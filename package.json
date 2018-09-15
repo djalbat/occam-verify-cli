@@ -1,13 +1,13 @@
 {
   "name": "occam-verifier",
   "author": "James Smith",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
-  "homepage": "https://github.com/occam-proof-assistant/Verifier",
+  "homepage": "https://github.com/jecs-imperial/occam-verifier",
   "description": "Occam's verifier.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/occam-proof-assistant/Verifier"
+    "url": "https://github.com/jecs-imperial/occam-verifier"
   },
   "dependencies": {},
   "devDependencies": {},
