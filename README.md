@@ -1,6 +1,6 @@
 # Verifier
 
-The Occam proof assistant's verifier.
+[Occam](https://github.com/jecs-imperial/occam)'s verifier.
 
 ## Contact
 
