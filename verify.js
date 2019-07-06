@@ -4,10 +4,14 @@ const main = require('./bin/main'),
 			argumentative = require('./argumentative');
 
 const { argv } = process,
-      { commandFromArgv, argumentFromArgv, optionsFromArgv } = argumentative;
+      { parseArgv } = argumentative;
 
-const command = commandFromArgv(argv),
-      argument = argumentFromArgv(argv),
-      options = optionsFromArgv(argv);
+const result = parseArgv(argv);
+
+debugger
+
+// const command = commandFromArgv(argv),
+//       argument = argumentFromArgv(argv),
+//       options = optionsFromArgv(argv);
 
 main(command, argument, options);
