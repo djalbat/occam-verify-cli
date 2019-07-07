@@ -16,12 +16,53 @@ const florenceLexer = FlorenceLexer.fromNothing(),
 
 function verifyFile(fileName, context) {
   const fileContent = readFile(fileName),
-        content = fileContent,  ///
-        tokens = florenceLexer.tokenise(content),
-        node = florenceParser.parse(tokens),
-        topmostNode = node; ///
+        tokens = florenceLexer.tokenise(fileContent),
+        topmostNode = florenceParser.parse(tokens);
 
-  verifyTopmostNode(topmostNode, context);
+  try {
+    verifyTopmostNode(topmostNode, context);
+  } catch (error) {
+    const node = error.getNode(),
+          message = error.getMessage(),
+          lineIndex = lineIndexFromNodeAndTokens(node, tokens),
+          lineNumber = lineIndex + 1;
+
+    console.log(`${fileName}:${lineNumber}: ${message}`);
+  }
 }
 
 module.exports = verifyFile;
+
+function lineIndexFromNodeAndTokens(node, tokens) {
+  let lineIndex = 0,
+      significantToken;
+
+  const nodeTerminalNode = node.isTerminalNode();
+
+  if (nodeTerminalNode) {
+    const terminalNode = node;  ///
+
+    significantToken = terminalNode.getSignificantToken();
+  } else {
+    const nonTerminalNode = node,
+          firstSignificantToken = nonTerminalNode.getFirstSignificantToken();
+
+    significantToken = firstSignificantToken; ///
+  }
+
+  tokens.some((token) => {
+    const tokenEndOfLineToken = token.isEndOfLineToken();
+
+    if (tokenEndOfLineToken) {
+      lineIndex++;
+    } else {
+      const significantTokenEqualToken = significantToken.isEqualTo(token);
+
+      if (significantTokenEqualToken) {
+        return true;
+      }
+    }
+  });
+
+  return lineIndex;
+}
