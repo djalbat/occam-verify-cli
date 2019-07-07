@@ -1,6 +1,6 @@
 'use strict';
 
-function main(command, argument, options) {
+function main(commands, options) {
   ///
 }
 

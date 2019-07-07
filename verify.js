@@ -6,12 +6,11 @@ const main = require('./bin/main'),
 const { argv } = process,
       { parseArgv } = argumentative;
 
-const result = parseArgv(argv);
+const abbreviations = {
+        'o': 'outputFile',
+        'h': 'hot-reload',
+        'i': 'incremental'
+      },
+      { options, commands } = parseArgv(argv, abbreviations);
 
-debugger
-
-// const command = commandFromArgv(argv),
-//       argument = argumentFromArgv(argv),
-//       options = optionsFromArgv(argv);
-
-main(command, argument, options);
+main(commands, options);
