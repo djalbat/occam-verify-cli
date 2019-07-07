@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-const main = require('./bin/main'),
-			argumentative = require('./argumentative');
+const argumentative = require('argumentative');
+
+const main = require('./bin/main');
 
 const { argv } = process,
       { parseArgv } = argumentative;

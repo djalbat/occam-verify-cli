@@ -10,6 +10,7 @@
     "url": "https://github.com/jecs-imperial/occam-verifier"
   },
   "dependencies": {
+    "argumentative": "git+ssh://git@github.com--djalbat:djalbat/argumentative.git",
     "occam-dom": "^1.0.13",
     "occam-lexers": "^9.0.4",
     "occam-parsers": "^9.0.12"
