@@ -1,28 +1,25 @@
 'use strict';
 
-const dom = require('occam-dom'),
-      necessary = require('necessary');
+const dom = require('occam-dom');
 
 const verifyTypeDeclarationNode = require('../../verify/node/declaration/type');
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first, second } = arrayUtilities;
+const { Query } = dom;
 
 const maximumDepth = 1,
-      keywordQuery = Query.fromExpression('//@keyword', maximumDepth);
+      keywordQuery = Query.fromExpression('//@keyword', maximumDepth),
+      typeDeclarationQuery = Query.fromExpression('//typeDeclaration', maximumDepth);
 
 function verifyDeclarationNode(declarationNode, context) {
   const keywordNodes = keywordQuery.execute(declarationNode),
-        firstKeywordNode = first(keywordNodes),
-        firstKeywordNodeContent = firstKeywordNode.getContent(),
-        keyword = firstKeywordNodeContent,  ///
-        childNodes = declarationNode.getChildNodes(),
-        secondChildNode = second(childNodes);
+        keywordNode = keywordNodes.shift(),
+        keywordNodeContent = keywordNode.getContent(),
+        keyword = keywordNodeContent;  ///
 
   switch (keyword) {
     case 'Type': {
-      const typeDeclarationNode = secondChildNode;  ///
+      const typeDeclarationNodes = typeDeclarationQuery.execute(declarationNode),
+            typeDeclarationNode = typeDeclarationNodes.shift();
 
       verifyTypeDeclarationNode(typeDeclarationNode, context);
 

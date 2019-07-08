@@ -3,7 +3,6 @@
 class Error {
   constructor(node, message) {
     this.node = node;
-
     this.message = message;
   }
 

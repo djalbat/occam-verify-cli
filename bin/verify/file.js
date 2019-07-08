@@ -4,12 +4,14 @@ const lexers = require('occam-lexers'),
       parsers = require('occam-parsers'),
       necessary = require('necessary');
 
-const verifyTopmostNode = require('../verify/node/topmost');
+const verifyTopmostNode = require('../verify/node/topmost'),
+      lineIndexUtilities = require('../utilities/lineIndex');
 
 const { fileSystemUtilities } = necessary,
       { FlorenceParser } = parsers,
       { FlorenceLexer } = lexers,
-      { readFile } = fileSystemUtilities;
+      { readFile } = fileSystemUtilities,
+      { lineIndexFromNodeAndTokens } = lineIndexUtilities;
 
 const florenceLexer = FlorenceLexer.fromNothing(),
       florenceParser = FlorenceParser.fromNothing();
@@ -32,37 +34,3 @@ function verifyFile(fileName, context) {
 }
 
 module.exports = verifyFile;
-
-function lineIndexFromNodeAndTokens(node, tokens) {
-  let lineIndex = 0,
-      significantToken;
-
-  const nodeTerminalNode = node.isTerminalNode();
-
-  if (nodeTerminalNode) {
-    const terminalNode = node;  ///
-
-    significantToken = terminalNode.getSignificantToken();
-  } else {
-    const nonTerminalNode = node,
-          firstSignificantToken = nonTerminalNode.getFirstSignificantToken();
-
-    significantToken = firstSignificantToken; ///
-  }
-
-  tokens.some((token) => {
-    const tokenEndOfLineToken = token.isEndOfLineToken();
-
-    if (tokenEndOfLineToken) {
-      lineIndex++;
-    } else {
-      const significantTokenEqualToken = significantToken.isEqualTo(token);
-
-      if (significantTokenEqualToken) {
-        return true;
-      }
-    }
-  });
-
-  return lineIndex;
-}

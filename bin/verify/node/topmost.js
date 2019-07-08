@@ -12,9 +12,7 @@ const maximumDepth = 1,
 function verifyTopmostNode(topmostNode, context) {
   const declarationNodes = declarationQuery.execute(topmostNode);
 
-  declarationNodes.forEach((declarationNode) => {
-    verifyDeclarationNode(declarationNode, context);
-  });
+  declarationNodes.forEach((declarationNode) => verifyDeclarationNode(declarationNode, context));
 }
 
 module.exports = verifyTopmostNode;

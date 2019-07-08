@@ -1,14 +1,11 @@
 'use strict';
 
-const dom = require('occam-dom'),
-      necessary = require('necessary');
+const dom = require('occam-dom');
 
 const Type = require('../../../type'),
       Error = require('../../../error');
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first, second } = arrayUtilities;
+const { Query } = dom;
 
 const typeNameQuery = Query.fromExpression('//typeName/@*');
 
@@ -20,34 +17,36 @@ function verifyTypeDeclarationNode(typeDeclarationNode, context) {
 
           return typeName;
         }),
-        firstTypeName = first(typeNames),
-        typeName = firstTypeName,
+        typeName = typeNames.shift(), ///
         typePresent = context.isTypePresentByTypeName(typeName);
 
-    if (typePresent) {
-      const node = typeDeclarationNode, ///
-            message = `The type ${typeName} already exists.`;
+  if (typePresent) {
+    const node = typeDeclarationNode, ///
+          message = `The type '${typeName}' is already present.`;
 
-      throw new Error(node, message);
+    throw new Error(node, message);
+  } else {
+    const subTypeName = typeNames.shift();
+
+    if (subTypeName === undefined) {
+      const type = Type.fromTypeName(typeName);
+
+      context.addType(type);
     } else {
-      const typeNamesLength = typeNames.length,
-            firstTypeName = first(typeNames),
-            typeName = firstTypeName;
+      const subTypeMissing = context.isSubTypeMissingBySubTypeName(subTypeName);
 
-      if (false) {
-        ///
-      } else if (typeNamesLength === 1) {
-        const type = Type.fromTypeName(typeName);
+      if (subTypeMissing) {
+        const node = typeDeclarationNode, ///
+              message = `The sub-type '${subTypeName}' is missing.`;
 
-        context.addType(type);
-      } else if (typeNamesLength === 2) {
-        const secondTypeName = second(typeNames),
-              subTypeName = secondTypeName,
-              type = Type.fromTypeNameAndSubTypeName(typeName, subTypeName);
-
-        context.addType(type);
+        throw new Error(node, message);
       }
+
+      const type = Type.fromTypeNameAndSubTypeName(typeName, subTypeName);
+
+      context.addType(type);
     }
+  }
 }
 
 module.exports = verifyTypeDeclarationNode;

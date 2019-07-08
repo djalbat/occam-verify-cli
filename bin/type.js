@@ -3,7 +3,6 @@
 class Type {
   constructor(name, subTypeName) {
     this.name = name;
-
     this.subTypeName = subTypeName;
   }
 
@@ -21,7 +20,7 @@ class Type {
 
   static fromTypeName(typeName) {
     const name = typeName,  ///
-          subTypeName = null,
+          subTypeName = undefined,
           type = new Type(name, subTypeName);
 
     return type;
