@@ -4,11 +4,10 @@ const Error = require('../../../error'),
       queries = require('../../../queries'),
       Constructor = require('../../../constructor');
 
-const { constructorNameQuery } = queries;
+const { typeNameNodeQuery, constructorNameNodeQuery, parenthesisedTypeNamesNodeQuery } = queries;
 
 function verifyConstructorDeclarationNode(constructorsDeclarationNode, context) {
-  const constructorNameNodes = constructorNameQuery.execute(constructorsDeclarationNode),
-        constructorNameNode = constructorNameNodes.shift(),
+  const constructorNameNode = constructorNameNodeQuery(constructorsDeclarationNode),
         constructorNameNodeContent = constructorNameNode.getContent(),
         constructorName = constructorNameNodeContent, ///
         constructorPresent = context.isConstructorPresentByConstructorName(constructorName);
@@ -20,9 +19,27 @@ function verifyConstructorDeclarationNode(constructorsDeclarationNode, context) 
     throw new Error(node, message);
   }
 
-  const constructor = Constructor.fromConstructorName(constructorName);
+  const typeNameNode = typeNameNodeQuery(constructorsDeclarationNode),
+        typeNameNodeContent = typeNameNode.getContent(),
+        typeName = typeNameNodeContent, ///
+        typeMissing = context.isTypeMissingByTypeName(typeName);
 
-  context.addConstructor(constructor);
+  if (typeMissing) {
+    const node = constructorsDeclarationNode, ///
+          message = `The type '${typeName}' for the constructor '${constructorName}' is missing.`;
+
+    throw new Error(node, message);
+  }
+
+  const parenthesisedTypeNamesNode = parenthesisedTypeNamesNodeQuery(constructorsDeclarationNode);
+
+  if (parenthesisedTypeNamesNode === undefined) {
+    const constructor = Constructor.fromConstructorNameAndTypeName(constructorName, typeName);
+
+    context.addConstructor(constructor);
+  } else {
+    debugger
+  }
 }
 
 module.exports = verifyConstructorDeclarationNode;

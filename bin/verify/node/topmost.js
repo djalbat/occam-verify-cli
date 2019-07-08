@@ -3,10 +3,10 @@
 const queries = require('../../queries'),
       verifyDeclarationNode = require('../../verify/node/declaration');
 
-const { declarationQuery } = queries;
+const { declarationNodesQuery } = queries;
 
 function verifyTopmostNode(topmostNode, context) {
-  const declarationNodes = declarationQuery.execute(topmostNode);
+  const declarationNodes = declarationNodesQuery(topmostNode);
 
   declarationNodes.forEach((declarationNode) => verifyDeclarationNode(declarationNode, context));
 }

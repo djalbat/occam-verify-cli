@@ -3,10 +3,10 @@
 const queries = require('../../../queries'),
       verifyConstructorDeclarationNode = require('../../../verify/node/declaration/constructor');
 
-const { constructorDeclarationQuery } = queries;
+const { constructorDeclarationNodesQuery } = queries;
 
 function verifyConstructorsDeclarationNode(constructorsDeclarationNode, context) {
-  const constructorDeclarationNodes = constructorDeclarationQuery.execute(constructorsDeclarationNode);
+  const constructorDeclarationNodes = constructorDeclarationNodesQuery(constructorsDeclarationNode);
 
   constructorDeclarationNodes.forEach((constructorDeclarationNode) => verifyConstructorDeclarationNode(constructorDeclarationNode, context));
 }

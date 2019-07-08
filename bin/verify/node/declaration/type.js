@@ -4,10 +4,10 @@ const Type = require('../../../type'),
       Error = require('../../../error'),
       queries = require('../../../queries');
 
-const { typeNameQuery } = queries;
+const { typeNameNodesQuery } = queries;
 
 function verifyTypeDeclarationNode(typeDeclarationNode, context) {
-  const typeNameNodes = typeNameQuery.execute(typeDeclarationNode),
+  const typeNameNodes = typeNameNodesQuery(typeDeclarationNode),
         typeNames = typeNameNodes.map((typeNameNode) => {
           const typeNameNodeContent = typeNameNode.getContent(),
                 typeName = typeNameNodeContent; ///

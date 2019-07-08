@@ -2,29 +2,35 @@
 
 const queries = require('../../queries'),
       verifyTypeDeclarationNode = require('../../verify/node/declaration/type'),
+      verifyConstructorDeclarationNode = require('../../verify/node/declaration/constructor'),
       verifyConstructorsDeclarationNode = require('../../verify/node/declaration/constructors');
 
-const { keywordQuery, typeDeclarationQuery, constructorsDeclarationQuery } = queries;
+const { keywordNodeQuery, typeDeclarationNodeQuery, constructorDeclarationNodeQuery, constructorsDeclarationNodeQuery } = queries;
 
 function verifyDeclarationNode(declarationNode, context) {
-  const keywordNodes = keywordQuery.execute(declarationNode),
-        keywordNode = keywordNodes.shift(),
+  const keywordNode = keywordNodeQuery(declarationNode),
         keywordNodeContent = keywordNode.getContent(),
         keyword = keywordNodeContent;  ///
 
   switch (keyword) {
     case 'Type': {
-      const typeDeclarationNodes = typeDeclarationQuery.execute(declarationNode),
-            typeDeclarationNode = typeDeclarationNodes.shift();
+      const typeDeclarationNode = typeDeclarationNodeQuery(declarationNode);
 
       verifyTypeDeclarationNode(typeDeclarationNode, context);
 
       break;
     }
 
+    case 'Constructor': {
+      const constructorDeclarationNode = constructorDeclarationNodeQuery(declarationNode);
+
+      verifyConstructorDeclarationNode(constructorDeclarationNode, context);
+
+      break;
+    }
+
     case 'Constructors': {
-      const constructorsDeclarationNodes = constructorsDeclarationQuery.execute(declarationNode),
-            constructorsDeclarationNode = constructorsDeclarationNodes.shift();
+      const constructorsDeclarationNode = constructorsDeclarationNodeQuery(declarationNode);
 
       verifyConstructorsDeclarationNode(constructorsDeclarationNode, context);
 

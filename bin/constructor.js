@@ -1,12 +1,22 @@
 'use strict';
 
 class Constructor {
-  constructor(name) {
+  constructor(name, typeName, typeNames) {
     this.name = name;
+    this.typeName = typeName;
+    this.typeNames = typeNames
   }
 
   getName() {
     return this.name;
+  }
+
+  getTypeName() {
+    return this.typeName;
+  }
+
+  getTypeNames() {
+    return this.typeNames;
   }
 
   matchConstructorName(constructorName) {
@@ -14,14 +24,15 @@ class Constructor {
   }
 
   asString() {
-    const string = `${this.name}`;
+    const string = `${this.name}:${this.typeName}`;
 
     return string;
   }
 
-  static fromConstructorName(constructorName) {
+  static fromConstructorNameAndTypeName(constructorName, typeName) {
     const name = constructorName,  ///
-          type = new Constructor(name);
+          typeNames = undefined,
+          type = new Constructor(name, typeName, typeNames);
 
     return type;
   }

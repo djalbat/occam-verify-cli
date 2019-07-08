@@ -34,6 +34,13 @@ class Context {
     return typePresent;
   }
 
+  isTypeMissingByTypeName(typeName) {
+    const typePresent = this.isTypePresentByTypeName(typeName),
+          typeMissing = !typePresent;
+
+    return typeMissing;
+  }
+
   isSubTypeMissingBySubTypeName(subTypeName) {
     const subTypeMissing = this.types.every((type) => {
       const typeNamesMatch = type.matchTypeName(subTypeName);
