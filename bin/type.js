@@ -18,6 +18,14 @@ class Type {
     return (this.name === typeName);
   }
 
+  asString() {
+    const string = (this.subTypeName === undefined) ?
+                    `${this.name}` :
+                      `${this.name}:${this.subTypeName}`;
+
+    return string;
+  }
+
   static fromTypeName(typeName) {
     const name = typeName,  ///
           subTypeName = undefined,

@@ -7,11 +7,19 @@ class Context {
   }
 
   addType(type) {
+    const typeString = type.asString();
+
     this.types.push(type);
+
+    console.log(`Added the '${typeString}' type to the context.`);
   }
 
   addConstructor(constructor) {
+    const constructorString = constructor.asString();
+
     this.constructors.push(constructor);
+
+    console.log(`Added the '${constructorString}' constructor to the context.`);
   }
 
   isTypePresentByTypeName(typeName) {
