@@ -1,13 +1,10 @@
 'use strict';
 
-const dom = require('occam-dom');
-
 const Type = require('../../../type'),
-      Error = require('../../../error');
+      Error = require('../../../error'),
+      queries = require('../../../queries');
 
-const { Query } = dom;
-
-const typeNameQuery = Query.fromExpression('//typeName/@*');
+const { typeNameQuery } = queries;
 
 function verifyTypeDeclarationNode(typeDeclarationNode, context) {
   const typeNameNodes = typeNameQuery.execute(typeDeclarationNode),

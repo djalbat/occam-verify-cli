@@ -1,14 +1,10 @@
 'use strict';
 
-const dom = require('occam-dom');
+const queries = require('../../queries'),
+      verifyTypeDeclarationNode = require('../../verify/node/declaration/type'),
+      verifyConstructorsDeclarationNode = require('../../verify/node/declaration/constructors');
 
-const verifyTypeDeclarationNode = require('../../verify/node/declaration/type');
-
-const { Query } = dom;
-
-const maximumDepth = 1,
-      keywordQuery = Query.fromExpression('//@keyword', maximumDepth),
-      typeDeclarationQuery = Query.fromExpression('//typeDeclaration', maximumDepth);
+const { keywordQuery, typeDeclarationQuery, constructorsDeclarationQuery } = queries;
 
 function verifyDeclarationNode(declarationNode, context) {
   const keywordNodes = keywordQuery.execute(declarationNode),
@@ -22,6 +18,15 @@ function verifyDeclarationNode(declarationNode, context) {
             typeDeclarationNode = typeDeclarationNodes.shift();
 
       verifyTypeDeclarationNode(typeDeclarationNode, context);
+
+      break;
+    }
+
+    case 'Constructors': {
+      const constructorsDeclarationNodes = constructorsDeclarationQuery.execute(declarationNode),
+            constructorsDeclarationNode = constructorsDeclarationNodes.shift();
+
+      verifyConstructorsDeclarationNode(constructorsDeclarationNode, context);
 
       break;
     }

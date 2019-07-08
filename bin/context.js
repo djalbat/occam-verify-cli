@@ -1,12 +1,17 @@
 'use strict';
 
 class Context {
-  constructor(types) {
+  constructor(types, constructors) {
     this.types = types;
+    this.constructors = constructors
   }
 
   addType(type) {
     this.types.push(type);
+  }
+
+  addConstructor(constructor) {
+    this.constructors.push(constructor);
   }
 
   isTypePresentByTypeName(typeName) {
@@ -33,9 +38,22 @@ class Context {
     return subTypeMissing;
   }
 
+  isConstructorPresentByConstructorName(constructorName) {
+    const constructorPresent = this.constructors.some((constructor) => {
+      const constructorNamesMatch = constructor.matchConstructorName(constructorName);
+
+      if (constructorNamesMatch) {
+        return true;
+      }
+    });
+
+    return constructorPresent;
+  }
+
   static fromNothing() {
     const types = [],
-          context = new Context(types);
+          constructors = [],
+          context = new Context(types, constructors);
 
     return context;
   }

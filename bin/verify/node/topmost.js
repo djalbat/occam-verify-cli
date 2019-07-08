@@ -1,13 +1,9 @@
 'use strict';
 
-const dom = require('occam-dom');
+const queries = require('../../queries'),
+      verifyDeclarationNode = require('../../verify/node/declaration');
 
-const verifyDeclarationNode = require('../../verify/node/declaration');
-
-const { Query } = dom;
-
-const maximumDepth = 1,
-      declarationQuery = Query.fromExpression('//declaration', maximumDepth);
+const { declarationQuery } = queries;
 
 function verifyTopmostNode(topmostNode, context) {
   const declarationNodes = declarationQuery.execute(topmostNode);
