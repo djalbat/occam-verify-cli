@@ -25,27 +25,27 @@ function verifyTypeDeclarationNode(typeDeclarationNode, context) {
           message = `The type '${typeName}' is already present.`;
 
     throw new Error(node, message);
+  }
+
+  const subTypeName = typeNames.shift();
+
+  if (subTypeName === undefined) {
+    const type = Type.fromTypeName(typeName);
+
+    context.addType(type);
   } else {
-    const subTypeName = typeNames.shift();
+    const subTypeMissing = context.isSubTypeMissingBySubTypeName(subTypeName);
 
-    if (subTypeName === undefined) {
-      const type = Type.fromTypeName(typeName);
+    if (subTypeMissing) {
+      const node = typeDeclarationNode, ///
+            message = `The sub-type '${subTypeName}' is missing.`;
 
-      context.addType(type);
-    } else {
-      const subTypeMissing = context.isSubTypeMissingBySubTypeName(subTypeName);
-
-      if (subTypeMissing) {
-        const node = typeDeclarationNode, ///
-              message = `The sub-type '${subTypeName}' is missing.`;
-
-        throw new Error(node, message);
-      }
-
-      const type = Type.fromTypeNameAndSubTypeName(typeName, subTypeName);
-
-      context.addType(type);
+      throw new Error(node, message);
     }
+
+    const type = Type.fromTypeNameAndSubTypeName(typeName, subTypeName);
+
+    context.addType(type);
   }
 }
 
