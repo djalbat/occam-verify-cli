@@ -2,10 +2,11 @@
 
 const queries = require('../../queries'),
       verifyTypeDeclarationNode = require('../../verify/node/declaration/type'),
+      verifyVariableDeclarationNode = require('../../verify/node/declaration/variable'),
       verifyConstructorDeclarationNode = require('../../verify/node/declaration/constructor'),
       verifyConstructorsDeclarationNode = require('../../verify/node/declaration/constructors');
 
-const { keywordNodeQuery, typeDeclarationNodeQuery, constructorDeclarationNodeQuery, constructorsDeclarationNodeQuery } = queries;
+const { keywordNodeQuery, typeDeclarationNodeQuery, variableDeclarationNodeQuery, constructorDeclarationNodeQuery, constructorsDeclarationNodeQuery } = queries;
 
 function verifyDeclarationNode(declarationNode, context) {
   const keywordNode = keywordNodeQuery(declarationNode),
@@ -17,7 +18,13 @@ function verifyDeclarationNode(declarationNode, context) {
       const typeDeclarationNode = typeDeclarationNodeQuery(declarationNode);
 
       verifyTypeDeclarationNode(typeDeclarationNode, context);
+      break;
+    }
 
+    case 'Variable': {
+      const variableDeclarationNode = variableDeclarationNodeQuery(declarationNode);
+
+      verifyVariableDeclarationNode(variableDeclarationNode, context);
       break;
     }
 
@@ -25,7 +32,6 @@ function verifyDeclarationNode(declarationNode, context) {
       const constructorDeclarationNode = constructorDeclarationNodeQuery(declarationNode);
 
       verifyConstructorDeclarationNode(constructorDeclarationNode, context);
-
       break;
     }
 
@@ -33,7 +39,6 @@ function verifyDeclarationNode(declarationNode, context) {
       const constructorsDeclarationNode = constructorsDeclarationNodeQuery(declarationNode);
 
       verifyConstructorsDeclarationNode(constructorsDeclarationNode, context);
-
       break;
     }
   }

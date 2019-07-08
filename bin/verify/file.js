@@ -4,7 +4,8 @@ const lexers = require('occam-lexers'),
       parsers = require('occam-parsers'),
       necessary = require('necessary');
 
-const verifyTopmostNode = require('../verify/node/topmost'),
+const Error = require('../error'),
+      verifyTopmostNode = require('../verify/node/topmost'),
       lineIndexUtilities = require('../utilities/lineIndex');
 
 const { fileSystemUtilities } = necessary,
@@ -24,6 +25,10 @@ function verifyFile(fileName, context) {
   try {
     verifyTopmostNode(topmostNode, context);
   } catch (error) {
+    if (!(error instanceof Error)) {
+      throw error;
+    }
+
     const node = error.getNode(),
           message = error.getMessage(),
           lineIndex = lineIndexFromNodeAndTokens(node, tokens),

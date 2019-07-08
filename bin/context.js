@@ -1,8 +1,9 @@
 'use strict';
 
 class Context {
-  constructor(types, constructors) {
+  constructor(types, variables, constructors) {
     this.types = types;
+    this.variables = variables;
     this.constructors = constructors
   }
 
@@ -12,6 +13,14 @@ class Context {
     this.types.push(type);
 
     console.log(`Added the '${typeString}' type to the context.`);
+  }
+
+  addVariable(variable) {
+    const variableString = variable.asString();
+
+    this.variables.push(variable);
+
+    console.log(`Added the '${variableString}' variable to the context.`);
   }
 
   addConstructor(constructor) {
@@ -53,6 +62,18 @@ class Context {
     return subTypeMissing;
   }
 
+  isVariablePresentByVariableName(VariableName) {
+    const VariablePresent = this.variables.some((Variable) => {
+      const VariableNamesMatch = Variable.matchVariableName(VariableName);
+
+      if (VariableNamesMatch) {
+        return true;
+      }
+    });
+
+    return VariablePresent;
+  }
+
   isConstructorPresentByConstructorName(constructorName) {
     const constructorPresent = this.constructors.some((constructor) => {
       const constructorNamesMatch = constructor.matchConstructorName(constructorName);
@@ -67,8 +88,9 @@ class Context {
 
   static fromNothing() {
     const types = [],
+          variables = [],
           constructors = [],
-          context = new Context(types, constructors);
+          context = new Context(types, variables, constructors);
 
     return context;
   }
