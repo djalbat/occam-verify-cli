@@ -4,7 +4,7 @@ const Error = require('../../../error'),
       queries = require('../../../queries'),
       Constructor = require('../../../constructor');
 
-const { typeNameNodeQuery, constructorNameNodeQuery, parenthesisedTypeNamesNodeQuery } = queries;
+const { typeNameNodeQuery, typeNameNodesQuery, constructorNameNodeQuery, parenthesisedTypeNamesNodeQuery } = queries;
 
 function verifyConstructorDeclarationNode(constructorsDeclarationNode, context) {
   const constructorNameNode = constructorNameNodeQuery(constructorsDeclarationNode),
@@ -38,7 +38,28 @@ function verifyConstructorDeclarationNode(constructorsDeclarationNode, context) 
 
     context.addConstructor(constructor);
   } else {
-    debugger
+    const typeNameNodes = typeNameNodesQuery(parenthesisedTypeNamesNode),
+          typeNames = typeNameNodes.map((typeNameNode) => {
+            const typeNameNodeContent = typeNameNode.getContent(),
+                  typeName = typeNameNodeContent; ///
+
+            return typeName;
+          });
+
+    typeNames.forEach((typeName) => {
+      const typeMissing = context.isTypeMissingByTypeName(typeName);
+
+      if (typeMissing) {
+        const node = constructorsDeclarationNode, ///
+              message = `The type '${typeName}' for the constructor '${constructorName}' is missing.`;
+
+        throw new Error(node, message);
+      }
+    });
+
+    const constructor = Constructor.fromConstructorNameTypeNameAndTypeNames(constructorName, typeName, typeNames);
+
+    context.addConstructor(constructor);
   }
 }
 

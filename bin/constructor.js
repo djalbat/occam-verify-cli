@@ -24,7 +24,21 @@ class Constructor {
   }
 
   asString() {
-    const string = `${this.name}:${this.typeName}`;
+    let string;
+
+    if (this.typeNames === undefined) {
+      string = `${this.name}:${this.typeName}`;
+    } else {
+      const typeNames = this.typeNames.reduce((typeNames, typeName, index) => {
+        typeNames = (index === 0) ?
+                      typeName : ///
+                        `${typeNames},${typeName}`;
+
+        return typeNames;
+      }, '');
+
+      string = `${this.name}(${typeNames}):${this.typeName}`;
+    }
 
     return string;
   }
@@ -32,9 +46,16 @@ class Constructor {
   static fromConstructorNameAndTypeName(constructorName, typeName) {
     const name = constructorName,  ///
           typeNames = undefined,
-          type = new Constructor(name, typeName, typeNames);
+          constructor = new Constructor(name, typeName, typeNames);
 
-    return type;
+    return constructor;
+  }
+
+  static fromConstructorNameTypeNameAndTypeNames(constructorName, typeName, typeNames) {
+    const name = constructorName,  ///
+          constructor = new Constructor(name, typeName, typeNames);
+
+    return constructor;
   }
 }
 

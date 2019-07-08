@@ -4,17 +4,16 @@ const dom = require('occam-dom');
 
 const { Query } = dom;
 
-const maximumDepth = 1,
-      typeNameNodesQuery = nodesQuery(Query.fromExpression('//typeName/@*', maximumDepth)),
-      declarationNodesQuery = nodesQuery(Query.fromExpression('//declaration', maximumDepth)),
-      constructorDeclarationNodesQuery = nodesQuery(Query.fromExpression('//constructorDeclaration', maximumDepth)),
-      keywordNodeQuery = nodeQuery(Query.fromExpression('//@keyword', maximumDepth)),
-      typeNameNodeQuery = nodeQuery(Query.fromExpression('//typeName/@*', maximumDepth)),
-      constructorNameNodeQuery = nodeQuery(Query.fromExpression('//constructorName/@*', maximumDepth)),
-      typeDeclarationNodeQuery = nodeQuery(Query.fromExpression('//typeDeclaration', maximumDepth)),
-      parenthesisedTypeNamesNodeQuery = nodeQuery(Query.fromExpression('//parenthesisedTypeNames', maximumDepth)),
-      constructorDeclarationNodeQuery = nodeQuery(Query.fromExpression('//constructorDeclaration', maximumDepth)),
-      constructorsDeclarationNodeQuery = nodeQuery(Query.fromExpression('//constructorsDeclaration', maximumDepth));
+const typeNameNodesQuery = nodesQuery(Query.fromExpression('//typeName/@*', 2)),
+      declarationNodesQuery = nodesQuery(Query.fromExpression('//declaration', 1)),
+      constructorDeclarationNodesQuery = nodesQuery(Query.fromExpression('//constructorDeclaration', 1)),
+      keywordNodeQuery = nodeQuery(Query.fromExpression('//@keyword', 1)),
+      typeNameNodeQuery = nodeQuery(Query.fromExpression('//typeName/@*', 1)),
+      typeDeclarationNodeQuery = nodeQuery(Query.fromExpression('//typeDeclaration', 1)),
+      constructorNameNodeQuery = nodeQuery(Query.fromExpression('//constructorName/@*', 1)),
+      parenthesisedTypeNamesNodeQuery = nodeQuery(Query.fromExpression('//parenthesisedTypeNames', 1)),
+      constructorDeclarationNodeQuery = nodeQuery(Query.fromExpression('//constructorDeclaration', 1)),
+      constructorsDeclarationNodeQuery = nodeQuery(Query.fromExpression('//constructorsDeclaration', 1));
 
 module.exports = {
   typeNameNodesQuery,
@@ -22,8 +21,8 @@ module.exports = {
   constructorDeclarationNodesQuery,
   keywordNodeQuery,
   typeNameNodeQuery,
-  constructorNameNodeQuery,
   typeDeclarationNodeQuery,
+  constructorNameNodeQuery,
   parenthesisedTypeNamesNodeQuery,
   constructorDeclarationNodeQuery,
   constructorsDeclarationNodeQuery
