@@ -1,12 +1,12 @@
 'use strict';
 
-const Error = require('../../../error'),
-      queries = require('../../../queries'),
-      Variable = require('../../../variable');
+const Error = require('../../error'),
+      queries = require('../../queries'),
+      Variable = require('../../variable');
 
 const { nameNodeQuery, typeNameNodeQuery } = queries;
 
-function verifyVariableDeclarationNode(variableDeclarationNode, context) {
+function verifyVariableDeclaration(variableDeclarationNode, context) {
   const nameNode = nameNodeQuery(variableDeclarationNode),
         nameNodeContent = nameNode.getContent(),
         name = nameNodeContent, ///
@@ -43,4 +43,4 @@ function verifyVariableDeclarationNode(variableDeclarationNode, context) {
   }
 }
 
-module.exports = verifyVariableDeclarationNode;
+module.exports = verifyVariableDeclaration;

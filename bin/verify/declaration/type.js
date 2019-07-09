@@ -1,12 +1,12 @@
 'use strict';
 
-const Type = require('../../../type'),
-      Error = require('../../../error'),
-      queries = require('../../../queries');
+const Type = require('../../type'),
+      Error = require('../../error'),
+      queries = require('../../queries');
 
 const { typeNameNodesQuery } = queries;
 
-function verifyTypeDeclarationNode(typeDeclarationNode, context) {
+function verifyTypeDeclaration(typeDeclarationNode, context) {
   const typeNameNodes = typeNameNodesQuery(typeDeclarationNode),
         typeNames = typeNameNodes.map((typeNameNode) => {
           const typeNameNodeContent = typeNameNode.getContent(),
@@ -46,4 +46,4 @@ function verifyTypeDeclarationNode(typeDeclarationNode, context) {
   }
 }
 
-module.exports = verifyTypeDeclarationNode;
+module.exports = verifyTypeDeclaration;

@@ -1,11 +1,11 @@
 'use strict';
 
-const queries = require('../../queries'),
-      verifyTypeDeclarationNode = require('../../verify/node/declaration/type'),
-      verifyVariableDeclarationNode = require('../../verify/node/declaration/variable'),
-      verifyVariablesDeclarationNode = require('../../verify/node/declaration/variables'),
-      verifyConstructorDeclarationNode = require('../../verify/node/declaration/constructor'),
-      verifyConstructorsDeclarationNode = require('../../verify/node/declaration/constructors');
+const queries = require('../queries'),
+      verifyTypeDeclaration = require('../verify/declaration/type'),
+      verifyVariableDeclaration = require('../verify/declaration/variable'),
+      verifyVariablesDeclaration = require('../verify/declaration/variables'),
+      verifyConstructorDeclaration = require('../verify/declaration/constructor'),
+      verifyConstructorsDeclaration = require('../verify/declaration/constructors');
 
 const { keywordNodeQuery,
         typeDeclarationNodeQuery,
@@ -14,7 +14,7 @@ const { keywordNodeQuery,
         constructorDeclarationNodeQuery,
         constructorsDeclarationNodeQuery } = queries;
 
-function verifyDeclarationNode(declarationNode, context) {
+function verifyDeclaration(declarationNode, context) {
   const keywordNode = keywordNodeQuery(declarationNode),
         keywordNodeContent = keywordNode.getContent(),
         keyword = keywordNodeContent;  ///
@@ -23,38 +23,38 @@ function verifyDeclarationNode(declarationNode, context) {
     case 'Type': {
       const typeDeclarationNode = typeDeclarationNodeQuery(declarationNode);
 
-      verifyTypeDeclarationNode(typeDeclarationNode, context);
+      verifyTypeDeclaration(typeDeclarationNode, context);
       break;
     }
 
     case 'Variable': {
       const variableDeclarationNode = variableDeclarationNodeQuery(declarationNode);
 
-      verifyVariableDeclarationNode(variableDeclarationNode, context);
+      verifyVariableDeclaration(variableDeclarationNode, context);
       break;
     }
 
     case 'Variables': {
       const variablesDeclarationNode = variablesDeclarationNodeQuery(declarationNode);
 
-      verifyVariablesDeclarationNode(variablesDeclarationNode, context);
+      verifyVariablesDeclaration(variablesDeclarationNode, context);
       break;
     }
 
     case 'Constructor': {
       const constructorDeclarationNode = constructorDeclarationNodeQuery(declarationNode);
 
-      verifyConstructorDeclarationNode(constructorDeclarationNode, context);
+      verifyConstructorDeclaration(constructorDeclarationNode, context);
       break;
     }
 
     case 'Constructors': {
       const constructorsDeclarationNode = constructorsDeclarationNodeQuery(declarationNode);
 
-      verifyConstructorsDeclarationNode(constructorsDeclarationNode, context);
+      verifyConstructorsDeclaration(constructorsDeclarationNode, context);
       break;
     }
   }
 }
 
-module.exports = verifyDeclarationNode;
+module.exports = verifyDeclaration;

@@ -5,7 +5,8 @@ const lexers = require('occam-lexers'),
       necessary = require('necessary');
 
 const Error = require('../error'),
-      verifyTopmostNode = require('../verify/node/topmost'),
+      queries = require('../queries'),
+      verifyDeclaration = require('../verify/declaration'),
       lineIndexUtilities = require('../utilities/lineIndex');
 
 const { fileSystemUtilities } = necessary,
@@ -13,6 +14,7 @@ const { fileSystemUtilities } = necessary,
       { FlorenceLexer } = lexers,
       { exit } = process,
       { readFile } = fileSystemUtilities,
+      { declarationNodesQuery } = queries,
       { lineIndexFromNodeAndTokens } = lineIndexUtilities;
 
 const florenceLexer = FlorenceLexer.fromNothing(),
@@ -24,7 +26,9 @@ function verifyFile(fileName, context) {
         topmostNode = florenceParser.parse(tokens);
 
   try {
-    verifyTopmostNode(topmostNode, context);
+    const declarationNodes = declarationNodesQuery(topmostNode);
+
+    declarationNodes.forEach((declarationNode) => verifyDeclaration(declarationNode, context));
   } catch (error) {
     if (!(error instanceof Error)) {
       throw error;
