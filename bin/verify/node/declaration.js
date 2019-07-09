@@ -3,10 +3,16 @@
 const queries = require('../../queries'),
       verifyTypeDeclarationNode = require('../../verify/node/declaration/type'),
       verifyVariableDeclarationNode = require('../../verify/node/declaration/variable'),
+      verifyVariablesDeclarationNode = require('../../verify/node/declaration/variables'),
       verifyConstructorDeclarationNode = require('../../verify/node/declaration/constructor'),
       verifyConstructorsDeclarationNode = require('../../verify/node/declaration/constructors');
 
-const { keywordNodeQuery, typeDeclarationNodeQuery, variableDeclarationNodeQuery, constructorDeclarationNodeQuery, constructorsDeclarationNodeQuery } = queries;
+const { keywordNodeQuery,
+        typeDeclarationNodeQuery,
+        variableDeclarationNodeQuery,
+        variablesDeclarationNodeQuery,
+        constructorDeclarationNodeQuery,
+        constructorsDeclarationNodeQuery } = queries;
 
 function verifyDeclarationNode(declarationNode, context) {
   const keywordNode = keywordNodeQuery(declarationNode),
@@ -25,6 +31,13 @@ function verifyDeclarationNode(declarationNode, context) {
       const variableDeclarationNode = variableDeclarationNodeQuery(declarationNode);
 
       verifyVariableDeclarationNode(variableDeclarationNode, context);
+      break;
+    }
+
+    case 'Variables': {
+      const variablesDeclarationNode = variablesDeclarationNodeQuery(declarationNode);
+
+      verifyVariablesDeclarationNode(variablesDeclarationNode, context);
       break;
     }
 

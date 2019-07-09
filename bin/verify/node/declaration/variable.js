@@ -4,25 +4,25 @@ const Error = require('../../../error'),
       queries = require('../../../queries'),
       Variable = require('../../../variable');
 
-const { typeNameNodeQuery, variableNameNodeQuery } = queries;
+const { nameNodeQuery, typeNameNodeQuery } = queries;
 
-function verifyVariableDeclarationNode(variablesDeclarationNode, context) {
-  const variableNameNode = variableNameNodeQuery(variablesDeclarationNode),
-        variableNameNodeContent = variableNameNode.getContent(),
-        variableName = variableNameNodeContent, ///
-        variablePresent = context.isVariablePresentByVariableName(variableName);
+function verifyVariableDeclarationNode(variableDeclarationNode, context) {
+  const nameNode = nameNodeQuery(variableDeclarationNode),
+        nameNodeContent = nameNode.getContent(),
+        name = nameNodeContent, ///
+        variablePresent = context.isVariablePresentByName(name);
 
   if (variablePresent) {
-    const node = variablesDeclarationNode, ///
-          message = `The variable '${variableName}' is already present.`;
+    const node = variableDeclarationNode, ///
+          message = `The variable '${name}' is already present.`;
 
     throw new Error(node, message);
   }
 
-  const typeNameNode = typeNameNodeQuery(variablesDeclarationNode);
+  const typeNameNode = typeNameNodeQuery(variableDeclarationNode);
 
   if (typeNameNode === undefined) {
-    const variable = Variable.fromVariableName(variableName);
+    const variable = Variable.fromName(name);
 
     context.addVariable(variable);
   } else {
@@ -31,13 +31,13 @@ function verifyVariableDeclarationNode(variablesDeclarationNode, context) {
           typeMissing = context.isTypeMissingByTypeName(typeName);
 
     if (typeMissing) {
-      const node = variablesDeclarationNode, ///
-            message = `The type '${typeName}' for the variable '${variableName}' is missing.`;
+      const node = variableDeclarationNode, ///
+            message = `The type '${typeName}' for the variable '${name}' is missing.`;
 
       throw new Error(node, message);
     }
 
-    const variable = Variable.fromVariableNameAndTypeName(variableName, typeName);
+    const variable = Variable.fromNameAndTypeName(name, typeName);
 
     context.addVariable(variable);
   }

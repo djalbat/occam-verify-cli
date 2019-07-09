@@ -14,8 +14,8 @@ class Variable {
     return this.typeName;
   }
 
-  matchVariableName(variableName) {
-    return (this.name === variableName);
+  matchName(name) {
+    return (this.name === name);
   }
 
   asString() {
@@ -26,17 +26,15 @@ class Variable {
     return string;
   }
 
-  static fromVariableName(variableName) {
-    const name = variableName,  ///
-          typeName = undefined,
+  static fromName(name) {
+    const typeName = undefined,
           variable = new Variable(name, typeName);
 
     return variable;
   }
 
-  static fromVariableNameAndTypeName(variableName, typeName) {
-    const name = variableName,  ///
-          variable = new Variable(name, typeName);
+  static fromNameAndTypeName(name, typeName) {
+    const variable = new Variable(name, typeName);
 
     return variable;
   }

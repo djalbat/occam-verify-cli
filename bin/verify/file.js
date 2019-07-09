@@ -11,6 +11,7 @@ const Error = require('../error'),
 const { fileSystemUtilities } = necessary,
       { FlorenceParser } = parsers,
       { FlorenceLexer } = lexers,
+      { exit } = process,
       { readFile } = fileSystemUtilities,
       { lineIndexFromNodeAndTokens } = lineIndexUtilities;
 
@@ -35,6 +36,8 @@ function verifyFile(fileName, context) {
           lineNumber = lineIndex + 1;
 
     console.log(`${fileName}:${lineNumber}: ${message}`);
+
+    exit();
   }
 }
 

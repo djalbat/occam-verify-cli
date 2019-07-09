@@ -31,6 +31,18 @@ class Context {
     console.log(`Added the '${constructorString}' constructor to the context.`);
   }
 
+  isVariablePresentByName(name) {
+    const VariablePresent = this.variables.some((variable) => {
+      const VariableNamesMatch = variable.matchName(name);
+
+      if (VariableNamesMatch) {
+        return true;
+      }
+    });
+
+    return VariablePresent;
+  }
+
   isTypePresentByTypeName(typeName) {
     const typePresent = this.types.some((type) => {
       const typeNamesMatch = type.matchTypeName(typeName);
@@ -50,33 +62,9 @@ class Context {
     return typeMissing;
   }
 
-  isSubTypeMissingBySubTypeName(subTypeName) {
-    const subTypeMissing = this.types.every((type) => {
-      const typeNamesMatch = type.matchTypeName(subTypeName);
-
-      if (!typeNamesMatch) {
-        return true;
-      }
-    });
-
-    return subTypeMissing;
-  }
-
-  isVariablePresentByVariableName(VariableName) {
-    const VariablePresent = this.variables.some((Variable) => {
-      const VariableNamesMatch = Variable.matchVariableName(VariableName);
-
-      if (VariableNamesMatch) {
-        return true;
-      }
-    });
-
-    return VariablePresent;
-  }
-
-  isConstructorPresentByConstructorName(constructorName) {
+  isConstructorPresentByName(name) {
     const constructorPresent = this.constructors.some((constructor) => {
-      const constructorNamesMatch = constructor.matchConstructorName(constructorName);
+      const constructorNamesMatch = constructor.matchName(name);
 
       if (constructorNamesMatch) {
         return true;
@@ -84,6 +72,19 @@ class Context {
     });
 
     return constructorPresent;
+  }
+
+  isSubTypeMissingBySubTypeName(subTypeName) {
+    const typeName = subTypeName, ///
+          subTypeMissing = this.types.every((type) => {
+            const typeNamesMatch = type.matchTypeName(typeName);
+
+            if (!typeNamesMatch) {
+              return true;
+            }
+          });
+
+    return subTypeMissing;
   }
 
   static fromNothing() {

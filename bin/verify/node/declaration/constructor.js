@@ -4,17 +4,17 @@ const Error = require('../../../error'),
       queries = require('../../../queries'),
       Constructor = require('../../../constructor');
 
-const { typeNameNodeQuery, typeNameNodesQuery, constructorNameNodeQuery, parenthesisedTypeNamesNodeQuery } = queries;
+const { nameNodeQuery, typeNameNodeQuery, typeNameNodesQuery, parenthesisedTypeNamesNodeQuery } = queries;
 
 function verifyConstructorDeclarationNode(constructorsDeclarationNode, context) {
-  const constructorNameNode = constructorNameNodeQuery(constructorsDeclarationNode),
-        constructorNameNodeContent = constructorNameNode.getContent(),
-        constructorName = constructorNameNodeContent, ///
-        constructorPresent = context.isConstructorPresentByConstructorName(constructorName);
+  const nameNode = nameNodeQuery(constructorsDeclarationNode),
+        nameNodeContent = nameNode.getContent(),
+        name = nameNodeContent, ///
+        constructorPresent = context.isConstructorPresentByName(name);
 
   if (constructorPresent) {
     const node = constructorsDeclarationNode, ///
-          message = `The constructor '${constructorName}' is already present.`;
+          message = `The constructor '${name}' is already present.`;
 
     throw new Error(node, message);
   }
@@ -26,7 +26,7 @@ function verifyConstructorDeclarationNode(constructorsDeclarationNode, context) 
 
   if (typeMissing) {
     const node = constructorsDeclarationNode, ///
-          message = `The type '${typeName}' for the constructor '${constructorName}' is missing.`;
+          message = `The type '${typeName}' for the constructor '${name}' is missing.`;
 
     throw new Error(node, message);
   }
@@ -34,7 +34,7 @@ function verifyConstructorDeclarationNode(constructorsDeclarationNode, context) 
   const parenthesisedTypeNamesNode = parenthesisedTypeNamesNodeQuery(constructorsDeclarationNode);
 
   if (parenthesisedTypeNamesNode === undefined) {
-    const constructor = Constructor.fromConstructorNameAndTypeName(constructorName, typeName);
+    const constructor = Constructor.fromNameAndTypeName(name, typeName);
 
     context.addConstructor(constructor);
   } else {
@@ -51,13 +51,13 @@ function verifyConstructorDeclarationNode(constructorsDeclarationNode, context) 
 
       if (typeMissing) {
         const node = constructorsDeclarationNode, ///
-              message = `The type '${typeName}' for the constructor '${constructorName}' is missing.`;
+              message = `The type '${typeName}' for the constructor '${name}' is missing.`;
 
         throw new Error(node, message);
       }
     });
 
-    const constructor = Constructor.fromConstructorNameTypeNameAndTypeNames(constructorName, typeName, typeNames);
+    const constructor = Constructor.fromNameTypeNameAndTypeNames(name, typeName, typeNames);
 
     context.addConstructor(constructor);
   }

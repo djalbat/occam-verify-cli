@@ -19,8 +19,8 @@ class Constructor {
     return this.typeNames;
   }
 
-  matchConstructorName(constructorName) {
-    return (this.name === constructorName);
+  matchName(name) {
+    return (this.name === name);
   }
 
   asString() {
@@ -43,17 +43,15 @@ class Constructor {
     return string;
   }
 
-  static fromConstructorNameAndTypeName(constructorName, typeName) {
-    const name = constructorName,  ///
-          typeNames = undefined,
+  static fromNameAndTypeName(name, typeName) {
+    const typeNames = undefined,
           constructor = new Constructor(name, typeName, typeNames);
 
     return constructor;
   }
 
-  static fromConstructorNameTypeNameAndTypeNames(constructorName, typeName, typeNames) {
-    const name = constructorName,  ///
-          constructor = new Constructor(name, typeName, typeNames);
+  static fromNameTypeNameAndTypeNames(name, typeName, typeNames) {
+    const constructor = new Constructor(name, typeName, typeNames);
 
     return constructor;
   }
