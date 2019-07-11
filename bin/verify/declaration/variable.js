@@ -2,7 +2,8 @@
 
 const Error = require('../../error'),
       queries = require('../../queries'),
-      Variable = require('../../variable');
+      Variable = require('../../variable'),
+      verifyTypeName = require('../../verify/typeName');
 
 const { nameNodeQuery, typeNameNodeQuery } = queries;
 
@@ -36,18 +37,8 @@ function verifyVariableDeclaration(variableDeclarationNode, context) {
 
     context.addVariable(variable);
   } else {
-    const typeNameNodeContent = typeNameNode.getContent(),
-          typeName = typeNameNodeContent, ///
-          typeMissing = context.isTypeMissingByTypeName(typeName);
-
-    if (typeMissing) {
-      const node = variableDeclarationNode, ///
-            message = `The type '${typeName}' for the variable '${name}' is missing.`;
-
-      throw new Error(node, message);
-    }
-
-    const variable = Variable.fromNameAndTypeName(name, typeName);
+    const typeName = verifyTypeName(typeNameNode, context),
+          variable = Variable.fromNameAndTypeName(name, typeName);
 
     context.addVariable(variable);
   }

@@ -1,17 +1,23 @@
 'use strict';
 
-const Error = require('../../../error'),
-      queries = require('../../../queries'),
+const queries = require('../../../queries'),
       verifyTerm = require('../../../verify/term'),
-      Constructor = require('../../../constructor');
+      Constructor = require('../../../constructor'),
+      verifyTypeName = require('../../../verify/typeName'),
+      verifyParenthesizedTypeNames = require('../../../verify/parenthesizedTypeNames');
 
-const { termNodeQuery } = queries;
+const { termNodeQuery, typeNameNodeQuery, parenthesisedTypeNamesNodeQuery } = queries;
 
 function verifyTermConstructorDeclaration(constructorDeclarationNode, context) {
-  const termNode = termNodeQuery(constructorDeclarationNode);
+  const termNode = termNodeQuery(constructorDeclarationNode),
+        typeNameNode = typeNameNodeQuery(constructorDeclarationNode),
+        parenthesisedTypeNamesNode = parenthesisedTypeNamesNodeQuery(constructorDeclarationNode),
+        term = verifyTerm(termNode, context),
+        typeName = verifyTypeName(typeNameNode, context),
+        typeNames = verifyParenthesizedTypeNames(parenthesisedTypeNamesNode, context),
+        constructor = Constructor.fromTermTypeNameAndTypeNames(term, typeName, typeNames);
 
-  verifyTerm(termNode, context);
-
+  context.addConstructor(constructor);
 }
 
 module.exports = verifyTermConstructorDeclaration;

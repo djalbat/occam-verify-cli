@@ -1,14 +1,14 @@
 'use strict';
 
-const Error = require('../error'),
-      queries = require('../queries');
+const Term = require('../term'),
+      Error = require('../error'),
+      queries = require('../queries'),
+      verifyParenthesizedTerms = require('../verify/parenthesizedTerms');
 
-const { nameNodeQuery,
-        termNodesQuery,
-        parenthesisedTermsNodeQuery } = queries;
+const { nameNodeQuery, parenthesisedTermsNodeQuery } = queries;
 
 function verifyTerm(termNode, context) {
-  let typeName = undefined;
+  let term = undefined;
 
   const nameNode = nameNodeQuery(termNode),
         nameNodeContent = nameNode.getContent(),
@@ -16,52 +16,41 @@ function verifyTerm(termNode, context) {
         parenthesisedTermsNode = parenthesisedTermsNodeQuery(termNode);
 
   if (parenthesisedTermsNode === undefined) {
-    const variable = context.retrieveVariableByName(name),
-          variablePresent = (variable !== undefined);
-
-    if (variablePresent) {
-      typeName = variable.getTypeName();
-    }
-
     const typeNames = undefined,
           constructor = context.retrieveConstructorByNameAndTypeNames(name, typeNames),
           constructorPresent = (constructor !== undefined);
 
     if (constructorPresent) {
-      typeName = constructor.getTypeName();
+      const typeName = constructor.getTypeName();
+
+      term = Term.fromNameAndTypeName(name, typeName);
     }
   } else {
-    const termNodes = termNodesQuery(parenthesisedTermsNode),
-          typeNames = termNodes.reduce((typeNames, termNode) => {
-            if (typeNames !== undefined) {
-              const typeName = verifyTerm(termNode, context);
+    const terms = verifyParenthesizedTerms(parenthesisedTermsNode, context),
+          typeNames = terms.map((term) => {
+            const typeName = term.getTypeName();
 
-              if (typeName === undefined) {
-                typeNames = undefined;
-              } else {
-                typeNames.push(typeName);
-              }
-            }
-
-            return typeNames;
-          }, []);
+            return typeName;
+          });
 
     const constructor = context.retrieveConstructorByNameAndTypeNames(name, typeNames),
           constructorPresent = (constructor !== undefined);
 
     if (constructorPresent) {
-      typeName = constructor.getTypeName();
+      const typeName = constructor.getTypeName();
+
+      term = Term.fromNameTermsAndTypeName(name, terms, typeName)
     }
   }
 
-  if (typeName === undefined) {
+  if (term === undefined) {
     const node = termNode, ///
           message = `The term '${name}' cannot be verified.`;
 
     throw new Error(node, message);
   }
 
-  return typeName;
+  return term;
 }
 
 module.exports = verifyTerm;
