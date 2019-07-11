@@ -4,8 +4,7 @@ const Context = require('./context'),
       verifyFile = require('./verify/file');
 
 function main(commands, options) {
-  const { file } = options,
-        fileName = file,  ///
+  const { fileName } = options,
         context = Context.fromNothing();
 
   verifyFile(fileName, context);

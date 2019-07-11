@@ -12,8 +12,18 @@ const { nameNodeQuery,
 function verifyNameConstructorDeclaration(constructorDeclarationNode, context) {
   const nameNode = nameNodeQuery(constructorDeclarationNode),
         nameNodeContent = nameNode.getContent(),
-        name = nameNodeContent, ///
-        constructorPresent = context.isConstructorPresentByName(name);
+        name = nameNodeContent; ///
+
+  const variablePresent = context.isVariablePresentByName(name);
+
+  if (variablePresent) {
+    const node = variableDeclarationNode, ///
+          message = `The variable '${name}' is already present.`;
+
+    throw new Error(node, message);
+  }
+
+  const constructorPresent = context.isConstructorPresentByName(name);
 
   if (constructorPresent) {
     const node = constructorDeclarationNode, ///
