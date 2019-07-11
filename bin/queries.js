@@ -4,7 +4,8 @@ const dom = require('occam-dom');
 
 const { Query } = dom;
 
-const typeNameNodesQuery = nodesQuery(Query.fromExpression('//typeName/@*', 2)),
+const termNodesQuery = nodesQuery(Query.fromExpression('//term', 2)),
+      typeNameNodesQuery = nodesQuery(Query.fromExpression('//typeName/@*', 2)),
       declarationNodesQuery = nodesQuery(Query.fromExpression('//declaration', 1)),
       variableDeclarationNodesQuery = nodesQuery(Query.fromExpression('//variableDeclaration', 1)),
       constructorDeclarationNodesQuery = nodesQuery(Query.fromExpression('//constructorDeclaration', 1)),
@@ -13,6 +14,7 @@ const typeNameNodesQuery = nodesQuery(Query.fromExpression('//typeName/@*', 2)),
       keywordNodeQuery = nodeQuery(Query.fromExpression('//@keyword', 1)),
       typeNameNodeQuery = nodeQuery(Query.fromExpression('//typeName/@*', 1)),
       typeDeclarationNodeQuery = nodeQuery(Query.fromExpression('//typeDeclaration', 1)),
+      parenthesisedTermsNodeQuery = nodeQuery(Query.fromExpression('//parenthesisedTerms', 1)),
       variableDeclarationNodeQuery = nodeQuery(Query.fromExpression('//variableDeclaration', 1)),
       variablesDeclarationNodeQuery = nodeQuery(Query.fromExpression('//variablesDeclaration', 1)),
       parenthesisedTypeNamesNodeQuery = nodeQuery(Query.fromExpression('//parenthesisedTypeNames', 1)),
@@ -20,6 +22,7 @@ const typeNameNodesQuery = nodesQuery(Query.fromExpression('//typeName/@*', 2)),
       constructorsDeclarationNodeQuery = nodeQuery(Query.fromExpression('//constructorsDeclaration', 1));
 
 module.exports = {
+  termNodesQuery,
   typeNameNodesQuery,
   declarationNodesQuery,
   variableDeclarationNodesQuery,
@@ -29,6 +32,7 @@ module.exports = {
   keywordNodeQuery,
   typeNameNodeQuery,
   typeDeclarationNodeQuery,
+  parenthesisedTermsNodeQuery,
   variableDeclarationNodeQuery,
   variablesDeclarationNodeQuery,
   parenthesisedTypeNamesNodeQuery,

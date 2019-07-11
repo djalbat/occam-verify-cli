@@ -31,16 +31,79 @@ class Context {
     console.log(`Added the '${constructorString}' constructor to the context.`);
   }
 
-  isVariablePresentByName(name) {
-    const VariablePresent = this.variables.some((variable) => {
-      const VariableNamesMatch = variable.matchName(name);
+  retrieveVariableByName(name) {
+    let retrievedVariable = undefined;
 
-      if (VariableNamesMatch) {
+    this.variables.some((variable) => {
+      const variableNamesMatch = variable.matchName(name);
+
+      if (variableNamesMatch) {
+        retrievedVariable = variable;
+
         return true;
       }
     });
 
-    return VariablePresent;
+    const variable = retrievedVariable; ///
+
+    return variable;
+  }
+
+  retrieveConstructorByName(name) {
+    let retrievedConstructor = undefined;
+
+    this.constructors.some((constructor) => {
+      const constructorNamesMatch = constructor.matchName(name);
+
+      if (constructorNamesMatch) {
+        retrievedConstructor = constructor;
+
+        return true;
+      }
+    });
+
+    const constructor = retrievedConstructor; ///
+
+    return constructor;
+  }
+
+  retrieveConstructorByNameAndTypeNames(name, typeNames) {
+    let retrievedConstructor = undefined;
+
+    this.constructors.some((constructor) => {
+      const constructorNamesMatch = constructor.matchNameAndTypeNames(name, typeNames);
+
+      if (constructorNamesMatch) {
+        retrievedConstructor = constructor;
+
+        return true;
+      }
+    });
+
+    const constructor = retrievedConstructor; ///
+
+    return constructor;
+  }
+
+  isVariablePresentByName(name) {
+    const variable = this.retrieveVariableByName(name),
+          variablePresent = (variable !== undefined);
+
+    return variablePresent;
+  }
+
+  isConstructorPresentByName(name) {
+    const constructor = this.retrieveConstructorByName(name),
+          constructorPresent = (constructor !== undefined);
+
+    return constructorPresent;
+  }
+
+  isConstructorPresentByNameAndTypeNames(name, typeNames) {
+    const constructor = this.retrieveConstructorByNameAndTypeNames(name, typeNames),
+          constructorPresent = (constructor !== undefined);
+
+    return constructorPresent;
   }
 
   isTypePresentByTypeName(typeName) {
@@ -60,18 +123,6 @@ class Context {
           typeMissing = !typePresent;
 
     return typeMissing;
-  }
-
-  isConstructorPresentByName(name) {
-    const constructorPresent = this.constructors.some((constructor) => {
-      const constructorNamesMatch = constructor.matchName(name);
-
-      if (constructorNamesMatch) {
-        return true;
-      }
-    });
-
-    return constructorPresent;
   }
 
   isSubTypeMissingBySubTypeName(subTypeName) {

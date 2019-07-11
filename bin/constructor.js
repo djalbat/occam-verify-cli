@@ -1,5 +1,9 @@
 'use strict';
 
+const arrayUtilities = require('./utilities/array');
+
+const { matchArrays } = arrayUtilities;
+
 class Constructor {
   constructor(name, typeName, typeNames) {
     this.name = name;
@@ -21,6 +25,10 @@ class Constructor {
 
   matchName(name) {
     return (this.name === name);
+  }
+
+  matchNameAndTypeNames(name, typeNames) {
+    return ((this.name === name) && matchArrays(this.typeNames, typeNames));
   }
 
   asString() {

@@ -11,6 +11,7 @@ function verifyTermConstructorDeclaration(constructorDeclarationNode, context) {
   const termNode = termNodeQuery(constructorDeclarationNode);
 
   verifyTerm(termNode, context);
+
 }
 
 module.exports = verifyTermConstructorDeclaration;
