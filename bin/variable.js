@@ -23,10 +23,6 @@ class Variable {
     this.value = value;
   }
 
-  setTypeName(typeName) {
-    this.typeName = typeName;
-  }
-
   matchName(name) {
     return (this.name === name);
   }
@@ -37,14 +33,6 @@ class Variable {
                       `${this.name}:${this.typeName}`;
 
     return string;
-  }
-
-  static fromName(name) {
-    const value = undefined,
-          typeName = undefined,
-          variable = new Variable(name, value, typeName);
-
-    return variable;
   }
 
   static fromNameAndTypeName(name, typeName) {

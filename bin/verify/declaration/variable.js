@@ -30,18 +30,11 @@ function verifyVariableDeclaration(variableDeclarationNode, context) {
     throw new Error(node, message);
   }
 
-  const typeNameNode = typeNameNodeQuery(variableDeclarationNode);
+  const typeNameNode = typeNameNodeQuery(variableDeclarationNode),
+        typeName = verifyTypeName(typeNameNode, context),
+        variable = Variable.fromNameAndTypeName(name, typeName);
 
-  if (typeNameNode === undefined) {
-    const variable = Variable.fromName(name);
-
-    context.addVariable(variable);
-  } else {
-    const typeName = verifyTypeName(typeNameNode, context),
-          variable = Variable.fromNameAndTypeName(name, typeName);
-
-    context.addVariable(variable);
-  }
+  context.addVariable(variable);
 }
 
 module.exports = verifyVariableDeclaration;

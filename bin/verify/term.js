@@ -15,14 +15,20 @@ function verifyTerm(termNode, context) {
         parenthesisedTermsNode = parenthesisedTermsNodeQuery(termNode);
 
   if (parenthesisedTermsNode === undefined) {
-    const typeNames = undefined,
-          constructor = context.retrieveConstructorByNameAndTypeNames(name, typeNames),
-          constructorPresent = (constructor !== undefined);
+    const variable = context.retrieveVariableByName(name);
 
-    if (constructorPresent) {
-      const typeName = constructor.getTypeName();
+    if (variable !== undefined) {
+      term = variable;  ///
+    } else {
+      const typeNames = undefined,
+            constructor = context.retrieveConstructorByNameAndTypeNames(name, typeNames),
+            constructorPresent = (constructor !== undefined);
 
-      term = Term.fromNameAndTypeName(name, typeName);
+      if (constructorPresent) {
+        const typeName = constructor.getTypeName();
+
+        term = Term.fromNameAndTypeName(name, typeName);
+      }
     }
   } else {
     const termNodes = termNodesQuery(parenthesisedTermsNode),
