@@ -2,10 +2,9 @@
 
 const Term = require('../term'),
       Error = require('../error'),
-      queries = require('../queries'),
-      verifyParenthesizedTerms = require('../verify/parenthesizedTerms');
+      queries = require('../queries');
 
-const { nameNodeQuery, parenthesisedTermsNodeQuery } = queries;
+const { nameNodeQuery, termNodesQuery, parenthesisedTermsNodeQuery } = queries;
 
 function verifyTerm(termNode, context) {
   let term = undefined;
@@ -26,14 +25,18 @@ function verifyTerm(termNode, context) {
       term = Term.fromNameAndTypeName(name, typeName);
     }
   } else {
-    const terms = verifyParenthesizedTerms(parenthesisedTermsNode, context),
+    const termNodes = termNodesQuery(parenthesisedTermsNode),
+          terms = termNodes.map((termNode) => {
+            const term = verifyTerm(termNode, context);
+
+            return term;
+          }),
           typeNames = terms.map((term) => {
             const typeName = term.getTypeName();
 
             return typeName;
-          });
-
-    const constructor = context.retrieveConstructorByNameAndTypeNames(name, typeNames),
+          }),
+          constructor = context.retrieveConstructorByNameAndTypeNames(name, typeNames),
           constructorPresent = (constructor !== undefined);
 
     if (constructorPresent) {
