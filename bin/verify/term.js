@@ -1,8 +1,8 @@
 'use strict';
 
-const Term = require('../term'),
-      Error = require('../error'),
-      queries = require('../queries');
+const Error = require('../error'),
+      queries = require('../queries'),
+      CompoundTerm = require('../compoundTerm');
 
 const { nameNodeQuery, termNodesQuery, parenthesisedTermsNodeQuery } = queries;
 
@@ -25,30 +25,24 @@ function verifyTerm(termNode, context) {
             constructorPresent = (constructor !== undefined);
 
       if (constructorPresent) {
-        const typeName = constructor.getTypeName();
+        const typeName = constructor.getTypeName(),
+              compoundTerm = CompoundTerm.fromNameAndTypeName(name, typeName);
 
-        term = Term.fromNameAndTypeName(name, typeName);
+        term = compoundTerm;  ///
       }
     }
   } else {
     const termNodes = termNodesQuery(parenthesisedTermsNode),
-          terms = termNodes.map((termNode) => {
-            const term = verifyTerm(termNode, context);
-
-            return term;
-          }),
-          typeNames = terms.map((term) => {
-            const typeName = term.getTypeName();
-
-            return typeName;
-          }),
+          terms = termNodes.map((termNode) => verifyTerm(termNode, context)),
+          typeNames = terms.map((term) => term.getTypeName()),
           constructor = context.retrieveConstructorByNameAndTypeNames(name, typeNames),
           constructorPresent = (constructor !== undefined);
 
     if (constructorPresent) {
-      const typeName = constructor.getTypeName();
+      const typeName = constructor.getTypeName(),
+            compoundTerm = CompoundTerm.fromNameTermsAndTypeName(name, terms, typeName);
 
-      term = Term.fromNameTermsAndTypeName(name, terms, typeName)
+      term = compoundTerm;  ///
     }
   }
 
