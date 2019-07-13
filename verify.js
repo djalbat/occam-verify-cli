@@ -8,7 +8,8 @@ const { argv } = process,
       { parseArgv } = argumentative;
 
 const abbreviations = {
-        'f': 'file-name'
+        'f': 'file-name',
+        'p': 'package-name'
       },
       { options, commands } = parseArgv(argv, abbreviations);
 
