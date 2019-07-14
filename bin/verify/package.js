@@ -1,44 +1,22 @@
 'use strict';
 
-const lexers = require('occam-lexers'),
-      parsers = require('occam-parsers'),
-      necessary = require('necessary'),
-      customgrammars = require('occam-custom-grammars');  ///
+const customgrammars = require('occam-custom-grammars');  ///
 
-const Error = require('../error'),
-      queries = require('../queries'),
-      verifyDeclaration = require('../verify/declaration'),
-      lineIndexUtilities = require('../utilities/lineIndex');
-
-const { fileSystemUtilities } = necessary,
-      { FlorenceParser } = parsers,
-      { FlorenceLexer } = lexers,
-      { exit } = process,
-      { readFile } = fileSystemUtilities,
-      { declarationNodesQuery } = queries,
-      { lineIndexFromNodeAndTokens } = lineIndexUtilities;
-
-const florenceLexer = FlorenceLexer.fromNothing(),
-      florenceParser = FlorenceParser.fromNothing();
+const { CustomGrammar, CombinedCustomGrammars, lexersUtilities, parsersUtilities } = customgrammars,
+      { florenceLexerFromCombinedCustomGrammars } = lexersUtilities,
+      { florenceParserFromCombinedCustomGrammars } = parsersUtilities;
 
 function verifyPackage(packageName, context) {
+  const directoryName = packageName, ///
+        customGrammar = CustomGrammar.fromDirectoryName(directoryName),
+        customGrammars = [
+          customGrammar
+        ],
+        combinedCustomGrammars = CombinedCustomGrammars.fromCustomGrammars(customGrammars),
+        florenceLexer = florenceLexerFromCombinedCustomGrammars(combinedCustomGrammars),
+        florenceParser = florenceParserFromCombinedCustomGrammars(combinedCustomGrammars);
 
-  try {
-
-  } catch (error) {
-    if (!(error instanceof Error)) {
-      throw error;
-    }
-
-    const node = error.getNode(),
-          message = error.getMessage(),
-          lineIndex = lineIndexFromNodeAndTokens(node, tokens),
-          lineNumber = lineIndex + 1;
-
-    console.log(`${packageName}:${lineNumber}: ${message}`);
-
-    exit();
-  }
+  debugger
 }
 
 module.exports = verifyPackage;
