@@ -1,22 +1,39 @@
 'use strict';
 
-const customgrammars = require('occam-custom-grammars');  ///
+const open = require('occam-open-cli'), ///
+			necessary = require('necessary');
 
-const { CustomGrammar, CombinedCustomGrammars, lexersUtilities, parsersUtilities } = customgrammars,
-      { florenceLexerFromCombinedCustomGrammars } = lexersUtilities,
-      { florenceParserFromCombinedCustomGrammars } = parsersUtilities;
+const verifyFile = require('../verify/file'),
+			grammarUtilities = require('../utilities/grammar');
+
+const { filePathUtilities } = open,
+			{ fileSystemUtilities } = necessary,
+			{ isFilePathFlorenceFilePath } = filePathUtilities,
+			{ readDirectory } = fileSystemUtilities,
+			{ combinedCustomGrammarsFromPackageName, florenceLexerFromCombinedCustomGrammars, florenceParserFromCombinedCustomGrammars } = grammarUtilities;
 
 function verifyPackage(packageName, context) {
-  const directoryName = packageName, ///
-        customGrammar = CustomGrammar.fromDirectoryName(directoryName),
-        customGrammars = [
-          customGrammar
-        ],
-        combinedCustomGrammars = CombinedCustomGrammars.fromCustomGrammars(customGrammars),
+  const combinedCustomGrammars = combinedCustomGrammarsFromPackageName(packageName),
+		    filePaths = filePathsFromPackageName(packageName),
         florenceLexer = florenceLexerFromCombinedCustomGrammars(combinedCustomGrammars),
         florenceParser = florenceParserFromCombinedCustomGrammars(combinedCustomGrammars);
 
-  debugger
+  filePaths.forEach((filePath) => verifyFile(filePath, context, florenceLexer, florenceParser))
 }
 
 module.exports = verifyPackage;
+
+function filePathsFromPackageName(packageName) {
+	let filePaths;
+
+	const directoryPath = packageName,  ///
+				fileNames = readDirectory(directoryPath);
+
+	filePaths = fileNames.map((fileName) => `${directoryPath}/${fileName}`);
+
+	const florenceFilePaths = filePaths.filter(isFilePathFlorenceFilePath);
+
+	filePaths = florenceFilePaths;  ///
+
+	return filePaths;
+}

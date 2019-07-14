@@ -11,11 +11,11 @@ const { arrayUtilities } = necessary,
 
 function main(commands, options) {
   const firstCommand = first(commands),
-        { fileName, packageName = firstCommand } = options, ///
+        { filePath, packageName = firstCommand } = options, ///
         context = Context.fromNothing();
 
   (packageName === undefined) ?
-    verifyFile(fileName, context) :
+    verifyFile(filePath, context) :
       verifyPackage(packageName, context);
 }
 

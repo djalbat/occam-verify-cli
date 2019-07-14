@@ -1,27 +1,22 @@
 'use strict';
 
-const lexers = require('occam-lexers'),
-      parsers = require('occam-parsers'),
-      necessary = require('necessary');
+const necessary = require('necessary');
 
 const Error = require('../error'),
       queries = require('../queries'),
-      verifyDeclaration = require('../verify/declaration'),
+			grammarUtilities = require('../utilities/grammar'),
+			verifyDeclaration = require('../verify/declaration'),
       lineIndexUtilities = require('../utilities/lineIndex');
 
 const { fileSystemUtilities } = necessary,
-      { FlorenceParser } = parsers,
-      { FlorenceLexer } = lexers,
       { exit } = process,
       { readFile } = fileSystemUtilities,
       { declarationNodesQuery } = queries,
-      { lineIndexFromNodeAndTokens } = lineIndexUtilities;
+      { lineIndexFromNodeAndTokens } = lineIndexUtilities,
+			{ florenceLexerFromNothing, florenceParserFromNothing } = grammarUtilities;
 
-const florenceLexer = FlorenceLexer.fromNothing(),
-      florenceParser = FlorenceParser.fromNothing();
-
-function verifyFile(fileName, context) {
-  const fileContent = readFile(fileName),
+function verifyFile(filePath, context, florenceLexer = florenceLexerFromNothing, florenceParser = florenceParserFromNothing) {
+  const fileContent = readFile(filePath),
         tokens = florenceLexer.tokenise(fileContent),
         topmostNode = florenceParser.parse(tokens);
 
@@ -39,7 +34,7 @@ function verifyFile(fileName, context) {
           lineIndex = lineIndexFromNodeAndTokens(node, tokens),
           lineNumber = lineIndex + 1;
 
-    console.log(`${fileName}:${lineNumber}: ${message}`);
+    console.log(`${filePath}:${lineNumber}: ${message}`);
 
     exit();
   }
