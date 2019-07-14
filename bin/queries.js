@@ -6,7 +6,7 @@ const { Query } = dom;
 
 const termNodesQuery = nodesQuery(Query.fromExpression('//term', 2)),
       typeNameNodesQuery = nodesQuery(Query.fromExpression('//typeName/@*', 2)),
-      declarationNodesQuery = nodesQuery(Query.fromExpression('//declaration', 1)),
+      topLevelInstructionNodesQuery = nodesQuery(Query.fromExpression('//axiom|declaration', 1)), ///
       variableDeclarationNodesQuery = nodesQuery(Query.fromExpression('//variableDeclaration', 1)),
       constructorDeclarationNodesQuery = nodesQuery(Query.fromExpression('//constructorDeclaration', 1)),
       termNodeQuery = nodeQuery(Query.fromExpression('//term', 1)),
@@ -24,7 +24,7 @@ const termNodesQuery = nodesQuery(Query.fromExpression('//term', 2)),
 module.exports = {
   termNodesQuery,
   typeNameNodesQuery,
-  declarationNodesQuery,
+  topLevelInstructionNodesQuery,
   variableDeclarationNodesQuery,
   constructorDeclarationNodesQuery,
   termNodeQuery,

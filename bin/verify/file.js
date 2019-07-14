@@ -5,13 +5,13 @@ const necessary = require('necessary');
 const Error = require('../error'),
       queries = require('../queries'),
 			grammarUtilities = require('../utilities/grammar'),
-			verifyDeclaration = require('../verify/declaration'),
-      lineIndexUtilities = require('../utilities/lineIndex');
+      lineIndexUtilities = require('../utilities/lineIndex'),
+      verifyTopLevelInstruction = require('../verify/topLevelInstruction');
 
 const { fileSystemUtilities } = necessary,
       { exit } = process,
       { readFile } = fileSystemUtilities,
-      { declarationNodesQuery } = queries,
+      { topLevelInstructionNodesQuery } = queries,
       { lineIndexFromNodeAndTokens } = lineIndexUtilities,
 			{ florenceLexerFromNothing, florenceParserFromNothing } = grammarUtilities;
 
@@ -21,9 +21,9 @@ function verifyFile(filePath, context, florenceLexer = florenceLexerFromNothing,
         topmostNode = florenceParser.parse(tokens);
 
   try {
-    const declarationNodes = declarationNodesQuery(topmostNode);
+    const topLevelInstructionNodes = topLevelInstructionNodesQuery(topmostNode);
 
-    declarationNodes.forEach((declarationNode) => verifyDeclaration(declarationNode, context));
+    topLevelInstructionNodes.forEach((topLevelInstructionNode) => verifyTopLevelInstruction(topLevelInstructionNode, context));
   } catch (error) {
     if (!(error instanceof Error)) {
       throw error;
