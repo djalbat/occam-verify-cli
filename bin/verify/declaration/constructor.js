@@ -6,12 +6,12 @@ const queries = require('../../queries'),
 
 const { termNodeQuery } = queries;
 
-function verifyConstructorDeclaration(constructorDeclarationNode, context) {
+function verifyConstructorDeclaration(constructorDeclarationNode, context, rules) {
   const termNode = termNodeQuery(constructorDeclarationNode);
 
   (termNode === undefined) ?
-    verifyNameConstructorDeclaration(constructorDeclarationNode, context) :
-      verifyTermConstructorDeclaration(constructorDeclarationNode, context);
+    verifyNameConstructorDeclaration(constructorDeclarationNode, context, rules) :
+      verifyTermConstructorDeclaration(constructorDeclarationNode, context, rules);
 }
 
 module.exports = verifyConstructorDeclaration;

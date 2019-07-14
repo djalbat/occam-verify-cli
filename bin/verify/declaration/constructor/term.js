@@ -8,13 +8,13 @@ const queries = require('../../../queries'),
 
 const { termNodeQuery, typeNameNodeQuery, parenthesisedTypeNamesNodeQuery } = queries;
 
-function verifyTermConstructorDeclaration(constructorDeclarationNode, context) {
+function verifyTermConstructorDeclaration(constructorDeclarationNode, context, rules) {
   const termNode = termNodeQuery(constructorDeclarationNode),
         typeNameNode = typeNameNodeQuery(constructorDeclarationNode),
         parenthesisedTypeNamesNode = parenthesisedTypeNamesNodeQuery(constructorDeclarationNode),
-        term = verifyTerm(termNode, context),
-        typeName = verifyTypeName(typeNameNode, context),
-        typeNames = verifyParenthesizedTypeNames(parenthesisedTypeNamesNode, context),
+        term = verifyTerm(termNode, context, rules),
+        typeName = verifyTypeName(typeNameNode, context, rules),
+        typeNames = verifyParenthesizedTypeNames(parenthesisedTypeNamesNode, context, rules),
         constructor = Constructor.fromTermTypeNameAndTypeNames(term, typeName, typeNames);
 
   context.addConstructor(constructor);

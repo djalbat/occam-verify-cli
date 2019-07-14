@@ -2,7 +2,7 @@
 
 const Error = require('../error');
 
-function verifyName(nameNode, context) {
+function verifyName(nameNode, context, rules) {
   const nameNodeContent = nameNode.getContent(),
         name = nameNodeContent; ///
 

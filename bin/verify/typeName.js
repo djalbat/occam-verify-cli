@@ -2,7 +2,7 @@
 
 const Error = require('../error');
 
-function verifyTypeName(typeNameNode, context) {
+function verifyTypeName(typeNameNode, context, rules) {
   const typeNameNodeContent = typeNameNode.getContent(),
         typeName = typeNameNodeContent, ///
         typeMissing = context.isTypeMissingByTypeName(typeName);

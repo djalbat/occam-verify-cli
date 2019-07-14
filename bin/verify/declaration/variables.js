@@ -5,10 +5,10 @@ const queries = require('../../queries'),
 
 const { variableDeclarationNodesQuery } = queries;
 
-function verifyVariablesDeclaration(variablesDeclarationNode, context) {
+function verifyVariablesDeclaration(variablesDeclarationNode, context, rules) {
   const variableDeclarationNodes = variableDeclarationNodesQuery(variablesDeclarationNode);
 
-  variableDeclarationNodes.forEach((variableDeclarationNode) => verifyVariableDeclaration(variableDeclarationNode, context));
+  variableDeclarationNodes.forEach((variableDeclarationNode) => verifyVariableDeclaration(variableDeclarationNode, context, rules));
 }
 
 module.exports = verifyVariablesDeclaration;

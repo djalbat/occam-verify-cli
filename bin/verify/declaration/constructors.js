@@ -5,10 +5,10 @@ const queries = require('../../queries'),
 
 const { constructorDeclarationNodesQuery } = queries;
 
-function verifyConstructorsDeclaration(constructorsDeclarationNode, context) {
+function verifyConstructorsDeclaration(constructorsDeclarationNode, context, rules) {
   const constructorDeclarationNodes = constructorDeclarationNodesQuery(constructorsDeclarationNode);
 
-  constructorDeclarationNodes.forEach((constructorDeclarationNode) => verifyConstructorDeclaration(constructorDeclarationNode, context));
+  constructorDeclarationNodes.forEach((constructorDeclarationNode) => verifyConstructorDeclaration(constructorDeclarationNode, context, rules));
 }
 
 module.exports = verifyConstructorsDeclaration;

@@ -21,9 +21,10 @@ function verifyFile(filePath, context, florenceLexer = florenceLexerFromNothing,
         topmostNode = florenceParser.parse(tokens);
 
   try {
-    const topLevelInstructionNodes = topLevelInstructionNodesQuery(topmostNode);
+    const rules = florenceParser.getRules(),
+          topLevelInstructionNodes = topLevelInstructionNodesQuery(topmostNode);
 
-    topLevelInstructionNodes.forEach((topLevelInstructionNode) => verifyTopLevelInstruction(topLevelInstructionNode, context));
+    topLevelInstructionNodes.forEach((topLevelInstructionNode) => verifyTopLevelInstruction(topLevelInstructionNode, context, rules));
   } catch (error) {
     if (!(error instanceof Error)) {
       throw error;

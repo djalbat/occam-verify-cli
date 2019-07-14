@@ -1,10 +1,16 @@
 'use strict';
 
-const queries = require('../queries');
+const queries = require('../queries'),
+      verifyStatement = require('../verify/statement');
 
-const {} = queries;
+const { labelNodesQuery, statementNodeQuery, parenthesisedLabelsNodeQuery } = queries;
 
-function verifyAxiom(axiomNode, context) {
+function verifyAxiom(axiomNode, context, rules) {
+  const parenthesisedLabelsNode = parenthesisedLabelsNodeQuery(axiomNode),
+        statementNode = statementNodeQuery(axiomNode),
+        labelNodes = labelNodesQuery(parenthesisedLabelsNode),
+        statement = verifyStatement(statementNode, context, rules);
+
   debugger
 }
 

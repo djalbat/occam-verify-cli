@@ -6,7 +6,7 @@ const Error = require('../error'),
 
 const { nameNodeQuery, termNodesQuery, parenthesisedTermsNodeQuery } = queries;
 
-function verifyTerm(termNode, context) {
+function verifyTerm(termNode, context, rules) {
   let term = undefined;
 
   const nameNode = nameNodeQuery(termNode),
@@ -33,7 +33,7 @@ function verifyTerm(termNode, context) {
     }
   } else {
     const termNodes = termNodesQuery(parenthesisedTermsNode),
-          terms = termNodes.map((termNode) => verifyTerm(termNode, context)),
+          terms = termNodes.map((termNode) => verifyTerm(termNode, context, rules)),
           typeNames = terms.map((term) => term.getTypeName()),
           constructor = context.retrieveConstructorByNameAndTypeNames(name, typeNames),
           constructorPresent = (constructor !== undefined);

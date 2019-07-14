@@ -5,13 +5,9 @@ const queries = require('../queries'),
 
 const { typeNameNodesQuery } = queries;
 
-function verifyParenthesizedTypeNames(parenthesisedTypeNamesNode, context) {
+function verifyParenthesizedTypeNames(parenthesisedTypeNamesNode, context, rules) {
   const typeNameNodes = typeNameNodesQuery(parenthesisedTypeNamesNode),
-        typeNames = typeNameNodes.map((typeNameNode) => {
-          const typeName = verifyTypeName(typeNameNode, context);
-
-          return typeName;
-        });
+        typeNames = typeNameNodes.map((typeNameNode) => verifyTypeName(typeNameNode, context, rules));
 
   return typeNames;
 }

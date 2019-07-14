@@ -8,19 +8,19 @@ const queries = require('../../../queries'),
 
 const { nameNodeQuery, typeNameNodeQuery, parenthesisedTypeNamesNodeQuery } = queries;
 
-function verifyNameConstructorDeclaration(constructorDeclarationNode, context) {
+function verifyNameConstructorDeclaration(constructorDeclarationNode, context, rules) {
   const nameNode = nameNodeQuery(constructorDeclarationNode),
         typeNameNode = typeNameNodeQuery(constructorDeclarationNode),
         parenthesisedTypeNamesNode = parenthesisedTypeNamesNodeQuery(constructorDeclarationNode),
-        name = verifyName(nameNode, context),
-        typeName = verifyTypeName(typeNameNode, context);
+        typeName = verifyTypeName(typeNameNode, context, rules),
+        name = verifyName(nameNode, context, rules);
 
   if (parenthesisedTypeNamesNode === undefined) {
     const constructor = Constructor.fromNameAndTypeName(name, typeName);
 
     context.addConstructor(constructor);
   } else {
-    const typeNames = verifyParenthesizedTypeNames(parenthesisedTypeNamesNode, context),
+    const typeNames = verifyParenthesizedTypeNames(parenthesisedTypeNamesNode, context, rules),
           constructor = Constructor.fromNameTypeNameAndTypeNames(name, typeName, typeNames);
 
     context.addConstructor(constructor);
