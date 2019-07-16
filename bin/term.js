@@ -1,6 +1,6 @@
 'use strict';
 
-class CompoundTerm {
+class Term {
   constructor(name, terms, typeName) {
     this.name = name;
     this.terms = terms;
@@ -28,19 +28,19 @@ class CompoundTerm {
 
   static fromNameAndTypeName(name, typeName) {
     const terms = [],
-          term = new CompoundTerm(name, terms, typeName);
+          term = new Term(name, terms, typeName);
 
     return term;
   }
 
   static fromNameTermsAndTypeName(name, terms, typeName) {
-    const term = new CompoundTerm(name, terms, typeName);
+    const term = new Term(name, terms, typeName);
 
     return term;
   }
 }
 
-module.exports = CompoundTerm;
+module.exports = Term;
 
 function termsAsTermsString(terms) {
   const termsString = terms.reduce((termsString, term, index) => {
