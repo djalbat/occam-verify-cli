@@ -116,20 +116,23 @@ function verifyNonTerminalPart(nonTerminalPart, childNodes, context, rules) {
 function verifyRuleNamePart(ruleNamePart, childNodes, context, rules) {
   let verified = false;
 
-  const childNode = childNodes.shift(),
-        childNodeNonTerminalNode = childNode.isNonTerminalNode();
+  const childNode = childNodes.shift();
 
-  if (childNodeNonTerminalNode) {
-    const nonTerminalNode = childNode,  ///
-          ruleNamePartRuleName = ruleNamePart.getRuleName(),
-          nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
+  if (childNode !== undefined) {
+    const childNodeNonTerminalNode = childNode.isNonTerminalNode();
 
-    if (ruleNamePartRuleName === nonTerminalNodeRuleName) {
-      const name = ruleNamePartRuleName,  ///
-            rule = findRuleByName(name, rules),
-            node = nonTerminalNode; ///
+    if (childNodeNonTerminalNode) {
+      const nonTerminalNode = childNode,  ///
+            ruleNamePartRuleName = ruleNamePart.getRuleName(),
+            nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
-      verified = verifyRule(rule, node, context, rules);
+      if (ruleNamePartRuleName === nonTerminalNodeRuleName) {
+        const name = ruleNamePartRuleName,  ///
+              rule = findRuleByName(name, rules),
+              node = nonTerminalNode; ///
+
+        verified = verifyRule(rule, node, context, rules);
+      }
     }
   }
 
@@ -137,5 +140,11 @@ function verifyRuleNamePart(ruleNamePart, childNodes, context, rules) {
 }
 
 function verifyOptionalPart(optionalPart, childNodes, context, rules) {
-  debugger
+  let verified = true;  ///
+
+  const part = optionalPart.getPart();
+
+  verifyPart(part, childNodes, context, rules);
+
+  return verified;
 }
