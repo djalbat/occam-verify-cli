@@ -2,65 +2,83 @@
 
 const parsers = require('occam-parsers');
 
-const queries = require('../../queries'),
+const Error = require('../../error'),
+      queries = require('../../queries'),
       Constructor = require('../../constructor'),
       Configuration = require('../../configuration'),
-      ruleUtilities = require('../../utilities/rule');
+      ruleUtilities = require('../../utilities/rule'),
+      verifyTypeName = require('../../verify/typeName');
 
 const { partTypes } = parsers,
-      { termNodeQuery } = queries,
       { findRuleByName } = ruleUtilities,
       { RuleNamePartType,
         OptionalPartPartType,
         GroupOfPartsPartType,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
-        ZeroOrMorePartsPartType } = partTypes;
+        ZeroOrMorePartsPartType } = partTypes,
+      { termNodeQuery, typeNameNodeQuery } = queries;
 
 function verifyConstructorDeclaration(constructorDeclarationNode, context, rules) {
   const termNode = termNodeQuery(constructorDeclarationNode),
         termRule = findRuleByName('term', rules),
+        rule = termRule,  ///
         node = termNode,  ///
-        constructor = Constructor.fromTermNode(termNode),
-        verified = verifyWithTermRule(node, termRule, constructor, context, rules);
+        verified = verifyWithRule(rule, node, context, rules);
 
   if (verified) {
+    const typeNameNode = typeNameNodeQuery(constructorDeclarationNode),
+          typeName = verifyTypeName(typeNameNode, context, rules),
+          type = context.getTypeByTypeName(typeName),
+          constructor = Constructor.fromTermNodeAndTypeName(termNode, type);
+
     context.addConstructor(constructor);
   }
 }
 
 module.exports = verifyConstructorDeclaration;
 
-function verifyWithTermRule(node, termRule, constructor, context, rules) {
-  const rule = termRule,  ///
-        definitions = rule.getDefinitions(),
-        verified = definitions.some((definition) => verifyWithDefinition(node, definition, constructor, context, rules));
+function verifyWithNameRule(nameRule, node, context, rules) {
+  let verified = true;  ///
+
+  const childNodes = node.getChildNodes().slice(),  ///
+        childNode = childNodes.shift(),
+        terminalNode = childNode, ///
+        terminalNodeContent = terminalNode.getContent(),
+        name =terminalNodeContent,  ///
+        typeOrVariablePresent = context.isTypeOrVariablePresentByName(name);
+
+  if (!typeOrVariablePresent) {
+    const message = `There is no type or variable with the name '${name}' present.`;
+
+    throw new Error(node, message);
+  }
 
   return verified;
 }
 
-function verifyRule(rule, node, constructor, context, rules) {
+function verifyWithRule(rule, node, context, rules) {
   const definitions = rule.getDefinitions(),
-        verified = definitions.some((definition) => verifyWithDefinition(node, definition, constructor, context, rules));
+        verified = definitions.some((definition) => verifyWithDefinition(node, definition, context, rules));
 
   return verified;
 }
 
-function verifyWithDefinition(node, definition, constructor, context, rules) {
+function verifyWithDefinition(node, definition, context, rules) {
   const parts = definition.getParts(),
         childNodes = node.getChildNodes().slice(),  ///
-        verified = verifyWithParts(childNodes, parts, constructor, context, rules);
+        verified = verifyWithParts(childNodes, parts, context, rules);
 
   return verified;
 }
 
-function verifyWithParts(childNodes, parts, constructor, context, rules) {
-  const verified = parts.every((part) => verifyWithPart(childNodes, part, constructor, context, rules));
+function verifyWithParts(childNodes, parts, context, rules) {
+  const verified = parts.every((part) => verifyWithPart(childNodes, part, context, rules));
 
   return verified;
 }
 
-function verifyWithPart(childNodes, part, constructor, context, rules) {
+function verifyWithPart(childNodes, part, context, rules) {
   let verified;
 
   const partTerminalPart = part.isTerminalPart();
@@ -68,17 +86,17 @@ function verifyWithPart(childNodes, part, constructor, context, rules) {
   if (partTerminalPart) {
     const terminalPart = part;  ///
 
-    verified = verifyWithTerminalPart(childNodes, terminalPart, constructor, context, rules);
+    verified = verifyWithTerminalPart(childNodes, terminalPart, context, rules);
   } else {
     const nonTerminalPart = part; ///
 
-    verified = verifyWithNonTerminalPart(childNodes, nonTerminalPart, constructor, context, rules);
+    verified = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
   }
 
   return verified;
 }
 
-function verifyWithTerminalPart(childNodes, terminalPart, constructor, context, rules) {
+function verifyWithTerminalPart(childNodes, terminalPart, context, rules) {
   let verified = false;
 
   const childNode = childNodes.shift(),
@@ -98,7 +116,7 @@ function verifyWithTerminalPart(childNodes, terminalPart, constructor, context, 
   return verified;
 }
 
-function verifyWithNonTerminalPart(childNodes, nonTerminalPart, constructor, context, rules) {
+function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules) {
   let verified = false;
 
   const nonTerminalPartType = nonTerminalPart.getType();
@@ -107,13 +125,13 @@ function verifyWithNonTerminalPart(childNodes, nonTerminalPart, constructor, con
     case RuleNamePartType:
       const ruleNamePart = nonTerminalPart;  ///
 
-      verified = verifyWithRuleNamePart(childNodes, ruleNamePart, constructor, context, rules);
+      verified = verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules);
       break;
 
     case OptionalPartPartType:
       const optionalPart = nonTerminalPart; ///
 
-      verified = verifyWithOptionalPart(childNodes, optionalPart, constructor, context, rules);
+      verified = verifyWithOptionalPart(childNodes, optionalPart, context, rules);
       break;
 
     default:
@@ -124,7 +142,7 @@ function verifyWithNonTerminalPart(childNodes, nonTerminalPart, constructor, con
   return verified;
 }
 
-function verifyWithRuleNamePart(childNodes, ruleNamePart, constructor, context, rules) {
+function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
   let verified = false;
 
   const childNode = childNodes.shift();
@@ -142,12 +160,12 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, constructor, context, 
               name = ruleNamePartRuleName,  ///
               rule = findRuleByName(name, rules);
 
-        if (name === 'term') {
-          const termRule = rule,  ///
+        if (name === 'name') {
+          const nameRule = rule,  ///
 
-          verified = verifyWithTermRule(node, termRule, constructor, context, rules);
+          verified = verifyWithNameRule(nameRule, node, context, rules);
         } else {
-          verified = verifyRule(rule, node, constructor, context, rules);
+          verified = verifyWithRule(rule, node, context, rules);
         }
       }
     }
@@ -156,12 +174,12 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, constructor, context, 
   return verified;
 }
 
-function verifyWithOptionalPart(childNodes, optionalPart, constructor, context, rules) {
+function verifyWithOptionalPart(childNodes, optionalPart, context, rules) {
   let verified = true;  ///
 
   const part = optionalPart.getPart();
 
-  verifyWithPart(childNodes, part, constructor, context, rules);
+  verifyWithPart(childNodes, part, context, rules);
 
   return verified;
 }

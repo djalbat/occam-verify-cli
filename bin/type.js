@@ -14,6 +14,10 @@ class Type {
     return this.subTypeName;
   }
 
+  matchName(name) {
+    return (this.name === name);
+  }
+
   matchTypeName(typeName) {
     return (this.name === typeName);
   }

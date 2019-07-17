@@ -14,9 +14,12 @@ class Constructor {
     return this.type;
   }
 
-  static fromTermNode(termNode) {
-    const type = undefined,
-          constructor = new Constructor(termNode, type);
+  asString() {
+    ///
+  }
+
+  static fromTermNodeAndTypeName(termNode, type) {
+    const constructor = new Constructor(termNode, type);
 
     return constructor;
   }
