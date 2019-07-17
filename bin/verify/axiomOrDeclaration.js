@@ -3,22 +3,22 @@
 const verifyAxiom = require('../verify/axiom'),
       verifyDeclaration = require('../verify/declaration');
 
-function verifyTopLevelInstruction(topLevelInstructionNode, context, rules) {
-  const ruleName = topLevelInstructionNode.getRuleName();
+function verifyAxiomOrDeclaration(axiomOrDeclarationNode, context, rules) {
+  const ruleName = axiomOrDeclarationNode.getRuleName();
 
   switch (ruleName) {
     case 'axiom':
-      const axiomNode = topLevelInstructionNode;  ///
+      const axiomNode = axiomOrDeclarationNode;  ///
 
       verifyAxiom(axiomNode, context, rules);
       break;
 
     case 'declaration':
-      const declarationNode = topLevelInstructionNode;  ///
+      const declarationNode = axiomOrDeclarationNode;  ///
 
       verifyDeclaration(declarationNode, context, rules);
       break;
   }
 }
 
-module.exports = verifyTopLevelInstruction;
+module.exports = verifyAxiomOrDeclaration;

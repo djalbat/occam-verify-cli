@@ -1,25 +1,22 @@
 'use strict';
 
 class Constructor {
-  constructor(parts) {
-    this.parts = parts;
+  constructor(termNode, type) {
+    this.termNode = termNode;
+    this.type = type;
   }
 
-  getParts() {
-    return this.parts;
+  getTermNode() {
+    return this.termNode;
   }
 
-  addPart(part) {
-    this.parts.push(part);
+  getType() {
+    return this.type;
   }
 
-  asString() {
-    debugger
-  }
-
-  static fromNothing() {
-    const parts = [],
-          constructor = new Constructor(parts);
+  static fromTermNode(termNode) {
+    const type = undefined,
+          constructor = new Constructor(termNode, type);
 
     return constructor;
   }

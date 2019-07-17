@@ -6,12 +6,12 @@ const Error = require('../error'),
       queries = require('../queries'),
 			grammarUtilities = require('../utilities/grammar'),
       lineIndexUtilities = require('../utilities/lineIndex'),
-      verifyTopLevelInstruction = require('../verify/topLevelInstruction');
+      verifyTopLevelInstruction = require('../verify/axiomOrDeclaration');
 
 const { fileSystemUtilities } = necessary,
       { exit } = process,
       { readFile } = fileSystemUtilities,
-      { topLevelInstructionNodesQuery } = queries,
+      { axiomOrDeclarationNodesQuery } = queries,
       { lineIndexFromNodeAndTokens } = lineIndexUtilities,
 			{ florenceLexerFromNothing, florenceParserFromNothing } = grammarUtilities;
 
@@ -22,9 +22,9 @@ function verifyFile(filePath, context, florenceLexer = florenceLexerFromNothing,
 
   try {
     const rules = florenceParser.getRules(),
-          topLevelInstructionNodes = topLevelInstructionNodesQuery(topmostNode);
+          axiomOrDeclarationNodes = axiomOrDeclarationNodesQuery(topmostNode);
 
-    topLevelInstructionNodes.forEach((topLevelInstructionNode) => verifyTopLevelInstruction(topLevelInstructionNode, context, rules));
+    axiomOrDeclarationNodes.forEach((axiomOrDeclarationNode) => verifyTopLevelInstruction(axiomOrDeclarationNode, context, rules));
   } catch (error) {
     if (!(error instanceof Error)) {
       throw error;
