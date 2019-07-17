@@ -1,125 +1,22 @@
 'use strict';
 
+const Error = require('../error'),
+      nodeUtilities = require('../utilities/node'),
+      verifyTermAgainstConstructor = require('../verify/termAgainstConstructor');
+
+const { nodeAsString } = nodeUtilities;
+
 function verifyTerm(termNode, context, rules) {
-  debugger
+  const constructors = context.getConstructors(),
+        verified = constructors.some((constructor) => verifyTermAgainstConstructor(termNode, constructor));
+
+  if (!verified) {
+    const node = termNode,  ///
+          termNodeString = nodeAsString(termNode),
+          message = `The term '${termNodeString}' cannot be verified.`;
+
+    throw new Error(node, message);
+  }
 }
 
 module.exports = verifyTerm;
-
-// let term = undefined;
-//
-// const termRule = findRuleByName('term', rules),
-//     rule = termRule;  ///
-//
-// verifyTermByRule(termNode, rule, context, rules);
-//
-// debugger
-//
-// return term;
-
-// const nameNode = nameNodeQuery(termNode),
-//       nameNodeContent = nameNode.getContent(),
-//       name = nameNodeContent, ///
-//       parenthesisedTermsNode = parenthesisedTermsNodeQuery(termNode);
-//
-// if (parenthesisedTermsNode === undefined) {
-//   const variable = context.retrieveVariableByName(name);
-//
-//   if (variable !== undefined) {
-//     term = variable;  ///
-//   } else {
-//     const typeNames = undefined,
-//           constructor = context.retrieveConstructorByNameAndTypeNames(name, typeNames),
-//           constructorPresent = (constructor !== undefined);
-//
-//     if (constructorPresent) {
-//       const typeName = constructor.getTypeName(),
-//             compoundTerm = CompoundTerm.fromNameAndTypeName(name, typeName);
-//
-//       term = compoundTerm;  ///
-//     }
-//   }
-// } else {
-//   const termNodes = termNodesQuery(parenthesisedTermsNode),
-//         terms = termNodes.map((termNode) => verifyTerm(termNode, context, rules)),
-//         typeNames = terms.map((term) => term.getTypeName()),
-//         constructor = context.retrieveConstructorByNameAndTypeNames(name, typeNames),
-//         constructorPresent = (constructor !== undefined);
-//
-//   if (constructorPresent) {
-//     const typeName = constructor.getTypeName(),
-//           compoundTerm = CompoundTerm.fromNameTermsAndTypeName(name, terms, typeName);
-//
-//     term = compoundTerm;  ///
-//   }
-// }
-//
-// if (term === undefined) {
-//   const node = termNode, ///
-//         message = `The term '${name}' cannot be verified.`;
-//
-//   throw new Error(node, message);
-// }
-
-// function verifyTermByRule(termNode, rule, context, rules) {
-//   let term = undefined;
-//
-//   const definitions = rule.getDefinitions();
-//
-//   definitions.some((definition) => {
-//     term = verifyTermByDefinition(termNode, definition, context ,rules);
-//
-//     if (term !== undefined) {
-//       return true;
-//     }
-//   });
-//
-//   return term;
-// }
-//
-// function verifyTermByDefinition(termNode, definition, context, rules) {
-//   let term = undefined;
-//
-//   const parts = definition.getParts(),
-//         childNodes = termNode.getChildNodes().slice();  ///
-//
-//   parts.every((part) => {
-//     verifyTermByPart(termNode, part, context, rules);
-//   });
-//
-//   return term;
-// }
-//
-// function verifyTermByPart(termNode, part, context, rules) {
-//   let term = undefined;
-//
-//   const partType = part.getType();
-//
-//   switch (partType) {
-//     case RuleNamePartType :
-//       const ruleNamePart = part;  ///
-//
-//       term = verifyTermByRuleNamePart(termNode, ruleNamePart, context, rules);
-//
-//       break;
-//   }
-//
-//   return term;
-// }
-//
-// function verifyTermByRuleNamePart(termNode, ruleNamePart, context, rules) {
-//   const ruleName = ruleNamePart.getRuleName(),
-//         name = ruleName,  ///
-//         rule = findRuleByName(name, rules);
-//
-//   if (rule === undefined) {
-//     const node = termNode, ///
-//           message = `The term '${name}' cannot be verified because the '${ruleName}' is missing.`;
-//
-//     throw new Error(node, message);
-//   }
-//
-//   const term = verifyTermByRule(termNode, ruleNamePart, context, rules);
-//
-//   return term;
-// }

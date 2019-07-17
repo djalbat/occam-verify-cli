@@ -7,6 +7,18 @@ class Context {
     this.constructors = constructors
   }
 
+  getTypes() {
+    return this.types;
+  }
+
+  getVariables() {
+    return this.variables;
+  }
+
+  getConstructors() {
+    return this.constructors;
+  }
+
   getTypeByTypeName(typeName) {
     const type = this.types.find((type) => {
       const name = type.getName();
