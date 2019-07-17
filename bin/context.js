@@ -47,9 +47,9 @@ class Context {
     let retrievedType = undefined;
 
     this.types.some((type) => {
-      const typeNamesMatch = type.matchName(name);
+      const typeMatchesName = type.matchName(name);
 
-      if (typeNamesMatch) {
+      if (typeMatchesName) {
         retrievedType = type;
 
         return true;
@@ -66,9 +66,9 @@ class Context {
     let retrievedVariable = undefined;
 
     this.variables.some((variable) => {
-      const variableNamesMatch = variable.matchName(name);
+      const variableMatchesName = variable.matchName(name);
 
-      if (variableNamesMatch) {
+      if (variableMatchesName) {
         retrievedVariable = variable;
 
         return true;
@@ -87,6 +87,19 @@ class Context {
     return variablePresent;
   }
 
+  isConstructorPresent(constructor) {
+    const constructorString = constructor.asString(),
+          constructorPresent = this.constructors.some((constructor) => {
+            const constructorMatchesConstructorString = constructor.matchConstructorString(constructorString);
+
+            if (constructorMatchesConstructorString) {
+              return true;
+            }
+          });
+
+    return constructorPresent;
+  }
+
   isTypePresentByName(name) {
     const type = this.retrieveTypeByName(name),
           typePresent = (type !== undefined);
@@ -96,9 +109,9 @@ class Context {
 
   isTypePresentByTypeName(typeName) {
     const typePresent = this.types.some((type) => {
-      const typeNamesMatch = type.matchTypeName(typeName);
+      const typeMatchesTypeName = type.matchTypeName(typeName);
 
-      if (typeNamesMatch) {
+      if (typeMatchesTypeName) {
         return true;
       }
     });
@@ -124,9 +137,9 @@ class Context {
   isSubTypeMissingBySubTypeName(subTypeName) {
     const typeName = subTypeName, ///
           subTypeMissing = this.types.every((type) => {
-            const typeNamesMatch = type.matchTypeName(typeName);
+            const typeMatchesTypeName = type.matchTypeName(typeName);
 
-            if (!typeNamesMatch) {
+            if (!typeMatchesTypeName) {
               return true;
             }
           });

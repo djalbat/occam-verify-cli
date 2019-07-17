@@ -15,11 +15,15 @@ class Type {
   }
 
   matchName(name) {
-    return (this.name === name);
+    const matchesName = (this.name === name);
+
+    return matchesName;
   }
 
   matchTypeName(typeName) {
-    return (this.name === typeName);
+    const matchesTypeName = (this.name === typeName);
+
+    return matchesTypeName;
   }
 
   asString() {

@@ -24,7 +24,9 @@ class Variable {
   }
 
   matchName(name) {
-    return (this.name === name);
+    const matchesName = (this.name === name);
+
+    return matchesName;
   }
 
   asString() {
