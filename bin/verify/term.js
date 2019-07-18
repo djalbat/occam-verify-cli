@@ -1,9 +1,11 @@
 'use strict';
 
 const Error = require('../error'),
+      queries = require('../queries'),
       nodeUtilities = require('../utilities/node');
 
-const { nodeAsString } = nodeUtilities;
+const { nameNodeQuery } = queries,
+      { nodeAsString } = nodeUtilities;
 
 function verifyTerm(termNode, context, rules) {
   let type = undefined;
@@ -128,16 +130,19 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules)
 
   if (constructorNodeNonTerminalNode) {
     const nonTerminalNodeRuleName = nonTerminalNode.getRuleName(),
-        constructorNonTerminalNode = constructorNode, ///
-        constructorNonTerminalNodeRuleName = constructorNonTerminalNode.getRuleName();
+          constructorNonTerminalNode = constructorNode, ///
+          constructorNonTerminalNodeRuleName = constructorNonTerminalNode.getRuleName();
 
     if (nonTerminalNodeRuleName === constructorNonTerminalNodeRuleName) {
       const name = nonTerminalNodeRuleName; ///
 
       if (name === 'term') {
-        const termNode = nonTerminalNode;
+        const termNode = nonTerminalNode,
+              constructorTermNode = constructorNode,  ///
+              type = verifyTerm(termNode, context, rules),
+              constructorType = constructorTypeFromConstructorTermNode(constructorTermNode, context);
 
-        verified = verifyTerm(termNode, context, rules);
+        verified = (type === constructorType);
       } else  {
         const node = nonTerminalNode, ///
               nodeChildNodes = node.getChildNodes().slice(),  ///
@@ -149,4 +154,14 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules)
   }
 
   return verified;
+}
+
+function constructorTypeFromConstructorTermNode(constructorTermNode, context) {
+  const nameNode = nameNodeQuery(constructorTermNode),
+        nameNodeContent = nameNode.getContent(),
+        name = nameNodeContent, ///
+        type = context.retrieveTypeByName(name),
+        constructorType = type; ///
+
+  return constructorType;
 }

@@ -40,7 +40,7 @@ function verifyWithNameRule(node, nameRule, context, rules) {
         childNode = childNodes.shift(),
         terminalNode = childNode, ///
         terminalNodeContent = terminalNode.getContent(),
-        name =terminalNodeContent,  ///
+        name = terminalNodeContent,  ///
         typeOrVariablePresent = context.isTypeOrVariablePresentByName(name);
 
   if (!typeOrVariablePresent) {

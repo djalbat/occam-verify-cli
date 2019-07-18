@@ -109,12 +109,16 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
         const node = nonTerminalNode, ///
               name = ruleNamePartRuleName;  ///
 
-        if (name === 'term') {
-          const termNode = node;
+        if (false) {
+          ///
+        } else if (name === 'term') {
+          const termNode = node;  ///
 
           type = verifyTerm(termNode, context, rules);
-        } else {
-          debugger
+        } else if (name === 'expression') {
+          const expressionNode = node;  ///
+
+          type = verifyExpression(expressionNode, context, rules);
         }
       }
     }
