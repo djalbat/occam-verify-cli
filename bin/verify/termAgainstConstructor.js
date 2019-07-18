@@ -75,8 +75,8 @@ function verifyTerminalNode(terminalNode, constructorNode, context) {
   const constructorNodeTerminalNode = constructorNode.isTerminalNode();
 
   if (constructorNodeTerminalNode) {
-    const constructorTerminalNode = constructorNode,  ///
-          terminalNodeType = terminalNode.getType(),
+    const terminalNodeType = terminalNode.getType(),
+          constructorTerminalNode = constructorNode,  ///
           constructorTerminalNodeType = constructorTerminalNode.getType();
 
     if (terminalNodeType === constructorTerminalNodeType) {
@@ -95,7 +95,17 @@ function verifyTerminalNode(terminalNode, constructorNode, context) {
 function verifyNonTerminalNode(nonTerminalNode, constructorNode, context) {
   let verified = false;
 
-  debugger
+  const constructorNodeNonTerminalNode = constructorNode.isNonTerminalNode();
+
+  if (constructorNodeNonTerminalNode) {
+    const nonTerminalNodeRuleName = nonTerminalNode.getRuleName(),
+          constructorNonTerminalNode = constructorNode, ///
+          constructorNonTerminalNodeRuleName = constructorNonTerminalNode.getRuleName();
+
+    if (nonTerminalNodeRuleName === constructorNonTerminalNodeRuleName) {
+      debugger
+    }
+  }
 
   return verified;
 }

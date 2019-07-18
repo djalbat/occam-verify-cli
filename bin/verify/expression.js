@@ -2,10 +2,13 @@
 
 const parsers = require('occam-parsers');
 
-const verifyTerm = require('../verify/term'),
+const Error = require('../error'),
+      verifyTerm = require('../verify/term'),
+      nodeUtilities = require('../utilities/node'),
       ruleUtilities = require('../utilities/rule');
 
 const { partTypes } = parsers,
+      { nodeAsString } = nodeUtilities,
       { findRuleByName } = ruleUtilities,
       { RuleNamePartType,
         OptionalPartPartType,
@@ -19,6 +22,14 @@ function verifyExpression(expressionNode, context, rules) {
         node = expressionNode,  ///
         rule = expressionRule,  ///
         type = verifyWithRule(node, rule, context, rules);
+
+  if (type === undefined) {
+    const node = expressionNode,  ///
+          expressionNodeString = nodeAsString(expressionNode),
+          message = `The expression '${expressionNodeString}' cannot be verified.`;
+
+    throw new Error(node, message);
+  }
 
   return type;
 }

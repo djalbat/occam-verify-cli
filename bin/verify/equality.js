@@ -10,7 +10,9 @@ function verifyEquality(equalityNode, context, rules) {
 
   const expressionNodes = expressionNodesQuery(equalityNode, context, rules),
         leftExpressionNode = expressionNodes.shift(),
-        leftType = verifyExpression(leftExpressionNode, context, rules);
+        rightExpressionNode = expressionNodes.shift(),
+        leftType = verifyExpression(leftExpressionNode, context, rules),
+        rightType = verifyExpression(rightExpressionNode, context, rules);
 
   debugger
 }
