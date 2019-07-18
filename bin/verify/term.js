@@ -7,8 +7,16 @@ const Error = require('../error'),
 const { nodeAsString } = nodeUtilities;
 
 function verifyTerm(termNode, context, rules) {
+  let type = undefined;
+
   const constructors = context.getConstructors(),
-        verified = constructors.some((constructor) => verifyTermAgainstConstructor(termNode, constructor, context, rules));
+        verified = constructors.some((constructor) => {
+          type = verifyTermAgainstConstructor(termNode, constructor, context, rules);
+
+          if (type !== undefined) {
+            return true;
+          }
+        });
 
   if (!verified) {
     const node = termNode,  ///
@@ -17,6 +25,8 @@ function verifyTerm(termNode, context, rules) {
 
     throw new Error(node, message);
   }
+
+  return type;
 }
 
 module.exports = verifyTerm;

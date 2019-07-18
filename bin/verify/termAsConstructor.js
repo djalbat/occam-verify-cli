@@ -151,7 +151,7 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
         if (name === 'name') {
           const nameRule = rule,  ///
 
-              verified = verifyWithNameRule(node, nameRule, context, rules);
+          verified = verifyWithNameRule(node, nameRule, context, rules);
         } else {
           verified = verifyWithRule(node, rule, context, rules);
         }

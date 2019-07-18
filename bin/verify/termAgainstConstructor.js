@@ -1,10 +1,16 @@
 'use strict';
 
 function verifyTermAgainstConstructor(termNode, constructor, context, rules) {
+  let type = undefined;
+
   const constructorTermNode = constructor.getTermNode(),
         verified = verifyTermNode(termNode, constructorTermNode, context);
 
-  return verified;
+  if (verified) {
+    type = constructor.getType();
+  }
+
+  return type;
 }
 
 module.exports = verifyTermAgainstConstructor;
