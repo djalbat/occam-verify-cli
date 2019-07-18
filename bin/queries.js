@@ -5,8 +5,8 @@ const dom = require('occam-dom');
 const { Query } = dom;
 
 const termNodesQuery = nodesQuery(Query.fromExpression('//term', 2)),
-      labelNodesQuery = nodesQuery(Query.fromExpression('//label', 1)),
       typeNameNodesQuery = nodesQuery(Query.fromExpression('//typeName/@*', 2)),
+      labelNameNodesQuery = nodesQuery(Query.fromExpression('//labelName/@*', 3)),
       expressionNodesQuery = nodesQuery(Query.fromExpression('//expression', 1)),
       axiomOrDeclarationNodesQuery = nodesQuery(Query.fromExpression('/document/axiom|declaration', 1)),
       variableDeclarationNodesQuery = nodesQuery(Query.fromExpression('//variableDeclaration', 1)),
@@ -28,8 +28,8 @@ const termNodesQuery = nodesQuery(Query.fromExpression('//term', 2)),
 
 module.exports = {
   termNodesQuery,
-  labelNodesQuery,
   typeNameNodesQuery,
+  labelNameNodesQuery,
   expressionNodesQuery,
   axiomOrDeclarationNodesQuery,
   variableDeclarationNodesQuery,

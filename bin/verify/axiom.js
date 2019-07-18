@@ -1,17 +1,41 @@
 'use strict';
 
-const queries = require('../queries'),
+const Error = require('../error'),
+      Axiom = require('../axiom'),
+      queries = require('../queries'),
       verifyStatement = require('../verify/statement');
 
-const { labelNodesQuery, statementNodeQuery, parenthesisedLabelsNodeQuery } = queries;
+const { labelNameNodesQuery, statementNodeQuery, parenthesisedLabelsNodeQuery } = queries;
 
 function verifyAxiom(axiomNode, context, rules) {
-  const parenthesisedLabelsNode = parenthesisedLabelsNodeQuery(axiomNode),
-        statementNode = statementNodeQuery(axiomNode),
-        labelNodes = labelNodesQuery(parenthesisedLabelsNode),
-        statement = verifyStatement(statementNode, context, rules);
+  const statementNode = statementNodeQuery(axiomNode),
+        verified = verifyStatement(statementNode, context, rules);
 
-  debugger
+  if (verified) {
+    const parenthesisedLabelsNode = parenthesisedLabelsNodeQuery(axiomNode),
+          labelNameNodes = labelNameNodesQuery(parenthesisedLabelsNode),
+          labels = labelNameNodes.map((labelNameNode) => {
+            const labelNameNodeContent = labelNameNode.getContent(),
+                  label = labelNameNodeContent; ///
+
+            return label;
+          });
+
+    labels.forEach((label) => {
+      const labelPresent = context.isLabelPresent(label);
+
+      if (labelPresent) {
+        const node = axiomNode, ///
+              message = `The label ${label} is already present`;
+
+        throw new Error(node, message);
+      }
+    });
+
+    const axiom = Axiom.fromStatementNodeAndLabels(statementNode, labels);
+
+    context.addAxiom(axiom);
+  }
 }
 
 module.exports = verifyAxiom;

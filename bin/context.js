@@ -1,14 +1,19 @@
 'use strict';
 
 class Context {
-  constructor(types, variables, constructors) {
+  constructor(types, axioms, variables, constructors) {
     this.types = types;
+    this.axioms = axioms;
     this.variables = variables;
     this.constructors = constructors
   }
 
   getTypes() {
     return this.types;
+  }
+
+  getAxioms() {
+    return this.axioms;
   }
 
   getVariables() {
@@ -37,6 +42,14 @@ class Context {
     this.types.push(type);
 
     console.log(`Added the '${typeString}' type to the context.`);
+  }
+
+  addAxiom(axiom) {
+    const axiomString = axiom.asString();
+
+    this.axioms.push(axiom);
+
+    console.log(`Added the '${axiomString}' axiom to the context.`);
   }
 
   addVariable(variable) {
@@ -90,6 +103,19 @@ class Context {
     const variable = retrievedVariable; ///
 
     return variable;
+  }
+
+  isLabelPresent(label) {
+    const labelPresent = this.axioms.some((axiom) => {
+      const labels = axiom.getLabels(),
+            labelsIncludesLabel = labels.includes(label);
+
+      if (labelsIncludesLabel) {
+        return true;
+      }
+    });
+
+    return labelPresent;
   }
 
   isVariablePresentByName(name) {
@@ -161,9 +187,10 @@ class Context {
 
   static fromNothing() {
     const types = [],
+          axioms = [],
           variables = [],
           constructors = [],
-          context = new Context(types, variables, constructors);
+          context = new Context(types, axioms, variables, constructors);
 
     return context;
   }

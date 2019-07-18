@@ -9,15 +9,14 @@ const { nodeAsString } = nodeUtilities,
       { expressionNodesQuery } = queries;
 
 function verifyEquality(equalityNode, context, rules) {
-  let verified = false;
-
   const expressionNodes = expressionNodesQuery(equalityNode, context, rules),
         leftExpressionNode = expressionNodes.shift(),
         rightExpressionNode = expressionNodes.shift(),
         leftType = verifyExpression(leftExpressionNode, context, rules),
-        rightType = verifyExpression(rightExpressionNode, context, rules);
+        rightType = verifyExpression(rightExpressionNode, context, rules),
+        verified = (leftType === rightType);
 
-  if (leftType !== rightType) {
+  if (!verified) {
     const node = equalityNode,  ///
           leftTypeName = leftType.getName(),
           rightTypeName = rightType.getName(),
