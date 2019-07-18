@@ -6,11 +6,13 @@ const queries = require('../queries'),
 const { expressionNodesQuery } = queries;
 
 function verifyEquality(equalityNode, context, rules) {
+  let verified = false;
+
   const expressionNodes = expressionNodesQuery(equalityNode, context, rules),
         leftExpressionNode = expressionNodes.shift(),
-        rightExpressionNode = expressionNodes.shift();
+        leftType = verifyExpression(leftExpressionNode, context, rules);
 
-  verifyExpression(leftExpressionNode, context, rules);
+  debugger
 }
 
 module.exports = verifyEquality;

@@ -1,17 +1,17 @@
 'use strict';
 
-const ruleUtilities = require('../utilities/rule'),
-      verifyWithRule = require('../verify/withRule');
+const ruleUtilities = require('../utilities/rule');
 
 const { findRuleByName } = ruleUtilities;
 
 function verifyExpression(expressionNode, context, rules) {
+  let type = undefined;
+
   const expressionRule = findRuleByName('expression', rules),
         node = expressionNode,  ///
-        rule = expressionRule,  ///
-        verified = verifyWithRule(node, rule, context, rules);
+        rule = expressionRule;  ///
 
-  return verified;
+  debugger
 }
 
 module.exports = verifyExpression;
