@@ -92,26 +92,6 @@ function verifyWithParts(childNodes, parts, context, rules) {
   return type;
 }
 
-function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules) {
-  let type = undefined;
-
-  const nonTerminalPartType = nonTerminalPart.getType();
-
-  switch (nonTerminalPartType) {
-    case RuleNamePartType:
-      const ruleNamePart = nonTerminalPart;  ///
-
-      type = verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules);
-      break;
-
-    default:
-
-      debugger
-  }
-
-  return type;
-}
-
 function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
   let type = undefined;
 
@@ -138,6 +118,26 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
         }
       }
     }
+  }
+
+  return type;
+}
+
+function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules) {
+  let type = undefined;
+
+  const nonTerminalPartType = nonTerminalPart.getType();
+
+  switch (nonTerminalPartType) {
+    case RuleNamePartType:
+      const ruleNamePart = nonTerminalPart;  ///
+
+      type = verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules);
+      break;
+
+    default:
+
+      debugger
   }
 
   return type;
