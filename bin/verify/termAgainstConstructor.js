@@ -1,157 +1,84 @@
 'use strict';
 
-const parsers = require('occam-parsers');
-
-const Error = require('../error'),
-      Configuration = require('../configuration'),
-      ruleUtilities = require('../utilities/rule');
-
-const { partTypes } = parsers,
-      { findRuleByName } = ruleUtilities,
-      { RuleNamePartType,
-        OptionalPartPartType,
-        GroupOfPartsPartType,
-        ChoiceOfPartsPartType,
-        OneOrMorePartsPartType,
-        ZeroOrMorePartsPartType } = partTypes;
-
-function verifyTermAgainstConstructor(termNode, context, rules) {
-  const verified = false; ///
+function verifyTermAgainstConstructor(termNode, constructor, context, rules) {
+  const constructorTermNode = constructor.getTermNode(),
+        verified = verifyTermNode(termNode, constructorTermNode, context);
 
   return verified;
 }
 
 module.exports = verifyTermAgainstConstructor;
 
-function verifyWithNameRule(node, nameRule, context, rules) {
-  let verified = true;  ///
+function verifyTermNode(termNode, constructorTermNode, context) {
+  let verified = false;
 
-  const childNodes = node.getChildNodes().slice(),  ///
-        childNode = childNodes.shift(),
-        terminalNode = childNode, ///
-        terminalNodeContent = terminalNode.getContent(),
-        name =terminalNodeContent,  ///
-        typeOrVariablePresent = context.isTypeOrVariablePresentByName(name);
+  const termNodeChildNodes = termNode.getChildNodes().slice(),  ///
+        constructorTermNodeChildNodes = constructorTermNode.getChildNodes().slice();  ///
 
-  if (!typeOrVariablePresent) {
-    const message = `There is no type or variable with the name '${name}' present.`;
+  let termNodeChildNode = termNodeChildNodes.shift(),
+      constructorTermNodeChildNode = constructorTermNodeChildNodes.shift();
 
-    throw new Error(node, message);
+  while (termNodeChildNode !== undefined) {
+    if (constructorTermNodeChildNode === undefined) {
+      break;
+    }
+
+    const node = termNodeChildNode, ///
+          constructorNode = constructorTermNodeChildNode; ///
+
+    verified = verifyNode(node, constructorNode, context);
+
+    if (!verified) {
+      break;
+    }
+
+    termNodeChildNode = termNodeChildNodes.shift();
+    constructorTermNodeChildNode = constructorTermNodeChildNodes.shift();
+  }
+
+  if (verified) {
+    if (constructorTermNodeChildNode !== undefined) {
+      verified = false;
+    }
   }
 
   return verified;
 }
 
-function verifyWithRule(node, rule, context, rules) {
-  const definitions = rule.getDefinitions(),
-        verified = definitions.some((definition) => verifyWithDefinition(node, definition, context, rules));
-
-  return verified;
-}
-
-function verifyWithDefinition(node, definition, context, rules) {
-  const parts = definition.getParts(),
-        childNodes = node.getChildNodes().slice(),  ///
-        verified = verifyWithParts(childNodes, parts, context, rules);
-
-  return verified;
-}
-
-function verifyWithParts(childNodes, parts, context, rules) {
-  const verified = parts.every((part) => verifyWithPart(childNodes, part, context, rules));
-
-  return verified;
-}
-
-function verifyWithPart(childNodes, part, context, rules) {
+function verifyNode(node, constructorNode, context) {
   let verified;
 
-  const partTerminalPart = part.isTerminalPart();
+  const nodeTerminalNode = node.isTerminalNode();
 
-  if (partTerminalPart) {
-    const terminalPart = part;  ///
+  if (nodeTerminalNode) {
+    const terminalNode = node;  ///
 
-    verified = verifyWithTerminalPart(childNodes, terminalPart, context, rules);
+    verified = verifyTerminalNode(terminalNode, constructorNode, context);
   } else {
-    const nonTerminalPart = part; ///
+    const nonTerminalNode = node;
 
-    verified = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
+    verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, context);
   }
 
   return verified;
 }
 
-function verifyWithTerminalPart(childNodes, terminalPart, context, rules) {
+function verifyTerminalNode(terminalNode, constructorNode, context) {
   let verified = false;
 
-  const childNode = childNodes.shift(),
-        childNodeTerminalNode = childNode.isTerminalNode();
+  const constructorNodeTerminalNode = constructorNode.isTerminalNode();
 
-  if (childNodeTerminalNode) {
-    let terminalNode = childNode; ///
+  if (constructorNodeTerminalNode) {
+    const constructorTerminalNode = constructorNode,  ///
+          terminalNodeType = terminalNode.getType(),
+          constructorTerminalNodeType = constructorTerminalNode.getType();
 
-    const significantToken = terminalNode.getSignificantToken(),
-          configuration = Configuration.fromSignificantToken(significantToken);
+    if (terminalNodeType === constructorTerminalNodeType) {
+      const terminalNodeContent = terminalNode.getContent(),
+            constructorTerminalNodeContent = constructorTerminalNode.getContent();
 
-    terminalNode = terminalPart.parse(configuration);
-
-    verified = (terminalNode !== undefined);
-  }
-
-  return verified;
-}
-
-function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules) {
-  let verified = false;
-
-  const nonTerminalPartType = nonTerminalPart.getType();
-
-  switch (nonTerminalPartType) {
-    case RuleNamePartType:
-      const ruleNamePart = nonTerminalPart;  ///
-
-      verified = verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules);
-      break;
-
-    case OptionalPartPartType:
-      const optionalPart = nonTerminalPart; ///
-
-      verified = verifyWithOptionalPart(childNodes, optionalPart, context, rules);
-      break;
-
-    default:
-
-      debugger
-  }
-
-  return verified;
-}
-
-function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
-  let verified = false;
-
-  const childNode = childNodes.shift();
-
-  if (childNode !== undefined) {
-    const childNodeNonTerminalNode = childNode.isNonTerminalNode();
-
-    if (childNodeNonTerminalNode) {
-      const nonTerminalNode = childNode,  ///
-            ruleNamePartRuleName = ruleNamePart.getRuleName(),
-            nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
-
-      if (ruleNamePartRuleName === nonTerminalNodeRuleName) {
-        const node = nonTerminalNode, ///
-              name = ruleNamePartRuleName,  ///
-              rule = findRuleByName(name, rules);
-
-        if (name === 'name') {
-          const nameRule = rule,  ///
-
-          verified = verifyWithNameRule(node, nameRule, context, rules);
-        } else {
-          verified = verifyWithRule(node, rule, context, rules);
-        }
+      if (terminalNodeContent === constructorTerminalNodeContent) {
+        verified = true;
       }
     }
   }
@@ -159,12 +86,10 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
   return verified;
 }
 
-function verifyWithOptionalPart(childNodes, optionalPart, context, rules) {
-  let verified = true;  ///
+function verifyNonTerminalNode(nonTerminalNode, constructorNode, context) {
+  let verified = false;
 
-  const part = optionalPart.getPart();
-
-  verifyWithPart(childNodes, part, context, rules);
+  debugger
 
   return verified;
 }

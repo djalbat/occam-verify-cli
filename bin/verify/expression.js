@@ -1,15 +1,17 @@
 'use strict';
 
-const queries = require('../queries'),
-      verifyTerm = require('../verify/term');
+const ruleUtilities = require('../utilities/rule'),
+      verifyWithRule = require('../verify/withRule');
 
-const { termNodeQuery } = queries;
+const { findRuleByName } = ruleUtilities;
 
 function verifyExpression(expressionNode, context, rules) {
-  const termNode = termNodeQuery(expressionNode),
-        term = verifyTerm(termNode, context, rules);
+  const expressionRule = findRuleByName('expression', rules),
+        node = expressionNode,  ///
+        rule = expressionRule,  ///
+        verified = verifyWithRule(node, rule, context, rules);
 
-  debugger
+  return verified;
 }
 
 module.exports = verifyExpression;

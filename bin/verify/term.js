@@ -8,7 +8,7 @@ const { nodeAsString } = nodeUtilities;
 
 function verifyTerm(termNode, context, rules) {
   const constructors = context.getConstructors(),
-        verified = constructors.some((constructor) => verifyTermAgainstConstructor(termNode, constructor));
+        verified = constructors.some((constructor) => verifyTermAgainstConstructor(termNode, constructor, context, rules));
 
   if (!verified) {
     const node = termNode,  ///
