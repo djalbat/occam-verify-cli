@@ -24,23 +24,23 @@ function verifyTypeDeclaration(typeDeclarationNode, context, rules) {
     throw new Error(node, message);
   }
 
-  const subTypeName = typeNames.shift();
+  const superTypeName = typeNames.shift();
 
-  if (subTypeName === undefined) {
+  if (superTypeName === undefined) {
     const type = Type.fromTypeName(typeName);
 
     context.addType(type);
   } else {
-    const subTypeMissing = context.isSubTypeMissingBySubTypeName(subTypeName);
+    const superType = context.findTypeByTypeName(superTypeName);
 
-    if (subTypeMissing) {
+    if (superType === undefined) {
       const node = typeDeclarationNode, ///
-            message = `The sub-type '${subTypeName}' is missing.`;
+            message = `The super-type '${superTypeName}' is missing.`;
 
       throw new Error(node, message);
     }
 
-    const type = Type.fromTypeNameAndSubTypeName(typeName, subTypeName);
+    const type = Type.fromTypeNameAndSuperType(typeName, superType);
 
     context.addType(type);
   }

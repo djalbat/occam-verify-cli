@@ -140,9 +140,10 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules)
         const termNode = nonTerminalNode,
               constructorTermNode = constructorNode,  ///
               type = verifyTerm(termNode, context, rules),
-              constructorType = constructorTypeFromConstructorTermNode(constructorTermNode, context);
+              constructorType = constructorTypeFromConstructorTermNode(constructorTermNode, context),
+              typeMatchesConstructorType = type.matchType(constructorType);
 
-        verified = (type === constructorType);
+        verified = typeMatchesConstructorType;  ///
       } else  {
         const node = nonTerminalNode, ///
               nodeChildNodes = node.getChildNodes().slice(),  ///

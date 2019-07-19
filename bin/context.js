@@ -154,19 +154,6 @@ class Context {
     return typeOrVariablePresent;
   }
 
-  isSubTypeMissingBySubTypeName(subTypeName) {
-    const typeName = subTypeName, ///
-          subTypeMissing = this.types.every((type) => {
-            const typeMatchesTypeName = type.matchTypeName(typeName);
-
-            if (!typeMatchesTypeName) {
-              return true;
-            }
-          });
-
-    return subTypeMissing;
-  }
-
   static fromNothing() {
     const types = [],
           axioms = [],
