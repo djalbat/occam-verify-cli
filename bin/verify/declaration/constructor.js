@@ -15,7 +15,7 @@ function verifyConstructorDeclaration(constructorDeclarationNode, context, rules
   if (verified) {
     const typeNameNode = typeNameNodeQuery(constructorDeclarationNode),
           typeName = verifyTypeName(typeNameNode, context, rules),
-          type = context.getTypeByTypeName(typeName),
+          type = context.findTypeByTypeName(typeName),
           constructor = Constructor.fromTermNodeAndTypeName(termNode, type),
           constructorPresent = context.isConstructorPresent(constructor);
 

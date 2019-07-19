@@ -24,18 +24,6 @@ class Context {
     return this.constructors;
   }
 
-  getTypeByTypeName(typeName) {
-    const type = this.types.find((type) => {
-      const name = type.getName();
-
-      if (name === typeName) {
-        return true;
-      }
-    });
-
-    return type;
-  }
-
   addType(type) {
     const typeString = type.asString();
 
@@ -68,39 +56,38 @@ class Context {
     console.log(`Added the '${constructorString}' constructor to the context.`);
   }
 
-  retrieveTypeByName(name) {
-    let retrievedType = undefined;
+  findTypeByName(name) {
+    const type = this.types.find((type) => {
+      const typeName = type.getName();
 
-    this.types.some((type) => {
-      const typeMatchesName = type.matchName(name);
-
-      if (typeMatchesName) {
-        retrievedType = type;
-
+      if (name === typeName) {
         return true;
       }
     });
-
-    const type = retrievedType; ///
 
     return type;
-
   }
 
-  retrieveVariableByName(name) {
-    let retrievedVariable = undefined;
+  findTypeByTypeName(typeName) {
+    const type = this.types.find((type) => {
+      const name = type.getName();
 
-    this.variables.some((variable) => {
-      const variableMatchesName = variable.matchName(name);
-
-      if (variableMatchesName) {
-        retrievedVariable = variable;
-
+      if (name === typeName) {
         return true;
       }
     });
 
-    const variable = retrievedVariable; ///
+    return type;
+  }
+
+  findVariableByName(name) {
+    const variable = this.variables.find((variable) => {
+      const variableName = variable.getName();
+
+      if (name === variableName) {
+        return true;
+      }
+    });
 
     return variable;
   }
@@ -118,13 +105,6 @@ class Context {
     return labelPresent;
   }
 
-  isVariablePresentByName(name) {
-    const variable = this.retrieveVariableByName(name),
-          variablePresent = (variable !== undefined);
-
-    return variablePresent;
-  }
-
   isConstructorPresent(constructor) {
     const constructorString = constructor.asString(),
           constructorPresent = this.constructors.some((constructor) => {
@@ -139,22 +119,24 @@ class Context {
   }
 
   isTypePresentByName(name) {
-    const type = this.retrieveTypeByName(name),
+    const type = this.findTypeByName(name),
           typePresent = (type !== undefined);
 
     return typePresent;
   }
 
   isTypePresentByTypeName(typeName) {
-    const typePresent = this.types.some((type) => {
-      const typeMatchesTypeName = type.matchTypeName(typeName);
-
-      if (typeMatchesTypeName) {
-        return true;
-      }
-    });
+    const type = this.findTypeByTypeName(typeName),
+          typePresent = (type !== undefined);
 
     return typePresent;
+  }
+
+  isVariablePresentByName(name) {
+    const variable = this.findVariableByName(name),
+          variablePresent = (variable !== undefined);
+
+    return variablePresent;
   }
 
   isTypeMissingByTypeName(typeName) {

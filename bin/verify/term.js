@@ -160,7 +160,7 @@ function constructorTypeFromConstructorTermNode(constructorTermNode, context) {
   const nameNode = nameNodeQuery(constructorTermNode),
         nameNodeContent = nameNode.getContent(),
         name = nameNodeContent, ///
-        type = context.retrieveTypeByName(name),
+        type = context.findTypeByName(name),
         constructorType = type; ///
 
   return constructorType;
