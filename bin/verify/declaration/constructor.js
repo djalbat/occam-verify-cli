@@ -9,28 +9,27 @@ const Error = require('../../error'),
 const { termNodeQuery, typeNameNodeQuery } = queries;
 
 function verifyConstructorDeclaration(constructorDeclarationNode, context, rules) {
-  const termNode = termNodeQuery(constructorDeclarationNode),
-        verified = verifyTermAsConstructor(termNode, context, rules);
+  const termNode = termNodeQuery(constructorDeclarationNode);
 
-  if (verified) {
-    const typeNameNode = typeNameNodeQuery(constructorDeclarationNode),
-          typeName = verifyTypeName(typeNameNode, context, rules),
-          type = context.findTypeByTypeName(typeName),
-          constructor = Constructor.fromTermNodeAndTypeName(termNode, type),
-          constructorPresent = context.isConstructorPresent(constructor);
+  verifyTermAsConstructor(termNode, context, rules);
 
+  const typeNameNode = typeNameNodeQuery(constructorDeclarationNode),
+        typeName = verifyTypeName(typeNameNode, context, rules),
+        type = context.findTypeByTypeName(typeName),
+        constructor = Constructor.fromTermNodeAndTypeName(termNode, type),
+        constructorPresent = context.isConstructorPresent(constructor);
+
+  if (constructorPresent) {
     if (constructorPresent) {
-      if (constructorPresent) {
-        const node = constructorDeclarationNode, ///
-              constructorString = constructor.asString(),
-              message = `The constructor '${constructorString}' is already present.`;
+      const node = constructorDeclarationNode, ///
+            constructorString = constructor.asString(),
+            message = `The constructor '${constructorString}' is already present.`;
 
-        throw new Error(node, message);
-      }
+      throw new Error(node, message);
     }
-
-    context.addConstructor(constructor);
   }
+
+  context.addConstructor(constructor);
 }
 
 module.exports = verifyConstructorDeclaration;
