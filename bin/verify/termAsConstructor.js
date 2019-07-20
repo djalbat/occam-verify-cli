@@ -9,18 +9,42 @@ const Error = require('../error'),
 
 const { partTypes } = parsers,
       { nodeAsString } = nodeUtilities,
-      { findRuleByName } = ruleUtilities,
       { RuleNamePartType,
         OptionalPartPartType,
         GroupOfPartsPartType,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
-        ZeroOrMorePartsPartType } = partTypes;
+        ZeroOrMorePartsPartType } = partTypes,
+      { findSingularDefinitionByRuleName, findRuleByName } = ruleUtilities;
 
 function verifyTermAsConstructor(termNode, context, rules) {
   const termRule = findRuleByName('term', rules),
-        node = termNode,  ///
+        termNodeChildNodes = termNode.getChildNodes().slice(),  ///
+        termNodeChildNode = termNodeChildNodes.shift(),
+        termNodeChildNodeTerminalNode = termNodeChildNode.isTerminalNode();
+
+  if (termNodeChildNodeTerminalNode) {
+    const node = termNode,  ///
+          termNodeString = nodeAsString(termNode),
+          message = `The constructor '${termNodeString}' cannot be terminal node.`;
+
+    throw new Error(node, message);
+  }
+
+  const termNodeChildNodeRuleName = termNodeChildNode.getRuleName(),
         rule = termRule,  ///
+        ruleName = termNodeChildNodeRuleName, ///
+        singularDefinition = findSingularDefinitionByRuleName(ruleName, rule);
+
+  if (singularDefinition === undefined) {
+    const node = termNode,  ///
+          termNodeString = nodeAsString(termNode),
+          message = `There is no singular term definition for the '${termNodeString}' constructor.`;
+
+    throw new Error(node, message);
+  }
+  
+  const node = termNode,  ///
         verified = verifyWithRule(node, rule, context, rules);
 
   if (!verified) {

@@ -18,6 +18,10 @@ class Constructor {
     return this.type;
   }
 
+  getRuleName() {
+    return this.termNode.getRuleName();
+  }
+
   asString() {
     const termNodeString = nodeAsString(this.termNode),
           typeString = this.type.asString(),

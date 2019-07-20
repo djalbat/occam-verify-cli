@@ -12,6 +12,40 @@ function findRuleByName(name, rules) {
   return rule;
 }
 
+function findSingularDefinitionByRuleName(ruleName, rule) {
+  let singularDefinition = undefined;
+
+  const definitions = rule.getDefinitions();
+
+  definitions.some((definition) => {
+    const parts = definition.getParts().slice(),  ///
+          part = parts.shift(),
+          partNonTerminalPart = part.isNonTerminalPart();
+
+    if (partNonTerminalPart) {
+      const partRuleNamePart = part.isRuleNamePart();
+
+      if (partRuleNamePart) {
+        const ruleNamePart = part,  ///
+              ruleNamePartRuleName = ruleNamePart.getRuleName();
+
+        if (ruleNamePartRuleName === ruleName) {
+          const part = parts.shift();
+
+          if (part === undefined) {
+            singularDefinition = definition;  ///
+
+            return true;
+          }
+        }
+      }
+    }
+  });
+
+  return singularDefinition;
+}
+
 module.exports = {
-  findRuleByName
+  findRuleByName,
+  findSingularDefinitionByRuleName
 };
