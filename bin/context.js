@@ -57,61 +57,31 @@ class Context {
   }
 
   findTypeByName(name) {
-    const type = this.types.find((type) => {
-      const typeName = type.getName();
-
-      if (name === typeName) {
-        return true;
-      }
-    });
+    const type = this.types.find((type) => type.matchName(name));
 
     return type;
   }
 
-  findTypeByTypeName(typeName) {
-    const type = this.types.find((type) => {
-      const name = type.getName();
+	findVariableByName(name) {
+		const variable = this.variables.find((variable) => variable.matchName(name));
 
-      if (name === typeName) {
-        return true;
-      }
-    });
+		return variable;
+	}
+
+	findTypeByTypeName(typeName) {
+    const type = this.types.find((type) => type.matchTypeName(typeName));
 
     return type;
   }
 
   findConstructorsByRuleName(ruleName) {
-	  const constructors = this.constructors.filter((constructor) => {
-		  const constructorRuleName = constructor.getRuleName();
-
-		  if (constructorRuleName === ruleName) {
-			  return true;
-		  }
-	  });
+	  const constructors = this.constructors.filter((constructor) => constructor.matchRuleName(ruleName));
 
 	  return constructors;
   }
 
-  findVariableByName(name) {
-    const variable = this.variables.find((variable) => {
-      const variableName = variable.getName();
-
-      if (name === variableName) {
-        return true;
-      }
-    });
-
-    return variable;
-  }
-
 	findVariableByVariableNameAndTypeName(variableName, typeName) {
-		const variable = this.variables.find((variable) => {
-			const matchesVariableNameAndTypeName = variable.matchVariableNameAndTypeName(variableName, typeName);
-
-			if (matchesVariableNameAndTypeName) {
-				return true;
-			}
-		});
+		const variable = this.variables.find((variable) => variable.matchVariableNameAndTypeName(variableName, typeName));
 
 		return variable;
 	}

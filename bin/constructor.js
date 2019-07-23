@@ -25,6 +25,12 @@ class Constructor {
     return this.type;
   }
 
+  matchRuleName(ruleName) {
+  	const matchesRuleName = (this.ruleName === ruleName);
+
+  	return matchesRuleName;
+  }
+
   asString() {
     const termNodeString = nodeAsString(this.termNode),
           typeString = this.type.asString(),
