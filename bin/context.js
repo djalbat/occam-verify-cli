@@ -80,6 +80,18 @@ class Context {
     return type;
   }
 
+  findConstructorsByRuleName(ruleName) {
+	  const constructors = this.constructors.filter((constructor) => {
+		  const constructorRuleName = constructor.getRuleName();
+
+		  if (constructorRuleName === ruleName) {
+			  return true;
+		  }
+	  });
+
+	  return constructors;
+  }
+
   findVariableByName(name) {
     const variable = this.variables.find((variable) => {
       const variableName = variable.getName();
@@ -91,6 +103,18 @@ class Context {
 
     return variable;
   }
+
+	findVariableByVariableNameAndTypeName(variableName, typeName) {
+		const variable = this.variables.find((variable) => {
+			const matchesVariableNameAndTypeName = variable.matchVariableNameAndTypeName(variableName, typeName);
+
+			if (matchesVariableNameAndTypeName) {
+				return true;
+			}
+		});
+
+		return variable;
+	}
 
   isLabelPresent(label) {
     const labelPresent = this.axioms.some((axiom) => {
@@ -105,17 +129,12 @@ class Context {
     return labelPresent;
   }
 
-  isConstructorPresent(constructor) {
-    const constructorString = constructor.asString(),
-          constructorPresent = this.constructors.some((constructor) => {
-            const constructorMatchesConstructorString = constructor.matchConstructorString(constructorString);
+  areConstructorsPresentByRuleName(ruleName) {
+    const constructors = this.findConstructorsByRuleName(ruleName),
+		      constructor = constructors.shift(),
+          constructorsPresent = (constructor !== undefined);
 
-            if (constructorMatchesConstructorString) {
-              return true;
-            }
-          });
-
-    return constructorPresent;
+    return constructorsPresent;
   }
 
   isTypePresentByName(name) {
@@ -139,19 +158,18 @@ class Context {
     return variablePresent;
   }
 
+  isVariablePresentByVariableNameAndTypeName(variableName, typeName) {
+  	const variable = this.findVariableByVariableNameAndTypeName(variableName, typeName),
+			    variablePresent = (variable !== undefined);
+
+  	return variablePresent;
+  }
+
   isTypeMissingByTypeName(typeName) {
     const typePresent = this.isTypePresentByTypeName(typeName),
           typeMissing = !typePresent;
 
     return typeMissing;
-  }
-
-  isTypeOrVariablePresentByName(name) {
-    const typePresent = this.isTypePresentByName(name),
-          variablePresent = this.isVariablePresentByName(name),
-          typeOrVariablePresent = typePresent || variablePresent;
-
-    return typeOrVariablePresent;
   }
 
   static fromNothing() {

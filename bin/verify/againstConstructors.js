@@ -4,15 +4,16 @@ const Error = require('../error'),
       queries = require('../queries'),
       nodeUtilities = require('../utilities/node');
 
-const { nameNodeQuery } = queries,
-      { nodeAsString } = nodeUtilities;
+const { nodeAsString } = nodeUtilities,
+			{ nameTerminalNodeQuery, termNonTerminalNodeQuery } = queries;
 
-function verifyTerm(termNode, context, rules) {
+function againstConstructors(node, context, rules) {
   let type = undefined;
 
-  const constructors = context.getConstructors(),
+  const ruleName = node.getRuleName(),
+		    constructors = context.findConstructorsByRuleName(ruleName),
         verified = constructors.some((constructor) => {
-          type = verifyTermAgainstConstructor(termNode, constructor, context, rules);
+          type = verifyAgainstConstructor(node, constructor, context, rules);
 
           if (type !== undefined) {
             return true;
@@ -20,9 +21,8 @@ function verifyTerm(termNode, context, rules) {
         });
 
   if (!verified) {
-    const node = termNode,  ///
-          termNodeString = nodeAsString(termNode),
-          message = `The term '${termNodeString}' cannot be verified.`;
+    const nodeString = nodeAsString(node),
+          message = `The term '${nodeString}' cannot be verified.`;
 
     throw new Error(node, message);
   }
@@ -30,20 +30,23 @@ function verifyTerm(termNode, context, rules) {
   return type;
 }
 
-module.exports = verifyTerm;
+module.exports = againstConstructors;
 
-function verifyTermAgainstConstructor(termNode, constructor, context, rules) {
+function verifyAgainstConstructor(node, constructor, context, rules) {
   let type = undefined;
 
-  const node = termNode,  ///
-        constructorTermNode = constructor.getTermNode(),
-        constructorNode = constructorTermNode,  ///
-        nodeChildNodes = node.getChildNodes().slice(),  ///
-        constructorNodeChildNodes = constructorNode.getChildNodes().slice(),  ///
-        verified = verifyChildNodes(nodeChildNodes, constructorNodeChildNodes, context, rules);
+  const constructorTermNode = constructor.getTermNode(),
+		    constructorTermNonTerminalNode = termNonTerminalNodeQuery(constructorTermNode);
 
-  if (verified) {
-    type = constructor.getType();
+  if (constructorTermNonTerminalNode !== undefined) {
+	  const constructorNode = constructorTermNonTerminalNode,  ///
+				  nodeChildNodes = node.getChildNodes().slice(),  ///
+				  constructorNodeChildNodes = constructorNode.getChildNodes().slice(),  ///
+				  verified = verifyChildNodes(nodeChildNodes, constructorNodeChildNodes, context, rules);
+
+	  if (verified) {
+		  type = constructor.getType();
+	  }
   }
 
   return type;
@@ -134,19 +137,21 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules)
           constructorNonTerminalNodeRuleName = constructorNonTerminalNode.getRuleName();
 
     if (nonTerminalNodeRuleName === constructorNonTerminalNodeRuleName) {
-      const name = nonTerminalNodeRuleName; ///
+      const node = nonTerminalNode, ///
+		        name = nonTerminalNodeRuleName; ///
 
-      if (name === 'term') {
-        const termNode = nonTerminalNode,
-              constructorTermNode = constructorNode,  ///
-              type = verifyTerm(termNode, context, rules),
-              constructorType = constructorTypeFromConstructorTermNode(constructorTermNode, context),
-              typeMatchesConstructorType = type.matchType(constructorType);
+      if (name === 'name') {
+      	const nameTerminalNode = nameTerminalNodeQuery(node),
+			        nameTerminalNodeContent = nameTerminalNode.getContent(),
+			        constructorNameTerminalNode = nameTerminalNodeQuery(constructorNode),
+			        constructorNameTerminalNodeContent = constructorNameTerminalNode.getContent(),
+			        typeName = constructorNameTerminalNodeContent,  ///
+				      variableName = nameTerminalNodeContent, ///
+			        variablePresent = context.isVariablePresentByVariableNameAndTypeName(variableName, typeName);
 
-        verified = typeMatchesConstructorType;  ///
+      	verified = variablePresent; ///
       } else  {
-        const node = nonTerminalNode, ///
-              nodeChildNodes = node.getChildNodes().slice(),  ///
+        const nodeChildNodes = node.getChildNodes().slice(),  ///
               constructorNodeChildNodes = constructorNode.getChildNodes().slice();  ///
 
         verified = verifyChildNodes(nodeChildNodes, constructorNodeChildNodes, context, rules);
@@ -155,14 +160,4 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules)
   }
 
   return verified;
-}
-
-function constructorTypeFromConstructorTermNode(constructorTermNode, context) {
-  const nameNode = nameNodeQuery(constructorTermNode),
-        nameNodeContent = nameNode.getContent(),
-        name = nameNodeContent, ///
-        type = context.findTypeByName(name),
-        constructorType = type; ///
-
-  return constructorType;
 }

@@ -29,6 +29,13 @@ class Variable {
     return matchesName;
   }
 
+  matchVariableNameAndTypeName(variableName, typeName) {
+  	const name = variableName,  ///
+			    matchesVariableNameAndTypeName = (this.name === name) && (this.typeName === typeName);
+
+  	return matchesVariableNameAndTypeName;
+  }
+
   asString() {
     const string = (this.typeName === undefined) ?
                     `${this.name}` :
