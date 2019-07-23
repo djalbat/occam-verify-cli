@@ -80,8 +80,8 @@ class Context {
 	  return constructors;
   }
 
-	findVariableByVariableNameAndTypeName(variableName, typeName) {
-		const variable = this.variables.find((variable) => variable.matchVariableNameAndTypeName(variableName, typeName));
+	findVariableByVariableNameAndType(variableName, type) {
+		const variable = this.variables.find((variable) => variable.matchVariableNameAndType(variableName, type));
 
 		return variable;
 	}
@@ -99,23 +99,8 @@ class Context {
     return labelPresent;
   }
 
-  areConstructorsPresentByRuleName(ruleName) {
-    const constructors = this.findConstructorsByRuleName(ruleName),
-		      constructor = constructors.shift(),
-          constructorsPresent = (constructor !== undefined);
-
-    return constructorsPresent;
-  }
-
   isTypePresentByName(name) {
     const type = this.findTypeByName(name),
-          typePresent = (type !== undefined);
-
-    return typePresent;
-  }
-
-  isTypePresentByTypeName(typeName) {
-    const type = this.findTypeByTypeName(typeName),
           typePresent = (type !== undefined);
 
     return typePresent;
@@ -128,8 +113,23 @@ class Context {
     return variablePresent;
   }
 
-  isVariablePresentByVariableNameAndTypeName(variableName, typeName) {
-  	const variable = this.findVariableByVariableNameAndTypeName(variableName, typeName),
+	isTypePresentByTypeName(typeName) {
+		const type = this.findTypeByTypeName(typeName),
+				typePresent = (type !== undefined);
+
+		return typePresent;
+	}
+
+	areConstructorsPresentByRuleName(ruleName) {
+		const constructors = this.findConstructorsByRuleName(ruleName),
+				constructor = constructors.shift(),
+				constructorsPresent = (constructor !== undefined);
+
+		return constructorsPresent;
+	}
+
+	isVariablePresentByVariableNameAndType(variableName, type) {
+  	const variable = this.findVariableByVariableNameAndType(variableName, type),
 			    variablePresent = (variable !== undefined);
 
   	return variablePresent;

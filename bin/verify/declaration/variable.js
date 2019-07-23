@@ -21,8 +21,8 @@ function verifyVariableDeclaration(variableDeclarationNode, context, rules) {
   }
 
   const typeNameNode = typeNameNodeQuery(variableDeclarationNode),
-        typeName = verifyTypeName(typeNameNode, context, rules),
-        variable = Variable.fromNameAndTypeName(name, typeName);
+        type = verifyTypeName(typeNameNode, context, rules),
+        variable = Variable.fromNameAndType(name, type);
 
   context.addVariable(variable);
 }

@@ -1,10 +1,10 @@
 'use strict';
 
 class Variable {
-  constructor(name, value, typeName) {
+  constructor(name, value, type) {
     this.name = name;
     this.value = value;
-    this.typeName = typeName;
+    this.type = type;
   }
 
   getName() {
@@ -15,8 +15,8 @@ class Variable {
     return this.value;
   }
 
-  getTypeName() {
-    return this.typeName;
+  getType() {
+    return this.type;
   }
 
   setValue(value) {
@@ -29,24 +29,25 @@ class Variable {
     return matchesName;
   }
 
-  matchVariableNameAndTypeName(variableName, typeName) {
+  matchVariableNameAndType(variableName, type) {
   	const name = variableName,  ///
-			    matchesVariableNameAndTypeName = (this.name === name) && (this.typeName === typeName);
+			    matchesName = (this.name === name),
+			    matchesType = this.type.matchType(type),
+			    matchesVariableNameAndTypeName = (matchesName && matchesType);
 
   	return matchesVariableNameAndTypeName;
   }
 
   asString() {
-    const string = (this.typeName === undefined) ?
-                    `${this.name}` :
-                      `${this.name}:${this.typeName}`;
+    const typeName = this.type.getName(),
+		      string = `${this.name}:${typeName}`;
 
     return string;
   }
 
-  static fromNameAndTypeName(name, typeName) {
+  static fromNameAndType(name, type) {
     const value = undefined,
-          variable = new Variable(name, value, typeName);
+          variable = new Variable(name, value, type);
 
     return variable;
   }

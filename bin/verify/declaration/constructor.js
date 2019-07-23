@@ -13,8 +13,7 @@ function verifyConstructorDeclaration(constructorDeclarationNode, context, rules
   verifyTermAsConstructor(termNode, context, rules);
 
   const typeNameNode = typeNameNodeQuery(constructorDeclarationNode),
-        typeName = verifyTypeName(typeNameNode, context, rules),
-        type = context.findTypeByTypeName(typeName),
+        type = verifyTypeName(typeNameNode, context, rules),
 		    constructor = Constructor.fromTermNodeAndType(termNode, type);
 
 	context.addConstructor(constructor);

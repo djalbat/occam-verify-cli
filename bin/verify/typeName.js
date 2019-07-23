@@ -5,16 +5,16 @@ const Error = require('../error');
 function verifyTypeName(typeNameNode, context, rules) {
   const typeNameNodeContent = typeNameNode.getContent(),
         typeName = typeNameNodeContent, ///
-        typeMissing = context.isTypeMissingByTypeName(typeName);
+        type = context.findTypeByTypeName(typeName);
 
-  if (typeMissing) {
+  if (type === undefined) {
     const node = typeNameNode, ///
           message = `The type '${typeName}' is missing.`;
 
     throw new Error(node, message);
   }
 
-  return typeName;
+  return type;
 }
 
 module.exports = verifyTypeName;

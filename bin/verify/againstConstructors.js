@@ -145,9 +145,10 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules)
 			        nameTerminalNodeContent = nameTerminalNode.getContent(),
 			        constructorNameTerminalNode = nameTerminalNodeQuery(constructorNode),
 			        constructorNameTerminalNodeContent = constructorNameTerminalNode.getContent(),
-			        typeName = constructorNameTerminalNodeContent,  ///
 				      variableName = nameTerminalNodeContent, ///
-			        variablePresent = context.isVariablePresentByVariableNameAndTypeName(variableName, typeName);
+			        typeName = constructorNameTerminalNodeContent,  ///
+			        type = context.findTypeByTypeName(typeName),
+			        variablePresent = context.isVariablePresentByVariableNameAndType(variableName, type);
 
       	verified = variablePresent; ///
       } else  {
