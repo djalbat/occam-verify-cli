@@ -7,7 +7,7 @@ const Error = require('../error'),
 			Configuration = require('../configuration'),
       nodeUtilities = require('../utilities/node'),
 			ruleUtilities = require('../utilities/rule'),
-			verifyAgainstConstructors = require('../verify/againstConstructors');
+			verifyAgainstConstructor = require('../verify/againstConstructor');
 
 const { partTypes } = parsers,
       { nodeAsString } = nodeUtilities,
@@ -18,7 +18,7 @@ const { partTypes } = parsers,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
         ZeroOrMorePartsPartType } = partTypes,
-			{ terminalNodeQuery, termNonTerminalNodeQuery, termNonTerminalNodesQuery, nameTerminalNodeQuery } = queries;
+			{ terminalNodeQuery, termNonTerminalNodesQuery, nameTerminalNodeQuery } = queries;
 
 function verifyTermAsConstructor(termNode, context, rules) {
 	checkTermNode(termNode, context, rules);
@@ -159,25 +159,25 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
       if (ruleNamePartRuleName === nonTerminalNodeRuleName) {
       	const node = nonTerminalNode, ///
 			        ruleName = ruleNamePartRuleName,  ///
-			        constructorsPresent = context.areConstructorsPresentByRuleName(ruleName);
+			        constructor = context.findConstructorByRuleName(ruleName);
 
-      	if (constructorsPresent) {
-      		verified = verifyAgainstConstructors(node, context, rules);
-	      } else {
-					const name = nonTerminalNodeRuleName, ///
-								rule = findRuleByName(name, rules);
+      	if (constructor !== undefined) {
+      		verifyAgainstConstructor(node, constructor, context, rules);
+	      }
 
-					switch (name) {
-						case 'name' :
-							const nameRule = rule;  ///
+	      const name = nonTerminalNodeRuleName, ///
+							rule = findRuleByName(name, rules);
 
-							verified = verifyWithNameRule(node, nameRule, context, rules);
-							break;
+				switch (name) {
+					case 'name' :
+						const nameRule = rule;  ///
 
-						default :
-							verified = verifyWithRule(node, rule, context, rules);
-							break;
-		      }
+						verified = verifyWithNameRule(node, nameRule, context, rules);
+						break;
+
+					default :
+						verified = verifyWithRule(node, rule, context, rules);
+						break;
 	      }
       }
     }

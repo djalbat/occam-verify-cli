@@ -5,7 +5,7 @@ const parsers = require('occam-parsers');
 const Error = require('../error'),
       nodeUtilities = require('../utilities/node'),
       ruleUtilities = require('../utilities/rule'),
-			verifyTermAgainstConstructors = require('../verify/termAgainstConsttructors');
+			verifyTermAgainstConstructors = require('../verify/termAgainstConstructors');
 
 const { partTypes } = parsers,
       { nodeAsString } = nodeUtilities,

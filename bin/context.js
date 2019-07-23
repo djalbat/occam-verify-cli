@@ -74,8 +74,8 @@ class Context {
     return type;
   }
 
-  findConstructorsByRuleName(ruleName) {
-	  const constructors = this.constructors.filter((constructor) => constructor.matchRuleName(ruleName));
+  findConstructorByRuleName(ruleName) {
+	  const constructors = this.constructors.find((constructor) => constructor.matchRuleName(ruleName));
 
 	  return constructors;
   }
@@ -120,10 +120,9 @@ class Context {
 		return typePresent;
 	}
 
-	areConstructorsPresentByRuleName(ruleName) {
-		const constructors = this.findConstructorsByRuleName(ruleName),
-				constructor = constructors.shift(),
-				constructorsPresent = (constructor !== undefined);
+	isConstructorPresentByRuleName(ruleName) {
+		const constructor = this.findConstructorByRuleName(ruleName),
+					constructorsPresent = (constructor !== undefined);
 
 		return constructorsPresent;
 	}
@@ -133,13 +132,6 @@ class Context {
 			    variablePresent = (variable !== undefined);
 
   	return variablePresent;
-  }
-
-  isTypeMissingByTypeName(typeName) {
-    const typePresent = this.isTypePresentByTypeName(typeName),
-          typeMissing = !typePresent;
-
-    return typeMissing;
   }
 
   static fromNothing() {
