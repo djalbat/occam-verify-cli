@@ -7,7 +7,7 @@ const Error = require('../error'),
 			Configuration = require('../configuration'),
       nodeUtilities = require('../utilities/node'),
 			ruleUtilities = require('../utilities/rule'),
-			verifyAgainstConstructor = require('../verify/againstConstructor');
+			verifyAgainstConstructors = require('../verify/againstConstructors');
 
 const { partTypes } = parsers,
       { nodeAsString } = nodeUtilities,
@@ -159,13 +159,15 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
       if (ruleNamePartRuleName === nonTerminalNodeRuleName) {
       	const node = nonTerminalNode, ///
 			        ruleName = ruleNamePartRuleName,  ///
-			        constructor = context.findConstructorByRuleName(ruleName);
+			        constructorsPresent = context.areConstructorsPresentByRuleName(ruleName);
 
-      	if (constructor !== undefined) {
-      		verifyAgainstConstructor(node, constructor, context, rules);
+      	if (constructorsPresent) {
+      		const constructors = context.findConstructorsByRuleName(ruleName);
 
-      		verified = true;
-	      } else {
+      		verified = verifyAgainstConstructors(node, constructors, context, rules);
+	      }
+
+	      if (!verified) {
 		      const name = nonTerminalNodeRuleName, ///
 					      rule = findRuleByName(name, rules);
 

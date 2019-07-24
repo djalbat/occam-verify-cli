@@ -74,10 +74,10 @@ class Context {
     return type;
   }
 
-  findConstructorByRuleName(ruleName) {
-	  const constructor = this.constructors.find((constructor) => constructor.matchRuleName(ruleName));
+  findConstructorsByRuleName(ruleName) {
+	  const constructors = this.constructors.filter((constructor) => constructor.matchRuleName(ruleName));
 
-	  return constructor;
+	  return constructors;
   }
 
 	findVariableByVariableNameAndType(variableName, type) {
@@ -120,8 +120,9 @@ class Context {
 		return typePresent;
 	}
 
-	isConstructorPresentByRuleName(ruleName) {
-		const constructor = this.findConstructorByRuleName(ruleName),
+	areConstructorsPresentByRuleName(ruleName) {
+		const constructors = this.findConstructorsByRuleName(ruleName),
+					constructor = constructors.shift(),
 					constructorsPresent = (constructor !== undefined);
 
 		return constructorsPresent;

@@ -1,11 +1,16 @@
 'use strict';
 
-const Error = require('../error'),
-      queries = require('../queries'),
-      nodeUtilities = require('../utilities/node');
+const queries = require('../queries');
 
-const { nodeAsString } = nodeUtilities,
-			{ nameTerminalNodeQuery, termNonTerminalNodeQuery } = queries;
+const { nameTerminalNodeQuery, termNonTerminalNodeQuery } = queries;
+
+function verifyAgainstConstructors(node, constructors, context, rules) {
+	const verified = constructors.some((constructor) => verifyAgainstConstructor(node, constructor, context, rules));
+
+	return verified;
+}
+
+module.exports = verifyAgainstConstructors;
 
 function verifyAgainstConstructor(node, constructor, context, rules) {
 	let verified = false;
@@ -21,15 +26,8 @@ function verifyAgainstConstructor(node, constructor, context, rules) {
 		verified = verifyChildNodes(nodeChildNodes, constructorNodeChildNodes, context, rules);
 	}
 
-	if (!verified) {
-		const nodeString = nodeAsString(node),
-					message = `The term '${nodeString}' cannot be verified.`;
-
-		throw new Error(node, message);
-	}
+	return verified;
 }
-
-module.exports = verifyAgainstConstructor;
 
 function verifyNode(node, constructorNode, context, rules) {
   let verified;
