@@ -163,21 +163,23 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
 
       	if (constructor !== undefined) {
       		verifyAgainstConstructor(node, constructor, context, rules);
-	      }
 
-	      const name = nonTerminalNodeRuleName, ///
-							rule = findRuleByName(name, rules);
+      		verified = true;
+	      } else {
+		      const name = nonTerminalNodeRuleName, ///
+					      rule = findRuleByName(name, rules);
 
-				switch (name) {
-					case 'name' :
-						const nameRule = rule;  ///
+		      switch (name) {
+			      case 'name' :
+				      const nameRule = rule;  ///
 
-						verified = verifyWithNameRule(node, nameRule, context, rules);
-						break;
+				      verified = verifyWithNameRule(node, nameRule, context, rules);
+				      break;
 
-					default :
-						verified = verifyWithRule(node, rule, context, rules);
-						break;
+			      default :
+				      verified = verifyWithRule(node, rule, context, rules);
+				      break;
+		      }
 	      }
       }
     }

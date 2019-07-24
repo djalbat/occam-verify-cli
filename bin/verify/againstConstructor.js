@@ -23,7 +23,7 @@ function verifyAgainstConstructor(node, constructor, context, rules) {
 
 	if (!verified) {
 		const nodeString = nodeAsString(node),
-				message = `The term '${nodeString}' cannot be verified.`;
+					message = `The term '${nodeString}' cannot be verified.`;
 
 		throw new Error(node, message);
 	}

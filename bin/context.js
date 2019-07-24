@@ -75,9 +75,9 @@ class Context {
   }
 
   findConstructorByRuleName(ruleName) {
-	  const constructors = this.constructors.find((constructor) => constructor.matchRuleName(ruleName));
+	  const constructor = this.constructors.find((constructor) => constructor.matchRuleName(ruleName));
 
-	  return constructors;
+	  return constructor;
   }
 
 	findVariableByVariableNameAndType(variableName, type) {
