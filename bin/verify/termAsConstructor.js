@@ -5,25 +5,25 @@ const parsers = require('occam-parsers');
 const Error = require('../error'),
 			queries = require('../queries'),
 			TermNode = require('../miscellaneous/termNode'),
+			ruleNames = require('../miscellaneous/ruleNames'),
       nodeUtilities = require('../utilities/node'),
 			ruleUtilities = require('../utilities/rule'),
 			Configuration = require('../miscellaneous/configuration'),
 			verifyTermAgainstConstructors = require('../verify/termAgainstConstructors');
 
 const { partTypes } = parsers,
-      { nodeAsString } = nodeUtilities,
+			{ nodeAsString } = nodeUtilities,
 			{ findRuleByName } = ruleUtilities,
+			{ NAME_RULE_NAME } = ruleNames,
+			{ nameTerminalNodeQuery } = queries,
       { RuleNamePartType,
         OptionalPartPartType,
         GroupOfPartsPartType,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
-        ZeroOrMorePartsPartType } = partTypes,
-			{ terminalNodeQuery, termNonTerminalNodesQuery, nameTerminalNodeQuery } = queries;
+        ZeroOrMorePartsPartType } = partTypes;
 
 function verifyTermAsConstructor(termNode, context, rules) {
-	checkTermNode(termNode, context, rules);
-
 	const termRule = findRuleByName('term', rules),
 			  node = termNode,  ///
 			  rule = termRule,  ///
@@ -158,31 +158,21 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
             nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
       if (ruleNamePartRuleName === nonTerminalNodeRuleName) {
-      	const node = nonTerminalNode, ///
-			        ruleName = ruleNamePartRuleName,  ///
-			        constructorsPresent = context.areConstructorsPresentByRuleName(ruleName);
+        const termNode = TermNode.fromChildNode(childNode);
 
-      	if (constructorsPresent) {
-      		const termNode = TermNode.fromChildNode(childNode),
-				        constructors = context.findConstructorsByRuleName(ruleName);
-
-      		verified = verifyTermAgainstConstructors(termNode, constructors, context, rules);
-	      }
+        verified = verifyTermAgainstConstructors(termNode, context, rules);
 
 	      if (!verified) {
-		      const name = nonTerminalNodeRuleName, ///
+		      const node = nonTerminalNode, ///
+				        name = nonTerminalNodeRuleName, ///
 					      rule = findRuleByName(name, rules);
 
-		      switch (name) {
-			      case 'name' :
-				      const nameRule = rule;  ///
+		      if (name === NAME_RULE_NAME) {
+			      const nameRule = rule;  ///
 
-				      verified = verifyWithNameRule(node, nameRule, context, rules);
-				      break;
-
-			      default :
-				      verified = verifyWithRule(node, rule, context, rules);
-				      break;
+			      verified = verifyWithNameRule(node, nameRule, context, rules);
+		      } else {
+			      verified = verifyWithRule(node, rule, context, rules);
 		      }
 	      }
       }
@@ -200,38 +190,4 @@ function verifyWithOptionalPart(childNodes, optionalPart, context, rules) {
   verifyWithPart(childNodes, part, context, rules);
 
   return verified;
-}
-
-function checkTermNode(termNode, context, rules) {
-	const termNonTerminalNodes = termNonTerminalNodesQuery(termNode);
-
-	let termNonTerminalNode = termNonTerminalNodes.shift();
-
-	if (termNonTerminalNode === undefined) {
-		const node = termNode,  ///
-					termNodeString = nodeAsString(termNode),
-					message = `The constructor '${termNodeString}' must have a non-terminal child node.`;
-
-		throw new Error(node, message);
-	}
-
-	termNonTerminalNode = termNonTerminalNodes.shift();
-
-	if (termNonTerminalNode !== undefined) {
-		const node = termNode,  ///
-					termNodeString = nodeAsString(termNode),
-					message = `The constructor '${termNodeString}' has more than one non-terminal child node.`;
-
-		throw new Error(node, message);
-	}
-
-	const terminalNode = terminalNodeQuery(termNode);
-
-	if (terminalNode !== undefined) {
-		const node = termNode,  ///
-					termNodeString = nodeAsString(termNode),
-					message = `The constructor '${termNodeString}' cannot have any child terminal nodes.`;
-
-		throw new Error(node, message);
-	}
 }

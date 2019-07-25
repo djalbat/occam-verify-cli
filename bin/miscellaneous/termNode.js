@@ -1,8 +1,8 @@
 'use strict';
 
-const constants = require('../constants');
+const ruleNames = require('../miscellaneous/ruleNames');
 
-const { TERM_RULE_NAME } = constants;
+const { TERM_RULE_NAME } = ruleNames;
 
 class TermNode {
 	constructor(ruleName, childNodes) {

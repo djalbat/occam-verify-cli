@@ -1,20 +1,13 @@
 'use strict';
 
-const queries = require('./queries'),
-			nodeUtilities = require('./utilities/node');
+const nodeUtilities = require('./utilities/node');
 
-const { nodeAsString } = nodeUtilities,
-			{ termNonTerminalNodeQuery } = queries;
+const { nodeAsString } = nodeUtilities;
 
 class Constructor {
-  constructor(ruleName, termNode, type) {
-  	this.ruleName = ruleName;
+  constructor(termNode, type) {
     this.termNode = termNode;
     this.type = type;
-  }
-
-  getRuleName() {
-  	return this.ruleName;
   }
 
   getTermNode() {
@@ -23,12 +16,6 @@ class Constructor {
 
   getType() {
     return this.type;
-  }
-
-  matchRuleName(ruleName) {
-  	const matchesRuleName = (this.ruleName === ruleName);
-
-  	return matchesRuleName;
   }
 
   asString() {
@@ -40,10 +27,7 @@ class Constructor {
   }
 
   static fromTermNodeAndType(termNode, type) {
-    const termNonTerminalNode = termNonTerminalNodeQuery(termNode),
-		      termNonTerminalNodeRuleName = termNonTerminalNode.getRuleName(),
-		      ruleName = termNonTerminalNodeRuleName, ///
-		      constructor = new Constructor(ruleName, termNode, type);
+    const constructor = new Constructor(termNode, type);
 
     return constructor;
   }
