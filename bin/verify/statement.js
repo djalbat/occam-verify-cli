@@ -1,6 +1,6 @@
 'use strict';
 
-const queries = require('../queries'),
+const queries = require('../miscellaneous/queries'),
       verifyEquality = require('../verify/equality');
 
 const { equalityNodeQuery } = queries;

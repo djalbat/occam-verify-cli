@@ -2,7 +2,7 @@
 
 const Type = require('../../type'),
       Error = require('../../error'),
-      queries = require('../../queries');
+      queries = require('../../miscellaneous/queries');
 
 const { typeNameNodesQuery } = queries;
 

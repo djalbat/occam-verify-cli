@@ -1,7 +1,7 @@
 'use strict';
 
 const Error = require('../../error'),
-      queries = require('../../queries'),
+      queries = require('../../miscellaneous/queries'),
       Variable = require('../../variable'),
       verifyTypeName = require('../../verify/typeName');
 

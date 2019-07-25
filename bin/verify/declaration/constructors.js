@@ -1,6 +1,6 @@
 'use strict';
 
-const queries = require('../../queries'),
+const queries = require('../../miscellaneous/queries'),
       verifyConstructorDeclaration = require('../../verify/declaration/constructor');
 
 const { constructorDeclarationNodesQuery } = queries;

@@ -1,6 +1,6 @@
 'use strict';
 
-const queries = require('../queries'),
+const queries = require('../miscellaneous/queries'),
       verifyTypeDeclaration = require('../verify/declaration/type'),
       verifyVariableDeclaration = require('../verify/declaration/variable'),
       verifyVariablesDeclaration = require('../verify/declaration/variables'),

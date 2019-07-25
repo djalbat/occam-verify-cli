@@ -1,7 +1,7 @@
 'use strict';
 
 const Error = require('../error'),
-      queries = require('../queries'),
+      queries = require('../miscellaneous/queries'),
       nodeUtilities = require('../utilities/node'),
       verifyExpression = require('../verify/expression');
 

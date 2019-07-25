@@ -3,7 +3,7 @@
 const necessary = require('necessary');
 
 const Error = require('../error'),
-      queries = require('../queries'),
+      queries = require('../miscellaneous/queries'),
 			grammarUtilities = require('../utilities/grammar'),
       lineIndexUtilities = require('../utilities/lineIndex'),
       verifyTopLevelInstruction = require('../verify/axiomOrDeclaration');

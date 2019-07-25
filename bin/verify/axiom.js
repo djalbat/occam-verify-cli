@@ -2,7 +2,7 @@
 
 const Error = require('../error'),
       Axiom = require('../axiom'),
-      queries = require('../queries'),
+      queries = require('../miscellaneous/queries'),
       verifyStatement = require('../verify/statement');
 
 const { labelNameNodesQuery, statementNodeQuery, parenthesisedLabelsNodeQuery } = queries;

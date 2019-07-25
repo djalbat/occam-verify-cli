@@ -3,7 +3,7 @@
 const parsers = require('occam-parsers');
 
 const Error = require('../error'),
-			queries = require('../queries'),
+			queries = require('../miscellaneous/queries'),
 			TermNode = require('../miscellaneous/termNode'),
 			ruleNames = require('../miscellaneous/ruleNames'),
       nodeUtilities = require('../utilities/node'),

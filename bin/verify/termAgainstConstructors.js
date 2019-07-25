@@ -1,6 +1,6 @@
 'use strict';
 
-const queries = require('../queries');
+const queries = require('../miscellaneous/queries');
 
 const { nameTerminalNodeQuery } = queries;
 

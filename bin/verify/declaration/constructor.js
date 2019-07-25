@@ -1,6 +1,6 @@
 'use strict';
 
-const queries = require('../../queries'),
+const queries = require('../../miscellaneous/queries'),
       Constructor = require('../../constructor'),
 			verifyTypeName = require('../../verify/typeName'),
       verifyTermAsConstructor = require('../../verify/termAsConstructor');
