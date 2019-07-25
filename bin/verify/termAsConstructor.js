@@ -4,10 +4,11 @@ const parsers = require('occam-parsers');
 
 const Error = require('../error'),
 			queries = require('../queries'),
-			Configuration = require('../configuration'),
+			TermNode = require('../miscellaneous/termNode'),
       nodeUtilities = require('../utilities/node'),
 			ruleUtilities = require('../utilities/rule'),
-			verifyAgainstConstructors = require('../verify/againstConstructors');
+			Configuration = require('../miscellaneous/configuration'),
+			verifyTermAgainstConstructors = require('../verify/termAgainstConstructors');
 
 const { partTypes } = parsers,
       { nodeAsString } = nodeUtilities,
@@ -162,9 +163,10 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
 			        constructorsPresent = context.areConstructorsPresentByRuleName(ruleName);
 
       	if (constructorsPresent) {
-      		const constructors = context.findConstructorsByRuleName(ruleName);
+      		const termNode = TermNode.fromChildNode(childNode),
+				        constructors = context.findConstructorsByRuleName(ruleName);
 
-      		verified = verifyAgainstConstructors(node, constructors, context, rules);
+      		verified = verifyTermAgainstConstructors(termNode, constructors, context, rules);
 	      }
 
 	      if (!verified) {
