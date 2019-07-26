@@ -1,16 +1,19 @@
 'use strict';
 
-const queries = require('../miscellaneous/queries');
+const queries = require('../miscellaneous/queries'),
+			ruleNames = require('../miscellaneous/ruleNames');
 
-const { nameTerminalNodeQuery } = queries;
+const { nameTerminalNodeQuery } = queries,
+			{ TERM_RULE_NAME, NAME_RULE_NAME } = ruleNames;
 
-function verifyAgainstConstructors(termNode, constructors, context, rules) {
-	const verified = constructors.some((constructor) => verifyAgainstConstructor(termNode, constructor, context, rules));
+function verifyTermAgainstConstructors(termNode, context, rules) {
+	const constructors = context.getConstructors(),
+				verified = constructors.some((constructor) => verifyAgainstConstructor(termNode, constructor, context, rules));
 
 	return verified;
 }
 
-module.exports = verifyAgainstConstructors;
+module.exports = verifyTermAgainstConstructors;
 
 function verifyAgainstConstructor(termNode, constructor, context, rules) {
 	const constructorTermNode = constructor.getTermNode(),
@@ -107,27 +110,47 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules)
 
 		if (nonTerminalNodeRuleName === constructorNonTerminalNodeRuleName) {
 			const node = nonTerminalNode, ///
-						name = nonTerminalNodeRuleName; ///
+						ruleName = nonTerminalNodeRuleName; ///
 
-			if (name === 'name') {
-				const nameTerminalNode = nameTerminalNodeQuery(node),
-							nameTerminalNodeContent = nameTerminalNode.getContent(),
-							constructorNameTerminalNode = nameTerminalNodeQuery(constructorNode),
-							constructorNameTerminalNodeContent = constructorNameTerminalNode.getContent(),
-							variableName = nameTerminalNodeContent, ///
-							typeName = constructorNameTerminalNodeContent,  ///
-							type = context.findTypeByTypeName(typeName),
-							variablePresent = context.isVariablePresentByVariableNameAndType(variableName, type);
+			switch (ruleName) {
+				case TERM_RULE_NAME : {
+					const termNode = node;  ///
 
-				verified = variablePresent; ///
-			} else  {
-				const nodeChildNodes = node.getChildNodes().slice(),  ///
-							constructorNodeChildNodes = constructorNode.getChildNodes().slice();  ///
+					debugger
 
-				verified = verifyChildNodes(nodeChildNodes, constructorNodeChildNodes, context, rules);
+					verified = verifyTermAgainstConstructors(termNode, context, rules);
+					break;
+				}
+
+				case NAME_RULE_NAME : {
+					const nameTerminalNode = nameTerminalNodeQuery(node),
+								constructorNameTerminalNode = nameTerminalNodeQuery(constructorNode);
+
+					verified = verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, context, rules);
+					break;
+				}
+
+				default : {
+					const nodeChildNodes = node.getChildNodes().slice(),  ///
+								constructorNodeChildNodes = constructorNode.getChildNodes().slice();  ///
+
+					verified = verifyChildNodes(nodeChildNodes, constructorNodeChildNodes, context, rules);
+				}
 			}
 		}
 	}
+
+	return verified;
+}
+
+function verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, context, rules) {
+	const nameTerminalNodeContent = nameTerminalNode.getContent(),
+				constructorNameTerminalNodeContent = constructorNameTerminalNode.getContent(),
+				variableName = nameTerminalNodeContent, ///
+				typeName = constructorNameTerminalNodeContent,  ///
+				type = context.findTypeByTypeName(typeName),
+				variablePresent = context.isVariablePresentByVariableNameAndType(variableName, type),
+				verified = variablePresent; ///
 
 	return verified;
 }

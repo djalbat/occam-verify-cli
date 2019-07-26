@@ -2,6 +2,7 @@
 
 const queries = require('../miscellaneous/queries'),
       verifyTypeDeclaration = require('../verify/declaration/type'),
+			verifyTypesDeclaration = require('../verify/declaration/types'),
       verifyVariableDeclaration = require('../verify/declaration/variable'),
       verifyVariablesDeclaration = require('../verify/declaration/variables'),
       verifyConstructorDeclaration = require('../verify/declaration/constructor'),
@@ -9,6 +10,7 @@ const queries = require('../miscellaneous/queries'),
 
 const { keywordNodeQuery,
         typeDeclarationNodeQuery,
+				typesDeclarationNodeQuery,
         variableDeclarationNodeQuery,
         variablesDeclarationNodeQuery,
         constructorDeclarationNodeQuery,
@@ -27,7 +29,14 @@ function verifyDeclaration(declarationNode, context, rules) {
       break;
     }
 
-    case 'Variable': {
+	  case 'Types': {
+		  const typesDeclarationNode = typesDeclarationNodeQuery(declarationNode);
+
+		  verifyTypesDeclaration(typesDeclarationNode, context, rules);
+		  break;
+	  }
+
+	  case 'Variable': {
       const variableDeclarationNode = variableDeclarationNodeQuery(declarationNode);
 
       verifyVariableDeclaration(variableDeclarationNode, context, rules);

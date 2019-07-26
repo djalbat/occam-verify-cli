@@ -55,7 +55,7 @@ function verifyWithNameRule(node, nameRule, context, rules) {
         verified = typePresent; ///
 
   if (!typePresent) {
-    const message = `There is no type '${name}' present.`;
+    const message = `The '${name}' type is missing.`;
 
     throw new Error(node, message);
   }
@@ -101,18 +101,21 @@ function verifyWithPart(childNodes, part, context, rules) {
 function verifyWithTerminalPart(childNodes, terminalPart, context, rules) {
   let verified = false;
 
-  const childNode = childNodes.shift(),
-        childNodeTerminalNode = childNode.isTerminalNode();
+  const childNode = childNodes.shift();
 
-  if (childNodeTerminalNode) {
-    let terminalNode = childNode; ///
+  if (childNode !== undefined) {
+	  const childNodeTerminalNode = childNode.isTerminalNode();
 
-    const significantToken = terminalNode.getSignificantToken(),
-          configuration = Configuration.fromSignificantToken(significantToken);
+	  if (childNodeTerminalNode) {
+		  let terminalNode = childNode; ///
 
-    terminalNode = terminalPart.parse(configuration);
+		  const significantToken = terminalNode.getSignificantToken(),
+					  configuration = Configuration.fromSignificantToken(significantToken);
 
-    verified = (terminalNode !== undefined);
+		  terminalNode = terminalPart.parse(configuration);
+
+		  verified = (terminalNode !== undefined);
+	  }
   }
 
   return verified;
@@ -131,10 +134,16 @@ function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules) 
       break;
 
     case OptionalPartPartType:
-      const optionalPart = nonTerminalPart; ///
+      const optionalPartPart = nonTerminalPart; ///
 
-      verified = verifyWithOptionalPart(childNodes, optionalPart, context, rules);
+      verified = verifyWithOptionalPartPart(childNodes, optionalPartPart, context, rules);
       break;
+
+	  case ZeroOrMorePartsPartType:
+		  const zeroOrMorePartsPart = nonTerminalPart; ///
+
+		  verified = verifyWithZeroOrMorePartsPart(childNodes, zeroOrMorePartsPart, context, rules);
+		  break;
 
     default:
 
@@ -182,12 +191,26 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
   return verified;
 }
 
-function verifyWithOptionalPart(childNodes, optionalPart, context, rules) {
-  let verified = true;  ///
+function verifyWithOptionalPartPart(childNodes, optionalPartPart, context, rules) {
+  let verified = true;
 
-  const part = optionalPart.getPart();
+  const part = optionalPartPart.getPart();
 
   verifyWithPart(childNodes, part, context, rules);
 
   return verified;
+}
+
+function verifyWithZeroOrMorePartsPart(childNodes, zeroOrMorePartsPart, context, rules) {
+	let verified = true;
+
+	const part = zeroOrMorePartsPart.getPart();
+
+	while (verified === true) {
+		verified = verifyWithPart(childNodes, part, context, rules);
+	}
+
+	verified = true;
+
+	return verified;
 }
