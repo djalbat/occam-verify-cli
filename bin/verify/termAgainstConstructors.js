@@ -1,7 +1,8 @@
 'use strict';
 
 const queries = require('../miscellaneous/queries'),
-			ruleNames = require('../miscellaneous/ruleNames');
+			ruleNames = require('../miscellaneous/ruleNames'),
+			ChildNodesIterator = require('../miscellaneous/childNodesIterator');
 
 const { TERM_RULE_NAME } = ruleNames,
 			{ termNameTerminalNodeQuery } = queries;
@@ -42,19 +43,19 @@ function verifyNode(node, constructorNode, termNode, context, rules) {
 	return verified;
 }
 
-function verifyChildNodes(nodeChildNodes, constructorNodeChildNodes, termNode, context, rules) {
+function verifyChildNodes(childNodesIterator, constructorChildNodesIterator, termNode, context, rules) {
 	let verified = false;
 
-	let nodeChildNode = nodeChildNodes.shift(),
-			constructorNodeChildNode = constructorNodeChildNodes.shift();
+	let childNode = childNodesIterator.shift(),
+			constructorChildNode = constructorChildNodesIterator.shift();
 
-	while (nodeChildNode !== undefined) {
-		if (constructorNodeChildNode === undefined) {
+	while (childNode !== undefined) {
+		if (constructorChildNode === undefined) {
 			break;
 		}
 
-		const node = nodeChildNode, ///
-					constructorNode = constructorNodeChildNode; ///
+		const node = childNode, ///
+					constructorNode = constructorChildNode; ///
 
 		verified = verifyNode(node, constructorNode, termNode, context, rules);
 
@@ -62,12 +63,12 @@ function verifyChildNodes(nodeChildNodes, constructorNodeChildNodes, termNode, c
 			break;
 		}
 
-		nodeChildNode = nodeChildNodes.shift();
-		constructorNodeChildNode = constructorNodeChildNodes.shift();
+		childNode = childNodesIterator.shift();
+		constructorChildNode = constructorChildNodesIterator.shift();
 	}
 
 	if (verified) {
-		if (constructorNodeChildNode !== undefined) {
+		if (constructorChildNode !== undefined) {
 			verified = false;
 		}
 	}
@@ -128,10 +129,10 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, termNode, conte
 			}
 
 			if (!verified) {
-				const nodeChildNodes = node.getChildNodes().slice(),  ///
-							constructorNodeChildNodes = constructorNode.getChildNodes().slice();  ///
+				const childNodesIterator = ChildNodesIterator.fromNode(node),
+							constructorChildNodesIterator = ChildNodesIterator.fromNode(constructorNode);
 
-				verified = verifyChildNodes(nodeChildNodes, constructorNodeChildNodes, termNode, context, rules);
+				verified = verifyChildNodes(childNodesIterator, constructorChildNodesIterator, termNode, context, rules);
 			}
 		}
 	}

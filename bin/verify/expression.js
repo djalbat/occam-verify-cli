@@ -5,6 +5,7 @@ const parsers = require('occam-parsers');
 const Error = require('../error'),
       nodeUtilities = require('../utilities/node'),
       ruleUtilities = require('../utilities/rule'),
+			ChildNodesIterator = require('../miscellaneous/childNodesIterator'),
 			verifyTermAgainstConstructors = require('../verify/termAgainstConstructors');
 
 const { partTypes } = parsers,
@@ -54,13 +55,13 @@ function verifyWithRule(node, rule, context, rules) {
 
 function verifyWithDefinition(node, definition, context, rules) {
   const parts = definition.getParts(),
-        childNodes = node.getChildNodes().slice(),  ///
-        type = verifyWithParts(childNodes, parts, context, rules);
+        childNodesIterator = ChildNodesIterator.fromNode(node),
+        type = verifyWithParts(childNodesIterator, parts, context, rules);
 
   return type;
 }
 
-function verifyWithParts(childNodes, parts, context, rules) {
+function verifyWithParts(childNodesIterator, parts, context, rules) {
   let type = undefined;
 
   const verified = parts.every((part) => {
@@ -73,7 +74,7 @@ function verifyWithParts(childNodes, parts, context, rules) {
     } else {
       const nonTerminalPart = part; ///
 
-      partType = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
+      partType = verifyWithNonTerminalPart(childNodesIterator, nonTerminalPart, context, rules);
     }
 
     if (type === undefined) {
@@ -92,10 +93,10 @@ function verifyWithParts(childNodes, parts, context, rules) {
   return type;
 }
 
-function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
+function verifyWithRuleNamePart(childNodesIterator, ruleNamePart, context, rules) {
   let type = undefined;
 
-  const childNode = childNodes.shift();
+  const childNode = childNodesIterator.shift();
 
   if (childNode !== undefined) {
     const childNodeNonTerminalNode = childNode.isNonTerminalNode();
