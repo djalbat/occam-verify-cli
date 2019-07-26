@@ -15,7 +15,7 @@ const { TYPE_KEYWORD,
 				VARIABLES_KEYWORD,
 				CONSTRUCTOR_KEYWORD,
 				CONSTRUCTORS_KEYWORD } = keywords,
-			{ keywordNodeQuery,
+			{ keywordTerminalNodeQuery,
         typeDeclarationNodeQuery,
 				typesDeclarationNodeQuery,
         variableDeclarationNodeQuery,
@@ -24,9 +24,9 @@ const { TYPE_KEYWORD,
         constructorsDeclarationNodeQuery } = queries;
 
 function verifyDeclaration(declarationNode, context, rules) {
-  const keywordNode = keywordNodeQuery(declarationNode),
-        keywordNodeContent = keywordNode.getContent(),
-        keyword = keywordNodeContent;  ///
+  const keywordTerminalNode = keywordTerminalNodeQuery(declarationNode),
+        keywordTerminalNodeContent = keywordTerminalNode.getContent(),
+        keyword = keywordTerminalNodeContent;  ///
 
   switch (keyword) {
     case TYPE_KEYWORD : {

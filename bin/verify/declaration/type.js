@@ -4,13 +4,13 @@ const Type = require('../../type'),
       Error = require('../../error'),
       queries = require('../../miscellaneous/queries');
 
-const { typeNameNodesQuery } = queries;
+const { typeNameTerminalNodesQuery } = queries;
 
 function verifyTypeDeclaration(typeDeclarationNode, context, rules) {
-  const typeNameNodes = typeNameNodesQuery(typeDeclarationNode),
-        typeNames = typeNameNodes.map((typeNameNode) => {
-          const typeNameNodeContent = typeNameNode.getContent(),
-                typeName = typeNameNodeContent; ///
+  const typeNameTerminalNodes = typeNameTerminalNodesQuery(typeDeclarationNode),
+        typeNames = typeNameTerminalNodes.map((typeNameTerminalNode) => {
+          const typeNameTerminalNodeContent = typeNameTerminalNode.getContent(),
+                typeName = typeNameTerminalNodeContent; ///
 
           return typeName;
         }),

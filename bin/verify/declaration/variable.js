@@ -5,12 +5,12 @@ const Error = require('../../error'),
       Variable = require('../../variable'),
       verifyTypeName = require('../../verify/typeName');
 
-const { nameNodeQuery, typeNameNodeQuery } = queries;
+const { typeNameNodeQuery, nameTerminalNodeQuery } = queries;
 
 function verifyVariableDeclaration(variableDeclarationNode, context, rules) {
-  const nameNode = nameNodeQuery(variableDeclarationNode),
-        nameNodeContent = nameNode.getContent(),
-        name = nameNodeContent, ///
+  const nameTerminalNode = nameTerminalNodeQuery(variableDeclarationNode),
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        name = nameTerminalNodeContent, ///
         variablePresent = context.isVariablePresentByName(name);
 
   if (variablePresent) {

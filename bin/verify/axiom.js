@@ -5,7 +5,9 @@ const Error = require('../error'),
       queries = require('../miscellaneous/queries'),
       verifyStatement = require('../verify/statement');
 
-const { labelNameNodesQuery, statementNodeQuery, parenthesisedLabelsNodeQuery } = queries;
+const { statementNodeQuery,
+				labelNameTerminalNodesQuery,
+				parenthesisedLabelsNodeQuery } = queries;
 
 function verifyAxiom(axiomNode, context, rules) {
   const statementNode = statementNodeQuery(axiomNode),
@@ -13,10 +15,10 @@ function verifyAxiom(axiomNode, context, rules) {
 
   if (verified) {
     const parenthesisedLabelsNode = parenthesisedLabelsNodeQuery(axiomNode),
-          labelNameNodes = labelNameNodesQuery(parenthesisedLabelsNode),
-          labels = labelNameNodes.map((labelNameNode) => {
-            const labelNameNodeContent = labelNameNode.getContent(),
-                  label = labelNameNodeContent; ///
+          labelNameTerminalNodes = labelNameTerminalNodesQuery(parenthesisedLabelsNode),
+          labels = labelNameTerminalNodes.map((labelNameTerminalNode) => {
+            const labelNameTerminalNodeContent = labelNameTerminalNode.getContent(),
+                  label = labelNameTerminalNodeContent; ///
 
             return label;
           });
