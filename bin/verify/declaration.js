@@ -1,14 +1,21 @@
 'use strict';
 
 const queries = require('../miscellaneous/queries'),
-      verifyTypeDeclaration = require('../verify/declaration/type'),
+			keywords = require('../miscellaneous/keywords'),
+			verifyTypeDeclaration = require('../verify/declaration/type'),
 			verifyTypesDeclaration = require('../verify/declaration/types'),
       verifyVariableDeclaration = require('../verify/declaration/variable'),
       verifyVariablesDeclaration = require('../verify/declaration/variables'),
       verifyConstructorDeclaration = require('../verify/declaration/constructor'),
       verifyConstructorsDeclaration = require('../verify/declaration/constructors');
 
-const { keywordNodeQuery,
+const { TYPE_KEYWORD,
+				TYPES_KEYWORD,
+				VARIABLE_KEYWORD,
+				VARIABLES_KEYWORD,
+				CONSTRUCTOR_KEYWORD,
+				CONSTRUCTORS_KEYWORD } = keywords,
+			{ keywordNodeQuery,
         typeDeclarationNodeQuery,
 				typesDeclarationNodeQuery,
         variableDeclarationNodeQuery,
@@ -22,42 +29,42 @@ function verifyDeclaration(declarationNode, context, rules) {
         keyword = keywordNodeContent;  ///
 
   switch (keyword) {
-    case 'Type': {
+    case TYPE_KEYWORD : {
       const typeDeclarationNode = typeDeclarationNodeQuery(declarationNode);
 
       verifyTypeDeclaration(typeDeclarationNode, context, rules);
       break;
     }
 
-	  case 'Types': {
+	  case TYPES_KEYWORD : {
 		  const typesDeclarationNode = typesDeclarationNodeQuery(declarationNode);
 
 		  verifyTypesDeclaration(typesDeclarationNode, context, rules);
 		  break;
 	  }
 
-	  case 'Variable': {
+	  case VARIABLE_KEYWORD : {
       const variableDeclarationNode = variableDeclarationNodeQuery(declarationNode);
 
       verifyVariableDeclaration(variableDeclarationNode, context, rules);
       break;
     }
 
-    case 'Variables': {
+    case VARIABLES_KEYWORD : {
       const variablesDeclarationNode = variablesDeclarationNodeQuery(declarationNode);
 
       verifyVariablesDeclaration(variablesDeclarationNode, context, rules);
       break;
     }
 
-    case 'Constructor': {
+    case CONSTRUCTOR_KEYWORD : {
       const constructorDeclarationNode = constructorDeclarationNodeQuery(declarationNode);
 
       verifyConstructorDeclaration(constructorDeclarationNode, context, rules);
       break;
     }
 
-    case 'Constructors': {
+    case CONSTRUCTORS_KEYWORD : {
       const constructorsDeclarationNode = constructorsDeclarationNodeQuery(declarationNode);
 
       verifyConstructorsDeclaration(constructorsDeclarationNode, context, rules);
