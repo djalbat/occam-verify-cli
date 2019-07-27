@@ -1,12 +1,12 @@
 'use strict';
 
-const queries = require('../miscellaneous/queries'),
+const Error = require('../error'),
 			ruleNames = require('../miscellaneous/ruleNames'),
+			TypedTerm = require('../miscellaneous/typedTerm'),
 			nodeUtilities = require('../utilities/node');
 
-const { getChildNodes } = nodeUtilities,
-			{ TERM_RULE_NAME } = ruleNames,
-			{ termNameTerminalNodeQuery } = queries;
+const { TERM_RULE_NAME } = ruleNames,
+			{ nodeAsString, getChildNodes } = nodeUtilities;
 
 function verifyTermAgainstConstructors(termNode, context, rules) {
 	const constructors = context.getConstructors(),
@@ -21,12 +21,32 @@ function verifyAgainstConstructor(constructor, termNode, context, rules) {
 	const constructorTermNode = constructor.getTermNode(),
 				nonTerminalNode = termNode, ///
 				constructorNode = constructorTermNode,  ///
-				verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, termNode, context, rules);
+				typedTerms = [];
+
+	let verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, termNode, context, rules);
+
+	if (verified) {
+		const callback = verifyAgainstConstructor;  ///
+
+		typedTerms.forEach((typedTerm) => {
+			const verified = typedTerm.verify(context, rules, callback);
+
+			if (!verified) {
+				const node = termNode,  ///
+							typeName = typedTerm.retrieveTypeName(context),
+							termString = nodeAsString(termNode),
+							typedTermString = typedTerm.asString(),
+							message = `The term '${termString}' cannot be verified because '${typedTermString}' is not a term or variable of type '${typeName}'.`;
+
+				throw new Error(node, message);
+			}
+		});
+	}
 
 	return verified;
 }
 
-function verifyNode(node, constructorNode, termNode, context, rules) {
+function verifyNode(node, constructorNode, typedTerms, termNode, context, rules) {
 	let verified;
 
 	const nodeTerminalNode = node.isTerminalNode();
@@ -34,17 +54,17 @@ function verifyNode(node, constructorNode, termNode, context, rules) {
 	if (nodeTerminalNode) {
 		const terminalNode = node;  ///
 
-		verified = verifyTerminalNode(terminalNode, constructorNode, termNode, context, rules);
+		verified = verifyTerminalNode(terminalNode, constructorNode, typedTerms, termNode, context, rules);
 	} else {
 		const nonTerminalNode = node; ///
 
-		verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, termNode, context, rules);
+		verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, termNode, context, rules);
 	}
 
 	return verified;
 }
 
-function verifyChildNodes(childNodes, constructorChildNodes, termNode, context, rules) {
+function verifyChildNodes(childNodes, constructorChildNodes, typedTerms, termNode, context, rules) {
 	let verified = false;
 
 	let childNode = childNodes.shift(),
@@ -58,7 +78,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, termNode, context, 
 		const node = childNode, ///
 					constructorNode = constructorChildNode; ///
 
-		verified = verifyNode(node, constructorNode, termNode, context, rules);
+		verified = verifyNode(node, constructorNode, typedTerms, termNode, context, rules);
 
 		if (!verified) {
 			break;
@@ -77,7 +97,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, termNode, context, 
 	return verified;
 }
 
-function verifyTerminalNode(terminalNode, constructorNode, termNode, context, rules) {
+function verifyTerminalNode(terminalNode, constructorNode, typedTerms, termNode, context, rules) {
 	let verified = false;
 
 	const constructorNodeTerminalNode = constructorNode.isTerminalNode();
@@ -100,7 +120,7 @@ function verifyTerminalNode(terminalNode, constructorNode, termNode, context, ru
 	return verified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, constructorNode, termNode, context, rules) {
+function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, termNode, context, rules) {
 	let verified = false;
 
 	const constructorNodeNonTerminalNode = constructorNode.isNonTerminalNode();
@@ -116,55 +136,19 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, termNode, conte
 
 			if ((ruleName === TERM_RULE_NAME) && (node !== termNode)) {
 				const termNode = node,  ///
-							constructorTermNode = constructorNode;  ///
+							constructorTermNode = constructorNode,  ///
+							typedTerm = TypedTerm.fromTermNodeAndConstructorTermNode(termNode, constructorTermNode);
 
-				verified = verifyTerm(termNode, constructorTermNode, context, rules);
-			}
+				typedTerms.push(typedTerm);
 
-			if (!verified) {
+				verified = true;  ///
+			} else {
 				const childNodes = getChildNodes(node),
 							constructorChildNodes = getChildNodes(constructorNode);
 
-				verified = verifyChildNodes(childNodes, constructorChildNodes, termNode, context, rules);
+				verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, termNode, context, rules);
 			}
 		}
-	}
-
-	return verified;
-}
-
-function verifyTerm(termNode, constructorTermNode, context, rules) {
-	let verified = false;
-
-	const termNameTerminalNode = termNameTerminalNodeQuery(termNode),
-				constructorTermNameTerminalNode = termNameTerminalNodeQuery(constructorTermNode),
-				constructorTermNameTerminalNodeContent = constructorTermNameTerminalNode.getContent(),
-				typeName = constructorTermNameTerminalNodeContent,  ///
-				type = context.findTypeByTypeName(typeName);
-
-	if (termNameTerminalNode === undefined) {
-		const constructors = context.getConstructors();
-
-		constructors.some((constructor) => {
-			verified = verifyAgainstConstructor(constructor, termNode, context, rules);
-
-			if (verified) {
-				const constructorType = constructor.getType(),  ///
-							constructorTypeMatchesTermType = constructorType.matchType(type);
-
-				verified = constructorTypeMatchesTermType;  ///
-			}
-
-			if (verified) {
-				return true;
-			}
-		});
-	} else {
-		const termNameTerminalNodeContent = termNameTerminalNode.getContent(),
-					variableName = termNameTerminalNodeContent, ///
-					variablePresent = context.isVariablePresentByVariableNameAndType(variableName, type);
-
-		verified = variablePresent; ///
 	}
 
 	return verified;

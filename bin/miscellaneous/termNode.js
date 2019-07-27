@@ -5,9 +5,15 @@ const ruleNames = require('../miscellaneous/ruleNames');
 const { TERM_RULE_NAME } = ruleNames;
 
 class TermNode {
-	constructor(ruleName, childNodes) {
+	constructor(ruleName, childNode) {
 		this.ruleName = ruleName;
-		this.childNodes = childNodes;
+		this.childNode = childNode;
+	}
+
+	isTerminalNode() {
+		const terminalNode = false;
+
+		return terminalNode;
 	}
 
 	getRuleName() {
@@ -15,15 +21,20 @@ class TermNode {
 	}
 
 	getChildNodes() {
-		return this.childNodes;
+		const childNodes = [  ///
+			this.childNode
+		];
+
+		return childNodes;
 	}
+
+	getFirstSignificantToken() { return this.childNode.getFirstSignificantToken(); }
+
+	getLastSignificantToken() { return this.childNode.getLastSignificantToken(); }
 
 	static fromChildNode(childNode) {
 		const ruleName = TERM_RULE_NAME,
-					childNodes = [
-						childNode
-					],
-					termNode = new TermNode(ruleName, childNodes);
+					termNode = new TermNode(ruleName, childNode);
 
 		return termNode;
 	}

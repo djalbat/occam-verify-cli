@@ -22,8 +22,8 @@ function verifyEquality(equalityNode, context, rules) {
     const node = equalityNode,  ///
           leftTypeName = leftType.getName(),
           rightTypeName = rightType.getName(),
-          equalityNodeString = nodeAsString(equalityNode),
-          message = `The equality '${equalityNodeString}' cannot be verified because the left type '${leftTypeName}' and right type '${rightTypeName}' cannot be matched.`;
+          equalityString = nodeAsString(equalityNode),
+          message = `The equality '${equalityString}' cannot be verified because the left type '${leftTypeName}' and right type '${rightTypeName}' cannot be matched.`;
 
     throw new Error(node, message);
   }

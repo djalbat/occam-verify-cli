@@ -19,9 +19,9 @@ class Constructor {
   }
 
   asString() {
-    const termNodeString = nodeAsString(this.termNode),
+    const termString = nodeAsString(this.termNode),
           typeString = this.type.asString(),
-          string = `${termNodeString}:${typeString}`;
+          string = `${termString}:${typeString}`;
 
     return string;
   }

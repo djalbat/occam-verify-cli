@@ -25,8 +25,8 @@ function verifyExpression(expressionNode, context, rules) {
 
   if (type === undefined) {
     const node = expressionNode,  ///
-          expressionNodeString = nodeAsString(expressionNode),
-          message = `The expression '${expressionNodeString}' cannot be verified.`;
+          expressionString = nodeAsString(expressionNode),
+          message = `The expression '${expressionString}' cannot be verified.`;
 
     throw new Error(node, message);
   }

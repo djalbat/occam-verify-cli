@@ -31,8 +31,8 @@ function verifyTermAsConstructor(termNode, context, rules) {
 
   if (!verified) {
     const node = termNode,  ///
-          termNodeString = nodeAsString(termNode),
-          message = `The constructor '${termNodeString}' cannot be verified.`;
+          termString = nodeAsString(termNode),
+          message = `The constructor '${termString}' cannot be verified.`;
 
     throw new Error(node, message);
   }
