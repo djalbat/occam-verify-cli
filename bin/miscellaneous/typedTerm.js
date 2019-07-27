@@ -40,7 +40,11 @@ class TypedTerm {
 			const constructors = context.getConstructors();
 
 			constructors.some((constructor) => {
-				verified = callback(constructor, this.termNode, context, rules);
+				const topmostTermNode = this.termNode,  ///
+							constructorTermNode = constructor.getTermNode(),
+							constructorTopmostTermNode = constructorTermNode; ///
+
+				verified = callback(topmostTermNode, constructorTopmostTermNode, context, rules);
 
 				if (verified) {
 					const constructorType = constructor.getType(),  ///

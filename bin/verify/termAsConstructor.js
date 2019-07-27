@@ -6,10 +6,10 @@ const Error = require('../error'),
 			queries = require('../miscellaneous/queries'),
 			TermNode = require('../miscellaneous/termNode'),
 			ruleNames = require('../miscellaneous/ruleNames'),
+			verifyTermA = require('../verify/term'),
       nodeUtilities = require('../utilities/node'),
 			ruleUtilities = require('../utilities/rule'),
-			Configuration = require('../miscellaneous/configuration'),
-			verifyTermAgainstConstructors = require('../verify/termAgainstConstructors');
+			Configuration = require('../miscellaneous/configuration');
 
 const { partTypes } = parsers,
 			{ findRuleByName } = ruleUtilities,
@@ -169,7 +169,7 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
       if (ruleNamePartRuleName === nonTerminalNodeRuleName) {
         const termNode = TermNode.fromChildNode(childNode);
 
-        verified = verifyTermAgainstConstructors(termNode, context, rules);
+        verified = verifyTermA(termNode, context, rules);
 
 	      if (!verified) {
 		      const node = nonTerminalNode, ///
