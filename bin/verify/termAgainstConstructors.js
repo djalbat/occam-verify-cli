@@ -114,15 +114,11 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, termNode, conte
 			const node = nonTerminalNode, ///
 						ruleName = nonTerminalNodeRuleName; ///
 
-			if (ruleName === TERM_RULE_NAME) {
-				if (node !== termNode) {
-					const termNode = node,  ///
-								constructorTermNode = constructorNode,  ///
-								typeName = typeNameFromConstructorTermNode(constructorTermNode),
-								type = context.findTypeByTypeName(typeName);
+			if ((ruleName === TERM_RULE_NAME) && (node !== termNode)) {
+				const termNode = node,  ///
+							constructorTermNode = constructorNode;  ///
 
-					verified = verifyTerm(termNode, type, context, rules);
-				}
+				verified = verifyTerm(termNode, constructorTermNode, context, rules);
 			}
 
 			if (!verified) {
@@ -137,10 +133,14 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, termNode, conte
 	return verified;
 }
 
-function verifyTerm(termNode, type, context, rules) {
+function verifyTerm(termNode, constructorTermNode, context, rules) {
 	let verified = false;
 
-	const termNameTerminalNode = termNameTerminalNodeQuery(termNode);
+	const termNameTerminalNode = termNameTerminalNodeQuery(termNode),
+				constructorTermNameTerminalNode = termNameTerminalNodeQuery(constructorTermNode),
+				constructorTermNameTerminalNodeContent = constructorTermNameTerminalNode.getContent(),
+				typeName = constructorTermNameTerminalNodeContent,  ///
+				type = context.findTypeByTypeName(typeName);
 
 	if (termNameTerminalNode === undefined) {
 		const constructors = context.getConstructors();
@@ -168,12 +168,4 @@ function verifyTerm(termNode, type, context, rules) {
 	}
 
 	return verified;
-}
-
-function typeNameFromConstructorTermNode(constructorTermNode) {
-	const constructorTermNameTerminalNode = termNameTerminalNodeQuery(constructorTermNode),
-				constructorTermNameTerminalNodeContent = constructorTermNameTerminalNode.getContent(),
-				typeName = constructorTermNameTerminalNodeContent;  ///
-
-	return typeName;
 }
