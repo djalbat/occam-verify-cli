@@ -10,14 +10,14 @@ const { getChildNodes } = nodeUtilities,
 
 function verifyTermAgainstConstructors(termNode, context, rules) {
 	const constructors = context.getConstructors(),
-				verified = constructors.some((constructor) => verifyAgainstConstructor(termNode, constructor, context, rules));
+				verified = constructors.some((constructor) => verifyAgainstConstructor(constructor, termNode, context, rules));
 
 	return verified;
 }
 
 module.exports = verifyTermAgainstConstructors;
 
-function verifyAgainstConstructor(termNode, constructor, context, rules) {
+function verifyAgainstConstructor(constructor, termNode, context, rules) {
 	const constructorTermNode = constructor.getTermNode(),
 				nonTerminalNode = termNode, ///
 				constructorNode = constructorTermNode,  ///
@@ -117,15 +117,11 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, termNode, conte
 			if (ruleName === TERM_RULE_NAME) {
 				if (node !== termNode) {
 					const termNode = node,  ///
-								constructorTermNode = constructorNode;  ///
+								constructorTermNode = constructorNode,  ///
+								typeName = typeNameFromConstructorTermNode(constructorTermNode),
+								type = context.findTypeByTypeName(typeName);
 
-					if (!verified) {
-						verified = verifyTermNameTerminalNode(termNode, constructorTermNode, context, rules);
-					}
-
-					if (!verified) {
-						verified = verifyTerm(termNode, constructorTermNode, context, rules);
-					}
+					verified = verifyTerm(termNode, type, context, rules);
 				}
 			}
 
@@ -141,18 +137,31 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, termNode, conte
 	return verified;
 }
 
-function verifyTermNameTerminalNode(termNode, constructorTermNode, context, rules) {
+function verifyTerm(termNode, type, context, rules) {
 	let verified = false;
 
 	const termNameTerminalNode = termNameTerminalNodeQuery(termNode);
 
-	if (termNameTerminalNode !== undefined) {
+	if (termNameTerminalNode === undefined) {
+		const constructors = context.getConstructors();
+
+		constructors.some((constructor) => {
+			verified = verifyAgainstConstructor(constructor, termNode, context, rules);
+
+			if (verified) {
+				const constructorType = constructor.getType(),  ///
+							constructorTypeMatchesTermType = constructorType.matchType(type);
+
+				verified = constructorTypeMatchesTermType;  ///
+			}
+
+			if (verified) {
+				return true;
+			}
+		});
+	} else {
 		const termNameTerminalNodeContent = termNameTerminalNode.getContent(),
-					constructorTermNameTerminalNode = termNameTerminalNodeQuery(constructorTermNode),
-					constructorTermNameTerminalNodeContent = constructorTermNameTerminalNode.getContent(),
 					variableName = termNameTerminalNodeContent, ///
-					typeName = constructorTermNameTerminalNodeContent,  ///
-					type = context.findTypeByTypeName(typeName),
 					variablePresent = context.isVariablePresentByVariableNameAndType(variableName, type);
 
 		verified = variablePresent; ///
@@ -161,29 +170,10 @@ function verifyTermNameTerminalNode(termNode, constructorTermNode, context, rule
 	return verified;
 }
 
-function verifyTerm(termNode, constructorTermNode, context, rules) {
-	let verified = false;
+function typeNameFromConstructorTermNode(constructorTermNode) {
+	const constructorTermNameTerminalNode = termNameTerminalNodeQuery(constructorTermNode),
+				constructorTermNameTerminalNodeContent = constructorTermNameTerminalNode.getContent(),
+				typeName = constructorTermNameTerminalNodeContent;  ///
 
-	const constructors = context.getConstructors();
-
-	constructors.some((constructor) => {
-		verified = verifyAgainstConstructor(termNode, constructor, context, rules);
-
-		if (verified) {
-			const constructorTermNameTerminalNode = termNameTerminalNodeQuery(constructorTermNode),
-						constructorTermNameTerminalNodeContent = constructorTermNameTerminalNode.getContent(),
-						termTypeName = constructorTermNameTerminalNodeContent,  ///
-						termType = context.findTypeByTypeName(termTypeName),
-						constructorType = constructor.getType(),  ///
-						constructorTypeMatchesTermType = constructorType.matchType(termType);
-
-			verified = constructorTypeMatchesTermType;  ///
-		}
-
-		if (verified) {
-			return true;
-		}
-	});
-
-	return verified;
+	return typeName;
 }
