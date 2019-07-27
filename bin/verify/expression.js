@@ -3,6 +3,7 @@
 const parsers = require('occam-parsers');
 
 const Error = require('../error'),
+			ruleNames = require('../miscellaneous/ruleNames'),
 			verifyTerm = require('../verify/term'),
       nodeUtilities = require('../utilities/node'),
       ruleUtilities = require('../utilities/rule');
@@ -15,7 +16,8 @@ const { partTypes } = parsers,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
         ZeroOrMorePartsPartType } = partTypes,
-			{ nodeAsString, getChildNodes } = nodeUtilities;
+			{ nodeAsString, getChildNodes } = nodeUtilities,
+			{ TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
 
 function verifyExpression(expressionNode, context, rules) {
   const expressionRule = findRuleByName('expression', rules),
@@ -74,6 +76,10 @@ function verifyWithParts(childNodes, parts, context, rules) {
       const nonTerminalPart = part; ///
 
       partType = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
+
+      if (partType === undefined) {
+      	return false;
+      }
     }
 
     if (type === undefined) {
@@ -109,17 +115,21 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
         const node = nonTerminalNode, ///
               name = ruleNamePartRuleName;  ///
 
-        if (false) {
-          ///
-        } else if (name === 'term') {
-          const termNode = node;  ///
+	      switch (name) {
+		      case TERM_RULE_NAME : {
+			      const termNode = node;  ///
 
-          type = verifyTerm(termNode, context, rules);
-        } else if (name === 'expression') {
-          const expressionNode = node;  ///
+			      type = verifyTerm(termNode, context, rules);
+		      	break;
+		      }
 
-          type = verifyExpression(expressionNode, context, rules);
-        }
+		      case EXPRESSION_RULE_NAME : {
+			      const expressionNode = node;  ///
+
+			      type = verifyExpression(expressionNode, context, rules);
+			      break;
+		      }
+	      }
       }
     }
   }

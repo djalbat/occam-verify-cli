@@ -1,21 +1,23 @@
 'use strict';
 
 const Error = require('../error'),
+			queries = require('../miscellaneous/queries'),
 			ruleNames = require('../miscellaneous/ruleNames'),
 			TypedTerm = require('../miscellaneous/typedTerm'),
 			nodeUtilities = require('../utilities/node');
 
 const { TERM_RULE_NAME } = ruleNames,
+			{ termNameTerminalNodeQuery } = queries,
 			{ nodeAsString, getChildNodes } = nodeUtilities;
 
 function verifyTerm(termNode, context, rules) {
 	let type = undefined;
 
-	const constructors = context.getConstructors();
+	const constructors = context.getConstructors(),
+				topmostTermNode = termNode; ///
 
 	constructors.some((constructor) => {
-		const topmostTermNode = termNode, ///
-					constructorTermNode = constructor.getTermNode(),
+		const constructorTermNode = constructor.getTermNode(),
 					constructorTopmostTermNode = constructorTermNode, ///
 					verified = verifyTopmostTermNode(topmostTermNode, constructorTopmostTermNode, context, rules);
 
@@ -25,6 +27,20 @@ function verifyTerm(termNode, context, rules) {
 			return true;
 		}
 	});
+
+	if (type === undefined) {
+		const termNameTerminalNode = termNameTerminalNodeQuery(termNode);
+
+		if (termNameTerminalNode !== undefined) {
+			const termNameTerminalNodeContent = termNameTerminalNode.getContent(),
+						name = termNameTerminalNodeContent, ///
+						variable = context.findVariableByName(name);
+
+			if (variable !== undefined) {
+				type = variable.getType();
+			}
+		}
+	}
 
 	return type;
 }
