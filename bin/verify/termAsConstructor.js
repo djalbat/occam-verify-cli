@@ -167,9 +167,10 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
             nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
       if (ruleNamePartRuleName === nonTerminalNodeRuleName) {
-        const termNode = TermNode.fromChildNode(childNode);
+        const termNode = TermNode.fromChildNode(childNode),
+		          type = verifyTermA(termNode, context, rules);
 
-        verified = verifyTermA(termNode, context, rules);
+        verified = (type !== undefined);
 
 	      if (!verified) {
 		      const node = nonTerminalNode, ///

@@ -9,19 +9,24 @@ const { TERM_RULE_NAME } = ruleNames,
 			{ nodeAsString, getChildNodes } = nodeUtilities;
 
 function verifyTerm(termNode, context, rules) {
-	const constructors = context.getConstructors(),
-				verified = constructors.some((constructor) => {
-					const topmostTermNode = termNode, ///
-								constructorTermNode = constructor.getTermNode(),
-								constructorTopmostTermNode = constructorTermNode, ///
-								verified = verifyTopmostTermNode(topmostTermNode, constructorTopmostTermNode, context, rules);
+	let type = undefined;
 
-					if (verified) {
-						return true;
-					}
-				});
+	const constructors = context.getConstructors();
 
-	return verified;
+	constructors.some((constructor) => {
+		const topmostTermNode = termNode, ///
+					constructorTermNode = constructor.getTermNode(),
+					constructorTopmostTermNode = constructorTermNode, ///
+					verified = verifyTopmostTermNode(topmostTermNode, constructorTopmostTermNode, context, rules);
+
+		if (verified) {
+			type = constructor.getType();
+
+			return true;
+		}
+	});
+
+	return type;
 }
 
 module.exports = verifyTerm;
