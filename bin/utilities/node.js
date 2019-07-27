@@ -20,6 +20,15 @@ function nodeAsString(node, string = '') {
   return string;
 }
 
+function getChildNodes(node) {
+	let childNodes = node.getChildNodes();
+
+	childNodes = childNodes.slice();  ///
+
+	return childNodes;
+}
+
 module.exports = {
-  nodeAsString
+  nodeAsString,
+	getChildNodes
 };

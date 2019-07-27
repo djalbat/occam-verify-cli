@@ -5,18 +5,17 @@ const parsers = require('occam-parsers');
 const Error = require('../error'),
       nodeUtilities = require('../utilities/node'),
       ruleUtilities = require('../utilities/rule'),
-			ChildNodesIterator = require('../miscellaneous/childNodesIterator'),
 			verifyTermAgainstConstructors = require('../verify/termAgainstConstructors');
 
 const { partTypes } = parsers,
-      { nodeAsString } = nodeUtilities,
       { findRuleByName } = ruleUtilities,
       { RuleNamePartType,
         OptionalPartPartType,
         GroupOfPartsPartType,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
-        ZeroOrMorePartsPartType } = partTypes;
+        ZeroOrMorePartsPartType } = partTypes,
+			{ nodeAsString, getChildNodes } = nodeUtilities;
 
 function verifyExpression(expressionNode, context, rules) {
   const expressionRule = findRuleByName('expression', rules),
@@ -55,13 +54,13 @@ function verifyWithRule(node, rule, context, rules) {
 
 function verifyWithDefinition(node, definition, context, rules) {
   const parts = definition.getParts(),
-        childNodesIterator = ChildNodesIterator.fromNode(node),
-        type = verifyWithParts(childNodesIterator, parts, context, rules);
+        childNodes = getChildNodes(node),
+        type = verifyWithParts(childNodes, parts, context, rules);
 
   return type;
 }
 
-function verifyWithParts(childNodesIterator, parts, context, rules) {
+function verifyWithParts(childNodes, parts, context, rules) {
   let type = undefined;
 
   const verified = parts.every((part) => {
@@ -74,7 +73,7 @@ function verifyWithParts(childNodesIterator, parts, context, rules) {
     } else {
       const nonTerminalPart = part; ///
 
-      partType = verifyWithNonTerminalPart(childNodesIterator, nonTerminalPart, context, rules);
+      partType = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
     }
 
     if (type === undefined) {
@@ -93,10 +92,10 @@ function verifyWithParts(childNodesIterator, parts, context, rules) {
   return type;
 }
 
-function verifyWithRuleNamePart(childNodesIterator, ruleNamePart, context, rules) {
+function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
   let type = undefined;
 
-  const childNode = childNodesIterator.shift();
+  const childNode = childNodes.shift();
 
   if (childNode !== undefined) {
     const childNodeNonTerminalNode = childNode.isNonTerminalNode();

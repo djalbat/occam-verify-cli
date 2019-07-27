@@ -9,11 +9,9 @@ const Error = require('../error'),
       nodeUtilities = require('../utilities/node'),
 			ruleUtilities = require('../utilities/rule'),
 			Configuration = require('../miscellaneous/configuration'),
-			ChildNodesIterator = require('../miscellaneous/childNodesIterator'),
 			verifyTermAgainstConstructors = require('../verify/termAgainstConstructors');
 
 const { partTypes } = parsers,
-			{ nodeAsString } = nodeUtilities,
 			{ findRuleByName } = ruleUtilities,
 			{ NAME_RULE_NAME } = ruleNames,
 			{ nameTerminalNodeQuery } = queries,
@@ -22,7 +20,8 @@ const { partTypes } = parsers,
         GroupOfPartsPartType,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
-        ZeroOrMorePartsPartType } = partTypes;
+        ZeroOrMorePartsPartType } = partTypes,
+			{ nodeAsString, getChildNodes } = nodeUtilities;
 
 function verifyTermAsConstructor(termNode, context, rules) {
 	const termRule = findRuleByName('term', rules),
@@ -66,12 +65,12 @@ function verifyWithNameRule(node, nameRule, context, rules) {
 
 function verifyWithDefinition(node, definition, context, rules) {
   const parts = definition.getParts(),
-		    childNodesIterator = ChildNodesIterator.fromNode(node);
+		    childNodes = getChildNodes(node);
 
-	let verified = parts.every((part) => verifyWithPart(childNodesIterator, part, context, rules));
+	let verified = parts.every((part) => verifyWithPart(childNodes, part, context, rules));
 
 	if (verified) {
-		const childNode = childNodesIterator.shift();
+		const childNode = childNodes.shift();
 
 		if (childNode !== undefined) {
 			verified = false;
@@ -81,7 +80,7 @@ function verifyWithDefinition(node, definition, context, rules) {
 	return verified;
 }
 
-function verifyWithPart(childNodesIterator, part, context, rules) {
+function verifyWithPart(childNodes, part, context, rules) {
   let verified;
 
   const partTerminalPart = part.isTerminalPart();
@@ -89,20 +88,20 @@ function verifyWithPart(childNodesIterator, part, context, rules) {
   if (partTerminalPart) {
     const terminalPart = part;  ///
 
-    verified = verifyWithTerminalPart(childNodesIterator, terminalPart, context, rules);
+    verified = verifyWithTerminalPart(childNodes, terminalPart, context, rules);
   } else {
     const nonTerminalPart = part; ///
 
-    verified = verifyWithNonTerminalPart(childNodesIterator, nonTerminalPart, context, rules);
+    verified = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
   }
 
   return verified;
 }
 
-function verifyWithTerminalPart(childNodesIterator, terminalPart, context, rules) {
+function verifyWithTerminalPart(childNodes, terminalPart, context, rules) {
   let verified = false;
 
-  const childNode = childNodesIterator.shift();
+  const childNode = childNodes.shift();
 
   if (childNode !== undefined) {
 	  const childNodeTerminalNode = childNode.isTerminalNode();
@@ -122,7 +121,7 @@ function verifyWithTerminalPart(childNodesIterator, terminalPart, context, rules
   return verified;
 }
 
-function verifyWithNonTerminalPart(childNodesIterator, nonTerminalPart, context, rules) {
+function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules) {
   let verified = false;
 
   const nonTerminalPartType = nonTerminalPart.getType();
@@ -131,19 +130,19 @@ function verifyWithNonTerminalPart(childNodesIterator, nonTerminalPart, context,
     case RuleNamePartType:
       const ruleNamePart = nonTerminalPart;  ///
 
-      verified = verifyWithRuleNamePart(childNodesIterator, ruleNamePart, context, rules);
+      verified = verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules);
       break;
 
     case OptionalPartPartType:
       const optionalPartPart = nonTerminalPart; ///
 
-      verified = verifyWithOptionalPartPart(childNodesIterator, optionalPartPart, context, rules);
+      verified = verifyWithOptionalPartPart(childNodes, optionalPartPart, context, rules);
       break;
 
 	  case ZeroOrMorePartsPartType:
 		  const zeroOrMorePartsPart = nonTerminalPart; ///
 
-		  verified = verifyWithZeroOrMorePartsPart(childNodesIterator, zeroOrMorePartsPart, context, rules);
+		  verified = verifyWithZeroOrMorePartsPart(childNodes, zeroOrMorePartsPart, context, rules);
 		  break;
 
     default:
@@ -154,10 +153,10 @@ function verifyWithNonTerminalPart(childNodesIterator, nonTerminalPart, context,
   return verified;
 }
 
-function verifyWithRuleNamePart(childNodesIterator, ruleNamePart, context, rules) {
+function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
   let verified = false;
 
-  const childNode = childNodesIterator.shift();
+  const childNode = childNodes.shift();
 
   if (childNode !== undefined) {
     const childNodeNonTerminalNode = childNode.isNonTerminalNode();
@@ -192,23 +191,23 @@ function verifyWithRuleNamePart(childNodesIterator, ruleNamePart, context, rules
   return verified;
 }
 
-function verifyWithOptionalPartPart(childNodesIterator, optionalPartPart, context, rules) {
+function verifyWithOptionalPartPart(childNodes, optionalPartPart, context, rules) {
   let verified = true;
 
   const part = optionalPartPart.getPart();
 
-  verifyWithPart(childNodesIterator, part, context, rules);
+  verifyWithPart(childNodes, part, context, rules);
 
   return verified;
 }
 
-function verifyWithZeroOrMorePartsPart(childNodesIterator, zeroOrMorePartsPart, context, rules) {
+function verifyWithZeroOrMorePartsPart(childNodes, zeroOrMorePartsPart, context, rules) {
 	let verified = true;
 
 	const part = zeroOrMorePartsPart.getPart();
 
 	while (verified === true) {
-		verified = verifyWithPart(childNodesIterator, part, context, rules);
+		verified = verifyWithPart(childNodes, part, context, rules);
 	}
 
 	verified = true;

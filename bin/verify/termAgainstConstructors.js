@@ -2,9 +2,10 @@
 
 const queries = require('../miscellaneous/queries'),
 			ruleNames = require('../miscellaneous/ruleNames'),
-			ChildNodesIterator = require('../miscellaneous/childNodesIterator');
+			nodeUtilities = require('../utilities/node');
 
-const { TERM_RULE_NAME } = ruleNames,
+const { getChildNodes } = nodeUtilities,
+			{ TERM_RULE_NAME } = ruleNames,
 			{ termNameTerminalNodeQuery } = queries;
 
 function verifyTermAgainstConstructors(termNode, context, rules) {
@@ -43,11 +44,11 @@ function verifyNode(node, constructorNode, termNode, context, rules) {
 	return verified;
 }
 
-function verifyChildNodes(childNodesIterator, constructorChildNodesIterator, termNode, context, rules) {
+function verifyChildNodes(childNodes, constructorChildNodes, termNode, context, rules) {
 	let verified = false;
 
-	let childNode = childNodesIterator.shift(),
-			constructorChildNode = constructorChildNodesIterator.shift();
+	let childNode = childNodes.shift(),
+			constructorChildNode = constructorChildNodes.shift();
 
 	while (childNode !== undefined) {
 		if (constructorChildNode === undefined) {
@@ -63,8 +64,8 @@ function verifyChildNodes(childNodesIterator, constructorChildNodesIterator, ter
 			break;
 		}
 
-		childNode = childNodesIterator.shift();
-		constructorChildNode = constructorChildNodesIterator.shift();
+		childNode = childNodes.shift();
+		constructorChildNode = constructorChildNodes.shift();
 	}
 
 	if (verified) {
@@ -129,10 +130,10 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, termNode, conte
 			}
 
 			if (!verified) {
-				const childNodesIterator = ChildNodesIterator.fromNode(node),
-							constructorChildNodesIterator = ChildNodesIterator.fromNode(constructorNode);
+				const childNodes = getChildNodes(node),
+							constructorChildNodes = getChildNodes(constructorNode);
 
-				verified = verifyChildNodes(childNodesIterator, constructorChildNodesIterator, termNode, context, rules);
+				verified = verifyChildNodes(childNodes, constructorChildNodes, termNode, context, rules);
 			}
 		}
 	}
