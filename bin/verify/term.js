@@ -2,6 +2,7 @@
 
 const Error = require('../error'),
 			queries = require('../miscellaneous/queries'),
+			TermNode = require('../miscellaneous/termNode'),
 			ruleNames = require('../miscellaneous/ruleNames'),
 			TypedTerm = require('../miscellaneous/typedTerm'),
 			nodeUtilities = require('../utilities/node');
@@ -47,7 +48,7 @@ function verifyTerm(termNode, context, rules) {
 
 module.exports = verifyTerm;
 
-function verifyNode(node, constructorNode, typedTerms, context, rules) {
+function verifyNode(node, constructorNode, typedTerms, context, rules, topmost) {
 	let verified;
 
 	const nodeTerminalNode = node.isTerminalNode();
@@ -59,7 +60,7 @@ function verifyNode(node, constructorNode, typedTerms, context, rules) {
 	} else {
 		const nonTerminalNode = node; ///
 
-		verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, context, rules);
+		verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, context, rules, topmost);
 	}
 
 	return verified;
@@ -74,7 +75,7 @@ function verifyTermNode(termNode, constructorTermNode, typedTerms, context, rule
 	return verified;
 }
 
-function verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules) {
+function verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules, topmost) {
 	let verified = false;
 
 	let childNode = childNodes.shift(),
@@ -88,7 +89,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context
 		const node = childNode, ///
 					constructorNode = constructorChildNode; ///
 
-		verified = verifyNode(node, constructorNode, typedTerms, context, rules);
+		verified = verifyNode(node, constructorNode, typedTerms, context, rules, topmost);
 
 		if (!verified) {
 			break;
@@ -130,7 +131,7 @@ function verifyTerminalNode(terminalNode, constructorNode, typedTerms, context, 
 	return verified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, context, rules) {
+function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, context, rules, topmost) {
 	let verified = false;
 
 	const constructorNodeNonTerminalNode = constructorNode.isNonTerminalNode();
@@ -146,11 +147,23 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, con
 
 				verified = verifyTermNode(termNode, constructorTermNode, typedTerms, context, rules);
 			} else {
-				const node = nonTerminalNode, ///
-							childNodes = cloneChildNodes(node),
-							constructorChildNodes = cloneChildNodes(constructorNode);
+				if (!topmost) {
+					const childNode = nonTerminalNode,  ///
+								termNode = TermNode.fromChildNode(childNode);
 
-				verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules);
+					verifyTerm(termNode, context, rules);
+
+					verified = true;
+				}
+
+				if (!verified) {
+					const node = nonTerminalNode, ///
+								topmost = false,
+								childNodes = cloneChildNodes(node),
+								constructorChildNodes = cloneChildNodes(constructorNode);
+
+					verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules, topmost);
+				}
 			}
 		}
 	}
@@ -160,11 +173,12 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, con
 
 function verifyTopmostTermNode(topmostTermNode, constructorTopmostTermNode, context, rules) {
 	const node = topmostTermNode, ///
+				topmost = true,
+				typedTerms = [],
 				childNodes = cloneChildNodes(node),
 				constructorNode = constructorTopmostTermNode, ///
 				constructorChildNodes = cloneChildNodes(constructorNode),
-				typedTerms = [],
-				verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules);
+				verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules, topmost);
 
 	if (verified) {
 		const callback = verifyTopmostTermNode;  ///

@@ -16,16 +16,16 @@ class TermNode {
 		return terminalNode;
 	}
 
-	getRuleName() {
-		return this.ruleName;
-	}
-
 	getChildNodes() {
 		const childNodes = [  ///
 			this.childNode
 		];
 
 		return childNodes;
+	}
+
+	getRuleName() {
+		return this.ruleName;
 	}
 
 	getFirstSignificantToken() { return this.childNode.getFirstSignificantToken(); }
