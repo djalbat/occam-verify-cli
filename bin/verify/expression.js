@@ -66,29 +66,26 @@ function verifyWithParts(childNodes, parts, context, rules) {
   let type = undefined;
 
   const verified = parts.every((part) => {
-    let partType;
+    const partNonTerminalPart = part.isNonTerminalPart();
 
-    const partTerminalPart = part.isTerminalPart();
+    if (partNonTerminalPart) {
+	    const nonTerminalPart = part, ///
+			      partType = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
 
-    if (partTerminalPart) {
-      partType = type;  ///
-    } else {
-      const nonTerminalPart = part; ///
+	    if (partType === undefined) {
+		    return false;
+	    }
 
-      partType = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
-
-      if (partType === undefined) {
-      	return false;
-      }
+	    if (type === undefined) {
+	    	type = partType;  ///
+	    } else {
+	    	if (type !== partType) {
+	    		return false;
+		    }
+	    }
     }
 
-    if (type === undefined) {
-      type = partType;
-    }
-
-    if (partType === type) {
-      return true;
-    }
+    return true;
   });
 
   if (!verified) {
@@ -107,27 +104,32 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
     const childNodeNonTerminalNode = childNode.isNonTerminalNode();
 
     if (childNodeNonTerminalNode) {
-      const nonTerminalNode = childNode,  ///
-            ruleNamePartRuleName = ruleNamePart.getRuleName(),
+      const ruleName = ruleNamePart.getRuleName(),
+		        nonTerminalNode = childNode,  ///
             nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
-      if (ruleNamePartRuleName === nonTerminalNodeRuleName) {
-        const node = nonTerminalNode, ///
-              name = ruleNamePartRuleName;  ///
-
-	      switch (name) {
+      if (ruleName === nonTerminalNodeRuleName) {
+	      switch (ruleName) {
 		      case TERM_RULE_NAME : {
-			      const termNode = node;  ///
+			      const termNode = nonTerminalNode;  ///
 
 			      type = verifyTerm(termNode, context, rules);
 		      	break;
 		      }
 
 		      case EXPRESSION_RULE_NAME : {
-			      const expressionNode = node;  ///
+			      const expressionNode = nonTerminalNode;  ///
 
 			      type = verifyExpression(expressionNode, context, rules);
 			      break;
+		      }
+
+		      default : {
+		      	const name = ruleName,  ///
+					        node = nonTerminalNode, ///
+					        rule = findRuleByName(name, rules);
+
+		      	type = verifyWithRule(node, rule, context, rules);
 		      }
 	      }
       }
