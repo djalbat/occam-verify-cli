@@ -8,7 +8,7 @@ const Error = require('../error'),
 
 const { TERM_RULE_NAME } = ruleNames,
 			{ termNameTerminalNodeQuery } = queries,
-			{ nodeAsString, getChildNodes } = nodeUtilities;
+			{ nodeAsString, cloneChildNodes } = nodeUtilities;
 
 function verifyTerm(termNode, context, rules) {
 	let type = undefined;
@@ -147,8 +147,8 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, con
 				verified = verifyTermNode(termNode, constructorTermNode, typedTerms, context, rules);
 			} else {
 				const node = nonTerminalNode, ///
-							childNodes = getChildNodes(node),
-							constructorChildNodes = getChildNodes(constructorNode);
+							childNodes = cloneChildNodes(node),
+							constructorChildNodes = cloneChildNodes(constructorNode);
 
 				verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules);
 			}
@@ -160,9 +160,9 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, con
 
 function verifyTopmostTermNode(topmostTermNode, constructorTopmostTermNode, context, rules) {
 	const node = topmostTermNode, ///
-				childNodes = getChildNodes(node),
+				childNodes = cloneChildNodes(node),
 				constructorNode = constructorTopmostTermNode, ///
-				constructorChildNodes = getChildNodes(constructorNode),
+				constructorChildNodes = cloneChildNodes(constructorNode),
 				typedTerms = [],
 				verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules);
 

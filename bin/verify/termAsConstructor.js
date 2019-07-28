@@ -21,7 +21,7 @@ const { partTypes } = parsers,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
         ZeroOrMorePartsPartType } = partTypes,
-			{ nodeAsString, getChildNodes } = nodeUtilities;
+			{ nodeAsString, cloneChildNodes } = nodeUtilities;
 
 function verifyTermAsConstructor(termNode, context, rules) {
 	const termRule = findRuleByName('term', rules),
@@ -65,7 +65,7 @@ function verifyWithNameRule(node, nameRule, context, rules) {
 
 function verifyWithDefinition(node, definition, context, rules) {
   const parts = definition.getParts(),
-		    childNodes = getChildNodes(node);
+		    childNodes = cloneChildNodes(node);
 
 	let verified = parts.every((part) => verifyWithPart(childNodes, part, context, rules));
 

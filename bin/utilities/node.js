@@ -20,7 +20,7 @@ function nodeAsString(node, string = '') {
   return string;
 }
 
-function getChildNodes(node) {
+function cloneChildNodes(node) {
 	let childNodes = node.getChildNodes();
 
 	childNodes = childNodes.slice();  ///
@@ -30,5 +30,5 @@ function getChildNodes(node) {
 
 module.exports = {
   nodeAsString,
-	getChildNodes
+	cloneChildNodes
 };

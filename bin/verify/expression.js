@@ -16,7 +16,7 @@ const { partTypes } = parsers,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
         ZeroOrMorePartsPartType } = partTypes,
-			{ nodeAsString, getChildNodes } = nodeUtilities,
+			{ nodeAsString, cloneChildNodes } = nodeUtilities,
 			{ TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
 
 function verifyExpression(expressionNode, context, rules) {
@@ -56,7 +56,7 @@ function verifyWithRule(node, rule, context, rules) {
 
 function verifyWithDefinition(node, definition, context, rules) {
   const parts = definition.getParts(),
-        childNodes = getChildNodes(node),
+        childNodes = cloneChildNodes(node),
         type = verifyWithParts(childNodes, parts, context, rules);
 
   return type;
