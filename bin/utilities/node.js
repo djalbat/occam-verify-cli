@@ -4,12 +4,16 @@ function nodeAsString(node, string = '') {
   const nodeTerminalNode = node.isTerminalNode();
 
   if (nodeTerminalNode) {
-    const terminalNode = node,
-          content = terminalNode.getContent();
+    const terminalNode = node,  ///
+          terminalNodeEpsilonNode = terminalNode.isEpsilonNode();
 
-    string = `${string}${content}`;
+    if (!terminalNodeEpsilonNode) {
+      const content = terminalNode.getContent();
+
+      string = `${string}${content}`;
+    }
   } else {
-    const nonTerminalNode = node,
+    const nonTerminalNode = node, ///
           childNodes = nonTerminalNode.getChildNodes();
 
     childNodes.forEach((childNode) => {

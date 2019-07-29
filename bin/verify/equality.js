@@ -23,7 +23,7 @@ function verifyEquality(equalityNode, context, rules) {
           leftTypeName = leftType.getName(),
           rightTypeName = rightType.getName(),
           equalityString = nodeAsString(equalityNode),
-          message = `The equality '${equalityString}' cannot be verified because the left type '${leftTypeName}' and right type '${rightTypeName}' cannot be matched.`;
+          message = `The equality '${equalityString}' cannot be verified because the types '${leftTypeName}' and '${rightTypeName}' aren't equal nor one a sub-type of the other.`;
 
     throw new Error(node, message);
   }
