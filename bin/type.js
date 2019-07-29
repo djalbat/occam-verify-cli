@@ -14,18 +14,32 @@ class Type {
     return this.superType;
   }
 
-  matchType(type) {
-    let matchesType = false;
+  isEqualTo(type) {
+    const equalToType = (this === type);
 
-    if (type === this) {
-      matchesType = true;
-    } else {
-      if (this.superType !== undefined) {
-        matchesType = this.superType.matchType(type);
+    return equalToType;
+  }
+
+  isSubTypeOf(type) {
+    let subTypeOfType = false;
+
+    if (this.superType !== undefined) {
+      if (this.superType === type) {
+        subTypeOfType = true;
+      } else {
+        subTypeOfType = this.superType.isSubTypeOf(type);
       }
     }
 
-    return matchesType;
+    return subTypeOfType;
+  }
+
+  isEqualToOrSubTypeOf(type) {
+    const equalToType = this.isEqualTo(type),
+          subTypeOfType = this.isSubTypeOf(type),
+          equalToOrSubTypeOfType = (equalToType || subTypeOfType);
+
+    return equalToOrSubTypeOfType;
   }
 
   matchName(name) {

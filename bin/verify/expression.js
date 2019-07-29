@@ -3,10 +3,12 @@
 const parsers = require('occam-parsers');
 
 const Error = require('../error'),
-			ruleNames = require('../miscellaneous/ruleNames'),
+      emptyType = require('../miscellaneous/emptyType'),
+      ruleNames = require('../miscellaneous/ruleNames'),
 			verifyTerm = require('../verify/term'),
       nodeUtilities = require('../utilities/node'),
-      ruleUtilities = require('../utilities/rule');
+      ruleUtilities = require('../utilities/rule'),
+      Configuration = require('../miscellaneous/configuration');
 
 const { partTypes } = parsers,
       { findRuleByName } = ruleUtilities,
@@ -65,32 +67,51 @@ function verifyWithDefinition(node, definition, context, rules) {
 function verifyWithParts(childNodes, parts, context, rules) {
   let type = undefined;
 
-  const verified = parts.every((part) => {
-    const partNonTerminalPart = part.isNonTerminalPart();
+  parts.some((part) => {
+    const partTerminalPart = part.isTerminalPart();
 
-    if (partNonTerminalPart) {
-	    const nonTerminalPart = part, ///
-			      partType = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
+    let partType;
 
-	    if (partType === undefined) {
-		    return false;
-	    }
+    if (partTerminalPart) {
+      const terminalPart = part;  ///
 
-	    if (type === undefined) {
-	    	type = partType;  ///
-	    } else {
-	    	if (type !== partType) {
-	    		return false;
-		    }
-	    }
+      partType = verifyWithTerminalPart(childNodes, terminalPart, context, rules);
+    } else {
+      const nonTerminalPart = part; ///
+
+      partType = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
     }
 
-    return true;
-  });
+    if (partType === undefined) {
+      type = undefined;
 
-  if (!verified) {
-    type = undefined;
-  }
+      return true;
+    }
+
+    if (type === undefined) {
+      type = partType;  ///
+    } else {
+      if (partType !== emptyType) {
+        const partTypeEqualToType = partType.isEqualTo(type);
+
+        if (!partTypeEqualToType) {
+          const partTypeSubTypeOfType = partType.isSubTypeOf(type);
+
+          if (!partTypeSubTypeOfType) {
+            const typeSubTypeOfPartType = type.isSubTypeOf(partType);
+
+            if (typeSubTypeOfPartType) {
+              type = partType;
+            } else {
+              type = undefined;
+
+              return true;
+            }
+          }
+        }
+      }
+    }
+  });
 
   return type;
 }
@@ -132,6 +153,31 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
 		      	type = verifyWithRule(node, rule, context, rules);
 		      }
 	      }
+      }
+    }
+  }
+
+  return type;
+}
+
+function verifyWithTerminalPart(childNodes, terminalPart, context, rules) {
+  let type = undefined;
+
+  const childNode = childNodes.shift();
+
+  if (childNode !== undefined) {
+    const childNodeTerminalNode = childNode.isTerminalNode();
+
+    if (childNodeTerminalNode) {
+      let terminalNode = childNode; ///
+
+      const significantToken = terminalNode.getSignificantToken(),
+            configuration = Configuration.fromSignificantToken(significantToken);
+
+      terminalNode = terminalPart.parse(configuration);
+
+      if (terminalNode !== undefined) {
+        type = emptyType; ///
       }
     }
   }

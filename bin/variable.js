@@ -29,15 +29,6 @@ class Variable {
     return matchesName;
   }
 
-  matchVariableNameAndType(variableName, type) {
-  	const name = variableName,  ///
-			    matchesName = (this.name === name),
-			    matchesType = this.type.matchType(type),
-			    matchesVariableNameAndTypeName = (matchesName && matchesType);
-
-  	return matchesVariableNameAndTypeName;
-  }
-
   asString() {
     const typeName = this.type.getName(),
 		      string = `${this.name}:${typeName}`;

@@ -14,9 +14,9 @@ function verifyEquality(equalityNode, context, rules) {
         rightExpressionNode = expressionNodes.shift(),
         leftType = verifyExpression(leftExpressionNode, context, rules),
         rightType = verifyExpression(rightExpressionNode, context, rules),
-        leftTypeMatchesRightType = leftType.matchType(rightType),
-        rightTypeMatchesLeftType = rightType.matchType(leftType),
-        verified = leftTypeMatchesRightType || rightTypeMatchesLeftType;
+        leftTypeEqualToOrSubTypeOfRightType = leftType.isEqualToOrSubTypeOf(rightType),
+        rightTypeEqualToOrSubTypeOfLeftType = rightType.isEqualToOrSubTypeOf(leftType),
+        verified = leftTypeEqualToOrSubTypeOfRightType || rightTypeEqualToOrSubTypeOfLeftType;
 
   if (!verified) {
     const node = equalityNode,  ///

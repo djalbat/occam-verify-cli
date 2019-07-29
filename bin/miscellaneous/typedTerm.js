@@ -48,9 +48,9 @@ class TypedTerm {
 
 				if (verified) {
 					const constructorType = constructor.getType(),  ///
-								constructorTypeMatchesTermType = constructorType.matchType(type);
+								constructorTypeEqualToOrSubTypeOfTermType = constructorType.isEqualToOrSubTypeOf(type);
 
-					verified = constructorTypeMatchesTermType;  ///
+					verified = constructorTypeEqualToOrSubTypeOfTermType;  ///
 				}
 
 				if (verified) {
@@ -59,10 +59,15 @@ class TypedTerm {
 			});
 		} else {
 			const termNameTerminalNodeContent = termNameTerminalNode.getContent(),
-						variableName = termNameTerminalNodeContent, ///
-						variablePresent = context.isVariablePresentByVariableNameAndType(variableName, type);
+						name = termNameTerminalNodeContent, ///
+            variable = context.findVariableByName(name);
 
-			verified = variablePresent; ///
+			if (variable !== undefined) {
+			  const variableType = variable.getType(),
+              variableTypeEqualToOrSubTypeOfType = variableType.isEqualToOrSubTypeOf(type);
+
+        verified = variableTypeEqualToOrSubTypeOfType; ///
+      }
 		}
 
 		return verified;

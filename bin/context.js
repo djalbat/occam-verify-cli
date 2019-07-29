@@ -74,12 +74,6 @@ class Context {
     return type;
   }
 
-	findVariableByVariableNameAndType(variableName, type) {
-		const variable = this.variables.find((variable) => variable.matchVariableNameAndType(variableName, type));
-
-		return variable;
-	}
-
   isLabelPresent(label) {
     const labelPresent = this.axioms.some((axiom) => {
       const labels = axiom.getLabels(),
@@ -113,13 +107,6 @@ class Context {
 
 		return typePresent;
 	}
-
-	isVariablePresentByVariableNameAndType(variableName, type) {
-  	const variable = this.findVariableByVariableNameAndType(variableName, type),
-			    variablePresent = (variable !== undefined);
-
-  	return variablePresent;
-  }
 
   static fromNothing() {
     const types = [],
