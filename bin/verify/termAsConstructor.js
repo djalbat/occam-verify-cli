@@ -6,7 +6,8 @@ const Error = require('../error'),
 			queries = require('../miscellaneous/queries'),
 			TermNode = require('../miscellaneous/termNode'),
 			ruleNames = require('../miscellaneous/ruleNames'),
-			verifyTermA = require('../verify/term'),
+      ChildNodes = require('../miscellaneous/childNodes'),
+			verifyTerm = require('../verify/term'),
       nodeUtilities = require('../utilities/node'),
 			ruleUtilities = require('../utilities/rule'),
 			Configuration = require('../miscellaneous/configuration');
@@ -43,22 +44,6 @@ module.exports = verifyTermAsConstructor;
 function verifyWithRule(node, rule, context, rules) {
   const definitions = rule.getDefinitions(),
         verified = definitions.some((definition) => verifyWithDefinition(node, definition, context, rules));
-
-  return verified;
-}
-
-function verifyWithNameRule(node, nameRule, context, rules) {
-	const nameTerminalNode = nameTerminalNodeQuery(node),
-				nameTerminalNodeContent = nameTerminalNode.getContent(),
-				name = nameTerminalNodeContent,
-        typePresent = context.isTypePresentByName(name),
-        verified = typePresent; ///
-
-  if (!typePresent) {
-    const message = `The '${name}' type is missing.`;
-
-    throw new Error(node, message);
-  }
 
   return verified;
 }
@@ -162,29 +147,29 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
     const childNodeNonTerminalNode = childNode.isNonTerminalNode();
 
     if (childNodeNonTerminalNode) {
-      const nonTerminalNode = childNode,  ///
-            ruleNamePartRuleName = ruleNamePart.getRuleName(),
+      const ruleName = ruleNamePart.getRuleName(),
+            nonTerminalNode = childNode,  ///
             nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
-      if (ruleNamePartRuleName === nonTerminalNodeRuleName) {
-        const termNode = TermNode.fromChildNode(childNode),
-		          type = verifyTermA(termNode, context, rules);
+      if (ruleName === nonTerminalNodeRuleName) {
+        const name = ruleName,  ///
+              node = nonTerminalNode, ///
+              rule = findRuleByName(name, rules);
 
-        verified = (type !== undefined);
+        if (ruleName === NAME_RULE_NAME) {
+          const nameRule = rule;  ///
 
-	      if (!verified) {
-		      const node = nonTerminalNode, ///
-				        name = nonTerminalNodeRuleName, ///
-					      rule = findRuleByName(name, rules);
+          verified = verifyWithNameRule(node, nameRule, context, rules);
+        } else {
+          const termNode = TermNode.fromChildNode(childNode),
+                type = verifyTerm(termNode, context, rules);
 
-		      if (name === NAME_RULE_NAME) {
-			      const nameRule = rule;  ///
+          verified = (type !== undefined);
 
-			      verified = verifyWithNameRule(node, nameRule, context, rules);
-		      } else {
-			      verified = verifyWithRule(node, rule, context, rules);
-		      }
-	      }
+          if (!verified) {
+            verified = verifyWithRule(node, rule, context, rules);
+          }
+        }
       }
     }
   }
@@ -193,11 +178,17 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
 }
 
 function verifyWithOptionalPartPart(childNodes, optionalPartPart, context, rules) {
-  let verified = true;
-
   const part = optionalPartPart.getPart();
 
-  verifyWithPart(childNodes, part, context, rules);
+  childNodes = ChildNodes.fromChildNodes(childNodes); ///
+
+  let verified = verifyWithPart(childNodes, part, context, rules);
+
+  if (!verified) {
+    childNodes.backtrack();
+
+    verified = true;
+  }
 
   return verified;
 }
@@ -214,4 +205,20 @@ function verifyWithZeroOrMorePartsPart(childNodes, zeroOrMorePartsPart, context,
 	verified = true;
 
 	return verified;
+}
+
+function verifyWithNameRule(node, nameRule, context, rules) {
+  const nameTerminalNode = nameTerminalNodeQuery(node),
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        name = nameTerminalNodeContent,
+        typePresent = context.isTypePresentByName(name),
+        verified = typePresent; ///
+
+  if (!typePresent) {
+    const message = `The '${name}' type is missing.`;
+
+    throw new Error(node, message);
+  }
+
+  return verified;
 }
