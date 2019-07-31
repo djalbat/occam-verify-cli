@@ -1,15 +1,15 @@
 'use strict';
 
-const Error = require('../error'),
-			queries = require('../miscellaneous/queries'),
+const SubTerm = require('../miscellaneous/subTerm'),
+      queries = require('../miscellaneous/queries'),
 			TermNode = require('../miscellaneous/termNode'),
 			ruleNames = require('../miscellaneous/ruleNames'),
-			TypedTerm = require('../miscellaneous/typedTerm'),
-			nodeUtilities = require('../utilities/node');
+			nodeUtilities = require('../utilities/node'),
+      SubExpression = require('../miscellaneous/subExpression');
 
-const { termNameTerminalNodeQuery } = queries,
-      { nodeAsString, cloneChildNodes } = nodeUtilities,
-      { NAME_RULE_NAME, TERM_RULE_NAME } = ruleNames;
+const { cloneChildNodes } = nodeUtilities,
+      { termNameTerminalNodeQuery } = queries,
+      { NAME_RULE_NAME, TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
 
 function verifyTerm(termNode, context, rules) {
 	let type = undefined;
@@ -51,34 +51,33 @@ module.exports = verifyTerm;
 function verifyTopmostTermNode(topmostTermNode, constructorTopmostTermNode, context, rules) {
   const node = topmostTermNode, ///
         topmost = true,
-        typedTerms = [],
+        subTerms = [],
         childNodes = cloneChildNodes(node),
+        subExpressions = [],
         constructorNode = constructorTopmostTermNode, ///
         constructorChildNodes = cloneChildNodes(constructorNode),
-        verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules, topmost);
+        verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, topmost);
 
   if (verified) {
-    const callback = verifyTopmostTermNode;  ///
+    let callback;
 
-    typedTerms.forEach((typedTerm) => {
-      const verified = typedTerm.verify(context, rules, callback);
+    callback = verifyTerm;  ///
 
-      if (!verified) {
-        const node = topmostTermNode,  ///
-              typeName = typedTerm.retrieveTypeName(context),
-              typedTermString = typedTerm.asString(),
-              topmostTermString = nodeAsString(topmostTermNode),
-              message = `The term '${topmostTermString}' cannot be verified because '${typedTermString}' is not a term or variable of type '${typeName}'.`;
+    subTerms.forEach((subTerm) => subTerm.verify(topmostTermNode, context, rules, callback));
 
-        throw new Error(node, message);
-      }
-    });
+    let verifyExpression;
+
+    ({ verifyExpression } = context);
+
+    callback = verifyExpression;  ///
+
+    subExpressions.forEach((subExpression) => subExpression.verify(topmostTermNode, context, rules, callback));
   }
 
   return verified;
 }
 
-function verifyNode(node, constructorNode, typedTerms, context, rules, topmost) {
+function verifyNode(node, constructorNode, subExpressions, subTerms, context, rules, topmost) {
 	let verified;
 
 	const nodeTerminalNode = node.isTerminalNode();
@@ -86,17 +85,17 @@ function verifyNode(node, constructorNode, typedTerms, context, rules, topmost) 
 	if (nodeTerminalNode) {
 		const terminalNode = node;  ///
 
-		verified = verifyTerminalNode(terminalNode, constructorNode, typedTerms, context, rules);
+		verified = verifyTerminalNode(terminalNode, constructorNode, subExpressions, subTerms, context, rules);
 	} else {
 		const nonTerminalNode = node; ///
 
-		verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, context, rules, topmost);
+		verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions, subTerms, context, rules, topmost);
 	}
 
 	return verified;
 }
 
-function verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules, topmost) {
+function verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, topmost) {
 	let verified = false;
 
 	let childNode = childNodes.shift(),
@@ -110,7 +109,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context
 		const node = childNode, ///
 					constructorNode = constructorChildNode; ///
 
-		verified = verifyNode(node, constructorNode, typedTerms, context, rules, topmost);
+		verified = verifyNode(node, constructorNode, subExpressions, subTerms, context, rules, topmost);
 
 		if (!verified) {
 			break;
@@ -129,7 +128,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context
 	return verified;
 }
 
-function verifyTerminalNode(terminalNode, constructorNode, typedTerms, context, rules) {
+function verifyTerminalNode(terminalNode, constructorNode, subExpressions, subTerms, context, rules) {
 	let verified = false;
 
 	const constructorNodeTerminalNode = constructorNode.isTerminalNode();
@@ -152,7 +151,7 @@ function verifyTerminalNode(terminalNode, constructorNode, typedTerms, context, 
 	return verified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, context, rules, topmost) {
+function verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions, subTerms, context, rules, topmost) {
 	let verified = false;
 
 	const constructorNodeNonTerminalNode = constructorNode.isNonTerminalNode();
@@ -168,11 +167,11 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, con
                 constructorChildNode = constructorNode, ///
                 termNode = TermNode.fromChildNode(childNode),
                 constructorTermNode = TermNode.fromChildNode(constructorChildNode),
-                typedTerm = TypedTerm.fromTermNodeAndConstructorTermNode(termNode, constructorTermNode);
+                subTerm = SubTerm.fromTermNodeAndConstructorTermNode(termNode, constructorTermNode);
 
-          typedTerms.push(typedTerm);
+          subTerms.push(subTerm);
 
-          verified = true;
+          verified = true;  ///
 
           break;
         }
@@ -180,11 +179,23 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, con
         case TERM_RULE_NAME : {
           const termNode = nonTerminalNode,  ///
                 constructorTermNode = constructorNode,  ///
-                typedTerm = TypedTerm.fromTermNodeAndConstructorTermNode(termNode, constructorTermNode);
+                subTerm = SubTerm.fromTermNodeAndConstructorTermNode(termNode, constructorTermNode);
 
-          typedTerms.push(typedTerm);
+          subTerms.push(subTerm);
 
-          verified = true;
+          verified = true;  ///
+
+          break;
+        }
+
+        case EXPRESSION_RULE_NAME : {
+          const expressionNode = nonTerminalNode,  ///
+                constructorTermNode = constructorNode,  ///
+                subExpression = SubExpression.fromExpressionNodeAndConstructorTermNode(expressionNode, constructorTermNode);
+
+          subExpressions.push(subExpression);
+
+          verified = true;  ///
 
           break;
         }
@@ -196,14 +207,14 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, con
                   childNodes = cloneChildNodes(node),
                   constructorChildNodes = cloneChildNodes(constructorNode);
 
-            verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules, topmost);
+            verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, topmost);
           } else {
             const childNode = nonTerminalNode,  ///
                   termNode = TermNode.fromChildNode(childNode);
 
             verifyTerm(termNode, context, rules);
 
-            verified = true;
+            verified = true;  ///
           }
         }
       }

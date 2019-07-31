@@ -187,7 +187,12 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
           case TERM_RULE_NAME : {
             const termNode = nonTerminalNode;  ///
 
+            Object.assign(context, {
+              verifyExpression
+            });
+
             type = verifyTerm(termNode, context, rules);
+
             break;
           }
 
@@ -195,6 +200,7 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
             const expressionNode = nonTerminalNode;  ///
 
             type = verifyExpression(expressionNode, context, rules);
+
             break;
           }
 
@@ -204,6 +210,8 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
                   rule = findRuleByName(name, rules);
 
             type = verifyWithRule(node, rule, context, rules);
+
+            break;
           }
         }
       }
