@@ -7,9 +7,9 @@ const Error = require('../error'),
 			TypedTerm = require('../miscellaneous/typedTerm'),
 			nodeUtilities = require('../utilities/node');
 
-const { TERM_RULE_NAME } = ruleNames,
-			{ termNameTerminalNodeQuery } = queries,
-			{ nodeAsString, cloneChildNodes } = nodeUtilities;
+const { termNameTerminalNodeQuery } = queries,
+      { nodeAsString, cloneChildNodes } = nodeUtilities,
+      { NAME_RULE_NAME, TERM_RULE_NAME } = ruleNames;
 
 function verifyTerm(termNode, context, rules) {
 	let type = undefined;
@@ -48,6 +48,36 @@ function verifyTerm(termNode, context, rules) {
 
 module.exports = verifyTerm;
 
+function verifyTopmostTermNode(topmostTermNode, constructorTopmostTermNode, context, rules) {
+  const node = topmostTermNode, ///
+        topmost = true,
+        typedTerms = [],
+        childNodes = cloneChildNodes(node),
+        constructorNode = constructorTopmostTermNode, ///
+        constructorChildNodes = cloneChildNodes(constructorNode),
+        verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules, topmost);
+
+  if (verified) {
+    const callback = verifyTopmostTermNode;  ///
+
+    typedTerms.forEach((typedTerm) => {
+      const verified = typedTerm.verify(context, rules, callback);
+
+      if (!verified) {
+        const node = topmostTermNode,  ///
+              typeName = typedTerm.retrieveTypeName(context),
+              typedTermString = typedTerm.asString(),
+              topmostTermString = nodeAsString(topmostTermNode),
+              message = `The term '${topmostTermString}' cannot be verified because '${typedTermString}' is not a term or variable of type '${typeName}'.`;
+
+        throw new Error(node, message);
+      }
+    });
+  }
+
+  return verified;
+}
+
 function verifyNode(node, constructorNode, typedTerms, context, rules, topmost) {
 	let verified;
 
@@ -62,15 +92,6 @@ function verifyNode(node, constructorNode, typedTerms, context, rules, topmost) 
 
 		verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, context, rules, topmost);
 	}
-
-	return verified;
-}
-
-function verifyTermNode(termNode, constructorTermNode, typedTerms, context, rules) {
-	const verified = true,  ///
-				typedTerm = TypedTerm.fromTermNodeAndConstructorTermNode(termNode, constructorTermNode);
-
-	typedTerms.push(typedTerm);
 
 	return verified;
 }
@@ -141,61 +162,54 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, typedTerms, con
 					constructorRuleName = constructorNode.getRuleName();
 
 		if (ruleName === constructorRuleName) {
-			if (ruleName === TERM_RULE_NAME) {
-				const termNode = nonTerminalNode,  ///
-							constructorTermNode = constructorNode;  ///
+		  switch (ruleName) {
+        case NAME_RULE_NAME : {
+          const childNode = nonTerminalNode,  ///
+                constructorChildNode = constructorNode, ///
+                termNode = TermNode.fromChildNode(childNode),
+                constructorTermNode = TermNode.fromChildNode(constructorChildNode),
+                typedTerm = TypedTerm.fromTermNodeAndConstructorTermNode(termNode, constructorTermNode);
 
-				verified = verifyTermNode(termNode, constructorTermNode, typedTerms, context, rules);
-			} else {
-				if (!topmost) {
-					const childNode = nonTerminalNode,  ///
-								termNode = TermNode.fromChildNode(childNode);
+          typedTerms.push(typedTerm);
 
-					verifyTerm(termNode, context, rules);
+          verified = true;
 
-					verified = true;
-				}
+          break;
+        }
 
-				if (!verified) {
-					const node = nonTerminalNode, ///
-								topmost = false,
-								childNodes = cloneChildNodes(node),
-								constructorChildNodes = cloneChildNodes(constructorNode);
+        case TERM_RULE_NAME : {
+          const termNode = nonTerminalNode,  ///
+                constructorTermNode = constructorNode,  ///
+                typedTerm = TypedTerm.fromTermNodeAndConstructorTermNode(termNode, constructorTermNode);
 
-					verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules, topmost);
-				}
-			}
+          typedTerms.push(typedTerm);
+
+          verified = true;
+
+          break;
+        }
+
+        default: {
+          if (!topmost) {
+            const childNode = nonTerminalNode,  ///
+                  termNode = TermNode.fromChildNode(childNode);
+
+            verifyTerm(termNode, context, rules);
+
+            verified = true;
+          }
+
+          if (!verified) {
+            const node = nonTerminalNode, ///
+                  topmost = false,
+                  childNodes = cloneChildNodes(node),
+                  constructorChildNodes = cloneChildNodes(constructorNode);
+
+            verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules, topmost);
+          }
+        }
+      }
 		}
-	}
-
-	return verified;
-}
-
-function verifyTopmostTermNode(topmostTermNode, constructorTopmostTermNode, context, rules) {
-	const node = topmostTermNode, ///
-				topmost = true,
-				typedTerms = [],
-				childNodes = cloneChildNodes(node),
-				constructorNode = constructorTopmostTermNode, ///
-				constructorChildNodes = cloneChildNodes(constructorNode),
-				verified = verifyChildNodes(childNodes, constructorChildNodes, typedTerms, context, rules, topmost);
-
-	if (verified) {
-		const callback = verifyTopmostTermNode;  ///
-
-		typedTerms.forEach((typedTerm) => {
-			const verified = typedTerm.verify(context, rules, callback);
-
-			if (!verified) {
-				const node = topmostTermNode,  ///
-							typeName = typedTerm.retrieveTypeName(context),
-							typedTermString = typedTerm.asString(),
-							topmostTermString = nodeAsString(topmostTermNode),
-							message = `The term '${topmostTermString}' cannot be verified because '${typedTermString}' is not a term or variable of type '${typeName}'.`;
-
-				throw new Error(node, message);
-			}
-		});
 	}
 
 	return verified;
