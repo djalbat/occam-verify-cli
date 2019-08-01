@@ -12,7 +12,7 @@ const { cloneChildNodes } = nodeUtilities,
       { NAME_RULE_NAME, TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
 
 function verifyTerm(termNode, context, rules) {
-	let type = undefined;
+  let type = undefined;
 
 	const constructors = context.getConstructors(),
 				topmostTermNode = termNode; ///

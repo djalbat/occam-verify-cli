@@ -23,6 +23,8 @@ const { partTypes } = parsers,
 			{ TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
 
 function verifyExpression(expressionNode, context, rules) {
+  Object.assign(context, { verifyExpression }); ///
+
   const expressionRule = findRuleByName('expression', rules),
         node = expressionNode,  ///
         rule = expressionRule,  ///
@@ -186,10 +188,6 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
         switch (ruleName) {
           case TERM_RULE_NAME : {
             const termNode = nonTerminalNode;  ///
-
-            Object.assign(context, {
-              verifyExpression
-            });
 
             type = verifyTerm(termNode, context, rules);
 
