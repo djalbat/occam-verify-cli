@@ -14,33 +14,12 @@ const { cloneChildNodes } = nodeUtilities,
 function verifyTerm(termNode, context, rules) {
   let type = undefined;
 
-	const constructors = context.getConstructors(),
-				topmostTermNode = termNode; ///
-
-	constructors.some((constructor) => {
-		const constructorTermNode = constructor.getTermNode(),
-					constructorTopmostTermNode = constructorTermNode, ///
-					verified = verifyTopmostTermNode(topmostTermNode, constructorTopmostTermNode, context, rules);
-
-		if (verified) {
-			type = constructor.getType();
-
-			return true;
-		}
-	});
+  if (type === undefined) {
+    type = verifyTermNodeAgainstConstructors(termNode, context, rules);
+  }
 
 	if (type === undefined) {
-		const termNameTerminalNode = termNameTerminalNodeQuery(termNode);
-
-		if (termNameTerminalNode !== undefined) {
-			const termNameTerminalNodeContent = termNameTerminalNode.getContent(),
-						name = termNameTerminalNodeContent, ///
-						variable = context.findVariableByName(name);
-
-			if (variable !== undefined) {
-				type = variable.getType();
-			}
-		}
+	  type = verifyTermNodeAgainstVariables(termNode, context, rules);
 	}
 
 	return type;
@@ -48,13 +27,50 @@ function verifyTerm(termNode, context, rules) {
 
 module.exports = verifyTerm;
 
-function verifyTopmostTermNode(topmostTermNode, constructorTopmostTermNode, context, rules) {
-  const node = topmostTermNode, ///
-        topmost = true,
+function verifyTermNodeAgainstConstructors(termNode, context, rules) {
+  let type = undefined;
+
+  const topmost = true, ///
+        constructors = context.getConstructors();
+
+  constructors.some((constructor) => {
+    const constructorTermNode = constructor.getTermNode(),
+          verified = verifyTermNode(termNode, constructorTermNode, context, rules, topmost);
+
+    if (verified) {
+      type = constructor.getType();
+
+      return true;
+    }
+  });
+
+  return type;
+}
+
+function verifyTermNodeAgainstVariables(termNode, context, rules) {
+  let type = undefined;
+
+  const termNameTerminalNode = termNameTerminalNodeQuery(termNode);
+
+  if (termNameTerminalNode !== undefined) {
+    const termNameTerminalNodeContent = termNameTerminalNode.getContent(),
+          name = termNameTerminalNodeContent, ///
+          variable = context.findVariableByName(name);
+
+    if (variable !== undefined) {
+      type = variable.getType();
+    }
+  }
+
+  return type;
+}
+
+function verifyTermNode(termNode, constructorTermNode, context, rules, topmost) {
+  const node = termNode, ///
         subTerms = [],
         childNodes = cloneChildNodes(node),
         subExpressions = [],
-        constructorNode = constructorTopmostTermNode, ///
+        constructorNode = constructorTermNode, ///
         constructorChildNodes = cloneChildNodes(constructorNode),
         verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, topmost);
 
@@ -164,8 +180,8 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions,
 		  switch (ruleName) {
         case NAME_RULE_NAME : {
           const childNode = nonTerminalNode,  ///
-                constructorChildNode = constructorNode, ///
                 termNode = TermNode.fromChildNode(childNode),
+                constructorChildNode = constructorNode, ///
                 constructorTermNode = TermNode.fromChildNode(constructorChildNode),
                 subTerm = SubTerm.fromTermNodeAndConstructorTermNode(termNode, constructorTermNode);
 
