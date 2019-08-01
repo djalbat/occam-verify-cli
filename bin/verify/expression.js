@@ -65,36 +65,32 @@ function verifyWithDefinition(node, definition, context, rules) {
   const parts = definition.getParts(),
         childNodes = cloneChildNodes(node);
 
-  parts.some((part) => {
+  parts.every((part) => {
     const partType = verifyWithPart(childNodes, part, context, rules);
 
-    if (partType === undefined) {
-      type = undefined;
+    if (partType !== undefined) {
+      if (type === undefined) {
+        type = partType;  ///
 
-      return true;
-    }
+        return true;
+      }
 
-    if (type === undefined) {
-      type = partType;  ///
-    } else {
-      if (partType !== emptyType) {
-        const partTypeEqualToType = partType.isEqualTo(type);
+      if (partType === emptyType) {
+        return true;
+      }
 
-        if (!partTypeEqualToType) {
-          const partTypeSubTypeOfType = partType.isSubTypeOf(type);
+      const partTypeEqualToOrSubTypeOfType = partType.isEqualToOrSubTypeOf(type);
 
-          if (!partTypeSubTypeOfType) {
-            const typeSubTypeOfPartType = type.isSubTypeOf(partType);
+      if (partTypeEqualToOrSubTypeOfType) {
+        return true;
+      }
 
-            if (typeSubTypeOfPartType) {
-              type = partType;
-            } else {
-              type = undefined;
+      const typeSubTypeOfPartType = type.isSubTypeOf(partType);
 
-              return true;
-            }
-          }
-        }
+      if (typeSubTypeOfPartType) {
+        type = partType;  ///
+
+        return true;
       }
     }
   });
