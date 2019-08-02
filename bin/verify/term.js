@@ -79,7 +79,7 @@ function verifyTermNode(termNode, constructorTermNode, context, rules, topmost) 
 
     callback = verifyTerm;  ///
 
-    subTerms.forEach((subTerm) => subTerm.verify(topmostTermNode, context, rules, callback));
+    subTerms.forEach((subTerm) => subTerm.verify(termNode, context, rules, callback));
 
     let verifyExpression;
 
@@ -87,7 +87,7 @@ function verifyTermNode(termNode, constructorTermNode, context, rules, topmost) 
 
     callback = verifyExpression;  ///
 
-    subExpressions.forEach((subExpression) => subExpression.verify(topmostTermNode, context, rules, callback));
+    subExpressions.forEach((subExpression) => subExpression.verify(termNode, context, rules, callback));
   }
 
   return verified;
