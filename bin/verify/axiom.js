@@ -3,15 +3,27 @@
 const Error = require('../error'),
       Axiom = require('../axiom'),
       queries = require('../miscellaneous/queries'),
-      verifyStatement = require('../verify/statement');
+      verifyUnqualifiedStatement = require('../verify/unqualifiedStatement'),
+      verifyIndicativeConditional = require('../verify/indicativeConditional');
 
-const { statementNodeQuery,
-				labelNameTerminalNodesQuery,
-				parenthesisedLabelsNodeQuery } = queries;
+const { labelNameTerminalNodesQuery,
+        parenthesisedLabelsNodeQuery,
+        unqualifiedStatementNodeQuery,
+        indicativeConditionalNodeQuery } = queries;
 
 function verifyAxiom(axiomNode, context, rules) {
-  const statementNode = statementNodeQuery(axiomNode),
-        verified = verifyStatement(statementNode, context, rules);
+  let verified = false;
+
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
+        indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
+
+  if (unqualifiedStatementNode !== undefined) {
+    verified = verifyUnqualifiedStatement(unqualifiedStatementNode, context, rules);
+  }
+
+  if (indicativeConditionalNode !== undefined) {
+    verified = verifyIndicativeConditional(indicativeConditionalNode, context, rules);
+  }
 
   if (verified) {
     const parenthesisedLabelsNode = parenthesisedLabelsNodeQuery(axiomNode),
@@ -34,7 +46,15 @@ function verifyAxiom(axiomNode, context, rules) {
       }
     });
 
-    const axiom = Axiom.fromStatementNodeAndLabels(statementNode, labels);
+    let axiom;
+
+    if (unqualifiedStatementNode !== undefined) {
+      axiom = Axiom.fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels);
+    }
+
+    if (indicativeConditionalNode !== undefined) {
+      axiom = Axiom.fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels);
+    }
 
     context.addAxiom(axiom);
   }

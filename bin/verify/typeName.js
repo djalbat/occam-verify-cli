@@ -2,13 +2,13 @@
 
 const Error = require('../error');
 
-function verifyTypeName(typeNameNode, context, rules) {
-  const typeNameNodeContent = typeNameNode.getContent(),
-        typeName = typeNameNodeContent, ///
+function verifyTypeName(typeNameTerminalNode, context, rules) {
+  const typeNameTerminalNodeContent = typeNameTerminalNode.getContent(),
+        typeName = typeNameTerminalNodeContent, ///
         type = context.findTypeByTypeName(typeName);
 
   if (type === undefined) {
-    const node = typeNameNode, ///
+    const node = typeNameTerminalNode, ///
           message = `The type '${typeName}' is missing.`;
 
     throw new Error(node, message);

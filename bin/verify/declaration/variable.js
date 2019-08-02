@@ -5,7 +5,7 @@ const Error = require('../../error'),
       Variable = require('../../variable'),
       verifyTypeName = require('../../verify/typeName');
 
-const { typeNameNodeQuery, nameTerminalNodeQuery } = queries;
+const { typeNameTerminalNodeQuery, nameTerminalNodeQuery } = queries;
 
 function verifyVariableDeclaration(variableDeclarationNode, context, rules) {
   const nameTerminalNode = nameTerminalNodeQuery(variableDeclarationNode),
@@ -20,8 +20,8 @@ function verifyVariableDeclaration(variableDeclarationNode, context, rules) {
     throw new Error(node, message);
   }
 
-  const typeNameNode = typeNameNodeQuery(variableDeclarationNode),
-        type = verifyTypeName(typeNameNode, context, rules),
+  const typeNameTerminalNode = typeNameTerminalNodeQuery(variableDeclarationNode),
+        type = verifyTypeName(typeNameTerminalNode, context, rules),
         variable = Variable.fromNameAndType(name, type);
 
   context.addVariable(variable);

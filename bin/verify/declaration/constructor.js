@@ -5,15 +5,15 @@ const queries = require('../../miscellaneous/queries'),
 			verifyTypeName = require('../../verify/typeName'),
       verifyTermAsConstructor = require('../../verify/termAsConstructor');
 
-const { termNodeQuery, typeNameNodeQuery } = queries;
+const { termNodeQuery, typeNameTerminalNodeQuery } = queries;
 
 function verifyConstructorDeclaration(constructorDeclarationNode, context, rules) {
   const termNode = termNodeQuery(constructorDeclarationNode);
 
   verifyTermAsConstructor(termNode, context, rules);
 
-  const typeNameNode = typeNameNodeQuery(constructorDeclarationNode),
-        type = verifyTypeName(typeNameNode, context, rules),
+  const typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode),
+        type = verifyTypeName(typeNameTerminalNode, context, rules),
 		    constructor = Constructor.fromTermNodeAndType(termNode, type);
 
 	context.addConstructor(constructor);

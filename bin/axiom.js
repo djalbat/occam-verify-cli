@@ -1,17 +1,22 @@
 'use strict';
 
 class Axiom {
-  constructor(statementNode, labels) {
-    this.statementNode = statementNode;
+  constructor(labels, unqualifiedStatementNode, indicativeConditionalNode) {
     this.labels = labels;
-  }
-
-  getStatementNode() {
-    return this.statementNode;
+    this.unqualifiedStatementNode = unqualifiedStatementNode;
+    this.indicativeConditionalNode = indicativeConditionalNode;
   }
 
   getLabels() {
     return this.labels;
+  }
+
+  getUnqualifiedStatementNode() {
+    return this.unqualifiedStatementNode;
+  }
+
+  getIndicativeConditionalNode() {
+    return this.indicativeConditionalNode;
   }
 
   asString() {
@@ -21,8 +26,16 @@ class Axiom {
     return string;
   }
 
-  static fromStatementNodeAndLabels(statementNode, labels) {
-    const axiom = new Axiom(statementNode, labels);
+  static fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels) {
+    const indicativeConditionalNode = undefined,
+          axiom = new Axiom(labels, unqualifiedStatementNode, indicativeConditionalNode);
+
+    return axiom;
+  }
+
+  static fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels) {
+    const unqualifiedStatementNode = undefined,
+          axiom = new Axiom(labels, unqualifiedStatementNode, indicativeConditionalNode);
 
     return axiom;
   }
