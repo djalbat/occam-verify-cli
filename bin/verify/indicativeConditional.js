@@ -14,10 +14,6 @@ function verifyIndicativeConditional(indicativeConditionalNode, context, rules) 
   const qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode);
 
   verifyQualifiedStatement(qualifiedStatementNode, context, rules);
-
-  const verified = true; ///
-
-  return verified;
 }
 
 module.exports = verifyIndicativeConditional;

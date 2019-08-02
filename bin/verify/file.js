@@ -16,11 +16,12 @@ const { fileSystemUtilities } = necessary,
 			{ florenceLexerFromNothing, florenceParserFromNothing } = grammarUtilities;
 
 function verifyFile(filePath, context, florenceLexer = florenceLexerFromNothing, florenceParser = florenceParserFromNothing) {
+  const fileContent = readFile(filePath),
+        tokens = florenceLexer.tokenise(fileContent),
+        node = florenceParser.parse(tokens);
+
   try {
-    const fileContent = readFile(filePath),
-          tokens = florenceLexer.tokenise(fileContent),
-          node = florenceParser.parse(tokens),
-          rules = florenceParser.getRules(),
+    const rules = florenceParser.getRules(),
           documentNode = node,  ///
           axiomOrDeclarationNodes = axiomOrDeclarationNodesQuery(documentNode);
 
@@ -29,12 +30,12 @@ function verifyFile(filePath, context, florenceLexer = florenceLexerFromNothing,
     if (!(error instanceof Error)) {
       throw error;
     } else {
-      const node = error.getNode(),
-            message = error.getMessage(),
-            lineIndex = lineIndexFromNodeAndTokens(node, tokens),
+      const errorNode = error.getNode(),
+            errorMessage = error.getMessage(),
+            lineIndex = lineIndexFromNodeAndTokens(errorNode, tokens),
             lineNumber = lineIndex + 1;
 
-      console.log(`${filePath}:${lineNumber}: ${message}`);
+      console.log(`${filePath}:${lineNumber}: ${errorMessage}`);
 
       exit();
     }

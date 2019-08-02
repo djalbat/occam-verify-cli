@@ -92,6 +92,8 @@ function verifyWithDefinition(node, definition, context, rules) {
 
         return true;
       }
+
+      type = undefined;
     }
   });
 

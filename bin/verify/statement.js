@@ -2,7 +2,8 @@
 
 const parsers = require('occam-parsers');
 
-const queries = require('../miscellaneous/queries'),
+const Error = require('../error'),
+      queries = require('../miscellaneous/queries'),
       emptyType = require('../miscellaneous/emptyType'),
       ruleNames = require('../miscellaneous/ruleNames'),
       verifyTerm = require('../verify/term'),
@@ -14,7 +15,6 @@ const queries = require('../miscellaneous/queries'),
 
 const { partTypes } = parsers,
       { findRuleByName } = ruleUtilities,
-      { cloneChildNodes } = nodeUtilities,
       { equalityNodeQuery } = queries,
       { RuleNamePartType,
         OptionalPartPartType,
@@ -22,6 +22,7 @@ const { partTypes } = parsers,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
         ZeroOrMorePartsPartType } = partTypes,
+      { nodeAsString, cloneChildNodes } = nodeUtilities,
       { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
 
 function verifyStatement(statementNode, context, rules) {
@@ -36,21 +37,37 @@ function verifyStatement(statementNode, context, rules) {
   } else {
     const statementRule = findRuleByName('statement', rules),
           node = statementNode, ///
-          rule = statementRule; ///
+          rule = statementRule, ///
+          type = verifyWithRule(node, rule, context, rules);
 
-    verified = verifyWithRule(node, rule, context, rules);
+    verified = (type !== undefined);
   }
 
-  return verified;
+  if (!verified) {
+    const node = statementNode,  ///
+          statementString = nodeAsString(statementNode),
+          message = `The statement '${statementString}' cannot be verified.`;
+
+    throw new Error(node, message);
+  }
 }
 
 module.exports = verifyStatement;
 
 function verifyWithRule(node, rule, context, rules) {
-  const definitions = rule.getDefinitions(),
-        verified = definitions.some((definition) => verifyWithDefinition(node, definition, context, rules));
+  let type = undefined;
 
-  return verified;
+  const definitions = rule.getDefinitions();
+
+  definitions.some((definition) => {
+    type = verifyWithDefinition(node, definition, context, rules);
+
+    if (type !== undefined) {
+      return true;
+    }
+  });
+
+  return type;
 }
 
 function verifyWithDefinition(node, definition, context, rules) {
@@ -86,6 +103,8 @@ function verifyWithDefinition(node, definition, context, rules) {
 
         return true;
       }
+
+      type = undefined;
     }
   });
 

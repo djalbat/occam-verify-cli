@@ -12,52 +12,48 @@ const { labelNameTerminalNodesQuery,
         indicativeConditionalNodeQuery } = queries;
 
 function verifyAxiom(axiomNode, context, rules) {
-  let verified = false;
-
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
         indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
   if (unqualifiedStatementNode !== undefined) {
-    verified = verifyUnqualifiedStatement(unqualifiedStatementNode, context, rules);
+    verifyUnqualifiedStatement(unqualifiedStatementNode, context, rules);
   }
 
   if (indicativeConditionalNode !== undefined) {
-    verified = verifyIndicativeConditional(indicativeConditionalNode, context, rules);
+    verifyIndicativeConditional(indicativeConditionalNode, context, rules);
   }
 
-  if (verified) {
-    const parenthesisedLabelsNode = parenthesisedLabelsNodeQuery(axiomNode),
-          labelNameTerminalNodes = labelNameTerminalNodesQuery(parenthesisedLabelsNode),
-          labels = labelNameTerminalNodes.map((labelNameTerminalNode) => {
-            const labelNameTerminalNodeContent = labelNameTerminalNode.getContent(),
-                  label = labelNameTerminalNodeContent; ///
+  const parenthesisedLabelsNode = parenthesisedLabelsNodeQuery(axiomNode),
+        labelNameTerminalNodes = labelNameTerminalNodesQuery(parenthesisedLabelsNode),
+        labels = labelNameTerminalNodes.map((labelNameTerminalNode) => {
+          const labelNameTerminalNodeContent = labelNameTerminalNode.getContent(),
+                label = labelNameTerminalNodeContent; ///
 
-            return label;
-          });
+          return label;
+        });
 
-    labels.forEach((label) => {
-      const labelPresent = context.isLabelPresent(label);
+  labels.forEach((label) => {
+    const labelPresent = context.isLabelPresent(label);
 
-      if (labelPresent) {
-        const node = axiomNode, ///
-              message = `The label ${label} is already present`;
+    if (labelPresent) {
+      const node = axiomNode, ///
+            message = `The label ${label} is already present`;
 
-        throw new Error(node, message);
-      }
-    });
-
-    let axiom;
-
-    if (unqualifiedStatementNode !== undefined) {
-      axiom = Axiom.fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels);
+      throw new Error(node, message);
     }
+  });
 
-    if (indicativeConditionalNode !== undefined) {
-      axiom = Axiom.fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels);
-    }
+  let axiom;
 
-    context.addAxiom(axiom);
+  if (unqualifiedStatementNode !== undefined) {
+    axiom = Axiom.fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels);
   }
+
+  if (indicativeConditionalNode !== undefined) {
+    axiom = Axiom.fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels);
+  }
+
+  context.addAxiom(axiom);
 }
 
 module.exports = verifyAxiom;

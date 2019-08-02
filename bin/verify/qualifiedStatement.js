@@ -3,13 +3,18 @@
 const queries = require('../miscellaneous/queries'),
       verifyStatement = require('../verify/statement');
 
-const { statementNodeQuery } = queries;
+const { qualificationNodeQuery, statementNodeQuery } = queries;
 
 function verifyQualifiedStatement(qualifiedStatementNode, context, rules) {
-  const statementNode = statementNodeQuery(qualifiedStatementNode),
-        verified = verifyStatement(statementNode, context, rules);
+  const statementNode = statementNodeQuery(qualifiedStatementNode);
 
-  return verified;
+  verifyStatement(statementNode, context, rules);
+
+  const qualificationNode = qualificationNodeQuery(qualifiedStatementNode);
+
+  if (qualificationNode !== undefined) {
+    debugger
+  }
 }
 
 module.exports = verifyQualifiedStatement;
