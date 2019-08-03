@@ -3,13 +3,15 @@
 const dom = require('occam-dom'),
       lexers = require('occam-lexers'),
       parsers = require('occam-parsers'),
-      necessary = require('necessary');
+      necessary = require('necessary'),
+      customgrammars = require('occam-custom-grammars');  ///;
 
-const customgrammars = require('occam-custom-grammars');  ///;
+const contentUtilities = require('../utilities/content');
 
 const { Query } = dom,
       { MetaJSONLexer } = lexers,
       { MetaJSONParser } = parsers,
+      { trimDoubleQuotes } = contentUtilities,
       { fileSystemUtilities } = necessary,
       { checkFileExists, readFile } = fileSystemUtilities,
       { CustomGrammar, CombinedCustomGrammars } = customgrammars;
@@ -34,7 +36,7 @@ function dependenciesFromPackageName(packageName) {
 
     dependencies = dependenciesStringLiterals.map((dependenciesStringLiteral) => {
       const dependenciesStringLiteralContent = dependenciesStringLiteral.getContent(),
-            dependency = dependenciesStringLiteralContent;  ///
+            dependency = trimDoubleQuotes(dependenciesStringLiteralContent);
 
       return dependency;
     });

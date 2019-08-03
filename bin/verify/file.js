@@ -8,8 +8,8 @@ const Error = require('../error'),
       lineIndexUtilities = require('../utilities/lineIndex'),
       verifyTopLevelInstruction = require('../verify/axiomOrDeclaration');
 
-const { fileSystemUtilities } = necessary,
-      { exit } = process,
+const { exit } = process,
+      { fileSystemUtilities } = necessary,
       { readFile } = fileSystemUtilities,
       { lineIndexFromNodeAndTokens } = lineIndexUtilities,
       { axiomOrDeclarationNodesQuery } = queries,
