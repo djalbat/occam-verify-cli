@@ -4,21 +4,26 @@ const open = require('occam-open-cli'), ///
 			necessary = require('necessary');
 
 const verifyFile = require('../verify/file'),
-			grammarUtilities = require('../utilities/grammar');
+			grammarUtilities = require('../utilities/grammar'),
+      packageUtilities = require('../utilities/package');
 
 const { filePathUtilities } = open,
 			{ fileSystemUtilities } = necessary,
+      { readDirectory } = fileSystemUtilities,
 			{ isFilePathFlorenceFilePath } = filePathUtilities,
-			{ readDirectory } = fileSystemUtilities,
-			{ combinedCustomGrammarsFromPackageName, florenceLexerFromCombinedCustomGrammars, florenceParserFromCombinedCustomGrammars } = grammarUtilities;
+      { dependenciesFromPackageName, combinedCustomGrammarsFromPackageName } = packageUtilities,
+			{ florenceLexerFromCombinedCustomGrammars, florenceParserFromCombinedCustomGrammars } = grammarUtilities;
 
 function verifyPackage(packageName, context) {
-  const combinedCustomGrammars = combinedCustomGrammarsFromPackageName(packageName),
+  const dependencies = dependenciesFromPackageName(packageName);
+
+  /*      combinedCustomGrammars = combinedCustomGrammarsFromPackageName(packageName),
 		    filePaths = filePathsFromPackageName(packageName),
         florenceLexer = florenceLexerFromCombinedCustomGrammars(combinedCustomGrammars),
         florenceParser = florenceParserFromCombinedCustomGrammars(combinedCustomGrammars);
 
   filePaths.forEach((filePath) => verifyFile(filePath, context, florenceLexer, florenceParser))
+  */
 }
 
 module.exports = verifyPackage;

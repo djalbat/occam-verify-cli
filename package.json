@@ -14,9 +14,9 @@
     "necessary": "^3.4.0",
     "occam-custom-grammars": "^1.3.11",
     "occam-dom": "^1.1.0",
-    "occam-lexers": "^9.0.4",
+    "occam-lexers": "^9.1.1",
     "occam-open-cli": "^2.0.10",
-    "occam-parsers": "^9.0.30"
+    "occam-parsers": "^9.1.0"
   },
   "devDependencies": {},
   "scripts": {}
