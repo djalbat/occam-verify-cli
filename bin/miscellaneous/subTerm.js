@@ -6,11 +6,13 @@ class SubTerm {
 		this.constructorTermNode = constructorTermNode;
 	}
 
-	verify(context, rules, verifyExpression, verifyTermNode) {
-    const verified = verifyTermNode(this.termNode, this.constructorTermNode, context, rules, verifyExpression);
+	getTermNode() {
+	  return this.termNode;
+  }
 
-    return verified;
-	}
+  getConstructorTermNode() {
+	  return this.constructorTermNode;
+  }
 
   static fromTermNodeAndConstructorTermNode(termNode, constructorTermNode) { return new SubTerm(termNode, constructorTermNode); }
 }

@@ -73,10 +73,16 @@ function verifyTermNode(termNode, constructorTermNode, context, rules, verifyExp
         constructorNode = constructorTermNode, ///
         constructorChildNodes = cloneChildNodes(constructorNode);
 
-  verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, verifyExpression);
+  verified = verifyChildNodes(childNodes, constructorChildNodes, context, rules, subTerms, subExpressions, verifyExpression);
 
   if (verified) {
-    verified = subTerms.every((subTerm) => subTerm.verify(context, rules, verifyExpression, verifyTermNode));
+    verified = subTerms.every((subTerm) => {
+      const termNode = subTerm.getTermNode(),
+            constructorTermNode = subTerm.getConstructorTermNode(),
+            verified = verifyTermNode(termNode, constructorTermNode, context, rules, verifyExpression);
+
+      return verified;
+    });
   }
 
   if (verified) {
@@ -86,7 +92,7 @@ function verifyTermNode(termNode, constructorTermNode, context, rules, verifyExp
   return verified;
 }
 
-function verifyNode(node, constructorNode, subExpressions, subTerms, context, rules, verifyExpression) {
+function verifyNode(node, constructorNode, context, rules, subTerms, subExpressions, verifyExpression) {
 	let verified;
 
 	const nodeTerminalNode = node.isTerminalNode();
@@ -94,17 +100,17 @@ function verifyNode(node, constructorNode, subExpressions, subTerms, context, ru
 	if (nodeTerminalNode) {
 		const terminalNode = node;  ///
 
-		verified = verifyTerminalNode(terminalNode, constructorNode, subExpressions, subTerms, context, rules, verifyExpression);
+		verified = verifyTerminalNode(terminalNode, constructorNode, context, rules, subTerms, subExpressions, verifyExpression);
 	} else {
 		const nonTerminalNode = node; ///
 
-		verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions, subTerms, context, rules, verifyExpression);
+		verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules, subTerms, subExpressions, verifyExpression);
 	}
 
 	return verified;
 }
 
-function verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, verifyExpression) {
+function verifyChildNodes(childNodes, constructorChildNodes, context, rules, subTerms, subExpressions, verifyExpression) {
 	let verified = false;
 
 	let childNode = childNodes.shift(),
@@ -118,7 +124,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, subExpressions, sub
 		const node = childNode, ///
 					constructorNode = constructorChildNode; ///
 
-		verified = verifyNode(node, constructorNode, subExpressions, subTerms, context, rules, verifyExpression);
+		verified = verifyNode(node, constructorNode, context, rules, subTerms, subExpressions, verifyExpression);
 
 		if (!verified) {
 			break;
@@ -137,7 +143,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, subExpressions, sub
 	return verified;
 }
 
-function verifyTerminalNode(terminalNode, constructorNode, subExpressions, subTerms, context, rules, verifyExpression) {
+function verifyTerminalNode(terminalNode, constructorNode, context, rules, subTerms, subExpressions, verifyExpression) {
 	let verified = false;
 
 	const constructorNodeTerminalNode = constructorNode.isTerminalNode();
@@ -160,7 +166,7 @@ function verifyTerminalNode(terminalNode, constructorNode, subExpressions, subTe
 	return verified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions, subTerms, context, rules, verifyExpression) {
+function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules, subTerms, subExpressions, verifyExpression) {
 	let verified = false;
 
 	const constructorNodeNonTerminalNode = constructorNode.isNonTerminalNode();
@@ -176,7 +182,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions,
                 nameTerminalNode = nameTerminalNodeQuery(node),
                 constructorNameTerminalNode = nameTerminalNodeQuery(constructorNode);
 
-          verified = verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, subExpressions, subTerms, context, rules, verifyExpression);
+          verified = verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, context, rules, subTerms, subExpressions, verifyExpression);
 
           break;
         }
@@ -210,7 +216,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions,
                 childNodes = cloneChildNodes(node),
                 constructorChildNodes = cloneChildNodes(constructorNode);
 
-          verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, verifyExpression);
+          verified = verifyChildNodes(childNodes, constructorChildNodes, context, rules, subTerms, subExpressions, verifyExpression);
         }
       }
 		}
@@ -219,7 +225,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions,
 	return verified;
 }
 
-function verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, subExpressions, subTerms, context, rules, verifyExpression) {
+function verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, context, rules, subTerms, subExpressions, verifyExpression) {
   let verified = false;
 
   const nameTerminalNodeContent = nameTerminalNode.getContent(),
