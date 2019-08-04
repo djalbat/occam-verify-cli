@@ -217,21 +217,28 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions,
         }
 
         default: {
-          if (topmost) {
-            const node = nonTerminalNode, ///
-                  topmost = false,
-                  childNodes = cloneChildNodes(node),
-                  constructorChildNodes = cloneChildNodes(constructorNode);
+          const node = nonTerminalNode, ///
+                topmost = false,
+                childNodes = cloneChildNodes(node),
+                constructorChildNodes = cloneChildNodes(constructorNode);
 
-            verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, topmost);
-          } else {
-            const childNode = nonTerminalNode,  ///
-                  termNode = TermNode.fromChildNode(childNode);
+          verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, topmost);
 
-            verifyTerm(termNode, context, rules);
-
-            verified = true;  ///
-          }
+          // if (topmost) {
+          //   const node = nonTerminalNode, ///
+          //         topmost = false,
+          //         childNodes = cloneChildNodes(node),
+          //         constructorChildNodes = cloneChildNodes(constructorNode);
+          //
+          //   verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, topmost);
+          // } else {
+          //   const childNode = nonTerminalNode,  ///
+          //         termNode = TermNode.fromChildNode(childNode);
+          //
+          //   verifyTerm(termNode, context, rules);
+          //
+          //   verified = true;  ///
+          // }
         }
       }
 		}
