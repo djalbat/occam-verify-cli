@@ -46,17 +46,9 @@ function dependenciesFromPackageName(packageName) {
 }
 
 function combinedCustomGrammarsFromPackageNames(packageNames) {
-	const directoryPaths = packageNames.reduce((directoryPaths, packageName) => {
-	        if (packageName !== undefined) {
-	          const directoryPath = packageName;  ///
-
-            directoryPaths.push(directoryPath);
-          }
-
-	        return directoryPaths;
-        }, []),
-        customGrammars = directoryPaths.map((directoryPath) => {
-          const customGrammar = CustomGrammar.fromDirectoryPath(directoryPath);
+	const customGrammars = packageNames.map((packageName) => {
+          const directoryPath = packageName,  ///
+                customGrammar = CustomGrammar.fromDirectoryPath(directoryPath);
 
           return customGrammar;
         }),

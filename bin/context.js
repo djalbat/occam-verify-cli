@@ -18,70 +18,72 @@ class Context {
   }
 
   getTypes() {
-    let types;
+    const types = [];
+
+    add(types, this.types);
 
     if (this.parentContext !== undefined) {
       const parentContextTypes = this.parentContext.getTypes();
 
-      types = this.types.concat(parentContextTypes);
-    } else {
-      types = this.types;
+      add(types, parentContextTypes);
     }
 
     return types;
   }
 
   getAxioms() {
-    let axioms;
+    const axioms = [];
+
+    add(axioms, this.axioms);
 
     if (this.parentContext !== undefined) {
       const parentContextAxioms = this.parentContext.getAxioms();
 
-      axioms = this.axioms.concat(parentContextAxioms);
-    } else {
-      axioms = this.axioms;
+      add(axioms, parentContextAxioms);
     }
 
     return axioms;
   }
 
   getVariables() {
-    let variables;
+    const variables = [];
+
+    add(variables, this.variables);
 
     if (this.parentContext !== undefined) {
       const parentContextVariables = this.parentContext.getVariables();
 
-      variables = this.variables.concat(parentContextVariables);
-    } else {
-      variables = this.variables;
+      add(variables, parentContextVariables);
     }
 
     return variables;
   }
 
   getConstructors() {
-    let constructors;
+    const constructors = [];
+
+    add(constructors, this.constructors);
 
     if (this.parentContext !== undefined) {
       const parentContextConstructors = this.parentContext.getConstructors();
 
-      constructors = this.constructors.concat(parentContextConstructors);
-    } else {
-      constructors = this.constructors;
+      add(constructors, parentContextConstructors);
     }
 
     return constructors;
   }
 
   getPackageNames() {
-    const packageNames = [
-      this.packageName
-    ];
+    const packageNames = [];
 
     if (this.parentContext !== undefined) {
       const parentContextPackageNames = this.parentContext.getPackageNames();
 
       add(packageNames, parentContextPackageNames);
+    }
+
+    if (this.packageName !== undefined) {
+      packageNames.push(this.packageName);
     }
 
     return packageNames;
@@ -90,7 +92,7 @@ class Context {
   addType(type) {
     const typeString = type.asString();
 
-    this.types.push(type);
+    this.types.unshift(type);
 
     console.log(`Added the '${typeString}' type to the context.`);
   }
@@ -98,7 +100,7 @@ class Context {
   addAxiom(axiom) {
     const axiomString = axiom.asString();
 
-    this.axioms.push(axiom);
+    this.axioms.unshift(axiom);
 
     console.log(`Added the '${axiomString}' axiom to the context.`);
   }
@@ -106,7 +108,7 @@ class Context {
   addVariable(variable) {
     const variableString = variable.asString();
 
-    this.variables.push(variable);
+    this.variables.unshift(variable);
 
     console.log(`Added the '${variableString}' variable to the context.`);
   }
@@ -114,13 +116,9 @@ class Context {
   addConstructor(constructor) {
     const constructorString = constructor.asString();
 
-    this.constructors.push(constructor);
+    this.constructors.unshift(constructor);
 
     console.log(`Added the '${constructorString}' constructor to the context.`);
-  }
-
-  addPackageName(packageName) {
-    this.packageNames.unshift(packageName); ///
   }
 
   addTypes(types) {

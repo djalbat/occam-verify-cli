@@ -66,26 +66,26 @@ function verifyTermNodeAgainstVariables(termNode, context, rules) {
 }
 
 function verifyTermNode(termNode, constructorTermNode, context, rules, topmost) {
+  let verified;
+
   const node = termNode, ///
         subTerms = [],
         childNodes = cloneChildNodes(node),
         subExpressions = [],
         constructorNode = constructorTermNode, ///
-        constructorChildNodes = cloneChildNodes(constructorNode),
-        verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, topmost);
+        constructorChildNodes = cloneChildNodes(constructorNode);
+
+  verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, subTerms, context, rules, topmost);
 
   if (verified) {
-    let callback;
+    const callback = verifyTerm;  ///
 
-    callback = verifyTerm;  ///
+    verified = subTerms.every((subTerm) => subTerm.verify(termNode, context, rules, callback));
+  }
 
-    subTerms.forEach((subTerm) => subTerm.verify(termNode, context, rules, callback));
-
-    let verifyExpression;
-
-    ({ verifyExpression } = context);
-
-    callback = verifyExpression;  ///
+  if (verified) {
+    const { verifyExpression } = context,
+          callback = verifyExpression;  ///
 
     subExpressions.forEach((subExpression) => subExpression.verify(termNode, context, rules, callback));
   }

@@ -1,11 +1,8 @@
 'use strict';
 
-const Error = require('../error'),
-      queries = require('../miscellaneous/queries'),
-			nodeUtilities = require('../utilities/node');
+const queries = require('../miscellaneous/queries');
 
-const { nodeAsString } = nodeUtilities,
-			{ termNameTerminalNodeQuery } = queries;
+const { termNameTerminalNodeQuery } = queries;
 
 class SubTerm {
 	constructor(termNode, constructorTermNode) {
@@ -40,15 +37,7 @@ class SubTerm {
       verified = typeEqualToOrSubTypeOfConstructorType;  ///
     }
 
-    if (!verified) {
-      const node = topmostTermNode,  ///
-            termString = nodeAsString(this.termNode),
-            topmostTermString = nodeAsString(topmostTermNode),
-            constructorTypeName = this.retrieveConstructorTypeName(context),
-            message = `The '${topmostTermString}' term cannot be verified because '${termString}' is not of type '${constructorTypeName}'.`;
-
-      throw new Error(node, message);
-    }
+    return verified;
 	}
 
   static fromTermNodeAndConstructorTermNode(termNode, constructorTermNode) { return new SubTerm(termNode, constructorTermNode); }

@@ -1,14 +1,9 @@
 'use strict';
 
-const necessary = require('necessary');
-
 const verifyFiles = require('../verify/files'),
       packageUtilities = require('../utilities/package');
 
-const { exit } = process,
-			{ arrayUtilities } = necessary,
-      { first } = arrayUtilities,
-      { dependenciesFromPackageName } = packageUtilities;
+const { dependenciesFromPackageName } = packageUtilities;
 
 function verifyPackage(packageName, context) {
   const dependencies = dependenciesFromPackageName(packageName);
