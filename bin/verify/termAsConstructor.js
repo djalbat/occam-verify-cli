@@ -7,15 +7,14 @@ const Error = require('../error'),
 			TermNode = require('../miscellaneous/termNode'),
 			ruleNames = require('../miscellaneous/ruleNames'),
       ChildNodes = require('../miscellaneous/childNodes'),
-			verifyTerm = require('../verify/term'),
       nodeUtilities = require('../utilities/node'),
 			ruleUtilities = require('../utilities/rule'),
 			Configuration = require('../miscellaneous/configuration'),
-      verifyExpression = require('../verify/expression');
+      verifyUtilities = require('../utilities/verify');
 
 const { partTypes } = parsers,
+      { NAME_RULE_NAME } = ruleNames,
 			{ findRuleByName } = ruleUtilities,
-			{ NAME_RULE_NAME } = ruleNames,
 			{ nameTerminalNodeQuery } = queries,
       { RuleNamePartType,
         OptionalPartPartType,
@@ -23,6 +22,7 @@ const { partTypes } = parsers,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
         ZeroOrMorePartsPartType } = partTypes,
+      { verifyTerm, verifyExpression } = verifyUtilities,
 			{ nodeAsString, cloneChildNodes } = nodeUtilities;
 
 function verifyTermAsConstructor(termNode, context, rules) {

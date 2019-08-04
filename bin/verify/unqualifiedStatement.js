@@ -1,9 +1,10 @@
 'use strict';
 
 const queries = require('../miscellaneous/queries'),
-      verifyStatement = require('../verify/statement');
+      verifyUtilities = require('../utilities/verify');
 
-const { statementNodeQuery } = queries;
+const { verifyStatement } = verifyUtilities,
+      { statementNodeQuery } = queries;
 
 function verifyUnqualifiedStatement(unqualifiedStatementNode, context, rules) {
   const statementNode = statementNodeQuery(unqualifiedStatementNode);

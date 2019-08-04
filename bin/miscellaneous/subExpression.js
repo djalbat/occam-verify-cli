@@ -28,10 +28,10 @@ class SubExpression {
 		return constructorTypeName;
 	}
 
-	verify(topmostTermNode, context, rules, callback) {
+	verify(topmostTermNode, context, rules, verifyExpression) {
 	  let verified = false;
 
-		const type = callback(this.expressionNode, context, rules);
+		const type = verifyExpression(this.expressionNode, context, rules);
 
 		if (type !== undefined) {
       const constructorType = this.retrieveConstructorType(context),
