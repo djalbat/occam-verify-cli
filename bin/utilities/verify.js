@@ -129,18 +129,28 @@ function verifyTermNode(termNode, constructorTermNode, context, rules) {
 }
 
 function verifyNode(node, constructorNode, subExpressions, context, rules) {
-  let verified;
+  let verified = false;
 
   const nodeTerminalNode = node.isTerminalNode();
 
   if (nodeTerminalNode) {
-    const terminalNode = node;  ///
+    const constructorNodeTerminalNode = constructorNode.isTerminalNode();
 
-    verified = verifyTerminalNode(terminalNode, constructorNode, context, rules);
+    if (constructorNodeTerminalNode) {
+      const terminalNode = node,  ///
+            constructorTerminalNode = constructorNode; ///
+
+      verified = verifyTerminalNode(terminalNode, constructorTerminalNode, context, rules);
+    }
   } else {
-    const nonTerminalNode = node; ///
+    const constructorNodeNonTerminalNode = constructorNode.isNonTerminalNode();
 
-    verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions, context, rules);
+    if (constructorNodeNonTerminalNode) {
+      const nonTerminalNode = node, ///
+            constructorNonTerminalNode = constructorNode; ///
+
+      verified = verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, subExpressions, context, rules);
+    }
   }
 
   return verified;
@@ -179,78 +189,55 @@ function verifyChildNodes(childNodes, constructorChildNodes, subExpressions, con
   return verified;
 }
 
-function verifyTerminalNode(terminalNode, constructorNode, context, rules) {
+function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, subExpressions, context, rules) {
   let verified = false;
 
-  const constructorNodeTerminalNode = constructorNode.isTerminalNode();
+  const nonTerminalNoderuleName = nonTerminalNode.getRuleName(),
+        constructorNonTerminalNodeRuleName = constructorNonTerminalNode.getRuleName();
 
-  if (constructorNodeTerminalNode) {
-    const terminalNodeType = terminalNode.getType(),
-          constructorTerminalNode = constructorNode,  ///
-          constructorTerminalNodeType = constructorTerminalNode.getType();
+  if (nonTerminalNoderuleName === constructorNonTerminalNodeRuleName) {
+    const ruleName = nonTerminalNoderuleName; ///
 
-    if (terminalNodeType === constructorTerminalNodeType) {
-      const terminalNodeContent = terminalNode.getContent(),
-            constructorTerminalNodeContent = constructorTerminalNode.getContent();
+    switch (ruleName) {
+      case NAME_RULE_NAME : {
+        const node = nonTerminalNode, ///
+              constructorNode = constructorNonTerminalNode, ///
+              nameTerminalNode = nameTerminalNodeQuery(node),
+              constructorNameTerminalNode = nameTerminalNodeQuery(constructorNode);
 
-      if (terminalNodeContent === constructorTerminalNodeContent) {
-        verified = true;
+        verified = verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, context, rules);
+
+        break;
       }
-    }
-  }
 
-  return verified;
-}
+      case TERM_RULE_NAME : {
+        const termNode = nonTerminalNode,  ///
+              constructorTermNode = constructorNonTerminalNode;  ///
 
-function verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions, context, rules) {
-  let verified = false;
+        verified = verifyTermNode(termNode, constructorTermNode, context, rules);
 
-  const constructorNodeNonTerminalNode = constructorNode.isNonTerminalNode();
+        break;
+      }
 
-  if (constructorNodeNonTerminalNode) {
-    const ruleName = nonTerminalNode.getRuleName(),
-          constructorRuleName = constructorNode.getRuleName();
+      case EXPRESSION_RULE_NAME : {
+        const expressionNode = nonTerminalNode,  ///
+              constructorTermNode = constructorNonTerminalNode,  ///
+              subExpression = SubExpression.fromExpressionNodeAndConstructorTermNode(expressionNode, constructorTermNode);
 
-    if (ruleName === constructorRuleName) {
-      switch (ruleName) {
-        case NAME_RULE_NAME : {
-          const node = nonTerminalNode, ///
-                nameTerminalNode = nameTerminalNodeQuery(node),
-                constructorNameTerminalNode = nameTerminalNodeQuery(constructorNode);
+        subExpressions.push(subExpression);
 
-          verified = verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, context, rules);
+        verified = true;  ///
 
-          break;
-        }
+        break;
+      }
 
-        case TERM_RULE_NAME : {
-          const termNode = nonTerminalNode,  ///
-                constructorTermNode = constructorNode;  ///
+      default: {
+        const node = nonTerminalNode, ///
+              childNodes = cloneChildNodes(node),
+              constructorNode = constructorNonTerminalNode, ///
+              constructorChildNodes = cloneChildNodes(constructorNode);
 
-          verified = verifyTermNode(termNode, constructorTermNode, context, rules);
-
-          break;
-        }
-
-        case EXPRESSION_RULE_NAME : {
-          const expressionNode = nonTerminalNode,  ///
-                constructorTermNode = constructorNode,  ///
-                subExpression = SubExpression.fromExpressionNodeAndConstructorTermNode(expressionNode, constructorTermNode);
-
-          subExpressions.push(subExpression);
-
-          verified = true;  ///
-
-          break;
-        }
-
-        default: {
-          const node = nonTerminalNode, ///
-                childNodes = cloneChildNodes(node),
-                constructorChildNodes = cloneChildNodes(constructorNode);
-
-          verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, rules);
-        }
+        verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, rules);
       }
     }
   }
@@ -278,6 +265,24 @@ function verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, c
             variableTypeEqualToOrSubTypeOfType = variableType.isEqualToOrSubTypeOf(type);
 
       verified = variableTypeEqualToOrSubTypeOfType;  ///
+    }
+  }
+
+  return verified;
+}
+
+function verifyTerminalNode(terminalNode, constructorTerminalNode, context, rules) {
+  let verified = false;
+
+  const terminalNodeType = terminalNode.getType(),
+        constructorTerminalNodeType = constructorTerminalNode.getType();
+
+  if (terminalNodeType === constructorTerminalNodeType) {
+    const terminalNodeContent = terminalNode.getContent(),
+        constructorTerminalNodeContent = constructorTerminalNode.getContent();
+
+    if (terminalNodeContent === constructorTerminalNodeContent) {
+      verified = true;
     }
   }
 
