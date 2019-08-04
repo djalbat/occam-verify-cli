@@ -13,7 +13,6 @@ const Error = require('../error'),
       verifyUtilities = require('../utilities/verify');
 
 const { partTypes } = parsers,
-      { NAME_RULE_NAME } = ruleNames,
 			{ findRuleByName } = ruleUtilities,
 			{ nameTerminalNodeQuery } = queries,
       { RuleNamePartType,
@@ -23,10 +22,11 @@ const { partTypes } = parsers,
         OneOrMorePartsPartType,
         ZeroOrMorePartsPartType } = partTypes,
       { verifyTerm, verifyExpression } = verifyUtilities,
-			{ nodeAsString, cloneChildNodes } = nodeUtilities;
+			{ nodeAsString, cloneChildNodes } = nodeUtilities,
+      { NAME_RULE_NAME, TERM_RULE_NAME } = ruleNames;
 
 function verifyTermAsConstructor(termNode, context, rules) {
-	const termRule = findRuleByName('term', rules),
+	const termRule = findRuleByName(TERM_RULE_NAME, rules),
 			  node = termNode,  ///
 			  rule = termRule,  ///
 			  verified = verifyWithRule(node, rule, context, rules);

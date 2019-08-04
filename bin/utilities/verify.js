@@ -21,7 +21,7 @@ const { partTypes } = parsers,
         ZeroOrMorePartsPartType } = partTypes,
       { nodeAsString, cloneChildNodes } = nodeUtilities,
       { nameTerminalNodeQuery, termNameTerminalNodeQuery } = queries,
-      { NAME_RULE_NAME, TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
+      { NAME_RULE_NAME, TERM_RULE_NAME, STATEMENT_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
 
 function verifyTerm(termNode, context, rules) {
   let type = undefined;
@@ -38,7 +38,7 @@ function verifyTerm(termNode, context, rules) {
 }
 
 function verifyExpression(expressionNode, context, rules) {
-  const expressionRule = findRuleByName('expression', rules),
+  const expressionRule = findRuleByName(EXPRESSION_RULE_NAME, rules),
         node = expressionNode,  ///
         rule = expressionRule,  ///
         type = verifyWithRule(node, rule, context, rules);
@@ -55,7 +55,7 @@ function verifyExpression(expressionNode, context, rules) {
 }
 
 function verifyStatement(statementNode, context, rules) {
-  const statementRule = findRuleByName('statement', rules),
+  const statementRule = findRuleByName(STATEMENT_RULE_NAME, rules),
         node = statementNode, ///
         rule = statementRule, ///
         type = verifyWithRule(node, rule, context, rules),
