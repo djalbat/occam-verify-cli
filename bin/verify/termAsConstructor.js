@@ -10,7 +10,8 @@ const Error = require('../error'),
 			verifyTerm = require('../verify/term'),
       nodeUtilities = require('../utilities/node'),
 			ruleUtilities = require('../utilities/rule'),
-			Configuration = require('../miscellaneous/configuration');
+			Configuration = require('../miscellaneous/configuration'),
+      verifyExpression = require('../verify/expression');
 
 const { partTypes } = parsers,
 			{ findRuleByName } = ruleUtilities,
@@ -168,7 +169,7 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
           verified = verifyWithNameRule(node, nameRule, context, rules);
         } else {
           const termNode = TermNode.fromChildNode(childNode),
-                type = verifyTerm(termNode, context, rules);
+                type = verifyTerm(termNode, context, rules, verifyExpression);
 
           verified = (type !== undefined);
 
