@@ -45,7 +45,7 @@ class SubExpression {
             expressionString = nodeAsString(this.expressionNode),
             topmostTermString = nodeAsString(topmostTermNode),
             constructorTypeName = this.retrieveConstructorTypeName(context),
-            message = `The '${topmostTermString}' term cannot be verified because '${expressionString}' is not of type '${constructorTypeName}'.`;
+            message = `The '${topmostTermString}' term cannot be verified because '${expressionString}' sub-expression is not of type '${constructorTypeName}'.`;
 
       throw new Error(node, message);
     }

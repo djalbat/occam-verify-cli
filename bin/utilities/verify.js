@@ -4,7 +4,6 @@ const parsers = require('occam-parsers');
 
 const Error = require('../error'),
       queries = require('../miscellaneous/queries'),
-      SubTerm = require('../miscellaneous/subTerm'),
       emptyType = require('../miscellaneous/emptyType'),
       ruleNames = require('../miscellaneous/ruleNames'),
       nodeUtilities = require('../utilities/node'),
@@ -38,22 +37,6 @@ function verifyTerm(termNode, context, rules) {
   return type;
 }
 
-function verifyStatement(statementNode, context, rules) {
-  const statementRule = findRuleByName('statement', rules),
-        node = statementNode, ///
-        rule = statementRule, ///
-        type = verifyWithRule(node, rule, context, rules),
-        verified = (type !== undefined);
-
-  if (!verified) {
-    const node = statementNode,  ///
-          statementString = nodeAsString(statementNode),
-          message = `The statement '${statementString}' cannot be verified.`;
-
-    throw new Error(node, message);
-  }
-}
-
 function verifyExpression(expressionNode, context, rules) {
   const expressionRule = findRuleByName('expression', rules),
         node = expressionNode,  ///
@@ -71,10 +54,26 @@ function verifyExpression(expressionNode, context, rules) {
   return type;
 }
 
+function verifyStatement(statementNode, context, rules) {
+  const statementRule = findRuleByName('statement', rules),
+        node = statementNode, ///
+        rule = statementRule, ///
+        type = verifyWithRule(node, rule, context, rules),
+        verified = (type !== undefined);
+
+  if (!verified) {
+    const node = statementNode,  ///
+          statementString = nodeAsString(statementNode),
+          message = `The statement '${statementString}' cannot be verified.`;
+
+    throw new Error(node, message);
+  }
+}
+
 module.exports = {
   verifyTerm,
-  verifyStatement,
-  verifyExpression
+  verifyExpression,
+  verifyStatement
 };
 
 function verifyTermNodeAgainstConstructors(termNode, context, rules) {
@@ -84,7 +83,7 @@ function verifyTermNodeAgainstConstructors(termNode, context, rules) {
 
   constructors.some((constructor) => {
     const constructorTermNode = constructor.getTermNode(),
-        verified = verifyTermNode(termNode, constructorTermNode, context, rules);
+          verified = verifyTermNode(termNode, constructorTermNode, context, rules);
 
     if (verified) {
       type = constructor.getType();
@@ -115,26 +114,12 @@ function verifyTermNodeAgainstVariables(termNode, context, rules) {
 }
 
 function verifyTermNode(termNode, constructorTermNode, context, rules) {
-  let verified;
-
   const node = termNode, ///
-        subTerms = [],
         childNodes = cloneChildNodes(node),
         subExpressions = [],
         constructorNode = constructorTermNode, ///
-        constructorChildNodes = cloneChildNodes(constructorNode);
-
-  verified = verifyChildNodes(childNodes, constructorChildNodes, context, rules, subTerms, subExpressions);
-
-  if (verified) {
-    verified = subTerms.every((subTerm) => {
-      const termNode = subTerm.getTermNode(),
-            constructorTermNode = subTerm.getConstructorTermNode(),
-            verified = verifyTermNode(termNode, constructorTermNode, context, rules);
-
-      return verified;
-    });
-  }
+        constructorChildNodes = cloneChildNodes(constructorNode),
+        verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, rules);
 
   if (verified) {
     subExpressions.forEach((subExpression) => subExpression.verify(termNode, context, rules, verifyExpression));
@@ -143,7 +128,7 @@ function verifyTermNode(termNode, constructorTermNode, context, rules) {
   return verified;
 }
 
-function verifyNode(node, constructorNode, context, rules, subTerms, subExpressions) {
+function verifyNode(node, constructorNode, subExpressions, context, rules) {
   let verified;
 
   const nodeTerminalNode = node.isTerminalNode();
@@ -155,13 +140,13 @@ function verifyNode(node, constructorNode, context, rules, subTerms, subExpressi
   } else {
     const nonTerminalNode = node; ///
 
-    verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules, subTerms, subExpressions);
+    verified = verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions, context, rules);
   }
 
   return verified;
 }
 
-function verifyChildNodes(childNodes, constructorChildNodes, context, rules, subTerms, subExpressions) {
+function verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, rules) {
   let verified = false;
 
   let childNode = childNodes.shift(),
@@ -175,7 +160,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, context, rules, sub
     const node = childNode, ///
           constructorNode = constructorChildNode; ///
 
-    verified = verifyNode(node, constructorNode, context, rules, subTerms, subExpressions);
+    verified = verifyNode(node, constructorNode, subExpressions, context, rules);
 
     if (!verified) {
       break;
@@ -217,7 +202,7 @@ function verifyTerminalNode(terminalNode, constructorNode, context, rules) {
   return verified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules, subTerms, subExpressions) {
+function verifyNonTerminalNode(nonTerminalNode, constructorNode, subExpressions, context, rules) {
   let verified = false;
 
   const constructorNodeNonTerminalNode = constructorNode.isNonTerminalNode();
@@ -240,12 +225,9 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules,
 
         case TERM_RULE_NAME : {
           const termNode = nonTerminalNode,  ///
-                constructorTermNode = constructorNode,  ///
-                subTerm = SubTerm.fromTermNodeAndConstructorTermNode(termNode, constructorTermNode);
+                constructorTermNode = constructorNode;  ///
 
-          subTerms.push(subTerm);
-
-          verified = true;  ///
+          verified = verifyTermNode(termNode, constructorTermNode, context, rules);
 
           break;
         }
@@ -267,7 +249,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNode, context, rules,
                 childNodes = cloneChildNodes(node),
                 constructorChildNodes = cloneChildNodes(constructorNode);
 
-          verified = verifyChildNodes(childNodes, constructorChildNodes, context, rules, subTerms, subExpressions);
+          verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, rules);
         }
       }
     }
