@@ -17,9 +17,7 @@ function main(commands, options) {
   if (packageName === undefined) {
     verifyFile(filePath, context);
   } else {
-    const packageNames = [];
-
-    verifyPackage(packageName, packageNames, context);
+    verifyPackage(packageName, context);
   }
 }
 

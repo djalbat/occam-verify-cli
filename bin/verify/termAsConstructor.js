@@ -118,6 +118,12 @@ function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules) 
       verified = verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules);
       break;
 
+    case GroupOfPartsPartType:
+      const groupOfPartsPart = nonTerminalPart; ///
+
+      verified = verifyWithGroupOfPartsPart(childNodes, groupOfPartsPart, context, rules);
+      break;
+
     case OptionalPartPartType:
       const optionalPartPart = nonTerminalPart; ///
 
@@ -172,6 +178,20 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
         }
       }
     }
+  }
+
+  return verified;
+}
+
+function verifyWithGroupOfPartsPart(childNodes, groupOfPartsPart, context, rules) {
+  const parts = groupOfPartsPart.getParts();
+
+  let verified = parts.every((part) => verifyWithPart(childNodes, part, context, rules));
+
+  childNodes = ChildNodes.fromChildNodes(childNodes); ///
+
+  if (!verified) {
+    childNodes.backtrack();
   }
 
   return verified;

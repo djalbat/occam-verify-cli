@@ -45,12 +45,21 @@ function dependenciesFromPackageName(packageName) {
   return dependencies;
 }
 
-function combinedCustomGrammarsFromPackageName(packageName) {
-	const directoryPath = packageName,  ///
-				customGrammar = CustomGrammar.fromDirectoryPath(directoryPath),
-				customGrammars = [
-					customGrammar
-				],
+function combinedCustomGrammarsFromPackageNames(packageNames) {
+	const directoryPaths = packageNames.reduce((directoryPaths, packageName) => {
+	        if (packageName !== undefined) {
+	          const directoryPath = packageName;  ///
+
+            directoryPaths.push(directoryPath);
+          }
+
+	        return directoryPaths;
+        }, []),
+        customGrammars = directoryPaths.map((directoryPath) => {
+          const customGrammar = CustomGrammar.fromDirectoryPath(directoryPath);
+
+          return customGrammar;
+        }),
 				combinedCustomGrammars = CombinedCustomGrammars.fromCustomGrammars(customGrammars);
 
 	return combinedCustomGrammars;
@@ -58,5 +67,5 @@ function combinedCustomGrammarsFromPackageName(packageName) {
 
 module.exports = {
   dependenciesFromPackageName,
-	combinedCustomGrammarsFromPackageName
+	combinedCustomGrammarsFromPackageNames
 };

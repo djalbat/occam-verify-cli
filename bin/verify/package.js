@@ -1,68 +1,45 @@
 'use strict';
 
-const open = require('occam-open-cli'), ///
-			necessary = require('necessary');
+const necessary = require('necessary');
 
-const verifyFile = require('../verify/file'),
-			grammarUtilities = require('../utilities/grammar'),
+const verifyFiles = require('../verify/files'),
       packageUtilities = require('../utilities/package');
 
 const { exit } = process,
-      { filePathUtilities } = open,
-			{ arrayUtilities, fileSystemUtilities } = necessary,
+			{ arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { readDirectory } = fileSystemUtilities,
-			{ isFilePathFlorenceFilePath } = filePathUtilities,
-      { dependenciesFromPackageName, combinedCustomGrammarsFromPackageName } = packageUtilities,
-			{ florenceLexerFromCombinedCustomGrammars, florenceParserFromCombinedCustomGrammars } = grammarUtilities;
+      { dependenciesFromPackageName } = packageUtilities;
 
-function verifyPackage(packageName, packageNames, context) {
-  packageNames = packageNames.concat(packageName);
-
+function verifyPackage(packageName, context) {
   const dependencies = dependenciesFromPackageName(packageName);
 
   dependencies.forEach((dependency) => {
     const packageName = dependency, ///
-          packageNamesIncludesPackageName = packageNames.includes(packageName);
+          packageNameMissing = context.isPackageNameMissing(packageName);
 
-    if (packageNamesIncludesPackageName) {
-      const firstPackageName = first(packageNames),
-            packageName = firstPackageName; ///
-
-      packageNames = packageNames.concat(packageName);
-
-      const packageNamesString = packageNames.join(' -> ');
-
-      console.log(`There is a cyclic dependency: ${packageNamesString}`);
-
-      exit();
+    if (packageNameMissing) {
+      context = verifyPackage(packageName, context);
     }
-
-    verifyPackage(packageName, packageNames, context);
   });
 
-  /*      combinedCustomGrammars = combinedCustomGrammarsFromPackageName(packageName),
-		    filePaths = filePathsFromPackageName(packageName),
-        florenceLexer = florenceLexerFromCombinedCustomGrammars(combinedCustomGrammars),
-        florenceParser = florenceParserFromCombinedCustomGrammars(combinedCustomGrammars);
+  // const packageNamesIncludesPackageName = packageNames.includes(packageName);
+  //
+  // if (packageNamesIncludesPackageName) {
+  //   const firstPackageName = first(packageNames),
+  //         packageName = firstPackageName; ///
+  //
+  //   context = packageNames.concat(packageName);
+  //
+  //   const packageNamesString = packageNames.join(' -> ');
+  //
+  //   console.log(`There is a cyclic dependency: ${packageNamesString}`);
+  //
+  //   exit();
+  // }
 
-  filePaths.forEach((filePath) => verifyFile(filePath, context, florenceLexer, florenceParser))
-  */
+  context = verifyFiles(packageName, context);
+
+  return context;
 }
 
 module.exports = verifyPackage;
-
-function filePathsFromPackageName(packageName) {
-	let filePaths;
-
-	const directoryPath = packageName,  ///
-				fileNames = readDirectory(directoryPath);
-
-	filePaths = fileNames.map((fileName) => `${directoryPath}/${fileName}`);
-
-	const florenceFilePaths = filePaths.filter(isFilePathFlorenceFilePath);
-
-	filePaths = florenceFilePaths;  ///
-
-	return filePaths;
-}
