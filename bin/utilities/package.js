@@ -18,7 +18,7 @@ const { Query } = dom,
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
-      dependenciesStringLiteralsQuery = Query.fromExpression('//dependencies//@string-literal[1...]');
+      dependencyStringLiteralNodesQuery = Query.fromExpression('//dependency//@string-literal');
 
 function dependenciesFromPackageName(packageName) {
   let dependencies = [];
@@ -32,11 +32,11 @@ function dependenciesFromPackageName(packageName) {
           content = metaJSONFileContent,  ///
           tokens = metaJSONLexer.tokenise(content),
           node = metaJSONParser.parse(tokens),
-          dependenciesStringLiterals = dependenciesStringLiteralsQuery.execute(node);
+          dependencyStringLiteralNodes = dependencyStringLiteralNodesQuery.execute(node);
 
-    dependencies = dependenciesStringLiterals.map((dependenciesStringLiteral) => {
-      const dependenciesStringLiteralContent = dependenciesStringLiteral.getContent(),
-            dependency = trimDoubleQuotes(dependenciesStringLiteralContent);
+    dependencies = dependencyStringLiteralNodes.map((dependencyStringLiteralNode) => {
+      const dependencyStringLiteralNodeContent = dependencyStringLiteralNode.getContent(),
+            dependency = trimDoubleQuotes(dependencyStringLiteralNodeContent);
 
       return dependency;
     });
