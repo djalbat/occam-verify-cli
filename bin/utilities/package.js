@@ -11,10 +11,10 @@ const contentUtilities = require('../utilities/content');
 const { Query } = dom,
       { MetaJSONLexer } = lexers,
       { MetaJSONParser } = parsers,
+      { CustomGrammar } = customgrammars,
       { trimDoubleQuotes } = contentUtilities,
       { fileSystemUtilities } = necessary,
-      { checkFileExists, readFile } = fileSystemUtilities,
-      { CustomGrammar, CombinedCustomGrammars } = customgrammars;
+      { checkFileExists, readFile } = fileSystemUtilities;
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
@@ -45,19 +45,18 @@ function dependenciesFromPackageName(packageName) {
   return dependencies;
 }
 
-function combinedCustomGrammarsFromPackageNames(packageNames) {
+function customGrammarsFromPackageNames(packageNames) {
 	const customGrammars = packageNames.map((packageName) => {
           const directoryPath = packageName,  ///
                 customGrammar = CustomGrammar.fromDirectoryPath(directoryPath);
 
           return customGrammar;
-        }),
-				combinedCustomGrammars = CombinedCustomGrammars.fromCustomGrammars(customGrammars);
+        });
 
-	return combinedCustomGrammars;
+	return customGrammars;
 }
 
 module.exports = {
   dependenciesFromPackageName,
-	combinedCustomGrammarsFromPackageNames
+	customGrammarsFromPackageNames
 };

@@ -12,11 +12,11 @@
   "dependencies": {
     "argumentative": "^1.1.0",
     "necessary": "^3.4.0",
-    "occam-custom-grammars": "^1.3.11",
+    "occam-custom-grammars": "^2.1.5",
     "occam-dom": "^1.2.2",
-    "occam-lexers": "^9.2.0",
+    "occam-lexers": "^9.2.1",
     "occam-open-cli": "^2.0.10",
-    "occam-parsers": "^9.2.2"
+    "occam-parsers": "^9.2.3"
   },
   "devDependencies": {},
   "scripts": {}
