@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
-const necessary = require('necessary');
+const necessary = require("necessary");
 
-const Error = require('../error'),
-      queries = require('../miscellaneous/queries'),
-			grammarUtilities = require('../utilities/grammar'),
-      lineIndexUtilities = require('../utilities/lineIndex'),
-      verifyAxiomOrDeclaration = require('../verify/axiomOrDeclaration');
+const Error = require("../error"),
+      queries = require("../miscellaneous/queries"),
+			grammarUtilities = require("../utilities/grammar"),
+      lineIndexUtilities = require("../utilities/lineIndex"),
+      verifyAxiomOrDeclaration = require("../verify/axiomOrDeclaration");
 
 const { exit } = process,
       { fileSystemUtilities } = necessary,

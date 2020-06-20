@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const Type = require('../../type'),
-      Error = require('../../error'),
-      queries = require('../../miscellaneous/queries');
+const Type = require("../../type"),
+      Error = require("../../error"),
+      queries = require("../../miscellaneous/queries");
 
 const { typeNameTerminalNodesQuery } = queries;
 

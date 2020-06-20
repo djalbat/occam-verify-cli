@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const queries = require('../../miscellaneous/queries'),
-      verifyTypeDeclaration = require('../../verify/declaration/type');
+const queries = require("../../miscellaneous/queries"),
+      verifyTypeDeclaration = require("../../verify/declaration/type");
 
 const { typeDeclarationNodesQuery } = queries;
 

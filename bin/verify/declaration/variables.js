@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const queries = require('../../miscellaneous/queries'),
-      verifyVariableDeclaration = require('../../verify/declaration/variable');
+const queries = require("../../miscellaneous/queries"),
+      verifyVariableDeclaration = require("../../verify/declaration/variable");
 
 const { variableDeclarationNodesQuery } = queries;
 

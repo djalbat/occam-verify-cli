@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const Error = require('../error');
+const Error = require("../error");
 
 function verifyTypeName(typeNameTerminalNode, context, rules) {
   const typeNameTerminalNodeContent = typeNameTerminalNode.getContent(),

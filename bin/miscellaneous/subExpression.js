@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const Error = require('../error'),
-      queries = require('../miscellaneous/queries'),
-			nodeUtilities = require('../utilities/node');
+const Error = require("../error"),
+      queries = require("../miscellaneous/queries"),
+			nodeUtilities = require("../utilities/node");
 
 const { nodeAsString } = nodeUtilities,
 			{ expressionTermNameTerminalNodeQuery } = queries;

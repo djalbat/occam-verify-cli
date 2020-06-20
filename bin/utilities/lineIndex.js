@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 function lineIndexFromNodeAndTokens(node, tokens) {
   let lineIndex = 0,

@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
-const open = require('occam-open-cli'), ///
-      necessary = require('necessary'),
-      customgrammars = require('occam-custom-grammars');  ///;;
+const open = require("occam-open-cli"), ///
+      necessary = require("necessary"),
+      customgrammars = require("occam-custom-grammars");  ///;;
 
-const Context = require('../context'),
-      verifyFile = require('../verify/file'),
-			grammarUtilities = require('../utilities/grammar'),
-      packageUtilities = require('../utilities/package');
+const Context = require("../context"),
+      verifyFile = require("../verify/file"),
+			grammarUtilities = require("../utilities/grammar"),
+      packageUtilities = require("../utilities/package");
 
 const { filePathUtilities } = open,
       { fileSystemUtilities } = necessary,

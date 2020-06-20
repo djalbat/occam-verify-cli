@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const Error = require('../error');
+const Error = require("../error");
 
 function verifyName(nameNode, context, rules) {
   const nameNodeContent = nameNode.getContent(),

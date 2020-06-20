@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const nodeUtilities = require('./utilities/node');
+const nodeUtilities = require("./utilities/node");
 
 const { nodeAsString } = nodeUtilities;
 

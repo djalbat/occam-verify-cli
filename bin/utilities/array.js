@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 function matchArrays(arrayA, arrayB) {
   let arraysMatch = false;

@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-const Error = require('../error'),
-      Axiom = require('../axiom'),
-      queries = require('../miscellaneous/queries'),
-      verifyUnqualifiedStatement = require('../verify/unqualifiedStatement'),
-      verifyIndicativeConditional = require('../verify/indicativeConditional');
+const Error = require("../error"),
+      Axiom = require("../axiom"),
+      queries = require("../miscellaneous/queries"),
+      verifyUnqualifiedStatement = require("../verify/unqualifiedStatement"),
+      verifyIndicativeConditional = require("../verify/indicativeConditional");
 
 const { labelNameTerminalNodesQuery,
         parenthesisedLabelsNodeQuery,

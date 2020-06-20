@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const ruleNames = require('../miscellaneous/ruleNames');
+const ruleNames = require("../miscellaneous/ruleNames");
 
 const { TERM_RULE_NAME } = ruleNames;
 

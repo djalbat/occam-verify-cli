@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 class Axiom {
   constructor(labels, unqualifiedStatementNode, indicativeConditionalNode) {

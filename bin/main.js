@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-const necessary = require('necessary');
+const necessary = require("necessary");
 
-const Context = require('./context'),
-      verifyFile = require('./verify/file'),
-      verifyPackage = require('./verify/package');
+const Context = require("./context"),
+      verifyFile = require("./verify/file"),
+      verifyPackage = require("./verify/package");
 
 const { arrayUtilities } = necessary,
       { first } = arrayUtilities;

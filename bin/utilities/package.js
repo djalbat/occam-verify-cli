@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
-const dom = require('occam-dom'),
-      lexers = require('occam-lexers'),
-      parsers = require('occam-parsers'),
-      necessary = require('necessary'),
-      customgrammars = require('occam-custom-grammars');  ///;
+const dom = require("occam-dom"),
+      lexers = require("occam-lexers"),
+      parsers = require("occam-parsers"),
+      necessary = require("necessary"),
+      customgrammars = require("occam-custom-grammars");  ///;
 
-const contentUtilities = require('../utilities/content');
+const contentUtilities = require("../utilities/content");
 
 const { Query } = dom,
       { MetaJSONLexer } = lexers,
@@ -18,7 +18,7 @@ const { Query } = dom,
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
-      dependencyStringLiteralNodesQuery = Query.fromExpression('//dependency//@string-literal');
+      dependencyStringLiteralNodesQuery = Query.fromExpression("//dependency//@string-literal");
 
 function dependenciesFromPackageName(packageName) {
   let dependencies = [];

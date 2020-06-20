@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const queries = require('../../miscellaneous/queries'),
-      Constructor = require('../../constructor'),
-			verifyTypeName = require('../../verify/typeName'),
-      verifyTermAsConstructor = require('../../verify/termAsConstructor');
+const queries = require("../../miscellaneous/queries"),
+      Constructor = require("../../constructor"),
+			verifyTypeName = require("../../verify/typeName"),
+      verifyTermAsConstructor = require("../../verify/termAsConstructor");
 
 const { termNodeQuery, typeNameTerminalNodeQuery } = queries;
 

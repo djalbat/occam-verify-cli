@@ -1,15 +1,15 @@
-'use strict';
+"use strict";
 
-const parsers = require('occam-parsers');
+const parsers = require("occam-parsers");
 
-const Error = require('../error'),
-      queries = require('../miscellaneous/queries'),
-      emptyType = require('../miscellaneous/emptyType'),
-      ruleNames = require('../miscellaneous/ruleNames'),
-      nodeUtilities = require('../utilities/node'),
-      ruleUtilities = require('../utilities/rule'),
-      Configuration = require('../miscellaneous/configuration'),
-      SubExpression = require('../miscellaneous/subExpression');
+const Error = require("../error"),
+      queries = require("../miscellaneous/queries"),
+      emptyType = require("../miscellaneous/emptyType"),
+      ruleNames = require("../miscellaneous/ruleNames"),
+      nodeUtilities = require("../utilities/node"),
+      ruleUtilities = require("../utilities/rule"),
+      Configuration = require("../miscellaneous/configuration"),
+      SubExpression = require("../miscellaneous/subExpression");
 
 const { partTypes } = parsers,
       { findRuleByName } = ruleUtilities,

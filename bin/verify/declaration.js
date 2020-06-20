@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
-const queries = require('../miscellaneous/queries'),
-			keywords = require('../miscellaneous/keywords'),
-			verifyTypeDeclaration = require('../verify/declaration/type'),
-			verifyTypesDeclaration = require('../verify/declaration/types'),
-      verifyVariableDeclaration = require('../verify/declaration/variable'),
-      verifyVariablesDeclaration = require('../verify/declaration/variables'),
-      verifyConstructorDeclaration = require('../verify/declaration/constructor'),
-      verifyConstructorsDeclaration = require('../verify/declaration/constructors');
+const queries = require("../miscellaneous/queries"),
+			keywords = require("../miscellaneous/keywords"),
+			verifyTypeDeclaration = require("../verify/declaration/type"),
+			verifyTypesDeclaration = require("../verify/declaration/types"),
+      verifyVariableDeclaration = require("../verify/declaration/variable"),
+      verifyVariablesDeclaration = require("../verify/declaration/variables"),
+      verifyConstructorDeclaration = require("../verify/declaration/constructor"),
+      verifyConstructorsDeclaration = require("../verify/declaration/constructors");
 
 const { TYPE_KEYWORD,
 				TYPES_KEYWORD,

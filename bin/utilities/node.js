@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-function nodeAsString(node, string = '') {
+function nodeAsString(node, string = "") {
   const nodeTerminalNode = node.isTerminalNode();
 
   if (nodeTerminalNode) {

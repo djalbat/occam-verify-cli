@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const Error = require('../../error'),
-      queries = require('../../miscellaneous/queries'),
-      Variable = require('../../variable'),
-      verifyTypeName = require('../../verify/typeName');
+const Error = require("../../error"),
+      queries = require("../../miscellaneous/queries"),
+      Variable = require("../../variable"),
+      verifyTypeName = require("../../verify/typeName");
 
 const { typeNameTerminalNodeQuery, nameTerminalNodeQuery } = queries;
 

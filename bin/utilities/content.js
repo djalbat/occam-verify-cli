@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-function trimDoubleQuotes(content) { return content.replace(/(^"|"$)/g, ''); } ///
+function trimDoubleQuotes(content) { return content.replace(/(^"|"$)/g, ""); } ///
 
 module.exports = {
   trimDoubleQuotes
