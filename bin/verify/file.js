@@ -21,11 +21,11 @@ function verifyFile(filePath, context, florenceLexer = florenceLexerFromNothing,
         node = florenceParser.parse(tokens);
 
   try {
-    const rules = florenceParser.getRules(),
+    const ruleMap = florenceParser.getRuleMap(),
           documentNode = node,  ///
           axiomOrDeclarationNodes = axiomOrDeclarationNodesQuery(documentNode);
 
-    axiomOrDeclarationNodes.forEach((axiomOrDeclarationNode) => verifyAxiomOrDeclaration(axiomOrDeclarationNode, context, rules));
+    axiomOrDeclarationNodes.forEach((axiomOrDeclarationNode) => verifyAxiomOrDeclaration(axiomOrDeclarationNode, context, ruleMap));
   } catch (error) {
     if (!(error instanceof Error)) {
       throw error;

@@ -5,10 +5,10 @@ const queries = require("../../miscellaneous/queries"),
 
 const { typeDeclarationNodesQuery } = queries;
 
-function verifyTypesDeclaration(typesDeclarationNode, context, rules) {
+function verifyTypesDeclaration(typesDeclarationNode, context, ruleMap) {
   const typeDeclarationNodes = typeDeclarationNodesQuery(typesDeclarationNode);
 
-  typeDeclarationNodes.forEach((typeDeclarationNode) => verifyTypeDeclaration(typeDeclarationNode, context, rules));
+  typeDeclarationNodes.forEach((typeDeclarationNode) => verifyTypeDeclaration(typeDeclarationNode, context, ruleMap));
 }
 
 module.exports = verifyTypesDeclaration;

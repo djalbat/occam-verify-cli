@@ -23,7 +23,7 @@ const { TYPE_KEYWORD,
         constructorDeclarationNodeQuery,
         constructorsDeclarationNodeQuery } = queries;
 
-function verifyDeclaration(declarationNode, context, rules) {
+function verifyDeclaration(declarationNode, context, ruleMap) {
   const keywordTerminalNode = keywordTerminalNodeQuery(declarationNode),
         keywordTerminalNodeContent = keywordTerminalNode.getContent(),
         keyword = keywordTerminalNodeContent;  ///
@@ -32,42 +32,42 @@ function verifyDeclaration(declarationNode, context, rules) {
     case TYPE_KEYWORD : {
       const typeDeclarationNode = typeDeclarationNodeQuery(declarationNode);
 
-      verifyTypeDeclaration(typeDeclarationNode, context, rules);
+      verifyTypeDeclaration(typeDeclarationNode, context, ruleMap);
       break;
     }
 
 	  case TYPES_KEYWORD : {
 		  const typesDeclarationNode = typesDeclarationNodeQuery(declarationNode);
 
-		  verifyTypesDeclaration(typesDeclarationNode, context, rules);
+		  verifyTypesDeclaration(typesDeclarationNode, context, ruleMap);
 		  break;
 	  }
 
 	  case VARIABLE_KEYWORD : {
       const variableDeclarationNode = variableDeclarationNodeQuery(declarationNode);
 
-      verifyVariableDeclaration(variableDeclarationNode, context, rules);
+      verifyVariableDeclaration(variableDeclarationNode, context, ruleMap);
       break;
     }
 
     case VARIABLES_KEYWORD : {
       const variablesDeclarationNode = variablesDeclarationNodeQuery(declarationNode);
 
-      verifyVariablesDeclaration(variablesDeclarationNode, context, rules);
+      verifyVariablesDeclaration(variablesDeclarationNode, context, ruleMap);
       break;
     }
 
     case CONSTRUCTOR_KEYWORD : {
       const constructorDeclarationNode = constructorDeclarationNodeQuery(declarationNode);
 
-      verifyConstructorDeclaration(constructorDeclarationNode, context, rules);
+      verifyConstructorDeclaration(constructorDeclarationNode, context, ruleMap);
       break;
     }
 
     case CONSTRUCTORS_KEYWORD : {
       const constructorsDeclarationNode = constructorsDeclarationNodeQuery(declarationNode);
 
-      verifyConstructorsDeclaration(constructorsDeclarationNode, context, rules);
+      verifyConstructorsDeclaration(constructorsDeclarationNode, context, ruleMap);
       break;
     }
   }

@@ -6,7 +6,7 @@ const Type = require("../../type"),
 
 const { typeNameTerminalNodesQuery } = queries;
 
-function verifyTypeDeclaration(typeDeclarationNode, context, rules) {
+function verifyTypeDeclaration(typeDeclarationNode, context, ruleMap) {
   const typeNameTerminalNodes = typeNameTerminalNodesQuery(typeDeclarationNode),
         typeNames = typeNameTerminalNodes.map((typeNameTerminalNode) => {
           const typeNameTerminalNodeContent = typeNameTerminalNode.getContent(),

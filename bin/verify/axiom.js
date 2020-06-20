@@ -11,16 +11,16 @@ const { labelNameTerminalNodesQuery,
         unqualifiedStatementNodeQuery,
         indicativeConditionalNodeQuery } = queries;
 
-function verifyAxiom(axiomNode, context, rules) {
+function verifyAxiom(axiomNode, context, ruleMap) {
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
         indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
   if (unqualifiedStatementNode !== undefined) {
-    verifyUnqualifiedStatement(unqualifiedStatementNode, context, rules);
+    verifyUnqualifiedStatement(unqualifiedStatementNode, context, ruleMap);
   }
 
   if (indicativeConditionalNode !== undefined) {
-    verifyIndicativeConditional(indicativeConditionalNode, context, rules);
+    verifyIndicativeConditional(indicativeConditionalNode, context, ruleMap);
   }
 
   const parenthesisedLabelsNode = parenthesisedLabelsNodeQuery(axiomNode),

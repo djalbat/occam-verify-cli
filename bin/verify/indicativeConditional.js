@@ -6,14 +6,14 @@ const queries = require("../miscellaneous/queries"),
 
 const { qualifiedStatementNodeQuery, unqualifiedStatementNodeQuery } = queries;
 
-function verifyIndicativeConditional(indicativeConditionalNode, context, rules) {
+function verifyIndicativeConditional(indicativeConditionalNode, context, ruleMap) {
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(indicativeConditionalNode);
 
-  verifyUnqualifiedStatement(unqualifiedStatementNode, context, rules);
+  verifyUnqualifiedStatement(unqualifiedStatementNode, context, ruleMap);
 
   const qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode);
 
-  verifyQualifiedStatement(qualifiedStatementNode, context, rules);
+  verifyQualifiedStatement(qualifiedStatementNode, context, ruleMap);
 }
 
 module.exports = verifyIndicativeConditional;

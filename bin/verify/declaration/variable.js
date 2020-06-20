@@ -7,7 +7,7 @@ const Error = require("../../error"),
 
 const { typeNameTerminalNodeQuery, nameTerminalNodeQuery } = queries;
 
-function verifyVariableDeclaration(variableDeclarationNode, context, rules) {
+function verifyVariableDeclaration(variableDeclarationNode, context, ruleMap) {
   const nameTerminalNode = nameTerminalNodeQuery(variableDeclarationNode),
         nameTerminalNodeContent = nameTerminalNode.getContent(),
         name = nameTerminalNodeContent, ///
@@ -21,7 +21,7 @@ function verifyVariableDeclaration(variableDeclarationNode, context, rules) {
   }
 
   const typeNameTerminalNode = typeNameTerminalNodeQuery(variableDeclarationNode),
-        type = verifyTypeName(typeNameTerminalNode, context, rules),
+        type = verifyTypeName(typeNameTerminalNode, context, ruleMap),
         variable = Variable.fromNameAndType(name, type);
 
   context.addVariable(variable);

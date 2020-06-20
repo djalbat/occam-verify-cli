@@ -6,10 +6,10 @@ const queries = require("../miscellaneous/queries"),
 const { verifyStatement } = verifyUtilities,
       { statementNodeQuery } = queries;
 
-function verifyUnqualifiedStatement(unqualifiedStatementNode, context, rules) {
+function verifyUnqualifiedStatement(unqualifiedStatementNode, context, ruleMap) {
   const statementNode = statementNodeQuery(unqualifiedStatementNode);
 
-  verifyStatement(statementNode, context, rules);
+  verifyStatement(statementNode, context, ruleMap);
 }
 
 module.exports = verifyUnqualifiedStatement;

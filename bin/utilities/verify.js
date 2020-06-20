@@ -7,12 +7,10 @@ const Error = require("../error"),
       emptyType = require("../miscellaneous/emptyType"),
       ruleNames = require("../miscellaneous/ruleNames"),
       nodeUtilities = require("../utilities/node"),
-      ruleUtilities = require("../utilities/rule"),
       Configuration = require("../miscellaneous/configuration"),
       SubExpression = require("../miscellaneous/subExpression");
 
 const { partTypes } = parsers,
-      { findRuleByName } = ruleUtilities,
       { RuleNamePartType,
         OptionalPartPartType,
         GroupOfPartsPartType,
@@ -23,25 +21,25 @@ const { partTypes } = parsers,
       { nameTerminalNodeQuery, termNameTerminalNodeQuery } = queries,
       { NAME_RULE_NAME, TERM_RULE_NAME, STATEMENT_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
 
-function verifyTerm(termNode, context, rules) {
+function verifyTerm(termNode, context, ruleMap) {
   let type = undefined;
 
   if (type === undefined) {
-    type = verifyTermNodeAgainstConstructors(termNode, context, rules);
+    type = verifyTermNodeAgainstConstructors(termNode, context, ruleMap);
   }
 
   if (type === undefined) {
-    type = verifyTermNodeAgainstVariables(termNode, context, rules);
+    type = verifyTermNodeAgainstVariables(termNode, context, ruleMap);
   }
 
   return type;
 }
 
-function verifyExpression(expressionNode, context, rules) {
-  const expressionRule = findRuleByName(EXPRESSION_RULE_NAME, rules),
+function verifyExpression(expressionNode, context, ruleMap) {
+  const expressionRule = ruleMap[EXPRESSION_RULE_NAME],
         node = expressionNode,  ///
         rule = expressionRule,  ///
-        type = verifyWithRule(node, rule, context, rules);
+        type = verifyWithRule(node, rule, context, ruleMap);
 
   if (type === undefined) {
     const node = expressionNode,  ///
@@ -54,11 +52,11 @@ function verifyExpression(expressionNode, context, rules) {
   return type;
 }
 
-function verifyStatement(statementNode, context, rules) {
-  const statementRule = findRuleByName(STATEMENT_RULE_NAME, rules),
+function verifyStatement(statementNode, context, ruleMap) {
+  const statementRule = ruleMap[STATEMENT_RULE_NAME],
         node = statementNode, ///
         rule = statementRule, ///
-        type = verifyWithRule(node, rule, context, rules),
+        type = verifyWithRule(node, rule, context, ruleMap),
         verified = (type !== undefined);
 
   if (!verified) {
@@ -76,14 +74,14 @@ module.exports = {
   verifyStatement
 };
 
-function verifyTermNodeAgainstConstructors(termNode, context, rules) {
+function verifyTermNodeAgainstConstructors(termNode, context, ruleMap) {
   let type = undefined;
 
   const constructors = context.getConstructors();
 
   constructors.some((constructor) => {
     const constructorTermNode = constructor.getTermNode(),
-          verified = verifyTermNode(termNode, constructorTermNode, context, rules);
+          verified = verifyTermNode(termNode, constructorTermNode, context, ruleMap);
 
     if (verified) {
       type = constructor.getType();
@@ -95,7 +93,7 @@ function verifyTermNodeAgainstConstructors(termNode, context, rules) {
   return type;
 }
 
-function verifyTermNodeAgainstVariables(termNode, context, rules) {
+function verifyTermNodeAgainstVariables(termNode, context, ruleMap) {
   let type = undefined;
 
   const termNameTerminalNode = termNameTerminalNodeQuery(termNode);
@@ -113,22 +111,22 @@ function verifyTermNodeAgainstVariables(termNode, context, rules) {
   return type;
 }
 
-function verifyTermNode(termNode, constructorTermNode, context, rules) {
+function verifyTermNode(termNode, constructorTermNode, context, ruleMap) {
   const node = termNode, ///
         childNodes = cloneChildNodes(node),
         subExpressions = [],
         constructorNode = constructorTermNode, ///
         constructorChildNodes = cloneChildNodes(constructorNode),
-        verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, rules);
+        verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, ruleMap);
 
   if (verified) {
-    subExpressions.forEach((subExpression) => subExpression.verify(termNode, context, rules, verifyExpression));
+    subExpressions.forEach((subExpression) => subExpression.verify(termNode, context, ruleMap, verifyExpression));
   }
 
   return verified;
 }
 
-function verifyNode(node, constructorNode, subExpressions, context, rules) {
+function verifyNode(node, constructorNode, subExpressions, context, ruleMap) {
   let verified = false;
 
   const nodeTerminalNode = node.isTerminalNode();
@@ -140,7 +138,7 @@ function verifyNode(node, constructorNode, subExpressions, context, rules) {
       const terminalNode = node,  ///
             constructorTerminalNode = constructorNode; ///
 
-      verified = verifyTerminalNode(terminalNode, constructorTerminalNode, context, rules);
+      verified = verifyTerminalNode(terminalNode, constructorTerminalNode, context, ruleMap);
     }
   } else {
     const constructorNodeNonTerminalNode = constructorNode.isNonTerminalNode();
@@ -149,14 +147,14 @@ function verifyNode(node, constructorNode, subExpressions, context, rules) {
       const nonTerminalNode = node, ///
             constructorNonTerminalNode = constructorNode; ///
 
-      verified = verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, subExpressions, context, rules);
+      verified = verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, subExpressions, context, ruleMap);
     }
   }
 
   return verified;
 }
 
-function verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, rules) {
+function verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, ruleMap) {
   let verified = false;
 
   let childNode = childNodes.shift(),
@@ -170,7 +168,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, subExpressions, con
     const node = childNode, ///
           constructorNode = constructorChildNode; ///
 
-    verified = verifyNode(node, constructorNode, subExpressions, context, rules);
+    verified = verifyNode(node, constructorNode, subExpressions, context, ruleMap);
 
     if (!verified) {
       break;
@@ -189,7 +187,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, subExpressions, con
   return verified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, subExpressions, context, rules) {
+function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, subExpressions, context, ruleMap) {
   let verified = false;
 
   const nonTerminalNoderuleName = nonTerminalNode.getRuleName(),
@@ -205,7 +203,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, subE
               nameTerminalNode = nameTerminalNodeQuery(node),
               constructorNameTerminalNode = nameTerminalNodeQuery(constructorNode);
 
-        verified = verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, context, rules);
+        verified = verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, context, ruleMap);
 
         break;
       }
@@ -214,7 +212,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, subE
         const termNode = nonTerminalNode,  ///
               constructorTermNode = constructorNonTerminalNode;  ///
 
-        verified = verifyTermNode(termNode, constructorTermNode, context, rules);
+        verified = verifyTermNode(termNode, constructorTermNode, context, ruleMap);
 
         break;
       }
@@ -237,7 +235,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, subE
               constructorNode = constructorNonTerminalNode, ///
               constructorChildNodes = cloneChildNodes(constructorNode);
 
-        verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, rules);
+        verified = verifyChildNodes(childNodes, constructorChildNodes, subExpressions, context, ruleMap);
       }
     }
   }
@@ -245,7 +243,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, subE
   return verified;
 }
 
-function verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, context, rules) {
+function verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, context, ruleMap) {
   let verified = false;
 
   const nameTerminalNodeContent = nameTerminalNode.getContent(),
@@ -271,7 +269,7 @@ function verifyNameTerminalNode(nameTerminalNode, constructorNameTerminalNode, c
   return verified;
 }
 
-function verifyTerminalNode(terminalNode, constructorTerminalNode, context, rules) {
+function verifyTerminalNode(terminalNode, constructorTerminalNode, context, ruleMap) {
   let verified = false;
 
   const terminalNodeType = terminalNode.getType(),
@@ -289,13 +287,13 @@ function verifyTerminalNode(terminalNode, constructorTerminalNode, context, rule
   return verified;
 }
 
-function verifyWithRule(node, rule, context, rules) {
+function verifyWithRule(node, rule, context, ruleMap) {
   let type = undefined;
 
   const definitions = rule.getDefinitions();
 
   definitions.some((definition) => {
-    type = verifyWithDefinition(node, definition, context, rules);
+    type = verifyWithDefinition(node, definition, context, ruleMap);
 
     if (type !== undefined) {
       return true;
@@ -305,14 +303,14 @@ function verifyWithRule(node, rule, context, rules) {
   return type;
 }
 
-function verifyWithDefinition(node, definition, context, rules) {
+function verifyWithDefinition(node, definition, context, ruleMap) {
   let type = undefined;
 
   const parts = definition.getParts(),
         childNodes = cloneChildNodes(node);
 
   parts.every((part) => {
-    const partType = verifyWithPart(childNodes, part, context, rules);
+    const partType = verifyWithPart(childNodes, part, context, ruleMap);
 
     if (partType !== undefined) {
       if (type === undefined) {
@@ -346,7 +344,7 @@ function verifyWithDefinition(node, definition, context, rules) {
   return type;
 }
 
-function verifyWithPart(childNodes, part, context, rules) {
+function verifyWithPart(childNodes, part, context, ruleMap) {
   let type = undefined;
 
   const partTerminalPart = part.isTerminalPart();
@@ -354,17 +352,17 @@ function verifyWithPart(childNodes, part, context, rules) {
   if (partTerminalPart) {
     const terminalPart = part;  ///
 
-    type = verifyWithTerminalPart(childNodes, terminalPart, context, rules);
+    type = verifyWithTerminalPart(childNodes, terminalPart, context, ruleMap);
   } else {
     const nonTerminalPart = part; ///
 
-    type = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules);
+    type = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, ruleMap);
   }
 
   return type;
 }
 
-function verifyWithTerminalPart(childNodes, terminalPart, context, rules) {
+function verifyWithTerminalPart(childNodes, terminalPart, context, ruleMap) {
   let type = undefined;
 
   const childNode = childNodes.shift();
@@ -389,7 +387,7 @@ function verifyWithTerminalPart(childNodes, terminalPart, context, rules) {
   return type;
 }
 
-function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules) {
+function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, ruleMap) {
   let type = undefined;
 
   const nonTerminalPartType = nonTerminalPart.getType();
@@ -398,13 +396,13 @@ function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules) 
     case RuleNamePartType :
       const ruleNamePart = nonTerminalPart;  ///
 
-      type = verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules);
+      type = verifyWithRuleNamePart(childNodes, ruleNamePart, context, ruleMap);
       break;
 
     case OptionalPartPartType:
       const optionalPartPart = nonTerminalPart; ///
 
-      type = verifyWithOptionalPartPart(childNodes, optionalPartPart, context, rules);
+      type = verifyWithOptionalPartPart(childNodes, optionalPartPart, context, ruleMap);
       break;
 
     default:
@@ -415,7 +413,7 @@ function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, rules) 
   return type;
 }
 
-function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
+function verifyWithRuleNamePart(childNodes, ruleNamePart, context, ruleMap) {
   let type = undefined;
 
   const childNode = childNodes.shift();
@@ -433,7 +431,7 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
           case TERM_RULE_NAME : {
             const termNode = nonTerminalNode;
 
-            type = verifyTerm(termNode, context, rules);
+            type = verifyTerm(termNode, context, ruleMap);
 
             break;
           }
@@ -441,17 +439,16 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
           case EXPRESSION_RULE_NAME : {
             const expressionNode = nonTerminalNode;  ///
 
-            type = verifyExpression(expressionNode, context, rules);
+            type = verifyExpression(expressionNode, context, ruleMap);
 
             break;
           }
 
           default : {
-            const name = ruleName,  ///
-                  node = nonTerminalNode, ///
-                  rule = findRuleByName(name, rules);
+            const node = nonTerminalNode, ///
+                  rule = ruleMap[ruleName] || null;
 
-            type = verifyWithRule(node, rule, context, rules);
+            type = verifyWithRule(node, rule, context, ruleMap);
 
             break;
           }
@@ -463,12 +460,12 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, rules) {
   return type;
 }
 
-function verifyWithOptionalPartPart(childNodes, optionalPartPart, context, rules) {
+function verifyWithOptionalPartPart(childNodes, optionalPartPart, context, ruleMap) {
   const part = optionalPartPart.getPart();
 
   childNodes = ChildNodes.fromChildNodes(childNodes); ///
 
-  let type = verifyWithPart(childNodes, part, context, rules);
+  let type = verifyWithPart(childNodes, part, context, ruleMap);
 
   if (type === undefined) {
     childNodes.backtrack();

@@ -7,13 +7,13 @@ const queries = require("../../miscellaneous/queries"),
 
 const { termNodeQuery, typeNameTerminalNodeQuery } = queries;
 
-function verifyConstructorDeclaration(constructorDeclarationNode, context, rules) {
+function verifyConstructorDeclaration(constructorDeclarationNode, context, ruleMap) {
   const termNode = termNodeQuery(constructorDeclarationNode);
 
-  verifyTermAsConstructor(termNode, context, rules);
+  verifyTermAsConstructor(termNode, context, ruleMap);
 
   const typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode),
-        type = verifyTypeName(typeNameTerminalNode, context, rules),
+        type = verifyTypeName(typeNameTerminalNode, context, ruleMap),
 		    constructor = Constructor.fromTermNodeAndType(termNode, type);
 
 	context.addConstructor(constructor);
