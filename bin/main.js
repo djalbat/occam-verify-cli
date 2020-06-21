@@ -14,11 +14,9 @@ function main(commands, options) {
         { filePath, packageName = firstCommand } = options, ///
         context = Context.fromNothing();
 
-  if (packageName === undefined) {
-    verifyFile(filePath, context);
-  } else {
-    verifyPackage(packageName, context);
-  }
+  packageName ?
+    verifyPackage(packageName, context) :
+      verifyFile(filePath, context);
 }
 
 module.exports = main;

@@ -29,42 +29,42 @@ function verifyDeclaration(declarationNode, context, ruleMap) {
         keyword = keywordTerminalNodeContent;  ///
 
   switch (keyword) {
-    case TYPE_KEYWORD : {
+    case TYPE_KEYWORD: {
       const typeDeclarationNode = typeDeclarationNodeQuery(declarationNode);
 
       verifyTypeDeclaration(typeDeclarationNode, context, ruleMap);
       break;
     }
 
-	  case TYPES_KEYWORD : {
+	  case TYPES_KEYWORD: {
 		  const typesDeclarationNode = typesDeclarationNodeQuery(declarationNode);
 
 		  verifyTypesDeclaration(typesDeclarationNode, context, ruleMap);
 		  break;
 	  }
 
-	  case VARIABLE_KEYWORD : {
+	  case VARIABLE_KEYWORD: {
       const variableDeclarationNode = variableDeclarationNodeQuery(declarationNode);
 
       verifyVariableDeclaration(variableDeclarationNode, context, ruleMap);
       break;
     }
 
-    case VARIABLES_KEYWORD : {
+    case VARIABLES_KEYWORD: {
       const variablesDeclarationNode = variablesDeclarationNodeQuery(declarationNode);
 
       verifyVariablesDeclaration(variablesDeclarationNode, context, ruleMap);
       break;
     }
 
-    case CONSTRUCTOR_KEYWORD : {
+    case CONSTRUCTOR_KEYWORD: {
       const constructorDeclarationNode = constructorDeclarationNodeQuery(declarationNode);
 
       verifyConstructorDeclaration(constructorDeclarationNode, context, ruleMap);
       break;
     }
 
-    case CONSTRUCTORS_KEYWORD : {
+    case CONSTRUCTORS_KEYWORD: {
       const constructorsDeclarationNode = constructorsDeclarationNodeQuery(declarationNode);
 
       verifyConstructorsDeclaration(constructorsDeclarationNode, context, ruleMap);

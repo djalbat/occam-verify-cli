@@ -24,15 +24,6 @@ function nodeAsString(node, string = "") {
   return string;
 }
 
-function cloneChildNodes(node) {
-	let childNodes = node.getChildNodes();
-
-	childNodes = childNodes.slice();  ///
-
-	return childNodes;
-}
-
 module.exports = {
-  nodeAsString,
-	cloneChildNodes
+  nodeAsString
 };

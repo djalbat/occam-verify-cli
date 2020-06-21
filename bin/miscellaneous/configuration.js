@@ -1,25 +1,37 @@
 "use strict";
 
 class Configuration {
-  constructor(nextSignificantToken) {
-    this.nextSignificantToken = nextSignificantToken;
+  constructor(childNodes, index) {
+    this.childNodes = childNodes;
+    this.index = index;
   }
 
-  getNextSignificantToken() {
-    return this.nextSignificantToken;
+  getNextChildNode() {
+    let nextChildNode = null;
+
+    const childNodesLength = this.childNodes.length;
+
+    if (this.index < childNodesLength) {
+      nextChildNode = this.childNodes[this.index++];
+    }
+
+    return nextChildNode;
   }
 
   getSavedIndex() {
-    ///
+    const savedIndex = this.index;  ///
+
+    return savedIndex;
   }
 
-  backtrack() {
-    ///
+  backtrack(savedIndex) {
+    this.index = savedIndex;  ///
   }
 
-  static fromSignificantToken(significantToken) {
-    const nextSignificantToken = significantToken,  ///
-          configuration = new Configuration(nextSignificantToken);
+  static fromNonTerminalNode(nonTerminalNode) {
+    const childNodes = nonTerminalNode.getChildNodes(),
+          index = 0,
+          configuration = new Configuration(childNodes, index);
 
     return configuration;
   }

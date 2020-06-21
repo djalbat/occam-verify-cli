@@ -4,30 +4,29 @@ const parsers = require("occam-parsers");
 
 const Error = require("../error"),
 			queries = require("../miscellaneous/queries"),
-			TermNode = require("../miscellaneous/termNode"),
 			ruleNames = require("../miscellaneous/ruleNames"),
-      ChildNodes = require("../miscellaneous/childNodes"),
       nodeUtilities = require("../utilities/node"),
-			Configuration = require("../miscellaneous/configuration"),
-      verifyUtilities = require("../utilities/verify");
+      Configuration = require("../miscellaneous/configuration"),
+      verifyUtilities = require("../utilities/verify"),
+      ParserConfiguration = require("../miscellaneous/parserConfiguration");
 
 const { partTypes } = parsers,
-			{ nameTerminalNodeQuery } = queries,
+      { verifyTerm } = verifyUtilities,
+      { nodeAsString } = nodeUtilities,
+      { nameTerminalNodeQuery } = queries,
       { RuleNamePartType,
         OptionalPartPartType,
         GroupOfPartsPartType,
         ChoiceOfPartsPartType,
         OneOrMorePartsPartType,
         ZeroOrMorePartsPartType } = partTypes,
-      { verifyTerm, verifyExpression } = verifyUtilities,
-			{ nodeAsString, cloneChildNodes } = nodeUtilities,
       { NAME_RULE_NAME, TERM_RULE_NAME } = ruleNames;
 
 function verifyTermAsConstructor(termNode, context, ruleMap) {
 	const termRule = ruleMap[TERM_RULE_NAME],
-			  node = termNode,  ///
+			  nonTerminalNode = termNode,  ///
 			  rule = termRule,  ///
-			  verified = verifyWithRule(node, rule, context, ruleMap);
+			  verified = verifyWithRule(nonTerminalNode, rule, context, ruleMap);
 
   if (!verified) {
     const node = termNode,  ///
@@ -40,31 +39,42 @@ function verifyTermAsConstructor(termNode, context, ruleMap) {
 
 module.exports = verifyTermAsConstructor;
 
-function verifyWithRule(node, rule, context, ruleMap) {
+function verifyWithRule(nonTerminalNode, rule, context, ruleMap) {
+  let verified = false;
+
   const definitions = rule.getDefinitions(),
-        verified = definitions.some((definition) => verifyWithDefinition(node, definition, context, ruleMap));
+        configuration = Configuration.fromNonTerminalNode(nonTerminalNode);
+
+  definitions.some((definition) => {
+    const savedIndex = configuration.getSavedIndex();
+
+    verified = verifyWithDefinition(definition, context, ruleMap, configuration);
+
+    if (verified) {
+      return true;
+    }
+
+    configuration.backtrack(savedIndex);
+  });
 
   return verified;
 }
 
-function verifyWithDefinition(node, definition, context, ruleMap) {
-  const parts = definition.getParts(),
-		    childNodes = cloneChildNodes(node);
+function verifyWithDefinition(definition, context, ruleMap, configuration) {
+  const parts = definition.getParts();
 
-	let verified = parts.every((part) => verifyWithPart(childNodes, part, context, ruleMap));
+	let verified = parts.every((part) => verifyWithPart(part, context, ruleMap, configuration));
 
-	if (verified) {
-		const childNode = childNodes.shift();
+	const nextChildNode = configuration.getNextChildNode();
 
-		if (childNode !== undefined) {
-			verified = false;
-		}
-	}
+	if (nextChildNode !== null) {
+	  verified = false;
+  }
 
 	return verified;
 }
 
-function verifyWithPart(childNodes, part, context, ruleMap) {
+function verifyWithPart(part, context, ruleMap, configuration) {
   let verified;
 
   const partTerminalPart = part.isTerminalPart();
@@ -72,40 +82,54 @@ function verifyWithPart(childNodes, part, context, ruleMap) {
   if (partTerminalPart) {
     const terminalPart = part;  ///
 
-    verified = verifyWithTerminalPart(childNodes, terminalPart, context, ruleMap);
+    verified = verifyWithTerminalPart(terminalPart, context, ruleMap, configuration);
   } else {
     const nonTerminalPart = part; ///
 
-    verified = verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, ruleMap);
+    verified = verifyWithNonTerminalPart(nonTerminalPart, context, ruleMap, configuration);
   }
 
   return verified;
 }
 
-function verifyWithTerminalPart(childNodes, terminalPart, context, ruleMap) {
+function verifyWithTerminalPart(terminalPart, context, ruleMap, configuration) {
   let verified = false;
 
-  const childNode = childNodes.shift();
+  const savedIndex = configuration.getSavedIndex(),
+        nextChildNode = configuration.getNextChildNode();
 
-  if (childNode !== undefined) {
-	  const childNodeTerminalNode = childNode.isTerminalNode();
+  if (nextChildNode !== null) {
+	  const childNode = nextChildNode,  ///
+          childNodeTerminalNode = childNode.isTerminalNode();
 
 	  if (childNodeTerminalNode) {
 		  let terminalNode = childNode; ///
 
-		  const significantToken = terminalNode.getSignificantToken(),
-					  configuration = Configuration.fromSignificantToken(significantToken);
+      const terminalPartNoWhitespacePart = terminalPart.isNoWhitespacePart();
 
-		  terminalNode = terminalPart.parse(configuration);
+      if (terminalPartNoWhitespacePart) {
+        const terminalNodeNoWhitespaceNode = terminalNode.isNoWhitespaceNode();
 
-		  verified = (terminalNode !== undefined);
+        verified = terminalNodeNoWhitespaceNode;  ///
+      } else {
+        const parserConfiguration = ParserConfiguration.fromTerminalNode(terminalNode),
+              configuration = parserConfiguration;  ///
+
+        terminalNode = terminalPart.parse(configuration); ///
+
+        verified = (terminalNode !== null);
+      }
 	  }
+  }
+
+  if (!verified) {
+    configuration.backtrack(savedIndex);
   }
 
   return verified;
 }
 
-function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, ruleMap) {
+function verifyWithNonTerminalPart(nonTerminalPart, context, ruleMap, configuration) {
   let verified = false;
 
   const nonTerminalPartType = nonTerminalPart.getType();
@@ -114,25 +138,25 @@ function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, ruleMap
     case RuleNamePartType:
       const ruleNamePart = nonTerminalPart;  ///
 
-      verified = verifyWithRuleNamePart(childNodes, ruleNamePart, context, ruleMap);
+      verified = verifyWithRuleNamePart(ruleNamePart, context, ruleMap, configuration);
       break;
 
     case GroupOfPartsPartType:
       const groupOfPartsPart = nonTerminalPart; ///
 
-      verified = verifyWithGroupOfPartsPart(childNodes, groupOfPartsPart, context, ruleMap);
+      verified = verifyWithGroupOfPartsPart(groupOfPartsPart, context, ruleMap, configuration);
       break;
 
     case OptionalPartPartType:
       const optionalPartPart = nonTerminalPart; ///
 
-      verified = verifyWithOptionalPartPart(childNodes, optionalPartPart, context, ruleMap);
+      verified = verifyWithOptionalPartPart(optionalPartPart, context, ruleMap, configuration);
       break;
 
 	  case ZeroOrMorePartsPartType:
 		  const zeroOrMorePartsPart = nonTerminalPart; ///
 
-		  verified = verifyWithZeroOrMorePartsPart(childNodes, zeroOrMorePartsPart, context, ruleMap);
+		  verified = verifyWithZeroOrMorePartsPart(zeroOrMorePartsPart, context, ruleMap, configuration);
 		  break;
 
     default:
@@ -143,13 +167,15 @@ function verifyWithNonTerminalPart(childNodes, nonTerminalPart, context, ruleMap
   return verified;
 }
 
-function verifyWithRuleNamePart(childNodes, ruleNamePart, context, ruleMap) {
+function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, configuration) {
   let verified = false;
 
-  const childNode = childNodes.shift();
+  const savedIndex = configuration.getSavedIndex(),
+        nextChildNode = configuration.getNextChildNode();
 
-  if (childNode !== undefined) {
-    const childNodeNonTerminalNode = childNode.isNonTerminalNode();
+  if (nextChildNode !== null) {
+    const childNode = nextChildNode,  ///
+          childNodeNonTerminalNode = childNode.isNonTerminalNode();
 
     if (childNodeNonTerminalNode) {
       const ruleName = ruleNamePart.getRuleName(),
@@ -157,54 +183,54 @@ function verifyWithRuleNamePart(childNodes, ruleNamePart, context, ruleMap) {
             nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
       if (ruleName === nonTerminalNodeRuleName) {
-        const name = ruleName,  ///
-              node = nonTerminalNode, ///
-              rule = ruleMap[ruleName] || null;
+        const rule = ruleMap[ruleName] || null;
 
-        if (ruleName === NAME_RULE_NAME) {
+        if (false) {
+          ///
+        } else if (ruleName === NAME_RULE_NAME) {
           const nameRule = rule;  ///
 
-          verified = verifyWithNameRule(node, nameRule, context, ruleMap);
-        } else {
-          const termNode = TermNode.fromChildNode(childNode),
-                type = verifyTerm(termNode, context, ruleMap, verifyExpression);
+          verified = verifyWithNameRule(nonTerminalNode, nameRule, context, ruleMap);
+        } else if (ruleName === TERM_RULE_NAME) {
+          const termRule = rule;  ///
 
-          verified = (type !== undefined);
+          verified = verifyWithTermRule(nonTerminalNode, termRule, context, ruleMap);
+        }
 
-          if (!verified) {
-            verified = verifyWithRule(node, rule, context, ruleMap);
-          }
+        if (!verified) {
+          verified = verifyWithRule(nonTerminalNode, rule, context, ruleMap);
         }
       }
     }
   }
 
-  return verified;
-}
-
-function verifyWithGroupOfPartsPart(childNodes, groupOfPartsPart, context, ruleMap) {
-  const parts = groupOfPartsPart.getParts();
-
-  let verified = parts.every((part) => verifyWithPart(childNodes, part, context, ruleMap));
-
-  childNodes = ChildNodes.fromChildNodes(childNodes); ///
-
   if (!verified) {
-    childNodes.backtrack();
+    configuration.backtrack(savedIndex);
   }
 
   return verified;
 }
 
-function verifyWithOptionalPartPart(childNodes, optionalPartPart, context, ruleMap) {
-  const part = optionalPartPart.getPart();
-
-  childNodes = ChildNodes.fromChildNodes(childNodes); ///
-
-  let verified = verifyWithPart(childNodes, part, context, ruleMap);
+function verifyWithGroupOfPartsPart(groupOfPartsPart, context, ruleMap, configuration) {
+  const parts = groupOfPartsPart.getParts(),
+        savedIndex = configuration.getSavedIndex(),
+        verified = parts.every((part) => verifyWithPart(part, context, ruleMap, configuration));
 
   if (!verified) {
-    childNodes.backtrack();
+    configuration.backtrack(savedIndex);
+  }
+
+  return verified;
+}
+
+function verifyWithOptionalPartPart(optionalPartPart, context, ruleMap, configuration) {
+  const part = optionalPartPart.getPart(),
+        savedIndex = configuration.getSavedIndex();
+
+  let verified = verifyWithPart(part, context, ruleMap, configuration);
+
+  if (!verified) {
+    configuration.backtrack(savedIndex);
 
     verified = true;
   }
@@ -212,13 +238,19 @@ function verifyWithOptionalPartPart(childNodes, optionalPartPart, context, ruleM
   return verified;
 }
 
-function verifyWithZeroOrMorePartsPart(childNodes, zeroOrMorePartsPart, context, ruleMap) {
+function verifyWithZeroOrMorePartsPart(zeroOrMorePartsPart, context, ruleMap, configuration) {
 	let verified = true;
 
 	const part = zeroOrMorePartsPart.getPart();
 
 	while (verified === true) {
-		verified = verifyWithPart(childNodes, part, context, ruleMap);
+	  const savedIndex = configuration.getSavedIndex();
+
+		verified = verifyWithPart(part, context, ruleMap, configuration);
+
+		if (!verified) {
+		  configuration.backtrack(savedIndex);
+    }
 	}
 
 	verified = true;
@@ -226,18 +258,27 @@ function verifyWithZeroOrMorePartsPart(childNodes, zeroOrMorePartsPart, context,
 	return verified;
 }
 
-function verifyWithNameRule(node, nameRule, context, ruleMap) {
-  const nameTerminalNode = nameTerminalNodeQuery(node),
+function verifyWithNameRule(nonTerminalNode, nameRule, context, ruleMap) {
+  const nameTerminalNode = nameTerminalNodeQuery(nonTerminalNode),
         nameTerminalNodeContent = nameTerminalNode.getContent(),
-        name = nameTerminalNodeContent,
+        name = nameTerminalNodeContent, ///
         typePresent = context.isTypePresentByName(name),
         verified = typePresent; ///
 
   if (!typePresent) {
-    const message = `The '${name}' type is missing.`;
+    const node = nonTerminalNode, ///
+          message = `The '${name}' type is missing.`;
 
     throw new Error(node, message);
   }
+
+  return verified;
+}
+
+function verifyWithTermRule(nonTerminalNode, termRule, context, ruleMap) {
+  const termNode = nonTerminalNode, ///
+        type = verifyTerm(termNode, context, ruleMap),
+        verified = (type !== undefined);
 
   return verified;
 }

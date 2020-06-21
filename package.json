@@ -16,7 +16,7 @@
     "occam-dom": "^2.0.32",
     "occam-lexers": "^12.0.3",
     "occam-open-cli": "^2.0.90",
-    "occam-parsers": "^12.0.3"
+    "occam-parsers": "^12.0.5"
   },
   "devDependencies": {},
   "scripts": {

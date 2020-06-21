@@ -1,14 +1,24 @@
 "use strict";
 
 const queries = require("../../miscellaneous/queries"),
-      verifyConstructorDeclaration = require("../../verify/declaration/constructor");
+      Constructor = require("../../constructor"),
+      verifyTypeName = require("../../verify/typeName"),
+      verifyTermAsConstructor = require("../../verify/termAsConstructor");
 
-const { constructorDeclarationNodesQuery } = queries;
+const { termNodesQuery, typeNameTerminalNodeQuery } = queries;
 
-function verifyConstructorsDeclaration(constructorsDeclarationNode, context, ruleMap) {
-  const constructorDeclarationNodes = constructorDeclarationNodesQuery(constructorsDeclarationNode);
+function verifyConstructorsDeclaration(constructorDeclarationNode, context, ruleMap) {
+  const typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode),
+        termNodes = termNodesQuery(constructorDeclarationNode),
+        type = verifyTypeName(typeNameTerminalNode, context, ruleMap);
 
-  constructorDeclarationNodes.forEach((constructorDeclarationNode) => verifyConstructorDeclaration(constructorDeclarationNode, context, ruleMap));
+  termNodes.forEach((termNode) => {
+    verifyTermAsConstructor(termNode, context, ruleMap);
+
+    const constructor = Constructor.fromTermNodeAndType(termNode, type);
+
+    context.addConstructor(constructor);
+  });
 }
 
 module.exports = verifyConstructorsDeclaration;
