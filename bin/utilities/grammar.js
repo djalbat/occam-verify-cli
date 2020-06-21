@@ -2,11 +2,13 @@
 
 const lexers = require("occam-lexers"),
 			parsers = require("occam-parsers"),
-			customgrammars = require("occam-custom-grammars");  ///
+      customGrammars = require("occam-custom-grammars"),  ///
+      grammarUtilities = require("occam-grammar-utilities");
 
 const { FlorenceLexer } = lexers,
 			{ FlorenceParser } = parsers,
-			{ lexersUtilities, parsersUtilities } = customgrammars,
+      { removeOrRenameIntermediateNodes } = grammarUtilities,
+			{ lexersUtilities, parsersUtilities } = customGrammars,
 			{ florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
 			{ florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
@@ -25,6 +27,7 @@ function florenceParserFromNothing() {
 module.exports = {
 	florenceLexerFromNothing,
 	florenceParserFromNothing,
+  removeOrRenameIntermediateNodes,
   florenceLexerFromCombinedCustomGrammar,
   florenceParserFromCombinedCustomGrammar
 };

@@ -141,6 +141,12 @@ function verifyWithNonTerminalPart(nonTerminalPart, context, ruleMap, configurat
       verified = verifyWithRuleNamePart(ruleNamePart, context, ruleMap, configuration);
       break;
 
+    case OptionalPartPartType:
+      const optionalPartPart = nonTerminalPart; ///
+
+      verified = verifyWithOptionalPartPart(optionalPartPart, context, ruleMap, configuration);
+      break;
+
     case GroupOfPartsPartType:
       const groupOfPartsPart = nonTerminalPart; ///
 
@@ -151,12 +157,6 @@ function verifyWithNonTerminalPart(nonTerminalPart, context, ruleMap, configurat
       const choiceOfPartsPart = nonTerminalPart; ///
 
       verified = verifyWithChoiceOfPartsPart(choiceOfPartsPart, context, ruleMap, configuration);
-      break;
-
-    case OptionalPartPartType:
-      const optionalPartPart = nonTerminalPart; ///
-
-      verified = verifyWithOptionalPartPart(optionalPartPart, context, ruleMap, configuration);
       break;
 
 	  case ZeroOrMorePartsPartType:
@@ -194,13 +194,15 @@ function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, configuration) {
         if (false) {
           ///
         } else if (ruleName === NAME_RULE_NAME) {
-          const nameRule = rule;  ///
+          const nameNode = nonTerminalNode, ///
+                nameRule = rule;  ///
 
-          verified = verifyWithNameRule(nonTerminalNode, nameRule, context, ruleMap);
+          verified = verifyWithNameRule(nameNode, nameRule, context, ruleMap);
         } else if (ruleName === TERM_RULE_NAME) {
-          const termRule = rule;  ///
+          const termNode = nonTerminalNode, ///
+                termRule = rule;  ///
 
-          verified = verifyWithTermRule(nonTerminalNode, termRule, context, ruleMap);
+          verified = verifyWithTermRule(termNode, termRule, context, ruleMap);
         }
 
         if (!verified) {
@@ -209,30 +211,6 @@ function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, configuration) {
       }
     }
   }
-
-  if (!verified) {
-    configuration.backtrack(savedIndex);
-  }
-
-  return verified;
-}
-
-function verifyWithGroupOfPartsPart(groupOfPartsPart, context, ruleMap, configuration) {
-  const parts = groupOfPartsPart.getParts(),
-        savedIndex = configuration.getSavedIndex(),
-        verified = parts.every((part) => verifyWithPart(part, context, ruleMap, configuration));
-
-  if (!verified) {
-    configuration.backtrack(savedIndex);
-  }
-
-  return verified;
-}
-
-function verifyWithChoiceOfPartsPart(chioceOfParts, context, ruleMap, configuration) {
-  const parts = chioceOfParts.getParts(),
-        savedIndex = configuration.getSavedIndex(),
-        verified = parts.some((part) => verifyWithPart(part, context, ruleMap, configuration));
 
   if (!verified) {
     configuration.backtrack(savedIndex);
@@ -251,6 +229,30 @@ function verifyWithOptionalPartPart(optionalPartPart, context, ruleMap, configur
     configuration.backtrack(savedIndex);
 
     verified = true;
+  }
+
+  return verified;
+}
+
+function verifyWithGroupOfPartsPart(groupOfPartsPart, context, ruleMap, configuration) {
+  const parts = groupOfPartsPart.getParts(),
+        savedIndex = configuration.getSavedIndex(),
+        verified = parts.every((part) => verifyWithPart(part, context, ruleMap, configuration));
+
+  if (!verified) {
+    configuration.backtrack(savedIndex);
+  }
+
+  return verified;
+}
+
+function verifyWithChoiceOfPartsPart(choiceOfParts, context, ruleMap, configuration) {
+  const parts = choiceOfParts.getParts(),
+        savedIndex = configuration.getSavedIndex(),
+        verified = parts.some((part) => verifyWithPart(part, context, ruleMap, configuration));
+
+  if (!verified) {
+    configuration.backtrack(savedIndex);
   }
 
   return verified;
@@ -276,8 +278,8 @@ function verifyWithZeroOrMorePartsPart(zeroOrMorePartsPart, context, ruleMap, co
 	return verified;
 }
 
-function verifyWithNameRule(nonTerminalNode, nameRule, context, ruleMap) {
-  const nameTerminalNode = nameTerminalNodeQuery(nonTerminalNode),
+function verifyWithNameRule(nameNode, nameRule, context, ruleMap) {
+  const nameTerminalNode = nameTerminalNodeQuery(nameNode),
         nameTerminalNodeContent = nameTerminalNode.getContent(),
         name = nameTerminalNodeContent, ///
         typePresent = context.isTypePresentByName(name),
@@ -293,9 +295,8 @@ function verifyWithNameRule(nonTerminalNode, nameRule, context, ruleMap) {
   return verified;
 }
 
-function verifyWithTermRule(nonTerminalNode, termRule, context, ruleMap) {
-  const termNode = nonTerminalNode, ///
-        type = verifyTerm(termNode, context, ruleMap),
+function verifyWithTermRule(termNode, termRule, context, ruleMap) {
+  const type = verifyTerm(termNode, context, ruleMap),
         verified = (type !== undefined);
 
   return verified;
