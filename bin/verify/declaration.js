@@ -70,6 +70,10 @@ function verifyDeclaration(declarationNode, context, ruleMap) {
       verifyConstructorsDeclaration(constructorsDeclarationNode, context, ruleMap);
       break;
     }
+
+    default:
+
+      debugger
   }
 }
 

@@ -147,6 +147,12 @@ function verifyWithNonTerminalPart(nonTerminalPart, context, ruleMap, configurat
       verified = verifyWithGroupOfPartsPart(groupOfPartsPart, context, ruleMap, configuration);
       break;
 
+    case ChoiceOfPartsPartType:
+      const choiceOfPartsPart = nonTerminalPart; ///
+
+      verified = verifyWithChoiceOfPartsPart(choiceOfPartsPart, context, ruleMap, configuration);
+      break;
+
     case OptionalPartPartType:
       const optionalPartPart = nonTerminalPart; ///
 
@@ -215,6 +221,18 @@ function verifyWithGroupOfPartsPart(groupOfPartsPart, context, ruleMap, configur
   const parts = groupOfPartsPart.getParts(),
         savedIndex = configuration.getSavedIndex(),
         verified = parts.every((part) => verifyWithPart(part, context, ruleMap, configuration));
+
+  if (!verified) {
+    configuration.backtrack(savedIndex);
+  }
+
+  return verified;
+}
+
+function verifyWithChoiceOfPartsPart(chioceOfParts, context, ruleMap, configuration) {
+  const parts = chioceOfParts.getParts(),
+        savedIndex = configuration.getSavedIndex(),
+        verified = parts.some((part) => verifyWithPart(part, context, ruleMap, configuration));
 
   if (!verified) {
     configuration.backtrack(savedIndex);

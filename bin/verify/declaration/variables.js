@@ -1,14 +1,34 @@
 "use strict";
 
-const queries = require("../../miscellaneous/queries"),
-      verifyVariableDeclaration = require("../../verify/declaration/variable");
+const Error = require("../../error"),
+      queries = require("../../miscellaneous/queries"),
+      Variable = require("../../variable"),
+      verifyTypeName = require("../../verify/typeName");
 
-const { variableDeclarationNodesQuery } = queries;
+const { typeNameTerminalNodeQuery, nameTerminalNodesQuery } = queries;
 
-function verifyVariablesDeclaration(variablesDeclarationNode, context, ruleMap) {
-  const variableDeclarationNodes = variableDeclarationNodesQuery(variablesDeclarationNode);
+function verifyVariablesDeclaration(variableDeclarationNode, context, ruleMap) {
+  const typeNameTerminalNode = typeNameTerminalNodeQuery(variableDeclarationNode),
+        type = verifyTypeName(typeNameTerminalNode, context, ruleMap);
 
-  variableDeclarationNodes.forEach((variableDeclarationNode) => verifyVariableDeclaration(variableDeclarationNode, context, ruleMap));
+  const nameTerminalNodes = nameTerminalNodesQuery(variableDeclarationNode);
+
+  nameTerminalNodes.forEach((nameTerminalNode) => {
+    const nameTerminalNodeContent = nameTerminalNode.getContent(),
+          name = nameTerminalNodeContent, ///
+          variablePresent = context.isVariablePresentByName(name);
+
+    if (variablePresent) {
+      const node = variableDeclarationNode, ///
+            message = `The variable '${name}' is already present.`;
+
+      throw new Error(node, message);
+    }
+
+    const variable = Variable.fromNameAndType(name, type);
+
+    context.addVariable(variable);
+  });
 }
 
 module.exports = verifyVariablesDeclaration;

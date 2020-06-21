@@ -8,6 +8,9 @@ const Error = require("../../error"),
 const { typeNameTerminalNodeQuery, nameTerminalNodeQuery } = queries;
 
 function verifyVariableDeclaration(variableDeclarationNode, context, ruleMap) {
+  const typeNameTerminalNode = typeNameTerminalNodeQuery(variableDeclarationNode),
+        type = verifyTypeName(typeNameTerminalNode, context, ruleMap);
+
   const nameTerminalNode = nameTerminalNodeQuery(variableDeclarationNode),
         nameTerminalNodeContent = nameTerminalNode.getContent(),
         name = nameTerminalNodeContent, ///
@@ -20,9 +23,7 @@ function verifyVariableDeclaration(variableDeclarationNode, context, ruleMap) {
     throw new Error(node, message);
   }
 
-  const typeNameTerminalNode = typeNameTerminalNodeQuery(variableDeclarationNode),
-        type = verifyTypeName(typeNameTerminalNode, context, ruleMap),
-        variable = Variable.fromNameAndType(name, type);
+  const variable = Variable.fromNameAndType(name, type);
 
   context.addVariable(variable);
 }
