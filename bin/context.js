@@ -8,11 +8,13 @@ const { arrayUtilities } = necessary,
 const add = push; ///
 
 class Context {
-  constructor(types, axioms, variables, constructors, packageName, parentContext) {
+  constructor(types, axioms, variables, operators, constructors, packageName, parentContext) {
     this.types = types;
     this.axioms = axioms;
+    this.operators = operators;
     this.variables = variables;
     this.constructors = constructors;
+
     this.packageName = packageName;
     this.parentContext = parentContext;
   }
@@ -111,6 +113,14 @@ class Context {
     this.variables.unshift(variable);
 
     console.log(`Added the '${variableString}' variable to the context.`);
+  }
+
+  addOperator(operator) {
+    const operatorString = operator.asString();
+
+    this.operators.unshift(operator);
+
+    console.log(`Added the '${operatorString}' operator to the context.`);
   }
 
   addConstructor(constructor) {
@@ -226,8 +236,9 @@ class Context {
     const types = [],
           axioms = [],
           variables = [],
+          operators = [],
           constructors = [],
-          context = new Context(types, axioms, variables, constructors, packageName, parentContext);
+          context = new Context(types, axioms, variables, operators, constructors, packageName, parentContext);
 
     return context;
   }

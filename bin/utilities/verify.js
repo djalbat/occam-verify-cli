@@ -212,10 +212,9 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, cont
       }
 
       default: {
-        const rule = ruleMap[ruleName] || null,
-              type = verifyWithRule(nonTerminalNode, rule, context, ruleMap);
+        const rule = ruleMap[ruleName] || null;
 
-        verified = (type !== undefined);
+        verified = verifyWithRule(nonTerminalNode, rule, context, ruleMap);
       }
     }
   }
@@ -270,7 +269,7 @@ function verifyTerminalNode(terminalNode, constructorTerminalNode, context, rule
 }
 
 function verifyWithRule(nonTerminalNode, rule, context, ruleMap) {
-  let type = undefined;
+  let verified = false;
 
   const definitions = rule.getDefinitions(),
         configuration = Configuration.fromNonTerminalNode(nonTerminalNode);
@@ -278,16 +277,16 @@ function verifyWithRule(nonTerminalNode, rule, context, ruleMap) {
   definitions.some((definition) => {
     const savedIndex = configuration.getSavedIndex();
 
-    type = verifyWithDefinition(definition, context, ruleMap, configuration);
+    verified = verifyWithDefinition(definition, context, ruleMap, configuration);
 
-    if (type !== undefined) {
+    if (verified) {
       return true;
     }
 
     configuration.backtrack(savedIndex);
   });
 
-  return type;
+  return verified;
 }
 
 function verifyWithDefinition(definition, context, ruleMap, configuration) {
@@ -416,7 +415,7 @@ function verifyWithNonTerminalPart(nonTerminalPart, context, ruleMap, configurat
 }
 
 function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, configuration) {
-  let type = undefined;
+  let verified = false;
 
   const nextChildNode = configuration.getNextChildNode();
 
@@ -432,17 +431,19 @@ function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, configuration) {
       if (ruleName === nonTerminalNodeRuleName) {
         switch (ruleName) {
           case TERM_RULE_NAME: {
-            const termNode = nonTerminalNode;
+            const termNode = nonTerminalNode, ///
+                  type = verifyTerm(termNode, context, ruleMap);
 
-            type = verifyTerm(termNode, context, ruleMap);
+            verified = (type !== undefined);
 
             break;
           }
 
           case EXPRESSION_RULE_NAME: {
-            const expressionNode = nonTerminalNode;  ///
+            const expressionNode = nonTerminalNode, ///
+                  type = verifyExpression(expressionNode, context, ruleMap);
 
-            type = verifyExpression(expressionNode, context, ruleMap);
+            verified = (type !== undefined);
 
             break;
           }
@@ -450,7 +451,7 @@ function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, configuration) {
           default: {
             const rule = ruleMap[ruleName] || null;
 
-            type = verifyWithRule(nonTerminalNode, rule, context, ruleMap);
+            verified = verifyWithRule(nonTerminalNode, rule, context, ruleMap);
 
             break;
           }
@@ -459,7 +460,7 @@ function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, configuration) {
     }
   }
 
-  return type;
+  return verified;
 }
 
 function verifyWithOptionalPartPart(optionalPartPart, context, ruleMap, configuration) {

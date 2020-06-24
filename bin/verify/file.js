@@ -13,14 +13,12 @@ const { exit } = process,
       { readFile } = fileSystemUtilities,
       { lineIndexFromNodeAndTokens } = lineIndexUtilities,
       { axiomOrDeclarationNodesQuery } = queries,
-			{ florenceLexerFromNothing, florenceParserFromNothing, removeOrRenameIntermediateNodes } = grammarUtilities;
+			{ florenceLexerFromNothing, florenceParserFromNothing } = grammarUtilities;
 
 function verifyFile(filePath, context, florenceLexer = florenceLexerFromNothing, florenceParser = florenceParserFromNothing) {
   const fileContent = readFile(filePath),
         tokens = florenceLexer.tokenise(fileContent),
         node = florenceParser.parse(tokens);
-
-  removeOrRenameIntermediateNodes(node);
 
   try {
     const ruleMap = florenceParser.getRuleMap(),
