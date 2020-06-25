@@ -2,21 +2,30 @@
 
 const necessary = require("necessary");
 
-const Context = require("./context"),
-      verifyFile = require("./verify/file"),
-      verifyPackage = require("./verify/package");
+const verifyFiles = require("./verify/files"),
+      verifyPackage = require("./verify/package"),
+      GlobalContext = require("./context/global"),
+      PackageContext = require("./context/package");
 
 const { arrayUtilities } = necessary,
       { first } = arrayUtilities;
 
 function main(commands, options) {
-  const firstCommand = first(commands),
-        { filePath, packageName = firstCommand } = options, ///
-        context = Context.fromNothing();
+  let globalContext = GlobalContext.fromNothing();
 
-  packageName ?
-    verifyPackage(packageName, context) :
-      verifyFile(filePath, context);
+  const firstCommand = first(commands),
+        { filePath, packageName = firstCommand } = options; ///
+
+  if (packageName) {
+    const packageNames = [];
+
+    verifyPackage(packageName, globalContext, packageNames);
+  } else {
+    const filePaths = [ filePath ], ///
+          packageContext = PackageContext.fromGlobalContext(globalContext);
+
+    verifyFiles(filePaths, packageContext);
+  }
 }
 
 module.exports = main;

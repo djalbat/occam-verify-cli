@@ -6,7 +6,7 @@ const Type = require("../../type"),
 
 const { typeNameTerminalNodesQuery } = queries;
 
-function verifyTypeDeclaration(typeDeclarationNode, context, ruleMap) {
+function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
   const typeNameTerminalNodes = typeNameTerminalNodesQuery(typeDeclarationNode),
         typeNames = typeNameTerminalNodes.map((typeNameTerminalNode) => {
           const typeNameTerminalNodeContent = typeNameTerminalNode.getContent(),
@@ -15,7 +15,7 @@ function verifyTypeDeclaration(typeDeclarationNode, context, ruleMap) {
           return typeName;
         }),
         typeName = typeNames.shift(), ///
-        typePresent = context.isTypePresentByTypeName(typeName);
+        typePresent = fileContext.isTypePresentByTypeName(typeName);
 
   if (typePresent) {
     const node = typeDeclarationNode, ///
@@ -29,9 +29,9 @@ function verifyTypeDeclaration(typeDeclarationNode, context, ruleMap) {
   if (superTypeName === undefined) {
     const type = Type.fromTypeName(typeName);
 
-    context.addType(type);
+    fileContext.addType(type);
   } else {
-    const superType = context.findTypeByTypeName(superTypeName);
+    const superType = fileContext.findTypeByTypeName(superTypeName);
 
     if (superType === undefined) {
       const node = typeDeclarationNode, ///
@@ -42,7 +42,7 @@ function verifyTypeDeclaration(typeDeclarationNode, context, ruleMap) {
 
     const type = Type.fromTypeNameAndSuperType(typeName, superType);
 
-    context.addType(type);
+    fileContext.addType(type);
   }
 }
 

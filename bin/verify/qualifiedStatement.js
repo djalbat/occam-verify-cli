@@ -6,10 +6,10 @@ const queries = require("../miscellaneous/queries"),
 const { verifyStatement } = verifyUtilities,
       { qualificationNodeQuery, statementNodeQuery } = queries;
 
-function verifyQualifiedStatement(qualifiedStatementNode, context, ruleMap) {
+function verifyQualifiedStatement(qualifiedStatementNode, fileContext) {
   const statementNode = statementNodeQuery(qualifiedStatementNode);
 
-  verifyStatement(statementNode, context, ruleMap);
+  verifyStatement(statementNode, fileContext);
 
   const qualificationNode = qualificationNodeQuery(qualifiedStatementNode);
 

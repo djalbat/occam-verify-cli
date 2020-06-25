@@ -3,30 +3,36 @@
 const necessary = require("necessary");
 
 const verifyFiles = require("../verify/files"),
+      PackageContext = require("../context/package"),
       packageUtilities = require("../utilities/package");
 
-const { exit } = process,
-      { arrayUtilities } = necessary,
+const { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { dependenciesFromPackageName } = packageUtilities;
+      { filePathsFromPackageName, dependencyPackageNamesFromPackageName } = packageUtilities;
 
-function verifyPackage(packageName, context, packageNames = []) {
+function verifyPackage(packageName, globalContext, packageNames) {
   checkForCyclicDependency(packageName, packageNames);
 
-  const dependencies = dependenciesFromPackageName(packageName);
+  const dependencyPackageNames = dependencyPackageNamesFromPackageName(packageName);
 
-  dependencies.forEach((dependency) => {
-    const packageName = dependency, ///
-          packageNameMissing = context.isPackageNameMissing(packageName);
+  dependencyPackageNames.forEach((dependencyPackageName) => {
+    const dependencyPackageMissing = globalContext.isPackageMissingByPackageName(dependencyPackageName);
 
-    if (packageNameMissing) {
-      context = verifyPackage(packageName, context, packageNames);
+    if (dependencyPackageMissing) {
+      const packageContext = verifyPackage(dependencyPackageName, globalContext, [ ...packageNames, packageName ]); ///
+
+      globalContext.addPackageContext(packageContext);
     }
   });
 
-  context = verifyFiles(packageName, context);
+  packageNames = [ ...packageNames, packageName ];
 
-  return context;
+  const filePaths = filePathsFromPackageName(packageName),
+        packageContext = PackageContext.fromGlobalContextAndPackageNames(globalContext, packageNames);
+
+  verifyFiles(filePaths, packageContext);
+
+  return packageContext;
 }
 
 module.exports = verifyPackage;
@@ -44,8 +50,6 @@ function checkForCyclicDependency(packageName, packageNames) {
 
     console.log(`There is a cyclic dependency: '${packageNamesString}'.`);
 
-    exit();
+    process.exit();
   }
-
-  packageNames.push(packageName);
 }

@@ -7,7 +7,7 @@ class NonTerminalNodeContext {
   }
 
   getNextChildNode() {
-    let nextChildNode = null;
+    let nextChildNode = undefined;
 
     const childNodesLength = this.childNodes.length;
 

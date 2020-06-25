@@ -1,6 +1,7 @@
 "use strict";
 
 const dom = require("occam-dom"),
+      open = require("occam-open-cli"), ///
       lexers = require("occam-lexers"),
       parsers = require("occam-parsers"),
       necessary = require("necessary"),
@@ -9,40 +10,32 @@ const dom = require("occam-dom"),
 const contentUtilities = require("../utilities/content");
 
 const { Query } = dom,
+      { CustomGrammar } = customgrammars,
       { MetaJSONLexer } = lexers,
       { MetaJSONParser } = parsers,
-      { CustomGrammar } = customgrammars,
       { trimDoubleQuotes } = contentUtilities,
+      { filePathUtilities } = open,
       { fileSystemUtilities } = necessary,
-      { checkFileExists, readFile } = fileSystemUtilities;
+      { isFilePathFlorenceFilePath } = filePathUtilities,
+      { checkFileExists, readFile, readDirectory } = fileSystemUtilities;
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
       dependencyStringLiteralNodesQuery = Query.fromExpression("//dependency//@string-literal");
 
-function dependenciesFromPackageName(packageName) {
-  let dependencies = [];
+function filePathsFromPackageName(packageName) {
+  let filePaths;
 
   const directoryPath = packageName,  ///
-        metaJSONFilePath = `${directoryPath}/meta.json`,
-        metaJSONFileExists = checkFileExists(metaJSONFilePath);
+        fileNames = readDirectory(directoryPath);
 
-  if (metaJSONFileExists) {
-    const metaJSONFileContent = readFile(metaJSONFilePath),
-          content = metaJSONFileContent,  ///
-          tokens = metaJSONLexer.tokenise(content),
-          node = metaJSONParser.parse(tokens),
-          dependencyStringLiteralNodes = dependencyStringLiteralNodesQuery.execute(node);
+  filePaths = fileNames.map((fileName) => `${directoryPath}/${fileName}`);
 
-    dependencies = dependencyStringLiteralNodes.map((dependencyStringLiteralNode) => {
-      const dependencyStringLiteralNodeContent = dependencyStringLiteralNode.getContent(),
-            dependency = trimDoubleQuotes(dependencyStringLiteralNodeContent);
+  const florenceFilePaths = filePaths.filter(isFilePathFlorenceFilePath);
 
-      return dependency;
-    });
-  }
+  filePaths = florenceFilePaths;  ///
 
-  return dependencies;
+  return filePaths;
 }
 
 function customGrammarsFromPackageNames(packageNames) {
@@ -56,7 +49,33 @@ function customGrammarsFromPackageNames(packageNames) {
 	return customGrammars;
 }
 
+function dependencyPackageNamesFromPackageName(packageName) {
+  let dependencyPackageNames = [];
+
+  const directoryPath = packageName,  ///
+        metaJSONFilePath = `${directoryPath}/meta.json`,
+        metaJSONFileExists = checkFileExists(metaJSONFilePath);
+
+  if (metaJSONFileExists) {
+    const metaJSONFileContent = readFile(metaJSONFilePath),
+          content = metaJSONFileContent,  ///
+          tokens = metaJSONLexer.tokenise(content),
+          node = metaJSONParser.parse(tokens),
+          dependencyStringLiteralNodes = dependencyStringLiteralNodesQuery.execute(node);
+
+    dependencyPackageNames = dependencyStringLiteralNodes.map((dependencyStringLiteralNode) => {
+      const dependencyStringLiteralNodeContent = dependencyStringLiteralNode.getContent(),
+            dependencyPackageName = trimDoubleQuotes(dependencyStringLiteralNodeContent);
+
+      return dependencyPackageName;
+    });
+  }
+
+  return dependencyPackageNames;
+}
+
 module.exports = {
-  dependenciesFromPackageName,
-	customGrammarsFromPackageNames
+  filePathsFromPackageName,
+  customGrammarsFromPackageNames,
+  dependencyPackageNamesFromPackageName
 };

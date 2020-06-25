@@ -29,7 +29,7 @@ const { TYPE_KEYWORD,
         constructorDeclarationNodeQuery,
         constructorsDeclarationNodeQuery } = queries;
 
-function verifyDeclaration(declarationNode, context, ruleMap) {
+function verifyDeclaration(declarationNode, fileContext) {
   const keywordTerminalNode = keywordTerminalNodeQuery(declarationNode),
         keywordTerminalNodeContent = keywordTerminalNode.getContent(),
         keyword = keywordTerminalNodeContent;  ///
@@ -38,56 +38,56 @@ function verifyDeclaration(declarationNode, context, ruleMap) {
     case TYPE_KEYWORD: {
       const typeDeclarationNode = typeDeclarationNodeQuery(declarationNode);
 
-      verifyTypeDeclaration(typeDeclarationNode, context, ruleMap);
+      verifyTypeDeclaration(typeDeclarationNode, fileContext);
       break;
     }
 
 	  case TYPES_KEYWORD: {
 		  const typesDeclarationNode = typesDeclarationNodeQuery(declarationNode);
 
-		  verifyTypesDeclaration(typesDeclarationNode, context, ruleMap);
+		  verifyTypesDeclaration(typesDeclarationNode, fileContext);
 		  break;
 	  }
 
 	  case VARIABLE_KEYWORD: {
       const variableDeclarationNode = variableDeclarationNodeQuery(declarationNode);
 
-      verifyVariableDeclaration(variableDeclarationNode, context, ruleMap);
+      verifyVariableDeclaration(variableDeclarationNode, fileContext);
       break;
     }
 
     case VARIABLES_KEYWORD: {
       const variablesDeclarationNode = variablesDeclarationNodeQuery(declarationNode);
 
-      verifyVariablesDeclaration(variablesDeclarationNode, context, ruleMap);
+      verifyVariablesDeclaration(variablesDeclarationNode, fileContext);
       break;
     }
 
     case OPERATOR_KEYWORD: {
       const operatorDeclarationNode = operatorDeclarationNodeQuery(declarationNode);
 
-      verifyOperatorDeclaration(operatorDeclarationNode, context, ruleMap);
+      verifyOperatorDeclaration(operatorDeclarationNode, fileContext);
       break;
     }
 
     case OPERATORS_KEYWORD: {
       const operatorsDeclarationNode = operatorsDeclarationNodeQuery(declarationNode);
 
-      verifyOperatorsDeclaration(operatorsDeclarationNode, context, ruleMap);
+      verifyOperatorsDeclaration(operatorsDeclarationNode, fileContext);
       break;
     }
 
     case CONSTRUCTOR_KEYWORD: {
       const constructorDeclarationNode = constructorDeclarationNodeQuery(declarationNode);
 
-      verifyConstructorDeclaration(constructorDeclarationNode, context, ruleMap);
+      verifyConstructorDeclaration(constructorDeclarationNode, fileContext);
       break;
     }
 
     case CONSTRUCTORS_KEYWORD: {
       const constructorsDeclarationNode = constructorsDeclarationNodeQuery(declarationNode);
 
-      verifyConstructorsDeclaration(constructorsDeclarationNode, context, ruleMap);
+      verifyConstructorsDeclaration(constructorsDeclarationNode, fileContext);
       break;
     }
 

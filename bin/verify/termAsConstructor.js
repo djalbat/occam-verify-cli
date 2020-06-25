@@ -59,7 +59,7 @@ function verifyWithDefinition(definition, context, ruleMap, nonTerminalNodeConte
 
 	const nextChildNode = nonTerminalNodeContext.getNextChildNode();
 
-	if (nextChildNode !== null) {
+	if (nextChildNode !== undefined) {
 	  verified = false;
   }
 
@@ -90,7 +90,7 @@ function verifyWithTerminalPart(terminalPart, context, ruleMap, nonTerminalNodeC
   const savedIndex = nonTerminalNodeContext.getSavedIndex(),
         nextChildNode = nonTerminalNodeContext.getNextChildNode();
 
-  if (nextChildNode !== null) {
+  if (nextChildNode !== undefined) {
 	  const childNode = nextChildNode,  ///
           childNodeTerminalNode = childNode.isTerminalNode();
 
@@ -107,9 +107,9 @@ function verifyWithTerminalPart(terminalPart, context, ruleMap, nonTerminalNodeC
         const parserContext = ParserContext.fromTerminalNode(terminalNode),
               context = parserContext;  ///
 
-        terminalNode = terminalPart.parse(context); ///
+        terminalNode = terminalPart.parse(context);
 
-        verified = (terminalNode !== null);
+        verified = (terminalNode !== null); ///
       }
 	  }
   }
@@ -171,7 +171,7 @@ function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, nonTerminalNodeC
   const savedIndex = nonTerminalNodeContext.getSavedIndex(),
         nextChildNode = nonTerminalNodeContext.getNextChildNode();
 
-  if (nextChildNode !== null) {
+  if (nextChildNode !== undefined) {
     const childNode = nextChildNode,  ///
           childNodeNonTerminalNode = childNode.isNonTerminalNode();
 
@@ -181,7 +181,7 @@ function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, nonTerminalNodeC
             nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
       if (ruleName === nonTerminalNodeRuleName) {
-        const rule = ruleMap[ruleName] || null;
+        const rule = ruleMap[ruleName];
 
         if (false) {
           ///

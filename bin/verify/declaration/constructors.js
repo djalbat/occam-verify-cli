@@ -10,10 +10,10 @@ const Error = require("../../error"),
 const { nodeAsString } = nodeUtilities,
       { termNodesQuery, typeNameTerminalNodeQuery } = queries;
 
-function verifyConstructorsDeclaration(constructorDeclarationNode, context, ruleMap) {
+function verifyConstructorsDeclaration(constructorDeclarationNode, fileContext) {
   const typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode),
         termNodes = termNodesQuery(constructorDeclarationNode),
-        type = verifyTypeName(typeNameTerminalNode, context, ruleMap);
+        type = verifyTypeName(typeNameTerminalNode, fileContext);
 
   if (type === undefined) {
     const firstTermNode = first(termNodes),
@@ -26,7 +26,7 @@ function verifyConstructorsDeclaration(constructorDeclarationNode, context, rule
   }
 
   termNodes.forEach((termNode) => {
-    const verified = verifyTermAsConstructor(termNode, context, ruleMap);
+    const verified = verifyTermAsConstructor(termNode, fileContext);
 
     if (!verified) {
       const node = termNode,  ///

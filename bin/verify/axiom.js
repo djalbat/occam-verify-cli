@@ -11,16 +11,16 @@ const { labelNameTerminalNodesQuery,
         unqualifiedStatementNodeQuery,
         indicativeConditionalNodeQuery } = queries;
 
-function verifyAxiom(axiomNode, context, ruleMap) {
+function verifyAxiom(axiomNode, fileContext) {
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
         indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
   if (unqualifiedStatementNode !== undefined) {
-    verifyUnqualifiedStatement(unqualifiedStatementNode, context, ruleMap);
+    verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
   }
 
   if (indicativeConditionalNode !== undefined) {
-    verifyIndicativeConditional(indicativeConditionalNode, context, ruleMap);
+    verifyIndicativeConditional(indicativeConditionalNode, fileContext);
   }
 
   const parenthesisedLabelsNode = parenthesisedLabelsNodeQuery(axiomNode),
@@ -53,7 +53,7 @@ function verifyAxiom(axiomNode, context, ruleMap) {
     axiom = Axiom.fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels);
   }
 
-  context.addAxiom(axiom);
+  fileContext.addAxiom(axiom);
 }
 
 module.exports = verifyAxiom;

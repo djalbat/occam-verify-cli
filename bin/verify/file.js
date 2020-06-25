@@ -1,45 +1,39 @@
 "use strict";
 
-const necessary = require("necessary");
-
 const Error = require("../error"),
       queries = require("../miscellaneous/queries"),
-			grammarUtilities = require("../utilities/grammar"),
+      FileContext = require("../context/file"),
       lineIndexUtilities = require("../utilities/lineIndex"),
       verifyAxiomOrDeclaration = require("../verify/axiomOrDeclaration");
 
-const { exit } = process,
-      { fileSystemUtilities } = necessary,
-      { readFile } = fileSystemUtilities,
-      { lineIndexFromNodeAndTokens } = lineIndexUtilities,
-      { axiomOrDeclarationNodesQuery } = queries,
-			{ florenceLexerFromNothing, florenceParserFromNothing } = grammarUtilities;
+const { lineIndexFromNodeAndTokens } = lineIndexUtilities,
+      { axiomOrDeclarationNodesQuery } = queries;
 
-function verifyFile(filePath, context, florenceLexer = florenceLexerFromNothing, florenceParser = florenceParserFromNothing) {
-  const fileContent = readFile(filePath),
-        tokens = florenceLexer.tokenise(fileContent),
-        node = florenceParser.parse(tokens);
+function verifyFile(filePath, packageContext) {
+  const fileContext = FileContext.fromPackageContextAndFilePath(packageContext, filePath);
 
   try {
-    const ruleMap = florenceParser.getRuleMap(),
-          documentNode = node,  ///
-          axiomOrDeclarationNodes = axiomOrDeclarationNodesQuery(documentNode);
+    const node = fileContext.getNode(),
+          axiomOrDeclarationNodes = axiomOrDeclarationNodesQuery(node);
 
-    axiomOrDeclarationNodes.forEach((axiomOrDeclarationNode) => verifyAxiomOrDeclaration(axiomOrDeclarationNode, context, ruleMap));
+    axiomOrDeclarationNodes.forEach((axiomOrDeclarationNode) => verifyAxiomOrDeclaration(axiomOrDeclarationNode, fileContext));
   } catch (error) {
     if (!(error instanceof Error)) {
       throw error;
     } else {
-      const errorNode = error.getNode(),
+      const tokens = fileContext.getTokens(),
+            errorNode = error.getNode(),
             errorMessage = error.getMessage(),
             lineIndex = lineIndexFromNodeAndTokens(errorNode, tokens),
             lineNumber = lineIndex + 1;
 
       console.log(`${filePath}:${lineNumber}: ${errorMessage}`);
 
-      exit();
+      process.exit();
     }
   }
+
+  return fileContext;
 }
 
 module.exports = verifyFile;
