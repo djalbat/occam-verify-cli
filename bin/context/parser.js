@@ -1,6 +1,6 @@
 "use strict";
 
-class ParserConfiguration {
+class ParserContext {
   constructor(nextSignificantToken) {
     this.nextSignificantToken = nextSignificantToken;
   }
@@ -20,10 +20,10 @@ class ParserConfiguration {
   static fromTerminalNode(terminalNode) {
     const significantToken = terminalNode.getSignificantToken(),
           nextSignificantToken = significantToken,  ///
-          configuration = new ParserConfiguration(nextSignificantToken);
+          parserContext = new ParserContext(nextSignificantToken);
 
-    return configuration;
+    return parserContext;
   }
 }
 
-module.exports = ParserConfiguration;
+module.exports = ParserContext;

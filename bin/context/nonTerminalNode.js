@@ -1,6 +1,6 @@
 "use strict";
 
-class Configuration {
+class NonTerminalNodeContext {
   constructor(childNodes, index) {
     this.childNodes = childNodes;
     this.index = index;
@@ -31,10 +31,10 @@ class Configuration {
   static fromNonTerminalNode(nonTerminalNode) {
     const childNodes = nonTerminalNode.getChildNodes(),
           index = 0,
-          configuration = new Configuration(childNodes, index);
+          nonTerminalNodeContext = new NonTerminalNodeContext(childNodes, index);
 
-    return configuration;
+    return nonTerminalNodeContext;
   }
 }
 
-module.exports = Configuration;
+module.exports = NonTerminalNodeContext;
