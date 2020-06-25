@@ -5,14 +5,12 @@ const parsers = require("occam-parsers");
 const Error = require("../error"),
 			queries = require("../miscellaneous/queries"),
 			ruleNames = require("../miscellaneous/ruleNames"),
-      nodeUtilities = require("../utilities/node"),
       Configuration = require("../miscellaneous/configuration"),
       verifyUtilities = require("../utilities/verify"),
       ParserConfiguration = require("../miscellaneous/parserConfiguration");
 
 const { partTypes } = parsers,
       { verifyTerm } = verifyUtilities,
-      { nodeAsString } = nodeUtilities,
       { nameTerminalNodeQuery } = queries,
       { RuleNamePartType,
         OptionalPartPartType,
@@ -28,13 +26,7 @@ function verifyTermAsConstructor(termNode, context, ruleMap) {
 			  rule = termRule,  ///
 			  verified = verifyWithRule(nonTerminalNode, rule, context, ruleMap);
 
-  if (!verified) {
-    const node = termNode,  ///
-          termString = nodeAsString(termNode),
-          message = `The constructor '${termString}' cannot be verified.`;
-
-    throw new Error(node, message);
-  }
+	return verified;
 }
 
 module.exports = verifyTermAsConstructor;
