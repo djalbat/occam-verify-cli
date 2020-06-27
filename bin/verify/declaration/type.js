@@ -27,9 +27,12 @@ function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
   const superTypeName = typeNames.shift();
 
   if (superTypeName === undefined) {
-    const type = Type.fromTypeName(typeName);
+    const type = Type.fromTypeName(typeName),
+          typeString = type.asString();
 
     fileContext.addType(type);
+
+    console.log(`Added the '${typeString}' type to the context.`);
   } else {
     const superType = fileContext.findTypeByTypeName(superTypeName);
 
@@ -40,9 +43,12 @@ function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
       throw new Error(node, message);
     }
 
-    const type = Type.fromTypeNameAndSuperType(typeName, superType);
+    const type = Type.fromTypeNameAndSuperType(typeName, superType),
+          typeString = type.asString();
 
     fileContext.addType(type);
+
+    console.log(`Added the '${typeString}' type to the context.`);
   }
 }
 

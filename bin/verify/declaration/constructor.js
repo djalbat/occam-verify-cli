@@ -10,10 +10,10 @@ const Error = require("../../error"),
 const { nodeAsString } = nodeUtilities,
       { termNodeQuery, typeNameTerminalNodeQuery } = queries;
 
-function verifyConstructorDeclaration(constructorDeclarationNode, context, ruleMap) {
+function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
   const typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode),
         termNode = termNodeQuery(constructorDeclarationNode),
-        type = verifyTypeName(typeNameTerminalNode, context, ruleMap);
+        type = verifyTypeName(typeNameTerminalNode, fileContext);
 
   if (type === undefined) {
     const node = termNode,  ///
@@ -23,7 +23,7 @@ function verifyConstructorDeclaration(constructorDeclarationNode, context, ruleM
     throw new Error(node, message);
   }
 
-  const verified = verifyTermAsConstructor(termNode, context, ruleMap);
+  const verified = verifyTermAsConstructor(termNode, fileContext);
 
   if (!verified) {
     const node = termNode,  ///
@@ -33,9 +33,12 @@ function verifyConstructorDeclaration(constructorDeclarationNode, context, ruleM
     throw new Error(node, message);
   }
 
-  const constructor = Constructor.fromTermNodeAndType(termNode, type);
+  const constructor = Constructor.fromTermNodeAndType(termNode, type),
+        constructorString = constructor.asString();
 
-	context.addConstructor(constructor);
+  fileContext.addConstructor(constructor);
+
+  console.log(`Added the '${constructorString}' constructor to the context.`);
 }
 
 module.exports = verifyConstructorDeclaration;

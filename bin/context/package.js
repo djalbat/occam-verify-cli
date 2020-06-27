@@ -27,15 +27,17 @@ class PackageContext {
     return this.packageName;
   }
 
-  getTypes() {
+  getTypes(bubble = true) {
     const types = [];
 
-    const globalContextTypes = this.globalContext.getTypes();
+    if (bubble) {
+      const globalContextTypes = this.globalContext.getTypes();
 
-    push(types, globalContextTypes);
+      push(types, globalContextTypes);
+    }
 
     this.fileContexts.forEach((fileContext) => {
-      const fileContextTypes = fileContext.getTypes();
+      const fileContextTypes = fileContext.getTypes(bubble);
 
       push(types, fileContextTypes);
     });
@@ -43,15 +45,17 @@ class PackageContext {
     return types;
   }
 
-  getAxioms() {
+  getAxioms(bubble = true) {
     const axioms = [];
 
-    const globalContextAxioms = this.globalContext.getAxioms();
+    if (bubble) {
+      const globalContextAxioms = this.globalContext.getAxioms();
 
-    push(axioms, globalContextAxioms);
+      push(axioms, globalContextAxioms);
+    }
 
     this.fileContexts.forEach((fileContext) => {
-      const fileContextAxioms = fileContext.getAxioms();
+      const fileContextAxioms = fileContext.getAxioms(bubble);
 
       push(axioms, fileContextAxioms);
     });
@@ -59,20 +63,47 @@ class PackageContext {
     return axioms;
   }
 
-  getConstructors() {
-    const constructors = [];
+  getOperators(bubble = true) {
+    const operators = [];
 
-    const globalContextConstructors = this.globalContext.getConstructors();
+    if (bubble) {
+      const globalContextOperators = this.globalContext.getOperators();
 
-    push(constructors, globalContextConstructors);
+      push(operators, globalContextOperators);
+    }
 
     this.fileContexts.forEach((fileContext) => {
-      const fileContextConstructors = fileContext.getConstructors();
+      const fileContextOperators = fileContext.getOperators(bubble);
+
+      push(operators, fileContextOperators);
+    });
+
+    return operators;
+  }
+
+  getConstructors(bubble = true) {
+    const constructors = [];
+
+    if (bubble) {
+      const globalContextConstructors = this.globalContext.getConstructors();
+
+      push(constructors, globalContextConstructors);
+    }
+
+    this.fileContexts.forEach((fileContext) => {
+      const fileContextConstructors = fileContext.getConstructors(bubble);
 
       push(constructors, fileContextConstructors);
     });
 
     return constructors;
+  }
+
+  findRuleByRuleName(ruleName) {
+    const ruleMap = this.florenceParser.getRuleMap(),
+          rule = ruleMap[ruleName];
+
+    return rule;
   }
 
   tokenise(content) { return this.florenceLexer.tokenise(content); }

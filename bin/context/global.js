@@ -13,10 +13,11 @@ class GlobalContext {
   }
 
   getTypes() {
-    const types = [];
+    const types = [],
+          bubble = false;
 
     this.packageContexts.forEach((packageContext) => {
-      const packageContextTypes = packageContext.getTypes();
+      const packageContextTypes = packageContext.getTypes(bubble);
 
       push(types, packageContextTypes);
     });
@@ -25,10 +26,11 @@ class GlobalContext {
   }
 
   getAxioms() {
-    const axioms = [];
+    const axioms = [],
+          bubble = false;
 
     this.packageContexts.forEach((packageContext) => {
-      const packageContextAxioms = packageContext.getAxioms();
+      const packageContextAxioms = packageContext.getAxioms(bubble);
 
       push(axioms, packageContextAxioms);
     });
@@ -36,11 +38,25 @@ class GlobalContext {
     return axioms;
   }
 
-  getConstructors() {
-    const constructors = [];
+  getOperators() {
+    const operatorss = [],
+          bubble = false;
 
     this.packageContexts.forEach((packageContext) => {
-      const packageContextConstructors = packageContext.getConstructors();
+      const packageContextOperators = packageContext.getOperators(bubble);
+
+      push(operatorss, packageContextOperators);
+    });
+
+    return operatorss;
+  }
+
+  getConstructors() {
+    const constructors = [],
+          bubble = false;
+
+    this.packageContexts.forEach((packageContext) => {
+      const packageContextConstructors = packageContext.getConstructors(bubble);
 
       push(constructors, packageContextConstructors);
     });

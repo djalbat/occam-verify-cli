@@ -5,12 +5,11 @@ const parsers = require("occam-parsers");
 const Error = require("../error"),
 			queries = require("../miscellaneous/queries"),
 			ruleNames = require("../miscellaneous/ruleNames"),
+      verifyTerm = require("../verify/term"),
       ParserContext = require("../context/parser"),
-      verifyUtilities = require("../utilities/verify"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
 const { partTypes } = parsers,
-      { verifyTerm } = verifyUtilities,
       { nameTerminalNodeQuery } = queries,
       { RuleNamePartType,
         OptionalPartPartType,
@@ -20,27 +19,27 @@ const { partTypes } = parsers,
         ZeroOrMorePartsPartType } = partTypes,
       { NAME_RULE_NAME, TERM_RULE_NAME } = ruleNames;
 
-function verifyTermAsConstructor(termNode, context, ruleMap) {
-	const termRule = ruleMap[TERM_RULE_NAME],
+function verifyTermAsConstructor(termNode, fileContext) {
+	const termRule = fileContext.findRuleByRuleName(TERM_RULE_NAME),
 			  nonTerminalNode = termNode,  ///
 			  rule = termRule,  ///
-			  verified = verifyWithRule(nonTerminalNode, rule, context, ruleMap);
+			  verified = verifyRule(rule, nonTerminalNode, fileContext);
 
 	return verified;
 }
 
 module.exports = verifyTermAsConstructor;
 
-function verifyWithRule(nonTerminalNode, rule, context, ruleMap) {
+function verifyRule(rule, nonTerminalNode, fileContext) {
   let verified = false;
 
   const definitions = rule.getDefinitions(),
-        nonTerminalNodeContext = NonTerminalNodeContext.fromNonTerminalNode(nonTerminalNode);
+        nonTerminalNodeContext = NonTerminalNodeContext.fromFileContextAndNonTerminalNode(fileContext, nonTerminalNode);
 
   definitions.some((definition) => {
     const savedIndex = nonTerminalNodeContext.getSavedIndex();
 
-    verified = verifyWithDefinition(definition, context, ruleMap, nonTerminalNodeContext);
+    verified = verifyDefinition(definition, nonTerminalNodeContext);
 
     if (verified) {
       return true;
@@ -52,10 +51,18 @@ function verifyWithRule(nonTerminalNode, rule, context, ruleMap) {
   return verified;
 }
 
-function verifyWithDefinition(definition, context, ruleMap, nonTerminalNodeContext) {
+function verifyDefinition(definition, nonTerminalNodeContext) {
+  let verified = false;
+
   const parts = definition.getParts();
 
-	let verified = parts.every((part) => verifyWithPart(part, context, ruleMap, nonTerminalNodeContext));
+  parts.every((part) => {
+    verified = verifyPart(part, nonTerminalNodeContext);
+
+    if (verified) {
+      return true;
+    }
+  });
 
 	const nextChildNode = nonTerminalNodeContext.getNextChildNode();
 
@@ -66,7 +73,7 @@ function verifyWithDefinition(definition, context, ruleMap, nonTerminalNodeConte
 	return verified;
 }
 
-function verifyWithPart(part, context, ruleMap, nonTerminalNodeContext) {
+function verifyPart(part, nonTerminalNodeContext) {
   let verified;
 
   const partTerminalPart = part.isTerminalPart();
@@ -74,17 +81,17 @@ function verifyWithPart(part, context, ruleMap, nonTerminalNodeContext) {
   if (partTerminalPart) {
     const terminalPart = part;  ///
 
-    verified = verifyWithTerminalPart(terminalPart, context, ruleMap, nonTerminalNodeContext);
+    verified = verifyTerminalPart(terminalPart, nonTerminalNodeContext);
   } else {
     const nonTerminalPart = part; ///
 
-    verified = verifyWithNonTerminalPart(nonTerminalPart, context, ruleMap, nonTerminalNodeContext);
+    verified = verifyNonTerminalPart(nonTerminalPart, nonTerminalNodeContext);
   }
 
   return verified;
 }
 
-function verifyWithTerminalPart(terminalPart, context, ruleMap, nonTerminalNodeContext) {
+function verifyTerminalPart(terminalPart, nonTerminalNodeContext) {
   let verified = false;
 
   const savedIndex = nonTerminalNodeContext.getSavedIndex(),
@@ -102,14 +109,18 @@ function verifyWithTerminalPart(terminalPart, context, ruleMap, nonTerminalNodeC
       if (terminalPartNoWhitespacePart) {
         const terminalNodeNoWhitespaceNode = terminalNode.isNoWhitespaceNode();
 
-        verified = terminalNodeNoWhitespaceNode;  ///
+        if (terminalNodeNoWhitespaceNode) {
+          verified = true;
+        }
       } else {
         const parserContext = ParserContext.fromTerminalNode(terminalNode),
               context = parserContext;  ///
 
         terminalNode = terminalPart.parse(context);
 
-        verified = (terminalNode !== null); ///
+        if (terminalNode !== null) {
+          verified = true;
+        }
       }
 	  }
   }
@@ -121,55 +132,147 @@ function verifyWithTerminalPart(terminalPart, context, ruleMap, nonTerminalNodeC
   return verified;
 }
 
-function verifyWithNonTerminalPart(nonTerminalPart, context, ruleMap, nonTerminalNodeContext) {
+function verifyNonTerminalPart(nonTerminalPart, nonTerminalNodeContext) {
   let verified = false;
 
   const nonTerminalPartType = nonTerminalPart.getType();
 
   switch (nonTerminalPartType) {
-    case RuleNamePartType:
+    case RuleNamePartType: {
       const ruleNamePart = nonTerminalPart;  ///
 
-      verified = verifyWithRuleNamePart(ruleNamePart, context, ruleMap, nonTerminalNodeContext);
+      verified = verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext);
       break;
+    }
 
-    case OptionalPartPartType:
+    case OptionalPartPartType: {
       const optionalPartPart = nonTerminalPart; ///
 
-      verified = verifyWithOptionalPartPart(optionalPartPart, context, ruleMap, nonTerminalNodeContext);
+      verified = verifyOptionalPartPart(optionalPartPart, nonTerminalNodeContext);
       break;
+    }
 
-    case GroupOfPartsPartType:
+    case GroupOfPartsPartType: {
       const groupOfPartsPart = nonTerminalPart; ///
 
-      verified = verifyWithGroupOfPartsPart(groupOfPartsPart, context, ruleMap, nonTerminalNodeContext);
+      verified = verifyGroupOfPartsPart(groupOfPartsPart, nonTerminalNodeContext);
       break;
+    }
 
-    case ChoiceOfPartsPartType:
+    case ChoiceOfPartsPartType: {
       const choiceOfPartsPart = nonTerminalPart; ///
 
-      verified = verifyWithChoiceOfPartsPart(choiceOfPartsPart, context, ruleMap, nonTerminalNodeContext);
+      verified = verifyChoiceOfPartsPart(choiceOfPartsPart, nonTerminalNodeContext);
       break;
+    }
 
-	  case ZeroOrMorePartsPartType:
-		  const zeroOrMorePartsPart = nonTerminalPart; ///
+    case OneOrMorePartsPartType: {
+      const oneOrMorePartsPart = nonTerminalPart; ///
 
-		  verified = verifyWithZeroOrMorePartsPart(zeroOrMorePartsPart, context, ruleMap, nonTerminalNodeContext);
-		  break;
+      verified = verifyOneOrMorePartsPart(oneOrMorePartsPart, nonTerminalNodeContext);
+      break;
+    }
 
-    default:
+    case ZeroOrMorePartsPartType: {
+      const zeroOrMorePartsPart = nonTerminalPart; ///
 
-      debugger
+      verified = verifyZeroOrMorePartsPart(zeroOrMorePartsPart, nonTerminalNodeContext);
+      break;
+    }
   }
 
   return verified;
 }
 
-function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, nonTerminalNodeContext) {
+function verifyOptionalPartPart(optionalPartPart, nonTerminalNodeContext) {
+  let verified;
+
+  const part = optionalPartPart.getPart(),
+        savedIndex = nonTerminalNodeContext.getSavedIndex();
+
+  verified = verifyPart(part, nonTerminalNodeContext);
+
+  if (!verified) {
+    nonTerminalNodeContext.backtrack(savedIndex);
+
+    verified = true;
+  }
+
+  return verified;
+}
+
+function verifyGroupOfPartsPart(groupOfPartsPart, nonTerminalNodeContext) {
+  const parts = groupOfPartsPart.getParts(),
+        savedIndex = nonTerminalNodeContext.getSavedIndex(),
+        verified = parts.every((part) => verifyPart(part, nonTerminalNodeContext));
+
+  if (!verified) {
+    nonTerminalNodeContext.backtrack(savedIndex);
+  }
+
+  return verified;
+}
+
+function verifyChoiceOfPartsPart(choiceOfParts, nonTerminalNodeContext) {
+  const parts = choiceOfParts.getParts(),
+        savedIndex = nonTerminalNodeContext.getSavedIndex(),
+        verified = parts.some((part) => verifyPart(part, nonTerminalNodeContext));
+
+  if (!verified) {
+    nonTerminalNodeContext.backtrack(savedIndex);
+  }
+
+  return verified;
+}
+
+function verifyOneOrMorePartsPart(oneOrMorePartsPart, nonTerminalNodeContext) {
+  let verified;
+
+  const part = oneOrMorePartsPart.getPart();
+
+  verified = verifyPart(part, nonTerminalNodeContext);
+
+  if (verified) {
+    while (verified) {
+      const savedIndex = nonTerminalNodeContext.getSavedIndex();
+
+      verified = verifyPart(part, nonTerminalNodeContext);
+
+      if (!verified) {
+        nonTerminalNodeContext.backtrack(savedIndex);
+      }
+    }
+
+    verified = true;
+  }
+
+  return verified;
+}
+
+function verifyZeroOrMorePartsPart(zeroOrMorePartsPart, nonTerminalNodeContext) {
+  let verified = true;
+
+  const part = zeroOrMorePartsPart.getPart();
+
+  while (verified) {
+    const savedIndex = nonTerminalNodeContext.getSavedIndex();
+
+    verified = verifyPart(part, nonTerminalNodeContext);
+
+    if (!verified) {
+      nonTerminalNodeContext.backtrack(savedIndex);
+    }
+  }
+
+  verified = true;
+
+  return verified;
+}
+
+function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
   let verified = false;
 
-  const savedIndex = nonTerminalNodeContext.getSavedIndex(),
-        nextChildNode = nonTerminalNodeContext.getNextChildNode();
+  const nextChildNode = nonTerminalNodeContext.getNextChildNode();
 
   if (nextChildNode !== undefined) {
     const childNode = nextChildNode,  ///
@@ -181,115 +284,55 @@ function verifyWithRuleNamePart(ruleNamePart, context, ruleMap, nonTerminalNodeC
             nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
       if (ruleName === nonTerminalNodeRuleName) {
-        const rule = ruleMap[ruleName];
+        const rule = nonTerminalNodeContext.findRuleByRuleName(ruleName),
+              fileContext = nonTerminalNodeContext.getFileContext();
 
-        if (false) {
-          ///
-        } else if (ruleName === NAME_RULE_NAME) {
-          const nameNode = nonTerminalNode, ///
-                nameRule = rule;  ///
+        switch (ruleName) {
+          case NAME_RULE_NAME: {
+            const nameNode = nonTerminalNode, ///
+                  nameRule = rule;  ///
 
-          verified = verifyWithNameRule(nameNode, nameRule, context, ruleMap);
-        } else if (ruleName === TERM_RULE_NAME) {
-          const termNode = nonTerminalNode, ///
-                termRule = rule;  ///
+            verified = verifyNameRule(nameRule, nameNode, fileContext);
+            break;
+          }
 
-          verified = verifyWithTermRule(termNode, termRule, context, ruleMap);
-        }
+          case TERM_RULE_NAME: {
+            const termNode = nonTerminalNode, ///
+                  type = verifyTerm(termNode, fileContext);
 
-        if (!verified) {
-          verified = verifyWithRule(nonTerminalNode, rule, context, ruleMap);
+            verified = (type !== undefined);
+
+            if (!verified) {
+              verified = verifyRule(rule, nonTerminalNode, fileContext);
+            }
+            break;
+          }
+
+          default: {
+            verified = verifyRule(rule, nonTerminalNode, fileContext);
+            break;
+          }
         }
       }
     }
   }
 
-  if (!verified) {
-    nonTerminalNodeContext.backtrack(savedIndex);
-  }
-
   return verified;
 }
 
-function verifyWithOptionalPartPart(optionalPartPart, context, ruleMap, nonTerminalNodeContext) {
-  const part = optionalPartPart.getPart(),
-        savedIndex = nonTerminalNodeContext.getSavedIndex();
-
-  let verified = verifyWithPart(part, context, ruleMap, nonTerminalNodeContext);
-
-  if (!verified) {
-    nonTerminalNodeContext.backtrack(savedIndex);
-
-    verified = true;
-  }
-
-  return verified;
-}
-
-function verifyWithGroupOfPartsPart(groupOfPartsPart, context, ruleMap, nonTerminalNodeContext) {
-  const parts = groupOfPartsPart.getParts(),
-        savedIndex = nonTerminalNodeContext.getSavedIndex(),
-        verified = parts.every((part) => verifyWithPart(part, context, ruleMap, nonTerminalNodeContext));
-
-  if (!verified) {
-    nonTerminalNodeContext.backtrack(savedIndex);
-  }
-
-  return verified;
-}
-
-function verifyWithChoiceOfPartsPart(choiceOfParts, context, ruleMap, nonTerminalNodeContext) {
-  const parts = choiceOfParts.getParts(),
-        savedIndex = nonTerminalNodeContext.getSavedIndex(),
-        verified = parts.some((part) => verifyWithPart(part, context, ruleMap, nonTerminalNodeContext));
-
-  if (!verified) {
-    nonTerminalNodeContext.backtrack(savedIndex);
-  }
-
-  return verified;
-}
-
-function verifyWithZeroOrMorePartsPart(zeroOrMorePartsPart, context, ruleMap, nonTerminalNodeContext) {
-	let verified = true;
-
-	const part = zeroOrMorePartsPart.getPart();
-
-	while (verified === true) {
-	  const savedIndex = nonTerminalNodeContext.getSavedIndex();
-
-		verified = verifyWithPart(part, context, ruleMap, nonTerminalNodeContext);
-
-		if (!verified) {
-		  nonTerminalNodeContext.backtrack(savedIndex);
-    }
-	}
-
-	verified = true;
-
-	return verified;
-}
-
-function verifyWithNameRule(nameNode, nameRule, context, ruleMap) {
+function verifyNameRule(nameRule, nameNode, fileContext) {
   const nameTerminalNode = nameTerminalNodeQuery(nameNode),
         nameTerminalNodeContent = nameTerminalNode.getContent(),
         name = nameTerminalNodeContent, ///
-        typePresent = context.isTypePresentByName(name),
+        typePresent = fileContext.isTypePresentByName(name),
         verified = typePresent; ///
 
   if (!typePresent) {
-    const node = nonTerminalNode, ///
+    const node = nameNode, ///
           message = `The '${name}' type is missing.`;
 
     throw new Error(node, message);
   }
-
-  return verified;
-}
-
-function verifyWithTermRule(termNode, termRule, context, ruleMap) {
-  const type = verifyTerm(termNode, context, ruleMap),
-        verified = (type !== undefined);
 
   return verified;
 }

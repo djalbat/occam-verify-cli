@@ -13,12 +13,12 @@ const { nodeAsString } = nodeUtilities,
 function verifyConstructorsDeclaration(constructorDeclarationNode, fileContext) {
   const typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode),
         termNodes = termNodesQuery(constructorDeclarationNode),
+        firstTermNode = first(termNodes),
+        termNode = firstTermNode, ///
         type = verifyTypeName(typeNameTerminalNode, fileContext);
 
   if (type === undefined) {
-    const firstTermNode = first(termNodes),
-          termNode = firstTermNode, ///
-          node = termNode,  ///
+    const node = termNode,  ///
           termString = nodeAsString(termNode),
           message = `The constructor '${termString}' cannot be verified because the type cannot be found.`;
 
@@ -36,9 +36,12 @@ function verifyConstructorsDeclaration(constructorDeclarationNode, fileContext) 
       throw new Error(node, message);
     }
 
-    const constructor = Constructor.fromTermNodeAndType(termNode, type);
+    const constructor = Constructor.fromTermNodeAndType(termNode, type),
+          constructorString = constructor.asString();
 
-    context.addConstructor(constructor);
+    fileContext.addConstructor(constructor);
+
+    console.log(`Added the '${constructorString}' constructor to the context.`);
   });
 }
 

@@ -9,8 +9,9 @@ const { arrayUtilities, fileSystemUtilities } = necessary,
       { push } = arrayUtilities;
 
 class FileContext {
-  constructor(packageContext, tokens, node, types, axioms, variables, operators, constructors) {
+  constructor(packageContext, filePath, tokens, node, types, axioms, variables, operators, constructors) {
     this.packageContext = packageContext;
+    this.filePath = filePath;
     this.tokens = tokens;
     this.node = node;
     this.types = types;
@@ -18,6 +19,10 @@ class FileContext {
     this.operators = operators;
     this.variables = variables;
     this.constructors = constructors;
+  }
+
+  getFilePath() {
+    return this.filePath;
   }
 
   getTokens() {
@@ -28,53 +33,67 @@ class FileContext {
     return this.node;
   }
 
-  getTypes() {
-    const types = [],
-          packageContextTypes = this.packageContext.getTypes();
+  getTypes(bubble = true) {
+    const types = [];
+
+    if (bubble) {
+      const packageContextTypes = this.packageContext.getTypes(bubble);
+
+      push(types, packageContextTypes);
+    }
 
     push(types, this.types);
-
-    push(types, packageContextTypes);
 
     return types;
   }
 
-  getAxioms() {
-    const axioms = [],
-          packageContextAxioms = this.packageContext.getAxioms();
+  getAxioms(bubble = true) {
+    const axioms = [];
+
+    if (bubble) {
+      const packageContextAxioms = this.packageContext.getAxioms(bubble);
+
+      push(axioms, packageContextAxioms);
+    }
 
     push(axioms, this.axioms);
-
-    push(axioms, packageContextAxioms);
 
     return axioms;
   }
 
-  getOperators() {
-    const operators = [],
-          packageContextOperators = this.packageContext.getOperators();
+  getOperators(bubble = true) {
+    const operators = [];
+
+    if (bubble) {
+      const packageContextOperators = this.packageContext.getOperators(bubble);
+
+      push(operators, packageContextOperators);
+    }
 
     push(operators, this.operators);
 
-    push(operators, packageContextOperators);
-
     return operators;
+  }
+
+  getConstructors(bubble = true) {
+    const constructors = [];
+
+    if (bubble) {
+      const packageContextConstructors = this.packageContext.getConstructors(bubble);
+
+      push(constructors, packageContextConstructors);
+    }
+
+    push(constructors, this.constructors);
+
+    return constructors;
   }
 
   getVariables() {
     return this.variables;
   }
 
-  getConstructors() {
-    const constructors = [],
-          packageContextConstructors = this.packageContext.getConstructors();
-
-    push(constructors, this.constructors);
-
-    push(constructors, packageContextConstructors);
-
-    return constructors;
-  }
+  findRuleByRuleName(ruleName) { return this.packageContext.findRuleByRuleName(ruleName); }
 
   findVariableByName(name) {
     const variable = this.variables.find((variable) => variable.matchName(name));
@@ -119,7 +138,7 @@ class FileContext {
           variables = [],
           operators = [],
           constructors = [],
-          fileContext = new FileContext(packageContext, tokens, node, types, axioms, variables, operators, constructors);
+          fileContext = new FileContext(packageContext, filePath, tokens, node, types, axioms, variables, operators, constructors);
 
     return fileContext;
   }

@@ -1,9 +1,14 @@
 "use strict";
 
 class NonTerminalNodeContext {
-  constructor(childNodes, index) {
+  constructor(fileContext, childNodes, index) {
+    this.fileContext = fileContext;
     this.childNodes = childNodes;
     this.index = index;
+  }
+
+  getFileContext() {
+    return this.fileContext;
   }
 
   getNextChildNode() {
@@ -28,10 +33,12 @@ class NonTerminalNodeContext {
     this.index = savedIndex;  ///
   }
 
-  static fromNonTerminalNode(nonTerminalNode) {
+  findRuleByRuleName(ruleName) { return this.fileContext.findRuleByRuleName(ruleName); }
+
+  static fromFileContextAndNonTerminalNode(fileContext, nonTerminalNode) {
     const childNodes = nonTerminalNode.getChildNodes(),
           index = 0,
-          nonTerminalNodeContext = new NonTerminalNodeContext(childNodes, index);
+          nonTerminalNodeContext = new NonTerminalNodeContext(fileContext, childNodes, index);
 
     return nonTerminalNodeContext;
   }
