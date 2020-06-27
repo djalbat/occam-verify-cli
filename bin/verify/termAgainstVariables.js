@@ -4,22 +4,19 @@ const queries = require("../miscellaneous/queries");
 
 const { termNameTerminalNodeQuery } = queries;
 
-function verifyNodeAgainstVariables(termNode, fileContext) {
-  let type = undefined;
+function verifyTermAgainstVariables(termNode, fileContext) {
+  let variable = undefined;
 
   const termNameTerminalNode = termNameTerminalNodeQuery(termNode);
 
   if (termNameTerminalNode !== undefined) {
     const termNameTerminalNodeContent = termNameTerminalNode.getContent(),
-          name = termNameTerminalNodeContent, ///
-          variable = fileContext.findVariableByName(name);
+          name = termNameTerminalNodeContent; ///
 
-    if (variable !== undefined) {
-      type = variable.getType();
-    }
+    variable = fileContext.findVariableByName(name);
   }
 
-  return type;
+  return variable;
 }
 
-module.exports = verifyNodeAgainstVariables;
+module.exports = verifyTermAgainstVariables;

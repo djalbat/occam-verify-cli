@@ -1,24 +1,19 @@
 "use strict";
 
-const verifyTermAgainstConstructor = require("../verify/verifyTermAgainstConstructor");
+const verifyTermAgainstConstructor = require("../verify/termAgainstConstructor");
 
 function verifyTermAgainstConstructors(termNode, fileContext) {
-  let type = undefined;
+  const constructors = fileContext.getConstructors(),
+        constructor = constructors.find((constructor) => {
+          const constructorTermNode = constructor.getTermNode(),
+                verified = verifyTermAgainstConstructor(termNode, constructorTermNode, fileContext);
 
-  const constructors = fileContext.getConstructors();
+          if (verified) {
+            return true;
+          }
+        });
 
-  constructors.some((constructor) => {
-    const constructorTermNode = constructor.getTermNode(),
-          verified = verifyTermAgainstConstructor(termNode, constructorTermNode, fileContext);
-
-    if (verified) {
-      type = constructor.getType();
-
-      return true;
-    }
-  });
-
-  return type;
+  return constructor;
 }
 
 module.exports = verifyTermAgainstConstructors;

@@ -16,8 +16,6 @@ const { partTypes } = parsers,
       { NAME_RULE_NAME, TERM_RULE_NAME } = ruleNames;
 
 function verifyTermAgainstConstructor(termNode, constructorTermNode, fileContext) {
-  return false;
-
   const nonTerminalNode = termNode, ///
         constructorNonTerminalNode = constructorTermNode, ///
         verified = verifyNonTerminalAgainstConstructor(nonTerminalNode, constructorNonTerminalNode, fileContext);

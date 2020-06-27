@@ -11,16 +11,21 @@ const { nodeAsString } = nodeUtilities,
       { termNodeQuery, typeNameTerminalNodeQuery } = queries;
 
 function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
-  const typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode),
-        termNode = termNodeQuery(constructorDeclarationNode),
-        type = verifyTypeName(typeNameTerminalNode, fileContext);
+  let type = undefined;
 
-  if (type === undefined) {
-    const node = termNode,  ///
-          termString = nodeAsString(termNode),
-          message = `The constructor '${termString}' cannot be verified because the type cannot be found.`;
+  const termNode = termNodeQuery(constructorDeclarationNode),
+        typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode);
 
-    throw new Error(node, message);
+  if (typeNameTerminalNode !== undefined) {
+    type = verifyTypeName(typeNameTerminalNode, fileContext);
+
+    if (type === undefined) {
+      const node = termNode,  ///
+            termString = nodeAsString(termNode),
+            message = `The constructor '${termString}' cannot be verified because the type cannot be found.`;
+
+      throw new Error(node, message);
+    }
   }
 
   const verified = verifyTermAsConstructor(termNode, fileContext);

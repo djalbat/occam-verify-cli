@@ -11,18 +11,23 @@ const { nodeAsString } = nodeUtilities,
       { termNodesQuery, typeNameTerminalNodeQuery } = queries;
 
 function verifyConstructorsDeclaration(constructorDeclarationNode, fileContext) {
-  const typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode),
-        termNodes = termNodesQuery(constructorDeclarationNode),
+  let type = undefined;
+
+  const termNodes = termNodesQuery(constructorDeclarationNode),
         firstTermNode = first(termNodes),
         termNode = firstTermNode, ///
-        type = verifyTypeName(typeNameTerminalNode, fileContext);
+        typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode);
 
-  if (type === undefined) {
-    const node = termNode,  ///
-          termString = nodeAsString(termNode),
-          message = `The constructor '${termString}' cannot be verified because the type cannot be found.`;
+  if (typeNameTerminalNode !== undefined) {
+    type = verifyTypeName(typeNameTerminalNode, fileContext);
 
-    throw new Error(node, message);
+    if (type === undefined) {
+      const node = termNode,  ///
+            termString = nodeAsString(termNode),
+            message = `The constructor '${termString}' cannot be verified because the type cannot be found.`;
+
+      throw new Error(node, message);
+    }
   }
 
   termNodes.forEach((termNode) => {

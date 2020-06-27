@@ -298,12 +298,16 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
 
           case TERM_RULE_NAME: {
             const termNode = nonTerminalNode, ///
-                  type = verifyTermAgainstConstructors(termNode, fileContext);
+                  constructor = verifyTermAgainstConstructors(termNode, fileContext);
 
-            verified = (type !== undefined);
-
-            if (!verified) {
+            if (constructor === undefined) {
               verified = verifyRule(rule, nonTerminalNode, fileContext);
+            } else {
+              const type = constructor.getType();
+
+              if (type === undefined) {
+                verified = true;
+              }
             }
             break;
           }

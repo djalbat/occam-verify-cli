@@ -4,6 +4,8 @@ const verifyTermAgainstVariables = require("../verify/termAgainstVariables"),
       verifyTermAgainstConstructors = require("../verify/termAgainstConstructors");
 
 function verifyTerm(termNode, fileContext) {
+  debugger
+
   let type = undefined;
 
   if (type === undefined) {
