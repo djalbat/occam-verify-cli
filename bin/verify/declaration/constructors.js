@@ -1,5 +1,7 @@
 "use strict";
 
+const necessary = require("necessary");
+
 const Error = require("../../error"),
       queries = require("../../miscellaneous/queries"),
       Constructor = require("../../constructor"),
@@ -7,7 +9,9 @@ const Error = require("../../error"),
       verifyTypeName = require("../../verify/typeName"),
       verifyTermAsConstructor = require("../../verify/termAsConstructor");
 
-const { nodeAsString } = nodeUtilities,
+const { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { nodeAsString } = nodeUtilities,
       { termNodesQuery, typeNameTerminalNodeQuery } = queries;
 
 function verifyConstructorsDeclaration(constructorDeclarationNode, fileContext) {
