@@ -5,9 +5,9 @@ const parsers = require("occam-parsers");
 const Error = require("../error"),
 			queries = require("../miscellaneous/queries"),
 			ruleNames = require("../miscellaneous/ruleNames"),
-      verifyTerm = require("../verify/term"),
       ParserContext = require("../context/parser"),
-      NonTerminalNodeContext = require("../context/nonTerminalNode");
+      NonTerminalNodeContext = require("../context/nonTerminalNode"),
+      verifyTermAgainstConstructors = require("../verify/termAgainstConstructors");
 
 const { partTypes } = parsers,
       { nameTerminalNodeQuery } = queries,
@@ -298,7 +298,7 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
 
           case TERM_RULE_NAME: {
             const termNode = nonTerminalNode, ///
-                  type = verifyTerm(termNode, fileContext);
+                  type = verifyTermAgainstConstructors(termNode, fileContext);
 
             verified = (type !== undefined);
 

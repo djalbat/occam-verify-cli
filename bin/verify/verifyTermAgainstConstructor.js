@@ -352,4 +352,3 @@ function verifyNameAgainstConstructor(nameNode, constructorNameNode, fileContext
 
   return verified;
 }
-
