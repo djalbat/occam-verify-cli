@@ -272,49 +272,54 @@ function verifyZeroOrMorePartsPart(zeroOrMorePartsPart, nonTerminalNodeContext) 
 function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
   let verified = false;
 
-  const nextChildNode = nonTerminalNodeContext.getNextChildNode();
+  const ruleName = ruleNamePart.getRuleName(),
+        rulePermitted = nonTerminalNodeContext.isRulePermittedByRuleName(ruleName);
 
-  if (nextChildNode !== undefined) {
-    const childNode = nextChildNode,  ///
-          childNodeNonTerminalNode = childNode.isNonTerminalNode();
+  if (rulePermitted) {
+    const nextChildNode = nonTerminalNodeContext.getNextChildNode();
 
-    if (childNodeNonTerminalNode) {
-      const ruleName = ruleNamePart.getRuleName(),
-            nonTerminalNode = childNode,  ///
-            nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
+    if (nextChildNode !== undefined) {
+      const childNode = nextChildNode,  ///
+            childNodeNonTerminalNode = childNode.isNonTerminalNode();
 
-      if (ruleName === nonTerminalNodeRuleName) {
-        const rule = nonTerminalNodeContext.findRuleByRuleName(ruleName),
-              fileContext = nonTerminalNodeContext.getFileContext();
+      if (childNodeNonTerminalNode) {
+        const ruleName = ruleNamePart.getRuleName(),
+              nonTerminalNode = childNode,  ///
+              nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
-        switch (ruleName) {
-          case NAME_RULE_NAME: {
-            const nameNode = nonTerminalNode, ///
-                  nameRule = rule;  ///
+        if (ruleName === nonTerminalNodeRuleName) {
+          const rule = nonTerminalNodeContext.findRuleByRuleName(ruleName),
+                fileContext = nonTerminalNodeContext.getFileContext();
 
-            verified = verifyNameRule(nameRule, nameNode, fileContext);
-            break;
-          }
+          switch (ruleName) {
+            case NAME_RULE_NAME: {
+              const nameNode = nonTerminalNode, ///
+                    nameRule = rule;  ///
 
-          case TERM_RULE_NAME: {
-            const termNode = nonTerminalNode, ///
-                  constructor = verifyTermAgainstConstructors(termNode, fileContext);
-
-            if (constructor === undefined) {
-              verified = verifyRule(rule, nonTerminalNode, fileContext);
-            } else {
-              const type = constructor.getType();
-
-              if (type === undefined) {
-                verified = true;
-              }
+              verified = verifyNameRule(nameRule, nameNode, fileContext);
+              break;
             }
-            break;
-          }
 
-          default: {
-            verified = verifyRule(rule, nonTerminalNode, fileContext);
-            break;
+            case TERM_RULE_NAME: {
+              const termNode = nonTerminalNode, ///
+                    constructor = verifyTermAgainstConstructors(termNode, fileContext);
+
+              if (constructor === undefined) {
+                verified = verifyRule(rule, nonTerminalNode, fileContext);
+              } else {
+                const type = constructor.getType();
+
+                if (type === undefined) {
+                  verified = true;
+                }
+              }
+              break;
+            }
+
+            default: {
+              verified = verifyRule(rule, nonTerminalNode, fileContext);
+              break;
+            }
           }
         }
       }

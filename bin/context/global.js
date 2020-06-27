@@ -12,6 +12,10 @@ class GlobalContext {
     this.packageContexts = packageContexts;
   }
 
+  getPackageContexts() {
+    return this.packageContexts;
+  }
+
   getTypes() {
     const types = [],
           bubble = false;

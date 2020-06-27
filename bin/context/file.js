@@ -2,11 +2,12 @@
 
 const necessary = require("necessary");
 
-const contextMixins = require("../mixins/context");
+const contextMixins = require("../mixins/context"),
+      grammarUtilities = require("../utilities/grammar");
 
 const { arrayUtilities, fileSystemUtilities } = necessary,
-      { readFile } = fileSystemUtilities,
-      { push } = arrayUtilities;
+      { push } = arrayUtilities,
+      { readFile } = fileSystemUtilities;
 
 class FileContext {
   constructor(packageContext, filePath, tokens, node, types, axioms, variables, operators, constructors) {
@@ -19,6 +20,10 @@ class FileContext {
     this.operators = operators;
     this.variables = variables;
     this.constructors = constructors;
+  }
+
+  getPackageContext() {
+    return this.packageContext;
   }
 
   getFilePath() {
@@ -92,6 +97,8 @@ class FileContext {
   getVariables() {
     return this.variables;
   }
+
+  getTermRuleNames() { return this.packageContext.getTermRuleNames(); }
 
   findRuleByRuleName(ruleName) { return this.packageContext.findRuleByRuleName(ruleName); }
 

@@ -15,16 +15,37 @@ const { arrayUtilities } = necessary,
       { push, last } = arrayUtilities;
 
 class PackageContext {
-  constructor(globalContext, fileContexts, packageName, florenceLexer, florenceParser) {
+  constructor(globalContext, fileContexts, packageName, termRuleNames, florenceLexer, florenceParser) {
     this.globalContext = globalContext;
     this.fileContexts = fileContexts;
     this.packageName = packageName;
+    this.termRuleNames = termRuleNames;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
   }
 
+  getGlobalContext() {
+    return this.globalContext;
+  }
+
+  getFileContexts() {
+    return this.fileContexts;
+  }
+
   getPackageName() {
     return this.packageName;
+  }
+
+  getTermRuleNames() {
+    return this.termRuleNames;
+  }
+
+  getFlorenceLexer() {
+    return this.florenceLexer;
+  }
+
+  getFlorenceParser() {
+    return this.florenceParser;
   }
 
   getTypes(bubble = true) {
@@ -130,9 +151,10 @@ class PackageContext {
           packageName = lastPackageName,  ///
           customGrammars = customGrammarsFromPackageNames(packageNames),
           combinedCustomGrammar = CombinedCustomGrammar.fromCustomGrammars(customGrammars),
+          termRuleNames = combinedCustomGrammar.getTermRuleNames(),
           florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
           florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar),
-          packageContext = new PackageContext(globalContext, fileContexts, packageName, florenceLexer, florenceParser);
+          packageContext = new PackageContext(globalContext, fileContexts, packageName, termRuleNames, florenceLexer, florenceParser);
 
     return packageContext;
   }
