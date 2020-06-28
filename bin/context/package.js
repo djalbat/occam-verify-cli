@@ -1,24 +1,22 @@
 "use strict";
 
-const necessary = require("necessary"),
-      customgrammars = require("occam-custom-grammars");  ///;;
+const necessary = require("necessary");
 
 const contextMixins = require("../mixins/context"),
       grammarUtilities = require("../utilities/grammar"),
       packageUtilities = require("../utilities/package");
 
-const { CombinedCustomGrammar } = customgrammars,
-      { customGrammarsFromPackageNames } = packageUtilities,
+const { combinedCustomGrammarFromPackageNames } = packageUtilities,
       { florenceLexerFromNothing, florenceParserFromNothing, florenceLexerFromCombinedCustomGrammar, florenceParserFromCombinedCustomGrammar } = grammarUtilities;
 
 const { arrayUtilities } = necessary,
-      { push, last } = arrayUtilities;
+      { push } = arrayUtilities;
 
 class PackageContext {
-  constructor(globalContext, fileContexts, packageName, termRuleNames, florenceLexer, florenceParser) {
+  constructor(globalContext, packageName, fileContexts, termRuleNames, florenceLexer, florenceParser) {
     this.globalContext = globalContext;
-    this.fileContexts = fileContexts;
     this.packageName = packageName;
+    this.fileContexts = fileContexts;
     this.termRuleNames = termRuleNames;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
@@ -145,16 +143,15 @@ class PackageContext {
     return packageContext;
   }
 
-  static fromGlobalContextAndPackageNames(globalContext, packageNames) {
-    const lastPackageName = last(packageNames),
+  static fromGlobalContextPackageNameAndPackageNames(globalContext, packageName, packageNames) {
+    packageNames = [ ...packageNames, packageName ];  ///
+
+    const combinedCustomGrammar = combinedCustomGrammarFromPackageNames(packageNames),
           fileContexts = [],
-          packageName = lastPackageName,  ///
-          customGrammars = customGrammarsFromPackageNames(packageNames),
-          combinedCustomGrammar = CombinedCustomGrammar.fromCustomGrammars(customGrammars),
           termRuleNames = combinedCustomGrammar.getTermRuleNames(),
           florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
           florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar),
-          packageContext = new PackageContext(globalContext, fileContexts, packageName, termRuleNames, florenceLexer, florenceParser);
+          packageContext = new PackageContext(globalContext, packageName, fileContexts, termRuleNames, florenceLexer, florenceParser);
 
     return packageContext;
   }

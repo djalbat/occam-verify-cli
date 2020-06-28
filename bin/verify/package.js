@@ -10,43 +10,50 @@ const { arrayUtilities } = necessary,
       { first } = arrayUtilities,
       { filePathsFromPackageName, dependencyPackageNamesFromPackageName } = packageUtilities;
 
-function verifyPackage(packageName, globalContext, packageNames) {
-  checkForCyclicDependency(packageName, packageNames);
+function verifyPackage(packageName, globalContext, siblingPackageName, dependentPackageNames) {
+  checkForCyclicDependency(packageName, dependentPackageNames);
+
+  dependentPackageNames = [ ...dependentPackageNames, packageName ];  ///
+
+  let siblingDependencyPackageName = undefined;
 
   const dependencyPackageNames = dependencyPackageNamesFromPackageName(packageName);
 
   dependencyPackageNames.forEach((dependencyPackageName) => {
-    const dependencyPackageMissing = globalContext.isPackageMissingByPackageName(dependencyPackageName);
+    const dependencyPackageVerified = globalContext.isPackageVerifiedByPackageName(dependencyPackageName);
 
-    if (dependencyPackageMissing) {
-      const packageContext = verifyPackage(dependencyPackageName, globalContext, [ ...packageNames, packageName ]); ///
-
-      globalContext.addPackageContext(packageContext);
+    if (!dependencyPackageVerified) {
+      verifyPackage(dependencyPackageName, globalContext, siblingDependencyPackageName, dependentPackageNames);
     }
+
+    siblingDependencyPackageName = dependencyPackageName; ///
   });
 
-  packageNames = [ ...packageNames, packageName ];
+  const packageNames = globalContext.getPackageNames(),
+        filePaths = filePathsFromPackageName(packageName),
+        start = 0,
+        deleteCount = (siblingPackageName === undefined) ?
+                        0 :
+                          packageNames.indexOf(siblingPackageName) + 1;
 
-  const filePaths = filePathsFromPackageName(packageName),
-        packageContext = PackageContext.fromGlobalContextAndPackageNames(globalContext, packageNames);
+  packageNames.splice(start, deleteCount);
+
+  const packageContext = PackageContext.fromGlobalContextPackageNameAndPackageNames(globalContext, packageName, packageNames);
 
   verifyFiles(filePaths, packageContext);
 
-  return packageContext;
+  globalContext.addPackageContext(packageContext);
 }
 
 module.exports = verifyPackage;
 
-function checkForCyclicDependency(packageName, packageNames) {
-  const packageNamesIncludesPackageName = packageNames.includes(packageName);
+function checkForCyclicDependency(packageName, dependentPackageNames) {
+  const dependentPackageNamesIncludesPackageName = dependentPackageNames.includes(packageName);
 
-  if (packageNamesIncludesPackageName) {
-    const firstPackageName = first(packageNames),
-          packageName = firstPackageName; ///
-
-    packageNames = packageNames.concat(packageName);
-
-    const packageNamesString = packageNames.join(`' -> '`);
+  if (dependentPackageNamesIncludesPackageName) {
+    const firstDependentPackageName = first(dependentPackageNames),
+          packageNames = dependentPackageNames.concat(firstDependentPackageName),
+          packageNamesString = packageNames.join(`' -> '`);
 
     console.log(`There is a cyclic dependency: '${packageNamesString}'.`);
 

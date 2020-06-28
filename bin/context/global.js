@@ -12,10 +12,6 @@ class GlobalContext {
     this.packageContexts = packageContexts;
   }
 
-  getPackageContexts() {
-    return this.packageContexts;
-  }
-
   getTypes() {
     const types = [],
           bubble = false;
@@ -68,12 +64,22 @@ class GlobalContext {
     return constructors;
   }
 
-  isPackageMissingByPackageName(packageName) {
-    const packageNames = this.packageContexts.map((packageContext) => packageContext.getPackageName()),
-          packageNamesIncludesPackageName = packageNames.includes(packageName),
-          packageMissing = !packageNamesIncludesPackageName;
+  getPackageNames() {
+    const packageNames = this.packageContexts.map((packageContext) => {
+      const packageName = packageContext.getPackageName();
 
-    return packageMissing;
+      return packageName;
+    });
+
+    return packageNames;
+  }
+
+  isPackageVerifiedByPackageName(packageName) {
+    const packageNames = this.getPackageNames(),
+          packageNamesIncludesPackageName = packageNames.includes(packageName),
+          packageVerified = packageNamesIncludesPackageName;  ///
+
+    return packageVerified;
   }
 
   addPackageContext(packageContext) {

@@ -10,13 +10,13 @@ const dom = require("occam-dom"),
 const contentUtilities = require("../utilities/content");
 
 const { Query } = dom,
-      { CustomGrammar } = customgrammars,
       { MetaJSONLexer } = lexers,
       { MetaJSONParser } = parsers,
       { trimDoubleQuotes } = contentUtilities,
       { filePathUtilities } = open,
       { fileSystemUtilities } = necessary,
       { isFilePathFlorenceFilePath } = filePathUtilities,
+      { CombinedCustomGrammar, CustomGrammar } = customgrammars,
       { checkFileExists, readFile, readDirectory } = fileSystemUtilities;
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
@@ -36,17 +36,6 @@ function filePathsFromPackageName(packageName) {
   filePaths = florenceFilePaths;  ///
 
   return filePaths;
-}
-
-function customGrammarsFromPackageNames(packageNames) {
-	const customGrammars = packageNames.map((packageName) => {
-          const directoryPath = packageName,  ///
-                customGrammar = CustomGrammar.fromDirectoryPath(directoryPath);
-
-          return customGrammar;
-        });
-
-	return customGrammars;
 }
 
 function dependencyPackageNamesFromPackageName(packageName) {
@@ -74,8 +63,29 @@ function dependencyPackageNamesFromPackageName(packageName) {
   return dependencyPackageNames;
 }
 
+function combinedCustomGrammarFromPackageNames(packageNames) {
+  const customGrammars = customGrammarsFromPackageNames(packageNames),
+        combinedCustomGrammar = CombinedCustomGrammar.fromCustomGrammars(customGrammars);
+
+  return combinedCustomGrammar;
+}
+
 module.exports = {
   filePathsFromPackageName,
-  customGrammarsFromPackageNames,
-  dependencyPackageNamesFromPackageName
+  dependencyPackageNamesFromPackageName,
+  combinedCustomGrammarFromPackageNames
 };
+
+function customGrammarFromPackageName(packageName) {
+  const directoryPath = packageName,  ///
+        customGrammar = CustomGrammar.fromDirectoryPath(directoryPath);
+
+  return customGrammar;
+}
+
+function customGrammarsFromPackageNames(packageNames) {
+  const customGrammars = packageNames.map((packageName) => customGrammarFromPackageName(packageName));
+
+  return customGrammars;
+}
+

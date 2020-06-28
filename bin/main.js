@@ -17,9 +17,10 @@ function main(commands, options) {
         { filePath, packageName = firstCommand } = options; ///
 
   if (packageName) {
-    const packageNames = [];
+    const siblingPackageName = undefined,
+          dependentPackageNames = [];
 
-    verifyPackage(packageName, globalContext, packageNames);
+    verifyPackage(packageName, globalContext, siblingPackageName, dependentPackageNames);
   } else {
     const filePaths = [ filePath ], ///
           packageContext = PackageContext.fromGlobalContext(globalContext);
