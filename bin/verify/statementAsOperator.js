@@ -292,12 +292,10 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
           const rule = nonTerminalNodeContext.findRuleByRuleName(ruleName),
                 fileContext = nonTerminalNodeContext.getFileContext();
 
-          debugger
-
           switch (ruleName) {
             case NAME_RULE_NAME: {
               const nameNode = nonTerminalNode, ///
-                  nameRule = rule;  ///
+                    nameRule = rule;  ///
 
               verified = verifyNameRule(nameRule, nameNode, fileContext);
               break;
@@ -305,7 +303,7 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
 
             case TERM_RULE_NAME: {
               const termNode = nonTerminalNode, ///
-                  constructor = verifyTermAgainstConstructors(termNode, fileContext);
+                    constructor = verifyTermAgainstConstructors(termNode, fileContext);
 
               if (constructor === undefined) {
                 verified = verifyRule(rule, nonTerminalNode, fileContext);
@@ -324,7 +322,7 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
 
               if (ruleNameTermRuleName) {
                 const termNode = TermNode.fromNonTerminalNode(nonTerminalNode),
-                    constructor = verifyTermAgainstConstructors(termNode, fileContext);
+                      constructor = verifyTermAgainstConstructors(termNode, fileContext);
 
                 if (constructor === undefined) {
                   verified = verifyRule(rule, nonTerminalNode, fileContext);
