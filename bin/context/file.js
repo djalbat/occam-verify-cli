@@ -2,8 +2,7 @@
 
 const necessary = require("necessary");
 
-const contextMixins = require("../mixins/context"),
-      grammarUtilities = require("../utilities/grammar");
+const contextMixins = require("../mixins/context");
 
 const { arrayUtilities, fileSystemUtilities } = necessary,
       { push } = arrayUtilities,
