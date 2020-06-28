@@ -318,7 +318,7 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
             }
 
             default: {
-              const ruleNameTermRuleName = nonTerminalNodeContext.isRulePermittedByRuleName(ruleName);
+              const ruleNameTermRuleName = nonTerminalNodeContext.isRuleNameTermRuleName(ruleName);
 
               if (ruleNameTermRuleName) {
                 const termNode = TermNode.fromNonTerminalNode(nonTerminalNode),
