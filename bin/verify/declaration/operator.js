@@ -7,9 +7,9 @@ const Error = require("../../error"),
 
 const { statementNodeQuery } = queries;
 
-function verifyOperatorDeclaration(operatorDeclarationNode, context, ruleMap) {
+function verifyOperatorDeclaration(operatorDeclarationNode, fileContext) {
   const statementNode = statementNodeQuery(operatorDeclarationNode),
-        verified = verifyStatementAsOperator(statementNode, context, ruleMap);
+        verified = verifyStatementAsOperator(statementNode, fileContext);
 
   if (!verified) {
     const node = statementNode,  ///
