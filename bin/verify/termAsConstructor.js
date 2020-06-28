@@ -4,6 +4,7 @@ const parsers = require("occam-parsers");
 
 const Error = require("../error"),
 			queries = require("../miscellaneous/queries"),
+      TermNode = require("../miscellaneous/termNode"),
 			ruleNames = require("../miscellaneous/ruleNames"),
       ParserContext = require("../context/parser"),
       NonTerminalNodeContext = require("../context/nonTerminalNode"),
@@ -317,7 +318,24 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
             }
 
             default: {
-              verified = verifyRule(rule, nonTerminalNode, fileContext);
+              const ruleNameTermRuleName = nonTerminalNodeContext.isRulePermittedByRuleName(ruleName);
+
+              if (ruleNameTermRuleName) {
+                const termNode = TermNode.fromNonTerminalNode(nonTerminalNode),
+                      constructor = verifyTermAgainstConstructors(termNode, fileContext);
+
+                if (constructor === undefined) {
+                  verified = verifyRule(rule, nonTerminalNode, fileContext);
+                } else {
+                  const type = constructor.getType();
+
+                  if (type === undefined) {
+                    verified = true;
+                  }
+                }
+              } else {
+                verified = verifyRule(rule, nonTerminalNode, fileContext);
+              }
               break;
             }
           }

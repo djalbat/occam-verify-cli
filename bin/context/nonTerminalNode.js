@@ -54,14 +54,6 @@ class NonTerminalNodeContext {
     return ruleNamePermitted;
   }
 
-  isRuleNameTermRuleName(ruleName) {
-    const termRuleNames = this.fileContext.getTermRuleNames(),
-          termRuleNamesIncludesRuleName = termRuleNames.includes(ruleName),
-          ruleNameTermRuleName = termRuleNamesIncludesRuleName; ///
-
-    return ruleNameTermRuleName;
-  }
-
   static fromFileContextAndNonTerminalNode(fileContext, nonTerminalNode) {
     const childNodes = nonTerminalNode.getChildNodes(),
           index = 0,
