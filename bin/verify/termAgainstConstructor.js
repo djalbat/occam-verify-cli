@@ -36,7 +36,7 @@ function verifyAgainstConstructor(node, constructorNode, fileContext) {
 
     if (constructorNodeNonTerminalNode) {
       const nonTerminalNode = node, ///
-          constructorNonTerminalNode = constructorNode; ///
+            constructorNonTerminalNode = constructorNode; ///
 
       verified = verifyNonTerminalAgainstConstructor(nonTerminalNode, constructorNonTerminalNode, fileContext);
     }

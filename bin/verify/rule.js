@@ -24,7 +24,7 @@ function verifyRule(rule, nonTerminalNode, fileContext) {
   let verified = false;
 
   const definitions = rule.getDefinitions(),
-      nonTerminalNodeContext = NonTerminalNodeContext.fromFileContextAndNonTerminalNode(fileContext, nonTerminalNode);
+        nonTerminalNodeContext = NonTerminalNodeContext.fromFileContextAndNonTerminalNode(fileContext, nonTerminalNode);
 
   definitions.some((definition) => {
     const savedIndex = nonTerminalNodeContext.getSavedIndex();
@@ -87,11 +87,11 @@ function verifyTerminalPart(terminalPart, nonTerminalNodeContext) {
   let verified = false;
 
   const savedIndex = nonTerminalNodeContext.getSavedIndex(),
-      nextChildNode = nonTerminalNodeContext.getNextChildNode();
+        nextChildNode = nonTerminalNodeContext.getNextChildNode();
 
   if (nextChildNode !== undefined) {
     const childNode = nextChildNode,  ///
-        childNodeTerminalNode = childNode.isTerminalNode();
+          childNodeTerminalNode = childNode.isTerminalNode();
 
     if (childNodeTerminalNode) {
       let terminalNode = childNode; ///
@@ -106,7 +106,7 @@ function verifyTerminalPart(terminalPart, nonTerminalNodeContext) {
         }
       } else {
         const parserContext = ParserContext.fromTerminalNode(terminalNode),
-            context = parserContext;  ///
+              context = parserContext;  ///
 
         terminalNode = terminalPart.parse(context);
 
@@ -180,7 +180,7 @@ function verifyOptionalPartPart(optionalPartPart, nonTerminalNodeContext) {
   let verified;
 
   const part = optionalPartPart.getPart(),
-      savedIndex = nonTerminalNodeContext.getSavedIndex();
+        savedIndex = nonTerminalNodeContext.getSavedIndex();
 
   verified = verifyPart(part, nonTerminalNodeContext);
 
@@ -195,8 +195,8 @@ function verifyOptionalPartPart(optionalPartPart, nonTerminalNodeContext) {
 
 function verifyGroupOfPartsPart(groupOfPartsPart, nonTerminalNodeContext) {
   const parts = groupOfPartsPart.getParts(),
-      savedIndex = nonTerminalNodeContext.getSavedIndex(),
-      verified = parts.every((part) => verifyPart(part, nonTerminalNodeContext));
+        savedIndex = nonTerminalNodeContext.getSavedIndex(),
+        verified = parts.every((part) => verifyPart(part, nonTerminalNodeContext));
 
   if (!verified) {
     nonTerminalNodeContext.backtrack(savedIndex);
@@ -207,8 +207,8 @@ function verifyGroupOfPartsPart(groupOfPartsPart, nonTerminalNodeContext) {
 
 function verifyChoiceOfPartsPart(choiceOfParts, nonTerminalNodeContext) {
   const parts = choiceOfParts.getParts(),
-      savedIndex = nonTerminalNodeContext.getSavedIndex(),
-      verified = parts.some((part) => verifyPart(part, nonTerminalNodeContext));
+        savedIndex = nonTerminalNodeContext.getSavedIndex(),
+        verified = parts.some((part) => verifyPart(part, nonTerminalNodeContext));
 
   if (!verified) {
     nonTerminalNodeContext.backtrack(savedIndex);
@@ -265,7 +265,7 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
   let verified = false;
 
   const ruleName = ruleNamePart.getRuleName(),
-      rulePermitted = nonTerminalNodeContext.isRulePermittedByRuleName(ruleName);
+        rulePermitted = nonTerminalNodeContext.isRulePermittedByRuleName(ruleName);
 
   if (rulePermitted) {
     const nextChildNode = nonTerminalNodeContext.getNextChildNode();
@@ -276,17 +276,17 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
 
       if (childNodeNonTerminalNode) {
         const ruleName = ruleNamePart.getRuleName(),
-            nonTerminalNode = childNode,  ///
-            nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
+              nonTerminalNode = childNode,  ///
+              nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
         if (ruleName === nonTerminalNodeRuleName) {
           const rule = nonTerminalNodeContext.findRuleByRuleName(ruleName),
-              fileContext = nonTerminalNodeContext.getFileContext();
+                fileContext = nonTerminalNodeContext.getFileContext();
 
           switch (ruleName) {
             case NAME_RULE_NAME: {
               const nameNode = nonTerminalNode, ///
-                  nameRule = rule;  ///
+                    nameRule = rule;  ///
 
               verified = verifyNameRule(nameRule, nameNode, fileContext);
               break;
@@ -294,7 +294,7 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
 
             case TERM_RULE_NAME: {
               const termNode = nonTerminalNode, ///
-                  constructor = verifyTermAgainstConstructors(termNode, fileContext);
+                    constructor = verifyTermAgainstConstructors(termNode, fileContext);
 
               if (constructor === undefined) {
                 verified = verifyRule(rule, nonTerminalNode, fileContext);
@@ -313,7 +313,7 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
 
               if (ruleNameTermRuleName) {
                 const termNode = TermNode.fromNonTerminalNode(nonTerminalNode),
-                    constructor = verifyTermAgainstConstructors(termNode, fileContext);
+                      constructor = verifyTermAgainstConstructors(termNode, fileContext);
 
                 if (constructor === undefined) {
                   verified = verifyRule(rule, nonTerminalNode, fileContext);
@@ -340,10 +340,10 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
 
 function verifyNameRule(nameRule, nameNode, fileContext) {
   const nameTerminalNode = nameTerminalNodeQuery(nameNode),
-      nameTerminalNodeContent = nameTerminalNode.getContent(),
-      name = nameTerminalNodeContent, ///
-      typePresent = fileContext.isTypePresentByName(name),
-      verified = typePresent; ///
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        name = nameTerminalNodeContent, ///
+        typePresent = fileContext.isTypePresentByName(name),
+        verified = typePresent; ///
 
   if (!typePresent) {
     const node = nameNode, ///

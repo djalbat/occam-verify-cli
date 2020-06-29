@@ -21,7 +21,7 @@ function verifyOperatorDeclaration(operatorDeclarationNode, fileContext) {
 
   const operator = Operator.fromStatementNode(statementNode);
 
-  context.addOperator(operator);
+  fileContext.addOperator(operator);
 }
 
 module.exports = verifyOperatorDeclaration;
