@@ -78,6 +78,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, file
               nameConstructorNode = constructorNonTerminalNode;
 
         verified = verifyNameNode(nameNode, nameConstructorNode, fileContext);
+
         break;
       }
 
@@ -86,6 +87,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, file
               constructorChildNodes = constructorNonTerminalNode.getChildNodes();
 
         verified = verifyChildNodes(childNodes, constructorChildNodes, fileContext);
+
         break;
       }
     }

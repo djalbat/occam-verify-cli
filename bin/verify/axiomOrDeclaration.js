@@ -14,12 +14,14 @@ function verifyAxiomOrDeclaration(axiomOrDeclarationNode, fileContext) {
       const axiomNode = axiomOrDeclarationNode;  ///
 
       verifyAxiom(axiomNode, fileContext);
+
       break;
 
     case DECLARATION_RULE_NAME:
       const declarationNode = axiomOrDeclarationNode;  ///
 
       verifyDeclaration(declarationNode, fileContext);
+
       break;
   }
 }

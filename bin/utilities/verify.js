@@ -133,30 +133,35 @@ function verifyWithNonTerminalPart(nonTerminalPart, nonTerminalNodeContext) {
       const ruleNamePart = nonTerminalPart;  ///
 
       verified = verifyWithRuleNamePart(ruleNamePart, nonTerminalNodeContext);
+
       break;
 
     case OptionalPartPartType:
       const optionalPartPart = nonTerminalPart; ///
 
       verified = verifyWithOptionalPartPart(optionalPartPart, nonTerminalNodeContext);
+
       break;
 
     case GroupOfPartsPartType:
       const groupOfPartsPart = nonTerminalPart; ///
 
       verified = verifyWithGroupOfPartsPart(groupOfPartsPart, nonTerminalNodeContext);
+
       break;
 
     case ChoiceOfPartsPartType:
       const choiceOfPartsPart = nonTerminalPart; ///
 
       verified = verifyWithChoiceOfPartsPart(choiceOfPartsPart, nonTerminalNodeContext);
+
       break;
 
     case ZeroOrMorePartsPartType:
       const zeroOrMorePartsPart = nonTerminalPart; ///
 
       verified = verifyWithZeroOrMorePartsPart(zeroOrMorePartsPart, nonTerminalNodeContext);
+
       break;
 
     default:
@@ -251,6 +256,7 @@ function verifyWithRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
                   nameRule = rule;  ///
 
             verified = verifyWithNameRule(nameNode, nameRule, fileContext);
+
             break;
           }
 
@@ -259,6 +265,7 @@ function verifyWithRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
                   type = verifyTerm(termNode, fileContext);
 
             verified = (type !== undefined);
+
             break;
           }
         }

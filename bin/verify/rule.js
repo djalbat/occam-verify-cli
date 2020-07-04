@@ -134,6 +134,7 @@ function verifyNonTerminalPart(nonTerminalPart, nonTerminalNodeContext) {
       const ruleNamePart = nonTerminalPart;  ///
 
       verified = verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext);
+
       break;
     }
 
@@ -141,6 +142,7 @@ function verifyNonTerminalPart(nonTerminalPart, nonTerminalNodeContext) {
       const optionalPartPart = nonTerminalPart; ///
 
       verified = verifyOptionalPartPart(optionalPartPart, nonTerminalNodeContext);
+
       break;
     }
 
@@ -148,6 +150,7 @@ function verifyNonTerminalPart(nonTerminalPart, nonTerminalNodeContext) {
       const groupOfPartsPart = nonTerminalPart; ///
 
       verified = verifyGroupOfPartsPart(groupOfPartsPart, nonTerminalNodeContext);
+
       break;
     }
 
@@ -155,6 +158,7 @@ function verifyNonTerminalPart(nonTerminalPart, nonTerminalNodeContext) {
       const choiceOfPartsPart = nonTerminalPart; ///
 
       verified = verifyChoiceOfPartsPart(choiceOfPartsPart, nonTerminalNodeContext);
+
       break;
     }
 
@@ -162,6 +166,7 @@ function verifyNonTerminalPart(nonTerminalPart, nonTerminalNodeContext) {
       const oneOrMorePartsPart = nonTerminalPart; ///
 
       verified = verifyOneOrMorePartsPart(oneOrMorePartsPart, nonTerminalNodeContext);
+
       break;
     }
 
@@ -169,6 +174,7 @@ function verifyNonTerminalPart(nonTerminalPart, nonTerminalNodeContext) {
       const zeroOrMorePartsPart = nonTerminalPart; ///
 
       verified = verifyZeroOrMorePartsPart(zeroOrMorePartsPart, nonTerminalNodeContext);
+
       break;
     }
   }
@@ -287,6 +293,7 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
                   nameRule = rule;  ///
 
             verified = verifyNameRule(nameRule, nameNode, fileContext);
+
             break;
           }
 
@@ -303,6 +310,7 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
                 verified = true;
               }
             }
+
             break;
           }
 
@@ -319,6 +327,7 @@ function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
                 verified = true;
               }
             }
+
             break;
           }
         }

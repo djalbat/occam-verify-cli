@@ -54,6 +54,7 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
       const nameNode = nonTerminalNode; ///
 
       verified = verifyNameNode(nameNode, fileContext);
+
       break;
     }
 
@@ -76,6 +77,8 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
           if (type === undefined) {
             verified = true;
           }
+
+          break;
         }
       }
 
@@ -89,6 +92,8 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
           if (type === undefined) {
             verified = true;
           }
+
+          break;
         }
       }
 

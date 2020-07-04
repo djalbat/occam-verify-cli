@@ -39,6 +39,7 @@ function verifyDeclaration(declarationNode, fileContext) {
       const typeDeclarationNode = typeDeclarationNodeQuery(declarationNode);
 
       verifyTypeDeclaration(typeDeclarationNode, fileContext);
+
       break;
     }
 
@@ -46,6 +47,7 @@ function verifyDeclaration(declarationNode, fileContext) {
 		  const typesDeclarationNode = typesDeclarationNodeQuery(declarationNode);
 
 		  verifyTypesDeclaration(typesDeclarationNode, fileContext);
+
 		  break;
 	  }
 
@@ -53,6 +55,7 @@ function verifyDeclaration(declarationNode, fileContext) {
       const variableDeclarationNode = variableDeclarationNodeQuery(declarationNode);
 
       verifyVariableDeclaration(variableDeclarationNode, fileContext);
+
       break;
     }
 
@@ -60,6 +63,7 @@ function verifyDeclaration(declarationNode, fileContext) {
       const variablesDeclarationNode = variablesDeclarationNodeQuery(declarationNode);
 
       verifyVariablesDeclaration(variablesDeclarationNode, fileContext);
+
       break;
     }
 
@@ -67,6 +71,7 @@ function verifyDeclaration(declarationNode, fileContext) {
       const operatorDeclarationNode = operatorDeclarationNodeQuery(declarationNode);
 
       verifyOperatorDeclaration(operatorDeclarationNode, fileContext);
+
       break;
     }
 
@@ -74,6 +79,7 @@ function verifyDeclaration(declarationNode, fileContext) {
       const operatorsDeclarationNode = operatorsDeclarationNodeQuery(declarationNode);
 
       verifyOperatorsDeclaration(operatorsDeclarationNode, fileContext);
+
       break;
     }
 
@@ -81,6 +87,7 @@ function verifyDeclaration(declarationNode, fileContext) {
       const constructorDeclarationNode = constructorDeclarationNodeQuery(declarationNode);
 
       verifyConstructorDeclaration(constructorDeclarationNode, fileContext);
+
       break;
     }
 
@@ -88,6 +95,7 @@ function verifyDeclaration(declarationNode, fileContext) {
       const constructorsDeclarationNode = constructorsDeclarationNodeQuery(declarationNode);
 
       verifyConstructorsDeclaration(constructorsDeclarationNode, fileContext);
+
       break;
     }
 
