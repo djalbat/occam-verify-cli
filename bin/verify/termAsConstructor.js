@@ -71,7 +71,11 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
               constructor = verifyTermAgainstConstructors(termNode, fileContext);
 
         if (constructor !== undefined) {
-          verified = true;
+          const type = constructor.getType();
+
+          if (type === undefined) {
+            verified = true;
+          }
         }
       }
 
@@ -80,7 +84,11 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
               operator = verifyExpressionAgainstOperators(expressionNode, fileContext);
 
         if (operator !== undefined) {
-          verified = true;
+          const type = operator.getType();
+
+          if (type === undefined) {
+            verified = true;
+          }
         }
       }
 
