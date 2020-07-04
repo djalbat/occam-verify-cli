@@ -26,7 +26,8 @@ class Constructor {
     if (this.type === undefined) {
       string = `${termString}`;
     } else {
-      const typeString = this.type.asString();
+      const noSuperType = true,
+            typeString = this.type.asString(noSuperType);
 
       string = `${termString}:${typeString}`;
     }

@@ -6,6 +6,7 @@ const { Query } = dom;
 
 const termNodeQuery = nodeQuery(Query.fromExpression("//term", 1)),
       statementNodeQuery = nodeQuery(Query.fromExpression("//statement", 1)),
+      expressionNodeQuery = nodeQuery(Query.fromExpression("//expression", 1)),
 			nameTerminalNodeQuery = nodeQuery(Query.fromExpression("//name/@*")),
       qualificationNodeQuery = nodeQuery(Query.fromExpression("//qualification", 1)),
 			keywordTerminalNodeQuery = nodeQuery(Query.fromExpression("//@keyword", 1)),
@@ -37,6 +38,7 @@ const termNodeQuery = nodeQuery(Query.fromExpression("//term", 1)),
 module.exports = {
   termNodeQuery,
   statementNodeQuery,
+  expressionNodeQuery,
 	nameTerminalNodeQuery,
   qualificationNodeQuery,
 	keywordTerminalNodeQuery,

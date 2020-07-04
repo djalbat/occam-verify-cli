@@ -264,71 +264,62 @@ function verifyZeroOrMorePartsPart(zeroOrMorePartsPart, nonTerminalNodeContext) 
 function verifyRuleNamePart(ruleNamePart, nonTerminalNodeContext) {
   let verified = false;
 
-  const ruleName = ruleNamePart.getRuleName(),
-        rulePermitted = nonTerminalNodeContext.isRulePermittedByRuleName(ruleName);
+  const ruleName = ruleNamePart.getRuleName();
 
-  if (rulePermitted) {
-    const nextChildNode = nonTerminalNodeContext.getNextChildNode();
+  const nextChildNode = nonTerminalNodeContext.getNextChildNode();
 
-    if (nextChildNode !== undefined) {
-      const childNode = nextChildNode,  ///
-          childNodeNonTerminalNode = childNode.isNonTerminalNode();
+  if (nextChildNode !== undefined) {
+    const childNode = nextChildNode,  ///
+        childNodeNonTerminalNode = childNode.isNonTerminalNode();
 
-      if (childNodeNonTerminalNode) {
-        const ruleName = ruleNamePart.getRuleName(),
-              nonTerminalNode = childNode,  ///
-              nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
+    if (childNodeNonTerminalNode) {
+      const ruleName = ruleNamePart.getRuleName(),
+            nonTerminalNode = childNode,  ///
+            nonTerminalNodeRuleName = nonTerminalNode.getRuleName();
 
-        if (ruleName === nonTerminalNodeRuleName) {
-          const rule = nonTerminalNodeContext.findRuleByRuleName(ruleName),
-                fileContext = nonTerminalNodeContext.getFileContext();
+      if (ruleName === nonTerminalNodeRuleName) {
+        const rule = nonTerminalNodeContext.findRuleByRuleName(ruleName),
+              fileContext = nonTerminalNodeContext.getFileContext();
 
-          switch (ruleName) {
-            case NAME_RULE_NAME: {
-              const nameNode = nonTerminalNode, ///
-                    nameRule = rule;  ///
+        switch (ruleName) {
+          case NAME_RULE_NAME: {
+            const nameNode = nonTerminalNode, ///
+                  nameRule = rule;  ///
 
-              verified = verifyNameRule(nameRule, nameNode, fileContext);
-              break;
-            }
+            verified = verifyNameRule(nameRule, nameNode, fileContext);
+            break;
+          }
 
-            case TERM_RULE_NAME: {
-              const termNode = nonTerminalNode, ///
-                    constructor = verifyTermAgainstConstructors(termNode, fileContext);
+          case TERM_RULE_NAME: {
+            const termNode = nonTerminalNode, ///
+                  constructor = verifyTermAgainstConstructors(termNode, fileContext);
 
-              if (constructor === undefined) {
-                verified = verifyRule(rule, nonTerminalNode, fileContext);
-              } else {
-                const type = constructor.getType();
+            if (constructor === undefined) {
+              verified = verifyRule(rule, nonTerminalNode, fileContext);
+            } else {
+              const type = constructor.getType();
 
-                if (type === undefined) {
-                  verified = true;
-                }
+              if (type === undefined) {
+                verified = true;
               }
-              break;
             }
+            break;
+          }
 
-            default: {
-              const ruleNameTermRuleName = nonTerminalNodeContext.isRuleNameTermRuleName(ruleName);
+          default: {
+            const termNode = TermNode.fromNonTerminalNode(nonTerminalNode),
+                  constructor = verifyTermAgainstConstructors(termNode, fileContext);
 
-              if (ruleNameTermRuleName) {
-                const termNode = TermNode.fromNonTerminalNode(nonTerminalNode),
-                      constructor = verifyTermAgainstConstructors(termNode, fileContext);
+            if (constructor === undefined) {
+              verified = verifyRule(rule, nonTerminalNode, fileContext);
+            } else {
+              const type = constructor.getType();
 
-                if (constructor === undefined) {
-                  verified = verifyRule(rule, nonTerminalNode, fileContext);
-                } else {
-                  const type = constructor.getType();
-
-                  if (type === undefined) {
-                    verified = true;
-                  }
-                }
-              } else {
-                verified = verifyRule(rule, nonTerminalNode, fileContext);
+              if (type === undefined) {
+                verified = true;
               }
-              break;
             }
+            break;
           }
         }
       }

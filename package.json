@@ -14,6 +14,7 @@
     "necessary": "^4.1.17",
     "occam-custom-grammars": "^5.0.29",
     "occam-dom": "^2.0.45",
+    "occam-grammar-utilities": "^5.0.25",
     "occam-lexers": "^12.0.10",
     "occam-open-cli": "^2.0.112",
     "occam-parsers": "^12.0.40"

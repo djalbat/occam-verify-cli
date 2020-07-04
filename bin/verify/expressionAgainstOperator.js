@@ -7,15 +7,15 @@ const queries = require("../miscellaneous/queries"),
 const { NAME_RULE_NAME } = ruleNames,
       { nameTerminalNodeQuery } = queries;
 
-function verifyTermAgainstConstructor(termNode, constructorTermNode, fileContext) {
-  const nonTerminalNode = termNode, ///
-        constructorNonTerminalNode = constructorTermNode, ///
+function verifyExpressionAgainstOperator(expressionNode, operatorExpressionNode, fileContext) {
+  const nonTerminalNode = expressionNode, ///
+        constructorNonTerminalNode = operatorExpressionNode, ///
         verified = verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, fileContext);
 
   return verified;
 }
 
-module.exports = verifyTermAgainstConstructor;
+module.exports = verifyExpressionAgainstOperator;
 
 function verifyNode(node, constructorNode, fileContext) {
   let verified = false;

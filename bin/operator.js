@@ -5,25 +5,40 @@ const nodeUtilities = require("./utilities/node");
 const { nodeAsString } = nodeUtilities;
 
 class Operator {
-  constructor(statementNode) {
-    this.statementNode = statementNode;
+  constructor(expressionNode, type) {
+    this.expressionNode = expressionNode;
+    this.type = type;
   }
 
-  getStatementNode() {
-    return this.statementNode;
+  getExpressionNode() {
+    return this.expressionNode;
+  }
+
+  getType() {
+    return this.type;
   }
 
   asString() {
-    const statementString = nodeAsString(this.statementNode),
-          string = `${statementString}`;
+    let string;
+
+    const expressionString = nodeAsString(this.expressionNode);
+
+    if (this.type === undefined) {
+      string = `${expressionString}`;
+    } else {
+      const noSuperType = true,
+            typeString = this.type.asString(noSuperType);
+
+      string = `${expressionString}:${typeString}`;
+    }
 
     return string;
   }
 
-  static fromStatementNode(statementNode) {
-    const constructor = new Operator(statementNode);
+  static fromExpressionNodeAndType(expressionNode, type) {
+    const operator = new Operator(expressionNode, type);
 
-    return constructor;
+    return operator;
   }
 }
 

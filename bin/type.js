@@ -54,10 +54,10 @@ class Type {
     return matchesTypeName;
   }
 
-  asString() {
+  asString(noSuperType = (this.superType === undefined)) {
     let string;
 
-    if (this.superType === undefined) {
+    if (noSuperType) {
       string = `${this.name}`;
     } else {
       const superTypeName = this.superType.getName();

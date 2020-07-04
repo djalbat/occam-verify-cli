@@ -1,12 +1,14 @@
 "use strict";
 
-const necessary = require("necessary");
+const necessary = require("necessary"),
+      grammarUtilities = require("occam-grammar-utilities");
 
 const contextMixins = require("../mixins/context");
 
 const { arrayUtilities, fileSystemUtilities } = necessary,
       { push } = arrayUtilities,
-      { readFile } = fileSystemUtilities;
+      { readFile } = fileSystemUtilities,
+      { removeOrRenameIntermediateNodes } = grammarUtilities;
 
 class FileContext {
   constructor(packageContext, filePath, tokens, node, types, axioms, variables, operators, constructors) {
@@ -97,8 +99,6 @@ class FileContext {
     return this.variables;
   }
 
-  getTermRuleNames() { return this.packageContext.getTermRuleNames(); }
-
   findRuleByRuleName(ruleName) { return this.packageContext.findRuleByRuleName(ruleName); }
 
   findVariableByName(name) {
@@ -138,8 +138,11 @@ class FileContext {
     const fileContent = readFile(filePath),
           content = fileContent,  ///
           tokens = packageContext.tokenise(content),
-          node = packageContext.parse(tokens),
-          types = [],
+          node = packageContext.parse(tokens);
+
+    removeOrRenameIntermediateNodes(node);
+
+    const types = [],
           axioms = [],
           variables = [],
           operators = [],

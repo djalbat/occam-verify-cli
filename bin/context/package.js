@@ -13,11 +13,10 @@ const { arrayUtilities } = necessary,
       { push } = arrayUtilities;
 
 class PackageContext {
-  constructor(globalContext, packageName, fileContexts, termRuleNames, florenceLexer, florenceParser) {
+  constructor(globalContext, packageName, fileContexts, florenceLexer, florenceParser) {
     this.globalContext = globalContext;
     this.packageName = packageName;
     this.fileContexts = fileContexts;
-    this.termRuleNames = termRuleNames;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
   }
@@ -32,10 +31,6 @@ class PackageContext {
 
   getPackageName() {
     return this.packageName;
-  }
-
-  getTermRuleNames() {
-    return this.termRuleNames;
   }
 
   getFlorenceLexer() {
@@ -148,10 +143,9 @@ class PackageContext {
 
     const combinedCustomGrammar = combinedCustomGrammarFromPackageNames(packageNames),
           fileContexts = [],
-          termRuleNames = combinedCustomGrammar.getTermRuleNames(),
           florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
           florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar),
-          packageContext = new PackageContext(globalContext, packageName, fileContexts, termRuleNames, florenceLexer, florenceParser);
+          packageContext = new PackageContext(globalContext, packageName, fileContexts, florenceLexer, florenceParser);
 
     return packageContext;
   }

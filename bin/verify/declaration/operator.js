@@ -3,25 +3,47 @@
 const Error = require("../../error"),
       queries = require("../../miscellaneous/queries"),
       Operator = require("../../operator"),
-      verifyStatementAsOperator = require("../../verify/statementAsOperator");
+      nodeUtilities = require("../../utilities/node"),
+      verifyTypeName = require("../../verify/typeName"),
+      verifyExpressionAsOperator = require("../../verify/expressionAsOperator");
 
-const { statementNodeQuery } = queries;
+const { nodeAsString } = nodeUtilities,
+      { expressionNodeQuery, typeNameTerminalNodeQuery } = queries;
 
 function verifyOperatorDeclaration(operatorDeclarationNode, fileContext) {
-  const statementNode = statementNodeQuery(operatorDeclarationNode),
-        verified = verifyStatementAsOperator(statementNode, fileContext);
+  let type = undefined;
+
+  const expressionNode = expressionNodeQuery(operatorDeclarationNode),
+        typeNameTerminalNode = typeNameTerminalNodeQuery(operatorDeclarationNode);
+
+  if (typeNameTerminalNode !== undefined) {
+    type = verifyTypeName(typeNameTerminalNode, fileContext);
+
+    if (type === undefined) {
+      const node = expressionNode,  ///
+            expressionString = nodeAsString(expressionNode),
+            message = `The operator '${expressionString}' cannot be verified because the type cannot be found.`;
+
+      throw new Error(node, message);
+    }
+  }
+
+  const verified = verifyExpressionAsOperator(expressionNode, fileContext);
 
   if (!verified) {
-    const node = statementNode,  ///
-          statementString = nodeAsString(statementNode),
-          message = `The operator '${statementString}' cannot be verified.`;
+    const node = expressionNode,  ///
+          expressionString = nodeAsString(expressionNode),
+          message = `The operator '${expressionString}' cannot be verified.`;
 
     throw new Error(node, message);
   }
 
-  const operator = Operator.fromStatementNode(statementNode);
+  const operator = Operator.fromExpressionNodeAndType(expressionNode, type),
+        operatorString = operator.asString();
 
   fileContext.addOperator(operator);
+
+  console.log(`Added the '${operatorString}' operator to the context.`);
 }
 
 module.exports = verifyOperatorDeclaration;
