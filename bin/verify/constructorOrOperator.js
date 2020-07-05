@@ -8,19 +8,21 @@ const queries = require("../miscellaneous/queries"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
 const { verifyTerm, verifyExpression } = verifyTermOrExpression,
-      { termNameNodeQuery, nameTerminalNodeQuery } = queries,
-      { NAME_RULE_NAME, TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
+      { termNameNodeQuery, nameTerminalNodeQuery } = queries;
 
 function verifyExpressionAsOperator(expressionNode, fileContext) {
   const nonTerminalNode = expressionNode,  ///
-        verified = verifyNonTerminalNode(nonTerminalNode, fileContext);
+        childNodes = nonTerminalNode.getChildNodes(),
+        verified = verifyChildNodes(childNodes, fileContext);
 
   return verified;
 }
 
 function verifyTermAsConstructor(termNode, fileContext) {
   const nonTerminalNode = termNode,  ///
-        verified = verifyNonTerminalNode(nonTerminalNode, fileContext);
+        childNodes = nonTerminalNode.getChildNodes(),
+        verified = verifyChildNodes(childNodes, fileContext);
 
   return verified;
 }
@@ -49,7 +51,9 @@ function verifyNode(node, fileContext) {
 }
 
 function verifyTerminalNode(terminalNode, fileContext) {
-  const verified = true;  ///
+  const verified = true;
+
+  ///
 
   return verified;
 }
@@ -60,12 +64,6 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
   const ruleName = nonTerminalNode.getRuleName();
 
   switch (ruleName) {
-    case NAME_RULE_NAME: {
-      debugger
-
-      break;
-    }
-
     case TERM_RULE_NAME: {
       const termNode = nonTerminalNode; ///
 
@@ -84,33 +82,15 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 
     default: {
       if (!verified) {
-        const termNode = TermNode.fromNonTerminalNode(nonTerminalNode),
-              constructor = verifyTerm(termNode, fileContext);
+        const termNode = TermNode.fromNonTerminalNode(nonTerminalNode);
 
-        if (constructor !== undefined) {
-          const type = constructor.getType();
-
-          if (type === undefined) {
-            verified = true;
-          }
-
-          break;
-        }
+        verified = verifyTermNode(termNode, fileContext);
       }
 
       if (!verified) {
-        const expressionNode = ExpressionNode.fromNonTerminalNode(nonTerminalNode),
-              operator = verifyExpression(expressionNode, fileContext);
+        const expressionNode = ExpressionNode.fromNonTerminalNode(nonTerminalNode);
 
-        if (operator !== undefined) {
-          const type = operator.getType();
-
-          if (type === undefined) {
-            verified = true;
-          }
-
-          break;
-        }
+        verified = verifyExpressionNode(expressionNode, fileContext);
       }
 
       if (!verified) {
@@ -118,6 +98,8 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 
         verified = verifyChildNodes(childNodes, fileContext);
       }
+
+      break;
     }
   }
 
@@ -125,11 +107,17 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 }
 
 function verifyExpressionNode(expressionNode, fileContext) {
-  let verified;
+  let verified = false;
 
-  const childNodes = nonTerminalNode.getChildNodes();
+  const operator = verifyExpression(expressionNode, fileContext);
 
-  verified = verifyChildNodes(childNodes, fileContext);
+  if (operator !== undefined) {
+    const type = operator.getType();
+
+    if (type === undefined) {
+      verified = true;
+    }
+  }
 
   return verified;
 }
@@ -142,10 +130,15 @@ function verifyTermNode(termNode, fileContext) {
   if (nameNode !== undefined) {
     verified = verifyNameNode(nameNode, fileContext);
   } else {
-    const nonTerminalNode = termNode, ///
-          childNodes = nonTerminalNode.getChildNodes();
+    const constructor = verifyTerm(termNode, fileContext);
 
-    verified = verifyChildNodes(childNodes, fileContext);
+    if (constructor !== undefined) {
+      const type = constructor.getType();
+
+      if (type === undefined) {
+        verified = true;
+      }
+    }
   }
 
   return verified;
