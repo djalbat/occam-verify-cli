@@ -1,5 +1,9 @@
 "use strict";
 
+const queries = require("../miscellaneous/queries");
+
+const { nameTerminalNodeQuery } = queries;
+
 function findTypeByName(name) {
   const types = this.getTypes(),
         type = types.find((type) => type.matchName(name));
@@ -10,6 +14,15 @@ function findTypeByName(name) {
 function findTypeByTypeName(typeName) {
   const types = this.getTypes(),
         type = types.find((type) => type.matchTypeName(typeName));
+
+  return type;
+}
+
+function findTypeByConstructorNameNode(constructorNameNode) {
+  const constructorNameTerminalNode = nameTerminalNodeQuery(constructorNameNode),
+        constructorNameTerminalNodeContent = constructorNameTerminalNode.getContent(),
+        name = constructorNameTerminalNodeContent, ///
+        type = this.findTypeByName(name);
 
   return type;
 }
@@ -45,6 +58,7 @@ function isTypePresentByTypeName(typeName) {
 module.exports = {
   findTypeByName,
   findTypeByTypeName,
+  findTypeByConstructorNameNode,
   isLabelPresent,
   isTypePresentByName,
   isTypePresentByTypeName

@@ -155,7 +155,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTermin
 function verifyExpressionNode(expressionNode, operatorExpressionNode, fileContext) {
   let verified = false;
 
-  ///
+  debugger
 
   return verified;
 }
@@ -166,68 +166,48 @@ function verifyTermNode(termNode, constructorTermNode, fileContext) {
   const constructorNameNode = termNameNodeQuery(constructorTermNode);
 
   if (constructorNameNode !== undefined) {
-    const constructorNameTerminalNode = nameTerminalNodeQuery(constructorNameNode),
-          constructorNameTerminalNodeContent = constructorNameTerminalNode.getContent(),
-          name = constructorNameTerminalNodeContent, ///
-          type = fileContext.findTypeByName(name);
+    const nameNode = termNameNodeQuery(termNode);
 
-    if (type !== undefined) {
-      const nameNode = termNameNodeQuery(termNode);
+    if (nameNode !== undefined) {
+      verified = verifyNameNode(nameNode, constructorNameNode, fileContext);
+    } else {
+      const constructor = verifyTerm(termNode, fileContext);
 
-      if (nameNode !== undefined) {
-        const nameTerminalNode = nameTerminalNodeQuery(nameNode),
-              nameTerminalNodeContent = nameTerminalNode.getContent(),
-              name = nameTerminalNodeContent,
-              variable = fileContext.findVariableByName(name);
+      if (constructor !== undefined) {
+        const type = fileContext.findTypeByConstructorNameNode(constructorNameNode),
+              constructorType = constructor.getType(),
+              constructorTypeEqualToOrSubTypeOfType = constructorType.isEqualToOrSubTypeOf(type);
 
-        if (variable !== undefined) {
-          const variableType = variable.getType(),
-                variableTypeEqualToOrSubTypeOfType = variableType.isEqualToOrSubTypeOf(type);
-
-          if (variableTypeEqualToOrSubTypeOfType) {
-            verified = true;
-          }
-        }
-      } else {
-        const constructor = verifyTerm(termNode, fileContext);
-
-        if (constructor !== undefined) {
-          const constructorType = constructor.getType(),
-                constructorTypeEqualToOrSubTypeOfType = constructorType.isEqualToOrSubTypeOf(type);
-
-          if (constructorTypeEqualToOrSubTypeOfType) {
-            verified = true;
-          }
+        if (constructorTypeEqualToOrSubTypeOfType) {
+          verified = true;
         }
       }
     }
+  } else {
+    debugger
   }
 
   return verified;
 }
 
-function verifyNameNode(nameNode, constructorOrExpressionNameNode, fileContext) {
+function verifyNameNode(nameNode, constructorNameNode, fileContext) {
   let verified = false;
 
   const nameTerminalNode = nameTerminalNodeQuery(nameNode),
-        constructorNameTerminalNode = nameTerminalNodeQuery(constructorOrExpressionNameNode),
         nameTerminalNodeContent = nameTerminalNode.getContent(),
         name = nameTerminalNodeContent, ///
         variable = fileContext.findVariableByName(name);
 
   if (variable !== undefined) {
-    const constructorNameTerminalNodeContent = constructorNameTerminalNode.getContent(),
-          constructorName = constructorNameTerminalNodeContent;  ///
+    const type = fileContext.findTypeByConstructorNameNode(constructorNameNode);
 
-    if (constructorName === name) {
-      verified = true;
-    } else {
-      const name = constructorName, ///
-            type = fileContext.findTypeByName(name),
-            variableType = variable.getType(),
+    if (type !== undefined) {
+      const variableType = variable.getType(),
             variableTypeEqualToOrSubTypeOfType = variableType.isEqualToOrSubTypeOf(type);
 
-      verified = variableTypeEqualToOrSubTypeOfType;  ///
+      if (variableTypeEqualToOrSubTypeOfType) {
+        verified = true;
+      }
     }
   }
 
@@ -269,4 +249,3 @@ function verifyChildNodes(childNodes, constructorOrExpressionChildNodes, fileCon
 
   return verified;
 }
-
