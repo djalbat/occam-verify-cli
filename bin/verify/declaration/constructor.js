@@ -5,7 +5,7 @@ const Error = require("../../error"),
       Constructor = require("../../constructor"),
       nodeUtilities = require("../../utilities/node"),
 			verifyTypeName = require("../../verify/typeName"),
-      verifyConstructorOrOperatorUtilities = require("../../utilities/verify/constructorOrOperator");
+      verifyConstructorOrOperatorUtilities = require("../../verify/constructorOrOperator");
 
 const { nodeAsString } = nodeUtilities,
       { verifyTermAsConstructor } = verifyConstructorOrOperatorUtilities,

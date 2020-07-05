@@ -5,10 +5,10 @@ const Error = require("../../error"),
       Operator = require("../../operator"),
       nodeUtilities = require("../../utilities/node"),
       verifyTypeName = require("../../verify/typeName"),
-      verifyConstructorOrOperatorUtilities = require("../../utilities/verify/constructorOrOperator");
+      verifyConstructorOrOperator = require("../../verify/constructorOrOperator");
 
 const { nodeAsString } = nodeUtilities,
-      { verifyExpressionAsOperator } = verifyConstructorOrOperatorUtilities,
+      { verifyExpressionAsOperator } = verifyConstructorOrOperator,
       { expressionNodeQuery, typeNameTerminalNodeQuery } = queries;
 
 function verifyOperatorDeclaration(operatorDeclarationNode, fileContext) {

@@ -1,13 +1,13 @@
 "use strict";
 
-const queries = require("../../miscellaneous/queries"),
-      TermNode = require("../../miscellaneous/termNode"),
-      ruleNames = require("../../miscellaneous/ruleNames"),
-      ExpressionNode = require("../../miscellaneous/expressionNode"),
-      NonTerminalNodeContext = require("../../context/nonTerminalNode"),
-      verifyTermOrExpressionUtilities = require("../../utilities/verify/termOrExpression");
+const queries = require("../miscellaneous/queries"),
+      TermNode = require("../miscellaneous/termNode"),
+      ruleNames = require("../miscellaneous/ruleNames"),
+      ExpressionNode = require("../miscellaneous/expressionNode"),
+      verifyTermOrExpression = require("../verify/termOrExpression"),
+      NonTerminalNodeContext = require("../context/nonTerminalNode");
 
-const { verifyTerm, verifyExpression } = verifyTermOrExpressionUtilities,
+const { verifyTerm, verifyExpression } = verifyTermOrExpression,
       { termNameNodeQuery, nameTerminalNodeQuery } = queries,
       { NAME_RULE_NAME, TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames;
 

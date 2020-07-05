@@ -1,8 +1,8 @@
 "use strict";
 
-const queries = require("../../miscellaneous/queries"),
-      ruleNames = require("../../miscellaneous/ruleNames"),
-      NonTerminalNodeContext = require("../../context/nonTerminalNode");
+const queries = require("../miscellaneous/queries"),
+      ruleNames = require("../miscellaneous/ruleNames"),
+      NonTerminalNodeContext = require("../context/nonTerminalNode");
 
 const { NAME_RULE_NAME } = ruleNames,
       { nameTerminalNodeQuery } = queries;
