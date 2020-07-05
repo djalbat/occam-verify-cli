@@ -7,11 +7,12 @@ const Error = require("../../error"),
       Constructor = require("../../constructor"),
       nodeUtilities = require("../../utilities/node"),
       verifyTypeName = require("../../verify/typeName"),
-      verifyTermAsConstructor = require("../../verify/termAsConstructor");
+      verifyConstructorOrOperatorUtilities = require("../../utilities/verify/constructorOrOperator");
 
 const { arrayUtilities } = necessary,
       { first } = arrayUtilities,
       { nodeAsString } = nodeUtilities,
+      { verifyTermAsConstructor } = verifyConstructorOrOperatorUtilities,
       { termNodesQuery, typeNameTerminalNodeQuery } = queries;
 
 function verifyConstructorsDeclaration(constructorDeclarationNode, fileContext) {

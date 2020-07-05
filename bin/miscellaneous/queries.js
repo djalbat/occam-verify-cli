@@ -5,6 +5,7 @@ const dom = require("occam-dom");
 const { Query } = dom;
 
 const termNodeQuery = nodeQuery(Query.fromExpression("//term", 1)),
+      termNameNodeQuery = nodeQuery(Query.fromExpression("/term/name")),
       statementNodeQuery = nodeQuery(Query.fromExpression("//statement", 1)),
       expressionNodeQuery = nodeQuery(Query.fromExpression("//expression", 1)),
 			nameTerminalNodeQuery = nodeQuery(Query.fromExpression("//name/@*")),
@@ -37,6 +38,7 @@ const termNodeQuery = nodeQuery(Query.fromExpression("//term", 1)),
 
 module.exports = {
   termNodeQuery,
+  termNameNodeQuery,
   statementNodeQuery,
   expressionNodeQuery,
 	nameTerminalNodeQuery,

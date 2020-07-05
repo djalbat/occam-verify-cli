@@ -1,14 +1,58 @@
 "use strict";
 
-const queries = require("../../miscellaneous/queries"),
-      verifyOperatorDeclaration = require("../../verify/declaration/operator");
+const necessary = require("necessary");
 
-const { operatorDeclarationNodesQuery } = queries;
+const Error = require("../../error"),
+      queries = require("../../miscellaneous/queries"),
+      Operator = require("../../operator"),
+      nodeUtilities = require("../../utilities/node"),
+      verifyTypeName = require("../../verify/typeName"),
+      verifyConstructorOrOperatorUtilities = require("../../utilities/verify/constructorOrOperator");
 
-function verifyOperatorsDeclaration(operatorsDeclarationNode, context, ruleMap) {
-  const operatorDeclarationNodes = operatorDeclarationNodesQuery(operatorsDeclarationNode);
+const { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { nodeAsString } = nodeUtilities,
+      { verifyExpressionAsOperator } = verifyConstructorOrOperatorUtilities,
+      { expressionNodesQuery, typeNameTerminalNodeQuery } = queries;
 
-  operatorDeclarationNodes.forEach((operatorDeclarationNode) => verifyOperatorDeclaration(operatorDeclarationNode, context, ruleMap));
+function verifyOperatorsDeclaration(operatorDeclarationNode, fileContext) {
+  let type = undefined;
+
+  const expressionNodes = expressionNodesQuery(operatorDeclarationNode),
+        firstTermNode = first(expressionNodes),
+        expressionNode = firstTermNode, ///
+        typeNameTerminalNode = typeNameTerminalNodeQuery(operatorDeclarationNode);
+
+  if (typeNameTerminalNode !== undefined) {
+    type = verifyTypeName(typeNameTerminalNode, fileContext);
+
+    if (type === undefined) {
+      const node = expressionNode,  ///
+            expressionString = nodeAsString(expressionNode),
+            message = `The operator '${expressionString}' cannot be verified because the type cannot be found.`;
+
+      throw new Error(node, message);
+    }
+  }
+
+  expressionNodes.forEach((expressionNode) => {
+    const verified = verifyExpressionAsOperator(expressionNode, fileContext);
+
+    if (!verified) {
+      const node = expressionNode,  ///
+            expressionString = nodeAsString(expressionNode),
+            message = `The operator '${expressionString}' cannot be verified.`;
+
+      throw new Error(node, message);
+    }
+
+    const operator = Operator.fromTermNodeAndType(expressionNode, type),
+          operatorString = operator.asString();
+
+    fileContext.addOperator(operator);
+
+    console.log(`Added the '${operatorString}' operator to the context.`);
+  });
 }
 
 module.exports = verifyOperatorsDeclaration;
