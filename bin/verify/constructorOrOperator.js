@@ -1,5 +1,7 @@
 "use strict";
 
+const necessary = require("necessary");
+
 const queries = require("../miscellaneous/queries"),
       TermNode = require("../miscellaneous/termNode"),
       ruleNames = require("../miscellaneous/ruleNames"),
@@ -7,9 +9,11 @@ const queries = require("../miscellaneous/queries"),
       verifyTermOrExpression = require("../verify/termOrExpression"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
-const { verifyTerm, verifyExpression } = verifyTermOrExpression,
-      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
-      { termNameNodeQuery, nameTerminalNodeQuery } = queries;
+const { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { verifyTerm, verifyExpression } = verifyTermOrExpression,
+      { NAME_RULE_NAME, TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
+      { termNameNodesQuery, expressionTermNodesQuery, nameTerminalNodeQuery } = queries;
 
 function verifyExpressionAsOperator(expressionNode, fileContext) {
   const nonTerminalNode = expressionNode,  ///
@@ -64,14 +68,6 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
   const ruleName = nonTerminalNode.getRuleName();
 
   switch (ruleName) {
-    case TERM_RULE_NAME: {
-      const termNode = nonTerminalNode; ///
-
-      verified = verifyTermNode(termNode, fileContext);
-
-      break;
-    }
-
     case EXPRESSION_RULE_NAME: {
       const expressionNode = nonTerminalNode; ///
 
@@ -80,17 +76,25 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
       break;
     }
 
+    case TERM_RULE_NAME: {
+      const termNode = nonTerminalNode; ///
+
+      verified = verifyTermNode(termNode, fileContext);
+
+      break;
+    }
+
     default: {
-      if (!verified) {
-        const termNode = TermNode.fromNonTerminalNode(nonTerminalNode);
-
-        verified = verifyTermNode(termNode, fileContext);
-      }
-
       if (!verified) {
         const expressionNode = ExpressionNode.fromNonTerminalNode(nonTerminalNode);
 
         verified = verifyExpressionNode(expressionNode, fileContext);
+      }
+
+      if (!verified) {
+        const termNode = TermNode.fromNonTerminalNode(nonTerminalNode);
+
+        verified = verifyTermNode(termNode, fileContext);
       }
 
       break;
@@ -98,9 +102,11 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
   }
 
   if (!verified) {
-    const childNodes = nonTerminalNode.getChildNodes();
+    if (ruleName !== NAME_RULE_NAME) {
+      const childNodes = nonTerminalNode.getChildNodes();
 
-    verified = verifyChildNodes(childNodes, fileContext);
+      verified = verifyChildNodes(childNodes, fileContext);
+    }
   }
 
   return verified;
@@ -109,13 +115,19 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 function verifyExpressionNode(expressionNode, fileContext) {
   let verified = false;
 
-  const operator = verifyExpression(expressionNode, fileContext);
+  const type = typeFromExpressionNode(expressionNode, fileContext);
 
-  if (operator !== undefined) {
-    const type = operator.getType();
+  if (type !== undefined) {
+    verified = true;
+  } else {
+    const operator = verifyExpression(expressionNode, fileContext);
 
-    if (type === undefined) {
-      verified = true;
+    if (operator !== undefined) {
+      const operatorType = operator.getType();
+
+      if (operatorType === undefined) {
+        verified = true;
+      }
     }
   }
 
@@ -125,35 +137,20 @@ function verifyExpressionNode(expressionNode, fileContext) {
 function verifyTermNode(termNode, fileContext) {
   let verified = false;
 
-  const nameNode = termNameNodeQuery(termNode);
+  const type = typeFromTermNode(termNode, fileContext);
 
-  if (nameNode !== undefined) {
-    verified = verifyNameNode(nameNode, fileContext);
+  if (type !== undefined) {
+    verified = true;
   } else {
     const constructor = verifyTerm(termNode, fileContext);
 
     if (constructor !== undefined) {
-      const type = constructor.getType();
+      const constructorType = constructor.getType();
 
-      if (type === undefined) {
+      if (constructorType === undefined) {
         verified = true;
       }
     }
-  }
-
-  return verified;
-}
-
-function verifyNameNode(nameNode, fileContext) {
-  let verified = false;
-
-  const nameTerminalNode = nameTerminalNodeQuery(nameNode),
-        nameTerminalNodeContent = nameTerminalNode.getContent(),
-        name = nameTerminalNodeContent, ///
-        type = fileContext.findTypeByName(name);
-
-  if (type !== undefined) {
-    verified = true;
   }
 
   return verified;
@@ -180,3 +177,45 @@ function verifyChildNodes(childNodes, fileContext) {
 
   return verified;
 }
+
+function typeFromNameNode(nameNode, fileContext) {
+  const nameTerminalNode = nameTerminalNodeQuery(nameNode),
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        name = nameTerminalNodeContent, ///
+        type = fileContext.findTypeByName(name);
+
+  return type;
+}
+
+function typeFromTermNode(termNode, fileContext) {
+  let type = undefined;
+
+  const termNameNodes = termNameNodesQuery(termNode),
+        termNameNodesLength = termNameNodes.length;
+
+  if (termNameNodesLength === 1) {
+    const firmTermNameNode = first(termNameNodes),
+          nameNode = firmTermNameNode;  ///
+
+    type = typeFromNameNode(nameNode, fileContext);
+  }
+
+  return type;
+}
+
+function typeFromExpressionNode(expressionNode, fileContext) {
+  let type = undefined;
+
+  const expressionTermNameNodes = expressionTermNodesQuery(expressionNode),
+        expressionTermNameNodesLength = expressionTermNameNodes.length;
+
+  if (expressionTermNameNodesLength === 1) {
+    const firmTermNameNode = first(expressionTermNameNodes),
+          nameNode = firmTermNameNode;  ///
+
+    type = typeFromNameNode(nameNode, fileContext);
+  }
+
+  return type;
+}
+

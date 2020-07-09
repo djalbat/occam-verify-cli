@@ -1,11 +1,15 @@
 "use strict";
 
+const necessary = require("necessary");
+
 const queries = require("../miscellaneous/queries"),
       ruleNames = require("../miscellaneous/ruleNames"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
-const { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
-      { termNameNodeQuery, nameTerminalNodeQuery } = queries;
+const { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
+      { expressionTermNodesQuery, termNameNodesQuery, nameTerminalNodeQuery } = queries;
 
 function verifyExpression(expressionNode, fileContext) { return verifyExpressionAgainstOperators(expressionNode, fileContext); }
 
@@ -120,15 +124,6 @@ function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTermin
     const ruleName = nonTerminalNodeRuleName; ///
 
     switch (ruleName) {
-      case TERM_RULE_NAME: {
-        const termNode = nonTerminalNode, ///
-              constructorTermNode = constructorOrExpressionNonTerminalNode; ///
-
-        verified = verifyTermNode(termNode, constructorTermNode, fileContext);
-
-        break;
-      }
-
       case EXPRESSION_RULE_NAME: {
         const expressionNode = nonTerminalNode, ///
               operatorExpressionNode = constructorOrExpressionNonTerminalNode;  ///
@@ -138,15 +133,22 @@ function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTermin
         break;
       }
 
-      default: {
-        const childNodes = nonTerminalNode.getChildNodes(),
-              constructorOrExpressionChildNodes = constructorOrExpressionNonTerminalNode.getChildNodes();
+      case TERM_RULE_NAME: {
+        const termNode = nonTerminalNode, ///
+              constructorTermNode = constructorOrExpressionNonTerminalNode; ///
 
-        verified = verifyChildNodes(childNodes, constructorOrExpressionChildNodes, fileContext);
+        verified = verifyTermNode(termNode, constructorTermNode, fileContext);
 
         break;
       }
     }
+  }
+
+  if (!verified) {
+    const childNodes = nonTerminalNode.getChildNodes(),
+          constructorOrExpressionChildNodes = constructorOrExpressionNonTerminalNode.getChildNodes();
+
+    verified = verifyChildNodes(childNodes, constructorOrExpressionChildNodes, fileContext);
   }
 
   return verified;
@@ -155,7 +157,40 @@ function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTermin
 function verifyExpressionNode(expressionNode, operatorExpressionNode, fileContext) {
   let verified = false;
 
-  debugger
+  const type = typeFromOperatorExpressionNode(operatorExpressionNode, fileContext);
+
+  if (type !== undefined) {
+    const variable = variableFromExpressionNode(expressionNode, fileContext);
+
+    if (variable !== undefined) {
+      const variableType = variable.getType(),
+            variableTypeEqualToOrSubTypeOfType = variableType.isEqualToOrSubTypeOf(type);
+
+      if (variableTypeEqualToOrSubTypeOfType) {
+        verified = true;
+      }
+    } else {
+      const operator = verifyExpression(expressionNode, fileContext);
+
+      if (operator !== undefined) {
+        const operatorType = operator.getType();
+
+        if (type === undefined) {
+          if (operatorType === undefined) {
+            verified = true;
+          }
+        } else {
+          if (operatorType !== undefined) {
+            const operatorTypeEqualToOrSubTypeOfType = operatorType.isEqualToOrSubTypeOf(type);
+
+            if (operatorTypeEqualToOrSubTypeOfType) {
+              verified = true;
+            }
+          }
+        }
+      }
+    }
+  }
 
   return verified;
 }
@@ -163,50 +198,37 @@ function verifyExpressionNode(expressionNode, operatorExpressionNode, fileContex
 function verifyTermNode(termNode, constructorTermNode, fileContext) {
   let verified = false;
 
-  const constructorNameNode = termNameNodeQuery(constructorTermNode);
+  const type = typeFromConstructorTermNode(constructorTermNode, fileContext);
 
-  if (constructorNameNode !== undefined) {
-    const nameNode = termNameNodeQuery(termNode);
+  if (type !== undefined) {
+    const variable = variableFromTermNode(termNode, fileContext);
 
-    if (nameNode !== undefined) {
-      verified = verifyNameNode(nameNode, constructorNameNode, fileContext);
-    } else {
-      const constructor = verifyTerm(termNode, fileContext);
-
-      if (constructor !== undefined) {
-        const type = fileContext.findTypeByConstructorNameNode(constructorNameNode),
-              constructorType = constructor.getType(),
-              constructorTypeEqualToOrSubTypeOfType = constructorType.isEqualToOrSubTypeOf(type);
-
-        if (constructorTypeEqualToOrSubTypeOfType) {
-          verified = true;
-        }
-      }
-    }
-  } else {
-    debugger
-  }
-
-  return verified;
-}
-
-function verifyNameNode(nameNode, constructorNameNode, fileContext) {
-  let verified = false;
-
-  const nameTerminalNode = nameTerminalNodeQuery(nameNode),
-        nameTerminalNodeContent = nameTerminalNode.getContent(),
-        name = nameTerminalNodeContent, ///
-        variable = fileContext.findVariableByName(name);
-
-  if (variable !== undefined) {
-    const type = fileContext.findTypeByConstructorNameNode(constructorNameNode);
-
-    if (type !== undefined) {
+    if (variable !== undefined) {
       const variableType = variable.getType(),
             variableTypeEqualToOrSubTypeOfType = variableType.isEqualToOrSubTypeOf(type);
 
       if (variableTypeEqualToOrSubTypeOfType) {
         verified = true;
+      }
+    } else {
+      const constructor = verifyTerm(termNode, fileContext);
+
+      if (constructor !== undefined) {
+        const constructorType = constructor.getType();
+
+        if (type === undefined) {
+          if (constructorType === undefined) {
+            verified = true;
+          }
+        } else {
+          if (constructorType !== undefined) {
+            const constructorTypeEqualToOrSubTypeOfType = constructorType.isEqualToOrSubTypeOf(type);
+
+            if (constructorTypeEqualToOrSubTypeOfType) {
+              verified = true;
+            }
+          }
+        }
       }
     }
   }
@@ -221,15 +243,15 @@ function verifyChildNodes(childNodes, constructorOrExpressionChildNodes, fileCon
         constructorOrExpressionNonTerminalNodeContext = NonTerminalNodeContext.fromChildNodesAndFileContext(constructorOrExpressionChildNodes, fileContext);
 
   let nextChildNode = nonTerminalNodeContext.getNextChildNode(),
-      nextConstructorChildNode = constructorOrExpressionNonTerminalNodeContext.getNextChildNode();
+      nextConstructorOrExpressionChildNode = constructorOrExpressionNonTerminalNodeContext.getNextChildNode();
 
   while (nextChildNode !== undefined) {
-    if (nextConstructorChildNode === undefined) {
+    if (nextConstructorOrExpressionChildNode === undefined) {
       break;
     }
 
     const node = nextChildNode,  ///
-          constructorOrExpressionNode = nextConstructorChildNode;  ///
+          constructorOrExpressionNode = nextConstructorOrExpressionChildNode;  ///
 
     verified = verifyNode(node, constructorOrExpressionNode, fileContext);
 
@@ -238,14 +260,96 @@ function verifyChildNodes(childNodes, constructorOrExpressionChildNodes, fileCon
     }
 
     nextChildNode = nonTerminalNodeContext.getNextChildNode();
-    nextConstructorChildNode = constructorOrExpressionNonTerminalNodeContext.getNextChildNode();
+    nextConstructorOrExpressionChildNode = constructorOrExpressionNonTerminalNodeContext.getNextChildNode();
   }
 
   if (verified) {
-    if (nextConstructorChildNode !== undefined) {
+    if (nextConstructorOrExpressionChildNode !== undefined) {
       verified = false;
     }
   }
 
   return verified;
+}
+
+function typeFromNameNode(nameNode, fileContext) {
+  const nameTerminalNode = nameTerminalNodeQuery(nameNode),
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        name = nameTerminalNodeContent,
+        type = fileContext.findTypeByName(name);
+
+  return type;
+}
+
+function variableFromNameNode(nameNode, fileContext) {
+  const nameTerminalNode = nameTerminalNodeQuery(nameNode),
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        name = nameTerminalNodeContent, ///
+        variable = fileContext.findVariableByName(name);
+
+  return variable;
+}
+
+function variableFromTermNode(termNode, fileContext) {
+  let variable = undefined;
+
+  const termNameNodes = termNameNodesQuery(termNode),
+        termNameNodesLength = termNameNodes.length;
+
+  if (termNameNodesLength === 1) {
+    const firmTermNameNode = first(termNameNodes),
+          nameNode = firmTermNameNode;  ///
+
+    variable = variableFromNameNode(nameNode, fileContext);
+  }
+
+  return variable;
+}
+
+function variableFromExpressionNode(expressionNode, fileContext) {
+  let variable = undefined;
+
+  const expressionTermNameNodes = expressionTermNodesQuery(expressionNode),
+        expressionTermNameNodesLength = expressionTermNameNodes.length;
+
+  if (expressionTermNameNodesLength === 1) {
+    const firmExpressionTermNameNode = first(expressionTermNameNodes),
+          nameNode = firmExpressionTermNameNode;  ///
+
+    variable = variableFromNameNode(nameNode, fileContext);
+  }
+
+  return variable;
+}
+
+function typeFromConstructorTermNode(constructorTermNode, fileContext) {
+  let type = undefined;
+
+  const termNameNodes = termNameNodesQuery(constructorTermNode),
+        termNameNodesLength = termNameNodes.length;
+
+  if (termNameNodesLength === 1) {
+    const firmTermNameNode = first(termNameNodes),
+          nameNode = firmTermNameNode;  ///
+
+    type = typeFromNameNode(nameNode, fileContext);
+  }
+
+  return type;
+}
+
+function typeFromOperatorExpressionNode(operatorExpressionNode, fileContext) {
+  let type = undefined;
+
+  const expressionTermNameNodes = expressionTermNodesQuery(operatorExpressionNode),
+        expressionTermNameNodesLength = expressionTermNameNodes.length;
+
+  if (expressionTermNameNodesLength === 1) {
+    const firmExpressionTermNameNode = first(expressionTermNameNodes),
+          nameNode = firmExpressionTermNameNode;  ///
+
+    type = typeFromNameNode(nameNode, fileContext);
+  }
+
+  return type;
 }
