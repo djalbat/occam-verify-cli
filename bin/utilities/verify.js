@@ -1,15 +1,13 @@
 "use strict";
 
-const necessary = require("necessary");
-
-const queries = require("../miscellaneous/queries"),
-      ruleNames = require("../miscellaneous/ruleNames"),
+const ruleNames = require("../miscellaneous/ruleNames"),
+      typeUtilities = require("../utilities/type"),
+      variableUtilities = require("../utilities/variable"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
-const { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
-      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
-      { expressionTermNodesQuery, termNameNodesQuery, nameTerminalNodeQuery } = queries;
+const { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
+      { variableFromTermNode, variableFromExpressionNode } = variableUtilities,
+      { typeFromConstructorTermNode, typeFromOperatorExpressionNode } = typeUtilities;
 
 function verifyExpression(expressionNode, fileContext) { return verifyExpressionAgainstOperators(expressionNode, fileContext); }
 
@@ -270,86 +268,4 @@ function verifyChildNodes(childNodes, constructorOrExpressionChildNodes, fileCon
   }
 
   return verified;
-}
-
-function typeFromNameNode(nameNode, fileContext) {
-  const nameTerminalNode = nameTerminalNodeQuery(nameNode),
-        nameTerminalNodeContent = nameTerminalNode.getContent(),
-        name = nameTerminalNodeContent,
-        type = fileContext.findTypeByName(name);
-
-  return type;
-}
-
-function variableFromNameNode(nameNode, fileContext) {
-  const nameTerminalNode = nameTerminalNodeQuery(nameNode),
-        nameTerminalNodeContent = nameTerminalNode.getContent(),
-        name = nameTerminalNodeContent, ///
-        variable = fileContext.findVariableByName(name);
-
-  return variable;
-}
-
-function variableFromTermNode(termNode, fileContext) {
-  let variable = undefined;
-
-  const termNameNodes = termNameNodesQuery(termNode),
-        termNameNodesLength = termNameNodes.length;
-
-  if (termNameNodesLength === 1) {
-    const firmTermNameNode = first(termNameNodes),
-          nameNode = firmTermNameNode;  ///
-
-    variable = variableFromNameNode(nameNode, fileContext);
-  }
-
-  return variable;
-}
-
-function variableFromExpressionNode(expressionNode, fileContext) {
-  let variable = undefined;
-
-  const expressionTermNameNodes = expressionTermNodesQuery(expressionNode),
-        expressionTermNameNodesLength = expressionTermNameNodes.length;
-
-  if (expressionTermNameNodesLength === 1) {
-    const firmExpressionTermNameNode = first(expressionTermNameNodes),
-          nameNode = firmExpressionTermNameNode;  ///
-
-    variable = variableFromNameNode(nameNode, fileContext);
-  }
-
-  return variable;
-}
-
-function typeFromConstructorTermNode(constructorTermNode, fileContext) {
-  let type = undefined;
-
-  const termNameNodes = termNameNodesQuery(constructorTermNode),
-        termNameNodesLength = termNameNodes.length;
-
-  if (termNameNodesLength === 1) {
-    const firmTermNameNode = first(termNameNodes),
-          nameNode = firmTermNameNode;  ///
-
-    type = typeFromNameNode(nameNode, fileContext);
-  }
-
-  return type;
-}
-
-function typeFromOperatorExpressionNode(operatorExpressionNode, fileContext) {
-  let type = undefined;
-
-  const expressionTermNameNodes = expressionTermNodesQuery(operatorExpressionNode),
-        expressionTermNameNodesLength = expressionTermNameNodes.length;
-
-  if (expressionTermNameNodesLength === 1) {
-    const firmExpressionTermNameNode = first(expressionTermNameNodes),
-          nameNode = firmExpressionTermNameNode;  ///
-
-    type = typeFromNameNode(nameNode, fileContext);
-  }
-
-  return type;
 }
