@@ -13,24 +13,20 @@ const { arrayUtilities } = necessary,
       { push } = arrayUtilities;
 
 class PackageContext {
-  constructor(globalContext, packageName, fileContexts, florenceLexer, florenceParser) {
-    this.globalContext = globalContext;
+  constructor(packageName, fileContexts, florenceLexer, florenceParser, dependencyPackageContexts) {
     this.packageName = packageName;
     this.fileContexts = fileContexts;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
-  }
-
-  getGlobalContext() {
-    return this.globalContext;
-  }
-
-  getFileContexts() {
-    return this.fileContexts;
+    this.dependencyPackageContexts = dependencyPackageContexts;
   }
 
   getPackageName() {
     return this.packageName;
+  }
+
+  getFileContexts() {
+    return this.fileContexts;
   }
 
   getFlorenceLexer() {
@@ -41,14 +37,13 @@ class PackageContext {
     return this.florenceParser;
   }
 
-  getTypes(bubble = true) {
-    const types = [];
+  getPackageDependencyContexts() {
+    return this.dependencyPackageContexts;
+  }
 
-    if (bubble) {
-      const globalContextTypes = this.globalContext.getTypes();
-
-      push(types, globalContextTypes);
-    }
+  getTypes() {
+    const types = [],
+          bubble = false;
 
     this.fileContexts.forEach((fileContext) => {
       const fileContextTypes = fileContext.getTypes(bubble);
@@ -56,17 +51,20 @@ class PackageContext {
       push(types, fileContextTypes);
     });
 
+    const packageContexts = this.retrievePackageContexts();
+
+    packageContexts.forEach((packageContext) => {
+      const packageContextTypes = packageContext.getTypes();
+
+      push(types, packageContextTypes);
+    });
+
     return types;
   }
 
-  getAxioms(bubble = true) {
-    const axioms = [];
-
-    if (bubble) {
-      const globalContextAxioms = this.globalContext.getAxioms();
-
-      push(axioms, globalContextAxioms);
-    }
+  getAxioms() {
+    const axioms = [],
+          bubble = false;
 
     this.fileContexts.forEach((fileContext) => {
       const fileContextAxioms = fileContext.getAxioms(bubble);
@@ -74,17 +72,20 @@ class PackageContext {
       push(axioms, fileContextAxioms);
     });
 
+    const packageContexts = this.retrievePackageContexts();
+
+    packageContexts.forEach((packageContext) => {
+      const packageContextAxioms = packageContext.getAxioms();
+
+      push(axioms, packageContextAxioms);
+    });
+
     return axioms;
   }
 
-  getOperators(bubble = true) {
-    const operators = [];
-
-    if (bubble) {
-      const globalContextOperators = this.globalContext.getOperators();
-
-      push(operators, globalContextOperators);
-    }
+  getOperators() {
+    const operators = [],
+          bubble = false;
 
     this.fileContexts.forEach((fileContext) => {
       const fileContextOperators = fileContext.getOperators(bubble);
@@ -92,22 +93,33 @@ class PackageContext {
       push(operators, fileContextOperators);
     });
 
+    const packageContexts = this.retrievePackageContexts();
+
+    packageContexts.forEach((packageContext) => {
+      const packageContextOperators = packageContext.getOperators();
+
+      push(operators, packageContextOperators);
+    });
+
     return operators;
   }
 
-  getConstructors(bubble = true) {
-    const constructors = [];
-
-    if (bubble) {
-      const globalContextConstructors = this.globalContext.getConstructors();
-
-      push(constructors, globalContextConstructors);
-    }
+  getConstructors() {
+    const constructors = [],
+          bubble = false;
 
     this.fileContexts.forEach((fileContext) => {
       const fileContextConstructors = fileContext.getConstructors(bubble);
 
       push(constructors, fileContextConstructors);
+    });
+
+    const packageContexts = this.retrievePackageContexts();
+
+    packageContexts.forEach((packageContext) => {
+      const packageContextConstructors = packageContext.getConstructors();
+
+      push(constructors, packageContextConstructors);
     });
 
     return constructors;
@@ -120,32 +132,56 @@ class PackageContext {
     return rule;
   }
 
-  tokenise(content) { return this.florenceLexer.tokenise(content); }
+  retrievePackageContexts(packageContexts = []) {
+    this.dependencyPackageContexts.forEach((dependencyPackageContext) => {
+      dependencyPackageContext.retrievePackageContexts(packageContexts);
 
-  parse(tokens) { return this.florenceParser.parse(tokens); }
+      const packageContextsIncludesDependencyPackageContext = packageContexts.includes(dependencyPackageContext);
+
+      if (!packageContextsIncludesDependencyPackageContext) {
+        const packageContext = dependencyPackageContext;  ///
+
+        packageContexts.push(packageContext);
+      }
+    });
+
+    return packageContexts;
+  }
 
   addFileContext(fileContext) {
     this.fileContexts.push(fileContext);
   }
 
-  static fromGlobalContext(globalContext) {
-    const fileContexts = [],
-          packageName = undefined,
+  tokenise(content) { return this.florenceLexer.tokenise(content); }
+
+  parse(tokens) { return this.florenceParser.parse(tokens); }
+
+  static fromNothing() {
+    const packageName = undefined,
+          fileContexts = [],
           florenceLexer = florenceLexerFromNothing(),
           florenceParser = florenceParserFromNothing(),
-          packageContext = new PackageContext(globalContext, fileContexts, packageName, florenceLexer, florenceParser);
+          dependencyPackageContexts = [],
+          packageContext = new PackageContext(packageName, fileContexts, florenceLexer, florenceParser, dependencyPackageContexts);
 
     return packageContext;
   }
 
-  static fromGlobalContextPackageNameAndPackageNames(globalContext, packageName, packageNames) {
-    packageNames = [ ...packageNames, packageName ];  ///
+  static fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts) {
+    const packageContexts = packageContextsFromDependencyPackageContexts(dependencyPackageContexts),
+          packageNames = packageContexts.map((packageContext) => {
+            const packageName = packageContext.getPackageName();
+
+            return packageName;
+          });
+
+    packageNames.push(packageName);
 
     const combinedCustomGrammar = combinedCustomGrammarFromPackageNames(packageNames),
           fileContexts = [],
           florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
           florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar),
-          packageContext = new PackageContext(globalContext, packageName, fileContexts, florenceLexer, florenceParser);
+          packageContext = new PackageContext(packageName, fileContexts, florenceLexer, florenceParser, dependencyPackageContexts);
 
     return packageContext;
   }
@@ -154,3 +190,19 @@ class PackageContext {
 Object.assign(PackageContext.prototype, contextMixins);
 
 module.exports = PackageContext;
+
+function packageContextsFromDependencyPackageContexts(dependencyPackageContexts, packageContexts = []) {
+  dependencyPackageContexts.forEach((dependencyPackageContext) => {
+    dependencyPackageContext.retrievePackageContexts(packageContexts);
+
+    const packageContextsIncludesDependencyPackageContext = packageContexts.includes(dependencyPackageContext);
+
+    if (!packageContextsIncludesDependencyPackageContext) {
+      const packageContext = dependencyPackageContext;  ///
+
+      packageContexts.push(packageContext);
+    }
+  });
+
+  return packageContexts;
+}

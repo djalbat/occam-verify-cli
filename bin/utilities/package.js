@@ -88,4 +88,3 @@ function customGrammarsFromPackageNames(packageNames) {
 
   return customGrammars;
 }
-

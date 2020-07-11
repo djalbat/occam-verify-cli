@@ -3,13 +3,14 @@
 const Error = require("../error"),
       queries = require("../miscellaneous/queries"),
       FileContext = require("../context/file"),
+      PackageContext = require("../context/package"),
       lineIndexUtilities = require("../utilities/lineIndex"),
       verifyAxiomOrDeclaration = require("../verify/axiomOrDeclaration");
 
 const { lineIndexFromNodeAndTokens } = lineIndexUtilities,
       { axiomOrDeclarationNodesQuery } = queries;
 
-function verifyFile(filePath, packageContext) {
+function verifyFile(filePath, packageContext = PackageContext.fromNothing()) {
   const fileContext = FileContext.fromPackageContextAndFilePath(packageContext, filePath);
 
   try {

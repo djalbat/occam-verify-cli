@@ -43,7 +43,7 @@ class FileContext {
     const types = [];
 
     if (bubble) {
-      const packageContextTypes = this.packageContext.getTypes(bubble);
+      const packageContextTypes = this.packageContext.getTypes();
 
       push(types, packageContextTypes);
     }
@@ -57,7 +57,7 @@ class FileContext {
     const axioms = [];
 
     if (bubble) {
-      const packageContextAxioms = this.packageContext.getAxioms(bubble);
+      const packageContextAxioms = this.packageContext.getAxioms();
 
       push(axioms, packageContextAxioms);
     }
@@ -71,7 +71,7 @@ class FileContext {
     const operators = [];
 
     if (bubble) {
-      const packageContextOperators = this.packageContext.getOperators(bubble);
+      const packageContextOperators = this.packageContext.getOperators();
 
       push(operators, packageContextOperators);
     }
@@ -85,7 +85,7 @@ class FileContext {
     const constructors = [];
 
     if (bubble) {
-      const packageContextConstructors = this.packageContext.getConstructors(bubble);
+      const packageContextConstructors = this.packageContext.getConstructors();
 
       push(constructors, packageContextConstructors);
     }

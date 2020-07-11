@@ -10,39 +10,38 @@ const { arrayUtilities } = necessary,
       { first } = arrayUtilities,
       { filePathsFromPackageName, dependencyPackageNamesFromPackageName } = packageUtilities;
 
-function verifyPackage(packageName, globalContext, siblingPackageName, dependentPackageNames) {
+function verifyPackage(packageName, packageContexts = [], dependentPackageNames = []) {
   checkForCyclicDependency(packageName, dependentPackageNames);
 
   dependentPackageNames = [ ...dependentPackageNames, packageName ];  ///
 
-  let siblingDependencyPackageName = undefined;
+  const dependencyPackageNames = dependencyPackageNamesFromPackageName(packageName),
+        dependencyPackageContexts = dependencyPackageNames.map((dependencyPackageName) => {
+          let dependencyPackageContext = packageContexts.find((packageContext) => {
+            const packageName = packageContext.getPackageName();
 
-  const dependencyPackageNames = dependencyPackageNamesFromPackageName(packageName);
+            if (packageName === dependencyPackageName) {
+              return true;
+            }
+          });
 
-  dependencyPackageNames.forEach((dependencyPackageName) => {
-    const dependencyPackageVerified = globalContext.isPackageVerifiedByPackageName(dependencyPackageName);
+          if (dependencyPackageContext === undefined) {
+            dependencyPackageContext = verifyPackage(dependencyPackageName, packageContexts, dependentPackageNames);
 
-    if (!dependencyPackageVerified) {
-      verifyPackage(dependencyPackageName, globalContext, siblingDependencyPackageName, dependentPackageNames);
-    }
+            const packageContext = dependencyPackageContext;  ///
 
-    siblingDependencyPackageName = dependencyPackageName; ///
-  });
+            packageContexts.push(packageContext);
+          }
 
-  const packageNames = globalContext.getPackageNames(),
-        filePaths = filePathsFromPackageName(packageName),
-        start = 0,
-        deleteCount = (siblingPackageName === undefined) ?
-                        0 :
-                          packageNames.indexOf(siblingPackageName) + 1;
+          return dependencyPackageContext;
+        });
 
-  packageNames.splice(start, deleteCount);
-
-  const packageContext = PackageContext.fromGlobalContextPackageNameAndPackageNames(globalContext, packageName, packageNames);
+  const filePaths = filePathsFromPackageName(packageName),
+        packageContext = PackageContext.fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts);
 
   verifyFiles(filePaths, packageContext);
 
-  globalContext.addPackageContext(packageContext);
+  return packageContext;
 }
 
 module.exports = verifyPackage;
