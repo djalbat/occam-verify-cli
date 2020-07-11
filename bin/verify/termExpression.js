@@ -1,11 +1,14 @@
 "use strict";
 
-const ruleNames = require("../miscellaneous/ruleNames"),
+const Error = require("../error"),
+      ruleNames = require("../miscellaneous/ruleNames"),
       typeUtilities = require("../utilities/type"),
+      nodeUtilities = require("../utilities/node"),
       variableUtilities = require("../utilities/variable"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
-const { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
+const { nodeAsString } = nodeUtilities,
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
       { variableFromTermNode, variableFromExpressionNode } = variableUtilities,
       { typeFromConstructorTermNode, typeFromOperatorExpressionNode } = typeUtilities;
 
@@ -158,35 +161,67 @@ function verifyExpressionNode(expressionNode, operatorExpressionNode, fileContex
   const type = typeFromOperatorExpressionNode(operatorExpressionNode, fileContext);
 
   if (type !== undefined) {
-    const variable = variableFromExpressionNode(expressionNode, fileContext);
+    if (verified === false) {
+      const variable = variableFromExpressionNode(expressionNode, fileContext);
 
-    if (variable !== undefined) {
-      const variableType = variable.getType(),
-            variableTypeEqualToOrSubTypeOfType = variableType.isEqualToOrSubTypeOf(type);
+      if (variable !== undefined) {
+        const variableType = variable.getType(),
+              variableTypeEqualToOrSubTypeOfType = variableType.isEqualToOrSubTypeOf(type);
 
-      if (variableTypeEqualToOrSubTypeOfType) {
+        if (!variableTypeEqualToOrSubTypeOfType) {
+          const node = expressionNode,  ///
+                noSuperType = true,
+                typeString = type.asString(noSuperType),
+                expressionString = nodeAsString(expressionNode),
+                variableTypeString = variableType.asString(noSuperType),
+                message = `The '${expressionString}' variable cannot be verified because its '${variableTypeString}' type is not equal to or a sub-type of the '${typeString}' type.`;
+
+          throw new Error(node, message);
+        }
+
         verified = true;
       }
-    } else {
+    }
+
+    if (verified === false) {
       const operator = verifyExpression(expressionNode, fileContext);
 
       if (operator !== undefined) {
         const operatorType = operator.getType();
 
-        if (type === undefined) {
-          if (operatorType === undefined) {
-            verified = true;
-          }
-        } else {
-          if (operatorType !== undefined) {
-            const operatorTypeEqualToOrSubTypeOfType = operatorType.isEqualToOrSubTypeOf(type);
+        if (operatorType === undefined) {
+          const node = expressionNode,  ///
+                expressionString = nodeAsString(expressionNode),
+                message = `The '${expressionString}' sub-expression cannot be verified because its type is undefined.`;
 
-            if (operatorTypeEqualToOrSubTypeOfType) {
-              verified = true;
-            }
+          throw new Error(node, message);
+        } else {
+          const operatorTypeEqualToOrSubTypeOfType = operatorType.isEqualToOrSubTypeOf(type);
+
+          if (!operatorTypeEqualToOrSubTypeOfType) {
+            const node = expressionNode,  ///
+                  noSuperType = true,
+                  typeString = type.asString(noSuperType),
+                  expressionString = nodeAsString(expressionNode),
+                  operatorTypeString = operatorType.asString(noSuperType),
+                  message = `The '${expressionString}' sub-expression cannot be verified because its '${operatorTypeString}' type is not equal to or a sub-type of the '${typeString}' type.`;
+
+            throw new Error(node, message);
           }
+
+          verified = true;
         }
       }
+    }
+
+    if (verified === false) {
+      const node = expressionNode,  ///
+            noSuperType = true,
+            typeString = type.asString(noSuperType),
+            expressionString = nodeAsString(expressionNode),
+            message = `The '${expressionString}' sub-expression cannot be verified because its type is not equal to or a sub-type of the '${typeString}' type.`;
+
+      throw new Error(node, message);
     }
   }
 
@@ -199,35 +234,67 @@ function verifyTermNode(termNode, constructorTermNode, fileContext) {
   const type = typeFromConstructorTermNode(constructorTermNode, fileContext);
 
   if (type !== undefined) {
-    const variable = variableFromTermNode(termNode, fileContext);
+    if (verified === false) {
+      const variable = variableFromTermNode(termNode, fileContext);
 
-    if (variable !== undefined) {
-      const variableType = variable.getType(),
-            variableTypeEqualToOrSubTypeOfType = variableType.isEqualToOrSubTypeOf(type);
+      if (variable !== undefined) {
+        const variableType = variable.getType(),
+              variableTypeEqualToOrSubTypeOfType = variableType.isEqualToOrSubTypeOf(type);
 
-      if (variableTypeEqualToOrSubTypeOfType) {
+        if (!variableTypeEqualToOrSubTypeOfType) {
+          const node = termNode,  ///
+                noSuperType = true,
+                typeString = type.asString(noSuperType),
+                termString = nodeAsString(termNode),
+                variableTypeString = variableType.asString(noSuperType),
+                message = `The '${termString}' variable cannot be verified because its '${variableTypeString}' type is not equal to or a sub-type of the '${typeString}' type.`;
+
+          throw new Error(node, message);
+        }
+
         verified = true;
       }
-    } else {
+    }
+
+    if (verified === false) {
       const constructor = verifyTerm(termNode, fileContext);
 
       if (constructor !== undefined) {
         const constructorType = constructor.getType();
 
-        if (type === undefined) {
-          if (constructorType === undefined) {
-            verified = true;
-          }
-        } else {
-          if (constructorType !== undefined) {
-            const constructorTypeEqualToOrSubTypeOfType = constructorType.isEqualToOrSubTypeOf(type);
+        if (constructorType === undefined) {
+          const node = termNode,  ///
+                termString = nodeAsString(termNode),
+                message = `The '${termString}' sub-term cannot be verified because its type is undefined.`;
 
-            if (constructorTypeEqualToOrSubTypeOfType) {
-              verified = true;
-            }
+          throw new Error(node, message);
+        } else {
+          const constructorTypeEqualToOrSubTypeOfType = constructorType.isEqualToOrSubTypeOf(type);
+
+          if (!constructorTypeEqualToOrSubTypeOfType) {
+            const node = termNode,  ///
+                  noSuperType = true,
+                  typeString = type.asString(noSuperType),
+                  termString = nodeAsString(termNode),
+                  constructorTypeString = constructorType.asString(noSuperType),
+                  message = `The '${termString}' sub-term cannot be verified because its '${constructorTypeString}' type is not equal to or a sub-type of the '${typeString}' type.`;
+
+            throw new Error(node, message);
           }
+
+          verified = true;
         }
       }
+    }
+
+    if (verified === false) {
+      const node = termNode,  ///
+            noSuperType = true,
+            typeString = type.asString(noSuperType),
+            termString = nodeAsString(termNode),
+            message = `The '${termString}' sub-term cannot be verified because its type is not equal to or a sub-type of the '${typeString}' type.`;
+
+      throw new Error(node, message);
     }
   }
 

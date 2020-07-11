@@ -112,24 +112,24 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 function verifyExpressionNode(expressionNode, fileContext) {
   let verified = false;
 
-  const operator = verifyExpression(expressionNode, fileContext);
+  const type = typeFromExpressionNode(expressionNode, fileContext);
 
-  if (operator !== undefined) {
-    const operatorType = operator.getType();
-
-    if (operatorType !== undefined) {
-      const node = expressionNode,  ///
-            expressionString = nodeAsString(expressionNode),
-            message = `The '${expressionString}' sub-expression cannot be verified because its type is not undefined.`;
-
-      throw new Error(node, message);
-    }
-
+  if (type !== undefined) {
     verified = true;
   } else {
-    const type = typeFromExpressionNode(expressionNode, fileContext);
+    const operator = verifyExpression(expressionNode, fileContext);
 
-    if (type !== undefined) {
+    if (operator !== undefined) {
+      const operatorType = operator.getType();
+
+      if (operatorType !== undefined) {
+        const node = expressionNode,  ///
+              expressionString = nodeAsString(expressionNode),
+              message = `The '${expressionString}' sub-expression cannot be verified because its type is not undefined.`;
+
+        throw new Error(node, message);
+      }
+
       verified = true;
     }
   }
@@ -140,24 +140,24 @@ function verifyExpressionNode(expressionNode, fileContext) {
 function verifyTermNode(termNode, fileContext) {
   let verified = false;
 
-  const constructor = verifyTerm(termNode, fileContext);
+  const type = typeFromTermNode(termNode, fileContext);
 
-  if (constructor !== undefined) {
-    const constructorType = constructor.getType();
-
-    if (constructorType !== undefined) {
-      const node = termNode,  ///
-            nodeString = nodeAsString(termNode),
-            message = `The '${nodeString}' sub-term cannot be verified because its type is not undefined.`;
-
-      throw new Error(node, message);
-    }
-
+  if (type !== undefined) {
     verified = true;
   } else {
-    const type = typeFromTermNode(termNode, fileContext);
+    const constructor = verifyTerm(termNode, fileContext);
 
-    if (type !== undefined) {
+    if (constructor !== undefined) {
+      const constructorType = constructor.getType();
+
+      if (constructorType !== undefined) {
+        const node = termNode,  ///
+              nodeString = nodeAsString(termNode),
+              message = `The '${nodeString}' sub-term cannot be verified because its type is not undefined.`;
+
+        throw new Error(node, message);
+      }
+
       verified = true;
     }
   }
