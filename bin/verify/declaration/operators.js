@@ -7,12 +7,12 @@ const Error = require("../../error"),
       Operator = require("../../operator"),
       nodeUtilities = require("../../utilities/node"),
       verifyTypeName = require("../../verify/typeName"),
-      verifyConstructorOrOperator = require("../../verify/constructorOrOperator");
+      verifyConstructorOperator = require("../../verify/constructorOperator");
 
 const { arrayUtilities } = necessary,
       { first } = arrayUtilities,
       { nodeAsString } = nodeUtilities,
-      { verifyExpressionAsOperator } = verifyConstructorOrOperator,
+      { verifyExpressionAsOperator } = verifyConstructorOperator,
       { expressionNodesQuery, typeNameTerminalNodeQuery } = queries;
 
 function verifyOperatorsDeclaration(operatorDeclarationNode, fileContext) {

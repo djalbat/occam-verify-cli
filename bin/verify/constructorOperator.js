@@ -6,11 +6,11 @@ const Error = require("../error"),
       typeUtilities = require("../utilities/type"),
       nodeUtilities = require("../utilities/node"),
       ExpressionNode = require("../miscellaneous/expressionNode"),
-      verifyUtilities = require("../utilities/verify"),
+      verifyTermExpression = require("../verify/termExpression"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
 const { nodeAsString } = nodeUtilities,
-      { verifyTerm, verifyExpression } = verifyUtilities,
+      { verifyTerm, verifyExpression } = verifyTermExpression,
       { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
       { typeFromTermNode, typeFromExpressionNode } = typeUtilities;
 

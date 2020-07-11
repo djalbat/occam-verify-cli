@@ -12,11 +12,11 @@ function variableFromTermNode(termNode, fileContext) {
   let variable = undefined;
 
   const termNameNodes = termNameNodesQuery(termNode),
-      termNameNodesLength = termNameNodes.length;
+        termNameNodesLength = termNameNodes.length;
 
   if (termNameNodesLength === 1) {
     const firmTermNameNode = first(termNameNodes),
-        nameNode = firmTermNameNode;  ///
+          nameNode = firmTermNameNode;  ///
 
     variable = variableFromNameNode(nameNode, fileContext);
   }
@@ -47,9 +47,9 @@ module.exports = {
 
 function variableFromNameNode(nameNode, fileContext) {
   const nameTerminalNode = nameTerminalNodeQuery(nameNode),
-      nameTerminalNodeContent = nameTerminalNode.getContent(),
-      name = nameTerminalNodeContent, ///
-      variable = fileContext.findVariableByName(name);
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        name = nameTerminalNodeContent, ///
+        variable = fileContext.findVariableByName(name);
 
   return variable;
 }
