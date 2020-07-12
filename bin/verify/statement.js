@@ -8,6 +8,8 @@ const { nodeAsString } = nodeUtilities,
       { STATEMENT_RULE_NAME } = ruleNames;
 
 function verifyStatement(statementNode, fileContext) {
+  debugger
+
   // const statementRule = fileContext.findRuleByRuleName(STATEMENT_RULE_NAME),
   //       nonTerminalNode = statementNode,  ///
   //       rule = statementRule,  ///

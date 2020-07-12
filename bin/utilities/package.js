@@ -2,20 +2,18 @@
 
 const dom = require("occam-dom"),
       open = require("occam-open-cli"), ///
-      lexers = require("occam-lexers"),
-      parsers = require("occam-parsers"),
+      grammars = require("occam-grammars"),
       necessary = require("necessary"),
       customgrammars = require("occam-custom-grammars");  ///;
 
 const contentUtilities = require("../utilities/content");
 
 const { Query } = dom,
-      { MetaJSONLexer } = lexers,
-      { MetaJSONParser } = parsers,
       { trimDoubleQuotes } = contentUtilities,
       { filePathUtilities } = open,
       { fileSystemUtilities } = necessary,
       { isFilePathFlorenceFilePath } = filePathUtilities,
+      { MetaJSONLexer, MetaJSONParser } = grammars,
       { CombinedCustomGrammar, CustomGrammar } = customgrammars,
       { checkFileExists, readFile, readDirectory } = fileSystemUtilities;
 
