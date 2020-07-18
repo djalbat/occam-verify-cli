@@ -34,6 +34,7 @@ const termNodeQuery = nodeQuery(Query.fromExpression("//term", 1)),
 			typeNameTerminalNodesQuery = nodesQuery(Query.fromExpression("//typeName/@*")),
 			labelNameTerminalNodesQuery = nodesQuery(Query.fromExpression("//labelName/@*")),
 			axiomOrDeclarationNodesQuery = nodesQuery(Query.fromExpression("//axiom|declaration", 1)),
+      statementExpressionNodesQuery = nodesQuery(Query.fromExpression("/statement/expression")),
 			variableDeclarationNodesQuery = nodesQuery(Query.fromExpression("//variableDeclaration", 1)),
 			constructorDeclarationNodesQuery = nodesQuery(Query.fromExpression("//constructorDeclaration", 1));
 
@@ -68,6 +69,7 @@ module.exports = {
 	typeNameTerminalNodesQuery,
 	labelNameTerminalNodesQuery,
 	axiomOrDeclarationNodesQuery,
+  statementExpressionNodesQuery,
 	variableDeclarationNodesQuery,
 	constructorDeclarationNodesQuery
 };

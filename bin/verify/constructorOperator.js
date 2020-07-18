@@ -96,14 +96,14 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
         verified = verifyTermNode(termNode, fileContext);
       }
 
+      if (!verified) {
+        const childNodes = nonTerminalNode.getChildNodes();
+
+        verified = verifyChildNodes(childNodes, fileContext);
+      }
+
       break;
     }
-  }
-
-  if (!verified) {
-    const childNodes = nonTerminalNode.getChildNodes();
-
-    verified = verifyChildNodes(childNodes, fileContext);
   }
 
   return verified;

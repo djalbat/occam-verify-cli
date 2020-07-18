@@ -27,14 +27,14 @@ function typeFromTermNode(termNode, fileContext) {
 function typeFromExpressionNode(expressionNode, fileContext) {
   let type = undefined;
 
-  const expressionTermNameNodes = expressionTermNodesQuery(expressionNode),
-        expressionTermNameNodesLength = expressionTermNameNodes.length;
+  const expressionTermNodes = expressionTermNodesQuery(expressionNode),
+        expressionTermNodesLength = expressionTermNodes.length;
 
-  if (expressionTermNameNodesLength === 1) {
-    const firmTermNameNode = first(expressionTermNameNodes),
-          nameNode = firmTermNameNode;  ///
+  if (expressionTermNodesLength === 1) {
+    const firmTermNode = first(expressionTermNodes),
+          termNode = firmTermNode;  ///
 
-    type = typeFromNameNode(nameNode, fileContext);
+    type = typeFromTermNode(termNode, fileContext);
   }
 
   return type;

@@ -6,7 +6,7 @@ const queries = require("../miscellaneous/queries");
 
 const { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { expressionTermNodesQuery, termNameNodesQuery, nameTerminalNodeQuery } = queries;
+      { termNameNodesQuery, expressionTermNodesQuery, nameTerminalNodeQuery } = queries;
 
 function variableFromTermNode(termNode, fileContext) {
   let variable = undefined;
@@ -27,14 +27,14 @@ function variableFromTermNode(termNode, fileContext) {
 function variableFromExpressionNode(expressionNode, fileContext) {
   let variable = undefined;
 
-  const expressionTermNameNodes = expressionTermNodesQuery(expressionNode),
-        expressionTermNameNodesLength = expressionTermNameNodes.length;
+  const expressionTermNodes = expressionTermNodesQuery(expressionNode),
+        expressionTermNodesLength = expressionTermNodes.length;
 
-  if (expressionTermNameNodesLength === 1) {
-    const firmExpressionTermNameNode = first(expressionTermNameNodes),
-          nameNode = firmExpressionTermNameNode;  ///
+  if (expressionTermNodesLength === 1) {
+    const firmExpressionTermNode = first(expressionTermNodes),
+          termNode = firmExpressionTermNode;  ///
 
-    variable = variableFromNameNode(nameNode, fileContext);
+    variable = variableFromTermNode(termNode, fileContext);
   }
 
   return variable;
