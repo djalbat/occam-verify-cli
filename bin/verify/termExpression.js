@@ -190,7 +190,13 @@ function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTermin
               const type = operator.getType();
 
               if (type === undefined) {
-                verified = true;
+                const nonTerminalNodeString = nodeAsString(nonTerminalNode),
+                      expressionNonTerminalNode = constructorOrExpressionNonTerminalNode,  ///
+                      expressionNonTerminalNodeString = nodeAsString(expressionNonTerminalNode);
+
+                if (nonTerminalNodeString === expressionNonTerminalNodeString) {
+                  verified = true;
+                }
               }
             }
           }
@@ -207,7 +213,13 @@ function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTermin
               const type = constructor.getType();
 
               if (type === undefined) {
-                verified = true;
+                const nonTerminalNodeString = nodeAsString(nonTerminalNode),
+                      constructorNonTerminalNode = constructorOrExpressionNonTerminalNode,  ///
+                      constructorNonTerminalNodeString = nodeAsString(constructorNonTerminalNode);
+
+                if (nonTerminalNodeString === constructorNonTerminalNodeString) {
+                  verified = true;
+                }
               }
             }
           }
