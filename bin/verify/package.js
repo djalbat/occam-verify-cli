@@ -39,6 +39,8 @@ function verifyPackage(packageName, packageContexts = [], dependentPackageNames 
   const filePaths = filePathsFromPackageName(packageName),
         packageContext = PackageContext.fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts);
 
+  console.log(`Verifying the '${packageName}' package...`);
+
   verifyFiles(filePaths, packageContext);
 
   return packageContext;

@@ -5,6 +5,7 @@ const dom = require("occam-dom");
 const { Query } = dom;
 
 const termNodeQuery = nodeQuery(Query.fromExpression("//term", 1)),
+      labelsNodeQuery = nodeQuery(Query.fromExpression("//labels", 2)),
       statementNodeQuery = nodeQuery(Query.fromExpression("//statement", 1)),
       expressionNodeQuery = nodeQuery(Query.fromExpression("//expression", 1)),
 			nameTerminalNodeQuery = nodeQuery(Query.fromExpression("//name/@*")),
@@ -15,7 +16,6 @@ const termNodeQuery = nodeQuery(Query.fromExpression("//term", 1)),
 			typesDeclarationNodeQuery = nodeQuery(Query.fromExpression("//typesDeclaration", 1)),
       typeNameTerminalNodeQuery = nodeQuery(Query.fromExpression("//typeName/@*")),
       qualifiedStatementNodeQuery = nodeQuery(Query.fromExpression("//qualifiedStatement", 1)),
-      parenthesisedLabelsNodeQuery = nodeQuery(Query.fromExpression("//parenthesisedLabels", 1)),
       variableDeclarationNodeQuery = nodeQuery(Query.fromExpression("//variableDeclaration", 1)),
       operatorDeclarationNodeQuery = nodeQuery(Query.fromExpression("//operatorDeclaration", 1)),
       variablesDeclarationNodeQuery = nodeQuery(Query.fromExpression("//variablesDeclaration", 1)),
@@ -40,6 +40,7 @@ const termNodeQuery = nodeQuery(Query.fromExpression("//term", 1)),
 
 module.exports = {
   termNodeQuery,
+  labelsNodeQuery,
   statementNodeQuery,
   expressionNodeQuery,
 	nameTerminalNodeQuery,
@@ -50,7 +51,6 @@ module.exports = {
 	typesDeclarationNodeQuery,
   typeNameTerminalNodeQuery,
   qualifiedStatementNodeQuery,
-  parenthesisedLabelsNodeQuery,
   variableDeclarationNodeQuery,
   operatorDeclarationNodeQuery,
   variablesDeclarationNodeQuery,

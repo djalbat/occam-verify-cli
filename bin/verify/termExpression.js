@@ -1,18 +1,51 @@
 "use strict";
 
+const dom = require("occam-dom");
+
+const { Query } = dom;
+
 const Error = require("../error"),
+      Operator = require("../operator"),
+      TermNode = require("../miscellaneous/termNode"),
       ruleNames = require("../miscellaneous/ruleNames"),
       typeUtilities = require("../utilities/type"),
       nodeUtilities = require("../utilities/node"),
+      ExpressionNode = require("../miscellaneous/expressionNode"),
       variableUtilities = require("../utilities/variable"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
 const { nodeAsString } = nodeUtilities,
-      { NAME_RULE_NAME, TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
       { variableFromTermNode, variableFromExpressionNode } = variableUtilities,
       { typeFromConstructorTermNode, typeFromOperatorExpressionNode } = typeUtilities;
 
-function verifyExpression(expressionNode, fileContext) { return verifyExpressionAgainstOperators(expressionNode, fileContext); }
+const expressionTermQuery = Query.fromExpression("/expression/term");
+
+function verifyExpression(expressionNode, fileContext) {
+  let operator = undefined;
+
+  if (operator === undefined) {
+    operator = verifyExpressionAgainstOperators(expressionNode, fileContext);
+  }
+
+  if (operator === undefined) {
+    const expressionTermNodes = expressionTermQuery.execute(expressionNode),
+          expressionTermNode = expressionTermNodes.shift(); ///
+
+    if (expressionTermNode !== undefined) {
+      const termNode = expressionTermNode,  ///
+            constructor = verifyTerm(termNode, fileContext);
+
+      if (constructor !== undefined) {
+        const type = constructor.getType();
+
+        operator = Operator.fromExpressionNodeAndType(expressionNode, type);
+      }
+    }
+  }
+
+  return operator;
+}
 
 function verifyTerm(termNode, fileContext) { return verifyTermAgainstConstructors(termNode, fileContext); }
 
@@ -40,7 +73,8 @@ function verifyExpressionAgainstOperator(expressionNode, operatorExpressionNode,
         constructorOrOperatorNonTerminalNode = operatorExpressionNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
         constructorOrOperatorChildNodes = constructorOrOperatorNonTerminalNode.getChildNodes(),
-        verified = verifyChildNodes(childNodes, constructorOrOperatorChildNodes, fileContext);
+        parentNode = nonTerminalNode, ///
+        verified = verifyChildNodes(childNodes, constructorOrOperatorChildNodes, parentNode, fileContext);
 
   return verified;
 }
@@ -48,8 +82,8 @@ function verifyExpressionAgainstOperator(expressionNode, operatorExpressionNode,
 function verifyTermAgainstConstructors(termNode, fileContext) {
   const constructors = fileContext.getConstructors(),
         constructor = constructors.find((constructor) => {
-          const constructorOrExpressionTermNode = constructor.getTermNode(),
-                verified = verifyTermAgainstConstructor(termNode, constructorOrExpressionTermNode, fileContext);
+          const constructorTermNode = constructor.getTermNode(),
+                verified = verifyTermAgainstConstructor(termNode, constructorTermNode, fileContext);
 
           if (verified) {
             return true;
@@ -59,17 +93,18 @@ function verifyTermAgainstConstructors(termNode, fileContext) {
   return constructor;
 }
 
-function verifyTermAgainstConstructor(termNode, constructorOrExpressionTermNode, fileContext) {
+function verifyTermAgainstConstructor(termNode, constructorTermNode, fileContext) {
   const nonTerminalNode = termNode, ///
-        constructorOrExpressionNonTerminalNode = constructorOrExpressionTermNode, ///
+        constructorOrExpressionNonTerminalNode = constructorTermNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
+        parentNode = nonTerminalNode,  ///
         constructorOrExpressionChildNodes = constructorOrExpressionNonTerminalNode.getChildNodes(),
-        verified = verifyChildNodes(childNodes, constructorOrExpressionChildNodes, fileContext);
+        verified = verifyChildNodes(childNodes, constructorOrExpressionChildNodes, parentNode, fileContext);
 
   return verified;
 }
 
-function verifyNode(node, constructorOrExpressionNode, fileContext) {
+function verifyNode(node, constructorOrExpressionNode, parentNode, fileContext) {
   let verified = false;
 
   const nodeTerminalNode = node.isTerminalNode();
@@ -81,7 +116,7 @@ function verifyNode(node, constructorOrExpressionNode, fileContext) {
       const terminalNode = node,  ///
             constructorOrExpressionTerminalNode = constructorOrExpressionNode; ///
 
-      verified = verifyTerminalNode(terminalNode, constructorOrExpressionTerminalNode, fileContext);
+      verified = verifyTerminalNode(terminalNode, constructorOrExpressionTerminalNode, parentNode, fileContext);
     }
   } else {
     const constructorNodeNonTerminalNode = constructorOrExpressionNode.isNonTerminalNode();
@@ -90,14 +125,14 @@ function verifyNode(node, constructorOrExpressionNode, fileContext) {
       const nonTerminalNode = node, ///
             constructorOrExpressionNonTerminalNode = constructorOrExpressionNode; ///
 
-      verified = verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTerminalNode, fileContext);
+      verified = verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTerminalNode, parentNode, fileContext);
     }
   }
 
   return verified;
 }
 
-function verifyTerminalNode(terminalNode, constructorOrExpressionTerminalNode, fileContext) {
+function verifyTerminalNode(terminalNode, constructorOrExpressionTerminalNode, parentNode, fileContext) {
   let verified = false;
 
   const terminalNodeType = terminalNode.getType(),
@@ -115,7 +150,7 @@ function verifyTerminalNode(terminalNode, constructorOrExpressionTerminalNode, f
   return verified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTerminalNode, fileContext) {
+function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTerminalNode, parentNode, fileContext) {
   let verified = false;
 
   const nonTerminalNodeRuleName = nonTerminalNode.getRuleName(),
@@ -124,33 +159,104 @@ function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTermin
   if (nonTerminalNodeRuleName === constructorOrExpressionNonTerminalNodeRuleName) {
     const ruleName = nonTerminalNodeRuleName; ///
 
-    if (ruleName !== NAME_RULE_NAME) {
-      switch (ruleName) {
-        case EXPRESSION_RULE_NAME: {
-          const expressionNode = nonTerminalNode, ///
-                operatorExpressionNode = constructorOrExpressionNonTerminalNode;  ///
+    switch (ruleName) {
+      case EXPRESSION_RULE_NAME: {
+        const expressionNode = nonTerminalNode, ///
+              operatorExpressionNode = constructorOrExpressionNonTerminalNode;  ///
 
-          verified = verifyExpressionNode(expressionNode, operatorExpressionNode, fileContext);
+        verified = verifyExpressionNode(expressionNode, operatorExpressionNode, fileContext);
 
-          break;
-        }
-
-        case TERM_RULE_NAME: {
-          const termNode = nonTerminalNode, ///
-                constructorTermNode = constructorOrExpressionNonTerminalNode; ///
-
-          verified = verifyTermNode(termNode, constructorTermNode, fileContext);
-
-          break;
-        }
+        break;
       }
 
-      if (!verified) {
-        const childNodes = nonTerminalNode.getChildNodes(),
-              constructorOrExpressionChildNodes = constructorOrExpressionNonTerminalNode.getChildNodes();
+      case TERM_RULE_NAME: {
+        const termNode = nonTerminalNode, ///
+              constructorTermNode = constructorOrExpressionNonTerminalNode; ///
 
-        verified = verifyChildNodes(childNodes, constructorOrExpressionChildNodes, fileContext);
+        verified = verifyTermNode(termNode, constructorTermNode, fileContext);
+
+        break;
       }
+
+      default: {
+        if (!verified) {
+          const parentNodeExpressionNode = (parentNode instanceof ExpressionNode);
+
+          if (!parentNodeExpressionNode) {
+            const expressionNode = ExpressionNode.fromNonTerminalNode(nonTerminalNode),
+                  operator = verifyExpression(expressionNode, fileContext);
+
+            if (operator !== undefined) {
+              const type = operator.getType();
+
+              if (type === undefined) {
+                verified = true;
+              }
+            }
+          }
+        }
+
+        if (!verified) {
+          const parentNodeTermNode = (parentNode instanceof TermNode);
+
+          if (!parentNodeTermNode) {
+            const termNode = TermNode.fromNonTerminalNode(nonTerminalNode),
+                  constructor = verifyTerm(termNode, fileContext);
+
+            if (constructor !== undefined) {
+              const type = constructor.getType();
+
+              if (type === undefined) {
+                verified = true;
+              }
+            }
+          }
+        }
+
+        if (!verified) {
+          const childNodes = nonTerminalNode.getChildNodes(),
+                parentNode = nonTerminalNode, ///
+                constructorOrExpressionChildNodes = constructorOrExpressionNonTerminalNode.getChildNodes();
+
+          verified = verifyChildNodes(childNodes, constructorOrExpressionChildNodes, parentNode, fileContext);
+        }
+      }
+    }
+  }
+
+  return verified;
+}
+
+function verifyChildNodes(childNodes, constructorOrExpressionChildNodes, parentNode, fileContext) {
+  let verified = false;
+
+  const nonTerminalNodeContext = NonTerminalNodeContext.fromChildNodesAndFileContext(childNodes, fileContext),
+        constructorOrExpressionNonTerminalNodeContext = NonTerminalNodeContext.fromChildNodesAndFileContext(constructorOrExpressionChildNodes, fileContext);
+
+  let nextChildNode = nonTerminalNodeContext.getNextChildNode(),
+      nextConstructorOrExpressionChildNode = constructorOrExpressionNonTerminalNodeContext.getNextChildNode();
+
+  while (nextChildNode !== undefined) {
+    if (nextConstructorOrExpressionChildNode === undefined) {
+      break;
+    }
+
+    const node = nextChildNode,  ///
+          constructorOrExpressionNode = nextConstructorOrExpressionChildNode;  ///
+
+    verified = verifyNode(node, constructorOrExpressionNode, parentNode, fileContext);
+
+    if (!verified) {
+      break;
+    }
+
+    nextChildNode = nonTerminalNodeContext.getNextChildNode();
+    nextConstructorOrExpressionChildNode = constructorOrExpressionNonTerminalNodeContext.getNextChildNode();
+  }
+
+  if (verified) {
+    if (nextChildNode !== undefined) {
+      verified = false;
     }
   }
 
@@ -251,42 +357,6 @@ function verifyTermNode(termNode, constructorTermNode, fileContext) {
       //       message = `The '${termString}' sub-term cannot be verified because its type is not equal to or a sub-type of the '${typeString}' type.`;
       //
       // throw new Error(node, message);
-    }
-  }
-
-  return verified;
-}
-
-function verifyChildNodes(childNodes, constructorOrExpressionChildNodes, fileContext) {
-  let verified = false;
-
-  const nonTerminalNodeContext = NonTerminalNodeContext.fromChildNodesAndFileContext(childNodes, fileContext),
-        constructorOrExpressionNonTerminalNodeContext = NonTerminalNodeContext.fromChildNodesAndFileContext(constructorOrExpressionChildNodes, fileContext);
-
-  let nextChildNode = nonTerminalNodeContext.getNextChildNode(),
-      nextConstructorOrExpressionChildNode = constructorOrExpressionNonTerminalNodeContext.getNextChildNode();
-
-  while (nextChildNode !== undefined) {
-    if (nextConstructorOrExpressionChildNode === undefined) {
-      break;
-    }
-
-    const node = nextChildNode,  ///
-          constructorOrExpressionNode = nextConstructorOrExpressionChildNode;  ///
-
-    verified = verifyNode(node, constructorOrExpressionNode, fileContext);
-
-    if (!verified) {
-      break;
-    }
-
-    nextChildNode = nonTerminalNodeContext.getNextChildNode();
-    nextConstructorOrExpressionChildNode = constructorOrExpressionNonTerminalNodeContext.getNextChildNode();
-  }
-
-  if (verified) {
-    if (nextConstructorOrExpressionChildNode !== undefined) {
-      verified = false;
     }
   }
 

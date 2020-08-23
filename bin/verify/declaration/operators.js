@@ -51,7 +51,7 @@ function verifyOperatorsDeclaration(operatorDeclarationNode, fileContext) {
 
     fileContext.addOperator(operator);
 
-    console.log(`Added the '${operatorString}' operator to the context.`);
+    console.log(`Verified the '${operatorString}' operator.`);
   });
 }
 

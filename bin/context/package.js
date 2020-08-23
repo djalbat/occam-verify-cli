@@ -41,86 +41,110 @@ class PackageContext {
     return this.dependencyPackageContexts;
   }
 
-  getTypes() {
+  getTypes(packageNames = []) {
     const types = [],
-          bubble = false;
+          packageNamesIncludesPackageName = packageNames.includes(this.packageName);
 
-    this.fileContexts.forEach((fileContext) => {
-      const fileContextTypes = fileContext.getTypes(bubble);
+    if (!packageNamesIncludesPackageName) {
+      packageNames.push(this.packageName);
 
-      push(types, fileContextTypes);
-    });
+      const bubble = false;
 
-    const packageContexts = this.retrievePackageContexts();
+      this.fileContexts.forEach((fileContext) => {
+        const fileContextTypes = fileContext.getTypes(bubble);
 
-    packageContexts.forEach((packageContext) => {
-      const packageContextTypes = packageContext.getTypes();
+        push(types, fileContextTypes);
+      });
 
-      push(types, packageContextTypes);
-    });
+      const packageContexts = this.retrievePackageContexts();
+
+      packageContexts.forEach((packageContext) => {
+        const packageContextTypes = packageContext.getTypes(packageNames);
+
+        push(types, packageContextTypes);
+      });
+    }
 
     return types;
   }
 
-  getAxioms() {
+  getAxioms(packageNames = []) {
     const axioms = [],
-          bubble = false;
+          packageNamesIncludesPackageName = packageNames.includes(this.packageName);
 
-    this.fileContexts.forEach((fileContext) => {
-      const fileContextAxioms = fileContext.getAxioms(bubble);
+    if (!packageNamesIncludesPackageName) {
+      packageNames.push(this.packageName);
 
-      push(axioms, fileContextAxioms);
-    });
+      const bubble = false;
 
-    const packageContexts = this.retrievePackageContexts();
+      this.fileContexts.forEach((fileContext) => {
+        const fileContextAxioms = fileContext.getAxioms(bubble);
 
-    packageContexts.forEach((packageContext) => {
-      const packageContextAxioms = packageContext.getAxioms();
+        push(axioms, fileContextAxioms);
+      });
 
-      push(axioms, packageContextAxioms);
-    });
+      const packageContexts = this.retrievePackageContexts();
+
+      packageContexts.forEach((packageContext) => {
+        const packageContextAxioms = packageContext.getAxioms(packageNames);
+
+        push(axioms, packageContextAxioms);
+      });
+    }
 
     return axioms;
   }
 
-  getOperators() {
+  getOperators(packageNames = []) {
     const operators = [],
-          bubble = false;
+          packageNamesIncludesPackageName = packageNames.includes(this.packageName);
 
-    this.fileContexts.forEach((fileContext) => {
-      const fileContextOperators = fileContext.getOperators(bubble);
+    if (!packageNamesIncludesPackageName) {
+      packageNames.push(this.packageName);
 
-      push(operators, fileContextOperators);
-    });
+      const bubble = false;
 
-    const packageContexts = this.retrievePackageContexts();
+      this.fileContexts.forEach((fileContext) => {
+        const fileContextOperators = fileContext.getOperators(bubble);
 
-    packageContexts.forEach((packageContext) => {
-      const packageContextOperators = packageContext.getOperators();
+        push(operators, fileContextOperators);
+      });
 
-      push(operators, packageContextOperators);
-    });
+      const packageContexts = this.retrievePackageContexts();
+
+      packageContexts.forEach((packageContext) => {
+        const packageContextOperators = packageContext.getOperators(packageNames);
+
+        push(operators, packageContextOperators);
+      });
+    }
 
     return operators;
   }
 
-  getConstructors() {
+  getConstructors(packageNames = []) {
     const constructors = [],
-          bubble = false;
+          packageNamesIncludesPackageName = packageNames.includes(this.packageName);
 
-    this.fileContexts.forEach((fileContext) => {
-      const fileContextConstructors = fileContext.getConstructors(bubble);
+    if (!packageNamesIncludesPackageName) {
+      packageNames.push(this.packageName);
 
-      push(constructors, fileContextConstructors);
-    });
+      const bubble = false;
 
-    const packageContexts = this.retrievePackageContexts();
+      this.fileContexts.forEach((fileContext) => {
+        const fileContextConstructors = fileContext.getConstructors(bubble);
 
-    packageContexts.forEach((packageContext) => {
-      const packageContextConstructors = packageContext.getConstructors();
+        push(constructors, fileContextConstructors);
+      });
 
-      push(constructors, packageContextConstructors);
-    });
+      const packageContexts = this.retrievePackageContexts();
+
+      packageContexts.forEach((packageContext) => {
+        const packageContextConstructors = packageContext.getConstructors();
+
+        push(constructors, packageContextConstructors);
+      });
+    }
 
     return constructors;
   }

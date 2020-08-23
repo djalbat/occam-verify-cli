@@ -17,7 +17,8 @@ const { nodeAsString } = nodeUtilities,
 function verifyExpressionAsOperator(expressionNode, fileContext) {
   const nonTerminalNode = expressionNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
-        verified = verifyChildNodes(childNodes, fileContext);
+        parentNode = nonTerminalNode,  ///
+        verified = verifyChildNodes(childNodes, parentNode, fileContext);
 
   return verified;
 }
@@ -25,7 +26,8 @@ function verifyExpressionAsOperator(expressionNode, fileContext) {
 function verifyTermAsConstructor(termNode, fileContext) {
   const nonTerminalNode = termNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
-        verified = verifyChildNodes(childNodes, fileContext);
+        parentNode = nonTerminalNode,  ///
+        verified = verifyChildNodes(childNodes, parentNode, fileContext);
 
   return verified;
 }
@@ -35,7 +37,7 @@ module.exports = {
   verifyTermAsConstructor
 };
 
-function verifyNode(node, fileContext) {
+function verifyNode(node, parentNode, fileContext) {
   let verified = false;
 
   const nodeTerminalNode = node.isTerminalNode();
@@ -43,17 +45,17 @@ function verifyNode(node, fileContext) {
   if (nodeTerminalNode) {
     const terminalNode = node;  ///
 
-    verified = verifyTerminalNode(terminalNode, fileContext);
+    verified = verifyTerminalNode(terminalNode, parentNode, fileContext);
   } else {
     const nonTerminalNode = node; ///
 
-    verified = verifyNonTerminalNode(nonTerminalNode, fileContext);
+    verified = verifyNonTerminalNode(nonTerminalNode, parentNode, fileContext);
   }
 
   return verified;
 }
 
-function verifyTerminalNode(terminalNode, fileContext) {
+function verifyTerminalNode(terminalNode, parentNode, fileContext) {
   const verified = true;
 
   ///
@@ -61,7 +63,7 @@ function verifyTerminalNode(terminalNode, fileContext) {
   return verified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, fileContext) {
+function verifyNonTerminalNode(nonTerminalNode, parentNode, fileContext) {
   let verified = false;
 
   const ruleName = nonTerminalNode.getRuleName();
@@ -85,25 +87,56 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 
     default: {
       if (!verified) {
-        const expressionNode = ExpressionNode.fromNonTerminalNode(nonTerminalNode);
+        const parentNodeExpressionNode = (parentNode instanceof ExpressionNode);
 
-        verified = verifyExpressionNode(expressionNode, fileContext);
+        if (!parentNodeExpressionNode) {
+          const expressionNode = ExpressionNode.fromNonTerminalNode(nonTerminalNode);
+
+          verified = verifyExpressionNode(expressionNode, fileContext);
+        }
       }
 
       if (!verified) {
-        const termNode = TermNode.fromNonTerminalNode(nonTerminalNode);
+        const parentNodeTermNode = (parentNode instanceof TermNode);
 
-        verified = verifyTermNode(termNode, fileContext);
+        if (!parentNodeTermNode) {
+          const termNode = TermNode.fromNonTerminalNode(nonTerminalNode);
+
+          verified = verifyTermNode(termNode, fileContext);
+        }
       }
 
       if (!verified) {
-        const childNodes = nonTerminalNode.getChildNodes();
+        const childNodes = nonTerminalNode.getChildNodes(),
+              parentNode = nonTerminalNode; ///
 
-        verified = verifyChildNodes(childNodes, fileContext);
+        verified = verifyChildNodes(childNodes, parentNode, fileContext);
       }
 
       break;
     }
+  }
+
+  return verified;
+}
+
+function verifyChildNodes(childNodes, parentNode, fileContext) {
+  let verified = false;
+
+  const nonTerminalNodeContext = NonTerminalNodeContext.fromChildNodesAndFileContext(childNodes, fileContext);
+
+  let nextChildNode = nonTerminalNodeContext.getNextChildNode();
+
+  while (nextChildNode !== undefined) {
+    const node = nextChildNode;  ///
+
+    verified = verifyNode(node, parentNode, fileContext);
+
+    if (!verified) {
+      break;
+    }
+
+    nextChildNode = nonTerminalNodeContext.getNextChildNode();
   }
 
   return verified;
@@ -165,24 +198,3 @@ function verifyTermNode(termNode, fileContext) {
   return verified;
 }
 
-function verifyChildNodes(childNodes, fileContext) {
-  let verified = false;
-
-  const nonTerminalNodeContext = NonTerminalNodeContext.fromChildNodesAndFileContext(childNodes, fileContext);
-
-  let nextChildNode = nonTerminalNodeContext.getNextChildNode();
-
-  while (nextChildNode !== undefined) {
-    const node = nextChildNode;  ///
-
-    verified = verifyNode(node, fileContext);
-
-    if (!verified) {
-      break;
-    }
-
-    nextChildNode = nonTerminalNodeContext.getNextChildNode();
-  }
-
-  return verified;
-}

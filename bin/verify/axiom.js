@@ -3,11 +3,13 @@
 const Error = require("../error"),
       Axiom = require("../axiom"),
       queries = require("../miscellaneous/queries"),
+      nodeUtilities = require("../utilities/node"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement"),
       verifyIndicativeConditional = require("../verify/indicativeConditional");
 
-const { labelNameTerminalNodesQuery,
-        parenthesisedLabelsNodeQuery,
+const { nodeAsString } = nodeUtilities,
+      { labelsNodeQuery,
+        labelNameTerminalNodesQuery,
         unqualifiedStatementNodeQuery,
         indicativeConditionalNodeQuery } = queries;
 
@@ -23,8 +25,8 @@ function verifyAxiom(axiomNode, fileContext) {
     verifyIndicativeConditional(indicativeConditionalNode, fileContext);
   }
 
-  const parenthesisedLabelsNode = parenthesisedLabelsNodeQuery(axiomNode),
-        labelNameTerminalNodes = labelNameTerminalNodesQuery(parenthesisedLabelsNode),
+  const labelsNode = labelsNodeQuery(axiomNode),
+        labelNameTerminalNodes = labelNameTerminalNodesQuery(labelsNode),
         labels = labelNameTerminalNodes.map((labelNameTerminalNode) => {
           const labelNameTerminalNodeContent = labelNameTerminalNode.getContent(),
                 label = labelNameTerminalNodeContent; ///
@@ -33,7 +35,7 @@ function verifyAxiom(axiomNode, fileContext) {
         });
 
   labels.forEach((label) => {
-    const labelPresent = context.isLabelPresent(label);
+    const labelPresent = fileContext.isLabelPresent(label);
 
     if (labelPresent) {
       const node = axiomNode, ///
@@ -53,7 +55,11 @@ function verifyAxiom(axiomNode, fileContext) {
     axiom = Axiom.fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels);
   }
 
+  const labelsString = nodeAsString(labelsNode);
+
   fileContext.addAxiom(axiom);
+
+  console.log(`Verified the '${labelsString}' axiom.`);
 }
 
 module.exports = verifyAxiom;

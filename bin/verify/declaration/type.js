@@ -32,7 +32,7 @@ function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
 
     fileContext.addType(type);
 
-    console.log(`Added the '${typeString}' type to the context.`);
+    console.log(`Verified the '${typeString}' type.`);
   } else {
     const superType = fileContext.findTypeByTypeName(superTypeName);
 
@@ -48,7 +48,7 @@ function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
 
     fileContext.addType(type);
 
-    console.log(`Added the '${typeString}' type to the context.`);
+    console.log(`Verified the '${typeString}' type.`);
   }
 }
 

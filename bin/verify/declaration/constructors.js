@@ -51,7 +51,7 @@ function verifyConstructorsDeclaration(constructorDeclarationNode, fileContext) 
 
     fileContext.addConstructor(constructor);
 
-    console.log(`Added the '${constructorString}' constructor to the context.`);
+    console.log(`Verified the '${constructorString}' constructor.`);
   });
 }
 
