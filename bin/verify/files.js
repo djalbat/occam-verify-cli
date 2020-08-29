@@ -3,11 +3,13 @@
 const verifyFile = require("../verify/file");
 
 function verifyFiles(filePaths, packageContext) {
-  filePaths.forEach((filePath) => {
-    const fileContext = verifyFile(filePath, packageContext);
+  let verified = false;
 
-    packageContext.addFileContext(fileContext);
+  filePaths.every((filePath) => {
+    const fileContext = verifyFile(filePath, packageContext);
   });
+
+  return verified;
 }
 
 module.exports = verifyFiles;

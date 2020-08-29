@@ -1,16 +1,19 @@
 "use strict";
 
-const Type = require("../../type"),
-      Error = require("../../error"),
-      queries = require("../../miscellaneous/queries");
+const dom = require("occam-dom");
 
-const { typeNameTerminalNodesQuery } = queries;
+const { Query } = dom;
+
+const Type = require("../../type"),
+      Error = require("../../error");
+
+const typeNameNodesQuery = Query.fromExpression("//typeName/@*");
 
 function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
-  const typeNameTerminalNodes = typeNameTerminalNodesQuery(typeDeclarationNode),
-        typeNames = typeNameTerminalNodes.map((typeNameTerminalNode) => {
-          const typeNameTerminalNodeContent = typeNameTerminalNode.getContent(),
-                typeName = typeNameTerminalNodeContent; ///
+  const typeNameNodes = typeNameNodesQuery.execute(typeDeclarationNode),
+        typeNames = typeNameNodes.map((typeNameNode) => {
+          const typeNameNodeContent = typeNameNode.getContent(),
+                typeName = typeNameNodeContent; ///
 
           return typeName;
         }),

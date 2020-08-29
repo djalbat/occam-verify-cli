@@ -2,8 +2,6 @@
 
 const queries = require("../miscellaneous/queries"),
 			keywords = require("../miscellaneous/keywords"),
-			verifyTypeDeclaration = require("../verify/declaration/type"),
-			verifyTypesDeclaration = require("../verify/declaration/types"),
       verifyVariableDeclaration = require("../verify/declaration/variable"),
       verifyOperatorDeclaration = require("../verify/declaration/operator"),
       verifyVariablesDeclaration = require("../verify/declaration/variables"),
@@ -11,17 +9,13 @@ const queries = require("../miscellaneous/queries"),
       verifyConstructorDeclaration = require("../verify/declaration/constructor"),
       verifyConstructorsDeclaration = require("../verify/declaration/constructors");
 
-const { TYPE_KEYWORD,
-				TYPES_KEYWORD,
-				VARIABLE_KEYWORD,
+const { VARIABLE_KEYWORD,
 				VARIABLES_KEYWORD,
         OPERATOR_KEYWORD,
         OPERATORS_KEYWORD,
 				CONSTRUCTOR_KEYWORD,
 				CONSTRUCTORS_KEYWORD } = keywords,
 			{ keywordTerminalNodeQuery,
-        typeDeclarationNodeQuery,
-				typesDeclarationNodeQuery,
         variableDeclarationNodeQuery,
         variablesDeclarationNodeQuery,
         operatorDeclarationNodeQuery,
@@ -35,22 +29,6 @@ function verifyDeclaration(declarationNode, fileContext) {
         keyword = keywordTerminalNodeContent;  ///
 
   switch (keyword) {
-    case TYPE_KEYWORD: {
-      const typeDeclarationNode = typeDeclarationNodeQuery(declarationNode);
-
-      verifyTypeDeclaration(typeDeclarationNode, fileContext);
-
-      break;
-    }
-
-	  case TYPES_KEYWORD: {
-		  const typesDeclarationNode = typesDeclarationNodeQuery(declarationNode);
-
-		  verifyTypesDeclaration(typesDeclarationNode, fileContext);
-
-		  break;
-	  }
-
 	  case VARIABLE_KEYWORD: {
       const variableDeclarationNode = variableDeclarationNodeQuery(declarationNode);
 
@@ -98,10 +76,6 @@ function verifyDeclaration(declarationNode, fileContext) {
 
       break;
     }
-
-    default:
-
-      debugger
   }
 }
 

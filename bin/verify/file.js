@@ -1,7 +1,9 @@
 "use strict";
 
-const Error = require("../error"),
+const log = require("../log"),
+      Error = require("../error"),
       queries = require("../miscellaneous/queries"),
+      verifyTypes = require("../verify/types"),
       FileContext = require("../context/file"),
       PackageContext = require("../context/package"),
       lineIndexUtilities = require("../utilities/lineIndex"),
@@ -11,13 +13,21 @@ const { lineIndexFromNodeAndTokens } = lineIndexUtilities,
       { axiomOrDeclarationNodesQuery } = queries;
 
 function verifyFile(filePath, packageContext = PackageContext.fromNothing()) {
+  let verified = true;
+
   const fileContext = FileContext.fromPackageContextAndFilePath(packageContext, filePath);
+
+  log.debug(`Verifying the '${filePath}' file...`);
+
+  if (verified) {
+    verified = verifyTypes(fileContext);
+  }
 
   try {
     const node = fileContext.getNode(),
           axiomOrDeclarationNodes = axiomOrDeclarationNodesQuery(node);
 
-    axiomOrDeclarationNodes.forEach((axiomOrDeclarationNode) => verifyAxiomOrDeclaration(axiomOrDeclarationNode, fileContext));
+    // axiomOrDeclarationNodes.forEach((axiomOrDeclarationNode) => verifyAxiomOrDeclaration(axiomOrDeclarationNode, fileContext));
   } catch (error) {
     if (!(error instanceof Error)) {
       throw error;
@@ -34,7 +44,13 @@ function verifyFile(filePath, packageContext = PackageContext.fromNothing()) {
     }
   }
 
-  return fileContext;
+  if (verified) {
+    packageContext.addFileContext(fileContext);
+
+    console.log(`Verified the '${filePath}' file.`);
+  }
+
+  return verified;
 }
 
 module.exports = verifyFile;

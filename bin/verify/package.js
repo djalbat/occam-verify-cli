@@ -2,7 +2,8 @@
 
 const necessary = require("necessary");
 
-const verifyFiles = require("../verify/files"),
+const log = require("../log"),
+      verifyFiles = require("../verify/files"),
       PackageContext = require("../context/package"),
       packageUtilities = require("../utilities/package");
 
@@ -34,14 +35,15 @@ function verifyPackage(packageName, packageContexts = [], dependentPackageNames 
           }
 
           return dependencyPackageContext;
-        });
-
-  const filePaths = filePathsFromPackageName(packageName),
+        }),
+        filePaths = filePathsFromPackageName(packageName),
         packageContext = PackageContext.fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts);
 
-  console.log(`Verifying the '${packageName}' package...`);
+  log.debug(`Verifying the '${packageName}' package...`);
 
   verifyFiles(filePaths, packageContext);
+
+  log.info(`Verified the '${packageName}' package.`);
 
   return packageContext;
 }

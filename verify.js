@@ -8,6 +8,7 @@ const { argv } = process,
       { parseArgv } = argumentative;
 
 const abbreviations = {
+        'l': 'log-level',
         'f': 'file-path',
         'p': 'package-name'
       },

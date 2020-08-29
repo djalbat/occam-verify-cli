@@ -2,7 +2,8 @@
 
 const necessary = require("necessary");
 
-const verifyFile = require("./verify/file"),
+const log = require("./log"),
+      verifyFile = require("./verify/file"),
       verifyPackage = require("./verify/package");
 
 const { arrayUtilities } = necessary,
@@ -10,7 +11,11 @@ const { arrayUtilities } = necessary,
 
 function main(commands, options) {
   const firstCommand = first(commands),
-        { filePath, packageName = firstCommand } = options; ///
+        { logLevel, filePath, packageName = firstCommand } = options; ///
+
+  if (logLevel) {
+    log.setLogLevel(logLevel);
+  }
 
   packageName ?
     verifyPackage(packageName) :
