@@ -14,14 +14,17 @@ const { Query } = dom,
 const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
 
 function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
+  let typeDeclarationVerified;
+
   const typeNameNameNodes = typeNameNameNodesQuery.execute(typeDeclarationNode),
         typeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
         firstTypeName = first(typeNames),
         secondTypeName = second(typeNames),
         typeName = firstTypeName, ///
         superTypeName = secondTypeName, ///
-        typeVerified = verifyType(typeName, superTypeName, fileContext),
-        typeDeclarationVerified = typeVerified; ///
+        typeVerified = verifyType(typeName, superTypeName, fileContext);
+
+  typeDeclarationVerified = typeVerified; ///
 
   return typeDeclarationVerified;
 }

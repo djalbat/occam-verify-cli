@@ -6,14 +6,18 @@ const log = require("../log"),
       verifyDeclarations = require("../verify/declarations");
 
 function verifyFile(filePath, packageContext = PackageContext.fromNothing()) {
-  let fileVerified = false;
+  let fileVerified = false,
+      declarationsVerified = false;
 
   log.debug(`Verifying the '${filePath}' file...`);
 
-  const fileContext = FileContext.fromPackageContextAndFilePath(packageContext, filePath),
-        declarationsVerified = verifyDeclarations(fileContext);
+  const fileContext = FileContext.fromPackageContextAndFilePath(packageContext, filePath);
 
-  fileVerified = true;  ///declarationsVerified;  ///
+  declarationsVerified = verifyDeclarations(fileContext);
+
+  if (declarationsVerified) {
+    fileVerified = true;  ///declarationsVerified;  ///
+  }
 
   if (fileVerified) {
     packageContext.addFileContext(fileContext);

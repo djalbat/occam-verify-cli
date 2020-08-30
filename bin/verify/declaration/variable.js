@@ -1,31 +1,37 @@
 "use strict";
 
-const Error = require("../../error"),
-      queries = require("../../miscellaneous/queries"),
-      Variable = require("../../variable"),
-      verifyTypeName = require("../../verify/typeName");
+const dom = require("occam-dom"),
+      necessary = require("necessary");
 
-const { typeNameTerminalNodeQuery, nameTerminalNodeQuery } = queries;
+const verifyVariable = require("../../verify/variable"),
+      typeUtilities = require("../../utilities/type"),
+      variableUtilities = require("../../utilities/variable");
 
-function verifyVariableDeclaration(variableDeclarationNode, context, ruleMap) {
-  const typeNameTerminalNode = typeNameTerminalNodeQuery(variableDeclarationNode),
-        type = verifyTypeName(typeNameTerminalNode, context, ruleMap);
+const { Query } = dom,
+      { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { typeNameFromTypeNameNode } = typeUtilities,
+      { variableNameFromVariableNameNode } = variableUtilities;
 
-  const nameTerminalNode = nameTerminalNodeQuery(variableDeclarationNode),
-        nameTerminalNodeContent = nameTerminalNode.getContent(),
-        name = nameTerminalNodeContent, ///
-        variablePresent = context.isVariablePresentByName(name);
+const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name"),
+      variableNameNameNodesQuery = Query.fromExpression("/*/variableName/@name");
 
-  if (variablePresent) {
-    const node = variableDeclarationNode, ///
-          message = `The variable '${name}' is already present.`;
+function verifyVariableDeclaration(variableDeclarationNode, fileContext) {
+  let variableDeclarationVerified;
 
-    throw new Error(node, message);
-  }
+  const variableNameNameNodes = variableNameNameNodesQuery.execute(variableDeclarationNode),
+        typeNameNameNodes = typeNameNameNodesQuery.execute(variableDeclarationNode),
+        variableNames = variableNameNameNodes.map((variableNameNameNode) => variableNameFromVariableNameNode(variableNameNameNode)),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
+        firstVariableName = first(variableNames),
+        firstTypeName = first(typeNames),
+        variableName = firstVariableName, ///
+        typeName = firstTypeName, ///
+        variableVerified = verifyVariable(variableName, typeName, fileContext);
 
-  const variable = Variable.fromNameAndType(name, type);
+  variableDeclarationVerified = variableVerified; ///
 
-  context.addVariable(variable);
+  return variableDeclarationVerified;
 }
 
 module.exports = verifyVariableDeclaration;

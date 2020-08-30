@@ -15,18 +15,17 @@ const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name"),
       typeNamesNameNodesQuery = Query.fromExpression("/*/typeNames//@name");
 
 function verifyTypesDeclaration(typeDeclarationNode, fileContext) {
+  let typeDeclarationVerified;
+
   const typeNamesNameNodes = typeNamesNameNodesQuery.execute(typeDeclarationNode),
         typeNames = typeNamesNameNodes.map((typeNamesNameNode) => typeNameFromTypeNameNode(typeNamesNameNode)),
         typeNameNameNodes = typeNameNameNodesQuery.execute(typeDeclarationNode),
         superTypeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
         firstSuperTypeName = first(superTypeNames),
         superTypeName = firstSuperTypeName, ///
-        typesVerified = typeNames.every((typeName) => {
-          const typeVerified = verifyType(typeName, superTypeName, fileContext);
+        typesVerified = typeNames.every((typeName) => verifyType(typeName, superTypeName, fileContext));
 
-          return typeVerified;
-        }),
-        typeDeclarationVerified = typesVerified; ///
+  typeDeclarationVerified = typesVerified; ///
 
   return typeDeclarationVerified;
 }

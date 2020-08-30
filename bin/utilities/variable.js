@@ -8,6 +8,13 @@ const { arrayUtilities } = necessary,
       { first } = arrayUtilities,
       { termNameNodesQuery, expressionTermNodesQuery, nameTerminalNodeQuery } = queries;
 
+function variableNameFromVariableNameNode(variableNameNode) {
+  const variableNameNodeContent = variableNameNode.getContent(),
+        variableName = variableNameNodeContent; ///
+
+  return variableName;
+}
+
 function variableFromTermNode(termNode, fileContext) {
   let variable = undefined;
 
@@ -41,6 +48,7 @@ function variableFromExpressionNode(expressionNode, fileContext) {
 }
 
 module.exports = {
+  variableNameFromVariableNameNode,
   variableFromTermNode,
   variableFromExpressionNode
 };
