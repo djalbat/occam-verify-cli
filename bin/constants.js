@@ -7,6 +7,8 @@ const WARNING = "WARNING";
 const ERROR = "ERROR";
 const FATAL = "FATAL";
 const DEFAULT_LOG_LEVEL = INFO;
+const TYPE_DECLARATION = "typeDeclaration";
+const TYPES_DECLARATION = "typesDeclaration";
 
 module.exports = {
   TRACE,
@@ -15,5 +17,7 @@ module.exports = {
   WARNING,
   ERROR,
   FATAL,
-  DEFAULT_LOG_LEVEL
+  DEFAULT_LOG_LEVEL,
+  TYPE_DECLARATION,
+  TYPES_DECLARATION
 };

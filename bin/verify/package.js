@@ -3,63 +3,66 @@
 const necessary = require("necessary");
 
 const log = require("../log"),
-      verifyFiles = require("../verify/files"),
+      verifyFile = require("../verify/file"),
       PackageContext = require("../context/package"),
       packageUtilities = require("../utilities/package");
 
 const { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { filePathsFromPackageName, dependencyPackageNamesFromPackageName } = packageUtilities;
+      { findPackageContext, filePathsFromPackageName, dependencyPackageNamesFromPackageName } = packageUtilities;
 
 function verifyPackage(packageName, packageContexts = [], dependentPackageNames = []) {
-  checkForCyclicDependency(packageName, dependentPackageNames);
-
-  dependentPackageNames = [ ...dependentPackageNames, packageName ];  ///
-
-  const dependencyPackageNames = dependencyPackageNamesFromPackageName(packageName),
-        dependencyPackageContexts = dependencyPackageNames.map((dependencyPackageName) => {
-          let dependencyPackageContext = packageContexts.find((packageContext) => {
-            const packageName = packageContext.getPackageName();
-
-            if (packageName === dependencyPackageName) {
-              return true;
-            }
-          });
-
-          if (dependencyPackageContext === undefined) {
-            dependencyPackageContext = verifyPackage(dependencyPackageName, packageContexts, dependentPackageNames);
-
-            const packageContext = dependencyPackageContext;  ///
-
-            packageContexts.push(packageContext);
-          }
-
-          return dependencyPackageContext;
-        }),
-        filePaths = filePathsFromPackageName(packageName),
-        packageContext = PackageContext.fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts);
+  let packageVerified = false;
 
   log.debug(`Verifying the '${packageName}' package...`);
 
-  verifyFiles(filePaths, packageContext);
+  const cyclicDependencyExists = checkCyclicDependencyExists(packageName, dependentPackageNames);
 
-  log.info(`Verified the '${packageName}' package.`);
+  if (!cyclicDependencyExists) {
+    dependentPackageNames = [ ...dependentPackageNames, packageName ];  ///
 
-  return packageContext;
+    const dependencyPackageNames = dependencyPackageNamesFromPackageName(packageName),
+          dependencyPackagesVerified = dependencyPackageNames.every((dependencyPackageName) => {
+            const dependencyPackageContext = findPackageContext(dependencyPackageName, packageContexts),
+                  dependencyPackageVerified = (dependencyPackageContext === undefined) ?
+                                                 verifyPackage(dependencyPackageName, packageContexts, dependentPackageNames) :
+                                                   true;
+
+            return dependencyPackageVerified;
+          });
+
+    if (dependencyPackagesVerified) {
+      const dependencyPackageContexts = dependencyPackageNames.map((dependencyPackageName) => findPackageContext(dependencyPackageName, packageContexts)),
+            packageContext = PackageContext.fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts),
+            filePaths = filePathsFromPackageName(packageName),
+            filesVerified = filePaths.every((filePath) => verifyFile(filePath, packageContext));
+
+      packageVerified = filesVerified;  ///
+
+      if (packageVerified) {
+        packageContexts.push(packageContext);
+
+        log.info(`Verified the '${packageName}' package.`);
+      }
+    }
+  }
+
+  return packageVerified;
 }
 
 module.exports = verifyPackage;
 
-function checkForCyclicDependency(packageName, dependentPackageNames) {
-  const dependentPackageNamesIncludesPackageName = dependentPackageNames.includes(packageName);
+function checkCyclicDependencyExists(packageName, dependentPackageNames) {
+  const dependentPackageNamesIncludesPackageName = dependentPackageNames.includes(packageName),
+        cyclicDependencyExists = dependentPackageNamesIncludesPackageName;  ///
 
-  if (dependentPackageNamesIncludesPackageName) {
+  if (cyclicDependencyExists) {
     const firstDependentPackageName = first(dependentPackageNames),
           packageNames = dependentPackageNames.concat(firstDependentPackageName),
           packageNamesString = packageNames.join(`' -> '`);
 
-    console.log(`There is a cyclic dependency: '${packageNamesString}'.`);
-
-    process.exit();
+    log.error(`There is a cyclic dependency: '${packageNamesString}'.`);
   }
+
+  return cyclicDependencyExists;
 }

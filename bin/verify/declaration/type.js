@@ -1,58 +1,29 @@
 "use strict";
 
-const dom = require("occam-dom");
+const dom = require("occam-dom"),
+      necessary = require("necessary");
 
-const { Query } = dom;
+const verifyType = require("../../verify/type"),
+      typeUtilities = require("../../utilities/type");
 
-const Type = require("../../type"),
-      Error = require("../../error");
+const { Query } = dom,
+      { arrayUtilities } = necessary,
+      { first, second } = arrayUtilities,
+      { typeNameFromTypeNameNode } = typeUtilities;
 
-const typeNameNodesQuery = Query.fromExpression("//typeName/@*");
+const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
 
 function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
-  const typeNameNodes = typeNameNodesQuery.execute(typeDeclarationNode),
-        typeNames = typeNameNodes.map((typeNameNode) => {
-          const typeNameNodeContent = typeNameNode.getContent(),
-                typeName = typeNameNodeContent; ///
+  const typeNameNameNodes = typeNameNameNodesQuery.execute(typeDeclarationNode),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
+        firstTypeName = first(typeNames),
+        secondTypeName = second(typeNames),
+        typeName = firstTypeName, ///
+        superTypeName = secondTypeName, ///
+        typeVerified = verifyType(typeName, superTypeName, fileContext),
+        typeDeclarationVerified = typeVerified; ///
 
-          return typeName;
-        }),
-        typeName = typeNames.shift(), ///
-        typePresent = fileContext.isTypePresentByTypeName(typeName);
-
-  if (typePresent) {
-    const node = typeDeclarationNode, ///
-          message = `The type '${typeName}' is already present.`;
-
-    throw new Error(node, message);
-  }
-
-  const superTypeName = typeNames.shift();
-
-  if (superTypeName === undefined) {
-    const type = Type.fromTypeName(typeName),
-          typeString = type.asString();
-
-    fileContext.addType(type);
-
-    console.log(`Verified the '${typeString}' type.`);
-  } else {
-    const superType = fileContext.findTypeByTypeName(superTypeName);
-
-    if (superType === undefined) {
-      const node = typeDeclarationNode, ///
-            message = `The super-type '${superTypeName}' is missing.`;
-
-      throw new Error(node, message);
-    }
-
-    const type = Type.fromTypeNameAndSuperType(typeName, superType),
-          typeString = type.asString();
-
-    fileContext.addType(type);
-
-    console.log(`Verified the '${typeString}' type.`);
-  }
+  return typeDeclarationVerified;
 }
 
 module.exports = verifyTypeDeclaration;

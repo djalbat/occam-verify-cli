@@ -15,7 +15,7 @@
     "occam-custom-grammars": "^5.0.39",
     "occam-dom": "^2.0.53",
     "occam-grammar-utilities": "^5.0.33",
-    "occam-grammars": "^1.0.14",
+    "occam-grammars": "^1.0.15",
     "occam-open-cli": "^2.0.118",
     "occam-parsers": "^14.0.1"
   },

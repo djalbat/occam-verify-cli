@@ -21,6 +21,18 @@ const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
       dependencyStringLiteralNodesQuery = Query.fromExpression("//dependency//@string-literal");
 
+function findPackageContext(packageName, packageContexts) {
+  const packageContext = packageContexts.find((packageContext) => {
+    const packageContextPackageName = packageContext.getPackageName();
+
+    if (packageContextPackageName === packageName) {
+      return true;
+    }
+  });
+
+  return packageContext;
+}
+
 function filePathsFromPackageName(packageName) {
   let filePaths;
 
@@ -69,6 +81,7 @@ function combinedCustomGrammarFromPackageNames(packageNames) {
 }
 
 module.exports = {
+  findPackageContext,
   filePathsFromPackageName,
   dependencyPackageNamesFromPackageName,
   combinedCustomGrammarFromPackageNames

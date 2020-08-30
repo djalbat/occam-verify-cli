@@ -6,11 +6,10 @@ const contextMixins = require("../mixins/context"),
       grammarUtilities = require("../utilities/grammar"),
       packageUtilities = require("../utilities/package");
 
-const { combinedCustomGrammarFromPackageNames } = packageUtilities,
-      { florenceLexerFromNothing, florenceParserFromNothing, florenceLexerFromCombinedCustomGrammar, florenceParserFromCombinedCustomGrammar } = grammarUtilities;
-
 const { arrayUtilities } = necessary,
-      { push } = arrayUtilities;
+      { push } = arrayUtilities,
+      { combinedCustomGrammarFromPackageNames } = packageUtilities,
+      { florenceLexerFromNothing, florenceParserFromNothing, florenceLexerFromCombinedCustomGrammar, florenceParserFromCombinedCustomGrammar } = grammarUtilities;
 
 class PackageContext {
   constructor(packageName, fileContexts, florenceLexer, florenceParser, dependencyPackageContexts) {

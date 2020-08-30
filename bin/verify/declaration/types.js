@@ -1,14 +1,34 @@
 "use strict";
 
-const queries = require("../../miscellaneous/queries"),
-      verifyTypeDeclaration = require("../../verify/declaration/type");
+const dom = require("occam-dom"),
+  necessary = require("necessary");
 
-const { typeDeclarationNodesQuery } = queries;
+const verifyType = require("../../verify/type"),
+      typeUtilities = require("../../utilities/type");
 
-function verifyTypesDeclaration(typesDeclarationNode, context, ruleMap) {
-  const typeDeclarationNodes = typeDeclarationNodesQuery(typesDeclarationNode);
+const { Query } = dom,
+      { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { typeNameFromTypeNameNode } = typeUtilities;
 
-  typeDeclarationNodes.forEach((typeDeclarationNode) => verifyTypeDeclaration(typeDeclarationNode, context, ruleMap));
+const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name"),
+      typeNamesNameNodesQuery = Query.fromExpression("/*/typeNames//@name");
+
+function verifyTypesDeclaration(typeDeclarationNode, fileContext) {
+  const typeNamesNameNodes = typeNamesNameNodesQuery.execute(typeDeclarationNode),
+        typeNames = typeNamesNameNodes.map((typeNamesNameNode) => typeNameFromTypeNameNode(typeNamesNameNode)),
+        typeNameNameNodes = typeNameNameNodesQuery.execute(typeDeclarationNode),
+        superTypeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
+        firstSuperTypeName = first(superTypeNames),
+        superTypeName = firstSuperTypeName, ///
+        typesVerified = typeNames.every((typeName) => {
+          const typeVerified = verifyType(typeName, superTypeName, fileContext);
+
+          return typeVerified;
+        }),
+        typeDeclarationVerified = typesVerified; ///
+
+  return typeDeclarationVerified;
 }
 
 module.exports = verifyTypesDeclaration;

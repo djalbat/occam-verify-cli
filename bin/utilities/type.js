@@ -8,6 +8,13 @@ const { arrayUtilities } = necessary,
       { first } = arrayUtilities,
       { termNameNodesQuery, expressionTermNodesQuery, nameTerminalNodeQuery } = queries;
 
+function typeNameFromTypeNameNode(typeNameNode) {
+  const typeNameNodeContent = typeNameNode.getContent(),
+    typeName = typeNameNodeContent; ///
+
+  return typeName;
+}
+
 function typeFromTermNode(termNode, fileContext) {
   let type = undefined;
 
@@ -55,6 +62,7 @@ function typeFromOperatorExpressionNode(operatorExpressionNode, fileContext) {
 }
 
 module.exports = {
+  typeNameFromTypeNameNode,
   typeFromTermNode,
   typeFromExpressionNode,
   typeFromConstructorTermNode,

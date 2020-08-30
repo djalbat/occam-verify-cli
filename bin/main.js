@@ -17,7 +17,7 @@ function main(commands, options) {
     log.setLogLevel(logLevel);
   }
 
-  packageName ?
+  (packageName !== undefined) ?
     verifyPackage(packageName) :
       verifyFile(filePath);
 }
