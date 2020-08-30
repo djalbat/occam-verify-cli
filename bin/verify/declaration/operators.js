@@ -1,58 +1,66 @@
 "use strict";
 
-const necessary = require("necessary");
+const dom = require("occam-dom"),
+      necessary = require("necessary");
 
-const Error = require("../../error"),
-      queries = require("../../miscellaneous/queries"),
+const log = require("../../log"),
       Operator = require("../../operator"),
       nodeUtilities = require("../../utilities/node"),
-      verifyTypeName = require("../../verify/typeName"),
+      typeUtilities = require("../../utilities/type"),
       verifyConstructorOperator = require("../../verify/constructorOperator");
 
-const { arrayUtilities } = necessary,
+const { Query } = dom,
+      { arrayUtilities } = necessary,
       { first } = arrayUtilities,
       { nodeAsString } = nodeUtilities,
-      { verifyExpressionAsOperator } = verifyConstructorOperator,
-      { expressionNodesQuery, typeNameTerminalNodeQuery } = queries;
+      { typeNameFromTypeNameNode } = typeUtilities,
+      { verifyExpressionAsOperator } = verifyConstructorOperator;
 
-function verifyOperatorsDeclaration(operatorDeclarationNode, fileContext) {
-  let type = undefined;
+const expressionNodesQuery = Query.fromExpression("/*/expressions/expression"),
+      typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
 
-  const expressionNodes = expressionNodesQuery(operatorDeclarationNode),
-        firstTermNode = first(expressionNodes),
-        expressionNode = firstTermNode, ///
-        typeNameTerminalNode = typeNameTerminalNodeQuery(operatorDeclarationNode);
+function verifyOperatorDeclaration(operatorDeclarationNode, fileContext) {
+  let operatorDeclarationVerified = false;
 
-  if (typeNameTerminalNode !== undefined) {
-    type = verifyTypeName(typeNameTerminalNode, fileContext);
+  const typeNameNameNodes = typeNameNameNodesQuery.execute(operatorDeclarationNode),
+        expressionNodes = expressionNodesQuery.execute(operatorDeclarationNode),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
+        firstTypeName = first(typeNames),
+        typeName = firstTypeName; ///
+
+  let type = undefined,
+      typeVerified = true;
+
+  if (typeName !== undefined) {
+    type = fileContext.findTypeByTypeName(typeName);
 
     if (type === undefined) {
-      const node = expressionNode,  ///
-            expressionString = nodeAsString(expressionNode),
-            message = `The operator '${expressionString}' cannot be verified because the type cannot be found.`;
+      const expressionNodeStrings = expressionNodes.map((expressionNode) => nodeAsString(expressionNode)),
+            expressionNodesString = expressionNodeStrings.join(",");
 
-      throw new Error(node, message);
+      typeVerified = false;
+
+      log.error(`The '${expressionNodesString}' operators' '${typeName}' type is missing.`);
     }
   }
 
-  expressionNodes.forEach((expressionNode) => {
-    const verified = verifyExpressionAsOperator(expressionNode, fileContext);
+  if (typeVerified) {
+    const expressionsVerified = expressionNodes.every((expressionNode) => {
+      const expressionVerified = verifyExpressionAsOperator(expressionNode, fileContext),
+            operator = Operator.fromExpressionNodeAndType(expressionNode, type),
+            operatorString = operator.asString();
 
-    if (!verified) {
-      const node = expressionNode,  ///
-            expressionString = nodeAsString(expressionNode),
-            message = `The operator '${expressionString}' cannot be verified.`;
+      fileContext.addOperator(operator);
 
-      throw new Error(node, message);
-    }
+      log.info(`Verified the '${operatorString}' operator.`);
 
-    const operator = Operator.fromTermNodeAndType(expressionNode, type),
-          operatorString = operator.asString();
+      return expressionVerified;
+    });
 
-    fileContext.addOperator(operator);
+    operatorDeclarationVerified = expressionsVerified;
+  }
 
-    console.log(`Verified the '${operatorString}' operator.`);
-  });
+  return operatorDeclarationVerified;
 }
 
-module.exports = verifyOperatorsDeclaration;
+module.exports = verifyOperatorDeclaration;

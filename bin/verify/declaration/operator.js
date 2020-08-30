@@ -1,50 +1,66 @@
 "use strict";
 
-const Error = require("../../error"),
-      queries = require("../../miscellaneous/queries"),
+const dom = require("occam-dom"),
+      necessary = require("necessary");
+
+const log = require("../../log"),
       Operator = require("../../operator"),
       nodeUtilities = require("../../utilities/node"),
-      verifyTypeName = require("../../verify/typeName"),
+      typeUtilities = require("../../utilities/type"),
       verifyConstructorOperator = require("../../verify/constructorOperator");
 
-const { nodeAsString } = nodeUtilities,
-      { verifyExpressionAsOperator } = verifyConstructorOperator,
-      { expressionNodeQuery, typeNameTerminalNodeQuery } = queries;
+const { Query } = dom,
+      { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { nodeAsString } = nodeUtilities,
+      { typeNameFromTypeNameNode } = typeUtilities,
+      { verifyExpressionAsOperator } = verifyConstructorOperator;
+
+const expressionNodesQuery = Query.fromExpression("/*/expression"),
+      typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
 
 function verifyOperatorDeclaration(operatorDeclarationNode, fileContext) {
-  let type = undefined;
+  let operatorDeclarationVerified = false;
 
-  const expressionNode = expressionNodeQuery(operatorDeclarationNode),
-        typeNameTerminalNode = typeNameTerminalNodeQuery(operatorDeclarationNode);
+  const typeNameNameNodes = typeNameNameNodesQuery.execute(operatorDeclarationNode),
+        expressionNodes = expressionNodesQuery.execute(operatorDeclarationNode),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
+        firstExpressionNode = first(expressionNodes),
+        firstTypeName = first(typeNames),
+        expressionNode = firstExpressionNode, ///
+        typeName = firstTypeName; ///
 
-  if (typeNameTerminalNode !== undefined) {
-    type = verifyTypeName(typeNameTerminalNode, fileContext);
+  let type = undefined,
+      typeVerified = true;
+
+  if (typeName !== undefined) {
+    type = fileContext.findTypeByTypeName(typeName);
 
     if (type === undefined) {
-      const node = expressionNode,  ///
-            expressionString = nodeAsString(expressionNode),
-            message = `The operator '${expressionString}' cannot be verified because the type cannot be found.`;
+      const expressionNodeString = nodeAsString(expressionNode);
 
-      throw new Error(node, message);
+      typeVerified = false;
+
+      log.error(`The '${expressionNodeString}' operator's '${typeName}' type is missing.`);
     }
   }
 
-  const verified = verifyExpressionAsOperator(expressionNode, fileContext);
+  if (typeVerified) {
+    const expressionVerified = verifyExpressionAsOperator(expressionNode, fileContext);
 
-  if (!verified) {
-    const node = expressionNode,  ///
-          expressionString = nodeAsString(expressionNode),
-          message = `The operator '${expressionString}' cannot be verified.`;
+    if (expressionVerified) {
+      const operator = Operator.fromExpressionNodeAndType(expressionNode, type),
+            operatorString = operator.asString();
 
-    throw new Error(node, message);
+      fileContext.addOperator(operator);
+
+      operatorDeclarationVerified = true;
+
+      log.info(`Verified the '${operatorString}' operator.`);
+    }
   }
 
-  const operator = Operator.fromExpressionNodeAndType(expressionNode, type),
-        operatorString = operator.asString();
-
-  fileContext.addOperator(operator);
-
-  console.log(`Verified the '${operatorString}' operator.`);
+  return operatorDeclarationVerified;
 }
 
 module.exports = verifyOperatorDeclaration;

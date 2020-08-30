@@ -1,16 +1,12 @@
 "use strict";
 
-const TRACE = "TRACE";
-const DEBUG = "DEBUG";
-const INFO = "INFO";
-const WARNING = "WARNING";
-const ERROR = "ERROR";
-const FATAL = "FATAL";
-const DEFAULT_LOG_LEVEL = INFO;
-const TYPE_DECLARATION = "typeDeclaration";
-const TYPES_DECLARATION = "typesDeclaration";
-const VARIABLE_DECLARATION = "variableDeclaration";
-const VARIABLES_DECLARATION = "variablesDeclaration";
+const TRACE = "TRACE",
+      DEBUG = "DEBUG",
+      INFO = "INFO",
+      WARNING = "WARNING",
+      ERROR = "ERROR",
+      FATAL = "FATAL",
+      DEFAULT_LOG_LEVEL = INFO;
 
 module.exports = {
   TRACE,
@@ -19,9 +15,5 @@ module.exports = {
   WARNING,
   ERROR,
   FATAL,
-  DEFAULT_LOG_LEVEL,
-  TYPE_DECLARATION,
-  TYPES_DECLARATION,
-  VARIABLE_DECLARATION,
-  VARIABLES_DECLARATION
+  DEFAULT_LOG_LEVEL
 };

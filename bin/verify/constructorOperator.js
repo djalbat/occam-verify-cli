@@ -18,18 +18,20 @@ function verifyExpressionAsOperator(expressionNode, fileContext) {
   const nonTerminalNode = expressionNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
         parentNode = nonTerminalNode,  ///
-        verified = verifyChildNodes(childNodes, parentNode, fileContext);
+        verified = verifyChildNodes(childNodes, parentNode, fileContext),
+        expressionVerified = verified;  ///
 
-  return verified;
+  return expressionVerified;
 }
 
 function verifyTermAsConstructor(termNode, fileContext) {
   const nonTerminalNode = termNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
         parentNode = nonTerminalNode,  ///
-        verified = verifyChildNodes(childNodes, parentNode, fileContext);
+        verified = verifyChildNodes(childNodes, parentNode, fileContext),
+        termVerified = verified;  ///
 
-  return verified;
+  return termVerified;
 }
 
 module.exports = {

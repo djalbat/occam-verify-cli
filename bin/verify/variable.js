@@ -15,7 +15,7 @@ function verifyVariable(variableName, typeName, fileContext) {
     const type = fileContext.findTypeByTypeName(typeName);
 
     if (type === undefined) {
-      log.error(`The variable '${variableName}''s type '${typeName}' is missing.`);
+      log.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
     } else {
       const variable = Variable.fromNameAndType(name, type),
             variableString = variable.asString();

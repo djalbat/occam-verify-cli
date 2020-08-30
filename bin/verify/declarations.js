@@ -5,16 +5,25 @@ const dom = require("occam-dom");
 const { Query } = dom;
 
 const log = require("../log"),
-      constants = require("../constants"),
       verifyTypeDeclaration = require("../verify/declaration/type"),
       verifyTypesDeclaration = require("../verify/declaration/types"),
       verifyVariableDeclaration = require("../verify/declaration/variable"),
-      verifyVariablesDeclaration = require("../verify/declaration/variables");
+      verifyVariablesDeclaration = require("../verify/declaration/variables"),
+      verifyOperatorDeclaration = require("../verify/declaration/operator"),
+      verifyOperatorsDeclaration = require("../verify/declaration/operators"),
+      verifyConstructorDeclaration = require("../verify/declaration/constructor"),
+      verifyConstructorsDeclaration = require("../verify/declaration/constructors");
 
-const { TYPE_DECLARATION,
-        TYPES_DECLARATION,
-        VARIABLE_DECLARATION,
-        VARIABLES_DECLARATION } = constants;
+const ruleNameToVerifyDeclarationMap = {
+  "typeDeclaration": verifyTypeDeclaration,
+  "typesDeclaration": verifyTypesDeclaration,
+  "variableDeclaration": verifyVariableDeclaration,
+  "variablesDeclaration": verifyVariablesDeclaration,
+  "operatorDeclaration": verifyOperatorDeclaration,
+  "operatorsDeclaration": verifyOperatorsDeclaration,
+  "constructorDeclaration": verifyConstructorDeclaration,
+  "constructorsDeclaration": verifyConstructorsDeclaration
+};
 
 const declarationNodesQuery = Query.fromExpression("//declaration/*", 2);
 
@@ -27,47 +36,9 @@ function verifyDeclarations(fileContext) {
         declarationNodes = declarationNodesQuery.execute(node);
 
   declarationsVerified = declarationNodes.every((declarationNode) => {
-    let declarationVerified = false;
-
-    const ruleName = declarationNode.getRuleName();
-
-    switch (ruleName) {
-      case TYPE_DECLARATION: {
-        const typeDeclarationNode = declarationNode,  ///
-              typeDeclarationVerified = verifyTypeDeclaration(typeDeclarationNode, fileContext);
-
-        declarationVerified = typeDeclarationVerified;  ///
-
-        break;
-      }
-
-      case TYPES_DECLARATION: {
-        const typesDeclarationNode = declarationNode,  ///
-              typesDeclarationVerified = verifyTypesDeclaration(typesDeclarationNode, fileContext);
-
-        declarationVerified = typesDeclarationVerified;  ///
-
-        break;
-      }
-
-      case VARIABLE_DECLARATION: {
-        const variableDeclarationNode = declarationNode,  ///
-              variableDeclarationVerified = verifyVariableDeclaration(variableDeclarationNode, fileContext);
-
-        declarationVerified = variableDeclarationVerified;  ///
-
-        break;
-      }
-
-      case VARIABLES_DECLARATION: {
-        const variablesDeclarationNode = declarationNode,  ///
-              variablesDeclarationVerified = verifyVariablesDeclaration(variablesDeclarationNode, fileContext);
-
-        declarationVerified = variablesDeclarationVerified;  ///
-
-        break;
-      }
-    }
+    const ruleName = declarationNode.getRuleName(),
+          verifyDeclaration = ruleNameToVerifyDeclarationMap[ruleName],
+          declarationVerified = verifyDeclaration(declarationNode, fileContext);
 
     return declarationVerified;
   });

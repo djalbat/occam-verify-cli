@@ -1,50 +1,66 @@
 "use strict";
 
-const Error = require("../../error"),
-      queries = require("../../miscellaneous/queries"),
+const dom = require("occam-dom"),
+      necessary = require("necessary");
+
+const log = require("../../log"),
       Constructor = require("../../constructor"),
       nodeUtilities = require("../../utilities/node"),
-			verifyTypeName = require("../../verify/typeName"),
+      typeUtilities = require("../../utilities/type"),
       verifyConstructorOperator = require("../../verify/constructorOperator");
 
-const { nodeAsString } = nodeUtilities,
+const { Query } = dom,
+      { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { nodeAsString } = nodeUtilities,
       { verifyTermAsConstructor } = verifyConstructorOperator,
-      { termNodeQuery, typeNameTerminalNodeQuery } = queries;
+      { typeNameFromTypeNameNode } = typeUtilities;
+
+const termNodesQuery = Query.fromExpression("/*/term"),
+      typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
 
 function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
-  let type = undefined;
+  let constructorDeclarationVerified = false;
 
-  const termNode = termNodeQuery(constructorDeclarationNode),
-        typeNameTerminalNode = typeNameTerminalNodeQuery(constructorDeclarationNode);
+  const typeNameNameNodes = typeNameNameNodesQuery.execute(constructorDeclarationNode),
+        termNodes = termNodesQuery.execute(constructorDeclarationNode),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
+        firstTermNode = first(termNodes),
+        firstTypeName = first(typeNames),
+        termNode = firstTermNode, ///
+        typeName = firstTypeName; ///
 
-  if (typeNameTerminalNode !== undefined) {
-    type = verifyTypeName(typeNameTerminalNode, fileContext);
+  let type = undefined,
+      typeVerified = true;
+
+  if (typeName !== undefined) {
+    type = fileContext.findTypeByTypeName(typeName);
 
     if (type === undefined) {
-      const node = termNode,  ///
-            termString = nodeAsString(termNode),
-            message = `The constructor '${termString}' cannot be verified because the type cannot be found.`;
+      const termNodeString = nodeAsString(termNode);
 
-      throw new Error(node, message);
+      typeVerified = false;
+
+      log.error(`The '${termNodeString}' constructor's '${typeName}' type is missing.`);
     }
   }
 
-  const verified = verifyTermAsConstructor(termNode, fileContext);
+  if (typeVerified) {
+    const termVerified = verifyTermAsConstructor(termNode, fileContext);
 
-  if (!verified) {
-    const node = termNode,  ///
-          termString = nodeAsString(termNode),
-          message = `The constructor '${termString}' cannot be verified.`;
+    if (termVerified) {
+      const constructor = Constructor.fromTermNodeAndType(termNode, type),
+            constructorString = constructor.asString();
 
-    throw new Error(node, message);
+      fileContext.addConstructor(constructor);
+
+      constructorDeclarationVerified = true;
+
+      log.info(`Verified the '${constructorString}' constructor.`);
+    }
   }
 
-  const constructor = Constructor.fromTermNodeAndType(termNode, type),
-        constructorString = constructor.asString();
-
-  fileContext.addConstructor(constructor);
-
-  console.log(`Verified the '${constructorString}' constructor.`);
+  return constructorDeclarationVerified;
 }
 
 module.exports = verifyConstructorDeclaration;

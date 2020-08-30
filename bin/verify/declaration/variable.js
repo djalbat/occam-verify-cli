@@ -3,8 +3,8 @@
 const dom = require("occam-dom"),
       necessary = require("necessary");
 
-const verifyVariable = require("../../verify/variable"),
-      typeUtilities = require("../../utilities/type"),
+const typeUtilities = require("../../utilities/type"),
+      verifyVariable = require("../../verify/variable"),
       variableUtilities = require("../../utilities/variable");
 
 const { Query } = dom,
