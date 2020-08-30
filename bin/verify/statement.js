@@ -1,49 +1,50 @@
 "use strict";
 
-const necessary = require("necessary");
+const dom = require("occam-dom"),
+      necessary = require("necessary");
 
-const Error = require("../error"),
-      queries = require("../miscellaneous/queries"),
+const log = require("../log"),
       nodeUtilities = require("../utilities/node"),
       verifyTermExpression = require("../verify/termExpression");
 
-const { arrayUtilities } = necessary,
+const { Query } = dom,
+      { arrayUtilities } = necessary,
       { first } = arrayUtilities,
       { nodeAsString } = nodeUtilities,
-      { verifyExpression } = verifyTermExpression,
-      { statementExpressionNodesQuery } = queries;
+      { verifyExpression } = verifyTermExpression;
+
+const statementExpressionNodesQuery = Query.fromExpression("/statement/expression!");
 
 function verifyStatement(statementNode, fileContext) {
-  const statementExpressionNodes = statementExpressionNodesQuery(statementNode),
-        statementExpressionNodesLength = statementExpressionNodes.length;
+  let statementVerified = false;
 
-  if (statementExpressionNodesLength === 1) {
-    const firstStatementExpressionNode = first(statementExpressionNodes),
-          expressionNode = firstStatementExpressionNode,  ///
-          operator = verifyExpression(expressionNode, fileContext);
+  const statementExpressionNodes = statementExpressionNodesQuery.execute(statementNode),
+        firstStatementExpressionNode = first(statementExpressionNodes),
+        expressionNode = firstStatementExpressionNode;  ///
+
+  if (expressionNode !== undefined) {
+    const operator = verifyExpression(expressionNode, fileContext);
 
     if (operator === undefined) {
-      const node = expressionNode,  ///
-            expressionString = nodeAsString(expressionNode),
-            message = `The statement's sub-expression '${expressionString}' cannot be verified.`;
+      const expressionString = nodeAsString(expressionNode);
 
-      throw new Error(node, message);
+      log.error(`The '${expressionString}' expression cannot be verified.`);
+    } else {
+      const type = operator.getType();
+
+      if (type !== undefined) {
+        const noSuperType = true,
+              typeString = type.asString(noSuperType),
+              expressionString = nodeAsString(expressionNode);
+
+        log.error(`The '${expressionString}' expression cannot be verified because its type '${typeString}' is not undefined.`);
+      } else {
+        statementVerified = true;
+      }
     }
-
-    const type = operator.getType();
-
-    if (type !== undefined) {
-      const node = expressionNode,  ///
-            noSuperType = true,
-            typeString = type.asString(noSuperType),
-            expressionString = nodeAsString(expressionNode),
-            message = `The statement's sub-expression '${expressionString}' cannot be verified because its type '${typeString}' should be undefined.`;
-
-      throw new Error(node, message);
-    }
-  } else {
-    debugger
   }
+
+  return statementVerified;
 }
 
 module.exports = verifyStatement;

@@ -4,8 +4,7 @@ const dom = require("occam-dom");
 
 const { Query } = dom;
 
-const log = require("../log"),
-      verifyTypeDeclaration = require("../verify/declaration/type"),
+const verifyTypeDeclaration = require("../verify/declaration/type"),
       verifyTypesDeclaration = require("../verify/declaration/types"),
       verifyVariableDeclaration = require("../verify/declaration/variable"),
       verifyVariablesDeclaration = require("../verify/declaration/variables"),
@@ -25,12 +24,10 @@ const ruleNameToVerifyDeclarationMap = {
   "constructorsDeclaration": verifyConstructorsDeclaration
 };
 
-const declarationNodesQuery = Query.fromExpression("//declaration/*", 2);
+const declarationNodesQuery = Query.fromExpression("/document/declaration/*", 2);
 
 function verifyDeclarations(fileContext) {
   let declarationsVerified;
-
-  log.debug(`Verifying declarations...`);
 
   const node = fileContext.getNode(),
         declarationNodes = declarationNodesQuery.execute(node);

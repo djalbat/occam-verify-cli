@@ -2,11 +2,13 @@
 
 const log = require("../log"),
       FileContext = require("../context/file"),
+      verifyAxioms = require("../verify/axioms"),
       PackageContext = require("../context/package"),
       verifyDeclarations = require("../verify/declarations");
 
 function verifyFile(filePath, packageContext = PackageContext.fromNothing()) {
   let fileVerified = false,
+      axiomsVerified = false,
       declarationsVerified = false;
 
   log.debug(`Verifying the '${filePath}' file...`);
@@ -16,11 +18,13 @@ function verifyFile(filePath, packageContext = PackageContext.fromNothing()) {
   declarationsVerified = verifyDeclarations(fileContext);
 
   if (declarationsVerified) {
-    fileVerified = true;  ///declarationsVerified;  ///
+    axiomsVerified = verifyAxioms(fileContext);
   }
 
-  if (fileVerified) {
+  if (axiomsVerified && declarationsVerified) {
     packageContext.addFileContext(fileContext);
+
+    fileVerified = true;
 
     log.info(`Verified the '${filePath}' file.`);
   }

@@ -1,65 +1,81 @@
 "use strict";
 
-const Error = require("../error"),
+const dom = require("occam-dom"),
+      necessary = require("necessary");
+
+const log = require("../log"),
       Axiom = require("../axiom"),
-      queries = require("../miscellaneous/queries"),
-      nodeUtilities = require("../utilities/node"),
+      labelUtilities = require("../utilities/label"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement"),
       verifyIndicativeConditional = require("../verify/indicativeConditional");
 
-const { nodeAsString } = nodeUtilities,
-      { labelsNodeQuery,
-        labelNameTerminalNodesQuery,
-        unqualifiedStatementNodeQuery,
-        indicativeConditionalNodeQuery } = queries;
+const { Query } = dom,
+      { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { labelNameFromLabelNameNode } = labelUtilities;
+
+const labelNameNodesQuery = Query.fromExpression("/axiom/labels/label//@name"),
+      unqualifiedStatementNodesQuery = Query.fromExpression("/axiom/unqualifiedStatement"),
+      indicativeConditionalNodesQuery = Query.fromExpression("/axiom/indicativeConditional");
 
 function verifyAxiom(axiomNode, fileContext) {
-  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
-        indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
+  let axiomVerified = false;
 
-  if (unqualifiedStatementNode !== undefined) {
-    verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
-  }
+  const labelNameNodes = labelNameNodesQuery.execute(axiomNode),
+        labelNames = labelNameNodes.map((labelNameNode) => labelNameFromLabelNameNode(labelNameNode)),
+        labels = labelNames,  ///
+        labelsVerified = labels.every((label) => {
+          let labelVerified = false;
 
-  if (indicativeConditionalNode !== undefined) {
-    verifyIndicativeConditional(indicativeConditionalNode, fileContext);
-  }
+          const labelPresent = fileContext.isLabelPresent(label);
 
-  const labelsNode = labelsNodeQuery(axiomNode),
-        labelNameTerminalNodes = labelNameTerminalNodesQuery(labelsNode),
-        labels = labelNameTerminalNodes.map((labelNameTerminalNode) => {
-          const labelNameTerminalNodeContent = labelNameTerminalNode.getContent(),
-                label = labelNameTerminalNodeContent; ///
+          if (labelPresent) {
+            log.error(`The label ${label} is already present`);
+          } else {
+            labelVerified = true;
+          }
 
-          return label;
+          return labelVerified;
         });
 
-  labels.forEach((label) => {
-    const labelPresent = fileContext.isLabelPresent(label);
+  if (labelsVerified) {
+    let axiom = undefined;
 
-    if (labelPresent) {
-      const node = axiomNode, ///
-            message = `The label ${label} is already present`;
+    const unqualifiedStatementNodes = unqualifiedStatementNodesQuery.execute(axiomNode),
+          indicativeConditionalNodes = indicativeConditionalNodesQuery.execute(axiomNode),
+          firstUnqualifiedStatementNode = first(unqualifiedStatementNodes),
+          firstIndicativeConditionalNode = first(indicativeConditionalNodes),
+          unqualifiedStatementNode = firstUnqualifiedStatementNode, ///
+          indicativeConditionalNode = firstIndicativeConditionalNode; ///
 
-      throw new Error(node, message);
+    if (false) {
+      ///
+    } else if (unqualifiedStatementNode !== undefined) {
+      const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
+
+      if (unqualifiedStatementVerified) {
+        axiom = Axiom.fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels);
+      }
+    } else if (indicativeConditionalNode !== undefined) {
+      const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, fileContext);
+
+      if (indicativeConditionalVerified) {
+        axiom = Axiom.fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels);
+      }
     }
-  });
 
-  let axiom;
+    if (axiom !== undefined) {
+      const labelsString = labels.join(",")
 
-  if (unqualifiedStatementNode !== undefined) {
-    axiom = Axiom.fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels);
+      fileContext.addAxiom(axiom);
+
+      axiomVerified = true;
+
+      log.info(`Verified the '${labelsString}' axiom.`);
+    }
   }
 
-  if (indicativeConditionalNode !== undefined) {
-    axiom = Axiom.fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels);
-  }
-
-  const labelsString = nodeAsString(labelsNode);
-
-  fileContext.addAxiom(axiom);
-
-  console.log(`Verified the '${labelsString}' axiom.`);
+  return axiomVerified;
 }
 
 module.exports = verifyAxiom;

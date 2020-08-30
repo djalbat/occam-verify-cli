@@ -1,38 +1,51 @@
 "use strict";
 
-const Error = require("../error"),
-      queries = require("../miscellaneous/queries"),
+const dom = require("occam-dom"),
+      necessary = require("necessary");
+
+const log = require("../log"),
       nodeUtilities = require("../utilities/node"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
-const { nodeAsString } = nodeUtilities,
-      { qualifiedStatementNodeQuery, unqualifiedStatementNodeQuery } = queries;
+const { Query } = dom,
+      { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { nodeAsString } = nodeUtilities;
+
+const qualifiedStatementNodeQuery = Query.fromExpression("/indicativeConditional/qualifiedStatement"),
+      unqualifiedStatementNodeQuery = Query.fromExpression("/indicativeConditional/unqualifiedStatement");
 
 function verifyIndicativeConditional(indicativeConditionalNode, fileContext) {
-  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(indicativeConditionalNode);
+  let indicativeConditionalVerified;
 
-  if (unqualifiedStatementNode === undefined) {
-    const node = indicativeConditionalNode,  ///
-          indicativeConditionalString = nodeAsString(indicativeConditionalNode),
-          message = `The indicative conditional '${indicativeConditionalString}' cannot be verified because its antecedent is not an unqualified statement.`;
+  const unqualifiedStatementNodes = unqualifiedStatementNodeQuery.execute(indicativeConditionalNode),
+        qualifiedStatementNodes = qualifiedStatementNodeQuery.execute(indicativeConditionalNode),
+        firstUnqualifiedStatementNode = first(unqualifiedStatementNodes),
+        firstQualifiedStatementNode = first(qualifiedStatementNodes),
+        unqualifiedStatementNode = firstUnqualifiedStatementNode,
+        qualifiedStatementNode = firstQualifiedStatementNode; ///
 
-    throw new Error(node, message);
+  if (false) {
+    ///
+  } else if (unqualifiedStatementNode === undefined) {
+    const indicativeConditionalString = nodeAsString(indicativeConditionalNode);
+
+    log.error(`The indicative conditional '${indicativeConditionalString}' cannot be verified because its antecedent is not a statement.`);
+  } else if (qualifiedStatementNode === undefined) {
+    const indicativeConditionalString = nodeAsString(indicativeConditionalNode);
+
+    log.error(`The indicative conditional '${indicativeConditionalString}' cannot be verified because its consequent is not a statement.`);
+  } else {
+    const qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, fileContext),
+          unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
+
+    if (qualifiedStatementVerified && unqualifiedStatementVerified) {
+      indicativeConditionalVerified = true;
+    }
   }
 
-  verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
-
-  const qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode);
-
-  if (qualifiedStatementNode === undefined) {
-    const node = indicativeConditionalNode,  ///
-          indicativeConditionalString = nodeAsString(indicativeConditionalNode),
-          message = `The indicative conditional '${indicativeConditionalString}' cannot be verified because its consequent is not a qualified statement.`;
-
-    throw new Error(node, message);
-  }
-
-  verifyQualifiedStatement(qualifiedStatementNode, fileContext);
+  return indicativeConditionalVerified;
 }
 
 module.exports = verifyIndicativeConditional;
