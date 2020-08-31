@@ -1,8 +1,7 @@
 "use strict";
 
-const dom = require("occam-dom");
-
-const { Query } = dom;
+const dom = require("occam-dom"),
+      necessary = require("necessary");
 
 const Error = require("../error"),
       Operator = require("../operator"),
@@ -14,12 +13,15 @@ const Error = require("../error"),
       variableUtilities = require("../utilities/variable"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
-const { nodeAsString } = nodeUtilities,
+const { Query } = dom,
+      { arrayUtilities } = necessary,
+      { first } = arrayUtilities,
+      { nodeAsString } = nodeUtilities,
       { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
       { variableFromTermNode, variableFromExpressionNode } = variableUtilities,
       { typeFromConstructorTermNode, typeFromOperatorExpressionNode } = typeUtilities;
 
-const expressionTermQuery = Query.fromExpression("/expression/term");
+const expressionTermQuery = Query.fromExpression("/expression/term!");
 
 function verifyExpression(expressionNode, fileContext) {
   let operator = undefined;
@@ -30,11 +32,12 @@ function verifyExpression(expressionNode, fileContext) {
 
   if (operator === undefined) {
     const expressionTermNodes = expressionTermQuery.execute(expressionNode),
-          expressionTermNode = expressionTermNodes.shift(); ///
+          firstExpressionTermNode = first(expressionTermNodes),
+          expressionTermNode = firstExpressionTermNode; ///
 
     if (expressionTermNode !== undefined) {
       const termNode = expressionTermNode,  ///
-            constructor = verifyTerm(termNode, fileContext);
+            constructor = verifyTermAgainstConstructors(termNode, fileContext);
 
       if (constructor !== undefined) {
         const type = constructor.getType();

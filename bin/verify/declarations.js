@@ -24,7 +24,7 @@ const ruleNameToVerifyDeclarationMap = {
   "constructorsDeclaration": verifyConstructorsDeclaration
 };
 
-const declarationNodesQuery = Query.fromExpression("/document/declaration/*", 2);
+const declarationNodesQuery = Query.fromExpression("/document/declaration/*");
 
 function verifyDeclarations(fileContext) {
   let declarationsVerified;
