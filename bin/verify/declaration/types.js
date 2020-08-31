@@ -1,33 +1,32 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
-
 const verifyType = require("../../verify/type"),
-      nodeUtilities = require("../../utilities/node");
+      nodeUtilities = require("../../utilities/node"),
+      queryUtilities = require("../../utilities/query");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
-      { nameFromNameNameNode } = nodeUtilities;
+const { nameFromNameNameNode } = nodeUtilities,
+      { nodeQuery, nodesQuery } = queryUtilities;
 
-const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!"),
-      typeNamesNameNodesQuery = Query.fromExpression("/*/typeNames//@name");
+const typeNamesNodeQuery = nodeQuery("/*/typeNames!"),
+      typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!"),
+      typeNameNameNodesQuery = nodesQuery("/*/typeName/@name!");
 
 function verifyTypesDeclaration(typeDeclarationNode, fileContext) {
-  let typeDeclarationVerified;
+  let typesDeclarationVerified;
 
-  const typeNamesNameNodes = typeNamesNameNodesQuery.execute(typeDeclarationNode),
-        typeNames = typeNamesNameNodes.map((typeNamesNameNode) => nameFromNameNameNode(typeNamesNameNode)),
-        typeNameNameNodes = typeNameNameNodesQuery.execute(typeDeclarationNode),
-        superTypeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
-        firstSuperTypeName = first(superTypeNames),
-        superTypeName = firstSuperTypeName, ///
+  const typeNameNameNode = typeNameNameNodeQuery(typeDeclarationNode),
+        typeName = (typeNameNameNode !== undefined) ?
+                      nameFromNameNameNode(typeNameNameNode) :
+                         undefined,
+        superTypeName = typeName, ///
+        typeNamesNode = typeNamesNodeQuery(typeDeclarationNode),
+        typeNameNameNodes = typeNameNameNodesQuery(typeNamesNode),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
         typesVerified = typeNames.every((typeName) => verifyType(typeName, superTypeName, fileContext));
 
-  typeDeclarationVerified = typesVerified; ///
+  typesDeclarationVerified = typesVerified; ///
 
-  return typeDeclarationVerified;
+  return typesDeclarationVerified;
 }
 
 module.exports = verifyTypesDeclaration;

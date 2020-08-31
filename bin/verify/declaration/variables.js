@@ -1,31 +1,27 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
-
 const nodeUtilities = require("../../utilities/node"),
+      queryUtilities = require("../../utilities/query"),
       verifyVariable = require("../../verify/variable");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
-      { nameFromNameNameNode } = nodeUtilities;
+const { nameFromNameNameNode } = nodeUtilities,
+      { nodeQuery, nodesQuery } = queryUtilities;
 
-const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!"),
-      variableNamesNameNodesQuery = Query.fromExpression("/*/variableNames//@name");
+const typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!"),
+      variableNamesNodeQuery = nodeQuery("/*/variableNames!"),
+      variableNameNameNodesQuery = nodesQuery("/*/variableName/@name!");
 
-function verifyVariablesDeclaration(variableDeclarationNode, fileContext) {
+function verifyVariablesDeclaration(typeDeclarationNode, fileContext) {
   let variablesDeclarationVerified;
 
-  const variableNamesNameNodes = variableNamesNameNodesQuery.execute(variableDeclarationNode),
-        typeNameNameNodes = typeNameNameNodesQuery.execute(variableDeclarationNode),
-        variableNames = variableNamesNameNodes.map((variableNamesNameNode) => nameFromNameNameNode(variableNamesNameNode)),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
-        firstTypeName = first(typeNames),
-        typeName = firstTypeName, ///
-        variablesVerified = variableNames.every((variableName) => verifyVariable(variableName, typeName, fileContext));
+  const typeNameNameNode = typeNameNameNodeQuery(typeDeclarationNode),
+        typeName = nameFromNameNameNode(typeNameNameNode),
+        variableNamesNode = variableNamesNodeQuery(typeDeclarationNode),
+        variableNameNameNodes = variableNameNameNodesQuery(variableNamesNode),
+        variableNames = variableNameNameNodes.map((variableNameNameNode) => nameFromNameNameNode(variableNameNameNode)),
+        typesVerified = variableNames.every((variableName) => verifyVariable(variableName, typeName, fileContext));
 
-  variablesDeclarationVerified = variablesVerified; ///
+  variablesDeclarationVerified = typesVerified; ///
 
   return variablesDeclarationVerified;
 }

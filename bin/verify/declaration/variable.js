@@ -1,33 +1,25 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
-
 const nodeUtilities = require("../../utilities/node"),
+      queryUtilities = require("../../utilities/query"),
       verifyVariable = require("../../verify/variable");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
+const { nodeQuery } = queryUtilities,
       { nameFromNameNameNode } = nodeUtilities;
 
-const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!"),
-      variableNameNameNodesQuery = Query.fromExpression("/*/variableName/@name!");
+const typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!"),
+      variableNameNameNodeQuery = nodeQuery("/*/variableName!/@name!");
 
-function verifyVariableDeclaration(variableDeclarationNode, fileContext) {
+function verifyVariableDeclaration(typeDeclarationNode, fileContext) {
   let variableDeclarationVerified;
 
-  const variableNameNameNodes = variableNameNameNodesQuery.execute(variableDeclarationNode),
-        typeNameNameNodes = typeNameNameNodesQuery.execute(variableDeclarationNode),
-        variableNames = variableNameNameNodes.map((variableNameNameNode) => nameFromNameNameNode(variableNameNameNode)),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
-        firstVariableName = first(variableNames),
-        firstTypeName = first(typeNames),
-        variableName = firstVariableName, ///
-        typeName = firstTypeName, ///
-        variableVerified = verifyVariable(variableName, typeName, fileContext);
+  const variableNameNameNode = variableNameNameNodeQuery(typeDeclarationNode),
+        typeNameNameNode = typeNameNameNodeQuery(typeDeclarationNode),
+        variableName = nameFromNameNameNode(variableNameNameNode),
+        typeName = nameFromNameNameNode(typeNameNameNode),
+        typeVerified = verifyVariable(variableName, typeName, fileContext);
 
-  variableDeclarationVerified = variableVerified; ///
+  variableDeclarationVerified = typeVerified; ///
 
   return variableDeclarationVerified;
 }

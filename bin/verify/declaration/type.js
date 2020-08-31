@@ -8,7 +8,7 @@ const { nodeQuery } = queryUtilities,
       { nameFromNameNameNode } = nodeUtilities;
 
 const firstTypeNameNameNodeQuery = nodeQuery("/*/typeName[0]/@name!"),
-      secondTypeNameNameNodeQuery = nodeQuery("/*/typeName[0]/@name!");
+      secondTypeNameNameNodeQuery = nodeQuery("/*/typeName[1]/@name!");
 
 function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
   let typeDeclarationVerified;
@@ -16,7 +16,9 @@ function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
   const firstTypeNameNameNode = firstTypeNameNameNodeQuery(typeDeclarationNode),
         secondTypeNameNameNode = secondTypeNameNameNodeQuery(typeDeclarationNode),
         firstTypeName = nameFromNameNameNode(firstTypeNameNameNode),
-        secondTypeName = nameFromNameNameNode(secondTypeNameNameNode),
+        secondTypeName = (secondTypeNameNameNode !== undefined) ?
+                            nameFromNameNameNode(secondTypeNameNameNode) :
+                              undefined,
         typeName = firstTypeName, ///
         superTypeName = secondTypeName, ///
         typeVerified = verifyType(typeName, superTypeName, fileContext);
