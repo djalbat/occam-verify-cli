@@ -6,8 +6,7 @@ const Error = require("../error"),
       typeUtilities = require("../utilities/type"),
       nodeUtilities = require("../utilities/node"),
       ExpressionNode = require("../node/expression"),
-      verifyTermExpression = require("../verify/termExpression"),
-      NonTerminalNodeContext = require("../context/nonTerminalNode");
+      verifyTermExpression = require("../verify/termExpression");
 
 const { nodeAsString } = nodeUtilities,
       { verifyTerm, verifyExpression } = verifyTermExpression,
@@ -125,12 +124,11 @@ function verifyNonTerminalNode(nonTerminalNode, parentNode, fileContext) {
 function verifyChildNodes(childNodes, parentNode, fileContext) {
   let verified = false;
 
-  const nonTerminalNodeContext = NonTerminalNodeContext.fromChildNodesAndFileContext(childNodes, fileContext);
+  let index = 0,
+      childNode = childNodes[index];
 
-  let nextChildNode = nonTerminalNodeContext.getNextChildNode();
-
-  while (nextChildNode !== undefined) {
-    const node = nextChildNode;  ///
+  while (childNode !== undefined) {
+    const node = childNode;  ///
 
     verified = verifyNode(node, parentNode, fileContext);
 
@@ -138,7 +136,8 @@ function verifyChildNodes(childNodes, parentNode, fileContext) {
       break;
     }
 
-    nextChildNode = nonTerminalNodeContext.getNextChildNode();
+    index++;
+    childNode = childNodes[index];
   }
 
   return verified;

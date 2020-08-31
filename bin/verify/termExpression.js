@@ -8,8 +8,7 @@ const Error = require("../error"),
       nodeUtilities = require("../utilities/node"),
       queryUtilities = require("../utilities/query"),
       ExpressionNode = require("../node/expression"),
-      variableUtilities = require("../utilities/variable"),
-      NonTerminalNodeContext = require("../context/nonTerminalNode");
+      variableUtilities = require("../utilities/variable");
 
 const { nodeQuery } = queryUtilities,
       { nodeAsString } = nodeUtilities,
@@ -239,19 +238,17 @@ function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTermin
 function verifyChildNodes(childNodes, constructorOrExpressionChildNodes, parentNode, fileContext) {
   let verified = false;
 
-  const nonTerminalNodeContext = NonTerminalNodeContext.fromChildNodesAndFileContext(childNodes, fileContext),
-        constructorOrExpressionNonTerminalNodeContext = NonTerminalNodeContext.fromChildNodesAndFileContext(constructorOrExpressionChildNodes, fileContext);
+  let index = 0,
+      childNode = childNodes[index],
+      constructorOrExpressionChildNode = constructorOrExpressionChildNodes[index]
 
-  let nextChildNode = nonTerminalNodeContext.getNextChildNode(),
-      nextConstructorOrExpressionChildNode = constructorOrExpressionNonTerminalNodeContext.getNextChildNode();
-
-  while (nextChildNode !== undefined) {
-    if (nextConstructorOrExpressionChildNode === undefined) {
+  while (childNode !== undefined) {
+    if (constructorOrExpressionChildNode === undefined) {
       break;
     }
 
-    const node = nextChildNode,  ///
-          constructorOrExpressionNode = nextConstructorOrExpressionChildNode;  ///
+    const node = childNode,  ///
+          constructorOrExpressionNode = constructorOrExpressionChildNode;  ///
 
     verified = verifyNode(node, constructorOrExpressionNode, parentNode, fileContext);
 
@@ -259,12 +256,13 @@ function verifyChildNodes(childNodes, constructorOrExpressionChildNodes, parentN
       break;
     }
 
-    nextChildNode = nonTerminalNodeContext.getNextChildNode();
-    nextConstructorOrExpressionChildNode = constructorOrExpressionNonTerminalNodeContext.getNextChildNode();
+    index++;
+    childNode = childNodes[index];
+    constructorOrExpressionChildNode = constructorOrExpressionChildNodes[index];
   }
 
   if (verified) {
-    if (nextChildNode !== undefined) {
+    if (childNode !== undefined) {
       verified = false;
     }
   }
