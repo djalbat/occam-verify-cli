@@ -1,25 +1,22 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
-
 const verifyType = require("../../verify/type"),
-      nodeUtilities = require("../../utilities/node");
+      nodeUtilities = require("../../utilities/node"),
+      queryUtilities = require("../../utilities/query");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first, second } = arrayUtilities,
+const { nodeQuery } = queryUtilities,
       { nameFromNameNameNode } = nodeUtilities;
 
-const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!");
+const firstTypeNameNameNodeQuery = nodeQuery("/*/typeName[0]/@name!"),
+      secondTypeNameNameNodeQuery = nodeQuery("/*/typeName[0]/@name!");
 
 function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
   let typeDeclarationVerified;
 
-  const typeNameNameNodes = typeNameNameNodesQuery.execute(typeDeclarationNode),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
-        firstTypeName = first(typeNames),
-        secondTypeName = second(typeNames),
+  const firstTypeNameNameNode = firstTypeNameNameNodeQuery(typeDeclarationNode),
+        secondTypeNameNameNode = secondTypeNameNameNodeQuery(typeDeclarationNode),
+        firstTypeName = nameFromNameNameNode(firstTypeNameNameNode),
+        secondTypeName = nameFromNameNameNode(secondTypeNameNameNode),
         typeName = firstTypeName, ///
         superTypeName = secondTypeName, ///
         typeVerified = verifyType(typeName, superTypeName, fileContext);

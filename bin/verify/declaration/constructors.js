@@ -1,30 +1,25 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
-
 const log = require("../../log"),
       Constructor = require("../../constructor"),
       nodeUtilities = require("../../utilities/node"),
+      queryUtilities = require("../../utilities/query"),
       verifyConstructorOperator = require("../../verify/constructorOperator");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
+const { nodeQuery, nodesQuery } = queryUtilities,
       { verifyTermAsConstructor } = verifyConstructorOperator,
       { nodeAsString, nameFromNameNameNode } = nodeUtilities;
 
-const termNodesQuery = Query.fromExpression("/*/terms/term"),
-      typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!");
+const termsTermNodesQuery = nodesQuery("/*/terms/term"),
+      typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!");
 
 function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
   let constructorDeclarationVerified = false;
 
-  const typeNameNameNodes = typeNameNameNodesQuery.execute(constructorDeclarationNode),
-        termNodes = termNodesQuery.execute(constructorDeclarationNode),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
-        firstTypeName = first(typeNames),
-        typeName = firstTypeName; ///
+  const typeNameNameNode = typeNameNameNodeQuery(constructorDeclarationNode),
+        termsTermNodes = termsTermNodesQuery(constructorDeclarationNode),
+        termNodes = termsTermNodes, ///
+        typeName = nameFromNameNameNode(typeNameNameNode);
 
   let type = undefined,
       typeVerified = true;

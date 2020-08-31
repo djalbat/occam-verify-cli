@@ -1,35 +1,29 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
-
 const log = require("../../log"),
       Operator = require("../../operator"),
       nodeUtilities = require("../../utilities/node"),
+      queryUtilities = require("../../utilities/query"),
       verifyConstructorOperator = require("../../verify/constructorOperator");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
+const { nodeQuery } = queryUtilities,
       { verifyExpressionAsOperator } = verifyConstructorOperator,
       { nodeAsString, nameFromNameNameNode } = nodeUtilities;
 
-const expressionNodesQuery = Query.fromExpression("/*/expression"),
-      typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!");
+const expressionNodeQuery = nodeQuery("/*/expression!"),
+      typeNameNameNodeQuery = nodeQuery("/*/typeName/@name!");
 
 function verifyOperatorDeclaration(operatorDeclarationNode, fileContext) {
   let operatorDeclarationVerified = false;
 
-  const typeNameNameNodes = typeNameNameNodesQuery.execute(operatorDeclarationNode),
-        expressionNodes = expressionNodesQuery.execute(operatorDeclarationNode),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
-        firstExpressionNode = first(expressionNodes),
-        firstTypeName = first(typeNames),
-        expressionNode = firstExpressionNode, ///
-        typeName = firstTypeName; ///
+  const expressionNode = expressionNodeQuery(operatorDeclarationNode),
+        typeNameNameNode = typeNameNameNodeQuery(operatorDeclarationNode),
+        typeName = (typeNameNameNode !== undefined) ?
+                     nameFromNameNameNode(typeNameNameNode) :
+                       undefined;
 
   let type = undefined,
-      typeVerified = true;
+    typeVerified = true;
 
   if (typeName !== undefined) {
     type = fileContext.findTypeByTypeName(typeName);

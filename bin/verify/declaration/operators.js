@@ -1,30 +1,25 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
-
 const log = require("../../log"),
       Operator = require("../../operator"),
       nodeUtilities = require("../../utilities/node"),
+      queryUtilities = require("../../utilities/query"),
       verifyConstructorOperator = require("../../verify/constructorOperator");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
+const { nodeQuery, nodesQuery } = queryUtilities,
       { verifyExpressionAsOperator } = verifyConstructorOperator,
       { nodeAsString, nameFromNameNameNode } = nodeUtilities;
 
-const expressionNodesQuery = Query.fromExpression("/*/expressions/expression"),
-      typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!");
+const typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!"),
+      expressionsExpressionNodesQuery = nodesQuery("/*/expressions/expression");
 
 function verifyOperatorDeclaration(operatorDeclarationNode, fileContext) {
   let operatorDeclarationVerified = false;
 
-  const typeNameNameNodes = typeNameNameNodesQuery.execute(operatorDeclarationNode),
-        expressionNodes = expressionNodesQuery.execute(operatorDeclarationNode),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
-        firstTypeName = first(typeNames),
-        typeName = firstTypeName; ///
+  const typeNameNameNode = typeNameNameNodeQuery(operatorDeclarationNode),
+        expressionsExpressionNodes = expressionsExpressionNodesQuery(operatorDeclarationNode),
+        expressionNodes = expressionsExpressionNodes, ///
+        typeName = nameFromNameNameNode(typeNameNameNode);
 
   let type = undefined,
       typeVerified = true;
