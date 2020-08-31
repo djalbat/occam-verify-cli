@@ -2,7 +2,7 @@
 
 const log = require("../log"),
       TermNode = require("../node/term"),
-      ruleNames = require("../ruleNames"),
+      constants = require("../constants"),
       typeUtilities = require("../utilities/type"),
       nodeUtilities = require("../utilities/node"),
       ExpressionNode = require("../node/expression"),
@@ -10,7 +10,7 @@ const log = require("../log"),
 
 const { nodeAsString } = nodeUtilities,
       { verifyTerm, verifyExpression } = verifyTermExpression,
-      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = constants,
       { typeFromTermNode, typeFromExpressionNode } = typeUtilities;
 
 function verifyExpressionAsOperator(expressionNode, fileContext) {

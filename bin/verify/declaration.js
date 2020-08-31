@@ -1,6 +1,6 @@
 "use strict";
 
-const ruleNames = require("../ruleNames"),
+const constants = require("../constants"),
       verifyTypeDeclaration = require("../verify/declaration/type"),
       verifyTypesDeclaration = require("../verify/declaration/types"),
       verifyVariableDeclaration = require("../verify/declaration/variable"),
@@ -17,7 +17,7 @@ const { TYPE_DECLARATION_RULE_NAME,
         OPERATOR_DECLARATION_RULE_NAME,
         OPERATORS_DECLARATION_RULE_NAME,
         CONSTRUCTOR_DECLARATION_RULE_NAME,
-        CONSTRUCTORS_DECLARATION_RULE_NAME } = ruleNames;
+        CONSTRUCTORS_DECLARATION_RULE_NAME } = constants;
 
 const map = {};
 

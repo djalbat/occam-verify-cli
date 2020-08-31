@@ -3,7 +3,7 @@
 const log = require("../log"),
       Operator = require("../operator"),
       TermNode = require("../node/term"),
-      ruleNames = require("../ruleNames"),
+      constants = require("../constants"),
       typeUtilities = require("../utilities/type"),
       nodeUtilities = require("../utilities/node"),
       queryUtilities = require("../utilities/query"),
@@ -12,7 +12,7 @@ const log = require("../log"),
 
 const { nodeQuery } = queryUtilities,
       { nodeAsString } = nodeUtilities,
-      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = constants,
       { variableFromTermNode, variableFromExpressionNode } = variableUtilities,
       { typeFromConstructorTermNode, typeFromOperatorExpressionNode } = typeUtilities;
 

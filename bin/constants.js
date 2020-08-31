@@ -1,19 +1,39 @@
 "use strict";
 
-const TRACE = "trace",
-      DEBUG = "debug",
-      INFO = "info",
-      WARNING = "warning",
-      ERROR = "error",
-      FATAL = "fatal",
-      DEFAULT_LOG_LEVEL = INFO;
+const TRACE_LEVEL = "trace",
+      DEBUG_LEVEL = "debug",
+      INFO_LEVEL = "info",
+      WARNING_LEVEL = "warning",
+      ERROR_LEVEL = "error",
+      FATAL_LEVEL = "fatal",
+      DEFAULT_LOG_LEVEL = INFO_LEVEL,
+      TERM_RULE_NAME = "term",
+      EXPRESSION_RULE_NAME = "expression",
+      TYPE_DECLARATION_RULE_NAME = "typeDeclaration",
+      TYPES_DECLARATION_RULE_NAME = "typesDeclaration",
+      VARIABLE_DECLARATION_RULE_NAME = "variableDeclaration",
+      VARIABLES_DECLARATION_RULE_NAME = "variablesDeclaration",
+      OPERATOR_DECLARATION_RULE_NAME = "operatorDeclaration",
+      OPERATORS_DECLARATION_RULE_NAME = "operatorsDeclaration",
+      CONSTRUCTOR_DECLARATION_RULE_NAME = "constructorDeclaration",
+      CONSTRUCTORS_DECLARATION_RULE_NAME = "constructorsDeclaration";
 
 module.exports = {
-  TRACE,
-  DEBUG,
-  INFO,
-  WARNING,
-  ERROR,
-  FATAL,
-  DEFAULT_LOG_LEVEL
+  TRACE_LEVEL,
+  DEBUG_LEVEL,
+  INFO_LEVEL,
+  WARNING_LEVEL,
+  ERROR_LEVEL,
+  FATAL_LEVEL,
+  DEFAULT_LOG_LEVEL,
+  TERM_RULE_NAME,
+  EXPRESSION_RULE_NAME,
+  TYPE_DECLARATION_RULE_NAME,
+  TYPES_DECLARATION_RULE_NAME,
+  VARIABLE_DECLARATION_RULE_NAME,
+  VARIABLES_DECLARATION_RULE_NAME,
+  OPERATOR_DECLARATION_RULE_NAME,
+  OPERATORS_DECLARATION_RULE_NAME,
+  CONSTRUCTOR_DECLARATION_RULE_NAME,
+  CONSTRUCTORS_DECLARATION_RULE_NAME
 };

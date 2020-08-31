@@ -2,9 +2,9 @@
 
 const parsers = require("occam-parsers");
 
-const ruleNames = require("../ruleNames");
+const constants = require("../constants");
 
-const { TERM_RULE_NAME } = ruleNames,
+const { TERM_RULE_NAME } = constants,
       { NonTerminalNode } = parsers;
 
 class Term extends NonTerminalNode {
