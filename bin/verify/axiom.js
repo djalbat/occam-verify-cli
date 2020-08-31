@@ -1,29 +1,32 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
-
 const log = require("../log"),
       Axiom = require("../axiom"),
       nodeUtilities = require("../utilities/node"),
+      queryUtilities = require("../utilities/query"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement"),
       verifyIndicativeConditional = require("../verify/indicativeConditional");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
-      { nameFromNameNode } = nodeUtilities;
+const { nameFromNameNameNode } = nodeUtilities,
+      { nodeQuery, nodesQuery } = queryUtilities;
 
-const labelNameNodesQuery = Query.fromExpression("/axiom/labels/label//@name"),
-      unqualifiedStatementNodesQuery = Query.fromExpression("/axiom/unqualifiedStatement"),
-      indicativeConditionalNodesQuery = Query.fromExpression("/axiom/indicativeConditional");
+const labelsLabelNodesQuery = nodesQuery("/*/labels/label"),
+      labelNameNameNodeQuery = nodeQuery("/*/labelName!/@name!"),
+      unqualifiedStatementNodeQuery = nodeQuery("/*/unqualifiedStatement!"),
+      indicativeConditionalNodeQuery = nodeQuery("/*/indicativeConditional!");
 
 function verifyAxiom(axiomNode, fileContext) {
   let axiomVerified = false;
 
-  const labelNameNodes = labelNameNodesQuery.execute(axiomNode),
-        labelNames = labelNameNodes.map((labelNameNode) => nameFromNameNode(labelNameNode)),
-        labels = labelNames,  ///
+  const labelsLabelNodes = labelsLabelNodesQuery(axiomNode),
+        labels = labelsLabelNodes.map((labelsLabelNode) => {
+          const labelNode = labelsLabelNode, ///
+                labelNameNameNode = labelNameNameNodeQuery(labelNode),
+                labelName = nameFromNameNameNode(labelNameNameNode),
+                label = labelName;  ///
+
+          return label;
+        }),
         labelsVerified = labels.every((label) => {
           let labelVerified = false;
 
@@ -41,12 +44,8 @@ function verifyAxiom(axiomNode, fileContext) {
   if (labelsVerified) {
     let axiom = undefined;
 
-    const unqualifiedStatementNodes = unqualifiedStatementNodesQuery.execute(axiomNode),
-          indicativeConditionalNodes = indicativeConditionalNodesQuery.execute(axiomNode),
-          firstUnqualifiedStatementNode = first(unqualifiedStatementNodes),
-          firstIndicativeConditionalNode = first(indicativeConditionalNodes),
-          unqualifiedStatementNode = firstUnqualifiedStatementNode, ///
-          indicativeConditionalNode = firstIndicativeConditionalNode; ///
+    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
+          indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
     if (false) {
       ///

@@ -12,7 +12,7 @@ const { Query } = dom,
       { arrayUtilities } = necessary,
       { first } = arrayUtilities,
       { verifyTermAsConstructor } = verifyConstructorOperator,
-      { nodeAsString, nameFromNameNode } = nodeUtilities;
+      { nodeAsString, nameFromNameNameNode } = nodeUtilities;
 
 const termNodesQuery = Query.fromExpression("/*/terms/term"),
       typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
@@ -22,7 +22,7 @@ function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
 
   const typeNameNameNodes = typeNameNameNodesQuery.execute(constructorDeclarationNode),
         termNodes = termNodesQuery.execute(constructorDeclarationNode),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNode(typeNameNameNode)),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
         firstTypeName = first(typeNames),
         typeName = firstTypeName; ///
 

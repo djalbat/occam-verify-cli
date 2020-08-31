@@ -8,7 +8,7 @@ const nodeUtilities = require("../utilities/node");
 const { Query } = dom,
       { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { nameFromNameNode } = nodeUtilities;
+      { nameFromNameNameNode } = nodeUtilities;
 
 const termNameNameNodesQuery = Query.fromExpression("/term!/name!/@name!"),
       expressionTermNameNameNodesQuery = Query.fromExpression("/expression!/term!/name!/@name");
@@ -21,7 +21,7 @@ function typeFromTermNode(termNode, fileContext) {
         nameNode = firmTermNameNameNode;  ///
 
   if (nameNode !== undefined) {
-    const name = nameFromNameNode(nameNode);
+    const name = nameFromNameNameNode(nameNode);
 
     type = fileContext.findTypeByName(name);
   }
@@ -37,7 +37,7 @@ function typeFromExpressionNode(expressionNode, fileContext) {
         nameNode = firmExpressionTermNameNameNode;  ///
 
   if (nameNode !== undefined) {
-    const name = nameFromNameNode(nameNode);
+    const name = nameFromNameNameNode(nameNode);
 
     type = fileContext.findTypeByName(name);
   }

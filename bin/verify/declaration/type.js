@@ -9,7 +9,7 @@ const verifyType = require("../../verify/type"),
 const { Query } = dom,
       { arrayUtilities } = necessary,
       { first, second } = arrayUtilities,
-      { nameFromNameNode } = nodeUtilities;
+      { nameFromNameNameNode } = nodeUtilities;
 
 const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
 
@@ -17,7 +17,7 @@ function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
   let typeDeclarationVerified;
 
   const typeNameNameNodes = typeNameNameNodesQuery.execute(typeDeclarationNode),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNode(typeNameNameNode)),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
         firstTypeName = first(typeNames),
         secondTypeName = second(typeNames),
         typeName = firstTypeName, ///

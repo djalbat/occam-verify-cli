@@ -24,14 +24,14 @@ function nodeAsString(node, string = "") {
   return string;
 }
 
-function nameFromNameNode(nameNode) {
-  const nameNodeContent = nameNode.getContent(),
-        name = nameNodeContent; ///
+function nameFromNameNameNode(nameNameNode) {
+  const nameNameNodeContent = nameNameNode.getContent(),
+        name = nameNameNodeContent; ///
 
   return name;
 }
 
 module.exports = {
   nodeAsString,
-  nameFromNameNode
+  nameFromNameNameNode
 };

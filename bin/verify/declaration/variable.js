@@ -9,7 +9,7 @@ const nodeUtilities = require("../../utilities/node"),
 const { Query } = dom,
       { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { nameFromNameNode } = nodeUtilities;
+      { nameFromNameNameNode } = nodeUtilities;
 
 const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name"),
       variableNameNameNodesQuery = Query.fromExpression("/*/variableName/@name");
@@ -19,8 +19,8 @@ function verifyVariableDeclaration(variableDeclarationNode, fileContext) {
 
   const variableNameNameNodes = variableNameNameNodesQuery.execute(variableDeclarationNode),
         typeNameNameNodes = typeNameNameNodesQuery.execute(variableDeclarationNode),
-        variableNames = variableNameNameNodes.map((variableNameNameNode) => nameFromNameNode(variableNameNameNode)),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNode(typeNameNameNode)),
+        variableNames = variableNameNameNodes.map((variableNameNameNode) => nameFromNameNameNode(variableNameNameNode)),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
         firstVariableName = first(variableNames),
         firstTypeName = first(typeNames),
         variableName = firstVariableName, ///

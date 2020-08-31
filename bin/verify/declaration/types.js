@@ -9,7 +9,7 @@ const verifyType = require("../../verify/type"),
 const { Query } = dom,
       { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { nameFromNameNode } = nodeUtilities;
+      { nameFromNameNameNode } = nodeUtilities;
 
 const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name"),
       typeNamesNameNodesQuery = Query.fromExpression("/*/typeNames//@name");
@@ -18,9 +18,9 @@ function verifyTypesDeclaration(typeDeclarationNode, fileContext) {
   let typeDeclarationVerified;
 
   const typeNamesNameNodes = typeNamesNameNodesQuery.execute(typeDeclarationNode),
-        typeNames = typeNamesNameNodes.map((typeNamesNameNode) => nameFromNameNode(typeNamesNameNode)),
+        typeNames = typeNamesNameNodes.map((typeNamesNameNode) => nameFromNameNameNode(typeNamesNameNode)),
         typeNameNameNodes = typeNameNameNodesQuery.execute(typeDeclarationNode),
-        superTypeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNode(typeNameNameNode)),
+        superTypeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNameNode(typeNameNameNode)),
         firstSuperTypeName = first(superTypeNames),
         superTypeName = firstSuperTypeName, ///
         typesVerified = typeNames.every((typeName) => verifyType(typeName, superTypeName, fileContext));
