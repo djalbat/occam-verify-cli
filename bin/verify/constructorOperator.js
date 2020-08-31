@@ -1,11 +1,11 @@
 "use strict";
 
 const Error = require("../error"),
-      TermNode = require("../miscellaneous/termNode"),
-      ruleNames = require("../miscellaneous/ruleNames"),
+      TermNode = require("../node/term"),
+      ruleNames = require("../ruleNames"),
       typeUtilities = require("../utilities/type"),
       nodeUtilities = require("../utilities/node"),
-      ExpressionNode = require("../miscellaneous/expressionNode"),
+      ExpressionNode = require("../node/expression"),
       verifyTermExpression = require("../verify/termExpression"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 

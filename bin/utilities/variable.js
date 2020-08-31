@@ -1,24 +1,29 @@
 "use strict";
 
-const necessary = require("necessary");
+const dom = require("occam-dom"),
+      necessary = require("necessary");
 
-const queries = require("../miscellaneous/queries");
+const nodeUtilities = require("../utilities/node");
 
-const { arrayUtilities } = necessary,
+const { Query } = dom,
+      { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { termNameNodesQuery, expressionTermNodesQuery, nameTerminalNodeQuery } = queries;
+      { nameFromNameNode } = nodeUtilities;
+
+const termNameNameNodesQuery = Query.fromExpression("/term!/name!/@name!"),
+      expressionTermNameNameNodesQuery = Query.fromExpression("/expression!/term!/name!/@name");
 
 function variableFromTermNode(termNode, fileContext) {
   let variable = undefined;
 
-  const termNameNodes = termNameNodesQuery(termNode),
-        termNameNodesLength = termNameNodes.length;
+  const termNameNameNodes = termNameNameNodesQuery.execute(termNode),
+        firmTermNameNameNode = first(termNameNameNodes),
+        nameNode = firmTermNameNameNode;  ///
 
-  if (termNameNodesLength === 1) {
-    const firmTermNameNode = first(termNameNodes),
-          nameNode = firmTermNameNode;  ///
+  if (nameNode !== undefined) {
+    const name = nameFromNameNode(nameNode);
 
-    variable = variableFromNameNode(nameNode, fileContext);
+    variable = fileContext.findVariableByName(name);
   }
 
   return variable;
@@ -27,14 +32,14 @@ function variableFromTermNode(termNode, fileContext) {
 function variableFromExpressionNode(expressionNode, fileContext) {
   let variable = undefined;
 
-  const expressionTermNodes = expressionTermNodesQuery(expressionNode),
-        expressionTermNodesLength = expressionTermNodes.length;
+  const expressionTermNameNameNodes = expressionTermNameNameNodesQuery.execute(expressionNode),
+        firmExpressionTermNameNameNode = first(expressionTermNameNameNodes),
+        nameNode = firmExpressionTermNameNameNode;  ///
 
-  if (expressionTermNodesLength === 1) {
-    const firmExpressionTermNode = first(expressionTermNodes),
-          termNode = firmExpressionTermNode;  ///
+  if (nameNode !== undefined) {
+    const name = nameFromNameNode(nameNode);
 
-    variable = variableFromTermNode(termNode, fileContext);
+    variable = fileContext.findVariableByName(name);
   }
 
   return variable;
@@ -44,12 +49,3 @@ module.exports = {
   variableFromTermNode,
   variableFromExpressionNode
 };
-
-function variableFromNameNode(nameNode, fileContext) {
-  const nameTerminalNode = nameTerminalNodeQuery(nameNode),
-        nameTerminalNodeContent = nameTerminalNode.getContent(),
-        name = nameTerminalNodeContent, ///
-        variable = fileContext.findVariableByName(name);
-
-  return variable;
-}

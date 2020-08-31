@@ -23,7 +23,7 @@ function typeFromTermNode(termNode, fileContext) {
   if (nameNode !== undefined) {
     const name = nameFromNameNode(nameNode);
 
-    type = fileContext.findTypeByTypeName(name);
+    type = fileContext.findTypeByName(name);
   }
 
   return type;
@@ -39,7 +39,7 @@ function typeFromExpressionNode(expressionNode, fileContext) {
   if (nameNode !== undefined) {
     const name = nameFromNameNode(nameNode);
 
-    type = fileContext.findTypeByTypeName(name);
+    type = fileContext.findTypeByName(name);
   }
 
   return type;

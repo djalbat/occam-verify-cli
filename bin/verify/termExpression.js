@@ -5,11 +5,11 @@ const dom = require("occam-dom"),
 
 const Error = require("../error"),
       Operator = require("../operator"),
-      TermNode = require("../miscellaneous/termNode"),
-      ruleNames = require("../miscellaneous/ruleNames"),
+      TermNode = require("../node/term"),
+      ruleNames = require("../ruleNames"),
       typeUtilities = require("../utilities/type"),
       nodeUtilities = require("../utilities/node"),
-      ExpressionNode = require("../miscellaneous/expressionNode"),
+      ExpressionNode = require("../node/expression"),
       variableUtilities = require("../utilities/variable"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
