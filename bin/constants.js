@@ -1,11 +1,11 @@
 "use strict";
 
-const TRACE = "TRACE",
-      DEBUG = "DEBUG",
-      INFO = "INFO",
-      WARNING = "WARNING",
-      ERROR = "ERROR",
-      FATAL = "FATAL",
+const TRACE = "trace",
+      DEBUG = "debug",
+      INFO = "info",
+      WARNING = "warning",
+      ERROR = "error",
+      FATAL = "fatal",
       DEFAULT_LOG_LEVEL = INFO;
 
 module.exports = {

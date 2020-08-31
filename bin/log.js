@@ -25,7 +25,8 @@ function log(message, level = "") {
     }
   }
 
-  const logMessage = `${level} ${message}`;
+  const upperCaseLevel = level.toUpperCase(),
+        logMessage = `${upperCaseLevel}: ${message}`;
 
   console.log(logMessage);
 }
