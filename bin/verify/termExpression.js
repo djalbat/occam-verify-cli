@@ -1,6 +1,6 @@
 "use strict";
 
-const Error = require("../error"),
+const log = require("../log"),
       Operator = require("../operator"),
       TermNode = require("../node/term"),
       ruleNames = require("../ruleNames"),
@@ -296,11 +296,9 @@ function verifyExpressionNode(expressionNode, operatorExpressionNode, fileContex
         const operatorType = operator.getType();
 
         if (operatorType === undefined) {
-          const node = expressionNode,  ///
-                expressionString = nodeAsString(expressionNode),
-                message = `The '${expressionString}' sub-expression cannot be verified because its type is undefined.`;
+          const expressionString = nodeAsString(expressionNode);
 
-          throw new Error(node, message);
+          log.error(`The '${expressionString}' sub-expression cannot be verified because its type is undefined.`);
         } else {
           const operatorTypeEqualToOrSubTypeOfType = operatorType.isEqualToOrSubTypeOf(type);
 
@@ -341,11 +339,9 @@ function verifyTermNode(termNode, constructorTermNode, fileContext) {
         const constructorType = constructor.getType();
 
         if (constructorType === undefined) {
-          const node = termNode,  ///
-                termString = nodeAsString(termNode),
-                message = `The '${termString}' sub-term cannot be verified because its type is undefined.`;
+          const termString = nodeAsString(termNode);
 
-          throw new Error(node, message);
+          log.error(`The '${termString}' sub-term cannot be verified because its type is undefined.`);
         } else {
           const constructorTypeEqualToOrSubTypeOfType = constructorType.isEqualToOrSubTypeOf(type);
 
@@ -354,16 +350,6 @@ function verifyTermNode(termNode, constructorTermNode, fileContext) {
           }
         }
       }
-    }
-
-    if (verified === false) {
-      // const node = termNode,  ///
-      //       noSuperType = true,
-      //       typeString = type.asString(noSuperType),
-      //       termString = nodeAsString(termNode),
-      //       message = `The '${termString}' sub-term cannot be verified because its type is not equal to or a sub-type of the '${typeString}' type.`;
-      //
-      // throw new Error(node, message);
     }
   }
 

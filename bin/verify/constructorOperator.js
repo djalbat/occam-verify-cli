@@ -1,6 +1,6 @@
 "use strict";
 
-const Error = require("../error"),
+const log = require("../log"),
       TermNode = require("../node/term"),
       ruleNames = require("../ruleNames"),
       typeUtilities = require("../utilities/type"),
@@ -157,11 +157,9 @@ function verifyExpressionNode(expressionNode, fileContext) {
       const operatorType = operator.getType();
 
       if (operatorType !== undefined) {
-        const node = expressionNode,  ///
-              expressionString = nodeAsString(expressionNode),
-              message = `The '${expressionString}' sub-expression cannot be verified because its type is not undefined.`;
+        const expressionString = nodeAsString(expressionNode);
 
-        throw new Error(node, message);
+        log.error(`The '${expressionString}' sub-expression cannot be verified because its type is not undefined.`);
       }
 
       verified = true;
@@ -185,11 +183,9 @@ function verifyTermNode(termNode, fileContext) {
       const constructorType = constructor.getType();
 
       if (constructorType !== undefined) {
-        const node = termNode,  ///
-              nodeString = nodeAsString(termNode),
-              message = `The '${nodeString}' sub-term cannot be verified because its type is not undefined.`;
+        const termString = nodeAsString(termNode);
 
-        throw new Error(node, message);
+        log.error(`The '${termString}' sub-term cannot be verified because its type is not undefined.`);
       }
 
       verified = true;
