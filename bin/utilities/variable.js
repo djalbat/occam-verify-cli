@@ -8,7 +8,7 @@ const nodeUtilities = require("../utilities/node");
 const { Query } = dom,
       { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { nameFromNameNode } = nodeUtilities;
+      { nameFromNameNameNode } = nodeUtilities;
 
 const termNameNameNodesQuery = Query.fromExpression("/term!/name!/@name!"),
       expressionTermNameNameNodesQuery = Query.fromExpression("/expression!/term!/name!/@name");
@@ -18,10 +18,10 @@ function variableFromTermNode(termNode, fileContext) {
 
   const termNameNameNodes = termNameNameNodesQuery.execute(termNode),
         firmTermNameNameNode = first(termNameNameNodes),
-        nameNode = firmTermNameNameNode;  ///
+        nameNameNode = firmTermNameNameNode;  ///
 
-  if (nameNode !== undefined) {
-    const name = nameFromNameNode(nameNode);
+  if (nameNameNode !== undefined) {
+    const name = nameFromNameNameNode(nameNameNode);
 
     variable = fileContext.findVariableByName(name);
   }
@@ -34,10 +34,10 @@ function variableFromExpressionNode(expressionNode, fileContext) {
 
   const expressionTermNameNameNodes = expressionTermNameNameNodesQuery.execute(expressionNode),
         firmExpressionTermNameNameNode = first(expressionTermNameNameNodes),
-        nameNode = firmExpressionTermNameNameNode;  ///
+        nameNameNode = firmExpressionTermNameNameNode;  ///
 
-  if (nameNode !== undefined) {
-    const name = nameFromNameNode(nameNode);
+  if (nameNameNode !== undefined) {
+    const name = nameFromNameNameNode(nameNameNode);
 
     variable = fileContext.findVariableByName(name);
   }

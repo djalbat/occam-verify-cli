@@ -11,7 +11,7 @@ const { Query } = dom,
       { first, second } = arrayUtilities,
       { nameFromNameNameNode } = nodeUtilities;
 
-const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
+const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!");
 
 function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
   let typeDeclarationVerified;

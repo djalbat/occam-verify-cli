@@ -1,22 +1,16 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
+const queryUtilities = require("../utilities/query"),
+      verifyStatement = require("../verify/statement");
 
-const verifyStatement = require("../verify/statement");
+const { nodeQuery } = queryUtilities;
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities;
-
-const statementNodeQuery = Query.fromExpression("/qualifiedStatement/statement");
+const statementNodeQuery = nodeQuery("/*/statement!");
 
 function verifyQualifiedStatement(qualifiedStatementNode, fileContext) {
   let qualifiedStatementVerified;
 
-  const statementNodes = statementNodeQuery.execute(qualifiedStatementNode),
-        firstStatementNode = first(statementNodes),
-        statementNode = firstStatementNode, ///
+  const statementNode = statementNodeQuery(qualifiedStatementNode),
         statementVerified = verifyStatement(statementNode, fileContext);
 
   qualifiedStatementVerified = statementVerified; ///

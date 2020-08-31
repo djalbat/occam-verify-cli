@@ -1,30 +1,22 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
-
 const log = require("../log"),
       nodeUtilities = require("../utilities/node"),
+      queryUtilities = require("../utilities/query"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
+const { nodeQuery } = queryUtilities,
       { nodeAsString } = nodeUtilities;
 
-const qualifiedStatementNodeQuery = Query.fromExpression("/indicativeConditional/qualifiedStatement"),
-      unqualifiedStatementNodeQuery = Query.fromExpression("/indicativeConditional/unqualifiedStatement");
+const qualifiedStatementNodeQuery = nodeQuery("/*/qualifiedStatement!"),
+      unqualifiedStatementNodeQuery = nodeQuery("/*/unqualifiedStatement!");
 
 function verifyIndicativeConditional(indicativeConditionalNode, fileContext) {
   let indicativeConditionalVerified;
 
-  const unqualifiedStatementNodes = unqualifiedStatementNodeQuery.execute(indicativeConditionalNode),
-        qualifiedStatementNodes = qualifiedStatementNodeQuery.execute(indicativeConditionalNode),
-        firstUnqualifiedStatementNode = first(unqualifiedStatementNodes),
-        firstQualifiedStatementNode = first(qualifiedStatementNodes),
-        unqualifiedStatementNode = firstUnqualifiedStatementNode,
-        qualifiedStatementNode = firstQualifiedStatementNode; ///
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(indicativeConditionalNode),
+        qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode);
 
   if (false) {
     ///

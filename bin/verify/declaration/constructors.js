@@ -15,7 +15,7 @@ const { Query } = dom,
       { nodeAsString, nameFromNameNameNode } = nodeUtilities;
 
 const termNodesQuery = Query.fromExpression("/*/terms/term"),
-      typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
+      typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!");
 
 function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
   let constructorDeclarationVerified = false;

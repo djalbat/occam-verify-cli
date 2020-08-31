@@ -1,27 +1,23 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
-
 const Error = require("../error"),
       Operator = require("../operator"),
       TermNode = require("../node/term"),
       ruleNames = require("../ruleNames"),
       typeUtilities = require("../utilities/type"),
       nodeUtilities = require("../utilities/node"),
+      queryUtilities = require("../utilities/query"),
       ExpressionNode = require("../node/expression"),
       variableUtilities = require("../utilities/variable"),
       NonTerminalNodeContext = require("../context/nonTerminalNode");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
+const { nodeQuery } = queryUtilities,
       { nodeAsString } = nodeUtilities,
       { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = ruleNames,
       { variableFromTermNode, variableFromExpressionNode } = variableUtilities,
       { typeFromConstructorTermNode, typeFromOperatorExpressionNode } = typeUtilities;
 
-const expressionTermQuery = Query.fromExpression("/expression/term!");
+const expressionTermQuery = nodeQuery("/expression/term!");
 
 function verifyExpression(expressionNode, fileContext) {
   let operator = undefined;
@@ -31,9 +27,7 @@ function verifyExpression(expressionNode, fileContext) {
   }
 
   if (operator === undefined) {
-    const expressionTermNodes = expressionTermQuery.execute(expressionNode),
-          firstExpressionTermNode = first(expressionTermNodes),
-          expressionTermNode = firstExpressionTermNode; ///
+    const expressionTermNode = expressionTermQuery(expressionNode);
 
     if (expressionTermNode !== undefined) {
       const termNode = expressionTermNode,  ///

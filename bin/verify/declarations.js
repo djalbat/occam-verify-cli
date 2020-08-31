@@ -1,18 +1,17 @@
 "use strict";
 
-const dom = require("occam-dom");
+const queryUtilities = require("../utilities/query"),
+      verifyDeclaration = require("../verify/declaration");
 
-const { Query } = dom;
+const { nodesQuery } = queryUtilities;
 
-const verifyDeclaration = require("../verify/declaration");
-
-const declarationNodesQuery = Query.fromExpression("/document/declaration/*");
+const declarationNodesQuery = nodesQuery("/*/declaration/*");
 
 function verifyDeclarations(fileContext) {
   let declarationsVerified;
 
   const node = fileContext.getNode(),
-        declarationNodes = declarationNodesQuery.execute(node);
+        declarationNodes = declarationNodesQuery(node);
 
   declarationsVerified = declarationNodes.every((declarationNode) => verifyDeclaration(declarationNode, fileContext));
 

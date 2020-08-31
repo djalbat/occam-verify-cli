@@ -15,7 +15,7 @@ const { Query } = dom,
       { nodeAsString, nameFromNameNameNode } = nodeUtilities;
 
 const expressionNodesQuery = Query.fromExpression("/*/expression"),
-      typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
+      typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!");
 
 function verifyOperatorDeclaration(operatorDeclarationNode, fileContext) {
   let operatorDeclarationVerified = false;

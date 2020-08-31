@@ -1,18 +1,17 @@
 "use strict";
 
-const dom = require("occam-dom");
+const verifyAxiom = require("../verify/axiom"),
+      queryUtilities = require("../utilities/query");
 
-const { Query } = dom;
+const { nodesQuery } = queryUtilities;
 
-const verifyAxiom = require("../verify/axiom");
-
-const axiomNodesQuery = Query.fromExpression("/document/axiom", 2);
+const axiomNodesQuery = nodesQuery("/*/axiom");
 
 function verifyAxioms(fileContext) {
   let axiomsVerified;
 
   const node = fileContext.getNode(),
-        axiomNodes = axiomNodesQuery.execute(node);
+        axiomNodes = axiomNodesQuery(node);
 
   axiomsVerified = axiomNodes.every((axiomNode) => verifyAxiom(axiomNode, fileContext));
 

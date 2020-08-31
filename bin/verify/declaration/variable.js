@@ -11,8 +11,8 @@ const { Query } = dom,
       { first } = arrayUtilities,
       { nameFromNameNameNode } = nodeUtilities;
 
-const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name"),
-      variableNameNameNodesQuery = Query.fromExpression("/*/variableName/@name");
+const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name!"),
+      variableNameNameNodesQuery = Query.fromExpression("/*/variableName/@name!");
 
 function verifyVariableDeclaration(variableDeclarationNode, fileContext) {
   let variableDeclarationVerified;
