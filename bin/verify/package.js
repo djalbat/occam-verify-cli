@@ -3,7 +3,7 @@
 const necessary = require("necessary");
 
 const log = require("../log"),
-      verifyFile = require("../verify/file"),
+      verifyFiles = require("../verify/files"),
       PackageContext = require("../context/package"),
       packageUtilities = require("../utilities/package");
 
@@ -35,7 +35,7 @@ function verifyPackage(packageName, packageContexts = [], dependentPackageNames 
       const dependencyPackageContexts = dependencyPackageNames.map((dependencyPackageName) => findPackageContext(dependencyPackageName, packageContexts)),
             packageContext = PackageContext.fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts),
             filePaths = filePathsFromPackageName(packageName),
-            filesVerified = filePaths.every((filePath) => verifyFile(filePath, packageContext));
+            filesVerified = verifyFiles(filePaths, packageContext);
 
       packageVerified = filesVerified;  ///
 
