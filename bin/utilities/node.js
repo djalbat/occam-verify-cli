@@ -24,6 +24,14 @@ function nodeAsString(node, string = "") {
   return string;
 }
 
+function nameFromNameNode(nameNode) {
+  const nameNodeContent = nameNode.getContent(),
+        name = nameNodeContent; ///
+
+  return name;
+}
+
 module.exports = {
-  nodeAsString
+  nodeAsString,
+  nameFromNameNode
 };

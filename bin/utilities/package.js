@@ -4,7 +4,7 @@ const dom = require("occam-dom"),
       open = require("occam-open-cli"), ///
       grammars = require("occam-grammars"),
       necessary = require("necessary"),
-      customgrammars = require("occam-custom-grammars");  ///;
+      customgrammars = require("occam-custom-grammars");
 
 const contentUtilities = require("../utilities/content");
 

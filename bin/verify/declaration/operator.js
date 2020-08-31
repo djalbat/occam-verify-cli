@@ -6,15 +6,13 @@ const dom = require("occam-dom"),
 const log = require("../../log"),
       Operator = require("../../operator"),
       nodeUtilities = require("../../utilities/node"),
-      typeUtilities = require("../../utilities/type"),
       verifyConstructorOperator = require("../../verify/constructorOperator");
 
 const { Query } = dom,
       { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { nodeAsString } = nodeUtilities,
-      { typeNameFromTypeNameNode } = typeUtilities,
-      { verifyExpressionAsOperator } = verifyConstructorOperator;
+      { verifyExpressionAsOperator } = verifyConstructorOperator,
+      { nodeAsString, nameFromNameNode } = nodeUtilities;
 
 const expressionNodesQuery = Query.fromExpression("/*/expression"),
       typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
@@ -24,7 +22,7 @@ function verifyOperatorDeclaration(operatorDeclarationNode, fileContext) {
 
   const typeNameNameNodes = typeNameNameNodesQuery.execute(operatorDeclarationNode),
         expressionNodes = expressionNodesQuery.execute(operatorDeclarationNode),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNode(typeNameNameNode)),
         firstExpressionNode = first(expressionNodes),
         firstTypeName = first(typeNames),
         expressionNode = firstExpressionNode, ///

@@ -6,15 +6,13 @@ const dom = require("occam-dom"),
 const log = require("../../log"),
       Constructor = require("../../constructor"),
       nodeUtilities = require("../../utilities/node"),
-      typeUtilities = require("../../utilities/type"),
       verifyConstructorOperator = require("../../verify/constructorOperator");
 
 const { Query } = dom,
       { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { nodeAsString } = nodeUtilities,
       { verifyTermAsConstructor } = verifyConstructorOperator,
-      { typeNameFromTypeNameNode } = typeUtilities;
+      { nodeAsString, nameFromNameNode } = nodeUtilities;
 
 const termNodesQuery = Query.fromExpression("/*/term"),
       typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
@@ -24,7 +22,7 @@ function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
 
   const typeNameNameNodes = typeNameNameNodesQuery.execute(constructorDeclarationNode),
         termNodes = termNodesQuery.execute(constructorDeclarationNode),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNode(typeNameNameNode)),
         firstTermNode = first(termNodes),
         firstTypeName = first(typeNames),
         termNode = firstTermNode, ///

@@ -5,14 +5,14 @@ const dom = require("occam-dom"),
 
 const log = require("../log"),
       Axiom = require("../axiom"),
-      labelUtilities = require("../utilities/label"),
+      nodeUtilities = require("../utilities/node"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement"),
       verifyIndicativeConditional = require("../verify/indicativeConditional");
 
 const { Query } = dom,
       { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { labelNameFromLabelNameNode } = labelUtilities;
+      { nameFromNameNode } = nodeUtilities;
 
 const labelNameNodesQuery = Query.fromExpression("/axiom/labels/label//@name"),
       unqualifiedStatementNodesQuery = Query.fromExpression("/axiom/unqualifiedStatement"),
@@ -22,7 +22,7 @@ function verifyAxiom(axiomNode, fileContext) {
   let axiomVerified = false;
 
   const labelNameNodes = labelNameNodesQuery.execute(axiomNode),
-        labelNames = labelNameNodes.map((labelNameNode) => labelNameFromLabelNameNode(labelNameNode)),
+        labelNames = labelNameNodes.map((labelNameNode) => nameFromNameNode(labelNameNode)),
         labels = labelNames,  ///
         labelsVerified = labels.every((label) => {
           let labelVerified = false;

@@ -1,31 +1,29 @@
 "use strict";
 
-const necessary = require("necessary");
+const dom = require("occam-dom"),
+      necessary = require("necessary");
 
-const queries = require("../miscellaneous/queries");
+const nodeUtilities = require("../utilities/node");
 
-const { arrayUtilities } = necessary,
+const { Query } = dom,
+      { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { termNameNodesQuery, expressionTermNodesQuery, nameTerminalNodeQuery } = queries;
+      { nameFromNameNode } = nodeUtilities;
 
-function typeNameFromTypeNameNode(typeNameNode) {
-  const typeNameNodeContent = typeNameNode.getContent(),
-    typeName = typeNameNodeContent; ///
-
-  return typeName;
-}
+const termNameNameNodesQuery = Query.fromExpression("/term!/name!/@name!"),
+      expressionTermNameNameNodesQuery = Query.fromExpression("/expression!/term!/name!/@name");
 
 function typeFromTermNode(termNode, fileContext) {
   let type = undefined;
 
-  const termNameNodes = termNameNodesQuery(termNode),
-        termNameNodesLength = termNameNodes.length;
+  const termNameNameNodes = termNameNameNodesQuery.execute(termNode),
+        firmTermNameNameNode = first(termNameNameNodes),
+        nameNode = firmTermNameNameNode;  ///
 
-  if (termNameNodesLength === 1) {
-    const firmTermNameNode = first(termNameNodes),
-          nameNode = firmTermNameNode;  ///
+  if (nameNode !== undefined) {
+    const name = nameFromNameNode(nameNode);
 
-    type = typeFromNameNode(nameNode, fileContext);
+    type = fileContext.findTypeByTypeName(name);
   }
 
   return type;
@@ -34,14 +32,14 @@ function typeFromTermNode(termNode, fileContext) {
 function typeFromExpressionNode(expressionNode, fileContext) {
   let type = undefined;
 
-  const expressionTermNodes = expressionTermNodesQuery(expressionNode),
-        expressionTermNodesLength = expressionTermNodes.length;
+  const expressionTermNameNameNodes = expressionTermNameNameNodesQuery.execute(expressionNode),
+        firmExpressionTermNameNameNode = first(expressionTermNameNameNodes),
+        nameNode = firmExpressionTermNameNameNode;  ///
 
-  if (expressionTermNodesLength === 1) {
-    const firmTermNode = first(expressionTermNodes),
-          termNode = firmTermNode;  ///
+  if (nameNode !== undefined) {
+    const name = nameFromNameNode(nameNode);
 
-    type = typeFromTermNode(termNode, fileContext);
+    type = fileContext.findTypeByTypeName(name);
   }
 
   return type;
@@ -62,18 +60,8 @@ function typeFromOperatorExpressionNode(operatorExpressionNode, fileContext) {
 }
 
 module.exports = {
-  typeNameFromTypeNameNode,
   typeFromTermNode,
   typeFromExpressionNode,
   typeFromConstructorTermNode,
   typeFromOperatorExpressionNode
 };
-
-function typeFromNameNode(nameNode, fileContext) {
-  const nameTerminalNode = nameTerminalNodeQuery(nameNode),
-        nameTerminalNodeContent = nameTerminalNode.getContent(),
-        name = nameTerminalNodeContent,
-        type = fileContext.findTypeByName(name);
-
-  return type;
-}

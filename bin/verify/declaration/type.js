@@ -4,12 +4,12 @@ const dom = require("occam-dom"),
       necessary = require("necessary");
 
 const verifyType = require("../../verify/type"),
-      typeUtilities = require("../../utilities/type");
+      nodeUtilities = require("../../utilities/node");
 
 const { Query } = dom,
       { arrayUtilities } = necessary,
       { first, second } = arrayUtilities,
-      { typeNameFromTypeNameNode } = typeUtilities;
+      { nameFromNameNode } = nodeUtilities;
 
 const typeNameNameNodesQuery = Query.fromExpression("/*/typeName/@name");
 
@@ -17,7 +17,7 @@ function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
   let typeDeclarationVerified;
 
   const typeNameNameNodes = typeNameNameNodesQuery.execute(typeDeclarationNode),
-        typeNames = typeNameNameNodes.map((typeNameNameNode) => typeNameFromTypeNameNode(typeNameNameNode)),
+        typeNames = typeNameNameNodes.map((typeNameNameNode) => nameFromNameNode(typeNameNameNode)),
         firstTypeName = first(typeNames),
         secondTypeName = second(typeNames),
         typeName = firstTypeName, ///
