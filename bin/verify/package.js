@@ -9,7 +9,7 @@ const log = require("../log"),
 
 const { arrayUtilities } = necessary,
       { first } = arrayUtilities,
-      { findPackageContext, filePathsFromPackageName, dependencyPackageNamesFromPackageName } = packageUtilities;
+      { findPackageContext, dependencyPackageNamesFromPackageName } = packageUtilities;
 
 function verifyPackage(packageName, packageContexts = [], dependentPackageNames = []) {
   let packageVerified = false;
@@ -34,8 +34,7 @@ function verifyPackage(packageName, packageContexts = [], dependentPackageNames 
     if (dependencyPackagesVerified) {
       const dependencyPackageContexts = dependencyPackageNames.map((dependencyPackageName) => findPackageContext(dependencyPackageName, packageContexts)),
             packageContext = PackageContext.fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts),
-            filePaths = filePathsFromPackageName(packageName),
-            filesVerified = verifyFiles(filePaths, packageContext);
+            filesVerified = verifyFiles(packageContext);
 
       packageVerified = filesVerified;  ///
 
