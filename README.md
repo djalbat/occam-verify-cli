@@ -1,8 +1,7 @@
 # Verifier
 
-[Occam](https://github.com/jecs-imperial/occam)'s verifier.
+[Occam](https://github.com/djalbat/occam)'s verifier.
 
 ## Contact
 
 * james.smith@openmathematics.org
-* http://djalbat.com
