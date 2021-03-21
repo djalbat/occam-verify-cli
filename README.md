@@ -1,4 +1,4 @@
-# Verifier
+# Occam Verifier
 
 [Occam](https://github.com/djalbat/occam)'s verifier.
 
