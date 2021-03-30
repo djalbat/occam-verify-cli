@@ -1,13 +1,10 @@
 "use strict";
 
-const log = require("../log"),
-      nodeUtilities = require("../utilities/node"),
-      queryUtilities = require("../utilities/query"),
-      verifyTermExpression = require("../verify/termExpression");
+const log = require("../log");
 
-const { nodeQuery } = queryUtilities,
-      { nodeAsString } = nodeUtilities,
-      { verifyExpression } = verifyTermExpression;
+const { nodeQuery } = require("../utilities/query"),
+      { nodeAsString } = require("../utilities/node"),
+      { verifyExpression } = require("../verify/termExpression");
 
 const statementExpressionNodeQuery = nodeQuery("/statement/expression!");
 

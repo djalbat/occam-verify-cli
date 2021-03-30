@@ -2,16 +2,12 @@
 
 const log = require("../log"),
       TermNode = require("../node/term"),
-      constants = require("../constants"),
-      typeUtilities = require("../utilities/type"),
-      nodeUtilities = require("../utilities/node"),
-      ExpressionNode = require("../node/expression"),
-      verifyTermExpression = require("../verify/termExpression");
+      ExpressionNode = require("../node/expression");
 
-const { nodeAsString } = nodeUtilities,
-      { verifyTerm, verifyExpression } = verifyTermExpression,
-      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = constants,
-      { typeFromTermNode, typeFromExpressionNode } = typeUtilities;
+const { nodeAsString } = require("../utilities/node"),
+      { verifyTerm, verifyExpression } = require("../verify/termExpression"),
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../constants"),
+      { typeFromTermNode, typeFromExpressionNode } = require("../utilities/type");
 
 function verifyExpressionAsOperator(expressionNode, fileContext) {
   const nonTerminalNode = expressionNode,  ///
@@ -194,4 +190,3 @@ function verifyTermNode(termNode, fileContext) {
 
   return verified;
 }
-

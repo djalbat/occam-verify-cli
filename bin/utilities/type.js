@@ -1,14 +1,11 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      necessary = require("necessary");
+const { Query } = require("occam-dom"),
+      { arrayUtilities } = require("necessary");
 
-const nodeUtilities = require("../utilities/node");
+const { nameFromNameNameNode } = require("../utilities/node");
 
-const { Query } = dom,
-      { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
-      { nameFromNameNameNode } = nodeUtilities;
+const { first } = arrayUtilities;
 
 const termNameNameNodesQuery = Query.fromExpression("/term!/name!/@name!"),
       expressionTermNameNameNodesQuery = Query.fromExpression("/expression!/term!/name!/@name");

@@ -1,20 +1,15 @@
 "use strict";
 
-const dom = require("occam-dom"),
-      open = require("occam-open-cli"), ///
-      grammars = require("occam-grammars"),
-      necessary = require("necessary"),
-      customgrammars = require("occam-custom-grammars");
+const { Query } = require("occam-dom"),
+      { filePathUtilities } = require("occam-open-cli"),
+      { fileSystemUtilities } = require("necessary"),
+      { CombinedCustomGrammar } = require("occam-custom-grammars"),
+      { MetaJSONLexer, MetaJSONParser } = require("occam-grammars");
 
-const contentUtilities = require("../utilities/content");
+const { trimDoubleQuotes } = require("../utilities/content"),
+      { customGrammarFromDirectoryPath } = require("../utilities/customGrammar");
 
-const { Query } = dom,
-      { trimDoubleQuotes } = contentUtilities,
-      { filePathUtilities } = open,
-      { fileSystemUtilities } = necessary,
-      { isFilePathFlorenceFilePath } = filePathUtilities,
-      { MetaJSONLexer, MetaJSONParser } = grammars,
-      { CombinedCustomGrammar, CustomGrammar } = customgrammars,
+const { isFilePathFlorenceFilePath } = filePathUtilities,
       { checkFileExists, readFile, readDirectory } = fileSystemUtilities;
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
@@ -89,7 +84,7 @@ module.exports = {
 
 function customGrammarFromPackageName(packageName) {
   const directoryPath = packageName,  ///
-        customGrammar = CustomGrammar.fromDirectoryPath(directoryPath);
+        customGrammar = customGrammarFromDirectoryPath(directoryPath);
 
   return customGrammar;
 }

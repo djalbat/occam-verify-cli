@@ -1,15 +1,13 @@
 "use strict";
 
-const necessary = require("necessary");
+const { arrayUtilities } = require("necessary");
 
-const contextMixins = require("../mixins/context"),
-      grammarUtilities = require("../utilities/grammar"),
-      packageUtilities = require("../utilities/package");
+const contextMixins = require("../mixins/context");
 
-const { arrayUtilities } = necessary,
-      { push } = arrayUtilities,
-      { combinedCustomGrammarFromPackageNames } = packageUtilities,
-      { florenceLexerFromNothing, florenceParserFromNothing, florenceLexerFromCombinedCustomGrammar, florenceParserFromCombinedCustomGrammar } = grammarUtilities;
+const { combinedCustomGrammarFromPackageNames } = require("../utilities/package"),
+      { florenceLexerFromNothing, florenceParserFromNothing, florenceLexerFromCombinedCustomGrammar, florenceParserFromCombinedCustomGrammar } = require("../utilities/grammar");
+
+const { push } = arrayUtilities;
 
 class PackageContext {
   constructor(packageName, fileContexts, florenceLexer, florenceParser, dependencyPackageContexts) {

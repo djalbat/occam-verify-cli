@@ -1,14 +1,11 @@
 "use strict";
 
 const log = require("../../log"),
-      Constructor = require("../../constructor"),
-      nodeUtilities = require("../../utilities/node"),
-      queryUtilities = require("../../utilities/query"),
-      verifyConstructorOperator = require("../../verify/constructorOperator");
+      Constructor = require("../../constructor");
 
-const { nodeQuery, nodesQuery } = queryUtilities,
-      { verifyTermAsConstructor } = verifyConstructorOperator,
-      { nodeAsString, nameFromNameNameNode } = nodeUtilities;
+const { nodeQuery, nodesQuery } = require("../../utilities/query"),
+      { verifyTermAsConstructor } = require("../../verify/constructorOperator"),
+      { nodeAsString, nameFromNameNameNode } = require("../../utilities/node");
 
 const termsTermNodesQuery = nodesQuery("/*/terms/term"),
       typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!");

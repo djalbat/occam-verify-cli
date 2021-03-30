@@ -1,9 +1,8 @@
 "use strict";
 
-const queryUtilities = require("../utilities/query"),
-      verifyDeclaration = require("../verify/declaration");
+const verifyDeclaration = require("../verify/declaration");
 
-const { nodesQuery } = queryUtilities;
+const { nodesQuery } = require("../utilities/query");
 
 const declarationNodesQuery = nodesQuery("/*/declaration/*");
 

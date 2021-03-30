@@ -1,9 +1,8 @@
 "use strict";
 
-const queryUtilities = require("../utilities/query"),
-      verifyStatement = require("../verify/statement");
+const verifyStatement = require("../verify/statement");
 
-const { nodeQuery } = queryUtilities;
+const { nodeQuery } = require("../utilities/query");
 
 const statementNodeQuery = nodeQuery("/*/statement!");
 

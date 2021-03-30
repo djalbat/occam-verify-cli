@@ -3,18 +3,13 @@
 const log = require("../log"),
       Operator = require("../operator"),
       TermNode = require("../node/term"),
-      constants = require("../constants"),
-      typeUtilities = require("../utilities/type"),
-      nodeUtilities = require("../utilities/node"),
-      queryUtilities = require("../utilities/query"),
-      ExpressionNode = require("../node/expression"),
-      variableUtilities = require("../utilities/variable");
+      ExpressionNode = require("../node/expression");
 
-const { nodeQuery } = queryUtilities,
-      { nodeAsString } = nodeUtilities,
-      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = constants,
-      { variableFromTermNode, variableFromExpressionNode } = variableUtilities,
-      { typeFromConstructorTermNode, typeFromOperatorExpressionNode } = typeUtilities;
+const { nodeQuery } = require("../utilities/query"),
+      { nodeAsString } = require("../utilities/node"),
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../constants"),
+      { variableFromTermNode, variableFromExpressionNode } = require("../utilities/variable"),
+      { typeFromConstructorTermNode, typeFromOperatorExpressionNode } = require("../utilities/type");
 
 const expressionTermQuery = nodeQuery("/expression/term!");
 

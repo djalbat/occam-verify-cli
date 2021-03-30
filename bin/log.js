@@ -1,8 +1,6 @@
 "use strict";
 
-const constants = require("./constants");
-
-const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL, DEFAULT_LOG_LEVEL } = constants;
+const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL, DEFAULT_LOG_LEVEL } = require("./constants");
 
 const levels = [
   TRACE_LEVEL,

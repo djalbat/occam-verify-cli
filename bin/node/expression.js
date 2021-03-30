@@ -1,11 +1,8 @@
 "use strict";
 
-const parsers = require("occam-parsers");
+const { NonTerminalNode } = require("occam-parsers");
 
-const constants = require("../constants");
-
-const { NonTerminalNode } = parsers,
-      { EXPRESSION_RULE_NAME } = constants;
+const { EXPRESSION_RULE_NAME } = require("../constants");
 
 class Expression extends NonTerminalNode {
   static fromNonTerminalNode(nonTerminalNode) {

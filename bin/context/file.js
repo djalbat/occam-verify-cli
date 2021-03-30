@@ -1,14 +1,12 @@
 "use strict";
 
-const necessary = require("necessary"),
-      grammarUtilities = require("occam-grammar-utilities");
+const { removeOrRenameIntermediateNodes } = require("occam-grammar-utilities"),
+      { arrayUtilities, fileSystemUtilities } = require("necessary");
 
 const contextMixins = require("../mixins/context");
 
-const { arrayUtilities, fileSystemUtilities } = necessary,
-      { push } = arrayUtilities,
-      { readFile } = fileSystemUtilities,
-      { removeOrRenameIntermediateNodes } = grammarUtilities;
+const { push } = arrayUtilities,
+      { readFile } = fileSystemUtilities;
 
 class FileContext {
   constructor(packageContext, filePath, tokens, node, types, axioms, variables, operators, constructors) {

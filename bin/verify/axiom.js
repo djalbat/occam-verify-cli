@@ -2,13 +2,11 @@
 
 const log = require("../log"),
       Axiom = require("../axiom"),
-      nodeUtilities = require("../utilities/node"),
-      queryUtilities = require("../utilities/query"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement"),
       verifyIndicativeConditional = require("../verify/indicativeConditional");
 
-const { nameFromNameNameNode } = nodeUtilities,
-      { nodeQuery, nodesQuery } = queryUtilities;
+const { nameFromNameNameNode } = require("../utilities/node"),
+      { nodeQuery, nodesQuery } = require("../utilities/query");
 
 const labelsLabelNodesQuery = nodesQuery("/*/labels/label"),
       labelNameNameNodeQuery = nodeQuery("/*/labelName!/@name!"),

@@ -1,9 +1,8 @@
 "use strict";
 
-const verifyAxiom = require("../verify/axiom"),
-      queryUtilities = require("../utilities/query");
+const verifyAxiom = require("../verify/axiom");
 
-const { nodesQuery } = queryUtilities;
+const { nodesQuery } = require("../utilities/query");
 
 const axiomNodesQuery = nodesQuery("/*/axiom");
 

@@ -1,8 +1,6 @@
 "use strict";
 
-const dom = require("occam-dom");
-
-const { Query } = dom;
+const { Query } = require("occam-dom");
 
 function nodeQuery(expression) {
   const query = Query.fromExpression(expression);

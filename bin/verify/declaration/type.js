@@ -1,11 +1,9 @@
 "use strict";
 
-const verifyType = require("../../verify/type"),
-      nodeUtilities = require("../../utilities/node"),
-      queryUtilities = require("../../utilities/query");
+const verifyType = require("../../verify/type");
 
-const { nodeQuery } = queryUtilities,
-      { nameFromNameNameNode } = nodeUtilities;
+const { nodeQuery } = require("../../utilities/query"),
+      { nameFromNameNameNode } = require("../../utilities/node");
 
 const firstTypeNameNameNodeQuery = nodeQuery("/*/typeName[0]/@name!"),
       secondTypeNameNameNodeQuery = nodeQuery("/*/typeName[1]/@name!");

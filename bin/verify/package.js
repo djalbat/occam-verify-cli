@@ -1,15 +1,14 @@
 "use strict";
 
-const necessary = require("necessary");
+const { arrayUtilities } = require("necessary");
 
 const log = require("../log"),
       verifyFiles = require("../verify/files"),
-      PackageContext = require("../context/package"),
-      packageUtilities = require("../utilities/package");
+      PackageContext = require("../context/package");
 
-const { arrayUtilities } = necessary,
-      { first } = arrayUtilities,
-      { findPackageContext, dependencyPackageNamesFromPackageName } = packageUtilities;
+const { findPackageContext, dependencyPackageNamesFromPackageName } = require("../utilities/package");
+
+const { first } = arrayUtilities;
 
 function verifyPackage(packageName, packageContexts = [], dependentPackageNames = []) {
   let packageVerified = false;

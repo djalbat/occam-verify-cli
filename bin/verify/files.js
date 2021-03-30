@@ -1,9 +1,8 @@
 "use strict";
 
-const verifyFile = require("../verify/file"),
-      packageUtilities = require("../utilities/package");
+const verifyFile = require("../verify/file");
 
-const { filePathsFromPackageName } = packageUtilities;
+const { filePathsFromPackageName } = require("../utilities/package");
 
 function verifyFiles(packageContext) {
   const packageName = packageContext.getPackageName(),

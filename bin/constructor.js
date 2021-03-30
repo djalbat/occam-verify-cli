@@ -1,8 +1,6 @@
 "use strict";
 
-const nodeUtilities = require("./utilities/node");
-
-const { nodeAsString } = nodeUtilities;
+const { nodeAsString } = require("./utilities/node");
 
 class Constructor {
   constructor(termNode, type) {

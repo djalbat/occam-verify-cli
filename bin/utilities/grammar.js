@@ -1,11 +1,9 @@
 "use strict";
 
-const grammars = require("occam-grammars"),
-      customGrammars = require("occam-custom-grammars");
+const { FlorenceLexer, FlorenceParser } = require("occam-grammars"),
+      { lexersUtilities, parsersUtilities } = require("occam-custom-grammars");
 
-const { FlorenceLexer, FlorenceParser } = grammars,
-			{ lexersUtilities, parsersUtilities } = customGrammars,
-			{ florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
+const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
 			{ florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 function florenceLexerFromNothing() {

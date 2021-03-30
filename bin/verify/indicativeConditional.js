@@ -1,13 +1,11 @@
 "use strict";
 
 const log = require("../log"),
-      nodeUtilities = require("../utilities/node"),
-      queryUtilities = require("../utilities/query"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
-const { nodeQuery } = queryUtilities,
-      { nodeAsString } = nodeUtilities;
+const { nodeQuery } = require("../utilities/query"),
+      { nodeAsString } = require("../utilities/node");
 
 const qualifiedStatementNodeQuery = nodeQuery("/*/qualifiedStatement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/*/unqualifiedStatement!");
