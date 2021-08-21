@@ -6,7 +6,7 @@ const log = require("../log"),
 
 const { nodeAsString } = require("../utilities/node"),
       { verifyTerm, verifyExpression } = require("../verify/termExpression"),
-      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../constants"),
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../ruleNames"),
       { typeFromTermNode, typeFromExpressionNode } = require("../utilities/type");
 
 function verifyExpressionAsOperator(expressionNode, fileContext) {

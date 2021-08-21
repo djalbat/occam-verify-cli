@@ -1,6 +1,8 @@
 "use strict";
 
-function nodeAsString(node, string = "") {
+const { EMPTY_STRING } = require("../constants");
+
+function nodeAsString(node, string = EMPTY_STRING) {
   const nodeTerminalNode = node.isTerminalNode();
 
   if (nodeTerminalNode) {

@@ -2,7 +2,7 @@
 
 const { NonTerminalNode } = require("occam-parsers");
 
-const { TERM_RULE_NAME } = require("../constants");
+const { TERM_RULE_NAME } = require("../ruleNames");
 
 class Term extends NonTerminalNode {
   static fromNonTerminalNode(nonTerminalNode) {

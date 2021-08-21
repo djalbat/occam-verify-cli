@@ -2,7 +2,7 @@
 
 const { NonTerminalNode } = require("occam-parsers");
 
-const { EXPRESSION_RULE_NAME } = require("../constants");
+const { EXPRESSION_RULE_NAME } = require("../ruleNames");
 
 class Expression extends NonTerminalNode {
   static fromNonTerminalNode(nonTerminalNode) {
