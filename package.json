@@ -1,7 +1,7 @@
 {
   "name": "occam-verifier",
   "author": "James Smith",
-  "version": "0.0.98",
+  "version": "0.0.99",
   "license": "MIT, Anti-996",
   "homepage": "https://github.com/djalbat/occam-verifier",
   "description": "Occam's verifier.",
@@ -12,10 +12,10 @@
   "dependencies": {
     "argumentative": "^2.0.15",
     "necessary": "^7.1.10",
-    "occam-custom-grammars": "^5.0.66",
+    "occam-custom-grammars": "^5.0.80",
     "occam-dom": "^3.0.20",
     "occam-grammar-utilities": "^5.0.51",
-    "occam-grammars": "^1.0.52",
+    "occam-grammars": "^1.0.63",
     "occam-open-cli": "^4.0.24",
     "occam-parsers": "^14.0.35"
   },
