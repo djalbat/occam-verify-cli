@@ -92,8 +92,8 @@ class PackageContext {
     return axioms;
   }
 
-  getOperators(packageNames = []) {
-    const operators = [],
+  getCombinators(packageNames = []) {
+    const combinators = [],
           packageNamesIncludesPackageName = packageNames.includes(this.packageName);
 
     if (!packageNamesIncludesPackageName) {
@@ -102,21 +102,21 @@ class PackageContext {
       const bubble = false;
 
       this.fileContexts.forEach((fileContext) => {
-        const fileContextOperators = fileContext.getOperators(bubble);
+        const fileContextCombinators = fileContext.getCombinators(bubble);
 
-        push(operators, fileContextOperators);
+        push(combinators, fileContextCombinators);
       });
 
       const packageContexts = this.retrievePackageContexts();
 
       packageContexts.forEach((packageContext) => {
-        const packageContextOperators = packageContext.getOperators(packageNames);
+        const packageContextCombinators = packageContext.getCombinators(packageNames);
 
-        push(operators, packageContextOperators);
+        push(combinators, packageContextCombinators);
       });
     }
 
-    return operators;
+    return combinators;
   }
 
   getConstructors(packageNames = []) {

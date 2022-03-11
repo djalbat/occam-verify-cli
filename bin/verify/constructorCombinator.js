@@ -9,7 +9,7 @@ const { nodeAsString } = require("../utilities/node"),
       { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../ruleNames"),
       { typeFromTermNode, typeFromExpressionNode } = require("../utilities/type");
 
-function verifyExpressionAsOperator(expressionNode, fileContext) {
+function verifyExpressionAsCombinator(expressionNode, fileContext) {
   const nonTerminalNode = expressionNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
         parentNode = nonTerminalNode,  ///
@@ -30,7 +30,7 @@ function verifyTermAsConstructor(termNode, fileContext) {
 }
 
 module.exports = {
-  verifyExpressionAsOperator,
+  verifyExpressionAsCombinator,
   verifyTermAsConstructor
 };
 
@@ -147,12 +147,12 @@ function verifyExpressionNode(expressionNode, fileContext) {
   if (type !== undefined) {
     verified = true;
   } else {
-    const operator = verifyExpression(expressionNode, fileContext);
+    const combinator = verifyExpression(expressionNode, fileContext);
 
-    if (operator !== undefined) {
-      const operatorType = operator.getType();
+    if (combinator !== undefined) {
+      const combinatorType = combinator.getType();
 
-      if (operatorType !== undefined) {
+      if (combinatorType !== undefined) {
         const expressionString = nodeAsString(expressionNode);
 
         log.error(`The '${expressionString}' sub-expression cannot be verified because its type is not undefined.`);

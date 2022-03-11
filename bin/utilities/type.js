@@ -49,8 +49,8 @@ function typeFromConstructorTermNode(constructorTermNode, fileContext) {
   return type;
 }
 
-function typeFromOperatorExpressionNode(operatorExpressionNode, fileContext) {
-  const expressionNode = operatorExpressionNode,  ///
+function typeFromCombinatorExpressionNode(combinatorExpressionNode, fileContext) {
+  const expressionNode = combinatorExpressionNode,  ///
         type = typeFromExpressionNode(expressionNode, fileContext);
 
   return type;
@@ -60,5 +60,5 @@ module.exports = {
   typeFromTermNode,
   typeFromExpressionNode,
   typeFromConstructorTermNode,
-  typeFromOperatorExpressionNode
+  typeFromCombinatorExpressionNode
 };

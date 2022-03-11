@@ -4,7 +4,7 @@ const log = require("../../log"),
       Constructor = require("../../constructor");
 
 const { nodeQuery } = require("../../utilities/query"),
-      { verifyTermAsConstructor } = require("../../verify/constructorOperator"),
+      { verifyTermAsConstructor } = require("../../verify/constructorCombinator"),
       { nodeAsString, nameFromNameNameNode } = require("../../utilities/node");
 
 const termNodeQuery = nodeQuery("/*/term!"),

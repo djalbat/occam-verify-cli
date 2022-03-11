@@ -15,14 +15,14 @@ function verifyStatement(statementNode, fileContext) {
 
   if (statementExpressionNode !== undefined) {
     const expressionNode = statementExpressionNode, ///
-          operator = verifyExpression(expressionNode, fileContext);
+          combinator = verifyExpression(expressionNode, fileContext);
 
-    if (operator === undefined) {
+    if (combinator === undefined) {
       const expressionString = nodeAsString(expressionNode);
 
       log.error(`The '${expressionString}' expression cannot be verified.`);
     } else {
-      const type = operator.getType();
+      const type = combinator.getType();
 
       if (type !== undefined) {
         const noSuperType = true,

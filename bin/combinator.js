@@ -2,7 +2,7 @@
 
 const { nodeAsString } = require("./utilities/node");
 
-class Operator {
+class Combinator {
   constructor(expressionNode, type) {
     this.expressionNode = expressionNode;
     this.type = type;
@@ -34,10 +34,10 @@ class Operator {
   }
 
   static fromExpressionNodeAndType(expressionNode, type) {
-    const operator = new Operator(expressionNode, type);
+    const combinator = new Combinator(expressionNode, type);
 
-    return operator;
+    return combinator;
   }
 }
 
-module.exports = Operator;
+module.exports = Combinator;

@@ -1,26 +1,26 @@
 "use strict";
 
 const log = require("../log"),
-      Operator = require("../operator"),
       TermNode = require("../node/term"),
+      Combinator = require("../combinator"),
       ExpressionNode = require("../node/expression");
 
 const { nodeQuery } = require("../utilities/query"),
       { nodeAsString } = require("../utilities/node"),
       { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../ruleNames"),
       { variableFromTermNode, variableFromExpressionNode } = require("../utilities/variable"),
-      { typeFromConstructorTermNode, typeFromOperatorExpressionNode } = require("../utilities/type");
+      { typeFromConstructorTermNode, typeFromCombinatorExpressionNode } = require("../utilities/type");
 
 const expressionTermQuery = nodeQuery("/expression/term!");
 
 function verifyExpression(expressionNode, fileContext) {
-  let operator = undefined;
+  let combinator = undefined;
 
-  if (operator === undefined) {
-    operator = verifyExpressionAgainstOperators(expressionNode, fileContext);
+  if (combinator === undefined) {
+    combinator = verifyExpressionAgainstCombinators(expressionNode, fileContext);
   }
 
-  if (operator === undefined) {
+  if (combinator === undefined) {
     const expressionTermNode = expressionTermQuery(expressionNode);
 
     if (expressionTermNode !== undefined) {
@@ -30,12 +30,12 @@ function verifyExpression(expressionNode, fileContext) {
       if (constructor !== undefined) {
         const type = constructor.getType();
 
-        operator = Operator.fromExpressionNodeAndType(expressionNode, type);
+        combinator = Combinator.fromExpressionNodeAndType(expressionNode, type);
       }
     }
   }
 
-  return operator;
+  return combinator;
 }
 
 function verifyTerm(termNode, fileContext) { return verifyTermAgainstConstructors(termNode, fileContext); }
@@ -45,27 +45,27 @@ module.exports = {
   verifyTerm
 };
 
-function verifyExpressionAgainstOperators(expressionNode, fileContext) {
-  const operators = fileContext.getOperators(),
-        operator = operators.find((operator) => {
-          const operatorExpressionNode = operator.getExpressionNode(),
-                verified = verifyExpressionAgainstOperator(expressionNode, operatorExpressionNode, fileContext);
+function verifyExpressionAgainstCombinators(expressionNode, fileContext) {
+  const combinators = fileContext.getCombinators(),
+        combinator = combinators.find((combinator) => {
+          const combinatorExpressionNode = combinator.getExpressionNode(),
+                verified = verifyExpressionAgainstCombinator(expressionNode, combinatorExpressionNode, fileContext);
 
           if (verified) {
             return true;
           }
         });
 
-  return operator;
+  return combinator;
 }
 
-function verifyExpressionAgainstOperator(expressionNode, operatorExpressionNode, fileContext) {
+function verifyExpressionAgainstCombinator(expressionNode, combinatorExpressionNode, fileContext) {
   const nonTerminalNode = expressionNode, ///
-        constructorOrOperatorNonTerminalNode = operatorExpressionNode, ///
+        constructorOrCombinatorNonTerminalNode = combinatorExpressionNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
-        constructorOrOperatorChildNodes = constructorOrOperatorNonTerminalNode.getChildNodes(),
+        constructorOrCombinatorChildNodes = constructorOrCombinatorNonTerminalNode.getChildNodes(),
         parentNode = nonTerminalNode, ///
-        verified = verifyChildNodes(childNodes, constructorOrOperatorChildNodes, parentNode, fileContext);
+        verified = verifyChildNodes(childNodes, constructorOrCombinatorChildNodes, parentNode, fileContext);
 
   return verified;
 }
@@ -153,9 +153,9 @@ function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTermin
     switch (ruleName) {
       case EXPRESSION_RULE_NAME: {
         const expressionNode = nonTerminalNode, ///
-              operatorExpressionNode = constructorOrExpressionNonTerminalNode;  ///
+              combinatorExpressionNode = constructorOrExpressionNonTerminalNode;  ///
 
-        verified = verifyExpressionNode(expressionNode, operatorExpressionNode, fileContext);
+        verified = verifyExpressionNode(expressionNode, combinatorExpressionNode, fileContext);
 
         break;
       }
@@ -175,10 +175,10 @@ function verifyNonTerminalNode(nonTerminalNode, constructorOrExpressionNonTermin
 
           if (!parentNodeExpressionNode) {
             const expressionNode = ExpressionNode.fromNonTerminalNode(nonTerminalNode),
-                  operator = verifyExpression(expressionNode, fileContext);
+                  combinator = verifyExpression(expressionNode, fileContext);
 
-            if (operator !== undefined) {
-              const type = operator.getType();
+            if (combinator !== undefined) {
+              const type = combinator.getType();
 
               if (type === undefined) {
                 const nonTerminalNodeString = nodeAsString(nonTerminalNode),
@@ -265,10 +265,10 @@ function verifyChildNodes(childNodes, constructorOrExpressionChildNodes, parentN
   return verified;
 }
 
-function verifyExpressionNode(expressionNode, operatorExpressionNode, fileContext) {
+function verifyExpressionNode(expressionNode, combinatorExpressionNode, fileContext) {
   let verified = false;
 
-  const type = typeFromOperatorExpressionNode(operatorExpressionNode, fileContext);
+  const type = typeFromCombinatorExpressionNode(combinatorExpressionNode, fileContext);
 
   if (type !== undefined) {
     if (verified === false) {
@@ -285,19 +285,19 @@ function verifyExpressionNode(expressionNode, operatorExpressionNode, fileContex
     }
 
     if (verified === false) {
-      const operator = verifyExpression(expressionNode, fileContext);
+      const combinator = verifyExpression(expressionNode, fileContext);
 
-      if (operator !== undefined) {
-        const operatorType = operator.getType();
+      if (combinator !== undefined) {
+        const combinatorType = combinator.getType();
 
-        if (operatorType === undefined) {
+        if (combinatorType === undefined) {
           const expressionString = nodeAsString(expressionNode);
 
           log.error(`The '${expressionString}' sub-expression cannot be verified because its type is undefined.`);
         } else {
-          const operatorTypeEqualToOrSubTypeOfType = operatorType.isEqualToOrSubTypeOf(type);
+          const combinatorTypeEqualToOrSubTypeOfType = combinatorType.isEqualToOrSubTypeOf(type);
 
-          if (operatorTypeEqualToOrSubTypeOfType) {
+          if (combinatorTypeEqualToOrSubTypeOfType) {
             verified = true;
           }
         }

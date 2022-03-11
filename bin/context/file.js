@@ -9,14 +9,14 @@ const { push } = arrayUtilities,
       { readFile } = fileSystemUtilities;
 
 class FileContext {
-  constructor(packageContext, filePath, tokens, node, types, axioms, variables, operators, constructors) {
+  constructor(packageContext, filePath, tokens, node, types, axioms, variables, combinators, constructors) {
     this.packageContext = packageContext;
     this.filePath = filePath;
     this.tokens = tokens;
     this.node = node;
     this.types = types;
     this.axioms = axioms;
-    this.operators = operators;
+    this.combinators = combinators;
     this.variables = variables;
     this.constructors = constructors;
   }
@@ -65,18 +65,18 @@ class FileContext {
     return axioms;
   }
 
-  getOperators(bubble = true) {
-    const operators = [];
+  getCombinators(bubble = true) {
+    const combinators = [];
 
     if (bubble) {
-      const packageContextOperators = this.packageContext.getOperators();
+      const packageContextCombinators = this.packageContext.getCombinators();
 
-      push(operators, packageContextOperators);
+      push(combinators, packageContextCombinators);
     }
 
-    push(operators, this.operators);
+    push(combinators, this.combinators);
 
-    return operators;
+    return combinators;
   }
 
   getConstructors(bubble = true) {
@@ -124,8 +124,8 @@ class FileContext {
     this.variables.push(variable);
   }
 
-  addOperator(operator) {
-    this.operators.push(operator);
+  addCombinator(combinator) {
+    this.combinators.push(combinator);
   }
 
   addConstructor(constructor) {
@@ -143,9 +143,9 @@ class FileContext {
     const types = [],
           axioms = [],
           variables = [],
-          operators = [],
+          combinators = [],
           constructors = [],
-          fileContext = new FileContext(packageContext, filePath, tokens, node, types, axioms, variables, operators, constructors);
+          fileContext = new FileContext(packageContext, filePath, tokens, node, types, axioms, variables, combinators, constructors);
 
     return fileContext;
   }
