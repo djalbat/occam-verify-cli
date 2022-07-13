@@ -3,18 +3,20 @@
 const verifyVariable = require("../../verify/variable");
 
 const { nodeQuery } = require("../../utilities/query"),
-      { nameFromNameNameNode } = require("../../utilities/node");
+      { nameFromNameNode } = require("../../utilities/node");
 
-const typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!"),
-      variableNameNameNodeQuery = nodeQuery("/*/variableName!/@name!");
+const firstNameNodeQuery = nodeQuery("/variableDeclaration/@name[0]"),
+      secondNameNodeQuery = nodeQuery("/variableDeclaration/@name[1]");
 
-function verifyVariableDeclaration(typeDeclarationNode, fileContext) {
+function verifyVariableDeclaration(variableDeclarationNode, fileContext) {
   let variableDeclarationVerified;
 
-  const variableNameNameNode = variableNameNameNodeQuery(typeDeclarationNode),
-        typeNameNameNode = typeNameNameNodeQuery(typeDeclarationNode),
-        variableName = nameFromNameNameNode(variableNameNameNode),
-        typeName = nameFromNameNameNode(typeNameNameNode),
+  const firstNameNode = firstNameNodeQuery(variableDeclarationNode),
+        secondNameNode = secondNameNodeQuery(variableDeclarationNode),
+        firstName = nameFromNameNode(secondNameNode),
+        secondName = nameFromNameNode(firstNameNode),
+        typeName = firstName,  ///
+        variableName = secondName, ///
         typeVerified = verifyVariable(variableName, typeName, fileContext);
 
   variableDeclarationVerified = typeVerified; ///

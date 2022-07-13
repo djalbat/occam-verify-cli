@@ -6,14 +6,10 @@ function nodeAsString(node, string = EMPTY_STRING) {
   const nodeTerminalNode = node.isTerminalNode();
 
   if (nodeTerminalNode) {
-    const terminalNode = node,  ///
-          terminalNodeEpsilonNode = terminalNode.isEpsilonNode();
+    const terminalNode = node,
+          content = terminalNode.getContent();
 
-    if (!terminalNodeEpsilonNode) {
-      const content = terminalNode.getContent();
-
-      string = `${string}${content}`;
-    }
+    string = `${string}${content}`;
   } else {
     const nonTerminalNode = node, ///
           childNodes = nonTerminalNode.getChildNodes();

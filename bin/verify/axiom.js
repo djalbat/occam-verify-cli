@@ -2,42 +2,22 @@
 
 const log = require("../log"),
       Axiom = require("../axiom"),
+      verifyLabels = require("../verify/labels"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement"),
       verifyIndicativeConditional = require("../verify/indicativeConditional");
 
-const { nameFromNameNameNode } = require("../utilities/node"),
-      { nodeQuery, nodesQuery } = require("../utilities/query");
+const { nodeQuery, nodesQuery } = require("../utilities/query");
 
-const labelsLabelNodesQuery = nodesQuery("/*/labels/label"),
-      labelNameNameNodeQuery = nodeQuery("/*/labelName!/@name!"),
-      unqualifiedStatementNodeQuery = nodeQuery("/*/unqualifiedStatement!"),
-      indicativeConditionalNodeQuery = nodeQuery("/*/indicativeConditional!");
+const labelNodesQuery = nodesQuery("/axiom/label"),
+      unqualifiedStatementNodeQuery = nodeQuery("/axiom/unqualifiedStatement!"),
+      indicativeConditionalNodeQuery = nodeQuery("/axiom/indicativeConditional!");
 
 function verifyAxiom(axiomNode, fileContext) {
   let axiomVerified = false;
 
-  const labelsLabelNodes = labelsLabelNodesQuery(axiomNode),
-        labels = labelsLabelNodes.map((labelsLabelNode) => {
-          const labelNode = labelsLabelNode, ///
-                labelNameNameNode = labelNameNameNodeQuery(labelNode),
-                labelName = nameFromNameNameNode(labelNameNameNode),
-                label = labelName;  ///
-
-          return label;
-        }),
-        labelsVerified = labels.every((label) => {
-          let labelVerified = false;
-
-          const labelPresent = fileContext.isLabelPresent(label);
-
-          if (labelPresent) {
-            log.error(`The label ${label} is already present`);
-          } else {
-            labelVerified = true;
-          }
-
-          return labelVerified;
-        });
+  const labels = [],
+        labelNodes = labelNodesQuery(axiomNode),
+        labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
     let axiom = undefined;

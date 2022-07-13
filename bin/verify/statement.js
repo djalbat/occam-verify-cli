@@ -1,39 +1,31 @@
 "use strict";
 
-const log = require("../log");
+const { nodeQuery } = require("../utilities/query");
 
-const { nodeQuery } = require("../utilities/query"),
-      { nodeAsString } = require("../utilities/node"),
-      { verifyExpression } = require("../verify/termExpression");
+const verifyEquality = require("../verify/equality"),
+      verifyTypeAssertion = require("../verify/typeAssertion");
 
-const statementExpressionNodeQuery = nodeQuery("/statement/expression!");
+const equalityNodeQuery = nodeQuery("/statement/equality!"),
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 function verifyStatement(statementNode, fileContext) {
   let statementVerified = false;
 
-  const statementExpressionNode = statementExpressionNodeQuery(statementNode);
+  const equalityNode = equalityNodeQuery(statementNode),
+        typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
-  if (statementExpressionNode !== undefined) {
-    const expressionNode = statementExpressionNode, ///
-          combinator = verifyExpression(expressionNode, fileContext);
+  if (false) {
+    ///
+  } else if (equalityNode !== undefined) {
+    const equalityVerified = verifyEquality(equalityNode, fileContext);
 
-    if (combinator === undefined) {
-      const expressionString = nodeAsString(expressionNode);
+    statementVerified = equalityVerified; ///
+  } else if (typeAssertionNode !== undefined) {
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, fileContext);
 
-      log.error(`The '${expressionString}' expression cannot be verified.`);
-    } else {
-      const type = combinator.getType();
-
-      if (type !== undefined) {
-        const noSuperType = true,
-              typeString = type.asString(noSuperType),
-              expressionString = nodeAsString(expressionNode);
-
-        log.error(`The '${expressionString}' expression cannot be verified because its type '${typeString}' is not undefined.`);
-      } else {
-        statementVerified = true;
-      }
-    }
+    statementVerified = typeAssertionVerified; ///
+  } else {
+    debugger
   }
 
   return statementVerified;

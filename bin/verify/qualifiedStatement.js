@@ -4,7 +4,7 @@ const verifyStatement = require("../verify/statement");
 
 const { nodeQuery } = require("../utilities/query");
 
-const statementNodeQuery = nodeQuery("/*/statement!");
+const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
 
 function verifyQualifiedStatement(qualifiedStatementNode, fileContext) {
   let qualifiedStatementVerified;

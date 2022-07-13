@@ -1,22 +1,23 @@
 "use strict";
 
 const log = require("../../log"),
-      Constructor = require("../../constructor");
+      Constructor = require("../../constructor"),
+      verifyTermAsConstructor = require("../../verify/termAsConstructor");
 
-const { nodeQuery, nodesQuery } = require("../../utilities/query"),
-      { verifyTermAsConstructor } = require("../../verify/constructorCombinator"),
-      { nodeAsString, nameFromNameNameNode } = require("../../utilities/node");
+const { nodesAsString } = require("../../utilities/nodes"),
+      { nameFromNameNode } = require("../../utilities/node"),
+      { nodeQuery, nodesQuery } = require("../../utilities/query");
 
-const termsTermNodesQuery = nodesQuery("/*/terms/term"),
-      typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!");
+const nameNodeQuery = nodeQuery("/constructorsDeclaration/@name!"),
+      termNodesQuery = nodesQuery("/constructorsDeclaration/term");
 
 function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
   let constructorDeclarationVerified = false;
 
-  const typeNameNameNode = typeNameNameNodeQuery(constructorDeclarationNode),
-        termsTermNodes = termsTermNodesQuery(constructorDeclarationNode),
-        termNodes = termsTermNodes, ///
-        typeName = nameFromNameNameNode(typeNameNameNode);
+  const nameNode = nameNodeQuery(constructorDeclarationNode),
+        termNodes = termNodesQuery(constructorDeclarationNode),
+        name = nameFromNameNode(nameNode),
+        typeName = name;  ///
 
   let type = undefined,
       typeVerified = true;
@@ -25,8 +26,7 @@ function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
     type = fileContext.findTypeByTypeName(typeName);
 
     if (type === undefined) {
-      const termNodeStrings = termNodes.map((termNode) => nodeAsString(termNode)),
-            termNodesString = termNodeStrings.join(",");
+      const termNodesString = nodesAsString(termNodes);
 
       typeVerified = false;
 
@@ -44,10 +44,12 @@ function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
 
       log.info(`Verified the '${constructorString}' constructor.`);
 
-      return termVerified;
+      if (termVerified) {
+        return true;
+      }
     });
 
-    constructorDeclarationVerified = termsVerified;
+    constructorDeclarationVerified = termsVerified; ///
   }
 
   return constructorDeclarationVerified;

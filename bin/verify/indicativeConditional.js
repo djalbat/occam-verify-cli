@@ -4,35 +4,34 @@ const log = require("../log"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
-const { nodeQuery } = require("../utilities/query"),
-      { nodeAsString } = require("../utilities/node");
+const { nodeQuery, nodesQuery } = require("../utilities/query");
+const {nodeAsString} = require("../utilities/node");
 
-const qualifiedStatementNodeQuery = nodeQuery("/*/qualifiedStatement!"),
-      unqualifiedStatementNodeQuery = nodeQuery("/*/unqualifiedStatement!");
+const qualifiedStatementNodeQuery = nodeQuery("/indicativeConditional/qualifiedStatement!"),
+      unqualifiedStatementNodesQuery = nodesQuery("/indicativeConditional/unqualifiedStatement");
 
 function verifyIndicativeConditional(indicativeConditionalNode, fileContext) {
   let indicativeConditionalVerified;
 
-  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(indicativeConditionalNode),
-        qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode);
+  const qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode),
+        unqualifiedStatementNodes = unqualifiedStatementNodesQuery(indicativeConditionalNode),
+        qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, fileContext),
+        unqualifiedStatementsVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
+          const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
 
-  if (false) {
-    ///
-  } else if (unqualifiedStatementNode === undefined) {
+          if (unqualifiedStatementVerified) {
+            return true;
+          }
+        });
+
+  if (!qualifiedStatementVerified || !unqualifiedStatementsVerified) {
     const indicativeConditionalString = nodeAsString(indicativeConditionalNode);
 
-    log.error(`The indicative conditional '${indicativeConditionalString}' cannot be verified because its antecedent is not a statement.`);
-  } else if (qualifiedStatementNode === undefined) {
-    const indicativeConditionalString = nodeAsString(indicativeConditionalNode);
+    log.error(`The indicative conditional '${indicativeConditionalString}' cannot be verified because its antecedents or consequents cannot be verified.`);
 
-    log.error(`The indicative conditional '${indicativeConditionalString}' cannot be verified because its consequent is not a statement.`);
+    indicativeConditionalVerified = false;
   } else {
-    const qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, fileContext),
-          unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
-
-    if (qualifiedStatementVerified && unqualifiedStatementVerified) {
-      indicativeConditionalVerified = true;
-    }
+    indicativeConditionalVerified = true;
   }
 
   return indicativeConditionalVerified;

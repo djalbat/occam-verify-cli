@@ -1,23 +1,22 @@
 "use strict";
 
 const log = require("../../log"),
-      Constructor = require("../../constructor");
+      Constructor = require("../../constructor"),
+      verifyTermAsConstructor = require("../../verify/termAsConstructor");
 
 const { nodeQuery } = require("../../utilities/query"),
-      { verifyTermAsConstructor } = require("../../verify/constructorCombinator"),
-      { nodeAsString, nameFromNameNameNode } = require("../../utilities/node");
+      { nodeAsString, nameFromNameNode } = require("../../utilities/node");
 
-const termNodeQuery = nodeQuery("/*/term!"),
-      typeNameNameNodeQuery = nodeQuery("/*/typeName/@name!");
+const nameNodeQuery = nodeQuery("/constructorDeclaration/@name!"),
+      termNodeQuery = nodeQuery("/constructorDeclaration/term!");
 
 function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
   let constructorDeclarationVerified = false;
 
-  const termNode = termNodeQuery(constructorDeclarationNode),
-        typeNameNameNode = typeNameNameNodeQuery(constructorDeclarationNode),
-        typeName = (typeNameNameNode !== undefined) ?
-                     nameFromNameNameNode(typeNameNameNode) :
-                       undefined;
+  const nameNode = nameNodeQuery(constructorDeclarationNode),
+        termNode = termNodeQuery(constructorDeclarationNode),
+        name = nameFromNameNode(nameNode),
+        typeName = name;  ///
 
   let type = undefined,
       typeVerified = true;
@@ -43,9 +42,9 @@ function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
 
       fileContext.addConstructor(constructor);
 
-      constructorDeclarationVerified = true;
-
       log.info(`Verified the '${constructorString}' constructor.`);
+
+      constructorDeclarationVerified = true;
     }
   }
 
