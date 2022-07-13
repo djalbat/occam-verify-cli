@@ -8,7 +8,7 @@ const { nodeQuery } = require("../../utilities/query"),
       { nodeAsString, nameFromNameNameNode } = require("../../utilities/node");
 
 const expressionNodeQuery = nodeQuery("/*/expression!"),
-      typeNameNameNodeQuery = nodeQuery("/*/typeName/@name!");
+      typeNameNameNodeQuery = nodeQuery("/*/typeName/@name");
 
 function verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext) {
   let combinatorDeclarationVerified = false;

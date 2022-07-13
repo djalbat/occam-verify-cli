@@ -7,7 +7,7 @@ const { nodeQuery, nodesQuery } = require("../../utilities/query"),
       { verifyExpressionAsCombinator } = require("../../verify/constructorCombinator"),
       { nodeAsString, nameFromNameNameNode } = require("../../utilities/node");
 
-const typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!"),
+const typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name"),
       expressionsExpressionNodesQuery = nodesQuery("/*/expressions/expression");
 
 function verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext) {

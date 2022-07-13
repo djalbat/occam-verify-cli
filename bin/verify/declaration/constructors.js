@@ -8,7 +8,7 @@ const { nodesAsString } = require("../../utilities/nodes"),
       { nameFromNameNode } = require("../../utilities/node"),
       { nodeQuery, nodesQuery } = require("../../utilities/query");
 
-const nameNodeQuery = nodeQuery("/constructorsDeclaration/@name!"),
+const nameNodeQuery = nodeQuery("/constructorsDeclaration/@name"),
       termNodesQuery = nodesQuery("/constructorsDeclaration/term");
 
 function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {

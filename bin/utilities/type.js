@@ -7,7 +7,7 @@ const { nameFromNameNameNode } = require("../utilities/node");
 
 const { first } = arrayUtilities;
 
-const termNameNameNodesQuery = Query.fromExpression("/term!/name!/@name!"),
+const termNameNameNodesQuery = Query.fromExpression("/term!/name!/@name"),
       expressionTermNameNameNodesQuery = Query.fromExpression("/expression!/term!/name!/@name");
 
 function typeFromTermNode(termNode, fileContext) {

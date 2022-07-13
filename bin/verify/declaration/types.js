@@ -6,8 +6,8 @@ const { nameFromNameNameNode } = require("../../utilities/node"),
       { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const typeNamesNodeQuery = nodeQuery("/*/typeNames!"),
-      typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!"),
-      typeNameNameNodesQuery = nodesQuery("/*/typeName/@name!");
+      typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name"),
+      typeNameNameNodesQuery = nodesQuery("/*/typeName/@name");
 
 function verifyTypesDeclaration(typeDeclarationNode, fileContext) {
   let typesDeclarationVerified;

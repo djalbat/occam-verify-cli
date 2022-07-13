@@ -5,14 +5,23 @@ const log = require("../log"),
       ExpressionNode = require("../node/expression");
 
 const { nodeAsString } = require("../utilities/node"),
+      { nodeQuery, parentNodeQuery } = require("../utilities/query"),
       { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../ruleNames"),
       { variableFromTermNode, variableFromExpressionNode } = require("../utilities/variable"),
       { typeFromConstructorTermNode, typeFromCombinatorExpressionNode } = require("../utilities/type");
 
+const nameNodeQuery = nodeQuery("/*/@name");
+
 function verifyExpression(expressionNode, types, fileContext) {
+  let parentNode = expressionNode;  ///
+
+  const nameNodeParentNode = parentNodeQuery(parentNode, nameNodeQuery);
+
+  debugger
+
   const combinators = fileContext.getCombinators(),
         expressionVerified = combinators.some((combinator) => {
-          const expressionVerifiedAgainstCombinator = verifyExpressionAgainstCombinator(expressionNode, combinator, fileContext);
+          const expressionVerifiedAgainstCombinator = verifyExpressionAgainstCombinator(expressionNode, combinator, types, fileContext);
 
           if (expressionVerifiedAgainstCombinator) {
             return true;
@@ -26,7 +35,7 @@ function verifyTerm(termNode, fileContext) { return verifyTermAgainstConstructor
 
 module.exports = verifyExpression;
 
-function verifyExpressionAgainstCombinator(expressionNode, combinator, fileContext) {
+function verifyExpressionAgainstCombinator(expressionNode, combinator, types, fileContext) {
   const nonTerminalNode = expressionNode, ///
         combinatorExpressionNode = combinator.getExpressionNode(),
         constructorOrCombinatorNonTerminalNode = combinatorExpressionNode, ///
@@ -34,6 +43,12 @@ function verifyExpressionAgainstCombinator(expressionNode, combinator, fileConte
         constructorOrCombinatorChildNodes = constructorOrCombinatorNonTerminalNode.getChildNodes(),
         childNodesVerified = verifyChildNodes(childNodes, constructorOrCombinatorChildNodes, fileContext),
         expressionVerifiedAgainstCombinator = childNodesVerified; ///
+
+  if (expressionVerifiedAgainstCombinator) {
+    const type = combinator.getType();
+
+    types.push(type);
+  }
 
   return expressionVerifiedAgainstCombinator;
 }

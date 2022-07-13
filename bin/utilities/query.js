@@ -2,6 +2,8 @@
 
 const { Query } = require("occam-dom");
 
+const uniqueChildNodeQuery = nodeQuery("/*/*|@*!");
+
 function nodeQuery(expression) {
   const query = Query.fromExpression(expression);
 
@@ -24,7 +26,26 @@ function nodesQuery(expression) {
   };
 }
 
+function parentNodeQuery(parentNode, query) {
+  let node = query(parentNode);
+
+  if (node === undefined) {
+    node = parentNode;  ///
+
+    const uniqueChildNode = uniqueChildNodeQuery(node);
+
+    parentNode = uniqueChildNode; ///
+
+    if (parentNode !== undefined) {
+      parentNode = parentNodeQuery(parentNode, query);
+    }
+  }
+
+  return parentNode;
+}
+
 module.exports = {
   nodeQuery,
-  nodesQuery
+  nodesQuery,
+  parentNodeQuery
 };

@@ -5,7 +5,7 @@ const log = require("../log");
 const { nodeQuery } = require("../utilities/query"),
       { nameFromNameNode } = require("../utilities/node");
 
-const nameNodeQuery = nodeQuery("/label/@*!");  ///
+const nameNodeQuery = nodeQuery("/label/@*");  ///
 
 function verifyLabels(labelNodes, labels, fileContext) {
   const labelsVerified = labelNodes.every((labelNode) => {

@@ -10,7 +10,7 @@ const { Query } = dom,
       { first } = arrayUtilities,
       { nameFromNameNameNode } = nodeUtilities;
 
-const termNameNameNodesQuery = Query.fromExpression("/term!/name!/@name!"),
+const termNameNameNodesQuery = Query.fromExpression("/term!/name!/@name"),
       expressionTermNameNameNodesQuery = Query.fromExpression("/expression!/term!/name!/@name");
 
 function variableFromTermNode(termNode, fileContext) {

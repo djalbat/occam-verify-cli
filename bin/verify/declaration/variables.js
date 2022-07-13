@@ -5,9 +5,9 @@ const verifyVariable = require("../../verify/variable");
 const { nameFromNameNameNode } = require("../../utilities/node"),
       { nodeQuery, nodesQuery } = require("../../utilities/query");
 
-const typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name!"),
+const typeNameNameNodeQuery = nodeQuery("/*/typeName!/@name"),
       variableNamesNodeQuery = nodeQuery("/*/variableNames!"),
-      variableNameNameNodesQuery = nodesQuery("/*/variableName/@name!");
+      variableNameNameNodesQuery = nodesQuery("/*/variableName/@name");
 
 function verifyVariablesDeclaration(typeDeclarationNode, fileContext) {
   let variablesDeclarationVerified;
