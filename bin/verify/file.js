@@ -2,26 +2,31 @@
 
 const log = require("../log"),
       FileContext = require("../context/file"),
-      verifyAxioms = require("../verify/axioms"),
       PackageContext = require("../context/package"),
-      verifyDeclarations = require("../verify/declarations");
+      verifyTopLevelInstruction = require("../verify/topLevelInstruction");
+
+const { nodesQuery } = require("../utilities/query");
+
+const topLevelInstructionNodesQuery = nodesQuery("/document/topLevelInstruction");
 
 function verifyFile(filePath, packageContext = PackageContext.fromNothing()) {
-  let fileVerified = false,
-      axiomsVerified = false,
-      declarationsVerified = false;
+  let fileVerified = false;
 
   log.debug(`Verifying the '${filePath}' file...`);
 
   const fileContext = FileContext.fromPackageContextAndFilePath(packageContext, filePath);
 
-  declarationsVerified = verifyDeclarations(fileContext);
+  const node = fileContext.getNode(),
+        topLevelInstructionNodes = topLevelInstructionNodesQuery(node),
+        topLevelInstructionsVerified = topLevelInstructionNodes.every((topLevelInstructionNode) => {
+          const topLevelInstructionVerified = verifyTopLevelInstruction(topLevelInstructionNode, fileContext);
 
-  if (declarationsVerified) {
-    axiomsVerified = verifyAxioms(fileContext);
-  }
+          if (topLevelInstructionVerified) {
+            return true;
+          }
+        })
 
-  if (axiomsVerified && declarationsVerified) {
+  if (topLevelInstructionsVerified) {
     packageContext.addFileContext(fileContext);
 
     fileVerified = true;

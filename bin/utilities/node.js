@@ -26,14 +26,19 @@ function nodeAsString(node, string = EMPTY_STRING) {
   return string;
 }
 
-function nameFromNameNameNode(nameNameNode) {
-  const nameNameNodeContent = nameNameNode.getContent(),
-        name = nameNameNodeContent; ///
+function nameFromNameNode(nameNode) {
+  let name = undefined;
+
+  if (nameNode !== undefined) {
+    const nameNodeContent = nameNode.getContent();
+
+    name = nameNodeContent; ///
+  }
 
   return name;
 }
 
 module.exports = {
   nodeAsString,
-  nameFromNameNameNode
+  nameFromNameNode
 };

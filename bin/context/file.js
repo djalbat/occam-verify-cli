@@ -16,8 +16,8 @@ class FileContext {
     this.node = node;
     this.types = types;
     this.axioms = axioms;
-    this.combinators = combinators;
     this.variables = variables;
+    this.combinators = combinators;
     this.constructors = constructors;
   }
 
@@ -65,6 +65,10 @@ class FileContext {
     return axioms;
   }
 
+  getVariables() {
+    return this.variables;
+  }
+
   getCombinators(bubble = true) {
     const combinators = [];
 
@@ -91,10 +95,6 @@ class FileContext {
     push(constructors, this.constructors);
 
     return constructors;
-  }
-
-  getVariables() {
-    return this.variables;
   }
 
   findRuleByRuleName(ruleName) { return this.packageContext.findRuleByRuleName(ruleName); }

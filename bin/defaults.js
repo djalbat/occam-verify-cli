@@ -1,6 +1,8 @@
 "use strict";
 
-const { INFO_LEVEL } = require("./levels");
+const { levels } = require("necessary");
+
+const { INFO_LEVEL } = levels;
 
 const DEFAULT_LOG_LEVEL = INFO_LEVEL; ///
 

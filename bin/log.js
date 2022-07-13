@@ -1,23 +1,25 @@
 "use strict";
 
-const { EMPTY_STRING } = require("./constants"),
-      { DEFAULT_LOG_LEVEL } = require("./defaults"),
-      { INFO_LEVEL, TRACE_LEVEL, DEBUG_LEVEL, ERROR_LEVEL, FATAL_LEVEL, WARNING_LEVEL } = require("./levels");
+const { levels } = require("necessary");
 
-const levels = [
-  TRACE_LEVEL,
-  DEBUG_LEVEL,
-  INFO_LEVEL,
-  WARNING_LEVEL,
-  ERROR_LEVEL,
-  FATAL_LEVEL,
-];
+const { EMPTY_STRING } = require("./constants"),
+      { DEFAULT_LOG_LEVEL } = require("./defaults");
+
+const { INFO_LEVEL, TRACE_LEVEL, DEBUG_LEVEL, ERROR_LEVEL, FATAL_LEVEL, WARNING_LEVEL } = levels;
 
 let logLevel = DEFAULT_LOG_LEVEL;
 
 function log(message, level = EMPTY_STRING) {
   if (level !== EMPTY_STRING) {
-    const levelIndex = levels.indexOf(level),
+    const levels = [
+            TRACE_LEVEL,
+            DEBUG_LEVEL,
+            INFO_LEVEL,
+            WARNING_LEVEL,
+            ERROR_LEVEL,
+            FATAL_LEVEL,
+          ],
+          levelIndex = levels.indexOf(level),
           logLevelIndex = levels.indexOf(logLevel);
 
     if (levelIndex < logLevelIndex) {
