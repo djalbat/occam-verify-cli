@@ -1,6 +1,7 @@
 "use strict";
 
-const verifyVariable = require("../../verify/variable");
+const log = require("../../log"),
+      Variable = require("../../variable");
 
 const { nodeQuery } = require("../../utilities/query"),
       { nameFromNameNode } = require("../../utilities/node");
@@ -17,9 +18,27 @@ function verifyVariableDeclaration(variableDeclarationNode, fileContext) {
         secondName = nameFromNameNode(firstNameNode),
         typeName = firstName,  ///
         variableName = secondName, ///
-        typeVerified = verifyVariable(variableName, typeName, fileContext);
+        name = variableName,  ///
+        variablePresent = fileContext.isVariablePresentByName(name);
 
-  variableDeclarationVerified = typeVerified; ///
+  if (variablePresent) {
+    log.error(`The variable '${variableName}' is already present.`);
+  } else {
+    const type = fileContext.findTypeByTypeName(typeName);
+
+    if (type === undefined) {
+      log.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
+    } else {
+      const variable = Variable.fromNameAndType(name, type),
+            variableString = variable.asString();
+
+      fileContext.addVariable(variable);
+
+      variableDeclarationVerified = true;
+
+      log.info(`Verified the '${variableString}' variable declaration.`);
+    }
+  }
 
   return variableDeclarationVerified;
 }

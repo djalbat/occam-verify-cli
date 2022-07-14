@@ -2,7 +2,7 @@
 
 const log = require("../log"),
       TermNode = require("../node/term"),
-      ExpressionNode = require("../node/expression");
+      verifyVariable = require("../verify/variable");
 
 const { nodeAsString } = require("../utilities/node"),
       { nodeQuery, parentNodeQuery } = require("../utilities/query"),
@@ -13,20 +13,18 @@ const { nodeAsString } = require("../utilities/node"),
 const nameNodeQuery = nodeQuery("/*/@name");
 
 function verifyExpression(expressionNode, types, fileContext) {
-  let parentNode = expressionNode;  ///
+  let expressionVerified;
 
-  const nameNodeParentNode = parentNodeQuery(parentNode, nameNodeQuery);
+  const expressionVerifiedAsVariable = verifyExpressionAsVariable(expressionNode, types, fileContext);
 
-  debugger
+  if (expressionVerifiedAsVariable) {
+    expressionVerified = expressionVerifiedAsVariable;  ///
+  } else {
+    const combinators = fileContext.getCombinators(),
+          expressionVerifiedAgainstCombinators = verifyExpressionAgainstCombinators(expressionNode, combinators, types, fileContext);
 
-  const combinators = fileContext.getCombinators(),
-        expressionVerified = combinators.some((combinator) => {
-          const expressionVerifiedAgainstCombinator = verifyExpressionAgainstCombinator(expressionNode, combinator, types, fileContext);
-
-          if (expressionVerifiedAgainstCombinator) {
-            return true;
-          }
-        });
+    expressionVerified = expressionVerifiedAgainstCombinators;  ///
+  }
 
   return expressionVerified;
 }
@@ -34,6 +32,34 @@ function verifyExpression(expressionNode, types, fileContext) {
 function verifyTerm(termNode, fileContext) { return verifyTermAgainstConstructors(termNode, fileContext); }
 
 module.exports = verifyExpression;
+
+function verifyExpressionAsVariable(expressionNode, types, fileContext) {
+  let expressionVerifiedAsVariable = false;
+
+  const parentNode = expressionNode,
+        nameNodeParentNode = parentNodeQuery(parentNode, nameNodeQuery);
+
+  if (nameNodeParentNode !== undefined) {
+    const variableNode = nameNodeParentNode,  ///
+          variableVerified = verifyVariable(variableNode, types, fileContext);
+
+    expressionVerifiedAsVariable = variableVerified;  ///
+  }
+
+  return expressionVerifiedAsVariable;
+}
+
+function verifyExpressionAgainstCombinators(expressionNode, combinators, types, fileContext) {
+  const expressionVerifiedAgainstCombinators = combinators.some((combinator) => {
+        const expressionVerifiedAgainstCombinator = verifyExpressionAgainstCombinator(expressionNode, combinator, types, fileContext);
+
+        if (expressionVerifiedAgainstCombinator) {
+          return true;
+        }
+      });
+
+  return expressionVerifiedAgainstCombinators;
+}
 
 function verifyExpressionAgainstCombinator(expressionNode, combinator, types, fileContext) {
   const nonTerminalNode = expressionNode, ///
