@@ -26,23 +26,23 @@ function verifyTopLevelInstruction(topLevelInstructionNode, fileContext) {
 
   if (false) {
     ///
-  } else if (axiomNode !== undefined) {
+  } else if (axiomNode !== null) {
     const axiomVerified = verifyAxiom(axiomNode, fileContext);
 
     topLevelInstructionVerified = axiomVerified;  ///
-  } else if (typeDeclarationNode !== undefined) {
+  } else if (typeDeclarationNode !== null) {
     const typeDeclarationVerified = verifyTypeDeclaration(typeDeclarationNode, fileContext);
 
     topLevelInstructionVerified = typeDeclarationVerified;  ///
-  } else if (variableDeclarationNode !== undefined) {
+  } else if (variableDeclarationNode !== null) {
     const variableDeclarationVerified = verifyVariableDeclaration(variableDeclarationNode, fileContext);
 
     topLevelInstructionVerified = variableDeclarationVerified;  ///
-  } else if (constructorDeclarationNode !== undefined) {
+  } else if (constructorDeclarationNode !== null) {
     const constructorDeclarationVerified = verifyConstructorDeclaration(constructorDeclarationNode, fileContext);
 
     topLevelInstructionVerified = constructorDeclarationVerified;  ///
-  } else if (constructorsDeclarationNode !== undefined) {
+  } else if (constructorsDeclarationNode !== null) {
     const constructorsDeclarationVerified = verifyConstructorsDeclaration(constructorsDeclarationNode, fileContext);
 
     topLevelInstructionVerified = constructorsDeclarationVerified;  ///

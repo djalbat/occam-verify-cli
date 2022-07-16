@@ -20,20 +20,20 @@ function verifyAxiom(axiomNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    let axiom = undefined;
+    let axiom = null;
 
     const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
           indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
     if (false) {
       ///
-    } else if (unqualifiedStatementNode !== undefined) {
+    } else if (unqualifiedStatementNode !== null) {
       const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
 
       if (unqualifiedStatementVerified) {
         axiom = Axiom.fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels);
       }
-    } else if (indicativeConditionalNode !== undefined) {
+    } else if (indicativeConditionalNode !== null) {
       const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, fileContext);
 
       if (indicativeConditionalVerified) {
@@ -41,7 +41,7 @@ function verifyAxiom(axiomNode, fileContext) {
       }
     }
 
-    if (axiom !== undefined) {
+    if (axiom !== null) {
       const labelsString = labels.join(",")
 
       fileContext.addAxiom(axiom);

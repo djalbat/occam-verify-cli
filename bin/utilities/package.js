@@ -23,7 +23,7 @@ function findPackageContext(packageName, packageContexts) {
     if (packageContextPackageName === packageName) {
       return true;
     }
-  });
+  }) || null;
 
   return packageContext;
 }
@@ -59,7 +59,7 @@ function dependencyPackageNamesFromPackageName(packageName) {
 
     dependencyPackageNames = dependencyStringLiteralNodes.map((dependencyStringLiteralNode) => {
       const dependencyStringLiteralNodeContent = dependencyStringLiteralNode.getContent(),
-            dependencyPackageName = trimDoubleQuotes(dependencyStringLiteralNodeContent);
+            dependencyPackageName = trimDoubleQuotes(dependencyStringLiteralNodeContent); ///
 
       return dependencyPackageName;
     });

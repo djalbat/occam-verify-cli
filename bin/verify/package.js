@@ -23,7 +23,7 @@ function verifyPackage(packageName, packageContexts = [], dependentPackageNames 
     const dependencyPackageNames = dependencyPackageNamesFromPackageName(packageName),
           dependencyPackagesVerified = dependencyPackageNames.every((dependencyPackageName) => {
             const dependencyPackageContext = findPackageContext(dependencyPackageName, packageContexts),
-                  dependencyPackageVerified = (dependencyPackageContext === undefined) ?
+                  dependencyPackageVerified = (dependencyPackageContext === null) ?
                                                  verifyPackage(dependencyPackageName, packageContexts, dependentPackageNames) :
                                                    true;
 

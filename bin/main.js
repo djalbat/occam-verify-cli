@@ -10,9 +10,9 @@ const { first } = arrayUtilities;
 
 function main(commands, options) {
   const firstCommand = first(commands),
-        { logLevel, filePath, packageName = firstCommand } = options; ///
+        { logLevel = null, filePath, packageName = firstCommand } = options; ///
 
-  if (logLevel) {
+  if (logLevel !== null) {
     log.setLogLevel(logLevel);
   }
 

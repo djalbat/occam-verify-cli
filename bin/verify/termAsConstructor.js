@@ -1,19 +1,54 @@
 "use strict";
 
-const log = require("../log");
+const log = require("../log"),
+      Constructor = require("../constructor");
 
-const { nodeAsString } = require("../utilities/node"),
+const { nodeQuery } = require("../utilities/query"),
       { verifyTerm, verifyExpression } = require("../verify/termExpression"),
-      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../ruleNames"),
-      { typeFromTermNode, typeFromExpressionNode } = require("../utilities/type");
+      { nodeAsString, nameFromNameNode } = require("../utilities/node"),
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../ruleNames");
 
-function verifyTermAsConstructor(termNode, fileContext) {
+const nameNodeQuery = nodeQuery("/type/@name")
+
+function verifyTermAsConstructor(termNode, typeNode, fileContext) {
+  let termVerifiedAsConstructor = false;
+
   const nonTerminalNode = termNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
-        childNodesVerified = verifyChildNodes(childNodes, fileContext),
-        termVerified = childNodesVerified;  ///
+        childNodesVerified = verifyChildNodes(childNodes, fileContext);
 
-  return termVerified;
+  let type = null;
+
+  if (childNodesVerified) {
+    if (typeNode === null) {
+      termVerifiedAsConstructor = true;
+    } else {
+      const typeNameNode = nameNodeQuery(typeNode),
+            typeName = nameFromNameNode(typeNameNode);
+
+      type = fileContext.findTypeByTypeName(typeName);
+
+      if (type !== null) {
+        termVerifiedAsConstructor = true;
+      } else {
+        const termNodeString = nodeAsString(termNode);
+
+        log.error(`The '${termNodeString}' constructor's '${typeName}' type is missing.`);
+      }
+    }
+  }
+
+  if (termVerifiedAsConstructor) {
+    const constructor = Constructor.fromTermNodeAndType(termNode, type);
+
+    fileContext.addConstructor(constructor);
+
+    const termNodeString = nodeAsString(termNode);
+
+    log.info(`Verified the '${termNodeString}' constructor.`);
+  }
+
+  return termVerifiedAsConstructor;
 }
 
 module.exports = verifyTermAsConstructor;

@@ -4,13 +4,9 @@ const log = require("../log"),
       TermNode = require("../node/term"),
       verifyVariable = require("../verify/variable");
 
-const { nodeAsString } = require("../utilities/node"),
-      { nodeQuery, parentNodeQuery } = require("../utilities/query"),
-      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../ruleNames"),
-      { variableFromTermNode, variableFromExpressionNode } = require("../utilities/variable"),
-      { typeFromConstructorTermNode, typeFromCombinatorExpressionNode } = require("../utilities/type");
-
-const nameNodeQuery = nodeQuery("/*/@name");
+const { nodeQuery } = require("../utilities/query"),
+      { nodeAsString, isNodeSingular } = require("../utilities/node"),
+      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../ruleNames");
 
 function verifyExpression(expressionNode, types, fileContext) {
   let expressionVerified;
@@ -36,15 +32,8 @@ module.exports = verifyExpression;
 function verifyExpressionAsVariable(expressionNode, types, fileContext) {
   let expressionVerifiedAsVariable = false;
 
-  const parentNode = expressionNode,
-        nameNodeParentNode = parentNodeQuery(parentNode, nameNodeQuery);
+  const expressionNodeSingular = isNodeSingular(expressionNode);
 
-  if (nameNodeParentNode !== undefined) {
-    const variableNode = nameNodeParentNode,  ///
-          variableVerified = verifyVariable(variableNode, types, fileContext);
-
-    expressionVerifiedAsVariable = variableVerified;  ///
-  }
 
   return expressionVerifiedAsVariable;
 }

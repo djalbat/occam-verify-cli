@@ -2,24 +2,18 @@
 
 const verifyType = require("../../verify/type");
 
-const { nodeQuery } = require("../../utilities/query"),
-      { nameFromNameNode } = require("../../utilities/node");
+const { nodeQuery } = require("../../utilities/query");
 
-const firstNameNodeQuery = nodeQuery("/typeDeclaration/@name[0]"),
-      secondNameNodeQuery = nodeQuery("/typeDeclaration/@name[1]");
+const firstTypeNodeQuery = nodeQuery("/typeDeclaration/type[0]"),
+      secondTypeNodeQuery = nodeQuery("/typeDeclaration/type[1]");
 
 function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
-  let typeDeclarationVerified;
-
-  const firstNameNode = firstNameNodeQuery(typeDeclarationNode),
-        secondNameNode = secondNameNodeQuery(typeDeclarationNode),
-        firstTypeName = nameFromNameNode(firstNameNode),
-        secondTypeName = nameFromNameNode(secondNameNode),
-        typeName = firstTypeName, ///
-        superTypeName = secondTypeName, ///
-        typeVerified = verifyType(typeName, superTypeName, fileContext);
-
-  typeDeclarationVerified = typeVerified; ///
+  const firstTypeNode = firstTypeNodeQuery(typeDeclarationNode),
+        secondTypeNode = secondTypeNodeQuery(typeDeclarationNode),
+        typeNode = firstTypeNode, ///
+        superTypeNode = secondTypeNode, ///
+        typeVerified = verifyType(typeNode, superTypeNode, fileContext),
+        typeDeclarationVerified = typeVerified; ///
 
   return typeDeclarationVerified;
 }

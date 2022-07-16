@@ -1,6 +1,9 @@
 "use strict";
 
-const { EMPTY_STRING } = require("../constants");
+const { nodeQuery } = require("./query"),
+      { EMPTY_STRING } = require("../constants");
+
+const singleNonTerminalChildNodeQuery = nodeQuery("/*/*!");
 
 function nodeAsString(node, string = EMPTY_STRING) {
   const nodeTerminalNode = node.isTerminalNode();
@@ -22,10 +25,26 @@ function nodeAsString(node, string = EMPTY_STRING) {
   return string;
 }
 
-function nameFromNameNode(nameNode) {
-  let name = undefined;
+function isNodeSingular(node) {
+  let nodeSingular = false;
 
-  if (nameNode !== undefined) {
+  const singleNonTerminalChildNode = singleNonTerminalChildNodeQuery(node);
+
+  if (singleNonTerminalChildNode === null) {
+    debugger
+  } else {
+    node = singleNonTerminalChildNode;  ///
+
+    nodeSingular = isNodeSingular(node);
+  }
+
+  return nodeSingular;
+}
+
+function nameFromNameNode(nameNode) {
+  let name = null;
+
+  if (nameNode !== null) {
     const nameNodeContent = nameNode.getContent();
 
     name = nameNodeContent; ///
@@ -36,5 +55,6 @@ function nameFromNameNode(nameNode) {
 
 module.exports = {
   nodeAsString,
+  isNodeSingular,
   nameFromNameNode
 };

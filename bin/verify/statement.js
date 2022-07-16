@@ -16,11 +16,11 @@ function verifyStatement(statementNode, fileContext) {
 
   if (false) {
     ///
-  } else if (equalityNode !== undefined) {
+  } else if (equalityNode !== null) {
     const equalityVerified = verifyEquality(equalityNode, fileContext);
 
     statementVerified = equalityVerified; ///
-  } else if (typeAssertionNode !== undefined) {
+  } else if (typeAssertionNode !== null) {
     const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, fileContext);
 
     statementVerified = typeAssertionVerified; ///

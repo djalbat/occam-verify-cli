@@ -3,10 +3,19 @@
 const log = require("../log"),
       Variable = require("../variable");
 
-function verifyVariable(variableName, typeName, fileContext) {
+const { nodeQuery } = require("../utilities/query");
+const {nameFromNameNode} = require("../utilities/node");
+
+const nameNodeQuery = nodeQuery("/*/@name");
+
+function verifyVariable(variableNode, typeNode, fileContext) {
   let variableVerified = false;
 
-  const name = variableName,  ///
+  const variableNameNode = nameNodeQuery(variableNode),
+        typeNameNode = nameNodeQuery(typeNode),
+        variableName = nameFromNameNode(variableNameNode),
+        typeName = nameFromNameNode(typeNameNode),
+        name = variableName,  ///
         variablePresent = fileContext.isVariablePresentByName(name);
 
   if (variablePresent) {
