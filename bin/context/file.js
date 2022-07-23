@@ -1,6 +1,6 @@
 "use strict";
 
-const { removeOrRenameIntermediateNodes } = require("occam-grammar-utilities"),
+const { rewriteNodes } = require("occam-grammar-utilities"),
       { arrayUtilities, fileSystemUtilities } = require("necessary");
 
 const contextMixins = require("../mixins/context");
@@ -138,7 +138,7 @@ class FileContext {
           tokens = packageContext.tokenise(content),
           node = packageContext.parse(tokens);
 
-    removeOrRenameIntermediateNodes(node);
+    rewriteNodes(node);
 
     const types = [],
           axioms = [],
