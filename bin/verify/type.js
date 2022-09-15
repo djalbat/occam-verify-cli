@@ -4,17 +4,16 @@ const log = require("../log"),
       Type = require("../type");
 
 const { nodeQuery } = require("../utilities/query");
-const { nameFromNameNode } = require("../utilities/node");
 
-const nameNodeQuery = nodeQuery("/type/@name");
+const typeTerminalNodeQuery = nodeQuery("/type/@type");
 
 function verifyType(typeNode, superTypeNode, fileContext) {
   let typeVerified = false;
 
-  const typeNameNode = nameNodeQuery(typeNode),
-        superTypeNameNode = nameNodeQuery(superTypeNode),
-        typeName = nameFromNameNode(typeNameNode),
-        superTypeName = nameNodeQuery(superTypeNameNode);
+  const typeTerminalNode = typeTerminalNodeQuery(typeNode),
+        superTypeTerminalNode = typeTerminalNodeQuery(superTypeNode),
+        typeName = typeNameFromTypeTerminalNode(typeTerminalNode),
+        superTypeName = typeNameFromTypeTerminalNode(superTypeTerminalNode);
 
   const typePresent = fileContext.isTypePresentByTypeName(typeName);
 
@@ -52,3 +51,15 @@ function verifyType(typeNode, superTypeNode, fileContext) {
 }
 
 module.exports = verifyType;
+
+function typeNameFromTypeTerminalNode(typeTerminalNode) {
+  let typeName = null;
+
+  if (typeTerminalNode !== null) {
+    const typeTerminalNodeContent = typeTerminalNode.getContent();
+
+    typeName = typeTerminalNodeContent; ///
+  }
+
+  return typeName;
+}

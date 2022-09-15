@@ -2,16 +2,12 @@
 
 const argumentative = require('argumentative');
 
-const main = require('./bin/main');
+const main = require('./bin/main'),
+      abbreviations = require('./bin/abbreviations');
 
 const { argv } = process,
       { parseArgv } = argumentative;
 
-const abbreviations = {
-        'l': 'log-level',
-        'f': 'file-path',
-        'p': 'package-name'
-      },
-      { options, commands } = parseArgv(argv, abbreviations);
+const { options, commands } = parseArgv(argv, abbreviations);
 
 main(commands, options);

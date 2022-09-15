@@ -7,7 +7,7 @@ const { Query } = require("occam-dom"),
       { MetaJSONLexer, MetaJSONParser } = require("occam-grammars");
 
 const { trimDoubleQuotes } = require("../utilities/content"),
-      { customGrammarFromDirectoryPath } = require("../utilities/customGrammar");
+      { customGrammarFromDirectoryName } = require("../utilities/customGrammar");
 
 const { isFilePathFlorenceFilePath } = filePathUtilities,
       { checkFileExists, readFile, readDirectory } = fileSystemUtilities;
@@ -31,12 +31,22 @@ function findPackageContext(packageName, packageContexts) {
 function filePathsFromPackageName(packageName) {
   let filePaths;
 
-  const directoryPath = packageName,  ///
-        fileNames = readDirectory(directoryPath);
+  const directoryName = packageName,  ///
+        fileNames = readDirectory(directoryName);
 
-  filePaths = fileNames.map((fileName) => `${directoryPath}/${fileName}`);
+  filePaths = fileNames.map((fileName) => {
+    const filePath = `${directoryName}/${fileName}`;
 
-  const florenceFilePaths = filePaths.filter(isFilePathFlorenceFilePath);
+    return filePath;
+  });
+
+  const florenceFilePaths = filePaths.filter((filePath) => {
+    const filePathFlorenceFilePath = isFilePathFlorenceFilePath(filePath);
+
+    if (filePathFlorenceFilePath) {
+      return true;
+    }
+  });
 
   filePaths = florenceFilePaths;  ///
 
@@ -46,8 +56,8 @@ function filePathsFromPackageName(packageName) {
 function dependencyPackageNamesFromPackageName(packageName) {
   let dependencyPackageNames = [];
 
-  const directoryPath = packageName,  ///
-        metaJSONFilePath = `${directoryPath}/meta.json`,
+  const directoryName = packageName,  ///
+        metaJSONFilePath = `${directoryName}/meta.json`,
         metaJSONFileExists = checkFileExists(metaJSONFilePath);
 
   if (metaJSONFileExists) {
@@ -69,7 +79,12 @@ function dependencyPackageNamesFromPackageName(packageName) {
 }
 
 function combinedCustomGrammarFromPackageNames(packageNames) {
-  const customGrammars = customGrammarsFromPackageNames(packageNames),
+  const customGrammars = packageNames.map((packageName) => {
+          const directoryName = packageName,  ///
+                customGrammar = customGrammarFromDirectoryName(directoryName);
+
+          return customGrammar;
+        }),
         combinedCustomGrammar = CombinedCustomGrammar.fromCustomGrammars(customGrammars);
 
   return combinedCustomGrammar;
@@ -81,16 +96,3 @@ module.exports = {
   dependencyPackageNamesFromPackageName,
   combinedCustomGrammarFromPackageNames
 };
-
-function customGrammarFromPackageName(packageName) {
-  const directoryPath = packageName,  ///
-        customGrammar = customGrammarFromDirectoryPath(directoryPath);
-
-  return customGrammar;
-}
-
-function customGrammarsFromPackageNames(packageNames) {
-  const customGrammars = packageNames.map((packageName) => customGrammarFromPackageName(packageName));
-
-  return customGrammars;
-}

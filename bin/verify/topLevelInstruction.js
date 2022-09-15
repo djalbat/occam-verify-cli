@@ -5,14 +5,12 @@ const { nodeQuery } = require("../utilities/query");
 const verifyAxiom = require("../verify/axiom"),
       verifyTypeDeclaration = require("../verify/declaration/type"),
       verifyVariableDeclaration = require("../verify/declaration/variable"),
-      verifyConstructorDeclaration = require("../verify/declaration/constructor"),
-      verifyConstructorsDeclaration = require("../verify/declaration/constructors");
+      verifyConstructorDeclaration = require("../verify/declaration/constructor");
 
 const axiomNodeQuery = nodeQuery("/topLevelInstruction/axiom!"),
       typeDeclarationNodeQuery = nodeQuery("/topLevelInstruction/typeDeclaration!"),
       variableDeclarationNodeQuery = nodeQuery("/topLevelInstruction/variableDeclaration!"),
-      constructorDeclarationNodeQuery = nodeQuery("/topLevelInstruction/constructorDeclaration!"),
-      constructorsDeclarationNodeQuery = nodeQuery("/topLevelInstruction/constructorsDeclaration!");
+      constructorDeclarationNodeQuery = nodeQuery("/topLevelInstruction/constructorDeclaration!");
 
 function verifyTopLevelInstruction(topLevelInstructionNode, fileContext) {
   let topLevelInstructionVerified = false;
@@ -21,8 +19,7 @@ function verifyTopLevelInstruction(topLevelInstructionNode, fileContext) {
         axiomNode = axiomNodeQuery(node),
         typeDeclarationNode = typeDeclarationNodeQuery(node),
         variableDeclarationNode = variableDeclarationNodeQuery(node),
-        constructorDeclarationNode = constructorDeclarationNodeQuery(node),
-        constructorsDeclarationNode = constructorsDeclarationNodeQuery(node);
+        constructorDeclarationNode = constructorDeclarationNodeQuery(node);
 
   if (false) {
     ///
@@ -42,10 +39,6 @@ function verifyTopLevelInstruction(topLevelInstructionNode, fileContext) {
     const constructorDeclarationVerified = verifyConstructorDeclaration(constructorDeclarationNode, fileContext);
 
     topLevelInstructionVerified = constructorDeclarationVerified;  ///
-  } else if (constructorsDeclarationNode !== null) {
-    const constructorsDeclarationVerified = verifyConstructorsDeclaration(constructorsDeclarationNode, fileContext);
-
-    topLevelInstructionVerified = constructorsDeclarationVerified;  ///
   }
 
   return topLevelInstructionVerified;

@@ -5,59 +5,65 @@ const { fileSystemUtilities } = require("necessary");
 
 const { readFile, checkFileExists } = fileSystemUtilities;
 
-function customGrammarFromDirectoryPath(directoryPath) {
-  const name = directoryPath, ///
-        lexicalPattern = lexicalPatternFromDirectoryPath(directoryPath),
-        termBNF = termBNFFromDirectoryPath(directoryPath),
-        expressionBNF = expressionBNFFromDirectoryPath(directoryPath),
-        statementBNF = statementBNFFromDirectoryPath(directoryPath),
-        metastatementBNF = metastatementBNFFromDirectoryPath(directoryPath),
-        customGrammar = new CustomGrammar(name, lexicalPattern, termBNF, expressionBNF, statementBNF, metastatementBNF);
+function customGrammarFromDirectoryName(directoryName) {
+  const name = directoryName, ///
+        typePattern = typePatternFromDirectoryPath(directoryName),
+        operatorPattern = operatorPatternFromDirectoryPath(directoryName),
+        termBNF = termBNFFromDirectoryPath(directoryName),
+        statementBNF = statementBNFFromDirectoryPath(directoryName),
+        metastatementBNF = metastatementBNFFromDirectoryPath(directoryName),
+        customGrammar = new CustomGrammar(name, typePattern, operatorPattern, termBNF, statementBNF, metastatementBNF);
 
   return customGrammar;
 }
 
 module.exports = {
-  customGrammarFromDirectoryPath
+  customGrammarFromDirectoryName
 };
 
-function lexicalPatternFromDirectoryPath(directoryPath) {
-  const lexicalPatternFilePath = `${directoryPath}/pattern.lex`,
-        lexicalPatternFileExists = checkFileExists(lexicalPatternFilePath),
-        lexicalPatternContent = lexicalPatternFileExists ?
-                                  readFile(lexicalPatternFilePath) :
-                                    null,
-        lexicalPattern = lexicalPatternContent; ///
+function typePatternFromDirectoryPath(directoryName) {
+  const typePatternFilePath = `${directoryName}/type.ptn`,
+        typePattern = patternFromBNFFilePath(typePatternFilePath);
 
-  return lexicalPattern;
+  return typePattern;
 }
 
-function metastatementBNFFromDirectoryPath(directoryPath) {
-  const metastatementBNFFilePath = `${directoryPath}/metastatement.bnf`,
+function operatorPatternFromDirectoryPath(directoryName) {
+  const operatorPatternFilePath = `${directoryName}/operator.ptn`,
+        operatorPattern = patternFromBNFFilePath(operatorPatternFilePath); ///
+
+  return operatorPattern;
+}
+
+function metastatementBNFFromDirectoryPath(directoryName) {
+  const metastatementBNFFilePath = `${directoryName}/metastatement.bnf`,
         metastatementBNF = bnfFromBNFFilePath(metastatementBNFFilePath);
 
   return metastatementBNF;
 }
 
-function statementBNFFromDirectoryPath(directoryPath) {
-  const statementBNFFilePath = `${directoryPath}/statement.bnf`,
+function statementBNFFromDirectoryPath(directoryName) {
+  const statementBNFFilePath = `${directoryName}/statement.bnf`,
         statementBNF = bnfFromBNFFilePath(statementBNFFilePath);
 
   return statementBNF;
 }
 
-function expressionBNFFromDirectoryPath(directoryPath) {
-  const expressionBNFFilePath = `${directoryPath}/expression.bnf`,
-        expressionBNF = bnfFromBNFFilePath(expressionBNFFilePath);
-
-  return expressionBNF;
-}
-
-function termBNFFromDirectoryPath(directoryPath) {
-  const termBNFFilePath = `${directoryPath}/term.bnf`,
+function termBNFFromDirectoryPath(directoryName) {
+  const termBNFFilePath = `${directoryName}/term.bnf`,
         termBNF = bnfFromBNFFilePath(termBNFFilePath);
 
   return termBNF;
+}
+
+function patternFromBNFFilePath(patternFilePath) {
+  const patternFileExists = checkFileExists(patternFilePath),
+        patternContent = patternFileExists ?
+                           readFile(patternFilePath) :
+                             null,
+        pattern = patternContent; ///
+
+  return pattern;
 }
 
 function bnfFromBNFFilePath(bnfFilePath) {

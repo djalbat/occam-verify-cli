@@ -31,7 +31,12 @@ function verifyPackage(packageName, packageContexts = [], dependentPackageNames 
           });
 
     if (dependencyPackagesVerified) {
-      const dependencyPackageContexts = dependencyPackageNames.map((dependencyPackageName) => findPackageContext(dependencyPackageName, packageContexts)),
+      const dependencyPackageContexts = dependencyPackageNames.map((dependencyPackageName) => {
+              const packagesContext = findPackageContext(dependencyPackageName, packageContexts),
+                    dependencyPackageContext = packagesContext; ///
+
+              return dependencyPackageContext;
+            }),
             packageContext = PackageContext.fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts),
             filesVerified = verifyFiles(packageContext);
 
