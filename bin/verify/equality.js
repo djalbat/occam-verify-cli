@@ -3,12 +3,12 @@
 const { arrayUtilities } = require("necessary");
 
 const log = require("../log"),
-      verifyExpression = require("../verify/expression");
+      verifyTerm = require("../verify/term");
 
 const { nodeQuery } = require("../utilities/query");
 
-const firstExpressionNodeQuery = nodeQuery("/equality/expression[0]"),
-      secondExpressionNodeQuery = nodeQuery("/equality/expression[1]");
+const firstTermNodeQuery = nodeQuery("/equality/term[0]"),
+      secondTermNodeQuery = nodeQuery("/equality/term[1]");
 
 const { first, second } = arrayUtilities;
 
@@ -16,12 +16,12 @@ function verifyEquality(equalityNode, fileContext) {
   let equalityVerified;
 
   const types = [],
-        firstExpressionNode = firstExpressionNodeQuery(equalityNode),
-        secondExpressionNode = secondExpressionNodeQuery(equalityNode),
-        firstExpressionVerified = verifyExpression(firstExpressionNode, types, fileContext),
-        secondExpressionVerified = verifyExpression(secondExpressionNode, types, fileContext);
+        firstTermNode = firstTermNodeQuery(equalityNode),
+        secondTermNode = secondTermNodeQuery(equalityNode),
+        firstTermVerified = verifyTerm(firstTermNode, types, fileContext),
+        secondTermVerified = verifyTerm(secondTermNode, types, fileContext);
 
-  if (!firstExpressionVerified || !secondExpressionVerified) {
+  if (!firstTermVerified || !secondTermVerified) {
     equalityVerified = false;
   } else {
     const firstType = first(types),

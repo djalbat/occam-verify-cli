@@ -3,13 +3,13 @@
 const { nodeAsString } = require("./utilities/node");
 
 class Combinator {
-  constructor(expressionNode, type) {
-    this.expressionNode = expressionNode;
+  constructor(statementNode, type) {
+    this.statementNode = statementNode;
     this.type = type;
   }
 
-  getExpressionNode() {
-    return this.expressionNode;
+  getStatementNode() {
+    return this.statementNode;
   }
 
   getType() {
@@ -19,22 +19,22 @@ class Combinator {
   asString() {
     let string;
 
-    const expressionString = nodeAsString(this.expressionNode);
+    const statementString = nodeAsString(this.statementNode);
 
     if (this.type === undefined) {
-      string = `${expressionString}`;
+      string = `${statementString}`;
     } else {
       const noSuperType = true,
             typeString = this.type.asString(noSuperType);
 
-      string = `${expressionString}:${typeString}`;
+      string = `${statementString}:${typeString}`;
     }
 
     return string;
   }
 
-  static fromExpressionNodeAndType(expressionNode, type) {
-    const combinator = new Combinator(expressionNode, type);
+  static fromStatementNodeAndType(statementNode, type) {
+    const combinator = new Combinator(statementNode, type);
 
     return combinator;
   }

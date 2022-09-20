@@ -1,7 +1,6 @@
 "use strict";
 
 const TERM_RULE_NAME = "term",
-      EXPRESSION_RULE_NAME = "expression",
       TYPE_DECLARATION_RULE_NAME = "typeDeclaration",
       TYPES_DECLARATION_RULE_NAME = "typesDeclaration",
       VARIABLE_DECLARATION_RULE_NAME = "variableDeclaration",
@@ -13,7 +12,6 @@ const TERM_RULE_NAME = "term",
 
 module.exports = {
   TERM_RULE_NAME,
-  EXPRESSION_RULE_NAME,
   TYPE_DECLARATION_RULE_NAME,
   TYPES_DECLARATION_RULE_NAME,
   VARIABLE_DECLARATION_RULE_NAME,

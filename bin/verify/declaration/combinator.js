@@ -4,16 +4,16 @@ const log = require("../../log"),
       Combinator = require("../../combinator");
 
 const { nodeQuery } = require("../../utilities/query"),
-      { verifyExpressionAsCombinator } = require("../../verify/constructorCombinator"),
+      { verifyStatementAsCombinator } = require("../../verify/constructorCombinator"),
       { nodeAsString, nameFromNameNameNode } = require("../../utilities/node");
 
-const expressionNodeQuery = nodeQuery("/*/expression!"),
+const statementNodeQuery = nodeQuery("/*/statement!"),
       typeNameNameNodeQuery = nodeQuery("/*/typeName/@name");
 
 function verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext) {
   let combinatorDeclarationVerified = false;
 
-  const expressionNode = expressionNodeQuery(combinatorDeclarationNode),
+  const statementNode = statementNodeQuery(combinatorDeclarationNode),
         typeNameNameNode = typeNameNameNodeQuery(combinatorDeclarationNode),
         typeName = (typeNameNameNode !== undefined) ?
                      nameFromNameNameNode(typeNameNameNode) :
@@ -26,19 +26,19 @@ function verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext) {
     type = fileContext.findTypeByTypeName(typeName);
 
     if (type === undefined) {
-      const expressionNodeString = nodeAsString(expressionNode);
+      const statementNodeString = nodeAsString(statementNode);
 
       typeVerified = false;
 
-      log.error(`The '${expressionNodeString}' combinator's '${typeName}' type is missing.`);
+      log.error(`The '${statementNodeString}' combinator's '${typeName}' type is missing.`);
     }
   }
 
   if (typeVerified) {
-    const expressionVerified = verifyExpressionAsCombinator(expressionNode, fileContext);
+    const statementVerified = verifyStatementAsCombinator(statementNode, fileContext);
 
-    if (expressionVerified) {
-      const combinator = Combinator.fromExpressionNodeAndType(expressionNode, type),
+    if (statementVerified) {
+      const combinator = Combinator.fromStatementNodeAndType(statementNode, type),
             combinatorString = combinator.asString();
 
       fileContext.addCombinator(combinator);

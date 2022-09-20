@@ -1,22 +1,11 @@
 "use strict";
 
 const log = require("../log"),
-      TermNode = require("../node/term"),
-      ExpressionNode = require("../node/expression");
+      TermNode = require("../node/term");
 
-const { nodeAsString } = require("../utilities/node"),
-      { verifyTerm, verifyExpression } = require("../verify/termExpression"),
-      { TERM_RULE_NAME, EXPRESSION_RULE_NAME } = require("../ruleNames");
-
-function verifyExpressionAsCombinator(expressionNode, fileContext) {
-  const nonTerminalNode = expressionNode,  ///
-        childNodes = nonTerminalNode.getChildNodes(),
-        parentNode = nonTerminalNode,  ///
-        verified = verifyChildNodes(childNodes, parentNode, fileContext),
-        expressionVerified = verified;  ///
-
-  return expressionVerified;
-}
+const { verifyTerm } = require("../verify/termExpression"),
+      { nodeAsString } = require("../utilities/node"),
+      { TERM_RULE_NAME } = require("../ruleNames");
 
 function verifyTermAsConstructor(termNode, fileContext) {
   const nonTerminalNode = termNode,  ///
@@ -29,7 +18,6 @@ function verifyTermAsConstructor(termNode, fileContext) {
 }
 
 module.exports = {
-  verifyExpressionAsCombinator,
   verifyTermAsConstructor
 };
 
@@ -65,14 +53,6 @@ function verifyNonTerminalNode(nonTerminalNode, parentNode, fileContext) {
   const ruleName = nonTerminalNode.getRuleName();
 
   switch (ruleName) {
-    case EXPRESSION_RULE_NAME: {
-      const expressionNode = nonTerminalNode; ///
-
-      verified = verifyExpressionNode(expressionNode, fileContext);
-
-      break;
-    }
-
     case TERM_RULE_NAME: {
       const termNode = nonTerminalNode; ///
 
@@ -82,16 +62,6 @@ function verifyNonTerminalNode(nonTerminalNode, parentNode, fileContext) {
     }
 
     default: {
-      if (!verified) {
-        const parentNodeExpressionNode = (parentNode instanceof ExpressionNode);
-
-        if (!parentNodeExpressionNode) {
-          const expressionNode = ExpressionNode.fromNonTerminalNode(nonTerminalNode);
-
-          verified = verifyExpressionNode(expressionNode, fileContext);
-        }
-      }
-
       if (!verified) {
         const parentNodeTermNode = (parentNode instanceof TermNode);
 
@@ -133,32 +103,6 @@ function verifyChildNodes(childNodes, parentNode, fileContext) {
 
     index++;
     childNode = childNodes[index];
-  }
-
-  return verified;
-}
-
-function verifyExpressionNode(expressionNode, fileContext) {
-  let verified = false;
-
-  const type = typeFromExpressionNode(expressionNode, fileContext);
-
-  if (type !== undefined) {
-    verified = true;
-  } else {
-    const combinator = verifyExpression(expressionNode, fileContext);
-
-    if (combinator !== undefined) {
-      const combinatorType = combinator.getType();
-
-      if (combinatorType !== undefined) {
-        const expressionString = nodeAsString(expressionNode);
-
-        log.error(`The '${expressionString}' sub-expression cannot be verified because its type is not undefined.`);
-      }
-
-      verified = true;
-    }
   }
 
   return verified;

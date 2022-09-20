@@ -3,23 +3,19 @@
 const log = require("../log"),
       Type = require("../type");
 
-const { nodeQuery } = require("../utilities/query");
-
-const typeTerminalNodeQuery = nodeQuery("/type/@type");
+const { typeNameFromTypeNode } = require("../utilities/node");
 
 function verifyType(typeNode, superTypeNode, fileContext) {
   let typeVerified = false;
 
-  const typeTerminalNode = typeTerminalNodeQuery(typeNode),
-        superTypeTerminalNode = typeTerminalNodeQuery(superTypeNode),
-        typeName = typeNameFromTypeTerminalNode(typeTerminalNode),
-        superTypeName = typeNameFromTypeTerminalNode(superTypeTerminalNode);
-
-  const typePresent = fileContext.isTypePresentByTypeName(typeName);
+  const typeName = typeNameFromTypeNode(typeNode),
+        typePresent = fileContext.isTypePresentByTypeName(typeName);
 
   if (typePresent) {
     log.error(`The type '${typeName}' is already present.`);
   } else {
+    const superTypeName = typeNameFromTypeNode(superTypeNode);
+
     if (superTypeName === null) {
       const type = Type.fromTypeName(typeName),
             typeString = type.asString();
@@ -52,14 +48,3 @@ function verifyType(typeNode, superTypeNode, fileContext) {
 
 module.exports = verifyType;
 
-function typeNameFromTypeTerminalNode(typeTerminalNode) {
-  let typeName = null;
-
-  if (typeTerminalNode !== null) {
-    const typeTerminalNodeContent = typeTerminalNode.getContent();
-
-    typeName = typeTerminalNodeContent; ///
-  }
-
-  return typeName;
-}

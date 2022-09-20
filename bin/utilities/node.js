@@ -3,7 +3,9 @@
 const { nodeQuery } = require("./query"),
       { EMPTY_STRING } = require("../constants");
 
-const singleNonTerminalChildNodeQuery = nodeQuery("/*/*!");
+const typeTerminalNodeQuery = nodeQuery("/type/@type"),
+      singleNonTerminalChildNodeQuery = nodeQuery("/*/*!");
+
 
 function nodeAsString(node, string = EMPTY_STRING) {
   const nodeTerminalNode = node.isTerminalNode();
@@ -53,8 +55,22 @@ function nameFromNameNode(nameNode) {
   return name;
 }
 
+function typeNameFromTypeNode(typeNode) {
+  let typeName = null;
+
+  if (typeNode !== null) {
+    const typeTerminalNode = typeTerminalNodeQuery(typeNode),
+          typeTerminalNodeContent = typeTerminalNode.getContent();
+
+    typeName = typeTerminalNodeContent; ///
+  }
+
+  return typeName;
+}
+
 module.exports = {
   nodeAsString,
   isNodeSingular,
-  nameFromNameNode
+  nameFromNameNode,
+  typeNameFromTypeNode
 };
