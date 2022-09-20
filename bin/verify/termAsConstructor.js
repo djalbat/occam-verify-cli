@@ -4,18 +4,19 @@ const log = require("../log"),
       Constructor = require("../constructor");
 
 const { verifyTerm } = require("../verify/term"),
-      { TERM_RULE_NAME } = require("../ruleNames"),
+      { TERM_RULE_NAME, TYPE_RULE_NAME } = require("../ruleNames"),
       { nodeAsString, typeNameFromTypeNode } = require("../utilities/node");
 
 function verifyTermAsConstructor(termNode, typeNode, fileContext) {
   let termVerifiedAsConstructor = false;
 
-  const node = termNode,  ///
-        nodeVerified = verifyNode(node, fileContext);
+  const nonTerminalNode = termNode,  ///
+        childNodes = nonTerminalNode.getChildNodes(),
+        childNodesVerified = verifyChildNodes(childNodes, fileContext);
 
   let type = null;
 
-  if (nodeVerified) {
+  if (childNodesVerified) {
     if (typeNode === null) {
       termVerifiedAsConstructor = true;
     } else {
@@ -102,6 +103,15 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
       break;
     }
 
+    case TYPE_RULE_NAME: {
+      const typeNode = nonTerminalNode, ///
+            typeNodeVerified = verifyTypeNode(typeNode, fileContext);
+
+      nonTerminalNodeVerified = typeNodeVerified; ///
+
+      break;
+    }
+
     default: {
       const childNodes = nonTerminalNode.getChildNodes(),
             childNodesVerified = verifyChildNodes(childNodes, fileContext);
@@ -116,6 +126,8 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 }
 
 function verifyTermNode(termNode, fileContext) {
+  debugger
+
   let verified = false;
 
   const type = typeFromTermNode(termNode, fileContext);
@@ -139,4 +151,19 @@ function verifyTermNode(termNode, fileContext) {
   }
 
   return verified;
+}
+
+function verifyTypeNode(typeNode, fileContext) {
+  let typeNodeVerified = false;
+
+  const typeName = typeNameFromTypeNode(typeNode),
+        typePresent = fileContext.isTypePresentByTypeName(typeName);
+
+  if (!typePresent) {
+    log.error(`The type '${typeName}' is missing.`);
+  } else {
+    typeNodeVerified = true;
+  }
+
+  return typeNodeVerified;
 }
