@@ -1,52 +1,36 @@
 "use strict";
 
 const log = require("../log"),
-      Constructor = require("../constructor");
+      Combinator = require("../combinator");
 
-const { TYPE_RULE_NAME, TERM_RULE_NAME } = require("../ruleNames"),
+const { TERM_RULE_NAME, TYPE_RULE_NAME } = require("../ruleNames"),
       { nodeAsString, typeNameFromTypeNode } = require("../utilities/node");
 
-function verifyTermAsConstructor(termNode, typeNode, fileContext) {
-  let termVerifiedAsConstructor = false;
+function verifyStatementAsCombinator(statementNode, fileContext) {
+  let statementVerifiedAsCombinator = false;
 
-  const nonTerminalNode = termNode,  ///
+  const nonTerminalNode = statementNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
         childNodesVerified = verifyChildNodes(childNodes, fileContext);
 
-  let type = null;
-
   if (childNodesVerified) {
-    if (typeNode === null) {
-      termVerifiedAsConstructor = true;
-    } else {
-      const typeName = typeNameFromTypeNode(typeNode);
-
-      type = fileContext.findTypeByTypeName(typeName);
-
-      if (type !== null) {
-        termVerifiedAsConstructor = true;
-      } else {
-        const termNodeString = nodeAsString(termNode);
-
-        log.error(`The '${termNodeString}' constructor's '${typeName}' type is missing.`);
-      }
-    }
+    statementVerifiedAsCombinator = true;
   }
 
-  if (termVerifiedAsConstructor) {
-    const constructor = Constructor.fromTermNodeAndType(termNode, type);
+  if (statementVerifiedAsCombinator) {
+    const combinator = Combinator.fromStatementNode(statementNode);
 
-    fileContext.addConstructor(constructor);
+    fileContext.addCombinator(combinator);
 
-    const termNodeString = nodeAsString(termNode);
+    const statementNodeString = nodeAsString(statementNode);
 
-    log.info(`Verified the '${termNodeString}' constructor.`);
+    log.info(`Verified the '${statementNodeString}' combinator.`);
   }
 
-  return termVerifiedAsConstructor;
+  return statementVerifiedAsCombinator;
 }
 
-module.exports = verifyTermAsConstructor;
+module.exports = verifyStatementAsCombinator;
 
 function verifyNode(node, fileContext) {
   let nodeVerified;

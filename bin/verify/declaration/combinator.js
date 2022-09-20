@@ -1,53 +1,15 @@
 "use strict";
 
-const log = require("../../log"),
-      Combinator = require("../../combinator");
+const verifyStatementAsCombinator = require("../../verify/statementAsCombinator");
 
-const { nodeQuery } = require("../../utilities/query"),
-      { verifyStatementAsCombinator } = require("../../verify/constructorCombinator"),
-      { nodeAsString, nameFromNameNameNode } = require("../../utilities/node");
+const { nodeQuery } = require("../../utilities/query");
 
-const statementNodeQuery = nodeQuery("/*/statement!"),
-      typeNameNameNodeQuery = nodeQuery("/*/typeName/@name");
+const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
 function verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext) {
-  let combinatorDeclarationVerified = false;
-
   const statementNode = statementNodeQuery(combinatorDeclarationNode),
-        typeNameNameNode = typeNameNameNodeQuery(combinatorDeclarationNode),
-        typeName = (typeNameNameNode !== undefined) ?
-                     nameFromNameNameNode(typeNameNameNode) :
-                       undefined;
-
-  let type = undefined,
-    typeVerified = true;
-
-  if (typeName !== undefined) {
-    type = fileContext.findTypeByTypeName(typeName);
-
-    if (type === undefined) {
-      const statementNodeString = nodeAsString(statementNode);
-
-      typeVerified = false;
-
-      log.error(`The '${statementNodeString}' combinator's '${typeName}' type is missing.`);
-    }
-  }
-
-  if (typeVerified) {
-    const statementVerified = verifyStatementAsCombinator(statementNode, fileContext);
-
-    if (statementVerified) {
-      const combinator = Combinator.fromStatementNodeAndType(statementNode, type),
-            combinatorString = combinator.asString();
-
-      fileContext.addCombinator(combinator);
-
-      combinatorDeclarationVerified = true;
-
-      log.info(`Verified the '${combinatorString}' combinator.`);
-    }
-  }
+        statementVerifiedAsCombinator = verifyStatementAsCombinator(statementNode, fileContext),
+        combinatorDeclarationVerified = statementVerifiedAsCombinator; ///
 
   return combinatorDeclarationVerified;
 }

@@ -5,11 +5,13 @@ const { nodeQuery } = require("../utilities/query");
 const verifyAxiom = require("../verify/axiom"),
       verifyTypeDeclaration = require("../verify/declaration/type"),
       verifyVariableDeclaration = require("../verify/declaration/variable"),
+      verifyCombinatorDeclaration = require("../verify/declaration/combinator"),
       verifyConstructorDeclaration = require("../verify/declaration/constructor");
 
 const axiomNodeQuery = nodeQuery("/topLevelInstruction/axiom!"),
       typeDeclarationNodeQuery = nodeQuery("/topLevelInstruction/typeDeclaration!"),
       variableDeclarationNodeQuery = nodeQuery("/topLevelInstruction/variableDeclaration!"),
+      combinatorDeclarationNodeQuery = nodeQuery("/topLevelInstruction/combinatorDeclaration!"),
       constructorDeclarationNodeQuery = nodeQuery("/topLevelInstruction/constructorDeclaration!");
 
 function verifyTopLevelInstruction(topLevelInstructionNode, fileContext) {
@@ -19,6 +21,7 @@ function verifyTopLevelInstruction(topLevelInstructionNode, fileContext) {
         axiomNode = axiomNodeQuery(node),
         typeDeclarationNode = typeDeclarationNodeQuery(node),
         variableDeclarationNode = variableDeclarationNodeQuery(node),
+        combinatorDeclarationNode = combinatorDeclarationNodeQuery(node),
         constructorDeclarationNode = constructorDeclarationNodeQuery(node);
 
   if (false) {
@@ -35,6 +38,10 @@ function verifyTopLevelInstruction(topLevelInstructionNode, fileContext) {
     const variableDeclarationVerified = verifyVariableDeclaration(variableDeclarationNode, fileContext);
 
     topLevelInstructionVerified = variableDeclarationVerified;  ///
+  } else if (combinatorDeclarationNode !== null) {
+    const combinatorDeclarationVerified = verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext);
+
+    topLevelInstructionVerified = combinatorDeclarationVerified;  ///
   } else if (constructorDeclarationNode !== null) {
     const constructorDeclarationVerified = verifyConstructorDeclaration(constructorDeclarationNode, fileContext);
 

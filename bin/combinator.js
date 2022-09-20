@@ -3,17 +3,8 @@
 const { nodeAsString } = require("./utilities/node");
 
 class Combinator {
-  constructor(statementNode, type) {
+  constructor(statementNode) {
     this.statementNode = statementNode;
-    this.type = type;
-  }
-
-  getStatementNode() {
-    return this.statementNode;
-  }
-
-  getType() {
-    return this.type;
   }
 
   asString() {
@@ -21,20 +12,13 @@ class Combinator {
 
     const statementString = nodeAsString(this.statementNode);
 
-    if (this.type === undefined) {
-      string = `${statementString}`;
-    } else {
-      const noSuperType = true,
-            typeString = this.type.asString(noSuperType);
-
-      string = `${statementString}:${typeString}`;
-    }
+    string = `${statementString}`;
 
     return string;
   }
 
-  static fromStatementNodeAndType(statementNode, type) {
-    const combinator = new Combinator(statementNode, type);
+  static fromStatementNode(statementNode) {
+    const combinator = new Combinator(statementNode);
 
     return combinator;
   }
