@@ -7,12 +7,13 @@ const { readFile, checkFileExists } = fileSystemUtilities;
 
 function customGrammarFromDirectoryName(directoryName) {
   const name = directoryName, ///
-        typePattern = typePatternFromDirectoryPath(directoryName),
-        operatorPattern = operatorPatternFromDirectoryPath(directoryName),
         termBNF = termBNFFromDirectoryPath(directoryName),
         statementBNF = statementBNFFromDirectoryPath(directoryName),
         metastatementBNF = metastatementBNFFromDirectoryPath(directoryName),
-        customGrammar = new CustomGrammar(name, typePattern, operatorPattern, termBNF, statementBNF, metastatementBNF);
+        typePattern = typePatternFromDirectoryPath(directoryName),
+        symbolPattern = symbolPatternFromDirectoryPath(directoryName),
+        operatorPattern = operatorPatternFromDirectoryPath(directoryName),
+        customGrammar = new CustomGrammar(name, termBNF, statementBNF, metastatementBNF, typePattern, symbolPattern, operatorPattern);
 
   return customGrammar;
 }
@@ -26,6 +27,13 @@ function typePatternFromDirectoryPath(directoryName) {
         typePattern = patternFromBNFFilePath(typePatternFilePath);
 
   return typePattern;
+}
+
+function symbolPatternFromDirectoryPath(directoryName) {
+  const symbolPatternFilePath = `${directoryName}/symbol.ptn`,
+        symbolPattern = patternFromBNFFilePath(symbolPatternFilePath);
+
+  return symbolPattern;
 }
 
 function operatorPatternFromDirectoryPath(directoryName) {
