@@ -6,11 +6,11 @@ const { nodeQuery } = require("../utilities/query");
 
 const statementNodeQuery = nodeQuery("/*/statement!");
 
-function verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext) {
+function verifyUnqualifiedStatement(unqualifiedStatementNode, context) {
   let unqualifiedStatementVerified;
 
   const statementNode = statementNodeQuery(unqualifiedStatementNode),
-        statementVerified = verifyStatement(statementNode, fileContext);
+        statementVerified = verifyStatement(statementNode, context);
 
   unqualifiedStatementVerified = statementVerified; ///
 

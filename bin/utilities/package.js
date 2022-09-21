@@ -16,18 +16,6 @@ const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
       dependencyStringLiteralNodesQuery = Query.fromExpression("//dependency//@string-literal");
 
-function findPackageContext(packageName, packageContexts) {
-  const packageContext = packageContexts.find((packageContext) => {
-    const packageContextPackageName = packageContext.getPackageName();
-
-    if (packageContextPackageName === packageName) {
-      return true;
-    }
-  }) || null;
-
-  return packageContext;
-}
-
 function filePathsFromPackageName(packageName) {
   let filePaths;
 
@@ -51,6 +39,18 @@ function filePathsFromPackageName(packageName) {
   filePaths = florenceFilePaths;  ///
 
   return filePaths;
+}
+
+function findDependencyPackageContext(dependencyPackageName, packageContexts) {
+  const packageContext = packageContexts.find((packageContext) => {
+    const packageName = packageContext.getPackageName();
+
+    if (packageName === dependencyPackageName) {
+      return true;
+    }
+  }) || null;
+
+  return packageContext;
 }
 
 function dependencyPackageNamesFromPackageName(packageName) {
@@ -91,8 +91,8 @@ function combinedCustomGrammarFromPackageNames(packageNames) {
 }
 
 module.exports = {
-  findPackageContext,
   filePathsFromPackageName,
+  findDependencyPackageContext,
   dependencyPackageNamesFromPackageName,
   combinedCustomGrammarFromPackageNames
 };

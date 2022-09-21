@@ -16,14 +16,20 @@ function isLabelPresent(label) {
 
 function findTypeByTypeName(typeName) {
   const types = this.getTypes(),
-        type = types.find((type) => type.matchTypeName(typeName));
+        type = types.find((type) => {
+          const matches = type.matchTypeName(typeName);
+
+          if (matches) {
+            return true;
+          }
+        }) || null;
 
   return type;
 }
 
 function isTypePresentByTypeName(typeName) {
   const type = this.findTypeByTypeName(typeName),
-        typePresent = (type !== undefined);
+        typePresent = (type !== null);
 
   return typePresent;
 }

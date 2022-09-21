@@ -10,12 +10,12 @@ const { combinedCustomGrammarFromPackageNames } = require("../utilities/package"
 const { push } = arrayUtilities;
 
 class PackageContext {
-  constructor(packageName, fileContexts, florenceLexer, florenceParser, dependencyPackageContexts) {
+  constructor(packageName, fileContexts, florenceLexer, florenceParser, packageContexts) {
     this.packageName = packageName;
     this.fileContexts = fileContexts;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
-    this.dependencyPackageContexts = dependencyPackageContexts;
+    this.packageContexts = packageContexts;
   }
 
   getPackageName() {
@@ -34,8 +34,8 @@ class PackageContext {
     return this.florenceParser;
   }
 
-  getPackageDependencyContexts() {
-    return this.dependencyPackageContexts;
+  getPackageContexts() {
+    return this.packageContexts;
   }
 
   getTypes(packageNames = []) {
@@ -53,9 +53,7 @@ class PackageContext {
         push(types, fileContextTypes);
       });
 
-      const packageContexts = this.retrievePackageContexts();
-
-      packageContexts.forEach((packageContext) => {
+      this.packageContexts.forEach((packageContext) => {
         const packageContextTypes = packageContext.getTypes(packageNames);
 
         push(types, packageContextTypes);
@@ -80,9 +78,7 @@ class PackageContext {
         push(axioms, fileContextAxioms);
       });
 
-      const packageContexts = this.retrievePackageContexts();
-
-      packageContexts.forEach((packageContext) => {
+      this.packageContexts.forEach((packageContext) => {
         const packageContextAxioms = packageContext.getAxioms(packageNames);
 
         push(axioms, packageContextAxioms);
@@ -107,9 +103,7 @@ class PackageContext {
         push(combinators, fileContextCombinators);
       });
 
-      const packageContexts = this.retrievePackageContexts();
-
-      packageContexts.forEach((packageContext) => {
+      this.packageContexts.forEach((packageContext) => {
         const packageContextCombinators = packageContext.getCombinators(packageNames);
 
         push(combinators, packageContextCombinators);
@@ -134,39 +128,14 @@ class PackageContext {
         push(constructors, fileContextConstructors);
       });
 
-      const packageContexts = this.retrievePackageContexts();
-
-      packageContexts.forEach((packageContext) => {
-        const packageContextConstructors = packageContext.getConstructors();
+      this.packageContexts.forEach((packageContext) => {
+        const packageContextConstructors = packageContext.getConstructors(packageNames);
 
         push(constructors, packageContextConstructors);
       });
     }
 
     return constructors;
-  }
-
-  findRuleByRuleName(ruleName) {
-    const ruleMap = this.florenceParser.getRuleMap(),
-          rule = ruleMap[ruleName];
-
-    return rule;
-  }
-
-  retrievePackageContexts(packageContexts = []) {
-    this.dependencyPackageContexts.forEach((dependencyPackageContext) => {
-      dependencyPackageContext.retrievePackageContexts(packageContexts);
-
-      const packageContextsIncludesDependencyPackageContext = packageContexts.includes(dependencyPackageContext);
-
-      if (!packageContextsIncludesDependencyPackageContext) {
-        const packageContext = dependencyPackageContext;  ///
-
-        packageContexts.push(packageContext);
-      }
-    });
-
-    return packageContexts;
   }
 
   addFileContext(fileContext) {
@@ -178,7 +147,7 @@ class PackageContext {
   parse(tokens) { return this.florenceParser.parse(tokens); }
 
   static fromNothing() {
-    const packageName = undefined,
+    const packageName = null,
           fileContexts = [],
           florenceLexer = florenceLexerFromNothing(),
           florenceParser = florenceParserFromNothing(),
@@ -189,20 +158,12 @@ class PackageContext {
   }
 
   static fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts) {
-    const packageContexts = packageContextsFromDependencyPackageContexts(dependencyPackageContexts),
-          packageNames = packageContexts.map((packageContext) => {
-            const packageName = packageContext.getPackageName();
-
-            return packageName;
-          });
-
-    packageNames.push(packageName);
-
-    const combinedCustomGrammar = combinedCustomGrammarFromPackageNames(packageNames),
+    const combinedCustomGrammar = combinedCustomGrammarFromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts),
           fileContexts = [],
           florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
           florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar),
-          packageContext = new PackageContext(packageName, fileContexts, florenceLexer, florenceParser, dependencyPackageContexts);
+          packageContexts = dependencyPackageContexts,  ///
+          packageContext = new PackageContext(packageName, fileContexts, florenceLexer, florenceParser, packageContexts);
 
     return packageContext;
   }
@@ -212,18 +173,17 @@ Object.assign(PackageContext.prototype, contextMixins);
 
 module.exports = PackageContext;
 
-function packageContextsFromDependencyPackageContexts(dependencyPackageContexts, packageContexts = []) {
-  dependencyPackageContexts.forEach((dependencyPackageContext) => {
-    dependencyPackageContext.retrievePackageContexts(packageContexts);
+function combinedCustomGrammarFromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts) {
+  const packageContexts = dependencyPackageContexts,  ///
+        packageNames = packageContexts.map((packageContext) => {
+          const packageName = packageContext.getPackageName();
 
-    const packageContextsIncludesDependencyPackageContext = packageContexts.includes(dependencyPackageContext);
+          return packageName;
+        });
 
-    if (!packageContextsIncludesDependencyPackageContext) {
-      const packageContext = dependencyPackageContext;  ///
+  packageNames.push(packageName);
 
-      packageContexts.push(packageContext);
-    }
-  });
+  const combinedCustomGrammar = combinedCustomGrammarFromPackageNames(packageNames);
 
-  return packageContexts;
+  return combinedCustomGrammar;
 }

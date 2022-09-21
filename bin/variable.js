@@ -30,14 +30,21 @@ class Variable {
   }
 
   asString() {
-    const typeName = this.type.getName(),
-		      string = `${this.name}:${typeName}`;
+    let string;
+
+    if (this.type === null) {
+      string = this.name;
+    } else {
+      const typeName = this.type.getName();
+
+      string = `${this.name}:${typeName}`;
+    }
 
     return string;
   }
 
   static fromNameAndType(name, type) {
-    const value = undefined,
+    const value = null,
           variable = new Variable(name, value, type);
 
     return variable;

@@ -1,11 +1,12 @@
 "use strict";
 
 const { rewriteNodes } = require("occam-grammar-utilities"),
-      { fileSystemUtilities } = require("necessary");
+      { arrayUtilities, fileSystemUtilities } = require("necessary");
 
 const contextMixins = require("../mixins/context");
 
-const { readFile } = fileSystemUtilities;
+const { push } = arrayUtilities,
+      { readFile } = fileSystemUtilities;
 
 class FileContext {
   constructor(packageContext, filePath, tokens, node, types, axioms, variables, combinators, constructors) {
@@ -37,25 +38,29 @@ class FileContext {
   }
 
   getTypes(bubble = true) {
-    const packageContextTypes = bubble ?
-                                  this.packageContext.getTypes() :
-                                    [],
-          types = [
-            ...this.types,
-            ...packageContextTypes
-          ];
+    const types = [
+      ...this.types
+    ];
+
+    if (bubble) {
+      const packageContextTypes = this.packageContext.getTypes();
+
+      push(types, packageContextTypes);
+    }
 
     return types;
   }
 
   getAxioms(bubble = true) {
-    const packageContextAxioms = bubble ?
-                                   this.packageContext.getAxioms() :
-                                     [],
-          axioms = [
-              ...this.axioms,
-              ...packageContextAxioms
-          ];
+    const axioms = [
+      ...this.axioms
+    ];
+
+    if (bubble) {
+      const packageContextAxioms = this.packageContext.getAxioms();
+
+      push(axioms, packageContextAxioms);
+    }
 
     return axioms;
   }
@@ -65,36 +70,44 @@ class FileContext {
   }
 
   getCombinators(bubble = true) {
-    const packageContextCombinators = bubble ?
-                                        this.packageContext.getCombinators() :
-                                          [],
-          combinators = [
-            ...this.combinators,
-            ...packageContextCombinators
-          ];
+    const combinators = [
+      ...this.combinators
+    ];
+
+    if (bubble) {
+      const packageContextCombinators = this.packageContext.getCombinators();
+
+      push(combinators, packageContextCombinators);
+    }
 
     return combinators;
   }
 
   getConstructors(bubble = true) {
-    const packageContextConstructors = bubble ?
-                                         this.packageContext.getConstructors() :
-                                           [],
-          constructors = [
-            ...this.constructors,
-            ...packageContextConstructors
-          ];
+    const constructors = [
+      ...this.constructors
+    ];
+
+    if (bubble) {
+      const packageContextConstructors = this.packageContext.getConstructors();
+
+      push(constructors, packageContextConstructors);
+    }
 
     return constructors;
   }
-
-  findRuleByRuleName(ruleName) { return this.packageContext.findRuleByRuleName(ruleName); }
 
   findTypeByTypeName(typeName) { return this.packageContext.findTypeByTypeName(typeName); }
 
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
-          variable = this.variables.find((variable) => variable.matchName(name));
+          variable = this.variables.find((variable) => {
+            const matches = variable.matchName(name);
+
+            if (matches) {
+              return true;
+            }
+          }) || null;
 
     return variable;
   }
@@ -108,7 +121,7 @@ class FileContext {
 
   isVariablePresentByVariableName(variableName) {
     const variable = this.findVariableByVariableName(variableName),
-          variablePresent = (variable !== undefined);
+          variablePresent = (variable !== null);
 
     return variablePresent;
   }

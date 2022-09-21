@@ -2,13 +2,13 @@
 
 const { ARGUMENT_RULE_NAME } = require("../ruleNames");
 
-function verifyTermAgainstConstructor(termNode, constructor, fileContext) {
+function verifyTermAgainstConstructor(termNode, constructor, context) {
   let termVerifiedAgainstConstructor = false;
 
   const constructorTermNode = constructor.getTermNode(),
         node = termNode,  ///
         constructorNode = constructorTermNode, ///
-        nodeVerified = verifyNode(node, constructorNode, fileContext);
+        nodeVerified = verifyNode(node, constructorNode, context);
 
   if (nodeVerified) {
     termVerifiedAgainstConstructor = true;
@@ -19,7 +19,7 @@ function verifyTermAgainstConstructor(termNode, constructor, fileContext) {
 
 module.exports = verifyTermAgainstConstructor;
 
-function verifyNode(node, constructorNode, fileContext) {
+function verifyNode(node, constructorNode, context) {
   let nodeVerified;
 
   const nodeTerminalNode = node.isTerminalNode(),
@@ -29,13 +29,13 @@ function verifyNode(node, constructorNode, fileContext) {
     if (nodeTerminalNode) {
       const terminalNode = node,  ///
             constructorTerminalNode = constructorNode,  ///
-            terminalNodeVerified = verifyTerminalNode(terminalNode, constructorTerminalNode, fileContext);
+            terminalNodeVerified = verifyTerminalNode(terminalNode, constructorTerminalNode, context);
 
       nodeVerified = terminalNodeVerified;  ///
     } else {
       const nonTerminalNode = node, ///
             constructorNonTerminalNode = constructorNode,  ///
-            nonTerminalNodeVerified = verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, fileContext);
+            nonTerminalNodeVerified = verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, context);
 
       nodeVerified = nonTerminalNodeVerified; ///
     }
@@ -44,7 +44,7 @@ function verifyNode(node, constructorNode, fileContext) {
   return nodeVerified;
 }
 
-function verifyChildNodes(childNodes, constructorChildNodes, fileContext) {
+function verifyChildNodes(childNodes, constructorChildNodes, context) {
   let childNodesVerified = false;
 
   const childNodesLength = childNodes.length,
@@ -55,7 +55,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, fileContext) {
       const construcotorChildNode = constructorChildNodes[index],
             node = childNode, ///
             constructorNode = construcotorChildNode,  ///
-            nodeVerified = verifyNode(node, constructorNode, fileContext);
+            nodeVerified = verifyNode(node, constructorNode, context);
 
       if (nodeVerified) {
         return true;
@@ -66,7 +66,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, fileContext) {
   return childNodesVerified;
 }
 
-function verifyTerminalNode(terminalNode, constructorTerminalNode, fileContext) {
+function verifyTerminalNode(terminalNode, constructorTerminalNode, context) {
   let terminalNodeVerified = true;
 
   const significantToken = terminalNode.getSignificantToken(),
@@ -80,7 +80,7 @@ function verifyTerminalNode(terminalNode, constructorTerminalNode, fileContext) 
   return terminalNodeVerified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, fileContext) {
+function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, context) {
   let nonTerminalNodeVerified = false;
 
   const ruleName = nonTerminalNode.getRuleName(),
@@ -91,7 +91,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, file
       case ARGUMENT_RULE_NAME: {
         const argumentNode = nonTerminalNode, ///
               constructorArgumentNode = constructorNonTerminalNode, ///
-              argumentNodeVerified = verifyArgumentNode(argumentNode, constructorArgumentNode, fileContext);
+              argumentNodeVerified = verifyArgumentNode(argumentNode, constructorArgumentNode, context);
 
         nonTerminalNodeVerified = argumentNodeVerified; ///
 
@@ -100,7 +100,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, file
 
       default: {
         const childNodes = nonTerminalNode.getChildNodes(),
-              childNodesVerified = verifyChildNodes(childNodes, fileContext);
+              childNodesVerified = verifyChildNodes(childNodes, context);
 
         nonTerminalNodeVerified = childNodesVerified; ///
 
@@ -113,7 +113,7 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, file
   return nonTerminalNodeVerified;
 }
 
-function verifyArgumentNode(argumentNode, constructorArgumentNode, fileContext) {
+function verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
   let argumentNodeVerified = false;
 
   debugger

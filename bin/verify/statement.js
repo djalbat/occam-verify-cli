@@ -8,7 +8,7 @@ const verifyEquality = require("../verify/equality"),
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
-function verifyStatement(statementNode, fileContext) {
+function verifyStatement(statementNode, context) {
   let statementVerified = false;
 
   const equalityNode = equalityNodeQuery(statementNode),
@@ -17,11 +17,11 @@ function verifyStatement(statementNode, fileContext) {
   if (false) {
     ///
   } else if (equalityNode !== null) {
-    const equalityVerified = verifyEquality(equalityNode, fileContext);
+    const equalityVerified = verifyEquality(equalityNode, context);
 
     statementVerified = equalityVerified; ///
   } else if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, fileContext);
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, context);
 
     statementVerified = typeAssertionVerified; ///
   } else {

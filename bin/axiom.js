@@ -27,14 +27,14 @@ class Axiom {
   }
 
   static fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels) {
-    const indicativeConditionalNode = undefined,
+    const indicativeConditionalNode = null,
           axiom = new Axiom(labels, unqualifiedStatementNode, indicativeConditionalNode);
 
     return axiom;
   }
 
   static fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels) {
-    const unqualifiedStatementNode = undefined,
+    const unqualifiedStatementNode = null,
           axiom = new Axiom(labels, unqualifiedStatementNode, indicativeConditionalNode);
 
     return axiom;
@@ -45,12 +45,12 @@ module.exports = Axiom;
 
 function labelsAsLabelsString(labels) {
   const labelsString = labels.reduce((labelsString, label) => {
-    labelsString = (labelsString === undefined) ?
+    labelsString = (labelsString === null) ?
                      `${label}` :
                        `${labelsString},${label}`;
 
     return labelsString;
-  }, undefined);
+  }, null);
 
   return labelsString;
 }

@@ -7,19 +7,19 @@ const { nodeQuery, variableNameFromVariableNode} = require("../utilities/query")
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
-function verifyTerm(termNode, types, fileContext) {
+function verifyTerm(termNode, types, context) {
   let termVerified = false;
 
   const variableNode = variableNodeQuery(termNode);
 
   if (variableNode !== null) {
     const variableName = variableNameFromVariableNode(variableNode),
-          variablePresent = fileContext.isVariablePresentByVariableName(variableName);
+          variablePresent = context.isVariablePresentByVariableName(variableName);
 
     if (!variablePresent) {
       log.error(`The ${variableName} variable is not present.`)
     } else {
-      const variable = fileContext.findVariableByVariableName(variableName),
+      const variable = context.findVariableByVariableName(variableName),
             type = variable.getType();
 
       types.push(type);
@@ -27,9 +27,9 @@ function verifyTerm(termNode, types, fileContext) {
       termVerified = true;
     }
   } else {
-    const constructors = fileContext.getConstructors(),
+    const constructors = context.getConstructors(),
           constructor = constructors.find((constructor) => {
-            const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, fileContext);
+            const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, context);
 
             if (termVerifiedAgainstConstructor) {
               return true;

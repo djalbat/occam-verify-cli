@@ -21,7 +21,7 @@ class Constructor {
 
     const termString = nodeAsString(this.termNode);
 
-    if (this.type === undefined) {
+    if (this.type === null) {
       string = `${termString}`;
     } else {
       const noSuperType = true,

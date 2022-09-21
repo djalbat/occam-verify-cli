@@ -14,15 +14,29 @@ function verifyVariable(variableNode, typeNode, fileContext) {
   if (variablePresent) {
     log.error(`The variable '${variableName}' is already present.`);
   } else {
-    const typeName = typeNameFromTypeNode(typeNode),
-          type = fileContext.findTypeByTypeName(typeName);
+    let variable = null;
 
-    if (type === undefined) {
-      log.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
-    } else {
+    const typeName = typeNameFromTypeNode(typeNode);
+    
+    if (typeName === null) {
       const name = variableName,  ///
-            variable = Variable.fromNameAndType(name, type),
-            variableString = variable.asString();
+            type = null;
+
+      variable = Variable.fromNameAndType(name, type);
+    } else {
+      const type = fileContext.findTypeByTypeName(typeName);
+
+      if (type === null) {
+        log.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
+      } else {
+        const name = variableName;  ///
+
+        variable = Variable.fromNameAndType(name, type);
+      }
+    }
+
+    if (variable !== null) {
+      const variableString = variable.asString();
 
       fileContext.addVariable(variable);
 
