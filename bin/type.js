@@ -23,7 +23,7 @@ class Type {
   isSubTypeOf(type) {
     let subTypeOfType = false;
 
-    if (this.superType !== undefined) {
+    if (this.superType !== null) {
       if (this.superType === type) {
         subTypeOfType = true;
       } else {
@@ -54,7 +54,7 @@ class Type {
     return matchesTypeName;
   }
 
-  asString(noSuperType = (this.superType === undefined)) {
+  asString(noSuperType = (this.superType === null)) {
     let string;
 
     if (noSuperType) {
@@ -70,7 +70,7 @@ class Type {
 
   static fromTypeName(typeName) {
     const name = typeName,  ///
-          superType = undefined,
+          superType = null,
           type = new Type(name, superType);
 
     return type;

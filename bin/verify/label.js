@@ -2,16 +2,12 @@
 
 const log = require("../log");
 
-const { nodeQuery } = require("../utilities/query"),
-      { nameFromNameNode } = require("../utilities/node");
-
-const nameNodeQuery = nodeQuery("/label/@*");  ///
+const { labelNameFromLabelNode } = require("../utilities/query");
 
 function verifyLabel(labelNode, labels, fileContext) {
   let labelVerified = false;
 
-  const labelNameNode = nameNodeQuery(labelNode),
-        labelName = nameFromNameNode(labelNameNode),
+  const labelName = labelNameFromLabelNode(labelNode),
         label = labelName,  ///
         labelPresent = fileContext.isLabelPresent(label);
 

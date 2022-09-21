@@ -3,8 +3,9 @@
 const log = require("../log"),
       Combinator = require("../combinator");
 
-const { TERM_RULE_NAME, TYPE_RULE_NAME } = require("../ruleNames"),
-      { nodeAsString, typeNameFromTypeNode } = require("../utilities/node");
+const { nodeAsString } = require("../utilities/node"),
+      { typeNameFromTypeNode } = require("../utilities/query"),
+      { TERM_RULE_NAME, TYPE_RULE_NAME } = require("../ruleNames");
 
 function verifyStatementAsCombinator(statementNode, fileContext) {
   let statementVerifiedAsCombinator = false;

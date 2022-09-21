@@ -1,10 +1,17 @@
 "use strict";
 
-function findTypeByName(name) {
-  const types = this.getTypes(),
-        type = types.find((type) => type.matchName(name));
+function isLabelPresent(label) {
+  const axioms = this.getAxioms(),
+        labelPresent = axioms.some((axiom) => {
+        const labels = axiom.getLabels(),
+              labelsIncludesLabel = labels.includes(label);
 
-  return type;
+        if (labelsIncludesLabel) {
+          return true;
+        }
+      });
+
+  return labelPresent;
 }
 
 function findTypeByTypeName(typeName) {
@@ -12,27 +19,6 @@ function findTypeByTypeName(typeName) {
         type = types.find((type) => type.matchTypeName(typeName));
 
   return type;
-}
-
-function isLabelPresent(label) {
-  const axioms = this.getAxioms(),
-        labelPresent = axioms.some((axiom) => {
-          const labels = axiom.getLabels(),
-                labelsIncludesLabel = labels.includes(label);
-
-          if (labelsIncludesLabel) {
-            return true;
-          }
-        });
-
-  return labelPresent;
-}
-
-function isTypePresentByName(name) {
-  const type = this.findTypeByName(name),
-        typePresent = (type !== undefined);
-
-  return typePresent;
 }
 
 function isTypePresentByTypeName(typeName) {
@@ -43,9 +29,7 @@ function isTypePresentByTypeName(typeName) {
 }
 
 module.exports = {
-  findTypeByName,
-  findTypeByTypeName,
   isLabelPresent,
-  isTypePresentByName,
+  findTypeByTypeName,
   isTypePresentByTypeName
 };

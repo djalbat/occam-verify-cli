@@ -8,8 +8,8 @@ const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
       variableNodeQuery = nodeQuery("/variableDeclaration/variable");
 
 function verifyVariableDeclaration(variableDeclarationNode, fileContext) {
-  const variableNode = variableNodeQuery(variableDeclarationNode),
-        typeNode = typeNodeQuery(variableDeclarationNode),
+  const typeNode = typeNodeQuery(variableDeclarationNode),
+        variableNode = variableNodeQuery(variableDeclarationNode),
         variableVVerified = verifyVariable(variableNode, typeNode, fileContext),
         variableDeclarationVerified = variableVVerified;  ///
 

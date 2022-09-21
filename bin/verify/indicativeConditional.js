@@ -4,8 +4,8 @@ const log = require("../log"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
+const { nodeAsString } = require("../utilities/node");
 const { nodeQuery, nodesQuery } = require("../utilities/query");
-const {nodeAsString} = require("../utilities/node");
 
 const qualifiedStatementNodeQuery = nodeQuery("/indicativeConditional/qualifiedStatement!"),
       unqualifiedStatementNodesQuery = nodesQuery("/indicativeConditional/unqualifiedStatement");
@@ -13,9 +13,7 @@ const qualifiedStatementNodeQuery = nodeQuery("/indicativeConditional/qualifiedS
 function verifyIndicativeConditional(indicativeConditionalNode, fileContext) {
   let indicativeConditionalVerified;
 
-  const qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode),
-        unqualifiedStatementNodes = unqualifiedStatementNodesQuery(indicativeConditionalNode),
-        qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, fileContext),
+  const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(indicativeConditionalNode),
         unqualifiedStatementsVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
           const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
 
@@ -23,6 +21,9 @@ function verifyIndicativeConditional(indicativeConditionalNode, fileContext) {
             return true;
           }
         });
+
+  const qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode),
+        qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, fileContext);
 
   if (!qualifiedStatementVerified || !unqualifiedStatementsVerified) {
     const indicativeConditionalString = nodeAsString(indicativeConditionalNode);

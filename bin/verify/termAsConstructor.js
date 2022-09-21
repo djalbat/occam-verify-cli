@@ -3,8 +3,9 @@
 const log = require("../log"),
       Constructor = require("../constructor");
 
-const { TYPE_RULE_NAME, TERM_RULE_NAME } = require("../ruleNames"),
-      { nodeAsString, typeNameFromTypeNode } = require("../utilities/node");
+const { nodeAsString } = require("../utilities/node"),
+      { typeNameFromTypeNode } = require("../utilities/query"),
+      { TYPE_RULE_NAME, TERM_RULE_NAME } = require("../ruleNames");
 
 function verifyTermAsConstructor(termNode, typeNode, fileContext) {
   let termVerifiedAsConstructor = false;

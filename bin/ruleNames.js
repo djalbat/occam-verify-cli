@@ -2,6 +2,7 @@
 
 const TERM_RULE_NAME = "term",
       TYPE_RULE_NAME = "type",
+      ARGUMENT_RULE_NAME = "argument",
       TYPE_DECLARATION_RULE_NAME = "typeDeclaration",
       TYPES_DECLARATION_RULE_NAME = "typesDeclaration",
       VARIABLE_DECLARATION_RULE_NAME = "variableDeclaration",
@@ -14,6 +15,7 @@ const TERM_RULE_NAME = "term",
 module.exports = {
   TERM_RULE_NAME,
   TYPE_RULE_NAME,
+  ARGUMENT_RULE_NAME,
   TYPE_DECLARATION_RULE_NAME,
   TYPES_DECLARATION_RULE_NAME,
   VARIABLE_DECLARATION_RULE_NAME,

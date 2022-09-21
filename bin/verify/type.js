@@ -3,7 +3,7 @@
 const log = require("../log"),
       Type = require("../type");
 
-const { typeNameFromTypeNode } = require("../utilities/node");
+const { typeNameFromTypeNode } = require("../utilities/query");
 
 function verifyType(typeNode, superTypeNode, fileContext) {
   let typeVerified = false;
