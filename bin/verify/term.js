@@ -1,47 +1,28 @@
 "use strict";
 
 const log = require("../log"),
-      verifyTermAgainstConstructor = require("../verify/termAgainstConstructor");
+      verifyTermAsVariable = require("../verify/termAsVariable"),
+      verifyTermAgainstConstructors = require("../verify/termAgainstConstructors");
 
-const { nodeQuery, variableNameFromVariableNode} = require("../utilities/query");
+const { nodeAsString } = require("../utilities/node");
 
-const variableNodeQuery = nodeQuery("/term/variable!");
-
-function verifyTerm(termNode, types, context) {
+function verifyTerm(termNode, types, supposition, context) {
   let termVerified = false;
 
-  const variableNode = variableNodeQuery(termNode);
+  const termVerifiedAsVariable = verifyTermAsVariable(termNode, types, supposition, context);
 
-  if (variableNode !== null) {
-    const variableName = variableNameFromVariableNode(variableNode),
-          variablePresent = context.isVariablePresentByVariableName(variableName);
-
-    if (!variablePresent) {
-      log.error(`The ${variableName} variable is not present.`)
-    } else {
-      const variable = context.findVariableByVariableName(variableName),
-            type = variable.getType();
-
-      types.push(type);
-
-      termVerified = true;
-    }
+  if (termVerifiedAsVariable) {
+    termVerified = true;
   } else {
-    const constructors = context.getConstructors(),
-          constructor = constructors.find((constructor) => {
-            const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, context);
+    if (supposition) {
+      const termString = nodeAsString(termNode);
 
-            if (termVerifiedAgainstConstructor) {
-              return true;
-            }
-          }) || null;
+      log.error(`The ${termString} term can only be a variable in a supposition.`)
+    } else {
+      const constructors = context.getConstructors(),
+            termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, constructors, context);
 
-    if (constructor !== null) {
-      const type = constructor.getType();
-
-      types.push(type);
-
-      termVerified = true;
+      termVerified = termVerifiedAgainstConstructors;
     }
   }
 

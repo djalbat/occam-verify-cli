@@ -3,15 +3,11 @@
 const { rewriteNodes } = require("occam-grammar-utilities"),
       { arrayUtilities, fileSystemUtilities } = require("necessary");
 
-const contextMixins = require("../mixins/context");
-
 const { push } = arrayUtilities,
       { readFile } = fileSystemUtilities;
 
 class FileContext {
-  constructor(packageContext, filePath, tokens, node, types, axioms, variables, combinators, constructors) {
-    this.packageContext = packageContext;
-    this.filePath = filePath;
+  constructor(tokens, node, types, axioms, variables, combinators, constructors, packageContext) {
     this.tokens = tokens;
     this.node = node;
     this.types = types;
@@ -19,14 +15,7 @@ class FileContext {
     this.variables = variables;
     this.combinators = combinators;
     this.constructors = constructors;
-  }
-
-  getPackageContext() {
-    return this.packageContext;
-  }
-
-  getFilePath() {
-    return this.filePath;
+    this.packageContext = packageContext;
   }
 
   getTokens() {
@@ -65,6 +54,19 @@ class FileContext {
     return axioms;
   }
 
+  getLabels() {
+    const axioms = this.getAxioms(),
+          labels = axioms.reduce((labels, axiom) => {
+            const axiomLabels = axiom.getLabels();
+
+            push(labels, axiomLabels);
+
+            return labels;
+          }, []);
+
+    return labels;
+  }
+
   getVariables() {
     return this.variables;
   }
@@ -97,7 +99,22 @@ class FileContext {
     return constructors;
   }
 
-  findTypeByTypeName(typeName) { return this.packageContext.findTypeByTypeName(typeName); }
+  getPackageContext() {
+    return this.packageContext;
+  }
+
+  findTypeByTypeName(typeName) {
+    const types = this.getTypes(),
+          type = types.find((type) => {
+            const matches = type.matchTypeName(typeName);
+
+            if (matches) {
+              return true;
+            }
+          }) || null;
+
+    return type;
+  }
 
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
@@ -110,6 +127,14 @@ class FileContext {
           }) || null;
 
     return variable;
+  }
+
+  isLabelPresent(label) {
+    const labels = this.getLabels(),
+          labelsIncludesLabel = labels.includes(label),
+          labelPresent = labelsIncludesLabel; ///
+
+    return labelPresent;
   }
 
   isTypePresentByTypeName(typeName) {
@@ -159,12 +184,10 @@ class FileContext {
           variables = [],
           combinators = [],
           constructors = [],
-          fileContext = new FileContext(packageContext, filePath, tokens, node, types, axioms, variables, combinators, constructors);
+          fileContext = new FileContext(tokens, node, types, axioms, variables, combinators, constructors, packageContext);
 
     return fileContext;
   }
 }
-
-Object.assign(FileContext.prototype, contextMixins);
 
 module.exports = FileContext;

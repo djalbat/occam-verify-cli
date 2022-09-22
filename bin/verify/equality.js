@@ -12,14 +12,14 @@ const firstTermNodeQuery = nodeQuery("/equality/term[0]"),
 
 const { first, second } = arrayUtilities;
 
-function verifyEquality(equalityNode, context) {
+function verifyEquality(equalityNode, supposition, context) {
   let equalityVerified;
 
   const types = [],
         firstTermNode = firstTermNodeQuery(equalityNode),
         secondTermNode = secondTermNodeQuery(equalityNode),
-        firstTermVerified = verifyTerm(firstTermNode, types, context),
-        secondTermVerified = verifyTerm(secondTermNode, types, context);
+        firstTermVerified = verifyTerm(firstTermNode, types, supposition, context),
+        secondTermVerified = verifyTerm(secondTermNode, types, supposition, context);
 
   if (!firstTermVerified || !secondTermVerified) {
     equalityVerified = false;

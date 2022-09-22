@@ -14,9 +14,8 @@ function verifyFile(filePath, packageContext = PackageContext.fromNothing()) {
 
   log.debug(`Verifying the '${filePath}' file...`);
 
-  const fileContext = FileContext.fromPackageContextAndFilePath(packageContext, filePath);
-
-  const node = fileContext.getNode(),
+  const fileContext = FileContext.fromPackageContextAndFilePath(packageContext, filePath),
+        node = fileContext.getNode(),
         topLevelInstructionNodes = topLevelInstructionNodesQuery(node),
         topLevelInstructionsVerified = topLevelInstructionNodes.every((topLevelInstructionNode) => {
           const topLevelInstructionVerified = verifyTopLevelInstruction(topLevelInstructionNode, fileContext);

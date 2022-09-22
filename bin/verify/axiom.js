@@ -25,15 +25,17 @@ function verifyAxiom(axiomNode, fileContext) {
     const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
           indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
-    if (false) {
-      ///
-    } else if (unqualifiedStatementNode !== null) {
-      const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
+    if (unqualifiedStatementNode !== null) {
+      const supposition = false,
+            context = fileContext,  ///
+            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, supposition, context);
 
       if (unqualifiedStatementVerified) {
         axiom = Axiom.fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels);
       }
-    } else if (indicativeConditionalNode !== null) {
+    }
+
+    if (indicativeConditionalNode !== null) {
       const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, fileContext);
 
       if (indicativeConditionalVerified) {

@@ -1,6 +1,7 @@
 "use strict";
 
 const log = require("../log"),
+      TemporaryContext = require("../context/temporary"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
@@ -13,9 +14,13 @@ const qualifiedStatementNodeQuery = nodeQuery("/indicativeConditional/qualifiedS
 function verifyIndicativeConditional(indicativeConditionalNode, fileContext) {
   let indicativeConditionalVerified;
 
+  const temporaryContext = TemporaryContext.fromFileContext(fileContext),
+        supposition = true,
+        context = temporaryContext; ///
+
   const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(indicativeConditionalNode),
         unqualifiedStatementsVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
-          const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, fileContext);
+          const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, supposition, context);
 
           if (unqualifiedStatementVerified) {
             return true;
@@ -23,7 +28,7 @@ function verifyIndicativeConditional(indicativeConditionalNode, fileContext) {
         });
 
   const qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode),
-        qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, fileContext);
+        qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, context);
 
   if (!qualifiedStatementVerified || !unqualifiedStatementsVerified) {
     const indicativeConditionalString = nodeAsString(indicativeConditionalNode);

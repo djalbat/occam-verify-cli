@@ -44,7 +44,7 @@ class Variable {
   }
 
   static fromNameAndType(name, type) {
-    const value = null,
+    const value = undefined,
           variable = new Variable(name, value, type);
 
     return variable;

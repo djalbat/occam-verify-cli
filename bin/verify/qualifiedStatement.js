@@ -9,8 +9,9 @@ const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
 function verifyQualifiedStatement(qualifiedStatementNode, context) {
   let qualifiedStatementVerified;
 
-  const statementNode = statementNodeQuery(qualifiedStatementNode),
-        statementVerified = verifyStatement(statementNode, context);
+  const supposition = false,
+        statementNode = statementNodeQuery(qualifiedStatementNode),
+        statementVerified = verifyStatement(statementNode, supposition, context);
 
   qualifiedStatementVerified = statementVerified; ///
 

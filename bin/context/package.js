@@ -2,8 +2,6 @@
 
 const { arrayUtilities } = require("necessary");
 
-const contextMixins = require("../mixins/context");
-
 const { combinedCustomGrammarFromPackageNames } = require("../utilities/package"),
       { florenceLexerFromNothing, florenceParserFromNothing, florenceLexerFromCombinedCustomGrammar, florenceParserFromCombinedCustomGrammar } = require("../utilities/grammar");
 
@@ -168,8 +166,6 @@ class PackageContext {
     return packageContext;
   }
 }
-
-Object.assign(PackageContext.prototype, contextMixins);
 
 module.exports = PackageContext;
 

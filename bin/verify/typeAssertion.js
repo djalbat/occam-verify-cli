@@ -1,14 +1,16 @@
 "use strict";
 
 const log = require("../log"),
+      Variable = require("../variable"),
       verifyTerm = require("../verify/term");
 
-const { nodeQuery, typeNameFromTypeNode} = require("../utilities/query");
+const { nodeQuery, typeNameFromTypeNode, variableNameFromVariableNode} = require("../utilities/query");
 
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
-      typeNodeQuery = nodeQuery("/typeAssertion/type");
+      typeNodeQuery = nodeQuery("/typeAssertion/type"),
+      variableNodeQuery = nodeQuery("/typeAssertion/term/variable!");
 
-function verifyTypeAssertion(typeAssertionNode, context) {
+function verifyTypeAssertion(typeAssertionNode, supposition, context) {
   let typeAssertionVerified = false;
 
   const typeNode = typeNodeQuery(typeAssertionNode),
@@ -21,9 +23,20 @@ function verifyTypeAssertion(typeAssertionNode, context) {
     const type = context.findTypeByTypeName(typeName),
           types = [],
           termNode = termNodeQuery(typeAssertionNode),
-          termVerified = verifyTerm(termNode, types, context);
+          termVerified = verifyTerm(termNode, types, supposition, context);
 
-    typeAssertionVerified = termVerified; ///
+    if (termVerified) {
+      if (supposition) {
+        const variableNode = variableNodeQuery(typeAssertionNode),
+              variableName = variableNameFromVariableNode(variableNode),
+              name = variableName,  ///
+              variable = Variable.fromNameAndType(name, type);
+
+        context.addVariable(variable);
+      } else {
+        debugger
+      }
+    }
   }
 
   return typeAssertionVerified;
