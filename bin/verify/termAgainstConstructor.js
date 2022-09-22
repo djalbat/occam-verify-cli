@@ -69,9 +69,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, context) {
 function verifyTerminalNode(terminalNode, constructorTerminalNode, context) {
   let terminalNodeVerified = false;
 
-  const significantToken = terminalNode.getSignificantToken(),
-        constructorSignificantToken = constructorTerminalNode.getSignificantToken(),
-        matches = significantToken.match(constructorSignificantToken);
+  const matches = terminalNode.match(constructorTerminalNode);
 
   if (matches) {
     terminalNodeVerified = true;
