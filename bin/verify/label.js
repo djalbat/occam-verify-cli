@@ -6,12 +6,12 @@ const { labelNameFromLabelNode } = require("../utilities/query");
 
 const { log } = loggingUtilities;
 
-function verifyLabel(labelNode, labels, fileContext) {
+function verifyLabel(labelNode, labels, context) {
   let labelVerified = false;
 
   const labelName = labelNameFromLabelNode(labelNode),
         label = labelName,  ///
-        labelPresent = fileContext.isLabelPresent(label);
+        labelPresent = context.isLabelPresent(label);
 
   if (labelPresent) {
     log.error(`The label ${label} is already present`);

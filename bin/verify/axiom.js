@@ -15,12 +15,12 @@ const labelNodesQuery = nodesQuery("/axiom/label"),
       unqualifiedStatementNodeQuery = nodeQuery("/axiom/unqualifiedStatement!"),
       indicativeConditionalNodeQuery = nodeQuery("/axiom/indicativeConditional!");
 
-function verifyAxiom(axiomNode, fileContext) {
+function verifyAxiom(axiomNode, context) {
   let axiomVerified = false;
 
   const labels = [],
         labelNodes = labelNodesQuery(axiomNode),
-        labelsVerified = verifyLabels(labelNodes, labels, fileContext);
+        labelsVerified = verifyLabels(labelNodes, labels, context);
 
   if (labelsVerified) {
     let axiom = null;
@@ -30,7 +30,7 @@ function verifyAxiom(axiomNode, fileContext) {
 
     if (unqualifiedStatementNode !== null) {
       const supposition = false,
-            context = fileContext,  ///
+            context = context,  ///
             unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, supposition, context);
 
       if (unqualifiedStatementVerified) {
@@ -39,7 +39,7 @@ function verifyAxiom(axiomNode, fileContext) {
     }
 
     if (indicativeConditionalNode !== null) {
-      const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, fileContext);
+      const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, context);
 
       if (indicativeConditionalVerified) {
         axiom = Axiom.fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels);
@@ -49,7 +49,7 @@ function verifyAxiom(axiomNode, fileContext) {
     if (axiom !== null) {
       const labelsString = labels.join(",")
 
-      fileContext.addAxiom(axiom);
+      context.addAxiom(axiom);
 
       axiomVerified = true;
 

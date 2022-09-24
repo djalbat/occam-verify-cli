@@ -1,28 +1,28 @@
 "use strict";
 
 class TemporaryContext {
-  constructor(variables, fileContext) {
+  constructor(context, variables) {
+    this.context = context;
     this.variables = variables;
-    this.fileContext = fileContext;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getVariables() {
     return this.variables;
   }
 
-  getFileContext() {
-    return this.fileContext;
-  }
+  getTypes() { return this.context.getTypes(); }
 
-  getTypes() { return this.fileContext.getTypes(); }
+  getAxioms() { return this.context.getAxioms(); }
 
-  getAxioms() { return this.fileContext.getAxioms(); }
+  getCombinators() { return this.context.getCombinators(); }
 
-  getCombinators() { return this.fileContext.getCombinators(); }
+  getConstructors() { return this.context.getConstructors(); }
 
-  getConstructors() { return this.fileContext.getConstructors(); }
-
-  findTypeByTypeName(typeName) { return this.fileContext.findTypeByTypeName(typeName); }
+  findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
 
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
@@ -32,14 +32,14 @@ class TemporaryContext {
             if (matches) {
               return true;
             }
-          }) || this.fileContext.findVariableByVariableName(variableName);  ///
+          }) || this.context.findVariableByVariableName(variableName);  ///
 
     return variable;
   }
 
-  isLabelPresent(label) { return this.fileContext.isLabelPresent(label); }
+  isLabelPresent(label) { return this.context.isLabelPresent(label); }
 
-  isTypePresentByTypeName(typeName) { return this.fileContext.isTypePresentByTypeName(typeName); }
+  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
   isVariablePresentByVariableName(variableName) {
     const variable = this.findVariableByVariableName(variableName),
@@ -52,9 +52,9 @@ class TemporaryContext {
     this.variables.push(variable);
   }
 
-  static fromFileContext(fileContext) {
+  static fromContext(context) {
     const variables = [],
-          temporaryContext = new TemporaryContext(variables, fileContext);
+          temporaryContext = new TemporaryContext(context, variables);
 
     return temporaryContext;
   }

@@ -7,10 +7,10 @@ const { nodeQuery } = require("../../utilities/query");
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
 
-function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
+function verifyConstructorDeclaration(constructorDeclarationNode, context) {
   const termNode = termNodeQuery(constructorDeclarationNode),
         typeNode = typeNodeQuery(constructorDeclarationNode),
-        termVerifiedAsConstructor = verifyTermAsConstructor(termNode, typeNode, fileContext),
+        termVerifiedAsConstructor = verifyTermAsConstructor(termNode, typeNode, context),
         constructorDeclarationVerified = termVerifiedAsConstructor; ///
 
   return constructorDeclarationVerified;

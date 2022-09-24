@@ -8,11 +8,11 @@ const { typeNameFromTypeNode } = require("../utilities/query");
 
 const { log } = loggingUtilities;
 
-function verifyType(typeNode, superTypeNode, fileContext) {
+function verifyType(typeNode, superTypeNode, context) {
   let typeVerified = false;
 
   const typeName = typeNameFromTypeNode(typeNode),
-        typePresent = fileContext.isTypePresentByTypeName(typeName);
+        typePresent = context.isTypePresentByTypeName(typeName);
 
   if (typePresent) {
     log.error(`The type '${typeName}' is already present.`);
@@ -23,13 +23,13 @@ function verifyType(typeNode, superTypeNode, fileContext) {
       const type = Type.fromTypeName(typeName),
             typeString = type.asString();
 
-      fileContext.addType(type);
+      context.addType(type);
 
       typeVerified = true;
 
       log.info(`Verified the '${typeString}' type.`);
     } else {
-      const superType = fileContext.findTypeByTypeName(superTypeName);
+      const superType = context.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
         log.error(`The super-type '${superTypeName}' is missing.`);
@@ -37,7 +37,7 @@ function verifyType(typeNode, superTypeNode, fileContext) {
         const type = Type.fromTypeNameAndSuperType(typeName, superType),
               typeString = type.asString();
 
-        fileContext.addType(type);
+        context.addType(type);
 
         typeVerified = true;
 

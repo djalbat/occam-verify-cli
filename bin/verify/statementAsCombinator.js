@@ -10,7 +10,7 @@ const { nodeAsString } = require("../utilities/node"),
 
 const { log } = loggingUtilities;
 
-function verifyStatementAsCombinator(statementNode, fileContext) {
+function verifyStatementAsCombinator(statementNode, context) {
   let statementVerifiedAsCombinator = false;
 
   const statementString = nodeAsString(statementNode);
@@ -19,7 +19,7 @@ function verifyStatementAsCombinator(statementNode, fileContext) {
 
   const nonTerminalNode = statementNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
-        childNodesVerified = verifyChildNodes(childNodes, fileContext);
+        childNodesVerified = verifyChildNodes(childNodes, context);
 
   if (childNodesVerified) {
     statementVerifiedAsCombinator = true;
@@ -28,7 +28,7 @@ function verifyStatementAsCombinator(statementNode, fileContext) {
   if (statementVerifiedAsCombinator) {
     const combinator = Combinator.fromStatementNode(statementNode);
 
-    fileContext.addCombinator(combinator);
+    context.addCombinator(combinator);
 
     const statementString = nodeAsString(statementNode);
 
@@ -40,19 +40,19 @@ function verifyStatementAsCombinator(statementNode, fileContext) {
 
 module.exports = verifyStatementAsCombinator;
 
-function verifyNode(node, fileContext) {
+function verifyNode(node, context) {
   let nodeVerified;
 
   const nodeTerminalNode = node.isTerminalNode();
 
   if (nodeTerminalNode) {
     const terminalNode = node,  ///
-          terminalNodeVerified = verifyTerminalNode(terminalNode, fileContext);
+          terminalNodeVerified = verifyTerminalNode(terminalNode, context);
 
     nodeVerified = terminalNodeVerified;  ///
   } else {
     const nonTerminalNode = node, ///
-          nonTerminalNodeVerified = verifyNonTerminalNode(nonTerminalNode, fileContext);
+          nonTerminalNodeVerified = verifyNonTerminalNode(nonTerminalNode, context);
 
     nodeVerified = nonTerminalNodeVerified; ///
   }
@@ -60,10 +60,10 @@ function verifyNode(node, fileContext) {
   return nodeVerified;
 }
 
-function verifyChildNodes(childNodes, fileContext) {
+function verifyChildNodes(childNodes, context) {
   const childNodesVerified = childNodes.every((childNode) => {
     const node = childNode, ///
-          nodeVerified = verifyNode(node, fileContext);
+          nodeVerified = verifyNode(node, context);
 
     if (nodeVerified) {
       return true;
@@ -73,13 +73,13 @@ function verifyChildNodes(childNodes, fileContext) {
   return childNodesVerified;
 }
 
-function verifyTerminalNode(terminalNode, fileContext) {
+function verifyTerminalNode(terminalNode, context) {
   const terminalNodeVerified = true;
 
   return terminalNodeVerified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, fileContext) {
+function verifyNonTerminalNode(nonTerminalNode, context) {
   let nonTerminalNodeVerified;
 
   const ruleName = nonTerminalNode.getRuleName();
@@ -87,7 +87,7 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
   switch (ruleName) {
     case TYPE_RULE_NAME: {
       const typeNode = nonTerminalNode, ///
-            typeNodeVerified = verifyTypeNode(typeNode, fileContext);
+            typeNodeVerified = verifyTypeNode(typeNode, context);
 
       nonTerminalNodeVerified = typeNodeVerified; ///
 
@@ -96,7 +96,7 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 
     case TERM_RULE_NAME: {
       const termNode = nonTerminalNode, ///
-            termNodeVerified = verifyTermNode(termNode, fileContext);
+            termNodeVerified = verifyTermNode(termNode, context);
 
       nonTerminalNodeVerified = termNodeVerified; ///
 
@@ -105,7 +105,7 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 
     default: {
       const childNodes = nonTerminalNode.getChildNodes(),
-            childNodesVerified = verifyChildNodes(childNodes, fileContext);
+            childNodesVerified = verifyChildNodes(childNodes, context);
 
       nonTerminalNodeVerified = childNodesVerified; ///
 
@@ -116,11 +116,11 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
   return nonTerminalNodeVerified;
 }
 
-function verifyTypeNode(typeNode, fileContext) {
+function verifyTypeNode(typeNode, context) {
   let typeNodeVerified = false;
 
   const typeName = typeNameFromTypeNode(typeNode),
-        typePresent = fileContext.isTypePresentByTypeName(typeName);
+        typePresent = context.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
     log.error(`The type '${typeName}' is missing.`);
@@ -131,7 +131,7 @@ function verifyTypeNode(typeNode, fileContext) {
   return typeNodeVerified;
 }
 
-function verifyTermNode(termNode, fileContext) {
+function verifyTermNode(termNode, context) {
   let termNodeVerified = false;
 
   debugger

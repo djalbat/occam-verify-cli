@@ -8,11 +8,11 @@ const { typeNameFromTypeNode, variableNameFromVariableNode } = require("../utili
 
 const { log } = loggingUtilities;
 
-function verifyVariable(variableNode, typeNode, fileContext) {
+function verifyVariable(variableNode, typeNode, context) {
   let variableVerified = false;
 
   const variableName = variableNameFromVariableNode(variableNode),
-        variablePresent = fileContext.isVariablePresentByVariableName(variableName);
+        variablePresent = context.isVariablePresentByVariableName(variableName);
 
   if (variablePresent) {
     log.error(`The variable '${variableName}' is already present.`);
@@ -27,7 +27,7 @@ function verifyVariable(variableNode, typeNode, fileContext) {
 
       variable = Variable.fromNameAndType(name, type);
     } else {
-      const type = fileContext.findTypeByTypeName(typeName);
+      const type = context.findTypeByTypeName(typeName);
 
       if (type === null) {
         log.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
@@ -41,7 +41,7 @@ function verifyVariable(variableNode, typeNode, fileContext) {
     if (variable !== null) {
       const variableString = variable.asString();
 
-      fileContext.addVariable(variable);
+      context.addVariable(variable);
 
       variableVerified = true;
 

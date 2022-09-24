@@ -6,9 +6,9 @@ const { nodeQuery } = require("../../utilities/query");
 
 const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
-function verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext) {
+function verifyCombinatorDeclaration(combinatorDeclarationNode, context) {
   const statementNode = statementNodeQuery(combinatorDeclarationNode),
-        statementVerifiedAsCombinator = verifyStatementAsCombinator(statementNode, fileContext),
+        statementVerifiedAsCombinator = verifyStatementAsCombinator(statementNode, context),
         combinatorDeclarationVerified = statementVerifiedAsCombinator; ///
 
   return combinatorDeclarationVerified;

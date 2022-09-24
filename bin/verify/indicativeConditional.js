@@ -14,12 +14,13 @@ const qualifiedStatementNodeQuery = nodeQuery("/indicativeConditional/qualifiedS
 
 const { log } = loggingUtilities;
 
-function verifyIndicativeConditional(indicativeConditionalNode, fileContext) {
+function verifyIndicativeConditional(indicativeConditionalNode, context) {
   let indicativeConditionalVerified;
 
-  const temporaryContext = TemporaryContext.fromFileContext(fileContext),
-        supposition = true,
-        context = temporaryContext; ///
+  const temporaryContext = TemporaryContext.fromContext(context),
+        supposition = true;
+
+  context = temporaryContext; ///
 
   const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(indicativeConditionalNode),
         unqualifiedStatementsVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
@@ -36,7 +37,7 @@ function verifyIndicativeConditional(indicativeConditionalNode, fileContext) {
   if (!qualifiedStatementVerified || !unqualifiedStatementsVerified) {
     const indicativeConditionalString = nodeAsString(indicativeConditionalNode);
 
-    log.error(`The indicative conditional '${indicativeConditionalString}' cannot be verified because its antecedents or consequents cannot be verified.`);
+    log.error(`The indicative conditional '${indicativeConditionalString}' cannot be verified because one of its antecedents or its consequent cannot be verified.`);
 
     indicativeConditionalVerified = false;
   } else {

@@ -14,7 +14,7 @@ const axiomNodeQuery = nodeQuery("/topLevelInstruction/axiom!"),
       combinatorDeclarationNodeQuery = nodeQuery("/topLevelInstruction/combinatorDeclaration!"),
       constructorDeclarationNodeQuery = nodeQuery("/topLevelInstruction/constructorDeclaration!");
 
-function verifyTopLevelInstruction(topLevelInstructionNode, fileContext) {
+function verifyTopLevelInstruction(topLevelInstructionNode, context) {
   let topLevelInstructionVerified = false;
 
   const node = topLevelInstructionNode, ///
@@ -27,23 +27,23 @@ function verifyTopLevelInstruction(topLevelInstructionNode, fileContext) {
   if (false) {
     ///
   } else if (axiomNode !== null) {
-    const axiomVerified = verifyAxiom(axiomNode, fileContext);
+    const axiomVerified = verifyAxiom(axiomNode, context);
 
     topLevelInstructionVerified = axiomVerified;  ///
   } else if (typeDeclarationNode !== null) {
-    const typeDeclarationVerified = verifyTypeDeclaration(typeDeclarationNode, fileContext);
+    const typeDeclarationVerified = verifyTypeDeclaration(typeDeclarationNode, context);
 
     topLevelInstructionVerified = typeDeclarationVerified;  ///
   } else if (variableDeclarationNode !== null) {
-    const variableDeclarationVerified = verifyVariableDeclaration(variableDeclarationNode, fileContext);
+    const variableDeclarationVerified = verifyVariableDeclaration(variableDeclarationNode, context);
 
     topLevelInstructionVerified = variableDeclarationVerified;  ///
   } else if (combinatorDeclarationNode !== null) {
-    const combinatorDeclarationVerified = verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext);
+    const combinatorDeclarationVerified = verifyCombinatorDeclaration(combinatorDeclarationNode, context);
 
     topLevelInstructionVerified = combinatorDeclarationVerified;  ///
   } else if (constructorDeclarationNode !== null) {
-    const constructorDeclarationVerified = verifyConstructorDeclaration(constructorDeclarationNode, fileContext);
+    const constructorDeclarationVerified = verifyConstructorDeclaration(constructorDeclarationNode, context);
 
     topLevelInstructionVerified = constructorDeclarationVerified;  ///
   }
