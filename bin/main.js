@@ -1,24 +1,26 @@
 "use strict";
 
-const { arrayUtilities } = require("necessary");
+const { arrayUtilities, loggingUtilities } = require("necessary");
 
-const log = require("./log"),
-      verifyFile = require("./verify/file"),
-      verifyPackage = require("./verify/package");
+const verifyPackage = require("./verify/package"),
+      loadPackageContexts = require("./loadPackageContexts"),
+      FileSystemPackageContext = require("./context/package/fileSystem");
 
-const { first } = arrayUtilities;
+const { log } = loggingUtilities,
+      { first } = arrayUtilities;
 
 function main(commands, options) {
   const firstCommand = first(commands),
-        { logLevel = null, filePath, packageName = firstCommand } = options; ///
+        { logLevel = null, packageName = firstCommand } = options; ///
 
   if (logLevel !== null) {
     log.setLogLevel(logLevel);
   }
 
-  (packageName !== undefined) ?
-    verifyPackage(packageName) :
-      verifyFile(filePath);
+  const PackageContext = FileSystemPackageContext,  ///
+        packageContextMap = loadPackageContexts(packageName, PackageContext);
+
+  verifyPackage(packageName, packageContextMap);
 }
 
 module.exports = main;

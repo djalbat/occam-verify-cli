@@ -1,11 +1,14 @@
 "use strict";
 
-const log = require("../log"),
-      Combinator = require("../combinator");
+const { loggingUtilities } = require("necessary");
+
+const Combinator = require("../combinator");
 
 const { nodeAsString } = require("../utilities/node"),
       { typeNameFromTypeNode } = require("../utilities/query"),
       { TERM_RULE_NAME, TYPE_RULE_NAME } = require("../ruleNames");
+
+const { log } = loggingUtilities;
 
 function verifyStatementAsCombinator(statementNode, fileContext) {
   let statementVerifiedAsCombinator = false;

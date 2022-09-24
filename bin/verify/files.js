@@ -2,13 +2,10 @@
 
 const verifyFile = require("../verify/file");
 
-const { filePathsFromPackageName } = require("../utilities/package");
-
 function verifyFiles(packageContext) {
   let filesVerified = false;
 
-  const packageName = packageContext.getPackageName(),
-        filePaths = filePathsFromPackageName(packageName);
+  const filePaths = packageContext.getFilePaths();
 
   for (;;) {
     const filePathsLength = filePaths.length;

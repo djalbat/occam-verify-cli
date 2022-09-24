@@ -1,19 +1,20 @@
 "use strict";
 
-const { arrayUtilities } = require("necessary");
+const { arrayUtilities } = require("necessary"),
+      { CustomGrammar, lexersUtilities, parsersUtilities, CombinedCustomGrammar } = require("occam-custom-grammars");
 
-const { combinedCustomGrammarFromPackageNames } = require("../utilities/package"),
-      { florenceLexerFromNothing, florenceParserFromNothing, florenceLexerFromCombinedCustomGrammar, florenceParserFromCombinedCustomGrammar } = require("../utilities/grammar");
-
-const { push } = arrayUtilities;
+const { push } = arrayUtilities,
+      { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
+      { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 class PackageContext {
-  constructor(packageName, fileContexts, florenceLexer, florenceParser, packageContexts) {
+  constructor(packageName, fileContexts, florenceLexer, florenceParser, packageContexts, packageVerified) {
     this.packageName = packageName;
     this.fileContexts = fileContexts;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
     this.packageContexts = packageContexts;
+    this.packageVerified = packageVerified;
   }
 
   getPackageName() {
@@ -34,6 +35,10 @@ class PackageContext {
 
   getPackageContexts() {
     return this.packageContexts;
+  }
+
+  isPackageVerified() {
+    return this.packageVerified;
   }
 
   getTypes(packageNames = []) {
@@ -136,6 +141,19 @@ class PackageContext {
     return constructors;
   }
 
+  getCustomGrammar() {
+    const name = this.packageName, ///
+          termBNF = this.getTermBNF(),
+          statementBNF = this.getStatementBNF(),
+          metastatementBNF = this.getMetastatementBNF(),
+          typePattern = this.getTypePattern(),
+          symbolPattern = this.getSymbolPattern(),
+          operatorPattern = this.getOperatorPattern(),
+          customGrammar = new CustomGrammar(name, termBNF, statementBNF, metastatementBNF, typePattern, symbolPattern, operatorPattern);
+
+    return customGrammar;
+  }
+
   addFileContext(fileContext) {
     this.fileContexts.push(fileContext);
   }
@@ -144,42 +162,31 @@ class PackageContext {
 
   parse(tokens) { return this.florenceParser.parse(tokens); }
 
-  static fromNothing() {
-    const packageName = null,
-          fileContexts = [],
-          florenceLexer = florenceLexerFromNothing(),
-          florenceParser = florenceParserFromNothing(),
-          dependencyPackageContexts = [],
-          packageContext = new PackageContext(packageName, fileContexts, florenceLexer, florenceParser, dependencyPackageContexts);
+  initialise(dependencyPackageContexts) {
+    const packageContext = this,  ///
+          packageContexts = [ packageContext, ...dependencyPackageContexts ],
+          customGrammars = packageContexts.map((packageContext) => {
+            const customGrammar = packageContext.getCustomGrammar();
 
-    return packageContext;
+            return customGrammar;
+          }),
+          combinedCustomGrammar = CombinedCustomGrammar.fromCustomGrammars(customGrammars);
+
+    this.florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
+
+    this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
   }
 
-  static fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts) {
-    const combinedCustomGrammar = combinedCustomGrammarFromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts),
-          fileContexts = [],
-          florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
-          florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar),
-          packageContexts = dependencyPackageContexts,  ///
-          packageContext = new PackageContext(packageName, fileContexts, florenceLexer, florenceParser, packageContexts);
+  static fromPackageName(Class, packageName) {
+    const fileContexts = [],
+          florenceLexer = null,
+          florenceParser = null,
+          packageContexts = [],
+          packageVerified = false,
+          packageContext = new Class(packageName, fileContexts, florenceLexer, florenceParser, packageContexts, packageVerified);
 
     return packageContext;
   }
 }
 
 module.exports = PackageContext;
-
-function combinedCustomGrammarFromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts) {
-  const packageContexts = dependencyPackageContexts,  ///
-        packageNames = packageContexts.map((packageContext) => {
-          const packageName = packageContext.getPackageName();
-
-          return packageName;
-        });
-
-  packageNames.push(packageName);
-
-  const combinedCustomGrammar = combinedCustomGrammarFromPackageNames(packageNames);
-
-  return combinedCustomGrammar;
-}

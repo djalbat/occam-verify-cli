@@ -1,10 +1,12 @@
 "use strict";
 
-const log = require("../log");
+const { loggingUtilities } = require("necessary");
 
 const { nodeQuery, variableNameFromVariableNode} = require("../utilities/query");
 
 const variableNodeQuery = nodeQuery("/term/variable!");
+
+const { log } = loggingUtilities;
 
 function verifyTermAsVariable(termNode, types, supposition, context) {
   let termVerifiedAsVariable = false;

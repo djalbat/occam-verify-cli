@@ -1,50 +1,37 @@
 "use strict";
 
-const { arrayUtilities } = require("necessary");
+const { loggingUtilities } = require("necessary");
 
-const log = require("../log"),
-      verifyFiles = require("../verify/files"),
-      PackageContext = require("../context/package");
+const verifyFiles = require("../verify/files");
 
-const { findDependencyPackageContext, dependencyPackageNamesFromPackageName } = require("../utilities/package");
+const { log } = loggingUtilities;
 
-const { first } = arrayUtilities;
+function verifyPackage(packageName, packageContextMap, packageContexts = []) {
+  const packageContext = packageContextMap[packageName];
 
-function verifyPackage(packageName, packageContexts = [], dependentPackageNames = []) {
-  let packageVerified = false;
+  let packageVerified = packageContext.isPackageVerified();
 
-  log.debug(`Verifying the '${packageName}' package...`);
+  if (!packageVerified) {
+    log.debug(`Verifying the '${packageName}' package...`);
 
-  const cyclicDependencyExists = checkCyclicDependencyExists(packageName, dependentPackageNames);
+    const dependencyPackageNames = packageContext.getDependencyPackageNames(),
+          dependencyPackagesVVerified = dependencyPackageNames.every((dependencyPackageName) => {
+            const packageName = dependencyPackageName,  ///
+                  packageVerified = verifyPackage(packageName, packageContextMap, packageContexts);
 
-  if (!cyclicDependencyExists) {
-    dependentPackageNames = [ ...dependentPackageNames, packageName ];  ///
-
-    const dependencyPackageNames = dependencyPackageNamesFromPackageName(packageName),
-          dependencyPackagesVerified = dependencyPackageNames.every((dependencyPackageName) => {
-            const dependencyPackageContext = findDependencyPackageContext(dependencyPackageName, packageContexts),
-                  dependencyPackageVerified = (dependencyPackageContext === null) ?
-                                                 verifyPackage(dependencyPackageName, packageContexts, dependentPackageNames) :
-                                                   true;
-
-            if (dependencyPackageVerified) {
+            if (packageVerified) {
               return true;
             }
           });
 
-    if (dependencyPackagesVerified) {
-      const dependencyPackageContexts = retrieveDependencyPackageContexts(dependencyPackageNames, packageContexts);
+    if (dependencyPackagesVVerified) {
+      const dependencyPackageContexts = retrieveDependencyPackageContexts(dependencyPackageNames, packageContextMap);
 
-      dependencyPackageContexts.sort((dependencyPackageContextA, dependencyPackageContextB) => {
-        const indexA = packageContexts.indexOf(dependencyPackageContextA),
-              indexB = packageContexts.indexOf(dependencyPackageContextB),
-              difference = (indexB - indexA);
+      sortDependencyPackageContexts(dependencyPackageContexts, packageContexts);
 
-        return difference;
-      });
+      packageContext.initialise(dependencyPackageContexts);
 
-      const packageContext = PackageContext.fromPackageNameAndDependencyPackageContexts(packageName, dependencyPackageContexts),
-            filesVerified = verifyFiles(packageContext);
+      const filesVerified = verifyFiles(packageContext);
 
       packageVerified = filesVerified;  ///
 
@@ -61,32 +48,27 @@ function verifyPackage(packageName, packageContexts = [], dependentPackageNames 
 
 module.exports = verifyPackage;
 
-function retrieveDependencyPackageContexts(dependencyPackageNames, packageContexts, dependencyPackageContexts = []) {
+function sortDependencyPackageContexts(dependencyPackageContexts, packageContexts) {
+  dependencyPackageContexts.sort((dependencyPackageContextA, dependencyPackageContextB) => {
+    const indexA = packageContexts.indexOf(dependencyPackageContextA),
+          indexB = packageContexts.indexOf(dependencyPackageContextB),
+          difference = (indexB - indexA);
+
+    return difference;
+  });
+}
+
+function retrieveDependencyPackageContexts(dependencyPackageNames, packageContextMap, dependencyPackageContexts = []) {
   dependencyPackageNames.forEach((dependencyPackageName) => {
-    const dependencyPackageContext = findDependencyPackageContext(dependencyPackageName, packageContexts),
+    const dependencyPackageContext = packageContextMap[dependencyPackageName],
           dependencyPackageContextsIncludesDependencyPackageContext = dependencyPackageContexts.includes(dependencyPackageContext);
 
     if (!dependencyPackageContextsIncludesDependencyPackageContext) {
       dependencyPackageContexts.push(dependencyPackageContext);
 
-      retrieveDependencyPackageContexts(dependencyPackageNames, packageContexts, dependencyPackageContexts);
+      retrieveDependencyPackageContexts(dependencyPackageNames, packageContextMap, dependencyPackageContexts);
     }
   });
 
   return dependencyPackageContexts;
-}
-
-function checkCyclicDependencyExists(packageName, dependentPackageNames) {
-  const dependentPackageNamesIncludesPackageName = dependentPackageNames.includes(packageName),
-        cyclicDependencyExists = dependentPackageNamesIncludesPackageName;  ///
-
-  if (cyclicDependencyExists) {
-    const firstDependentPackageName = first(dependentPackageNames),
-          packageNames = dependentPackageNames.concat(firstDependentPackageName),
-          packageNamesString = packageNames.join(`' -> '`);
-
-    log.error(`There is a cyclic dependency: '${packageNamesString}'.`);
-  }
-
-  return cyclicDependencyExists;
 }

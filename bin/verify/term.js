@@ -1,10 +1,13 @@
 "use strict";
 
-const log = require("../log"),
-      verifyTermAsVariable = require("../verify/termAsVariable"),
+const { loggingUtilities } = require("necessary");
+
+const verifyTermAsVariable = require("../verify/termAsVariable"),
       verifyTermAgainstConstructors = require("../verify/termAgainstConstructors");
 
 const { nodeAsString } = require("../utilities/node");
+
+const { log } = loggingUtilities;
 
 function verifyTerm(termNode, types, supposition, context) {
   let termVerified = false;

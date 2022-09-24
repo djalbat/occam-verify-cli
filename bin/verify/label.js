@@ -1,8 +1,10 @@
 "use strict";
 
-const log = require("../log");
+const { loggingUtilities } = require("necessary");
 
 const { labelNameFromLabelNode } = require("../utilities/query");
+
+const { log } = loggingUtilities;
 
 function verifyLabel(labelNode, labels, fileContext) {
   let labelVerified = false;

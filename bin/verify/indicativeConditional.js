@@ -1,7 +1,8 @@
 "use strict";
 
-const log = require("../log"),
-      TemporaryContext = require("../context/temporary"),
+const { loggingUtilities } = require("necessary");
+
+const TemporaryContext = require("../context/temporary"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
@@ -10,6 +11,8 @@ const { nodeQuery, nodesQuery } = require("../utilities/query");
 
 const qualifiedStatementNodeQuery = nodeQuery("/indicativeConditional/qualifiedStatement!"),
       unqualifiedStatementNodesQuery = nodesQuery("/indicativeConditional/unqualifiedStatement");
+
+const { log } = loggingUtilities;
 
 function verifyIndicativeConditional(indicativeConditionalNode, fileContext) {
   let indicativeConditionalVerified;

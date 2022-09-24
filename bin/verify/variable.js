@@ -1,9 +1,12 @@
 "use strict";
 
-const log = require("../log"),
-      Variable = require("../variable");
+const { loggingUtilities } = require("necessary");
+
+const Variable = require("../variable");
 
 const { typeNameFromTypeNode, variableNameFromVariableNode } = require("../utilities/query");
+
+const { log } = loggingUtilities;
 
 function verifyVariable(variableNode, typeNode, fileContext) {
   let variableVerified = false;

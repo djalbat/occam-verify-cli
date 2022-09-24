@@ -1,9 +1,12 @@
 "use strict";
 
-const log = require("../log"),
-      Type = require("../type");
+const { loggingUtilities } = require("necessary");
+
+const Type = require("../type");
 
 const { typeNameFromTypeNode } = require("../utilities/query");
+
+const { log } = loggingUtilities;
 
 function verifyType(typeNode, superTypeNode, fileContext) {
   let typeVerified = false;

@@ -1,12 +1,15 @@
 "use strict";
 
-const log = require("../log"),
-      Axiom = require("../axiom"),
+const { loggingUtilities } = require("necessary");
+
+const Axiom = require("../axiom"),
       verifyLabels = require("../verify/labels"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement"),
       verifyIndicativeConditional = require("../verify/indicativeConditional");
 
 const { nodeQuery, nodesQuery } = require("../utilities/query");
+
+const { log } = loggingUtilities;
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
       unqualifiedStatementNodeQuery = nodeQuery("/axiom/unqualifiedStatement!"),

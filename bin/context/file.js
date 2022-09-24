@@ -1,10 +1,9 @@
 "use strict";
 
 const { rewriteNodes } = require("occam-grammar-utilities"),
-      { arrayUtilities, fileSystemUtilities } = require("necessary");
+      { arrayUtilities } = require("necessary");
 
-const { push } = arrayUtilities,
-      { readFile } = fileSystemUtilities;
+const { push } = arrayUtilities;
 
 class FileContext {
   constructor(tokens, node, types, axioms, variables, combinators, constructors, packageContext) {
@@ -172,7 +171,7 @@ class FileContext {
   }
 
   static fromPackageContextAndFilePath(packageContext, filePath) {
-    const fileContent = readFile(filePath),
+    const fileContent = packageContext.getFileContent(filePath),
           content = fileContent,  ///
           tokens = packageContext.tokenise(content),
           node = packageContext.parse(tokens);

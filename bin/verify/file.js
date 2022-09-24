@@ -1,11 +1,14 @@
 "use strict";
 
-const log = require("../log"),
-      FileContext = require("../context/file"),
+const { loggingUtilities } = require("necessary");
+
+const FileContext = require("../context/file"),
       PackageContext = require("../context/package"),
       verifyTopLevelInstruction = require("../verify/topLevelInstruction");
 
 const { nodesQuery } = require("../utilities/query");
+
+const { log } = loggingUtilities;
 
 const topLevelInstructionNodesQuery = nodesQuery("/document/topLevelInstruction");
 

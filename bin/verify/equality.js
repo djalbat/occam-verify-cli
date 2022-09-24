@@ -2,8 +2,7 @@
 
 const { arrayUtilities } = require("necessary");
 
-const log = require("../log"),
-      verifyTerm = require("../verify/term");
+const verifyTerm = require("../verify/term");
 
 const { nodeQuery } = require("../utilities/query");
 

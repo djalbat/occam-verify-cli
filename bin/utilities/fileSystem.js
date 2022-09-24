@@ -3,11 +3,7 @@
 const { Query } = require("occam-dom"),
       { filePathUtilities } = require("occam-open-cli"),
       { fileSystemUtilities } = require("necessary"),
-      { CombinedCustomGrammar } = require("occam-custom-grammars"),
       { MetaJSONLexer, MetaJSONParser } = require("occam-grammars");
-
-const { trimDoubleQuotes } = require("../utilities/content"),
-      { customGrammarFromDirectoryName } = require("../utilities/customGrammar");
 
 const { isFilePathFlorenceFilePath } = filePathUtilities,
       { checkFileExists, readFile, readDirectory } = fileSystemUtilities;
@@ -41,18 +37,6 @@ function filePathsFromPackageName(packageName) {
   return filePaths;
 }
 
-function findDependencyPackageContext(dependencyPackageName, packageContexts) {
-  const packageContext = packageContexts.find((packageContext) => {
-    const packageName = packageContext.getPackageName();
-
-    if (packageName === dependencyPackageName) {
-      return true;
-    }
-  }) || null;
-
-  return packageContext;
-}
-
 function dependencyPackageNamesFromPackageName(packageName) {
   let dependencyPackageNames = [];
 
@@ -78,21 +62,9 @@ function dependencyPackageNamesFromPackageName(packageName) {
   return dependencyPackageNames;
 }
 
-function combinedCustomGrammarFromPackageNames(packageNames) {
-  const customGrammars = packageNames.map((packageName) => {
-          const directoryName = packageName,  ///
-                customGrammar = customGrammarFromDirectoryName(directoryName);
-
-          return customGrammar;
-        }),
-        combinedCustomGrammar = CombinedCustomGrammar.fromCustomGrammars(customGrammars);
-
-  return combinedCustomGrammar;
-}
-
 module.exports = {
   filePathsFromPackageName,
-  findDependencyPackageContext,
-  dependencyPackageNamesFromPackageName,
-  combinedCustomGrammarFromPackageNames
+  dependencyPackageNamesFromPackageName
 };
+
+function trimDoubleQuotes(content) { return content.replace(/(^"|"$)/g, ""); } ///
