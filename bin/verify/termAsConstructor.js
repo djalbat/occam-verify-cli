@@ -1,17 +1,25 @@
 "use strict";
 
-const { loggingUtilities } = require("necessary");
+const { arrayUtilities, loggingUtilities } = require("necessary");
 
-const Constructor = require("../constructor");
+const verifyTerm = require("../verify/term"),
+      Constructor = require("../constructor");
 
 const { nodeAsString } = require("../utilities/node"),
-      { typeNameFromTypeNode } = require("../utilities/query"),
-      { TYPE_RULE_NAME, TERM_RULE_NAME } = require("../ruleNames");
+      { nodeQuery, typeNameFromTypeNode } = require("../utilities/query"),
+      { TERM_RULE_NAME, ARGUMENT_RULE_NAME } = require("../ruleNames");
 
-const { log } = loggingUtilities;
+const { log } = loggingUtilities,
+      { first } = arrayUtilities;
+
+const typeNodeQuery = nodeQuery("/argument/type");
 
 function verifyTermAsConstructor(termNode, typeNode, fileContext) {
   let termVerifiedAsConstructor = false;
+
+  const termString = nodeAsString(termNode);
+
+  log.debug(`Verifying the ${termString} term as a constructor...`);
 
   const nonTerminalNode = termNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
@@ -30,9 +38,9 @@ function verifyTermAsConstructor(termNode, typeNode, fileContext) {
       if (type !== null) {
         termVerifiedAsConstructor = true;
       } else {
-        const termNodeString = nodeAsString(termNode);
+        const termString = nodeAsString(termNode);
 
-        log.error(`The '${termNodeString}' constructor's '${typeName}' type is missing.`);
+        log.error(`The '${termString}' constructor's '${typeName}' type is missing.`);
       }
     }
   }
@@ -42,9 +50,9 @@ function verifyTermAsConstructor(termNode, typeNode, fileContext) {
 
     fileContext.addConstructor(constructor);
 
-    const termNodeString = nodeAsString(termNode);
+    const termString = nodeAsString(termNode);
 
-    log.info(`Verified the '${termNodeString}' constructor.`);
+    log.info(`Verified the '${termString}' constructor.`);
   }
 
   return termVerifiedAsConstructor;
@@ -97,20 +105,34 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
   const ruleName = nonTerminalNode.getRuleName();
 
   switch (ruleName) {
-    case TYPE_RULE_NAME: {
-      const typeNode = nonTerminalNode, ///
-            typeNodeVerified = verifyTypeNode(typeNode, fileContext);
+    case ARGUMENT_RULE_NAME: {
+      const argumentNode = nonTerminalNode, ///
+            argumentNodeVerified = verifyArgumentNode(argumentNode, fileContext);
 
-      nonTerminalNodeVerified = typeNodeVerified; ///
+      nonTerminalNodeVerified = argumentNodeVerified; ///
 
       break;
     }
 
     case TERM_RULE_NAME: {
       const termNode = nonTerminalNode, ///
-            termNodeVerified = verifyTermNode(termNode, fileContext);
+            types = [],
+            supposition = false,
+            context = fileContext,
+            termVerified = verifyTerm(termNode, types, supposition, context);
 
-      nonTerminalNodeVerified = termNodeVerified; ///
+      if (termVerified) {
+        const firstType = first(types),
+              type = firstType; ///
+
+        if (type !== null) {
+          const termString = nodeAsString(termNode);
+
+          log.error(`The type of the constructor's compound '${termString}' term node is not null.`);
+        } else {
+          nonTerminalNodeVerified = true; ///
+        }
+      }
 
       break;
     }
@@ -128,25 +150,25 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
   return nonTerminalNodeVerified;
 }
 
-function verifyTypeNode(typeNode, fileContext) {
+function verifyArgumentNode(argumentNode, fileContext) {
   let typeNodeVerified = false;
 
-  const typeName = typeNameFromTypeNode(typeNode),
-        typePresent = fileContext.isTypePresentByTypeName(typeName);
+  const typeNode = typeNodeQuery(argumentNode);
 
-  if (!typePresent) {
-    log.error(`The type '${typeName}' is missing.`);
+  if (typeNode === null) {
+    const argumentString = nodeAsString(argumentNode);
+
+    log.error(`The ${argumentString} argument should be a type.`);
   } else {
-    typeNodeVerified = true;
+    const typeName = typeNameFromTypeNode(typeNode),
+          typePresent = fileContext.isTypePresentByTypeName(typeName);
+
+    if (!typePresent) {
+      log.error(`The type '${typeName}' is missing.`);
+    } else {
+      typeNodeVerified = true;
+    }
   }
 
   return typeNodeVerified;
-}
-
-function verifyTermNode(termNode, fileContext) {
-  let termNodeVerified = false;
-
-  debugger
-
-  return termNodeVerified;
 }

@@ -13,6 +13,10 @@ const { log } = loggingUtilities;
 function verifyStatementAsCombinator(statementNode, fileContext) {
   let statementVerifiedAsCombinator = false;
 
+  const statementString = nodeAsString(statementNode);
+
+  log.debug(`Verifiying the ${statementString} statement as a combinator...`);
+
   const nonTerminalNode = statementNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
         childNodesVerified = verifyChildNodes(childNodes, fileContext);
@@ -26,9 +30,9 @@ function verifyStatementAsCombinator(statementNode, fileContext) {
 
     fileContext.addCombinator(combinator);
 
-    const statementNodeString = nodeAsString(statementNode);
+    const statementString = nodeAsString(statementNode);
 
-    log.info(`Verified the '${statementNodeString}' combinator.`);
+    log.info(`Verified the '${statementString}' combinator.`);
   }
 
   return statementVerifiedAsCombinator;

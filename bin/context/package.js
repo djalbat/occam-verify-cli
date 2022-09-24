@@ -162,10 +162,14 @@ class PackageContext {
 
   parse(tokens) { return this.florenceParser.parse(tokens); }
 
-  initialise(dependencyPackageContexts) {
-    const packageContext = this,  ///
-          packageContexts = [ packageContext, ...dependencyPackageContexts ],
-          customGrammars = packageContexts.map((packageContext) => {
+  initialise(packageContexts, dependencyPackageContexts) {
+    this.packageContexts = packageContexts;
+
+    const packageContext = this;  ///
+
+    packageContexts = [ packageContext, ...dependencyPackageContexts ]; ///
+
+    const customGrammars = packageContexts.map((packageContext) => {
             const customGrammar = packageContext.getCustomGrammar();
 
             return customGrammar;

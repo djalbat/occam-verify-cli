@@ -25,11 +25,18 @@ function verifyPackage(packageName, packageContextMap, packageContexts = []) {
           });
 
     if (dependencyPackagesVVerified) {
+      const packageNames = dependencyPackageNames,  ///
+            packageContexts = packageNames.map((packageName) => {
+              const packageContext = packageContextMap[packageName];
+
+              return packageContext;
+            });
+
       const dependencyPackageContexts = retrieveDependencyPackageContexts(dependencyPackageNames, packageContextMap);
 
       sortDependencyPackageContexts(dependencyPackageContexts, packageContexts);
 
-      packageContext.initialise(dependencyPackageContexts);
+      packageContext.initialise(packageContexts, dependencyPackageContexts);
 
       const filesVerified = verifyFiles(packageContext);
 

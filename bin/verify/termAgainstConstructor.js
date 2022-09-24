@@ -3,16 +3,11 @@
 const { ARGUMENT_RULE_NAME } = require("../ruleNames");
 
 function verifyTermAgainstConstructor(termNode, constructor, context) {
-  let termVerifiedAgainstConstructor = false;
-
   const constructorTermNode = constructor.getTermNode(),
         node = termNode,  ///
         constructorNode = constructorTermNode, ///
-        nodeVerified = verifyNode(node, constructorNode, context);
-
-  if (nodeVerified) {
-    termVerifiedAgainstConstructor = true;
-  }
+        nodeVerified = verifyNode(node, constructorNode, context),
+        termVerifiedAgainstConstructor = nodeVerified;  ///
 
   return termVerifiedAgainstConstructor;
 }

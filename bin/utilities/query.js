@@ -39,7 +39,7 @@ function typeNameFromTypeNode(typeNode) {
 
   if (typeNode !== null) {
     const typeTerminalNode = typeTerminalNodeQuery(typeNode),
-        typeTerminalNodeContent = typeTerminalNode.getContent();
+          typeTerminalNodeContent = typeTerminalNode.getContent();
 
     typeName = typeTerminalNodeContent; ///
   }
@@ -49,16 +49,16 @@ function typeNameFromTypeNode(typeNode) {
 
 function labelNameFromLabelNode(labelNode) {
   const labelNameTerminalNode = labelNameTerminalNodeQuery(labelNode),
-      labelNameTerminalNodeContent = labelNameTerminalNode.getContent(),
-      labelName = labelNameTerminalNodeContent; ///
+        labelNameTerminalNodeContent = labelNameTerminalNode.getContent(),
+        labelName = labelNameTerminalNodeContent; ///
 
   return labelName;
 }
 
 function variableNameFromVariableNode(variableNode) {
   const variableNameTerminalNode = variableNameTerminalNodeQuery(variableNode),
-      variableNameTerminalNodeContent = variableNameTerminalNode.getContent(),
-      variableName = variableNameTerminalNodeContent; ///
+        variableNameTerminalNodeContent = variableNameTerminalNode.getContent(),
+        variableName = variableNameTerminalNodeContent; ///
 
   return variableName;
 }
