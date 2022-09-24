@@ -26,9 +26,9 @@ function verifyEquality(equalityNode, supposition, context) {
     const firstType = first(types),
           secondType = second(types);
 
-    debugger
-
-    equalityVerified = true;
+    if (firstType === secondType) {
+      debugger
+    }
   }
 
   return equalityVerified;
