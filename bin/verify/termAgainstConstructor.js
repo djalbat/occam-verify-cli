@@ -101,7 +101,6 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, cont
         break;
       }
     }
-
   }
 
   return nonTerminalNodeVerified;

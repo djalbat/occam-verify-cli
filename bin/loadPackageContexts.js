@@ -2,17 +2,20 @@
 
 const { arrayUtilities, loggingUtilities } = require("necessary");
 
+const FileSystemPackageContext = require("./context/package/fileSystem");
+
 const { log } = loggingUtilities,
       { first } = arrayUtilities;
 
-function loadPackageContexts(packageName, PackageContext, packageContextMap = {}, dependentPackageNames = []) {
+function loadPackageContexts(packageName, packageContextMap = {}, dependentPackageNames = []) {
   const cyclicDependencyExists = checkCyclicDependencyExists(packageName, dependentPackageNames);
 
   if (!cyclicDependencyExists) {
     const packageContext = packageContextMap[packageName] || null;
 
     if (packageContext === null) {
-      const packageContext = PackageContext.fromPackageName(packageName);
+      const fileSystemPackageContext = FileSystemPackageContext.fromPackageName(packageName),
+            packageContext = fileSystemPackageContext;  ///
 
       packageContextMap[packageName] = packageContext;
 
@@ -23,7 +26,7 @@ function loadPackageContexts(packageName, PackageContext, packageContextMap = {}
       dependencyPackageNames.forEach((dependencyPackageName) => {
         const packageName = dependencyPackageName;  ///
 
-        loadPackageContexts(packageName, PackageContext, packageContextMap, dependentPackageNames);
+        loadPackageContexts(packageName, packageContextMap, dependentPackageNames);
       });
     }
   }

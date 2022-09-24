@@ -181,13 +181,13 @@ class PackageContext {
     this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
   }
 
-  static fromPackageName(Class, packageName) {
+  static fromPackageName(Class, packageName, ...remainingArguments) {
     const fileContexts = [],
           florenceLexer = null,
           florenceParser = null,
           packageContexts = [],
           packageVerified = false,
-          packageContext = new Class(packageName, fileContexts, florenceLexer, florenceParser, packageContexts, packageVerified);
+          packageContext = new Class(packageName, fileContexts, florenceLexer, florenceParser, packageContexts, packageVerified, ...remainingArguments);
 
     return packageContext;
   }

@@ -3,8 +3,7 @@
 const { arrayUtilities, loggingUtilities } = require("necessary");
 
 const verifyPackage = require("./verify/package"),
-      loadPackageContexts = require("./loadPackageContexts"),
-      FileSystemPackageContext = require("./context/package/fileSystem");
+      loadPackageContexts = require("./loadPackageContexts");
 
 const { log } = loggingUtilities,
       { first } = arrayUtilities;
@@ -17,8 +16,7 @@ function main(commands, options) {
     log.setLogLevel(logLevel);
   }
 
-  const PackageContext = FileSystemPackageContext,  ///
-        packageContextMap = loadPackageContexts(packageName, PackageContext);
+  const packageContextMap = loadPackageContexts(packageName);
 
   verifyPackage(packageName, packageContextMap);
 }
