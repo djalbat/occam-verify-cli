@@ -128,6 +128,18 @@ class FileContext {
     return variable;
   }
 
+  isAntecedent() {
+    const antecedent = false;
+
+    return antecedent;
+  }
+
+  isConsequent() {
+    const consequent = false;
+
+    return consequent;
+  }
+
   isLabelPresent(label) {
     const labels = this.getLabels(),
           labelsIncludesLabel = labels.includes(label),

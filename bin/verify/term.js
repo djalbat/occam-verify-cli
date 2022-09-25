@@ -14,23 +14,40 @@ const { log } = loggingUtilities,
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!")
 
-function verifyTerm(termNode, types, supposition, context) {
+function verifyTerm(termNode, types, values, context) {
   let termVerified = false;
 
-  const termVerifiedAsVariable = verifyTermAsVariable(termNode, types, supposition, context);
+  const termVerifiedAsVariable = verifyTermAsVariable(termNode, types, values, context);
 
   if (termVerifiedAsVariable) {
     termVerified = true;
   } else {
-    if (supposition) {
+    const antecedent = context.isAntecedent();
+
+    if (antecedent) {
       const termString = nodeAsString(termNode);
 
-      log.error(`The ${termString} term can only be a variable in a supposition.`)
+      log.error(`The ${termString} term can only be a variable in an antecedent.`)
     } else {
       const constructors = context.getConstructors(),
-            termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, constructors, context);
+            constructor = constructors.find((constructor) => {
+              const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, context);
 
-      termVerified = termVerifiedAgainstConstructors;
+              if (termVerifiedAgainstConstructor) {
+                return true;
+              }
+            }) || null;
+
+      if (constructor !== null) {
+        const type = constructor.getType(),
+              value = termNode; ///
+
+        types.push(type);
+
+        values.push(value);
+
+        termVerified = true;
+      }
     }
   }
 
@@ -38,28 +55,6 @@ function verifyTerm(termNode, types, supposition, context) {
 }
 
 module.exports = verifyTerm;
-
-function verifyTermAgainstConstructors(termNode, types, constructors, context) {
-  let termVerifiedAgainstConstructors = false;
-
-  const constructor = constructors.find((constructor) => {
-    const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, context);
-
-    if (termVerifiedAgainstConstructor) {
-      return true;
-    }
-  }) || null;
-
-  if (constructor !== null) {
-    const type = constructor.getType();
-
-    types.push(type);
-
-    termVerifiedAgainstConstructors = true;
-  }
-
-  return termVerifiedAgainstConstructors;
-}
 
 function verifyTermAgainstConstructor(termNode, constructor, context) {
   const constructorTermNode = constructor.getTermNode(),
@@ -174,8 +169,8 @@ function verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
     log.error(`The ${argumentString} argument should be a term, not a type`);
   } else {
     const types = [],
-          supposition = false,
-          termVerified = verifyTerm(termNode, types, supposition, context);
+          values = [],
+          termVerified = verifyTerm(termNode, types, values, context);
 
     if (termVerified) {
       const firstType = first(types),

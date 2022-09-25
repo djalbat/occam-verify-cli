@@ -29,9 +29,7 @@ function verifyAxiom(axiomNode, context) {
           indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
     if (unqualifiedStatementNode !== null) {
-      const supposition = false,
-            context = context,  ///
-            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, supposition, context);
+      const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context);
 
       if (unqualifiedStatementVerified) {
         axiom = Axiom.fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels);

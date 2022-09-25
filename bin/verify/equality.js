@@ -11,23 +11,29 @@ const firstTermNodeQuery = nodeQuery("/equality/term[0]"),
 
 const { first, second } = arrayUtilities;
 
-function verifyEquality(equalityNode, supposition, context) {
-  let equalityVerified;
+function verifyEquality(equalityNode, context) {
+  let equalityVerified = false;
 
   const types = [],
+        values = [],
         firstTermNode = firstTermNodeQuery(equalityNode),
         secondTermNode = secondTermNodeQuery(equalityNode),
-        firstTermVerified = verifyTerm(firstTermNode, types, supposition, context),
-        secondTermVerified = verifyTerm(secondTermNode, types, supposition, context);
+        firstTermVerified = verifyTerm(firstTermNode, types, values, context),
+        secondTermVerified = verifyTerm(secondTermNode, types, values, context);
 
-  if (!firstTermVerified || !secondTermVerified) {
-    equalityVerified = false;
-  } else {
+  if (firstTermVerified && secondTermVerified) {
     const firstType = first(types),
           secondType = second(types);
 
     if (firstType === secondType) {
-      debugger
+      const antecedent = context.isAntecedent(),
+            consequent = context.isConsequent();
+
+      if (antecedent || consequent) {
+        equalityVerified = true;
+      } else {
+        debugger
+      }
     }
   }
 

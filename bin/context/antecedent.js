@@ -1,6 +1,6 @@
 "use strict";
 
-class TemporaryContext {
+class AntecedentContext {
   constructor(context, variables) {
     this.context = context;
     this.variables = variables;
@@ -37,6 +37,18 @@ class TemporaryContext {
     return variable;
   }
 
+  isAntecedent() {
+    const antecedent = true;
+
+    return antecedent;
+  }
+
+  isConsequent() {
+    const consequent = false;
+
+    return consequent;
+  }
+
   isLabelPresent(label) { return this.context.isLabelPresent(label); }
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
@@ -54,10 +66,10 @@ class TemporaryContext {
 
   static fromContext(context) {
     const variables = [],
-          temporaryContext = new TemporaryContext(context, variables);
+          antecedentContext = new AntecedentContext(context, variables);
 
-    return temporaryContext;
+    return antecedentContext;
   }
 }
 
-module.exports = TemporaryContext;
+module.exports = AntecedentContext;

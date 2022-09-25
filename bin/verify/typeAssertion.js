@@ -13,7 +13,7 @@ const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeNodeQuery = nodeQuery("/typeAssertion/type"),
       variableNodeQuery = nodeQuery("/typeAssertion/term/variable!");
 
-function verifyTypeAssertion(typeAssertionNode, supposition, context) {
+function verifyTypeAssertion(typeAssertionNode, context) {
   let typeAssertionVerified = false;
 
   const typeNode = typeNodeQuery(typeAssertionNode),
@@ -25,17 +25,22 @@ function verifyTypeAssertion(typeAssertionNode, supposition, context) {
   } else {
     const type = context.findTypeByTypeName(typeName),
           types = [],
+          values = [],
           termNode = termNodeQuery(typeAssertionNode),
-          termVerified = verifyTerm(termNode, types, supposition, context);
+          termVerified = verifyTerm(termNode, types, values, context);
 
     if (termVerified) {
-      if (supposition) {
+      const antecedent = context.isAntecedent();
+
+      if (antecedent) {
         const variableNode = variableNodeQuery(typeAssertionNode),
               variableName = variableNameFromVariableNode(variableNode),
               name = variableName,  ///
               variable = Variable.fromNameAndType(name, type);
 
         context.addVariable(variable);
+
+        typeAssertionVerified = true;
       } else {
         debugger
       }

@@ -13,7 +13,7 @@ const equalityNodeQuery = nodeQuery("/statement/equality!"),
 
 const { log } = loggingUtilities;
 
-function verifyStatement(statementNode, supposition, context) {
+function verifyStatement(statementNode, context) {
   let statementVerified = false;
 
   const statementString = nodeAsString(statementNode);
@@ -26,11 +26,11 @@ function verifyStatement(statementNode, supposition, context) {
   if (false) {
     ///
   } else if (equalityNode !== null) {
-    const equalityVerified = verifyEquality(equalityNode, supposition, context);
+    const equalityVerified = verifyEquality(equalityNode, context);
 
     statementVerified = equalityVerified; ///
   } else if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, supposition, context);
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, context);
 
     statementVerified = typeAssertionVerified; ///
   } else {

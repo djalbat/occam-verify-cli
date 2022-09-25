@@ -7,9 +7,8 @@ const { nodeQuery } = require("../utilities/query");
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
 
 function verifyQualifiedStatement(qualifiedStatementNode, context) {
-  const supposition = false,
-        statementNode = statementNodeQuery(qualifiedStatementNode),
-        statementVerified = verifyStatement(statementNode, supposition, context),
+  const statementNode = statementNodeQuery(qualifiedStatementNode),
+        statementVerified = verifyStatement(statementNode, context),
         qualifiedStatementVerified = statementVerified; ///
 
   return qualifiedStatementVerified;

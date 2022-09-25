@@ -2,7 +2,8 @@
 
 const { loggingUtilities } = require("necessary");
 
-const TemporaryContext = require("../context/temporary"),
+const AntecedentContext = require("../context/antecedent"),
+      ConsequentContext = require("../context/consequent"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
@@ -15,33 +16,38 @@ const qualifiedStatementNodeQuery = nodeQuery("/indicativeConditional/qualifiedS
 const { log } = loggingUtilities;
 
 function verifyIndicativeConditional(indicativeConditionalNode, context) {
-  let indicativeConditionalVerified;
+  let indicativeConditionalVerified = false;
 
-  const temporaryContext = TemporaryContext.fromContext(context),
-        supposition = true;
+  const antecedentContext = AntecedentContext.fromContext(context);
 
-  context = temporaryContext; ///
+  context = antecedentContext; ///
 
   const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(indicativeConditionalNode),
         unqualifiedStatementsVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
-          const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, supposition, context);
+          const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context);
 
           if (unqualifiedStatementVerified) {
             return true;
           }
         });
 
-  const qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode),
-        qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, context);
-
-  if (!qualifiedStatementVerified || !unqualifiedStatementsVerified) {
-    const indicativeConditionalString = nodeAsString(indicativeConditionalNode);
-
-    log.error(`The indicative conditional '${indicativeConditionalString}' cannot be verified because one of its antecedents or its consequent cannot be verified.`);
-
-    indicativeConditionalVerified = false;
+  if (!unqualifiedStatementsVerified) {
+    log.error(`The indicative conditional '${indicativeConditionalString}' cannot be verified because one of its antecedent statments cannot be verified.`);
   } else {
-    indicativeConditionalVerified = true;
+    const consequentContext = ConsequentContext.fromContext(context);
+
+    context = consequentContext;  ///
+
+    const qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode),
+          qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, context);
+
+    if (!qualifiedStatementVerified) {
+      const indicativeConditionalString = nodeAsString(indicativeConditionalNode);
+
+      log.error(`The indicative conditional '${indicativeConditionalString}' cannot be verified because the consequent statement cannot be verified.`);
+    } else {
+      indicativeConditionalVerified = true;
+    }
   }
 
   return indicativeConditionalVerified;
