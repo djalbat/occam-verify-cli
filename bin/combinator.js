@@ -1,6 +1,6 @@
 "use strict";
 
-const { nodeAsString } = require("./utilities/node");
+const { nodeAsString } = require("./utilities/string");
 
 class Combinator {
   constructor(statementNode) {

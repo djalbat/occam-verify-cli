@@ -1,38 +1,28 @@
 "use strict";
 
+const fs = require("fs");
+
 const { Query } = require("occam-dom"),
       { filePathUtilities } = require("occam-open-cli"),
       { fileSystemUtilities } = require("necessary"),
       { MetaJSONLexer, MetaJSONParser } = require("occam-grammars");
 
 const { isFilePathFlorenceFilePath } = filePathUtilities,
-      { checkFileExists, readFile, readDirectory } = fileSystemUtilities;
+      { readFile, isEntryFile, isEntryDirectory, checkFileExists } = fileSystemUtilities;
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
       dependencyStringLiteralNodesQuery = Query.fromExpression("//dependency//@string-literal");
 
 function filePathsFromPackageName(packageName) {
-  let filePaths;
-
   const directoryName = packageName,  ///
-        fileNames = readDirectory(directoryName);
+        filePaths = readFilePaths(directoryName, (filePath) => {
+          const filePathFlorenceFilePath = isFilePathFlorenceFilePath(filePath);
 
-  filePaths = fileNames.map((fileName) => {
-    const filePath = `${directoryName}/${fileName}`;
-
-    return filePath;
-  });
-
-  const florenceFilePaths = filePaths.filter((filePath) => {
-    const filePathFlorenceFilePath = isFilePathFlorenceFilePath(filePath);
-
-    if (filePathFlorenceFilePath) {
-      return true;
-    }
-  });
-
-  filePaths = florenceFilePaths;  ///
+          if (filePathFlorenceFilePath) {
+            return true;
+          }
+        });
 
   return filePaths;
 }
@@ -68,3 +58,40 @@ module.exports = {
 };
 
 function trimDoubleQuotes(content) { return content.replace(/(^"|"$)/g, ""); } ///
+
+function readFilePaths(directoryPath, test, filePaths = []) {
+  const subEntryNames = fs.readdirSync(directoryPath);
+
+  subEntryNames.forEach((subEntryName) => {
+    const subEntryNameHiddenName = isNameHiddenName(subEntryName);
+
+    if (!subEntryNameHiddenName) {
+      const subEntryPath = `${directoryPath}/${subEntryName}`,
+            subEntryFile = isEntryFile(subEntryPath),
+            subEntryDirectory = isEntryDirectory(subEntryPath);
+
+      if (subEntryFile) {
+        const filePath = subEntryPath,  ///
+              pass = test(filePath);
+
+        if (pass) {
+          filePaths.push(filePath);
+        }
+      }
+
+      if (subEntryDirectory) {
+        const subDirectoryPath = subEntryPath;  ///
+
+        readFilePaths(subDirectoryPath, test, filePaths);
+      }
+    }
+  });
+
+  return filePaths;
+}
+
+function isNameHiddenName(name) {
+  const nameHiddenName = /^\..+/.test(name);
+
+  return nameHiddenName;
+}

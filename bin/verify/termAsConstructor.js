@@ -5,7 +5,7 @@ const { arrayUtilities, loggingUtilities } = require("necessary");
 const verifyTerm = require("../verify/term"),
       Constructor = require("../constructor");
 
-const { nodeAsString } = require("../utilities/node"),
+const { nodeAsString } = require("../utilities/string"),
       { nodeQuery, typeNameFromTypeNode } = require("../utilities/query"),
       { TERM_RULE_NAME, ARGUMENT_RULE_NAME } = require("../ruleNames");
 

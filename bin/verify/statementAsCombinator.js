@@ -4,7 +4,7 @@ const { loggingUtilities } = require("necessary");
 
 const Combinator = require("../combinator");
 
-const { nodeAsString } = require("../utilities/node"),
+const { nodeAsString } = require("../utilities/string"),
       { typeNameFromTypeNode } = require("../utilities/query"),
       { TERM_RULE_NAME, TYPE_RULE_NAME } = require("../ruleNames");
 

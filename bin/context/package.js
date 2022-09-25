@@ -41,6 +41,31 @@ class PackageContext {
     return this.packageVerified;
   }
 
+  getRules(packageNames = []) {
+    const rules = [],
+          packageNamesIncludesPackageName = packageNames.includes(this.packageName);
+
+    if (!packageNamesIncludesPackageName) {
+      packageNames.push(this.packageName);
+
+      const bubble = false;
+
+      this.fileContexts.forEach((fileContext) => {
+        const fileContextRules = fileContext.getRules(bubble);
+
+        push(rules, fileContextRules);
+      });
+
+      this.packageContexts.forEach((packageContext) => {
+        const packageContextRules = packageContext.getRules(packageNames);
+
+        push(rules, packageContextRules);
+      });
+    }
+
+    return rules;
+  }
+
   getTypes(packageNames = []) {
     const types = [],
           packageNamesIncludesPackageName = packageNames.includes(this.packageName);

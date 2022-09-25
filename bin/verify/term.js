@@ -4,7 +4,7 @@ const { arrayUtilities, loggingUtilities } = require("necessary/lib/main");
 
 const verifyTermAsVariable = require("../verify/termAsVariable");
 
-const { nodeAsString } = require("../utilities/node"),
+const { nodeAsString } = require("../utilities/string"),
       { ARGUMENT_RULE_NAME } = require("../ruleNames"),
       { nodeQuery, typeNameFromTypeNode } = require("../utilities/query");
 

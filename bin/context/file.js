@@ -6,9 +6,10 @@ const { rewriteNodes } = require("occam-grammar-utilities"),
 const { push } = arrayUtilities;
 
 class FileContext {
-  constructor(tokens, node, types, axioms, variables, combinators, constructors, packageContext) {
+  constructor(tokens, node, rules, types, axioms, variables, combinators, constructors, packageContext) {
     this.tokens = tokens;
     this.node = node;
+    this.rules = rules;
     this.types = types;
     this.axioms = axioms;
     this.variables = variables;
@@ -23,6 +24,20 @@ class FileContext {
 
   getNode() {
     return this.node;
+  }
+
+  getRules(bubble = true) {
+    const rules = [
+      ...this.rules
+    ];
+
+    if (bubble) {
+      const packageContextRules = this.packageContext.getRules();
+
+      push(rules, packageContextRules);
+    }
+
+    return rules;
   }
 
   getTypes(bubble = true) {
@@ -190,12 +205,13 @@ class FileContext {
 
     rewriteNodes(node);
 
-    const types = [],
+    const rules = [],
+          types = [],
           axioms = [],
           variables = [],
           combinators = [],
           constructors = [],
-          fileContext = new FileContext(tokens, node, types, axioms, variables, combinators, constructors, packageContext);
+          fileContext = new FileContext(tokens, node, rules, types, axioms, variables, combinators, constructors, packageContext);
 
     return fileContext;
   }

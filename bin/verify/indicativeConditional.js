@@ -7,8 +7,8 @@ const AntecedentContext = require("../context/antecedent"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
-const { nodeAsString } = require("../utilities/node");
-const { nodeQuery, nodesQuery } = require("../utilities/query");
+const { nodeAsString } = require("../utilities/string"),
+      { nodeQuery, nodesQuery } = require("../utilities/query");
 
 const qualifiedStatementNodeQuery = nodeQuery("/indicativeConditional/qualifiedStatement!"),
       unqualifiedStatementNodesQuery = nodesQuery("/indicativeConditional/unqualifiedStatement");

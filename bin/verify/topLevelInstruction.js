@@ -2,13 +2,15 @@
 
 const { nodeQuery } = require("../utilities/query");
 
-const verifyAxiom = require("../verify/axiom"),
+const verifyRule = require("../verify/rule"),
+      verifyAxiom = require("../verify/axiom"),
       verifyTypeDeclaration = require("../verify/declaration/type"),
       verifyVariableDeclaration = require("../verify/declaration/variable"),
       verifyCombinatorDeclaration = require("../verify/declaration/combinator"),
       verifyConstructorDeclaration = require("../verify/declaration/constructor");
 
-const axiomNodeQuery = nodeQuery("/topLevelInstruction/axiom!"),
+const ruleNodeQuery = nodeQuery("/topLevelInstruction/rule!"),
+      axiomNodeQuery = nodeQuery("/topLevelInstruction/axiom!"),
       typeDeclarationNodeQuery = nodeQuery("/topLevelInstruction/typeDeclaration!"),
       variableDeclarationNodeQuery = nodeQuery("/topLevelInstruction/variableDeclaration!"),
       combinatorDeclarationNodeQuery = nodeQuery("/topLevelInstruction/combinatorDeclaration!"),
@@ -18,6 +20,7 @@ function verifyTopLevelInstruction(topLevelInstructionNode, context) {
   let topLevelInstructionVerified = false;
 
   const node = topLevelInstructionNode, ///
+        ruleNode = ruleNodeQuery(node),
         axiomNode = axiomNodeQuery(node),
         typeDeclarationNode = typeDeclarationNodeQuery(node),
         variableDeclarationNode = variableDeclarationNodeQuery(node),
@@ -26,6 +29,10 @@ function verifyTopLevelInstruction(topLevelInstructionNode, context) {
 
   if (false) {
     ///
+  } else if (ruleNode !== null) {
+    const ruleVerified = verifyRule(ruleNode, context);
+
+    topLevelInstructionVerified = ruleVerified;  ///
   } else if (axiomNode !== null) {
     const axiomVerified = verifyAxiom(axiomNode, context);
 

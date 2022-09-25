@@ -1,5 +1,7 @@
 "use strict";
 
+const { labelsAsString } = require("./utilities/string");
+
 class Axiom {
   constructor(labels, unqualifiedStatementNode, indicativeConditionalNode) {
     this.labels = labels;
@@ -20,8 +22,7 @@ class Axiom {
   }
 
   asString() {
-    const labelsString = labelsAsLabelsString(this.labels),
-          string = `${labelsString}`;
+    const string = labelsAsString(this.labels);
 
     return string;
   }
@@ -43,14 +44,3 @@ class Axiom {
 
 module.exports = Axiom;
 
-function labelsAsLabelsString(labels) {
-  const labelsString = labels.reduce((labelsString, label) => {
-    labelsString = (labelsString === null) ?
-                     `${label}` :
-                       `${labelsString},${label}`;
-
-    return labelsString;
-  }, null);
-
-  return labelsString;
-}

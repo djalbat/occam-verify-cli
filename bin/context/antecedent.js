@@ -14,6 +14,8 @@ class AntecedentContext {
     return this.variables;
   }
 
+  getRules() { return this.context.getRules(); }
+
   getTypes() { return this.context.getTypes(); }
 
   getAxioms() { return this.context.getAxioms(); }

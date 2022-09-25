@@ -9,6 +9,8 @@ class ConsequentContext {
     return this.context;
   }
 
+  getRules() { return this.context.getRules(); }
+
   getTypes() { return this.context.getTypes(); }
 
   getAxioms() { return this.context.getAxioms(); }

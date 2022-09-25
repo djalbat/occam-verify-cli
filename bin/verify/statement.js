@@ -6,7 +6,7 @@ const verifyEquality = require("../verify/equality"),
       verifyTypeAssertion = require("../verify/typeAssertion");
 
 const { nodeQuery } = require("../utilities/query"),
-      { nodeAsString } = require("../utilities/node");
+      { nodeAsString } = require("../utilities/string");
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
