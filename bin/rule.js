@@ -27,7 +27,7 @@ class Rule {
     return string;
   }
 
-  static fromPremiseMetastatementNodesConclusionMetastatementNodeAndLabels(premiseMetastatementNodes, conclusionMetastatementNode, labels) {
+  static fromPremiseUnqualifiedMetastatementNodesConclusionUnqualifiedMetastatementNodeAndLabels(premiseMetastatementNodes, conclusionMetastatementNode, labels) {
     const rule = new Rule(labels, premiseMetastatementNodes, conclusionMetastatementNode);
 
     return rule;

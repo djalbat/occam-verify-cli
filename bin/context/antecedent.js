@@ -62,6 +62,8 @@ class AntecedentContext {
     return variablePresent;
   }
 
+  addAxiom(axiom) { this.context.addAxiom(axiom); }
+
   addVariable(variable) {
     this.variables.push(variable);
   }

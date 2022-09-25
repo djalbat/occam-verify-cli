@@ -1,57 +1,20 @@
 "use strict";
 
-const { loggingUtilities } = require("necessary");
-
-const Axiom = require("../axiom"),
-      verifyLabels = require("../verify/labels"),
-      verifyUnqualifiedStatement = require("../verify/unqualifiedStatement"),
-      verifyIndicativeConditional = require("../verify/indicativeConditional");
-
-const { nodeQuery, nodesQuery } = require("../utilities/query");
-
-const { log } = loggingUtilities;
-
-const labelNodesQuery = nodesQuery("/axiom/label"),
-      unqualifiedStatementNodeQuery = nodeQuery("/axiom/unqualifiedStatement!"),
-      indicativeConditionalNodeQuery = nodeQuery("/axiom/indicativeConditional!");
+const verifyConditionalAxiom = require("../verify/conditionalAxiom"),
+      verifyUnconditionalAxiom = require("../verify/unconditionalAxiom");
 
 function verifyAxiom(axiomNode, context) {
   let axiomVerified = false;
 
-  const labels = [],
-        labelNodes = labelNodesQuery(axiomNode),
-        labelsVerified = verifyLabels(labelNodes, labels, context);
+  const unconditionalAxiomVerified = verifyUnconditionalAxiom(axiomNode, context);
 
-  if (labelsVerified) {
-    let axiom = null;
+  if (unconditionalAxiomVerified) {
+    axiomVerified = true;
+  } else {
+    const conditionalAxiomVerified = verifyConditionalAxiom(axiomNode, context);
 
-    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
-          indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
-
-    if (unqualifiedStatementNode !== null) {
-      const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context);
-
-      if (unqualifiedStatementVerified) {
-        axiom = Axiom.fromUnqualifiedStatementNodeAndLabels(unqualifiedStatementNode, labels);
-      }
-    }
-
-    if (indicativeConditionalNode !== null) {
-      const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, context);
-
-      if (indicativeConditionalVerified) {
-        axiom = Axiom.fromIndicativeConditionalNodeAndLabels(indicativeConditionalNode, labels);
-      }
-    }
-
-    if (axiom !== null) {
-      const labelsString = labels.join(",")
-
-      context.addAxiom(axiom);
-
+    if (conditionalAxiomVerified) {
       axiomVerified = true;
-
-      log.info(`Verified the '${labelsString}' axiom.`);
     }
   }
 

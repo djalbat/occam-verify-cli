@@ -28,12 +28,15 @@ function verifyRule(ruleNode, context) {
           conclusionUnqualifiedMetastatementNode = conclusionUnqualifiedMetastatementNodeQuery(ruleNode);
 
     const premiseUnqualifiedMetastatementsVerified = premiseUnqualifiedMetastatementNodes.every((premiseUnqualifiedMetastatementNode) => {
-      const premiseUnqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(premiseUnqualifiedMetastatementNode, context);
+            const premiseUnqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(premiseUnqualifiedMetastatementNode, context);
 
-      if (premiseUnqualifiedMetastatementVerified) {
-        return true;
-      }
-    });
+            if (premiseUnqualifiedMetastatementVerified) {
+              return true;
+            }
+          }),
+          conclusionUnqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(conclusionUnqualifiedMetastatementNode, context);
+
+    debugger
 
     if (rule !== null) {
       const labelsString = labels.join(",")

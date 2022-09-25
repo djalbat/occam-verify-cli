@@ -41,6 +41,8 @@ class ConsequentContext {
 
   isVariablePresentByVariableName(variableName) { return this.context.isVariablePresentByVariableName(variableName); }
 
+  addAxiom(axiom) { this.context.addAxiom(axiom); }
+
   static fromContext(context) {
     const consequentContext = new ConsequentContext(context);
 
