@@ -1,23 +1,21 @@
 "use strict";
 
-const { loggingUtilities } = require("necessary");
+const verifyMetaproofDerivation = require("../verify/metaproofDerivation");
 
-const Rule = require("../rule"),
-    verifyLabels = require("../verify/labels"),
-    verifyMetaproof = require("../verify/metaproof"),
-    verifyUnqualifiedMetastatement = require("../verify/unqualifiedMetastatement");
+const { nodeQuery } = require("../utilities/query");
 
-const { nodeQuery, nodesQuery } = require("../utilities/query"),
-    { labelsAsString, nodesAsString } = require("../utilities/string");
-
-const { log } = loggingUtilities;
-
-const metaproofDerivationQuery = nodeQuery("/metaproof/metaproof!");
+const metaproofDerivationNodeQuery = nodeQuery("/metaproof/metaproofDerivation!");
 
 function verifyMetaproof(metaproofNode, premiseMetastatementNodes, conclusionMetastatementNode, context) {
   let metaproofVerified = false;
 
-  debugger
+  const metaproofDerivationNode = metaproofDerivationNodeQuery(metaproofNode);
+
+  if (metaproofDerivationNode !== null) {
+    const metaproofDerivationVerified = verifyMetaproofDerivation(metaproofDerivationNode, premiseMetastatementNodes, conclusionMetastatementNode, context);
+
+    debugger
+  }
 
   return metaproofVerified;
 }

@@ -13,7 +13,7 @@ const { nodeQuery, nodesQuery } = require("../utilities/query"),
 const { log } = loggingUtilities;
 
 const labelNodesQuery = nodesQuery("/rule/label"),
-      metaproofNodeQuery = nodesQuery("/rule/metaproof!"),
+      metaproofNodeQuery = nodeQuery("/rule/metaproof!"),
       metastatementNodeQuery = nodeQuery("/*/metastatement"),
       premiseUnqualifiedMetastatementNodesQuery = nodesQuery("/rule/premise|premises/unqualifiedMetastatement"),
       conclusionUnqualifiedMetastatementNodeQuery = nodeQuery("/rule/conclusion/unqualifiedMetastatement!");
