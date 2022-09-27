@@ -4,6 +4,7 @@ const { loggingUtilities } = require("necessary");
 
 const Rule = require("../rule"),
       verifyLabels = require("../verify/labels"),
+      verifyMetaproof = require("../verify/metaproof"),
       verifyUnqualifiedMetastatement = require("../verify/unqualifiedMetastatement");
 
 const { nodeQuery, nodesQuery } = require("../utilities/query"),

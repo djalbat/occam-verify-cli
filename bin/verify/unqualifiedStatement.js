@@ -7,9 +7,15 @@ const { nodeQuery } = require("../utilities/query");
 const statementNodeQuery = nodeQuery("/*/statement!");
 
 function verifyUnqualifiedStatement(unqualifiedStatementNode, context) {
-  const statementNode = statementNodeQuery(unqualifiedStatementNode),
-        statementVerified = verifyStatement(statementNode, context),
-        unqualifiedStatementVerified = statementVerified; ///
+  let unqualifiedStatementVerified = false;
+
+  const statementNode = statementNodeQuery(unqualifiedStatementNode);
+
+  if (statementNode !== null) {
+    const statementVerified = verifyStatement(statementNode, context);
+
+    unqualifiedStatementVerified = statementVerified; ///
+  }
 
   return unqualifiedStatementVerified;
 }
