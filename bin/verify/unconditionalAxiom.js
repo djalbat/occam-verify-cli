@@ -6,7 +6,8 @@ const Axiom = require("../axiom"),
       verifyLabels = require("../verify/labels"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
-const { nodeQuery, nodesQuery } = require("../utilities/query");
+const { labelsAsString } = require("../utilities/string"),
+      { nodeQuery, nodesQuery } = require("../utilities/query");
 
 const { log } = loggingUtilities;
 
@@ -32,7 +33,7 @@ function verifyUnconditionalAxiom(axiomNode, context) {
               consequentStatementNode = statementNode,  ///
               axiom = Axiom.fromConsequentStatementNodeAndLabels(consequentStatementNode, labels);
 
-        const labelsString = labels.join(",")
+        const labelsString = labelsAsString(labels);
 
         context.addAxiom(axiom);
 

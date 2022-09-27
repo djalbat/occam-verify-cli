@@ -6,11 +6,14 @@ const Rule = require("../rule"),
       verifyLabels = require("../verify/labels"),
       verifyUnqualifiedMetastatement = require("../verify/unqualifiedMetastatement");
 
-const { nodeQuery, nodesQuery } = require("../utilities/query");
+const { nodeQuery, nodesQuery } = require("../utilities/query"),
+      { labelsAsString, nodesAsString } = require("../utilities/string");
 
 const { log } = loggingUtilities;
 
 const labelNodesQuery = nodesQuery("/rule/label"),
+      metaproofNodeQuery = nodesQuery("/rule/metaproof!"),
+      metastatementNodeQuery = nodeQuery("/*/metastatement"),
       premiseUnqualifiedMetastatementNodesQuery = nodesQuery("/rule/premise|premises/unqualifiedMetastatement"),
       conclusionUnqualifiedMetastatementNodeQuery = nodeQuery("/rule/conclusion/unqualifiedMetastatement!");
 
@@ -19,7 +22,11 @@ function verifyRule(ruleNode, context) {
 
   const labels = [],
         labelNodes = labelNodesQuery(ruleNode),
-        labelsVerified = verifyLabels(labelNodes, labels, context);
+        labelsString = nodesAsString(labelNodes);
+
+  log.debug(`Verifying the '${labelsString}' rule...`);
+
+  const labelsVerified = verifyLabels(labelNodes, labels, context);
 
   if (labelsVerified) {
     let rule = null;
@@ -28,18 +35,34 @@ function verifyRule(ruleNode, context) {
           conclusionUnqualifiedMetastatementNode = conclusionUnqualifiedMetastatementNodeQuery(ruleNode);
 
     const premiseUnqualifiedMetastatementsVerified = premiseUnqualifiedMetastatementNodes.every((premiseUnqualifiedMetastatementNode) => {
-            const premiseUnqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(premiseUnqualifiedMetastatementNode, context);
+      const premiseUnqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(premiseUnqualifiedMetastatementNode, context);
 
-            if (premiseUnqualifiedMetastatementVerified) {
-              return true;
-            }
-          }),
-          conclusionUnqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(conclusionUnqualifiedMetastatementNode, context);
+      if (premiseUnqualifiedMetastatementVerified) {
+        return true;
+      }
+    });
 
-    debugger
+    if (premiseUnqualifiedMetastatementsVerified) {
+      const conclusionUnqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(conclusionUnqualifiedMetastatementNode, context);
+
+      if (conclusionUnqualifiedMetastatementVerified) {
+        const premiseMetastatementNodes = premiseUnqualifiedMetastatementNodes.map((premiseUnqualifiedMetastatementNode) => {
+              const premiseMetastatementNode = metastatementNodeQuery(premiseUnqualifiedMetastatementNode);
+
+              return premiseMetastatementNode;
+            }),
+            conclusionMetastatementNode = metastatementNodeQuery(conclusionUnqualifiedMetastatementNode);
+
+        const metaproofNode = metaproofNodeQuery(ruleNode);
+
+        if (metaproofNode !== null) {
+          const metaproofVerified = verifyMetaproof(metaproofNode, premiseMetastatementNodes, conclusionMetastatementNode, context);
+        }
+      }
+    }
 
     if (rule !== null) {
-      const labelsString = labels.join(",")
+      const labelsString = labelsAsString(labels);
 
       context.addRule(rule);
 

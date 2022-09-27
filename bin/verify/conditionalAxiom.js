@@ -10,7 +10,7 @@ const AntecedentContext = require("../context/antecedent"),
       ConsequentContext = require("../context/consequent"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement");
 
-const { nodeAsString } = require("../utilities/string"),
+const { labelsAsString } = require("../utilities/string"),
       { nodeQuery, nodesQuery } = require("../utilities/query");
 
 const { log } = loggingUtilities;
@@ -63,7 +63,7 @@ function verifyConditionalAxiom(axiomNode, context) {
                 consequentStatementNode = statementNodeQuery(qualifiedStatementNode), ///
                 axiom = Axiom.fromAntecedentStatementNodesConsequentStatementNodeAndLabels(antecedentStatementNodes, consequentStatementNode, labels);
 
-          const labelsString = labels.join(",")
+          const labelsString = labelsAsString(labels);
 
           context.addAxiom(axiom);
 

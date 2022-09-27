@@ -19,7 +19,7 @@ function verifyTermAsConstructor(termNode, typeNode, context) {
 
   const termString = nodeAsString(termNode);
 
-  log.debug(`Verifying the ${termString} term as a constructor...`);
+  log.debug(`Verifying the '${termString}' term as a constructor...`);
 
   const nonTerminalNode = termNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),

@@ -1,6 +1,6 @@
 "use strict";
 
-const { EMPTY_STRING } = require("../constants");
+const { COMMA, EMPTY_STRING } = require("../constants");
 
 function nodeAsString(node, string = EMPTY_STRING) {
   const nodeTerminalNode = node.isTerminalNode();
@@ -29,7 +29,7 @@ function nodesAsString(nodes) {
     if (string === null) {
       string = nodeString;  ///
     } else {
-      string = `${string},${nodeString}`;
+      string = `${string}${COMMA}${nodeString}`;
     }
 
     return string;
@@ -39,13 +39,7 @@ function nodesAsString(nodes) {
 }
 
 function labelsAsString(labels) {
-  const labelsString = labels.reduce((labelsString, label) => {
-    labelsString = (labelsString === null) ?
-                    `${label}` :
-                      `${labelsString},${label}`;
-
-    return labelsString;
-  }, null);
+  const labelsString = labels.join(COMMA);
 
   return labelsString;
 }

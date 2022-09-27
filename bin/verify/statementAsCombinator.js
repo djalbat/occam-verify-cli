@@ -15,7 +15,7 @@ function verifyStatementAsCombinator(statementNode, context) {
 
   const statementString = nodeAsString(statementNode);
 
-  log.debug(`Verifiying the ${statementString} statement as a combinator...`);
+  log.debug(`Verifying the ${statementString} statement as a combinator...`);
 
   const nonTerminalNode = statementNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),

@@ -18,7 +18,7 @@ function verifyStatement(statementNode, context) {
 
   const statementString = nodeAsString(statementNode);
 
-  log.debug(`Verifying the ${statementString} statement...`);
+  log.debug(`Verifying the '${statementString}' statement...`);
 
   const equalityNode = equalityNodeQuery(statementNode),
         typeAssertionNode = typeAssertionNodeQuery(statementNode);
