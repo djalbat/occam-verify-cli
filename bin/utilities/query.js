@@ -4,7 +4,8 @@ const { Query } = require("occam-dom");
 
 const typeTerminalNodeQuery = nodeQuery("/type/@type"),
       labelNameTerminalNodeQuery = nodeQuery("/label/@name"),
-      variableNameTerminalNodeQuery = nodeQuery("/variable/@name");
+      variableNameTerminalNodeQuery = nodeQuery("/variable/@name"),
+      referenceNameTerminalNodeQuery = nodeQuery("/reference/@name");
 
 function nodeQuery(expression) {
   const query = Query.fromExpression(expression);
@@ -63,10 +64,19 @@ function variableNameFromVariableNode(variableNode) {
   return variableName;
 }
 
+function referenceNameFromReferenceNode(referenceNode) {
+  const referenceNameTerminalNode = referenceNameTerminalNodeQuery(referenceNode),
+        referenceNameTerminalNodeContent = referenceNameTerminalNode.getContent(),
+        referenceName = referenceNameTerminalNodeContent; ///
+
+  return referenceName;
+}
+
 module.exports = {
   nodeQuery,
   nodesQuery,
   typeNameFromTypeNode,
   labelNameFromLabelNode,
-  variableNameFromVariableNode
+  variableNameFromVariableNode,
+  referenceNameFromReferenceNode
 };

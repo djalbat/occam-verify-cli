@@ -4,7 +4,7 @@ const verifyMetastatement = require("../verify/metastatement");
 
 const { nodeQuery } = require("../utilities/query");
 
-const metastatementNodeQuery = nodeQuery("/*/metastatement!");
+const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
 function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context) {
   let unqualifiedMetastatementVerified = false;

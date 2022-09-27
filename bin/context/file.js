@@ -130,6 +130,20 @@ class FileContext {
     return type;
   }
 
+  findRuleByReferenceName(referenceName) {
+    const label = referenceName,  ///
+          axiom = this.axioms.find((axiom) => {
+            const axiomLabels = axiom.getLabels(),
+                  axiomLabelsIncludesLabel = axiomLabels.includes(label);
+
+            if (axiomLabelsIncludesLabel) {
+              return true;
+            }
+          }) || null;
+
+    return axiom;
+  }
+
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
           variable = this.variables.find((variable) => {
