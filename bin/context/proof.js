@@ -1,9 +1,10 @@
 "use strict";
 
-class AntecedentContext {
-  constructor(context, variables) {
+class ProofContext {
+  constructor(context, variables, inAntecedent) {
     this.context = context;
     this.variables = variables;
+    this.inAntecedent = inAntecedent;
   }
 
   getContext() {
@@ -12,6 +13,10 @@ class AntecedentContext {
 
   getVariables() {
     return this.variables;
+  }
+
+  isInAntecedent() {
+    return this.inAntecedent;
   }
 
   getRules() { return this.context.getRules(); }
@@ -39,18 +44,6 @@ class AntecedentContext {
     return variable;
   }
 
-  isAntecedent() {
-    const antecedent = true;
-
-    return antecedent;
-  }
-
-  isConsequent() {
-    const consequent = false;
-
-    return consequent;
-  }
-
   isLabelPresent(label) { return this.context.isLabelPresent(label); }
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
@@ -62,6 +55,10 @@ class AntecedentContext {
     return variablePresent;
   }
 
+  setInAntecedent(inAntecedent) {
+    this.inAntecedent = inAntecedent;
+  }
+
   addAxiom(axiom) { this.context.addAxiom(axiom); }
 
   addVariable(variable) {
@@ -70,10 +67,11 @@ class AntecedentContext {
 
   static fromContext(context) {
     const variables = [],
-          antecedentContext = new AntecedentContext(context, variables);
+          inAntecedent = true,
+          proofContext = new ProofContext(context, variables, inAntecedent);
 
-    return antecedentContext;
+    return proofContext;
   }
 }
 
-module.exports = AntecedentContext;
+module.exports = ProofContext;

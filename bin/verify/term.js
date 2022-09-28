@@ -22,9 +22,9 @@ function verifyTerm(termNode, types, values, context) {
   if (termVerifiedAsVariable) {
     termVerified = true;
   } else {
-    const antecedent = context.isAntecedent();
+    const inAntecedent = context.isInAntecedent();
 
-    if (antecedent) {
+    if (inAntecedent) {
       const termString = nodeAsString(termNode);
 
       log.error(`The ${termString} term can only be a variable in an antecedent.`)

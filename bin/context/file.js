@@ -157,16 +157,10 @@ class FileContext {
     return variable;
   }
 
-  isAntecedent() {
-    const antecedent = false;
+  isInAntecedent() {
+    const inAntecedent = false;
 
-    return antecedent;
-  }
-
-  isConsequent() {
-    const consequent = false;
-
-    return consequent;
+    return inAntecedent;
   }
 
   isLabelPresent(label) {

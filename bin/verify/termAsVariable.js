@@ -20,11 +20,11 @@ function verifyTermAsVariable(termNode, types, values, context) {
     if (!variablePresent) {
       log.error(`The ${variableName} variable is not present.`)
     } else {
-      const antecedent = context.isAntecedent(),
+      const inAntecedent = context.isInAntecedent(),
             variable = context.findVariableByVariableName(variableName),
             type = variable.getType();
 
-      if (antecedent && (type !== null)) {
+      if (inAntecedent && (type !== null)) {
         log.error(`The type of the ${variableName} variable must be null in an antecedent.`)
       } else {
         const value = variable.getValue();

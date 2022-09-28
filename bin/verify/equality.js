@@ -26,10 +26,9 @@ function verifyEquality(equalityNode, context) {
           secondType = second(types);
 
     if (firstType === secondType) {
-      const antecedent = context.isAntecedent(),
-            consequent = context.isConsequent();
+      const inAntecedent = context.isInAntecedent();
 
-      if (antecedent || consequent) {
+      if (inAntecedent) {
         equalityVerified = true;
       } else {
         debugger

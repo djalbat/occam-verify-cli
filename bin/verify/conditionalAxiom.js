@@ -6,8 +6,7 @@ const Axiom = require("../axiom"),
       verifyLabels = require("../verify/labels"),
       verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
 
-const AntecedentContext = require("../context/antecedent"),
-      ConsequentContext = require("../context/consequent"),
+const ProofContext = require("../context/proof"),
       verifyQualifiedStatement = require("../verify/qualifiedStatement");
 
 const { labelsAsString } = require("../utilities/string"),
@@ -32,9 +31,9 @@ function verifyConditionalAxiom(axiomNode, context) {
     const indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
     if (indicativeConditionalNode !== null) {
-      const antecedentContext = AntecedentContext.fromContext(context);
+      const proofContext = ProofContext.fromContext(context);
 
-      context = antecedentContext; ///
+      context = proofContext; ///
 
       const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(indicativeConditionalNode),
             unqualifiedStatementsVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
@@ -45,11 +44,11 @@ function verifyConditionalAxiom(axiomNode, context) {
               }
             });
 
+      const inAntecedent = false;
+
+      proofContext.setInAntecedent(inAntecedent);
+
       if (unqualifiedStatementsVerified) {
-        const consequentContext = ConsequentContext.fromContext(context);
-
-        context = consequentContext;  ///
-
         const qualifiedStatementNode = qualifiedStatementNodeQuery(indicativeConditionalNode),
               qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, context);
 

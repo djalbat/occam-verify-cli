@@ -30,9 +30,9 @@ function verifyTypeAssertion(typeAssertionNode, context) {
           termVerified = verifyTerm(termNode, types, values, context);
 
     if (termVerified) {
-      const antecedent = context.isAntecedent();
+      const inAntecedent = context.isInAntecedent();
 
-      if (antecedent) {
+      if (inAntecedent) {
         const variableNode = variableNodeQuery(typeAssertionNode),
               variableName = variableNameFromVariableNode(variableNode),
               name = variableName,  ///
