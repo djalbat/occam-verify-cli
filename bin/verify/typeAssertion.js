@@ -36,7 +36,7 @@ function verifyTypeAssertion(typeAssertionNode, context) {
         const variableNode = variableNodeQuery(typeAssertionNode),
               variableName = variableNameFromVariableNode(variableNode),
               name = variableName,  ///
-              variable = Variable.fromNameAndType(name, type);
+              variable = Variable.fromTypeAndName(type, name);
 
         context.addVariable(variable);
 

@@ -22,10 +22,10 @@ function verifyVariable(variableNode, typeNode, context) {
     const typeName = typeNameFromTypeNode(typeNode);
     
     if (typeName === null) {
-      const name = variableName,  ///
-            type = null;
+      const type = null,
+            name = variableName;  ///
 
-      variable = Variable.fromNameAndType(name, type);
+      variable = Variable.fromTypeAndName(type, name);
     } else {
       const type = context.findTypeByTypeName(typeName);
 
@@ -34,7 +34,7 @@ function verifyVariable(variableNode, typeNode, context) {
       } else {
         const name = variableName;  ///
 
-        variable = Variable.fromNameAndType(name, type);
+        variable = Variable.fromTypeAndName(type, name);
       }
     }
 

@@ -205,6 +205,10 @@ class FileContext {
     this.constructors.push(constructor);
   }
 
+  setInAntecedent(inAntecedent) {
+    ///
+  }
+
   static fromPackageContextAndFilePath(packageContext, filePath) {
     const fileContent = packageContext.getFileContent(filePath),
           content = fileContent,  ///

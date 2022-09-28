@@ -3,22 +3,27 @@
 const { labelsAsString } = require("./utilities/string");
 
 class Axiom {
-  constructor(labels, consequentStatementNode, antecedentStatementNodes) {
+  constructor(labels, antecedent, consequent, statementNode) {
     this.labels = labels;
-    this.consequentStatementNode = consequentStatementNode;
-    this.antecedentStatementNodes = antecedentStatementNodes;
+    this.antecedent = antecedent;
+    this.consequent = consequent;
+    this.statementNode = statementNode;
   }
 
   getLabels() {
     return this.labels;
   }
 
-  getConsequentStatementNode() {
-    return this.consequentStatementNode;
+  getAntecedent() {
+    return this.antecedent;
   }
 
-  getAntecedentStatementNodes() {
-    return this.antecedentStatementNodes;
+  getConsequent() {
+    return this.consequent;
+  }
+
+  getStatementNode() {
+    return this.statementNode;
   }
 
   asString() {
@@ -27,15 +32,17 @@ class Axiom {
     return string;
   }
 
-  static fromConsequentStatementNodeAndLabels(consequentStatementNode, labels) {
-    const antecedentStatementNodes = [],
-          axiom = new Axiom(labels, consequentStatementNode, antecedentStatementNodes);
+  static fromStatementNodeAndLabels(statementNode, labels) {
+    const antecedent = null,
+          consequent = null,
+          axiom = new Axiom(labels, antecedent, consequent, statementNode);
 
     return axiom;
   }
 
-  static fromAntecedentStatementNodesConsequentStatementNodeAndLabels(antecedentStatementNodes, consequentStatementNode, labels) {
-    const axiom = new Axiom(labels, consequentStatementNode, antecedentStatementNodes);
+  static fromAntecedentConsequentAndLabels(antecedent, consequent, labels) {
+    const statementNode = null,
+          axiom = new Axiom(labels, antecedent, consequent, statementNode);
 
     return axiom;
   }

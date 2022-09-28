@@ -1,10 +1,14 @@
 "use strict";
 
 class Variable {
-  constructor(name, value, type) {
+  constructor(type, name, value) {
+    this.type = type;
     this.name = name;
     this.value = value;
-    this.type = type;
+  }
+
+  getType() {
+    return this.type;
   }
 
   getName() {
@@ -13,10 +17,6 @@ class Variable {
 
   getValue() {
     return this.value;
-  }
-
-  getType() {
-    return this.type;
   }
 
   setValue(value) {
@@ -43,9 +43,9 @@ class Variable {
     return string;
   }
 
-  static fromNameAndType(name, type) {
+  static fromTypeAndName(type, name) {
     const value = undefined,
-          variable = new Variable(name, value, type);
+          variable = new Variable(type, name, value);
 
     return variable;
   }

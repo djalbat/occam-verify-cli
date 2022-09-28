@@ -2,8 +2,8 @@
 
 const { loggingUtilities } = require("necessary");
 
-const verifyConditionalAxiom = require("../verify/conditionalAxiom"),
-      verifyUnconditionalAxiom = require("../verify/unconditionalAxiom");
+const verifyUnqualifiedStatementAxiom = require("../verify/unqualifiedStatementAxiom"),
+      verifyIndicativeConditionalAxiom = require("../verify/indicativeConditionalAxiom");
 
 const { nodesQuery } = require("../utilities/query"),
       { nodesAsString } = require("../utilities/string");
@@ -20,12 +20,12 @@ function verifyAxiom(axiomNode, context) {
 
   log.debug(`Verifying the '${labelsString}' axiom...`);
 
-  const unconditionalAxiomVerified = verifyUnconditionalAxiom(axiomNode, context);
+  const unconditionalAxiomVerified = verifyIndicativeConditionalAxiom(axiomNode, context);
 
   if (unconditionalAxiomVerified) {
     axiomVerified = true;
   } else {
-    const conditionalAxiomVerified = verifyConditionalAxiom(axiomNode, context);
+    const conditionalAxiomVerified = verifyUnqualifiedStatementAxiom(axiomNode, context);
 
     if (conditionalAxiomVerified) {
       axiomVerified = true;
