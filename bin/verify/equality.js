@@ -23,14 +23,23 @@ function verifyEquality(equalityNode, context) {
 
   if (firstTermVerified && secondTermVerified) {
     const firstType = first(types),
-          secondType = second(types);
+          secondType = second(types),
+          firstTypeEqualToSecondType = firstType.isEqualTo(secondType),
+          firstTypeSubTypeOfSecondType = firstType.isSubTypeOf(secondType),
+          secondTypeSubTypeOfFirstType = secondType.isSubTypeOf(firstType);
 
-    if (firstType === secondType) {
+    if (firstTypeEqualToSecondType || firstTypeSubTypeOfSecondType || secondTypeSubTypeOfFirstType) {
       const inAntecedent = context.isInAntecedent();
 
-      debugger
+      if (inAntecedent) {
+        equalityVerified = true;
+      } else {
+        const termsEqual = equateTerms(firstTermNode, secondTermNode, context);
 
-      equalityVerified = true;
+        if (termsEqual) {
+          equalityVerified = true;
+        }
+      }
     }
   }
 
@@ -38,3 +47,11 @@ function verifyEquality(equalityNode, context) {
 }
 
 module.exports = verifyEquality;
+
+function equateTerms(firstTermNode, secondTermNode, context) {
+  let termsEqual = true;  ///
+
+  debugger
+
+  return termsEqual;
+}
