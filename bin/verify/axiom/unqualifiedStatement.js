@@ -2,12 +2,12 @@
 
 const { loggingUtilities } = require("necessary");
 
-const Axiom = require("../axiom"),
-      verifyLabels = require("../verify/labels"),
-      verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
+const Axiom = require("../../axiom"),
+      verifyLabels = require("../../verify/labels"),
+      verifyUnqualifiedStatement = require("../../verify/statement/unqualified");
 
-const { labelsAsString } = require("../utilities/string"),
-      { nodeQuery, nodesQuery } = require("../utilities/query");
+const { labelsAsString } = require("../../utilities/string"),
+      { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const { log } = loggingUtilities;
 

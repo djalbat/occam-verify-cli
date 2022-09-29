@@ -1,7 +1,7 @@
 "use strict";
 
 const Premise = require("../premise"),
-      verifyUnqualifiedMetastatement = require("../verify/unqualifiedMetastatement");
+      verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
 const { nodeQuery, nodesQuery } = require("../utilities/query");
 

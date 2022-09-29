@@ -1,13 +1,13 @@
 "use strict";
 
-const { nodeQuery } = require("../utilities/query");
+const { nodeQuery } = require("../../utilities/query");
 
-const verifyRule = require("../verify/rule"),
-      verifyAxiom = require("../verify/axiom"),
-      verifyTypeDeclaration = require("../verify/declaration/type"),
-      verifyVariableDeclaration = require("../verify/declaration/variable"),
-      verifyCombinatorDeclaration = require("../verify/declaration/combinator"),
-      verifyConstructorDeclaration = require("../verify/declaration/constructor");
+const verifyRule = require("../../verify/rule"),
+      verifyAxiom = require("../../verify/axiom"),
+      verifyTypeDeclaration = require("../../verify/declaration/type"),
+      verifyVariableDeclaration = require("../../verify/declaration/variable"),
+      verifyCombinatorDeclaration = require("../../verify/declaration/combinator"),
+      verifyConstructorDeclaration = require("../../verify/declaration/constructor");
 
 const ruleNodeQuery = nodeQuery("/topLevelDeclaration/rule!"),
       axiomNodeQuery = nodeQuery("/topLevelDeclaration/axiom!"),

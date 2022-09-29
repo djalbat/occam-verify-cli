@@ -4,7 +4,7 @@ const { loggingUtilities } = require("necessary");
 
 const FileContext = require("../context/file"),
       PackageContext = require("../context/package"),
-      verifyTopLevelDeclaration = require("../verify/topLevelDeclaration");
+      verifyTopLevelDeclaration = require("../verify/declaration/topLevel");
 
 const { nodesQuery } = require("../utilities/query");
 

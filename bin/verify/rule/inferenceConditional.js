@@ -2,13 +2,13 @@
 
 const { arrayUtilities, loggingUtilities } = require("necessary");
 
-const Rule = require("../rule"),
-      verifyLabels = require("../verify/labels"),
-      verifyPremise = require("../verify/premise"),
-      verifyConclusion = require("../verify/conclusion");
+const Rule = require("../../rule"),
+      verifyLabels = require("../../verify/labels"),
+      verifyPremise = require("../../verify/premise"),
+      verifyConclusion = require("../../verify/conclusion");
 
-const { labelsAsString } = require("../utilities/string"),
-      { nodeQuery, nodesQuery } = require("../utilities/query");
+const { labelsAsString } = require("../../utilities/string"),
+      { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const { log } = loggingUtilities,
       { first } = arrayUtilities;

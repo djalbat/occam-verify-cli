@@ -3,8 +3,8 @@
 const { loggingUtilities } = require("necessary");
 
 const ProofContext = require("../context/proof"),
-      verifyUnqualifiedStatementAxiom = require("../verify/unqualifiedStatementAxiom"),
-      verifyIndicativeConditionalAxiom = require("../verify/indicativeConditionalAxiom");
+      verifyUnqualifiedStatementAxiom = require("../verify/axiom/unqualifiedStatement"),
+      verifyIndicativeConditionalAxiom = require("../verify/axiom/indicativeConditional");
 
 const { nodesQuery } = require("../utilities/query"),
       { nodesAsString } = require("../utilities/string");

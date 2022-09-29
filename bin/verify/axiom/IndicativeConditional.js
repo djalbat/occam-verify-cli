@@ -2,13 +2,13 @@
 
 const { arrayUtilities, loggingUtilities } = require("necessary");
 
-const Axiom = require("../axiom"),
-      verifyLabels = require("../verify/labels"),
-      verifyAntecedent = require("../verify/antecedent"),
-      verifyConsequent = require("../verify/consequent");
+const Axiom = require("../../axiom"),
+      verifyLabels = require("../../verify/labels"),
+      verifyAntecedent = require("../../verify/antecedent"),
+      verifyConsequent = require("../../verify/consequent");
 
-const { labelsAsString } = require("../utilities/string"),
-      { nodeQuery, nodesQuery } = require("../utilities/query");
+const { labelsAsString } = require("../../utilities/string"),
+      { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const { log } = loggingUtilities,
       { first } = arrayUtilities;

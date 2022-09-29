@@ -3,8 +3,8 @@
 const { loggingUtilities } = require("necessary");
 
 const MetaproofContext = require("../context/metaproof"),
-      verifyInferenceConditionalRule = require("../verify/inferenceConditionalRule"),
-      verifyUnqualifiedMetastatementRule = require("../verify/unqualifiedMetastatementRule");
+      verifyInferenceConditionalRule = require("../verify/rule/inferenceConditional"),
+      verifyUnqualifiedMetastatementRule = require("../verify/rule/unqualifiedMetastatement");
 
 const { nodesQuery } = require("../utilities/query"),
       { nodesAsString } = require("../utilities/string");

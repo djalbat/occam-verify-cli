@@ -1,8 +1,8 @@
 "use strict";
 
 const Consequent = require("../consequent"),
-      verifyQualifiedStatement = require("../verify/qualifiedStatement"),
-      verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
+      verifyQualifiedStatement = require("../verify/statement/qualified"),
+      verifyUnqualifiedStatement = require("../verify/statement/unqualified");
 
 const { nodeQuery } = require("../utilities/query");
 

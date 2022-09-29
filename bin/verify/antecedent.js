@@ -1,7 +1,7 @@
 "use strict";
 
 const Antecedent = require("../antecedent"),
-      verifyUnqualifiedStatement = require("../verify/unqualifiedStatement");
+      verifyUnqualifiedStatement = require("../verify/statement/unqualified");
 
 const { nodeQuery, nodesQuery } = require("../utilities/query");
 

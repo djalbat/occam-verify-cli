@@ -1,8 +1,8 @@
 "use strict";
 
 const Conclusion = require("../conclusion"),
-      verifyQualifiedMetastatement = require("../verify/qualifiedMetastatement"),
-      verifyUnqualifiedMetastatement = require("../verify/unqualifiedMetastatement");
+      verifyQualifiedMetastatement = require("../verify/metastatement/qualified"),
+      verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
 const { nodeQuery } = require("../utilities/query");
 

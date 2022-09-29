@@ -2,12 +2,12 @@
 
 const { loggingUtilities } = require("necessary");
 
-const Rule = require("../rule"),
-      verifyLabels = require("../verify/labels"),
-      verifyUnqualifiedMetastatement = require("../verify/unqualifiedMetastatement");
+const Rule = require("../../rule"),
+      verifyLabels = require("../../verify/labels"),
+      verifyUnqualifiedMetastatement = require("../../verify/metastatement/unqualified");
 
-const { labelsAsString } = require("../utilities/string"),
-      { nodeQuery, nodesQuery } = require("../utilities/query");
+const { labelsAsString } = require("../../utilities/string"),
+      { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const { log } = loggingUtilities;
 

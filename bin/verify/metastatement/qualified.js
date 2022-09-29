@@ -1,8 +1,8 @@
 "use strict";
 
-const verifyMetastatement = require("../verify/metastatement");
+const verifyMetastatement = require("../../verify/metastatement");
 
-const { nodeQuery, referenceNameFromReferenceNode } = require("../utilities/query");
+const { nodeQuery, referenceNameFromReferenceNode } = require("../../utilities/query");
 
 const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/reference!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
