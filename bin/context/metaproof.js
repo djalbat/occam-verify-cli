@@ -31,6 +31,8 @@ class MetaproofContext {
 
   findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
 
+  findRuleByReferenceName(referenceName) { return this.context.findRuleByReferenceName(referenceName); }
+
   findVariableByVariableName(variableName) { return this.context.findVariableByVariableName(variableName); }
 
   isLabelPresent(label) { return this.context.isLabelPresent(label); }

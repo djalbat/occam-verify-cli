@@ -1,20 +1,20 @@
 "use strict";
 
-const verifyMetaproofDerivation = require("../verify/metaproofDerivation");
+const verifyMetaDerivation = require("../verify/metaDerivation");
 
 const { nodeQuery } = require("../utilities/query");
 
-const metaproofDerivationNodeQuery = nodeQuery("/metaproof/metaproofDerivation!");
+const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!");
 
 function verifyMetaproof(metaproofNode, premiseMetastatementNodes, conclusionMetastatementNode, context) {
   let metaproofVerified = false;
 
-  const metaproofDerivationNode = metaproofDerivationNodeQuery(metaproofNode);
+  const metaDerivationNode = metaDerivationNodeQuery(metaproofNode);
 
-  if (metaproofDerivationNode !== null) {
-    const metaproofDerivationVerified = verifyMetaproofDerivation(metaproofDerivationNode, premiseMetastatementNodes, conclusionMetastatementNode, context);
+  if (metaDerivationNode !== null) {
+    const metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, premiseMetastatementNodes, conclusionMetastatementNode, context);
 
-    debugger
+    metaproofVerified = metaDerivationVerified; ///
   }
 
   return metaproofVerified;

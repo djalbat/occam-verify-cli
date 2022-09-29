@@ -7,7 +7,7 @@ const { nodeQuery, referenceNameFromReferenceNode } = require("../../utilities/q
 const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/reference!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
 
-function verifyQualifiedMetastatement(qualifiedMetastatementNode, premiseMetastatementNodes, conclusionMetastatementNode, context) {
+function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
   let qualifiedMetastatementVerified = false;
 
   const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
@@ -17,9 +17,11 @@ function verifyQualifiedMetastatement(qualifiedMetastatementNode, premiseMetasta
           referenceName = referenceNameFromReferenceNode(referenceNode),
           rule = context.findRuleByReferenceName(referenceName);
 
-    const metastatementVerified = verifyMetastatement(metastatementNode, context);
+    if (rule !== null) {
+      const metastatementVerified = verifyMetastatement(metastatementNode, context);
 
-    qualifiedMetastatementVerified = metastatementVerified; ///
+      qualifiedMetastatementVerified = metastatementVerified; ///
+    }
   }
 
   return qualifiedMetastatementVerified;

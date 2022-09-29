@@ -31,6 +31,8 @@ class ProofContext {
 
   findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
 
+  findRuleByReferenceName(referenceName) { return this.context.findRuleByReferenceName(referenceName); }
+
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
           variable = this.variables.find((variable) => {

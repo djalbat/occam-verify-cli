@@ -2,16 +2,18 @@
 
 const { loggingUtilities } = require("necessary");
 
-const MetaproofContext = require("../context/metaproof"),
+const verifyMetaproof = require("../verify/metaproof"),
+      MetaproofContext = require("../context/metaproof"),
       verifyInferenceConditionalRule = require("../verify/rule/inferenceConditional"),
       verifyUnqualifiedMetastatementRule = require("../verify/rule/unqualifiedMetastatement");
 
-const { nodesQuery } = require("../utilities/query"),
-      { nodesAsString } = require("../utilities/string");
+const { nodesAsString } = require("../utilities/string"),
+      { nodeQuery, nodesQuery } = require("../utilities/query");
 
 const { log } = loggingUtilities;
 
-const labelNodesQuery = nodesQuery("/rule/label");
+const labelNodesQuery = nodesQuery("/rule/label"),
+      metaproofNodeQuery = nodeQuery("/rule/metaproof");
 
 function verifyRule(ruleNode, context) {
   let ruleVerified = false;
@@ -29,7 +31,19 @@ function verifyRule(ruleNode, context) {
         unqualifiedMetastatementRuleVerified = verifyUnqualifiedMetastatementRule(ruleNode, context);
 
   if (inferenceConditionalRuleVerified || unqualifiedMetastatementRuleVerified) {
-    debugger
+    const metaproofNode = metaproofNodeQuery(ruleNode);
+
+    if (metaproofNode !== null) {
+      const metaproofVerified = verifyMetaproof(metaproofNode, context);
+
+      ruleVerified = metaproofVerified; ///
+    } else {
+      ruleVerified = true;
+    }
+  }
+
+  if (ruleVerified) {
+    log.info(`Verified the '${labelsString}' rule.`);
   }
 
   return ruleVerified;

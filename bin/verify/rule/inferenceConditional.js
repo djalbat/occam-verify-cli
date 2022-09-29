@@ -1,17 +1,15 @@
 "use strict";
 
-const { arrayUtilities, loggingUtilities } = require("necessary");
+const { arrayUtilities } = require("necessary");
 
 const Rule = require("../../rule"),
       verifyLabels = require("../../verify/labels"),
       verifyPremise = require("../../verify/premise"),
       verifyConclusion = require("../../verify/conclusion");
 
-const { labelsAsString } = require("../../utilities/string"),
-      { nodeQuery, nodesQuery } = require("../../utilities/query");
+const { nodeQuery, nodesQuery } = require("../../utilities/query");
 
-const { log } = loggingUtilities,
-      { first } = arrayUtilities;
+const { first } = arrayUtilities;
 
 const labelNodesQuery = nodesQuery("/rule/label"),
       premiseNodeQuery = nodeQuery("/inferenceConditional/premise|premises!"),
@@ -43,14 +41,11 @@ function verifyInferenceConditionalRule(ruleNode, context) {
                 firstConclusion = first(conclusions),
                 premise = firstPremise, ///
                 conclusion = firstConclusion, ///
-                rule = Rule.fromPremiseConclusionAndLabels(premise, conclusion, labels),
-                labelsString = labelsAsString(labels);
+                rule = Rule.fromPremiseConclusionAndLabels(premise, conclusion, labels);
 
           context.addRule(rule);
 
           inferenceConditionalRuleVerified = true;
-
-          log.info(`Verified the '${labelsString}' rule.`);
         }
       }
     }

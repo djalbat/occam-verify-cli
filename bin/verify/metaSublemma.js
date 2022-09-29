@@ -1,6 +1,6 @@
 "use strict";
 
-function verifyMetaSublemma(metaproofNode, premiseMetastatementNodes, conclusionMetastatementNode, context) {
+function verifyMetaSublemma(metaSublemmaNode, context) {
   let metaSublemmaVerified = false;
 
   debugger

@@ -1,15 +1,10 @@
 "use strict";
 
-const { loggingUtilities } = require("necessary");
-
 const Axiom = require("../../axiom"),
       verifyLabels = require("../../verify/labels"),
       verifyUnqualifiedStatement = require("../../verify/statement/unqualified");
 
-const { labelsAsString } = require("../../utilities/string"),
-      { nodeQuery, nodesQuery } = require("../../utilities/query");
-
-const { log } = loggingUtilities;
+const { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
       statementNodeQuery = nodeQuery("/*/statement"),
@@ -32,13 +27,9 @@ function verifyUnqualifiedStatementAxiom(axiomNode, context) {
         const statementNode = statementNodeQuery(unqualifiedStatementNode),
               axiom = Axiom.fromStatementNodeAndLabels(statementNode, labels);
 
-        const labelsString = labelsAsString(labels);
-
         context.addAxiom(axiom);
 
         unqualifiedStatementAxiomVerified = true;
-
-        log.info(`Verified the '${labelsString}' axiom.`);
       }
     }
   }

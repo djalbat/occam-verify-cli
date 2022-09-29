@@ -1,15 +1,10 @@
 "use strict";
 
-const { loggingUtilities } = require("necessary");
-
 const Rule = require("../../rule"),
       verifyLabels = require("../../verify/labels"),
       verifyUnqualifiedMetastatement = require("../../verify/metastatement/unqualified");
 
-const { labelsAsString } = require("../../utilities/string"),
-      { nodeQuery, nodesQuery } = require("../../utilities/query");
-
-const { log } = loggingUtilities;
+const { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const labelNodesQuery = nodesQuery("/rule/label"),
       metastatementNodeQuery = nodeQuery("/*/metastatement"),
@@ -32,13 +27,9 @@ function verifyUnqualifiedMetastatementRule(ruleNode, context) {
         const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
               rule = Rule.fromMetastatementNodeAndLabels(metastatementNode, labels);
 
-        const labelsString = labelsAsString(labels);
-
         context.addRule(rule);
 
         unqualifiedMetastatementRuleVerified = true;
-
-        log.info(`Verified the '${labelsString}' rule.`);
       }
     }
   }

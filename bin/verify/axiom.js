@@ -27,6 +27,10 @@ function verifyAxiom(axiomNode, context) {
         indicativeConditionalAxiomVerified = verifyIndicativeConditionalAxiom(axiomNode, context),
         axiomVerified = (unqualifiedStatementAxiomVerified || indicativeConditionalAxiomVerified);
 
+  if (axiomVerified) {
+    log.info(`Verified the '${labelsString}' axiom.`);
+  }
+
   return axiomVerified;
 }
 

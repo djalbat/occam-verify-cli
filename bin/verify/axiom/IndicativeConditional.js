@@ -1,17 +1,15 @@
 "use strict";
 
-const { arrayUtilities, loggingUtilities } = require("necessary");
+const { arrayUtilities } = require("necessary");
 
 const Axiom = require("../../axiom"),
       verifyLabels = require("../../verify/labels"),
       verifyAntecedent = require("../../verify/antecedent"),
       verifyConsequent = require("../../verify/consequent");
 
-const { labelsAsString } = require("../../utilities/string"),
-      { nodeQuery, nodesQuery } = require("../../utilities/query");
+const { nodeQuery, nodesQuery } = require("../../utilities/query");
 
-const { log } = loggingUtilities,
-      { first } = arrayUtilities;
+const { first } = arrayUtilities;
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
       antecedentNodeQuery = nodeQuery("/indicativeConditional/antecedent!"),
@@ -43,14 +41,11 @@ function verifyIndicativeConditionalAxiom(axiomNode, context) {
                 firstConsequent = first(consequents),
                 antecedent = firstAntecedent, ///
                 consequent = firstConsequent, ///
-                axiom = Axiom.fromAntecedentConsequentAndLabels(antecedent, consequent, labels),
-                labelsString = labelsAsString(labels);
+                axiom = Axiom.fromAntecedentConsequentAndLabels(antecedent, consequent, labels);
 
           context.addAxiom(axiom);
 
           indicativeConditionalAxiomVerified = true;
-
-          log.info(`Verified the '${labelsString}' axiom.`);
         }
       }
     }
