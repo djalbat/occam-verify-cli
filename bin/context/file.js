@@ -189,6 +189,10 @@ class FileContext {
     this.types.push(type);
   }
 
+  addRule(rule) {
+    this.rules.push(rule);
+  }
+
   addAxiom(axiom) {
     this.axioms.push(axiom);
   }

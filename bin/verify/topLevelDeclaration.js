@@ -9,17 +9,17 @@ const verifyRule = require("../verify/rule"),
       verifyCombinatorDeclaration = require("../verify/declaration/combinator"),
       verifyConstructorDeclaration = require("../verify/declaration/constructor");
 
-const ruleNodeQuery = nodeQuery("/topLevelInstruction/rule!"),
-      axiomNodeQuery = nodeQuery("/topLevelInstruction/axiom!"),
-      typeDeclarationNodeQuery = nodeQuery("/topLevelInstruction/typeDeclaration!"),
-      variableDeclarationNodeQuery = nodeQuery("/topLevelInstruction/variableDeclaration!"),
-      combinatorDeclarationNodeQuery = nodeQuery("/topLevelInstruction/combinatorDeclaration!"),
-      constructorDeclarationNodeQuery = nodeQuery("/topLevelInstruction/constructorDeclaration!");
+const ruleNodeQuery = nodeQuery("/topLevelDeclaration/rule!"),
+      axiomNodeQuery = nodeQuery("/topLevelDeclaration/axiom!"),
+      typeDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/typeDeclaration!"),
+      variableDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/variableDeclaration!"),
+      combinatorDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/combinatorDeclaration!"),
+      constructorDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/constructorDeclaration!");
 
-function verifyTopLevelInstruction(topLevelInstructionNode, context) {
-  let topLevelInstructionVerified = false;
+function verifyTopLevelDeclaration(topLevelDeclarationNode, context) {
+  let topLevelDeclarationVerified = false;
 
-  const node = topLevelInstructionNode, ///
+  const node = topLevelDeclarationNode, ///
         ruleNode = ruleNodeQuery(node),
         axiomNode = axiomNodeQuery(node),
         typeDeclarationNode = typeDeclarationNodeQuery(node),
@@ -32,30 +32,30 @@ function verifyTopLevelInstruction(topLevelInstructionNode, context) {
   } else if (ruleNode !== null) {
     const ruleVerified = verifyRule(ruleNode, context);
 
-    topLevelInstructionVerified = ruleVerified;  ///
+    topLevelDeclarationVerified = ruleVerified;  ///
   } else if (axiomNode !== null) {
     const axiomVerified = verifyAxiom(axiomNode, context);
 
-    topLevelInstructionVerified = axiomVerified;  ///
+    topLevelDeclarationVerified = axiomVerified;  ///
   } else if (typeDeclarationNode !== null) {
     const typeDeclarationVerified = verifyTypeDeclaration(typeDeclarationNode, context);
 
-    topLevelInstructionVerified = typeDeclarationVerified;  ///
+    topLevelDeclarationVerified = typeDeclarationVerified;  ///
   } else if (variableDeclarationNode !== null) {
     const variableDeclarationVerified = verifyVariableDeclaration(variableDeclarationNode, context);
 
-    topLevelInstructionVerified = variableDeclarationVerified;  ///
+    topLevelDeclarationVerified = variableDeclarationVerified;  ///
   } else if (combinatorDeclarationNode !== null) {
     const combinatorDeclarationVerified = verifyCombinatorDeclaration(combinatorDeclarationNode, context);
 
-    topLevelInstructionVerified = combinatorDeclarationVerified;  ///
+    topLevelDeclarationVerified = combinatorDeclarationVerified;  ///
   } else if (constructorDeclarationNode !== null) {
     const constructorDeclarationVerified = verifyConstructorDeclaration(constructorDeclarationNode, context);
 
-    topLevelInstructionVerified = constructorDeclarationVerified;  ///
+    topLevelDeclarationVerified = constructorDeclarationVerified;  ///
   }
 
-  return topLevelInstructionVerified;
+  return topLevelDeclarationVerified;
 }
 
-module.exports = verifyTopLevelInstruction;
+module.exports = verifyTopLevelDeclaration;

@@ -16,7 +16,7 @@ const labelNodesQuery = nodesQuery("/axiom/label"),
       unqualifiedStatementNodeQuery = nodeQuery("/axiom/unqualifiedStatement!");
 
 function verifyUnqualifiedStatementAxiom(axiomNode, context) {
-  let unconditionalAxiomVerified = false;
+  let unqualifiedStatementAxiomVerified = false;
 
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode);
 
@@ -30,21 +30,20 @@ function verifyUnqualifiedStatementAxiom(axiomNode, context) {
 
       if (unqualifiedStatementVerified) {
         const statementNode = statementNodeQuery(unqualifiedStatementNode),
-              consequentStatementNode = statementNode,  ///
-              axiom = Axiom.fromConsequentStatementNodeAndLabels(consequentStatementNode, labels);
+              axiom = Axiom.fromStatementNodeAndLabels(statementNode, labels);
 
         const labelsString = labelsAsString(labels);
 
         context.addAxiom(axiom);
 
-        unconditionalAxiomVerified = true;
+        unqualifiedStatementAxiomVerified = true;
 
         log.info(`Verified the '${labelsString}' axiom.`);
       }
     }
   }
 
-  return unconditionalAxiomVerified;
+  return unqualifiedStatementAxiomVerified;
 }
 
 module.exports = verifyUnqualifiedStatementAxiom;

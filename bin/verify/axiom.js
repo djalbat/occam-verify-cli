@@ -2,7 +2,8 @@
 
 const { loggingUtilities } = require("necessary");
 
-const verifyUnqualifiedStatementAxiom = require("../verify/unqualifiedStatementAxiom"),
+const ProofContext = require("../context/proof"),
+      verifyUnqualifiedStatementAxiom = require("../verify/unqualifiedStatementAxiom"),
       verifyIndicativeConditionalAxiom = require("../verify/indicativeConditionalAxiom");
 
 const { nodesQuery } = require("../utilities/query"),
@@ -13,24 +14,18 @@ const { log } = loggingUtilities;
 const labelNodesQuery = nodesQuery("/axiom/label");
 
 function verifyAxiom(axiomNode, context) {
-  let axiomVerified = false;
-
   const labelNodes = labelNodesQuery(axiomNode),
         labelsString = nodesAsString(labelNodes);
 
   log.debug(`Verifying the '${labelsString}' axiom...`);
 
-  const unconditionalAxiomVerified = verifyIndicativeConditionalAxiom(axiomNode, context);
+  const proofContext = ProofContext.fromContext(context);
 
-  if (unconditionalAxiomVerified) {
-    axiomVerified = true;
-  } else {
-    const conditionalAxiomVerified = verifyUnqualifiedStatementAxiom(axiomNode, context);
+  context = proofContext; ///
 
-    if (conditionalAxiomVerified) {
-      axiomVerified = true;
-    }
-  }
+  const unqualifiedStatementAxiomVerified = verifyUnqualifiedStatementAxiom(axiomNode, context),
+        indicativeConditionalAxiomVerified = verifyIndicativeConditionalAxiom(axiomNode, context),
+        axiomVerified = (unqualifiedStatementAxiomVerified || indicativeConditionalAxiomVerified);
 
   return axiomVerified;
 }

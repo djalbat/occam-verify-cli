@@ -3,22 +3,27 @@
 const { labelsAsString } = require("./utilities/string");
 
 class Rule {
-  constructor(labels, premiseMetastatementNodes, conclusionMetastatementNode) {
+  constructor(labels, premise, conclusion, metastatementNode) {
     this.labels = labels;
-    this.premiseMetastatementNodes = premiseMetastatementNodes;
-    this.conclusionMetastatementNode = conclusionMetastatementNode;
+    this.premise = premise;
+    this.conclusion = conclusion;
+    this.metastatementNode = metastatementNode;
   }
 
   getLabels() {
     return this.labels;
   }
 
-  getPremiseMetastatementNodes() {
-    return this.premiseMetastatementNodes;
+  getPremise() {
+    return this.premise;
   }
 
-  getConclusionMetastatementNode() {
-    return this.conclusionMetastatementNode;
+  getConclusion() {
+    return this.conclusion;
+  }
+
+  getMetastatementNode() {
+    return this.metastatementNode;
   }
 
   asString() {
@@ -27,11 +32,21 @@ class Rule {
     return string;
   }
 
-  static fromPremiseUnqualifiedMetastatementNodesConclusionUnqualifiedMetastatementNodeAndLabels(premiseMetastatementNodes, conclusionMetastatementNode, labels) {
-    const rule = new Rule(labels, premiseMetastatementNodes, conclusionMetastatementNode);
+  static fromMetastatementNodeAndLabels(metastatementNode, labels) {
+    const premise = null,
+          conclusion = null,
+          rule = new Rule(labels, premise, conclusion, metastatementNode);
+
+    return rule;
+  }
+
+  static fromPremiseConclusionAndLabels(premise, conclusion, labels) {
+    const metastatementNode = null,
+          rule = new Rule(labels, premise, conclusion, metastatementNode);
 
     return rule;
   }
 }
 
 module.exports = Rule;
+

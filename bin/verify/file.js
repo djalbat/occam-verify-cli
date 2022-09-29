@@ -4,13 +4,13 @@ const { loggingUtilities } = require("necessary");
 
 const FileContext = require("../context/file"),
       PackageContext = require("../context/package"),
-      verifyTopLevelInstruction = require("../verify/topLevelInstruction");
+      verifyTopLevelDeclaration = require("../verify/topLevelDeclaration");
 
 const { nodesQuery } = require("../utilities/query");
 
 const { log } = loggingUtilities;
 
-const topLevelInstructionNodesQuery = nodesQuery("/document/topLevelInstruction");
+const topLevelDeclarationNodesQuery = nodesQuery("/document/topLevelDeclaration");
 
 function verifyFile(filePath, packageContext = PackageContext.fromNothing()) {
   let fileVerified = false;
@@ -20,16 +20,16 @@ function verifyFile(filePath, packageContext = PackageContext.fromNothing()) {
   const fileContext = FileContext.fromPackageContextAndFilePath(packageContext, filePath),
         context = fileContext,  ///
         node = fileContext.getNode(),
-        topLevelInstructionNodes = topLevelInstructionNodesQuery(node),
-        topLevelInstructionsVerified = topLevelInstructionNodes.every((topLevelInstructionNode) => {
-          const topLevelInstructionVerified = verifyTopLevelInstruction(topLevelInstructionNode, context);
+        topLevelDeclarationNodes = topLevelDeclarationNodesQuery(node),
+        topLevelDeclarationsVerified = topLevelDeclarationNodes.every((topLevelDeclarationNode) => {
+          const topLevelDeclarationVerified = verifyTopLevelDeclaration(topLevelDeclarationNode, context);
 
-          if (topLevelInstructionVerified) {
+          if (topLevelDeclarationVerified) {
             return true;
           }
         })
 
-  if (topLevelInstructionsVerified) {
+  if (topLevelDeclarationsVerified) {
     packageContext.addFileContext(fileContext);
 
     fileVerified = true;

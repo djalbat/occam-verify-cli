@@ -1,9 +1,9 @@
 "use strict";
 
 class MetaproofContext {
-  constructor(context, inAntecedent, metastatements) {
+  constructor(context, inPremise, metastatements) {
     this.context = context;
-    this.inAntecedent = inAntecedent;
+    this.inPremise = inPremise;
     this.metastatements = metastatements;
   }
 
@@ -11,8 +11,8 @@ class MetaproofContext {
     return this.context;
   }
 
-  isInAntecedent() {
-    return this.inAntecedent;
+  isInPremise() {
+    return this.inPremise;
   }
 
   getMetastatements() {
@@ -39,18 +39,20 @@ class MetaproofContext {
 
   isVariablePresentByVariableName(variableName) { return this.context.isVariablePresentByVariableName(variableName); }
 
-  setInAntecedent(inAntecedent) {
-    this.inAntecedent = inAntecedent;
+  setInPremise(inPremise) {
+    this.inPremise = inPremise;
   }
+
+  addRule(rule) { this.context.addRule(rule); }
 
   addMetastatement(metastatement) {
     this.metastatements.push(metastatement);
   }
 
   static fromContext(context) {
-    const inAntecedent = true,
+    const inPremise = true,
           metastatements = [],
-          metaproofContext = new MetaproofContext(context, metastatements, inAntecedent);
+          metaproofContext = new MetaproofContext(context, metastatements, inPremise);
 
     return metaproofContext;
   }

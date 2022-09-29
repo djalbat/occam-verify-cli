@@ -3,7 +3,6 @@
 const { arrayUtilities, loggingUtilities } = require("necessary");
 
 const Axiom = require("../axiom"),
-      ProofContext = require("../context/proof"),
       verifyLabels = require("../verify/labels"),
       verifyAntecedent = require("../verify/antecedent"),
       verifyConsequent = require("../verify/consequent");
@@ -20,7 +19,7 @@ const labelNodesQuery = nodesQuery("/axiom/label"),
       indicativeConditionalNodeQuery = nodeQuery("/axiom/indicativeConditional!");
 
 function verifyIndicativeConditionalAxiom(axiomNode, context) {
-  let conditionalAxiomVerified = false;
+  let indicativeConditionalAxiomVerified = false;
 
   const indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
@@ -30,10 +29,6 @@ function verifyIndicativeConditionalAxiom(axiomNode, context) {
           labelsVerified = verifyLabels(labelNodes, labels, context);
 
     if (labelsVerified) {
-      const proofContext = ProofContext.fromContext(context);
-
-      context = proofContext; ///
-
       const antecedents = [],
             antecedentNode = antecedentNodeQuery(indicativeConditionalNode),
             antecedentVerified = verifyAntecedent(antecedentNode, antecedents, context);
@@ -53,7 +48,7 @@ function verifyIndicativeConditionalAxiom(axiomNode, context) {
 
           context.addAxiom(axiom);
 
-          conditionalAxiomVerified = true;
+          indicativeConditionalAxiomVerified = true;
 
           log.info(`Verified the '${labelsString}' axiom.`);
         }
@@ -61,7 +56,7 @@ function verifyIndicativeConditionalAxiom(axiomNode, context) {
     }
   }
 
-  return conditionalAxiomVerified;
+  return indicativeConditionalAxiomVerified;
 }
 
 module.exports = verifyIndicativeConditionalAxiom;

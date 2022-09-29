@@ -2,8 +2,9 @@
 
 const { loggingUtilities } = require("necessary");
 
-const verifyUnqualifiedStatementRule = require("../verify/unqualifiedStatementRule"),
-      verifyIndicativeConditionalRule = require("../verify/indicativeConditionalRule");
+const MetaproofContext = require("../context/metaproof"),
+      verifyInferenceConditionalRule = require("../verify/inferenceConditionalRule"),
+      verifyUnqualifiedMetastatementRule = require("../verify/unqualifiedMetastatementRule");
 
 const { nodesQuery } = require("../utilities/query"),
       { nodesAsString } = require("../utilities/string");
@@ -20,16 +21,15 @@ function verifyRule(ruleNode, context) {
 
   log.debug(`Verifying the '${labelsString}' rule...`);
 
-  const unconditionalRuleVerified = verifyIndicativeConditionalRule(ruleNode, context);
+  const metaproofContext = MetaproofContext.fromContext(context);
 
-  if (unconditionalRuleVerified) {
-    ruleVerified = true;
-  } else {
-    const conditionalRuleVerified = verifyUnqualifiedStatementRule(ruleNode, context);
+  context = metaproofContext; ///
 
-    if (conditionalRuleVerified) {
-      ruleVerified = true;
-    }
+  const inferenceConditionalRuleVerified = verifyInferenceConditionalRule(ruleNode, context),
+        unqualifiedMetastatementRuleVerified = verifyUnqualifiedMetastatementRule(ruleNode, context);
+
+  if (inferenceConditionalRuleVerified || unqualifiedMetastatementRuleVerified) {
+    debugger
   }
 
   return ruleVerified;
