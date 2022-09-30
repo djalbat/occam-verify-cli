@@ -54,7 +54,7 @@ class MetaproofContext {
   static fromContext(context) {
     const inPremise = true,
           metastatements = [],
-          metaproofContext = new MetaproofContext(context, metastatements, inPremise);
+          metaproofContext = new MetaproofContext(context, inPremise, metastatements);
 
     return metaproofContext;
   }

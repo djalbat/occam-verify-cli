@@ -5,6 +5,7 @@ const { arrayUtilities } = require("necessary");
 const Rule = require("../../rule"),
       verifyLabels = require("../../verify/labels"),
       verifyPremise = require("../../verify/premise"),
+      MetaproofContext = require("../../context/metaproof"),
       verifyConclusion = require("../../verify/conclusion");
 
 const { nodeQuery, nodesQuery } = require("../../utilities/query");
@@ -22,6 +23,10 @@ function verifyInferenceConditionalRule(ruleNode, context) {
   const inferenceConditionalNode = inferenceConditionalNodeQuery(ruleNode);
 
   if (inferenceConditionalNode !== null) {
+    const metaproofContext = MetaproofContext.fromContext(context);
+
+    context = metaproofContext; ///
+
     const labels = [],
           labelNodes = labelNodesQuery(ruleNode),
           labelsVerified = verifyLabels(labelNodes, labels, context);

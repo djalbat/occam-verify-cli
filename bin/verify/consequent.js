@@ -1,33 +1,21 @@
 "use strict";
 
 const Consequent = require("../consequent"),
-      verifyQualifiedStatement = require("../verify/statement/qualified"),
       verifyUnqualifiedStatement = require("../verify/statement/unqualified");
 
 const { nodeQuery } = require("../utilities/query");
 
-const statementNodeQuery = nodeQuery("/*/statement!"),
-      qualifiedStatementNodeQuery = nodeQuery("/consequent/qualifiedStatement!"),
+const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/consequent/unqualifiedStatement!");
 
 function verifyConsequent(consequentNode, consequents, context) {
   let consequentVerified = false;
 
-  const qualifiedStatementNode = qualifiedStatementNodeQuery(consequentNode),
-        unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode);
+  const inAntecedent = false;
 
-  if (qualifiedStatementNode !== null) {
-    const qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, context);
+  context.setInAntecedent(inAntecedent);
 
-    if (qualifiedStatementVerified) {
-      const statementNode = statementNodeQuery(qualifiedStatementNode),
-            consequent = Consequent.fromStatementNode(statementNode);
-
-      consequents.push(consequent);
-
-      consequentVerified = true;
-    }
-  }
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode);
 
   if (unqualifiedStatementNode !== null) {
     const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context);

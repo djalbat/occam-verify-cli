@@ -13,6 +13,10 @@ const metastatementNodeQuery = nodeQuery("/*/metastatement!"),
 function verifyConclusion(conclusionNode, conclusions, context) {
   let conclusionVerified = false;
 
+  const inPremise = false;
+
+  context.setInPremise(inPremise);
+
   const qualifiedMetastatementNode = qualifiedMetastatementNodeQuery(conclusionNode),
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode);
 

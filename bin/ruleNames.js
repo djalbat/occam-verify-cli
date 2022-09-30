@@ -5,7 +5,7 @@ const TERM_RULE_NAME = "term",
       ARGUMENT_RULE_NAME = "argument",
       META_SUBLEMMA_RULE_NAME = "metaSublemma",
       QUALIFIED_METASTATEMENT_RULE_NAME = "qualifiedMetastatement",
-      UNQUALIFIED_METASTATEMENT_RULE_NAME = "qualifiedMetastatement";
+      UNQUALIFIED_METASTATEMENT_RULE_NAME = "unqualifiedMetastatement";
 
 module.exports = {
   TERM_RULE_NAME,

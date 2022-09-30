@@ -1,20 +1,20 @@
 "use strict";
 
-const Premise = require("../premise"),
+const MetaAntecedent = require("../metaAntecedent"),
       verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
 const { nodeQuery, nodesQuery } = require("../utilities/query");
 
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement"),
-      unqualifiedMetastatementNodesQuery = nodesQuery("/premise|premises/unqualifiedMetastatement");
+      unqualifiedMetastatementNodesQuery = nodesQuery("/metaAntecedent/unqualifiedMetastatement");
 
-function verifyPremise(premiseNode, premises, context) {
+function verifyMetaAntecedent(metaAntecedentNode, metaAntecedents, context) {
   const inPremise = true;
 
   context.setInPremise(inPremise);
 
-  const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(premiseNode),
-        premiseVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
+  const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(metaAntecedentNode),
+        metaAntecedentVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
           const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
 
           if (unqualifiedMetastatementVerified) {
@@ -22,18 +22,18 @@ function verifyPremise(premiseNode, premises, context) {
           }
         });
 
-  if (premiseVerified) {
+  if (metaAntecedentVerified) {
     const metastatementNodes = unqualifiedMetastatementNodes.map((unqualifiedMetastatementNode) => {
             const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
             return metastatementNode;
           }),
-          premise = Premise.fromMetastatementNodes(metastatementNodes);
+          metaAntecedent = MetaAntecedent.fromMetastatementNodes(metastatementNodes);
 
-    premises.push(premise);
+    metaAntecedents.push(metaAntecedent);
   }
 
-  return premiseVerified;
+  return metaAntecedentVerified;
 }
 
-module.exports = verifyPremise;
+module.exports = verifyMetaAntecedent;

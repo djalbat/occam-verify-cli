@@ -37,6 +37,10 @@ function verifyStatement(statementNode, context) {
     debugger
   }
 
+  if (statementVerified) {
+    log.info(`Verifyied the '${statementString}' statement.`);
+  }
+
   return statementVerified;
 }
 

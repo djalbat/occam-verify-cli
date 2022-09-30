@@ -10,7 +10,7 @@ function verifyMetastatement(metastatementNode, context) {
   const metastatementString = nodeAsString(metastatementNode),
         metastatementVerified = true;
 
-  log.debug(`Verifying the '${metastatementString}' metastatement...`);
+  log.info(`Verified the '${metastatementString}' metastatement.`);
 
   return metastatementVerified;
 }
