@@ -171,10 +171,10 @@ class FileContext {
     return variable;
   }
 
-  isInAntecedent() {
-    const inAntecedent = false;
+  isDerived() {
+    const derived = false;
 
-    return inAntecedent;
+    return derived;
   }
 
   isLabelPresent(label) {

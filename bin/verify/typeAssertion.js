@@ -1,17 +1,17 @@
 "use strict";
 
-const { loggingUtilities } = require("necessary");
+const { arrayUtilities, loggingUtilities } = require("necessary");
 
 const Variable = require("../variable"),
-      verifyTerm = require("../verify/term");
+      verifyTermAsVariable = require("../verify/termAsVariable");
 
-const { nodeQuery, typeNameFromTypeNode, variableNameFromVariableNode} = require("../utilities/query");
+const { nodeQuery, typeNameFromTypeNode } = require("../utilities/query");
 
-const { log } = loggingUtilities;
+const { log } = loggingUtilities,
+      { first } = arrayUtilities;
 
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
-      typeNodeQuery = nodeQuery("/typeAssertion/type"),
-      variableNodeQuery = nodeQuery("/typeAssertion/term/variable!");
+      typeNodeQuery = nodeQuery("/typeAssertion/type");
 
 function verifyTypeAssertion(typeAssertionNode, context) {
   let typeAssertionVerified = false;
@@ -23,26 +23,42 @@ function verifyTypeAssertion(typeAssertionNode, context) {
   if (!typePresent) {
     log.error(`The ${typeName} type is not present.`);
   } else {
-    const type = context.findTypeByTypeName(typeName),
-          types = [],
-          values = [],
-          termNode = termNodeQuery(typeAssertionNode),
-          termVerified = verifyTerm(termNode, types, values, context);
+    const derived = context.isDerived();
 
-    if (termVerified) {
-      const inAntecedent = context.isInAntecedent();
+    if (derived) {
+      debugger
+    } else {
+      const types = [],
+            names = [],
+            values = [],
+            termNode = termNodeQuery(typeAssertionNode),
+            termVerified = verifyTermAsVariable(termNode, types, names, values, context);
 
-      if (inAntecedent) {
-        const variableNode = variableNodeQuery(typeAssertionNode),
-              variableName = variableNameFromVariableNode(variableNode),
-              name = variableName,  ///
-              variable = Variable.fromTypeAndName(type, name);
+      if (termVerified) {
+        const firstName = first(names),
+              firstValue = first(values),
+              variableName = firstName, ///
+              value = firstValue;
 
-        context.addVariable(variable);
+        if (value !== undefined) {
+          log.error(`The value of the ${variableName} variable is not undefined.`);
+        } else {
+          const type = context.findTypeByTypeName(typeName),
+                firstType = first(types),
+                variableType = firstType, ///
+                typeSubTypeOfVariableType = type.isSubTypeOf(variableType);
 
-        typeAssertionVerified = true;
-      } else {
-        debugger
+          if (!typeSubTypeOfVariableType) {
+            log.error(`The asserted type of the ${variableName} variable is not a sub-type of its declared type.`);
+          } else {
+            const name = variableName,  ///
+                  variable = Variable.fromTypeAndName(type, name);
+
+            context.addVariable(variable);
+
+            typeAssertionVerified = true;
+          }
+        }
       }
     }
   }

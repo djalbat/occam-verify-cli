@@ -3,7 +3,6 @@
 const { arrayUtilities } = require("necessary");
 
 const Axiom = require("../../axiom"),
-      ProofContext = require("../../context/proof"),
       verifyLabels = require("../../verify/labels"),
       verifyAntecedent = require("../../verify/antecedent"),
       verifyConsequent = require("../../verify/consequent");
@@ -23,10 +22,6 @@ function verifyIndicativeConditionalAxiom(axiomNode, context) {
   const indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
   if (indicativeConditionalNode !== null) {
-    const proofContext = ProofContext.fromContext(context);
-
-    context = proofContext; ///
-
     const labels = [],
           labelNodes = labelNodesQuery(axiomNode),
           labelsVerified = verifyLabels(labelNodes, labels, context);

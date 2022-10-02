@@ -1,9 +1,9 @@
 "use strict";
 
 class MetaproofContext {
-  constructor(context, inPremise, metastatements) {
+  constructor(context, derived, metastatements) {
     this.context = context;
-    this.inPremise = inPremise;
+    this.derived = derived;
     this.metastatements = metastatements;
   }
 
@@ -11,8 +11,8 @@ class MetaproofContext {
     return this.context;
   }
 
-  isInPremise() {
-    return this.inPremise;
+  isDerived() {
+    return this.derived;
   }
 
   getMetastatements() {
@@ -41,8 +41,8 @@ class MetaproofContext {
 
   isVariablePresentByVariableName(variableName) { return this.context.isVariablePresentByVariableName(variableName); }
 
-  setInPremise(inPremise) {
-    this.inPremise = inPremise;
+  setDerived(derived) {
+    this.derived = derived;
   }
 
   addRule(rule) { this.context.addRule(rule); }
@@ -52,9 +52,9 @@ class MetaproofContext {
   }
 
   static fromContext(context) {
-    const inPremise = true,
+    const derived = false,
           metastatements = [],
-          metaproofContext = new MetaproofContext(context, inPremise, metastatements);
+          metaproofContext = new MetaproofContext(context, derived, metastatements);
 
     return metaproofContext;
   }

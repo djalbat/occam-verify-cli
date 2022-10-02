@@ -24,21 +24,19 @@ function verifyEquality(equalityNode, context) {
   if (firstTermVerified && secondTermVerified) {
     const firstType = first(types),
           secondType = second(types),
-          firstTypeEqualToSecondType = firstType.isEqualTo(secondType),
-          firstTypeSubTypeOfSecondType = firstType.isSubTypeOf(secondType),
-          secondTypeSubTypeOfFirstType = secondType.isSubTypeOf(firstType);
+          firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType = firstType.isEqualToSubTypeOfOrSuperTypeOf(secondType);
 
-    if (firstTypeEqualToSecondType || firstTypeSubTypeOfSecondType || secondTypeSubTypeOfFirstType) {
-      const inAntecedent = context.isInAntecedent();
+    if (firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType) {
+      const derived = context.isDerived();
 
-      if (inAntecedent) {
-        equalityVerified = true;
-      } else {
+      if (derived) {
         const termsEqual = equateTerms(firstTermNode, secondTermNode, context);
 
         if (termsEqual) {
           equalityVerified = true;
         }
+      } else {
+        equalityVerified = true;
       }
     }
   }

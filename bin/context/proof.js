@@ -1,22 +1,22 @@
 "use strict";
 
 class ProofContext {
-  constructor(context, variables, inAntecedent) {
+  constructor(context, derived, variables) {
     this.context = context;
+    this.derived = derived;
     this.variables = variables;
-    this.inAntecedent = inAntecedent;
   }
 
   getContext() {
     return this.context;
   }
 
-  getVariables() {
-    return this.variables;
+  isDerived() {
+    return this.derived;
   }
 
-  isInAntecedent() {
-    return this.inAntecedent;
+  getVariables() {
+    return this.variables;
   }
 
   getRules() { return this.context.getRules(); }
@@ -57,8 +57,8 @@ class ProofContext {
     return variablePresent;
   }
 
-  setInAntecedent(inAntecedent) {
-    this.inAntecedent = inAntecedent;
+  setDerived(derived) {
+    this.derived = derived;
   }
 
   addAxiom(axiom) { this.context.addAxiom(axiom); }
@@ -69,8 +69,8 @@ class ProofContext {
 
   static fromContext(context) {
     const variables = [],
-          inAntecedent = true,
-          proofContext = new ProofContext(context, variables, inAntecedent);
+          derived = false,
+          proofContext = new ProofContext(context, derived, variables);
 
     return proofContext;
   }

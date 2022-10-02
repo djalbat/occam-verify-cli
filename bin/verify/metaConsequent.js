@@ -11,10 +11,6 @@ const metastatementNodeQuery = nodeQuery("/unqualifiedMetaStatement/metastatemen
 function verifyMetaConsequent(metaConsequentNode, metaConsequents, context) {
   let metaConsequentVerified = false;
 
-  const inAntecedent = false;
-
-  context.setInAntecedent(inAntecedent);
-
   const unqualifiedMetaStatementNode = unqualifiedMetaStatementNodeQuery(metaConsequentNode);
 
   if (unqualifiedMetaStatementNode !== null) {

@@ -11,10 +11,6 @@ const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
 function verifyConsequent(consequentNode, consequents, context) {
   let consequentVerified = false;
 
-  const inAntecedent = false;
-
-  context.setInAntecedent(inAntecedent);
-
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode);
 
   if (unqualifiedStatementNode !== null) {

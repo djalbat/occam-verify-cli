@@ -23,10 +23,10 @@ class Type {
   isSubTypeOf(type) {
     let subTypeOfType = false;
 
-    if (this.superType !== null) {
-      if (this.superType === type) {
-        subTypeOfType = true;
-      } else {
+    if (this.superType === type) {
+      subTypeOfType = true;
+    } else {
+      if (this.superType !== null) {
         subTypeOfType = this.superType.isSubTypeOf(type);
       }
     }
@@ -34,12 +34,45 @@ class Type {
     return subTypeOfType;
   }
 
+  isSuperTypeOf(type) {
+    let superTypeOfType = false;
+
+    const superType = type.getSuperType();
+
+    if (superType !== null) {
+      if (superType === this) {
+        superTypeOfType = true;
+      } else {
+        superTypeOfType = superType.isSuperTypeOf(this);
+      }
+    }
+
+    return superTypeOfType;
+  }
+
   isEqualToOrSubTypeOf(type) {
     const equalToType = this.isEqualTo(type),
           subTypeOfType = this.isSubTypeOf(type),
-          equalToOrSubTypeOfType = (equalToType || subTypeOfType);
+          equalToTypeOrSubTypeOf = (equalToType || subTypeOfType);
 
-    return equalToOrSubTypeOfType;
+    return equalToTypeOrSubTypeOf;
+  }
+
+  isEqualToOrSuperTypeOf(type) {
+    const equalToType = this.isEqualTo(type),
+          superTypeOfType = this.isSuperTypeOf(type),
+          equalToTypeOrSuperTypeOf = (equalToType || superTypeOfType);
+
+    return equalToTypeOrSuperTypeOf;
+  }
+
+  isEqualToSubTypeOfOrSuperTypeOf(type) {
+    const equalToType = this.isEqualTo(type),
+          subTypeOfType = this.isSubTypeOf(type),
+          superTypeOfType = this.isSuperTypeOf(type),
+          equalToTypeSubTypeOfOrSuperTypeOf = (equalToType || subTypeOfType || superTypeOfType);
+
+    return equalToTypeSubTypeOfOrSuperTypeOf;
   }
 
   matchName(name) {

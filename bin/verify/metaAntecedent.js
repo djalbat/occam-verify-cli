@@ -9,10 +9,6 @@ const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatemen
       unqualifiedMetastatementNodesQuery = nodesQuery("/metaAntecedent/unqualifiedMetastatement");
 
 function verifyMetaAntecedent(metaAntecedentNode, metaAntecedents, context) {
-  const inPremise = true;
-
-  context.setInPremise(inPremise);
-
   const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(metaAntecedentNode),
         metaAntecedentVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
           const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);

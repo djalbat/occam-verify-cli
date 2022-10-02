@@ -8,7 +8,7 @@ const variableNodeQuery = nodeQuery("/term/variable!");
 
 const { log } = loggingUtilities;
 
-function verifyTermAsVariable(termNode, types, values, context) {
+function verifyTermAsVariable(termNode, types, names, values, context) {
   let termVerifiedAsVariable = false;
 
   const variableNode = variableNodeQuery(termNode);
@@ -20,21 +20,18 @@ function verifyTermAsVariable(termNode, types, values, context) {
     if (!variablePresent) {
       log.error(`The ${variableName} variable is not present.`)
     } else {
-      const inAntecedent = context.isInAntecedent(),
-            variable = context.findVariableByVariableName(variableName),
-            type = variable.getType();
+      const variable = context.findVariableByVariableName(variableName),
+            type = variable.getType(),
+            name = variableName,  ///
+            value = variable.getValue();
 
-      if (inAntecedent && (type !== null)) {
-        log.error(`The type of the ${variableName} variable must be null in an antecedent.`)
-      } else {
-        const value = variable.getValue();
+      types.push(type);
 
-        types.push(type);
+      names.push(name);
 
-        values.push(value);
+      values.push(value);
 
-        termVerifiedAsVariable = true;
-      }
+      termVerifiedAsVariable = true;
     }
   }
 

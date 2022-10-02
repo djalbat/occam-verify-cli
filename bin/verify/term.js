@@ -17,37 +17,30 @@ const termNodeQuery = nodeQuery("/argument/term!"),
 function verifyTerm(termNode, types, values, context) {
   let termVerified = false;
 
-  const termVerifiedAsVariable = verifyTermAsVariable(termNode, types, values, context);
+  const names = [],
+        termVerifiedAsVariable = verifyTermAsVariable(termNode, types, names, values, context);
 
   if (termVerifiedAsVariable) {
     termVerified = true;
   } else {
-    const inAntecedent = context.isInAntecedent();
+    const constructors = context.getConstructors(),
+          constructor = constructors.find((constructor) => {
+            const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, context);
 
-    if (inAntecedent) {
-      const termString = nodeAsString(termNode);
+            if (termVerifiedAgainstConstructor) {
+              return true;
+            }
+          }) || null;
 
-      log.error(`The ${termString} term can only be a variable in an antecedent.`)
-    } else {
-      const constructors = context.getConstructors(),
-            constructor = constructors.find((constructor) => {
-              const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, context);
+    if (constructor !== null) {
+      const type = constructor.getType(),
+            value = termNode; ///
 
-              if (termVerifiedAgainstConstructor) {
-                return true;
-              }
-            }) || null;
+      types.push(type);
 
-      if (constructor !== null) {
-        const type = constructor.getType(),
-              value = termNode; ///
+      values.push(value);
 
-        types.push(type);
-
-        values.push(value);
-
-        termVerified = true;
-      }
+      termVerified = true;
     }
   }
 
@@ -177,9 +170,10 @@ function verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
             termType = firstType, ///
             typeNode = typeNodeQuery(constructorArgumentNode),
             typeName = typeNameFromTypeNode(typeNode),
-            type = context.findTypeByTypeName(typeName);
+            type = context.findTypeByTypeName(typeName),
+            termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
 
-      if (termType === type) {
+      if (termTypeEqualToOrSubTypeOfType) {
         argumentNodeVerified = true;
       }
     }

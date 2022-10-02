@@ -2,7 +2,8 @@
 
 const { loggingUtilities } = require("necessary");
 
-const verifyUnqualifiedStatementAxiom = require("../verify/axiom/unqualifiedStatement"),
+const ProofContext = require("../context/proof"),
+      verifyUnqualifiedStatementAxiom = require("../verify/axiom/unqualifiedStatement"),
       verifyIndicativeConditionalAxiom = require("../verify/axiom/indicativeConditional");
 
 const { nodesQuery } = require("../utilities/query"),
@@ -17,6 +18,10 @@ function verifyAxiom(axiomNode, context) {
         labelsString = nodesAsString(labelNodes);
 
   log.debug(`Verifying the '${labelsString}' axiom...`);
+
+  const proofContext = ProofContext.fromContext(context);
+
+  context = proofContext; ///
 
   const unqualifiedStatementAxiomVerified = verifyUnqualifiedStatementAxiom(axiomNode, context),
         indicativeConditionalAxiomVerified = verifyIndicativeConditionalAxiom(axiomNode, context),

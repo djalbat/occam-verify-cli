@@ -9,10 +9,6 @@ const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement"),
       unqualifiedStatementNodesQuery = nodesQuery("/antecedent/unqualifiedStatement");
 
 function verifyAntecedent(antecedentNode, antecedents, context) {
-  const inAntecedent = true;
-
-  context.setInAntecedent(inAntecedent);
-
   const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(antecedentNode),
         antecedentVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
           const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context);
