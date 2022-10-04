@@ -1,10 +1,12 @@
 "use strict";
 
+const { nodeAsString } = require("../utilities/string");
+
 class MetaproofContext {
-  constructor(context, derived, metastatements) {
+  constructor(context, derived, metastatementNodes) {
     this.context = context;
     this.derived = derived;
-    this.metastatements = metastatements;
+    this.metastatementNodes = metastatementNodes;
   }
 
   getContext() {
@@ -15,8 +17,8 @@ class MetaproofContext {
     return this.derived;
   }
 
-  getMetastatements() {
-    return this.metastatements;
+  getMetastatementNodes() {
+    return this.metastatementNodes;
   }
 
   getRules() { return this.context.getRules(); }
@@ -39,22 +41,47 @@ class MetaproofContext {
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
+  isMetastatementNodePresent(metaStatementNode) {
+    const metastatementNodeA = metaStatementNode; ///
+
+    let metastatementNodePresent = this.metastatementNodes.some((metaStatementNode) => {
+      const metastatementNodeB = metaStatementNode, ///
+            metastatementNodeAString = nodeAsString(metastatementNodeA),
+            metastatementNodeBString = nodeAsString(metastatementNodeB),
+            matches = (metastatementNodeAString === metastatementNodeBString);
+
+      if (matches) {
+        return true;
+      }
+    });
+
+    if (!metastatementNodePresent) {
+      metastatementNodePresent = this.context.isMetastatementNodePresent(metaStatementNode);
+    }
+
+    return metastatementNodePresent;
+  }
+
   isVariablePresentByVariableName(variableName) { return this.context.isVariablePresentByVariableName(variableName); }
 
   setDerived(derived) {
+    if (derived) {
+      this.metastatementNodes.pop();
+    }
+
     this.derived = derived;
   }
 
   addRule(rule) { this.context.addRule(rule); }
 
-  addMetastatement(metastatement) {
-    this.metastatements.push(metastatement);
+  addMetastatementNode(metastatementNode) {
+    this.metastatementNodes.push(metastatementNode);
   }
 
   static fromContext(context) {
     const derived = false,
-          metastatements = [],
-          metaproofContext = new MetaproofContext(context, derived, metastatements);
+          metastatementNodes = [],
+          metaproofContext = new MetaproofContext(context, derived, metastatementNodes);
 
     return metaproofContext;
   }

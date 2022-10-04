@@ -39,10 +39,10 @@ class Type {
 
     const superType = type.getSuperType();
 
-    if (superType !== null) {
-      if (superType === this) {
-        superTypeOfType = true;
-      } else {
+    if (superType === this) {
+      superTypeOfType = true;
+    } else {
+      if (superType !== null) {
         superTypeOfType = superType.isSuperTypeOf(this);
       }
     }

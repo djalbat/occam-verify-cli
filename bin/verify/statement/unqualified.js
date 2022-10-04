@@ -14,7 +14,11 @@ function verifyUnqualifiedStatement(unqualifiedStatementNode, context) {
   if (statementNode !== null) {
     const statementVerified = verifyStatement(statementNode, context);
 
-    unqualifiedStatementVerified = statementVerified; ///
+    if (statementVerified) {
+      context.addStatementNode(statementNode);
+
+      unqualifiedStatementVerified = true;
+    }
   }
 
   return unqualifiedStatementVerified;

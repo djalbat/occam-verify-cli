@@ -1,7 +1,6 @@
 "use strict";
 
-const MetaproofContext = require("../context/metaproof"),
-      verifyMetaDerivation = require("../verify/metaDerivation");
+const verifyMetaDerivation = require("../verify/metaDerivation");
 
 const { nodeQuery } = require("../utilities/query");
 
@@ -13,10 +12,6 @@ function verifyMetaproof(metaproofNode, premiseMetastatementNodes, conclusionMet
   const metaDerivationNode = metaDerivationNodeQuery(metaproofNode);
 
   if (metaDerivationNode !== null) {
-    const metaproofContext = MetaproofContext.fromContext();
-
-    context = metaproofContext; ///
-
     const metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, premiseMetastatementNodes, conclusionMetastatementNode, context);
 
     metaproofVerified = metaDerivationVerified; ///

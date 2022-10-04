@@ -33,12 +33,12 @@ function verifyRule(ruleNode, context) {
   if (inferenceConditionalRuleVerified || unqualifiedMetastatementRuleVerified) {
     const metaproofNode = metaproofNodeQuery(ruleNode);
 
+    ruleVerified = true;
+
     if (metaproofNode !== null) {
       const metaproofVerified = verifyMetaproof(metaproofNode, context);
 
       ruleVerified = metaproofVerified; ///
-    } else {
-      ruleVerified = true;
     }
   }
 

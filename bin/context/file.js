@@ -192,6 +192,12 @@ class FileContext {
     return typePresent;
   }
 
+  isMetastatementNodePresent(metaStatementNode) {
+    const metastatementNodePresent = false;
+
+    return metastatementNodePresent;
+  }
+
   isVariablePresentByVariableName(variableName) {
     const variable = this.findVariableByVariableName(variableName),
           variablePresent = (variable !== null);

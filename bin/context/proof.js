@@ -1,10 +1,11 @@
 "use strict";
 
 class ProofContext {
-  constructor(context, derived, variables) {
+  constructor(context, derived, variables, statementNodes) {
     this.context = context;
     this.derived = derived;
     this.variables = variables;
+    this.statementNodes = statementNodes;
   }
 
   getContext() {
@@ -17,6 +18,10 @@ class ProofContext {
 
   getVariables() {
     return this.variables;
+  }
+
+  getStatementNodes() {
+    return this.statementNodes;
   }
 
   getRules() { return this.context.getRules(); }
@@ -58,6 +63,10 @@ class ProofContext {
   }
 
   setDerived(derived) {
+    if (derived) {
+      this.statementNodes.pop();
+    }
+
     this.derived = derived;
   }
 
@@ -67,10 +76,15 @@ class ProofContext {
     this.variables.push(variable);
   }
 
+  addStatementNode(statementNode) {
+    this.statementNodes.push(statementNode);
+  }
+
   static fromContext(context) {
-    const variables = [],
-          derived = false,
-          proofContext = new ProofContext(context, derived, variables);
+    const derived = false,
+          variables = [],
+          statementNodes = [],
+          proofContext = new ProofContext(context, derived, variables, statementNodes);
 
     return proofContext;
   }

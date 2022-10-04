@@ -10,11 +10,16 @@ const { nodeQuery, nodesQuery } = require("../utilities/query"),
 
 const metaAntecedentNodeQuery = nodeQuery("/metaSublemma/metaAntecedent!"),
       metaDerivationNodeQuery = nodeQuery("/metaSublemma/metaDerivation!"),
-      metaSublemmaChildNodesQuery = nodesQuery("/metaDerivation/*");
+      metaSublemmaChildNodesQuery = nodesQuery("/metaDerivation/*"),
+      qualifiedMetastatementNodeQuery = nodeQuery("/metaSublemma/qualifiedMetastatement!");
 
 function verifyMetaDerivation(metaNode, context) {
+  const derived = true;
+
+  context.setDerived(derived);
+
   const metaSublemmaChildNodes = metaSublemmaChildNodesQuery(metaNode),
-        metaSublemmaQualifiedMetastatementUnqualifiedStatementsVerified = metaSublemmaChildNodes.every((metaSublemmaChildNode) => {
+        metaSublemmaChildNodesVerified = metaSublemmaChildNodes.every((metaSublemmaChildNode) => {
           let metaSublemmaChildNodeVerified;
 
           const ruleName = metaSublemmaChildNode.getRuleName();
@@ -50,7 +55,7 @@ function verifyMetaDerivation(metaNode, context) {
 
           return metaSublemmaChildNodeVerified;
         }),
-        metaDerivationVerified = metaSublemmaQualifiedMetastatementUnqualifiedStatementsVerified;  ///
+        metaDerivationVerified = metaSublemmaChildNodesVerified;  ///
 
   return metaDerivationVerified;
 }
@@ -78,7 +83,10 @@ function verifyMetaSublemma(metaSublemmaNode, context) {
     }
 
     if (metaDerivationVerified) {
+      const qualifiedMetastatementNode = qualifiedMetastatementNodeQuery(metaSublemmaNode),
+            qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
 
+      metaSublemmaVerified = qualifiedMetastatementVerified;  ///
     }
   }
 

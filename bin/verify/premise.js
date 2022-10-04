@@ -9,10 +9,6 @@ const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatemen
       unqualifiedMetastatementNodesQuery = nodesQuery("/premise|premises/unqualifiedMetastatement");
 
 function verifyPremise(premiseNode, premises, context) {
-  const inPremise = true;
-
-  context.setInPremise(inPremise);
-
   const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(premiseNode),
         premiseVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
           const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);

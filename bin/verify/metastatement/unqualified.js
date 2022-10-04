@@ -14,7 +14,23 @@ function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context) {
   if (metastatementNode !== null) {
     const metastatementVerified = verifyMetastatement(metastatementNode, context);
 
-    unqualifiedMetastatementVerified = metastatementVerified; ///
+    if (metastatementVerified) {
+      const derived = context.isDerived();
+
+      if (derived) {
+        const metastatementPresent = context.isMetastatementNodePresent(metastatementNode);
+
+        if (metastatementPresent) {
+          context.addMetastatementNode(metastatementNode);
+
+          unqualifiedMetastatementVerified = true;
+        }
+      } else {
+        context.addMetastatementNode(metastatementNode);
+
+        unqualifiedMetastatementVerified = true;
+      }
+    }
   }
 
   return unqualifiedMetastatementVerified;
