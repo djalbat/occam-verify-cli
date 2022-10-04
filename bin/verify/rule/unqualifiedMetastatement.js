@@ -10,7 +10,7 @@ const labelNodesQuery = nodesQuery("/rule/label"),
       metastatementNodeQuery = nodeQuery("/*/metastatement"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/rule/unqualifiedMetastatement!");
 
-function verifyUnqualifiedMetastatementRule(ruleNode, context) {
+function verifyUnqualifiedMetastatementRule(ruleNode, rules, context) {
   let unqualifiedMetastatementRuleVerified = false;
 
   const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(ruleNode);
@@ -27,7 +27,7 @@ function verifyUnqualifiedMetastatementRule(ruleNode, context) {
         const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
               rule = Rule.fromMetastatementNodeAndLabels(metastatementNode, labels);
 
-        context.addRule(rule);
+        rules.push(rule);
 
         unqualifiedMetastatementRuleVerified = true;
       }

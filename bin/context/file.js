@@ -131,7 +131,8 @@ class FileContext {
 
   findRuleByReferenceName(referenceName) {
     const label = referenceName,  ///
-          rule = this.rules.find((rule) => {
+          rules = this.getRules(),
+          rule = rules.find((rule) => {
             const ruleLabels = rule.getLabels(),
                   ruleLabelsIncludesLabel = ruleLabels.includes(label);
 
@@ -145,7 +146,8 @@ class FileContext {
 
   findAxiomByReferenceName(referenceName) {
     const label = referenceName,  ///
-          axiom = this.axioms.find((axiom) => {
+          axioms = this.getAxioms(),
+          axiom = axioms.find((axiom) => {
             const axiomLabels = axiom.getLabels(),
                   axiomLabelsIncludesLabel = axiomLabels.includes(label);
 

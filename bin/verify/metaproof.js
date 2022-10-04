@@ -1,20 +1,43 @@
 "use strict";
 
-const verifyMetaDerivation = require("../verify/metaDerivation");
+const verifyMetaDerivation = require("../verify/metaDerivation"),
+      verifyQualifiedMetastatement = require("../verify/metastatement/qualified");
 
-const { nodeQuery } = require("../utilities/query");
+const { first } = require("../utilities/array"),
+      { nodeQuery } = require("../utilities/query"),
+      { nodeAsString } = require("../utilities/string");
 
-const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!");
+const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement!/metastatement!"),
+      metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
+      qualifiedStatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement!");
 
-function verifyMetaproof(metaproofNode, premiseMetastatementNodes, conclusionMetastatementNode, context) {
+function verifyMetaproof(metaproofNode, rules, context) {
   let metaproofVerified = false;
 
   const metaDerivationNode = metaDerivationNodeQuery(metaproofNode);
 
-  if (metaDerivationNode !== null) {
-    const metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, premiseMetastatementNodes, conclusionMetastatementNode, context);
+  let metaDerivationVerified = false;
 
-    metaproofVerified = metaDerivationVerified; ///
+  if (metaDerivationNode !== null) {
+    metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, context);
+  }
+
+  if (metaDerivationVerified) {
+    const qualifiedMetastatementNode = qualifiedStatementNodeQuery(metaproofNode),
+          qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
+
+    if (qualifiedMetastatementVerified) {
+      const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
+            firstRule = first(rules),
+            rule = firstRule, ///
+            metastatementString = nodeAsString(metastatementNode),
+            ruleMetastatementNode = rule.getMetastatementNode(),
+            ruleMetastatementString = nodeAsString(ruleMetastatementNode);
+
+      if (metastatementString === ruleMetastatementString) {
+        metaproofVerified = true;
+      }
+    }
   }
 
   return metaproofVerified;

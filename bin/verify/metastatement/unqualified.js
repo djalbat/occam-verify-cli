@@ -1,8 +1,11 @@
 "use strict";
 
-const verifyMetastatement = require("../../verify/metastatement");
+const { loggingUtilities } = require("necessary");
 
-const { nodeQuery } = require("../../utilities/query");
+const { nodeQuery } = require("../../utilities/query"),
+      { nodeAsString } = require("../../utilities/string");
+
+const { log } = loggingUtilities;
 
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
@@ -12,25 +15,23 @@ function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context) {
   const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
   if (metastatementNode !== null) {
-    const metastatementVerified = verifyMetastatement(metastatementNode, context);
+    const derived = context.isDerived();
 
-    if (metastatementVerified) {
-      const derived = context.isDerived();
+    let metastatementPresent = true;  ///
 
-      if (derived) {
-        const metastatementPresent = context.isMetastatementNodePresent(metastatementNode);
-
-        if (metastatementPresent) {
-          context.addMetastatementNode(metastatementNode);
-
-          unqualifiedMetastatementVerified = true;
-        }
-      } else {
-        context.addMetastatementNode(metastatementNode);
-
-        unqualifiedMetastatementVerified = true;
-      }
+    if (derived) {
+      metastatementPresent = context.isMetastatementNodePresent(metastatementNode);
     }
+
+    if (metastatementPresent) {
+      context.addMetastatementNode(metastatementNode);
+    }
+
+    const metastatementString = nodeAsString(metastatementNode);
+
+    log.info(`Verified the '${metastatementString}' unqualified metastatement.`);
+
+    unqualifiedMetastatementVerified = true;
   }
 
   return unqualifiedMetastatementVerified;

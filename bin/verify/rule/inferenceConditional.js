@@ -13,7 +13,7 @@ const labelNodesQuery = nodesQuery("/rule/label"),
       conclusionNodeQuery = nodeQuery("/inferenceConditional/conclusion!"),
       inferenceConditionalNodeQuery = nodeQuery("/rule/inferenceConditional!");
 
-function verifyInferenceConditionalRule(ruleNode, context) {
+function verifyInferenceConditionalRule(ruleNode, rules, context) {
   let inferenceConditionalRuleVerified = false;
 
   const inferenceConditionalNode = inferenceConditionalNodeQuery(ruleNode);
@@ -40,7 +40,7 @@ function verifyInferenceConditionalRule(ruleNode, context) {
                 conclusion = firstConclusion, ///
                 rule = Rule.fromPremiseConclusionAndLabels(premise, conclusion, labels);
 
-          context.addRule(rule);
+          rules.push(rule);
 
           inferenceConditionalRuleVerified = true;
         }

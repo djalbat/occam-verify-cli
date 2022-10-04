@@ -7,13 +7,14 @@ const verifyMetaproof = require("../verify/metaproof"),
       verifyInferenceConditionalRule = require("../verify/rule/inferenceConditional"),
       verifyUnqualifiedMetastatementRule = require("../verify/rule/unqualifiedMetastatement");
 
-const { nodesAsString } = require("../utilities/string"),
+const { first } = require("../utilities/array"),
+      { nodesAsString } = require("../utilities/string"),
       { nodeQuery, nodesQuery } = require("../utilities/query");
 
 const { log } = loggingUtilities;
 
 const labelNodesQuery = nodesQuery("/rule/label"),
-      metaproofNodeQuery = nodeQuery("/rule/metaproof");
+      metaproofNodeQuery = nodeQuery("/rule/metaproof!");
 
 function verifyRule(ruleNode, context) {
   let ruleVerified = false;
@@ -27,22 +28,30 @@ function verifyRule(ruleNode, context) {
 
   context = metaproofContext; ///
 
-  const inferenceConditionalRuleVerified = verifyInferenceConditionalRule(ruleNode, context),
-        unqualifiedMetastatementRuleVerified = verifyUnqualifiedMetastatementRule(ruleNode, context);
+  const rules = [],
+        inferenceConditionalRuleVerified = verifyInferenceConditionalRule(ruleNode, rules, context),
+        unqualifiedMetastatementRuleVerified = verifyUnqualifiedMetastatementRule(ruleNode, rules, context);
 
   if (inferenceConditionalRuleVerified || unqualifiedMetastatementRuleVerified) {
     const metaproofNode = metaproofNodeQuery(ruleNode);
 
-    ruleVerified = true;
+    let metaproofVerified = true;
 
     if (metaproofNode !== null) {
-      const metaproofVerified = verifyMetaproof(metaproofNode, context);
+      metaproofVerified = verifyMetaproof(metaproofNode, rules, context);
+    }
 
-      ruleVerified = metaproofVerified; ///
+    if (metaproofVerified) {
+      ruleVerified = true;
     }
   }
 
   if (ruleVerified) {
+    const firstRule = first(rules),
+          rule = firstRule; ///
+
+    context.addRule(rule);
+
     log.info(`Verified the '${labelsString}' rule.`);
   }
 

@@ -1,8 +1,13 @@
 "use strict";
 
-const verifyMetastatement = require("../../verify/metastatement");
+const { loggingUtilities } = require("necessary");
 
-const { nodeQuery, referenceNameFromReferenceNode } = require("../../utilities/query");
+const equateMetastatementNodes = require("../../equate/metastatementNodes");
+
+const { nodeAsString } = require("../../utilities/string"),
+      { nodeQuery, referenceNameFromReferenceNode } = require("../../utilities/query");
+
+const { log } = loggingUtilities;
 
 const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/reference!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
@@ -10,7 +15,7 @@ const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/ref
 function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
   let qualifiedMetastatementVerified = false;
 
-  const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
+  let metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
 
   if (metastatementNode !== null) {
     const referenceNode = referenceNodeQuery(qualifiedMetastatementNode),
@@ -18,9 +23,21 @@ function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
           rule = context.findRuleByReferenceName(referenceName);
 
     if (rule !== null) {
-      const metastatementVerified = verifyMetastatement(metastatementNode, context);
+      const metastatementNodes = context.getMetastatementNodes(),
+            ruleMetastatementNodes = rule.getMetastatementNodes(),
+            metastatementNodesEqual = equateMetastatementNodes(metastatementNodes, ruleMetastatementNodes, context);
 
-      qualifiedMetastatementVerified = metastatementVerified; ///
+      if (metastatementNodesEqual) {
+        metastatementNode = rule.getMetastatementNode();
+
+        context.addMetastatementNode(metastatementNode);
+
+        const metastatementString = nodeAsString(metastatementNode);
+
+        log.info(`Verified the '${metastatementString}' qualified metastatement.`);
+
+        qualifiedMetastatementVerified = true;
+      }
     }
   }
 
@@ -28,3 +45,4 @@ function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
 }
 
 module.exports = verifyQualifiedMetastatement;
+

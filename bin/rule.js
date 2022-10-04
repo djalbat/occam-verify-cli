@@ -23,7 +23,19 @@ class Rule {
   }
 
   getMetastatementNode() {
-    return this.metastatementNode;
+    const metastatementNode = (this.conclusion !== null) ?
+                                 this.conclusion.getMetastatementNode() :
+                                   this.metastatementNode;
+
+    return metastatementNode;
+  }
+
+  getMetastatementNodes() {
+    const metastatementNodes = (this.premise !== null) ?
+                                  this.premise.getMetastatementNodes() :
+                                    [];
+
+    return metastatementNodes;
   }
 
   asString() {
