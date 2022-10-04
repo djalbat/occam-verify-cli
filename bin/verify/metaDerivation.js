@@ -11,7 +11,8 @@ const { nodeQuery, nodesQuery } = require("../utilities/query"),
 const metaAntecedentNodeQuery = nodeQuery("/metaSublemma/metaAntecedent!"),
       metaDerivationNodeQuery = nodeQuery("/metaSublemma/metaDerivation!"),
       metaSublemmaChildNodesQuery = nodesQuery("/metaDerivation/*"),
-      qualifiedMetastatementNodeQuery = nodeQuery("/metaSublemma/qualifiedMetastatement!");
+      qualifiedMetastatementNodeQuery = nodeQuery("/metaSublemma/qualifiedMetastatement!"),
+      unqualifiedMetastatementNodeQuery = nodeQuery("/metaSublemma/unqualifiedMetastatement!");
 
 function verifyMetaDerivation(metaNode, context) {
   const derived = true;
@@ -84,9 +85,19 @@ function verifyMetaSublemma(metaSublemmaNode, context) {
 
     if (metaDerivationVerified) {
       const qualifiedMetastatementNode = qualifiedMetastatementNodeQuery(metaSublemmaNode),
-            qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
+            unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaSublemmaNode);
 
-      metaSublemmaVerified = qualifiedMetastatementVerified;  ///
+      if (qualifiedMetastatementNode !== null) {
+        const qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
+
+        metaSublemmaVerified = qualifiedMetastatementVerified;  ///
+      }
+
+      if (unqualifiedMetastatementNode !== null) {
+        const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
+
+        metaSublemmaVerified = unqualifiedMetastatementVerified;  ///
+      }
     }
   }
 

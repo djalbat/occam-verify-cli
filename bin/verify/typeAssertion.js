@@ -1,14 +1,14 @@
 "use strict";
 
-const { arrayUtilities, loggingUtilities } = require("necessary");
+const { loggingUtilities } = require("necessary");
 
 const Variable = require("../variable"),
       verifyTermAsVariable = require("../verify/termAsVariable");
 
-const { nodeQuery, typeNameFromTypeNode } = require("../utilities/query");
+const { first } = require("../utilities/array"),
+      { nodeQuery, typeNameFromTypeNode } = require("../utilities/query");
 
-const { log } = loggingUtilities,
-      { first } = arrayUtilities;
+const { log } = loggingUtilities;
 
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeNodeQuery = nodeQuery("/typeAssertion/type");

@@ -1,15 +1,12 @@
 "use strict";
 
-const { arrayUtilities } = require("necessary");
-
 const verifyTerm = require("../verify/term");
 
-const { nodeQuery } = require("../utilities/query");
+const { nodeQuery } = require("../utilities/query"),
+      { first, second } = require("../utilities/array");
 
 const firstTermNodeQuery = nodeQuery("/equality/term[0]"),
       secondTermNodeQuery = nodeQuery("/equality/term[1]");
-
-const { first, second } = arrayUtilities;
 
 function verifyEquality(equalityNode, context) {
   let equalityVerified = false;

@@ -1,12 +1,13 @@
 "use strict";
 
-const { arrayUtilities, loggingUtilities } = require("necessary");
+const { loggingUtilities } = require("necessary");
 
 const verifyPackage = require("./verify/package"),
       loadPackageContexts = require("./loadPackageContexts");
 
-const { log } = loggingUtilities,
-      { first } = arrayUtilities;
+const { first } = require("./utilities/array");
+
+const { log } = loggingUtilities;
 
 function main(commands, options) {
   const firstCommand = first(commands),

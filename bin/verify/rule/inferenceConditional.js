@@ -1,15 +1,12 @@
 "use strict";
 
-const { arrayUtilities } = require("necessary");
-
 const Rule = require("../../rule"),
       verifyLabels = require("../../verify/labels"),
       verifyPremise = require("../../verify/premise"),
       verifyConclusion = require("../../verify/conclusion");
 
-const { nodeQuery, nodesQuery } = require("../../utilities/query");
-
-const { first } = arrayUtilities;
+const { first } = require("../../utilities/array"),
+      { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const labelNodesQuery = nodesQuery("/rule/label"),
       premiseNodeQuery = nodeQuery("/inferenceConditional/premise|premises!"),

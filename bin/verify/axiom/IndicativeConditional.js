@@ -1,15 +1,12 @@
 "use strict";
 
-const { arrayUtilities } = require("necessary");
-
 const Axiom = require("../../axiom"),
       verifyLabels = require("../../verify/labels"),
       verifyAntecedent = require("../../verify/antecedent"),
       verifyConsequent = require("../../verify/consequent");
 
-const { nodeQuery, nodesQuery } = require("../../utilities/query");
-
-const { first } = arrayUtilities;
+const { first } = require("../../utilities/array"),
+      { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
       antecedentNodeQuery = nodeQuery("/indicativeConditional/antecedent!"),

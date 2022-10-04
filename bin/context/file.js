@@ -1,9 +1,8 @@
 "use strict";
 
-const { rewriteNodes } = require("occam-grammar-utilities"),
-      { arrayUtilities } = require("necessary");
+const { rewriteNodes } = require("occam-grammar-utilities");
 
-const { push } = arrayUtilities;
+const { push } = require("../utilities/array");
 
 class FileContext {
   constructor(tokens, node, rules, types, axioms, variables, combinators, constructors, packageContext) {

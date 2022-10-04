@@ -2,6 +2,8 @@
 
 const verifyFile = require("../verify/file");
 
+const { leftDifference } = require("../utilities/array");
+
 function verifyFiles(packageContext) {
   let filesVerified = false;
 
@@ -16,22 +18,26 @@ function verifyFiles(packageContext) {
       break;
     }
 
-    const fileVerified = filePaths.some((filePath, index) => {
+    const verifiedFilePaths = [];
+
+    filePaths.forEach((filePath) => {
       const fileVerified = verifyFile(filePath, packageContext);
 
       if (fileVerified) {
-        const start = index,  ///
-              deleteCount = 1;
+        const verifiedFilePath = filePath;  ///
 
-        filePaths.splice(start, deleteCount);
-
-        return true;
+        verifiedFilePaths.push(verifiedFilePath);
       }
     });
+
+    const verifiedFilePathsLength = verifiedFilePaths.length,
+          fileVerified = (verifiedFilePathsLength > 0);
 
     if (!fileVerified) {
       break;
     }
+
+    leftDifference(filePaths, verifiedFilePaths);
   }
 
   return filesVerified;

@@ -1,10 +1,10 @@
 "use strict";
 
-const { arrayUtilities } = require("necessary"),
-      { CustomGrammar, lexersUtilities, parsersUtilities, CombinedCustomGrammar } = require("occam-custom-grammars");
+const { CustomGrammar, lexersUtilities, parsersUtilities, CombinedCustomGrammar } = require("occam-custom-grammars");
 
-const { push } = arrayUtilities,
-      { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
+const { push } = require("../utilities/array");
+
+const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 class PackageContext {
