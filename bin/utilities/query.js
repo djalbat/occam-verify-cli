@@ -5,7 +5,8 @@ const { Query } = require("occam-dom");
 const typeTerminalNodeQuery = nodeQuery("/type/@type"),
       labelNameTerminalNodeQuery = nodeQuery("/label/@name"),
       variableNameTerminalNodeQuery = nodeQuery("/variable/@name"),
-      referenceNameTerminalNodeQuery = nodeQuery("/reference/@name");
+      referenceNameTerminalNodeQuery = nodeQuery("/reference/@name"),
+      metavariableNameTerminalNodeQuery = nodeQuery("/metavariable/@name");
 
 function nodeQuery(expression) {
   const query = Query.fromExpression(expression);
@@ -72,11 +73,20 @@ function referenceNameFromReferenceNode(referenceNode) {
   return referenceName;
 }
 
+function metavariableNameFromMetavariableNode(metavariableNode) {
+  const metavariableNameTerminalNode = metavariableNameTerminalNodeQuery(metavariableNode),
+        metavariableNameTerminalNodeContent = metavariableNameTerminalNode.getContent(),
+        metavariableName = metavariableNameTerminalNodeContent; ///
+
+  return metavariableName;
+}
+
 module.exports = {
   nodeQuery,
   nodesQuery,
   typeNameFromTypeNode,
   labelNameFromLabelNode,
   variableNameFromVariableNode,
-  referenceNameFromReferenceNode
+  referenceNameFromReferenceNode,
+  metavariableNameFromMetavariableNode
 };
