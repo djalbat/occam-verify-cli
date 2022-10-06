@@ -2,10 +2,8 @@
 
 const { loggingUtilities } = require("necessary");
 
-const equateRuleMetastatements = require("../../equate/metastatementNodes");
-
 const { nodeAsString } = require("../../utilities/string"),
-      { applyMetaSubstitutions } = require("../../utilities/substitutions"),
+      { equatePremises, adjustConclusion } = require("../../utilities/rule"),
       { nodeQuery, referenceNameFromReferenceNode } = require("../../utilities/query");
 
 const { log } = loggingUtilities;
@@ -26,13 +24,13 @@ function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
     if (rule !== null) {
       const metaSubstitutions = [],
             metastatementNodes = context.getMetastatementNodes(),
-            ruleMetastatementNodes = rule.getMetastatementNodes(),
-            ruleMetastatementsEqual = equateRuleMetastatements(ruleMetastatementNodes, metastatementNodes, metaSubstitutions, context);
+            premiseMetastatementNodes = rule.getPremiseMetastatementNodes(),
+            premisesEqual = equatePremises(premiseMetastatementNodes, metastatementNodes, metaSubstitutions, context);
 
-      if (ruleMetastatementsEqual) {
-        metastatementNode = rule.getMetastatementNode();
+      if (premisesEqual) {
+        const conclusionMetastatementNode = rule.getConclusionMetastatementNode();
 
-        metastatementNode = applyMetaSubstitutions(metastatementNode, metaSubstitutions); ///
+        metastatementNode = adjustConclusion(conclusionMetastatementNode, metaSubstitutions); ///
 
         context.addMetastatementNode(metastatementNode);
 

@@ -22,20 +22,20 @@ class Rule {
     return this.conclusion;
   }
 
-  getMetastatementNode() {
-    const metastatementNode = (this.conclusion !== null) ?
-                                 this.conclusion.getMetastatementNode() :
-                                   this.metastatementNode;
-
-    return metastatementNode;
-  }
-
-  getMetastatementNodes() {
+  getPremiseMetastatementNodes() {
     const metastatementNodes = (this.premise !== null) ?
                                   this.premise.getMetastatementNodes() :
                                     [];
 
     return metastatementNodes;
+  }
+
+  getConclusionMetastatementNode() {
+    const metastatementNode = (this.conclusion !== null) ?
+                                 this.conclusion.getMetastatementNode() :
+                                   this.metastatementNode;
+
+    return metastatementNode;
   }
 
   asString() {
