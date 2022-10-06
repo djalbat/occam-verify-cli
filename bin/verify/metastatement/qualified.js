@@ -2,8 +2,8 @@
 
 const { loggingUtilities } = require("necessary");
 
-const { nodeAsString } = require("../../utilities/string"),
-      { equatePremises, adjustConclusion } = require("../../utilities/rule"),
+const { matchRule } = require("../../utilities/rule"),
+      { nodeAsString } = require("../../utilities/string"),
       { nodeQuery, referenceNameFromReferenceNode } = require("../../utilities/query");
 
 const { log } = loggingUtilities;
@@ -14,7 +14,7 @@ const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/ref
 function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
   let qualifiedMetastatementVerified = false;
 
-  let metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
+  const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
 
   if (metastatementNode !== null) {
     const referenceNode = referenceNodeQuery(qualifiedMetastatementNode),
@@ -22,16 +22,9 @@ function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
           rule = context.findRuleByReferenceName(referenceName);
 
     if (rule !== null) {
-      const metaSubstitutions = [],
-            metastatementNodes = context.getMetastatementNodes(),
-            premiseMetastatementNodes = rule.getPremiseMetastatementNodes(),
-            premisesEqual = equatePremises(premiseMetastatementNodes, metastatementNodes, metaSubstitutions, context);
+      const ruleMatches = matchRule(rule, metastatementNode, context);
 
-      if (premisesEqual) {
-        const conclusionMetastatementNode = rule.getConclusionMetastatementNode();
-
-        metastatementNode = adjustConclusion(conclusionMetastatementNode, metaSubstitutions); ///
-
+      if (ruleMatches) {
         context.addMetastatementNode(metastatementNode);
 
         const metastatementString = nodeAsString(metastatementNode);

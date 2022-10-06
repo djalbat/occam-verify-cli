@@ -31,10 +31,10 @@ function verifyMetaproof(metaproofNode, rules, context) {
             firstRule = first(rules),
             rule = firstRule, ///
             metastatementString = nodeAsString(metastatementNode),
-            ruleMetastatementNode = rule.getMetastatementNode(),
-            ruleMetastatementString = nodeAsString(ruleMetastatementNode);
+            conclusionMetastatementNode = rule.getConclusionMetastatementNode(),
+            conclusionMetastatementString = nodeAsString(conclusionMetastatementNode);
 
-      if (metastatementString === ruleMetastatementString) {
+      if (metastatementString === conclusionMetastatementString) {
         metaproofVerified = true;
       }
     }
