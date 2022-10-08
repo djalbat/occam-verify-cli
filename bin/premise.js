@@ -1,16 +1,16 @@
 "use strict";
 
 class Premise {
-  constructor(metastatementNodes) {
-    this.metastatementNodes = metastatementNodes;
+  constructor(metastatementNode) {
+    this.metastatementNode = metastatementNode;
   }
 
-  getMetastatementNodes() {
-    return this.metastatementNodes;
+  getMetastatementNode() {
+    return this.metastatementNode;
   }
 
-  static fromMetastatementNodes(metastatementNodes) {
-    const premise = new Premise(metastatementNodes);
+  static fromMetastatementNode(metastatementNode) {
+    const premise = new Premise(metastatementNode);
 
     return premise;
   }

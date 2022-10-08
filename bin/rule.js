@@ -3,39 +3,22 @@
 const { labelsAsString } = require("./utilities/string");
 
 class Rule {
-  constructor(labels, premise, conclusion, metastatementNode) {
+  constructor(labels, premises, conclusion) {
     this.labels = labels;
-    this.premise = premise;
+    this.premises = premises;
     this.conclusion = conclusion;
-    this.metastatementNode = metastatementNode;
   }
 
   getLabels() {
     return this.labels;
   }
 
-  getPremise() {
-    return this.premise;
+  getPremises() {
+    return this.premises;
   }
 
   getConclusion() {
     return this.conclusion;
-  }
-
-  getPremiseMetastatementNodes() {
-    const metastatementNodes = (this.premise !== null) ?
-                                  this.premise.getMetastatementNodes() :
-                                    [];
-
-    return metastatementNodes;
-  }
-
-  getConclusionMetastatementNode() {
-    const metastatementNode = (this.conclusion !== null) ?
-                                 this.conclusion.getMetastatementNode() :
-                                   this.metastatementNode;
-
-    return metastatementNode;
   }
 
   asString() {
@@ -44,17 +27,8 @@ class Rule {
     return string;
   }
 
-  static fromMetastatementNodeAndLabels(metastatementNode, labels) {
-    const premise = null,
-          conclusion = null,
-          rule = new Rule(labels, premise, conclusion, metastatementNode);
-
-    return rule;
-  }
-
-  static fromPremiseConclusionAndLabels(premise, conclusion, labels) {
-    const metastatementNode = null,
-          rule = new Rule(labels, premise, conclusion, metastatementNode);
+  static fromPremisesConclusionAndLabels(premises, conclusion, labels) {
+    const rule = new Rule(labels, premises, conclusion);
 
     return rule;
   }

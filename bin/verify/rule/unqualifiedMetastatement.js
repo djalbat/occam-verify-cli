@@ -1,6 +1,7 @@
 "use strict";
 
 const Rule = require("../../rule"),
+      Conclusion = require("../../conclusion"),
       verifyLabels = require("../../verify/labels"),
       verifyUnqualifiedMetastatement = require("../../verify/metastatement/unqualified");
 
@@ -25,7 +26,9 @@ function verifyUnqualifiedMetastatementRule(ruleNode, rules, context) {
 
       if (unqualifiedMetastatementVerified) {
         const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-              rule = Rule.fromMetastatementNodeAndLabels(metastatementNode, labels);
+              conclusion = Conclusion.fromMetastatementNode(metastatementNode),
+              premises = [],
+              rule = Rule.fromPremisesConclusionAndLabels(premises, conclusion, labels);
 
         rules.push(rule);
 

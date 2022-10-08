@@ -9,15 +9,15 @@ const { prune, someCombination } = require("../utilities/array"),
 function matchRule(rule, metastatementNode, context) {
   let metastatementNodes = context.getMetastatementNodes();
 
-  const premiseMetastatementNodes = rule.getPremiseMetastatementNodes(),
-        conclusionMetastatementNode = rule.getConclusionMetastatementNode(),
-        premiseMetastatementNodesLength = premiseMetastatementNodes.length,
-        start = -premiseMetastatementNodesLength;
+  const premises = rule.getPremises(),
+        conclusion = rule.getConclusion(),
+        premisesLength = premises.length,
+        start = -premisesLength;
 
   metastatementNodes = metastatementNodes.slice(start); ///
 
   const ruleMatches = someCombination(metastatementNodes, (metastatementNodes) => {
-    const premisesMatchConclusion = matchPremisesAndConclusion(premiseMetastatementNodes, conclusionMetastatementNode, metastatementNodes, metastatementNode);
+    const premisesMatchConclusion = matchPremisesAndConclusion(premises, conclusion, metastatementNodes, metastatementNode);
 
     if (premisesMatchConclusion) {
       return true;
@@ -31,14 +31,14 @@ module.exports = {
   matchRule
 };
 
-function matchPremisesAndConclusion(premiseMetastatementNodes, conclusionMetastatementNode, metastatementNodes, metastatementNode) {
+function matchPremisesAndConclusion(premises, conclusion, metastatementNodes, metastatementNode) {
   let premisesMatchConclusion = false;
 
   const metaSubstitutions = [],
-        premisesMatches = matchPremises(premiseMetastatementNodes, metastatementNodes, metaSubstitutions);
+        premisesMatches = matchPremises(premises, metastatementNodes, metaSubstitutions);
 
   if (premisesMatches) {
-    const conclusionMatches = matchConclusion(conclusionMetastatementNode, metastatementNode, metaSubstitutions);
+    const conclusionMatches = matchConclusion(conclusion, metastatementNode, metaSubstitutions);
 
     premisesMatchConclusion = conclusionMatches;  ///
   }
@@ -46,9 +46,9 @@ function matchPremisesAndConclusion(premiseMetastatementNodes, conclusionMetasta
   return premisesMatchConclusion;
 }
 
-function matchPremises(premiseMetastatementNodes, metastatementNodes, metaSubstitutions) {
-  const premisesMatches = premiseMetastatementNodes.every((premiseMetastatementNode) => {
-    const premiseMatches = matchPremise(premiseMetastatementNode, metastatementNodes, metaSubstitutions);
+function matchPremises(premise, metastatementNodes, metaSubstitutions) {
+  const premisesMatches = premise.every((premise) => {
+    const premiseMatches = matchPremise(premise, metastatementNodes, metaSubstitutions);
 
     if (premiseMatches) {
       return true;
@@ -58,10 +58,10 @@ function matchPremises(premiseMetastatementNodes, metastatementNodes, metaSubsti
   return premisesMatches;
 }
 
-function matchPremise(premiseMetastatementNode, metastatementNodes, metaSubstitutions) {
+function matchPremise(premise, metastatementNodes, metaSubstitutions) {
   const metastatementNode = prune(metastatementNodes, (metastatementNode) => {
     const nonTerminalNode = metastatementNode,  ///
-          premiseNonTerminalNode = premiseMetastatementNode,  ///
+          premiseNonTerminalNode = premise.getMetastatementNode(),
           premiseNonTerminalNodeMatches = matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, metaSubstitutions);
 
     if (!premiseNonTerminalNodeMatches) {
@@ -193,8 +193,9 @@ function matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, me
   return premiseNonTerminalNodeMatches;
 }
 
-function matchConclusion(conclusionMetastatementNode, metastatementNode, metaSubstitutions) {
+function matchConclusion(conclusion, metastatementNode, metaSubstitutions) {
   const nonTerminalNode = metastatementNode,  ///
+        conclusionMetastatementNode = conclusion.getMetastatementNode(),
         conclusionNonTerminalNode = conclusionMetastatementNode,  ///
         conclusionNonTerminalNodeMatches = matchConclusionNonTerminalNode(conclusionNonTerminalNode, nonTerminalNode, metaSubstitutions),
         conclusionMatches = conclusionNonTerminalNodeMatches; ///
@@ -262,9 +263,7 @@ function matchConclusionMetavariable(conclusionMetavariableNode, nonTerminalNode
         }) || null;
 
   if (metaSubstitution !== null) {
-    let metaSubstitutionNonTerminalNode = metaSubstitution.getNonTerminalNode();  ///
-
-    const metaSubstitutionNonTerminalNodeMatches = matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, nonTerminalNode);
+    const metaSubstitutionNonTerminalNodeMatches = metaSubstitution.matchNonTerminalNode(nonTerminalNode);
 
     conclusionMetavariableMatches = metaSubstitutionNonTerminalNodeMatches;  ///
   }
@@ -313,80 +312,4 @@ function matchConclusionNonTerminalNode(conclusionNonTerminalNode, nonTerminalNo
   }
 
   return conclusionNonTerminalNodeMatches;
-}
-
-function matchMetaSubstitutionNode(metaSubstitutionNode, node) {
-  let metaSubstitutionNodeMatches = false;
-
-  const nodeTerminalNode = node.isTerminalNode(),
-        ruleNodeTerminalNode = metaSubstitutionNode.isTerminalNode();
-
-  if (nodeTerminalNode === ruleNodeTerminalNode) {
-    if (nodeTerminalNode) {
-      const terminalNode = node,  ///
-            metaSubstitutionTerminalNode = metaSubstitutionNode,  ///
-            metaSubstitutionTerminalNodeMatches = matchMetaSubstitutionTerminalNode(metaSubstitutionTerminalNode, terminalNode);
-
-      metaSubstitutionNodeMatches = metaSubstitutionTerminalNodeMatches;  ///
-    } else {
-      const nonTerminalNode = node, ///
-            metaSubstitutionNonTerminalNode = metaSubstitutionNode,  ///
-            metaSubstitutionNonTerminalNodeMatches = matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, nonTerminalNode);
-
-      metaSubstitutionNodeMatches = metaSubstitutionNonTerminalNodeMatches; ///
-    }
-  }
-
-  return metaSubstitutionNodeMatches;
-}
-
-function matchMetaSubstitutionChildNodes(metaSubstitutionChildNodes, childNodes) {
-  let metaSubstitutionChildNodesMatches = false;
-
-  const childNodesLength = childNodes.length,
-        metaSubstitutionChildNodesLength = metaSubstitutionChildNodes.length;
-
-  if (childNodesLength === metaSubstitutionChildNodesLength) {
-    metaSubstitutionChildNodesMatches = childNodes.every((childNode, index) => {
-      const metaSubstitutionChildNode = metaSubstitutionChildNodes[index],
-            metaSubstitutionNode = metaSubstitutionChildNode, ///
-            node = childNode, ///
-            metaSubstitutionNodeMatches = matchMetaSubstitutionNode(metaSubstitutionNode, node);
-
-      if (metaSubstitutionNodeMatches) {
-        return true;
-      }
-    })
-  }
-
-  return metaSubstitutionChildNodesMatches;
-}
-
-function matchMetaSubstitutionTerminalNode(metaSubstitutionTerminalNode, terminalNode) {
-  let metaSubstitutionTerminalNodeMatches = false;
-
-  const matches = metaSubstitutionTerminalNode.match(terminalNode);
-
-  if (matches) {
-    metaSubstitutionTerminalNodeMatches = true;
-  }
-
-  return metaSubstitutionTerminalNodeMatches;
-}
-
-function matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, nonTerminalNode) {
-  let metaSubstitutionNonTerminalNodeMatches = false;
-
-  const ruleName = nonTerminalNode.getRuleName(),
-        metaSubstitutionRuleName = metaSubstitutionNonTerminalNode.getRuleName(); ///
-
-  if (ruleName === metaSubstitutionRuleName) {
-    const childNodes = nonTerminalNode.getChildNodes(),
-          metaSubstitutionChildNodes = metaSubstitutionNonTerminalNode.getChildNodes(),
-          metaSubstitutionChildNodesMatches = matchMetaSubstitutionChildNodes(metaSubstitutionChildNodes, childNodes);
-
-    metaSubstitutionNonTerminalNodeMatches = metaSubstitutionChildNodesMatches; ///
-  }
-
-  return metaSubstitutionNonTerminalNodeMatches;
 }

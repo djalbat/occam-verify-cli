@@ -2,15 +2,15 @@
 
 const Rule = require("../../rule"),
       verifyLabels = require("../../verify/labels"),
-      verifyPremise = require("../../verify/premise"),
-      verifyConclusion = require("../../verify/conclusion");
+      verifyConclusion = require("../../verify/conclusion"),
+      verifyPremiseOrPremises = require("../../verify/premiseOrPremises");
 
 const { first } = require("../../utilities/array"),
       { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const labelNodesQuery = nodesQuery("/rule/label"),
-      premiseNodeQuery = nodeQuery("/inferenceConditional/premise|premises!"),
       conclusionNodeQuery = nodeQuery("/inferenceConditional/conclusion!"),
+      premiseOrPremisesNodeQuery = nodeQuery("/inferenceConditional/premise|premises!"),
       inferenceConditionalNodeQuery = nodeQuery("/rule/inferenceConditional!");
 
 function verifyInferenceConditionalRule(ruleNode, rules, context) {
@@ -25,20 +25,18 @@ function verifyInferenceConditionalRule(ruleNode, rules, context) {
 
     if (labelsVerified) {
       const premises = [],
-            premiseNode = premiseNodeQuery(inferenceConditionalNode),
-            premiseVerified = verifyPremise(premiseNode, premises, context);
+            premiseOrPremisesNode = premiseOrPremisesNodeQuery(inferenceConditionalNode),
+            premiseOrPremisesVerified = verifyPremiseOrPremises(premiseOrPremisesNode, premises, context);
 
-      if (premiseVerified) {
+      if (premiseOrPremisesVerified) {
         const conclusions = [],
               conclusionNode = conclusionNodeQuery(inferenceConditionalNode),
               conclusionVerified = verifyConclusion(conclusionNode, conclusions, context);
 
         if (conclusionVerified) {
-          const firstPremise = first(premises),
-                firstConclusion = first(conclusions),
-                premise = firstPremise, ///
+          const firstConclusion = first(conclusions),
                 conclusion = firstConclusion, ///
-                rule = Rule.fromPremiseConclusionAndLabels(premise, conclusion, labels);
+                rule = Rule.fromPremisesConclusionAndLabels(premises, conclusion, labels);
 
           rules.push(rule);
 
