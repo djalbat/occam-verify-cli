@@ -70,9 +70,8 @@ function verifyMetaSublemma(metaSublemmaNode, context) {
 
   context = metaproofContext; ///
 
-  const metaAntecedents = [],
-        metaAntecedentNode = metaAntecedentNodeQuery(metaSublemmaNode),
-        metaAntecedentVerified = verifyMetaAntecedent(metaAntecedentNode, metaAntecedents, context);
+  const metaAntecedentNode = metaAntecedentNodeQuery(metaSublemmaNode),
+        metaAntecedentVerified = verifyMetaAntecedent(metaAntecedentNode, context);
 
   if (metaAntecedentVerified) {
     let metaDerivationVerified = true;

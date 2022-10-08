@@ -1,12 +1,10 @@
 "use strict";
 
-const MetaConsequent = require("../metaConsequent"),
-      verifyUnqualifiedMetaStatement = require("../verify/metastatement/unqualified");
+const verifyUnqualifiedMetaStatement = require("../verify/metastatement/unqualified");
 
 const { nodeQuery } = require("../utilities/query");
 
-const metastatementNodeQuery = nodeQuery("/unqualifiedMetaStatement/metastatement!"),
-      unqualifiedMetaStatementNodeQuery = nodeQuery("/metaConsequent/unqualifiedMetaStatement!");
+const unqualifiedMetaStatementNodeQuery = nodeQuery("/metaConsequent/unqualifiedMetaStatement!");
 
 function verifyMetaConsequent(metaConsequentNode, metaConsequents, context) {
   let metaConsequentVerified = false;
@@ -16,14 +14,7 @@ function verifyMetaConsequent(metaConsequentNode, metaConsequents, context) {
   if (unqualifiedMetaStatementNode !== null) {
     const unqualifiedMetaStatementVerified = verifyUnqualifiedMetaStatement(unqualifiedMetaStatementNode, context);
 
-    if (unqualifiedMetaStatementVerified) {
-      const metastatementNode = metastatementNodeQuery(unqualifiedMetaStatementNode),
-            metaConsequent = MetaConsequent.fromMetaStatementNode(metastatementNode);
-
-      metaConsequents.push(metaConsequent);
-
-      metaConsequentVerified = true;
-    }
+    metaConsequentVerified = unqualifiedMetaStatementVerified;
   }
 
   return metaConsequentVerified;

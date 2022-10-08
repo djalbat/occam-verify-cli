@@ -1,14 +1,12 @@
 "use strict";
 
-const MetaAntecedent = require("../metaAntecedent"),
-      verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
+const verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
-const { nodeQuery, nodesQuery } = require("../utilities/query");
+const { nodesQuery } = require("../utilities/query");
 
-const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement"),
-      unqualifiedMetastatementNodesQuery = nodesQuery("/metaAntecedent/unqualifiedMetastatement");
+const unqualifiedMetastatementNodesQuery = nodesQuery("/metaAntecedent/unqualifiedMetastatement");
 
-function verifyMetaAntecedent(metaAntecedentNode, metaAntecedents, context) {
+function verifyMetaAntecedent(metaAntecedentNode, context) {
   const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(metaAntecedentNode),
         metaAntecedentVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
           const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
@@ -17,17 +15,6 @@ function verifyMetaAntecedent(metaAntecedentNode, metaAntecedents, context) {
             return true;
           }
         });
-
-  if (metaAntecedentVerified) {
-    const metastatementNodes = unqualifiedMetastatementNodes.map((unqualifiedMetastatementNode) => {
-            const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
-
-            return metastatementNode;
-          }),
-          metaAntecedent = MetaAntecedent.fromMetastatementNodes(metastatementNodes);
-
-    metaAntecedents.push(metaAntecedent);
-  }
 
   return metaAntecedentVerified;
 }

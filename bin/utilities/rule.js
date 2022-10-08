@@ -2,8 +2,7 @@
 
 const MetaSubstitution = require("../metaSubstitution");
 
-const { nodeAsString } = require("../utilities/string"),
-      { prune, someCombination } = require("../utilities/array"),
+const { prune, someCombination } = require("../utilities/array"),
       { METAVARIABLE_RULE_NAME } = require("../ruleNames"),
       { metavariableNameFromMetavariableNode } = require("../utilities/query");
 
@@ -18,7 +17,7 @@ function matchRule(rule, metastatementNode, context) {
   metastatementNodes = metastatementNodes.slice(start); ///
 
   const ruleMatches = someCombination(metastatementNodes, (metastatementNodes) => {
-    const premisesMatchConclusion = matchPremisesAndConclusion(premiseMetastatementNodes, conclusionMetastatementNode, metastatementNodes, metastatementNode, context);
+    const premisesMatchConclusion = matchPremisesAndConclusion(premiseMetastatementNodes, conclusionMetastatementNode, metastatementNodes, metastatementNode);
 
     if (premisesMatchConclusion) {
       return true;
@@ -32,18 +31,16 @@ module.exports = {
   matchRule
 };
 
-function matchPremisesAndConclusion(premiseMetastatementNodes, conclusionMetastatementNode, metastatementNodes, metastatementNode, context) {
+function matchPremisesAndConclusion(premiseMetastatementNodes, conclusionMetastatementNode, metastatementNodes, metastatementNode) {
   let premisesMatchConclusion = false;
 
   const metaSubstitutions = [],
-        premisesMatch = matchPremises(premiseMetastatementNodes, metastatementNodes, metaSubstitutions, context);
+        premisesMatches = matchPremises(premiseMetastatementNodes, metastatementNodes, metaSubstitutions);
 
-  if (premisesMatch) {
-    const conclusionNonTerminalNode = matchConclusion(conclusionMetastatementNode, metaSubstitutions), ///
-          conclusionMetastatementString = nodeAsString(conclusionNonTerminalNode),
-          metastatementString = nodeAsString(metastatementNode);
+  if (premisesMatches) {
+    const conclusionMatches = matchConclusion(conclusionMetastatementNode, metastatementNode, metaSubstitutions);
 
-    premisesMatchConclusion = (metastatementString === conclusionMetastatementString);
+    premisesMatchConclusion = conclusionMatches;  ///
   }
 
   return premisesMatchConclusion;
@@ -125,10 +122,9 @@ function matchPremiseChildNodes(premiseChildNodes, childNodes, metaSubstitutions
 }
 
 function matchPremiseMetavariable(premiseMetavariableNode, nonTerminalNode, metaSubstitutions) {
-  let premiseMetavariableMatches = false;
+  let premiseMetavariableMatches;
 
   const premiseMetavariableName = metavariableNameFromMetavariableNode(premiseMetavariableNode),
-        nonTerminalString = nodeAsString(nonTerminalNode),
         metaSubstitution = metaSubstitutions.find((metaSubstitution) => {
           const metavariableName = metaSubstitution.getMetavariableName();
 
@@ -139,11 +135,9 @@ function matchPremiseMetavariable(premiseMetavariableNode, nonTerminalNode, meta
 
   if (metaSubstitution !== null) {
     const metaSubstitutionNonTerminalNode = metaSubstitution.getNonTerminalNode(),
-          metaSubstitutionNonTerminalString = nodeAsString(metaSubstitutionNonTerminalNode);
+          metaSubstitutionNonTerminalNodeMatches = matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, nonTerminalNode);
 
-    if (nonTerminalString === metaSubstitutionNonTerminalString) {
-      premiseMetavariableMatches = true;
-    }
+    premiseMetavariableMatches = metaSubstitutionNonTerminalNodeMatches;  ///
   } else {
     const metavariableName = premiseMetavariableName, ///
           metaSubstitution = MetaSubstitution.fromMetavariableNameAndNonTerminalNode(metavariableName, nonTerminalNode);
@@ -199,67 +193,65 @@ function matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, me
   return premiseNonTerminalNodeMatches;
 }
 
-function matchConclusion(conclusionMetastatementNode, metaSubstitutions) {
-  let conclusionNonTerminalNode = conclusionMetastatementNode;  ///
+function matchConclusion(conclusionMetastatementNode, metastatementNode, metaSubstitutions) {
+  const nonTerminalNode = metastatementNode,  ///
+        conclusionNonTerminalNode = conclusionMetastatementNode,  ///
+        conclusionNonTerminalNodeMatches = matchConclusionNonTerminalNode(conclusionNonTerminalNode, nonTerminalNode, metaSubstitutions),
+        conclusionMatches = conclusionNonTerminalNodeMatches; ///
 
-  conclusionNonTerminalNode = conclusionNonTerminalNode.clone();
-
-  conclusionNonTerminalNode = matchConclusionNonTerminalNode(conclusionNonTerminalNode, metaSubstitutions);
-
-  return conclusionNonTerminalNode;
+  return conclusionMatches;
 }
 
-function matchConclusionNode(conclusionNode, metaSubstitutions) {
-  const conclusionNodeNonTerminalNode = conclusionNode.isNonTerminalNode();
+function matchConclusionNode(conclusionNode, node, metaSubstitutions) {
+  let conclusionNodeMatches = false;
 
-  if (conclusionNodeNonTerminalNode) {
-    let conclusionNonTerminalNode = conclusionNode; ///
+  const nodeTerminalNode = node.isTerminalNode(),
+        ruleNodeTerminalNode = conclusionNode.isTerminalNode();
 
-    conclusionNonTerminalNode = matchConclusionNonTerminalNode(conclusionNonTerminalNode, metaSubstitutions);
+  if (nodeTerminalNode === ruleNodeTerminalNode) {
+    if (nodeTerminalNode) {
+      const terminalNode = node,  ///
+            conclusionTerminalNode = conclusionNode,  ///
+            conclusionTerminalNodeMatches = matchConclusionTerminalNode(conclusionTerminalNode, terminalNode, metaSubstitutions);
 
-    conclusionNode = conclusionNonTerminalNode; ///
+      conclusionNodeMatches = conclusionTerminalNodeMatches;  ///
+    } else {
+      const nonTerminalNode = node, ///
+            conclusionNonTerminalNode = conclusionNode,  ///
+            conclusionNonTerminalNodeMatches = matchConclusionNonTerminalNode(conclusionNonTerminalNode, nonTerminalNode, metaSubstitutions);
+
+      conclusionNodeMatches = conclusionNonTerminalNodeMatches; ///
+    }
   }
 
-  return conclusionNode;
+  return conclusionNodeMatches;
 }
 
-function matchConclusionChildNodes(conclusionChildNodes, metaSubstitutions) {
-  conclusionChildNodes = conclusionChildNodes.map((conclusionChildNode) => {
-    let conclusionNode = conclusionChildNode; ///
+function matchConclusionChildNodes(conclusionChildNodes, childNodes, metaSubstitutions) {
+  let conclusionChildNodesMatches = false;
 
-    conclusionNode = matchConclusionNode(conclusionNode, metaSubstitutions);
+  const childNodesLength = childNodes.length,
+        conclusionChildNodesLength = conclusionChildNodes.length;
 
-    conclusionChildNode = conclusionNode; ///
+  if (childNodesLength === conclusionChildNodesLength) {
+    conclusionChildNodesMatches = childNodes.every((childNode, index) => {
+      const conclusionChildNode = conclusionChildNodes[index],
+            conclusionNode = conclusionChildNode, ///
+            node = childNode, ///
+            conclusionNodeMatches = matchConclusionNode(conclusionNode, node, metaSubstitutions);
 
-    return conclusionChildNode;
-  });
-
-  return conclusionChildNodes;
-}
-
-function matchConclusionNonTerminalNode(conclusinNonTerminalNode, metaSubstitutions) {
-  const ruleName = conclusinNonTerminalNode.getRuleName();
-
-  if (ruleName === METAVARIABLE_RULE_NAME) {
-    let conclusionMetaVariableNode = conclusinNonTerminalNode; ///
-
-    conclusinNonTerminalNode = matchConclusionMetavariableNode(conclusionMetaVariableNode, metaSubstitutions);
-  } else {
-    let childNodes = conclusinNonTerminalNode.getChildNodes();
-
-    let conclusionChildNodes = childNodes;  ///
-
-    conclusionChildNodes = matchConclusionChildNodes(conclusionChildNodes, metaSubstitutions);
-
-    childNodes = conclusionChildNodes;  ///
-
-    conclusinNonTerminalNode.setChildNodes(childNodes);
+      if (conclusionNodeMatches) {
+        return true;
+      }
+    })
   }
 
-  return conclusinNonTerminalNode;
+  return conclusionChildNodesMatches;
 }
 
-function matchConclusionMetavariableNode(conclusionMetavariableNode, metaSubstitutions) {
+function matchConclusionMetavariable(conclusionMetavariableNode, nonTerminalNode, metaSubstitutions) {
+  let conclusionMetavariableMatches = true;
+
   const conclusionMetavariableName = metavariableNameFromMetavariableNode(conclusionMetavariableNode),
         metaSubstitution = metaSubstitutions.find((metaSubstitution) => {
           const metavariableName = metaSubstitution.getMetavariableName();
@@ -267,13 +259,134 @@ function matchConclusionMetavariableNode(conclusionMetavariableNode, metaSubstit
           if (metavariableName === conclusionMetavariableName) {
             return true;
           }
-        });
+        }) || null;
 
-  let nonTerminalNode = metaSubstitution.getNonTerminalNode();  ///
+  if (metaSubstitution !== null) {
+    let metaSubstitutionNonTerminalNode = metaSubstitution.getNonTerminalNode();  ///
 
-  nonTerminalNode = nonTerminalNode.clone();  ///
+    const metaSubstitutionNonTerminalNodeMatches = matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, nonTerminalNode);
 
-  const conclusionNonTerminalNode = nonTerminalNode;  ///
+    conclusionMetavariableMatches = metaSubstitutionNonTerminalNodeMatches;  ///
+  }
 
-  return conclusionNonTerminalNode;
+  return conclusionMetavariableMatches;
+}
+
+function matchConclusionTerminalNode(conclusionTerminalNode, terminalNode, metaSubstitutions) {
+  let conclusionTerminalNodeMatches = false;
+
+  const matches = conclusionTerminalNode.match(terminalNode);
+
+  if (matches) {
+    conclusionTerminalNodeMatches = true;
+  }
+
+  return conclusionTerminalNodeMatches;
+}
+
+function matchConclusionNonTerminalNode(conclusionNonTerminalNode, nonTerminalNode, metaSubstitutions) {
+  let conclusionNonTerminalNodeMatches = false;
+
+  const conclusionRuleName = conclusionNonTerminalNode.getRuleName(); ///
+
+  switch (conclusionRuleName) {
+    case METAVARIABLE_RULE_NAME: {
+      const conclusionMetavariableNode = conclusionNonTerminalNode, ///
+            conclusionMetavariableMatches = matchConclusionMetavariable(conclusionMetavariableNode, nonTerminalNode, metaSubstitutions);
+
+      conclusionNonTerminalNodeMatches = conclusionMetavariableMatches;
+
+      break;
+    }
+
+    default: {
+      const ruleName = nonTerminalNode.getRuleName();
+
+      if (ruleName === conclusionRuleName) {
+        const childNodes = nonTerminalNode.getChildNodes(),
+              conclusionChildNodes = conclusionNonTerminalNode.getChildNodes(),
+              conclusionChildNodesMatches = matchConclusionChildNodes(conclusionChildNodes, childNodes, metaSubstitutions);
+
+        conclusionNonTerminalNodeMatches = conclusionChildNodesMatches; ///
+      }
+    }
+  }
+
+  return conclusionNonTerminalNodeMatches;
+}
+
+function matchMetaSubstitutionNode(metaSubstitutionNode, node) {
+  let metaSubstitutionNodeMatches = false;
+
+  const nodeTerminalNode = node.isTerminalNode(),
+        ruleNodeTerminalNode = metaSubstitutionNode.isTerminalNode();
+
+  if (nodeTerminalNode === ruleNodeTerminalNode) {
+    if (nodeTerminalNode) {
+      const terminalNode = node,  ///
+            metaSubstitutionTerminalNode = metaSubstitutionNode,  ///
+            metaSubstitutionTerminalNodeMatches = matchMetaSubstitutionTerminalNode(metaSubstitutionTerminalNode, terminalNode);
+
+      metaSubstitutionNodeMatches = metaSubstitutionTerminalNodeMatches;  ///
+    } else {
+      const nonTerminalNode = node, ///
+            metaSubstitutionNonTerminalNode = metaSubstitutionNode,  ///
+            metaSubstitutionNonTerminalNodeMatches = matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, nonTerminalNode);
+
+      metaSubstitutionNodeMatches = metaSubstitutionNonTerminalNodeMatches; ///
+    }
+  }
+
+  return metaSubstitutionNodeMatches;
+}
+
+function matchMetaSubstitutionChildNodes(metaSubstitutionChildNodes, childNodes) {
+  let metaSubstitutionChildNodesMatches = false;
+
+  const childNodesLength = childNodes.length,
+        metaSubstitutionChildNodesLength = metaSubstitutionChildNodes.length;
+
+  if (childNodesLength === metaSubstitutionChildNodesLength) {
+    metaSubstitutionChildNodesMatches = childNodes.every((childNode, index) => {
+      const metaSubstitutionChildNode = metaSubstitutionChildNodes[index],
+            metaSubstitutionNode = metaSubstitutionChildNode, ///
+            node = childNode, ///
+            metaSubstitutionNodeMatches = matchMetaSubstitutionNode(metaSubstitutionNode, node);
+
+      if (metaSubstitutionNodeMatches) {
+        return true;
+      }
+    })
+  }
+
+  return metaSubstitutionChildNodesMatches;
+}
+
+function matchMetaSubstitutionTerminalNode(metaSubstitutionTerminalNode, terminalNode) {
+  let metaSubstitutionTerminalNodeMatches = false;
+
+  const matches = metaSubstitutionTerminalNode.match(terminalNode);
+
+  if (matches) {
+    metaSubstitutionTerminalNodeMatches = true;
+  }
+
+  return metaSubstitutionTerminalNodeMatches;
+}
+
+function matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, nonTerminalNode) {
+  let metaSubstitutionNonTerminalNodeMatches = false;
+
+  const ruleName = nonTerminalNode.getRuleName(),
+        metaSubstitutionRuleName = metaSubstitutionNonTerminalNode.getRuleName(); ///
+
+  if (ruleName === metaSubstitutionRuleName) {
+    const childNodes = nonTerminalNode.getChildNodes(),
+          metaSubstitutionChildNodes = metaSubstitutionNonTerminalNode.getChildNodes(),
+          metaSubstitutionChildNodesMatches = matchMetaSubstitutionChildNodes(metaSubstitutionChildNodes, childNodes);
+
+    metaSubstitutionNonTerminalNodeMatches = metaSubstitutionChildNodesMatches; ///
+  }
+
+  return metaSubstitutionNonTerminalNodeMatches;
 }
