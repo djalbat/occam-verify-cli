@@ -2,8 +2,6 @@
 
 const { loggingUtilities } = require("necessary");
 
-const MetaAssertion = require("../../metaAssertion");
-
 const { nodeAsString } = require("../../utilities/string"),
       { nodeQuery, referenceNameFromReferenceNode } = require("../../utilities/query");
 

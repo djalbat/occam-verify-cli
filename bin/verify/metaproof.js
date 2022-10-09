@@ -3,9 +3,7 @@
 const verifyMetaDerivation = require("../verify/metaDerivation"),
       verifyQualifiedMetastatement = require("../verify/metastatement/qualified");
 
-const { first } = require("../utilities/array"),
-      { nodeQuery } = require("../utilities/query"),
-      { nodeAsString } = require("../utilities/string");
+const { nodeQuery } = require("../utilities/query");
 
 const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement!/metastatement!"),
       metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),

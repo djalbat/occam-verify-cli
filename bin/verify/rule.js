@@ -4,7 +4,6 @@ const { loggingUtilities } = require("necessary");
 
 const Rule = require("../rule"),
       verifyLabels = require("../verify/labels"),
-      MetaproofContext = require("../context/metaproof"),
       verifyConditionalInference = require("../verify/conditinalInference"),
       verifyUnconditionalInference = require("../verify/unconditionalInference");
 
@@ -30,10 +29,6 @@ function verifyRule(ruleNode, context) {
         labelsVerified = verifyLabels(labelNodes, labels, context);
 
   if (labelsVerified) {
-    const metaproofContext = MetaproofContext.fromContext(context);
-
-    context = metaproofContext; ///
-
     const premises = [],
           conclusions = [],
           conditionalInferenceNode = conditionalInferenceNodeQuery(ruleNode),
