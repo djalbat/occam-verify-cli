@@ -1,39 +1,28 @@
 "use strict";
 
-const Rule = require("../../rule"),
-      Conclusion = require("../../conclusion"),
-      verifyLabels = require("../../verify/labels"),
+const Conclusion = require("../../conclusion"),
       verifyUnqualifiedMetastatement = require("../../verify/metastatement/unqualified");
 
-const { nodeQuery, nodesQuery } = require("../../utilities/query");
+const { nodeQuery } = require("../../utilities/query");
 
-const labelNodesQuery = nodesQuery("/rule/label"),
-      metastatementNodeQuery = nodeQuery("/*/metastatement"),
+const metastatementNodeQuery = nodeQuery("/*/metastatement"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/rule/unqualifiedMetastatement!");
 
-function verifyUnqualifiedMetastatementRule(ruleNode, rules, context) {
+function verifyUnqualifiedMetastatementRule(ruleNode, premises, conclusions, context) {
   let unqualifiedMetastatementRuleVerified = false;
 
   const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(ruleNode);
 
   if (unqualifiedMetastatementNode !== null) {
-    const labels = [],
-          labelNodes = labelNodesQuery(ruleNode),
-          labelsVerified = verifyLabels(labelNodes, labels, context);
+    const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
 
-    if (labelsVerified) {
-      const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
+    if (unqualifiedMetastatementVerified) {
+      const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
+            conclusion = Conclusion.fromMetastatementNode(metastatementNode);
 
-      if (unqualifiedMetastatementVerified) {
-        const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-              conclusion = Conclusion.fromMetastatementNode(metastatementNode),
-              premises = [],
-              rule = Rule.fromPremisesConclusionAndLabels(premises, conclusion, labels);
+      conclusions.push(conclusion);
 
-        rules.push(rule);
-
-        unqualifiedMetastatementRuleVerified = true;
-      }
+      unqualifiedMetastatementRuleVerified = true;
     }
   }
 

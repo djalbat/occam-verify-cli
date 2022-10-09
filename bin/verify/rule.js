@@ -2,7 +2,9 @@
 
 const { loggingUtilities } = require("necessary");
 
-const verifyMetaproof = require("../verify/metaproof"),
+const Rule = require("../rule"),
+      verifyLabels = require("../verify/labels"),
+      verifyMetaproof = require("../verify/metaproof"),
       MetaproofContext = require("../context/metaproof"),
       verifyInferenceConditionalRule = require("../verify/rule/inferenceConditional"),
       verifyUnqualifiedMetastatementRule = require("../verify/rule/unqualifiedMetastatement");
@@ -24,13 +26,20 @@ function verifyRule(ruleNode, context) {
 
   log.debug(`Verifying the '${labelsString}' rule...`);
 
+  const labels = [],
+        labelsVerified = verifyLabels(labelNodes, labels, context);
+
+  if (labelsVerified) {
+  }
+
   const metaproofContext = MetaproofContext.fromContext(context);
 
   context = metaproofContext; ///
 
-  const rules = [],
-        inferenceConditionalRuleVerified = verifyInferenceConditionalRule(ruleNode, rules, context),
-        unqualifiedMetastatementRuleVerified = verifyUnqualifiedMetastatementRule(ruleNode, rules, context);
+  const premises = [],
+        conclusions = [],
+        inferenceConditionalRuleVerified = verifyInferenceConditionalRule(ruleNode, premises, conclusions, context),
+        unqualifiedMetastatementRuleVerified = verifyUnqualifiedMetastatementRule(ruleNode, premises, conclusions, context);
 
   if (inferenceConditionalRuleVerified || unqualifiedMetastatementRuleVerified) {
     const metaproofNode = metaproofNodeQuery(ruleNode);
@@ -47,8 +56,9 @@ function verifyRule(ruleNode, context) {
   }
 
   if (ruleVerified) {
-    const firstRule = first(rules),
-          rule = firstRule; ///
+    const firstConclusion = first(conclusions),
+          conclusion = firstConclusion, ///
+          rule = Rule.fromPremisesConclusionAndLabels(premises, conclusion, labels);
 
     context.addRule(rule);
 
