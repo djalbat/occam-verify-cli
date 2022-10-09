@@ -2,8 +2,7 @@
 
 const { loggingUtilities } = require("necessary");
 
-const { matchRule } = require("../../utilities/rule"),
-      { nodeAsString } = require("../../utilities/string"),
+const { nodeAsString } = require("../../utilities/string"),
       { nodeQuery, referenceNameFromReferenceNode } = require("../../utilities/query");
 
 const { log } = loggingUtilities;
@@ -22,9 +21,9 @@ function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
           rule = context.findRuleByReferenceName(referenceName);
 
     if (rule !== null) {
-      const ruleMatches = matchRule(rule, metastatementNode, context);
+      const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, context);
 
-      if (ruleMatches) {
+      if (ruleMatchesMetastatement) {
         context.addMetastatementNode(metastatementNode);
 
         const metastatementString = nodeAsString(metastatementNode);
@@ -40,4 +39,3 @@ function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
 }
 
 module.exports = verifyQualifiedMetastatement;
-
