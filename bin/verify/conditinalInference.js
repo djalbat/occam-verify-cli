@@ -1,17 +1,17 @@
 "use strict";
 
-const verifyMetaproof = require("../../verify/metaproof"),
-      verifyConclusion = require("../../verify/conclusion"),
-      verifyPremiseOrPremises = require("../../verify/premiseOrPremises");
+const verifyMetaproof = require("../verify/metaproof"),
+      verifyConclusion = require("../verify/conclusion"),
+      verifyPremiseOrPremises = require("../verify/premiseOrPremises");
 
-const { nodeQuery } = require("../../utilities/query");
+const { nodeQuery } = require("../utilities/query");
 
 const metaproofNodeQuery = nodeQuery("/rule/metaproof!"),
       conclusionNodeQuery = nodeQuery("/conditionalInference/conclusion!"),
       premiseOrPremisesNodeQuery = nodeQuery("/conditionalInference/premise|premises!");
 
 function verifyConditionalInference(ruleNode, premises, conclusions, context) {
-  let conditinalInferenceVerified = false;
+  let conditionalInferenceVerified = false;
 
   const inferenceConditionalNode = inferenceConditionalNodeQuery(ruleNode);
 
@@ -35,11 +35,11 @@ function verifyConditionalInference(ruleNode, premises, conclusions, context) {
       if (metaproofVerified) {
         ruleVerified = true;
       }
-      conditinalInferenceVerified = conclusionVerified;
+      conditionalInferenceVerified = conclusionVerified;
     }
   }
 
-  return conditinalInferenceVerified;
+  return conditionalInferenceVerified;
 }
 
 module.exports = verifyConditionalInference;
