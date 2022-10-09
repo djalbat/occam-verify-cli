@@ -2,6 +2,8 @@
 
 const { loggingUtilities } = require("necessary");
 
+const MetaAssertion = require("../../metaAssertion");
+
 const { nodeQuery } = require("../../utilities/query"),
       { nodeAsString } = require("../../utilities/string");
 
@@ -17,21 +19,20 @@ function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context) {
   if (metastatementNode !== null) {
     const derived = context.isDerived();
 
-    let metastatementPresent = true;  ///
-
     if (derived) {
-      metastatementPresent = context.isMetastatementNodePresent(metastatementNode);
-    }
+      const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode),
+            metaAssertionPresent = context.isMetaAssertionPresent(metaAssertion);
 
-    if (metastatementPresent) {
-      context.addMetastatementNode(metastatementNode);
+      unqualifiedMetastatementVerified = metaAssertionPresent;  ///
+    } else {
+      unqualifiedMetastatementVerified = true;
     }
+  }
 
+  if (unqualifiedMetastatementVerified) {
     const metastatementString = nodeAsString(metastatementNode);
 
     log.info(`Verified the '${metastatementString}' unqualified metastatement.`);
-
-    unqualifiedMetastatementVerified = true;
   }
 
   return unqualifiedMetastatementVerified;

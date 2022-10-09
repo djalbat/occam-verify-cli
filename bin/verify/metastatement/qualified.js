@@ -2,6 +2,8 @@
 
 const { loggingUtilities } = require("necessary");
 
+const MetaAssertion = require("../../metaAssertion");
+
 const { nodeAsString } = require("../../utilities/string"),
       { nodeQuery, referenceNameFromReferenceNode } = require("../../utilities/query");
 
@@ -24,15 +26,15 @@ function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
       const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, context);
 
       if (ruleMatchesMetastatement) {
-        context.addMetastatementNode(metastatementNode);
-
-        const metastatementString = nodeAsString(metastatementNode);
-
-        log.info(`Verified the '${metastatementString}' qualified metastatement.`);
-
         qualifiedMetastatementVerified = true;
       }
     }
+  }
+
+  if (qualifiedMetastatementVerified) {
+    const metastatementString = nodeAsString(metastatementNode);
+
+    log.info(`Verified the '${metastatementString}' qualified metastatement.`);
   }
 
   return qualifiedMetastatementVerified;

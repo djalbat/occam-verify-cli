@@ -1,12 +1,10 @@
 "use strict";
 
-const { nodeAsString } = require("../utilities/string");
-
 class MetaproofContext {
-  constructor(context, derived, metastatementNodes) {
+  constructor(context, derived, metaAssertions) {
     this.context = context;
     this.derived = derived;
-    this.metastatementNodes = metastatementNodes;
+    this.metaAssertions = metaAssertions;
   }
 
   getContext() {
@@ -17,8 +15,8 @@ class MetaproofContext {
     return this.derived;
   }
 
-  getMetastatementNodes() {
-    return this.metastatementNodes;
+  getMetaAssertions() {
+    return this.metaAssertions;
   }
 
   getRules() { return this.context.getRules(); }
@@ -41,47 +39,41 @@ class MetaproofContext {
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
-  isMetastatementNodePresent(metaStatementNode) {
-    const metastatementNodeA = metaStatementNode; ///
+  isMetaAssertionPresent(metaAssertion) {
+    const metaAssertionA = metaAssertion; ///
 
-    let metastatementNodePresent = this.metastatementNodes.some((metaStatementNode) => {
-      const metastatementNodeB = metaStatementNode, ///
-            metastatementNodeAString = nodeAsString(metastatementNodeA),
-            metastatementNodeBString = nodeAsString(metastatementNodeB),
-            matches = (metastatementNodeAString === metastatementNodeBString);
+    let metaAssertionPresent = this.metaAssertions.some((metaAssertion) => {
+      const metaAssertionB = metaAssertion, ///
+            matches = metaAssertionA.match(metaAssertionB);
 
       if (matches) {
         return true;
       }
     });
 
-    if (!metastatementNodePresent) {
-      metastatementNodePresent = this.context.isMetastatementNodePresent(metaStatementNode);
+    if (!metaAssertionPresent) {
+      metaAssertionPresent = this.context.isMetaAssertionPresent(metaAssertion);
     }
 
-    return metastatementNodePresent;
+    return metaAssertionPresent;
   }
 
   isVariablePresentByVariableName(variableName) { return this.context.isVariablePresentByVariableName(variableName); }
 
   setDerived(derived) {
-    if (derived) {
-      this.metastatementNodes.pop();
-    }
-
     this.derived = derived;
   }
 
   addRule(rule) { this.context.addRule(rule); }
 
-  addMetastatementNode(metastatementNode) {
-    this.metastatementNodes.push(metastatementNode);
+  addMetaAssertion(metaAssertion) {
+    this.metaAssertions.push(metaAssertion);
   }
 
   static fromContext(context) {
     const derived = false,
-          metastatementNodes = [],
-          metaproofContext = new MetaproofContext(context, derived, metastatementNodes);
+          metaAssertions = [],
+          metaproofContext = new MetaproofContext(context, derived, metaAssertions);
 
     return metaproofContext;
   }

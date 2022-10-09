@@ -1,6 +1,7 @@
 "use strict";
 
-const MetaproofContext = require("../context/metaproof"),
+const MetaAssertion = require("../metaAssertion"),
+      MetaproofContext = require("../context/metaproof"),
       verifyMetaAntecedent = require("../verify/metaAntecedent"),
       verifyQualifiedMetastatement = require("../verify/metastatement/qualified"),
       verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
@@ -19,44 +20,61 @@ function verifyMetaDerivation(metaDerivationNode, context) {
 
   context.setDerived(derived);
 
-  const metaSubproofChildNodes = metaDerivationChildNodesQuery(metaDerivationNode),
-        metaSubproofChildNodesVerified = metaSubproofChildNodes.every((metaSubproofChildNode) => {
-          let metaSubproofChildNodeVerified;
+  const metaDerivationChildNodes = metaDerivationChildNodesQuery(metaDerivationNode),
+        metaDerivationChildNodesVerified = metaDerivationChildNodes.every((metaDerivationChildNode) => {
+          let metaDerivationChildNodeVerified;
 
-          const ruleName = metaSubproofChildNode.getRuleName();
+          const ruleName = metaDerivationChildNode.getRuleName();
 
           switch (ruleName) {
             case META_SUBPROOF_RULE_NAME: {
-              const metaSubproofNode = metaSubproofChildNode,  ///
+              const metaSubproofNode = metaDerivationChildNode,  ///
                     metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, context);
 
-              metaSubproofChildNodeVerified = metaSubproofVerified;  ///
+              if (metaSubproofVerified) {
+                const metaAssertion = MetaAssertion.fromMetaSubproofNode(metaSubproofNode);
+
+                context.addMetaAssertion(metaAssertion);
+
+                metaDerivationChildNodeVerified = true;
+              }
 
               break;
             }
 
             case QUALIFIED_METASTATEMENT_RULE_NAME: {
-              const qualifiedMetastatementNode = metaSubproofChildNode,  ///
+              const qualifiedMetastatementNode = metaDerivationChildNode,  ///
                     qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
 
-              metaSubproofChildNodeVerified = qualifiedMetastatementVerified;  ///
+              if (qualifiedMetastatementVerified) {
+                const metaAssertion = MetaAssertion.fromQualifiedMetastatementNode(qualifiedMetastatementNode);
+
+                context.addMetaAssertion(metaAssertion);
+
+                metaDerivationChildNodeVerified = qualifiedMetastatementVerified; ///
+              }
 
               break;
             }
 
             case UNQUALIFIED_METASTATEMENT_RULE_NAME: {
-              const unqualifiedMetastatementNode = metaSubproofChildNode,  ///
+              const unqualifiedMetastatementNode = metaDerivationChildNode,  ///
                     unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
 
-              metaSubproofChildNodeVerified = unqualifiedMetastatementVerified;  ///
+              if (unqualifiedMetastatementVerified) {
+                const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode);
 
+                context.addMetaAssertion(metaAssertion);
+
+                metaDerivationChildNodeVerified = true;
+              }
               break;
             }
           }
 
-          return metaSubproofChildNodeVerified;
+          return metaDerivationChildNodeVerified;
         }),
-        metaDerivationVerified = metaSubproofChildNodesVerified;  ///
+        metaDerivationVerified = metaDerivationChildNodesVerified;  ///
 
   return metaDerivationVerified;
 }

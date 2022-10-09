@@ -186,17 +186,17 @@ class FileContext {
     return labelPresent;
   }
 
+  isMetaAssertionPresent(metaAssertion) {
+    const metaAssertionPresent = false;
+
+    return metaAssertionPresent;
+  }
+
   isTypePresentByTypeName(typeName) {
     const type = this.findTypeByTypeName(typeName),
           typePresent = (type !== null);
 
     return typePresent;
-  }
-
-  isMetastatementNodePresent(metaStatementNode) {
-    const metastatementNodePresent = false;
-
-    return metastatementNodePresent;
   }
 
   isVariablePresentByVariableName(variableName) {
@@ -228,10 +228,6 @@ class FileContext {
 
   addConstructor(constructor) {
     this.constructors.push(constructor);
-  }
-
-  setInAntecedent(inAntecedent) {
-    ///
   }
 
   static fromPackageContextAndFilePath(packageContext, filePath) {

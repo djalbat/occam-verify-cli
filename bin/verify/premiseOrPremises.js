@@ -1,6 +1,7 @@
 "use strict";
 
 const Premise = require("../premise"),
+      MetaAssertion = require("../metaAssertion"),
       verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
 const { nodeQuery, nodesQuery } = require("../utilities/query");
@@ -21,7 +22,10 @@ function verifyPremiseOrPremises(premiseOrPremisesNode, premises, context) {
   if (premiseOrPremisesVerified) {
     unqualifiedMetastatementNodes.forEach((unqualifiedMetastatementNode) => {
       const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
+            metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode),
             premise = Premise.fromMetastatementNode(metastatementNode);
+
+      context.addMetaAssertion(metaAssertion);
 
       premises.push(premise);
     });

@@ -1,6 +1,7 @@
 "use strict";
 
-const verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
+const MetaAssertion = require("../metaAssertion"),
+      verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
 const { nodesQuery } = require("../utilities/query");
 
@@ -15,6 +16,14 @@ function verifyMetaAntecedent(metaAntecedentNode, context) {
             return true;
           }
         });
+
+  if (metaAntecedentVerified) {
+    unqualifiedMetastatementNodes.forEach((unqualifiedMetastatementNode) => {
+      const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode);
+
+      context.addMetaAssertion(metaAssertion);
+    });
+  }
 
   return metaAntecedentVerified;
 }
