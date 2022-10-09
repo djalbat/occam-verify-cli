@@ -4,10 +4,9 @@ const { loggingUtilities } = require("necessary");
 
 const Rule = require("../rule"),
       verifyLabels = require("../verify/labels"),
-      verifyMetaproof = require("../verify/metaproof"),
       MetaproofContext = require("../context/metaproof"),
-      verifyInferenceConditionalRule = require("../verify/rule/inferenceConditional"),
-      verifyUnqualifiedMetastatementRule = require("../verify/rule/unqualifiedMetastatement");
+      verifyConditionalInference = require("../verify/conditinalInference"),
+      verifyUnconditionalInference = require("../verify/unconditionalInference");
 
 const { first } = require("../utilities/array"),
       { nodesAsString } = require("../utilities/string"),
@@ -16,7 +15,8 @@ const { first } = require("../utilities/array"),
 const { log } = loggingUtilities;
 
 const labelNodesQuery = nodesQuery("/rule/label"),
-      metaproofNodeQuery = nodeQuery("/rule/metaproof!");
+      conditionalInferenceNodeQuery = nodeQuery("/rule/conditionalInference!"),
+      unconditionalInferenceNodeQuery = nodeQuery("/rule/unconditionalInference!");
 
 function verifyRule(ruleNode, context) {
   let ruleVerified = false;
@@ -30,39 +30,36 @@ function verifyRule(ruleNode, context) {
         labelsVerified = verifyLabels(labelNodes, labels, context);
 
   if (labelsVerified) {
-  }
+    const metaproofContext = MetaproofContext.fromContext(context);
 
-  const metaproofContext = MetaproofContext.fromContext(context);
+    context = metaproofContext; ///
 
-  context = metaproofContext; ///
+    const premises = [],
+          conclusions = [],
+          conditionalInferenceNode = conditionalInferenceNodeQuery(ruleNode),
+          unconditionalInferenceNode = unconditionalInferenceNodeQuery(ruleNode);
 
-  const premises = [],
-        conclusions = [],
-        inferenceConditionalRuleVerified = verifyInferenceConditionalRule(ruleNode, premises, conclusions, context),
-        unqualifiedMetastatementRuleVerified = verifyUnqualifiedMetastatementRule(ruleNode, premises, conclusions, context);
+    if (conditionalInferenceNode !== null) {
+      const conditionalInferenceVerified = verifyConditionalInference(ruleNode, premises, conclusions, context);
 
-  if (inferenceConditionalRuleVerified || unqualifiedMetastatementRuleVerified) {
-    const metaproofNode = metaproofNodeQuery(ruleNode);
-
-    let metaproofVerified = true;
-
-    if (metaproofNode !== null) {
-      metaproofVerified = verifyMetaproof(metaproofNode, rules, context);
+      ruleVerified = conditionalInferenceVerified;  ///
     }
 
-    if (metaproofVerified) {
-      ruleVerified = true;
+    if (unconditionalInferenceNode !== null) {
+      const unconditionalInferenceVerified = verifyUnconditionalInference(ruleNode, premises, conclusions, context);
+
+      ruleVerified = unconditionalInferenceVerified;  ///
     }
-  }
 
-  if (ruleVerified) {
-    const firstConclusion = first(conclusions),
-          conclusion = firstConclusion, ///
-          rule = Rule.fromPremisesConclusionAndLabels(premises, conclusion, labels);
+    if (ruleVerified) {
+      const firstConclusion = first(conclusions),
+            conclusion = firstConclusion, ///
+            rule = Rule.fromPremisesConclusionAndLabels(premises, conclusion, labels);
 
-    context.addRule(rule);
+      context.addRule(rule);
 
-    log.info(`Verified the '${labelsString}' rule.`);
+      log.info(`Verified the '${labelsString}' rule.`);
+    }
   }
 
   return ruleVerified;
