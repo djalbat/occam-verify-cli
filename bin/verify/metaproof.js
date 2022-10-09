@@ -11,7 +11,7 @@ const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement!/metastatement
       metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
       qualifiedStatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement!");
 
-function verifyMetaproof(metaproofNode, rules, context) {
+function verifyMetaproof(metaproofNode, context) {
   let metaproofVerified = false;
 
   const metaDerivationNode = metaDerivationNodeQuery(metaproofNode);

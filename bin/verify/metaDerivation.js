@@ -6,99 +6,99 @@ const MetaproofContext = require("../context/metaproof"),
       verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
 const { nodeQuery, nodesQuery } = require("../utilities/query"),
-      { META_CONDITIONAL_PROOF_RULE_NAME, QUALIFIED_METASTATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME } = require("../ruleNames");
+      { META_SUBPROOF_RULE_NAME, QUALIFIED_METASTATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME } = require("../ruleNames");
 
-const metaAntecedentNodeQuery = nodeQuery("/metaConditionalProof/metaAntecedent!"),
-      metaDerivationNodeQuery = nodeQuery("/metaConditionalProof/metaDerivation!"),
+const metaAntecedentNodeQuery = nodeQuery("/metaSubproof/metaAntecedent!"),
+      metaDerivationNodeQuery = nodeQuery("/metaSubproof/metaDerivation!"),
       metaDerivationChildNodesQuery = nodesQuery("/metaDerivation/*"),
-      qualifiedMetastatementNodeQuery = nodeQuery("/metaConditionalProof/qualifiedMetastatement!"),
-      unqualifiedMetastatementNodeQuery = nodeQuery("/metaConditionalProof/unqualifiedMetastatement!");
+      qualifiedMetastatementNodeQuery = nodeQuery("/metaSubproof/qualifiedMetastatement!"),
+      unqualifiedMetastatementNodeQuery = nodeQuery("/metaSubproof/unqualifiedMetastatement!");
 
 function verifyMetaDerivation(metaDerivationNode, context) {
   const derived = true;
 
   context.setDerived(derived);
 
-  const metaConditionalProofChildNodes = metaDerivationChildNodesQuery(metaDerivationNode),
-        metaConditionalProofChildNodesVerified = metaConditionalProofChildNodes.every((metaConditionalProofChildNode) => {
-          let metaConditionalProofChildNodeVerified;
+  const metaSubproofChildNodes = metaDerivationChildNodesQuery(metaDerivationNode),
+        metaSubproofChildNodesVerified = metaSubproofChildNodes.every((metaSubproofChildNode) => {
+          let metaSubproofChildNodeVerified;
 
-          const ruleName = metaConditionalProofChildNode.getRuleName();
+          const ruleName = metaSubproofChildNode.getRuleName();
 
           switch (ruleName) {
-            case META_CONDITIONAL_PROOF_RULE_NAME: {
-              const metaConditionalProofNode = metaConditionalProofChildNode,  ///
-                    metaConditionalProofVerified = verifyMetaConditionalProof(metaConditionalProofNode, context);
+            case META_SUBPROOF_RULE_NAME: {
+              const metaSubproofNode = metaSubproofChildNode,  ///
+                    metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, context);
 
-              metaConditionalProofChildNodeVerified = metaConditionalProofVerified;  ///
+              metaSubproofChildNodeVerified = metaSubproofVerified;  ///
 
               break;
             }
 
             case QUALIFIED_METASTATEMENT_RULE_NAME: {
-              const qualifiedMetastatementNode = metaConditionalProofChildNode,  ///
+              const qualifiedMetastatementNode = metaSubproofChildNode,  ///
                     qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
 
-              metaConditionalProofChildNodeVerified = qualifiedMetastatementVerified;  ///
+              metaSubproofChildNodeVerified = qualifiedMetastatementVerified;  ///
 
               break;
             }
 
             case UNQUALIFIED_METASTATEMENT_RULE_NAME: {
-              const unqualifiedMetastatementNode = metaConditionalProofChildNode,  ///
+              const unqualifiedMetastatementNode = metaSubproofChildNode,  ///
                     unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
 
-              metaConditionalProofChildNodeVerified = unqualifiedMetastatementVerified;  ///
+              metaSubproofChildNodeVerified = unqualifiedMetastatementVerified;  ///
 
               break;
             }
           }
 
-          return metaConditionalProofChildNodeVerified;
+          return metaSubproofChildNodeVerified;
         }),
-        metaDerivationVerified = metaConditionalProofChildNodesVerified;  ///
+        metaDerivationVerified = metaSubproofChildNodesVerified;  ///
 
   return metaDerivationVerified;
 }
 
 module.exports = verifyMetaDerivation;
 
-function verifyMetaConditionalProof(metaConditionalProofNode, context) {
-  let metaConditionalProofVerified = false;
+function verifyMetaSubproof(metaSubproofNode, context) {
+  let metaSubproofVerified = false;
 
   const metaproofContext = MetaproofContext.fromContext(context);
 
   context = metaproofContext; ///
 
-  const metaAntecedentNode = metaAntecedentNodeQuery(metaConditionalProofNode),
+  const metaAntecedentNode = metaAntecedentNodeQuery(metaSubproofNode),
         metaAntecedentVerified = verifyMetaAntecedent(metaAntecedentNode, context);
 
   if (metaAntecedentVerified) {
     let metaDerivationVerified = true;
 
-    const metaDerivationNode = metaDerivationNodeQuery(metaConditionalProofNode);
+    const metaDerivationNode = metaDerivationNodeQuery(metaSubproofNode);
 
     if (metaDerivationNode !== null) {
       metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, context);
     }
 
     if (metaDerivationVerified) {
-      const qualifiedMetastatementNode = qualifiedMetastatementNodeQuery(metaConditionalProofNode),
-            unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaConditionalProofNode);
+      const qualifiedMetastatementNode = qualifiedMetastatementNodeQuery(metaSubproofNode),
+            unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaSubproofNode);
 
       if (qualifiedMetastatementNode !== null) {
         const qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
 
-        metaConditionalProofVerified = qualifiedMetastatementVerified;  ///
+        metaSubproofVerified = qualifiedMetastatementVerified;  ///
       }
 
       if (unqualifiedMetastatementNode !== null) {
         const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
 
-        metaConditionalProofVerified = unqualifiedMetastatementVerified;  ///
+        metaSubproofVerified = unqualifiedMetastatementVerified;  ///
       }
     }
   }
 
-  return metaConditionalProofVerified;
+  return metaSubproofVerified;
 }

@@ -1,29 +1,27 @@
 "use strict";
 
-const Conclusion = require("../../conclusion"),
-      verifyUnqualifiedMetastatement = require("../../verify/metastatement/unqualified");
+const Conclusion = require("../conclusion"),
+      verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
-const { nodeQuery } = require("../../utilities/query");
+const { nodeQuery } = require("../utilities/query");
 
-const metastatementNodeQuery = nodeQuery("/*/metastatement"),
-      unqualifiedMetastatementNodeQuery = nodeQuery("/rule/unqualifiedMetastatement!");
+const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
+      unqualifiedMetastatementNodeQuery = nodeQuery("/unconditionalInference/unqualifiedMetastatement!");
 
-function verifyUnconditionalInference(ruleNode, premises, conclusions, context) {
+function verifyUnconditionalInference(unconditionalInferenceNode, premises, conclusions, context) {
   let unconditionalInferenceVerified = false;
 
-  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(ruleNode);
+  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(unconditionalInferenceNode);
 
-  if (unqualifiedMetastatementNode !== null) {
-    const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
+  const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
 
-    if (unqualifiedMetastatementVerified) {
-      const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-            conclusion = Conclusion.fromMetastatementNode(metastatementNode);
+  if (unqualifiedMetastatementVerified) {
+    const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
+          conclusion = Conclusion.fromMetastatementNode(metastatementNode);
 
-      conclusions.push(conclusion);
+    conclusions.push(conclusion);
 
-      unconditionalInferenceVerified = true;
-    }
+    unconditionalInferenceVerified = true;
   }
 
   return unconditionalInferenceVerified;
