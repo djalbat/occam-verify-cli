@@ -10,16 +10,16 @@ const { nodeQuery, nodesQuery } = require("../utilities/query"),
 
 const metaAntecedentNodeQuery = nodeQuery("/metaSublemma/metaAntecedent!"),
       metaDerivationNodeQuery = nodeQuery("/metaSublemma/metaDerivation!"),
-      metaSublemmaChildNodesQuery = nodesQuery("/metaDerivation/*"),
+      metaDerivationChildNodesQuery = nodesQuery("/metaDerivation/*"),
       qualifiedMetastatementNodeQuery = nodeQuery("/metaSublemma/qualifiedMetastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/metaSublemma/unqualifiedMetastatement!");
 
-function verifyMetaDerivation(metaNode, context) {
+function verifyMetaDerivation(metaDerivationNode, context) {
   const derived = true;
 
   context.setDerived(derived);
 
-  const metaSublemmaChildNodes = metaSublemmaChildNodesQuery(metaNode),
+  const metaSublemmaChildNodes = metaDerivationChildNodesQuery(metaDerivationNode),
         metaSublemmaChildNodesVerified = metaSublemmaChildNodes.every((metaSublemmaChildNode) => {
           let metaSublemmaChildNodeVerified;
 

@@ -27,16 +27,18 @@ function verifyMetaproof(metaproofNode, rules, context) {
           qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
 
     if (qualifiedMetastatementVerified) {
-      const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
-            firstRule = first(rules),
-            rule = firstRule, ///
-            metastatementString = nodeAsString(metastatementNode),
-            conclusionMetastatementNode = rule.getConclusionMetastatementNode(),
-            conclusionMetastatementString = nodeAsString(conclusionMetastatementNode);
+      debugger
 
-      if (metastatementString === conclusionMetastatementString) {
-        metaproofVerified = true;
-      }
+      // const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
+      //       firstRule = first(rules),
+      //       rule = firstRule, ///
+      //       metastatementString = nodeAsString(metastatementNode),
+      //       conclusionMetastatementNode = rule.getConclusionMetastatementNode(),
+      //       conclusionMetastatementString = nodeAsString(conclusionMetastatementNode);
+      //
+      // if (metastatementString === conclusionMetastatementString) {
+      //   metaproofVerified = true;
+      // }
     }
   }
 
