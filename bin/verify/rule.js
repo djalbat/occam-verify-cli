@@ -40,13 +40,13 @@ function verifyRule(ruleNode, context) {
           unconditionalInferenceNode = unconditionalInferenceNodeQuery(ruleNode);
 
     if (conditionalInferenceNode !== null) {
-      const conditionalInferenceVerified = verifyConditionalInference(ruleNode, premises, conclusions, context);
+      const conditionalInferenceVerified = verifyConditionalInference(conditionalInferenceNode, premises, conclusions, context);
 
       ruleVerified = conditionalInferenceVerified;  ///
     }
 
     if (unconditionalInferenceNode !== null) {
-      const unconditionalInferenceVerified = verifyUnconditionalInference(ruleNode, premises, conclusions, context);
+      const unconditionalInferenceVerified = verifyUnconditionalInference(unconditionalInferenceNode, premises, conclusions, context);
 
       ruleVerified = unconditionalInferenceVerified;  ///
     }

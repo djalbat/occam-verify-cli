@@ -6,36 +6,30 @@ const verifyMetaproof = require("../verify/metaproof"),
 
 const { nodeQuery } = require("../utilities/query");
 
-const metaproofNodeQuery = nodeQuery("/rule/metaproof!"),
+const metaproofNodeQuery = nodeQuery("/conditionalInference/metaproof!"),
       conclusionNodeQuery = nodeQuery("/conditionalInference/conclusion!"),
       premiseOrPremisesNodeQuery = nodeQuery("/conditionalInference/premise|premises!");
 
-function verifyConditionalInference(ruleNode, premises, conclusions, context) {
+function verifyConditionalInference(conditionalInferenceNode, premises, conclusions, context) {
   let conditionalInferenceVerified = false;
 
-  const inferenceConditionalNode = inferenceConditionalNodeQuery(ruleNode);
+  const premiseOrPremisesNode = premiseOrPremisesNodeQuery(conditionalInferenceNode),
+        premiseOrPremisesVerified = verifyPremiseOrPremises(premiseOrPremisesNode, premises, context);
 
-  if (inferenceConditionalNode !== null) {
-    const premiseOrPremisesNode = premiseOrPremisesNodeQuery(inferenceConditionalNode),
-          premiseOrPremisesVerified = verifyPremiseOrPremises(premiseOrPremisesNode, premises, context);
+  if (premiseOrPremisesVerified) {
+    const conclusionNode = conclusionNodeQuery(conditionalInferenceNode),
+          conclusionVerified = verifyConclusion(conclusionNode, conclusions, context);
 
-    if (premiseOrPremisesVerified) {
-      const conclusionNode = conclusionNodeQuery(inferenceConditionalNode),
-            conclusionVerified = verifyConclusion(conclusionNode, conclusions, context);
-
-
-      const metaproofNode = metaproofNodeQuery(ruleNode);
-
+    if (conclusionVerified) {
       let metaproofVerified = true;
 
+      const metaproofNode = metaproofNodeQuery(conditionalInferenceNode);
+
       if (metaproofNode !== null) {
-        metaproofVerified = verifyMetaproof(metaproofNode, rules, context);
+        metaproofVerified = verifyMetaproof(metaproofNode, context);
       }
 
-      if (metaproofVerified) {
-        ruleVerified = true;
-      }
-      conditionalInferenceVerified = conclusionVerified;
+      conditionalInferenceVerified = metaproofVerified; ///
     }
   }
 

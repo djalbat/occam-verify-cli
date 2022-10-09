@@ -8,8 +8,8 @@ const { nodeQuery } = require("../../utilities/query");
 const metastatementNodeQuery = nodeQuery("/*/metastatement"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/rule/unqualifiedMetastatement!");
 
-function verifyUnqualifiedMetastatementRule(ruleNode, premises, conclusions, context) {
-  let unqualifiedMetastatementRuleVerified = false;
+function verifyUnconditionalInference(ruleNode, premises, conclusions, context) {
+  let unconditionalInferenceVerified = false;
 
   const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(ruleNode);
 
@@ -22,11 +22,11 @@ function verifyUnqualifiedMetastatementRule(ruleNode, premises, conclusions, con
 
       conclusions.push(conclusion);
 
-      unqualifiedMetastatementRuleVerified = true;
+      unconditionalInferenceVerified = true;
     }
   }
 
-  return unqualifiedMetastatementRuleVerified;
+  return unconditionalInferenceVerified;
 }
 
-module.exports = verifyUnqualifiedMetastatementRule;
+module.exports = verifyUnconditionalInference;
