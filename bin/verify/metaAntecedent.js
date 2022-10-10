@@ -3,26 +3,19 @@
 const MetaAssertion = require("../metaAssertion"),
       verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
-const { nodesQuery } = require("../utilities/query");
+const { nodeQuery } = require("../utilities/query");
 
-const unqualifiedMetastatementNodesQuery = nodesQuery("/metaAntecedent/unqualifiedMetastatement");
+const unqualifiedMetastatementNodeQuery = nodeQuery("/metaAntecedent/unqualifiedMetastatement!");
 
 function verifyMetaAntecedent(metaAntecedentNode, context) {
-  const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(metaAntecedentNode),
-        metaAntecedentVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
-          const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
-
-          if (unqualifiedMetastatementVerified) {
-            return true;
-          }
-        });
+  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaAntecedentNode),
+        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context),
+        metaAntecedentVerified = unqualifiedMetastatementVerified;  ///
 
   if (metaAntecedentVerified) {
-    unqualifiedMetastatementNodes.forEach((unqualifiedMetastatementNode) => {
-      const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode);
+    const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode);
 
-      context.addMetaAssertion(metaAssertion);
-    });
+    context.addMetaAssertion(metaAssertion);
   }
 
   return metaAntecedentVerified;

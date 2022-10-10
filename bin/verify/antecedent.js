@@ -1,30 +1,19 @@
 "use strict";
 
-const Antecedent = require("../antecedent"),
+const Assertion = require("../assertion"),
       verifyUnqualifiedStatement = require("../verify/statement/unqualified");
 
-const { nodeQuery, nodesQuery } = require("../utilities/query");
+const { nodeQuery } = require("../utilities/query");
 
-const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement"),
-      unqualifiedStatementNodesQuery = nodesQuery("/antecedent/unqualifiedStatement");
+const unqualifiedStatementNodeQuery = nodeQuery("/antecedent/unqualifiedStatement!");
 
 function verifyAntecedent(antecedentNode, antecedents, context) {
-  const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(antecedentNode),
-        antecedentVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
-          const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context);
-
-          if (unqualifiedStatementVerified) {
-            return true;
-          }
-        });
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(antecedentNode),
+        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context),
+        antecedentVerified = unqualifiedStatementVerified;
 
   if (antecedentVerified) {
-    const statementNodes = unqualifiedStatementNodes.map((unqualifiedStatementNode) => {
-            const statementNode = statementNodeQuery(unqualifiedStatementNode);
-
-            return statementNode;
-          }),
-          antecedent = Antecedent.fromStatementNodes(statementNodes);
+    const antecedent = Assertion.fromUnqualifiedStatementNode(unqualifiedStatementNode);
 
     antecedents.push(antecedent);
   }
