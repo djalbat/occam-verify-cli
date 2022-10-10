@@ -23,15 +23,15 @@ class Rule {
   }
 
   matchMetastatement(metastatementNode, context) {
-    let metastatementNodes = context.getMetastatementNodes();
+    let metaAssertions = context.getMetaAssertions();
 
     const premisesLength = this.premises.length,
           start = -premisesLength;
 
-    metastatementNodes = metastatementNodes.slice(start); ///
+    metaAssertions = metaAssertions.slice(start); ///
 
-    const matchesMetastatement = someCombination(metastatementNodes, (metastatementNodes) => {
-      const premisesMatchConclusion = matchPremisesAndConclusion(this.premises, this.conclusion, metastatementNodes, metastatementNode);
+    const matchesMetastatement = someCombination(metaAssertions, (metaAssertions) => {
+      const premisesMatchConclusion = matchPremisesAndConclusion(this.premises, this.conclusion, metaAssertions, metastatementNode);
 
       if (premisesMatchConclusion) {
         return true;
@@ -56,24 +56,27 @@ class Rule {
 
 module.exports = Rule;
 
-function matchPremise(premise, metastatementNodes, metaSubstitutions) {
-  const metastatementNode = prune(metastatementNodes, (metastatementNode) => {
-    const nonTerminalNode = metastatementNode,  ///
-          nonTerminalNodeMatches = premise.matchNonTerminalNode(nonTerminalNode, metaSubstitutions);
+function matchPremise(premise, metaAssertions, metaSubstitutions) {
+  const metaAssertion = prune(metaAssertions, (metaAssertion) => {
+    const nonTerminalNode = metaAssertion.getNonTerminalNode();
 
-    if (!nonTerminalNodeMatches) {  ///
-      return true;
+    if (nonTerminalNode !== null) {
+      const nonTerminalNodeMatches = premise.matchNonTerminalNode(nonTerminalNode, metaSubstitutions);
+
+      if (!nonTerminalNodeMatches) {  ///
+        return true;
+      }
     }
   }) || null;
 
-  const premiseMatches = (metastatementNode !== null);
+  const premiseMatches = (metaAssertion !== null);
 
   return premiseMatches;
 }
 
-function matchPremises(premise, metastatementNodes, metaSubstitutions) {
+function matchPremises(premise, metaAssertions, metaSubstitutions) {
   const premisesMatches = premise.every((premise) => {
-    const premiseMatches = matchPremise(premise, metastatementNodes, metaSubstitutions);
+    const premiseMatches = matchPremise(premise, metaAssertions, metaSubstitutions);
 
     if (premiseMatches) {
       return true;
@@ -91,11 +94,11 @@ function matchConclusion(conclusion, metastatementNode, metaSubstitutions) {
   return conclusionMatches;
 }
 
-function matchPremisesAndConclusion(premises, conclusion, metastatementNodes, metastatementNode) {
+function matchPremisesAndConclusion(premises, conclusion, metaAssertions, metastatementNode) {
   let premisesMatchConclusion = false;
 
   const metaSubstitutions = [],
-        premisesMatches = matchPremises(premises, metastatementNodes, metaSubstitutions);
+        premisesMatches = matchPremises(premises, metaAssertions, metaSubstitutions);
 
   if (premisesMatches) {
     const conclusionMatches = matchConclusion(conclusion, metastatementNode, metaSubstitutions);

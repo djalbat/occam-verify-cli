@@ -68,6 +68,7 @@ function verifyMetaDerivation(metaDerivationNode, context) {
 
                 metaDerivationChildNodeVerified = true;
               }
+
               break;
             }
           }

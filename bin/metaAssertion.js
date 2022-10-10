@@ -10,6 +10,14 @@ class MetaAssertion {
     this.metastatementNode = metastatementNode;
   }
 
+  getNonTerminalNode() {
+    const nonTerminalNode = (this.metastatementNode !== null) ?
+                               this.metastatementNode :
+                                 null;
+
+    return nonTerminalNode;
+  }
+
   getMetaSubproofNode() {
     return this.metaSubproofNode;
   }
