@@ -23,9 +23,7 @@ function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
     if (rule !== null) {
       const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, context);
 
-      if (ruleMatchesMetastatement) {
-        qualifiedMetastatementVerified = true;
-      }
+      qualifiedMetastatementVerified = ruleMatchesMetastatement;  ///
     }
   }
 

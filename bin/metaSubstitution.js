@@ -1,29 +1,29 @@
 "use strict";
 
 class MetaSubstitution {
-  constructor(metavariableName, nonTerminalNode) {
+  constructor(metavariableName, nodes) {
     this.metavariableName = metavariableName;
-    this.nonTerminalNode = nonTerminalNode;
+    this.nodes = nodes;
   }
 
   getMetavariableName() {
     return this.metavariableName;
   }
 
-  getNonTerminalNode() {
-    return this.nonTerminalNode;
+  getNodes() {
+    return this.nodes;
   }
 
-  matchNonTerminalNode(nonTerminalNode) {
-    const metaSubstitutionNonTerminalNode = this.nonTerminalNode,
-          metaSubstitutionNonTerminalNodeMatches = matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, nonTerminalNode),
+  matchNodes(nodes) {
+    const metaSubstitutionNodes = this.nodes,  ///
+          metaSubstitutionNonTerminalNodeMatches = matchMetaSubstitutionNodes(metaSubstitutionNodes, nodes),
           nonTerminalNodeMatches = metaSubstitutionNonTerminalNodeMatches;  ///
 
     return nonTerminalNodeMatches;
   }
 
-  static fromMetavariableNameAndNonTerminalNode(metavariableName, nonTerminalNode) {
-    const metaSubstitution = new MetaSubstitution(metavariableName, nonTerminalNode);
+  static fromMetavariableNameAndNodes(metavariableName, nodes) {
+    const metaSubstitution = new MetaSubstitution(metavariableName, nodes);
 
     return metaSubstitution;
   }
@@ -56,17 +56,15 @@ function matchMetaSubstitutionNode(metaSubstitutionNode, node) {
   return metaSubstitutionNodeMatches;
 }
 
-function matchMetaSubstitutionChildNodes(metaSubstitutionChildNodes, childNodes) {
-  let metaSubstitutionChildNodesMatches = false;
+function matchMetaSubstitutionNodes(metaSubstitutionNodes, nodes) {
+  let metaSubstitutionNodesMatches = false;
 
-  const childNodesLength = childNodes.length,
-        metaSubstitutionChildNodesLength = metaSubstitutionChildNodes.length;
+  const nodesLength = nodes.length,
+        metaSubstitutionNodesLength = metaSubstitutionNodes.length;
 
-  if (childNodesLength === metaSubstitutionChildNodesLength) {
-    metaSubstitutionChildNodesMatches = childNodes.every((childNode, index) => {
-      const metaSubstitutionChildNode = metaSubstitutionChildNodes[index],
-            metaSubstitutionNode = metaSubstitutionChildNode, ///
-            node = childNode, ///
+  if (nodesLength === metaSubstitutionNodesLength) {
+    metaSubstitutionNodesMatches = nodes.every((node, index) => {
+      const metaSubstitutionNode = metaSubstitutionNodes[index],
             metaSubstitutionNodeMatches = matchMetaSubstitutionNode(metaSubstitutionNode, node);
 
       if (metaSubstitutionNodeMatches) {
@@ -75,17 +73,12 @@ function matchMetaSubstitutionChildNodes(metaSubstitutionChildNodes, childNodes)
     })
   }
 
-  return metaSubstitutionChildNodesMatches;
+  return metaSubstitutionNodesMatches;
 }
 
 function matchMetaSubstitutionTerminalNode(metaSubstitutionTerminalNode, terminalNode) {
-  let metaSubstitutionTerminalNodeMatches = false;
-
-  const matches = metaSubstitutionTerminalNode.match(terminalNode);
-
-  if (matches) {
-    metaSubstitutionTerminalNodeMatches = true;
-  }
+  const matches = metaSubstitutionTerminalNode.match(terminalNode),
+        metaSubstitutionTerminalNodeMatches = matches;  ///
 
   return metaSubstitutionTerminalNodeMatches;
 }
@@ -99,9 +92,11 @@ function matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, n
   if (ruleName === metaSubstitutionRuleName) {
     const childNodes = nonTerminalNode.getChildNodes(),
           metaSubstitutionChildNodes = metaSubstitutionNonTerminalNode.getChildNodes(),
-          metaSubstitutionChildNodesMatches = matchMetaSubstitutionChildNodes(metaSubstitutionChildNodes, childNodes);
+          nodes = childNodes, ///
+          metaSubstitutionNodes = metaSubstitutionChildNodes, ///
+          metaSubstitutionNodesMatches = matchMetaSubstitutionNodes(metaSubstitutionNodes, nodes);
 
-    metaSubstitutionNonTerminalNodeMatches = metaSubstitutionChildNodesMatches; ///
+    metaSubstitutionNonTerminalNodeMatches = metaSubstitutionNodesMatches; ///
   }
 
   return metaSubstitutionNonTerminalNodeMatches;

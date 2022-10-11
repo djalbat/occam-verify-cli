@@ -3,7 +3,7 @@
 const { loggingUtilities } = require("necessary");
 
 const verifyEquality = require("../verify/equality"),
-      verifyTypeAssertion = require("../verify/typeAssertion");
+      verifyTypeAssertion = require("../verify/assertion/type");
 
 const { nodeQuery } = require("../utilities/query"),
       { nodeAsString } = require("../utilities/string");

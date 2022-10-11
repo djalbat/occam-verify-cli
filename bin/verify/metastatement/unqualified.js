@@ -20,7 +20,7 @@ function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context) {
     const derived = context.isDerived();
 
     if (derived) {
-      const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode),
+      const metaAssertion = MetaAssertion.fromMetastatementNode(metastatementNode),
             metaAssertionPresent = context.isMetaAssertionPresent(metaAssertion);
 
       unqualifiedMetastatementVerified = metaAssertionPresent;  ///

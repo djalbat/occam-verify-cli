@@ -2,7 +2,7 @@
 
 const { arrayUtilities } = require("necessary");
 
-const { push, prune, first, second, filter } = arrayUtilities;
+const { push, prune, first, second, third, filter } = arrayUtilities;
 
 function leftDifference(arrayA, arrayB) {
   filter(arrayA, (elementA) => {
@@ -33,6 +33,7 @@ module.exports = {
   prune,
   first,
   second,
+  third,
   filter,
   leftDifference,
   someCombination

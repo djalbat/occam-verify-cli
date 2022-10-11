@@ -2,11 +2,11 @@
 
 const { loggingUtilities } = require("necessary");
 
-const Variable = require("../variable"),
-      verifyTermAsVariable = require("../verify/termAsVariable");
+const Variable = require("../../variable"),
+      verifyTermAsVariable = require("../../verify/termAsVariable");
 
-const { first } = require("../utilities/array"),
-      { nodeQuery, typeNameFromTypeNode } = require("../utilities/query");
+const { first } = require("../../utilities/array"),
+      { nodeQuery, typeNameFromTypeNode } = require("../../utilities/query");
 
 const { log } = loggingUtilities;
 

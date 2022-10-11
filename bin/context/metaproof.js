@@ -40,10 +40,10 @@ class MetaproofContext {
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
   isMetaAssertionPresent(metaAssertion) {
-    const metaAssertionA = metaAssertion; ///
+    const metaAssertionB = metaAssertion; ///
 
     let metaAssertionPresent = this.metaAssertions.some((metaAssertion) => {
-      const metaAssertionB = metaAssertion, ///
+      const metaAssertionA = metaAssertion, ///
             matches = metaAssertionA.match(metaAssertionB);
 
       if (matches) {

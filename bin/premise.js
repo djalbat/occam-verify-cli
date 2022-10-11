@@ -2,8 +2,9 @@
 
 const MetaSubstitution = require("./metaSubstitution");
 
-const { METAVARIABLE_RULE_NAME } = require("./ruleNames"),
-      { metavariableNameFromMetavariableNode } = require("./utilities/query");
+const { first } = require("./utilities/array"),
+      { metavariableNameFromMetavariableNode } = require("./utilities/query"),
+      { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } = require("./ruleNames");
 
 class Premise {
   constructor(metastatementNode) {
@@ -56,29 +57,27 @@ function matchPremiseNode(premiseNode, node, metaSubstitutions) {
   return premiseNodeMatches;
 }
 
-function matchPremiseChildNodes(premiseChildNodes, childNodes, metaSubstitutions) {
-  let premiseChildNodesMatches = false;
+function matchPremiseNodes(premiseNodes, nodes, metaSubstitutions) {
+  let premiseNodesMatches = false;
 
-  const childNodesLength = childNodes.length,
-      premiseChildNodesLength = premiseChildNodes.length;
+  const nodesLength = nodes.length,
+        premiseNodesLength = premiseNodes.length;
 
-  if (childNodesLength === premiseChildNodesLength) {
-    premiseChildNodesMatches = childNodes.every((childNode, index) => {
-      const premiseChildNode = premiseChildNodes[index],
-            premiseNode = premiseChildNode, ///
-            node = childNode, ///
+  if (nodesLength === premiseNodesLength) {
+    premiseNodesMatches = nodes.every((node, index) => {
+      const premiseNode = premiseNodes[index],
             premiseNodeMatches = matchPremiseNode(premiseNode, node, metaSubstitutions);
 
       if (premiseNodeMatches) {
         return true;
       }
-    })
+    });
   }
 
-  return premiseChildNodesMatches;
+  return premiseNodesMatches;
 }
 
-function matchPremiseMetavariable(premiseMetavariableNode, nonTerminalNode, metaSubstitutions) {
+function matchPremiseMetavariable(premiseMetavariableNode, nodes, metaSubstitutions) {
   let premiseMetavariableMatches;
 
   const premiseMetavariableName = metavariableNameFromMetavariableNode(premiseMetavariableNode),
@@ -91,12 +90,12 @@ function matchPremiseMetavariable(premiseMetavariableNode, nonTerminalNode, meta
       }) || null;
 
   if (metaSubstitution !== null) {
-    const nonTerminalNodeMatches = metaSubstitution.matchNonTerminalNode(nonTerminalNode);
+    const nonTerminalNodeMatches = metaSubstitution.matchNodes(nodes);
 
     premiseMetavariableMatches = nonTerminalNodeMatches;  ///
   } else {
     const metavariableName = premiseMetavariableName, ///
-          metaSubstitution = MetaSubstitution.fromMetavariableNameAndNonTerminalNode(metavariableName, nonTerminalNode);
+          metaSubstitution = MetaSubstitution.fromMetavariableNameAndNodes(metavariableName, nodes);
 
     metaSubstitutions.push(metaSubstitution);
 
@@ -107,13 +106,8 @@ function matchPremiseMetavariable(premiseMetavariableNode, nonTerminalNode, meta
 }
 
 function matchPremiseTerminalNode(premiseTerminalNode, terminalNode, metaSubstitutions) {
-  let premiseTerminalNodeMatches = false;
-
-  const matches = premiseTerminalNode.match(terminalNode);
-
-  if (matches) {
-    premiseTerminalNodeMatches = true;
-  }
+  const matches = premiseTerminalNode.match(terminalNode),
+        premiseTerminalNodeMatches = matches;
 
   return premiseTerminalNodeMatches;
 }
@@ -121,30 +115,62 @@ function matchPremiseTerminalNode(premiseTerminalNode, terminalNode, metaSubstit
 function matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, metaSubstitutions) {
   let premiseNonTerminalNodeMatches = false;
 
-  const premiseRuleName = premiseNonTerminalNode.getRuleName(); ///
+  const ruleName = nonTerminalNode.getRuleName(),
+        premiseRuleName = premiseNonTerminalNode.getRuleName(); ///
 
-  switch (premiseRuleName) {
-    case METAVARIABLE_RULE_NAME: {
-      const premiseMetavariableNode = premiseNonTerminalNode, ///
-            premiseMetavariableMatches = matchPremiseMetavariable(premiseMetavariableNode, nonTerminalNode, metaSubstitutions);
+  if (ruleName === premiseRuleName) {
+    const childNodes = nonTerminalNode.getChildNodes(),
+          premiseChildNodes = premiseNonTerminalNode.getChildNodes(),
+          nodes = childNodes, ///
+          premiseNodes = premiseChildNodes, ///
+          premiseChildNodesMatches = matchPremiseNodes(premiseNodes, nodes, metaSubstitutions);
 
-      premiseNonTerminalNodeMatches = premiseMetavariableMatches;
+    premiseNonTerminalNodeMatches = premiseChildNodesMatches; ///
 
-      break;
-    }
+    if (!premiseNonTerminalNodeMatches) {
+      const ruleNameMetastatementRuleName = (ruleName === METASTATEMENT_RULE_NAME);
 
-    default: {
-      const ruleName = nonTerminalNode.getRuleName();
+      if (ruleNameMetastatementRuleName) {
+        const metastatementNode = nonTerminalNode,  ///
+              premiseMetastatementNode = premiseNonTerminalNode,  ///
+              premiseMetastatementNodeMatches = matchPremiseMetastatementNode(premiseMetastatementNode, metastatementNode, metaSubstitutions);
 
-      if (ruleName === premiseRuleName) {
-        const childNodes = nonTerminalNode.getChildNodes(),
-              premiseChildNodes = premiseNonTerminalNode.getChildNodes(),
-              premiseChildNodesMatches = matchPremiseChildNodes(premiseChildNodes, childNodes, metaSubstitutions);
-
-        premiseNonTerminalNodeMatches = premiseChildNodesMatches; ///
+        premiseNonTerminalNodeMatches = premiseMetastatementNodeMatches; ///
       }
     }
   }
 
   return premiseNonTerminalNodeMatches;
+}
+
+function matchPremiseMetastatementNode(premiseMetastatementNode, metastatementNode, metaSubstitutions) {
+  let premiseMetastatementNodeMatches = false;
+
+  const premiseNonTerminalNode = premiseMetastatementNode,  ///
+        premiseChildNodes = premiseNonTerminalNode.getChildNodes(),
+        premiseChildNodesLength = premiseChildNodes.length;
+
+  if (premiseChildNodesLength === 1) {
+    const firstPremiseChildNode = first(premiseChildNodes),
+          premiseChildNode = firstPremiseChildNode,  ///
+          premiseChildNodeNonTerminalNode = premiseChildNode.isNonTerminalNode();
+
+    if (premiseChildNodeNonTerminalNode) {
+      const premiseNonTerminalChildNode = premiseChildNode,  ///
+            premiseNonTerminalChildNodeRuleName = premiseNonTerminalChildNode.getRuleName(),
+            premiseNonTerminalChildNodeRuleNameMetavariableRuleName = (premiseNonTerminalChildNodeRuleName === METAVARIABLE_RULE_NAME);
+
+      if (premiseNonTerminalChildNodeRuleNameMetavariableRuleName) {
+        const premiseMetavariableNode = premiseNonTerminalChildNode,  ///
+              nonTerminalNode = metastatementNode,  ///
+              childNodes = nonTerminalNode.getChildNodes(),
+              nodes = childNodes, ///
+              premiseMetaVariableMatches = matchPremiseMetavariable(premiseMetavariableNode, nodes, metaSubstitutions);
+
+        premiseMetastatementNodeMatches = premiseMetaVariableMatches; ///
+      }
+    }
+  }
+
+  return premiseMetastatementNodeMatches;
 }
