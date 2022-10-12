@@ -1,8 +1,8 @@
 "use strict";
 
-const { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME} = require("./ruleNames"),
-      { metavariableNameFromMetavariableNode } = require("./utilities/query");
-const {first} = require("./utilities/array");
+const { first } = require("./utilities/array"),
+      { metavariableNameFromMetavariableNode } = require("./utilities/query"),
+      { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } = require("./ruleNames");
 
 class Conclusion {
   constructor(metastatementNode) {
