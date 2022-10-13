@@ -1,8 +1,6 @@
 "use strict";
 
-const { first, third, second } = require("./utilities/array"),
-      { METASTATEMENT_RULE_NAME } = require("./ruleNames"),
-      { BRACKETED_METASTATEMENT_CHILD_NODES_LENGTH, LEFT_BRACKET, RIGHT_BRACKET} = require("./constants");
+const { matchBracketedMetastatementChildNode } = require("./utilities/metastatement");
 
 class MetaSubstitution {
   constructor(metavariableName, nodes) {
@@ -27,41 +25,18 @@ class MetaSubstitution {
     matches = metaSubstitutionNonTerminalNodeMatches;  ///
 
     if (!matches) {
-      const metaSubstitutionNodesLength = metaSubstitutionNodes.length;
-
-      if (metaSubstitutionNodesLength === BRACKETED_METASTATEMENT_CHILD_NODES_LENGTH) {
-        const firstMetaSubstitutionNode = first(metaSubstitutionNodes),
-              thirdMetaSubstitutionNode = third(metaSubstitutionNodes),
-              secondMetaSubstitutionNode = second(metaSubstitutionNodes),
-              firstMetaSubstitutionNodeTerminalNode = firstMetaSubstitutionNode.isTerminalNode(),
-              thirdMetaSubstitutionNodeTerminalNode = thirdMetaSubstitutionNode.isTerminalNode(),
-              secondMetaSubstitutionNodeNonTerminalNode = secondMetaSubstitutionNode.isNonTerminalNode();
-
-        if (firstMetaSubstitutionNodeTerminalNode && secondMetaSubstitutionNodeNonTerminalNode && thirdMetaSubstitutionNodeTerminalNode) {
-          const nonTerminalNode = secondMetaSubstitutionNode,  ///
-                ruleName = nonTerminalNode.getRuleName(),
-                ruleNameMetastatementRuleName = (ruleName === METASTATEMENT_RULE_NAME);
-
-          if (ruleNameMetastatementRuleName) {
-            const metastatementNode = nonTerminalNode,  ///
-                  firstTerminalNode = firstMetaSubstitutionNode, ///
-                  secondTerminalNode = thirdMetaSubstitutionNode,  ///
-                  firstTerminalNodeContent = firstTerminalNode.getContent(),
-                  secondTerminalNodeContent = secondTerminalNode.getContent(),
-                  firstTerminalNodeContentLeftBracket = (firstTerminalNodeContent === LEFT_BRACKET),
-                  secondTerminalNodeContentRightBracket = (secondTerminalNodeContent === RIGHT_BRACKET);
-
-            if (firstTerminalNodeContentLeftBracket && secondTerminalNodeContentRightBracket) {
-              const nonTerminalNode = metastatementNode,  ///
+      const childNodes = metaSubstitutionNodes, ///
+            bracketedMetastatementChildNodeMatches = matchBracketedMetastatementChildNode(childNodes, (bracketedMetastatementChildNode) => {
+              const nonTerminalNode = bracketedMetastatementChildNode,  ///
                     childNodes = nonTerminalNode.getChildNodes(),
                     metaSubstitutionNodes = childNodes, ///
-                    metaAssertionNonTerminalNodeMatches = matchMetaSubstitutionNodes(metaSubstitutionNodes, nodes);
+                    metaAssertionNonTerminalNodeMatches = matchMetaSubstitutionNodes(metaSubstitutionNodes, nodes),
+                    bracketedMetastatementChildNodeMatches = metaAssertionNonTerminalNodeMatches; ///
 
-              matches = metaAssertionNonTerminalNodeMatches;  ///
-            }
-          }
-        }
-      }
+              return bracketedMetastatementChildNodeMatches;
+            });
+
+      matches = bracketedMetastatementChildNodeMatches; ///
     }
 
     return matches;

@@ -21,9 +21,9 @@ function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context) {
 
     if (derived) {
       const metaAssertion = MetaAssertion.fromMetastatementNode(metastatementNode),
-            metaAssertionPresent = context.isMetaAssertionPresent(metaAssertion);
+            metaAssertionMatches = context.matchMetaAssertion(metaAssertion);
 
-      unqualifiedMetastatementVerified = metaAssertionPresent;  ///
+      unqualifiedMetastatementVerified = metaAssertionMatches;  ///
     } else {
       unqualifiedMetastatementVerified = true;
     }

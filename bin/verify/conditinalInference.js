@@ -10,7 +10,7 @@ const Conclusion = require("../conclusion");
 
 const metaproofNodeQuery = nodeQuery("/conditionalInference/metaproof!"),
       conclusionNodeQuery = nodeQuery("/conditionalInference/conclusion!"),
-      metastatementNodeQuery = nodeQuery("/conditionalInference/conclusion/metastatement!"),
+      metastatementNodeQuery = nodeQuery("/conditionalInference/conclusion!/unqualifiedMetastatement!/metastatement!"),
       premiseOrPremisesNodeQuery = nodeQuery("/conditionalInference/premise|premises!");
 
 function verifyConditionalInference(conditionalInferenceNode, premises, conclusions, context) {

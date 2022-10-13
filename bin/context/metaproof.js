@@ -1,7 +1,5 @@
 "use strict";
 
-const { last } = require("../utilities/array");
-
 class MetaproofContext {
   constructor(context, derived, metaAssertions) {
     this.context = context;
@@ -19,12 +17,6 @@ class MetaproofContext {
 
   getMetaAssertions() {
     return this.metaAssertions;
-  }
-
-  getLastMetaAssertion() {
-    const lastMetaAssertion = last(this.metaAssertions);
-
-    return lastMetaAssertion;
   }
 
   getRules() { return this.context.getRules(); }
@@ -47,10 +39,12 @@ class MetaproofContext {
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
-  isMetaAssertionPresent(metaAssertion) {
+  matchMetaAssertion(metaAssertion) {
+    let metaAssertionMatches;
+
     const metaAssertionB = metaAssertion; ///
 
-    let metaAssertionPresent = this.metaAssertions.some((metaAssertion) => {
+    metaAssertionMatches = this.metaAssertions.some((metaAssertion) => {
       const metaAssertionA = metaAssertion, ///
             matches = metaAssertionA.match(metaAssertionB);
 
@@ -59,11 +53,11 @@ class MetaproofContext {
       }
     });
 
-    if (!metaAssertionPresent) {
-      metaAssertionPresent = this.context.isMetaAssertionPresent(metaAssertion);
+    if (!metaAssertionMatches) {
+      metaAssertionMatches = this.context.matchMetaAssertion(metaAssertion);
     }
 
-    return metaAssertionPresent;
+    return metaAssertionMatches;
   }
 
   isVariablePresentByVariableName(variableName) { return this.context.isVariablePresentByVariableName(variableName); }

@@ -1,9 +1,9 @@
 "use strict";
 
-const { first, second, third } = require("./utilities/array"),
+const { first, second } = require("./utilities/array"),
       { nodeQuery, nodesQuery } = require("./utilities/query"),
       { METASTATEMENT_RULE_NAME } = require("./ruleNames"),
-      { LEFT_BRACKET, RIGHT_BRACKET, BRACKETED_METASTATEMENT_CHILD_NODES_LENGTH } = require("./constants");
+      { matchBracketedMetastatementChildNode } = require("./utilities/metastatement");
 
 const metastatementNodeQuery = nodeQuery("/*/metastatement!"),
       metastatementNodesQuery = nodesQuery("/metaSubproofAssertion/metastatement"),
@@ -194,8 +194,8 @@ function matchMetaAssertionNonTerminalNode(metaAssertionNonTerminalNode, nonTerm
 
   if (ruleName === metaAssertionRuleName) {
     const childNodes = nonTerminalNode.getChildNodes(),
-          metaAssertionChildNodes = metaAssertionNonTerminalNode.getChildNodes(),
           nodes = childNodes, ///
+          metaAssertionChildNodes = metaAssertionNonTerminalNode.getChildNodes(),
           metaAssertionNodes = metaAssertionChildNodes, ///
           metaAssertionChildMatches = matchMetaAssertionNodes(metaAssertionNodes, nodes);
 
@@ -205,57 +205,20 @@ function matchMetaAssertionNonTerminalNode(metaAssertionNonTerminalNode, nonTerm
       const ruleNameMetastatementRuleName = (ruleName === METASTATEMENT_RULE_NAME);
 
       if (ruleNameMetastatementRuleName) {
-        const metastatementNode = nonTerminalNode,  ///
-              metaAssertionMetastatementNode = metaAssertionNonTerminalNode,  ///
-              metaAssertionMetastatementNodeMatches = matchMetaAssertionMetastatementNode(metaAssertionMetastatementNode, metastatementNode);
+        const bracketedMetastatementChildNodeMatches = matchBracketedMetastatementChildNode(childNodes, (bracketedMetastatementChildNode) => {
+                const nonTerminalNode = bracketedMetastatementChildNode,  ///
+                      childNodes = nonTerminalNode.getChildNodes(),
+                      nodes = childNodes, ///
+                      metaAssertionChildMatches = matchMetaAssertionNodes(metaAssertionNodes, nodes),
+                      bracketedMetastatementChildNodeMatches = metaAssertionChildMatches;  ///
 
-        metaAssertionNonTerminalNodeMatches = metaAssertionMetastatementNodeMatches; ///
+                return bracketedMetastatementChildNodeMatches;
+              });
+
+        metaAssertionNonTerminalNodeMatches = bracketedMetastatementChildNodeMatches; ///
       }
     }
   }
 
   return metaAssertionNonTerminalNodeMatches;
-}
-
-function matchMetaAssertionMetastatementNode(metaAssertionMetastatementNode, metastatementNode) {
-  let metaAssertionMetastatementNodeMatches = false;
-
-  const nonTerminalNode = metastatementNode,  ///
-        childNodes = nonTerminalNode.getChildNodes(),
-        childNodesLength = childNodes.length;
-
-  if (childNodesLength === BRACKETED_METASTATEMENT_CHILD_NODES_LENGTH) {
-    const firstChildNode = first(childNodes),
-          thirdChildNode = third(childNodes),
-          secondChildNode = second(childNodes),
-          firstChildNodeTerminalNode = firstChildNode.isTerminalNode(),
-          thirdChildNodeTerminalNode = thirdChildNode.isTerminalNode(),
-          secondChildNodeNonTerminalNode = secondChildNode.isNonTerminalNode();
-
-    if (firstChildNodeTerminalNode && secondChildNodeNonTerminalNode && thirdChildNodeTerminalNode) {
-      const nonTerminalNode = secondChildNode,  ///
-            ruleName = nonTerminalNode.getRuleName(),
-            ruleNameMetastatementRuleName = (ruleName === METASTATEMENT_RULE_NAME);
-
-      if (ruleNameMetastatementRuleName) {
-        const metastatementNode = nonTerminalNode,  ///
-              firstTerminalNode = firstChildNode, ///
-              secondTerminalNode = thirdChildNode,  ///
-              firstTerminalNodeContent = firstTerminalNode.getContent(),
-              secondTerminalNodeContent = secondTerminalNode.getContent(),
-              firstTerminalNodeContentLeftBracket = (firstTerminalNodeContent === LEFT_BRACKET),
-              secondTerminalNodeContentRightBracket = (secondTerminalNodeContent === RIGHT_BRACKET);
-
-        if (firstTerminalNodeContentLeftBracket && secondTerminalNodeContentRightBracket) {
-          const nonTerminalNode = metastatementNode,  ///
-                metaAssertionNonTerminalNode = metaAssertionMetastatementNode,  ///
-                metaAssertionNonTerminalNodeMatches = matchMetaAssertionNonTerminalNode(metaAssertionNonTerminalNode, nonTerminalNode);
-
-          metaAssertionMetastatementNodeMatches = metaAssertionNonTerminalNodeMatches;  ///
-        }
-      }
-    }
-  }
-
-  return metaAssertionMetastatementNodeMatches;
 }

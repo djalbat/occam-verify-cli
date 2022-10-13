@@ -1,7 +1,7 @@
 "use strict";
 
 const { labelsAsString } = require("./utilities/string"),
-      { prune, someCombination } = require("./utilities/array");
+      { prune, someChoice } = require("./utilities/array");
 
 class Rule {
   constructor(labels, premises, conclusion) {
@@ -30,7 +30,7 @@ class Rule {
 
     metaAssertions = metaAssertions.slice(start); ///
 
-    const matchesMetastatement = someCombination(metaAssertions, (metaAssertions) => {
+    const matchesMetastatement = someChoice(metaAssertions, (metaAssertions) => {
       const premisesMatchConclusion = matchPremisesAndConclusion(this.premises, this.conclusion, metaAssertions, metastatementNode);
 
       if (premisesMatchConclusion) {

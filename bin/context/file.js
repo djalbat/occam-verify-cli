@@ -186,10 +186,10 @@ class FileContext {
     return labelPresent;
   }
 
-  isMetaAssertionPresent(metaAssertion) {
-    const metaAssertionPresent = false;
+  matchMetaAssertion(metaAssertion) {
+    const metaAssertionMatches = false;
 
-    return metaAssertionPresent;
+    return metaAssertionMatches;
   }
 
   isTypePresentByTypeName(typeName) {

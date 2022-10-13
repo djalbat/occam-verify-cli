@@ -8,7 +8,7 @@ const Conclusion = require("../conclusion"),
 const { nodeQuery } = require("../utilities/query");
 
 const metaproofNodeQuery = nodeQuery("/unconditionalInference/metaproof!"),
-      metastatementNodeQuery = nodeQuery("/unconditionalInference/unqualifiedMetastatement/metastatement!"),
+      metastatementNodeQuery = nodeQuery("/unconditionalInference/unqualifiedMetastatement!/metastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/unconditionalInference/unqualifiedMetastatement!");
 
 function verifyUnconditionalInference(unconditionalInferenceNode, premises, conclusions, context) {

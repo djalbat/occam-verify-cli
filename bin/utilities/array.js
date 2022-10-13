@@ -4,20 +4,10 @@ const { arrayUtilities } = require("necessary");
 
 const { push, last, prune, first, third, second, filter } = arrayUtilities;
 
-function leftDifference(arrayA, arrayB) {
-  filter(arrayA, (elementA) => {
-    const arrayBIncludesElementA = arrayB.includes(elementA);
-
-    if (!arrayBIncludesElementA) {
-      return true;
-    }
-  });
-}
-
-function someCombination(array, callback) {
-  const combinations = combinationsFromArray(array),
-        found = combinations.some((combination) => {
-          const array = combination,  ///
+function someChoice(array, callback) {
+  const choices = choicesFromArray(array),
+        found = choices.some((choice) => {
+          const array = choice,  ///
                 passed = callback(array);
 
           if (passed) {
@@ -28,6 +18,26 @@ function someCombination(array, callback) {
   return found;
 }
 
+function leftDifference(arrayA, arrayB) {
+  filter(arrayA, (elementA) => {
+    const arrayBIncludesElementA = arrayB.includes(elementA);
+
+    if (!arrayBIncludesElementA) {
+      return true;
+    }
+  });
+}
+
+function rightDifference(arrayA, arrayB) {
+  filter(arrayB, (elementB) => {
+    const arrayAIncludesElementB = arrayA.includes(elementB);
+
+    if (!arrayAIncludesElementB) {
+      return true;
+    }
+  });
+}
+
 module.exports = {
   push,
   last,
@@ -36,64 +46,65 @@ module.exports = {
   third,
   second,
   filter,
+  someChoice,
   leftDifference,
-  someCombination
+  rightDifference
 };
 
-function combinationsFromArray(array) {
+function choicesFromArray(array) {
   const arrayLength = array.length,
-        indexCombinations = indexCombinationsFromArrayLength(arrayLength),
-        combinations = indexCombinations.map((indexCombination) => {
+        indexChoices = indexChoicesFromArrayLength(arrayLength),
+        choices = indexChoices.map((indexChoice) => {
           const elements = [];
 
           for (let position = 0; position < arrayLength; position++) {
-            const index = indexCombination[position],
+            const index = indexChoice[position],
                   element = array[index];
 
             elements.push(element);
           }
 
-          const combination = elements; ///
+          const choice = elements; ///
 
-          return combination;
+          return choice;
         });
 
-  return combinations;
+  return choices;
 }
 
-function indexCombinationsFromArrayLength(arrayLength) {
-  let indexCombinations;
+function indexChoicesFromArrayLength(arrayLength) {
+  let indexChoices;
 
   if (arrayLength === 0) {
-    indexCombinations = [];
+    indexChoices = [];
   } else if (arrayLength === 1) {
-    const indexCombination = [
+    const indexChoice = [
       0
     ];
 
-    indexCombinations = [
-      indexCombination
+    indexChoices = [
+      indexChoice
     ];
   } else {
     const innerArrayLength = arrayLength - 1,
-          innerIndexCombinations = indexCombinationsFromArrayLength(innerArrayLength);
+          innerIndexChoices = indexChoicesFromArrayLength(innerArrayLength);
 
-    indexCombinations = [];
+    indexChoices = [];
 
-    innerIndexCombinations.forEach((innerIndexCombination) => {
+    innerIndexChoices.forEach((innerIndexChoice) => {
       const outerIndex = innerArrayLength;  ///
 
       for (let position = innerArrayLength; position >= 0; position--) {
-        const indexCombination = innerIndexCombination.slice(),
+        const indexChoice = innerIndexChoice.slice(),
               start = position, ///
               deleteCount = 0;
 
-        indexCombination.splice(start, deleteCount, outerIndex);
+        indexChoice.splice(start, deleteCount, outerIndex);
 
-        indexCombinations.push(indexCombination);
+        indexChoices.push(indexChoice);
       }
     });
   }
 
-  return indexCombinations;
+  return indexChoices;
 }
