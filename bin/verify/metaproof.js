@@ -5,11 +5,10 @@ const verifyMetaDerivation = require("../verify/metaDerivation"),
 
 const { nodeQuery } = require("../utilities/query");
 
-const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement!/metastatement!"),
-      metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
+const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
       qualifiedStatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement!");
 
-function verifyMetaproof(metaproofNode, context) {
+function verifyMetaproof(metaproofNode, metastatementNode, context) {
   let metaproofVerified = false;
 
   const metaDerivationNode = metaDerivationNodeQuery(metaproofNode);
@@ -25,18 +24,12 @@ function verifyMetaproof(metaproofNode, context) {
           qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
 
     if (qualifiedMetastatementVerified) {
-      debugger
+      const lastMetaAssertion = context.getLastMetaAssertion(),
+            lastMetaAssertionMetastatementNode = lastMetaAssertion.getMetastatementNode(),
+            metaProofMetastatementNode = lastMetaAssertionMetastatementNode,  ///
+            metaProofMetastatementNodeMatches = matchMetaProofMetastatementNode(metaProofMetastatementNode, metastatementNode);
 
-      // const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
-      //       firstRule = first(rules),
-      //       rule = firstRule, ///
-      //       metastatementString = nodeAsString(metastatementNode),
-      //       conclusionMetastatementNode = rule.getConclusionMetastatementNode(),
-      //       conclusionMetastatementString = nodeAsString(conclusionMetastatementNode);
-      //
-      // if (metastatementString === conclusionMetastatementString) {
-      //   metaproofVerified = true;
-      // }
+      metaproofVerified = metaProofMetastatementNodeMatches;  ///
     }
   }
 
@@ -44,3 +37,11 @@ function verifyMetaproof(metaproofNode, context) {
 }
 
 module.exports = verifyMetaproof;
+
+function matchMetaProofMetastatementNode(metaProofMetastatementNode, metastatementNode) {
+  let metaProofMetastatementNodeMatches = false;
+
+  debugger
+
+  return metaProofMetastatementNodeMatches;
+}

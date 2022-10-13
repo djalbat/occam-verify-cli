@@ -1,5 +1,7 @@
 "use strict";
 
+const { last } = require("../utilities/array");
+
 class MetaproofContext {
   constructor(context, derived, metaAssertions) {
     this.context = context;
@@ -17,6 +19,12 @@ class MetaproofContext {
 
   getMetaAssertions() {
     return this.metaAssertions;
+  }
+
+  getLastMetaAssertion() {
+    const lastMetaAssertion = last(this.metaAssertions);
+
+    return lastMetaAssertion;
   }
 
   getRules() { return this.context.getRules(); }

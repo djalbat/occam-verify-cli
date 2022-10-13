@@ -6,9 +6,11 @@ const verifyMetaproof = require("../verify/metaproof"),
       verifyPremiseOrPremises = require("../verify/premiseOrPremises");
 
 const { nodeQuery } = require("../utilities/query");
+const Conclusion = require("../conclusion");
 
 const metaproofNodeQuery = nodeQuery("/conditionalInference/metaproof!"),
       conclusionNodeQuery = nodeQuery("/conditionalInference/conclusion!"),
+      metastatementNodeQuery = nodeQuery("/conditionalInference/conclusion/metastatement!"),
       premiseOrPremisesNodeQuery = nodeQuery("/conditionalInference/premise|premises!");
 
 function verifyConditionalInference(conditionalInferenceNode, premises, conclusions, context) {
@@ -18,24 +20,31 @@ function verifyConditionalInference(conditionalInferenceNode, premises, conclusi
 
   context = metaproofContext; ///
 
-  const premiseOrPremisesNode = premiseOrPremisesNodeQuery(conditionalInferenceNode),
+  const conclusionNode = conclusionNodeQuery(conditionalInferenceNode),
+        metastatementNode = metastatementNodeQuery(conditionalInferenceNode),
+        premiseOrPremisesNode = premiseOrPremisesNodeQuery(conditionalInferenceNode),
         premiseOrPremisesVerified = verifyPremiseOrPremises(premiseOrPremisesNode, premises, context);
 
   if (premiseOrPremisesVerified) {
-    const conclusionNode = conclusionNodeQuery(conditionalInferenceNode),
-          conclusionVerified = verifyConclusion(conclusionNode, conclusions, context);
+    const conclusionVerified = verifyConclusion(conclusionNode, conclusions, context);
 
     if (conclusionVerified) {
-      let metaproofVerified = true;
+      conditionalInferenceVerified = true;
 
       const metaproofNode = metaproofNodeQuery(conditionalInferenceNode);
 
       if (metaproofNode !== null) {
-        metaproofVerified = verifyMetaproof(metaproofNode, context);
-      }
+        const metaproofVerified = verifyMetaproof(metaproofNode, metastatementNode, context);
 
-      conditionalInferenceVerified = metaproofVerified; ///
+        conditionalInferenceVerified = metaproofVerified; ///
+      }
     }
+  }
+
+  if (conditionalInferenceVerified) {
+    const conclusion = Conclusion.fromMetastatementNode(metastatementNode);
+
+    conclusions.push(conclusion);
   }
 
   return conditionalInferenceVerified;
