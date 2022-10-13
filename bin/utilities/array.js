@@ -2,13 +2,25 @@
 
 const { arrayUtilities } = require("necessary");
 
+const { indexesArrayFromArrayLengthAndIndexesLength } = require("../utilities/indexes");
+
 const { push, last, prune, first, third, second, filter } = arrayUtilities;
 
-function someChoice(array, callback) {
-  const choices = choicesFromArray(array),
-        found = choices.some((choice) => {
-          const array = choice,  ///
-                passed = callback(array);
+function someSubArray(array, subArrayLength, callback) {
+  const arrayLength = array.length,
+        indexesLength = subArrayLength, ///
+        indexesArray = indexesArrayFromArrayLengthAndIndexesLength(arrayLength, indexesLength),
+        found = indexesArray.some((indexes) => {
+          const subArray = [];
+
+          for (let count = 0; count < subArrayLength; count++) {
+            const index = indexes[count],
+                  element = array[index];
+
+            subArray.push(element);
+          }
+
+          const passed = callback(subArray);
 
           if (passed) {
             return true;
@@ -46,65 +58,7 @@ module.exports = {
   third,
   second,
   filter,
-  someChoice,
+  someSubArray,
   leftDifference,
   rightDifference
 };
-
-function choicesFromArray(array) {
-  const arrayLength = array.length,
-        indexChoices = indexChoicesFromArrayLength(arrayLength),
-        choices = indexChoices.map((indexChoice) => {
-          const elements = [];
-
-          for (let position = 0; position < arrayLength; position++) {
-            const index = indexChoice[position],
-                  element = array[index];
-
-            elements.push(element);
-          }
-
-          const choice = elements; ///
-
-          return choice;
-        });
-
-  return choices;
-}
-
-function indexChoicesFromArrayLength(arrayLength) {
-  let indexChoices;
-
-  if (arrayLength === 0) {
-    indexChoices = [];
-  } else if (arrayLength === 1) {
-    const indexChoice = [
-      0
-    ];
-
-    indexChoices = [
-      indexChoice
-    ];
-  } else {
-    const innerArrayLength = arrayLength - 1,
-          innerIndexChoices = indexChoicesFromArrayLength(innerArrayLength);
-
-    indexChoices = [];
-
-    innerIndexChoices.forEach((innerIndexChoice) => {
-      const outerIndex = innerArrayLength;  ///
-
-      for (let position = innerArrayLength; position >= 0; position--) {
-        const indexChoice = innerIndexChoice.slice(),
-              start = position, ///
-              deleteCount = 0;
-
-        indexChoice.splice(start, deleteCount, outerIndex);
-
-        indexChoices.push(indexChoice);
-      }
-    });
-  }
-
-  return indexChoices;
-}
