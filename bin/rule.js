@@ -1,7 +1,8 @@
 "use strict";
 
-const { labelsAsString } = require("./utilities/string"),
-      { prune, someSubArray } = require("./utilities/array");
+const { prune } = require("./utilities/array"),
+      { someSubArray } = require("./utilities/array"),
+      { labelsAsString } = require("./utilities/string");
 
 class Rule {
   constructor(labels, premises, conclusion) {

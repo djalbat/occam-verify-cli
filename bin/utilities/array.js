@@ -2,19 +2,32 @@
 
 const { arrayUtilities } = require("necessary");
 
-const { indexesArrayFromArrayLengthAndIndexesLength } = require("../utilities/indexes");
+const permutationsMatrix = require("../permutationsMatrix");
+
+const { MAXIMUM_INDEXES_LENGTH, MAXIMUM_PERMUTATION_LENGTH } = require("../constants");
 
 const { push, last, prune, first, third, second, filter } = arrayUtilities;
 
 function someSubArray(array, subArrayLength, callback) {
+  let found = false;
+
   const arrayLength = array.length,
-        indexesLength = subArrayLength, ///
-        indexesArray = indexesArrayFromArrayLengthAndIndexesLength(arrayLength, indexesLength),
-        found = indexesArray.some((indexes) => {
+        indexesLength = arrayLength, ///
+        permutationLength = subArrayLength; ///
+
+  if (permutationLength <= MAXIMUM_PERMUTATION_LENGTH) {
+    const offset = (indexesLength <= MAXIMUM_INDEXES_LENGTH) ?
+                     0 :
+                      indexesLength - MAXIMUM_INDEXES_LENGTH,
+          permutations = permutationsMatrix[indexesLength][permutationLength];
+
+    if (permutations !== null) {
+      found = permutations.some((permutation) => {
+        if (permutation !== null) {
           const subArray = [];
 
-          for (let count = 0; count < subArrayLength; count++) {
-            const index = indexes[count],
+          for (let position = 0; position < permutationLength; position++) {
+            const index = permutation[position] + offset,
                   element = array[index];
 
             subArray.push(element);
@@ -25,7 +38,10 @@ function someSubArray(array, subArrayLength, callback) {
           if (passed) {
             return true;
           }
-        });
+        }
+      });
+    }
+  }
 
   return found;
 }
