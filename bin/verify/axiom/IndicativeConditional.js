@@ -2,7 +2,7 @@
 
 const Axiom = require("../../axiom"),
       verifyLabels = require("../../verify/labels"),
-      verifyAntecedent = require("../../verify/antecedent"),
+      verifySupposition = require("../../verify/antecedent"),
       verifyConsequent = require("../../verify/consequent");
 
 const { first } = require("../../utilities/array"),
@@ -26,7 +26,7 @@ function verifyIndicativeConditionalAxiom(axiomNode, context) {
     if (labelsVerified) {
       const antecedents = [],
             antecedentNode = antecedentNodeQuery(indicativeConditionalNode),
-            antecedentVerified = verifyAntecedent(antecedentNode, antecedents, context);
+            antecedentVerified = verifySupposition(antecedentNode, antecedents, context);
 
       if (antecedentVerified) {
         const consequents = [],
@@ -34,11 +34,11 @@ function verifyIndicativeConditionalAxiom(axiomNode, context) {
               consequentVerified = verifyConsequent(consequentNode, consequents, context);
 
         if (consequentVerified) {
-          const firstAntecedent = first(antecedents),
+          const firstSupposition = first(antecedents),
                 firstConsequent = first(consequents),
-                antecedent = firstAntecedent, ///
+                antecedent = firstSupposition, ///
                 consequent = firstConsequent, ///
-                axiom = Axiom.fromAntecedentConsequentAndLabels(antecedent, consequent, labels);
+                axiom = Axiom.fromSuppositionConsequentAndLabels(antecedent, consequent, labels);
 
           context.addAxiom(axiom);
 

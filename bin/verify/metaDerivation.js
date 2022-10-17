@@ -2,14 +2,14 @@
 
 const MetaAssertion = require("../metaAssertion"),
       MetaproofContext = require("../context/metaproof"),
-      verifyMetaAntecedent = require("../verify/metaAntecedent"),
+      verifyMetaSupposition = require("../verify/metaSupposition"),
       verifyQualifiedMetastatement = require("../verify/metastatement/qualified"),
       verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
 const { nodeQuery, nodesQuery } = require("../utilities/query"),
       { META_SUBPROOF_RULE_NAME, QUALIFIED_METASTATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME } = require("../ruleNames");
 
-const metaAntecedentNodeQuery = nodeQuery("/metaSubproof/metaAntecedent!"),
+const metaSuppositionNodeQuery = nodeQuery("/metaSubproof/metaSupposition!"),
       metaDerivationNodeQuery = nodeQuery("/metaSubproof/metaDerivation!"),
       metaDerivationChildNodesQuery = nodesQuery("/metaDerivation/*"),
       qualifiedMetastatementNodeQuery = nodeQuery("/metaSubproof/qualifiedMetastatement!"),
@@ -89,10 +89,10 @@ function verifyMetaSubproof(metaSubproofNode, context) {
 
   context = metaproofContext; ///
 
-  const metaAntecedentNode = metaAntecedentNodeQuery(metaSubproofNode),
-        metaAntecedentVerified = verifyMetaAntecedent(metaAntecedentNode, context);
+  const metaSuppositionNode = metaSuppositionNodeQuery(metaSubproofNode),
+        metaSuppositionVerified = verifyMetaSupposition(metaSuppositionNode, context);
 
-  if (metaAntecedentVerified) {
+  if (metaSuppositionVerified) {
     let metaDerivationVerified = true;
 
     const metaDerivationNode = metaDerivationNodeQuery(metaSubproofNode);

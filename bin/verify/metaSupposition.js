@@ -5,20 +5,20 @@ const MetaAssertion = require("../metaAssertion"),
 
 const { nodeQuery } = require("../utilities/query");
 
-const unqualifiedMetastatementNodeQuery = nodeQuery("/metaAntecedent/unqualifiedMetastatement!");
+const unqualifiedMetastatementNodeQuery = nodeQuery("/metaSupposition/unqualifiedMetastatement!");
 
-function verifyMetaAntecedent(metaAntecedentNode, context) {
-  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaAntecedentNode),
+function verifyMetaSupposition(metaSuppositionNode, context) {
+  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaSuppositionNode),
         unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context),
-        metaAntecedentVerified = unqualifiedMetastatementVerified;  ///
+        metaSuppositionVerified = unqualifiedMetastatementVerified;  ///
 
-  if (metaAntecedentVerified) {
+  if (metaSuppositionVerified) {
     const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode);
 
     context.addMetaAssertion(metaAssertion);
   }
 
-  return metaAntecedentVerified;
+  return metaSuppositionVerified;
 }
 
-module.exports = verifyMetaAntecedent;
+module.exports = verifyMetaSupposition;

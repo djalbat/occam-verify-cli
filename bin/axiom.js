@@ -3,9 +3,9 @@
 const { labelsAsString } = require("./utilities/string");
 
 class Axiom {
-  constructor(labels, antecedent, consequent, statementNode) {
+  constructor(labels, supposition, consequent, statementNode) {
     this.labels = labels;
-    this.antecedent = antecedent;
+    this.supposition = supposition;
     this.consequent = consequent;
     this.statementNode = statementNode;
   }
@@ -14,8 +14,8 @@ class Axiom {
     return this.labels;
   }
 
-  getAntecedent() {
-    return this.antecedent;
+  getSupposition() {
+    return this.supposition;
   }
 
   getConsequent() {
@@ -33,16 +33,16 @@ class Axiom {
   }
 
   static fromStatementNodeAndLabels(statementNode, labels) {
-    const antecedent = null,
+    const supposition = null,
           consequent = null,
-          axiom = new Axiom(labels, antecedent, consequent, statementNode);
+          axiom = new Axiom(labels, supposition, consequent, statementNode);
 
     return axiom;
   }
 
-  static fromAntecedentConsequentAndLabels(antecedent, consequent, labels) {
+  static fromSuppositionConsequentAndLabels(supposition, consequent, labels) {
     const statementNode = null,
-          axiom = new Axiom(labels, antecedent, consequent, statementNode);
+          axiom = new Axiom(labels, supposition, consequent, statementNode);
 
     return axiom;
   }
