@@ -9,8 +9,8 @@ const MetaAssertion = require("../metaAssertion"),
 const { nodeQuery, nodesQuery } = require("../utilities/query"),
       { META_SUBPROOF_RULE_NAME, QUALIFIED_METASTATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME } = require("../ruleNames");
 
-const metaSuppositionNodeQuery = nodeQuery("/metaSubproof/metaSupposition!"),
-      metaDerivationNodeQuery = nodeQuery("/metaSubproof/metaDerivation!"),
+const metaDerivationNodeQuery = nodeQuery("/metaSubproof/metaDerivation!"),
+      metaSuppositionNodeQuery = nodeQuery("/metaSubproof/metaSupposition!"),
       metaDerivationChildNodesQuery = nodesQuery("/metaDerivation/*"),
       qualifiedMetastatementNodeQuery = nodeQuery("/metaSubproof/qualifiedMetastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/metaSubproof/unqualifiedMetastatement!");
