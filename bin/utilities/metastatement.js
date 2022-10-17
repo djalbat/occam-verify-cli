@@ -4,8 +4,8 @@ const { first, second, third } = require("../utilities/array"),
       { METASTATEMENT_RULE_NAME } = require("../ruleNames"),
       { LEFT_BRACKET, RIGHT_BRACKET, BRACKETED_METASTATEMENT_CHILD_NODES_LENGTH } = require("../constants");
 
-function matchBracketedMetastatementChildNode(childNodes, callback) {
-  let bracketedMetastatementChildNodeMatches = false;
+function bracketedMetastatementChildNodeFromChildNodes(childNodes) {
+  let bracketedMetastatementChildNode = null;
 
   const childNodesLength = childNodes.length;
 
@@ -29,16 +29,27 @@ function matchBracketedMetastatementChildNode(childNodes, callback) {
             nonTerminalNodeRuleNameMetastatementRuleName = (nonTerminalNodeRuleName === METASTATEMENT_RULE_NAME);
 
       if (firstTerminalNodeContentLeftBracket && nonTerminalNodeRuleNameMetastatementRuleName && secondTerminalNodeContentRightBracket) {
-        const bracketedMetastatementChildNode = nonTerminalNode;  ///
-
-        bracketedMetastatementChildNodeMatches = callback(bracketedMetastatementChildNode);
+        bracketedMetastatementChildNode = nonTerminalNode;  ///
       }
     }
+  }
+
+  return bracketedMetastatementChildNode;
+}
+
+function matchBracketedMetastatementChildNode(childNodes, callback) {
+  let bracketedMetastatementChildNodeMatches = false;
+
+  const bracketedMetastatementChildNode = bracketedMetastatementChildNodeFromChildNodes(childNodes);
+
+  if (bracketedMetastatementChildNode !== null) {
+    bracketedMetastatementChildNodeMatches = callback(bracketedMetastatementChildNode);
   }
 
   return bracketedMetastatementChildNodeMatches;
 }
 
 module.exports = {
-  matchBracketedMetastatementChildNode
+  matchBracketedMetastatementChildNode,
+  bracketedMetastatementChildNodeFromChildNodes
 };

@@ -1,7 +1,6 @@
 "use strict";
 
 const Conclusion = require("../conclusion"),
-      MetaproofContext = require("../context/metaproof"),
       verifyUnqualifiedMetastatement = require("../verify/metastatement/unqualified");
 
 const { nodeQuery } = require("../utilities/query");
@@ -11,10 +10,6 @@ const metastatementNodeQuery = nodeQuery("/unconditionalInference/unqualifiedMet
 
 function verifyUnconditionalInference(unconditionalInferenceNode, premises, conclusions, context) {
   let unconditionalInferenceVerified = false;
-
-  const metaproofContext = MetaproofContext.fromContext(context);
-
-  context = metaproofContext; ///
 
   const metastatementNode = metastatementNodeQuery(unconditionalInferenceNode),
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(unconditionalInferenceNode),

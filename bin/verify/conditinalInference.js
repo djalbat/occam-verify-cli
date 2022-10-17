@@ -1,8 +1,6 @@
 "use strict";
 
-const verifyMetaproof = require("../verify/metaproof"),
-      MetaproofContext = require("../context/metaproof"),
-      verifyConclusion = require("../verify/conclusion"),
+const verifyConclusion = require("../verify/conclusion"),
       verifyPremiseOrPremises = require("../verify/premiseOrPremises");
 
 const { nodeQuery } = require("../utilities/query");
@@ -14,10 +12,6 @@ const conclusionNodeQuery = nodeQuery("/conditionalInference/conclusion!"),
 
 function verifyConditionalInference(conditionalInferenceNode, premises, conclusions, context) {
   let conditionalInferenceVerified = false;
-
-  const metaproofContext = MetaproofContext.fromContext(context);
-
-  context = metaproofContext; ///
 
   const conclusionNode = conclusionNodeQuery(conditionalInferenceNode),
         metastatementNode = metastatementNodeQuery(conditionalInferenceNode),

@@ -1,6 +1,6 @@
 "use strict";
 
-const { matchBracketedMetastatementChildNode } = require("./utilities/metastatement");
+const { matchBracketedMetastatementChildNode, bracketedMetastatementChildNodeFromChildNodes } = require("./utilities/metastatement");
 
 class MetaSubstitution {
   constructor(metavariableName, nodes) {
@@ -43,6 +43,15 @@ class MetaSubstitution {
   }
 
   static fromMetavariableNameAndNodes(metavariableName, nodes) {
+    const bracketedMetastatementChildNode = bracketedMetastatementChildNodeFromChildNodes(nodes);
+
+    if (bracketedMetastatementChildNode !== null) {
+      const nonTerminalNode = bracketedMetastatementChildNode,  ///
+            childNodes = nonTerminalNode.getChildNodes();
+
+      nodes = childNodes; ///
+    }
+
     const metaSubstitution = new MetaSubstitution(metavariableName, nodes);
 
     return metaSubstitution;
