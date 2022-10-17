@@ -2,15 +2,15 @@
 
 const Axiom = require("../../axiom"),
       verifyLabels = require("../../verify/labels"),
-      verifySupposition = require("../../verify/antecedent"),
-      verifyConsequent = require("../../verify/consequent");
+      verifyConsequent = require("../../verify/consequent"),
+      verifySupposition = require("../../verify/supposition");
 
 const { first } = require("../../utilities/array"),
       { nodeQuery, nodesQuery } = require("../../utilities/query");
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
-      antecedentNodeQuery = nodeQuery("/indicativeConditional/antecedent!"),
       consequentNodeQuery = nodeQuery("/indicativeConditional/consequent!"),
+      suppositionNodeQuery = nodeQuery("/indicativeConditional/supposition!"),
       indicativeConditionalNodeQuery = nodeQuery("/axiom/indicativeConditional!");
 
 function verifyIndicativeConditionalAxiom(axiomNode, context) {
@@ -24,21 +24,21 @@ function verifyIndicativeConditionalAxiom(axiomNode, context) {
           labelsVerified = verifyLabels(labelNodes, labels, context);
 
     if (labelsVerified) {
-      const antecedents = [],
-            antecedentNode = antecedentNodeQuery(indicativeConditionalNode),
-            antecedentVerified = verifySupposition(antecedentNode, antecedents, context);
+      const suppositions = [],
+            suppositionNode = suppositionNodeQuery(indicativeConditionalNode),
+            suppositionVerified = verifySupposition(suppositionNode, suppositions, context);
 
-      if (antecedentVerified) {
+      if (suppositionVerified) {
         const consequents = [],
               consequentNode = consequentNodeQuery(indicativeConditionalNode),
               consequentVerified = verifyConsequent(consequentNode, consequents, context);
 
         if (consequentVerified) {
-          const firstSupposition = first(antecedents),
+          const firstSupposition = first(suppositions),
                 firstConsequent = first(consequents),
-                antecedent = firstSupposition, ///
+                supposition = firstSupposition, ///
                 consequent = firstConsequent, ///
-                axiom = Axiom.fromSuppositionConsequentAndLabels(antecedent, consequent, labels);
+                axiom = Axiom.fromSuppositionConsequentAndLabels(supposition, consequent, labels);
 
           context.addAxiom(axiom);
 
