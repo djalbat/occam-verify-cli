@@ -8,8 +8,7 @@ const verifyMetaproof = require("../verify/metaproof"),
 const { nodeQuery } = require("../utilities/query");
 const Conclusion = require("../conclusion");
 
-const metaproofNodeQuery = nodeQuery("/conditionalInference/metaproof!"),
-      conclusionNodeQuery = nodeQuery("/conditionalInference/conclusion!"),
+const conclusionNodeQuery = nodeQuery("/conditionalInference/conclusion!"),
       metastatementNodeQuery = nodeQuery("/conditionalInference/conclusion!/unqualifiedMetastatement!/metastatement!"),
       premiseOrPremisesNodeQuery = nodeQuery("/conditionalInference/premise|premises!");
 
@@ -29,22 +28,12 @@ function verifyConditionalInference(conditionalInferenceNode, premises, conclusi
     const conclusionVerified = verifyConclusion(conclusionNode, conclusions, context);
 
     if (conclusionVerified) {
+      const conclusion = Conclusion.fromMetastatementNode(metastatementNode);
+
+      conclusions.push(conclusion);
+
       conditionalInferenceVerified = true;
-
-      const metaproofNode = metaproofNodeQuery(conditionalInferenceNode);
-
-      if (metaproofNode !== null) {
-        const metaproofVerified = verifyMetaproof(metaproofNode, metastatementNode, context);
-
-        conditionalInferenceVerified = metaproofVerified; ///
-      }
     }
-  }
-
-  if (conditionalInferenceVerified) {
-    const conclusion = Conclusion.fromMetastatementNode(metastatementNode);
-
-    conclusions.push(conclusion);
   }
 
   return conditionalInferenceVerified;

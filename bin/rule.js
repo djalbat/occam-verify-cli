@@ -54,15 +54,25 @@ module.exports = Rule;
 
 function matchPremise(premise, metaAssertions, metaSubstitutions) {
   const metaAssertion = prune(metaAssertions, (metaAssertion) => {
-    const nonTerminalNode = metaAssertion.getNonTerminalNode();
+    const metaSubproofNode = metaAssertion.getMetaSubproofNode(),
+          metastatementNode = metaAssertion.getMetastatementNode()
 
-    if (nonTerminalNode !== null) {
-      const nonTerminalNodeMatches = premise.matchNonTerminalNode(nonTerminalNode, metaSubstitutions);
+    if (metaSubproofNode !== null) {
+      const metaSubProofMatches = premise.matchMetaSubproofNode(metaSubproofNode, metaSubstitutions);
 
-      if (!nonTerminalNodeMatches) {  ///
+      if (!metaSubProofMatches) {  ///
         return true;
       }
     }
+
+    if (metastatementNode !== null) {
+      const metastatementMatches = premise.matchMetastatementNode(metastatementNode, metaSubstitutions);
+
+      if (!metastatementMatches) {  ///
+        return true;
+      }
+    }
+
   }) || null;
 
   const premiseMatches = (metaAssertion !== null);
@@ -83,8 +93,7 @@ function matchPremises(premise, metaAssertions, metaSubstitutions) {
 }
 
 function matchConclusion(conclusion, metastatementNode, metaSubstitutions) {
-  const nonTerminalNode = metastatementNode,  ///
-        nonTerminalNodeMatches = conclusion.matchNonTerminalNode(nonTerminalNode, metaSubstitutions),
+  const nonTerminalNodeMatches = conclusion.matchMetastatementNode(metastatementNode, metaSubstitutions),
         conclusionMatches = nonTerminalNodeMatches; ///
 
   return conclusionMatches;

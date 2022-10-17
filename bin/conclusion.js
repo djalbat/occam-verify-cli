@@ -13,13 +13,13 @@ class Conclusion {
     return this.metastatementNode;
   }
 
-  matchNonTerminalNode(metastatementNode, metaSubstitutions) {
+  matchMetastatementNode(metastatementNode, metaSubstitutions) {
     const nonTerminalNode = metastatementNode,  ///
           conclusionNonTerminalNode = this.metastatementNode,  ///
           conclusionNonTerminalNodeMatches = matchConclusionNonTerminalNode(conclusionNonTerminalNode, nonTerminalNode, metaSubstitutions),
-          nonTerminalNodeMatches = conclusionNonTerminalNodeMatches; ///
+          metastatementNodeMatches = conclusionNonTerminalNodeMatches; ///
 
-    return nonTerminalNodeMatches;
+    return metastatementNodeMatches;
   }
 
   static fromMetastatementNode(metastatementNode) {
@@ -89,9 +89,9 @@ function matchConclusionMetavariable(conclusionMetavariableNode, nodes, metaSubs
         }) || null;
 
   if (metaSubstitution !== null) {
-    const metaSubstitutionNonTerminalNodeMatches = metaSubstitution.matchNodes(nodes);
+    const metaSubstitutionNodesMatch = metaSubstitution.matchNodes(nodes);
 
-    conclusionMetavariableMatches = metaSubstitutionNonTerminalNodeMatches;  ///
+    conclusionMetavariableMatches = metaSubstitutionNodesMatch;  ///
   }
 
   return conclusionMetavariableMatches;

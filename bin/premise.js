@@ -2,9 +2,14 @@
 
 const MetaSubstitution = require("./metaSubstitution");
 
-const { first } = require("./utilities/array"),
+const { first, second } = require("./utilities/array"),
+      { nodeQuery, nodesQuery } = require("./utilities/query"),
       { metavariableNameFromMetavariableNode } = require("./utilities/query"),
       { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } = require("./ruleNames");
+
+const metastatementNodesQuery = nodesQuery("/metaSubproofAssertion/metastatement"),
+      metaSubproofAssertionNodeQuery = nodeQuery("/metastatement/metaSubproofAssertion!"),
+      qualifiedOrUnqualifiedMetastatementMetastatementNodesQuery = nodesQuery("/metaSubproof/qualifiedMetastatement|unqualifiedMetastatement/metastatement!");
 
 class Premise {
   constructor(metastatementNode) {
@@ -15,12 +20,43 @@ class Premise {
     return this.metastatementNode;
   }
 
-  matchNonTerminalNode(nonTerminalNode, metaSubstitutions) {
-    const premiseNonTerminalNode = this.metastatementNode,  ///
-          premiseNonTerminalNodeMatches = matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, metaSubstitutions),
-          nonTerminalNodeMatches = premiseNonTerminalNodeMatches; ///
+  matchMetaSubproofNode(metaSubproofNode, metaSubstitutions) {
+    let metaSubproofNodeMatches = false;
 
-    return nonTerminalNodeMatches;
+    const metaSubproofAssertionNode = metaSubproofAssertionNodeQuery(this.metastatementNode);
+
+    if (metaSubproofAssertionNode !== null) {
+      const metaSubproofAssertionMetastatementNodes = metastatementNodesQuery(metaSubproofAssertionNode),
+            firstMetaSubproofAssertionMetastatementNode = first(metaSubproofAssertionMetastatementNodes),
+            qualifiedOrUnqualifiedMetastatementMetastatementNodes = qualifiedOrUnqualifiedMetastatementMetastatementNodesQuery(metaSubproofNode),
+            firstQualifiedOrUnqualifiedMetastatementMetastatementNode = first(qualifiedOrUnqualifiedMetastatementMetastatementNodes);
+
+      const nonTerminalNode = firstQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
+            premiseNonTerminalNode = firstMetaSubproofAssertionMetastatementNode,  ///
+            premiseNonTerminalNodeMatches = matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, metaSubstitutions);
+
+      if (premiseNonTerminalNodeMatches) {
+        const secondMetaSubproofAssertionMetastatementNode = second(metaSubproofAssertionMetastatementNodes),
+              secondQualifiedOrUnqualifiedMetastatementMetastatementNode = second(qualifiedOrUnqualifiedMetastatementMetastatementNodes);
+
+        const nonTerminalNode = secondQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
+              premiseNonTerminalNode = secondMetaSubproofAssertionMetastatementNode, ///
+              premiseNonTerminalNodeMatches = matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, metaSubstitutions);
+
+        metaSubproofNodeMatches = premiseNonTerminalNodeMatches; ///
+      }
+    }
+
+    return metaSubproofNodeMatches;
+  }
+
+  matchMetastatementNode(metastatementNode, metaSubstitutions) {
+    const nonTerminalNode = metastatementNode,  ///
+          premiseNonTerminalNode = this.metastatementNode,  ///
+          premiseNonTerminalNodeMatches = matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, metaSubstitutions),
+          metastatementNodeMatches = premiseNonTerminalNodeMatches; ///
+
+    return metastatementNodeMatches;
   }
 
   static fromMetastatementNode(metastatementNode) {
@@ -82,17 +118,17 @@ function matchPremiseMetavariable(premiseMetavariableNode, nodes, metaSubstituti
 
   const premiseMetavariableName = metavariableNameFromMetavariableNode(premiseMetavariableNode),
         metaSubstitution = metaSubstitutions.find((metaSubstitution) => {
-        const metavariableName = metaSubstitution.getMetavariableName();
+          const metavariableName = metaSubstitution.getMetavariableName();
 
-        if (metavariableName === premiseMetavariableName) {
-          return true;
-        }
-      }) || null;
+          if (metavariableName === premiseMetavariableName) {
+            return true;
+          }
+        }) || null;
 
   if (metaSubstitution !== null) {
-    const nonTerminalNodeMatches = metaSubstitution.matchNodes(nodes);
+    const metaSubstitutionNodesMatch = metaSubstitution.matchNodes(nodes);
 
-    premiseMetavariableMatches = nonTerminalNodeMatches;  ///
+    premiseMetavariableMatches = metaSubstitutionNodesMatch;  ///
   } else {
     const metavariableName = premiseMetavariableName, ///
           metaSubstitution = MetaSubstitution.fromMetavariableNameAndNodes(metavariableName, nodes);

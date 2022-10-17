@@ -25,11 +25,11 @@ class MetaSubstitution {
     matches = metaSubstitutionNonTerminalNodeMatches;  ///
 
     if (!matches) {
-      const childNodes = metaSubstitutionNodes, ///
+      const childNodes = nodes, ///
             bracketedMetastatementChildNodeMatches = matchBracketedMetastatementChildNode(childNodes, (bracketedMetastatementChildNode) => {
               const nonTerminalNode = bracketedMetastatementChildNode,  ///
                     childNodes = nonTerminalNode.getChildNodes(),
-                    metaSubstitutionNodes = childNodes, ///
+                    nodes = childNodes, ///
                     metaAssertionNonTerminalNodeMatches = matchMetaSubstitutionNodes(metaSubstitutionNodes, nodes),
                     bracketedMetastatementChildNodeMatches = metaAssertionNonTerminalNodeMatches; ///
 

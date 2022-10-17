@@ -116,6 +116,12 @@ class FileContext {
     return this.packageContext;
   }
 
+  getMetaAssertions() {
+    const metaAssertions = [];
+
+    return metaAssertions;
+  }
+
   findTypeByTypeName(typeName) {
     const types = this.getTypes(),
           type = types.find((type) => {

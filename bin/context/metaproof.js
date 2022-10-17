@@ -16,7 +16,14 @@ class MetaproofContext {
   }
 
   getMetaAssertions() {
-    return this.metaAssertions;
+    let metaAssertions = this.context.getMetaAssertions();
+
+    metaAssertions = [
+      ...metaAssertions,
+      ...this.metaAssertions
+    ];
+
+    return metaAssertions;
   }
 
   getRules() { return this.context.getRules(); }

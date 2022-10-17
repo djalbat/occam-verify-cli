@@ -30,7 +30,7 @@ function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
   if (qualifiedMetastatementVerified) {
     const metastatementString = nodeAsString(metastatementNode);
 
-    log.info(`Verified the '${metastatementString}' qualified metastatement.`);
+    log.debug(`Verified the '${metastatementString}' qualified metastatement.`);
   }
 
   return qualifiedMetastatementVerified;

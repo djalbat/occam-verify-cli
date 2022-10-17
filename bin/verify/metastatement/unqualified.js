@@ -32,7 +32,7 @@ function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context) {
   if (unqualifiedMetastatementVerified) {
     const metastatementString = nodeAsString(metastatementNode);
 
-    log.info(`Verified the '${metastatementString}' unqualified metastatement.`);
+    log.debug(`Verified the '${metastatementString}' unqualified metastatement.`);
   }
 
   return unqualifiedMetastatementVerified;
