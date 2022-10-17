@@ -9,7 +9,7 @@ const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
       qualifiedStatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement!"),
       metaProofMetastatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement/metastatement!");
 
-function verifyMetaproof(metaproofNode, metastatementNode, context) {
+function verifyMetaproof(metaproofNode, conclusion, context) {
   let metaproofVerified = false;
 
   const metaDerivationNode = metaDerivationNodeQuery(metaproofNode);
@@ -25,7 +25,8 @@ function verifyMetaproof(metaproofNode, metastatementNode, context) {
           qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
 
     if (qualifiedMetastatementVerified) {
-      const metaProofMetastatementNode = metaProofMetastatementNodeQuery(metaproofNode),
+      const metastatementNode = conclusion.getMetastatementNode(),
+            metaProofMetastatementNode = metaProofMetastatementNodeQuery(metaproofNode),
             metaProofMetastatementNodeMatches = matchMetaProofMetastatementNode(metaProofMetastatementNode, metastatementNode);
 
       metaproofVerified = metaProofMetastatementNodeMatches;  ///

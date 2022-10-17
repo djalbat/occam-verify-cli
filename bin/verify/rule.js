@@ -60,9 +60,7 @@ function verifyRule(ruleNode, context) {
       let metaproofVerified = true;
 
       if (metaproofNode !== null) {
-        const metastatementNode = conclusion.getMetastatementNode();
-
-        metaproofVerified = verifyMetaproof(metaproofNode, metastatementNode, context);
+        metaproofVerified = verifyMetaproof(metaproofNode, conclusion, context);
       }
 
       if (metaproofVerified) {
