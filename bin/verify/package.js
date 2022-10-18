@@ -34,8 +34,6 @@ function verifyPackage(packageName, packageContextMap, packageContexts = []) {
 
       const dependencyPackageContexts = retrieveDependencyPackageContexts(dependencyPackageNames, packageContextMap);
 
-      sortDependencyPackageContexts(dependencyPackageContexts, packageContexts);
-
       packageContext.initialise(packageContexts, dependencyPackageContexts);
 
       const filesVerified = verifyFiles(packageContext);
@@ -55,25 +53,18 @@ function verifyPackage(packageName, packageContextMap, packageContexts = []) {
 
 module.exports = verifyPackage;
 
-function sortDependencyPackageContexts(dependencyPackageContexts, packageContexts) {
-  dependencyPackageContexts.sort((dependencyPackageContextA, dependencyPackageContextB) => {
-    const indexA = packageContexts.indexOf(dependencyPackageContextA),
-          indexB = packageContexts.indexOf(dependencyPackageContextB),
-          difference = (indexB - indexA);
-
-    return difference;
-  });
-}
-
 function retrieveDependencyPackageContexts(dependencyPackageNames, packageContextMap, dependencyPackageContexts = []) {
   dependencyPackageNames.forEach((dependencyPackageName) => {
     const dependencyPackageContext = packageContextMap[dependencyPackageName],
           dependencyPackageContextsIncludesDependencyPackageContext = dependencyPackageContexts.includes(dependencyPackageContext);
 
     if (!dependencyPackageContextsIncludesDependencyPackageContext) {
-      dependencyPackageContexts.push(dependencyPackageContext);
+      const packageContext = dependencyPackageContext,  ///
+            dependencyPackageNames = packageContext.getDependencyPackageNames();
 
       retrieveDependencyPackageContexts(dependencyPackageNames, packageContextMap, dependencyPackageContexts);
+
+      dependencyPackageContexts.push(dependencyPackageContext);
     }
   });
 
