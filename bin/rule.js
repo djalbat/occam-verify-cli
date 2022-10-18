@@ -24,17 +24,28 @@ class Rule {
   }
 
   matchMetastatement(metastatementNode, context) {
-    const metaAssertions = context.getMetaAssertions(),
-          premisesLength = this.premises.length,
-          matchesMetastatement = someSubArray(metaAssertions, premisesLength, (metaAssertions) => {
-            const premisesMatchConclusion = matchPremisesAndConclusion(this.premises, this.conclusion, metaAssertions, metastatementNode);
+    let metastatementNatches;
 
-            if (premisesMatchConclusion) {
-              return true;
-            }
-          });
+    const premisesLength = this.premises.length;
 
-    return matchesMetastatement;
+    if (premisesLength === 0) {
+      const metaSubstitutions = [],
+            conclusionMatches = matchConclusion(this.conclusion, metastatementNode, metaSubstitutions);
+
+      metastatementNatches = conclusionMatches; ///
+    } else {
+      const metaAssertions = context.getMetaAssertions();
+
+      metastatementNatches = someSubArray(metaAssertions, premisesLength, (metaAssertions) => {
+        const premisesMatchConclusion = matchPremisesAndConclusion(this.premises, this.conclusion, metaAssertions, metastatementNode);
+
+        if (premisesMatchConclusion) {
+          return true;
+        }
+      });
+    }
+
+    return metastatementNatches;
   }
 
   asString() {
