@@ -15,6 +15,10 @@ function verifyPremiseOrPremises(premiseOrPremisesNode, premises, context) {
           const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
 
           if (unqualifiedMetastatementVerified) {
+            const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode);
+
+            context.addMetaAssertion(metaAssertion);
+
             return true;
           }
         });
@@ -22,10 +26,7 @@ function verifyPremiseOrPremises(premiseOrPremisesNode, premises, context) {
   if (premiseOrPremisesVerified) {
     unqualifiedMetastatementNodes.forEach((unqualifiedMetastatementNode) => {
       const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-            metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode),
             premise = Premise.fromMetastatementNode(metastatementNode);
-
-      context.addMetaAssertion(metaAssertion);
 
       premises.push(premise);
     });

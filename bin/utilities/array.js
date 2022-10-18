@@ -16,10 +16,18 @@ function someSubArray(array, subArrayLength, callback) {
         permutationLength = subArrayLength; ///
 
   if (permutationLength <= MAXIMUM_PERMUTATION_LENGTH) {
-    const offset = (indexesLength <= MAXIMUM_INDEXES_LENGTH) ?
-                     0 :
-                      indexesLength - MAXIMUM_INDEXES_LENGTH,
-          permutations = permutationsMatrix[indexesLength][permutationLength];
+    let offset,
+        permutations;
+
+    if (indexesLength > MAXIMUM_INDEXES_LENGTH) {
+      offset = indexesLength - MAXIMUM_INDEXES_LENGTH;
+
+      permutations = permutationsMatrix[MAXIMUM_INDEXES_LENGTH][permutationLength];
+    } else {
+      offset = 0;
+
+      permutations = permutationsMatrix[indexesLength][permutationLength];
+    }
 
     if (permutations !== null) {
       found = permutations.some((permutation) => {
