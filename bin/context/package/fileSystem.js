@@ -2,7 +2,7 @@
 
 const { fileSystemUtilities } = require("necessary");
 
-const PackageContext = require("../../context/package");
+const { PackageContext } = require("../../../lib/main");
 
 const { filePathsFromPackageName, dependencyPackageNamesFromPackageName } = require("../../utilities/fileSystem"),
       { TERM_BNF_FILE_NAME,

@@ -1,14 +1,12 @@
 "use strict";
 
-const fs = require("fs");
-
 const { Query } = require("occam-dom"),
       { filePathUtilities } = require("occam-open-cli"),
       { fileSystemUtilities } = require("necessary"),
       { MetaJSONLexer, MetaJSONParser } = require("occam-grammars");
 
 const { isFilePathFlorenceFilePath } = filePathUtilities,
-      { readFile, isEntryFile, isEntryDirectory, checkFileExists } = fileSystemUtilities;
+      { readFile, isEntryFile, readDirectory, isEntryDirectory, checkFileExists } = fileSystemUtilities;
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
@@ -60,7 +58,7 @@ module.exports = {
 function trimDoubleQuotes(content) { return content.replace(/(^"|"$)/g, ""); } ///
 
 function readFilePaths(directoryPath, test, filePaths = []) {
-  const subEntryNames = fs.readdirSync(directoryPath);
+  const subEntryNames = readDirectory(directoryPath);
 
   subEntryNames.forEach((subEntryName) => {
     const subEntryNameHiddenName = isNameHiddenName(subEntryName);

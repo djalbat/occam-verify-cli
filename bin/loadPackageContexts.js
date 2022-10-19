@@ -1,12 +1,11 @@
 "use strict";
 
-const { loggingUtilities } = require("necessary");
+const { arrayUtilities, loggingUtilities } = require("necessary");
 
 const FileSystemPackageContext = require("./context/package/fileSystem");
 
-const { first } = require("./utilities/array");
-
-const { log } = loggingUtilities;
+const { log } = loggingUtilities,
+      { first } = arrayUtilities;
 
 function loadPackageContexts(packageName, packageContextMap = {}, dependentPackageNames = []) {
   const cyclicDependencyExists = checkCyclicDependencyExists(packageName, dependentPackageNames);
