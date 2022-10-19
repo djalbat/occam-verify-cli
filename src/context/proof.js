@@ -80,6 +80,18 @@ export default class ProofContext {
     this.statementNodes.push(statementNode);
   }
 
+  trace(message) { this.context.trace(message); }
+
+  debug(message) { this.context.debug(message); }
+
+  info(message) { this.context.info(message); }
+
+  warning(message) { this.context.warning(message); }
+
+  error(message) { this.context.error(message); }
+
+  fatal(message) { this.context.fatal(message); }
+
   static fromContext(context) {
     const derived = false,
           variables = [],

@@ -1,6 +1,6 @@
 "use strict";
 
-const { fileSystemUtilities } = require("necessary");
+const { loggingUtilities, fileSystemUtilities } = require("necessary");
 
 const { PackageContext } = require("../../../lib/main");
 
@@ -12,7 +12,8 @@ const { filePathsFromPackageName, dependencyPackageNamesFromPackageName } = requ
         SYMBOL_PATTERN_FILE_NAME,
         OPERATOR_PATTERN_FILE_NAME } = require("../../fileNames");
 
-const { readFile, checkFileExists } = fileSystemUtilities;
+const { log } = loggingUtilities,
+      { readFile, checkFileExists } = fileSystemUtilities;
 
 class FileSystemPackageContext extends PackageContext {
   getFilePaths() {
@@ -94,6 +95,18 @@ class FileSystemPackageContext extends PackageContext {
 
     return termBNF;
   }
+
+  trace(message) { log.trace(message); }
+
+  debug(message) { log.debug(message); }
+
+  info(message) { log.info(message); }
+
+  warning(message) { log.warning(message); }
+
+  error(message) { log.error(message); }
+
+  fatal(message) { log.fatal(message); }
 
   static fromPackageName(packageName) { return PackageContext.fromPackageName(FileSystemPackageContext, packageName); }
 }

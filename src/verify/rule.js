@@ -1,7 +1,5 @@
 "use strict";
 
-import { loggingUtilities } from "necessary";
-
 import Rule from "../rule";
 import verifyLabels from "../verify/labels";
 import verifyMetaproof from "../verify/metaproof";
@@ -12,8 +10,6 @@ import verifyUnconditionalInference from "../verify/unconditionalInference";
 import { first } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-
-const { log } = loggingUtilities;
 
 const labelNodesQuery = nodesQuery("/rule/label"),
       metaproofNodeQuery = nodeQuery("/rule/metaproof!"),
@@ -30,7 +26,7 @@ export default function verifyRule(ruleNode, context) {
 
   context = metaproofContext; ///
 
-  log.debug(`Verifying the '${labelsString}' rule...`);
+  context.debug(`Verifying the '${labelsString}' rule...`);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, context);
@@ -73,7 +69,7 @@ export default function verifyRule(ruleNode, context) {
     }
 
     if (ruleVerified) {
-      log.info(`Verified the '${labelsString}' rule.`);
+      context.info(`Verified the '${labelsString}' rule.`);
     }
   }
 

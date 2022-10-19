@@ -1,10 +1,6 @@
 "use strict";
 
-import { loggingUtilities } from "necessary";
-
 import verifyFiles from "../verify/files";
-
-const { log } = loggingUtilities;
 
 export default function verifyPackage(packageName, packageContextMap, packageContexts = []) {
   const packageContext = packageContextMap[packageName];
@@ -12,7 +8,7 @@ export default function verifyPackage(packageName, packageContextMap, packageCon
   let packageVerified = packageContext.isPackageVerified();
 
   if (!packageVerified) {
-    log.debug(`Verifying the '${packageName}' package...`);
+    context.debug(`Verifying the '${packageName}' package...`);
 
     const dependencyPackageNames = packageContext.getDependencyPackageNames(),
           dependencyPackagesVVerified = dependencyPackageNames.every((dependencyPackageName) => {
@@ -43,7 +39,7 @@ export default function verifyPackage(packageName, packageContextMap, packageCon
       if (packageVerified) {
         packageContexts.push(packageContext);
 
-        log.info(`Verified the '${packageName}' package.`);
+        context.info(`Verified the '${packageName}' package.`);
       }
     }
   }

@@ -1,14 +1,10 @@
 "use strict";
 
-import { loggingUtilities } from "necessary";
-
 import Variable from "../../variable";
 import verifyTermAsVariable from "../../verify/termAsVariable";
 
 import { first } from "../../utilities/array";
 import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
-
-const { log } = loggingUtilities;
 
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeNodeQuery = nodeQuery("/typeAssertion/type");
@@ -21,7 +17,7 @@ export default function verifyTypeAssertion(typeAssertionNode, context) {
         typePresent = context.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    log.error(`The ${typeName} type is not present.`);
+    context.error(`The ${typeName} type is not present.`);
   } else {
     const derived = context.isDerived();
 
@@ -41,7 +37,7 @@ export default function verifyTypeAssertion(typeAssertionNode, context) {
               value = firstValue;
 
         if (value !== undefined) {
-          log.error(`The value of the ${variableName} variable is not undefined.`);
+          context.error(`The value of the ${variableName} variable is not undefined.`);
         } else {
           const type = context.findTypeByTypeName(typeName),
                 firstType = first(types),
@@ -49,7 +45,7 @@ export default function verifyTypeAssertion(typeAssertionNode, context) {
                 typeSubTypeOfVariableType = type.isSubTypeOf(variableType);
 
           if (!typeSubTypeOfVariableType) {
-            log.error(`The asserted type of the ${variableName} variable is not a sub-type of its declared type.`);
+            context.error(`The asserted type of the ${variableName} variable is not a sub-type of its declared type.`);
           } else {
             const name = variableName,  ///
                   variable = Variable.fromTypeAndName(type, name);

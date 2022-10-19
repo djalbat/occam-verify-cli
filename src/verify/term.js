@@ -1,15 +1,11 @@
 "use strict";
 
-import { loggingUtilities } from "necessary/lib/main";
-
 import verifyTermAsVariable from "../verify/termAsVariable";
 
 import { first } from "../utilities/array";
 import { nodeAsString } from "../utilities/string";
 import { ARGUMENT_RULE_NAME } from "../ruleNames";
 import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
-
-const { log } = loggingUtilities;
 
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!")
@@ -157,7 +153,7 @@ function verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
   if (termNode === null) {
     const argumentString = nodeAsString(argumentNode);
 
-    log.error(`The ${argumentString} argument should be a term, not a type`);
+    context.error(`The ${argumentString} argument should be a term, not a type`);
   } else {
     const types = [],
           values = [],

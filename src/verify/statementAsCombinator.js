@@ -1,21 +1,17 @@
 "use strict";
 
-import { loggingUtilities } from "necessary";
-
 import Combinator from "../combinator";
 
 import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode } from "../utilities/query";
 import { TERM_RULE_NAME, TYPE_RULE_NAME } from "../ruleNames";
 
-const { log } = loggingUtilities;
-
 export default function verifyStatementAsCombinator(statementNode, context) {
   let statementVerifiedAsCombinator = false;
 
   const statementString = nodeAsString(statementNode);
 
-  log.debug(`Verifying the ${statementString} statement as a combinator...`);
+  context.debug(`Verifying the ${statementString} statement as a combinator...`);
 
   const nonTerminalNode = statementNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
@@ -32,7 +28,7 @@ export default function verifyStatementAsCombinator(statementNode, context) {
 
     const statementString = nodeAsString(statementNode);
 
-    log.info(`Verified the '${statementString}' combinator.`);
+    context.info(`Verified the '${statementString}' combinator.`);
   }
 
   return statementVerifiedAsCombinator;
@@ -121,7 +117,7 @@ function verifyTypeNode(typeNode, context) {
         typePresent = context.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    log.error(`The type '${typeName}' is missing.`);
+    context.error(`The type '${typeName}' is missing.`);
   } else {
     typeNodeVerified = true;
   }

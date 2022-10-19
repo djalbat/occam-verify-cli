@@ -1,13 +1,9 @@
 "use strict";
 
-import { loggingUtilities } from "necessary";
-
 import MetaAssertion from "../../metaAssertion";
 
 import { nodeQuery } from "../../utilities/query";
 import { nodeAsString } from "../../utilities/string";
-
-const { log } = loggingUtilities;
 
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
@@ -32,7 +28,7 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
   if (unqualifiedMetastatementVerified) {
     const metastatementString = nodeAsString(metastatementNode);
 
-    log.debug(`Verified the '${metastatementString}' unqualified metastatement.`);
+    context.debug(`Verified the '${metastatementString}' unqualified metastatement.`);
   }
 
   return unqualifiedMetastatementVerified;

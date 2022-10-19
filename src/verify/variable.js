@@ -1,12 +1,8 @@
 "use strict";
 
-import { loggingUtilities } from "necessary";
-
 import Variable from "../variable";
 
 import { typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities/query";
-
-const { log } = loggingUtilities;
 
 export default function verifyVariable(variableNode, typeNode, context) {
   let variableVerified = false;
@@ -15,7 +11,7 @@ export default function verifyVariable(variableNode, typeNode, context) {
         variablePresent = context.isVariablePresentByVariableName(variableName);
 
   if (variablePresent) {
-    log.error(`The variable '${variableName}' is already present.`);
+    context.error(`The variable '${variableName}' is already present.`);
   } else {
     let variable = null;
 
@@ -30,7 +26,7 @@ export default function verifyVariable(variableNode, typeNode, context) {
       const type = context.findTypeByTypeName(typeName);
 
       if (type === null) {
-        log.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
+        context.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
       } else {
         const name = variableName;  ///
 
@@ -45,7 +41,7 @@ export default function verifyVariable(variableNode, typeNode, context) {
 
       variableVerified = true;
 
-      log.info(`Verified the '${variableString}' variable.`);
+      context.info(`Verified the '${variableString}' variable.`);
     }
   }
 

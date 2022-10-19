@@ -1,7 +1,5 @@
 "use strict";
 
-import { loggingUtilities } from "necessary";
-
 import ProofContext from "../context/proof";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 import verifyIndicativeConditional from "../verify/indicativeConditional";
@@ -9,8 +7,6 @@ import verifyIndicativeConditional from "../verify/indicativeConditional";
 import { first, second } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-
-const { log } = loggingUtilities;
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
       statementNodeQuery = nodeQuery("/*/statement"),
@@ -21,7 +17,7 @@ export default function verifyAxiom(axiomNode, context) {
   const labelNodes = labelNodesQuery(axiomNode),
         labelsString = nodesAsString(labelNodes);
 
-  log.debug(`Verifying the '${labelsString}' axiom...`);
+  context.debug(`Verifying the '${labelsString}' axiom...`);
 
   const proofContext = ProofContext.fromContext(context);
 
@@ -65,7 +61,7 @@ export default function verifyAxiom(axiomNode, context) {
   }
 
   if (axiomVerified) {
-    log.info(`Verified the '${labelsString}' axiom.`);
+    context.info(`Verified the '${labelsString}' axiom.`);
   }
 
   return axiomVerified;

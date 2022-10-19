@@ -236,6 +236,18 @@ export default class FileContext {
     this.constructors.push(constructor);
   }
 
+  trace(message) { this.packageContext.trace(message); }
+
+  debug(message) { this.packageContext.debug(message); }
+
+  info(message) { this.packageContext.info(message); }
+
+  warning(message) { this.packageContext.warning(message); }
+
+  error(message) { this.packageContext.error(message); }
+
+  fatal(message) { this.packageContext.fatal(message); }
+
   static fromPackageContextAndFilePath(packageContext, filePath) {
     const fileContent = packageContext.getFileContent(filePath),
           content = fileContent,  ///

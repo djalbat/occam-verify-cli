@@ -1,7 +1,5 @@
 "use strict";
 
-import { loggingUtilities } from "necessary";
-
 import verifyEquality from "../verify/equality";
 import verifyTypeAssertion from "../verify/assertion/type";
 
@@ -11,14 +9,12 @@ import { nodeAsString } from "../utilities/string";
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
-const { log } = loggingUtilities;
-
 export default function verifyStatement(statementNode, context) {
   let statementVerified = false;
 
   const statementString = nodeAsString(statementNode);
 
-  log.debug(`Verifying the '${statementString}' statement...`);
+  context.debug(`Verifying the '${statementString}' statement...`);
 
   const equalityNode = equalityNodeQuery(statementNode),
         typeAssertionNode = typeAssertionNodeQuery(statementNode);
@@ -38,7 +34,7 @@ export default function verifyStatement(statementNode, context) {
   }
 
   if (statementVerified) {
-    log.info(`Verified the '${statementString}' statement.`);
+    context.info(`Verified the '${statementString}' statement.`);
   }
 
   return statementVerified;

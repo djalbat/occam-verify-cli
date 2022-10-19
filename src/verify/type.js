@@ -1,12 +1,8 @@
 "use strict";
 
-import { loggingUtilities } from "necessary";
-
 import Type from "../type";
 
 import { typeNameFromTypeNode } from "../utilities/query";
-
-const { log } = loggingUtilities;
 
 export default function verifyType(typeNode, superTypeNode, context) {
   let typeVerified = false;
@@ -15,7 +11,7 @@ export default function verifyType(typeNode, superTypeNode, context) {
         typePresent = context.isTypePresentByTypeName(typeName);
 
   if (typePresent) {
-    log.error(`The type '${typeName}' is already present.`);
+    context.error(`The type '${typeName}' is already present.`);
   } else {
     const superTypeName = typeNameFromTypeNode(superTypeNode);
 
@@ -27,12 +23,12 @@ export default function verifyType(typeNode, superTypeNode, context) {
 
       typeVerified = true;
 
-      log.info(`Verified the '${typeString}' type.`);
+      context.info(`Verified the '${typeString}' type.`);
     } else {
       const superType = context.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
-        log.error(`The super-type '${superTypeName}' is missing.`);
+        context.error(`The super-type '${superTypeName}' is missing.`);
       } else {
         const type = Type.fromTypeNameAndSuperType(typeName, superType),
               typeString = type.asString();
@@ -41,7 +37,7 @@ export default function verifyType(typeNode, superTypeNode, context) {
 
         typeVerified = true;
 
-        log.info(`Verified the '${typeString}' type.`);
+        context.info(`Verified the '${typeString}' type.`);
       }
     }
   }
