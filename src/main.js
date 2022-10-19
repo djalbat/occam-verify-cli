@@ -1,4 +1,4 @@
 "use strict";
 
-export { default as verifyPackage } from "./verify/package";
-export { default as PackageContext } from "./context/package";
+export { default as verifyRelease } from "./verify/release";
+export { default as ReleaseContext } from "./context/release";

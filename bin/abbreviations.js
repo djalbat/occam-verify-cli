@@ -2,10 +2,10 @@
 
 const options = require("./options");
 
-const { LOG_LEVEL_OPTION, PACKAGE_NAME_OPTIONS } = options;
+const { LOG_LEVEL_OPTION, RELEASE_NAME_OPTIONS } = options;
 
 const l = LOG_LEVEL_OPTION,
-      p = PACKAGE_NAME_OPTIONS;
+      p = RELEASE_NAME_OPTIONS;
 
 module.exports = {
   l,

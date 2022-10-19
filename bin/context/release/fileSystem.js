@@ -2,9 +2,9 @@
 
 const { loggingUtilities, fileSystemUtilities } = require("necessary");
 
-const { PackageContext } = require("../../../lib/main");
+const { ReleaseContext } = require("../../../lib/main");
 
-const { filePathsFromPackageName, dependencyPackageNamesFromPackageName } = require("../../utilities/fileSystem"),
+const { filePathsFromReleaseName, dependencyReleaseNamesFromReleaseName } = require("../../utilities/fileSystem"),
       { TERM_BNF_FILE_NAME,
         STATEMENT_BNF_FILE_NAME,
         METASTATEMENT_BNF_FILE_NAME,
@@ -15,10 +15,10 @@ const { filePathsFromPackageName, dependencyPackageNamesFromPackageName } = requ
 const { log } = loggingUtilities,
       { readFile, checkFileExists } = fileSystemUtilities;
 
-class FileSystemPackageContext extends PackageContext {
+class FileSystemReleaseContext extends ReleaseContext {
   getFilePaths() {
-    const packageName = this.getPackageName(),
-          filePaths = filePathsFromPackageName(packageName);
+    const releaseName = this.getReleaseName(),
+          filePaths = filePathsFromReleaseName(releaseName);
 
     return filePaths;
   }
@@ -29,16 +29,16 @@ class FileSystemPackageContext extends PackageContext {
     return fileContent;
   }
 
-  getDependencyPackageNames() {
-    const packageName = this.getPackageName(),
-          dependencyPackageNames = dependencyPackageNamesFromPackageName(packageName);
+  getDependencyReleaseNames() {
+    const releaseName = this.getReleaseName(),
+          dependencyReleaseNames = dependencyReleaseNamesFromReleaseName(releaseName);
 
-    return dependencyPackageNames;
+    return dependencyReleaseNames;
   }
 
   getTermBNF() {
-    const packageName = this.getPackageName(),
-          directoryName = packageName,  ///
+    const releaseName = this.getReleaseName(),
+          directoryName = releaseName,  ///
           fileName = TERM_BNF_FILE_NAME, ///
           fileContent = fileContentFromDirectoryNameAndFileName(directoryName, fileName),
           termBNF = fileContent;  ///
@@ -47,8 +47,8 @@ class FileSystemPackageContext extends PackageContext {
   }
 
   getStatementBNF() {
-    const packageName = this.getPackageName(),
-          directoryName = packageName,  ///
+    const releaseName = this.getReleaseName(),
+          directoryName = releaseName,  ///
           fileName = STATEMENT_BNF_FILE_NAME, ///
           fileContent = fileContentFromDirectoryNameAndFileName(directoryName, fileName),
           termBNF = fileContent;  ///
@@ -57,8 +57,8 @@ class FileSystemPackageContext extends PackageContext {
   }
 
   getMetastatementBNF() {
-    const packageName = this.getPackageName(),
-          directoryName = packageName,  ///
+    const releaseName = this.getReleaseName(),
+          directoryName = releaseName,  ///
           fileName = METASTATEMENT_BNF_FILE_NAME, ///
           fileContent = fileContentFromDirectoryNameAndFileName(directoryName, fileName),
           termBNF = fileContent;  ///
@@ -67,8 +67,8 @@ class FileSystemPackageContext extends PackageContext {
   }
 
   getTypePattern() {
-    const packageName = this.getPackageName(),
-          directoryName = packageName,  ///
+    const releaseName = this.getReleaseName(),
+          directoryName = releaseName,  ///
           fileName = TYPE_PATTERN_FILE_NAME, ///
           fileContent = fileContentFromDirectoryNameAndFileName(directoryName, fileName),
           termBNF = fileContent;  ///
@@ -77,8 +77,8 @@ class FileSystemPackageContext extends PackageContext {
   }
 
   getSymbolPattern() {
-    const packageName = this.getPackageName(),
-          directoryName = packageName,  ///
+    const releaseName = this.getReleaseName(),
+          directoryName = releaseName,  ///
           fileName = SYMBOL_PATTERN_FILE_NAME, ///
           fileContent = fileContentFromDirectoryNameAndFileName(directoryName, fileName),
           termBNF = fileContent;  ///
@@ -87,8 +87,8 @@ class FileSystemPackageContext extends PackageContext {
   }
 
   getOperatorPattern() {
-    const packageName = this.getPackageName(),
-          directoryName = packageName,  ///
+    const releaseName = this.getReleaseName(),
+          directoryName = releaseName,  ///
           fileName = OPERATOR_PATTERN_FILE_NAME, ///
           fileContent = fileContentFromDirectoryNameAndFileName(directoryName, fileName),
           termBNF = fileContent;  ///
@@ -108,10 +108,10 @@ class FileSystemPackageContext extends PackageContext {
 
   fatal(message) { log.fatal(message); }
 
-  static fromPackageName(packageName) { return PackageContext.fromPackageName(FileSystemPackageContext, packageName); }
+  static fromReleaseName(releaseName) { return ReleaseContext.fromReleaseName(FileSystemReleaseContext, releaseName); }
 }
 
-module.exports = FileSystemPackageContext;
+module.exports = FileSystemReleaseContext;
 
 function fileContentFromDirectoryNameAndFileName(directoryName, fileName) {
   const filePath = `${directoryName}/${fileName}`,

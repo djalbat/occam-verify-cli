@@ -4,10 +4,10 @@ import verifyFile from "../verify/file";
 
 import { leftDifference } from "../utilities/array";
 
-export default function verifyFiles(packageContext) {
+export default function verifyFiles(releaseContext) {
   let filesVerified = false;
 
-  const filePaths = packageContext.getFilePaths();
+  const filePaths = releaseContext.getFilePaths();
 
   for (;;) {
     const filePathsLength = filePaths.length;
@@ -21,7 +21,7 @@ export default function verifyFiles(packageContext) {
     const verifiedFilePaths = [];
 
     filePaths.forEach((filePath) => {
-      const fileVerified = verifyFile(filePath, packageContext);
+      const fileVerified = verifyFile(filePath, releaseContext);
 
       if (fileVerified) {
         const verifiedFilePath = filePath;  ///

@@ -1,24 +1,24 @@
 "use strict";
 
-const { verifyPackage } = require("../lib/main");
+const { verifyRelease } = require("../lib/main");
 const { arrayUtilities, loggingUtilities } = require("necessary");
 
-const loadPackageContexts = require("./loadPackageContexts");
+const loadReleaseContexts = require("./loadReleaseContexts");
 
 const { log } = loggingUtilities,
       { first } = arrayUtilities;
 
 function main(commands, options) {
   const firstCommand = first(commands),
-        { logLevel = null, packageName = firstCommand } = options; ///
+        { logLevel = null, releaseName = firstCommand } = options; ///
 
   if (logLevel !== null) {
     log.setLogLevel(logLevel);
   }
 
-  const packageContextMap = loadPackageContexts(packageName);
+  const releaseContextMap = loadReleaseContexts(releaseName);
 
-  verifyPackage(packageName, packageContextMap);
+  verifyRelease(releaseName, releaseContextMap);
 }
 
 module.exports = main;

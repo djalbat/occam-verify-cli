@@ -7,18 +7,18 @@ import { push } from "../utilities/array";
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
-export default class PackageContext {
-  constructor(packageName, fileContexts, florenceLexer, florenceParser, packageContexts, packageVerified) {
-    this.packageName = packageName;
+export default class ReleaseContext {
+  constructor(releaseName, fileContexts, florenceLexer, florenceParser, releaseContexts, releaseVerified) {
+    this.releaseName = releaseName;
     this.fileContexts = fileContexts;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
-    this.packageContexts = packageContexts;
-    this.packageVerified = packageVerified;
+    this.releaseContexts = releaseContexts;
+    this.releaseVerified = releaseVerified;
   }
 
-  getPackageName() {
-    return this.packageName;
+  getReleaseName() {
+    return this.releaseName;
   }
 
   getFileContexts() {
@@ -33,20 +33,20 @@ export default class PackageContext {
     return this.florenceParser;
   }
 
-  getPackageContexts() {
-    return this.packageContexts;
+  getReleaseContexts() {
+    return this.releaseContexts;
   }
 
-  isPackageVerified() {
-    return this.packageVerified;
+  isReleaseVerified() {
+    return this.releaseVerified;
   }
 
-  getRules(packageNames = []) {
+  getRules(releaseNames = []) {
     const rules = [],
-          packageNamesIncludesPackageName = packageNames.includes(this.packageName);
+          releaseNamesIncludesReleaseName = releaseNames.includes(this.releaseName);
 
-    if (!packageNamesIncludesPackageName) {
-      packageNames.push(this.packageName);
+    if (!releaseNamesIncludesReleaseName) {
+      releaseNames.push(this.releaseName);
 
       const bubble = false;
 
@@ -56,22 +56,22 @@ export default class PackageContext {
         push(rules, fileContextRules);
       });
 
-      this.packageContexts.forEach((packageContext) => {
-        const packageContextRules = packageContext.getRules(packageNames);
+      this.releaseContexts.forEach((releaseContext) => {
+        const releaseContextRules = releaseContext.getRules(releaseNames);
 
-        push(rules, packageContextRules);
+        push(rules, releaseContextRules);
       });
     }
 
     return rules;
   }
 
-  getTypes(packageNames = []) {
+  getTypes(releaseNames = []) {
     const types = [],
-          packageNamesIncludesPackageName = packageNames.includes(this.packageName);
+          releaseNamesIncludesReleaseName = releaseNames.includes(this.releaseName);
 
-    if (!packageNamesIncludesPackageName) {
-      packageNames.push(this.packageName);
+    if (!releaseNamesIncludesReleaseName) {
+      releaseNames.push(this.releaseName);
 
       const bubble = false;
 
@@ -81,22 +81,22 @@ export default class PackageContext {
         push(types, fileContextTypes);
       });
 
-      this.packageContexts.forEach((packageContext) => {
-        const packageContextTypes = packageContext.getTypes(packageNames);
+      this.releaseContexts.forEach((releaseContext) => {
+        const releaseContextTypes = releaseContext.getTypes(releaseNames);
 
-        push(types, packageContextTypes);
+        push(types, releaseContextTypes);
       });
     }
 
     return types;
   }
 
-  getAxioms(packageNames = []) {
+  getAxioms(releaseNames = []) {
     const axioms = [],
-          packageNamesIncludesPackageName = packageNames.includes(this.packageName);
+          releaseNamesIncludesReleaseName = releaseNames.includes(this.releaseName);
 
-    if (!packageNamesIncludesPackageName) {
-      packageNames.push(this.packageName);
+    if (!releaseNamesIncludesReleaseName) {
+      releaseNames.push(this.releaseName);
 
       const bubble = false;
 
@@ -106,22 +106,22 @@ export default class PackageContext {
         push(axioms, fileContextAxioms);
       });
 
-      this.packageContexts.forEach((packageContext) => {
-        const packageContextAxioms = packageContext.getAxioms(packageNames);
+      this.releaseContexts.forEach((releaseContext) => {
+        const releaseContextAxioms = releaseContext.getAxioms(releaseNames);
 
-        push(axioms, packageContextAxioms);
+        push(axioms, releaseContextAxioms);
       });
     }
 
     return axioms;
   }
 
-  getCombinators(packageNames = []) {
+  getCombinators(releaseNames = []) {
     const combinators = [],
-          packageNamesIncludesPackageName = packageNames.includes(this.packageName);
+          releaseNamesIncludesReleaseName = releaseNames.includes(this.releaseName);
 
-    if (!packageNamesIncludesPackageName) {
-      packageNames.push(this.packageName);
+    if (!releaseNamesIncludesReleaseName) {
+      releaseNames.push(this.releaseName);
 
       const bubble = false;
 
@@ -131,22 +131,22 @@ export default class PackageContext {
         push(combinators, fileContextCombinators);
       });
 
-      this.packageContexts.forEach((packageContext) => {
-        const packageContextCombinators = packageContext.getCombinators(packageNames);
+      this.releaseContexts.forEach((releaseContext) => {
+        const releaseContextCombinators = releaseContext.getCombinators(releaseNames);
 
-        push(combinators, packageContextCombinators);
+        push(combinators, releaseContextCombinators);
       });
     }
 
     return combinators;
   }
 
-  getConstructors(packageNames = []) {
+  getConstructors(releaseNames = []) {
     const constructors = [],
-          packageNamesIncludesPackageName = packageNames.includes(this.packageName);
+          releaseNamesIncludesReleaseName = releaseNames.includes(this.releaseName);
 
-    if (!packageNamesIncludesPackageName) {
-      packageNames.push(this.packageName);
+    if (!releaseNamesIncludesReleaseName) {
+      releaseNames.push(this.releaseName);
 
       const bubble = false;
 
@@ -156,10 +156,10 @@ export default class PackageContext {
         push(constructors, fileContextConstructors);
       });
 
-      this.packageContexts.forEach((packageContext) => {
-        const packageContextConstructors = packageContext.getConstructors(packageNames);
+      this.releaseContexts.forEach((releaseContext) => {
+        const releaseContextConstructors = releaseContext.getConstructors(releaseNames);
 
-        push(constructors, packageContextConstructors);
+        push(constructors, releaseContextConstructors);
       });
     }
 
@@ -167,7 +167,7 @@ export default class PackageContext {
   }
 
   getCustomGrammar() {
-    const name = this.packageName, ///
+    const name = this.releaseName, ///
           termBNF = this.getTermBNF(),
           statementBNF = this.getStatementBNF(),
           metastatementBNF = this.getMetastatementBNF(),
@@ -187,15 +187,15 @@ export default class PackageContext {
 
   parse(tokens) { return this.florenceParser.parse(tokens); }
 
-  initialise(packageContexts, dependencyPackageContexts) {
-    this.packageContexts = packageContexts;
+  initialise(releaseContexts, dependencyReleaseContexts) {
+    this.releaseContexts = releaseContexts;
 
-    const packageContext = this;  ///
+    const releaseContext = this;  ///
 
-    packageContexts = [ packageContext, ...dependencyPackageContexts ]; ///
+    releaseContexts = [ releaseContext, ...dependencyReleaseContexts ]; ///
 
-    const customGrammars = packageContexts.map((packageContext) => {
-            const customGrammar = packageContext.getCustomGrammar();
+    const customGrammars = releaseContexts.map((releaseContext) => {
+            const customGrammar = releaseContext.getCustomGrammar();
 
             return customGrammar;
           }),
@@ -206,14 +206,14 @@ export default class PackageContext {
     this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
   }
 
-  static fromPackageName(Class, packageName, ...remainingArguments) {
+  static fromReleaseName(Class, releaseName, ...remainingArguments) {
     const fileContexts = [],
           florenceLexer = null,
           florenceParser = null,
-          packageContexts = [],
-          packageVerified = false,
-          packageContext = new Class(packageName, fileContexts, florenceLexer, florenceParser, packageContexts, packageVerified, ...remainingArguments);
+          releaseContexts = [],
+          releaseVerified = false,
+          releaseContext = new Class(releaseName, fileContexts, florenceLexer, florenceParser, releaseContexts, releaseVerified, ...remainingArguments);
 
-    return packageContext;
+    return releaseContext;
   }
 }

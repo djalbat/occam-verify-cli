@@ -5,7 +5,7 @@ import { rewriteNodes } from "occam-grammar-utilities";
 import { push } from "../utilities/array";
 
 export default class FileContext {
-  constructor(tokens, node, rules, types, axioms, variables, combinators, constructors, packageContext) {
+  constructor(tokens, node, rules, types, axioms, variables, combinators, constructors, releaseContext) {
     this.tokens = tokens;
     this.node = node;
     this.rules = rules;
@@ -14,7 +14,7 @@ export default class FileContext {
     this.variables = variables;
     this.combinators = combinators;
     this.constructors = constructors;
-    this.packageContext = packageContext;
+    this.releaseContext = releaseContext;
   }
 
   getTokens() {
@@ -31,9 +31,9 @@ export default class FileContext {
     ];
 
     if (bubble) {
-      const packageContextRules = this.packageContext.getRules();
+      const releaseContextRules = this.releaseContext.getRules();
 
-      push(rules, packageContextRules);
+      push(rules, releaseContextRules);
     }
 
     return rules;
@@ -45,9 +45,9 @@ export default class FileContext {
     ];
 
     if (bubble) {
-      const packageContextTypes = this.packageContext.getTypes();
+      const releaseContextTypes = this.releaseContext.getTypes();
 
-      push(types, packageContextTypes);
+      push(types, releaseContextTypes);
     }
 
     return types;
@@ -59,9 +59,9 @@ export default class FileContext {
     ];
 
     if (bubble) {
-      const packageContextAxioms = this.packageContext.getAxioms();
+      const releaseContextAxioms = this.releaseContext.getAxioms();
 
-      push(axioms, packageContextAxioms);
+      push(axioms, releaseContextAxioms);
     }
 
     return axioms;
@@ -90,9 +90,9 @@ export default class FileContext {
     ];
 
     if (bubble) {
-      const packageContextCombinators = this.packageContext.getCombinators();
+      const releaseContextCombinators = this.releaseContext.getCombinators();
 
-      push(combinators, packageContextCombinators);
+      push(combinators, releaseContextCombinators);
     }
 
     return combinators;
@@ -104,16 +104,16 @@ export default class FileContext {
     ];
 
     if (bubble) {
-      const packageContextConstructors = this.packageContext.getConstructors();
+      const releaseContextConstructors = this.releaseContext.getConstructors();
 
-      push(constructors, packageContextConstructors);
+      push(constructors, releaseContextConstructors);
     }
 
     return constructors;
   }
 
-  getPackageContext() {
-    return this.packageContext;
+  getReleaseContext() {
+    return this.releaseContext;
   }
 
   getMetaAssertions() {
@@ -236,23 +236,23 @@ export default class FileContext {
     this.constructors.push(constructor);
   }
 
-  trace(message) { this.packageContext.trace(message); }
+  trace(message) { this.releaseContext.trace(message); }
 
-  debug(message) { this.packageContext.debug(message); }
+  debug(message) { this.releaseContext.debug(message); }
 
-  info(message) { this.packageContext.info(message); }
+  info(message) { this.releaseContext.info(message); }
 
-  warning(message) { this.packageContext.warning(message); }
+  warning(message) { this.releaseContext.warning(message); }
 
-  error(message) { this.packageContext.error(message); }
+  error(message) { this.releaseContext.error(message); }
 
-  fatal(message) { this.packageContext.fatal(message); }
+  fatal(message) { this.releaseContext.fatal(message); }
 
-  static fromPackageContextAndFilePath(packageContext, filePath) {
-    const fileContent = packageContext.getFileContent(filePath),
+  static fromReleaseContextAndFilePath(releaseContext, filePath) {
+    const fileContent = releaseContext.getFileContent(filePath),
           content = fileContent,  ///
-          tokens = packageContext.tokenise(content),
-          node = packageContext.parse(tokens);
+          tokens = releaseContext.tokenise(content),
+          node = releaseContext.parse(tokens);
 
     rewriteNodes(node);
 
@@ -262,7 +262,7 @@ export default class FileContext {
           variables = [],
           combinators = [],
           constructors = [],
-          fileContext = new FileContext(tokens, node, rules, types, axioms, variables, combinators, constructors, packageContext);
+          fileContext = new FileContext(tokens, node, rules, types, axioms, variables, combinators, constructors, releaseContext);
 
     return fileContext;
   }

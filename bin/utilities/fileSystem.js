@@ -12,8 +12,8 @@ const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
       dependencyStringLiteralNodesQuery = Query.fromExpression("//dependency//@string-literal");
 
-function filePathsFromPackageName(packageName) {
-  const directoryName = packageName,  ///
+function filePathsFromReleaseName(releaseName) {
+  const directoryName = releaseName,  ///
         filePaths = readFilePaths(directoryName, (filePath) => {
           const filePathFlorenceFilePath = isFilePathFlorenceFilePath(filePath);
 
@@ -25,10 +25,10 @@ function filePathsFromPackageName(packageName) {
   return filePaths;
 }
 
-function dependencyPackageNamesFromPackageName(packageName) {
-  let dependencyPackageNames = [];
+function dependencyReleaseNamesFromReleaseName(releaseName) {
+  let dependencyReleaseNames = [];
 
-  const directoryName = packageName,  ///
+  const directoryName = releaseName,  ///
         metaJSONFilePath = `${directoryName}/meta.json`,
         metaJSONFileExists = checkFileExists(metaJSONFilePath);
 
@@ -39,20 +39,20 @@ function dependencyPackageNamesFromPackageName(packageName) {
           node = metaJSONParser.parse(tokens),
           dependencyStringLiteralNodes = dependencyStringLiteralNodesQuery.execute(node);
 
-    dependencyPackageNames = dependencyStringLiteralNodes.map((dependencyStringLiteralNode) => {
+    dependencyReleaseNames = dependencyStringLiteralNodes.map((dependencyStringLiteralNode) => {
       const dependencyStringLiteralNodeContent = dependencyStringLiteralNode.getContent(),
-            dependencyPackageName = trimDoubleQuotes(dependencyStringLiteralNodeContent); ///
+            dependencyReleaseName = trimDoubleQuotes(dependencyStringLiteralNodeContent); ///
 
-      return dependencyPackageName;
+      return dependencyReleaseName;
     });
   }
 
-  return dependencyPackageNames;
+  return dependencyReleaseNames;
 }
 
 module.exports = {
-  filePathsFromPackageName,
-  dependencyPackageNamesFromPackageName
+  filePathsFromReleaseName,
+  dependencyReleaseNamesFromReleaseName
 };
 
 function trimDoubleQuotes(content) { return content.replace(/(^"|"$)/g, ""); } ///
