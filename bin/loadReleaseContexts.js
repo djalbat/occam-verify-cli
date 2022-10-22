@@ -19,7 +19,7 @@ function loadReleaseContexts(releaseName, releaseContextMap = {}, dependentRelea
 
       releaseContextMap[releaseName] = releaseContext;
 
-      const dependencyReleaseNames = releaseContext.getDependencyReleaseNames(releaseName);
+      const dependencyReleaseNames = releaseContext.getDependencyReleaseNames();
 
       dependentReleaseNames = [ ...dependentReleaseNames, releaseName ];  ///
 
