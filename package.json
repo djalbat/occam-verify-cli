@@ -35,6 +35,5 @@
     "watch": "npm run clean && npm run batch && npm run incremental",
     "watch-debug": "npm run clean && npm run batch-debug && npm run incremental-debug"
   },
-  "browser": "./lib/browser.js",
-  "main": "./lib/main.js"
+  "main": "./lib/index.js"
 }

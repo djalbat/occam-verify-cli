@@ -10,7 +10,7 @@ const { isFilePathFlorenceFilePath } = filePathUtilities,
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
-      dependencyStringLiteralNodesQuery = Query.fromExpression("//dependency//@string-literal");
+      dependencyNonTerminalNodeQuery = Query.fromExpression("//dependencies/dependency/@string-literal!");
 
 function filePathsFromReleaseName(releaseName) {
   const directoryName = releaseName,  ///
@@ -37,11 +37,11 @@ function dependencyReleaseNamesFromReleaseName(releaseName) {
           content = metaJSONFileContent,  ///
           tokens = metaJSONLexer.tokenise(content),
           node = metaJSONParser.parse(tokens),
-          dependencyStringLiteralNodes = dependencyStringLiteralNodesQuery.execute(node);
+          dependencyNonTerminalNodes = dependencyNonTerminalNodeQuery.execute(node);
 
-    dependencyReleaseNames = dependencyStringLiteralNodes.map((dependencyStringLiteralNode) => {
-      const dependencyStringLiteralNodeContent = dependencyStringLiteralNode.getContent(),
-            dependencyReleaseName = trimDoubleQuotes(dependencyStringLiteralNodeContent); ///
+    dependencyReleaseNames = dependencyNonTerminalNodes.map((dependencyNonTerminalNode) => {
+      const dependencyNonTerminalNodeContent = dependencyNonTerminalNode.getContent(),
+            dependencyReleaseName = trimDoubleQuotes(dependencyNonTerminalNodeContent); ///
 
       return dependencyReleaseName;
     });
@@ -54,8 +54,6 @@ module.exports = {
   filePathsFromReleaseName,
   dependencyReleaseNamesFromReleaseName
 };
-
-function trimDoubleQuotes(content) { return content.replace(/(^"|"$)/g, ""); } ///
 
 function readFilePaths(directoryPath, test, filePaths = []) {
   const subEntryNames = readDirectory(directoryPath);
@@ -93,3 +91,5 @@ function isNameHiddenName(name) {
 
   return nameHiddenName;
 }
+
+function trimDoubleQuotes(content) { return content.replace(/(^"|"$)/g, ""); } ///

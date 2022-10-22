@@ -1,19 +1,20 @@
 "use strict";
 
-const { loggingUtilities, fileSystemUtilities } = require("necessary");
+const { fileNames } = require("occam-open-cli"),
+      { loggingUtilities, fileSystemUtilities } = require("necessary");
 
 const { ReleaseContext } = require("../../../lib/main");
 
-const { filePathsFromReleaseName, dependencyReleaseNamesFromReleaseName } = require("../../utilities/fileSystem"),
+const { filePathsFromReleaseName, dependencyReleaseNamesFromReleaseName } = require("../../utilities/release");
+
+const { log } = loggingUtilities,
+      { readFile, checkFileExists } = fileSystemUtilities,
       { TERM_BNF_FILE_NAME,
         STATEMENT_BNF_FILE_NAME,
         METASTATEMENT_BNF_FILE_NAME,
         TYPE_PATTERN_FILE_NAME,
         SYMBOL_PATTERN_FILE_NAME,
-        OPERATOR_PATTERN_FILE_NAME } = require("../../fileNames");
-
-const { log } = loggingUtilities,
-      { readFile, checkFileExists } = fileSystemUtilities;
+        OPERATOR_PATTERN_FILE_NAME } = fileNames;
 
 class FileSystemReleaseContext extends ReleaseContext {
   getFilePaths() {
