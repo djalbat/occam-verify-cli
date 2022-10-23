@@ -8,13 +8,15 @@ const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(releaseName, fileContexts, florenceLexer, florenceParser, releaseContexts, releaseVerified) {
+  constructor(releaseName, fileContexts, florenceLexer, florenceParser, releaseContexts, releaseVerified, log) {
     this.releaseName = releaseName;
     this.fileContexts = fileContexts;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
     this.releaseContexts = releaseContexts;
     this.releaseVerified = releaseVerified;
+
+    this.log = log;
   }
 
   getReleaseName() {
@@ -35,6 +37,10 @@ export default class ReleaseContext {
 
   getReleaseContexts() {
     return this.releaseContexts;
+  }
+
+  getLog() {
+    return this.log;
   }
 
   isReleaseVerified() {
@@ -187,6 +193,18 @@ export default class ReleaseContext {
 
   parse(tokens) { return this.florenceParser.parse(tokens); }
 
+  trace(message) { this.log.trace(message); }
+
+  debug(message) { this.log.debug(message); }
+
+  info(message) { this.log.info(message); }
+
+  warning(message) { this.log.warning(message); }
+
+  error(message) { this.log.error(message); }
+
+  fatal(message) { this.log.fatal(message); }
+
   initialise(releaseContexts, dependencyReleaseContexts) {
     this.releaseContexts = releaseContexts;
 
@@ -206,13 +224,13 @@ export default class ReleaseContext {
     this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
   }
 
-  static fromReleaseName(Class, releaseName, ...remainingArguments) {
+  static fromReleaseNameAndLog(Class, releaseName, log, ...remainingArguments) {
     const fileContexts = [],
           florenceLexer = null,
           florenceParser = null,
           releaseContexts = [],
           releaseVerified = false,
-          releaseContext = new Class(releaseName, fileContexts, florenceLexer, florenceParser, releaseContexts, releaseVerified, ...remainingArguments);
+          releaseContext = new Class(releaseName, fileContexts, florenceLexer, florenceParser, releaseContexts, releaseVerified, log, ...remainingArguments);
 
     return releaseContext;
   }

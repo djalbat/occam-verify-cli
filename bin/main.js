@@ -1,7 +1,7 @@
 "use strict";
 
-const { verifyRelease } = require("../lib/main");
-const { arrayUtilities, loggingUtilities } = require("necessary");
+const { verifyRelease } = require("../lib/index"),
+      { arrayUtilities, loggingUtilities } = require("necessary");
 
 const loadReleaseContexts = require("./loadReleaseContexts");
 

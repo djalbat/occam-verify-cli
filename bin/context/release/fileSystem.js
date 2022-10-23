@@ -1,14 +1,12 @@
 "use strict";
 
 const { fileNames } = require("occam-open-cli"),
-      { loggingUtilities, fileSystemUtilities } = require("necessary");
-
-const { ReleaseContext } = require("../../../lib/main");
+      { ReleaseContext } = require("../../../lib/index"), ///
+      { fileSystemUtilities } = require("necessary");
 
 const { filePathsFromReleaseName, dependencyReleaseNamesFromReleaseName } = require("../../utilities/release");
 
-const { log } = loggingUtilities,
-      { readFile, checkFileExists } = fileSystemUtilities,
+const { readFile, checkFileExists } = fileSystemUtilities,
       { TERM_BNF_FILE_NAME,
         STATEMENT_BNF_FILE_NAME,
         METASTATEMENT_BNF_FILE_NAME,
@@ -97,19 +95,7 @@ class FileSystemReleaseContext extends ReleaseContext {
     return termBNF;
   }
 
-  trace(message) { log.trace(message); }
-
-  debug(message) { log.debug(message); }
-
-  info(message) { log.info(message); }
-
-  warning(message) { log.warning(message); }
-
-  error(message) { log.error(message); }
-
-  fatal(message) { log.fatal(message); }
-
-  static fromReleaseName(releaseName) { return ReleaseContext.fromReleaseName(FileSystemReleaseContext, releaseName); }
+  static fromReleaseNameAndLog(releaseName, log) { return ReleaseContext.fromReleaseNameAndLog(FileSystemReleaseContext, releaseName, log); }
 }
 
 module.exports = FileSystemReleaseContext;

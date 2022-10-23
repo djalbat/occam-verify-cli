@@ -14,7 +14,7 @@ function loadReleaseContexts(releaseName, releaseContextMap = {}, dependentRelea
     const releaseContext = releaseContextMap[releaseName] || null;
 
     if (releaseContext === null) {
-      const fileSystemReleaseContext = FileSystemReleaseContext.fromReleaseName(releaseName),
+      const fileSystemReleaseContext = FileSystemReleaseContext.fromReleaseNameAndLog(releaseName, log),
             releaseContext = fileSystemReleaseContext;  ///
 
       releaseContextMap[releaseName] = releaseContext;
