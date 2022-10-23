@@ -1,10 +1,6 @@
 "use strict";
 
-import { loggingUtilities } from "necessary";
-
 import verifyFiles from "../verify/files";
-
-const { log } = loggingUtilities;
 
 export default function verifyRelease(releaseName, releaseContextMap, releaseContexts = []) {
   const releaseContext = releaseContextMap[releaseName];
@@ -12,7 +8,7 @@ export default function verifyRelease(releaseName, releaseContextMap, releaseCon
   let releaseVerified = releaseContext.isReleaseVerified();
 
   if (!releaseVerified) {
-    log.debug(`Verifying the '${releaseName}' package...`);
+    releaseContext.debug(`Verifying the '${releaseName}' package...`);
 
     const dependencyReleaseNames = releaseContext.getDependencyReleaseNames(),
           dependencyReleasesVVerified = dependencyReleaseNames.every((dependencyReleaseName) => {
@@ -43,7 +39,7 @@ export default function verifyRelease(releaseName, releaseContextMap, releaseCon
       if (releaseVerified) {
         releaseContexts.push(releaseContext);
 
-        log.info(`Verified the '${releaseName}' release.`);
+        releaseContext.info(`Verified the '${releaseName}' release.`);
       }
     }
   }
