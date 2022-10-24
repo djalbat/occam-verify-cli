@@ -5,12 +5,14 @@ const { Query } = require("occam-dom"),
       { fileSystemUtilities } = require("necessary"),
       { MetaJSONLexer, MetaJSONParser } = require("occam-grammars");
 
+const { nodesQuery } = require("../utilities/query");
+
 const { isFilePathFlorenceFilePath } = filePathUtilities,
       { readFile, isEntryFile, readDirectory, isEntryDirectory, checkFileExists } = fileSystemUtilities;
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
-      dependencyNonTerminalNodeQuery = Query.fromExpression("//dependencies/dependency/@string-literal!");
+      dependencyNameTerminalNodesQuery = nodesQuery("//dependencies/dependency/name!/@*!");
 
 function filePathsFromReleaseName(releaseName) {
   const directoryName = releaseName,  ///
@@ -37,11 +39,11 @@ function dependencyReleaseNamesFromReleaseName(releaseName) {
           content = metaJSONFileContent,  ///
           tokens = metaJSONLexer.tokenise(content),
           node = metaJSONParser.parse(tokens),
-          dependencyNonTerminalNodes = dependencyNonTerminalNodeQuery.execute(node);
+          dependencyNameTerminalNodes = dependencyNameTerminalNodesQuery(node);
 
-    dependencyReleaseNames = dependencyNonTerminalNodes.map((dependencyNonTerminalNode) => {
-      const dependencyNonTerminalNodeContent = dependencyNonTerminalNode.getContent(),
-            dependencyReleaseName = trimDoubleQuotes(dependencyNonTerminalNodeContent); ///
+    dependencyReleaseNames = dependencyNameTerminalNodes.map((dependencyNameTerminalNode) => {
+      const dependencyNameTerminalNodeContent = dependencyNameTerminalNode.getContent(),
+            dependencyReleaseName = trimDoubleQuotes(dependencyNameTerminalNodeContent); ///
 
       return dependencyReleaseName;
     });
