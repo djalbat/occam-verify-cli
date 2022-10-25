@@ -3,24 +3,32 @@
 import { CustomGrammar, lexersUtilities, parsersUtilities, CombinedCustomGrammar } from "occam-custom-grammars";
 
 import { push } from "../utilities/array";
+import {dependenciesFromReleaseName, filePathsFromReleaseName} from "../../utilities/release";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(releaseName, fileContexts, florenceLexer, florenceParser, releaseContexts, releaseVerified, log) {
-    this.releaseName = releaseName;
+  constructor(log, release, verified, fileContexts, florenceLexer, florenceParser, releaseContexts) {
+    this.log = log;
+    this.release = release;
+    this.verified = verified;
     this.fileContexts = fileContexts;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
     this.releaseContexts = releaseContexts;
-    this.releaseVerified = releaseVerified;
-
-    this.log = log;
   }
 
-  getReleaseName() {
-    return this.releaseName;
+  getLog() {
+    return this.log;
+  }
+
+  getRelease() {
+    return this.release;
+  }
+
+  isVerified() {
+    return this.verified;
   }
 
   getFileContexts() {
@@ -39,20 +47,27 @@ export default class ReleaseContext {
     return this.releaseContexts;
   }
 
-  getLog() {
-    return this.log;
+  getReleaseName() {
+    const releaseName = this.release.getName();
+
+    return releaseName;
   }
 
-  isReleaseVerified() {
-    return this.releaseVerified;
-  }
+  getVersion() { return this.release.getVersion(); }
+
+  getFilePaths() { return this.release.getFilePatns(); }
+
+  getFileContent(filePath) { return this.release.getFileContent(filePath); }
+
+  getDependencies() { return this.release.getDependencies(); }
 
   getRules(releaseNames = []) {
     const rules = [],
-          releaseNamesIncludesReleaseName = releaseNames.includes(this.releaseName);
+          releaseName = this.getReleaseName(),
+          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(this.releaseName);
+      releaseNames.push(releaseName);
 
       const bubble = false;
 
@@ -74,10 +89,11 @@ export default class ReleaseContext {
 
   getTypes(releaseNames = []) {
     const types = [],
-          releaseNamesIncludesReleaseName = releaseNames.includes(this.releaseName);
+          releaseName = this.getReleaesName(),
+          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(this.releaseName);
+      releaseNames.push(releaseName);
 
       const bubble = false;
 
@@ -99,10 +115,11 @@ export default class ReleaseContext {
 
   getAxioms(releaseNames = []) {
     const axioms = [],
-          releaseNamesIncludesReleaseName = releaseNames.includes(this.releaseName);
+          releaseName = this.getReleaseName(),
+          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(this.releaseName);
+      releaseNames.push(releaseName);
 
       const bubble = false;
 
@@ -124,10 +141,11 @@ export default class ReleaseContext {
 
   getCombinators(releaseNames = []) {
     const combinators = [],
-          releaseNamesIncludesReleaseName = releaseNames.includes(this.releaseName);
+          releaseName = this.getReleaseName(),
+          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(this.releaseName);
+      releaseNames.push(releaseName);
 
       const bubble = false;
 
@@ -148,11 +166,12 @@ export default class ReleaseContext {
   }
 
   getConstructors(releaseNames = []) {
-    const constructors = [],
-          releaseNamesIncludesReleaseName = releaseNames.includes(this.releaseName);
+    const releaseName = this.getReleaseName(),
+          constructors = [],
+          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(this.releaseName);
+      releaseNames.push(releaseName);
 
       const bubble = false;
 
@@ -173,7 +192,8 @@ export default class ReleaseContext {
   }
 
   getCustomGrammar() {
-    const name = this.releaseName, ///
+    const releaseName = this.getReleaseName(),
+          name = releaseName, ///
           termBNF = this.getTermBNF(),
           statementBNF = this.getStatementBNF(),
           metastatementBNF = this.getMetastatementBNF(),
@@ -224,13 +244,13 @@ export default class ReleaseContext {
     this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
   }
 
-  static fromReleaseNameAndLog(Class, releaseName, log, ...remainingArguments) {
-    const fileContexts = [],
+  static fromLogAndRelease(Class, log, release, ...remainingArguments) {
+    const verified = false,
+          fileContexts = [],
           florenceLexer = null,
           florenceParser = null,
           releaseContexts = [],
-          releaseVerified = false,
-          releaseContext = new Class(releaseName, fileContexts, florenceLexer, florenceParser, releaseContexts, releaseVerified, log, ...remainingArguments);
+          releaseContext = new Class(log, release, verified, fileContexts, florenceLexer, florenceParser, releaseContexts, ...remainingArguments);
 
     return releaseContext;
   }

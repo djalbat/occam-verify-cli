@@ -1,18 +1,52 @@
 "use strict";
 
-const { Query } = require("occam-dom"),
-      { filePathUtilities } = require("occam-open-cli"),
+const { filePathUtilities } = require("occam-open-cli"),
       { fileSystemUtilities } = require("necessary"),
       { MetaJSONLexer, MetaJSONParser } = require("occam-grammars");
 
-const { nodesQuery } = require("../utilities/query");
+const { nodeQuery, nodesQuery } = require("../utilities/query");
 
 const { isFilePathFlorenceFilePath } = filePathUtilities,
       { readFile, isEntryFile, readDirectory, isEntryDirectory, checkFileExists } = fileSystemUtilities;
 
 const metaJSONLexer = MetaJSONLexer.fromNothing(),
       metaJSONParser = MetaJSONParser.fromNothing(),
-      dependencyNameTerminalNodesQuery = nodesQuery("//dependencies/dependency/name!/@*!");
+      dependencyNodesQuery = nodesQuery("//dependencies/dependency"),
+      dependencyNameTerminalNodeQuery = nodeQuery("/dependency/name!/@*!"),
+      shortenedVersionNumberTerminalNodeQuery = nodeQuery("//dependency/shortenedVersionNumber/@*!");
+
+function versionFromReleaseName(releaseName) {
+  const version = [],
+        directoryName = releaseName,  ///
+        metaJSONFilePath = `${directoryName}/meta.json`,
+        metaJSONFileExists = checkFileExists(metaJSONFilePath);
+
+  if (metaJSONFileExists) {
+    const metaJSONFileContent = readFile(metaJSONFilePath),
+          content = metaJSONFileContent,  ///
+          tokens = metaJSONLexer.tokenise(content),
+          node = metaJSONParser.parse(tokens);
+
+    if (node !== null) {
+      const dependencyNodes = dependencyNodesQuery(node);
+
+      dependencyNodes.forEach((dependencyNode) => {
+        const dependencyNameTerminalNode = dependencyNameTerminalNodeQuery(dependencyNode),
+            shortenedVersionNumberTerminalNode = shortenedVersionNumberTerminalNodeQuery(dependencyNode),
+            dependencyNameTerminalNodeContent = dependencyNameTerminalNode.getContent(),
+            shortenedVersionNumberTerminalNodeContent = shortenedVersionNumberTerminalNode.getContent(),
+            string = trimDoubleQuotes(shortenedVersionNumberTerminalNodeContent),  ///
+            name = trimDoubleQuotes(dependencyNameTerminalNodeContent),///
+            shortenedVersion = ShortenedVersion.fromString(string),
+            dependency = Dependency.fromNameAndShortenedVersion(name, shortenedVersion);
+
+        version.push(dependency);
+      });
+    }
+  }
+
+  return version;
+}
 
 function filePathsFromReleaseName(releaseName) {
   const directoryName = releaseName,  ///
@@ -27,10 +61,9 @@ function filePathsFromReleaseName(releaseName) {
   return filePaths;
 }
 
-function dependencyReleaseNamesFromReleaseName(releaseName) {
-  let dependencyReleaseNames = [];
-
-  const directoryName = releaseName,  ///
+function dependenciesFromReleaseName(releaseName) {
+  const dependencies = [],
+        directoryName = releaseName,  ///
         metaJSONFilePath = `${directoryName}/meta.json`,
         metaJSONFileExists = checkFileExists(metaJSONFilePath);
 
@@ -38,23 +71,32 @@ function dependencyReleaseNamesFromReleaseName(releaseName) {
     const metaJSONFileContent = readFile(metaJSONFilePath),
           content = metaJSONFileContent,  ///
           tokens = metaJSONLexer.tokenise(content),
-          node = metaJSONParser.parse(tokens),
-          dependencyNameTerminalNodes = dependencyNameTerminalNodesQuery(node);
+          node = metaJSONParser.parse(tokens);
 
-    dependencyReleaseNames = dependencyNameTerminalNodes.map((dependencyNameTerminalNode) => {
-      const dependencyNameTerminalNodeContent = dependencyNameTerminalNode.getContent(),
-            dependencyReleaseName = trimDoubleQuotes(dependencyNameTerminalNodeContent); ///
+    if (node !== null) {
+      const dependencyNodes = dependencyNodesQuery(node);
 
-      return dependencyReleaseName;
-    });
+      dependencyNodes.forEach((dependencyNode) => {
+        const dependencyNameTerminalNode = dependencyNameTerminalNodeQuery(dependencyNode),
+              shortenedVersionNumberTerminalNode = shortenedVersionNumberTerminalNodeQuery(dependencyNode),
+              dependencyNameTerminalNodeContent = dependencyNameTerminalNode.getContent(),
+              shortenedVersionNumberTerminalNodeContent = shortenedVersionNumberTerminalNode.getContent(),
+              string = trimDoubleQuotes(shortenedVersionNumberTerminalNodeContent),  ///
+              name = trimDoubleQuotes(dependencyNameTerminalNodeContent),///
+              shortenedVersion = ShortenedVersion.fromString(string),
+              dependency = Dependency.fromNameAndShortenedVersion(name, shortenedVersion);
+
+        dependencies.push(dependency);
+      });
+    }
   }
 
-  return dependencyReleaseNames;
+  return dependencies;
 }
 
 module.exports = {
   filePathsFromReleaseName,
-  dependencyReleaseNamesFromReleaseName
+  dependenciesFromReleaseName
 };
 
 function readFilePaths(directoryPath, test, filePaths = []) {

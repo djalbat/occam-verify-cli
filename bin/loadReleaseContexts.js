@@ -1,8 +1,9 @@
 "use strict";
 
+const { Release } = require("occam-open-cli");
 const { arrayUtilities, loggingUtilities } = require("necessary");
 
-const FileSystemReleaseContext = require("./context/release/fileSystem");
+const ReleaseContext = require("../lib/index");
 
 const { log } = loggingUtilities,
       { first } = arrayUtilities;
@@ -14,12 +15,18 @@ function loadReleaseContexts(releaseName, releaseContextMap = {}, dependentRelea
     const releaseContext = releaseContextMap[releaseName] || null;
 
     if (releaseContext === null) {
-      const fileSystemReleaseContext = FileSystemReleaseContext.fromReleaseNameAndLog(releaseName, log),
-            releaseContext = fileSystemReleaseContext;  ///
+      const release = Release.from(), ///
+            releaseContext = ReleaseContext.fromLogAndRelease(log, release);
 
       releaseContextMap[releaseName] = releaseContext;
 
-      const dependencyReleaseNames = releaseContext.getDependencyReleaseNames();
+      const dependencies = releaseContext.getDependencies(),
+            dependencyReleaseNames = dependencies.map((dependency) => {
+              const dependencyName = dependency.getName(),
+                    dependencyReleaseName = dependencyName;  ///
+
+              return dependencyReleaseName;
+            })
 
       dependentReleaseNames = [ ...dependentReleaseNames, releaseName ];  ///
 

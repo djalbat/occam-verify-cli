@@ -10,9 +10,10 @@ export default function verifyRelease(releaseName, releaseContextMap, releaseCon
   if (!releaseVerified) {
     releaseContext.debug(`Verifying the '${releaseName}' package...`);
 
-    const dependencyReleaseNames = releaseContext.getDependencyReleaseNames(),
-          dependencyReleasesVVerified = dependencyReleaseNames.every((dependencyReleaseName) => {
-            const releaseName = dependencyReleaseName,  ///
+    const dependencies = releaseContext.getDependencies(),
+          dependencyReleasesVVerified = dependencies.every((dependency) => {
+            const name = dependency.getName(),
+                  releaseName = name,  ///
                   releaseVerified = verifyRelease(releaseName, releaseContextMap, releaseContexts);
 
             if (releaseVerified) {
@@ -21,14 +22,15 @@ export default function verifyRelease(releaseName, releaseContextMap, releaseCon
           });
 
     if (dependencyReleasesVVerified) {
-      const releaseNames = dependencyReleaseNames,  ///
-            releaseContexts = releaseNames.map((releaseName) => {
-              const releaseContext = releaseContextMap[releaseName];
+      const releaseContexts = dependencies.map((dependency) => {
+              const name = dependency.getName(),
+                    releaseName = name, ///
+                    releaseContext = releaseContextMap[releaseName];
 
               return releaseContext;
             });
 
-      const dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependencyReleaseNames, releaseContextMap);
+      const dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependencies, releaseContextMap);
 
       releaseContext.initialise(releaseContexts, dependencyReleaseContexts);
 
@@ -47,16 +49,18 @@ export default function verifyRelease(releaseName, releaseContextMap, releaseCon
   return releaseVerified;
 }
 
-function retrieveDependencyReleaseContexts(dependencyReleaseNames, releaseContextMap, dependencyReleaseContexts = []) {
-  dependencyReleaseNames.forEach((dependencyReleaseName) => {
-    const dependencyReleaseContext = releaseContextMap[dependencyReleaseName],
+function retrieveDependencyReleaseContexts(dependencies, releaseContextMap, dependencyReleaseContexts = []) {
+  dependencies.forEach((dependency) => {
+    const dependencyName = dependency.getName(),
+          dependencyReleaseName = dependencyName, ///
+          dependencyReleaseContext = releaseContextMap[dependencyReleaseName],
           dependencyReleaseContextsIncludesDependencyReleaseContext = dependencyReleaseContexts.includes(dependencyReleaseContext);
 
     if (!dependencyReleaseContextsIncludesDependencyReleaseContext) {
       const releaseContext = dependencyReleaseContext,  ///
-            dependencyReleaseNames = releaseContext.getDependencyReleaseNames();
+            dependencies = releaseContext.getDependencies();
 
-      retrieveDependencyReleaseContexts(dependencyReleaseNames, releaseContextMap, dependencyReleaseContexts);
+      retrieveDependencyReleaseContexts(dependencies, releaseContextMap, dependencyReleaseContexts);
 
       dependencyReleaseContexts.push(dependencyReleaseContext);
     }
