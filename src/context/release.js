@@ -3,7 +3,6 @@
 import { CustomGrammar, lexersUtilities, parsersUtilities, CombinedCustomGrammar } from "occam-custom-grammars";
 
 import { push } from "../utilities/array";
-import {dependenciesFromReleaseName, filePathsFromReleaseName} from "../../utilities/release";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
