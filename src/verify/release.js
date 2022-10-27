@@ -42,7 +42,7 @@ export default function verifyRelease(releaseName, releaseContextMap, releaseCon
       if (releaseVerified) {
         releaseContexts.push(releaseContext);
 
-        releaseContext.info(`Verified the '${releaseName}' release.`);
+        releaseContext.info(`Verified the '${releaseName}' package.`);
       }
     }
   }
