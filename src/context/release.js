@@ -193,13 +193,13 @@ export default class ReleaseContext {
   getCustomGrammar() {
     const releaseName = this.getReleaseName(),
           name = releaseName, ///
-          termBNF = this.getTermBNF(),
-          statementBNF = this.getStatementBNF(),
-          metastatementBNF = this.getMetastatementBNF(),
-          typePattern = this.getTypePattern(),
-          symbolPattern = this.getSymbolPattern(),
-          operatorPattern = this.getOperatorPattern(),
-          customGrammar = new CustomGrammar(name, termBNF, statementBNF, metastatementBNF, typePattern, symbolPattern, operatorPattern);
+          termBNF = this.release.getTermBNF(),
+          statementBNF = this.release.getStatementBNF(),
+          metastatementBNF = this.release.getMetastatementBNF(),
+          typePattern = this.release.getTypePattern(),
+          symbolPattern = this.release.getSymbolPattern(),
+          operatorPattern = this.release.getOperatorPattern(),
+          customGrammar = CustomGrammar.fromNameTermBNFStatementBNFMetastatementBNFTypePatternSymbolPatternAndOperatorPattern(name, termBNF, statementBNF, metastatementBNF, typePattern, symbolPattern, operatorPattern);
 
     return customGrammar;
   }
