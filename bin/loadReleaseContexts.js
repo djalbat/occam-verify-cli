@@ -1,12 +1,14 @@
 "use strict";
 
-const { Release } = require("occam-open-cli");
-const { arrayUtilities, loggingUtilities } = require("necessary");
+const { ReleaseContext } = require("../lib/index"),
+      { fileSystemUtilities } = require("occam-file-system"),
+      { arrayUtilities, loggingUtilities } = require("necessary");
 
-const ReleaseContext = require("../lib/index");
+const { PERIOD } = require("./constants");
 
 const { log } = loggingUtilities,
-      { first } = arrayUtilities;
+      { first } = arrayUtilities,
+      { loadRelease } = fileSystemUtilities;
 
 function loadReleaseContexts(releaseName, releaseContextMap = {}, dependentReleaseNames = []) {
   const cyclicDependencyExists = checkCyclicDependencyExists(releaseName, dependentReleaseNames);
@@ -15,26 +17,33 @@ function loadReleaseContexts(releaseName, releaseContextMap = {}, dependentRelea
     const releaseContext = releaseContextMap[releaseName] || null;
 
     if (releaseContext === null) {
-      const release = Release.from(), ///
-            releaseContext = ReleaseContext.fromLogAndRelease(log, release);
+      const topmostDirectoryName = releaseName,  ///
+            projectsDirectoryPath = PERIOD,
+            release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
 
-      releaseContextMap[releaseName] = releaseContext;
+      if (release === null) {
+        log.error(`The '${releaseName}' package cannot be loaded.`);
+      } else {
+        const releaseContext = ReleaseContext.fromLogAndRelease(log, release);
 
-      const dependencies = releaseContext.getDependencies(),
-            dependencyReleaseNames = dependencies.map((dependency) => {
-              const dependencyName = dependency.getName(),
-                    dependencyReleaseName = dependencyName;  ///
+        releaseContextMap[releaseName] = releaseContext;
 
-              return dependencyReleaseName;
-            })
+        const dependencies = releaseContext.getDependencies(),
+              dependencyReleaseNames = dependencies.mapDependency((dependency) => {
+                const dependencyName = dependency.getName(),
+                      dependencyReleaseName = dependencyName;  ///
 
-      dependentReleaseNames = [ ...dependentReleaseNames, releaseName ];  ///
+                return dependencyReleaseName;
+              });
 
-      dependencyReleaseNames.forEach((dependencyReleaseName) => {
-        const releaseName = dependencyReleaseName;  ///
+        dependentReleaseNames = [ ...dependentReleaseNames, releaseName ];  ///
 
-        loadReleaseContexts(releaseName, releaseContextMap, dependentReleaseNames);
-      });
+        dependencyReleaseNames.forEach((dependencyReleaseName) => {
+          const releaseName = dependencyReleaseName;  ///
+
+          loadReleaseContexts(releaseName, releaseContextMap, dependentReleaseNames);
+        });
+      }
     }
   }
 

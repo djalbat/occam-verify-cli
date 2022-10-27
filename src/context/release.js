@@ -243,13 +243,13 @@ export default class ReleaseContext {
     this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
   }
 
-  static fromLogAndRelease(Class, log, release, ...remainingArguments) {
+  static fromLogAndRelease(log, release, ...remainingArguments) {
     const verified = false,
           fileContexts = [],
           florenceLexer = null,
           florenceParser = null,
           releaseContexts = [],
-          releaseContext = new Class(log, release, verified, fileContexts, florenceLexer, florenceParser, releaseContexts, ...remainingArguments);
+          releaseContext = new ReleaseContext(log, release, verified, fileContexts, florenceLexer, florenceParser, releaseContexts, ...remainingArguments);
 
     return releaseContext;
   }
