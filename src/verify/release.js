@@ -51,7 +51,7 @@ export default function verifyRelease(releaseName, releaseContextMap, releaseCon
 }
 
 function retrieveDependencyReleaseContexts(dependencies, releaseContextMap, dependencyReleaseContexts = []) {
-  dependencies.forEach((dependency) => {
+  dependencies.forEachDependency((dependency) => {
     const dependencyName = dependency.getName(),
           dependencyReleaseName = dependencyName, ///
           dependencyReleaseContext = releaseContextMap[dependencyReleaseName],
