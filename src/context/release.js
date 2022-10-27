@@ -54,9 +54,14 @@ export default class ReleaseContext {
 
   getVersion() { return this.release.getVersion(); }
 
-  getFilePaths() { return this.release.getFilePatns(); }
+  getFilePaths() { return this.release.getFilePaths(); }
 
-  getFileContent(filePath) { return this.release.getFileContent(filePath); }
+  getFileContent(filePath) {
+    const file = this.release.getFile(filePath),
+          fileContent = file.getContent();
+
+    return fileContent;
+  }
 
   getDependencies() { return this.release.getDependencies(); }
 
