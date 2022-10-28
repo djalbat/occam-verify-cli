@@ -1,19 +1,22 @@
 "use strict";
 
-import { CustomGrammar, lexersUtilities, parsersUtilities, CombinedCustomGrammar } from "occam-custom-grammars";
+import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import logMixins from "../mixins/log";
 
 import { push } from "../utilities/array";
+import { customGrammarFromRelease, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 class ReleaseContext {
-  constructor(log, release, verified, fileContexts, florenceLexer, florenceParser, releaseContexts) {
+  constructor(log, release, verified, customGrammar, fileContexts, florenceLexer, florenceParser, releaseContexts) {
     this.log = log;
     this.release = release;
     this.verified = verified;
+    this.customGrammar = customGrammar;
+
     this.fileContexts = fileContexts;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
@@ -32,6 +35,10 @@ class ReleaseContext {
     return this.verified;
   }
 
+  getCustomGrammar() {
+    return this.customGrammar;
+  }
+
   getFileContexts() {
     return this.fileContexts;
   }
@@ -48,24 +55,19 @@ class ReleaseContext {
     return this.releaseContexts;
   }
 
-  getReleaseName() {
-    const releaseName = this.release.getName();
-
-    return releaseName;
-  }
+  getFile(filePath) { return this.release.getFile(filePath); }
 
   getVersion() { return this.release.getVersion(); }
 
   getFilePaths() { return this.release.getFilePaths(); }
 
-  getFileContent(filePath) {
-    const file = this.release.getFile(filePath),
-          fileContent = file.getContent();
-
-    return fileContent;
-  }
-
   getDependencies() { return this.release.getDependencies(); }
+
+  getReleaseName() {
+    const releaseName = this.release.getName();
+
+    return releaseName;
+  }
 
   getRules(releaseNames = []) {
     const rules = [],
@@ -197,20 +199,6 @@ class ReleaseContext {
     return constructors;
   }
 
-  getCustomGrammar() {
-    const releaseName = this.getReleaseName(),
-          name = releaseName, ///
-          termBNF = this.release.getTermBNF(),
-          statementBNF = this.release.getStatementBNF(),
-          metastatementBNF = this.release.getMetastatementBNF(),
-          typePattern = this.release.getTypePattern(),
-          symbolPattern = this.release.getSymbolPattern(),
-          operatorPattern = this.release.getOperatorPattern(),
-          customGrammar = CustomGrammar.fromNameTermBNFStatementBNFMetastatementBNFTypePatternSymbolPatternAndOperatorPattern(name, termBNF, statementBNF, metastatementBNF, typePattern, symbolPattern, operatorPattern);
-
-    return customGrammar;
-  }
-
   addFileContext(fileContext) {
     this.fileContexts.push(fileContext);
   }
@@ -220,31 +208,27 @@ class ReleaseContext {
   parse(tokens) { return this.florenceParser.parse(tokens); }
 
   initialise(releaseContexts, dependencyReleaseContexts) {
-    this.releaseContexts = releaseContexts;
-
     const releaseContext = this;  ///
 
     releaseContexts = [ releaseContext, ...dependencyReleaseContexts ]; ///
 
-    const customGrammars = releaseContexts.map((releaseContext) => {
-            const customGrammar = releaseContext.getCustomGrammar();
-
-            return customGrammar;
-          }),
-          combinedCustomGrammar = CombinedCustomGrammar.fromCustomGrammars(customGrammars);
+    const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts);
 
     this.florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 
     this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
+
+    this.releaseContexts = releaseContexts;
   }
 
   static fromLogAndRelease(log, release, ...remainingArguments) {
     const verified = false,
+          customGrammar = customGrammarFromRelease(release),
           fileContexts = [],
           florenceLexer = null,
           florenceParser = null,
           releaseContexts = [],
-          releaseContext = new ReleaseContext(log, release, verified, fileContexts, florenceLexer, florenceParser, releaseContexts, ...remainingArguments);
+          releaseContext = new ReleaseContext(log, release, verified, customGrammar, fileContexts, florenceLexer, florenceParser, releaseContexts, ...remainingArguments);
 
     return releaseContext;
   }
@@ -253,4 +237,3 @@ class ReleaseContext {
 Object.assign(ReleaseContext.prototype, logMixins);
 
 export default ReleaseContext;
-

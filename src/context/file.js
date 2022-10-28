@@ -265,8 +265,8 @@ export default class FileContext {
   }
 
   static fromReleaseContextAndFilePath(releaseContext, filePath) {
-    const fileContent = releaseContext.getFileContent(filePath),
-          content = fileContent,  ///
+    const file = releaseContext.getFile(filePath),
+          content = file.getContent(),
           tokens = releaseContext.tokenise(content),
           node = releaseContext.parse(tokens);
 
