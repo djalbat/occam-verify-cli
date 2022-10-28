@@ -1,13 +1,14 @@
 "use strict";
 
-const { ReleaseContext } = require("../lib/index"),
-      { fileSystemUtilities } = require("occam-file-system"),
-      { arrayUtilities, loggingUtilities } = require("necessary");
+const { arrayUtilities } = require("necessary"),
+      { ReleaseContext } = require("../lib/index"),
+      { fileSystemUtilities } = require("occam-file-system");
+
+const log = require("./log");
 
 const { PERIOD } = require("./constants");
 
-const { log } = loggingUtilities,
-      { first } = arrayUtilities,
+const { first } = arrayUtilities,
       { loadRelease } = fileSystemUtilities;
 
 function loadReleaseContexts(releaseName, releaseContextMap = {}, dependentReleaseNames = []) {

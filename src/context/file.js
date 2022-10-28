@@ -1,11 +1,16 @@
 "use strict";
 
+import { levels } from "necessary";
 import { rewriteNodes } from "occam-grammar-utilities";
 
 import { push } from "../utilities/array";
+import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "../utilities/tokens";
+
+const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL } = levels;
 
 export default class FileContext {
-  constructor(tokens, node, rules, types, axioms, variables, combinators, constructors, releaseContext) {
+  constructor(filePath, tokens, node, rules, types, axioms, variables, combinators, constructors, releaseContext) {
+    this.filePath = filePath;
     this.tokens = tokens;
     this.node = node;
     this.rules = rules;
@@ -15,6 +20,10 @@ export default class FileContext {
     this.combinators = combinators;
     this.constructors = constructors;
     this.releaseContext = releaseContext;
+  }
+
+  getFilePath() {
+    return this.filePath;
   }
 
   getTokens() {
@@ -236,17 +245,24 @@ export default class FileContext {
     this.constructors.push(constructor);
   }
 
-  trace(message) { this.releaseContext.trace(message); }
+  trace(message, node) { this.log(node, TRACE_LEVEL, message); }
 
-  debug(message) { this.releaseContext.debug(message); }
+  debug(message, node) { this.log(node, DEBUG_LEVEL, message); }
 
-  info(message) { this.releaseContext.info(message); }
+  info(message, node) { this.log(node, INFO_LEVEL, message); }
 
-  warning(message) { this.releaseContext.warning(message); }
+  warning(message, node) { this.log(node, WARNING_LEVEL, message); }
 
-  error(message) { this.releaseContext.error(message); }
+  error(message, node) { this.log(node, ERROR_LEVEL, message); }
 
-  fatal(message) { this.releaseContext.fatal(message); }
+  fatal(message, node) { this.log(node, FATAL_LEVEL, message); }
+
+  log(node, level, message) {
+    const leastLineIndex = leastLineIndexFromNodeAndTokens(node, this.tokens),
+          greatestLineIndex = greatestLineIndexFromNodeAndTokens(node, this.tokens);
+
+    this.releaseContext.log(level, message, this.filePath, leastLineIndex, greatestLineIndex);
+  }
 
   static fromReleaseContextAndFilePath(releaseContext, filePath) {
     const fileContent = releaseContext.getFileContent(filePath),
@@ -262,7 +278,7 @@ export default class FileContext {
           variables = [],
           combinators = [],
           constructors = [],
-          fileContext = new FileContext(tokens, node, rules, types, axioms, variables, combinators, constructors, releaseContext);
+          fileContext = new FileContext(filePath, tokens, node, rules, types, axioms, variables, combinators, constructors, releaseContext);
 
     return fileContext;
   }

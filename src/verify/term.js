@@ -153,7 +153,7 @@ function verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
   if (termNode === null) {
     const argumentString = nodeAsString(argumentNode);
 
-    context.error(`The ${argumentString} argument should be a term, not a type`);
+    context.error(`The ${argumentString} argument should be a term, not a type`, argumentNode);
   } else {
     const types = [],
           values = [],

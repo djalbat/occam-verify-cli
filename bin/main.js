@@ -1,20 +1,15 @@
 "use strict";
 
 const { verifyRelease } = require("../lib/index"),
-      { arrayUtilities, loggingUtilities } = require("necessary");
+      { arrayUtilities } = require("necessary");
 
 const loadReleaseContexts = require("./loadReleaseContexts");
 
-const { log } = loggingUtilities,
-      { first } = arrayUtilities;
+const { first } = arrayUtilities;
 
 function main(commands, options) {
   const firstCommand = first(commands),
-        { logLevel = null, releaseName = firstCommand } = options; ///
-
-  if (logLevel !== null) {
-    log.setLogLevel(logLevel);
-  }
+        { releaseName = firstCommand } = options; ///
 
   const releaseContextMap = loadReleaseContexts(releaseName);
 

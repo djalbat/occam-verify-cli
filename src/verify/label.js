@@ -10,7 +10,7 @@ export default function verifyLabel(labelNode, labels, context) {
         labelPresent = context.isLabelPresent(label);
 
   if (labelPresent) {
-    context.error(`The label ${label} is already present`);
+    context.error(`The label ${label} is already present`, labelNode);
   } else {
     labels.push(label);
 

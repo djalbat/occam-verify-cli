@@ -79,17 +79,17 @@ export default class MetaproofContext {
     this.metaAssertions.push(metaAssertion);
   }
 
-  trace(message) { this.context.trace(message); }
+  trace(message, node) { this.context.trace(message, node); }
 
-  debug(message) { this.context.debug(message); }
+  debug(message, node) { this.context.debug(message, node); }
 
-  info(message) { this.context.info(message); }
+  info(message, node) { this.context.info(message, node); }
 
-  warning(message) { this.context.warning(message); }
+  warning(message, node) { this.context.warning(message, node); }
 
-  error(message) { this.context.error(message); }
+  error(message, node) { this.context.error(message, node); }
 
-  fatal(message) { this.context.fatal(message); }
+  fatal(message, node) { this.context.fatal(message, node); }
 
   static fromContext(context) {
     const derived = false,

@@ -14,7 +14,7 @@ export default function verifyTermAsVariable(termNode, types, names, values, con
           variablePresent = context.isVariablePresentByVariableName(variableName);
 
     if (!variablePresent) {
-      context.error(`The ${variableName} variable is not present.`)
+      context.error(`The ${variableName} variable is not present.`, variableNode)
     } else {
       const variable = context.findVariableByVariableName(variableName),
             type = variable.getType(),

@@ -1,11 +1,13 @@
 "use strict";
 
+import { levels } from "necessary";
 import { CustomGrammar, lexersUtilities, parsersUtilities, CombinedCustomGrammar } from "occam-custom-grammars";
 
 import { push } from "../utilities/array";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
-      { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
+      { florenceParserFromCombinedCustomGrammar } = parsersUtilities,
+      { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL } = levels;
 
 export default class ReleaseContext {
   constructor(log, release, verified, fileContexts, florenceLexer, florenceParser, releaseContexts) {
@@ -217,17 +219,17 @@ export default class ReleaseContext {
 
   parse(tokens) { return this.florenceParser.parse(tokens); }
 
-  trace(message) { this.log.trace(message); }
+  trace(message) { this.log(TRACE_LEVEL, message); }
 
-  debug(message) { this.log.debug(message); }
+  debug(message) { this.log(DEBUG_LEVEL, message); }
 
-  info(message) { this.log.info(message); }
+  info(message) { this.log(INFO_LEVEL, message); }
 
-  warning(message) { this.log.warning(message); }
+  warning(message) { this.log(WARNING_LEVEL, message); }
 
-  error(message) { this.log.error(message); }
+  error(message) { this.log(ERROR_LEVEL, message); }
 
-  fatal(message) { this.log.fatal(message); }
+  fatal(message) { this.log(FATAL_LEVEL, message); }
 
   initialise(releaseContexts, dependencyReleaseContexts) {
     this.releaseContexts = releaseContexts;

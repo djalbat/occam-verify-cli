@@ -14,7 +14,7 @@ export default function verifyStatement(statementNode, context) {
 
   const statementString = nodeAsString(statementNode);
 
-  context.debug(`Verifying the '${statementString}' statement...`);
+  context.debug(`Verifying the '${statementString}' statement...`, statementNode);
 
   const equalityNode = equalityNodeQuery(statementNode),
         typeAssertionNode = typeAssertionNodeQuery(statementNode);
@@ -34,7 +34,7 @@ export default function verifyStatement(statementNode, context) {
   }
 
   if (statementVerified) {
-    context.info(`Verified the '${statementString}' statement.`);
+    context.info(`Verified the '${statementString}' statement.`, statementNode);
   }
 
   return statementVerified;

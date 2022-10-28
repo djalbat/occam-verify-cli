@@ -11,7 +11,7 @@ export default function verifyStatementAsCombinator(statementNode, context) {
 
   const statementString = nodeAsString(statementNode);
 
-  context.debug(`Verifying the ${statementString} statement as a combinator...`);
+  context.debug(`Verifying the ${statementString} statement as a combinator...`, statementNode);
 
   const nonTerminalNode = statementNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
@@ -28,7 +28,7 @@ export default function verifyStatementAsCombinator(statementNode, context) {
 
     const statementString = nodeAsString(statementNode);
 
-    context.info(`Verified the '${statementString}' combinator.`);
+    context.info(`Verified the '${statementString}' combinator.`, statementNode);
   }
 
   return statementVerifiedAsCombinator;
@@ -117,7 +117,7 @@ function verifyTypeNode(typeNode, context) {
         typePresent = context.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    context.error(`The type '${typeName}' is missing.`);
+    context.error(`The type '${typeName}' is missing.`, typeNode);
   } else {
     typeNodeVerified = true;
   }

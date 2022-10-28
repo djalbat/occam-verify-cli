@@ -15,7 +15,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, context) {
 
   const termString = nodeAsString(termNode);
 
-  context.debug(`Verifying the '${termString}' term as a constructor...`);
+  context.debug(`Verifying the '${termString}' term as a constructor...`, termNode);
 
   const nonTerminalNode = termNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
@@ -36,7 +36,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, context) {
       } else {
         const termString = nodeAsString(termNode);
 
-        context.error(`The '${termString}' constructor's '${typeName}' type is missing.`);
+        context.error(`The '${termString}' constructor's '${typeName}' type is missing.`, termNode);
       }
     }
   }
@@ -48,7 +48,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, context) {
 
     const termString = nodeAsString(termNode);
 
-    context.info(`Verified the '${termString}' constructor.`);
+    context.info(`Verified the '${termString}' constructor.`, termNode);
   }
 
   return termVerifiedAsConstructor;
@@ -121,7 +121,7 @@ function verifyNonTerminalNode(nonTerminalNode, context) {
         if (type !== null) {
           const termString = nodeAsString(termNode);
 
-          context.error(`The type of the constructor's compound '${termString}' term node is not null.`);
+          context.error(`The type of the constructor's compound '${termString}' term node is not null.`, termNode);
         } else {
           nonTerminalNodeVerified = true; ///
         }
@@ -151,13 +151,13 @@ function verifyArgumentNode(argumentNode, context) {
   if (typeNode === null) {
     const argumentString = nodeAsString(argumentNode);
 
-    context.error(`The ${argumentString} argument should be a type.`);
+    context.error(`The ${argumentString} argument should be a type.`, argumentNode);
   } else {
     const typeName = typeNameFromTypeNode(typeNode),
           typePresent = context.isTypePresentByTypeName(typeName);
 
     if (!typePresent) {
-      context.error(`The type '${typeName}' is missing.`);
+      context.error(`The type '${typeName}' is missing.`, typeNode);
     } else {
       typeNodeVerified = true;
     }
