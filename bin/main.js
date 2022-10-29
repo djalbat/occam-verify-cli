@@ -3,17 +3,22 @@
 const { verifyRelease } = require("../lib/index"),
       { arrayUtilities } = require("necessary");
 
-const loadReleaseContexts = require("./loadReleaseContexts");
+const { createReleaseContext } = require("./utilities/release");
 
 const { first } = arrayUtilities;
 
 function main(commands, options) {
   const firstCommand = first(commands),
-        { releaseName = firstCommand } = options; ///
+        { releaseName = firstCommand } = options, ///
+        releaseContextMap = {};
 
-  const releaseContextMap = loadReleaseContexts(releaseName);
+  createReleaseContext(releaseName, releaseContextMap);
 
-  verifyRelease(releaseName, releaseContextMap);
+  const releaseContext = releaseContextMap[releaseName];
+
+  if (releaseContext !== null) {
+    verifyRelease(releaseName, releaseContextMap);
+  }
 }
 
 module.exports = main;

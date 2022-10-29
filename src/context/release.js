@@ -57,21 +57,18 @@ class ReleaseContext {
 
   getFile(filePath) { return this.release.getFile(filePath); }
 
+  getName() { return this.release.getName(); }
+
   getVersion() { return this.release.getVersion(); }
 
   getFilePaths() { return this.release.getFilePaths(); }
 
   getDependencies() { return this.release.getDependencies(); }
 
-  getReleaseName() {
-    const releaseName = this.release.getName();
-
-    return releaseName;
-  }
-
   getRules(releaseNames = []) {
-    const rules = [],
-          releaseName = this.getReleaseName(),
+    const name = this.getName(),
+          rules = [],
+          releaseName = name, ///
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
@@ -96,8 +93,9 @@ class ReleaseContext {
   }
 
   getTypes(releaseNames = []) {
-    const types = [],
-          releaseName = this.getReleaesName(),
+    const name = this.getName(),
+          types = [],
+          releaseName = name, ///
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
@@ -122,8 +120,9 @@ class ReleaseContext {
   }
 
   getAxioms(releaseNames = []) {
-    const axioms = [],
-          releaseName = this.getReleaseName(),
+    const name = this.getName(),
+          axioms = [],
+          releaseName = name, ///
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
@@ -148,8 +147,9 @@ class ReleaseContext {
   }
 
   getCombinators(releaseNames = []) {
-    const combinators = [],
-          releaseName = this.getReleaseName(),
+    const name = this.getName(),
+          combinators = [],
+          releaseName = name, ///
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
@@ -174,8 +174,9 @@ class ReleaseContext {
   }
 
   getConstructors(releaseNames = []) {
-    const releaseName = this.getReleaseName(),
+    const name = this.getName(),
           constructors = [],
+          releaseName = name, ///
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
