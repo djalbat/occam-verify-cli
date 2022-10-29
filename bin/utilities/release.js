@@ -22,17 +22,10 @@ function createReleaseContext(name, shortenedVersion, releaseContextMap, depende
   }
 
   if (releaseContext !== null) {
-    const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion);
+    const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion),
+          dependencyReleaseContextsCreated = createDependencyReleaseContexts(releaseContext, releaseContextMap, dependentNames);
 
-    if (!releaseMatchesShortedVersion) {
-      releaseContext = null;
-    }
-  }
-
-  if (releaseContext !== null) {
-    const dependencyReleaseContextsCreated = createDependencyReleaseContexts(releaseContext, releaseContextMap, dependentNames);
-
-    if (!dependencyReleaseContextsCreated) {
+    if (!releaseMatchesShortedVersion || !dependencyReleaseContextsCreated) {
       releaseContext = null;
     }
   }

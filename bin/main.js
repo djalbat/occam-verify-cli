@@ -10,8 +10,8 @@ const { first } = arrayUtilities;
 function main(commands, options) {
   const firstCommand = first(commands),
         { name = firstCommand } = options, ///
-        shortenedVersion = null,
         releaseContextMap = {},
+        shortenedVersion = null,
         releaseContext = createReleaseContext(name, shortenedVersion, releaseContextMap);
 
   if (releaseContext !== null) {
