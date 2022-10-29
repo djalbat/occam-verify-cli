@@ -10,39 +10,39 @@ const { log } = require("../utilities/logging"),
 const { first } = arrayUtilities,
       { loadRelease } = fileSystemUtilities;
 
-function createReleaseContext(releaseName, releaseContextMap, dependentNames = []) {
-  let releaseContext = releaseContextMap[releaseName] || null;
+function createReleaseContext(name, releaseContextMap, dependentNames = []) {
+  let releaseContext = releaseContextMap[name] || null;
 
   if (releaseContext !== null) {
     return;
   }
 
-  const topmostDirectoryName = releaseName, ///
+  const topmostDirectoryName = name, ///
         projectsDirectoryPath = PERIOD,
         release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
 
   if (release === null) {
-    log.error(`The '${releaseName}' package cannot be loaded.`);
+    log.error(`The '${name}' package cannot be loaded.`);
   } else {
     const releaseContext = ReleaseContext.fromLogAndRelease(log, release);
 
     createDependencyReleaseContexts(releaseContext, releaseContextMap, dependentNames);
 
-    releaseContextMap[releaseName] = releaseContext;
+    releaseContextMap[name] = releaseContext;
   }
 }
 
 function createDependencyReleaseContexts(releaseContext, releaseContextMap, dependentNames = []) {
   const name = releaseContext.getName(),
+        version = releaseContext.getVersion(),
         dependencies = releaseContext.getDependencies(),
         dependencyNames = dependencies.mapDependency((dependency) => {
           const dependencyName = dependency.getName();
 
           return dependencyName;
-        }),
-        releaseName = name; ///
+        });
 
-  dependentNames = [ ...dependentNames, releaseName ];  ///
+  dependentNames = [ ...dependentNames, name ];  ///
 
   dependencyNames.forEach((dependencyName) => {
     const cyclicDependencyExists = checkCyclicDependencyExists(dependencyName, dependentNames, releaseContext);
@@ -51,9 +51,9 @@ function createDependencyReleaseContexts(releaseContext, releaseContextMap, depe
       return;
     }
 
-    const releaseName = dependencyName; ///
+    const name = dependencyName; ///
 
-    createReleaseContext(releaseName, releaseContextMap, dependentNames);
+    createReleaseContext(name, releaseContextMap, dependentNames);
   });
 }
 

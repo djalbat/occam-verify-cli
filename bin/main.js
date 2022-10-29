@@ -9,15 +9,15 @@ const { first } = arrayUtilities;
 
 function main(commands, options) {
   const firstCommand = first(commands),
-        { releaseName = firstCommand } = options, ///
+        { name = firstCommand } = options, ///
         releaseContextMap = {};
 
-  createReleaseContext(releaseName, releaseContextMap);
+  createReleaseContext(name, releaseContextMap);
 
-  const releaseContext = releaseContextMap[releaseName];
+  const releaseContext = releaseContextMap[name];
 
   if (releaseContext !== null) {
-    verifyRelease(releaseName, releaseContextMap);
+    verifyRelease(name, releaseContextMap);
   }
 }
 

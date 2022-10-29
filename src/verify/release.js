@@ -2,20 +2,19 @@
 
 import verifyFiles from "../verify/files";
 
-export default function verifyRelease(releaseName, releaseContextMap, releaseContexts = []) {
-  const releaseContext = releaseContextMap[releaseName],
+export default function verifyRelease(name, releaseContextMap, releaseContexts = []) {
+  const releaseContext = releaseContextMap[name],
         verified = releaseContext.isVerified()
 
   let releaseVerified = verified; ///
 
   if (!releaseVerified) {
-    releaseContext.debug(`Verifying the '${releaseName}' package...`);
+    releaseContext.debug(`Verifying the '${name}' package...`);
 
     const dependencies = releaseContext.getDependencies(),
           dependencyReleasesVVerified = dependencies.everyDependency((dependency) => {
             const name = dependency.getName(),
-                  releaseName = name,  ///
-                  releaseVerified = verifyRelease(releaseName, releaseContextMap, releaseContexts);
+                  releaseVerified = verifyRelease(name, releaseContextMap, releaseContexts);
 
             if (releaseVerified) {
               return true;
@@ -25,13 +24,11 @@ export default function verifyRelease(releaseName, releaseContextMap, releaseCon
     if (dependencyReleasesVVerified) {
       const releaseContexts = dependencies.mapDependency((dependency) => {
               const name = dependency.getName(),
-                    releaseName = name, ///
-                    releaseContext = releaseContextMap[releaseName];
+                    releaseContext = releaseContextMap[name];
 
               return releaseContext;
-            });
-
-      const dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependencies, releaseContextMap);
+            }),
+            dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependencies, releaseContextMap);
 
       releaseContext.initialise(releaseContexts, dependencyReleaseContexts);
 
@@ -42,7 +39,7 @@ export default function verifyRelease(releaseName, releaseContextMap, releaseCon
       if (releaseVerified) {
         releaseContexts.push(releaseContext);
 
-        releaseContext.info(`Verified the '${releaseName}' package.`);
+        releaseContext.info(`Verified the '${name}' package.`);
       }
     }
   }
