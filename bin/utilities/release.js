@@ -10,7 +10,7 @@ const { log } = require("../utilities/logging"),
 const { first } = arrayUtilities,
       { loadRelease } = fileSystemUtilities;
 
-function createReleaseContext(name, releaseContextMap, dependentNames = []) {
+function createReleaseContext(name, shortenedVersion, releaseContextMap, dependentNames = []) {
   let releaseContext = releaseContextMap[name] || null;
 
   if (releaseContext !== null) {
@@ -34,20 +34,12 @@ function createReleaseContext(name, releaseContextMap, dependentNames = []) {
 
 function createDependencyReleaseContexts(releaseContext, releaseContextMap, dependentNames = []) {
   const name = releaseContext.getName(),
-        version = releaseContext.getVersion(),
         dependencies = releaseContext.getDependencies(),
-        dependencyNames = dependencies.reduceDependency((dependencyNames, dependency) => {
-          const dependencyName = dependency.getName(),
-                dependencyMatchesVersion = dependency.matchVersion(version);
+        dependencyNames = dependencies.mapDependency((dependency) => {
+          const dependencyName = dependency.getName();
 
-          if (dependencyMatchesVersion) {
-            dependencyNames.push(dependencyName);
-          } else {
-            releaseContext.error(`The '${dependencyName}' dependency's  does to mat.`)
-          }
-
-          return dependencyNames;
-        }, []);
+          return dependencyName;
+        });
 
   dependentNames = [ ...dependentNames, name ];  ///
 

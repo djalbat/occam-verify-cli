@@ -10,9 +10,10 @@ const { first } = arrayUtilities;
 function main(commands, options) {
   const firstCommand = first(commands),
         { name = firstCommand } = options, ///
+        shortenedVersion = null,
         releaseContextMap = {};
 
-  createReleaseContext(name, releaseContextMap);
+  createReleaseContext(name, shortenedVersion, releaseContextMap);
 
   const releaseContext = releaseContextMap[name];
 
