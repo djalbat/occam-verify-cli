@@ -10,7 +10,7 @@ const { log } = require("../utilities/logging"),
 const { first } = arrayUtilities,
       { loadRelease } = fileSystemUtilities;
 
-function createReleaseContext(name, shortenedVersion, releaseContextMap, dependentNames = []) {
+function createReleaseContext(name, shortenedVersion, releaseContextMap = {}, dependentNames = []) {
   let releaseContext = releaseContextMap[name] || null;
 
   if (releaseContext === null) {

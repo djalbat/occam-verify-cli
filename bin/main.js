@@ -12,7 +12,7 @@ function main(commands, options) {
         { name = firstCommand } = options, ///
         shortenedVersion = null,
         releaseContextMap = {},
-        releaseContext =  createReleaseContext(name, shortenedVersion, releaseContextMap);
+        releaseContext = createReleaseContext(name, shortenedVersion);
 
   if (releaseContext !== null) {
     verifyRelease(name, releaseContextMap);
