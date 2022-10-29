@@ -10,7 +10,7 @@ const { log } = require("../utilities/logging"),
 const { first } = arrayUtilities,
       { loadRelease } = fileSystemUtilities;
 
-function createReleaseContext(name, shortenedVersion, releaseContextMap = {}, dependentNames = []) {
+function createReleaseContext(name, shortenedVersion, releaseContextMap, dependentNames = []) {
   let releaseContext = releaseContextMap[name] || null;
 
   if (releaseContext === null) {
@@ -22,15 +22,9 @@ function createReleaseContext(name, shortenedVersion, releaseContextMap = {}, de
   }
 
   if (releaseContext !== null) {
-    const releaseContextMatchesShortedVersion = releaseContext.matchShortenedVersion(shortenedVersion);
+    const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion);
 
-    if (!releaseContextMatchesShortedVersion) {
-      const version = releaseContext.getVersion(),
-            versionString = version.toString(),
-            shortenedVersionString = shortenedVersion.toString();
-
-      log.error(`The '${name}' package's version of ${versionString} does not match the dependency's shortened version of ${shortenedVersionString}.`);
-
+    if (!releaseMatchesShortedVersion) {
       releaseContext = null;
     }
   }
@@ -101,4 +95,20 @@ function createDependencyReleaseContexts(releaseContext, releaseContextMap, depe
   });
 
   return dependencyReleaseContextsCreated;
+}
+
+function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion) {
+  const release = releaseContext.getRelease(),
+        releaseMatchesShortedVersion = release.matchShortenedVersion(shortenedVersion);
+
+  if (!releaseMatchesShortedVersion) {
+    const name = releaseContext.getName(),
+          version = releaseContext.getVersion(),
+          versionString = version.toString(),
+          shortenedVersionString = shortenedVersion.toString();
+
+    releaseContext.error(`The '${name}' package's version of ${versionString} does not match the dependency's shortened version of ${shortenedVersionString}.`);
+  }
+
+  return releaseMatchesShortedVersion;
 }
