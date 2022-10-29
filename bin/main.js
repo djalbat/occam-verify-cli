@@ -11,11 +11,8 @@ function main(commands, options) {
   const firstCommand = first(commands),
         { name = firstCommand } = options, ///
         shortenedVersion = null,
-        releaseContextMap = {};
-
-  createReleaseContext(name, shortenedVersion, releaseContextMap);
-
-  const releaseContext = releaseContextMap[name];
+        releaseContextMap = {},
+        releaseContext =  createReleaseContext(name, shortenedVersion, releaseContextMap);
 
   if (releaseContext !== null) {
     verifyRelease(name, releaseContextMap);

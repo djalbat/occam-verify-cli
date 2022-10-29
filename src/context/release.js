@@ -65,6 +65,8 @@ class ReleaseContext {
 
   getDependencies() { return this.release.getDependencies(); }
 
+  matchShortenedVersion(shortenedVersion) { return this.release.matchShortenedVersion(shortenedVersion); }
+
   getRules(releaseNames = []) {
     const name = this.getName(),
           rules = [],
