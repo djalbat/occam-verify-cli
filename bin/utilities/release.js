@@ -37,12 +37,13 @@ function createDependencyReleaseContexts(releaseContext, releaseContextMap, depe
         version = releaseContext.getVersion(),
         dependencies = releaseContext.getDependencies(),
         dependencyNames = dependencies.reduceDependency((dependencyNames, dependency) => {
-          const dependencyMatchesVersion = dependency.matchVersion(version);
+          const dependencyName = dependency.getName(),
+                dependencyMatchesVersion = dependency.matchVersion(version);
 
           if (dependencyMatchesVersion) {
-            const dependencyName = dependency.getName();
-
             dependencyNames.push(dependencyName);
+          } else {
+            releaseContext.error(`The '${dependencyName}' dependency's  does to mat.`)
           }
 
           return dependencyNames;
