@@ -36,11 +36,17 @@ function createDependencyReleaseContexts(releaseContext, releaseContextMap, depe
   const name = releaseContext.getName(),
         version = releaseContext.getVersion(),
         dependencies = releaseContext.getDependencies(),
-        dependencyNames = dependencies.mapDependency((dependency) => {
-          const dependencyName = dependency.getName();
+        dependencyNames = dependencies.reduceDependency((dependencyNames, dependency) => {
+          const dependencyMatchesVersion = dependency.matchVersion(version);
 
-          return dependencyName;
-        });
+          if (dependencyMatchesVersion) {
+            const dependencyName = dependency.getName();
+
+            dependencyNames.push(dependencyName);
+          }
+
+          return dependencyNames;
+        }, []);
 
   dependentNames = [ ...dependentNames, name ];  ///
 
