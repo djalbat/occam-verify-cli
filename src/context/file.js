@@ -3,6 +3,7 @@
 import { rewriteNodes } from "occam-grammar-utilities";
 
 import loggingMixins from "../mixins/logging";
+import fileContextMixins from "../mixins/context/file";
 
 import { push } from "../utilities/array";
 import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "../utilities/tokens";
@@ -291,5 +292,6 @@ class FileContext {
 }
 
 Object.assign(FileContext.prototype, loggingMixins);
+Object.assign(FileContext.prototype, fileContextMixins);
 
 export default FileContext;

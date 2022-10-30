@@ -1,22 +1,22 @@
 "use strict";
 
-import verifyTerm from "../verify/term";
-
 import { nodeQuery } from "../utilities/query";
 import { first, second } from "../utilities/array";
 
 const firstTermNodeQuery = nodeQuery("/equality/term[0]"),
       secondTermNodeQuery = nodeQuery("/equality/term[1]");
 
-export default function verifyEquality(equalityNode, context) {
+export default function verifyEquality(equalityNode, context = this) {
   let equalityVerified = false;
+
+  context.begin(equalityNode);
 
   const types = [],
         values = [],
         firstTermNode = firstTermNodeQuery(equalityNode),
         secondTermNode = secondTermNodeQuery(equalityNode),
-        firstTermVerified = verifyTerm(firstTermNode, types, values, context),
-        secondTermVerified = verifyTerm(secondTermNode, types, values, context);
+        firstTermVerified = context.verifyTerm(firstTermNode, types, values),
+        secondTermVerified = context.verifyTerm(secondTermNode, types, values);
 
   if (firstTermVerified && secondTermVerified) {
     const firstType = first(types),
@@ -37,6 +37,10 @@ export default function verifyEquality(equalityNode, context) {
       }
     }
   }
+
+  equalityVerified ?
+    context.complete(equalityNode) :
+      context.halt(equalityNode);
 
   return equalityVerified;
 }

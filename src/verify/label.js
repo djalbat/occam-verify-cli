@@ -2,8 +2,10 @@
 
 import { labelNameFromLabelNode } from "../utilities/query";
 
-export default function verifyLabel(labelNode, labels, context) {
+export default function verifyLabel(labelNode, labels, context = this) {
   let labelVerified = false;
+
+  context.begin(labelNode);
 
   const labelName = labelNameFromLabelNode(labelNode),
         label = labelName,  ///
@@ -16,6 +18,10 @@ export default function verifyLabel(labelNode, labels, context) {
 
     labelVerified = true;
   }
+
+  labelVerified ?
+    context.complete(labelNode) :
+      context.halt(labelNode);
 
   return labelVerified;
 }

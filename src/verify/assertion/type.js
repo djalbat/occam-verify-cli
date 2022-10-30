@@ -1,7 +1,6 @@
 "use strict";
 
 import Variable from "../../variable";
-import verifyTermAsVariable from "../../verify/termAsVariable";
 
 import { first } from "../../utilities/array";
 import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
@@ -9,8 +8,10 @@ import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeNodeQuery = nodeQuery("/typeAssertion/type");
 
-export default function verifyTypeAssertion(typeAssertionNode, context) {
+export default function verifyTypeAssertion(typeAssertionNode, context = this) {
   let typeAssertionVerified = false;
+
+  context.begin(typeAssertionNode);
 
   const typeNode = typeNodeQuery(typeAssertionNode),
         typeName = typeNameFromTypeNode(typeNode),
@@ -28,7 +29,7 @@ export default function verifyTypeAssertion(typeAssertionNode, context) {
             names = [],
             values = [],
             termNode = termNodeQuery(typeAssertionNode),
-            termVerified = verifyTermAsVariable(termNode, types, names, values, context);
+            termVerified = context.verifyTermAsVariable(termNode, types, names, values);
 
       if (termVerified) {
         const firstName = first(names),
@@ -58,6 +59,10 @@ export default function verifyTypeAssertion(typeAssertionNode, context) {
       }
     }
   }
+
+  typeAssertionVerified ?
+    context.complete(typeAssertionNode) :
+      context.halt(typeAssertionNode);
 
   return typeAssertionVerified;
 }

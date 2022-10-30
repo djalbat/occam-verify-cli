@@ -1,10 +1,10 @@
 "use strict";
 
-import verifyLabel from "../verify/label";
+export default function verifyLabels(labelNodes, labels, context = this) {
+  let labelsVerified;
 
-export default function verifyLabels(labelNodes, labels, context) {
-  const labelsVerified = labelNodes.every((labelNode) => {
-    const labelVerified = verifyLabel(labelNode, labels, context);
+  labelsVerified = labelNodes.every((labelNode) => {
+    const labelVerified = context.verifyLabel(labelNode, labels);
 
     if (labelVerified) {
       return true;

@@ -1,8 +1,6 @@
 "use strict";
 
 import ProofContext from "../context/proof";
-import verifyUnqualifiedStatement from "../verify/statement/unqualified";
-import verifyIndicativeConditional from "../verify/indicativeConditional";
 
 import { first, second } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
@@ -13,23 +11,21 @@ const labelNodesQuery = nodesQuery("/axiom/label"),
       unqualifiedStatementNodeQuery = nodeQuery("/axiom/unqualifiedStatement!"),
       indicativeConditionalNodeQuery = nodeQuery("/axiom/indicativeConditional!");
 
-export default function verifyAxiom(axiomNode, context) {
+export default function verifyAxiom(axiomNode, context = this) {
+  let axiomVerified = false;
+
+  context.begin(axiomNode);
+
   const labelNodes = labelNodesQuery(axiomNode),
-        labelsString = nodesAsString(labelNodes);
+        labelsString = nodesAsString(labelNodes),
+        proofContext = ProofContext.fromContext(context),
+        unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
+        indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
   context.debug(`Verifying the '${labelsString}' axiom...`);
 
-  const proofContext = ProofContext.fromContext(context);
-
-  context = proofContext; ///
-
-  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
-        indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
-
-  let axiomVerified = false;
-
   if (unqualifiedStatementNode !== null) {
-    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context);
+    const unqualifiedStatementVerified = proofContext.verifyUnqualifiedStatement(unqualifiedStatementNode);
 
     if (unqualifiedStatementVerified) {
       const statementNode = statementNodeQuery(unqualifiedStatementNode),
@@ -44,7 +40,7 @@ export default function verifyAxiom(axiomNode, context) {
 
   if (indicativeConditionalNode !== null) {
     const statementNodes = [],
-          indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, statementNodes, context);
+          indicativeConditionalVerified = proofContext.verifyIndicativeConditional(indicativeConditionalNode, statementNodes);
 
     if (indicativeConditionalVerified !== null) {
       const labels = labelsString,  ///
@@ -60,9 +56,9 @@ export default function verifyAxiom(axiomNode, context) {
     }
   }
 
-  if (axiomVerified) {
-    context.info(`Verified the '${labelsString}' axiom.`);
-  }
+  axiomVerified ?
+    context.complete(axiomNode) :
+      context.halt(axiomNode);
 
   return axiomVerified;
 }

@@ -2,10 +2,15 @@
 
 import Variable from "../variable";
 
+import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities/query";
 
-export default function verifyVariable(variableNode, typeNode, context) {
+export default function verifyVariable(variableNode, typeNode, context = this) {
   let variableVerified = false;
+
+  context.begin(variableNode);
+
+  let variable = null;
 
   const variableName = variableNameFromVariableNode(variableNode),
         variablePresent = context.isVariablePresentByVariableName(variableName);
@@ -13,8 +18,6 @@ export default function verifyVariable(variableNode, typeNode, context) {
   if (variablePresent) {
     context.error(`The variable '${variableName}' is already present.`);
   } else {
-    let variable = null;
-
     const typeName = typeNameFromTypeNode(typeNode);
     
     if (typeName === null) {
@@ -35,15 +38,19 @@ export default function verifyVariable(variableNode, typeNode, context) {
     }
 
     if (variable !== null) {
-      const variableString = variable.asString();
+      const variableString = nodeAsString(variableName);
+
+      context.info(`Verified the '${variableString}' variable.`);
 
       context.addVariable(variable);
 
       variableVerified = true;
-
-      context.info(`Verified the '${variableString}' variable.`);
     }
   }
+
+  variableVerified ?
+    context.complete(variableNode) :
+      context.halt(variableNode);
 
   return variableVerified;
 }

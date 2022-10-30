@@ -6,30 +6,29 @@ import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode } from "../utilities/query";
 import { TERM_RULE_NAME, TYPE_RULE_NAME } from "../ruleNames";
 
-export default function verifyStatementAsCombinator(statementNode, context) {
+export default function verifyStatementAsCombinator(statementNode, context = this) {
   let statementVerifiedAsCombinator = false;
 
-  const statementString = nodeAsString(statementNode);
-
-  context.debug(`Verifying the ${statementString} statement as a combinator...`);
+  context.begin(statementNode);
 
   const nonTerminalNode = statementNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
         childNodesVerified = verifyChildNodes(childNodes, context);
 
   if (childNodesVerified) {
-    statementVerifiedAsCombinator = true;
-  }
+    const combinator = Combinator.fromStatementNode(statementNode),
+          statementString = nodeAsString(statementNode);
 
-  if (statementVerifiedAsCombinator) {
-    const combinator = Combinator.fromStatementNode(statementNode);
+    context.info(`Verified the '${statementString}' combinator.`);
 
     context.addCombinator(combinator);
 
-    const statementString = nodeAsString(statementNode);
-
-    context.info(`Verified the '${statementString}' combinator.`);
+    statementVerifiedAsCombinator = true;
   }
+
+  statementVerifiedAsCombinator ?
+    context.complete(statementNode) :
+      context.halt(statementNode);
 
   return statementVerifiedAsCombinator;
 }
@@ -52,6 +51,29 @@ function verifyNode(node, context) {
   }
 
   return nodeVerified;
+}
+
+function verifyTypeNode(typeNode, context) {
+  let typeNodeVerified = false;
+
+  const typeName = typeNameFromTypeNode(typeNode),
+        typePresent = context.isTypePresentByTypeName(typeName);
+
+  if (!typePresent) {
+    context.error(`The type '${typeName}' is missing.`);
+  } else {
+    typeNodeVerified = true;
+  }
+
+  return typeNodeVerified;
+}
+
+function verifyTermNode(termNode, context) {
+  let termNodeVerified = false;
+
+  debugger
+
+  return termNodeVerified;
 }
 
 function verifyChildNodes(childNodes, context) {
@@ -108,27 +130,4 @@ function verifyNonTerminalNode(nonTerminalNode, context) {
   }
 
   return nonTerminalNodeVerified;
-}
-
-function verifyTypeNode(typeNode, context) {
-  let typeNodeVerified = false;
-
-  const typeName = typeNameFromTypeNode(typeNode),
-        typePresent = context.isTypePresentByTypeName(typeName);
-
-  if (!typePresent) {
-    context.error(`The type '${typeName}' is missing.`);
-  } else {
-    typeNodeVerified = true;
-  }
-
-  return typeNodeVerified;
-}
-
-function verifyTermNode(termNode, context) {
-  let termNodeVerified = false;
-
-  debugger
-
-  return termNodeVerified;
 }

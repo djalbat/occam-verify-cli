@@ -10,18 +10,16 @@ import { TERM_RULE_NAME, ARGUMENT_RULE_NAME } from "../ruleNames";
 
 const typeNodeQuery = nodeQuery("/argument/type");
 
-export default function verifyTermAsConstructor(termNode, typeNode, context) {
+export default function verifyTermAsConstructor(termNode, typeNode, context = this) {
   let termVerifiedAsConstructor = false;
 
-  const termString = nodeAsString(termNode);
+  context.begin(termNode);
 
-  context.debug(`Verifying the '${termString}' term as a constructor...`);
+  let type = null;
 
   const nonTerminalNode = termNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
         childNodesVerified = verifyChildNodes(childNodes, context);
-
-  let type = null;
 
   if (childNodesVerified) {
     if (typeNode === null) {
@@ -42,14 +40,17 @@ export default function verifyTermAsConstructor(termNode, typeNode, context) {
   }
 
   if (termVerifiedAsConstructor) {
-    const constructor = Constructor.fromTermNodeAndType(termNode, type);
+    const termString = nodeAsString(termNode),
+          constructor = Constructor.fromTermNodeAndType(termNode, type);
 
     context.addConstructor(constructor);
 
-    const termString = nodeAsString(termNode);
-
     context.info(`Verified the '${termString}' constructor.`);
   }
+
+  termVerifiedAsConstructor ?
+    context.complete(termNode) :
+      context.halt(termNode);
 
   return termVerifiedAsConstructor;
 }
@@ -91,6 +92,29 @@ function verifyTerminalNode(terminalNode, context) {
   const terminalNodeVerified = true;
 
   return terminalNodeVerified;
+}
+
+function verifyArgumentNode(argumentNode, context) {
+  let typeNodeVerified = false;
+
+  const typeNode = typeNodeQuery(argumentNode);
+
+  if (typeNode === null) {
+    const argumentString = nodeAsString(argumentNode);
+
+    context.error(`The ${argumentString} argument should be a type.`);
+  } else {
+    const typeName = typeNameFromTypeNode(typeNode),
+          typePresent = context.isTypePresentByTypeName(typeName);
+
+    if (!typePresent) {
+      context.error(`The type '${typeName}' is missing.`);
+    } else {
+      typeNodeVerified = true;
+    }
+  }
+
+  return typeNodeVerified;
 }
 
 function verifyNonTerminalNode(nonTerminalNode, context) {
@@ -143,25 +167,3 @@ function verifyNonTerminalNode(nonTerminalNode, context) {
   return nonTerminalNodeVerified;
 }
 
-function verifyArgumentNode(argumentNode, context) {
-  let typeNodeVerified = false;
-
-  const typeNode = typeNodeQuery(argumentNode);
-
-  if (typeNode === null) {
-    const argumentString = nodeAsString(argumentNode);
-
-    context.error(`The ${argumentString} argument should be a type.`);
-  } else {
-    const typeName = typeNameFromTypeNode(typeNode),
-          typePresent = context.isTypePresentByTypeName(typeName);
-
-    if (!typePresent) {
-      context.error(`The type '${typeName}' is missing.`);
-    } else {
-      typeNodeVerified = true;
-    }
-  }
-
-  return typeNodeVerified;
-}

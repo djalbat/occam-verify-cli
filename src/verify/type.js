@@ -2,10 +2,15 @@
 
 import Type from "../type";
 
+import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode } from "../utilities/query";
 
-export default function verifyType(typeNode, superTypeNode, context) {
+export default function verifyType(typeNode, superTypeNode, context = this) {
   let typeVerified = false;
+
+  context.begin(typeNode);
+
+  let type = null;
 
   const typeName = typeNameFromTypeNode(typeNode),
         typePresent = context.isTypePresentByTypeName(typeName);
@@ -16,32 +21,31 @@ export default function verifyType(typeNode, superTypeNode, context) {
     const superTypeName = typeNameFromTypeNode(superTypeNode);
 
     if (superTypeName === null) {
-      const type = Type.fromTypeName(typeName),
-            typeString = type.asString();
-
-      context.addType(type);
-
-      typeVerified = true;
-
-      context.info(`Verified the '${typeString}' type.`);
+      type = Type.fromTypeName(typeName);
     } else {
       const superType = context.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
         context.error(`The super-type '${superTypeName}' is missing.`);
       } else {
-        const type = Type.fromTypeNameAndSuperType(typeName, superType),
-              typeString = type.asString();
-
-        context.addType(type);
-
-        typeVerified = true;
-
-        context.info(`Verified the '${typeString}' type.`);
+        type = Type.fromTypeNameAndSuperType(typeName, superType);
       }
     }
   }
 
+  if (type !== null) {
+    const typeString = nodeAsString(typeNode);
+
+    context.info(`Verified the '${typeString}' type.`);
+
+    context.addType(type);
+
+    typeVerified = true;
+  }
+
+  typeVerified ?
+    context.complete(typeNode):
+      context.halt(typeNode);
+
   return typeVerified;
 }
-

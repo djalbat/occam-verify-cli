@@ -4,8 +4,10 @@ import { nodeQuery, variableNameFromVariableNode} from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
-export default function verifyTermAsVariable(termNode, types, names, values, context) {
+export default function verifyTermAsVariable(termNode, types, names, values, context = this) {
   let termVerifiedAsVariable = false;
+
+  context.begin(termNode);
 
   const variableNode = variableNodeQuery(termNode);
 
@@ -30,6 +32,10 @@ export default function verifyTermAsVariable(termNode, types, names, values, con
       termVerifiedAsVariable = true;
     }
   }
+
+  termVerifiedAsVariable ?
+    context.complete(termNode) :
+      context.halt(termNode);
 
   return termVerifiedAsVariable;
 }

@@ -6,8 +6,10 @@ import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query
 const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/reference!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
 
-export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, context) {
+export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, context = this) {
   let qualifiedMetastatementVerified = false;
+
+  context.begin(qualifiedMetastatementNode);
 
   const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
 
@@ -28,6 +30,10 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
     context.debug(`Verified the '${metastatementString}' qualified metastatement.`);
   }
+
+  qualifiedMetastatementVerified ?
+    context.complete(qualifiedMetastatementNode) :
+      context.halt(qualifiedMetastatementNode);
 
   return qualifiedMetastatementVerified;
 }

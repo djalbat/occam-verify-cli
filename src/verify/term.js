@@ -10,8 +10,10 @@ import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!")
 
-export default function verifyTerm(termNode, types, values, context) {
+export default function verifyTerm(termNode, types, values, context = this) {
   let termVerified = false;
+
+  context.begin(termNode);
 
   const names = [],
         termVerifiedAsVariable = verifyTermAsVariable(termNode, types, names, values, context);
@@ -39,6 +41,10 @@ export default function verifyTerm(termNode, types, values, context) {
       termVerified = true;
     }
   }
+
+  termVerified ?
+    context.complete(termNode) :
+      context.halt(termNode);
 
   return termVerified;
 }

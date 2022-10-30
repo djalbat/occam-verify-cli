@@ -1,11 +1,7 @@
 "use strict";
 
 import Rule from "../rule";
-import verifyLabels from "../verify/labels";
-import verifyMetaproof from "../verify/metaproof";
 import MetaproofContext from "../context/metaproof";
-import verifyConditionalInference from "../verify/conditinalInference";
-import verifyUnconditionalInference from "../verify/unconditionalInference";
 
 import { first } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
@@ -16,20 +12,19 @@ const labelNodesQuery = nodesQuery("/rule/label"),
       conditionalInferenceNodeQuery = nodeQuery("/rule/conditionalInference!"),
       unconditionalInferenceNodeQuery = nodeQuery("/rule/unconditionalInference!");
 
-export default function verifyRule(ruleNode, context) {
+export default function verifyRule(ruleNode, context = this) {
   let ruleVerified = false;
 
+  context.begin(ruleNode);
+
   const labelNodes = labelNodesQuery(ruleNode),
-        labelsString = nodesAsString(labelNodes);
-
-  const metaproofContext = MetaproofContext.fromContext(context);
-
-  context = metaproofContext; ///
+        labelsString = nodesAsString(labelNodes),
+        metaproofContext = MetaproofContext.fromContext(context);
 
   context.debug(`Verifying the '${labelsString}' rule...`);
 
   const labels = [],
-        labelsVerified = verifyLabels(labelNodes, labels, context);
+        labelsVerified = context.verifyLabels(labelNodes, labels);
 
   if (labelsVerified) {
     const premises = [],
@@ -41,11 +36,11 @@ export default function verifyRule(ruleNode, context) {
         unconditionalInferenceVerified = false;
 
     if (conditionalInferenceNode !== null) {
-      conditionalInferenceVerified = verifyConditionalInference(conditionalInferenceNode, premises, conclusions, context);
+      conditionalInferenceVerified = metaproofContext.verifyConditionalInference(conditionalInferenceNode, premises, conclusions);
     }
 
     if (unconditionalInferenceNode !== null) {
-      unconditionalInferenceVerified = verifyUnconditionalInference(unconditionalInferenceNode, premises, conclusions, context);
+      unconditionalInferenceVerified = metaproofContext.verifyUnconditionalInference(unconditionalInferenceNode, premises, conclusions);
     }
 
     if (conditionalInferenceVerified || unconditionalInferenceVerified) {
@@ -56,7 +51,7 @@ export default function verifyRule(ruleNode, context) {
       let metaproofVerified = true;
 
       if (metaproofNode !== null) {
-        metaproofVerified = verifyMetaproof(metaproofNode, conclusion, context);
+        metaproofVerified = metaproofContext.verifyMetaproof(metaproofNode, conclusion);
       }
 
       if (metaproofVerified) {
@@ -67,11 +62,11 @@ export default function verifyRule(ruleNode, context) {
         ruleVerified = true;
       }
     }
-
-    if (ruleVerified) {
-      context.info(`Verified the '${labelsString}' rule.`);
-    }
   }
+
+  ruleVerified ?
+    context.complete(ruleNode) :
+      context.complete(ruleNode);
 
   return ruleVerified;
 }

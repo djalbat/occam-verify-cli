@@ -1,10 +1,8 @@
 "use strict";
 
-import verifyFile from "../verify/file";
-
 import { leftDifference } from "../utilities/array";
 
-export default function verifyFiles(releaseContext) {
+export default function verifyFiles(releaseContext = this) {
   let filesVerified = false;
 
   const filePaths = releaseContext.getFilePaths();
@@ -21,7 +19,7 @@ export default function verifyFiles(releaseContext) {
     const verifiedFilePaths = [];
 
     filePaths.forEach((filePath) => {
-      const fileVerified = verifyFile(filePath, releaseContext);
+      const fileVerified = releaseContext.verifyFile(filePath);
 
       if (fileVerified) {
         const verifiedFilePath = filePath;  ///

@@ -1,6 +1,7 @@
 "use strict";
 
 import loggingMixins from "../mixins/logging";
+import metaproofContextMixins from "../mixins/context/metaproof";
 
 class MetaproofContext {
   constructor(context, derived, metaAssertions) {
@@ -97,5 +98,6 @@ class MetaproofContext {
 }
 
 Object.assign(MetaproofContext.prototype, loggingMixins);
+Object.assign(MetaproofContext.prototype, metaproofContextMixins);
 
 export default MetaproofContext;

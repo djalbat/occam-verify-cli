@@ -1,41 +1,39 @@
 "use strict";
 
-import verifyEquality from "../verify/equality";
-import verifyTypeAssertion from "../verify/assertion/type";
-
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
-export default function verifyStatement(statementNode, context) {
+export default function verifyStatement(statementNode, context = this) {
   let statementVerified = false;
 
-  const statementString = nodeAsString(statementNode);
-
-  context.debug(`Verifying the '${statementString}' statement...`);
+  context.begin(statementNode);
 
   const equalityNode = equalityNodeQuery(statementNode),
+        statementString = nodeAsString(statementNode),
         typeAssertionNode = typeAssertionNodeQuery(statementNode);
+
+  context.debug(`Verifying the '${statementString}' statement...`);
 
   if (false) {
     ///
   } else if (equalityNode !== null) {
-    const equalityVerified = verifyEquality(equalityNode, context);
+    const equalityVerified = context.verifyEquality(equalityNode);
 
     statementVerified = equalityVerified; ///
   } else if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, context);
+    const typeAssertionVerified = context.verifyTypeAssertion(typeAssertionNode);
 
     statementVerified = typeAssertionVerified; ///
   } else {
     debugger
   }
 
-  if (statementVerified) {
-    context.info(`Verified the '${statementString}' statement.`);
-  }
+  statementVerified ?
+    context.complete(statementNode) :
+      context.halt(statementNode);
 
   return statementVerified;
 }

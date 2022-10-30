@@ -7,8 +7,10 @@ import { nodeAsString } from "../../utilities/string";
 
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
-export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context) {
+export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context = this) {
   let unqualifiedMetastatementVerified = false;
+
+  context.begin(unqualifiedMetastatementNode);
 
   const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
@@ -30,6 +32,10 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
 
     context.debug(`Verified the '${metastatementString}' unqualified metastatement.`);
   }
+
+  unqualifiedMetastatementVerified ?
+    context.complete(unqualifiedMetastatementNode) :
+      context.halt(unqualifiedMetastatementNode);
 
   return unqualifiedMetastatementVerified;
 }
