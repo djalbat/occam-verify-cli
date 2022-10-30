@@ -26,7 +26,7 @@ export default function verifyRule(ruleNode, context) {
 
   context = metaproofContext; ///
 
-  context.debug(`Verifying the '${labelsString}' rule...`, ruleNode);
+  context.debug(`Verifying the '${labelsString}' rule...`);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, context);
@@ -69,7 +69,7 @@ export default function verifyRule(ruleNode, context) {
     }
 
     if (ruleVerified) {
-      context.info(`Verified the '${labelsString}' rule.`, ruleNode);
+      context.info(`Verified the '${labelsString}' rule.`);
     }
   }
 

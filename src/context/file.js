@@ -1,16 +1,16 @@
 "use strict";
 
-import { levels } from "necessary";
 import { rewriteNodes } from "occam-grammar-utilities";
+
+import loggingMixins from "../mixins/logging";
 
 import { push } from "../utilities/array";
 import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "../utilities/tokens";
 
-const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL } = levels;
-
-export default class FileContext {
-  constructor(filePath, tokens, node, rules, types, axioms, variables, combinators, constructors, releaseContext) {
+class FileContext {
+  constructor(filePath, context, tokens, node, rules, types, axioms, variables, combinators, constructors) {
     this.filePath = filePath;
+    this.context = context;
     this.tokens = tokens;
     this.node = node;
     this.rules = rules;
@@ -19,11 +19,14 @@ export default class FileContext {
     this.variables = variables;
     this.combinators = combinators;
     this.constructors = constructors;
-    this.releaseContext = releaseContext;
   }
 
   getFilePath() {
     return this.filePath;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getTokens() {
@@ -40,7 +43,7 @@ export default class FileContext {
     ];
 
     if (bubble) {
-      const releaseContextRules = this.releaseContext.getRules();
+      const releaseContextRules = this.context.getRules();
 
       push(rules, releaseContextRules);
     }
@@ -54,7 +57,7 @@ export default class FileContext {
     ];
 
     if (bubble) {
-      const releaseContextTypes = this.releaseContext.getTypes();
+      const releaseContextTypes = this.context.getTypes();
 
       push(types, releaseContextTypes);
     }
@@ -68,7 +71,7 @@ export default class FileContext {
     ];
 
     if (bubble) {
-      const releaseContextAxioms = this.releaseContext.getAxioms();
+      const releaseContextAxioms = this.context.getAxioms();
 
       push(axioms, releaseContextAxioms);
     }
@@ -99,7 +102,7 @@ export default class FileContext {
     ];
 
     if (bubble) {
-      const releaseContextCombinators = this.releaseContext.getCombinators();
+      const releaseContextCombinators = this.context.getCombinators();
 
       push(combinators, releaseContextCombinators);
     }
@@ -113,7 +116,7 @@ export default class FileContext {
     ];
 
     if (bubble) {
-      const releaseContextConstructors = this.releaseContext.getConstructors();
+      const releaseContextConstructors = this.context.getConstructors();
 
       push(constructors, releaseContextConstructors);
     }
@@ -122,7 +125,7 @@ export default class FileContext {
   }
 
   getReleaseContext() {
-    return this.releaseContext;
+    return this.context;
   }
 
   getMetaAssertions() {
@@ -245,23 +248,25 @@ export default class FileContext {
     this.constructors.push(constructor);
   }
 
-  trace(message, node) { this.log(node, TRACE_LEVEL, message); }
-
-  debug(message, node) { this.log(node, DEBUG_LEVEL, message); }
-
-  info(message, node) { this.log(node, INFO_LEVEL, message); }
-
-  warning(message, node) { this.log(node, WARNING_LEVEL, message); }
-
-  error(message, node) { this.log(node, ERROR_LEVEL, message); }
-
-  fatal(message, node) { this.log(node, FATAL_LEVEL, message); }
-
-  log(node, level, message) {
+  halt(node) {
     const leastLineIndex = leastLineIndexFromNodeAndTokens(node, this.tokens),
           greatestLineIndex = greatestLineIndexFromNodeAndTokens(node, this.tokens);
 
-    this.releaseContext.log(level, message, this.filePath, leastLineIndex, greatestLineIndex);
+    this.context.halt(this.filePath, leastLineIndex, greatestLineIndex);
+  }
+
+  begin(node) {
+    const leastLineIndex = leastLineIndexFromNodeAndTokens(node, this.tokens),
+          greatestLineIndex = greatestLineIndexFromNodeAndTokens(node, this.tokens);
+
+    this.context.begin(this.filePath, leastLineIndex, greatestLineIndex);
+  }
+
+  complete(node) {
+    const leastLineIndex = leastLineIndexFromNodeAndTokens(node, this.tokens),
+          greatestLineIndex = greatestLineIndexFromNodeAndTokens(node, this.tokens);
+
+    this.context.complete(this.filePath, leastLineIndex, greatestLineIndex);
   }
 
   static fromReleaseContextAndFilePath(releaseContext, filePath) {
@@ -272,14 +277,19 @@ export default class FileContext {
 
     rewriteNodes(node);
 
-    const rules = [],
+    const context = releaseContext, ///
+          rules = [],
           types = [],
           axioms = [],
           variables = [],
           combinators = [],
           constructors = [],
-          fileContext = new FileContext(filePath, tokens, node, rules, types, axioms, variables, combinators, constructors, releaseContext);
+          fileContext = new FileContext(filePath, context, tokens, node, rules, types, axioms, variables, combinators, constructors);
 
     return fileContext;
   }
 }
+
+Object.assign(FileContext.prototype, loggingMixins);
+
+export default FileContext;

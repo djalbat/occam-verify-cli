@@ -4,6 +4,8 @@ const { arrayUtilities } = require("necessary"),
       { ReleaseContext } = require("../../lib/index"),
       { fileSystemUtilities } = require("occam-file-system");
 
+const callbacks = require("../callbacks");
+
 const { log } = require("../utilities/logging"),
       { PERIOD } = require("../constants");
 
@@ -17,7 +19,7 @@ function createReleaseContext(name, shortenedVersion, releaseContextMap, depende
     const release = createRelease(name);
 
     if (release !== null) {
-      releaseContext = ReleaseContext.fromLogAndRelease(log, release);
+      releaseContext = ReleaseContext.fromLogReleaseAndCallbacks(log, release, callbacks);
     }
   }
 

@@ -28,7 +28,7 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
   if (unqualifiedMetastatementVerified) {
     const metastatementString = nodeAsString(metastatementNode);
 
-    context.debug(`Verified the '${metastatementString}' unqualified metastatement.`, unqualifiedMetastatementNode);
+    context.debug(`Verified the '${metastatementString}' unqualified metastatement.`);
   }
 
   return unqualifiedMetastatementVerified;

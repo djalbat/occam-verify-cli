@@ -4,16 +4,8 @@ const { levels } = require("necessary");
 
 const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL } = levels;
 
-function log(level, message, filePath = null, leastLineIndex = null, greatestLineIndex = null) {
-  if (filePath === null) {
-    console.log(`(${level}) ${message}`)
-  } else if (leastLineIndex === greatestLineIndex) {
-    const lineIndex = leastLineIndex; ///
-
-    console.log(`(${level}) '${filePath}' : [${lineIndex}] - ${message}`);
-  } else  {
-    console.log(`(${level}) '${filePath}' : [${leastLineIndex}-${greatestLineIndex}] - ${message}`);
-  }
+function log(level, message) {
+  console.log(`(${level}) ${message}`)
 }
 
 function trace(message) { log(TRACE_LEVEL, message); }

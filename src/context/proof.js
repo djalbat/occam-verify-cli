@@ -1,6 +1,8 @@
 "use strict";
 
-export default class ProofContext {
+import loggingMixins from "../mixins/logging";
+
+class ProofContext {
   constructor(context, derived, variables, statementNodes) {
     this.context = context;
     this.derived = derived;
@@ -80,17 +82,11 @@ export default class ProofContext {
     this.statementNodes.push(statementNode);
   }
 
-  trace(message, node) { this.context.trace(message, node); }
+  halt(node) { this.context.halt(node); }
 
-  debug(message, node) { this.context.debug(message, node); }
+  begin(node) { this.context.begin(node); }
 
-  info(message, node) { this.context.info(message, node); }
-
-  warning(message, node) { this.context.warning(message, node); }
-
-  error(message, node) { this.context.error(message, node); }
-
-  fatal(message, node) { this.context.fatal(message, node); }
+  complete(node) { this.context.complete(node); }
 
   static fromContext(context) {
     const derived = false,
@@ -101,3 +97,7 @@ export default class ProofContext {
     return proofContext;
   }
 }
+
+Object.assign(ProofContext.prototype, loggingMixins);
+
+export default ProofContext;

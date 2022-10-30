@@ -2,49 +2,67 @@
 
 import verifyFiles from "../verify/files";
 
-export default function verifyRelease(name, releaseContextMap, releaseContexts = []) {
+export default function verifyRelease(name, releaseContextMap) {
   const releaseContext = releaseContextMap[name],
-        verified = releaseContext.isVerified()
+        verified = releaseContext.isVerified();
 
   let releaseVerified = verified; ///
 
   if (!releaseVerified) {
     releaseContext.debug(`Verifying the '${name}' package...`);
 
-    const dependencies = releaseContext.getDependencies(),
-          dependencyReleasesVVerified = dependencies.everyDependency((dependency) => {
-            const name = dependency.getName(),
-                  releaseVerified = verifyRelease(name, releaseContextMap, releaseContexts);
-
-            if (releaseVerified) {
-              return true;
-            }
-          });
+    const dependencyReleasesVVerified = verifyDependencyReleases(releaseContext, releaseContextMap);
 
     if (dependencyReleasesVVerified) {
-      const releaseContexts = dependencies.mapDependency((dependency) => {
-              const name = dependency.getName(),
-                    releaseContext = releaseContextMap[name];
+      const releaseFilesVerified = verifyReleaseFiles(releaseContext, releaseContextMap);
 
-              return releaseContext;
-            }),
-            dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependencies, releaseContextMap);
-
-      releaseContext.initialise(releaseContexts, dependencyReleaseContexts);
-
-      const filesVerified = verifyFiles(releaseContext);
-
-      releaseVerified = filesVerified;  ///
-
-      if (releaseVerified) {
-        releaseContexts.push(releaseContext);
-
-        releaseContext.info(`Verified the '${name}' package.`);
+      if (releaseFilesVerified) {
+        releaseVerified = true;
       }
     }
   }
 
+  if (releaseVerified) {
+    const verified = true;
+
+    releaseContext.setVerified(verified);
+
+    releaseContext.info(`Verified the '${name}' package.`);
+  }
+
   return releaseVerified;
+}
+
+function verifyReleaseFiles(releaseContext, releaseContextMap) {
+  const dependencies = releaseContext.getDependencies(),
+        releaseContexts = dependencies.mapDependency((dependency) => {
+          const name = dependency.getName(),
+                releaseContext = releaseContextMap[name];
+
+          return releaseContext;
+        }),
+        dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependencies, releaseContextMap);
+
+  releaseContext.initialise(releaseContexts, dependencyReleaseContexts);
+
+  const filesVerified = verifyFiles(releaseContext),
+        releaseFilesVerified = filesVerified; ///
+
+  return releaseFilesVerified;
+}
+
+function verifyDependencyReleases(releaseContext, releaseContextMap) {
+  const dependencies = releaseContext.getDependencies(),
+        dependencyReleasesVVerified = dependencies.everyDependency((dependency) => {
+          const name = dependency.getName(),
+                releaseVerified = verifyRelease(name, releaseContextMap);
+
+          if (releaseVerified) {
+            return true;
+          }
+        });
+
+  return dependencyReleasesVVerified;
 }
 
 function retrieveDependencyReleaseContexts(dependencies, releaseContextMap, dependencyReleaseContexts = []) {

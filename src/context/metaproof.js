@@ -1,6 +1,8 @@
 "use strict";
 
-export default class MetaproofContext {
+import loggingMixins from "../mixins/logging";
+
+class MetaproofContext {
   constructor(context, derived, metaAssertions) {
     this.context = context;
     this.derived = derived;
@@ -46,6 +48,18 @@ export default class MetaproofContext {
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
+  isVariablePresentByVariableName(variableName) { return this.context.isVariablePresentByVariableName(variableName); }
+
+  setDerived(derived) {
+    this.derived = derived;
+  }
+
+  addRule(rule) { this.context.addRule(rule); }
+
+  addMetaAssertion(metaAssertion) {
+    this.metaAssertions.push(metaAssertion);
+  }
+
   matchMetaAssertion(metaAssertion) {
     let metaAssertionMatches;
 
@@ -67,29 +81,11 @@ export default class MetaproofContext {
     return metaAssertionMatches;
   }
 
-  isVariablePresentByVariableName(variableName) { return this.context.isVariablePresentByVariableName(variableName); }
+  halt(node) { this.context.halt(node); }
 
-  setDerived(derived) {
-    this.derived = derived;
-  }
+  begin(node) { this.context.begin(node); }
 
-  addRule(rule) { this.context.addRule(rule); }
-
-  addMetaAssertion(metaAssertion) {
-    this.metaAssertions.push(metaAssertion);
-  }
-
-  trace(message, node) { this.context.trace(message, node); }
-
-  debug(message, node) { this.context.debug(message, node); }
-
-  info(message, node) { this.context.info(message, node); }
-
-  warning(message, node) { this.context.warning(message, node); }
-
-  error(message, node) { this.context.error(message, node); }
-
-  fatal(message, node) { this.context.fatal(message, node); }
+  complete(node) { this.context.complete(node); }
 
   static fromContext(context) {
     const derived = false,
@@ -99,3 +95,7 @@ export default class MetaproofContext {
     return metaproofContext;
   }
 }
+
+Object.assign(MetaproofContext.prototype, loggingMixins);
+
+export default MetaproofContext;

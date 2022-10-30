@@ -17,7 +17,7 @@ export default function verifyTypeAssertion(typeAssertionNode, context) {
         typePresent = context.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    context.error(`The ${typeName} type is not present.`, typeAssertionNode);
+    context.error(`The ${typeName} type is not present.`);
   } else {
     const derived = context.isDerived();
 
@@ -37,7 +37,7 @@ export default function verifyTypeAssertion(typeAssertionNode, context) {
               value = firstValue;
 
         if (value !== undefined) {
-          context.error(`The value of the ${variableName} variable is not undefined.`, typeAssertionNode);
+          context.error(`The value of the ${variableName} variable is not undefined.`);
         } else {
           const type = context.findTypeByTypeName(typeName),
                 firstType = first(types),
@@ -45,7 +45,7 @@ export default function verifyTypeAssertion(typeAssertionNode, context) {
                 typeSubTypeOfVariableType = type.isSubTypeOf(variableType);
 
           if (!typeSubTypeOfVariableType) {
-            context.error(`The asserted type of the ${variableName} variable is not a sub-type of its declared type.`, typeAssertionNode);
+            context.error(`The asserted type of the ${variableName} variable is not a sub-type of its declared type.`);
           } else {
             const name = variableName,  ///
                   variable = Variable.fromTypeAndName(type, name);

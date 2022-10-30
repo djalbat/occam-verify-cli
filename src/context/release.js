@@ -2,8 +2,6 @@
 
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
-import logMixins from "../mixins/log";
-
 import { push } from "../utilities/array";
 import { customGrammarFromRelease, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
@@ -11,12 +9,12 @@ const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 class ReleaseContext {
-  constructor(log, release, verified, customGrammar, fileContexts, florenceLexer, florenceParser, releaseContexts) {
+  constructor(log, release, callbacks, verified, customGrammar, fileContexts, florenceLexer, florenceParser, releaseContexts) {
     this.log = log;
     this.release = release;
+    this.callbacks = callbacks;
     this.verified = verified;
     this.customGrammar = customGrammar;
-
     this.fileContexts = fileContexts;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
@@ -29,6 +27,10 @@ class ReleaseContext {
 
   getRelease() {
     return this.release;
+  }
+
+  getCallbacks() {
+    return this.callbacks;
   }
 
   isVerified() {
@@ -206,9 +208,31 @@ class ReleaseContext {
     this.fileContexts.push(fileContext);
   }
 
+  setVerified(verified) {
+    this.verified = verified;
+  }
+
   tokenise(content) { return this.florenceLexer.tokenise(content); }
 
   parse(tokens) { return this.florenceParser.parse(tokens); }
+
+  trace(message) { this.log.trace(message); }
+
+  debug(message) { this.log.debug(message); }
+
+  info(message) { this.log.info(message); }
+
+  warning(message) { this.log.warning(message); }
+
+  error(message) { this.log.error(message); }
+
+  fatal(message) { this.log.fatal(message); }
+
+  halt(filePath, leastLineIndex, greatestLineIndex) { this.callbacks.halt(filePath, leastLineIndex, greatestLineIndex); }
+
+  begin(filePath, leastLineIndex, greatestLineIndex) { this.callbacks.begin(filePath, leastLineIndex, greatestLineIndex); }
+
+  complete(filePath, leastLineIndex, greatestLineIndex) { this.callbacks.complete(filePath, leastLineIndex, greatestLineIndex); }
 
   initialise(releaseContexts, dependencyReleaseContexts) {
     const releaseContext = this;  ///
@@ -224,19 +248,17 @@ class ReleaseContext {
     this.releaseContexts = releaseContexts;
   }
 
-  static fromLogAndRelease(log, release, ...remainingArguments) {
+  static fromLogReleaseAndCallbacks(log, release, callbacks, ...remainingArguments) {
     const verified = false,
           customGrammar = customGrammarFromRelease(release),
           fileContexts = [],
           florenceLexer = null,
           florenceParser = null,
           releaseContexts = [],
-          releaseContext = new ReleaseContext(log, release, verified, customGrammar, fileContexts, florenceLexer, florenceParser, releaseContexts, ...remainingArguments);
+          releaseContext = new ReleaseContext(log, release, callbacks, verified, customGrammar, fileContexts, florenceLexer, florenceParser, releaseContexts, ...remainingArguments);
 
     return releaseContext;
   }
 }
-
-Object.assign(ReleaseContext.prototype, logMixins);
 
 export default ReleaseContext;

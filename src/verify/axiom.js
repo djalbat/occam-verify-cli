@@ -17,7 +17,7 @@ export default function verifyAxiom(axiomNode, context) {
   const labelNodes = labelNodesQuery(axiomNode),
         labelsString = nodesAsString(labelNodes);
 
-  context.debug(`Verifying the '${labelsString}' axiom...`, axiomNode);
+  context.debug(`Verifying the '${labelsString}' axiom...`);
 
   const proofContext = ProofContext.fromContext(context);
 
@@ -61,7 +61,7 @@ export default function verifyAxiom(axiomNode, context) {
   }
 
   if (axiomVerified) {
-    context.info(`Verified the '${labelsString}' axiom.`, axiomNode);
+    context.info(`Verified the '${labelsString}' axiom.`);
   }
 
   return axiomVerified;

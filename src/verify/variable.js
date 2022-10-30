@@ -11,7 +11,7 @@ export default function verifyVariable(variableNode, typeNode, context) {
         variablePresent = context.isVariablePresentByVariableName(variableName);
 
   if (variablePresent) {
-    context.error(`The variable '${variableName}' is already present.`, variableNode);
+    context.error(`The variable '${variableName}' is already present.`);
   } else {
     let variable = null;
 
@@ -26,7 +26,7 @@ export default function verifyVariable(variableNode, typeNode, context) {
       const type = context.findTypeByTypeName(typeName);
 
       if (type === null) {
-        context.error(`The '${variableName}' variable's '${typeName}' type is missing.`, variableNode);
+        context.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
       } else {
         const name = variableName;  ///
 
@@ -41,7 +41,7 @@ export default function verifyVariable(variableNode, typeNode, context) {
 
       variableVerified = true;
 
-      context.info(`Verified the '${variableString}' variable.`, variableNode);
+      context.info(`Verified the '${variableString}' variable.`);
     }
   }
 

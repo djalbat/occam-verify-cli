@@ -26,7 +26,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
   if (qualifiedMetastatementVerified) {
     const metastatementString = nodeAsString(metastatementNode);
 
-    context.debug(`Verified the '${metastatementString}' qualified metastatement.`, qualifiedMetastatementNode);
+    context.debug(`Verified the '${metastatementString}' qualified metastatement.`);
   }
 
   return qualifiedMetastatementVerified;

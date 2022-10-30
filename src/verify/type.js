@@ -11,7 +11,7 @@ export default function verifyType(typeNode, superTypeNode, context) {
         typePresent = context.isTypePresentByTypeName(typeName);
 
   if (typePresent) {
-    context.error(`The type '${typeName}' is already present.`, typeNode);
+    context.error(`The type '${typeName}' is already present.`);
   } else {
     const superTypeName = typeNameFromTypeNode(superTypeNode);
 
@@ -23,12 +23,12 @@ export default function verifyType(typeNode, superTypeNode, context) {
 
       typeVerified = true;
 
-      context.info(`Verified the '${typeString}' type.`, typeNode);
+      context.info(`Verified the '${typeString}' type.`);
     } else {
       const superType = context.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
-        context.error(`The super-type '${superTypeName}' is missing.`, typeNode);
+        context.error(`The super-type '${superTypeName}' is missing.`);
       } else {
         const type = Type.fromTypeNameAndSuperType(typeName, superType),
               typeString = type.asString();
@@ -37,7 +37,7 @@ export default function verifyType(typeNode, superTypeNode, context) {
 
         typeVerified = true;
 
-        context.info(`Verified the '${typeString}' type.`, typeNode);
+        context.info(`Verified the '${typeString}' type.`);
       }
     }
   }
