@@ -1,12 +1,15 @@
 "use strict";
 
+import verifyMetaDerivation from "../verify/metaDerivation";
+import verifyQualifiedMetastatement from "../verify/metastatement/qualified";
+
 import { nodeQuery } from "../utilities/query";
 
 const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
       qualifiedStatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement!"),
       metaProofMetastatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement/metastatement!");
 
-export default function verifyMetaproof(metaproofNode, conclusion, context = this) {
+export default function verifyMetaproof(metaproofNode, conclusion, context) {
   let metaproofVerified = false;
 
   context.begin(metaproofNode);
@@ -16,12 +19,12 @@ export default function verifyMetaproof(metaproofNode, conclusion, context = thi
   let metaDerivationVerified = true;
 
   if (metaDerivationNode !== null) {
-    metaDerivationVerified = context.verifyMetaDerivation(metaDerivationNode);
+    metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, context);
   }
 
   if (metaDerivationVerified) {
     const qualifiedMetastatementNode = qualifiedStatementNodeQuery(metaproofNode),
-          qualifiedMetastatementVerified = context.verifyQualifiedMetastatement(qualifiedMetastatementNode);
+          qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
 
     if (qualifiedMetastatementVerified) {
       const metastatementNode = conclusion.getMetastatementNode(),

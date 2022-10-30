@@ -1,18 +1,20 @@
 "use strict";
 
+import verifyVariable from "../../verify/variable";
+
 import { nodeQuery } from "../../utilities/query";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
       variableNodeQuery = nodeQuery("/variableDeclaration/variable");
 
-export default function verifyVariableDeclaration(variableDeclarationNode, context = this) {
+export default function verifyVariableDeclaration(variableDeclarationNode, context) {
   let variableDeclarationVerified;
 
   context.begin(variableDeclarationNode);
 
   const typeNode = typeNodeQuery(variableDeclarationNode),
         variableNode = variableNodeQuery(variableDeclarationNode),
-        variableVVerified = context.verifyVariable(variableNode, typeNode);
+        variableVVerified = verifyVariable(variableNode, typeNode, context);
 
   variableDeclarationVerified = variableVVerified;  ///
 

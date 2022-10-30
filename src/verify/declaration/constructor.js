@@ -1,18 +1,20 @@
 "use strict";
 
+import verifyTermAsConstructor from "../../verify/termAsConstructor";
+
 import { nodeQuery } from "../../utilities/query";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
 
-export default function verifyConstructorDeclaration(constructorDeclarationNode, context = this) {
+export default function verifyConstructorDeclaration(constructorDeclarationNode, context) {
   let constructorDeclarationVerified;
 
   context.begin(constructorDeclarationNode);
 
   const termNode = termNodeQuery(constructorDeclarationNode),
         typeNode = typeNodeQuery(constructorDeclarationNode),
-        termVerifiedAsConstructor = context.verifyTermAsConstructor(termNode, typeNode);
+        termVerifiedAsConstructor = verifyTermAsConstructor(termNode, typeNode, context);
 
   constructorDeclarationVerified = termVerifiedAsConstructor; ///
 

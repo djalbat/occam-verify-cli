@@ -1,5 +1,7 @@
 "use strict";
 
+import verifyStatement from "../../verify/statement";
+
 import { nodeQuery } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
@@ -10,7 +12,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, context
   context.begin(qualifiedStatementNode);
 
   const statementNode = statementNodeQuery(qualifiedStatementNode),
-        statementVerified = context.verifyStatement(statementNode);
+        statementVerified = verifyStatement(statementNode, context);
 
   qualifiedStatementVerified = statementVerified; ///
 

@@ -2,15 +2,13 @@
 
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
-import releaseContextMixins from "../mixins/context/release";
-
 import { push } from "../utilities/array";
 import { customGrammarFromRelease, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
-class ReleaseContext {
+export default class ReleaseContext {
   constructor(log, release, callbacks, verified, customGrammar, fileContexts, florenceLexer, florenceParser, releaseContexts) {
     this.log = log;
     this.release = release;
@@ -230,10 +228,6 @@ class ReleaseContext {
 
   fatal(message) { this.log.fatal(message); }
 
-  verify() {
-
-  }
-
   halt(filePath, leastLineIndex, greatestLineIndex) { this.callbacks.halt(filePath, leastLineIndex, greatestLineIndex); }
 
   begin(filePath, leastLineIndex, greatestLineIndex) { this.callbacks.begin(filePath, leastLineIndex, greatestLineIndex); }
@@ -266,7 +260,3 @@ class ReleaseContext {
     return releaseContext;
   }
 }
-
-Object.assign(ReleaseContext.prototype, releaseContextMixins);
-
-export default ReleaseContext;

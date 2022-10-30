@@ -1,16 +1,18 @@
 "use strict";
 
+import verifyStatementAsCombinator from "../../verify/statementAsCombinator";
+
 import { nodeQuery } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
-export default function verifyCombinatorDeclaration(combinatorDeclarationNode, context = this) {
+export default function verifyCombinatorDeclaration(combinatorDeclarationNode, context) {
   let combinatorDeclarationVerified;
 
   context.begin(combinatorDeclarationNode);
 
   const statementNode = statementNodeQuery(combinatorDeclarationNode),
-        statementVerifiedAsCombinator = context.verifyStatementAsCombinator(statementNode);
+        statementVerifiedAsCombinator = verifyStatementAsCombinator(statementNode, context);
 
   combinatorDeclarationVerified = statementVerifiedAsCombinator; ///
 

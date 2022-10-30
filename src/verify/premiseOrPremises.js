@@ -2,6 +2,7 @@
 
 import Premise from "../premise";
 import MetaAssertion from "../metaAssertion";
+import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
@@ -16,7 +17,7 @@ export default function verifyPremiseOrPremises(premiseOrPremisesNode, premises,
   const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(premiseOrPremisesNode);
 
   premiseOrPremisesVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
-    const unqualifiedMetastatementVerified = context.verifyUnqualifiedMetastatement(unqualifiedMetastatementNode);
+    const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
 
     if (unqualifiedMetastatementVerified) {
       const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),

@@ -1,13 +1,14 @@
 "use strict";
 
 import Conclusion from "../conclusion";
+import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
 
 const metastatementNodeQuery = nodeQuery("/*/metastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/conclusion/unqualifiedMetastatement!");
 
-export default function verifyConclusion(conclusionNode, conclusions, context = this) {
+export default function verifyConclusion(conclusionNode, conclusions, context) {
   let conclusionVerified = false;
 
   context.begin(conclusionNode);
@@ -15,7 +16,7 @@ export default function verifyConclusion(conclusionNode, conclusions, context = 
   const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode);
 
   if (unqualifiedMetastatementNode !== null) {
-    const unqualifiedMetastatementVerified = context.verifyUnqualifiedMetastatement(unqualifiedMetastatementNode);
+    const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
 
     if (unqualifiedMetastatementVerified) {
       const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),

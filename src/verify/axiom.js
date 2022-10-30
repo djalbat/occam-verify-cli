@@ -1,6 +1,8 @@
 "use strict";
 
 import ProofContext from "../context/proof";
+import verifyUnqualifiedStatement from "../verify/statement/unqualified";
+import verifyIndicativeConditional from "../verify/indicativeConditional";
 
 import { first, second } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
@@ -11,7 +13,7 @@ const labelNodesQuery = nodesQuery("/axiom/label"),
       unqualifiedStatementNodeQuery = nodeQuery("/axiom/unqualifiedStatement!"),
       indicativeConditionalNodeQuery = nodeQuery("/axiom/indicativeConditional!");
 
-export default function verifyAxiom(axiomNode, context = this) {
+export default function verifyAxiom(axiomNode, context) {
   let axiomVerified = false;
 
   context.begin(axiomNode);
@@ -22,10 +24,12 @@ export default function verifyAxiom(axiomNode, context = this) {
         unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
         indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
+  context = proofContext; ///
+
   context.debug(`Verifying the '${labelsString}' axiom...`);
 
   if (unqualifiedStatementNode !== null) {
-    const unqualifiedStatementVerified = proofContext.verifyUnqualifiedStatement(unqualifiedStatementNode);
+    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context);
 
     if (unqualifiedStatementVerified) {
       const statementNode = statementNodeQuery(unqualifiedStatementNode),
@@ -40,7 +44,7 @@ export default function verifyAxiom(axiomNode, context = this) {
 
   if (indicativeConditionalNode !== null) {
     const statementNodes = [],
-          indicativeConditionalVerified = proofContext.verifyIndicativeConditional(indicativeConditionalNode, statementNodes);
+          indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, statementNodes, context);
 
     if (indicativeConditionalVerified !== null) {
       const labels = labelsString,  ///

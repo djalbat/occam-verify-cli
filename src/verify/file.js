@@ -1,14 +1,16 @@
 "use strict";
 
 import FileContext from "../context/file";
+import verifyTopLevelDeclarations from "../verify/topLevelDeclarations";
 
-export default function verifyFile(filePath, releaseContext = this) {
+export default function verifyFile(filePath, releaseContext) {
   let fileVerified;
 
   releaseContext.debug(`Verifying the '${filePath}' file...`);
 
   const fileContext = FileContext.fromReleaseContextAndFilePath(releaseContext, filePath),
-        topLevelDeclarationsVerified = fileContext.verifyTopLevelDeclarations()
+        context = fileContext,  ///
+        topLevelDeclarationsVerified = verifyTopLevelDeclarations(fileContext, context);
 
   fileVerified = topLevelDeclarationsVerified;  ///
 

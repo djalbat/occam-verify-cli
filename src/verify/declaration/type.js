@@ -1,11 +1,13 @@
 "use strict";
 
+import verifyType from "../../verify/type";
+
 import { nodeQuery } from "../../utilities/query";
 
 const firstTypeNodeQuery = nodeQuery("/typeDeclaration/type[0]"),
       secondTypeNodeQuery = nodeQuery("/typeDeclaration/type[1]");
 
-export default function verifyTypeDeclaration(typeDeclarationNode, context = this) {
+export default function verifyTypeDeclaration(typeDeclarationNode, context) {
   let typeDeclarationVerified;
 
   context.begin(typeDeclarationNode);
@@ -15,7 +17,7 @@ export default function verifyTypeDeclaration(typeDeclarationNode, context = thi
         typeNode = firstTypeNode, ///
         superTypeNode = secondTypeNode; ///
 
-  const typeVerified = context.verifyType(typeNode, superTypeNode);
+  const typeVerified = verifyType(typeNode, superTypeNode, context);
 
   typeDeclarationVerified = typeVerified; ///
 

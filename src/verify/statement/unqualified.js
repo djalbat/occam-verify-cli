@@ -1,5 +1,7 @@
 "use strict";
 
+import verifyStatement from "../../verify/statement";
+
 import { nodeQuery } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
@@ -12,7 +14,7 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, con
   const statementNode = statementNodeQuery(unqualifiedStatementNode);
 
   if (statementNode !== null) {
-    const statementVerified = context.verifyStatement(statementNode);
+    const statementVerified = verifyStatement(statementNode, context);
 
     if (statementVerified) {
       context.addStatementNode(statementNode);

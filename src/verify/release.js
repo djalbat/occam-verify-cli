@@ -1,5 +1,7 @@
 "use strict";
 
+import verifyFiles from "../verify/files";
+
 export default function verifyRelease(name, releaseContextMap) {
   const releaseContext = releaseContextMap[name],
         verified = releaseContext.isVerified();
@@ -43,7 +45,7 @@ function verifyReleaseFiles(releaseContext, releaseContextMap) {
 
   releaseContext.initialise(releaseContexts, dependencyReleaseContexts);
 
-  const filesVerified = releaseContext.verifyFiles(),
+  const filesVerified = verifyFiles(releaseContext),
         releaseFilesVerified = filesVerified; ///
 
   return releaseFilesVerified;

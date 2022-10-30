@@ -1,7 +1,6 @@
 "use strict";
 
 import loggingMixins from "../mixins/logging";
-import proofContextMixins from "../mixins/context/proof";
 
 class ProofContext {
   constructor(context, derived, variables, statementNodes) {
@@ -100,6 +99,5 @@ class ProofContext {
 }
 
 Object.assign(ProofContext.prototype, loggingMixins);
-Object.assign(ProofContext.prototype, proofContextMixins);
 
 export default ProofContext;
