@@ -1,16 +1,15 @@
 "use strict";
 
-const { arrayUtilities } = require("necessary"),
-      { ReleaseContext } = require("../../lib/index"),
-      { fileSystemUtilities } = require("occam-file-system");
+const { fileSystemUtilities } = require("occam-file-system"),
+      { ReleaseContext, verificationUtilities } = require("../../lib/index");
 
 const callbacks = require("../callbacks");
 
 const { log } = require("../utilities/logging"),
       { PERIOD } = require("../constants");
 
-const { first } = arrayUtilities,
-      { loadRelease } = fileSystemUtilities;
+const { loadRelease } = fileSystemUtilities,
+      { checkCyclicDependencyExists, checkReleaseMatchesShortenedVersion} = verificationUtilities;
 
 function createReleaseContext(name, shortenedVersion, releaseContextMap, dependentNames = []) {
   let releaseContext = releaseContextMap[name] || null;
@@ -54,21 +53,6 @@ function createRelease(name) {
   return release;
 }
 
-function checkCyclicDependencyExists(name, dependentNames, releaseContext) {
-  const dependentNamesIncludesName = dependentNames.includes(name),
-        cyclicDependencyExists = dependentNamesIncludesName;  ///
-
-  if (cyclicDependencyExists) {
-    const firstDependentName = first(dependentNames),
-          dependencyNames = dependentNames.concat(firstDependentName),
-          dependencyNamesString = dependencyNames.join(`' -> '`);
-
-    releaseContext.error(`There is a cyclic dependency: '${dependencyNamesString}'.`);
-  }
-
-  return cyclicDependencyExists;
-}
-
 function createDependencyReleaseContexts(releaseContext, releaseContextMap, dependentNames = []) {
   const name = releaseContext.getName(),
         dependencies = releaseContext.getDependencies();
@@ -90,20 +74,4 @@ function createDependencyReleaseContexts(releaseContext, releaseContextMap, depe
   });
 
   return dependencyReleaseContextsCreated;
-}
-
-function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion) {
-  const release = releaseContext.getRelease(),
-        releaseMatchesShortedVersion = release.matchShortenedVersion(shortenedVersion);
-
-  if (!releaseMatchesShortedVersion) {
-    const name = releaseContext.getName(),
-          version = releaseContext.getVersion(),
-          versionString = version.toString(),
-          shortenedVersionString = shortenedVersion.toString();
-
-    releaseContext.error(`The '${name}' package's version of ${versionString} does not match the dependency's shortened version of ${shortenedVersionString}.`);
-  }
-
-  return releaseMatchesShortedVersion;
 }
