@@ -5,28 +5,28 @@ import Type from "../type";
 import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode } from "../utilities/query";
 
-export default function verifyType(typeNode, superTypeNode, context = this) {
+export default function verifyType(typeNode, superTypeNode, fileContext) {
   let typeVerified = false;
 
-  context.begin(typeNode);
+  fileContext.begin(typeNode);
 
   let type = null;
 
   const typeName = typeNameFromTypeNode(typeNode),
-        typePresent = context.isTypePresentByTypeName(typeName);
+        typePresent = fileContext.isTypePresentByTypeName(typeName);
 
   if (typePresent) {
-    context.error(`The type '${typeName}' is already present.`);
+    fileContext.error(`The type '${typeName}' is already present.`);
   } else {
     const superTypeName = typeNameFromTypeNode(superTypeNode);
 
     if (superTypeName === null) {
       type = Type.fromTypeName(typeName);
     } else {
-      const superType = context.findTypeByTypeName(superTypeName);
+      const superType = fileContext.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
-        context.error(`The super-type '${superTypeName}' is missing.`);
+        fileContext.error(`The super-type '${superTypeName}' is missing.`);
       } else {
         type = Type.fromTypeNameAndSuperType(typeName, superType);
       }
@@ -36,16 +36,16 @@ export default function verifyType(typeNode, superTypeNode, context = this) {
   if (type !== null) {
     const typeString = nodeAsString(typeNode);
 
-    context.info(`Verified the '${typeString}' type.`);
+    fileContext.info(`Verified the '${typeString}' type.`);
 
-    context.addType(type);
+    fileContext.addType(type);
 
     typeVerified = true;
   }
 
   typeVerified ?
-    context.complete(typeNode):
-      context.halt(typeNode);
+    fileContext.complete(typeNode):
+      fileContext.halt(typeNode);
 
   return typeVerified;
 }

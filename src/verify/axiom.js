@@ -13,30 +13,28 @@ const labelNodesQuery = nodesQuery("/axiom/label"),
       unqualifiedStatementNodeQuery = nodeQuery("/axiom/unqualifiedStatement!"),
       indicativeConditionalNodeQuery = nodeQuery("/axiom/indicativeConditional!");
 
-export default function verifyAxiom(axiomNode, context) {
+export default function verifyAxiom(axiomNode, fileContext) {
   let axiomVerified = false;
 
-  context.begin(axiomNode);
+  fileContext.begin(axiomNode);
 
   const labelNodes = labelNodesQuery(axiomNode),
         labelsString = nodesAsString(labelNodes),
-        proofContext = ProofContext.fromContext(context),
+        proofContext = ProofContext.fromFileContext(fileContext),
         unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
         indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
-  context = proofContext; ///
-
-  context.debug(`Verifying the '${labelsString}' axiom...`);
+  fileContext.debug(`Verifying the '${labelsString}' axiom...`);
 
   if (unqualifiedStatementNode !== null) {
-    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context);
+    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
 
     if (unqualifiedStatementVerified) {
       const statementNode = statementNodeQuery(unqualifiedStatementNode),
             labels = labelsString,  ///
             axiom = Axiom.fromStatementNodeAndLabels(statementNode, labels);
 
-      context.addAxiom(axiom);
+      fileContext.addAxiom(axiom);
 
       axiomVerified = true;
     }
@@ -44,7 +42,7 @@ export default function verifyAxiom(axiomNode, context) {
 
   if (indicativeConditionalNode !== null) {
     const statementNodes = [],
-          indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, statementNodes, context);
+          indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, statementNodes, proofContext);
 
     if (indicativeConditionalVerified !== null) {
       const labels = labelsString,  ///
@@ -54,15 +52,15 @@ export default function verifyAxiom(axiomNode, context) {
             consequentStatementNode = secondStatementNode,  ///
             axiom = Axiom.fromSuppositionStatementNodeConsequentStatementNodeAndLabels(suppositionStatementNode, consequentStatementNode, labels);
 
-      context.addAxiom(axiom);
+      fileContext.addAxiom(axiom);
 
       axiomVerified = true;
     }
   }
 
   axiomVerified ?
-    context.complete(axiomNode) :
-      context.halt(axiomNode);
+    fileContext.complete(axiomNode) :
+      fileContext.halt(axiomNode);
 
   return axiomVerified;
 }

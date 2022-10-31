@@ -9,15 +9,15 @@ import { nodeQuery, nodesQuery } from "../utilities/query";
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement"),
       unqualifiedMetastatementNodesQuery = nodesQuery("/premise|premises/unqualifiedMetastatement");
 
-export default function verifyPremiseOrPremises(premiseOrPremisesNode, premises, context = this) {
+export default function verifyPremiseOrPremises(premiseOrPremisesNode, premises, metaproofContext) {
   let premiseOrPremisesVerified;
 
-  context.begin(premiseOrPremisesNode);
+  metaproofContext.begin(premiseOrPremisesNode);
 
   const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(premiseOrPremisesNode);
 
   premiseOrPremisesVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
-    const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
+    const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
 
     if (unqualifiedMetastatementVerified) {
       const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
@@ -26,15 +26,15 @@ export default function verifyPremiseOrPremises(premiseOrPremisesNode, premises,
 
       premises.push(premise);
 
-      context.addMetaAssertion(metaAssertion);
+      metaproofContext.addMetaAssertion(metaAssertion);
 
       return true;
     }
   });
 
   premiseOrPremisesVerified ?
-    context.complete(premiseOrPremisesNode) :
-      context.halt(premiseOrPremisesNode);
+    metaproofContext.complete(premiseOrPremisesNode) :
+      metaproofContext.halt(premiseOrPremisesNode);
 
   return premiseOrPremisesVerified;
 }

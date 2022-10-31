@@ -6,26 +6,26 @@ import { nodeQuery } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
-export default function verifyUnqualifiedStatement(unqualifiedStatementNode, context = this) {
+export default function verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext) {
   let unqualifiedStatementVerified = false;
 
-  context.begin(unqualifiedStatementNode);
+  proofContext.begin(unqualifiedStatementNode);
 
   const statementNode = statementNodeQuery(unqualifiedStatementNode);
 
   if (statementNode !== null) {
-    const statementVerified = verifyStatement(statementNode, context);
+    const statementVerified = verifyStatement(statementNode, proofContext);
 
     if (statementVerified) {
-      context.addStatementNode(statementNode);
+      proofContext.addStatementNode(statementNode);
 
       unqualifiedStatementVerified = true;
     }
   }
 
   unqualifiedStatementVerified ?
-    context.complete(unqualifiedStatementNode) :
-      context.halt(unqualifiedStatementNode);
+    proofContext.complete(unqualifiedStatementNode) :
+      proofContext.halt(unqualifiedStatementNode);
 
   return unqualifiedStatementVerified;
 }

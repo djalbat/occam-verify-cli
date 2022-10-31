@@ -1,6 +1,8 @@
 "use strict";
 
+import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
+import callbacksMixins from "../mixins/callbacks";
 
 class MetaproofContext {
   constructor(context, derived, metaAssertions) {
@@ -28,33 +30,9 @@ class MetaproofContext {
     return metaAssertions;
   }
 
-  getRules() { return this.context.getRules(); }
-
-  getTypes() { return this.context.getTypes(); }
-
-  getAxioms() { return this.context.getAxioms(); }
-
-  getCombinators() { return this.context.getCombinators(); }
-
-  getConstructors() { return this.context.getConstructors(); }
-
-  findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
-
-  findRuleByReferenceName(referenceName) { return this.context.findRuleByReferenceName(referenceName); }
-
-  findVariableByVariableName(variableName) { return this.context.findVariableByVariableName(variableName); }
-
-  isLabelPresent(label) { return this.context.isLabelPresent(label); }
-
-  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
-
-  isVariablePresentByVariableName(variableName) { return this.context.isVariablePresentByVariableName(variableName); }
-
   setDerived(derived) {
     this.derived = derived;
   }
-
-  addRule(rule) { this.context.addRule(rule); }
 
   addMetaAssertion(metaAssertion) {
     this.metaAssertions.push(metaAssertion);
@@ -81,21 +59,28 @@ class MetaproofContext {
     return metaAssertionMatches;
   }
 
-  halt(node) { this.context.halt(node); }
-
-  begin(node) { this.context.begin(node); }
-
-  complete(node) { this.context.complete(node); }
-
-  static fromContext(context) {
-    const derived = false,
+  static fromFileContext(fileContext) {
+    const context = fileContext,  ///
+          derived = false,
           metaAssertions = [],
           metaproofContext = new MetaproofContext(context, derived, metaAssertions);
 
     return metaproofContext;
   }
+
+  static fromMetaproofContext(metaproofContext) {
+    const context = metaproofContext,  ///
+          derived = false,
+          metaAssertions = [];
+
+    metaproofContext = new MetaproofContext(context, derived, metaAssertions);  ///
+
+    return metaproofContext;
+  }
 }
 
+Object.assign(MetaproofContext.prototype, fileMixins);
 Object.assign(MetaproofContext.prototype, loggingMixins);
+Object.assign(MetaproofContext.prototype, callbacksMixins);
 
 export default MetaproofContext;

@@ -7,19 +7,19 @@ import { nodeAsString } from "../../utilities/string";
 
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
-export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context = this) {
+export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext) {
   let unqualifiedMetastatementVerified = false;
 
-  context.begin(unqualifiedMetastatementNode);
+  metaproofContext.begin(unqualifiedMetastatementNode);
 
   const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
   if (metastatementNode !== null) {
-    const derived = context.isDerived();
+    const derived = metaproofContext.isDerived();
 
     if (derived) {
       const metaAssertion = MetaAssertion.fromMetastatementNode(metastatementNode),
-            metaAssertionMatches = context.matchMetaAssertion(metaAssertion);
+            metaAssertionMatches = metaproofContext.matchMetaAssertion(metaAssertion);
 
       unqualifiedMetastatementVerified = metaAssertionMatches;  ///
     } else {
@@ -30,12 +30,12 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
   if (unqualifiedMetastatementVerified) {
     const metastatementString = nodeAsString(metastatementNode);
 
-    context.debug(`Verified the '${metastatementString}' unqualified metastatement.`);
+    metaproofContext.debug(`Verified the '${metastatementString}' unqualified metastatement.`);
   }
 
   unqualifiedMetastatementVerified ?
-    context.complete(unqualifiedMetastatementNode) :
-      context.halt(unqualifiedMetastatementNode);
+    metaproofContext.complete(unqualifiedMetastatementNode) :
+      metaproofContext.halt(unqualifiedMetastatementNode);
 
   return unqualifiedMetastatementVerified;
 }

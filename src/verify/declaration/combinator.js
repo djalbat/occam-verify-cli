@@ -6,19 +6,19 @@ import { nodeQuery } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
-export default function verifyCombinatorDeclaration(combinatorDeclarationNode, context) {
+export default function verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext) {
   let combinatorDeclarationVerified;
 
-  context.begin(combinatorDeclarationNode);
+  fileContext.begin(combinatorDeclarationNode);
 
   const statementNode = statementNodeQuery(combinatorDeclarationNode),
-        statementVerifiedAsCombinator = verifyStatementAsCombinator(statementNode, context);
+        statementVerifiedAsCombinator = verifyStatementAsCombinator(statementNode, fileContext);
 
   combinatorDeclarationVerified = statementVerifiedAsCombinator; ///
 
   combinatorDeclarationVerified ?
-    context.complete(combinatorDeclarationNode) :
-      context.halt(combinatorDeclarationNode);
+    fileContext.complete(combinatorDeclarationNode) :
+      fileContext.halt(combinatorDeclarationNode);
 
   return combinatorDeclarationVerified;
 }

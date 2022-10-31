@@ -4,7 +4,7 @@ import { nodeQuery, variableNameFromVariableNode} from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
-export default function verifyTermAsVariable(termNode, types, names, values, context = this) {
+export default function verifyTermAsVariable(termNode, types, names, values, context) {
   let termVerifiedAsVariable = false;
 
   context.begin(termNode);

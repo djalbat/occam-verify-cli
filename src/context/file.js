@@ -37,6 +37,10 @@ class FileContext {
     return this.node;
   }
 
+  getVariables() {
+    return this.variables;
+  }
+
   getRules(bubble = true) {
     const rules = [
       ...this.rules
@@ -79,23 +83,6 @@ class FileContext {
     return axioms;
   }
 
-  getLabels() {
-    const axioms = this.getAxioms(),
-          labels = axioms.reduce((labels, axiom) => {
-            const axiomLabels = axiom.getLabels();
-
-            push(labels, axiomLabels);
-
-            return labels;
-          }, []);
-
-    return labels;
-  }
-
-  getVariables() {
-    return this.variables;
-  }
-
   getCombinators(bubble = true) {
     const combinators = [
       ...this.combinators
@@ -124,12 +111,8 @@ class FileContext {
     return constructors;
   }
 
-  getReleaseContext() {
-    return this.context;
-  }
-
   getMetaAssertions() {
-    const metaAssertions = [];
+    const metaAssertions = [];  ///
 
     return metaAssertions;
   }
@@ -167,7 +150,7 @@ class FileContext {
           axioms = this.getAxioms(),
           axiom = axioms.find((axiom) => {
             const axiomLabels = axiom.getLabels(),
-                  axiomLabelsIncludesLabel = axiomLabels.includes(label);
+                axiomLabelsIncludesLabel = axiomLabels.includes(label);
 
             if (axiomLabelsIncludesLabel) {
               return true;
@@ -179,7 +162,8 @@ class FileContext {
 
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
-          variable = this.variables.find((variable) => {
+          variables = this.getVariables(),
+          variable = variables.find((variable) => {
             const matches = variable.matchName(name);
 
             if (matches) {
@@ -190,38 +174,39 @@ class FileContext {
     return variable;
   }
 
-  isDerived() {
-    const derived = false;
-
-    return derived;
-  }
-
   isLabelPresent(label) {
     const labels = this.getLabels(),
-          labelsIncludesLabel = labels.includes(label),
-          labelPresent = labelsIncludesLabel; ///
+        labelsIncludesLabel = labels.includes(label),
+        labelPresent = labelsIncludesLabel; ///
 
     return labelPresent;
   }
 
-  matchMetaAssertion(metaAssertion) {
-    const metaAssertionMatches = false;
-
-    return metaAssertionMatches;
-  }
-
   isTypePresentByTypeName(typeName) {
     const type = this.findTypeByTypeName(typeName),
-          typePresent = (type !== null);
+        typePresent = (type !== null);
 
     return typePresent;
   }
 
   isVariablePresentByVariableName(variableName) {
     const variable = this.findVariableByVariableName(variableName),
-          variablePresent = (variable !== null);
+        variablePresent = (variable !== null);
 
     return variablePresent;
+  }
+
+  getLabels() {
+    const axioms = this.getAxioms(),
+          labels = axioms.reduce((labels, axiom) => {
+            const axiomLabels = axiom.getLabels();
+
+            push(labels, axiomLabels);
+
+            return labels;
+          }, []);
+
+    return labels;
   }
 
   addType(type) {

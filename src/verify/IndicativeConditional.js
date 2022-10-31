@@ -6,15 +6,15 @@ import { nodesQuery } from "../utilities/query";
 
 const unqualifiedStatementNodesQuery = nodesQuery("/indicativeConditional/unqualifiedStatement");
 
-export default function verifyIndicativeConditional(indicativeConditionalNode, statementNodes, context) {
+export default function verifyIndicativeConditional(indicativeConditionalNode, statementNodes, proofContext) {
   let indicativeConditionalVerified;
 
-  context.begin(indicativeConditionalNode);
+  proofContext.begin(indicativeConditionalNode);
 
   const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(indicativeConditionalNode);
 
   indicativeConditionalVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
-    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, context);
+    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
 
     if (unqualifiedStatementVerified) {
       return true;
@@ -22,8 +22,8 @@ export default function verifyIndicativeConditional(indicativeConditionalNode, s
   });
 
   indicativeConditionalVerified ?
-    context.complete(indicativeConditionalNode) :
-      context.halt(indicativeConditionalNode);
+    proofContext.complete(indicativeConditionalNode) :
+      proofContext.halt(indicativeConditionalNode);
 
   return indicativeConditionalVerified;
 }

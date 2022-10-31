@@ -23,7 +23,7 @@ export default class Rule {
     return this.conclusion;
   }
 
-  matchMetastatement(metastatementNode, context) {
+  matchMetastatement(metastatementNode, metaproofContext) {
     let metastatementNatches;
 
     const premisesLength = this.premises.length;
@@ -34,7 +34,7 @@ export default class Rule {
 
       metastatementNatches = conclusionMatches; ///
     } else {
-      const metaAssertions = context.getMetaAssertions();
+      const metaAssertions = metaproofContext.getMetaAssertions();
 
       metastatementNatches = someSubArray(metaAssertions, premisesLength, (metaAssertions) => {
         const premisesMatchConclusion = matchPremisesAndConclusion(this.premises, this.conclusion, metaAssertions, metastatementNode);

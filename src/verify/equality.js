@@ -8,13 +8,14 @@ import { first, second } from "../utilities/array";
 const firstTermNodeQuery = nodeQuery("/equality/term[0]"),
       secondTermNodeQuery = nodeQuery("/equality/term[1]");
 
-export default function verifyEquality(equalityNode, context) {
+export default function verifyEquality(equalityNode, proofContext) {
   let equalityVerified = false;
 
-  context.begin(equalityNode);
+  proofContext.begin(equalityNode);
 
   const types = [],
         values = [],
+        context = proofContext,
         firstTermNode = firstTermNodeQuery(equalityNode),
         secondTermNode = secondTermNodeQuery(equalityNode),
         firstTermVerified = verifyTerm(firstTermNode, types, values, context),
@@ -26,10 +27,10 @@ export default function verifyEquality(equalityNode, context) {
           firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType = firstType.isEqualToSubTypeOfOrSuperTypeOf(secondType);
 
     if (firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType) {
-      const derived = context.isDerived();
+      const derived = proofContext.isDerived();
 
       if (derived) {
-        const termsEqual = equateTerms(firstTermNode, secondTermNode, context);
+        const termsEqual = equateTerms(firstTermNode, secondTermNode, proofContext);
 
         if (termsEqual) {
           equalityVerified = true;
@@ -41,13 +42,13 @@ export default function verifyEquality(equalityNode, context) {
   }
 
   equalityVerified ?
-    context.complete(equalityNode) :
-      context.halt(equalityNode);
+    proofContext.complete(equalityNode) :
+      proofContext.halt(equalityNode);
 
   return equalityVerified;
 }
 
-function equateTerms(firstTermNode, secondTermNode, context) {
+function equateTerms(firstTermNode, secondTermNode, proofContext) {
   let termsEqual = true;  ///
 
   debugger

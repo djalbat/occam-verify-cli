@@ -8,15 +8,15 @@ import { nodeQuery } from "../utilities/query";
 const metastatementNodeQuery = nodeQuery("/*/metastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/conclusion/unqualifiedMetastatement!");
 
-export default function verifyConclusion(conclusionNode, conclusions, context) {
+export default function verifyConclusion(conclusionNode, conclusions, metaproofContext) {
   let conclusionVerified = false;
 
-  context.begin(conclusionNode);
+  metaproofContext.begin(conclusionNode);
 
   const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode);
 
   if (unqualifiedMetastatementNode !== null) {
-    const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
+    const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
 
     if (unqualifiedMetastatementVerified) {
       const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
@@ -29,8 +29,8 @@ export default function verifyConclusion(conclusionNode, conclusions, context) {
   }
 
   conclusionVerified ?
-    context.complete(conclusionNode) :
-      context.halt(conclusionNode);
+    metaproofContext.complete(conclusionNode) :
+      metaproofContext.halt(conclusionNode);
 
   return conclusionVerified;
 }

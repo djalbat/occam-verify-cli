@@ -16,10 +16,10 @@ const ruleNodeQuery = nodeQuery("/topLevelDeclaration/rule!"),
       combinatorDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/combinatorDeclaration!"),
       constructorDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/constructorDeclaration!");
 
-export default function verifyTopLevelDeclaration(topLevelDeclarationNode, context) {
+export default function verifyTopLevelDeclaration(topLevelDeclarationNode, fileContext) {
   let topLevelDeclarationVerified = false;
 
-  context.begin(topLevelDeclarationNode);
+  fileContext.begin(topLevelDeclarationNode);
 
   const node = topLevelDeclarationNode, ///
         ruleNode = ruleNodeQuery(node),
@@ -32,34 +32,34 @@ export default function verifyTopLevelDeclaration(topLevelDeclarationNode, conte
   if (false) {
     ///
   } else if (ruleNode !== null) {
-    const ruleVerified = verifyRule(ruleNode, context);
+    const ruleVerified = verifyRule(ruleNode, fileContext);
 
     topLevelDeclarationVerified = ruleVerified;  ///
   } else if (axiomNode !== null) {
-    const axiomVerified = verifyAxiom(axiomNode, context);
+    const axiomVerified = verifyAxiom(axiomNode, fileContext);
 
     topLevelDeclarationVerified = axiomVerified;  ///
   } else if (typeDeclarationNode !== null) {
-    const typeDeclarationVerified = verifyTypeDeclaration(typeDeclarationNode, context);
+    const typeDeclarationVerified = verifyTypeDeclaration(typeDeclarationNode, fileContext);
 
     topLevelDeclarationVerified = typeDeclarationVerified;  ///
   } else if (variableDeclarationNode !== null) {
-    const variableDeclarationVerified = verifyVariableDeclaration(variableDeclarationNode, context);
+    const variableDeclarationVerified = verifyVariableDeclaration(variableDeclarationNode, fileContext);
 
     topLevelDeclarationVerified = variableDeclarationVerified;  ///
   } else if (combinatorDeclarationNode !== null) {
-    const combinatorDeclarationVerified = verifyCombinatorDeclaration(combinatorDeclarationNode, context);
+    const combinatorDeclarationVerified = verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext);
 
     topLevelDeclarationVerified = combinatorDeclarationVerified;  ///
   } else if (constructorDeclarationNode !== null) {
-    const constructorDeclarationVerified = verifyConstructorDeclaration(constructorDeclarationNode, context);
+    const constructorDeclarationVerified = verifyConstructorDeclaration(constructorDeclarationNode, fileContext);
 
     topLevelDeclarationVerified = constructorDeclarationVerified;  ///
   }
 
   topLevelDeclarationVerified ?
-    context.complete(topLevelDeclarationNode) :
-      context.halt(topLevelDeclarationNode);
+    fileContext.complete(topLevelDeclarationNode) :
+      fileContext.halt(topLevelDeclarationNode);
 
   return topLevelDeclarationVerified;
 }

@@ -9,22 +9,22 @@ const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
       qualifiedStatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement!"),
       metaProofMetastatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement/metastatement!");
 
-export default function verifyMetaproof(metaproofNode, conclusion, context) {
+export default function verifyMetaproof(metaproofNode, conclusion, metaproofContext) {
   let metaproofVerified = false;
 
-  context.begin(metaproofNode);
+  metaproofContext.begin(metaproofNode);
 
   const metaDerivationNode = metaDerivationNodeQuery(metaproofNode);
 
   let metaDerivationVerified = true;
 
   if (metaDerivationNode !== null) {
-    metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, context);
+    metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, metaproofContext);
   }
 
   if (metaDerivationVerified) {
     const qualifiedMetastatementNode = qualifiedStatementNodeQuery(metaproofNode),
-          qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
+          qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metaproofContext);
 
     if (qualifiedMetastatementVerified) {
       const metastatementNode = conclusion.getMetastatementNode(),
@@ -36,8 +36,8 @@ export default function verifyMetaproof(metaproofNode, conclusion, context) {
   }
 
   metaproofVerified ?
-    context.complete(metaproofNode) :
-      context.complete(metaproofNode);
+    metaproofContext.complete(metaproofNode) :
+      metaproofContext.complete(metaproofNode);
 
   return metaproofVerified;
 }

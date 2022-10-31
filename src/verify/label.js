@@ -2,17 +2,17 @@
 
 import { labelNameFromLabelNode } from "../utilities/query";
 
-export default function verifyLabel(labelNode, labels, context = this) {
+export default function verifyLabel(labelNode, labels, fileContext) {
   let labelVerified = false;
 
-  context.begin(labelNode);
+  fileContext.begin(labelNode);
 
   const labelName = labelNameFromLabelNode(labelNode),
         label = labelName,  ///
-        labelPresent = context.isLabelPresent(label);
+        labelPresent = fileContext.isLabelPresent(label);
 
   if (labelPresent) {
-    context.error(`The label ${label} is already present`, labelNode);
+    fileContext.error(`The label ${label} is already present`, labelNode);
   } else {
     labels.push(label);
 
@@ -20,8 +20,8 @@ export default function verifyLabel(labelNode, labels, context = this) {
   }
 
   labelVerified ?
-    context.complete(labelNode) :
-      context.halt(labelNode);
+    fileContext.complete(labelNode) :
+      fileContext.halt(labelNode);
 
   return labelVerified;
 }

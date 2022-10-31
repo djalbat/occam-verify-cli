@@ -1,7 +1,11 @@
 "use strict";
 
 import FileContext from "../context/file";
-import verifyTopLevelDeclarations from "../verify/topLevelDeclarations";
+import verifyTopLevelDeclaration from "./declaration/topLevel";
+
+import { nodesQuery } from "../utilities/query";
+
+const topLevelDeclarationNodesQuery = nodesQuery("/document/topLevelDeclaration");
 
 export default function verifyFile(filePath, releaseContext) {
   let fileVerified;
@@ -9,8 +13,15 @@ export default function verifyFile(filePath, releaseContext) {
   releaseContext.debug(`Verifying the '${filePath}' file...`);
 
   const fileContext = FileContext.fromReleaseContextAndFilePath(releaseContext, filePath),
-        context = fileContext,  ///
-        topLevelDeclarationsVerified = verifyTopLevelDeclarations(fileContext, context);
+        node = fileContext.getNode(),
+        topLevelDeclarationNodes = topLevelDeclarationNodesQuery(node),
+        topLevelDeclarationsVerified = topLevelDeclarationNodes.every((topLevelDeclarationNode) => {
+          const topLevelDeclarationVerified = verifyTopLevelDeclaration(topLevelDeclarationNode, fileContext);
+
+          if (topLevelDeclarationVerified) {
+            return true;
+          }
+        })
 
   fileVerified = topLevelDeclarationsVerified;  ///
 

@@ -7,20 +7,20 @@ import { nodeQuery } from "../../utilities/query";
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
 
-export default function verifyConstructorDeclaration(constructorDeclarationNode, context) {
+export default function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
   let constructorDeclarationVerified;
 
-  context.begin(constructorDeclarationNode);
+  fileContext.begin(constructorDeclarationNode);
 
   const termNode = termNodeQuery(constructorDeclarationNode),
         typeNode = typeNodeQuery(constructorDeclarationNode),
-        termVerifiedAsConstructor = verifyTermAsConstructor(termNode, typeNode, context);
+        termVerifiedAsConstructor = verifyTermAsConstructor(termNode, typeNode, fileContext);
 
   constructorDeclarationVerified = termVerifiedAsConstructor; ///
 
   constructorDeclarationVerified ?
-    context.complete(constructorDeclarationNode) :
-      context.halt(constructorDeclarationNode);
+    fileContext.complete(constructorDeclarationNode) :
+      fileContext.halt(constructorDeclarationNode);
 
   return constructorDeclarationVerified;
 }

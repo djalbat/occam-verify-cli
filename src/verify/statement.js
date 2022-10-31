@@ -9,25 +9,25 @@ import { nodeAsString } from "../utilities/string";
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
-export default function verifyStatement(statementNode, context) {
+export default function verifyStatement(statementNode, proofContext) {
   let statementVerified = false;
 
-  context.begin(statementNode);
+  proofContext.begin(statementNode);
 
   const equalityNode = equalityNodeQuery(statementNode),
         statementString = nodeAsString(statementNode),
         typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
-  context.debug(`Verifying the '${statementString}' statement...`);
+  proofContext.debug(`Verifying the '${statementString}' statement...`);
 
   if (false) {
     ///
   } else if (equalityNode !== null) {
-    const equalityVerified = verifyEquality(equalityNode, context);
+    const equalityVerified = verifyEquality(equalityNode, proofContext);
 
     statementVerified = equalityVerified; ///
   } else if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, context);
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, proofContext);
 
     statementVerified = typeAssertionVerified; ///
   } else {
@@ -35,8 +35,8 @@ export default function verifyStatement(statementNode, context) {
   }
 
   statementVerified ?
-    context.complete(statementNode) :
-      context.halt(statementNode);
+    proofContext.complete(statementNode) :
+      proofContext.halt(statementNode);
 
   return statementVerified;
 }

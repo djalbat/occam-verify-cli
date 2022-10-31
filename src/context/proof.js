@@ -1,6 +1,8 @@
 "use strict";
 
+import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
+import callbacksMixins from "../mixins/callbacks";
 
 class ProofContext {
   constructor(context, derived, variables, statementNodes) {
@@ -26,20 +28,6 @@ class ProofContext {
     return this.statementNodes;
   }
 
-  getRules() { return this.context.getRules(); }
-
-  getTypes() { return this.context.getTypes(); }
-
-  getAxioms() { return this.context.getAxioms(); }
-
-  getCombinators() { return this.context.getCombinators(); }
-
-  getConstructors() { return this.context.getConstructors(); }
-
-  findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
-
-  findRuleByReferenceName(referenceName) { return this.context.findRuleByReferenceName(referenceName); }
-
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
           variable = this.variables.find((variable) => {
@@ -52,10 +40,6 @@ class ProofContext {
 
     return variable;
   }
-
-  isLabelPresent(label) { return this.context.isLabelPresent(label); }
-
-  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
   isVariablePresentByVariableName(variableName) {
     const variable = this.findVariableByVariableName(variableName),
@@ -82,14 +66,9 @@ class ProofContext {
     this.statementNodes.push(statementNode);
   }
 
-  halt(node) { this.context.halt(node); }
-
-  begin(node) { this.context.begin(node); }
-
-  complete(node) { this.context.complete(node); }
-
-  static fromContext(context) {
-    const derived = false,
+  static fromFileContext(fileContext) {
+    const context = fileContext,  ///
+          derived = false,
           variables = [],
           statementNodes = [],
           proofContext = new ProofContext(context, derived, variables, statementNodes);
@@ -98,6 +77,8 @@ class ProofContext {
   }
 }
 
+Object.assign(ProofContext.prototype, fileMixins);
 Object.assign(ProofContext.prototype, loggingMixins);
+Object.assign(ProofContext.prototype, callbacksMixins);
 
 export default ProofContext;

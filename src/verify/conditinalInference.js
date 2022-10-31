@@ -8,24 +8,24 @@ import { nodeQuery } from "../utilities/query";
 const conclusionNodeQuery = nodeQuery("/conditionalInference/conclusion!"),
       premiseOrPremisesNodeQuery = nodeQuery("/conditionalInference/premise|premises!");
 
-export default function verifyConditionalInference(conditionalInferenceNode, premises, conclusions, context) {
+export default function verifyConditionalInference(conditionalInferenceNode, premises, conclusions, metaproofContext) {
   let conditionalInferenceVerified = false;
 
-  context.begin(conditionalInferenceNode);
+  metaproofContext.begin(conditionalInferenceNode);
 
   const conclusionNode = conclusionNodeQuery(conditionalInferenceNode),
         premiseOrPremisesNode = premiseOrPremisesNodeQuery(conditionalInferenceNode),
-        premiseOrPremisesVerified = verifyPremiseOrPremises(premiseOrPremisesNode, premises, context);
+        premiseOrPremisesVerified = verifyPremiseOrPremises(premiseOrPremisesNode, premises, metaproofContext);
 
   if (premiseOrPremisesVerified) {
-    const conclusionVerified = verifyConclusion(conclusionNode, conclusions, context);
+    const conclusionVerified = verifyConclusion(conclusionNode, conclusions, metaproofContext);
 
     conditionalInferenceVerified = conclusionVerified;  ///
   }
 
   conditionalInferenceVerified ?
-    context.complete(conditionalInferenceNode) :
-      context.halt(conditionalInferenceNode);
+    metaproofContext.complete(conditionalInferenceNode) :
+      metaproofContext.halt(conditionalInferenceNode);
 
   return conditionalInferenceVerified;
 }

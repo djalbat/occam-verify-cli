@@ -6,19 +6,19 @@ import { nodeQuery } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
 
-export default function verifyQualifiedStatement(qualifiedStatementNode, context = this) {
+export default function verifyQualifiedStatement(qualifiedStatementNode, proofContext) {
   let qualifiedStatementVerified;
 
-  context.begin(qualifiedStatementNode);
+  proofContext.begin(qualifiedStatementNode);
 
   const statementNode = statementNodeQuery(qualifiedStatementNode),
-        statementVerified = verifyStatement(statementNode, context);
+        statementVerified = verifyStatement(statementNode, proofContext);
 
   qualifiedStatementVerified = statementVerified; ///
 
   qualifiedStatementVerified ?
-    context.complete(qualifiedStatementNode) :
-      context.halt(qualifiedStatementNode);
+    proofContext.complete(qualifiedStatementNode) :
+      proofContext.halt(qualifiedStatementNode);
 
   return qualifiedStatementVerified;
 }

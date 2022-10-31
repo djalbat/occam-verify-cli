@@ -15,14 +15,14 @@ const metaDerivationNodeQuery = nodeQuery("/metaSubproof/metaDerivation!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/unqualifiedMetastatement!"),
       qualifiedOrUnqualifiedMetastatementNodesQuery = nodesQuery("/metaSubproof/qualifiedMetastatement|unqualifiedMetastatement")
 
-export default function verifyMetaDerivation(metaDerivationNode, context) {
+export default function verifyMetaDerivation(metaDerivationNode, metaproofContext) {
   let metaDerivationVerified;
 
-  context.begin(metaDerivationNode);
+  metaproofContext.begin(metaDerivationNode);
 
   const derived = true;
 
-  context.setDerived(derived);
+  metaproofContext.setDerived(derived);
 
   const metaDerivationChildNodes = metaDerivationChildNodesQuery(metaDerivationNode),
         metaDerivationChildNodesVerified = metaDerivationChildNodes.every((metaDerivationChildNode) => {
@@ -33,12 +33,12 @@ export default function verifyMetaDerivation(metaDerivationNode, context) {
           switch (ruleName) {
             case META_SUBPROOF_RULE_NAME: {
               const metaSubproofNode = metaDerivationChildNode,  ///
-                    metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, context);
+                    metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, metaproofContext);
 
               if (metaSubproofVerified) {
                 const metaAssertion = MetaAssertion.fromMetaSubproofNode(metaSubproofNode);
 
-                context.addMetaAssertion(metaAssertion);
+                metaproofContext.addMetaAssertion(metaAssertion);
 
                 metaDerivationChildNodeVerified = true;
               }
@@ -48,12 +48,12 @@ export default function verifyMetaDerivation(metaDerivationNode, context) {
 
             case QUALIFIED_METASTATEMENT_RULE_NAME: {
               const qualifiedMetastatementNode = metaDerivationChildNode,  ///
-                    qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
+                    qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metaproofContext);
 
               if (qualifiedMetastatementVerified) {
                 const metaAssertion = MetaAssertion.fromQualifiedMetastatementNode(qualifiedMetastatementNode);
 
-                context.addMetaAssertion(metaAssertion);
+                metaproofContext.addMetaAssertion(metaAssertion);
 
                 metaDerivationChildNodeVerified = qualifiedMetastatementVerified; ///
               }
@@ -63,12 +63,12 @@ export default function verifyMetaDerivation(metaDerivationNode, context) {
 
             case UNQUALIFIED_METASTATEMENT_RULE_NAME: {
               const unqualifiedMetastatementNode = metaDerivationChildNode,  ///
-                    unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
+                    unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
 
               if (unqualifiedMetastatementVerified) {
                 const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode);
 
-                context.addMetaAssertion(metaAssertion);
+                metaproofContext.addMetaAssertion(metaAssertion);
 
                 metaDerivationChildNodeVerified = true;
               }
@@ -83,35 +83,33 @@ export default function verifyMetaDerivation(metaDerivationNode, context) {
   metaDerivationVerified = metaDerivationChildNodesVerified;  ///
 
   metaDerivationVerified ?
-    context.complete(metaDerivationNode) :
-      context.halt(metaDerivationNode);
+    metaproofContext.complete(metaDerivationNode) :
+      metaproofContext.halt(metaDerivationNode);
 
   return metaDerivationVerified;
 }
 
-function verifyMetaSubproof(metaSubproofNode, context) {
+function verifyMetaSubproof(metaSubproofNode, metaproofContext) {
   let metaSubproofVerified = false;
 
-  const metaproofContext = MetaproofContext.fromContext(context);
-
-  context = metaproofContext; ///
+  metaproofContext = MetaproofContext.fromMetaproofContext(metaproofContext); ///
 
   const qualifiedOrUnqualifiedMetastatementNodes = qualifiedOrUnqualifiedMetastatementNodesQuery(metaSubproofNode),
         firstQualifiedOrUnqualifiedMetastatementNode = first(qualifiedOrUnqualifiedMetastatementNodes),
         unqualifiedMetastatementNode = firstQualifiedOrUnqualifiedMetastatementNode,  ///
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
+        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
 
   if (unqualifiedMetastatementVerified) {
     const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode);
 
-    context.addMetaAssertion(metaAssertion);
+    metaproofContext.addMetaAssertion(metaAssertion);
 
     let metaDerivationVerified = true;
 
     const metaDerivationNode = metaDerivationNodeQuery(metaSubproofNode);
 
     if (metaDerivationNode !== null) {
-      metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, context);
+      metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, metaproofContext);
     }
 
     if (metaDerivationVerified) {
@@ -121,13 +119,13 @@ function verifyMetaSubproof(metaSubproofNode, context) {
             unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(qualifiedOrUnqualifiedMetastatementNode);
 
       if (qualifiedMetastatementNode !== null) {
-        const qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, context);
+        const qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metaproofContext);
 
         metaSubproofVerified = qualifiedMetastatementVerified;  ///
       }
 
       if (unqualifiedMetastatementNode !== null) {
-        const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, context);
+        const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
 
         metaSubproofVerified = unqualifiedMetastatementVerified;  ///
       }

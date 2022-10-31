@@ -5,18 +5,18 @@ import Variable from "../variable";
 import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities/query";
 
-export default function verifyVariable(variableNode, typeNode, context = this) {
+export default function verifyVariable(variableNode, typeNode, fileContext) {
   let variableVerified = false;
 
-  context.begin(variableNode);
+  fileContext.begin(variableNode);
 
   let variable = null;
 
   const variableName = variableNameFromVariableNode(variableNode),
-        variablePresent = context.isVariablePresentByVariableName(variableName);
+        variablePresent = fileContext.isVariablePresentByVariableName(variableName);
 
   if (variablePresent) {
-    context.error(`The variable '${variableName}' is already present.`);
+    fileContext.error(`The variable '${variableName}' is already present.`);
   } else {
     const typeName = typeNameFromTypeNode(typeNode);
     
@@ -26,10 +26,10 @@ export default function verifyVariable(variableNode, typeNode, context = this) {
 
       variable = Variable.fromTypeAndName(type, name);
     } else {
-      const type = context.findTypeByTypeName(typeName);
+      const type = fileContext.findTypeByTypeName(typeName);
 
       if (type === null) {
-        context.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
+        fileContext.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
       } else {
         const name = variableName;  ///
 
@@ -40,17 +40,17 @@ export default function verifyVariable(variableNode, typeNode, context = this) {
     if (variable !== null) {
       const variableString = nodeAsString(variableName);
 
-      context.info(`Verified the '${variableString}' variable.`);
+      fileContext.info(`Verified the '${variableString}' variable.`);
 
-      context.addVariable(variable);
+      fileContext.addVariable(variable);
 
       variableVerified = true;
     }
   }
 
   variableVerified ?
-    context.complete(variableNode) :
-      context.halt(variableNode);
+    fileContext.complete(variableNode) :
+      fileContext.halt(variableNode);
 
   return variableVerified;
 }
