@@ -17,7 +17,7 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, pro
     const statementVerified = verifyStatement(statementNode, proofContext);
 
     if (statementVerified) {
-      proofContext.addStatementNode(statementNode);
+      debugger
 
       unqualifiedStatementVerified = true;
     }

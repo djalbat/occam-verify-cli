@@ -22,7 +22,7 @@ class MetaproofContext {
   getMetaAssertions() {
     let metaAssertions = this.context.getMetaAssertions();
 
-    metaAssertions = [
+    metaAssertions = [  ///
       ...metaAssertions,
       ...this.metaAssertions
     ];

@@ -111,6 +111,12 @@ class FileContext {
     return constructors;
   }
 
+  getAssertions() {
+    const assertions = [];  ///
+
+    return assertions;
+  }
+
   getMetaAssertions() {
     const metaAssertions = [];  ///
 

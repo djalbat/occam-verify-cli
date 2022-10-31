@@ -5,11 +5,10 @@ import loggingMixins from "../mixins/logging";
 import callbacksMixins from "../mixins/callbacks";
 
 class ProofContext {
-  constructor(context, derived, variables, statementNodes) {
+  constructor(context, derived, assertions) {
     this.context = context;
     this.derived = derived;
-    this.variables = variables;
-    this.statementNodes = statementNodes;
+    this.assertions = assertions;
   }
 
   getContext() {
@@ -20,32 +19,15 @@ class ProofContext {
     return this.derived;
   }
 
-  getVariables() {
-    return this.variables;
-  }
+  getAssertions() {
+    let assertions = this.context.getAssertions();
 
-  getStatementNodes() {
-    return this.statementNodes;
-  }
+    assertions = [
+      ...assertions,
+      ...this.assertions
+    ];
 
-  findVariableByVariableName(variableName) {
-    const name = variableName,  ///
-          variable = this.variables.find((variable) => {
-            const matches = variable.matchName(name);
-
-            if (matches) {
-              return true;
-            }
-          }) || this.context.findVariableByVariableName(variableName);  ///
-
-    return variable;
-  }
-
-  isVariablePresentByVariableName(variableName) {
-    const variable = this.findVariableByVariableName(variableName),
-          variablePresent = (variable !== null);
-
-    return variablePresent;
+    return assertions;
   }
 
   setDerived(derived) {
@@ -56,22 +38,46 @@ class ProofContext {
     this.derived = derived;
   }
 
-  addAxiom(axiom) { this.context.addAxiom(axiom); }
-
-  addVariable(variable) {
-    this.variables.push(variable);
+  addAssertion(assertion) {
+    this.assertions.push(assertion);
   }
 
-  addStatementNode(statementNode) {
-    this.statementNodes.push(statementNode);
+  matchAssertion(assertion) {
+    let assertionMatches;
+
+    const assertionB = assertion; ///
+
+    assertionMatches = this.assertions.some((assertion) => {
+      const assertionA = assertion, ///
+            matches = assertionA.match(assertionB);
+
+      if (matches) {
+        return true;
+      }
+    });
+
+    if (!assertionMatches) {
+      assertionMatches = this.context.matchAssertion(assertion);
+    }
+
+    return assertionMatches;
   }
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
           derived = false,
-          variables = [],
-          statementNodes = [],
-          proofContext = new ProofContext(context, derived, variables, statementNodes);
+          assertions = [],
+          proofContext = new ProofContext(context, derived, assertions);
+
+    return proofContext;
+  }
+
+  static fromProofContext(proofContext) {
+    const context = proofContext,  ///
+          derived = false,
+          assertions = [];
+
+    proofContext = new ProofContext(context, derived, assertions);  ///
 
     return proofContext;
   }
