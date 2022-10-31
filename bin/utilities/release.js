@@ -9,7 +9,7 @@ const { log } = require("../utilities/logging"),
       { PERIOD } = require("../constants");
 
 const { loadRelease } = fileSystemUtilities,
-      { checkCyclicDependencyExists, checkReleaseMatchesShortenedVersion} = verificationUtilities;
+      { checkCyclicDependencyExists, checkReleaseMatchesShortenedVersion } = verificationUtilities;
 
 function createReleaseContext(name, shortenedVersion, releaseContextMap, dependentNames = []) {
   let releaseContext = releaseContextMap[name] || null;
