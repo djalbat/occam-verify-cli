@@ -1,77 +1,124 @@
 "use strict";
 
-const { fileSystemUtilities } = require("occam-file-system"),
-      { ReleaseContext, verificationUtilities } = require("../../lib/index");
+const { ReleaseContext } = require("../../lib/index");
 
-const callbacks = require("../callbacks");
-
-const { log } = require("../utilities/logging"),
-      { PERIOD } = require("../constants");
-
-const { loadRelease } = fileSystemUtilities,
-      { checkCyclicDependencyExists, checkReleaseMatchesShortenedVersion } = verificationUtilities;
-
-function createReleaseContext(name, shortenedVersion, releaseContextMap, dependentNames = []) {
-  let releaseContext = releaseContextMap[name] || null;
-
-  if (releaseContext === null) {
-    const release = createRelease(name);
-
-    if (release !== null) {
-      releaseContext = ReleaseContext.fromLogReleaseAndCallbacks(log, release, callbacks);
-    }
-  }
+function createReleaseContext(connection, name, dependentNames, shortenedVersion, context, callback) {
+  const { releaseContextMap } = context,
+        releaseContext = releaseContextMap[name] || null;
 
   if (releaseContext !== null) {
-    const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion),
-          dependencyReleaseContextsCreated = createDependencyReleaseContexts(releaseContext, releaseContextMap, dependentNames);
+    const error = false;
 
-    if (!releaseMatchesShortedVersion || !dependencyReleaseContextsCreated) {
-      releaseContext = null;
-    }
+    callback(error);
+
+    return;
   }
 
-  releaseContextMap[name] = releaseContext;
+  const { createRelease } = context;
 
-  return releaseContext;
+  createRelease(name, (release) => {
+    if (release === null) {
+      const error = true;
+
+      callback(error);
+
+      return;
+    }
+
+    const { log, callbacks } = context,
+          releaseContext = ReleaseContext.fromLogReleaseAndCallbacks(log, release, callbacks),
+          releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion);
+
+    if (!releaseMatchesShortedVersion) {
+      const error = true;
+
+      callback(error);
+
+      return;
+    }
+
+    createDependencyReleaseContexts(connection, releaseContext, dependentNames, context, (error) => {
+      if (!error) {
+        releaseContextMap[name] = releaseContext;
+      }
+
+      callback(error);
+    });
+  });
 }
 
 module.exports = {
   createReleaseContext
 };
 
-function createRelease(name) {
-  const topmostDirectoryName = name, ///
-        projectsDirectoryPath = PERIOD;
+function checkCyclicDependencyExists(name, dependentNames, releaseContext) {
+  const dependentNamesIncludesName = dependentNames.includes(name),
+        cyclicDependencyExists = dependentNamesIncludesName;  ///
 
-  let release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
+  if (cyclicDependencyExists) {
+    const firstDependentName = first(dependentNames),
+          dependencyNames = dependentNames.concat(firstDependentName),
+          dependencyNamesString = dependencyNames.join(`' -> '`);
 
-  if (release === null) {
-    log.error(`The '${name}' package cannot be loaded.`);
+    releaseContext.error(`There is a cyclic dependency: '${dependencyNamesString}'.`);
   }
 
-  return release;
+  return cyclicDependencyExists;
 }
 
-function createDependencyReleaseContexts(releaseContext, releaseContextMap, dependentNames = []) {
+function createDependencyReleaseContexts(connection, releaseContext, dependentNames, context, callback) {
   const name = releaseContext.getName(),
         dependencies = releaseContext.getDependencies();
 
   dependentNames = [ ...dependentNames, name ];  ///
 
-  const dependencyReleaseContextsCreated = dependencies.everyDependency((dependency) => {
+  dependencies.asynchronousForEachDependency(dependencies, (dependency, next, done) => {
     const name = dependency.getName(),
           shortenedVersion = dependency.getShortedVersion(),
           cyclicDependencyExists = checkCyclicDependencyExists(name, dependentNames, releaseContext);
 
-    if (!cyclicDependencyExists) {
-      const releaseContext = createReleaseContext(name, shortenedVersion, releaseContextMap, dependentNames);
+    if (cyclicDependencyExists) {
+      noError = false;
 
-      if (releaseContext !== null) {
-        return true;
-      }
+      done();
+
+      return;
     }
-  });
 
-  return dependencyReleaseContextsCreated;
+    createReleaseContext(connection, name, dependentNames, shortenedVersion, context, (error) => {
+      if (error) {
+        noError = false;
+
+        done();
+
+        return;
+      }
+
+      next();
+    });
+  }, done);
+
+  let noError = true;
+
+  function done() {
+    const error = !noError;
+
+    callback(error);
+  }
+}
+
+function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion) {
+  const release = releaseContext.getRelease(),
+        releaseMatchesShortedVersion = release.matchShortenedVersion(shortenedVersion);
+
+  if (!releaseMatchesShortedVersion) {
+    const name = releaseContext.getName(),
+          version = releaseContext.getVersion(),
+          versionString = version.toString(),
+          shortenedVersionString = shortenedVersion.toString();
+
+    releaseContext.error(`The '${name}' package's version of ${versionString} does not match the dependency's shortened version of ${shortenedVersionString}.`);
+  }
+
+  return releaseMatchesShortedVersion;
 }
