@@ -2,14 +2,14 @@
 
 import verifyFiles from "../verify/files";
 
-export default function verifyRelease(name, releaseContextMap) {
-  const releaseContext = releaseContextMap[name],
+export default function verifyRelease(releaseName, releaseContextMap) {
+  const releaseContext = releaseContextMap[releaseName],
         verified = releaseContext.isVerified();
 
   let releaseVerified = verified; ///
 
   if (!releaseVerified) {
-    releaseContext.debug(`Verifying the '${name}' package...`);
+    releaseContext.debug(`Verifying the '${releaseName}' package...`);
 
     const dependencyReleasesVVerified = verifyDependencyReleases(releaseContext, releaseContextMap);
 
@@ -27,7 +27,7 @@ export default function verifyRelease(name, releaseContextMap) {
 
     releaseContext.setVerified(verified);
 
-    releaseContext.info(`Verified the '${name}' package.`);
+    releaseContext.info(`Verified the '${releaseName}' package.`);
   }
 
   return releaseVerified;
@@ -37,7 +37,8 @@ function verifyReleaseFiles(releaseContext, releaseContextMap) {
   const dependencies = releaseContext.getDependencies(),
         releaseContexts = dependencies.mapDependency((dependency) => {
           const name = dependency.getName(),
-                releaseContext = releaseContextMap[name];
+                releaseName = name, ///
+                releaseContext = releaseContextMap[releaseName];
 
           return releaseContext;
         }),
@@ -55,7 +56,8 @@ function verifyDependencyReleases(releaseContext, releaseContextMap) {
   const dependencies = releaseContext.getDependencies(),
         dependencyReleasesVVerified = dependencies.everyDependency((dependency) => {
           const name = dependency.getName(),
-                releaseVerified = verifyRelease(name, releaseContextMap);
+                releaseName = name, ///
+                releaseVerified = verifyRelease(releaseName, releaseContextMap);
 
           if (releaseVerified) {
             return true;

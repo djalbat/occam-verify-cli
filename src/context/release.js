@@ -59,8 +59,6 @@ export default class ReleaseContext {
 
   getFile(filePath) { return this.release.getFile(filePath); }
 
-  getName() { return this.release.getName(); }
-
   getVersion() { return this.release.getVersion(); }
 
   getFilePaths() { return this.release.getFilePaths(); }
@@ -69,10 +67,15 @@ export default class ReleaseContext {
 
   matchShortenedVersion(shortenedVersion) { return this.release.matchShortenedVersion(shortenedVersion); }
 
+  getReleaseName() {
+    const releaseName = this.release.getName();
+
+    return releaseName;
+  }
+
   getRules(releaseNames = []) {
-    const name = this.getName(),
-          rules = [],
-          releaseName = name, ///
+    const rules = [],
+          releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
@@ -97,9 +100,8 @@ export default class ReleaseContext {
   }
 
   getTypes(releaseNames = []) {
-    const name = this.getName(),
-          types = [],
-          releaseName = name, ///
+    const types = [],
+          releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
@@ -124,9 +126,8 @@ export default class ReleaseContext {
   }
 
   getAxioms(releaseNames = []) {
-    const name = this.getName(),
-          axioms = [],
-          releaseName = name, ///
+    const axioms = [],
+          releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
@@ -151,9 +152,8 @@ export default class ReleaseContext {
   }
 
   getCombinators(releaseNames = []) {
-    const name = this.getName(),
-          combinators = [],
-          releaseName = name, ///
+    const combinators = [],
+          releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
@@ -178,9 +178,8 @@ export default class ReleaseContext {
   }
 
   getConstructors(releaseNames = []) {
-    const name = this.getName(),
-          constructors = [],
-          releaseName = name, ///
+    const constructors = [],
+          releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {

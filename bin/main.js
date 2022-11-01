@@ -14,7 +14,7 @@ const { first } = arrayUtilities,
 
 function main(commands, options) {
   const firstCommand = first(commands),
-        { name = firstCommand } = options, ///
+        { releaseName = firstCommand } = options, ///
         releaseContextMap = {},
         shortenedVersion = null,
         dependentNames = [],
@@ -26,14 +26,14 @@ function main(commands, options) {
           releaseContextMap
         };
 
-  createReleaseContext(name, dependentNames, shortenedVersion, context, (error) => {
+  createReleaseContext(releaseName, dependentNames, shortenedVersion, context, (error) => {
     if (error) {
       ///
 
       return;
     }
 
-    verifyRelease(name, releaseContextMap);
+    verifyRelease(releaseName, releaseContextMap);
   });
 }
 

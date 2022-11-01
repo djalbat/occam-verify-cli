@@ -2,9 +2,9 @@
 
 import ReleaseContext from "../context/release"
 
-export function createReleaseContext(name, dependentNames, shortenedVersion, context, callback) {
+export function createReleaseContext(releaseName, dependentNames, shortenedVersion, context, callback) {
   const { releaseContextMap } = context,
-        releaseContext = releaseContextMap[name] || null;
+        releaseContext = releaseContextMap[releaseName] || null;
 
   if (releaseContext !== null) {
     const error = false;
@@ -16,7 +16,7 @@ export function createReleaseContext(name, dependentNames, shortenedVersion, con
 
   const { createRelease } = context;
 
-  createRelease(name, (release) => {
+  createRelease(releaseName, (release) => {
     if (release === null) {
       const error = true;
 
@@ -39,7 +39,7 @@ export function createReleaseContext(name, dependentNames, shortenedVersion, con
 
     createDependencyReleaseContexts(releaseContext, dependentNames, context, (error) => {
       if (!error) {
-        releaseContextMap[name] = releaseContext;
+        releaseContextMap[releaseName] = releaseContext;
       }
 
       callback(error);
@@ -51,9 +51,9 @@ export default {
   createReleaseContext
 };
 
-function checkCyclicDependencyExists(name, dependentNames, releaseContext) {
-  const dependentNamesIncludesName = dependentNames.includes(name),
-        cyclicDependencyExists = dependentNamesIncludesName;  ///
+function checkCyclicDependencyExists(releaseName, dependentNames, releaseContext) {
+  const dependentNamesIncludesReleaseName = dependentNames.includes(releaseName),
+        cyclicDependencyExists = dependentNamesIncludesReleaseName;  ///
 
   if (cyclicDependencyExists) {
     const firstDependentName = first(dependentNames),
@@ -69,15 +69,16 @@ function checkCyclicDependencyExists(name, dependentNames, releaseContext) {
 function createDependencyReleaseContexts(releaseContext, dependentNames, context, callback) {
   let noError = true;
 
-  const name = releaseContext.getName(),
+  const releaseName = releaseContext.getReleaseName(),
         dependencies = releaseContext.getDependencies();
 
-  dependentNames = [ ...dependentNames, name ];  ///
+  dependentNames = [ ...dependentNames, releaseName ];  ///
 
   dependencies.asynchronousForEachDependency((dependency, next, done) => {
     const name = dependency.getName(),
+          releaseName = name, //
           shortenedVersion = dependency.getShortedVersion(),
-          cyclicDependencyExists = checkCyclicDependencyExists(name, dependentNames, releaseContext);
+          cyclicDependencyExists = checkCyclicDependencyExists(releaseName, dependentNames, releaseContext);
 
     if (cyclicDependencyExists) {
       noError = false;
@@ -87,7 +88,7 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
       return;
     }
 
-    createReleaseContext(name, dependentNames, shortenedVersion, context, (error) => {
+    createReleaseContext(releaseName, dependentNames, shortenedVersion, context, (error) => {
       if (error) {
         noError = false;
 
@@ -112,12 +113,12 @@ function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion) {
         releaseMatchesShortedVersion = release.matchShortenedVersion(shortenedVersion);
 
   if (!releaseMatchesShortedVersion) {
-    const name = releaseContext.getName(),
-          version = releaseContext.getVersion(),
+    const version = releaseContext.getVersion(),
+          releaseName = releaseContext.getReleaseName(),
           versionString = version.toString(),
           shortenedVersionString = shortenedVersion.toString();
 
-    releaseContext.error(`The '${name}' package's version of ${versionString} does not match the dependency's shortened version of ${shortenedVersionString}.`);
+    releaseContext.error(`The '${releaseName}' package's version of ${versionString} does not match the dependency's shortened version of ${shortenedVersionString}.`);
   }
 
   return releaseMatchesShortedVersion;
