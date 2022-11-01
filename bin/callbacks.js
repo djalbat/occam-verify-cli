@@ -3,10 +3,9 @@
 const { Callbacks } = require("../lib/index"),
       { loggingUtilities } = require("necessary");
 
-const { HALT_MESSAGE, BEGIN_MESSAGE, COMPLETED_MESSAGE } = require("./messages");
-
 const { log } = loggingUtilities,
-      { trace } = log;
+      { trace } = log,
+      { HALT_MESSAGE, BEGIN_MESSAGE, COMPLETED_MESSAGE } = Callbacks;
 
 function halt(filePath, leastLineIndex, greatestLineIndex) {
   let message = HALT_MESSAGE;

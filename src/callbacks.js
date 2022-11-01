@@ -1,6 +1,10 @@
 "use strict";
 
-export default class Callbacks {
+const HALT_MESSAGE = "Halted verification.",
+      BEGIN_MESSAGE = "Begun verification...",
+      COMPLETED_MESSAGE = "...completed verification.";
+
+class Callbacks {
   constructor(halt, begin, complete) {
     this.halt = halt;
     this.begin = begin;
@@ -25,3 +29,11 @@ export default class Callbacks {
     return callbacks;
   }
 }
+
+Object.assign(Callbacks, {
+  HALT_MESSAGE,
+  BEGIN_MESSAGE,
+  COMPLETED_MESSAGE
+});
+
+export default Callbacks;
