@@ -18,7 +18,6 @@ function main(commands, options) {
         releaseContextMap = {},
         shortenedVersion = null,
         dependentNames = [],
-        connection = null,  ///
         callbacks = callbacksFromLog(log),
         context = {
           log,
@@ -27,7 +26,7 @@ function main(commands, options) {
           releaseContextMap
         };
 
-  createReleaseContext(connection, name, dependentNames, shortenedVersion, context, (error) => {
+  createReleaseContext(name, dependentNames, shortenedVersion, context, (error) => {
     if (error) {
       ///
 

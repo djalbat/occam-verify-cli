@@ -2,7 +2,7 @@
 
 import ReleaseContext from "../context/release"
 
-export function createReleaseContext(connection, name, dependentNames, shortenedVersion, context, callback) {
+export function createReleaseContext(name, dependentNames, shortenedVersion, context, callback) {
   const { releaseContextMap } = context,
         releaseContext = releaseContextMap[name] || null;
 
@@ -37,7 +37,7 @@ export function createReleaseContext(connection, name, dependentNames, shortened
       return;
     }
 
-    createDependencyReleaseContexts(connection, releaseContext, dependentNames, context, (error) => {
+    createDependencyReleaseContexts(releaseContext, dependentNames, context, (error) => {
       if (!error) {
         releaseContextMap[name] = releaseContext;
       }
@@ -66,7 +66,7 @@ function checkCyclicDependencyExists(name, dependentNames, releaseContext) {
   return cyclicDependencyExists;
 }
 
-function createDependencyReleaseContexts(connection, releaseContext, dependentNames, context, callback) {
+function createDependencyReleaseContexts(releaseContext, dependentNames, context, callback) {
   let noError = true;
 
   const name = releaseContext.getName(),
@@ -87,7 +87,7 @@ function createDependencyReleaseContexts(connection, releaseContext, dependentNa
       return;
     }
 
-    createReleaseContext(connection, name, dependentNames, shortenedVersion, context, (error) => {
+    createReleaseContext(name, dependentNames, shortenedVersion, context, (error) => {
       if (error) {
         noError = false;
 
