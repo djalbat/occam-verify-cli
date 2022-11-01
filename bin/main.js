@@ -4,10 +4,9 @@ const { arrayUtilities } = require("necessary"),
       { fileSystemUtilities } = require("occam-file-system"),
       { verifyRelease, releaseContextUtilities } = require("../lib/index");
 
-const callbacks = require("./callbacks");
-
 const { log } = require("./utilities/logging"),
-      { PERIOD } = require("./constants");
+      { PERIOD } = require("./constants"),
+      { callbacksFromLog } = require("./utilities/callbacks");
 
 const { first } = arrayUtilities,
       { loadRelease } = fileSystemUtilities,
@@ -20,6 +19,7 @@ function main(commands, options) {
         shortenedVersion = null,
         dependentNames = [],
         connection = null,  ///
+        callbacks = callbacksFromLog(log),
         context = {
           log,
           callbacks,
