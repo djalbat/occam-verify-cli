@@ -1,8 +1,8 @@
 "use strict";
 
-const { ReleaseContext } = require("../../lib/index");
+import ReleaseContext from "../context/release"
 
-function createReleaseContext(connection, name, dependentNames, shortenedVersion, context, callback) {
+export function createReleaseContext(connection, name, dependentNames, shortenedVersion, context, callback) {
   const { releaseContextMap } = context,
         releaseContext = releaseContextMap[name] || null;
 
@@ -44,10 +44,10 @@ function createReleaseContext(connection, name, dependentNames, shortenedVersion
 
       callback(error);
     });
-  });
+  }, context);
 }
 
-module.exports = {
+export default {
   createReleaseContext
 };
 
@@ -67,12 +67,14 @@ function checkCyclicDependencyExists(name, dependentNames, releaseContext) {
 }
 
 function createDependencyReleaseContexts(connection, releaseContext, dependentNames, context, callback) {
+  let noError = true;
+
   const name = releaseContext.getName(),
         dependencies = releaseContext.getDependencies();
 
   dependentNames = [ ...dependentNames, name ];  ///
 
-  dependencies.asynchronousForEachDependency(dependencies, (dependency, next, done) => {
+  dependencies.asynchronousForEachDependency((dependency, next, done) => {
     const name = dependency.getName(),
           shortenedVersion = dependency.getShortedVersion(),
           cyclicDependencyExists = checkCyclicDependencyExists(name, dependentNames, releaseContext);
@@ -97,8 +99,6 @@ function createDependencyReleaseContexts(connection, releaseContext, dependentNa
       next();
     });
   }, done);
-
-  let noError = true;
 
   function done() {
     const error = !noError;

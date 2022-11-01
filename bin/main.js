@@ -1,17 +1,17 @@
 "use strict";
 
-const { verifyRelease } = require("../lib/index"),
-      { arrayUtilities } = require("necessary"),
-      { fileSystemUtilities } = require("occam-file-system")
+const { arrayUtilities } = require("necessary"),
+      { fileSystemUtilities } = require("occam-file-system"),
+      { verifyRelease, releaseContextUtilities } = require("../lib/index");
 
 const callbacks = require("./callbacks");
 
 const { log } = require("./utilities/logging"),
-      { PERIOD } = require("./constants"),
-      { createReleaseContext } = require("./utilities/release");
+      { PERIOD } = require("./constants");
 
 const { first } = arrayUtilities,
-      { loadRelease } = fileSystemUtilities;
+      { loadRelease } = fileSystemUtilities,
+      { createReleaseContext } = releaseContextUtilities;
 
 function main(commands, options) {
   const firstCommand = first(commands),
@@ -40,7 +40,7 @@ function main(commands, options) {
 
 module.exports = main;
 
-function createRelease(name, callback) {
+function createRelease(name, callback, context) {
   const topmostDirectoryName = name, ///
         projectsDirectoryPath = PERIOD, ///
         release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
