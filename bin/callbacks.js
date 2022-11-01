@@ -1,25 +1,42 @@
 "use strict";
 
-const { levels } = require("necessary"),
-      { Callbacks } = require("../lib/index"),
+const { Callbacks } = require("../lib/index"),
       { loggingUtilities } = require("necessary");
 
 const { HALT_MESSAGE, BEGIN_MESSAGE, COMPLETED_MESSAGE } = require("./messages");
 
 const { log } = loggingUtilities,
-      { TRACE_LEVEL } = levels;
+      { trace } = log;
 
-function halt(filePath, leastLineIndex, greatestLineIndex) { logMessage(HALT_MESSAGE, filePath, leastLineIndex, greatestLineIndex); } ///
+function halt(filePath, leastLineIndex, greatestLineIndex) {
+  let message = HALT_MESSAGE;
 
-function begin(filePath, leastLineIndex, greatestLineIndex) { logMessage(BEGIN_MESSAGE, filePath, leastLineIndex, greatestLineIndex); } ///
+  message = formatMessage(message, filePath, leastLineIndex, greatestLineIndex); ///
 
-function complete(filePath, leastLineIndex, greatestLineIndex) { logMessage(COMPLETED_MESSAGE, filePath, leastLineIndex, greatestLineIndex); }  ///
+  trace(message);
+}
+
+function begin(filePath, leastLineIndex, greatestLineIndex) {
+  let message = BEGIN_MESSAGE;
+
+  message = formatMessage(message, filePath, leastLineIndex, greatestLineIndex); ///
+
+  trace(message);
+}
+
+function complete(filePath, leastLineIndex, greatestLineIndex) {
+  let message = COMPLETED_MESSAGE;
+
+  message = formatMessage(message, filePath, leastLineIndex, greatestLineIndex); ///
+
+  trace(message);
+}
 
 const callbacks = Callbacks.fromHaltBeginAndComplete(halt, begin, complete);
 
 module.exports = callbacks;
 
-function logMessage(message, filePath, leastLineIndex, greatestLineIndex) {
+function formatMessage(message, filePath, leastLineIndex, greatestLineIndex) {
   if (leastLineIndex === greatestLineIndex) {
     const lineIndex = leastLineIndex; ///
 
@@ -27,10 +44,6 @@ function logMessage(message, filePath, leastLineIndex, greatestLineIndex) {
   } else {
     message = `'${filePath}' : [${leastLineIndex}-${greatestLineIndex}] - ${message}`;
   }
-
-  const level = TRACE_LEVEL;
-
-  log(message, level);
 
   return message;
 }
