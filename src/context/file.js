@@ -41,6 +41,27 @@ class FileContext {
     return this.variables;
   }
 
+  getLabels() {
+    const labels = [];
+
+    const rules = this.getRules(),
+          axioms = this.getAxioms();
+
+    rules.forEach((rule) => {
+      const ruleLabels = rule.getLabels();
+
+      push(labels, ruleLabels);
+    });
+
+    axioms.forEach((axiom) => {
+      const axiomLabels = axiom.getLabels();
+
+      push(labels, axiomLabels);
+    });
+
+    return labels;
+  }
+
   getRules(bubble = true) {
     const rules = [
       ...this.rules
@@ -136,14 +157,27 @@ class FileContext {
     return type;
   }
 
+  findLabelByLabelName(labelName) {
+    const name = labelName,  ///
+          labels = this.getLabels(),
+          label = labels.find((label) => {
+            const matches = label.matchName(name);
+
+            if (matches) {
+              return true;
+            }
+          }) || null;
+
+    return label;
+  }
+
   findRuleByReferenceName(referenceName) {
-    const label = referenceName,  ///
+    const labelName = referenceName,  ///
           rules = this.getRules(),
           rule = rules.find((rule) => {
-            const ruleLabels = rule.getLabels(),
-                  ruleLabelsIncludesLabel = ruleLabels.includes(label);
+            const ruleMatchesLabelName = rule.matchLabelName(labelName);
 
-            if (ruleLabelsIncludesLabel) {
+            if (ruleMatchesLabelName) {
               return true;
             }
           }) || null;
@@ -152,13 +186,12 @@ class FileContext {
   }
 
   findAxiomByReferenceName(referenceName) {
-    const label = referenceName,  ///
+    const labelName = referenceName,  ///
           axioms = this.getAxioms(),
           axiom = axioms.find((axiom) => {
-            const axiomLabels = axiom.getLabels(),
-                axiomLabelsIncludesLabel = axiomLabels.includes(label);
+            const axiomMatchesLabelName = axiom.matchLabelName(labelName);
 
-            if (axiomLabelsIncludesLabel) {
+            if (axiomMatchesLabelName) {
               return true;
             }
           }) || null;
@@ -180,14 +213,6 @@ class FileContext {
     return variable;
   }
 
-  isLabelPresent(label) {
-    const labels = this.getLabels(),
-        labelsIncludesLabel = labels.includes(label),
-        labelPresent = labelsIncludesLabel; ///
-
-    return labelPresent;
-  }
-
   isTypePresentByTypeName(typeName) {
     const type = this.findTypeByTypeName(typeName),
         typePresent = (type !== null);
@@ -195,24 +220,18 @@ class FileContext {
     return typePresent;
   }
 
-  isVariablePresentByVariableName(variableName) {
-    const variable = this.findVariableByVariableName(variableName),
-        variablePresent = (variable !== null);
+  isLabelPresentByLabelName(labelName) {
+    const label = this.findLabelByLabelName(labelName),
+          labelPresent = (label !== null);
 
-    return variablePresent;
+    return labelPresent;
   }
 
-  getLabels() {
-    const axioms = this.getAxioms(),
-          labels = axioms.reduce((labels, axiom) => {
-            const axiomLabels = axiom.getLabels();
+  isVariablePresentByVariableName(variableName) {
+    const variable = this.findVariableByVariableName(variableName),
+          variablePresent = (variable !== null);
 
-            push(labels, axiomLabels);
-
-            return labels;
-          }, []);
-
-    return labels;
+    return variablePresent;
   }
 
   addType(type) {
@@ -258,6 +277,34 @@ class FileContext {
           greatestLineIndex = greatestLineIndexFromNodeAndTokens(node, this.tokens);
 
     this.context.complete(this.filePath, leastLineIndex, greatestLineIndex);
+  }
+
+  asJSON() {
+    const filePath = this.getFilePath(),
+          rulesJSON = this.rules.map((rule) => rule.asJSON(this.tokens)),
+          typesJSON = this.types.map((type) => type.asJSON(this.tokens)),
+          axiomsJSON = this.axioms.map((axiom) => axiom.asJSON(this.tokens)),
+          variablesJSON = this.variables.map((variable) => variable.asJSON(this.tokens)),
+          combinatorsJSON = this.combinators.map((combinator) => combinator.asJSON(this.tokens)),
+          constructorsJSON = this.constructors.map((constructor) => constructor.asJSON(this.tokens)),
+          path = filePath,  ///
+          rules = rulesJSON,  ///
+          types = typesJSON,  ///
+          axioms = axiomsJSON,  ///
+          variables = variablesJSON,  ///
+          combinators = combinatorsJSON,  ///
+          constructors = constructorsJSON,  ///
+          json = {
+            path,
+            rules,
+            types,
+            axioms,
+            variables,
+            combinators,
+            constructors
+          };
+
+    return json;
   }
 
   static fromReleaseContextAndFilePath(releaseContext, filePath) {

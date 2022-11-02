@@ -37,7 +37,14 @@ function main(commands, options) {
       return;
     }
 
-    verifyRelease(releaseName, releaseContextMap);
+    const releaseVerified = verifyRelease(releaseName, releaseContextMap);
+
+    if (releaseVerified) {
+      const releaseContext = releaseContextMap[releaseName],
+            releaseContextJSON = releaseContext.toJSON();
+
+      debugger
+    }
   });
 }
 

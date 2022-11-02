@@ -23,6 +23,19 @@ export default class Rule {
     return this.conclusion;
   }
 
+  matchLabelName(labelName) {
+    const matchesLabelName = this.labels.some((label) => {
+      const name = labelName, ///
+            labelMatchesName = label.matchName(name);
+
+      if (labelMatchesName) {
+        return true;
+      }
+    });
+
+    return matchesLabelName;
+  }
+
   matchMetastatement(metastatementNode, metaproofContext) {
     let metastatementNatches;
 
@@ -54,7 +67,11 @@ export default class Rule {
     return string;
   }
 
-  static fromPremisesConclusionAndLabels(premises, conclusion, labels) {
+  asJSON(tokens) {
+
+  }
+
+  static fromLabelsPremisesAndConclusion(labels, premises, conclusion) {
     const rule = new Rule(labels, premises, conclusion);
 
     return rule;

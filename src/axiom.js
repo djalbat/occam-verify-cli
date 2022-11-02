@@ -26,6 +26,19 @@ export default class Axiom {
     return this.consequentStatementNode;
   }
 
+  matchLabelName(labelName) {
+    const matchesLabelName = this.labels.some((label) => {
+      const name = labelName, ///
+            labelMatchesName = label.matchName(name);
+
+      if (labelMatchesName) {
+        return true;
+      }
+    });
+
+    return matchesLabelName;
+  }
+
   asString() {
     const string = labelsAsString(this.labels);
 

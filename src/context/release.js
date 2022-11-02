@@ -247,6 +247,16 @@ export default class ReleaseContext {
     this.releaseContexts = releaseContexts;
   }
 
+  asJSON() {
+    const fileContextsJSON = this.fileContexts.map((fileContext) => fileContext.toJSON()),
+          files = fileContextsJSON, ///
+          json = {
+            files
+          };
+
+    return json;
+  }
+
   static fromLogReleaseAndCallbacks(log, release, callbacks, ...remainingArguments) {
     const verified = false,
           customGrammar = customGrammarFromRelease(release),

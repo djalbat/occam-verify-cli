@@ -59,7 +59,7 @@ export default function verifyRule(ruleNode, fileContext) {
       }
 
       if (metaproofVerified) {
-        const rule = Rule.fromPremisesConclusionAndLabels(premises, conclusion, labels);
+        const rule = Rule.fromLabelsPremisesAndConclusion(labels, premises, conclusion);
 
         fileContext.addRule(rule);
 

@@ -1,5 +1,8 @@
 "use strict";
 
+import Label from "../label";
+
+import { nodesAsString } from "../utilities/string";
 import { labelNameFromLabelNode } from "../utilities/query";
 
 export default function verifyLabel(labelNode, labels, fileContext) {
@@ -8,12 +11,15 @@ export default function verifyLabel(labelNode, labels, fileContext) {
   fileContext.begin(labelNode);
 
   const labelName = labelNameFromLabelNode(labelNode),
-        label = labelName,  ///
-        labelPresent = fileContext.isLabelPresent(label);
+        labelPresent = fileContext.isLabelPresentByLabelName(labelName);
 
   if (labelPresent) {
-    fileContext.error(`The label ${label} is already present`, labelNode);
+    const labelString = nodesAsString(labelNode);
+
+    fileContext.error(`The label ${labelString} is already present`, labelNode);
   } else {
+    const label = Label.fromLabelNode(labelNode);
+
     labels.push(label);
 
     labelVerified = true;

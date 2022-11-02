@@ -37,9 +37,3 @@ export function nodesAsString(nodes) {
 
   return string;
 }
-
-export function labelsAsString(labels) {
-  const labelsString = labels.join(COMMA);
-
-  return labelsString;
-}
