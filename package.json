@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "argumentative": "^2.0.15",
-    "necessary": "^11.0.40",
+    "necessary": "^11.1.11",
     "occam-custom-grammars": "^5.0.357",
     "occam-dom": "^3.0.171",
     "occam-file-system": "^5.0.59",
