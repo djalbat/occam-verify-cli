@@ -2,7 +2,7 @@
 
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
-import { labelsAsString } from "./utilities/string";
+import { lineIndexFromLabelsAndTokens } from "./utilities/tokens";
 
 export default class Rule {
   constructor(labels, premises, conclusion) {
@@ -61,14 +61,30 @@ export default class Rule {
     return metastatementNatches;
   }
 
-  asString() {
-    const string = labelsAsString(this.labels);
+  toJSON(tokens) {
+    const lineIndex = lineIndexFromLabelsAndTokens(this.labels, tokens),
+          labelsJSON = this.labels.map((label) => {
+            const labelJSON = label.toJSON();
 
-    return string;
-  }
+            return labelJSON;
+          }),
+          premisesJSON = this.premises.map((premise) => {
+            const premiseJSON = premise.toJSON();
 
-  asJSON(tokens) {
+            return premiseJSON;
+          }),
+          conclusionJSON = this.conclusion.toJSON(),
+          labels = labelsJSON,  ///
+          premises = premisesJSON,  ///
+          conclusion = conclusionJSON,  ///
+          json = {
+            lineIndex,
+            labels,
+            premises,
+            conclusion
+          };
 
+    return json;
   }
 
   static fromLabelsPremisesAndConclusion(labels, premises, conclusion) {

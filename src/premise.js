@@ -2,6 +2,7 @@
 
 import MetaSubstitution from "./metaSubstitution";
 
+import { nodeAsString } from "./utilities/string";
 import { first, second } from "./utilities/array";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { metavariableNameFromMetavariableNode } from "./utilities/query";
@@ -57,6 +58,16 @@ export default class Premise {
           metastatementNodeMatches = premiseNonTerminalNodeMatches; ///
 
     return metastatementNodeMatches;
+  }
+
+  toJSON() {
+    const metastatementString = nodeAsString(this.metastatementNode),
+          metastatement = metastatementString, ///
+          json = {
+            metastatement
+          };
+
+    return json;
   }
 
   static fromMetastatementNode(metastatementNode) {

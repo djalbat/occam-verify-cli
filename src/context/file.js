@@ -279,19 +279,37 @@ class FileContext {
     this.context.complete(this.filePath, leastLineIndex, greatestLineIndex);
   }
 
-  asJSON() {
+  toJSON() {
     const filePath = this.getFilePath(),
-          rulesJSON = this.rules.map((rule) => rule.asJSON(this.tokens)),
-          typesJSON = this.types.map((type) => type.asJSON(this.tokens)),
-          axiomsJSON = this.axioms.map((axiom) => axiom.asJSON(this.tokens)),
-          variablesJSON = this.variables.map((variable) => variable.asJSON(this.tokens)),
-          combinatorsJSON = this.combinators.map((combinator) => combinator.asJSON(this.tokens)),
-          constructorsJSON = this.constructors.map((constructor) => constructor.asJSON(this.tokens)),
+          rulesJSON = this.rules.map((rule) => {
+            const ruleJSON = rule.toJSON(this.tokens);
+
+            return ruleJSON;
+          }),
+          typesJSON = this.types.map((type) => {
+            const typeJSON = type.toJSON(this.tokens);
+
+            return typeJSON;
+          }),
+          axiomsJSON = this.axioms.map((axiom) => {
+            const axiomJSON = axiom.toJSON(this.tokens);
+
+            return axiomJSON;
+          }),
+          combinatorsJSON = this.combinators.map((combinator) => {
+            const combinatorJSON = combinator.toJSON(this.tokens);
+
+            return combinatorJSON;
+          }),
+          constructorsJSON = this.constructors.map((constructor) => {
+            const constructorJSON = constructor.toJSON(this.tokens);
+
+            return constructorJSON;
+          }),
           path = filePath,  ///
           rules = rulesJSON,  ///
           types = typesJSON,  ///
           axioms = axiomsJSON,  ///
-          variables = variablesJSON,  ///
           combinators = combinatorsJSON,  ///
           constructors = constructorsJSON,  ///
           json = {
@@ -299,7 +317,6 @@ class FileContext {
             rules,
             types,
             axioms,
-            variables,
             combinators,
             constructors
           };

@@ -40,10 +40,11 @@ function main(commands, options) {
     const releaseVerified = verifyRelease(releaseName, releaseContextMap);
 
     if (releaseVerified) {
-      const releaseContext = releaseContextMap[releaseName],
-            releaseContextJSON = releaseContext.toJSON();
+      const releaseContext = releaseContextMap[releaseName];
 
-      debugger
+      releaseContext.toJSON();
+
+      ///
     }
   });
 }

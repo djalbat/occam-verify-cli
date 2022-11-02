@@ -1,6 +1,6 @@
 "use strict";
 
-import { labelsAsString } from "./utilities/string";
+import {nodeAsString} from "./utilities/string";
 
 export default class Axiom {
   constructor(labels, statementNode, suppositionStatementNode, consequentStatementNode) {
@@ -39,10 +39,33 @@ export default class Axiom {
     return matchesLabelName;
   }
 
-  asString() {
-    const string = labelsAsString(this.labels);
+  toString() {
+    const labelsJSON = this.labels.map((label) => {
+            const labelJSON = label.asJSON();
 
-    return string;
+            return labelJSON;
+          }),
+          statementString = (this.statementNode === null) ?
+                               null :
+                                 nodeAsString(this.statementNode),
+          consequentStatementString = (this.consequentStatementNode === null) ?
+                                         null :
+                                           nodeAsString(this.consequentStatementNode),
+          suppositionStatementString = (this.suppositionStatementNode === null) ?
+                                          null :
+                                            nodeAsString(this.suppositionStatementNode),
+          labels = labelsJSON,  ///
+          statement = statementString,  ///
+          consequent = consequentStatementString, ///
+          supposition = suppositionStatementString, ///
+          json = {
+            labels,
+            statement,
+            consequent,
+            supposition
+          };
+
+    return json;
   }
 
   static fromStatementNodeAndLabels(statementNode, labels) {

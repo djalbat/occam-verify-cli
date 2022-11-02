@@ -1,5 +1,19 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
+const { first } = arrayUtilities;
+
+export function lineIndexFromLabelsAndTokens(labels, tokens) {
+  const firstLabel = first(labels),
+        label = firstLabel, ///
+        node = label.getNode(),
+        leastLineIndex = leastLineIndexFromNodeAndTokens(node, tokens),
+        lineIndex = leastLineIndex; ///
+
+  return lineIndex;
+}
+
 export function leastLineIndexFromNodeAndTokens(node, tokens) {
   let leastLineIndex = undefined; ///
 

@@ -2,12 +2,24 @@
 
 import verifyFile from "../verify/file";
 
-import { leftDifference } from "../utilities/array";
+import { filePathUtilities } from "occam-file-system";
+
+import { filter, leftDifference } from "../utilities/array";
+
+const { isFilePathFlorenceFilePath } = filePathUtilities;
 
 export default function verifyFiles(releaseContext) {
   let filesVerified = false;
 
   const filePaths = releaseContext.getFilePaths();
+
+  filter(filePaths, (filePath) => {
+    const filePathFlorenceFilePath = isFilePathFlorenceFilePath(filePath);
+
+    if (filePathFlorenceFilePath) {
+      return true;
+    }
+  })
 
   for (;;) {
     const filePathsLength = filePaths.length;

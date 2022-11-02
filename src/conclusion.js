@@ -1,6 +1,7 @@
 "use strict";
 
 import { first } from "./utilities/array";
+import { nodeAsString } from "./utilities/string";
 import { metavariableNameFromMetavariableNode } from "./utilities/query";
 import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } from "./ruleNames";
 
@@ -20,6 +21,16 @@ export default class Conclusion {
           metastatementNodeMatches = conclusionNonTerminalNodeMatches; ///
 
     return metastatementNodeMatches;
+  }
+
+  toJSON() {
+    const metastatementString = nodeAsString(this.metastatementNode),
+          metastatement = metastatementString,  ///
+          json = {
+            metastatement
+          };
+
+    return json;
   }
 
   static fromMetastatementNode(metastatementNode) {

@@ -17,6 +17,16 @@ export default class Combinator {
     return string;
   }
 
+  toJSON() {
+    const statementString = nodeAsString(this.statementNode),
+          statement = statementString,  ///
+          json = {
+            statement
+          };
+
+    return json;
+  }
+
   static fromStatementNode(statementNode) {
     const combinator = new Combinator(statementNode);
 

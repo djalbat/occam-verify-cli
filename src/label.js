@@ -26,6 +26,13 @@ export default class Label {
     return string;
   }
 
+  toJSON() {
+    const string = nodeAsString(this.node),
+          json = string; ///
+
+    return json;
+  }
+
   static fromLabelNode(labelNode) {
     const node = labelNode, ///
           variable = new Label(node);
