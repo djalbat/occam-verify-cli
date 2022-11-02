@@ -280,8 +280,7 @@ class FileContext {
   }
 
   asJSON() {
-    const filePath = this.getFilePath(),
-          rulesJSON = this.rules.map((rule) => {
+    const rulesJSON = this.rules.map((rule) => {
             const ruleJSON = rule.asJSON(this.tokens);
 
             return ruleJSON;
@@ -306,14 +305,12 @@ class FileContext {
 
             return constructorJSON;
           }),
-          path = filePath,  ///
           rules = rulesJSON,  ///
           types = typesJSON,  ///
           axioms = axiomsJSON,  ///
           combinators = combinatorsJSON,  ///
           constructors = constructorsJSON,  ///
           json = {
-            path,
             rules,
             types,
             axioms,
