@@ -1,7 +1,7 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import {labelNameFromLabelNode} from "./utilities/query";
+import { labelNameFromLabelNode } from "./utilities/query";
 
 export default class Label {
   constructor(node) {
