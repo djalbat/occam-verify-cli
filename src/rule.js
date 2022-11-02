@@ -61,19 +61,19 @@ export default class Rule {
     return metastatementNatches;
   }
 
-  toJSON(tokens) {
+  asJSON(tokens) {
     const lineIndex = lineIndexFromLabelsAndTokens(this.labels, tokens),
           labelsJSON = this.labels.map((label) => {
-            const labelJSON = label.toJSON();
+            const labelJSON = label.asJSON();
 
             return labelJSON;
           }),
           premisesJSON = this.premises.map((premise) => {
-            const premiseJSON = premise.toJSON();
+            const premiseJSON = premise.asJSON();
 
             return premiseJSON;
           }),
-          conclusionJSON = this.conclusion.toJSON(),
+          conclusionJSON = this.conclusion.asJSON(),
           labels = labelsJSON,  ///
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///

@@ -39,7 +39,7 @@ export default class Axiom {
     return matchesLabelName;
   }
 
-  toString() {
+  asJSON() {
     const labelsJSON = this.labels.map((label) => {
             const labelJSON = label.asJSON();
 

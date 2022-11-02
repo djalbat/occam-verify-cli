@@ -60,7 +60,7 @@ export default class Premise {
     return metastatementNodeMatches;
   }
 
-  toJSON() {
+  asJSON() {
     const metastatementString = nodeAsString(this.metastatementNode),
           metastatement = metastatementString, ///
           json = {

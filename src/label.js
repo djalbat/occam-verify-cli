@@ -26,7 +26,7 @@ export default class Label {
     return string;
   }
 
-  toJSON() {
+  asJSON() {
     const string = nodeAsString(this.node),
           json = string; ///
 

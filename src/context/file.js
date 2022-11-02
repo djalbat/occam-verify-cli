@@ -279,30 +279,30 @@ class FileContext {
     this.context.complete(this.filePath, leastLineIndex, greatestLineIndex);
   }
 
-  toJSON() {
+  asJSON() {
     const filePath = this.getFilePath(),
           rulesJSON = this.rules.map((rule) => {
-            const ruleJSON = rule.toJSON(this.tokens);
+            const ruleJSON = rule.asJSON(this.tokens);
 
             return ruleJSON;
           }),
           typesJSON = this.types.map((type) => {
-            const typeJSON = type.toJSON(this.tokens);
+            const typeJSON = type.asJSON(this.tokens);
 
             return typeJSON;
           }),
           axiomsJSON = this.axioms.map((axiom) => {
-            const axiomJSON = axiom.toJSON(this.tokens);
+            const axiomJSON = axiom.asJSON(this.tokens);
 
             return axiomJSON;
           }),
           combinatorsJSON = this.combinators.map((combinator) => {
-            const combinatorJSON = combinator.toJSON(this.tokens);
+            const combinatorJSON = combinator.asJSON(this.tokens);
 
             return combinatorJSON;
           }),
           constructorsJSON = this.constructors.map((constructor) => {
-            const constructorJSON = constructor.toJSON(this.tokens);
+            const constructorJSON = constructor.asJSON(this.tokens);
 
             return constructorJSON;
           }),

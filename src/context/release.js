@@ -247,9 +247,9 @@ export default class ReleaseContext {
     this.releaseContexts = releaseContexts;
   }
 
-  toJSON() {
+  asJSON() {
     const fileContextsJSON = this.fileContexts.map((fileContext) => {
-            const fileContextJSON = fileContext.toJSON();
+            const fileContextJSON = fileContext.asJSON();
 
             return fileContextJSON;
           }),
