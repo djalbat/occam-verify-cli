@@ -2,7 +2,7 @@
 
 import Label from "../label";
 
-import { nodesAsString } from "../utilities/string";
+import { nodeAsString } from "../utilities/string";
 import { labelNameFromLabelNode } from "../utilities/query";
 
 export default function verifyLabel(labelNode, labels, fileContext) {
@@ -14,9 +14,9 @@ export default function verifyLabel(labelNode, labels, fileContext) {
         labelPresent = fileContext.isLabelPresentByLabelName(labelName);
 
   if (labelPresent) {
-    const labelString = nodesAsString(labelNode);
+    const labelString = nodeAsString(labelNode);
 
-    fileContext.error(`The label ${labelString} is already present`, labelNode);
+    fileContext.error(`The '${labelString}' label is already present.`, labelNode);
   } else {
     const label = Label.fromLabelNode(labelNode);
 
