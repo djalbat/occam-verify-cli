@@ -151,6 +151,32 @@ export default class ReleaseContext {
     return axioms;
   }
 
+  getLabels(releaseNames = []) {
+    const labels = [],
+          releaseName = this.getReleaseName(),
+          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
+
+    if (!releaseNamesIncludesReleaseName) {
+      releaseNames.push(releaseName);
+
+      const bubble = false;
+
+      this.fileContexts.forEach((fileContext) => {
+        const fileContextLabels = fileContext.getLabels(bubble);
+
+        push(labels, fileContextLabels);
+      });
+
+      this.releaseContexts.forEach((releaseContext) => {
+        const releaseContextLabels = releaseContext.getLabels(releaseNames);
+
+        push(labels, releaseContextLabels);
+      });
+    }
+
+    return labels;
+  }
+
   getCombinators(releaseNames = []) {
     const combinators = [],
           releaseName = this.getReleaseName(),
