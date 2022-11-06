@@ -12,7 +12,7 @@ export function nodeAsString(node) {
       const terminalNode = node,  ///
             content = terminalNode.getContent();
 
-      string = `${string}${content}`;
+      string = content; ///
     } else {
       const nonTerminalNode = node, ///
             childNodes = nonTerminalNode.getChildNodes();
