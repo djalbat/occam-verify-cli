@@ -1,6 +1,7 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
+import { CONSTRUCTOR_KIND } from "./kinds";
 
 export default class Constructor {
   constructor(termNode, type) {
@@ -38,12 +39,14 @@ export default class Constructor {
           typeJSON = (this.type === null) ?
                         null :
                           this.type.asJSON(),
+          kind = CONSTRUCTOR_KIND,
           term = termString,  ///
           type = typeJSON,  ///
-          json = {
+          json = [{
+            kind,
             term,
             type
-          };
+          }];
 
     return json;
   }

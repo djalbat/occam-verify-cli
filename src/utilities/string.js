@@ -1,22 +1,26 @@
 "use strict";
 
-import { COMMA, EMPTY_STRING } from "../constants";
+import { COMMA } from "../constants";
 
-export function nodeAsString(node, string = EMPTY_STRING) {
-  const nodeTerminalNode = node.isTerminalNode();
+export function nodeAsString(node) {
+  let string = null;
 
-  if (nodeTerminalNode) {
-    const terminalNode = node,
-          content = terminalNode.getContent();
+  if (node !== null) {
+    const nodeTerminalNode = node.isTerminalNode();
 
-    string = `${string}${content}`;
-  } else {
-    const nonTerminalNode = node, ///
-          childNodes = nonTerminalNode.getChildNodes();
+    if (nodeTerminalNode) {
+      const terminalNode = node,  ///
+            content = terminalNode.getContent();
 
-    childNodes.forEach((childNode) => {
-      string = nodeAsString(childNode, string);
-    });
+      string = `${string}${content}`;
+    } else {
+      const nonTerminalNode = node, ///
+            childNodes = nonTerminalNode.getChildNodes();
+
+      childNodes.forEach((childNode) => {
+        string = nodeAsString(childNode, string);
+      });
+    }
   }
 
   return string;

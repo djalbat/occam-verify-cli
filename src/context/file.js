@@ -296,43 +296,37 @@ export default class FileContext {
   }
 
   asJSON() {
-    const rulesJSON = this.rules.map((rule) => {
-            const ruleJSON = rule.asJSON(this.tokens);
+    const json = [];
 
-            return ruleJSON;
-          }),
-          typesJSON = this.types.map((type) => {
-            const typeJSON = type.asJSON(this.tokens);
+    this.rules.forEach((rule) => {
+      const ruleJSON = rule.asJSON();
 
-            return typeJSON;
-          }),
-          axiomsJSON = this.axioms.map((axiom) => {
-            const axiomJSON = axiom.asJSON(this.tokens);
+      push(json, ruleJSON);
+    });
 
-            return axiomJSON;
-          }),
-          combinatorsJSON = this.combinators.map((combinator) => {
-            const combinatorJSON = combinator.asJSON(this.tokens);
+    this.types.forEach((type) => {
+      const typeJSON = type.asJSON();
 
-            return combinatorJSON;
-          }),
-          constructorsJSON = this.constructors.map((constructor) => {
-            const constructorJSON = constructor.asJSON(this.tokens);
+      push(json, typeJSON);
+    });
 
-            return constructorJSON;
-          }),
-          rules = rulesJSON,  ///
-          types = typesJSON,  ///
-          axioms = axiomsJSON,  ///
-          combinators = combinatorsJSON,  ///
-          constructors = constructorsJSON,  ///
-          json = {
-            rules,
-            types,
-            axioms,
-            combinators,
-            constructors
-          };
+    this.axioms.forEach((axiom) => {
+      const axiomJSON = axiom.asJSON();
+
+      push(json, axiomJSON);
+    });
+
+    this.combinators.forEach((combinator) => {
+      const combinatorJSON = combinator.asJSON();
+
+      push(json, combinatorJSON);
+    });
+
+    this.constructors.forEach((constructor) => {
+      const constructorJSON = constructor.asJSON();
+
+      push(json, constructorJSON)
+    });
 
     return json;
   }

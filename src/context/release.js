@@ -274,15 +274,13 @@ export default class ReleaseContext {
   }
 
   asJSON() {
-    const fileContextsJSON = this.fileContexts.map((fileContext) => {
-            const fileContextJSON = fileContext.asJSON();
+    const json = [];
 
-            return fileContextJSON;
-          }),
-          files = fileContextsJSON, ///
-          json = {
-            files
-          };
+    this.fileContexts.forEach((fileContext) => {
+      const fileContextJSON = fileContext.asJSON();
+
+      push(json, fileContextJSON);
+    });
 
     return json;
   }

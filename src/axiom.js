@@ -1,6 +1,7 @@
 "use strict";
 
-import {nodeAsString} from "./utilities/string";
+import { AXIOM_KIND } from "./kinds";
+import { nodeAsString } from "./utilities/string";
 
 export default class Axiom {
   constructor(labels, statementNode, suppositionStatementNode, consequentStatementNode) {
@@ -40,30 +41,26 @@ export default class Axiom {
   }
 
   asJSON() {
-    const labelsJSON = this.labels.map((label) => {
-            const labelJSON = label.asJSON();
-
-            return labelJSON;
-          }),
-          statementString = (this.statementNode === null) ?
-                               null :
-                                 nodeAsString(this.statementNode),
-          consequentStatementString = (this.consequentStatementNode === null) ?
-                                         null :
-                                           nodeAsString(this.consequentStatementNode),
-          suppositionStatementString = (this.suppositionStatementNode === null) ?
-                                          null :
-                                            nodeAsString(this.suppositionStatementNode),
-          labels = labelsJSON,  ///
+    const statementString = nodeAsString(this.statementNode),
+          consequentStatementString = nodeAsString(this.consequentStatementNode),
+          suppositionStatementString = nodeAsString(this.suppositionStatementNode),
+          kind = AXIOM_KIND,
           statement = statementString,  ///
           consequent = consequentStatementString, ///
           supposition = suppositionStatementString, ///
-          json = {
-            labels,
-            statement,
-            consequent,
-            supposition
-          };
+          json = this.labels.map((label) => {
+            const labelString = label.asString();
+
+            label = labelString;  ///
+
+            return ({
+              kind,
+              label,
+              statement,
+              consequent,
+              supposition
+            });
+          });
 
     return json;
   }

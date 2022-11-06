@@ -1,6 +1,7 @@
 "use strict";
 
 import { prune } from "./utilities/array";
+import { RULE_KIND } from "./kinds";
 import { someSubArray } from "./utilities/array";
 
 export default class Rule {
@@ -61,25 +62,27 @@ export default class Rule {
   }
 
   asJSON() {
-    const labelsJSON = this.labels.map((label) => {
-            const labelJSON = label.asJSON();
-
-            return labelJSON;
-          }),
-          premisesJSON = this.premises.map((premise) => {
+    const premisesJSON = this.premises.map((premise) => {
             const premiseJSON = premise.asJSON();
 
             return premiseJSON;
           }),
           conclusionJSON = this.conclusion.asJSON(),
-          labels = labelsJSON,  ///
+          kind = RULE_KIND,
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///
-          json = {
-            labels,
-            premises,
-            conclusion
-          };
+          json = this.labels.map((label) => {
+            const labelString = label.asString();
+
+            label = labelString;  ///
+
+            return ({
+              kind,
+              label,
+              premises,
+              conclusion
+            });
+          });
 
     return json;
   }

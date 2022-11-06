@@ -1,5 +1,7 @@
 "use strict";
 
+import { TYPE_KIND } from "./kinds";
+
 export default class Type {
   constructor(name, superType) {
     this.name = name;
@@ -105,12 +107,14 @@ export default class Type {
     const superTypeJSON = (this.superType === null) ?
                             null :
                               this.superType.asJSON(),
+          kind = TYPE_KIND,
           name = this.name,
           superType = superTypeJSON,  ///
-          json = {
+          json = [{
+            kind,
             name,
             superType
-          };
+          }];
 
     return json;
   }
