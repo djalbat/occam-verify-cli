@@ -1,9 +1,9 @@
 "use strict";
 
-const { LOG_LEVEL_OPTIONS, RELEASE_NAME_OPTIONS } = require("./options");
+const { LOG_LEVEL_OPTION, RELEASE_NAME_OPTION } = require("./options");
 
-const l = LOG_LEVEL_OPTIONS,
-      p = RELEASE_NAME_OPTIONS;
+const l = LOG_LEVEL_OPTION,
+      p = RELEASE_NAME_OPTION;
 
 module.exports = {
   l,
