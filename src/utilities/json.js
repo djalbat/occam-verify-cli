@@ -50,7 +50,7 @@ function compareJSON(jsonA, jsonB) {
   return result;
 }
 
-module.exports = {
+export default {
   compareJSON
 };
 

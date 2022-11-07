@@ -24,7 +24,7 @@ function updateVersion(version, versionChange) {
   }
 }
 
-module.exports = {
+export default {
   updateVersion
 };
 
