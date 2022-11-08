@@ -67,10 +67,13 @@ function checkCyclicDependencyExists(releaseName, dependentNames, releaseContext
 }
 
 function createDependencyReleaseContexts(releaseContext, dependentNames, context, callback) {
-  let noError = true;
-
   const releaseName = releaseContext.getReleaseName(),
-        dependencies = releaseContext.getDependencies();
+        dependencies = releaseContext.getDependencies(),
+        done = () => {
+          const error = false;
+
+          callback(error);
+        }
 
   dependentNames = [ ...dependentNames, releaseName ];  ///
 
@@ -81,18 +84,18 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
           cyclicDependencyExists = checkCyclicDependencyExists(releaseName, dependentNames, releaseContext);
 
     if (cyclicDependencyExists) {
-      noError = false;
+      const error = true;
 
-      done();
+      callback(error);
 
       return;
     }
 
     createReleaseContext(releaseName, dependentNames, shortenedVersion, context, (error) => {
       if (error) {
-        noError = false;
+        error = !!error;  ///
 
-        done();
+        callback(error);
 
         return;
       }
@@ -100,12 +103,6 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
       next();
     });
   }, done);
-
-  function done() {
-    const error = !noError;
-
-    callback(error);
-  }
 }
 
 function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion) {
