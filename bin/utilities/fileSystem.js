@@ -1,7 +1,7 @@
 "use strict";
 
-const { ReleaseContext } = require("../../lib/index"),  ///
-      { fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
+const { DirectoryReleaseContext } = require("../../lib/index"),  ///
+      { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
       { loggingUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
 
 const callbacks = require("../callbacks");
@@ -29,9 +29,16 @@ function releaseContextFromFile(name, projectsDirectoryPath) {
   let releaseContext = null;
 
   const filePath = `${projectsDirectoryPath}/${name}`,
-        content = readFile(filePath);
+        content = readFile(filePath),
+        releaseJSONString = content,  ///
+        releaseJSON = JSON.parse(releaseJSONString);
 
-  debugger
+  let { entries } = releaseJSON;
+
+  const json = entries; ///
+
+  entries = Entries.fromJSON(json);
+
 
   return releaseContext;
 }
@@ -43,7 +50,9 @@ function releaseContextFromDirectory(name, projectsDirectoryPath) {
         release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
 
   if (release !== null) {
-    releaseContext = ReleaseContext.fromLogReleaseAndCallbacks(log, release, callbacks);
+    const directoryReleaseContext = DirectoryReleaseContext.fromLogReleaseAndCallbacks(log, release, callbacks);
+
+    releaseContext = directoryReleaseContext; ///
   }
 
   return releaseContext;

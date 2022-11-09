@@ -25,3 +25,8 @@ export function combinedCustomGrammarFromReleaseContexts(releaseContexts) {
 
   return combinedCustomGrammar;
 }
+
+export default {
+  customGrammarFromRelease,
+  combinedCustomGrammarFromReleaseContexts
+};
