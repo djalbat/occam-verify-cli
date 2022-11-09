@@ -3,44 +3,23 @@
 import ReleaseContext from "../../context/release";
 
 import { push } from "../../utilities/array";
-import { customGrammarFromEntries } from "../../utilities/customGrammar";
+import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
 
 export default class DirectoryReleaseContext extends ReleaseContext {
-  constructor(log, verified, callbacks, customGrammar, florenceLexer, florenceParser, releaseContexts, fileContexts, release) {
-    super(log, verified, callbacks, customGrammar, florenceLexer, florenceParser, releaseContexts);
+  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts, fileContexts) {
+    super(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts);
 
     this.fileContexts = fileContexts;
-    this.release = release;
   }
 
   getFileContexts() {
     return this.fileContexts;
   }
 
-  getRelease() {
-    return this.release;
-  }
-
-  getReleaseName() {
-    const releaseName = this.release.getName();
-
-    return releaseName;
-  }
-
-  getFile(filePath) { return this.release.getFile(filePath); }
-
-  getVersion() { return this.release.getVersion(); }
-
-  getFilePaths() { return this.release.getFilePaths(); }
-
-  getDependencies() { return this.release.getDependencies(); }
-
-  matchShortenedVersion(shortenedVersion) { return this.release.matchShortenedVersion(shortenedVersion); }
-
   getRules(releaseNames = []) {
     const rules = [],
-        releaseName = this.getReleaseName(),
-        releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
+          releaseName = this.getReleaseName(),
+          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
@@ -209,15 +188,14 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     return json;
   }
 
-  static fromLogReleaseAndCallbacks(log, release, callbacks) {
-    const entries = release.getEntries(),
-          verified = false,
-          customGrammar = customGrammarFromEntries(entries),
+  static fromLogNameEntriesAndCallbacks(log, name, entries, callbacks) {
+    const verified = false,
+          customGrammar = customGrammarFromNameAndEntries(name, entries),
           florenceLexer = null,
           florenceParser = null,
           releaseContexts = null,
           fileContexts = [],
-          releaseContext = new DirectoryReleaseContext(log, verified, callbacks, customGrammar, florenceLexer, florenceParser, releaseContexts, fileContexts, release);
+          releaseContext = new DirectoryReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts, fileContexts);
 
     return releaseContext;
   }

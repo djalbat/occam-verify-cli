@@ -2,9 +2,8 @@
 
 import { CustomGrammar, CombinedCustomGrammar } from "occam-custom-grammars";
 
-export function customGrammarFromEntries(entries) {
-  const name = entries.getName(),
-        termBNF = entries.getTermBNF(),
+export function customGrammarFromNameAndEntries(name, entries) {
+  const termBNF = entries.getTermBNF(),
         statementBNF = entries.getStatementBNF(),
         metastatementBNF = entries.getMetastatementBNF(),
         typePattern = entries.getTypePattern(),
@@ -27,6 +26,6 @@ export function combinedCustomGrammarFromReleaseContexts(releaseContexts) {
 }
 
 export default {
-  customGrammarFromEntries,
+  customGrammarFromNameAndEntries,
   combinedCustomGrammarFromReleaseContexts
 };

@@ -8,10 +8,12 @@ const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(log, verified, callbacks, customGrammar, florenceLexer, florenceParser, releaseContexts) {
+  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts) {
     this.log = log;
-    this.verified = verified;
+    this.name = name;
+    this.entries = entries;
     this.callbacks = callbacks;
+    this.verified = verified;
     this.customGrammar = customGrammar;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
@@ -22,12 +24,20 @@ export default class ReleaseContext {
     return this.log;
   }
 
-  isVerified() {
-    return this.verified;
+  getName() {
+    return this.name;
+  }
+
+  getEntries() {
+    return this.entries;
   }
 
   getCallbacks() {
     return this.callbacks;
+  }
+
+  isVerified() {
+    return this.verified;
   }
 
   getCustomGrammar() {
@@ -45,6 +55,23 @@ export default class ReleaseContext {
   getReleaseContexts() {
     return this.releaseContexts;
   }
+
+  getReleaseName() {
+    const name = this.getName(),
+        releaseName = name; ///
+
+    return releaseName;
+  }
+
+  getFile(filePath) { return this.entries.getFile(filePath); }
+
+  getVersion() { return this.entries.getVersion(); }
+
+  getFilePaths() { return this.entries.getFilePaths(); }
+
+  getDependencies() { return this.entries.getDependencies(); }
+
+  matchShortenedVersion(shortenedVersion) { return this.entries.matchShortenedVersion(shortenedVersion); }
 
   setVerified(verified) {
     this.verified = verified;

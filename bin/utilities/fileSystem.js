@@ -50,7 +50,9 @@ function releaseContextFromDirectory(name, projectsDirectoryPath) {
         release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
 
   if (release !== null) {
-    const directoryReleaseContext = DirectoryReleaseContext.fromLogReleaseAndCallbacks(log, release, callbacks);
+    const name = release.getName(),
+          entries = release.getEntries(),
+          directoryReleaseContext = DirectoryReleaseContext.fromLogNameEntriesAndCallbacks(log, name, entries, callbacks);
 
     releaseContext = directoryReleaseContext; ///
   }
