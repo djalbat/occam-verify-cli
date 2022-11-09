@@ -3,7 +3,7 @@
 import ReleaseContext from "../../context/release";
 
 import { push } from "../../utilities/array";
-import { customGrammarFromRelease } from "../../utilities/customGrammar";
+import { customGrammarFromEntries } from "../../utilities/customGrammar";
 
 export default class DirectoryReleaseContext extends ReleaseContext {
   constructor(log, verified, callbacks, customGrammar, florenceLexer, florenceParser, releaseContexts, fileContexts, release) {
@@ -210,8 +210,9 @@ export default class DirectoryReleaseContext extends ReleaseContext {
   }
 
   static fromLogReleaseAndCallbacks(log, release, callbacks) {
-    const verified = false,
-          customGrammar = customGrammarFromRelease(release),
+    const entries = release.getEntries(),
+          verified = false,
+          customGrammar = customGrammarFromEntries(entries),
           florenceLexer = null,
           florenceParser = null,
           releaseContexts = null,

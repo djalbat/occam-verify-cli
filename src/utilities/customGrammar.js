@@ -2,14 +2,14 @@
 
 import { CustomGrammar, CombinedCustomGrammar } from "occam-custom-grammars";
 
-export function customGrammarFromRelease(release) {
-  const name = release.getName(),
-        termBNF = release.getTermBNF(),
-        statementBNF = release.getStatementBNF(),
-        metastatementBNF = release.getMetastatementBNF(),
-        typePattern = release.getTypePattern(),
-        symbolPattern = release.getSymbolPattern(),
-        operatorPattern = release.getOperatorPattern(),
+export function customGrammarFromEntries(entries) {
+  const name = entries.getName(),
+        termBNF = entries.getTermBNF(),
+        statementBNF = entries.getStatementBNF(),
+        metastatementBNF = entries.getMetastatementBNF(),
+        typePattern = entries.getTypePattern(),
+        symbolPattern = entries.getSymbolPattern(),
+        operatorPattern = entries.getOperatorPattern(),
         customGrammar = CustomGrammar.fromNameTermBNFStatementBNFMetastatementBNFTypePatternSymbolPatternAndOperatorPattern(name, termBNF, statementBNF, metastatementBNF, typePattern, symbolPattern, operatorPattern);
 
   return customGrammar;
@@ -27,6 +27,6 @@ export function combinedCustomGrammarFromReleaseContexts(releaseContexts) {
 }
 
 export default {
-  customGrammarFromRelease,
+  customGrammarFromEntries,
   combinedCustomGrammarFromReleaseContexts
 };

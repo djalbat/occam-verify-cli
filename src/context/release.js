@@ -2,7 +2,7 @@
 
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
-import { customGrammarFromRelease, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
+import { combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
@@ -84,17 +84,5 @@ export default class ReleaseContext {
     this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
     this.releaseContexts = releaseContexts;
-  }
-
-  static fromLogReleaseAndCallbacks(log, release, callbacks, ...remainingArguments) {
-    const verified = false,
-          customGrammar = customGrammarFromRelease(release),
-          fileContexts = [],
-          florenceLexer = null,
-          florenceParser = null,
-          releaseContexts = null,
-          releaseContext = new ReleaseContext(log, release, callbacks, verified, customGrammar, fileContexts, florenceLexer, florenceParser, releaseContexts, ...remainingArguments);
-
-    return releaseContext;
   }
 }
