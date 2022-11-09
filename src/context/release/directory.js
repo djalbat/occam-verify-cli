@@ -16,32 +16,6 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     return this.fileContexts;
   }
 
-  getRules(releaseNames = []) {
-    const rules = [],
-          releaseName = this.getReleaseName(),
-          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
-
-    if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(releaseName);
-
-      const bubble = false;
-
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextRules = fileContext.getRules(bubble);
-
-        push(rules, fileContextRules);
-      });
-
-      this.releaseContexts.forEach((releaseContext) => {
-        const releaseContextRules = releaseContext.getRules(releaseNames);
-
-        push(rules, releaseContextRules);
-      });
-    }
-
-    return rules;
-  }
-
   getTypes(releaseNames = []) {
     const types = [],
           releaseName = this.getReleaseName(),
@@ -66,6 +40,32 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     }
 
     return types;
+  }
+
+  getRules(releaseNames = []) {
+    const rules = [],
+          releaseName = this.getReleaseName(),
+          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
+
+    if (!releaseNamesIncludesReleaseName) {
+      releaseNames.push(releaseName);
+
+      const bubble = false;
+
+      this.fileContexts.forEach((fileContext) => {
+        const fileContextRules = fileContext.getRules(bubble);
+
+        push(rules, fileContextRules);
+      });
+
+      this.releaseContexts.forEach((releaseContext) => {
+        const releaseContextRules = releaseContext.getRules(releaseNames);
+
+        push(rules, releaseContextRules);
+      });
+    }
+
+    return rules;
   }
 
   getAxioms(releaseNames = []) {

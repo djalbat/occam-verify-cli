@@ -70,6 +70,17 @@ export default class Premise {
     return json;
   }
 
+  static fromJSON(json, callback) {
+    const { metastatement } = json,
+          ruleName = METASTATEMENT_RULE_NAME,
+          content = metastatement,  ///
+          node = callback(content, ruleName),
+          metastatementNode = node, ///
+          premise = new Premise(metastatementNode);
+
+    return premise;
+  }
+
   static fromMetastatementNode(metastatementNode) {
     const premise = new Premise(metastatementNode);
 

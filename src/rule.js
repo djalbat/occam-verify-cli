@@ -1,5 +1,9 @@
 "use strict";
 
+import Label from "./label";
+import Premise from "./premise";
+import Conclusion from "./conclusion";
+
 import { prune } from "./utilities/array";
 import { RULE_KIND } from "./kinds";
 import { someSubArray } from "./utilities/array";
@@ -62,29 +66,57 @@ export default class Rule {
   }
 
   toJSON() {
-    const premisesJSON = this.premises.map((premise) => {
+    const labelsJSON = this.labels.map((label) => {
+            const labelJSON = label.toJSON();
+
+            return labelJSON;
+          }),
+          premisesJSON = this.premises.map((premise) => {
             const premiseJSON = premise.toJSON();
 
             return premiseJSON;
           }),
           conclusionJSON = this.conclusion.toJSON(),
           kind = RULE_KIND,
+          labels = labelsJSON,  ///
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///
-          json = this.labels.map((label) => {
-            const labelString = label.asString();
-
-            label = labelString;  ///
-
-            return ({
-              kind,
-              label,
-              premises,
-              conclusion
-            });
-          });
+          json = {
+            kind,
+            labels,
+            premises,
+            conclusion
+          };
 
     return json;
+  }
+
+  static fromJSON(json, callback) {
+    let { labels, premises, conclusion } = json;
+
+    labels = labels.map((label) => {
+      const json = label; ///
+
+      label = Label.fromJSON(json, callback);
+
+      return label;
+    });
+
+    premises = premises.map((premise) => {
+      const json = premise; ///
+
+      premise = Premise.fromJSON(json, callback);
+
+      return premise;
+    });
+
+    json = conclusion;  ///
+
+    conclusion = Conclusion.fromJSON(json, callback);
+
+    const rule = new Rule(labels, premises, conclusion);
+
+    return rule;
   }
 
   static fromLabelsPremisesAndConclusion(labels, premises, conclusion) {

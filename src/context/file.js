@@ -301,31 +301,31 @@ export default class FileContext {
     this.rules.forEach((rule) => {
       const ruleJSON = rule.toJSON();
 
-      push(json, ruleJSON);
+      json.push(ruleJSON);
     });
 
     this.types.forEach((type) => {
       const typeJSON = type.toJSON();
 
-      push(json, typeJSON);
+      json.push(typeJSON);
     });
 
     this.axioms.forEach((axiom) => {
       const axiomJSON = axiom.toJSON();
 
-      push(json, axiomJSON);
+      json.push(axiomJSON);
     });
 
     this.combinators.forEach((combinator) => {
       const combinatorJSON = combinator.toJSON();
 
-      push(json, combinatorJSON);
+      json.push(combinatorJSON);
     });
 
     this.constructors.forEach((constructor) => {
       const constructorJSON = constructor.toJSON();
 
-      push(json, constructorJSON)
+      json.push(constructorJSON)
     });
 
     return json;

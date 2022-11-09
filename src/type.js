@@ -110,14 +110,31 @@ export default class Type {
           kind = TYPE_KIND,
           name = this.name,
           superType = superTypeJSON,  ///
-          json = [{
+          json = {
             kind,
             name,
             superType
-          }];
+          };
 
     return json;
   }
+
+  static fromJSON(json) {
+    const { name } = json;
+
+    let { superType } = json;
+
+    if (superType !== null) {
+      json = superType; ///
+
+      superType = Type.fromJSON(json);
+    }
+
+    const type = new Type(name, superType);
+
+    return type;
+  }
+
 
   static fromTypeName(typeName) {
     const name = typeName,  ///
