@@ -1,7 +1,5 @@
 "use strict";
 
-import ReleaseContext from "../context/release"
-
 export function createReleaseContext(releaseName, dependentNames, shortenedVersion, context, callback) {
   const { releaseContextMap } = context,
         releaseContext = releaseContextMap[releaseName] || null;
@@ -14,10 +12,10 @@ export function createReleaseContext(releaseName, dependentNames, shortenedVersi
     return;
   }
 
-  const { createRelease } = context;
+  const { releaseContextFromReleaseName } = context;
 
-  createRelease(releaseName, (release) => {
-    if (release === null) {
+  releaseContextFromReleaseName(releaseName, (releaseContext) => {
+    if (releaseContext === null) {
       const error = true;
 
       callback(error);
@@ -25,9 +23,7 @@ export function createReleaseContext(releaseName, dependentNames, shortenedVersi
       return;
     }
 
-    const { log, callbacks } = context,
-          releaseContext = ReleaseContext.fromLogReleaseAndCallbacks(log, release, callbacks),
-          releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion);
+    const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion);
 
     if (!releaseMatchesShortedVersion) {
       const error = true;

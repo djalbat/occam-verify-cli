@@ -1,18 +1,14 @@
 "use strict";
 
-const { fileSystemUtilities } = require("occam-file-system"),
-      { arrayUtilities, loggingUtilities } = require("necessary"),
+const { arrayUtilities, loggingUtilities } = require("necessary"),
       { verifyRelease, releaseContextUtilities } = require("../lib/index");
 
-const callbacks = require("./callbacks");
-
-const { PERIOD } = require("./constants"),
-      { DEFAULT_LOG_LEVEL } = require("./defaults");
+const { DEFAULT_LOG_LEVEL } = require("./defaults"),
+      { releaseContextFromReleaseName } = require("./utilities/fileSystem");
 
 const { log } = loggingUtilities,
       { first } = arrayUtilities,
       { setLogLevel } = log,
-      { loadRelease } = fileSystemUtilities,
       { createReleaseContext } = releaseContextUtilities;
 
 function main(commands, options) {
@@ -22,10 +18,8 @@ function main(commands, options) {
         shortenedVersion = null,
         dependentNames = [],
         context = {
-          log,
-          callbacks,
-          createRelease,
-          releaseContextMap
+          releaseContextMap,
+          releaseContextFromReleaseName
         };
 
   setLogLevel(logLevel);
@@ -50,11 +44,3 @@ function main(commands, options) {
 }
 
 module.exports = main;
-
-function createRelease(name, callback, context) {
-  const topmostDirectoryName = name, ///
-        projectsDirectoryPath = PERIOD, ///
-        release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
-
-  callback(release);
-}
