@@ -3,34 +3,34 @@
 import ReleaseContext from "../../context/release";
 
 import { push } from "../../utilities/array";
-import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
+import {combinedCustomGrammarFromReleaseContexts, customGrammarFromNameAndEntries} from "../../utilities/customGrammar";
 
-export default class DirectoryReleaseContext extends ReleaseContext {
-  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts, fileContexts) {
+export default class FileReleaseContext extends ReleaseContext {
+  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts, contextJSON, rules, types, axioms, labels, combinators, constructors) {
     super(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts);
 
-    this.fileContexts = fileContexts;
+    this.rules = rules;
+    this.types = types;
+    this.axioms = axioms;
+    this.labels = labels;
+    this.combinators = combinators;
+    this.constructors = constructors;
+    this.contextJSON = contextJSON;
   }
 
-  getFileContexts() {
-    return this.fileContexts;
+  getContextJSON() {
+    return this.contextJSON;
   }
 
   getRules(releaseNames = []) {
-    const rules = [],
+    const rules = [
+            ...this.rules
+          ],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
-
-      const bubble = false;
-
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextRules = fileContext.getRules(bubble);
-
-        push(rules, fileContextRules);
-      });
 
       this.releaseContexts.forEach((releaseContext) => {
         const releaseContextRules = releaseContext.getRules(releaseNames);
@@ -43,20 +43,14 @@ export default class DirectoryReleaseContext extends ReleaseContext {
   }
 
   getTypes(releaseNames = []) {
-    const types = [],
+    const types = [
+            ...this.types
+          ],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
-
-      const bubble = false;
-
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextTypes = fileContext.getTypes(bubble);
-
-        push(types, fileContextTypes);
-      });
 
       this.releaseContexts.forEach((releaseContext) => {
         const releaseContextTypes = releaseContext.getTypes(releaseNames);
@@ -69,20 +63,14 @@ export default class DirectoryReleaseContext extends ReleaseContext {
   }
 
   getAxioms(releaseNames = []) {
-    const axioms = [],
+    const axioms = [
+            ...this.axioms
+          ],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
-
-      const bubble = false;
-
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextAxioms = fileContext.getAxioms(bubble);
-
-        push(axioms, fileContextAxioms);
-      });
 
       this.releaseContexts.forEach((releaseContext) => {
         const releaseContextAxioms = releaseContext.getAxioms(releaseNames);
@@ -95,20 +83,14 @@ export default class DirectoryReleaseContext extends ReleaseContext {
   }
 
   getLabels(releaseNames = []) {
-    const labels = [],
+    const labels = [
+            ...this.labels
+          ],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
-
-      const bubble = false;
-
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextLabels = fileContext.getLabels(bubble);
-
-        push(labels, fileContextLabels);
-      });
 
       this.releaseContexts.forEach((releaseContext) => {
         const releaseContextLabels = releaseContext.getLabels(releaseNames);
@@ -121,20 +103,14 @@ export default class DirectoryReleaseContext extends ReleaseContext {
   }
 
   getCombinators(releaseNames = []) {
-    const combinators = [],
+    const combinators = [
+            ...this.combinators
+          ],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
-
-      const bubble = false;
-
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextCombinators = fileContext.getCombinators(bubble);
-
-        push(combinators, fileContextCombinators);
-      });
 
       this.releaseContexts.forEach((releaseContext) => {
         const releaseContextCombinators = releaseContext.getCombinators(releaseNames);
@@ -147,20 +123,14 @@ export default class DirectoryReleaseContext extends ReleaseContext {
   }
 
   getConstructors(releaseNames = []) {
-    const constructors = [],
+    const constructors = [
+            ...this.constructors
+          ],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
-
-      const bubble = false;
-
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextConstructors = fileContext.getConstructors(bubble);
-
-        push(constructors, fileContextConstructors);
-      });
 
       this.releaseContexts.forEach((releaseContext) => {
         const releaseContextConstructors = releaseContext.getConstructors(releaseNames);
@@ -172,31 +142,26 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     return constructors;
   }
 
-  addFileContext(fileContext) {
-    this.fileContexts.push(fileContext);
+  initialise(dependencyReleaseContexts) {
+    super.initialise(dependencyReleaseContexts);
+
+    debugger
   }
 
-  toJSON() {
-    const json = [];
-
-    this.fileContexts.forEach((fileContext) => {
-      const fileContextJSON = fileContext.toJSON();
-
-      push(json, fileContextJSON);
-    });
-
-    return json;
-  }
-
-  static fromLogNameEntriesAndCallbacks(log, name, entries, callbacks) {
-    const verified = false,
+  static fromLogNameEntriesCallbacksAndContextJSON(log, name, entries, callbacks, contextJSON) {
+    const verified = false, ///
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           florenceLexer = null,
           florenceParser = null,
           releaseContexts = null,
-          fileContexts = [],
-          directoryReleaseContext = new DirectoryReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts, fileContexts);
+          rules = null,
+          types = null,
+          axioms = null,
+          labels = null,
+          combinators = null,
+          constructors = null,
+          releaseContext = new FileReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts, contextJSON, rules, types, axioms, labels, combinators, constructors);
 
-    return directoryReleaseContext;
+    return releaseContext;
   }
 }

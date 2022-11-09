@@ -58,9 +58,15 @@ export default class ReleaseContext {
 
   getReleaseName() {
     const name = this.getName(),
-        releaseName = name; ///
+         releaseName = name; ///
 
     return releaseName;
+  }
+
+  isInitialised() {
+    const initialised = (this.releaseContexts !== null);  ///
+
+    return initialised;
   }
 
   getFile(filePath) { return this.entries.getFile(filePath); }
@@ -99,12 +105,13 @@ export default class ReleaseContext {
 
   complete(filePath, leastLineIndex, greatestLineIndex) { this.callbacks.complete(filePath, leastLineIndex, greatestLineIndex); }
 
-  initialise(releaseContexts, dependencyReleaseContexts) {
-    const releaseContext = this;  ///
-
-    releaseContexts = [ releaseContext, ...dependencyReleaseContexts ]; ///
-
-    const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts);
+  initialise(dependencyReleaseContexts) {
+    const releaseContext = this,  ///
+          releaseContexts = [
+            releaseContext,
+            ...dependencyReleaseContexts
+          ],
+          combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts);
 
     this.florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 

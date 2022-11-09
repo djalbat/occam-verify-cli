@@ -43,9 +43,38 @@ export function createReleaseContext(releaseName, dependentNames, shortenedVersi
   }, context);
 }
 
+export function initialiseReleaseContexts(releaseName, releaseContextMap) {
+  const releaseContext = releaseContextMap[releaseName];
+
+  initialiseReleaseContext(releaseContext, releaseContextMap);
+}
+
 export default {
-  createReleaseContext
+  createReleaseContext,
+  initialiseReleaseContexts
 };
+
+function initialiseReleaseContext(releaseContext, releaseContextMap) {
+  const initialised = releaseContext.isInitialised();
+
+  if (initialised) {
+    return;
+  }
+
+  const dependencies = releaseContext.getDependencies();
+
+  dependencies.forEachDependency((dependency) => {
+    const name = dependency.getName(),
+          releaseName = name, ///
+          releaseContext = releaseContextMap[releaseName];
+
+    initialiseReleaseContext(releaseContext, releaseContextMap);
+  });
+
+  const dependencyReleaseContexts = retrieveDependencyReleaseContexts(releaseContext, releaseContextMap);
+
+  releaseContext.initialise(dependencyReleaseContexts);
+}
 
 function checkCyclicDependencyExists(releaseName, dependentNames, releaseContext) {
   const dependentNamesIncludesReleaseName = dependentNames.includes(releaseName),
@@ -99,6 +128,27 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
       next();
     });
   }, done);
+}
+
+function retrieveDependencyReleaseContexts(releaseContext, releaseContextMap, dependencyReleaseContexts = []) {
+  const dependencies = releaseContext.getDependencies();
+
+  dependencies.forEachDependency((dependency) => {
+    const dependencyName = dependency.getName(),
+          dependencyReleaseName = dependencyName, ///
+          dependencyReleaseContext = releaseContextMap[dependencyReleaseName],
+          dependencyReleaseContextsIncludesDependencyReleaseContext = dependencyReleaseContexts.includes(dependencyReleaseContext);
+
+    if (!dependencyReleaseContextsIncludesDependencyReleaseContext) {
+      const releaseContext = dependencyReleaseContext;  ///
+
+      retrieveDependencyReleaseContexts(releaseContext, releaseContextMap, dependencyReleaseContexts);
+
+      dependencyReleaseContexts.push(dependencyReleaseContext);
+    }
+  });
+
+  return dependencyReleaseContexts;
 }
 
 function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion) {

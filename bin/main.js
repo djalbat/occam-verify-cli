@@ -9,7 +9,7 @@ const { DEFAULT_LOG_LEVEL } = require("./defaults"),
 const { log } = loggingUtilities,
       { first } = arrayUtilities,
       { setLogLevel } = log,
-      { createReleaseContext } = releaseContextUtilities;
+      { createReleaseContext, initialiseReleaseContexts } = releaseContextUtilities;
 
 function main(commands, options) {
   const firstCommand = first(commands),
@@ -30,6 +30,8 @@ function main(commands, options) {
 
       return;
     }
+
+    initialiseReleaseContexts(releaseName, releaseContextMap);
 
     const releaseVerified = verifyRelease(releaseName, releaseContextMap);
 

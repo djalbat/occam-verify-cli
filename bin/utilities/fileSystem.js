@@ -1,6 +1,6 @@
 "use strict";
 
-const { DirectoryReleaseContext } = require("../../lib/index"),  ///
+const { FileReleaseContext, DirectoryReleaseContext } = require("../../lib/index"),  ///
       { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
       { loggingUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
 
@@ -15,8 +15,8 @@ function releaseContextFromReleaseName(name, context, callback) {
         entryPath = `${projectsDirectoryPath}/${name}`,
         entryFile = isEntryFile(entryPath),
         releaseContext = entryFile ?
-                           releaseContextFromFile(name, projectsDirectoryPath) :
-                             releaseContextFromDirectory(name, projectsDirectoryPath);
+                           fileReleaseContextFromNameAndProjectsDirectoryPath(name, projectsDirectoryPath) :
+                             directoryReleaseContextFromNameAndProjectsDirectoryPath(name, projectsDirectoryPath);
 
   callback(releaseContext);
 }
@@ -25,13 +25,13 @@ module.exports = {
   releaseContextFromReleaseName
 };
 
-function releaseContextFromFile(name, projectsDirectoryPath) {
-  let releaseContext = null;
-
+function fileReleaseContextFromNameAndProjectsDirectoryPath(name, projectsDirectoryPath) {
   const filePath = `${projectsDirectoryPath}/${name}`,
         content = readFile(filePath),
         releaseJSONString = content,  ///
-        releaseJSON = JSON.parse(releaseJSONString);
+        releaseJSON = JSON.parse(releaseJSONString),
+        { context } = releaseJSON,
+        contextJSON = context;  ///
 
   let { entries } = releaseJSON;
 
@@ -39,11 +39,13 @@ function releaseContextFromFile(name, projectsDirectoryPath) {
 
   entries = Entries.fromJSON(json);
 
+  const fileReleaseContext = FileReleaseContext.fromLogNameEntriesCallbacksAndContextJSON(log, name, entries, callbacks, contextJSON),
+        releaseContext = fileReleaseContext;  ///
 
   return releaseContext;
 }
 
-function releaseContextFromDirectory(name, projectsDirectoryPath) {
+function directoryReleaseContextFromNameAndProjectsDirectoryPath(name, projectsDirectoryPath) {
   let releaseContext = null;
 
   const topmostDirectoryName = name, ///

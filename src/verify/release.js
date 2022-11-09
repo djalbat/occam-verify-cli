@@ -14,7 +14,7 @@ export default function verifyRelease(releaseName, releaseContextMap) {
     const dependencyReleasesVVerified = verifyDependencyReleases(releaseContext, releaseContextMap);
 
     if (dependencyReleasesVVerified) {
-      const releaseFilesVerified = verifyReleaseFiles(releaseContext, releaseContextMap);
+      const releaseFilesVerified = verifyReleaseFiles(releaseContext);
 
       if (releaseFilesVerified) {
         releaseVerified = true;
@@ -33,19 +33,7 @@ export default function verifyRelease(releaseName, releaseContextMap) {
   return releaseVerified;
 }
 
-function verifyReleaseFiles(releaseContext, releaseContextMap) {
-  const dependencies = releaseContext.getDependencies(),
-        releaseContexts = dependencies.mapDependency((dependency) => {
-          const name = dependency.getName(),
-                releaseName = name, ///
-                releaseContext = releaseContextMap[releaseName];
-
-          return releaseContext;
-        }),
-        dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependencies, releaseContextMap);
-
-  releaseContext.initialise(releaseContexts, dependencyReleaseContexts);
-
+function verifyReleaseFiles(releaseContext) {
   const filesVerified = verifyFiles(releaseContext),
         releaseFilesVerified = filesVerified; ///
 
@@ -65,24 +53,4 @@ function verifyDependencyReleases(releaseContext, releaseContextMap) {
         });
 
   return dependencyReleasesVVerified;
-}
-
-function retrieveDependencyReleaseContexts(dependencies, releaseContextMap, dependencyReleaseContexts = []) {
-  dependencies.forEachDependency((dependency) => {
-    const dependencyName = dependency.getName(),
-          dependencyReleaseName = dependencyName, ///
-          dependencyReleaseContext = releaseContextMap[dependencyReleaseName],
-          dependencyReleaseContextsIncludesDependencyReleaseContext = dependencyReleaseContexts.includes(dependencyReleaseContext);
-
-    if (!dependencyReleaseContextsIncludesDependencyReleaseContext) {
-      const releaseContext = dependencyReleaseContext,  ///
-            dependencies = releaseContext.getDependencies();
-
-      retrieveDependencyReleaseContexts(dependencies, releaseContextMap, dependencyReleaseContexts);
-
-      dependencyReleaseContexts.push(dependencyReleaseContext);
-    }
-  });
-
-  return dependencyReleaseContexts;
 }
