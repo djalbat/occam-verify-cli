@@ -18,7 +18,7 @@ export default class Combinator {
     return string;
   }
 
-  asJSON() {
+  toJSON() {
     const statementString = nodeAsString(this.statementNode),
           kind = COMBINATOR_KIND,
           statement = statementString,  ///

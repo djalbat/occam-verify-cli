@@ -103,10 +103,10 @@ export default class Type {
     return string;
   }
 
-  asJSON() {
+  toJSON() {
     const superTypeJSON = (this.superType === null) ?
                             null :
-                              this.superType.asJSON(),
+                              this.superType.toJSON(),
           kind = TYPE_KIND,
           name = this.name,
           superType = superTypeJSON,  ///

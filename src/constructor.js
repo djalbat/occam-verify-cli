@@ -34,11 +34,11 @@ export default class Constructor {
     return string;
   }
 
-  asJSON() {
+  toJSON() {
     const termString = nodeAsString(this.termNode),
           typeJSON = (this.type === null) ?
                         null :
-                          this.type.asJSON(),
+                          this.type.toJSON(),
           kind = CONSTRUCTOR_KIND,
           term = termString,  ///
           type = typeJSON,  ///

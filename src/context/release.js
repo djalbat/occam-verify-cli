@@ -273,11 +273,11 @@ export default class ReleaseContext {
     this.releaseContexts = releaseContexts;
   }
 
-  asJSON() {
+  toJSON() {
     const json = [];
 
     this.fileContexts.forEach((fileContext) => {
-      const fileContextJSON = fileContext.asJSON();
+      const fileContextJSON = fileContext.toJSON();
 
       push(json, fileContextJSON);
     });

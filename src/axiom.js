@@ -40,7 +40,7 @@ export default class Axiom {
     return matchesLabelName;
   }
 
-  asJSON() {
+  toJSON() {
     const statementString = nodeAsString(this.statementNode),
           consequentStatementString = nodeAsString(this.consequentStatementNode),
           suppositionStatementString = nodeAsString(this.suppositionStatementNode),

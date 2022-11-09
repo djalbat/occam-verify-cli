@@ -42,7 +42,7 @@ function main(commands, options) {
     if (releaseVerified) {
       const releaseContext = releaseContextMap[releaseName];
 
-      releaseContext.asJSON();
+      releaseContext.toJSON();
 
       ///
     }

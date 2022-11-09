@@ -295,35 +295,35 @@ export default class FileContext {
     this.releaseContext.complete(this.filePath, leastLineIndex, greatestLineIndex);
   }
 
-  asJSON() {
+  toJSON() {
     const json = [];
 
     this.rules.forEach((rule) => {
-      const ruleJSON = rule.asJSON();
+      const ruleJSON = rule.toJSON();
 
       push(json, ruleJSON);
     });
 
     this.types.forEach((type) => {
-      const typeJSON = type.asJSON();
+      const typeJSON = type.toJSON();
 
       push(json, typeJSON);
     });
 
     this.axioms.forEach((axiom) => {
-      const axiomJSON = axiom.asJSON();
+      const axiomJSON = axiom.toJSON();
 
       push(json, axiomJSON);
     });
 
     this.combinators.forEach((combinator) => {
-      const combinatorJSON = combinator.asJSON();
+      const combinatorJSON = combinator.toJSON();
 
       push(json, combinatorJSON);
     });
 
     this.constructors.forEach((constructor) => {
-      const constructorJSON = constructor.asJSON();
+      const constructorJSON = constructor.toJSON();
 
       push(json, constructorJSON)
     });

@@ -23,7 +23,7 @@ export default class Conclusion {
     return metastatementNodeMatches;
   }
 
-  asJSON() {
+  toJSON() {
     const metastatementString = nodeAsString(this.metastatementNode),
           metastatement = metastatementString,  ///
           json = {

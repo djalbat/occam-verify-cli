@@ -61,13 +61,13 @@ export default class Rule {
     return metastatementNatches;
   }
 
-  asJSON() {
+  toJSON() {
     const premisesJSON = this.premises.map((premise) => {
-            const premiseJSON = premise.asJSON();
+            const premiseJSON = premise.toJSON();
 
             return premiseJSON;
           }),
-          conclusionJSON = this.conclusion.asJSON(),
+          conclusionJSON = this.conclusion.toJSON(),
           kind = RULE_KIND,
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///
