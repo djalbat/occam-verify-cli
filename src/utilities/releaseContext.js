@@ -14,7 +14,7 @@ export function createReleaseContext(releaseName, dependentNames, shortenedVersi
 
   const { releaseContextFromReleaseName } = context;
 
-  releaseContextFromReleaseName(releaseName, (releaseContext) => {
+  releaseContextFromReleaseName(releaseName, context, (releaseContext) => {
     if (releaseContext === null) {
       const error = true;
 

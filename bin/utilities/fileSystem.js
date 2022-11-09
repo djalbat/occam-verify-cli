@@ -10,7 +10,7 @@ const { log } = loggingUtilities,
       { loadRelease } = occamFileSystemUtilities,
       { readFile, isEntryFile } = necessaryFileSystemUtilities;
 
-function releaseContextFromReleaseName(name, callback) {
+function releaseContextFromReleaseName(name, context, callback) {
   const projectsDirectoryPath = process.cwd(), ///
         entryPath = `${projectsDirectoryPath}/${name}`,
         entryFile = isEntryFile(entryPath),
