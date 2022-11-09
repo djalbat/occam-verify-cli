@@ -102,8 +102,8 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
 }
 
 function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion) {
-  const release = releaseContext.getRelease(),
-        releaseMatchesShortedVersion = release.matchShortenedVersion(shortenedVersion);
+  const entries = releaseContext.getEntries(),
+        releaseMatchesShortedVersion = entries.matchShortenedVersion(shortenedVersion);
 
   if (!releaseMatchesShortedVersion) {
     const version = releaseContext.getVersion(),
