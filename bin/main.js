@@ -4,7 +4,7 @@ const { arrayUtilities, loggingUtilities } = require("necessary"),
       { verifyRelease, releaseContextUtilities } = require("../lib/index");
 
 const { DEFAULT_LOG_LEVEL } = require("./defaults"),
-      { releaseContextFromReleaseName } = require("./utilities/fileSystem");
+      { releaseContextFromReleaseNameAndShortenedVersion } = require("./utilities/fileSystem");
 
 const { log } = loggingUtilities,
       { first } = arrayUtilities,
@@ -19,7 +19,7 @@ function main(commands, options) {
         dependentNames = [],
         context = {
           releaseContextMap,
-          releaseContextFromReleaseName
+          releaseContextFromReleaseNameAndShortenedVersion
         };
 
   setLogLevel(logLevel);

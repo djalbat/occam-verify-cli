@@ -12,20 +12,10 @@ export function createReleaseContext(releaseName, dependentNames, shortenedVersi
     return;
   }
 
-  const { releaseContextFromReleaseName } = context;
+  const { releaseContextFromReleaseNameAndShortenedVersion } = context;
 
-  releaseContextFromReleaseName(releaseName, context, (releaseContext) => {
+  releaseContextFromReleaseNameAndShortenedVersion(releaseName, shortenedVersion, context, (releaseContext) => {
     if (releaseContext === null) {
-      const error = true;
-
-      callback(error);
-
-      return;
-    }
-
-    const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion);
-
-    if (!releaseMatchesShortedVersion) {
       const error = true;
 
       callback(error);
@@ -149,20 +139,4 @@ function retrieveDependencyReleaseContexts(releaseContext, releaseContextMap, de
   });
 
   return dependencyReleaseContexts;
-}
-
-function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion) {
-  const entries = releaseContext.getEntries(),
-        releaseMatchesShortedVersion = entries.matchShortenedVersion(shortenedVersion);
-
-  if (!releaseMatchesShortedVersion) {
-    const version = releaseContext.getVersion(),
-          releaseName = releaseContext.getReleaseName(),
-          versionString = version.toString(),
-          shortenedVersionString = shortenedVersion.toString();
-
-    releaseContext.error(`The '${releaseName}' package's version of ${versionString} does not match the dependency's shortened version of ${shortenedVersionString}.`);
-  }
-
-  return releaseMatchesShortedVersion;
 }

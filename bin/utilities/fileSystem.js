@@ -10,23 +10,30 @@ const { log } = loggingUtilities,
       { loadRelease } = occamFileSystemUtilities,
       { readFile, isEntryFile } = necessaryFileSystemUtilities;
 
-function releaseContextFromReleaseName(name, context, callback) {
+function releaseContextFromReleaseNameAndShortenedVersion(releaseName, shortenedVersion, context, callback) {
   const projectsDirectoryPath = process.cwd(), ///
-        entryPath = `${projectsDirectoryPath}/${name}`,
-        entryFile = isEntryFile(entryPath),
-        releaseContext = entryFile ?
-                           fileReleaseContextFromNameAndProjectsDirectoryPath(name, projectsDirectoryPath) :
-                             directoryReleaseContextFromNameAndProjectsDirectoryPath(name, projectsDirectoryPath);
+        entryPath = `${projectsDirectoryPath}/${releaseName}`,
+        entryFile = isEntryFile(entryPath);
+
+  let releaseContext = entryFile ?
+                         fileReleaseContextFromEntryPath(entryPath) :
+                           directoryReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath);
+
+  const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion);
+
+  if (!releaseMatchesShortedVersion) {
+    releaseContext = null;
+  }
 
   callback(releaseContext);
 }
 
 module.exports = {
-  releaseContextFromReleaseName
+  releaseContextFromReleaseNameAndShortenedVersion
 };
 
-function fileReleaseContextFromNameAndProjectsDirectoryPath(name, projectsDirectoryPath) {
-  const filePath = `${projectsDirectoryPath}/${name}`,
+function fileReleaseContextFromEntryPath(entryPath) {
+  const filePath = entryPath, ///
         content = readFile(filePath),
         releaseJSONString = content,  ///
         releaseJSON = JSON.parse(releaseJSONString),
@@ -45,10 +52,26 @@ function fileReleaseContextFromNameAndProjectsDirectoryPath(name, projectsDirect
   return releaseContext;
 }
 
-function directoryReleaseContextFromNameAndProjectsDirectoryPath(name, projectsDirectoryPath) {
+function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion) {
+  const entries = releaseContext.getEntries(),
+        releaseMatchesShortedVersion = entries.matchShortenedVersion(shortenedVersion);
+
+  if (!releaseMatchesShortedVersion) {
+    const version = releaseContext.getVersion(),
+          releaseName = releaseContext.getReleaseName(),
+          versionString = version.toString(),
+          shortenedVersionString = shortenedVersion.toString();
+
+    releaseContext.error(`The '${releaseName}' package's version of ${versionString} does not match the dependency's shortened version of ${shortenedVersionString}.`);
+  }
+
+  return releaseMatchesShortedVersion;
+}
+
+function directoryReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath) {
   let releaseContext = null;
 
-  const topmostDirectoryName = name, ///
+  const topmostDirectoryName = releaseName, ///
         release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
 
   if (release !== null) {
