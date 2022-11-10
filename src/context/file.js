@@ -42,26 +42,23 @@ export default class FileContext {
   getLabels(bubble = true) {
     const labels = [];
 
-    if (bubble) {
-      const releaseContextLabels = this.releaseContext.getLabels();
-
-      push(labels, releaseContextLabels);
-    }
-
-    const rules = this.getRules(),
-          axioms = this.getAxioms();
-
-    rules.forEach((rule) => {
+    this.rules.forEach((rule) => {
       const ruleLabels = rule.getLabels();
 
       push(labels, ruleLabels);
     });
 
-    axioms.forEach((axiom) => {
+    this.axioms.forEach((axiom) => {
       const axiomLabels = axiom.getLabels();
 
       push(labels, axiomLabels);
     });
+
+    if (bubble) {
+      const releaseContextLabels = this.releaseContext.getLabels();
+
+      push(labels, releaseContextLabels);
+    }
 
     return labels;
   }

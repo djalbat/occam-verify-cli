@@ -8,7 +8,7 @@ const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts) {
+  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts) {
     this.log = log;
     this.name = name;
     this.entries = entries;
@@ -17,7 +17,7 @@ export default class ReleaseContext {
     this.customGrammar = customGrammar;
     this.florenceLexer = florenceLexer;
     this.florenceParser = florenceParser;
-    this.releaseContexts = releaseContexts;
+    this.dependencyReleaseContexts = dependencyReleaseContexts;
   }
 
   getLog() {
@@ -52,8 +52,8 @@ export default class ReleaseContext {
     return this.florenceParser;
   }
 
-  getReleaseContexts() {
-    return this.releaseContexts;
+  getDependencyReleaseContexts() {
+    return this.dependencyReleaseContexts;
   }
 
   getReleaseName() {
@@ -64,7 +64,7 @@ export default class ReleaseContext {
   }
 
   isInitialised() {
-    const initialised = (this.releaseContexts !== null);  ///
+    const initialised = (this.dependencyReleaseContexts !== null);  ///
 
     return initialised;
   }
@@ -117,6 +117,6 @@ export default class ReleaseContext {
 
     this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
-    this.releaseContexts = releaseContexts;
+    this.dependencyReleaseContexts = dependencyReleaseContexts;
   }
 }

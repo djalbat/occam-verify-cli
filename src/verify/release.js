@@ -17,17 +17,15 @@ export default function verifyRelease(releaseName, releaseContextMap) {
       const releaseFilesVerified = verifyReleaseFiles(releaseContext);
 
       if (releaseFilesVerified) {
+        const verified = true;
+
         releaseVerified = true;
+
+        releaseContext.setVerified(verified);
+
+        releaseContext.info(`Verified the '${releaseName}' package.`);
       }
     }
-  }
-
-  if (releaseVerified) {
-    const verified = true;
-
-    releaseContext.setVerified(verified);
-
-    releaseContext.info(`Verified the '${releaseName}' package.`);
   }
 
   return releaseVerified;

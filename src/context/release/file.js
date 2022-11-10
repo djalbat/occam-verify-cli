@@ -13,8 +13,8 @@ import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
 import { RULE_KIND, TYPE_KIND, AXIOM_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
 
 export default class FileReleaseContext extends ReleaseContext {
-  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts, contextJSON, types, rules, axioms, combinators, constructors) {
-    super(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts);
+  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, combinators, constructors) {
+    super(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts);
 
     this.types = types;
     this.rules = rules;
@@ -29,16 +29,18 @@ export default class FileReleaseContext extends ReleaseContext {
   }
 
   getTypes(releaseNames = []) {
-    const types = [
-          ...this.types
-        ],
+    const types = [],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
 
-      this.releaseContexts.forEach((releaseContext) => {
+      push(types, this.types);
+
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextTypes = releaseContext.getTypes(releaseNames);
 
         push(types, releaseContextTypes);
@@ -49,16 +51,18 @@ export default class FileReleaseContext extends ReleaseContext {
   }
 
   getRules(releaseNames = []) {
-    const rules = [
-            ...this.rules
-          ],
+    const rules = [],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
 
-      this.releaseContexts.forEach((releaseContext) => {
+      push(rules, this.rules);
+
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextRules = releaseContext.getRules(releaseNames);
 
         push(rules, releaseContextRules);
@@ -69,16 +73,18 @@ export default class FileReleaseContext extends ReleaseContext {
   }
 
   getAxioms(releaseNames = []) {
-    const axioms = [
-            ...this.axioms
-          ],
+    const axioms = [],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
 
-      this.releaseContexts.forEach((releaseContext) => {
+      push(axioms, this.axioms);
+
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextAxioms = releaseContext.getAxioms(releaseNames);
 
         push(axioms, releaseContextAxioms);
@@ -93,22 +99,24 @@ export default class FileReleaseContext extends ReleaseContext {
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
-    this.rules.forEach((rule) => {
-      const ruleLabels = rule.getLabels();
-
-      push(labels, ruleLabels);
-    });
-
-    this.axioms.forEach((axiom) => {
-      const axiomLabels = axiom.getLabels();
-
-      push(labels, axiomLabels);
-    });
-
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
 
-      this.releaseContexts.forEach((releaseContext) => {
+      this.rules.forEach((rule) => {
+        const ruleLabels = rule.getLabels();
+
+        push(labels, ruleLabels);
+      });
+
+      this.axioms.forEach((axiom) => {
+        const axiomLabels = axiom.getLabels();
+
+        push(labels, axiomLabels);
+      });
+
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextAxioms = releaseContext.getAxioms(releaseNames);
 
         push(labels, releaseContextAxioms);
@@ -119,16 +127,18 @@ export default class FileReleaseContext extends ReleaseContext {
   }
 
   getCombinators(releaseNames = []) {
-    const combinators = [
-            ...this.combinators
-          ],
+    const combinators = [],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
 
-      this.releaseContexts.forEach((releaseContext) => {
+      push(combinators, this.combinators);
+
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextCombinators = releaseContext.getCombinators(releaseNames);
 
         push(combinators, releaseContextCombinators);
@@ -139,16 +149,18 @@ export default class FileReleaseContext extends ReleaseContext {
   }
 
   getConstructors(releaseNames = []) {
-    const constructors = [
-            ...this.constructors
-          ],
+    const constructors = [],
           releaseName = this.getReleaseName(),
           releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
 
     if (!releaseNamesIncludesReleaseName) {
       releaseNames.push(releaseName);
 
-      this.releaseContexts.forEach((releaseContext) => {
+      push(constructors, this.constructors);
+
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextConstructors = releaseContext.getConstructors(releaseNames);
 
         push(constructors, releaseContextConstructors);
@@ -161,10 +173,10 @@ export default class FileReleaseContext extends ReleaseContext {
   initialise(dependencyReleaseContexts) {
     super.initialise(dependencyReleaseContexts);
 
-    const ruleMap = this.florenceParser.getRuleMap(),
-          jsonArray = this.contextJSON,  ///
+    const jsonArray = this.contextJSON,  ///
           callback = (content, ruleName) => {
-            const tokens = this.florenceLexer.tokenise(content),
+            const ruleMap = this.florenceParser.getRuleMap(),
+                  tokens = this.florenceLexer.tokenise(content),
                   rule = ruleMap[ruleName],
                   node = this.florenceParser.parse(tokens, rule);
 
@@ -219,17 +231,17 @@ export default class FileReleaseContext extends ReleaseContext {
   }
 
   static fromLogNameEntriesCallbacksAndContextJSON(log, name, entries, callbacks, contextJSON) {
-    const verified = false, ///
+    const verified = true,
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           florenceLexer = null,
           florenceParser = null,
-          releaseContexts = null,
-          types = null,
-          rules = null,
-          axioms = null,
-          combinators = null,
-          constructors = null,
-          releaseContext = new FileReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts, contextJSON, types, rules, axioms, combinators, constructors);
+          dependencyReleaseContexts = null,
+          types = [],
+          rules = [],
+          axioms = [],
+          combinators = [],
+          constructors = [],
+          releaseContext = new FileReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, combinators, constructors);
 
     return releaseContext;
   }

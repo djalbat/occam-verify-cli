@@ -6,8 +6,8 @@ import { push } from "../../utilities/array";
 import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
 
 export default class DirectoryReleaseContext extends ReleaseContext {
-  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts, fileContexts) {
-    super(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts);
+  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, fileContexts) {
+    super(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts);
 
     this.fileContexts = fileContexts;
   }
@@ -32,7 +32,9 @@ export default class DirectoryReleaseContext extends ReleaseContext {
         push(types, fileContextTypes);
       });
 
-      this.releaseContexts.forEach((releaseContext) => {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextTypes = releaseContext.getTypes(releaseNames);
 
         push(types, releaseContextTypes);
@@ -58,7 +60,9 @@ export default class DirectoryReleaseContext extends ReleaseContext {
         push(rules, fileContextRules);
       });
 
-      this.releaseContexts.forEach((releaseContext) => {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextRules = releaseContext.getRules(releaseNames);
 
         push(rules, releaseContextRules);
@@ -84,7 +88,9 @@ export default class DirectoryReleaseContext extends ReleaseContext {
         push(axioms, fileContextAxioms);
       });
 
-      this.releaseContexts.forEach((releaseContext) => {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextAxioms = releaseContext.getAxioms(releaseNames);
 
         push(axioms, releaseContextAxioms);
@@ -110,7 +116,9 @@ export default class DirectoryReleaseContext extends ReleaseContext {
         push(labels, fileContextLabels);
       });
 
-      this.releaseContexts.forEach((releaseContext) => {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextLabels = releaseContext.getLabels(releaseNames);
 
         push(labels, releaseContextLabels);
@@ -136,7 +144,9 @@ export default class DirectoryReleaseContext extends ReleaseContext {
         push(combinators, fileContextCombinators);
       });
 
-      this.releaseContexts.forEach((releaseContext) => {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextCombinators = releaseContext.getCombinators(releaseNames);
 
         push(combinators, releaseContextCombinators);
@@ -162,7 +172,9 @@ export default class DirectoryReleaseContext extends ReleaseContext {
         push(constructors, fileContextConstructors);
       });
 
-      this.releaseContexts.forEach((releaseContext) => {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
         const releaseContextConstructors = releaseContext.getConstructors(releaseNames);
 
         push(constructors, releaseContextConstructors);
@@ -193,9 +205,9 @@ export default class DirectoryReleaseContext extends ReleaseContext {
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           florenceLexer = null,
           florenceParser = null,
-          releaseContexts = null,
+          dependencyReleaseContexts = null,
           fileContexts = [],
-          directoryReleaseContext = new DirectoryReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, releaseContexts, fileContexts);
+          directoryReleaseContext = new DirectoryReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, fileContexts);
 
     return directoryReleaseContext;
   }
