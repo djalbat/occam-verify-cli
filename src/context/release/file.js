@@ -161,8 +161,8 @@ export default class FileReleaseContext extends ReleaseContext {
   initialise(dependencyReleaseContexts) {
     super.initialise(dependencyReleaseContexts);
 
-    const topLevelDeclarationsJSON = this.contextJSON,  ///
-          ruleMap = this.florenceParser.getRuleMap(),
+    const ruleMap = this.florenceParser.getRuleMap(),
+          jsonArray = this.contextJSON,  ///
           callback = (content, ruleName) => {
             const tokens = this.florenceLexer.tokenise(content),
                   rule = ruleMap[ruleName],
@@ -171,9 +171,8 @@ export default class FileReleaseContext extends ReleaseContext {
             return node;
           };
 
-    topLevelDeclarationsJSON.forEach((topLevelDeclarationJSON) => {
-      const json = topLevelDeclarationJSON, ///
-            { kind } = json;
+    jsonArray.forEach((json) => {
+      const { kind } = json;
 
       switch (kind) {
         case TYPE_KIND: {
