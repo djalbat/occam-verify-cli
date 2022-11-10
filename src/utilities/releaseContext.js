@@ -14,9 +14,15 @@ export function createReleaseContext(releaseName, dependentNames, shortenedVersi
 
   const { releaseContextFromReleaseNameAndShortenedVersion } = context;
 
-  releaseContextFromReleaseNameAndShortenedVersion(releaseName, shortenedVersion, context, (releaseContext) => {
+  releaseContextFromReleaseNameAndShortenedVersion(releaseName, shortenedVersion, context, (error, releaseContext) => {
+    if (error) {
+      callback(error);
+
+      return;
+    }
+
     if (releaseContext === null) {
-      const error = true;
+      releaseContextMap[releaseName] = releaseContext;
 
       callback(error);
 
@@ -24,9 +30,13 @@ export function createReleaseContext(releaseName, dependentNames, shortenedVersi
     }
 
     createDependencyReleaseContexts(releaseContext, dependentNames, context, (error) => {
-      if (!error) {
-        releaseContextMap[releaseName] = releaseContext;
+      if (error) {
+        callback(error);
+
+        return;
       }
+
+      releaseContextMap[releaseName] = releaseContext;
 
       callback(error);
     });
@@ -45,6 +55,10 @@ export default {
 };
 
 function initialiseReleaseContext(releaseContext, releaseContextMap) {
+  if (releaseContext === null) {
+    return;
+  }
+
   const initialised = releaseContext.isInitialised();
 
   if (initialised) {
@@ -85,7 +99,7 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
   const releaseName = releaseContext.getReleaseName(),
         dependencies = releaseContext.getDependencies(),
         done = () => {
-          const error = false;
+          const error = null;
 
           callback(error);
         }
@@ -108,8 +122,6 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
 
     createReleaseContext(releaseName, dependentNames, shortenedVersion, context, (error) => {
       if (error) {
-        error = !!error;  ///
-
         callback(error);
 
         return;
@@ -126,8 +138,13 @@ function retrieveDependencyReleaseContexts(releaseContext, releaseContextMap, de
   dependencies.forEachDependency((dependency) => {
     const dependencyName = dependency.getName(),
           dependencyReleaseName = dependencyName, ///
-          dependencyReleaseContext = releaseContextMap[dependencyReleaseName],
-          dependencyReleaseContextsIncludesDependencyReleaseContext = dependencyReleaseContexts.includes(dependencyReleaseContext);
+          dependencyReleaseContext = releaseContextMap[dependencyReleaseName];
+
+    if (dependencyReleaseContext === null) {
+      return;
+    }
+
+    const dependencyReleaseContextsIncludesDependencyReleaseContext = dependencyReleaseContexts.includes(dependencyReleaseContext);
 
     if (!dependencyReleaseContextsIncludesDependencyReleaseContext) {
       const releaseContext = dependencyReleaseContext;  ///

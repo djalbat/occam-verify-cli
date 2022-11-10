@@ -135,7 +135,6 @@ export default class Type {
     return type;
   }
 
-
   static fromTypeName(typeName) {
     const name = typeName,  ///
           superType = null,

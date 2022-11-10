@@ -15,17 +15,29 @@ function releaseContextFromReleaseNameAndShortenedVersion(releaseName, shortened
         entryPath = `${projectsDirectoryPath}/${releaseName}`,
         entryFile = isEntryFile(entryPath);
 
-  let releaseContext = entryFile ?
-                         fileReleaseContextFromEntryPath(entryPath) :
-                           directoryReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath);
+  let releaseContext;
 
-  const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion);
+  try {
+    releaseContext = entryFile ?
+                       fileReleaseContextFromEntryPath(entryPath) :
+                         directoryReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath);
+  } catch (error) {
+    const releaseContext = null;
 
-  if (!releaseMatchesShortedVersion) {
-    releaseContext = null;
+    callback(error, releaseContext);
   }
 
-  callback(releaseContext);
+  if (releaseContext !== null) {
+    const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion);
+
+    if (!releaseMatchesShortedVersion) {
+      releaseContext = null;
+    }
+  }
+
+  const error = null;
+
+  callback(error, releaseContext);
 }
 
 module.exports = {
@@ -33,6 +45,8 @@ module.exports = {
 };
 
 function fileReleaseContextFromEntryPath(entryPath) {
+  let releaseContext;
+
   const filePath = entryPath, ///
         content = readFile(filePath),
         releaseJSONString = content,  ///
@@ -46,8 +60,9 @@ function fileReleaseContextFromEntryPath(entryPath) {
 
   entries = Entries.fromJSON(json);
 
-  const fileReleaseContext = FileReleaseContext.fromLogNameEntriesCallbacksAndContextJSON(log, name, entries, callbacks, contextJSON),
-        releaseContext = fileReleaseContext;  ///
+  const fileReleaseContext = FileReleaseContext.fromLogNameEntriesCallbacksAndContextJSON(log, name, entries, callbacks, contextJSON);
+
+  releaseContext = fileReleaseContext;  ///
 
   return releaseContext;
 }
@@ -75,7 +90,7 @@ function directoryReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseN
         release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
 
   if (release !== null) {
-    const name = release.getName(),
+    const name = releaseName, ///
           entries = release.getEntries(),
           directoryReleaseContext = DirectoryReleaseContext.fromLogNameEntriesAndCallbacks(log, name, entries, callbacks);
 

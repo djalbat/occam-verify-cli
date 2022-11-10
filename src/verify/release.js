@@ -3,8 +3,13 @@
 import verifyFiles from "../verify/files";
 
 export default function verifyRelease(releaseName, releaseContextMap) {
-  const releaseContext = releaseContextMap[releaseName],
-        verified = releaseContext.isVerified();
+  const releaseContext = releaseContextMap[releaseName];
+
+  if (releaseContext === null) {
+    return;
+  }
+
+  const verified = releaseContext.isVerified();
 
   let releaseVerified = verified; ///
 
