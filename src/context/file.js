@@ -39,7 +39,7 @@ export default class FileContext {
     return this.variables;
   }
 
-  getLabels(bubble = true) {
+  getLabels(includeReleaseContext = true) {
     const labels = [];
 
     this.rules.forEach((rule) => {
@@ -54,7 +54,7 @@ export default class FileContext {
       push(labels, axiomLabels);
     });
 
-    if (bubble) {
+    if (includeReleaseContext) {
       const releaseContextLabels = this.releaseContext.getLabels();
 
       push(labels, releaseContextLabels);
@@ -63,12 +63,12 @@ export default class FileContext {
     return labels;
   }
 
-  getRules(bubble = true) {
-    const rules = [
-      ...this.rules
-    ];
+  getRules(includeReleaseContext = true) {
+    const rules = []
 
-    if (bubble) {
+    push(rules, this.rules);
+
+    if (includeReleaseContext) {
       const releaseContextRules = this.releaseContext.getRules();
 
       push(rules, releaseContextRules);
@@ -77,12 +77,12 @@ export default class FileContext {
     return rules;
   }
 
-  getTypes(bubble = true) {
-    const types = [
-      ...this.types
-    ];
+  getTypes(includeReleaseContext = true) {
+    const types = [];
 
-    if (bubble) {
+    push(types, this.types);
+
+    if (includeReleaseContext) {
       const releaseContextTypes = this.releaseContext.getTypes();
 
       push(types, releaseContextTypes);
@@ -91,12 +91,12 @@ export default class FileContext {
     return types;
   }
 
-  getAxioms(bubble = true) {
-    const axioms = [
-      ...this.axioms
-    ];
+  getAxioms(includeReleaseContext = true) {
+    const axioms = [];
 
-    if (bubble) {
+    push(axioms, this.axioms);
+
+    if (includeReleaseContext) {
       const releaseContextAxioms = this.releaseContext.getAxioms();
 
       push(axioms, releaseContextAxioms);
@@ -105,12 +105,12 @@ export default class FileContext {
     return axioms;
   }
 
-  getCombinators(bubble = true) {
-    const combinators = [
-      ...this.combinators
-    ];
+  getCombinators(includeReleaseContext = true) {
+    const combinators = [];
 
-    if (bubble) {
+    push(combinators, this.combinators);
+
+    if (includeReleaseContext) {
       const releaseContextCombinators = this.releaseContext.getCombinators();
 
       push(combinators, releaseContextCombinators);
@@ -119,12 +119,12 @@ export default class FileContext {
     return combinators;
   }
 
-  getConstructors(bubble = true) {
-    const constructors = [
-      ...this.constructors
-    ];
+  getConstructors(includeReleaseContext = true) {
+    const constructors = [];
 
-    if (bubble) {
+    push(constructors, this.constructors);
+
+    if (includeReleaseContext) {
       const releaseContextConstructors = this.releaseContext.getConstructors();
 
       push(constructors, releaseContextConstructors);

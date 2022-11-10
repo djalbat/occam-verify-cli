@@ -16,110 +16,22 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     return this.fileContexts;
   }
 
-  getTypes(releaseNames = []) {
-    const types = [],
-          releaseName = this.getReleaseName(),
-          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
+  getLabels(includeDependencyReleaseContexts = true) {
+    const labels = [];
 
-    if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(releaseName);
+    this.fileContexts.forEach((fileContext) => {
+      const includeReleaseContext = false,
+            fileContextLabels = fileContext.getLabels(includeReleaseContext);
 
-      const bubble = false;
+      push(labels, fileContextLabels);
+    });
 
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextTypes = fileContext.getTypes(bubble);
-
-        push(types, fileContextTypes);
-      });
-
+    if (includeDependencyReleaseContexts) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
-        const releaseContextTypes = releaseContext.getTypes(releaseNames);
-
-        push(types, releaseContextTypes);
-      });
-    }
-
-    return types;
-  }
-
-  getRules(releaseNames = []) {
-    const rules = [],
-          releaseName = this.getReleaseName(),
-          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
-
-    if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(releaseName);
-
-      const bubble = false;
-
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextRules = fileContext.getRules(bubble);
-
-        push(rules, fileContextRules);
-      });
-
-      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
-
-      dependencyReleaseContexts.forEach((releaseContext) => {
-        const releaseContextRules = releaseContext.getRules(releaseNames);
-
-        push(rules, releaseContextRules);
-      });
-    }
-
-    return rules;
-  }
-
-  getAxioms(releaseNames = []) {
-    const axioms = [],
-          releaseName = this.getReleaseName(),
-          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
-
-    if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(releaseName);
-
-      const bubble = false;
-
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextAxioms = fileContext.getAxioms(bubble);
-
-        push(axioms, fileContextAxioms);
-      });
-
-      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
-
-      dependencyReleaseContexts.forEach((releaseContext) => {
-        const releaseContextAxioms = releaseContext.getAxioms(releaseNames);
-
-        push(axioms, releaseContextAxioms);
-      });
-    }
-
-    return axioms;
-  }
-
-  getLabels(releaseNames = []) {
-    const labels = [],
-          releaseName = this.getReleaseName(),
-          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
-
-    if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(releaseName);
-
-      const bubble = false;
-
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextLabels = fileContext.getLabels(bubble);
-
-        push(labels, fileContextLabels);
-      });
-
-      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
-
-      dependencyReleaseContexts.forEach((releaseContext) => {
-        const releaseContextLabels = releaseContext.getLabels(releaseNames);
+        const includeDependencyReleaseContexts = false,
+              releaseContextLabels = releaseContext.getLabels(includeDependencyReleaseContexts);
 
         push(labels, releaseContextLabels);
       });
@@ -128,26 +40,94 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     return labels;
   }
 
-  getCombinators(releaseNames = []) {
-    const combinators = [],
-          releaseName = this.getReleaseName(),
-          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
+  getTypes(includeDependencyReleaseContexts = true) {
+    const types = [];
 
-    if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(releaseName);
+    this.fileContexts.forEach((fileContext) => {
+      const includeReleaseContext = false,
+            fileContextTypes = fileContext.getTypes(includeReleaseContext);
 
-      const bubble = false;
+      push(types, fileContextTypes);
+    });
 
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextCombinators = fileContext.getCombinators(bubble);
-
-        push(combinators, fileContextCombinators);
-      });
-
+    if (includeDependencyReleaseContexts) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
-        const releaseContextCombinators = releaseContext.getCombinators(releaseNames);
+        const includeDependencyReleaseContexts = false,
+              releaseContextTypes = releaseContext.getTypes(includeDependencyReleaseContexts);
+
+        push(types, releaseContextTypes);
+      });
+    }
+
+    return types;
+  }
+
+  getRules(includeDependencyReleaseContexts = true) {
+    const rules = [];
+
+    this.fileContexts.forEach((fileContext) => {
+      const includeReleaseContext = false,
+            fileContextRules = fileContext.getRules(includeReleaseContext);
+
+      push(rules, fileContextRules);
+    });
+
+    if (includeDependencyReleaseContexts) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencyReleaseContexts = false,
+              releaseContextRules = releaseContext.getRules(includeDependencyReleaseContexts);
+
+        push(rules, releaseContextRules);
+      });
+    }
+
+    return rules;
+  }
+
+  getAxioms(includeDependencyReleaseContexts = true) {
+    const axioms = [];
+
+    this.fileContexts.forEach((fileContext) => {
+      const includeReleaseContext = false,
+            fileContextAxioms = fileContext.getAxioms(includeReleaseContext);
+
+      push(axioms, fileContextAxioms);
+    });
+
+    if (includeDependencyReleaseContexts) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencyReleaseContexts = false,
+              releaseContextAxioms = releaseContext.getAxioms(includeDependencyReleaseContexts);
+
+        push(axioms, releaseContextAxioms);
+      });
+    }
+
+    return axioms;
+  }
+
+  getCombinators(includeDependencyReleaseContexts = true) {
+    const combinators = [];
+
+    this.fileContexts.forEach((fileContext) => {
+      const includeReleaseContext = false,
+            fileContextCombinators = fileContext.getCombinators(includeReleaseContext);
+
+      push(combinators, fileContextCombinators);
+    });
+
+    if (includeDependencyReleaseContexts) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencyReleaseContexts = false,
+              releaseContextCombinators = releaseContext.getCombinators(includeDependencyReleaseContexts);
 
         push(combinators, releaseContextCombinators);
       });
@@ -156,26 +136,22 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     return combinators;
   }
 
-  getConstructors(releaseNames = []) {
-    const constructors = [],
-          releaseName = this.getReleaseName(),
-          releaseNamesIncludesReleaseName = releaseNames.includes(releaseName);
+  getConstructors(includeDependencyReleaseContexts = true) {
+    const constructors = [];
 
-    if (!releaseNamesIncludesReleaseName) {
-      releaseNames.push(releaseName);
+    this.fileContexts.forEach((fileContext) => {
+      const includeReleaseContext = false,
+            fileContextConstructors = fileContext.getConstructors(includeReleaseContext);
 
-      const bubble = false;
+      push(constructors, fileContextConstructors);
+    });
 
-      this.fileContexts.forEach((fileContext) => {
-        const fileContextConstructors = fileContext.getConstructors(bubble);
-
-        push(constructors, fileContextConstructors);
-      });
-
+    if (includeDependencyReleaseContexts) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
-        const releaseContextConstructors = releaseContext.getConstructors(releaseNames);
+        const includeDependencyReleaseContexts = false,
+              releaseContextConstructors = releaseContext.getConstructors(includeDependencyReleaseContexts);
 
         push(constructors, releaseContextConstructors);
       });
