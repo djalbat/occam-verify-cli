@@ -18,6 +18,7 @@ function main(commands, options) {
         shortenedVersion = null,
         dependentNames = [],
         context = {
+          log,
           releaseContextMap,
           releaseContextFromReleaseNameAndShortenedVersion
         };

@@ -1,13 +1,12 @@
 "use strict";
 
 const { FileReleaseContext, DirectoryReleaseContext } = require("../../lib/index"),  ///
-      { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
-      { loggingUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
+      { fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary"),
+      { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system");
 
 const callbacks = require("../callbacks");
 
-const { log } = loggingUtilities,
-      { loadRelease } = occamFileSystemUtilities,
+const { loadRelease } = occamFileSystemUtilities,
       { readFile, isEntryFile } = necessaryFileSystemUtilities;
 
 function releaseContextFromReleaseNameAndShortenedVersion(releaseName, shortenedVersion, context, callback) {
@@ -19,8 +18,8 @@ function releaseContextFromReleaseNameAndShortenedVersion(releaseName, shortened
 
   try {
     releaseContext = entryFile ?
-                       fileReleaseContextFromEntryPath(entryPath) :
-                         directoryReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath);
+                       fileReleaseContextFromEntryPath(entryPath, context) :
+                         directoryReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath, context);
   } catch (error) {
     const releaseContext = null;
 
@@ -28,7 +27,7 @@ function releaseContextFromReleaseNameAndShortenedVersion(releaseName, shortened
   }
 
   if (releaseContext !== null) {
-    const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion);
+    const releaseMatchesShortedVersion = checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion, context);
 
     if (!releaseMatchesShortedVersion) {
       releaseContext = null;
@@ -44,15 +43,18 @@ module.exports = {
   releaseContextFromReleaseNameAndShortenedVersion
 };
 
-function fileReleaseContextFromEntryPath(entryPath) {
+function fileReleaseContextFromEntryPath(entryPath, context) {
   let releaseContext;
 
-  const filePath = entryPath, ///
+  const { log } = context,
+        filePath = entryPath, ///
         content = readFile(filePath),
         releaseJSONString = content,  ///
-        releaseJSON = JSON.parse(releaseJSONString),
-        { context } = releaseJSON,
-        contextJSON = context;  ///
+        releaseJSON = JSON.parse(releaseJSONString);
+
+  ({ context } = releaseJSON);
+
+  const contextJSON = context;  ///
 
   let { entries } = releaseJSON;
 
@@ -67,30 +69,32 @@ function fileReleaseContextFromEntryPath(entryPath) {
   return releaseContext;
 }
 
-function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion) {
+function checkReleaseMatchesShortenedVersion(releaseContext, shortenedVersion, context) {
   const entries = releaseContext.getEntries(),
         releaseMatchesShortedVersion = entries.matchShortenedVersion(shortenedVersion);
 
   if (!releaseMatchesShortedVersion) {
-    const version = releaseContext.getVersion(),
+    const { log } = context,
+          version = releaseContext.getVersion(),
           releaseName = releaseContext.getReleaseName(),
           versionString = version.toString(),
           shortenedVersionString = shortenedVersion.toString();
 
-    releaseContext.error(`The '${releaseName}' package's version of ${versionString} does not match the dependency's shortened version of ${shortenedVersionString}.`);
+    log.error(`The '${releaseName}' package's version of ${versionString} does not match the dependency's shortened version of ${shortenedVersionString}.`);
   }
 
   return releaseMatchesShortedVersion;
 }
 
-function directoryReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath) {
+function directoryReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath, context) {
   let releaseContext = null;
 
   const topmostDirectoryName = releaseName, ///
         release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
 
   if (release !== null) {
-    const name = releaseName, ///
+    const { log } = context,
+          name = releaseName, ///
           entries = release.getEntries(),
           directoryReleaseContext = DirectoryReleaseContext.fromLogNameEntriesAndCallbacks(log, name, entries, callbacks);
 

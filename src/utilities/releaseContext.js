@@ -22,6 +22,10 @@ export function createReleaseContext(releaseName, dependentNames, shortenedVersi
     }
 
     if (releaseContext === null) {
+      const { log } = context;
+
+      log.error(`The '${releaseName}' package could not be created.`);
+
       releaseContextMap[releaseName] = releaseContext;
 
       callback(error);
