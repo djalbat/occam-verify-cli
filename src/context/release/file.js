@@ -28,7 +28,7 @@ export default class FileReleaseContext extends ReleaseContext {
     return this.contextJSON;
   }
 
-  getLabels(includeDependencyReleaseContexts = true) {
+  getLabels(includeDependencies = true) {
     const labels = [];
 
     this.rules.forEach((rule) => {
@@ -43,12 +43,12 @@ export default class FileReleaseContext extends ReleaseContext {
       push(labels, axiomLabels);
     });
 
-    if (includeDependencyReleaseContexts) {
+    if (includeDependencies) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
-        const includeDependencyReleaseContexts = false,
-              releaseContextAxioms = releaseContext.getAxioms(includeDependencyReleaseContexts);
+        const includeDependencies = false,
+              releaseContextAxioms = releaseContext.getAxioms(includeDependencies);
 
         push(labels, releaseContextAxioms);
       });
@@ -57,17 +57,17 @@ export default class FileReleaseContext extends ReleaseContext {
     return labels;
   }
 
-  getTypes(includeDependencyReleaseContexts = true) {
+  getTypes(includeDependencies = true) {
     const types = [];
 
     push(types, this.types);
 
-    if (includeDependencyReleaseContexts) {
+    if (includeDependencies) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
-        const includeDependencyReleaseContexts = false,
-              releaseContextTypes = releaseContext.getTypes(includeDependencyReleaseContexts);
+        const includeDependencies = false,
+              releaseContextTypes = releaseContext.getTypes(includeDependencies);
 
         push(types, releaseContextTypes);
       });
@@ -76,17 +76,17 @@ export default class FileReleaseContext extends ReleaseContext {
     return types;
   }
 
-  getRules(includeDependencyReleaseContexts = true) {
+  getRules(includeDependencies = true) {
     const rules = [];
 
     push(rules, this.rules);
 
-    if (includeDependencyReleaseContexts) {
+    if (includeDependencies) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
-        const includeDependencyReleaseContexts = false,
-              releaseContextRules = releaseContext.getRules(includeDependencyReleaseContexts);
+        const includeDependencies = false,
+              releaseContextRules = releaseContext.getRules(includeDependencies);
 
         push(rules, releaseContextRules);
       });
@@ -95,17 +95,17 @@ export default class FileReleaseContext extends ReleaseContext {
     return rules;
   }
 
-  getAxioms(includeDependencyReleaseContexts = true) {
+  getAxioms(includeDependencies = true) {
     const axioms = [];
 
     push(axioms, this.axioms);
 
-    if (includeDependencyReleaseContexts) {
+    if (includeDependencies) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
-        const includeDependencyReleaseContexts = false,
-              releaseContextAxioms = releaseContext.getAxioms(includeDependencyReleaseContexts);
+        const includeDependencies = false,
+              releaseContextAxioms = releaseContext.getAxioms(includeDependencies);
 
         push(axioms, releaseContextAxioms);
       });
@@ -114,17 +114,17 @@ export default class FileReleaseContext extends ReleaseContext {
     return axioms;
   }
 
-  getCombinators(includeDependencyReleaseContexts = true) {
+  getCombinators(includeDependencies = true) {
     const combinators = [];
 
     push(combinators, this.combinators);
 
-    if (includeDependencyReleaseContexts) {
+    if (includeDependencies) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
-        const includeDependencyReleaseContexts = false,
-              releaseContextCombinators = releaseContext.getCombinators(includeDependencyReleaseContexts);
+        const includeDependencies = false,
+              releaseContextCombinators = releaseContext.getCombinators(includeDependencies);
 
         push(combinators, releaseContextCombinators);
       });
@@ -133,17 +133,17 @@ export default class FileReleaseContext extends ReleaseContext {
     return combinators;
   }
 
-  getConstructors(includeDependencyReleaseContexts = true) {
+  getConstructors(includeDependencies = true) {
     const constructors = [];
 
     push(constructors, this.constructors);
 
-    if (includeDependencyReleaseContexts) {
+    if (includeDependencies) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
-        const includeDependencyReleaseContexts = false,
-              releaseContextConstructors = releaseContext.getConstructors(includeDependencyReleaseContexts);
+        const includeDependencies = false,
+              releaseContextConstructors = releaseContext.getConstructors(includeDependencies);
 
         push(constructors, releaseContextConstructors);
       });

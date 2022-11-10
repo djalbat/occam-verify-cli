@@ -39,7 +39,7 @@ export default class FileContext {
     return this.variables;
   }
 
-  getLabels(includeReleaseContext = true) {
+  getLabels(includeRelease = true) {
     const labels = [];
 
     this.rules.forEach((rule) => {
@@ -54,7 +54,7 @@ export default class FileContext {
       push(labels, axiomLabels);
     });
 
-    if (includeReleaseContext) {
+    if (includeRelease) {
       const releaseContextLabels = this.releaseContext.getLabels();
 
       push(labels, releaseContextLabels);
@@ -63,12 +63,12 @@ export default class FileContext {
     return labels;
   }
 
-  getRules(includeReleaseContext = true) {
+  getRules(includeRelease = true) {
     const rules = []
 
     push(rules, this.rules);
 
-    if (includeReleaseContext) {
+    if (includeRelease) {
       const releaseContextRules = this.releaseContext.getRules();
 
       push(rules, releaseContextRules);
@@ -77,12 +77,12 @@ export default class FileContext {
     return rules;
   }
 
-  getTypes(includeReleaseContext = true) {
+  getTypes(includeRelease = true) {
     const types = [];
 
     push(types, this.types);
 
-    if (includeReleaseContext) {
+    if (includeRelease) {
       const releaseContextTypes = this.releaseContext.getTypes();
 
       push(types, releaseContextTypes);
@@ -91,12 +91,12 @@ export default class FileContext {
     return types;
   }
 
-  getAxioms(includeReleaseContext = true) {
+  getAxioms(includeRelease = true) {
     const axioms = [];
 
     push(axioms, this.axioms);
 
-    if (includeReleaseContext) {
+    if (includeRelease) {
       const releaseContextAxioms = this.releaseContext.getAxioms();
 
       push(axioms, releaseContextAxioms);
@@ -105,12 +105,12 @@ export default class FileContext {
     return axioms;
   }
 
-  getCombinators(includeReleaseContext = true) {
+  getCombinators(includeRelease = true) {
     const combinators = [];
 
     push(combinators, this.combinators);
 
-    if (includeReleaseContext) {
+    if (includeRelease) {
       const releaseContextCombinators = this.releaseContext.getCombinators();
 
       push(combinators, releaseContextCombinators);
@@ -119,12 +119,12 @@ export default class FileContext {
     return combinators;
   }
 
-  getConstructors(includeReleaseContext = true) {
+  getConstructors(includeRelease = true) {
     const constructors = [];
 
     push(constructors, this.constructors);
 
-    if (includeReleaseContext) {
+    if (includeRelease) {
       const releaseContextConstructors = this.releaseContext.getConstructors();
 
       push(constructors, releaseContextConstructors);
