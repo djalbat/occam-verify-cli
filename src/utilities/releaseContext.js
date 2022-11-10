@@ -113,7 +113,7 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
           cyclicDependencyExists = checkCyclicDependencyExists(releaseName, dependentNames, releaseContext);
 
     if (cyclicDependencyExists) {
-      const error = true;
+      const error = null;
 
       callback(error);
 
