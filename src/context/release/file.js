@@ -2,6 +2,8 @@
 
 import ReleaseContext from "../../context/release";
 
+import { rewriteNodes } from "occam-grammar-utilities";
+
 import Rule from "../../rule";
 import Type from "../../type";
 import Axiom from "../../axiom";
@@ -162,6 +164,8 @@ export default class FileReleaseContext extends ReleaseContext {
                   tokens = this.florenceLexer.tokenise(content),
                   rule = ruleMap[ruleName],
                   node = this.florenceParser.parse(tokens, rule);
+
+            rewriteNodes(node);
 
             return node;
           };
