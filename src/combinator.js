@@ -32,12 +32,17 @@ export default class Combinator {
   }
 
   static fromJSON(json, callback) {
+    let combinator = null;
+
     const { statement } = json,
           content = statement,  ///
           ruleName = STATEMENT_RULE_NAME,
           node = callback(content, ruleName),
-          statementNode = node, ///
-          combinator = new Combinator(statementNode);
+          statementNode = node; ///
+
+    if (statementNode !== null) {
+      combinator = new Combinator(statementNode);
+    }
 
     return combinator;
   }

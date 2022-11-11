@@ -55,6 +55,8 @@ export default class Constructor {
   }
 
   static fromJSON(json, callback) {
+    let constructor = null;
+
     let { type } = json;
 
     const { term } = json,
@@ -63,11 +65,13 @@ export default class Constructor {
           node = callback(content, ruleName),
           termNode = node; ///
 
-    json = type;  ///
+    if (termNode !== null) {
+      json = type;  ///
 
-    type = Type.fromJSON(json);
+      type = Type.fromJSON(json);
 
-    const constructor = new Constructor(termNode, type);
+      constructor = new Constructor(termNode, type);
+    }
 
     return constructor;
   }

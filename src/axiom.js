@@ -69,47 +69,66 @@ export default class Axiom {
   }
 
   static fromJSON(json, callback) {
+    let axiom = null;
+
     let { labels } = json;
 
     const { statement, consequent, supposition } = json;
 
-    labels = labels.map((label) => {
-      const json = label; ///
+    labels = labels.reduce((labels, label) => {
+      if (labels !== null) {
+        const json = label; ///
 
-      label = Label.fromJSON(json);
+        label = Label.fromJSON(json, callback); ///
 
-      return label;
-    });
+        if (label !== null) {
+          labels.push(label);
+        } else {
+          labels = null;
+        }
+      }
 
-    let statementNode = null,
-        consequentNode = null,
-        suppositionNode = null;
+      return labels;
+    }, []);
 
     if (statement !== null) {
       const content = statement,  ///
             ruleName = STATEMENT_RULE_NAME,
-            node = callback(content, ruleName);
+            node = callback(content, ruleName),
+            statementNode = node; ///
 
-      statementNode = node; ///
+      if (statementNode !== null) {
+        const consequentNode = null,
+              suppositionNode = null;
+
+        axiom = new Axiom(labels, statementNode, consequentNode, suppositionNode);
+      }
     }
 
-    if (consequent !== null) {
-      const content = consequent,  ///
-            ruleName = STATEMENT_RULE_NAME,
-            node = callback(content, ruleName);
+    if ((consequent !== null) && (supposition !== null)) {
+      let node,
+          content;
 
-      consequentNode = node; ///
+      const ruleName = STATEMENT_RULE_NAME;
+
+      content = consequent;  ///
+
+      node = callback(content, ruleName);
+
+      const consequentNode = node; ///
+
+      content = supposition;  ///
+
+      node = callback(content, ruleName);
+
+      const suppositionNode = node; ///
+
+      if ((consequentNode !== null) && (suppositionNode !== null)) {
+        const statementNode = null;
+
+        axiom = new Axiom(labels, statementNode, consequentNode, suppositionNode);
+      }
     }
-
-    if (supposition !== null) {
-      const content = supposition,  ///
-            ruleName = STATEMENT_RULE_NAME,
-            node = callback(content, ruleName);
-
-      suppositionNode = node; ///
-    }
-
-    const axiom = new Axiom(labels, statementNode, consequentNode, suppositionNode);
 
     return axiom;
   }

@@ -71,12 +71,17 @@ export default class Premise {
   }
 
   static fromJSON(json, callback) {
+    let premise = null;
+
     const { metastatement } = json,
           ruleName = METASTATEMENT_RULE_NAME,
           content = metastatement,  ///
           node = callback(content, ruleName),
-          metastatementNode = node, ///
-          premise = new Premise(metastatementNode);
+          metastatementNode = node; ///
+
+    if (metastatementNode !== null) {
+      premise = new Premise(metastatementNode);
+    }
 
     return premise;
   }

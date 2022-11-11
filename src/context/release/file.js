@@ -165,7 +165,9 @@ export default class FileReleaseContext extends ReleaseContext {
                   rule = ruleMap[ruleName],
                   node = this.florenceParser.parse(tokens, rule);
 
-            rewriteNodes(node);
+            if (node !== null) {
+              rewriteNodes(node);
+            }
 
             return node;
           };
@@ -177,7 +179,9 @@ export default class FileReleaseContext extends ReleaseContext {
         case TYPE_KIND: {
           const type = Type.fromJSON(json);
 
-          this.types.push(type);
+          if (type !== null) {
+            this.types.push(type);
+          }
 
           break;
         }
@@ -185,7 +189,9 @@ export default class FileReleaseContext extends ReleaseContext {
         case RULE_KIND: {
           const rule = Rule.fromJSON(json, callback);
 
-          this.rules.push(rule);
+          if (rule !== null) {
+            this.rules.push(rule);
+          }
 
           break;
         }
@@ -193,7 +199,9 @@ export default class FileReleaseContext extends ReleaseContext {
         case AXIOM_KIND: {
           const axiom = Axiom.fromJSON(json, callback);
 
-          this.axioms.push(axiom);
+          if (axiom !== null) {
+            this.axioms.push(axiom);
+          }
 
           break;
         }
@@ -201,7 +209,9 @@ export default class FileReleaseContext extends ReleaseContext {
         case COMBINATOR_KIND: {
           const combinator = Combinator.fromJSON(json, callback);
 
-          this.combinators.push(combinator);
+          if (combinator !== null) {
+            this.combinators.push(combinator);
+          }
 
           break;
         }
@@ -209,7 +219,9 @@ export default class FileReleaseContext extends ReleaseContext {
         case CONSTRUCTOR_KIND: {
           const constructor = Constructor.fromJSON(json, callback);
 
-          this.constructors.push(constructor);
+          if (constructor !== null) {
+            this.constructors.push(constructor);
+          }
 
           break;
         }

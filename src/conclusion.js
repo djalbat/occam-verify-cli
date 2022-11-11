@@ -34,12 +34,17 @@ export default class Conclusion {
   }
 
   static fromJSON(json, callback) {
+    let conclusion = null;
+
     const { metastatement } = json,
           ruleName = METASTATEMENT_RULE_NAME,
           content = metastatement,  ///
           node = callback(content, ruleName),
-          metastatementNode = node, ///
-          conclusion = new Conclusion(metastatementNode);
+          metastatementNode = node; ///
+
+    if (metastatementNode !== null) {
+      conclusion = new Conclusion(metastatementNode);
+    }
 
     return conclusion;
   }

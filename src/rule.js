@@ -92,29 +92,49 @@ export default class Rule {
   }
 
   static fromJSON(json, callback) {
+    let rule = null;
+
     let { labels, premises, conclusion } = json;
 
-    labels = labels.map((label) => {
-      const json = label; ///
+    labels = labels.reduce((labels, label) => {
+      if (labels !== null) {
+        const json = label; ///
 
-      label = Label.fromJSON(json, callback);
+        label = Label.fromJSON(json, callback); ///
 
-      return label;
-    });
+        if (label !== null) {
+          labels.push(label);
+        } else {
+          labels = null;
+        }
+      }
 
-    premises = premises.map((premise) => {
-      const json = premise; ///
+      return labels;
+    }, []);
 
-      premise = Premise.fromJSON(json, callback);
+    premises = premises.reduce((premises, premise) => {
+      if (premises !== null) {
+        const json = premise; ///
 
-      return premise;
-    });
+        premise = Premise.fromJSON(json, callback); ///
+
+        if (premise !== null) {
+          premises.push(premise);
+        } else {
+          premises = null;
+        }
+      }
+
+      return premises;
+    }, []);
 
     json = conclusion;  ///
 
     conclusion = Conclusion.fromJSON(json, callback);
 
-    const rule = new Rule(labels, premises, conclusion);
+    if ((labels !== null) && (premises !== null) && (conclusion !== null)) {
+      rule = new Rule(labels, premises, conclusion);
+    }
 
     return rule;
   }
