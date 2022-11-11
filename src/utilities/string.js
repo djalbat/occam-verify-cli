@@ -18,7 +18,11 @@ export function nodeAsString(node) {
             childNodes = nonTerminalNode.getChildNodes();
 
       childNodes.forEach((childNode) => {
-        string = nodeAsString(childNode, string);
+        const nodeString = nodeAsString(childNode);
+
+        string = (string === null) ?
+                   nodeString : ///
+                    `${string}${nodeString}`;
       });
     }
   }

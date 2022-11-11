@@ -18,7 +18,7 @@ function releaseContextFromReleaseNameAndShortenedVersion(releaseName, shortened
 
   try {
     releaseContext = entryFile ?
-                       fileReleaseContextFromEntryPath(entryPath, context) :
+                       fileReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath, context) :
                          directoryReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath, context);
   } catch (error) {
     const releaseContext = null;
@@ -43,11 +43,11 @@ module.exports = {
   releaseContextFromReleaseNameAndShortenedVersion
 };
 
-function fileReleaseContextFromEntryPath(entryPath, context) {
+function fileReleaseContextFromReleaseNameAndProjectsDirectoryPath(releaseName, projectsDirectoryPath, context) {
   let releaseContext;
 
   const { log } = context,
-        filePath = entryPath, ///
+        filePath = `${projectsDirectoryPath}/${releaseName}`,
         content = readFile(filePath),
         releaseJSONString = content,  ///
         releaseJSON = JSON.parse(releaseJSONString);
@@ -62,7 +62,8 @@ function fileReleaseContextFromEntryPath(entryPath, context) {
 
   entries = Entries.fromJSON(json);
 
-  const fileReleaseContext = FileReleaseContext.fromLogNameEntriesCallbacksAndContextJSON(log, name, entries, callbacks, contextJSON);
+  const name = releaseName, ///
+        fileReleaseContext = FileReleaseContext.fromLogNameEntriesCallbacksAndContextJSON(log, name, entries, callbacks, contextJSON);
 
   releaseContext = fileReleaseContext;  ///
 
