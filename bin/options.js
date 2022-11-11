@@ -1,9 +1,11 @@
 "use strict";
 
-const LOG_LEVEL_OPTION = "log-level",
-      RELEASE_NAME_OPTION = "package-name";
+const HELP_OPTION = "help",
+      VERSION_OPTION = "version",
+      LOG_LEVEL_OPTION = "log-level";
 
 module.exports = {
-  LOG_LEVEL_OPTION,
-  RELEASE_NAME_OPTION
+  HELP_OPTION,
+  VERSION_OPTION,
+  LOG_LEVEL_OPTION
 };
