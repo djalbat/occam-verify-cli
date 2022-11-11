@@ -1,7 +1,9 @@
 "use strict";
 
-export function createReleaseContext(releaseName, dependentNames, shortenedVersion, context, callback) {
+export function createReleaseContext(dependency, dependentNames, context, callback) {
   const { releaseContextMap } = context,
+        name = dependency.getName(),
+        releaseName = name, ///
         releaseContext = releaseContextMap[releaseName] || null;
 
   if (releaseContext !== null) {
@@ -14,7 +16,7 @@ export function createReleaseContext(releaseName, dependentNames, shortenedVersi
 
   const { releaseContextFromReleaseNameAndShortenedVersion } = context;
 
-  releaseContextFromReleaseNameAndShortenedVersion(releaseName, shortenedVersion, context, (error, releaseContext) => {
+  releaseContextFromReleaseNameAndShortenedVersion(dependency, context, (error, releaseContext) => {
     if (error) {
       callback(error);
 
@@ -84,13 +86,17 @@ function initialiseReleaseContext(releaseContext, releaseContextMap) {
   releaseContext.initialise(dependencyReleaseContexts);
 }
 
-function checkCyclicDependencyExists(releaseName, dependentNames, releaseContext) {
-  const dependentNamesIncludesReleaseName = dependentNames.includes(releaseName),
-        cyclicDependencyExists = dependentNamesIncludesReleaseName;  ///
+function checkCyclicDependencyExists(dependency, dependentNames, releaseContext) {
+  const dependencyName = dependency.getName(),
+        dependentNamesIncludesDependencyName = dependentNames.includes(dependencyName),
+        cyclicDependencyExists = dependentNamesIncludesDependencyName;  ///
 
   if (cyclicDependencyExists) {
     const firstDependentName = first(dependentNames),
-          dependencyNames = dependentNames.concat(firstDependentName),
+          dependencyNames = [  ///
+              ...dependentNames,
+            firstDependentName
+          ],
           dependencyNamesString = dependencyNames.join(`' -> '`);
 
     releaseContext.error(`There is a cyclic dependency: '${dependencyNamesString}'.`);
@@ -111,10 +117,7 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
   dependentNames = [ ...dependentNames, releaseName ];  ///
 
   dependencies.asynchronousForEachDependency((dependency, next, done) => {
-    const name = dependency.getName(),
-          releaseName = name, //
-          shortenedVersion = dependency.getShortedVersion(),
-          cyclicDependencyExists = checkCyclicDependencyExists(releaseName, dependentNames, releaseContext);
+    const cyclicDependencyExists = checkCyclicDependencyExists(dependency, dependentNames, releaseContext);
 
     if (cyclicDependencyExists) {
       const error = null;
@@ -124,7 +127,7 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
       return;
     }
 
-    createReleaseContext(releaseName, dependentNames, shortenedVersion, context, (error) => {
+    createReleaseContext(dependency, dependentNames, context, (error) => {
       if (error) {
         callback(error);
 
