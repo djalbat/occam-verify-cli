@@ -132,25 +132,28 @@ function retrieveDependencyReleaseContexts(dependency, context, dependencyReleas
   const { releaseContextMap } = context,
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///
-        releaseContext = releaseContextMap[releaseName] || null;
-
-  if (releaseContext === null) {
-    return;
-  }
-
-  const dependencyReleaseContextsIncludesReleaseContext = dependencyReleaseContexts.includes(releaseContext);
-
-  if (dependencyReleaseContextsIncludesReleaseContext) {
-    return;
-  }
-
-  const dependencies = releaseContext.getDependencies();
+        releaseContext = releaseContextMap[releaseName],
+        dependencies = releaseContext.getDependencies();
 
   dependencies.forEachDependency((dependency) => {
-    retrieveDependencyReleaseContexts(dependency, context, dependencyReleaseContexts);
-  });
+    const dependencyName = dependency.getName(),
+          releaseName = dependencyName, ///
+          releaseContext = releaseContextMap[releaseName] || null;
 
-  dependencyReleaseContexts.push(releaseContext);
+    if (releaseContext === null) {
+      return;
+    }
+
+    const dependencyReleaseContextsIncludesReleaseContext = dependencyReleaseContexts.includes(releaseContext);
+
+    if (dependencyReleaseContextsIncludesReleaseContext) {
+      return;
+    }
+
+    retrieveDependencyReleaseContexts(dependency, context, dependencyReleaseContexts);
+
+    dependencyReleaseContexts.push(releaseContext);
+  });
 
   return dependencyReleaseContexts;
 }

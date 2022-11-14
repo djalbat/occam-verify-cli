@@ -38,8 +38,6 @@ function verifyAction(argument, logLevel) {
     if (releaseVerified) {
       const releaseContext = releaseContextMap[releaseName];
 
-      releaseContext.toJSON();
-
       ///
     }
   });
