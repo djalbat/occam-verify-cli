@@ -4,22 +4,21 @@ const { Dependency } = require("occam-file-system"),
       { loggingUtilities } = require("necessary"),
       { verifyRelease, releaseContextUtilities } = require("../../lib/index");
 
-const { releaseContextFromReleaseNameAndShortenedVersion } = require("../utilities/fileSystem");
+const { releaseContextFromDependencyAndDependentNames } = require("../utilities/fileSystem");
 
 const { log } = loggingUtilities,
       { setLogLevel } = log,
-      { createReleaseContext, initialiseReleaseContexts } = releaseContextUtilities;
+      { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
 function verifyAction(argument, logLevel) {
   const name = argument, ///
-        releaseContextMap = {},
-        shortenedVersion = null,
+        dependency = Dependency.fromName(name),
         dependentNames = [],
-        dependency = Dependency.fromNameAndShortenedVersion(name, shortenedVersion),
+        releaseContextMap = {},
         context = {
           log,
           releaseContextMap,
-          releaseContextFromReleaseNameAndShortenedVersion
+          releaseContextFromDependencyAndDependentNames
         };
 
   setLogLevel(logLevel);
@@ -31,11 +30,10 @@ function verifyAction(argument, logLevel) {
       return;
     }
 
-    const releaseName = name; ///
+    initialiseReleaseContext(dependency, context);
 
-    initialiseReleaseContexts(releaseName, releaseContextMap);
-
-    const releaseVerified = verifyRelease(releaseName, releaseContextMap);
+    const releaseName = name, ///
+          releaseVerified = verifyRelease(releaseName, releaseContextMap);
 
     if (releaseVerified) {
       const releaseContext = releaseContextMap[releaseName];

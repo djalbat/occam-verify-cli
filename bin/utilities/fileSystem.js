@@ -1,15 +1,16 @@
 "use strict";
 
-const { FileReleaseContext, DirectoryReleaseContext } = require("../../lib/index"),  ///
-      { fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary"),
-      { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system");
+const { FileReleaseContext, DirectoryReleaseContext } = require("../../lib/index"), ///
+      { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
+      { arrayUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
 
 const callbacks = require("../callbacks");
 
-const { loadRelease } = occamFileSystemUtilities,
+const { last } = arrayUtilities,
+      { loadRelease } = occamFileSystemUtilities,
       { readFile, isEntryFile } = necessaryFileSystemUtilities;
 
-function releaseContextFromReleaseNameAndShortenedVersion(dependency, context, callback) {
+function releaseContextFromDependencyAndDependentNames(dependency, dependentNames, context, callback) {
   const projectsDirectoryPath = process.cwd(), ///
         dependencyName = dependency.getName(),
         entryPath = `${projectsDirectoryPath}/${dependencyName}`,
@@ -28,7 +29,7 @@ function releaseContextFromReleaseNameAndShortenedVersion(dependency, context, c
   }
 
   if (releaseContext !== null) {
-    const releaseMatchesShortedVersion = checkReleaseMatchesDependency(dependency, releaseContext, context);
+    const releaseMatchesShortedVersion = checkReleaseMatchesDependency(dependency, dependentNames, releaseContext, context);
 
     if (!releaseMatchesShortedVersion) {
       releaseContext = null;
@@ -41,22 +42,28 @@ function releaseContextFromReleaseNameAndShortenedVersion(dependency, context, c
 }
 
 module.exports = {
-  releaseContextFromReleaseNameAndShortenedVersion
+  releaseContextFromDependencyAndDependentNames
 };
 
-function checkReleaseMatchesDependency(dependency, releaseContext, context) {
+function checkReleaseMatchesDependency(dependency, dependentNames, releaseContext, context) {
+  let releaseMatchesShortedVersion = true;
+
   const entries = releaseContext.getEntries(),
-        shortenedVersion = dependency.getShortedVersion(),
-        releaseMatchesShortedVersion = entries.matchShortenedVersion(shortenedVersion);
+        shortenedVersion = dependency.getShortedVersion();
 
-  if (!releaseMatchesShortedVersion) {
-    const { log } = context,
-          version = releaseContext.getVersion(),
-          versionString = version.toString(),
-          dependencyName = dependency.getName(),
-          shortenedVersionString = shortenedVersion.toString();
+  if (shortenedVersion !== null) {
+    releaseMatchesShortedVersion = entries.matchShortenedVersion(shortenedVersion);
 
-    log.error(`The '${dependencyName}' dependency's version of ${versionString} does not match the required shortened version of ${shortenedVersionString}.`);
+    if (!releaseMatchesShortedVersion) {
+      const { log } = context,
+            version = releaseContext.getVersion(),
+            versionString = version.toString(),
+            dependencyName = dependency.getName(),
+            lastDependentName = last(dependentNames),
+            shortenedVersionString = shortenedVersion.toString();
+
+      log.error(`Version mismatch: '${lastDependentName}' requires '${dependencyName}' to be version ${shortenedVersionString}.0 or higher but version ${versionString} has been supplied.`);
+    }
   }
 
   return releaseMatchesShortedVersion;

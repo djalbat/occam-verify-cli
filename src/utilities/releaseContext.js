@@ -2,65 +2,49 @@
 
 export function createReleaseContext(dependency, dependentNames, context, callback) {
   const { releaseContextMap } = context,
-        name = dependency.getName(),
-        releaseName = name, ///
+        dependencyName = dependency.getName(),
+        releaseName = dependencyName, ///
         releaseContext = releaseContextMap[releaseName] || null;
 
   if (releaseContext !== null) {
-    const error = false;
+    const error = null;
 
     callback(error);
 
     return;
   }
 
-  const { releaseContextFromReleaseNameAndShortenedVersion } = context;
+  const { releaseContextFromDependencyAndDependentNames } = context;
 
-  releaseContextFromReleaseNameAndShortenedVersion(dependency, context, (error, releaseContext) => {
+  releaseContextFromDependencyAndDependentNames(dependency, dependentNames, context, (error, releaseContext) => {
     if (error) {
       callback(error);
 
       return;
     }
 
+    releaseContextMap[releaseName] = releaseContext;
+
     if (releaseContext === null) {
       const { log } = context;
 
       log.error(`The '${releaseName}' package could not be created.`);
-
-      releaseContextMap[releaseName] = releaseContext;
 
       callback(error);
 
       return;
     }
 
-    createDependencyReleaseContexts(releaseContext, dependentNames, context, (error) => {
-      if (error) {
-        callback(error);
-
-        return;
-      }
-
-      releaseContextMap[releaseName] = releaseContext;
-
-      callback(error);
-    });
+    createDependencyReleaseContexts(dependency, dependentNames, context, callback);
   }, context);
 }
 
-export function initialiseReleaseContexts(releaseName, releaseContextMap) {
-  const releaseContext = releaseContextMap[releaseName];
+export function initialiseReleaseContext(dependency, context) {
+  const { releaseContextMap } = context,
+        dependencyName = dependency.getName(),
+        releaseName = dependencyName, ///
+        releaseContext = releaseContextMap[releaseName] || null;
 
-  initialiseReleaseContext(releaseContext, releaseContextMap);
-}
-
-export default {
-  createReleaseContext,
-  initialiseReleaseContexts
-};
-
-function initialiseReleaseContext(releaseContext, releaseContextMap) {
   if (releaseContext === null) {
     return;
   }
@@ -74,39 +58,44 @@ function initialiseReleaseContext(releaseContext, releaseContextMap) {
   const dependencies = releaseContext.getDependencies();
 
   dependencies.forEachDependency((dependency) => {
-    const name = dependency.getName(),
-          releaseName = name, ///
-          releaseContext = releaseContextMap[releaseName];
-
-    initialiseReleaseContext(releaseContext, releaseContextMap);
+    initialiseReleaseContext(dependency, context);
   });
 
-  const dependencyReleaseContexts = retrieveDependencyReleaseContexts(releaseContext, releaseContextMap);
+  const dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependency, context);
 
   releaseContext.initialise(dependencyReleaseContexts);
 }
 
-function checkCyclicDependencyExists(dependency, dependentNames, releaseContext) {
+export default {
+  createReleaseContext,
+  initialiseReleaseContext
+};
+
+function checkCyclicDependencyExists(dependency, dependentNames, context) {
   const dependencyName = dependency.getName(),
         dependentNamesIncludesDependencyName = dependentNames.includes(dependencyName),
         cyclicDependencyExists = dependentNamesIncludesDependencyName;  ///
 
   if (cyclicDependencyExists) {
-    const firstDependentName = first(dependentNames),
+    const { log } = context,
+          firstDependentName = first(dependentNames),
           dependencyNames = [  ///
               ...dependentNames,
             firstDependentName
           ],
           dependencyNamesString = dependencyNames.join(`' -> '`);
 
-    releaseContext.error(`There is a cyclic dependency: '${dependencyNamesString}'.`);
+    log.error(`There is a cyclic dependency: '${dependencyNamesString}'.`);
   }
 
   return cyclicDependencyExists;
 }
 
-function createDependencyReleaseContexts(releaseContext, dependentNames, context, callback) {
-  const releaseName = releaseContext.getReleaseName(),
+function createDependencyReleaseContexts(dependency, dependentNames, context, callback) {
+  const { releaseContextMap } = context,
+        dependencyName = dependency.getName(),
+        releaseName = dependencyName, ///
+        releaseContext = releaseContextMap[releaseName],
         dependencies = releaseContext.getDependencies(),
         done = () => {
           const error = null;
@@ -114,10 +103,10 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
           callback(error);
         }
 
-  dependentNames = [ ...dependentNames, releaseName ];  ///
+  dependentNames = [ ...dependentNames, dependencyName ];  ///
 
   dependencies.asynchronousForEachDependency((dependency, next, done) => {
-    const cyclicDependencyExists = checkCyclicDependencyExists(dependency, dependentNames, releaseContext);
+    const cyclicDependencyExists = checkCyclicDependencyExists(dependency, dependentNames, context);
 
     if (cyclicDependencyExists) {
       const error = null;
@@ -139,28 +128,29 @@ function createDependencyReleaseContexts(releaseContext, dependentNames, context
   }, done);
 }
 
-function retrieveDependencyReleaseContexts(releaseContext, releaseContextMap, dependencyReleaseContexts = []) {
+function retrieveDependencyReleaseContexts(dependency, context, dependencyReleaseContexts = []) {
+  const { releaseContextMap } = context,
+        dependencyName = dependency.getName(),
+        releaseName = dependencyName, ///
+        releaseContext = releaseContextMap[releaseName] || null;
+
+  if (releaseContext === null) {
+    return;
+  }
+
+  const dependencyReleaseContextsIncludesReleaseContext = dependencyReleaseContexts.includes(releaseContext);
+
+  if (dependencyReleaseContextsIncludesReleaseContext) {
+    return;
+  }
+
   const dependencies = releaseContext.getDependencies();
 
   dependencies.forEachDependency((dependency) => {
-    const dependencyName = dependency.getName(),
-          dependencyReleaseName = dependencyName, ///
-          dependencyReleaseContext = releaseContextMap[dependencyReleaseName];
-
-    if (dependencyReleaseContext === null) {
-      return;
-    }
-
-    const dependencyReleaseContextsIncludesDependencyReleaseContext = dependencyReleaseContexts.includes(dependencyReleaseContext);
-
-    if (!dependencyReleaseContextsIncludesDependencyReleaseContext) {
-      const releaseContext = dependencyReleaseContext;  ///
-
-      retrieveDependencyReleaseContexts(releaseContext, releaseContextMap, dependencyReleaseContexts);
-
-      dependencyReleaseContexts.push(dependencyReleaseContext);
-    }
+    retrieveDependencyReleaseContexts(dependency, context, dependencyReleaseContexts);
   });
+
+  dependencyReleaseContexts.push(releaseContext);
 
   return dependencyReleaseContexts;
 }
