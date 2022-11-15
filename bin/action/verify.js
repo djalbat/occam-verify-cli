@@ -32,14 +32,9 @@ function verifyAction(argument, logLevel) {
 
     initialiseReleaseContext(dependency, context);
 
-    const releaseName = name, ///
-          releaseVerified = verifyRelease(releaseName, releaseContextMap);
+    const releaseName = name; ///
 
-    if (releaseVerified) {
-      const releaseContext = releaseContextMap[releaseName];
-
-      ///
-    }
+    verifyRelease(releaseName, releaseContextMap);
   });
 }
 

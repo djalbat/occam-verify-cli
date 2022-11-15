@@ -3,32 +3,32 @@
 import verifyFiles from "../verify/files";
 
 export default function verifyRelease(releaseName, releaseContextMap) {
+  let releaseVerified = false;
+
   const releaseContext = releaseContextMap[releaseName];
 
-  if (releaseContext === null) {
-    return;
-  }
-
-  const verified = releaseContext.isVerified();
-
-  let releaseVerified = verified; ///
-
-  if (!releaseVerified) {
-    releaseContext.debug(`Verifying the '${releaseName}' package...`);
-
+  if (releaseContext !== null) {
     const dependencyReleasesVVerified = verifyDependencyReleases(releaseContext, releaseContextMap);
 
     if (dependencyReleasesVVerified) {
-      const releaseFilesVerified = verifyReleaseFiles(releaseContext);
+      const verified = releaseContext.isVerified();
 
-      if (releaseFilesVerified) {
-        const verified = true;
-
+      if (verified) {
         releaseVerified = true;
+      } else {
+        releaseContext.debug(`Verifying the '${releaseName}' package...`);
 
-        releaseContext.setVerified(verified);
+        const releaseFilesVerified = verifyReleaseFiles(releaseContext);
 
-        releaseContext.info(`Verified the '${releaseName}' package.`);
+        if (releaseFilesVerified) {
+          const verified = true;
+
+          releaseVerified = verified;
+
+          releaseContext.setVerified(verified);
+
+          releaseContext.info(`Verified the '${releaseName}' package.`);
+        }
       }
     }
   }
