@@ -2,9 +2,12 @@
 
 import Type from "./type";
 
+import { nodeQuery } from "./utilities/query";
 import { nodeAsString } from "./utilities/string";
-import { TERM_RULE_NAME } from "./ruleNames";
 import { CONSTRUCTOR_KIND } from "./kinds";
+import { CONSTRUCTOR_DECLARATION_RULE_NAME } from "./ruleNames";
+
+const statementNodeQuery = nodeQuery("/constructorDeclaration/term");
 
 export default class Constructor {
   constructor(termNode, type) {
@@ -55,23 +58,20 @@ export default class Constructor {
   }
 
   static fromJSON(json, callback) {
-    let constructor = null;
-
     let { type } = json;
 
     const { term } = json,
-          content = term,  ///
-          ruleName = TERM_RULE_NAME,
-          node = callback(content, ruleName),
-          termNode = node; ///
+          ruleName = CONSTRUCTOR_DECLARATION_RULE_NAME,
+          content = `Constructor ${term}
+`,
+          constructorDeclarationNode = callback(content, ruleName),
+          termNode = statementNodeQuery(constructorDeclarationNode);
 
-    if (termNode !== null) {
-      json = type;  ///
+    json = type;  ///
 
-      type = Type.fromJSON(json);
+    type = Type.fromJSON(json);
 
-      constructor = new Constructor(termNode, type);
-    }
+    const constructor = new Constructor(termNode, type);
 
     return constructor;
   }

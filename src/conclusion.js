@@ -1,9 +1,12 @@
 "use strict";
 
 import { first } from "./utilities/array";
+import { nodeQuery } from "./utilities/query";
 import { nodeAsString } from "./utilities/string";
 import { metavariableNameFromMetavariableNode } from "./utilities/query";
-import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } from "./ruleNames";
+import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME } from "./ruleNames";
+
+const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement");
 
 export default class Conclusion {
   constructor(metastatementNode) {
@@ -37,10 +40,11 @@ export default class Conclusion {
     let conclusion = null;
 
     const { metastatement } = json,
-          ruleName = METASTATEMENT_RULE_NAME,
-          content = metastatement,  ///
-          node = callback(content, ruleName),
-          metastatementNode = node; ///
+          ruleName = UNQUALIFIED_METASTATEMENT_RULE_NAME,
+          content = `${metastatement}
+`,
+          unqualifiedMetastatementNode = callback(content, ruleName),
+          metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
     if (metastatementNode !== null) {
       conclusion = new Conclusion(metastatementNode);

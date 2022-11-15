@@ -1,8 +1,11 @@
 "use strict";
 
+import { nodeQuery } from "./utilities/query";
 import { nodeAsString } from "./utilities/string";
 import { COMBINATOR_KIND } from "./kinds";
-import { STATEMENT_RULE_NAME } from "./ruleNames";
+import { COMBINATOR_DECLARATION_RULE_NAME } from "./ruleNames";
+
+const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
 export default class Combinator {
   constructor(statementNode) {
@@ -32,17 +35,13 @@ export default class Combinator {
   }
 
   static fromJSON(json, callback) {
-    let combinator = null;
-
     const { statement } = json,
-          content = statement,  ///
-          ruleName = STATEMENT_RULE_NAME,
-          node = callback(content, ruleName),
-          statementNode = node; ///
-
-    if (statementNode !== null) {
-      combinator = new Combinator(statementNode);
-    }
+          ruleName = COMBINATOR_DECLARATION_RULE_NAME,
+          content = `Combinator ${statement}
+`,
+          combinatorDeclarationNode = callback(content, ruleName),
+          statementNode = statementNodeQuery(combinatorDeclarationNode),
+          combinator = new Combinator(statementNode);
 
     return combinator;
   }

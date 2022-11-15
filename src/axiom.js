@@ -2,9 +2,12 @@
 
 import Label from "./label";
 
+import { nodeQuery } from "./utilities/query";
 import { AXIOM_KIND } from "./kinds";
 import { nodeAsString } from "./utilities/string";
-import { STATEMENT_RULE_NAME } from "occam-custom-grammars/lib/ruleNames";
+import { UNQUALIFIED_STATEMENT_RULE_NAME } from "./ruleNames";
+
+const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement");
 
 export default class Axiom {
   constructor(labels, statementNode, suppositionStatementNode, consequentStatementNode) {
@@ -92,42 +95,45 @@ export default class Axiom {
     }, []);
 
     if (statement !== null) {
-      const content = statement,  ///
-            ruleName = STATEMENT_RULE_NAME,
-            node = callback(content, ruleName),
-            statementNode = node; ///
+      const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME,
+            content = `${statement}
+`,
+            unqualifiedStatementNode = callback(content, ruleName),
+            statementNode = statementNodeQuery(unqualifiedStatementNode),
+            consequentNode = null,
+            suppositionNode = null;
 
-      if (statementNode !== null) {
-        const consequentNode = null,
-              suppositionNode = null;
-
-        axiom = new Axiom(labels, statementNode, consequentNode, suppositionNode);
-      }
+      axiom = new Axiom(labels, statementNode, consequentNode, suppositionNode);
     }
 
     if ((consequent !== null) && (supposition !== null)) {
-      let node,
-          content;
+      let content,
+          statementNode,
+          unqualifiedStatementNode;
 
-      const ruleName = STATEMENT_RULE_NAME;
+      const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME;
 
-      content = consequent;  ///
+      content = `${consequent}
+`;
 
-      node = callback(content, ruleName);
+      unqualifiedStatementNode = callback(content, ruleName);
 
-      const consequentNode = node; ///
+      statementNode = statementNodeQuery(unqualifiedStatementNode);
 
-      content = supposition;  ///
+      const consequentNode = statementNode; ///
 
-      node = callback(content, ruleName);
+      content = `${supposition}
+`;
 
-      const suppositionNode = node; ///
+      unqualifiedStatementNode = callback(content, ruleName);
 
-      if ((consequentNode !== null) && (suppositionNode !== null)) {
-        const statementNode = null;
+      statementNode = statementNodeQuery(unqualifiedStatementNode);
 
-        axiom = new Axiom(labels, statementNode, consequentNode, suppositionNode);
-      }
+      const suppositionNode = statementNode;  ///
+
+      statementNode = null;
+
+      axiom = new Axiom(labels, statementNode, consequentNode, suppositionNode);
     }
 
     return axiom;

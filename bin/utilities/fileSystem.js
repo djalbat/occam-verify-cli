@@ -58,11 +58,12 @@ function checkReleaseMatchesDependency(dependency, dependentNames, releaseContex
       const { log } = context,
             version = releaseContext.getVersion(),
             versionString = version.toString(),
-            dependencyName = dependency.getName(),
             lastDependentName = last(dependentNames),
+            dependentName = lastDependentName,  ///
+            dependencyName = dependency.getName(),
             shortenedVersionString = shortenedVersion.toString();
 
-      log.error(`Version mismatch: '${lastDependentName}' requires '${dependencyName}' to be version ${shortenedVersionString}.0 or higher but version ${versionString} has been supplied.`);
+      log.error(`Version mismatch: '${dependentName}' requires '${dependencyName}' to be version ${shortenedVersionString}.0 or higher but version ${versionString} has been supplied.`);
     }
   }
 
