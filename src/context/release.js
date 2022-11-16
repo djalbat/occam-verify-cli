@@ -106,6 +106,8 @@ export default class ReleaseContext {
   complete(filePath, leastLineIndex, greatestLineIndex) { this.callbacks.complete(filePath, leastLineIndex, greatestLineIndex); }
 
   initialise(dependencyReleaseContexts) {
+    console.log("initialise...")
+
     const releaseContext = this,  ///
           releaseContexts = [
             releaseContext,
@@ -118,5 +120,7 @@ export default class ReleaseContext {
     this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
     this.dependencyReleaseContexts = dependencyReleaseContexts;
+
+    console.log("...initialise")
   }
 }
