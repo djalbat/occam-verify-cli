@@ -115,6 +115,8 @@ export default class ReleaseContext {
           ],
           combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts);
 
+    console.log("...initialise...")
+
     this.florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 
     this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
