@@ -9,10 +9,10 @@ function helpAction() {
 
 Commands:
 
+  help                                            Show this help
+
   version                                         Show the version
 
-  help                                            Show this help
-  
 Options:
 
   --help|-h                                       Show this help
