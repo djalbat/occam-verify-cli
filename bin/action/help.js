@@ -19,8 +19,6 @@ Options:
 
   --version|-v                                    Show the version
 
-  --log-level|-l                                  Set the log level when publishing
-
 Further information:
 
 Please see the readme file on GitHub:
