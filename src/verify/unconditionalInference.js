@@ -1,33 +1,24 @@
 "use strict";
 
-import Conclusion from "../conclusion";
-import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
+import verifyConclusion from "../verify/conclusion";
 
 import { nodeQuery } from "../utilities/query";
 
-const metastatementNodeQuery = nodeQuery("/unconditionalInference/unqualifiedMetastatement!/metastatement!"),
-      unqualifiedMetastatementNodeQuery = nodeQuery("/unconditionalInference/unqualifiedMetastatement!");
+const conclusionNodeQuery = nodeQuery("/unconditionalInference/conclusion!");
 
-export default function verifyUnconditionalInference(unconditionalInferenceNode, premises, conclusions, metaproofContext) {
-  let unconditionalInferenceVerified = false;
+export default function verifyUnconditionalInference(conditionalInferenceNode, conclusions, metaproofContext) {
+  let unconditionalInferenceVerified;
 
-  metaproofContext.begin(unconditionalInferenceNode);
+  metaproofContext.begin(conditionalInferenceNode);
 
-  const metastatementNode = metastatementNodeQuery(unconditionalInferenceNode),
-        unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(unconditionalInferenceNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
+  const conclusionNode = conclusionNodeQuery(conditionalInferenceNode),
+        conclusionVerified = verifyConclusion(conclusionNode, conclusions, metaproofContext);
 
-  if (unqualifiedMetastatementVerified) {
-    const conclusion = Conclusion.fromMetastatementNode(metastatementNode);
-
-    conclusions.push(conclusion);
-
-    unconditionalInferenceVerified = true;
-  }
+  unconditionalInferenceVerified = conclusionVerified;  ///
 
   unconditionalInferenceVerified ?
-    metaproofContext.complete(unconditionalInferenceNode) :
-      metaproofContext.halt(unconditionalInferenceNode);
+    metaproofContext.complete(conditionalInferenceNode) :
+      metaproofContext.halt(conditionalInferenceNode);
 
   return unconditionalInferenceVerified;
 }
