@@ -44,7 +44,7 @@ export default function verifyRule(ruleNode, fileContext) {
     }
 
     if (unconditionalInferenceNode !== null) {
-      unconditionalInferenceVerified = verifyUnconditionalInference(unconditionalInferenceNode, premises, conclusions, metaproofContext);
+      unconditionalInferenceVerified = verifyUnconditionalInference(unconditionalInferenceNode, conclusions, metaproofContext);
     }
 
     if (conditionalInferenceVerified || unconditionalInferenceVerified) {
