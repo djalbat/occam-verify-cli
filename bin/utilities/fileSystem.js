@@ -2,18 +2,19 @@
 
 const { FileReleaseContext, DirectoryReleaseContext } = require("../../lib/index"), ///
       { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
-      { arrayUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
+      { pathUtilities, arrayUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
 
 const callbacks = require("../callbacks");
 
 const { last } = arrayUtilities,
       { loadProject } = occamFileSystemUtilities,
+      { concatenatePaths } = pathUtilities,
       { readFile, isEntryFile } = necessaryFileSystemUtilities;
 
 function releaseContextFromDependencyAndDependentNames(dependency, dependentNames, context, callback) {
   const projectsDirectoryPath = process.cwd(), ///
         dependencyName = dependency.getName(),
-        entryPath = `${projectsDirectoryPath}/${dependencyName}`,
+        entryPath = concatenatePaths(projectsDirectoryPath, dependencyName),
         entryFile = isEntryFile(entryPath);
 
   let releaseContext;
@@ -75,7 +76,7 @@ function fileReleaseContextFromDependencyAndProjectsDirectoryPath(dependency, pr
 
   const { log } = context,
         dependencyName = dependency.getName(),
-        filePath = `${projectsDirectoryPath}/${dependencyName}`,
+        filePath = concatenatePaths(projectsDirectoryPath, dependencyName),
         content = readFile(filePath),
         releaseJSONString = content,  ///
         releaseJSON = JSON.parse(releaseJSONString);
