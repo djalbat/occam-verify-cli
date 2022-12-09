@@ -7,7 +7,7 @@ const { FileReleaseContext, DirectoryReleaseContext } = require("../../lib/index
 const callbacks = require("../callbacks");
 
 const { last } = arrayUtilities,
-      { loadRelease } = occamFileSystemUtilities,
+      { loadProject } = occamFileSystemUtilities,
       { readFile, isEntryFile } = necessaryFileSystemUtilities;
 
 function releaseContextFromDependencyAndDependentNames(dependency, dependentNames, context, callback) {
@@ -102,13 +102,13 @@ function directoryReleaseContextFromDependencyAndProjectsDirectoryPath(dependenc
   let releaseContext = null;
 
   const dependencyName = dependency.getName(),
-        topmostDirectoryName = dependencyName, ///
-        release = loadRelease(topmostDirectoryName, projectsDirectoryPath);
+        projectName = dependencyName, ///
+        project = loadProject(projectName, projectsDirectoryPath);
 
-  if (release !== null) {
+  if (project !== null) {
     const { log } = context,
-          name = dependencyName, ///
-          entries = release.getEntries(),
+          name = project.getName(),
+          entries = project.getEntries(),
           directoryReleaseContext = DirectoryReleaseContext.fromLogNameEntriesAndCallbacks(log, name, entries, callbacks);
 
     releaseContext = directoryReleaseContext; ///

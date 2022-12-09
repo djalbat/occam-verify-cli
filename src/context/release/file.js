@@ -23,7 +23,6 @@ export default class FileReleaseContext extends ReleaseContext {
     this.axioms = axioms;
     this.combinators = combinators;
     this.constructors = constructors;
-
     this.contextJSON = contextJSON;
   }
 

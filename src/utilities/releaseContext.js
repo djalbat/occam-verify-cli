@@ -96,12 +96,7 @@ function createDependencyReleaseContexts(dependency, dependentNames, context, ca
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///
         releaseContext = releaseContextMap[releaseName],
-        dependencies = releaseContext.getDependencies(),
-        done = () => {
-          const error = null;
-
-          callback(error);
-        }
+        dependencies = releaseContext.getDependencies();
 
   dependentNames = [ ...dependentNames, dependencyName ];  ///
 
@@ -125,7 +120,11 @@ function createDependencyReleaseContexts(dependency, dependentNames, context, ca
 
       next();
     });
-  }, done);
+  }, () => {
+    const error = null;
+
+    callback(error);
+  });
 }
 
 function retrieveDependencyReleaseContexts(dependency, context, dependencyReleaseContexts = []) {
