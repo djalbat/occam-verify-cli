@@ -58,7 +58,7 @@ export default class ReleaseContext {
 
   getReleaseName() {
     const name = this.getName(),
-         releaseName = name; ///
+          releaseName = name; ///
 
     return releaseName;
   }

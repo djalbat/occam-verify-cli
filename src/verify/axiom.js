@@ -1,6 +1,7 @@
 "use strict";
 
 import Axiom from "../axiom";
+import verifyLabels from "../verify/labels";
 import ProofContext from "../context/proof";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 import verifyIndicativeConditional from "../verify/indicativeConditional";
@@ -22,41 +23,45 @@ export default function verifyAxiom(axiomNode, fileContext) {
 
   const labelNodes = labelNodesQuery(axiomNode),
         labelsString = nodesAsString(labelNodes),
-        proofContext = ProofContext.fromFileContext(fileContext),
-        unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
-        indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
+        proofContext = ProofContext.fromFileContext(fileContext);
 
   fileContext.debug(`Verifying the '${labelsString}' axiom...`);
 
-  if (unqualifiedStatementNode !== null) {
-    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
+  const labels = [],
+        labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
-    if (unqualifiedStatementVerified) {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode),
-            labels = labelsString,  ///
-            axiom = Axiom.fromStatementNodeAndLabels(statementNode, labels);
+  if (labelsVerified) {
+    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
+          indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
 
-      fileContext.addAxiom(axiom);
+    if (unqualifiedStatementNode !== null) {
+      const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
 
-      axiomVerified = true;
+      if (unqualifiedStatementVerified) {
+        const statementNode = statementNodeQuery(unqualifiedStatementNode),
+              axiom = Axiom.fromLabelsAndStatementNode(labels, statementNode);
+
+        fileContext.addAxiom(axiom);
+
+        axiomVerified = true;
+      }
     }
-  }
 
-  if (indicativeConditionalNode !== null) {
-    const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, proofContext);
+    if (indicativeConditionalNode !== null) {
+      const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, proofContext);
 
-    if (indicativeConditionalVerified !== null) {
-      const labels = labelsString,  ///
-            statementNodes = statementNodesQuery(indicativeConditionalNode),
-            firstStatementNode = first(statementNodes),
-            secondStatementNode = second(statementNodes),
-            consequentStatementNode = secondStatementNode,  ///
-            suppositionStatementNode = firstStatementNode,  ///
-            axiom = Axiom.fromSuppositionStatementNodeConsequentStatementNodeAndLabels(suppositionStatementNode, consequentStatementNode, labels);
+      if (indicativeConditionalVerified !== null) {
+        const statementNodes = statementNodesQuery(indicativeConditionalNode),
+              firstStatementNode = first(statementNodes),
+              secondStatementNode = second(statementNodes),
+              consequentStatementNode = secondStatementNode,  ///
+              suppositionStatementNode = firstStatementNode,  ///
+              axiom = Axiom.fromLabelsSuppositionStatementNodeConsequentAndStatementNode(labels, suppositionStatementNode, consequentStatementNode);
 
-      fileContext.addAxiom(axiom);
+        fileContext.addAxiom(axiom);
 
-      axiomVerified = true;
+        axiomVerified = true;
+      }
     }
   }
 

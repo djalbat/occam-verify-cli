@@ -139,7 +139,7 @@ export default class Axiom {
     return axiom;
   }
 
-  static fromStatementNodeAndLabels(statementNode, labels) {
+  static fromLabelsAndStatementNode(labels, statementNode) {
     const suppositionStatementNode = null,
           consequentStatementNode = null,
           axiom = new Axiom(labels, statementNode, suppositionStatementNode, consequentStatementNode);
@@ -147,7 +147,7 @@ export default class Axiom {
     return axiom;
   }
 
-  static fromSuppositionStatementNodeConsequentStatementNodeAndLabels(suppositionStatementNode, consequentStatementNode, labels) {
+  static fromLabelsSuppositionStatementNodeConsequentAndStatementNode(labels, suppositionStatementNode, consequentStatementNode) {
     const statementNode = null,
           axiom = new Axiom(labels, statementNode, suppositionStatementNode, consequentStatementNode);
 
