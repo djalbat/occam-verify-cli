@@ -23,13 +23,15 @@ export default function verifyRelease(releaseName, releaseContextMap) {
         if (releaseFilesVerified) {
           const verified = true;
 
-          releaseVerified = verified;
-
           releaseContext.setVerified(verified);
 
-          releaseContext.info(`Verified the '${releaseName}' package.`);
+          releaseVerified = verified; ///
         }
       }
+    }
+
+    if (releaseVerified) {
+      releaseContext.info(`Verified the '${releaseName}' package.`);
     }
   }
 

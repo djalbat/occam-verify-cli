@@ -68,7 +68,9 @@ export default function verifyRule(ruleNode, fileContext) {
     }
   }
 
-  fileContext.info(`Verified the '${labelsString}' rule.`);
+  if (ruleVerified) {
+    fileContext.info(`Verified the '${labelsString}' rule.`);
+  }
 
   ruleVerified ?
     fileContext.complete(ruleNode) :

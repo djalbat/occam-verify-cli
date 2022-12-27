@@ -16,14 +16,17 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
         childNodesVerified = verifyChildNodes(childNodes, fileContext);
 
   if (childNodesVerified) {
-    const combinator = Combinator.fromStatementNode(statementNode),
-          statementString = nodeAsString(statementNode);
-
-    fileContext.info(`Verified the '${statementString}' combinator.`);
+    const combinator = Combinator.fromStatementNode(statementNode);
 
     fileContext.addCombinator(combinator);
 
     statementVerifiedAsCombinator = true;
+  }
+
+  if (statementVerifiedAsCombinator) {
+    const statementString = nodeAsString(statementNode);
+
+    fileContext.info(`Verified the '${statementString}' combinator.`);
   }
 
   statementVerifiedAsCombinator ?

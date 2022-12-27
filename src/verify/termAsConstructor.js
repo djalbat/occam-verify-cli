@@ -40,10 +40,13 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
   }
 
   if (termVerifiedAsConstructor) {
-    const termString = nodeAsString(termNode),
-          constructor = Constructor.fromTermNodeAndType(termNode, type);
+    const constructor = Constructor.fromTermNodeAndType(termNode, type);
 
     fileContext.addConstructor(constructor);
+  }
+
+  if (termVerifiedAsConstructor) {
+    const termString = nodeAsString(termNode);
 
     fileContext.info(`Verified the '${termString}' constructor.`);
   }

@@ -65,7 +65,9 @@ export default function verifyAxiom(axiomNode, fileContext) {
     }
   }
 
-  fileContext.info(`Verified the '${labelsString}' axiom.`);
+  if (axiomVerified) {
+    fileContext.info(`Verified the '${labelsString}' axiom.`);
+  }
 
   axiomVerified ?
     fileContext.complete(axiomNode) :

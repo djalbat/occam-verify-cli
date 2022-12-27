@@ -38,14 +38,16 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
     }
 
     if (variable !== null) {
-      const variableString = nodeAsString(variableNode);
-
-      fileContext.info(`Verified the '${variableString}' variable.`);
-
       fileContext.addVariable(variable);
 
       variableVerified = true;
     }
+  }
+
+  if (variableVerified) {
+    const variableString = nodeAsString(variableNode);
+
+    fileContext.info(`Verified the '${variableString}' variable.`);
   }
 
   variableVerified ?

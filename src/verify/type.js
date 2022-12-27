@@ -34,13 +34,15 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
   }
 
   if (type !== null) {
-    const typeString = nodeAsString(typeNode);
-
-    fileContext.info(`Verified the '${typeString}' type.`);
-
     fileContext.addType(type);
 
     typeVerified = true;
+  }
+
+  if (typeVerified) {
+    const typeString = nodeAsString(typeNode);
+
+    fileContext.info(`Verified the '${typeString}' type.`);
   }
 
   typeVerified ?
