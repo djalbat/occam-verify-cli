@@ -65,6 +65,8 @@ export default function verifyAxiom(axiomNode, fileContext) {
     }
   }
 
+  fileContext.info(`Verified the '${labelsString}' axiom.`);
+
   axiomVerified ?
     fileContext.complete(axiomNode) :
       fileContext.halt(axiomNode);
