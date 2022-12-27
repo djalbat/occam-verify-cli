@@ -1,5 +1,6 @@
 "use strict";
 
+import Axiom from "../axiom";
 import ProofContext from "../context/proof";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 import verifyIndicativeConditional from "../verify/indicativeConditional";
@@ -9,7 +10,8 @@ import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
-      statementNodeQuery = nodeQuery("/*/statement"),
+      statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
+      statementNodesQuery = nodesQuery("/indicativeConditional/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/axiom/unqualifiedStatement!"),
       indicativeConditionalNodeQuery = nodeQuery("/axiom/indicativeConditional!");
 
@@ -41,15 +43,15 @@ export default function verifyAxiom(axiomNode, fileContext) {
   }
 
   if (indicativeConditionalNode !== null) {
-    const statementNodes = [],
-          indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, statementNodes, proofContext);
+    const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, proofContext);
 
     if (indicativeConditionalVerified !== null) {
       const labels = labelsString,  ///
+            statementNodes = statementNodesQuery(indicativeConditionalNode),
             firstStatementNode = first(statementNodes),
             secondStatementNode = second(statementNodes),
-            suppositionStatementNode = firstStatementNode,  ///
             consequentStatementNode = secondStatementNode,  ///
+            suppositionStatementNode = firstStatementNode,  ///
             axiom = Axiom.fromSuppositionStatementNodeConsequentStatementNodeAndLabels(suppositionStatementNode, consequentStatementNode, labels);
 
       fileContext.addAxiom(axiom);

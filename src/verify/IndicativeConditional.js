@@ -6,7 +6,7 @@ import { nodesQuery } from "../utilities/query";
 
 const unqualifiedStatementNodesQuery = nodesQuery("/indicativeConditional/unqualifiedStatement");
 
-export default function verifyIndicativeConditional(indicativeConditionalNode, statementNodes, proofContext) {
+export default function verifyIndicativeConditional(indicativeConditionalNode, proofContext) {
   let indicativeConditionalVerified;
 
   proofContext.begin(indicativeConditionalNode);

@@ -31,13 +31,13 @@ export default function verifyTypeAssertion(typeAssertionNode, proofContext) {
             values = [],
             context = proofContext, ///
             termNode = termNodeQuery(typeAssertionNode),
-            termVerified = verifyTermAsVariable(termNode, types, names, values, context);
+            termVerifiedAsVariable = verifyTermAsVariable(termNode, types, names, values, context);
 
-      if (termVerified) {
+      if (termVerifiedAsVariable) {
         const firstName = first(names),
               firstValue = first(values),
               variableName = firstName, ///
-              value = firstValue;
+              value = firstValue; ///
 
         if (value !== undefined) {
           proofContext.error(`The value of the ${variableName} variable is not undefined.`);

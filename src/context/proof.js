@@ -4,10 +4,13 @@ import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 import callbacksMixins from "../mixins/callbacks";
 
+import { push } from "../utilities/array";
+
 class ProofContext {
-  constructor(context, derived, assertions) {
+  constructor(context, derived, variables, assertions) {
     this.context = context;
     this.derived = derived;
+    this.variables = variables;
     this.assertions = assertions;
   }
 
@@ -30,12 +33,36 @@ class ProofContext {
     return assertions;
   }
 
+  getTypes() { return this.context.getTypes(); }
+
+  getAxioms() { return this.context.getAxioms(); }
+
+  getCombinators() { return this.context.getCombinators(); }
+
+  getConstructors() { return this.context.getConstructors(); }
+
+  getVariables() {
+    const variables = [];
+
+    push(variables, this.variables);
+
+    const contextVariables = this.context.getVariables();
+
+    push(variables, contextVariables);
+
+    return variables;
+  }
+
   setDerived(derived) {
     if (derived) {
       this.statementNodes.pop();
     }
 
     this.derived = derived;
+  }
+
+  addVariable(variable) {
+    this.variables.push(variable);
   }
 
   addAssertion(assertion) {
@@ -63,11 +90,45 @@ class ProofContext {
     return assertionMatches;
   }
 
+  findVariableByVariableName(variableName) {
+    const name = variableName,  ///
+          variables = this.getVariables(),
+          variable = variables.find((variable) => {
+            const matches = variable.matchName(name);
+
+            if (matches) {
+              return true;
+            }
+          }) || null;
+
+    return variable;
+  }
+
+  isVariablePresentByVariableName(variableName) {
+    const variable = this.findVariableByVariableName(variableName),
+        variablePresent = (variable !== null);
+
+    return variablePresent;
+  }
+
+  findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
+
+  findLabelByTypeName(labelName) { return this.context.findLabelByTypeName(labelName); }
+
+  findRuleByReferenceName(referenceName) { return this.context.findRuleByReferenceName(referenceName); }
+
+  findAxiomByReferenceName(referenceName) { return this.context.findAxiomByReferenceName(referenceName); }
+
+  isLabelPresentByLabelName(labelName) { return this.context.isLabelPresentByLabelName(labelName); }
+
+  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
+
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
           derived = false,
+          variables = [],
           assertions = [],
-          proofContext = new ProofContext(context, derived, assertions);
+          proofContext = new ProofContext(context, derived, variables, assertions);
 
     return proofContext;
   }
@@ -75,9 +136,10 @@ class ProofContext {
   static fromProofContext(proofContext) {
     const context = proofContext,  ///
           derived = false,
+          variables = [],
           assertions = [];
 
-    proofContext = new ProofContext(context, derived, assertions);  ///
+    proofContext = new ProofContext(context, derived, variables, assertions);
 
     return proofContext;
   }
