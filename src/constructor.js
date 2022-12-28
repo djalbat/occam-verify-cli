@@ -74,12 +74,7 @@ export default class Constructor {
 
     type = Type.fromJSON(json, releaseContext);
 
-    const typeName = type.getName(),
-          typePresent = releaseContext.isTypePresentByTypeName(typeName);
-
-    if (!typePresent) {
-      throw new Error(`The '${content}' constructor cannot be instantiated because its '${typeName} is not present.'`);
-    }
+    const typeName = type.getName();
 
     type = releaseContext.findTypeByTypeName(typeName); ///
 

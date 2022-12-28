@@ -39,7 +39,7 @@ export function createReleaseContext(dependency, dependentNames, context, callba
   }, context);
 }
 
-export function initialiseReleaseContext(dependency, context) {
+export function initialiseReleaseContext(dependency, dependentName, verified, context) {
   const { releaseContextMap } = context,
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///
@@ -55,10 +55,26 @@ export function initialiseReleaseContext(dependency, context) {
     return;
   }
 
+  const releaseContextVerified = releaseContext.isVerified();
+
+  if (verified) {
+    if (!releaseContextVerified) {
+      const { log } = context;
+
+      log .error(`Unable to initialise the '${releaseName}' dependency's context because its '${dependentName}' dependent is a package.`);
+
+      return;
+    }
+  }
+
+  verified = releaseContextVerified;  ///
+
+  dependentName = releaseName;  ///
+
   const dependencies = releaseContext.getDependencies();
 
   dependencies.forEachDependency((dependency) => {
-    initialiseReleaseContext(dependency, context);
+    initialiseReleaseContext(dependency, dependentName, verified, context);
   });
 
   const dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependency, context);

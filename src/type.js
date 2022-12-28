@@ -131,14 +131,7 @@ export default class Type {
 
       superType = Type.fromJSON(json, releaseContext);
 
-      const superTypeName = superType.getName(),
-            superTypePresent = releaseContext.isTypePresentByTypeName(superTypeName);
-
-      if (!superTypePresent) {
-        const typeName = name;  ///
-
-        throw new Error(`The '${typeName}' type cannot be instantiated because its '${superTypeName}' super type is not present.`);
-      }
+      const superTypeName = superType.getName();
 
       superType = releaseContext.findTypeByTypeName(superTypeName); ///
     }

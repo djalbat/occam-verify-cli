@@ -27,28 +27,21 @@ function verifyAction(argument, logLevel) {
 
   createReleaseContext(dependency, dependentNames, context, (error) => {
     if (error) {
-      ///
-
       return;
     }
 
-    let releaseVerified = false;
+    const releaseName = name, ///
+          dependentName = releaseName,  ///
+          releaseContext = releaseContextMap[releaseName],
+          verified = releaseContext.isVerified();
 
-    try {
-      const releaseName = name; ///
+    initialiseReleaseContext(dependency, dependentName, verified, context);
 
-      initialiseReleaseContext(dependency, context);
+    delete context.releaseContextMap;
+    delete context.releaseContextFromDependencyAndDependentNames;
 
-      releaseVerified = verifyRelease(releaseName, releaseContextMap);
-    } catch (error) {
-      log.error(error);
-    } finally {
-      delete context.releaseContextMap;
-      delete context.releaseContextFromDependencyAndDependentNames;
-    }
+    verifyRelease(releaseName, releaseContextMap);
   });
-
-  ///
 }
 
 module.exports = verifyAction;

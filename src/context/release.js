@@ -69,13 +69,6 @@ export default class ReleaseContext {
     return type;
   }
 
-  isTypePresentByTypeName(typeName) {
-    const type = this.findTypeByTypeName(typeName),
-          typePresent = (type !== null);
-
-    return typePresent;
-  }
-
   getReleaseName() {
     const name = this.getName(),
           releaseName = name; ///
