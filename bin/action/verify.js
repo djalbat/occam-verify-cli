@@ -2,7 +2,7 @@
 
 const { Dependency } = require("occam-file-system"),
       { loggingUtilities } = require("necessary"),
-      { verifyRelease, releaseContextUtilities } = require("../../lib/index");
+      { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
 const { releaseContextFromDependencyAndDependentNames } = require("../utilities/fileSystem");
 
@@ -12,16 +12,18 @@ const { log } = loggingUtilities,
 
 function verifyAction(argument, logLevel) {
   const name = argument, ///
+        context = {},
         dependency = Dependency.fromName(name),
         dependentNames = [],
-        releaseContextMap = {},
-        context = {
-          log,
-          releaseContextMap,
-          releaseContextFromDependencyAndDependentNames
-        };
+        releaseContextMap = {};
 
   setLogLevel(logLevel);
+
+  Object.assign(context, {
+    log,
+    releaseContextMap,
+    releaseContextFromDependencyAndDependentNames
+  });
 
   createReleaseContext(dependency, dependentNames, context, (error) => {
     if (error) {
@@ -30,12 +32,23 @@ function verifyAction(argument, logLevel) {
       return;
     }
 
-    initialiseReleaseContext(dependency, context);
+    let releaseVerified = false;
 
-    const releaseName = name; ///
+    try {
+      const releaseName = name; ///
 
-    verifyRelease(releaseName, releaseContextMap);
+      initialiseReleaseContext(dependency, context);
+
+      releaseVerified = verifyRelease(releaseName, releaseContextMap);
+    } catch (error) {
+      log.error(error);
+    } finally {
+      delete context.releaseContextMap;
+      delete context.releaseContextFromDependencyAndDependentNames;
+    }
   });
+
+  ///
 }
 
 module.exports = verifyAction;

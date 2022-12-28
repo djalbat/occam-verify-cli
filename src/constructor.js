@@ -57,19 +57,31 @@ export default class Constructor {
     return json;
   }
 
-  static fromJSON(json, callback) {
-    let { type } = json;
-
+  static fromJSON(json, releaseContext) {
     const { term } = json,
           ruleName = CONSTRUCTOR_DECLARATION_RULE_NAME,
           content = `Constructor ${term}
 `,
-          constructorDeclarationNode = callback(content, ruleName),
+          node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
+          constructorDeclarationNode = node,  ///
           termNode = statementNodeQuery(constructorDeclarationNode);
 
-    json = type;  ///
+    let { type } = json;
 
-    type = Type.fromJSON(json);
+    const typeJSON = type;  ///
+
+    json = typeJSON;  ///
+
+    type = Type.fromJSON(json, releaseContext);
+
+    const typeName = type.getName(),
+          typePresent = releaseContext.isTypePresentByTypeName(typeName);
+
+    if (!typePresent) {
+      throw new Error(`The '${content}' constructor cannot be instantiated because its '${typeName} is not present.'`);
+    }
+
+    type = releaseContext.findTypeByTypeName(typeName); ///
 
     const constructor = new Constructor(termNode, type);
 

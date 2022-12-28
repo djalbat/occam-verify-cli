@@ -119,15 +119,28 @@ export default class Type {
     return json;
   }
 
-  static fromJSON(json) {
+  static fromJSON(json, releaseContext) {
     const { name } = json;
 
     let { superType } = json;
 
     if (superType !== null) {
-      json = superType; ///
+      const superTypeJSON = superType;  ///
 
-      superType = Type.fromJSON(json);
+      json = superTypeJSON; ///
+
+      superType = Type.fromJSON(json, releaseContext);
+
+      const superTypeName = superType.getName(),
+            superTypePresent = releaseContext.isTypePresentByTypeName(superTypeName);
+
+      if (!superTypePresent) {
+        const typeName = name;  ///
+
+        throw new Error(`The '${typeName}' type cannot be instantiated because its '${superTypeName}' super type is not present.`);
+      }
+
+      superType = releaseContext.findTypeByTypeName(superTypeName); ///
     }
 
     const type = new Type(name, superType);

@@ -56,6 +56,26 @@ export default class ReleaseContext {
     return this.dependencyReleaseContexts;
   }
 
+  findTypeByTypeName(typeName) {
+    const types = this.getTypes(),
+          type = types.find((type) => {
+            const matches = type.matchTypeName(typeName);
+
+            if (matches) {
+              return true;
+            }
+          }) || null;
+
+    return type;
+  }
+
+  isTypePresentByTypeName(typeName) {
+    const type = this.findTypeByTypeName(typeName),
+          typePresent = (type !== null);
+
+    return typePresent;
+  }
+
   getReleaseName() {
     const name = this.getName(),
           releaseName = name; ///

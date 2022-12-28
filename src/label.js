@@ -34,16 +34,11 @@ export default class Label {
     return json;
   }
 
-  static fromJSON(json, callback) {
-    let label = null;
-
+  static fromJSON(json, releaseContext) {
     const content = json, ///
           ruleName = LABEL_RULE_NAME,
-          node = callback(content, ruleName);
-
-    if (node !== null) {
-      label = new Label(node);
-    }
+          node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
+          label = new Label(node);
 
     return label;
   }

@@ -34,12 +34,13 @@ export default class Combinator {
     return json;
   }
 
-  static fromJSON(json, callback) {
+  static fromJSON(json, releaseContext) {
     const { statement } = json,
           ruleName = COMBINATOR_DECLARATION_RULE_NAME,
           content = `Combinator ${statement}
 `,
-          combinatorDeclarationNode = callback(content, ruleName),
+          node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
+          combinatorDeclarationNode = node, ///
           statementNode = statementNodeQuery(combinatorDeclarationNode),
           combinator = new Combinator(statementNode);
 

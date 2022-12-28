@@ -71,19 +71,15 @@ export default class Premise {
     return json;
   }
 
-  static fromJSON(json, callback) {
-    let premise = null;
-
+  static fromJSON(json, releaseContext) {
     const { metastatement } = json,
           ruleName = UNQUALIFIED_METASTATEMENT_RULE_NAME,
           content = `${metastatement}
 `,
-          unqualifiedMetastatementNode = callback(content, ruleName),
-          metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
-
-    if (metastatementNode !== null) {
-      premise = new Premise(metastatementNode);
-    }
+          node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
+          unqualifiedMetastatementNode = node,  ///
+          metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
+          premise = new Premise(metastatementNode);
 
     return premise;
   }

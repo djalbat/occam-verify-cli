@@ -6,13 +6,13 @@ import { push } from "../utilities/array";
 import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "../utilities/tokens";
 
 export default class FileContext {
-  constructor(releaseContext, filePath, tokens, node, rules, types, axioms, variables, combinators, constructors) {
+  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, variables, combinators, constructors) {
     this.releaseContext = releaseContext;
     this.filePath = filePath;
     this.tokens = tokens;
     this.node = node;
-    this.rules = rules;
     this.types = types;
+    this.rules = rules;
     this.axioms = axioms;
     this.variables = variables;
     this.combinators = combinators;
@@ -63,20 +63,6 @@ export default class FileContext {
     return labels;
   }
 
-  getRules(includeRelease = true) {
-    const rules = []
-
-    push(rules, this.rules);
-
-    if (includeRelease) {
-      const releaseContextRules = this.releaseContext.getRules();
-
-      push(rules, releaseContextRules);
-    }
-
-    return rules;
-  }
-
   getTypes(includeRelease = true) {
     const types = [];
 
@@ -89,6 +75,20 @@ export default class FileContext {
     }
 
     return types;
+  }
+
+  getRules(includeRelease = true) {
+    const rules = []
+
+    push(rules, this.rules);
+
+    if (includeRelease) {
+      const releaseContextRules = this.releaseContext.getRules();
+
+      push(rules, releaseContextRules);
+    }
+
+    return rules;
   }
 
   getAxioms(includeRelease = true) {
@@ -295,16 +295,16 @@ export default class FileContext {
   toJSON() {
     const json = [];
 
-    this.rules.forEach((rule) => {
-      const ruleJSON = rule.toJSON();
-
-      json.push(ruleJSON);
-    });
-
     this.types.forEach((type) => {
       const typeJSON = type.toJSON();
 
       json.push(typeJSON);
+    });
+
+    this.rules.forEach((rule) => {
+      const ruleJSON = rule.toJSON();
+
+      json.push(ruleJSON);
     });
 
     this.axioms.forEach((axiom) => {
@@ -336,13 +336,13 @@ export default class FileContext {
 
     rewriteNodes(node);
 
-    const rules = [],
-          types = [],
+    const types = [],
+          rules = [],
           axioms = [],
           variables = [],
           combinators = [],
           constructors = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, rules, types, axioms, variables, combinators, constructors);
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, variables, combinators, constructors);
 
     return fileContext;
   }

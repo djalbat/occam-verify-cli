@@ -154,73 +154,65 @@ export default class FileReleaseContext extends ReleaseContext {
     return constructors;
   }
 
+  nodeFromContentAndRuleName(content, ruleName) {
+    const ruleMap = this.florenceParser.getRuleMap(),
+          rule = ruleMap[ruleName],
+          tokens = this.florenceLexer.tokenise(content),
+          node = this.florenceParser.parse(tokens, rule);
+
+    if (node !== null) {
+      rewriteNodes(node);
+    }
+
+    return node;
+  }
+
   initialise(dependencyReleaseContexts) {
     super.initialise(dependencyReleaseContexts);
 
-    const jsonArray = this.contextJSON,  ///
-          callback = (content, ruleName) => {
-            const ruleMap = this.florenceParser.getRuleMap(),
-                  tokens = this.florenceLexer.tokenise(content),
-                  rule = ruleMap[ruleName],
-                  node = this.florenceParser.parse(tokens, rule);
-
-            if (node !== null) {
-              rewriteNodes(node);
-            }
-
-            return node;
-          };
+    const jsonArray = this.contextJSON,
+          releaseContext = this;  ///
 
     jsonArray.forEach((json) => {
       const { kind } = json;
 
       switch (kind) {
         case TYPE_KIND: {
-          const type = Type.fromJSON(json);
+          const type = Type.fromJSON(json, releaseContext);
 
-          if (type !== null) {
-            this.types.push(type);
-          }
+          this.types.push(type);
 
           break;
         }
 
         case RULE_KIND: {
-          const rule = Rule.fromJSON(json, callback);
+          const rule = Rule.fromJSON(json, releaseContext);
 
-          if (rule !== null) {
-            this.rules.push(rule);
-          }
+          this.rules.push(rule);
 
           break;
         }
 
         case AXIOM_KIND: {
-          const axiom = Axiom.fromJSON(json, callback);
+          const axiom = Axiom.fromJSON(json, releaseContext);
 
-          if (axiom !== null) {
-            this.axioms.push(axiom);
-          }
+          this.axioms.push(axiom);
 
           break;
         }
 
         case COMBINATOR_KIND: {
-          const combinator = Combinator.fromJSON(json, callback);
+          const combinator = Combinator.fromJSON(json, releaseContext);
 
-          if (combinator !== null) {
-            this.combinators.push(combinator);
-          }
+          this.combinators.push(combinator);
 
           break;
         }
 
         case CONSTRUCTOR_KIND: {
-          const constructor = Constructor.fromJSON(json, callback);
+          const constructor = Constructor.fromJSON(json, releaseContext);
 
-          if (constructor !== null) {
-            this.constructors.push(constructor);
-          }
+          this.constructors.push(constructor);
 
           break;
         }

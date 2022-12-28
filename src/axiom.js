@@ -71,43 +71,38 @@ export default class Axiom {
     return json;
   }
 
-  static fromJSON(json, callback) {
-    let axiom = null;
-
+  static fromJSON(json, releaseContext) {
     let { labels } = json;
+
+    const labelsJSON = labels;  ///
+
+    labels = labelsJSON.map((labelJSON) => {
+      const json = labelJSON, ///
+            label = Label.fromJSON(json, releaseContext);
+
+      return label;
+    });
 
     const { statement, consequent, supposition } = json;
 
-    labels = labels.reduce((labels, label) => {
-      if (labels !== null) {
-        const json = label; ///
+    let axiom;
 
-        label = Label.fromJSON(json, callback); ///
-
-        if (label !== null) {
-          labels.push(label);
-        } else {
-          labels = null;
-        }
-      }
-
-      return labels;
-    }, []);
-
-    if (statement !== null) {
+    if (false) {
+      ///
+    } else if (statement !== null) {
       const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME,
             content = `${statement}
 `,
-            unqualifiedStatementNode = callback(content, ruleName),
+            node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
+            unqualifiedStatementNode = node,  ///
             statementNode = statementNodeQuery(unqualifiedStatementNode),
             consequentNode = null,
             suppositionNode = null;
 
       axiom = new Axiom(labels, statementNode, consequentNode, suppositionNode);
-    }
-
-    if ((consequent !== null) && (supposition !== null)) {
-      let content,
+    } else if ((consequent !== null) && (supposition !== null)) {
+      let node,
+          content,
           statementNode,
           unqualifiedStatementNode;
 
@@ -116,7 +111,9 @@ export default class Axiom {
       content = `${consequent}
 `;
 
-      unqualifiedStatementNode = callback(content, ruleName);
+      node = releaseContext.nodeFromContentAndRuleName(content, ruleName);
+
+      unqualifiedStatementNode = node;  ///
 
       statementNode = statementNodeQuery(unqualifiedStatementNode);
 
@@ -125,7 +122,9 @@ export default class Axiom {
       content = `${supposition}
 `;
 
-      unqualifiedStatementNode = callback(content, ruleName);
+      node = releaseContext.nodeFromContentAndRuleName(content, ruleName);
+
+      unqualifiedStatementNode = node;  ///
 
       statementNode = statementNodeQuery(unqualifiedStatementNode);
 

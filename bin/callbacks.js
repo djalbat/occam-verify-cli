@@ -1,6 +1,6 @@
 "use strict";
 
-const { Callbacks } = require("../lib/index"),
+const { Callbacks } = require("../lib/index"),  ///
       { loggingUtilities } = require("necessary");
 
 const { log } = loggingUtilities,

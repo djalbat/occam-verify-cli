@@ -91,50 +91,40 @@ export default class Rule {
     return json;
   }
 
-  static fromJSON(json, callback) {
-    let rule = null;
+  static fromJSON(json, releaseContext) {
+    let rule;
 
-    let { labels, premises, conclusion } = json;
+    let { labels } = json;
 
-    labels = labels.reduce((labels, label) => {
-      if (labels !== null) {
-        const json = label; ///
+    const labelsJSON = labels;  ///
 
-        label = Label.fromJSON(json, callback); ///
+    labels = labelsJSON.map((labelJSON) => {
+      const json = labelJSON, ///
+            label = Label.fromJSON(json, releaseContext);
 
-        if (label !== null) {
-          labels.push(label);
-        } else {
-          labels = null;
-        }
-      }
+      return label;
+    });
 
-      return labels;
-    }, []);
+    let { premises } = json;
 
-    premises = premises.reduce((premises, premise) => {
-      if (premises !== null) {
-        const json = premise; ///
+    const premisesJSON = premises;  ///
 
-        premise = Premise.fromJSON(json, callback); ///
+    premises = premisesJSON.map((premiseJSON) => {
+      const json = premiseJSON, ///
+            premise = Premise.fromJSON(json, releaseContext);
 
-        if (premise !== null) {
-          premises.push(premise);
-        } else {
-          premises = null;
-        }
-      }
+      return premise;
+    });
 
-      return premises;
-    }, []);
+    let { conclusion } = json;
 
-    json = conclusion;  ///
+    const conclusionJSON = conclusion;  ///
 
-    conclusion = Conclusion.fromJSON(json, callback);
+    json = conclusionJSON;  ///
 
-    if ((labels !== null) && (premises !== null) && (conclusion !== null)) {
-      rule = new Rule(labels, premises, conclusion);
-    }
+    conclusion = Conclusion.fromJSON(json, releaseContext);
+
+    rule = new Rule(labels, premises, conclusion);
 
     return rule;
   }

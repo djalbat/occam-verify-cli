@@ -36,19 +36,15 @@ export default class Conclusion {
     return json;
   }
 
-  static fromJSON(json, callback) {
-    let conclusion = null;
-
+  static fromJSON(json, releaseContext) {
     const { metastatement } = json,
           ruleName = UNQUALIFIED_METASTATEMENT_RULE_NAME,
           content = `${metastatement}
 `,
-          unqualifiedMetastatementNode = callback(content, ruleName),
-          metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
-
-    if (metastatementNode !== null) {
-      conclusion = new Conclusion(metastatementNode);
-    }
+          node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
+          unqualifiedMetastatementNode = node,  ///
+          metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
+          conclusion = new Conclusion(metastatementNode);
 
     return conclusion;
   }
