@@ -5,7 +5,8 @@ import verifyTopLevelDeclaration from "./declaration/topLevel";
 
 import { nodesQuery } from "../utilities/query";
 
-const topLevelDeclarationNodesQuery = nodesQuery("/document/topLevelDeclaration");
+const errorNodesQuery = nodesQuery("/document/error"),
+      topLevelDeclarationNodesQuery = nodesQuery("/document/topLevelDeclaration");
 
 export default function verifyFile(filePath, releaseContext) {
   let fileVerified = false;
@@ -14,19 +15,26 @@ export default function verifyFile(filePath, releaseContext) {
 
   const fileContext = FileContext.fromReleaseContextAndFilePath(releaseContext, filePath),
         node = fileContext.getNode(),
-        topLevelDeclarationNodes = topLevelDeclarationNodesQuery(node),
-        topLevelDeclarationsVerified = topLevelDeclarationNodes.every((topLevelDeclarationNode) => {
-          const topLevelDeclarationVerified = verifyTopLevelDeclaration(topLevelDeclarationNode, fileContext);
+        errorNodes = errorNodesQuery(node),
+        errorNodesLength = errorNodes.length;
 
-          if (topLevelDeclarationVerified) {
-            return true;
-          }
-        });
+  if (errorNodesLength > 0) {
+    releaseContext.error(`The '${filePath}' file cannot be verified because it contains errors.`);
+  } else {
+    const topLevelDeclarationNodes = topLevelDeclarationNodesQuery(node),
+          topLevelDeclarationsVerified = topLevelDeclarationNodes.every((topLevelDeclarationNode) => {
+            const topLevelDeclarationVerified = verifyTopLevelDeclaration(topLevelDeclarationNode, fileContext);
 
-  if (topLevelDeclarationsVerified) {
-    releaseContext.addFileContext(fileContext);
+            if (topLevelDeclarationVerified) {
+              return true;
+            }
+          });
 
-    fileVerified = true;
+    if (topLevelDeclarationsVerified) {
+      releaseContext.addFileContext(fileContext);
+
+      fileVerified = true;
+    }
   }
 
   if (fileVerified) {
