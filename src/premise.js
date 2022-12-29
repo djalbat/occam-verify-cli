@@ -2,8 +2,8 @@
 
 import MetaSubstitution from "./metaSubstitution";
 
+import { first } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
-import { first, second } from "./utilities/array";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { metavariableNameFromMetavariableNode } from "./utilities/query";
 import { metastatementNodeFromMetastatementJSON } from "./utilities/node";
@@ -29,25 +29,21 @@ export default class Premise {
 
     if (metaSubproofAssertionNode !== null) {
       const metaSubproofAssertionMetastatementNodes = metastatementNodesQuery(metaSubproofAssertionNode),
+            metaSubproofAssertionMetastatementNodesLength = metaSubproofAssertionMetastatementNodes.length,
             qualifiedOrUnqualifiedMetastatementMetastatementNodes = qualifiedOrUnqualifiedMetastatementMetastatementNodesQuery(metaSubproofNode),
             qualifiedOrUnqualifiedMetastatementMetastatementNodesLength = qualifiedOrUnqualifiedMetastatementMetastatementNodes.length;
 
-      if (qualifiedOrUnqualifiedMetastatementMetastatementNodesLength === 2) {
-        const firstMetaSubproofAssertionMetastatementNode = first(metaSubproofAssertionMetastatementNodes),
-              firstQualifiedOrUnqualifiedMetastatementMetastatementNode = first(qualifiedOrUnqualifiedMetastatementMetastatementNodes),
-              nonTerminalNode = firstQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
-              premiseNonTerminalNode = firstMetaSubproofAssertionMetastatementNode,  ///
-              premiseNonTerminalNodeMatches = matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, metaSubstitutions);
+      if (metaSubproofAssertionMetastatementNodesLength === qualifiedOrUnqualifiedMetastatementMetastatementNodesLength) {
+        metaSubproofNodeMatches = metaSubproofAssertionMetastatementNodes.every((metaSubproofAssertionMetastatementNode, index) => {
+                                    const qualifiedOrUnqualifiedMetastatementMetastatementNode = qualifiedOrUnqualifiedMetastatementMetastatementNodes[index],
+                                          nonTerminalNode = qualifiedOrUnqualifiedMetastatementMetastatementNode, ///
+                                          premiseNonTerminalNode = metaSubproofAssertionMetastatementNode,  ///
+                                          premiseNonTerminalNodeMatches = matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, metaSubstitutions);
 
-        if (premiseNonTerminalNodeMatches) {
-          const secondMetaSubproofAssertionMetastatementNode = second(metaSubproofAssertionMetastatementNodes),
-                secondQualifiedOrUnqualifiedMetastatementMetastatementNode = second(qualifiedOrUnqualifiedMetastatementMetastatementNodes),
-                nonTerminalNode = secondQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
-                premiseNonTerminalNode = secondMetaSubproofAssertionMetastatementNode, ///
-                premiseNonTerminalNodeMatches = matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, metaSubstitutions);
-
-          metaSubproofNodeMatches = premiseNonTerminalNodeMatches; ///
-        }
+                                    if (premiseNonTerminalNodeMatches) {
+                                      return true;
+                                    }
+                                  });
       }
     }
 
