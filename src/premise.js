@@ -6,10 +6,10 @@ import { nodeAsString } from "./utilities/string";
 import { first, second } from "./utilities/array";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { metavariableNameFromMetavariableNode } from "./utilities/query";
-import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME } from "./ruleNames";
+import { metastatementNodeFromMetastatementJSON } from "./utilities/node";
+import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } from "./ruleNames";
 
-const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement"),
-      metastatementNodesQuery = nodesQuery("/metaSubproofAssertion/metastatement"),
+const metastatementNodesQuery = nodesQuery("/metaSubproofAssertion/metastatement"),
       metaSubproofAssertionNodeQuery = nodeQuery("/metastatement/metaSubproofAssertion!"),
       qualifiedOrUnqualifiedMetastatementMetastatementNodesQuery = nodesQuery("/metaSubproof/qualifiedMetastatement|unqualifiedMetastatement/metastatement!");
 
@@ -73,12 +73,8 @@ export default class Premise {
 
   static fromJSON(json, releaseContext) {
     const { metastatement } = json,
-          ruleName = UNQUALIFIED_METASTATEMENT_RULE_NAME,
-          content = `${metastatement}
-`,
-          node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
-          unqualifiedMetastatementNode = node,  ///
-          metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
+          metastatementJSON = metastatement,  ///
+          metastatementNode = metastatementNodeFromMetastatementJSON(metastatementJSON, releaseContext),
           premise = new Premise(metastatementNode);
 
     return premise;

@@ -1,7 +1,7 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { LABEL_RULE_NAME } from "./ruleNames";
+import { labelNodeFromLabelJSON } from "./utilities/node";
 import { labelNameFromLabelNode } from "./utilities/query";
 
 export default class Label {
@@ -35,9 +35,9 @@ export default class Label {
   }
 
   static fromJSON(json, releaseContext) {
-    const content = json, ///
-          ruleName = LABEL_RULE_NAME,
-          node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
+    const labelJSON = json, ///
+          labelNode = labelNodeFromLabelJSON(labelJSON, releaseContext),
+          node = labelNode, ///
           label = new Label(node);
 
     return label;

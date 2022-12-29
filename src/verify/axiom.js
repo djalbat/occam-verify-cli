@@ -6,7 +6,7 @@ import ProofContext from "../context/proof";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 import verifyIndicativeConditional from "../verify/indicativeConditional";
 
-import { first, second } from "../utilities/array";
+import { front, last } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
@@ -52,11 +52,11 @@ export default function verifyAxiom(axiomNode, fileContext) {
 
       if (indicativeConditionalVerified !== null) {
         const statementNodes = statementNodesQuery(indicativeConditionalNode),
-              firstStatementNode = first(statementNodes),
-              secondStatementNode = second(statementNodes),
-              consequentStatementNode = secondStatementNode,  ///
-              suppositionStatementNode = firstStatementNode,  ///
-              axiom = Axiom.fromLabelsSuppositionStatementNodeConsequentAndStatementNode(labels, suppositionStatementNode, consequentStatementNode);
+              lastStatementNode = last(statementNodes),
+              frontStatementNodes = front(statementNodes),
+              consequentStatementNode = lastStatementNode,  ///
+              suppositionStatementNodes = frontStatementNodes,  ///
+              axiom = Axiom.fromLabelsSuppositionStatementNodesAndConsequentStatementNode(labels, suppositionStatementNodes, consequentStatementNode);
 
         fileContext.addAxiom(axiom);
 

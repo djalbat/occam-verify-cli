@@ -2,18 +2,16 @@
 
 import Label from "./label";
 
-import { nodeQuery } from "./utilities/query";
 import { AXIOM_KIND } from "./kinds";
 import { nodeAsString } from "./utilities/string";
-import { UNQUALIFIED_STATEMENT_RULE_NAME } from "./ruleNames";
 
-const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement");
+import { statementNodeFromStatementJSON } from "./utilities/node";
 
 export default class Axiom {
-  constructor(labels, statementNode, suppositionStatementNode, consequentStatementNode) {
+  constructor(labels, statementNode, suppositionStatementNodes, consequentStatementNode) {
     this.labels = labels;
     this.statementNode = statementNode;
-    this.suppositionStatementNode = suppositionStatementNode;
+    this.suppositionStatementNodes = suppositionStatementNodes;
     this.consequentStatementNode = consequentStatementNode;
   }
 
@@ -25,8 +23,8 @@ export default class Axiom {
     return this.statementNode;
   }
 
-  getSuppositionStatementNode() {
-    return this.suppositionStatementNode;
+  getSuppositionStatementNodes() {
+    return this.suppositionStatementNodes;
   }
 
   getConsequentStatementNode() {
@@ -54,18 +52,22 @@ export default class Axiom {
           }),
           statementString = nodeAsString(this.statementNode),
           consequentStatementString = nodeAsString(this.consequentStatementNode),
-          suppositionStatementString = nodeAsString(this.suppositionStatementNode),
+          suppositionStatementStrings = this.suppositionStatementNodes.map((suppositionStatementNode) => {
+            const suppositionStatementString = nodeAsString(suppositionStatementNode);
+
+            return suppositionStatementString;
+          }),
           kind = AXIOM_KIND,
           labels = labelsJSON,  ///
           statement = statementString,  ///
           consequent = consequentStatementString, ///
-          supposition = suppositionStatementString, ///
+          suppositions = suppositionStatementStrings, ///
           json = {
             kind,
             labels,
             statement,
             consequent,
-            supposition
+            suppositions
           };
 
     return json;
@@ -83,72 +85,45 @@ export default class Axiom {
       return label;
     });
 
-    const { statement, consequent, supposition } = json;
+    const { statement, suppositions, consequent } = json;
 
     let axiom;
 
-    if (false) {
-      ///
-    } else if (statement !== null) {
-      const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME,
-            content = `${statement}
-`,
-            node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
-            unqualifiedStatementNode = node,  ///
-            statementNode = statementNodeQuery(unqualifiedStatementNode),
-            consequentNode = null,
-            suppositionNode = null;
+    if (statement !== null) {
+      const statementJSON = statement,  ///
+            statementNode = statementNodeFromStatementJSON(statementJSON, releaseContext),
+            suppositionStatementNodes = null,
+            consequentStatementNode = null;
 
-      axiom = new Axiom(labels, statementNode, consequentNode, suppositionNode);
-    } else if ((consequent !== null) && (supposition !== null)) {
-      let node,
-          content,
-          statementNode,
-          unqualifiedStatementNode;
+      axiom = new Axiom(labels, statementNode, suppositionStatementNodes, consequentStatementNode);
+    } else {
+      const statementNode = null,
+            suppositionStatementsJSON = suppositions,  ///
+            suppositionStatementNodes = suppositionStatementsJSON.map((suppositionStatementJSON) => {
+              const suppositionStatementNode = statementNodeFromStatementJSON(suppositionStatementJSON, releaseContext);
 
-      const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME;
+              return suppositionStatementNode;
+            }),
+            consequentStatementJSON = consequent, ///
+            consequentStatementNode = statementNodeFromStatementJSON(consequentStatementJSON, releaseContext);
 
-      content = `${consequent}
-`;
-
-      node = releaseContext.nodeFromContentAndRuleName(content, ruleName);
-
-      unqualifiedStatementNode = node;  ///
-
-      statementNode = statementNodeQuery(unqualifiedStatementNode);
-
-      const consequentNode = statementNode; ///
-
-      content = `${supposition}
-`;
-
-      node = releaseContext.nodeFromContentAndRuleName(content, ruleName);
-
-      unqualifiedStatementNode = node;  ///
-
-      statementNode = statementNodeQuery(unqualifiedStatementNode);
-
-      const suppositionNode = statementNode;  ///
-
-      statementNode = null;
-
-      axiom = new Axiom(labels, statementNode, consequentNode, suppositionNode);
+      axiom = new Axiom(labels, statementNode, suppositionStatementNodes, consequentStatementNode);
     }
 
     return axiom;
   }
 
   static fromLabelsAndStatementNode(labels, statementNode) {
-    const suppositionStatementNode = null,
+    const suppositionStatementNodes = [],
           consequentStatementNode = null,
-          axiom = new Axiom(labels, statementNode, suppositionStatementNode, consequentStatementNode);
+          axiom = new Axiom(labels, statementNode, suppositionStatementNodes, consequentStatementNode);
 
     return axiom;
   }
 
-  static fromLabelsSuppositionStatementNodeConsequentAndStatementNode(labels, suppositionStatementNode, consequentStatementNode) {
+  static fromLabelsSuppositionStatementNodesAndConsequentStatementNode(labels, suppositionStatementNodes, consequentStatementNode) {
     const statementNode = null,
-          axiom = new Axiom(labels, statementNode, suppositionStatementNode, consequentStatementNode);
+          axiom = new Axiom(labels, statementNode, suppositionStatementNodes, consequentStatementNode);
 
     return axiom;
   }
