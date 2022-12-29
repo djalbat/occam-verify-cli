@@ -5,7 +5,7 @@ import MetaproofContext from "../context/metaproof";
 import verifyQualifiedMetastatement from "../verify/metastatement/qualified";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
-import { first, second } from "../utilities/array";
+import { front, last } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { META_SUBPROOF_RULE_NAME, QUALIFIED_METASTATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME } from "../ruleNames";
 
@@ -95,14 +95,22 @@ function verifyMetaSubproof(metaSubproofNode, metaproofContext) {
   metaproofContext = MetaproofContext.fromMetaproofContext(metaproofContext); ///
 
   const qualifiedOrUnqualifiedMetastatementNodes = qualifiedOrUnqualifiedMetastatementNodesQuery(metaSubproofNode),
-        firstQualifiedOrUnqualifiedMetastatementNode = first(qualifiedOrUnqualifiedMetastatementNodes),
-        unqualifiedMetastatementNode = firstQualifiedOrUnqualifiedMetastatementNode,  ///
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
+        frontQualifiedOrUnqualifiedMetastatementNodes = front(qualifiedOrUnqualifiedMetastatementNodes),
+        unqualifiedMetastatementNodes = frontQualifiedOrUnqualifiedMetastatementNodes,  ///
+        unqualifiedMetastatementsVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
+          const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
 
-  if (unqualifiedMetastatementVerified) {
-    const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode);
+          if (unqualifiedMetastatementVerified) {
+            return true;
+          }
+        });
 
-    metaproofContext.addMetaAssertion(metaAssertion);
+  if (unqualifiedMetastatementsVerified) {
+    unqualifiedMetastatementNodes.forEach((unqualifiedMetastatementNode) => {
+      const metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode);
+
+      metaproofContext.addMetaAssertion(metaAssertion);
+    });
 
     let metaDerivationVerified = true;
 
@@ -113,8 +121,8 @@ function verifyMetaSubproof(metaSubproofNode, metaproofContext) {
     }
 
     if (metaDerivationVerified) {
-      const secondQualifiedOrUnqualifiedMetastatementNode = second(qualifiedOrUnqualifiedMetastatementNodes),
-            qualifiedOrUnqualifiedMetastatementNode = secondQualifiedOrUnqualifiedMetastatementNode,  ///
+      const lastQualifiedOrUnqualifiedMetastatementNode = last(qualifiedOrUnqualifiedMetastatementNodes),
+            qualifiedOrUnqualifiedMetastatementNode = lastQualifiedOrUnqualifiedMetastatementNode,  ///
             qualifiedMetastatementNode = qualifiedMetastatementNodeQuery(qualifiedOrUnqualifiedMetastatementNode),
             unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(qualifiedOrUnqualifiedMetastatementNode);
 
