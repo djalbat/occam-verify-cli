@@ -50,7 +50,7 @@ export default function verifyAxiom(axiomNode, fileContext) {
     if (indicativeConditionalNode !== null) {
       const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, proofContext);
 
-      if (indicativeConditionalVerified !== null) {
+      if (indicativeConditionalVerified) {
         const statementNodes = statementNodesQuery(indicativeConditionalNode),
               lastStatementNode = last(statementNodes),
               frontStatementNodes = front(statementNodes),
