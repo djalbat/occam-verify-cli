@@ -1,43 +1,27 @@
 "use strict";
 
-import verifyTermAsVariable from "../verify/termAsVariable";
-
 import { first } from "../utilities/array";
 import { nodeAsString } from "../utilities/string";
 import { ARGUMENT_RULE_NAME } from "../ruleNames";
-import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
+import { nodeQuery, typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities/query";
 
 const termNodeQuery = nodeQuery("/argument/term!"),
-      typeNodeQuery = nodeQuery("/argument/type!")
+      typeNodeQuery = nodeQuery("/argument/type!"),
+      variableNodeQuery = nodeQuery("/term/variable!");
 
 export default function verifyTerm(termNode, types, values, context) {
   let termVerified = false;
 
   context.begin(termNode);
 
-  const names = [],
-        termVerifiedAsVariable = verifyTermAsVariable(termNode, types, names, values, context);
+  const termVerifiedAsVariable = verifyTermAsVariable(termNode, types, values, context);
 
   if (termVerifiedAsVariable) {
     termVerified = true;
   } else {
-    const constructors = context.getConstructors(),
-          constructor = constructors.find((constructor) => {
-            const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, context);
+    const termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, values, context);
 
-            if (termVerifiedAgainstConstructor) {
-              return true;
-            }
-          }) || null;
-
-    if (constructor !== null) {
-      const type = constructor.getType(),
-            value = termNode; ///
-
-      types.push(type);
-
-      values.push(value);
-
+    if (termVerifiedAgainstConstructors) {
       termVerified = true;
     }
   }
@@ -47,6 +31,71 @@ export default function verifyTerm(termNode, types, values, context) {
       context.halt(termNode);
 
   return termVerified;
+}
+
+export function verifyTermAsVariable(termNode, types, values, context) {
+  let termVerifiedAsVariable = false;
+
+  context.begin(termNode);
+
+  const variableNode = variableNodeQuery(termNode);
+
+  if (variableNode !== null) {
+    const variableName = variableNameFromVariableNode(variableNode),
+          variablePresent = context.isVariablePresentByVariableName(variableName);
+
+    if (!variablePresent) {
+      context.error(`The ${variableName} variable is not present.`)
+    } else {
+      const variable = context.findVariableByVariableName(variableName),
+        type = variable.getType(),
+        value = variable.getValue();
+
+      types.push(type);
+
+      values.push(value);
+
+      termVerifiedAsVariable = true;
+    }
+  }
+
+  termVerifiedAsVariable ?
+    context.complete(termNode) :
+      context.halt(termNode);
+
+  return termVerifiedAsVariable;
+}
+
+export function verifyTermAgainstConstructors(termNode, types, values, context) {
+  let termVerifiedAgainstConstructors = false;
+
+  context.begin(termNode);
+
+  const constructors = context.getConstructors(),
+        constructor = constructors.find((constructor) => {
+          const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, context);
+
+          if (termVerifiedAgainstConstructor) {
+            return true;
+          }
+        }) || null;
+
+  if (constructor !== null) {
+    const type = constructor.getType(),
+          value = termNode; ///
+
+    types.push(type);
+
+    values.push(value);
+
+    termVerifiedAgainstConstructors = true;
+  }
+
+  termVerifiedAgainstConstructors ?
+    context.complete(termNode) :
+      context.halt(termNode);
+
+  return termVerifiedAgainstConstructors;
 }
 
 function verifyTermAgainstConstructor(termNode, constructor, context) {

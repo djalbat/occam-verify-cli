@@ -61,15 +61,17 @@ export default class Constructor {
 
     let { type } = json;
 
-    const typeJSON = type;  ///
+    if (type !== null) {
+      const typeJSON = type;  ///
 
-    json = typeJSON;  ///
+      json = typeJSON;  ///
 
-    type = Type.fromJSON(json, releaseContext);
+      type = Type.fromJSON(json, releaseContext);
 
-    const typeName = type.getName();
+      const typeName = type.getName();
 
-    type = releaseContext.findTypeByTypeName(typeName); ///
+      type = releaseContext.findTypeByTypeName(typeName); ///
+    }
 
     const constructor = new Constructor(termNode, type);
 

@@ -112,6 +112,30 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     return axioms;
   }
 
+  getLemmas(includeDependencies = true) {
+    const lemmas = [];
+
+    this.fileContexts.forEach((fileContext) => {
+      const includeRelease = false,
+            fileContextLemmas = fileContext.getLemmas(includeRelease);
+
+      push(lemmas, fileContextLemmas);
+    });
+
+    if (includeDependencies) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencies = false,
+              releaseContextLemmas = releaseContext.getLemmas(includeDependencies);
+
+        push(lemmas, releaseContextLemmas);
+      });
+    }
+
+    return lemmas;
+  }
+
   getCombinators(includeDependencies = true) {
     const combinators = [];
 

@@ -12,15 +12,16 @@ import Constructor from "../../constructor";
 
 import { push } from "../../utilities/array";
 import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
-import { RULE_KIND, TYPE_KIND, AXIOM_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
+import { RULE_KIND, TYPE_KIND, AXIOM_KIND, LEMMA_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
 
 export default class FileReleaseContext extends ReleaseContext {
-  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, combinators, constructors) {
+  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, combinators, constructors) {
     super(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts);
 
     this.types = types;
     this.rules = rules;
     this.axioms = axioms;
+    this.lemmas = lemmas;
     this.combinators = combinators;
     this.constructors = constructors;
     this.contextJSON = contextJSON;
@@ -116,6 +117,25 @@ export default class FileReleaseContext extends ReleaseContext {
     return axioms;
   }
 
+  getLemmas(includeDependencies = true) {
+    const lemmas = [];
+
+    push(lemmas, this.lemmas);
+
+    if (includeDependencies) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencies = false,
+              releaseContextLemmas = releaseContext.getLemmas(includeDependencies);
+
+        push(lemmas, releaseContextLemmas);
+      });
+    }
+
+    return lemmas;
+  }
+
   getCombinators(includeDependencies = true) {
     const combinators = [];
 
@@ -201,6 +221,14 @@ export default class FileReleaseContext extends ReleaseContext {
           break;
         }
 
+        case LEMMA_KIND: {
+          const lemma = Lemma.fromJSON(json, releaseContext);
+
+          this.lemmas.push(lemma);
+
+          break;
+        }
+
         case COMBINATOR_KIND: {
           const combinator = Combinator.fromJSON(json, releaseContext);
 
@@ -229,9 +257,10 @@ export default class FileReleaseContext extends ReleaseContext {
           types = [],
           rules = [],
           axioms = [],
+          lemmas = [],
           combinators = [],
           constructors = [],
-          releaseContext = new FileReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, combinators, constructors);
+          releaseContext = new FileReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, combinators, constructors);
 
     return releaseContext;
   }

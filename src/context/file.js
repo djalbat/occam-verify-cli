@@ -6,7 +6,7 @@ import { push } from "../utilities/array";
 import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "../utilities/tokens";
 
 export default class FileContext {
-  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, variables, combinators, constructors) {
+  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, combinators, constructors) {
     this.releaseContext = releaseContext;
     this.filePath = filePath;
     this.tokens = tokens;
@@ -14,6 +14,7 @@ export default class FileContext {
     this.types = types;
     this.rules = rules;
     this.axioms = axioms;
+    this.lemmas = lemmas;
     this.variables = variables;
     this.combinators = combinators;
     this.constructors = constructors;
@@ -52,6 +53,12 @@ export default class FileContext {
       const axiomLabels = axiom.getLabels();
 
       push(labels, axiomLabels);
+    });
+
+    this.lemmas.forEach((lemma) => {
+      const lemmaLabels = lemma.getLabels();
+
+      push(labels, lemmaLabels);
     });
 
     if (includeRelease) {
@@ -103,6 +110,20 @@ export default class FileContext {
     }
 
     return axioms;
+  }
+
+  getLemmas(includeRelease = true) {
+    const lemmas = [];
+
+    push(lemmas, this.lemmas);
+
+    if (includeRelease) {
+      const releaseContextLemmas = this.releaseContext.getLemmas();
+
+      push(lemmas, releaseContextLemmas);
+    }
+
+    return lemmas;
   }
 
   getCombinators(includeRelease = true) {
@@ -200,6 +221,20 @@ export default class FileContext {
     return axiom;
   }
 
+  findLemmaByReferenceName(referenceName) {
+    const labelName = referenceName,  ///
+          lemmas = this.getLemmas(),
+          lemma = lemmas.find((lemma) => {
+            const lemmaMatchesLabelName = lemma.matchLabelName(labelName);
+
+            if (lemmaMatchesLabelName) {
+              return true;
+            }
+          }) || null;
+
+    return lemma;
+  }
+
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
           variables = this.getVariables(),
@@ -245,6 +280,10 @@ export default class FileContext {
 
   addAxiom(axiom) {
     this.axioms.push(axiom);
+  }
+
+  addLemma(lemma) {
+    this.lemmas.push(lemma);
   }
 
   addVariable(variable) {
@@ -313,6 +352,12 @@ export default class FileContext {
       json.push(axiomJSON);
     });
 
+    this.lemmas.forEach((lemma) => {
+      const lemmaJSON = lemma.toJSON();
+
+      json.push(lemmaJSON);
+    });
+
     this.combinators.forEach((combinator) => {
       const combinatorJSON = combinator.toJSON();
 
@@ -339,10 +384,11 @@ export default class FileContext {
     const types = [],
           rules = [],
           axioms = [],
+          lemmas = [],
           variables = [],
           combinators = [],
           constructors = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, variables, combinators, constructors);
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, combinators, constructors);
 
     return fileContext;
   }
