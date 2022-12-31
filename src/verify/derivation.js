@@ -5,19 +5,16 @@ import ProofContext from "../context/proof";
 import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
-import { front, last } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { SUBPROOF_RULE_NAME, QUALIFIED_STATEMENT_RULE_NAME, UNQUALIFIED_STATEMENT_RULE_NAME } from "../ruleNames";
 
-const derivationNodeQuery = nodeQuery("/subproof/derivation!"),
-      derivationChildNodesQuery = nodesQuery("/derivation/*"),
-      qualifiedStatementNodeQuery = nodeQuery("/qualifiedStatement"),
-      unqualifiedStatementNodeQuery = nodeQuery("/unqualifiedStatement!"),
-      qualifiedOrUnqualifiedStatementNodesQuery = nodesQuery("/subproof/qualifiedStatement|unqualifiedStatement")
+const derivationNodeQuery = nodeQuery("/subproof/derivation|abridgedDerivation!"),  ///
+      derivationChildNodesQuery = nodesQuery("/derivation|abridgedDerivation/*"),
+      unqualifiedStatementNodesQuery = nodesQuery("/subproof/unqualifiedStatement")
 
 export default function verifyDerivation(derivationNode, proofContext) {
   let derivationVerified,
-      derived;
+    derived;
 
   proofContext.begin(derivationNode);
 
@@ -106,9 +103,7 @@ function verifySubproof(subproofNode, proofContext) {
 
   proofContext = ProofContext.fromProofContext(proofContext); ///
 
-  const qualifiedOrUnqualifiedStatementNodes = qualifiedOrUnqualifiedStatementNodesQuery(subproofNode),
-        frontQualifiedOrUnqualifiedStatementNodes = front(qualifiedOrUnqualifiedStatementNodes),
-        unqualifiedStatementNodes = frontQualifiedOrUnqualifiedStatementNodes,  ///
+  const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(subproofNode),
         unqualifiedStatementsVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
           const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
 
@@ -124,31 +119,11 @@ function verifySubproof(subproofNode, proofContext) {
       proofContext.addAssertion(assertion);
     });
 
-    let derivationVerified = true;
-
-    const derivationNode = derivationNodeQuery(subproofNode);
-
-    if (derivationNode !== null) {
-      derivationVerified = verifyDerivation(derivationNode, proofContext);
-    }
+    const derivationNode = derivationNodeQuery(subproofNode),
+          derivationVerified = verifyDerivation(derivationNode, proofContext);
 
     if (derivationVerified) {
-      const lastQualifiedOrUnqualifiedStatementNode = last(qualifiedOrUnqualifiedStatementNodes),
-            qualifiedOrUnqualifiedStatementNode = lastQualifiedOrUnqualifiedStatementNode,  ///
-            qualifiedStatementNode = qualifiedStatementNodeQuery(qualifiedOrUnqualifiedStatementNode),
-            unqualifiedStatementNode = unqualifiedStatementNodeQuery(qualifiedOrUnqualifiedStatementNode);
-
-      if (qualifiedStatementNode !== null) {
-        const qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
-
-        subproofVerified = qualifiedStatementVerified;  ///
-      }
-
-      if (unqualifiedStatementNode !== null) {
-        const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
-
-        subproofVerified = unqualifiedStatementVerified;  ///
-      }
+      subproofVerified = true;
     }
   }
 
