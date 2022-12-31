@@ -11,6 +11,10 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
   metaproofContext.begin(qualifiedMetastatementNode);
 
+  const qualifiedMetastatementString = nodeAsString(qualifiedMetastatementNode);
+
+  metaproofContext.debug(`Verifying the '${qualifiedMetastatementString}' qualified metastatement...`);
+
   const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
 
   if (metastatementNode !== null) {
@@ -26,9 +30,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
   }
 
   if (qualifiedMetastatementVerified) {
-    const metastatementString = nodeAsString(metastatementNode);
-
-    metaproofContext.debug(`Verified the '${metastatementString}' qualified metastatement.`);
+    metaproofContext.info(`Verified the '${qualifiedMetastatementString}' qualified metastatement.`);
   }
 
   qualifiedMetastatementVerified ?

@@ -14,6 +14,10 @@ export default function verifyTerm(termNode, types, context) {
 
   context.begin(termNode);
 
+  const termString = nodeAsString(termNode);
+
+  context.debug(`Verifying the '${termString}' term...`);
+
   const variables = [],
         termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
 
@@ -31,6 +35,10 @@ export default function verifyTerm(termNode, types, context) {
     if (termVerifiedAgainstConstructors) {
       termVerified = true;
     }
+  }
+
+  if (termVerified) {
+    context.info(`Verified the '${termString}' term.`);
   }
 
   termVerified ?

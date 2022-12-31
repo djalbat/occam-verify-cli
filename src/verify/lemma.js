@@ -6,13 +6,10 @@ import ProofContext from "../context/proof";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 import verifyIndicativeConditional from "../verify/indicativeConditional";
 
-import { front, last } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const labelNodesQuery = nodesQuery("/lemma/label"),
-      statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
-      statementNodesQuery = nodesQuery("/indicativeConditional/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/lemma/unqualifiedStatement!"),
       indicativeConditionalNodeQuery = nodeQuery("/lemma/indicativeConditional!");
 
@@ -25,57 +22,37 @@ export default function verifyLemma(lemmaNode, fileContext) {
         labelsString = nodesAsString(labelNodes),
         proofContext = ProofContext.fromFileContext(fileContext);
 
-  (labelsString === null) ?
-    fileContext.debug(`Verifying an anonymous lemma...`) :
-      fileContext.debug(`Verifying the '${labelsString}' lemma...`);
+  fileContext.debug(`Verifying the '${labelsString}' lemma...`);
 
   const labels = [],
-        labelsLength = labels.length,
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
     const unqualifiedStatementNode = unqualifiedStatementNodeQuery(lemmaNode),
           indicativeConditionalNode = indicativeConditionalNodeQuery(lemmaNode);
 
+    let unqualifiedStatementVerified = false,
+        indicativeConditionalVerified = false;
+
     if (unqualifiedStatementNode !== null) {
-      const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
-
-      if (unqualifiedStatementVerified) {
-        if (labelsLength > 0) {
-          const statementNode = statementNodeQuery(unqualifiedStatementNode),
-                lemma = Lemma.fromLabelsAndStatementNode(labels, statementNode);
-
-          fileContext.addLemma(lemma);
-        }
-
-        lemmaVerified = true;
-      }
+      unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
     }
 
     if (indicativeConditionalNode !== null) {
-      const indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, proofContext);
+      indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, proofContext);
+    }
 
-      if (indicativeConditionalVerified !== null) {
-        if (labelsLength) {
-          const statementNodes = statementNodesQuery(indicativeConditionalNode),
-                lastStatementNode = last(statementNodes),
-                frontStatementNodes = front(statementNodes),
-                consequentStatementNode = lastStatementNode,  ///
-                suppositionStatementNodes = frontStatementNodes,  ///
-                lemma = Lemma.fromLabelsSuppositionStatementNodesAndConsequentStatementNode(labels, suppositionStatementNodes, consequentStatementNode);
+    if (unqualifiedStatementVerified || indicativeConditionalVerified) {
+      const lemma = Lemma.fromLabelsUnqualifiedStatementNodeAndIndicativeConditionalNode(labels, unqualifiedStatementNode, indicativeConditionalNode);
 
-          fileContext.addLemma(lemma);
-        }
+      fileContext.addLemma(lemma);
 
-        lemmaVerified = true;
-      }
+      lemmaVerified = true;
     }
   }
 
   if (lemmaVerified) {
-    (labelsString === null) ?
-      fileContext.info(`Verified an anonymous lemma.`) :
-        fileContext.info(`Verified the '${labelsString}' lemma.`);
+    fileContext.info(`Verified the '${labelsString}' lemma.`);
   }
 
   lemmaVerified ?

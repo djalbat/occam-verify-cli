@@ -1,8 +1,8 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { labelNodeFromLabelJSON } from "./utilities/node";
 import { labelNameFromLabelNode } from "./utilities/query";
+import { labelNodeFromLabelString } from "./utilities/string";
 
 export default class Label {
   constructor(node) {
@@ -35,8 +35,8 @@ export default class Label {
   }
 
   static fromJSON(json, releaseContext) {
-    const labelJSON = json, ///
-          labelNode = labelNodeFromLabelJSON(labelJSON, releaseContext),
+    const labelString = json, ///
+          labelNode = labelNodeFromLabelString(labelString, releaseContext),
           node = labelNode, ///
           label = new Label(node);
 

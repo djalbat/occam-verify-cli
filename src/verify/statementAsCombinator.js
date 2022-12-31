@@ -11,6 +11,10 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
 
   fileContext.begin(statementNode);
 
+  const statementString = nodeAsString(statementNode);
+
+  fileContext.debug(`Verifying the '${statementString}' combinator....`);
+
   const nonTerminalNode = statementNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
         childNodesVerified = verifyChildNodes(childNodes, fileContext);
@@ -24,8 +28,6 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
   }
 
   if (statementVerifiedAsCombinator) {
-    const statementString = nodeAsString(statementNode);
-
     fileContext.info(`Verified the '${statementString}' combinator.`);
   }
 

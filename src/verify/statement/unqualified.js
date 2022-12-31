@@ -14,25 +14,31 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, pro
 
   proofContext.begin(unqualifiedStatementNode);
 
+  const unqualifiedStatementString = nodeAsString(unqualifiedStatementNode);
+
+  proofContext.debug(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
+
   const statementNode = statementNodeQuery(unqualifiedStatementNode);
 
   if (statementNode !== null) {
-    const derived = proofContext.isDerived();
+    const statementVerified = verifyStatement(statementNode, proofContext);
 
-    if (derived) {
-      const assertion = Assertion.fromStatementNode(statementNode),
-            assertionMatches = proofContext.matchAssertion(assertion);
+    if (statementVerified) {
+      const derived = proofContext.isDerived();
 
-      unqualifiedStatementVerified = assertionMatches;  ///
-    } else {
-      unqualifiedStatementVerified = true;
+      if (derived) {
+        const assertion = Assertion.fromStatementNode(statementNode),
+              assertionMatches = proofContext.matchAssertion(assertion);
+
+        unqualifiedStatementVerified = assertionMatches;  ///
+      } else {
+        unqualifiedStatementVerified = true;
+      }
     }
   }
 
   if (unqualifiedStatementVerified) {
-    const statementString = nodeAsString(statementNode);
-
-    proofContext.debug(`Verified the '${statementString}' unqualified statement.`);
+    proofContext.info(`Verified the '${unqualifiedStatementString}' unqualified statement.`);
   }
 
   unqualifiedStatementVerified ?

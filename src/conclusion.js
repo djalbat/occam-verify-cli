@@ -3,7 +3,7 @@
 import { first } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
 import { metavariableNameFromMetavariableNode } from "./utilities/query";
-import { metastatementNodeFromMetastatementJSON } from "./utilities/node";
+import { metastatementNodeFromMetastatementString } from "./utilities/string";
 import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } from "./ruleNames";
 
 export default class Conclusion {
@@ -36,8 +36,8 @@ export default class Conclusion {
 
   static fromJSON(json, releaseContext) {
     const { metastatement } = json,
-          metastatementJSON = metastatement,  ///
-          metastatementNode = metastatementNodeFromMetastatementJSON(metastatementJSON, releaseContext),
+          metastatementString = metastatement,  ///
+          metastatementNode = metastatementNodeFromMetastatementString(metastatementString, releaseContext),
           conclusion = new Conclusion(metastatementNode);
 
     return conclusion;

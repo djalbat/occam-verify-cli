@@ -10,7 +10,9 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
 
   fileContext.begin(typeNode);
 
-  let type = null;
+  const typeString = nodeAsString(typeNode);
+
+  fileContext.debug(`Verifying the '${typeString}' type...`);
 
   const typeName = typeNameFromTypeNode(typeNode),
         typePresent = fileContext.isTypePresentByTypeName(typeName);
@@ -18,6 +20,8 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
   if (typePresent) {
     fileContext.error(`The type '${typeName}' is already present.`);
   } else {
+    let type;
+
     const superTypeName = typeNameFromTypeNode(superTypeNode);
 
     if (superTypeName === null) {
@@ -31,17 +35,15 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
         type = Type.fromTypeNameAndSuperType(typeName, superType);
       }
     }
-  }
 
-  if (type !== null) {
-    fileContext.addType(type);
+    if (type !== null) {
+      fileContext.addType(type);
 
-    typeVerified = true;
+      typeVerified = true;
+    }
   }
 
   if (typeVerified) {
-    const typeString = nodeAsString(typeNode);
-
     fileContext.info(`Verified the '${typeString}' type.`);
   }
 

@@ -1,6 +1,7 @@
 "use strict";
 
 import MetaAssertion from "../../metaAssertion";
+import verifyMetastatement from "../../verify/metastatement";
 
 import { nodeQuery } from "../../utilities/query";
 import { nodeAsString } from "../../utilities/string";
@@ -12,25 +13,31 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
 
   metaproofContext.begin(unqualifiedMetastatementNode);
 
+  const unqualifiedMetastatementString = nodeAsString(unqualifiedMetastatementNode);
+
+  metaproofContext.info(`Verified the '${unqualifiedMetastatementString}' unqualified metastatement.`);
+
   const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
   if (metastatementNode !== null) {
-    const derived = metaproofContext.isDerived();
+    const metastatementVerified = verifyMetastatement(metastatementNode, metaproofContext);
 
-    if (derived) {
-      const metaAssertion = MetaAssertion.fromMetastatementNode(metastatementNode),
-            metaAssertionMatches = metaproofContext.matchMetaAssertion(metaAssertion);
+    if (metastatementVerified) {
+      const derived = metaproofContext.isDerived();
 
-      unqualifiedMetastatementVerified = metaAssertionMatches;  ///
-    } else {
-      unqualifiedMetastatementVerified = true;
+      if (derived) {
+        const metaAssertion = MetaAssertion.fromMetastatementNode(metastatementNode),
+              metaAssertionMatches = metaproofContext.matchMetaAssertion(metaAssertion);
+
+        unqualifiedMetastatementVerified = metaAssertionMatches;  ///
+      } else {
+        unqualifiedMetastatementVerified = true;
+      }
     }
   }
 
   if (unqualifiedMetastatementVerified) {
-    const metastatementString = nodeAsString(metastatementNode);
-
-    metaproofContext.debug(`Verified the '${metastatementString}' unqualified metastatement.`);
+    metaproofContext.info(`Verified the '${unqualifiedMetastatementString}' unqualified metastatement.`);
   }
 
   unqualifiedMetastatementVerified ?

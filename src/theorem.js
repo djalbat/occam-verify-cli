@@ -5,36 +5,31 @@ import Label from "./label";
 import { THEOREM_KIND } from "./kinds";
 import { nodeAsString } from "./utilities/string";
 
-import { statementNodeFromStatementJSON } from "./utilities/node";
+import { unqualifiedStatementNodeFromUnqualifiedStatementString, indicativeConditionalNodeFromIndicativeConditionalString } from "./utilities/string";
 
 export default class Theorem {
-  constructor(labels, statementNode, suppositionStatementNodes, consequentStatementNode) {
+  constructor(labels, unqualifiedStatementNode, indicativeConditionalNode) {
     this.labels = labels;
-    this.statementNode = statementNode;
-    this.suppositionStatementNodes = suppositionStatementNodes;
-    this.consequentStatementNode = consequentStatementNode;
+    this.unqualifiedStatementNode = unqualifiedStatementNode;
+    this.indicativeConditionalNode = indicativeConditionalNode;
   }
 
   getLabels() {
     return this.labels;
   }
 
-  getStatementNode() {
-    return this.statementNode;
+  getUnqualifiedStatementNode() {
+    return this.unqualifiedStatementNode;
   }
 
-  getSuppositionStatementNodes() {
-    return this.suppositionStatementNodes;
-  }
-
-  getConsequentStatementNode() {
-    return this.consequentStatementNode;
+  getIndicativeConditionalNode() {
+    return this.indicativeConditionalNode;
   }
 
   matchLabelName(labelName) {
     const matchesLabelName = this.labels.some((label) => {
       const name = labelName, ///
-            labelMatchesName = label.matchName(name);
+        labelMatchesName = label.matchName(name);
 
       if (labelMatchesName) {
         return true;
@@ -50,24 +45,17 @@ export default class Theorem {
 
             return labelJSON;
           }),
-          statementString = nodeAsString(this.statementNode),
-          consequentStatementString = nodeAsString(this.consequentStatementNode),
-          suppositionStatementStrings = this.suppositionStatementNodes.map((suppositionStatementNode) => {
-            const suppositionStatementString = nodeAsString(suppositionStatementNode);
-
-            return suppositionStatementString;
-          }),
+          unqualifiedStatementString = nodeAsString(this.unqalifiedStatementNode),
+          indicativeConditionalString = nodeAsString(this.indicativeConditionalNode),
           kind = THEOREM_KIND,
           labels = labelsJSON,  ///
-          statement = statementString,  ///
-          consequent = consequentStatementString, ///
-          suppositions = suppositionStatementStrings, ///
+          unqualifiedStatement = unqualifiedStatementString,  ///
+          indicativeConditional = indicativeConditionalString,  ///
           json = {
             kind,
             labels,
-            statement,
-            consequent,
-            suppositions
+            unqualifiedStatement,
+            indicativeConditional
           };
 
     return json;
@@ -79,51 +67,36 @@ export default class Theorem {
     const labelsJSON = labels;  ///
 
     labels = labelsJSON.map((labelJSON) => {
-      const json = labelJSON, ///
-            label = Label.fromJSON(json, releaseContext);
+                const json = labelJSON, ///
+                      label = Label.fromJSON(json, releaseContext);
 
-      return label;
-    });
+                return label;
+              });
 
-    const { statement, suppositions, consequent } = json;
+    let { unqualifiedStatement, indicativeConditional } = json;
 
-    let theorem;
+    let unqualifiedStatementNode = null,
+        indicativeConditionalNode = null;
 
-    if (statement !== null) {
-      const statementJSON = statement,  ///
-            statementNode = statementNodeFromStatementJSON(statementJSON, releaseContext),
-            suppositionStatementNodes = null,
-            consequentStatementNode = null;
+    if (unqualifiedStatement !== null) {
+      const unqualifiedStatementString = unqualifiedStatement;  ///
 
-      theorem = new Theorem(labels, statementNode, suppositionStatementNodes, consequentStatementNode);
-    } else {
-      const statementNode = null,
-            suppositionStatementsJSON = suppositions,  ///
-            suppositionStatementNodes = suppositionStatementsJSON.map((suppositionStatementJSON) => {
-              const suppositionStatementNode = statementNodeFromStatementJSON(suppositionStatementJSON, releaseContext);
-
-              return suppositionStatementNode;
-            }),
-            consequentStatementJSON = consequent, ///
-            consequentStatementNode = statementNodeFromStatementJSON(consequentStatementJSON, releaseContext);
-
-      theorem = new Theorem(labels, statementNode, suppositionStatementNodes, consequentStatementNode);
+      unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementString(unqualifiedStatementString, releaseContext);
     }
 
+    if (indicativeConditional !== null) {
+      const indicativeConditionalString = indicativeConditional;  ///
+
+      indicativeConditionalNode = indicativeConditionalNodeFromIndicativeConditionalString(indicativeConditionalString, releaseContext);
+    }
+
+    const theorem = new Theorem(labels, unqualifiedStatementNode, indicativeConditionalNode);
+
     return theorem;
   }
 
-  static fromLabelsAndStatementNode(labels, statementNode) {
-    const suppositionStatementNodes = [],
-          consequentStatementNode = null,
-          theorem = new Theorem(labels, statementNode, suppositionStatementNodes, consequentStatementNode);
-
-    return theorem;
-  }
-
-  static fromLabelsSuppositionStatementNodesAndConsequentStatementNode(labels, suppositionStatementNodes, consequentStatementNode) {
-    const statementNode = null,
-          theorem = new Theorem(labels, statementNode, suppositionStatementNodes, consequentStatementNode);
+  static fromLabelsUnqualifiedStatementNodeAndIndicativeConditionalNode(labels, unqualifiedStatementNode, indicativeConditionalNode) {
+    const theorem = new Theorem(labels, unqualifiedStatementNode, indicativeConditionalNode);
 
     return theorem;
   }

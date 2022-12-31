@@ -3,6 +3,7 @@
 import verifyTerm from "../verify/term";
 
 import { nodeQuery } from "../utilities/query";
+import { nodeAsString } from "../utilities/string";
 import { first, second } from "../utilities/array";
 
 const firstTermNodeQuery = nodeQuery("/equality/term[0]"),
@@ -12,6 +13,10 @@ export default function verifyEquality(equalityNode, proofContext) {
   let equalityVerified = false;
 
   proofContext.begin(equalityNode);
+
+  const equalityString = nodeAsString(equalityNode);
+
+  proofContext.debug(`Verifying the '${equalityString}' equality...`);
 
   const types = [],
         context = proofContext,
@@ -28,6 +33,10 @@ export default function verifyEquality(equalityNode, proofContext) {
     if (firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType) {
       equalityVerified = true;
     }
+  }
+
+  if (equalityVerified) {
+    proofContext.info(`Verified the '${equalityString}' equality.`);
   }
 
   equalityVerified ?

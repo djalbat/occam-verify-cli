@@ -10,7 +10,9 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
 
   fileContext.begin(variableNode);
 
-  let variable = null;
+  const variableString = nodeAsString(variableNode);
+
+  fileContext.debug(`Verifying the '${variableString}' variable...`);
 
   const variableName = variableNameFromVariableNode(variableNode),
         variablePresent = fileContext.isVariablePresentByVariableName(variableName);
@@ -18,6 +20,8 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
   if (variablePresent) {
     fileContext.error(`The variable '${variableName}' is already present.`);
   } else {
+    let variable;
+
     const typeName = typeNameFromTypeNode(typeNode);
     
     if (typeName === null) {
@@ -45,8 +49,6 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
   }
 
   if (variableVerified) {
-    const variableString = nodeAsString(variableNode);
-
     fileContext.info(`Verified the '${variableString}' variable.`);
   }
 

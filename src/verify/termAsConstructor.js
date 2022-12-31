@@ -18,7 +18,11 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
   let type = null;
 
   const nonTerminalNode = termNode,  ///
-        childNodes = nonTerminalNode.getChildNodes(),
+        termString = nodeAsString(termNode);
+
+  fileContext.debug(`Verifying the '${termString}' constructor...`);
+
+  const childNodes = nonTerminalNode.getChildNodes(),
         childNodesVerified = verifyChildNodes(childNodes, fileContext);
 
   if (childNodesVerified) {
@@ -32,8 +36,6 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
       if (type !== null) {
         termVerifiedAsConstructor = true;
       } else {
-        const termString = nodeAsString(termNode);
-
         fileContext.error(`The '${termString}' constructor's '${typeName}' type is missing.`);
       }
     }
@@ -46,8 +48,6 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
   }
 
   if (termVerifiedAsConstructor) {
-    const termString = nodeAsString(termNode);
-
     fileContext.info(`Verified the '${termString}' constructor.`);
   }
 
