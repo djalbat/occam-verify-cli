@@ -391,6 +391,12 @@ export default class FileContext {
       json.push(axiomJSON);
     });
 
+    this.lemmas.forEach((lemma) => {
+      const lemmaJSON = lemma.toJSON();
+
+      json.push(lemmaJSON);
+    });
+
     this.theorems.forEach((theorem) => {
       const theoremJSON = theorem.toJSON();
 

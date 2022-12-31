@@ -7,13 +7,14 @@ import { rewriteNodes } from "occam-grammar-utilities";
 import Rule from "../../rule";
 import Type from "../../type";
 import Axiom from "../../axiom";
+import Lemma from "../../lemma";
 import Theorem from "../../theorem";
 import Combinator from "../../combinator";
 import Constructor from "../../constructor";
 
 import { push } from "../../utilities/array";
 import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
-import { RULE_KIND, TYPE_KIND, AXIOM_KIND, THEOREM_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
+import { RULE_KIND, TYPE_KIND, AXIOM_KIND, LEMMA_KIND, THEOREM_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
 
 export default class FileReleaseContext extends ReleaseContext {
   constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, theorems, combinators, constructors) {
@@ -203,9 +204,7 @@ export default class FileReleaseContext extends ReleaseContext {
     return node;
   }
 
-  initialise(dependencyReleaseContexts) {
-    super.initialise(dependencyReleaseContexts);
-
+  fromJSON() {
     const jsonArray = this.contextJSON,
           releaseContext = this;  ///
 
@@ -237,6 +236,14 @@ export default class FileReleaseContext extends ReleaseContext {
           break;
         }
 
+        case LEMMA_KIND: {
+          const lemma = Lemma.fromJSON(json, releaseContext);
+
+          this.lemmas.push(lemma);
+
+          break;
+        }
+
         case THEOREM_KIND: {
           const theorem = Theorem.fromJSON(json, releaseContext);
 
@@ -262,6 +269,12 @@ export default class FileReleaseContext extends ReleaseContext {
         }
       }
     });
+  }
+
+  initialise(dependencyReleaseContexts) {
+    super.initialise(dependencyReleaseContexts);
+
+    this.fromJSON();
   }
 
   static fromLogNameEntriesCallbacksAndContextJSON(log, name, entries, callbacks, contextJSON) {
