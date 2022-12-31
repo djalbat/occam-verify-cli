@@ -4,6 +4,8 @@ import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 import callbacksMixins from "../mixins/callbacks";
 
+import { last } from "../utilities/array";
+
 class MetaproofContext {
   constructor(context, derived, metaAssertions) {
     this.context = context;
@@ -28,6 +30,18 @@ class MetaproofContext {
     ];
 
     return metaAssertions;
+  }
+
+  getLastMetaAssertion() {
+    let lastMetaAssertion = null;
+
+    const metaAssertionsLength = this.metaAssertions.length;
+
+    if (metaAssertionsLength > 0) {
+      lastMetaAssertion = last(this.metaAssertions);
+    }
+
+    return lastMetaAssertion;
   }
 
   setDerived(derived) {
