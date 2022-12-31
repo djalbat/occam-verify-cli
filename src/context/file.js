@@ -6,7 +6,7 @@ import { push } from "../utilities/array";
 import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "../utilities/tokens";
 
 export default class FileContext {
-  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, combinators, constructors) {
+  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, combinators, constructors) {
     this.releaseContext = releaseContext;
     this.filePath = filePath;
     this.tokens = tokens;
@@ -15,6 +15,7 @@ export default class FileContext {
     this.rules = rules;
     this.axioms = axioms;
     this.lemmas = lemmas;
+    this.theorems = theorems;
     this.variables = variables;
     this.combinators = combinators;
     this.constructors = constructors;
@@ -59,6 +60,12 @@ export default class FileContext {
       const lemmaLabels = lemma.getLabels();
 
       push(labels, lemmaLabels);
+    });
+
+    this.theorems.forEach((theorem) => {
+      const theoremLabels = theorem.getLabels();
+
+      push(labels, theoremLabels);
     });
 
     if (includeRelease) {
@@ -124,6 +131,20 @@ export default class FileContext {
     }
 
     return lemmas;
+  }
+
+  getTheorems(includeRelease = true) {
+    const theorems = [];
+
+    push(theorems, this.theorems);
+
+    if (includeRelease) {
+      const releaseContextTheorems = this.releaseContext.getTheorems();
+
+      push(theorems, releaseContextTheorems);
+    }
+
+    return theorems;
   }
 
   getCombinators(includeRelease = true) {
@@ -235,6 +256,20 @@ export default class FileContext {
     return lemma;
   }
 
+  findTheoremByReferenceName(referenceName) {
+    const labelName = referenceName,  ///
+          theorems = this.getTheorems(),
+          theorem = theorems.find((theorem) => {
+            const theoremMatchesLabelName = theorem.matchLabelName(labelName);
+
+            if (theoremMatchesLabelName) {
+              return true;
+            }
+          }) || null;
+
+    return theorem;
+  }
+
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
           variables = this.getVariables(),
@@ -284,6 +319,10 @@ export default class FileContext {
 
   addLemma(lemma) {
     this.lemmas.push(lemma);
+  }
+
+  addTheorem(theorem) {
+    this.theorems.push(theorem);
   }
 
   addVariable(variable) {
@@ -352,10 +391,10 @@ export default class FileContext {
       json.push(axiomJSON);
     });
 
-    this.lemmas.forEach((lemma) => {
-      const lemmaJSON = lemma.toJSON();
+    this.theorems.forEach((theorem) => {
+      const theoremJSON = theorem.toJSON();
 
-      json.push(lemmaJSON);
+      json.push(theoremJSON);
     });
 
     this.combinators.forEach((combinator) => {
@@ -385,10 +424,11 @@ export default class FileContext {
           rules = [],
           axioms = [],
           lemmas = [],
+          theorems = [],
           variables = [],
           combinators = [],
           constructors = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, combinators, constructors);
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, combinators, constructors);
 
     return fileContext;
   }

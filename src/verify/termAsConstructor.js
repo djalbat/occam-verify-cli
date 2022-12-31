@@ -138,9 +138,8 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
     case TERM_RULE_NAME: {
       const termNode = nonTerminalNode, ///
             types = [],
-            values = [],
             context = fileContext,  ///
-            termVerified = verifyTerm(termNode, types, values, context);
+            termVerified = verifyTerm(termNode, types, context);
 
       if (termVerified) {
         const firstType = first(types),

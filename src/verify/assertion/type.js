@@ -1,7 +1,6 @@
 "use strict";
 
 import Variable from "../../variable";
-import verifyTerm from "../../verify/term";
 
 import { first } from "../../utilities/array";
 import { nodeAsString } from "../../utilities/string";
@@ -11,7 +10,7 @@ import { verifyTermAsVariable, verifyTermAgainstConstructors } from "../../verif
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeNodeQuery = nodeQuery("/typeAssertion/type");
 
-export default function verifyTypeAssertion(typeAssertionNode, proofContext) {
+export default function verifyTypeAssertion(typeAssertionNode, types, variables, proofContext) {
   let typeAssertionVerified = false;
 
   proofContext.begin(typeAssertionNode);
@@ -23,22 +22,37 @@ export default function verifyTypeAssertion(typeAssertionNode, proofContext) {
   if (!typePresent) {
     proofContext.error(`The ${typeName} type is not present.`);
   } else {
+    const type = proofContext.findTypeByTypeName(typeName),
+          context = proofContext, ///
+          termNode = termNodeQuery(typeAssertionNode),
+          variables = [],
+          termString = nodeAsString(termNode),
+          termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
+
+    if (termVerifiedAsVariable) {
+      types.add(type);
+
+      typeAssertionVerified = true;
+    } else {
+      const termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, values, context);
+
+    }
+
+
+    const ;
+
+
     const derived = proofContext.isDerived();
 
     if (derived) {
       debugger
     } else {
-      const types = [],
-            values = [],
-            context = proofContext, ///
-            termNode = termNodeQuery(typeAssertionNode),
-            termString = nodeAsString(termNode),
-            termVerifiedAsVariable = verifyTermAsVariable(termNode, types, values, context);
 
       if (termVerifiedAsVariable) {
-        const firstValue = first(values),
-              variableName = termString, ///
-              value = firstValue; ///
+        const firstVariable = first(variables),
+              variable = firstVariable, ///
+              variableName = variable.getName(),
+              variableDefined = variable.isDefined();
 
         if (value !== undefined) {
           proofContext.error(`The value of the ${variableName} variable is not undefined.`);
@@ -60,7 +74,6 @@ export default function verifyTypeAssertion(typeAssertionNode, proofContext) {
           }
         }
       } else {
-        const termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, values, context);
 
         if (termVerifiedAgainstConstructors) {
           const type = proofContext.findTypeByTypeName(typeName),

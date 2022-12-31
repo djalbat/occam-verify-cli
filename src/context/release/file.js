@@ -7,21 +7,23 @@ import { rewriteNodes } from "occam-grammar-utilities";
 import Rule from "../../rule";
 import Type from "../../type";
 import Axiom from "../../axiom";
+import Theorem from "../../theorem";
 import Combinator from "../../combinator";
 import Constructor from "../../constructor";
 
 import { push } from "../../utilities/array";
 import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
-import { RULE_KIND, TYPE_KIND, AXIOM_KIND, LEMMA_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
+import { RULE_KIND, TYPE_KIND, AXIOM_KIND, THEOREM_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
 
 export default class FileReleaseContext extends ReleaseContext {
-  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, combinators, constructors) {
+  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, theorems, combinators, constructors) {
     super(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts);
 
     this.types = types;
     this.rules = rules;
     this.axioms = axioms;
     this.lemmas = lemmas;
+    this.theorems = theorems;
     this.combinators = combinators;
     this.constructors = constructors;
     this.contextJSON = contextJSON;
@@ -44,6 +46,12 @@ export default class FileReleaseContext extends ReleaseContext {
       const axiomLabels = axiom.getLabels();
 
       push(labels, axiomLabels);
+    });
+
+    this.theorems.forEach((theorem) => {
+      const theoremLabels = theorem.getLabels();
+
+      push(labels, theoremLabels);
     });
 
     if (includeDependencies) {
@@ -117,23 +125,31 @@ export default class FileReleaseContext extends ReleaseContext {
     return axioms;
   }
 
-  getLemmas(includeDependencies = true) {
-    const lemmas = [];
+  getLemmas() {
+    const theorems = [];
 
-    push(lemmas, this.lemmas);
+    push(theorems, this.theorems);
+
+    return theorems;
+  }
+
+  getTheorems(includeDependencies = true) {
+    const theorems = [];
+
+    push(theorems, this.theorems);
 
     if (includeDependencies) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
         const includeDependencies = false,
-              releaseContextLemmas = releaseContext.getLemmas(includeDependencies);
+              releaseContextTheorems = releaseContext.getTheorems(includeDependencies);
 
-        push(lemmas, releaseContextLemmas);
+        push(theorems, releaseContextTheorems);
       });
     }
 
-    return lemmas;
+    return theorems;
   }
 
   getCombinators(includeDependencies = true) {
@@ -221,10 +237,10 @@ export default class FileReleaseContext extends ReleaseContext {
           break;
         }
 
-        case LEMMA_KIND: {
-          const lemma = Lemma.fromJSON(json, releaseContext);
+        case THEOREM_KIND: {
+          const theorem = Theorem.fromJSON(json, releaseContext);
 
-          this.lemmas.push(lemma);
+          this.theorems.push(theorem);
 
           break;
         }
@@ -258,9 +274,10 @@ export default class FileReleaseContext extends ReleaseContext {
           rules = [],
           axioms = [],
           lemmas = [],
+          theorems = [],
           combinators = [],
           constructors = [],
-          releaseContext = new FileReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, combinators, constructors);
+          releaseContext = new FileReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, theorems, combinators, constructors);
 
     return releaseContext;
   }

@@ -37,6 +37,10 @@ class ProofContext {
 
   getAxioms() { return this.context.getAxioms(); }
 
+  getLemmas() { return this.context.getLemmas(); }
+
+  getTheorems() { return this.context.getTheorems(); }
+
   getCombinators() { return this.context.getCombinators(); }
 
   getConstructors() { return this.context.getConstructors(); }
@@ -54,10 +58,6 @@ class ProofContext {
   }
 
   setDerived(derived) {
-    if (derived) {
-      this.statementNodes.pop();
-    }
-
     this.derived = derived;
   }
 
@@ -118,6 +118,10 @@ class ProofContext {
   findRuleByReferenceName(referenceName) { return this.context.findRuleByReferenceName(referenceName); }
 
   findAxiomByReferenceName(referenceName) { return this.context.findAxiomByReferenceName(referenceName); }
+
+  findLemmaByReferenceName(referenceName) { return this.context.findLemmaByReferenceName(referenceName); }
+
+  findTheoremByReferenceName(referenceName) { return this.context.findTheoremByReferenceName(referenceName); }
 
   isLabelPresentByLabelName(labelName) { return this.context.isLabelPresentByLabelName(labelName); }
 

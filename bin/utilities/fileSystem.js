@@ -9,13 +9,24 @@ const callbacks = require("../callbacks");
 const { last } = arrayUtilities,
       { loadProject } = occamFileSystemUtilities,
       { concatenatePaths } = pathUtilities,
-      { readFile, isEntryFile } = necessaryFileSystemUtilities;
+      { readFile, isEntryFile, checkEntryExists } = necessaryFileSystemUtilities;
 
 function releaseContextFromDependencyAndDependentNames(dependency, dependentNames, context, callback) {
   const projectsDirectoryPath = process.cwd(), ///
         dependencyName = dependency.getName(),
         entryPath = concatenatePaths(projectsDirectoryPath, dependencyName),
-        entryFile = isEntryFile(entryPath);
+        entryExists = checkEntryExists(entryPath);
+
+  if (!entryExists) {
+    const error = null,
+          releaseContext = null;
+
+    callback(error, releaseContext);
+
+    return;
+  }
+
+  const entryFile = isEntryFile(entryPath);
 
   let releaseContext;
 
@@ -27,6 +38,8 @@ function releaseContextFromDependencyAndDependentNames(dependency, dependentName
     const releaseContext = null;
 
     callback(error, releaseContext);
+
+    return;
   }
 
   if (releaseContext !== null) {

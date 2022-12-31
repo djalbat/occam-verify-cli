@@ -112,7 +112,7 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     return axioms;
   }
 
-  getLemmas(includeDependencies = true) {
+  getLemmas() {
     const lemmas = [];
 
     this.fileContexts.forEach((fileContext) => {
@@ -122,18 +122,31 @@ export default class DirectoryReleaseContext extends ReleaseContext {
       push(lemmas, fileContextLemmas);
     });
 
+    return lemmas;
+  }
+
+  getTheorems(includeDependencies = true) {
+    const theorems = [];
+
+    this.fileContexts.forEach((fileContext) => {
+      const includeRelease = false,
+            fileContextTheorems = fileContext.getTheorems(includeRelease);
+
+      push(theorems, fileContextTheorems);
+    });
+
     if (includeDependencies) {
       const dependencyReleaseContexts = this.getDependencyReleaseContexts();
 
       dependencyReleaseContexts.forEach((releaseContext) => {
         const includeDependencies = false,
-              releaseContextLemmas = releaseContext.getLemmas(includeDependencies);
+              releaseContextTheorems = releaseContext.getTheorems(includeDependencies);
 
-        push(lemmas, releaseContextLemmas);
+        push(theorems, releaseContextTheorems);
       });
     }
 
-    return lemmas;
+    return theorems;
   }
 
   getCombinators(includeDependencies = true) {

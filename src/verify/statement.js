@@ -27,7 +27,8 @@ export default function verifyStatement(statementNode, proofContext) {
 
     statementVerified = equalityVerified; ///
   } else if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, proofContext);
+    const types = [],
+          typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, types, proofContext);
 
     statementVerified = typeAssertionVerified; ///
   } else {

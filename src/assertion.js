@@ -49,6 +49,13 @@ export default class Assertion {
     return assertion;
   }
 
+  static fromStatementNode(statementNode) {
+    const subproofNode = null,
+          assertion = new Assertion(subproofNode, statementNode);
+
+    return assertion;
+  }
+
   static fromQualifiedStatementNode(qualifiedStatementNode) {
     const subproofNode = null,
           statementNode = statementNodeQuery(qualifiedStatementNode),
@@ -95,7 +102,7 @@ function matchAssertionChildNodes(assertionChildNodes, childNodes) {
   let assertionChildNodesMatches = false;
 
   const childNodesLength = childNodes.length,
-      assertionChildNodesLength = assertionChildNodes.length;
+        assertionChildNodesLength = assertionChildNodes.length;
 
   if (childNodesLength === assertionChildNodesLength) {
     assertionChildNodesMatches = childNodes.every((childNode, index) => {

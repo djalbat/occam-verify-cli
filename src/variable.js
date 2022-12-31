@@ -19,6 +19,12 @@ export default class Variable {
     return this.value;
   }
 
+  isDefined() {
+    const defined = (this.value !== undefined);
+
+    return defined;
+  }
+
   setValue(value) {
     this.value = value;
   }

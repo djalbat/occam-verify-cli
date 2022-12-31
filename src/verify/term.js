@@ -9,17 +9,24 @@ const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!"),
       variableNodeQuery = nodeQuery("/term/variable!");
 
-export default function verifyTerm(termNode, types, values, context) {
+export default function verifyTerm(termNode, types, context) {
   let termVerified = false;
 
   context.begin(termNode);
 
-  const termVerifiedAsVariable = verifyTermAsVariable(termNode, types, values, context);
+  const variables = [],
+        termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
 
   if (termVerifiedAsVariable) {
+    const firstVariable = first(variables),
+          variable = firstVariable, ///
+          type = variable.getType();
+
+    types.push(type);
+
     termVerified = true;
   } else {
-    const termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, values, context);
+    const termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, context);
 
     if (termVerifiedAgainstConstructors) {
       termVerified = true;
@@ -33,7 +40,7 @@ export default function verifyTerm(termNode, types, values, context) {
   return termVerified;
 }
 
-export function verifyTermAsVariable(termNode, types, values, context) {
+export function verifyTermAsVariable(termNode, variables, context) {
   let termVerifiedAsVariable = false;
 
   context.begin(termNode);
@@ -47,13 +54,9 @@ export function verifyTermAsVariable(termNode, types, values, context) {
     if (!variablePresent) {
       context.error(`The ${variableName} variable is not present.`)
     } else {
-      const variable = context.findVariableByVariableName(variableName),
-        type = variable.getType(),
-        value = variable.getValue();
+      const variable = context.findVariableByVariableName(variableName);
 
-      types.push(type);
-
-      values.push(value);
+      variables.push(variable);
 
       termVerifiedAsVariable = true;
     }
@@ -66,7 +69,7 @@ export function verifyTermAsVariable(termNode, types, values, context) {
   return termVerifiedAsVariable;
 }
 
-export function verifyTermAgainstConstructors(termNode, types, values, context) {
+export function verifyTermAgainstConstructors(termNode, types, context) {
   let termVerifiedAgainstConstructors = false;
 
   context.begin(termNode);
@@ -81,12 +84,9 @@ export function verifyTermAgainstConstructors(termNode, types, values, context) 
         }) || null;
 
   if (constructor !== null) {
-    const type = constructor.getType(),
-          value = termNode; ///
+    const type = constructor.getType();
 
     types.push(type);
-
-    values.push(value);
 
     termVerifiedAgainstConstructors = true;
   }
@@ -211,8 +211,7 @@ function verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
     context.error(`The ${argumentString} argument should be a term, not a type`);
   } else {
     const types = [],
-          values = [],
-          termVerified = verifyTerm(termNode, types, values, context);
+          termVerified = verifyTerm(termNode, types, context);
 
     if (termVerified) {
       const firstType = first(types),

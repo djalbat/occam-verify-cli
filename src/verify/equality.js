@@ -14,12 +14,11 @@ export default function verifyEquality(equalityNode, proofContext) {
   proofContext.begin(equalityNode);
 
   const types = [],
-        values = [],
         context = proofContext,
         firstTermNode = firstTermNodeQuery(equalityNode),
         secondTermNode = secondTermNodeQuery(equalityNode),
-        firstTermVerified = verifyTerm(firstTermNode, types, values, context),
-        secondTermVerified = verifyTerm(secondTermNode, types, values, context);
+        firstTermVerified = verifyTerm(firstTermNode, types, context),
+        secondTermVerified = verifyTerm(secondTermNode, types, context);
 
   if (firstTermVerified && secondTermVerified) {
     const firstType = first(types),
@@ -27,17 +26,7 @@ export default function verifyEquality(equalityNode, proofContext) {
           firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType = firstType.isEqualToSubTypeOfOrSuperTypeOf(secondType);
 
     if (firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType) {
-      const derived = proofContext.isDerived();
-
-      if (derived) {
-        const termsEqual = equateTerms(firstTermNode, secondTermNode, proofContext);
-
-        if (termsEqual) {
-          equalityVerified = true;
-        }
-      } else {
-        equalityVerified = true;
-      }
+      equalityVerified = true;
     }
   }
 
@@ -46,12 +35,4 @@ export default function verifyEquality(equalityNode, proofContext) {
       proofContext.halt(equalityNode);
 
   return equalityVerified;
-}
-
-function equateTerms(firstTermNode, secondTermNode, proofContext) {
-  let termsEqual = true;  ///
-
-  debugger
-
-  return termsEqual;
 }
