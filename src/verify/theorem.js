@@ -54,7 +54,7 @@ export default function verifyTheorem(theoremNode, fileContext) {
             proofVerified = verifyProof(proofNode, consequent, proofContext);
 
       if (proofVerified) {
-        const theorem = Theorem.fromLabelsPremisesAndConsequent(labels, antecedents, consequent);
+        const theorem = Theorem.fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent);
 
         fileContext.addTheorem(theorem);
 

@@ -8,6 +8,7 @@ import verifyConditionalIndicative from "../verify/conditinalIndicative";
 import verifyUnconditionalIndicative from "../verify/unconditionalIndicative";
 
 import { first } from "../utilities/array";
+import { EMPTY_STRING } from "../constants";
 import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
@@ -25,7 +26,9 @@ export default function verifyLemma(lemmaNode, fileContext) {
         labelsString = nodesAsString(labelNodes),
         proofContext = ProofContext.fromFileContext(fileContext);
 
-  fileContext.debug(`Verifying the '${labelsString}' lemma...`);
+  (labelsString === EMPTY_STRING) ?
+    fileContext.debug(`Verifying a lemma...`) :
+      fileContext.debug(`Verifying the '${labelsString}' lemma...`);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
@@ -37,7 +40,7 @@ export default function verifyLemma(lemmaNode, fileContext) {
           unconditionalIndicativeNode = unconditionalIndicativeNodeQuery(lemmaNode);
 
     let conditionalIndicativeVerified = false,
-      unconditionalIndicativeVerified = false;
+        unconditionalIndicativeVerified = false;
 
     if (conditionalIndicativeNode !== null) {
       conditionalIndicativeVerified = verifyConditionalIndicative(conditionalIndicativeNode, antecedents, consequents, proofContext);
@@ -54,7 +57,7 @@ export default function verifyLemma(lemmaNode, fileContext) {
             proofVerified = verifyProof(proofNode, consequent, proofContext);
 
       if (proofVerified) {
-        const lemma = Lemma.fromLabelsPremisesAndConsequent(labels, antecedents, consequent);
+        const lemma = Lemma.fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent);
 
         fileContext.addLemma(lemma);
 
@@ -64,7 +67,9 @@ export default function verifyLemma(lemmaNode, fileContext) {
   }
 
   if (lemmaVerified) {
-    fileContext.info(`Verified the '${labelsString}' lemma.`);
+    (labelsString === EMPTY_STRING) ?
+      fileContext.info(`Verified the lemma.`) :
+        fileContext.info(`Verified the '${labelsString}' lemma.`);
   }
 
   lemmaVerified ?
