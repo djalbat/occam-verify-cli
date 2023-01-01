@@ -1,10 +1,12 @@
 "use strict";
 
+import verifyStatement from "../../verify/statement";
+
 import { nodeAsString } from "../../utilities/string";
 import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
 
-const referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!"),
-      statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
+const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
+      referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!");
 
 export default function verifyQualifiedStatement(qualifiedStatementNode, proofContext) {
   let qualifiedStatementVerified = false;
@@ -17,11 +19,18 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, proofCo
 
   const statementNode = statementNodeQuery(qualifiedStatementNode);
 
-    if (statementNode !== null) {
-    const referenceNode = referenceNodeQuery(qualifiedStatementNode),
-          referenceName = referenceNameFromReferenceNode(referenceNode);
+  if (statementNode !== null) {
+    const referenceNode = referenceNodeQuery(qualifiedStatementNode);
 
-    ///
+    if (referenceNode === null) {
+      const statementVerified = verifyStatement(statementNode, proofContext);
+
+      qualifiedStatementVerified = statementVerified; ///
+    } else {
+      const referenceName = referenceNameFromReferenceNode(referenceNode);
+
+      debugger
+    }
   }
 
   if (qualifiedStatementVerified) {

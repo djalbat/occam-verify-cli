@@ -1,39 +1,57 @@
 "use strict";
 
+import ProofContext from "../context/proof";
 import verifyDerivation from "../verify/derivation";
 import verifyQualifiedStatement from "../verify/statement/qualified";
 
 import { nodeQuery } from "../utilities/query";
 
 const derivationNodeQuery = nodeQuery("/proof/derivation!"),
-      qualifiedStatementNodeQuery = nodeQuery("/proof/qualifiedStatement!"),
-      proofStatementNodeQuery = nodeQuery("/proof/qualifiedStatement/statement!");
+      qualifiedStatementNodeQuery = nodeQuery("/proof/qualifiedStatement!");
 
-export default function verifyProof(proofNode, conclusion, proofContext) {
+export default function verifyProof(proofNode, fileContext) {
   let proofVerified = false;
+
+  const proofContext = ProofContext.fromFileContext(fileContext);
 
   proofContext.begin(proofNode);
 
-  const derivationNode = derivationNodeQuery(proofNode);
+  const derivationNode = derivationNodeQuery(proofNode),
+        qualifiedStatementNode = qualifiedStatementNodeQuery(proofNode);
 
-  let derivationVerified = true;
+  let derivationVerified = false,
+      qualifiedStatementVerified = false;
 
   if (derivationNode !== null) {
     derivationVerified = verifyDerivation(derivationNode, proofContext);
   }
 
-  if (derivationVerified) {
-    const qualifiedStatementNode = qualifiedStatementNodeQuery(proofNode),
-          qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
+  if (qualifiedStatementNode !== null) {
+    let derived;
 
-    if (qualifiedStatementVerified) {
-      const statementNode = conclusion.getStatementNode(),
-            proofStatementNode = proofStatementNodeQuery(proofNode),
-            proofStatementNodeMatches = matchProofStatementNode(proofStatementNode, statementNode);
+    derived = true;
 
-      proofVerified = proofStatementNodeMatches;  ///
-    }
+    proofContext.setDerived(derived);
+
+    qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
+
+    derived = false;
+
+    proofContext.setDerived(derived);
   }
+
+  // if (derivationVerified) {
+  //   const qualifiedStatementNode = qualifiedStatementNodeQuery(proofNode),
+  //         qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
+  //
+  //   if (qualifiedStatementVerified) {
+  //     const statementNode = conclusion.getStatementNode(),
+  //           proofStatementNode = proofStatementNodeQuery(proofNode),
+  //           proofStatementNodeMatches = matchProofStatementNode(proofStatementNode, statementNode);
+  //
+  //     proofVerified = proofStatementNodeMatches;  ///
+  //   }
+  // }
 
   proofVerified ?
     proofContext.complete(proofNode) :

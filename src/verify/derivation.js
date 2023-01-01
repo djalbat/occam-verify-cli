@@ -14,7 +14,7 @@ const derivationNodeQuery = nodeQuery("/subproof/derivation|abridgedDerivation!"
 
 export default function verifyDerivation(derivationNode, proofContext) {
   let derivationVerified,
-    derived;
+      derived;
 
   proofContext.begin(derivationNode);
 

@@ -29,7 +29,7 @@ export default class Theorem {
   matchLabelName(labelName) {
     const matchesLabelName = this.labels.some((label) => {
       const name = labelName, ///
-        labelMatchesName = label.matchName(name);
+            labelMatchesName = label.matchName(name);
 
       if (labelMatchesName) {
         return true;
