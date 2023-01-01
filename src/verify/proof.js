@@ -1,18 +1,16 @@
 "use strict";
 
-import ProofContext from "../context/proof";
+import Assertion from "../assertion";
 import verifyDerivation from "../verify/derivation";
-import verifyQualifiedStatement from "../verify/statement/qualified";
+import verifyQualifiedStatement from "./statement/qualified";
 
 import { nodeQuery } from "../utilities/query";
 
 const derivationNodeQuery = nodeQuery("/proof/derivation!"),
       qualifiedStatementNodeQuery = nodeQuery("/proof/qualifiedStatement!");
 
-export default function verifyProof(proofNode, fileContext) {
+export default function verifyProof(proofNode, consequent, proofContext) {
   let proofVerified = false;
-
-  const proofContext = ProofContext.fromFileContext(fileContext);
 
   proofContext.begin(proofNode);
 
@@ -27,31 +25,24 @@ export default function verifyProof(proofNode, fileContext) {
   }
 
   if (qualifiedStatementNode !== null) {
-    let derived;
-
-    derived = true;
-
-    proofContext.setDerived(derived);
-
     qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
 
-    derived = false;
+    if (qualifiedStatementVerified) {
+      const assertion = Assertion.fromQualifiedStatementNode(qualifiedStatementNode);
 
-    proofContext.setDerived(derived);
+      proofContext.addAssertion(assertion);
+    }
   }
 
-  // if (derivationVerified) {
-  //   const qualifiedStatementNode = qualifiedStatementNodeQuery(proofNode),
-  //         qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
-  //
-  //   if (qualifiedStatementVerified) {
-  //     const statementNode = conclusion.getStatementNode(),
-  //           proofStatementNode = proofStatementNodeQuery(proofNode),
-  //           proofStatementNodeMatches = matchProofStatementNode(proofStatementNode, statementNode);
-  //
-  //     proofVerified = proofStatementNodeMatches;  ///
-  //   }
-  // }
+  if (derivationVerified || qualifiedStatementVerified) {
+    const lastAssertion = proofContext.getLastAssertion(),
+          assertion = lastAssertion, ///
+          statementNode = consequent.getStatementNode(),
+          assertionStatementNode = assertion.getStatementNode(),
+          assertionStatementNodeMatches = matchProofStatementNode(assertionStatementNode, statementNode);
+
+    proofVerified = assertionStatementNodeMatches;  ///
+  }
 
   proofVerified ?
     proofContext.complete(proofNode) :
@@ -60,82 +51,82 @@ export default function verifyProof(proofNode, fileContext) {
   return proofVerified;
 }
 
-function matchProofStatementNode(proofStatementNode, statementNode) {
-  const proofNonTerminalNode = proofStatementNode,  ///
+function matchProofStatementNode(assertionStatementNode, statementNode) {
+  const assertionNonTerminalNode = assertionStatementNode,  ///
         nonTerminalNode = statementNode,  ///
-        proofNonTerminalNodeMatches = matchProofNonTerminalNode(proofNonTerminalNode, nonTerminalNode),
-        proofStatementNodeMatches = proofNonTerminalNodeMatches;  ///
+        assertionNonTerminalNodeMatches = matchProofNonTerminalNode(assertionNonTerminalNode, nonTerminalNode),
+        assertionStatementNodeMatches = assertionNonTerminalNodeMatches;  ///
 
-  return proofStatementNodeMatches;
+  return assertionStatementNodeMatches;
 }
 
-function matchProofNode(proofNode, node) {
-  let proofNodeMatches = false;
+function matchProofNode(assertionNode, node) {
+  let assertionNodeMatches = false;
 
   const nodeTerminalNode = node.isTerminalNode(),
-        ruleNodeTerminalNode = proofNode.isTerminalNode();
+        ruleNodeTerminalNode = assertionNode.isTerminalNode();
 
   if (nodeTerminalNode === ruleNodeTerminalNode) {
     if (nodeTerminalNode) {
       const terminalNode = node,  ///
-            proofTerminalNode = proofNode,  ///
-            proofTerminalNodeMatches = matchProofTerminalNode(proofTerminalNode, terminalNode);
+            assertionTerminalNode = assertionNode,  ///
+            assertionTerminalNodeMatches = matchProofTerminalNode(assertionTerminalNode, terminalNode);
 
-      proofNodeMatches = proofTerminalNodeMatches;  ///
+      assertionNodeMatches = assertionTerminalNodeMatches;  ///
     } else {
       const nonTerminalNode = node, ///
-            proofNonTerminalNode = proofNode,  ///
-            proofNonTerminalNodeMatches = matchProofNonTerminalNode(proofNonTerminalNode, nonTerminalNode);
+            assertionNonTerminalNode = assertionNode,  ///
+            assertionNonTerminalNodeMatches = matchProofNonTerminalNode(assertionNonTerminalNode, nonTerminalNode);
 
-      proofNodeMatches = proofNonTerminalNodeMatches; ///
+      assertionNodeMatches = assertionNonTerminalNodeMatches; ///
     }
   }
 
-  return proofNodeMatches;
+  return assertionNodeMatches;
 }
 
-function matchProofNodes(proofNodes, nodes) {
-  let proofNodesMatches = false;
+function matchProofNodes(assertionNodes, nodes) {
+  let assertionNodesMatches = false;
 
   const nodesLength = nodes.length,
-        proofNodesLength = proofNodes.length;
+        assertionNodesLength = assertionNodes.length;
 
-  if (nodesLength === proofNodesLength) {
-    proofNodesMatches = nodes.every((node, index) => {
-      const proofNode = proofNodes[index],
-            proofNodeMatches = matchProofNode(proofNode, node);
+  if (nodesLength === assertionNodesLength) {
+    assertionNodesMatches = nodes.every((node, index) => {
+      const assertionNode = assertionNodes[index],
+            assertionNodeMatches = matchProofNode(assertionNode, node);
 
-      if (proofNodeMatches) {
+      if (assertionNodeMatches) {
         return true;
       }
     })
   }
 
-  return proofNodesMatches;
+  return assertionNodesMatches;
 }
 
-function matchProofTerminalNode(proofTerminalNode, terminalNode) {
-  const matches = proofTerminalNode.match(terminalNode),
-        proofTerminalNodeMatches = matches;  ///
+function matchProofTerminalNode(assertionTerminalNode, terminalNode) {
+  const matches = assertionTerminalNode.match(terminalNode),
+        assertionTerminalNodeMatches = matches;  ///
 
-  return proofTerminalNodeMatches;
+  return assertionTerminalNodeMatches;
 }
 
-function matchProofNonTerminalNode(proofNonTerminalNode, nonTerminalNode) {
-  let proofNonTerminalNodeMatches = false;
+function matchProofNonTerminalNode(assertionNonTerminalNode, nonTerminalNode) {
+  let assertionNonTerminalNodeMatches = false;
 
   const ruleName = nonTerminalNode.getRuleName(),
-        proofRuleName = proofNonTerminalNode.getRuleName(); ///
+        assertionRuleName = assertionNonTerminalNode.getRuleName(); ///
 
-  if (ruleName === proofRuleName) {
+  if (ruleName === assertionRuleName) {
     const childNodes = nonTerminalNode.getChildNodes(),
-          proofChildNodes = proofNonTerminalNode.getChildNodes(),
+          assertionChildNodes = assertionNonTerminalNode.getChildNodes(),
           nodes = childNodes, ///
-          proofNodes = proofChildNodes, ///
-          proofNodesMatches = matchProofNodes(proofNodes, nodes);
+          assertionNodes = assertionChildNodes, ///
+          assertionNodesMatches = matchProofNodes(assertionNodes, nodes);
 
-    proofNonTerminalNodeMatches = proofNodesMatches; ///
+    assertionNonTerminalNodeMatches = assertionNodesMatches; ///
   }
 
-  return proofNonTerminalNodeMatches;
+  return assertionNonTerminalNodeMatches;
 }

@@ -4,7 +4,7 @@ import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 import callbacksMixins from "../mixins/callbacks";
 
-import { push } from "../utilities/array";
+import { push, last } from "../utilities/array";
 
 class ProofContext {
   constructor(context, derived, variables, assertions) {
@@ -55,6 +55,12 @@ class ProofContext {
     push(variables, contextVariables);
 
     return variables;
+  }
+
+  getLastAssertion() {
+    const lastAssertion = last(this.assertions);
+
+    return lastAssertion;
   }
 
   setDerived(derived) {
