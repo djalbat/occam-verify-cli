@@ -5,7 +5,7 @@ import Antecedent from "./antecedent";
 import Consequent from "./consequent";
 
 import { prune } from "./utilities/array";
-import { AXIOM_KIND } from "./kinds";
+import { THEOREM_KIND } from "./kinds";
 import { someSubArray } from "./utilities/array";
 
 export default class Theorem {
@@ -77,7 +77,7 @@ export default class Theorem {
             return antecedentJSON;
           }),
           consequentJSON = this.consequent.toJSON(),
-          kind = AXIOM_KIND,
+          kind = THEOREM_KIND,
           labels = labelsJSON,  ///
           antecedents = antecedentsJSON,  ///
           consequent = consequentJSON,  ///
