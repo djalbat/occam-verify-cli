@@ -4,14 +4,15 @@ const { Dependency } = require("occam-file-system"),
       { loggingUtilities } = require("necessary"),
       { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
-const { releaseContextFromDependencyAndDependentNames } = require("../utilities/fileSystem");
+const { EMPTY_STRING } = require("../constants"),
+      { releaseContextFromDependencyAndDependentNames } = require("../utilities/fileSystem");
 
 const { log } = loggingUtilities,
       { setLogLevel } = log,
       { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
 function verifyAction(argument, logLevel) {
-  const name = argument, ///
+  const name = argument.replace(/\/$/, EMPTY_STRING),
         context = {},
         dependency = Dependency.fromName(name),
         dependentNames = [],
