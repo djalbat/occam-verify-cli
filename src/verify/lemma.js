@@ -1,17 +1,20 @@
 "use strict";
 
 import Lemma from "../lemma";
-import verifyLabels from "../verify/labels";
+import verifyProof from "../verify/proof";
 import ProofContext from "../context/proof";
-import verifyUnqualifiedStatement from "../verify/statement/unqualified";
-import verifyIndicativeConditional from "../verify/indicativeConditional";
+import verifyLabels from "../verify/labels";
+import verifyConditionalIndicative from "../verify/conditinalIndicative";
+import verifyUnconditionalIndicative from "../verify/unconditionalIndicative";
 
+import { first } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const labelNodesQuery = nodesQuery("/lemma/label"),
-      unqualifiedStatementNodeQuery = nodeQuery("/lemma/unqualifiedStatement!"),
-      indicativeConditionalNodeQuery = nodeQuery("/lemma/indicativeConditional!");
+const proofNodeQuery = nodeQuery("/lemma/proof!"),
+      labelNodesQuery = nodesQuery("/lemma/label"),
+      conditionalIndicativeNodeQuery = nodeQuery("/lemma/conditionalIndicative!"),
+      unconditionalIndicativeNodeQuery = nodeQuery("/lemma/unconditionalIndicative!");
 
 export default function verifyLemma(lemmaNode, fileContext) {
   let lemmaVerified = false;
@@ -28,26 +31,35 @@ export default function verifyLemma(lemmaNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(lemmaNode),
-          indicativeConditionalNode = indicativeConditionalNodeQuery(lemmaNode);
+    const antecedents = [],
+          consequents = [],
+          conditionalIndicativeNode = conditionalIndicativeNodeQuery(lemmaNode),
+          unconditionalIndicativeNode = unconditionalIndicativeNodeQuery(lemmaNode);
 
-    let unqualifiedStatementVerified = false,
-        indicativeConditionalVerified = false;
+    let conditionalIndicativeVerified = false,
+      unconditionalIndicativeVerified = false;
 
-    if (unqualifiedStatementNode !== null) {
-      unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
+    if (conditionalIndicativeNode !== null) {
+      conditionalIndicativeVerified = verifyConditionalIndicative(conditionalIndicativeNode, antecedents, consequents, proofContext);
     }
 
-    if (indicativeConditionalNode !== null) {
-      indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, proofContext);
+    if (unconditionalIndicativeNode !== null) {
+      unconditionalIndicativeVerified = verifyUnconditionalIndicative(unconditionalIndicativeNode, consequents, proofContext);
     }
 
-    if (unqualifiedStatementVerified || indicativeConditionalVerified) {
-      const lemma = Lemma.fromLabelsUnqualifiedStatementNodeAndIndicativeConditionalNode(labels, unqualifiedStatementNode, indicativeConditionalNode);
+    if (conditionalIndicativeVerified || unconditionalIndicativeVerified) {
+      const proofNode = proofNodeQuery(lemmaNode),
+            firstConsequent = first(consequents),
+            consequent = firstConsequent, ///
+            proofVerified = verifyProof(proofNode, consequent, proofContext);
 
-      fileContext.addLemma(lemma);
+      if (proofVerified) {
+        const lemma = Lemma.fromLabelsPremisesAndConsequent(labels, antecedents, consequent);
 
-      lemmaVerified = true;
+        fileContext.addLemma(lemma);
+
+        lemmaVerified = true;
+      }
     }
   }
 
@@ -57,7 +69,7 @@ export default function verifyLemma(lemmaNode, fileContext) {
 
   lemmaVerified ?
     fileContext.complete(lemmaNode) :
-      fileContext.halt(lemmaNode);
+      fileContext.complete(lemmaNode);
 
   return lemmaVerified;
 }

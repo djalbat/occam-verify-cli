@@ -55,9 +55,7 @@ export default function verifyRule(ruleNode, fileContext) {
       let metaproofVerified = true;
 
       if (metaproofNode !== null) {
-        const metastatementNode = conclusion.getMetastatementNode();
-
-        metaproofVerified = verifyMetaproof(metaproofNode, metastatementNode, metaproofContext);
+        metaproofVerified = verifyMetaproof(metaproofNode, conclusion, metaproofContext);
       }
 
       if (metaproofVerified) {

@@ -1,29 +1,30 @@
 "use strict";
 
 import Label from "./label";
+import Antecedent from "./antecedent";
+import Consequent from "./consequent";
 
-import { LEMMA_KIND } from "./kinds";
-import { nodeAsString } from "./utilities/string";
-
-import { unqualifiedStatementNodeFromUnqualifiedStatementString, indicativeConditionalNodeFromIndicativeConditionalString } from "./utilities/string";
+import { prune } from "./utilities/array";
+import { AXIOM_KIND } from "./kinds";
+import { someSubArray } from "./utilities/array";
 
 export default class Lemma {
-  constructor(labels, unqualifiedStatementNode, indicativeConditionalNode) {
+  constructor(labels, antecedents, consequent) {
     this.labels = labels;
-    this.unqualifiedStatementNode = unqualifiedStatementNode;
-    this.indicativeConditionalNode = indicativeConditionalNode;
+    this.antecedents = antecedents;
+    this.consequent = consequent;
   }
 
   getLabels() {
     return this.labels;
   }
 
-  getUnqualifiedStatementNode() {
-    return this.unqualifiedStatementNode;
+  getAntecedents() {
+    return this.antecedents;
   }
 
-  getIndicativeConditionalNode() {
-    return this.indicativeConditionalNode;
+  getConsequent() {
+    return this.consequent;
   }
 
   matchLabelName(labelName) {
@@ -39,29 +40,60 @@ export default class Lemma {
     return matchesLabelName;
   }
 
+  matchStatement(statementNode, proofContext) {
+    let statementNatches;
+
+    const antecedentsLength = this.antecedents.length;
+
+    if (antecedentsLength === 0) {
+      const substitutions = [],
+            consequentMatches = matchConsequent(this.consequent, statementNode, substitutions);
+
+      statementNatches = consequentMatches; ///
+    } else {
+      const assertions = proofContext.getAssertions();
+
+      statementNatches = someSubArray(assertions, antecedentsLength, (assertions) => {
+        const antecedentsMatchConsequent = matchAntecedentsAndConsequent(this.antecedents, this.consequent, assertions, statementNode);
+
+        if (antecedentsMatchConsequent) {
+          return true;
+        }
+      });
+    }
+
+    return statementNatches;
+  }
+
   toJSON() {
     const labelsJSON = this.labels.map((label) => {
             const labelJSON = label.toJSON();
 
             return labelJSON;
           }),
-          unqualifiedStatementString = nodeAsString(this.unqalifiedStatementNode),
-          indicativeConditionalString = nodeAsString(this.indicativeConditionalNode),
-          kind = LEMMA_KIND,
+          antecedentsJSON = this.antecedents.map((antecedent) => {
+            const antecedentJSON = antecedent.toJSON();
+
+            return antecedentJSON;
+          }),
+          consequentJSON = this.consequent.toJSON(),
+          kind = AXIOM_KIND,
           labels = labelsJSON,  ///
-          unqualifiedStatement = unqualifiedStatementString,  ///
-          indicativeConditional = indicativeConditionalString,  ///
+          antecedents = antecedentsJSON,  ///
+          consequent = consequentJSON,  ///
           json = {
             kind,
             labels,
-            unqualifiedStatement,
-            indicativeConditional
+            antecedents,
+            consequent
           };
 
     return json;
   }
 
   static fromJSON(json, releaseContext) {
+    let lemma;
+
     let { labels } = json;
 
     const labelsJSON = labels;  ///
@@ -73,31 +105,95 @@ export default class Lemma {
       return label;
     });
 
-    let { unqualifiedStatement, indicativeConditional } = json;
+    let { antecedents } = json;
 
-    let unqualifiedStatementNode = null,
-        indicativeConditionalNode = null;
+    const antecedentsJSON = antecedents;  ///
 
-    if (unqualifiedStatement !== null) {
-      const unqualifiedStatementString = unqualifiedStatement;  ///
+    antecedents = antecedentsJSON.map((antecedentJSON) => {
+      const json = antecedentJSON, ///
+            antecedent = Antecedent.fromJSON(json, releaseContext);
 
-      unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementString(unqualifiedStatementString, releaseContext);
-    }
+      return antecedent;
+    });
 
-    if (indicativeConditional !== null) {
-      const indicativeConditionalString = indicativeConditional;  ///
+    let { consequent } = json;
 
-      indicativeConditionalNode = indicativeConditionalNodeFromIndicativeConditionalString(indicativeConditionalString, releaseContext);
-    }
+    const consequentJSON = consequent;  ///
 
-    const lemma = new Lemma(labels, unqualifiedStatementNode, indicativeConditionalNode);
+    json = consequentJSON;  ///
 
-    return lemma;
-  }
+    consequent = Consequent.fromJSON(json, releaseContext);
 
-  static fromLabelsUnqualifiedStatementNodeAndIndicativeConditionalNode(labels, unqualifiedStatementNode, indicativeConditionalNode) {
-    const lemma = new Lemma(labels, unqualifiedStatementNode, indicativeConditionalNode);
+    lemma = new Lemma(labels, antecedents, consequent);
 
     return lemma;
   }
+
+  static fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent) {
+    const lemma = new Lemma(labels, antecedents, consequent);
+
+    return lemma;
+  }
+}
+
+function matchAntecedent(antecedent, assertions, substitutions) {
+  const assertion = prune(assertions, (assertion) => {
+    const subproofNode = assertion.getSubproofNode(),
+          statementNode = assertion.getStatementNode();
+
+    if (subproofNode !== null) {
+      const subProofMatches = antecedent.matchSubproofNode(subproofNode, substitutions);
+
+      if (!subProofMatches) {  ///
+        return true;
+      }
+    }
+
+    if (statementNode !== null) {
+      const statementMatches = antecedent.matchStatementNode(statementNode, substitutions);
+
+      if (!statementMatches) {  ///
+        return true;
+      }
+    }
+
+  }) || null;
+
+  const antecedentMatches = (assertion !== null);
+
+  return antecedentMatches;
+}
+
+function matchAntecedents(antecedent, assertions, substitutions) {
+  const antecedentsMatches = antecedent.every((antecedent) => {
+    const antecedentMatches = matchAntecedent(antecedent, assertions, substitutions);
+
+    if (antecedentMatches) {
+      return true;
+    }
+  });
+
+  return antecedentsMatches;
+}
+
+function matchConsequent(consequent, statementNode, substitutions) {
+  const nonTerminalNodeMatches = consequent.matchStatementNode(statementNode, substitutions),
+        consequentMatches = nonTerminalNodeMatches; ///
+
+  return consequentMatches;
+}
+
+function matchAntecedentsAndConsequent(antecedents, consequent, assertions, statementNode) {
+  let antecedentsMatchConsequent = false;
+
+  const substitutions = [],
+        antecedentsMatches = matchAntecedents(antecedents, assertions, substitutions);
+
+  if (antecedentsMatches) {
+    const consequentMatches = matchConsequent(consequent, statementNode, substitutions);
+
+    antecedentsMatchConsequent = consequentMatches;  ///
+  }
+
+  return antecedentsMatchConsequent;
 }

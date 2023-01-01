@@ -1,19 +1,20 @@
 "use strict";
 
 import Theorem from "../theorem";
-import verifyProof from "./proof";
-import verifyLabels from "../verify/labels";
+import verifyProof from "../verify/proof";
 import ProofContext from "../context/proof";
-import verifyUnqualifiedStatement from "../verify/statement/unqualified";
-import verifyIndicativeConditional from "../verify/indicativeConditional";
+import verifyLabels from "../verify/labels";
+import verifyConditionalIndicative from "../verify/conditinalIndicative";
+import verifyUnconditionalIndicative from "../verify/unconditionalIndicative";
 
+import { first } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const proofNodeQuery = nodeQuery("/theorem/proof"),
+const proofNodeQuery = nodeQuery("/theorem/proof!"),
       labelNodesQuery = nodesQuery("/theorem/label"),
-      unqualifiedStatementNodeQuery = nodeQuery("/theorem/unqualifiedStatement!"),
-      indicativeConditionalNodeQuery = nodeQuery("/theorem/indicativeConditional!");
+      conditionalIndicativeNodeQuery = nodeQuery("/theorem/conditionalIndicative!"),
+      unconditionalIndicativeNodeQuery = nodeQuery("/theorem/unconditionalIndicative!");
 
 export default function verifyTheorem(theoremNode, fileContext) {
   let theoremVerified = false;
@@ -30,30 +31,35 @@ export default function verifyTheorem(theoremNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(theoremNode),
-          indicativeConditionalNode = indicativeConditionalNodeQuery(theoremNode);
+    const antecedents = [],
+          consequents = [],
+          conditionalIndicativeNode = conditionalIndicativeNodeQuery(theoremNode),
+          unconditionalIndicativeNode = unconditionalIndicativeNodeQuery(theoremNode);
 
-    let unqualifiedStatementVerified = false,
-        indicativeConditionalVerified = false;
+    let conditionalIndicativeVerified = false,
+        unconditionalIndicativeVerified = false;
 
-    if (unqualifiedStatementNode !== null) {
-      unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
+    if (conditionalIndicativeNode !== null) {
+      conditionalIndicativeVerified = verifyConditionalIndicative(conditionalIndicativeNode, antecedents, consequents, proofContext);
     }
 
-    if (indicativeConditionalNode !== null) {
-      indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, proofContext);
+    if (unconditionalIndicativeNode !== null) {
+      unconditionalIndicativeVerified = verifyUnconditionalIndicative(unconditionalIndicativeNode, consequents, proofContext);
     }
 
-    if (unqualifiedStatementVerified || indicativeConditionalVerified) {
+    if (conditionalIndicativeVerified || unconditionalIndicativeVerified) {
       const proofNode = proofNodeQuery(theoremNode),
-            statements =
-            proofVerified = verifyProof(proofNode, fileContext);
+            firstConsequent = first(consequents),
+            consequent = firstConsequent, ///
+            proofVerified = verifyProof(proofNode, consequent, proofContext);
 
-      const theorem = Theorem.fromLabelsUnqualifiedStatementNodeAndIndicativeConditionalNode(labels, unqualifiedStatementNode, indicativeConditionalNode);
+      if (proofVerified) {
+        const theorem = Theorem.fromLabelsPremisesAndConsequent(labels, antecedents, consequent);
 
-      fileContext.addTheorem(theorem);
+        fileContext.addTheorem(theorem);
 
-      theoremVerified = true;
+        theoremVerified = true;
+      }
     }
   }
 
@@ -63,7 +69,7 @@ export default function verifyTheorem(theoremNode, fileContext) {
 
   theoremVerified ?
     fileContext.complete(theoremNode) :
-      fileContext.halt(theoremNode);
+      fileContext.complete(theoremNode);
 
   return theoremVerified;
 }

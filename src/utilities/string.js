@@ -5,7 +5,7 @@ import { nodeQuery } from "../utilities/query";
 import { TERM_RULE_NAME,
          LABEL_RULE_NAME,
          UNQUALIFIED_STATEMENT_RULE_NAME,
-         INDICATIVE_CONDITIONAL_RULE_NAME,
+         CONDITIONAL_INDICATIVE_RULE_NAME,
          UNQUALIFIED_METASTATEMENT_RULE_NAME} from "../ruleNames";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement"),
@@ -104,11 +104,11 @@ export function unqualifiedStatementNodeFromUnqualifiedStatementString(unqualifi
   return unqualifiedStatementNode;
 }
 
-export function indicativeConditionalNodeFromIndicativeConditionalString(indicativeConditionalString, releaseContext) {
-  const ruleName = INDICATIVE_CONDITIONAL_RULE_NAME,
-        content = indicativeConditionalString, ///
+export function conditionalIndicativeNodeFromConditionalIndicativeString(conditionalIndicativeString, releaseContext) {
+  const ruleName = CONDITIONAL_INDICATIVE_RULE_NAME,
+        content = conditionalIndicativeString, ///
         node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
-        indicativeConditionalNode = node;  ///
+        conditionalIndicativeNode = node;  ///
 
-  return indicativeConditionalNode;
+  return conditionalIndicativeNode;
 }

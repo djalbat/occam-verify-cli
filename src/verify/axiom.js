@@ -1,17 +1,18 @@
 "use strict";
 
 import Axiom from "../axiom";
-import verifyLabels from "../verify/labels";
 import ProofContext from "../context/proof";
-import verifyUnqualifiedStatement from "../verify/statement/unqualified";
-import verifyIndicativeConditional from "../verify/indicativeConditional";
+import verifyLabels from "../verify/labels";
+import verifyConditionalIndicative from "../verify/conditinalIndicative";
+import verifyUnconditionalIndicative from "../verify/unconditionalIndicative";
 
+import { first } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
-      unqualifiedStatementNodeQuery = nodeQuery("/axiom/unqualifiedStatement!"),
-      indicativeConditionalNodeQuery = nodeQuery("/axiom/indicativeConditional!");
+      conditionalIndicativeNodeQuery = nodeQuery("/axiom/conditionalIndicative!"),
+      unconditionalIndicativeNodeQuery = nodeQuery("/axiom/unconditionalIndicative!");
 
 export default function verifyAxiom(axiomNode, fileContext) {
   let axiomVerified = false;
@@ -28,22 +29,26 @@ export default function verifyAxiom(axiomNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(axiomNode),
-          indicativeConditionalNode = indicativeConditionalNodeQuery(axiomNode);
+    const antecedents = [],
+          consequents = [],
+          conditionalIndicativeNode = conditionalIndicativeNodeQuery(axiomNode),
+          unconditionalIndicativeNode = unconditionalIndicativeNodeQuery(axiomNode);
 
-    let unqualifiedStatementVerified = false,
-        indicativeConditionalVerified = false;
+    let conditionalIndicativeVerified = false,
+      unconditionalIndicativeVerified = false;
 
-    if (unqualifiedStatementNode !== null) {
-      unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
+    if (conditionalIndicativeNode !== null) {
+      conditionalIndicativeVerified = verifyConditionalIndicative(conditionalIndicativeNode, antecedents, consequents, proofContext);
     }
 
-    if (indicativeConditionalNode !== null) {
-      indicativeConditionalVerified = verifyIndicativeConditional(indicativeConditionalNode, proofContext);
+    if (unconditionalIndicativeNode !== null) {
+      unconditionalIndicativeVerified = verifyUnconditionalIndicative(unconditionalIndicativeNode, consequents, proofContext);
     }
 
-    if (unqualifiedStatementVerified || indicativeConditionalVerified) {
-      const axiom = Axiom.fromLabelsUnqualifiedStatementNodeAndIndicativeConditionalNode(labels, unqualifiedStatementNode, indicativeConditionalNode);
+    if (conditionalIndicativeVerified || unconditionalIndicativeVerified) {
+      const firstConsequent = first(consequents),
+            consequent = firstConsequent, ///
+            axiom = Axiom.fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent);
 
       fileContext.addAxiom(axiom);
 
@@ -57,7 +62,7 @@ export default function verifyAxiom(axiomNode, fileContext) {
 
   axiomVerified ?
     fileContext.complete(axiomNode) :
-      fileContext.halt(axiomNode);
+      fileContext.complete(axiomNode);
 
   return axiomVerified;
 }

@@ -9,7 +9,7 @@ import { nodeQuery } from "../utilities/query";
 const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
       qualifiedMetastatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement!");
 
-export default function verifyMetaproof(metaproofNode, metastatementNode, metaproofContext) {
+export default function verifyMetaproof(metaproofNode, conclusion, metaproofContext) {
   let metaproofVerified = false;
 
   metaproofContext.begin(metaproofNode);
@@ -37,6 +37,7 @@ export default function verifyMetaproof(metaproofNode, metastatementNode, metapr
   if (metaDerivationVerified || qualifiedMetastatementVerified) {
     const lastMetaAssertion = metaproofContext.getLastMetaAssertion(),
           metaAssertion = lastMetaAssertion, ///
+          metastatementNode = conclusion.getMetastatementNode(),
           metaAssertionMetastatementNode = metaAssertion.getMetastatementNode(),
           metaAssertionMetastatementNodeMatches = matchMetaProofMetastatementNode(metaAssertionMetastatementNode, metastatementNode);
 
