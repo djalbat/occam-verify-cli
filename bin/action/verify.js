@@ -4,7 +4,7 @@ const { Dependency } = require("occam-file-system"),
       { loggingUtilities } = require("necessary"),
       { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
-const { EMPTY_STRING } = require("../constants"),
+const { trimTrailingSlash } = require("../utilities/string"),
       { releaseContextFromDependencyAndDependentNames } = require("../utilities/fileSystem");
 
 const { log } = loggingUtilities,
@@ -12,7 +12,7 @@ const { log } = loggingUtilities,
       { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
 function verifyAction(argument, logLevel) {
-  const name = argument.replace(/\/$/, EMPTY_STRING),
+  const name = trimTrailingSlash(argument), ///
         context = {},
         dependency = Dependency.fromName(name),
         dependentNames = [],

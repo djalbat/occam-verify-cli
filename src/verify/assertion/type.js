@@ -4,6 +4,7 @@ import { first } from "../../utilities/array";
 import { nodeAsString } from "../../utilities/string";
 import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
 import { verifyTermAsVariable, verifyTermAgainstConstructors } from "../../verify/term";
+import Variable from "../../variable";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeNodeQuery = nodeQuery("/typeAssertion/type");
@@ -24,43 +25,19 @@ export default function verifyTypeAssertion(typeAssertionNode, proofContext) {
   if (!typePresent) {
     proofContext.error(`The ${typeName} type is not present.`);
   } else {
-    let assertedType = null;
-
-    const type = proofContext.findTypeByTypeName(typeName),
-          context = proofContext, ///
-          termNode = termNodeQuery(typeAssertionNode);
-
-    const variables = [],
+    const context = proofContext, ///
+          termNode = termNodeQuery(typeAssertionNode),
+          variables = [],
           termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
 
     if (termVerifiedAsVariable) {
-      const firstVariable = first(variables),
-            variable = firstVariable, ///
-            variableType = variable.getType();
+      const variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, proofContext);
 
-      assertedType = variableType;  ///
+      typeAssertionVerified = variableTypeAssertionVerified;  ///
     } else {
-      const types = [],
-            termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, context);
+      const termTypeAssertionVerified = verifyTermTypeAssertion(typeAssertionNode, proofContext);
 
-      if (termVerifiedAgainstConstructors) {
-        const firstType = first(types),
-              termType = firstType; ///
-
-        assertedType = termType;  ///
-      }
-    }
-
-    if (assertedType !== null) {
-      const typeEqualToOrSubTypeOfAssertedType = type.isEqualToOrSubTypeOf(assertedType);
-
-      if (!typeEqualToOrSubTypeOfAssertedType) {
-        const termString = nodeAsString(termNode);
-
-        proofContext.error(`The type of the '${termString}' term or variable is not equal to or a sub-type of the asserted type.`);
-      } else {
-        typeAssertionVerified = true;
-      }
+      typeAssertionVerified = termTypeAssertionVerified;  ///
     }
   }
 
@@ -73,4 +50,71 @@ export default function verifyTypeAssertion(typeAssertionNode, proofContext) {
       proofContext.halt(typeAssertionNode);
 
   return typeAssertionVerified;
+}
+
+function verifyTermTypeAssertion(typeAssertionNode, proofContext) {
+  let termTypeAssertionVerified = false;
+
+  const types = [],
+        context = proofContext, ///
+        termNode = termNodeQuery(typeAssertionNode),
+        termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, context);
+
+  if (termVerifiedAgainstConstructors) {
+    const typeNode = typeNodeQuery(typeAssertionNode),
+          typeName = typeNameFromTypeNode(typeNode),
+          assertedTypeName = typeName,  ///
+          assertedType = proofContext.findTypeByTypeName(assertedTypeName),
+          firstType = first(types),
+          termType = firstType,
+          assertedTypeEqualToOrSubTypeOfTermType = assertedType.isEqualToOrSubTypeOf(termType);
+
+    if (!assertedTypeEqualToOrSubTypeOfTermType) {
+      const termString = nodeAsString(termNode);
+
+      proofContext.error(`The asserted type is not equal to or a sub-type of the '${termString}' term type.`);
+    } else {
+      termTypeAssertionVerified = true;
+    }
+  }
+
+  return termTypeAssertionVerified;
+}
+
+function verifyVariableTypeAssertion(typeAssertionNode, proofContext) {
+  let variableTypeAssertionVerified = false;
+
+  const context = proofContext, ///
+        variables = [],
+        termNode = termNodeQuery(typeAssertionNode);
+
+  verifyTermAsVariable(termNode, variables, context);
+
+  const typeNode = typeNodeQuery(typeAssertionNode),
+        typeName = typeNameFromTypeNode(typeNode),
+        assertedTypeName = typeName,  ///
+        assertedType = proofContext.findTypeByTypeName(assertedTypeName),
+        firstVariable = first(variables),
+        variable = firstVariable, ///
+        variableName = variable.getName(),
+        variableType = variable.getType(),
+        assertedTypeEqualToOrSubTypeOfVariableType = assertedType.isEqualToOrSubTypeOf(variableType);
+
+  if (!assertedTypeEqualToOrSubTypeOfVariableType) {
+    proofContext.error(`The asserted type is not equal to or a sub-type of the '${variableName}' variable type.`);
+  } else {
+    const derived = proofContext.isDerived();
+
+    if (!derived) {
+      const type = assertedType,  ///
+            name = variableName,  ///
+            variable = Variable.fromTypeAndName(type, name);
+
+      proofContext.addVariable(variable);
+    }
+
+    variableTypeAssertionVerified = true;
+  }
+
+  return variableTypeAssertionVerified;
 }
