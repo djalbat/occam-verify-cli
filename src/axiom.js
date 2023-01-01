@@ -45,7 +45,7 @@ export default class Axiom {
 
             return labelJSON;
           }),
-          unqualifiedStatementString = nodeAsString(this.unqalifiedStatementNode),
+          unqualifiedStatementString = nodeAsString(this.unqualifiedStatementNode),
           indicativeConditionalString = nodeAsString(this.indicativeConditionalNode),
           kind = AXIOM_KIND,
           labels = labelsJSON,  ///
