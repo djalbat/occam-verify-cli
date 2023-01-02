@@ -1,7 +1,7 @@
 "use strict";
 
 import Premise from "../premise";
-import MetaAssertion from "../metaAssertion";
+import MetaproofStep from "../step/metaproof";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -21,12 +21,12 @@ export default function verifyPremiseOrPremises(premiseOrPremisesNode, premises,
 
     if (unqualifiedMetastatementVerified) {
       const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-            metaAssertion = MetaAssertion.fromUnqualifiedMetastatementNode(unqualifiedMetastatementNode),
+            metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode),
             premise = Premise.fromMetastatementNode(metastatementNode);
 
       premises.push(premise);
 
-      metaproofContext.addMetaAssertion(metaAssertion);
+      metaproofContext.addMetaproofStep(metaproofStep);
 
       return true;
     }

@@ -1,12 +1,14 @@
 "use strict";
 
-import MetaAssertion from "../metaAssertion";
+import MetaproofStep from "../step/metaproof";
 import verifyMetaDerivation from "../verify/metaDerivation";
 import verifyQualifiedMetastatement from "./metastatement/qualified";
 
+import { matchNode } from "../utilities/node";
 import { nodeQuery } from "../utilities/query";
 
-const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
+const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!"),
+      metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
       qualifiedMetastatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement!");
 
 export default function verifyMetaproof(metaproofNode, conclusion, metaproofContext) {
@@ -25,23 +27,34 @@ export default function verifyMetaproof(metaproofNode, conclusion, metaproofCont
   }
 
   if (qualifiedMetastatementNode !== null) {
+    let derived;
+
+    derived = true;
+
+    metaproofContext.setDerived(derived);
+
     qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metaproofContext);
 
-    if (qualifiedMetastatementVerified) {
-      const metaAssertion = MetaAssertion.fromQualifiedMetastatementNode(qualifiedMetastatementNode);
+    derived = false;
 
-      metaproofContext.addMetaAssertion(metaAssertion);
+    metaproofContext.setDerived(derived);
+
+    if (qualifiedMetastatementVerified) {
+      const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
+            metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
+
+      metaproofContext.addMetaproofStep(metaproofStep);
     }
   }
 
   if (metaDerivationVerified || qualifiedMetastatementVerified) {
-    const lastMetaAssertion = metaproofContext.getLastMetaAssertion(),
-          metaAssertion = lastMetaAssertion, ///
-          metastatementNode = conclusion.getMetastatementNode(),
-          metaAssertionMetastatementNode = metaAssertion.getMetastatementNode(),
-          metaAssertionMetastatementNodeMatches = matchMetaProofMetastatementNode(metaAssertionMetastatementNode, metastatementNode);
+    const lastMetaproofStep = metaproofContext.getLastMetaproofStep(),
+          metaproofStep = lastMetaproofStep, ///
+          lastMetastatementNode = metaproofStep.getMetastatementNode(),
+          conclusionMetastatementNode = conclusion.getMetastatementNode(),
+          lastMetastatementMatches = matchLastMetastatementNode(lastMetastatementNode, conclusionMetastatementNode);
 
-    metaproofVerified = metaAssertionMetastatementNodeMatches;  ///
+    metaproofVerified = lastMetastatementMatches;  ///
   }
 
   metaproofVerified ?
@@ -51,82 +64,11 @@ export default function verifyMetaproof(metaproofNode, conclusion, metaproofCont
   return metaproofVerified;
 }
 
-function matchMetaProofMetastatementNode(metaAssertionMetastatementNode, metastatementNode) {
-  const metaAssertionNonTerminalNode = metaAssertionMetastatementNode,  ///
-        nonTerminalNode = metastatementNode,  ///
-        metaAssertionNonTerminalNodeMatches = matchMetaProofNonTerminalNode(metaAssertionNonTerminalNode, nonTerminalNode),
-        metaAssertionMetastatementNodeMatches = metaAssertionNonTerminalNodeMatches;  ///
+function matchLastMetastatementNode(lastMetastatementNode, conclusionMetastatementNode) {
+  const nodeA = lastMetastatementNode,  ///
+        nodeB = conclusionMetastatementNode,  ///
+        nonTerminalNodeMatches = matchNode(nodeA, nodeB),
+        lastMetastatementMatches = nonTerminalNodeMatches;  ///
 
-  return metaAssertionMetastatementNodeMatches;
-}
-
-function matchMetaProofNode(metaAssertionNode, node) {
-  let metaAssertionNodeMatches = false;
-
-  const nodeTerminalNode = node.isTerminalNode(),
-        ruleNodeTerminalNode = metaAssertionNode.isTerminalNode();
-
-  if (nodeTerminalNode === ruleNodeTerminalNode) {
-    if (nodeTerminalNode) {
-      const terminalNode = node,  ///
-            metaAssertionTerminalNode = metaAssertionNode,  ///
-            metaAssertionTerminalNodeMatches = matchMetaProofTerminalNode(metaAssertionTerminalNode, terminalNode);
-
-      metaAssertionNodeMatches = metaAssertionTerminalNodeMatches;  ///
-    } else {
-      const nonTerminalNode = node, ///
-            metaAssertionNonTerminalNode = metaAssertionNode,  ///
-            metaAssertionNonTerminalNodeMatches = matchMetaProofNonTerminalNode(metaAssertionNonTerminalNode, nonTerminalNode);
-
-      metaAssertionNodeMatches = metaAssertionNonTerminalNodeMatches; ///
-    }
-  }
-
-  return metaAssertionNodeMatches;
-}
-
-function matchMetaProofNodes(metaAssertionNodes, nodes) {
-  let metaAssertionNodesMatches = false;
-
-  const nodesLength = nodes.length,
-        metaAssertionNodesLength = metaAssertionNodes.length;
-
-  if (nodesLength === metaAssertionNodesLength) {
-    metaAssertionNodesMatches = nodes.every((node, index) => {
-      const metaAssertionNode = metaAssertionNodes[index],
-            metaAssertionNodeMatches = matchMetaProofNode(metaAssertionNode, node);
-
-      if (metaAssertionNodeMatches) {
-        return true;
-      }
-    })
-  }
-
-  return metaAssertionNodesMatches;
-}
-
-function matchMetaProofTerminalNode(metaAssertionTerminalNode, terminalNode) {
-  const matches = metaAssertionTerminalNode.match(terminalNode),
-        metaAssertionTerminalNodeMatches = matches;  ///
-
-  return metaAssertionTerminalNodeMatches;
-}
-
-function matchMetaProofNonTerminalNode(metaAssertionNonTerminalNode, nonTerminalNode) {
-  let metaAssertionNonTerminalNodeMatches = false;
-
-  const ruleName = nonTerminalNode.getRuleName(),
-        metaAssertionRuleName = metaAssertionNonTerminalNode.getRuleName(); ///
-
-  if (ruleName === metaAssertionRuleName) {
-    const childNodes = nonTerminalNode.getChildNodes(),
-          metaAssertionChildNodes = metaAssertionNonTerminalNode.getChildNodes(),
-          nodes = childNodes, ///
-          metaAssertionNodes = metaAssertionChildNodes, ///
-          metaAssertionNodesMatches = matchMetaProofNodes(metaAssertionNodes, nodes);
-
-    metaAssertionNonTerminalNodeMatches = metaAssertionNodesMatches; ///
-  }
-
-  return metaAssertionNonTerminalNodeMatches;
+  return lastMetastatementMatches;
 }

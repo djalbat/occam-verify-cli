@@ -1,6 +1,6 @@
 "use strict";
 
-import Assertion from "../assertion";
+import ProofStep from "../step/proof";
 import ProofContext from "../context/proof";
 import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
@@ -8,7 +8,8 @@ import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { SUBPROOF_RULE_NAME, QUALIFIED_STATEMENT_RULE_NAME, UNQUALIFIED_STATEMENT_RULE_NAME } from "../ruleNames";
 
-const derivationNodeQuery = nodeQuery("/subproof/derivation|abridgedDerivation!"),  ///
+const statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/statement!"),
+      derivationNodeQuery = nodeQuery("/subproof/derivation|abridgedDerivation!"),  ///
       derivationChildNodesQuery = nodesQuery("/derivation|abridgedDerivation/*"),
       unqualifiedStatementNodesQuery = nodesQuery("/subproof/unqualifiedStatement")
 
@@ -54,9 +55,9 @@ function verifyDerivationChild(derivationChildNode, proofContext) {
             subproofVerified = verifySubproof(subproofNode, proofContext);
 
       if (subproofVerified) {
-        const assertion = Assertion.fromSubproofNode(subproofNode);
+        const proofStep = ProofStep.fromSubproofNode(subproofNode);
 
-        proofContext.addAssertion(assertion);
+        proofContext.addProofStep(proofStep);
 
         derivationChildVerified = true;
       }
@@ -69,9 +70,10 @@ function verifyDerivationChild(derivationChildNode, proofContext) {
             qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
 
       if (qualifiedStatementVerified) {
-        const assertion = Assertion.fromQualifiedStatementNode(qualifiedStatementNode);
+        const statementNode = statementNodeQuery(qualifiedStatementNode),
+              proofStep = ProofStep.fromStatementNode(statementNode);
 
-        proofContext.addAssertion(assertion);
+        proofContext.addProofStep(proofStep);
 
         derivationChildVerified = qualifiedStatementVerified; ///
       }
@@ -84,9 +86,10 @@ function verifyDerivationChild(derivationChildNode, proofContext) {
             unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
 
       if (unqualifiedStatementVerified) {
-        const assertion = Assertion.fromUnqualifiedStatementNode(unqualifiedStatementNode);
+        const statementNode = statementNodeQuery(unqualifiedStatementNode),
+              proofStep = ProofStep.fromStatementNode(statementNode);
 
-        proofContext.addAssertion(assertion);
+        proofContext.addProofStep(proofStep);
 
         derivationChildVerified = true;
       }
@@ -114,9 +117,10 @@ function verifySubproof(subproofNode, proofContext) {
 
   if (unqualifiedStatementsVerified) {
     unqualifiedStatementNodes.forEach((unqualifiedStatementNode) => {
-      const assertion = Assertion.fromUnqualifiedStatementNode(unqualifiedStatementNode);
+      const statementNode = statementNodeQuery(unqualifiedStatementNode),
+            proofStep = ProofStep.fromStatementNode(statementNode);
 
-      proofContext.addAssertion(assertion);
+      proofContext.addProofStep(proofStep);
     });
 
     const derivationNode = derivationNodeQuery(subproofNode),

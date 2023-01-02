@@ -7,10 +7,10 @@ import callbacksMixins from "../mixins/callbacks";
 import { last } from "../utilities/array";
 
 class MetaproofContext {
-  constructor(context, derived, metaAssertions) {
+  constructor(context, derived, metaproofSteps) {
     this.context = context;
     this.derived = derived;
-    this.metaAssertions = metaAssertions;
+    this.metaproofSteps = metaproofSteps;
   }
 
   getContext() {
@@ -21,63 +21,60 @@ class MetaproofContext {
     return this.derived;
   }
 
-  getMetaAssertions() {
-    let metaAssertions = this.context.getMetaAssertions();
+  getMetaproofSteps() {
+    let metaproofSteps = this.context.getMetaproofSteps();
 
-    metaAssertions = [  ///
-      ...metaAssertions,
-      ...this.metaAssertions
+    metaproofSteps = [  ///
+      ...metaproofSteps,
+      ...this.metaproofSteps
     ];
 
-    return metaAssertions;
+    return metaproofSteps;
   }
 
-  getLastMetaAssertion() {
-    let lastMetaAssertion = null;
+  getLastMetaproofStep() {
+    let lastMetaproofStep = null;
 
-    const metaAssertionsLength = this.metaAssertions.length;
+    const metaproofStepsLength = this.metaproofSteps.length;
 
-    if (metaAssertionsLength > 0) {
-      lastMetaAssertion = last(this.metaAssertions);
+    if (metaproofStepsLength > 0) {
+      lastMetaproofStep = last(this.metaproofSteps);
     }
 
-    return lastMetaAssertion;
+    return lastMetaproofStep;
   }
 
   setDerived(derived) {
     this.derived = derived;
   }
 
-  addMetaAssertion(metaAssertion) {
-    this.metaAssertions.push(metaAssertion);
+  addMetaproofStep(metaproofStep) {
+    this.metaproofSteps.push(metaproofStep);
   }
 
-  matchMetaAssertion(metaAssertion) {
-    let metaAssertionMatches;
+  matchMetastatement(metastatementNode) {
+    let metastatementMatches;
 
-    const metaAssertionB = metaAssertion; ///
+    metastatementMatches = this.metaproofSteps.some((metaproofStep) => {
+      metastatementMatches = metaproofStep.matchMetastatement(metastatementNode);
 
-    metaAssertionMatches = this.metaAssertions.some((metaAssertion) => {
-      const metaAssertionA = metaAssertion, ///
-            matches = metaAssertionA.match(metaAssertionB);
-
-      if (matches) {
+      if (metastatementMatches) {
         return true;
       }
     });
 
-    if (!metaAssertionMatches) {
-      metaAssertionMatches = this.context.matchMetaAssertion(metaAssertion);
+    if (!metastatementMatches) {
+      metastatementMatches = this.context.matchMetastatement(metastatementNode);
     }
 
-    return metaAssertionMatches;
+    return metastatementMatches;
   }
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
           derived = false,
-          metaAssertions = [],
-          metaproofContext = new MetaproofContext(context, derived, metaAssertions);
+          metaproofSteps = [],
+          metaproofContext = new MetaproofContext(context, derived, metaproofSteps);
 
     return metaproofContext;
   }
@@ -85,9 +82,9 @@ class MetaproofContext {
   static fromMetaproofContext(metaproofContext) {
     const context = metaproofContext,  ///
           derived = false,
-          metaAssertions = [];
+          metaproofSteps = [];
 
-    metaproofContext = new MetaproofContext(context, derived, metaAssertions);  ///
+    metaproofContext = new MetaproofContext(context, derived, metaproofSteps);  ///
 
     return metaproofContext;
   }

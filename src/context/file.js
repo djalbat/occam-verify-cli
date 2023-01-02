@@ -175,16 +175,16 @@ export default class FileContext {
     return constructors;
   }
 
-  getAssertions() {
-    const assertions = [];  ///
+  getProofSteps() {
+    const proofSteps = [];  ///
 
-    return assertions;
+    return proofSteps;
   }
 
-  getMetaAssertions() {
-    const metaAssertions = [];  ///
+  getMetaproofSteps() {
+    const metaproofSteps = [];  ///
 
-    return metaAssertions;
+    return metaproofSteps;
   }
 
   findTypeByTypeName(typeName) {

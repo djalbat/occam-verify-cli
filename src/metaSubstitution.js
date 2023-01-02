@@ -1,6 +1,6 @@
 "use strict";
 
-import { matchBracketedMetastatementChildNode, bracketedMetastatementChildNodeFromChildNodes } from "./utilities/metastatement";
+import { matchBracketedMetastatementChildNode, bracketedMetastatementChildNodeFromChildNodes } from "./utilities/metaAssertion";
 
 export default class MetaSubstitution {
   constructor(metavariableName, nodes) {

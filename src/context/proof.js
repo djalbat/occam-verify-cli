@@ -7,11 +7,11 @@ import callbacksMixins from "../mixins/callbacks";
 import { push, last } from "../utilities/array";
 
 class ProofContext {
-  constructor(context, derived, variables, assertions) {
+  constructor(context, derived, variables, proofSteps) {
     this.context = context;
     this.derived = derived;
     this.variables = variables;
-    this.assertions = assertions;
+    this.proofSteps = proofSteps;
   }
 
   getContext() {
@@ -22,15 +22,15 @@ class ProofContext {
     return this.derived;
   }
 
-  getAssertions() {
-    let assertions = this.context.getAssertions();
+  getProofSteps() {
+    let proofSteps = this.context.getProofSteps();
 
-    assertions = [
-      ...assertions,
-      ...this.assertions
+    proofSteps = [
+      ...proofSteps,
+      ...this.proofSteps
     ];
 
-    return assertions;
+    return proofSteps;
   }
 
   getTypes() { return this.context.getTypes(); }
@@ -57,10 +57,10 @@ class ProofContext {
     return variables;
   }
 
-  getLastAssertion() {
-    const lastAssertion = last(this.assertions);
+  getLastProofStep() {
+    const lastProofStep = last(this.proofSteps);
 
-    return lastAssertion;
+    return lastProofStep;
   }
 
   setDerived(derived) {
@@ -71,29 +71,26 @@ class ProofContext {
     this.variables.push(variable);
   }
 
-  addAssertion(assertion) {
-    this.assertions.push(assertion);
+  addAssertion(proofStep) {
+    this.proofSteps.push(proofStep);
   }
 
-  matchAssertion(assertion) {
-    let assertionMatches;
+  matchStatement(statementNode) {
+    let statementMatches;
 
-    const assertionB = assertion; ///
+    statementMatches = this.proofSteps.some((proofStep) => {
+      statementMatches = proofStep.matchStatement(statementNode);
 
-    assertionMatches = this.assertions.some((assertion) => {
-      const assertionA = assertion, ///
-            matches = assertionA.match(assertionB);
-
-      if (matches) {
+      if (statementMatches) {
         return true;
       }
     });
 
-    if (!assertionMatches) {
-      assertionMatches = this.context.matchAssertion(assertion);
+    if (!statementMatches) {
+      statementMatches = this.context.matchStatement(statementNode);
     }
 
-    return assertionMatches;
+    return statementMatches;
   }
 
   findVariableByVariableName(variableName) {
@@ -137,8 +134,8 @@ class ProofContext {
     const context = fileContext,  ///
           derived = false,
           variables = [],
-          assertions = [],
-          proofContext = new ProofContext(context, derived, variables, assertions);
+          proofSteps = [],
+          proofContext = new ProofContext(context, derived, variables, proofSteps);
 
     return proofContext;
   }
@@ -147,9 +144,9 @@ class ProofContext {
     const context = proofContext,  ///
           derived = false,
           variables = [],
-          assertions = [];
+          proofSteps = [];
 
-    proofContext = new ProofContext(context, derived, variables, assertions);
+    proofContext = new ProofContext(context, derived, variables, proofSteps);
 
     return proofContext;
   }

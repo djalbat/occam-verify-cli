@@ -18,19 +18,14 @@ export default function verifyEquality(equalityNode, proofContext) {
 
   proofContext.debug(`Verifying the '${equalityString}' equality...`);
 
-  const types = [],
-        context = proofContext,
-        firstTermNode = firstTermNodeQuery(equalityNode),
-        secondTermNode = secondTermNodeQuery(equalityNode),
-        firstTermVerified = verifyTerm(firstTermNode, types, context),
-        secondTermVerified = verifyTerm(secondTermNode, types, context);
+  const equalityTypesVerified = verifyEqualityTypes(equalityNode, proofContext);
 
-  if (firstTermVerified && secondTermVerified) {
-    const firstType = first(types),
-          secondType = second(types),
-          firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType = firstType.isEqualToSubTypeOfOrSuperTypeOf(secondType);
+  if (equalityTypesVerified) {
+    const derived = proofContext.isDerived();
 
-    if (firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType) {
+    if (derived) {
+      debugger
+    } else {
       equalityVerified = true;
     }
   }
@@ -44,4 +39,27 @@ export default function verifyEquality(equalityNode, proofContext) {
       proofContext.halt(equalityNode);
 
   return equalityVerified;
+}
+
+function verifyEqualityTypes(equalityNode, proofContext) {
+  let equalityTypesVerified = false;
+
+  const types = [],
+        context = proofContext,  ///
+        firstTermNode = firstTermNodeQuery(equalityNode),
+        secondTermNode = secondTermNodeQuery(equalityNode),
+        firstTermVerified = verifyTerm(firstTermNode, types, context),
+        secondTermVerified = verifyTerm(secondTermNode, types, context);
+
+  if (firstTermVerified && secondTermVerified) {
+    const firstType = first(types),
+          secondType = second(types),
+          firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType = firstType.isEqualToSubTypeOfOrSuperTypeOf(secondType);
+
+    if (firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType) {
+      equalityTypesVerified = true;
+    }
+  }
+
+  return equalityTypesVerified;
 }

@@ -51,10 +51,19 @@ export default class Rule {
 
       metastatementNatches = conclusionMatches; ///
     } else {
-      const metaAssertions = metaproofContext.getMetaAssertions();
+      const metaproofSteps = metaproofContext.getMetaproofSteps();
 
-      metastatementNatches = someSubArray(metaAssertions, premisesLength, (metaAssertions) => {
-        const premisesMatchConclusion = matchPremisesAndConclusion(this.premises, this.conclusion, metaAssertions, metastatementNode);
+      metastatementNatches = someSubArray(metaproofSteps, premisesLength, (metaproofSteps) => {
+        let premisesMatchConclusion = false;
+
+        const metaSubstitutions = [],
+              premisesMatches = matchPremises(this.premises, metaproofSteps, metaSubstitutions);
+
+        if (premisesMatches) {
+          const conclusionMatches = matchConclusion(this.conclusion, metastatementNode, metaSubstitutions);
+
+          premisesMatchConclusion = conclusionMatches;  ///
+        }
 
         if (premisesMatchConclusion) {
           return true;
@@ -136,10 +145,10 @@ export default class Rule {
   }
 }
 
-function matchPremise(premise, metaAssertions, metaSubstitutions) {
-  const metaAssertion = prune(metaAssertions, (metaAssertion) => {
-    const metaSubproofNode = metaAssertion.getMetaSubproofNode(),
-          metastatementNode = metaAssertion.getMetastatementNode()
+function matchPremise(premise, metaproofSteps, metaSubstitutions) {
+  const metaproofStep = prune(metaproofSteps, (metaproofStep) => {
+    const metaSubproofNode = metaproofStep.getMetaSubproofNode(),
+          metastatementNode = metaproofStep.getMetastatementNode()
 
     if (metaSubproofNode !== null) {
       const metaSubProofMatches = premise.matchMetaSubproofNode(metaSubproofNode, metaSubstitutions);
@@ -156,17 +165,16 @@ function matchPremise(premise, metaAssertions, metaSubstitutions) {
         return true;
       }
     }
-
   }) || null;
 
-  const premiseMatches = (metaAssertion !== null);
+  const premiseMatches = (metaproofStep !== null);
 
   return premiseMatches;
 }
 
-function matchPremises(premise, metaAssertions, metaSubstitutions) {
+function matchPremises(premise, metaproofSteps, metaSubstitutions) {
   const premisesMatches = premise.every((premise) => {
-    const premiseMatches = matchPremise(premise, metaAssertions, metaSubstitutions);
+    const premiseMatches = matchPremise(premise, metaproofSteps, metaSubstitutions);
 
     if (premiseMatches) {
       return true;
@@ -181,19 +189,4 @@ function matchConclusion(conclusion, metastatementNode, metaSubstitutions) {
         conclusionMatches = nonTerminalNodeMatches; ///
 
   return conclusionMatches;
-}
-
-function matchPremisesAndConclusion(premises, conclusion, metaAssertions, metastatementNode) {
-  let premisesMatchConclusion = false;
-
-  const metaSubstitutions = [],
-        premisesMatches = matchPremises(premises, metaAssertions, metaSubstitutions);
-
-  if (premisesMatches) {
-    const conclusionMatches = matchConclusion(conclusion, metastatementNode, metaSubstitutions);
-
-    premisesMatchConclusion = conclusionMatches;  ///
-  }
-
-  return premisesMatchConclusion;
 }

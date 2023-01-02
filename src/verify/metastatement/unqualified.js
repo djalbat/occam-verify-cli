@@ -1,6 +1,5 @@
 "use strict";
 
-import MetaAssertion from "../../metaAssertion";
 import verifyMetastatement from "../../verify/metastatement";
 
 import { nodeQuery } from "../../utilities/query";
@@ -26,8 +25,7 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
       const derived = metaproofContext.isDerived();
 
       if (derived) {
-        const metaAssertion = MetaAssertion.fromMetastatementNode(metastatementNode),
-              metaAssertionMatches = metaproofContext.matchMetaAssertion(metaAssertion);
+        const metaAssertionMatches = metaproofContext.matchMetastatement(metastatementNode);
 
         unqualifiedMetastatementVerified = metaAssertionMatches;  ///
       } else {
