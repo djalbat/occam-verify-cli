@@ -71,7 +71,7 @@ class ProofContext {
     this.variables.push(variable);
   }
 
-  addAssertion(proofStep) {
+  addProofStep(proofStep) {
     this.proofSteps.push(proofStep);
   }
 

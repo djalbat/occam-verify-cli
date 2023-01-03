@@ -2,8 +2,6 @@
 
 import verifyStatement from "../../verify/statement";
 
-import Assertion from "../../assertion";
-
 import { nodeQuery } from "../../utilities/query";
 import { nodeAsString } from "../../utilities/string";
 
@@ -27,8 +25,7 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, pro
       const derived = proofContext.isDerived();
 
       if (derived) {
-        const assertion = Assertion.fromStatementNode(statementNode),
-              assertionMatches = proofContext.matchAssertion(assertion);
+        const assertionMatches = proofContext.matchStatement(statementNode);
 
         unqualifiedStatementVerified = assertionMatches;  ///
       } else {

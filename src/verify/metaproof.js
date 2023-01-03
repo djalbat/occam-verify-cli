@@ -50,11 +50,13 @@ export default function verifyMetaproof(metaproofNode, conclusion, metaproofCont
   if (metaDerivationVerified || qualifiedMetastatementVerified) {
     const lastMetaproofStep = metaproofContext.getLastMetaproofStep(),
           metaproofStep = lastMetaproofStep, ///
-          lastMetastatementNode = metaproofStep.getMetastatementNode(),
+          metastatementNode = metaproofStep.getMetastatementNode(),
           conclusionMetastatementNode = conclusion.getMetastatementNode(),
-          lastMetastatementMatches = matchLastMetastatementNode(lastMetastatementNode, conclusionMetastatementNode);
+          nodeA = metastatementNode,  ///
+          nodeB = conclusionMetastatementNode,  ///
+          nodeMatches = matchNode(nodeA, nodeB);
 
-    metaproofVerified = lastMetastatementMatches;  ///
+    metaproofVerified = nodeMatches;  ///
   }
 
   metaproofVerified ?
@@ -62,13 +64,4 @@ export default function verifyMetaproof(metaproofNode, conclusion, metaproofCont
       metaproofContext.complete(metaproofNode);
 
   return metaproofVerified;
-}
-
-function matchLastMetastatementNode(lastMetastatementNode, conclusionMetastatementNode) {
-  const nodeA = lastMetastatementNode,  ///
-        nodeB = conclusionMetastatementNode,  ///
-        nonTerminalNodeMatches = matchNode(nodeA, nodeB),
-        lastMetastatementMatches = nonTerminalNodeMatches;  ///
-
-  return lastMetastatementMatches;
 }

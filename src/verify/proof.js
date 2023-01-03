@@ -50,11 +50,13 @@ export default function verifyProof(proofNode, conclusion, proofContext) {
   if (derivationVerified || qualifiedStatementVerified) {
     const lastProofStep = proofContext.getLastProofStep(),
           proofStep = lastProofStep, ///
-          lastStatementNode = proofStep.getStatementNode(),
+          statementNode = proofStep.getStatementNode(),
           conclusionStatementNode = conclusion.getStatementNode(),
-          lastStatementMatches = matchLastStatementNode(lastStatementNode, conclusionStatementNode);
+          nodeA = statementNode,  ///
+          nodeB = conclusionStatementNode,  ///
+          nodeMatches = matchNode(nodeA, nodeB);
 
-    proofVerified = lastStatementMatches;  ///
+    proofVerified = nodeMatches;  ///
   }
 
   proofVerified ?
@@ -62,13 +64,4 @@ export default function verifyProof(proofNode, conclusion, proofContext) {
       proofContext.complete(proofNode);
 
   return proofVerified;
-}
-
-function matchLastStatementNode(lastStatementNode, conclusionStatementNode) {
-  const nodeA = lastStatementNode,  ///
-        nodeB = conclusionStatementNode,  ///
-        nonTerminalNodeMatches = matchNode(nodeA, nodeB),
-        lastStatementMatches = nonTerminalNodeMatches;  ///
-
-  return lastStatementMatches;
 }

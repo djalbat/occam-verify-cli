@@ -1,6 +1,6 @@
 "use strict";
 
-import Assertion from "../assertion";
+import ProofStep from "../step/proof";
 import Antecedent from "../antecedent";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
@@ -19,12 +19,12 @@ export default function verifyAntecedent(antecedentNode, antecedents, proofConte
 
   if (unqualifiedStatementVerified) {
     const statementNode = statementNodeQuery(unqualifiedStatementNode),
-          assertion = Assertion.fromUnqualifiedStatementNode(unqualifiedStatementNode),
+          proofStep = ProofStep.fromStatementNode(statementNode),
           antecedent = Antecedent.fromStatementNode(statementNode);
 
     antecedents.push(antecedent);
 
-    proofContext.addAssertion(assertion);
+    proofContext.addProofStep(proofStep);
 
     antecedentOrAntecedentsVerified = true;
   }
