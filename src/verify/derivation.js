@@ -14,14 +14,11 @@ const statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/s
       unqualifiedStatementNodesQuery = nodesQuery("/subproof/unqualifiedStatement")
 
 export default function verifyDerivation(derivationNode, proofContext) {
-  let derivationVerified,
-      derived;
+  let derivationVerified;
 
   proofContext.begin(derivationNode);
 
-  derived = true;
-
-  proofContext.setDerived(derived);
+  proofContext.setDerived();
 
   const derivationChildNodes = derivationChildNodesQuery(derivationNode);
 
@@ -33,9 +30,7 @@ export default function verifyDerivation(derivationNode, proofContext) {
     }
   });
 
-  derived = false;
-
-  proofContext.setDerived(derived);
+  proofContext.setDerived();
 
   derivationVerified ?
     proofContext.complete(derivationNode) :

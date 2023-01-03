@@ -44,8 +44,12 @@ class MetaproofContext {
     return lastMetaproofStep;
   }
 
-  setDerived(derived) {
+  setDerived(derived = true) {
     this.derived = derived;
+  }
+
+  resetDerived() {
+    this.derived = false;
   }
 
   addMetaproofStep(metaproofStep) {

@@ -14,14 +14,11 @@ const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement|unqualifiedMet
       unqualifiedMetastatementNodesQuery = nodesQuery("/metaSubproof/unqualifiedMetastatement")
 
 export default function verifyMetaDerivation(metaDerivationNode, metaproofContext) {
-  let metaDerivationVerified,
-      derived;
+  let metaDerivationVerified;
 
   metaproofContext.begin(metaDerivationNode);
 
-  derived = true;
-
-  metaproofContext.setDerived(derived);
+  metaproofContext.setDerived();
 
   const metaDerivationChildNodes = metaDerivationChildNodesQuery(metaDerivationNode);
 
@@ -33,9 +30,7 @@ export default function verifyMetaDerivation(metaDerivationNode, metaproofContex
     }
   });
 
-  derived = false;
-
-  metaproofContext.setDerived(derived);
+  metaproofContext.resetDerived();
 
   metaDerivationVerified ?
     metaproofContext.complete(metaDerivationNode) :

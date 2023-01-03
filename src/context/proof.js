@@ -63,8 +63,12 @@ class ProofContext {
     return lastProofStep;
   }
 
-  setDerived(derived) {
+  setDerived(derived = true) {
     this.derived = derived;
+  }
+
+  resetDerived() {
+    this.derived = false;
   }
 
   addVariable(variable) {

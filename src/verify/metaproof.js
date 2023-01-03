@@ -27,17 +27,11 @@ export default function verifyMetaproof(metaproofNode, conclusion, metaproofCont
   }
 
   if (qualifiedMetastatementNode !== null) {
-    let derived;
-
-    derived = true;
-
-    metaproofContext.setDerived(derived);
+    metaproofContext.setDerived();
 
     qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metaproofContext);
 
-    derived = false;
-
-    metaproofContext.setDerived(derived);
+    metaproofContext.resetDerived();
 
     if (qualifiedMetastatementVerified) {
       const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),

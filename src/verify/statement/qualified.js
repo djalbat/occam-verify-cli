@@ -2,7 +2,6 @@
 
 import verifyStatement from "../../verify/statement";
 
-import { nodeAsString } from "../../utilities/string";
 import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
@@ -12,10 +11,6 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, proofCo
   let qualifiedStatementVerified = false;
 
   proofContext.begin(qualifiedStatementNode);
-
-  const qualifiedStatementString = nodeAsString(qualifiedStatementNode);
-
-  proofContext.debug(`Verifying the '${qualifiedStatementString}' qualified statement...`);
 
   const statementNode = statementNodeQuery(qualifiedStatementNode);
 
@@ -31,10 +26,6 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, proofCo
 
       debugger
     }
-  }
-
-  if (qualifiedStatementVerified) {
-    proofContext.info(`Verified the '${qualifiedStatementString}' qualified statement.`);
   }
 
   qualifiedStatementVerified ?

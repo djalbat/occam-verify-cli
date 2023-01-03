@@ -3,7 +3,6 @@
 import verifyStatement from "../../verify/statement";
 
 import { nodeQuery } from "../../utilities/query";
-import { nodeAsString } from "../../utilities/string";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
@@ -11,10 +10,6 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, pro
   let unqualifiedStatementVerified = false;
 
   proofContext.begin(unqualifiedStatementNode);
-
-  const unqualifiedStatementString = nodeAsString(unqualifiedStatementNode);
-
-  proofContext.debug(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
 
   const statementNode = statementNodeQuery(unqualifiedStatementNode);
 
@@ -32,10 +27,6 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, pro
         unqualifiedStatementVerified = true;
       }
     }
-  }
-
-  if (unqualifiedStatementVerified) {
-    proofContext.info(`Verified the '${unqualifiedStatementString}' unqualified statement.`);
   }
 
   unqualifiedStatementVerified ?
