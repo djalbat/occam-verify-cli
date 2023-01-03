@@ -1,5 +1,7 @@
 "use strict";
 
+import { last } from "../utilities/array";
+
 export function createReleaseContext(dependency, dependentNames, context, callback) {
   const { releaseContextMap } = context,
         dependencyName = dependency.getName(),
@@ -25,10 +27,30 @@ export function createReleaseContext(dependency, dependentNames, context, callba
 
     releaseContextMap[releaseName] = releaseContext;
 
-    if (releaseContext === null) {
-      const { log } = context;
+    const { log } = context;
 
+    if (releaseContext === null) {
       log.error(`The '${releaseName}' package could not be created.`);
+
+      callback(error);
+
+      return;
+    }
+
+    const releaseMatchesDependency = checkReleaseMatchesDependency(dependency, dependentNames, releaseContext, context);
+
+    if (!releaseMatchesDependency) {
+      const version = releaseContext.getVersion(),
+            versionString = version.toString(),
+            lastDependentName = last(dependentNames),
+            dependentName = lastDependentName,  ///
+            dependencyName = dependency.getName(),
+            shortenedVersion = dependency.getShortedVersion(),
+            shortenedVersionString = shortenedVersion.toString();
+
+      error = `Version mismatch: '${dependentName}' requires '${dependencyName}' to be version ${shortenedVersionString}.0 or higher but version ${versionString} has been supplied.`;
+
+      log.error(error);
 
       callback(error);
 
@@ -105,6 +127,23 @@ function checkCyclicDependencyExists(dependency, dependentNames, context) {
   }
 
   return cyclicDependencyExists;
+}
+
+function checkReleaseMatchesDependency(dependency, dependentNames, releaseContext, context) {
+  let releaseMatchesDependency = true;
+
+  const entries = releaseContext.getEntries(),
+        shortenedVersion = dependency.getShortedVersion();
+
+  if (shortenedVersion !== null) {
+    const entriesMatchShortenedVersion = entries.matchShortenedVersion(shortenedVersion);
+
+    if (!entriesMatchShortenedVersion) {
+      releaseMatchesDependency = false;
+    }
+  }
+
+  return releaseMatchesDependency;
 }
 
 function createDependencyReleaseContexts(dependency, dependentNames, context, callback) {

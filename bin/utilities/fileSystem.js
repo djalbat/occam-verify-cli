@@ -6,8 +6,7 @@ const { FileReleaseContext, DirectoryReleaseContext } = require("../../lib/index
 
 const callbacks = require("../callbacks");
 
-const { last } = arrayUtilities,
-      { loadProject } = occamFileSystemUtilities,
+const { loadProject } = occamFileSystemUtilities,
       { concatenatePaths } = pathUtilities,
       { readFile, isEntryFile, checkEntryExists } = necessaryFileSystemUtilities;
 
@@ -42,14 +41,6 @@ function releaseContextFromDependencyAndDependentNames(dependency, dependentName
     return;
   }
 
-  if (releaseContext !== null) {
-    const releaseMatchesShortedVersion = checkReleaseMatchesDependency(dependency, dependentNames, releaseContext, context);
-
-    if (!releaseMatchesShortedVersion) {
-      releaseContext = null;
-    }
-  }
-
   const error = null;
 
   callback(error, releaseContext);
@@ -58,31 +49,6 @@ function releaseContextFromDependencyAndDependentNames(dependency, dependentName
 module.exports = {
   releaseContextFromDependencyAndDependentNames
 };
-
-function checkReleaseMatchesDependency(dependency, dependentNames, releaseContext, context) {
-  let releaseMatchesShortedVersion = true;
-
-  const entries = releaseContext.getEntries(),
-        shortenedVersion = dependency.getShortedVersion();
-
-  if (shortenedVersion !== null) {
-    releaseMatchesShortedVersion = entries.matchShortenedVersion(shortenedVersion);
-
-    if (!releaseMatchesShortedVersion) {
-      const { log } = context,
-            version = releaseContext.getVersion(),
-            versionString = version.toString(),
-            lastDependentName = last(dependentNames),
-            dependentName = lastDependentName,  ///
-            dependencyName = dependency.getName(),
-            shortenedVersionString = shortenedVersion.toString();
-
-      log.error(`Version mismatch: '${dependentName}' requires '${dependencyName}' to be version ${shortenedVersionString}.0 or higher but version ${versionString} has been supplied.`);
-    }
-  }
-
-  return releaseMatchesShortedVersion;
-}
 
 function fileReleaseContextFromDependencyAndProjectsDirectoryPath(dependency, projectsDirectoryPath, context) {
   let releaseContext;
