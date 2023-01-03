@@ -2,7 +2,7 @@
 
 const { FileReleaseContext, DirectoryReleaseContext } = require("../../lib/index"), ///
       { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
-      { pathUtilities, arrayUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
+      { pathUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
 
 const callbacks = require("../callbacks");
 

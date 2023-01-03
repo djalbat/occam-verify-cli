@@ -5,7 +5,7 @@ const { Dependency } = require("occam-file-system"),
       { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
 const { trimTrailingSlash } = require("../utilities/string"),
-      { releaseContextFromDependencyAndDependentNames } = require("../utilities/fileSystem");
+      { releaseContextFromDependencyAndDependentNames } = require("../utilities/releaseContext");
 
 const { log } = loggingUtilities,
       { setLogLevel } = log,
@@ -28,6 +28,8 @@ function verifyAction(argument, logLevel) {
 
   createReleaseContext(dependency, dependentNames, context, (error) => {
     if (error) {
+      log.error(error);
+
       return;
     }
 
