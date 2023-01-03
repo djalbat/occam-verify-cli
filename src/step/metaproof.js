@@ -2,8 +2,7 @@
 
 import { first, second } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-
-import { matchTopmostMetaAssertionMetastatementNode } from "../utilities/metaAssertion";
+import { matchBracketedNonTerminalNode } from "../utilities/node";
 
 const metastatementNodesQuery = nodesQuery("/metaSubproofAssertion/metastatement"),
       metaSubproofAssertionNodeQuery = nodeQuery("/metastatement/metaSubproofAssertion"),
@@ -45,10 +44,10 @@ export default class MetaproofStep {
     let metastatementsMatch = false;
 
     if (this.metastatementNode !== null) {
-      const topmostMetastatementNode = metastatementNode, ///
-            topmostMetaAssertionMetastatementNode = this.metastatementNode,  ///
-            topmostMetaAssertionMetastatementNodeMatches = matchTopmostMetaAssertionMetastatementNode(topmostMetaAssertionMetastatementNode, topmostMetastatementNode),
-            metastatementNodeMatches = topmostMetaAssertionMetastatementNodeMatches;  ///
+      const nonTerminalNodeA = metastatementNode, ///
+            nonTerminalNodeB = this.metastatementNode,  ///
+            bracketedNodeMatches = matchBracketedNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB),
+            metastatementNodeMatches = bracketedNodeMatches;  ///
 
       return metastatementNodeMatches;
     }
@@ -65,19 +64,19 @@ export default class MetaproofStep {
             qualifiedOrUnqualifiedMetastatementMetastatementNodes = qualifiedOrUnqualifiedMetastatementMetastatementNodesQuery(this.metaSubproofNode),
             firstQualifiedOrUnqualifiedMetastatementMetastatementNode = first(qualifiedOrUnqualifiedMetastatementMetastatementNodes);
 
-      const topmostMetastatementNode = firstMetaSubproofAssertionMetastatementNode,  ///
-            topmostMetaAssertionMetastatementNode = firstQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
-            topmostMetaAssertionMetastatementNodeMatches = matchTopmostMetaAssertionMetastatementNode(topmostMetaAssertionMetastatementNode, topmostMetastatementNode);
+      const nonTerminalNodeA = firstMetaSubproofAssertionMetastatementNode,  ///
+            nonTerminalNodeB = firstQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
+            bracketedNodeMatches = matchBracketedNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB);
 
-      if (topmostMetaAssertionMetastatementNodeMatches) {
+      if (bracketedNodeMatches) {
         const secondMetaSubproofAssertionMetastatementNode = second(metaSubproofAssertionMetastatementNodes),
               secondQualifiedOrUnqualifiedMetastatementMetastatementNode = second(qualifiedOrUnqualifiedMetastatementMetastatementNodes);
 
-        const topmostMetastatementNode = secondMetaSubproofAssertionMetastatementNode, ///
-              topmostMetaAssertionMetastatementNode = secondQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
-              topmostMetaAssertionMetastatementNodeMatches = matchTopmostMetaAssertionMetastatementNode(topmostMetaAssertionMetastatementNode, topmostMetastatementNode);
+        const nonTerminalNodeA = secondMetaSubproofAssertionMetastatementNode, ///
+              nonTerminalNodeB = secondQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
+              bracketedNodeMatches = matchBracketedNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB);
 
-        metaSubproofAssertionMatches = topmostMetaAssertionMetastatementNodeMatches; ///
+        metaSubproofAssertionMatches = bracketedNodeMatches; ///
       }
     }
 

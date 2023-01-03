@@ -1,6 +1,6 @@
 "use strict";
 
-import { matchBracketedMetastatementChildNode, bracketedMetastatementChildNodeFromChildNodes } from "./utilities/metaAssertion";
+import { matchNodes, bracketedChildNodeFromChildNodes } from "./utilities/node";
 
 export default class MetaSubstitution {
   constructor(metavariableName, nodes) {
@@ -19,34 +19,34 @@ export default class MetaSubstitution {
   matchNodes(nodes) {
     let matches;
 
-    const metaSubstitutionNodes = this.nodes,  ///
-          metaSubstitutionNonTerminalNodeMatches = matchMetaSubstitutionNodes(metaSubstitutionNodes, nodes);
+    const nodesA = this.nodes,  ///
+          nodesB = nodes,
+          metaSubstitutionNodesMatch = matchNodes(nodesA, nodesB);
 
-    matches = metaSubstitutionNonTerminalNodeMatches;  ///
+    matches = metaSubstitutionNodesMatch;  ///
 
     if (!matches) {
       const childNodes = nodes, ///
-            bracketedMetastatementChildNodeMatches = matchBracketedMetastatementChildNode(childNodes, (bracketedMetastatementChildNode) => {
-              const nonTerminalNode = bracketedMetastatementChildNode,  ///
-                    childNodes = nonTerminalNode.getChildNodes(),
-                    nodes = childNodes, ///
-                    metaAssertionNonTerminalNodeMatches = matchMetaSubstitutionNodes(metaSubstitutionNodes, nodes),
-                    bracketedMetastatementChildNodeMatches = metaAssertionNonTerminalNodeMatches; ///
+            bracketedChildNode = bracketedChildNodeFromChildNodes(childNodes);
 
-              return bracketedMetastatementChildNodeMatches;
-            });
+      if (bracketedChildNode !== null) {
+        const nonTerminalNode = bracketedChildNode,  ///
+              childNodes = nonTerminalNode.getChildNodes(),
+              nodesB = childNodes, ///
+              nodesMatch = matchNodes(nodesA, nodesB);
 
-      matches = bracketedMetastatementChildNodeMatches; ///
+        matches = nodesMatch; ///
+      }
     }
 
     return matches;
   }
 
   static fromMetavariableNameAndNodes(metavariableName, nodes) {
-    const bracketedMetastatementChildNode = bracketedMetastatementChildNodeFromChildNodes(nodes);
+    const bracketedChildNode = bracketedChildNodeFromChildNodes(nodes);
 
-    if (bracketedMetastatementChildNode !== null) {
-      const nonTerminalNode = bracketedMetastatementChildNode,  ///
+    if (bracketedChildNode !== null) {
+      const nonTerminalNode = bracketedChildNode,  ///
             childNodes = nonTerminalNode.getChildNodes();
 
       nodes = childNodes; ///
@@ -56,75 +56,4 @@ export default class MetaSubstitution {
 
     return metaSubstitution;
   }
-}
-
-function matchMetaSubstitutionNode(metaSubstitutionNode, node) {
-  let metaSubstitutionNodeMatches = false;
-
-  const nodeTerminalNode = node.isTerminalNode(),
-        ruleNodeTerminalNode = metaSubstitutionNode.isTerminalNode();
-
-  if (nodeTerminalNode === ruleNodeTerminalNode) {
-    if (nodeTerminalNode) {
-      const terminalNode = node,  ///
-            metaSubstitutionTerminalNode = metaSubstitutionNode,  ///
-            metaSubstitutionTerminalNodeMatches = matchMetaSubstitutionTerminalNode(metaSubstitutionTerminalNode, terminalNode);
-
-      metaSubstitutionNodeMatches = metaSubstitutionTerminalNodeMatches;  ///
-    } else {
-      const nonTerminalNode = node, ///
-            metaSubstitutionNonTerminalNode = metaSubstitutionNode,  ///
-            metaSubstitutionNonTerminalNodeMatches = matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, nonTerminalNode);
-
-      metaSubstitutionNodeMatches = metaSubstitutionNonTerminalNodeMatches; ///
-    }
-  }
-
-  return metaSubstitutionNodeMatches;
-}
-
-function matchMetaSubstitutionNodes(metaSubstitutionNodes, nodes) {
-  let metaSubstitutionNodesMatches = false;
-
-  const nodesLength = nodes.length,
-        metaSubstitutionNodesLength = metaSubstitutionNodes.length;
-
-  if (nodesLength === metaSubstitutionNodesLength) {
-    metaSubstitutionNodesMatches = nodes.every((node, index) => {
-      const metaSubstitutionNode = metaSubstitutionNodes[index],
-            metaSubstitutionNodeMatches = matchMetaSubstitutionNode(metaSubstitutionNode, node);
-
-      if (metaSubstitutionNodeMatches) {
-        return true;
-      }
-    })
-  }
-
-  return metaSubstitutionNodesMatches;
-}
-
-function matchMetaSubstitutionTerminalNode(metaSubstitutionTerminalNode, terminalNode) {
-  const matches = metaSubstitutionTerminalNode.match(terminalNode),
-        metaSubstitutionTerminalNodeMatches = matches;  ///
-
-  return metaSubstitutionTerminalNodeMatches;
-}
-
-function matchMetaSubstitutionNonTerminalNode(metaSubstitutionNonTerminalNode, nonTerminalNode) {
-  let metaSubstitutionNonTerminalNodeMatches = false;
-
-  const ruleName = nonTerminalNode.getRuleName(),
-        metaSubstitutionRuleName = metaSubstitutionNonTerminalNode.getRuleName(); ///
-
-  if (ruleName === metaSubstitutionRuleName) {
-    const childNodes = nonTerminalNode.getChildNodes(),
-          metaSubstitutionChildNodes = metaSubstitutionNonTerminalNode.getChildNodes(),
-          nodes = childNodes, ///
-          metaSubstitutionNodes = metaSubstitutionChildNodes, ///
-          metaSubstitutionNodesMatches = matchMetaSubstitutionNodes(metaSubstitutionNodes, nodes);
-
-    metaSubstitutionNonTerminalNodeMatches = metaSubstitutionNodesMatches; ///
-  }
-
-  return metaSubstitutionNonTerminalNodeMatches;
 }
