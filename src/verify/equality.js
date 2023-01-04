@@ -1,13 +1,14 @@
 "use strict";
 
+import Equality from "../equality";
 import verifyTerm from "../verify/term";
 
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
 import { first, second } from "../utilities/array";
 
-const firstTermNodeQuery = nodeQuery("/equality/term[0]"),
-      secondTermNodeQuery = nodeQuery("/equality/term[1]");
+const leftTermNodeQuery = nodeQuery("/equality/term[0]"),
+      rightTermNodeQuery = nodeQuery("/equality/term[1]");
 
 export default function verifyEquality(equalityNode, proofContext) {
   let equalityVerified = false;
@@ -24,7 +25,20 @@ export default function verifyEquality(equalityNode, proofContext) {
     const derived = proofContext.isDerived();
 
     if (derived) {
-      debugger
+      const equality = Equality.fromEqualityNode(equalityNode),
+            proofSteps = proofContext.getProofSteps(),
+            equalities = proofSteps.reduce((equalities, proofStep) => {
+                           const equality = Equality.fromProofStep(proofStep);
+
+                           if (equality !== null) {
+                             equalities.push(equality);
+                           }
+
+                           return equalities;
+                         }, []),
+                         equalityTermsEqual = equality.areTermsEqual(equalities, proofContext);
+
+      equalityVerified = equalityTermsEqual;  ///
     } else {
       equalityVerified = true;
     }
@@ -46,17 +60,19 @@ function verifyEqualityTypes(equalityNode, proofContext) {
 
   const types = [],
         context = proofContext,  ///
-        firstTermNode = firstTermNodeQuery(equalityNode),
-        secondTermNode = secondTermNodeQuery(equalityNode),
-        firstTermVerified = verifyTerm(firstTermNode, types, context),
-        secondTermVerified = verifyTerm(secondTermNode, types, context);
+        leftTermNode = leftTermNodeQuery(equalityNode),
+        rightTermNode = rightTermNodeQuery(equalityNode),
+        leftTermVerified = verifyTerm(leftTermNode, types, context),
+        rightTermVerified = verifyTerm(rightTermNode, types, context);
 
-  if (firstTermVerified && secondTermVerified) {
+  if (leftTermVerified && rightTermVerified) {
     const firstType = first(types),
           secondType = second(types),
-          firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType = firstType.isEqualToSubTypeOfOrSuperTypeOf(secondType);
+          leftType = firstType, ///
+          rightType = secondType, ///
+          leftTypeEqualToSubTypeOfOrSuperTypeOfRightType = leftType.isEqualToSubTypeOfOrSuperTypeOf(rightType);
 
-    if (firstTypeEqualToSubTypeOfOrSuperTypeOfSecondType) {
+    if (leftTypeEqualToSubTypeOfOrSuperTypeOfRightType) {
       equalityTypesVerified = true;
     }
   }

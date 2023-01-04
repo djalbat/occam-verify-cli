@@ -35,6 +35,22 @@ export default class Variable {
     return matchesName;
   }
 
+  isEqualTo(variable) {
+    let equalTo = false;
+
+    if (variable === this) {
+      equalTo = true;
+    } else {
+      const value = variable.getValue();
+
+      if (value === this.value) {
+        equalTo = true;
+      }
+    }
+
+    return equalTo;
+  }
+
   asString() {
     let string;
 

@@ -141,17 +141,15 @@ function verifyNode(node, constructorNode, context) {
   return nodeVerified;
 }
 
-function verifyChildNodes(childNodes, constructorChildNodes, context) {
-  let childNodesVerified = false;
+function verifyNodes(nodes, constructorNodes, context) {
+  let nodesVerified = false;
 
-  const childNodesLength = childNodes.length,
-        constructorChildNodesLength = constructorChildNodes.length;
+  const nodesLength = nodes.length,
+        constructorNodesLength = constructorNodes.length;
 
-  if (childNodesLength === constructorChildNodesLength) {
-    childNodesVerified = childNodes.every((childNode, index) => {
-      const constructorChildNode = constructorChildNodes[index],
-            node = childNode, ///
-            constructorNode = constructorChildNode,  ///
+  if (nodesLength === constructorNodesLength) {
+    nodesVerified = nodes.every((node, index) => {
+      const constructorNode = constructorNodes[index],
             nodeVerified = verifyNode(node, constructorNode, context);
 
       if (nodeVerified) {
@@ -160,7 +158,7 @@ function verifyChildNodes(childNodes, constructorChildNodes, context) {
     });
   }
 
-  return childNodesVerified;
+  return nodesVerified;
 }
 
 function verifyTerminalNode(terminalNode, constructorTerminalNode, context) {
@@ -196,7 +194,9 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, cont
       default: {
         const childNodes = nonTerminalNode.getChildNodes(),
               constructorChildNodes = constructorNonTerminalNode.getChildNodes(),
-              childNodesVerified = verifyChildNodes(childNodes, constructorChildNodes, context);
+              nodes = childNodes, ///
+              constructorNodes = constructorChildNodes, ///
+              childNodesVerified = verifyNodes(nodes, constructorNodes, context);
 
         nonTerminalNodeVerified = childNodesVerified; ///
 
