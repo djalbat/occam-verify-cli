@@ -6,6 +6,7 @@ import verifyTerm from "../verify/term";
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
 import { first, second } from "../utilities/array";
+import { MAXIMUM_INDEXES_LENGTH } from "../constants";
 
 const leftTermNodeQuery = nodeQuery("/equality/term[0]"),
       rightTermNodeQuery = nodeQuery("/equality/term[1]");
@@ -27,16 +28,8 @@ export default function verifyEquality(equalityNode, proofContext) {
     if (derived) {
       const equality = Equality.fromEqualityNode(equalityNode),
             proofSteps = proofContext.getProofSteps(),
-            equalities = proofSteps.reduce((equalities, proofStep) => {
-                           const equality = Equality.fromProofStep(proofStep);
-
-                           if (equality !== null) {
-                             equalities.push(equality);
-                           }
-
-                           return equalities;
-                         }, []),
-                         equalityTermsEqual = equality.areTermsEqual(equalities, proofContext);
+            equalities = equalitiesFromProofSteps(proofSteps),
+            equalityTermsEqual = equality.areTermsEqual(equalities, proofContext);
 
       equalityVerified = equalityTermsEqual;  ///
     } else {
@@ -78,4 +71,22 @@ function verifyEqualityTypes(equalityNode, proofContext) {
   }
 
   return equalityTypesVerified;
+}
+
+function equalitiesFromProofSteps(proofSteps) {
+  const start = -MAXIMUM_INDEXES_LENGTH;  ///
+
+  proofSteps = proofSteps.slice(start); ///
+
+  const equalities = proofSteps.reduce((equalities, proofStep, index) => {
+    const equality = Equality.fromProofStep(proofStep);
+
+    if (equality !== null) {
+      equalities.push(equality);
+    }
+
+    return equalities;
+  }, []);
+
+  return equalities;
 }

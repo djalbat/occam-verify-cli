@@ -176,8 +176,8 @@ function verifyTerminalNode(terminalNode, constructorTerminalNode, context) {
 function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, context) {
   let nonTerminalNodeVerified = false;
 
-  const ruleName = nonTerminalNode.getRuleName(),
-        constructorRuleName = constructorNonTerminalNode.getRuleName();
+  const ruleName = nonTerminalNode.getRuleName(), ///
+        constructorRuleName = constructorNonTerminalNode.getRuleName(); ///
 
   if (ruleName === constructorRuleName) {
     switch (ruleName) {
@@ -196,9 +196,9 @@ function verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, cont
               constructorChildNodes = constructorNonTerminalNode.getChildNodes(),
               nodes = childNodes, ///
               constructorNodes = constructorChildNodes, ///
-              childNodesVerified = verifyNodes(nodes, constructorNodes, context);
+              nodesVerified = verifyNodes(nodes, constructorNodes, context);
 
-        nonTerminalNodeVerified = childNodesVerified; ///
+        nonTerminalNodeVerified = nodesVerified; ///
 
         break;
       }
