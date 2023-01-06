@@ -4,7 +4,7 @@ import { ARGUMENT_RULE_NAME } from "./ruleNames";
 import { nodeQuery, variableNameFromVariableNode } from "./utilities/query";
 
 const termNodeQuery = nodeQuery("/argument/term!"),
-      variableNodeQuery = nodeQuery("/term/variable!"),
+      variableNodeQuery = nodeQuery("/argument/term!/variable!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
       leftTermNodeQuery = nodeQuery("/equality/term[0]"),
       rightTermNodeQuery = nodeQuery("/equality/term[1]");
@@ -186,6 +186,19 @@ function equateArgumentNode(leftArgumentNode, rightArgumentNode, equalities, pro
   }
 
   return argumentNodeEquates;
+}
+
+function equateVariableNode(leftVariableNode, rightVariableNode, equalities, proofContext) {
+  let variableNodeEquates = false;
+
+  const leftVariable = variableFromTermNode(leftTermNode, proofContext),
+        rightVariable = variableFromTermNode(rightTermNode, proofContext);
+
+  const leftVariableEqualToRightVariable = leftVariable.isEqualTo(rightVariable);
+
+  argumentNodeEquates = leftVariableEqualToRightVariable; ///
+
+  return variableNodeEquates;
 }
 
 function variableFromTermNode(termNode, proofContext) {
