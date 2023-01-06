@@ -29,9 +29,9 @@ export default function verifyEquality(equalityNode, proofContext) {
       const equality = Equality.fromEqualityNode(equalityNode),
             proofSteps = proofContext.getProofSteps(),
             equalities = equalitiesFromProofSteps(proofSteps),
-            equalityTermsEqual = equality.areTermsEqual(equalities, proofContext);
+            equalityEquates = equality.equate(equalities, proofContext);
 
-      equalityVerified = equalityTermsEqual;  ///
+      equalityVerified = equalityEquates;  ///
     } else {
       equalityVerified = true;
     }

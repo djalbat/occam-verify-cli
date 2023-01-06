@@ -50,10 +50,10 @@ export default class AxiomLemmaTheorem {
 
       statementNatches = consequentMatches; ///
     } else {
-      const assertions = proofContext.getAssertions();
+      const proofSteps = proofContext.getProofSteps();
 
-      statementNatches = someSubArray(assertions, antecedentsLength, (assertions) => {
-        const antecedentsMatchConsequent = matchAntecedentsAndConsequent(this.antecedents, this.consequent, assertions, statementNode);
+      statementNatches = someSubArray(proofSteps, antecedentsLength, (proofSteps) => {
+        const antecedentsMatchConsequent = matchAntecedentsAndConsequent(this.antecedents, this.consequent, proofSteps, statementNode);
 
         if (antecedentsMatchConsequent) {
           return true;
@@ -127,10 +127,10 @@ export default class AxiomLemmaTheorem {
   static fromLabelsAntecedentsAndConsequent(Class, labels, antecedents, consequent) { return new Class(labels, antecedents, consequent); }
 }
 
-function matchAntecedent(antecedent, assertions, substitutions) {
-  const assertion = prune(assertions, (assertion) => {
-    const subproofNode = assertion.getSubproofNode(),
-          statementNode = assertion.getStatementNode();
+function matchAntecedent(antecedent, proofSteps, substitutions) {
+  const proofStep = prune(proofSteps, (proofStep) => {
+    const subproofNode = proofStep.getSubproofNode(),
+          statementNode = proofStep.getStatementNode();
 
     if (subproofNode !== null) {
       const subProofMatches = antecedent.matchSubproofNode(subproofNode, substitutions);
@@ -150,14 +150,14 @@ function matchAntecedent(antecedent, assertions, substitutions) {
 
   }) || null;
 
-  const antecedentMatches = (assertion !== null);
+  const antecedentMatches = (proofStep !== null);
 
   return antecedentMatches;
 }
 
-function matchAntecedents(antecedent, assertions, substitutions) {
+function matchAntecedents(antecedent, proofSteps, substitutions) {
   const antecedentsMatches = antecedent.every((antecedent) => {
-    const antecedentMatches = matchAntecedent(antecedent, assertions, substitutions);
+    const antecedentMatches = matchAntecedent(antecedent, proofSteps, substitutions);
 
     if (antecedentMatches) {
       return true;
@@ -174,11 +174,11 @@ function matchConsequent(consequent, statementNode, substitutions) {
   return consequentMatches;
 }
 
-function matchAntecedentsAndConsequent(antecedents, consequent, assertions, statementNode) {
+function matchAntecedentsAndConsequent(antecedents, consequent, proofSteps, statementNode) {
   let antecedentsMatchConsequent = false;
 
   const substitutions = [],
-        antecedentsMatches = matchAntecedents(antecedents, assertions, substitutions);
+        antecedentsMatches = matchAntecedents(antecedents, proofSteps, substitutions);
 
   if (antecedentsMatches) {
     const consequentMatches = matchConsequent(consequent, statementNode, substitutions);

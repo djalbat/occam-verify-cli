@@ -1,11 +1,9 @@
 "use strict";
 
-import { ARGUMENT_RULE_NAME } from "./ruleNames";
-import { nodeQuery, variableNameFromVariableNode } from "./utilities/query";
+import { nodeQuery } from "./utilities/query";
+import { TERM_RULE_NAME } from "./ruleNames";
 
-const termNodeQuery = nodeQuery("/argument/term!"),
-      variableNodeQuery = nodeQuery("/argument/term!/variable!"),
-      equalityNodeQuery = nodeQuery("/statement/equality!"),
+const equalityNodeQuery = nodeQuery("/statement/equality!"),
       leftTermNodeQuery = nodeQuery("/equality/term[0]"),
       rightTermNodeQuery = nodeQuery("/equality/term[1]");
 
@@ -23,13 +21,42 @@ export default class Equality {
     return this.rightTermNode;
   }
 
-  areTermsEqual(equalities, proofContext) {
+  match(equality, equalities, proofContext) {
+    let matches;
+
+    equalities = pruneEqualities(equalities, equality); ///
+
+    const leftTermNode = equality.getLeftTermNode(),
+          rightTermNode = equality.getRightTermNode();
+
+    let leftNonTerminalNode,  ///
+        rightNonTerminalNode,
+        nonTerminalNodeEquates;
+
+    leftNonTerminalNode = this.leftTermNode;  ///
+    rightNonTerminalNode = leftTermNode;  ///
+
+    nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, proofContext);
+
+    if (nonTerminalNodeEquates) {
+      leftNonTerminalNode = this.rightTermNode;  ///
+      rightNonTerminalNode = rightTermNode;  ///
+
+      nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, proofContext);
+    }
+
+    matches = nonTerminalNodeEquates; ///
+
+    return matches;
+  }
+
+  equate(equalities, proofContext) {
     const leftNonTerminalNode = this.leftTermNode,  ///
           rightNonTerminalNode = this.rightTermNode,  ///
           nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, proofContext),
-          termsEqual = nonTerminalNodeEquates; ///
+          equates = nonTerminalNodeEquates; ///
 
-    return termsEqual;
+    return equates;
   }
 
   static fromProofStep(proofStep) {
@@ -55,6 +82,12 @@ export default class Equality {
     const leftTermNode = leftTermNodeQuery(equalityNode),
           rightTermNode = rightTermNodeQuery(equalityNode),
           equality = new Equality(leftTermNode, rightTermNode);
+
+    return equality;
+  }
+
+  static fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode) {
+    const equality = new Equality(leftTermNode, rightTermNode);
 
     return equality;
   }
@@ -113,105 +146,62 @@ function equateTerminalNode(terminalNodeA, terminalNodeB, equalities, proofConte
 }
 
 function equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, proofContext) {
-  let nonTerminalNodeVerified = false;
+  let nonTerminalNodeEquates = false;
 
   const leftNonTerminalNodeRuleName = leftNonTerminalNode.getRuleName(),
         rightNonTerminalNodeRuleName = rightNonTerminalNode.getRuleName();
 
   if (leftNonTerminalNodeRuleName === rightNonTerminalNodeRuleName) {
-    const ruleName = leftNonTerminalNodeRuleName; ///
+    const ruleName = leftNonTerminalNodeRuleName, ///
+          ruleNameTermRuleName = (ruleName === TERM_RULE_NAME);
 
-    switch (ruleName) {
-      case ARGUMENT_RULE_NAME: {
-        const leftArgumentNode = leftNonTerminalNode, ///
-              rightArgumentNode = rightNonTerminalNode, ///
-              argumentNodeVerified = equateArgumentNode(leftArgumentNode, rightArgumentNode, equalities, proofContext);
+    if (ruleNameTermRuleName) {
+      const leftTermNode = leftNonTerminalNode, ///
+            rightTermNode = rightNonTerminalNode, ///
+            termNodeEquates = equateTermNode(leftTermNode, rightTermNode, equalities, proofContext);
 
-        nonTerminalNodeVerified = argumentNodeVerified; ///
+      nonTerminalNodeEquates = termNodeEquates;  ///
+    }
 
-        break;
-      }
+    if (!nonTerminalNodeEquates) {
+      const leftNonTerminalNodeChildNodes = leftNonTerminalNode.getChildNodes(),
+            rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
+            leftNodes = leftNonTerminalNodeChildNodes, ///
+            rightNodes = rightNonTerminalNodeChildNodes, ///
+            nodesEquate = equateNodes(leftNodes, rightNodes, equalities, proofContext);
 
-      default: {
-        const leftNonTerminalNodeChildNodes = leftNonTerminalNode.getChildNodes(),
-              rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
-              leftNodes = leftNonTerminalNodeChildNodes, ///
-              rightNodes = rightNonTerminalNodeChildNodes, ///
-              nodesVerified = equateNodes(leftNodes, rightNodes, equalities, proofContext);
-
-        nonTerminalNodeVerified = nodesVerified; ///
-
-        break;
-      }
+      nonTerminalNodeEquates = nodesEquate; ///
     }
   }
 
-  return nonTerminalNodeVerified;
+  return nonTerminalNodeEquates;
 }
 
-function equateArgumentNode(leftArgumentNode, rightArgumentNode, equalities, proofContext) {
-  let argumentNodeEquates = false;
+function equateTermNode(leftTermNode, rightTermNode, equalities, proofContext) {
+  const equality = Equality.fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode),
+        equalityA = equality, ///
+        equalitiesB = equalities, ///
+        equalityMatches = equalitiesB.some((equalityB) => { ///
+          const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB, proofContext);
 
-  const leftTermNode = termNodeQuery(leftArgumentNode),
-        rightTermNode = termNodeQuery(rightArgumentNode),
-        leftVariable = variableFromTermNode(leftTermNode, proofContext),
-        rightVariable = variableFromTermNode(rightTermNode, proofContext);
+          if (equalityAMatchesEqualityB) {
+            return true;
+          }
+        }),
+        termNodeEquates = equalityMatches;  ///
 
-  if (false) {
-    ///
-  } else if ((leftVariable !== null) && (rightVariable !== null)) {
-    const leftVariableEqualToRightVariable = leftVariable.isEqualTo(rightVariable);
+  return termNodeEquates;
+}
 
-    argumentNodeEquates = leftVariableEqualToRightVariable; ///
-  } else if (leftVariable !== null) {
-    const leftVariableValue = leftVariable.getValue();
+function pruneEqualities(equalities, equality) {
+  const equalityA = equality, ///
+        equalitiesB = equalities; ///
 
-    if (leftVariableValue !== undefined) {
-      const leftNode = leftVariableValue, ///
-            rightNode = rightTermNode,  ///
-            termNodeEquates = equateNode(leftNode, rightNode, equalities, proofContext);;
-
-      argumentNodeEquates = termNodeEquates;  ///
+  equalities = equalitiesB.filter((equalityB) => {
+    if (equalityA !== equalityB) {
+      return true;
     }
-  } else if (rightVariable !== null) {
-    const rightVariableValue = rightVariable.getValue();
+  });
 
-    if (rightVariableValue !== undefined) {
-      const leftNode = leftTermNode,  ///
-            rightNode = rightVariableValue, ///
-            termNodeEquates = equateNode(leftNode, rightNode, equalities, proofContext);;
-
-      argumentNodeEquates = termNodeEquates;  ///
-    }
-  }
-
-  return argumentNodeEquates;
+  return equalities;
 }
-
-function equateVariableNode(leftVariableNode, rightVariableNode, equalities, proofContext) {
-  let variableNodeEquates = false;
-
-  const leftVariable = variableFromTermNode(leftTermNode, proofContext),
-        rightVariable = variableFromTermNode(rightTermNode, proofContext);
-
-  const leftVariableEqualToRightVariable = leftVariable.isEqualTo(rightVariable);
-
-  argumentNodeEquates = leftVariableEqualToRightVariable; ///
-
-  return variableNodeEquates;
-}
-
-function variableFromTermNode(termNode, proofContext) {
-  let variable = null;
-
-  const variableNode = variableNodeQuery(termNode);
-
-  if (variableNode !== null) {
-    const variableName = variableNameFromVariableNode(variableNode);
-
-    variable = proofContext.findVariableByVariableName(variableName);
-  }
-
-  return variable;
-}
-
