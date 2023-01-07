@@ -22,32 +22,52 @@ export default class Equality {
   }
 
   match(equality, equalities, proofContext) {
-    let matches;
-
-    equalities = pruneEqualities(equalities, equality); ///
+    let matches = false;
 
     const leftTermNode = equality.getLeftTermNode(),
           rightTermNode = equality.getRightTermNode();
 
-    let leftNonTerminalNode,  ///
-        rightNonTerminalNode,
-        nonTerminalNodeEquates;
+    if (!matches) {
+      const reversed = false,
+            leftTermNodeAndRightTermNodeMatch = this.matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities, proofContext);
 
-    leftNonTerminalNode = this.leftTermNode;  ///
-    rightNonTerminalNode = leftTermNode;  ///
-
-    nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, proofContext);
-
-    if (nonTerminalNodeEquates) {
-      leftNonTerminalNode = this.rightTermNode;  ///
-      rightNonTerminalNode = rightTermNode;  ///
-
-      nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, proofContext);
+      matches = leftTermNodeAndRightTermNodeMatch;  ///
     }
 
-    matches = nonTerminalNodeEquates; ///
+    if (!matches) {
+      const reversed = true,
+            leftTermNodeAndRightTermNodeMatch = this.matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities, proofContext);
+
+      matches = leftTermNodeAndRightTermNodeMatch;  ///
+    }
 
     return matches;
+  }
+
+  matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities, proofContext) {
+    let leftTermNodeAndRightTermNodeMatch = true;
+
+    if (leftTermNodeAndRightTermNodeMatch) {
+      const leftNonTerminalNode = reversed ?
+                                    this.rightTermNode :
+                                      this.leftTermNode,  ///
+            rightNonTerminalNode = leftTermNode,  ///
+            nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, proofContext);
+
+      leftTermNodeAndRightTermNodeMatch = nonTerminalNodeEquates; ///
+    }
+
+    if (leftTermNodeAndRightTermNodeMatch) {
+      const leftNonTerminalNode = reversed ?
+                                    this.leftTermNode :
+                                      this.rightTermNode,  ///
+            rightNonTerminalNode = rightTermNode,  ///
+            nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, proofContext);
+
+      leftTermNodeAndRightTermNodeMatch = nonTerminalNodeEquates; ///
+    }
+
+    return leftTermNodeAndRightTermNodeMatch;
   }
 
   equate(equalities, proofContext) {
@@ -180,8 +200,13 @@ function equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equali
 function equateTermNode(leftTermNode, rightTermNode, equalities, proofContext) {
   const equality = Equality.fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode),
         equalityA = equality, ///
-        equalitiesB = equalities, ///
-        equalityMatches = equalitiesB.some((equalityB) => { ///
+        equalityMatches = equalities.some((equality) => { ///
+          let equalitiesB = equalities; ///
+
+          const equalityB = equality; ///
+
+          equalitiesB = pruneEqualities(equalitiesB, equalityB);  ///
+
           const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB, proofContext);
 
           if (equalityAMatchesEqualityB) {
@@ -194,10 +219,11 @@ function equateTermNode(leftTermNode, rightTermNode, equalities, proofContext) {
 }
 
 function pruneEqualities(equalities, equality) {
-  const equalityA = equality, ///
-        equalitiesB = equalities; ///
+  const equalityA = equality; ///
 
-  equalities = equalitiesB.filter((equalityB) => {
+  equalities = equalities.filter((equality) => {
+    const equalityB = equality; ///
+
     if (equalityA !== equalityB) {
       return true;
     }
