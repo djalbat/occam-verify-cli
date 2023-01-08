@@ -1,10 +1,10 @@
 "use strict";
 
 export default class Variable {
-  constructor(type, name, value) {
+  constructor(type, name, termNode) {
     this.type = type;
     this.name = name;
-    this.value = value;
+    this.termNode = termNode;
   }
 
   getType() {
@@ -15,18 +15,12 @@ export default class Variable {
     return this.name;
   }
 
-  getValue() {
-    return this.value;
+  getTermNode() {
+    return this.termNode;
   }
 
-  isDefined() {
-    const defined = (this.value !== undefined);
-
-    return defined;
-  }
-
-  setValue(value) {
-    this.value = value;
+  setTermNode(termNode) {
+    this.termNode = termNode;
   }
 
   matchName(name) {
@@ -41,9 +35,9 @@ export default class Variable {
     if (variable === this) {
       equalTo = true;
     } else {
-      const value = variable.getValue();
+      const termNode = variable.getTermNode();
 
-      if (value === this.value) {
+      if (termNode === this.termNode) {
         equalTo = true;
       }
     }
@@ -66,8 +60,8 @@ export default class Variable {
   }
 
   static fromTypeAndName(type, name) {
-    const value = undefined,
-          variable = new Variable(type, name, value);
+    const termNode = null,
+          variable = new Variable(type, name, termNode);
 
     return variable;
   }
