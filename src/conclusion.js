@@ -146,7 +146,7 @@ function matchConclusionNonTerminalNode(conclusionNonTerminalNode, nonTerminalNo
   return conclusionNonTerminalNodeMatches;
 }
 
-function matchConclusionMetavariableNode(conclusionMetavariableNode, nodes, substitutions) {
+function matchConclusionMetavariableNode(conclusionMetavariableNode, statementNode, substitutions) {
   let conclusionMetavariableNodeMatches = true;
 
   const conclusionMetavariableName = metavariableNameFromMetavariableNode(conclusionMetavariableNode),
@@ -159,7 +159,7 @@ function matchConclusionMetavariableNode(conclusionMetavariableNode, nodes, subs
         }) || null;
 
   if (substitution !== null) {
-    const substitutionNodesMatch = substitution.matchNodes(nodes);
+    const substitutionNodesMatch = substitution.matchStatementNode(statementNode);
 
     conclusionMetavariableNodeMatches = substitutionNodesMatch;  ///
   }
@@ -186,10 +186,7 @@ function matchConclusionMetastatementNode(conclusionMetastatementNode, statement
 
       if (conclusionNonTerminalChildNodeRuleNameMetavariableRuleName) {
         const conclusionMetavariableNode = conclusionNonTerminalChildNode,  ///
-              nonTerminalNode = statementNode,  ///
-              childNodes = nonTerminalNode.getChildNodes(),
-              nodes = childNodes, ///
-              conclusionMetavariableNodeMatches = matchConclusionMetavariableNode(conclusionMetavariableNode, nodes, substitutions);
+              conclusionMetavariableNodeMatches = matchConclusionMetavariableNode(conclusionMetavariableNode, statementNode, substitutions);
 
         conclusionMetastatementNodeMatches = conclusionMetavariableNodeMatches; ///
       }
@@ -282,7 +279,7 @@ function metaMatchConclusionNonTerminalNode(conclusionNonTerminalNode, nonTermin
   return conclusionNonTerminalNodeMatches;
 }
 
-function metaMatchConclusionMetavariableNode(conclusionMetavariableNode, nodes, metaSubstitutions) {
+function metaMatchConclusionMetavariableNode(conclusionMetavariableNode, metastatementNode, metaSubstitutions) {
   let conclusionMetavariableNodeMatches = true;
 
   const conclusionMetavariableName = metavariableNameFromMetavariableNode(conclusionMetavariableNode),
@@ -295,7 +292,7 @@ function metaMatchConclusionMetavariableNode(conclusionMetavariableNode, nodes, 
     }) || null;
 
   if (metaSubstitution !== null) {
-    const metaSubstitutionNodesMatch = metaSubstitution.matchNodes(nodes);
+    const metaSubstitutionNodesMatch = metaSubstitution.matchMetastatementNode(metastatementNode);
 
     conclusionMetavariableNodeMatches = metaSubstitutionNodesMatch;  ///
   }
@@ -322,10 +319,7 @@ function metaMatchConclusionMetastatementNode(conclusionMetastatementNode, metas
 
       if (conclusionNonTerminalChildNodeRuleNameMetavariableRuleName) {
         const conclusionMetavariableNode = conclusionNonTerminalChildNode,  ///
-              nonTerminalNode = metastatementNode,  ///
-              childNodes = nonTerminalNode.getChildNodes(),
-              nodes = childNodes, ///
-              conclusionMetavariableNodeMatches = metaMatchConclusionMetavariableNode(conclusionMetavariableNode, nodes, metaSubstitutions);
+              conclusionMetavariableNodeMatches = metaMatchConclusionMetavariableNode(conclusionMetavariableNode, metastatementNode, metaSubstitutions);
 
         conclusionMetastatementNodeMatches = conclusionMetavariableNodeMatches; ///
       }

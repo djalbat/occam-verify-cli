@@ -1,59 +1,63 @@
 "use strict";
 
-import { matchNodes, bracketedChildNodeFromChildNodes } from "./utilities/node";
+import { STATEMENT_RULE_NAME } from "./ruleNames";
+import { matchNode, bracketedNonTerminalChildNodeFromChildNodes } from "./utilities/node";
 
 export default class Substitution {
-  constructor(metavariableName, nodes) {
+  constructor(metavariableName, statementNode) {
     this.metavariableName = metavariableName;
-    this.nodes = nodes;
+    this.statementNode = statementNode;
   }
 
   getMetavariableName() {
     return this.metavariableName;
   }
 
-  getNodes() {
-    return this.nodes;
+  getStatementNode() {
+    return this.statementNode;
   }
 
-  matchNodes(nodes) {
-    let matches;
+  matchStatementNode(statementNode) {
+    let matchesStatementNode;
 
-    const nodesA = this.nodes,  ///
-          nodesB = nodes,
-          nodesMatch = matchNodes(nodesA, nodesB);
+    const nodeA = this.statementNode,  ///
+          nodeB = statementNode,
+          nodeMatches = matchNode(nodeA, nodeB);
 
-    matches = nodesMatch;  ///
+    matchesStatementNode = nodeMatches;  ///
 
-    if (!matches) {
-      const childNodes = nodes, ///
-            bracketedChildNode = bracketedChildNodeFromChildNodes(childNodes);
+    if (!matchesStatementNode) {
+      const nonTerminalNode = statementNode,  ///
+            childNodes = nonTerminalNode.getChildNodes(), ///
+            ruleName = STATEMENT_RULE_NAME;
 
-      if (bracketedChildNode !== null) {
-        const nonTerminalNode = bracketedChildNode,  ///
-              childNodes = nonTerminalNode.getChildNodes(),
-              nodesB = childNodes, ///
-              nodesMatch = matchNodes(nodesA, nodesB);
+      statementNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
 
-        matches = nodesMatch; ///
+      if (statementNode !== null) {
+        const nodeA = this.statementNode,  ///
+              nodeB = statementNode,
+              nodeMatches = matchNode(nodeA, nodeB);
+
+        matchesStatementNode = nodeMatches;  ///
       }
     }
 
-    return matches;
+    return matchesStatementNode;
   }
 
-  static fromMetavariableNameAndNodes(metavariableName, nodes) {
-    const bracketedChildNode = bracketedChildNodeFromChildNodes(nodes);
+  static fromMetavariableNameAndStatementNode(metavariableName, statementNode) {
+    let substitution = new Substitution(metavariableName, statementNode);
 
-    if (bracketedChildNode !== null) {
-      const nonTerminalNode = bracketedChildNode,  ///
-            childNodes = nonTerminalNode.getChildNodes();
+    const nonTerminalNode = statementNode,  ///
+          childNodes = nonTerminalNode.getChildNodes(),
+          ruleName = STATEMENT_RULE_NAME;
 
-      nodes = childNodes; ///
+    statementNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
+
+    if (statementNode !== null) {
+      substitution = new Substitution(metavariableName, statementNode);
     }
 
-    const metaSubstitution = new Substitution(metavariableName, nodes);
-
-    return metaSubstitution;
+    return substitution;
   }
 }
