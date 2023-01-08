@@ -192,24 +192,32 @@ function matchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode, su
   let premiseNonTerminalNodeMatches = false;
 
   const ruleName = nonTerminalNode.getRuleName(),
-        premiseRuleName = premiseNonTerminalNode.getRuleName(), ///
+        childNodes = nonTerminalNode.getChildNodes(),
+        premiseNonTerminalNodeRuleName = premiseNonTerminalNode.getRuleName(),
+        premiseNonTerminalNodeChildNodes = premiseNonTerminalNode.getChildNodes(),
         ruleNameStatementRuleName = (ruleName === STATEMENT_RULE_NAME),
-        premiseRuleNameMetastatementRuleName = (premiseRuleName === METASTATEMENT_RULE_NAME);
+        premiseNonTerminalNodeRuleNameMetastatementRuleName = (premiseNonTerminalNodeRuleName === METASTATEMENT_RULE_NAME);
 
-  if (ruleNameStatementRuleName && premiseRuleNameMetastatementRuleName) {
+  if (ruleNameStatementRuleName && premiseNonTerminalNodeRuleNameMetastatementRuleName) {
     const statementNode = nonTerminalNode,  ///
           premiseMetastatementNode = premiseNonTerminalNode,  ///
           premiseMetastatementNodeMatches = matchPremiseMetastatementNode(premiseMetastatementNode, statementNode, substitutions);
 
-    premiseNonTerminalNodeMatches = premiseMetastatementNodeMatches; ///
-  } else if (ruleName === premiseRuleName) {
-    const childNodes = nonTerminalNode.getChildNodes(),
-          premiseChildNodes = premiseNonTerminalNode.getChildNodes(),
-          nodes = childNodes, ///
-          premiseNodes = premiseChildNodes, ///
-          premiseChildNodesMatches = matchPremiseNodes(premiseNodes, nodes, substitutions);
+    if (premiseMetastatementNodeMatches) {
+      premiseNonTerminalNodeMatches = true;
+    } else {
+      const nodes = childNodes, ///
+            premiseNodes = premiseNonTerminalNodeChildNodes, ///
+            premiseNonTerminalNodeChildNodesMatches = matchPremiseNodes(premiseNodes, nodes, substitutions);
 
-    premiseNonTerminalNodeMatches = premiseChildNodesMatches; ///
+      premiseNonTerminalNodeMatches = premiseNonTerminalNodeChildNodesMatches; ///
+    }
+  } else if (ruleName === premiseNonTerminalNodeRuleName) {
+    const nodes = childNodes, ///
+          premiseNodes = premiseNonTerminalNodeChildNodes, ///
+          premiseNonTerminalNodeChildNodesMatches = matchPremiseNodes(premiseNodes, nodes, substitutions);
+
+    premiseNonTerminalNodeMatches = premiseNonTerminalNodeChildNodesMatches; ///
   }
 
   return premiseNonTerminalNodeMatches;
@@ -247,11 +255,11 @@ function matchPremiseMetastatementNode(premiseMetastatementNode, statementNode, 
   let premiseMetastatementNodeMatches = false;
 
   const premiseNonTerminalNode = premiseMetastatementNode,  ///
-        premiseChildNodes = premiseNonTerminalNode.getChildNodes(),
-        premiseChildNodesLength = premiseChildNodes.length;
+        premiseNonTerminalNodeChildNodes = premiseNonTerminalNode.getChildNodes(),
+        premiseNonTerminalNodeChildNodesLength = premiseNonTerminalNodeChildNodes.length;
 
-  if (premiseChildNodesLength === 1) {
-    const firstPremiseChildNode = first(premiseChildNodes),
+  if (premiseNonTerminalNodeChildNodesLength === 1) {
+    const firstPremiseChildNode = first(premiseNonTerminalNodeChildNodes),
           premiseChildNode = firstPremiseChildNode,  ///
           premiseChildNodeNonTerminalNode = premiseChildNode.isNonTerminalNode();
 
@@ -331,24 +339,24 @@ function metaMatchPremiseNonTerminalNode(premiseNonTerminalNode, nonTerminalNode
   let premiseNonTerminalNodeMatches = false;
 
   const ruleName = nonTerminalNode.getRuleName(),
-        premiseRuleName = premiseNonTerminalNode.getRuleName(), ///
+        premiseNonTerminalNodeRuleName = premiseNonTerminalNode.getRuleName(),
         ruleNameMetastatementRuleName = (ruleName === METASTATEMENT_RULE_NAME),
-        premiseRuleNameMetastatementRuleName = (premiseRuleName === METASTATEMENT_RULE_NAME);
+        premiseNonTerminalNodeRuleNameMetastatementRuleName = (premiseNonTerminalNodeRuleName === METASTATEMENT_RULE_NAME);
 
-  if (ruleNameMetastatementRuleName && premiseRuleNameMetastatementRuleName) {
+  if (ruleNameMetastatementRuleName && premiseNonTerminalNodeRuleNameMetastatementRuleName) {
     const metastatementNode = nonTerminalNode,  ///
           premiseMetastatementNode = premiseNonTerminalNode,  ///
           premiseMetastatementNodeMatches = metaMatchPremiseMetastatementNode(premiseMetastatementNode, metastatementNode, metaSubstitutions);
 
     premiseNonTerminalNodeMatches = premiseMetastatementNodeMatches; ///
-  } else if (ruleName === premiseRuleName) {
+  } else if (ruleName === premiseNonTerminalNodeRuleName) {
     const childNodes = nonTerminalNode.getChildNodes(),
-          premiseChildNodes = premiseNonTerminalNode.getChildNodes(),
+          premiseNonTerminalNodeChildNodes = premiseNonTerminalNode.getChildNodes(), ///
           nodes = childNodes, ///
-          premiseNodes = premiseChildNodes, ///
-          premiseChildNodesMatches = metaMatchPremiseNodes(premiseNodes, nodes, metaSubstitutions);
+          premiseNodes = premiseNonTerminalNodeChildNodes, ///
+          premiseNonTerminalNodeChildNodesMatches = metaMatchPremiseNodes(premiseNodes, nodes, metaSubstitutions);
 
-    premiseNonTerminalNodeMatches = premiseChildNodesMatches; ///
+    premiseNonTerminalNodeMatches = premiseNonTerminalNodeChildNodesMatches; ///
   }
 
   return premiseNonTerminalNodeMatches;
@@ -386,11 +394,11 @@ function metaMatchPremiseMetastatementNode(premiseMetastatementNode, metastateme
   let premiseMetastatementNodeMatches = false;
 
   const premiseNonTerminalNode = premiseMetastatementNode,  ///
-        premiseChildNodes = premiseNonTerminalNode.getChildNodes(),
-        premiseChildNodesLength = premiseChildNodes.length;
+        premiseNonTerminalNodeChildNodes = premiseNonTerminalNode.getChildNodes(),
+        premiseNonTerminalNodeChildNodesLength = premiseNonTerminalNodeChildNodes.length;
 
-  if (premiseChildNodesLength === 1) {
-    const firstPremiseChildNode = first(premiseChildNodes),
+  if (premiseNonTerminalNodeChildNodesLength === 1) {
+    const firstPremiseChildNode = first(premiseNonTerminalNodeChildNodes),
           premiseChildNode = firstPremiseChildNode,  ///
           premiseChildNodeNonTerminalNode = premiseChildNode.isNonTerminalNode();
 

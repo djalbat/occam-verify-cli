@@ -219,7 +219,7 @@ function matchPremises(premise, proofSteps, substitutions) {
 }
 
 function matchConclusion(conclusion, statementNode, substitutions) {
-  const statementNodeMatches = conclusion.matchSstatementNode(statementNode, substitutions),
+  const statementNodeMatches = conclusion.matchStatementNode(statementNode, substitutions),
         conclusionMatches = statementNodeMatches; ///
 
   return conclusionMatches;
