@@ -97,8 +97,11 @@ function verifyVariableTypeAssertion(typeAssertionNode, proofContext) {
         firstVariable = first(variables),
         variable = firstVariable, ///
         variableName = variable.getName(),
-        variableType = variable.getType(),
-        assertedTypeEqualToOrSubTypeOfVariableType = assertedType.isEqualToOrSubTypeOf(variableType);
+        variableType = variable.getType();
+
+  const assertedTypeEqualToOrSubTypeOfVariableType = (variableType === null) ?
+                                                        true :  ///
+                                                          assertedType.isEqualToOrSubTypeOf(variableType);
 
   if (!assertedTypeEqualToOrSubTypeOfVariableType) {
     proofContext.error(`The asserted type is not equal to or a sub-type of the '${variableName}' variable type.`);

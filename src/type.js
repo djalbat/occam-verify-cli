@@ -17,39 +17,45 @@ export default class Type {
   }
 
   isEqualTo(type) {
-    const equalToType = (this === type);
+    const equalTo = (this === type);
 
-    return equalToType;
+    return equalTo;
   }
 
   isSubTypeOf(type) {
-    let subTypeOfType = false;
+    let subTypeOf = false;
 
-    if (this.superType === type) {
-      subTypeOfType = true;
-    } else {
-      if (this.superType !== null) {
-        subTypeOfType = this.superType.isSubTypeOf(type);
+    let superType = this.superType;
+
+    while (superType !== null) {
+      if (superType === type) {
+        subTypeOf = true;
+
+        break;
       }
+
+      superType = superType.getSuperType();
     }
 
-    return subTypeOfType;
+    return subTypeOf;
   }
 
   isSuperTypeOf(type) {
-    let superTypeOfType = false;
+    let superTypeOf = false;
 
-    const superType = type.getSuperType();
+    let superType = type.getSuperType();
 
-    if (superType === this) {
-      superTypeOfType = true;
-    } else {
-      if (superType !== null) {
-        superTypeOfType = superType.isSuperTypeOf(this);
+    while (superType !== null) {
+      if (superType === this) {
+        superTypeOf = true;
+
+        break;
       }
+
+      superType = superType.getSuperType();
     }
 
-    return superTypeOfType;
+    return superTypeOf;
   }
 
   isEqualToOrSubTypeOf(type) {
