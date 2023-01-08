@@ -20,16 +20,18 @@ export default function verifyStatement(statementNode, proofContext) {
 
   proofContext.debug(`Verifying the '${statementString}' statement...`);
 
-  if (equalityNode !== null) {
+  if (false) {
+    ///
+  } else if (equalityNode !== null) {
     const equalityVerified = verifyEquality(equalityNode, proofContext);
 
     statementVerified = equalityVerified; ///
-  }
-
-  if (typeAssertionNode !== null) {
+  } else if (typeAssertionNode !== null) {
     const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, proofContext);
 
     statementVerified = typeAssertionVerified; ///
+  } else {
+    statementVerified = true;
   }
 
   statementVerified ?

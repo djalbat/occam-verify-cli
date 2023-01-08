@@ -22,9 +22,14 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, proofCo
 
       qualifiedStatementVerified = statementVerified; ///
     } else {
-      const referenceName = referenceNameFromReferenceNode(referenceNode);
+      const referenceName = referenceNameFromReferenceNode(referenceNode),
+            rule = proofContext.findRuleByReferenceName(referenceName);
 
-      debugger
+      if (rule !== null) {
+        const ruleMatchesStatement = rule.matchStatement(statementNode, proofContext);
+
+        qualifiedStatementVerified = ruleMatchesStatement;  ///
+      }
     }
   }
 

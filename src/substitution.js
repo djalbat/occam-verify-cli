@@ -3,13 +3,13 @@
 import { matchNodes, bracketedChildNodeFromChildNodes } from "./utilities/node";
 
 export default class Substitution {
-  constructor(variableName, nodes) {
-    this.variableName = variableName;
+  constructor(metavariableName, nodes) {
+    this.metavariableName = metavariableName;
     this.nodes = nodes;
   }
 
-  getVariableName() {
-    return this.variableName;
+  getMetavariableName() {
+    return this.metavariableName;
   }
 
   getNodes() {
@@ -21,9 +21,9 @@ export default class Substitution {
 
     const nodesA = this.nodes,  ///
           nodesB = nodes,
-          metaSubstitutionNodesMatch = matchNodes(nodesA, nodesB);
+          nodesMatch = matchNodes(nodesA, nodesB);
 
-    matches = metaSubstitutionNodesMatch;  ///
+    matches = nodesMatch;  ///
 
     if (!matches) {
       const childNodes = nodes, ///
@@ -42,7 +42,7 @@ export default class Substitution {
     return matches;
   }
 
-  static fromMetavariableNameAndNodes(variableName, nodes) {
+  static fromMetavariableNameAndNodes(metavariableName, nodes) {
     const bracketedChildNode = bracketedChildNodeFromChildNodes(nodes);
 
     if (bracketedChildNode !== null) {
@@ -52,7 +52,7 @@ export default class Substitution {
       nodes = childNodes; ///
     }
 
-    const metaSubstitution = new Substitution(variableName, nodes);
+    const metaSubstitution = new Substitution(metavariableName, nodes);
 
     return metaSubstitution;
   }

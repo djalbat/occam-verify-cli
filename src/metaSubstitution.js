@@ -21,9 +21,9 @@ export default class MetaSubstitution {
 
     const nodesA = this.nodes,  ///
           nodesB = nodes,
-          metaSubstitutionNodesMatch = matchNodes(nodesA, nodesB);
+          nodesMatch = matchNodes(nodesA, nodesB);
 
-    matches = metaSubstitutionNodesMatch;  ///
+    matches = nodesMatch;  ///
 
     if (!matches) {
       const childNodes = nodes, ///
