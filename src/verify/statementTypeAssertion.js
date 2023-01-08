@@ -1,53 +1,59 @@
 "use strict";
 
-import { first } from "../../utilities/array";
-import { nodeAsString } from "../../utilities/string";
-import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
-import { verifyTermAsVariable, verifyTermAgainstConstructors } from "../../verify/term";
-import Variable from "../../variable";
+import Variable from "../variable";
+
+import { first } from "../utilities/array";
+import { nodeAsString } from "../utilities/string";
+import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
+import { verifyTermAsVariable, verifyTermAgainstConstructors } from "../verify/term";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
-      typeNodeQuery = nodeQuery("/typeAssertion/type");
+      typeNodeQuery = nodeQuery("/typeAssertion/type"),
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
-export default function verifyTypeAssertion(typeAssertionNode, proofContext) {
+export default function verifyStatementTypeAssertion(statementNode, proofContext) {
   let typeAssertionVerified = false;
 
-  proofContext.begin(typeAssertionNode);
+  proofContext.begin(statementNode);
 
-  const typeAssertionString = nodeAsString(typeAssertionNode);
+  const statementString = nodeAsString(statementNode);
 
-  proofContext.debug(`Verifying the '${typeAssertionString}' type assertion...`);
+  proofContext.debug(`Verifying the '${statementString}' statement type assertion...`);
 
-  const typeNode = typeNodeQuery(typeAssertionNode),
-        typeName = typeNameFromTypeNode(typeNode),
-        typePresent = proofContext.isTypePresentByTypeName(typeName);
+  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
-  if (!typePresent) {
-    proofContext.error(`The ${typeName} type is not present.`);
-  } else {
-    const context = proofContext, ///
-          termNode = termNodeQuery(typeAssertionNode),
-          variables = [],
-          termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
+  if (typeAssertionNode !== null) {
+    const typeNode = typeNodeQuery(typeAssertionNode),
+          typeName = typeNameFromTypeNode(typeNode),
+          typePresent = proofContext.isTypePresentByTypeName(typeName);
 
-    if (termVerifiedAsVariable) {
-      const variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, proofContext);
-
-      typeAssertionVerified = variableTypeAssertionVerified;  ///
+    if (!typePresent) {
+      proofContext.error(`The ${typeName} type is not present.`);
     } else {
-      const termTypeAssertionVerified = verifyTermTypeAssertion(typeAssertionNode, proofContext);
+      const context = proofContext, ///
+            termNode = termNodeQuery(typeAssertionNode),
+            variables = [],
+            termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
 
-      typeAssertionVerified = termTypeAssertionVerified;  ///
+      if (termVerifiedAsVariable) {
+        const variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, proofContext);
+
+        typeAssertionVerified = variableTypeAssertionVerified;  ///
+      } else {
+        const termTypeAssertionVerified = verifyTermTypeAssertion(typeAssertionNode, proofContext);
+
+        typeAssertionVerified = termTypeAssertionVerified;  ///
+      }
     }
   }
 
   if (typeAssertionVerified) {
-    proofContext.info(`Verified the '${typeAssertionString}' type assertion.`);
+    proofContext.info(`Verified the '${statementString}' statement type assertion.`);
   }
 
   typeAssertionVerified ?
-    proofContext.complete(typeAssertionNode) :
-      proofContext.halt(typeAssertionNode);
+    proofContext.complete(statementNode) :
+      proofContext.halt(statementNode);
 
   return typeAssertionVerified;
 }

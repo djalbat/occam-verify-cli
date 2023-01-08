@@ -2,10 +2,11 @@
 
 import { nodeQuery } from "./utilities/query";
 import { TERM_RULE_NAME } from "./ruleNames";
+import { EQUALS_CHARACTER } from "./constants";
 
-const equalityNodeQuery = nodeQuery("/statement/equality!"),
-      leftTermNodeQuery = nodeQuery("/equality/term[0]"),
-      rightTermNodeQuery = nodeQuery("/equality/term[1]");
+const specialNodeQuery = nodeQuery("/statement/@special!"),
+      leftTermNodeQuery = nodeQuery("/statement/term[0]"),
+      rightTermNodeQuery = nodeQuery("/statement/term[1]");
 
 export default class Equality {
   constructor(leftTermNode, rightTermNode) {
@@ -85,23 +86,20 @@ export default class Equality {
     const statementNode = proofStep.getStatementNode();
 
     if (statementNode !== null) {
-      const equalityNode = equalityNodeQuery(statementNode);
+      const specialNode = specialNodeQuery(statementNode);
 
-      if (equalityNode !== null) {
-        const leftTermNode = leftTermNodeQuery(equalityNode),
-              rightTermNode = rightTermNodeQuery(equalityNode);
+      if (specialNode !== null) {
+        const terminalNode = specialNode, ///
+              terminalNodeContent = terminalNode.getContent();
 
-        equality = new Equality(leftTermNode, rightTermNode);
+        if (terminalNodeContent === EQUALS_CHARACTER) {
+          const leftTermNode = leftTermNodeQuery(statementNode),
+                rightTermNode = rightTermNodeQuery(statementNode);
+
+          equality = new Equality(leftTermNode, rightTermNode);
+        }
       }
     }
-
-    return equality;
-  }
-
-  static fromEqualityNode(equalityNode) {
-    const leftTermNode = leftTermNodeQuery(equalityNode),
-          rightTermNode = rightTermNodeQuery(equalityNode),
-          equality = new Equality(leftTermNode, rightTermNode);
 
     return equality;
   }

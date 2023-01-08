@@ -1,37 +1,33 @@
 "use strict";
 
-import verifyEquality from "../verify/equality";
-import verifyTypeAssertion from "../verify/assertion/type";
+import verifyStatementAsEquality from "../verify/statementAsEquality";
+import verifyStatementTypeAssertion from "../verify/statementTypeAssertion";
 
-import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
-
-const equalityNodeQuery = nodeQuery("/statement/equality!"),
-      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 export default function verifyStatement(statementNode, proofContext) {
   let statementVerified = false;
 
   proofContext.begin(statementNode);
 
-  const equalityNode = equalityNodeQuery(statementNode),
-        statementString = nodeAsString(statementNode),
-        typeAssertionNode = typeAssertionNodeQuery(statementNode);
+  const statementString = nodeAsString(statementNode);
 
   proofContext.debug(`Verifying the '${statementString}' statement...`);
 
-  if (false) {
-    ///
-  } else if (equalityNode !== null) {
-    const equalityVerified = verifyEquality(equalityNode, proofContext);
+  if (!statementVerified) {
+    const equalityVerifiedAsEquality = verifyStatementAsEquality(statementNode, proofContext);
 
-    statementVerified = equalityVerified; ///
-  } else if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, proofContext);
+    statementVerified = equalityVerifiedAsEquality; ///
+  }
 
-    statementVerified = typeAssertionVerified; ///
-  } else {
-    statementVerified = true;
+  if (!statementVerified) {
+    const statementTypeAssertionVerified = verifyStatementTypeAssertion(statementNode, proofContext);
+
+    statementVerified = statementTypeAssertionVerified; ///
+  }
+
+  if (!statementVerified) {
+    statementVerified = true; ///
   }
 
   statementVerified ?
