@@ -250,28 +250,30 @@ function metaMatchConclusionNonTerminalNode(conclusionNonTerminalNode, nonTermin
   let conclusionNonTerminalNodeMatches = false;
 
   const ruleName = nonTerminalNode.getRuleName(),
-        conclusionNonTerminalNodeRuleName = conclusionNonTerminalNode.getRuleName();
+        childNodes = nonTerminalNode.getChildNodes(),
+        conclusionNonTerminalNodeRuleName = conclusionNonTerminalNode.getRuleName(),
+        conclusionNonTerminalNodeChildNodes = conclusionNonTerminalNode.getChildNodes(),
+        nodes = childNodes, ///
+        conclusionNodes = conclusionNonTerminalNodeChildNodes, ///
+        ruleNameMetastatementRuleName = (ruleName === METASTATEMENT_RULE_NAME),
+        conclusionNonTerminalNodeRuleNameMetastatementRuleName = (conclusionNonTerminalNodeRuleName === METASTATEMENT_RULE_NAME);
 
-  if (ruleName === conclusionNonTerminalNodeRuleName) {
-    const childNodes = nonTerminalNode.getChildNodes(),
-          conclusionNonTerminalNodeChildNodes = conclusionNonTerminalNode.getChildNodes(),
-          nodes = childNodes, ///
-          conclusionNodes = conclusionNonTerminalNodeChildNodes, ///
-          conclusionNonTerminalNodeChildNodesMatches = metaMatchConclusionNodes(conclusionNodes, nodes, metaSubstitutions);
+  if (ruleNameMetastatementRuleName && conclusionNonTerminalNodeRuleNameMetastatementRuleName) {
+    const statementNode = nonTerminalNode,  ///
+          conclusionMetastatementNode = conclusionNonTerminalNode,  ///
+          conclusionMetastatementNodeMatches = metaMatchConclusionMetastatementNode(conclusionMetastatementNode, statementNode, metaSubstitutions);
+
+    if (conclusionMetastatementNodeMatches) {
+      conclusionNonTerminalNodeMatches = true; ///
+    } else {
+      const conclusionNonTerminalNodeChildNodesMatches = metaMatchConclusionNodes(conclusionNodes, nodes, metaSubstitutions);
+
+      conclusionNonTerminalNodeMatches = conclusionNonTerminalNodeChildNodesMatches; ///
+    }
+  } else if (ruleName === conclusionNonTerminalNodeRuleName) {
+    const conclusionNonTerminalNodeChildNodesMatches = metaMatchConclusionNodes(conclusionNodes, nodes, metaSubstitutions);
 
     conclusionNonTerminalNodeMatches = conclusionNonTerminalNodeChildNodesMatches; ///
-
-    if (!conclusionNonTerminalNodeMatches) {
-      const ruleNameMetastatementRuleName = (ruleName === METASTATEMENT_RULE_NAME);
-
-      if (ruleNameMetastatementRuleName) {
-        const metastatementNode = nonTerminalNode,  ///
-              conclusionMetastatementNode = conclusionNonTerminalNode,  ///
-              conclusionMetastatementNodeMatches = metaMatchConclusionMetastatementNode(conclusionMetastatementNode, metastatementNode, metaSubstitutions);
-
-        conclusionNonTerminalNodeMatches = conclusionMetastatementNodeMatches; ///
-      }
-    }
   }
 
   return conclusionNonTerminalNodeMatches;
@@ -282,12 +284,12 @@ function metaMatchConclusionMetavariableNode(conclusionMetavariableNode, metasta
 
   const conclusionMetavariableName = metavariableNameFromMetavariableNode(conclusionMetavariableNode),
         metaSubstitution = metaSubstitutions.find((metaSubstitution) => {
-      const metavariableName = metaSubstitution.getMetavariableName();
+          const metavariableName = metaSubstitution.getMetavariableName();
 
-      if (metavariableName === conclusionMetavariableName) {
-        return true;
-      }
-    }) || null;
+          if (metavariableName === conclusionMetavariableName) {
+            return true;
+          }
+        }) || null;
 
   if (metaSubstitution !== null) {
     const metaSubstitutionNodesMatch = metaSubstitution.matchMetastatementNode(metastatementNode);
