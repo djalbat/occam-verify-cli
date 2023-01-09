@@ -2,6 +2,7 @@
 
 import verifyStatement from "../../verify/statement";
 
+import { nodeAsString } from "../../utilities/string";
 import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
@@ -15,6 +16,10 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, proofCo
   const statementNode = statementNodeQuery(qualifiedStatementNode);
 
   if (statementNode !== null) {
+    const statementString = nodeAsString(statementNode);
+
+    proofContext.debug(`Verifying the ${statementString} qualified statement...`);
+
     const referenceNode = referenceNodeQuery(qualifiedStatementNode);
 
     if (referenceNode === null) {

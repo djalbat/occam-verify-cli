@@ -1,15 +1,15 @@
 "use strict";
 
 export default function verifyMetastatement(metastatementNode, metaproofContext) {
-  let statementVerified;
+  let metastatementVerified;
 
   metaproofContext.begin(metastatementNode);
 
-  statementVerified = true; ///
+  metastatementVerified = true; ///
 
-  statementVerified ?
+  metastatementVerified ?
     metaproofContext.complete(metastatementNode) :
       metaproofContext.halt(metastatementNode);
 
-  return statementVerified;
+  return metastatementVerified;
 }

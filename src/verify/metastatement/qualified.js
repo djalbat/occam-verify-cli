@@ -1,5 +1,6 @@
 "use strict";
 
+import { nodeAsString } from "../../utilities/string";
 import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
 
 const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/reference!"),
@@ -13,6 +14,10 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
   const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
 
   if (metastatementNode !== null) {
+    const metastatementString = nodeAsString(metastatementNode);
+
+    metaproofContext.debug(`Verifying the ${metastatementString} qualified metastatement...`);
+
     const referenceNode = referenceNodeQuery(qualifiedMetastatementNode),
           referenceName = referenceNameFromReferenceNode(referenceNode),
           rule = metaproofContext.findRuleByReferenceName(referenceName);
