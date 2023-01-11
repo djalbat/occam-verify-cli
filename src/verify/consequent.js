@@ -13,19 +13,16 @@ export default function verifyConsequent(consequentNode, consequents, proofConte
 
   proofContext.begin(consequentNode);
 
-  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode);
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode),
+        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
 
-  if (unqualifiedStatementNode !== null) {
-    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
+  if (unqualifiedStatementVerified) {
+    const statementNode = statementNodeQuery(unqualifiedStatementNode),
+          consequent = Consequent.fromStatementNode(statementNode);
 
-    if (unqualifiedStatementVerified) {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode),
-            consequent = Consequent.fromStatementNode(statementNode);
+    consequents.push(consequent);
 
-      consequents.push(consequent);
-
-      consequentVerified = true;
-    }
+    consequentVerified = true;
   }
 
   consequentVerified ?

@@ -13,19 +13,16 @@ export default function verifyConclusion(conclusionNode, conclusions, metaproofC
 
   metaproofContext.begin(conclusionNode);
 
-  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode);
+  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode),
+        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
 
-  if (unqualifiedMetastatementNode !== null) {
-    const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
+  if (unqualifiedMetastatementVerified) {
+    const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
+          conclusion = Conclusion.fromMetastatementNode(metastatementNode);
 
-    if (unqualifiedMetastatementVerified) {
-      const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-            conclusion = Conclusion.fromMetastatementNode(metastatementNode);
+    conclusions.push(conclusion);
 
-      conclusions.push(conclusion);
-
-      conclusionVerified = true;
-    }
+    conclusionVerified = true;
   }
 
   conclusionVerified ?

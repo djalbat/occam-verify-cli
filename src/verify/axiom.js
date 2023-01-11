@@ -35,7 +35,7 @@ export default function verifyAxiom(axiomNode, fileContext) {
           unconditionalIndicativeNode = unconditionalIndicativeNodeQuery(axiomNode);
 
     let conditionalIndicativeVerified = false,
-      unconditionalIndicativeVerified = false;
+        unconditionalIndicativeVerified = false;
 
     if (conditionalIndicativeNode !== null) {
       conditionalIndicativeVerified = verifyConditionalIndicative(conditionalIndicativeNode, antecedents, consequents, proofContext);
