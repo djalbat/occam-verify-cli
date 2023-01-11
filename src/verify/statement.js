@@ -20,10 +20,6 @@ export default function verifyStatement(statementNode, proofContext) {
     statementVerified = statementTypeAssertionVerified; ///
   }
 
-  if (!statementVerified) {
-    statementVerified = true; ///
-  }
-
   statementVerified ?
     proofContext.complete(statementNode) :
       proofContext.halt(statementNode);

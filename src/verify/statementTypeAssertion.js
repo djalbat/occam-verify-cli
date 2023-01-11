@@ -12,7 +12,7 @@ const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 export default function verifyStatementTypeAssertion(statementNode, proofContext) {
-  let typeAssertionVerified = false;
+  let statementTypeAssertionVerified = false;
 
   proofContext.begin(statementNode);
 
@@ -38,24 +38,24 @@ export default function verifyStatementTypeAssertion(statementNode, proofContext
       if (termVerifiedAsVariable) {
         const variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, proofContext);
 
-        typeAssertionVerified = variableTypeAssertionVerified;  ///
+        statementTypeAssertionVerified = variableTypeAssertionVerified;  ///
       } else {
         const termTypeAssertionVerified = verifyTermTypeAssertion(typeAssertionNode, proofContext);
 
-        typeAssertionVerified = termTypeAssertionVerified;  ///
+        statementTypeAssertionVerified = termTypeAssertionVerified;  ///
       }
     }
   }
 
-  if (typeAssertionVerified) {
+  if (statementTypeAssertionVerified) {
     proofContext.info(`Verified the '${statementString}' statement type assertion.`);
   }
 
-  typeAssertionVerified ?
+  statementTypeAssertionVerified ?
     proofContext.complete(statementNode) :
       proofContext.halt(statementNode);
 
-  return typeAssertionVerified;
+  return statementTypeAssertionVerified;
 }
 
 function verifyTermTypeAssertion(typeAssertionNode, proofContext) {
