@@ -12,7 +12,7 @@ import { VARIABLE_RULE_NAME, STATEMENT_RULE_NAME } from "./ruleNames";
 const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
       unqualifiedStatementStatementNodesQuery = nodesQuery("/subproof/unqualifiedStatement/statement!"),
-      qualifiedOrUnqualifiedStatementStatementNodeQuery = nodeQuery("/subproof/metaDerivation|abridgedMetaDerivation/qualifiedStatement|unqualifiedStatement[-1]/statement!");
+      qualifiedOrUnqualifiedStatementStatementNodeQuery = nodeQuery("/subproof/subDerivation/qualifiedStatement|unqualifiedStatement[-1]/statement!");
 
 export default class Antecedent {
   constructor(statementNode) {

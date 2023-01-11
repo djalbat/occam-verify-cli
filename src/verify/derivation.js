@@ -8,10 +8,10 @@ import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { SUBPROOF_RULE_NAME, QUALIFIED_STATEMENT_RULE_NAME, UNQUALIFIED_STATEMENT_RULE_NAME } from "../ruleNames";
 
-const statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/statement!"),
-      derivationNodeQuery = nodeQuery("/subproof/derivation|abridgedDerivation!"),  ///
-      derivationChildNodesQuery = nodesQuery("/derivation|abridgedDerivation/*"),
-      unqualifiedStatementNodesQuery = nodesQuery("/subproof/unqualifiedStatement")
+const childNodesQuery = nodesQuery("/derivation|subDerivation/*"),
+      statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/statement!"),
+      subDerivationNodeQuery = nodeQuery("/subproof/subDerivation"),
+      unqualifiedStatementNodesQuery = nodesQuery("/subproof/unqualifiedStatement");
 
 export default function verifyDerivation(derivationNode, proofContext) {
   let derivationVerified;
@@ -20,17 +20,17 @@ export default function verifyDerivation(derivationNode, proofContext) {
 
   proofContext.setDerived();
 
-  const derivationChildNodes = derivationChildNodesQuery(derivationNode);
+  const childNodes = childNodesQuery(derivationNode);
 
-  derivationVerified = derivationChildNodes.every((derivationChildNode) => {  ///
-    const derivationChildVerified = verifyDerivationChild(derivationChildNode, proofContext);
+  derivationVerified = childNodes.every((childNode) => {  ///
+    const childVerified = verifyChild(childNode, proofContext);
 
-    if (derivationChildVerified) {
+    if (childVerified) {
       return true;
     }
   });
 
-  proofContext.setDerived();
+  proofContext.resetDerived();
 
   derivationVerified ?
     proofContext.complete(derivationNode) :
@@ -39,61 +39,30 @@ export default function verifyDerivation(derivationNode, proofContext) {
   return derivationVerified;
 }
 
-function verifyDerivationChild(derivationChildNode, proofContext) {
-  let derivationChildVerified;
+function verifySubDerivation(subDerivationNode, proofContext) {
+  let derivationVerified;
 
-  const ruleName = derivationChildNode.getRuleName();
+  proofContext.begin(subDerivationNode);
 
-  switch (ruleName) {
-    case SUBPROOF_RULE_NAME: {
-      const subproofNode = derivationChildNode,  ///
-            subproofVerified = verifySubproof(subproofNode, proofContext);
+  proofContext.setDerived();
 
-      if (subproofVerified) {
-        const proofStep = ProofStep.fromSubproofNode(subproofNode);
+  const childNodes = childNodesQuery(subDerivationNode);
 
-        proofContext.addProofStep(proofStep);
+  derivationVerified = childNodes.every((childNode) => {  ///
+    const childVerified = verifyChild(childNode, proofContext);
 
-        derivationChildVerified = true;
-      }
-
-      break;
+    if (childVerified) {
+      return true;
     }
+  });
 
-    case QUALIFIED_STATEMENT_RULE_NAME: {
-      const qualifiedStatementNode = derivationChildNode,  ///
-            qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
+  proofContext.resetDerived();
 
-      if (qualifiedStatementVerified) {
-        const statementNode = statementNodeQuery(qualifiedStatementNode),
-              proofStep = ProofStep.fromStatementNode(statementNode);
+  derivationVerified ?
+    proofContext.complete(subDerivationNode) :
+      proofContext.halt(subDerivationNode);
 
-        proofContext.addProofStep(proofStep);
-
-        derivationChildVerified = qualifiedStatementVerified; ///
-      }
-
-      break;
-    }
-
-    case UNQUALIFIED_STATEMENT_RULE_NAME: {
-      const unqualifiedStatementNode = derivationChildNode,  ///
-            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
-
-      if (unqualifiedStatementVerified) {
-        const statementNode = statementNodeQuery(unqualifiedStatementNode),
-              proofStep = ProofStep.fromStatementNode(statementNode);
-
-        proofContext.addProofStep(proofStep);
-
-        derivationChildVerified = true;
-      }
-
-      break;
-    }
-  }
-
-  return derivationChildVerified;
+  return derivationVerified;
 }
 
 function verifySubproof(subproofNode, proofContext) {
@@ -118,13 +87,70 @@ function verifySubproof(subproofNode, proofContext) {
       proofContext.addProofStep(proofStep);
     });
 
-    const derivationNode = derivationNodeQuery(subproofNode),
-          derivationVerified = verifyDerivation(derivationNode, proofContext);
+    const subDerivationNode = subDerivationNodeQuery(subproofNode),
+          subDerivationVerified = verifySubDerivation(subDerivationNode, proofContext);
 
-    if (derivationVerified) {
+    if (subDerivationVerified) {
       subproofVerified = true;
     }
   }
 
   return subproofVerified;
+}
+
+function verifyChild(childNode, proofContext) {
+  let childVerified;
+
+  const childNodeRuleName = childNode.getRuleName();
+
+  switch (childNodeRuleName) {
+    case SUBPROOF_RULE_NAME: {
+      const subproofNode = childNode,  ///
+            subproofVerified = verifySubproof(subproofNode, proofContext);
+
+      if (subproofVerified) {
+        const proofStep = ProofStep.fromSubproofNode(subproofNode);
+
+        proofContext.addProofStep(proofStep);
+
+        childVerified = true;
+      }
+
+      break;
+    }
+
+    case QUALIFIED_STATEMENT_RULE_NAME: {
+      const qualifiedStatementNode = childNode,  ///
+            qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
+
+      if (qualifiedStatementVerified) {
+        const statementNode = statementNodeQuery(qualifiedStatementNode),
+              proofStep = ProofStep.fromStatementNode(statementNode);
+
+        proofContext.addProofStep(proofStep);
+
+        childVerified = qualifiedStatementVerified; ///
+      }
+
+      break;
+    }
+
+    case UNQUALIFIED_STATEMENT_RULE_NAME: {
+      const unqualifiedStatementNode = childNode,  ///
+            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
+
+      if (unqualifiedStatementVerified) {
+        const statementNode = statementNodeQuery(unqualifiedStatementNode),
+              proofStep = ProofStep.fromStatementNode(statementNode);
+
+        proofContext.addProofStep(proofStep);
+
+        childVerified = true;
+      }
+
+      break;
+    }
+  }
+
+  return childVerified;
 }
