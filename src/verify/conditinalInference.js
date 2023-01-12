@@ -1,7 +1,7 @@
 "use strict";
 
+import verifyPremise from "../verify/premise";
 import verifyConclusion from "../verify/conclusion";
-import verifyPrmise from "../verify/premise";
 
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
@@ -16,7 +16,7 @@ export default function verifyConditionalInference(conditionalInferenceNode, pre
   const conclusionNode = conclusionNodeQuery(conditionalInferenceNode),
         premiseNodes = premisesNodeQuery(conditionalInferenceNode),
         premisesVerified = premiseNodes.every((premiseNode) => {
-          const premiseVerified = verifyPrmise(premiseNode, premises, metaproofContext);
+          const premiseVerified = verifyPremise(premiseNode, premises, metaproofContext);
 
           if (premiseVerified) {
             return true;

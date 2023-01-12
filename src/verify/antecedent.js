@@ -5,6 +5,7 @@ import Antecedent from "../antecedent";
 
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
+import verifyStatement from "./statement";
 
 const statementNodeQuery = nodeQuery("/antecedent/unqualifiedStatement!/statement!");
 
@@ -20,12 +21,17 @@ export default function verifyAntecedent(antecedentNode, antecedents, proofConte
   const statementNode = statementNodeQuery(antecedentNode);
 
   if (statementNode !== null) {
-    const proofStep = ProofStep.fromStatementNode(statementNode),
-          antecedent = Antecedent.fromStatementNode(statementNode);
+    const qualified = false,
+          statementVerified = verifyStatement(statementNode, qualified, proofContext);
 
-    antecedents.push(antecedent);
+    if (statementVerified) {
+      const proofStep = ProofStep.fromStatementNode(statementNode),
+            antecedent = Antecedent.fromStatementNode(statementNode);
 
-    proofContext.addProofStep(proofStep);
+      antecedents.push(antecedent);
+
+      proofContext.addProofStep(proofStep);
+    }
 
     antecedentVerified = true;
   }

@@ -27,11 +27,7 @@ export default function verifyProof(proofNode, conclusion, proofContext) {
   }
 
   if (qualifiedStatementNode !== null) {
-    proofContext.setDerived();
-
     qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
-
-    proofContext.resetDerived();
 
     if (qualifiedStatementVerified) {
       const statementNode = statementNodeQuery(qualifiedStatementNode),

@@ -18,8 +18,6 @@ export default function verifyMetaDerivation(metaDerivationNode, metaproofContex
 
   metaproofContext.begin(metaDerivationNode);
 
-  metaproofContext.setDerived();
-
   const childNodes = childNodesQuery(metaDerivationNode);
 
   metaDerivationVerified = childNodes.every((childNode) => {  ///
@@ -29,8 +27,6 @@ export default function verifyMetaDerivation(metaDerivationNode, metaproofContex
       return true;
     }
   });
-
-  metaproofContext.resetDerived();
 
   metaDerivationVerified ?
     metaproofContext.complete(metaDerivationNode) :
@@ -44,8 +40,6 @@ function verifyMetaSubDerivation(metaSubDerivationNode, metaproofContext) {
 
   metaproofContext.begin(metaSubDerivationNode);
 
-  metaproofContext.setDerived();
-
   const childNodes = childNodesQuery(metaSubDerivationNode);
 
   metaDerivationVerified = childNodes.every((childNode) => {  ///
@@ -55,8 +49,6 @@ function verifyMetaSubDerivation(metaSubDerivationNode, metaproofContext) {
       return true;
     }
   });
-
-  metaproofContext.resetDerived();
 
   metaDerivationVerified ?
     metaproofContext.complete(metaSubDerivationNode) :
@@ -72,17 +64,17 @@ function verifyMetaSubproof(metaSubproofNode, metaproofContext) {
 
   const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(metaSubproofNode),
         unqualifiedMetastatementsVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
-      const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
+          const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
 
-      if (unqualifiedMetastatementVerified) {
-        return true;
-      }
-    });
+          if (unqualifiedMetastatementVerified) {
+            return true;
+          }
+        });
 
   if (unqualifiedMetastatementsVerified) {
     unqualifiedMetastatementNodes.forEach((unqualifiedMetastatementNode) => {
       const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-        metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
+            metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
 
       metaproofContext.addMetaproofStep(metaproofStep);
     });

@@ -17,15 +17,9 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
 
     metaproofContext.debug(`Verifying the ${metastatementString} unqualified metastatement...`);
 
-    const derived = metaproofContext.isDerived();
+    const metaAssertionMatches = metaproofContext.matchMetastatement(metastatementNode);
 
-    if (derived) {
-      const metaAssertionMatches = metaproofContext.matchMetastatement(metastatementNode);
-
-      unqualifiedMetastatementVerified = metaAssertionMatches;  ///
-    } else {
-      unqualifiedMetastatementVerified = true;
-    }
+    unqualifiedMetastatementVerified = metaAssertionMatches;  ///
   }
 
   unqualifiedMetastatementVerified ?

@@ -3,19 +3,19 @@
 import verifyStatementAsEquality from "../verify/statementAsEquality";
 import verifyStatementTypeAssertion from "../verify/statementTypeAssertion";
 
-export default function verifyStatement(statementNode, proofContext) {
+export default function verifyStatement(statementNode, qualified, proofContext) {
   let statementVerified = false;
 
   proofContext.begin(statementNode);
 
   if (!statementVerified) {
-    const equalityVerifiedAsEquality = verifyStatementAsEquality(statementNode, proofContext);
+    const equalityVerifiedAsEquality = verifyStatementAsEquality(statementNode, qualified, proofContext);
 
     statementVerified = equalityVerifiedAsEquality; ///
   }
 
   if (!statementVerified) {
-    const statementTypeAssertionVerified = verifyStatementTypeAssertion(statementNode, proofContext);
+    const statementTypeAssertionVerified = verifyStatementTypeAssertion(statementNode, qualified, proofContext);
 
     statementVerified = statementTypeAssertionVerified; ///
   }

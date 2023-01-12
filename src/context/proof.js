@@ -7,19 +7,14 @@ import callbacksMixins from "../mixins/callbacks";
 import { push, last } from "../utilities/array";
 
 class ProofContext {
-  constructor(context, derived, variables, proofSteps) {
+  constructor(context, variables, proofSteps) {
     this.context = context;
-    this.derived = derived;
     this.variables = variables;
     this.proofSteps = proofSteps;
   }
 
   getContext() {
     return this.context;
-  }
-
-  isDerived() {
-    return this.derived;
   }
 
   getProofSteps() {
@@ -61,14 +56,6 @@ class ProofContext {
     const lastProofStep = last(this.proofSteps);
 
     return lastProofStep;
-  }
-
-  setDerived(derived = true) {
-    this.derived = derived;
-  }
-
-  resetDerived() {
-    this.derived = false;
   }
 
   addVariable(variable) {
@@ -136,21 +123,19 @@ class ProofContext {
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
-          derived = false,
           variables = [],
           proofSteps = [],
-          proofContext = new ProofContext(context, derived, variables, proofSteps);
+          proofContext = new ProofContext(context, variables, proofSteps);
 
     return proofContext;
   }
 
   static fromProofContext(proofContext) {
     const context = proofContext,  ///
-          derived = false,
           variables = [],
           proofSteps = [];
 
-    proofContext = new ProofContext(context, derived, variables, proofSteps);
+    proofContext = new ProofContext(context, variables, proofSteps);
 
     return proofContext;
   }

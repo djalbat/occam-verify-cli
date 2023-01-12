@@ -17,15 +17,9 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, pro
 
     proofContext.debug(`Verifying the ${statementString} unqualified statement...`);
 
-    const derived = proofContext.isDerived();
+    const assertionMatches = proofContext.matchStatement(statementNode);
 
-    if (derived) {
-      const assertionMatches = proofContext.matchStatement(statementNode);
-
-      unqualifiedStatementVerified = assertionMatches;  ///
-    } else {
-      unqualifiedStatementVerified = true;
-    }
+    unqualifiedStatementVerified = assertionMatches;  ///
   }
 
   unqualifiedStatementVerified ?

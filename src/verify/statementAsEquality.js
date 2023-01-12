@@ -1,20 +1,18 @@
 "use strict";
 
 import Equality from "../equality";
-import Variable from "../variable";
 import verifyTerm from "../verify/term";
 
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
 import { first, second } from "../utilities/array";
-import { verifyTermAsVariable } from "../verify/term";
 import { EQUALS_CHARACTER, MAXIMUM_INDEXES_LENGTH } from "../constants";
 
 const specialNodeQuery = nodeQuery("/statement/@special!"),
       leftTermNodeQuery = nodeQuery("/statement/term[0]"),
       rightTermNodeQuery = nodeQuery("/statement/term[1]");
 
-export default function verifyStatementAsEquality(statementNode, proofContext) {
+export default function verifyStatementAsEquality(statementNode, qualified, proofContext) {
   let statementVerifiedAsEquality = false;
 
   proofContext.begin(statementNode);
@@ -48,38 +46,16 @@ export default function verifyStatementAsEquality(statementNode, proofContext) {
         if ((leftType === null) && (rightType === null)) {
           proofContext.error(`The types of the '${leftTermString}' and '${rightTermString}' terms are both undefined and therefore the terms cannot be equated.`);
         } else if (rightType === null) {
-          const type = leftType,  ///
-                termNode = rightTermNode, ///
-                variable = addVariable(type, termNode, proofContext);
-
-          if (variable !== null) {
-            const leftTypeName = leftType.getName();
-
-            proofContext.info(`The '${rightTermString}' variable has been given the '${leftTypeName}' type.`);
-
-            statementVerifiedAsEquality = true;
-          }
+          proofContext.info(`The type of the right '${rightTermString}' term is undefined and therefore the types cannot be equated.`);
         } else if (leftType === null) {
-          const type = rightType,  ///
-                termNode = leftType, ///
-                variable = addVariable(type, termNode, proofContext);
-
-          if (variable !== null) {
-            const rightTypeName = rightType.getName();
-
-            proofContext.info(`The '${rightTermString}' variable has been given the '${rightTypeName}' type.`);
-
-            statementVerifiedAsEquality = true;
-          }
+          proofContext.info(`The type of the left '${leftTermString}' term is undefined and therefore the types cannot be equated.`);
         } else {
           const leftTypeMatchesRightType = leftType.match(rightType);
 
           if (!leftTypeMatchesRightType) {
             proofContext.error(`The types of the '${leftTermString}' and '${rightTermString}' terms do not match and therefore the terms cannot be equated.`);
           } else {
-            const derived = proofContext.isDerived();
-
-            if (!derived) {
+            if (!qualified) {
               statementVerifiedAsEquality = true;
             } else {
               const equality = Equality.fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode),
@@ -122,25 +98,4 @@ function equalitiesFromProofSteps(proofSteps) {
   }, []);
 
   return equalities;
-}
-
-function addVariable(type, termNode, proofContext) {
-  let variable = null;
-
-  const variables = [],
-        termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, proofContext);
-
-  if (termVerifiedAsVariable) {
-    const firstVariable = first(variables);
-
-    variable = firstVariable;  ///
-
-    const name = variable.getName();
-
-    variable = Variable.fromTypeAndName(type, name);  ///
-
-    proofContext.addVariable(variable);
-  }
-
-  return variable;
 }

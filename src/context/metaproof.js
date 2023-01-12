@@ -7,18 +7,13 @@ import callbacksMixins from "../mixins/callbacks";
 import { last } from "../utilities/array";
 
 class MetaproofContext {
-  constructor(context, derived, metaproofSteps) {
+  constructor(context, metaproofSteps) {
     this.context = context;
-    this.derived = derived;
     this.metaproofSteps = metaproofSteps;
   }
 
   getContext() {
     return this.context;
-  }
-
-  isDerived() {
-    return this.derived;
   }
 
   getMetaproofSteps() {
@@ -42,14 +37,6 @@ class MetaproofContext {
     }
 
     return lastMetaproofStep;
-  }
-
-  setDerived(derived = true) {
-    this.derived = derived;
-  }
-
-  resetDerived() {
-    this.derived = false;
   }
 
   addMetaproofStep(metaproofStep) {
@@ -76,19 +63,17 @@ class MetaproofContext {
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
-          derived = false,
           metaproofSteps = [],
-          metaproofContext = new MetaproofContext(context, derived, metaproofSteps);
+          metaproofContext = new MetaproofContext(context, metaproofSteps);
 
     return metaproofContext;
   }
 
   static fromMetaproofContext(metaproofContext) {
     const context = metaproofContext,  ///
-          derived = false,
           metaproofSteps = [];
 
-    metaproofContext = new MetaproofContext(context, derived, metaproofSteps);  ///
+    metaproofContext = new MetaproofContext(context, metaproofSteps);  ///
 
     return metaproofContext;
   }

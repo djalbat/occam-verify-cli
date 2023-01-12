@@ -23,7 +23,8 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, proofCo
     const referenceNode = referenceNodeQuery(qualifiedStatementNode);
 
     if (referenceNode === null) {
-      const statementVerified = verifyStatement(statementNode, proofContext);
+      const qualified = true,
+            statementVerified = verifyStatement(statementNode, qualified, proofContext);
 
       qualifiedStatementVerified = statementVerified; ///
     } else {
