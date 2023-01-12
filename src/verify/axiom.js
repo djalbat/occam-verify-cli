@@ -3,7 +3,7 @@
 import Axiom from "../axiom";
 import ProofContext from "../context/proof";
 import verifyLabels from "../verify/labels";
-import verifyConditionalIndicative from "../verify/conditinalIndicative";
+import verifyConditionalIndicative from "../verify/conditionalIndicative";
 import verifyUnconditionalIndicative from "../verify/unconditionalIndicative";
 
 import { first } from "../utilities/array";
