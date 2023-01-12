@@ -1,24 +1,25 @@
 "use strict";
 
 import Conclusion from "../conclusion";
-import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
+import {nodeAsString} from "../utilities/string";
 
-const metastatementNodeQuery = nodeQuery("/*/metastatement!"),
-      unqualifiedMetastatementNodeQuery = nodeQuery("/conclusion/unqualifiedMetastatement!");
+const metastatementNodeQuery = nodeQuery("/conclusion/unqualifiedMetastatement!/metastatement!");
 
 export default function verifyConclusion(conclusionNode, conclusions, metaproofContext) {
   let conclusionVerified = false;
 
   metaproofContext.begin(conclusionNode);
 
-  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
+  const conclusionString = nodeAsString(conclusionNode);
 
-  if (unqualifiedMetastatementVerified) {
-    const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-          conclusion = Conclusion.fromMetastatementNode(metastatementNode);
+  metaproofContext.debug(`Verifying the '${conclusionString}' conclusion...`);
+
+  const metastatementNode = metastatementNodeQuery(conclusionNode);
+
+  if (metastatementNode !== null) {
+    const conclusion = Conclusion.fromMetastatementNode(metastatementNode);
 
     conclusions.push(conclusion);
 

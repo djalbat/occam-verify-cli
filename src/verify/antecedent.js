@@ -5,33 +5,36 @@ import Antecedent from "../antecedent";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
+import { nodeAsString } from "../utilities/string";
 
-const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement"),
-      unqualifiedStatementNodeQuery = nodeQuery("/antecedent/unqualifiedStatement");
+const statementNodeQuery = nodeQuery("/antecedent/unqualifiedStatement!/statement!"),
+      unqualifiedStatementNodeQuery = nodeQuery("/");
 
 export default function verifyAntecedent(antecedentNode, antecedents, proofContext) {
-  let antecedentOrAntecedentsVerified;
+  let antecedentVerified;
 
   proofContext.begin(antecedentNode);
 
-  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(antecedentNode),
-        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
+  const antecedentString = nodeAsString(antecedentNode);
 
-  if (unqualifiedStatementVerified) {
-    const statementNode = statementNodeQuery(unqualifiedStatementNode),
-          proofStep = ProofStep.fromStatementNode(statementNode),
+  proofContext.debug(`Verifying the ${antecedentString} antecedent...`);
+
+  const statementNode = statementNodeQuery(antecedentNode);
+
+  if (statementNode !== null) {
+    const proofStep = ProofStep.fromStatementNode(statementNode),
           antecedent = Antecedent.fromStatementNode(statementNode);
 
     antecedents.push(antecedent);
 
     proofContext.addProofStep(proofStep);
 
-    antecedentOrAntecedentsVerified = true;
+    antecedentVerified = true;
   }
 
-  antecedentOrAntecedentsVerified ?
+  antecedentVerified ?
     proofContext.complete(antecedentNode) :
       proofContext.halt(antecedentNode);
 
-  return antecedentOrAntecedentsVerified;
+  return antecedentVerified;
 }

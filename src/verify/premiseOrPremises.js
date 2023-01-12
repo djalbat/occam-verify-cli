@@ -6,17 +6,16 @@ import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified"
 
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement"),
-      unqualifiedMetastatementNodesQuery = nodesQuery("/premise|premises/unqualifiedMetastatement");
+const metastatementNodesQuery = nodesQuery("/premise|premises/unqualifiedMetastatement/metastatement");
 
 export default function verifyPremiseOrPremises(premiseOrPremisesNode, premises, metaproofContext) {
   let premiseOrPremisesVerified;
 
   metaproofContext.begin(premiseOrPremisesNode);
 
-  const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(premiseOrPremisesNode);
+  const metastatementNodes = metastatementNodesQuery(premiseOrPremisesNode);
 
-  premiseOrPremisesVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
+  premiseOrPremisesVerified = metastatementNodes.every((unqualifiedMetastatementNode) => {
     const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
 
     if (unqualifiedMetastatementVerified) {

@@ -1,25 +1,33 @@
 "use strict";
 
-import verifyUnqualifiedStatement from "../verify/statement/unqualified";
+import verifyConsequent from "../verify/consequent";
+import verifyAntecedent from "../verify/antecedent";
 
-import { nodesQuery } from "../utilities/query";
+import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const unqualifiedStatementNodesQuery = nodesQuery("/conditionalIndicative/unqualifiedStatement");
+const consequentNodeQuery = nodeQuery("/conditionalIndicative/consequent!"),
+      antecedentsNodeQuery = nodesQuery("/conditionalIndicative/antecedent");
 
-export default function verifyConditionalIndicative(conditionalIndicativeNode, proofContext) {
-  let conditionalIndicativeVerified;
+export default function verifyConditionalIndicative(conditionalIndicativeNode, antecedents, consequents, proofContext) {
+  let conditionalIndicativeVerified = false;
 
   proofContext.begin(conditionalIndicativeNode);
 
-  const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(conditionalIndicativeNode);
+  const consequentNode = consequentNodeQuery(conditionalIndicativeNode),
+        antecedentNodes = antecedentsNodeQuery(conditionalIndicativeNode),
+        antecedentsVerified = antecedentNodes.every((antecedentNode) => {
+          const antecedentVerified = verifyAntecedent(antecedentNode, antecedents, proofContext);
 
-  conditionalIndicativeVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
-    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
+          if (antecedentVerified) {
+            return true;
+          }
+        });
 
-    if (unqualifiedStatementVerified) {
-      return true;
-    }
-  });
+  if (antecedentsVerified) {
+    const consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
+
+    conditionalIndicativeVerified = consequentVerified;  ///
+  }
 
   conditionalIndicativeVerified ?
     proofContext.complete(conditionalIndicativeNode) :
