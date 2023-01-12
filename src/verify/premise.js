@@ -6,7 +6,7 @@ import MetaproofStep from "../step/metaproof";
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
 
-const metastatementNodeQuery = nodeQuery("/premise/unqualifiedStatement!/metastatement!");
+const metastatementNodeQuery = nodeQuery("/premise/unqualifiedMetastatement!/metastatement!");
 
 export default function verifyPremise(premiseNode, premises, metaproofContext) {
   let premiseVerified;
