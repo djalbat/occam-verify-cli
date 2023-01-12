@@ -2,13 +2,11 @@
 
 import ProofStep from "../step/proof";
 import Antecedent from "../antecedent";
-import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
 
-const statementNodeQuery = nodeQuery("/antecedent/unqualifiedStatement!/statement!"),
-      unqualifiedStatementNodeQuery = nodeQuery("/");
+const statementNodeQuery = nodeQuery("/antecedent/unqualifiedStatement!/statement!");
 
 export default function verifyAntecedent(antecedentNode, antecedents, proofContext) {
   let antecedentVerified;

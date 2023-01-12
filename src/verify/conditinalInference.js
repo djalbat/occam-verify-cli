@@ -1,12 +1,12 @@
 "use strict";
 
 import verifyConclusion from "../verify/conclusion";
-import verifyPremiseOrPremises from "../verify/premiseOrPremises";
+import verifyPrmise from "../verify/premise";
 
-import { nodeQuery } from "../utilities/query";
+import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const conclusionNodeQuery = nodeQuery("/conditionalInference/conclusion!"),
-      premiseOrPremisesNodeQuery = nodeQuery("/conditionalInference/premise|premises!");
+const premisesNodeQuery = nodesQuery("/conditionalInference/premise"),
+      conclusionNodeQuery = nodeQuery("/conditionalInference/conclusion!");
 
 export default function verifyConditionalInference(conditionalInferenceNode, premises, conclusions, metaproofContext) {
   let conditionalInferenceVerified = false;
@@ -14,10 +14,16 @@ export default function verifyConditionalInference(conditionalInferenceNode, pre
   metaproofContext.begin(conditionalInferenceNode);
 
   const conclusionNode = conclusionNodeQuery(conditionalInferenceNode),
-        premiseOrPremisesNode = premiseOrPremisesNodeQuery(conditionalInferenceNode),
-        premiseOrPremisesVerified = verifyPremiseOrPremises(premiseOrPremisesNode, premises, metaproofContext);
+        premiseNodes = premisesNodeQuery(conditionalInferenceNode),
+        premisesVerified = premiseNodes.every((premiseNode) => {
+          const premiseVerified = verifyPrmise(premiseNode, premises, metaproofContext);
 
-  if (premiseOrPremisesVerified) {
+          if (premiseVerified) {
+            return true;
+          }
+        });
+
+  if (premisesVerified) {
     const conclusionVerified = verifyConclusion(conclusionNode, conclusions, metaproofContext);
 
     conditionalInferenceVerified = conclusionVerified;  ///
