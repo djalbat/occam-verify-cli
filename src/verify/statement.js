@@ -1,7 +1,8 @@
 "use strict";
 
-import verifyStatementAsEquality from "../verify/statementAsEquality";
-import verifyStatementTypeAssertion from "../verify/statementTypeAssertion";
+import verifyTypeAssertion from "../verify/assertion/type";
+
+const typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 export default function verifyStatement(statementNode, qualified, proofContext) {
   let statementVerified = false;
@@ -9,15 +10,13 @@ export default function verifyStatement(statementNode, qualified, proofContext) 
   proofContext.begin(statementNode);
 
   if (!statementVerified) {
-    const equalityVerifiedAsEquality = verifyStatementAsEquality(statementNode, qualified, proofContext);
+    const typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
-    statementVerified = equalityVerifiedAsEquality; ///
-  }
+    if (typeAssertionNode !== null) {
+      const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, qualified, proofContext);
 
-  if (!statementVerified) {
-    const statementTypeAssertionVerified = verifyStatementTypeAssertion(statementNode, qualified, proofContext);
-
-    statementVerified = statementTypeAssertionVerified; ///
+      statementVerified = typeAssertionVerified; ///
+    }
   }
 
   statementVerified ?
