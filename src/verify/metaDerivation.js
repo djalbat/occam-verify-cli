@@ -20,7 +20,7 @@ export default function verifyMetaDerivation(metaDerivationNode, metaproofContex
 
   const childNodes = childNodesQuery(metaDerivationNode);
 
-  metaDerivationVerified = childNodes.every((childNode) => {  ///
+  metaDerivationVerified = childNodes.every((childNode) => {
     const childVerified = verifyChild(childNode, metaproofContext);
 
     if (childVerified) {
@@ -36,13 +36,13 @@ export default function verifyMetaDerivation(metaDerivationNode, metaproofContex
 }
 
 function verifyMetaSubDerivation(metaSubDerivationNode, metaproofContext) {
-  let metaDerivationVerified;
+  let metaSubDerivationVerified;
 
   metaproofContext.begin(metaSubDerivationNode);
 
   const childNodes = childNodesQuery(metaSubDerivationNode);
 
-  metaDerivationVerified = childNodes.every((childNode) => {  ///
+  metaSubDerivationVerified = childNodes.every((childNode) => {
     const childVerified = verifyChild(childNode, metaproofContext);
 
     if (childVerified) {
@@ -50,11 +50,11 @@ function verifyMetaSubDerivation(metaSubDerivationNode, metaproofContext) {
     }
   });
 
-  metaDerivationVerified ?
+  metaSubDerivationVerified ?
     metaproofContext.complete(metaSubDerivationNode) :
       metaproofContext.halt(metaSubDerivationNode);
 
-  return metaDerivationVerified;
+  return metaSubDerivationVerified;
 }
 
 function verifyMetaSubproof(metaSubproofNode, metaproofContext) {

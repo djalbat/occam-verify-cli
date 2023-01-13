@@ -20,7 +20,7 @@ export default function verifyDerivation(derivationNode, proofContext) {
 
   const childNodes = childNodesQuery(derivationNode);
 
-  derivationVerified = childNodes.every((childNode) => {  ///
+  derivationVerified = childNodes.every((childNode) => {
     const childVerified = verifyChild(childNode, proofContext);
 
     if (childVerified) {
@@ -36,13 +36,13 @@ export default function verifyDerivation(derivationNode, proofContext) {
 }
 
 function verifySubDerivation(subDerivationNode, proofContext) {
-  let derivationVerified;
+  let subDerivationVerified;
 
   proofContext.begin(subDerivationNode);
 
   const childNodes = childNodesQuery(subDerivationNode);
 
-  derivationVerified = childNodes.every((childNode) => {  ///
+  subDerivationVerified = childNodes.every((childNode) => {
     const childVerified = verifyChild(childNode, proofContext);
 
     if (childVerified) {
@@ -50,11 +50,11 @@ function verifySubDerivation(subDerivationNode, proofContext) {
     }
   });
 
-  derivationVerified ?
+  subDerivationVerified ?
     proofContext.complete(subDerivationNode) :
       proofContext.halt(subDerivationNode);
 
-  return derivationVerified;
+  return subDerivationVerified;
 }
 
 function verifySubproof(subproofNode, proofContext) {

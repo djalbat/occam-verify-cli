@@ -2,10 +2,10 @@
 
 import ProofStep from "../step/proof";
 import Antecedent from "../antecedent";
+import verifyStatement from "./statement";
 
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
-import verifyStatement from "./statement";
 
 const statementNodeQuery = nodeQuery("/antecedent/unqualifiedStatement!/statement!");
 
