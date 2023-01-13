@@ -1,15 +1,11 @@
 "use strict";
 
-import MetaproofStep from "../step/metaproof";
 import verifyMetaDerivation from "../verify/metaDerivation";
-import verifyQualifiedMetastatement from "./metastatement/qualified";
 
 import { matchNode } from "../utilities/node";
 import { nodeQuery } from "../utilities/query";
 
-const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!"),
-      metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!"),
-      qualifiedMetastatementNodeQuery = nodeQuery("/metaproof/qualifiedMetastatement!");
+const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!");
 
 export default function verifyMetaproof(metaproofNode, conclusion, metaproofContext) {
   let metaproofVerified = false;
@@ -17,27 +13,9 @@ export default function verifyMetaproof(metaproofNode, conclusion, metaproofCont
   metaproofContext.begin(metaproofNode);
 
   const metaDerivationNode = metaDerivationNodeQuery(metaproofNode),
-        qualifiedMetastatementNode = qualifiedMetastatementNodeQuery(metaproofNode);
+        metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, metaproofContext);
 
-  let metaDerivationVerified = false,
-      qualifiedMetastatementVerified = false;
-
-  if (metaDerivationNode !== null) {
-    metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, metaproofContext);
-  }
-
-  if (qualifiedMetastatementNode !== null) {
-    qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metaproofContext);
-
-    if (qualifiedMetastatementVerified) {
-      const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
-            metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
-
-      metaproofContext.addMetaproofStep(metaproofStep);
-    }
-  }
-
-  if (metaDerivationVerified || qualifiedMetastatementVerified) {
+  if (metaDerivationVerified) {
     const lastMetaproofStep = metaproofContext.getLastMetaproofStep(),
           metaproofStep = lastMetaproofStep, ///
           metastatementNode = metaproofStep.getMetastatementNode(),

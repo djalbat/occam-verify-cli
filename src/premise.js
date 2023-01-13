@@ -12,8 +12,8 @@ import { STATEMENT_RULE_NAME, METASTATEMENT_RULE_NAME, METAVARIABLE_RULE_NAME } 
 
 const metastatementNodesQuery = nodesQuery("/metaSubproofAssertion/metastatement"),
       metaSubproofAssertionNodeQuery = nodeQuery("/metastatement/metaSubproofAssertion!"),
-      unqualifiedStatementStatementNodesQuery = nodesQuery("/subproof/unqualifiedStatement/statement!"),
-      unqualifiedMetastatementMetastatementNodesQuery = nodesQuery("/metaSubproof/unqualifiedMetastatement/metastatement!"),
+      unqualifiedStatementStatementNodesQuery = nodesQuery("/subproof/antecedent/unqualifiedStatement!/statement!"),
+      unqualifiedMetastatementMetastatementNodesQuery = nodesQuery("/metaSubproof/metaAntecedent/unqualifiedMetastatement!/metastatement!"),
       qualifiedOrUnqualifiedStatementStatementNodeQuery = nodeQuery("/subproof/subDerivation/qualifiedStatement|unqualifiedStatement[-1]/statement!"),
       qualifiedOrUnqualifiedMetastatementMetastatementNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation/qualifiedMetastatement|unqualifiedMetastatement[-1]/metastatement!");
 

@@ -2,6 +2,7 @@
 
 import ProofStep from "../step/proof";
 import ProofContext from "../context/proof";
+import verifyAntecedent from "./antecedent";
 import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
@@ -10,8 +11,8 @@ import { SUBPROOF_RULE_NAME, QUALIFIED_STATEMENT_RULE_NAME, UNQUALIFIED_STATEMEN
 
 const childNodesQuery = nodesQuery("/derivation|subDerivation/*"),
       statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/statement!"),
-      subDerivationNodeQuery = nodeQuery("/subproof/subDerivation"),
-      unqualifiedStatementNodesQuery = nodesQuery("/subproof/unqualifiedStatement");
+      antecedentNodesQuery = nodesQuery("/subproof/antecedent"),
+      subDerivationNodeQuery = nodeQuery("/subproof/subDerivation");
 
 export default function verifyDerivation(derivationNode, proofContext) {
   let derivationVerified;
@@ -62,23 +63,17 @@ function verifySubproof(subproofNode, proofContext) {
 
   proofContext = ProofContext.fromProofContext(proofContext); ///
 
-  const unqualifiedStatementNodes = unqualifiedStatementNodesQuery(subproofNode),
-        unqualifiedStatementsVerified = unqualifiedStatementNodes.every((unqualifiedStatementNode) => {
-          const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
+  const antecedents = [],
+        antecedentNodes = antecedentNodesQuery(subproofNode),
+        antecedentsVerified = antecedentNodes.every((antecedentNode) => {
+          const antecedentVerified = verifyAntecedent(antecedentNode, antecedents, proofContext);
 
-          if (unqualifiedStatementVerified) {
+          if (antecedentVerified) {
             return true;
           }
         });
 
-  if (unqualifiedStatementsVerified) {
-    unqualifiedStatementNodes.forEach((unqualifiedStatementNode) => {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode),
-            proofStep = ProofStep.fromStatementNode(statementNode);
-
-      proofContext.addProofStep(proofStep);
-    });
-
+  if (antecedentsVerified) {
     const subDerivationNode = subDerivationNodeQuery(subproofNode),
           subDerivationVerified = verifySubDerivation(subDerivationNode, proofContext);
 

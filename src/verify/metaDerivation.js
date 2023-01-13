@@ -2,6 +2,7 @@
 
 import MetaproofStep from "../step/metaproof";
 import MetaproofContext from "../context/metaproof";
+import verifyMetaAntecedent from "../verify/metaAntecedent";
 import verifyQualifiedMetastatement from "../verify/metastatement/qualified";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
@@ -10,8 +11,8 @@ import { META_SUBPROOF_RULE_NAME, QUALIFIED_METASTATEMENT_RULE_NAME, UNQUALIFIED
 
 const childNodesQuery = nodesQuery("/metaDerivation|metaSubDerivation/*"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement|unqualifiedMetastatement/metastatement!"),
-      metaSubDerivationNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation"),
-      unqualifiedMetastatementNodesQuery = nodesQuery("/metaSubproof/unqualifiedMetastatement");
+      metaAntecedentNodesQuery = nodesQuery("/metaSubproof/metaAntecedent"),
+      metaSubDerivationNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation");
 
 export default function verifyMetaDerivation(metaDerivationNode, metaproofContext) {
   let metaDerivationVerified;
@@ -62,23 +63,17 @@ function verifyMetaSubproof(metaSubproofNode, metaproofContext) {
 
   metaproofContext = MetaproofContext.fromMetaproofContext(metaproofContext); ///
 
-  const unqualifiedMetastatementNodes = unqualifiedMetastatementNodesQuery(metaSubproofNode),
-        unqualifiedMetastatementsVerified = unqualifiedMetastatementNodes.every((unqualifiedMetastatementNode) => {
-          const unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
+  const metaAntecedents = [],
+        metaAntecedentNodes = metaAntecedentNodesQuery(metaSubproofNode),
+        metaAntecedentsVerified = metaAntecedentNodes.every((metaAntecedentNode) => {
+          const metaAntecedentVerified = verifyMetaAntecedent(metaAntecedentNode, metaAntecedents, metaproofContext);
 
-          if (unqualifiedMetastatementVerified) {
+          if (metaAntecedentVerified) {
             return true;
           }
         });
 
-  if (unqualifiedMetastatementsVerified) {
-    unqualifiedMetastatementNodes.forEach((unqualifiedMetastatementNode) => {
-      const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-            metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
-
-      metaproofContext.addMetaproofStep(metaproofStep);
-    });
-
+  if (metaAntecedentsVerified) {
     const metaSubDerivationNode = metaSubDerivationNodeQuery(metaSubproofNode),
           metaSubDerivationVerified = verifyMetaSubDerivation(metaSubDerivationNode, metaproofContext);
 

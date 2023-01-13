@@ -2,6 +2,8 @@
 
 import verifyTypeAssertion from "../verify/assertion/type";
 
+import { nodeQuery } from "../utilities/query";
+
 const typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 export default function verifyStatement(statementNode, qualified, proofContext) {

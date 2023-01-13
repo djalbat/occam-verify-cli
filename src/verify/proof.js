@@ -1,15 +1,11 @@
 "use strict";
 
-import ProofStep from "../step/proof";
 import verifyDerivation from "../verify/derivation";
-import verifyQualifiedStatement from "./statement/qualified";
 
 import { matchNode } from "../utilities/node";
 import { nodeQuery } from "../utilities/query";
 
-const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
-      derivationNodeQuery = nodeQuery("/proof/derivation!"),
-      qualifiedStatementNodeQuery = nodeQuery("/proof/qualifiedStatement!");
+const derivationNodeQuery = nodeQuery("/proof/derivation!");
 
 export default function verifyProof(proofNode, conclusion, proofContext) {
   let proofVerified = false;
@@ -17,27 +13,9 @@ export default function verifyProof(proofNode, conclusion, proofContext) {
   proofContext.begin(proofNode);
 
   const derivationNode = derivationNodeQuery(proofNode),
-        qualifiedStatementNode = qualifiedStatementNodeQuery(proofNode);
+        derivationVerified = verifyDerivation(derivationNode, proofContext);
 
-  let derivationVerified = false,
-      qualifiedStatementVerified = false;
-
-  if (derivationNode !== null) {
-    derivationVerified = verifyDerivation(derivationNode, proofContext);
-  }
-
-  if (qualifiedStatementNode !== null) {
-    qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
-
-    if (qualifiedStatementVerified) {
-      const statementNode = statementNodeQuery(qualifiedStatementNode),
-            proofStep = ProofStep.fromStatementNode(statementNode);
-
-      proofContext.addProofStep(proofStep);
-    }
-  }
-
-  if (derivationVerified || qualifiedStatementVerified) {
+  if (derivationVerified) {
     const lastProofStep = proofContext.getLastProofStep(),
           proofStep = lastProofStep, ///
           statementNode = proofStep.getStatementNode(),
