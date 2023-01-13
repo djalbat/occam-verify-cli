@@ -9,7 +9,7 @@ export function createReleaseContext(dependency, dependentNames, context, callba
         releaseContext = releaseContextMap[releaseName] || null;
 
   if (releaseContext !== null) {
-    const error = null;
+    const error = checkReleaseMatchesDependency(dependency, dependentNames, releaseContext);
 
     callback(error);
 
@@ -33,18 +33,9 @@ export function createReleaseContext(dependency, dependentNames, context, callba
       return;
     }
 
-    const releaseMatchesDependency = checkReleaseMatchesDependency(dependency, dependentNames, releaseContext, context);
+    error = checkReleaseMatchesDependency(dependency, dependentNames, releaseContext);
 
-    if (!releaseMatchesDependency)  {
-      const version = releaseContext.getVersion(),
-            versionString = version.toString(),
-            lastDependentName = last(dependentNames),
-            dependentName = lastDependentName,  ///
-            dependencyName = dependency.getName(),
-            shortenedVersion = dependency.getShortedVersion(),
-            shortenedVersionString = shortenedVersion.toString(),
-            error = `Version mismatch: '${dependentName}' requires '${dependencyName}' to be version ${shortenedVersionString}.0 or higher but version ${versionString} has been supplied.`;
-
+    if (error !== null)  {
       callback(error);
 
       return;
@@ -78,7 +69,7 @@ export function initialiseReleaseContext(dependency, dependentName, verified, co
     if (!releaseContextVerified) {
       const { log } = context;
 
-      log .error(`Unable to initialise the '${releaseName}' dependency's context because its '${dependentName}' dependent is a package.`);
+      log.error(`Unable to initialise the '${releaseName}' dependency's context because its '${dependentName}' dependent is a package.`);
 
       return;
     }
@@ -105,15 +96,28 @@ export default {
 };
 
 function checkCyclicDependencyExists(dependency, dependentNames) {
+  let error = null;
+
   const dependencyName = dependency.getName(),
         dependentNamesIncludesDependencyName = dependentNames.includes(dependencyName),
         cyclicDependencyExists = dependentNamesIncludesDependencyName;  ///
 
-  return cyclicDependencyExists;
+  if (cyclicDependencyExists) {
+    const firstDependentName = first(dependentNames),
+          dependencyNames = [  ///
+            ...dependentNames,
+            firstDependentName
+          ],
+          dependencyNamesString = dependencyNames.join(`' -> '`);
+
+    error =`There is a cyclic dependency: '${dependencyNamesString}'.`;
+  }
+
+  return error;
 }
 
-function checkReleaseMatchesDependency(dependency, dependentNames, releaseContext, context) {
-  let releaseMatchesDependency = true;
+function checkReleaseMatchesDependency(dependency, dependentNames, releaseContext) {
+  let error = null;
 
   const entries = releaseContext.getEntries(),
         shortenedVersion = dependency.getShortedVersion();
@@ -122,11 +126,19 @@ function checkReleaseMatchesDependency(dependency, dependentNames, releaseContex
     const entriesMatchShortenedVersion = entries.matchShortenedVersion(shortenedVersion);
 
     if (!entriesMatchShortenedVersion) {
-      releaseMatchesDependency = false;
+      const version = releaseContext.getVersion(),
+            versionString = version.toString(),
+            lastDependentName = last(dependentNames),
+            dependentName = lastDependentName,  ///
+            dependencyName = dependency.getName(),
+            shortenedVersion = dependency.getShortedVersion(),
+            shortenedVersionString = shortenedVersion.toString();
+
+      error = `Version mismatch: '${dependentName}' requires '${dependencyName}' to be version ${shortenedVersionString}.0 or higher but version ${versionString} has been supplied.`;
     }
   }
 
-  return releaseMatchesDependency;
+  return error;
 }
 
 function createDependencyReleaseContexts(dependency, dependentNames, context, callback) {
@@ -139,17 +151,9 @@ function createDependencyReleaseContexts(dependency, dependentNames, context, ca
   dependentNames = [ ...dependentNames, dependencyName ];  ///
 
   dependencies.asynchronousForEachDependency((dependency, next, done) => {
-    const cyclicDependencyExists = checkCyclicDependencyExists(dependency, dependentNames);
+    const error = checkCyclicDependencyExists(dependency, dependentNames);
 
-    if (cyclicDependencyExists) {
-      const firstDependentName = first(dependentNames),
-            dependencyNames = [  ///
-              ...dependentNames,
-              firstDependentName
-            ],
-            dependencyNamesString = dependencyNames.join(`' -> '`),
-            error =`There is a cyclic dependency: '${dependencyNamesString}'.`;
-
+    if (error !== null) {
       callback(error);
 
       return;
