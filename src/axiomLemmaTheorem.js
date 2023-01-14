@@ -1,29 +1,29 @@
 "use strict";
 
 import Label from "./label";
-import Antecedent from "./antecedent";
-import Consequent from "./consequent";
+import Consequence from "./consequence";
+import Supposition from "./supposition";
 
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
 
 export default class AxiomLemmaTheorem {
-  constructor(labels, antecedents, consequent) {
+  constructor(labels, suppositions, consequence) {
     this.labels = labels;
-    this.antecedents = antecedents;
-    this.consequent = consequent;
+    this.suppositions = suppositions;
+    this.consequence = consequence;
   }
 
   getLabels() {
     return this.labels;
   }
 
-  getAntecedents() {
-    return this.antecedents;
+  getSuppositions() {
+    return this.suppositions;
   }
 
-  getConsequent() {
-    return this.consequent;
+  getConsequence() {
+    return this.consequence;
   }
 
   matchLabelName(labelName) {
@@ -42,20 +42,20 @@ export default class AxiomLemmaTheorem {
   matchStatement(statementNode, proofContext) {
     let statementNatches;
 
-    const antecedentsLength = this.antecedents.length;
+    const suppositionsLength = this.suppositions.length;
 
-    if (antecedentsLength === 0) {
+    if (suppositionsLength === 0) {
       const substitutions = [],
-            consequentMatches = matchConsequent(this.consequent, statementNode, substitutions);
+            consequenceMatches = matchConsequence(this.consequence, statementNode, substitutions);
 
-      statementNatches = consequentMatches; ///
+      statementNatches = consequenceMatches; ///
     } else {
       const proofSteps = proofContext.getProofSteps();
 
-      statementNatches = someSubArray(proofSteps, antecedentsLength, (proofSteps) => {
-        const antecedentsMatchConsequent = matchAntecedentsAndConsequent(this.antecedents, this.consequent, proofSteps, statementNode);
+      statementNatches = someSubArray(proofSteps, suppositionsLength, (proofSteps) => {
+        const suppositionsMatchConsequence = matchSuppositionsAndConsequence(this.suppositions, this.consequence, proofSteps, statementNode);
 
-        if (antecedentsMatchConsequent) {
+        if (suppositionsMatchConsequence) {
           return true;
         }
       });
@@ -71,20 +71,20 @@ export default class AxiomLemmaTheorem {
 
             return labelJSON;
           }),
-          antecedentsJSON = this.antecedents.map((antecedent) => {
-            const antecedentJSON = antecedent.toJSON();
+          suppositionsJSON = this.suppositions.map((supposition) => {
+            const suppositionJSON = supposition.toJSON();
 
-            return antecedentJSON;
+            return suppositionJSON;
           }),
-          consequentJSON = this.consequent.toJSON(),
+          consequenceJSON = this.consequence.toJSON(),
           labels = labelsJSON,  ///
-          antecedents = antecedentsJSON,  ///
-          consequent = consequentJSON,  ///
+          suppositions = suppositionsJSON,  ///
+          consequence = consequenceJSON,  ///
           json = {
             kind,
             labels,
-            antecedents,
-            consequent
+            suppositions,
+            consequence
           };
 
     return json;
@@ -102,38 +102,38 @@ export default class AxiomLemmaTheorem {
       return label;
     });
 
-    let { antecedents } = json;
+    let { suppositions } = json;
 
-    const antecedentsJSON = antecedents;  ///
+    const suppositionsJSON = suppositions;  ///
 
-    antecedents = antecedentsJSON.map((antecedentJSON) => {
-      const json = antecedentJSON, ///
-            antecedent = Antecedent.fromJSON(json, releaseContext);
+    suppositions = suppositionsJSON.map((suppositionJSON) => {
+      const json = suppositionJSON, ///
+            supposition = Supposition.fromJSON(json, releaseContext);
 
-      return antecedent;
+      return supposition;
     });
 
-    let { consequent } = json;
+    let { consequence } = json;
 
-    const consequentJSON = consequent;  ///
+    const consequenceJSON = consequence;  ///
 
-    json = consequentJSON;  ///
+    json = consequenceJSON;  ///
 
-    consequent = Consequent.fromJSON(json, releaseContext);
+    consequence = Consequence.fromJSON(json, releaseContext);
 
-    return new Class(labels, antecedents, consequent);  ///
+    return new Class(labels, suppositions, consequence);  ///
   }
 
-  static fromLabelsAntecedentsAndConsequent(Class, labels, antecedents, consequent) { return new Class(labels, antecedents, consequent); }
+  static fromLabelsSuppositionsAndConsequence(Class, labels, suppositions, consequence) { return new Class(labels, suppositions, consequence); }
 }
 
-function matchAntecedent(antecedent, proofSteps, substitutions) {
+function matchSupposition(supposition, proofSteps, substitutions) {
   const proofStep = prune(proofSteps, (proofStep) => {
     const subproofNode = proofStep.getSubproofNode(),
           statementNode = proofStep.getStatementNode();
 
     if (subproofNode !== null) {
-      const subProofMatches = antecedent.matchSubproofNode(subproofNode, substitutions);
+      const subProofMatches = supposition.matchSubproofNode(subproofNode, substitutions);
 
       if (!subProofMatches) {  ///
         return true;
@@ -141,7 +141,7 @@ function matchAntecedent(antecedent, proofSteps, substitutions) {
     }
 
     if (statementNode !== null) {
-      const statementMatches = antecedent.matchStatementNode(statementNode, substitutions);
+      const statementMatches = supposition.matchStatementNode(statementNode, substitutions);
 
       if (!statementMatches) {  ///
         return true;
@@ -150,41 +150,41 @@ function matchAntecedent(antecedent, proofSteps, substitutions) {
 
   }) || null;
 
-  const antecedentMatches = (proofStep !== null);
+  const suppositionMatches = (proofStep !== null);
 
-  return antecedentMatches;
+  return suppositionMatches;
 }
 
-function matchAntecedents(antecedent, proofSteps, substitutions) {
-  const antecedentsMatches = antecedent.every((antecedent) => {
-    const antecedentMatches = matchAntecedent(antecedent, proofSteps, substitutions);
+function matchSuppositions(supposition, proofSteps, substitutions) {
+  const suppositionsMatches = supposition.every((supposition) => {
+    const suppositionMatches = matchSupposition(supposition, proofSteps, substitutions);
 
-    if (antecedentMatches) {
+    if (suppositionMatches) {
       return true;
     }
   });
 
-  return antecedentsMatches;
+  return suppositionsMatches;
 }
 
-function matchConsequent(consequent, statementNode, substitutions) {
-  const nonTerminalNodeMatches = consequent.matchStatementNode(statementNode, substitutions),
-        consequentMatches = nonTerminalNodeMatches; ///
+function matchConsequence(consequence, statementNode, substitutions) {
+  const nonTerminalNodeMatches = consequence.matchStatementNode(statementNode, substitutions),
+        consequenceMatches = nonTerminalNodeMatches; ///
 
-  return consequentMatches;
+  return consequenceMatches;
 }
 
-function matchAntecedentsAndConsequent(antecedents, consequent, proofSteps, statementNode) {
-  let antecedentsMatchConsequent = false;
+function matchSuppositionsAndConsequence(suppositions, consequence, proofSteps, statementNode) {
+  let suppositionsMatchConsequence = false;
 
   const substitutions = [],
-        antecedentsMatches = matchAntecedents(antecedents, proofSteps, substitutions);
+        suppositionsMatches = matchSuppositions(suppositions, proofSteps, substitutions);
 
-  if (antecedentsMatches) {
-    const consequentMatches = matchConsequent(consequent, statementNode, substitutions);
+  if (suppositionsMatches) {
+    const consequenceMatches = matchConsequence(consequence, statementNode, substitutions);
 
-    antecedentsMatchConsequent = consequentMatches;  ///
+    suppositionsMatchConsequence = consequenceMatches;  ///
   }
 
-  return antecedentsMatchConsequent;
+  return suppositionsMatchConsequence;
 }

@@ -4,8 +4,8 @@ import Lemma from "../lemma";
 import verifyProof from "../verify/proof";
 import ProofContext from "../context/proof";
 import verifyLabels from "../verify/labels";
-import verifyAntecedent from "./antecedent";
-import verifyConsequent from "./consequent";
+import verifySupposition from "./supposition";
+import verifyConsequence from "./consequence";
 
 import { first } from "../utilities/array";
 import { EMPTY_STRING } from "../constants";
@@ -14,8 +14,8 @@ import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const proofNodeQuery = nodeQuery("/lemma/proof!"),
       labelNodesQuery = nodesQuery("/lemma/label"),
-      consequentNodeQuery = nodeQuery("/lemma/consequent!"),
-      antecedentsNodeQuery = nodesQuery("/lemma/antecedent");
+      consequenceNodeQuery = nodeQuery("/lemma/consequence!"),
+      suppositionsNodeQuery = nodesQuery("/lemma/supposition");
 
 export default function verifyLemma(lemmaNode, fileContext) {
   let lemmaVerified = false;
@@ -34,29 +34,29 @@ export default function verifyLemma(lemmaNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const antecedents = [],
-          antecedentNodes = antecedentsNodeQuery(lemmaNode),
-          antecedentsVerified = antecedentNodes.every((antecedentNode) => {
-            const antecedentVerified = verifyAntecedent(antecedentNode, antecedents, proofContext);
+    const suppositions = [],
+          suppositionNodes = suppositionsNodeQuery(lemmaNode),
+          suppositionsVerified = suppositionNodes.every((suppositionNode) => {
+            const suppositionVerified = verifySupposition(suppositionNode, suppositions, proofContext);
 
-            if (antecedentVerified) {
+            if (suppositionVerified) {
               return true;
             }
           });
 
-    if (antecedentsVerified) {
-      const consequents = [],
-            consequentNode = consequentNodeQuery(lemmaNode),
-            consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
+    if (suppositionsVerified) {
+      const consequences = [],
+            consequenceNode = consequenceNodeQuery(lemmaNode),
+            consequenceVerified = verifyConsequence(consequenceNode, consequences, proofContext);
 
-      if (consequentVerified) {
+      if (consequenceVerified) {
         const proofNode = proofNodeQuery(lemmaNode),
-              firstConsequent = first(consequents),
-              consequent = firstConsequent, ///
-              proofVerified = verifyProof(proofNode, consequent, proofContext);
+              firstConsequence = first(consequences),
+              consequence = firstConsequence, ///
+              proofVerified = verifyProof(proofNode, consequence, proofContext);
 
         if (proofVerified) {
-          const lemma = Lemma.fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent);
+          const lemma = Lemma.fromLabelsSuppositionsAndConsequence(labels, suppositions, consequence);
 
           fileContext.addLemma(lemma);
 

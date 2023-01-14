@@ -2,7 +2,7 @@
 
 import MetaproofStep from "../step/metaproof";
 import MetaproofContext from "../context/metaproof";
-import verifyMetaAntecedent from "../verify/metaAntecedent";
+import verifyMetaSupposition from "../verify/metaSupposition";
 import verifyQualifiedMetastatement from "../verify/metastatement/qualified";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
@@ -11,7 +11,7 @@ import { META_SUBPROOF_RULE_NAME, QUALIFIED_METASTATEMENT_RULE_NAME, UNQUALIFIED
 
 const childNodesQuery = nodesQuery("/metaDerivation|metaSubDerivation/*"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement|unqualifiedMetastatement/metastatement!"),
-      metaAntecedentNodesQuery = nodesQuery("/metaSubproof/metaAntecedent"),
+      metaSuppositionNodesQuery = nodesQuery("/metaSubproof/metaSupposition"),
       metaSubDerivationNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation");
 
 export default function verifyMetaDerivation(metaDerivationNode, metaproofContext) {
@@ -63,17 +63,17 @@ function verifyMetaSubproof(metaSubproofNode, metaproofContext) {
 
   metaproofContext = MetaproofContext.fromMetaproofContext(metaproofContext); ///
 
-  const metaAntecedents = [],
-        metaAntecedentNodes = metaAntecedentNodesQuery(metaSubproofNode),
-        metaAntecedentsVerified = metaAntecedentNodes.every((metaAntecedentNode) => {
-          const metaAntecedentVerified = verifyMetaAntecedent(metaAntecedentNode, metaAntecedents, metaproofContext);
+  const metaSuppositions = [],
+        metaSuppositionNodes = metaSuppositionNodesQuery(metaSubproofNode),
+        metaSuppositionsVerified = metaSuppositionNodes.every((metaSuppositionNode) => {
+          const metaSuppositionVerified = verifyMetaSupposition(metaSuppositionNode, metaSuppositions, metaproofContext);
 
-          if (metaAntecedentVerified) {
+          if (metaSuppositionVerified) {
             return true;
           }
         });
 
-  if (metaAntecedentsVerified) {
+  if (metaSuppositionsVerified) {
     const metaSubDerivationNode = metaSubDerivationNodeQuery(metaSubproofNode),
           metaSubDerivationVerified = verifyMetaSubDerivation(metaSubDerivationNode, metaproofContext);
 

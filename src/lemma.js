@@ -9,5 +9,5 @@ export default class Lemma extends AxiomLemmaTheorem {
 
   static fromJSON(json, releaseContext) { return AxiomLemmaTheorem.fromJSON(Lemma, json, releaseContext); }
 
-  static fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent) { return AxiomLemmaTheorem.fromLabelsAntecedentsAndConsequent(Lemma, labels, antecedents, consequent); }
+  static fromLabelsSuppositionsAndConsequence(labels, suppositions, consequence) { return AxiomLemmaTheorem.fromLabelsSuppositionsAndConsequence(Lemma, labels, suppositions, consequence); }
 }

@@ -2,7 +2,7 @@
 
 import ProofStep from "../step/proof";
 import ProofContext from "../context/proof";
-import verifyAntecedent from "./antecedent";
+import verifySupposition from "./supposition";
 import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
@@ -11,7 +11,7 @@ import { SUBPROOF_RULE_NAME, QUALIFIED_STATEMENT_RULE_NAME, UNQUALIFIED_STATEMEN
 
 const childNodesQuery = nodesQuery("/derivation|subDerivation/*"),
       statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/statement!"),
-      antecedentNodesQuery = nodesQuery("/subproof/antecedent"),
+      suppositionNodesQuery = nodesQuery("/subproof/supposition"),
       subDerivationNodeQuery = nodeQuery("/subproof/subDerivation");
 
 export default function verifyDerivation(derivationNode, proofContext) {
@@ -63,17 +63,17 @@ function verifySubproof(subproofNode, proofContext) {
 
   proofContext = ProofContext.fromProofContext(proofContext); ///
 
-  const antecedents = [],
-        antecedentNodes = antecedentNodesQuery(subproofNode),
-        antecedentsVerified = antecedentNodes.every((antecedentNode) => {
-          const antecedentVerified = verifyAntecedent(antecedentNode, antecedents, proofContext);
+  const suppositions = [],
+        suppositionNodes = suppositionNodesQuery(subproofNode),
+        suppositionsVerified = suppositionNodes.every((suppositionNode) => {
+          const suppositionVerified = verifySupposition(suppositionNode, suppositions, proofContext);
 
-          if (antecedentVerified) {
+          if (suppositionVerified) {
             return true;
           }
         });
 
-  if (antecedentsVerified) {
+  if (suppositionsVerified) {
     const subDerivationNode = subDerivationNodeQuery(subproofNode),
           subDerivationVerified = verifySubDerivation(subDerivationNode, proofContext);
 
