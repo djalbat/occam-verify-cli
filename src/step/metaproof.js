@@ -85,7 +85,7 @@ export default class MetaproofStep {
 
   static fromRuleSubproofNode(ruleSubproofNode) {
     const metastatementNode = null,
-          metaProofStep = new MetaproofStep(ruleSubproofNode, ruleSubproofNode, metastatementNode);
+          metaProofStep = new MetaproofStep(ruleSubproofNode, metastatementNode);
 
     return metaProofStep;
   }

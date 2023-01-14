@@ -8,14 +8,14 @@ import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { metavariableNameFromMetavariableNode } from "./utilities/query";
 import { metastatementNodeFromMetastatementString } from "./utilities/string";
-import { STATEMENT_RULE_NAME, METASTATEMENT_RULE_NAME, METAVARIABLE_RULE_NAME } from "./ruleNames";
+import { STATEMENT_RULE_NAME, METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } from "./ruleNames";
 
 const metastatementNodesQuery = nodesQuery("/ruleSubproofAssertion/metastatement"),
       ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/ruleSubproofAssertion!"),
-      unqualifiedStatementStatementNodesQuery = nodesQuery("/subproof/antecedent/unqualifiedStatement!/statement!"),
-      unqualifiedMetastatementMetastatementNodesQuery = nodesQuery("/ruleSubproof/metaAntecedent/unqualifiedMetastatement!/metastatement!"),
-      qualifiedOrUnqualifiedStatementStatementNodeQuery = nodeQuery("/subproof/subDerivation/qualifiedStatement|unqualifiedStatement[-1]/statement!"),
-      qualifiedOrUnqualifiedMetastatementMetastatementNodeQuery = nodeQuery("/ruleSubproof/metaSubDerivation/qualifiedMetastatement|unqualifiedMetastatement[-1]/metastatement!");
+      premiseMetastatementNodesQuery = nodesQuery("/ruleSubproof/premise/unqualifiedMetastatement!/metastatement!"),
+      subDerivationStatementNodeQuery = nodeQuery("/subproof/subDerivation/qualifiedStatement|unqualifiedStatement[-1]/statement!"),
+      suppositionStatementStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement!/statement!"),
+      ruleSubDerivationMetastatementNodeQuery = nodeQuery("/ruleSubproof/ruleSubDerivation/qualifiedMetastatement|unqualifiedMetastatement[-1]/metastatement!");
 
 export default class Premise {
   constructor(metastatementNode) {
@@ -32,12 +32,12 @@ export default class Premise {
     const subproofAssertionNode = ruleSubproofAssertionNodeQuery(this.metastatementNode);
 
     if (subproofAssertionNode !== null) {
-      const ruleSubproofAssertionMetastatementNodes = metastatementNodesQuery(subproofAssertionNode),
-            unqualifiedStatementStatementNodes = unqualifiedStatementStatementNodesQuery(subproofNode),
-            qualifiedOrUnqualifiedStatementStatementNode = qualifiedOrUnqualifiedStatementStatementNodeQuery(subproofNode),
+      const subDerivationStatementNode = subDerivationStatementNodeQuery(subproofNode),
+            suppositionStatementStatementNodes = suppositionStatementStatementNodesQuery(subproofNode),
+            ruleSubproofAssertionMetastatementNodes = metastatementNodesQuery(subproofAssertionNode),
             statementNodes = [
-              ...unqualifiedStatementStatementNodes,
-              qualifiedOrUnqualifiedStatementStatementNode
+              ...suppositionStatementStatementNodes,
+              subDerivationStatementNode
             ],
             statementNodesLength = statementNodes.length,
             ruleSubproofAssertionMetastatementNodesLength = ruleSubproofAssertionMetastatementNodes.length;
@@ -74,12 +74,12 @@ export default class Premise {
     const ruleSubproofAssertionNode = ruleSubproofAssertionNodeQuery(this.metastatementNode);
 
     if (ruleSubproofAssertionNode !== null) {
-      const ruleSubproofAssertionMetastatementNodes = metastatementNodesQuery(ruleSubproofAssertionNode),
-            unqualifiedMetastatementMetastatementNodes = unqualifiedMetastatementMetastatementNodesQuery(ruleSubproofNode),
-            qualifiedOrUnqualifiedMetastatementMetastatementNode = qualifiedOrUnqualifiedMetastatementMetastatementNodeQuery(ruleSubproofNode),
+      const premiseMetastatementNodes = premiseMetastatementNodesQuery(ruleSubproofNode),
+            ruleSubDerivationMetastatementNode = ruleSubDerivationMetastatementNodeQuery(ruleSubproofNode),
+            ruleSubproofAssertionMetastatementNodes = metastatementNodesQuery(ruleSubproofAssertionNode),
             metastatementNodes = [
-              ...unqualifiedMetastatementMetastatementNodes,
-              qualifiedOrUnqualifiedMetastatementMetastatementNode
+              ...premiseMetastatementNodes,
+              ruleSubDerivationMetastatementNode
             ],
             metastatementNodesLength = metastatementNodes.length,
             ruleSubproofAssertionMetastatementNodesLength = ruleSubproofAssertionMetastatementNodes.length;
