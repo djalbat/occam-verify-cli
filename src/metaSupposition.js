@@ -4,15 +4,9 @@ import MetaSubstitution from "./metaSubstitution";
 
 import { first } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
-import { nodeQuery, nodesQuery } from "./utilities/query";
 import { metavariableNameFromMetavariableNode } from "./utilities/query";
 import { metastatementNodeFromMetastatementString } from "./utilities/string";
 import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } from "./ruleNames";
-
-const metastatementNodesQuery = nodesQuery("/metaSubproofAssertion/metastatement"),
-      metaSubproofAssertionNodeQuery = nodeQuery("/metastatement/metaSubproofAssertion!"),
-      unqualifiedMetastatementMetastatementNodesQuery = nodesQuery("/metaSubproof/unqualifiedMetastatement/metastatement!"),
-      qualifiedOrUnqualifiedMetastatementMetastatementNodeQuery = nodeQuery("/metaSubproof/subDerivation/qualifiedMetastatement|unqualifiedMetastatement[-1]/metastatement!");
 
 export default class MetaSupposition {
   constructor(metastatementNode) {
@@ -21,39 +15,6 @@ export default class MetaSupposition {
 
   getMetastatementNode() {
     return this.metastatementNode;
-  }
-
-  matchSubproofNode(metaSubproofNode, metaSubstitutions) {
-    let metaSubproofNodeMatches = false;
-
-    const metaSubproofAssertionNode = metaSubproofAssertionNodeQuery(this.metastatementNode);
-
-    if (metaSubproofAssertionNode !== null) {
-      const metaSubproofAssertionMetastatementNodes = metastatementNodesQuery(metaSubproofAssertionNode),
-            unqualifiedMetastatementMetastatementNodes = unqualifiedMetastatementMetastatementNodesQuery(metaSubproofNode),
-            qualifiedOrUnqualifiedMetastatementMetastatementNode = qualifiedOrUnqualifiedMetastatementMetastatementNodeQuery(metaSubproofNode),
-            metastatementNodes = [
-              ...unqualifiedMetastatementMetastatementNodes,
-              qualifiedOrUnqualifiedMetastatementMetastatementNode
-            ],
-            metastatementNodesLength = metastatementNodes.length,
-            metaSubproofAssertionMetastatementNodesLength = metaSubproofAssertionMetastatementNodes.length;
-
-      if (metastatementNodesLength === metaSubproofAssertionMetastatementNodesLength) {
-        metaSubproofNodeMatches = metaSubproofAssertionMetastatementNodes.every((metaSubproofAssertionMetastatementNode, index) => {
-                                    const metastatementNode = metastatementNodes[index],
-                                          nonTerminalNode = metastatementNode, ///
-                                          metaSuppositionNonTerminalNode = metaSubproofAssertionMetastatementNode,  ///
-                                          metaSuppositionNonTerminalNodeMatches = matchMetaSuppositionNonTerminalNode(metaSuppositionNonTerminalNode, nonTerminalNode, metaSubstitutions);
-
-                                    if (metaSuppositionNonTerminalNodeMatches) {
-                                      return true;
-                                    }
-                                  });
-      }
-    }
-
-    return metaSubproofNodeMatches;
   }
 
   matchMetastatementNode(metastatementNode, metaSubstitutions) {

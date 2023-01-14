@@ -8,7 +8,6 @@ export const SUBPROOF_RULE_NAME = "subproof";
 export const STATEMENT_RULE_NAME = "statement";
 export const METAVARIABLE_RULE_NAME = "metavariable";
 export const METASTATEMENT_RULE_NAME = "metastatement";
-export const META_SUBPROOF_RULE_NAME = "metaSubproof";
 export const RULE_SUBPROOF_RULE_NAME = "ruleSubproof";
 export const QUALIFIED_STATEMENT_RULE_NAME = "qualifiedStatement";
 export const UNQUALIFIED_STATEMENT_RULE_NAME = "unqualifiedStatement";

@@ -227,13 +227,13 @@ function matchConclusion(conclusion, statementNode, substitutions) {
 
 function metaMatchPremise(premise, metaproofSteps, metaSubstitutions) {
   const metaproofStep = prune(metaproofSteps, (metaproofStep) => {
-    const metaSubproofNode = metaproofStep.getMetaSubproofNode(),
+    const ruleSubproofNode = metaproofStep.getRuleSubproofNode(),
           metastatementNode = metaproofStep.getMetastatementNode()
 
-    if (metaSubproofNode !== null) {
-      const metaSubProofNodeMatches = premise.matchMetaSubproofNode(metaSubproofNode, metaSubstitutions);
+    if (ruleSubproofNode !== null) {
+      const ruleSubProofNodeMatches = premise.matchRuleSubproofNode(ruleSubproofNode, metaSubstitutions);
 
-      if (!metaSubProofNodeMatches) {  ///
+      if (!ruleSubProofNodeMatches) {  ///
         return true;
       }
     }
