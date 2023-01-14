@@ -5,7 +5,7 @@ import verifyRuleDerivation from "../verify/ruleDerivation";
 import { matchNode } from "../utilities/node";
 import { nodeQuery } from "../utilities/query";
 
-const ruleDerivationNodeQuery = nodeQuery("/metaproof/ruleDerivation!");
+const ruleDerivationNodeQuery = nodeQuery("/ruleProof/ruleDerivation!");
 
 export default function verifyMetaproof(ruleProofNode, conclusion, metaproofContext) {
   let ruleProofVerified = false;
