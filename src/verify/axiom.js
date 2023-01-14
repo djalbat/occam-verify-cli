@@ -3,16 +3,16 @@
 import Axiom from "../axiom";
 import ProofContext from "../context/proof";
 import verifyLabels from "../verify/labels";
-import verifyConditionalIndicative from "../verify/conditionalIndicative";
-import verifyUnconditionalIndicative from "../verify/unconditionalIndicative";
+import verifyAntecedent from "../verify/antecedent";
+import verifyConsequent from "../verify/consequent";
 
 import { first } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
-      conditionalIndicativeNodeQuery = nodeQuery("/axiom/conditionalIndicative!"),
-      unconditionalIndicativeNodeQuery = nodeQuery("/axiom/unconditionalIndicative!");
+      consequentNodeQuery = nodeQuery("/axiom/consequent!"),
+      antecedentsNodeQuery = nodesQuery("/axiom/antecedent");
 
 export default function verifyAxiom(axiomNode, fileContext) {
   let axiomVerified = false;
@@ -30,29 +30,29 @@ export default function verifyAxiom(axiomNode, fileContext) {
 
   if (labelsVerified) {
     const antecedents = [],
-          consequents = [],
-          conditionalIndicativeNode = conditionalIndicativeNodeQuery(axiomNode),
-          unconditionalIndicativeNode = unconditionalIndicativeNodeQuery(axiomNode);
+          antecedentNodes = antecedentsNodeQuery(axiomNode),
+          antecedentsVerified = antecedentNodes.every((antecedentNode) => {
+            const antecedentVerified = verifyAntecedent(antecedentNode, antecedents, proofContext);
 
-    let conditionalIndicativeVerified = false,
-        unconditionalIndicativeVerified = false;
+            if (antecedentVerified) {
+              return true;
+            }
+          });
 
-    if (conditionalIndicativeNode !== null) {
-      conditionalIndicativeVerified = verifyConditionalIndicative(conditionalIndicativeNode, antecedents, consequents, proofContext);
-    }
+    if (antecedentsVerified) {
+      const consequents = [],
+            consequentNode = consequentNodeQuery(axiomNode),
+            consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
 
-    if (unconditionalIndicativeNode !== null) {
-      unconditionalIndicativeVerified = verifyUnconditionalIndicative(unconditionalIndicativeNode, consequents, proofContext);
-    }
+      if (consequentVerified) {
+        const firstConsequent = first(consequents),
+              consequent = firstConsequent, ///
+              axiom = Axiom.fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent);
 
-    if (conditionalIndicativeVerified || unconditionalIndicativeVerified) {
-      const firstConsequent = first(consequents),
-            consequent = firstConsequent, ///
-            axiom = Axiom.fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent);
+        fileContext.addAxiom(axiom);
 
-      fileContext.addAxiom(axiom);
-
-      axiomVerified = true;
+        axiomVerified = true;
+      }
     }
   }
 

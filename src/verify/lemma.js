@@ -4,8 +4,8 @@ import Lemma from "../lemma";
 import verifyProof from "../verify/proof";
 import ProofContext from "../context/proof";
 import verifyLabels from "../verify/labels";
-import verifyConditionalIndicative from "../verify/conditionalIndicative";
-import verifyUnconditionalIndicative from "../verify/unconditionalIndicative";
+import verifyAntecedent from "./antecedent";
+import verifyConsequent from "./consequent";
 
 import { first } from "../utilities/array";
 import { EMPTY_STRING } from "../constants";
@@ -14,8 +14,8 @@ import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const proofNodeQuery = nodeQuery("/lemma/proof!"),
       labelNodesQuery = nodesQuery("/lemma/label"),
-      conditionalIndicativeNodeQuery = nodeQuery("/lemma/conditionalIndicative!"),
-      unconditionalIndicativeNodeQuery = nodeQuery("/lemma/unconditionalIndicative!");
+      consequentNodeQuery = nodeQuery("/lemma/consequent!"),
+      antecedentsNodeQuery = nodesQuery("/lemma/antecedent");
 
 export default function verifyLemma(lemmaNode, fileContext) {
   let lemmaVerified = false;
@@ -35,33 +35,33 @@ export default function verifyLemma(lemmaNode, fileContext) {
 
   if (labelsVerified) {
     const antecedents = [],
-          consequents = [],
-          conditionalIndicativeNode = conditionalIndicativeNodeQuery(lemmaNode),
-          unconditionalIndicativeNode = unconditionalIndicativeNodeQuery(lemmaNode);
+          antecedentNodes = antecedentsNodeQuery(lemmaNode),
+          antecedentsVerified = antecedentNodes.every((antecedentNode) => {
+            const antecedentVerified = verifyAntecedent(antecedentNode, antecedents, proofContext);
 
-    let conditionalIndicativeVerified = false,
-        unconditionalIndicativeVerified = false;
+            if (antecedentVerified) {
+              return true;
+            }
+          });
 
-    if (conditionalIndicativeNode !== null) {
-      conditionalIndicativeVerified = verifyConditionalIndicative(conditionalIndicativeNode, antecedents, consequents, proofContext);
-    }
+    if (antecedentsVerified) {
+      const consequents = [],
+            consequentNode = consequentNodeQuery(lemmaNode),
+            consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
 
-    if (unconditionalIndicativeNode !== null) {
-      unconditionalIndicativeVerified = verifyUnconditionalIndicative(unconditionalIndicativeNode, consequents, proofContext);
-    }
+      if (consequentVerified) {
+        const proofNode = proofNodeQuery(lemmaNode),
+              firstConsequent = first(consequents),
+              consequent = firstConsequent, ///
+              proofVerified = verifyProof(proofNode, consequent, proofContext);
 
-    if (conditionalIndicativeVerified || unconditionalIndicativeVerified) {
-      const proofNode = proofNodeQuery(lemmaNode),
-            firstConsequent = first(consequents),
-            consequent = firstConsequent, ///
-            proofVerified = verifyProof(proofNode, consequent, proofContext);
+        if (proofVerified) {
+          const lemma = Lemma.fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent);
 
-      if (proofVerified) {
-        const lemma = Lemma.fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent);
+          fileContext.addLemma(lemma);
 
-        fileContext.addLemma(lemma);
-
-        lemmaVerified = true;
+          lemmaVerified = true;
+        }
       }
     }
   }

@@ -4,8 +4,8 @@ import Theorem from "../theorem";
 import verifyProof from "../verify/proof";
 import ProofContext from "../context/proof";
 import verifyLabels from "../verify/labels";
-import verifyConditionalIndicative from "../verify/conditionalIndicative";
-import verifyUnconditionalIndicative from "../verify/unconditionalIndicative";
+import verifyAntecedent from "./antecedent";
+import verifyConsequent from "./consequent";
 
 import { first } from "../utilities/array";
 import { nodesAsString } from "../utilities/string";
@@ -13,8 +13,8 @@ import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const proofNodeQuery = nodeQuery("/theorem/proof!"),
       labelNodesQuery = nodesQuery("/theorem/label"),
-      conditionalIndicativeNodeQuery = nodeQuery("/theorem/conditionalIndicative!"),
-      unconditionalIndicativeNodeQuery = nodeQuery("/theorem/unconditionalIndicative!");
+      consequentNodeQuery = nodeQuery("/theorem/consequent!"),
+      antecedentsNodeQuery = nodesQuery("/theorem/antecedent");
 
 export default function verifyTheorem(theoremNode, fileContext) {
   let theoremVerified = false;
@@ -32,33 +32,33 @@ export default function verifyTheorem(theoremNode, fileContext) {
 
   if (labelsVerified) {
     const antecedents = [],
-          consequents = [],
-          conditionalIndicativeNode = conditionalIndicativeNodeQuery(theoremNode),
-          unconditionalIndicativeNode = unconditionalIndicativeNodeQuery(theoremNode);
+          antecedentNodes = antecedentsNodeQuery(theoremNode),
+          antecedentsVerified = antecedentNodes.every((antecedentNode) => {
+            const antecedentVerified = verifyAntecedent(antecedentNode, antecedents, proofContext);
 
-    let conditionalIndicativeVerified = false,
-        unconditionalIndicativeVerified = false;
+            if (antecedentVerified) {
+              return true;
+            }
+          });
 
-    if (conditionalIndicativeNode !== null) {
-      conditionalIndicativeVerified = verifyConditionalIndicative(conditionalIndicativeNode, antecedents, consequents, proofContext);
-    }
+    if (antecedentsVerified) {
+      const consequents = [],
+            consequentNode = consequentNodeQuery(theoremNode),
+            consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
 
-    if (unconditionalIndicativeNode !== null) {
-      unconditionalIndicativeVerified = verifyUnconditionalIndicative(unconditionalIndicativeNode, consequents, proofContext);
-    }
+      if (consequentVerified) {
+        const proofNode = proofNodeQuery(theoremNode),
+              firstConsequent = first(consequents),
+              consequent = firstConsequent, ///
+              proofVerified = verifyProof(proofNode, consequent, proofContext);
 
-    if (conditionalIndicativeVerified || unconditionalIndicativeVerified) {
-      const proofNode = proofNodeQuery(theoremNode),
-            firstConsequent = first(consequents),
-            consequent = firstConsequent, ///
-            proofVerified = verifyProof(proofNode, consequent, proofContext);
+        if (proofVerified) {
+          const theorem = Theorem.fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent);
 
-      if (proofVerified) {
-        const theorem = Theorem.fromLabelsAntecedentsAndConsequent(labels, antecedents, consequent);
+          fileContext.addTheorem(theorem);
 
-        fileContext.addTheorem(theorem);
-
-        theoremVerified = true;
+          theoremVerified = true;
+        }
       }
     }
   }
