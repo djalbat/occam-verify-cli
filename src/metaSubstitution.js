@@ -1,7 +1,8 @@
 "use strict";
 
+import { matchNode } from "./utilities/node";
 import { METASTATEMENT_RULE_NAME } from "./ruleNames";
-import { matchNode, bracketedNonTerminalChildNodeFromChildNodes } from "./utilities/node";
+import { bracketedNonTerminalChildNodeFromChildNodes } from "./utilities/substitution";
 
 export default class MetaSubstitution {
   constructor(metavariableName, metastatementNode) {

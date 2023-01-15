@@ -2,7 +2,7 @@
 
 import { first, second } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import { matchBracketedNonTerminalNode } from "../utilities/node";
+import { matchBracketedNonTerminalNode } from "../utilities/substitution";
 
 const metastatementNodesQuery = nodesQuery("/ruleSubproofAssertion/metastatement"),
       ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/ruleSubproofAssertion"),
