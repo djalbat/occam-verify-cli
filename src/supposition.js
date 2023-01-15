@@ -5,10 +5,10 @@ import { nodeQuery, nodesQuery } from "./utilities/query";
 import { suppositionSubstitutionMatcher } from "./matcher/substitution/supposition";
 import { statementNodeFromStatementString } from "./utilities/string";
 
-const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
-      subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
-      unqualifiedStatementStatementNodesQuery = nodesQuery("/subproof/unqualifiedStatement/statement!"),
-      qualifiedOrUnqualifiedStatementStatementNodeQuery = nodeQuery("/subproof/subDerivation/qualifiedStatement|unqualifiedStatement[-1]/statement!");
+const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
+      subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
+      subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement!"),
+      subproofSubDerivationLastStatementNodeQuery = nodeQuery("/subproof/subDerivation/qualifiedStatement|unqualifiedStatement[-1]/statement!");
 
 export default class Supposition {
   constructor(statementNode) {
@@ -25,21 +25,21 @@ export default class Supposition {
     const subproofAssertionNode = subproofAssertionNodeQuery(this.statementNode);
 
     if (subproofAssertionNode !== null) {
-      const subproofAssertionStatementNodes = statementNodesQuery(subproofAssertionNode),
-            unqualifiedStatementStatementNodes = unqualifiedStatementStatementNodesQuery(subproofNode),
-            qualifiedOrUnqualifiedStatementStatementNode = qualifiedOrUnqualifiedStatementStatementNodeQuery(subproofNode),
-            statementNodes = [
-              ...unqualifiedStatementStatementNodes,
-              qualifiedOrUnqualifiedStatementStatementNode
+      const subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
+            subproofSubDerivationLastStatementNode = subproofSubDerivationLastStatementNodeQuery(subproofNode),
+            subproofStatementNodes = [
+              ...subproofSuppositionStatementNodes,
+              subproofSubDerivationLastStatementNode
             ],
-            statementNodesLength = statementNodes.length,
+            subproofAssertionStatementNodes = subproofAssertionStatementNodesQuery(subproofAssertionNode),
+            subproofStatementNodesLength = subproofStatementNodes.length,
             subproofAssertionStatementNodesLength = subproofAssertionStatementNodes.length;
 
-      if (statementNodesLength === subproofAssertionStatementNodesLength) {
+      if (subproofStatementNodesLength === subproofAssertionStatementNodesLength) {
         subproofNodeMatches = subproofAssertionStatementNodes.every((subproofAssertionStatementNode, index) => {
-                                const statementNode = statementNodes[index],
+                                const subproofStatementNode = subproofStatementNodes[index],
                                       nonTerminalNodeA = subproofAssertionStatementNode,  ///
-                                      nonTerminalNodeB = statementNode, ///
+                                      nonTerminalNodeB = subproofStatementNode, ///
                                       nonTerminalNodeMatches = suppositionSubstitutionMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
 
                                 if (nonTerminalNodeMatches) {

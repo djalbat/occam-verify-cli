@@ -6,12 +6,12 @@ import { premiseSubstitutionMatcher } from "./matcher/substitution/premise";
 import { premiseMetaSubstitutionMatcher } from "./matcher/metaSubstitution/premise";
 import { metastatementNodeFromMetastatementString } from "./utilities/string";
 
-const metastatementNodesQuery = nodesQuery("/ruleSubproofAssertion/metastatement"),
-      ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/ruleSubproofAssertion!"),
-      premiseMetastatementNodesQuery = nodesQuery("/ruleSubproof/premise/unqualifiedMetastatement!/metastatement!"),
-      subDerivationStatementNodeQuery = nodeQuery("/subproof/subDerivation/qualifiedStatement|unqualifiedStatement[-1]/statement!"),
-      suppositionStatementStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement!/statement!"),
-      ruleSubDerivationMetastatementNodeQuery = nodeQuery("/ruleSubproof/ruleSubDerivation/qualifiedMetastatement|unqualifiedMetastatement[-1]/metastatement!");
+const ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/ruleSubproofAssertion!"),
+      ruleSubproofPremiseMetastatementQuery = nodesQuery("/ruleSubproof/premise/unqualifiedMetastatement!/metastatement!"),
+      subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement!/statement!"),
+      subproofSubDerivationLastStatementNodeQuery = nodeQuery("/subproof/subDerivation/qualifiedStatement|unqualifiedStatement[-1]/statement!"),
+      ruleSubproofAssertionMetastatementNodesQuery = nodesQuery("/ruleSubproofAssertion/metastatement"),
+      ruleSubproofSubDerivationLastMetastatementQuery = nodeQuery("/ruleSubproof/ruleSubDerivation/qualifiedMetastatement|unqualifiedMetastatement[-1]/metastatement!");
 
 export default class Premise {
   constructor(metastatementNode) {
@@ -28,21 +28,21 @@ export default class Premise {
     const subproofAssertionNode = ruleSubproofAssertionNodeQuery(this.metastatementNode);
 
     if (subproofAssertionNode !== null) {
-      const subDerivationStatementNode = subDerivationStatementNodeQuery(subproofNode),
-            suppositionStatementStatementNodes = suppositionStatementStatementNodesQuery(subproofNode),
-            ruleSubproofAssertionMetastatementNodes = metastatementNodesQuery(subproofAssertionNode),
-            statementNodes = [
-              ...suppositionStatementStatementNodes,
-              subDerivationStatementNode
+      const subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
+            subproofSubDerivationLastStatementNode = subproofSubDerivationLastStatementNodeQuery(subproofNode),
+            subproofStatementNodes = [
+              ...subproofSuppositionStatementNodes,
+              subproofSubDerivationLastStatementNode
             ],
-            statementNodesLength = statementNodes.length,
-            ruleSubproofAssertionMetastatementNodesLength = ruleSubproofAssertionMetastatementNodes.length;
+            ruleSubproofAssertionMetasubproofStatementNodes = ruleSubproofAssertionMetasubproofStatementNodesQuery(subproofAssertionNode),
+            subproofStatementNodesLength = subproofStatementNodes.length,
+            ruleSubproofAssertionMetasubproofStatementNodesLength = ruleSubproofAssertionMetasubproofStatementNodes.length;
 
-      if (statementNodesLength === ruleSubproofAssertionMetastatementNodesLength) {
-        subproofNodeMatches = ruleSubproofAssertionMetastatementNodes.every((ruleSubproofAssertionMetastatementNode, index) => {
-          const statementNode = statementNodes[index],
+      if (subproofStatementNodesLength === ruleSubproofAssertionMetasubproofStatementNodesLength) {
+        subproofNodeMatches = ruleSubproofAssertionMetasubproofStatementNodes.every((ruleSubproofAssertionMetastatementNode, index) => {
+          const subproofStatementNode = subproofStatementNodes[index],
                 nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
-                nonTerminalNodeB = statementNode, ///
+                nonTerminalNodeB = subproofStatementNode, ///
                 nonTerminalNodeMatches = premiseSubstitutionMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
 
           if (nonTerminalNodeMatches) {
@@ -70,21 +70,21 @@ export default class Premise {
     const ruleSubproofAssertionNode = ruleSubproofAssertionNodeQuery(this.metastatementNode);
 
     if (ruleSubproofAssertionNode !== null) {
-      const premiseMetastatementNodes = premiseMetastatementNodesQuery(ruleSubproofNode),
-            ruleSubDerivationMetastatementNode = ruleSubDerivationMetastatementNodeQuery(ruleSubproofNode),
-            ruleSubproofAssertionMetastatementNodes = metastatementNodesQuery(ruleSubproofAssertionNode),
-            metastatementNodes = [
-              ...premiseMetastatementNodes,
-              ruleSubDerivationMetastatementNode
+      const ruleSubproofPremiseMetastatement = ruleSubproofPremiseMetastatementQuery(ruleSubproofNode),
+            ruleSubproofSubDerivationLastMetastatement = ruleSubproofSubDerivationLastMetastatementQuery(ruleSubproofNode),
+            ruleSubproofMetastatementNodes = [
+              ...ruleSubproofPremiseMetastatement,
+              ruleSubproofSubDerivationLastMetastatement
             ],
-            metastatementNodesLength = metastatementNodes.length,
+            ruleSubproofMetastatementNodesLength = ruleSubproofMetastatementNodes.length,
+            ruleSubproofAssertionMetastatementNodes = ruleSubproofAssertionMetastatementNodesQuery(ruleSubproofAssertionNode),
             ruleSubproofAssertionMetastatementNodesLength = ruleSubproofAssertionMetastatementNodes.length;
 
-      if (metastatementNodesLength === ruleSubproofAssertionMetastatementNodesLength) {
+      if (ruleSubproofMetastatementNodesLength === ruleSubproofAssertionMetastatementNodesLength) {
         ruleSubproofNodeMatches = ruleSubproofAssertionMetastatementNodes.every((ruleSubproofAssertionMetastatementNode, index) => {
-                                    const metastatementNode = metastatementNodes[index],
+                                    const ruleSubproofMetastatementNode = ruleSubproofMetastatementNodes[index],
                                           nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
-                                          nonTerminalNodeB = metastatementNode, ///
+                                          nonTerminalNodeB = ruleSubproofMetastatementNode, ///
                                           nonTerminalNodeMatches = premiseMetaSubstitutionMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaSubstitutions);
 
                                     if (nonTerminalNodeMatches) {
