@@ -2,7 +2,7 @@
 
 import verifyDerivation from "../verify/derivation";
 
-import { matchNode } from "../utilities/node";
+import { matcher } from "../matcher";
 import { nodeQuery } from "../utilities/query";
 
 const derivationNodeQuery = nodeQuery("/proof/derivation!");
@@ -22,7 +22,7 @@ export default function verifyProof(proofNode, conclusion, proofContext) {
           conclusionStatementNode = conclusion.getStatementNode(),
           nodeA = statementNode,  ///
           nodeB = conclusionStatementNode,  ///
-          nodeMatches = matchNode(nodeA, nodeB);
+          nodeMatches = matcher.matchNode(nodeA, nodeB);
 
     proofVerified = nodeMatches;  ///
   }

@@ -1,15 +1,15 @@
 "use strict";
 
+import { matcher } from "../matcher";
 import { first, second, third } from "../utilities/array";
 import { METASTATEMENT_RULE_NAME } from "../ruleNames";
-import { matchNode, matchNonTerminalNode } from "../utilities/node";
 import { BRACKETED_CHILD_NODES_LENGTH, LEFT_BRACKET, RIGHT_BRACKET } from "../constants";
 
 export function matchBracketedNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB) {
   let bracketedNodeMatches = false;
 
   if (!bracketedNodeMatches) {
-    const nonTerminalNodeMatches = matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB);
+    const nonTerminalNodeMatches = matcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB);
 
     bracketedNodeMatches = nonTerminalNodeMatches;  ///
   }
@@ -22,7 +22,7 @@ export function matchBracketedNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB
     if (bracketedNonTerminalChildNodeA !== null) {
       const nodeA = bracketedNonTerminalChildNodeA,  ///
             nodeB = nonTerminalNodeB, ///
-            nodeMatches = matchNode(nodeA, nodeB);
+            nodeMatches = matcher.matchNode(nodeA, nodeB);
 
       bracketedNodeMatches = nodeMatches; ///
     }
