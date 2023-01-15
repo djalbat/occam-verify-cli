@@ -5,6 +5,7 @@ export const TYPE_RULE_NAME = "type";
 export const LABEL_RULE_NAME = "label";
 export const ARGUMENT_RULE_NAME = "argument";
 export const SUBPROOF_RULE_NAME = "subproof";
+export const VARIABLE_RULE_NAME = "variable";
 export const STATEMENT_RULE_NAME = "statement";
 export const METAVARIABLE_RULE_NAME = "metavariable";
 export const METASTATEMENT_RULE_NAME = "metastatement";
