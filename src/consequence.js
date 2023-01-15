@@ -1,7 +1,7 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { consequenceMatcher } from "./matcher/consequence";
+import { consequenceSubstitutionMatcher } from "./matcher/substitution/consequence";
 import { statementNodeFromStatementString } from "./utilities/string";
 
 export default class Consequence {
@@ -14,9 +14,9 @@ export default class Consequence {
   }
 
   matchStatementNode(statementNode, metaSubstitutions) {
-    const nonTerminalNode = statementNode,  ///
-          consequenceNonTerminalNode = this.statementNode,  ///
-          nonTerminalNodeMatches = consequenceMatcher.matchNonTerminalNode(consequenceNonTerminalNode, nonTerminalNode, metaSubstitutions),
+    const nonTerminalNodeA = this.statementNode,  ///
+          nonTerminalNodeB = statementNode,  ///
+          nonTerminalNodeMatches = consequenceSubstitutionMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaSubstitutions),
           statementNodeMatches = nonTerminalNodeMatches; ///
 
     return statementNodeMatches;

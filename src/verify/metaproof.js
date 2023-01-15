@@ -2,8 +2,8 @@
 
 import verifyMetaDerivation from "../verify/metaDerivation";
 
-import { matcher } from "../matcher";
 import { nodeQuery } from "../utilities/query";
+import { genericMatcher } from "../matcher/generic";
 
 const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!");
 
@@ -22,7 +22,7 @@ export default function verifyMetaproof(metaproofNode, conclusion, metaproofCont
           conclusionMetastatementNode = conclusion.getMetastatementNode(),
           nodeA = metastatementNode,  ///
           nodeB = conclusionMetastatementNode,  ///
-          nodeMatches = matcher.matchNode(nodeA, nodeB);
+          nodeMatches = genericMatcher.matchNode(nodeA, nodeB);
 
     metaproofVerified = nodeMatches;  ///
   }

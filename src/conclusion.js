@@ -1,8 +1,8 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { conclusionMatcher } from "./matcher/conclusion";
-import { conclusionMetaMatcher } from "./metaMatcher/conclusion";
+import { conclusionSubstitutionMatcher } from "./matcher/substitution/conclusion";
+import { conclusionMetaSubstitutionMatcher } from "./matcher/metaSubstitution/conclusion";
 import { metastatementNodeFromMetastatementString } from "./utilities/string";
 
 export default class Conclusion {
@@ -15,9 +15,9 @@ export default class Conclusion {
   }
 
   matchStatementNode(statementNode, substitutions) {
-    const nonTerminalNode = statementNode,  ///
-          conclusionNonTerminalNode = this.metastatementNode,  ///
-          nonTerminalNodeMatches = conclusionMatcher.matchNonTerminalNode(conclusionNonTerminalNode, nonTerminalNode, substitutions),
+    const nonTerminalNodeA = this.metastatementNode,  ///
+          nonTerminalNodeB = statementNode,  ///
+          nonTerminalNodeMatches = conclusionSubstitutionMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
           statementNodeMatches = nonTerminalNodeMatches; ///
 
     return statementNodeMatches;
@@ -26,7 +26,7 @@ export default class Conclusion {
   matchMetastatementNode(metastatementNode, metaSubstitutions) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = metastatementNode,  ///
-          nonTerminalNodeMatches = conclusionMetaMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaSubstitutions),
+          nonTerminalNodeMatches = conclusionMetaSubstitutionMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaSubstitutions),
           metastatementNodeMatches = nonTerminalNodeMatches; ///
 
     return metastatementNodeMatches;

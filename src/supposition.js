@@ -1,8 +1,8 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { suppositionMatcher } from "./matcher/supposition";
 import { nodeQuery, nodesQuery } from "./utilities/query";
+import { suppositionSubstitutionMatcher } from "./matcher/substitution/supposition";
 import { statementNodeFromStatementString } from "./utilities/string";
 
 const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
@@ -38,9 +38,9 @@ export default class Supposition {
       if (statementNodesLength === subproofAssertionStatementNodesLength) {
         subproofNodeMatches = subproofAssertionStatementNodes.every((subproofAssertionStatementNode, index) => {
                                 const statementNode = statementNodes[index],
-                                      nonTerminalNode = statementNode, ///
-                                      suppositionNonTerminalNode = subproofAssertionStatementNode,  ///
-                                      nonTerminalNodeMatches = suppositionMatcher.matchNonTerminalNode(suppositionNonTerminalNode, nonTerminalNode, substitutions);
+                                      nonTerminalNodeA = subproofAssertionStatementNode,  ///
+                                      nonTerminalNodeB = statementNode, ///
+                                      nonTerminalNodeMatches = suppositionSubstitutionMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
 
                                 if (nonTerminalNodeMatches) {
                                   return true;
@@ -53,9 +53,9 @@ export default class Supposition {
   }
 
   matchStatementNode(statementNode, substitutions) {
-    const nonTerminalNode = statementNode,  ///
-          suppositionNonTerminalNode = this.statementNode,  ///
-          nonTerminalNodeMatches = suppositionMatcher.matchNonTerminalNode(suppositionNonTerminalNode, nonTerminalNode, substitutions),
+    const nonTerminalNodeA = this.statementNode,  ///
+          nonTerminalNodeB = statementNode,  ///
+          nonTerminalNodeMatches = suppositionSubstitutionMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
           statementNodeMatches = nonTerminalNodeMatches; ///
 
     return statementNodeMatches;

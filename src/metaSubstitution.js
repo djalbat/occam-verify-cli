@@ -1,6 +1,6 @@
 "use strict";
 
-import { matcher } from "./matcher";
+import { genericMatcher } from "./matcher/generic";
 import { METASTATEMENT_RULE_NAME } from "./ruleNames";
 import { bracketedNonTerminalChildNodeFromChildNodes } from "./utilities/substitution";
 
@@ -23,7 +23,7 @@ export default class MetaSubstitution {
 
     const nodeA = this.metastatementNode,  ///
           nodeB = metastatementNode,
-          nodeMatches = matcher.matchNode(nodeA, nodeB);
+          nodeMatches = genericMatcher.matchNode(nodeA, nodeB);
 
     matchesMetastatementNode = nodeMatches;  ///
 
@@ -37,7 +37,7 @@ export default class MetaSubstitution {
       if (metastatementNode !== null) {
         const nodeA = this.metastatementNode,  ///
               nodeB = metastatementNode,
-              nodeMatches = matcher.matchNode(nodeA, nodeB);
+              nodeMatches = genericMatcher.matchNode(nodeA, nodeB);
 
         matchesMetastatementNode = nodeMatches;  ///
       }

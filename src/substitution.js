@@ -1,6 +1,6 @@
 "use strict";
 
-import { matcher } from "./matcher";
+import { genericMatcher } from "./matcher/generic";
 import { STATEMENT_RULE_NAME } from "./ruleNames";
 import { bracketedNonTerminalChildNodeFromChildNodes } from "./utilities/substitution";
 
@@ -23,7 +23,7 @@ export default class Substitution {
 
     const nodeA = this.statementNode,  ///
           nodeB = statementNode,
-          nodeMatches = matcher.matchNode(nodeA, nodeB);
+          nodeMatches = genericMatcher.matchNode(nodeA, nodeB);
 
     matchesStatementNode = nodeMatches;  ///
 

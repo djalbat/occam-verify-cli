@@ -1,13 +1,13 @@
 "use strict";
 
-import Matcher from "./matcher";
-import MetaSubstitution from "./metaSubstitution";
+import GenericMatcher from "../matcher/generic";
+import MetaSubstitution from "../metaSubstitution";
 
-import { first } from "./utilities/array";
-import { metavariableNameFromMetavariableNode } from "./utilities/query";
-import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } from "./ruleNames";
+import { first } from "../utilities/array";
+import { metavariableNameFromMetavariableNode } from "../utilities/query";
+import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } from "../ruleNames";
 
-export default class MetaMatcher extends Matcher {
+export default class MetaSubstitutionMatcher extends GenericMatcher {
   matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaSubstitutions) {
     let nonTerminalNodeMatches = false;
 

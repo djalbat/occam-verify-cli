@@ -2,8 +2,8 @@
 
 import verifyDerivation from "../verify/derivation";
 
-import { matcher } from "../matcher";
 import { nodeQuery } from "../utilities/query";
+import { genericMatcher } from "../matcher/generic";
 
 const derivationNodeQuery = nodeQuery("/proof/derivation!");
 
@@ -22,7 +22,7 @@ export default function verifyProof(proofNode, conclusion, proofContext) {
           conclusionStatementNode = conclusion.getStatementNode(),
           nodeA = statementNode,  ///
           nodeB = conclusionStatementNode,  ///
-          nodeMatches = matcher.matchNode(nodeA, nodeB);
+          nodeMatches = genericMatcher.matchNode(nodeA, nodeB);
 
     proofVerified = nodeMatches;  ///
   }
