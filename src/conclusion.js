@@ -24,9 +24,9 @@ export default class Conclusion {
   }
 
   matchMetastatementNode(metastatementNode, metaSubstitutions) {
-    const nonTerminalNode = metastatementNode,  ///
-          conclusionNonTerminalNode = this.metastatementNode,  ///
-          nonTerminalNodeMatches = conclusionMetaMatcher.matchNonTerminalNode(conclusionNonTerminalNode, nonTerminalNode, metaSubstitutions),
+    const nonTerminalNodeA = this.metastatementNode,  ///
+          nonTerminalNodeB = metastatementNode,  ///
+          nonTerminalNodeMatches = conclusionMetaMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaSubstitutions),
           metastatementNodeMatches = nonTerminalNodeMatches; ///
 
     return metastatementNodeMatches;
