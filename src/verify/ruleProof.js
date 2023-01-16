@@ -2,8 +2,8 @@
 
 import verifyRuleDerivation from "../verify/ruleDerivation";
 
+import { matcher } from "../matcher";
 import { nodeQuery } from "../utilities/query";
-import { genericMatcher } from "../matcher/generic";
 
 const ruleDerivationNodeQuery = nodeQuery("/ruleProof/ruleDerivation!");
 
@@ -22,7 +22,7 @@ export default function verifyRuleProof(ruleProofNode, conclusion, metaproofCont
           conclusionMetastatementNode = conclusion.getMetastatementNode(),
           nodeA = metastatementNode,  ///
           nodeB = conclusionMetastatementNode,  ///
-          nodeMatches = genericMatcher.matchNode(nodeA, nodeB);
+          nodeMatches = matcher.matchNode(nodeA, nodeB);
 
     ruleProofVerified = nodeMatches;  ///
   }

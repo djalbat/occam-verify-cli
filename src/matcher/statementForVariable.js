@@ -1,33 +1,33 @@
 "use strict";
 
-import Substitution from "../substitution";
-import GenericMatcher from "../matcher/generic";
+import Matcher from "../matcher";
+import StatementForVariableSubstitution from "../substitution/statementForVariable";
 
 import { first } from "../utilities/array";
 import { variableNameFromVariableNode } from "../utilities/query";
 import { VARIABLE_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
 
-export default class SubstitutionMatcher extends GenericMatcher {
+export default class StatementForVariableMatcher extends Matcher {
   matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
     let nonTerminalNodeMatches = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
-          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
+          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
+          nonTerminalNodeARuleNameMetastatementRuleName = (nonTerminalNodeARuleName === STATEMENT_RULE_NAME),
+          nonTerminalNodeBRuleNameMetastatementRuleName = (nonTerminalNodeBRuleName === STATEMENT_RULE_NAME);
 
-    if (nonTerminalNodeARuleName === nonTerminalNodeBRuleName) {
-      nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+    if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameMetastatementRuleName) {
+      const statementNodeA = nonTerminalNodeA,  ///
+            statementNodeB = nonTerminalNodeB,  ///
+            statementNodeMatches = this.matchStatementNode(statementNodeA, statementNodeB, substitutions);
 
-      if (!nonTerminalNodeMatches) {
-        const nonTerminalNodeBuleNameStatementRuleName = (nonTerminalNodeBRuleName === STATEMENT_RULE_NAME);
-
-        if (nonTerminalNodeBuleNameStatementRuleName) {
-          const statementNodeA = nonTerminalNodeA,  ///
-                statementNodeB = nonTerminalNodeB,  ///
-                statementNodeMatches = this.matchStatementNode(statementNodeA, statementNodeB, substitutions);
-
-          nonTerminalNodeMatches = statementNodeMatches; ///
-        }
+      if (statementNodeMatches) {
+        nonTerminalNodeMatches = true;  ///
+      } else {
+        nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
       }
+    } else if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
+      nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
     }
 
     return nonTerminalNodeMatches;
@@ -85,7 +85,8 @@ export default class SubstitutionMatcher extends GenericMatcher {
       if (createSubstitutions) {
         const variableName = variableNameA, ///
               statementNode = statementNodeB, ///
-              substitution = Substitution.fromVariableNameAndStatementNode(variableName, statementNode);
+              statementForVariableSubstitution = StatementForVariableSubstitution.fromVariableNameAndStatementNode(variableName, statementNode),
+              substitution = statementForVariableSubstitution;  ///
 
         substitutions.push(substitution);
       }

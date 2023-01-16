@@ -1,6 +1,6 @@
 "use strict";
 
-export default class GenericMatcher {
+export default class Matcher {
   matchNode(nodeA, nodeB, ...remainingArguments) {
     let nodeMatches = false;
 
@@ -73,4 +73,4 @@ export default class GenericMatcher {
   }
 }
 
-export const genericMatcher = new GenericMatcher();
+export const matcher = new Matcher();

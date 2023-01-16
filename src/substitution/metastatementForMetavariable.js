@@ -1,10 +1,10 @@
 "use strict";
 
-import { genericMatcher } from "./matcher/generic";
-import { METASTATEMENT_RULE_NAME } from "./ruleNames";
-import { bracketedNonTerminalChildNodeFromChildNodes } from "./utilities/substitution";
+import { matcher } from "../matcher";
+import { METASTATEMENT_RULE_NAME } from "../ruleNames";
+import { bracketedNonTerminalChildNodeFromChildNodes } from "../utilities/substitution";
 
-export default class MetaSubstitution {
+export default class MetastatementForMetavariableSubstitution {
   constructor(metavariableName, metastatementNode) {
     this.metavariableName = metavariableName;
     this.metastatementNode = metastatementNode;
@@ -23,7 +23,7 @@ export default class MetaSubstitution {
 
     const nodeA = this.metastatementNode,  ///
           nodeB = metastatementNode,
-          nodeMatches = genericMatcher.matchNode(nodeA, nodeB);
+          nodeMatches = matcher.matchNode(nodeA, nodeB);
 
     matchesMetastatementNode = nodeMatches;  ///
 
@@ -37,7 +37,7 @@ export default class MetaSubstitution {
       if (metastatementNode !== null) {
         const nodeA = this.metastatementNode,  ///
               nodeB = metastatementNode,
-              nodeMatches = genericMatcher.matchNode(nodeA, nodeB);
+              nodeMatches = matcher.matchNode(nodeA, nodeB);
 
         matchesMetastatementNode = nodeMatches;  ///
       }
@@ -47,7 +47,7 @@ export default class MetaSubstitution {
   }
 
   static fromMetavariableNameAndMetastatementNode(metavariableName, metastatementNode) {
-    let metaSubstitution = new MetaSubstitution(metavariableName, metastatementNode);
+    let metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableName, metastatementNode);
 
     const nonTerminalNode = metastatementNode,  ///
           childNodes = nonTerminalNode.getChildNodes(),
@@ -56,9 +56,9 @@ export default class MetaSubstitution {
     metastatementNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
 
     if (metastatementNode !== null) {
-      metaSubstitution = new MetaSubstitution(metavariableName, metastatementNode);
+      metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableName, metastatementNode);
     }
 
-    return metaSubstitution;
+    return metastatementForMetavariableSubstitution;
   }
 }

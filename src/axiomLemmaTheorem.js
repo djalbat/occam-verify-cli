@@ -1,8 +1,8 @@
 "use strict";
 
 import Label from "./label";
-import Consequence from "./consequence";
 import Supposition from "./supposition";
+import Consequence from "./consequence";
 
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";

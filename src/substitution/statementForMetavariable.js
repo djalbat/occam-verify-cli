@@ -1,10 +1,10 @@
 "use strict";
 
-import { genericMatcher } from "./matcher/generic";
-import { STATEMENT_RULE_NAME } from "./ruleNames";
-import { bracketedNonTerminalChildNodeFromChildNodes } from "./utilities/substitution";
+import { matcher } from "../matcher";
+import { STATEMENT_RULE_NAME } from "../ruleNames";
+import { bracketedNonTerminalChildNodeFromChildNodes } from "../utilities/substitution";
 
-export default class Substitution {
+export default class StatementForMetavariableSubstitution {
   constructor(metavariableName, statementNode) {
     this.metavariableName = metavariableName;
     this.statementNode = statementNode;
@@ -23,7 +23,7 @@ export default class Substitution {
 
     const nodeA = this.statementNode,  ///
           nodeB = statementNode,
-          nodeMatches = genericMatcher.matchNode(nodeA, nodeB);
+          nodeMatches = matcher.matchNode(nodeA, nodeB);
 
     matchesStatementNode = nodeMatches;  ///
 
@@ -47,7 +47,7 @@ export default class Substitution {
   }
 
   static fromMetavariableNameAndStatementNode(metavariableName, statementNode) {
-    let substitution = new Substitution(metavariableName, statementNode);
+    let statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableName, statementNode);
 
     const nonTerminalNode = statementNode,  ///
           childNodes = nonTerminalNode.getChildNodes(),
@@ -56,9 +56,9 @@ export default class Substitution {
     statementNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
 
     if (statementNode !== null) {
-      substitution = new Substitution(metavariableName, statementNode);
+      statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableName, statementNode);
     }
 
-    return substitution;
+    return statementForMetavariableSubstitution;
   }
 }
