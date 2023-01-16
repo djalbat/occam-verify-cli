@@ -2,6 +2,7 @@
 
 import Premise from "../premise";
 import MetaproofStep from "../step/metaproof";
+import verifyMetastatement from "../verify/metastatement";
 
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
@@ -20,14 +21,19 @@ export default function verifyPremise(premiseNode, premises, metaproofContext) {
   const metastatementNode = metastatementNodeQuery(premiseNode);
 
   if (metastatementNode !== null) {
-    const metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode),
-          premise = Premise.fromMetastatementNode(metastatementNode);
+    const qualified = false,
+          metastatementVerified = verifyMetastatement(metastatementNode, qualified, metaproofContext);
 
-    premises.push(premise);
+    if (metastatementVerified) {
+      const metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode),
+            premise = Premise.fromMetastatementNode(metastatementNode);
 
-    metaproofContext.addMetaproofStep(metaproofStep);
+      premises.push(premise);
 
-    premiseVerified = true;
+      metaproofContext.addMetaproofStep(metaproofStep);
+
+      premiseVerified = true;
+    }
   }
 
   premiseVerified ?

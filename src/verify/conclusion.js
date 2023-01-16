@@ -3,7 +3,8 @@
 import Conclusion from "../conclusion";
 
 import { nodeQuery } from "../utilities/query";
-import {nodeAsString} from "../utilities/string";
+import { nodeAsString } from "../utilities/string";
+import verifyMetastatement from "./metastatement";
 
 const metastatementNodeQuery = nodeQuery("/conclusion/unqualifiedMetastatement!/metastatement!");
 
@@ -19,11 +20,16 @@ export default function verifyConclusion(conclusionNode, conclusions, metaproofC
   const metastatementNode = metastatementNodeQuery(conclusionNode);
 
   if (metastatementNode !== null) {
-    const conclusion = Conclusion.fromMetastatementNode(metastatementNode);
+    const qualified = false,
+          metastatementVerified = verifyMetastatement(metastatementNode, qualified, metaproofContext);
 
-    conclusions.push(conclusion);
+    if (metastatementVerified) {
+      const conclusion = Conclusion.fromMetastatementNode(metastatementNode);
 
-    conclusionVerified = true;
+      conclusions.push(conclusion);
+
+      conclusionVerified = true;
+    }
   }
 
   conclusionVerified ?

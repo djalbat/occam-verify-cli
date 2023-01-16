@@ -5,8 +5,8 @@ import verifyStatement from "../../verify/statement";
 import { nodeAsString } from "../../utilities/string";
 import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
 
-const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
-      referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!");
+const referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!"),
+      statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
 
 export default function verifyQualifiedStatement(qualifiedStatementNode, proofContext) {
   let qualifiedStatementVerified = false;

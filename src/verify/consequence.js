@@ -1,6 +1,7 @@
 "use strict";
 
 import Consequence from "../consequence";
+import verifyStatement from "./statement";
 
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
@@ -19,11 +20,16 @@ export default function verifyConsequence(consequenceNode, consequences, proofCo
   const statementNode = statementNodeQuery(consequenceNode);
 
   if (statementNode !== null) {
-    const consequence = Consequence.fromStatementNode(statementNode);
+    const qualified = false,
+          statementVerified = verifyStatement(statementNode, qualified, proofContext);
 
-    consequences.push(consequence);
+    if (statementVerified) {
+      const consequence = Consequence.fromStatementNode(statementNode);
 
-    consequenceVerified = true;
+      consequences.push(consequence);
+
+      consequenceVerified = true;
+    }
   }
 
   consequenceVerified ?

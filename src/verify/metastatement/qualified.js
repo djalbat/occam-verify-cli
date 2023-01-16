@@ -1,5 +1,7 @@
 "use strict";
 
+import verifyMetastatement from "../../verify/metastatement";
+
 import { nodeAsString } from "../../utilities/string";
 import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
 
@@ -18,14 +20,22 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
     metaproofContext.debug(`Verifying the ${metastatementString} qualified metastatement...`);
 
-    const referenceNode = referenceNodeQuery(qualifiedMetastatementNode),
-          referenceName = referenceNameFromReferenceNode(referenceNode),
-          rule = metaproofContext.findRuleByReferenceName(referenceName);
+    const referenceNode = referenceNodeQuery(qualifiedMetastatementNode);
 
-    if (rule !== null) {
-      const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, metaproofContext);
+    if (referenceNode === null) {
+      const qualified = true,
+            metastatementVerified = verifyMetastatement(metastatementNode, qualified, metaproofContext);
 
-      qualifiedMetastatementVerified = ruleMatchesMetastatement;  ///
+      qualifiedMetastatementVerified = metastatementVerified; ///
+    } else {
+      const referenceName = referenceNameFromReferenceNode(referenceNode),
+            rule = metaproofContext.findRuleByReferenceName(referenceName);
+
+      if (rule !== null) {
+        const ruleMatchesStatement = rule.matchMetastatement(metastatementNode, metaproofContext);
+
+        qualifiedMetastatementVerified = ruleMatchesStatement;  ///
+      }
     }
   }
 
