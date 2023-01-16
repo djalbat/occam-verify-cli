@@ -2,12 +2,13 @@
 
 import ProofStep from "../step/proof";
 import Supposition from "../supposition";
-import verifyStatement from "./statement";
+import verifyUnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
 
-const statementNodeQuery = nodeQuery("/supposition/unqualifiedStatement!/statement!");
+const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
+      unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement!");
 
 export default function verifySupposition(suppositionNode, suppositions, proofContext) {
   let suppositionVerified;
@@ -18,20 +19,18 @@ export default function verifySupposition(suppositionNode, suppositions, proofCo
 
   proofContext.debug(`Verifying the ${suppositionString} supposition...`);
 
-  const statementNode = statementNodeQuery(suppositionNode);
+  const derived = false,
+        unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
+        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, derived, proofContext);
 
-  if (statementNode !== null) {
-    const qualified = false,
-          statementVerified = verifyStatement(statementNode, qualified, proofContext);
+  if (unqualifiedStatementVerified) {
+    const statementNode = statementNodeQuery(unqualifiedStatementNode),
+          proofStep = ProofStep.fromStatementNode(statementNode),
+          supposition = Supposition.fromStatementNode(statementNode);
 
-    if (statementVerified) {
-      const proofStep = ProofStep.fromStatementNode(statementNode),
-            supposition = Supposition.fromStatementNode(statementNode);
+    suppositions.push(supposition);
 
-      suppositions.push(supposition);
-
-      proofContext.addProofStep(proofStep);
-    }
+    proofContext.addProofStep(proofStep);
 
     suppositionVerified = true;
   }

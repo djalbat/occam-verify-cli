@@ -1,12 +1,13 @@
 "use strict";
 
 import Consequence from "../consequence";
-import verifyStatement from "./statement";
+import verifyUnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
 
-const statementNodeQuery = nodeQuery("/consequence/unqualifiedStatement!/statement!");
+const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
+      unqualifiedStatementNodeQuery = nodeQuery("/consequence/unqualifiedStatement!");
 
 export default function verifyConsequence(consequenceNode, consequences, proofContext) {
   let consequenceVerified = false;
@@ -17,19 +18,17 @@ export default function verifyConsequence(consequenceNode, consequences, proofCo
 
   proofContext.debug(`Verifying the ${consequenceString} consequence...`);
 
-  const statementNode = statementNodeQuery(consequenceNode);
+  const derived = false,
+        unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequenceNode),
+        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, derived, proofContext);
 
-  if (statementNode !== null) {
-    const qualified = false,
-          statementVerified = verifyStatement(statementNode, qualified, proofContext);
+  if (unqualifiedStatementVerified) {
+    const statementNode = statementNodeQuery(unqualifiedStatementNode),
+          consequence = Consequence.fromStatementNode(statementNode);
 
-    if (statementVerified) {
-      const consequence = Consequence.fromStatementNode(statementNode);
+    consequences.push(consequence);
 
-      consequences.push(consequence);
-
-      consequenceVerified = true;
-    }
+    consequenceVerified = true;
   }
 
   consequenceVerified ?

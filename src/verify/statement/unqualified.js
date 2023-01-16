@@ -1,11 +1,13 @@
 "use strict";
 
+import verifyStatement from "../statement";
+
 import { nodeQuery } from "../../utilities/query";
 import { nodeAsString } from "../../utilities/string";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
-export default function verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext) {
+export default function verifyUnqualifiedStatement(unqualifiedStatementNode, derived, proofContext) {
   let unqualifiedStatementVerified = false;
 
   proofContext.begin(unqualifiedStatementNode);
@@ -17,9 +19,16 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, pro
 
     proofContext.debug(`Verifying the ${statementString} unqualified statement...`);
 
-    const assertionMatches = proofContext.matchStatement(statementNode);
+    if (derived) {
+      const assertionMatches = proofContext.matchStatement(statementNode);
 
-    unqualifiedStatementVerified = assertionMatches;  ///
+      unqualifiedStatementVerified = assertionMatches;  ///
+    } else {
+      const qualified = false,
+            statementVerified = verifyStatement(statementNode, qualified, proofContext);
+
+      unqualifiedStatementVerified = statementVerified;  ///
+    }
   }
 
   unqualifiedStatementVerified ?

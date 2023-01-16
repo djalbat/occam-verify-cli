@@ -123,8 +123,9 @@ function verifyChild(childNode, metaproofContext) {
     }
 
     case UNQUALIFIED_METASTATEMENT_RULE_NAME: {
-      const unqualifiedMetastatementNode = childNode,  ///
-            unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, metaproofContext);
+      const derived = true,
+            unqualifiedMetastatementNode = childNode,  ///
+            unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, metaproofContext);
 
       if (unqualifiedMetastatementVerified) {
         const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),

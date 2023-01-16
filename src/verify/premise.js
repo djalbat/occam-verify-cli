@@ -2,12 +2,13 @@
 
 import Premise from "../premise";
 import MetaproofStep from "../step/metaproof";
-import verifyMetastatement from "../verify/metastatement";
+import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
 import { nodeAsString } from "../utilities/string";
 
-const metastatementNodeQuery = nodeQuery("/premise/unqualifiedMetastatement!/metastatement!");
+const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
+      unqualifiedMetastatementNodeQuery = nodeQuery("/premise/unqualifiedMetastatement!");
 
 export default function verifyPremise(premiseNode, premises, metaproofContext) {
   let premiseVerified;
@@ -18,22 +19,20 @@ export default function verifyPremise(premiseNode, premises, metaproofContext) {
 
   metaproofContext.debug(`Verifying the ${premiseString} premise...`);
 
-  const metastatementNode = metastatementNodeQuery(premiseNode);
+  const derived = false,
+        unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(premiseNode),
+        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, metaproofContext);
 
-  if (metastatementNode !== null) {
-    const qualified = false,
-          metastatementVerified = verifyMetastatement(metastatementNode, qualified, metaproofContext);
+  if (unqualifiedMetastatementVerified) {
+    const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
+          metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode),
+          premise = Premise.fromMetastatementNode(metastatementNode);
 
-    if (metastatementVerified) {
-      const metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode),
-            premise = Premise.fromMetastatementNode(metastatementNode);
+    premises.push(premise);
 
-      premises.push(premise);
+    metaproofContext.addMetaproofStep(metaproofStep);
 
-      metaproofContext.addMetaproofStep(metaproofStep);
-
-      premiseVerified = true;
-    }
+    premiseVerified = true;
   }
 
   premiseVerified ?

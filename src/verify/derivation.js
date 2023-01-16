@@ -123,8 +123,9 @@ function verifyChild(childNode, proofContext) {
     }
 
     case UNQUALIFIED_STATEMENT_RULE_NAME: {
-      const unqualifiedStatementNode = childNode,  ///
-            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, proofContext);
+      const derived = true,
+            unqualifiedStatementNode = childNode,  ///
+            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, derived, proofContext);
 
       if (unqualifiedStatementVerified) {
         const statementNode = statementNodeQuery(unqualifiedStatementNode),
