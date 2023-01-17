@@ -9,6 +9,10 @@ export default class Combinator {
     this.statementNode = statementNode;
   }
 
+  getStatementNode() {
+    return this.statementNode;
+  }
+
   asString() {
     let string;
 
