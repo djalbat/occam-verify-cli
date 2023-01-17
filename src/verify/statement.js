@@ -6,19 +6,17 @@ import { nodeQuery } from "../utilities/query";
 
 const typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
-export default function verifyStatement(statementNode, qualified, proofContext) {
-  let statementVerified = false;
+export default function verifyStatement(statementNode, assertions, proofContext) {
+  let statementVerified = true; ///
 
   proofContext.begin(statementNode);
 
-  if (!statementVerified) {
-    const typeAssertionNode = typeAssertionNodeQuery(statementNode);
+  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
-    if (typeAssertionNode !== null) {
-      const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, qualified, proofContext);
+  if (typeAssertionNode !== null) {
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assertions, proofContext);
 
-      statementVerified = typeAssertionVerified; ///
-    }
+    statementVerified = typeAssertionVerified; ///
   }
 
   statementVerified ?

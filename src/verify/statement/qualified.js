@@ -20,22 +20,24 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, proofCo
 
     proofContext.debug(`Verifying the ${statementString} qualified statement...`);
 
+    let ruleMatchesStatement = true;
+
     const referenceNode = referenceNodeQuery(qualifiedStatementNode);
 
-    if (referenceNode === null) {
-      const qualified = true,
-            statementVerified = verifyStatement(statementNode, qualified, proofContext);
-
-      qualifiedStatementVerified = statementVerified; ///
-    } else {
+    if (referenceNode !== null) {
       const referenceName = referenceNameFromReferenceNode(referenceNode),
             rule = proofContext.findRuleByReferenceName(referenceName);
 
       if (rule !== null) {
-        const ruleMatchesStatement = rule.matchStatement(statementNode, proofContext);
-
-        qualifiedStatementVerified = ruleMatchesStatement;  ///
+        ruleMatchesStatement = rule.matchStatement(statementNode, proofContext);
       }
+    }
+
+    if (ruleMatchesStatement) {
+      const assertions = [],
+            statementVerified = verifyStatement(statementNode, assertions, proofContext);
+
+      qualifiedStatementVerified = statementVerified; ///
     }
   }
 

@@ -19,8 +19,9 @@ export default function verifyConsequence(consequenceNode, consequences, proofCo
   proofContext.debug(`Verifying the ${consequenceString} consequence...`);
 
   const derived = false,
+        assertions = [],
         unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequenceNode),
-        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, derived, proofContext);
+        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assertions, derived, proofContext);
 
   if (unqualifiedStatementVerified) {
     const statementNode = statementNodeQuery(unqualifiedStatementNode),

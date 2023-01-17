@@ -7,7 +7,7 @@ import { nodeAsString } from "../../utilities/string";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
-export default function verifyUnqualifiedStatement(unqualifiedStatementNode, derived, proofContext) {
+export default function verifyUnqualifiedStatement(unqualifiedStatementNode, assertions, derived, proofContext) {
   let unqualifiedStatementVerified = false;
 
   proofContext.begin(unqualifiedStatementNode);
@@ -19,13 +19,14 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, der
 
     proofContext.debug(`Verifying the ${statementString} unqualified statement...`);
 
-    if (derived) {
-      const assertionMatches = proofContext.matchStatement(statementNode);
+    let statementMatches = true;
 
-      unqualifiedStatementVerified = assertionMatches;  ///
-    } else {
-      const qualified = false,
-            statementVerified = verifyStatement(statementNode, qualified, proofContext);
+    if (derived) {
+      statementMatches = proofContext.matchStatement(statementNode);
+    }
+
+    if (statementMatches) {
+      const statementVerified = verifyStatement(statementNode, assertions, proofContext);
 
       unqualifiedStatementVerified = statementVerified;  ///
     }

@@ -20,14 +20,11 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
     metaproofContext.debug(`Verifying the ${metastatementString} qualified metastatement...`);
 
+    let ruleMatchesStatement = true;
+
     const referenceNode = referenceNodeQuery(qualifiedMetastatementNode);
 
-    if (referenceNode === null) {
-      const qualified = true,
-            metastatementVerified = verifyMetastatement(metastatementNode, qualified, metaproofContext);
-
-      qualifiedMetastatementVerified = metastatementVerified; ///
-    } else {
+    if (referenceNode !== null) {
       const referenceName = referenceNameFromReferenceNode(referenceNode),
             rule = metaproofContext.findRuleByReferenceName(referenceName);
 
@@ -36,6 +33,13 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
         qualifiedMetastatementVerified = ruleMatchesStatement;  ///
       }
+    }
+
+    if (ruleMatchesStatement) {
+      const assertions = [],
+            metastatementVerified = verifyMetastatement(metastatementNode, assertions, metaproofContext);
+
+      qualifiedMetastatementVerified = metastatementVerified; ///
     }
   }
 

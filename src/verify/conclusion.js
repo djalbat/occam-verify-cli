@@ -19,8 +19,9 @@ export default function verifyConclusion(conclusionNode, conclusions, metaproofC
   metaproofContext.debug(`Verifying the '${conclusionString}' conclusion...`);
 
   const derived = false,
+        assertions = [],
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, metaproofContext);
+        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assertions, derived, metaproofContext);
 
   if (unqualifiedMetastatementVerified) {
     const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
