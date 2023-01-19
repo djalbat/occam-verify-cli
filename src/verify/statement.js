@@ -5,12 +5,15 @@ import verifyTypeAssertion from "../verify/assertion/type";
 
 import { first } from "../utilities/array";
 import { nodeAsString } from "../utilities/string";
+import { STATEMENT_META_TYPE } from "../metaTypes";
 import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
-import { ARGUMENT_RULE_NAME, METAARGUMENT_RULE_NAME } from "../ruleNames";
+import { ARGUMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../ruleNames";
+import bracketedCombinator from "../ocmbinator/bracketed";
 
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!"),
-      statementNodeQuery = nodeQuery("/metaargument/statement!"),
+      metaTypeNodeQuery = nodeQuery("/metaArgument/metaType!/@meta-type"),
+      statementNodeQuery = nodeQuery("/metaArgument/statement!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 export default function verifyStatement(statementNode, assertions, proofContext) {
@@ -43,8 +46,11 @@ function verifyStatementAgainstCombinators(statementNode, context) {
 
   context.begin(statementNode);
 
-  const combinators = context.getCombinators(),
-        combinator = combinators.find((combinator) => {
+  const combinators = context.getCombinators();
+
+  combinators.unshift(bracketedCombinator);
+
+  const combinator = combinators.find((combinator) => {
           const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
 
           if (statementVerifiedAgainstCombinator) {
@@ -148,12 +154,12 @@ function verifyNonTerminalNode(nonTerminalNode, combinatorNonTerminalNode, conte
         break;
       }
 
-      case METAARGUMENT_RULE_NAME: {
-        const metaargumentNode = nonTerminalNode, ///
+      case META_ARGUMENT_RULE_NAME: {
+        const metaArgumentNode = nonTerminalNode, ///
               combinatorMetaargumentNode = combinatorNonTerminalNode, ///
-              metaargumentNodeVerified = verifyMetaargumentNode(metaargumentNode, combinatorMetaargumentNode, context);
+              metaArgumentNodeVerified = verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context);
 
-        nonTerminalNodeVerified = metaargumentNodeVerified; ///
+        nonTerminalNodeVerified = metaArgumentNodeVerified; ///
 
         break;
       }
@@ -205,27 +211,37 @@ function verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
   return argumentNodeVerified;
 }
 
-function verifyMetaargumentNode(metaargumentNode, combinatorMetaargumentNode, context) {
-  let metaargumentNodeVerified = false;
+function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context) {
+  let metaArgumentNodeVerified = false;
 
-  const statementNode = statementNodeQuery(metaargumentNode);
+  const statementNode = statementNodeQuery(metaArgumentNode);
 
   if (statementNode === null) {
-    const argumentString = nodeAsString(metaargumentNode);
+    const metaArgumentString = nodeAsString(metaArgumentNode);
 
-    context.error(`The ${argumentString} metaargument should be a statement, not a metatype`);
+    context.error(`The '${metaArgumentString}' meta-argument should be a statement, not a meta-type.`);
   } else {
     const assertions = null,
           statementVerified = verifyStatement(statementNode, assertions, context);
 
     if (statementVerified) {
-      debugger
+      const combinatorMetaTYpeNode = metaTypeNodeQuery(combinatorMetaargumentNode);
 
-      if (true) {
-        metaargumentNodeVerified = true;
+      if (combinatorMetaTYpeNode !== null) {
+        const terminalNode = combinatorMetaTYpeNode,  ///
+              terminalNodeContent = terminalNode.getContent(),
+              terminalNodeContentStatementMetaType = (terminalNodeContent === STATEMENT_META_TYPE);
+
+        metaArgumentNodeVerified = terminalNodeContentStatementMetaType;  ///
+      }
+
+      if (!metaArgumentNodeVerified) {
+        const combinatorMetaargumentString = nodeAsString(combinatorMetaargumentNode);
+
+        context.error(`The '${combinatorMetaargumentString}' combinator meta-argument should be the 'Statement' meta-type.`);
       }
     }
   }
 
-  return metaargumentNodeVerified;
+  return metaArgumentNodeVerified;
 }
