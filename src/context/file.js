@@ -424,7 +424,9 @@ export default class FileContext {
           tokens = releaseContext.tokenise(content),
           node = releaseContext.parse(tokens);
 
-    rewriteNodes(node);
+    if (node !== null) {
+      rewriteNodes(node);
+    }
 
     const types = [],
           rules = [],

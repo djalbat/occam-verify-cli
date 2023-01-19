@@ -14,26 +14,31 @@ export default function verifyFile(filePath, releaseContext) {
   releaseContext.debug(`Verifying the '${filePath}' file...`);
 
   const fileContext = FileContext.fromReleaseContextAndFilePath(releaseContext, filePath),
-        node = fileContext.getNode(),
-        errorNodes = errorNodesQuery(node),
-        errorNodesLength = errorNodes.length;
+        node = fileContext.getNode();
 
-  if (errorNodesLength > 0) {
-    releaseContext.error(`The '${filePath}' file cannot be verified because it contains errors.`);
+  if (node === null) {
+    fileVerified = true;
   } else {
-    const topLevelDeclarationNodes = topLevelDeclarationNodesQuery(node),
-          topLevelDeclarationsVerified = topLevelDeclarationNodes.every((topLevelDeclarationNode) => {
-            const topLevelDeclarationVerified = verifyTopLevelDeclaration(topLevelDeclarationNode, fileContext);
+    const errorNodes = errorNodesQuery(node),
+          errorNodesLength = errorNodes.length;
 
-            if (topLevelDeclarationVerified) {
-              return true;
-            }
-          });
+    if (errorNodesLength > 0) {
+      releaseContext.error(`The '${filePath}' file cannot be verified because it contains errors.`);
+    } else {
+      const topLevelDeclarationNodes = topLevelDeclarationNodesQuery(node),
+            topLevelDeclarationsVerified = topLevelDeclarationNodes.every((topLevelDeclarationNode) => {
+              const topLevelDeclarationVerified = verifyTopLevelDeclaration(topLevelDeclarationNode, fileContext);
 
-    if (topLevelDeclarationsVerified) {
-      releaseContext.addFileContext(fileContext);
+              if (topLevelDeclarationVerified) {
+                return true;
+              }
+            });
 
-      fileVerified = true;
+      if (topLevelDeclarationsVerified) {
+        releaseContext.addFileContext(fileContext);
+
+        fileVerified = true;
+      }
     }
   }
 
