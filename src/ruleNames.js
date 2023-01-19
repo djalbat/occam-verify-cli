@@ -7,6 +7,7 @@ export const ARGUMENT_RULE_NAME = "argument";
 export const SUBPROOF_RULE_NAME = "subproof";
 export const VARIABLE_RULE_NAME = "variable";
 export const STATEMENT_RULE_NAME = "statement";
+export const METAARGUMENT_RULE_NAME = "metaargument";
 export const METAVARIABLE_RULE_NAME = "metavariable";
 export const METASTATEMENT_RULE_NAME = "metastatement";
 export const RULE_SUBPROOF_RULE_NAME = "ruleSubproof";

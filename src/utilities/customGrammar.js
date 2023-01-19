@@ -14,6 +14,13 @@ export function customGrammarFromNameAndEntries(name, entries) {
   return customGrammar;
 }
 
+export function combinedCustomGrammarFromNothing() {
+  const customGrammars = [],
+        combinedCustomGrammar = CombinedCustomGrammar.fromCustomGrammars(customGrammars);
+
+  return combinedCustomGrammar;
+}
+
 export function combinedCustomGrammarFromReleaseContexts(releaseContexts) {
   const customGrammars = releaseContexts.map((releaseContext) => {
           const customGrammar = releaseContext.getCustomGrammar();
@@ -27,5 +34,6 @@ export function combinedCustomGrammarFromReleaseContexts(releaseContexts) {
 
 export default {
   customGrammarFromNameAndEntries,
+  combinedCustomGrammarFromNothing,
   combinedCustomGrammarFromReleaseContexts
 };

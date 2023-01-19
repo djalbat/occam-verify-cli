@@ -5,11 +5,12 @@ import verifyTypeAssertion from "../verify/assertion/type";
 
 import { first } from "../utilities/array";
 import { nodeAsString } from "../utilities/string";
-import { ARGUMENT_RULE_NAME } from "../ruleNames";
 import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
+import { ARGUMENT_RULE_NAME, METAARGUMENT_RULE_NAME } from "../ruleNames";
 
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!"),
+      statementNodeQuery = nodeQuery("/metaargument/statement!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 export default function verifyStatement(statementNode, assertions, proofContext) {
@@ -147,6 +148,16 @@ function verifyNonTerminalNode(nonTerminalNode, combinatorNonTerminalNode, conte
         break;
       }
 
+      case METAARGUMENT_RULE_NAME: {
+        const metaargumentNode = nonTerminalNode, ///
+              combinatorMetaargumentNode = combinatorNonTerminalNode, ///
+              metaargumentNodeVerified = verifyMetaargumentNode(metaargumentNode, combinatorMetaargumentNode, context);
+
+        nonTerminalNodeVerified = metaargumentNodeVerified; ///
+
+        break;
+      }
+
       default: {
         const childNodes = nonTerminalNode.getChildNodes(),
               combinatorChildNodes = combinatorNonTerminalNode.getChildNodes(),
@@ -192,4 +203,29 @@ function verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
   }
 
   return argumentNodeVerified;
+}
+
+function verifyMetaargumentNode(metaargumentNode, combinatorMetaargumentNode, context) {
+  let metaargumentNodeVerified = false;
+
+  const statementNode = statementNodeQuery(metaargumentNode);
+
+  if (statementNode === null) {
+    const argumentString = nodeAsString(metaargumentNode);
+
+    context.error(`The ${argumentString} metaargument should be a statement, not a metatype`);
+  } else {
+    const assertions = null,
+          statementVerified = verifyStatement(statementNode, assertions, context);
+
+    if (statementVerified) {
+      debugger
+
+      if (true) {
+        metaargumentNodeVerified = true;
+      }
+    }
+  }
+
+  return metaargumentNodeVerified;
 }

@@ -3,6 +3,7 @@
 import ReleaseContext from "../../context/release";
 
 import { push } from "../../utilities/array";
+import { addBracketedCombinator } from "../../utilities/bracketedCombinator";
 import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
 
 export default class DirectoryReleaseContext extends ReleaseContext {
@@ -169,6 +170,8 @@ export default class DirectoryReleaseContext extends ReleaseContext {
         push(combinators, releaseContextCombinators);
       });
     }
+
+    addBracketedCombinator(combinators)
 
     return combinators;
   }

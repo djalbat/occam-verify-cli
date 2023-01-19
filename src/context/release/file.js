@@ -13,6 +13,7 @@ import Combinator from "../../combinator";
 import Constructor from "../../constructor";
 
 import { push } from "../../utilities/array";
+import { addBracketedCombinator } from "../../utilities/bracketedCombinator";
 import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
 import { RULE_KIND, TYPE_KIND, AXIOM_KIND, LEMMA_KIND, THEOREM_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
 
@@ -168,6 +169,8 @@ export default class FileReleaseContext extends ReleaseContext {
         push(combinators, releaseContextCombinators);
       });
     }
+
+    addBracketedCombinator(combinators);
 
     return combinators;
   }
