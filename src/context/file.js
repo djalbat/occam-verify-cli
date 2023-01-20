@@ -305,6 +305,12 @@ export default class FileContext {
     return variablePresent;
   }
 
+  matchStatement(statementNode) {
+    const statementMatches = false;
+
+    return statementMatches;
+  }
+
   addType(type) {
     this.types.push(type);
   }
