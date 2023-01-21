@@ -13,6 +13,6 @@ export const RULE_SUBPROOF_RULE_NAME = "ruleSubproof";
 export const META_ARGUMENT_RULE_NAME = "metaArgument";
 export const QUALIFIED_STATEMENT_RULE_NAME = "qualifiedStatement";
 export const UNQUALIFIED_STATEMENT_RULE_NAME = "unqualifiedStatement";
-export const CONDITIONAL_INDICATIVE_RULE_NAME = "conditionalIndicative";
+export const CONSTRUCTOR_DECLARATIONRULE_NAME = "constructorDeclaration";
 export const QUALIFIED_METASTATEMENT_RULE_NAME = "qualifiedMetastatement";
 export const UNQUALIFIED_METASTATEMENT_RULE_NAME = "unqualifiedMetastatement";

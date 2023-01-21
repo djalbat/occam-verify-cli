@@ -2,14 +2,14 @@
 
 import { COMMA } from "../constants";
 import { nodeQuery } from "../utilities/query";
-import { TERM_RULE_NAME,
-         LABEL_RULE_NAME,
+import { LABEL_RULE_NAME,
          UNQUALIFIED_STATEMENT_RULE_NAME,
-         CONDITIONAL_INDICATIVE_RULE_NAME,
-         UNQUALIFIED_METASTATEMENT_RULE_NAME} from "../ruleNames";
+         CONSTRUCTOR_DECLARATIONRULE_NAME,
+         UNQUALIFIED_METASTATEMENT_RULE_NAME } from "../ruleNames";
 
-const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement"),
-      metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement");
+const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
+      statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
+      metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
 export function nodeAsString(node) {
   let string = null;
@@ -56,10 +56,12 @@ export function nodesAsString(nodes) {
 }
 
 export function termNodeFromTermString(termString, releaseContext) {
-  const ruleName = TERM_RULE_NAME,
-        content = termString, ///
+  const ruleName = CONSTRUCTOR_DECLARATIONRULE_NAME,
+        content = `Constructor ${termString}
+`,
         node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
-        termNode = node;  ///
+        constructorDeclarationNode = node, ///
+        termNode = termNodeQuery(constructorDeclarationNode);
 
   return termNode;
 }
@@ -93,22 +95,4 @@ export function metastatementNodeFromMetastatementString(metastatementString, re
         metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
   return metastatementNode;
-}
-
-export function unqualifiedStatementNodeFromUnqualifiedStatementString(unqualifiedStatementString, releaseContext) {
-  const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME,
-        content = unqualifiedStatementString, ///
-        node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
-        unqualifiedStatementNode = node;  ///
-
-  return unqualifiedStatementNode;
-}
-
-export function conditionalIndicativeNodeFromConditionalIndicativeString(conditionalIndicativeString, releaseContext) {
-  const ruleName = CONDITIONAL_INDICATIVE_RULE_NAME,
-        content = conditionalIndicativeString, ///
-        node = releaseContext.nodeFromContentAndRuleName(content, ruleName),
-        conditionalIndicativeNode = node;  ///
-
-  return conditionalIndicativeNode;
 }
