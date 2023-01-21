@@ -20,18 +20,22 @@ export default function verifyTerm(termNode, types, context) {
 
   context.debug(`Verifying the '${termString}' term...`);
 
-  const variables = [],
-        termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
+  if (!termVerified) {
+    const variables = [],
+          termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
 
-  if (termVerifiedAsVariable) {
-    const firstVariable = first(variables),
-          variable = firstVariable, ///
-          type = variable.getType();
+    if (termVerifiedAsVariable) {
+      const firstVariable = first(variables),
+            variable = firstVariable, ///
+            type = variable.getType();
 
-    types.push(type);
+      types.push(type);
 
-    termVerified = true;
-  } else {
+      termVerified = true;
+    }
+  }
+
+  if (!termVerified) {
     const termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, context);
 
     if (termVerifiedAgainstConstructors) {

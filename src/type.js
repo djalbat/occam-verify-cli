@@ -96,7 +96,7 @@ export default class Type {
     return matchesTypeName;
   }
 
-  asString(noSuperType = (this.superType === null)) {
+  asString(noSuperType) {
     let string;
 
     if (noSuperType) {
@@ -111,9 +111,7 @@ export default class Type {
   }
 
   toJSON() {
-    const superTypeJSON = (this.superType === null) ?
-                            null :
-                              this.superType.toJSON(),
+    const superTypeJSON = this.superType.toJSON(),
           kind = TYPE_KIND,
           name = this.name,
           superType = superTypeJSON,  ///
@@ -127,23 +125,17 @@ export default class Type {
   }
 
   static fromJSON(json, releaseContext) {
-    const { name } = json;
+    let type;
 
     let { superType } = json;
 
-    if (superType !== null) {
-      const superTypeJSON = superType;  ///
+    const superTypeJSON = superType;  ///
 
-      json = superTypeJSON; ///
+    superType = superTypeFromSuperTypeJSON(superTypeJSON, releaseContext);
 
-      superType = Type.fromJSON(json, releaseContext);
+    const { name } = json;
 
-      const superTypeName = superType.getName();
-
-      superType = releaseContext.findTypeByTypeName(superTypeName); ///
-    }
-
-    const type = new Type(name, superType);
+    type = new Type(name, superType);
 
     return type;
   }
@@ -175,3 +167,13 @@ class ObjectType extends Type {
 }
 
 export const objectType = ObjectType.fromNothing();
+
+function superTypeFromSuperTypeJSON(superTypeJSON, releaseContext) {
+  const json = superTypeJSON, ///
+        { name } = json,
+        superType = (name === OBJECT_TYPE_NAME) ?
+          objectType :
+            Type.fromJSON(json, releaseContext);
+
+  return superType;
+}
