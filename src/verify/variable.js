@@ -2,6 +2,7 @@
 
 import Variable from "../variable";
 
+import { objectType } from "../type";
 import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities/query";
 
@@ -25,7 +26,7 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
     const typeName = typeNameFromTypeNode(typeNode);
     
     if (typeName === null) {
-      const type = null,
+      const type = objectType,
             name = variableName;  ///
 
       variable = Variable.fromTypeAndName(type, name);

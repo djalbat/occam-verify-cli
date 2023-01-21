@@ -1,7 +1,9 @@
 "use strict";
 
 import { first } from "../utilities/array";
+import { objectType } from "../type";
 import { nodeAsString } from "../utilities/string";
+import { OBJECT_TYPE_NAME } from "../typeNames";
 import { ARGUMENT_RULE_NAME } from "../ruleNames";
 import { nodeQuery, typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities/query";
 
@@ -224,7 +226,9 @@ function verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
             termType = firstType, ///
             typeNode = typeNodeQuery(constructorArgumentNode),
             typeName = typeNameFromTypeNode(typeNode),
-            type = context.findTypeByTypeName(typeName),
+            type = (typeName === OBJECT_TYPE_NAME) ?
+                     objectType :  ///
+                       context.findTypeByTypeName(typeName),
             termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
 
       if (termTypeEqualToOrSubTypeOfType) {

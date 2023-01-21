@@ -1,14 +1,18 @@
 "use strict";
 
 import verifyTerm from "../verify/term";
+import EqualityAssertion from "../assertion/equality";
+import equalityCombinator from "../ocmbinator/equality";
+import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/assertion/type";
 
 import { first } from "../utilities/array";
+import { objectType } from "../type";
 import { nodeAsString } from "../utilities/string";
+import { OBJECT_TYPE_NAME } from "../typeNames";
 import { STATEMENT_META_TYPE } from "../metaTypes";
 import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
 import { ARGUMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../ruleNames";
-import bracketedCombinator from "../ocmbinator/bracketed";
 
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!"),
@@ -21,15 +25,20 @@ export default function verifyStatement(statementNode, assertions, proofContext)
 
   proofContext.begin(statementNode);
 
-  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
+  if (!statementVerified) {
+    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, assertions, proofContext);
 
-  if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assertions, proofContext);
+    statementVerified = statementVerifiedAsEquality;  //
+  }
 
-    statementVerified = typeAssertionVerified; ///
-  } else {
-    const context = proofContext, ///
-          statementVerifiedAgainstCombinators = verifyStatementAgainstCombinators(statementNode, context);
+  if (!statementVerified) {
+    const statementVerifiedAsTypeAssertion = verifyStatementAsTypeAssertion(statementNode, assertions, proofContext);
+
+    statementVerified = statementVerifiedAsTypeAssertion; ///
+  }
+
+  if (!statementVerified) {
+    const statementVerifiedAgainstCombinators = verifyStatementAgainstCombinators(statementNode, proofContext);
 
     statementVerified = statementVerifiedAgainstCombinators;  ///
   }
@@ -41,17 +50,50 @@ export default function verifyStatement(statementNode, assertions, proofContext)
   return statementVerified;
 }
 
-function verifyStatementAgainstCombinators(statementNode, context) {
+function verifyStatementAsEquality(statementNode, assertions, proofContext) {
+  let statementVerifiedAsEquality = false;
+
+  const combinator = equalityCombinator,  ///
+        statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, proofContext);
+
+  if (statementVerifiedAgainstCombinator) {
+    const equalityAssertion = EqualityAssertion.fromStatementNode(statementNode),
+          assertion = equalityAssertion;  ///
+
+    assertions.push(assertion);
+
+    statementVerifiedAsEquality = true;
+  }
+
+  return statementVerifiedAsEquality;
+}
+
+function verifyStatementAsTypeAssertion(statementNode, assertions, proofContext) {
+  let statementVerifiedAsTypeAssertion = false;
+
+  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
+
+  if (typeAssertionNode !== null) {
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assertions, proofContext);
+
+    statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
+  }
+
+  return statementVerifiedAsTypeAssertion;
+}
+
+function verifyStatementAgainstCombinators(statementNode, proofContext) {
   let statementVerifiedAgainstCombinators = false;
 
-  context.begin(statementNode);
+  let combinators = proofContext.getCombinators();
 
-  const combinators = context.getCombinators();
-
-  combinators.unshift(bracketedCombinator);
+  combinators = [ ///
+    bracketedCombinator,
+    ...combinators
+  ];
 
   const combinator = combinators.find((combinator) => {
-          const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
+          const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, proofContext);
 
           if (statementVerifiedAgainstCombinator) {
             return true;
@@ -62,24 +104,20 @@ function verifyStatementAgainstCombinators(statementNode, context) {
     statementVerifiedAgainstCombinators = true;
   }
 
-  statementVerifiedAgainstCombinators ?
-    context.complete(statementNode) :
-      context.halt(statementNode);
-
   return statementVerifiedAgainstCombinators;
 }
 
-function verifyStatementAgainstCombinator(statementNode, combinator, context) {
+function verifyStatementAgainstCombinator(statementNode, combinator, proofContext) {
   const combinatorStatementNode = combinator.getStatementNode(),
         node = statementNode,  ///
         combinatorNode = combinatorStatementNode, ///
-        nodeVerified = verifyNode(node, combinatorNode, context),
+        nodeVerified = verifyNode(node, combinatorNode, proofContext),
         statementVerifiedAgainstCombinator = nodeVerified;  ///
 
   return statementVerifiedAgainstCombinator;
 }
 
-function verifyNode(node, combinatorNode, context) {
+function verifyNode(node, combinatorNode, proofContext) {
   let nodeVerified;
 
   const nodeTerminalNode = node.isTerminalNode(),
@@ -89,13 +127,13 @@ function verifyNode(node, combinatorNode, context) {
     if (nodeTerminalNode) {
       const terminalNode = node,  ///
             combinatorTerminalNode = combinatorNode,  ///
-            terminalNodeVerified = verifyTerminalNode(terminalNode, combinatorTerminalNode, context);
+            terminalNodeVerified = verifyTerminalNode(terminalNode, combinatorTerminalNode, proofContext);
 
       nodeVerified = terminalNodeVerified;  ///
     } else {
       const nonTerminalNode = node, ///
             combinatorNonTerminalNode = combinatorNode,  ///
-            nonTerminalNodeVerified = verifyNonTerminalNode(nonTerminalNode, combinatorNonTerminalNode, context);
+            nonTerminalNodeVerified = verifyNonTerminalNode(nonTerminalNode, combinatorNonTerminalNode, proofContext);
 
       nodeVerified = nonTerminalNodeVerified; ///
     }
@@ -104,7 +142,7 @@ function verifyNode(node, combinatorNode, context) {
   return nodeVerified;
 }
 
-function verifyNodes(nodes, combinatorNodes, context) {
+function verifyNodes(nodes, combinatorNodes, proofContext) {
   let nodesVerified = false;
 
   const nodesLength = nodes.length,
@@ -113,7 +151,7 @@ function verifyNodes(nodes, combinatorNodes, context) {
   if (nodesLength === combinatorNodesLength) {
     nodesVerified = nodes.every((node, index) => {
       const combinatorNode = combinatorNodes[index],
-            nodeVerified = verifyNode(node, combinatorNode, context);
+            nodeVerified = verifyNode(node, combinatorNode, proofContext);
 
       if (nodeVerified) {
         return true;
@@ -124,7 +162,7 @@ function verifyNodes(nodes, combinatorNodes, context) {
   return nodesVerified;
 }
 
-function verifyTerminalNode(terminalNode, combinatorTerminalNode, context) {
+function verifyTerminalNode(terminalNode, combinatorTerminalNode, proofContext) {
   let terminalNodeVerified = false;
 
   const matches = terminalNode.match(combinatorTerminalNode);
@@ -136,7 +174,7 @@ function verifyTerminalNode(terminalNode, combinatorTerminalNode, context) {
   return terminalNodeVerified;
 }
 
-function verifyNonTerminalNode(nonTerminalNode, combinatorNonTerminalNode, context) {
+function verifyNonTerminalNode(nonTerminalNode, combinatorNonTerminalNode, proofContext) {
   let nonTerminalNodeVerified = false;
 
   const ruleName = nonTerminalNode.getRuleName(), ///
@@ -147,7 +185,7 @@ function verifyNonTerminalNode(nonTerminalNode, combinatorNonTerminalNode, conte
       case ARGUMENT_RULE_NAME: {
         const argumentNode = nonTerminalNode, ///
               combinatorArgumentNode = combinatorNonTerminalNode, ///
-              argumentNodeVerified = verifyArgumentNode(argumentNode, combinatorArgumentNode, context);
+              argumentNodeVerified = verifyArgumentNode(argumentNode, combinatorArgumentNode, proofContext);
 
         nonTerminalNodeVerified = argumentNodeVerified; ///
 
@@ -157,7 +195,7 @@ function verifyNonTerminalNode(nonTerminalNode, combinatorNonTerminalNode, conte
       case META_ARGUMENT_RULE_NAME: {
         const metaArgumentNode = nonTerminalNode, ///
               combinatorMetaargumentNode = combinatorNonTerminalNode, ///
-              metaArgumentNodeVerified = verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context);
+              metaArgumentNodeVerified = verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, proofContext);
 
         nonTerminalNodeVerified = metaArgumentNodeVerified; ///
 
@@ -169,7 +207,7 @@ function verifyNonTerminalNode(nonTerminalNode, combinatorNonTerminalNode, conte
               combinatorChildNodes = combinatorNonTerminalNode.getChildNodes(),
               nodes = childNodes, ///
               combinatorNodes = combinatorChildNodes, ///
-              nodesVerified = verifyNodes(nodes, combinatorNodes, context);
+              nodesVerified = verifyNodes(nodes, combinatorNodes, proofContext);
 
         nonTerminalNodeVerified = nodesVerified; ///
 
@@ -181,7 +219,7 @@ function verifyNonTerminalNode(nonTerminalNode, combinatorNonTerminalNode, conte
   return nonTerminalNodeVerified;
 }
 
-function verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
+function verifyArgumentNode(argumentNode, combinatorArgumentNode, proofContext) {
   let argumentNodeVerified = false;
 
   const termNode = termNodeQuery(argumentNode);
@@ -189,9 +227,10 @@ function verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
   if (termNode === null) {
     const argumentString = nodeAsString(argumentNode);
 
-    context.error(`The ${argumentString} argument should be a term, not a type`);
+    proofContext.error(`The ${argumentString} argument should be a term, not a type`);
   } else {
     const types = [],
+          context = proofContext, ///
           termVerified = verifyTerm(termNode, types, context);
 
     if (termVerified) {
@@ -199,7 +238,9 @@ function verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
             termType = firstType, ///
             typeNode = typeNodeQuery(combinatorArgumentNode),
             typeName = typeNameFromTypeNode(typeNode),
-            type = context.findTypeByTypeName(typeName),
+            type = (typeName === OBJECT_TYPE_NAME) ?
+                     objectType :  ///
+                       proofContext.findTypeByTypeName(typeName),
             statementTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
 
       if (statementTypeEqualToOrSubTypeOfType) {
@@ -211,7 +252,7 @@ function verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
   return argumentNodeVerified;
 }
 
-function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context) {
+function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, proofContext) {
   let metaArgumentNodeVerified = false;
 
   const statementNode = statementNodeQuery(metaArgumentNode);
@@ -219,10 +260,10 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
   if (statementNode === null) {
     const metaArgumentString = nodeAsString(metaArgumentNode);
 
-    context.error(`The '${metaArgumentString}' meta-argument should be a statement, not a meta-type.`);
+    proofContext.error(`The '${metaArgumentString}' meta-argument should be a statement, not a meta-type.`);
   } else {
     const assertions = null,
-          statementVerified = verifyStatement(statementNode, assertions, context);
+          statementVerified = verifyStatement(statementNode, assertions, proofContext);
 
     if (statementVerified) {
       const combinatorMetaTYpeNode = metaTypeNodeQuery(combinatorMetaargumentNode);
@@ -238,7 +279,7 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
       if (!metaArgumentNodeVerified) {
         const combinatorMetaargumentString = nodeAsString(combinatorMetaargumentNode);
 
-        context.error(`The '${combinatorMetaargumentString}' combinator meta-argument should be the 'Statement' meta-type.`);
+        proofContext.error(`The '${combinatorMetaargumentString}' combinator meta-argument should be the 'Statement' meta-type.`);
       }
     }
   }

@@ -1,6 +1,7 @@
 "use strict";
 
 import { TYPE_KIND } from "./kinds";
+import { OBJECT_TYPE_NAME } from "./typeNames";
 
 export default class Type {
   constructor(name, superType) {
@@ -149,7 +150,7 @@ export default class Type {
 
   static fromTypeName(typeName) {
     const name = typeName,  ///
-          superType = null,
+          superType = objectType, ///
           type = new Type(name, superType);
 
     return type;
@@ -162,3 +163,15 @@ export default class Type {
     return type;
   }
 }
+
+class ObjectType extends Type {
+  static fromNothing() {
+    const name = OBJECT_TYPE_NAME,
+          superType = null,
+          objectType = new ObjectType(name, superType);
+
+    return objectType;
+  }
+}
+
+export const objectType = ObjectType.fromNothing();

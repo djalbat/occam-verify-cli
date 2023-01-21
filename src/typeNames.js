@@ -1,3 +1,3 @@
 "use strict";
 
-export
+export const OBJECT_TYPE_NAME = "Object";

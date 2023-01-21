@@ -12,7 +12,7 @@ const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
       florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
-class BracketedCombinatorReleaseContext {
+class CombinatorReleaseContext {
   nodeFromContentAndRuleName(content, ruleName) {
     const ruleMap = florenceParser.getRuleMap(),
           rule = ruleMap[ruleName],
@@ -27,13 +27,13 @@ class BracketedCombinatorReleaseContext {
   }
 
   static fromNothing() {
-    const bracketedCombinatorReleaseContext = new BracketedCombinatorReleaseContext();
+    const combinatorReleaseContext = new CombinatorReleaseContext();
 
-    return bracketedCombinatorReleaseContext;
+    return combinatorReleaseContext;
   }
 }
 
-const bracketedCombinatorReleaseContext = BracketedCombinatorReleaseContext.fromNothing();
+const combinatorReleaseContext = CombinatorReleaseContext.fromNothing();
 
-export default bracketedCombinatorReleaseContext;
+export default combinatorReleaseContext;
 

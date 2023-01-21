@@ -1,14 +1,14 @@
 "use strict";
 
 import Combinator from "../combinator";
-import bracketedCombinatorReleaseContext from "../context/release/bracketedCombinator";
+import combinatorReleaseContext from "../context/release/combinator";
 
 import { statementNodeFromStatementString } from "../utilities/string";
 
 class BracketedCombinator extends Combinator {
   static fromNothing() {
     const statementString = "(Statement)",
-          releaseContext = bracketedCombinatorReleaseContext, ///
+          releaseContext = combinatorReleaseContext, ///
           statementNode = statementNodeFromStatementString(statementString, releaseContext),
           bracketedCombinator = new BracketedCombinator(statementNode);
 
