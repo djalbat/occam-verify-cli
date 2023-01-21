@@ -1,11 +1,11 @@
 "use strict";
 
-import { nodeQuery } from "../utilities/query";
+import { nodeQuery } from "./utilities/query";
 
 const leftTermNodeQuery = nodeQuery("/statement/term[0]"),
       rightTermNodeQuery = nodeQuery("/statement/term[1]");
 
-export default class EqualityAssertion {
+export default class Equality {
   constructor(leftTermNode, rightTermNode) {
     this.leftTermNode = leftTermNode;
     this.rightTermNode = rightTermNode;
@@ -26,8 +26,8 @@ export default class EqualityAssertion {
   static fromStatementNode(statementNode) {
     const leftTermNode = leftTermNodeQuery(statementNode),
           rightTermNode = rightTermNodeQuery(statementNode),
-          equalityAssertion = new EqualityAssertion(leftTermNode, rightTermNode);
+          equality = new Equality(leftTermNode, rightTermNode);
 
-    return equalityAssertion;
+    return equality;
   }
 }

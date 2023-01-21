@@ -1,7 +1,6 @@
 "use strict";
 
 import verifyTerm from "../verify/term";
-import EqualityAssertion from "../assertion/equality";
 import equalityCombinator from "../ocmbinator/equality";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/assertion/type";
@@ -26,7 +25,7 @@ export default function verifyStatement(statementNode, assertions, proofContext)
   proofContext.begin(statementNode);
 
   if (!statementVerified) {
-    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, assertions, proofContext);
+    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, proofContext);
 
     statementVerified = statementVerifiedAsEquality;  //
   }
@@ -50,18 +49,13 @@ export default function verifyStatement(statementNode, assertions, proofContext)
   return statementVerified;
 }
 
-function verifyStatementAsEquality(statementNode, assertions, proofContext) {
+function verifyStatementAsEquality(statementNode, proofContext) {
   let statementVerifiedAsEquality = false;
 
   const combinator = equalityCombinator,  ///
         statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, proofContext);
 
   if (statementVerifiedAgainstCombinator) {
-    const equalityAssertion = EqualityAssertion.fromStatementNode(statementNode),
-          assertion = equalityAssertion;  ///
-
-    assertions.push(assertion);
-
     statementVerifiedAsEquality = true;
   }
 
