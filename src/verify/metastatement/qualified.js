@@ -8,7 +8,7 @@ import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query
 const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/reference!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
 
-export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, metaproofContext) {
+export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, assertions, derived, metaproofContext) {
   let qualifiedMetastatementVerified = false;
 
   metaproofContext.begin(qualifiedMetastatementNode);
@@ -20,7 +20,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
     metaproofContext.debug(`Verifying the ${metastatementString} qualified metastatement...`);
 
-    let ruleMatchesStatement = true;
+    let ruleMatchesMetastatement = true;
 
     const referenceNode = referenceNodeQuery(qualifiedMetastatementNode);
 
@@ -29,15 +29,12 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
             rule = metaproofContext.findRuleByReferenceName(referenceName);
 
       if (rule !== null) {
-        const ruleMatchesStatement = rule.matchMetastatement(metastatementNode, metaproofContext);
-
-        qualifiedMetastatementVerified = ruleMatchesStatement;  ///
+        ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, metaproofContext);
       }
     }
 
-    if (ruleMatchesStatement) {
-      const assertions = [],
-            metastatementVerified = verifyMetastatement(metastatementNode, assertions, metaproofContext);
+    if (ruleMatchesMetastatement) {
+      const metastatementVerified = verifyMetastatement(metastatementNode, assertions, derived, metaproofContext);
 
       qualifiedMetastatementVerified = metastatementVerified; ///
     }

@@ -8,7 +8,7 @@ import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query
 const referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!"),
       statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
 
-export default function verifyQualifiedStatement(qualifiedStatementNode, proofContext) {
+export default function verifyQualifiedStatement(qualifiedStatementNode, assertions, derived, proofContext) {
   let qualifiedStatementVerified = false;
 
   proofContext.begin(qualifiedStatementNode);
@@ -34,8 +34,8 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, proofCo
     }
 
     if (ruleMatchesStatement) {
-      const assertions = [],
-            statementVerified = verifyStatement(statementNode, assertions, proofContext);
+      const context = proofContext,
+            statementVerified = verifyStatement(statementNode, assertions, derived, context);
 
       qualifiedStatementVerified = statementVerified; ///
     }

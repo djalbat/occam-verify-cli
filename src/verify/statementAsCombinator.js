@@ -1,10 +1,12 @@
 "use strict";
 
 import Combinator from "../combinator";
+import verifyTerm from "../verify/term";
+import verifyStatement from "../verify/statement";
 
 import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode } from "../utilities/query";
-import { TERM_RULE_NAME, TYPE_RULE_NAME } from "../ruleNames";
+import { TYPE_RULE_NAME, TERM_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
 
 export default function verifyStatementAsCombinator(statementNode, fileContext) {
   let statementVerifiedAsCombinator = false;
@@ -58,29 +60,6 @@ function verifyNode(node, fileContext) {
   return nodeVerified;
 }
 
-function verifyTypeNode(typeNode, fileContext) {
-  let typeNodeVerified = false;
-
-  const typeName = typeNameFromTypeNode(typeNode),
-        typePresent = fileContext.isTypePresentByTypeName(typeName);
-
-  if (!typePresent) {
-    fileContext.error(`The type '${typeName}' is missing.`);
-  } else {
-    typeNodeVerified = true;
-  }
-
-  return typeNodeVerified;
-}
-
-function verifyTermNode(termNode, fileContext) {
-  let termNodeVerified = false;
-
-  debugger
-
-  return termNodeVerified;
-}
-
 function verifyChildNodes(childNodes, fileContext) {
   const childNodesVerified = childNodes.every((childNode) => {
     const node = childNode, ///
@@ -124,6 +103,15 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
       break;
     }
 
+    case STATEMENT_RULE_NAME: {
+      const statmentNode = nonTerminalNode, ///
+            statmentNodeVerified = verifyStatementNode(statmentNode, fileContext);
+
+      nonTerminalNodeVerified = statmentNodeVerified; ///
+
+      break;
+    }
+
     default: {
       const childNodes = nonTerminalNode.getChildNodes(),
             childNodesVerified = verifyChildNodes(childNodes, fileContext);
@@ -136,3 +124,38 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 
   return nonTerminalNodeVerified;
 }
+
+function verifyTypeNode(typeNode, fileContext) {
+  let typeNodeVerified = false;
+
+  const typeName = typeNameFromTypeNode(typeNode),
+        typePresent = fileContext.isTypePresentByTypeName(typeName);
+
+  if (!typePresent) {
+    fileContext.error(`The type '${typeName}' is missing.`);
+  } else {
+    typeNodeVerified = true;
+  }
+
+  return typeNodeVerified;
+}
+
+function verifyTermNode(termNode, fileContext) {
+  const types = [],
+        context = fileContext,  ///
+        termVerified = verifyTerm(termNode, types, context),
+        termNodeVerified = termVerified;  ///
+
+  return termNodeVerified;
+}
+
+function verifyStatementNode(statementNode, fileContext) {
+  const context = fileContext,  ///
+        derived = false,
+        assertions = [],
+        statementVerified = verifyStatement(statementNode, assertions, derived, context),
+        statementNodeVerified = statementVerified;  ///
+
+  return statementNodeVerified;
+}
+

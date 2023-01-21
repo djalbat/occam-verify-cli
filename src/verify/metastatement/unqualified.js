@@ -26,7 +26,7 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
     }
 
     if (metastatementMatches) {
-      const metastatementVerified = verifyMetastatement(metastatementNode, assertions, metaproofContext);
+      const metastatementVerified = verifyMetastatement(metastatementNode, assertions, derived, metaproofContext);
 
       unqualifiedMetastatementVerified = metastatementVerified; ///
     }

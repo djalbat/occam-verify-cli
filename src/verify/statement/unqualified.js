@@ -26,7 +26,8 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
     }
 
     if (statementMatches) {
-      const statementVerified = verifyStatement(statementNode, assertions, proofContext);
+      const context = proofContext, ///
+            statementVerified = verifyStatement(statementNode, assertions, derived, context);
 
       unqualifiedStatementVerified = statementVerified;  ///
     }

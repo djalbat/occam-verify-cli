@@ -97,29 +97,6 @@ function verifyTerminalNode(terminalNode, fileContext) {
   return terminalNodeVerified;
 }
 
-function verifyArgumentNode(argumentNode, fileContext) {
-  let typeNodeVerified = false;
-
-  const typeNode = typeNodeQuery(argumentNode);
-
-  if (typeNode === null) {
-    const argumentString = nodeAsString(argumentNode);
-
-    fileContext.error(`The ${argumentString} argument should be a type.`);
-  } else {
-    const typeName = typeNameFromTypeNode(typeNode),
-          typePresent = fileContext.isTypePresentByTypeName(typeName);
-
-    if (!typePresent) {
-      fileContext.error(`The type '${typeName}' is missing.`);
-    } else {
-      typeNodeVerified = true;
-    }
-  }
-
-  return typeNodeVerified;
-}
-
 function verifyNonTerminalNode(nonTerminalNode, fileContext) {
   let nonTerminalNodeVerified;
 
@@ -170,3 +147,25 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
   return nonTerminalNodeVerified;
 }
 
+function verifyArgumentNode(argumentNode, fileContext) {
+  let typeNodeVerified = false;
+
+  const typeNode = typeNodeQuery(argumentNode);
+
+  if (typeNode === null) {
+    const argumentString = nodeAsString(argumentNode);
+
+    fileContext.error(`The ${argumentString} argument should be a type.`);
+  } else {
+    const typeName = typeNameFromTypeNode(typeNode),
+          typePresent = fileContext.isTypePresentByTypeName(typeName);
+
+    if (!typePresent) {
+      fileContext.error(`The type '${typeName}' is missing.`);
+    } else {
+      typeNodeVerified = true;
+    }
+  }
+
+  return typeNodeVerified;
+}

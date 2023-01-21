@@ -107,8 +107,10 @@ function verifyChild(childNode, proofContext) {
     }
 
     case QUALIFIED_STATEMENT_RULE_NAME: {
-      const qualifiedStatementNode = childNode,  ///
-            qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, proofContext);
+      const derived = true,
+            assertions = [],
+            qualifiedStatementNode = childNode,  ///
+            qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assertions, derived, proofContext);
 
       if (qualifiedStatementVerified) {
         const statementNode = statementNodeQuery(qualifiedStatementNode),

@@ -107,8 +107,10 @@ function verifyChild(childNode, metaproofContext) {
     }
 
     case QUALIFIED_METASTATEMENT_RULE_NAME: {
-      const qualifiedMetastatementNode = childNode,  ///
-            qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metaproofContext);
+      const derived = true,
+            assertions = [],
+            qualifiedMetastatementNode = childNode,  ///
+            qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, assertions, derived, metaproofContext);
 
       if (qualifiedMetastatementVerified) {
         const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
