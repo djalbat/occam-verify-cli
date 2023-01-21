@@ -157,6 +157,19 @@ export default class Type {
 }
 
 class ObjectType extends Type {
+  toJSON() {
+    const kind = TYPE_KIND,
+          name = this.name,
+          superType = null,  ///
+          json = {
+            kind,
+            name,
+            superType
+          };
+
+    return json;
+  }
+
   static fromNothing() {
     const name = OBJECT_TYPE_NAME,
           superType = null,
