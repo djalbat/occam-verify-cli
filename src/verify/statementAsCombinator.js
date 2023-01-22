@@ -4,7 +4,6 @@ import Combinator from "../combinator";
 import verifyTerm from "../verify/term";
 import verifyStatement from "../verify/statement";
 
-import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode } from "../utilities/query";
 import { TYPE_RULE_NAME, TERM_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
 
@@ -13,7 +12,7 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
 
   fileContext.begin(statementNode);
 
-  const statementString = nodeAsString(statementNode);
+  const statementString = fileContext.nodeAsString(statementNode);
 
   fileContext.debug(`Verifying the '${statementString}' combinator....`);
 

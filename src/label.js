@@ -21,14 +21,14 @@ export default class Label {
     return matchesName;
   }
 
-  asString() {
-    const string = nodeAsString(this.node);
+  asString(tokens) {
+    const string = nodeAsString(this.node, tokens);
 
     return string;
   }
 
-  toJSON() {
-    const string = nodeAsString(this.node),
+  toJSON(tokens) {
+    const string = nodeAsString(this.node, tokens),
           json = string;  ///
 
     return json;

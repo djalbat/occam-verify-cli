@@ -32,8 +32,8 @@ export default class Conclusion {
     return metastatementNodeMatches;
   }
 
-  toJSON() {
-    const metastatementString = nodeAsString(this.metastatementNode),
+  toJSON(tokens) {
+    const metastatementString = nodeAsString(this.metastatementNode, tokens),
           metastatement = metastatementString,  ///
           json = {
             metastatement

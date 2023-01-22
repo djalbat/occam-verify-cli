@@ -22,7 +22,7 @@ export default function verifyRule(ruleNode, fileContext) {
   fileContext.begin(ruleNode);
 
   const labelNodes = labelNodesQuery(ruleNode),
-        labelsString = nodesAsString(labelNodes),
+        labelsString = fileContext.nodesAsString(labelNodes),
         metaProofContext = MetaproofContext.fromFileContext(fileContext);
 
   fileContext.debug(`Verifying the '${labelsString}' rule...`);

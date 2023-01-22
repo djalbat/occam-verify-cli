@@ -121,6 +121,10 @@ class ProofContext {
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
+  nodeAsString(node) { return this.context.nodeAsString(node); }
+
+  nodesAsString(node) { return this.context.nodesAsString(node); }
+
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
           variables = [],

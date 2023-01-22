@@ -3,7 +3,6 @@
 import Variable from "../variable";
 
 import { objectType } from "../type";
-import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities/query";
 
 export default function verifyVariable(variableNode, typeNode, fileContext) {
@@ -11,7 +10,7 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
 
   fileContext.begin(variableNode);
 
-  const variableString = nodeAsString(variableNode);
+  const variableString = fileContext.nodeAsString(variableNode);
 
   fileContext.debug(`Verifying the '${variableString}' variable...`);
 

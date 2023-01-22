@@ -96,7 +96,7 @@ export default class Type {
     return matchesTypeName;
   }
 
-  asString(noSuperType) {
+  asString(tokens, noSuperType) {
     let string;
 
     if (noSuperType) {
@@ -110,8 +110,8 @@ export default class Type {
     return string;
   }
 
-  toJSON() {
-    const superTypeJSON = this.superType.toJSON(),
+  toJSON(tokens) {
+    const superTypeJSON = this.superType.toJSON(tokens),
           kind = TYPE_KIND,
           name = this.name,
           superType = superTypeJSON,  ///
@@ -157,7 +157,7 @@ export default class Type {
 }
 
 class ObjectType extends Type {
-  toJSON() {
+  toJSON(tokens) {
     const kind = TYPE_KIND,
           name = this.name,
           superType = null,  ///

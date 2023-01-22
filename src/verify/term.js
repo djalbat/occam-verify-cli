@@ -2,7 +2,6 @@
 
 import { first } from "../utilities/array";
 import { objectType } from "../type";
-import { nodeAsString } from "../utilities/string";
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { ARGUMENT_RULE_NAME } from "../ruleNames";
 import { nodeQuery, typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities/query";
@@ -16,7 +15,7 @@ export default function verifyTerm(termNode, types, context) {
 
   context.begin(termNode);
 
-  const termString = nodeAsString(termNode);
+  const termString = context.nodeAsString(termNode);
 
   context.debug(`Verifying the '${termString}' term...`);
 
@@ -218,7 +217,7 @@ function verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
   const termNode = termNodeQuery(argumentNode);
 
   if (termNode === null) {
-    const argumentString = nodeAsString(argumentNode);
+    const argumentString = context.nodeAsString(argumentNode);
 
     context.error(`The ${argumentString} argument should be a term, not a type`);
   } else {

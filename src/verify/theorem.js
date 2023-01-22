@@ -22,7 +22,7 @@ export default function verifyTheorem(theoremNode, fileContext) {
   fileContext.begin(theoremNode);
 
   const labelNodes = labelNodesQuery(theoremNode),
-        labelsString = nodesAsString(labelNodes),
+        labelsString = fileContext.nodesAsString(labelNodes),
         proofContext = ProofContext.fromFileContext(fileContext);
 
   fileContext.debug(`Verifying the '${labelsString}' theorem...`);

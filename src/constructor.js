@@ -20,16 +20,16 @@ export default class Constructor {
     return this.type;
   }
 
-  asString() {
+  asString(tokens) {
     let string;
 
-    const termString = nodeAsString(this.termNode);
+    const termString = nodeAsString(this.termNode, tokens);
 
     if (this.type === null) {
       string = `${termString}`;
     } else {
       const noSuperType = true,
-            typeString = this.type.asString(noSuperType);
+            typeString = this.type.asString(tokens, noSuperType);
 
       string = `${termString}:${typeString}`;
     }
@@ -37,11 +37,11 @@ export default class Constructor {
     return string;
   }
 
-  toJSON() {
-    const termString = nodeAsString(this.termNode),
+  toJSON(tokens) {
+    const termString = nodeAsString(this.termNode, tokens),
           typeJSON = (this.type === null) ?
                         null :
-                          this.type.toJSON(),
+                          this.type.toJSON(tokens),
           kind = CONSTRUCTOR_KIND,
           term = termString,  ///
           type = typeJSON,  ///

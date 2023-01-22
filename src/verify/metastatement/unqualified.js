@@ -15,9 +15,9 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
   const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
   if (metastatementNode !== null) {
-    const metastatementString = nodeAsString(metastatementNode);
+    const metastatementString = metaproofContext.nodeAsString(metastatementNode);
 
-    metaproofContext.debug(`Verifying the ${metastatementString} unqualified metastatement...`);
+    metaproofContext.debug(`Verifying the '${metastatementString}' unqualified metastatement...`);
 
     let metastatementMatches = true;
 

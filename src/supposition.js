@@ -61,8 +61,8 @@ export default class Supposition {
     return statementNodeMatches;
   }
 
-  toJSON() {
-    const statementString = nodeAsString(this.statementNode),
+  toJSON(tokens) {
+    const statementString = nodeAsString(this.statementNode, tokens),
           statement = statementString, ///
           json = {
             statement

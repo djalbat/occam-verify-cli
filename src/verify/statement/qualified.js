@@ -16,9 +16,9 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, asserti
   const statementNode = statementNodeQuery(qualifiedStatementNode);
 
   if (statementNode !== null) {
-    const statementString = nodeAsString(statementNode);
+    const statementString = proofContext.nodeAsString(statementNode);
 
-    proofContext.debug(`Verifying the ${statementString} qualified statement...`);
+    proofContext.debug(`Verifying the '${statementString}' qualified statement...`);
 
     let ruleMatchesStatement = true;
 

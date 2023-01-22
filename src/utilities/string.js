@@ -1,17 +1,14 @@
 "use strict";
 
-import { COMMA } from "../constants";
 import { nodeQuery } from "../utilities/query";
-import { LABEL_RULE_NAME,
-         UNQUALIFIED_STATEMENT_RULE_NAME,
-         CONSTRUCTOR_DECLARATIONRULE_NAME,
-         UNQUALIFIED_METASTATEMENT_RULE_NAME } from "../ruleNames";
+import { COMMA, EMPTY_STRING } from "../constants";
+import { LABEL_RULE_NAME, UNQUALIFIED_STATEMENT_RULE_NAME, CONSTRUCTOR_DECLARATIONRULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME } from "../ruleNames";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
       statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
-export function nodeAsString(node) {
+export function nodeAsString(node, tokens) {
   let string = null;
 
   if (node !== null) {
@@ -24,24 +21,35 @@ export function nodeAsString(node) {
       string = content; ///
     } else {
       const nonTerminalNode = node, ///
-            childNodes = nonTerminalNode.getChildNodes();
+            firstSignificantToken = nonTerminalNode.getFirstSignificantToken(),
+            lastSignificantToken = nonTerminalNode.getLastSignificantToken(),
+            firstSignificantTokenIndex = tokens.indexOf(firstSignificantToken),
+            lastSignificantTokenIndex = tokens.indexOf(lastSignificantToken),
+            start = firstSignificantTokenIndex, ///
+            end = lastSignificantTokenIndex + 1;
 
-      childNodes.forEach((childNode) => {
-        const nodeString = nodeAsString(childNode);
+      tokens = tokens.slice(start, end);  ///
 
-        string = (string === null) ?
-                   nodeString : ///
-                    `${string}${nodeString}`;
-      });
+      string = tokens.reduce((string, token) => {
+        const content = token.getContent();
+
+        string = `${string}${content}`;
+
+        return string;
+      }, EMPTY_STRING);
     }
+  }
+
+  if (string !== null) {
+    string = string.replace(/[\r\n]/, EMPTY_STRING)
   }
 
   return string;
 }
 
-export function nodesAsString(nodes) {
+export function nodesAsString(nodes, tokens) {
   const string = nodes.reduce((string, node) => {
-    const nodeString = nodeAsString(node);
+    const nodeString = nodeAsString(node, tokens);
 
     if (string === null) {
       string = nodeString;  ///

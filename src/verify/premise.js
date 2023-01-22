@@ -5,7 +5,6 @@ import MetaproofStep from "../step/metaproof";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
-import { nodeAsString } from "../utilities/string";
 
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/premise/unqualifiedMetastatement!");
@@ -15,9 +14,9 @@ export default function verifyPremise(premiseNode, premises, metaproofContext) {
 
   metaproofContext.begin(premiseNode);
 
-  const premiseString = nodeAsString(premiseNode);
+  const premiseString = metaproofContext.nodeAsString(premiseNode);
 
-  metaproofContext.debug(`Verifying the ${premiseString} premise...`);
+  metaproofContext.debug(`Verifying the '${premiseString}' premise...`);
 
   const derived = false,
         assertions = [],

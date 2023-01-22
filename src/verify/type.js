@@ -2,7 +2,6 @@
 
 import Type from "../type";
 
-import { nodeAsString } from "../utilities/string";
 import { typeNameFromTypeNode } from "../utilities/query";
 
 export default function verifyType(typeNode, superTypeNode, fileContext) {
@@ -10,7 +9,7 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
 
   fileContext.begin(typeNode);
 
-  const typeString = nodeAsString(typeNode);
+  const typeString = fileContext.nodeAsString(typeNode);
 
   fileContext.debug(`Verifying the '${typeString}' type...`);
 

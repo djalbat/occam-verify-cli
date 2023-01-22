@@ -3,6 +3,7 @@
 import { rewriteNodes } from "occam-grammar-utilities";
 
 import { push } from "../utilities/array";
+import { nodeAsString, nodesAsString } from "../utilities/string";
 import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "../utilities/tokens";
 
 export default class FileContext {
@@ -343,6 +344,18 @@ export default class FileContext {
     this.constructors.push(constructor);
   }
 
+  nodeAsString(node) {
+    const string = nodeAsString(node, this.tokens);
+
+    return string;
+  }
+
+  nodesAsString(node) {
+    const string = nodesAsString(node, this.tokens);
+
+    return string;
+  }
+
   trace(message) { this.releaseContext.trace(message); }
 
   debug(message) { this.releaseContext.debug(message); }
@@ -380,43 +393,43 @@ export default class FileContext {
     const json = [];
 
     this.types.forEach((type) => {
-      const typeJSON = type.toJSON();
+      const typeJSON = type.toJSON(this.tokens);
 
       json.push(typeJSON);
     });
 
     this.rules.forEach((rule) => {
-      const ruleJSON = rule.toJSON();
+      const ruleJSON = rule.toJSON(this.tokens);
 
       json.push(ruleJSON);
     });
 
     this.axioms.forEach((axiom) => {
-      const axiomJSON = axiom.toJSON();
+      const axiomJSON = axiom.toJSON(this.tokens);
 
       json.push(axiomJSON);
     });
 
     this.lemmas.forEach((lemma) => {
-      const lemmaJSON = lemma.toJSON();
+      const lemmaJSON = lemma.toJSON(this.tokens);
 
       json.push(lemmaJSON);
     });
 
     this.theorems.forEach((theorem) => {
-      const theoremJSON = theorem.toJSON();
+      const theoremJSON = theorem.toJSON(this.tokens);
 
       json.push(theoremJSON);
     });
 
     this.combinators.forEach((combinator) => {
-      const combinatorJSON = combinator.toJSON();
+      const combinatorJSON = combinator.toJSON(this.tokens);
 
       json.push(combinatorJSON);
     });
 
     this.constructors.forEach((constructor) => {
-      const constructorJSON = constructor.toJSON();
+      const constructorJSON = constructor.toJSON(this.tokens);
 
       json.push(constructorJSON)
     });

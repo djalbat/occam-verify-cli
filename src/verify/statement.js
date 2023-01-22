@@ -8,7 +8,6 @@ import verifyTypeAssertion from "../verify/assertion/type";
 
 import { first } from "../utilities/array";
 import { objectType } from "../type";
-import { nodeAsString } from "../utilities/string";
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { STATEMENT_META_TYPE } from "../metaTypes";
 import { MAXIMUM_INDEXES_LENGTH } from "../constants";
@@ -230,7 +229,7 @@ function verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
   const termNode = termNodeQuery(argumentNode);
 
   if (termNode === null) {
-    const argumentString = nodeAsString(argumentNode);
+    const argumentString = context.nodeAsString(argumentNode);
 
     context.error(`The ${argumentString} argument should be a term, not a type`);
   } else {
@@ -262,7 +261,7 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
   const statementNode = statementNodeQuery(metaArgumentNode);
 
   if (statementNode === null) {
-    const metaArgumentString = nodeAsString(metaArgumentNode);
+    const metaArgumentString = context.nodeAsString(metaArgumentNode);
 
     context.error(`The '${metaArgumentString}' meta-argument should be a statement, not a meta-type.`);
   } else {
@@ -282,7 +281,7 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
       }
 
       if (!metaArgumentNodeVerified) {
-        const combinatorMetaargumentString = nodeAsString(combinatorMetaargumentNode);
+        const combinatorMetaargumentString = context.nodeAsString(combinatorMetaargumentNode);
 
         context.error(`The '${combinatorMetaargumentString}' combinator meta-argument should be the 'Statement' meta-type.`);
       }

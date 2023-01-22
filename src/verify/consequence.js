@@ -4,7 +4,6 @@ import Consequence from "../consequence";
 import verifyUnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
-import { nodeAsString } from "../utilities/string";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/consequence/unqualifiedStatement!");
@@ -14,9 +13,9 @@ export default function verifyConsequence(consequenceNode, consequences, proofCo
 
   proofContext.begin(consequenceNode);
 
-  const consequenceString = nodeAsString(consequenceNode);
+  const consequenceString = proofContext.nodeAsString(consequenceNode);
 
-  proofContext.debug(`Verifying the ${consequenceString} consequence...`);
+  proofContext.debug(`Verifying the '${consequenceString}' consequence...`);
 
   const derived = false,
         assertions = [],

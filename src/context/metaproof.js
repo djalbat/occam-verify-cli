@@ -61,6 +61,10 @@ class MetaproofContext {
     return metastatementMatches;
   }
 
+  nodeAsString(node) { return this.context.nodeAsString(node); }
+
+  nodesAsString(node) { return this.context.nodesAsString(node); }
+
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
           metaproofSteps = [],

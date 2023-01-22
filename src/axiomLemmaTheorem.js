@@ -64,19 +64,19 @@ export default class AxiomLemmaTheorem {
     return statementNatches;
   }
 
-  toJSON() {
+  toJSON(tokens) {
     const { kind } = this.constructor,
           labelsJSON = this.labels.map((label) => {
-            const labelJSON = label.toJSON();
+            const labelJSON = label.toJSON(tokens);
 
             return labelJSON;
           }),
           suppositionsJSON = this.suppositions.map((supposition) => {
-            const suppositionJSON = supposition.toJSON();
+            const suppositionJSON = supposition.toJSON(tokens);
 
             return suppositionJSON;
           }),
-          consequenceJSON = this.consequence.toJSON(),
+          consequenceJSON = this.consequence.toJSON(tokens),
           labels = labelsJSON,  ///
           suppositions = suppositionsJSON,  ///
           consequence = consequenceJSON,  ///

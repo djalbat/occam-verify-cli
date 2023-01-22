@@ -13,18 +13,18 @@ export default class Combinator {
     return this.statementNode;
   }
 
-  asString() {
+  asString(tokens) {
     let string;
 
-    const statementString = nodeAsString(this.statementNode);
+    const statementString = nodeAsString(this.statementNode, tokens);
 
     string = `${statementString}`;
 
     return string;
   }
 
-  toJSON() {
-    const statementString = nodeAsString(this.statementNode),
+  toJSON(tokens) {
+    const statementString = nodeAsString(this.statementNode, tokens),
           kind = COMBINATOR_KIND,
           statement = statementString,  ///
           json = {

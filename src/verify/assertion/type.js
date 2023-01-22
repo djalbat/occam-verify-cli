@@ -15,7 +15,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assertions, proof
 
   proofContext.begin(typeAssertionNode);
 
-  const typeAssertionString = nodeAsString(typeAssertionNode);
+  const typeAssertionString = proofContext.nodeAsString(typeAssertionNode);
 
   proofContext.debug(`Verifying the '${typeAssertionString}' type assertion...`);
 
@@ -110,7 +110,7 @@ function verifyTermTypeAssertion(typeAssertionNode, assertions, proofContext) {
             assertedType = proofContext.findTypeByTypeName(assertedTypeName),
             firstType = first(types),
             termType = firstType,
-            termString = nodeAsString(termNode),
+            termString = proofContext.nodeAsString(termNode),
             assertedTypeEqualToTermType = (termType === null) ?
                                              true : ///
                                                assertedType.isEqualTo(termType);

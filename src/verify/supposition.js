@@ -5,7 +5,6 @@ import Supposition from "../supposition";
 import verifyUnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
-import { nodeAsString } from "../utilities/string";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement!");
@@ -15,9 +14,9 @@ export default function verifySupposition(suppositionNode, suppositions, proofCo
 
   proofContext.begin(suppositionNode);
 
-  const suppositionString = nodeAsString(suppositionNode);
+  const suppositionString = proofContext.nodeAsString(suppositionNode);
 
-  proofContext.debug(`Verifying the ${suppositionString} supposition...`);
+  proofContext.debug(`Verifying the '${suppositionString}' supposition...`);
 
   const derived = false,
         assertions = [],

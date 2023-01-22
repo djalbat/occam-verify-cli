@@ -4,7 +4,6 @@ import verifyTerm from "../verify/term";
 import Constructor from "../constructor";
 
 import { first } from "../utilities/array";
-import { nodeAsString } from "../utilities/string";
 import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
 import { TERM_RULE_NAME, ARGUMENT_RULE_NAME } from "../ruleNames";
 
@@ -18,7 +17,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
   let type = null;
 
   const nonTerminalNode = termNode,  ///
-        termString = nodeAsString(termNode);
+        termString = fileContext.nodeAsString(termNode);
 
   fileContext.debug(`Verifying the '${termString}' constructor...`);
 
@@ -123,7 +122,7 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
               type = firstType; ///
 
         if (type !== null) {
-          const termString = nodeAsString(termNode);
+          const termString = fileContext.nodeAsString(termNode);
 
           fileContext.error(`The type of the constructor's compound '${termString}' term node is not null.`);
         } else {
@@ -153,7 +152,7 @@ function verifyArgumentNode(argumentNode, fileContext) {
   const typeNode = typeNodeQuery(argumentNode);
 
   if (typeNode === null) {
-    const argumentString = nodeAsString(argumentNode);
+    const argumentString = fileContext.nodeAsString(argumentNode);
 
     fileContext.error(`The ${argumentString} argument should be a type.`);
   } else {

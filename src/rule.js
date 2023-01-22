@@ -108,18 +108,18 @@ export default class Rule {
     return metastatementNatches;
   }
 
-  toJSON() {
+  toJSON(tokens) {
     const labelsJSON = this.labels.map((label) => {
-            const labelJSON = label.toJSON();
+            const labelJSON = label.toJSON(tokens);
 
             return labelJSON;
           }),
           premisesJSON = this.premises.map((premise) => {
-            const premiseJSON = premise.toJSON();
+            const premiseJSON = premise.toJSON(tokens);
 
             return premiseJSON;
           }),
-          conclusionJSON = this.conclusion.toJSON(),
+          conclusionJSON = this.conclusion.toJSON(tokens),
           kind = RULE_KIND,
           labels = labelsJSON,  ///
           premises = premisesJSON,  ///

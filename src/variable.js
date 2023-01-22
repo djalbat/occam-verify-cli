@@ -45,7 +45,7 @@ export default class Variable {
     return equalTo;
   }
 
-  asString() {
+  asString(tokens) {
     let string;
 
     if (this.type === null) {

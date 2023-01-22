@@ -23,7 +23,7 @@ export default function verifyLemma(lemmaNode, fileContext) {
   fileContext.begin(lemmaNode);
 
   const labelNodes = labelNodesQuery(lemmaNode),
-        labelsString = nodesAsString(labelNodes),
+        labelsString = fileContext.nodesAsString(labelNodes),
         proofContext = ProofContext.fromFileContext(fileContext);
 
   (labelsString === EMPTY_STRING) ?
