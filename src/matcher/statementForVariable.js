@@ -3,31 +3,36 @@
 import Matcher from "../matcher";
 import StatementForVariableSubstitution from "../substitution/statementForVariable";
 
-import { first } from "../utilities/array";
+import { nodeQuery } from "../utilities/query";
+import { STATEMENT_RULE_NAME } from "../ruleNames";
 import { variableNameFromVariableNode } from "../utilities/query";
-import { VARIABLE_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
+
+const variableNodeQuery = nodeQuery('/statement/variable!');
 
 export default class StatementForVariableMatcher extends Matcher {
   matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
     let nonTerminalNodeMatches = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
-          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
-          nonTerminalNodeARuleNameMetastatementRuleName = (nonTerminalNodeARuleName === STATEMENT_RULE_NAME),
-          nonTerminalNodeBRuleNameMetastatementRuleName = (nonTerminalNodeBRuleName === STATEMENT_RULE_NAME);
+          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
 
-    if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameMetastatementRuleName) {
-      const statementNodeA = nonTerminalNodeA,  ///
-            statementNodeB = nonTerminalNodeB,  ///
-            statementNodeMatches = this.matchStatementNode(statementNodeA, statementNodeB, substitutions);
+    if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
+      const nonTerminalNodeARuleNameMetastatementRuleName = (nonTerminalNodeARuleName === STATEMENT_RULE_NAME),
+            nonTerminalNodeBRuleNameMetastatementRuleName = (nonTerminalNodeBRuleName === STATEMENT_RULE_NAME);
 
-      if (statementNodeMatches) {
-        nonTerminalNodeMatches = true;  ///
+      if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameMetastatementRuleName) {
+        const statementNodeA = nonTerminalNodeA,  ///
+              statementNodeB = nonTerminalNodeB,  ///
+              statementNodeMatches = this.matchStatementNode(statementNodeA, statementNodeB, substitutions);
+
+        if (statementNodeMatches) {
+          nonTerminalNodeMatches = true;  ///
+        } else {
+          nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+        }
       } else {
         nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
       }
-    } else if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
-      nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
     }
 
     return nonTerminalNodeMatches;
@@ -36,27 +41,12 @@ export default class StatementForVariableMatcher extends Matcher {
   matchStatementNode(statementNodeA, statementNodeB, substitutions) {
     let statementNodeMatches = false;
 
-    const nonTerminalNodeA = statementNodeA,  ///
-          nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-          nonTerminalNodeAChildNodesLength = nonTerminalNodeAChildNodes.length;
+    const variableNodeA = variableNodeQuery(statementNodeA);
 
-    if (nonTerminalNodeAChildNodesLength === 1) {
-      const firstNonTerminalNodeAChildNode = first(nonTerminalNodeAChildNodes),
-            childNodeA = firstNonTerminalNodeAChildNode,  ///
-            childNodeANonTerminalNode = childNodeA.isNonTerminalNode();
+    if (variableNodeA !== null) {
+      const variableMatches = this.matchVariableNode(variableNodeA, statementNodeB, substitutions);
 
-      if (childNodeANonTerminalNode) {
-        const nonTerminalNodeA = childNodeA,  ///
-              nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
-              nonTerminalNodeARuleNameVariableRuleName = (nonTerminalNodeARuleName === VARIABLE_RULE_NAME);
-
-        if (nonTerminalNodeARuleNameVariableRuleName) {
-          const variableNodeA = nonTerminalNodeA,  ///
-                variableMatches = this.matchVariableNode(variableNodeA, statementNodeB, substitutions);
-
-          statementNodeMatches = variableMatches; ///
-        }
-      }
+      statementNodeMatches = variableMatches; ///
     }
 
     return statementNodeMatches;

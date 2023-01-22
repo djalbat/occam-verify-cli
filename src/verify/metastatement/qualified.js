@@ -2,7 +2,6 @@
 
 import verifyMetastatement from "../../verify/metastatement";
 
-import { nodeAsString } from "../../utilities/string";
 import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
 
 const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/reference!"),

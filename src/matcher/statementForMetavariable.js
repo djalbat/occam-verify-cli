@@ -3,31 +3,52 @@
 import Matcher from "../matcher";
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
 
-import { first } from "../utilities/array";
+import { nodeQuery } from "../utilities/query";
 import { metavariableNameFromMetavariableNode } from "../utilities/query";
-import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } from "../ruleNames";
+import { STATEMENT_RULE_NAME, METASTATEMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../ruleNames";
+
+const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!'),
+      metaArgumentChildNodeNodeQuery = nodeQuery('/metaArgument/*!');
 
 export default class StatementForMetavariableMatcher extends Matcher {
   matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
     let nonTerminalNodeMatches = false;
 
-    const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
-          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
-          nonTerminalNodeARuleNameMetastatementRuleName = (nonTerminalNodeARuleName === METASTATEMENT_RULE_NAME),
-          nonTerminalNodeBRuleNameStatementRuleName = (nonTerminalNodeBRuleName === STATEMENT_RULE_NAME);
+    const nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
+          nonTerminalNodeBRuleNameMetaArgumentRuleName = (nonTerminalNodeBRuleName === META_ARGUMENT_RULE_NAME);
 
-    if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameStatementRuleName) {
-      const metastatementNodeA = nonTerminalNodeA,  ///
-            statementNodeB = nonTerminalNodeB,  ///
-            statementNodeMatches = this.matchStatementNode(metastatementNodeA, statementNodeB, substitutions);
+    if (nonTerminalNodeBRuleNameMetaArgumentRuleName) {
+      const metaArgumentNodeB = nonTerminalNodeB, ///
+            metaArgumentChildNodeB = metaArgumentChildNodeNodeQuery(metaArgumentNodeB);
 
-      if (statementNodeMatches) {
-        nonTerminalNodeMatches = true;  ///
-      } else {
+      nonTerminalNodeB = metaArgumentChildNodeB;  ///
+
+      nonTerminalNodeMatches = this.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+    } else {
+      const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
+            nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
+            nonTerminalNodeARuleNameMetastatementRuleName = (nonTerminalNodeARuleName === METASTATEMENT_RULE_NAME),
+            nonTerminalNodeBRuleNameStatementRuleName = (nonTerminalNodeBRuleName === STATEMENT_RULE_NAME);
+
+      if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameStatementRuleName) {
+        const metastatementNodeA = nonTerminalNodeA,  ///
+              statementNodeB = nonTerminalNodeB,  ///
+              statementNodeMatches = this.matchStatementNode(metastatementNodeA, statementNodeB, substitutions);
+
+        if (statementNodeMatches) {
+          nonTerminalNodeMatches = true;  ///
+        } else {
+          const nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
+                nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
+                nodesA = nonTerminalNodeAChildNodes, ///
+                nodesB = nonTerminalNodeBChildNodes, ///
+                nodesMatch = this.matchNodes(nodesA, nodesB, substitutions);
+
+          nonTerminalNodeMatches = nodesMatch;  ///
+        }
+      } else if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
         nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
       }
-    } else if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
-      nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
     }
 
     return nonTerminalNodeMatches;
@@ -36,27 +57,12 @@ export default class StatementForMetavariableMatcher extends Matcher {
   matchStatementNode(metastatementNodeA, statementNodeB, substitutions) {
     let statementNodeMatches = false;
 
-    const nonTerminalNodeA = metastatementNodeA,  ///
-          nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-          nonTerminalNodeAChildNodesLength = nonTerminalNodeAChildNodes.length;
+    const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
-    if (nonTerminalNodeAChildNodesLength === 1) {
-      const firstNonTerminalNodeAChildNode = first(nonTerminalNodeAChildNodes),
-        cChildNodeA = firstNonTerminalNodeAChildNode,  ///
-        cChildNodeANonTerminalNode = cChildNodeA.isNonTerminalNode();
+    if (metavariableNodeA !== null) {
+      const metavariableNodeMatches = this.matchMetavariableNode(metavariableNodeA, statementNodeB, substitutions);
 
-      if (cChildNodeANonTerminalNode) {
-        const nonTerminalNodeA = cChildNodeA,  ///
-              nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
-              nonTerminalNodeARuleNameMetavariableRuleName = (nonTerminalNodeARuleName === METAVARIABLE_RULE_NAME);
-
-        if (nonTerminalNodeARuleNameMetavariableRuleName) {
-          const metavariableNodeA = nonTerminalNodeA,  ///
-                metaVariableNodeMatches = this.matchMetavariableNode(metavariableNodeA, statementNodeB, substitutions);
-
-          statementNodeMatches = metaVariableNodeMatches; ///
-        }
-      }
+      statementNodeMatches = metavariableNodeMatches; ///
     }
 
     return statementNodeMatches;

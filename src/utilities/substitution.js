@@ -17,7 +17,8 @@ export function matchBracketedNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB
   if (!bracketedNodeMatches) {
     const nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
           childNodesA = nonTerminalNodeAChildNodes, ///
-          bracketedNonTerminalChildNodeA = bracketedNonTerminalChildNodeFromChildNodes(childNodesA);
+          ruleName = METASTATEMENT_RULE_NAME,
+          bracketedNonTerminalChildNodeA = bracketedNonTerminalChildNodeFromChildNodes(childNodesA, ruleName);
 
     if (bracketedNonTerminalChildNodeA !== null) {
       const nodeA = bracketedNonTerminalChildNodeA,  ///
@@ -31,7 +32,8 @@ export function matchBracketedNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB
   if (!bracketedNodeMatches) {
     const nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
           childNodesB = nonTerminalNodeBChildNodes, ///
-          bracketedNonTerminalChildNodeB = bracketedNonTerminalChildNodeFromChildNodes(childNodesB);
+          ruleName = METASTATEMENT_RULE_NAME,
+          bracketedNonTerminalChildNodeB = bracketedNonTerminalChildNodeFromChildNodes(childNodesB, ruleName);
 
     if (bracketedNonTerminalChildNodeB !== null) {
       const nodeB = bracketedNonTerminalChildNodeB,  ///
@@ -45,7 +47,7 @@ export function matchBracketedNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB
   return bracketedNodeMatches;
 }
 
-export function bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName = METASTATEMENT_RULE_NAME) {
+export function bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName) {
   let bracketedNonTerminalChildNode = null;
 
   const childNodesLength = childNodes.length;

@@ -2,7 +2,6 @@
 
 import verifyStatement from "../../verify/statement";
 
-import { nodeAsString } from "../../utilities/string";
 import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
 
 const referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!"),

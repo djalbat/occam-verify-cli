@@ -34,12 +34,12 @@ export default class Premise {
               ...subproofSuppositionStatementNodes,
               subproofSubDerivationLastStatementNode
             ],
-            ruleSubproofAssertionMetaSubproofStatementNodes = ruleSubproofAssertionMetaSubproofStatementNodesQuery(subproofAssertionNode),
+            ruleSubproofAssertionMetastatementNodes = ruleSubproofAssertionMetastatementNodesQuery(subproofAssertionNode),
             subproofStatementNodesLength = subproofStatementNodes.length,
-            ruleSubproofAssertionMetaSubproofStatementNodesLength = ruleSubproofAssertionMetaSubproofStatementNodes.length;
+            ruleSubproofAssertionMetastatementNodesLength = ruleSubproofAssertionMetastatementNodes.length;
 
-      if (subproofStatementNodesLength === ruleSubproofAssertionMetaSubproofStatementNodesLength) {
-        subproofNodeMatches = ruleSubproofAssertionMetaSubproofStatementNodes.every((ruleSubproofAssertionMetastatementNode, index) => {
+      if (subproofStatementNodesLength === ruleSubproofAssertionMetastatementNodesLength) {
+        subproofNodeMatches = ruleSubproofAssertionMetastatementNodes.every((ruleSubproofAssertionMetastatementNode, index) => {
           const subproofStatementNode = subproofStatementNodes[index],
                 nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = subproofStatementNode, ///

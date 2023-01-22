@@ -3,31 +3,36 @@
 import Matcher from "../matcher";
 import MetastatementForMetavariableSubstitution from "../substitution/metastatementForMetavariable";
 
-import { first } from "../utilities/array";
+import { nodeQuery } from "../utilities/query";
+import { METASTATEMENT_RULE_NAME } from "../ruleNames";
 import { metavariableNameFromMetavariableNode } from "../utilities/query";
-import { METAVARIABLE_RULE_NAME, METASTATEMENT_RULE_NAME } from "../ruleNames";
+
+const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!');
 
 export default class MetastatementForMetavariableMatcher extends Matcher {
   matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
     let nonTerminalNodeMatches = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
-          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
-          nonTerminalNodeARuleNameMetastatementRuleName = (nonTerminalNodeARuleName === METASTATEMENT_RULE_NAME),
-          nonTerminalNodeBRuleNameMetastatementRuleName = (nonTerminalNodeBRuleName === METASTATEMENT_RULE_NAME);
+          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
 
-    if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameMetastatementRuleName) {
-      const metastatementNodeA = nonTerminalNodeA,  ///
-            metastatementNodeB = nonTerminalNodeB,  ///
-            metastatementNodeMatches = this.matchMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions);
+    if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
+      const nonTerminalNodeARuleNameMetastatementRuleName = (nonTerminalNodeARuleName === METASTATEMENT_RULE_NAME),
+            nonTerminalNodeBRuleNameMetastatementRuleName = (nonTerminalNodeBRuleName === METASTATEMENT_RULE_NAME);
 
-      if (metastatementNodeMatches) {
-        nonTerminalNodeMatches = true;  ///
+      if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameMetastatementRuleName) {
+        const metastatementNodeA = nonTerminalNodeA,  ///
+              metastatementNodeB = nonTerminalNodeB,  ///
+              metastatementNodeMatches = this.matchMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions);
+
+        if (metastatementNodeMatches) {
+          nonTerminalNodeMatches = true;  ///
+        } else {
+          nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+        }
       } else {
         nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
       }
-    } else if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
-      nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
     }
 
     return nonTerminalNodeMatches;
@@ -36,27 +41,12 @@ export default class MetastatementForMetavariableMatcher extends Matcher {
   matchMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions) {
     let metastatementNodeMatches = false;
 
-    const nonTerminalNodeA = metastatementNodeA,  ///
-          nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-          nonTerminalNodeAChildNodesLength = nonTerminalNodeAChildNodes.length;
+    const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
-    if (nonTerminalNodeAChildNodesLength === 1) {
-      const firstNonTerminalNodeAChildNode = first(nonTerminalNodeAChildNodes),
-            cChildNodeA = firstNonTerminalNodeAChildNode,  ///
-            cChildNodeANonTerminalNode = cChildNodeA.isNonTerminalNode();
+    if (metavariableNodeA !== null) {
+      const metaVariableNodeMatches = this.matchMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions);
 
-      if (cChildNodeANonTerminalNode) {
-        const nonTerminalNodeA = cChildNodeA,  ///
-              nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
-              nonTerminalNodeARuleNameMetavariableRuleName = (nonTerminalNodeARuleName === METAVARIABLE_RULE_NAME);
-
-        if (nonTerminalNodeARuleNameMetavariableRuleName) {
-          const metavariableNodeA = nonTerminalNodeA,  ///
-                metaVariableNodeMatches = this.matchMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions);
-
-          metastatementNodeMatches = metaVariableNodeMatches; ///
-        }
-      }
+      metastatementNodeMatches = metaVariableNodeMatches; ///
     }
 
     return metastatementNodeMatches;

@@ -3,7 +3,6 @@
 import TypeAssertion from "../../assertion/type";
 
 import { first } from "../../utilities/array";
-import { nodeAsString } from "../../utilities/string";
 import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
 import { verifyTermAsVariable, verifyTermAgainstConstructors } from "../../verify/term";
 

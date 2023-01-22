@@ -3,7 +3,6 @@
 import verifyMetastatement from "../metastatement";
 
 import { nodeQuery } from "../../utilities/query";
-import { nodeAsString } from "../../utilities/string";
 
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 

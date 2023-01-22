@@ -37,7 +37,7 @@ export default class StatementForVariableSubstitution {
       if (statementNode !== null) {
         const nodeA = this.statementNode,  ///
               nodeB = statementNode,
-              nodeMatches = matchNode(nodeA, nodeB);
+              nodeMatches = matcher.matchNode(nodeA, nodeB);
 
         matchesStatementNode = nodeMatches;  ///
       }

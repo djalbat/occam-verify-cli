@@ -3,7 +3,6 @@
 import verifyStatement from "../statement";
 
 import { nodeQuery } from "../../utilities/query";
-import { nodeAsString } from "../../utilities/string";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 

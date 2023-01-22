@@ -1,8 +1,11 @@
 "use strict";
 
 import { matcher } from "../matcher";
-import { STATEMENT_RULE_NAME } from "../ruleNames";
+import { nodeQuery } from "../utilities/query";
+import { META_ARGUMENT_RULE_NAME } from "../ruleNames";
 import { bracketedNonTerminalChildNodeFromChildNodes } from "../utilities/substitution";
+
+const statementNodeQuery = nodeQuery('/metaArgument/statement!');
 
 export default class StatementForMetavariableSubstitution {
   constructor(metavariableName, statementNode) {
@@ -30,16 +33,19 @@ export default class StatementForMetavariableSubstitution {
     if (!matchesStatementNode) {
       const nonTerminalNode = statementNode,  ///
             childNodes = nonTerminalNode.getChildNodes(), ///
-            ruleName = STATEMENT_RULE_NAME;
+            ruleName = META_ARGUMENT_RULE_NAME,
+            metaArgumentNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
 
-      statementNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
+      if (metaArgumentNode !== null) {
+        const statementNode = statementNodeQuery(metaArgumentNode);
 
-      if (statementNode !== null) {
-        const nodeA = this.statementNode,  ///
-              nodeB = statementNode,
-              nodeMatches = matchNode(nodeA, nodeB);
+        if (statementNode !== null) {
+          const nodeA = this.statementNode,  ///
+                nodeB = statementNode,
+                nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-        matchesStatementNode = nodeMatches;  ///
+          matchesStatementNode = nodeMatches;  ///
+        }
       }
     }
 
@@ -51,7 +57,7 @@ export default class StatementForMetavariableSubstitution {
 
     const nonTerminalNode = statementNode,  ///
           childNodes = nonTerminalNode.getChildNodes(),
-          ruleName = STATEMENT_RULE_NAME;
+          ruleName = META_ARGUMENT_RULE_NAME;
 
     statementNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
 
