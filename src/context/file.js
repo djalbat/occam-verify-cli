@@ -7,7 +7,7 @@ import { nodeAsString, nodesAsString } from "../utilities/string";
 import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "../utilities/tokens";
 
 export default class FileContext {
-  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, combinators, constructors) {
+  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, conjectures, variables, combinators, constructors) {
     this.releaseContext = releaseContext;
     this.filePath = filePath;
     this.tokens = tokens;
@@ -17,6 +17,7 @@ export default class FileContext {
     this.axioms = axioms;
     this.lemmas = lemmas;
     this.theorems = theorems;
+    this.conjectures = conjectures;
     this.variables = variables;
     this.combinators = combinators;
     this.constructors = constructors;
@@ -40,6 +41,18 @@ export default class FileContext {
 
   getVariables() {
     return this.variables;
+  }
+
+  getProofSteps() {
+    const proofSteps = [];  ///
+
+    return proofSteps;
+  }
+
+  getMetaproofSteps() {
+    const metaproofSteps = [];  ///
+
+    return metaproofSteps;
   }
 
   getLabels(includeRelease = true) {
@@ -91,6 +104,8 @@ export default class FileContext {
 
     return types;
   }
+
+
 
   getRules(includeRelease = true) {
     const rules = []
@@ -148,6 +163,20 @@ export default class FileContext {
     return theorems;
   }
 
+  getConjectures(includeRelease = true) {
+    const conjectures = [];
+
+    push(conjectures, this.conjectures);
+
+    if (includeRelease) {
+      const releaseContextConjectures = this.releaseContext.getConjectures();
+
+      push(conjectures, releaseContextConjectures);
+    }
+
+    return conjectures;
+  }
+
   getCombinators(includeRelease = true) {
     const combinators = [];
 
@@ -174,18 +203,6 @@ export default class FileContext {
     }
 
     return constructors;
-  }
-
-  getProofSteps() {
-    const proofSteps = [];  ///
-
-    return proofSteps;
-  }
-
-  getMetaproofSteps() {
-    const metaproofSteps = [];  ///
-
-    return metaproofSteps;
   }
 
   findTypeByTypeName(typeName) {
@@ -271,6 +288,46 @@ export default class FileContext {
     return theorem;
   }
 
+  findConjectureByReferenceName(referenceName) {
+    const labelName = referenceName,  ///
+          conjectures = this.getConjectures(),
+          conjecture = conjectures.find((conjecture) => {
+            const conjectureMatchesLabelName = conjecture.matchLabelName(labelName);
+
+            if (conjectureMatchesLabelName) {
+              return true;
+            }
+          }) || null;
+
+    return conjecture;
+  }
+
+  isLabelPresentByLabelName(labelName) {
+    const label = this.findLabelByLabelName(labelName),
+          labelPresent = (label !== null);
+
+    return labelPresent;
+  }
+
+  isTypePresentByTypeName(typeName) {
+    const type = this.findTypeByTypeName(typeName),
+          typePresent = (type !== null);
+
+    return typePresent;
+  }
+
+  nodeAsString(node) {
+    const string = nodeAsString(node, this.tokens);
+
+    return string;
+  }
+
+  nodesAsString(node) {
+    const string = nodesAsString(node, this.tokens);
+
+    return string;
+  }
+
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
           variables = this.getVariables(),
@@ -283,20 +340,6 @@ export default class FileContext {
           }) || null;
 
     return variable;
-  }
-
-  isTypePresentByTypeName(typeName) {
-    const type = this.findTypeByTypeName(typeName),
-          typePresent = (type !== null);
-
-    return typePresent;
-  }
-
-  isLabelPresentByLabelName(labelName) {
-    const label = this.findLabelByLabelName(labelName),
-          labelPresent = (label !== null);
-
-    return labelPresent;
   }
 
   isVariablePresentByVariableName(variableName) {
@@ -342,18 +385,6 @@ export default class FileContext {
 
   addConstructor(constructor) {
     this.constructors.push(constructor);
-  }
-
-  nodeAsString(node) {
-    const string = nodeAsString(node, this.tokens);
-
-    return string;
-  }
-
-  nodesAsString(node) {
-    const string = nodesAsString(node, this.tokens);
-
-    return string;
   }
 
   trace(message) { this.releaseContext.trace(message); }
@@ -452,10 +483,11 @@ export default class FileContext {
           axioms = [],
           lemmas = [],
           theorems = [],
+          conjectures = [],
           variables = [],
           combinators = [],
           constructors = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, combinators, constructors);
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, conjectures, variables, combinators, constructors);
 
     return fileContext;
   }

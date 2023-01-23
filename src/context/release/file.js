@@ -9,15 +9,16 @@ import Type from "../../type";
 import Axiom from "../../axiom";
 import Lemma from "../../lemma";
 import Theorem from "../../theorem";
+import Conjecture from "../../conjecture";
 import Combinator from "../../combinator";
 import Constructor from "../../constructor";
 
 import { push } from "../../utilities/array";
 import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
-import { RULE_KIND, TYPE_KIND, AXIOM_KIND, LEMMA_KIND, THEOREM_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
+import { RULE_KIND, TYPE_KIND, AXIOM_KIND, LEMMA_KIND, THEOREM_KIND, CONJECTURE_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
 
 export default class FileReleaseContext extends ReleaseContext {
-  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, theorems, combinators, constructors) {
+  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors) {
     super(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts);
 
     this.types = types;
@@ -25,6 +26,7 @@ export default class FileReleaseContext extends ReleaseContext {
     this.axioms = axioms;
     this.lemmas = lemmas;
     this.theorems = theorems;
+    this.conjectures = conjectures;
     this.combinators = combinators;
     this.constructors = constructors;
     this.contextJSON = contextJSON;
@@ -153,6 +155,25 @@ export default class FileReleaseContext extends ReleaseContext {
     return theorems;
   }
 
+  getConjectures(includeDependencies = true) {
+    const conjectures = [];
+
+    push(conjectures, this.conjectures);
+
+    if (includeDependencies) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencies = false,
+              releaseContextConjectures = releaseContext.getConjectures(includeDependencies);
+
+        push(conjectures, releaseContextConjectures);
+      });
+    }
+
+    return conjectures;
+  }
+
   getCombinators(includeDependencies = true) {
     const combinators = [];
 
@@ -252,6 +273,14 @@ export default class FileReleaseContext extends ReleaseContext {
           break;
         }
 
+        case CONJECTURE_KIND: {
+          const conjecture = Conjecture.fromJSON(json, releaseContext);
+
+          this.conjectures.push(conjecture);
+
+          break;
+        }
+
         case COMBINATOR_KIND: {
           const combinator = Combinator.fromJSON(json, releaseContext);
 
@@ -288,9 +317,10 @@ export default class FileReleaseContext extends ReleaseContext {
           axioms = [],
           lemmas = [],
           theorems = [],
+          conjectures = [],
           combinators = [],
           constructors = [],
-          releaseContext = new FileReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, theorems, combinators, constructors);
+          releaseContext = new FileReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors);
 
     return releaseContext;
   }

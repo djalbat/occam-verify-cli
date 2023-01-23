@@ -149,6 +149,30 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     return theorems;
   }
 
+  getConjectures(includeDependencies = true) {
+    const conjectures = [];
+
+    this.fileContexts.forEach((fileContext) => {
+      const includeRelease = false,
+            fileContextConjectures = fileContext.getConjectures(includeRelease);
+
+      push(conjectures, fileContextConjectures);
+    });
+
+    if (includeDependencies) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencies = false,
+              releaseContextConjectures = releaseContext.getConjectures(includeDependencies);
+
+        push(conjectures, releaseContextConjectures);
+      });
+    }
+
+    return conjectures;
+  }
+
   getCombinators(includeDependencies = true) {
     const combinators = [];
 

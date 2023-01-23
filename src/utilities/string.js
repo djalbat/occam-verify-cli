@@ -51,14 +51,10 @@ export function nodesAsString(nodes, tokens) {
   const string = nodes.reduce((string, node) => {
     const nodeString = nodeAsString(node, tokens);
 
-    if (string === null) {
-      string = nodeString;  ///
-    } else {
-      string = `${string}${COMMA}${nodeString}`;
-    }
+    string = `${string}${COMMA}${nodeString}`;
 
     return string;
-  }, null);
+  }, EMPTY_STRING);
 
   return string;
 }

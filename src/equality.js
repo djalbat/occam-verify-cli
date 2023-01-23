@@ -26,6 +26,8 @@ export default class Equality {
     const leftTermNode = equality.getLeftTermNode(),
           rightTermNode = equality.getRightTermNode();
 
+    equalities = filterEqualities(equalities, equality);  ///
+
     if (!matches) {
       const reversed = false,
             leftTermNodeAndRightTermNodeMatch = this.matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities);
@@ -197,13 +199,8 @@ function equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equali
 function equateTermNode(leftTermNode, rightTermNode, equalities) {
   const equality = Equality.fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode),
         equalityA = equality, ///
-        equalityMatches = equalities.some((equality) => { ///
-          let equalitiesB = equalities; ///
-
-          const equalityB = equality; ///
-
-          equalitiesB = filterEqualities(equalitiesB, equalityB);  ///
-
+        equalitiesB = equalities, ///
+        equalityMatches = equalitiesB.some((equalityB) => { ///
           const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB);
 
           if (equalityAMatchesEqualityB) {

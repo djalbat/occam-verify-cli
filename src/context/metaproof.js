@@ -4,16 +4,29 @@ import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 import callbacksMixins from "../mixins/callbacks";
 
-import { last } from "../utilities/array";
+import { push, last } from "../utilities/array";
 
 class MetaproofContext {
-  constructor(context, metaproofSteps) {
+  constructor(context, metavariables, metaproofSteps) {
     this.context = context;
+    this.metavariables = metavariables;
     this.metaproofSteps = metaproofSteps;
   }
 
   getContext() {
     return this.context;
+  }
+
+  getMetavariables() {
+    const metavariables = [];
+
+    push(metavariables, this.metavariables);
+
+    const contextMetavariables = this.context.getMetavariables();
+
+    push(metavariables, contextMetavariables);
+
+    return metavariables;
   }
 
   getMetaproofSteps() {
@@ -39,6 +52,10 @@ class MetaproofContext {
     return lastMetaproofStep;
   }
 
+  addMetavariable(metavariable) {
+    this.metavariables.push(metavariable);
+  }
+
   addMetaproofStep(metaproofStep) {
     this.metaproofSteps.push(metaproofStep);
   }
@@ -61,9 +78,26 @@ class MetaproofContext {
     return metastatementMatches;
   }
 
-  nodeAsString(node) { return this.context.nodeAsString(node); }
+  findMetavariableByMetavariableName(metavariableName) {
+    const name = metavariableName,  ///
+          metavariables = this.getMetavariables(),
+          metavariable = metavariables.find((metavariable) => {
+            const matches = metavariable.matchName(name);
 
-  nodesAsString(node) { return this.context.nodesAsString(node); }
+            if (matches) {
+              return true;
+            }
+          }) || null;
+
+    return metavariable;
+  }
+
+  isMetavariablePresentByVariableName(metavariableName) {
+    const metavariable = this.findMetavariableByMetavariableName(metavariableName),
+          metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
+  }
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
@@ -75,9 +109,10 @@ class MetaproofContext {
 
   static fromMetaproofContext(metaproofContext) {
     const context = metaproofContext,  ///
+          metavariables = [],
           metaproofSteps = [];
 
-    metaproofContext = new MetaproofContext(context, metaproofSteps);  ///
+    metaproofContext = new MetaproofContext(context, metavariables, metaproofSteps);  ///
 
     return metaproofContext;
   }

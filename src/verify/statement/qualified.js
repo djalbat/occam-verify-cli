@@ -19,20 +19,52 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, asserti
 
     proofContext.debug(`Verifying the '${statementString}' qualified statement...`);
 
-    let ruleMatchesStatement = true;
+    let statementMatches = false;
 
     const referenceNode = referenceNodeQuery(qualifiedStatementNode);
 
-    if (referenceNode !== null) {
-      const referenceName = referenceNameFromReferenceNode(referenceNode),
-            rule = proofContext.findRuleByReferenceName(referenceName);
+    if (referenceNode === null) {
+      statementMatches = true;  ///
+    } else {
+      const referenceName = referenceNameFromReferenceNode(referenceNode);
 
-      if (rule !== null) {
-        ruleMatchesStatement = rule.matchStatement(statementNode, proofContext);
+      if (!statementMatches) {
+        const rule = proofContext.findRuleByReferenceName(referenceName),
+              ruleMatchesStatement = rule.matchStatement(statementNode, proofContext);
+
+        statementMatches = ruleMatchesStatement;  ///
+      }
+
+      if (!statementMatches) {
+        const axiom = proofContext.findAxiomByReferenceName(referenceName),
+              axiomMatchesStatement = axiom.matchStatement(statementNode, proofContext);
+
+        statementMatches = axiomMatchesStatement; ///
+      }
+
+      if (!statementMatches) {
+        const lemma = proofContext.findLemmaByReferenceName(referenceName),
+              lemmaMatchesStatement = lemma.matchStatement(statementNode, proofContext);
+
+        statementMatches = lemmaMatchesStatement; ///
+      }
+
+      if (!statementMatches) {
+        const theorem = proofContext.findTheoremByReferenceName(referenceName),
+              theoremMatchesStatement = theorem.matchStatement(statementNode, proofContext);
+
+        statementMatches = theoremMatchesStatement; ///
+      }
+
+      if (!statementMatches) {
+        const conjecture = proofContext.findConjectureByReferenceName(referenceName),
+              conjectureMatchesStatement = conjecture.matchStatement(statementNode, proofContext);
+
+        statementMatches = conjectureMatchesStatement; ///
       }
     }
 
-    if (ruleMatchesStatement) {
+    if (statementMatches) {
       const context = proofContext,
             statementVerified = verifyStatement(statementNode, assertions, derived, context);
 

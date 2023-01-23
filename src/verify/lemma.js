@@ -9,7 +9,6 @@ import verifyConsequence from "./consequence";
 
 import { first } from "../utilities/array";
 import { EMPTY_STRING } from "../constants";
-import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const proofNodeQuery = nodeQuery("/lemma/proof!"),

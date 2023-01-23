@@ -7,7 +7,7 @@ import Consequence from "./consequence";
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
 
-export default class AxiomLemmaTheorem {
+export default class AxiomLemmaTheoremConjecture {
   constructor(labels, suppositions, consequence) {
     this.labels = labels;
     this.suppositions = suppositions;

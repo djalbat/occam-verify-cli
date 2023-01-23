@@ -8,7 +8,6 @@ import MetaproofContext from "../context/metaproof";
 import verifyConclusion from "../verify/conclusion";
 
 import { first } from "../utilities/array";
-import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const labelNodesQuery = nodesQuery("/rule/label"),

@@ -1,13 +1,13 @@
 "use strict";
 
-import AxiomLemmaTheorem from "./axiomLemmaTheorem";
+import AxiomLemmaTheoremConjecture from "./axiomLemmaTheoremConjecture";
 
 import { LEMMA_KIND } from "./kinds";
 
-export default class Lemma extends AxiomLemmaTheorem {
+export default class Lemma extends AxiomLemmaTheoremConjecture {
   static kind = LEMMA_KIND;
 
-  static fromJSON(json, releaseContext) { return AxiomLemmaTheorem.fromJSON(Lemma, json, releaseContext); }
+  static fromJSON(json, releaseContext) { return AxiomLemmaTheoremConjecture.fromJSON(Lemma, json, releaseContext); }
 
-  static fromLabelsSuppositionsAndConsequence(labels, suppositions, consequence) { return AxiomLemmaTheorem.fromLabelsSuppositionsAndConsequence(Lemma, labels, suppositions, consequence); }
+  static fromLabelsSuppositionsAndConsequence(labels, suppositions, consequence) { return AxiomLemmaTheoremConjecture.fromLabelsSuppositionsAndConsequence(Lemma, labels, suppositions, consequence); }
 }

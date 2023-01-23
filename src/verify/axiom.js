@@ -7,7 +7,6 @@ import verifySupposition from "../verify/supposition";
 import verifyConsequence from "../verify/consequence";
 
 import { first } from "../utilities/array";
-import { nodesAsString } from "../utilities/string";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const labelNodesQuery = nodesQuery("/axiom/label"),

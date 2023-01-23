@@ -17,29 +17,6 @@ class ProofContext {
     return this.context;
   }
 
-  getProofSteps() {
-    let proofSteps = this.context.getProofSteps();
-
-    proofSteps = [
-      ...proofSteps,
-      ...this.proofSteps
-    ];
-
-    return proofSteps;
-  }
-
-  getTypes() { return this.context.getTypes(); }
-
-  getAxioms() { return this.context.getAxioms(); }
-
-  getLemmas() { return this.context.getLemmas(); }
-
-  getTheorems() { return this.context.getTheorems(); }
-
-  getCombinators() { return this.context.getCombinators(); }
-
-  getConstructors() { return this.context.getConstructors(); }
-
   getVariables() {
     const variables = [];
 
@@ -52,8 +29,25 @@ class ProofContext {
     return variables;
   }
 
+  getProofSteps() {
+    let proofSteps = this.context.getProofSteps();
+
+    proofSteps = [
+      ...proofSteps,
+      ...this.proofSteps
+    ];
+
+    return proofSteps;
+  }
+
   getLastProofStep() {
-    const lastProofStep = last(this.proofSteps);
+    let lastProofStep = null;
+
+    const proofStepsLength = this.proofSteps.length;
+
+    if (proofStepsLength > 0) {
+      lastProofStep = last(this.proofSteps);
+    }
 
     return lastProofStep;
   }
@@ -100,30 +94,10 @@ class ProofContext {
 
   isVariablePresentByVariableName(variableName) {
     const variable = this.findVariableByVariableName(variableName),
-        variablePresent = (variable !== null);
+          variablePresent = (variable !== null);
 
     return variablePresent;
   }
-
-  findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
-
-  findLabelByTypeName(labelName) { return this.context.findLabelByTypeName(labelName); }
-
-  findRuleByReferenceName(referenceName) { return this.context.findRuleByReferenceName(referenceName); }
-
-  findAxiomByReferenceName(referenceName) { return this.context.findAxiomByReferenceName(referenceName); }
-
-  findLemmaByReferenceName(referenceName) { return this.context.findLemmaByReferenceName(referenceName); }
-
-  findTheoremByReferenceName(referenceName) { return this.context.findTheoremByReferenceName(referenceName); }
-
-  isLabelPresentByLabelName(labelName) { return this.context.isLabelPresentByLabelName(labelName); }
-
-  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
-
-  nodeAsString(node) { return this.context.nodeAsString(node); }
-
-  nodesAsString(node) { return this.context.nodesAsString(node); }
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
