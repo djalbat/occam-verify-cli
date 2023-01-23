@@ -19,56 +19,65 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, asserti
 
     proofContext.debug(`Verifying the '${statementString}' qualified statement...`);
 
-    let statementMatches = false;
-
     const referenceNode = referenceNodeQuery(qualifiedStatementNode);
 
     if (referenceNode === null) {
-      statementMatches = true;  ///
-    } else {
-      const referenceName = referenceNameFromReferenceNode(referenceNode);
-
-      if (!statementMatches) {
-        const rule = proofContext.findRuleByReferenceName(referenceName),
-              ruleMatchesStatement = rule.matchStatement(statementNode, proofContext);
-
-        statementMatches = ruleMatchesStatement;  ///
-      }
-
-      if (!statementMatches) {
-        const axiom = proofContext.findAxiomByReferenceName(referenceName),
-              axiomMatchesStatement = axiom.matchStatement(statementNode, proofContext);
-
-        statementMatches = axiomMatchesStatement; ///
-      }
-
-      if (!statementMatches) {
-        const lemma = proofContext.findLemmaByReferenceName(referenceName),
-              lemmaMatchesStatement = lemma.matchStatement(statementNode, proofContext);
-
-        statementMatches = lemmaMatchesStatement; ///
-      }
-
-      if (!statementMatches) {
-        const theorem = proofContext.findTheoremByReferenceName(referenceName),
-              theoremMatchesStatement = theorem.matchStatement(statementNode, proofContext);
-
-        statementMatches = theoremMatchesStatement; ///
-      }
-
-      if (!statementMatches) {
-        const conjecture = proofContext.findConjectureByReferenceName(referenceName),
-              conjectureMatchesStatement = conjecture.matchStatement(statementNode, proofContext);
-
-        statementMatches = conjectureMatchesStatement; ///
-      }
-    }
-
-    if (statementMatches) {
       const context = proofContext,
             statementVerified = verifyStatement(statementNode, assertions, derived, context);
 
       qualifiedStatementVerified = statementVerified; ///
+    } else {
+      const referenceName = referenceNameFromReferenceNode(referenceNode);
+
+      if (!qualifiedStatementVerified) {
+        const rule = proofContext.findRuleByReferenceName(referenceName);
+
+        if (rule !== null) {
+          const ruleMatchesStatement = rule.matchStatement(statementNode, proofContext);
+
+          qualifiedStatementVerified = ruleMatchesStatement;  ///
+        }
+      }
+
+      if (!qualifiedStatementVerified) {
+        const axiom = proofContext.findAxiomByReferenceName(referenceName);
+
+        if (axiom !== null) {
+          const axiomMatchesStatement = axiom.matchStatement(statementNode, proofContext);
+
+          qualifiedStatementVerified = axiomMatchesStatement; ///
+        }
+      }
+
+      if (!qualifiedStatementVerified) {
+        const lemma = proofContext.findLemmaByReferenceName(referenceName);
+
+        if (lemma !== null) {
+          const lemmaMatchesStatement = lemma.matchStatement(statementNode, proofContext);
+
+          qualifiedStatementVerified = lemmaMatchesStatement; ///
+        }
+      }
+
+      if (!qualifiedStatementVerified) {
+        const theorem = proofContext.findTheoremByReferenceName(referenceName);
+
+        if (theorem !== null) {
+          const theoremMatchesStatement = theorem.matchStatement(statementNode, proofContext);
+
+          qualifiedStatementVerified = theoremMatchesStatement; ///
+        }
+      }
+
+      if (!qualifiedStatementVerified) {
+        const conjecture = proofContext.findConjectureByReferenceName(referenceName);
+
+        if (conjecture !== null) {
+          const conjectureMatchesStatement = conjecture.matchStatement(statementNode, proofContext);
+
+          qualifiedStatementVerified = conjectureMatchesStatement; ///
+        }
+      }
     }
   }
 

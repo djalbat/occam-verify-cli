@@ -4,6 +4,7 @@ import verifyRule from "../../verify/rule";
 import verifyAxiom from "../../verify/axiom";
 import verifyLemma from "../../verify/lemma";
 import verifyTheorem from "../../verify/theorem";
+import verifyConjecture from "../../verify/conjecture";
 import verifyTypeDeclaration from "../../verify/declaration/type";
 import verifyVariableDeclaration from "../../verify/declaration/variable";
 import verifyCombinatorDeclaration from "../../verify/declaration/combinator";
@@ -15,6 +16,7 @@ const ruleNodeQuery = nodeQuery("/topLevelDeclaration/rule!"),
       axiomNodeQuery = nodeQuery("/topLevelDeclaration/axiom!"),
       lemmaNodeQuery = nodeQuery("/topLevelDeclaration/lemma!"),
       theoremNodeQuery = nodeQuery("/topLevelDeclaration/theorem!"),
+      conjectureNodeQuery = nodeQuery("/topLevelDeclaration/conjecture!"),
       typeDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/typeDeclaration!"),
       variableDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/variableDeclaration!"),
       combinatorDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/combinatorDeclaration!"),
@@ -30,6 +32,7 @@ export default function verifyTopLevelDeclaration(topLevelDeclarationNode, fileC
         axiomNode = axiomNodeQuery(node),
         lemmaNode = lemmaNodeQuery(node),
         theoremNode = theoremNodeQuery(node),
+        conjectureNode = conjectureNodeQuery(node),
         typeDeclarationNode = typeDeclarationNodeQuery(node),
         variableDeclarationNode = variableDeclarationNodeQuery(node),
         combinatorDeclarationNode = combinatorDeclarationNodeQuery(node),
@@ -53,6 +56,10 @@ export default function verifyTopLevelDeclaration(topLevelDeclarationNode, fileC
     const theoremVerified = verifyTheorem(theoremNode, fileContext);
 
     topLevelDeclarationVerified = theoremVerified;  ///
+  } else if (conjectureNode !== null) {
+    const conjectureVerified = verifyConjecture(conjectureNode, fileContext);
+
+    topLevelDeclarationVerified = conjectureVerified;  ///
   } else if (typeDeclarationNode !== null) {
     const typeDeclarationVerified = verifyTypeDeclaration(typeDeclarationNode, fileContext);
 

@@ -156,7 +156,7 @@ function matchSupposition(supposition, proofSteps, substitutions) {
 }
 
 function matchSuppositions(supposition, proofSteps, substitutions) {
-  const suppositionsMatches = supposition.every((supposition) => {
+  const suppositionsMatch = supposition.every((supposition) => {
     const suppositionMatches = matchSupposition(supposition, proofSteps, substitutions);
 
     if (suppositionMatches) {
@@ -164,7 +164,7 @@ function matchSuppositions(supposition, proofSteps, substitutions) {
     }
   });
 
-  return suppositionsMatches;
+  return suppositionsMatch;
 }
 
 function matchConsequence(consequence, statementNode, substitutions) {
@@ -178,9 +178,9 @@ function matchSuppositionsAndConsequence(suppositions, consequence, proofSteps, 
   let suppositionsMatchConsequence = false;
 
   const substitutions = [],
-        suppositionsMatches = matchSuppositions(suppositions, proofSteps, substitutions);
+        suppositionsMatch = matchSuppositions(suppositions, proofSteps, substitutions);
 
-  if (suppositionsMatches) {
+  if (suppositionsMatch) {
     const consequenceMatches = matchConsequence(consequence, statementNode, substitutions);
 
     suppositionsMatchConsequence = consequenceMatches;  ///
