@@ -57,9 +57,10 @@ export default class StatementForMetavariableSubstitution {
 
     const nonTerminalNode = statementNode,  ///
           childNodes = nonTerminalNode.getChildNodes(),
-          ruleName = META_ARGUMENT_RULE_NAME;
+          ruleName = META_ARGUMENT_RULE_NAME,
+          metaArgumentNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
 
-    statementNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
+    statementNode = statementNodeQuery(metaArgumentNode);
 
     if (statementNode !== null) {
       statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableName, statementNode);

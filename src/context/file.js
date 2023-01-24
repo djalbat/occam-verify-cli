@@ -105,8 +105,6 @@ export default class FileContext {
     return types;
   }
 
-
-
   getRules(includeRelease = true) {
     const rules = []
 
@@ -451,6 +449,12 @@ export default class FileContext {
       const theoremJSON = theorem.toJSON(this.tokens);
 
       json.push(theoremJSON);
+    });
+
+    this.conjectures.forEach((conjecture) => {
+      const conjectureJSON = conjecture.toJSON(this.tokens);
+
+      json.push(conjectureJSON);
     });
 
     this.combinators.forEach((combinator) => {

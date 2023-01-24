@@ -2,7 +2,7 @@
 
 import { nodeAsString } from "./utilities/string";
 import { statementNodeFromStatementString } from "./utilities/string";
-import { consequenceStatementForVariableMatcher } from "./matcher/statementForVariable/consequence";
+import { consequenceTermForVariableMatcher } from "./matcher/termForVariable/consequence";
 
 export default class Consequence {
   constructor(statementNode) {
@@ -16,7 +16,7 @@ export default class Consequence {
   matchStatementNode(statementNode, substitutions) {
     const nonTerminalNodeA = this.statementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeMatches = consequenceStatementForVariableMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
+          nonTerminalNodeMatches = consequenceTermForVariableMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
           statementNodeMatches = nonTerminalNodeMatches; ///
 
     return statementNodeMatches;
