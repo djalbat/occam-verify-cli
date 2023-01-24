@@ -51,7 +51,9 @@ export function nodesAsString(nodes, tokens) {
   const string = nodes.reduce((string, node) => {
     const nodeString = nodeAsString(node, tokens);
 
-    string = `${string}${COMMA}${nodeString}`;
+    string = (string === EMPTY_STRING) ?
+               nodeString :
+                `${string}${COMMA}${nodeString}`;
 
     return string;
   }, EMPTY_STRING);

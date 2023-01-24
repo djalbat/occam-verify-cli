@@ -32,7 +32,7 @@ export default function verifyStatement(statementNode, assertions, derived, cont
   }
 
   if (!statementVerified) {
-    const statementVerifiedAsTypeAssertion = verifyStatementAsTypeAssertion(statementNode, assertions, context);
+    const statementVerifiedAsTypeAssertion = verifyStatementAsTypeAssertion(statementNode, assertions, derived, context);
 
     statementVerified = statementVerifiedAsTypeAssertion; ///
   }
@@ -72,13 +72,13 @@ function verifyStatementAsEquality(statementNode, derived, context) {
   return statementVerifiedAsEquality;
 }
 
-function verifyStatementAsTypeAssertion(statementNode, assertions, context) {
+function verifyStatementAsTypeAssertion(statementNode, assertions, derived, context) {
   let statementVerifiedAsTypeAssertion = false;
 
   const typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
   if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assertions, context);
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assertions, derived, context);
 
     statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
   }
@@ -266,7 +266,7 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
     context.error(`The '${metaArgumentString}' meta-argument should be a statement, not a meta-type.`);
   } else {
     const derived = false,
-          assertions = null,
+          assertions = [],
           statementVerified = verifyStatement(statementNode, assertions, derived, context);
 
     if (statementVerified) {
