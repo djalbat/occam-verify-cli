@@ -1,7 +1,11 @@
 "use strict";
 
+import verifyTerm from "./verify/term";
+
 import { nodeQuery } from "./utilities/query";
+import { first, second } from "./utilities/array";
 import { TERM_RULE_NAME } from "./ruleNames";
+import {nodeAsString} from "./utilities/string";
 
 const leftTermNodeQuery = nodeQuery("/statement/argument[0]/term!"),
       rightTermNodeQuery = nodeQuery("/statement/argument[1]/term!");
@@ -20,7 +24,7 @@ export default class Equality {
     return this.rightTermNode;
   }
 
-  match(equality, equalities) {
+  match(equality, equalities, context) {
     let matches = false;
 
     const leftTermNode = equality.getLeftTermNode(),
@@ -30,14 +34,14 @@ export default class Equality {
 
     if (!matches) {
       const reversed = false,
-            leftTermNodeAndRightTermNodeMatch = this.matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities);
+            leftTermNodeAndRightTermNodeMatch = this.matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities, context);
 
       matches = leftTermNodeAndRightTermNodeMatch;  ///
     }
 
     if (!matches) {
       const reversed = true,
-            leftTermNodeAndRightTermNodeMatch = this.matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities);
+            leftTermNodeAndRightTermNodeMatch = this.matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities, context);
 
       matches = leftTermNodeAndRightTermNodeMatch;  ///
     }
@@ -45,7 +49,7 @@ export default class Equality {
     return matches;
   }
 
-  matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities) {
+  matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities, context) {
     let leftTermNodeAndRightTermNodeMatch = true;
 
     if (leftTermNodeAndRightTermNodeMatch) {
@@ -53,7 +57,7 @@ export default class Equality {
                                     this.rightTermNode :
                                       this.leftTermNode,  ///
             rightNonTerminalNode = leftTermNode,  ///
-            nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities);
+            nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context);
 
       leftTermNodeAndRightTermNodeMatch = nonTerminalNodeEquates; ///
     }
@@ -63,7 +67,7 @@ export default class Equality {
                                     this.leftTermNode :
                                       this.rightTermNode,  ///
             rightNonTerminalNode = rightTermNode,  ///
-            nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities);
+            nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context);
 
       leftTermNodeAndRightTermNodeMatch = nonTerminalNodeEquates; ///
     }
@@ -71,16 +75,16 @@ export default class Equality {
     return leftTermNodeAndRightTermNodeMatch;
   }
 
-  equate(equalities) {
+  equate(equalities, context) {
     const leftNonTerminalNode = this.leftTermNode,  ///
           rightNonTerminalNode = this.rightTermNode,  ///
-          nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities),
+          nonTerminalNodeEquates = equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context),
           equates = nonTerminalNodeEquates; ///
 
     return equates;
   }
 
-  static fromProofStep(proofStep) {
+  static fromProofStep(proofStep, context) {
     let equality = null;
 
     const statementNode = proofStep.getStatementNode();
@@ -90,29 +94,23 @@ export default class Equality {
             rightTermNode = rightTermNodeQuery(statementNode);
 
       if ((leftTermNode !== null) && (rightTermNode !== null)) {
-        equality = new Equality(leftTermNode, rightTermNode);
+        equality = equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, context);
       }
     }
 
     return equality;
   }
 
-  static fromStatementNode(statementNode) {
+  static fromStatementNode(statementNode, context) {
     const leftTermNode = leftTermNodeQuery(statementNode),
           rightTermNode = rightTermNodeQuery(statementNode),
-          equality = new Equality(leftTermNode, rightTermNode);
-
-    return equality;
-  }
-
-  static fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode) {
-    const equality = new Equality(leftTermNode, rightTermNode);
+          equality = equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, context);
 
     return equality;
   }
 }
 
-function equateNode(nodeA, nodeB, equalities) {
+function equateNode(nodeA, nodeB, equalities, context) {
   let nodeEquates = false;
 
   const nodeATerminalNode = nodeA.isTerminalNode(),
@@ -122,13 +120,13 @@ function equateNode(nodeA, nodeB, equalities) {
     if (nodeATerminalNode) {
       const terminalNodeA = nodeA,  ///
             terminalNodeB = nodeB,  ///
-            terminalNodeEquates = equateTerminalNode(terminalNodeA, terminalNodeB, equalities);
+            terminalNodeEquates = equateTerminalNode(terminalNodeA, terminalNodeB, equalities, context);
 
       nodeEquates = terminalNodeEquates;  ///
     } else {
       const nonTerminalNodeA = nodeA,  ///
             nonTerminalNodeB = nodeB, ///
-            nonTerminalNodeEquates = equateNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equalities);
+            nonTerminalNodeEquates = equateNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equalities, context);
 
       nodeEquates = nonTerminalNodeEquates; ///
     }
@@ -137,7 +135,7 @@ function equateNode(nodeA, nodeB, equalities) {
   return nodeEquates;
 }
 
-function equateNodes(leftNodes, rightNodes, equalities) {
+function equateNodes(leftNodes, rightNodes, equalities, context) {
   let nodesEquate = false;
 
   const leftNodesLength = leftNodes.length,
@@ -146,7 +144,7 @@ function equateNodes(leftNodes, rightNodes, equalities) {
   if (leftNodesLength === rightNodesLength) {
     nodesEquate = leftNodes.every((LeftNode, index) => {
       const rightNode = rightNodes[index],
-            nodeEquates = equateNode(LeftNode, rightNode, equalities);
+            nodeEquates = equateNode(LeftNode, rightNode, equalities, context);
 
       if (nodeEquates) {
         return true;
@@ -157,14 +155,14 @@ function equateNodes(leftNodes, rightNodes, equalities) {
   return nodesEquate;
 }
 
-function equateTerminalNode(terminalNodeA, terminalNodeB, equalities) {
+function equateTerminalNode(terminalNodeA, terminalNodeB, equalities, context) {
   const matches = terminalNodeA.match(terminalNodeB),
         terminalNodeEquates = matches;  ///
 
   return terminalNodeEquates;
 }
 
-function equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities) {
+function equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context) {
   let nonTerminalNodeEquates = false;
 
   const leftNonTerminalNodeRuleName = leftNonTerminalNode.getRuleName(),
@@ -177,7 +175,7 @@ function equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equali
     if (ruleNameTermRuleName) {
       const leftTermNode = leftNonTerminalNode, ///
             rightTermNode = rightNonTerminalNode, ///
-            termNodeEquates = equateTermNode(leftTermNode, rightTermNode, equalities);
+            termNodeEquates = equateTermNode(leftTermNode, rightTermNode, equalities, context);
 
       nonTerminalNodeEquates = termNodeEquates;  ///
     }
@@ -187,7 +185,7 @@ function equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equali
             rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
             leftNodes = leftNonTerminalNodeChildNodes, ///
             rightNodes = rightNonTerminalNodeChildNodes, ///
-            nodesEquate = equateNodes(leftNodes, rightNodes, equalities);
+            nodesEquate = equateNodes(leftNodes, rightNodes, equalities, context);
 
       nonTerminalNodeEquates = nodesEquate; ///
     }
@@ -196,20 +194,55 @@ function equateNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equali
   return nonTerminalNodeEquates;
 }
 
-function equateTermNode(leftTermNode, rightTermNode, equalities) {
-  const equality = Equality.fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode),
-        equalityA = equality, ///
+function equateTermNode(leftTermNode, rightTermNode, equalities, context) {
+  let termNodeEquates = false;
+
+  const equality = equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, context);
+
+  if (equality !== null) {
+    const equalityA = equality, ///
         equalitiesB = equalities, ///
         equalityMatches = equalitiesB.some((equalityB) => { ///
-          const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB);
+          const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB, context);
 
           if (equalityAMatchesEqualityB) {
             return true;
           }
-        }),
-        termNodeEquates = equalityMatches;  ///
+        });
+
+    termNodeEquates = equalityMatches;  ///
+  }
 
   return termNodeEquates;
+}
+
+function equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, context) {
+  let equality = null;
+
+  const types = [],
+        leftTermVerified = verifyTerm(leftTermNode, types, context),
+        rightTermVerified = verifyTerm(rightTermNode, types, context);
+
+  if (leftTermVerified && rightTermVerified) {
+    const firstType = first(types),
+          secondType = second(types),
+          leftTermType = firstType, ///
+          rightTermType = secondType, ///
+          leftTermTypeEqualToRightTermType = leftTermType.isEqualTo(rightTermType);
+
+    if (leftTermTypeEqualToRightTermType) {
+      equality = new Equality(leftTermNode, rightTermNode);
+    } else {
+      const leftTermString = context.nodeAsString(leftTermNode),
+            rightTermString = context.nodeAsString(rightTermNode),
+            leftTermTypeName = leftTermType.getName(),
+            rightTermTypeName = rightTermType.getName();
+
+      context.error(`The left '${leftTermString}' term's '${leftTermTypeName}' type is not equal to the right '${rightTermString}' term's '${rightTermTypeName}' type.'`);
+    }
+  }
+
+  return equality;
 }
 
 function filterEqualities(equalities, equality) {

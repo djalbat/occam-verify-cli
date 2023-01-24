@@ -57,15 +57,21 @@ function verifyStatementAsEquality(statementNode, derived, context) {
         statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
 
   if (statementVerifiedAgainstCombinator) {
-    statementVerifiedAsEquality = true;
+    const equality = Equality.fromStatementNode(statementNode, context);
 
-    if (derived) {
-      const equality = Equality.fromStatementNode(statementNode),
-            proofSteps = context.getProofSteps(),
-            equalities = equalitiesFromProofSteps(proofSteps),
-            equalityEquates = equality.equate(equalities);
+    if (equality !== null) {
+      statementVerifiedAsEquality = true; ///
 
-      statementVerifiedAsEquality = equalityEquates; ///
+      if (derived) {
+        const proofSteps = context.getProofSteps(),
+              equalities = equalitiesFromProofSteps(proofSteps, context);
+
+        if (equalities !== null) {
+          const equalityEquates = equality.equate(equalities);
+
+          statementVerifiedAsEquality = equalityEquates; ///
+        }
+      }
     }
   }
 
@@ -291,20 +297,24 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
   return metaArgumentNodeVerified;
 }
 
-function equalitiesFromProofSteps(proofSteps) {
+function equalitiesFromProofSteps(proofSteps, context) {
+  let equalities = [];
+
   const start = -MAXIMUM_INDEXES_LENGTH;  ///
 
   proofSteps = proofSteps.slice(start); ///
 
-  const equalities = proofSteps.reduce((equalities, proofStep, index) => {
-    const equality = Equality.fromProofStep(proofStep);
+  proofSteps.every((proofStep) => {
+    const equality = Equality.fromProofStep(proofStep, context);
 
-    if (equality !== null) {
+    if (equality === null) {
+      equalities = null;
+    } else {
       equalities.push(equality);
-    }
 
-    return equalities;
-  }, []);
+      return true;
+    }
+  });
 
   return equalities;
 }
