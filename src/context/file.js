@@ -7,20 +7,23 @@ import { nodeAsString, nodesAsString } from "../utilities/string";
 import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "../utilities/tokens";
 
 export default class FileContext {
-  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, conjectures, variables, combinators, constructors) {
+  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, variables, metavariables) {
     this.releaseContext = releaseContext;
     this.filePath = filePath;
     this.tokens = tokens;
     this.node = node;
+
     this.types = types;
     this.rules = rules;
     this.axioms = axioms;
     this.lemmas = lemmas;
     this.theorems = theorems;
     this.conjectures = conjectures;
-    this.variables = variables;
     this.combinators = combinators;
     this.constructors = constructors;
+
+    this.variables = variables;
+    this.metavariables = metavariables;
   }
 
   getReleaseContext() {
@@ -37,10 +40,6 @@ export default class FileContext {
 
   getNode() {
     return this.node;
-  }
-
-  getVariables() {
-    return this.variables;
   }
 
   getProofSteps() {
@@ -201,6 +200,14 @@ export default class FileContext {
     }
 
     return constructors;
+  }
+
+  getVariables() {
+    return this.variables;
+  }
+
+  getMetavariables() {
+    return this.metavariables;
   }
 
   findTypeByTypeName(typeName) {
@@ -488,10 +495,11 @@ export default class FileContext {
           lemmas = [],
           theorems = [],
           conjectures = [],
-          variables = [],
           combinators = [],
           constructors = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, conjectures, variables, combinators, constructors);
+          variables = [],
+          metavariables = [],
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, variables, metavariables);
 
     return fileContext;
   }

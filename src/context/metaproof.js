@@ -17,6 +17,8 @@ class MetaproofContext {
     return this.context;
   }
 
+  getVariables() { return this.context.getVariables(); }
+
   getMetavariables() {
     const metavariables = [];
 

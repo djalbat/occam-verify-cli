@@ -2,7 +2,6 @@
 
 import Equality from "../equality";
 import verifyTerm from "../verify/term";
-import equalityCombinator from "../ocmbinator/equality";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/assertion/type";
 
@@ -10,7 +9,6 @@ import { first } from "../utilities/array";
 import { objectType } from "../type";
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { STATEMENT_META_TYPE } from "../metaTypes";
-import { MAXIMUM_INDEXES_LENGTH } from "../constants";
 import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
 import { ARGUMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../ruleNames";
 
@@ -26,9 +24,9 @@ export default function verifyStatement(statementNode, assertions, derived, cont
   context.begin(statementNode);
 
   if (!statementVerified) {
-    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, derived, context);
+    const statementVerifiedAgainstCombinators = verifyStatementAgainstCombinators(statementNode, context);
 
-    statementVerified = statementVerifiedAsEquality;  //
+    statementVerified = statementVerifiedAgainstCombinators;  ///
   }
 
   if (!statementVerified) {
@@ -38,9 +36,9 @@ export default function verifyStatement(statementNode, assertions, derived, cont
   }
 
   if (!statementVerified) {
-    const statementVerifiedAgainstCombinators = verifyStatementAgainstCombinators(statementNode, context);
+    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, derived, context);
 
-    statementVerified = statementVerifiedAgainstCombinators;  ///
+    statementVerified = statementVerifiedAsEquality;  //
   }
 
   statementVerified ?
@@ -50,46 +48,14 @@ export default function verifyStatement(statementNode, assertions, derived, cont
   return statementVerified;
 }
 
-function verifyStatementAsEquality(statementNode, derived, context) {
-  let statementVerifiedAsEquality = false;
+export function verifyStatementAgainstCombinator(statementNode, combinator, context) {
+  const combinatorStatementNode = combinator.getStatementNode(),
+        node = statementNode,  ///
+        combinatorNode = combinatorStatementNode, ///
+        nodeVerified = verifyNode(node, combinatorNode, context),
+        statementVerifiedAgainstCombinator = nodeVerified;  ///
 
-  const combinator = equalityCombinator,  ///
-        statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
-
-  if (statementVerifiedAgainstCombinator) {
-    const equality = Equality.fromStatementNode(statementNode, context);
-
-    if (equality !== null) {
-      statementVerifiedAsEquality = true; ///
-
-      if (derived) {
-        const proofSteps = context.getProofSteps(),
-              equalities = equalitiesFromProofSteps(proofSteps, context);
-
-        if (equalities !== null) {
-          const equalityEquates = equality.equate(equalities);
-
-          statementVerifiedAsEquality = equalityEquates; ///
-        }
-      }
-    }
-  }
-
-  return statementVerifiedAsEquality;
-}
-
-function verifyStatementAsTypeAssertion(statementNode, assertions, derived, context) {
-  let statementVerifiedAsTypeAssertion = false;
-
-  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
-
-  if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assertions, derived, context);
-
-    statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
-  }
-
-  return statementVerifiedAsTypeAssertion;
+  return statementVerifiedAgainstCombinator;
 }
 
 function verifyStatementAgainstCombinators(statementNode, context) {
@@ -117,14 +83,40 @@ function verifyStatementAgainstCombinators(statementNode, context) {
   return statementVerifiedAgainstCombinators;
 }
 
-function verifyStatementAgainstCombinator(statementNode, combinator, context) {
-  const combinatorStatementNode = combinator.getStatementNode(),
-        node = statementNode,  ///
-        combinatorNode = combinatorStatementNode, ///
-        nodeVerified = verifyNode(node, combinatorNode, context),
-        statementVerifiedAgainstCombinator = nodeVerified;  ///
+function verifyStatementAsTypeAssertion(statementNode, assertions, derived, context) {
+  let statementVerifiedAsTypeAssertion = false;
 
-  return statementVerifiedAgainstCombinator;
+  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
+
+  if (typeAssertionNode !== null) {
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assertions, derived, context);
+
+    statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
+  }
+
+  return statementVerifiedAsTypeAssertion;
+}
+
+function verifyStatementAsEquality(statementNode, derived, context) {
+  let statementVerifiedAsEquality = false;
+
+  const equality = Equality.fromStatementNode(statementNode, context);
+
+  if (equality !== null) {
+    statementVerifiedAsEquality = true; ///
+
+    if (derived) {
+      const equalities = context.getEqualities();
+
+      if (equalities !== null) {
+        const equalityEquates = equality.equate(equalities, context);
+
+        statementVerifiedAsEquality = equalityEquates; ///
+      }
+    }
+  }
+
+  return statementVerifiedAsEquality;
 }
 
 function verifyNode(node, combinatorNode, context) {
@@ -295,26 +287,4 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
   }
 
   return metaArgumentNodeVerified;
-}
-
-function equalitiesFromProofSteps(proofSteps, context) {
-  let equalities = [];
-
-  const start = -MAXIMUM_INDEXES_LENGTH;  ///
-
-  proofSteps = proofSteps.slice(start); ///
-
-  proofSteps.every((proofStep) => {
-    const equality = Equality.fromProofStep(proofStep, context);
-
-    if (equality === null) {
-      equalities = null;
-    } else {
-      equalities.push(equality);
-
-      return true;
-    }
-  });
-
-  return equalities;
 }

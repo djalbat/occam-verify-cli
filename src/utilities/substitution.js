@@ -1,4 +1,4 @@
-"use strict";
+    "use strict";
 
 import { matcher } from "../matcher";
 import { first, second, third } from "../utilities/array";

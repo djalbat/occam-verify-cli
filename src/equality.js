@@ -1,11 +1,14 @@
 "use strict";
 
 import verifyTerm from "./verify/term";
+import equalityCombinator from "./ocmbinator/equality";
 
+import { matcher } from "./matcher";
 import { nodeQuery } from "./utilities/query";
 import { first, second } from "./utilities/array";
+import { EQUALITY_DEPTH } from "./constants";
 import { TERM_RULE_NAME } from "./ruleNames";
-import {nodeAsString} from "./utilities/string";
+import { verifyStatementAgainstCombinator } from "./verify/statement";
 
 const leftTermNodeQuery = nodeQuery("/statement/argument[0]/term!"),
       rightTermNodeQuery = nodeQuery("/statement/argument[1]/term!");
@@ -24,32 +27,7 @@ export default class Equality {
     return this.rightTermNode;
   }
 
-  match(equality, equalities, context) {
-    let matches = false;
-
-    const leftTermNode = equality.getLeftTermNode(),
-          rightTermNode = equality.getRightTermNode();
-
-    equalities = filterEqualities(equalities, equality);  ///
-
-    if (!matches) {
-      const reversed = false,
-            leftTermNodeAndRightTermNodeMatch = this.matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities, context);
-
-      matches = leftTermNodeAndRightTermNodeMatch;  ///
-    }
-
-    if (!matches) {
-      const reversed = true,
-            leftTermNodeAndRightTermNodeMatch = this.matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities, context);
-
-      matches = leftTermNodeAndRightTermNodeMatch;  ///
-    }
-
-    return matches;
-  }
-
-  matchLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, reversed, equalities, context) {
+  matchTermNodes(leftTermNode, rightTermNode, reversed, equalities, context) {
     let leftTermNodeAndRightTermNodeMatch = true;
 
     if (leftTermNodeAndRightTermNodeMatch) {
@@ -75,6 +53,31 @@ export default class Equality {
     return leftTermNodeAndRightTermNodeMatch;
   }
 
+  match(equality, equalities, context) {
+    let matches = false;
+
+    const leftTermNode = equality.getLeftTermNode(),
+          rightTermNode = equality.getRightTermNode();
+
+    equalities = filterEqualities(equalities, equality);  ///
+
+    if (!matches) {
+      const reversed = false,
+            leftTermNodeAndRightTermNodeMatch = this.matchTermNodes(leftTermNode, rightTermNode, reversed, equalities, context);
+
+      matches = leftTermNodeAndRightTermNodeMatch;  ///
+    }
+
+    if (!matches) {
+      const reversed = true,
+            leftTermNodeAndRightTermNodeMatch = this.matchTermNodes(leftTermNode, rightTermNode, reversed, equalities, context);
+
+      matches = leftTermNodeAndRightTermNodeMatch;  ///
+    }
+
+    return matches;
+  }
+
   equate(equalities, context) {
     const leftNonTerminalNode = this.leftTermNode,  ///
           rightNonTerminalNode = this.rightTermNode,  ///
@@ -84,17 +87,25 @@ export default class Equality {
     return equates;
   }
 
-  static fromProofStep(proofStep, context) {
+  static fromProofStep(proofStep) {
     let equality = null;
 
     const statementNode = proofStep.getStatementNode();
 
     if (statementNode !== null) {
-      const leftTermNode = leftTermNodeQuery(statementNode),
-            rightTermNode = rightTermNodeQuery(statementNode);
+      const combinator = equalityCombinator,  ///
+            combinatorStatementNode = combinator.getStatementNode(),  ///
+            substitutions = null,
+            depth = EQUALITY_DEPTH,
+            nodeA = statementNode,  ///
+            nodeB = combinatorStatementNode,  ///
+            nodeMatches = matcher.matchNode(nodeA, nodeB, substitutions, depth);
 
-      if ((leftTermNode !== null) && (rightTermNode !== null)) {
-        equality = equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, context);
+      if (nodeMatches) {
+        const leftTermNode = leftTermNodeQuery(statementNode),
+              rightTermNode = rightTermNodeQuery(statementNode);
+
+        equality = new Equality(leftTermNode, rightTermNode);
       }
     }
 
@@ -102,9 +113,17 @@ export default class Equality {
   }
 
   static fromStatementNode(statementNode, context) {
-    const leftTermNode = leftTermNodeQuery(statementNode),
-          rightTermNode = rightTermNodeQuery(statementNode),
-          equality = equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, context);
+    let equality = null;
+
+    const combinator = equalityCombinator,  ///
+          statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
+
+    if (statementVerifiedAgainstCombinator) {
+      const leftTermNode = leftTermNodeQuery(statementNode),
+            rightTermNode = rightTermNodeQuery(statementNode);
+
+      equality = new Equality(leftTermNode, rightTermNode);
+    }
 
     return equality;
   }
@@ -201,19 +220,33 @@ function equateTermNode(leftTermNode, rightTermNode, equalities, context) {
 
   if (equality !== null) {
     const equalityA = equality, ///
-        equalitiesB = equalities, ///
-        equalityMatches = equalitiesB.some((equalityB) => { ///
-          const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB, context);
+          equalitiesB = equalities, ///
+          equalityMatches = equalitiesB.some((equalityB) => { ///
+            const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB, context);
 
-          if (equalityAMatchesEqualityB) {
-            return true;
-          }
-        });
+            if (equalityAMatchesEqualityB) {
+              return true;
+            }
+          });
 
     termNodeEquates = equalityMatches;  ///
   }
 
   return termNodeEquates;
+}
+
+function filterEqualities(equalities, equality) {
+  const equalityA = equality; ///
+
+  equalities = equalities.filter((equality) => {
+    const equalityB = equality; ///
+
+    if (equalityA !== equalityB) {
+      return true;
+    }
+  });
+
+  return equalities;
 }
 
 function equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, context) {
@@ -243,18 +276,4 @@ function equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, c
   }
 
   return equality;
-}
-
-function filterEqualities(equalities, equality) {
-  const equalityA = equality; ///
-
-  equalities = equalities.filter((equality) => {
-    const equalityB = equality; ///
-
-    if (equalityA !== equalityB) {
-      return true;
-    }
-  });
-
-  return equalities;
 }

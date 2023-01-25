@@ -1,45 +1,20 @@
 "use strict";
 
-import Variable from "../variable";
-
 export default class TypeAssertion {
-  constructor(type, termNode, variableName) {
-    this.type = type;
-    this.termNode = termNode;
-    this.variableName = variableName;
+  constructor(variable) {
+    this.variable = variable;
   }
 
-  getType() {
-    return this.type;
-  }
-
-  getTermNode() {
-    return this.termNode;
-  }
-
-  getVariableName() {
-    return this.variableName;
+  getVariable() {
+    return this.variable;
   }
 
   assert(proofContext) {
-    if (this.variableName !== null) {
-      const name = this.variableName,  ///
-            variable = Variable.fromTypeAndName(this.type, name);
-
-      proofContext.addVariable(variable);
-    }
+    proofContext.addVariable(this.variable);
   }
 
-  static fromTypeAndTermNode(type, termNode) {
-    const variableName = null,
-          typeAssertion = new TypeAssertion(type, termNode, variableName);
-
-    return typeAssertion;
-  }
-
-  static fromTypeAndVariableName(type, variableName) {
-    const termNode = null,
-          typeAssertion = new TypeAssertion(type, termNode, variableName);
+  static fromVariable(variable) {
+    const typeAssertion = new TypeAssertion(variable);
 
     return typeAssertion;
   }
