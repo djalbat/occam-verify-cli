@@ -3,7 +3,7 @@
 import { matcher } from "../matcher";
 import { nodeQuery } from "../utilities/query";
 import { META_ARGUMENT_RULE_NAME } from "../ruleNames";
-import { bracketedNonTerminalChildNodeFromChildNodes } from "../utilities/substitution";
+import { bracketedNonTerminalNodeFromNonTerminalNode } from "../utilities/nonTerminalNode";
 
 const statementNodeQuery = nodeQuery('/metaArgument/statement!');
 
@@ -31,10 +31,10 @@ export default class StatementForMetavariableSubstitution {
     matchesStatementNode = nodeMatches;  ///
 
     if (!matchesStatementNode) {
-      const nonTerminalNode = statementNode,  ///
-            childNodes = nonTerminalNode.getChildNodes(), ///
-            ruleName = META_ARGUMENT_RULE_NAME,
-            metaArgumentNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
+      const ruleName = META_ARGUMENT_RULE_NAME,
+            nonTerminalNode = statementNode,  ///
+            bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName),
+            metaArgumentNode = bracketedNonTerminalNode;  ///
 
       if (metaArgumentNode !== null) {
         const statementNode = statementNodeQuery(metaArgumentNode);
@@ -55,10 +55,10 @@ export default class StatementForMetavariableSubstitution {
   static fromMetavariableNameAndStatementNode(metavariableName, statementNode) {
     let statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableName, statementNode);
 
-    const nonTerminalNode = statementNode,  ///
-          childNodes = nonTerminalNode.getChildNodes(),
-          ruleName = META_ARGUMENT_RULE_NAME,
-          metaArgumentNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
+    const ruleName = META_ARGUMENT_RULE_NAME,
+          nonTerminalNode = statementNode,  ///
+          bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName),
+          metaArgumentNode = bracketedNonTerminalNode;  ///
 
     statementNode = statementNodeQuery(metaArgumentNode);
 

@@ -81,15 +81,19 @@ class ProofContext {
   }
 
   matchStatement(statementNode) {
-    let statementMatches;
+    let statementMatches = false;
 
-    statementMatches = this.proofSteps.some((proofStep) => {
-      statementMatches = proofStep.matchStatement(statementNode);
+    if (!statementMatches) {
+      const proofStepMatchesStatement = this.proofSteps.some((proofStep) => {
+        const proofStepMatchesStatement = proofStep.match(statementNode);
 
-      if (statementMatches) {
-        return true;
-      }
-    });
+        if (proofStepMatchesStatement) {
+          return true;
+        }
+      });
+
+      statementMatches = proofStepMatchesStatement; ///
+    }
 
     if (!statementMatches) {
       statementMatches = this.context.matchStatement(statementNode);

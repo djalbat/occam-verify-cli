@@ -63,15 +63,19 @@ class MetaproofContext {
   }
 
   matchMetastatement(metastatementNode) {
-    let metastatementMatches;
+    let metastatementMatches = false;
 
-    metastatementMatches = this.metaproofSteps.some((metaproofStep) => {
-      metastatementMatches = metaproofStep.matchMetastatement(metastatementNode);
+    if (!metastatementMatches) {
+      const proofStepMatchesMetastatement = this.metaproofSteps.some((metaproofStep) => {
+        const proofStepMatchesMetastatement = metaproofStep.match(metastatementNode);
 
-      if (metastatementMatches) {
-        return true;
-      }
-    });
+        if (proofStepMatchesMetastatement) {
+          return true;
+        }
+      });
+
+      metastatementMatches = proofStepMatchesMetastatement; ///
+    }
 
     if (!metastatementMatches) {
       metastatementMatches = this.context.matchMetastatement(metastatementNode);
@@ -103,8 +107,9 @@ class MetaproofContext {
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
+          metavariables = [],
           metaproofSteps = [],
-          metaproofContext = new MetaproofContext(context, metaproofSteps);
+          metaproofContext = new MetaproofContext(context, metavariables, metaproofSteps);
 
     return metaproofContext;
   }

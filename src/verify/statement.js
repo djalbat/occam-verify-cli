@@ -69,12 +69,12 @@ function verifyStatementAgainstCombinators(statementNode, context) {
   ];
 
   const combinator = combinators.find((combinator) => {
-          const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
+    const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
 
-          if (statementVerifiedAgainstCombinator) {
-            return true;
-          }
-        }) || null;
+    if (statementVerifiedAgainstCombinator) {
+      return true;
+    }
+  }) || null;
 
   if (combinator !== null) {
     statementVerifiedAgainstCombinators = true;

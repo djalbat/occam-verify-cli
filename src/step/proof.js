@@ -1,6 +1,7 @@
 "use strict";
 
-import { matchBracketedNonTerminalNode } from "../utilities/substitution";
+import { META_ARGUMENT_RULE_NAME } from "../ruleNames";
+import { matchNonTerminalNodeModuloBrackets } from "../utilities/nonTerminalNode";
 
 export default class ProofStep {
   constructor(subproofNode, statementNode) {
@@ -16,29 +17,30 @@ export default class ProofStep {
     return this.statementNode;
   }
 
-  matchStatement(statementNode) {
-    let statementMatches;
+  match(statementNode) {
+    let matches;
 
-    const statementsMatch = this.matchStatements(statementNode);
+    const matchesStatement = this.matchStatement(statementNode);
 
-    statementMatches = statementsMatch; //
+    matches = matchesStatement; //
 
-    return statementMatches;
+    return matches;
   }
 
-  matchStatements(statementNode) {
-    let statementsMatch = false;
+  matchStatement(statementNode) {
+    let matchesStatement = false;
 
     if (this.statementNode !== null) {
-      const nonTerminalNodeA = statementNode, ///
+      const ruleName = META_ARGUMENT_RULE_NAME,
+            nonTerminalNodeA = statementNode, ///
             nonTerminalNodeB = this.statementNode,  ///
-            bracketedNodeMatches = matchBracketedNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB),
-            statementNodeMatches = bracketedNodeMatches;  ///
+            nonTerminalNodeMatchesModuloBrackets = matchNonTerminalNodeModuloBrackets(nonTerminalNodeA, nonTerminalNodeB, ruleName),
+            statementNodeMatches = nonTerminalNodeMatchesModuloBrackets;  ///
 
       return statementNodeMatches;
     }
 
-    return statementsMatch;
+    return matchesStatement;
   }
 
   static fromSubproofNode(subproofNode) {

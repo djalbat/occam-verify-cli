@@ -1,56 +1,53 @@
-    "use strict";
+"use strict";
 
 import { matcher } from "../matcher";
 import { first, second, third } from "../utilities/array";
-import { METASTATEMENT_RULE_NAME } from "../ruleNames";
 import { BRACKETED_CHILD_NODES_LENGTH, LEFT_BRACKET, RIGHT_BRACKET } from "../constants";
 
-export function matchBracketedNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB) {
-  let bracketedNodeMatches = false;
+export function matchNonTerminalNodeModuloBrackets(nonTerminalNodeA, nonTerminalNodeB, ruleName) {
+  let nonTerminalNodeMatchesModuloBrackets = false;
 
-  if (!bracketedNodeMatches) {
+  if (!nonTerminalNodeMatchesModuloBrackets) {
     const nonTerminalNodeMatches = matcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB);
 
-    bracketedNodeMatches = nonTerminalNodeMatches;  ///
+    nonTerminalNodeMatchesModuloBrackets = nonTerminalNodeMatches;  ///
   }
 
-  if (!bracketedNodeMatches) {
-    const nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-          childNodesA = nonTerminalNodeAChildNodes, ///
-          ruleName = METASTATEMENT_RULE_NAME,
-          bracketedNonTerminalChildNodeA = bracketedNonTerminalChildNodeFromChildNodes(childNodesA, ruleName);
+  if (!nonTerminalNodeMatchesModuloBrackets) {
+    const bracketedNonTerminalNodeA = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNodeA, ruleName);
 
-    if (bracketedNonTerminalChildNodeA !== null) {
-      const nodeA = bracketedNonTerminalChildNodeA,  ///
+    if (bracketedNonTerminalNodeA !== null) {
+      const nodeA = bracketedNonTerminalNodeA,  ///
             nodeB = nonTerminalNodeB, ///
             nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-      bracketedNodeMatches = nodeMatches; ///
+      nonTerminalNodeMatchesModuloBrackets = nodeMatches; ///
     }
   }
 
-  if (!bracketedNodeMatches) {
-    const nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
-          childNodesB = nonTerminalNodeBChildNodes, ///
-          ruleName = METASTATEMENT_RULE_NAME,
-          bracketedNonTerminalChildNodeB = bracketedNonTerminalChildNodeFromChildNodes(childNodesB, ruleName);
+  if (!nonTerminalNodeMatchesModuloBrackets) {
+    const bracketedNonTerminalNodeB = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNodeB, ruleName);
 
-    if (bracketedNonTerminalChildNodeB !== null) {
-      const nodeB = bracketedNonTerminalChildNodeB,  ///
+    if (bracketedNonTerminalNodeB !== null) {
+      const nodeB = bracketedNonTerminalNodeB,  ///
             nodeA = nonTerminalNodeA, ///
-            nodeMatches = matchNode(nodeA, nodeB);
+            nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-      bracketedNodeMatches = nodeMatches; ///
+      nonTerminalNodeMatchesModuloBrackets = nodeMatches; ///
     }
   }
 
-  return bracketedNodeMatches;
+  return nonTerminalNodeMatchesModuloBrackets;
 }
 
-export function bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName) {
-  let bracketedNonTerminalChildNode = null;
 
-  const childNodesLength = childNodes.length;
+// ruleName = METASTATEMENT_RULE_NAME, META_ARGUMENT_RULE_NAME, STATEMENT_RULE_NAME
+
+export function bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName) {
+  let bracketedNonTerminalNode = null;
+
+  const childNodes = nonTerminalNode.getChildNodes(),
+        childNodesLength = childNodes.length;
 
   if (childNodesLength === BRACKETED_CHILD_NODES_LENGTH) {
     const firstChildNode = first(childNodes),
@@ -72,10 +69,11 @@ export function bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName
             secondTerminalNodeContentRightBracket = (secondTerminalNodeContent === RIGHT_BRACKET);
 
       if (nonTerminalNodeRuleNameRuleName && firstTerminalNodeContentLeftBracket && secondTerminalNodeContentRightBracket) {
-        bracketedNonTerminalChildNode = nonTerminalNode;  ///
+        bracketedNonTerminalNode = nonTerminalNode;  ///
       }
     }
   }
 
-  return bracketedNonTerminalChildNode;
+  return bracketedNonTerminalNode;
 }
+

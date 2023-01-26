@@ -2,7 +2,7 @@
 
 import { matcher } from "../matcher";
 import { METASTATEMENT_RULE_NAME } from "../ruleNames";
-import { bracketedNonTerminalChildNodeFromChildNodes } from "../utilities/substitution";
+import { bracketedNonTerminalNodeFromNonTerminalNode } from "../utilities/nonTerminalNode";
 
 export default class MetastatementForMetavariableSubstitution {
   constructor(metavariableName, metastatementNode) {
@@ -28,11 +28,11 @@ export default class MetastatementForMetavariableSubstitution {
     matchesMetastatementNode = nodeMatches;  ///
 
     if (!matchesMetastatementNode) {
-      const nonTerminalNode = metastatementNode,  ///
-            childNodes = nonTerminalNode.getChildNodes(), ///
-            ruleName = METASTATEMENT_RULE_NAME;
+      const ruleName = METASTATEMENT_RULE_NAME,
+            nonTerminalNode = metastatementNode,  ///
+            bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName);
 
-      metastatementNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
+      metastatementNode = bracketedNonTerminalNode; ///
 
       if (metastatementNode !== null) {
         const nodeA = this.metastatementNode,  ///
@@ -49,11 +49,11 @@ export default class MetastatementForMetavariableSubstitution {
   static fromMetavariableNameAndMetastatementNode(metavariableName, metastatementNode) {
     let metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableName, metastatementNode);
 
-    const nonTerminalNode = metastatementNode,  ///
-          childNodes = nonTerminalNode.getChildNodes(),
-          ruleName = METASTATEMENT_RULE_NAME;
+    const ruleName = METASTATEMENT_RULE_NAME,
+          nonTerminalNode = metastatementNode,  ///
+          bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName);
 
-    metastatementNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
+    metastatementNode = bracketedNonTerminalNode; ///
 
     if (metastatementNode !== null) {
       metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableName, metastatementNode);

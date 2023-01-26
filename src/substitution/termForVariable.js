@@ -2,7 +2,7 @@
 
 import { matcher } from "../matcher";
 import { STATEMENT_RULE_NAME } from "../ruleNames";
-import { bracketedNonTerminalChildNodeFromChildNodes } from "../utilities/substitution";
+import { bracketedNonTerminalNodeFromNonTerminalNode } from "../utilities/nonTerminalNode";
 
 export default class TermForVariableSubstitution {
   constructor(variableName, termNode) {
@@ -28,11 +28,11 @@ export default class TermForVariableSubstitution {
     matchesTermNode = nodeMatches;  ///
 
     if (!matchesTermNode) {
-      const nonTerminalNode = termNode,  ///
-            childNodes = nonTerminalNode.getChildNodes(), ///
-            ruleName = STATEMENT_RULE_NAME;
+      const ruleName = STATEMENT_RULE_NAME,
+            nonTerminalNode = termNode,  ///
+            bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName);
 
-      termNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
+      termNode = bracketedNonTerminalNode;  ///
 
       if (termNode !== null) {
         const nodeA = this.termNode,  ///
@@ -49,11 +49,11 @@ export default class TermForVariableSubstitution {
   static fromVariableNameAndTermNode(variableName, termNode) {
     let termForVariableSubstitution = new TermForVariableSubstitution(variableName, termNode);
 
-    const nonTerminalNode = termNode,  ///
-          childNodes = nonTerminalNode.getChildNodes(),
-          ruleName = STATEMENT_RULE_NAME;
+    const ruleName = STATEMENT_RULE_NAME,
+          nonTerminalNode = termNode,  ///
+          bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName);
 
-    termNode = bracketedNonTerminalChildNodeFromChildNodes(childNodes, ruleName);  ///
+    termNode = bracketedNonTerminalNode;  ///
 
     if (termNode !== null) {
       termForVariableSubstitution = new TermForVariableSubstitution(variableName, termNode);
