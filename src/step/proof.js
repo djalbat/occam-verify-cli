@@ -1,7 +1,7 @@
 "use strict";
 
 import { META_ARGUMENT_RULE_NAME } from "../ruleNames";
-import { matchNonTerminalNodeModuloBrackets } from "../utilities/nonTerminalNode";
+import { matchStatementModuloBrackets } from "../utilities/proof";
 
 export default class ProofStep {
   constructor(subproofNode, statementNode) {
@@ -32,12 +32,11 @@ export default class ProofStep {
 
     if (this.statementNode !== null) {
       const ruleName = META_ARGUMENT_RULE_NAME,
-            nonTerminalNodeA = statementNode, ///
-            nonTerminalNodeB = this.statementNode,  ///
-            nonTerminalNodeMatchesModuloBrackets = matchNonTerminalNodeModuloBrackets(nonTerminalNodeA, nonTerminalNodeB, ruleName),
-            statementNodeMatches = nonTerminalNodeMatchesModuloBrackets;  ///
+            statementNodeA = statementNode, ///
+            statementNodeB = this.statementNode,  ///
+            statementMatchesModuloBrackets = matchStatementModuloBrackets(statementNodeA, statementNodeB, ruleName);
 
-      return statementNodeMatches;
+      matchesStatement = statementMatchesModuloBrackets;  ///
     }
 
     return matchesStatement;

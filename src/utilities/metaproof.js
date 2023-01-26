@@ -4,20 +4,20 @@ import { matcher } from "../matcher";
 import { METASTATEMENT_RULE_NAME } from "../ruleNames";
 import { bracketedNonTerminalNodeFromNonTerminalNode } from "../utilities/nonTerminalNode"
 
-export function matchMetastatementNodeModuloBrackets(metastatementNodeA, metastatementNodeB) {
-  let metastatementNodeMatchesModuloBrackets = false;
+export function matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB) {
+  let metastatementMatchesModuloBrackets = false;
 
   const ruleName = METASTATEMENT_RULE_NAME,
         nonTerminalNodeA = metastatementNodeA,  ///
         nonTerminalNodeB = metastatementNodeB;  ///
 
-  if (!metastatementNodeMatchesModuloBrackets) {
+  if (!metastatementMatchesModuloBrackets) {
     const nonTerminalNodeMatches = matcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB);
 
-    metastatementNodeMatchesModuloBrackets = nonTerminalNodeMatches;  ///
+    metastatementMatchesModuloBrackets = nonTerminalNodeMatches;  ///
   }
 
-  if (!metastatementNodeMatchesModuloBrackets) {
+  if (!metastatementMatchesModuloBrackets) {
     const bracketedNonTerminalNodeA = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNodeA, ruleName);
 
     if (bracketedNonTerminalNodeA !== null) {
@@ -25,11 +25,11 @@ export function matchMetastatementNodeModuloBrackets(metastatementNodeA, metasta
             nodeB = nonTerminalNodeB, ///
             nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-      metastatementNodeMatchesModuloBrackets = nodeMatches; ///
+      metastatementMatchesModuloBrackets = nodeMatches; ///
     }
   }
 
-  if (!metastatementNodeMatchesModuloBrackets) {
+  if (!metastatementMatchesModuloBrackets) {
     const bracketedNonTerminalNodeB = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNodeB, ruleName);
 
     if (bracketedNonTerminalNodeB !== null) {
@@ -37,9 +37,9 @@ export function matchMetastatementNodeModuloBrackets(metastatementNodeA, metasta
             nodeA = nonTerminalNodeA, ///
             nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-      metastatementNodeMatchesModuloBrackets = nodeMatches; ///
+      metastatementMatchesModuloBrackets = nodeMatches; ///
     }
   }
 
-  return metastatementNodeMatchesModuloBrackets;
+  return metastatementMatchesModuloBrackets;
 }

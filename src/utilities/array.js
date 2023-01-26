@@ -6,11 +6,7 @@ import permutationsMatrix from "../permutationsMatrix";
 
 import { MAXIMUM_INDEXES_LENGTH, MAXIMUM_PERMUTATION_LENGTH } from "../constants";
 
-export const { second, third, last, push, prune, filter } = arrayUtilities;
-
-export function first(array) {
-  return array[0];
-}
+export const { first, second, third, last, push, prune, filter } = arrayUtilities;
 
 export function someSubArray(array, subArrayLength, callback) {
   let found = false;

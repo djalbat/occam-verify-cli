@@ -2,7 +2,7 @@
 
 import { first, second } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import { matchMetastatementNodeModuloBrackets } from "../utilities/metaproof";
+import { matchMetastatementModuloBrackets } from "../utilities/metaproof";
 
 const metastatementNodesQuery = nodesQuery("/ruleSubproofAssertion/metastatement"),
       ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/ruleSubproofAssertion"),
@@ -36,27 +36,26 @@ export default class MetaproofStep {
     }
 
     if (!matches) {
-      const matchesStatement = this.matchMetastatement(metastatementNode);
+      const matchesMetastatement = this.matchMetastatement(metastatementNode);
 
-      matches = matchesStatement; //
+      matches = matchesMetastatement; ///
     }
 
     return matches;
   }
 
   matchMetastatement(metastatementNode) {
-    let matchesStatement = false;
+    let matchesMetastatement = false;
 
     if (this.metastatementNode !== null) {
-      const nonTerminalNodeA = metastatementNode, ///
-            nonTerminalNodeB = this.metastatementNode,  ///
-            nonTerminalNodeMatchesModuloBrackets = matchMetastatementNodeModuloBrackets(nonTerminalNodeA, nonTerminalNodeB),
-            metastatementNodeMatches = nonTerminalNodeMatchesModuloBrackets;  ///
+      const metastatementNodeA = metastatementNode, ///
+            metastatementNodeB = this.metastatementNode,  ///
+            metastatementMatchesModuloBrackets = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB);
 
-      return metastatementNodeMatches;
+      matchesMetastatement = metastatementMatchesModuloBrackets;  ///
     }
 
-    return matchesStatement;
+    return matchesMetastatement;
   }
 
   matchRuleSubproofAssertion(ruleSubproofAssertionNode) {
@@ -70,17 +69,17 @@ export default class MetaproofStep {
 
       const metastatementNodeA = firstRuleSubproofAssertionMetastatementNode,  ///
             metastatementNodeB = firstQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
-            nonTerminalNodeMatchesModuloBrackets = matchMetastatementNodeModuloBrackets(metastatementNodeA, metastatementNodeB);
+            metastatementMatchesModuloBrackets = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB);
 
-      if (nonTerminalNodeMatchesModuloBrackets) {
+      if (metastatementMatchesModuloBrackets) {
         const secondRuleSubproofAssertionMetastatementNode = second(ruleSubproofAssertionMetastatementNodes),
               secondQualifiedOrUnqualifiedMetastatementMetastatementNode = second(qualifiedOrUnqualifiedMetastatementMetastatementNodes);
 
         const metastatementNodeA = secondRuleSubproofAssertionMetastatementNode, ///
               metastatementNodeB = secondQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
-              nonTerminalNodeMatchesModuloBrackets = matchMetastatementNodeModuloBrackets(metastatementNodeA, metastatementNodeB);
+              metastatementMatchesModuloBrackets = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB);
 
-        matchesRuleSubproofAssertion = nonTerminalNodeMatchesModuloBrackets; ///
+        matchesRuleSubproofAssertion = metastatementMatchesModuloBrackets; ///
       }
     }
 
