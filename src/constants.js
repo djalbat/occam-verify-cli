@@ -1,9 +1,6 @@
 "use strict";
 
 export const COMMA = ',';
-export const STRING = "string";
-export const NUMBER = "number";
-export const BOOLEAN = "boolean";
 export const EMPTY_STRING = "";
 export const LEFT_BRACKET = "(";
 export const RIGHT_BRACKET = ")";
