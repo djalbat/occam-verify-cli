@@ -1,11 +1,7 @@
 "use strict";
 
 import { matcher } from "../matcher";
-import { nodeQuery } from "../utilities/query";
-import { META_ARGUMENT_RULE_NAME } from "../ruleNames";
-import { bracketedNonTerminalNodeFromNonTerminalNode } from "../utilities/nonTerminalNode";
-
-const statementNodeQuery = nodeQuery('/metaArgument/statement!');
+import { bracketedStatementNodeFromStatementNode } from "../utilities/proof";
 
 export default class StatementForMetavariableSubstitution {
   constructor(metavariableName, statementNode) {
@@ -31,21 +27,15 @@ export default class StatementForMetavariableSubstitution {
     matchesStatementNode = nodeMatches;  ///
 
     if (!matchesStatementNode) {
-      const ruleName = META_ARGUMENT_RULE_NAME,
-            nonTerminalNode = statementNode,  ///
-            bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName),
-            metaArgumentNode = bracketedNonTerminalNode;  ///
+      const bracketedStatementNode = bracketedStatementNodeFromStatementNode(statementNode);
 
-      if (metaArgumentNode !== null) {
-        const statementNode = statementNodeQuery(metaArgumentNode);
+      if (bracketedStatementNode !== null) {
+        const statementNode = bracketedStatementNode, ///
+              nodeA = this.statementNode,  ///
+              nodeB = statementNode,
+              nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-        if (statementNode !== null) {
-          const nodeA = this.statementNode,  ///
-                nodeB = statementNode,
-                nodeMatches = matcher.matchNode(nodeA, nodeB);
-
-          matchesStatementNode = nodeMatches;  ///
-        }
+        matchesStatementNode = nodeMatches;  ///
       }
     }
 
@@ -55,14 +45,11 @@ export default class StatementForMetavariableSubstitution {
   static fromMetavariableNameAndStatementNode(metavariableName, statementNode) {
     let statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableName, statementNode);
 
-    const ruleName = META_ARGUMENT_RULE_NAME,
-          nonTerminalNode = statementNode,  ///
-          bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName),
-          metaArgumentNode = bracketedNonTerminalNode;  ///
+    const bracketedStatementNode = bracketedStatementNodeFromStatementNode(statementNode);
 
-    statementNode = statementNodeQuery(metaArgumentNode);
+    if (bracketedStatementNode !== null) {
+      const statementNode = bracketedStatementNode; ///
 
-    if (statementNode !== null) {
       statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableName, statementNode);
     }
 

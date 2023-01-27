@@ -1,8 +1,6 @@
 "use strict";
 
 import { matcher } from "../matcher";
-import { STATEMENT_RULE_NAME } from "../ruleNames";
-import { bracketedNonTerminalNodeFromNonTerminalNode } from "../utilities/nonTerminalNode";
 
 export default class TermForVariableSubstitution {
   constructor(variableName, termNode) {
@@ -27,37 +25,11 @@ export default class TermForVariableSubstitution {
 
     matchesTermNode = nodeMatches;  ///
 
-    if (!matchesTermNode) {
-      const ruleName = STATEMENT_RULE_NAME,
-            nonTerminalNode = termNode,  ///
-            bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName);
-
-      termNode = bracketedNonTerminalNode;  ///
-
-      if (termNode !== null) {
-        const nodeA = this.termNode,  ///
-              nodeB = termNode,
-              nodeMatches = matcher.matchNode(nodeA, nodeB);
-
-        matchesTermNode = nodeMatches;  ///
-      }
-    }
-
     return matchesTermNode;
   }
 
   static fromVariableNameAndTermNode(variableName, termNode) {
-    let termForVariableSubstitution = new TermForVariableSubstitution(variableName, termNode);
-
-    const ruleName = STATEMENT_RULE_NAME,
-          nonTerminalNode = termNode,  ///
-          bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName);
-
-    termNode = bracketedNonTerminalNode;  ///
-
-    if (termNode !== null) {
-      termForVariableSubstitution = new TermForVariableSubstitution(variableName, termNode);
-    }
+    const termForVariableSubstitution = new TermForVariableSubstitution(variableName, termNode);
 
     return termForVariableSubstitution;
   }

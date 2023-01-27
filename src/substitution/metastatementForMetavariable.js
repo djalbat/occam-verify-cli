@@ -1,8 +1,7 @@
 "use strict";
 
 import { matcher } from "../matcher";
-import { METASTATEMENT_RULE_NAME } from "../ruleNames";
-import { bracketedNonTerminalNodeFromNonTerminalNode } from "../utilities/nonTerminalNode";
+import { bracketedMetastatementNodeFromMetastatementNode } from "../utilities/metaproof";
 
 export default class MetastatementForMetavariableSubstitution {
   constructor(metavariableName, metastatementNode) {
@@ -28,14 +27,11 @@ export default class MetastatementForMetavariableSubstitution {
     matchesMetastatementNode = nodeMatches;  ///
 
     if (!matchesMetastatementNode) {
-      const ruleName = METASTATEMENT_RULE_NAME,
-            nonTerminalNode = metastatementNode,  ///
-            bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName);
+      const bracketedNonTerminalNode = bracketedMetastatementNodeFromMetastatementNode(metastatementNode);
 
-      metastatementNode = bracketedNonTerminalNode; ///
-
-      if (metastatementNode !== null) {
-        const nodeA = this.metastatementNode,  ///
+      if (bracketedNonTerminalNode !== null) {
+        const metastatementNode = bracketedNonTerminalNode, ///
+              nodeA = this.metastatementNode,  ///
               nodeB = metastatementNode,
               nodeMatches = matcher.matchNode(nodeA, nodeB);
 
@@ -49,13 +45,11 @@ export default class MetastatementForMetavariableSubstitution {
   static fromMetavariableNameAndMetastatementNode(metavariableName, metastatementNode) {
     let metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableName, metastatementNode);
 
-    const ruleName = METASTATEMENT_RULE_NAME,
-          nonTerminalNode = metastatementNode,  ///
-          bracketedNonTerminalNode = bracketedNonTerminalNodeFromNonTerminalNode(nonTerminalNode, ruleName);
+    const bracketedMetastatementNode = bracketedMetastatementNodeFromMetastatementNode(metastatementNode);
 
-    metastatementNode = bracketedNonTerminalNode; ///
+    if (bracketedMetastatementNode !== null) {
+      const metastatementNode = bracketedMetastatementNode; ///
 
-    if (metastatementNode !== null) {
       metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableName, metastatementNode);
     }
 
