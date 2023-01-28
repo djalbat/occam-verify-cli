@@ -1,16 +1,15 @@
 "use strict";
 
 const { Dependency } = require("occam-file-system"),
-      { Log, verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
+      { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
 const { trimTrailingSlash } = require("../utilities/string"),
       { releaseContextFromDependencyAndDependentNames } = require("../utilities/releaseContext");
 
 const { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
-function verifyAction(argument, logLevel) {
-  const log = Log.fromLogLevel(logLevel),
-        name = trimTrailingSlash(argument), ///
+function verifyAction(argument, log) {
+  const name = trimTrailingSlash(argument), ///
         context = {},
         dependency = Dependency.fromName(name),
         dependentNames = [],
@@ -26,8 +25,6 @@ function verifyAction(argument, logLevel) {
     if (error) {
       log.error(error);
 
-      log.toConsole();
-
       return;
     }
 
@@ -40,8 +37,6 @@ function verifyAction(argument, logLevel) {
       if (error) {
         log.error(error);
 
-        log.toConsole();
-
         return;
       }
 
@@ -49,8 +44,6 @@ function verifyAction(argument, logLevel) {
       delete context.releaseContextFromDependencyAndDependentNames;
 
       verifyRelease(releaseName, releaseContextMap);
-
-      log.toConsole();
     });
   });
 }
