@@ -16,13 +16,11 @@ const labelNodesQuery = nodesQuery("/axiom/label"),
 export default function verifyAxiom(axiomNode, fileContext) {
   let axiomVerified = false;
 
-  fileContext.begin(axiomNode);
-
   const labelNodes = labelNodesQuery(axiomNode),
         labelsString = fileContext.nodesAsString(labelNodes),
         proofContext = ProofContext.fromFileContext(fileContext);
 
-  fileContext.debug(`Verifying the '${labelsString}' axiom...`);
+  fileContext.debug(axiomNode, `Verifying the '${labelsString}' axiom...`);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
@@ -56,12 +54,8 @@ export default function verifyAxiom(axiomNode, fileContext) {
   }
 
   if (axiomVerified) {
-    fileContext.info(`Verified the '${labelsString}' axiom.`);
+    fileContext.info(axiomNode, `Verified the '${labelsString}' axiom.`);
   }
-
-  axiomVerified ?
-    fileContext.complete(axiomNode) :
-      fileContext.complete(axiomNode);
 
   return axiomVerified;
 }

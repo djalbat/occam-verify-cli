@@ -8,17 +8,12 @@ import { typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities
 export default function verifyVariable(variableNode, typeNode, fileContext) {
   let variableVerified = false;
 
-  fileContext.begin(variableNode);
-
-  const variableString = fileContext.nodeAsString(variableNode);
-
-  fileContext.debug(`Verifying the '${variableString}' variable...`);
-
   const variableName = variableNameFromVariableNode(variableNode),
+        variableString = fileContext.nodeAsString(variableNode),
         variablePresent = fileContext.isVariablePresentByVariableName(variableName);
 
   if (variablePresent) {
-    fileContext.error(`The variable '${variableName}' is already present.`);
+    fileContext.error(variableNode, `The variable '${variableName}' is already present.`);
   } else {
     let variable;
 
@@ -33,7 +28,7 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
       const type = fileContext.findTypeByTypeName(typeName);
 
       if (type === null) {
-        fileContext.error(`The '${variableName}' variable's '${typeName}' type is missing.`);
+        fileContext.error(variableNode, `The '${variableName}' variable's '${typeName}' type is missing.`);
       } else {
         const name = variableName;  ///
 
@@ -49,12 +44,8 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
   }
 
   if (variableVerified) {
-    fileContext.info(`Verified the '${variableString}' variable.`);
+    fileContext.info(variableNode, `Verified the '${variableString}' variable.`);
   }
-
-  variableVerified ?
-    fileContext.complete(variableNode) :
-      fileContext.halt(variableNode);
 
   return variableVerified;
 }

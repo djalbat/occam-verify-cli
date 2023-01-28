@@ -2,7 +2,7 @@
 
 import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { statementNodeFromStatementString } from "./utilities/string";
+import { statementNodeFromStatementString } from "./utilities/node";
 import { suppositionTermForVariableMatcher } from "./matcher/termForVariable/supposition";
 
 const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
@@ -71,10 +71,10 @@ export default class Supposition {
     return json;
   }
 
-  static fromJSON(json, releaseContext) {
+  static fromJSON(json, lexer, parser) {
     const { statement } = json,
           statementString = statement,  ///
-          statementNode = statementNodeFromStatementString(statementString, releaseContext),
+          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
           supposition = new Supposition(statementNode);
 
     return supposition;

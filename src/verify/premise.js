@@ -12,11 +12,9 @@ const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatemen
 export default function verifyPremise(premiseNode, premises, metaproofContext) {
   let premiseVerified;
 
-  metaproofContext.begin(premiseNode);
-
   const premiseString = metaproofContext.nodeAsString(premiseNode);
 
-  metaproofContext.debug(`Verifying the '${premiseString}' premise...`);
+  metaproofContext.debug(premiseNode, `Verifying the '${premiseString}' premise...`);
 
   const derived = false,
         assertions = [],
@@ -34,10 +32,6 @@ export default function verifyPremise(premiseNode, premises, metaproofContext) {
 
     premiseVerified = true;
   }
-
-  premiseVerified ?
-    metaproofContext.complete(premiseNode) :
-      metaproofContext.halt(premiseNode);
 
   return premiseVerified;
 }

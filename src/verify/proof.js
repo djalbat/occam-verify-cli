@@ -10,8 +10,6 @@ const derivationNodeQuery = nodeQuery("/proof/derivation!");
 export default function verifyProof(proofNode, conclusion, proofContext) {
   let proofVerified = false;
 
-  proofContext.begin(proofNode);
-
   const derivationNode = derivationNodeQuery(proofNode),
         derivationVerified = verifyDerivation(derivationNode, proofContext);
 
@@ -26,10 +24,6 @@ export default function verifyProof(proofNode, conclusion, proofContext) {
 
     proofVerified = nodeMatches;  ///
   }
-
-  proofVerified ?
-    proofContext.complete(proofNode) :
-      proofContext.complete(proofNode);
 
   return proofVerified;
 }

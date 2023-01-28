@@ -1,7 +1,7 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { metastatementNodeFromMetastatementString } from "./utilities/string";
+import { metastatementNodeFromMetastatementString } from "./utilities/node";
 import { conclusionStatementForMetavariableMatcher } from "./matcher/statementForMetavariable/conclusion";
 import { conclusionMetastatementForMetavariableMatcher } from "./matcher/metastatementForMetavariable/conclusion";
 
@@ -42,10 +42,10 @@ export default class Conclusion {
     return json;
   }
 
-  static fromJSON(json, releaseContext) {
+  static fromJSON(json, lexer, parser) {
     const { metastatement } = json,
           metastatementString = metastatement,  ///
-          metastatementNode = metastatementNodeFromMetastatementString(metastatementString, releaseContext),
+          metastatementNode = metastatementNodeFromMetastatementString(metastatementString, lexer, parser),
           conclusion = new Conclusion(metastatementNode);
 
     return conclusion;

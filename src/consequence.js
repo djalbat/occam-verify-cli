@@ -1,7 +1,7 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { statementNodeFromStatementString } from "./utilities/string";
+import { statementNodeFromStatementString } from "./utilities/node";
 import { consequenceTermForVariableMatcher } from "./matcher/termForVariable/consequence";
 
 export default class Consequence {
@@ -32,10 +32,10 @@ export default class Consequence {
     return json;
   }
 
-  static fromJSON(json, releaseContext) {
+  static fromJSON(json, lexer, parser) {
     const { statement } = json,
           statementString = statement,  ///
-          statementNode = statementNodeFromStatementString(statementString, releaseContext),
+          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
           consequence = new Consequence(statementNode);
 
     return consequence;

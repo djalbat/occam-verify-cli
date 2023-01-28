@@ -13,11 +13,9 @@ const termNodeQuery = nodeQuery("/argument/term!"),
 export default function verifyTerm(termNode, types, context) {
   let termVerified = false;
 
-  context.begin(termNode);
-
   const termString = context.nodeAsString(termNode);
 
-  context.debug(`Verifying the '${termString}' term...`);
+  context.debug(termNode, `Verifying the '${termString}' term...`);
 
   if (!termVerified) {
     const variables = [],
@@ -43,20 +41,14 @@ export default function verifyTerm(termNode, types, context) {
   }
 
   if (termVerified) {
-    context.info(`Verified the '${termString}' term.`);
+    context.info(termNode, `Verified the '${termString}' term.`);
   }
-
-  termVerified ?
-    context.complete(termNode) :
-      context.halt(termNode);
 
   return termVerified;
 }
 
 export function verifyTermAsVariable(termNode, variables, context) {
   let termVerifiedAsVariable = false;
-
-  context.begin(termNode);
 
   const variableNode = variableNodeQuery(termNode);
 
@@ -73,17 +65,11 @@ export function verifyTermAsVariable(termNode, variables, context) {
     }
   }
 
-  termVerifiedAsVariable ?
-    context.complete(termNode) :
-      context.halt(termNode);
-
   return termVerifiedAsVariable;
 }
 
 export function verifyTermAgainstConstructors(termNode, types, context) {
   let termVerifiedAgainstConstructors = false;
-
-  context.begin(termNode);
 
   const constructors = context.getConstructors(),
         constructor = constructors.find((constructor) => {
@@ -101,10 +87,6 @@ export function verifyTermAgainstConstructors(termNode, types, context) {
 
     termVerifiedAgainstConstructors = true;
   }
-
-  termVerifiedAgainstConstructors ?
-    context.complete(termNode) :
-      context.halt(termNode);
 
   return termVerifiedAgainstConstructors;
 }
@@ -219,7 +201,7 @@ function verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
   if (termNode === null) {
     const argumentString = context.nodeAsString(argumentNode);
 
-    context.error(`The ${argumentString} argument should be a term, not a type`);
+    context.error(argumentNode, `The ${argumentString} argument should be a term, not a type`);
   } else {
     const types = [],
           termVerified = verifyTerm(termNode, types, context);

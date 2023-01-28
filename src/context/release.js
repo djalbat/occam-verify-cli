@@ -1,27 +1,24 @@
 "use strict";
 
+import { levels } from "necessary";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import { combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
-      { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
+      { florenceParserFromCombinedCustomGrammar } = parsersUtilities,
+      { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL } = levels;
 
 export default class ReleaseContext {
-  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts) {
-    this.log = log;
+  constructor(name, entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts) {
     this.name = name;
     this.entries = entries;
-    this.callbacks = callbacks;
+    this.messages = messages;
+    this.lexer = lexer;
+    this.parser = parser;
     this.verified = verified;
     this.customGrammar = customGrammar;
-    this.florenceLexer = florenceLexer;
-    this.florenceParser = florenceParser;
     this.dependencyReleaseContexts = dependencyReleaseContexts;
-  }
-
-  getLog() {
-    return this.log;
   }
 
   getName() {
@@ -32,8 +29,16 @@ export default class ReleaseContext {
     return this.entries;
   }
 
-  getCallbacks() {
-    return this.callbacks;
+  getMessages() {
+    return messages;
+  }
+
+  getLexer() {
+    return this.lexer;
+  }
+
+  getParser() {
+    return this.parser;
   }
 
   isVerified() {
@@ -42,14 +47,6 @@ export default class ReleaseContext {
 
   getCustomGrammar() {
     return this.customGrammar;
-  }
-
-  getFlorenceLexer() {
-    return this.florenceLexer;
-  }
-
-  getFlorenceParser() {
-    return this.florenceParser;
   }
 
   getDependencyReleaseContexts() {
@@ -96,27 +93,51 @@ export default class ReleaseContext {
     this.verified = verified;
   }
 
-  tokenise(content) { return this.florenceLexer.tokenise(content); }
+  tokenise(content) { return this.lexer.tokenise(content); }
 
-  parse(tokens) { return this.florenceParser.parse(tokens); }
+  parse(tokens) { return this.parser.parse(tokens); }
 
-  trace(message) { this.log.trace(message); }
+  trace(message) {
+    const level = TRACE_LEVEL;
 
-  debug(message) { this.log.debug(message); }
+    this.log(level, message);
+  }
 
-  info(message) { this.log.info(message); }
+  debug(message) {
+    const level = DEBUG_LEVEL;
 
-  warning(message) { this.log.warning(message); }
+    this.log(level, message);
+  }
 
-  error(message) { this.log.error(message); }
+  info(message) {
+    const level = INFO_LEVEL;
 
-  fatal(message) { this.log.fatal(message); }
+    this.log(level, message);
+  }
 
-  halt(filePath, leastLineIndex, greatestLineIndex) { this.callbacks.halt(filePath, leastLineIndex, greatestLineIndex); }
+  warning(message) {
+    const level = WARNING_LEVEL;
 
-  begin(filePath, leastLineIndex, greatestLineIndex) { this.callbacks.begin(filePath, leastLineIndex, greatestLineIndex); }
+    this.log(level, message);
+  }
 
-  complete(filePath, leastLineIndex, greatestLineIndex) { this.callbacks.complete(filePath, leastLineIndex, greatestLineIndex); }
+  error(message) {
+    const level = ERROR_LEVEL;
+
+    this.log(level, message);
+  }
+
+  fatal(message) {
+    const level = FATAL_LEVEL;
+
+    this.log(level, message);
+  }
+
+  log(level, message, filePath = null, leastLineIndex = null, greatestLineIndex = null) {
+    message = formatMessage(message, filePath, leastLineIndex, greatestLineIndex);
+
+    this.messages.addMessage(level, message);
+  }
 
   initialise(dependencyReleaseContexts) {
     const releaseContext = this,  ///
@@ -124,12 +145,28 @@ export default class ReleaseContext {
             releaseContext,
             ...dependencyReleaseContexts
           ],
-          combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts);
+          combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
+          florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
+          florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
-    this.florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
+    this.lexer = florenceLexer; ///
 
-    this.florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
+    this.parser = florenceParser; ///
 
     this.dependencyReleaseContexts = dependencyReleaseContexts;
   }
+}
+
+function formatMessage(message, filePath, leastLineIndex, greatestLineIndex) {
+  if (filePath === null) {
+    message = `${message}`;
+  } else if (leastLineIndex === greatestLineIndex) {
+    const lineIndex = leastLineIndex; ///
+
+    message = `${filePath} (${lineIndex}) - ${message}`;
+  } else {
+    message = `${filePath} (${leastLineIndex}-${greatestLineIndex}) - ${message}`;
+  }
+
+  return message;
 }

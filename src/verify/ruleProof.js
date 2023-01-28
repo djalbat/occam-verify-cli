@@ -10,8 +10,6 @@ const ruleDerivationNodeQuery = nodeQuery("/ruleProof/ruleDerivation!");
 export default function verifyRuleProof(ruleProofNode, conclusion, metaproofContext) {
   let ruleProofVerified = false;
 
-  metaproofContext.begin(ruleProofNode);
-
   const ruleDerivationNode = ruleDerivationNodeQuery(ruleProofNode),
         ruleDerivationVerified = verifyRuleDerivation(ruleDerivationNode, metaproofContext);
 
@@ -26,10 +24,6 @@ export default function verifyRuleProof(ruleProofNode, conclusion, metaproofCont
 
     ruleProofVerified = nodeMatches;  ///
   }
-
-  ruleProofVerified ?
-    metaproofContext.complete(ruleProofNode) :
-      metaproofContext.complete(ruleProofNode);
 
   return ruleProofVerified;
 }

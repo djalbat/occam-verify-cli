@@ -4,7 +4,7 @@ import Type from "./type";
 
 import { nodeAsString } from "./utilities/string";
 import { CONSTRUCTOR_KIND } from "./kinds";
-import { termNodeFromTermString } from "./utilities/string";
+import { termNodeFromTermString } from "./utilities/node";
 
 export default class Constructor {
   constructor(termNode, type) {
@@ -54,10 +54,10 @@ export default class Constructor {
     return json;
   }
 
-  static fromJSON(json, releaseContext) {
+  static fromJSON(json, lexer, parser) {
     const { term } = json,
           termString = term,  ///
-          termNode = termNodeFromTermString(termString, releaseContext);
+          termNode = termNodeFromTermString(termString, lexer, parser);
 
     let { type } = json;
 
@@ -66,7 +66,7 @@ export default class Constructor {
 
       json = typeJSON;  ///
 
-      type = Type.fromJSON(json, releaseContext);
+      type = Type.fromJSON(json, lexer, parser);
 
       const typeName = type.getName();
 

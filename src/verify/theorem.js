@@ -18,13 +18,11 @@ const proofNodeQuery = nodeQuery("/theorem/proof!"),
 export default function verifyTheorem(theoremNode, fileContext) {
   let theoremVerified = false;
 
-  fileContext.begin(theoremNode);
-
   const labelNodes = labelNodesQuery(theoremNode),
         labelsString = fileContext.nodesAsString(labelNodes),
         proofContext = ProofContext.fromFileContext(fileContext);
 
-  fileContext.debug(`Verifying the '${labelsString}' theorem...`);
+  fileContext.debug(theoremNode, `Verifying the '${labelsString}' theorem...`);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
@@ -63,12 +61,8 @@ export default function verifyTheorem(theoremNode, fileContext) {
   }
 
   if (theoremVerified) {
-    fileContext.info(`Verified the '${labelsString}' theorem.`);
+    fileContext.info(theoremNode, `Verified the '${labelsString}' theorem.`);
   }
-
-  theoremVerified ?
-    fileContext.complete(theoremNode) :
-      fileContext.complete(theoremNode);
 
   return theoremVerified;
 }

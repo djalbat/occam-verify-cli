@@ -11,11 +11,9 @@ const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
 export default function verifyConsequence(consequenceNode, consequences, proofContext) {
   let consequenceVerified = false;
 
-  proofContext.begin(consequenceNode);
-
   const consequenceString = proofContext.nodeAsString(consequenceNode);
 
-  proofContext.debug(`Verifying the '${consequenceString}' consequence...`);
+  proofContext.debug(consequenceNode, `Verifying the '${consequenceString}' consequence...`);
 
   const derived = false,
         assertions = [],
@@ -30,10 +28,6 @@ export default function verifyConsequence(consequenceNode, consequences, proofCo
 
     consequenceVerified = true;
   }
-
-  consequenceVerified ?
-    proofContext.complete(consequenceNode) :
-      proofContext.halt(consequenceNode);
 
   return consequenceVerified;
 }

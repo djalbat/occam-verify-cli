@@ -9,14 +9,12 @@ const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 export default function verifyUnqualifiedStatement(unqualifiedStatementNode, assertions, derived, proofContext) {
   let unqualifiedStatementVerified = false;
 
-  proofContext.begin(unqualifiedStatementNode);
-
   const statementNode = statementNodeQuery(unqualifiedStatementNode);
 
   if (statementNode !== null) {
     const statementString = proofContext.nodeAsString(statementNode);
 
-    proofContext.debug(`Verifying the '${statementString}' unqualified statement...`);
+    proofContext.debug(unqualifiedStatementNode, `Verifying the '${statementString}' unqualified statement...`);
 
     let statementMatches = true;
 
@@ -31,10 +29,6 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
       unqualifiedStatementVerified = statementVerified;  ///
     }
   }
-
-  unqualifiedStatementVerified ?
-    proofContext.complete(unqualifiedStatementNode) :
-      proofContext.halt(unqualifiedStatementNode);
 
   return unqualifiedStatementVerified;
 }

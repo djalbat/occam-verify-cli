@@ -9,14 +9,12 @@ const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatemen
 export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assertions, derived, metaproofContext) {
   let unqualifiedMetastatementVerified = false;
 
-  metaproofContext.begin(unqualifiedMetastatementNode);
-
   const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
   if (metastatementNode !== null) {
     const metastatementString = metaproofContext.nodeAsString(metastatementNode);
 
-    metaproofContext.debug(`Verifying the '${metastatementString}' unqualified metastatement...`);
+    metaproofContext.debug(unqualifiedMetastatementNode, `Verifying the '${metastatementString}' unqualified metastatement...`);
 
     let metastatementMatches = true;
 
@@ -30,10 +28,6 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
       unqualifiedMetastatementVerified = metastatementVerified; ///
     }
   }
-
-  unqualifiedMetastatementVerified ?
-    metaproofContext.complete(unqualifiedMetastatementNode) :
-      metaproofContext.halt(unqualifiedMetastatementNode);
 
   return unqualifiedMetastatementVerified;
 }

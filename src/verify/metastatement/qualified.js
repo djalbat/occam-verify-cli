@@ -10,14 +10,12 @@ const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/ref
 export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, assertions, derived, metaproofContext) {
   let qualifiedMetastatementVerified = false;
 
-  metaproofContext.begin(qualifiedMetastatementNode);
-
   const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
 
   if (metastatementNode !== null) {
     const metastatementString = metaproofContext.nodeAsString(metastatementNode);
 
-    metaproofContext.debug(`Verifying the '${metastatementString}' qualified metastatement...`);
+    metaproofContext.debug(qualifiedMetastatementNode, `Verifying the '${metastatementString}' qualified metastatement...`);
 
     let ruleMatchesMetastatement = true;
 
@@ -38,10 +36,6 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
       qualifiedMetastatementVerified = metastatementVerified; ///
     }
   }
-
-  qualifiedMetastatementVerified ?
-    metaproofContext.complete(qualifiedMetastatementNode) :
-      metaproofContext.halt(qualifiedMetastatementNode);
 
   return qualifiedMetastatementVerified;
 }

@@ -2,7 +2,7 @@
 
 import { nodeAsString } from "./utilities/string";
 import { labelNameFromLabelNode } from "./utilities/query";
-import { labelNodeFromLabelString } from "./utilities/string";
+import { labelNodeFromLabelString } from "./utilities/node";
 
 export default class Label {
   constructor(node) {
@@ -34,9 +34,9 @@ export default class Label {
     return json;
   }
 
-  static fromJSON(json, releaseContext) {
+  static fromJSON(json, lexer, parser) {
     const labelString = json, ///
-          labelNode = labelNodeFromLabelString(labelString, releaseContext),
+          labelNode = labelNodeFromLabelString(labelString, lexer, parser),
           node = labelNode, ///
           label = new Label(node);
 

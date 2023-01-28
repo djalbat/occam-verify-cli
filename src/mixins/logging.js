@@ -1,16 +1,16 @@
 "use strict";
 
-function trace(message) { this.context.trace(message); }
+function trace(node, message) { this.context.trace(node, message); }
 
-function debug(message) { this.context.debug(message); }
+function debug(node, message) { this.context.debug(node, message); }
 
-function info(message) { this.context.info(message); }
+function info(node, message) { this.context.info(node, message); }
 
-function warning(message) { this.context.warning(message); }
+function warning(node, message) { this.context.warning(node, message); }
 
-function error(message) { this.context.error(message); }
+function error(node, message) { this.context.error(node, message); }
 
-function fatal(message) { this.context.fatal(message); }
+function fatal(node, message) { this.context.fatal(node, message); }
 
 const loggingMixins = {
   trace,

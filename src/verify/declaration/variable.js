@@ -10,17 +10,11 @@ const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
 export default function verifyVariableDeclaration(variableDeclarationNode, fileContext) {
   let variableDeclarationVerified;
 
-  fileContext.begin(variableDeclarationNode);
-
   const typeNode = typeNodeQuery(variableDeclarationNode),
         variableNode = variableNodeQuery(variableDeclarationNode),
         variableVVerified = verifyVariable(variableNode, typeNode, fileContext);
 
   variableDeclarationVerified = variableVVerified;  ///
-
-  variableDeclarationVerified ?
-    fileContext.complete(variableDeclarationNode) :
-      fileContext.halt(variableDeclarationNode);
 
   return variableDeclarationVerified;
 }

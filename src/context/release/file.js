@@ -2,8 +2,6 @@
 
 import ReleaseContext from "../../context/release";
 
-import { rewriteNodes } from "occam-grammar-utilities";
-
 import Rule from "../../rule";
 import Type from "../../type";
 import Axiom from "../../axiom";
@@ -18,8 +16,8 @@ import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
 import { RULE_KIND, TYPE_KIND, AXIOM_KIND, LEMMA_KIND, THEOREM_KIND, CONJECTURE_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
 
 export default class FileReleaseContext extends ReleaseContext {
-  constructor(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors) {
-    super(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts);
+  constructor(name,  entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, contextJSON) {
+    super(name,  entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts);
 
     this.types = types;
     this.rules = rules;
@@ -29,7 +27,6 @@ export default class FileReleaseContext extends ReleaseContext {
     this.conjectures = conjectures;
     this.combinators = combinators;
     this.constructors = constructors;
-
     this.contextJSON = contextJSON;
   }
 
@@ -213,29 +210,17 @@ export default class FileReleaseContext extends ReleaseContext {
     return constructors;
   }
 
-  nodeFromContentAndRuleName(content, ruleName) {
-    const ruleMap = this.florenceParser.getRuleMap(),
-          rule = ruleMap[ruleName],
-          tokens = this.florenceLexer.tokenise(content),
-          node = this.florenceParser.parse(tokens, rule);
-
-    if (node !== null) {
-      rewriteNodes(node);
-    }
-
-    return node;
-  }
-
   fromJSON() {
     const jsonArray = this.contextJSON,
-          releaseContext = this;  ///
+          lexer = this.getLexer(),
+          parser = this.getParser();
 
     jsonArray.forEach((json) => {
       const { kind } = json;
 
       switch (kind) {
         case TYPE_KIND: {
-          const type = Type.fromJSON(json, releaseContext);
+          const type = Type.fromJSON(json, lexer, parser);
 
           this.types.push(type);
 
@@ -243,7 +228,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case RULE_KIND: {
-          const rule = Rule.fromJSON(json, releaseContext);
+          const rule = Rule.fromJSON(json, lexer, parser);
 
           this.rules.push(rule);
 
@@ -251,7 +236,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case AXIOM_KIND: {
-          const axiom = Axiom.fromJSON(json, releaseContext);
+          const axiom = Axiom.fromJSON(json, lexer, parser);
 
           this.axioms.push(axiom);
 
@@ -259,7 +244,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case LEMMA_KIND: {
-          const lemma = Lemma.fromJSON(json, releaseContext);
+          const lemma = Lemma.fromJSON(json, lexer, parser);
 
           this.lemmas.push(lemma);
 
@@ -267,7 +252,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case THEOREM_KIND: {
-          const theorem = Theorem.fromJSON(json, releaseContext);
+          const theorem = Theorem.fromJSON(json, lexer, parser);
 
           this.theorems.push(theorem);
 
@@ -275,7 +260,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case CONJECTURE_KIND: {
-          const conjecture = Conjecture.fromJSON(json, releaseContext);
+          const conjecture = Conjecture.fromJSON(json, lexer, parser);
 
           this.conjectures.push(conjecture);
 
@@ -283,7 +268,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case COMBINATOR_KIND: {
-          const combinator = Combinator.fromJSON(json, releaseContext);
+          const combinator = Combinator.fromJSON(json, lexer, parser);
 
           this.combinators.push(combinator);
 
@@ -291,7 +276,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case CONSTRUCTOR_KIND: {
-          const constructor = Constructor.fromJSON(json, releaseContext);
+          const constructor = Constructor.fromJSON(json, lexer, parser);
 
           this.constructors.push(constructor);
 
@@ -307,11 +292,11 @@ export default class FileReleaseContext extends ReleaseContext {
     this.fromJSON();
   }
 
-  static fromLogNameEntriesCallbacksAndContextJSON(log, name, entries, callbacks, contextJSON) {
-    const verified = true,
+  static fromNameEntriesMessagesAndContextJSON(name, entries, messages, contextJSON) {
+    const lexer = null,
+          parser = null,
+          verified = true,
           customGrammar = customGrammarFromNameAndEntries(name, entries),
-          florenceLexer = null,
-          florenceParser = null,
           dependencyReleaseContexts = null,
           types = [],
           rules = [],
@@ -321,7 +306,7 @@ export default class FileReleaseContext extends ReleaseContext {
           conjectures = [],
           combinators = [],
           constructors = [],
-          releaseContext = new FileReleaseContext(log, name, entries, callbacks, verified, customGrammar, florenceLexer, florenceParser, dependencyReleaseContexts, contextJSON, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors);
+          releaseContext = new FileReleaseContext(name,  entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, contextJSON);
 
     return releaseContext;
   }

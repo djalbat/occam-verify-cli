@@ -4,8 +4,6 @@ const { FileReleaseContext, DirectoryReleaseContext } = require("../../lib/index
       { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
       { pathUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
 
-const callbacks = require("../callbacks");
-
 const { loadProject } = occamFileSystemUtilities,
       { concatenatePaths } = pathUtilities,
       { readFile, isEntryFile, checkEntryExists } = necessaryFileSystemUtilities;
@@ -53,7 +51,7 @@ module.exports = {
 function fileReleaseContextFromDependencyAndProjectsDirectoryPath(dependency, projectsDirectoryPath, context) {
   let releaseContext;
 
-  const { log } = context,
+  const { messages } = context,
         dependencyName = dependency.getName(),
         filePath = concatenatePaths(projectsDirectoryPath, dependencyName),
         content = readFile(filePath),
@@ -71,7 +69,7 @@ function fileReleaseContextFromDependencyAndProjectsDirectoryPath(dependency, pr
   entries = Entries.fromJSON(json);
 
   const name = dependencyName, ///
-        fileReleaseContext = FileReleaseContext.fromLogNameEntriesCallbacksAndContextJSON(log, name, entries, callbacks, contextJSON);
+        fileReleaseContext = FileReleaseContext.fromNameEntriesMessagesAndContextJSON(name, entries, messages, contextJSON);
 
   releaseContext = fileReleaseContext;  ///
 
@@ -86,10 +84,10 @@ function directoryReleaseContextFromDependencyAndProjectsDirectoryPath(dependenc
         project = loadProject(projectName, projectsDirectoryPath);
 
   if (project !== null) {
-    const { log } = context,
+    const { messages } = context,
           name = project.getName(),
           entries = project.getEntries(),
-          directoryReleaseContext = DirectoryReleaseContext.fromLogNameEntriesAndCallbacks(log, name, entries, callbacks);
+          directoryReleaseContext = DirectoryReleaseContext.fromNameEntriesAndMessages(name, entries, messages);
 
     releaseContext = directoryReleaseContext; ///
   }

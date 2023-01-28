@@ -19,15 +19,13 @@ const proofNodeQuery = nodeQuery("/lemma/proof!"),
 export default function verifyLemma(lemmaNode, fileContext) {
   let lemmaVerified = false;
 
-  fileContext.begin(lemmaNode);
-
   const labelNodes = labelNodesQuery(lemmaNode),
         labelsString = fileContext.nodesAsString(labelNodes),
         proofContext = ProofContext.fromFileContext(fileContext);
 
   (labelsString === EMPTY_STRING) ?
-    fileContext.debug(`Verifying a lemma...`) :
-      fileContext.debug(`Verifying the '${labelsString}' lemma...`);
+    fileContext.debug(lemmaNode, `Verifying a lemma...`) :
+      fileContext.debug(lemmaNode, `Verifying the '${labelsString}' lemma...`);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
@@ -67,13 +65,9 @@ export default function verifyLemma(lemmaNode, fileContext) {
 
   if (lemmaVerified) {
     (labelsString === EMPTY_STRING) ?
-      fileContext.info(`Verified the lemma.`) :
-        fileContext.info(`Verified the '${labelsString}' lemma.`);
+      fileContext.info(lemmaNode, `Verified the lemma.`) :
+        fileContext.info(lemmaNode, `Verified the '${labelsString}' lemma.`);
   }
-
-  lemmaVerified ?
-    fileContext.complete(lemmaNode) :
-      fileContext.complete(lemmaNode);
 
   return lemmaVerified;
 }

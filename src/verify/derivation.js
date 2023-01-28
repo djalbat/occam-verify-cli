@@ -17,8 +17,6 @@ const childNodesQuery = nodesQuery("/derivation|subDerivation/*"),
 export default function verifyDerivation(derivationNode, proofContext) {
   let derivationVerified;
 
-  proofContext.begin(derivationNode);
-
   const childNodes = childNodesQuery(derivationNode);
 
   derivationVerified = childNodes.every((childNode) => {
@@ -29,17 +27,11 @@ export default function verifyDerivation(derivationNode, proofContext) {
     }
   });
 
-  derivationVerified ?
-    proofContext.complete(derivationNode) :
-      proofContext.halt(derivationNode);
-
   return derivationVerified;
 }
 
 function verifySubDerivation(subDerivationNode, proofContext) {
   let subDerivationVerified;
-
-  proofContext.begin(subDerivationNode);
 
   const childNodes = childNodesQuery(subDerivationNode);
 
@@ -50,10 +42,6 @@ function verifySubDerivation(subDerivationNode, proofContext) {
       return true;
     }
   });
-
-  subDerivationVerified ?
-    proofContext.complete(subDerivationNode) :
-      proofContext.halt(subDerivationNode);
 
   return subDerivationVerified;
 }

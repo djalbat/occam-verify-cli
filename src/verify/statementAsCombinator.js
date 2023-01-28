@@ -10,11 +10,9 @@ import { TYPE_RULE_NAME, TERM_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleName
 export default function verifyStatementAsCombinator(statementNode, fileContext) {
   let statementVerifiedAsCombinator = false;
 
-  fileContext.begin(statementNode);
-
   const statementString = fileContext.nodeAsString(statementNode);
 
-  fileContext.debug(`Verifying the '${statementString}' combinator....`);
+  fileContext.debug(statementNode, `Verifying the '${statementString}' combinator....`);
 
   const nonTerminalNode = statementNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
@@ -29,12 +27,8 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
   }
 
   if (statementVerifiedAsCombinator) {
-    fileContext.info(`Verified the '${statementString}' combinator.`);
+    fileContext.info(statementNode, `Verified the '${statementString}' combinator.`);
   }
-
-  statementVerifiedAsCombinator ?
-    fileContext.complete(statementNode) :
-      fileContext.halt(statementNode);
 
   return statementVerifiedAsCombinator;
 }
@@ -131,7 +125,7 @@ function verifyTypeNode(typeNode, fileContext) {
         typePresent = fileContext.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    fileContext.error(`The type '${typeName}' is missing.`);
+    fileContext.error(typeNode, `The type '${typeName}' is missing.`);
   } else {
     typeNodeVerified = true;
   }

@@ -12,11 +12,9 @@ const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
 export default function verifySupposition(suppositionNode, suppositions, proofContext) {
   let suppositionVerified;
 
-  proofContext.begin(suppositionNode);
-
   const suppositionString = proofContext.nodeAsString(suppositionNode);
 
-  proofContext.debug(`Verifying the '${suppositionString}' supposition...`);
+  proofContext.debug(suppositionNode, `Verifying the '${suppositionString}' supposition...`);
 
   const derived = false,
         assertions = [],
@@ -38,10 +36,6 @@ export default function verifySupposition(suppositionNode, suppositions, proofCo
 
     suppositionVerified = true;
   }
-
-  suppositionVerified ?
-    proofContext.complete(suppositionNode) :
-      proofContext.halt(suppositionNode);
 
   return suppositionVerified;
 }

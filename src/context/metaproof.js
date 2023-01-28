@@ -2,7 +2,6 @@
 
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
-import callbacksMixins from "../mixins/callbacks";
 
 import { push, last } from "../utilities/array";
 
@@ -127,6 +126,5 @@ class MetaproofContext {
 
 Object.assign(MetaproofContext.prototype, fileMixins);
 Object.assign(MetaproofContext.prototype, loggingMixins);
-Object.assign(MetaproofContext.prototype, callbacksMixins);
 
 export default MetaproofContext;

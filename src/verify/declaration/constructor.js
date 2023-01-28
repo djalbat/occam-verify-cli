@@ -10,17 +10,11 @@ const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
 export default function verifyConstructorDeclaration(constructorDeclarationNode, fileContext) {
   let constructorDeclarationVerified;
 
-  fileContext.begin(constructorDeclarationNode);
-
   const termNode = termNodeQuery(constructorDeclarationNode),
         typeNode = typeNodeQuery(constructorDeclarationNode),
         termVerifiedAsConstructor = verifyTermAsConstructor(termNode, typeNode, fileContext);
 
   constructorDeclarationVerified = termVerifiedAsConstructor; ///
-
-  constructorDeclarationVerified ?
-    fileContext.complete(constructorDeclarationNode) :
-      fileContext.halt(constructorDeclarationNode);
 
   return constructorDeclarationVerified;
 }

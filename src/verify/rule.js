@@ -18,13 +18,11 @@ const labelNodesQuery = nodesQuery("/rule/label"),
 export default function verifyRule(ruleNode, fileContext) {
   let ruleVerified = false;
 
-  fileContext.begin(ruleNode);
-
   const labelNodes = labelNodesQuery(ruleNode),
         labelsString = fileContext.nodesAsString(labelNodes),
         metaProofContext = MetaproofContext.fromFileContext(fileContext);
 
-  fileContext.debug(`Verifying the '${labelsString}' rule...`);
+  fileContext.debug(ruleNode, `Verifying the '${labelsString}' rule...`);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
@@ -68,12 +66,8 @@ export default function verifyRule(ruleNode, fileContext) {
   }
 
   if (ruleVerified) {
-    fileContext.info(`Verified the '${labelsString}' rule.`);
+    fileContext.info(ruleNode, `Verified the '${labelsString}' rule.`);
   }
-
-  ruleVerified ?
-    fileContext.complete(ruleNode) :
-      fileContext.complete(ruleNode);
 
   return ruleVerified;
 }

@@ -25,8 +25,6 @@ const ruleNodeQuery = nodeQuery("/topLevelDeclaration/rule!"),
 export default function verifyTopLevelDeclaration(topLevelDeclarationNode, fileContext) {
   let topLevelDeclarationVerified = false;
 
-  fileContext.begin(topLevelDeclarationNode);
-
   const node = topLevelDeclarationNode, ///
         ruleNode = ruleNodeQuery(node),
         axiomNode = axiomNodeQuery(node),
@@ -77,10 +75,6 @@ export default function verifyTopLevelDeclaration(topLevelDeclarationNode, fileC
 
     topLevelDeclarationVerified = constructorDeclarationVerified;  ///
   }
-
-  topLevelDeclarationVerified ?
-    fileContext.complete(topLevelDeclarationNode) :
-      fileContext.halt(topLevelDeclarationNode);
 
   return topLevelDeclarationVerified;
 }

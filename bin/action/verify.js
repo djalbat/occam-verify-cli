@@ -4,6 +4,8 @@ const { Dependency } = require("occam-file-system"),
       { loggingUtilities } = require("necessary"),
       { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
+const Messages = require("../messages");
+
 const { trimTrailingSlash } = require("../utilities/string"),
       { releaseContextFromDependencyAndDependentNames } = require("../utilities/releaseContext");
 
@@ -14,6 +16,7 @@ const { log } = loggingUtilities,
 function verifyAction(argument, logLevel) {
   const name = trimTrailingSlash(argument), ///
         context = {},
+        messages = Messages.fromLogLevel(logLevel),
         dependency = Dependency.fromName(name),
         dependentNames = [],
         releaseContextMap = {};
@@ -22,6 +25,7 @@ function verifyAction(argument, logLevel) {
 
   Object.assign(context, {
     log,
+    messages,
     releaseContextMap,
     releaseContextFromDependencyAndDependentNames
   });
@@ -44,6 +48,8 @@ function verifyAction(argument, logLevel) {
     delete context.releaseContextFromDependencyAndDependentNames;
 
     verifyRelease(releaseName, releaseContextMap);
+
+    messages.toConsole();
   });
 }
 

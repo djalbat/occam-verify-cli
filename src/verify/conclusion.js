@@ -11,11 +11,9 @@ const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatemen
 export default function verifyConclusion(conclusionNode, conclusions, metaproofContext) {
   let conclusionVerified = false;
 
-  metaproofContext.begin(conclusionNode);
-
   const conclusionString = metaproofContext.nodeAsString(conclusionNode);
 
-  metaproofContext.debug(`Verifying the '${conclusionString}' conclusion...`);
+  metaproofContext.debug(conclusionNode, `Verifying the '${conclusionString}' conclusion...`);
 
   const derived = false,
         assertions = [],
@@ -30,10 +28,6 @@ export default function verifyConclusion(conclusionNode, conclusions, metaproofC
 
     conclusionVerified = true;
   }
-
-  conclusionVerified ?
-    metaproofContext.complete(conclusionNode) :
-      metaproofContext.halt(conclusionNode);
 
   return conclusionVerified;
 }

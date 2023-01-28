@@ -21,8 +21,6 @@ const termNodeQuery = nodeQuery("/argument/term!"),
 export default function verifyStatement(statementNode, assertions, derived, context) {
   let statementVerified = false;
 
-  context.begin(statementNode);
-
   if (!statementVerified) {
     const statementVerifiedAgainstCombinators = verifyStatementAgainstCombinators(statementNode, context);
 
@@ -40,10 +38,6 @@ export default function verifyStatement(statementNode, assertions, derived, cont
 
     statementVerified = statementVerifiedAsEquality;  //
   }
-
-  statementVerified ?
-    context.complete(statementNode) :
-      context.halt(statementNode);
 
   return statementVerified;
 }
@@ -229,7 +223,7 @@ function verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
   if (termNode === null) {
     const argumentString = context.nodeAsString(argumentNode);
 
-    context.error(`The ${argumentString} argument should be a term, not a type`);
+    context.error(argumentNode, `The ${argumentString} argument should be a term, not a type`);
   } else {
     const types = [],
           termVerified = verifyTerm(termNode, types, context);
@@ -261,7 +255,7 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
   if (statementNode === null) {
     const metaArgumentString = context.nodeAsString(metaArgumentNode);
 
-    context.error(`The '${metaArgumentString}' meta-argument should be a statement, not a meta-type.`);
+    context.error(metaArgumentNode, `The '${metaArgumentString}' meta-argument should be a statement, not a meta-type.`);
   } else {
     const derived = false,
           assertions = [],
@@ -281,7 +275,7 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
       if (!metaArgumentNodeVerified) {
         const combinatorMetaargumentString = context.nodeAsString(combinatorMetaargumentNode);
 
-        context.error(`The '${combinatorMetaargumentString}' combinator meta-argument should be the 'Statement' meta-type.`);
+        context.error(metaArgumentNode, `The '${combinatorMetaargumentString}' combinator meta-argument should be the 'Statement' meta-type.`);
       }
     }
   }

@@ -10,14 +10,12 @@ const referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/referen
 export default function verifyQualifiedStatement(qualifiedStatementNode, assertions, derived, proofContext) {
   let qualifiedStatementVerified = false;
 
-  proofContext.begin(qualifiedStatementNode);
-
   const statementNode = statementNodeQuery(qualifiedStatementNode);
 
   if (statementNode !== null) {
     const statementString = proofContext.nodeAsString(statementNode);
 
-    proofContext.debug(`Verifying the '${statementString}' qualified statement...`);
+    proofContext.debug(qualifiedStatementNode, `Verifying the '${statementString}' qualified statement...`);
 
     const referenceNode = referenceNodeQuery(qualifiedStatementNode);
 
@@ -80,10 +78,6 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, asserti
       }
     }
   }
-
-  qualifiedStatementVerified ?
-    proofContext.complete(qualifiedStatementNode) :
-      proofContext.halt(qualifiedStatementNode);
 
   return qualifiedStatementVerified;
 }

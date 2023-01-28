@@ -10,8 +10,6 @@ const firstTypeNodeQuery = nodeQuery("/typeDeclaration/type[0]"),
 export default function verifyTypeDeclaration(typeDeclarationNode, fileContext) {
   let typeDeclarationVerified;
 
-  fileContext.begin(typeDeclarationNode);
-
   const firstTypeNode = firstTypeNodeQuery(typeDeclarationNode),
         secondTypeNode = secondTypeNodeQuery(typeDeclarationNode),
         typeNode = firstTypeNode, ///
@@ -20,10 +18,6 @@ export default function verifyTypeDeclaration(typeDeclarationNode, fileContext) 
   const typeVerified = verifyType(typeNode, superTypeNode, fileContext);
 
   typeDeclarationVerified = typeVerified; ///
-
-  typeDeclarationVerified ?
-    fileContext.complete(typeDeclarationNode) :
-      fileContext.halt(typeDeclarationNode);
 
   return typeDeclarationVerified;
 }

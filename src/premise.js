@@ -3,7 +3,7 @@
 import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { premiseStatementForMetavariableMatcher } from "./matcher/statementForMetavariable/premise";
-import { metastatementNodeFromMetastatementString } from "./utilities/string";
+import { metastatementNodeFromMetastatementString } from "./utilities/node";
 import { premiseMetastatementForMetavariableMatcher } from "./matcher/metastatementForMetavariable/premise";
 
 const ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/ruleSubproofAssertion!"),
@@ -116,10 +116,10 @@ export default class Premise {
     return json;
   }
 
-  static fromJSON(json, releaseContext) {
+  static fromJSON(json, lexer, parser) {
     const { metastatement } = json,
           metastatementString = metastatement,  ///
-          metastatementNode = metastatementNodeFromMetastatementString(metastatementString, releaseContext),
+          metastatementNode = metastatementNodeFromMetastatementString(metastatementString, lexer, parser),
           premise = new Premise(metastatementNode);
 
     return premise;

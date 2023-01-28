@@ -1,16 +1,12 @@
 "use strict";
 
 import Combinator from "../combinator";
-import combinatorReleaseContext from "../context/release/combinator";
 
-import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
-import { statementNodeFromStatementString } from "../utilities/string";
+import { bracketedCombinatorStatementNode } from "../utilities/node";
 
 class BracketedCombinator extends Combinator {
   static fromNothing() {
-    const statementString = `(${STATEMENT_META_TYPE_NAME})`,
-          releaseContext = combinatorReleaseContext, ///
-          statementNode = statementNodeFromStatementString(statementString, releaseContext),
+    const statementNode = bracketedCombinatorStatementNode,  ///
           bracketedCombinator = new BracketedCombinator(statementNode);
 
     return bracketedCombinator;

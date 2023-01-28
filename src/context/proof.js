@@ -3,7 +3,6 @@
 import Equality from "../equality";
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
-import callbacksMixins from "../mixins/callbacks";
 
 import { push, last } from "../utilities/array";
 import { MAXIMUM_INDEXES_LENGTH } from "../constants";
@@ -145,7 +144,6 @@ class ProofContext {
 
 Object.assign(ProofContext.prototype, fileMixins);
 Object.assign(ProofContext.prototype, loggingMixins);
-Object.assign(ProofContext.prototype, callbacksMixins);
 
 export default ProofContext;
 

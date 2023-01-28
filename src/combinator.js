@@ -2,7 +2,7 @@
 
 import { nodeAsString } from "./utilities/string";
 import { COMBINATOR_KIND } from "./kinds";
-import { statementNodeFromStatementString } from "./utilities/string";
+import { statementNodeFromStatementString } from "./utilities/node";
 
 export default class Combinator {
   constructor(statementNode) {
@@ -35,10 +35,10 @@ export default class Combinator {
     return json;
   }
 
-  static fromJSON(json, releaseContext) {
+  static fromJSON(json, lexer, parser) {
     const { statement } = json,
           statementString = statement,  ///
-          statementNode = statementNodeFromStatementString(statementString, releaseContext),
+          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
           combinator = new Combinator(statementNode);
 
     return combinator;

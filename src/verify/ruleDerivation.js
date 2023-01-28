@@ -17,8 +17,6 @@ const childNodesQuery = nodesQuery("/ruleDerivation|ruleSubDerivation/*"),
 export default function verifyRuleDerivation(ruleDerivationNode, metaproofContext) {
   let ruleDerivationVerified;
 
-  metaproofContext.begin(ruleDerivationNode);
-
   const childNodes = childNodesQuery(ruleDerivationNode);
 
   ruleDerivationVerified = childNodes.every((childNode) => {
@@ -29,17 +27,11 @@ export default function verifyRuleDerivation(ruleDerivationNode, metaproofContex
     }
   });
 
-  ruleDerivationVerified ?
-    metaproofContext.complete(ruleDerivationNode) :
-      metaproofContext.halt(ruleDerivationNode);
-
   return ruleDerivationVerified;
 }
 
 function verifyRuleSubDerivation(ruleSubDerivationNode, metaproofContext) {
   let ruleSubDerivationVerified;
-
-  metaproofContext.begin(ruleSubDerivationNode);
 
   const childNodes = childNodesQuery(ruleSubDerivationNode);
 
@@ -50,10 +42,6 @@ function verifyRuleSubDerivation(ruleSubDerivationNode, metaproofContext) {
       return true;
     }
   });
-
-  ruleSubDerivationVerified ?
-    metaproofContext.complete(ruleSubDerivationNode) :
-      metaproofContext.halt(ruleSubDerivationNode);
 
   return ruleSubDerivationVerified;
 }
