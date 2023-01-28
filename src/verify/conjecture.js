@@ -22,7 +22,7 @@ export default function verifyConjecture(conjectureNode, fileContext) {
         labelsString = fileContext.nodesAsString(labelNodes),
         proofContext = ProofContext.fromFileContext(fileContext);
 
-  fileContext.debug(conjectureNode, `Verifying the '${labelsString}' conjecture...`);
+  fileContext.debug(`Verifying the '${labelsString}' conjecture...`, conjectureNode);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
@@ -60,7 +60,7 @@ export default function verifyConjecture(conjectureNode, fileContext) {
   }
 
   if (conjectureVerified) {
-    fileContext.info(conjectureNode, `Verified the '${labelsString}' conjecture.`);
+    fileContext.info(`Verified the '${labelsString}' conjecture.`, conjectureNode);
   }
 
   return conjectureVerified;

@@ -13,7 +13,7 @@ export default function verifyConsequence(consequenceNode, consequences, proofCo
 
   const consequenceString = proofContext.nodeAsString(consequenceNode);
 
-  proofContext.debug(consequenceNode, `Verifying the '${consequenceString}' consequence...`);
+  proofContext.debug(`Verifying the '${consequenceString}' consequence...`, consequenceNode);
 
   const derived = false,
         assertions = [],

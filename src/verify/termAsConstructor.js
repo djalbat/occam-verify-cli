@@ -31,7 +31,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
       if (type !== null) {
         termVerifiedAsConstructor = true;
       } else {
-        fileContext.error(termNode, `The '${termString}' constructor's '${typeName}' type is missing.`);
+        fileContext.error(`The '${termString}' constructor's '${typeName}' type is missing.`, termNode);
       }
     }
   }
@@ -43,7 +43,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
   }
 
   if (termVerifiedAsConstructor) {
-    fileContext.info(termNode, `Verified the '${termString}' constructor.`);
+    fileContext.info(`Verified the '${termString}' constructor.`, termNode);
   }
 
   return termVerifiedAsConstructor;
@@ -116,7 +116,7 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
         if (type !== null) {
           const termString = fileContext.nodeAsString(termNode);
 
-          fileContext.error(termNode, `The type of the constructor's compound '${termString}' term node is not null.`);
+          fileContext.error(`The type of the constructor's compound '${termString}' term node is not null.`, termNode);
         } else {
           nonTerminalNodeVerified = true; ///
         }
@@ -146,13 +146,13 @@ function verifyArgumentNode(argumentNode, fileContext) {
   if (typeNode === null) {
     const argumentString = fileContext.nodeAsString(argumentNode);
 
-    fileContext.error(argumentNode, `The ${argumentString} argument should be a type.`);
+    fileContext.error(`The ${argumentString} argument should be a type.`, argumentNode);
   } else {
     const typeName = typeNameFromTypeNode(typeNode),
           typePresent = fileContext.isTypePresentByTypeName(typeName);
 
     if (!typePresent) {
-      fileContext.error(argumentNode, `The type '${typeName}' is missing.`);
+      fileContext.error(`The type '${typeName}' is missing.`, argumentNode);
     } else {
       typeNodeVerified = true;
     }

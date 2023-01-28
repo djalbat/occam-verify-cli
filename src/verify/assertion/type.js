@@ -15,14 +15,14 @@ export default function verifyTypeAssertion(typeAssertionNode, assertions, deriv
 
   const typeAssertionString = proofContext.nodeAsString(typeAssertionNode);
 
-  proofContext.debug(typeAssertionNode, `Verifying the '${typeAssertionString}' type assertion...`);
+  proofContext.debug(`Verifying the '${typeAssertionString}' type assertion...`, typeAssertionNode);
 
   const typeNode = typeNodeQuery(typeAssertionNode),
         typeName = typeNameFromTypeNode(typeNode),
         typePresent = proofContext.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    proofContext.error(typeAssertionNode, `The ${typeName} type is not present.`);
+    proofContext.error(`The ${typeName} type is not present.`, typeAssertionNode);
   } else {
     if (!typeAssertionVerified) {
       const variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, assertions, derived, proofContext);
@@ -38,7 +38,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assertions, deriv
   }
 
   if (typeAssertionVerified) {
-    proofContext.info(typeAssertionNode, `Verified the '${typeAssertionString}' statement type assertion.`);
+    proofContext.info(`Verified the '${typeAssertionString}' statement type assertion.`, typeAssertionNode);
   }
 
   return typeAssertionVerified;
@@ -69,7 +69,7 @@ function verifyVariableTypeAssertion(typeAssertionNode, assertions, derived, pro
         const assertedTypeName = assertedType.getName(),
               variableTypeName = variableType.getName();
 
-        proofContext.error(typeAssertionNode, `The '${variableName}' variable's '${variableTypeName}' type is not equal to or a sub-type of the '${assertedTypeName}' asserted type.`);
+        proofContext.error(`The '${variableName}' variable's '${variableTypeName}' type is not equal to or a sub-type of the '${assertedTypeName}' asserted type.`, typeAssertionNode);
       } else {
         variableTypeAssertionVerified = true;
       }
@@ -80,7 +80,7 @@ function verifyVariableTypeAssertion(typeAssertionNode, assertions, derived, pro
         const assertedTypeName = assertedType.getName(),
               variableTypeName = variableType.getName();
 
-        proofContext.error(typeAssertionNode, `The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${variableName}' variable's '${variableTypeName}' type.`);
+        proofContext.error(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
       } else {
         const type = assertedType,  ///
               name = variableName,  ///

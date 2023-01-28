@@ -1,31 +1,23 @@
 "use strict";
 
 const { Dependency } = require("occam-file-system"),
-      { loggingUtilities } = require("necessary"),
-      { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
-
-const Messages = require("../messages");
+      { Log, verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
 const { trimTrailingSlash } = require("../utilities/string"),
       { releaseContextFromDependencyAndDependentNames } = require("../utilities/releaseContext");
 
-const { log } = loggingUtilities,
-      { setLogLevel } = log,
-      { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
+const { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
 function verifyAction(argument, logLevel) {
-  const name = trimTrailingSlash(argument), ///
+  const log = Log.fromLogLevel(logLevel),
+        name = trimTrailingSlash(argument), ///
         context = {},
-        messages = Messages.fromLogLevel(logLevel),
         dependency = Dependency.fromName(name),
         dependentNames = [],
         releaseContextMap = {};
 
-  setLogLevel(logLevel);
-
   Object.assign(context, {
     log,
-    messages,
     releaseContextMap,
     releaseContextFromDependencyAndDependentNames
   });
@@ -33,6 +25,8 @@ function verifyAction(argument, logLevel) {
   createReleaseContext(dependency, dependentNames, context, (error) => {
     if (error) {
       log.error(error);
+
+      log.toConsole();
 
       return;
     }
@@ -42,14 +36,22 @@ function verifyAction(argument, logLevel) {
           releaseContext = releaseContextMap[releaseName],
           verified = releaseContext.isVerified();
 
-    initialiseReleaseContext(dependency, dependentName, verified, context);
+    initialiseReleaseContext(dependency, dependentName, verified, context, (error) => {
+      if (error) {
+        log.error(error);
 
-    delete context.releaseContextMap;
-    delete context.releaseContextFromDependencyAndDependentNames;
+        log.toConsole();
 
-    verifyRelease(releaseName, releaseContextMap);
+        return;
+      }
 
-    messages.toConsole();
+      delete context.releaseContextMap;
+      delete context.releaseContextFromDependencyAndDependentNames;
+
+      verifyRelease(releaseName, releaseContextMap);
+
+      log.toConsole();
+    });
   });
 }
 

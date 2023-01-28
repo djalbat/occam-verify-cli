@@ -16,8 +16,8 @@ import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
 import { RULE_KIND, TYPE_KIND, AXIOM_KIND, LEMMA_KIND, THEOREM_KIND, CONJECTURE_KIND, COMBINATOR_KIND, CONSTRUCTOR_KIND } from "../../kinds";
 
 export default class FileReleaseContext extends ReleaseContext {
-  constructor(name,  entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, contextJSON) {
-    super(name,  entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts);
+  constructor(log, name, entries, lexer, parser, verified, customGrammar, dependencyReleaseContexts, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, contextJSON) {
+    super(log, name, entries, lexer, parser, verified, customGrammar, dependencyReleaseContexts);
 
     this.types = types;
     this.rules = rules;
@@ -292,7 +292,7 @@ export default class FileReleaseContext extends ReleaseContext {
     this.fromJSON();
   }
 
-  static fromNameEntriesMessagesAndContextJSON(name, entries, messages, contextJSON) {
+  static fromLogNameEntriesAndContextJSON(log, name, entries, contextJSON) {
     const lexer = null,
           parser = null,
           verified = true,
@@ -306,7 +306,7 @@ export default class FileReleaseContext extends ReleaseContext {
           conjectures = [],
           combinators = [],
           constructors = [],
-          releaseContext = new FileReleaseContext(name,  entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, contextJSON);
+          releaseContext = new FileReleaseContext(log, name, entries, lexer, parser, verified, customGrammar, dependencyReleaseContexts, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, contextJSON);
 
     return releaseContext;
   }

@@ -14,7 +14,7 @@ export default function verifySupposition(suppositionNode, suppositions, proofCo
 
   const suppositionString = proofContext.nodeAsString(suppositionNode);
 
-  proofContext.debug(suppositionNode, `Verifying the '${suppositionString}' supposition...`);
+  proofContext.debug(`Verifying the '${suppositionString}' supposition...`, suppositionNode);
 
   const derived = false,
         assertions = [],

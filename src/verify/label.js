@@ -13,7 +13,7 @@ export default function verifyLabel(labelNode, labels, fileContext) {
   if (labelPresent) {
     const labelString = fileContext.nodeAsString(labelNode);
 
-    fileContext.error(labelNode, `The '${labelString}' label is already present.`, labelNode);
+    fileContext.error(`The '${labelString}' label is already present.`, labelNode);
   } else {
     const label = Label.fromLabelNode(labelNode);
 

@@ -15,7 +15,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
   if (metastatementNode !== null) {
     const metastatementString = metaproofContext.nodeAsString(metastatementNode);
 
-    metaproofContext.debug(qualifiedMetastatementNode, `Verifying the '${metastatementString}' qualified metastatement...`);
+    metaproofContext.debug(`Verifying the '${metastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
 
     let ruleMatchesMetastatement = true;
 

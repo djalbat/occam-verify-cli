@@ -12,7 +12,7 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
         typePresent = fileContext.isTypePresentByTypeName(typeName);
 
   if (typePresent) {
-    fileContext.error(typeNode, `The type '${typeName}' is already present.`);
+    fileContext.error(`The type '${typeName}' is already present.`, typeNode);
   } else {
     let type;
 
@@ -24,7 +24,7 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
       const superType = fileContext.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
-        fileContext.error(typeNode, `The super-type '${superTypeName}' is missing.`);
+        fileContext.error(`The super-type '${superTypeName}' is missing.`, typeNode);
       } else {
         type = Type.fromTypeNameAndSuperType(typeName, superType);
       }
@@ -38,7 +38,7 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
   }
 
   if (typeVerified) {
-    fileContext.info(typeNode, `Verified the '${typeString}' type.`);
+    fileContext.info(`Verified the '${typeString}' type.`, typeNode);
   }
 
   return typeVerified;

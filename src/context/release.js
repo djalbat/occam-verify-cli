@@ -1,24 +1,26 @@
 "use strict";
 
-import { levels } from "necessary";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import { combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
-      { florenceParserFromCombinedCustomGrammar } = parsersUtilities,
-      { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL } = levels;
+      { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(name, entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts) {
+  constructor(log, name, entries, lexer, parser, verified, customGrammar, dependencyReleaseContexts) {
+    this.log = log;
     this.name = name;
     this.entries = entries;
-    this.messages = messages;
     this.lexer = lexer;
     this.parser = parser;
     this.verified = verified;
     this.customGrammar = customGrammar;
     this.dependencyReleaseContexts = dependencyReleaseContexts;
+  }
+
+  getLog() {
+    return log;
   }
 
   getName() {
@@ -27,10 +29,6 @@ export default class ReleaseContext {
 
   getEntries() {
     return this.entries;
-  }
-
-  getMessages() {
-    return messages;
   }
 
   getLexer() {
@@ -97,47 +95,17 @@ export default class ReleaseContext {
 
   parse(tokens) { return this.parser.parse(tokens); }
 
-  trace(message) {
-    const level = TRACE_LEVEL;
+  trace(message, node = null, tokens = null, filePath = null) { this.log.trace(message, node, tokens, filePath); }
 
-    this.log(level, message);
-  }
+  debug(message, node = null, tokens = null, filePath = null) { this.log.debug(message, node, tokens, filePath); }
 
-  debug(message) {
-    const level = DEBUG_LEVEL;
+  info(message, node = null, tokens = null, filePath = null) { this.log.info(message, node, tokens, filePath); }
 
-    this.log(level, message);
-  }
+  warning(message, node = null, tokens = null, filePath = null) { this.log.warning(message, node, tokens, filePath); }
 
-  info(message) {
-    const level = INFO_LEVEL;
+  error(message, node = null, tokens = null, filePath = null) { this.log.error(message, node, tokens, filePath); }
 
-    this.log(level, message);
-  }
-
-  warning(message) {
-    const level = WARNING_LEVEL;
-
-    this.log(level, message);
-  }
-
-  error(message) {
-    const level = ERROR_LEVEL;
-
-    this.log(level, message);
-  }
-
-  fatal(message) {
-    const level = FATAL_LEVEL;
-
-    this.log(level, message);
-  }
-
-  log(level, message, filePath = null, leastLineIndex = null, greatestLineIndex = null) {
-    message = formatMessage(message, filePath, leastLineIndex, greatestLineIndex);
-
-    this.messages.addMessage(level, message);
-  }
+  fatal(message, node = null, tokens = null, filePath = null) { this.log.fatal(message, node, tokens, filePath); }
 
   initialise(dependencyReleaseContexts) {
     const releaseContext = this,  ///
@@ -155,18 +123,4 @@ export default class ReleaseContext {
 
     this.dependencyReleaseContexts = dependencyReleaseContexts;
   }
-}
-
-function formatMessage(message, filePath, leastLineIndex, greatestLineIndex) {
-  if (filePath === null) {
-    message = `${message}`;
-  } else if (leastLineIndex === greatestLineIndex) {
-    const lineIndex = leastLineIndex; ///
-
-    message = `${filePath} (${lineIndex}) - ${message}`;
-  } else {
-    message = `${filePath} (${leastLineIndex}-${greatestLineIndex}) - ${message}`;
-  }
-
-  return message;
 }

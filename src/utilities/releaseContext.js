@@ -35,7 +35,7 @@ export function createReleaseContext(dependency, dependentNames, context, callba
 
     error = checkReleaseMatchesDependency(dependency, dependentNames, releaseContext);
 
-    if (error !== null)  {
+    if (error) {
       callback(error);
 
       return;
@@ -47,19 +47,25 @@ export function createReleaseContext(dependency, dependentNames, context, callba
   }, context);
 }
 
-export function initialiseReleaseContext(dependency, dependentName, verified, context) {
+export function initialiseReleaseContext(dependency, dependentName, verified, context, callback) {
+  let error = null;
+
   const { releaseContextMap } = context,
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///
         releaseContext = releaseContextMap[releaseName] || null;
 
   if (releaseContext === null) {
+    callback(error);
+
     return;
   }
 
   const initialised = releaseContext.isInitialised();
 
   if (initialised) {
+    callback(error);
+
     return;
   }
 
@@ -67,27 +73,39 @@ export function initialiseReleaseContext(dependency, dependentName, verified, co
 
   if (verified) {
     if (!releaseContextVerified) {
-      const { log } = context;
+      error = `Unable to initialise the '${releaseName}' dependency's context because its '${dependentName}' dependent is a package.`;
 
-      log.error(`Unable to initialise the '${releaseName}' dependency's context because its '${dependentName}' dependent is a package.`);
+      callback(error);
 
       return;
     }
   }
 
-  verified = releaseContextVerified;  ///
-
   dependentName = releaseName;  ///
+
+  verified = releaseContextVerified;  ///
 
   const dependencies = releaseContext.getDependencies();
 
-  dependencies.forEachDependency((dependency) => {
-    initialiseReleaseContext(dependency, dependentName, verified, context);
-  });
+  dependencies.asynchronousForEachDependency((dependency, next, done) => {
+    initialiseReleaseContext(dependency, dependentName, verified, context, (error) => {
+      if (error) {
+        callback(error);
 
-  const dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependency, context);
+        return;
+      }
 
-  releaseContext.initialise(dependencyReleaseContexts);
+      next();
+    });
+  }, done);
+
+  function done() {
+    const dependencyReleaseContexts = retrieveDependencyReleaseContexts(dependency, context);
+
+    releaseContext.initialise(dependencyReleaseContexts);
+
+    callback(error);
+  }
 }
 
 export default {
@@ -153,7 +171,7 @@ function createDependencyReleaseContexts(dependency, dependentNames, context, ca
   dependencies.asynchronousForEachDependency((dependency, next, done) => {
     const error = checkCyclicDependencyExists(dependency, dependentNames);
 
-    if (error !== null) {
+    if (error) {
       callback(error);
 
       return;

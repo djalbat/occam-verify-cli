@@ -1,13 +1,9 @@
 "use strict";
 
-import { levels } from "necessary";
 import { rewriteNodes } from "occam-grammar-utilities";
 
 import { push } from "../utilities/array";
 import { nodeAsString, nodesAsString } from "../utilities/string";
-import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "../utilities/tokens";
-
-const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL } = levels;
 
 export default class FileContext {
   constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, variables, metavariables) {
@@ -393,49 +389,17 @@ export default class FileContext {
     this.constructors.push(constructor);
   }
 
-  trace(node, message) {
-    const level = TRACE_LEVEL;
+  trace(message, node) { this.releaseContext.trace(message, node, this.tokens, this.filePath); }
 
-    this.log(node, level, message);
-  }
+  debug(message, node) { this.releaseContext.debug(message, node, this.tokens, this.filePath); }
 
-  debug(node, message) {
-    const level = DEBUG_LEVEL;
+  info(message, node) { this.releaseContext.info(message, node, this.tokens, this.filePath); }
 
-    this.log(node, level, message);
-  }
+  warning(message, node) { this.releaseContext.warning(message, node, this.tokens, this.filePath); }
 
-  info(node, message) {
-    const level = INFO_LEVEL;
+  error(message, node) { this.releaseContext.error(message, node, this.tokens, this.filePath); }
 
-    this.log(node, level, message);
-  }
-
-  warning(node, message) {
-    const level = WARNING_LEVEL;
-
-    this.log(node, level, message);
-  }
-
-  error(node, message) {
-    const level = ERROR_LEVEL;
-
-    this.log(node, level, message);
-  }
-
-  fatal(node, message) {
-    const level = FATAL_LEVEL;
-
-    this.log(node, level, message);
-  }
-
-  log(node, level, message) {
-    const filePath = this.filePath,
-          leastLineIndex = leastLineIndexFromNodeAndTokens(node, this.tokens),
-          greatestLineIndex = greatestLineIndexFromNodeAndTokens(node, this.tokens);
-
-    this.releaseContext.log(level, message, filePath, leastLineIndex, greatestLineIndex);
-  }
+  fatal(message, node) { this.releaseContext.fatal(message, node, this.tokens, this.filePath); }
 
   toJSON() {
     const json = [];

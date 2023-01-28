@@ -12,7 +12,7 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
 
   const statementString = fileContext.nodeAsString(statementNode);
 
-  fileContext.debug(statementNode, `Verifying the '${statementString}' combinator....`);
+  fileContext.debug(`Verifying the '${statementString}' combinator....`, statementNode);
 
   const nonTerminalNode = statementNode,  ///
         childNodes = nonTerminalNode.getChildNodes(),
@@ -27,7 +27,7 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
   }
 
   if (statementVerifiedAsCombinator) {
-    fileContext.info(statementNode, `Verified the '${statementString}' combinator.`);
+    fileContext.info(`Verified the '${statementString}' combinator.`, statementNode);
   }
 
   return statementVerifiedAsCombinator;
@@ -125,7 +125,7 @@ function verifyTypeNode(typeNode, fileContext) {
         typePresent = fileContext.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    fileContext.error(typeNode, `The type '${typeName}' is missing.`);
+    fileContext.error(`The type '${typeName}' is missing.`, typeNode);
   } else {
     typeNodeVerified = true;
   }

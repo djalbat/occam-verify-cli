@@ -6,8 +6,8 @@ import { push } from "../../utilities/array";
 import { customGrammarFromNameAndEntries } from "../../utilities/customGrammar";
 
 export default class DirectoryReleaseContext extends ReleaseContext {
-  constructor(name,  entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts, fileContexts) {
-    super(name,  entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts);
+  constructor(log, name, entries, lexer, parser, verified, customGrammar, dependencyReleaseContexts, fileContexts) {
+    super(log, name, entries, lexer, parser, verified, customGrammar, dependencyReleaseContexts);
 
     this.fileContexts = fileContexts;
   }
@@ -237,14 +237,14 @@ export default class DirectoryReleaseContext extends ReleaseContext {
     return json;
   }
 
-  static fromNameEntriesAndMessages(name, entries, messages) {
+  static fromLogNameAndEntries(log, name, entries) {
     const lexer = null,
           parser = null,
           verified = false,
-          customGrammar = customGrammarFromNameAndEntries(name, entries, messages),
+          customGrammar = customGrammarFromNameAndEntries(name, entries),
           dependencyReleaseContexts = null,
           fileContexts = [],
-          directoryReleaseContext = new DirectoryReleaseContext(name, entries, messages, lexer, parser, verified, customGrammar, dependencyReleaseContexts, fileContexts);
+          directoryReleaseContext = new DirectoryReleaseContext(log, name, entries, lexer, parser, verified, customGrammar, dependencyReleaseContexts, fileContexts);
 
     return directoryReleaseContext;
   }

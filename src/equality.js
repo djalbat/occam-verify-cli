@@ -271,7 +271,7 @@ function equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, c
             leftTermTypeName = leftTermType.getName(),
             rightTermTypeName = rightTermType.getName();
 
-      context.error(leftTermNode, `The left '${leftTermString}' term's '${leftTermTypeName}' type is not equal to the right '${rightTermString}' term's '${rightTermTypeName}' type.'`);
+      context.error(`The left '${leftTermString}' term's '${leftTermTypeName}' type is not equal to the right '${rightTermString}' term's '${rightTermTypeName}' type.'`, leftTermNode);
     }
   }
 

@@ -223,7 +223,7 @@ function verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
   if (termNode === null) {
     const argumentString = context.nodeAsString(argumentNode);
 
-    context.error(argumentNode, `The ${argumentString} argument should be a term, not a type`);
+    context.error(`The ${argumentString} argument should be a term, not a type`, argumentNode);
   } else {
     const types = [],
           termVerified = verifyTerm(termNode, types, context);
@@ -255,7 +255,7 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
   if (statementNode === null) {
     const metaArgumentString = context.nodeAsString(metaArgumentNode);
 
-    context.error(metaArgumentNode, `The '${metaArgumentString}' meta-argument should be a statement, not a meta-type.`);
+    context.error(`The '${metaArgumentString}' meta-argument should be a statement, not a meta-type.`, metaArgumentNode);
   } else {
     const derived = false,
           assertions = [],
@@ -275,7 +275,7 @@ function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, co
       if (!metaArgumentNodeVerified) {
         const combinatorMetaargumentString = context.nodeAsString(combinatorMetaargumentNode);
 
-        context.error(metaArgumentNode, `The '${combinatorMetaargumentString}' combinator meta-argument should be the 'Statement' meta-type.`);
+        context.error(`The '${combinatorMetaargumentString}' combinator meta-argument should be the 'Statement' meta-type.`, metaArgumentNode);
       }
     }
   }

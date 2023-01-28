@@ -15,7 +15,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, asserti
   if (statementNode !== null) {
     const statementString = proofContext.nodeAsString(statementNode);
 
-    proofContext.debug(qualifiedStatementNode, `Verifying the '${statementString}' qualified statement...`);
+    proofContext.debug(`Verifying the '${statementString}' qualified statement...`, qualifiedStatementNode);
 
     const referenceNode = referenceNodeQuery(qualifiedStatementNode);
 

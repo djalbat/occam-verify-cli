@@ -15,7 +15,7 @@ export default function verifyTerm(termNode, types, context) {
 
   const termString = context.nodeAsString(termNode);
 
-  context.debug(termNode, `Verifying the '${termString}' term...`);
+  context.debug(`Verifying the '${termString}' term...`, termNode);
 
   if (!termVerified) {
     const variables = [],
@@ -41,7 +41,7 @@ export default function verifyTerm(termNode, types, context) {
   }
 
   if (termVerified) {
-    context.info(termNode, `Verified the '${termString}' term.`);
+    context.info(`Verified the '${termString}' term.`, termNode);
   }
 
   return termVerified;
@@ -201,7 +201,7 @@ function verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
   if (termNode === null) {
     const argumentString = context.nodeAsString(argumentNode);
 
-    context.error(argumentNode, `The ${argumentString} argument should be a term, not a type`);
+    context.error(`The ${argumentString} argument should be a term, not a type`, argumentNode);
   } else {
     const types = [],
           termVerified = verifyTerm(termNode, types, context);
