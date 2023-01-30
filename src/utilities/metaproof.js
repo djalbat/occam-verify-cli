@@ -1,9 +1,12 @@
 "use strict";
 
+import bracketedMetastatementNode from "../node/metastatement/bracketed";
+
 import { matcher } from "../matcher";
-import { first, second, third } from "./array";
-import { METASTATEMENT_RULE_NAME } from "../ruleNames";
-import { LEFT_BRACKET, RIGHT_BRACKET, BRACKETED_CHILD_NODES_LENGTH } from "../constants";
+import { nodeQuery } from "../utilities/query";
+import { BRACKETED_METASTATEMENT_DEPTH } from "../constants";
+
+const bracketedMetastatementChildNodeQuery = nodeQuery('/metastatement/metastatement!');
 
 export function matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB) {
   let metastatementMatchesModuloBrackets = false;
@@ -17,11 +20,11 @@ export function matchMetastatementModuloBrackets(metastatementNodeA, metastateme
   }
 
   if (!metastatementMatchesModuloBrackets) {
-    const bracketedNonTerminalNodeA = bracketedMetastatementNodeFromMetastatementNode(metastatementNodeA);
+    const bracketedMetastatementChildNodeA = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNodeA);
 
-    if (bracketedNonTerminalNodeA !== null) {
-      const nodeA = bracketedNonTerminalNodeA,  ///
-            nodeB = nonTerminalNodeB, ///
+    if (bracketedMetastatementChildNodeA !== null) {
+      const nodeA = bracketedMetastatementChildNodeA,  ///
+            nodeB = metastatementNodeB, ///
             nodeMatches = matcher.matchNode(nodeA, nodeB);
 
       metastatementMatchesModuloBrackets = nodeMatches; ///
@@ -29,11 +32,11 @@ export function matchMetastatementModuloBrackets(metastatementNodeA, metastateme
   }
 
   if (!metastatementMatchesModuloBrackets) {
-    const bracketedNonTerminalNodeB = bracketedMetastatementNodeFromMetastatementNode(metastatementNodeB);
+    const bracketedMetastatementChildNodeB = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNodeB);
 
-    if (bracketedNonTerminalNodeB !== null) {
-      const nodeB = bracketedNonTerminalNodeB,  ///
-            nodeA = nonTerminalNodeA, ///
+    if (bracketedMetastatementChildNodeB !== null) {
+      const nodeA = metastatementNodeA, ///
+            nodeB = bracketedMetastatementChildNodeB,  ///
             nodeMatches = matcher.matchNode(nodeA, nodeB);
 
       metastatementMatchesModuloBrackets = nodeMatches; ///
@@ -43,37 +46,18 @@ export function matchMetastatementModuloBrackets(metastatementNodeA, metastateme
   return metastatementMatchesModuloBrackets;
 }
 
-export function bracketedMetastatementNodeFromMetastatementNode(metastatementNode) {
-  let bracketedMetastatementNode = null;
+export function bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode) {
+  let bracketedMetastatementChildNode = null;
 
-  const nonTerminalNode = metastatementNode,  ///
-        childNodes = nonTerminalNode.getChildNodes(),
-        childNodesLength = childNodes.length;
+  const depth = BRACKETED_METASTATEMENT_DEPTH,
+        substitutions = null,
+        nonTerminalNodeA = metastatementNode,  ///
+        nonTerminalNodeB = bracketedMetastatementNode,  ///
+        nonTerminalNodeMatches = matcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, depth);
 
-  if (childNodesLength === BRACKETED_CHILD_NODES_LENGTH) {
-    const firstChildNode = first(childNodes),
-          thirdChildNode = third(childNodes),
-          secondChildNode = second(childNodes),
-          firstChildNodeTerminalNode = firstChildNode.isTerminalNode(),
-          thirdChildNodeTerminalNode = thirdChildNode.isTerminalNode(),
-          secondChildNodeNonTerminalNode = secondChildNode.isNonTerminalNode();
-
-    if (firstChildNodeTerminalNode && secondChildNodeNonTerminalNode && thirdChildNodeTerminalNode) {
-      const nonTerminalNode = secondChildNode,  ///
-            firstTerminalNode = firstChildNode, ///
-            secondTerminalNode = thirdChildNode,  ///
-            nonTerminalNodeRuleName = nonTerminalNode.getRuleName(),
-            firstTerminalNodeContent = firstTerminalNode.getContent(),
-            secondTerminalNodeContent = secondTerminalNode.getContent(),
-            firstTerminalNodeContentLeftBracket = (firstTerminalNodeContent === LEFT_BRACKET),
-            secondTerminalNodeContentRightBracket = (secondTerminalNodeContent === RIGHT_BRACKET),
-            nonTerminalNodeRuleNameMetastatementRuleName = (nonTerminalNodeRuleName === METASTATEMENT_RULE_NAME);
-
-      if (nonTerminalNodeRuleNameMetastatementRuleName && firstTerminalNodeContentLeftBracket && secondTerminalNodeContentRightBracket) {
-        bracketedMetastatementNode = nonTerminalNode;  ///
-      }
-    }
+  if (nonTerminalNodeMatches) {
+    bracketedMetastatementChildNode = bracketedMetastatementChildNodeQuery(metastatementNode);
   }
 
-  return bracketedMetastatementNode;
+  return bracketedMetastatementChildNode;
 }

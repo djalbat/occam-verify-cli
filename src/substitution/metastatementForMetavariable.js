@@ -1,7 +1,7 @@
 "use strict";
 
 import { matcher } from "../matcher";
-import { bracketedMetastatementNodeFromMetastatementNode } from "../utilities/metaproof";
+import { bracketedMetastatementChildNodeFromMetastatementNode } from "../utilities/metaproof";
 
 export default class MetastatementForMetavariableSubstitution {
   constructor(metavariableName, metastatementNode) {
@@ -27,10 +27,10 @@ export default class MetastatementForMetavariableSubstitution {
     matchesMetastatementNode = nodeMatches;  ///
 
     if (!matchesMetastatementNode) {
-      const bracketedNonTerminalNode = bracketedMetastatementNodeFromMetastatementNode(metastatementNode);
+      const bracketedMetastatementChildNode = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode);
 
-      if (bracketedNonTerminalNode !== null) {
-        const metastatementNode = bracketedNonTerminalNode, ///
+      if (bracketedMetastatementChildNode !== null) {
+        const metastatementNode = bracketedMetastatementChildNode, ///
               nodeA = this.metastatementNode,  ///
               nodeB = metastatementNode,
               nodeMatches = matcher.matchNode(nodeA, nodeB);
@@ -45,10 +45,10 @@ export default class MetastatementForMetavariableSubstitution {
   static fromMetavariableNameAndMetastatementNode(metavariableName, metastatementNode) {
     let metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableName, metastatementNode);
 
-    const bracketedMetastatementNode = bracketedMetastatementNodeFromMetastatementNode(metastatementNode);
+    const bracketedMetastatementChildNode = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode);
 
-    if (bracketedMetastatementNode !== null) {
-      const metastatementNode = bracketedMetastatementNode; ///
+    if (bracketedMetastatementChildNode !== null) {
+      const metastatementNode = bracketedMetastatementChildNode; ///
 
       metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableName, metastatementNode);
     }

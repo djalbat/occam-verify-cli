@@ -1,7 +1,7 @@
 "use strict";
 
 import { matcher } from "../matcher";
-import { bracketedStatementNodeFromStatementNode } from "../utilities/proof";
+import { bracketedStatementChildNodeFromStatementNode } from "../utilities/proof";
 
 export default class StatementForMetavariableSubstitution {
   constructor(metavariableName, statementNode) {
@@ -27,10 +27,10 @@ export default class StatementForMetavariableSubstitution {
     matchesStatementNode = nodeMatches;  ///
 
     if (!matchesStatementNode) {
-      const bracketedStatementNode = bracketedStatementNodeFromStatementNode(statementNode);
+      const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
-      if (bracketedStatementNode !== null) {
-        const statementNode = bracketedStatementNode, ///
+      if (bracketedStatementChildNode !== null) {
+        const statementNode = bracketedStatementChildNode, ///
               nodeA = this.statementNode,  ///
               nodeB = statementNode,
               nodeMatches = matcher.matchNode(nodeA, nodeB);
@@ -45,10 +45,10 @@ export default class StatementForMetavariableSubstitution {
   static fromMetavariableNameAndStatementNode(metavariableName, statementNode) {
     let statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableName, statementNode);
 
-    const bracketedStatementNode = bracketedStatementNodeFromStatementNode(statementNode);
+    const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
-    if (bracketedStatementNode !== null) {
-      const statementNode = bracketedStatementNode; ///
+    if (bracketedStatementChildNode !== null) {
+      const statementNode = bracketedStatementChildNode; ///
 
       statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableName, statementNode);
     }
