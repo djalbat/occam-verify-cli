@@ -2,6 +2,7 @@
 
 import verifyTerm from "./verify/term";
 import equalityCombinator from "./ocmbinator/equality";
+import equalityStatementNode from "./node/statement/equality";
 
 import { matcher } from "./matcher";
 import { nodeQuery } from "./utilities/query";
@@ -93,12 +94,10 @@ export default class Equality {
     const statementNode = proofStep.getStatementNode();
 
     if (statementNode !== null) {
-      const combinator = equalityCombinator,  ///
-            combinatorStatementNode = combinator.getStatementNode(),  ///
-            substitutions = null,
+      const substitutions = null,
             depth = EQUALITY_DEPTH,
             nodeA = statementNode,  ///
-            nodeB = combinatorStatementNode,  ///
+            nodeB = equalityStatementNode,  ///
             nodeMatches = matcher.matchNode(nodeA, nodeB, substitutions, depth);
 
       if (nodeMatches) {
