@@ -2,7 +2,7 @@
 
 import Combinator from "../combinator";
 
-import { equalityCombinatorStatementNode } from "../utilities/node";
+import equalityCombinatorStatementNode from "../node/statement/combinator/equality";
 
 class EqualityCombinator extends Combinator {
   static fromNothing() {

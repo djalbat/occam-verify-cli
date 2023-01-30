@@ -1,12 +1,11 @@
 "use strict";
 
-import { nodeQuery } from "./query";
 import { rewriteNodes } from "occam-grammar-utilities";
-import { OBJECT_TYPE_NAME } from "../typeNames";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
+
+import { nodeQuery } from "../utilities/query";
 import { LABEL_RULE_NAME, UNQUALIFIED_STATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME, CONSTRUCTOR_DECLARATIONRULE_NAME } from "../ruleNames";
 
-import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
@@ -19,22 +18,6 @@ const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
 const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
       statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
-
-const equalityStatementString = "n=m",
-      bracketedStatementString = "(n=m)",
-      bracketedMetastatementString = "(A)",
-      equalityCombinatorStatementString = `${OBJECT_TYPE_NAME} = ${OBJECT_TYPE_NAME}`,
-      bracketedCombinatorStatementString = `(${STATEMENT_META_TYPE_NAME})`;
-
-export const equalityStatementNode = statementNodeFromStatementString(equalityStatementString);
-
-export const bracketedStatementNode = statementNodeFromStatementString(bracketedStatementString);
-
-export const bracketedMetastatementNode = metastatementNodeFromMetastatementString(bracketedMetastatementString);
-
-export const equalityCombinatorStatementNode = statementNodeFromStatementString(equalityCombinatorStatementString);
-
-export const bracketedCombinatorStatementNode = statementNodeFromStatementString(bracketedCombinatorStatementString);
 
 export function termNodeFromTermString(termString, lexer, parser) {
   const ruleName = CONSTRUCTOR_DECLARATIONRULE_NAME,

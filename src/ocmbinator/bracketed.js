@@ -2,7 +2,7 @@
 
 import Combinator from "../combinator";
 
-import { bracketedCombinatorStatementNode } from "../utilities/node";
+import bracketedCombinatorStatementNode from "../node/statement/combinator/bracketed";
 
 class BracketedCombinator extends Combinator {
   static fromNothing() {
