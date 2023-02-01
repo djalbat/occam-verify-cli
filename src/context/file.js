@@ -462,7 +462,9 @@ export default class FileContext {
           node = releaseContext.parse(tokens);
 
     if (node !== null) {
-      rewriteNodes(node);
+      const nonTerminalNode = node; ///
+
+      rewriteNodes(nonTerminalNode);
     }
 
     const types = [],

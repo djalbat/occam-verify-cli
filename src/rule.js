@@ -134,7 +134,7 @@ export default class Rule {
     return json;
   }
 
-  static fromJSON(json, lexer, parser) {
+  static fromJSON(json, context) {
     let rule;
 
     let { labels } = json;
@@ -143,7 +143,7 @@ export default class Rule {
 
     labels = labelsJSON.map((labelJSON) => {
       const json = labelJSON, ///
-            label = Label.fromJSON(json, lexer, parser);
+            label = Label.fromJSON(json, context);
 
       return label;
     });
@@ -154,7 +154,7 @@ export default class Rule {
 
     premises = premisesJSON.map((premiseJSON) => {
       const json = premiseJSON, ///
-            premise = Premise.fromJSON(json, lexer, parser);
+            premise = Premise.fromJSON(json, context);
 
       return premise;
     });
@@ -165,7 +165,7 @@ export default class Rule {
 
     json = conclusionJSON;  ///
 
-    conclusion = Conclusion.fromJSON(json, lexer, parser);
+    conclusion = Conclusion.fromJSON(json, context);
 
     rule = new Rule(labels, premises, conclusion);
 

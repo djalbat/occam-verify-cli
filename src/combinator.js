@@ -35,9 +35,11 @@ export default class Combinator {
     return json;
   }
 
-  static fromJSON(json, lexer, parser) {
+  static fromJSON(json, context) {
     const { statement } = json,
           statementString = statement,  ///
+          lexer = context.getLexer(),
+          parser = context.getParser(),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
           combinator = new Combinator(statementNode);
 

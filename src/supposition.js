@@ -71,9 +71,11 @@ export default class Supposition {
     return json;
   }
 
-  static fromJSON(json, lexer, parser) {
+  static fromJSON(json, context) {
     const { statement } = json,
           statementString = statement,  ///
+          lexer = context.getLexer(),
+          parser = context.getParser(),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
           supposition = new Supposition(statementNode);
 

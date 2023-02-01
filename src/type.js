@@ -124,14 +124,14 @@ export default class Type {
     return json;
   }
 
-  static fromJSON(json, lexer, parser) {
+  static fromJSON(json, context) {
     let type;
 
     let { superType } = json;
 
     const superTypeJSON = superType;  ///
 
-    superType = superTypeFromSuperTypeJSON(superTypeJSON, lexer, parser);
+    superType = superTypeFromSuperTypeJSON(superTypeJSON, context);
 
     const { name } = json;
 
@@ -181,7 +181,7 @@ class ObjectType extends Type {
 
 export const objectType = ObjectType.fromNothing();
 
-function superTypeFromSuperTypeJSON(superTypeJSON, lexer, parser) {
+function superTypeFromSuperTypeJSON(superTypeJSON, context) {
   let superType;
 
   const json = superTypeJSON, ///
@@ -191,11 +191,11 @@ function superTypeFromSuperTypeJSON(superTypeJSON, lexer, parser) {
     superType = objectType; ///
   } else {
     const typeName = name,  ///
-          type = releaseContext.findTypeByTypeName(typeName);
+          type = context.findTypeByTypeName(typeName);
 
     superType = (type !== null) ?
                   type :  ///
-                    Type.fromJSON(json, lexer, parser);  ///
+                    Type.fromJSON(json, context);  ///
   }
 
   return superType;

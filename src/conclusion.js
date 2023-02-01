@@ -42,9 +42,11 @@ export default class Conclusion {
     return json;
   }
 
-  static fromJSON(json, lexer, parser) {
+  static fromJSON(json, context) {
     const { metastatement } = json,
           metastatementString = metastatement,  ///
+          lexer = context.getLexer(),
+          parser = context.getParser(),
           metastatementNode = metastatementNodeFromMetastatementString(metastatementString, lexer, parser),
           conclusion = new Conclusion(metastatementNode);
 

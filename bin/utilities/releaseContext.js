@@ -51,7 +51,8 @@ module.exports = {
 function fileReleaseContextFromDependencyAndProjectsDirectoryPath(dependency, projectsDirectoryPath, context) {
   let releaseContext;
 
-  const dependencyName = dependency.getName(),
+  const { log } = context,
+        dependencyName = dependency.getName(),
         filePath = concatenatePaths(projectsDirectoryPath, dependencyName),
         content = readFile(filePath),
         releaseJSONString = content,  ///
@@ -67,8 +68,7 @@ function fileReleaseContextFromDependencyAndProjectsDirectoryPath(dependency, pr
 
   entries = Entries.fromJSON(json);
 
-  const { log } = context,
-        name = dependencyName, ///
+  const name = dependencyName, ///
         fileReleaseContext = FileReleaseContext.fromLogNameEntriesAndContextJSON(log, name, entries, contextJSON);
 
   releaseContext = fileReleaseContext;  ///

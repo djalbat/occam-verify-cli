@@ -65,9 +65,10 @@ function nodeFromContentAndRuleName(content, ruleName, lexer = florenceLexer, pa
   const ruleMap = parser.getRuleMap(),
         rule = ruleMap[ruleName],
         tokens = lexer.tokenise(content),
-        node = parser.parse(tokens, rule);
+        node = parser.parse(tokens, rule),
+        nonTerminalNode = node; ///
 
-  rewriteNodes(node);
+  rewriteNodes(nonTerminalNode);
 
   return node;
 }

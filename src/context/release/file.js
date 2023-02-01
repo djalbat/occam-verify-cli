@@ -211,16 +211,15 @@ export default class FileReleaseContext extends ReleaseContext {
   }
 
   fromJSON() {
-    const jsonArray = this.contextJSON,
-          lexer = this.getLexer(),
-          parser = this.getParser();
+    const context = this, ///
+          jsonArray = this.contextJSON;
 
     jsonArray.forEach((json) => {
       const { kind } = json;
 
       switch (kind) {
         case TYPE_KIND: {
-          const type = Type.fromJSON(json, lexer, parser);
+          const type = Type.fromJSON(json, context);
 
           this.types.push(type);
 
@@ -228,7 +227,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case RULE_KIND: {
-          const rule = Rule.fromJSON(json, lexer, parser);
+          const rule = Rule.fromJSON(json, context);
 
           this.rules.push(rule);
 
@@ -236,7 +235,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case AXIOM_KIND: {
-          const axiom = Axiom.fromJSON(json, lexer, parser);
+          const axiom = Axiom.fromJSON(json, context);
 
           this.axioms.push(axiom);
 
@@ -244,7 +243,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case LEMMA_KIND: {
-          const lemma = Lemma.fromJSON(json, lexer, parser);
+          const lemma = Lemma.fromJSON(json, context);
 
           this.lemmas.push(lemma);
 
@@ -252,7 +251,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case THEOREM_KIND: {
-          const theorem = Theorem.fromJSON(json, lexer, parser);
+          const theorem = Theorem.fromJSON(json, context);
 
           this.theorems.push(theorem);
 
@@ -260,7 +259,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case CONJECTURE_KIND: {
-          const conjecture = Conjecture.fromJSON(json, lexer, parser);
+          const conjecture = Conjecture.fromJSON(json, context);
 
           this.conjectures.push(conjecture);
 
@@ -268,7 +267,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case COMBINATOR_KIND: {
-          const combinator = Combinator.fromJSON(json, lexer, parser);
+          const combinator = Combinator.fromJSON(json, context);
 
           this.combinators.push(combinator);
 
@@ -276,7 +275,7 @@ export default class FileReleaseContext extends ReleaseContext {
         }
 
         case CONSTRUCTOR_KIND: {
-          const constructor = Constructor.fromJSON(json, lexer, parser);
+          const constructor = Constructor.fromJSON(json, context);
 
           this.constructors.push(constructor);
 
