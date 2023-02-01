@@ -4,7 +4,7 @@ const helpAction = require("./action/help"),
       verifyAction = require("./action/verify"),
       versionAction = require("./action/version");
 
-const { DEFAULT_HELP, DEFAULT_VERSION, DEFAULT_LOG_LEVEL } = require("./defaults"),
+const { DEFAULT_HELP, DEFAULT_TAIL, DEFAULT_FOLLOW, DEFAULT_VERSION, DEFAULT_LOG_LEVEL } = require("./defaults"),
       { HELP_COMMAND,
         VERIFY_COMMAND,
         VERSION_COMMAND } = require("./commands");
@@ -12,6 +12,8 @@ const { DEFAULT_HELP, DEFAULT_VERSION, DEFAULT_LOG_LEVEL } = require("./defaults
 function actions(command, argument, options) {
   const commandMissing = (command === null),
         { help = DEFAULT_HELP,
+          tail = DEFAULT_TAIL,
+          follow = DEFAULT_FOLLOW,
           version = DEFAULT_VERSION,
           logLevel = DEFAULT_LOG_LEVEL } = options;
 
@@ -27,13 +29,13 @@ function actions(command, argument, options) {
 
   switch (command) {
     case HELP_COMMAND: helpAction(); break;
-    case VERIFY_COMMAND: verifyAction(argument, logLevel); break;
+    case VERIFY_COMMAND: verifyAction(argument, tail, follow, logLevel); break;
     case VERSION_COMMAND: versionAction(); break;
 
     default: {
       argument = command; ///
 
-      verifyAction(argument, logLevel);
+      verifyAction(argument, tail, follow, logLevel);
 
       break;
     }

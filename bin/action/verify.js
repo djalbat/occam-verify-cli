@@ -8,8 +8,8 @@ const { trimTrailingSlash } = require("../utilities/string"),
 
 const { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
-function verifyAction(argument, logLevel) {
-  const log = Log.fromLogLevel(logLevel),
+function verifyAction(argument, tail, follow, logLevel) {
+  const log = Log.followAndLogLevel(follow, logLevel),
         name = trimTrailingSlash(argument), ///
         context = {},
         dependency = Dependency.fromName(name),
@@ -26,6 +26,8 @@ function verifyAction(argument, logLevel) {
     if (error) {
       log.error(error);
 
+      tailLogMessages();
+
       return;
     }
 
@@ -38,6 +40,8 @@ function verifyAction(argument, logLevel) {
       if (error) {
         log.error(error);
 
+        tailLogMessages();
+
         return;
       }
 
@@ -45,8 +49,24 @@ function verifyAction(argument, logLevel) {
       delete context.releaseContextFromDependencyAndDependentNames;
 
       verifyRelease(releaseName, releaseContextMap);
+
+      tailLogMessages();
     });
   });
+
+  function tailLogMessages() {
+    if (!follow) {
+      let logMessages = log.getMessages()
+
+      const start = - tail;
+
+      logMessages = logMessages.slice(start);
+
+      logMessages.forEach((logMessage) => {
+        console.log(logMessage);
+      });
+    }
+  }
 }
 
 module.exports = verifyAction;
