@@ -9,7 +9,7 @@ const { trimTrailingSlash } = require("../utilities/string"),
 const { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
 function verifyAction(argument, tail, follow, logLevel) {
-  const log = Log.followAndLogLevel(follow, logLevel),
+  const log = Log.fromFollowAndLogLevel(follow, logLevel),
         name = trimTrailingSlash(argument), ///
         context = {},
         dependency = Dependency.fromName(name),

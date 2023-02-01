@@ -84,7 +84,7 @@ export default class Log {
         this.messages.push(message);
   }
 
-  static followAndLogLevel(follow, logLevel) {
+  static fromFollowAndLogLevel(follow, logLevel) {
     const messages = follow ?
                        null :
                          [],
