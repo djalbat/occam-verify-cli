@@ -15,7 +15,7 @@ export default function verifyTerm(termNode, types, context) {
 
   const termString = context.nodeAsString(termNode);
 
-  context.debug(`Verifying the '${termString}' term...`, termNode);
+  context.trace(`Verifying the '${termString}' term...`, termNode);
 
   if (!termVerified) {
     const variables = [],
@@ -41,7 +41,7 @@ export default function verifyTerm(termNode, types, context) {
   }
 
   if (termVerified) {
-    context.info(`Verified the '${termString}' term.`, termNode);
+    context.debug(`Verified the '${termString}' term.`, termNode);
   }
 
   return termVerified;

@@ -14,9 +14,10 @@ import { ARGUMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../ruleNames";
 
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!"),
-      metaTypeNodeQuery = nodeQuery("/metaArgument/metaType!/@meta-type"),
+      metaTypeNodeQuery = nodeQuery("/metaArgument/metaType!"),
       statementNodeQuery = nodeQuery("/metaArgument/statement!"),
-      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
+      metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type");
 
 export default function verifyStatement(statementNode, assertions, derived, context) {
   let statementVerified = false;
@@ -250,32 +251,27 @@ function verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
 function verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context) {
   let metaArgumentNodeVerified = false;
 
-  const statementNode = statementNodeQuery(metaArgumentNode);
+  const statementNode = statementNodeQuery(metaArgumentNode),
+        combinatorMetaTYpeNode = metaTypeNodeQuery(combinatorMetaargumentNode);
 
   if (statementNode === null) {
     const metaArgumentString = context.nodeAsString(metaArgumentNode);
 
-    context.error(`The '${metaArgumentString}' meta-argument should be a statement, not a meta-type.`, metaArgumentNode);
+    context.error(`Expected a statement but got a '${metaArgumentString}' meta-type.`, metaArgumentNode);
   } else {
-    const derived = false,
-          assertions = [],
-          statementVerified = verifyStatement(statementNode, assertions, derived, context);
+    if (combinatorMetaTYpeNode === null) {
+      const combinatorMetaargumentString = context.nodeAsString(combinatorMetaargumentNode);
 
-    if (statementVerified) {
-      const combinatorMetaTYpeNode = metaTypeNodeQuery(combinatorMetaargumentNode);
+      context.error(`Expected a meta-type but got a '${combinatorMetaargumentString}' statement.`, metaArgumentNode);
+    } else {
+      const combinatorMetaTypeTerminalNode = metaTypeTerminalNodeQuery(combinatorMetaTYpeNode),
+            content = combinatorMetaTypeTerminalNode.getContent(),
+            contentStatementMetaType = (content === STATEMENT_META_TYPE);
 
-      if (combinatorMetaTYpeNode !== null) {
-        const terminalNode = combinatorMetaTYpeNode,  ///
-              terminalNodeContent = terminalNode.getContent(),
-              terminalNodeContentStatementMetaType = (terminalNodeContent === STATEMENT_META_TYPE);
-
-        metaArgumentNodeVerified = terminalNodeContentStatementMetaType;  ///
-      }
-
-      if (!metaArgumentNodeVerified) {
-        const combinatorMetaargumentString = context.nodeAsString(combinatorMetaargumentNode);
-
-        context.error(`The '${combinatorMetaargumentString}' combinator meta-argument should be the 'Statement' meta-type.`, metaArgumentNode);
+      if (!contentStatementMetaType) {
+        context.error(`Expected the meta-type to be 'Statement' but got '${content}'.`, metaArgumentNode);
+      } else {
+        metaArgumentNodeVerified = true;
       }
     }
   }
