@@ -84,6 +84,15 @@ export default class Log {
         this.messages.push(message);
   }
 
+  static fromNothing() {
+    const messages = [],
+          logLevel = TRACE_LEVEL,
+          follow = false,
+          log = new Log(messages, logLevel, follow);
+
+    return log;
+  }
+
   static fromFollowAndLogLevel(follow, logLevel) {
     const messages = follow ?
                        null :
