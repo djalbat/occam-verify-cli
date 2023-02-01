@@ -28,7 +28,7 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
       const type = fileContext.findTypeByTypeName(typeName);
 
       if (type === null) {
-        fileContext.error(`The '${variableName}' variable's '${typeName}' type is missing.`, variableNode);
+        fileContext.error(`The '${variableName}' variable's '${typeName}' type is not present.`, variableNode);
       } else {
         const name = variableName;  ///
 

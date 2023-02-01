@@ -1,6 +1,7 @@
 "use strict";
 
-import { matcher } from "../matcher";
+import matcher from "../matcher";
+
 import { bracketedMetastatementChildNodeFromMetastatementNode } from "../utilities/metaproof";
 
 export default class MetastatementForMetavariableSubstitution {

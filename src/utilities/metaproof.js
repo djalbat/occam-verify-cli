@@ -1,8 +1,8 @@
 "use strict";
 
+import matcher from "../matcher";
 import bracketedMetastatementNode from "../node/metastatement/bracketed";
 
-import { matcher } from "../matcher";
 import { nodeQuery } from "../utilities/query";
 import { BRACKETED_METASTATEMENT_DEPTH } from "../constants";
 
@@ -12,11 +12,11 @@ export function matchMetastatementModuloBrackets(metastatementNodeA, metastateme
   let metastatementMatchesModuloBrackets = false;
 
   if (!metastatementMatchesModuloBrackets) {
-    const nonTerminalNodeA = metastatementNodeA,  ///
-          nonTerminalNodeB = metastatementNodeB,  ///
-          nonTerminalNodeMatches = matcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB);
+    const nodeA = metastatementNodeA,  ///
+          nodeB = metastatementNodeB,  ///
+          nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-    metastatementMatchesModuloBrackets = nonTerminalNodeMatches;  ///
+    metastatementMatchesModuloBrackets = nodeMatches;  ///
   }
 
   if (!metastatementMatchesModuloBrackets) {
@@ -49,11 +49,10 @@ export function matchMetastatementModuloBrackets(metastatementNodeA, metastateme
 export function bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode) {
   let bracketedMetastatementChildNode = null;
 
-  const depth = BRACKETED_METASTATEMENT_DEPTH,
-        substitutions = null,
-        nonTerminalNodeA = metastatementNode,  ///
-        nonTerminalNodeB = bracketedMetastatementNode,  ///
-        nonTerminalNodeMatches = matcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, depth);
+  const nodeA = metastatementNode,  ///
+        nodeB = bracketedMetastatementNode,  ///
+        depth = BRACKETED_METASTATEMENT_DEPTH,
+        nonTerminalNodeMatches = matcher.matchNode(nodeA, nodeB, depth);
 
   if (nonTerminalNodeMatches) {
     bracketedMetastatementChildNode = bracketedMetastatementChildNodeQuery(metastatementNode);

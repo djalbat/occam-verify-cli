@@ -1,7 +1,5 @@
 "use strict";
 
-const { Log } = require("../lib/index");
-
 const helpAction = require("./action/help"),
       verifyAction = require("./action/verify"),
       versionAction = require("./action/version");
@@ -28,36 +26,16 @@ function actions(command, argument, options) {
   }
 
   switch (command) {
-    case HELP_COMMAND: {
-      helpAction();
-
-      break;
-    }
-
-    case VERIFY_COMMAND: {
-      const log = Log.fromLogLevel(logLevel);
-
-      verifyAction(argument, log);
-
-      log.toConsole();
-
-      break;
-    }
-
-    case VERSION_COMMAND: {
-      versionAction();
-
-      break;
-    }
+    case HELP_COMMAND: helpAction(); break;
+    case VERIFY_COMMAND: verifyAction(argument, logLevel); break;
+    case VERSION_COMMAND: versionAction(); break;
 
     default: {
       argument = command; ///
 
-      const log = Log.fromLogLevel(logLevel);
+      verifyAction(argument, logLevel);
 
-      verifyAction(argument, log);
-
-      log.toConsole();
+      break;
     }
   }
 }

@@ -1,6 +1,6 @@
 "use strict";
 
-import Matcher from "../matcher";
+import Verifier from "../verifier";
 import MetastatementForMetavariableSubstitution from "../substitution/metastatementForMetavariable";
 
 import { nodeQuery } from "../utilities/query";
@@ -9,7 +9,7 @@ import { metavariableNameFromMetavariableNode } from "../utilities/query";
 
 const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!');
 
-export default class MetastatementForMetavariableMatcher extends Matcher {
+export default class MetastatementForMetavariableVerifier extends Verifier {
   matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
     let nonTerminalNodeMatches = false;
 

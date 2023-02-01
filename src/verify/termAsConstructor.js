@@ -31,7 +31,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
       if (type !== null) {
         termVerifiedAsConstructor = true;
       } else {
-        fileContext.error(`The '${termString}' constructor's '${typeName}' type is missing.`, termNode);
+        fileContext.error(`The '${termString}' constructor's '${typeName}' type is not present.`, termNode);
       }
     }
   }
@@ -152,7 +152,7 @@ function verifyArgumentNode(argumentNode, fileContext) {
           typePresent = fileContext.isTypePresentByTypeName(typeName);
 
     if (!typePresent) {
-      fileContext.error(`The type '${typeName}' is missing.`, argumentNode);
+      fileContext.error(`The type '${typeName}' is not present.`, argumentNode);
     } else {
       typeNodeVerified = true;
     }

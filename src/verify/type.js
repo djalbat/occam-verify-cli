@@ -24,7 +24,7 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
       const superType = fileContext.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
-        fileContext.error(`The super-type '${superTypeName}' is missing.`, typeNode);
+        fileContext.error(`The super-type '${superTypeName}' is not present.`, typeNode);
       } else {
         type = Type.fromTypeNameAndSuperType(typeName, superType);
       }

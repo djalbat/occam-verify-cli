@@ -1,6 +1,6 @@
 "use strict";
 
-import Matcher from "../matcher";
+import Verifier from "../verifier";
 import TermForVariableSubstitution from "../substitution/termForVariable";
 
 import { nodeQuery } from "../utilities/query";
@@ -9,7 +9,7 @@ import { variableNameFromVariableNode } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery('/term/variable!');
 
-export default class TermForVariableMatcher extends Matcher {
+export default class TermForVariableVerifier extends Verifier {
   matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
     let nonTerminalNodeMatches = false;
 

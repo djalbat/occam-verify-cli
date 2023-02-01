@@ -1,7 +1,7 @@
 "use strict";
 
-export default class Matcher {
-  matchNode(nodeA, nodeB, substitutions, depth = Infinity) {
+class Matcher {
+  matchNode(nodeA, nodeB, depth = Infinity) {
     let nodeMatches = false;
 
     if (depth === 0) {
@@ -20,7 +20,7 @@ export default class Matcher {
         } else {
           const nonTerminalNodeA = nodeA,  ///
                 nonTerminalNodeB = nodeB, ///
-                nonTerminalNodeMatches = this.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, depth);
+                nonTerminalNodeMatches = this.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, depth);
 
           nodeMatches = nonTerminalNodeMatches; ///
         }
@@ -30,7 +30,7 @@ export default class Matcher {
     return nodeMatches;
   }
 
-  matchNodes(nodesA, nodesB, substitutions, depth = Infinity) {
+  matchNodes(nodesA, nodesB, depth) {
     let nodesMatch = false;
 
     const nodesALength = nodesA.length,
@@ -41,7 +41,7 @@ export default class Matcher {
 
       nodesMatch = nodesA.every((nodeA, index) => {
         const nodeB = nodesB[index],
-              nodeMatches = this.matchNode(nodeA, nodeB, substitutions, depth);
+              nodeMatches = this.matchNode(nodeA, nodeB, depth);
 
         if (nodeMatches) {
           return true;
@@ -52,14 +52,14 @@ export default class Matcher {
     return nodesMatch;
   }
 
-  matchTerminalNode(terminalNodeA, terminalNodeB, substitutions, depth) {
+  matchTerminalNode(terminalNodeA, terminalNodeB, depth) {
     const matches = terminalNodeA.match(terminalNodeB),
           terminalNodeMatches = matches;  ///
 
     return terminalNodeMatches;
   }
 
-  matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, depth = Infinity) {
+  matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, depth) {
     let nonTerminalNodeMatches = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(), ///
@@ -70,7 +70,7 @@ export default class Matcher {
             nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
             nodesA = nonTerminalNodeAChildNodes, ///
             nodesB = nonTerminalNodeBChildNodes, ///
-            nodesMatch = this.matchNodes(nodesA, nodesB, substitutions, depth);
+            nodesMatch = this.matchNodes(nodesA, nodesB, depth);
 
       nonTerminalNodeMatches = nodesMatch; ///
     }
@@ -79,4 +79,6 @@ export default class Matcher {
   }
 }
 
-export const matcher = new Matcher();
+const matcher = new Matcher();
+
+export default matcher;

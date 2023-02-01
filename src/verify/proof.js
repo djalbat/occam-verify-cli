@@ -1,8 +1,8 @@
 "use strict";
 
+import matcher from "../matcher";
 import verifyDerivation from "../verify/derivation";
 
-import { matcher } from "../matcher";
 import { nodeQuery } from "../utilities/query";
 
 const derivationNodeQuery = nodeQuery("/proof/derivation!");

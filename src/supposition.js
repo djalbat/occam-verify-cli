@@ -3,7 +3,7 @@
 import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { statementNodeFromStatementString } from "./utilities/node";
-import { suppositionTermForVariableMatcher } from "./matcher/termForVariable/supposition";
+import { suppositionTermForVariableVerifier } from "./verifier/termForVariable/supposition";
 
 const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
       subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
@@ -40,7 +40,7 @@ export default class Supposition {
                                 const subproofStatementNode = subproofStatementNodes[index],
                                       nonTerminalNodeA = subproofAssertionStatementNode,  ///
                                       nonTerminalNodeB = subproofStatementNode, ///
-                                      nonTerminalNodeMatches = suppositionTermForVariableMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+                                      nonTerminalNodeMatches = suppositionTermForVariableVerifier.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
 
                                 if (nonTerminalNodeMatches) {
                                   return true;
@@ -55,7 +55,7 @@ export default class Supposition {
   matchStatementNode(statementNode, substitutions) {
     const nonTerminalNodeA = this.statementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeMatches = suppositionTermForVariableMatcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
+          nonTerminalNodeMatches = suppositionTermForVariableVerifier.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
           statementNodeMatches = nonTerminalNodeMatches; ///
 
     return statementNodeMatches;

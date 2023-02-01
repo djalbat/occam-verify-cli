@@ -1,6 +1,7 @@
 "use strict";
 
-import { matcher } from "../matcher";
+import matcher from "../matcher";
+
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/proof";
 
 export default class StatementForMetavariableSubstitution {

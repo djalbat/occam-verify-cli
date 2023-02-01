@@ -7,9 +7,10 @@ import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } f
 const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL } = levels;
 
 export default class Log {
-  constructor(messages, logLevel) {
+  constructor(messages, logLevel, following) {
     this.messages = messages;
     this.logLevel = logLevel;
+    this.following = following;
   }
 
   getMessages() {
@@ -18,6 +19,10 @@ export default class Log {
 
   getLogLevel() {
     return this.logLevel;
+  }
+
+  isFollowing() {
+    return this.following;
   }
 
   trace(message, node, tokens, filePath) {
@@ -75,17 +80,16 @@ export default class Log {
     message = formatMessage(level, message, node, tokens, filePath);  ///
 
     this.messages.push(message);
-  }
 
-  toConsole() {
-    this.messages.forEach((message) => {
+    if (this.following) {
       console.log(message);
-    });
+    }
   }
 
   static fromLogLevel(logLevel) {
     const messages = [],
-          log = new Log(messages, logLevel);
+          following = true,
+          log = new Log(messages, logLevel, following);
 
     return log;
   }

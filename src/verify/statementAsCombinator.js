@@ -125,7 +125,7 @@ function verifyTypeNode(typeNode, fileContext) {
         typePresent = fileContext.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    fileContext.error(`The type '${typeName}' is missing.`, typeNode);
+    fileContext.error(`The type '${typeName}' not present.`, typeNode);
   } else {
     typeNodeVerified = true;
   }

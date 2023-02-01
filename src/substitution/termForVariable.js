@@ -1,6 +1,6 @@
 "use strict";
 
-import { matcher } from "../matcher";
+import matcher from "../matcher";
 
 export default class TermForVariableSubstitution {
   constructor(variableName, termNode) {

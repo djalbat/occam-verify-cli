@@ -1,8 +1,8 @@
 "use strict";
 
+import matcher from "../matcher";
 import bracketedStatementNode from "../node/statement/bracketed";
 
-import { matcher } from "../matcher";
 import { nodeQuery } from "../utilities/query";
 import { BRACKETED_STATEMENT_DEPTH } from "../constants";
 
@@ -12,9 +12,9 @@ export function matchStatementModuloBrackets(statementNodeA, statementNodeB) {
   let statementMatchesModuloBrackets = false;
 
   if (!statementMatchesModuloBrackets) {
-    const nonTerminalNodeA = statementNodeA,  ///
-          nonTerminalNodeB = statementNodeB,  ///
-          nonTerminalNodeMatches = matcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB);
+    const nodeA = statementNodeA,  ///
+          nodeB = statementNodeB,  ///
+          nonTerminalNodeMatches = matcher.matchNode(nodeA, nodeB);
 
     statementMatchesModuloBrackets = nonTerminalNodeMatches;  ///
   }
@@ -49,11 +49,10 @@ export function matchStatementModuloBrackets(statementNodeA, statementNodeB) {
 export function bracketedStatementChildNodeFromStatementNode(statementNode) {
   let bracketedStatementChildNode = null;
 
-  const depth = BRACKETED_STATEMENT_DEPTH,
-        substitutions = null,
-        nonTerminalNodeA = statementNode,  ///
-        nonTerminalNodeB = bracketedStatementNode,  ///
-        nonTerminalNodeMatches = matcher.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, depth);
+  const nodeA = statementNode,  ///
+        nodeB = bracketedStatementNode,  ///
+        depth = BRACKETED_STATEMENT_DEPTH,
+        nonTerminalNodeMatches = matcher.matchNode(nodeA, nodeB, depth);
 
   if (nonTerminalNodeMatches) {
     bracketedStatementChildNode = bracketedStatementChildNodeQuery(statementNode);

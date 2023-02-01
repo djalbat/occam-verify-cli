@@ -1,10 +1,10 @@
 "use strict";
 
+import matcher from "./matcher";
 import verifyTerm from "./verify/term";
 import equalityCombinator from "./ocmbinator/equality";
 import equalityStatementNode from "./node/statement/equality";
 
-import { matcher } from "./matcher";
 import { nodeQuery } from "./utilities/query";
 import { first, second } from "./utilities/array";
 import { EQUALITY_DEPTH } from "./constants";
@@ -94,11 +94,10 @@ export default class Equality {
     const statementNode = proofStep.getStatementNode();
 
     if (statementNode !== null) {
-      const substitutions = null,
-            depth = EQUALITY_DEPTH,
-            nodeA = statementNode,  ///
+      const nodeA = statementNode,  ///
             nodeB = equalityStatementNode,  ///
-            nodeMatches = matcher.matchNode(nodeA, nodeB, substitutions, depth);
+            depth = EQUALITY_DEPTH,
+            nodeMatches = matcher.matchNode(nodeA, nodeB, depth);
 
       if (nodeMatches) {
         const leftTermNode = leftTermNodeQuery(statementNode),
