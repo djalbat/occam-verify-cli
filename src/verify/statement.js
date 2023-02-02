@@ -98,8 +98,6 @@ function verifyStatementAsEquality(statementNode, derived, context) {
   const equality = Equality.fromStatementNode(statementNode, context);
 
   if (equality !== null) {
-    statementVerifiedAsEquality = true; ///
-
     if (derived) {
       const equalities = context.getEqualities();
 
@@ -108,6 +106,8 @@ function verifyStatementAsEquality(statementNode, derived, context) {
 
         statementVerifiedAsEquality = equalityEquates; ///
       }
+    } else {
+      statementVerifiedAsEquality = true;
     }
   }
 

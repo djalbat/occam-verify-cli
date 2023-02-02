@@ -1,6 +1,7 @@
 "use strict";
 
 import matcher from "./matcher";
+import Variable from "./variable";
 import verifyTerm from "./verify/term";
 import equalityCombinator from "./ocmbinator/equality";
 import equalityStatementNode from "./node/statement/equality";
@@ -9,6 +10,7 @@ import { nodeQuery } from "./utilities/query";
 import { first, second } from "./utilities/array";
 import { EQUALITY_DEPTH } from "./constants";
 import { TERM_RULE_NAME } from "./ruleNames";
+import { verifyTermAsVariable } from "./verify/term";
 import { verifyStatementAgainstCombinator } from "./verify/statement";
 
 const leftTermNodeQuery = nodeQuery("/statement/argument[0]/term!"),
@@ -120,7 +122,7 @@ export default class Equality {
       const leftTermNode = leftTermNodeQuery(statementNode),
             rightTermNode = rightTermNodeQuery(statementNode);
 
-      equality = new Equality(leftTermNode, rightTermNode);
+      equality = equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, context);
     }
 
     return equality;
@@ -264,12 +266,63 @@ function equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, c
     if (leftTermTypeEqualToRightTermType) {
       equality = new Equality(leftTermNode, rightTermNode);
     } else {
+      const leftTermTypeSubTypeOfRightTermType = leftTermType.isSubTypeOf(rightTermType),
+            rightTermTypeSubTypeOfLeftTermType = rightTermType.isSubTypeOf(leftTermType);
+
+      if (false) {
+          ///
+      } else if (leftTermTypeSubTypeOfRightTermType) {
+        const variables = [],
+              rightTermVerifiedAsVariable = verifyTermAsVariable(rightTermNode, variables, context);
+
+        if (rightTermVerifiedAsVariable) {
+          let rightVariable;
+
+          const firstVariable = first(variables);
+
+          rightVariable = firstVariable;  ///
+
+          const rightVariableName = rightVariable.getName(),
+                rightName = rightVariableName,  ///
+                rightType = leftTermType; ///
+
+          rightVariable = Variable.fromTypeAndName(rightType, rightName);
+
+          context.addVariable(rightVariable);
+
+          equality = new Equality(leftTermNode, rightTermNode);
+        }
+      } else if (rightTermTypeSubTypeOfLeftTermType) {
+        const variables = [],
+              leftTermVerifiedAsVariable = verifyTermAsVariable(leftTermNode, variables, context);
+
+        if (leftTermVerifiedAsVariable) {
+          let leftVariable;
+
+          const firstVariable = first(variables);
+
+          leftVariable = firstVariable;  ///
+
+          const leftVariableName = leftVariable.getName(),
+                leftName = leftVariableName,  ///
+                leftType = rightTermType; ///
+
+          leftVariable = Variable.fromTypeAndName(leftType, leftName);
+
+          context.addVariable(leftVariable);
+
+          equality = new Equality(leftTermNode, rightTermNode);
+        }
+      }
+    }
+
+    if (equality === null) {
       const leftTermString = context.nodeAsString(leftTermNode),
             rightTermString = context.nodeAsString(rightTermNode),
             leftTermTypeName = leftTermType.getName(),
             rightTermTypeName = rightTermType.getName();
 
-      context.error(`The left '${leftTermString}' term's '${leftTermTypeName}' type is not equal to the right '${rightTermString}' term's '${rightTermTypeName}' type.'`, leftTermNode);
+      context.error(`The left '${leftTermString}' term's '${leftTermTypeName}' type is not equal to the right '${rightTermString}' term's '${rightTermTypeName}' type and neither can be inferred.'`, leftTermNode);
     }
   }
 
