@@ -110,14 +110,13 @@ function verifyStatementAsEquality(statementNode, assertions, derived, context) 
     if (derived) {
       debugger
     } else {
-      const variables = [],
+      const types = [],
+            variables = [],
             leftTermNode = leftTermNodeQuery(statementNode),
+            rightTermNode = rightTermNodeQuery(statementNode),
             leftTermVerifiedAsVariable = verifyTermAsVariable(leftTermNode, variables, context);
 
       if (leftTermVerifiedAsVariable) {
-        const types = [],
-              rightTermNode = rightTermNodeQuery(statementNode);
-
         verifyTerm(rightTermNode, types, context);
 
         const firstVariable = first(variables),
@@ -146,7 +145,18 @@ function verifyStatementAsEquality(statementNode, assertions, derived, context) 
           statementVerifiedAsEquality = true;
         }
       } else {
-        debugger
+        const rightTermVerifiedAsVariable = verifyTermAsVariable(rightTermNode, variables, context);
+
+        if (rightTermVerifiedAsVariable) {
+          const firstVariable = first(variables),
+                rightVariable = firstVariable,  ///
+                leftTermString = nodeAsString(leftTermNode),
+                rightVariableName = rightVariable.getName();
+
+          context.error(`The left '${leftTermString}' term cannot be equated with the right '${rightVariableName}' variable.`, statementNode);
+        } else {
+          statementVerifiedAsEquality = true;
+        }
       }
     }
   }
