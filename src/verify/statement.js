@@ -1,19 +1,25 @@
 "use strict";
 
-import Equality from "../equality";
+import Variable from "../variable";
+import Assertion from "../assertion";
 import verifyTerm from "../verify/term";
+import equalityCombinator from "../ocmbinator/equality";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/assertion/type";
 
 import { first } from "../utilities/array";
 import { objectType } from "../type";
+import { nodeAsString } from "../utilities/string";
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { STATEMENT_META_TYPE } from "../metaTypes";
+import { verifyTermAsVariable } from "../verify/term";
 import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
 import { ARGUMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../ruleNames";
 
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!"),
+      leftTermNodeQuery = nodeQuery("/statement/argument[0]/term!"),
+      rightTermNodeQuery = nodeQuery("/statement/argument[1]/term!"),
       metaTypeNodeQuery = nodeQuery("/metaArgument/metaType!"),
       statementNodeQuery = nodeQuery("/metaArgument/statement!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
@@ -35,22 +41,12 @@ export default function verifyStatement(statementNode, assertions, derived, cont
   }
 
   if (!statementVerified) {
-    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, derived, context);
+    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, assertions, derived, context);
 
     statementVerified = statementVerifiedAsEquality;  //
   }
 
   return statementVerified;
-}
-
-export function verifyStatementAgainstCombinator(statementNode, combinator, context) {
-  const combinatorStatementNode = combinator.getStatementNode(),
-        node = statementNode,  ///
-        combinatorNode = combinatorStatementNode, ///
-        nodeVerified = verifyNode(node, combinatorNode, context),
-        statementVerifiedAgainstCombinator = nodeVerified;  ///
-
-  return statementVerifiedAgainstCombinator;
 }
 
 function verifyStatementAgainstCombinators(statementNode, context) {
@@ -78,6 +74,16 @@ function verifyStatementAgainstCombinators(statementNode, context) {
   return statementVerifiedAgainstCombinators;
 }
 
+function verifyStatementAgainstCombinator(statementNode, combinator, context) {
+  const combinatorStatementNode = combinator.getStatementNode(),
+      node = statementNode,  ///
+      combinatorNode = combinatorStatementNode, ///
+      nodeVerified = verifyNode(node, combinatorNode, context),
+      statementVerifiedAgainstCombinator = nodeVerified;  ///
+
+  return statementVerifiedAgainstCombinator;
+}
+
 function verifyStatementAsTypeAssertion(statementNode, assertions, derived, context) {
   let statementVerifiedAsTypeAssertion = false;
 
@@ -92,23 +98,61 @@ function verifyStatementAsTypeAssertion(statementNode, assertions, derived, cont
   return statementVerifiedAsTypeAssertion;
 }
 
-function verifyStatementAsEquality(statementNode, derived, context) {
+function verifyStatementAsEquality(statementNode, assertions, derived, context) {
   let statementVerifiedAsEquality = false;
 
-  const equality = Equality.fromStatementNode(statementNode, context);
+  const statementString = context.nodeAsString(statementNode);
 
-  if (equality !== null) {
+  const combinator = equalityCombinator,  ///
+        statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
+
+  if (statementVerifiedAgainstCombinator) {
     if (derived) {
-      const equalities = context.getEqualities();
-
-      if (equalities !== null) {
-        const equalityEquates = equality.equate(equalities, context);
-
-        statementVerifiedAsEquality = equalityEquates; ///
-      }
+      debugger
     } else {
-      statementVerifiedAsEquality = true;
+      const variables = [],
+            leftTermNode = leftTermNodeQuery(statementNode),
+            leftTermVerifiedAsVariable = verifyTermAsVariable(leftTermNode, variables, context);
+
+      if (leftTermVerifiedAsVariable) {
+        const types = [],
+              rightTermNode = rightTermNodeQuery(statementNode);
+
+        verifyTerm(rightTermNode, types, context);
+
+        const firstVariable = first(variables),
+              leftVariable = firstVariable, ///
+              firstType = first(types),
+              rightTermType = firstType, ///
+              leftVariableType = leftVariable.getType(),
+              leftVariableName = leftVariable.getName(),
+              leftVariableTypeEqualToOrSuperTypeOfRightTermType = leftVariableType.isEqualToOrSuperTypeOf(rightTermType);
+
+        if (!leftVariableTypeEqualToOrSuperTypeOfRightTermType) {
+          const rightTermString = nodeAsString(rightTermNode),
+                rightTermTypeName = rightTermType.getName(),
+                leftVariableTypeName = leftVariableType.getName();
+
+          context.error(`The left '${leftVariableName}' variable's '${leftVariableTypeName}' type is not equal to or a super-type of the right '${rightTermString}' term's '${rightTermTypeName}' type.`, statementNode);
+        } else {
+          const type = leftVariableType,  ///
+                name = leftVariableName,  ///
+                termNode = rightTermNode, ///
+                variable = Variable.fromTypeNameAndTermNode(type, name, termNode),
+                assertion = Assertion.fromVariable(variable);
+
+          assertions.push(assertion);
+
+          statementVerifiedAsEquality = true;
+        }
+      } else {
+        debugger
+      }
     }
+  }
+
+  if (statementVerifiedAsEquality) {
+    context.info(`Verified the '${statementString}' statement as an equality.`, statementNode);
   }
 
   return statementVerifiedAsEquality;

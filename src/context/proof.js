@@ -1,11 +1,9 @@
 "use strict";
 
-import Equality from "../equality";
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 
 import { push, last } from "../utilities/array";
-import { MAXIMUM_INDEXES_LENGTH } from "../constants";
 
 class ProofContext {
   constructor(context, variables, proofSteps) {
@@ -54,22 +52,6 @@ class ProofContext {
   }
 
   getMetavariables() { return this.context.getMetavariables(); }
-
-  getEqualities() {
-    const equalities = [],
-          start = -MAXIMUM_INDEXES_LENGTH,  ///
-          proofSteps = this.proofSteps.slice(start); ///
-
-    proofSteps.forEach((proofStep) => {
-      const equality = Equality.fromProofStep(proofStep);
-
-      if (equality !== null) {
-        equalities.push(equality);
-      }
-    });
-
-    return equalities;
-  }
 
   addVariable(variable) {
     this.variables.push(variable);
@@ -146,10 +128,3 @@ Object.assign(ProofContext.prototype, fileMixins);
 Object.assign(ProofContext.prototype, loggingMixins);
 
 export default ProofContext;
-
-function equalitiesFromProofSteps(proofSteps, context) {
-  let equalities = [];
-
-
-  return equalities;
-}

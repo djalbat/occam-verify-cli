@@ -1,17 +1,12 @@
 "use strict";
 
-import matcher from "./matcher";
 import Variable from "./variable";
 import verifyTerm from "./verify/term";
-import equalityCombinator from "./ocmbinator/equality";
-import equalityStatementNode from "./node/statement/equality";
 
 import { nodeQuery } from "./utilities/query";
 import { first, second } from "./utilities/array";
-import { EQUALITY_DEPTH } from "./constants";
 import { TERM_RULE_NAME } from "./ruleNames";
 import { verifyTermAsVariable } from "./verify/term";
-import { verifyStatementAgainstCombinator } from "./verify/statement";
 
 const leftTermNodeQuery = nodeQuery("/statement/argument[0]/term!"),
       rightTermNodeQuery = nodeQuery("/statement/argument[1]/term!");
@@ -90,40 +85,10 @@ export default class Equality {
     return equates;
   }
 
-  static fromProofStep(proofStep) {
-    let equality = null;
-
-    const statementNode = proofStep.getStatementNode();
-
-    if (statementNode !== null) {
-      const nodeA = statementNode,  ///
-            nodeB = equalityStatementNode,  ///
-            depth = EQUALITY_DEPTH,
-            nodeMatches = matcher.matchNode(nodeA, nodeB, depth);
-
-      if (nodeMatches) {
-        const leftTermNode = leftTermNodeQuery(statementNode),
-              rightTermNode = rightTermNodeQuery(statementNode);
-
-        equality = new Equality(leftTermNode, rightTermNode);
-      }
-    }
-
-    return equality;
-  }
-
   static fromStatementNode(statementNode, context) {
-    let equality = null;
-
-    const combinator = equalityCombinator,  ///
-          statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
-
-    if (statementVerifiedAgainstCombinator) {
-      const leftTermNode = leftTermNodeQuery(statementNode),
-            rightTermNode = rightTermNodeQuery(statementNode);
-
-      equality = equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, context);
-    }
+    const leftTermNode = leftTermNodeQuery(statementNode),
+          rightTermNode = rightTermNodeQuery(statementNode),
+          equality = equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, context);
 
     return equality;
   }
@@ -266,8 +231,7 @@ function equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, c
     if (leftTermTypeEqualToRightTermType) {
       equality = new Equality(leftTermNode, rightTermNode);
     } else {
-      const leftTermTypeSubTypeOfRightTermType = leftTermType.isSubTypeOf(rightTermType),
-            rightTermTypeSubTypeOfLeftTermType = rightTermType.isSubTypeOf(leftTermType);
+      const leftTermTypeSubTypeOfRightTermType = leftTermType.isSubTypeOf(rightTermType);
 
       if (false) {
           ///
@@ -289,27 +253,6 @@ function equalityFromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode, c
           rightVariable = Variable.fromTypeAndName(rightType, rightName);
 
           context.addVariable(rightVariable);
-
-          equality = new Equality(leftTermNode, rightTermNode);
-        }
-      } else if (rightTermTypeSubTypeOfLeftTermType) {
-        const variables = [],
-              leftTermVerifiedAsVariable = verifyTermAsVariable(leftTermNode, variables, context);
-
-        if (leftTermVerifiedAsVariable) {
-          let leftVariable;
-
-          const firstVariable = first(variables);
-
-          leftVariable = firstVariable;  ///
-
-          const leftVariableName = leftVariable.getName(),
-                leftName = leftVariableName,  ///
-                leftType = rightTermType; ///
-
-          leftVariable = Variable.fromTypeAndName(leftType, leftName);
-
-          context.addVariable(leftVariable);
 
           equality = new Equality(leftTermNode, rightTermNode);
         }

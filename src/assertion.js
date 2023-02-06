@@ -1,6 +1,6 @@
 "use strict";
 
-export default class TypeAssertion {
+export default class Assertion {
   constructor(variable) {
     this.variable = variable;
   }
@@ -14,8 +14,8 @@ export default class TypeAssertion {
   }
 
   static fromVariable(variable) {
-    const typeAssertion = new TypeAssertion(variable);
+    const assertion = new Assertion(variable);
 
-    return typeAssertion;
+    return assertion;
   }
 }

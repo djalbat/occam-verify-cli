@@ -1,9 +1,10 @@
 "use strict";
 
 export default class Variable {
-  constructor(type, name) {
+  constructor(type, name, termNode) {
     this.type = type;
     this.name = name;
+    this.termNode = termNode;
   }
 
   getType() {
@@ -12,6 +13,14 @@ export default class Variable {
 
   getName() {
     return this.name;
+  }
+
+  getTermNode() {
+    return this.termNode;
+  }
+
+  isUndefined() {
+    return (this.termNode === null);
   }
 
   matchName(name) {
@@ -28,7 +37,14 @@ export default class Variable {
   }
 
   static fromTypeAndName(type, name) {
-    const variable = new Variable(type, name);
+    const termNode = null,
+          variable = new Variable(type, name, termNode);
+
+    return variable;
+  }
+
+  static fromTypeNameAndTermNode(type, name, termNode) {
+    const variable = new Variable(type, name, termNode);
 
     return variable;
   }
