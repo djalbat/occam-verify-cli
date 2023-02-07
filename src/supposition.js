@@ -37,15 +37,15 @@ export default class Supposition {
 
       if (subproofStatementNodesLength === subproofAssertionStatementNodesLength) {
         subproofNodeMatches = subproofAssertionStatementNodes.every((subproofAssertionStatementNode, index) => {
-                                const subproofStatementNode = subproofStatementNodes[index],
-                                      nonTerminalNodeA = subproofAssertionStatementNode,  ///
-                                      nonTerminalNodeB = subproofStatementNode, ///
-                                      nonTerminalNodeVerifies = suppositionTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+          const subproofStatementNode = subproofStatementNodes[index],
+                nonTerminalNodeA = subproofAssertionStatementNode,  ///
+                nonTerminalNodeB = subproofStatementNode, ///
+                nonTerminalNodeVerifies = suppositionTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
 
-                                if (nonTerminalNodeVerifies) {
-                                  return true;
-                                }
-                              });
+          if (nonTerminalNodeVerifies) {
+            return true;
+          }
+        });
       }
     }
 

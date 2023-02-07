@@ -82,15 +82,15 @@ export default class Premise {
 
       if (ruleSubproofMetastatementNodesLength === ruleSubproofAssertionMetastatementNodesLength) {
         ruleSubproofNodeMatches = ruleSubproofAssertionMetastatementNodes.every((ruleSubproofAssertionMetastatementNode, index) => {
-                                    const ruleSubproofMetastatementNode = ruleSubproofMetastatementNodes[index],
-                                          nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
-                                          nonTerminalNodeB = ruleSubproofMetastatementNode, ///
-                                          nonTerminalNodeVerifies = premiseMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+          const ruleSubproofMetastatementNode = ruleSubproofMetastatementNodes[index],
+                nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
+                nonTerminalNodeB = ruleSubproofMetastatementNode, ///
+                nonTerminalNodeVerifies = premiseMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
 
-                                    if (nonTerminalNodeVerifies) {
-                                      return true;
-                                    }
-                                  });
+          if (nonTerminalNodeVerifies) {
+            return true;
+          }
+        });
       }
     }
 
