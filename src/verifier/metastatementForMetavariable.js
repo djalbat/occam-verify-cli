@@ -10,8 +10,8 @@ import { metavariableNameFromMetavariableNode } from "../utilities/query";
 const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!');
 
 export default class MetastatementForMetavariableVerifier extends Verifier {
-  matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
-    let nonTerminalNodeMatches = false;
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
+    let nonTerminalNodeVerifies = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
           nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
@@ -23,37 +23,37 @@ export default class MetastatementForMetavariableVerifier extends Verifier {
       if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameMetastatementRuleName) {
         const metastatementNodeA = nonTerminalNodeA,  ///
               metastatementNodeB = nonTerminalNodeB,  ///
-              metastatementNodeMatches = this.matchMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions);
+              metastatementNodeVerifies = this.verifyMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions);
 
-        if (metastatementNodeMatches) {
-          nonTerminalNodeMatches = true;  ///
+        if (metastatementNodeVerifies) {
+          nonTerminalNodeVerifies = true;  ///
         } else {
-          nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+          nonTerminalNodeVerifies = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
         }
       } else {
-        nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+        nonTerminalNodeVerifies = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
       }
     }
 
-    return nonTerminalNodeMatches;
+    return nonTerminalNodeVerifies;
   }
 
-  matchMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions) {
-    let metastatementNodeMatches = false;
+  verifyMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions) {
+    let metastatementNodeVerifies = false;
 
     const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
     if (metavariableNodeA !== null) {
-      const metaVariableNodeMatches = this.matchMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions);
+      const metaVariableNodeVerifies = this.verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions);
 
-      metastatementNodeMatches = metaVariableNodeMatches; ///
+      metastatementNodeVerifies = metaVariableNodeVerifies; ///
     }
 
-    return metastatementNodeMatches;
+    return metastatementNodeVerifies;
   }
 
-  matchMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions) {
-    let metavariableNodeMatches;
+  verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions) {
+    let metavariableNodeVerifies;
 
     const metavariableNameA = metavariableNameFromMetavariableNode(metavariableNodeA),
           substitution = substitutions.find((substitution) => {
@@ -66,9 +66,9 @@ export default class MetastatementForMetavariableVerifier extends Verifier {
 
     if (substitution !== null) {
       const metastatementNode = metastatementNodeB, ///
-            substitutionNodesMatch = substitution.matchMetastatementNode(metastatementNode);
+            substitutionNodesMatch = substitution.verifyMetastatementNode(metastatementNode);
 
-      metavariableNodeMatches = substitutionNodesMatch;  ///
+      metavariableNodeVerifies = substitutionNodesMatch;  ///
     } else {
       const { createSubstitutions } = this.constructor;
 
@@ -81,9 +81,9 @@ export default class MetastatementForMetavariableVerifier extends Verifier {
         substitutions.push(substitution);
       }
 
-      metavariableNodeMatches = true;
+      metavariableNodeVerifies = true;
     }
 
-    return metavariableNodeMatches;
+    return metavariableNodeVerifies;
   }
 }

@@ -1,8 +1,8 @@
 "use strict";
 
 export default class Verifier {
-  matchNode(nodeA, nodeB, substitutions) {
-    let nodeMatches = false;
+  verifyNode(nodeA, nodeB, substitutions) {
+    let nodeVerifies = false;
 
     const nodeATerminalNode = nodeA.isTerminalNode(),
           nodeBTerminalNode = nodeB.isTerminalNode();
@@ -11,50 +11,50 @@ export default class Verifier {
       if (nodeATerminalNode) {
         const terminalNodeA = nodeA,  ///
               terminalNodeB = nodeB,  ///
-              terminalNodeMatches = this.matchTerminalNode(terminalNodeA, terminalNodeB);
+              terminalNodeVerifies = this.verifyTerminalNode(terminalNodeA, terminalNodeB);
 
-        nodeMatches = terminalNodeMatches;  ///
+        nodeVerifies = terminalNodeVerifies;  ///
       } else {
         const nonTerminalNodeA = nodeA,  ///
               nonTerminalNodeB = nodeB, ///
-              nonTerminalNodeMatches = this.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+              nonTerminalNodeVerifies = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
 
-        nodeMatches = nonTerminalNodeMatches; ///
+        nodeVerifies = nonTerminalNodeVerifies; ///
       }
     }
 
-    return nodeMatches;
+    return nodeVerifies;
   }
 
-  matchNodes(nodesA, nodesB, substitutions) {
-    let nodesMatch = false;
+  verifyNodes(nodesA, nodesB, substitutions) {
+    let nodesVerify = false;
 
     const nodesALength = nodesA.length,
           nodesBLength = nodesB.length;
 
     if (nodesALength === nodesBLength) {
-      nodesMatch = nodesA.every((nodeA, index) => {
+      nodesVerify = nodesA.every((nodeA, index) => {
         const nodeB = nodesB[index],
-              nodeMatches = this.matchNode(nodeA, nodeB, substitutions);
+              nodeVerifies = this.verifyNode(nodeA, nodeB, substitutions);
 
-        if (nodeMatches) {
+        if (nodeVerifies) {
           return true;
         }
       })
     }
 
-    return nodesMatch;
+    return nodesVerify;
   }
 
-  matchTerminalNode(terminalNodeA, terminalNodeB, substitutions) {
+  verifyTerminalNode(terminalNodeA, terminalNodeB, substitutions) {
     const matches = terminalNodeA.match(terminalNodeB),
-          terminalNodeMatches = matches;  ///
+          terminalNodeVerifies = matches;  ///
 
-    return terminalNodeMatches;
+    return terminalNodeVerifies;
   }
 
-  matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
-    let nonTerminalNodeMatches = false;
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
+    let nonTerminalNodeVerifies = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(), ///
           nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(); ///
@@ -64,11 +64,11 @@ export default class Verifier {
             nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
             nodesA = nonTerminalNodeAChildNodes, ///
             nodesB = nonTerminalNodeBChildNodes, ///
-            nodesMatch = this.matchNodes(nodesA, nodesB, substitutions);
+            nodesVerify = this.verifyNodes(nodesA, nodesB, substitutions);
 
-      nonTerminalNodeMatches = nodesMatch; ///
+      nonTerminalNodeVerifies = nodesVerify; ///
     }
 
-    return nonTerminalNodeMatches;
+    return nonTerminalNodeVerifies;
   }
 }

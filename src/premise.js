@@ -43,9 +43,9 @@ export default class Premise {
           const subproofStatementNode = subproofStatementNodes[index],
                 nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = subproofStatementNode, ///
-                nonTerminalNodeMatches = premiseStatementForMetavariableVerifier.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+                nonTerminalNodeVerifies = premiseStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
 
-          if (nonTerminalNodeMatches) {
+          if (nonTerminalNodeVerifies) {
             return true;
           }
         });
@@ -58,8 +58,8 @@ export default class Premise {
   matchStatementNode(statementNode, substitutions) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeMatches = premiseStatementForMetavariableVerifier.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
-          statementNodeMatches = nonTerminalNodeMatches; ///
+          nonTerminalNodeVerifies = premiseStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
+          statementNodeMatches = nonTerminalNodeVerifies; ///
 
     return statementNodeMatches;
   }
@@ -85,9 +85,9 @@ export default class Premise {
                                     const ruleSubproofMetastatementNode = ruleSubproofMetastatementNodes[index],
                                           nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
                                           nonTerminalNodeB = ruleSubproofMetastatementNode, ///
-                                          nonTerminalNodeMatches = premiseMetastatementForMetavariableVerifier.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+                                          nonTerminalNodeVerifies = premiseMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
 
-                                    if (nonTerminalNodeMatches) {
+                                    if (nonTerminalNodeVerifies) {
                                       return true;
                                     }
                                   });
@@ -100,8 +100,8 @@ export default class Premise {
   matchMetastatementNode(metastatementNode, substitutions) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = metastatementNode,  ///
-          nonTerminalNodeMatches = premiseMetastatementForMetavariableVerifier.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
-          metastatementNodeMatches = nonTerminalNodeMatches; ///
+          nonTerminalNodeVerifies = premiseMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
+          metastatementNodeMatches = nonTerminalNodeVerifies; ///
 
     return metastatementNodeMatches;
   }

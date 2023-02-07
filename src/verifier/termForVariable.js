@@ -10,8 +10,8 @@ import { variableNameFromVariableNode } from "../utilities/query";
 const variableNodeQuery = nodeQuery('/term/variable!');
 
 export default class TermForVariableVerifier extends Verifier {
-  matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
-    let nonTerminalNodeMatches = false;
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
+    let nonTerminalNodeVerifies = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
           nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
@@ -23,37 +23,37 @@ export default class TermForVariableVerifier extends Verifier {
       if (nonTerminalNodeARuleNameTermRuleName && nonTerminalNodeBRuleNameTermRuleName) {
         const termNodeA = nonTerminalNodeA,  ///
               termNodeB = nonTerminalNodeB,  ///
-              termNodeMatches = this.matchTermNode(termNodeA, termNodeB, substitutions);
+              termNodeVerifies = this.verifyTermNode(termNodeA, termNodeB, substitutions);
 
-        if (termNodeMatches) {
-          nonTerminalNodeMatches = true;  ///
+        if (termNodeVerifies) {
+          nonTerminalNodeVerifies = true;  ///
         } else {
-          nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+          nonTerminalNodeVerifies = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
         }
       } else {
-        nonTerminalNodeMatches = super.matchNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+        nonTerminalNodeVerifies = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
       }
     }
 
-    return nonTerminalNodeMatches;
+    return nonTerminalNodeVerifies;
   }
 
-  matchTermNode(termNodeA, termNodeB, substitutions) {
-    let termNodeMatches = false;
+  verifyTermNode(termNodeA, termNodeB, substitutions) {
+    let termNodeVerifies = false;
 
     const variableNodeA = variableNodeQuery(termNodeA);
 
     if (variableNodeA !== null) {
-      const variableMatches = this.matchVariableNode(variableNodeA, termNodeB, substitutions);
+      const variableVerifies = this.verifyVariableNode(variableNodeA, termNodeB, substitutions);
 
-      termNodeMatches = variableMatches; ///
+      termNodeVerifies = variableVerifies; ///
     }
 
-    return termNodeMatches;
+    return termNodeVerifies;
   }
 
-  matchVariableNode(variableNodeB, termNodeB, substitutions) {
-    let variableMatches;
+  verifyVariableNode(variableNodeB, termNodeB, substitutions) {
+    let variableVerifies;
 
     const variableNameA = variableNameFromVariableNode(variableNodeB),
           substitution = substitutions.find((substitution) => {
@@ -66,9 +66,9 @@ export default class TermForVariableVerifier extends Verifier {
 
     if (substitution !== null) {
       const termNode = termNodeB, ///
-            substitutionNodesMatch = substitution.matchTermNode(termNode);
+            substitutionNodesVerifies = substitution.verifyTermNode(termNode);
 
-      variableMatches = substitutionNodesMatch;  ///
+      variableVerifies = substitutionNodesVerifies;  ///
     } else {
       const { createSubstitutions } = this.constructor;
 
@@ -81,9 +81,9 @@ export default class TermForVariableVerifier extends Verifier {
         substitutions.push(substitution);
       }
 
-      variableMatches = true;
+      variableVerifies = true;
     }
 
-    return variableMatches;
+    return variableVerifies;
   }
 }

@@ -1,5 +1,6 @@
 "use strict";
 
+import Equality from "../equality";
 import Variable from "../variable";
 import Assignment from "../assignment";
 import verifyTerm from "../verify/term";
@@ -76,10 +77,10 @@ function verifyStatementAgainstCombinators(statementNode, context) {
 
 function verifyStatementAgainstCombinator(statementNode, combinator, context) {
   const combinatorStatementNode = combinator.getStatementNode(),
-      node = statementNode,  ///
-      combinatorNode = combinatorStatementNode, ///
-      nodeVerified = verifyNode(node, combinatorNode, context),
-      statementVerifiedAgainstCombinator = nodeVerified;  ///
+        node = statementNode,  ///
+        combinatorNode = combinatorStatementNode, ///
+        nodeVerified = verifyNode(node, combinatorNode, context),
+        statementVerifiedAgainstCombinator = nodeVerified;  ///
 
   return statementVerifiedAgainstCombinator;
 }
@@ -107,13 +108,17 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context)
         statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
 
   if (statementVerifiedAgainstCombinator) {
+    const leftTermNode = leftTermNodeQuery(statementNode),
+          rightTermNode = rightTermNodeQuery(statementNode);
+
     if (derived) {
-      debugger
+      const equality = Equality.fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode),
+            equalityEquates = equality.equate(context);
+
+      statementVerifiedAsEquality = equalityEquates;  ///
     } else {
       const types = [],
             variables = [],
-            leftTermNode = leftTermNodeQuery(statementNode),
-            rightTermNode = rightTermNodeQuery(statementNode),
             leftTermVerifiedAsVariable = verifyTermAsVariable(leftTermNode, variables, context);
 
       if (leftTermVerifiedAsVariable) {
