@@ -1,6 +1,6 @@
 "use strict";
 
-export default function verifyMetastatement(metastatementNode, assertions, derived, metaproofContext) {
+export default function verifyMetastatement(metastatementNode, assignments, derived, metaproofContext) {
   let metastatementVerified = true; ///
 
   ///

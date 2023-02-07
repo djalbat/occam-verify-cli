@@ -7,7 +7,7 @@ import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query
 const referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!"),
       statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
 
-export default function verifyQualifiedStatement(qualifiedStatementNode, assertions, derived, proofContext) {
+export default function verifyQualifiedStatement(qualifiedStatementNode, assignments, derived, proofContext) {
   let qualifiedStatementVerified = false;
 
   const statementNode = statementNodeQuery(qualifiedStatementNode);
@@ -21,7 +21,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, asserti
 
     if (referenceNode === null) {
       const context = proofContext,
-            statementVerified = verifyStatement(statementNode, assertions, derived, context);
+            statementVerified = verifyStatement(statementNode, assignments, derived, context);
 
       qualifiedStatementVerified = statementVerified; ///
     } else {

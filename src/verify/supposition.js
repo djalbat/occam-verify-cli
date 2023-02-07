@@ -17,9 +17,9 @@ export default function verifySupposition(suppositionNode, suppositions, proofCo
   proofContext.debug(`Verifying the '${suppositionString}' supposition...`, suppositionNode);
 
   const derived = false,
-        assertions = [],
+        assignments = [],
         unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
-        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assertions, derived, proofContext);
+        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, proofContext);
 
   if (unqualifiedStatementVerified) {
     const statementNode = statementNodeQuery(unqualifiedStatementNode),
@@ -30,8 +30,8 @@ export default function verifySupposition(suppositionNode, suppositions, proofCo
 
     proofContext.addProofStep(proofStep);
 
-    assertions.every((assertion) => {
-      assertion.assert(proofContext);
+    assignments.every((assignment) => {
+      assignment.assign(proofContext);
     });
 
     suppositionVerified = true;

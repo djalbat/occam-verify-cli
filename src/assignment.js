@@ -1,6 +1,6 @@
 "use strict";
 
-export default class Assertion {
+export default class Assignment {
   constructor(variable) {
     this.variable = variable;
   }
@@ -9,13 +9,13 @@ export default class Assertion {
     return this.variable;
   }
 
-  assert(proofContext) {
+  assign(proofContext) {
     proofContext.addVariable(this.variable);
   }
 
   static fromVariable(variable) {
-    const assertion = new Assertion(variable);
+    const assignment = new Assignment(variable);
 
-    return assertion;
+    return assignment;
   }
 }

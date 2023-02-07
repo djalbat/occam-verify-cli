@@ -7,7 +7,7 @@ import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query
 const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/reference!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
 
-export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, assertions, derived, metaproofContext) {
+export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, assignments, derived, metaproofContext) {
   let qualifiedMetastatementVerified = false;
 
   const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
@@ -31,7 +31,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
     }
 
     if (ruleMatchesMetastatement) {
-      const metastatementVerified = verifyMetastatement(metastatementNode, assertions, derived, metaproofContext);
+      const metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, metaproofContext);
 
       qualifiedMetastatementVerified = metastatementVerified; ///
     }

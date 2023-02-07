@@ -1,7 +1,7 @@
 "use strict";
 
 import Variable from "../variable";
-import Assertion from "../assertion";
+import Assignment from "../assignment";
 import verifyTerm from "../verify/term";
 import equalityCombinator from "../ocmbinator/equality";
 import bracketedCombinator from "../ocmbinator/bracketed";
@@ -25,7 +25,7 @@ const termNodeQuery = nodeQuery("/argument/term!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type");
 
-export default function verifyStatement(statementNode, assertions, derived, context) {
+export default function verifyStatement(statementNode, assignments, derived, context) {
   let statementVerified = false;
 
   if (!statementVerified) {
@@ -35,13 +35,13 @@ export default function verifyStatement(statementNode, assertions, derived, cont
   }
 
   if (!statementVerified) {
-    const statementVerifiedAsTypeAssertion = verifyStatementAsTypeAssertion(statementNode, assertions, derived, context);
+    const statementVerifiedAsTypeAssertion = verifyStatementAsTypeAssertion(statementNode, assignments, derived, context);
 
     statementVerified = statementVerifiedAsTypeAssertion; ///
   }
 
   if (!statementVerified) {
-    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, assertions, derived, context);
+    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, assignments, derived, context);
 
     statementVerified = statementVerifiedAsEquality;  //
   }
@@ -84,13 +84,13 @@ function verifyStatementAgainstCombinator(statementNode, combinator, context) {
   return statementVerifiedAgainstCombinator;
 }
 
-function verifyStatementAsTypeAssertion(statementNode, assertions, derived, context) {
+function verifyStatementAsTypeAssertion(statementNode, assignments, derived, context) {
   let statementVerifiedAsTypeAssertion = false;
 
   const typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
   if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assertions, derived, context);
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, context);
 
     statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
   }
@@ -98,7 +98,7 @@ function verifyStatementAsTypeAssertion(statementNode, assertions, derived, cont
   return statementVerifiedAsTypeAssertion;
 }
 
-function verifyStatementAsEquality(statementNode, assertions, derived, context) {
+function verifyStatementAsEquality(statementNode, assignments, derived, context) {
   let statementVerifiedAsEquality = false;
 
   const statementString = context.nodeAsString(statementNode);
@@ -138,9 +138,9 @@ function verifyStatementAsEquality(statementNode, assertions, derived, context) 
                 name = leftVariableName,  ///
                 termNode = rightTermNode, ///
                 variable = Variable.fromTypeNameAndTermNode(type, name, termNode),
-                assertion = Assertion.fromVariable(variable);
+                assignment = Assignment.fromVariable(variable);
 
-          assertions.push(assertion);
+          assignments.push(assignment);
 
           statementVerifiedAsEquality = true;
         }

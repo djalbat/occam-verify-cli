@@ -145,8 +145,8 @@ function verifyTermNode(termNode, fileContext) {
 function verifyStatementNode(statementNode, fileContext) {
   const context = fileContext,  ///
         derived = false,
-        assertions = [],
-        statementVerified = verifyStatement(statementNode, assertions, derived, context),
+        assignments = [],
+        statementVerified = verifyStatement(statementNode, assignments, derived, context),
         statementNodeVerified = statementVerified;  ///
 
   return statementNodeVerified;

@@ -6,7 +6,7 @@ import { nodeQuery } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
-export default function verifyUnqualifiedStatement(unqualifiedStatementNode, assertions, derived, proofContext) {
+export default function verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, proofContext) {
   let unqualifiedStatementVerified = false;
 
   const statementNode = statementNodeQuery(unqualifiedStatementNode);
@@ -24,7 +24,7 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
 
     if (statementMatches) {
       const context = proofContext, ///
-            statementVerified = verifyStatement(statementNode, assertions, derived, context);
+            statementVerified = verifyStatement(statementNode, assignments, derived, context);
 
       unqualifiedStatementVerified = statementVerified;  ///
     }

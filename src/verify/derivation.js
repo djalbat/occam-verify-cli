@@ -96,9 +96,9 @@ function verifyChild(childNode, proofContext) {
 
     case QUALIFIED_STATEMENT_RULE_NAME: {
       const derived = true,
-            assertions = [],
+            assignments = [],
             qualifiedStatementNode = childNode,  ///
-            qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assertions, derived, proofContext);
+            qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assignments, derived, proofContext);
 
       if (qualifiedStatementVerified) {
         const statementNode = statementNodeQuery(qualifiedStatementNode),
@@ -114,9 +114,9 @@ function verifyChild(childNode, proofContext) {
 
     case UNQUALIFIED_STATEMENT_RULE_NAME: {
       const derived = true,
-            assertions = [],
+            assignments = [],
             unqualifiedStatementNode = childNode,  ///
-            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assertions, derived, proofContext);
+            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, proofContext);
 
       if (unqualifiedStatementVerified) {
         const statementNode = statementNodeQuery(unqualifiedStatementNode),

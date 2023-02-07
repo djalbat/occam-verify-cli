@@ -1,7 +1,7 @@
 "use strict";
 
 import Variable from "../../variable";
-import Assertion from "../../assertion";
+import Assignment from "../../assignment";
 
 import { first } from "../../utilities/array";
 import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
@@ -10,7 +10,7 @@ import { verifyTermAsVariable, verifyTermAgainstConstructors } from "../../verif
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeNodeQuery = nodeQuery("/typeAssertion/type");
 
-export default function verifyTypeAssertion(typeAssertionNode, assertions, derived, context) {
+export default function verifyTypeAssertion(typeAssertionNode, assignments, derived, context) {
   let typeAssertionVerified = false;
 
   const typeAssertionString = context.nodeAsString(typeAssertionNode);
@@ -25,7 +25,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assertions, deriv
     context.error(`The ${typeName} type is not present.`, typeAssertionNode);
   } else {
     if (!typeAssertionVerified) {
-      const variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, assertions, derived, context);
+      const variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, context);
 
       typeAssertionVerified = variableTypeAssertionVerified;  ///
     }
@@ -44,7 +44,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assertions, deriv
   return typeAssertionVerified;
 }
 
-function verifyVariableTypeAssertion(typeAssertionNode, assertions, derived, context) {
+function verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, context) {
   let variableTypeAssertionVerified = false;
 
   const variables = [],
@@ -88,9 +88,9 @@ function verifyVariableTypeAssertion(typeAssertionNode, assertions, derived, con
           const type = assertedType,  ///
                 name = variableName,  ///
                 variable = Variable.fromTypeAndName(type, name),
-                assertion = Assertion.fromVariable(variable);
+                assignment = Assignment.fromVariable(variable);
 
-          assertions.push(assertion);
+          assignments.push(assignment);
 
           variableTypeAssertionVerified = true;
         }
