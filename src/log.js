@@ -103,7 +103,7 @@ export default class Log {
   }
 }
 
-function formatMessage(level, message, node, tokens, filePath) {
+function formatMessage(level, message, node = null, tokens = null, filePath = null) {
   const upperCaseLevel = level.toUpperCase();
 
   if (node === null) {
