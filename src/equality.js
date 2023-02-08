@@ -231,7 +231,7 @@ class EqualityVerifier extends Verifier {
       const equalityA = equality, ///
             equalitiesB = equalities, ///
             equalityMatches = equalitiesB.some((equalityB) => { ///
-              const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB, equalities, context);
+              const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB, context);
 
               if (equalityAMatchesEqualityB) {
                 return true;

@@ -325,15 +325,15 @@ function verifyStatementAsEquality(statementNode, derived, context) {
               secondType = second(types),
               leftTermType = firstType, ///
               rightTermType = secondType, ///
-              leftTermTypeEqualToRightTermType = leftTermType.isEqualTo(rightTermType);
+              leftTermTypeEqualToOrSubTypeOfOfSuperTypeOf = leftTermType.isEqualToOrSubTypeOfOfSuperTypeOf(rightTermType);
 
-        if (!leftTermTypeEqualToRightTermType) {
+        if (!leftTermTypeEqualToOrSubTypeOfOfSuperTypeOf) {
           const leftTermString = context.nodeAsString(leftTermNode),
                 rightTermString = context.nodeAsString(rightTermNode),
                 leftTermTypeName = leftTermType.getName(),
                 rightTermTypeName = rightTermType.getName();
 
-          context.error(`The left '${leftTermString}' term's '${leftTermTypeName}' type is not equal to the right '${rightTermString}' term's '${rightTermTypeName}' type.`, statementNode);
+          context.error(`The left '${leftTermString}' term's '${leftTermTypeName}' type is not equal to, a sub-type of or a super-type of the right '${rightTermString}' term's '${rightTermTypeName}' type.`, statementNode);
         } else {
           statementVerifiedAsEquality = true;
         }
