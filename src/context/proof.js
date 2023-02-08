@@ -1,5 +1,6 @@
 "use strict";
 
+import Equality from "../equality";
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 

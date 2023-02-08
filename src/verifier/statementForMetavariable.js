@@ -12,7 +12,7 @@ const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!'),
 
 export default class StatementForMetavariableVerifier extends Verifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
-    let nonTerminalNodeVerifies = false;
+    let nonTerminalNodeVerified = false;
 
     const nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
           nonTerminalNodeBRuleNameMetaArgumentRuleName = (nonTerminalNodeBRuleName === META_ARGUMENT_RULE_NAME);
@@ -23,7 +23,7 @@ export default class StatementForMetavariableVerifier extends Verifier {
 
       nonTerminalNodeB = metaArgumentChildNodeB;  ///
 
-      nonTerminalNodeVerifies = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+      nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
     } else {
       const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
             nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
@@ -33,10 +33,10 @@ export default class StatementForMetavariableVerifier extends Verifier {
       if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameStatementRuleName) {
         const metastatementNodeA = nonTerminalNodeA,  ///
               statementNodeB = nonTerminalNodeB,  ///
-              statementNodeVerifies = this.verifyStatementNode(metastatementNodeA, statementNodeB, substitutions);
+              statementNodeVerified = this.verifyStatementNode(metastatementNodeA, statementNodeB, substitutions);
 
-        if (statementNodeVerifies) {
-          nonTerminalNodeVerifies = true;  ///
+        if (statementNodeVerified) {
+          nonTerminalNodeVerified = true;  ///
         } else {
           const nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
                 nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
@@ -44,32 +44,32 @@ export default class StatementForMetavariableVerifier extends Verifier {
                 nodesB = nonTerminalNodeBChildNodes, ///
                 nodesMatch = this.verifyNodes(nodesA, nodesB, substitutions);
 
-          nonTerminalNodeVerifies = nodesMatch;  ///
+          nonTerminalNodeVerified = nodesMatch;  ///
         }
       } else if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
-        nonTerminalNodeVerifies = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
       }
     }
 
-    return nonTerminalNodeVerifies;
+    return nonTerminalNodeVerified;
   }
 
   verifyStatementNode(metastatementNodeA, statementNodeB, substitutions) {
-    let statementNodeVerifies = false;
+    let statementNodeVerified = false;
 
     const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
     if (metavariableNodeA !== null) {
-      const metavariableNodeVerifies = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions);
+      const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions);
 
-      statementNodeVerifies = metavariableNodeVerifies; ///
+      statementNodeVerified = metavariableNodeVerified; ///
     }
 
-    return statementNodeVerifies;
+    return statementNodeVerified;
   }
 
   verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions) {
-    let metavariableNodeVerifies;
+    let metavariableNodeVerified;
 
     const metavariableNameA = metavariableNameFromMetavariableNode(metavariableNodeA),
           substitution = substitutions.find((substitution) => {
@@ -84,7 +84,7 @@ export default class StatementForMetavariableVerifier extends Verifier {
       const statementNode = statementNodeB, ///
             statementNodeMatches = substitution.matchStatementNode(statementNode);
 
-      metavariableNodeVerifies = statementNodeMatches;  ///
+      metavariableNodeVerified = statementNodeMatches;  ///
     } else {
       const { createSubstitutions } = this.constructor;
 
@@ -97,9 +97,9 @@ export default class StatementForMetavariableVerifier extends Verifier {
         substitutions.push(substitution);
       }
 
-      metavariableNodeVerifies = true;
+      metavariableNodeVerified = true;
     }
 
-    return metavariableNodeVerifies;
+    return metavariableNodeVerified;
   }
 }

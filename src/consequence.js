@@ -16,8 +16,8 @@ export default class Consequence {
   matchStatementNode(statementNode, substitutions) {
     const nonTerminalNodeA = this.statementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeVerifies = consequenceTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
-          statementNodeMatches = nonTerminalNodeVerifies; ///
+          nonTerminalNodeVerified = consequenceTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
+          statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;
   }

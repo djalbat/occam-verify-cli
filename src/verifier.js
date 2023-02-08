@@ -2,7 +2,7 @@
 
 export default class Verifier {
   verifyNode(nodeA, nodeB, ...remainingArguments) {
-    let nodeVerifies = false;
+    let nodeVerified = false;
 
     const nodeATerminalNode = nodeA.isTerminalNode(),
           nodeBTerminalNode = nodeB.isTerminalNode();
@@ -11,19 +11,19 @@ export default class Verifier {
       if (nodeATerminalNode) {
         const terminalNodeA = nodeA,  ///
               terminalNodeB = nodeB,  ///
-              terminalNodeVerifies = this.verifyTerminalNode(terminalNodeA, terminalNodeB);
+              terminalNodeVerified = this.verifyTerminalNode(terminalNodeA, terminalNodeB);
 
-        nodeVerifies = terminalNodeVerifies;  ///
+        nodeVerified = terminalNodeVerified;  ///
       } else {
         const nonTerminalNodeA = nodeA,  ///
               nonTerminalNodeB = nodeB, ///
-              nonTerminalNodeVerifies = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments);
+              nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments);
 
-        nodeVerifies = nonTerminalNodeVerifies; ///
+        nodeVerified = nonTerminalNodeVerified; ///
       }
     }
 
-    return nodeVerifies;
+    return nodeVerified;
   }
 
   verifyNodes(nodesA, nodesB, ...remainingArguments) {
@@ -35,9 +35,9 @@ export default class Verifier {
     if (nodesALength === nodesBLength) {
       nodesVerify = nodesA.every((nodeA, index) => {
         const nodeB = nodesB[index],
-              nodeVerifies = this.verifyNode(nodeA, nodeB, ...remainingArguments);
+              nodeVerified = this.verifyNode(nodeA, nodeB, ...remainingArguments);
 
-        if (nodeVerifies) {
+        if (nodeVerified) {
           return true;
         }
       })
@@ -48,13 +48,13 @@ export default class Verifier {
 
   verifyTerminalNode(terminalNodeA, terminalNodeB, ...remainingArguments) {
     const matches = terminalNodeA.match(terminalNodeB),
-          terminalNodeVerifies = matches;  ///
+          terminalNodeVerified = matches;  ///
 
-    return terminalNodeVerifies;
+    return terminalNodeVerified;
   }
 
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments) {
-    let nonTerminalNodeVerifies = false;
+    let nonTerminalNodeVerified = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(), ///
           nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(); ///
@@ -66,9 +66,9 @@ export default class Verifier {
             nodesB = nonTerminalNodeBChildNodes, ///
             nodesVerify = this.verifyNodes(nodesA, nodesB, ...remainingArguments);
 
-      nonTerminalNodeVerifies = nodesVerify; ///
+      nonTerminalNodeVerified = nodesVerify; ///
     }
 
-    return nonTerminalNodeVerifies;
+    return nonTerminalNodeVerified;
   }
 }

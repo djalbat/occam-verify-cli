@@ -11,7 +11,7 @@ const variableNodeQuery = nodeQuery('/term/variable!');
 
 export default class TermForVariableVerifier extends Verifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
-    let nonTerminalNodeVerifies = false;
+    let nonTerminalNodeVerified = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
           nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
@@ -23,37 +23,37 @@ export default class TermForVariableVerifier extends Verifier {
       if (nonTerminalNodeARuleNameTermRuleName && nonTerminalNodeBRuleNameTermRuleName) {
         const termNodeA = nonTerminalNodeA,  ///
               termNodeB = nonTerminalNodeB,  ///
-              termNodeVerifies = this.verifyTermNode(termNodeA, termNodeB, substitutions);
+              termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, substitutions);
 
-        if (termNodeVerifies) {
-          nonTerminalNodeVerifies = true;  ///
+        if (termNodeVerified) {
+          nonTerminalNodeVerified = true;  ///
         } else {
-          nonTerminalNodeVerifies = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
         }
       } else {
-        nonTerminalNodeVerifies = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
       }
     }
 
-    return nonTerminalNodeVerifies;
+    return nonTerminalNodeVerified;
   }
 
   verifyTermNode(termNodeA, termNodeB, substitutions) {
-    let termNodeVerifies = false;
+    let termNodeVerified = false;
 
     const variableNodeA = variableNodeQuery(termNodeA);
 
     if (variableNodeA !== null) {
-      const variableVerifies = this.verifyVariableNode(variableNodeA, termNodeB, substitutions);
+      const variableVerified = this.verifyVariableNode(variableNodeA, termNodeB, substitutions);
 
-      termNodeVerifies = variableVerifies; ///
+      termNodeVerified = variableVerified; ///
     }
 
-    return termNodeVerifies;
+    return termNodeVerified;
   }
 
   verifyVariableNode(variableNodeB, termNodeB, substitutions) {
-    let variableVerifies;
+    let variableVerified;
 
     const variableNameA = variableNameFromVariableNode(variableNodeB),
           substitution = substitutions.find((substitution) => {
@@ -66,9 +66,9 @@ export default class TermForVariableVerifier extends Verifier {
 
     if (substitution !== null) {
       const termNode = termNodeB, ///
-            substitutionNodesVerifies = substitution.matchTermNode(termNode);
+            substitutionNodesVerified = substitution.matchTermNode(termNode);
 
-      variableVerifies = substitutionNodesVerifies;  ///
+      variableVerified = substitutionNodesVerified;  ///
     } else {
       const { createSubstitutions } = this.constructor;
 
@@ -81,9 +81,9 @@ export default class TermForVariableVerifier extends Verifier {
         substitutions.push(substitution);
       }
 
-      variableVerifies = true;
+      variableVerified = true;
     }
 
-    return variableVerifies;
+    return variableVerified;
   }
 }
