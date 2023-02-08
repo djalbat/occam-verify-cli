@@ -66,9 +66,9 @@ export default class MetastatementForMetavariableVerifier extends Verifier {
 
     if (substitution !== null) {
       const metastatementNode = metastatementNodeB, ///
-            substitutionNodesMatch = substitution.verifyMetastatementNode(metastatementNode);
+            metastatementNodeMatches = substitution.matchMetastatementNode(metastatementNode);
 
-      metavariableNodeVerifies = substitutionNodesMatch;  ///
+      metavariableNodeVerifies = metastatementNodeMatches;  ///
     } else {
       const { createSubstitutions } = this.constructor;
 

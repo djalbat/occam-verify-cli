@@ -66,7 +66,7 @@ export default class TermForVariableVerifier extends Verifier {
 
     if (substitution !== null) {
       const termNode = termNodeB, ///
-            substitutionNodesVerifies = substitution.verifyTermNode(termNode);
+            substitutionNodesVerifies = substitution.matchTermNode(termNode);
 
       variableVerifies = substitutionNodesVerifies;  ///
     } else {
