@@ -1,7 +1,7 @@
 "use strict";
 
 export default class Verifier {
-  verifyNode(nodeA, nodeB, substitutions, context) {
+  verifyNode(nodeA, nodeB, ...remainingArguments) {
     let nodeVerifies = false;
 
     const nodeATerminalNode = nodeA.isTerminalNode(),
@@ -17,7 +17,7 @@ export default class Verifier {
       } else {
         const nonTerminalNodeA = nodeA,  ///
               nonTerminalNodeB = nodeB, ///
-              nonTerminalNodeVerifies = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, context);
+              nonTerminalNodeVerifies = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments);
 
         nodeVerifies = nonTerminalNodeVerifies; ///
       }
@@ -26,7 +26,7 @@ export default class Verifier {
     return nodeVerifies;
   }
 
-  verifyNodes(nodesA, nodesB, substitutions, context) {
+  verifyNodes(nodesA, nodesB, ...remainingArguments) {
     let nodesVerify = false;
 
     const nodesALength = nodesA.length,
@@ -35,7 +35,7 @@ export default class Verifier {
     if (nodesALength === nodesBLength) {
       nodesVerify = nodesA.every((nodeA, index) => {
         const nodeB = nodesB[index],
-              nodeVerifies = this.verifyNode(nodeA, nodeB, substitutions, context);
+              nodeVerifies = this.verifyNode(nodeA, nodeB, ...remainingArguments);
 
         if (nodeVerifies) {
           return true;
@@ -46,14 +46,14 @@ export default class Verifier {
     return nodesVerify;
   }
 
-  verifyTerminalNode(terminalNodeA, terminalNodeB, substitutions, context) {
+  verifyTerminalNode(terminalNodeA, terminalNodeB, ...remainingArguments) {
     const matches = terminalNodeA.match(terminalNodeB),
           terminalNodeVerifies = matches;  ///
 
     return terminalNodeVerifies;
   }
 
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, context = null) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments) {
     let nonTerminalNodeVerifies = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(), ///
@@ -64,7 +64,7 @@ export default class Verifier {
             nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
             nodesA = nonTerminalNodeAChildNodes, ///
             nodesB = nonTerminalNodeBChildNodes, ///
-            nodesVerify = this.verifyNodes(nodesA, nodesB, substitutions, context);
+            nodesVerify = this.verifyNodes(nodesA, nodesB, ...remainingArguments);
 
       nonTerminalNodeVerifies = nodesVerify; ///
     }

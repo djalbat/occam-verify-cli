@@ -17,7 +17,7 @@ const termNodeQuery = nodeQuery("/argument/term!"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type");
 
 class StatementVerifier extends Verifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, context) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context) {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNode = nonTerminalNodeA, ///
@@ -31,7 +31,7 @@ class StatementVerifier extends Verifier {
         case ARGUMENT_RULE_NAME: {
           const argumentNode = nonTerminalNode, ///
                 combinatorArgumentNode = combinatorNonTerminalNode, ///
-                argumentNodeVerified = this.verifyArgumentNode(argumentNode, combinatorArgumentNode, substitutions, context);
+                argumentNodeVerified = this.verifyArgumentNode(argumentNode, combinatorArgumentNode, context);
 
           nonTerminalNodeVerified = argumentNodeVerified; ///
 
@@ -41,7 +41,7 @@ class StatementVerifier extends Verifier {
         case META_ARGUMENT_RULE_NAME: {
           const metaArgumentNode = nonTerminalNode, ///
                 combinatorMetaargumentNode = combinatorNonTerminalNode, ///
-                metaArgumentNodeVerified = this.verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, substitutions, context);
+                metaArgumentNodeVerified = this.verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context);
 
           nonTerminalNodeVerified = metaArgumentNodeVerified; ///
 
@@ -53,7 +53,7 @@ class StatementVerifier extends Verifier {
                 combinatorChildNodes = combinatorNonTerminalNode.getChildNodes(),
                 nodesA = childNodes, ///
                 nodesB = combinatorChildNodes, ///
-                nodesVerified = this.verifyNodes(nodesA, nodesB, substitutions, context);
+                nodesVerified = this.verifyNodes(nodesA, nodesB, context);
 
           nonTerminalNodeVerified = nodesVerified; ///
 
@@ -65,7 +65,7 @@ class StatementVerifier extends Verifier {
     return nonTerminalNodeVerified;
   }
 
-  verifyArgumentNode(argumentNode, combinatorArgumentNode, substitutions, context) {
+  verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
     let argumentNodeVerified = false;
 
     const termNode = termNodeQuery(argumentNode);
@@ -97,7 +97,7 @@ class StatementVerifier extends Verifier {
     return argumentNodeVerified;
   }
 
-  verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, substitutions, context) {
+  verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context) {
     let metaArgumentNodeVerified = false;
 
     const statementNode = statementNodeQuery(metaArgumentNode),

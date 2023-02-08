@@ -60,19 +60,28 @@ export default class Type {
   }
 
   isEqualToOrSubTypeOf(type) {
-    const equalToType = this.isEqualTo(type),
-          subTypeOfType = this.isSubTypeOf(type),
-          equalToTypeOrSubTypeOf = (equalToType || subTypeOfType);
+    const equalTo = this.isEqualTo(type),
+          subTypeOf = this.isSubTypeOf(type),
+          equalToOrSubTypeOf = (equalTo || subTypeOf);
 
-    return equalToTypeOrSubTypeOf;
+    return equalToOrSubTypeOf;
   }
 
   isEqualToOrSuperTypeOf(type) {
-    const equalToType = this.isEqualTo(type),
-          superTypeOfType = this.isSuperTypeOf(type),
-          equalToTypeOrSuperTypeOf = (equalToType || superTypeOfType);
+    const equalTo = this.isEqualTo(type),
+          superTypeOf = this.isSuperTypeOf(type),
+          equalToOrSuperTypeOf = (equalTo || superTypeOf);
 
-    return equalToTypeOrSuperTypeOf;
+    return equalToOrSuperTypeOf;
+  }
+
+  isEqualToOrSubTypeOfOfSuperTypeOf(type) {
+    const equalTo = this.isEqualTo(type),
+          subTypeOf = this.isSubTypeOf(type),
+          superTypeOf = this.isSuperTypeOf(type),
+          equalToOrSubTypeOfOfSuperTypeOf = (equalTo || subTypeOf || superTypeOf);
+
+    return equalToOrSubTypeOfOfSuperTypeOf;
   }
 
   match(type) {
