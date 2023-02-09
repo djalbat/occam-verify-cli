@@ -31,7 +31,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
     }
 
     if (!typeAssertionVerified) {
-      const termTypeAssertionVerified = verifyTermTypeAssertion(typeAssertionNode, context);
+      const termTypeAssertionVerified = verifyTermTypeAssertion(typeAssertionNode, derived, context);
 
       typeAssertionVerified = termTypeAssertionVerified;  ///
     }
@@ -66,13 +66,13 @@ function verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, co
             variableType = variable.getType();
 
       if (derived) {
-        const variableTypeEqualToOrSubTypeOfAssertedType = variableType.isEqualToOrSubTypeOf(assertedType);
+        const assertedTypeEqualToOrSuperTypeOfVariableType = assertedType.isEqualToOrSuperTypeOf(variableType);
 
-        if (!variableTypeEqualToOrSubTypeOfAssertedType) {
+        if (!assertedTypeEqualToOrSuperTypeOfVariableType) {
           const assertedTypeName = assertedType.getName(),
                 variableTypeName = variableType.getName();
 
-          context.error(`The '${variableName}' variable's '${variableTypeName}' type is not equal to or a sub-type of the '${assertedTypeName}' asserted type.`, typeAssertionNode);
+          context.error(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
         } else {
           variableTypeAssertionVerified = true;
         }
@@ -101,7 +101,7 @@ function verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, co
   return variableTypeAssertionVerified;
 }
 
-function verifyTermTypeAssertion(typeAssertionNode, context) {
+function verifyTermTypeAssertion(typeAssertionNode, derived, context) {
   let termTypeAssertionVerified = false;
 
   const types = [],
@@ -118,17 +118,32 @@ function verifyTermTypeAssertion(typeAssertionNode, context) {
       context.error(`The '${assertedTypeName}' asserted type is not present.`, typeAssertionNode);
     } else {
       const firstType = first(types),
-            termType = firstType, ///
-            termTypeIsEqualToAssertedType = termType.isEqualTo(assertedType);
+            termType = firstType; ///
 
-      if (!termTypeIsEqualToAssertedType) {
-        const termString = context.nodeAsString(termNode),
-              termTypeName = termType.getName(),
-              assertedTypeName = assertedType.getName();
+      if (derived) {
+        const assertedTypeIsEqualToOrSuperTypeOfTermType = assertedType.isEqualToOrSuperTypeOf(termType);
 
-        context.error(`The '${assertedTypeName}' asserted type is not equal to the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
+        if (!assertedTypeIsEqualToOrSuperTypeOfTermType) {
+          const termString = context.nodeAsString(termNode),
+                termTypeName = termType.getName(),
+                assertedTypeName = assertedType.getName();
+
+          context.error(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
+        } else {
+          termTypeAssertionVerified = true;
+        }
       } else {
-        termTypeAssertionVerified = true;
+        const assertedTypeIsEqualToOrSubTypeOfTermType = assertedType.isEqualToOrSubTypeOf(termType);
+
+        if (!assertedTypeIsEqualToOrSubTypeOfTermType) {
+          const termString = context.nodeAsString(termNode),
+                termTypeName = termType.getName(),
+                assertedTypeName = assertedType.getName();
+
+          context.error(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
+        } else {
+          termTypeAssertionVerified = true;
+        }
       }
     }
   }

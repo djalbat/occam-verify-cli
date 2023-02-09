@@ -310,7 +310,7 @@ function verifyStatementAsEquality(statementNode, derived, context) {
                 leftTermTypeName = leftTermType.getName(),
                 rightVariableTypeName = rightVariableType.getName();
 
-          context.error(`The left '${rightVariableName}' variable's '${rightVariableTypeName}' type is not equal to or a super-type of the right '${leftTermString}' term's '${leftTermTypeName}' type.`, statementNode);
+          context.error(`The right '${rightVariableName}' variable's '${rightVariableTypeName}' type is not equal to or a super-type of the left '${leftTermString}' term's '${leftTermTypeName}' type.`, statementNode);
         } else {
           statementVerifiedAsEquality = true;
         }
