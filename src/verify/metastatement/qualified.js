@@ -37,5 +37,11 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
     }
   }
 
+  if (qualifiedMetastatementVerified) {
+    const metastatementString = metaproofContext.nodeAsString(metastatementNode);
+
+    metaproofContext.info(`Verified the '${metastatementString}' qualified metastatement.`, qualifiedMetastatementNode);
+  }
+
   return qualifiedMetastatementVerified;
 }

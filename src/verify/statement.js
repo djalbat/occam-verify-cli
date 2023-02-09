@@ -3,6 +3,7 @@
 import Verifier from "../verifier";
 import Variable from "../variable";
 import Equality from "../equality";
+import Assignment from "../assignment";
 import verifyTerm from "../verify/term";
 import equalityCombinator from "../ocmbinator/equality";
 import bracketedCombinator from "../ocmbinator/bracketed";
@@ -39,7 +40,7 @@ export default function verifyStatement(statementNode, assignments, derived, con
   }
 
   if (!statementVerified) {
-    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, derived, context);
+    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, assignments, derived, context);
 
     statementVerified = statementVerifiedAsEquality;  //
   }
@@ -211,7 +212,7 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, con
   return statementVerifiedAsTypeAssertion;
 }
 
-function verifyStatementAsEquality(statementNode, derived, context) {
+function verifyStatementAsEquality(statementNode, assignments, derived, context) {
   let statementVerifiedAsEquality = false;
 
   const combinator = equalityCombinator,  ///
@@ -255,17 +256,19 @@ function verifyStatementAsEquality(statementNode, derived, context) {
           if (leftVariableTypeSuperTypeOfRightVariableType) {
             const type = rightVariableType,  ///
                   name = leftVariableName, ///
-                  variable = Variable.fromTypeAndName(type, name);
+                  variable = Variable.fromTypeAndName(type, name),
+                  assignment = Assignment.fromVariable(variable);
 
-            context.addVariable(variable);
+            assignments.push(assignment);
           }
 
           if (rightVariableTypeSuperTypeOfLeftVariableType) {
             const type = leftVariableType,  ///
                   name = rightVariableName, ///
-                  variable = Variable.fromTypeAndName(type, name);
+                  variable = Variable.fromTypeAndName(type, name),
+                  assignment = Assignment.fromVariable(variable);
 
-            context.addVariable(variable);
+            assignments.push(assignment);
           }
 
           statementVerifiedAsEquality = true;
@@ -279,17 +282,24 @@ function verifyStatementAsEquality(statementNode, derived, context) {
               firstVariable = first(variables),
               leftVariable = firstVariable, ///
               rightTermType = firstType,  ///
+              leftVariableName = leftVariable.getName(),
               leftVariableType = leftVariable.getType(),
               leftVariableTypeEqualToOrSuperTypeOfRightTermType = leftVariableType.isEqualToOrSuperTypeOf(rightTermType);
 
         if (!leftVariableTypeEqualToOrSuperTypeOfRightTermType) {
           const rightTermString = context.nodeAsString(rightTermNode),
-                leftVariableName = leftVariable.getName(),
                 rightTermTypeName = rightTermType.getName(),
                 leftVariableTypeName = leftVariableType.getName();
 
           context.error(`The left '${leftVariableName}' variable's '${leftVariableTypeName}' type is not equal to or a super-type of the right '${rightTermString}' term's '${rightTermTypeName}' type.`, statementNode);
         } else {
+          const type = rightTermType, ///
+                name = leftVariableName,  ///
+                variable = Variable.fromTypeAndName(type, name),
+                assignment = Assignment.fromVariable(variable);
+
+          assignments.push(assignment);
+
           statementVerifiedAsEquality = true;
         }
       } else if (rightTermVerifiedAsVariable) {
@@ -301,17 +311,24 @@ function verifyStatementAsEquality(statementNode, derived, context) {
               firstVariable = first(variables),
               leftTermType = firstType,  ///
               rightVariable = firstVariable, ///
+              rightVariableName = rightVariable.getName(),
               rightVariableType = rightVariable.getType(),
               rightVariableTypeEqualToOrSuperTypeOfRightTermType = rightVariableType.isEqualToOrSuperTypeOf(leftTermType);
 
         if (!rightVariableTypeEqualToOrSuperTypeOfRightTermType) {
           const leftTermString = context.nodeAsString(leftTermNode),
-                rightVariableName = rightVariable.getName(),
                 leftTermTypeName = leftTermType.getName(),
                 rightVariableTypeName = rightVariableType.getName();
 
           context.error(`The right '${rightVariableName}' variable's '${rightVariableTypeName}' type is not equal to or a super-type of the left '${leftTermString}' term's '${leftTermTypeName}' type.`, statementNode);
         } else {
+          const type = leftTermType, ///
+                name = rightVariableName,  ///
+                variable = Variable.fromTypeAndName(type, name),
+                assignment = Assignment.fromVariable(variable);
+
+          assignments.push(assignment);
+
           statementVerifiedAsEquality = true;
         }
       } else {

@@ -4,7 +4,7 @@ import Equality from "../equality";
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 
-import { push, last } from "../utilities/array";
+import { push, last, filter } from "../utilities/array";
 import { MAXIMUM_INDEXES_LENGTH } from "../constants";
 
 class ProofContext {
@@ -72,6 +72,17 @@ class ProofContext {
   }
 
   addVariable(variable) {
+    const variableName = variable.getName();
+
+    filter(this.variables, (variable) => {
+      const name = variable.getName(),
+            nameVariableName = (name === variableName);
+
+      if (!nameVariableName) {
+        return true;
+      }
+    });
+
     this.variables.push(variable);
   }
 

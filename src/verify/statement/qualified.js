@@ -79,5 +79,11 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
     }
   }
 
+  if (qualifiedStatementVerified) {
+    const statementString = proofContext.nodeAsString(statementNode);
+
+    proofContext.info(`Verified the '${statementString}' qualified statement.`, qualifiedStatementNode);
+  }
+
   return qualifiedStatementVerified;
 }

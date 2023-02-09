@@ -29,5 +29,11 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
     }
   }
 
+  if (unqualifiedMetastatementVerified) {
+    const metastatementString = metaproofContext.nodeAsString(metastatementNode);
+
+    metaproofContext.info(`Verified the '${metastatementString}' unqualified metastatement.`, unqualifiedMetastatementNode);
+  }
+
   return unqualifiedMetastatementVerified;
 }

@@ -30,5 +30,11 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
     }
   }
 
+  if (unqualifiedStatementVerified) {
+    const statementString = proofContext.nodeAsString(statementNode);
+
+    proofContext.info(`Verified the '${statementString}' unqualified statement.`, unqualifiedStatementNode);
+  }
+
   return unqualifiedStatementVerified;
 }

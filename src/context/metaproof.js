@@ -3,7 +3,7 @@
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 
-import { push, last } from "../utilities/array";
+import { push, last, filter } from "../utilities/array";
 
 class MetaproofContext {
   constructor(context, metavariables, metaproofSteps) {
@@ -54,6 +54,17 @@ class MetaproofContext {
   }
 
   addMetavariable(metavariable) {
+    const metavariableName = metavariable.getName();
+
+    filter(this.metavariables, (metavariable) => {
+      const name = metavariable.getName(),
+            nameMetavariableName = (name === metavariableName);
+
+      if (!nameMetavariableName) {
+        return true;
+      }
+    });
+
     this.metavariables.push(metavariable);
   }
 
