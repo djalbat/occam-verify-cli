@@ -220,9 +220,9 @@ class EqualityVerifier extends Verifier {
             secondType = second(types),
             leftTermType = firstType, ///
             rightTermType = secondType, ///
-            leftTermTypeEqualToRightTermType = leftTermType.isEqualTo(rightTermType);
+            leftTermTypeEqualToOrSubTypeOfOfSuperTypeOfRightTermType = leftTermType.isEqualToOrSubTypeOfOfSuperTypeOf(rightTermType);
 
-      if (leftTermTypeEqualToRightTermType) {
+      if (leftTermTypeEqualToOrSubTypeOfOfSuperTypeOfRightTermType) {
         equality = Equality.fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode);
       }
     }
