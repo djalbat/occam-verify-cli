@@ -16,13 +16,13 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
 
     proofContext.debug(`Verifying the '${statementString}' unqualified statement...`, unqualifiedStatementNode);
 
-    let statementMatches = true;
-
     if (derived) {
-      statementMatches = proofContext.matchStatement(statementNode);
+      const statementMatches = proofContext.matchStatement(statementNode);
+
+      unqualifiedStatementVerified = statementMatches;  ///
     }
 
-    if (statementMatches) {
+    if (!unqualifiedStatementVerified) {
       const context = proofContext, ///
             statementVerified = verifyStatement(statementNode, assignments, derived, context);
 

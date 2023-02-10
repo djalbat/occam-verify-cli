@@ -1,7 +1,5 @@
 "use strict";
 
-import verifyStatement from "../../verify/statement";
-
 import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
 
 const referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!"),
@@ -17,64 +15,56 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
 
     proofContext.debug(`Verifying the '${statementString}' qualified statement...`, qualifiedStatementNode);
 
-    const referenceNode = referenceNodeQuery(qualifiedStatementNode);
+    const referenceNode = referenceNodeQuery(qualifiedStatementNode),
+          referenceName = referenceNameFromReferenceNode(referenceNode);
 
-    if (referenceNode === null) {
-      const context = proofContext,
-            statementVerified = verifyStatement(statementNode, assignments, derived, context);
+    if (!qualifiedStatementVerified) {
+      const rule = proofContext.findRuleByReferenceName(referenceName);
 
-      qualifiedStatementVerified = statementVerified; ///
-    } else {
-      const referenceName = referenceNameFromReferenceNode(referenceNode);
+      if (rule !== null) {
+        const ruleMatchesStatement = rule.matchStatement(statementNode, proofContext);
 
-      if (!qualifiedStatementVerified) {
-        const rule = proofContext.findRuleByReferenceName(referenceName);
-
-        if (rule !== null) {
-          const ruleMatchesStatement = rule.matchStatement(statementNode, proofContext);
-
-          qualifiedStatementVerified = ruleMatchesStatement;  ///
-        }
+        qualifiedStatementVerified = ruleMatchesStatement;  ///
       }
+    }
 
-      if (!qualifiedStatementVerified) {
-        const axiom = proofContext.findAxiomByReferenceName(referenceName);
+    if (!qualifiedStatementVerified) {
+      const axiom = proofContext.findAxiomByReferenceName(referenceName);
 
-        if (axiom !== null) {
-          const axiomMatchesStatement = axiom.matchStatement(statementNode, proofContext);
+      if (axiom !== null) {
+        const axiomMatchesStatement = axiom.matchStatement(statementNode, proofContext);
 
-          qualifiedStatementVerified = axiomMatchesStatement; ///
-        }
+        qualifiedStatementVerified = axiomMatchesStatement; ///
       }
+    }
 
-      if (!qualifiedStatementVerified) {
-        const lemma = proofContext.findLemmaByReferenceName(referenceName);
+    if (!qualifiedStatementVerified) {
+      const lemma = proofContext.findLemmaByReferenceName(referenceName);
 
-        if (lemma !== null) {
-          const lemmaMatchesStatement = lemma.matchStatement(statementNode, proofContext);
+      if (lemma !== null) {
+        const lemmaMatchesStatement = lemma.matchStatement(statementNode, proofContext);
 
-          qualifiedStatementVerified = lemmaMatchesStatement; ///
-        }
+        qualifiedStatementVerified = lemmaMatchesStatement; ///
       }
+    }
 
-      if (!qualifiedStatementVerified) {
-        const theorem = proofContext.findTheoremByReferenceName(referenceName);
+    if (!qualifiedStatementVerified) {
+      const theorem = proofContext.findTheoremByReferenceName(referenceName);
 
-        if (theorem !== null) {
-          const theoremMatchesStatement = theorem.matchStatement(statementNode, proofContext);
+      if (theorem !== null) {
+        const theoremMatchesStatement = theorem.matchStatement(statementNode, proofContext);
 
-          qualifiedStatementVerified = theoremMatchesStatement; ///
-        }
+        qualifiedStatementVerified = theoremMatchesStatement; ///
       }
+    }
 
-      if (!qualifiedStatementVerified) {
-        const conjecture = proofContext.findConjectureByReferenceName(referenceName);
+    if (!qualifiedStatementVerified) {
+      const conjecture = proofContext.findConjectureByReferenceName(referenceName);
 
-        if (conjecture !== null) {
-          const conjectureMatchesStatement = conjecture.matchStatement(statementNode, proofContext);
+      if (conjecture !== null) {
+        const conjectureMatchesStatement = conjecture.matchStatement(statementNode, proofContext);
 
-          qualifiedStatementVerified = conjectureMatchesStatement; ///
-        }
+        qualifiedStatementVerified = conjectureMatchesStatement; ///
       }
     }
   }

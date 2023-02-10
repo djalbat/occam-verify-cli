@@ -1,6 +1,6 @@
 "use strict";
 
-import verifyMetastatement from "../metastatement";
+import verifyMetastatement from "../../verify/metastatement";
 
 import { nodeQuery } from "../../utilities/query";
 
@@ -16,13 +16,13 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
 
     metaproofContext.debug(`Verifying the '${metastatementString}' unqualified metastatement...`, unqualifiedMetastatementNode);
 
-    let metastatementMatches = true;
-
     if (derived) {
-      metastatementMatches = metaproofContext.matchMetastatement(metastatementNode);
+      const metastatementMatches = metaproofContext.matchMetastatement(metastatementNode);
+
+      unqualifiedMetastatementVerified = metastatementMatches;  ///
     }
 
-    if (metastatementMatches) {
+    if (!unqualifiedMetastatementVerified) {
       const metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, metaproofContext);
 
       unqualifiedMetastatementVerified = metastatementVerified; ///
