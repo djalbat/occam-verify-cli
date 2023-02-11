@@ -254,18 +254,18 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context)
                 rightVariableTypeSuperTypeOfLeftVariableType = rightVariableType.isSuperTypeOf(leftVariableType);
 
           if (leftVariableTypeSuperTypeOfRightVariableType) {
-            const type = rightVariableType,  ///
-                  name = leftVariableName, ///
-                  variable = Variable.fromTypeAndName(type, name),
+            const name = leftVariableName, ///
+                  type = rightVariableType,  ///
+                  variable = Variable.fromNameAndType(name, type),
                   assignment = Assignment.fromVariable(variable);
 
             assignments.push(assignment);
           }
 
           if (rightVariableTypeSuperTypeOfLeftVariableType) {
-            const type = leftVariableType,  ///
-                  name = rightVariableName, ///
-                  variable = Variable.fromTypeAndName(type, name),
+            const name = rightVariableName, ///
+                  type = leftVariableType,  ///
+                  variable = Variable.fromNameAndType(name, type),
                   assignment = Assignment.fromVariable(variable);
 
             assignments.push(assignment);
@@ -293,9 +293,9 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context)
 
           context.error(`The left '${leftVariableName}' variable's '${leftVariableTypeName}' type is not equal to or a super-type of the right '${rightTermString}' term's '${rightTermTypeName}' type.`, statementNode);
         } else {
-          const type = rightTermType, ///
-                name = leftVariableName,  ///
-                variable = Variable.fromTypeAndName(type, name),
+          const name = leftVariableName,  ///
+                type = rightTermType, ///
+                variable = Variable.fromNameAndType(name, type),
                 assignment = Assignment.fromVariable(variable);
 
           assignments.push(assignment);
@@ -322,9 +322,9 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context)
 
           context.error(`The right '${rightVariableName}' variable's '${rightVariableTypeName}' type is not equal to or a super-type of the left '${leftTermString}' term's '${leftTermTypeName}' type.`, statementNode);
         } else {
-          const type = leftTermType, ///
-                name = rightVariableName,  ///
-                variable = Variable.fromTypeAndName(type, name),
+          const name = rightVariableName,  ///
+                type = leftTermType, ///
+                variable = Variable.fromNameAndType(name, type),
                 assignment = Assignment.fromVariable(variable);
 
           assignments.push(assignment);

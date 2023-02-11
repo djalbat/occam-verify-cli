@@ -20,10 +20,10 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
     const typeName = typeNameFromTypeNode(typeNode);
     
     if (typeName === null) {
-      const type = objectType,
-            name = variableName;  ///
+      const name = variableName,  ///
+            type = objectType;
 
-      variable = Variable.fromTypeAndName(type, name);
+        variable = Variable.fromNameAndType(name, type);
     } else {
       const type = fileContext.findTypeByTypeName(typeName);
 
@@ -32,7 +32,7 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
       } else {
         const name = variableName;  ///
 
-        variable = Variable.fromTypeAndName(type, name);
+        variable = Variable.fromNameAndType(name, type);
       }
     }
 

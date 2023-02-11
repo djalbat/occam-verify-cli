@@ -9,6 +9,7 @@ import verifyTypeDeclaration from "../../verify/declaration/type";
 import verifyVariableDeclaration from "../../verify/declaration/variable";
 import verifyCombinatorDeclaration from "../../verify/declaration/combinator";
 import verifyConstructorDeclaration from "../../verify/declaration/constructor";
+import verifyMetavariableDeclaration from "../../verify/declaration/metavariable";
 
 import { nodeQuery } from "../../utilities/query";
 
@@ -20,7 +21,8 @@ const ruleNodeQuery = nodeQuery("/topLevelDeclaration/rule!"),
       typeDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/typeDeclaration!"),
       variableDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/variableDeclaration!"),
       combinatorDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/combinatorDeclaration!"),
-      constructorDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/constructorDeclaration!");
+      constructorDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/constructorDeclaration!"),
+      metavariableDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/metavariableDeclaration!");
 
 export default function verifyTopLevelDeclaration(topLevelDeclarationNode, fileContext) {
   let topLevelDeclarationVerified = false;
@@ -34,7 +36,8 @@ export default function verifyTopLevelDeclaration(topLevelDeclarationNode, fileC
         typeDeclarationNode = typeDeclarationNodeQuery(node),
         variableDeclarationNode = variableDeclarationNodeQuery(node),
         combinatorDeclarationNode = combinatorDeclarationNodeQuery(node),
-        constructorDeclarationNode = constructorDeclarationNodeQuery(node);
+        constructorDeclarationNode = constructorDeclarationNodeQuery(node),
+        metavariableDeclarationNode = metavariableDeclarationNodeQuery(node);
 
   if (false) {
     ///
@@ -74,6 +77,10 @@ export default function verifyTopLevelDeclaration(topLevelDeclarationNode, fileC
     const constructorDeclarationVerified = verifyConstructorDeclaration(constructorDeclarationNode, fileContext);
 
     topLevelDeclarationVerified = constructorDeclarationVerified;  ///
+  } else if (metavariableDeclarationNode !== null) {
+    const metavariableDeclarationVerified = verifyMetavariableDeclaration(metavariableDeclarationNode, fileContext);
+
+    topLevelDeclarationVerified = metavariableDeclarationVerified;  ///
   }
 
   return topLevelDeclarationVerified;

@@ -3,6 +3,7 @@
 import { Query } from "occam-dom";
 
 const typeTerminalNodeQuery = nodeQuery("/type/@type"),
+      metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type"),
       labelNameTerminalNodeQuery = nodeQuery("/label/@name"),
       variableNameTerminalNodeQuery = nodeQuery("/variable/@name"),
       referenceNameTerminalNodeQuery = nodeQuery("/reference/@name"),
@@ -55,6 +56,19 @@ export function labelNameFromLabelNode(labelNode) {
         labelName = labelNameTerminalNodeContent; ///
 
   return labelName;
+}
+
+export function metaTypeNameFromMetaTypeNode(metaTypeNode) {
+  let metaTypeName = null;
+
+  if (metaTypeNode !== null) {
+    const metaTypeTerminalNode = metaTypeTerminalNodeQuery(metaTypeNode),
+          metaTypeTerminalNodeContent = metaTypeTerminalNode.getContent();
+
+    metaTypeName = metaTypeTerminalNodeContent; ///
+  }
+
+  return metaTypeName;
 }
 
 export function variableNameFromVariableNode(variableNode) {

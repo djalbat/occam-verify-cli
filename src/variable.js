@@ -1,17 +1,17 @@
 "use strict";
 
 export default class Variable {
-  constructor(type, name) {
-    this.type = type;
+  constructor(name, type) {
     this.name = name;
-  }
-
-  getType() {
-    return this.type;
+    this.type = type;
   }
 
   getName() {
     return this.name;
+  }
+
+  getType() {
+    return this.type;
   }
 
   matchName(name) {
@@ -27,8 +27,8 @@ export default class Variable {
     return string;
   }
 
-  static fromTypeAndName(type, name) {
-    const variable = new Variable(type, name);
+  static fromNameAndType(name, type) {
+    const variable = new Variable(name, type);
 
     return variable;
   }

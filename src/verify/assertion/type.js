@@ -85,9 +85,9 @@ function verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, co
 
           context.error(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
         } else {
-          const type = assertedType,  ///
-                name = variableName,  ///
-                variable = Variable.fromTypeAndName(type, name),
+          const name = variableName,  ///
+                type = assertedType,  ///
+                variable = Variable.fromNameAndType(name, type),
                 assignment = Assignment.fromVariable(variable);
 
           assignments.push(assignment);

@@ -2,8 +2,13 @@
 
 import { rewriteNodes } from "occam-grammar-utilities";
 
-import { push } from "../utilities/array";
+import { push, filter } from "../utilities/array";
+import { statementMetaType } from "../metaType";
 import { nodeAsString, nodesAsString } from "../utilities/string";
+
+const metaTypes = [
+  statementMetaType
+];
 
 export default class FileContext {
   constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, variables, metavariables) {
@@ -157,6 +162,10 @@ export default class FileContext {
     return theorems;
   }
 
+  getMetaTypes(includeRelease = true) {
+    return metaTypes;
+  }
+
   getConjectures(includeRelease = true) {
     const conjectures = [];
 
@@ -290,46 +299,6 @@ export default class FileContext {
     return theorem;
   }
 
-  findConjectureByReferenceName(referenceName) {
-    const labelName = referenceName,  ///
-          conjectures = this.getConjectures(),
-          conjecture = conjectures.find((conjecture) => {
-            const conjectureMatchesLabelName = conjecture.matchLabelName(labelName);
-
-            if (conjectureMatchesLabelName) {
-              return true;
-            }
-          }) || null;
-
-    return conjecture;
-  }
-
-  isLabelPresentByLabelName(labelName) {
-    const label = this.findLabelByLabelName(labelName),
-          labelPresent = (label !== null);
-
-    return labelPresent;
-  }
-
-  isTypePresentByTypeName(typeName) {
-    const type = this.findTypeByTypeName(typeName),
-          typePresent = (type !== null);
-
-    return typePresent;
-  }
-
-  nodeAsString(node) {
-    const string = nodeAsString(node, this.tokens);
-
-    return string;
-  }
-
-  nodesAsString(node) {
-    const string = nodesAsString(node, this.tokens);
-
-    return string;
-  }
-
   findVariableByVariableName(variableName) {
     const name = variableName,  ///
           variables = this.getVariables(),
@@ -344,6 +313,61 @@ export default class FileContext {
     return variable;
   }
 
+  findMetaTypeByMetaTypeName(metaTypeName) {
+    const metaTypes = this.getMetaTypes(),
+          metaType = metaTypes.find((metaType) => {
+            const matches = metaType.matchMetaTypeName(metaTypeName);
+
+            if (matches) {
+              return true;
+            }
+          }) || null;
+
+    return metaType;
+  }
+
+  findConjectureByReferenceName(referenceName) {
+    const labelName = referenceName,  ///
+          conjectures = this.getConjectures(),
+          conjecture = conjectures.find((conjecture) => {
+            const conjectureMatchesLabelName = conjecture.matchLabelName(labelName);
+
+            if (conjectureMatchesLabelName) {
+              return true;
+            }
+          }) || null;
+
+    return conjecture;
+  }
+
+  findMetavariableByMetavariableName(metavariableName) {
+    const name = metavariableName,  ///
+          metavariables = this.getMetavariables(),
+          metavariable = metavariables.find((metavariable) => {
+            const matches = metavariable.matchName(name);
+
+            if (matches) {
+              return true;
+            }
+          }) || null;
+
+    return metavariable;
+  }
+
+  isTypePresentByTypeName(typeName) {
+    const type = this.findTypeByTypeName(typeName),
+          typePresent = (type !== null);
+
+    return typePresent;
+  }
+
+  isLabelPresentByLabelName(labelName) {
+    const label = this.findLabelByLabelName(labelName),
+          labelPresent = (label !== null);
+
+    return labelPresent;
+  }
+
   isVariablePresentByVariableName(variableName) {
     const variable = this.findVariableByVariableName(variableName),
           variablePresent = (variable !== null);
@@ -351,10 +375,29 @@ export default class FileContext {
     return variablePresent;
   }
 
+  isMetavariablePresentByMetavariableName(metavariableName) {
+    const metavariable = this.findMetavariableByMetavariableName(metavariableName),
+          metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
+  }
+
   matchStatement(statementNode) {
     const statementMatches = false;
 
     return statementMatches;
+  }
+
+  nodeAsString(node) {
+    const string = nodeAsString(node, this.tokens);
+
+    return string;
+  }
+
+  nodesAsString(node) {
+    const string = nodesAsString(node, this.tokens);
+
+    return string;
   }
 
   addType(type) {
@@ -378,6 +421,17 @@ export default class FileContext {
   }
 
   addVariable(variable) {
+    const variableName = variable.getName();
+
+    filter(this.variables, (variable) => {
+      const name = variable.getName(),
+            nameVariableName = (name === variableName);
+
+      if (!nameVariableName) {
+        return true;
+      }
+    });
+
     this.variables.push(variable);
   }
 
@@ -387,6 +441,21 @@ export default class FileContext {
 
   addConstructor(constructor) {
     this.constructors.push(constructor);
+  }
+
+  addMetavariable(metavariable) {
+    const metavariableName = metavariable.getName();
+
+    filter(this.metavariables, (metavariable) => {
+      const name = metavariable.getName(),
+            nameMetavariableName = (name === metavariableName);
+
+      if (!nameMetavariableName) {
+        return true;
+      }
+    });
+
+    this.metavariables.push(metavariable);
   }
 
   trace(message, node) { this.releaseContext.trace(message, node, this.tokens, this.filePath); }
