@@ -192,8 +192,8 @@ function verifyStatementAgainstCombinator(statementNode, combinator, context) {
   const combinatorStatementNode = combinator.getStatementNode(),
         nonTerminalNodeA = statementNode,  ///
         nonTerminalNodeB = combinatorStatementNode, ///
-        nodeVerified = statementVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context),
-        statementVerifiedAgainstCombinator = nodeVerified;  ///
+        nonTerminalNodeVerified = statementVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context),
+        statementVerifiedAgainstCombinator = nonTerminalNodeVerified;  ///
 
   return statementVerifiedAgainstCombinator;
 }

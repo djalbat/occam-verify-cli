@@ -108,7 +108,7 @@ class MetaproofContext {
     return metavariable;
   }
 
-  isMetavariablePresentByVariableName(metavariableName) {
+  isMetavariablePresentByMetavariableName(metavariableName) {
     const metavariable = this.findMetavariableByMetavariableName(metavariableName),
           metavariablePresent = (metavariable !== null);
 

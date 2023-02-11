@@ -40,7 +40,7 @@ export default class Verifier {
         if (nodeVerified) {
           return true;
         }
-      })
+      });
     }
 
     return nodesVerify;
