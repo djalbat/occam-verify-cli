@@ -44,7 +44,7 @@ export default function verifyAxiom(axiomNode, fileContext) {
       if (consequenceVerified) {
         const firstConsequence = first(consequences),
               consequence = firstConsequence, ///
-              axiom = Axiom.fromLabelsSuppositionsAndConsequence(labels, suppositions, consequence);
+              axiom = Axiom.fromLabelsSuppositionsConsequenceAndProofContext(labels, suppositions, consequence, proofContext);
 
         fileContext.addAxiom(axiom);
 

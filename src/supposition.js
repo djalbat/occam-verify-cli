@@ -19,7 +19,7 @@ export default class Supposition {
     return this.statementNode;
   }
 
-  matchSubproofNode(subproofNode, substitutions) {
+  matchSubproofNode(subproofNode, substitutions, proofContext, statementProofContext) {
     let subproofNodeMatches = false;
 
     const subproofAssertionNode = subproofAssertionNodeQuery(this.statementNode);
@@ -40,7 +40,9 @@ export default class Supposition {
           const subproofStatementNode = subproofStatementNodes[index],
                 nonTerminalNodeA = subproofAssertionStatementNode,  ///
                 nonTerminalNodeB = subproofStatementNode, ///
-                nonTerminalNodeVerified = suppositionTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+                proofContextA = proofContext, ///
+                proofContextB = statementProofContext,  ///
+                nonTerminalNodeVerified = suppositionTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB);
 
           if (nonTerminalNodeVerified) {
             return true;
@@ -52,10 +54,12 @@ export default class Supposition {
     return subproofNodeMatches;
   }
 
-  matchStatementNode(statementNode, substitutions) {
+  matchStatementNode(statementNode, substitutions, proofContext, statementProofContext) {
     const nonTerminalNodeA = this.statementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeVerified = suppositionTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
+          proofContextA = proofContext, ///
+          proofContextB = statementProofContext,  ///
+          nonTerminalNodeVerified = suppositionTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;

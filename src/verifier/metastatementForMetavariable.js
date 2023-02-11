@@ -10,7 +10,7 @@ import { metavariableNameFromMetavariableNode } from "../utilities/query";
 const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!');
 
 export default class MetastatementForMetavariableVerifier extends Verifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, metaproofContext) {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
@@ -23,28 +23,28 @@ export default class MetastatementForMetavariableVerifier extends Verifier {
       if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameMetastatementRuleName) {
         const metastatementNodeA = nonTerminalNodeA,  ///
               metastatementNodeB = nonTerminalNodeB,  ///
-              metastatementNodeVerified = this.verifyMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions);
+              metastatementNodeVerified = this.verifyMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions, metaproofContext);
 
         if (metastatementNodeVerified) {
           nonTerminalNodeVerified = true;  ///
         } else {
-          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, metaproofContext);
         }
       } else {
-        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, metaproofContext);
       }
     }
 
     return nonTerminalNodeVerified;
   }
 
-  verifyMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions) {
+  verifyMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions, metaproofContext) {
     let metastatementNodeVerified = false;
 
     const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
     if (metavariableNodeA !== null) {
-      const metaVariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions);
+      const metaVariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions, metaproofContext);
 
       metastatementNodeVerified = metaVariableNodeVerified; ///
     }
@@ -52,7 +52,7 @@ export default class MetastatementForMetavariableVerifier extends Verifier {
     return metastatementNodeVerified;
   }
 
-  verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions) {
+  verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions, metaproofContext) {
     let metavariableNodeVerified;
 
     const metavariableNameA = metavariableNameFromMetavariableNode(metavariableNodeA),

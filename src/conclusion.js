@@ -14,19 +14,19 @@ export default class Conclusion {
     return this.metastatementNode;
   }
 
-  matchStatementNode(statementNode, substitutions) {
+  matchStatementNode(statementNode, substitutions, proofContext) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeVerified = conclusionStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
+          nonTerminalNodeVerified = conclusionStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;
   }
 
-  matchMetastatementNode(metastatementNode, substitutions) {
+  matchMetastatementNode(metastatementNode, substitutions, metaproofContext) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = metastatementNode,  ///
-          nonTerminalNodeVerified = conclusionMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
+          nonTerminalNodeVerified = conclusionMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, metaproofContext),
           metastatementNodeMatches = nonTerminalNodeVerified; ///
 
     return metastatementNodeMatches;

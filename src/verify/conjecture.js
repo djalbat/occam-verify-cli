@@ -9,6 +9,7 @@ import verifyConsequence from "./consequence";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
+import proof from "../context/proof";
 
 const proofNodeQuery = nodeQuery("/conjecture/proof!"),
       labelNodesQuery = nodesQuery("/conjecture/label"),
@@ -50,7 +51,7 @@ export default function verifyConjecture(conjectureNode, fileContext) {
 
         verifyProof(proofNode, consequence, proofContext);
 
-        const conjecture = Conjecture.fromLabelsSuppositionsAndConsequence(labels, suppositions, consequence);
+        const conjecture = Conjecture.fromLabelsSuppositionsConsequenceAndProofContext(labels, suppositions, consequence, proofContext);
 
         fileContext.addConjecture(conjecture);
 

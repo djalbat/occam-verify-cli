@@ -53,7 +53,7 @@ export default function verifyLemma(lemmaNode, fileContext) {
               proofVerified = verifyProof(proofNode, consequence, proofContext);
 
         if (proofVerified) {
-          const lemma = Lemma.fromLabelsSuppositionsAndConsequence(labels, suppositions, consequence);
+          const lemma = Lemma.fromLabelsSuppositionsConsequenceAndProofContext(labels, suppositions, consequence, proofContext);
 
           fileContext.addLemma(lemma);
 

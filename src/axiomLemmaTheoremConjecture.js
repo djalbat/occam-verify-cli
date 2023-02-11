@@ -8,10 +8,11 @@ import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
 
 export default class AxiomLemmaTheoremConjecture {
-  constructor(labels, suppositions, consequence) {
+  constructor(labels, suppositions, consequence, proofContext) {
     this.labels = labels;
     this.suppositions = suppositions;
     this.consequence = consequence;
+    this.proofContext = proofContext;
   }
 
   getLabels() {
@@ -24,6 +25,10 @@ export default class AxiomLemmaTheoremConjecture {
 
   getConsequence() {
     return this.consequence;
+  }
+
+  getProofContext() {
+    return this.proofContext;
   }
 
   matchLabelName(labelName) {
@@ -39,21 +44,22 @@ export default class AxiomLemmaTheoremConjecture {
     return matchesLabelName;
   }
 
-  matchStatement(statementNode, proofContext) {
+  matchStatement(statementNode, statementProofContext) {
     let statementNatches;
 
     const suppositionsLength = this.suppositions.length;
 
     if (suppositionsLength === 0) {
       const substitutions = [],
-            consequenceMatches = matchConsequence(this.consequence, statementNode, substitutions);
+            consequenceMatches = matchConsequence(this.consequence, statementNode, substitutions, this.proofContext, statementProofContext);
 
       statementNatches = consequenceMatches; ///
     } else {
-      const proofSteps = proofContext.getProofSteps();
+      const proofSteps = statementProofContext.getProofSteps();
 
       statementNatches = someSubArray(proofSteps, suppositionsLength, (proofSteps) => {
-        const suppositionsMatchConsequence = matchSuppositionsAndConsequence(this.suppositions, this.consequence, proofSteps, statementNode);
+        const substitutions = [],
+              suppositionsMatchConsequence = matchSuppositionsAndConsequence(this.suppositions, this.consequence, statementNode, proofSteps, substitutions, this.proofContext, statementProofContext);
 
         if (suppositionsMatchConsequence) {
           return true;
@@ -124,16 +130,16 @@ export default class AxiomLemmaTheoremConjecture {
     return new Class(labels, suppositions, consequence);  ///
   }
 
-  static fromLabelsSuppositionsAndConsequence(Class, labels, suppositions, consequence) { return new Class(labels, suppositions, consequence); }
+  static fromLabelsSuppositionsConsequenceAndProofContext(Class, labels, suppositions, consequence, proofContext) { return new Class(labels, suppositions, consequence, proofContext); }
 }
 
-function matchSupposition(supposition, proofSteps, substitutions) {
+function matchSupposition(supposition, proofSteps, substitutions, proofContext, statementProofContext) {
   const proofStep = prune(proofSteps, (proofStep) => {
     const subproofNode = proofStep.getSubproofNode(),
           statementNode = proofStep.getStatementNode();
 
     if (subproofNode !== null) {
-      const subProofMatches = supposition.matchSubproofNode(subproofNode, substitutions);
+      const subProofMatches = supposition.matchSubproofNode(subproofNode, substitutions, proofContext, statementProofContext);
 
       if (!subProofMatches) {  ///
         return true;
@@ -141,7 +147,7 @@ function matchSupposition(supposition, proofSteps, substitutions) {
     }
 
     if (statementNode !== null) {
-      const statementMatches = supposition.matchStatementNode(statementNode, substitutions);
+      const statementMatches = supposition.matchStatementNode(statementNode, substitutions, proofContext, statementProofContext);
 
       if (!statementMatches) {  ///
         return true;
@@ -155,9 +161,9 @@ function matchSupposition(supposition, proofSteps, substitutions) {
   return suppositionMatches;
 }
 
-function matchSuppositions(supposition, proofSteps, substitutions) {
+function matchSuppositions(supposition, proofSteps, substitutions, proofContext, statementProofContext) {
   const suppositionsMatch = supposition.every((supposition) => {
-    const suppositionMatches = matchSupposition(supposition, proofSteps, substitutions);
+    const suppositionMatches = matchSupposition(supposition, proofSteps, substitutions, proofContext, statementProofContext);
 
     if (suppositionMatches) {
       return true;
@@ -167,21 +173,20 @@ function matchSuppositions(supposition, proofSteps, substitutions) {
   return suppositionsMatch;
 }
 
-function matchConsequence(consequence, statementNode, substitutions) {
-  const nonTerminalNodeMatches = consequence.matchStatementNode(statementNode, substitutions),
+function matchConsequence(consequence, statementNode, substitutions, proofContext, statementProofContext) {
+  const nonTerminalNodeMatches = consequence.matchStatementNode(statementNode, substitutions, proofContext, statementProofContext),
         consequenceMatches = nonTerminalNodeMatches; ///
 
   return consequenceMatches;
 }
 
-function matchSuppositionsAndConsequence(suppositions, consequence, proofSteps, statementNode) {
+function matchSuppositionsAndConsequence(suppositions, consequence, statementNode, proofSteps, substitutions, proofContext, statementProofContext) {
   let suppositionsMatchConsequence = false;
 
-  const substitutions = [],
-        suppositionsMatch = matchSuppositions(suppositions, proofSteps, substitutions);
+  const suppositionsMatch = matchSuppositions(suppositions, proofSteps, substitutions, proofContext, statementProofContext);
 
   if (suppositionsMatch) {
-    const consequenceMatches = matchConsequence(consequence, statementNode, substitutions);
+    const consequenceMatches = matchConsequence(consequence, statementNode, substitutions, proofContext, statementProofContext);
 
     suppositionsMatchConsequence = consequenceMatches;  ///
   }

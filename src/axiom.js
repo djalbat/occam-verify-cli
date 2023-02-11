@@ -9,5 +9,5 @@ export default class Axiom extends AxiomLemmaTheoremConjecture {
 
   static fromJSON(json, context) { return AxiomLemmaTheoremConjecture.fromJSON(Axiom, json, context); }
 
-  static fromLabelsSuppositionsAndConsequence(labels, suppositions, consequence) { return AxiomLemmaTheoremConjecture.fromLabelsSuppositionsAndConsequence(Axiom, labels, suppositions, consequence); }
+  static fromLabelsSuppositionsConsequenceAndProofContext(labels, suppositions, consequence, proofContext) { return AxiomLemmaTheoremConjecture.fromLabelsSuppositionsConsequenceAndProofContext(Axiom, labels, suppositions, consequence, proofContext); }
 }

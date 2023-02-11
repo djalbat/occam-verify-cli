@@ -11,7 +11,7 @@ const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!'),
       metaArgumentChildNodeNodeQuery = nodeQuery('/metaArgument/*!');
 
 export default class StatementForMetavariableVerifier extends Verifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext) {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
@@ -23,7 +23,7 @@ export default class StatementForMetavariableVerifier extends Verifier {
 
       nonTerminalNodeB = metaArgumentChildNodeB;  ///
 
-      nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+      nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext);
     } else {
       const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
             nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
@@ -33,7 +33,7 @@ export default class StatementForMetavariableVerifier extends Verifier {
       if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameStatementRuleName) {
         const metastatementNodeA = nonTerminalNodeA,  ///
               statementNodeB = nonTerminalNodeB,  ///
-              statementNodeVerified = this.verifyStatementNode(metastatementNodeA, statementNodeB, substitutions);
+              statementNodeVerified = this.verifyStatementNode(metastatementNodeA, statementNodeB, substitutions, proofContext);
 
         if (statementNodeVerified) {
           nonTerminalNodeVerified = true;  ///
@@ -42,25 +42,25 @@ export default class StatementForMetavariableVerifier extends Verifier {
                 nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
                 nodesA = nonTerminalNodeAChildNodes, ///
                 nodesB = nonTerminalNodeBChildNodes, ///
-                nodesMatch = this.verifyNodes(nodesA, nodesB, substitutions);
+                nodesMatch = this.verifyNodes(nodesA, nodesB, substitutions, proofContext);
 
           nonTerminalNodeVerified = nodesMatch;  ///
         }
       } else if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
-        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions);
+        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext);
       }
     }
 
     return nonTerminalNodeVerified;
   }
 
-  verifyStatementNode(metastatementNodeA, statementNodeB, substitutions) {
+  verifyStatementNode(metastatementNodeA, statementNodeB, substitutions, proofContext) {
     let statementNodeVerified = false;
 
     const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
     if (metavariableNodeA !== null) {
-      const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions);
+      const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, proofContext);
 
       statementNodeVerified = metavariableNodeVerified; ///
     }
@@ -68,7 +68,7 @@ export default class StatementForMetavariableVerifier extends Verifier {
     return statementNodeVerified;
   }
 
-  verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions) {
+  verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, proofContext) {
     let metavariableNodeVerified;
 
     const metavariableNameA = metavariableNameFromMetavariableNode(metavariableNodeA),

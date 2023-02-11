@@ -13,10 +13,10 @@ export default class Consequence {
     return this.statementNode;
   }
 
-  matchStatementNode(statementNode, substitutions) {
+  matchStatementNode(statementNode, substitutions, proofContext) {
     const nonTerminalNodeA = this.statementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeVerified = consequenceTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
+          nonTerminalNodeVerified = consequenceTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;

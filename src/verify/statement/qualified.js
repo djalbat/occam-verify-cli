@@ -11,7 +11,8 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
   const statementNode = statementNodeQuery(qualifiedStatementNode);
 
   if (statementNode !== null) {
-    const statementString = proofContext.nodeAsString(statementNode);
+    const statementString = proofContext.nodeAsString(statementNode),
+          statementProofContext = proofContext; ///
 
     proofContext.debug(`Verifying the '${statementString}' qualified statement...`, qualifiedStatementNode);
 
@@ -22,7 +23,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
       const rule = proofContext.findRuleByReferenceName(referenceName);
 
       if (rule !== null) {
-        const ruleMatchesStatement = rule.matchStatement(statementNode, proofContext);
+        const ruleMatchesStatement = rule.matchStatement(statementNode, statementProofContext);
 
         qualifiedStatementVerified = ruleMatchesStatement;  ///
       }
@@ -32,7 +33,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
       const axiom = proofContext.findAxiomByReferenceName(referenceName);
 
       if (axiom !== null) {
-        const axiomMatchesStatement = axiom.matchStatement(statementNode, proofContext);
+        const axiomMatchesStatement = axiom.matchStatement(statementNode, statementProofContext);
 
         qualifiedStatementVerified = axiomMatchesStatement; ///
       }
@@ -42,7 +43,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
       const lemma = proofContext.findLemmaByReferenceName(referenceName);
 
       if (lemma !== null) {
-        const lemmaMatchesStatement = lemma.matchStatement(statementNode, proofContext);
+        const lemmaMatchesStatement = lemma.matchStatement(statementNode, statementProofContext);
 
         qualifiedStatementVerified = lemmaMatchesStatement; ///
       }
@@ -52,7 +53,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
       const theorem = proofContext.findTheoremByReferenceName(referenceName);
 
       if (theorem !== null) {
-        const theoremMatchesStatement = theorem.matchStatement(statementNode, proofContext);
+        const theoremMatchesStatement = theorem.matchStatement(statementNode, statementProofContext);
 
         qualifiedStatementVerified = theoremMatchesStatement; ///
       }
@@ -62,7 +63,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
       const conjecture = proofContext.findConjectureByReferenceName(referenceName);
 
       if (conjecture !== null) {
-        const conjectureMatchesStatement = conjecture.matchStatement(statementNode, proofContext);
+        const conjectureMatchesStatement = conjecture.matchStatement(statementNode, statementProofContext);
 
         qualifiedStatementVerified = conjectureMatchesStatement; ///
       }

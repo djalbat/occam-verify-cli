@@ -9,6 +9,7 @@ import verifyConsequence from "./consequence";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
+import proof from "../context/proof";
 
 const proofNodeQuery = nodeQuery("/theorem/proof!"),
       labelNodesQuery = nodesQuery("/theorem/label"),
@@ -50,7 +51,7 @@ export default function verifyTheorem(theoremNode, fileContext) {
               proofVerified = verifyProof(proofNode, consequence, proofContext);
 
         if (proofVerified) {
-          const theorem = Theorem.fromLabelsSuppositionsAndConsequence(labels, suppositions, consequence);
+          const theorem = Theorem.fromLabelsSuppositionsConsequenceAndProofContext(labels, suppositions, consequence, proofContext);
 
           fileContext.addTheorem(theorem);
 
