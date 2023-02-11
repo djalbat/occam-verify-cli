@@ -58,8 +58,16 @@ export default class AxiomLemmaTheoremConjecture {
       const proofSteps = statementProofContext.getProofSteps();
 
       statementNatches = someSubArray(proofSteps, suppositionsLength, (proofSteps) => {
+        let suppositionsMatchConsequence = false;
+
         const substitutions = [],
-              suppositionsMatchConsequence = matchSuppositionsAndConsequence(this.suppositions, this.consequence, statementNode, proofSteps, substitutions, this.proofContext, statementProofContext);
+              suppositionsMatch = matchSuppositions(this.suppositions, proofSteps, substitutions, this.proofContext, statementProofContext);
+
+        if (suppositionsMatch) {
+          const consequenceMatches = matchConsequence(this.consequence, statementNode, substitutions, this.proofContext, statementProofContext);
+
+          suppositionsMatchConsequence = consequenceMatches;  ///
+        }
 
         if (suppositionsMatchConsequence) {
           return true;
@@ -178,18 +186,4 @@ function matchConsequence(consequence, statementNode, substitutions, proofContex
         consequenceMatches = nonTerminalNodeMatches; ///
 
   return consequenceMatches;
-}
-
-function matchSuppositionsAndConsequence(suppositions, consequence, statementNode, proofSteps, substitutions, proofContext, statementProofContext) {
-  let suppositionsMatchConsequence = false;
-
-  const suppositionsMatch = matchSuppositions(suppositions, proofSteps, substitutions, proofContext, statementProofContext);
-
-  if (suppositionsMatch) {
-    const consequenceMatches = matchConsequence(consequence, statementNode, substitutions, proofContext, statementProofContext);
-
-    suppositionsMatchConsequence = consequenceMatches;  ///
-  }
-
-  return suppositionsMatchConsequence;
 }

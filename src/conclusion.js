@@ -14,19 +14,23 @@ export default class Conclusion {
     return this.metastatementNode;
   }
 
-  matchStatementNode(statementNode, substitutions, proofContext) {
+  matchStatementNode(statementNode, substitutions, fileContext, statementProofContext) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeVerified = conclusionStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext),
+          fileContextA = fileContext, ///
+          proofContextB = statementProofContext,  ///
+          nonTerminalNodeVerified = conclusionStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;
   }
 
-  matchMetastatementNode(metastatementNode, substitutions, metaproofContext) {
+  matchMetastatementNode(metastatementNode, substitutions, fileContext, metastatementMetaproofContext) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = metastatementNode,  ///
-          nonTerminalNodeVerified = conclusionMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, metaproofContext),
+          fileContextA = fileContext, ///
+          metaproofContextB = metastatementMetaproofContext,  ///
+          nonTerminalNodeVerified = conclusionMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB),
           metastatementNodeMatches = nonTerminalNodeVerified; ///
 
     return metastatementNodeMatches;

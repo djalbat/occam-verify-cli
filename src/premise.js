@@ -22,7 +22,7 @@ export default class Premise {
     return this.metastatementNode;
   }
 
-  matchSubproofNode(subproofNode, substitutions, proofContext) {
+  matchSubproofNode(subproofNode, substitutions, fileContext, statementProofContext) {
     let subproofNodeMatches = false;
 
     const subproofAssertionNode = ruleSubproofAssertionNodeQuery(this.metastatementNode);
@@ -43,7 +43,9 @@ export default class Premise {
           const subproofStatementNode = subproofStatementNodes[index],
                 nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = subproofStatementNode, ///
-                nonTerminalNodeVerified = premiseStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext);
+                fileContextA = fileContext, ///
+                proofContextB = statementProofContext,  ///
+                nonTerminalNodeVerified = premiseStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB);
 
           if (nonTerminalNodeVerified) {
             return true;
@@ -55,16 +57,18 @@ export default class Premise {
     return subproofNodeMatches;
   }
 
-  matchStatementNode(statementNode, substitutions, proofContext) {
+  matchStatementNode(statementNode, substitutions, fileContext, statementProofContext) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeVerified = premiseStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext),
+          fileContextA = fileContext, ///
+          proofContextB = statementProofContext,  ///
+          nonTerminalNodeVerified = premiseStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;
   }
 
-  matchRuleSubproofNode(ruleSubproofNode, substitutions, metaproofContext) {
+  matchRuleSubproofNode(ruleSubproofNode, substitutions, fileContext, metastatementMetaproofContext) {
     let ruleSubproofNodeMatches = false;
 
     const ruleSubproofAssertionNode = ruleSubproofAssertionNodeQuery(this.metastatementNode);
@@ -85,7 +89,9 @@ export default class Premise {
           const ruleSubproofMetastatementNode = ruleSubproofMetastatementNodes[index],
                 nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = ruleSubproofMetastatementNode, ///
-                nonTerminalNodeVerified = premiseMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, metaproofContext);
+                fileContextA = fileContext, ///
+                metaproofContextB = metastatementMetaproofContext,  ///
+                nonTerminalNodeVerified = premiseMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB);
 
           if (nonTerminalNodeVerified) {
             return true;
@@ -97,10 +103,12 @@ export default class Premise {
     return ruleSubproofNodeMatches;
   }
 
-  matchMetastatementNode(metastatementNode, substitutions) {
+  matchMetastatementNode(metastatementNode, substitutions, fileContext, metastatementMetaproofContext) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = metastatementNode,  ///
-          nonTerminalNodeVerified = premiseMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions),
+          fileContextA = fileContext, ///
+          metaproofContextB = metastatementMetaproofContext,  ///
+          nonTerminalNodeVerified = premiseMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB),
           metastatementNodeMatches = nonTerminalNodeVerified; ///
 
     return metastatementNodeMatches;
