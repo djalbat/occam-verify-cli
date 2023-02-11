@@ -1,16 +1,15 @@
 "use strict";
 
 const { Dependency } = require("occam-file-system"),
-      { Log, verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
+      { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
 const { trimTrailingSlash } = require("../utilities/string"),
       { releaseContextFromDependencyAndDependentNames } = require("../utilities/releaseContext");
 
 const { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
-function verifyAction(argument, tail, follow, logLevel) {
-  const log = Log.fromFollowAndLogLevel(follow, logLevel),
-        name = trimTrailingSlash(argument), ///
+function verifyAction(argument, log) {
+  const name = trimTrailingSlash(argument), ///
         context = {},
         dependency = Dependency.fromName(name),
         dependentNames = [],
@@ -26,8 +25,6 @@ function verifyAction(argument, tail, follow, logLevel) {
     if (error) {
       log.error(error);
 
-      tailLogMessages();
-
       return;
     }
 
@@ -40,8 +37,6 @@ function verifyAction(argument, tail, follow, logLevel) {
       if (error) {
         log.error(error);
 
-        tailLogMessages();
-
         return;
       }
 
@@ -49,24 +44,8 @@ function verifyAction(argument, tail, follow, logLevel) {
       delete context.releaseContextFromDependencyAndDependentNames;
 
       verifyRelease(releaseName, releaseContextMap);
-
-      tailLogMessages();
     });
   });
-
-  function tailLogMessages() {
-    if (!follow) {
-      let logMessages = log.getMessages()
-
-      const start = - tail;
-
-      logMessages = logMessages.slice(start);
-
-      logMessages.forEach((logMessage) => {
-        console.log(logMessage);
-      });
-    }
-  }
 }
 
 module.exports = verifyAction;
