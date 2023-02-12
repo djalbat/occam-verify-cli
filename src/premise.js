@@ -124,11 +124,11 @@ export default class Premise {
     return json;
   }
 
-  static fromJSON(json, context) {
+  static fromJSONAndFileContext(json, fileContext) {
     const { metastatement } = json,
           metastatementString = metastatement,  ///
-          lexer = context.getLexer(),
-          parser = context.getParser(),
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
           metastatementNode = metastatementNodeFromMetastatementString(metastatementString, lexer, parser),
           premise = new Premise(metastatementNode);
 

@@ -27,6 +27,10 @@ export default class Variable {
     return string;
   }
 
+  static fromJSONAndFileContext(json, fileContext) {
+    debugger
+  }
+
   static fromNameAndType(name, type) {
     const variable = new Variable(name, type);
 

@@ -27,6 +27,10 @@ export default class Metavariable {
     return string;
   }
 
+  static fromJSONAndFileContext(json, fileContext) {
+    debugger
+  }
+
   static fromNameAndMetaType(name, metaType) {
     const metavariable = new Metavariable(name, metaType);
 

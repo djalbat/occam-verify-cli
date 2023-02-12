@@ -34,10 +34,10 @@ export default class Label {
     return json;
   }
 
-  static fromJSON(json, context) {
+  static fromJSONAndFileContext(json, fileContext) {
     const labelString = json, ///
-          lexer  = context.getLexer(),
-          parser = context.getParser(),
+          lexer  = fileContext.getLexer(),
+          parser = fileContext.getParser(),
           labelNode = labelNodeFromLabelString(labelString, lexer, parser),
           node = labelNode, ///
           label = new Label(node);

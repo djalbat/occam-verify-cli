@@ -104,14 +104,14 @@ export default class AxiomLemmaTheoremConjecture {
     return json;
   }
 
-  static fromJSON(Class, json, context) {
+  static fromJSONAndFileContext(Class, json, fileContext) {
     let { labels } = json;
 
     const labelsJSON = labels;  ///
 
     labels = labelsJSON.map((labelJSON) => {
       const json = labelJSON, ///
-            label = Label.fromJSON(json, context);
+            label = Label.fromJSONAndFileContext(json, fileContext);
 
       return label;
     });
@@ -122,7 +122,7 @@ export default class AxiomLemmaTheoremConjecture {
 
     suppositions = suppositionsJSON.map((suppositionJSON) => {
       const json = suppositionJSON, ///
-            supposition = Supposition.fromJSON(json, context);
+            supposition = Supposition.fromJSONAndFileContext(json, fileContext);
 
       return supposition;
     });
@@ -133,7 +133,7 @@ export default class AxiomLemmaTheoremConjecture {
 
     json = consequenceJSON;  ///
 
-    consequence = Consequence.fromJSON(json, context);
+    consequence = Consequence.fromJSONAndFileContext(json, fileContext);
 
     return new Class(labels, suppositions, consequence);  ///
   }

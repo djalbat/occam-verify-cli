@@ -4,7 +4,13 @@ import { rewriteNodes } from "occam-grammar-utilities";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import { nodeQuery } from "../utilities/query";
-import { LABEL_RULE_NAME, UNQUALIFIED_STATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME, CONSTRUCTOR_DECLARATIONRULE_NAME } from "../ruleNames";
+import { TYPE_RULE_NAME,
+         LABEL_RULE_NAME,
+         VARIABLE_RULE_NAME,
+         METAVARIABLE_RULE_NAME,
+         UNQUALIFIED_STATEMENT_RULE_NAME,
+         CONSTRUCTOR_DECLARATION_RULE_NAME,
+         UNQUALIFIED_METASTATEMENT_RULE_NAME } from "../ruleNames";
 
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
 
@@ -16,11 +22,13 @@ const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
+      typeNodeQuery = nodeQuery("/variableDeclaration/type!"),
+      variableNodeQuery = nodeQuery("/variableDeclaration/variable!"),
       statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
 export function termNodeFromTermString(termString, lexer, parser) {
-  const ruleName = CONSTRUCTOR_DECLARATIONRULE_NAME,
+  const ruleName = CONSTRUCTOR_DECLARATION_RULE_NAME,
         content = `Constructor ${termString}
 `,
         node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
@@ -37,6 +45,28 @@ export function labelNodeFromLabelString(labelString, lexer, parser) {
         labelNode = node; ///
 
   return labelNode;
+}
+
+export function typeNodeFromVariableString(variableString, lexer, parser) {
+  const ruleName = TYPE_RULE_NAME,
+        content = `Variable ${variableString}
+`,
+        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
+        typeDeclarationNode = node, ///
+        typeNode = typeNodeQuery(typeDeclarationNode);
+
+  return typeNode;
+}
+
+export function variableNodeFromVariableString(variableString, lexer, parser) {
+  const ruleName = VARIABLE_RULE_NAME,
+        content = `Variable ${variableString}
+`,
+        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
+        variableDeclarationNode = node, ///
+        variableNode = variableNodeQuery(variableDeclarationNode);
+
+  return variableNode;
 }
 
 export function statementNodeFromStatementString(statementString, lexer, parser) {

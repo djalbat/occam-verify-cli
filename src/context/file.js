@@ -2,16 +2,37 @@
 
 import { rewriteNodes } from "occam-grammar-utilities";
 
+import Type from "../type";
+import Rule from "../rule";
+import Axiom from "../axiom";
+import Lemma from "../lemma";
+import Theorem from "../theorem";
+import Variable from "../variable";
+import Conjecture from "../conjecture";
+import Combinator from "../combinator";
+import Constructor from "../constructor";
+import Metavariable from "../metavariable";
+
 import { push, filter } from "../utilities/array";
 import { statementMetaType } from "../metaType";
 import { nodeAsString, nodesAsString } from "../utilities/string";
+import { TYPE_KIND,
+         RULE_KIND,
+         AXIOM_KIND,
+         LEMMA_KIND,
+         THEOREM_KIND,
+         VARIABLE_KIND,
+         CONJECTURE_KIND,
+         COMBINATOR_KIND,
+         CONSTRUCTOR_KIND,
+         METAVARIABLE_KIND } from "../kinds";
 
 const metaTypes = [
   statementMetaType
 ];
 
 export default class FileContext {
-  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, variables, metavariables) {
+  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, conjectures, combinators, constructors, metavariables) {
     this.releaseContext = releaseContext;
     this.filePath = filePath;
     this.tokens = tokens;
@@ -21,10 +42,10 @@ export default class FileContext {
     this.axioms = axioms;
     this.lemmas = lemmas;
     this.theorems = theorems;
+    this.variables = variables;
     this.conjectures = conjectures;
     this.combinators = combinators;
     this.constructors = constructors;
-    this.variables = variables;
     this.metavariables = metavariables;
   }
 
@@ -81,6 +102,12 @@ export default class FileContext {
       const theoremLabels = theorem.getLabels();
 
       push(labels, theoremLabels);
+    });
+
+    this.conjectures.forEach((conjecture) => {
+      const conjectureLabels = conjecture.getLabels();
+
+      push(labels, conjectureLabels);
     });
 
     if (includeRelease) {
@@ -162,6 +189,10 @@ export default class FileContext {
     return theorems;
   }
 
+  getVariables(includeRelease = true) {
+    return this.variables;
+  }
+
   getMetaTypes(includeRelease = true) {
     return metaTypes;
   }
@@ -208,25 +239,8 @@ export default class FileContext {
     return constructors;
   }
 
-  getVariables() {
-    return this.variables;
-  }
-
-  getMetavariables() {
+  getMetavariables(includeRelease = true) {
     return this.metavariables;
-  }
-
-  findTypeByTypeName(typeName) {
-    const types = this.getTypes(),
-          type = types.find((type) => {
-            const matches = type.matchTypeName(typeName);
-
-            if (matches) {
-              return true;
-            }
-          }) || null;
-
-    return type;
   }
 
   findLabelByLabelName(labelName) {
@@ -241,6 +255,19 @@ export default class FileContext {
           }) || null;
 
     return label;
+  }
+
+  findTypeByTypeName(typeName) {
+    const types = this.getTypes(),
+          type = types.find((type) => {
+            const matches = type.matchTypeName(typeName);
+
+            if (matches) {
+              return true;
+            }
+          }) || null;
+
+    return type;
   }
 
   findRuleByReferenceName(referenceName) {
@@ -354,18 +381,18 @@ export default class FileContext {
     return metavariable;
   }
 
-  isTypePresentByTypeName(typeName) {
-    const type = this.findTypeByTypeName(typeName),
-          typePresent = (type !== null);
-
-    return typePresent;
-  }
-
   isLabelPresentByLabelName(labelName) {
     const label = this.findLabelByLabelName(labelName),
           labelPresent = (label !== null);
 
     return labelPresent;
+  }
+
+  isTypePresentByTypeName(typeName) {
+    const type = this.findTypeByTypeName(typeName),
+          typePresent = (type !== null);
+
+    return typePresent;
   }
 
   isVariablePresentByVariableName(variableName) {
@@ -433,6 +460,10 @@ export default class FileContext {
     });
 
     this.variables.push(variable);
+  }
+
+  addConjecture(conjecture) {
+    this.conjectures.push(conjecture);
   }
 
   addCombinator(combinator) {
@@ -503,6 +534,12 @@ export default class FileContext {
       json.push(theoremJSON);
     });
 
+    this.variables.forEach((variable) => {
+      const variableJSON = variable.toJSON(this.tokens);
+
+      json.push(variableJSON)
+    });
+
     this.conjectures.forEach((conjecture) => {
       const conjectureJSON = conjecture.toJSON(this.tokens);
 
@@ -521,7 +558,104 @@ export default class FileContext {
       json.push(constructorJSON)
     });
 
+    this.metavariables.forEach((metavariable) => {
+      const metavariableJSON = metavariable.toJSON(this.tokens);
+
+      json.push(metavariableJSON)
+    });
+
     return json;
+  }
+
+  static fromJSON(json) {
+    const jsonArray = json, ///
+          fileContext = this; ///
+
+    jsonArray.forEach((json) => {
+      const { kind } = json;
+
+      switch (kind) {
+        case TYPE_KIND: {
+          const type = Type.fromJSONAndFileContext(json, fileContext);
+
+          this.types.push(type);
+
+          break;
+        }
+
+        case RULE_KIND: {
+          const rule = Rule.fromJSONAndFileContext(json, fileContext);
+
+          this.rules.push(rule);
+
+          break;
+        }
+
+        case AXIOM_KIND: {
+          const axiom = Axiom.fromJSONAndFileContext(json, fileContext);
+
+          this.axioms.push(axiom);
+
+          break;
+        }
+
+        case LEMMA_KIND: {
+          const lemma = Lemma.fromJSONAndFileContext(json, fileContext);
+
+          this.lemmas.push(lemma);
+
+          break;
+        }
+
+        case THEOREM_KIND: {
+          const theorem = Theorem.fromJSONAndFileContext(json, fileContext);
+
+          this.theorems.push(theorem);
+
+          break;
+        }
+
+        case VARIABLE_KIND: {
+          const variable = Variable.fromJSONAndFileContext(json, fileContext);
+
+          this.variables.push(variable);
+
+          break;
+        }
+
+        case CONJECTURE_KIND: {
+          const conjecture = Conjecture.fromJSONAndFileContext(json, fileContext);
+
+          this.conjectures.push(conjecture);
+
+          break;
+        }
+
+        case COMBINATOR_KIND: {
+          const combinator = Combinator.fromJSONAndFileContext(json, fileContext);
+
+          this.combinators.push(combinator);
+
+          break;
+        }
+
+        case CONSTRUCTOR_KIND: {
+          const constructor = Constructor.fromJSONAndFileContext(json, fileContext);
+
+          this.constructors.push(constructor);
+
+          break;
+        }
+
+        case METAVARIABLE_KIND: {
+          const metavariable = Metavariable.fromJSONAndFileContext(json, fileContext);
+
+          this.metavariables.push(metavariable);
+
+          break;
+        }
+      }
+    });
   }
 
   static fromReleaseContextAndFilePath(releaseContext, filePath) {
@@ -541,12 +675,12 @@ export default class FileContext {
           axioms = [],
           lemmas = [],
           theorems = [],
+          variables = [],
           conjectures = [],
           combinators = [],
           constructors = [],
-          variables = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, conjectures, combinators, constructors, variables, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, theorems, conjectures, combinators, constructors, metavariables);
 
     return fileContext;
   }

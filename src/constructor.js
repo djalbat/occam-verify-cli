@@ -54,11 +54,11 @@ export default class Constructor {
     return json;
   }
 
-  static fromJSON(json, context) {
+  static fromJSONAndFileContext(json, fileContext) {
     const { term } = json,
           termString = term,  ///
-          lexer = context.getLexer(),
-          parser = context.getParser(),
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
           termNode = termNodeFromTermString(termString, lexer, parser);
 
     let { type } = json;
@@ -68,11 +68,11 @@ export default class Constructor {
 
       json = typeJSON;  ///
 
-      type = Type.fromJSON(json, context);
+      type = Type.fromJSONAndFileContext(json, fileContext);
 
       const typeName = type.getName();
 
-      type = context.findTypeByTypeName(typeName); ///
+      type = fileContext.findTypeByTypeName(typeName); ///
     }
 
     const constructor = new Constructor(termNode, type);
