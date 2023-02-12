@@ -8,7 +8,7 @@ const { loadProject } = occamFileSystemUtilities,
       { concatenatePaths } = pathUtilities,
       { readFile, isEntryFile, checkEntryExists } = necessaryFileSystemUtilities;
 
-function releaseContextFromDependency(dependency, dependentNames, context, callback) {
+function releaseContextFromDependency(dependency, context, callback) {
   const projectsDirectoryPath = process.cwd(), ///
         dependencyName = dependency.getName(),
         entryPath = concatenatePaths(projectsDirectoryPath, dependencyName),
