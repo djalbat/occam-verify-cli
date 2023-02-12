@@ -8,7 +8,7 @@ const { loadProject } = occamFileSystemUtilities,
       { concatenatePaths } = pathUtilities,
       { readFile, isEntryFile, checkEntryExists } = necessaryFileSystemUtilities;
 
-function releaseContextFromDependencyAndDependentNames(dependency, dependentNames, context, callback) {
+function releaseContextFromDependency(dependency, dependentNames, context, callback) {
   const projectsDirectoryPath = process.cwd(), ///
         dependencyName = dependency.getName(),
         entryPath = concatenatePaths(projectsDirectoryPath, dependencyName),
@@ -57,7 +57,7 @@ function releaseContextFromDependencyAndDependentNames(dependency, dependentName
 }
 
 module.exports = {
-  releaseContextFromDependencyAndDependentNames
+  releaseContextFromDependency
 };
 
 function releaseContextFromLogAndJSON(log, json) {

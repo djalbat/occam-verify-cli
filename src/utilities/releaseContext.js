@@ -16,9 +16,9 @@ export function createReleaseContext(dependency, dependentNames, context, callba
     return;
   }
 
-  const { releaseContextFromDependencyAndDependentNames } = context;
+  const { releaseContextFromDependency } = context;
 
-  releaseContextFromDependencyAndDependentNames(dependency, dependentNames, context, (error, releaseContext) => {
+  releaseContextFromDependency(dependency, context, (error, releaseContext) => {
     if (error) {
       callback(error);
 

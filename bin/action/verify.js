@@ -4,7 +4,7 @@ const { Dependency } = require("occam-file-system"),
       { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
 const { trimTrailingSlash } = require("../utilities/string"),
-      { releaseContextFromDependencyAndDependentNames } = require("../utilities/releaseContext");
+      { releaseContextFromDependency } = require("../utilities/releaseContext");
 
 const { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
@@ -18,7 +18,7 @@ function verifyAction(argument, log) {
   Object.assign(context, {
     log,
     releaseContextMap,
-    releaseContextFromDependencyAndDependentNames
+    releaseContextFromDependency
   });
 
   createReleaseContext(dependency, dependentNames, context, (error) => {
@@ -41,7 +41,7 @@ function verifyAction(argument, log) {
       }
 
       delete context.releaseContextMap;
-      delete context.releaseContextFromDependencyAndDependentNames;
+      delete context.releaseContextFromDependency;
 
       verifyRelease(releaseName, releaseContextMap);
     });
