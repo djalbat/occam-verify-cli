@@ -186,11 +186,13 @@ function createDependencyReleaseContexts(dependency, dependentNames, context, ca
 
       next();
     });
-  }, () => {
+  }, done);
+
+  function done() {
     const error = null;
 
     callback(error);
-  });
+  }
 }
 
 function retrieveDependencyReleaseContexts(dependency, context, dependencyReleaseContexts = []) {

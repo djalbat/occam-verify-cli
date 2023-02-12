@@ -2,6 +2,8 @@
 
 import Type from "./type";
 
+import { VARIABLE_KIND } from "./kinds";
+
 export default class Variable {
   constructor(name, type) {
     this.name = name;
@@ -31,14 +33,22 @@ export default class Variable {
 
   toJSON(tokens) {
     const typeJSON = this.type.toJSON(tokens),
+          kind = VARIABLE_KIND,
           name = this.name, ///
           type = typeJSON,  ///
           json = {
+            kind,
             name,
             type
           };
 
     return json;
+  }
+
+  static fromNameAndType(name, type) {
+    const variable = new Variable(name, type);
+
+    return variable;
   }
 
   static fromJSONAndFileContext(json, fileContext) {
@@ -54,12 +64,6 @@ export default class Variable {
 
     type = fileContext.findTypeByTypeName(typeName); ///
 
-    const variable = new Variable(name, type);
-
-    return variable;
-  }
-
-  static fromNameAndType(name, type) {
     const variable = new Variable(name, type);
 
     return variable;
