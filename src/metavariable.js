@@ -1,5 +1,7 @@
 "use strict";
 
+import Type from "./type";
+
 export default class Metavariable {
   constructor(name, metaType) {
     this.name = name;
@@ -20,6 +22,18 @@ export default class Metavariable {
     return matchesName;
   }
 
+  toJSON(tokens) {
+    const metaTypeJSON = this.metaType.toJSON(tokens),
+          name = this.name, ///
+          metaType = metaTypeJSON,  ///
+          json = {
+            name,
+            metaType
+          };
+
+    return json;
+  }
+
   asString(tokens) {
     const metaTypeName = this.metaType.getName(),
           string = `${this.name}:${metaTypeName}`;
@@ -28,7 +42,21 @@ export default class Metavariable {
   }
 
   static fromJSONAndFileContext(json, fileContext) {
-    debugger
+    const { name } = json;
+
+    let { metaType } = json;
+
+    json = metaType;  ///
+
+    metaType = MetaType.fromJSONAndFileContext(json, fileContext);
+
+    const metaTypeName = metaType.getName();
+
+    metaType = fileContext.findTypeByTypeName(metaTypeName); ///
+
+    const metavariable = new Metavariable(name, metaType);
+
+    return metavariable;
   }
 
   static fromNameAndMetaType(name, metaType) {

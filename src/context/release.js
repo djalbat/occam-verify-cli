@@ -11,8 +11,9 @@ const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(log, name, entries, lexer, parser, verified, customGrammar, fileContexts, dependencyReleaseContexts) {
+  constructor(log, json, name, entries, lexer, parser, verified, customGrammar, fileContexts, dependencyReleaseContexts) {
     this.log = log;
+    this.json = json;
     this.name = name;
     this.entries = entries;
     this.lexer = lexer;
@@ -25,6 +26,10 @@ export default class ReleaseContext {
 
   getLog() {
     return log;
+  }
+
+  getJSON() {
+    return this.json;
   }
 
   getName() {
@@ -325,7 +330,8 @@ export default class ReleaseContext {
   fatal(message, node = null, tokens = null, filePath = null) { this.log.fatal(message, node, tokens, filePath); }
 
   initialise(dependencyReleaseContexts) {
-    const releaseContext = this,  ///
+    const fileContexts = [],
+          releaseContext = this,  ///
           releaseContexts = [
             releaseContext,
             ...dependencyReleaseContexts
@@ -334,9 +340,25 @@ export default class ReleaseContext {
           florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
           florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
+    if (this.json !== null) {
+      const fileContextsJSON = this.json; ///
+
+      fileContextsJSON.forEach((fileContextJSON) => {
+        const json = fileContextJSON, ///
+              { filePath } = json,
+              fileContext = FileContext.fromFilePathAndReleaseContext(filePath, releaseContext);
+
+        fileContext.initialise(json);
+
+        fileContexts.push(fileContext);
+      });
+    }
+
     this.lexer = florenceLexer; ///
 
     this.parser = florenceParser; ///
+
+    this.fileContexts = fileContexts;
 
     this.dependencyReleaseContexts = dependencyReleaseContexts;
   }
@@ -353,25 +375,14 @@ export default class ReleaseContext {
     return json;
   }
 
-  fromJSON(json) {
-    const fileContextsJSON = json;  ///
-
-    this.fileContexts = fileContextsJSON.map((fileContextJSON) => {
-      const json = fileContextJSON, ///
-            fileContext = FileContext.fromJSON(json);
-
-      return fileContext;
-    });
-  }
-
-  static fromLogNameAndEntries(log, name, entries) {
+  static fromLogJSONNameAndEntries(log, json, name, entries) {
     const lexer = null,
           parser = null,
           verified = false,
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           fileContexts = null,
           dependencyReleaseContexts = null,
-          releaseContext = new ReleaseContext(log, name, entries, lexer, parser, verified, customGrammar, fileContexts, dependencyReleaseContexts);
+          releaseContext = new ReleaseContext(log, json, name, entries, lexer, parser, verified, customGrammar, fileContexts, dependencyReleaseContexts);
 
     return releaseContext;
   }

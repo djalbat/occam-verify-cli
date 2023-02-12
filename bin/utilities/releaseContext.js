@@ -1,6 +1,6 @@
 "use strict";
 
-const { FileReleaseContext, DirectoryReleaseContext } = require("../../lib/index"), ///
+const { ReleaseContext } = require("../../lib/index"), ///
       { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
       { pathUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
 
@@ -25,15 +25,27 @@ function releaseContextFromDependencyAndDependentNames(dependency, dependentName
 
   const entryFile = isEntryFile(entryPath);
 
-  let releaseContext;
+  let releaseContext = null;
 
   try {
-    releaseContext = entryFile ?
-                       fileReleaseContextFromDependencyAndProjectsDirectoryPath(dependency, projectsDirectoryPath, context) :
-                         directoryReleaseContextFromDependencyAndProjectsDirectoryPath(dependency, projectsDirectoryPath, context);
-  } catch (error) {
-    const releaseContext = null;
+    const { log } = context;
 
+    if (entryFile) {
+      const filePath = entryPath, ///
+            content = readFile(filePath),
+            jsonString = content, ///
+            json = JSON.parse(jsonString);
+
+      releaseContext = releaseContextFromLogAndJSON(log, json);
+    } else {
+      const projectName = dependencyName, ///
+            project = loadProject(projectName, projectsDirectoryPath);
+
+      if (project !== null) {
+        releaseContext = releaseContextFromLogAndProject(log, project);
+      }
+    }
+  } catch (error) {
     callback(error, releaseContext);
 
     return;
@@ -48,49 +60,27 @@ module.exports = {
   releaseContextFromDependencyAndDependentNames
 };
 
-function fileReleaseContextFromDependencyAndProjectsDirectoryPath(dependency, projectsDirectoryPath, context) {
-  let releaseContext;
+function releaseContextFromLogAndJSON(log, json) {
+  const { name, context } = json;
 
-  const { log } = context,
-        dependencyName = dependency.getName(),
-        filePath = concatenatePaths(projectsDirectoryPath, dependencyName),
-        content = readFile(filePath),
-        releaseJSONString = content,  ///
-        releaseJSON = JSON.parse(releaseJSONString);
+  let { entries } = json;
 
-  ({ context } = releaseJSON);
-
-  const contextJSON = context;  ///
-
-  let { entries } = releaseJSON;
-
-  const json = entries; ///
+  json = entries; ///
 
   entries = Entries.fromJSON(json);
 
-  const name = dependencyName, ///
-        fileReleaseContext = FileReleaseContext.fromLogNameEntriesAndContextJSON(log, name, entries, contextJSON);
+  json = context; ///
 
-  releaseContext = fileReleaseContext;  ///
+  const releaseContext = ReleaseContext.fromLogJSONNameAndEntries(log, json, name, entries);
 
   return releaseContext;
 }
 
-function directoryReleaseContextFromDependencyAndProjectsDirectoryPath(dependency, projectsDirectoryPath, context) {
-  let releaseContext = null;
-
-  const dependencyName = dependency.getName(),
-        projectName = dependencyName, ///
-        project = loadProject(projectName, projectsDirectoryPath);
-
-  if (project !== null) {
-    const { log } = context,
-          name = project.getName(),
-          entries = project.getEntries(),
-          directoryReleaseContext = DirectoryReleaseContext.fromLogNameAndEntries(log, name, entries);
-
-    releaseContext = directoryReleaseContext; ///
-  }
+function releaseContextFromLogAndProject(log, project) {
+  const json = null,
+        name = project.getName(),
+        entries = project.getEntries(),
+        releaseContext = ReleaseContext.fromLogJSONNameAndEntries(log, json, name, entries);
 
   return releaseContext;
 }

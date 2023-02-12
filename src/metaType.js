@@ -54,16 +54,19 @@ export default class MetaType {
     return json;
   }
 
-  static fromJSON(json, context) {
-    const { name } = json,
+  static fromMetaTypeName(metaTypeName) {
+    const name = metaTypeName,  ///
           metaType = new MetaType(name);
 
     return metaType;
   }
 
-  static fromMetaTypeName(metaTypeName) {
-    const name = metaTypeName,  ///
-          metaType = new MetaType(name);
+  static fromJSONAndFileContext(json, fileContext) {
+    let metaType;
+
+    const { name } = json;
+
+    metaType = new MetaType(name);
 
     return metaType;
   }

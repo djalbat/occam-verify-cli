@@ -133,6 +133,14 @@ export default class Type {
     return json;
   }
 
+  static fromTypeName(typeName) {
+    const name = typeName,  ///
+          superType = objectType, ///
+          type = new Type(name, superType);
+
+    return type;
+  }
+
   static fromJSONAndFileContext(json, fileContext) {
     let type;
 
@@ -145,14 +153,6 @@ export default class Type {
     const { name } = json;
 
     type = new Type(name, superType);
-
-    return type;
-  }
-
-  static fromTypeName(typeName) {
-    const name = typeName,  ///
-          superType = objectType, ///
-          type = new Type(name, superType);
 
     return type;
   }

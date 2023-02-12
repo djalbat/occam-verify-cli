@@ -7,6 +7,7 @@ import { nodeQuery } from "../utilities/query";
 import { TYPE_RULE_NAME,
          LABEL_RULE_NAME,
          VARIABLE_RULE_NAME,
+         META_TYPE_RULE_NAME,
          METAVARIABLE_RULE_NAME,
          UNQUALIFIED_STATEMENT_RULE_NAME,
          CONSTRUCTOR_DECLARATION_RULE_NAME,
@@ -24,7 +25,9 @@ const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
 const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
       typeNodeQuery = nodeQuery("/variableDeclaration/type!"),
       variableNodeQuery = nodeQuery("/variableDeclaration/variable!"),
+      metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType!"),
       statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
+      metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable!"),
       metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
 export function termNodeFromTermString(termString, lexer, parser) {
@@ -78,6 +81,28 @@ export function statementNodeFromStatementString(statementString, lexer, parser)
         statementNode = statementNodeQuery(unqualifiedStatementNode);
 
   return statementNode;
+}
+
+export function metaTypeNodeFromMetavariableString(metavariableString, lexer, parser) {
+  const ruleName = META_TYPE_RULE_NAME,
+        content = `Metavariable ${metavariableString}
+`,
+        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
+        metaTypeDeclarationNode = node, ///
+        metaTypeNode = metaTypeNodeQuery(metaTypeDeclarationNode);
+
+  return metaTypeNode;
+}
+
+export function metavariableNodeFromMetavariableString(metavariableString, lexer, parser) {
+  const ruleName = METAVARIABLE_RULE_NAME,
+        content = `Metavariable ${metavariableString}
+`,
+        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
+        metavariableDeclarationNode = node, ///
+        metavariableNode = metavariableNodeQuery(metavariableDeclarationNode);
+
+  return metavariableNode;
 }
 
 export function metastatementNodeFromMetastatementString(metastatementString, lexer, parser) {

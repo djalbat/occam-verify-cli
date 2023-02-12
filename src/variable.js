@@ -1,5 +1,7 @@
 "use strict";
 
+import Type from "./type";
+
 export default class Variable {
   constructor(name, type) {
     this.name = name;
@@ -27,8 +29,34 @@ export default class Variable {
     return string;
   }
 
+  toJSON(tokens) {
+    const typeJSON = this.type.toJSON(tokens),
+          name = this.name, ///
+          type = typeJSON,  ///
+          json = {
+            name,
+            type
+          };
+
+    return json;
+  }
+
   static fromJSONAndFileContext(json, fileContext) {
-    debugger
+    const { name } = json;
+
+    let { type } = json;
+
+    json = type;  ///
+
+    type = Type.fromJSONAndFileContext(json, fileContext);
+
+    const typeName = type.getName();
+
+    type = fileContext.findTypeByTypeName(typeName); ///
+
+    const variable = new Variable(name, type);
+
+    return variable;
   }
 
   static fromNameAndType(name, type) {

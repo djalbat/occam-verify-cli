@@ -13,7 +13,7 @@ export default function verifyFile(filePath, releaseContext) {
 
   releaseContext.debug(`Verifying the '${filePath}' file...`);
 
-  const fileContext = FileContext.fromReleaseContextAndFilePath(releaseContext, filePath),
+  const fileContext = FileContext.fromFilePathAndReleaseContext(filePath, releaseContext),
         node = fileContext.getNode();
 
   if (node === null) {

@@ -567,9 +567,8 @@ export default class FileContext {
     return json;
   }
 
-  static fromJSON(json) {
-    const jsonArray = json, ///
-          fileContext = this; ///
+  initialise(json) {
+    const jsonArray = json; ///
 
     jsonArray.forEach((json) => {
       const { kind } = json;
@@ -578,7 +577,7 @@ export default class FileContext {
         case TYPE_KIND: {
           const type = Type.fromJSONAndFileContext(json, fileContext);
 
-          this.types.push(type);
+          types.push(type);
 
           break;
         }
@@ -586,7 +585,7 @@ export default class FileContext {
         case RULE_KIND: {
           const rule = Rule.fromJSONAndFileContext(json, fileContext);
 
-          this.rules.push(rule);
+          rules.push(rule);
 
           break;
         }
@@ -594,7 +593,7 @@ export default class FileContext {
         case AXIOM_KIND: {
           const axiom = Axiom.fromJSONAndFileContext(json, fileContext);
 
-          this.axioms.push(axiom);
+          axioms.push(axiom);
 
           break;
         }
@@ -602,7 +601,7 @@ export default class FileContext {
         case LEMMA_KIND: {
           const lemma = Lemma.fromJSONAndFileContext(json, fileContext);
 
-          this.lemmas.push(lemma);
+          lemmas.push(lemma);
 
           break;
         }
@@ -610,7 +609,7 @@ export default class FileContext {
         case THEOREM_KIND: {
           const theorem = Theorem.fromJSONAndFileContext(json, fileContext);
 
-          this.theorems.push(theorem);
+          theorems.push(theorem);
 
           break;
         }
@@ -618,7 +617,7 @@ export default class FileContext {
         case VARIABLE_KIND: {
           const variable = Variable.fromJSONAndFileContext(json, fileContext);
 
-          this.variables.push(variable);
+          variables.push(variable);
 
           break;
         }
@@ -626,7 +625,7 @@ export default class FileContext {
         case CONJECTURE_KIND: {
           const conjecture = Conjecture.fromJSONAndFileContext(json, fileContext);
 
-          this.conjectures.push(conjecture);
+          conjectures.push(conjecture);
 
           break;
         }
@@ -634,7 +633,7 @@ export default class FileContext {
         case COMBINATOR_KIND: {
           const combinator = Combinator.fromJSONAndFileContext(json, fileContext);
 
-          this.combinators.push(combinator);
+          combinators.push(combinator);
 
           break;
         }
@@ -642,7 +641,7 @@ export default class FileContext {
         case CONSTRUCTOR_KIND: {
           const constructor = Constructor.fromJSONAndFileContext(json, fileContext);
 
-          this.constructors.push(constructor);
+          constructors.push(constructor);
 
           break;
         }
@@ -650,7 +649,7 @@ export default class FileContext {
         case METAVARIABLE_KIND: {
           const metavariable = Metavariable.fromJSONAndFileContext(json, fileContext);
 
-          this.metavariables.push(metavariable);
+          metavariables.push(metavariable);
 
           break;
         }
@@ -658,7 +657,7 @@ export default class FileContext {
     });
   }
 
-  static fromReleaseContextAndFilePath(releaseContext, filePath) {
+  static fromFilePathAndReleaseContext(filePath, releaseContext) {
     const file = releaseContext.getFile(filePath),
           content = file.getContent(),
           tokens = releaseContext.tokenise(content),
