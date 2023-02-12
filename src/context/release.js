@@ -330,8 +330,7 @@ export default class ReleaseContext {
   fatal(message, node = null, tokens = null, filePath = null) { this.log.fatal(message, node, tokens, filePath); }
 
   initialise(dependencyReleaseContexts) {
-    const fileContexts = [],
-          releaseContext = this,  ///
+    const releaseContext = this,  ///
           releaseContexts = [
             releaseContext,
             ...dependencyReleaseContexts
@@ -340,25 +339,25 @@ export default class ReleaseContext {
           florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
           florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
-    if (this.json !== null) {
+    this.lexer = florenceLexer; ///
+
+    this.parser = florenceParser; ///
+
+    if (this.json === null) {
+      this.fileContexts = [];
+    } else {
       const fileContextsJSON = this.json; ///
 
-      fileContextsJSON.forEach((fileContextJSON) => {
+      this.fileContexts = fileContextsJSON.map((fileContextJSON) => {
         const json = fileContextJSON, ///
               { filePath } = json,
               fileContext = FileContext.fromFilePathAndReleaseContext(filePath, releaseContext);
 
         fileContext.initialise(json);
 
-        fileContexts.push(fileContext);
+        return fileContext;
       });
     }
-
-    this.lexer = florenceLexer; ///
-
-    this.parser = florenceParser; ///
-
-    this.fileContexts = fileContexts;
 
     this.dependencyReleaseContexts = dependencyReleaseContexts;
   }

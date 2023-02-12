@@ -55,6 +55,10 @@ export default class FileContext {
     return this.node;
   }
 
+  getLexer() { return this.releaseContext.getLexer(); }
+
+  getParser() { return this.releaseContext.getParser(); }
+
   getProofSteps() {
     const proofSteps = [];  ///
 

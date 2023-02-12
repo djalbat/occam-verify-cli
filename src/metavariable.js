@@ -58,7 +58,7 @@ export default class Metavariable {
 
     const metaTypeName = metaType.getName();
 
-    metaType = fileContext.findTypeByTypeName(metaTypeName); ///
+    metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName); ///
 
     const metavariable = new Metavariable(name, metaType);
 
