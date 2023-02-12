@@ -2,8 +2,6 @@
 
 import Type from "./type";
 
-import { VARIABLE_KIND } from "./kinds";
-
 export default class Variable {
   constructor(name, type) {
     this.name = name;
@@ -33,11 +31,9 @@ export default class Variable {
 
   toJSON(tokens) {
     const typeJSON = this.type.toJSON(tokens),
-          kind = VARIABLE_KIND,
           name = this.name, ///
           type = typeJSON,  ///
           json = {
-            kind,
             name,
             type
           };

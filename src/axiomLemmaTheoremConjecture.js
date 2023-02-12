@@ -79,8 +79,7 @@ export default class AxiomLemmaTheoremConjecture {
   }
 
   toJSON(tokens) {
-    const { kind } = this.constructor,
-          labelsJSON = this.labels.map((label) => {
+    const labelsJSON = this.labels.map((label) => {
             const labelJSON = label.toJSON(tokens);
 
             return labelJSON;
@@ -95,7 +94,6 @@ export default class AxiomLemmaTheoremConjecture {
           suppositions = suppositionsJSON,  ///
           consequence = consequenceJSON,  ///
           json = {
-            kind,
             labels,
             suppositions,
             consequence

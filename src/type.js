@@ -1,6 +1,5 @@
 "use strict";
 
-import { TYPE_KIND } from "./kinds";
 import { OBJECT_TYPE_NAME } from "./typeNames";
 
 export default class Type {
@@ -121,11 +120,9 @@ export default class Type {
 
   toJSON(tokens) {
     const superTypeJSON = this.superType.toJSON(tokens),
-          kind = TYPE_KIND,
           name = this.name,
           superType = superTypeJSON,  ///
           json = {
-            kind,
             name,
             superType
           };
@@ -167,11 +164,9 @@ export default class Type {
 
 class ObjectType extends Type {
   toJSON(tokens) {
-    const kind = TYPE_KIND,
-          name = this.name,
+    const name = this.name,
           superType = null,  ///
           json = {
-            kind,
             name,
             superType
           };

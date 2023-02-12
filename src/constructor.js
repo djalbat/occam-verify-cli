@@ -3,7 +3,6 @@
 import Type from "./type";
 
 import { nodeAsString } from "./utilities/string";
-import { CONSTRUCTOR_KIND } from "./kinds";
 import { termNodeFromTermString } from "./utilities/node";
 
 export default class Constructor {
@@ -42,11 +41,9 @@ export default class Constructor {
           typeJSON = (this.type === null) ?
                         null :
                           this.type.toJSON(tokens),
-          kind = CONSTRUCTOR_KIND,
           term = termString,  ///
           type = typeJSON,  ///
           json = {
-            kind,
             term,
             type
           };

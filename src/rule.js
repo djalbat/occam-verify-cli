@@ -5,7 +5,6 @@ import Premise from "./premise";
 import Conclusion from "./conclusion";
 
 import { prune } from "./utilities/array";
-import { RULE_KIND } from "./kinds";
 import { someSubArray } from "./utilities/array";
 
 export default class Rule {
@@ -125,12 +124,10 @@ export default class Rule {
             return premiseJSON;
           }),
           conclusionJSON = this.conclusion.toJSON(tokens),
-          kind = RULE_KIND,
           labels = labelsJSON,  ///
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///
           json = {
-            kind,
             labels,
             premises,
             conclusion

@@ -2,8 +2,6 @@
 
 import MetaType from "./metaType";
 
-import { METAVARIABLE_KIND } from "./kinds";
-
 export default class Metavariable {
   constructor(name, metaType) {
     this.name = name;
@@ -26,11 +24,9 @@ export default class Metavariable {
 
   toJSON(tokens) {
     const metaTypeJSON = this.metaType.toJSON(tokens),
-          kind = METAVARIABLE_KIND,
           name = this.name, ///
           metaType = metaTypeJSON,  ///
           json = {
-            kind,
             name,
             metaType
           };

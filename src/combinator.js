@@ -1,7 +1,6 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { COMBINATOR_KIND } from "./kinds";
 import { statementNodeFromStatementString } from "./utilities/node";
 
 export default class Combinator {
@@ -25,10 +24,8 @@ export default class Combinator {
 
   toJSON(tokens) {
     const statementString = nodeAsString(this.statementNode, tokens),
-          kind = COMBINATOR_KIND,
           statement = statementString,  ///
           json = {
-            kind,
             statement
           };
 

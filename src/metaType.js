@@ -1,6 +1,5 @@
 "use strict";
 
-import { META_TYPE_KIND } from "./kinds";
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 
 export default class MetaType {
@@ -44,10 +43,8 @@ export default class MetaType {
   }
 
   toJSON(tokens) {
-    const kind = META_TYPE_KIND,
-          name = this.name,
+    const name = this.name,
           json = {
-            kind,
             name
           };
 
