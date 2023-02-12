@@ -43,7 +43,11 @@ function verifyAction(argument, log) {
       delete context.releaseContextMap;
       delete context.releaseContextFromDependency;
 
-      verifyRelease(releaseName, releaseContextMap);
+      const releaseVerified = verifyRelease(releaseName, releaseContextMap);
+
+      if (releaseVerified) {
+        releaseContext.toJSON();
+      }
     });
   });
 }
