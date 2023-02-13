@@ -34,6 +34,13 @@ export default class Label {
     return json;
   }
 
+  static fromLabelNode(labelNode) {
+    const node = labelNode, ///
+          variable = new Label(node);
+
+    return variable;
+  }
+
   static fromJSONAndFileContext(json, fileContext) {
     const labelString = json, ///
           lexer  = fileContext.getLexer(),
@@ -43,12 +50,5 @@ export default class Label {
           label = new Label(node);
 
     return label;
-  }
-
-  static fromLabelNode(labelNode) {
-    const node = labelNode, ///
-          variable = new Label(node);
-
-    return variable;
   }
 }

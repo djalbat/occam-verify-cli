@@ -32,6 +32,12 @@ export default class Combinator {
     return json;
   }
 
+  static fromStatementNode(statementNode) {
+    const combinator = new Combinator(statementNode);
+
+    return combinator;
+  }
+
   static fromJSONAndFileContext(json, fileContext) {
     const { statement } = json,
           statementString = statement,  ///
@@ -39,12 +45,6 @@ export default class Combinator {
           parser = fileContext.getParser(),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
           combinator = new Combinator(statementNode);
-
-    return combinator;
-  }
-
-  static fromStatementNode(statementNode) {
-    const combinator = new Combinator(statementNode);
 
     return combinator;
   }

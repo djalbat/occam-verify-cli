@@ -32,19 +32,19 @@ export default class Consequence {
     return json;
   }
 
-  static fromJSON(json, context) {
-    const { statement } = json,
-          statementString = statement,  ///
-          lexer = context.getLexer(),
-          parser = context.getParser(),
-          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-          consequence = new Consequence(statementNode);
+  static fromStatementNode(statementNode) {
+    const consequence = new Consequence(statementNode);
 
     return consequence;
   }
 
-  static fromStatementNode(statementNode) {
-    const consequence = new Consequence(statementNode);
+  static fromJSONAndFileContext(json, fileContext) {
+    const { statement } = json,
+          statementString = statement,  ///
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
+          consequence = new Consequence(statementNode);
 
     return consequence;
   }

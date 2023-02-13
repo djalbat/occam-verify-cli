@@ -118,7 +118,7 @@ export default class AxiomLemmaTheoremConjecture {
       return label;
     });
 
-    let { suppositions } = json;
+    let { suppositions, consequence, proofContext } = json;
 
     const suppositionsJSON = suppositions;  ///
 
@@ -129,15 +129,11 @@ export default class AxiomLemmaTheoremConjecture {
       return supposition;
     });
 
-    let { consequence } = json;
-
     const consequenceJSON = consequence;  ///
 
     json = consequenceJSON;  ///
 
     consequence = Consequence.fromJSONAndFileContext(json, fileContext);
-
-    let { proofContext } = json;
 
     const proofContextJSON = proofContext;  ///
 

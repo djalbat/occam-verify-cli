@@ -186,20 +186,22 @@ class ObjectType extends Type {
 export const objectType = ObjectType.fromNothing();
 
 function superTypeFromSuperTypeJSONAndFileContext(superTypeJSON, fileContext) {
-  let superType;
+  let superType = null;
 
-  const json = superTypeJSON, ///
-        { name } = json;
+  if (superTypeJSON !== null) {
+    const json = superTypeJSON, ///
+          { name } = json;
 
-  if (name === OBJECT_TYPE_NAME) {
-    superType = objectType; ///
-  } else {
-    const typeName = name,  ///
-          type = fileContext.findTypeByTypeName(typeName);
+    if (name === OBJECT_TYPE_NAME) {
+      superType = objectType; ///
+    } else {
+      const typeName = name,  ///
+            type = fileContext.findTypeByTypeName(typeName);
 
-    superType = (type !== null) ?
-                  type :  ///
-                    Type.fromJSONAndFileContext(json, fileContext);  ///
+      superType = (type !== null) ?
+                    type :  ///
+                      Type.fromJSONAndFileContext(json, fileContext);  ///
+    }
   }
 
   return superType;

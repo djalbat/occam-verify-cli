@@ -349,27 +349,23 @@ export default class ReleaseContext {
 
     this.parser = florenceParser; ///
 
-    if (this.json === null) {
-      this.verified = false;
+    this.dependencyReleaseContexts = dependencyReleaseContexts;
 
-      this.fileContexts = [];
-    } else {
+    if (this.json !== null) {
       const fileContextsJSON = this.json; ///
 
-      this.verified = true;
-
-      this.fileContexts = fileContextsJSON.map((fileContextJSON) => {
+      fileContextsJSON.forEach((fileContextJSON) => {
         const json = fileContextJSON, ///
               { filePath } = json,
               fileContext = FileContext.fromFilePathAndReleaseContext(filePath, releaseContext);
 
         fileContext.initialise(json);
 
-        return fileContext;
+        this.fileContexts.push(fileContext);
       });
-    }
 
-    this.dependencyReleaseContexts = dependencyReleaseContexts;
+      this.verified = true;
+    }
   }
 
   toJSON() {
@@ -386,9 +382,9 @@ export default class ReleaseContext {
   static fromLogJSONNameAndEntries(log, json, name, entries) {
     const lexer = null,
           parser = null,
-          verified = null,
+          verified = false,
           customGrammar = customGrammarFromNameAndEntries(name, entries),
-          fileContexts = null,
+          fileContexts = [],
           dependencyReleaseContexts = null,
           releaseContext = new ReleaseContext(log, json, name, entries, lexer, parser, verified, customGrammar, fileContexts, dependencyReleaseContexts);
 

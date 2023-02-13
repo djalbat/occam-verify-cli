@@ -46,6 +46,12 @@ export default class Conclusion {
     return json;
   }
 
+  static fromMetastatementNode(metastatementNode) {
+    const conclusion = new Conclusion(metastatementNode);
+
+    return conclusion;
+  }
+
   static fromJSONAndFileContext(json, fileContext) {
     const { metastatement } = json,
           metastatementString = metastatement,  ///
@@ -53,12 +59,6 @@ export default class Conclusion {
           parser = fileContext.getParser(),
           metastatementNode = metastatementNodeFromMetastatementString(metastatementString, lexer, parser),
           conclusion = new Conclusion(metastatementNode);
-
-    return conclusion;
-  }
-
-  static fromMetastatementNode(metastatementNode) {
-    const conclusion = new Conclusion(metastatementNode);
 
     return conclusion;
   }

@@ -51,6 +51,12 @@ export default class Constructor {
     return json;
   }
 
+  static fromTermNodeAndType(termNode, type) {
+    const constructor = new Constructor(termNode, type);
+
+    return constructor;
+  }
+
   static fromJSONAndFileContext(json, fileContext) {
     const { term } = json,
           termString = term,  ///
@@ -72,12 +78,6 @@ export default class Constructor {
       type = fileContext.findTypeByTypeName(typeName); ///
     }
 
-    const constructor = new Constructor(termNode, type);
-
-    return constructor;
-  }
-
-  static fromTermNodeAndType(termNode, type) {
     const constructor = new Constructor(termNode, type);
 
     return constructor;

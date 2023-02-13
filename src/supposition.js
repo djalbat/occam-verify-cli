@@ -75,6 +75,12 @@ export default class Supposition {
     return json;
   }
 
+  static fromStatementNode(statementNode) {
+    const supposition = new Supposition(statementNode);
+
+    return supposition;
+  }
+
   static fromJSONAndFileContext(json, fileContext) {
     const { statement } = json,
           statementString = statement,  ///
@@ -82,12 +88,6 @@ export default class Supposition {
           parser = fileContext.getParser(),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
           supposition = new Supposition(statementNode);
-
-    return supposition;
-  }
-
-  static fromStatementNode(statementNode) {
-    const supposition = new Supposition(statementNode);
 
     return supposition;
   }
