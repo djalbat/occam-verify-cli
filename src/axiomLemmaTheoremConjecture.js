@@ -3,6 +3,7 @@
 import Label from "./label";
 import Supposition from "./supposition";
 import Consequence from "./consequence";
+import ProofContext from "./context/proof";
 
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
@@ -90,13 +91,16 @@ export default class AxiomLemmaTheoremConjecture {
             return suppositionJSON;
           }),
           consequenceJSON = this.consequence.toJSON(tokens),
+          proofContextJSON = this.proofContext.toJSON(tokens),
           labels = labelsJSON,  ///
           suppositions = suppositionsJSON,  ///
           consequence = consequenceJSON,  ///
+          proofContext = proofContextJSON,  ///
           json = {
             labels,
             suppositions,
-            consequence
+            consequence,
+            proofContext
           };
 
     return json;
@@ -133,7 +137,15 @@ export default class AxiomLemmaTheoremConjecture {
 
     consequence = Consequence.fromJSONAndFileContext(json, fileContext);
 
-    return new Class(labels, suppositions, consequence);  ///
+    let { proofContext } = json;
+
+    const proofContextJSON = proofContext;  ///
+
+    json = proofContextJSON;  ///
+
+    proofContext = ProofContext.fromJSONAndFileContext(json, fileContext);
+
+    return new Class(labels, suppositions, consequence, proofContext);  ///
   }
 
   static fromLabelsSuppositionsConsequenceAndProofContext(Class, labels, suppositions, consequence, proofContext) { return new Class(labels, suppositions, consequence, proofContext); }

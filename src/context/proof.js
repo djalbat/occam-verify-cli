@@ -1,5 +1,6 @@
 "use strict";
 
+import Variable from "../variable";
 import Equality from "../equality";
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
@@ -133,6 +134,21 @@ class ProofContext {
     return variablePresent;
   }
 
+  toJSON(tokens) {
+    const variables = this.variables.map((variable) => {
+            const variableJSON = variable.toJSON(tokens);
+
+            variable = variableJSON;
+
+            return variable;
+          }),
+          json = {
+            variables
+          };
+
+    return json;
+  }
+
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
           variables = [],
@@ -148,6 +164,25 @@ class ProofContext {
           proofSteps = [];
 
     proofContext = new ProofContext(context, variables, proofSteps);
+
+    return proofContext;
+  }
+
+  static fromJSONAndFileContext(json, fileContext) {
+    let { variables } = json;
+
+    const variablesJSON = variables;
+
+    variables = variablesJSON.map((variableJSON) => {
+      const json = variableJSON,  ///
+            variable = Variable.fromJSONAndFileContext(json, fileContext);
+
+      return variable;
+    });
+
+    const context = fileContext,  ///
+          proofSteps = [],
+          proofContext = new ProofContext(context, variables, proofSteps);
 
     return proofContext;
   }
