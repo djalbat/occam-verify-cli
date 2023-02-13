@@ -286,17 +286,23 @@ export default class ReleaseContext {
     return type;
   }
 
-  getReleaseName() {
-    const name = this.getName(),
-          releaseName = name; ///
+  isReleased() {
+    const released = (this.json !== null);
 
-    return releaseName;
+    return released;
   }
 
   isInitialised() {
     const initialised = (this.dependencyReleaseContexts !== null);  ///
 
     return initialised;
+  }
+
+  getReleaseName() {
+    const name = this.getName(),
+          releaseName = name; ///
+
+    return releaseName;
   }
 
   getFile(filePath) { return this.entries.getFile(filePath); }
@@ -344,9 +350,13 @@ export default class ReleaseContext {
     this.parser = florenceParser; ///
 
     if (this.json === null) {
+      this.verified = false;
+
       this.fileContexts = [];
     } else {
       const fileContextsJSON = this.json; ///
+
+      this.verified = true;
 
       this.fileContexts = fileContextsJSON.map((fileContextJSON) => {
         const json = fileContextJSON, ///
@@ -376,7 +386,7 @@ export default class ReleaseContext {
   static fromLogJSONNameAndEntries(log, json, name, entries) {
     const lexer = null,
           parser = null,
-          verified = false,
+          verified = null,
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           fileContexts = null,
           dependencyReleaseContexts = null,

@@ -31,9 +31,19 @@ function verifyAction(argument, log) {
     const releaseName = name, ///
           dependentName = releaseName,  ///
           releaseContext = releaseContextMap[releaseName],
-          verified = releaseContext.isVerified();
+          released = releaseContext.isReleased();
 
-    initialiseReleaseContext(dependency, dependentName, verified, context, (error) => {
+    if (released) {
+      const error = `The '${name}' package does not need to be verified.'`;
+
+      log.error(error);
+
+      return;
+    }
+
+    const dependentReleased = released; ///
+
+    initialiseReleaseContext(dependency, dependentName, dependentReleased, context, (error) => {
       if (error) {
         log.error(error);
 

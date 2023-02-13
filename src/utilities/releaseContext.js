@@ -47,12 +47,12 @@ export function createReleaseContext(dependency, dependentNames, context, callba
   }, context);
 }
 
-export function initialiseReleaseContext(dependency, dependentName, verified, context, callback) {
+export function initialiseReleaseContext(dependency, dependentName, dependentReleased, context, callback) {
   let error = null;
 
   const { releaseContextMap } = context,
-        dependencyName = dependency.getName(),
-        releaseName = dependencyName, ///
+        name = dependency.getName(),
+        releaseName = name, ///
         releaseContext = releaseContextMap[releaseName] || null;
 
   if (releaseContext === null) {
@@ -61,7 +61,8 @@ export function initialiseReleaseContext(dependency, dependentName, verified, co
     return;
   }
 
-  const initialised = releaseContext.isInitialised();
+  const released = releaseContext.isReleased(),
+        initialised = releaseContext.isInitialised();
 
   if (initialised) {
     callback(error);
@@ -69,11 +70,9 @@ export function initialiseReleaseContext(dependency, dependentName, verified, co
     return;
   }
 
-  const releaseContextVerified = releaseContext.isVerified();
-
-  if (verified) {
-    if (!releaseContextVerified) {
-      error = `Unable to initialise the '${releaseName}' dependency's context because its '${dependentName}' dependent is a package.`;
+  if (!released) {
+    if (dependentReleased) {
+      error = `Unable to initialise the '${name}' dependency's context because its '${dependentName}' dependent is a package.`;
 
       callback(error);
 
@@ -81,14 +80,14 @@ export function initialiseReleaseContext(dependency, dependentName, verified, co
     }
   }
 
-  dependentName = releaseName;  ///
+  dependentName = name;  ///
 
-  verified = releaseContextVerified;  ///
+  dependentReleased = released;  ///
 
   const dependencies = releaseContext.getDependencies();
 
   dependencies.asynchronousForEachDependency((dependency, next, done) => {
-    initialiseReleaseContext(dependency, dependentName, verified, context, (error) => {
+    initialiseReleaseContext(dependency, dependentName, dependentReleased, context, (error) => {
       if (error) {
         callback(error);
 
