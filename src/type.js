@@ -84,24 +84,21 @@ export default class Type {
   }
 
   match(type) {
-    const equalToType = this.isEqualTo(type),
-          subTypeOfType = this.isSubTypeOf(type),
-          superTypeOfType = this.isSuperTypeOf(type),
-          matches = (equalToType || subTypeOfType || superTypeOfType);
+    const matches = (type === this);  ///
 
     return matches;
   }
 
   matchName(name) {
-    const matchesName = (this.name === name);
+    const nameMatches = (this.name === name);
 
-    return matchesName;
+    return nameMatches;
   }
 
   matchTypeName(typeName) {
-    const matchesTypeName = (this.name === typeName);
+    const typeNameMatches = (this.name === typeName);
 
-    return matchesTypeName;
+    return typeNameMatches;
   }
 
   asString(tokens, noSuperType) {

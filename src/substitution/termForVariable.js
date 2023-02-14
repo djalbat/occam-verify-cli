@@ -17,15 +17,15 @@ export default class TermForVariableSubstitution {
   }
 
   matchTermNode(termNode) {
-    let matchesTermNode;
+    let termNodeMatches;
 
     const nodeA = this.termNode,  ///
           nodeB = termNode,
           nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-    matchesTermNode = nodeMatches;  ///
+    termNodeMatches = nodeMatches;  ///
 
-    return matchesTermNode;
+    return termNodeMatches;
   }
 
   static fromVariableNameAndTermNode(variableName, termNode) {

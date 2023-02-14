@@ -32,7 +32,7 @@ export default class Rule {
   }
 
   matchLabelName(labelName) {
-    const matchesLabelName = this.labels.some((label) => {
+    const labelNameMatches = this.labels.some((label) => {
       const name = labelName, ///
             labelMatchesName = label.matchName(name);
 
@@ -41,7 +41,7 @@ export default class Rule {
       }
     });
 
-    return matchesLabelName;
+    return labelNameMatches;
   }
 
   matchStatement(statementNode, statementProofContext) {

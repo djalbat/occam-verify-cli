@@ -17,9 +17,9 @@ export default class Metavariable {
   }
 
   matchName(name) {
-    const matchesName = (this.name === name);
+    const nameMatches = (this.name === name);
 
-    return matchesName;
+    return nameMatches;
   }
 
   toJSON(tokens) {

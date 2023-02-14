@@ -19,15 +19,15 @@ export default class StatementForMetavariableSubstitution {
   }
 
   matchStatementNode(statementNode) {
-    let matchesStatementNode;
+    let statementNodeMatches;
 
     const nodeA = this.statementNode,  ///
           nodeB = statementNode,
           nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-    matchesStatementNode = nodeMatches;  ///
+    statementNodeMatches = nodeMatches;  ///
 
-    if (!matchesStatementNode) {
+    if (!statementNodeMatches) {
       const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
       if (bracketedStatementChildNode !== null) {
@@ -36,11 +36,11 @@ export default class StatementForMetavariableSubstitution {
               nodeB = statementNode,
               nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-        matchesStatementNode = nodeMatches;  ///
+        statementNodeMatches = nodeMatches;  ///
       }
     }
 
-    return matchesStatementNode;
+    return statementNodeMatches;
   }
 
   static fromMetavariableNameAndStatementNode(metavariableName, statementNode) {

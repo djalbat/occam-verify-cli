@@ -19,15 +19,15 @@ export default class MetastatementForMetavariableSubstitution {
   }
 
   matchMetastatementNode(metastatementNode) {
-    let matchesMetastatementNode;
+    let metastatementNodeMatches;
 
     const nodeA = this.metastatementNode,  ///
           nodeB = metastatementNode,
           nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-    matchesMetastatementNode = nodeMatches;  ///
+    metastatementNodeMatches = nodeMatches;  ///
 
-    if (!matchesMetastatementNode) {
+    if (!metastatementNodeMatches) {
       const bracketedMetastatementChildNode = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode);
 
       if (bracketedMetastatementChildNode !== null) {
@@ -36,11 +36,11 @@ export default class MetastatementForMetavariableSubstitution {
               nodeB = metastatementNode,
               nodeMatches = matcher.matchNode(nodeA, nodeB);
 
-        matchesMetastatementNode = nodeMatches;  ///
+        metastatementNodeMatches = nodeMatches;  ///
       }
     }
 
-    return matchesMetastatementNode;
+    return metastatementNodeMatches;
   }
 
   static fromMetavariableNameAndMetastatementNode(metavariableName, metastatementNode) {

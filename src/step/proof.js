@@ -20,15 +20,15 @@ export default class ProofStep {
   match(statementNode) {
     let matches;
 
-    const matchesStatement = this.matchStatement(statementNode);
+    const statementMatches = this.matchStatement(statementNode);
 
-    matches = matchesStatement; //
+    matches = statementMatches; //
 
     return matches;
   }
 
   matchStatement(statementNode) {
-    let matchesStatement = false;
+    let statementMatches = false;
 
     if (this.statementNode !== null) {
       const ruleName = META_ARGUMENT_RULE_NAME,
@@ -36,10 +36,10 @@ export default class ProofStep {
             statementNodeB = this.statementNode,  ///
             statementMatchesModuloBrackets = matchStatementModuloBrackets(statementNodeA, statementNodeB, ruleName);
 
-      matchesStatement = statementMatchesModuloBrackets;  ///
+      statementMatches = statementMatchesModuloBrackets;  ///
     }
 
-    return matchesStatement;
+    return statementMatches;
   }
 
   static fromSubproofNode(subproofNode) {

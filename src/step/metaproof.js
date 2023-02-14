@@ -29,37 +29,37 @@ export default class MetaproofStep {
       const ruleSubproofAssertionNode = ruleSubproofAssertionNodeQuery(metastatementNode);
 
       if (ruleSubproofAssertionNode !== null) {
-        const matchesRuleSubproofAssertion = this.matchRuleSubproofAssertion(ruleSubproofAssertionNode);
+        const ruleSubproofAssertionMatches = this.matchRuleSubproofAssertion(ruleSubproofAssertionNode);
 
-        matches = matchesRuleSubproofAssertion;  ///
+        matches = ruleSubproofAssertionMatches;  ///
       }
     }
 
     if (!matches) {
-      const matchesMetastatement = this.matchMetastatement(metastatementNode);
+      const metastatementMatches = this.matchMetastatement(metastatementNode);
 
-      matches = matchesMetastatement; ///
+      matches = metastatementMatches; ///
     }
 
     return matches;
   }
 
   matchMetastatement(metastatementNode) {
-    let matchesMetastatement = false;
+    let metastatementMatches = false;
 
     if (this.metastatementNode !== null) {
       const metastatementNodeA = metastatementNode, ///
             metastatementNodeB = this.metastatementNode,  ///
             metastatementMatchesModuloBrackets = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB);
 
-      matchesMetastatement = metastatementMatchesModuloBrackets;  ///
+      metastatementMatches = metastatementMatchesModuloBrackets;  ///
     }
 
-    return matchesMetastatement;
+    return metastatementMatches;
   }
 
   matchRuleSubproofAssertion(ruleSubproofAssertionNode) {
-    let matchesRuleSubproofAssertion = false;
+    let ruleSubproofAssertionMatches = false;
 
     if (this.ruleSubproofNode !== null) {
       const ruleSubproofAssertionMetastatementNodes = metastatementNodesQuery(ruleSubproofAssertionNode),
@@ -79,11 +79,11 @@ export default class MetaproofStep {
               metastatementNodeB = secondQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
               metastatementMatchesModuloBrackets = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB);
 
-        matchesRuleSubproofAssertion = metastatementMatchesModuloBrackets; ///
+        ruleSubproofAssertionMatches = metastatementMatchesModuloBrackets; ///
       }
     }
 
-    return matchesRuleSubproofAssertion;
+    return ruleSubproofAssertionMatches;
   }
 
   static fromRuleSubproofNode(ruleSubproofNode) {

@@ -25,15 +25,15 @@ export default class MetaType {
   }
 
   matchName(name) {
-    const matchesName = (this.name === name);
+    const nameMatches = (this.name === name);
 
-    return matchesName;
+    return nameMatches;
   }
 
   matchMetaTypeName(metaTypeName) {
-    const matchesMetaTypeName = (this.name === metaTypeName);
+    const metaTypeNameMatches = (this.name === metaTypeName);
 
-    return matchesMetaTypeName;
+    return metaTypeNameMatches;
   }
 
   asString(tokens) {

@@ -16,10 +16,34 @@ export default class Variable {
     return this.type;
   }
 
-  matchName(name) {
-    const matchesName = (this.name === name);
+  match(variable) {
+    const name = variable.getName(),
+          type = variable.getType(),
+          nameMatches = this.matchName(name),
+          typeMatches = this.matchType(type),
+          matches = (nameMatches && typeMatches);
 
-    return matchesName;
+    return matches;
+  }
+
+  matchName(name) {
+    const nameMatches = (this.name === name);
+
+    return nameMatches;
+  }
+
+  matchType(type) {
+    const typeMatches = this.type.match(type);
+
+    return typeMatches;
+  }
+
+  matchNameAndType(name, type) {
+    const nameMatches = this.matchName(name),
+          typeMatches = this.matchType(type),
+          nameAndTypeMatch = (nameMatches && typeMatches);
+
+    return nameAndTypeMatch;
   }
 
   asString(tokens) {

@@ -7,8 +7,8 @@ import { first } from "../../utilities/array";
 import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
 import { verifyTermAsVariable, verifyTermAgainstConstructors } from "../../verify/term";
 
-const termNodeQuery = nodeQuery("/typeAssertion/term"),
-      typeNodeQuery = nodeQuery("/typeAssertion/type");
+const termNodeQuery = nodeQuery("/typeAssertion/term!"),
+      typeNodeQuery = nodeQuery("/typeAssertion/type!");
 
 export default function verifyTypeAssertion(typeAssertionNode, assignments, derived, context) {
   let typeAssertionVerified = false;
@@ -44,7 +44,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
   return typeAssertionVerified;
 }
 
-function verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, context) {
+export function verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, context) {
   let variableTypeAssertionVerified = false;
 
   const variables = [],
