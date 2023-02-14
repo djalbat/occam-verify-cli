@@ -30,7 +30,7 @@ export default function verifySupposition(suppositionNode, suppositions, proofCo
 
     proofContext.addProofStep(proofStep);
 
-    assignments.every((assignment) => {
+    assignments.forEach((assignment) => {
       assignment.assign(proofContext);
     });
 

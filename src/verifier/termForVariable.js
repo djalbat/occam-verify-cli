@@ -1,13 +1,13 @@
 "use strict";
 
 import Verifier from "../verifier";
+import verifyTerm from "../verify/term";
 import TermForVariableSubstitution from "../substitution/termForVariable";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
 import { TERM_RULE_NAME } from "../ruleNames";
 import { variableNameFromVariableNode } from "../utilities/query";
-import { verifyTermAgainstConstructors } from "../verify/term";
 
 const variableNodeQuery = nodeQuery('/term/variable!');
 
@@ -54,10 +54,10 @@ export default class TermForVariableVerifier extends Verifier {
     return termNodeVerified;
   }
 
-  verifyVariableNode(variableNodeB, termNodeB, substitutions, proofContextA, proofContextB) {
+  verifyVariableNode(variableNodeA, termNodeB, substitutions, proofContextA, proofContextB) {
     let variableVerified;
 
-    const variableNameA = variableNameFromVariableNode(variableNodeB),
+    const variableNameA = variableNameFromVariableNode(variableNodeA),
           substitution = substitutions.find((substitution) => {
             const variableName = substitution.getVariableName();
 
@@ -83,7 +83,7 @@ export default class TermForVariableVerifier extends Verifier {
           const types = [],
                 context = proofContextB, ///
                 termNode = termNodeB, ///
-                termVerified = verifyTermAgainstConstructors(termNodeB, types, context);
+                termVerified = verifyTerm(termNode, types, context);
 
           if (termVerified) {
             const firstType = first(types),

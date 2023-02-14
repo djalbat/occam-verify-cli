@@ -186,6 +186,20 @@ class ProofContext {
 
     return proofContext;
   }
+
+  static fromProofContextAndAssignments(proofContext, assignments) {
+    const context = proofContext,  ///
+          variables = assignments.map((assignment) => {
+            const variable = assignment.getVariable();
+
+            return variable;
+          }),
+          proofSteps = [];
+
+    proofContext = new ProofContext(context, variables, proofSteps);
+
+    return proofContext;
+  }
 }
 
 Object.assign(ProofContext.prototype, fileMixins);
