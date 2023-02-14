@@ -48,7 +48,8 @@ export default function verifyTypeInference(typeInferenceNode, context) {
             variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, context)
 
       if (variableTypeAssertionVerified) {
-        const assignment = assignments.pop(),
+        const firstAssignment = first(assignments),
+              assignment = firstAssignment, ///
               variables = [],
               leftTermNode = leftTermNodeQuery(statementNode),
               rightTermNode = rightTermNodeQuery(statementNode),

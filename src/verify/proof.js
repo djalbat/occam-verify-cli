@@ -1,6 +1,7 @@
 "use strict";
 
 import matcher from "../matcher";
+import ProofContext from "../context/proof";
 import verifyDerivation from "../verify/derivation";
 
 import { nodeQuery } from "../utilities/query";
@@ -9,6 +10,8 @@ const derivationNodeQuery = nodeQuery("/proof/derivation!");
 
 export default function verifyProof(proofNode, conclusion, proofContext) {
   let proofVerified = false;
+
+  proofContext = ProofContext.fromProofContext(proofContext); ///
 
   const derivationNode = derivationNodeQuery(proofNode),
         derivationVerified = verifyDerivation(derivationNode, proofContext);
