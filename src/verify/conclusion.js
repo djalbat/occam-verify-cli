@@ -29,5 +29,9 @@ export default function verifyConclusion(conclusionNode, conclusions, metaproofC
     conclusionVerified = true;
   }
 
+  if (conclusionVerified) {
+    metaproofContext.info(`Verified the '${conclusionString}' conclusion.`, conclusionNode);
+  }
+
   return conclusionVerified;
 }

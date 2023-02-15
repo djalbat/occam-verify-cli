@@ -32,5 +32,9 @@ export default function verifyPremise(premiseNode, premises, metaproofContext) {
     premiseVerified = true;
   }
 
+  if (premiseVerified) {
+    metaproofContext.info(`Verified the '${premiseString}' premise.`, premiseNode);
+  }
+
   return premiseVerified;
 }

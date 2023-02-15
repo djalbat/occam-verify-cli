@@ -1,5 +1,6 @@
 "use strict";
 
+import Equality from "../equality";
 import verifyTerm from "./term";
 import equalityCombinator from "../ocmbinator/equality";
 
@@ -10,9 +11,7 @@ import { verifyVariableTypeAssertion } from "./assertion/type";
 import { verifyStatementAgainstCombinator } from "../verify/statement";
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/proof";
 
-const leftTermNodeQuery = nodeQuery("/statement/argument[0]/term!"),
-      rightTermNodeQuery = nodeQuery("/statement/argument[1]/term!"),
-      statementNodeQuery = nodeQuery("/typeInference/statement!"),
+const statementNodeQuery = nodeQuery("/typeInference/statement!"),
       typeAssertionNodeQuery = nodeQuery("/typeInference/typeAssertion!");
 
 export default function verifyTypeInference(typeInferenceNode, context) {
@@ -43,6 +42,7 @@ export default function verifyTypeInference(typeInferenceNode, context) {
       context.error(`The '${statementString}' statement is not an equality.`, typeInferenceNode);
     } else {
       const derived = false,  ///
+            equality = Equality.fromStatementNode(statementNode),
             assignments = [],
             typeAssertionNode = typeAssertionNodeQuery(typeInferenceNode),
             variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, context)
@@ -51,8 +51,8 @@ export default function verifyTypeInference(typeInferenceNode, context) {
         const firstAssignment = first(assignments),
               assignment = firstAssignment, ///
               variables = [],
-              leftTermNode = leftTermNodeQuery(statementNode),
-              rightTermNode = rightTermNodeQuery(statementNode),
+              leftTermNode = equality.getLeftTermNode(),
+              rightTermNode = equality.getRightTermNode(),
               leftTermVerifiedAsVariable = verifyTermAsVariable(leftTermNode, variables, context),
               rightTermVerifiedAsVariable = verifyTermAsVariable(rightTermNode, variables, context);
 

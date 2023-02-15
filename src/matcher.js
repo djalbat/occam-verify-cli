@@ -37,7 +37,7 @@ class Matcher {
           nodesBLength = nodesB.length;
 
     if (nodesALength === nodesBLength) {
-      depth --;
+      depth--;
 
       nodesMatch = nodesA.every((nodeA, index) => {
         const nodeB = nodesB[index],

@@ -37,5 +37,9 @@ export default function verifySupposition(suppositionNode, suppositions, proofCo
     suppositionVerified = true;
   }
 
+  if (suppositionVerified) {
+    proofContext.info(`Verified the '${suppositionString}' supposition.`, suppositionNode);
+  }
+
   return suppositionVerified;
 }

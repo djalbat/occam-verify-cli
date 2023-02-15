@@ -6,7 +6,6 @@ import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 
 import { push, last, filter } from "../utilities/array";
-import { MAXIMUM_INDEXES_LENGTH } from "../constants";
 
 class ProofContext {
   constructor(context, variables, proofSteps) {
@@ -56,12 +55,10 @@ class ProofContext {
 
   getMetavariables() { return this.context.getMetavariables(); }
 
-  getEqualities() {
-    const equalities = [],
-          start = -MAXIMUM_INDEXES_LENGTH,  ///
-          proofSteps = this.proofSteps.slice(start); ///
+  getEqualities(equalities = []) {
+    this.context.getEqualities(equalities);
 
-    proofSteps.forEach((proofStep) => {
+    this.proofSteps.forEach((proofStep) => {
       const equality = Equality.fromProofStep(proofStep);
 
       if (equality !== null) {

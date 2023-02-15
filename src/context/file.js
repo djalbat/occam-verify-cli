@@ -59,6 +59,10 @@ export default class FileContext {
 
   getParser() { return this.releaseContext.getParser(); }
 
+  getEqualities(equalities = []) {
+    return equalities;
+  }
+
   getProofSteps() {
     const proofSteps = [];  ///
 

@@ -29,5 +29,9 @@ export default function verifyConsequence(consequenceNode, consequences, proofCo
     consequenceVerified = true;
   }
 
+  if (consequenceVerified) {
+    proofContext.info(`Verified the '${consequenceString}' consequence.`, consequenceNode);
+  }
+
   return consequenceVerified;
 }
