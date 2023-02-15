@@ -44,14 +44,14 @@ function actions(command, argument, options) {
   }
 
   if (!follow) {
+    let messages = log.getMessages()
+
     const start = - tail;
 
-    let logMessages = log.getMessages()
+    messages = messages.slice(start); ///
 
-    logMessages = logMessages.slice(start); ///
-
-    logMessages.forEach((logMessage) => {
-      console.log(logMessage);
+    messages.forEach((message) => {
+      console.log(message);
     });
   }
 }
