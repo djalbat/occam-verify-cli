@@ -4,16 +4,15 @@ import Conjecture from "../conjecture";
 import verifyProof from "../verify/proof";
 import ProofContext from "../context/proof";
 import verifyLabels from "../verify/labels";
+import verifyConsequent from "./consequent";
 import verifySupposition from "./supposition";
-import verifyConsequence from "./consequence";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import proof from "../context/proof";
 
 const proofNodeQuery = nodeQuery("/conjecture/proof!"),
       labelNodesQuery = nodesQuery("/conjecture/label"),
-      consequenceNodeQuery = nodeQuery("/conjecture/consequence!"),
+      consequentNodeQuery = nodeQuery("/conjecture/consequent!"),
       suppositionsNodeQuery = nodesQuery("/conjecture/supposition");
 
 export default function verifyConjecture(conjectureNode, fileContext) {
@@ -40,18 +39,18 @@ export default function verifyConjecture(conjectureNode, fileContext) {
           });
 
     if (suppositionsVerified) {
-      const consequences = [],
-            consequenceNode = consequenceNodeQuery(conjectureNode),
-            consequenceVerified = verifyConsequence(consequenceNode, consequences, proofContext);
+      const consequents = [],
+            consequentNode = consequentNodeQuery(conjectureNode),
+            consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
 
-      if (consequenceVerified) {
+      if (consequentVerified) {
         const proofNode = proofNodeQuery(conjectureNode),
-              firstConsequence = first(consequences),
-              consequence = firstConsequence; ///
+              firstConsequent = first(consequents),
+              consequent = firstConsequent; ///
 
-        verifyProof(proofNode, consequence, proofContext);
+        verifyProof(proofNode, consequent, proofContext);
 
-        const conjecture = Conjecture.fromLabelsSuppositionsConsequenceAndProofContext(labels, suppositions, consequence, proofContext);
+        const conjecture = Conjecture.fromLabelsSuppositionsConsequentAndProofContext(labels, suppositions, consequent, proofContext);
 
         fileContext.addConjecture(conjecture);
 

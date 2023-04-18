@@ -3,14 +3,14 @@
 import Axiom from "../axiom";
 import ProofContext from "../context/proof";
 import verifyLabels from "../verify/labels";
+import verifyConsequent from "../verify/consequent";
 import verifySupposition from "../verify/supposition";
-import verifyConsequence from "../verify/consequence";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
-      consequenceNodeQuery = nodeQuery("/axiom/consequence!"),
+      consequentNodeQuery = nodeQuery("/axiom/consequent!"),
       suppositionsNodeQuery = nodesQuery("/axiom/supposition");
 
 export default function verifyAxiom(axiomNode, fileContext) {
@@ -37,14 +37,14 @@ export default function verifyAxiom(axiomNode, fileContext) {
           });
 
     if (suppositionsVerified) {
-      const consequences = [],
-            consequenceNode = consequenceNodeQuery(axiomNode),
-            consequenceVerified = verifyConsequence(consequenceNode, consequences, proofContext);
+      const consequents = [],
+            consequentNode = consequentNodeQuery(axiomNode),
+            consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
 
-      if (consequenceVerified) {
-        const firstConsequence = first(consequences),
-              consequence = firstConsequence, ///
-              axiom = Axiom.fromLabelsSuppositionsConsequenceAndProofContext(labels, suppositions, consequence, proofContext);
+      if (consequentVerified) {
+        const firstConsequent = first(consequents),
+              consequent = firstConsequent, ///
+              axiom = Axiom.fromLabelsSuppositionsConsequentAndProofContext(labels, suppositions, consequent, proofContext);
 
         fileContext.addAxiom(axiom);
 

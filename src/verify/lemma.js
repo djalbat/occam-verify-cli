@@ -4,8 +4,8 @@ import Lemma from "../lemma";
 import verifyProof from "../verify/proof";
 import ProofContext from "../context/proof";
 import verifyLabels from "../verify/labels";
+import verifyConsequent from "./consequent";
 import verifySupposition from "./supposition";
-import verifyConsequence from "./consequence";
 
 import { first } from "../utilities/array";
 import { EMPTY_STRING } from "../constants";
@@ -13,7 +13,7 @@ import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const proofNodeQuery = nodeQuery("/lemma/proof!"),
       labelNodesQuery = nodesQuery("/lemma/label"),
-      consequenceNodeQuery = nodeQuery("/lemma/consequence!"),
+      consequentNodeQuery = nodeQuery("/lemma/consequent!"),
       suppositionsNodeQuery = nodesQuery("/lemma/supposition");
 
 export default function verifyLemma(lemmaNode, fileContext) {
@@ -42,18 +42,18 @@ export default function verifyLemma(lemmaNode, fileContext) {
           });
 
     if (suppositionsVerified) {
-      const consequences = [],
-            consequenceNode = consequenceNodeQuery(lemmaNode),
-            consequenceVerified = verifyConsequence(consequenceNode, consequences, proofContext);
+      const consequents = [],
+            consequentNode = consequentNodeQuery(lemmaNode),
+            consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
 
-      if (consequenceVerified) {
+      if (consequentVerified) {
         const proofNode = proofNodeQuery(lemmaNode),
-              firstConsequence = first(consequences),
-              consequence = firstConsequence, ///
-              proofVerified = verifyProof(proofNode, consequence, proofContext);
+              firstConsequent = first(consequents),
+              consequent = firstConsequent, ///
+              proofVerified = verifyProof(proofNode, consequent, proofContext);
 
         if (proofVerified) {
-          const lemma = Lemma.fromLabelsSuppositionsConsequenceAndProofContext(labels, suppositions, consequence, proofContext);
+          const lemma = Lemma.fromLabelsSuppositionsConsequentAndProofContext(labels, suppositions, consequent, proofContext);
 
           fileContext.addLemma(lemma);
 

@@ -4,16 +4,15 @@ import Theorem from "../theorem";
 import verifyProof from "../verify/proof";
 import ProofContext from "../context/proof";
 import verifyLabels from "../verify/labels";
+import verifyConsequent from "./consequent";
 import verifySupposition from "./supposition";
-import verifyConsequence from "./consequence";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import proof from "../context/proof";
 
 const proofNodeQuery = nodeQuery("/theorem/proof!"),
       labelNodesQuery = nodesQuery("/theorem/label"),
-      consequenceNodeQuery = nodeQuery("/theorem/consequence!"),
+      consequentNodeQuery = nodeQuery("/theorem/consequent!"),
       suppositionsNodeQuery = nodesQuery("/theorem/supposition");
 
 export default function verifyTheorem(theoremNode, fileContext) {
@@ -40,18 +39,18 @@ export default function verifyTheorem(theoremNode, fileContext) {
           });
 
     if (suppositionsVerified) {
-      const consequences = [],
-            consequenceNode = consequenceNodeQuery(theoremNode),
-            consequenceVerified = verifyConsequence(consequenceNode, consequences, proofContext);
+      const consequents = [],
+            consequentNode = consequentNodeQuery(theoremNode),
+            consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
 
-      if (consequenceVerified) {
+      if (consequentVerified) {
         const proofNode = proofNodeQuery(theoremNode),
-              firstConsequence = first(consequences),
-              consequence = firstConsequence, ///
-              proofVerified = verifyProof(proofNode, consequence, proofContext);
+              firstConsequent = first(consequents),
+              consequent = firstConsequent, ///
+              proofVerified = verifyProof(proofNode, consequent, proofContext);
 
         if (proofVerified) {
-          const theorem = Theorem.fromLabelsSuppositionsConsequenceAndProofContext(labels, suppositions, consequence, proofContext);
+          const theorem = Theorem.fromLabelsSuppositionsConsequentAndProofContext(labels, suppositions, consequent, proofContext);
 
           fileContext.addTheorem(theorem);
 

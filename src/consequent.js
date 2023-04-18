@@ -2,9 +2,9 @@
 
 import { nodeAsString } from "./utilities/string";
 import { statementNodeFromStatementString } from "./utilities/node";
-import { consequenceTermForVariableVerifier } from "./verifier/termForVariable/consequence";
+import { consequentTermForVariableVerifier } from "./verifier/termForVariable/consequent";
 
-export default class Consequence {
+export default class Consequent {
   constructor(statementNode) {
     this.statementNode = statementNode;
   }
@@ -16,7 +16,7 @@ export default class Consequence {
   matchStatementNode(statementNode, substitutions, proofContext) {
     const nonTerminalNodeA = this.statementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeVerified = consequenceTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext),
+          nonTerminalNodeVerified = consequentTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;
@@ -33,9 +33,9 @@ export default class Consequence {
   }
 
   static fromStatementNode(statementNode) {
-    const consequence = new Consequence(statementNode);
+    const consequent = new Consequent(statementNode);
 
-    return consequence;
+    return consequent;
   }
 
   static fromJSONAndFileContext(json, fileContext) {
@@ -44,8 +44,8 @@ export default class Consequence {
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-          consequence = new Consequence(statementNode);
+          consequent = new Consequent(statementNode);
 
-    return consequence;
+    return consequent;
   }
 }
