@@ -2,8 +2,8 @@
 
 import TermForVariableVerifier from "../../verifier/termForVariable";
 
-class ConsequenceTermForVariableVerifier extends TermForVariableVerifier {
+class ConsequentTermForVariableVerifier extends TermForVariableVerifier {
   static createSubstitutions = false;
 }
 
-export const consequenceTermForVariableVerifier = new ConsequenceTermForVariableVerifier();
+export const consequentTermForVariableVerifier = new ConsequentTermForVariableVerifier();
