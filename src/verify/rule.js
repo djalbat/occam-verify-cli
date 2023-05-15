@@ -51,7 +51,7 @@ export default function verifyRule(ruleNode, fileContext) {
         let ruleProofVerified = true; ///
 
         if (ruleProofNode !== null) {
-          ruleProofVerified = verifyRuleProof(ruleProofNode, conclusion, assignments, metaProofContext);
+          ruleProofVerified = verifyRuleProof(ruleProofNode, conclusion, metaProofContext);
         }
 
         if (ruleProofVerified) {

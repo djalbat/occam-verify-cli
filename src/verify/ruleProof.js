@@ -8,7 +8,7 @@ import { nodeQuery } from "../utilities/query";
 
 const ruleDerivationNodeQuery = nodeQuery("/ruleProof/ruleDerivation!");
 
-export default function verifyRuleProof(ruleProofNode, conclusion, assignments, metaproofContext) {
+export default function verifyRuleProof(ruleProofNode, conclusion, metaproofContext) {
   let ruleProofVerified = false;
 
   metaproofContext = MetaproofContext.fromMetaproofContext(metaproofContext); ///

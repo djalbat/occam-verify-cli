@@ -56,9 +56,7 @@ function significantTokenIndexFromSignificantTokenAndTokens(significantToken, to
   tokens.some((token) => {
     significantTokenIndex++;
 
-    const tokenEqualToSignificantToken = token.isEqualTo(significantToken);
-
-    if (tokenEqualToSignificantToken) {
+    if (token === significantToken) {
       return true;
     }
   });
