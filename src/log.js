@@ -110,9 +110,9 @@ function formatMessage(level, message, node = null, tokens = null, filePath = nu
     message = `${upperCaseLevel}: ${message}`;
   } else {
     const leastLineIndex = leastLineIndexFromNodeAndTokens(node, tokens),
-          leastLineNumber = leastLineIndex + 1,
+          leastLineNumber = leastLineIndex, ///
           greatestLineIndex = greatestLineIndexFromNodeAndTokens(node, tokens),
-          greatestLineNumber = greatestLineIndex + 1;
+          greatestLineNumber = greatestLineIndex; ///
 
     if (leastLineNumber === greatestLineNumber) {
       const lineNumber = leastLineNumber; ///

@@ -7,7 +7,8 @@ import { first } from "../utilities/array";
 import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
 import { TERM_RULE_NAME, ARGUMENT_RULE_NAME } from "../ruleNames";
 
-const typeNodeQuery = nodeQuery("/argument/type");
+const typeNodeQuery = nodeQuery("/argument/type"),
+      termNodeQuery = nodeQuery("/argument/term");
 
 export default function verifyTermAsConstructor(termNode, typeNode, fileContext) {
   let termVerifiedAsConstructor = false;
@@ -139,24 +140,28 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext) {
 }
 
 function verifyArgumentNode(argumentNode, fileContext) {
-  let typeNodeVerified = false;
+  let argumentNodeVerified = false;
 
-  const typeNode = typeNodeQuery(argumentNode);
+  const typeNode = typeNodeQuery(argumentNode),
+        termNode = termNodeQuery(argumentNode);
 
-  if (typeNode === null) {
-    const argumentString = fileContext.nodeAsString(argumentNode);
-
-    fileContext.error(`The ${argumentString} argument should be a type.`, argumentNode);
-  } else {
+  if (false) {
+    ///
+  } else if (typeNode !== null) {
     const typeName = typeNameFromTypeNode(typeNode),
           typePresent = fileContext.isTypePresentByTypeName(typeName);
 
     if (!typePresent) {
       fileContext.error(`The type '${typeName}' is not present.`, argumentNode);
-    } else {
-      typeNodeVerified = true;
     }
+
+    argumentNodeVerified = typePresent; ///
+  } else if (termNode !== null) {
+    const node = termNode,  ///
+          nodeVerified = verifyNode(node, fileContext);
+
+    argumentNodeVerified = nodeVerified;  ///
   }
 
-  return typeNodeVerified;
+  return argumentNodeVerified;
 }
