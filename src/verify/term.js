@@ -3,6 +3,8 @@
 import Verifier from "../verifier";
 
 import { first } from "../utilities/array";
+import { objectType } from "../type";
+import { OBJECT_TYPE_NAME } from "../typeNames";
 import { ARGUMENT_RULE_NAME } from "../ruleNames";
 import { nodeQuery, typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities/query";
 
@@ -86,7 +88,9 @@ class TermVerifier extends Verifier {
 
         if (termVerified) {
           const constructorTypeName = typeNameFromTypeNode(constructorTypeNode),
-                constructorType = context.findTypeByTypeName(constructorTypeName),
+                constructorType = (constructorTypeName === OBJECT_TYPE_NAME) ?
+                                    objectType :
+                                      context.findTypeByTypeName(constructorTypeName),
                 firstType = first(types),
                 termType = firstType, ///
                 type = constructorType, ///
@@ -103,7 +107,7 @@ class TermVerifier extends Verifier {
   }
 }
 
-const termVerifier = new TermVerifier();
+export const termVerifier = new TermVerifier();
 
 export default function verifyTerm(termNode, types, context) {
   let termVerified = false;
@@ -167,9 +171,9 @@ export function verifyTermAgainstConstructors(termNode, types, context) {
 
 export function verifyTermAgainstConstructor(termNode, constructor, context) {
   const constructorTermNode = constructor.getTermNode(),
-        nodeA = termNode,  ///
-        nodeB = constructorTermNode,  ///
-        nodeVerified = termVerifier.verifyNode(nodeA, nodeB, context),
+        nonTerminalNNdeA = termNode,  ///
+        nonTerminalNodeB = constructorTermNode,  ///
+        nodeVerified = termVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context),
         termVerifiedAgainstConstructor = nodeVerified;  ///
 
   return termVerifiedAgainstConstructor;

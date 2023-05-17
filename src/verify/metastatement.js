@@ -55,7 +55,7 @@ class MetastatementVerifier extends Verifier {
   }
 }
 
-const metastatementVerifier = new MetastatementVerifier();
+export const metastatementVerifier = new MetastatementVerifier();
 
 export default function verifyMetastatement(metastatementNode, derived, metaproofContext) {
   let metastatementVerified = false;

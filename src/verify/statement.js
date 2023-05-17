@@ -9,6 +9,7 @@ import verifyTypeInference from "../verify/typeInference";
 import verifyTypeAssertion from "../verify/assertion/type";
 
 import { objectType } from "../type";
+import { termVerifier } from "../verify/term";
 import { first, second } from "../utilities/array";
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { STATEMENT_META_TYPE } from "../metaTypes";
@@ -38,8 +39,8 @@ class StatementVerifier extends Verifier {
       switch (ruleName) {
         case ARGUMENT_RULE_NAME: {
           const argumentNode = nonTerminalNode, ///
-                combinatorArgumentNode = combinatorNonTerminalNode, ///
-                argumentNodeVerified = this.verifyArgumentNode(argumentNode, combinatorArgumentNode, context);
+                constructorArgumentNode = combinatorNonTerminalNode, ///
+                argumentNodeVerified = termVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, context);
 
           nonTerminalNodeVerified = argumentNodeVerified; ///
 
@@ -137,7 +138,7 @@ class StatementVerifier extends Verifier {
   }
 }
 
-const statementVerifier = new StatementVerifier();
+export const statementVerifier = new StatementVerifier();
 
 export default function verifyStatement(statementNode, assignments, derived, context) {
   let statementVerified = false;
@@ -180,10 +181,6 @@ export function verifyStatementAgainstCombinators(statementNode, context) {
   ];
 
   const combinator = combinators.find((combinator, index) => {
-    if (index === 13) {
-      debugger
-    }
-
     const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
 
     if (statementVerifiedAgainstCombinator) {
@@ -242,8 +239,14 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, con
   return statementVerifiedAsTypeAssertion;
 }
 
+let count = 0;
+
 function verifyStatementAsEquality(statementNode, derived, context) {
   let statementVerifiedAsEquality = false;
+
+  if (count++ === 8) {
+    debugger
+  }
 
   const combinator = equalityCombinator,  ///
         statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
