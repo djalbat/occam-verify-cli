@@ -1,7 +1,5 @@
 "use strict";
 
-import matcher from "../matcher";
-
 export default class TermForVariableSubstitution {
   constructor(variableName, termNode) {
     this.variableName = variableName;
@@ -19,11 +17,7 @@ export default class TermForVariableSubstitution {
   matchTermNode(termNode) {
     let termNodeMatches;
 
-    const nodeA = this.termNode,  ///
-          nodeB = termNode,
-          nodeMatches = matcher.matchNode(nodeA, nodeB);
-
-    termNodeMatches = nodeMatches;  ///
+    termNodeMatches = this.termNode.match(termNode);
 
     return termNodeMatches;
   }

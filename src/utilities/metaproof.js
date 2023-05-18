@@ -1,6 +1,5 @@
 "use strict";
 
-import matcher from "../matcher";
 import bracketedMetastatementNode from "../node/metastatement/bracketed";
 
 import { nodeQuery } from "../utilities/query";
@@ -12,22 +11,18 @@ export function matchMetastatementModuloBrackets(metastatementNodeA, metastateme
   let metastatementMatchesModuloBrackets = false;
 
   if (!metastatementMatchesModuloBrackets) {
-    const nodeA = metastatementNodeA,  ///
-          nodeB = metastatementNodeB,  ///
-          nodeMatches = matcher.matchNode(nodeA, nodeB);
+    const metastatementNodeMatches = metastatementNodeA.match(metastatementNodeB);
 
-    metastatementMatchesModuloBrackets = nodeMatches;  ///
+    metastatementMatchesModuloBrackets = metastatementNodeMatches;  ///
   }
 
   if (!metastatementMatchesModuloBrackets) {
     const bracketedMetastatementChildNodeA = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNodeA);
 
     if (bracketedMetastatementChildNodeA !== null) {
-      const nodeA = bracketedMetastatementChildNodeA,  ///
-            nodeB = metastatementNodeB, ///
-            nodeMatches = matcher.matchNode(nodeA, nodeB);
+      const bracketedMetastatementChildNodeAMatchesMetastatementNodeB = bracketedMetastatementChildNodeA.match(metastatementNodeB);
 
-      metastatementMatchesModuloBrackets = nodeMatches; ///
+      metastatementMatchesModuloBrackets = bracketedMetastatementChildNodeAMatchesMetastatementNodeB; ///
     }
   }
 
@@ -35,11 +30,9 @@ export function matchMetastatementModuloBrackets(metastatementNodeA, metastateme
     const bracketedMetastatementChildNodeB = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNodeB);
 
     if (bracketedMetastatementChildNodeB !== null) {
-      const nodeA = metastatementNodeA, ///
-            nodeB = bracketedMetastatementChildNodeB,  ///
-            nodeMatches = matcher.matchNode(nodeA, nodeB);
+      const metastatementNodeAMatchesBracketedMetastatementChildNodeB = metastatementNodeA.match(bracketedMetastatementChildNodeB);
 
-      metastatementMatchesModuloBrackets = nodeMatches; ///
+      metastatementMatchesModuloBrackets = metastatementNodeAMatchesBracketedMetastatementChildNodeB; ///
     }
   }
 
@@ -49,12 +42,10 @@ export function matchMetastatementModuloBrackets(metastatementNodeA, metastateme
 export function bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode) {
   let bracketedMetastatementChildNode = null;
 
-  const nodeA = metastatementNode,  ///
-        nodeB = bracketedMetastatementNode,  ///
-        depth = BRACKETED_METASTATEMENT_DEPTH,
-        nonTerminalNodeMatches = matcher.matchNode(nodeA, nodeB, depth);
+  const depth = BRACKETED_METASTATEMENT_DEPTH,
+        metastatementNodeMatchesBracketedMetastatementNode = metastatementNode.match(bracketedMetastatementNode, depth);
 
-  if (nonTerminalNodeMatches) {
+  if (metastatementNodeMatchesBracketedMetastatementNode) {
     bracketedMetastatementChildNode = bracketedMetastatementChildNodeQuery(metastatementNode);
   }
 

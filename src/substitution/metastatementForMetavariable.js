@@ -1,7 +1,5 @@
 "use strict";
 
-import matcher from "../matcher";
-
 import { bracketedMetastatementChildNodeFromMetastatementNode } from "../utilities/metaproof";
 
 export default class MetastatementForMetavariableSubstitution {
@@ -21,22 +19,15 @@ export default class MetastatementForMetavariableSubstitution {
   matchMetastatementNode(metastatementNode) {
     let metastatementNodeMatches;
 
-    const nodeA = this.metastatementNode,  ///
-          nodeB = metastatementNode,
-          nodeMatches = matcher.matchNode(nodeA, nodeB);
-
-    metastatementNodeMatches = nodeMatches;  ///
+    metastatementNodeMatches = this.metastatementNode.match(metastatementNode)
 
     if (!metastatementNodeMatches) {
       const bracketedMetastatementChildNode = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode);
 
       if (bracketedMetastatementChildNode !== null) {
-        const metastatementNode = bracketedMetastatementChildNode, ///
-              nodeA = this.metastatementNode,  ///
-              nodeB = metastatementNode,
-              nodeMatches = matcher.matchNode(nodeA, nodeB);
+        const metastatementNode = bracketedMetastatementChildNode; ///
 
-        metastatementNodeMatches = nodeMatches;  ///
+        metastatementNodeMatches = this.metastatementNode.match(metastatementNode);
       }
     }
 

@@ -1,7 +1,5 @@
 "use strict";
 
-import matcher from "../matcher";
-
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/proof";
 
 export default class StatementForMetavariableSubstitution {
@@ -21,22 +19,15 @@ export default class StatementForMetavariableSubstitution {
   matchStatementNode(statementNode) {
     let statementNodeMatches;
 
-    const nodeA = this.statementNode,  ///
-          nodeB = statementNode,
-          nodeMatches = matcher.matchNode(nodeA, nodeB);
-
-    statementNodeMatches = nodeMatches;  ///
+    statementNodeMatches = this.statementNode.match(statementNode);
 
     if (!statementNodeMatches) {
       const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
       if (bracketedStatementChildNode !== null) {
-        const statementNode = bracketedStatementChildNode, ///
-              nodeA = this.statementNode,  ///
-              nodeB = statementNode,
-              nodeMatches = matcher.matchNode(nodeA, nodeB);
+        const statementNode = bracketedStatementChildNode; ///
 
-        statementNodeMatches = nodeMatches;  ///
+        statementNodeMatches = this.statementNode.match(statementNode);
       }
     }
 

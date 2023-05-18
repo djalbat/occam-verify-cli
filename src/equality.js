@@ -1,6 +1,5 @@
 "use strict";
 
-import matcher from "./matcher";
 import Verifier from "./verifier";
 import verifyTerm from "./verify/term";
 import equalityStatementNode from "./node/statement/equality";
@@ -94,12 +93,10 @@ export default class Equality {
     const statementNode = proofStep.getStatementNode();
 
     if (statementNode !== null) {
-      const nodeA = statementNode,  ///
-            nodeB = equalityStatementNode,  ///
-            depth = EQUALITY_DEPTH,
-            nodeMatches = matcher.matchNode(nodeA, nodeB, depth);
+      const depth = EQUALITY_DEPTH,
+            statementNodeMatchesEqualityStatementNode = statementNode.match(equalityStatementNode, depth);
 
-      if (nodeMatches) {
+      if (statementNodeMatchesEqualityStatementNode) {
         const leftTermNode = leftTermNodeQuery(statementNode),
               rightTermNode = rightTermNodeQuery(statementNode);
 

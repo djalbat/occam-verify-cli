@@ -1,6 +1,5 @@
 "use strict";
 
-import matcher from "../matcher";
 import MetaproofContext from "../context/metaproof";
 import verifyRuleDerivation from "../verify/ruleDerivation";
 
@@ -21,11 +20,9 @@ export default function verifyRuleProof(ruleProofNode, conclusion, metaproofCont
           metaproofStep = lastMetaproofStep, ///
           metastatementNode = metaproofStep.getMetastatementNode(),
           conclusionMetastatementNode = conclusion.getMetastatementNode(),
-          nodeA = metastatementNode,  ///
-          nodeB = conclusionMetastatementNode,  ///
-          nodeMatches = matcher.matchNode(nodeA, nodeB);
+          metastatementNodeMatchConclusionMetastatementNode = metastatementNode.match(conclusionMetastatementNode);
 
-    ruleProofVerified = nodeMatches;  ///
+    ruleProofVerified = metastatementNodeMatchConclusionMetastatementNode;  ///
   }
 
   return ruleProofVerified;

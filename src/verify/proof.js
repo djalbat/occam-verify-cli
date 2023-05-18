@@ -1,6 +1,5 @@
 "use strict";
 
-import matcher from "../matcher";
 import ProofContext from "../context/proof";
 import verifyDerivation from "../verify/derivation";
 
@@ -21,11 +20,9 @@ export default function verifyProof(proofNode, conclusion, proofContext) {
           proofStep = lastProofStep, ///
           statementNode = proofStep.getStatementNode(),
           conclusionStatementNode = conclusion.getStatementNode(),
-          nodeA = statementNode,  ///
-          nodeB = conclusionStatementNode,  ///
-          nodeMatches = matcher.matchNode(nodeA, nodeB);
+          statementNodeMatchConclusionStatementNode = statementNode.match(conclusionStatementNode);
 
-    proofVerified = nodeMatches;  ///
+    proofVerified = statementNodeMatchConclusionStatementNode;  ///
   }
 
   return proofVerified;
