@@ -239,14 +239,8 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, con
   return statementVerifiedAsTypeAssertion;
 }
 
-let count = 0;
-
 function verifyStatementAsEquality(statementNode, derived, context) {
   let statementVerifiedAsEquality = false;
-
-  if (count++ === 8) {
-    debugger
-  }
 
   const combinator = equalityCombinator,  ///
         statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
