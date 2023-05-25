@@ -10,7 +10,7 @@ import verifyConclusion from "../verify/conclusion";
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const labelNodesQuery = nodesQuery("/rule/label"),
+const labelNodesQuery = nodesQuery("/rule/labels/label"),
       premisesNodeQuery = nodesQuery("/rule/premise"),
       ruleProofNodeQuery = nodeQuery("/rule/ruleProof!"),
       conclusionNodeQuery = nodeQuery("/rule/conclusion!");

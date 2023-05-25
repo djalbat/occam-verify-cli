@@ -11,7 +11,7 @@ import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const proofNodeQuery = nodeQuery("/theorem/proof!"),
-      labelNodesQuery = nodesQuery("/theorem/label"),
+      labelNodesQuery = nodesQuery("/theorem/labels/label"),
       consequentNodeQuery = nodeQuery("/theorem/consequent!"),
       suppositionsNodeQuery = nodesQuery("/theorem/supposition");
 
