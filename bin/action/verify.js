@@ -43,6 +43,8 @@ function verifyAction(argument, log) {
 
     const dependentReleased = released; ///
 
+    log.info("Initialising package contexts...");
+
     initialiseReleaseContext(dependency, dependentName, dependentReleased, context, (error) => {
       if (error) {
         log.error(error);
