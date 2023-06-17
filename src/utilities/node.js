@@ -1,6 +1,5 @@
 "use strict";
 
-import { rewriteNodes } from "occam-grammar-utilities";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import { nodeQuery } from "../utilities/query";
@@ -120,10 +119,7 @@ function nodeFromContentAndRuleName(content, ruleName, lexer = florenceLexer, pa
   const ruleMap = parser.getRuleMap(),
         rule = ruleMap[ruleName],
         tokens = lexer.tokenise(content),
-        node = parser.parse(tokens, rule),
-        nonTerminalNode = node; ///
-
-  rewriteNodes(nonTerminalNode);
+        node = parser.parse(tokens, rule);
 
   return node;
 }

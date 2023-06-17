@@ -1,7 +1,5 @@
 "use strict";
 
-import { rewriteNodes } from "occam-grammar-utilities";
-
 import Type from "../type";
 import Rule from "../rule";
 import Axiom from "../axiom";
@@ -686,15 +684,8 @@ export default class FileContext {
     const file = releaseContext.getFile(filePath),
           content = file.getContent(),
           tokens = releaseContext.tokenise(content),
-          node = releaseContext.parse(tokens);
-
-    if (node !== null) {
-      const nonTerminalNode = node; ///
-
-      rewriteNodes(nonTerminalNode);
-    }
-
-    const types = [],
+          node = releaseContext.parse(tokens),
+          types = [],
           rules = [],
           axioms = [],
           lemmas = [],
