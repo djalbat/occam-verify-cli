@@ -2,7 +2,7 @@
 
 const EMPTY_STRING = "",
       PACKAGE_JSON = "package.json",
-      OCCAM_VERIFY_CLI = "OCCAM Verify CLI";
+      OCCAM_VERIFY_CLI = "Occam Verify CLI";
 
 module.exports = {
   EMPTY_STRING,
