@@ -1,13 +1,13 @@
 "use strict";
 
-const { VERIFY_CLI } = require("../constants"),
+const { OCCAM_VERIFY_CLI } = require("../constants"),
       { getPackageVersion } = require("../utilities/packageJSON");
 
 function versionAction() {
   const packageVersion = getPackageVersion(),
         version = packageVersion; ///
 
-  console.log(`${VERIFY_CLI} version ${version}`);
+  console.log(`${OCCAM_VERIFY_CLI} version ${version}`);
 
   process.exit();
 }

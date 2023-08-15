@@ -1,11 +1,11 @@
 "use strict";
 
-const VERIFY_CLI = "Verify-CLI",
-      EMPTY_STRING = "",
-      PACKAGE_JSON = "package.json";
+const EMPTY_STRING = "",
+      PACKAGE_JSON = "package.json",
+      OCCAM_VERIFY_CLI = "OCCAM Verify CLI";
 
 module.exports = {
-  VERIFY_CLI,
   EMPTY_STRING,
-  PACKAGE_JSON
+  PACKAGE_JSON,
+  OCCAM_VERIFY_CLI
 };
