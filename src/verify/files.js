@@ -2,7 +2,7 @@
 
 import verifyFile from "../verify/file";
 
-import { filePathUtilities } from "occam-file-system";
+import { filePathUtilities } from "occam-entities";
 
 import { filter, leftDifference } from "../utilities/array";
 
