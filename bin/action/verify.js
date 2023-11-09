@@ -1,6 +1,6 @@
 "use strict";
 
-const { Dependency } = require("occam-file-system"),
+const { Dependency } = require("occam-entities"),
       { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
 const { trimTrailingSlash } = require("../utilities/string"),
