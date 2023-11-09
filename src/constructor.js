@@ -4,10 +4,12 @@ import Type from "./type";
 
 import { nodeAsString } from "./utilities/string";
 import { termNodeFromTermString } from "./utilities/node";
+import { constructorDeclarationTokensFromTermString } from "./utilities/node";
 
 export default class Constructor {
-  constructor(termNode, type) {
+  constructor(termNode, string, type) {
     this.termNode = termNode;
+    this.string = string;
     this.type = type;
   }
 
@@ -15,25 +17,12 @@ export default class Constructor {
     return this.termNode;
   }
 
-  getType() {
-    return this.type;
+  getString() {
+    return this.string;
   }
 
-  asString(tokens) {
-    let string;
-
-    const termString = nodeAsString(this.termNode, tokens);
-
-    if (this.type === null) {
-      string = `${termString}`;
-    } else {
-      const noSuperType = true,
-            typeString = this.type.asString(tokens, noSuperType);
-
-      string = `${termString}:${typeString}`;
-    }
-
-    return string;
+  getType() {
+    return this.type;
   }
 
   toJSON(tokens) {
@@ -51,8 +40,9 @@ export default class Constructor {
     return json;
   }
 
-  static fromTermNodeAndType(termNode, type) {
-    const constructor = new Constructor(termNode, type);
+  static fromTermNodeTypeAndTokens(termNode, type, tokens) {
+    const string = stringFromTermNodeTypeAndTokens(termNode, type, tokens),
+          constructor = new Constructor(termNode, string, type);
 
     return constructor;
   }
@@ -78,8 +68,28 @@ export default class Constructor {
       type = fileContext.findTypeByTypeName(typeName); ///
     }
 
-    const constructor = new Constructor(termNode, type);
+    const constructorDeclarationTokens = constructorDeclarationTokensFromTermString(termString, lexer),
+          tokens = constructorDeclarationTokens,  ///
+          string = stringFromTermNodeTypeAndTokens(termNode, type, tokens),
+          constructor = new Constructor(termNode, string, type);
 
     return constructor;
   }
+}
+
+function stringFromTermNodeTypeAndTokens(termNode, type, tokens) {
+  let string;
+
+  const termString = nodeAsString(termNode, tokens);
+
+  if (type === null) {
+    string = `${termString}`;
+  } else {
+    const noSuperType = true,
+          typeString = type.asString(tokens, noSuperType);
+
+    string = `${termString}:${typeString}`;
+  }
+
+  return string;
 }

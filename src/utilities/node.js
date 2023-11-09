@@ -29,32 +29,74 @@ const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
       metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable!"),
       metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
+export function labelTokensFromLabelString(labelString, lexer) {
+  const labelContent = `${labelString}`,
+        labelTokens = tokensFromContentAndLexer(labelContent, lexer);
+
+  return labelTokens;
+}
+
+export function constructorDeclarationTokensFromTermString(termString, lexer) {
+  const constructorDeclarationContent = `Constructor ${termString}
+`,
+        constructorDeclarationTokens = tokensFromContentAndLexer(constructorDeclarationContent, lexer);
+
+  return constructorDeclarationTokens;
+}
+
+export function variableDeclarationTokensFromVariableString(variableString, lexer) {
+  const variableDeclarationContent = `Variable ${variableString}
+`,
+        variableDeclarationTokens = tokensFromContentAndLexer(variableDeclarationContent, lexer);
+
+  return variableDeclarationTokens;
+}
+
+export function unqualifiedStatementTokensFromStatementString(statementString, lexer) {
+  const unqualifiedStatementContent = `${statementString}
+`,
+        unqualifiedStatementTokens = tokensFromContentAndLexer(unqualifiedStatementContent, lexer);
+
+  return unqualifiedStatementTokens;
+}
+
+export function metavariableDeclarationTokensFromMetavariableString(metavariableString, lexer) {
+  const metavariableDeclarationContent = `Metavariable ${metavariableString}
+`,
+        metavariableDeclarationTokens = tokensFromContentAndLexer(metavariableDeclarationContent, lexer);
+
+  return metavariableDeclarationTokens;
+}
+
+export function unqualifiedMetastatementTokensFromMetastatementString(metastatementString, lexer) {
+  const unqualifiedMetastatementContent = `${metastatementString}
+`,
+        unqualifiedMetastatementTokens = tokensFromContentAndLexer(unqualifiedMetastatementContent, lexer);
+
+  return unqualifiedMetastatementTokens;
+}
+
 export function termNodeFromTermString(termString, lexer, parser) {
   const ruleName = CONSTRUCTOR_DECLARATION_RULE_NAME,
-        content = `Constructor ${termString}
-`,
-        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
-        constructorDeclarationNode = node, ///
+        constructorDeclarationTokens = constructorDeclarationTokensFromTermString(termString, lexer, parser),
+        constructorDeclarationNode = nodeFromTokensRuleNameAndParser(constructorDeclarationTokens, ruleName, parser),
         termNode = termNodeQuery(constructorDeclarationNode);
 
   return termNode;
 }
 
 export function labelNodeFromLabelString(labelString, lexer, parser) {
-  const content = labelString, ///
-        ruleName = LABEL_RULE_NAME,
-        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
-        labelNode = node; ///
+  const ruleName = LABEL_RULE_NAME,
+        labelTokens = labelTokensFromLabelString(labelString, lexer),
+        labelNode = nodeFromTokensRuleNameAndParser(labelTokens, ruleName, parser);
 
   return labelNode;
 }
 
 export function typeNodeFromVariableString(variableString, lexer, parser) {
   const ruleName = TYPE_RULE_NAME,
-        content = `Variable ${variableString}
-`,
-        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
-        typeDeclarationNode = node, ///
+        variableDeclarationTokens = variableDeclarationTokensFromVariableString(variableString, lexer),
+        typeDeclarationNode = nodeFromTokensRuleNameAndParser(variableDeclarationTokens, ruleName, parser),
         typeNode = typeNodeQuery(typeDeclarationNode);
 
   return typeNode;
@@ -62,10 +104,8 @@ export function typeNodeFromVariableString(variableString, lexer, parser) {
 
 export function variableNodeFromVariableString(variableString, lexer, parser) {
   const ruleName = VARIABLE_RULE_NAME,
-        content = `Variable ${variableString}
-`,
-        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
-        variableDeclarationNode = node, ///
+        variableTDeclarationTokens = variableDeclarationTokensFromVariableString(variableString, lexer),
+        variableDeclarationNode = nodeFromTokensRuleNameAndParser(variableTDeclarationTokens, ruleName, parser),
         variableNode = variableNodeQuery(variableDeclarationNode);
 
   return variableNode;
@@ -73,10 +113,8 @@ export function variableNodeFromVariableString(variableString, lexer, parser) {
 
 export function statementNodeFromStatementString(statementString, lexer, parser) {
   const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME,
-        content = `${statementString}
-`,
-        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
-        unqualifiedStatementNode = node,  ///
+        unqualifiedStatementTokens = unqualifiedStatementTokensFromStatementString(statementString, lexer),
+        unqualifiedStatementNode = nodeFromTokensRuleNameAndParser(unqualifiedStatementTokens, ruleName, parser),
         statementNode = statementNodeQuery(unqualifiedStatementNode);
 
   return statementNode;
@@ -84,10 +122,8 @@ export function statementNodeFromStatementString(statementString, lexer, parser)
 
 export function metaTypeNodeFromMetavariableString(metavariableString, lexer, parser) {
   const ruleName = META_TYPE_RULE_NAME,
-        content = `Metavariable ${metavariableString}
-`,
-        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
-        metaTypeDeclarationNode = node, ///
+        metavariableDeclarationTokens = metavariableDeclarationTokensFromMetavariableString(metavariableString, lexer),
+        metaTypeDeclarationNode = nodeFromTokensRuleNameAndParser(metavariableDeclarationTokens, ruleName, parser),
         metaTypeNode = metaTypeNodeQuery(metaTypeDeclarationNode);
 
   return metaTypeNode;
@@ -95,10 +131,8 @@ export function metaTypeNodeFromMetavariableString(metavariableString, lexer, pa
 
 export function metavariableNodeFromMetavariableString(metavariableString, lexer, parser) {
   const ruleName = METAVARIABLE_RULE_NAME,
-        content = `Metavariable ${metavariableString}
-`,
-        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
-        metavariableDeclarationNode = node, ///
+        metavariableDeclarationTokens = metavariableDeclarationTokensFromMetavariableString(metavariableString, lexer),
+        metavariableDeclarationNode = nodeFromTokensRuleNameAndParser(metavariableDeclarationTokens, ruleName, parser),
         metavariableNode = metavariableNodeQuery(metavariableDeclarationNode);
 
   return metavariableNode;
@@ -106,19 +140,22 @@ export function metavariableNodeFromMetavariableString(metavariableString, lexer
 
 export function metastatementNodeFromMetastatementString(metastatementString, lexer, parser) {
   const ruleName = UNQUALIFIED_METASTATEMENT_RULE_NAME,
-        content = `${metastatementString}
-`,
-        node = nodeFromContentAndRuleName(content, ruleName, lexer, parser),
-        unqualifiedMetastatementNode = node,  ///
+        unqualifiedMetastatementTokens = unqualifiedMetastatementTokensFromMetastatementString(metastatementString, lexer),
+        unqualifiedMetastatementNode = nodeFromTokensRuleNameAndParser(unqualifiedMetastatementTokens, ruleName, parser),
         metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
   return metastatementNode;
 }
 
-function nodeFromContentAndRuleName(content, ruleName, lexer = florenceLexer, parser = florenceParser) {
+function tokensFromContentAndLexer(content, lexer = florenceLexer) {
+  const tokens = lexer.tokenise(content);
+
+  return tokens;
+}
+
+function nodeFromTokensRuleNameAndParser(tokens, ruleName, parser = florenceParser) {
   const ruleMap = parser.getRuleMap(),
         rule = ruleMap[ruleName],
-        tokens = lexer.tokenise(content),
         node = parser.parse(tokens, rule);
 
   return node;

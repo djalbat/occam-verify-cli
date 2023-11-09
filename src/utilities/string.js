@@ -54,4 +54,3 @@ export function nodesAsString(nodes, tokens) {
 
   return string;
 }
-

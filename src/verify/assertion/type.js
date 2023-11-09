@@ -22,7 +22,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
         typePresent = context.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    context.error(`The ${typeName} type is not present.`, typeAssertionNode);
+    context.error(`The '${typeName}' type is not present.`, typeAssertionNode);
   } else {
     if (!typeAssertionVerified) {
       const variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, context);

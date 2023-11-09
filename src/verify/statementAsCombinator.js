@@ -19,7 +19,8 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
         childNodesVerified = verifyChildNodes(childNodes, fileContext);
 
   if (childNodesVerified) {
-    const combinator = Combinator.fromStatementNode(statementNode);
+    const tokens = fileContext.getTokens(),
+          combinator = Combinator.fromStatementNodeAndTokens(statementNode, tokens);
 
     fileContext.addCombinator(combinator);
 

@@ -16,8 +16,6 @@ class MetaproofContext {
     return this.context;
   }
 
-  getVariables() { return this.context.getVariables(); }
-
   getMetavariables() {
     const metavariables = [];
 
@@ -40,6 +38,8 @@ class MetaproofContext {
 
     return metaproofSteps;
   }
+
+  getVariables() { return this.context.getVariables(); }
 
   getLastMetaproofStep() {
     let lastMetaproofStep = null;

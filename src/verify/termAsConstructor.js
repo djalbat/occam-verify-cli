@@ -38,7 +38,8 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
   }
 
   if (termVerifiedAsConstructor) {
-    const constructor = Constructor.fromTermNodeAndType(termNode, type);
+    const tokens = fileContext.getTokens(),
+          constructor = Constructor.fromTermNodeTypeAndTokens(termNode, type, tokens);
 
     fileContext.addConstructor(constructor);
   }

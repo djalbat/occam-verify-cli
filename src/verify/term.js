@@ -63,12 +63,17 @@ class TermVerifier extends Verifier {
   verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
     let argumentNodeVerified = false;
 
+    const argumentString = context.nodeAsString(argumentNode),
+          constructorArgumentString = context.nodeAsString(constructorArgumentNode);
+
+    context.trace(`Verifying the '${argumentString}' argument against the '${constructorArgumentString}' constructor.`);
+
     const typeNode = typeNodeQuery(argumentNode);
 
     if (typeNode !== null) {
       const argumentString = context.nodeAsString(argumentNode);
 
-      context.error(`The ${argumentString} argument should be a term, not a type`, argumentNode);
+      context.error(`The '${argumentString}' argument should be a term, not a type`, argumentNode);
     } else {
       const termNode = termNodeQuery(argumentNode),
             constructorTermNode = termNodeQuery(constructorArgumentNode),
@@ -88,13 +93,15 @@ class TermVerifier extends Verifier {
 
         if (termVerified) {
           const constructorTypeName = typeNameFromTypeNode(constructorTypeNode),
+                firstType = first(types),
+                termType = firstType, ///
+                termTypeName = termType.getName(),
                 constructorType = (constructorTypeName === OBJECT_TYPE_NAME) ?
                                     objectType :
                                       context.findTypeByTypeName(constructorTypeName),
-                firstType = first(types),
-                termType = firstType, ///
-                type = constructorType, ///
-                termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
+                termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(constructorType);
+
+          context.trace(`The type of the term is '${termTypeName}' and the type of the constructor is '${constructorTypeName}'.`, argumentNode);
 
           if (termTypeEqualToOrSubTypeOfType) {
             argumentNodeVerified = true;
@@ -114,7 +121,7 @@ export default function verifyTerm(termNode, types, context) {
 
   const termString = context.nodeAsString(termNode);
 
-  context.trace(`Verifying the '${termString}' term...`, termNode);
+  context.debug(`Verifying the '${termString}' term...`, termNode);
 
   if (!termVerified) {
     const variables = [],
@@ -149,6 +156,10 @@ export default function verifyTerm(termNode, types, context) {
 export function verifyTermAgainstConstructors(termNode, types, context) {
   let termVerifiedAgainstConstructors = false;
 
+  const termString = context.nodeAsString(termNode);
+
+  context.trace(`Verifying the '${termString}' term against constructors...`, termNode);
+
   const constructors = context.getConstructors(),
         constructor = constructors.find((constructor) => {
           const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, context);
@@ -163,6 +174,8 @@ export function verifyTermAgainstConstructors(termNode, types, context) {
 
     types.push(type);
 
+    context.trace(`...verified.`, termNode);
+
     termVerifiedAgainstConstructors = true;
   }
 
@@ -170,6 +183,11 @@ export function verifyTermAgainstConstructors(termNode, types, context) {
 }
 
 export function verifyTermAgainstConstructor(termNode, constructor, context) {
+  const termString = context.nodeAsString(termNode),
+        constructorString = constructor.getString();
+
+  context.trace(`Verifying the '${termString}' term against the '${constructorString}' constructor.`, termNode);
+
   const constructorTermNode = constructor.getTermNode(),
         nonTerminalNNdeA = termNode,  ///
         nonTerminalNodeB = constructorTermNode,  ///
@@ -181,6 +199,10 @@ export function verifyTermAgainstConstructor(termNode, constructor, context) {
 
 export function verifyTermAsVariable(termNode, variables, context) {
   let termVerifiedAsVariable = false;
+
+  const termString = context.nodeAsString(termNode);
+
+  context.trace(`Verifying the '${termString}' term as a variable...`, termNode);
 
   const variableNode = variableNodeQuery(termNode);
 
@@ -194,6 +216,8 @@ export function verifyTermAsVariable(termNode, variables, context) {
       variables.push(variable);
 
       termVerifiedAsVariable = true;
+
+      context.trace(`...verified.`, termNode);
     }
   }
 

@@ -2,24 +2,20 @@
 
 import { nodeAsString } from "./utilities/string";
 import { statementNodeFromStatementString } from "./utilities/node";
+import { unqualifiedStatementTokensFromStatementString } from "./utilities/node";
 
 export default class Combinator {
-  constructor(statementNode) {
+  constructor(statementNode, string) {
     this.statementNode = statementNode;
+    this.string = string;
   }
 
   getStatementNode() {
     return this.statementNode;
   }
 
-  asString(tokens) {
-    let string;
-
-    const statementString = nodeAsString(this.statementNode, tokens);
-
-    string = `${statementString}`;
-
-    return string;
+  getString() {
+    return this.string;
   }
 
   toJSON(tokens) {
@@ -32,8 +28,9 @@ export default class Combinator {
     return json;
   }
 
-  static fromStatementNode(statementNode) {
-    const combinator = new Combinator(statementNode);
+  static fromStatementNodeAndTokens(statementNode, tokens) {
+    const string = stringFromStatementNodeAndTokens(statementNode, tokens),
+          combinator = new Combinator(statementNode, string);
 
     return combinator;
   }
@@ -44,8 +41,18 @@ export default class Combinator {
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-          combinator = new Combinator(statementNode);
+          unqualifiedStatementTokens = unqualifiedStatementTokensFromStatementString(statementString, lexer),
+          tokens = unqualifiedStatementTokens,  //
+          string = stringFromStatementNodeAndTokens(statementNode, tokens),
+          combinator = new Combinator(statementNode, string);
 
     return combinator;
   }
+}
+
+function stringFromStatementNodeAndTokens(statementNode, tokens) {
+  const statementString = nodeAsString(statementNode, tokens),
+        string = statementString; ///
+
+  return string;
 }

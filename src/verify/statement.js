@@ -82,7 +82,7 @@ class StatementVerifier extends Verifier {
     if (termNode === null) {
       const argumentString = context.nodeAsString(argumentNode);
 
-      context.error(`The ${argumentString} argument should be a term, not a type`, argumentNode);
+      context.error(`The '${argumentString}' argument should be a term, not a type`, argumentNode);
     } else {
       const types = [],
             termVerified = verifyTerm(termNode, types, context);
@@ -173,6 +173,10 @@ export default function verifyStatement(statementNode, assignments, derived, con
 export function verifyStatementAgainstCombinators(statementNode, context) {
   let statementVerifiedAgainstCombinators = false;
 
+  const statementString = context.nodeAsString(statementNode);
+
+  context.trace(`Verifying the '${statementString}' statement against combinators.`, statementNode);
+
   let combinators = context.getCombinators();
 
   combinators = [ ///
@@ -196,8 +200,13 @@ export function verifyStatementAgainstCombinators(statementNode, context) {
 }
 
 export function verifyStatementAgainstCombinator(statementNode, combinator, context) {
+  const statementString = context.nodeAsString(statementNode),
+        combinatorString = combinator.getString();
+
+  context.trace(`Verifying the '${statementString}' statement against the '${combinatorString}' combinator.`, statementNode);
+
   const combinatorStatementNode = combinator.getStatementNode(),
-        nonTerminalNodeA = statementNode,  ///
+        nonTerminalNodeA = statementNode, ///
         nonTerminalNodeB = combinatorStatementNode, ///
         nonTerminalNodeVerified = statementVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context),
         statementVerifiedAgainstCombinator = nonTerminalNodeVerified;  ///
