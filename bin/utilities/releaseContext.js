@@ -1,7 +1,8 @@
 "use strict";
 
-const { ReleaseContext } = require("../../lib/index"), ///
-      { Entries, fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
+const { Entries } = require("occam-entities"),
+      { ReleaseContext } = require("../../lib/index"), ///
+      { fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
       { pathUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
 
 const { loadProject } = occamFileSystemUtilities,
