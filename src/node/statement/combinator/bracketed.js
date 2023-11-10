@@ -1,10 +1,9 @@
 "use strict";
 
-import { STATEMENT_META_TYPE_NAME } from "../../../metaTypeNames";
-import { statementNodeFromStatementString } from "../../../utilities/node";
+import unqualifiedBracketedCombinatorStatementTokens from "../../../tokens/statement/combinator/bracketed";
 
-const bracketedCombinatorStatementString = `(${STATEMENT_META_TYPE_NAME})`;
+import { statementNodeFromUnqualifiedStatementTokens } from "../../../utilities/node";
 
-const bracketedCombinatorStatementNode = statementNodeFromStatementString(bracketedCombinatorStatementString);
+const bracketedCombinatorStatementNode = statementNodeFromUnqualifiedStatementTokens(unqualifiedBracketedCombinatorStatementTokens);
 
 export default bracketedCombinatorStatementNode;

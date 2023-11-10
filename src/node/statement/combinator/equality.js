@@ -1,11 +1,9 @@
 "use strict";
 
-import { OBJECT_TYPE_NAME } from "../../../typeNames";
-import { statementNodeFromStatementString } from "../../../utilities/node";
+import unqualifiedEqualityCombinatorStatementTokens from "../../../tokens/statement/combinator/equality";
 
-const equalityCombinatorStatementString = `${OBJECT_TYPE_NAME} = ${OBJECT_TYPE_NAME}`;
+import { statementNodeFromUnqualifiedStatementTokens } from "../../../utilities/node";
 
-const equalityCombinatorStatementNode = statementNodeFromStatementString(equalityCombinatorStatementString);
+const equalityCombinatorStatementNode = statementNodeFromUnqualifiedStatementTokens(unqualifiedEqualityCombinatorStatementTokens);
 
 export default equalityCombinatorStatementNode;
-

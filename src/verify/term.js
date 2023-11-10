@@ -63,11 +63,6 @@ class TermVerifier extends Verifier {
   verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
     let argumentNodeVerified = false;
 
-    const argumentString = context.nodeAsString(argumentNode),
-          constructorArgumentString = context.nodeAsString(constructorArgumentNode);
-
-    context.trace(`Verifying the '${argumentString}' argument against the '${constructorArgumentString}' constructor.`, argumentNode);
-
     const typeNode = typeNodeQuery(argumentNode);
 
     if (typeNode !== null) {
