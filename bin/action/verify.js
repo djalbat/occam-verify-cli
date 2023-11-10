@@ -34,7 +34,7 @@ function verifyAction(argument, log) {
           released = releaseContext.isReleased();
 
     if (released) {
-      const error = `The '${name}' package does not need to be verified.'`;
+      const error = `The '${name}' package does not need to be verified.`;
 
       log.error(error);
 
