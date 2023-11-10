@@ -60,12 +60,20 @@ export const metastatementVerifier = new MetastatementVerifier();
 export default function verifyMetastatement(metastatementNode, derived, metaproofContext) {
   let metastatementVerified = false;
 
+  const metastatementString = metaproofContext.nodeAsString(metastatementNode);
+
+  metaproofContext.debug(`Verifying the '${metastatementString}' metastatement...`, metastatementNode);
+
   if (!metastatementVerified) {
     const nonTerminalNodeA = metastatementNode, ///
           nonTerminalNodeB = metastatementNode, ///
           nonTerminalNodeVerified = metastatementVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaproofContext);
 
     metastatementVerified = nonTerminalNodeVerified;  ///
+  }
+
+  if (metastatementVerified) {
+    metaproofContext.debug(`Verified the '${metastatementString}' metastatement.`, metastatementNode);
   }
 
   return metastatementVerified;

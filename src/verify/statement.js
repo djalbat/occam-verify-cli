@@ -143,6 +143,10 @@ export const statementVerifier = new StatementVerifier();
 export default function verifyStatement(statementNode, assignments, derived, context) {
   let statementVerified = false;
 
+  const statementString = context.nodeAsString(statementNode);
+
+  context.debug(`Verifying the '${statementString}' statement...`, statementNode);
+
   if (!statementVerified) {
     const statementVerifiedAgainstCombinators = verifyStatementAgainstCombinators(statementNode, context);
 
@@ -165,6 +169,10 @@ export default function verifyStatement(statementNode, assignments, derived, con
     const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, derived, context);
 
     statementVerified = statementVerifiedAsEquality;  //
+  }
+
+  if (statementVerified) {
+    context.debug(`Verified the '${statementString}' statement.`, statementNode);
   }
 
   return statementVerified;

@@ -96,9 +96,11 @@ class TermVerifier extends Verifier {
                                       context.findTypeByTypeName(constructorTypeName),
                 termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(constructorType);
 
-          context.trace(`The type of the term is '${termTypeName}' and the type of the constructor is '${constructorTypeName}'.`, argumentNode);
-
           if (termTypeEqualToOrSubTypeOfType) {
+            const termString = context.nodeAsString(termNode);
+
+            context.trace(`The '${termTypeName}' type of the '${termString}' term is equal to or a sub-type of the '${constructorTypeName}' type in the constructor.`, argumentNode);
+
             argumentNodeVerified = true;
           }
         }
@@ -142,7 +144,11 @@ export default function verifyTerm(termNode, types, context) {
   }
 
   if (termVerified) {
-    context.debug(`Verified the '${termString}' term.`, termNode);
+    const firstType = first(types),
+          type = firstType, ///
+          typeName = type.getName();
+
+    context.debug(`Verified the '${termString}' term, which has type '${typeName}'.`, termNode);
   }
 
   return termVerified;
