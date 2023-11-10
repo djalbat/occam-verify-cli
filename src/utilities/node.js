@@ -1,8 +1,9 @@
 "use strict";
 
-import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
+import { parsersUtilities } from "occam-custom-grammars";
 
 import { nodeQuery } from "../utilities/query";
+import { combinedCustomGrammarFromNothing } from "./customGrammar";
 import { TYPE_RULE_NAME,
          LABEL_RULE_NAME,
          VARIABLE_RULE_NAME,
@@ -11,14 +12,16 @@ import { TYPE_RULE_NAME,
          UNQUALIFIED_STATEMENT_RULE_NAME,
          CONSTRUCTOR_DECLARATION_RULE_NAME,
          UNQUALIFIED_METASTATEMENT_RULE_NAME } from "../ruleNames";
+import { labelTokensFromLabelString,
+         constructorDeclarationTokensFromTermString,
+         variableDeclarationTokensFromVariableString,
+         unqualifiedStatementTokensFromStatementString,
+         metavariableDeclarationTokensFromMetavariableString,
+         unqualifiedMetastatementTokensFromMetastatementString } from "../utilities/tokens";
 
-import { combinedCustomGrammarFromNothing } from "./customGrammar";
-
-const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
-      { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
+const { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
-      florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
       florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
@@ -29,128 +32,165 @@ const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
       metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable!"),
       metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
-export function labelTokensFromLabelString(labelString, lexer) {
-  const labelContent = `${labelString}`,
-        labelTokens = tokensFromContentAndLexer(labelContent, lexer);
-
-  return labelTokens;
-}
-
-export function constructorDeclarationTokensFromTermString(termString, lexer) {
-  const constructorDeclarationContent = `Constructor ${termString}
-`,
-        constructorDeclarationTokens = tokensFromContentAndLexer(constructorDeclarationContent, lexer);
-
-  return constructorDeclarationTokens;
-}
-
-export function variableDeclarationTokensFromVariableString(variableString, lexer) {
-  const variableDeclarationContent = `Variable ${variableString}
-`,
-        variableDeclarationTokens = tokensFromContentAndLexer(variableDeclarationContent, lexer);
-
-  return variableDeclarationTokens;
-}
-
-export function unqualifiedStatementTokensFromStatementString(statementString, lexer) {
-  const unqualifiedStatementContent = `${statementString}
-`,
-        unqualifiedStatementTokens = tokensFromContentAndLexer(unqualifiedStatementContent, lexer);
-
-  return unqualifiedStatementTokens;
-}
-
-export function metavariableDeclarationTokensFromMetavariableString(metavariableString, lexer) {
-  const metavariableDeclarationContent = `Metavariable ${metavariableString}
-`,
-        metavariableDeclarationTokens = tokensFromContentAndLexer(metavariableDeclarationContent, lexer);
-
-  return metavariableDeclarationTokens;
-}
-
-export function unqualifiedMetastatementTokensFromMetastatementString(metastatementString, lexer) {
-  const unqualifiedMetastatementContent = `${metastatementString}
-`,
-        unqualifiedMetastatementTokens = tokensFromContentAndLexer(unqualifiedMetastatementContent, lexer);
-
-  return unqualifiedMetastatementTokens;
-}
-
 export function termNodeFromTermString(termString, lexer, parser) {
-  const ruleName = CONSTRUCTOR_DECLARATION_RULE_NAME,
-        constructorDeclarationTokens = constructorDeclarationTokensFromTermString(termString, lexer, parser),
-        constructorDeclarationNode = nodeFromTokensRuleNameAndParser(constructorDeclarationTokens, ruleName, parser),
-        termNode = termNodeQuery(constructorDeclarationNode);
+  const constructorDeclarationTokens = constructorDeclarationTokensFromTermString(termString, parser),
+        termNode = termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser);
 
   return termNode;
 }
 
 export function labelNodeFromLabelString(labelString, lexer, parser) {
-  const ruleName = LABEL_RULE_NAME,
-        labelTokens = labelTokensFromLabelString(labelString, lexer),
-        labelNode = nodeFromTokensRuleNameAndParser(labelTokens, ruleName, parser);
+  const labelTokens = labelTokensFromLabelString(labelString, lexer),
+        labelNode = labelNodeFromLabelTokens(labelTokens, parser);
 
   return labelNode;
 }
 
 export function typeNodeFromVariableString(variableString, lexer, parser) {
-  const ruleName = TYPE_RULE_NAME,
-        variableDeclarationTokens = variableDeclarationTokensFromVariableString(variableString, lexer),
-        typeDeclarationNode = nodeFromTokensRuleNameAndParser(variableDeclarationTokens, ruleName, parser),
-        typeNode = typeNodeQuery(typeDeclarationNode);
+  const variableDeclarationTokens = variableDeclarationTokensFromVariableString(variableString, lexer),
+        typeNode = typeNodeFromVariableVariableDeclarationTokens(variableDeclarationTokens, parser);
 
   return typeNode;
 }
 
 export function variableNodeFromVariableString(variableString, lexer, parser) {
-  const ruleName = VARIABLE_RULE_NAME,
-        variableTDeclarationTokens = variableDeclarationTokensFromVariableString(variableString, lexer),
-        variableDeclarationNode = nodeFromTokensRuleNameAndParser(variableTDeclarationTokens, ruleName, parser),
-        variableNode = variableNodeQuery(variableDeclarationNode);
+  const variableTDeclarationTokens = variableDeclarationTokensFromVariableString(variableString, lexer),
+        variableNode = variableNodeFromVariableVariableTDeclarationTokens(variableTDeclarationTokens, parser);
 
   return variableNode;
 }
 
 export function statementNodeFromStatementString(statementString, lexer, parser) {
-  const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME,
-        unqualifiedStatementTokens = unqualifiedStatementTokensFromStatementString(statementString, lexer),
-        unqualifiedStatementNode = nodeFromTokensRuleNameAndParser(unqualifiedStatementTokens, ruleName, parser),
-        statementNode = statementNodeQuery(unqualifiedStatementNode);
+  const unqualifiedStatementTokens = unqualifiedStatementTokensFromStatementString(statementString, lexer),
+        statementNode = statementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser);
 
   return statementNode;
 }
 
 export function metaTypeNodeFromMetavariableString(metavariableString, lexer, parser) {
-  const ruleName = META_TYPE_RULE_NAME,
-        metavariableDeclarationTokens = metavariableDeclarationTokensFromMetavariableString(metavariableString, lexer),
-        metaTypeDeclarationNode = nodeFromTokensRuleNameAndParser(metavariableDeclarationTokens, ruleName, parser),
-        metaTypeNode = metaTypeNodeQuery(metaTypeDeclarationNode);
+  const metavariableDeclarationTokens = metavariableDeclarationTokensFromMetavariableString(metavariableString, lexer),
+        metaTypeNode = metaTypeNodeFromMetavariableDeclarationTokens(metavariableDeclarationTokens, parser);
 
   return metaTypeNode;
 }
 
 export function metavariableNodeFromMetavariableString(metavariableString, lexer, parser) {
-  const ruleName = METAVARIABLE_RULE_NAME,
-        metavariableDeclarationTokens = metavariableDeclarationTokensFromMetavariableString(metavariableString, lexer),
-        metavariableDeclarationNode = nodeFromTokensRuleNameAndParser(metavariableDeclarationTokens, ruleName, parser),
-        metavariableNode = metavariableNodeQuery(metavariableDeclarationNode);
+  const metavariableDeclarationTokens = metavariableDeclarationTokensFromMetavariableString(metavariableString, lexer),
+        metavariableNode = metavariableNodeFromMetavariableDeclarationTokens(metavariableDeclarationTokens, parser);
 
   return metavariableNode;
 }
 
 export function metastatementNodeFromMetastatementString(metastatementString, lexer, parser) {
-  const ruleName = UNQUALIFIED_METASTATEMENT_RULE_NAME,
-        unqualifiedMetastatementTokens = unqualifiedMetastatementTokensFromMetastatementString(metastatementString, lexer),
-        unqualifiedMetastatementNode = nodeFromTokensRuleNameAndParser(unqualifiedMetastatementTokens, ruleName, parser),
+  const unqualifiedMetastatementTokens = unqualifiedMetastatementTokensFromMetastatementString(metastatementString, lexer),
+        metastatementNode = metastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser);
+
+  return metastatementNode;
+}
+
+export function termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
+  const constructorDeclarationNode = constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser),
+        termNode = termNodeQuery(constructorDeclarationNode);
+
+  return termNode;
+}
+
+export function statementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {
+  const unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
+        statementNode = statementNodeQuery(unqualifiedStatementNode);
+
+  return statementNode;
+}
+
+export function typeNodeFromVariableVariableDeclarationTokens(variableDeclarationTokens, parser) {
+  const typeDeclarationNode = typeDeclarationNodeFromVariableDeclarationTokens(variableDeclarationTokens, parser),
+        typeNode = typeNodeQuery(typeDeclarationNode);
+
+  return typeNode;
+}
+
+export function metaTypeNodeFromMetavariableDeclarationTokens(metavariableDeclarationTokens, parser) {
+  const metaTypeDeclarationNode = metaTypeDeclarationNodeFromMetavariableDeclarationTokens(metavariableDeclarationTokens, parser),
+        metaTypeNode = metaTypeNodeQuery(metaTypeDeclarationNode);
+
+  return metaTypeNode;
+}
+
+export function metavariableNodeFromMetavariableDeclarationTokens(metavariableDeclarationTokens, parser) {
+  const metavariableDeclarationNode = metavariableDeclarationNodeFromMetavariableDeclarationTokens(metavariableDeclarationTokens, parser),
+        metavariableNode = metavariableNodeQuery(metavariableDeclarationNode);
+
+  return metavariableNode;
+}
+
+export function variableNodeFromVariableVariableTDeclarationTokens(variableTDeclarationTokens, parser) {
+  const variableDeclarationNode = variableDeclarationNodeFromVariableTDeclarationTokens(variableTDeclarationTokens, parser),
+        variableNode = variableNodeQuery(variableDeclarationNode);
+
+  return variableNode;
+}
+
+export function metastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser) {
+  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser),
         metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
 
   return metastatementNode;
 }
 
-function tokensFromContentAndLexer(content, lexer = florenceLexer) {
-  const tokens = lexer.tokenise(content);
+export function labelNodeFromLabelTokens(labelTokens, parser) {
+  const ruleName = LABEL_RULE_NAME,
+        labelNode = nodeFromTokensRuleNameAndParser(labelTokens, ruleName, parser);
 
-  return tokens;
+  return labelNode;
+}
+
+export function typeDeclarationNodeFromVariableDeclarationTokens(variableDeclarationTokens, parser) {
+  const ruleName = TYPE_RULE_NAME,
+        typeDeclarationNode = nodeFromTokensRuleNameAndParser(variableDeclarationTokens, ruleName, parser);
+
+  return typeDeclarationNode;
+}
+
+export function variableDeclarationNodeFromVariableTDeclarationTokens(variableTDeclarationTokens, parser) {
+  const ruleName = VARIABLE_RULE_NAME,
+        variableDeclarationNode = nodeFromTokensRuleNameAndParser(variableTDeclarationTokens, ruleName, parser);
+
+  return variableDeclarationNode;
+}
+
+export function unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {
+  const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME,
+        unqualifiedStatementNode = nodeFromTokensRuleNameAndParser(unqualifiedStatementTokens, ruleName, parser);
+
+  return unqualifiedStatementNode;
+}
+
+export function metaTypeDeclarationNodeFromMetavariableDeclarationTokens(metavariableDeclarationTokens, parser) {
+  const ruleName = META_TYPE_RULE_NAME,
+        metaTypeDeclarationNode = nodeFromTokensRuleNameAndParser(metavariableDeclarationTokens, ruleName, parser);
+
+  return metaTypeDeclarationNode;
+}
+
+export function constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
+  const ruleName = CONSTRUCTOR_DECLARATION_RULE_NAME,
+        constructorDeclarationNode = nodeFromTokensRuleNameAndParser(constructorDeclarationTokens, ruleName, parser);
+
+  return constructorDeclarationNode;
+}
+
+export function metavariableDeclarationNodeFromMetavariableDeclarationTokens(metavariableDeclarationTokens, parser) {
+  const ruleName = METAVARIABLE_RULE_NAME,
+        metavariableDeclarationNode = nodeFromTokensRuleNameAndParser(metavariableDeclarationTokens, ruleName, parser);
+
+  return metavariableDeclarationNode;
+}
+
+export function unqualifiedMetastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser) {
+  const ruleName = UNQUALIFIED_METASTATEMENT_RULE_NAME,
+        unqualifiedMetastatementNode = nodeFromTokensRuleNameAndParser(unqualifiedMetastatementTokens, ruleName, parser);
+
+  return unqualifiedMetastatementNode;
 }
 
 function nodeFromTokensRuleNameAndParser(tokens, ruleName, parser = florenceParser) {

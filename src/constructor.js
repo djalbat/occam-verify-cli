@@ -3,8 +3,8 @@
 import Type from "./type";
 
 import { nodeAsString } from "./utilities/string";
-import { termNodeFromTermString } from "./utilities/node";
-import { constructorDeclarationTokensFromTermString } from "./utilities/node";
+import { termNodeFromConstructorDeclarationTokens } from "./utilities/node";
+import { constructorDeclarationTokensFromTermString } from "./utilities/tokens";
 
 export default class Constructor {
   constructor(termNode, string, type) {
@@ -52,7 +52,8 @@ export default class Constructor {
           termString = term,  ///
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
-          termNode = termNodeFromTermString(termString, lexer, parser);
+          constructorDeclarationTokens = constructorDeclarationTokensFromTermString(termString, lexer),
+          termNode = termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser);
 
     let { type } = json;
 
@@ -68,8 +69,7 @@ export default class Constructor {
       type = fileContext.findTypeByTypeName(typeName); ///
     }
 
-    const constructorDeclarationTokens = constructorDeclarationTokensFromTermString(termString, lexer),
-          tokens = constructorDeclarationTokens,  ///
+    const tokens = constructorDeclarationTokens,  ///
           string = stringFromTermNodeTypeAndTokens(termNode, type, tokens),
           constructor = new Constructor(termNode, string, type);
 

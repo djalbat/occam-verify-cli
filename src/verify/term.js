@@ -66,7 +66,7 @@ class TermVerifier extends Verifier {
     const argumentString = context.nodeAsString(argumentNode),
           constructorArgumentString = context.nodeAsString(constructorArgumentNode);
 
-    context.trace(`Verifying the '${argumentString}' argument against the '${constructorArgumentString}' constructor.`);
+    context.trace(`Verifying the '${argumentString}' argument against the '${constructorArgumentString}' constructor.`, argumentNode);
 
     const typeNode = typeNodeQuery(argumentNode);
 
@@ -174,8 +174,6 @@ export function verifyTermAgainstConstructors(termNode, types, context) {
 
     types.push(type);
 
-    context.trace(`...verified.`, termNode);
-
     termVerifiedAgainstConstructors = true;
   }
 
@@ -216,8 +214,6 @@ export function verifyTermAsVariable(termNode, variables, context) {
       variables.push(variable);
 
       termVerifiedAsVariable = true;
-
-      context.trace(`...verified.`, termNode);
     }
   }
 

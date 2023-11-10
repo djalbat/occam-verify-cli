@@ -1,8 +1,8 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { statementNodeFromStatementString } from "./utilities/node";
-import { unqualifiedStatementTokensFromStatementString } from "./utilities/node";
+import { statementNodeFromUnqualifiedStatementTokens } from "./utilities/node";
+import { unqualifiedStatementTokensFromStatementString } from "./utilities/tokens";
 
 export default class Combinator {
   constructor(statementNode, string) {
@@ -40,8 +40,8 @@ export default class Combinator {
           statementString = statement,  ///
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
-          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
           unqualifiedStatementTokens = unqualifiedStatementTokensFromStatementString(statementString, lexer),
+          statementNode = statementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
           tokens = unqualifiedStatementTokens,  //
           string = stringFromStatementNodeAndTokens(statementNode, tokens),
           combinator = new Combinator(statementNode, string);

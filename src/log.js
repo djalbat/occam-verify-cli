@@ -2,7 +2,7 @@
 
 import { levels } from "necessary";
 
-import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "./utilities/tokens";
+import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "./utilities/lineIndex";
 
 const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL } = levels;
 

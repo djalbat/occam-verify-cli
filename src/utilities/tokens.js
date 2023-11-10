@@ -1,51 +1,63 @@
 "use strict";
 
-export function leastLineIndexFromNodeAndTokens(node, tokens) {
-  let leastLineIndex = undefined; ///
+import { lexersUtilities } from "occam-custom-grammars";
 
-  const firstSignificantToken = node.getFirstSignificantToken(),
-        firstSignificantTokenIndex = tokens.indexOf(firstSignificantToken);
+import { combinedCustomGrammarFromNothing } from "./customGrammar";
 
-  let lineIndex = 0;
+const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities;
 
-  tokens.some((token, tokenIndex) => {  ///
-    if (tokenIndex === firstSignificantTokenIndex) {
-      leastLineIndex = lineIndex;  ///
+const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
+      florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 
-      return true;
-    }
+export function labelTokensFromLabelString(labelString, lexer) {
+  const labelContent = `${labelString}`,
+        labelTokens = tokensFromContentAndLexer(labelContent, lexer);
 
-    const tokenEndOfLineToken = token.isEndOfLineToken();
-
-    if (tokenEndOfLineToken) {
-      lineIndex += 1;
-    }
-  });
-
-  return leastLineIndex;
+  return labelTokens;
 }
 
-export function greatestLineIndexFromNodeAndTokens(node, tokens) {
-  let greatestLineIndex = undefined;  ///
+export function constructorDeclarationTokensFromTermString(termString, lexer) {
+  const constructorDeclarationContent = `Constructor ${termString}
+`,
+        constructorDeclarationTokens = tokensFromContentAndLexer(constructorDeclarationContent, lexer);
 
-  const lastSignificantToken = node.getLastSignificantToken(),
-        lastSignificantTokenIndex = tokens.indexOf(lastSignificantToken);
+  return constructorDeclarationTokens;
+}
 
-  let lineIndex = 0;
+export function variableDeclarationTokensFromVariableString(variableString, lexer) {
+  const variableDeclarationContent = `Variable ${variableString}
+`,
+        variableDeclarationTokens = tokensFromContentAndLexer(variableDeclarationContent, lexer);
 
-  tokens.some((token, tokenIndex) => {  ///
-    if (tokenIndex === lastSignificantTokenIndex) {
-      greatestLineIndex = lineIndex;  ///
+  return variableDeclarationTokens;
+}
 
-      return true;
-    }
+export function unqualifiedStatementTokensFromStatementString(statementString, lexer) {
+  const unqualifiedStatementContent = `${statementString}
+`,
+        unqualifiedStatementTokens = tokensFromContentAndLexer(unqualifiedStatementContent, lexer);
 
-    const tokenEndOfLineToken = token.isEndOfLineToken();
+  return unqualifiedStatementTokens;
+}
 
-    if (tokenEndOfLineToken) {
-      lineIndex += 1;
-    }
-  });
+export function metavariableDeclarationTokensFromMetavariableString(metavariableString, lexer) {
+  const metavariableDeclarationContent = `Metavariable ${metavariableString}
+`,
+        metavariableDeclarationTokens = tokensFromContentAndLexer(metavariableDeclarationContent, lexer);
 
-  return greatestLineIndex;
+  return metavariableDeclarationTokens;
+}
+
+export function unqualifiedMetastatementTokensFromMetastatementString(metastatementString, lexer) {
+  const unqualifiedMetastatementContent = `${metastatementString}
+`,
+        unqualifiedMetastatementTokens = tokensFromContentAndLexer(unqualifiedMetastatementContent, lexer);
+
+  return unqualifiedMetastatementTokens;
+}
+
+function tokensFromContentAndLexer(content, lexer = florenceLexer) {
+  const tokens = lexer.tokenise(content);
+
+  return tokens;
 }
