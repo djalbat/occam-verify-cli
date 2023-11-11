@@ -141,35 +141,26 @@ class StatementVerifier extends Verifier {
 export const statementVerifier = new StatementVerifier();
 
 export default function verifyStatement(statementNode, assignments, derived, context) {
-  let statementVerified = false;
+  let statementVerified;
 
   const statementString = context.nodeAsString(statementNode);
 
   context.debug(`Verifying the '${statementString}' statement...`, statementNode);
 
-  if (!statementVerified) {
-    const statementVerifiedAgainstCombinators = verifyStatementAgainstCombinators(statementNode, context);
+  const verifyStatementFunctions = [
+    verifyStatementAgainstCombinators,
+    verifyStatementAsTypeInference,
+    verifyStatementAsTypeAssertion,
+    verifyStatementAsEquality
+  ];
 
-    statementVerified = statementVerifiedAgainstCombinators;  ///
-  }
+  statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
+    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, context);
 
-  if (!statementVerified) {
-    const statementVerifiedAsTypeInference = verifyStatementAsTypeInference(statementNode, derived, context);
-
-    statementVerified = statementVerifiedAsTypeInference; ///
-  }
-
-  if (!statementVerified) {
-    const statementVerifiedAsTypeAssertion = verifyStatementAsTypeAssertion(statementNode, assignments, derived, context);
-
-    statementVerified = statementVerifiedAsTypeAssertion; ///
-  }
-
-  if (!statementVerified) {
-    const statementVerifiedAsEquality = verifyStatementAsEquality(statementNode, derived, context);
-
-    statementVerified = statementVerifiedAsEquality;  //
-  }
+    if (statementVerified) {
+      return true;
+    }
+  });
 
   if (statementVerified) {
     context.debug(`Verified the '${statementString}' statement.`, statementNode);
@@ -178,8 +169,8 @@ export default function verifyStatement(statementNode, assignments, derived, con
   return statementVerified;
 }
 
-export function verifyStatementAgainstCombinators(statementNode, context) {
-  let statementVerifiedAgainstCombinators = false;
+export function verifyStatementAgainstCombinators(statementNode, assignments, derived, context) {
+  let statementVerifiedAgainstCombinators;
 
   const statementString = context.nodeAsString(statementNode);
 
@@ -192,17 +183,13 @@ export function verifyStatementAgainstCombinators(statementNode, context) {
     ...combinators
   ];
 
-  const combinator = combinators.find((combinator, index) => {
+  statementVerifiedAgainstCombinators = combinators.some((combinator) => {
     const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
 
     if (statementVerifiedAgainstCombinator) {
       return true;
     }
-  }) || null;
-
-  if (combinator !== null) {
-    statementVerifiedAgainstCombinators = true;
-  }
+  });
 
   return statementVerifiedAgainstCombinators;
 }
@@ -222,7 +209,7 @@ export function verifyStatementAgainstCombinator(statementNode, combinator, cont
   return statementVerifiedAgainstCombinator;
 }
 
-function verifyStatementAsTypeInference(statementNode, derived, context) {
+function verifyStatementAsTypeInference(statementNode, assignments, derived, context) {
   let statementVerifiedAsTypeInference = false;
 
   const typeInferenceNode = typeInferenceNodeQuery(statementNode);
@@ -256,7 +243,7 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, con
   return statementVerifiedAsTypeAssertion;
 }
 
-function verifyStatementAsEquality(statementNode, derived, context) {
+function verifyStatementAsEquality(statementNode, assignments, derived, context) {
   let statementVerifiedAsEquality = false;
 
   const combinator = equalityCombinator,  ///
@@ -292,7 +279,7 @@ function verifyStatementAsEquality(statementNode, derived, context) {
           const leftVariableTypeName = leftVariableType.getName(),
                 rightVariableTypeName = rightVariableType.getName();
 
-          context.error(`The left '${leftVariableName}' variable's '${leftVariableTypeName}' type is not equal to, a sub-type of or a super-type of the right '${rightVariableName}' variable's '${rightVariableTypeName}' type.`, statementNode);
+          context.error(`The left '${leftVariableName}' variable's '${leftVariableTypeName}' type is not equal to, a sub-type of nor a super-type of the right '${rightVariableName}' variable's '${rightVariableTypeName}' type.`, statementNode);
         } else {
           statementVerifiedAsEquality = true;
         }

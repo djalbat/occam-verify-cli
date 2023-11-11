@@ -114,34 +114,24 @@ class TermVerifier extends Verifier {
 export const termVerifier = new TermVerifier();
 
 export default function verifyTerm(termNode, types, context) {
-  let termVerified = false;
+  let termVerified;
 
   const termString = context.nodeAsString(termNode);
 
   context.debug(`Verifying the '${termString}' term...`, termNode);
 
-  if (!termVerified) {
-    const variables = [],
-          termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
+  const verifyTermFunctions = [
+    verifyTermAsVariableEx,
+    verifyTermAgainstConstructors
+  ];
 
-    if (termVerifiedAsVariable) {
-      const firstVariable = first(variables),
-            variable = firstVariable, ///
-            type = variable.getType();
+  termVerified = verifyTermFunctions.some((verifyTermFunction) => {
+    const termVerified = verifyTermFunction(termNode, types, context);
 
-      types.push(type);
-
-      termVerified = true;
+    if (termVerified) {
+      return true;
     }
-  }
-
-  if (!termVerified) {
-    const termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, context);
-
-    if (termVerifiedAgainstConstructors) {
-      termVerified = true;
-    }
-  }
+  });
 
   if (termVerified) {
     const firstType = first(types),
@@ -155,45 +145,23 @@ export default function verifyTerm(termNode, types, context) {
 }
 
 export function verifyTermAgainstConstructors(termNode, types, context) {
-  let termVerifiedAgainstConstructors = false;
+  let termVerifiedAgainstConstructors;
 
   const termString = context.nodeAsString(termNode);
 
   context.trace(`Verifying the '${termString}' term against constructors...`, termNode);
 
-  const constructors = context.getConstructors(),
-        constructor = constructors.find((constructor) => {
-          const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, constructor, context);
+  const constructors = context.getConstructors();
 
-          if (termVerifiedAgainstConstructor) {
-            return true;
-          }
-        }) || null;
+  termVerifiedAgainstConstructors = constructors.some((constructor) => {
+    const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, types, constructor, context);
 
-  if (constructor !== null) {
-    const type = constructor.getType();
-
-    types.push(type);
-
-    termVerifiedAgainstConstructors = true;
-  }
+    if (termVerifiedAgainstConstructor) {
+      return true;
+    }
+  });
 
   return termVerifiedAgainstConstructors;
-}
-
-export function verifyTermAgainstConstructor(termNode, constructor, context) {
-  const termString = context.nodeAsString(termNode),
-        constructorString = constructor.getString();
-
-  context.trace(`Verifying the '${termString}' term against the '${constructorString}' constructor.`, termNode);
-
-  const constructorTermNode = constructor.getTermNode(),
-        nonTerminalNNdeA = termNode,  ///
-        nonTerminalNodeB = constructorTermNode,  ///
-        nodeVerified = termVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context),
-        termVerifiedAgainstConstructor = nodeVerified;  ///
-
-  return termVerifiedAgainstConstructor;
 }
 
 export function verifyTermAsVariable(termNode, variables, context) {
@@ -216,6 +184,48 @@ export function verifyTermAsVariable(termNode, variables, context) {
 
       termVerifiedAsVariable = true;
     }
+  }
+
+  return termVerifiedAsVariable;
+}
+
+function verifyTermAgainstConstructor(termNode, types, constructor, context) {
+  let termVerifiedAgainstConstructor = false;
+
+  const termString = context.nodeAsString(termNode),
+        constructorString = constructor.getString();
+
+  context.trace(`Verifying the '${termString}' term against the '${constructorString}' constructor.`, termNode);
+
+  const constructorTermNode = constructor.getTermNode(),
+        nonTerminalNNdeA = termNode,  ///
+        nonTerminalNodeB = constructorTermNode,  ///
+        nodeVerified = termVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context);
+
+  if (nodeVerified) {
+    const type = constructor.getType();
+
+    types.push(type);
+
+    termVerifiedAgainstConstructor = true;
+  }
+
+  return termVerifiedAgainstConstructor;
+}
+
+function verifyTermAsVariableEx(termNode, types, context) {
+  let termVerifiedAsVariable;
+
+  const variables = [];
+
+  termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
+
+  if (termVerifiedAsVariable) {
+    const firstVariable = first(variables),
+          variable = firstVariable, ///
+          type = variable.getType();
+
+    types.push(type);
   }
 
   return termVerifiedAsVariable;
