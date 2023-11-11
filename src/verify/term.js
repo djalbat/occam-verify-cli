@@ -13,7 +13,7 @@ const termNodeQuery = nodeQuery("/argument/term!"),
       variableNodeQuery = nodeQuery("/term/variable!");
 
 class TermVerifier extends Verifier {
-  verifyTerminalNode(terminalNode, constructorTerminalNode, context) {
+  verifyTerminalNode(terminalNode, constructorTerminalNode, context, verifyAhead) {
     let terminalNodeVerified = false;
 
     const matches = terminalNode.match(constructorTerminalNode);
@@ -25,7 +25,7 @@ class TermVerifier extends Verifier {
     return terminalNodeVerified;
   }
 
-  verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, context) {
+  verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, context, verifyAhead) {
     let nonTerminalNodeVerified = false;
 
     const ruleName = nonTerminalNode.getRuleName(), ///
@@ -36,7 +36,7 @@ class TermVerifier extends Verifier {
         case ARGUMENT_RULE_NAME: {
           const argumentNode = nonTerminalNode, ///
                 constructorArgumentNode = constructorNonTerminalNode, ///
-                argumentNodeVerified = this.verifyArgumentNode(argumentNode, constructorArgumentNode, context);
+                argumentNodeVerified = this.verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead);
 
           nonTerminalNodeVerified = argumentNodeVerified; ///
 
@@ -48,7 +48,7 @@ class TermVerifier extends Verifier {
                 constructorChildNodes = constructorNonTerminalNode.getChildNodes(),
                 nodes = childNodes, ///
                 constructorNodes = constructorChildNodes, ///
-                nodesVerified = this.verifyNodes(nodes, constructorNodes, context);
+                nodesVerified = this.verifyNodes(nodes, constructorNodes, context, verifyAhead);
 
           nonTerminalNodeVerified = nodesVerified; ///
 
@@ -60,7 +60,7 @@ class TermVerifier extends Verifier {
     return nonTerminalNodeVerified;
   }
 
-  verifyArgumentNode(argumentNode, constructorArgumentNode, context) {
+  verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead) {
     let argumentNodeVerified = false;
 
     const typeNode = typeNodeQuery(argumentNode);
@@ -79,12 +79,12 @@ class TermVerifier extends Verifier {
       } else if (constructorTermNode !== null) {
         const node = termNode,  ///
               constructorNode = constructorTermNode,  ///
-              nodeVerified = this.verifyNode(node, constructorNode, context);
+              nodeVerified = this.verifyNode(node, constructorNode, context, verifyAhead);
 
         argumentNodeVerified = nodeVerified;  ///
       } else if (constructorTypeNode !== null) {
         const types = [],
-              termVerified = verifyTerm(termNode, types, context);
+              termVerified = verifyTerm(termNode, types, context, verifyAhead);
 
         if (termVerified) {
           const constructorTypeName = typeNameFromTypeNode(constructorTypeNode),
@@ -113,7 +113,7 @@ class TermVerifier extends Verifier {
 
 export const termVerifier = new TermVerifier();
 
-export default function verifyTerm(termNode, types, context) {
+export default function verifyTerm(termNode, types, context, verifyAhead) {
   let termVerified;
 
   const termString = context.nodeAsString(termNode);
@@ -126,7 +126,7 @@ export default function verifyTerm(termNode, types, context) {
   ];
 
   termVerified = verifyTermFunctions.some((verifyTermFunction) => {
-    const termVerified = verifyTermFunction(termNode, types, context);
+    const termVerified = verifyTermFunction(termNode, types, context, verifyAhead);
 
     if (termVerified) {
       return true;
@@ -144,7 +144,7 @@ export default function verifyTerm(termNode, types, context) {
   return termVerified;
 }
 
-export function verifyTermAgainstConstructors(termNode, types, context) {
+export function verifyTermAgainstConstructors(termNode, types, context, verifyAhead) {
   let termVerifiedAgainstConstructors;
 
   const termString = context.nodeAsString(termNode);
@@ -154,7 +154,11 @@ export function verifyTermAgainstConstructors(termNode, types, context) {
   const constructors = context.getConstructors();
 
   termVerifiedAgainstConstructors = constructors.some((constructor) => {
-    const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, types, constructor, context);
+    const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, types, constructor, context, () => {
+      const verifiedAhead = verifyAhead(context);
+
+      return verifiedAhead;
+    });
 
     if (termVerifiedAgainstConstructor) {
       return true;
@@ -164,7 +168,7 @@ export function verifyTermAgainstConstructors(termNode, types, context) {
   return termVerifiedAgainstConstructors;
 }
 
-export function verifyTermAsVariable(termNode, variables, context) {
+export function verifyTermAsVariable(termNode, variables, context, verifyAhead) {
   let termVerifiedAsVariable = false;
 
   const termString = context.nodeAsString(termNode);
@@ -189,7 +193,7 @@ export function verifyTermAsVariable(termNode, variables, context) {
   return termVerifiedAsVariable;
 }
 
-function verifyTermAgainstConstructor(termNode, types, constructor, context) {
+function verifyTermAgainstConstructor(termNode, types, constructor, context, verifyAhead) {
   let termVerifiedAgainstConstructor = false;
 
   const termString = context.nodeAsString(termNode),
@@ -200,7 +204,7 @@ function verifyTermAgainstConstructor(termNode, types, constructor, context) {
   const constructorTermNode = constructor.getTermNode(),
         nonTerminalNNdeA = termNode,  ///
         nonTerminalNodeB = constructorTermNode,  ///
-        nodeVerified = termVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context);
+        nodeVerified = termVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context, verifyAhead);
 
   if (nodeVerified) {
     const type = constructor.getType();
@@ -213,12 +217,12 @@ function verifyTermAgainstConstructor(termNode, types, constructor, context) {
   return termVerifiedAgainstConstructor;
 }
 
-function verifyTermAsVariableEx(termNode, types, context) {
+function verifyTermAsVariableEx(termNode, types, context, verifyAhead) {
   let termVerifiedAsVariable;
 
   const variables = [];
 
-  termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
+  termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context, verifyAhead);
 
   if (termVerifiedAsVariable) {
     const firstVariable = first(variables),

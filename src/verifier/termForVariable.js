@@ -83,7 +83,7 @@ export default class TermForVariableVerifier extends Verifier {
           const types = [],
                 context = proofContextB, ///
                 termNode = termNodeB, ///
-                termVerified = verifyTerm(termNode, types, context);
+                termVerified = verifyTerm(termNode, types, context, verifyAhead);
 
           if (termVerified) {
             const firstType = first(types),

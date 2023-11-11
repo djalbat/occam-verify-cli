@@ -26,7 +26,7 @@ const termNodeQuery = nodeQuery("/argument/term!"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type");
 
 class StatementVerifier extends Verifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context, verifyAhead) {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNode = nonTerminalNodeA, ///
@@ -40,7 +40,7 @@ class StatementVerifier extends Verifier {
         case ARGUMENT_RULE_NAME: {
           const argumentNode = nonTerminalNode, ///
                 constructorArgumentNode = combinatorNonTerminalNode, ///
-                argumentNodeVerified = termVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, context);
+                argumentNodeVerified = termVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead);
 
           nonTerminalNodeVerified = argumentNodeVerified; ///
 
@@ -50,7 +50,7 @@ class StatementVerifier extends Verifier {
         case META_ARGUMENT_RULE_NAME: {
           const metaArgumentNode = nonTerminalNode, ///
                 combinatorMetaargumentNode = combinatorNonTerminalNode, ///
-                metaArgumentNodeVerified = this.verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context);
+                metaArgumentNodeVerified = this.verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead);
 
           nonTerminalNodeVerified = metaArgumentNodeVerified; ///
 
@@ -62,7 +62,7 @@ class StatementVerifier extends Verifier {
                 combinatorChildNodes = combinatorNonTerminalNode.getChildNodes(),
                 nodesA = childNodes, ///
                 nodesB = combinatorChildNodes, ///
-                nodesVerified = this.verifyNodes(nodesA, nodesB, context);
+                nodesVerified = this.verifyNodes(nodesA, nodesB, context, verifyAhead);
 
           nonTerminalNodeVerified = nodesVerified; ///
 
@@ -74,7 +74,7 @@ class StatementVerifier extends Verifier {
     return nonTerminalNodeVerified;
   }
 
-  verifyArgumentNode(argumentNode, combinatorArgumentNode, context) {
+  verifyArgumentNode(argumentNode, combinatorArgumentNode, context, verifyAhead) {
     let argumentNodeVerified = false;
 
     const termNode = termNodeQuery(argumentNode);
@@ -85,7 +85,7 @@ class StatementVerifier extends Verifier {
       context.error(`The '${argumentString}' argument should be a term, not a type`, argumentNode);
     } else {
       const types = [],
-            termVerified = verifyTerm(termNode, types, context);
+            termVerified = verifyTerm(termNode, types, context, verifyAhead);
 
       if (termVerified) {
         const firstType = first(types),
@@ -106,7 +106,7 @@ class StatementVerifier extends Verifier {
     return argumentNodeVerified;
   }
 
-  verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context) {
+  verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead) {
     let metaArgumentNodeVerified = false;
 
     const statementNode = statementNodeQuery(metaArgumentNode),
@@ -140,7 +140,7 @@ class StatementVerifier extends Verifier {
 
 export const statementVerifier = new StatementVerifier();
 
-export default function verifyStatement(statementNode, assignments, derived, context) {
+export default function verifyStatement(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerified;
 
   const statementString = context.nodeAsString(statementNode);
@@ -155,7 +155,7 @@ export default function verifyStatement(statementNode, assignments, derived, con
   ];
 
   statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
-    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, context);
+    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, context, verifyAhead);
 
     if (statementVerified) {
       return true;
@@ -169,7 +169,7 @@ export default function verifyStatement(statementNode, assignments, derived, con
   return statementVerified;
 }
 
-export function verifyStatementAgainstCombinators(statementNode, assignments, derived, context) {
+export function verifyStatementAgainstCombinators(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAgainstCombinators;
 
   const statementString = context.nodeAsString(statementNode);
@@ -184,7 +184,11 @@ export function verifyStatementAgainstCombinators(statementNode, assignments, de
   ];
 
   statementVerifiedAgainstCombinators = combinators.some((combinator) => {
-    const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
+    const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context, () => {
+      const verifiedAhead = verifyAhead();
+
+      return verifiedAhead;
+    });
 
     if (statementVerifiedAgainstCombinator) {
       return true;
@@ -194,7 +198,7 @@ export function verifyStatementAgainstCombinators(statementNode, assignments, de
   return statementVerifiedAgainstCombinators;
 }
 
-export function verifyStatementAgainstCombinator(statementNode, combinator, context) {
+export function verifyStatementAgainstCombinator(statementNode, combinator, context, verifyAhead) {
   const statementString = context.nodeAsString(statementNode),
         combinatorString = combinator.getString();
 
@@ -203,13 +207,13 @@ export function verifyStatementAgainstCombinator(statementNode, combinator, cont
   const combinatorStatementNode = combinator.getStatementNode(),
         nonTerminalNodeA = statementNode, ///
         nonTerminalNodeB = combinatorStatementNode, ///
-        nonTerminalNodeVerified = statementVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context),
+        nonTerminalNodeVerified = statementVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context, verifyAhead),
         statementVerifiedAgainstCombinator = nonTerminalNodeVerified;  ///
 
   return statementVerifiedAgainstCombinator;
 }
 
-function verifyStatementAsTypeInference(statementNode, assignments, derived, context) {
+function verifyStatementAsTypeInference(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAsTypeInference = false;
 
   const typeInferenceNode = typeInferenceNodeQuery(statementNode);
@@ -220,7 +224,7 @@ function verifyStatementAsTypeInference(statementNode, assignments, derived, con
 
       context.error(`The '${typeInferenceString}' type inference can only be derived.`, typeInferenceNode);
     } else {
-      const typeInferenceVerified = verifyTypeInference(typeInferenceNode, context);
+      const typeInferenceVerified = verifyTypeInference(typeInferenceNode, context, verifyAhead);
 
       statementVerifiedAsTypeInference = typeInferenceVerified; ///
     }
@@ -229,13 +233,13 @@ function verifyStatementAsTypeInference(statementNode, assignments, derived, con
   return statementVerifiedAsTypeInference;
 }
 
-function verifyStatementAsTypeAssertion(statementNode, assignments, derived, context) {
+function verifyStatementAsTypeAssertion(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAsTypeAssertion = false;
 
   const typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
   if (typeAssertionNode !== null) {
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, context);
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead);
 
     statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
   }
@@ -243,26 +247,26 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, con
   return statementVerifiedAsTypeAssertion;
 }
 
-function verifyStatementAsEquality(statementNode, assignments, derived, context) {
+function verifyStatementAsEquality(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAsEquality = false;
 
   const combinator = equalityCombinator,  ///
-        statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
+        statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context, verifyAhead);
 
   if (statementVerifiedAgainstCombinator) {
     const equality = Equality.fromStatementNode(statementNode);
 
     if (derived) {
       const equalities = context.getEqualities(),
-            equalityVerified = equality.verify(equalities, context);
+            equalityVerified = equality.verify(equalities, context, verifyAhead);
 
       statementVerifiedAsEquality = equalityVerified;  ///
     } else {
       const variables = [],
             leftTermNode = equality.getLeftTermNode(),
             rightTermNode = equality.getRightTermNode(),
-            leftTermVerifiedAsVariable = verifyTermAsVariable(leftTermNode, variables, context),
-            rightTermVerifiedAsVariable = verifyTermAsVariable(rightTermNode, variables, context);
+            leftTermVerifiedAsVariable = verifyTermAsVariable(leftTermNode, variables, context, verifyAhead),
+            rightTermVerifiedAsVariable = verifyTermAsVariable(rightTermNode, variables, context, verifyAhead);
 
       if (leftTermVerifiedAsVariable && rightTermVerifiedAsVariable) {
         const firstVariable = first(variables),
@@ -286,7 +290,7 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context)
       } else if (leftTermVerifiedAsVariable) {
         const types = [];
 
-        verifyTerm(rightTermNode, types, context);
+        verifyTerm(rightTermNode, types, context, verifyAhead);
 
         const firstType = first(types),
               firstVariable = first(variables),
@@ -308,7 +312,7 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context)
       } else if (rightTermVerifiedAsVariable) {
         const types = [];
 
-        verifyTerm(leftTermNode, types, context);
+        verifyTerm(leftTermNode, types, context, verifyAhead);
 
         const firstType = first(types),
               firstVariable = first(variables),
@@ -330,9 +334,9 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context)
       } else {
         const types = [];
 
-        verifyTerm(leftTermNode, types, context);
+        verifyTerm(leftTermNode, types, context, verifyAhead);
 
-        verifyTerm(rightTermNode, types, context);
+        verifyTerm(rightTermNode, types, context, verifyAhead);
 
         const firstType = first(types),
               secondType = second(types),
