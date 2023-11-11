@@ -55,7 +55,19 @@ function verifyAction(argument, log) {
       delete context.releaseContextMap;
       delete context.releaseContextFromDependency;
 
+      let now;
+
+      now = Date.now();
+
       verifyRelease(releaseName, releaseContextMap);
+
+      const then = now; ///
+
+      now = Date.now();
+
+      const seconds = Math.floor(now - then) / 1000;
+
+      log.info(`Verification time ${seconds} seconds.`);
     });
   });
 }
