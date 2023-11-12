@@ -14,7 +14,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
     const statementString = proofContext.nodeAsString(statementNode),
           statementProofContext = proofContext; ///
 
-    proofContext.debug(`Verifying the '${statementString}' qualified statement.`, qualifiedStatementNode);
+    proofContext.trace(`Verifying the '${statementString}' qualified statement...`, qualifiedStatementNode);
 
     const referenceNode = referenceNodeQuery(qualifiedStatementNode),
           referenceName = referenceNameFromReferenceNode(referenceNode);
@@ -68,12 +68,10 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
         qualifiedStatementVerified = conjectureMatchesStatement; ///
       }
     }
-  }
 
-  if (qualifiedStatementVerified) {
-    const statementString = proofContext.nodeAsString(statementNode);
-
-    proofContext.info(`Verified the '${statementString}' qualified statement.`, qualifiedStatementNode);
+    if (qualifiedStatementVerified) {
+      proofContext.debug(`...verified the '${statementString}' qualified statement.`, qualifiedStatementNode);
+    }
   }
 
   return qualifiedStatementVerified;

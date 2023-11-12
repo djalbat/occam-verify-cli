@@ -16,7 +16,7 @@ export default function verifyRelease(releaseName, releaseContextMap) {
       if (verified) {
         releaseVerified = true;
       } else {
-        releaseContext.debug(`Verifying '${releaseName}'.`);
+        releaseContext.debug(`Verifying the '${releaseName}' project...`);
 
         const releaseFilesVerified = verifyReleaseFiles(releaseContext);
 
@@ -29,7 +29,7 @@ export default function verifyRelease(releaseName, releaseContextMap) {
         }
 
         if (releaseVerified) {
-          releaseContext.info(`Verified  '${releaseName}'.`);
+          releaseContext.info(`...verified the '${releaseName}' project.`);
         }
       }
     }

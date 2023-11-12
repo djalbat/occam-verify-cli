@@ -14,7 +14,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
     const metastatementString = metaproofContext.nodeAsString(metastatementNode),
           metastatementMetaproofContext = metaproofContext; ///
 
-    metaproofContext.debug(`Verifying the '${metastatementString}' qualified metastatement.`, qualifiedMetastatementNode);
+    metaproofContext.trace(`Verifying the '${metastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
 
     const referenceNode = referenceNodeQuery(qualifiedMetastatementNode),
           referenceName = referenceNameFromReferenceNode(referenceNode),
@@ -25,12 +25,10 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
       qualifiedMetastatementVerified = ruleMatchesMetastatement;  ///
     }
-  }
 
-  if (qualifiedMetastatementVerified) {
-    const metastatementString = metaproofContext.nodeAsString(metastatementNode);
-
-    metaproofContext.info(`Verified the '${metastatementString}' qualified metastatement.`, qualifiedMetastatementNode);
+    if (qualifiedMetastatementVerified) {
+      metaproofContext.debug(`...verified the '${metastatementString}' qualified metastatement.`, qualifiedMetastatementNode);
+    }
   }
 
   return qualifiedMetastatementVerified;

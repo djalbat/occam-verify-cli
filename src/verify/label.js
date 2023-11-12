@@ -8,18 +8,26 @@ export default function verifyLabel(labelNode, labels, fileContext) {
   let labelVerified = false;
 
   const labelName = labelNameFromLabelNode(labelNode),
-        labelPresent = fileContext.isLabelPresentByLabelName(labelName);
+        labelString = fileContext.nodeAsString(labelNode);
+
+  fileContext.trace(`Verifying the '${labelString}' label...`);
+
+  const labelPresent = fileContext.isLabelPresentByLabelName(labelName);
 
   if (labelPresent) {
     const labelString = fileContext.nodeAsString(labelNode);
 
-    fileContext.error(`The '${labelString}' label is already present.`, labelNode);
+    fileContext.info(`The '${labelString}' label is already present.`, labelNode);
   } else {
     const label = Label.fromLabelNode(labelNode);
 
     labels.push(label);
 
     labelVerified = true;
+  }
+
+  if (labelVerified) {
+    fileContext.debug(`...verified the '${labelString}' label.`);
   }
 
   return labelVerified;

@@ -1,15 +1,15 @@
 "use strict";
 
-import Verifier from "../verifier";
-import MetastatementForMetavariableSubstitution from "../substitution/metastatementForMetavariable";
+import NodesVerifier from "../../verifier/nodes";
+import MetastatementForMetavariableSubstitution from "../../substitution/metastatementForMetavariable";
 
-import { nodeQuery } from "../utilities/query";
-import { METASTATEMENT_RULE_NAME } from "../ruleNames";
-import { metavariableNameFromMetavariableNode } from "../utilities/query";
+import { nodeQuery } from "../../utilities/query";
+import { METASTATEMENT_RULE_NAME } from "../../ruleNames";
+import { metavariableNameFromMetavariableNode } from "../../utilities/query";
 
 const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!');
 
-export default class MetastatementForMetavariableVerifier extends Verifier {
+export default class MetastatementForMetavariableNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB) {
     let nonTerminalNodeVerified = false;
 

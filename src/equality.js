@@ -1,7 +1,7 @@
 "use strict";
 
-import Verifier from "./verifier";
 import verifyTerm from "./verify/term";
+import NodesVerifier from "./verifier/nodes";
 import equalityStatementNode from "./node/statement/equality";
 
 import { nodeQuery } from "./utilities/query";
@@ -35,7 +35,7 @@ export default class Equality {
                                     this.rightTermNode :
                                       this.leftTermNode,  ///
             rightNonTerminalNode = leftTermNode,  ///
-            nonTerminalNodeVerified = equalityVerifier.verifyNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context);
+            nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context);
 
       leftTermNodeAndRightTermNodeMatch = nonTerminalNodeVerified; ///
     }
@@ -45,7 +45,7 @@ export default class Equality {
                                     this.leftTermNode :
                                       this.rightTermNode,  ///
             rightNonTerminalNode = rightTermNode,  ///
-            nonTerminalNodeVerified = equalityVerifier.verifyNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context);
+            nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context);
 
       leftTermNodeAndRightTermNodeMatch = nonTerminalNodeVerified; ///
     }
@@ -81,7 +81,7 @@ export default class Equality {
   verify(equalities, context) {
     const leftNonTerminalNode = this.leftTermNode,  ///
           rightNonTerminalNode = this.rightTermNode,  ///
-          nonTerminalNodeVerified = equalityVerifier.verifyNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context),
+          nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context),
           verified = nonTerminalNodeVerified; ///
 
     return verified;
@@ -122,7 +122,7 @@ export default class Equality {
   }
 }
 
-class EqualityVerifier extends Verifier {
+class EqualityNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context) {
     let nonTerminalNodeVerified = false;
 
@@ -144,11 +144,11 @@ class EqualityVerifier extends Verifier {
       if (!nonTerminalNodeVerified) {
         const leftNonTerminalNodeChildNodes = leftNonTerminalNode.getChildNodes(),
               rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
-              leftNodes = leftNonTerminalNodeChildNodes, ///
-              rightNodes = rightNonTerminalNodeChildNodes, ///
-              nodesVerified = this.verifyNodes(leftNodes, rightNodes, equalities, context);
+              leftChildNodes = leftNonTerminalNodeChildNodes, ///
+              rightChildNodes = rightNonTerminalNodeChildNodes, ///
+              childNodesVerified = this.verifyChildNodes(leftChildNodes, rightChildNodes, equalities, context);
 
-        nonTerminalNodeVerified = nodesVerified; ///
+        nonTerminalNodeVerified = childNodesVerified; ///
       }
     }
 
@@ -242,7 +242,7 @@ class EqualityVerifier extends Verifier {
   }
 }
 
-const equalityVerifier = new EqualityVerifier();
+const equalityNodesVerifier = new EqualityNodesVerifier();
 
 function filterEqualities(equalities, equality) {
   const equalityA = equality; ///

@@ -10,9 +10,17 @@ export default function verifyCombinatorDeclaration(combinatorDeclarationNode, f
   let combinatorDeclarationVerified;
 
   const statementNode = statementNodeQuery(combinatorDeclarationNode),
-        statementVerifiedAsCombinator = verifyStatementAsCombinator(statementNode, fileContext);
+        statementString = fileContext.nodeAsString(statementNode);
+
+  fileContext.trace(`Verifying the '${statementString}' combinator declaration...`);
+
+  const statementVerifiedAsCombinator = verifyStatementAsCombinator(statementNode, fileContext);
 
   combinatorDeclarationVerified = statementVerifiedAsCombinator; ///
+
+  if (combinatorDeclarationVerified) {
+    fileContext.debug(`...verified the '${statementString}' combinator declaration.`);
+  }
 
   return combinatorDeclarationVerified;
 }

@@ -7,12 +7,15 @@ import { typeNameFromTypeNode } from "../utilities/query";
 export default function verifyType(typeNode, superTypeNode, fileContext) {
   let typeVerified = false;
 
+  const typeString = fileContext.nodeAsString(typeNode);
+
+  fileContext.trace(`Verifying the '${typeString}' type.`);
+
   const typeName = typeNameFromTypeNode(typeNode),
-        typeString = fileContext.nodeAsString(typeNode),
         typePresent = fileContext.isTypePresentByTypeName(typeName);
 
   if (typePresent) {
-    fileContext.error(`The type '${typeName}' is already present.`, typeNode);
+    fileContext.info(`The type '${typeName}' is already present.`, typeNode);
   } else {
     let type;
 
@@ -24,7 +27,7 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
       const superType = fileContext.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
-        fileContext.error(`The super-type '${superTypeName}' is not present.`, typeNode);
+        fileContext.info(`The super-type '${superTypeName}' is not present.`, typeNode);
       } else {
         type = Type.fromTypeNameAndSuperType(typeName, superType);
       }
@@ -38,7 +41,7 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
   }
 
   if (typeVerified) {
-    fileContext.info(`Verified the '${typeString}' type.`, typeNode);
+    fileContext.debug(`...verified the '${typeString}' type.`, typeNode);
   }
 
   return typeVerified;

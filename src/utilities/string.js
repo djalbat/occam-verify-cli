@@ -3,21 +3,23 @@
 import { COMMA, EMPTY_STRING } from "../constants";
 
 export function nodeAsString(node, tokens) {
-  let string;
+  let string = EMPTY_STRING;
 
-  const nodeTerminalNode = node.isTerminalNode();
+  if (node !== null) {
+    const nodeTerminalNode = node.isTerminalNode();
 
-  if (nodeTerminalNode) {
-    const terminalNode = node;  ///
+    if (nodeTerminalNode) {
+      const terminalNode = node;  ///
 
-    string = terminalNodeAsString(terminalNode);
-  } else {
-    const nonTerminalNode = node; ///
+      string = terminalNodeAsString(terminalNode);
+    } else {
+      const nonTerminalNode = node; ///
 
-    string = nonTerminalNodeAsString(nonTerminalNode, tokens);
+      string = nonTerminalNodeAsString(nonTerminalNode, tokens);
+    }
+
+    string = string.replace(/[\r\n]/, EMPTY_STRING);
   }
-
-  string = string.replace(/[\r\n]/, EMPTY_STRING);
 
   return string;
 }

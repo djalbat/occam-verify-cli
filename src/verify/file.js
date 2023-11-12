@@ -11,7 +11,7 @@ const errorNodesQuery = nodesQuery("/document/error"),
 export default function verifyFile(filePath, releaseContext) {
   let fileVerified = false;
 
-  releaseContext.debug(`Verifying the '${filePath}' file.`);
+  releaseContext.debug(`Verifying the '${filePath}' file...`);
 
   const fileContext = FileContext.fromFilePathAndReleaseContext(filePath, releaseContext),
         node = fileContext.getNode();
@@ -23,7 +23,7 @@ export default function verifyFile(filePath, releaseContext) {
           errorNodesLength = errorNodes.length;
 
     if (errorNodesLength > 0) {
-      releaseContext.error(`The '${filePath}' file cannot be verified because it contains errors.`);
+      releaseContext.info(`The '${filePath}' file cannot be verified because it contains errors.`);
     } else {
       const topLevelDeclarationNodes = topLevelDeclarationNodesQuery(node),
             topLevelDeclarationsVerified = topLevelDeclarationNodes.every((topLevelDeclarationNode) => {
@@ -43,7 +43,7 @@ export default function verifyFile(filePath, releaseContext) {
   }
 
   if (fileVerified) {
-    releaseContext.info(`Verified the '${filePath}' file.`);
+    releaseContext.info(`...verified the '${filePath}' file.`);
   }
 
   return fileVerified;

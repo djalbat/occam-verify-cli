@@ -1,17 +1,17 @@
 "use strict";
 
-import Verifier from "../verifier";
-import verifyTerm from "../verify/term";
-import TermForVariableSubstitution from "../substitution/termForVariable";
+import verifyTerm from "../../verify/term";
+import NodesVerifier from "../../verifier/nodes";
+import TermForVariableSubstitution from "../../substitution/termForVariable";
 
-import { first } from "../utilities/array";
-import { nodeQuery } from "../utilities/query";
-import { TERM_RULE_NAME } from "../ruleNames";
-import { variableNameFromVariableNode } from "../utilities/query";
+import { first } from "../../utilities/array";
+import { nodeQuery } from "../../utilities/query";
+import { TERM_RULE_NAME } from "../../ruleNames";
+import { variableNameFromVariableNode } from "../../utilities/query";
 
 const variableNodeQuery = nodeQuery('/term/variable!');
 
-export default class TermForVariableVerifier extends Verifier {
+export default class TermForVariableNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB) {
     let nonTerminalNodeVerified = false;
 

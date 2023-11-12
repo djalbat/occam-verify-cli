@@ -12,9 +12,17 @@ export default function verifyMetavariableDeclaration(metavariableDeclarationNod
 
   const metaTypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
         metavariableNode = metavariableNodeQuery(metavariableDeclarationNode),
-        metavariableVVerified = verifyMetavariable(metavariableNode, metaTypeNode, fileContext);
+        metavariableString = fileContext.nodeAsString(metaTypeNode);
+
+  fileContext.trace(`Verifying the '${metavariableString}' metavariable declaration...`);
+
+  const metavariableVVerified = verifyMetavariable(metavariableNode, metaTypeNode, fileContext);
 
   metavariableDeclarationVerified = metavariableVVerified;  ///
+
+  if (metavariableDeclarationVerified) {
+    fileContext.debug(`...verified the '${metavariableString}' metavariable declaration.`);
+  }
 
   return metavariableDeclarationVerified;
 }

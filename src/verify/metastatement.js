@@ -1,77 +1,22 @@
 "use strict";
 
-import Verifier from "../verifier";
-
-import { METAVARIABLE_RULE_NAME } from "../ruleNames";
-import { metavariableNameFromMetavariableNode } from "../utilities/query";
-
-class MetastatementVerifier extends Verifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaproofContext) {
-    let nonTerminalNodeVerified = false;
-
-    const nonTerminalNode = nonTerminalNodeA, ///
-          ruleName = nonTerminalNode.getRuleName(); ///
-
-    switch (ruleName) {
-      case METAVARIABLE_RULE_NAME: {
-        const metavariableNode = nonTerminalNode, ///
-              metavariableNodeVerified = this.verifyMetavariableNode(metavariableNode, metaproofContext);
-
-        nonTerminalNodeVerified = metavariableNodeVerified; ///
-
-        break;
-      }
-
-      default: {
-        const childNodes = nonTerminalNode.getChildNodes(),
-              nodesA = childNodes, ///
-              nodesB = childNodes, ///
-              nodesVerified = this.verifyNodes(nodesA, nodesB, metaproofContext);
-
-        nonTerminalNodeVerified = nodesVerified; ///
-
-        break;
-      }
-    }
-
-    return nonTerminalNodeVerified;
-  }
-
-  verifyMetavariableNode(metavariableNode, metaproofContext) {
-    let metavariableNodeVerified = false;
-
-    const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-          metavariablePresent = metaproofContext.isMetavariablePresentByMetavariableName(metavariableName);
-
-    if (!metavariablePresent) {
-      const metavariableString = metaproofContext.nodeAsString(metavariableNode);
-
-      metaproofContext.error(`The '${metavariableString}' metavariable is not present.`, metavariableNode);
-    } else {
-      metavariableNodeVerified = true;
-    }
-
-    return metavariableNodeVerified;
-  }
-}
-
-export const metastatementVerifier = new MetastatementVerifier();
+import metastatementNodesVerifier from "../verifier/nodes/metastatement";
 
 export default function verifyMetastatement(metastatementNode, derived, metaproofContext) {
   let metastatementVerified;
 
   const metastatementString = metaproofContext.nodeAsString(metastatementNode);
 
-  metaproofContext.debug(`Verifying the '${metastatementString}' metastatement.`, metastatementNode);
+  metaproofContext.trace(`Verifying the '${metastatementString}' metastatement...`, metastatementNode);
 
   const nonTerminalNodeA = metastatementNode, ///
         nonTerminalNodeB = metastatementNode, ///
-        nonTerminalNodeVerified = metastatementVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaproofContext);
+        nonTerminalNodeVerified = metastatementNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaproofContext);
 
   metastatementVerified = nonTerminalNodeVerified;  ///
 
   if (metastatementVerified) {
-    metaproofContext.debug(`Verified the '${metastatementString}' metastatement.`, metastatementNode);
+    metaproofContext.debug(`...verified the '${metastatementString}' metastatement.`, metastatementNode);
   }
 
   return metastatementVerified;

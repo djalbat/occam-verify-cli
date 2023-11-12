@@ -22,7 +22,7 @@ export default function verifyTheorem(theoremNode, fileContext) {
         labelsString = fileContext.nodesAsString(labelNodes),
         proofContext = ProofContext.fromFileContext(fileContext);
 
-  fileContext.debug(`Verifying the '${labelsString}' theorem.`, theoremNode);
+  fileContext.trace(`Verifying the '${labelsString}' theorem...`, theoremNode);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
@@ -61,7 +61,7 @@ export default function verifyTheorem(theoremNode, fileContext) {
   }
 
   if (theoremVerified) {
-    fileContext.info(`Verified the '${labelsString}' theorem.`, theoremNode);
+    fileContext.debug(`...verified the '${labelsString}' theorem.`, theoremNode);
   }
 
   return theoremVerified;

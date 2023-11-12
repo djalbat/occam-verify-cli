@@ -36,14 +36,12 @@ function verifyAction(argument, log) {
     if (released) {
       const error = `The '${name}' package does not need to be verified.`;
 
-      log.error(error);
+      log.warning(error);
 
       return;
     }
 
     const dependentReleased = released; ///
-
-    log.info("Initialising package contexts...");
 
     initialiseReleaseContext(dependency, dependentName, dependentReleased, context, (error) => {
       if (error) {

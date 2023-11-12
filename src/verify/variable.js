@@ -8,12 +8,15 @@ import { typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities
 export default function verifyVariable(variableNode, typeNode, fileContext) {
   let variableVerified = false;
 
+  const variableString = fileContext.nodeAsString(variableNode);
+
+  fileContext.trace(`Verifying the '${variableString}' variable.`);
+
   const variableName = variableNameFromVariableNode(variableNode),
-        variableString = fileContext.nodeAsString(variableNode),
         variablePresent = fileContext.isVariablePresentByVariableName(variableName);
 
   if (variablePresent) {
-    fileContext.error(`The variable '${variableName}' is already present.`, variableNode);
+    fileContext.info(`The variable '${variableName}' is already present.`, variableNode);
   } else {
     let variable;
 
@@ -28,7 +31,7 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
       const type = fileContext.findTypeByTypeName(typeName);
 
       if (type === null) {
-        fileContext.error(`The '${variableName}' variable's '${typeName}' type is not present.`, variableNode);
+        fileContext.info(`The '${variableName}' variable's '${typeName}' type is not present.`, variableNode);
       } else {
         const name = variableName;  ///
 
@@ -44,7 +47,7 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
   }
 
   if (variableVerified) {
-    fileContext.info(`Verified the '${variableString}' variable.`, variableNode);
+    fileContext.debug(`...verified the '${variableString}' variable.`, variableNode);
   }
 
   return variableVerified;

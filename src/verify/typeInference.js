@@ -19,7 +19,7 @@ export default function verifyTypeInference(typeInferenceNode, context) {
 
   const typeInferenceString = context.nodeAsString(typeInferenceNode);
 
-  context.debug(`Verifying the '${typeInferenceString}' type inference.`, typeInferenceNode);
+  context.trace(`Verifying the '${typeInferenceString}' type inference...`, typeInferenceNode);
 
   let statementNode = statementNodeQuery(typeInferenceNode);
 
@@ -33,13 +33,13 @@ export default function verifyTypeInference(typeInferenceNode, context) {
         statementMatches = context.matchStatement(statementNode);
 
   if (!statementMatches) {
-    context.error(`The '${statementString}' statement is not present in the context.`, typeInferenceNode);
+    context.info(`The '${statementString}' statement is not present in the context.`, typeInferenceNode);
   } else {
     const combinator = equalityCombinator,  ///
           statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
 
     if (!statementVerifiedAgainstCombinator) {
-      context.error(`The '${statementString}' statement is not an equality.`, typeInferenceNode);
+      context.info(`The '${statementString}' statement is not an equality.`, typeInferenceNode);
     } else {
       const derived = false,  ///
             equality = Equality.fromStatementNode(statementNode),
@@ -131,7 +131,7 @@ export default function verifyTypeInference(typeInferenceNode, context) {
   }
 
   if (typeInferenceVerified) {
-    context.info(`Verified the '${typeInferenceString}' type inference.`, typeInferenceNode);
+    context.debug(`...verified the '${typeInferenceString}' type inference.`, typeInferenceNode);
   }
 
   return typeInferenceVerified;

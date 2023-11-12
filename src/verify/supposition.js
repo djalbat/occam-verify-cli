@@ -14,7 +14,7 @@ export default function verifySupposition(suppositionNode, suppositions, proofCo
 
   const suppositionString = proofContext.nodeAsString(suppositionNode);
 
-  proofContext.debug(`Verifying the '${suppositionString}' supposition.`, suppositionNode);
+  proofContext.trace(`Verifying the '${suppositionString}' supposition...`, suppositionNode);
 
   const derived = false,
         assignments = [],
@@ -38,7 +38,7 @@ export default function verifySupposition(suppositionNode, suppositions, proofCo
   }
 
   if (suppositionVerified) {
-    proofContext.info(`Verified the '${suppositionString}' supposition.`, suppositionNode);
+    proofContext.debug(`...verified the '${suppositionString}' supposition.`, suppositionNode);
   }
 
   return suppositionVerified;

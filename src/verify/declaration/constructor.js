@@ -3,6 +3,7 @@
 import verifyTermAsConstructor from "../../verify/termAsConstructor";
 
 import { nodeQuery } from "../../utilities/query";
+import { EMPTY_STRING } from "../../constants";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
@@ -12,9 +13,22 @@ export default function verifyConstructorDeclaration(constructorDeclarationNode,
 
   const termNode = termNodeQuery(constructorDeclarationNode),
         typeNode = typeNodeQuery(constructorDeclarationNode),
-        termVerifiedAsConstructor = verifyTermAsConstructor(termNode, typeNode, fileContext);
+        termString = fileContext.nodeAsString(termNode),
+        typeString = fileContext.nodeAsString(typeNode);
+
+  (typeString === EMPTY_STRING) ?
+    fileContext.trace(`Verifying the '${termString}' variable declaration...`, constructorDeclarationNode) :
+      fileContext.trace(`Verifying the '${termString}:${typeString}' variable declaration...`, constructorDeclarationNode);
+
+  const termVerifiedAsConstructor = verifyTermAsConstructor(termNode, typeNode, fileContext);
 
   constructorDeclarationVerified = termVerifiedAsConstructor; ///
+
+  if (constructorDeclarationVerified) {
+    (typeString === EMPTY_STRING) ?
+      fileContext.debug(`...verified the '${termString}' variable declaration.`, constructorDeclarationNode) :
+        fileContext.debug(`...verified the '${termString}:${typeString}' variable declaration.`, constructorDeclarationNode);
+  }
 
   return constructorDeclarationVerified;
 }

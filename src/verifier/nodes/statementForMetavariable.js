@@ -1,16 +1,16 @@
 "use strict";
 
-import Verifier from "../verifier";
-import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
+import NodesVerifier from "../../verifier/nodes";
+import StatementForMetavariableSubstitution from "../../substitution/statementForMetavariable";
 
-import { nodeQuery } from "../utilities/query";
-import { metavariableNameFromMetavariableNode } from "../utilities/query";
-import { STATEMENT_RULE_NAME, METASTATEMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../ruleNames";
+import { nodeQuery } from "../../utilities/query";
+import { metavariableNameFromMetavariableNode } from "../../utilities/query";
+import { STATEMENT_RULE_NAME, METASTATEMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../../ruleNames";
 
 const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!'),
       metaArgumentChildNodeNodeQuery = nodeQuery('/metaArgument/*!');
 
-export default class StatementForMetavariableVerifier extends Verifier {
+export default class StatementForMetavariableNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB) {
     let nonTerminalNodeVerified = false;
 
@@ -40,11 +40,11 @@ export default class StatementForMetavariableVerifier extends Verifier {
         } else {
           const nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
                 nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
-                nodesA = nonTerminalNodeAChildNodes, ///
-                nodesB = nonTerminalNodeBChildNodes, ///
-                nodesMatch = this.verifyNodes(nodesA, nodesB, substitutions, fileContextA, proofContextB);
+                childNodesA = nonTerminalNodeAChildNodes, ///
+                childNodesB = nonTerminalNodeBChildNodes, ///
+                childNodesVerified = this.verifyChildNodes(childNodesA, childNodesB, substitutions, fileContextA, proofContextB);
 
-          nonTerminalNodeVerified = nodesMatch;  ///
+          nonTerminalNodeVerified = childNodesVerified;  ///
         }
       } else if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
         nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB);

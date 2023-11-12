@@ -14,7 +14,7 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
   if (statementNode !== null) {
     const statementString = proofContext.nodeAsString(statementNode);
 
-    proofContext.debug(`Verifying the '${statementString}' unqualified statement.`, unqualifiedStatementNode);
+    proofContext.trace(`Verifying the '${statementString}' unqualified statement...`, unqualifiedStatementNode);
 
     if (derived) {
       const statementMatches = proofContext.matchStatement(statementNode);
@@ -32,12 +32,10 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
 
       unqualifiedStatementVerified = statementVerified;  ///
     }
-  }
 
-  if (unqualifiedStatementVerified) {
-    const statementString = proofContext.nodeAsString(statementNode);
-
-    proofContext.info(`Verified the '${statementString}' unqualified statement.`, unqualifiedStatementNode);
+    if (unqualifiedStatementVerified) {
+      proofContext.debug(`...verified the '${statementString}' unqualified statement.`, unqualifiedStatementNode);
+    }
   }
 
   return unqualifiedStatementVerified;

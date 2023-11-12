@@ -36,7 +36,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
       if (type !== null) {
         termVerifiedAsConstructor = true;
       } else {
-        fileContext.error(`The '${termString}' constructor's '${typeName}' type is not present.`, termNode);
+        fileContext.info(`The '${termString}' constructor's '${typeName}' type is not present.`, termNode);
       }
     }
   }
@@ -122,7 +122,7 @@ function verifyNonTerminalNode(nonTerminalNode, fileContext, verifyAhead) {
         if (type !== null) {
           const termString = fileContext.nodeAsString(termNode);
 
-          fileContext.error(`The type of the constructor's compound '${termString}' term node is not null.`, termNode);
+          fileContext.info(`The type of the constructor's compound '${termString}' term node is not null.`, termNode);
         } else {
           nonTerminalNodeVerified = true; ///
         }
@@ -157,7 +157,7 @@ function verifyArgumentNode(argumentNode, fileContext, verifyAhead) {
           typePresent = fileContext.isTypePresentByTypeName(typeName);
 
     if (!typePresent) {
-      fileContext.error(`The type '${typeName}' is not present.`, argumentNode);
+      fileContext.info(`The type '${typeName}' is not present.`, argumentNode);
     }
 
     argumentNodeVerified = typePresent; ///

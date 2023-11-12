@@ -22,7 +22,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
         typePresent = context.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    context.error(`The '${typeName}' type is not present.`, typeAssertionNode);
+    context.info(`The '${typeName}' type is not present.`, typeAssertionNode);
   } else {
     if (!typeAssertionVerified) {
       const variableTypeAssertionVerified = verifyVariableTypeAssertion(typeAssertionNode, assignments, derived, context);
@@ -58,7 +58,7 @@ export function verifyVariableTypeAssertion(typeAssertionNode, assignments, deri
           assertedType = context.findTypeByTypeName(assertedTypeName);
 
     if (assertedType === null) {
-      context.error(`The '${assertedTypeName}' asserted type is not present.`, typeAssertionNode);
+      context.info(`The '${assertedTypeName}' asserted type is not present.`, typeAssertionNode);
     } else {
       const firstVariable = first(variables),
             variable = firstVariable, ///
@@ -72,7 +72,7 @@ export function verifyVariableTypeAssertion(typeAssertionNode, assignments, deri
           const assertedTypeName = assertedType.getName(),
                 variableTypeName = variableType.getName();
 
-          context.error(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
+          context.info(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
         } else {
           variableTypeAssertionVerified = true;
         }
@@ -83,7 +83,7 @@ export function verifyVariableTypeAssertion(typeAssertionNode, assignments, deri
           const assertedTypeName = assertedType.getName(),
                 variableTypeName = variableType.getName();
 
-          context.error(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
+          context.info(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
         } else {
           const name = variableName,  ///
                 type = assertedType,  ///
@@ -115,7 +115,7 @@ function verifyTermTypeAssertion(typeAssertionNode, derived, context) {
           assertedType = context.findTypeByTypeName(assertedTypeName);
 
     if (assertedType === null) {
-      context.error(`The '${assertedTypeName}' asserted type is not present.`, typeAssertionNode);
+      context.info(`The '${assertedTypeName}' asserted type is not present.`, typeAssertionNode);
     } else {
       const firstType = first(types),
             termType = firstType; ///
@@ -128,7 +128,7 @@ function verifyTermTypeAssertion(typeAssertionNode, derived, context) {
                 termTypeName = termType.getName(),
                 assertedTypeName = assertedType.getName();
 
-          context.error(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
+          context.info(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
         } else {
           termTypeAssertionVerified = true;
         }
@@ -140,7 +140,7 @@ function verifyTermTypeAssertion(typeAssertionNode, derived, context) {
                 termTypeName = termType.getName(),
                 assertedTypeName = assertedType.getName();
 
-          context.error(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
+          context.info(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
         } else {
           termTypeAssertionVerified = true;
         }
