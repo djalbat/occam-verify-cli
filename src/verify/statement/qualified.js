@@ -14,7 +14,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
     const statementString = proofContext.nodeAsString(statementNode),
           statementProofContext = proofContext; ///
 
-    proofContext.debug(`Verifying the '${statementString}' qualified statement...`, qualifiedStatementNode);
+    proofContext.debug(`Verifying the '${statementString}' qualified statement.`, qualifiedStatementNode);
 
     const referenceNode = referenceNodeQuery(qualifiedStatementNode),
           referenceName = referenceNameFromReferenceNode(referenceNode);

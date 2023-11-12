@@ -24,8 +24,8 @@ export default function verifyLemma(lemmaNode, fileContext) {
         proofContext = ProofContext.fromFileContext(fileContext);
 
   (labelsString === EMPTY_STRING) ?
-    fileContext.debug(`Verifying a lemma...`, lemmaNode) :
-      fileContext.debug(`Verifying the '${labelsString}' lemma...`, lemmaNode);
+    fileContext.debug(`Verifying a lemma.`, lemmaNode) :
+      fileContext.debug(`Verifying the '${labelsString}' lemma.`, lemmaNode);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);

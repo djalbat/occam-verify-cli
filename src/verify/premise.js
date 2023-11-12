@@ -14,7 +14,7 @@ export default function verifyPremise(premiseNode, premises, metaproofContext) {
 
   const premiseString = metaproofContext.nodeAsString(premiseNode);
 
-  metaproofContext.debug(`Verifying the '${premiseString}' premise...`, premiseNode);
+  metaproofContext.debug(`Verifying the '${premiseString}' premise.`, premiseNode);
 
   const derived = false,
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(premiseNode),

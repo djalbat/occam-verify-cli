@@ -20,7 +20,7 @@ export default function verifyAxiom(axiomNode, fileContext) {
         labelsString = fileContext.nodesAsString(labelNodes),
         proofContext = ProofContext.fromFileContext(fileContext);
 
-  fileContext.debug(`Verifying the '${labelsString}' axiom...`, axiomNode);
+  fileContext.debug(`Verifying the '${labelsString}' axiom.`, axiomNode);
 
   const labels = [],
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);

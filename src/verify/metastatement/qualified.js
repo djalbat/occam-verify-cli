@@ -14,7 +14,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
     const metastatementString = metaproofContext.nodeAsString(metastatementNode),
           metastatementMetaproofContext = metaproofContext; ///
 
-    metaproofContext.debug(`Verifying the '${metastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
+    metaproofContext.debug(`Verifying the '${metastatementString}' qualified metastatement.`, qualifiedMetastatementNode);
 
     const referenceNode = referenceNodeQuery(qualifiedMetastatementNode),
           referenceName = referenceNameFromReferenceNode(referenceNode),

@@ -145,7 +145,7 @@ export default function verifyStatement(statementNode, assignments, derived, con
 
   const statementString = context.nodeAsString(statementNode);
 
-  context.debug(`Verifying the '${statementString}' statement...`, statementNode);
+  context.debug(`Verifying the '${statementString}' statement.`, statementNode);
 
   const verifyStatementFunctions = [
     verifyStatementAgainstCombinators,
@@ -216,6 +216,10 @@ export function verifyStatementAgainstCombinator(statementNode, combinator, cont
 function verifyStatementAsTypeInference(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAsTypeInference = false;
 
+  const statementString = context.nodeAsString(statementNode);
+
+  context.trace(`Verifying the '${statementString}' statement as a type inference.`, statementNode);
+
   const typeInferenceNode = typeInferenceNodeQuery(statementNode);
 
   if (typeInferenceNode !== null) {
@@ -236,6 +240,10 @@ function verifyStatementAsTypeInference(statementNode, assignments, derived, con
 function verifyStatementAsTypeAssertion(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAsTypeAssertion = false;
 
+  const statementString = context.nodeAsString(statementNode);
+
+  context.trace(`Verifying the '${statementString}' statement as a type assertion.`, statementNode);
+
   const typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
   if (typeAssertionNode !== null) {
@@ -249,6 +257,10 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, con
 
 function verifyStatementAsEquality(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAsEquality = false;
+
+  const statementString = context.nodeAsString(statementNode);
+
+  context.trace(`Verifying the '${statementString}' statement as an equality.`, statementNode);
 
   const combinator = equalityCombinator,  ///
         statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context, verifyAhead);

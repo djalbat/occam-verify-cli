@@ -14,7 +14,7 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
   if (statementNode !== null) {
     const statementString = proofContext.nodeAsString(statementNode);
 
-    proofContext.debug(`Verifying the '${statementString}' unqualified statement...`, unqualifiedStatementNode);
+    proofContext.debug(`Verifying the '${statementString}' unqualified statement.`, unqualifiedStatementNode);
 
     if (derived) {
       const statementMatches = proofContext.matchStatement(statementNode);

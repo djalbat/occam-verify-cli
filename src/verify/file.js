@@ -11,7 +11,7 @@ const errorNodesQuery = nodesQuery("/document/error"),
 export default function verifyFile(filePath, releaseContext) {
   let fileVerified = false;
 
-  releaseContext.debug(`Verifying the '${filePath}' file...`);
+  releaseContext.debug(`Verifying the '${filePath}' file.`);
 
   const fileContext = FileContext.fromFilePathAndReleaseContext(filePath, releaseContext),
         node = fileContext.getNode();

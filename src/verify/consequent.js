@@ -13,7 +13,7 @@ export default function verifyConsequent(consequentNode, consequents, proofConte
 
   const consequentString = proofContext.nodeAsString(consequentNode);
 
-  proofContext.debug(`Verifying the '${consequentString}' consequent...`, consequentNode);
+  proofContext.debug(`Verifying the '${consequentString}' consequent.`, consequentNode);
 
   const derived = false,
         assignments = [],

@@ -62,7 +62,7 @@ export default function verifyMetastatement(metastatementNode, derived, metaproo
 
   const metastatementString = metaproofContext.nodeAsString(metastatementNode);
 
-  metaproofContext.debug(`Verifying the '${metastatementString}' metastatement...`, metastatementNode);
+  metaproofContext.debug(`Verifying the '${metastatementString}' metastatement.`, metastatementNode);
 
   const nonTerminalNodeA = metastatementNode, ///
         nonTerminalNodeB = metastatementNode, ///

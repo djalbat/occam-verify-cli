@@ -118,10 +118,10 @@ export default function verifyTerm(termNode, types, context, verifyAhead) {
 
   const termString = context.nodeAsString(termNode);
 
-  context.debug(`Verifying the '${termString}' term...`, termNode);
+  context.debug(`Verifying the '${termString}' term.`, termNode);
 
   const verifyTermFunctions = [
-    verifyTermAsVariableEx,
+    verifyTermAsStandaloneVariable,
     verifyTermAgainstConstructors
   ];
 
@@ -149,7 +149,7 @@ export function verifyTermAgainstConstructors(termNode, types, context, verifyAh
 
   const termString = context.nodeAsString(termNode);
 
-  context.trace(`Verifying the '${termString}' term against constructors...`, termNode);
+  context.trace(`Verifying the '${termString}' term against constructors.`, termNode);
 
   const constructors = context.getConstructors();
 
@@ -173,7 +173,7 @@ export function verifyTermAsVariable(termNode, variables, context, verifyAhead) 
 
   const termString = context.nodeAsString(termNode);
 
-  context.trace(`Verifying the '${termString}' term as a variable...`, termNode);
+  context.trace(`Verifying the '${termString}' term as a variable.`, termNode);
 
   const variableNode = variableNodeQuery(termNode);
 
@@ -217,12 +217,15 @@ function verifyTermAgainstConstructor(termNode, types, constructor, context, ver
   return termVerifiedAgainstConstructor;
 }
 
-function verifyTermAsVariableEx(termNode, types, context, verifyAhead) {
-  let termVerifiedAsVariable;
+function verifyTermAsStandaloneVariable(termNode, types, context, verifyAhead) {
+  let termVerifiedAsStandaloneVariable = false;
 
-  const variables = [];
+  const termString = context.nodeAsString(termNode);
 
-  termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context, verifyAhead);
+  context.trace(`Verifying the '${termString}' term as a standalone variable.`, termNode);
+
+  const variables = [],
+        termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context, verifyAhead);
 
   if (termVerifiedAsVariable) {
     const firstVariable = first(variables),
@@ -230,7 +233,9 @@ function verifyTermAsVariableEx(termNode, types, context, verifyAhead) {
           type = variable.getType();
 
     types.push(type);
+
+    termVerifiedAsStandaloneVariable = true;
   }
 
-  return termVerifiedAsVariable;
+  return termVerifiedAsStandaloneVariable;
 }

@@ -19,7 +19,7 @@ export default function verifyTypeInference(typeInferenceNode, context) {
 
   const typeInferenceString = context.nodeAsString(typeInferenceNode);
 
-  context.debug(`Verifying the '${typeInferenceString}' type inference...`, typeInferenceNode);
+  context.debug(`Verifying the '${typeInferenceString}' type inference.`, typeInferenceNode);
 
   let statementNode = statementNodeQuery(typeInferenceNode);
 

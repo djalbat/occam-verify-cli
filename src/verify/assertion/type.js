@@ -15,7 +15,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
 
   const typeAssertionString = context.nodeAsString(typeAssertionNode);
 
-  context.debug(`Verifying the '${typeAssertionString}' type assertion...`, typeAssertionNode);
+  context.debug(`Verifying the '${typeAssertionString}' type assertion.`, typeAssertionNode);
 
   const typeNode = typeNodeQuery(typeAssertionNode),
         typeName = typeNameFromTypeNode(typeNode),
