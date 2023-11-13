@@ -12,14 +12,14 @@ export default function verifyCombinatorDeclaration(combinatorDeclarationNode, f
   const statementNode = statementNodeQuery(combinatorDeclarationNode),
         statementString = fileContext.nodeAsString(statementNode);
 
-  fileContext.trace(`Verifying the '${statementString}' combinator declaration...`);
+  fileContext.trace(`Verifying the '${statementString}' combinator declaration...`, combinatorDeclarationNode);
 
   const statementVerifiedAsCombinator = verifyStatementAsCombinator(statementNode, fileContext);
 
   combinatorDeclarationVerified = statementVerifiedAsCombinator; ///
 
   if (combinatorDeclarationVerified) {
-    fileContext.debug(`...verified the '${statementString}' combinator declaration.`);
+    fileContext.debug(`...verified the '${statementString}' combinator declaration.`, combinatorDeclarationNode);
   }
 
   return combinatorDeclarationVerified;

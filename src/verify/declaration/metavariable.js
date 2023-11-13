@@ -14,14 +14,14 @@ export default function verifyMetavariableDeclaration(metavariableDeclarationNod
         metavariableNode = metavariableNodeQuery(metavariableDeclarationNode),
         metavariableString = fileContext.nodeAsString(metaTypeNode);
 
-  fileContext.trace(`Verifying the '${metavariableString}' metavariable declaration...`);
+  fileContext.trace(`Verifying the '${metavariableString}' metavariable declaration...`, metavariableDeclarationNode);
 
   const metavariableVVerified = verifyMetavariable(metavariableNode, metaTypeNode, fileContext);
 
   metavariableDeclarationVerified = metavariableVVerified;  ///
 
   if (metavariableDeclarationVerified) {
-    fileContext.debug(`...verified the '${metavariableString}' metavariable declaration.`);
+    fileContext.debug(`...verified the '${metavariableString}' metavariable declaration.`, metavariableDeclarationNode);
   }
 
   return metavariableDeclarationVerified;

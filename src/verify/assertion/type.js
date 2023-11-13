@@ -15,7 +15,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
 
   const typeAssertionString = context.nodeAsString(typeAssertionNode);
 
-  context.debug(`Verifying the '${typeAssertionString}' type assertion.`, typeAssertionNode);
+  context.trace(`Verifying the '${typeAssertionString}' type assertion.`, typeAssertionNode);
 
   const typeNode = typeNodeQuery(typeAssertionNode),
         typeName = typeNameFromTypeNode(typeNode),
@@ -38,7 +38,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
   }
 
   if (typeAssertionVerified) {
-    context.info(`Verified the '${typeAssertionString}' statement type assertion.`, typeAssertionNode);
+    context.debug(`Verified the '${typeAssertionString}' statement type assertion.`, typeAssertionNode);
   }
 
   return typeAssertionVerified;
@@ -52,6 +52,10 @@ export function verifyVariableTypeAssertion(typeAssertionNode, assignments, deri
         termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context);
 
   if (termVerifiedAsVariable) {
+    const typeAssertionString = context.nodeAsString(typeAssertionNode);
+
+    context.trace(`Verifying the '${typeAssertionString}' variable type assertion...`, typeAssertionNode);
+
     const typeNode = typeNodeQuery(typeAssertionNode),
           typeName = typeNameFromTypeNode(typeNode),
           assertedTypeName = typeName,  ///
@@ -96,6 +100,10 @@ export function verifyVariableTypeAssertion(typeAssertionNode, assignments, deri
         }
       }
     }
+
+    if (variableTypeAssertionVerified) {
+      context.debug(`...verified the '${typeAssertionString}' variable type assertion.`, typeAssertionNode);
+    }
   }
 
   return variableTypeAssertionVerified;
@@ -109,6 +117,10 @@ function verifyTermTypeAssertion(typeAssertionNode, derived, context) {
         termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, context);
 
   if (termVerifiedAgainstConstructors) {
+    const typeAssertionString = context.nodeAsString(typeAssertionNode);
+
+    context.trace(`Verifying the '${typeAssertionString}' term type assertion...`, typeAssertionNode);
+
     const typeNode = typeNodeQuery(typeAssertionNode),
           typeName = typeNameFromTypeNode(typeNode),
           assertedTypeName = typeName,  ///
@@ -145,6 +157,10 @@ function verifyTermTypeAssertion(typeAssertionNode, derived, context) {
           termTypeAssertionVerified = true;
         }
       }
+    }
+
+    if (termTypeAssertionVerified) {
+      context.debug(`...verified the '${typeAssertionString}' term type assertion.`, typeAssertionNode);
     }
   }
 

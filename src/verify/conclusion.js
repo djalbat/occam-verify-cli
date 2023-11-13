@@ -13,7 +13,7 @@ export default function verifyConclusion(conclusionNode, conclusions, metaproofC
 
   const conclusionString = metaproofContext.nodeAsString(conclusionNode);
 
-  metaproofContext.debug(`Verifying the '${conclusionString}' conclusion.`, conclusionNode);
+  metaproofContext.trace(`Verifying the '${conclusionString}' conclusion...`, conclusionNode);
 
   const derived = false,
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode),
@@ -29,7 +29,7 @@ export default function verifyConclusion(conclusionNode, conclusions, metaproofC
   }
 
   if (conclusionVerified) {
-    metaproofContext.info(`Verified the '${conclusionString}' conclusion.`, conclusionNode);
+    metaproofContext.debug(`...verified the '${conclusionString}' conclusion.`, conclusionNode);
   }
 
   return conclusionVerified;

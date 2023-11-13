@@ -65,7 +65,7 @@ function verifyMetaargument(metaArgumentNode, combinatorMetaargumentNode, contex
 
   const metaArgumentString = context.nodeAsString(metaArgumentNode);
 
-  context.trace(`Verifying the '${metaArgumentString}' metaargument...`);
+  context.trace(`Verifying the '${metaArgumentString}' metaargument...`, metaArgumentNode);
 
   const statementNode = statementNodeQuery(metaArgumentNode),
         combinatorMetaTYpeNode = metaTypeNodeQuery(combinatorMetaargumentNode);
@@ -91,7 +91,7 @@ function verifyMetaargument(metaArgumentNode, combinatorMetaargumentNode, contex
   }
 
   if (metaArgumentVerified) {
-    context.debug(`...verified the '${metaArgumentString}' metaargument.`);
+    context.debug(`...verified the '${metaArgumentString}' metaargument.`, metaArgumentNode);
   }
 
   return metaArgumentVerified;

@@ -43,7 +43,7 @@ function verifyMetavariable(metavariableNode, metaproofContext) {
 
   const metavariableString = metaproofContext.nodeAsString(metavariableNode);
 
-  metaproofContext.trace(`Verifying the '${metavariableString}' metavariable...`);
+  metaproofContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
   const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
         metavariablePresent = metaproofContext.isMetavariablePresentByMetavariableName(metavariableName);
@@ -51,7 +51,7 @@ function verifyMetavariable(metavariableNode, metaproofContext) {
   metavariableVerified = metavariablePresent;
 
   if (metavariableVerified) {
-    metaproofContext.debug(`...verified the '${metavariableString}' metavariable.`);
+    metaproofContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
   }
 
   return metavariableVerified;

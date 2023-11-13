@@ -7,8 +7,11 @@ import { metaTypeNameFromMetaTypeNode, metavariableNameFromMetavariableNode } fr
 export default function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
   let metavariableVerified = false;
 
+  const metavariableString = fileContext.nodeAsString(metavariableNode);
+
+  fileContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
+
   const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-        metavariableString = fileContext.nodeAsString(metavariableNode),
         metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
 
   if (metavariablePresent) {
@@ -25,7 +28,7 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
   }
 
   if (metavariableVerified) {
-    fileContext.info(`Verified the '${metavariableString}' metavariable.`, metavariableNode);
+    fileContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
   }
 
   return metavariableVerified;

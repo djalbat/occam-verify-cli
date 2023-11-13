@@ -52,7 +52,7 @@ function verifyArgument(argumentNode, constructorArgumentNode, context, verifyAh
 
   const argumentString = context.nodeAsString(argumentNode);
 
-  context.trace(`Verifying the '${argumentString}' argument...`);
+  context.trace(`Verifying the '${argumentString}' argument...`, argumentNode);
 
   const typeNode = typeNodeQuery(argumentNode);
 
@@ -99,7 +99,7 @@ function verifyArgument(argumentNode, constructorArgumentNode, context, verifyAh
   }
 
   if (argumentVerified) {
-    context.debug(`...verified the '${argumentString}' argument.`);
+    context.debug(`...verified the '${argumentString}' argument.`, argumentNode);
   }
 
   return argumentVerified;

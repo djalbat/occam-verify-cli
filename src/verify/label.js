@@ -10,7 +10,7 @@ export default function verifyLabel(labelNode, labels, fileContext) {
   const labelName = labelNameFromLabelNode(labelNode),
         labelString = fileContext.nodeAsString(labelNode);
 
-  fileContext.trace(`Verifying the '${labelString}' label...`);
+  fileContext.trace(`Verifying the '${labelString}' label...`, labelNode);
 
   const labelPresent = fileContext.isLabelPresentByLabelName(labelName);
 
@@ -27,7 +27,7 @@ export default function verifyLabel(labelNode, labels, fileContext) {
   }
 
   if (labelVerified) {
-    fileContext.debug(`...verified the '${labelString}' label.`);
+    fileContext.debug(`...verified the '${labelString}' label.`, labelNode);
   }
 
   return labelVerified;

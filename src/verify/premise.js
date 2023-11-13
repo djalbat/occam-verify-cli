@@ -33,7 +33,7 @@ export default function verifyPremise(premiseNode, premises, metaproofContext) {
   }
 
   if (premiseVerified) {
-    metaproofContext.info(`...verified the '${premiseString}' premise.`, premiseNode);
+    metaproofContext.debug(`...verified the '${premiseString}' premise.`, premiseNode);
   }
 
   return premiseVerified;
