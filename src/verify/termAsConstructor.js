@@ -13,9 +13,10 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
   fileContext.debug(`Verifying the '${termString}' term as a constructor...`, termNode);
 
   const nonTerminalNode = termNode, ///
-        nonTerminalNodeVerified = termAsConstructorNodeVerifier.verifyNonTerminalNode(nonTerminalNode, fileContext);
+        childNodes = nonTerminalNode.getChildNodes(),
+        childNodesVerified = termAsConstructorNodeVerifier.verifyChildNodes(childNodes, fileContext);
 
-  if (nonTerminalNodeVerified) {
+  if (childNodesVerified) {
     let type = null;
 
     if (typeNode === null) {

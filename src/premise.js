@@ -1,10 +1,11 @@
 "use strict";
 
+import premiseStatementForMetavariableNodesVerifier from "./verifier/nodes/statementForMetavariable/premise";
+import premiseMetastatementForMetavariableNodesVerifier from "./verifier/nodes/metastatementForMetavariable/premise";
+
 import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { premiseStatementForMetavariableVerifier } from "./verifier/statementForMetavariable/premise";
 import { metastatementNodeFromMetastatementString } from "./utilities/node";
-import { premiseMetastatementForMetavariableVerifier } from "./verifier/metastatementForMetavariable/premise";
 
 const ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/ruleSubproofAssertion!"),
       ruleSubproofPremiseMetastatementQuery = nodesQuery("/ruleSubproof/premise/unqualifiedMetastatement!/metastatement!"),
@@ -45,7 +46,7 @@ export default class Premise {
                 nonTerminalNodeB = subproofStatementNode, ///
                 fileContextA = fileContext, ///
                 proofContextB = statementProofContext,  ///
-                nonTerminalNodeVerified = premiseStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB);
+                nonTerminalNodeVerified = premiseStatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB);
 
           if (nonTerminalNodeVerified) {
             return true;
@@ -62,7 +63,7 @@ export default class Premise {
           nonTerminalNodeB = statementNode,  ///
           fileContextA = fileContext, ///
           proofContextB = statementProofContext,  ///
-          nonTerminalNodeVerified = premiseStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB),
+          nonTerminalNodeVerified = premiseStatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;
@@ -91,7 +92,7 @@ export default class Premise {
                 nonTerminalNodeB = ruleSubproofMetastatementNode, ///
                 fileContextA = fileContext, ///
                 metaproofContextB = metastatementMetaproofContext,  ///
-                nonTerminalNodeVerified = premiseMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB);
+                nonTerminalNodeVerified = premiseMetastatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB);
 
           if (nonTerminalNodeVerified) {
             return true;
@@ -108,7 +109,7 @@ export default class Premise {
           nonTerminalNodeB = metastatementNode,  ///
           fileContextA = fileContext, ///
           metaproofContextB = metastatementMetaproofContext,  ///
-          nonTerminalNodeVerified = premiseMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB),
+          nonTerminalNodeVerified = premiseMetastatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB),
           metastatementNodeMatches = nonTerminalNodeVerified; ///
 
     return metastatementNodeMatches;

@@ -1,9 +1,10 @@
 "use strict";
 
+import suppositionTermForVariableNodesVerifier from "./verifier/nodes/termForVariable/supposition";
+
 import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { statementNodeFromStatementString } from "./utilities/node";
-import { suppositionTermForVariableVerifier } from "./verifier/termForVariable/supposition";
 
 const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
       subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
@@ -42,7 +43,7 @@ export default class Supposition {
                 nonTerminalNodeB = subproofStatementNode, ///
                 proofContextA = proofContext, ///
                 proofContextB = statementProofContext,  ///
-                nonTerminalNodeVerified = suppositionTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB);
+                nonTerminalNodeVerified = suppositionTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB);
 
           if (nonTerminalNodeVerified) {
             return true;
@@ -59,7 +60,7 @@ export default class Supposition {
           nonTerminalNodeB = statementNode,  ///
           proofContextA = proofContext, ///
           proofContextB = statementProofContext,  ///
-          nonTerminalNodeVerified = suppositionTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB),
+          nonTerminalNodeVerified = suppositionTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;

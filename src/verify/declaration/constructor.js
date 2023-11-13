@@ -17,8 +17,8 @@ export default function verifyConstructorDeclaration(constructorDeclarationNode,
         typeString = fileContext.nodeAsString(typeNode);
 
   (typeString === EMPTY_STRING) ?
-    fileContext.trace(`Verifying the '${termString}' variable declaration...`, constructorDeclarationNode) :
-      fileContext.trace(`Verifying the '${termString}:${typeString}' variable declaration...`, constructorDeclarationNode);
+    fileContext.trace(`Verifying the '${termString}' constructor declaration...`, constructorDeclarationNode) :
+      fileContext.trace(`Verifying the '${termString}:${typeString}' constructor declaration...`, constructorDeclarationNode);
 
   const termVerifiedAsConstructor = verifyTermAsConstructor(termNode, typeNode, fileContext);
 
@@ -26,8 +26,8 @@ export default function verifyConstructorDeclaration(constructorDeclarationNode,
 
   if (constructorDeclarationVerified) {
     (typeString === EMPTY_STRING) ?
-      fileContext.debug(`...verified the '${termString}' variable declaration.`, constructorDeclarationNode) :
-        fileContext.debug(`...verified the '${termString}:${typeString}' variable declaration.`, constructorDeclarationNode);
+      fileContext.debug(`...verified the '${termString}' constructor declaration.`, constructorDeclarationNode) :
+        fileContext.debug(`...verified the '${termString}:${typeString}' constructor declaration.`, constructorDeclarationNode);
   }
 
   return constructorDeclarationVerified;

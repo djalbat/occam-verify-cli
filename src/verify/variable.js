@@ -10,7 +10,7 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
 
   const variableString = fileContext.nodeAsString(variableNode);
 
-  fileContext.trace(`Verifying the '${variableString}' variable.`);
+  fileContext.trace(`Verifying the '${variableString}' variable.`, variableNode);
 
   const variableName = variableNameFromVariableNode(variableNode),
         variablePresent = fileContext.isVariablePresentByVariableName(variableName);

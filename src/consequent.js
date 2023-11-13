@@ -1,8 +1,9 @@
 "use strict";
 
+import consequentTermForVariableNodesVerifier from "./verifier/nodes/termForVariable/consequent";
+
 import { nodeAsString } from "./utilities/string";
 import { statementNodeFromStatementString } from "./utilities/node";
-import { consequentTermForVariableVerifier } from "./verifier/termForVariable/consequent";
 
 export default class Consequent {
   constructor(statementNode) {
@@ -16,7 +17,7 @@ export default class Consequent {
   matchStatementNode(statementNode, substitutions, proofContext) {
     const nonTerminalNodeA = this.statementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeVerified = consequentTermForVariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext),
+          nonTerminalNodeVerified = consequentTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;

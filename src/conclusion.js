@@ -1,9 +1,10 @@
 "use strict";
 
+import conclusionStatementForMetavariableNodesVerifier from "./verifier/nodes/statementForMetavariable/conclusion";
+import conclusionMetastatementForMetavariableNodesVerifier from "./verifier/nodes/metastatementForMetavariable/conclusion";
+
 import { nodeAsString } from "./utilities/string";
 import { metastatementNodeFromMetastatementString } from "./utilities/node";
-import { conclusionStatementForMetavariableVerifier } from "./verifier/statementForMetavariable/conclusion";
-import { conclusionMetastatementForMetavariableVerifier } from "./verifier/metastatementForMetavariable/conclusion";
 
 export default class Conclusion {
   constructor(metastatementNode) {
@@ -19,7 +20,7 @@ export default class Conclusion {
           nonTerminalNodeB = statementNode,  ///
           fileContextA = fileContext, ///
           proofContextB = statementProofContext,  ///
-          nonTerminalNodeVerified = conclusionStatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB),
+          nonTerminalNodeVerified = conclusionStatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;
@@ -30,7 +31,7 @@ export default class Conclusion {
           nonTerminalNodeB = metastatementNode,  ///
           fileContextA = fileContext, ///
           metaproofContextB = metastatementMetaproofContext,  ///
-          nonTerminalNodeVerified = conclusionMetastatementForMetavariableVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB),
+          nonTerminalNodeVerified = conclusionMetastatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB),
           metastatementNodeMatches = nonTerminalNodeVerified; ///
 
     return metastatementNodeMatches;

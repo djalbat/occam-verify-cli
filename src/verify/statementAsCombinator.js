@@ -11,9 +11,10 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
   fileContext.trace(`Verifying the '${statementString}' statement as a combinator....`, statementNode);
 
   const nonTerminalNode = statementNode, ///
-        nonTerminalNodeVerified = statementAsCombinatorNodeVerifier.verifyNonTerminalNode(nonTerminalNode, fileContext);
+        childNodes = nonTerminalNode.getChildNodes(),
+        childNodesVerified = statementAsCombinatorNodeVerifier.verifyChildNodes(childNodes, fileContext);
 
-  if (nonTerminalNodeVerified) {
+  if (childNodesVerified) {
     const tokens = fileContext.getTokens(),
           combinator = Combinator.fromStatementNodeAndTokens(statementNode, tokens);
 
