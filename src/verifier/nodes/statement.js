@@ -3,7 +3,7 @@
 import NodesVerifier from "../../verifier/nodes";
 
 import { nodeQuery } from "../../utilities/query";
-import { termNodesVerifier } from "../../verify/term";
+import { verifyArgument } from "../../verifier/nodes/term";
 import { STATEMENT_META_TYPE } from "../../metaTypes";
 import { ARGUMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../../ruleNames";
 
@@ -26,9 +26,9 @@ class StatementNodesVerifier extends NodesVerifier {
         case ARGUMENT_RULE_NAME: {
           const argumentNode = nonTerminalNode, ///
                 constructorArgumentNode = combinatorNonTerminalNode, ///
-                argumentNodeVerified = termNodesVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead);
+                argumentVerified = verifyArgument(argumentNode, constructorArgumentNode, context, verifyAhead);
 
-          nonTerminalNodeVerified = argumentNodeVerified; ///
+          nonTerminalNodeVerified = argumentVerified; ///
 
           break;
         }

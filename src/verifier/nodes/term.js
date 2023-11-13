@@ -47,7 +47,7 @@ const termNodesVerifier = new TermNodesVerifier();
 
 export default termNodesVerifier;
 
-function verifyArgument(argumentNode, constructorArgumentNode, context, verifyAhead) {
+export function verifyArgument(argumentNode, constructorArgumentNode, context, verifyAhead) {
   let argumentVerified = false;
 
   const argumentString = context.nodeAsString(argumentNode);
@@ -74,7 +74,8 @@ function verifyArgument(argumentNode, constructorArgumentNode, context, verifyAh
 
       argumentVerified = nodeVerified;  ///
     } else if (constructorTypeNode !== null) {
-      const types = [],
+      const { verifyTerm } = termNodesVerifier,
+            types = [],
             termVerified = verifyTerm(termNode, types, context, verifyAhead);
 
       if (termVerified) {

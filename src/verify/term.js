@@ -7,7 +7,7 @@ import { nodeQuery, variableNameFromVariableNode } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
-export default function verifyTerm(termNode, types, context, verifyAhead) {
+function verifyTerm(termNode, types, context, verifyAhead) {
   let termVerified;
 
   const termString = context.nodeAsString(termNode);
@@ -37,6 +37,12 @@ export default function verifyTerm(termNode, types, context, verifyAhead) {
 
   return termVerified;
 }
+
+Object.assign(termNodesVerifier, {
+  verifyTerm
+});
+
+export default verifyTerm;
 
 export function verifyTermAgainstConstructors(termNode, types, context, verifyAhead) {
   let termVerifiedAgainstConstructors;

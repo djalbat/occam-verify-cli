@@ -15,7 +15,7 @@ import { verifyTermAsVariable } from "../verify/term";
 const typeInferenceNodeQuery = nodeQuery("/statement/typeInference!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
-export default function verifyStatement(statementNode, assignments, derived, context, verifyAhead) {
+function verifyStatement(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerified;
 
   const statementString = context.nodeAsString(statementNode);
@@ -43,6 +43,12 @@ export default function verifyStatement(statementNode, assignments, derived, con
 
   return statementVerified;
 }
+
+Object.assign(verifyStatement, {
+  statementNodesVerifier
+});
+
+export default verifyStatement;
 
 export function verifyStatementAgainstCombinators(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAgainstCombinators;
