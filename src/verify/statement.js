@@ -156,7 +156,7 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context,
   if (statementVerifiedAgainstCombinator) {
     const statementString = context.nodeAsString(statementNode);
 
-    context.trace(`Verifying the '${statementString}' statement as an equality.`, statementNode);
+    context.trace(`Verifying the '${statementString}' statement as an equality...`, statementNode);
 
     const equality = Equality.fromStatementNode(statementNode);
 

@@ -28,8 +28,8 @@ export default function verifyTypeDeclaration(typeDeclarationNode, fileContext) 
 
   if (typeDeclarationVerified) {
     (superTypeString === EMPTY_STRING) ?
-      fileContext.trace(`...verifying the '${typeString}' type declaration.`, typeDeclarationNode) :
-        fileContext.trace(`...verifying the '${typeString}:${superTypeString}' type declaration.`, typeDeclarationNode);
+      fileContext.trace(`...verified the '${typeString}' type declaration.`, typeDeclarationNode) :
+        fileContext.trace(`...verified the '${typeString}:${superTypeString}' type declaration.`, typeDeclarationNode);
   }
 
   return typeDeclarationVerified;

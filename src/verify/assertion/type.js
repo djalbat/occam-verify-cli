@@ -15,7 +15,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
 
   const typeAssertionString = context.nodeAsString(typeAssertionNode);
 
-  context.trace(`Verifying the '${typeAssertionString}' type assertion.`, typeAssertionNode);
+  context.trace(`Verifying the '${typeAssertionString}' type assertion...`, typeAssertionNode);
 
   const typeNode = typeNodeQuery(typeAssertionNode),
         typeName = typeNameFromTypeNode(typeNode),
@@ -38,7 +38,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
   }
 
   if (typeAssertionVerified) {
-    context.debug(`Verified the '${typeAssertionString}' statement type assertion.`, typeAssertionNode);
+    context.debug(`...verified the '${typeAssertionString}' statement type assertion.`, typeAssertionNode);
   }
 
   return typeAssertionVerified;
