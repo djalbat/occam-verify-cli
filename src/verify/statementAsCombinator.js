@@ -12,7 +12,11 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
 
   const nonTerminalNode = statementNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
-        childNodesVerified = statementAsCombinatorNodeVerifier.verifyChildNodes(childNodes, fileContext);
+        childNodesVerified = statementAsCombinatorNodeVerifier.verifyChildNodes(childNodes, fileContext, () => {
+          const verifiedAhead = true;
+
+          return verifiedAhead;
+        });
 
   if (childNodesVerified) {
     const tokens = fileContext.getTokens(),

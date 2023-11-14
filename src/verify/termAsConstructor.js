@@ -14,7 +14,11 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
 
   const nonTerminalNode = termNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
-        childNodesVerified = termAsConstructorNodeVerifier.verifyChildNodes(childNodes, fileContext);
+        childNodesVerified = termAsConstructorNodeVerifier.verifyChildNodes(childNodes, fileContext, () => {
+          const verifiedAhead = true;
+
+          return verifiedAhead;
+        });
 
   if (childNodesVerified) {
     let type = null;

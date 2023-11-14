@@ -35,16 +35,39 @@ export default class NodesVerifier {
           childNodesBLength = childNodesB.length;
 
     if (childNodesALength === childNodesBLength) {
-      childNodesVerify = childNodesA.every((childNodeA, index) => {
-        const childNodeB = childNodesB[index],
-              nodeA = childNodeA, ///
-              nodeB = childNodeB, ///
-              nodeVerified = this.verifyNode(nodeA, nodeB, ...remainingArguments);
+      const index = 0,
+            childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments);
 
-        if (nodeVerified) {
-          return true;
-        }
-      });
+      childNodesVerify = childNodesVerifyAhead; ///
+    }
+
+    return childNodesVerify;
+  }
+
+  verifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments) {
+    let childNodesVerify;
+
+    const verifyAhead = remainingArguments.pop(), ///
+          childNodesALength = childNodesA.length;
+
+    if (index === childNodesALength) {
+      const verifiedAhead = verifyAhead();
+
+      childNodesVerify = verifiedAhead; ///
+    } else {
+      const childNodeA = childNodesA[index],
+            childNodeB = childNodesB[index],
+            nodeA = childNodeA, ///
+            nodeB = childNodeB, ///
+            nodeVerified = this.verifyNode(nodeA, nodeB, ...remainingArguments, () => {
+              index++;
+
+              const childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments);
+
+              return childNodesVerifyAhead;
+            });
+
+      childNodesVerify = nodeVerified;  ///
     }
 
     return childNodesVerify;

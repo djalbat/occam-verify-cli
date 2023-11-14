@@ -23,10 +23,10 @@ function verifyStatement(statementNode, assignments, derived, context, verifyAhe
   context.trace(`Verifying the '${statementString}' statement...`, statementNode);
 
   const verifyStatementFunctions = [
-    verifyStatementAgainstCombinators,
+    verifyStatementAsEquality,
     verifyStatementAsTypeInference,
     verifyStatementAsTypeAssertion,
-    verifyStatementAsEquality
+    verifyStatementAgainstCombinators
   ];
 
   statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {

@@ -24,14 +24,37 @@ export default class NodeVerifier {
   verifyChildNodes(childNodes, ...remainingArguments) {
     let childNodesVerify;
 
-    childNodesVerify = childNodes.every((childNode) => {
-      const node = childNode, ///
-            nodeVerified = this.verifyNode(node, ...remainingArguments);
+    const index = 0,
+          childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodes, ...remainingArguments);
 
-      if (nodeVerified) {
-        return true;
-      }
-    });
+    childNodesVerify = childNodesVerifyAhead; ///
+
+    return childNodesVerify;
+  }
+
+  verifyChildNodesAhead(index, childNodes, ...remainingArguments) {
+    let childNodesVerify;
+
+    const verifyAhead = remainingArguments.pop(), ///
+          childNodesLength = childNodes.length;
+
+    if (index === childNodesLength) {
+      const verifiedAhead = verifyAhead();
+
+      childNodesVerify = verifiedAhead; ///
+    } else {
+      const childNode = childNodes[index],
+            node = childNode, ///
+            nodeVerified = this.verifyNode(node, ...remainingArguments, () => {
+              index++;
+
+              const childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodes, ...remainingArguments);
+
+              return childNodesVerifyAhead;
+            });
+
+      childNodesVerify = nodeVerified;  ///
+    }
 
     return childNodesVerify;
   }
