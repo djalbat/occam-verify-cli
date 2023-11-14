@@ -6,4 +6,6 @@ class ConsequentTermForVariableNodesVerifier extends TermForVariableNodesVerifie
   static createSubstitutions = false;
 }
 
-export const consequentTermForVariableNodesVerifier = new ConsequentTermForVariableNodesVerifier();
+const consequentTermForVariableNodesVerifier = new ConsequentTermForVariableNodesVerifier();
+
+export default consequentTermForVariableNodesVerifier;

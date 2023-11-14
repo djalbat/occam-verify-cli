@@ -6,4 +6,6 @@ class ConclusionStatementForMetavariableNodesVerifier extends StatementForMetava
   static createSubstitutions = false;
 }
 
-export const conclusionStatementForMetavariableNodesVerifier = new ConclusionStatementForMetavariableNodesVerifier();
+const conclusionStatementForMetavariableNodesVerifier = new ConclusionStatementForMetavariableNodesVerifier();
+
+export default conclusionStatementForMetavariableNodesVerifier;

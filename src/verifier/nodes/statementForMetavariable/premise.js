@@ -6,4 +6,6 @@ class PremiseStatementForMetavariableNodesVerifier extends StatementForMetavaria
   static createSubstitutions = true;
 }
 
-export const premiseStatementForMetavariableNodesVerifier = new PremiseStatementForMetavariableNodesVerifier();
+const premiseStatementForMetavariableNodesVerifier = new PremiseStatementForMetavariableNodesVerifier();
+
+export default premiseStatementForMetavariableNodesVerifier;

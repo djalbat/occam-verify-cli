@@ -6,4 +6,6 @@ class SuppositionTermForVariableNodesVerifier extends TermForVariableNodesVerifi
   static createSubstitutions = true;
 }
 
-export const suppositionTermForVariableNodesVerifier = new SuppositionTermForVariableNodesVerifier();
+const suppositionTermForVariableNodesVerifier = new SuppositionTermForVariableNodesVerifier();
+
+export default suppositionTermForVariableNodesVerifier;

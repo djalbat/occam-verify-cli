@@ -1,16 +1,15 @@
 "use strict";
 
-import NodesVerifier from "../../verifier/nodes";
+import NodeVerifier from "../../verifier/node";
 
 import { METAVARIABLE_RULE_NAME } from "../../ruleNames";
 import { metavariableNameFromMetavariableNode } from "../../utilities/query";
 
-class MetastatementNodesVerifier extends NodesVerifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaproofContext) {
+class MetastatementNodeVerifier extends NodeVerifier {
+  verifyNonTerminalNode(nonTerminalNode, metaproofContext) {
     let nonTerminalNodeVerified;
 
-    const nonTerminalNode = nonTerminalNodeA, ///
-          ruleName = nonTerminalNode.getRuleName(); ///
+    const ruleName = nonTerminalNode.getRuleName(); ///
 
     switch (ruleName) {
       case METAVARIABLE_RULE_NAME: {
@@ -24,7 +23,7 @@ class MetastatementNodesVerifier extends NodesVerifier {
       }
 
       default: {
-        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, metaproofContext);
+        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNode, metaproofContext);
 
         break;
       }
@@ -34,9 +33,9 @@ class MetastatementNodesVerifier extends NodesVerifier {
   }
 }
 
-const metastatementNodesVerifier = new MetastatementNodesVerifier();
+const metastatementNodeVerifier = new MetastatementNodeVerifier();
 
-export default metastatementNodesVerifier;
+export default metastatementNodeVerifier;
 
 function verifyMetavariable(metavariableNode, metaproofContext) {
   let metavariableVerified;
