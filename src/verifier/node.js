@@ -8,7 +8,7 @@ export default class NodeVerifier {
 
     if (nodeTerminalNode) {
       const terminalNode = node,  ///
-            terminalNodeVerified = this.verifyTerminalNode(terminalNode);
+            terminalNodeVerified = this.verifyTerminalNode(terminalNode, ...remainingArguments);
 
       nodeVerified = terminalNodeVerified;  ///
     } else {
@@ -48,6 +48,8 @@ export default class NodeVerifier {
             nodeVerified = this.verifyNode(node, ...remainingArguments, () => {
               index++;
 
+              remainingArguments.push(verifyAhead);
+
               const childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodes, ...remainingArguments);
 
               return childNodesVerifyAhead;
@@ -60,7 +62,12 @@ export default class NodeVerifier {
   }
 
   verifyTerminalNode(terminalNode, ...remainingArguments) {
-    const terminalNodeVerified = true;  ///
+    let terminalNodeVerified;
+
+    const verifyAhead = remainingArguments.pop(), ///
+          verifiedAhead = verifyAhead();  ///
+
+    terminalNodeVerified = verifiedAhead; ///
 
     return terminalNodeVerified;
   }

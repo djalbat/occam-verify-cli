@@ -14,7 +14,7 @@ export default class NodesVerifier {
     } else if (nodeATerminalNode && nodeBTerminalNode) {
       const terminalNodeA = nodeA,  ///
             terminalNodeB = nodeB,  ///
-            terminalNodeVerified = this.verifyTerminalNode(terminalNodeA, terminalNodeB);
+            terminalNodeVerified = this.verifyTerminalNode(terminalNodeA, terminalNodeB, ...remainingArguments);
 
       nodeVerified = terminalNodeVerified;  ///
     } else if (nodeANonTerminalNode && nodeBNonTerminalNode) {
@@ -62,6 +62,8 @@ export default class NodesVerifier {
             nodeVerified = this.verifyNode(nodeA, nodeB, ...remainingArguments, () => {
               index++;
 
+              remainingArguments.push(verifyAhead); ///
+
               const childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments);
 
               return childNodesVerifyAhead;
@@ -74,11 +76,16 @@ export default class NodesVerifier {
   }
 
   verifyTerminalNode(terminalNodeA, terminalNodeB, ...remainingArguments) {
-    let terminalNodeVerified;
+    let terminalNodeVerified = false;
 
     const matches = terminalNodeA.match(terminalNodeB);
 
-    terminalNodeVerified = matches;  ///
+    if (matches) {
+      const verifyAhead = remainingArguments.pop(),
+            verifiedAhead = verifyAhead();
+
+      terminalNodeVerified = verifiedAhead;  ///
+    }
 
     return terminalNodeVerified;
   }

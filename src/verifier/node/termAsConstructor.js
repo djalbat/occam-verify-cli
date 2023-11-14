@@ -72,7 +72,7 @@ export function verifyStandaloneTerm(termNode, fileContext, verifyAhead) {
 }
 
 export function verifyType(typeNode, fileContext, verifyAhead) {
-  let typeVerified;
+  let typeVerified = false;
 
   const typeString = fileContext.nodeAsString(typeNode);
 
@@ -83,12 +83,12 @@ export function verifyType(typeNode, fileContext, verifyAhead) {
 
   if (!typePresent) {
     fileContext.info(`The type '${typeName}' is not present.`, typeNode);
-  }
-
-  typeVerified = typePresent; ///
-
-  if (typeVerified) {
+  } else {
     fileContext.debug(`...verified the '${typeString}' type.`, typeNode);
+
+    const verifiedAhead = verifyAhead();
+
+    typeVerified = verifiedAhead; ///
   }
 
   return typeVerified;
