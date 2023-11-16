@@ -5,6 +5,7 @@ import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 import FileContext from "./file";
 
 import { push } from "../utilities/array";
+import { objectType } from "../type";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
@@ -274,8 +275,14 @@ export default class ReleaseContext {
   }
 
   findTypeByTypeName(typeName) {
-    const types = this.getTypes(),
-          type = types.find((type) => {
+    let types = this.getTypes();
+
+    types = [ ///
+      ...types,
+      objectType
+    ];
+
+    const type = types.find((type) => {
             const matches = type.matchTypeName(typeName);
 
             if (matches) {

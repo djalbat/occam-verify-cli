@@ -3,8 +3,6 @@
 import NodesVerifier from "../../verifier/nodes";
 
 import { first } from "../../utilities/array";
-import { objectType } from "../../type";
-import { OBJECT_TYPE_NAME } from "../../typeNames";
 import { ARGUMENT_RULE_NAME } from "../../ruleNames";
 import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
 
@@ -57,44 +55,50 @@ export function verifyArgument(argumentNode, constructorArgumentNode, context, v
   const typeNode = typeNodeQuery(argumentNode);
 
   if (typeNode !== null) {
-    const argumentString = context.nodeAsString(argumentNode);
-
     context.info(`The '${argumentString}' argument should be a term, not a type`, argumentNode);
   } else {
-    const termNode = termNodeQuery(argumentNode),
-          constructorTermNode = termNodeQuery(constructorArgumentNode),
-          constructorTypeNode = typeNodeQuery(constructorArgumentNode);
+    const termNode = termNodeQuery(argumentNode);
 
-    if (false) {
-      ///
-    } else if (constructorTermNode !== null) {
-      const node = termNode,  ///
-            constructorNode = constructorTermNode,  ///
-            nodeVerified = this.verifyNode(node, constructorNode, context, verifyAhead);
+    if (!argumentVerified) {
+      const constructorTermNode = termNodeQuery(constructorArgumentNode);
 
-      argumentVerified = nodeVerified;  ///
-    } else if (constructorTypeNode !== null) {
-      const { verifyTerm } = termNodesVerifier,
-            types = [],
-            termVerified = verifyTerm(termNode, types, context, verifyAhead);
+      if (constructorTermNode !== null) {
+        const node = termNode,  ///
+              constructorNode = constructorTermNode,  ///
+              nodeVerified = this.verifyNode(node, constructorNode, context, verifyAhead);
 
-      if (termVerified) {
-        const constructorTypeName = typeNameFromTypeNode(constructorTypeNode),
-              firstType = first(types),
-              termType = firstType, ///
-              termTypeName = termType.getName(),
-              constructorType = (constructorTypeName === OBJECT_TYPE_NAME) ?
-                                  objectType :
-                                    context.findTypeByTypeName(constructorTypeName),
-              termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(constructorType);
+        argumentVerified = nodeVerified;  ///
+      }
+    }
 
-        if (termTypeEqualToOrSubTypeOfType) {
-          const termString = context.nodeAsString(termNode);
+    if (!argumentVerified) {
+      const constructorTypeNode = typeNodeQuery(constructorArgumentNode);
 
-          context.trace(`The '${termTypeName}' type of the '${termString}' term is equal to or a sub-type of the '${constructorTypeName}' type in the constructor.`, argumentNode);
+      if (constructorTypeNode !== null) {
+        const { verifyTerm } = termNodesVerifier,
+              types = [],
+              termVerified = verifyTerm(termNode, types, context, () => {
+                let verifiedAhead = false;
 
-          argumentVerified = true;
-        }
+                const constructorTypeName = typeNameFromTypeNode(constructorTypeNode),
+                      firstType = first(types),
+                      termType = firstType, ///
+                      termTypeName = termType.getName(),
+                      constructorType = context.findTypeByTypeName(constructorTypeName),
+                      termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(constructorType);
+
+                if (termTypeEqualToOrSubTypeOfType) {
+                  const termString = context.nodeAsString(termNode);
+
+                  context.trace(`The '${termTypeName}' type of the '${termString}' term is equal to or a sub-type of the '${constructorTypeName}' type in the constructor.`, argumentNode);
+
+                  verifiedAhead = verifyAhead();
+                }
+
+                return verifiedAhead;
+              });
+
+        argumentVerified = termVerified;  ///
       }
     }
   }

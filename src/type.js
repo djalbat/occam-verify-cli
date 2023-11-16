@@ -187,18 +187,13 @@ function superTypeFromSuperTypeJSONAndFileContext(superTypeJSON, fileContext) {
 
   if (superTypeJSON !== null) {
     const json = superTypeJSON, ///
-          { name } = json;
-
-    if (name === OBJECT_TYPE_NAME) {
-      superType = objectType; ///
-    } else {
-      const typeName = name,  ///
-            type = fileContext.findTypeByTypeName(typeName);
+          { name } = json,
+          typeName = name,  ///
+          type = fileContext.findTypeByTypeName(typeName);
 
       superType = (type !== null) ?
                     type :  ///
                       Type.fromJSONAndFileContext(json, fileContext);  ///
-    }
   }
 
   return superType;

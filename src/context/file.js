@@ -11,6 +11,7 @@ import Combinator from "../combinator";
 import Constructor from "../constructor";
 import Metavariable from "../metavariable";
 
+import { objectType } from "../type";
 import { push, filter } from "../utilities/array";
 import { statementMetaType } from "../metaType";
 import { nodeAsString, nodesAsString } from "../utilities/string";
@@ -254,8 +255,14 @@ export default class FileContext {
   }
 
   findTypeByTypeName(typeName) {
-    const types = this.getTypes(),
-          type = types.find((type) => {
+    let types = this.getTypes();
+
+    types = [ ///
+      ...types,
+      objectType
+    ];
+
+    const type = types.find((type) => {
             const matches = type.matchTypeName(typeName);
 
             if (matches) {
