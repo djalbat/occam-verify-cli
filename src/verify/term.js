@@ -28,11 +28,7 @@ function verifyTerm(termNode, types, context, verifyAhead) {
   });
 
   if (termVerified) {
-    const firstType = first(types),
-          type = firstType, ///
-          typeName = type.getName();
-
-    context.debug(`...verified the '${termString}' term, which has been given the '${typeName}' type.`, termNode);
+    context.debug(`...verified the '${termString}' term.`, termNode);
   }
 
   return termVerified;

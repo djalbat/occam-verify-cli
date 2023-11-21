@@ -98,13 +98,13 @@ export function verifyStatementAgainstCombinator(statementNode, combinator, cont
 function verifyStatementAsTypeInference(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAsTypeInference = false;
 
-  const statementString = context.nodeAsString(statementNode);
-
-  context.trace(`Verifying the '${statementString}' statement as a type inference...`, statementNode);
-
   const typeInferenceNode = typeInferenceNodeQuery(statementNode);
 
   if (typeInferenceNode !== null) {
+    const statementString = context.nodeAsString(statementNode);
+
+    context.trace(`Verifying the '${statementString}' statement as a type inference...`, statementNode);
+
     if (!derived) {
       const typeInferenceString = context.nodeAsString(typeInferenceNode);
 
@@ -114,10 +114,10 @@ function verifyStatementAsTypeInference(statementNode, assignments, derived, con
 
       statementVerifiedAsTypeInference = typeInferenceVerified; ///
     }
-  }
 
-  if (statementVerifiedAsTypeInference) {
-    context.debug(`...verified the '${statementString}' statement as a type inference.`, statementNode);
+    if (statementVerifiedAsTypeInference) {
+      context.debug(`...verified the '${statementString}' statement as a type inference.`, statementNode);
+    }
   }
 
   return statementVerifiedAsTypeInference;
@@ -126,47 +126,52 @@ function verifyStatementAsTypeInference(statementNode, assignments, derived, con
 function verifyStatementAsTypeAssertion(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAsTypeAssertion = false;
 
-  const statementString = context.nodeAsString(statementNode);
-
-  context.trace(`Verifying the '${statementString}' statement as a type assertion...`, statementNode);
-
   const typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
   if (typeAssertionNode !== null) {
+    const statementString = context.nodeAsString(statementNode);
+
+    context.trace(`Verifying the '${statementString}' statement as a type assertion...`, statementNode);
+
     const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead);
 
     statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
-  }
 
-  if (statementVerifiedAsTypeAssertion) {
-    context.debug(`...verified the '${statementString}' statement as a type assertion.`, statementNode);
+    if (statementVerifiedAsTypeAssertion) {
+      context.debug(`...verified the '${statementString}' statement as a type assertion.`, statementNode);
+    }
   }
 
   return statementVerifiedAsTypeAssertion;
 }
 
 function verifyStatementAsEquality(statementNode, assignments, derived, context, verifyAhead) {
-  let statementVerifiedAsEquality;
+  let statementVerifiedAsEquality = false;
 
-  const statementString = context.nodeAsString(statementNode);
+  const depth = EQUALITY_DEPTH,
+        statementNodeMatchesEqualityStatementNode = statementNode.match(equalityStatementNode, depth);
 
-  context.trace(`Verifying the '${statementString}' statement as an equality...`, statementNode);
+  if (statementNodeMatchesEqualityStatementNode) {
+    const statementString = context.nodeAsString(statementNode);
 
-  const verifyStatementAsEqualityFunctions = [
-    verifyStatementAsDerivedEquality,
-    verifyStatementAsStandaloneEquality
-  ];
+    context.trace(`Verifying the '${statementString}' statement as an equality...`, statementNode);
 
-  statementVerifiedAsEquality = verifyStatementAsEqualityFunctions.some((verifyStatementAsEqualityFunction) => {
-    const statementVerified = verifyStatementAsEqualityFunction(statementNode, derived, context, verifyAhead);
+    const verifyStatementAsEqualityFunctions = [
+      verifyStatementAsDerivedEquality,
+      verifyStatementAsStandaloneEquality
+    ];
 
-    if (statementVerified) {
-      return true;
+    statementVerifiedAsEquality = verifyStatementAsEqualityFunctions.some((verifyStatementAsEqualityFunction) => {
+      const statementVerified = verifyStatementAsEqualityFunction(statementNode, derived, context, verifyAhead);
+
+      if (statementVerified) {
+        return true;
+      }
+    });
+
+    if (statementVerifiedAsEquality) {
+      context.debug(`...verified the '${statementString}' statement as an equality.`, statementNode);
     }
-  });
-
-  if (statementVerifiedAsEquality) {
-    context.debug(`...verified the '${statementString}' statement as an equality.`, statementNode);
   }
 
   return statementVerifiedAsEquality;
@@ -175,20 +180,20 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context,
 function verifyStatementAsDerivedEquality(statementNode, derived, context, verifyAhead) {
   let verifiedStatementAsDerivedEquality = false;
 
-  const statementString = context.nodeAsString(statementNode);
-
-  context.trace(`Verifying the '${statementString}' statement as a derived equality...`, statementNode);
-
   if (derived) {
+    const statementString = context.nodeAsString(statementNode);
+
+    context.trace(`Verifying the '${statementString}' statement as a derived equality...`, statementNode);
+
     const equality = Equality.fromStatementNode(statementNode),
           equalities = context.getEqualities(),
           equalityVerified = equality.verify(equalities, context, verifyAhead);
 
     verifiedStatementAsDerivedEquality = equalityVerified;  ///
-  }
 
-  if (verifiedStatementAsDerivedEquality) {
-    context.debug(`...verified the '${statementString}' statement as a derived equality.`, statementNode);
+    if (verifiedStatementAsDerivedEquality) {
+      context.debug(`...verified the '${statementString}' statement as a derived equality.`, statementNode);
+    }
   }
 
   return verifiedStatementAsDerivedEquality;
@@ -201,46 +206,41 @@ function verifyStatementAsStandaloneEquality(statementNode, derived, context, ve
 
   context.trace(`Verifying the '${statementString}' statement as a standalone equality...`, statementNode);
 
-  const depth = EQUALITY_DEPTH,
-        statementNodeMatchesEqualityStatementNode = statementNode.match(equalityStatementNode, depth);
+  const types = [],
+        leftTermNode = leftTermNodeQuery(statementNode),
+        leftTermVerified = verifyTerm(leftTermNode, types, context, () => {
+          let verifiedAhead;
 
-  if (statementNodeMatchesEqualityStatementNode) {
-    const types = [],
-          leftTermNode = leftTermNodeQuery(statementNode),
-          leftTermVerified = verifyTerm(leftTermNode, types, context, () => {
-            let verifiedAhead;
+          const rightTermNode = rightTermNodeQuery(statementNode),
+                rightTermVerified = verifyTerm(rightTermNode, types, context, () => {
+                  let verifiedAhead = false;
 
-            const rightTermNode = rightTermNodeQuery(statementNode),
-                  rightTermVerified = verifyTerm(rightTermNode, types, context, () => {
-                    let verifiedAhead = false;
+                  const firstType = first(types),
+                        secondType = second(types),
+                        leftType = firstType, ///
+                        rightType = secondType, ///
+                        leftTypeEqualToOrSubTypeOfOfSuperTypeOfRightType = leftType.isEqualToOrSubTypeOfOfSuperTypeOf(rightType);
 
-                    const firstType = first(types),
-                          secondType = second(types),
-                          leftType = firstType, ///
-                          rightType = secondType, ///
-                          leftTypeEqualToOrSubTypeOfOfSuperTypeOfRightType = leftType.isEqualToOrSubTypeOfOfSuperTypeOf(rightType);
+                  if (!leftTypeEqualToOrSubTypeOfOfSuperTypeOfRightType) {
+                    const leftTypeName = leftType.getName(),
+                          rightTypeName = rightType.getName(),
+                          leftTermString = context.nodeAsString(leftTermNode),
+                          rightTermString = context.nodeAsString(rightTermNode);
 
-                    if (!leftTypeEqualToOrSubTypeOfOfSuperTypeOfRightType) {
-                      const leftTypeName = leftType.getName(),
-                            rightTypeName = rightType.getName(),
-                            leftTermString = context.nodeAsString(leftTermNode),
-                            rightTermString = context.nodeAsString(rightTermNode);
+                    context.info(`The left '${leftTermString}' term's '${leftTypeName}' type is not equal to, a sub-type of nor a super-type of the right '${rightTermString}' term's '${rightTypeName}' type.`, statementNode);
+                  } else {
+                    verifiedAhead = verifyAhead();
+                  }
 
-                      context.info(`The left '${leftTermString}' term's '${leftTypeName}' type is not equal to, a sub-type of nor a super-type of the right '${rightTermString}' term's '${rightTypeName}' type.`, statementNode);
-                    } else {
-                      verifiedAhead = verifyAhead();
-                    }
+                  return verifiedAhead;
+                });
 
-                    return verifiedAhead;
-                  });
+              verifiedAhead = rightTermVerified;  ///
 
-                verifiedAhead = rightTermVerified;  ///
+              return verifiedAhead;
+            });
 
-                return verifiedAhead;
-              });
-
-    statementVerifiedAsStandaloneEquality = leftTermVerified; ///
-  }
+  statementVerifiedAsStandaloneEquality = leftTermVerified; ///
 
   if (statementVerifiedAsStandaloneEquality) {
     context.trace(`...verified the '${statementString}' statement as a standalone equality.`, statementNode);

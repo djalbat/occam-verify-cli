@@ -2,7 +2,7 @@
 
 import metastatementNodeVerifier from "../verifier/node/metastatement";
 
-function verifyMetastatement(metastatementNode, derived, metaproofContext, verifyAhead) {
+function verifyMetastatement(metastatementNode, derived, metaproofContext) {
   let metastatementVerified;
 
   const metastatementString = metaproofContext.nodeAsString(metastatementNode);
@@ -14,7 +14,7 @@ function verifyMetastatement(metastatementNode, derived, metaproofContext, verif
   ];
 
   metastatementVerified = verifyMetastatementFunctions.some((verifyStatementFunction) => {
-    const metastatementVerified = verifyStatementFunction(metastatementNode, derived, metaproofContext, verifyAhead);
+    const metastatementVerified = verifyStatementFunction(metastatementNode, derived, metaproofContext);
 
     if (metastatementVerified) {
       return true;
@@ -34,7 +34,7 @@ Object.assign(verifyMetastatement, {
 
 export default verifyMetastatement;
 
-function verifyStandaloneMetastatement(metastatementNode, derived, metaproofContext, verifyAhead) {
+function verifyStandaloneMetastatement(metastatementNode, derived, metaproofContext) {
   let standaloneMetastatementVerified;
 
   const metastatementString = metaproofContext.nodeAsString(metastatementNode);
@@ -42,7 +42,11 @@ function verifyStandaloneMetastatement(metastatementNode, derived, metaproofCont
   metaproofContext.trace(`Verifying the '${metastatementString}' standalone metastatement...`, metastatementNode);
 
   const nonTerminalNode = metastatementNode, ///
-        nonTerminalNodeVerified = metastatementNodeVerifier.verifyNonTerminalNode(nonTerminalNode, metaproofContext);
+        nonTerminalNodeVerified = metastatementNodeVerifier.verifyNonTerminalNode(nonTerminalNode, metaproofContext, () => {
+          const verifiedAhead = true;
+
+          return verifiedAhead;
+        });
 
   standaloneMetastatementVerified = nonTerminalNodeVerified;  ///
 

@@ -6,7 +6,7 @@ import { METAVARIABLE_RULE_NAME } from "../../ruleNames";
 import { metavariableNameFromMetavariableNode } from "../../utilities/query";
 
 class MetastatementNodeVerifier extends NodeVerifier {
-  verifyNonTerminalNode(nonTerminalNode, metaproofContext) {
+  verifyNonTerminalNode(nonTerminalNode, metaproofContext, verifyAhead) {
     let nonTerminalNodeVerified;
 
     const ruleName = nonTerminalNode.getRuleName(); ///
@@ -14,7 +14,7 @@ class MetastatementNodeVerifier extends NodeVerifier {
     switch (ruleName) {
       case METAVARIABLE_RULE_NAME: {
         const metavariableNode = nonTerminalNode, ///
-              metavariableVerified = verifyMetavariable(metavariableNode, metaproofContext),
+              metavariableVerified = verifyMetavariable(metavariableNode, metaproofContext, verifyAhead),
               metavariableNodeVerified = metavariableVerified;  ///
 
         nonTerminalNodeVerified = metavariableNodeVerified; ///
@@ -23,7 +23,7 @@ class MetastatementNodeVerifier extends NodeVerifier {
       }
 
       default: {
-        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNode, metaproofContext);
+        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNode, metaproofContext, verifyAhead);
 
         break;
       }
@@ -37,7 +37,7 @@ const metastatementNodeVerifier = new MetastatementNodeVerifier();
 
 export default metastatementNodeVerifier;
 
-function verifyMetavariable(metavariableNode, metaproofContext) {
+function verifyMetavariable(metavariableNode, metaproofContext, verifyAhead) {
   let metavariableVerified;
 
   const metavariableString = metaproofContext.nodeAsString(metavariableNode);
@@ -47,7 +47,11 @@ function verifyMetavariable(metavariableNode, metaproofContext) {
   const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
         metavariablePresent = metaproofContext.isMetavariablePresentByMetavariableName(metavariableName);
 
-  metavariableVerified = metavariablePresent;
+  if (metavariablePresent) {
+    const verifiedAhead = verifyAhead();
+
+    metavariableVerified = verifiedAhead; ///
+  }
 
   if (metavariableVerified) {
     metaproofContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);

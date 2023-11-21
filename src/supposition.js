@@ -43,7 +43,11 @@ export default class Supposition {
                 nonTerminalNodeB = subproofStatementNode, ///
                 proofContextA = proofContext, ///
                 proofContextB = statementProofContext,  ///
-                nonTerminalNodeVerified = suppositionTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB);
+                nonTerminalNodeVerified = suppositionTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB, () => {
+                  const verifiedAhead = true;
+
+                  return verifiedAhead;
+                });
 
           if (nonTerminalNodeVerified) {
             return true;
@@ -60,7 +64,11 @@ export default class Supposition {
           nonTerminalNodeB = statementNode,  ///
           proofContextA = proofContext, ///
           proofContextB = statementProofContext,  ///
-          nonTerminalNodeVerified = suppositionTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB),
+          nonTerminalNodeVerified = suppositionTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB, () => {
+            const verifiedAhead = true;
+
+            return verifiedAhead;
+          }),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;

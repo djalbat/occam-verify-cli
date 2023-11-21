@@ -17,7 +17,11 @@ export default class Consequent {
   matchStatementNode(statementNode, substitutions, proofContext) {
     const nonTerminalNodeA = this.statementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          nonTerminalNodeVerified = consequentTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext),
+          nonTerminalNodeVerified = consequentTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContext, () => {
+            const verifiedAhead = true;
+
+            return verifiedAhead;
+          }),
           statementNodeMatches = nonTerminalNodeVerified; ///
 
     return statementNodeMatches;

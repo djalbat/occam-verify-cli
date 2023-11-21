@@ -83,15 +83,10 @@ export function verifyArgument(argumentNode, constructorArgumentNode, context, v
                 const constructorTypeName = typeNameFromTypeNode(constructorTypeNode),
                       firstType = first(types),
                       termType = firstType, ///
-                      termTypeName = termType.getName(),
                       constructorType = context.findTypeByTypeName(constructorTypeName),
                       termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(constructorType);
 
                 if (termTypeEqualToOrSubTypeOfType) {
-                  const termString = context.nodeAsString(termNode);
-
-                  context.trace(`The '${termTypeName}' type of the '${termString}' term is equal to or a sub-type of the constructor's '${constructorTypeName}' type.`, argumentNode);
-
                   verifiedAhead = verifyAhead();
                 }
 
