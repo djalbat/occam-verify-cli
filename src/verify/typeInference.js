@@ -2,13 +2,13 @@
 
 import Equality from "../equality";
 import verifyTerm from "./term";
-import equalityCombinator from "../ocmbinator/equality";
+import equalityStatementNode from "../node/statement/equality";
 
 import { nodeQuery } from "../utilities/query";
 import { first, second } from "../utilities/array";
+import { EQUALITY_DEPTH } from "../constants";
 import { verifyTermAsVariable } from "./term";
 import { verifyVariableTypeAssertion } from "./assertion/type";
-import { verifyStatementAgainstCombinator } from "../verify/statement";
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/proof";
 
 const statementNodeQuery = nodeQuery("/typeInference/statement!"),
@@ -35,10 +35,10 @@ export default function verifyTypeInference(typeInferenceNode, context) {
   if (!statementMatches) {
     context.info(`The '${statementString}' statement is not present in the context.`, typeInferenceNode);
   } else {
-    const combinator = equalityCombinator,  ///
-          statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context);
+    const depth = EQUALITY_DEPTH,
+          statementNodeMatchesEqualityStatementNode = statementNode.match(equalityStatementNode, depth);
 
-    if (!statementVerifiedAgainstCombinator) {
+    if (!statementNodeMatchesEqualityStatementNode) {
       context.info(`The '${statementString}' statement is not an equality.`, typeInferenceNode);
     } else {
       const derived = false,  ///

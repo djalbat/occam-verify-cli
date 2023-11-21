@@ -2,14 +2,15 @@
 
 import Equality from "../equality";
 import verifyTerm from "../verify/term";
-import equalityCombinator from "../ocmbinator/equality";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeInference from "../verify/typeInference";
 import verifyTypeAssertion from "../verify/assertion/type";
+import equalityStatementNode from "../node/statement/equality";
 import statementNodesVerifier from "../verifier/nodes/statement";
 
 import { nodeQuery } from "../utilities/query";
 import { first, second } from "../utilities/array";
+import { EQUALITY_DEPTH } from "../constants";
 
 const leftTermNodeQuery = nodeQuery("/statement/argument[0]/term!"),
       rightTermNodeQuery = nodeQuery("/statement/argument[1]/term!"),
@@ -151,27 +152,18 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context,
 
   context.trace(`Verifying the '${statementString}' statement as an equality...`, statementNode);
 
-  const combinator = equalityCombinator,  ///
-        statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context, () => {
-          let verifiedAhead;
+  const verifyStatementAsEqualityFunctions = [
+    verifyStatementAsDerivedEquality,
+    verifyStatementAsStandaloneEquality
+  ];
 
-          const verifyStatementAsEqualityFunctions = [
-            verifyStatementAsDerivedEquality,
-            verifyStatementAsEqualTerms
-          ];
+  statementVerifiedAsEquality = verifyStatementAsEqualityFunctions.some((verifyStatementAsEqualityFunction) => {
+    const statementVerified = verifyStatementAsEqualityFunction(statementNode, derived, context, verifyAhead);
 
-          verifiedAhead = verifyStatementAsEqualityFunctions.some((verifyStatementAsEqualityFunction) => {
-            const statementVerified = verifyStatementAsEqualityFunction(statementNode, derived, context, verifyAhead);
-
-            if (statementVerified) {
-              return true;
-            }
-          });
-
-          return verifiedAhead;
-        });
-
-  statementVerifiedAsEquality = statementVerifiedAgainstCombinator; ///
+    if (statementVerified) {
+      return true;
+    }
+  });
 
   if (statementVerifiedAsEquality) {
     context.debug(`...verified the '${statementString}' statement as an equality.`, statementNode);
@@ -202,52 +194,57 @@ function verifyStatementAsDerivedEquality(statementNode, derived, context, verif
   return verifiedStatementAsDerivedEquality;
 }
 
-function verifyStatementAsEqualTerms(statementNode, derived, context, verifyAhead) {
-  let statementVerifiedAsEqualTerms;
+function verifyStatementAsStandaloneEquality(statementNode, derived, context, verifyAhead) {
+  let statementVerifiedAsStandaloneEquality;
 
   const statementString = context.nodeAsString(statementNode);
 
-  context.trace(`Verifying the '${statementString}' statement as equal terms...`, statementNode);
+  context.trace(`Verifying the '${statementString}' statement as a standalone equality...`, statementNode);
 
-  const types = [],
-        leftTermNode = leftTermNodeQuery(statementNode),
-        leftTermVerified = verifyTerm(leftTermNode, types, context, () => {
-          let verifiedAhead;
+  const depth = EQUALITY_DEPTH,
+        statementNodeMatchesEqualityStatementNode = statementNode.match(equalityStatementNode, depth);
 
-          const rightTermNode = rightTermNodeQuery(statementNode),
-                rightTermVerified = verifyTerm(rightTermNode, types, context, () => {
-                  let verifiedAhead = false;
+  if (statementNodeMatchesEqualityStatementNode) {
+    const types = [],
+          leftTermNode = leftTermNodeQuery(statementNode),
+          leftTermVerified = verifyTerm(leftTermNode, types, context, () => {
+            let verifiedAhead;
 
-                  const firstType = first(types),
-                        secondType = second(types),
-                        leftType = firstType, ///
-                        rightType = secondType, ///
-                        leftTypeEqualToOrSubTypeOfOfSuperTypeOfRightType = leftType.isEqualToOrSubTypeOfOfSuperTypeOf(rightType);
+            const rightTermNode = rightTermNodeQuery(statementNode),
+                  rightTermVerified = verifyTerm(rightTermNode, types, context, () => {
+                    let verifiedAhead = false;
 
-                  if (!leftTypeEqualToOrSubTypeOfOfSuperTypeOfRightType) {
-                    const leftTypeName = leftType.getName(),
-                          rightTypeName = rightType.getName(),
-                          leftTermString = context.nodeAsString(leftTermNode),
-                          rightTermString = context.nodeAsString(rightTermNode);
+                    const firstType = first(types),
+                          secondType = second(types),
+                          leftType = firstType, ///
+                          rightType = secondType, ///
+                          leftTypeEqualToOrSubTypeOfOfSuperTypeOfRightType = leftType.isEqualToOrSubTypeOfOfSuperTypeOf(rightType);
 
-                    context.info(`The left '${leftTermString}' term's '${leftTypeName}' type is not equal to, a sub-type of nor a super-type of the right '${rightTermString}' term's '${rightTypeName}' type.`, statementNode);
-                  } else {
-                    verifiedAhead = verifyAhead();
-                  }
+                    if (!leftTypeEqualToOrSubTypeOfOfSuperTypeOfRightType) {
+                      const leftTypeName = leftType.getName(),
+                            rightTypeName = rightType.getName(),
+                            leftTermString = context.nodeAsString(leftTermNode),
+                            rightTermString = context.nodeAsString(rightTermNode);
 
-                  return verifiedAhead;
-                });
+                      context.info(`The left '${leftTermString}' term's '${leftTypeName}' type is not equal to, a sub-type of nor a super-type of the right '${rightTermString}' term's '${rightTypeName}' type.`, statementNode);
+                    } else {
+                      verifiedAhead = verifyAhead();
+                    }
 
-          verifiedAhead = rightTermVerified;  ///
+                    return verifiedAhead;
+                  });
 
-          return verifiedAhead;
-        });
+                verifiedAhead = rightTermVerified;  ///
 
-  statementVerifiedAsEqualTerms = leftTermVerified; ///
+                return verifiedAhead;
+              });
 
-  if (statementVerifiedAsEqualTerms) {
-    context.trace(`...verified the '${statementString}' statement as equal terms.`, statementNode);
+    statementVerifiedAsStandaloneEquality = leftTermVerified; ///
   }
 
-  return statementVerifiedAsEqualTerms;
+  if (statementVerifiedAsStandaloneEquality) {
+    context.trace(`...verified the '${statementString}' statement as a standalone equality.`, statementNode);
+  }
+
+  return statementVerifiedAsStandaloneEquality;
 }

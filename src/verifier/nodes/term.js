@@ -55,7 +55,7 @@ export function verifyArgument(argumentNode, constructorArgumentNode, context, v
   const typeNode = typeNodeQuery(argumentNode);
 
   if (typeNode !== null) {
-    context.info(`The '${argumentString}' argument should be a term, not a type`, argumentNode);
+    context.info(`The '${argumentString}' argument should be a term, not a type.`, argumentNode);
   } else {
     const termNode = termNodeQuery(argumentNode);
 
