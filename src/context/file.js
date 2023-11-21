@@ -225,13 +225,13 @@ export default class FileContext {
   getConstructors(includeRelease = true) {
     const constructors = [];
 
+    push(constructors, this.constructors);
+
     if (includeRelease) {
       const releaseContextConstructors = this.releaseContext.getConstructors();
 
       push(constructors, releaseContextConstructors);
     }
-
-    push(constructors, this.constructors);
 
     return constructors;
   }

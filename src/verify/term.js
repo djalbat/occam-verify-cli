@@ -82,6 +82,10 @@ export function verifyTermAsVariable(termNode, variables, context, verifyAhead) 
 
       verifiedAhead = verifyAhead();
 
+      if (!verifiedAhead) {
+        variables.pop();
+      }
+
       termVerifiedAsVariable = verifiedAhead; ///
     }
   }
@@ -113,6 +117,10 @@ function verifyTermAgainstConstructor(termNode, types, constructor, context, ver
 
           verifiedAhead = verifyAhead();
 
+          if (!verifiedAhead) {
+            types.pop();
+          }
+
           return verifiedAhead;
         });
 
@@ -143,6 +151,10 @@ function verifyTermAsStandaloneVariable(termNode, types, context, verifyAhead) {
           types.push(type);
 
           verifiedAhead = verifyAhead();
+
+          if (!verifiedAhead) {
+            types.pop();
+          }
 
           return verifiedAhead;
         });
