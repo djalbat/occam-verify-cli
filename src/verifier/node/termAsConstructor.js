@@ -82,7 +82,7 @@ export function verifyType(typeNode, fileContext, verifyAhead) {
         typePresent = fileContext.isTypePresentByTypeName(typeName);
 
   if (!typePresent) {
-    fileContext.info(`The type '${typeName}' is not present.`, typeNode);
+    fileContext.debug(`The type '${typeName}' is not present.`, typeNode);
   } else {
     fileContext.debug(`...verified the '${typeString}' type.`, typeNode);
 

@@ -12,7 +12,7 @@ import { variableNameFromVariableNode } from "../../utilities/query";
 const variableNodeQuery = nodeQuery('/term/variable!');
 
 export default class TermForVariableNodesVerifier extends NodesVerifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB, verifyAhead) {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
@@ -25,28 +25,28 @@ export default class TermForVariableNodesVerifier extends NodesVerifier {
       if (nonTerminalNodeARuleNameTermRuleName && nonTerminalNodeBRuleNameTermRuleName) {
         const termNodeA = nonTerminalNodeA,  ///
               termNodeB = nonTerminalNodeB,  ///
-              termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, substitutions, proofContextA, proofContextB);
+              termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, substitutions, proofContextA, proofContextB, verifyAhead);
 
         if (termNodeVerified) {
           nonTerminalNodeVerified = true;  ///
         } else {
-          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB);
+          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB, verifyAhead);
         }
       } else {
-        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB);
+        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB, verifyAhead);
       }
     }
 
     return nonTerminalNodeVerified;
   }
 
-  verifyTermNode(termNodeA, termNodeB, substitutions, proofContextA, proofContextB) {
+  verifyTermNode(termNodeA, termNodeB, substitutions, proofContextA, proofContextB, verifyAhead) {
     let termNodeVerified = false;
 
     const variableNodeA = variableNodeQuery(termNodeA);
 
     if (variableNodeA !== null) {
-      const variableVerified = this.verifyVariableNode(variableNodeA, termNodeB, substitutions, proofContextA, proofContextB);
+      const variableVerified = this.verifyVariableNode(variableNodeA, termNodeB, substitutions, proofContextA, proofContextB, verifyAhead);
 
       termNodeVerified = variableVerified; ///
     }
@@ -54,8 +54,8 @@ export default class TermForVariableNodesVerifier extends NodesVerifier {
     return termNodeVerified;
   }
 
-  verifyVariableNode(variableNodeA, termNodeB, substitutions, proofContextA, proofContextB) {
-    let variableVerified;
+  verifyVariableNode(variableNodeA, termNodeB, substitutions, proofContextA, proofContextB, verifyAhead) {
+    let variableVerified = false;
 
     const variableNameA = variableNameFromVariableNode(variableNodeA),
           substitution = substitutions.find((substitution) => {
@@ -70,7 +70,11 @@ export default class TermForVariableNodesVerifier extends NodesVerifier {
       const termNode = termNodeB, ///
             substitutionNodesVerified = substitution.matchTermNode(termNode);
 
-      variableVerified = substitutionNodesVerified;  ///
+      if (substitutionNodesVerified) {
+        const verifiedAhead = verifyAhead();
+
+        variableVerified = verifiedAhead;  ///
+      }
     } else {
       const { createSubstitutions } = this.constructor;
 
@@ -83,23 +87,31 @@ export default class TermForVariableNodesVerifier extends NodesVerifier {
           const types = [],
                 context = proofContextB, ///
                 termNode = termNodeB, ///
-                termVerified = verifyTerm(termNode, types, context, verifyAhead);
+                termVerified = verifyTerm(termNode, types, context, () => {
+                  let verifiedAhead = false;
 
-          if (termVerified) {
-            const firstType = first(types),
-                  termType = firstType,
-                  variableType = variable.getType(),
-                  variableTypeEqualToOrSuperTypeOfTermType = variableType.isEqualToOrSuperTypeOf(termType);
+                  const firstType = first(types),
+                        termType = firstType,
+                        variableType = variable.getType(),
+                        variableTypeEqualToOrSuperTypeOfTermType = variableType.isEqualToOrSuperTypeOf(termType);
 
-            if (variableTypeEqualToOrSuperTypeOfTermType) {
-              const termForVariableSubstitution = TermForVariableSubstitution.fromVariableNameAndTermNode(variableName, termNode),
-                    substitution = termForVariableSubstitution;  ///
+                  if (variableTypeEqualToOrSuperTypeOfTermType) {
+                    const termForVariableSubstitution = TermForVariableSubstitution.fromVariableNameAndTermNode(variableName, termNode),
+                          substitution = termForVariableSubstitution;  ///
 
-              substitutions.push(substitution);
+                    substitutions.push(substitution);
 
-              variableVerified = true;
-            }
-          }
+                    verifiedAhead = verifyAhead();
+
+                    if (!verifiedAhead) {
+                      substitutions.pop();
+                    }
+                  }
+
+                  return verifiedAhead;
+                });
+
+          variableVerified = termVerified;  ///
         }
       }
     }

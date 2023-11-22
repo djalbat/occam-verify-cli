@@ -4,7 +4,7 @@ import Equality from "../equality";
 import verifyTerm from "../verify/term";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeInference from "../verify/typeInference";
-import verifyTypeAssertion from "../verify/assertion/type";
+import verifyTypeAssertion from "../verify/typeAssertion";
 import equalityStatementNode from "../node/statement/equality";
 import statementNodesVerifier from "../verifier/nodes/statement";
 
@@ -108,7 +108,7 @@ function verifyStatementAsTypeInference(statementNode, assignments, derived, con
     if (!derived) {
       const typeInferenceString = context.nodeAsString(typeInferenceNode);
 
-      context.info(`The '${typeInferenceString}' type inference can only be derived.`, typeInferenceNode);
+      context.debug(`The '${typeInferenceString}' type inference can only be derived.`, typeInferenceNode);
     } else {
       const typeInferenceVerified = verifyTypeInference(typeInferenceNode, context, verifyAhead);
 
@@ -227,7 +227,7 @@ function verifyStatementAsStandaloneEquality(statementNode, derived, context, ve
                           leftTermString = context.nodeAsString(leftTermNode),
                           rightTermString = context.nodeAsString(rightTermNode);
 
-                    context.info(`The left '${leftTermString}' term's '${leftTypeName}' type is not equal to, a sub-type of nor a super-type of the right '${rightTermString}' term's '${rightTypeName}' type.`, statementNode);
+                    context.debug(`The left '${leftTermString}' term's '${leftTypeName}' type is not equal to, a sub-type of nor a super-type of the right '${rightTermString}' term's '${rightTypeName}' type.`, statementNode);
                   } else {
                     verifiedAhead = verifyAhead();
                   }

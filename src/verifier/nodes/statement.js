@@ -71,21 +71,23 @@ function verifyMetaargument(metaArgumentNode, combinatorMetaargumentNode, contex
         combinatorMetaTYpeNode = metaTypeNodeQuery(combinatorMetaargumentNode);
 
   if (statementNode === null) {
-    context.info(`Expected a statement but got a '${metaArgumentString}' meta-type.`, metaArgumentNode);
+    context.debug(`Expected a statement but got a '${metaArgumentString}' meta-type.`, metaArgumentNode);
   } else {
     if (combinatorMetaTYpeNode === null) {
       const combinatorMetaargumentString = context.nodeAsString(combinatorMetaargumentNode);
 
-      context.info(`Expected a meta-type but got a '${combinatorMetaargumentString}' statement.`, metaArgumentNode);
+      context.debug(`Expected a meta-type but got a '${combinatorMetaargumentString}' statement.`, metaArgumentNode);
     } else {
       const combinatorMetaTypeTerminalNode = metaTypeTerminalNodeQuery(combinatorMetaTYpeNode),
             content = combinatorMetaTypeTerminalNode.getContent(),
             contentStatementMetaType = (content === STATEMENT_META_TYPE);
 
       if (!contentStatementMetaType) {
-        context.info(`Expected the meta-type to be 'Statement' but got '${content}'.`, metaArgumentNode);
+        context.debug(`Expected the meta-type of the combinator to be '${STATEMENT_META_TYPE}' but got '${content}' instead.`, metaArgumentNode);
       } else {
-        metaArgumentVerified = true;
+        const verifiedAhead = verifyAhead();
+
+        metaArgumentVerified = verifiedAhead; ///
       }
     }
   }

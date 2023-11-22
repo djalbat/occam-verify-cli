@@ -175,8 +175,8 @@ function matchSupposition(supposition, proofSteps, substitutions, proofContext, 
   return suppositionMatches;
 }
 
-function matchSuppositions(supposition, proofSteps, substitutions, proofContext, statementProofContext) {
-  const suppositionsMatch = supposition.every((supposition) => {
+function matchSuppositions(suppositions, proofSteps, substitutions, proofContext, statementProofContext) {
+  const suppositionsMatch = suppositions.every((supposition) => {
     const suppositionMatches = matchSupposition(supposition, proofSteps, substitutions, proofContext, statementProofContext);
 
     if (suppositionMatches) {

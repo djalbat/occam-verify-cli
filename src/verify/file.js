@@ -23,7 +23,7 @@ export default function verifyFile(filePath, releaseContext) {
           errorNodesLength = errorNodes.length;
 
     if (errorNodesLength > 0) {
-      releaseContext.info(`The '${filePath}' file cannot be verified because it contains errors.`);
+      releaseContext.warning(`The '${filePath}' file cannot be verified because it contains errors.`);
     } else {
       const topLevelDeclarationNodes = topLevelDeclarationNodesQuery(node),
             topLevelDeclarationsVerified = topLevelDeclarationNodes.every((topLevelDeclarationNode) => {

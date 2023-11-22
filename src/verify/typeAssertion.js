@@ -1,11 +1,11 @@
 "use strict";
 
-import Variable from "../../variable";
-import Assignment from "../../assignment";
+import Variable from "../variable";
+import Assignment from "../assignment";
 
-import { first } from "../../utilities/array";
-import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
-import { verifyTermAsVariable, verifyTermAgainstConstructors } from "../../verify/term";
+import { first } from "../utilities/array";
+import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
+import { verifyTermAsVariable, verifyTermAgainstConstructors } from "../verify/term";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term!"),
       typeNodeQuery = nodeQuery("/typeAssertion/type!");
@@ -23,7 +23,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
         assertedType = context.findTypeByTypeName(assertedTypeName);
 
   if (assertedType === null) {
-    context.info(`The '${typeName}' asserted type is not present.`, typeAssertionNode);
+    context.debug(`The '${typeName}' asserted type is not present.`, typeAssertionNode);
   } else {
     const verifyTypeAssertionFunctions = [
       verifyVariableTypeAssertion,
@@ -70,7 +70,7 @@ export function verifyVariableTypeAssertion(typeAssertionNode, assertedType, ass
               const assertedTypeName = assertedType.getName(),
                     variableTypeName = variableType.getName();
 
-              context.info(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
+              context.debug(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
             } else {
               verifiedAhead = verifyAhead();
             }
@@ -81,7 +81,7 @@ export function verifyVariableTypeAssertion(typeAssertionNode, assertedType, ass
               const assertedTypeName = assertedType.getName(),
                     variableTypeName = variableType.getName();
 
-              context.info(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
+              context.debug(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
             } else {
               const name = variableName,  ///
                     type = assertedType,  ///
@@ -133,7 +133,7 @@ function verifyTermTypeAssertion(typeAssertionNode, assertedType, assignments, d
                     termTypeName = termType.getName(),
                     assertedTypeName = assertedType.getName();
 
-              context.info(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
+              context.debug(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
             } else {
               verifiedAhead = verifyAhead();
             }
@@ -145,7 +145,7 @@ function verifyTermTypeAssertion(typeAssertionNode, assertedType, assignments, d
                     termTypeName = termType.getName(),
                     assertedTypeName = assertedType.getName();
 
-              context.info(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
+              context.debug(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
             } else {
               verifiedAhead = verifyAhead();
             }

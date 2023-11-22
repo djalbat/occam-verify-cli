@@ -15,7 +15,7 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
         metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
 
   if (metavariablePresent) {
-    fileContext.info(`The metavariable '${metavariableName}' is already present.`, metavariableNode);
+    fileContext.debug(`The metavariable '${metavariableName}' is already present.`, metavariableNode);
   } else {
     const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
           metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName),

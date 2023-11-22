@@ -8,8 +8,7 @@ import { nodeQuery } from "../utilities/query";
 import { first, second } from "../utilities/array";
 import { EQUALITY_DEPTH } from "../constants";
 import { verifyTermAsVariable } from "./term";
-import { verifyVariableTypeAssertion } from "./assertion/type";
-import { bracketedStatementChildNodeFromStatementNode } from "../utilities/proof";
+import { verifyVariableTypeAssertion } from "./typeAssertion";
 
 const statementNodeQuery = nodeQuery("/typeInference/statement!"),
       typeAssertionNodeQuery = nodeQuery("/typeInference/typeAssertion!");
@@ -21,25 +20,18 @@ export default function verifyTypeInference(typeInferenceNode, context) {
 
   context.trace(`Verifying the '${typeInferenceString}' type inference...`, typeInferenceNode);
 
-  let statementNode = statementNodeQuery(typeInferenceNode);
-
-  const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
-
-  if (bracketedStatementChildNode !== null) {
-    statementNode = bracketedStatementChildNode; ///
-  }
-
-  const statementString = context.nodeAsString(statementNode),
+  const statementNode = statementNodeQuery(typeInferenceNode),
+        statementString = context.nodeAsString(statementNode),
         statementMatches = context.matchStatement(statementNode);
 
   if (!statementMatches) {
-    context.info(`The '${statementString}' statement is not present in the context.`, typeInferenceNode);
+    context.debug(`The '${statementString}' statement is not present in the context.`, typeInferenceNode);
   } else {
     const depth = EQUALITY_DEPTH,
           statementNodeMatchesEqualityStatementNode = statementNode.match(equalityStatementNode, depth);
 
     if (!statementNodeMatchesEqualityStatementNode) {
-      context.info(`The '${statementString}' statement is not an equality.`, typeInferenceNode);
+      context.debug(`The '${statementString}' statement is not an equality.`, typeInferenceNode);
     } else {
       const derived = false,  ///
             equality = Equality.fromStatementNode(statementNode),

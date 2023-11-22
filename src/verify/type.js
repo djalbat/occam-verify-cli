@@ -15,7 +15,7 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
         typePresent = fileContext.isTypePresentByTypeName(typeName);
 
   if (typePresent) {
-    fileContext.info(`The type '${typeName}' is already present.`, typeNode);
+    fileContext.debug(`The type '${typeName}' is already present.`, typeNode);
   } else {
     let type;
 
@@ -27,7 +27,7 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
       const superType = fileContext.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
-        fileContext.info(`The super-type '${superTypeName}' is not present.`, typeNode);
+        fileContext.debug(`The super-type '${superTypeName}' is not present.`, typeNode);
       } else {
         type = Type.fromTypeNameAndSuperType(typeName, superType);
       }

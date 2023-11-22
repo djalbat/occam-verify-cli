@@ -16,7 +16,7 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
         variablePresent = fileContext.isVariablePresentByVariableName(variableName);
 
   if (variablePresent) {
-    fileContext.info(`The variable '${variableName}' is already present.`, variableNode);
+    fileContext.debug(`The variable '${variableName}' is already present.`, variableNode);
   } else {
     let variable;
 
@@ -31,7 +31,7 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
       const type = fileContext.findTypeByTypeName(typeName);
 
       if (type === null) {
-        fileContext.info(`The '${variableName}' variable's '${typeName}' type is not present.`, variableNode);
+        fileContext.debug(`The '${variableName}' variable's '${typeName}' type is not present.`, variableNode);
       } else {
         const name = variableName;  ///
 

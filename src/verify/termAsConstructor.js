@@ -33,7 +33,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
       if (type !== null) {
         termVerifiedAsConstructor = true;
       } else {
-        fileContext.info(`The '${termString}' constructor's '${typeName}' type is not present.`, termNode);
+        fileContext.debug(`The '${termString}' constructor's '${typeName}' type is not present.`, termNode);
       }
     }
 
