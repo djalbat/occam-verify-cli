@@ -59,13 +59,13 @@ export function verifyTermAgainstConstructors(termNode, types, context, verifyAh
 export function verifyTermAsVariable(termNode, variables, context, verifyAhead) {
   let termVerifiedAsVariable = false;
 
-  const termString = context.nodeAsString(termNode);
-
-  context.trace(`Verifying the '${termString}' term as a variable...`, termNode);
-
   const variableNode = variableNodeQuery(termNode);
 
   if (variableNode !== null) {
+    const termString = context.nodeAsString(termNode);
+
+    context.trace(`Verifying the '${termString}' term as a variable...`, termNode);
+
     const variableName = variableNameFromVariableNode(variableNode),
           variablePresent = context.isVariablePresentByVariableName(variableName);
 
@@ -84,10 +84,10 @@ export function verifyTermAsVariable(termNode, variables, context, verifyAhead) 
 
       termVerifiedAsVariable = verifiedAhead; ///
     }
-  }
 
-  if (termVerifiedAsVariable) {
-    context.debug(`...verified the '${termString}' term as a variable.`, termNode);
+    if (termVerifiedAsVariable) {
+      context.debug(`...verified the '${termString}' term as a variable.`, termNode);
+    }
   }
 
   return termVerifiedAsVariable;
