@@ -89,24 +89,24 @@ export default class Equality {
     const statementNode = proofStep.getStatementNode();
 
     if (statementNode !== null) {
-      const depth = EQUALITY_DEPTH,
-            statementNodeMatchesEqualityStatementNode = statementNode.match(equalityStatementNode, depth);
-
-      if (statementNodeMatchesEqualityStatementNode) {
-        const leftTermNode = leftTermNodeQuery(statementNode),
-              rightTermNode = rightTermNodeQuery(statementNode);
-
-        equality = new Equality(leftTermNode, rightTermNode);
-      }
+      equality = Equality.fromStatementNode(statementNode);
     }
 
     return equality;
   }
 
   static fromStatementNode(statementNode) {
-    const leftTermNode = leftTermNodeQuery(statementNode),
-          rightTermNode = rightTermNodeQuery(statementNode),
-          equality = new Equality(leftTermNode, rightTermNode);
+    let equality = null;
+
+    const depth = EQUALITY_DEPTH,
+          statementNodeMatchesEqualityStatementNode = statementNode.match(equalityStatementNode, depth);
+
+    if (statementNodeMatchesEqualityStatementNode) {
+      const leftTermNode = leftTermNodeQuery(statementNode),
+            rightTermNode = rightTermNodeQuery(statementNode);
+
+      equality = new Equality(leftTermNode, rightTermNode);
+    }
 
     return equality;
   }
