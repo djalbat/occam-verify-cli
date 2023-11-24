@@ -1,13 +1,12 @@
 "use strict";
 
-import equalityStatementNode from "./node/statement/equality";
 import equalityNodesVerifier from "./verifier/nodes/equality";
 
 import { nodeQuery } from "./utilities/query";
-import { EQUALITY_DEPTH } from "./constants";
 
-const leftTermNodeQuery = nodeQuery("/statement/argument[0]/term!"),
-      rightTermNodeQuery = nodeQuery("/statement/argument[1]/term!");
+const equalityNodeQuery = nodeQuery("/statement/equality!"),
+      leftTermNodeQuery = nodeQuery("/equality/argument[0]/term!"),
+      rightTermNodeQuery = nodeQuery("/equality/argument[1]/term!");
 
 export default class Equality {
   constructor(leftTermNode, rightTermNode) {
@@ -24,29 +23,29 @@ export default class Equality {
   }
 
   matchTermNodes(leftTermNode, rightTermNode, reversed, equalities, context) {
-    let leftTermNodeAndRightTermNodeMatch = true;
+    let termNodesMatch = true;
 
-    if (leftTermNodeAndRightTermNodeMatch) {
+    if (termNodesMatch) {
       const leftNonTerminalNode = reversed ?
                                     this.rightTermNode :
                                       this.leftTermNode,  ///
             rightNonTerminalNode = leftTermNode,  ///
             nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context);
 
-      leftTermNodeAndRightTermNodeMatch = nonTerminalNodeVerified; ///
+      termNodesMatch = nonTerminalNodeVerified; ///
     }
 
-    if (leftTermNodeAndRightTermNodeMatch) {
+    if (termNodesMatch) {
       const leftNonTerminalNode = reversed ?
                                     this.leftTermNode :
                                       this.rightTermNode,  ///
             rightNonTerminalNode = rightTermNode,  ///
             nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, equalities, context);
 
-      leftTermNodeAndRightTermNodeMatch = nonTerminalNodeVerified; ///
+      termNodesMatch = nonTerminalNodeVerified; ///
     }
 
-    return leftTermNodeAndRightTermNodeMatch;
+    return termNodesMatch;
   }
 
   match(equality, equalities, context) {
@@ -89,24 +88,23 @@ export default class Equality {
     const statementNode = proofStep.getStatementNode();
 
     if (statementNode !== null) {
-      equality = Equality.fromStatementNode(statementNode);
+      const equalityNode = equalityNodeQuery(statementNode);
+
+      if (equalityNode !== null) {
+        const leftTermNode = leftTermNodeQuery(statementNode),
+              rightTermNode = rightTermNodeQuery(statementNode);
+
+        equality = new Equality(leftTermNode, rightTermNode);
+      }
     }
 
     return equality;
   }
 
-  static fromStatementNode(statementNode) {
-    let equality = null;
-
-    const depth = EQUALITY_DEPTH,
-          statementNodeMatchesEqualityStatementNode = statementNode.match(equalityStatementNode, depth);
-
-    if (statementNodeMatchesEqualityStatementNode) {
-      const leftTermNode = leftTermNodeQuery(statementNode),
-            rightTermNode = rightTermNodeQuery(statementNode);
-
-      equality = new Equality(leftTermNode, rightTermNode);
-    }
+  static fromEqualityNode(equalityNode) {
+    const leftTermNode = leftTermNodeQuery(equalityNode),
+          rightTermNode = rightTermNodeQuery(equalityNode),
+          equality = new Equality(leftTermNode, rightTermNode);
 
     return equality;
   }

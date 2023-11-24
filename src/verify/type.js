@@ -9,7 +9,7 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
 
   const typeString = fileContext.nodeAsString(typeNode);
 
-  fileContext.trace(`Verifying the '${typeString}' type.`);
+  fileContext.trace(`Verifying the '${typeString}' type.`, typeNode);
 
   const typeName = typeNameFromTypeNode(typeNode),
         typePresent = fileContext.isTypePresentByTypeName(typeName);
