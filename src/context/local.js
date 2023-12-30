@@ -5,7 +5,7 @@ import Equality from "../equality";
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 
-import { push, last, filter } from "../utilities/array";
+import { last, filter } from "../utilities/array";
 
 class LocalContext {
   constructor(context, variables, proofSteps, collections) {
@@ -20,13 +20,12 @@ class LocalContext {
   }
 
   getVariables() {
-    const variables = [];
+    let variables = this.context.getVariables();
 
-    push(variables, this.variables);
-
-    const contextVariables = this.context.getVariables();
-
-    push(variables, contextVariables);
+    variables = [ ///
+      ...variables,
+      ...this.variables
+    ];
 
     return variables;
   }
@@ -34,7 +33,7 @@ class LocalContext {
   getProofSteps() {
     let proofSteps = this.context.getProofSteps();
 
-    proofSteps = [
+    proofSteps = [  ///
       ...proofSteps,
       ...this.proofSteps
     ];
@@ -43,7 +42,23 @@ class LocalContext {
   }
 
   getCollections() {
+    let collections = this.context.getCollections();
+
     return this.collections;
+  }
+
+  getEqualities() {
+    const equalities = this.context.getEqualities();
+
+    this.proofSteps.forEach((proofStep) => {
+      const equality = Equality.fromProofStep(proofStep);
+
+      if (equality !== null) {
+        equalities.push(equality);
+      }
+    });
+
+    return equalities;
   }
 
   getLastProofStep() {
@@ -59,20 +74,6 @@ class LocalContext {
   }
 
   getMetavariables() { return this.context.getMetavariables(); }
-
-  getEqualities(equalities = []) {
-    this.context.getEqualities(equalities);
-
-    this.proofSteps.forEach((proofStep) => {
-      const equality = Equality.fromProofStep(proofStep);
-
-      if (equality !== null) {
-        equalities.push(equality);
-      }
-    });
-
-    return equalities;
-  }
 
   addVariable(variable) {
     const variableName = variable.getName();

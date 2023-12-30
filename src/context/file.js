@@ -58,7 +58,9 @@ export default class FileContext {
 
   getParser() { return this.releaseContext.getParser(); }
 
-  getEqualities(equalities = []) {
+  getEqualities() {
+    const equalities = [];  ///
+
     return equalities;
   }
 
@@ -66,6 +68,12 @@ export default class FileContext {
     const proofSteps = [];  ///
 
     return proofSteps;
+  }
+
+  getCollections() {
+    const collections = []; ///
+
+    return collections;
   }
 
   getMetaproofSteps() {

@@ -3,7 +3,7 @@
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 
-import { push, last, filter } from "../utilities/array";
+import { last, filter } from "../utilities/array";
 
 class LocalMetaContext {
   constructor(context, metavariables, metaproofSteps) {
@@ -17,13 +17,12 @@ class LocalMetaContext {
   }
 
   getMetavariables() {
-    const metavariables = [];
+    let metavariables = this.context.getMetavariables();
 
-    push(metavariables, this.metavariables);
-
-    const contextMetavariables = this.context.getMetavariables();
-
-    push(metavariables, contextMetavariables);
+    metavariables = [ ///
+      ...metavariables,
+      this.metavariables
+    ]
 
     return metavariables;
   }

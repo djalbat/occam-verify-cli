@@ -16,13 +16,16 @@ export default function verifyProof(proofNode, conclusion, localContext) {
         derivationVerified = verifyDerivation(derivationNode, localContext);
 
   if (derivationVerified) {
-    const lastProofStep = localContext.getLastProofStep(),
-          proofStep = lastProofStep, ///
-          statementNode = proofStep.getStatementNode(),
-          conclusionStatementNode = conclusion.getStatementNode(),
-          statementNodeMatchConclusionStatementNode = statementNode.match(conclusionStatementNode);
+    const lastProofStep = localContext.getLastProofStep();
 
-    proofVerified = statementNodeMatchConclusionStatementNode;  ///
+    if (lastProofStep !== null) {
+      const proofStep = lastProofStep, ///
+            statementNode = proofStep.getStatementNode(),
+            conclusionStatementNode = conclusion.getStatementNode(),
+            statementNodeMatchConclusionStatementNode = statementNode.match(conclusionStatementNode);
+
+      proofVerified = statementNodeMatchConclusionStatementNode;  ///
+    }
   }
 
   return proofVerified;
