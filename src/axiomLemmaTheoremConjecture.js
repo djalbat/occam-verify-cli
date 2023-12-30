@@ -3,17 +3,17 @@
 import Label from "./label";
 import Consequent from "./consequent";
 import Supposition from "./supposition";
-import ProofContext from "./context/proof";
+import LocalContext from "./context/local";
 
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
 
 export default class AxiomLemmaTheoremConjecture {
-  constructor(labels, suppositions, consequent, proofContext) {
+  constructor(labels, suppositions, consequent, localContext) {
     this.labels = labels;
     this.suppositions = suppositions;
     this.consequent = consequent;
-    this.proofContext = proofContext;
+    this.localContext = localContext;
   }
 
   getLabels() {
@@ -28,8 +28,8 @@ export default class AxiomLemmaTheoremConjecture {
     return this.consequent;
   }
 
-  getProofContext() {
-    return this.proofContext;
+  getLocalContext() {
+    return this.localContext;
   }
 
   matchLabelName(labelName) {
@@ -45,27 +45,27 @@ export default class AxiomLemmaTheoremConjecture {
     return labelNameMatches;
   }
 
-  matchStatement(statementNode, statementProofContext) {
+  matchStatement(statementNode, statementLocalContext) {
     let statementNatches;
 
     const suppositionsLength = this.suppositions.length;
 
     if (suppositionsLength === 0) {
       const substitutions = [],
-            consequentMatches = matchConsequent(this.consequent, statementNode, substitutions, this.proofContext, statementProofContext);
+            consequentMatches = matchConsequent(this.consequent, statementNode, substitutions, this.localContext, statementLocalContext);
 
       statementNatches = consequentMatches; ///
     } else {
-      const proofSteps = statementProofContext.getProofSteps();
+      const proofSteps = statementLocalContext.getProofSteps();
 
       statementNatches = someSubArray(proofSteps, suppositionsLength, (proofSteps) => {
         let suppositionsMatchConsequent = false;
 
         const substitutions = [],
-              suppositionsMatch = matchSuppositions(this.suppositions, proofSteps, substitutions, this.proofContext, statementProofContext);
+              suppositionsMatch = matchSuppositions(this.suppositions, proofSteps, substitutions, this.localContext, statementLocalContext);
 
         if (suppositionsMatch) {
-          const consequentMatches = matchConsequent(this.consequent, statementNode, substitutions, this.proofContext, statementProofContext);
+          const consequentMatches = matchConsequent(this.consequent, statementNode, substitutions, this.localContext, statementLocalContext);
 
           suppositionsMatchConsequent = consequentMatches;  ///
         }
@@ -91,16 +91,16 @@ export default class AxiomLemmaTheoremConjecture {
             return suppositionJSON;
           }),
           consequentJSON = this.consequent.toJSON(tokens),
-          proofContextJSON = this.proofContext.toJSON(tokens),
+          localContextJSON = this.localContext.toJSON(tokens),
           labels = labelsJSON,  ///
           suppositions = suppositionsJSON,  ///
           consequent = consequentJSON,  ///
-          proofContext = proofContextJSON,  ///
+          localContext = localContextJSON,  ///
           json = {
             labels,
             suppositions,
             consequent,
-            proofContext
+            localContext
           };
 
     return json;
@@ -118,7 +118,7 @@ export default class AxiomLemmaTheoremConjecture {
       return label;
     });
 
-    let { suppositions, consequent, proofContext } = json;
+    let { suppositions, consequent, localContext } = json;
 
     const suppositionsJSON = suppositions;  ///
 
@@ -135,25 +135,25 @@ export default class AxiomLemmaTheoremConjecture {
 
     consequent = Consequent.fromJSONAndFileContext(json, fileContext);
 
-    const proofContextJSON = proofContext;  ///
+    const localContextJSON = localContext;  ///
 
-    json = proofContextJSON;  ///
+    json = localContextJSON;  ///
 
-    proofContext = ProofContext.fromJSONAndFileContext(json, fileContext);
+    localContext = LocalContext.fromJSONAndFileContext(json, fileContext);
 
-    return new Class(labels, suppositions, consequent, proofContext);  ///
+    return new Class(labels, suppositions, consequent, localContext);  ///
   }
 
-  static fromLabelsSuppositionsConsequentAndProofContext(Class, labels, suppositions, consequent, proofContext) { return new Class(labels, suppositions, consequent, proofContext); }
+  static fromLabelsSuppositionsConsequentAndLocalContext(Class, labels, suppositions, consequent, localContext) { return new Class(labels, suppositions, consequent, localContext); }
 }
 
-function matchSupposition(supposition, proofSteps, substitutions, proofContext, statementProofContext) {
+function matchSupposition(supposition, proofSteps, substitutions, localContext, statementLocalContext) {
   const proofStep = prune(proofSteps, (proofStep) => {
     const subproofNode = proofStep.getSubproofNode(),
           statementNode = proofStep.getStatementNode();
 
     if (subproofNode !== null) {
-      const subProofMatches = supposition.matchSubproofNode(subproofNode, substitutions, proofContext, statementProofContext);
+      const subProofMatches = supposition.matchSubproofNode(subproofNode, substitutions, localContext, statementLocalContext);
 
       if (!subProofMatches) {  ///
         return true;
@@ -161,7 +161,7 @@ function matchSupposition(supposition, proofSteps, substitutions, proofContext, 
     }
 
     if (statementNode !== null) {
-      const statementMatches = supposition.matchStatementNode(statementNode, substitutions, proofContext, statementProofContext);
+      const statementMatches = supposition.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext);
 
       if (!statementMatches) {  ///
         return true;
@@ -175,9 +175,9 @@ function matchSupposition(supposition, proofSteps, substitutions, proofContext, 
   return suppositionMatches;
 }
 
-function matchSuppositions(suppositions, proofSteps, substitutions, proofContext, statementProofContext) {
+function matchSuppositions(suppositions, proofSteps, substitutions, localContext, statementLocalContext) {
   const suppositionsMatch = suppositions.every((supposition) => {
-    const suppositionMatches = matchSupposition(supposition, proofSteps, substitutions, proofContext, statementProofContext);
+    const suppositionMatches = matchSupposition(supposition, proofSteps, substitutions, localContext, statementLocalContext);
 
     if (suppositionMatches) {
       return true;
@@ -187,8 +187,8 @@ function matchSuppositions(suppositions, proofSteps, substitutions, proofContext
   return suppositionsMatch;
 }
 
-function matchConsequent(consequent, statementNode, substitutions, proofContext, statementProofContext) {
-  const nonTerminalNodeMatches = consequent.matchStatementNode(statementNode, substitutions, proofContext, statementProofContext),
+function matchConsequent(consequent, statementNode, substitutions, localContext, statementLocalContext) {
+  const nonTerminalNodeMatches = consequent.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext),
         consequentMatches = nonTerminalNodeMatches; ///
 
   return consequentMatches;

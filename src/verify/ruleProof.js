@@ -1,22 +1,22 @@
 "use strict";
 
-import MetaproofContext from "../context/metaproof";
+import LocalMetaContext from "../context/localMeta";
 import verifyRuleDerivation from "../verify/ruleDerivation";
 
 import { nodeQuery } from "../utilities/query";
 
 const ruleDerivationNodeQuery = nodeQuery("/ruleProof/ruleDerivation!");
 
-export default function verifyRuleProof(ruleProofNode, conclusion, metaproofContext) {
+export default function verifyRuleProof(ruleProofNode, conclusion, localMetaContext) {
   let ruleProofVerified = false;
 
-  metaproofContext = MetaproofContext.fromMetaproofContext(metaproofContext); ///
+  localMetaContext = LocalMetaContext.fromLocalMetaContext(localMetaContext); ///
 
   const ruleDerivationNode = ruleDerivationNodeQuery(ruleProofNode),
-        ruleDerivationVerified = verifyRuleDerivation(ruleDerivationNode, metaproofContext);
+        ruleDerivationVerified = verifyRuleDerivation(ruleDerivationNode, localMetaContext);
 
   if (ruleDerivationVerified) {
-    const lastMetaproofStep = metaproofContext.getLastMetaproofStep(),
+    const lastMetaproofStep = localMetaContext.getLastMetaproofStep(),
           metaproofStep = lastMetaproofStep, ///
           metastatementNode = metaproofStep.getMetastatementNode(),
           conclusionMetastatementNode = conclusion.getMetastatementNode(),

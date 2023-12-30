@@ -9,8 +9,8 @@ export default class Assignment {
     return this.variable;
   }
 
-  assign(proofContext) {
-    proofContext.addVariable(this.variable);
+  assign(localContext) {
+    localContext.addVariable(this.variable);
   }
 
   match(assignment) {

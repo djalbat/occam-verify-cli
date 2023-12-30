@@ -2,7 +2,7 @@
 
 import Conjecture from "../conjecture";
 import verifyProof from "../verify/proof";
-import ProofContext from "../context/proof";
+import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
 import verifyConsequent from "./consequent";
 import verifySupposition from "./supposition";
@@ -20,7 +20,7 @@ export default function verifyConjecture(conjectureNode, fileContext) {
 
   const labelNodes = labelNodesQuery(conjectureNode),
         labelsString = fileContext.nodesAsString(labelNodes),
-        proofContext = ProofContext.fromFileContext(fileContext);
+        localContext = LocalContext.fromFileContext(fileContext);
 
   fileContext.trace(`Verifying the '${labelsString}' conjecture...`, conjectureNode);
 
@@ -31,7 +31,7 @@ export default function verifyConjecture(conjectureNode, fileContext) {
     const suppositions = [],
           suppositionNodes = suppositionsNodeQuery(conjectureNode),
           suppositionsVerified = suppositionNodes.every((suppositionNode) => {
-            const suppositionVerified = verifySupposition(suppositionNode, suppositions, proofContext);
+            const suppositionVerified = verifySupposition(suppositionNode, suppositions, localContext);
 
             if (suppositionVerified) {
               return true;
@@ -41,16 +41,16 @@ export default function verifyConjecture(conjectureNode, fileContext) {
     if (suppositionsVerified) {
       const consequents = [],
             consequentNode = consequentNodeQuery(conjectureNode),
-            consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
+            consequentVerified = verifyConsequent(consequentNode, consequents, localContext);
 
       if (consequentVerified) {
         const proofNode = proofNodeQuery(conjectureNode),
               firstConsequent = first(consequents),
               consequent = firstConsequent; ///
 
-        verifyProof(proofNode, consequent, proofContext);
+        verifyProof(proofNode, consequent, localContext);
 
-        const conjecture = Conjecture.fromLabelsSuppositionsConsequentAndProofContext(labels, suppositions, consequent, proofContext);
+        const conjecture = Conjecture.fromLabelsSuppositionsConsequentAndLocalContext(labels, suppositions, consequent, localContext);
 
         fileContext.addConjecture(conjecture);
 

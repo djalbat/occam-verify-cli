@@ -1,22 +1,22 @@
 "use strict";
 
-import ProofContext from "../context/proof";
+import LocalContext from "../context/local";
 import verifyDerivation from "../verify/derivation";
 
 import { nodeQuery } from "../utilities/query";
 
 const derivationNodeQuery = nodeQuery("/proof/derivation!");
 
-export default function verifyProof(proofNode, conclusion, proofContext) {
+export default function verifyProof(proofNode, conclusion, localContext) {
   let proofVerified = false;
 
-  proofContext = ProofContext.fromProofContext(proofContext); ///
+  localContext = LocalContext.fromLocalContext(localContext); ///
 
   const derivationNode = derivationNodeQuery(proofNode),
-        derivationVerified = verifyDerivation(derivationNode, proofContext);
+        derivationVerified = verifyDerivation(derivationNode, localContext);
 
   if (derivationVerified) {
-    const lastProofStep = proofContext.getLastProofStep(),
+    const lastProofStep = localContext.getLastProofStep(),
           proofStep = lastProofStep, ///
           statementNode = proofStep.getStatementNode(),
           conclusionStatementNode = conclusion.getStatementNode(),

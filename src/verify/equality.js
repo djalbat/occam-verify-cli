@@ -3,6 +3,8 @@
 import Equality from "../equality";
 import verifyTerms from "../verify/terms";
 
+import { first, second } from "../utilities/array";
+
 export default function verifyEquality(equalityNode, assignments, derived, context, verifyAhead) {
   let equalityVerified;
 
@@ -10,13 +12,13 @@ export default function verifyEquality(equalityNode, assignments, derived, conte
 
   context.trace(`Verifying the '${equalityString}' equality...`, equalityNode);
 
-  const verifyStatementAsEqualityFunctions = [
+  const verifyEqualityFunctions = [
     verifyDerivedEquality,
     verifyStandaloneEquality
   ];
 
-  equalityVerified = verifyStatementAsEqualityFunctions.some((verifyStatementAsEqualityFunction) => {
-    const statementVerified = verifyStatementAsEqualityFunction(equalityNode, derived, context, verifyAhead);
+  equalityVerified = verifyEqualityFunctions.some((verifyEqualityFunction) => {
+    const statementVerified = verifyEqualityFunction(equalityNode, derived, context, verifyAhead);
 
     if (statementVerified) {
       return true;
@@ -31,46 +33,70 @@ export default function verifyEquality(equalityNode, assignments, derived, conte
 }
 
 function verifyDerivedEquality(equalityNode, derived, context, verifyAhead) {
-  let verifiedStatementAsDerivedEquality = false;
+  let derivedEqualityVerified = false;
 
   if (derived) {
     const equalityString = context.nodeAsString(equalityNode);
 
     context.trace(`Verifying the '${equalityString}' derived equality...`, equalityNode);
 
-    const equality = Equality.fromEqualityNode(equalityNode),
-          equalities = context.getEqualities(),
-          equalityVerified = equality.verify(equalities, context, verifyAhead);
+    debugger
 
-    verifiedStatementAsDerivedEquality = equalityVerified;  ///
+    // const equality = Equality.fromEqualityNode(equalityNode),
+    //       equalities = context.getEqualities(),
+    //       equalityVerified = equality.verify(equalities, context, verifyAhead);
+    //
+    // derivedEqualityVerified = equalityVerified;  ///
 
-    if (verifiedStatementAsDerivedEquality) {
+    if (derivedEqualityVerified) {
       context.debug(`...verified the '${equalityString}' derived equality.`, equalityNode);
     }
   }
 
-  return verifiedStatementAsDerivedEquality;
+  return derivedEqualityVerified;
 }
 
 function verifyStandaloneEquality(equalityNode, derived, context, verifyAhead) {
-  let statementVerifiedAsStandaloneEquality = false;
+  let standaloneEqualityVerified = false;
 
   if (!derived) {
     const equalityString = context.nodeAsString(equalityNode);
 
     context.trace(`Verifying the '${equalityString}' standalone equality...`, equalityNode);
 
-    const equality = Equality.fromEqualityNode(equalityNode),
+    const types = [],
+          equality = Equality.fromEqualityNode(equalityNode),
           leftTermNode = equality.getLeftTermNode(),
           rightTermNode = equality.getRightTermNode(),
-          termsVerified = verifyTerms(leftTermNode, rightTermNode, context, verifyAhead);
+          termsVerified = verifyTerms(leftTermNode, rightTermNode, types, context, () => {
+            let verifiedAhead;
 
-    statementVerifiedAsStandaloneEquality = termsVerified; ///
+            const firstType = first(types),
+                  secondType = second(types),
+                  leftType = firstType, ///
+                  rightType = secondType, ///
+                  leftTermNodeMatchesRightTermNode = leftTermNode.match(rightTermNode);
 
-    if (statementVerifiedAsStandaloneEquality) {
+            if (leftTermNodeMatchesRightTermNode) {
+              const termNode = leftTermNode,  ///
+                    type = leftType;
+
+              debugger
+            } else {
+
+            }
+
+            verifiedAhead = verifiedAhead();
+
+            return verifiedAhead;
+          });
+
+    standaloneEqualityVerified = termsVerified; ///
+
+    if (standaloneEqualityVerified) {
       context.trace(`...verified the '${equalityString}' standalone equality.`, equalityNode);
     }
   }
 
-  return statementVerifiedAsStandaloneEquality;
+  return standaloneEqualityVerified;
 }

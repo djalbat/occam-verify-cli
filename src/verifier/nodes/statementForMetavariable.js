@@ -11,7 +11,7 @@ const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!'),
       metaArgumentChildNodeNodeQuery = nodeQuery('/metaArgument/*!');
 
 export default class StatementForMetavariableNodesVerifier extends NodesVerifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContext) {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
@@ -23,7 +23,7 @@ export default class StatementForMetavariableNodesVerifier extends NodesVerifier
 
       nonTerminalNodeB = metaArgumentChildNodeB;  ///
 
-      nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB);
+      nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContext);
     } else {
       const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
             nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(),
@@ -33,7 +33,7 @@ export default class StatementForMetavariableNodesVerifier extends NodesVerifier
       if (nonTerminalNodeARuleNameMetastatementRuleName && nonTerminalNodeBRuleNameStatementRuleName) {
         const metastatementNodeA = nonTerminalNodeA,  ///
               statementNodeB = nonTerminalNodeB,  ///
-              statementNodeVerified = this.verifyStatementNode(metastatementNodeA, statementNodeB, substitutions, fileContextA, proofContextB);
+              statementNodeVerified = this.verifyStatementNode(metastatementNodeA, statementNodeB, substitutions, fileContextA, localContext);
 
         if (statementNodeVerified) {
           nonTerminalNodeVerified = true;  ///
@@ -42,25 +42,25 @@ export default class StatementForMetavariableNodesVerifier extends NodesVerifier
                 nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
                 childNodesA = nonTerminalNodeAChildNodes, ///
                 childNodesB = nonTerminalNodeBChildNodes, ///
-                childNodesVerified = this.verifyChildNodes(childNodesA, childNodesB, substitutions, fileContextA, proofContextB);
+                childNodesVerified = this.verifyChildNodes(childNodesA, childNodesB, substitutions, fileContextA, localContext);
 
           nonTerminalNodeVerified = childNodesVerified;  ///
         }
       } else if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
-        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB);
+        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContext);
       }
     }
 
     return nonTerminalNodeVerified;
   }
 
-  verifyStatementNode(metastatementNodeA, statementNodeB, substitutions, fileContextA, proofContextB) {
+  verifyStatementNode(metastatementNodeA, statementNodeB, substitutions, fileContextA, localContext) {
     let statementNodeVerified = false;
 
     const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
     if (metavariableNodeA !== null) {
-      const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, proofContextB);
+      const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, localContext);
 
       statementNodeVerified = metavariableNodeVerified; ///
     }
@@ -68,7 +68,7 @@ export default class StatementForMetavariableNodesVerifier extends NodesVerifier
     return statementNodeVerified;
   }
 
-  verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, proofContextB) {
+  verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, localContext) {
     let metavariableNodeVerified;
 
     const metavariableNameA = metavariableNameFromMetavariableNode(metavariableNodeA),

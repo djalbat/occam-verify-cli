@@ -15,12 +15,12 @@ export default class Conclusion {
     return this.metastatementNode;
   }
 
-  matchStatementNode(statementNode, substitutions, fileContext, statementProofContext) {
+  matchStatementNode(statementNode, substitutions, fileContext, statementLocalContext) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = statementNode,  ///
           fileContextA = fileContext, ///
-          proofContextB = statementProofContext,  ///
-          nonTerminalNodeVerified = conclusionStatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, proofContextB, () => {
+          localContextB = statementLocalContext,  ///
+          nonTerminalNodeVerified = conclusionStatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContextB, () => {
             const verifyAhead = true;
 
             return verifyAhead;
@@ -30,12 +30,12 @@ export default class Conclusion {
     return statementNodeMatches;
   }
 
-  matchMetastatementNode(metastatementNode, substitutions, fileContext, metastatementMetaproofContext) {
+  matchMetastatementNode(metastatementNode, substitutions, fileContext, metastatementMetalocalContext) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = metastatementNode,  ///
           fileContextA = fileContext, ///
-          metaproofContextB = metastatementMetaproofContext,  ///
-          nonTerminalNodeVerified = conclusionMetastatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metaproofContextB, () => {
+          metalocalContextB = metastatementMetalocalContext,  ///
+          nonTerminalNodeVerified = conclusionMetastatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, metalocalContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

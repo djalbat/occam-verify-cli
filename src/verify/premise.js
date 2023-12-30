@@ -9,16 +9,16 @@ import { nodeQuery } from "../utilities/query";
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/premise/unqualifiedMetastatement!");
 
-export default function verifyPremise(premiseNode, premises, metaproofContext) {
+export default function verifyPremise(premiseNode, premises, localMetaContext) {
   let premiseVerified;
 
-  const premiseString = metaproofContext.nodeAsString(premiseNode);
+  const premiseString = localMetaContext.nodeAsString(premiseNode);
 
-  metaproofContext.trace(`Verifying the '${premiseString}' premise...`, premiseNode);
+  localMetaContext.trace(`Verifying the '${premiseString}' premise...`, premiseNode);
 
   const derived = false,
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(premiseNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, metaproofContext);
+        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, localMetaContext);
 
   if (unqualifiedMetastatementVerified) {
     const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
@@ -27,13 +27,13 @@ export default function verifyPremise(premiseNode, premises, metaproofContext) {
 
     premises.push(premise);
 
-    metaproofContext.addMetaproofStep(metaproofStep);
+    localMetaContext.addMetaproofStep(metaproofStep);
 
     premiseVerified = true;
   }
 
   if (premiseVerified) {
-    metaproofContext.debug(`...verified the '${premiseString}' premise.`, premiseNode);
+    localMetaContext.debug(`...verified the '${premiseString}' premise.`, premiseNode);
   }
 
   return premiseVerified;

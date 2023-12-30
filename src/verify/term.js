@@ -93,6 +93,41 @@ export function verifyTermAsVariable(termNode, variables, context, verifyAhead) 
   return termVerifiedAsVariable;
 }
 
+function verifyTermAsStandaloneVariable(termNode, types, context, verifyAhead) {
+  let termVerifiedAsStandaloneVariable;
+
+  const termString = context.nodeAsString(termNode);
+
+  context.trace(`Verifying the '${termString}' term as a standalone variable...`, termNode);
+
+  const variables = [],
+        termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context, () => {
+          let verifiedAhead;
+
+          const firstVariable = first(variables),
+                variable = firstVariable, ///
+                type = variable.getType();
+
+          types.push(type);
+
+          verifiedAhead = verifyAhead();
+
+          if (!verifiedAhead) {
+            types.pop();
+          }
+
+          return verifiedAhead;
+        });
+
+  termVerifiedAsStandaloneVariable = termVerifiedAsVariable;  ///
+
+  if (termVerifiedAsStandaloneVariable) {
+    context.debug(`...verified the '${termString}' term as a standalone variable.`, termNode);
+  }
+
+  return termVerifiedAsStandaloneVariable;
+}
+
 function verifyTermAgainstConstructor(termNode, types, constructor, context, verifyAhead) {
   let termVerifiedAgainstConstructor;
 
@@ -127,39 +162,4 @@ function verifyTermAgainstConstructor(termNode, types, constructor, context, ver
   }
 
   return termVerifiedAgainstConstructor;
-}
-
-function verifyTermAsStandaloneVariable(termNode, types, context, verifyAhead) {
-  let termVerifiedAsStandaloneVariable;
-
-  const termString = context.nodeAsString(termNode);
-
-  context.trace(`Verifying the '${termString}' term as a standalone variable...`, termNode);
-
-  const variables = [],
-        termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context, () => {
-          let verifiedAhead;
-
-          const firstVariable = first(variables),
-                variable = firstVariable, ///
-                type = variable.getType();
-
-          types.push(type);
-
-          verifiedAhead = verifyAhead();
-
-          if (!verifiedAhead) {
-            types.pop();
-          }
-
-          return verifiedAhead;
-        });
-
-  termVerifiedAsStandaloneVariable = termVerifiedAsVariable;  ///
-
-  if (termVerifiedAsStandaloneVariable) {
-    context.debug(`...verified the '${termString}' term as a standalone variable.`, termNode);
-  }
-
-  return termVerifiedAsStandaloneVariable;
 }

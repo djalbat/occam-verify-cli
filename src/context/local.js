@@ -7,11 +7,12 @@ import loggingMixins from "../mixins/logging";
 
 import { push, last, filter } from "../utilities/array";
 
-class ProofContext {
-  constructor(context, variables, proofSteps) {
+class LocalContext {
+  constructor(context, variables, proofSteps, collections) {
     this.context = context;
     this.variables = variables;
     this.proofSteps = proofSteps;
+    this.collections = collections;
   }
 
   getContext() {
@@ -39,6 +40,10 @@ class ProofContext {
     ];
 
     return proofSteps;
+  }
+
+  getCollections() {
+    return this.collections;
   }
 
   getLastProofStep() {
@@ -150,19 +155,21 @@ class ProofContext {
     const context = fileContext,  ///
           variables = [],
           proofSteps = [],
-          proofContext = new ProofContext(context, variables, proofSteps);
+          collections = [],
+          localContext = new LocalContext(context, variables, proofSteps, collections);
 
-    return proofContext;
+    return localContext;
   }
 
-  static fromProofContext(proofContext) {
-    const context = proofContext,  ///
+  static fromLocalContext(localContext) {
+    const context = localContext,  ///
           variables = [],
-          proofSteps = [];
+          proofSteps = [],
+          collections = [];
 
-    proofContext = new ProofContext(context, variables, proofSteps);
+    localContext = new LocalContext(context, variables, proofSteps, collections);
 
-    return proofContext;
+    return localContext;
   }
 
   static fromJSONAndFileContext(json, fileContext) {
@@ -179,27 +186,29 @@ class ProofContext {
 
     const context = fileContext,  ///
           proofSteps = [],
-          proofContext = new ProofContext(context, variables, proofSteps);
+          collections = [],
+          localContext = new LocalContext(context, variables, proofSteps, collections);
 
-    return proofContext;
+    return localContext;
   }
 
-  static fromProofContextAndAssignments(proofContext, assignments) {
-    const context = proofContext,  ///
+  static fromLocalContextAndAssignments(localContext, assignments) {
+    const context = localContext,  ///
           variables = assignments.map((assignment) => {
             const variable = assignment.getVariable();
 
             return variable;
           }),
-          proofSteps = [];
+          proofSteps = [],
+          collections = [];
 
-    proofContext = new ProofContext(context, variables, proofSteps);
+    localContext = new LocalContext(context, variables, proofSteps, collections);
 
-    return proofContext;
+    return localContext;
   }
 }
 
-Object.assign(ProofContext.prototype, fileMixins);
-Object.assign(ProofContext.prototype, loggingMixins);
+Object.assign(LocalContext.prototype, fileMixins);
+Object.assign(LocalContext.prototype, loggingMixins);
 
-export default ProofContext;
+export default LocalContext;

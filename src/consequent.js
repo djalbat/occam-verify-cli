@@ -14,12 +14,12 @@ export default class Consequent {
     return this.statementNode;
   }
 
-  matchStatementNode(statementNode, substitutions, proofContext) {
+  matchStatementNode(statementNode, substitutions, localContext) {
     const nonTerminalNodeA = this.statementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          proofContextA = proofContext, ///
-          proofContextB = null, ///
-          nonTerminalNodeVerified = consequentTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB, () => {
+          localContextA = localContext, ///
+          localContextB = null, ///
+          nonTerminalNodeVerified = consequentTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

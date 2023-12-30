@@ -8,16 +8,16 @@ import { nodeQuery } from "../utilities/query";
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/conclusion/unqualifiedMetastatement!");
 
-export default function verifyConclusion(conclusionNode, conclusions, metaproofContext) {
+export default function verifyConclusion(conclusionNode, conclusions, localMetaContext) {
   let conclusionVerified = false;
 
-  const conclusionString = metaproofContext.nodeAsString(conclusionNode);
+  const conclusionString = localMetaContext.nodeAsString(conclusionNode);
 
-  metaproofContext.trace(`Verifying the '${conclusionString}' conclusion...`, conclusionNode);
+  localMetaContext.trace(`Verifying the '${conclusionString}' conclusion...`, conclusionNode);
 
   const derived = false,
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, metaproofContext);
+        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, localMetaContext);
 
   if (unqualifiedMetastatementVerified) {
     const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
@@ -29,7 +29,7 @@ export default function verifyConclusion(conclusionNode, conclusions, metaproofC
   }
 
   if (conclusionVerified) {
-    metaproofContext.debug(`...verified the '${conclusionString}' conclusion.`, conclusionNode);
+    localMetaContext.debug(`...verified the '${conclusionString}' conclusion.`, conclusionNode);
   }
 
   return conclusionVerified;

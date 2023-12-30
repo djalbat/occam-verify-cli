@@ -1,7 +1,7 @@
 "use strict";
 
 import Axiom from "../axiom";
-import ProofContext from "../context/proof";
+import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
 import verifyConsequent from "../verify/consequent";
 import verifySupposition from "../verify/supposition";
@@ -18,7 +18,7 @@ export default function verifyAxiom(axiomNode, fileContext) {
 
   const labelNodes = labelNodesQuery(axiomNode),
         labelsString = fileContext.nodesAsString(labelNodes),
-        proofContext = ProofContext.fromFileContext(fileContext);
+        localContext = LocalContext.fromFileContext(fileContext);
 
   fileContext.trace(`Verifying the '${labelsString}' axiom...`, axiomNode);
 
@@ -29,7 +29,7 @@ export default function verifyAxiom(axiomNode, fileContext) {
     const suppositions = [],
           suppositionNodes = suppositionsNodeQuery(axiomNode),
           suppositionsVerified = suppositionNodes.every((suppositionNode) => {
-            const suppositionVerified = verifySupposition(suppositionNode, suppositions, proofContext);
+            const suppositionVerified = verifySupposition(suppositionNode, suppositions, localContext);
 
             if (suppositionVerified) {
               return true;
@@ -39,12 +39,12 @@ export default function verifyAxiom(axiomNode, fileContext) {
     if (suppositionsVerified) {
       const consequents = [],
             consequentNode = consequentNodeQuery(axiomNode),
-            consequentVerified = verifyConsequent(consequentNode, consequents, proofContext);
+            consequentVerified = verifyConsequent(consequentNode, consequents, localContext);
 
       if (consequentVerified) {
         const firstConsequent = first(consequents),
               consequent = firstConsequent, ///
-              axiom = Axiom.fromLabelsSuppositionsConsequentAndProofContext(labels, suppositions, consequent, proofContext);
+              axiom = Axiom.fromLabelsSuppositionsConsequentAndLocalContext(labels, suppositions, consequent, localContext);
 
         fileContext.addAxiom(axiom);
 

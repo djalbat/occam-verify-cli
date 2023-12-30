@@ -1,7 +1,7 @@
 "use strict";
 
 import ProofStep from "../step/proof";
-import ProofContext from "../context/proof";
+import LocalContext from "../context/local";
 import verifySupposition from "./supposition";
 import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
@@ -14,13 +14,13 @@ const childNodesQuery = nodesQuery("/derivation|subDerivation/*"),
       suppositionNodesQuery = nodesQuery("/subproof/supposition"),
       subDerivationNodeQuery = nodeQuery("/subproof/subDerivation");
 
-export default function verifyDerivation(derivationNode, proofContext) {
+export default function verifyDerivation(derivationNode, localContext) {
   let derivationVerified;
 
   const childNodes = childNodesQuery(derivationNode);
 
   derivationVerified = childNodes.every((childNode) => {
-    const childVerified = verifyChild(childNode, proofContext);
+    const childVerified = verifyChild(childNode, localContext);
 
     if (childVerified) {
       return true;
@@ -30,13 +30,13 @@ export default function verifyDerivation(derivationNode, proofContext) {
   return derivationVerified;
 }
 
-function verifySubDerivation(subDerivationNode, proofContext) {
+function verifySubDerivation(subDerivationNode, localContext) {
   let subDerivationVerified;
 
   const childNodes = childNodesQuery(subDerivationNode);
 
   subDerivationVerified = childNodes.every((childNode) => {
-    const childVerified = verifyChild(childNode, proofContext);
+    const childVerified = verifyChild(childNode, localContext);
 
     if (childVerified) {
       return true;
@@ -46,15 +46,15 @@ function verifySubDerivation(subDerivationNode, proofContext) {
   return subDerivationVerified;
 }
 
-function verifySubproof(subproofNode, proofContext) {
+function verifySubproof(subproofNode, localContext) {
   let subproofVerified = false;
 
-  proofContext = ProofContext.fromProofContext(proofContext); ///
+  localContext = LocalContext.fromLocalContext(localContext); ///
 
   const suppositions = [],
         suppositionNodes = suppositionNodesQuery(subproofNode),
         suppositionsVerified = suppositionNodes.every((suppositionNode) => {
-          const suppositionVerified = verifySupposition(suppositionNode, suppositions, proofContext);
+          const suppositionVerified = verifySupposition(suppositionNode, suppositions, localContext);
 
           if (suppositionVerified) {
             return true;
@@ -63,7 +63,7 @@ function verifySubproof(subproofNode, proofContext) {
 
   if (suppositionsVerified) {
     const subDerivationNode = subDerivationNodeQuery(subproofNode),
-          subDerivationVerified = verifySubDerivation(subDerivationNode, proofContext);
+          subDerivationVerified = verifySubDerivation(subDerivationNode, localContext);
 
     if (subDerivationVerified) {
       subproofVerified = true;
@@ -73,7 +73,7 @@ function verifySubproof(subproofNode, proofContext) {
   return subproofVerified;
 }
 
-function verifyChild(childNode, proofContext) {
+function verifyChild(childNode, localContext) {
   let childVerified;
 
   const childNodeRuleName = childNode.getRuleName();
@@ -81,12 +81,12 @@ function verifyChild(childNode, proofContext) {
   switch (childNodeRuleName) {
     case SUBPROOF_RULE_NAME: {
       const subproofNode = childNode,  ///
-            subproofVerified = verifySubproof(subproofNode, proofContext);
+            subproofVerified = verifySubproof(subproofNode, localContext);
 
       if (subproofVerified) {
         const proofStep = ProofStep.fromSubproofNode(subproofNode);
 
-        proofContext.addProofStep(proofStep);
+        localContext.addProofStep(proofStep);
 
         childVerified = true;
       }
@@ -98,13 +98,13 @@ function verifyChild(childNode, proofContext) {
       const derived = true,
             assignments = [],
             qualifiedStatementNode = childNode,  ///
-            qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assignments, derived, proofContext);
+            qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assignments, derived, localContext);
 
       if (qualifiedStatementVerified) {
         const statementNode = statementNodeQuery(qualifiedStatementNode),
               proofStep = ProofStep.fromStatementNode(statementNode);
 
-        proofContext.addProofStep(proofStep);
+        localContext.addProofStep(proofStep);
 
         childVerified = qualifiedStatementVerified; ///
       }
@@ -116,13 +116,13 @@ function verifyChild(childNode, proofContext) {
       const derived = true,
             assignments = [],
             unqualifiedStatementNode = childNode,  ///
-            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, proofContext);
+            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
       if (unqualifiedStatementVerified) {
         const statementNode = statementNodeQuery(unqualifiedStatementNode),
               proofStep = ProofStep.fromStatementNode(statementNode);
 
-        proofContext.addProofStep(proofStep);
+        localContext.addProofStep(proofStep);
 
         childVerified = true;
       }

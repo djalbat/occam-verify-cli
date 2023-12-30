@@ -5,7 +5,7 @@ import loggingMixins from "../mixins/logging";
 
 import { push, last, filter } from "../utilities/array";
 
-class MetaproofContext {
+class LocalMetaContext {
   constructor(context, metavariables, metaproofSteps) {
     this.context = context;
     this.metavariables = metavariables;
@@ -119,23 +119,23 @@ class MetaproofContext {
     const context = fileContext,  ///
           metavariables = [],
           metaproofSteps = [],
-          metaproofContext = new MetaproofContext(context, metavariables, metaproofSteps);
+          localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps);
 
-    return metaproofContext;
+    return localMetaContext;
   }
 
-  static fromMetaproofContext(metaproofContext) {
-    const context = metaproofContext,  ///
+  static fromLocalMetaContext(localMetaContext) {
+    const context = localMetaContext,  ///
           metavariables = [],
           metaproofSteps = [];
 
-    metaproofContext = new MetaproofContext(context, metavariables, metaproofSteps);  ///
+    localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps);  ///
 
-    return metaproofContext;
+    return localMetaContext;
   }
 }
 
-Object.assign(MetaproofContext.prototype, fileMixins);
-Object.assign(MetaproofContext.prototype, loggingMixins);
+Object.assign(LocalMetaContext.prototype, fileMixins);
+Object.assign(LocalMetaContext.prototype, loggingMixins);
 
-export default MetaproofContext;
+export default LocalMetaContext;

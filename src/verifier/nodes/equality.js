@@ -42,22 +42,25 @@ class EqualityNodesVerifier extends NodesVerifier {
   verifyTermNode(leftTermNode, rightTermNode, equalities, context, verifyAhead) {
     let termNodeVerified = false;
 
-    const termsVerified = verifyTerms(leftTermNode, rightTermNode, context, verifyAhead);
+    debugger
 
-    if (termsVerified) {
-      const equality = Equality.fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode),
-            equalityA = equality, ///
-            equalitiesB = equalities, ///
-            equalityMatches = equalitiesB.some((equalityB) => { ///
-              const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB, context);
-
-              if (equalityAMatchesEqualityB) {
-                return true;
-              }
-            });
-
-      termNodeVerified = equalityMatches;  ///
-    }
+    // const types = [],
+    //       termsVerified = verifyTerms(leftTermNode, rightTermNode, types, context, verifyAhead);
+    //
+    // if (termsVerified) {
+    //   const equality = Equality.fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode),
+    //         equalityA = equality, ///
+    //         equalitiesB = equalities, ///
+    //         equalityMatches = equalitiesB.some((equalityB) => { ///
+    //           const equalityAMatchesEqualityB = equalityA.match(equalityB, equalitiesB, context);
+    //
+    //           if (equalityAMatchesEqualityB) {
+    //             return true;
+    //           }
+    //         });
+    //
+    //   termNodeVerified = equalityMatches;  ///
+    // }
 
     return termNodeVerified;
   }

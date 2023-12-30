@@ -8,17 +8,17 @@ import { nodeQuery } from "../utilities/query";
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/consequent/unqualifiedStatement!");
 
-export default function verifyConsequent(consequentNode, consequents, proofContext) {
+export default function verifyConsequent(consequentNode, consequents, localContext) {
   let consequentVerified = false;
 
-  const consequentString = proofContext.nodeAsString(consequentNode);
+  const consequentString = localContext.nodeAsString(consequentNode);
 
-  proofContext.trace(`Verifying the '${consequentString}' consequent...`, consequentNode);
+  localContext.trace(`Verifying the '${consequentString}' consequent...`, consequentNode);
 
   const derived = false,
         assignments = [],
         unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode),
-        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, proofContext);
+        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
   if (unqualifiedStatementVerified) {
     const statementNode = statementNodeQuery(unqualifiedStatementNode),
@@ -30,7 +30,7 @@ export default function verifyConsequent(consequentNode, consequents, proofConte
   }
 
   if (consequentVerified) {
-    proofContext.debug(`...verified the '${consequentString}' consequent.`, consequentNode);
+    localContext.debug(`...verified the '${consequentString}' consequent.`, consequentNode);
   }
 
   return consequentVerified;

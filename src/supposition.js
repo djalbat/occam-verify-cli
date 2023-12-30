@@ -20,7 +20,7 @@ export default class Supposition {
     return this.statementNode;
   }
 
-  matchSubproofNode(subproofNode, substitutions, proofContext, statementProofContext) {
+  matchSubproofNode(subproofNode, substitutions, localContext, statementLocalContext) {
     let subproofNodeMatches = false;
 
     const subproofAssertionNode = subproofAssertionNodeQuery(this.statementNode);
@@ -41,9 +41,9 @@ export default class Supposition {
           const subproofStatementNode = subproofStatementNodes[index],
                 nonTerminalNodeA = subproofAssertionStatementNode,  ///
                 nonTerminalNodeB = subproofStatementNode, ///
-                proofContextA = proofContext, ///
-                proofContextB = statementProofContext,  ///
-                nonTerminalNodeVerified = suppositionTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB, () => {
+                localContextA = localContext, ///
+                localContextB = statementLocalContext,  ///
+                nonTerminalNodeVerified = suppositionTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
                   const verifiedAhead = true;
 
                   return verifiedAhead;
@@ -59,12 +59,12 @@ export default class Supposition {
     return subproofNodeMatches;
   }
 
-  matchStatementNode(statementNode, substitutions, proofContext, statementProofContext) {
+  matchStatementNode(statementNode, substitutions, localContext, statementLocalContext) {
     const nonTerminalNodeA = this.statementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          proofContextA = proofContext, ///
-          proofContextB = statementProofContext,  ///
-          nonTerminalNodeVerified = suppositionTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, proofContextA, proofContextB, () => {
+          localContextA = localContext, ///
+          localContextB = statementLocalContext,  ///
+          nonTerminalNodeVerified = suppositionTermForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;
