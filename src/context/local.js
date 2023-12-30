@@ -6,6 +6,7 @@ import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 
 import { last, filter } from "../utilities/array";
+import { mergeCollections, findCollectionByType, findCollectionByTermNode } from "../utilities/collection";
 
 class LocalContext {
   constructor(context, variables, proofSteps, collections) {
@@ -44,7 +45,12 @@ class LocalContext {
   getCollections() {
     let collections = this.context.getCollections();
 
-    return this.collections;
+    const collectionsA = collections, ///
+          collectionsB = this.collections;
+
+    collections = mergeCollections(collectionsA, collectionsB); ///
+
+    return collections;
   }
 
   getEqualities() {
@@ -94,6 +100,10 @@ class LocalContext {
     this.proofSteps.push(proofStep);
   }
 
+  addCollection(collection) {
+    this.collections.push(collection);
+  }
+
   matchStatement(statementNode) {
     let statementMatches = false;
 
@@ -114,6 +124,20 @@ class LocalContext {
     }
 
     return statementMatches;
+  }
+
+  findCollectionByType(type) {
+    const collections = this.getCollections(),
+          collection = findCollectionByType(collections, type);
+
+    return collection;
+  }
+
+  findCollectionByTermNode(termNode) {
+    const collections = this.getCollections(),
+          collection = findCollectionByTermNode(collections, termNode);
+
+    return collection;
   }
 
   findVariableByVariableName(variableName) {

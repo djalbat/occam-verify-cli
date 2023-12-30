@@ -26,8 +26,42 @@ export default class Collection {
     this.termNodes.push(termNode);
   }
 
+  matchType(type) {
+    const typeMatches = (this.type === type);
+
+    return typeMatches;
+  }
+
+  matchTermNode(termNode) {
+    const termNodeA = termNode, ///
+          termNodeMatches = this.termNodes.some((termNode) => {
+            const termNodeB = termNode, ///
+                  termNodeAMatchesTermNodeB = termNodeA.match(termNodeB);
+
+            if (termNodeAMatchesTermNodeB) {
+              return true;
+            }
+          });
+
+    return termNodeMatches;
+  }
+
   static fromType(type) {
     const termNodes = [],
+          collection = new Collection(type, termNodes);
+
+    return collection;
+  }
+
+  static fromCollections(collectionA, collectionB) {
+    const collectionAType = collectionA.getType(),
+          collectionATermNodes = collectionA.getTermNodes(),
+          collectionBTermNodes = collectionB.getTermNodes(),
+          type = collectionAType, ///
+          termNodes = [
+            ...collectionATermNodes,
+            ...collectionBTermNodes
+          ],
           collection = new Collection(type, termNodes);
 
     return collection;
