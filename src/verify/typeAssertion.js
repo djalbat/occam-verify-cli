@@ -1,7 +1,7 @@
 "use strict";
 
 import Variable from "../variable";
-import Assignment from "../assignment";
+import VariableAssignment from "../assignment/variable";
 
 import { first } from "../utilities/array";
 import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
@@ -86,7 +86,8 @@ export function verifyVariableTypeAssertion(typeAssertionNode, assertedType, ass
               const name = variableName,  ///
                     type = assertedType,  ///
                     variable = Variable.fromNameAndType(name, type),
-                    assignment = Assignment.fromVariable(variable);
+                    variableAssignment = VariableAssignment.fromVariable(variable),
+                    assignment = variableAssignment; ///
 
               assignments.push(assignment);
 

@@ -1,68 +1,100 @@
 "use strict";
 
 export default class Collection {
-  constructor(type, termNodes) {
-    this.type = type;
-    this.termNodes = termNodes;
+  constructor(terms) {
+    this.terms = terms;
+  }
+
+  getTerms() {
+    return this.terms;
+  }
+
+  setTerms(terms) {
+    this.terms = terms;
+  }
+
+  addTerm(term) {
+    this.terms.push(term);
   }
 
   getType() {
-    return this.type;
-  }
+    const type = this.terms.reduce((type, term) => {
+      const termType = term.getType();
 
-  getTermNodes() {
-    return this.termNodes;
-  }
+      if (type === null) {
+        type = termType;  ///
+      } else {
+        const termTypeSubTypeOfType = termType.isSubTypeOf(type);
 
-  setType(type) {
-    this.type = type;
-  }
+        if (termTypeSubTypeOfType) {
+          type = termType;  ///
+        }
+      }
 
-  setTermNodes(termNodes) {
-    this.termNodes = termNodes;
-  }
+      return type;
+    }, null);
 
-  addTermNode(termNode) {
-    this.termNodes.push(termNode);
+    return type;
   }
 
   matchType(type) {
-    const typeMatches = (this.type === type);
+    const typeA = type; ///
+
+    type = this.getType();
+
+    const typeB = type; ///
+
+    const typeMatches = (typeA === typeB);  ///
 
     return typeMatches;
   }
 
-  matchTermNode(termNode) {
-    const termNodeA = termNode, ///
-          termNodeMatches = this.termNodes.some((termNode) => {
-            const termNodeB = termNode, ///
-                  termNodeAMatchesTermNodeB = termNodeA.match(termNodeB);
+  matchTerm(term) {
+    const termA = term, ///
+          termMatches = this.terms.some((term) => {
+            const termB = term, ///
+                  termAMatchesTermB = termA.match(termB);
 
-            if (termNodeAMatchesTermNodeB) {
+            if (termAMatchesTermB) {
               return true;
             }
           });
 
-    return termNodeMatches;
+    return termMatches;
   }
 
-  static fromType(type) {
-    const termNodes = [],
-          collection = new Collection(type, termNodes);
+  matchTerms(terms) {
+    const termsMatch = terms.every((term) => {
+      const termMatches = this.matchTerm(term);
+
+      if (termMatches) {
+        return true;
+      }
+    })
+
+    return termsMatch;
+  }
+
+  static fromEquality(equality) {
+    const leftTerm = equality.getLeftTerm(),
+          rightTerm = equality.getRightTerm(),
+          terms = [
+            leftTerm,
+            rightTerm
+          ],
+          collection = new Collection(terms);
 
     return collection;
   }
 
   static fromCollections(collectionA, collectionB) {
-    const collectionAType = collectionA.getType(),
-          collectionATermNodes = collectionA.getTermNodes(),
-          collectionBTermNodes = collectionB.getTermNodes(),
-          type = collectionAType, ///
-          termNodes = [
-            ...collectionATermNodes,
-            ...collectionBTermNodes
+    const collectionATerms = collectionA.getTerms(),
+          collectionBTerms = collectionB.getTerms(),
+          terms = [
+            ...collectionATerms,
+            ...collectionBTerms
           ],
-          collection = new Collection(type, termNodes);
+          collection = new Collection(terms);
 
     return collection;
   }

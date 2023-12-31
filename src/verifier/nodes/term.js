@@ -76,13 +76,14 @@ export function verifyArgument(argumentNode, constructorArgumentNode, context, v
 
       if (constructorTypeNode !== null) {
         const { verifyTerm } = termNodesVerifier,
-              types = [],
-              termVerified = verifyTerm(termNode, types, context, () => {
+              terms = [],
+              termVerified = verifyTerm(termNode, terms, context, () => {
                 let verifiedAhead = false;
 
                 const constructorTypeName = typeNameFromTypeNode(constructorTypeNode),
-                      firstType = first(types),
-                      termType = firstType, ///
+                      firstTerm = first(terms),
+                      term = firstTerm, ///
+                      termType = term.getType(),
                       constructorType = context.findTypeByTypeName(constructorTypeName),
                       termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(constructorType);
 

@@ -74,6 +74,15 @@ export default class Type {
     return equalToOrSuperTypeOf;
   }
 
+  isEqualToSubTypeOfOrSuperTypeOf(type) {
+    const equalTo = this.isEqualTo(type),
+          subTypeOf = this.isSubTypeOf(type),
+          superTypeOf = this.isSuperTypeOf(type),
+          equalToOrSubTypeOfSuperTypeOf = (equalTo || subTypeOf || superTypeOf);
+
+    return equalToOrSubTypeOfSuperTypeOf;
+  }
+
   match(type) {
     const matches = (type === this);  ///
 

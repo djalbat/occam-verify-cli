@@ -2,11 +2,12 @@
 
 import Variable from "../variable";
 import Equality from "../equality";
+import Collection from "../collection";
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 
 import { last, filter } from "../utilities/array";
-import { mergeCollections, findCollectionByType, findCollectionByTermNode } from "../utilities/collection";
+import { mergeCollections, findCollectionByType, findCollectionByTerm, findCollectionByTerms } from "../utilities/collection";
 
 class LocalContext {
   constructor(context, variables, proofSteps, collections) {
@@ -81,6 +82,36 @@ class LocalContext {
 
   getMetavariables() { return this.context.getMetavariables(); }
 
+  addEquality(equality) {
+    const equalityReflexive = equality.isReflexive();
+
+    if (equalityReflexive) {
+      ///
+    } else {
+      const leftTerm = equality.getLeftTerm(),
+            rightTerm = equality.getRightTerm(),
+            leftCollection = this.findCollectionByTerm(leftTerm),
+            rightCollection = this.findCollectionByTerm(rightTerm);
+
+      if (false) {
+        ///
+      } else if ((leftCollection === null) && (rightCollection === null)) {
+        const collection = Collection.fromEquality(equality);
+
+        this.addCollection(collection);
+      } else if ((leftCollection !== null) && (rightCollection === null)) {
+        debugger
+
+      } else if ((leftCollection === null) && (rightCollection !== null)) {
+        debugger
+
+      } else if ((leftCollection !== null) && (rightCollection !== null)) {
+        debugger
+
+      }
+    }
+  }
+
   addVariable(variable) {
     const variableName = variable.getName();
 
@@ -133,9 +164,16 @@ class LocalContext {
     return collection;
   }
 
-  findCollectionByTermNode(termNode) {
+  findCollectionByTerm(term) {
     const collections = this.getCollections(),
-          collection = findCollectionByTermNode(collections, termNode);
+          collection = findCollectionByTerm(collections, term);
+
+    return collection;
+  }
+
+  findCollectionByTerms(terms) {
+    const collections = this.getCollections(),
+          collection = findCollectionByTerms(collections, terms);
 
     return collection;
   }
@@ -159,6 +197,35 @@ class LocalContext {
           variablePresent = (variable !== null);
 
     return variablePresent;
+  }
+
+  isEqualityEqual(equality) {
+    let equalityEqual;
+
+    const equalityReflexive = equality.isReflexive();
+
+    if (equalityReflexive) {
+      equalityEqual = true;
+    } else {
+      const leftTerm = equality.getLeftTerm(),
+            rightTerm = equality.getRightTerm(),
+            terms = [
+              leftTerm,
+              rightTerm
+            ],
+            termsEqual = this.areTermsEqual(terms);
+
+      equalityEqual = termsEqual; ///
+    }
+
+    return equalityEqual;
+  }
+
+  areTermsEqual(terms) {
+    const collection = this.findCollectionByTerms(terms),
+          termsEqual = (collection !== null);
+
+    return termsEqual;
   }
 
   toJSON(tokens) {

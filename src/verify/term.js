@@ -1,5 +1,6 @@
 "use strict";
 
+import Term from "../term";
 import termNodesVerifier from "../verifier/nodes/term";
 
 import { first } from "../utilities/array";
@@ -7,7 +8,7 @@ import { nodeQuery, variableNameFromVariableNode } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
-function verifyTerm(termNode, types, context, verifyAhead) {
+function verifyTerm(termNode, terms, context, verifyAhead) {
   let termVerified;
 
   const termString = context.nodeAsString(termNode);
@@ -20,7 +21,7 @@ function verifyTerm(termNode, types, context, verifyAhead) {
   ];
 
   termVerified = verifyTermFunctions.some((verifyTermFunction) => {
-    const termVerified = verifyTermFunction(termNode, types, context, verifyAhead);
+    const termVerified = verifyTermFunction(termNode, terms, context, verifyAhead);
 
     if (termVerified) {
       return true;
@@ -40,13 +41,13 @@ Object.assign(termNodesVerifier, {
 
 export default verifyTerm;
 
-export function verifyTermAgainstConstructors(termNode, types, context, verifyAhead) {
+export function verifyTermAgainstConstructors(termNode, terms, context, verifyAhead) {
   let termVerifiedAgainstConstructors;
 
   const constructors = context.getConstructors();
 
   termVerifiedAgainstConstructors = constructors.some((constructor) => {
-    const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, types, constructor, context, verifyAhead);
+    const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, terms, constructor, context, verifyAhead);
 
     if (termVerifiedAgainstConstructor) {
       return true;
@@ -93,7 +94,7 @@ export function verifyTermAsVariable(termNode, variables, context, verifyAhead) 
   return termVerifiedAsVariable;
 }
 
-function verifyTermAsStandaloneVariable(termNode, types, context, verifyAhead) {
+function verifyTermAsStandaloneVariable(termNode, terms, context, verifyAhead) {
   let termVerifiedAsStandaloneVariable;
 
   const termString = context.nodeAsString(termNode);
@@ -106,14 +107,15 @@ function verifyTermAsStandaloneVariable(termNode, types, context, verifyAhead) {
 
           const firstVariable = first(variables),
                 variable = firstVariable, ///
-                type = variable.getType();
+                type = variable.getType(),
+                term = Term.fromTermNodeAndType(termNode, type);
 
-          types.push(type);
+          terms.push(term);
 
           verifiedAhead = verifyAhead();
 
           if (!verifiedAhead) {
-            types.pop();
+            terms.pop();
           }
 
           return verifiedAhead;
@@ -128,7 +130,7 @@ function verifyTermAsStandaloneVariable(termNode, types, context, verifyAhead) {
   return termVerifiedAsStandaloneVariable;
 }
 
-function verifyTermAgainstConstructor(termNode, types, constructor, context, verifyAhead) {
+function verifyTermAgainstConstructor(termNode, terms, constructor, context, verifyAhead) {
   let termVerifiedAgainstConstructor;
 
   const termString = context.nodeAsString(termNode),
@@ -142,14 +144,15 @@ function verifyTermAgainstConstructor(termNode, types, constructor, context, ver
         nodeVerified = termNodesVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context, () => {
           let verifiedAhead;
 
-          const type = constructor.getType();
+          const type = constructor.getType(),
+                term = Term.fromTermNodeAndType(termNode, type);
 
-          types.push(type);
+          terms.push(term);
 
           verifiedAhead = verifyAhead();
 
           if (!verifiedAhead) {
-            types.pop();
+            terms.pop();
           }
 
           return verifiedAhead;

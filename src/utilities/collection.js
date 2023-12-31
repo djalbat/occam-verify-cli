@@ -48,11 +48,23 @@ export function findCollectionByType(collections, type) {
   return collection;
 }
 
-export function findCollectionByTermNode(collections, termNode) {
+export function findCollectionByTerm(collections, term) {
   const collection = collections.find((collection) => {
-    const collectionMatchesTermNode = collection.matchTermNode(termNode);
+    const collectionMatchesTerm = collection.matchTerm(term);
 
-    if (collectionMatchesTermNode) {
+    if (collectionMatchesTerm) {
+      return true;
+    }
+  }) || null;
+
+  return collection;
+}
+
+export function findCollectionByTerms(collections, terms) {
+  const collection = collections.find((collection) => {
+    const collectionMatchesTerms = collection.matchTerms(terms);
+
+    if (collectionMatchesTerms) {
       return true;
     }
   }) || null;

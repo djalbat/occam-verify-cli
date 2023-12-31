@@ -84,14 +84,15 @@ export default class TermForVariableNodesVerifier extends NodesVerifier {
               variable = localContext.findVariableByVariableName(variableName);
 
         if (variable !== null) {
-          const types = [],
+          const terms = [],
                 context = localContextB, ///
                 termNode = termNodeB, ///
-                termVerified = verifyTerm(termNode, types, context, () => {
+                termVerified = verifyTerm(termNode, terms, context, () => {
                   let verifiedAhead = false;
 
-                  const firstType = first(types),
-                        termType = firstType,
+                  const firstTerm = first(terms),
+                        term = firstTerm, ///
+                        termType = term.getType(),
                         variableType = variable.getType(),
                         variableTypeEqualToOrSuperTypeOfTermType = variableType.isEqualToOrSuperTypeOf(termType);
 

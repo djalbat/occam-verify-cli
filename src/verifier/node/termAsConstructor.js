@@ -58,9 +58,9 @@ export function verifyStandaloneTerm(termNode, fileContext, verifyAhead) {
 
   fileContext.trace(`Verifying the '${termString}' standalone term...`, termNode);
 
-  const types = [],
+  const terms = [],
         context = fileContext,  ///
-        termVerified = verifyTerm(termNode, types, context, verifyAhead);
+        termVerified = verifyTerm(termNode, terms, context, verifyAhead);
 
   standaloneTermVerified = termVerified;  ///
 

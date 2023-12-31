@@ -45,7 +45,7 @@ class EqualityNodesVerifier extends NodesVerifier {
     debugger
 
     // const types = [],
-    //       termsVerified = verifyTerms(leftTermNode, rightTermNode, types, context, verifyAhead);
+    //       termsVerified = verifyTerms(termNodes, types, context, verifyAhead);
     //
     // if (termsVerified) {
     //   const equality = Equality.fromLeftTermNodeAndRightTermNode(leftTermNode, rightTermNode),
