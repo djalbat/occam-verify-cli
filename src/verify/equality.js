@@ -113,6 +113,10 @@ function verifyStandaloneEquality(equalityNode, assignments, derived, context, v
               assignments.push(assignment);
 
               verifiedAhead = verifyAhead();
+
+              if (!verifiedAhead) {
+                assignments.pop();
+              }
             }
 
             return verifiedAhead;

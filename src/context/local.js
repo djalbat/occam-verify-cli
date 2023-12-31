@@ -100,12 +100,17 @@ class LocalContext {
 
         this.addCollection(collection);
       } else if ((leftCollection !== null) && (rightCollection === null)) {
-        debugger
+        const term = rightTerm, ///
+              collection = leftCollection;  ///
 
+        collection.addTerm(term);
       } else if ((leftCollection === null) && (rightCollection !== null)) {
-        debugger
+        const term = leftTerm, ///
+              collection = rightCollection;  ///
 
+        collection.addTerm(term);
       } else if ((leftCollection !== null) && (rightCollection !== null)) {
+
         debugger
 
       }
