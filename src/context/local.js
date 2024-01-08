@@ -54,20 +54,6 @@ class LocalContext {
     return collections;
   }
 
-  getEqualities() {
-    const equalities = this.context.getEqualities();
-
-    this.proofSteps.forEach((proofStep) => {
-      const equality = Equality.fromProofStep(proofStep);
-
-      if (equality !== null) {
-        equalities.push(equality);
-      }
-    });
-
-    return equalities;
-  }
-
   getLastProofStep() {
     let lastProofStep = null;
 
