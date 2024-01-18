@@ -59,7 +59,7 @@ function verifyDerivedEquality(equalityNode, assignments, derived, context, veri
                   secondTerm = second(terms),
                   leftTerm = firstTerm, ///
                   rightTerm = secondTerm, ///
-                  equality = Equality.fromLeftTermAndRightTerm(leftTerm, rightTerm);
+                  equality = Equality.fromEqualityNodeLeftTermAndRightTerm(equalityNode, leftTerm, rightTerm);
 
             if (equality !== null) {
               const equalityEqual = context.isEqualityEqual(equality);
@@ -104,7 +104,7 @@ function verifyStandaloneEquality(equalityNode, assignments, derived, context, v
                   secondTerm = second(terms),
                   leftTerm = firstTerm, ///
                   rightTerm = secondTerm, ///
-                  equality = Equality.fromLeftTermAndRightTerm(leftTerm, rightTerm);
+                  equality = Equality.fromEqualityNodeLeftTermAndRightTerm(equalityNode, leftTerm, rightTerm);
 
             if (equality !== null) {
               const equalityAssignment = EqualityAssignment.fromEquality(equality),

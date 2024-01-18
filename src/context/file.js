@@ -490,7 +490,7 @@ export default class FileContext {
 
     const node = metavariable.getNode(),
           metavariablePresent = this.metavariables.some((metavariable) => {
-            const nodeMatches = metavariable.matchName(node);
+            const nodeMatches = metavariable.matchNode(node);
 
             if (nodeMatches) {
               return true;

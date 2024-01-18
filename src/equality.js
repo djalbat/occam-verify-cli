@@ -1,9 +1,14 @@
 "use strict";
 
 export default class Equality {
-  constructor(leftTerm, rightTerm) {
+  constructor(node, leftTerm, rightTerm) {
+    this.node = node;
     this.leftTerm = leftTerm;
     this.rightTerm = rightTerm;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getLeftTerm() {
@@ -21,14 +26,7 @@ export default class Equality {
     return reflexive;
   }
 
-  getNode() {
-    const leftTermNode = this.leftTerm.getNode(),
-          node = leftTermNode;  ///
-
-    return node;
-  }
-
-  static fromLeftTermAndRightTerm(leftTerm, rightTerm) {
+  static fromEqualityNodeLeftTermAndRightTerm(equalityNode, leftTerm, rightTerm) {
     let equality = null;
 
     const leftTermType = leftTerm.getType(),
@@ -36,7 +34,9 @@ export default class Equality {
           leftTermTypeEqualToSubTypeOfOrSuperTypeOfRightTermType = leftTermType.isEqualToSubTypeOfOrSuperTypeOf(rightTermType);
 
     if (leftTermTypeEqualToSubTypeOfOrSuperTypeOfRightTermType) {
-      equality = new Equality(leftTerm, rightTerm);
+      const node = equalityNode;  ///
+
+      equality = new Equality(node, leftTerm, rightTerm);
     }
 
     return equality;
