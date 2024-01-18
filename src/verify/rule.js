@@ -2,7 +2,7 @@
 
 import Rule from "../rule";
 import verifyLabels from "../verify/labels";
-import verifyPremise from "../verify/premise";
+import verifyPremises from "../verify/premises";
 import verifyRuleProof from "../verify/ruleProof";
 import LocalMetaContext from "../context/localMeta";
 import verifyConclusion from "../verify/conclusion";
@@ -30,13 +30,7 @@ export default function verifyRule(ruleNode, fileContext) {
   if (labelsVerified) {
     const premises = [],
           premiseNodes = premisesNodeQuery(ruleNode),
-          premisesVerified = premiseNodes.every((premiseNode) => {
-            const premiseVerified = verifyPremise(premiseNode, premises, localMetaContext);
-
-            if (premiseVerified) {
-              return true;
-            }
-          });
+          premisesVerified = verifyPremises(premiseNodes, premises, localMetaContext);
 
     if (premisesVerified) {
       const conclusions = [],

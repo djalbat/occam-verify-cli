@@ -2,7 +2,7 @@
 
 import ProofStep from "../step/proof";
 import LocalContext from "../context/local";
-import verifySupposition from "../verify/supposition";
+import verifySuppositions from "../verify/suppositions";
 import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
@@ -53,13 +53,7 @@ function verifySubproof(subproofNode, localContext) {
 
   const suppositions = [],
         suppositionNodes = suppositionNodesQuery(subproofNode),
-        suppositionsVerified = suppositionNodes.every((suppositionNode) => {
-          const suppositionVerified = verifySupposition(suppositionNode, suppositions, localContext);
-
-          if (suppositionVerified) {
-            return true;
-          }
-        });
+        suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
   if (suppositionsVerified) {
     const subDerivationNode = subDerivationNodeQuery(subproofNode),

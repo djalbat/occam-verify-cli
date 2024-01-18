@@ -9,15 +9,15 @@ export default class MetavariableAssignment {
     return this.metavariable;
   }
 
-  assign(localContext) {
-    const metavariableAdded = localContext.addMetavariable(this.metavariable),
+  assign(fileContext) {
+    const metavariableAdded = fileContext.addMetavariable(this.metavariable),
           metavariableNode = this.metavariable.getNode(),
-          metavariableString = localContext.nodeAsString(metavariableNode),
+          metavariableString = fileContext.nodeAsString(metavariableNode),
           metavariableAssigned = metavariableAdded; ///
 
     metavariableAssigned ?
-      localContext.debug(`Able to assign the '${metavariableString}' metavariable.`, metavariableNode) :
-        localContext.trace(`Unable to assign the '${metavariableString}' metavariable.`, metavariableNode);
+      fileContext.debug(`Able to assign the '${metavariableString}' metavariable.`, metavariableNode) :
+        fileContext.trace(`Unable to assign the '${metavariableString}' metavariable.`, metavariableNode);
 
     return metavariableAssigned;
   }

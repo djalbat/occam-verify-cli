@@ -1,5 +1,6 @@
 "use strict";
 
+import Variable from "../variable";
 import VariableAssignment from "../assignment/variable";
 import verifyTermAndStandaloneType from "../verify/termAndStandaloneType";
 import verifyTermAsVariableAndStandaloneType from "../verify/termAsVariableAndStandaloneType";
@@ -95,14 +96,18 @@ function verifyStandaloneTypeAssertion(typeAssertionNode, assignments, derived, 
           termAsVariableAndStandaloneTypeVerified = verifyTermAsVariableAndStandaloneType(termNode, typeNode, variables, types, context, () => {
             let verifiedAhead = false;
 
-            const firstVariable = first(variables),
-                  firstType = first(types),
-                  variable = firstVariable, ///
+            const firstVariable = first(variables);
+
+            let variable = firstVariable; ///
+
+            const firstType = first(types),
                   type = firstType, ///
                   variableType = variable.getType(),
                   variableTypeEqualToOrSuperTypeOfType = variableType.isEqualToOrSuperTypeOf(type);
 
             if (variableTypeEqualToOrSuperTypeOfType) {
+              variable = Variable.fromVariableAndType(variable, type);  ///
+
               const variableAssignment = VariableAssignment.fromVariable(variable),
                     assignment = variableAssignment; ///
 

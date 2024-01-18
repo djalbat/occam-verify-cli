@@ -1,7 +1,7 @@
 "use strict";
 
 import Conclusion from "../conclusion";
-import verifyUnqualifiedMetastatement from "./metastatement/unqualified";
+import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
 

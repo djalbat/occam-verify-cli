@@ -1,7 +1,7 @@
 "use strict";
 
 import MetaproofStep from "../step/metaproof";
-import verifyPremise from "../verify/premise";
+import verifyPremises from "../verify/premises";
 import LocalMetaContext from "../context/localMeta";
 import verifyQualifiedMetastatement from "../verify/metastatement/qualified";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
@@ -53,13 +53,11 @@ function verifyRuleSubproof(ruleSubproofNode, localMetaContext) {
 
   const premises = [],
         premiseNodes = premiseNodesQuery(ruleSubproofNode),
-        premisesVerified = premiseNodes.every((premiseNode) => {
-          const premiseVerified = verifyPremise(premiseNode, premises, localMetaContext);
+        premisesVerified = verifyPremises(premiseNodes, premises, localMetaContext);
 
-          if (premiseVerified) {
-            return true;
-          }
-        });
+        if (premiseVerified) {
+          return true;
+        }
 
   if (premisesVerified) {
     const ruleSubDerivationNode = ruleSubDerivationNodeQuery(ruleSubproofNode),

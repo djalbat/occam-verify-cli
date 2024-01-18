@@ -4,8 +4,8 @@ import Conjecture from "../conjecture";
 import verifyProof from "../verify/proof";
 import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
-import verifyConsequent from "./consequent";
-import verifySupposition from "./supposition";
+import verifyConsequent from "../verify/consequent";
+import verifySuppositions from "../verify/suppositions";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -30,13 +30,7 @@ export default function verifyConjecture(conjectureNode, fileContext) {
   if (labelsVerified) {
     const suppositions = [],
           suppositionNodes = suppositionsNodeQuery(conjectureNode),
-          suppositionsVerified = suppositionNodes.every((suppositionNode) => {
-            const suppositionVerified = verifySupposition(suppositionNode, suppositions, localContext);
-
-            if (suppositionVerified) {
-              return true;
-            }
-          });
+          suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
     if (suppositionsVerified) {
       const consequents = [],

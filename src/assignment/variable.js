@@ -9,15 +9,17 @@ export default class VariableAssignment {
     return this.variable;
   }
 
-  assign(localContext) {
-    const variableAdded = localContext.addVariable(this.variable),
+  assign(context) {
+    const variableAdded = context.addVariable(this.variable),
           variableNode = this.variable.getNode(),
-          variableString = localContext.nodeAsString(variableNode),
+          variableType = this.variable.getType(),
+          variableString = context.nodeAsString(variableNode),
+          variableTypeName = variableType.getName(),
           variableAssigned = variableAdded; ///
 
     variableAssigned ?
-      localContext.debug(`Able to assign the '${variableString}' variable.`, variableNode) :
-        localContext.trace(`Unable to assign the '${variableString}' variable.`, variableNode);
+      context.debug(`Able to assign the '${variableString}' variable with type '${variableTypeName}'.`, variableNode) :
+        context.trace(`Unable to assign the '${variableString}' variable with type '${variableTypeName}'.`, variableNode);
 
     return variableAssigned;
   }

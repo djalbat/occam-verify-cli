@@ -9,7 +9,7 @@ import { nodeQuery } from "../utilities/query";
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement!");
 
-export default function verifySupposition(suppositionNode, suppositions, localContext) {
+export default function verifySupposition(suppositionNode, suppositions, assignments, localContext) {
   let suppositionVerified;
 
   const suppositionString = localContext.nodeAsString(suppositionNode);
@@ -17,7 +17,6 @@ export default function verifySupposition(suppositionNode, suppositions, localCo
   localContext.trace(`Verifying the '${suppositionString}' supposition...`, suppositionNode);
 
   const derived = false,
-        assignments = [],
         unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
         unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
@@ -29,14 +28,6 @@ export default function verifySupposition(suppositionNode, suppositions, localCo
     suppositions.push(supposition);
 
     localContext.addProofStep(proofStep);
-
-    assignments.every((assignment) => {
-      const assigned = assignment.assign(localContext);
-
-      if (assigned) {
-        return true;
-      }
-    });
 
     suppositionVerified = true;
   }

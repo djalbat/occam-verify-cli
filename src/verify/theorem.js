@@ -5,7 +5,7 @@ import verifyProof from "../verify/proof";
 import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
 import verifyConsequent from "../verify/consequent";
-import verifySupposition from "../verify/supposition";
+import verifySuppositions from "../verify/suppositions";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -30,13 +30,7 @@ export default function verifyTheorem(theoremNode, fileContext) {
   if (labelsVerified) {
     const suppositions = [],
           suppositionNodes = suppositionsNodeQuery(theoremNode),
-          suppositionsVerified = suppositionNodes.every((suppositionNode) => {
-            const suppositionVerified = verifySupposition(suppositionNode, suppositions, localContext);
-
-            if (suppositionVerified) {
-              return true;
-            }
-          });
+          suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
     if (suppositionsVerified) {
       const consequents = [],

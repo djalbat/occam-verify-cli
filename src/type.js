@@ -101,7 +101,7 @@ export default class Type {
     return typeNameMatches;
   }
 
-  asString(tokens, noSuperType) {
+  asString(tokens, noSuperType = false) {
     let string;
 
     if (noSuperType) {

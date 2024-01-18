@@ -4,7 +4,7 @@ import Axiom from "../axiom";
 import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
 import verifyConsequent from "../verify/consequent";
-import verifySupposition from "../verify/supposition";
+import verifySuppositions from "../verify/suppositions";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -28,13 +28,7 @@ export default function verifyAxiom(axiomNode, fileContext) {
   if (labelsVerified) {
     const suppositions = [],
           suppositionNodes = suppositionsNodeQuery(axiomNode),
-          suppositionsVerified = suppositionNodes.every((suppositionNode) => {
-            const suppositionVerified = verifySupposition(suppositionNode, suppositions, localContext);
-
-            if (suppositionVerified) {
-              return true;
-            }
-          });
+          suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
     if (suppositionsVerified) {
       const consequents = [],
