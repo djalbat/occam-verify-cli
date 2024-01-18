@@ -5,7 +5,6 @@ import MetastatementForMetavariableSubstitution from "../../substitution/metasta
 
 import { nodeQuery } from "../../utilities/query";
 import { METASTATEMENT_RULE_NAME } from "../../ruleNames";
-import { metavariableNameFromMetavariableNode } from "../../utilities/query";
 
 const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!');
 
@@ -55,11 +54,10 @@ export default class MetastatementForMetavariableNodesVerifier extends NodesVeri
   verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions, fileContextA, localMetaContextB, verifyAhead) {
     let metavariableNodeVerified;
 
-    const metavariableNameA = metavariableNameFromMetavariableNode(metavariableNodeA),
-          substitution = substitutions.find((substitution) => {
-            const metavariableName = substitution.getMetavariableName();
+    const substitution = substitutions.find((substitution) => {
+            const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNodeA);
 
-            if (metavariableName === metavariableNameA) {
+            if (substitutionMatchesMetavariableNodeA) {
               return true;
             }
           }) || null;
@@ -73,9 +71,9 @@ export default class MetastatementForMetavariableNodesVerifier extends NodesVeri
       const { createSubstitutions } = this.constructor;
 
       if (createSubstitutions) {
-        const metavariableName = metavariableNameA, ///
+        const metavariableNode = metavariableNodeA, ///
               metastatementNode = metastatementNodeB, ///
-              metastatementForMetavariableSubstitution = MetastatementForMetavariableSubstitution.fromMetavariableNameAndMetastatementNode(metavariableName, metastatementNode),
+              metastatementForMetavariableSubstitution = MetastatementForMetavariableSubstitution.fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode),
               substitution = metastatementForMetavariableSubstitution;  ///
 
         substitutions.push(substitution);

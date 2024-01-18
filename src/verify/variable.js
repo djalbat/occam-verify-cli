@@ -1,9 +1,10 @@
 "use strict";
 
 import Variable from "../variable";
+import VariableAssignment from "../assignment/variable";
 
 import { objectType } from "../type";
-import { typeNameFromTypeNode, variableNameFromVariableNode } from "../utilities/query";
+import { typeNameFromTypeNode } from "../utilities/query";
 
 export default function verifyVariable(variableNode, typeNode, fileContext) {
   let variableVerified = false;
@@ -12,37 +13,36 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
 
   fileContext.trace(`Verifying the '${variableString}' variable...`, variableNode);
 
-  const variableName = variableNameFromVariableNode(variableNode),
-        variablePresent = fileContext.isVariablePresentByVariableName(variableName);
+  const variablePresent = fileContext.isVariablePresentByVariableNode(variableNode);
 
   if (variablePresent) {
-    fileContext.debug(`The variable '${variableName}' is already present.`, variableNode);
+    fileContext.debug(`The variable '${variableString}' is already present.`, variableNode);
   } else {
     let variable;
 
     const typeName = typeNameFromTypeNode(typeNode);
     
     if (typeName === null) {
-      const name = variableName,  ///
-            type = objectType;
+      const type = objectType;
 
-        variable = Variable.fromNameAndType(name, type);
+      variable = Variable.fromVariableNodeAndType(variableNode, type);
     } else {
       const type = fileContext.findTypeByTypeName(typeName);
 
       if (type === null) {
-        fileContext.debug(`The '${variableName}' variable's '${typeName}' type is not present.`, variableNode);
+        fileContext.debug(`The '${variableString}' variable's '${typeName}' type is not present.`, variableNode);
       } else {
-        const name = variableName;  ///
-
-        variable = Variable.fromNameAndType(name, type);
+        variable = Variable.fromVariableNodeAndType(variableNode, type);
       }
     }
 
     if (variable !== null) {
-      fileContext.addVariable(variable);
+      const variableAssignment = VariableAssignment.fromVariable(variable),
+            variableAssigned = variableAssignment.assign(fileContext);
 
-      variableVerified = true;
+      if (variableAssigned) {
+        variableVerified = true;
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 "use strict";
 
 import FileContext from "../context/file";
-import verifyTopLevelDeclaration from "./declaration/topLevel";
+import verifyTopLevelDeclaration from "../verify/declaration/topLevel";
 
 import { nodesQuery } from "../utilities/query";
 

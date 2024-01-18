@@ -331,13 +331,13 @@ export default class FileContext {
     return theorem;
   }
 
-  findVariableByVariableName(variableName) {
-    const name = variableName,  ///
+  findVariableByVariableNode(variableNode) {
+    const node = variableNode,  ///
           variables = this.getVariables(),
           variable = variables.find((variable) => {
-            const matches = variable.matchName(name);
+            const nodeMatches = variable.matchNode(node);
 
-            if (matches) {
+            if (nodeMatches) {
               return true;
             }
           }) || null;
@@ -372,11 +372,11 @@ export default class FileContext {
     return conjecture;
   }
 
-  findMetavariableByMetavariableName(metavariableName) {
-    const name = metavariableName,  ///
+  findMetavariableByMetavariableNode(metavariableNode) {
+    const node = metavariableNode,  ///
           metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-            const matches = metavariable.matchName(name);
+            const matches = metavariable.matchNode(node);
 
             if (matches) {
               return true;
@@ -400,15 +400,15 @@ export default class FileContext {
     return typePresent;
   }
 
-  isVariablePresentByVariableName(variableName) {
-    const variable = this.findVariableByVariableName(variableName),
+  isVariablePresentByVariableNode(variableNode) {
+    const variable = this.findVariableByVariableNode(variableNode),
           variablePresent = (variable !== null);
 
     return variablePresent;
   }
 
-  isMetavariablePresentByMetavariableName(metavariableName) {
-    const metavariable = this.findMetavariableByMetavariableName(metavariableName),
+  isMetavariablePresentByMetavariableNode(metavariableNode) {
+    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode),
           metavariablePresent = (metavariable !== null);
 
     return metavariablePresent;
@@ -453,18 +453,24 @@ export default class FileContext {
   }
 
   addVariable(variable) {
-    const variableName = variable.getName();
+    let variableAdded = false;
 
-    filter(this.variables, (variable) => {
-      const name = variable.getName(),
-            nameVariableName = (name === variableName);
+    const node = variable.getNode(),
+          variablePresent = this.variables.some((variable) => {
+            const nodeMatches = variable.matchNode(node);
 
-      if (!nameVariableName) {
-        return true;
-      }
-    });
+            if (nodeMatches) {
+              return true;
+            }
+          });
 
-    this.variables.push(variable);
+    if (!variablePresent) {
+      this.variables.push(variable);
+
+      variableAdded = true;
+    }
+
+    return variableAdded;
   }
 
   addConjecture(conjecture) {
@@ -480,18 +486,24 @@ export default class FileContext {
   }
 
   addMetavariable(metavariable) {
-    const metavariableName = metavariable.getName();
+    let metavariableAdded = false;
 
-    filter(this.metavariables, (metavariable) => {
-      const name = metavariable.getName(),
-            nameMetavariableName = (name === metavariableName);
+    const node = metavariable.getNode(),
+          metavariablePresent = this.metavariables.some((metavariable) => {
+            const nodeMatches = metavariable.matchName(node);
 
-      if (!nameMetavariableName) {
-        return true;
-      }
-    });
+            if (nodeMatches) {
+              return true;
+            }
+          });
 
-    this.metavariables.push(metavariable);
+    if (!metavariablePresent) {
+      this.metavariables.push(metavariable);
+
+      metavariableAdded = true;
+    }
+
+    return metavariableAdded;
   }
 
   trace(message, node) { this.releaseContext.trace(message, node, this.tokens, this.filePath); }

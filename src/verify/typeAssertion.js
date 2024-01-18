@@ -1,92 +1,109 @@
 "use strict";
 
-import Variable from "../variable";
 import VariableAssignment from "../assignment/variable";
+import verifyTermAndStandaloneType from "../verify/termAndStandaloneType";
+import verifyTermAsVariableAndStandaloneType from "../verify/termAsVariableAndStandaloneType";
 
 import { first } from "../utilities/array";
-import { nodeQuery, typeNameFromTypeNode } from "../utilities/query";
-import { verifyTermAsVariable, verifyTermAgainstConstructors } from "../verify/term";
+import { nodeQuery } from "../utilities/query";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term!"),
       typeNodeQuery = nodeQuery("/typeAssertion/type!");
 
 export default function verifyTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead) {
-  let typeAssertionVerified = false;
+  let typeAssertionVerified;
 
   const typeAssertionString = context.nodeAsString(typeAssertionNode);
 
   context.trace(`Verifying the '${typeAssertionString}' type assertion...`, typeAssertionNode);
 
-  const typeNode = typeNodeQuery(typeAssertionNode),
-        typeName = typeNameFromTypeNode(typeNode),
-        assertedTypeName = typeName,  ///
-        assertedType = context.findTypeByTypeName(assertedTypeName);
+  const verifyTypeAssertionFunctions = [
+    verifyDerivedTypeAssertion,
+    verifyStandaloneTypeAssertion
+  ];
 
-  if (assertedType === null) {
-    context.debug(`The '${typeName}' asserted type is not present.`, typeAssertionNode);
-  } else {
-    const verifyTypeAssertionFunctions = [
-      verifyVariableTypeAssertion,
-      verifyTermTypeAssertion
-    ];
+  typeAssertionVerified = verifyTypeAssertionFunctions.some((verifyTypeAssertionFunction) => {
+    const typeAssertionVerified = verifyTypeAssertionFunction(typeAssertionNode, assignments, derived, context, verifyAhead);
 
-    typeAssertionVerified = verifyTypeAssertionFunctions.some((verifyTypeAssertionFunction) => {
-      const typeAssertionVerified = verifyTypeAssertionFunction(typeAssertionNode, assertedType, assignments, derived, context, verifyAhead);
-
-      if (typeAssertionVerified) {
-        return true;
-      }
-    });
-  }
+    if (typeAssertionVerified) {
+      return true;
+    }
+  });
 
   if (typeAssertionVerified) {
-    context.debug(`...verified the '${typeAssertionString}' statement type assertion.`, typeAssertionNode);
+    context.debug(`...verified the '${typeAssertionString}' type assertion.`, typeAssertionNode);
   }
 
   return typeAssertionVerified;
 }
 
-export function verifyVariableTypeAssertion(typeAssertionNode, assertedType, assignments, derived, context, verifyAhead) {
-  let variableTypeAssertionVerified;
+function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead) {
+  let derivedTypeAssertionVerified = false;
 
-  const typeAssertionString = context.nodeAsString(typeAssertionNode);
+  if (derived) {
+    const typeAssertionString = context.nodeAsString(typeAssertionNode);
 
-  context.trace(`Verifying the '${typeAssertionString}' variable type assertion...`, typeAssertionNode);
+    context.trace(`Verifying the '${typeAssertionString}' derived type assertion...`, typeAssertionNode);
 
-  const variables = [],
-        termNode = termNodeQuery(typeAssertionNode),
-        termVerifiedAsVariable = verifyTermAsVariable(termNode, variables, context, () => {
-          let verifiedAhead = false;
+    const terms = [],
+          types = [],
+          termNode = termNodeQuery(typeAssertionNode),
+          typeNode = typeNodeQuery(typeAssertionNode),
+          termAndStandaloneTypeVerified = verifyTermAndStandaloneType(termNode, typeNode, terms, types, context, () => {
+            let verifiedAhead = false;
 
-          const firstVariable = first(variables),
-                variable = firstVariable, ///
-                variableName = variable.getName(),
-                variableType = variable.getType();
+            const firstTerm = first(terms),
+                  firstType = first(types),
+                  term = firstTerm, ///
+                  type = firstType, ///
+                  termType = term.getType(),
+                  termTypeEqualToOrSuperTypeOfType = termType.isEqualToOrSuperTypeOf(type);
 
-          if (derived) {
-            const assertedTypeEqualToOrSuperTypeOfVariableType = assertedType.isEqualToOrSuperTypeOf(variableType);
+            if (termTypeEqualToOrSuperTypeOfType) {
+              debugger
 
-            if (!assertedTypeEqualToOrSuperTypeOfVariableType) {
-              const assertedTypeName = assertedType.getName(),
-                    variableTypeName = variableType.getName();
-
-              context.debug(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
-            } else {
-              verifiedAhead = verifyAhead();
+              if (false) {  ///
+                verifiedAhead = verifyAhead();
+              }
             }
-          } else {
-            const assertedTypeEqualToOrSubTypeOfVariableType = assertedType.isEqualToOrSubTypeOf(variableType);
 
-            if (!assertedTypeEqualToOrSubTypeOfVariableType) {
-              const assertedTypeName = assertedType.getName(),
-                    variableTypeName = variableType.getName();
+            return verifiedAhead;
+          });
 
-              context.debug(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${variableName}' variable's '${variableTypeName}' type.`, typeAssertionNode);
-            } else {
-              const name = variableName,  ///
-                    type = assertedType,  ///
-                    variable = Variable.fromNameAndType(name, type),
-                    variableAssignment = VariableAssignment.fromVariable(variable),
+    derivedTypeAssertionVerified = termAndStandaloneTypeVerified; ///
+
+    if (derivedTypeAssertionVerified) {
+      context.trace(`...verified the '${typeAssertionString}' derived type assertion.`, typeAssertionNode);
+    }
+  }
+
+  return derivedTypeAssertionVerified;
+}
+
+function verifyStandaloneTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead) {
+  let standaloneTypeAssertionVerified = false;
+
+  if (!derived) {
+    const typeAssertionString = context.nodeAsString(typeAssertionNode);
+
+    context.trace(`Verifying the '${typeAssertionString}' standalone type assertion...`, typeAssertionNode);
+
+    const types = [],
+          variables = [],
+          termNode = termNodeQuery(typeAssertionNode),
+          typeNode = typeNodeQuery(typeAssertionNode),
+          termAsVariableAndStandaloneTypeVerified = verifyTermAsVariableAndStandaloneType(termNode, typeNode, variables, types, context, () => {
+            let verifiedAhead = false;
+
+            const firstVariable = first(variables),
+                  firstType = first(types),
+                  variable = firstVariable, ///
+                  type = firstType, ///
+                  variableType = variable.getType(),
+                  variableTypeEqualToOrSuperTypeOfType = variableType.isEqualToOrSuperTypeOf(type);
+
+            if (variableTypeEqualToOrSuperTypeOfType) {
+              const variableAssignment = VariableAssignment.fromVariable(variable),
                     assignment = variableAssignment; ///
 
               assignments.push(assignment);
@@ -97,69 +114,16 @@ export function verifyVariableTypeAssertion(typeAssertionNode, assertedType, ass
                 assignments.pop();
               }
             }
-          }
 
-          return verifiedAhead;
-        });
+            return verifiedAhead;
+          });
 
-  variableTypeAssertionVerified = termVerifiedAsVariable; ///
+    standaloneTypeAssertionVerified = termAsVariableAndStandaloneTypeVerified; ///
 
-  if (variableTypeAssertionVerified) {
-    context.debug(`...verified the '${typeAssertionString}' variable type assertion.`, typeAssertionNode);
+    if (standaloneTypeAssertionVerified) {
+      context.trace(`...verified the '${typeAssertionString}' standalone type assertion.`, typeAssertionNode);
+    }
   }
 
-  return variableTypeAssertionVerified;
-}
-
-function verifyTermTypeAssertion(typeAssertionNode, assertedType, assignments, derived, context, verifyAhead) {
-  let termTypeAssertionVerified;
-
-  const typeAssertionString = context.nodeAsString(typeAssertionNode);
-
-  context.trace(`Verifying the '${typeAssertionString}' term type assertion...`, typeAssertionNode);
-
-  const types = [],
-        termNode = termNodeQuery(typeAssertionNode),
-        termVerifiedAgainstConstructors = verifyTermAgainstConstructors(termNode, types, context, () => {
-          let verifiedAhead = false;
-
-          const firstType = first(types),
-                termType = firstType; ///
-
-          if (derived) {
-            const assertedTypeIsEqualToOrSuperTypeOfTermType = assertedType.isEqualToOrSuperTypeOf(termType);
-
-            if (!assertedTypeIsEqualToOrSuperTypeOfTermType) {
-              const termString = context.nodeAsString(termNode),
-                    termTypeName = termType.getName(),
-                    assertedTypeName = assertedType.getName();
-
-              context.debug(`The '${assertedTypeName}' asserted type is not equal to or a super-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
-            } else {
-              verifiedAhead = verifyAhead();
-            }
-          } else {
-            const assertedTypeIsEqualToOrSubTypeOfTermType = assertedType.isEqualToOrSubTypeOf(termType);
-
-            if (!assertedTypeIsEqualToOrSubTypeOfTermType) {
-              const termString = context.nodeAsString(termNode),
-                    termTypeName = termType.getName(),
-                    assertedTypeName = assertedType.getName();
-
-              context.debug(`The '${assertedTypeName}' asserted type is not equal to or a sub-type of the '${termString}' term's '${termTypeName}' type.`, typeAssertionNode);
-            } else {
-              verifiedAhead = verifyAhead();
-            }
-          }
-
-          return verifiedAhead;
-        });
-
-  termTypeAssertionVerified = termVerifiedAgainstConstructors;  ///
-
-  if (termTypeAssertionVerified) {
-    context.debug(`...verified the '${typeAssertionString}' term type assertion.`, typeAssertionNode);
-  }
-
-  return termTypeAssertionVerified;
+  return standaloneTypeAssertionVerified;
 }

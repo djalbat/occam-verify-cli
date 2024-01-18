@@ -2,14 +2,17 @@
 
 import Type from "./type";
 
+import { nodeAsString } from "./utilities/string";
+import { variableNodeFromVariableString } from "./utilities/node";
+
 export default class Variable {
-  constructor(name, type) {
-    this.name = name;
+  constructor(node, type) {
+    this.node = node;
     this.type = type;
   }
 
-  getName() {
-    return this.name;
+  getNode() {
+    return this.node;
   }
 
   getType() {
@@ -17,19 +20,19 @@ export default class Variable {
   }
 
   match(variable) {
-    const name = variable.getName(),
-          type = variable.getType(),
-          nameMatches = this.matchName(name),
+    const type = variable.getType(),
+          node = variable.getNode(),
           typeMatches = this.matchType(type),
-          matches = (nameMatches && typeMatches);
+          nodeMatches = this.matchNode(node),
+          matches = nodeMatches && typeMatches;
 
     return matches;
   }
 
-  matchName(name) {
-    const nameMatches = (this.name === name);
+  matchNode(node) {
+    const nodeMatches = this.node.match(node);
 
-    return nameMatches;
+    return nodeMatches;
   }
 
   matchType(type) {
@@ -38,41 +41,46 @@ export default class Variable {
     return typeMatches;
   }
 
-  matchNameAndType(name, type) {
-    const nameMatches = this.matchName(name),
+  matchNodeAndType(node, type) {
+    const nodeMatches = this.matchNode(node),
           typeMatches = this.matchType(type),
-          nameAndTypeMatch = (nameMatches && typeMatches);
+          nodeAndTypeMatch = nodeMatches && typeMatches;
 
-    return nameAndTypeMatch;
+    return nodeAndTypeMatch;
   }
 
   asString(tokens) {
-    const typeName = this.type.getName(),
-          string = `${this.name}:${typeName}`;
+    const typeName = this.type.getName();
+
+    let string = nodeAsString(this.node, tokens);
+
+    string = `${string}:${typeName}`; ///
 
     return string;
   }
 
   toJSON(tokens) {
     const typeJSON = this.type.toJSON(tokens),
-          name = this.name, ///
+          string = nodeAsString(this.node, tokens),
+          node = string,  //
           type = typeJSON,  ///
           json = {
-            name,
+            node,
             type
           };
 
     return json;
   }
 
-  static fromNameAndType(name, type) {
-    const variable = new Variable(name, type);
-
-    return variable;
-  }
-
   static fromJSONAndFileContext(json, fileContext) {
-    const { name } = json;
+    let { node } = json;
+
+    const lexer  = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          variableString = node,  ///
+          variableNode = variableNodeFromVariableString(variableString, lexer, parser);
+
+    node = variableNode;  ///
 
     let { type } = json;
 
@@ -84,7 +92,14 @@ export default class Variable {
 
     type = fileContext.findTypeByTypeName(typeName); ///
 
-    const variable = new Variable(name, type);
+    const variable = new Variable(node, type);
+
+    return variable;
+  }
+
+  static fromVariableNodeAndType(variableNode, type) {
+    const node = variableNode,  ///
+          variable = new Variable(node, type);
 
     return variable;
   }

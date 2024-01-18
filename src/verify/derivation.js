@@ -2,7 +2,7 @@
 
 import ProofStep from "../step/proof";
 import LocalContext from "../context/local";
-import verifySupposition from "./supposition";
+import verifySupposition from "../verify/supposition";
 import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 

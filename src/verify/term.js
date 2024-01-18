@@ -4,7 +4,7 @@ import Term from "../term";
 import termNodesVerifier from "../verifier/nodes/term";
 
 import { first } from "../utilities/array";
-import { nodeQuery, variableNameFromVariableNode } from "../utilities/query";
+import { nodeQuery } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
@@ -67,13 +67,12 @@ export function verifyTermAsVariable(termNode, variables, context, verifyAhead) 
 
     context.trace(`Verifying the '${termString}' term as a variable...`, termNode);
 
-    const variableName = variableNameFromVariableNode(variableNode),
-          variablePresent = context.isVariablePresentByVariableName(variableName);
+    const variablePresent = context.isVariablePresentByVariableNode(variableNode);
 
     if (variablePresent) {
       let verifiedAhead;
 
-      const variable = context.findVariableByVariableName(variableName);
+      const variable = context.findVariableByVariableNode(variableNode);
 
       variables.push(variable);
 

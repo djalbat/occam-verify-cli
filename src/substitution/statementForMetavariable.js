@@ -3,13 +3,13 @@
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/proof";
 
 export default class StatementForMetavariableSubstitution {
-  constructor(metavariableName, statementNode) {
-    this.metavariableName = metavariableName;
+  constructor(metavariableNode, statementNode) {
+    this.metavariableNode = metavariableNode;
     this.statementNode = statementNode;
   }
 
-  getMetavariableName() {
-    return this.metavariableName;
+  getMetavariableNode() {
+    return this.metavariableNode;
   }
 
   getStatementNode() {
@@ -34,15 +34,21 @@ export default class StatementForMetavariableSubstitution {
     return statementNodeMatches;
   }
 
-  static fromMetavariableNameAndStatementNode(metavariableName, statementNode) {
-    let statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableName, statementNode);
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+
+    return metavariableNodeMatches;
+  }
+
+  static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {
+    let statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableNode, statementNode);
 
     const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
     if (bracketedStatementChildNode !== null) {
       const statementNode = bracketedStatementChildNode; ///
 
-      statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableName, statementNode);
+      statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableNode, statementNode);
     }
 
     return statementForMetavariableSubstitution;

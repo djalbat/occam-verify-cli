@@ -10,12 +10,21 @@ export default class EqualityAssignment {
   }
 
   assign(localContext) {
-    localContext.addEquality(this.equality);
+    const equalityAdded = localContext.addEquality(this.equality),
+          equalityNode = this.equality.getNode(),
+          equalityString = localContext.nodeAsString(equalityNode),
+          equalityAssigned = equalityAdded; ///
+
+    equalityAssigned ?
+      localContext.debug(`Able to assign the '${equalityString}' equality.`, equalityNode) :
+        localContext.trace(`Unable to assign the '${equalityString}' equality.`, equalityNode);
+
+    return equalityAssigned;
   }
 
   static fromEquality(equality) {
-    const assignmentAssignment = new EqualityAssignment(equality);
+    const equalityAssignment = new EqualityAssignment(equality);
 
-    return assignmentAssignment;
+    return equalityAssignment;
   }
 }

@@ -3,17 +3,23 @@
 import { bracketedMetastatementChildNodeFromMetastatementNode } from "../utilities/metaproof";
 
 export default class MetastatementForMetavariableSubstitution {
-  constructor(metavariableName, metastatementNode) {
-    this.metavariableName = metavariableName;
+  constructor(metavariableNode, metastatementNode) {
+    this.metavariableNode = metavariableNode;
     this.metastatementNode = metastatementNode;
   }
 
-  getMetavariableName() {
-    return this.metavariableName;
+  getMetavariableNode() {
+    return this.metavariableNode;
   }
 
   getMetastatementNode() {
     return this.metastatementNode;
+  }
+
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+
+    return metavariableNodeMatches;
   }
 
   matchMetastatementNode(metastatementNode) {
@@ -34,15 +40,15 @@ export default class MetastatementForMetavariableSubstitution {
     return metastatementNodeMatches;
   }
 
-  static fromMetavariableNameAndMetastatementNode(metavariableName, metastatementNode) {
-    let metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableName, metastatementNode);
+  static fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode) {
+    let metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableNode, metastatementNode);
 
     const bracketedMetastatementChildNode = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode);
 
     if (bracketedMetastatementChildNode !== null) {
       const metastatementNode = bracketedMetastatementChildNode; ///
 
-      metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableName, metastatementNode);
+      metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableNode, metastatementNode);
     }
 
     return metastatementForMetavariableSubstitution;

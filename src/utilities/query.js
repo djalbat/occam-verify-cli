@@ -5,9 +5,7 @@ import { Query } from "occam-dom";
 const typeTerminalNodeQuery = nodeQuery("/type/@type"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type"),
       labelNameTerminalNodeQuery = nodeQuery("/label/@name"),
-      variableNameTerminalNodeQuery = nodeQuery("/variable/@name"),
-      referenceNameTerminalNodeQuery = nodeQuery("/reference/@name"),
-      metavariableNameTerminalNodeQuery = nodeQuery("/metavariable/@name");
+      referenceNameTerminalNodeQuery = nodeQuery("/reference/@name");
 
 export function nodeQuery(expression) {
   const query = Query.fromExpression(expression);
@@ -71,26 +69,10 @@ export function metaTypeNameFromMetaTypeNode(metaTypeNode) {
   return metaTypeName;
 }
 
-export function variableNameFromVariableNode(variableNode) {
-  const variableNameTerminalNode = variableNameTerminalNodeQuery(variableNode),
-        variableNameTerminalNodeContent = variableNameTerminalNode.getContent(),
-        variableName = variableNameTerminalNodeContent; ///
-
-  return variableName;
-}
-
 export function referenceNameFromReferenceNode(referenceNode) {
   const referenceNameTerminalNode = referenceNameTerminalNodeQuery(referenceNode),
         referenceNameTerminalNodeContent = referenceNameTerminalNode.getContent(),
         referenceName = referenceNameTerminalNodeContent; ///
 
   return referenceName;
-}
-
-export function metavariableNameFromMetavariableNode(metavariableNode) {
-  const metavariableNameTerminalNode = metavariableNameTerminalNodeQuery(metavariableNode),
-        metavariableNameTerminalNodeContent = metavariableNameTerminalNode.getContent(),
-        metavariableName = metavariableNameTerminalNodeContent; ///
-
-  return metavariableName;
 }

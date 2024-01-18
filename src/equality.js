@@ -21,6 +21,13 @@ export default class Equality {
     return reflexive;
   }
 
+  getNode() {
+    const leftTermNode = this.leftTerm.getNode(),
+          node = leftTermNode;  ///
+
+    return node;
+  }
+
   static fromLeftTermAndRightTerm(leftTerm, rightTerm) {
     let equality = null;
 

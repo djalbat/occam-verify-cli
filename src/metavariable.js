@@ -2,32 +2,35 @@
 
 import MetaType from "./metaType";
 
+import { nodeAsString } from "./utilities/string";
+
 export default class Metavariable {
-  constructor(name, metaType) {
-    this.name = name;
+  constructor(node, metaType) {
+    this.node = node;
     this.metaType = metaType;
   }
 
-  getName() {
-    return this.name;
+  getNode() {
+    return this.node;
   }
 
   getMetaType() {
     return this.metaType;
   }
 
-  matchName(name) {
-    const nameMatches = (this.name === name);
+  matchNode(node) {
+    const nodeMatches = this.node.match(node);
 
-    return nameMatches;
+    return nodeMatches;
   }
 
   toJSON(tokens) {
     const metaTypeJSON = this.metaType.toJSON(tokens),
-          name = this.name, ///
           metaType = metaTypeJSON,  ///
+          string = nodeAsString(this.node, tokens),
+          node = string,  ///
           json = {
-            name,
+            node,
             metaType
           };
 
@@ -35,20 +38,17 @@ export default class Metavariable {
   }
 
   asString(tokens) {
-    const metaTypeName = this.metaType.getName(),
-          string = `${this.name}:${metaTypeName}`;
+    const metaTypeName = this.metaType.getName();
+
+    let string = nodeAsString(this.node, tokens);
+
+    string = `${string}:${metaTypeName}`;
 
     return string;
   }
 
-  static fromNameAndMetaType(name, metaType) {
-    const metavariable = new Metavariable(name, metaType);
-
-    return metavariable;
-  }
-
   static fromJSONAndFileContext(json, fileContext) {
-    const { name } = json;
+    const { node } = json;
 
     let { metaType } = json;
 
@@ -60,7 +60,14 @@ export default class Metavariable {
 
     metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName); ///
 
-    const metavariable = new Metavariable(name, metaType);
+    const metavariable = new Metavariable(node, metaType);
+
+    return metavariable;
+  }
+
+  static fromMetavariableNodeAndMetaType(metavariableNode, metaType) {
+    const node = metavariableNode,  ///
+          metavariable = new Metavariable(node, metaType);
 
     return metavariable;
   }

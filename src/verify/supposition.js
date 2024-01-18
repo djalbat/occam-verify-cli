@@ -2,7 +2,7 @@
 
 import ProofStep from "../step/proof";
 import Supposition from "../supposition";
-import verifyUnqualifiedStatement from "./statement/unqualified";
+import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -30,8 +30,12 @@ export default function verifySupposition(suppositionNode, suppositions, localCo
 
     localContext.addProofStep(proofStep);
 
-    assignments.forEach((assignment) => {
-      assignment.assign(localContext);
+    assignments.every((assignment) => {
+      const assigned = assignment.assign(localContext);
+
+      if (assigned) {
+        return true;
+      }
     });
 
     suppositionVerified = true;

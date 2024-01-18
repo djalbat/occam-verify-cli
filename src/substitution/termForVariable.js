@@ -1,13 +1,13 @@
 "use strict";
 
 export default class TermForVariableSubstitution {
-  constructor(variableName, termNode) {
-    this.variableName = variableName;
+  constructor(variableNode, termNode) {
+    this.variableNode = variableNode;
     this.termNode = termNode;
   }
 
-  getVariableName() {
-    return this.variableName;
+  getVariableNode() {
+    return this.variableNode;
   }
 
   getTermNode() {
@@ -15,15 +15,19 @@ export default class TermForVariableSubstitution {
   }
 
   matchTermNode(termNode) {
-    let termNodeMatches;
-
-    termNodeMatches = this.termNode.match(termNode);
+    const termNodeMatches = this.termNode.match(termNode);
 
     return termNodeMatches;
   }
 
-  static fromVariableNameAndTermNode(variableName, termNode) {
-    const termForVariableSubstitution = new TermForVariableSubstitution(variableName, termNode);
+  matchVariableNode(variableNode) {
+    const variableNodeMatches = this.variableNode.match(variableNode);
+
+    return variableNodeMatches;
+  }
+
+  static fromVariableNodeAndTermNode(variableNode, termNode) {
+    const termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
 
     return termForVariableSubstitution;
   }

@@ -3,7 +3,7 @@
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 
-import { last, filter } from "../utilities/array";
+import { last } from "../utilities/array";
 
 class LocalMetaContext {
   constructor(context, metavariables, metaproofSteps) {
@@ -53,18 +53,24 @@ class LocalMetaContext {
   }
 
   addMetavariable(metavariable) {
-    const metavariableName = metavariable.getName();
+    let metavariableAdded = false;
 
-    filter(this.metavariables, (metavariable) => {
-      const name = metavariable.getName(),
-            nameMetavariableName = (name === metavariableName);
+    const node = metavariable.getName(),
+          metavariablePresent = this.metavariables.some((metavariable) => {
+            const nodeMatches = metavariable.matchNode(node);
 
-      if (!nameMetavariableName) {
-        return true;
-      }
-    });
+            if (nodeMatches) {
+              return true;
+            }
+          });
 
-    this.metavariables.push(metavariable);
+    if (!metavariablePresent) {
+      this.metavariables.push(metavariable);
+
+      metavariableAdded = true;
+    }
+
+    return metavariableAdded;
   }
 
   addMetaproofStep(metaproofStep) {
@@ -93,11 +99,11 @@ class LocalMetaContext {
     return metastatementMatches;
   }
 
-  findMetavariableByMetavariableName(metavariableName) {
-    const name = metavariableName,  ///
+  findMetavariableByMetavariableNode(metavariableNode) {
+    const node = metavariableNode,  ///
           metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-            const matches = metavariable.matchName(name);
+            const matches = metavariable.matchNode(node);
 
             if (matches) {
               return true;
@@ -107,8 +113,8 @@ class LocalMetaContext {
     return metavariable;
   }
 
-  isMetavariablePresentByMetavariableName(metavariableName) {
-    const metavariable = this.findMetavariableByMetavariableName(metavariableName),
+  isMetavariablePresentByMetavariableNode(metavariableNode) {
+    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode),
           metavariablePresent = (metavariable !== null);
 
     return metavariablePresent;

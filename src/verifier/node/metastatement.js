@@ -3,7 +3,6 @@
 import NodeVerifier from "../../verifier/node";
 
 import { METAVARIABLE_RULE_NAME } from "../../ruleNames";
-import { metavariableNameFromMetavariableNode } from "../../utilities/query";
 
 class MetastatementNodeVerifier extends NodeVerifier {
   verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead) {
@@ -44,8 +43,7 @@ function verifyMetavariable(metavariableNode, localMetaContext, verifyAhead) {
 
   localMetaContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
-  const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-        metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableName(metavariableName);
+  const metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode);
 
   if (metavariablePresent) {
     const verifiedAhead = verifyAhead();

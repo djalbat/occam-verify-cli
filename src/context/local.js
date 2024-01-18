@@ -1,12 +1,11 @@
 "use strict";
 
 import Variable from "../variable";
-import Equality from "../equality";
 import Collection from "../collection";
 import fileMixins from "../mixins/file";
 import loggingMixins from "../mixins/logging";
 
-import { last, filter } from "../utilities/array";
+import { last } from "../utilities/array";
 import { mergeCollections, findCollectionByType, findCollectionByTerm, findCollectionByTerms } from "../utilities/collection";
 
 class LocalContext {
@@ -69,15 +68,17 @@ class LocalContext {
   getMetavariables() { return this.context.getMetavariables(); }
 
   addEquality(equality) {
+    let equalityAdded;
+
     const equalityReflexive = equality.isReflexive();
 
     if (equalityReflexive) {
-      ///
+      equalityAdded = true; ///
     } else {
       const leftTerm = equality.getLeftTerm(),
             rightTerm = equality.getRightTerm(),
-            leftCollection = this.findCollectionByTerm(leftTerm),
-            rightCollection = this.findCollectionByTerm(rightTerm);
+            leftCollection = findCollectionByTerm(this.collections, leftTerm),
+            rightCollection = findCollectionByTerm(this.collections, rightTerm);
 
       if (false) {
         ///
@@ -85,37 +86,51 @@ class LocalContext {
         const collection = Collection.fromEquality(equality);
 
         this.addCollection(collection);
+
+        equalityAdded = true;
       } else if ((leftCollection !== null) && (rightCollection === null)) {
         const term = rightTerm, ///
               collection = leftCollection;  ///
 
         collection.addTerm(term);
+
+        equalityAdded = true;
       } else if ((leftCollection === null) && (rightCollection !== null)) {
         const term = leftTerm, ///
               collection = rightCollection;  ///
 
         collection.addTerm(term);
+
+        equalityAdded = true;
       } else if ((leftCollection !== null) && (rightCollection !== null)) {
 
         debugger
 
       }
     }
+
+    return equalityAdded;
   }
 
   addVariable(variable) {
-    const variableName = variable.getName();
+    let variableAdded = false;
 
-    filter(this.variables, (variable) => {
-      const name = variable.getName(),
-            nameVariableName = (name === variableName);
+    const node = variable.getNode(),
+          variablePresent = this.variables.some((variable) => {
+            const nodeMatches = variable.matchNode(node);
 
-      if (!nameVariableName) {
-        return true;
-      }
-    });
+            if (nodeMatches) {
+              return true;
+            }
+          });
 
-    this.variables.push(variable);
+    if (!variablePresent) {
+      this.variables.push(variable);
+
+      variableAdded = true;
+    }
+
+    return variableAdded;
   }
 
   addProofStep(proofStep) {
@@ -169,11 +184,11 @@ class LocalContext {
     return collection;
   }
 
-  findVariableByVariableName(variableName) {
-    const name = variableName,  ///
+  findVariableByVariableNode(variableNode) {
+    const node = variableNode,  ///
           variables = this.getVariables(),
           variable = variables.find((variable) => {
-            const matches = variable.matchName(name);
+            const matches = variable.matchNode(node);
 
             if (matches) {
               return true;
@@ -183,8 +198,8 @@ class LocalContext {
     return variable;
   }
 
-  isVariablePresentByVariableName(variableName) {
-    const variable = this.findVariableByVariableName(variableName),
+  isVariablePresentByVariableNode(variableNode) {
+    const variable = this.findVariableByVariableNode(variableNode),
           variablePresent = (variable !== null);
 
     return variablePresent;

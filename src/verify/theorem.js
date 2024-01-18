@@ -4,8 +4,8 @@ import Theorem from "../theorem";
 import verifyProof from "../verify/proof";
 import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
-import verifyConsequent from "./consequent";
-import verifySupposition from "./supposition";
+import verifyConsequent from "../verify/consequent";
+import verifySupposition from "../verify/supposition";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";

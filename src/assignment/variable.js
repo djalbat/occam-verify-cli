@@ -10,12 +10,21 @@ export default class VariableAssignment {
   }
 
   assign(localContext) {
-    localContext.addVariable(this.variable);
+    const variableAdded = localContext.addVariable(this.variable),
+          variableNode = this.variable.getNode(),
+          variableString = localContext.nodeAsString(variableNode),
+          variableAssigned = variableAdded; ///
+
+    variableAssigned ?
+      localContext.debug(`Able to assign the '${variableString}' variable.`, variableNode) :
+        localContext.trace(`Unable to assign the '${variableString}' variable.`, variableNode);
+
+    return variableAssigned;
   }
 
   static fromVariable(variable) {
-    const assignmentAssignment = new VariableAssignment(variable);
+    const variableAssignment = new VariableAssignment(variable);
 
-    return assignmentAssignment;
+    return variableAssignment;
   }
 }

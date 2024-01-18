@@ -7,7 +7,6 @@ import TermForVariableSubstitution from "../../substitution/termForVariable";
 import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
 import { TERM_RULE_NAME } from "../../ruleNames";
-import { variableNameFromVariableNode } from "../../utilities/query";
 
 const variableNodeQuery = nodeQuery('/term/variable!');
 
@@ -57,11 +56,10 @@ export default class TermForVariableNodesVerifier extends NodesVerifier {
   verifyVariableNode(variableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
     let variableVerified = false;
 
-    const variableNameA = variableNameFromVariableNode(variableNodeA),
-          substitution = substitutions.find((substitution) => {
-            const variableName = substitution.getVariableName();
+    const substitution = substitutions.find((substitution) => {
+            const substitutionMatchesVariableNodeA = substitution.matchVariableNode(variableNodeA);
 
-            if (variableName === variableNameA) {
+            if (substitutionMatchesVariableNodeA) {
               return true;
             }
           }) || null;
@@ -79,9 +77,9 @@ export default class TermForVariableNodesVerifier extends NodesVerifier {
       const { createSubstitutions } = this.constructor;
 
       if (createSubstitutions) {
-        const variableName = variableNameA, ///
+        const variableNode = variableNodeA, ///
               localContext = localContextA, ///
-              variable = localContext.findVariableByVariableName(variableName);
+              variable = localContext.findVariableByVariableNode(variableNode);
 
         if (variable !== null) {
           const terms = [],
@@ -97,7 +95,7 @@ export default class TermForVariableNodesVerifier extends NodesVerifier {
                         variableTypeEqualToOrSuperTypeOfTermType = variableType.isEqualToOrSuperTypeOf(termType);
 
                   if (variableTypeEqualToOrSuperTypeOfTermType) {
-                    const termForVariableSubstitution = TermForVariableSubstitution.fromVariableNameAndTermNode(variableName, termNode),
+                    const termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
                           substitution = termForVariableSubstitution;  ///
 
                     substitutions.push(substitution);

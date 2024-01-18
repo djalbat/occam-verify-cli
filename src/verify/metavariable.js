@@ -1,8 +1,9 @@
 "use strict";
 
 import Metavariable from "../metavariable";
+import MetavariableAssignment from "../assignment/metavariable";
 
-import { metaTypeNameFromMetaTypeNode, metavariableNameFromMetavariableNode } from "../utilities/query";
+import { metaTypeNameFromMetaTypeNode } from "../utilities/query";
 
 export default function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
   let metavariableVerified = false;
@@ -11,20 +12,20 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
 
   fileContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
-  const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-        metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
+  const metavariablePresent = fileContext.isMetavariablePresentByMetavariableNode(metavariableNode);
 
   if (metavariablePresent) {
-    fileContext.debug(`The metavariable '${metavariableName}' is already present.`, metavariableNode);
+    fileContext.debug(`The metavariable '${metavariableString}' is already present.`, metavariableNode);
   } else {
     const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
           metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName),
-          name = metavariableName,  ///
-          metavariable = Metavariable.fromNameAndMetaType(name, metaType);
+          metavariable = Metavariable.fromMetavariableNodeAndMetaType(metavariableNode, metaType),
+          metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
+          metavariableAssigned = metavariableAssignment.assign(fileContext);
 
-    fileContext.addMetavariable(metavariable);
-
-    metavariableVerified = true;
+    if (metavariableAssigned) {
+      metavariableVerified = true;
+    }
   }
 
   if (metavariableVerified) {

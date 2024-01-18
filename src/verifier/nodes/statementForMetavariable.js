@@ -4,7 +4,6 @@ import NodesVerifier from "../../verifier/nodes";
 import StatementForMetavariableSubstitution from "../../substitution/statementForMetavariable";
 
 import { nodeQuery } from "../../utilities/query";
-import { metavariableNameFromMetavariableNode } from "../../utilities/query";
 import { STATEMENT_RULE_NAME, METASTATEMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../../ruleNames";
 
 const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!'),
@@ -71,11 +70,10 @@ export default class StatementForMetavariableNodesVerifier extends NodesVerifier
   verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, localContext) {
     let metavariableNodeVerified;
 
-    const metavariableNameA = metavariableNameFromMetavariableNode(metavariableNodeA),
-          substitution = substitutions.find((substitution) => {
-            const metavariableName = substitution.getMetavariableName();
+    const substitution = substitutions.find((substitution) => {
+            const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNodeA);
 
-            if (metavariableName === metavariableNameA) {
+            if (substitutionMatchesMetavariableNodeA) {
               return true;
             }
           }) || null;
@@ -89,9 +87,9 @@ export default class StatementForMetavariableNodesVerifier extends NodesVerifier
       const { createSubstitutions } = this.constructor;
 
       if (createSubstitutions) {
-        const metavariableName = metavariableNameA, ///
+        const metavariableNode = metavariableNodeA, ///
               statementNode = statementNodeB, ///
-              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNameAndStatementNode(metavariableName, statementNode),
+              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode),
               substitution = statementForMetavariableSubstitution;  ///
 
         substitutions.push(substitution);
