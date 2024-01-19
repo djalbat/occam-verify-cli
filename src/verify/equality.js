@@ -19,7 +19,7 @@ export default function verifyEquality(equalityNode, assignments, derived, conte
 
   const verifyEqualityFunctions = [
     verifyDerivedEquality,
-    verifyStandaloneEquality
+    verifyGivenEquality
   ];
 
   equalityVerified = verifyEqualityFunctions.some((verifyEqualityFunction) => {
@@ -82,13 +82,13 @@ function verifyDerivedEquality(equalityNode, assignments, derived, context, veri
   return derivedEqualityVerified;
 }
 
-function verifyStandaloneEquality(equalityNode, assignments, derived, context, verifyAhead) {
-  let standaloneEqualityVerified = false;
+function verifyGivenEquality(equalityNode, assignments, derived, context, verifyAhead) {
+  let givenEqualityVerified = false;
 
   if (!derived) {
     const equalityString = context.nodeAsString(equalityNode);
 
-    context.trace(`Verifying the '${equalityString}' standalone equality...`, equalityNode);
+    context.trace(`Verifying the '${equalityString}' given equality...`, equalityNode);
 
     const terms = [],
           leftTermNode = leftTermNodeQuery(equalityNode),
@@ -122,12 +122,12 @@ function verifyStandaloneEquality(equalityNode, assignments, derived, context, v
             return verifiedAhead;
           });
 
-    standaloneEqualityVerified = termsVerified; ///
+    givenEqualityVerified = termsVerified; ///
 
-    if (standaloneEqualityVerified) {
-      context.trace(`...verified the '${equalityString}' standalone equality.`, equalityNode);
+    if (givenEqualityVerified) {
+      context.trace(`...verified the '${equalityString}' given equality.`, equalityNode);
     }
   }
 
-  return standaloneEqualityVerified;
+  return givenEqualityVerified;
 }

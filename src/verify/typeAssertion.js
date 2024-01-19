@@ -20,7 +20,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
 
   const verifyTypeAssertionFunctions = [
     verifyDerivedTypeAssertion,
-    verifyStandaloneTypeAssertion
+    verifyGivenTypeAssertion
   ];
 
   typeAssertionVerified = verifyTypeAssertionFunctions.some((verifyTypeAssertionFunction) => {
@@ -81,13 +81,13 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, con
   return derivedTypeAssertionVerified;
 }
 
-function verifyStandaloneTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead) {
-  let standaloneTypeAssertionVerified = false;
+function verifyGivenTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead) {
+  let givenTypeAssertionVerified = false;
 
   if (!derived) {
     const typeAssertionString = context.nodeAsString(typeAssertionNode);
 
-    context.trace(`Verifying the '${typeAssertionString}' standalone type assertion...`, typeAssertionNode);
+    context.trace(`Verifying the '${typeAssertionString}' given type assertion...`, typeAssertionNode);
 
     const types = [],
           variables = [],
@@ -123,12 +123,12 @@ function verifyStandaloneTypeAssertion(typeAssertionNode, assignments, derived, 
             return verifiedAhead;
           });
 
-    standaloneTypeAssertionVerified = termAsVariableAndStandaloneTypeVerified; ///
+    givenTypeAssertionVerified = termAsVariableAndStandaloneTypeVerified; ///
 
-    if (standaloneTypeAssertionVerified) {
-      context.trace(`...verified the '${typeAssertionString}' standalone type assertion.`, typeAssertionNode);
+    if (givenTypeAssertionVerified) {
+      context.trace(`...verified the '${typeAssertionString}' given type assertion.`, typeAssertionNode);
     }
   }
 
-  return standaloneTypeAssertionVerified;
+  return givenTypeAssertionVerified;
 }

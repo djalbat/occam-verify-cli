@@ -3,7 +3,7 @@
 import NodeVerifier from "../../verifier/node";
 import verifyStatement from "../../verify/statement";
 
-import { verifyStandaloneTerm, verifyType } from "./../../verifier/node/termAsConstructor";
+import { verifyType, verifyStandaloneTerm } from "./../../verifier/node/termAsConstructor";
 import { TYPE_RULE_NAME, TERM_RULE_NAME, STATEMENT_RULE_NAME } from "../../ruleNames";
 
 class StatementAsCombinatorNodeVerifier extends NodeVerifier {
