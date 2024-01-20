@@ -28,8 +28,8 @@ function verifyMetastatement(metastatementNode, derived, localMetaContext) {
   return metastatementVerified;
 }
 
-Object.assign(verifyMetastatement, {
-  metastatementNodeVerifier
+Object.assign(metastatementNodeVerifier, {
+  verifyMetastatement
 });
 
 export default verifyMetastatement;

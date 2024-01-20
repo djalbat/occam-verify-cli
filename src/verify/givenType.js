@@ -2,12 +2,12 @@
 
 import { typeNameFromTypeNode } from "../utilities/query";
 
-export default function verifyStandaloneType(typeNode, types, context, verifyAhead) {
-  let standaloneTypeVerified = false;
+export default function verifyGivenType(typeNode, types, context, verifyAhead) {
+  let givenTypeVerified = false;
 
   const typeString = context.nodeAsString(typeNode);
 
-  context.trace(`Verifying the standalone '${typeString}' type...`, typeNode);
+  context.trace(`Verifying the given '${typeString}' type...`, typeNode);
 
   const typeName = typeNameFromTypeNode(typeNode),
         type = context.findTypeByTypeName(typeName);
@@ -23,12 +23,12 @@ export default function verifyStandaloneType(typeNode, types, context, verifyAhe
       types.pop();
     }
 
-    standaloneTypeVerified = verifiedAhead; ///
+    givenTypeVerified = verifiedAhead; ///
   }
 
-  if (standaloneTypeVerified) {
-    context.debug(`...verified the standalone '${typeString}' type.`, typeNode);
+  if (givenTypeVerified) {
+    context.debug(`...verified the given '${typeString}' type.`, typeNode);
   }
 
-  return standaloneTypeVerified;
+  return givenTypeVerified;
 }

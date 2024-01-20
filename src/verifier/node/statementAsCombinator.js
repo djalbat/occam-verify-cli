@@ -14,6 +14,8 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
 
     switch (ruleName) {
       case TYPE_RULE_NAME: {
+        debugger
+
         const typeNode = nonTerminalNode, ///
               typeVerified = verifyType(typeNode, fileContext, verifyAhead),
               typeNodeVerified = typeVerified;  ///
@@ -24,6 +26,8 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
       }
 
       case TERM_RULE_NAME: {
+        debugger
+
         const termNode = nonTerminalNode, ///
               standaloneTermVerified = verifyStandaloneTerm(termNode, fileContext, verifyAhead),
               termNodeVerified = standaloneTermVerified;  ///
@@ -34,6 +38,8 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
       }
 
       case STATEMENT_RULE_NAME: {
+        debugger
+
         const statementNode = nonTerminalNode, ///
               standaloneStatementVerified = verifyStandaloneStatement(statementNode, fileContext, verifyAhead),
               statementNodeVerified = standaloneStatementVerified; ///

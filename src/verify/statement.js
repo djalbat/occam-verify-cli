@@ -38,13 +38,57 @@ function verifyStatement(statementNode, assignments, derived, context, verifyAhe
   return statementVerified;
 }
 
-Object.assign(verifyStatement, {
-  statementNodesVerifier
+Object.assign(statementNodesVerifier, {
+  verifyStatement
 });
 
 export default verifyStatement;
 
-export function verifyStatementAgainstCombinators(statementNode, assignments, derived, context, verifyAhead) {
+function verifyStatementAsEquality(statementNode, assignments, derived, context, verifyAhead) {
+  let statementVerifiedAsEquality = false;
+
+  const equalityNode = equalityNodeQuery(statementNode);
+
+  if (equalityNode !== null) {
+    const statementString = context.nodeAsString(statementNode);
+
+    context.trace(`Verifying the '${statementString}' statement as an equality...`, statementNode);
+
+    const equalityVerified = verifyEquality(equalityNode, assignments, derived, context, verifyAhead);
+
+    statementVerifiedAsEquality = equalityVerified; ///
+
+    if (statementVerifiedAsEquality) {
+      context.debug(`...verified the '${statementString}' statement as an equality.`, statementNode);
+    }
+  }
+
+  return statementVerifiedAsEquality;
+}
+
+function verifyStatementAsTypeAssertion(statementNode, assignments, derived, context, verifyAhead) {
+  let statementVerifiedAsTypeAssertion = false;
+
+  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
+
+  if (typeAssertionNode !== null) {
+    const statementString = context.nodeAsString(statementNode);
+
+    context.trace(`Verifying the '${statementString}' statement as a type assertion...`, statementNode);
+
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead);
+
+    statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
+
+    if (statementVerifiedAsTypeAssertion) {
+      context.debug(`...verified the '${statementString}' statement as a type assertion.`, statementNode);
+    }
+  }
+
+  return statementVerifiedAsTypeAssertion;
+}
+
+function verifyStatementAgainstCombinators(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAgainstCombinators;
 
   let combinators = context.getCombinators();
@@ -85,48 +129,4 @@ function verifyStatementAgainstCombinator(statementNode, combinator, context, ve
   }
 
   return statementVerifiedAgainstCombinator;
-}
-
-function verifyStatementAsTypeAssertion(statementNode, assignments, derived, context, verifyAhead) {
-  let statementVerifiedAsTypeAssertion = false;
-
-  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
-
-  if (typeAssertionNode !== null) {
-    const statementString = context.nodeAsString(statementNode);
-
-    context.trace(`Verifying the '${statementString}' statement as a type assertion...`, statementNode);
-
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead);
-
-    statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
-
-    if (statementVerifiedAsTypeAssertion) {
-      context.debug(`...verified the '${statementString}' statement as a type assertion.`, statementNode);
-    }
-  }
-
-  return statementVerifiedAsTypeAssertion;
-}
-
-function verifyStatementAsEquality(statementNode, assignments, derived, context, verifyAhead) {
-  let statementVerifiedAsEquality = false;
-
-  const equalityNode = equalityNodeQuery(statementNode);
-
-  if (equalityNode !== null) {
-    const statementString = context.nodeAsString(statementNode);
-
-    context.trace(`Verifying the '${statementString}' statement as an equality...`, statementNode);
-
-    const equalityVerified = verifyEquality(equalityNode, assignments, derived, context, verifyAhead);
-
-    statementVerifiedAsEquality = equalityVerified; ///
-
-    if (statementVerifiedAsEquality) {
-      context.debug(`...verified the '${statementString}' statement as an equality.`, statementNode);
-    }
-  }
-
-  return statementVerifiedAsEquality;
 }

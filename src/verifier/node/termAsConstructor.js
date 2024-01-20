@@ -2,8 +2,9 @@
 
 import verifyTerm from "../../verify/term";
 import NodeVerifier from "../../verifier/node";
+import verifyGivenType from "../../verify/givenType";
 
-import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
+import { nodeQuery } from "../../utilities/query";
 import { TERM_RULE_NAME, ARGUMENT_RULE_NAME } from "../../ruleNames";
 
 const typeNodeQuery = nodeQuery("/argument/type"),
@@ -71,29 +72,6 @@ export function verifyStandaloneTerm(termNode, fileContext, verifyAhead) {
   return standaloneTermVerified;
 }
 
-export function verifyType(typeNode, fileContext, verifyAhead) {
-  let typeVerified = false;
-
-  const typeString = fileContext.nodeAsString(typeNode);
-
-  fileContext.trace(`Verifying the '${typeString}' type...`, typeNode);
-
-  const typeName = typeNameFromTypeNode(typeNode),
-        typePresent = fileContext.isTypePresentByTypeName(typeName);
-
-  if (!typePresent) {
-    fileContext.debug(`The type '${typeName}' is not present.`, typeNode);
-  } else {
-    fileContext.debug(`...verified the '${typeString}' type.`, typeNode);
-
-    const verifiedAhead = verifyAhead();
-
-    typeVerified = verifiedAhead; ///
-  }
-
-  return typeVerified;
-}
-
 function verifyArgument(argumentNode, fileContext, verifyAhead) {
   let argumentVerified;
 
@@ -105,9 +83,10 @@ function verifyArgument(argumentNode, fileContext, verifyAhead) {
         termNode = termNodeQuery(argumentNode);
 
   if (typeNode !== null) {
-    const typeVerified = verifyType(typeNode, fileContext, verifyAhead);
+    const types = [], ///
+          givenTypeVerified = verifyGivenType(typeNode, types, fileContext, verifyAhead);
 
-    argumentVerified = typeVerified; ///
+    argumentVerified = givenTypeVerified; ///
   }
 
   if (termNode !== null) {

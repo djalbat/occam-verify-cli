@@ -60,7 +60,7 @@ const statementNodesVerifier = new StatementNodesVerifier();
 
 export default statementNodesVerifier;
 
-function verifyMetaargument(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead) {
+export function verifyMetaargument(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead) {
   let metaArgumentVerified = false;
 
   const metaArgumentString = context.nodeAsString(metaArgumentNode);

@@ -2,14 +2,15 @@
 
 import Variable from "../variable";
 import VariableAssignment from "../assignment/variable";
-import verifyTermAndStandaloneType from "../verify/termAndStandaloneType";
-import verifyTermAsVariableAndStandaloneType from "../verify/termAsVariableAndStandaloneType";
+import verifyTermAndGivenType from "../verify/termAndGivenType";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
+import { verifyTermAsGivenVariable } from "./term";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term!"),
-      typeNodeQuery = nodeQuery("/typeAssertion/type!");
+      typeNodeQuery = nodeQuery("/typeAssertion/type!"),
+      variableNodeQuery = nodeQuery("/term/variable!");
 
 export default function verifyTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead) {
   let typeAssertionVerified;
@@ -50,7 +51,7 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, con
           types = [],
           termNode = termNodeQuery(typeAssertionNode),
           typeNode = typeNodeQuery(typeAssertionNode),
-          termAndStandaloneTypeVerified = verifyTermAndStandaloneType(termNode, typeNode, terms, types, context, () => {
+          termAndGivenTypeVerified = verifyTermAndGivenType(termNode, typeNode, terms, types, context, () => {
             let verifiedAhead = false;
 
             const firstTerm = first(terms),
@@ -58,20 +59,16 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, con
                   term = firstTerm, ///
                   type = firstType, ///
                   termType = term.getType(),
-                  termTypeEqualToOrSuperTypeOfType = termType.isEqualToOrSuperTypeOf(type);
+                  typeEqualToOrSuperTypeOfTermType = type.isEqualToOrSuperTypeOf(termType);
 
-            if (termTypeEqualToOrSuperTypeOfType) {
-              debugger
-
-              if (false) {  ///
-                verifiedAhead = verifyAhead();
-              }
+            if (typeEqualToOrSuperTypeOfTermType) {
+              verifiedAhead = verifyAhead();
             }
 
             return verifiedAhead;
           });
 
-    derivedTypeAssertionVerified = termAndStandaloneTypeVerified; ///
+    derivedTypeAssertionVerified = termAndGivenTypeVerified; ///
 
     if (derivedTypeAssertionVerified) {
       context.trace(`...verified the '${typeAssertionString}' derived type assertion.`, typeAssertionNode);
@@ -89,41 +86,47 @@ function verifyGivenTypeAssertion(typeAssertionNode, assignments, derived, conte
 
     context.trace(`Verifying the '${typeAssertionString}' given type assertion...`, typeAssertionNode);
 
-    const types = [],
-          variables = [],
+    const terms = [],
+          types = [],
           termNode = termNodeQuery(typeAssertionNode),
           typeNode = typeNodeQuery(typeAssertionNode),
-          termAsVariableAndStandaloneTypeVerified = verifyTermAsVariableAndStandaloneType(termNode, typeNode, variables, types, context, () => {
+          termAndGivenTypeVerified = verifyTermAndGivenType(termNode, typeNode, terms, types, context, () => {
             let verifiedAhead = false;
 
-            const firstVariable = first(variables);
-
-            let variable = firstVariable; ///
-
-            const firstType = first(types),
+            const firstTerm = first(terms),
+                  firstType = first(types),
+                  term = firstTerm, ///
                   type = firstType, ///
-                  variableType = variable.getType(),
-                  variableTypeEqualToOrSuperTypeOfType = variableType.isEqualToOrSuperTypeOf(type);
+                  termType = term.getType(),
+                  typeEqualToOrSubTypeOfTermType = type.isEqualToOrSubTypeOf(termType);
 
-            if (variableTypeEqualToOrSuperTypeOfType) {
-              variable = Variable.fromVariableAndType(variable, type);  ///
+            if (typeEqualToOrSubTypeOfTermType) {
+              const variableNode = variableNodeQuery(termNode);
 
-              const variableAssignment = VariableAssignment.fromVariable(variable),
-                    assignment = variableAssignment; ///
+              if (variableNode === null) {
+                verifiedAhead = verifyAhead();
+              } else {
+                let variable = context.findVariableByVariableNode(variableNode);
 
-              assignments.push(assignment);
+                variable = Variable.fromVariableAndType(variable, type);
 
-              verifiedAhead = verifyAhead();
+                const variableAssignment = VariableAssignment.fromVariable(variable),
+                      assignment = variableAssignment;  ///
 
-              if (!verifiedAhead) {
-                assignments.pop();
+                assignments.push(assignment);
+
+                verifiedAhead = verifyAhead();
+
+                if (!verifiedAhead) {
+                  assignments.pop();
+                }
               }
             }
 
             return verifiedAhead;
           });
 
-    givenTypeAssertionVerified = termAsVariableAndStandaloneTypeVerified; ///
+    givenTypeAssertionVerified = termAndGivenTypeVerified; ///
 
     if (givenTypeAssertionVerified) {
       context.trace(`...verified the '${typeAssertionString}' given type assertion.`, typeAssertionNode);
