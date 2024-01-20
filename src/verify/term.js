@@ -67,12 +67,10 @@ export function verifyTermAsVariable(termNode, variables, context, verifyAhead) 
 
     context.trace(`Verifying the '${termString}' term as a variable...`, termNode);
 
-    const variablePresent = context.isVariablePresentByVariableNode(variableNode);
+    const variable = context.findVariableByVariableNode(variableNode);
 
-    if (variablePresent) {
+    if (variable !== null) {
       let verifiedAhead;
-
-      const variable = context.findVariableByVariableNode(variableNode);
 
       variables.push(variable);
 

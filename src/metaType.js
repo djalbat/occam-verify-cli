@@ -57,16 +57,6 @@ export default class MetaType {
 
     return metaType;
   }
-
-  static fromJSONAndFileContext(json, fileContext) {
-    let metaType;
-
-    const { name } = json;
-
-    metaType = new MetaType(name);
-
-    return metaType;
-  }
 }
 
 class StatementMetaType extends MetaType {
@@ -79,3 +69,13 @@ class StatementMetaType extends MetaType {
 }
 
 export const statementMetaType = StatementMetaType.fromNothing();
+
+export function metaTypeFromJSONAndFileContext(json, fileContext) {
+  let metaType;
+
+  const { name } = json;
+
+  metaType = new MetaType(name);
+
+  return metaType;
+}

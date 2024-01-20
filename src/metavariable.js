@@ -1,8 +1,7 @@
 "use strict";
 
-import MetaType from "./metaType";
-
 import { nodeAsString } from "./utilities/string";
+import { metaTypeFromJSONAndFileContext } from "./metaType";
 
 export default class Metavariable {
   constructor(node, metaType) {
@@ -54,11 +53,7 @@ export default class Metavariable {
 
     json = metaType;  ///
 
-    metaType = MetaType.fromJSONAndFileContext(json, fileContext);
-
-    const metaTypeName = metaType.getName();
-
-    metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName); ///
+    metaType = metaTypeFromJSONAndFileContext(json, fileContext);
 
     const metavariable = new Metavariable(node, metaType);
 

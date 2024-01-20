@@ -1,8 +1,7 @@
 "use strict";
 
-import Type from "./type";
-
 import { nodeAsString } from "./utilities/string";
+import { typeFromJSONAndFileContext } from "./type";
 import { variableNodeFromVariableString } from "./utilities/node";
 
 export default class Variable {
@@ -86,11 +85,7 @@ export default class Variable {
 
     json = type;  ///
 
-    type = Type.fromJSONAndFileContext(json, fileContext);
-
-    const typeName = type.getName();
-
-    type = fileContext.findTypeByTypeName(typeName); ///
+    type = typeFromJSONAndFileContext(json, fileContext);
 
     const variable = new Variable(node, type);
 

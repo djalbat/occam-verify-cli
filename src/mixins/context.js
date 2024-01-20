@@ -1,5 +1,17 @@
 "use strict";
 
+function trace(node, message) { this.context.trace(node, message); }
+
+function debug(node, message) { this.context.debug(node, message); }
+
+function info(node, message) { this.context.info(node, message); }
+
+function warning(node, message) { this.context.warning(node, message); }
+
+function error(node, message) { this.context.error(node, message); }
+
+function fatal(node, message) { this.context.fatal(node, message); }
+
 function getAxioms() { return this.context.getAxioms(); }
 
 function getLemmas() { return this.context.getLemmas(); }
@@ -34,7 +46,13 @@ function nodeAsString(node) { return this.context.nodeAsString(node); }
 
 function nodesAsString(node) { return this.context.nodesAsString(node); }
 
-const fileMixins = {
+const contextMixins = {
+  trace,
+  debug,
+  info,
+  warning,
+  error,
+  fatal,
   getAxioms,
   getLemmas,
   getTheorems,
@@ -54,4 +72,4 @@ const fileMixins = {
   nodesAsString
 };
 
-export default fileMixins;
+export default contextMixins;

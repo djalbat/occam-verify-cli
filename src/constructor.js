@@ -1,8 +1,7 @@
 "use strict";
 
-import Type from "./type";
-
 import { nodeAsString } from "./utilities/string";
+import { typeFromJSONAndFileContext } from "./type";
 import { termNodeFromConstructorDeclarationTokens } from "./utilities/node";
 import { constructorDeclarationTokensFromTermString } from "./utilities/tokens";
 
@@ -62,11 +61,7 @@ export default class Constructor {
 
       json = typeJSON;  ///
 
-      type = Type.fromJSONAndFileContext(json, fileContext);
-
-      const typeName = type.getName();
-
-      type = fileContext.findTypeByTypeName(typeName); ///
+      type = typeFromJSONAndFileContext(json, fileContext);
     }
 
     const tokens = constructorDeclarationTokens,  ///

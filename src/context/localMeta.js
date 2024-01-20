@@ -1,7 +1,6 @@
 "use strict";
 
-import fileMixins from "../mixins/file";
-import loggingMixins from "../mixins/logging";
+import contextMixins from "../mixins/context";
 
 import { last } from "../utilities/array";
 
@@ -20,8 +19,8 @@ class LocalMetaContext {
     let metavariables = this.context.getMetavariables();
 
     metavariables = [ ///
+      ...this.metavariables,
       ...metavariables,
-      this.metavariables
     ]
 
     return metavariables;
@@ -31,8 +30,8 @@ class LocalMetaContext {
     let metaproofSteps = this.context.getMetaproofSteps();
 
     metaproofSteps = [  ///
-      ...metaproofSteps,
-      ...this.metaproofSteps
+      ...this.metaproofSteps,
+      ...metaproofSteps
     ];
 
     return metaproofSteps;
@@ -140,7 +139,6 @@ class LocalMetaContext {
   }
 }
 
-Object.assign(LocalMetaContext.prototype, fileMixins);
-Object.assign(LocalMetaContext.prototype, loggingMixins);
+Object.assign(LocalMetaContext.prototype, contextMixins);
 
 export default LocalMetaContext;

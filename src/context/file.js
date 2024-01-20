@@ -1,6 +1,5 @@
 "use strict";
 
-import Type from "../type";
 import Rule from "../rule";
 import Axiom from "../axiom";
 import Lemma from "../lemma";
@@ -11,9 +10,10 @@ import Combinator from "../combinator";
 import Constructor from "../constructor";
 import Metavariable from "../metavariable";
 
+import { push } from "../utilities/array";
 import { objectType } from "../type";
-import { push, filter } from "../utilities/array";
 import { statementMetaType } from "../metaType";
+import { typeFromJSONAndFileContext } from "../type";
 import { nodeAsString, nodesAsString } from "../utilities/string";
 
 const metaTypes = [
@@ -259,18 +259,15 @@ export default class FileContext {
   findTypeByTypeName(typeName) {
     let types = this.getTypes();
 
-    types = [ ///
-      ...types,
-      objectType
-    ];
+    types.push(objectType);
 
     const type = types.find((type) => {
-            const matches = type.matchTypeName(typeName);
+      const matches = type.matchTypeName(typeName);
 
-            if (matches) {
-              return true;
-            }
-          }) || null;
+      if (matches) {
+        return true;
+      }
+    }) || null;
 
     return type;
   }
@@ -632,7 +629,7 @@ export default class FileContext {
 
     typesJSON.forEach((typeJSON) => {
       const json = typeJSON,  ///
-            type = Type.fromJSONAndFileContext(json, fileContext);
+            type = typeFromJSONAndFileContext(json, fileContext);
 
       this.types.push(type);
     });

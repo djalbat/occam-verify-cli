@@ -58,10 +58,19 @@ export default class Type {
     return superTypeOf;
   }
 
+  isComparableTo(type) {
+    const equalTo = this.isEqualTo(type),
+          subTypeOf = this.isSubTypeOf(type),
+          superTypeOf = this.isSuperTypeOf(type),
+          comparableTo = equalTo || subTypeOf || superTypeOf;
+
+    return comparableTo;
+  }
+
   isEqualToOrSubTypeOf(type) {
     const equalTo = this.isEqualTo(type),
           subTypeOf = this.isSubTypeOf(type),
-          equalToOrSubTypeOf = (equalTo || subTypeOf);
+          equalToOrSubTypeOf = equalTo || subTypeOf;
 
     return equalToOrSubTypeOf;
   }
@@ -69,18 +78,9 @@ export default class Type {
   isEqualToOrSuperTypeOf(type) {
     const equalTo = this.isEqualTo(type),
           superTypeOf = this.isSuperTypeOf(type),
-          equalToOrSuperTypeOf = (equalTo || superTypeOf);
+          equalToOrSuperTypeOf = equalTo || superTypeOf;
 
     return equalToOrSuperTypeOf;
-  }
-
-  isEqualToSubTypeOfOrSuperTypeOf(type) {
-    const equalTo = this.isEqualTo(type),
-          subTypeOf = this.isSubTypeOf(type),
-          superTypeOf = this.isSuperTypeOf(type),
-          equalToOrSubTypeOfSuperTypeOf = (equalTo || subTypeOf || superTypeOf);
-
-    return equalToOrSubTypeOfSuperTypeOf;
   }
 
   match(type) {
@@ -135,22 +135,6 @@ export default class Type {
     return type;
   }
 
-  static fromJSONAndFileContext(json, fileContext) {
-    let type;
-
-    let { superType } = json;
-
-    const superTypeJSON = superType;  ///
-
-    superType = superTypeFromSuperTypeJSONAndFileContext(superTypeJSON, fileContext);
-
-    const { name } = json;
-
-    type = new Type(name, superType);
-
-    return type;
-  }
-
   static fromTypeNameAndSuperType(typeName, superType) {
     const name = typeName,  ///
           type = new Type(name, superType);
@@ -182,19 +166,23 @@ class ObjectType extends Type {
 
 export const objectType = ObjectType.fromNothing();
 
-function superTypeFromSuperTypeJSONAndFileContext(superTypeJSON, fileContext) {
-  let superType = null;
+export function typeFromJSONAndFileContext(json, fileContext) {
+  let type;
 
-  if (superTypeJSON !== null) {
-    const json = superTypeJSON, ///
-          { name } = json,
-          typeName = name,  ///
-          type = fileContext.findTypeByTypeName(typeName);
+  const { name } = json,
+        typeName = name;  ///
 
-      superType = (type !== null) ?
-                    type :  ///
-                      Type.fromJSONAndFileContext(json, fileContext);  ///
+  type = fileContext.findTypeByTypeName(typeName);
+
+  if (type === null) {
+    let { superType } = json;
+
+    const superJSON = superType;  ///
+
+    superType = typeFromJSONAndFileContext(superJSON, fileContext);
+
+    type = new Type(name, superType);
   }
 
-  return superType;
+  return type;
 }

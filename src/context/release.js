@@ -277,18 +277,15 @@ export default class ReleaseContext {
   findTypeByTypeName(typeName) {
     let types = this.getTypes();
 
-    types = [ ///
-      ...types,
-      objectType
-    ];
+    types.push(objectType);
 
     const type = types.find((type) => {
-            const matches = type.matchTypeName(typeName);
+      const matches = type.matchTypeName(typeName);
 
-            if (matches) {
-              return true;
-            }
-          }) || null;
+      if (matches) {
+        return true;
+      }
+    }) || null;
 
     return type;
   }

@@ -40,14 +40,6 @@ export function unqualifiedStatementTokensFromStatementString(statementString, l
   return unqualifiedStatementTokens;
 }
 
-export function metavariableDeclarationTokensFromMetavariableString(metavariableString, lexer) {
-  const metavariableDeclarationContent = `Metavariable ${metavariableString}
-`,
-        metavariableDeclarationTokens = tokensFromContentAndLexer(metavariableDeclarationContent, lexer);
-
-  return metavariableDeclarationTokens;
-}
-
 export function unqualifiedMetastatementTokensFromMetastatementString(metastatementString, lexer) {
   const unqualifiedMetastatementContent = `${metastatementString}
 `,

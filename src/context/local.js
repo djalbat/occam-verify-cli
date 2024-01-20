@@ -2,8 +2,7 @@
 
 import Variable from "../variable";
 import Collection from "../collection";
-import fileMixins from "../mixins/file";
-import loggingMixins from "../mixins/logging";
+import contextMixins from "../mixins/context";
 
 import { last } from "../utilities/array";
 import { mergeCollections, findCollectionByType, findCollectionByTerm, findCollectionByTerms } from "../utilities/collection";
@@ -24,8 +23,8 @@ class LocalContext {
     let variables = this.context.getVariables();
 
     variables = [ ///
-      ...variables,
-      ...this.variables
+      ...this.variables,
+      ...variables
     ];
 
     return variables;
@@ -35,8 +34,8 @@ class LocalContext {
     let proofSteps = this.context.getProofSteps();
 
     proofSteps = [  ///
-      ...proofSteps,
-      ...this.proofSteps
+      ...this.proofSteps,
+      ...proofSteps
     ];
 
     return proofSteps;
@@ -306,7 +305,6 @@ class LocalContext {
   }
 }
 
-Object.assign(LocalContext.prototype, fileMixins);
-Object.assign(LocalContext.prototype, loggingMixins);
+Object.assign(LocalContext.prototype, contextMixins);
 
 export default LocalContext;

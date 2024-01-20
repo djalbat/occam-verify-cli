@@ -31,9 +31,9 @@ export default class Equality {
 
     const leftTermType = leftTerm.getType(),
           rightTermType = rightTerm.getType(),
-          leftTermTypeEqualToSubTypeOfOrSuperTypeOfRightTermType = leftTermType.isEqualToSubTypeOfOrSuperTypeOf(rightTermType);
+          leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
 
-    if (leftTermTypeEqualToSubTypeOfOrSuperTypeOfRightTermType) {
+    if (leftTermTypeComparableToRightTermType) {
       const node = equalityNode;  ///
 
       equality = new Equality(node, leftTerm, rightTerm);
