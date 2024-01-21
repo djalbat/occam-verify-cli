@@ -17,9 +17,9 @@ class EqualityNodesVerifier extends NodesVerifier {
         case TERM_RULE_NAME: {
           const leftTermNode = nonTerminalNodeA, ///
                 rightTermNode = nonTerminalNodeB, ///
-                collection = areTermNodesEqual(leftTermNode, rightTermNode, collections);
+                termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, collections);
 
-          if (collection !== null) {
+          if (termNodesEqual) {
             const verifiedAhead = verifyAhead();
 
             nonTerminalNodeVerified = verifiedAhead;  ///
