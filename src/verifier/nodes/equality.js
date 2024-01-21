@@ -23,6 +23,8 @@ class EqualityNodesVerifier extends NodesVerifier {
             const verifiedAhead = verifyAhead();
 
             nonTerminalNodeVerified = verifiedAhead;  ///
+          } else {
+            nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, collections, localContext, verifyAhead);
           }
 
           break;
