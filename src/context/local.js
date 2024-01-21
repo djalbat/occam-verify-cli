@@ -239,21 +239,6 @@ class LocalContext {
 
     return localContext;
   }
-
-  static fromLocalContextAndAssignments(localContext, assignments) {
-    const context = localContext,  ///
-          variables = assignments.map((assignment) => {
-            const variable = assignment.getVariable();
-
-            return variable;
-          }),
-          proofSteps = [],
-          collections = [];
-
-    localContext = new LocalContext(context, variables, proofSteps, collections);
-
-    return localContext;
-  }
 }
 
 Object.assign(LocalContext.prototype, contextMixins);

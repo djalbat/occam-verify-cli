@@ -2,8 +2,6 @@
 
 import equalityNodesVerifier from "./verifier/nodes/equality";
 
-import { areTermNodesEqual } from "./utilities/collection";
-
 export default class Equality {
   constructor(node, leftTerm, rightTerm) {
     this.node = node;
@@ -31,33 +29,20 @@ export default class Equality {
   }
 
   isEqual(context) {
-    let equal;
-
     const leftTerm = this.getLeftTerm(),
           rightTerm = this.getRightTerm(),
-          collections = context.getCollections(),
           leftTermNode = leftTerm.getNode(),
           rightTermNode = rightTerm.getNode(),
-          termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, collections);
+          nonTerminalNodeA = leftTermNode,  ///
+          nonTerminalNodeB = rightTermNode, ///
+          collections = context.getCollections(),
+          localContext = this,  ///
+          nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, collections, localContext, () => {
+            const verifiedAhead = true;
 
-    if (termNodesEqual) {
-      equal = true;
-    } else {
-      const leftNonTerminalNode = leftTermNode, ///
-            rightNonTerminalNode = rightTermNode, ///
-            leftNonTerminalNodeChildNodes = leftNonTerminalNode.getChildNodes(),
-            rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
-            childNodesA = leftNonTerminalNodeChildNodes,  ///
-            childNodesB = rightNonTerminalNodeChildNodes, ///
-            localContext = this,  ///
-            childNodesVerify = equalityNodesVerifier.verifyChildNodes(childNodesA, childNodesB, collections, localContext, () => {
-              const verifiedAhead = true;
-
-              return verifiedAhead;
-            });
-
-      equal = childNodesVerify;  ///
-    }
+            return verifiedAhead;
+          }),
+          equal = nonTerminalNodeVerified;  ///
 
     return equal;
   }
