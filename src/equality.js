@@ -26,7 +26,7 @@ export default class Equality {
     return reflexive;
   }
 
-  static fromEqualityNodeLeftTermAndRightTerm(equalityNode, leftTerm, rightTerm) {
+  static fromLeftTermRightTermAndEqualityNode(leftTerm, rightTerm, equalityNode) {
     let equality = null;
 
     const leftTermType = leftTerm.getType(),
