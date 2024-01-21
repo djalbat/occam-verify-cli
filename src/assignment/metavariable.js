@@ -16,8 +16,8 @@ export default class MetavariableAssignment {
           metavariableAssigned = metavariableAdded; ///
 
     metavariableAssigned ?
-      fileContext.debug(`Able to assign the '${metavariableString}' metavariable.`, metavariableNode) :
-        fileContext.trace(`Unable to assign the '${metavariableString}' metavariable.`, metavariableNode);
+      fileContext.trace(`Assigned the '${metavariableString}' metavariable.`, metavariableNode) :
+        fileContext.debug(`Unable to assign the '${metavariableString}' metavariable.`, metavariableNode);
 
     return metavariableAssigned;
   }

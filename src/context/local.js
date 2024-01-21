@@ -67,6 +67,24 @@ class LocalContext {
 
   getMetavariables() { return this.context.getMetavariables(); }
 
+  getTermType(term) {
+    let termType;
+
+    const collections = this.getCollections(),
+          collection = findCollectionByTerm(collections, term);
+
+    if (collection !== null) {
+      const localContext = this,  ///
+            collectionType = collection.getType(localContext);
+
+      termType = collectionType;  ///
+    } else {
+      termType = term.getType();
+    }
+
+    return termType;
+  }
+
   addEquality(equality) {
     let equalityAdded;
 

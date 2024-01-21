@@ -58,7 +58,7 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, con
                   firstType = first(types),
                   term = firstTerm, ///
                   type = firstType, ///
-                  termType = term.getType(),
+                  termType = context.getTermType(term),
                   typeEqualToOrSuperTypeOfTermType = type.isEqualToOrSuperTypeOf(termType);
 
             if (typeEqualToOrSuperTypeOfTermType) {

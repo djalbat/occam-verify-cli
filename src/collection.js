@@ -21,9 +21,9 @@ export default class Collection {
     this.terms.push(term);
   }
 
-  getType(localContext) {
+  getType(context) {
     const type = this.terms.reduce((type, term) => {
-      const termType = termTypeFromTerm(term, localContext);
+      const termType = termTypeFromTerm(term, context);
 
       if (type === null) {
         type = termType;  ///
@@ -41,10 +41,10 @@ export default class Collection {
     return type;
   }
 
-  matchType(type, localContext) {
+  matchType(type, context) {
     const typeA = type; ///
 
-    type = this.getType(localContext);
+    type = this.getType(context);
 
     const typeB = type; ///
 
@@ -132,14 +132,14 @@ export default class Collection {
   }
 }
 
-function termTypeFromTerm(term, localContext) {
+function termTypeFromTerm(term, context) {
   let termType;
 
   const termNode = term.getNode(),
         variableNode = variableNodeQuery(termNode);
 
   if (variableNode !== null) {
-    const variable = localContext.findVariableByVariableNode(variableNode),
+    const variable = context.findVariableByVariableNode(variableNode),
           variableType = variable.getType();
 
     termType = variableType;  ///

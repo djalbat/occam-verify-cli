@@ -18,8 +18,8 @@ export default class VariableAssignment {
           variableAssigned = variableAdded; ///
 
     variableAssigned ?
-      context.debug(`Able to assign the '${variableString}' variable with type '${variableTypeName}'.`, variableNode) :
-        context.trace(`Unable to assign the '${variableString}' variable with type '${variableTypeName}'.`, variableNode);
+      context.trace(`Assigned the '${variableString}' variable with type '${variableTypeName}'.`, variableNode) :
+        context.debug(`Unable to assign the '${variableString}' variable with type '${variableTypeName}'.`, variableNode);
 
     return variableAssigned;
   }

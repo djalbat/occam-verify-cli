@@ -16,8 +16,8 @@ export default class EqualityAssignment {
           equalityAssigned = equalityAdded; ///
 
     equalityAssigned ?
-      context.debug(`Able to assign the '${equalityString}' equality.`, equalityNode) :
-        context.trace(`Unable to assign the '${equalityString}' equality.`, equalityNode);
+      context.trace(`Assigned the '${equalityString}' equality.`, equalityNode) :
+        context.debug(`Unable to assign the '${equalityString}' equality.`, equalityNode);
 
     return equalityAssigned;
   }

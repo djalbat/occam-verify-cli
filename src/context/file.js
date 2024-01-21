@@ -58,6 +58,12 @@ export default class FileContext {
 
   getParser() { return this.releaseContext.getParser(); }
 
+  getTermType(term) {
+    const termType = term.getType();
+
+    return termType;
+  }
+
   getProofSteps() {
     const proofSteps = [];  ///
 

@@ -15,6 +15,12 @@ class LocalMetaContext {
     return this.context;
   }
 
+  getTermType(term) {
+    const termType = term.getType();
+
+    return termType;
+  }
+
   getMetavariables() {
     let metavariables = this.context.getMetavariables();
 
