@@ -1,5 +1,9 @@
 "use strict";
 
+import { nodeQuery } from "./utilities/query";
+
+const variableNodeQuery = nodeQuery("/term/variable!");
+
 export default class Collection {
   constructor(terms) {
     this.terms = terms;
@@ -17,9 +21,9 @@ export default class Collection {
     this.terms.push(term);
   }
 
-  getType() {
+  getType(localContext) {
     const type = this.terms.reduce((type, term) => {
-      const termType = term.getType();
+      const termType = termTypeFromTerm(term, localContext);
 
       if (type === null) {
         type = termType;  ///
@@ -37,14 +41,15 @@ export default class Collection {
     return type;
   }
 
-  matchType(type) {
+  matchType(type, localContext) {
     const typeA = type; ///
 
-    type = this.getType();
+    type = this.getType(localContext);
 
     const typeB = type; ///
 
-    const typeMatches = (typeA === typeB);  ///
+    const typeAEqualToTypeB = typeA.isEqualTo(typeB),
+          typeMatches = typeAEqualToTypeB;  ///
 
     return typeMatches;
   }
@@ -63,6 +68,21 @@ export default class Collection {
     return termMatches;
   }
 
+  matchTermNode(termNode) {
+    const termNodeA = termNode, ///
+          termNodeMatches = this.terms.some((term) => {
+            const termNode = term.getNode(),
+                  termNodeB = termNode, ///
+                  termNodeAMatchesTermB = termNodeA.match(termNodeB);
+
+            if (termNodeAMatchesTermB) {
+              return true;
+            }
+          });
+
+    return termNodeMatches;
+  }
+
   matchTerms(terms) {
     const termsMatch = terms.every((term) => {
       const termMatches = this.matchTerm(term);
@@ -73,6 +93,18 @@ export default class Collection {
     })
 
     return termsMatch;
+  }
+
+  matchTermNodes(termNodes) {
+    const termNodesMatch = termNodes.every((termNode) => {
+      const termNodeMatches = this.matchTermNode(termNode);
+
+      if (termNodeMatches) {
+        return true;
+      }
+    })
+
+    return termNodesMatch;
   }
 
   static fromEquality(equality) {
@@ -98,4 +130,22 @@ export default class Collection {
 
     return collection;
   }
+}
+
+function termTypeFromTerm(term, localContext) {
+  let termType;
+
+  const termNode = term.getNode(),
+        variableNode = variableNodeQuery(termNode);
+
+  if (variableNode !== null) {
+    const variable = localContext.findVariableByVariableNode(variableNode),
+          variableType = variable.getType();
+
+    termType = variableType;  ///
+  } else {
+    termType = term.getType();
+  }
+
+  return termType;
 }

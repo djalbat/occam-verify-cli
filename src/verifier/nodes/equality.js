@@ -1,0 +1,45 @@
+"use strict";
+
+import NodesVerifier from "../../verifier/nodes";
+
+import { TERM_RULE_NAME } from "../../ruleNames";
+import { areTermNodesEqual } from "../../utilities/collection";
+
+class EqualityNodesVerifier extends NodesVerifier {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, collections, localContext, verifyAhead) {
+    let nonTerminalNodeVerified = false;
+
+    const ruleNameA = nonTerminalNodeA.getRuleName(), ///
+          ruleNameB = nonTerminalNodeB.getRuleName(); ///
+
+    if (ruleNameA === ruleNameB) {
+      switch (ruleNameA) {
+        case TERM_RULE_NAME: {
+          const leftTermNode = nonTerminalNodeA, ///
+                rightTermNode = nonTerminalNodeB, ///
+                collection = areTermNodesEqual(leftTermNode, rightTermNode, collections);
+
+          if (collection !== null) {
+            const verifiedAhead = verifyAhead();
+
+            nonTerminalNodeVerified = verifiedAhead;  ///
+          }
+
+          break;
+        }
+
+        default: {
+          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, collections, localContext, verifyAhead);
+
+          break;
+        }
+      }
+    }
+
+    return nonTerminalNodeVerified;
+  }
+}
+
+const equalityNodesVerifier = new EqualityNodesVerifier();
+
+export default equalityNodesVerifier;

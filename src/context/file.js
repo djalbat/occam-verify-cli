@@ -64,7 +64,7 @@ export default class FileContext {
     return proofSteps;
   }
 
-  getCollections() {
+  getCollections(localContext) {
     const collections = []; ///
 
     return collections;

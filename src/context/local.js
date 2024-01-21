@@ -3,9 +3,10 @@
 import Variable from "../variable";
 import Collection from "../collection";
 import contextMixins from "../mixins/context";
+import equalityNodesVerifier from "../verifier/nodes/equality";
 
 import { last } from "../utilities/array";
-import { mergeCollections, findCollectionByType, findCollectionByTerm, findCollectionByTerms } from "../utilities/collection";
+import { areTermNodesEqual, mergeCollections, findCollectionByTerm } from "../utilities/collection";
 
 class LocalContext {
   constructor(context, variables, proofSteps, collections) {
@@ -44,10 +45,11 @@ class LocalContext {
   getCollections() {
     let collections = this.context.getCollections();
 
-    const collectionsA = collections, ///
-          collectionsB = this.collections;
+    const collectionsA = this.collections, ///
+          collectionsB = collections,
+          localContext = this;  ///
 
-    collections = mergeCollections(collectionsA, collectionsB); ///
+    collections = mergeCollections(collectionsA, collectionsB, localContext); ///
 
     return collections;
   }
@@ -162,27 +164,6 @@ class LocalContext {
     return statementMatches;
   }
 
-  findCollectionByType(type) {
-    const collections = this.getCollections(),
-          collection = findCollectionByType(collections, type);
-
-    return collection;
-  }
-
-  findCollectionByTerm(term) {
-    const collections = this.getCollections(),
-          collection = findCollectionByTerm(collections, term);
-
-    return collection;
-  }
-
-  findCollectionByTerms(terms) {
-    const collections = this.getCollections(),
-          collection = findCollectionByTerms(collections, terms);
-
-    return collection;
-  }
-
   findVariableByVariableNode(variableNode) {
     const node = variableNode,  ///
           variables = this.getVariables(),
@@ -205,30 +186,40 @@ class LocalContext {
   }
 
   isEqualityEqual(equality) {
-    let equalityEqual;
-
-    const equalityReflexive = equality.isReflexive();
-
-    if (equalityReflexive) {
-      equalityEqual = true;
-    } else {
-      const leftTerm = equality.getLeftTerm(),
-            rightTerm = equality.getRightTerm(),
-            terms = [
-              leftTerm,
-              rightTerm
-            ],
-            termsEqual = this.areTermsEqual(terms);
-
-      equalityEqual = termsEqual; ///
-    }
+    const leftTerm = equality.getLeftTerm(),
+          rightTerm = equality.getRightTerm(),
+          termsEqual = this.areTermsEqual(leftTerm, rightTerm),
+          equalityEqual = termsEqual; ///
 
     return equalityEqual;
   }
 
-  areTermsEqual(terms) {
-    const collection = this.findCollectionByTerms(terms),
-          termsEqual = (collection !== null);
+  areTermsEqual(leftTerm, rightTerm) {
+    let termsEqual;
+
+    const collections = this.getCollections(),
+          leftTermNode = leftTerm.getNode(),
+          rightTermNode = rightTerm.getNode(),
+          termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, collections);
+
+    if (termNodesEqual) {
+      termsEqual = true;
+    } else {
+      const leftNonTerminalNode = leftTermNode, ///
+            rightNonTerminalNode = rightTermNode, ///
+            leftNonTerminalNodeChildNodes = leftNonTerminalNode.getChildNodes(),
+            rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
+            childNodesA = leftNonTerminalNodeChildNodes,  ///
+            childNodesB = rightNonTerminalNodeChildNodes, ///
+            localContext = this,  ///
+            childNodesVerify = equalityNodesVerifier.verifyChildNodes(childNodesA, childNodesB, collections, localContext, () => {
+              const verifiedAhead = true;
+
+              return verifiedAhead;
+            });
+
+      termsEqual = childNodesVerify;  ///
+    }
 
     return termsEqual;
   }

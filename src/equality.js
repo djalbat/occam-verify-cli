@@ -21,7 +21,7 @@ export default class Equality {
 
   isReflexive() {
     const leftTermMatchesRightTerm = this.leftTerm.match(this.rightTerm),
-          reflexive = leftTermMatchesRightTerm;
+          reflexive = leftTermMatchesRightTerm; ///
 
     return reflexive;
   }
