@@ -62,7 +62,7 @@ function verifyDerivedEquality(equalityNode, assignments, derived, context, veri
                   equality = Equality.fromLeftTermRightTermAndEqualityNode(leftTerm, rightTerm, equalityNode);
 
             if (equality !== null) {
-              const equalityEqual = context.isEqualityEqual(equality);
+              const equalityEqual = equality.isEqual(context);
 
               if (equalityEqual) {
                 verifiedAhead = verifyAhead();

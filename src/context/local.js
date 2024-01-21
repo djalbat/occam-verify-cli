@@ -3,10 +3,9 @@
 import Variable from "../variable";
 import Collection from "../collection";
 import contextMixins from "../mixins/context";
-import equalityNodesVerifier from "../verifier/nodes/equality";
 
 import { last } from "../utilities/array";
-import { areTermNodesEqual, mergeCollections, findCollectionByTerm } from "../utilities/collection";
+import { mergeCollections, findCollectionByTerm } from "../utilities/collection";
 
 class LocalContext {
   constructor(context, variables, proofSteps, collections) {
@@ -183,45 +182,6 @@ class LocalContext {
           variablePresent = (variable !== null);
 
     return variablePresent;
-  }
-
-  isEqualityEqual(equality) {
-    const leftTerm = equality.getLeftTerm(),
-          rightTerm = equality.getRightTerm(),
-          termsEqual = this.areTermsEqual(leftTerm, rightTerm),
-          equalityEqual = termsEqual; ///
-
-    return equalityEqual;
-  }
-
-  areTermsEqual(leftTerm, rightTerm) {
-    let termsEqual;
-
-    const collections = this.getCollections(),
-          leftTermNode = leftTerm.getNode(),
-          rightTermNode = rightTerm.getNode(),
-          termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, collections);
-
-    if (termNodesEqual) {
-      termsEqual = true;
-    } else {
-      const leftNonTerminalNode = leftTermNode, ///
-            rightNonTerminalNode = rightTermNode, ///
-            leftNonTerminalNodeChildNodes = leftNonTerminalNode.getChildNodes(),
-            rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
-            childNodesA = leftNonTerminalNodeChildNodes,  ///
-            childNodesB = rightNonTerminalNodeChildNodes, ///
-            localContext = this,  ///
-            childNodesVerify = equalityNodesVerifier.verifyChildNodes(childNodesA, childNodesB, collections, localContext, () => {
-              const verifiedAhead = true;
-
-              return verifiedAhead;
-            });
-
-      termsEqual = childNodesVerify;  ///
-    }
-
-    return termsEqual;
   }
 
   toJSON(tokens) {

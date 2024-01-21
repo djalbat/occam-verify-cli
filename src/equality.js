@@ -1,5 +1,9 @@
 "use strict";
 
+import equalityNodesVerifier from "./verifier/nodes/equality";
+
+import { areTermNodesEqual } from "./utilities/collection";
+
 export default class Equality {
   constructor(node, leftTerm, rightTerm) {
     this.node = node;
@@ -24,6 +28,38 @@ export default class Equality {
           reflexive = leftTermMatchesRightTerm; ///
 
     return reflexive;
+  }
+
+  isEqual(context) {
+    let equal;
+
+    const leftTerm = this.getLeftTerm(),
+          rightTerm = this.getRightTerm(),
+          collections = context.getCollections(),
+          leftTermNode = leftTerm.getNode(),
+          rightTermNode = rightTerm.getNode(),
+          termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, collections);
+
+    if (termNodesEqual) {
+      equal = true;
+    } else {
+      const leftNonTerminalNode = leftTermNode, ///
+            rightNonTerminalNode = rightTermNode, ///
+            leftNonTerminalNodeChildNodes = leftNonTerminalNode.getChildNodes(),
+            rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
+            childNodesA = leftNonTerminalNodeChildNodes,  ///
+            childNodesB = rightNonTerminalNodeChildNodes, ///
+            localContext = this,  ///
+            childNodesVerify = equalityNodesVerifier.verifyChildNodes(childNodesA, childNodesB, collections, localContext, () => {
+              const verifiedAhead = true;
+
+              return verifiedAhead;
+            });
+
+      equal = childNodesVerify;  ///
+    }
+
+    return equal;
   }
 
   static fromLeftTermRightTermAndEqualityNode(leftTerm, rightTerm, equalityNode) {

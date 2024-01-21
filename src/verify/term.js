@@ -40,14 +40,14 @@ Object.assign(termNodesVerifier, {
 export default verifyTerm;
 
 function verifyTermAsVariable(termNode, terms, context, verifyAhead) {
-  let termVerifiedAsStandaloneVariable;
+  let termVerifiedAsVariable;
 
   const termString = context.nodeAsString(termNode);
 
   context.trace(`Verifying the '${termString}' term as a variable...`, termNode);
 
   const variables = [],
-        termVerifiedAsVariable = verifyTermAsGivenVariable(termNode, variables, context, () => {
+        termVerifiedAsGivenVariable = verifyTermAsGivenVariable(termNode, variables, context, () => {
           let verifiedAhead;
 
           const firstVariable = first(variables),
@@ -66,13 +66,13 @@ function verifyTermAsVariable(termNode, terms, context, verifyAhead) {
           return verifiedAhead;
         });
 
-  termVerifiedAsStandaloneVariable = termVerifiedAsVariable;  ///
+  termVerifiedAsVariable = termVerifiedAsGivenVariable;  ///
 
-  if (termVerifiedAsStandaloneVariable) {
+  if (termVerifiedAsVariable) {
     context.debug(`...verified the '${termString}' term as a variable.`, termNode);
   }
 
-  return termVerifiedAsStandaloneVariable;
+  return termVerifiedAsVariable;
 }
 
 function verifyTermAgainstConstructors(termNode, terms, context, verifyAhead) {
