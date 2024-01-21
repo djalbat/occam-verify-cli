@@ -9,7 +9,7 @@ import { STATEMENT_RULE_NAME, METASTATEMENT_RULE_NAME, META_ARGUMENT_RULE_NAME }
 const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!'),
       metaArgumentChildNodeNodeQuery = nodeQuery('/metaArgument/*!');
 
-export default class StatementForMetavariableNodesVerifier extends NodesVerifier {
+class StatementForMetavariableNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContext) {
     let nonTerminalNodeVerified = false;
 
@@ -84,16 +84,12 @@ export default class StatementForMetavariableNodesVerifier extends NodesVerifier
 
       metavariableNodeVerified = statementNodeMatches;  ///
     } else {
-      const { createSubstitutions } = this.constructor;
+      const metavariableNode = metavariableNodeA, ///
+            statementNode = statementNodeB, ///
+            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode),
+            substitution = statementForMetavariableSubstitution;  ///
 
-      if (createSubstitutions) {
-        const metavariableNode = metavariableNodeA, ///
-              statementNode = statementNodeB, ///
-              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode),
-              substitution = statementForMetavariableSubstitution;  ///
-
-        substitutions.push(substitution);
-      }
+      substitutions.push(substitution);
 
       metavariableNodeVerified = true;
     }
@@ -101,3 +97,7 @@ export default class StatementForMetavariableNodesVerifier extends NodesVerifier
     return metavariableNodeVerified;
   }
 }
+
+const statementForMetavariableNodesVerifier = new StatementForMetavariableNodesVerifier();
+
+export default statementForMetavariableNodesVerifier;
