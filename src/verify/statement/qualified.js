@@ -1,10 +1,14 @@
 "use strict";
 
-import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
-import { verifyStatementAsEquality, verifyStatementAsTypeAssertion } from "../../verify/statement";
+import verifyEquality from "../equality";
+import verifyTypeAssertion from "../typeAssertion";
 
-const referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!"),
-      statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
+import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
+
+const equalityNodeQuery = nodeQuery("/qualifiedStatement/statement/equality!"),
+      referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!"),
+      statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
+      typeAssertionNodeQuery = nodeQuery("/qualifiedStatement/statement/typeAssertion!");
 
 export default function verifyQualifiedStatement(qualifiedStatementNode, assignments, derived, localContext) {
   let qualifiedStatementVerified = false;
@@ -19,17 +23,17 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
     const referenceNode = referenceNodeQuery(qualifiedStatementNode),
           referenceName = referenceNameFromReferenceNode(referenceNode),
           verifyQualifiedStatementFunctions = [
-            verifyUnqualifiedStatementAAgainstRule,
-            verifyUnqualifiedStatementAAgainstAxiom,
-            verifyUnqualifiedStatementAAgainstLemma,
-            verifyUnqualifiedStatementAAgainstTheorem,
-            verifyUnqualifiedStatementAAgainstConjecture
+            verifyQualifiedStatementAAgainstRule,
+            verifyQualifiedStatementAAgainstAxiom,
+            verifyQualifiedStatementAAgainstLemma,
+            verifyQualifiedStatementAAgainstTheorem,
+            verifyQualifiedStatementAAgainstConjecture
           ];
 
     qualifiedStatementVerified = verifyQualifiedStatementFunctions.some((verifyQualifiedStatementFunction) => {  ///
-      const unqualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, referenceName, localContext);
+      const qualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, referenceName, localContext);
 
-      if (unqualifiedStatementVerified) {
+      if (qualifiedStatementVerified) {
         return true;
       }
     });
@@ -38,19 +42,19 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
       derived = false;  ///
 
       const context = localContext, ///
-            verifyStatementFunctions = [
-              verifyStatementAsEquality,
-              verifyStatementAsTypeAssertion
+            verifyQualifiedStatementFunctions = [
+              verifyQualifiedStatementAsEquality,
+              verifyQualifiedStatementAsTypeAssertion
             ];
 
-      qualifiedStatementVerified = verifyStatementFunctions.some((verifyStatementFunction) => { ///
-        const statementVerified = verifyStatementFunction(statementNode, assignments, derived, context, () => {
+      qualifiedStatementVerified = verifyQualifiedStatementFunctions.every((verifyQualifiedStatementFunction) => { ///
+        const qualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, assignments, derived, context, () => {
           const verifiedAhead = true;
 
           return verifiedAhead;
         });
 
-        if (statementVerified) {
+        if (qualifiedStatementVerified) {
           return true;
         }
       });
@@ -64,8 +68,8 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
   return qualifiedStatementVerified;
 }
 
-function verifyUnqualifiedStatementAAgainstRule(qualifiedStatementNode, referenceName, localContext) {
-  let unqualifiedStatementVerifiedAgainstRule = false;
+function verifyQualifiedStatementAAgainstRule(qualifiedStatementNode, referenceName, localContext) {
+  let qualifiedStatementVerifiedAgainstRule = false;
 
   const rule = localContext.findRuleByReferenceName(referenceName);
 
@@ -74,22 +78,22 @@ function verifyUnqualifiedStatementAAgainstRule(qualifiedStatementNode, referenc
           statementLocalContext = localContext, ///
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the ${referenceName} rule...`, statementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${referenceName}' rule...`, statementNode);
 
     const ruleMatchesStatement = rule.matchStatement(statementNode, statementLocalContext);
 
-    unqualifiedStatementVerifiedAgainstRule = ruleMatchesStatement;  ///
+    qualifiedStatementVerifiedAgainstRule = ruleMatchesStatement;  ///
 
-    if (unqualifiedStatementVerifiedAgainstRule) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the ${referenceName} rule.`, statementNode);
+    if (qualifiedStatementVerifiedAgainstRule) {
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${referenceName}' rule.`, statementNode);
     }
   }
 
-  return unqualifiedStatementVerifiedAgainstRule;
+  return qualifiedStatementVerifiedAgainstRule;
 }
 
-function verifyUnqualifiedStatementAAgainstAxiom(qualifiedStatementNode, referenceName, localContext) {
-  let unqualifiedStatementVerifiedAgainstAxiom = false;
+function verifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, referenceName, localContext) {
+  let qualifiedStatementVerifiedAgainstAxiom = false;
 
   const axiom = localContext.findAxiomByReferenceName(referenceName);
 
@@ -98,22 +102,22 @@ function verifyUnqualifiedStatementAAgainstAxiom(qualifiedStatementNode, referen
           statementLocalContext = localContext, ///
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the ${referenceName} axiom...`, statementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${referenceName}' axiom...`, statementNode);
 
     const axiomMatchesStatement = axiom.matchStatement(statementNode, statementLocalContext);
 
-    unqualifiedStatementVerifiedAgainstAxiom = axiomMatchesStatement; ///
+    qualifiedStatementVerifiedAgainstAxiom = axiomMatchesStatement; ///
 
-    if (unqualifiedStatementVerifiedAgainstAxiom) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the ${referenceName} axiom.`, statementNode);
+    if (qualifiedStatementVerifiedAgainstAxiom) {
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${referenceName}' axiom.`, statementNode);
     }
   }
 
-  return unqualifiedStatementVerifiedAgainstAxiom;
+  return qualifiedStatementVerifiedAgainstAxiom;
 }
 
-function verifyUnqualifiedStatementAAgainstLemma(qualifiedStatementNode, referenceName, localContext) {
-  let unqualifiedStatementVerifiedAgainstLemma = false;
+function verifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, referenceName, localContext) {
+  let qualifiedStatementVerifiedAgainstLemma = false;
 
   const lemma = localContext.findLemmaByReferenceName(referenceName);
 
@@ -122,22 +126,22 @@ function verifyUnqualifiedStatementAAgainstLemma(qualifiedStatementNode, referen
           statementLocalContext = localContext, ///
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the ${referenceName} lemma...`, statementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${referenceName}' lemma...`, statementNode);
 
     const lemmaMatchesStatement = lemma.matchStatement(statementNode, statementLocalContext);
 
-    unqualifiedStatementVerifiedAgainstLemma = lemmaMatchesStatement; ///
+    qualifiedStatementVerifiedAgainstLemma = lemmaMatchesStatement; ///
 
-    if (unqualifiedStatementVerifiedAgainstLemma) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the ${referenceName} lemma.`, statementNode);
+    if (qualifiedStatementVerifiedAgainstLemma) {
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${referenceName}' lemma.`, statementNode);
     }
   }
 
-  return unqualifiedStatementVerifiedAgainstLemma;
+  return qualifiedStatementVerifiedAgainstLemma;
 }
 
-function verifyUnqualifiedStatementAAgainstTheorem(qualifiedStatementNode, referenceName, localContext) {
-  let unqualifiedStatementVerifiedAgainstTheorem = false;
+function verifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, referenceName, localContext) {
+  let qualifiedStatementVerifiedAgainstTheorem = false;
 
   const theorem = localContext.findTheoremByReferenceName(referenceName);
 
@@ -146,22 +150,22 @@ function verifyUnqualifiedStatementAAgainstTheorem(qualifiedStatementNode, refer
           statementLocalContext = localContext, ///
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the ${referenceName} theorem...`, statementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${referenceName}' theorem...`, statementNode);
 
     const theoremMatchesStatement = theorem.matchStatement(statementNode, statementLocalContext);
 
-    unqualifiedStatementVerifiedAgainstTheorem = theoremMatchesStatement; ///
+    qualifiedStatementVerifiedAgainstTheorem = theoremMatchesStatement; ///
 
-    if (unqualifiedStatementVerifiedAgainstTheorem) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the ${referenceName} theorem.`, statementNode);
+    if (qualifiedStatementVerifiedAgainstTheorem) {
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${referenceName}' theorem.`, statementNode);
     }
   }
 
-  return unqualifiedStatementVerifiedAgainstTheorem;
+  return qualifiedStatementVerifiedAgainstTheorem;
 }
 
-function verifyUnqualifiedStatementAAgainstConjecture(qualifiedStatementNode, referenceName, localContext) {
-  let unqualifiedStatementVerifiedAgainstConjecture = false;
+function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, referenceName, localContext) {
+  let qualifiedStatementVerifiedAgainstConjecture = false;
 
   const conjecture = localContext.findConjectureByReferenceName(referenceName);
 
@@ -170,16 +174,60 @@ function verifyUnqualifiedStatementAAgainstConjecture(qualifiedStatementNode, re
           statementLocalContext = localContext, ///
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the ${referenceName} conjecture...`, statementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${referenceName}' conjecture...`, statementNode);
 
     const conjectureMatchesStatement = conjecture.matchStatement(statementNode, statementLocalContext);
 
-    unqualifiedStatementVerifiedAgainstConjecture = conjectureMatchesStatement; ///
+    qualifiedStatementVerifiedAgainstConjecture = conjectureMatchesStatement; ///
 
-    if (unqualifiedStatementVerifiedAgainstConjecture) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the ${referenceName} conjecture.`, statementNode);
+    if (qualifiedStatementVerifiedAgainstConjecture) {
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${referenceName}' conjecture.`, statementNode);
     }
   }
 
-  return unqualifiedStatementVerifiedAgainstConjecture;
+  return qualifiedStatementVerifiedAgainstConjecture;
+}
+
+function verifyQualifiedStatementAsEquality(qualifiedStatementNode, assignments, derived, context, verifyAhead) {
+  let statementVerifiedAsEquality = true; ///
+
+  const equalityNode = equalityNodeQuery(qualifiedStatementNode);
+
+  if (equalityNode !== null) {
+    const qualifiedStatementString = context.nodeAsString(qualifiedStatementNode);
+
+    context.trace(`Verifying the '${qualifiedStatementString}' qualified statement as an equality...`, qualifiedStatementNode);
+
+    const equalityVerified = verifyEquality(equalityNode, assignments, derived, context, verifyAhead);
+
+    statementVerifiedAsEquality = equalityVerified; ///
+
+    if (statementVerifiedAsEquality) {
+      context.debug(`...verified the '${qualifiedStatementString}' qualified statement as an equality.`, qualifiedStatementNode);
+    }
+  }
+
+  return statementVerifiedAsEquality;
+}
+
+function verifyQualifiedStatementAsTypeAssertion(qualifiedStatementNode, assignments, derived, context, verifyAhead) {
+  let statementVerifiedAsTypeAssertion = true;  ///
+
+  const typeAssertionNode = typeAssertionNodeQuery(qualifiedStatementNode);
+
+  if (typeAssertionNode !== null) {
+    const qualifiedStatementString = context.nodeAsString(qualifiedStatementNode);
+
+    context.trace(`Verifying the '${qualifiedStatementString}' qualified statement as a type assertion...`, qualifiedStatementNode);
+
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead);
+
+    statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
+
+    if (statementVerifiedAsTypeAssertion) {
+      context.debug(`...verified the '${qualifiedStatementString}' qualified statement as a type assertion.`, qualifiedStatementNode);
+    }
+  }
+
+  return statementVerifiedAsTypeAssertion;
 }
