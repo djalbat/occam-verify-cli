@@ -107,23 +107,24 @@ class LocalContext {
 
         equalityAdded = true;
       } else if ((leftCollection !== null) && (rightCollection === null)) {
-        const term = rightTerm, ///
-              collection = leftCollection;  ///
-
-        collection.addTerm(term);
+        leftCollection.addTerm(rightTerm);
 
         equalityAdded = true;
       } else if ((leftCollection === null) && (rightCollection !== null)) {
-        const term = leftTerm, ///
-              collection = rightCollection;  ///
-
-        collection.addTerm(term);
+        rightCollection.addTerm(leftTerm);
 
         equalityAdded = true;
       } else if ((leftCollection !== null) && (rightCollection !== null)) {
+        if (leftCollection === rightCollection) {
+          const collection = leftCollection;  ///
 
-        debugger
+          collection.addTerm(leftTerm);
+          collection.addTerm(rightTerm);
 
+          equalityAdded = true;
+        } else {
+          debugger
+        }
       }
     }
 

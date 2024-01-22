@@ -9,30 +9,37 @@ import { nodeQuery } from "../utilities/query";
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement!");
 
-export default function verifySupposition(suppositionNode, suppositions, assignments, localContext) {
-  let suppositionVerified;
+export default function verifySupposition(suppositionNode, suppositions, localContext) {
+  let suppositionVerified = false;
 
   const suppositionString = localContext.nodeAsString(suppositionNode);
 
   localContext.trace(`Verifying the '${suppositionString}' supposition...`, suppositionNode);
 
   const derived = false,
+        assignments = [],
         unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
         unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
   if (unqualifiedStatementVerified) {
+    suppositionVerified = assignments.every((assignment) => {  ///
+      const assigned = assignment.assign(localContext);
+
+      if (assigned) {
+        return true;
+      }
+    });
+  }
+
+  if (suppositionVerified) {
     const statementNode = statementNodeQuery(unqualifiedStatementNode),
-          proofStep = ProofStep.fromStatementNode(statementNode),
-          supposition = Supposition.fromStatementNode(statementNode);
+          supposition = Supposition.fromStatementNode(statementNode),
+          proofStep = ProofStep.fromStatementNode(statementNode);
 
     suppositions.push(supposition);
 
     localContext.addProofStep(proofStep);
 
-    suppositionVerified = true;
-  }
-
-  if (suppositionVerified) {
     localContext.debug(`...verified the '${suppositionString}' supposition.`, suppositionNode);
   }
 

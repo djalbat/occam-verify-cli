@@ -68,14 +68,17 @@ function verifySubproof(subproofNode, localContext) {
 }
 
 function verifyChild(childNode, localContext) {
-  let childVerified;
+  let childVerified = false;
 
   const childNodeRuleName = childNode.getRuleName();
 
   switch (childNodeRuleName) {
     case SUBPROOF_RULE_NAME: {
-      const subproofNode = childNode,  ///
-            subproofVerified = verifySubproof(subproofNode, localContext);
+      let subproofVerified;
+
+      const subproofNode = childNode;  ///
+
+      subproofVerified = verifySubproof(subproofNode, localContext);
 
       if (subproofVerified) {
         const proofStep = ProofStep.fromSubproofNode(subproofNode);
@@ -89,10 +92,23 @@ function verifyChild(childNode, localContext) {
     }
 
     case QUALIFIED_STATEMENT_RULE_NAME: {
+      let qualifiedStatementVerified;
+
       const derived = true,
             assignments = [],
-            qualifiedStatementNode = childNode,  ///
-            qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assignments, derived, localContext);
+            qualifiedStatementNode = childNode;  ///
+
+      qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assignments, derived, localContext);
+
+      if (qualifiedStatementVerified) {
+        qualifiedStatementVerified = assignments.every((assignment) => {  ///
+          const assigned = assignment.assign(localContext);
+
+          if (assigned) {
+            return true;
+          }
+        });
+      }
 
       if (qualifiedStatementVerified) {
         const statementNode = statementNodeQuery(qualifiedStatementNode),
@@ -100,17 +116,30 @@ function verifyChild(childNode, localContext) {
 
         localContext.addProofStep(proofStep);
 
-        childVerified = qualifiedStatementVerified; ///
+        childVerified = true; ///
       }
 
       break;
     }
 
     case UNQUALIFIED_STATEMENT_RULE_NAME: {
+      let unqualifiedStatementVerified;
+
       const derived = true,
             assignments = [],
-            unqualifiedStatementNode = childNode,  ///
-            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+            unqualifiedStatementNode = childNode;  ///
+
+      unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+
+      if (unqualifiedStatementVerified) {
+        unqualifiedStatementVerified = assignments.every((assignment) => {  ///
+          const assigned = assignment.assign(localContext);
+
+          if (assigned) {
+            return true;
+          }
+        });
+      }
 
       if (unqualifiedStatementVerified) {
         const statementNode = statementNodeQuery(unqualifiedStatementNode),

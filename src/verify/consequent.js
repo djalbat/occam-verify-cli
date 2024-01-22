@@ -21,15 +21,15 @@ export default function verifyConsequent(consequentNode, consequents, localConte
         unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
   if (unqualifiedStatementVerified) {
+    consequentVerified = true;
+  }
+
+  if (consequentVerified) {
     const statementNode = statementNodeQuery(unqualifiedStatementNode),
           consequent = Consequent.fromStatementNode(statementNode);
 
     consequents.push(consequent);
 
-    consequentVerified = true;
-  }
-
-  if (consequentVerified) {
     localContext.debug(`...verified the '${consequentString}' consequent.`, consequentNode);
   }
 

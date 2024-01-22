@@ -44,7 +44,7 @@ Object.assign(statementNodesVerifier, {
 
 export default verifyStatement;
 
-function verifyStatementAsEquality(statementNode, assignments, derived, context, verifyAhead) {
+export function verifyStatementAsEquality(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAsEquality = false;
 
   const equalityNode = equalityNodeQuery(statementNode);
@@ -66,7 +66,7 @@ function verifyStatementAsEquality(statementNode, assignments, derived, context,
   return statementVerifiedAsEquality;
 }
 
-function verifyStatementAsTypeAssertion(statementNode, assignments, derived, context, verifyAhead) {
+export function verifyStatementAsTypeAssertion(statementNode, assignments, derived, context, verifyAhead) {
   let statementVerifiedAsTypeAssertion = false;
 
   const typeAssertionNode = typeAssertionNodeQuery(statementNode);
