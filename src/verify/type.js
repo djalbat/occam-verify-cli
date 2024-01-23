@@ -46,3 +46,29 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
 
   return typeVerified;
 }
+
+export function verifyStandaloneType(typeNode, fileContext, verifyAhead) {
+  let standaloneTypeVerified = false;
+
+  const typeString = fileContext.nodeAsString(typeNode);
+
+  fileContext.trace(`Verifying the '${typeString}' standalone type...`, typeNode);
+
+  const typeName = typeNameFromTypeNode(typeNode),
+        typePresent = fileContext.isTypePresentByTypeName(typeName);
+
+  if (!typePresent) {
+    fileContext.debug(`The type '${typeName}' is not present.`, typeNode);
+  } else {
+    const verifiedAhead = verifyAhead();
+
+    standaloneTypeVerified = verifiedAhead;  ///
+
+  }
+
+  if (standaloneTypeVerified) {
+    fileContext.debug(`...verified the '${typeString}' standalone type.`, typeNode);
+  }
+
+  return standaloneTypeVerified;
+}

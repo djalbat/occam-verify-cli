@@ -38,6 +38,27 @@ function verifyStatement(statementNode, assignments, derived, context, verifyAhe
   return statementVerified;
 }
 
+export function verifyStandaloneStatement(statementNode, fileContext, verifyAhead) {
+  let standaloneStatementVerified;
+
+  const statementString = fileContext.nodeAsString(statementNode);
+
+  fileContext.trace(`Verifying the '${statementString}' standalone statement...`, statementNode);
+
+  const context = fileContext,  ///
+        derived = false,
+        assignments = [],
+        statementVerified = verifyStatement(statementNode, assignments, derived, context, verifyAhead);
+
+  standaloneStatementVerified = statementVerified;  ///
+
+  if (standaloneStatementVerified) {
+    fileContext.debug(`...verified the '${statementString}' standalone statement.`, statementNode);
+  }
+
+  return standaloneStatementVerified;
+}
+
 Object.assign(statementNodesVerifier, {
   verifyStatement
 });

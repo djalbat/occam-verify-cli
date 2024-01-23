@@ -1,9 +1,10 @@
 "use strict";
 
 import NodeVerifier from "../../verifier/node";
-import verifyStatement from "../../verify/statement";
 
-import { verifyType, verifyStandaloneTerm } from "./../../verifier/node/termAsConstructor";
+import { verifyStandaloneType } from "./../../verify/type";
+import { verifyStandaloneTerm } from "./../../verify/term";
+import { verifyStandaloneStatement } from "../../verify/statement";
 import { TYPE_RULE_NAME, TERM_RULE_NAME, STATEMENT_RULE_NAME } from "../../ruleNames";
 
 class StatementAsCombinatorNodeVerifier extends NodeVerifier {
@@ -14,11 +15,9 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
 
     switch (ruleName) {
       case TYPE_RULE_NAME: {
-        debugger
-
         const typeNode = nonTerminalNode, ///
-              typeVerified = verifyType(typeNode, fileContext, verifyAhead),
-              typeNodeVerified = typeVerified;  ///
+              standaloneTypeVerified = verifyStandaloneType(typeNode, fileContext, verifyAhead),
+              typeNodeVerified = standaloneTypeVerified;  ///
 
         nonTerminalNodeVerified = typeNodeVerified; ///
 
@@ -26,8 +25,6 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
       }
 
       case TERM_RULE_NAME: {
-        debugger
-
         const termNode = nonTerminalNode, ///
               standaloneTermVerified = verifyStandaloneTerm(termNode, fileContext, verifyAhead),
               termNodeVerified = standaloneTermVerified;  ///
@@ -38,8 +35,6 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
       }
 
       case STATEMENT_RULE_NAME: {
-        debugger
-
         const statementNode = nonTerminalNode, ///
               standaloneStatementVerified = verifyStandaloneStatement(statementNode, fileContext, verifyAhead),
               statementNodeVerified = standaloneStatementVerified; ///
@@ -64,23 +59,3 @@ const statementAsCombinatorNodeVerifier = new StatementAsCombinatorNodeVerifier(
 
 export default statementAsCombinatorNodeVerifier;
 
-function verifyStandaloneStatement(statementNode, fileContext, verifyAhead) {
-  let standaloneStatementVerified;
-
-  const statementString = fileContext.nodeAsString(statementNode);
-
-  fileContext.trace(`Verifying the '${statementString}' standalone statement...`, statementNode);
-
-  const context = fileContext,  ///
-        derived = false,
-        assignments = [],
-        statementVerified = verifyStatement(statementNode, assignments, derived, context, verifyAhead);
-
-  standaloneStatementVerified = statementVerified;  ///
-
-  if (standaloneStatementVerified) {
-    fileContext.debug(`...verified the '${statementString}' standalone statement.`, statementNode);
-  }
-
-  return standaloneStatementVerified;
-}

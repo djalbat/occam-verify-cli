@@ -33,6 +33,26 @@ function verifyTerm(termNode, terms, context, verifyAhead) {
   return termVerified;
 }
 
+export function verifyStandaloneTerm(termNode, fileContext, verifyAhead) {
+  let standaloneTermVerified;
+
+  const termString = fileContext.nodeAsString(termNode);
+
+  fileContext.trace(`Verifying the '${termString}' standalone term...`, termNode);
+
+  const terms = [],
+        context = fileContext,  ///
+        termVerified = verifyTerm(termNode, terms, context, verifyAhead);
+
+  standaloneTermVerified = termVerified;  ///
+
+  if (standaloneTermVerified) {
+    fileContext.debug(`...verified the '${termString}' standalone term.`, termNode);
+  }
+
+  return standaloneTermVerified;
+}
+
 Object.assign(termNodesVerifier, {
   verifyTerm
 });

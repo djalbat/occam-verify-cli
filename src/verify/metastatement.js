@@ -9,17 +9,14 @@ function verifyMetastatement(metastatementNode, derived, localMetaContext) {
 
   localMetaContext.trace(`Verifying the '${metastatementString}' metastatement...`, metastatementNode);
 
-  const verifyMetastatementFunctions = [
-    verifyStandaloneMetastatement
-  ];
+  const nonTerminalNode = metastatementNode, ///
+        nonTerminalNodeVerified = metastatementNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localMetaContext, () => {
+          const verifiedAhead = true;
 
-  metastatementVerified = verifyMetastatementFunctions.some((verifyMetastatementFunction) => {
-    const metastatementVerified = verifyMetastatementFunction(metastatementNode, derived, localMetaContext);
+          return verifiedAhead;
+        });
 
-    if (metastatementVerified) {
-      return true;
-    }
-  });
+  metastatementVerified = nonTerminalNodeVerified;  ///
 
   if (metastatementVerified) {
     localMetaContext.debug(`...verified the '${metastatementString}' metastatement.`, metastatementNode);
@@ -33,27 +30,3 @@ Object.assign(metastatementNodeVerifier, {
 });
 
 export default verifyMetastatement;
-
-function verifyStandaloneMetastatement(metastatementNode, derived, localMetaContext) {
-  let standaloneMetastatementVerified;
-
-  const metastatementString = localMetaContext.nodeAsString(metastatementNode);
-
-  localMetaContext.trace(`Verifying the '${metastatementString}' standalone metastatement...`, metastatementNode);
-
-  const nonTerminalNode = metastatementNode, ///
-        nonTerminalNodeVerified = metastatementNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localMetaContext, () => {
-          const verifiedAhead = true;
-
-          return verifiedAhead;
-        });
-
-  standaloneMetastatementVerified = nonTerminalNodeVerified;  ///
-
-  if (standaloneMetastatementVerified) {
-    localMetaContext.debug(`...verified the '${metastatementString}' standalone metastatement.`, metastatementNode);
-  }
-
-  return standaloneMetastatementVerified;
-
-}
