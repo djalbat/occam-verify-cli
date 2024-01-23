@@ -1,9 +1,9 @@
 "use strict";
 
 import NodeVerifier from "../../verifier/node";
-import verifyGivenType from "../../verify/givenType";
 
 import { nodeQuery } from "../../utilities/query";
+import { verifyStandaloneType } from "../../verify/type";
 import { verifyStandaloneTerm } from "../../verify/term";
 import { TERM_RULE_NAME, ARGUMENT_RULE_NAME } from "../../ruleNames";
 
@@ -63,10 +63,9 @@ function verifyArgument(argumentNode, fileContext, verifyAhead) {
         termNode = termNodeQuery(argumentNode);
 
   if (typeNode !== null) {
-    const types = [], ///
-          givenTypeVerified = verifyGivenType(typeNode, types, fileContext, verifyAhead);
+    const standaloneTypeVerified = verifyStandaloneType(typeNode, fileContext, verifyAhead);
 
-    argumentVerified = givenTypeVerified; ///
+    argumentVerified = standaloneTypeVerified; ///
   }
 
   if (termNode !== null) {

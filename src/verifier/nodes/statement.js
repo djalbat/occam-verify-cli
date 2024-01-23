@@ -36,8 +36,7 @@ class StatementNodesVerifier extends NodesVerifier {
         case META_ARGUMENT_RULE_NAME: {
           const metaArgumentNode = nonTerminalNode, ///
                 combinatorMetaargumentNode = combinatorNonTerminalNode, ///
-                metaArgumentVerified = verifyMetaargument(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead),
-                metaArgumentNodeVerified = metaArgumentVerified;  ///
+                metaArgumentNodeVerified = this.verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead);
 
           nonTerminalNodeVerified = metaArgumentNodeVerified; ///
 
@@ -54,47 +53,41 @@ class StatementNodesVerifier extends NodesVerifier {
 
     return nonTerminalNodeVerified;
   }
+
+  verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead) {
+    let metaArgumentNodeVerified = false;
+
+    const metaArgumentString = context.nodeAsString(metaArgumentNode);
+
+    const statementNode = statementNodeQuery(metaArgumentNode),
+          combinatorMetaTYpeNode = metaTypeNodeQuery(combinatorMetaargumentNode);
+
+    if (statementNode === null) {
+      context.debug(`Expected a statement but got a '${metaArgumentString}' meta-type.`, metaArgumentNode);
+    } else {
+      if (combinatorMetaTYpeNode === null) {
+        const combinatorMetaargumentString = context.nodeAsString(combinatorMetaargumentNode);
+
+        context.debug(`Expected a meta-type but got a '${combinatorMetaargumentString}' statement.`, metaArgumentNode);
+      } else {
+        const combinatorMetaTypeTerminalNode = metaTypeTerminalNodeQuery(combinatorMetaTYpeNode),
+              content = combinatorMetaTypeTerminalNode.getContent(),
+              contentStatementMetaType = (content === STATEMENT_META_TYPE);
+
+        if (!contentStatementMetaType) {
+          context.debug(`Expected the meta-type of the combinator to be '${STATEMENT_META_TYPE}' but got '${content}' instead.`, metaArgumentNode);
+        } else {
+          const verifiedAhead = verifyAhead();
+
+          metaArgumentNodeVerified = verifiedAhead; ///
+        }
+      }
+    }
+
+    return metaArgumentNodeVerified;
+  }
 }
 
 const statementNodesVerifier = new StatementNodesVerifier();
 
 export default statementNodesVerifier;
-
-export function verifyMetaargument(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead) {
-  let metaArgumentVerified = false;
-
-  const metaArgumentString = context.nodeAsString(metaArgumentNode);
-
-  context.trace(`Verifying the '${metaArgumentString}' metaargument...`, metaArgumentNode);
-
-  const statementNode = statementNodeQuery(metaArgumentNode),
-        combinatorMetaTYpeNode = metaTypeNodeQuery(combinatorMetaargumentNode);
-
-  if (statementNode === null) {
-    context.debug(`Expected a statement but got a '${metaArgumentString}' meta-type.`, metaArgumentNode);
-  } else {
-    if (combinatorMetaTYpeNode === null) {
-      const combinatorMetaargumentString = context.nodeAsString(combinatorMetaargumentNode);
-
-      context.debug(`Expected a meta-type but got a '${combinatorMetaargumentString}' statement.`, metaArgumentNode);
-    } else {
-      const combinatorMetaTypeTerminalNode = metaTypeTerminalNodeQuery(combinatorMetaTYpeNode),
-            content = combinatorMetaTypeTerminalNode.getContent(),
-            contentStatementMetaType = (content === STATEMENT_META_TYPE);
-
-      if (!contentStatementMetaType) {
-        context.debug(`Expected the meta-type of the combinator to be '${STATEMENT_META_TYPE}' but got '${content}' instead.`, metaArgumentNode);
-      } else {
-        const verifiedAhead = verifyAhead();
-
-        metaArgumentVerified = verifiedAhead; ///
-      }
-    }
-  }
-
-  if (metaArgumentVerified) {
-    context.debug(`...verified the '${metaArgumentString}' metaargument.`, metaArgumentNode);
-  }
-
-  return metaArgumentVerified;
-}
