@@ -52,7 +52,7 @@ const termAsConstructorNodeVerifier = new TermAsConstructorNodeVerifier();
 
 export default termAsConstructorNodeVerifier;
 
-function verifyArgument(argumentNode, fileContext, verifyAhead) {
+export function verifyArgument(argumentNode, fileContext, verifyAhead) {
   let argumentVerified;
 
   const argumentString = fileContext.nodeAsString(argumentNode);
