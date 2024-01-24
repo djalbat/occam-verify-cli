@@ -98,3 +98,4 @@ class TermNodesVerifier extends NodesVerifier {
 const termNodesVerifier = new TermNodesVerifier();
 
 export default termNodesVerifier;
+

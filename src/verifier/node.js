@@ -46,11 +46,10 @@ export default class NodeVerifier {
       const childNode = childNodes[index],
             node = childNode, ///
             nodeVerified = this.verifyNode(node, ...remainingArguments, () => {
-              index++;
-
               remainingArguments.push(verifyAhead);
 
-              const childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodes, ...remainingArguments);
+              const aheadIndex = index + 1,
+                    childNodesVerifyAhead = this.verifyChildNodesAhead(aheadIndex, childNodes, ...remainingArguments);
 
               return childNodesVerifyAhead;
             });

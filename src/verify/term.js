@@ -2,9 +2,12 @@
 
 import Term from "../term";
 import termNodesVerifier from "../verifier/nodes/term";
-import verifyTermAsGivenVariable from "../verify/termAsGivenVariable";
+import verifyGivenVariable from "../verify/givenVariable";
 
 import { first } from "../utilities/array";
+import { nodeQuery } from "../utilities/query";
+
+const variableNodeQuery = nodeQuery("/term/variable!");
 
 function verifyTerm(termNode, terms, context, verifyAhead) {
   let termVerified;
@@ -60,53 +63,61 @@ Object.assign(termNodesVerifier, {
 export default verifyTerm;
 
 function verifyTermAsVariable(termNode, terms, context, verifyAhead) {
-  let termVerifiedAsVariable;
+  let termVerifiedAsVariable = false;
 
-  const termString = context.nodeAsString(termNode);
+  const variableNode = variableNodeQuery(termNode);
 
-  context.trace(`Verifying the '${termString}' term as a variable...`, termNode);
+  if (variableNode !== null) {
+    const termString = context.nodeAsString(termNode);
 
-  const variables = [],
-        termVerifiedAsGivenVariable = verifyTermAsGivenVariable(termNode, variables, context, () => {
-          let verifiedAhead;
+    context.trace(`Verifying the '${termString}' term as a variable...`, termNode);
 
-          const firstVariable = first(variables),
-                variable = firstVariable, ///
-                type = variable.getType(),
-                term = Term.fromTermNodeAndType(termNode, type);
+    const variables = [],
+          givenVariableVerified = verifyGivenVariable(variableNode, variables, context, () => {
+            let verifiedAhead;
 
-          terms.push(term);
+            const firstVariable = first(variables),
+                  variable = firstVariable, ///
+                  type = variable.getType(),
+                  term = Term.fromTermNodeAndType(termNode, type);
 
-          verifiedAhead = verifyAhead();
+            terms.push(term);
 
-          if (!verifiedAhead) {
-            terms.pop();
-          }
+            verifiedAhead = verifyAhead();
 
-          return verifiedAhead;
-        });
+            if (!verifiedAhead) {
+              terms.pop();
+            }
 
-  termVerifiedAsVariable = termVerifiedAsGivenVariable;  ///
+            return verifiedAhead;
+          });
 
-  if (termVerifiedAsVariable) {
-    context.debug(`...verified the '${termString}' term as a variable.`, termNode);
+    termVerifiedAsVariable = givenVariableVerified;  ///
+
+    if (termVerifiedAsVariable) {
+      context.debug(`...verified the '${termString}' term as a variable.`, termNode);
+    }
   }
 
   return termVerifiedAsVariable;
 }
 
 function verifyTermAgainstConstructors(termNode, terms, context, verifyAhead) {
-  let termVerifiedAgainstConstructors;
+  let termVerifiedAgainstConstructors = false;
 
-  const constructors = context.getConstructors();
+  const variableNode = variableNodeQuery(termNode);
 
-  termVerifiedAgainstConstructors = constructors.some((constructor) => {
-    const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, terms, constructor, context, verifyAhead);
+  if (variableNode === null) {
+    const constructors = context.getConstructors();
 
-    if (termVerifiedAgainstConstructor) {
-      return true;
-    }
-  });
+    termVerifiedAgainstConstructors = constructors.some((constructor) => {
+      const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, terms, constructor, context, verifyAhead);
+
+      if (termVerifiedAgainstConstructor) {
+        return true;
+      }
+    });
+  }
 
   return termVerifiedAgainstConstructors;
 }
