@@ -73,3 +73,31 @@ export function rightDifference(arrayA, arrayB) {
     }
   });
 }
+
+export function areArraysEqual(arrayA, arrayB, callback) {
+  if (callback === undefined) {
+    callback = (elementA, elementB) => {
+      if (elementA === elementB) {
+        return true;
+      }
+    };
+  }
+
+  let arraysEqual = false;
+
+  const arrayALength = arrayA.length,
+        arrayBLength = arrayB.length;
+
+  if (arrayALength === arrayBLength) {
+    arraysEqual = arrayA.every((elementA, index) => {
+      const elementB = arrayB[index],
+            result = callback(elementA, elementB);
+
+      if (result) {
+        return true;
+      }
+    })
+  }
+
+  return arraysEqual;
+}

@@ -1,5 +1,7 @@
 "use strict";
 
+import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual } from "../utilities/terminalNodes";
+
 export default class NodesVerifier {
   verifyNode(nodeA, nodeB, ...remainingArguments) {
     let nodeVerified = false;
@@ -35,13 +37,49 @@ export default class NodesVerifier {
           childNodesBLength = childNodesB.length;
 
     if (childNodesALength === childNodesBLength) {
-      const index = 0,
-            childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments);
+      const childTerminalNodeMapA = terminalNodeMapFromNodes(childNodesA),
+            childTerminalNodeMapB = terminalNodeMapFromNodes(childNodesB),
+            terminalNodeMapsEqual = areTerminalNodeMapsEqual(childTerminalNodeMapA, childTerminalNodeMapB);
 
-      childNodesVerify = childNodesVerifyAhead; ///
+      if (terminalNodeMapsEqual) {
+        const index = 0,
+              childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments);
+
+        childNodesVerify = childNodesVerifyAhead; ///
+      }
     }
 
     return childNodesVerify;
+  }
+
+  verifyTerminalNode(terminalNodeA, terminalNodeB, ...remainingArguments) { ///
+    let terminalNodeVerified;
+
+    const verifyAhead = remainingArguments.pop(),
+          verifiedAhead = verifyAhead();
+
+    terminalNodeVerified = verifiedAhead;  ///
+
+    return terminalNodeVerified;
+  }
+
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments) {
+    let nonTerminalNodeVerified = false;
+
+    const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(), ///
+          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(); ///
+
+    if (nonTerminalNodeARuleName === nonTerminalNodeBRuleName) {
+      const nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
+            nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
+            childNodesA = nonTerminalNodeAChildNodes, ///
+            childNodesB = nonTerminalNodeBChildNodes, ///
+            childNodesVerify = this.verifyChildNodes(childNodesA, childNodesB, ...remainingArguments);
+
+      nonTerminalNodeVerified = childNodesVerify; ///
+    }
+
+    return nonTerminalNodeVerified;
   }
 
   verifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments) {
@@ -72,39 +110,5 @@ export default class NodesVerifier {
     }
 
     return childNodesVerify;
-  }
-
-  verifyTerminalNode(terminalNodeA, terminalNodeB, ...remainingArguments) {
-    let terminalNodeVerified = false;
-
-    const matches = terminalNodeA.match(terminalNodeB);
-
-    if (matches) {
-      const verifyAhead = remainingArguments.pop(),
-            verifiedAhead = verifyAhead();
-
-      terminalNodeVerified = verifiedAhead;  ///
-    }
-
-    return terminalNodeVerified;
-  }
-
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments) {
-    let nonTerminalNodeVerified = false;
-
-    const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(), ///
-          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(); ///
-
-    if (nonTerminalNodeARuleName === nonTerminalNodeBRuleName) {
-      const nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-            nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
-            childNodesA = nonTerminalNodeAChildNodes, ///
-            childNodesB = nonTerminalNodeBChildNodes, ///
-            childNodesVerify = this.verifyChildNodes(childNodesA, childNodesB, ...remainingArguments);
-
-      nonTerminalNodeVerified = childNodesVerify; ///
-    }
-
-    return nonTerminalNodeVerified;
   }
 }

@@ -32,6 +32,28 @@ export default class NodeVerifier {
     return childNodesVerify;
   }
 
+  verifyTerminalNode(terminalNode, ...remainingArguments) {
+    let terminalNodeVerified;
+
+    const verifyAhead = remainingArguments.pop(), ///
+          verifiedAhead = verifyAhead();  ///
+
+    terminalNodeVerified = verifiedAhead; ///
+
+    return terminalNodeVerified;
+  }
+
+  verifyNonTerminalNode(nonTerminalNode, ...remainingArguments) {
+    let nonTerminalNodeVerified;
+
+    const childNodes = nonTerminalNode.getChildNodes(), ///
+          childNodesVerify = this.verifyChildNodes(childNodes, ...remainingArguments);
+
+    nonTerminalNodeVerified = childNodesVerify; ///
+
+    return nonTerminalNodeVerified;
+  }
+
   verifyChildNodesAhead(index, childNodes, ...remainingArguments) {
     let childNodesVerify;
 
@@ -58,27 +80,5 @@ export default class NodeVerifier {
     }
 
     return childNodesVerify;
-  }
-
-  verifyTerminalNode(terminalNode, ...remainingArguments) {
-    let terminalNodeVerified;
-
-    const verifyAhead = remainingArguments.pop(), ///
-          verifiedAhead = verifyAhead();  ///
-
-    terminalNodeVerified = verifiedAhead; ///
-
-    return terminalNodeVerified;
-  }
-
-  verifyNonTerminalNode(nonTerminalNode, ...remainingArguments) {
-    let nonTerminalNodeVerified;
-
-    const childNodes = nonTerminalNode.getChildNodes(), ///
-          childNodesVerify = this.verifyChildNodes(childNodes, ...remainingArguments);
-
-    nonTerminalNodeVerified = childNodesVerify; ///
-
-    return nonTerminalNodeVerified;
   }
 }
