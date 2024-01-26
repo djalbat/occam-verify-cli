@@ -339,14 +339,14 @@ export default class ReleaseContext {
 
   fatal(message, node = null, tokens = null, filePath = null) { this.log.fatal(message, node, tokens, filePath); }
 
-  initialise(dependencyReleaseContexts) {
-    const releaseContext = this,  ///
-          releaseContexts = [
-            releaseContext,
-            ...dependencyReleaseContexts
-          ],
-          combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
-          florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
+  initialise(releaseContexts) {
+    releaseContexts = releaseContexts.slice();  ///
+
+    const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
+          releaseContext = releaseContexts.shift(),
+          dependencyReleaseContexts = releaseContexts;  ///
+
+    const florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
           florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
     this.lexer = florenceLexer; ///

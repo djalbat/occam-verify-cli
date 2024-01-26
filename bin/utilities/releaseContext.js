@@ -24,12 +24,10 @@ function releaseContextFromDependency(dependency, context, callback) {
     return;
   }
 
-  const entryFile = isEntryFile(entryPath);
-
   let releaseContext = null;
 
   try {
-    const { log } = context;
+    const entryFile = isEntryFile(entryPath);
 
     if (entryFile) {
       const filePath = entryPath, ///
@@ -37,13 +35,13 @@ function releaseContextFromDependency(dependency, context, callback) {
             jsonString = content, ///
             json = JSON.parse(jsonString);
 
-      releaseContext = releaseContextFromLogAndJSON(log, json);
+      releaseContext = releaseContextFromJSON(json, context);
     } else {
       const projectName = dependencyName, ///
             project = loadProject(projectName, projectsDirectoryPath);
 
       if (project !== null) {
-        releaseContext = releaseContextFromLogAndProject(log, project);
+        releaseContext = releaseContextFromProject(project, context);
       }
     }
   } catch (error) {
@@ -61,8 +59,11 @@ module.exports = {
   releaseContextFromDependency
 };
 
-function releaseContextFromLogAndJSON(log, json) {
-  const { name, context } = json;
+function releaseContextFromJSON(json, context) {
+  const { log } = context,
+        { name } = json;
+
+  ({ context } = json);
 
   let { entries } = json;
 
@@ -77,8 +78,9 @@ function releaseContextFromLogAndJSON(log, json) {
   return releaseContext;
 }
 
-function releaseContextFromLogAndProject(log, project) {
-  const json = null,
+function releaseContextFromProject(project, context) {
+  const { log } = context,
+        json = null,
         name = project.getName(),
         entries = project.getEntries(),
         releaseContext = ReleaseContext.fromLogJSONNameAndEntries(log, json, name, entries);

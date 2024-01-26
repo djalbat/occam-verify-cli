@@ -1,12 +1,10 @@
 "use strict";
 
 const { Dependency } = require("occam-entities"),
-      { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
+      { verifyRelease, createReleaseContext, initialiseReleaseContext } = require("../../lib/index");  ///
 
 const { trimTrailingSlash } = require("../utilities/string"),
       { releaseContextFromDependency } = require("../utilities/releaseContext");
-
-const { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
 function verifyAction(argument, log) {
   const name = trimTrailingSlash(argument), ///
@@ -34,39 +32,34 @@ function verifyAction(argument, log) {
           released = releaseContext.isReleased();
 
     if (released) {
-      const error = `The '${name}' package does not need to be verified.`;
-
-      log.warning(error);
+      log.warning(`The '${name}' package does not need to be verified.`);
 
       return;
     }
 
-    const dependentReleased = released; ///
+    const dependentReleased = released, ///
+          releaseContextInitialised = initialiseReleaseContext(dependency, dependentName, dependentReleased, context);
 
-    initialiseReleaseContext(dependency, dependentName, dependentReleased, context, (error) => {
-      if (error) {
-        log.error(error);
+    delete context.releaseContextMap;
+    delete context.releaseContextFromDependency;
 
-        return;
-      }
+    if (!releaseContextInitialised) {
+      return;
+    }
 
-      delete context.releaseContextMap;
-      delete context.releaseContextFromDependency;
+    let now;
 
-      let now;
+    now = Date.now();
 
-      now = Date.now();
+    verifyRelease(releaseName, releaseContextMap);
 
-      verifyRelease(releaseName, releaseContextMap);
+    const then = now; ///
 
-      const then = now; ///
+    now = Date.now();
 
-      now = Date.now();
+    const seconds = Math.floor(now - then) / 1000;
 
-      const seconds = Math.floor(now - then) / 1000;
-
-      log.info(`Verification time ${seconds} seconds.`);
-    });
+    log.info(`Verification time ${seconds} seconds.`);
   });
 }
 
