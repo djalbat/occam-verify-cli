@@ -40,7 +40,7 @@ export default function initialiseReleaseContext(dependency, dependentName, depe
         });
 
         if (releaseContextInitialised) {
-          const releaseContexts = retrieveReleaseContexts(dependency, context);
+          const releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
 
           releaseContext.initialise(releaseContexts);
         }
@@ -51,24 +51,39 @@ export default function initialiseReleaseContext(dependency, dependentName, depe
   return releaseContextInitialised;
 }
 
-function retrieveReleaseContexts(dependency, context, releaseContexts = []) {
-  const { releaseContextMap } = context,
-        dependencyName = dependency.getName(),
-        releaseName = dependencyName, ///
-        releaseContext = releaseContextMap[releaseName],
-        releaseContextsIncludesReleaseContext = releaseContexts.includes(releaseContext);
+function retrieveReleaseContexts(releaseContext, releaseContextMap) {
+  const releaseContexts = [],
+        remainingReleaseContext = releaseContext,  ///
+        remainingReleaseContexts = [
+          remainingReleaseContext
+        ];
 
-  if (releaseContextsIncludesReleaseContext) {
-    return;
+  let remainingReleaseContextsLength = remainingReleaseContexts.length;
+
+  while (remainingReleaseContextsLength > 0) {
+    const remainingReleaseContext = remainingReleaseContexts.shift(),
+          releaseContext = remainingReleaseContext;  ///
+
+    releaseContexts.push(releaseContext);
+
+    const dependencies = releaseContext.getDependencies();
+
+    dependencies.forEachDependency((dependency) => {
+      const dependencyName = dependency.getName(),
+            releaseName = dependencyName, ///
+            releaseContext = releaseContextMap[releaseName],
+            releaseContextsIncludesReleaseContext = releaseContexts.includes(releaseContext),
+            remainingReleaseContextsIncludesReleaseContext = remainingReleaseContexts.includes(releaseContext);
+
+      if (!releaseContextsIncludesReleaseContext && !remainingReleaseContextsIncludesReleaseContext) {
+        const remainingReleaseContext = releaseContext; ///
+
+        remainingReleaseContexts.push(remainingReleaseContext);
+      }
+    });
+
+    remainingReleaseContextsLength = remainingReleaseContexts.length;
   }
-
-  releaseContexts.push(releaseContext);
-
-  const dependencies = releaseContext.getDependencies();
-
-  dependencies.forEachDependency((dependency) => {
-    retrieveReleaseContexts(dependency, context, releaseContexts);
-  });
 
   return releaseContexts;
 }
