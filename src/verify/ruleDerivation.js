@@ -55,10 +55,6 @@ function verifyRuleSubproof(ruleSubproofNode, localMetaContext) {
         premiseNodes = premiseNodesQuery(ruleSubproofNode),
         premisesVerified = verifyPremises(premiseNodes, premises, localMetaContext);
 
-        if (premiseVerified) {
-          return true;
-        }
-
   if (premisesVerified) {
     const ruleSubDerivationNode = ruleSubDerivationNodeQuery(ruleSubproofNode),
           ruleSubDerivationVerified = verifyRuleSubDerivation(ruleSubDerivationNode, localMetaContext);
