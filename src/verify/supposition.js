@@ -5,6 +5,7 @@ import Supposition from "../supposition";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
+import { assignAssignment } from "../utilities/assignments";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement!");
@@ -22,13 +23,9 @@ export default function verifySupposition(suppositionNode, suppositions, localCo
         unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
   if (unqualifiedStatementVerified) {
-    suppositionVerified = assignments.every((assignment) => {  ///
-      const assigned = assignment.assign(localContext);
+    const assignmentAssigned = assignAssignment(assignments, localContext);
 
-      if (assigned) {
-        return true;
-      }
-    });
+    suppositionVerified = assignmentAssigned; ///
   }
 
   if (suppositionVerified) {

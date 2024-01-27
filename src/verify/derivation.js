@@ -6,8 +6,10 @@ import verifySuppositions from "../verify/suppositions";
 import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
+import { assignAssignment } from "../utilities/assignments";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { SUBPROOF_RULE_NAME, QUALIFIED_STATEMENT_RULE_NAME, UNQUALIFIED_STATEMENT_RULE_NAME } from "../ruleNames";
+import local from "../context/local";
 
 const childNodesQuery = nodesQuery("/derivation|subDerivation/*"),
       statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/statement!"),
@@ -101,13 +103,9 @@ function verifyChild(childNode, localContext) {
       qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assignments, derived, localContext);
 
       if (qualifiedStatementVerified) {
-        qualifiedStatementVerified = assignments.every((assignment) => {  ///
-          const assigned = assignment.assign(localContext);
+        const assignmentAssigned = assignAssignment(assignments, localContext);
 
-          if (assigned) {
-            return true;
-          }
-        });
+        qualifiedStatementVerified = assignmentAssigned; ///
       }
 
       if (qualifiedStatementVerified) {
@@ -132,13 +130,9 @@ function verifyChild(childNode, localContext) {
       unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
       if (unqualifiedStatementVerified) {
-        unqualifiedStatementVerified = assignments.every((assignment) => {  ///
-          const assigned = assignment.assign(localContext);
+        const assignmentAssigned = assignAssignment(assignments, localContext);
 
-          if (assigned) {
-            return true;
-          }
-        });
+        unqualifiedStatementVerified = assignmentAssigned;  ///
       }
 
       if (unqualifiedStatementVerified) {
