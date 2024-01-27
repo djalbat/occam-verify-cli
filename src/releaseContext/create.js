@@ -16,7 +16,9 @@ export default function createReleaseContext(dependency, dependentNames, context
     return;
   }
 
-  log.info(`Creating the '${releaseName}' context.`)
+  const dependencyString = dependency.asString();
+
+  log.info(`Creating the '${releaseName}' context from the '${dependencyString}' dependency...`)
 
   const { releaseContextFromDependency } = context;
 
@@ -50,6 +52,8 @@ export default function createReleaseContext(dependency, dependentNames, context
     releaseContextMap[releaseName] = releaseContext;
 
     createDependencyReleaseContexts(dependency, dependentNames, context, callback);
+
+    log.info(`...creating the '${releaseName}' context.`)
   }, context);
 }
 
