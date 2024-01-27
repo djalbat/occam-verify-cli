@@ -5,20 +5,23 @@ import { last } from "../utilities/array";
 export default function createReleaseContext(dependency, dependentNames, context, callback) {
   const { log, releaseContextMap } = context,
         dependencyName = dependency.getName(),
+        dependencyString = dependency.asString(),
         releaseName = dependencyName, ///
         releaseContext = releaseContextMap[releaseName] || null;
 
+  log.debug(`Creating the '${releaseName}' context given the '${dependencyString}' dependency...`);
+
   if (releaseContext !== null) {
-    const error = null;
+    const error = null,
+          version = releaseContext.getVersion(),
+          versionString = version.toString();
+
+    log.debug(`...already created the '${releaseName}:${versionString}' context.`);
 
     callback(error);
 
     return;
   }
-
-  const dependencyString = dependency.asString();
-
-  log.info(`Creating the '${releaseName}' context from the '${dependencyString}' dependency...`)
 
   const { releaseContextFromDependency } = context;
 
@@ -49,11 +52,14 @@ export default function createReleaseContext(dependency, dependentNames, context
       return;
     }
 
+    const version = releaseContext.getVersion(),
+          versionString = version.toString();
+
+    log.info(`...created the '${releaseName}@${versionString}' context.`);
+
     releaseContextMap[releaseName] = releaseContext;
 
     createDependencyReleaseContexts(dependency, dependentNames, context, callback);
-
-    log.info(`...creating the '${releaseName}' context.`)
   }, context);
 }
 
@@ -103,14 +109,12 @@ function checkReleaseMatchesDependency(releaseContext, dependency, dependentName
     if (!entriesMatchShortenedVersion) {
       const { log } = context,
             version = releaseContext.getVersion(),
-            versionString = version.toString(),
             lastDependentName = last(dependentNames),
             dependentName = lastDependentName,  ///
-            dependencyName = dependency.getName(),
-            shortenedVersion = dependency.getShortedVersion(),
-            shortenedVersionString = shortenedVersion.toString();
+            versionString = version.toString(),
+            dependencyString = dependency.asString();
 
-      log.error(`Version mismatch: '${dependentName}' requires '${dependencyName}' to be version ${shortenedVersionString}.0 or higher but version ${versionString} has been supplied.`);
+      log.error(`Version mismatch: '${dependentName}' requires the '${dependencyString}' dependency but a context with version '${versionString}' has already been created.`);
 
       releaseMatchesDependency = false;
     }
@@ -148,11 +152,9 @@ function createDependencyReleaseContexts(dependency, dependentNames, context, ca
 
       next();
     });
-  }, done);
-
-  function done() {
+  }, () => {
     const error = null;
 
     callback(error);
-  }
+  });
 }
