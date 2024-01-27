@@ -26,8 +26,8 @@ export function areTerminalNodeMapsEqual(terminalNodeMapA, terminalNodeMapB) {
         terminalNodeMapKeysEqual = areArraysEqual(indexesA, indexesB);
 
   if (terminalNodeMapKeysEqual) {
-    const terminalNodesA = Object.keys(terminalNodeMapA), ///
-          terminalNodesB = Object.keys(terminalNodeMapB), ///
+    const terminalNodesA = Object.values(terminalNodeMapA), ///
+          terminalNodesB = Object.values(terminalNodeMapB), ///
           terminalNodeMapValuesEqual = areArraysEqual(terminalNodesA, terminalNodesB, (terminalNodeA, terminalNodeB) => {
             const matches = terminalNodeA.match(terminalNodeB);
 

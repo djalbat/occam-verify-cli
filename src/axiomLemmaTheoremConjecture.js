@@ -167,7 +167,6 @@ function matchSupposition(supposition, proofSteps, substitutions, localContext, 
         return true;
       }
     }
-
   }) || null;
 
   const suppositionMatches = (proofStep !== null);
