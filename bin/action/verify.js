@@ -40,9 +40,6 @@ function verifyAction(argument, log) {
     const dependentReleased = released, ///
           releaseContextInitialised = initialiseReleaseContext(dependency, dependentName, dependentReleased, context);
 
-    delete context.releaseContextMap;
-    delete context.releaseContextFromDependency;
-
     if (!releaseContextInitialised) {
       return;
     }

@@ -3,7 +3,7 @@
 import { last } from "../utilities/array";
 
 export default function createReleaseContext(dependency, dependentNames, context, callback) {
-  const { releaseContextMap } = context,
+  const { log, releaseContextMap } = context,
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///
         releaseContext = releaseContextMap[releaseName] || null;
@@ -16,6 +16,8 @@ export default function createReleaseContext(dependency, dependentNames, context
     return;
   }
 
+  log.info(`Creating the '${releaseName}' context.`)
+
   const { releaseContextFromDependency } = context;
 
   releaseContextFromDependency(dependency, context, (error, releaseContext) => {
@@ -25,9 +27,9 @@ export default function createReleaseContext(dependency, dependentNames, context
       return;
     }
 
-    const releaseCreated = checkReleaseCreated(releaseContext, dependency, context);
+    const releaseContextCreated = checkReleaseContextCreated(releaseContext, dependency, context);
 
-    if (!releaseCreated) {
+    if (!releaseContextCreated) {
       const error = null;
 
       callback(error);
@@ -51,18 +53,18 @@ export default function createReleaseContext(dependency, dependentNames, context
   }, context);
 }
 
-function checkReleaseCreated(releaseContext, dependency, context) {
-  const releaseCreated = (releaseContext !== null);
+function checkReleaseContextCreated(releaseContext, dependency, context) {
+  const releaseContextCreated = (releaseContext !== null);
 
-  if (!releaseCreated) {
+  if (!releaseContextCreated) {
     const { log } = context,
           dependencyName = dependency.getName(),
           releaseName = dependencyName; ///
 
-    log.error(`The '${releaseName}' package could not be created.`);
+    log.error(`The '${releaseName}' context could not be created.`);
   }
 
-  return releaseCreated;
+  return releaseContextCreated;
 }
 
 function checkCyclicDependencyExists(dependency, dependentNames, context) {
