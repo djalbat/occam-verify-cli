@@ -46,10 +46,10 @@ export function terminalNodeAsString(terminalNode) {
 }
 
 export function nonTerminalNodeAsString(nonTerminalNode, tokens) {
-  const firstSignificantToken = nonTerminalNode.getFirstSignificantToken(),
-        lastSignificantToken = nonTerminalNode.getLastSignificantToken(),
-        firstSignificantTokenIndex = tokens.indexOf(firstSignificantToken),
+  const lastSignificantToken = nonTerminalNode.getLastSignificantToken(),
+        firstSignificantToken = nonTerminalNode.getFirstSignificantToken(),
         lastSignificantTokenIndex = tokens.indexOf(lastSignificantToken),
+        firstSignificantTokenIndex = tokens.indexOf(firstSignificantToken),
         start = firstSignificantTokenIndex, ///
         end = lastSignificantTokenIndex + 1;
 
