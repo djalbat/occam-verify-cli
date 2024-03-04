@@ -13,7 +13,7 @@
     "argumentative": "^2.0.28",
     "necessary": "^13.3.1",
     "occam-custom-grammars": "^5.0.631",
-    "occam-dom": "^3.1.123",
+    "occam-query": "^3.1.123",
     "occam-entities": "^1.0.63",
     "occam-file-system": "^6.0.112",
     "occam-grammar-utilities": "^8.0.125"
