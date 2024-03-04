@@ -1,6 +1,6 @@
 "use strict";
 
-import { Query } from "occam-dom";
+import { Query } from "occam-query";
 
 const typeTerminalNodeQuery = nodeQuery("/type/@type"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type"),
