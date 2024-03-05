@@ -2,6 +2,7 @@
 
 import termForVariableNodesVerifier from "./verifier/nodes/termForVariable";
 
+import { match } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { statementNodeFromStatementString } from "./utilities/node";
@@ -37,9 +38,8 @@ export default class Supposition {
             subproofAssertionStatementNodesLength = subproofAssertionStatementNodes.length;
 
       if (subproofStatementNodesLength === subproofAssertionStatementNodesLength) {
-        subproofNodeMatches = subproofAssertionStatementNodes.every((subproofAssertionStatementNode, index) => {
-          const subproofStatementNode = subproofStatementNodes[index],
-                nonTerminalNodeA = subproofAssertionStatementNode,  ///
+        subproofNodeMatches = match(subproofAssertionStatementNodes, subproofStatementNodes, (subproofAssertionStatementNode, subproofStatementNode) => {
+          const nonTerminalNodeA = subproofAssertionStatementNode,  ///
                 nonTerminalNodeB = subproofStatementNode, ///
                 localContextA = localContext, ///
                 localContextB = statementLocalContext,  ///

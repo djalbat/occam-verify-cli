@@ -1,6 +1,6 @@
 "use strict";
 
-import { areArraysEqual } from "../utilities/array";
+import { match } from "../utilities/array";
 
 export function terminalNodeMapFromNodes(nodes) {
   const terminalNodeMap = {};
@@ -23,12 +23,18 @@ export function areTerminalNodeMapsEqual(terminalNodeMapA, terminalNodeMapB) {
 
   const indexesA = Object.keys(terminalNodeMapA), ///
         indexesB = Object.keys(terminalNodeMapB), ///
-        terminalNodeMapKeysEqual = areArraysEqual(indexesA, indexesB);
+        terminalNodeMapKeysMatch = match(indexesA, indexesB, (indexA, indexB) => {
+          const matches = (indexA === indexB);
 
-  if (terminalNodeMapKeysEqual) {
+          if (matches) {
+            return true;
+          }
+        });
+
+  if (terminalNodeMapKeysMatch) {
     const terminalNodesA = Object.values(terminalNodeMapA), ///
           terminalNodesB = Object.values(terminalNodeMapB), ///
-          terminalNodeMapValuesEqual = areArraysEqual(terminalNodesA, terminalNodesB, (terminalNodeA, terminalNodeB) => {
+          terminalNodeMapValuesMatch = match(terminalNodesA, terminalNodesB, (terminalNodeA, terminalNodeB) => {
             const matches = terminalNodeA.match(terminalNodeB);
 
             if (matches) {
@@ -36,7 +42,7 @@ export function areTerminalNodeMapsEqual(terminalNodeMapA, terminalNodeMapB) {
             }
           });
 
-    terminalNodeMapsEqual = terminalNodeMapValuesEqual; ///
+    terminalNodeMapsEqual = terminalNodeMapValuesMatch; ///
   }
 
   return terminalNodeMapsEqual;

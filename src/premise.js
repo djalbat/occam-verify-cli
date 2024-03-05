@@ -3,6 +3,7 @@
 import statementForMetavariableNodesVerifier from "./verifier/nodes/statementForMetavariable";
 import metastatementForMetavariableNodesVerifier from "./verifier/nodes/metastatementForMetavariable";
 
+import { match } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { metastatementNodeFromMetastatementString } from "./utilities/node";
@@ -40,9 +41,8 @@ export default class Premise {
             ruleSubproofAssertionMetastatementNodesLength = ruleSubproofAssertionMetastatementNodes.length;
 
       if (subproofStatementNodesLength === ruleSubproofAssertionMetastatementNodesLength) {
-        subproofNodeMatches = ruleSubproofAssertionMetastatementNodes.every((ruleSubproofAssertionMetastatementNode, index) => {
-          const subproofStatementNode = subproofStatementNodes[index],
-                nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
+        subproofNodeMatches = match(ruleSubproofAssertionMetastatementNodes, subproofStatementNodes, (ruleSubproofAssertionMetastatementNode, subproofStatementNode) => {
+          const nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = subproofStatementNode, ///
                 fileContextA = fileContext, ///
                 localContextB = statementLocalContext,  ///
@@ -94,9 +94,8 @@ export default class Premise {
             ruleSubproofAssertionMetastatementNodesLength = ruleSubproofAssertionMetastatementNodes.length;
 
       if (ruleSubproofMetastatementNodesLength === ruleSubproofAssertionMetastatementNodesLength) {
-        ruleSubproofNodeMatches = ruleSubproofAssertionMetastatementNodes.every((ruleSubproofAssertionMetastatementNode, index) => {
-          const ruleSubproofMetastatementNode = ruleSubproofMetastatementNodes[index],
-                nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
+        ruleSubproofNodeMatches = match(ruleSubproofAssertionMetastatementNodes, ruleSubproofMetastatementNodes, (ruleSubproofAssertionMetastatementNode, ruleSubproofMetastatementNode) => {
+          const nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = ruleSubproofMetastatementNode, ///
                 fileContextA = fileContext, ///
                 localMetaContextB = metastatementLocalMetaContext,  ///
