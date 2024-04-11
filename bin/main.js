@@ -9,7 +9,7 @@ const helpAction = require("./action/help"),
 const { HELP_COMMAND, VERIFY_COMMAND, VERSION_COMMAND } = require("./commands"),
       { DEFAULT_HELP, DEFAULT_TAIL, DEFAULT_FOLLOW, DEFAULT_VERSION, DEFAULT_LOG_LEVEL } = require("./defaults");
 
-function actions(command, argument, options) {
+function main(command, argument, options) {
   const commandMissing = (command === null),
         { help = DEFAULT_HELP,
           tail = DEFAULT_TAIL,
@@ -56,4 +56,4 @@ function actions(command, argument, options) {
   }
 }
 
-module.exports = actions;
+module.exports = main;
