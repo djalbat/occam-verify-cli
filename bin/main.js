@@ -30,9 +30,23 @@ function main(command, argument, options) {
   const log = Log.fromFollowAndLogLevel(follow, logLevel);
 
   switch (command) {
-    case HELP_COMMAND: helpAction(); break;
-    case VERIFY_COMMAND: { verifyAction(argument, log); break; }
-    case VERSION_COMMAND: versionAction(); break;
+    case HELP_COMMAND: {
+      helpAction();
+
+      break;
+    }
+
+    case VERIFY_COMMAND: {
+      verifyAction(argument, log);
+
+      break;
+    }
+
+    case VERSION_COMMAND: {
+      versionAction();
+
+      break;
+    }
 
     default: {
       argument = command; ///
