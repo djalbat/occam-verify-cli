@@ -3,9 +3,7 @@
 function helpAction() {
   console.log(`Usage: 
   
-  verify [<options>] [<argument>]                 Verify the specified project
-
-  verify [<command>]  [<options>] [<argument>]    
+  verify [<options>] [<command>] [<argument>]
 
 Commands:
 
