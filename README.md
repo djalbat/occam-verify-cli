@@ -29,9 +29,7 @@ If you would like to contribute or would simply like to have a look at the code,
 These are the commands and options:
 
 ```
-  verify [<options>] [<argument>]                 Verify the specified project
-
-  verify [<command>]  [<options>] [<argument>]    
+  verify [<options>] [<command>] [<argument>]
 
 Commands:
 
