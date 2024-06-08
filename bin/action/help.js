@@ -27,8 +27,6 @@ Please see the readme file on GitHub:
 
   https://github.com/djalbat/occam-verify-cli
 `);
-
-  process.exit();
 }
 
 module.exports = helpAction;
