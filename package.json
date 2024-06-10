@@ -1,7 +1,7 @@
 {
   "name": "occam-verify-cli",
   "author": "James Smith",
-  "version": "0.0.798",
+  "version": "0.0.799",
   "license": "MIT, Anti-996",
   "homepage": "https://github.com/djalbat/occam-verify-cli",
   "description": "Occam's Verifier",
@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@swc/core": "^1.5.6",
-    "watchful-cli": "^1.7.51"
+    "watchful-cli": "^1.7.56"
   },
   "scripts": {
     "clean": "rm -rf ./lib",
