@@ -3,8 +3,7 @@
 export function leastLineIndexFromNodeAndTokens(node, tokens) {
   let leastLineIndex = undefined; ///
 
-  const firstSignificantToken = node.getFirstSignificantToken(),
-        firstSignificantTokenIndex = tokens.indexOf(firstSignificantToken);
+  const firstSignificantTokenIndex = node.getFirstSignificantTokenIndex(tokens);
 
   let lineIndex = 0;
 
@@ -28,8 +27,7 @@ export function leastLineIndexFromNodeAndTokens(node, tokens) {
 export function greatestLineIndexFromNodeAndTokens(node, tokens) {
   let greatestLineIndex = undefined;  ///
 
-  const lastSignificantToken = node.getLastSignificantToken(),
-        lastSignificantTokenIndex = tokens.indexOf(lastSignificantToken);
+  const lastSignificantTokenIndex = node.getLastSignificantTokenIndex(tokens);
 
   let lineIndex = 0;
 
