@@ -55,11 +55,19 @@ export default function createReleaseContext(dependency, dependentNames, context
     const version = releaseContext.getVersion(),
           versionString = version.toString();
 
-    log.info(`...created the '${releaseName}@${versionString}' context.`);
-
     releaseContextMap[releaseName] = releaseContext;
 
-    createDependencyReleaseContexts(dependency, dependentNames, context, callback);
+    createDependencyReleaseContexts(dependency, dependentNames, context, (error) => {
+      if (error) {
+        callback(error);
+
+        return;
+      }
+
+      log.info(`...created the '${releaseName}@${versionString}' context.`);
+
+      callback(error);
+    });
   }, context);
 }
 
