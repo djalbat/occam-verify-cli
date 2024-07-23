@@ -122,7 +122,7 @@ function checkReleaseMatchesDependency(releaseContext, dependency, dependentName
             versionString = version.toString(),
             dependencyString = dependency.asString();
 
-      log.error(`Version mismatch: '${dependentName}' requires the '${dependencyString}' dependency but a context with version '${versionString}' has already been created.`);
+      log.error(`Version mismatch: '${dependentName}' requires the '${dependencyString}' dependency but a context with version '${versionString}' was created.`);
 
       releaseMatchesDependency = false;
     }
