@@ -26,8 +26,11 @@ export function combinedCustomGrammarFromReleaseContexts(releaseContexts) {
           const customGrammar = releaseContext.getCustomGrammar();
 
           return customGrammar;
-        }),
-        combinedCustomGrammar = CombinedCustomGrammar.fromCustomGrammars(customGrammars);
+        });
+
+  customGrammars.reverse(); ///
+
+  const combinedCustomGrammar = CombinedCustomGrammar.fromCustomGrammars(customGrammars);
 
   return combinedCustomGrammar;
 }

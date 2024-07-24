@@ -80,7 +80,7 @@ export default class ReleaseContext {
 
       dependencyReleaseContexts.forEach((releaseContext) => {
         const includeDependencies = false,
-          releaseContextLabels = releaseContext.getLabels(includeDependencies);
+              releaseContextLabels = releaseContext.getLabels(includeDependencies);
 
         push(labels, releaseContextLabels);
       });
