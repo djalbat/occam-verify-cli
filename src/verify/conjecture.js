@@ -42,7 +42,9 @@ export default function verifyConjecture(conjectureNode, fileContext) {
               firstConsequent = first(consequents),
               consequent = firstConsequent; ///
 
-        verifyProof(proofNode, consequent, localContext);
+        if (proofNode !== null) {
+          verifyProof(proofNode, consequent, localContext);
+        }
 
         const conjecture = Conjecture.fromLabelsSuppositionsConsequentAndLocalContext(labels, suppositions, consequent, localContext);
 

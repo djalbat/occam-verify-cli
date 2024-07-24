@@ -9,7 +9,6 @@ import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 import { assignAssignment } from "../utilities/assignments";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { SUBPROOF_RULE_NAME, QUALIFIED_STATEMENT_RULE_NAME, UNQUALIFIED_STATEMENT_RULE_NAME } from "../ruleNames";
-import local from "../context/local";
 
 const childNodesQuery = nodesQuery("/derivation|subDerivation/*"),
       statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/statement!"),
