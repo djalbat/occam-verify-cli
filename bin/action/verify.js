@@ -28,8 +28,15 @@ function verifyAction(argument, log) {
 
     const releaseName = name, ///
           dependentName = releaseName,  ///
-          releaseContext = releaseContextMap[releaseName],
-          released = releaseContext.isReleased();
+          releaseContext = releaseContextMap[releaseName] || null;
+
+    if (releaseContext === null) {
+      log.warning(`The '${name}' proiject or package does not exist.`);
+
+      return;
+    }
+
+    const released = releaseContext.isReleased();
 
     if (released) {
       log.warning(`The '${name}' package does not need to be verified.`);
