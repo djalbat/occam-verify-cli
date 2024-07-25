@@ -3,11 +3,13 @@
 import Term from "../term";
 import termNodesVerifier from "../verifier/nodes/term";
 import verifyGivenVariable from "../verify/givenVariable";
+import bracketedConstructor from "../constructor/bracketed";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
 
-const variableNodeQuery = nodeQuery("/term/variable!");
+const termNodeQuery = nodeQuery("/term/argument/term"),
+      variableNodeQuery = nodeQuery("/term/variable!");
 
 function verifyTerm(termNode, terms, context, verifyAhead) {
   let termVerified;
@@ -18,7 +20,8 @@ function verifyTerm(termNode, terms, context, verifyAhead) {
 
   const verifyTermFunctions = [
     verifyTermAsVariable,
-    verifyTermAgainstConstructors
+    verifyTermAgainstConstructors,
+    verifyTermAgainstBracketedConstructor
   ];
 
   termVerified = verifyTermFunctions.some((verifyTermFunction) => {
@@ -102,26 +105,6 @@ function verifyTermAsVariable(termNode, terms, context, verifyAhead) {
   return termVerifiedAsVariable;
 }
 
-function verifyTermAgainstConstructors(termNode, terms, context, verifyAhead) {
-  let termVerifiedAgainstConstructors = false;
-
-  const variableNode = variableNodeQuery(termNode);
-
-  if (variableNode === null) {
-    const constructors = context.getConstructors();
-
-    termVerifiedAgainstConstructors = constructors.some((constructor) => {
-      const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, terms, constructor, context, verifyAhead);
-
-      if (termVerifiedAgainstConstructor) {
-        return true;
-      }
-    });
-  }
-
-  return termVerifiedAgainstConstructors;
-}
-
 function verifyTermAgainstConstructor(termNode, terms, constructor, context, verifyAhead) {
   let termVerifiedAgainstConstructor;
 
@@ -158,3 +141,87 @@ function verifyTermAgainstConstructor(termNode, terms, constructor, context, ver
 
   return termVerifiedAgainstConstructor;
 }
+
+function verifyTermAgainstConstructors(termNode, terms, context, verifyAhead) {
+  let termVerifiedAgainstConstructors = false;
+
+  const variableNode = variableNodeQuery(termNode);
+
+  if (variableNode === null) {
+    const constructors = context.getConstructors();
+
+    termVerifiedAgainstConstructors = constructors.some((constructor) => {
+      const termVerifiedAgainstConstructor = verifyTermAgainstConstructor(termNode, terms, constructor, context, verifyAhead);
+
+      if (termVerifiedAgainstConstructor) {
+        return true;
+      }
+    });
+  }
+
+  return termVerifiedAgainstConstructors;
+}
+
+function verifyTermAgainstBracketedConstructor(termNode, terms, context, verifyAhead) {
+  let termVerifiedAgainstBracketedConstructor;
+
+  const termString = context.nodeAsString(termNode),
+        bracketedConstructorString = bracketedConstructor.getString();
+
+  context.trace(`Verifying the '${termString}' term against the '${bracketedConstructorString}' bracketed constructor...`, termNode);
+
+  const bracketedConstructorTermNode = bracketedConstructor.getTermNode(),
+        nonTerminalNNdeA = termNode,  ///
+        nonTerminalNodeB = bracketedConstructorTermNode,  ///
+        nodeVerified = termNodesVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context, () => {
+          let verifiedAhead;
+
+          const bracketedTermNode = termNode; ///
+
+          termNode = termNodeQuery(termNode); ///
+
+          if (termNode === null) {
+            verifiedAhead = false;
+          } else {
+            let type;
+
+            verifyTerm(termNode, terms, context, () => {
+              let verifiedAhead;
+
+              const firstTerm = first(terms),
+                    term = firstTerm; ///
+
+              type = term.getType();
+
+              verifiedAhead = true;
+
+              return verifiedAhead;
+            });
+
+            terms.pop();
+
+            termNode = bracketedTermNode; ///
+
+            const term = Term.fromTermNodeAndType(termNode, type);
+
+            terms.push(term);
+
+            verifiedAhead = verifyAhead();
+
+            if (!verifiedAhead) {
+              terms.pop();
+            }
+          }
+
+          return verifiedAhead;
+        });
+
+  termVerifiedAgainstBracketedConstructor = nodeVerified;  ///
+
+  if (termVerifiedAgainstBracketedConstructor) {
+    context.debug(`...verified the '${termString}' term against the '${bracketedConstructorString}' constructor.`, termNode);
+  }
+
+  return termVerifiedAgainstBracketedConstructor;
+}
+
