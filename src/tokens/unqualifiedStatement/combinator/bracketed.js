@@ -5,6 +5,6 @@ import { unqualifiedStatementTokensFromStatementString } from "../../../utilitie
 
 const bracketedCombinatorStatementString = `(${STATEMENT_META_TYPE_NAME})`;
 
-const unqualifiedBracketedCombinatorStatementTokens = unqualifiedStatementTokensFromStatementString(bracketedCombinatorStatementString)
+const bracketedCombinatorUnqualifiedStatementTokens = unqualifiedStatementTokensFromStatementString(bracketedCombinatorStatementString)
 
-export default unqualifiedBracketedCombinatorStatementTokens;
+export default bracketedCombinatorUnqualifiedStatementTokens;
