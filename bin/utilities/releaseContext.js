@@ -1,12 +1,13 @@
 "use strict";
 
-const { Entries } = require("occam-entities"),
-      { ReleaseContext } = require("../../lib/index"), ///
+const { ReleaseContext } = require("../../lib/index"), ///
+      { Entries, metaJSONUtilities } = require("occam-entities"),
       { fileSystemUtilities : occamFileSystemUtilities } = require("occam-file-system"),
       { pathUtilities, fileSystemUtilities : necessaryFileSystemUtilities } = require("necessary");
 
 const { loadProject } = occamFileSystemUtilities,
       { concatenatePaths } = pathUtilities,
+      { isMetaJSONFileValid } = metaJSONUtilities,
       { readFile, isEntryFile, checkEntryExists } = necessaryFileSystemUtilities;
 
 function releaseContextFromDependency(dependency, context, callback) {
@@ -79,11 +80,22 @@ function releaseContextFromJSON(json, context) {
 }
 
 function releaseContextFromProject(project, context) {
-  const { log } = context,
-        json = null,
-        name = project.getName(),
-        entries = project.getEntries(),
-        releaseContext = ReleaseContext.fromLogJSONNameAndEntries(log, json, name, entries);
+  let releaseContext = null;
+
+  const metaJSONFile = project.getMetaJSONFile();
+
+  if (metaJSONFile !== null) {
+    const metaJSONFileValid = isMetaJSONFileValid(metaJSONFile);
+
+    if (metaJSONFileValid) {
+      const { log } = context,
+            json = null,
+            name = project.getName(),
+            entries = project.getEntries();
+
+      releaseContext = ReleaseContext.fromLogJSONNameAndEntries(log, json, name, entries);
+    }
+  }
 
   return releaseContext;
 }

@@ -79,7 +79,7 @@ function checkReleaseContextCreated(releaseContext, dependency, context) {
           dependencyName = dependency.getName(),
           releaseName = dependencyName; ///
 
-    log.error(`The '${releaseName}' context could not be created.`);
+    log.error(`The '${releaseName}' context could not be created. Most likely the 'meta.json' file is missing or invalid.`);
   }
 
   return releaseContextCreated;
