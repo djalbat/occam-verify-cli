@@ -4,9 +4,8 @@ import { third } from "../utilities/array";
 import { CONTAINED } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const statementVariableNodesQuery = nodesQuery("/statement//variable");
-
-export const containmentVariableNodeQuery = nodeQuery("/containment/argument/term/variable!");
+const statementVariableNodesQuery = nodesQuery("/statement//variable"),
+      containmentVariableNodeQuery = nodeQuery("/containment/argument/term/variable!");
 
 export default function verifyContainment(containmentNode, statementNode) {
   let containmentVerified = false;

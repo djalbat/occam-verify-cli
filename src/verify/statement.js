@@ -7,10 +7,9 @@ import verifyTypeAssertion from "../verify/typeAssertion";
 import statementNodesVerifier from "../verifier/nodes/statement";
 
 import { nodeQuery } from "../utilities/query";
-import { containmentVariableNodeQuery } from "../verify/containment";
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
-      statementNodeQuery = nodeQuery("/statement/statement!"),
+      statementNodeQuery = nodeQuery("/statement/metaArgument/statement!"),
       containmentNodeQuery = nodeQuery("/statement/containment!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
@@ -120,37 +119,37 @@ function verifyStatementWithContainment(statementNode, assignments, derived, con
   const containmentNode = containmentNodeQuery(statementNode);
 
   if (containmentNode !== null) {
+    const statementString = context.nodeAsString(statementNode);
+
     statementNode = statementNodeQuery(statementNode);  ///
 
-    const statementString = context.nodeAsString(statementNode),
-          containmentVariableNode = containmentVariableNodeQuery(containmentNode),
-          containmentVariableString = context.nodeAsString(containmentVariableNode);
+    if (statementNode !== null) {
+      context.trace(`Verifying the '${statementString}' statement with containment...`, statementNode);
 
-    context.trace(`Verifying that the '${containmentVariableString}' is either contained in or omitted from the '${statementString}' statement...`, statementNode);
+      const containmentVerified = verifyContainment(containmentNode, statementNode);
 
-    const containmentVerified = verifyContainment(containmentNode, statementNode);
+      if (containmentVerified) {
+        const verifyStatementFunctions = [
+          verifyStatementAsEquality,
+          verifyStatementAgainstCombinators
+        ];
 
-    if (containmentVerified) {
-      const verifyStatementFunctions = [
-        verifyStatementAsEquality,
-        verifyStatementAgainstCombinators
-      ];
+        const statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
+          const derived = false,
+                assignments = [],
+                statementVerified = verifyStatementFunction(statementNode, assignments, derived, context, verifyAhead);
 
-      const statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
-        const derived = false,
-              assignments = [],
-              statementVerified = verifyStatementFunction(statementNode, assignments, derived, context, verifyAhead);
+          if (statementVerified) {
+            return true;
+          }
+        });
 
-        if (statementVerified) {
-          return true;
-        }
-      });
+        statementVerifiedWithContainment = statementVerified; ///
+      }
 
-      statementVerifiedWithContainment = statementVerified; ///
-    }
-
-    if (statementVerifiedWithContainment) {
-      context.debug(`...verified that '${containmentVariableString}' is either contained in or omitted from the '${statementString}' statement.`, statementNode);
+      if (statementVerifiedWithContainment) {
+        context.debug(`...verified the '${statementString}' statement with containment.`, statementNode);
+      }
     }
   }
 
