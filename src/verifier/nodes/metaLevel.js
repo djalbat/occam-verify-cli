@@ -24,11 +24,7 @@ class MetaLevelNodesVerifier extends NodesVerifier {
                 metastatementNodeB = nonTerminalNodeB,  ///
                 metastatementNodeVerified = this.verifyMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions, fileContextA, localMetaContextB, verifyAhead);
 
-          if (metastatementNodeVerified) {
-            nonTerminalNodeVerified = true;  ///
-          } else {
-            nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localMetaContextB, verifyAhead);
-          }
+          nonTerminalNodeVerified = metastatementNodeVerified;  ///
 
           break;
         }
@@ -45,7 +41,7 @@ class MetaLevelNodesVerifier extends NodesVerifier {
   }
 
   verifyMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions, fileContextA, localMetaContextB, verifyAhead) {
-    let metastatementNodeVerified = false;
+    let metastatementNodeVerified;
 
     const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
@@ -53,6 +49,12 @@ class MetaLevelNodesVerifier extends NodesVerifier {
       const metaVariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions, fileContextA, localMetaContextB, verifyAhead);
 
       metastatementNodeVerified = metaVariableNodeVerified; ///
+    } else {
+      const nonTerminalNodeA = metastatementNodeA,  ///
+            nonTerminalNodeB = metastatementNodeB, ///
+            nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localMetaContextB, verifyAhead);
+
+      metastatementNodeVerified = nonTerminalNodeVerified;  ///
     }
 
     return metastatementNodeVerified;

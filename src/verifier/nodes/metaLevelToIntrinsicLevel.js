@@ -12,7 +12,7 @@ const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!'),
 
 class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContextB, verifyAhead) {
-    let nonTerminalNodeVerified = false;
+    let nonTerminalNodeVerified;
 
     const nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
 

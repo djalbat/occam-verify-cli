@@ -26,11 +26,7 @@ class IntrinsicLevelNodesVerifier extends NodesVerifier {
                 termNodeB = nonTerminalNodeB,  ///
                 termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
-          if (termNodeVerified) {
-            nonTerminalNodeVerified = true;  ///
-          } else {
-            nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
-          }
+          nonTerminalNodeVerified = termNodeVerified;  ///
 
           break;
         }
@@ -47,7 +43,7 @@ class IntrinsicLevelNodesVerifier extends NodesVerifier {
   }
 
   verifyTermNode(termNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
-    let termNodeVerified = false;
+    let termNodeVerified;
 
     const variableNodeA = variableNodeQuery(termNodeA);
 
@@ -55,6 +51,12 @@ class IntrinsicLevelNodesVerifier extends NodesVerifier {
       const variableVerified = this.verifyVariableNode(variableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
       termNodeVerified = variableVerified; ///
+    } else {
+      const nonTerminalNodeA = termNodeA, ///
+            nonTerminalNodeB = termNodeB, ///
+            nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
+
+      termNodeVerified = nonTerminalNodeVerified; ///
     }
 
     return termNodeVerified;
