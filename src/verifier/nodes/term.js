@@ -14,9 +14,8 @@ class TermNodesVerifier extends NodesVerifier {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNode = nonTerminalNodeA, ///
-          constructorNonTerminalNode = nonTerminalNodeB; ///
-
-    const ruleName = nonTerminalNode.getRuleName(), ///
+          constructorNonTerminalNode = nonTerminalNodeB, ///
+          ruleName = nonTerminalNode.getRuleName(), ///
           constructorRuleName = constructorNonTerminalNode.getRuleName(); ///
 
     if (ruleName === constructorRuleName) {

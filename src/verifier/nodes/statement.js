@@ -16,9 +16,8 @@ class StatementNodesVerifier extends NodesVerifier {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNode = nonTerminalNodeA, ///
-          combinatorNonTerminalNode = nonTerminalNodeB; ///
-
-    const ruleName = nonTerminalNode.getRuleName(), ///
+          combinatorNonTerminalNode = nonTerminalNodeB, ///
+          ruleName = nonTerminalNode.getRuleName(), ///
           combinatorRuleName = combinatorNonTerminalNode.getRuleName(); ///
 
     if (ruleName === combinatorRuleName) {

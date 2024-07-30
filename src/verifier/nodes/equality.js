@@ -15,17 +15,11 @@ class EqualityNodesVerifier extends NodesVerifier {
     if (ruleNameA === ruleNameB) {
       switch (ruleNameA) {
         case TERM_RULE_NAME: {
-          const leftTermNode = nonTerminalNodeA, ///
-                rightTermNode = nonTerminalNodeB, ///
-                termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, collections);
+          const termNodeA = nonTerminalNodeA, ///
+                termNodeB = nonTerminalNodeB, ///
+                termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, collections, localContext, verifyAhead);
 
-          if (termNodesEqual) {
-            const verifiedAhead = verifyAhead();
-
-            nonTerminalNodeVerified = verifiedAhead;  ///
-          } else {
-            nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, collections, localContext, verifyAhead);
-          }
+          nonTerminalNodeVerified = termNodeVerified;  ///
 
           break;
         }
@@ -39,6 +33,27 @@ class EqualityNodesVerifier extends NodesVerifier {
     }
 
     return nonTerminalNodeVerified;
+  }
+
+  verifyTermNode(termNodeA, termNodeB, collections, localContext, verifyAhead) {
+    let termNodeVerified;
+
+    const leftTermNode = termNodeA, ///
+          rightTermNode = termNodeB, ///
+          termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, collections);
+
+    if (termNodesEqual) {
+      const verifiedAhead = verifyAhead();
+
+      termNodeVerified = verifiedAhead;  ///
+    } else {
+      const nonTerminalNodeA = termNodeA, ///
+            nonTerminalNodeB = termNodeB; ///
+
+      termNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, collections, localContext, verifyAhead);
+    }
+
+    return termNodeVerified;
   }
 }
 
