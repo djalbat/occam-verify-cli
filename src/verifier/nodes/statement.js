@@ -23,22 +23,22 @@ class StatementNodesVerifier extends NodesVerifier {
 
     if (ruleName === combinatorRuleName) {
       switch (ruleName) {
-        case ARGUMENT_RULE_NAME: {
-          const argumentNode = nonTerminalNode, ///
-                constructorArgumentNode = combinatorNonTerminalNode, ///
-                argumentNodeVerified = termNodesVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead);
-
-          nonTerminalNodeVerified = argumentNodeVerified; ///
-
-          break;
-        }
-
         case META_ARGUMENT_RULE_NAME: {
           const metaArgumentNode = nonTerminalNode, ///
                 combinatorMetaargumentNode = combinatorNonTerminalNode, ///
                 metaArgumentNodeVerified = this.verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead);
 
           nonTerminalNodeVerified = metaArgumentNodeVerified; ///
+
+          break;
+        }
+
+        case ARGUMENT_RULE_NAME: {
+          const argumentNode = nonTerminalNode, ///
+                constructorArgumentNode = combinatorNonTerminalNode, ///
+                argumentNodeVerified = termNodesVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead);
+
+          nonTerminalNodeVerified = argumentNodeVerified; ///
 
           break;
         }

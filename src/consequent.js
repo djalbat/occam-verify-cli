@@ -1,6 +1,6 @@
 "use strict";
 
-import termForVariableNodesVerifier from "./verifier/nodes/termForVariable";
+import intrinsicLevelNodesVerifier from "./verifier/nodes/intrinsicLevel";
 
 import { nodeAsString } from "./utilities/string";
 import { statementNodeFromStatementString } from "./utilities/node";
@@ -19,7 +19,7 @@ export default class Consequent {
           nonTerminalNodeB = statementNode,  ///
           localContextA = localContext, ///
           localContextB = statementLocalContext, ///
-          nonTerminalNodeVerified = termForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+          nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

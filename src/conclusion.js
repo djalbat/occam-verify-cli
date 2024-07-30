@@ -1,7 +1,7 @@
 "use strict";
 
-import statementForMetavariableNodesVerifier from "./verifier/nodes/statementForMetavariable";
-import metastatementForMetavariableNodesVerifier from "./verifier/nodes/metastatementForMetavariable";
+import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
+import metaLevelToIntrinsicLevelNodesVerifier from "./verifier/nodes/metaLevelToIntrinsicLevel";
 
 import { nodeAsString } from "./utilities/string";
 import { metastatementNodeFromMetastatementString } from "./utilities/node";
@@ -20,7 +20,7 @@ export default class Conclusion {
           nonTerminalNodeB = statementNode,  ///
           fileContextA = fileContext, ///
           localContextB = statementLocalContext,  ///
-          nonTerminalNodeVerified = statementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContextB, () => {
+          nonTerminalNodeVerified = metaLevelToIntrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContextB, () => {
             const verifyAhead = true;
 
             return verifyAhead;
@@ -35,7 +35,7 @@ export default class Conclusion {
           nonTerminalNodeB = metastatementNode,  ///
           fileContextA = fileContext, ///
           localMetaContextB = metastatementLocalMetaContext,  ///
-          nonTerminalNodeVerified = metastatementForMetavariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localMetaContextB, () => {
+          nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localMetaContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

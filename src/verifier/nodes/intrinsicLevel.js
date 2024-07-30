@@ -10,29 +10,36 @@ import { TERM_RULE_NAME } from "../../ruleNames";
 
 const variableNodeQuery = nodeQuery('/term/variable!');
 
-class TermForVariableNodesVerifier extends NodesVerifier {
+class IntrinsicLevelNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead) {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
           nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
 
-    if (nonTerminalNodeBRuleName === nonTerminalNodeARuleName) {
-      const nonTerminalNodeARuleNameTermRuleName = (nonTerminalNodeARuleName === TERM_RULE_NAME),
-            nonTerminalNodeBRuleNameTermRuleName = (nonTerminalNodeBRuleName === TERM_RULE_NAME);
+    if (nonTerminalNodeARuleName === nonTerminalNodeBRuleName) {
+      const ruleName = nonTerminalNodeARuleName;  ///
 
-      if (nonTerminalNodeARuleNameTermRuleName && nonTerminalNodeBRuleNameTermRuleName) {
-        const termNodeA = nonTerminalNodeA,  ///
-              termNodeB = nonTerminalNodeB,  ///
-              termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
+      switch (ruleName) {
+        case TERM_RULE_NAME: {
+          const termNodeA = nonTerminalNodeA,  ///
+                termNodeB = nonTerminalNodeB,  ///
+                termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
-        if (termNodeVerified) {
-          nonTerminalNodeVerified = true;  ///
-        } else {
-          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
+          if (termNodeVerified) {
+            nonTerminalNodeVerified = true;  ///
+          } else {
+            nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
+          }
+
+          break;
         }
-      } else {
-        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
+
+        default: {
+          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
+
+          break;
+        }
       }
     }
 
@@ -115,6 +122,6 @@ class TermForVariableNodesVerifier extends NodesVerifier {
   }
 }
 
-const termForVariableNodesVerifier = new TermForVariableNodesVerifier();
+const intrinsicLevelNodesVerifier = new IntrinsicLevelNodesVerifier();
 
-export default termForVariableNodesVerifier;
+export default intrinsicLevelNodesVerifier;

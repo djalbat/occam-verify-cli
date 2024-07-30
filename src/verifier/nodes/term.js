@@ -10,8 +10,11 @@ const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!");
 
 class TermNodesVerifier extends NodesVerifier {
-  verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, context, verifyAhead) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context, verifyAhead) {
     let nonTerminalNodeVerified = false;
+
+    const nonTerminalNode = nonTerminalNodeA, ///
+          constructorNonTerminalNode = nonTerminalNodeB; ///
 
     const ruleName = nonTerminalNode.getRuleName(), ///
           constructorRuleName = constructorNonTerminalNode.getRuleName(); ///

@@ -1,6 +1,6 @@
 "use strict";
 
-import termForVariableNodesVerifier from "./verifier/nodes/termForVariable";
+import intrinsicLevelNodesVerifier from "./verifier/nodes/intrinsicLevel";
 
 import { match } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
@@ -43,7 +43,7 @@ export default class Supposition {
                 nonTerminalNodeB = subproofStatementNode, ///
                 localContextA = localContext, ///
                 localContextB = statementLocalContext,  ///
-                nonTerminalNodeVerified = termForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+                nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
                   const verifiedAhead = true;
 
                   return verifiedAhead;
@@ -64,7 +64,7 @@ export default class Supposition {
           nonTerminalNodeB = statementNode,  ///
           localContextA = localContext, ///
           localContextB = statementLocalContext,  ///
-          nonTerminalNodeVerified = termForVariableNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+          nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

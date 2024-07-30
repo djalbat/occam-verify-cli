@@ -1,6 +1,7 @@
 "use strict";
 
 import NodesVerifier from "../../verifier/nodes";
+import TermForVariableSubstitution from "../../substitution/termForVariable";
 import StatementForMetavariableSubstitution from "../../substitution/statementForMetavariable";
 
 import { nodeQuery } from "../../utilities/query";
@@ -9,7 +10,7 @@ import { STATEMENT_RULE_NAME, METASTATEMENT_RULE_NAME, META_ARGUMENT_RULE_NAME }
 const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!'),
       metaArgumentChildNodeNodeQuery = nodeQuery('/metaArgument/*!');
 
-class StatementForMetavariableNodesVerifier extends NodesVerifier {
+class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContext) {
     let nonTerminalNodeVerified = false;
 
@@ -98,6 +99,6 @@ class StatementForMetavariableNodesVerifier extends NodesVerifier {
   }
 }
 
-const statementForMetavariableNodesVerifier = new StatementForMetavariableNodesVerifier();
+const metaLevelToIntrinsicLevelNodesVerifier = new MetaLevelToIntrinsicLevelNodesVerifier();
 
-export default statementForMetavariableNodesVerifier;
+export default metaLevelToIntrinsicLevelNodesVerifier;
