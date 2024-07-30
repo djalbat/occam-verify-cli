@@ -8,6 +8,7 @@ import statementNodesVerifier from "../verifier/nodes/statement";
 import { nodeQuery } from "../utilities/query";
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
+      containmentNodeQuery = nodeQuery("/statement/containment!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 function verifyStatement(statementNode, assignments, derived, context, verifyAhead) {
@@ -20,6 +21,7 @@ function verifyStatement(statementNode, assignments, derived, context, verifyAhe
   const verifyStatementFunctions = [
     verifyStatementAsEquality,
     verifyStatementAsTypeAssertion,
+    verifyStatementWithContainment,
     verifyStatementAgainstCombinators
   ];
 
@@ -103,6 +105,28 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, con
 
     if (statementVerifiedAsTypeAssertion) {
       context.debug(`...verified the '${statementString}' statement as a type assertion.`, statementNode);
+    }
+  }
+
+  return statementVerifiedAsTypeAssertion;
+}
+
+function verifyStatementWithContainment(statementNode, assignments, derived, context, verifyAhead) {
+  let statementVerifiedAsTypeAssertion = false;
+
+  const containmentNode = containmentNodeQuery(statementNode);
+
+  if (containmentNode !== null) {
+    const statementString = context.nodeAsString(statementNode);
+
+    context.trace(`Verifying the '${statementString}' statement with a containment...`, statementNode);
+
+    const containmentVerified = verifyTypeAssertion(containmentNode, assignments, derived, context, verifyAhead);
+
+    statementVerifiedAsTypeAssertion = containmentVerified; ///
+
+    if (statementVerifiedAsTypeAssertion) {
+      context.debug(`...verified the '${statementString}' statement with a containment.`, statementNode);
     }
   }
 
