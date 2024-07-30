@@ -1,13 +1,16 @@
 "use strict";
 
 import verifyEquality from "../verify/equality";
+import verifyContainment from "../verify/containment";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/typeAssertion";
 import statementNodesVerifier from "../verifier/nodes/statement";
 
 import { nodeQuery } from "../utilities/query";
+import { containmentVariableNodeQuery } from "../verify/containment";
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
+      statementNodeQuery = nodeQuery("/statement/statement!"),
       containmentNodeQuery = nodeQuery("/statement/containment!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
@@ -112,25 +115,46 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, con
 }
 
 function verifyStatementWithContainment(statementNode, assignments, derived, context, verifyAhead) {
-  let statementVerifiedAsTypeAssertion = false;
+  let statementVerifiedWithContainment = false;
 
   const containmentNode = containmentNodeQuery(statementNode);
 
   if (containmentNode !== null) {
-    // const statementString = context.nodeAsString(statementNode);
-    //
-    // context.trace(`Verifying the '${statementString}' statement with a containment...`, statementNode);
-    //
-    // const containmentVerified = verifyTypeAssertion(containmentNode, assignments, derived, context, verifyAhead);
-    //
-    // statementVerifiedAsTypeAssertion = containmentVerified; ///
-    //
-    // if (statementVerifiedAsTypeAssertion) {
-    //   context.debug(`...verified the '${statementString}' statement with a containment.`, statementNode);
-    // }
+    statementNode = statementNodeQuery(statementNode);  ///
+
+    const statementString = context.nodeAsString(statementNode),
+          containmentVariableNode = containmentVariableNodeQuery(containmentNode),
+          containmentVariableString = context.nodeAsString(containmentVariableNode);
+
+    context.trace(`Verifying that the '${containmentVariableString}' is either contained in or omitted from the '${statementString}' statement...`, statementNode);
+
+    const containmentVerified = verifyContainment(containmentNode, statementNode);
+
+    if (containmentVerified) {
+      const verifyStatementFunctions = [
+        verifyStatementAsEquality,
+        verifyStatementAgainstCombinators
+      ];
+
+      const statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
+        const derived = false,
+              assignments = [],
+              statementVerified = verifyStatementFunction(statementNode, assignments, derived, context, verifyAhead);
+
+        if (statementVerified) {
+          return true;
+        }
+      });
+
+      statementVerifiedWithContainment = statementVerified; ///
+    }
+
+    if (statementVerifiedWithContainment) {
+      context.debug(`...verified that '${containmentVariableString}' is either contained in or omitted from the '${statementString}' statement.`, statementNode);
+    }
   }
 
-  return statementVerifiedAsTypeAssertion;
+  return statementVerifiedWithContainment;
 }
 
 function verifyStatementAgainstCombinators(statementNode, assignments, derived, context, verifyAhead) {
