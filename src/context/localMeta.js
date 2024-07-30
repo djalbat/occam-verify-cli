@@ -104,6 +104,27 @@ class LocalMetaContext {
     return metastatementMatches;
   }
 
+  findVariableByVariableNode(variableNode) {
+    const node = variableNode,  ///
+          variables = this.getVariables(),
+          variable = variables.find((variable) => {
+            const matches = variable.matchNode(node);
+
+            if (matches) {
+              return true;
+            }
+          }) || null;
+
+    return variable;
+  }
+
+  isVariablePresentByVariableNode(variableNode) {
+    const variable = this.findVariableByVariableNode(variableNode),
+          variablePresent = (variable !== null);
+
+    return variablePresent;
+  }
+
   findMetavariableByMetavariableNode(metavariableNode) {
     const node = metavariableNode,  ///
           metavariables = this.getMetavariables(),

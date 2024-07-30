@@ -2,7 +2,7 @@
 
 import NodeVerifier from "../../verifier/node";
 
-import { METAVARIABLE_RULE_NAME } from "../../ruleNames";
+import { VARIABLE_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
 
 class MetastatementNodeVerifier extends NodeVerifier {
   verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead) {
@@ -17,6 +17,16 @@ class MetastatementNodeVerifier extends NodeVerifier {
               metavariableNodeVerified = metavariableVerified;  ///
 
         nonTerminalNodeVerified = metavariableNodeVerified; ///
+
+        break;
+      }
+
+      case VARIABLE_RULE_NAME: {
+        const variableNode = nonTerminalNode, ///
+              variableVerified = verifyVariable(variableNode, localMetaContext, verifyAhead),
+              variableNodeVerified = variableVerified;  ///
+
+        nonTerminalNodeVerified = variableNodeVerified; ///
 
         break;
       }
@@ -56,4 +66,26 @@ function verifyMetavariable(metavariableNode, localMetaContext, verifyAhead) {
   }
 
   return metavariableVerified;
+}
+
+function verifyVariable(variableNode, localMetaContext, verifyAhead) {
+  let variableVerified;
+
+  const variableString = localMetaContext.nodeAsString(variableNode);
+
+  localMetaContext.trace(`Verifying the '${variableString}' variable...`, variableNode);
+
+  const variablePresent = localMetaContext.isVariablePresentByVariableNode(variableNode);
+
+  if (variablePresent) {
+    const verifiedAhead = verifyAhead();
+
+    variableVerified = verifiedAhead; ///
+  }
+
+  if (variableVerified) {
+    localMetaContext.debug(`...verified the '${variableString}' variable.`, variableNode);
+  }
+
+  return variableVerified;
 }

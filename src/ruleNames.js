@@ -3,6 +3,7 @@
 export const TERM_RULE_NAME = "term";
 export const TYPE_RULE_NAME = "type";
 export const LABEL_RULE_NAME = "label";
+export const VARIABLE_RULE_NAME = "variable";
 export const ARGUMENT_RULE_NAME = "argument";
 export const SUBPROOF_RULE_NAME = "subproof";
 export const STATEMENT_RULE_NAME = "statement";
