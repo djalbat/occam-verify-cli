@@ -117,17 +117,17 @@ function verifyStatementWithContainment(statementNode, assignments, derived, con
   const containmentNode = containmentNodeQuery(statementNode);
 
   if (containmentNode !== null) {
-    const statementString = context.nodeAsString(statementNode);
-
-    context.trace(`Verifying the '${statementString}' statement with a containment...`, statementNode);
-
-    const containmentVerified = verifyTypeAssertion(containmentNode, assignments, derived, context, verifyAhead);
-
-    statementVerifiedAsTypeAssertion = containmentVerified; ///
-
-    if (statementVerifiedAsTypeAssertion) {
-      context.debug(`...verified the '${statementString}' statement with a containment.`, statementNode);
-    }
+    // const statementString = context.nodeAsString(statementNode);
+    //
+    // context.trace(`Verifying the '${statementString}' statement with a containment...`, statementNode);
+    //
+    // const containmentVerified = verifyTypeAssertion(containmentNode, assignments, derived, context, verifyAhead);
+    //
+    // statementVerifiedAsTypeAssertion = containmentVerified; ///
+    //
+    // if (statementVerifiedAsTypeAssertion) {
+    //   context.debug(`...verified the '${statementString}' statement with a containment.`, statementNode);
+    // }
   }
 
   return statementVerifiedAsTypeAssertion;
