@@ -5,7 +5,7 @@ import bracketedMetastatementNode from "../node/metastatement/bracketed";
 import { nodeQuery } from "../utilities/query";
 import { BRACKETED_METASTATEMENT_DEPTH } from "../constants";
 
-const bracketedMetastatementChildNodeQuery = nodeQuery('/metastatement/metastatement!');
+const bracketedMetastatementChildNodeQuery = nodeQuery("/metastatement/metastatement!");
 
 export function matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB) {
   let metastatementMatchesModuloBrackets = false;

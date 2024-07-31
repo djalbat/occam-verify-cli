@@ -1,9 +1,13 @@
 "use strict";
 
+import Substitution from "../substitution";
+
 import { bracketedMetastatementChildNodeFromMetastatementNode } from "../utilities/metaproof";
 
-export default class MetastatementForMetavariableSubstitution {
+export default class MetastatementForMetavariableSubstitution extends Substitution {
   constructor(metavariableNode, metastatementNode) {
+    super();
+
     this.metavariableNode = metavariableNode;
     this.metastatementNode = metastatementNode;
   }

@@ -17,22 +17,22 @@ class TermAsConstructorNodeVerifier extends NodeVerifier {
     const ruleName = nonTerminalNode.getRuleName();
 
     switch (ruleName) {
-      case TERM_RULE_NAME: {
-        const termNode = nonTerminalNode, ///
-              standaloneTermVerified = verifyStandaloneTerm(termNode, fileContext, verifyAhead),
-              termNodeVerified = standaloneTermVerified;  ///
-
-        nonTerminalNodeVerified = termNodeVerified; ///
-
-        break;
-      }
-
       case ARGUMENT_RULE_NAME: {
         const argumentNode = nonTerminalNode, ///
               argumentVerified = verifyArgument(argumentNode, fileContext, verifyAhead),
               argumentNodeVerified = argumentVerified;  ///
 
         nonTerminalNodeVerified = argumentNodeVerified; ///
+
+        break;
+      }
+
+      case TERM_RULE_NAME: {
+        const termNode = nonTerminalNode, ///
+              standaloneTermVerified = verifyStandaloneTerm(termNode, fileContext, verifyAhead),
+              termNodeVerified = standaloneTermVerified;  ///
+
+        nonTerminalNodeVerified = termNodeVerified; ///
 
         break;
       }
@@ -52,7 +52,7 @@ const termAsConstructorNodeVerifier = new TermAsConstructorNodeVerifier();
 
 export default termAsConstructorNodeVerifier;
 
-export function verifyArgument(argumentNode, fileContext, verifyAhead) {
+function verifyArgument(argumentNode, fileContext, verifyAhead) {
   let argumentVerified;
 
   const argumentString = fileContext.nodeAsString(argumentNode);

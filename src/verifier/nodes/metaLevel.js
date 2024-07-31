@@ -1,12 +1,12 @@
 "use strict";
 
 import NodesVerifier from "../../verifier/nodes";
-import MetastatementForMetavariableSubstitution from "../../substitution/metastatementForMetavariable";
+import metaLevelNodesVerifierMixins from "../../mixins/nodesVerifier/metaLevel";
 
 import { nodeQuery } from "../../utilities/query";
 import { METASTATEMENT_RULE_NAME } from "../../ruleNames";
 
-const metavariableNodeQuery = nodeQuery('/metastatement/metavariable!');
+const metavariableNodeQuery = nodeQuery("/metastatement/metavariable!");
 
 class MetaLevelNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localMetaContextB, verifyAhead) {
@@ -59,37 +59,9 @@ class MetaLevelNodesVerifier extends NodesVerifier {
 
     return metastatementNodeVerified;
   }
-
-  verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions, fileContextA, localMetaContextB, verifyAhead) {
-    let metavariableNodeVerified;
-
-    const substitution = substitutions.find((substitution) => {
-            const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNodeA);
-
-            if (substitutionMatchesMetavariableNodeA) {
-              return true;
-            }
-          }) || null;
-
-    if (substitution !== null) {
-      const metastatementNode = metastatementNodeB, ///
-            metastatementNodeMatches = substitution.matchMetastatementNode(metastatementNode);
-
-      metavariableNodeVerified = metastatementNodeMatches;  ///
-    } else {
-      const metavariableNode = metavariableNodeA, ///
-            metastatementNode = metastatementNodeB, ///
-            metastatementForMetavariableSubstitution = MetastatementForMetavariableSubstitution.fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode),
-            substitution = metastatementForMetavariableSubstitution;  ///
-
-      substitutions.push(substitution);
-
-      metavariableNodeVerified = true;
-    }
-
-    return metavariableNodeVerified;
-  }
 }
+
+Object.assign(MetaLevelNodesVerifier.prototype, metaLevelNodesVerifierMixins);
 
 const metaLevelNodesVerifier = new MetaLevelNodesVerifier();
 

@@ -14,12 +14,12 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
     const ruleName = nonTerminalNode.getRuleName();
 
     switch (ruleName) {
-      case TYPE_RULE_NAME: {
-        const typeNode = nonTerminalNode, ///
-              standaloneTypeVerified = verifyStandaloneType(typeNode, fileContext, verifyAhead),
-              typeNodeVerified = standaloneTypeVerified;  ///
+      case STATEMENT_RULE_NAME: {
+        const statementNode = nonTerminalNode, ///
+              standaloneStatementVerified = verifyStandaloneStatement(statementNode, fileContext, verifyAhead),
+              statementNodeVerified = standaloneStatementVerified; ///
 
-        nonTerminalNodeVerified = typeNodeVerified; ///
+        nonTerminalNodeVerified = statementNodeVerified; ///
 
         break;
       }
@@ -34,12 +34,12 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
         break;
       }
 
-      case STATEMENT_RULE_NAME: {
-        const statementNode = nonTerminalNode, ///
-              standaloneStatementVerified = verifyStandaloneStatement(statementNode, fileContext, verifyAhead),
-              statementNodeVerified = standaloneStatementVerified; ///
+      case TYPE_RULE_NAME: {
+        const typeNode = nonTerminalNode, ///
+              standaloneTypeVerified = verifyStandaloneType(typeNode, fileContext, verifyAhead),
+              typeNodeVerified = standaloneTypeVerified;  ///
 
-        nonTerminalNodeVerified = statementNodeVerified; ///
+        nonTerminalNodeVerified = typeNodeVerified; ///
 
         break;
       }
@@ -58,4 +58,3 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
 const statementAsCombinatorNodeVerifier = new StatementAsCombinatorNodeVerifier();
 
 export default statementAsCombinatorNodeVerifier;
-

@@ -1,9 +1,13 @@
 "use strict";
 
+import Substitution from "../substitution";
+
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/proof";
 
-export default class StatementForMetavariableSubstitution {
+export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(metavariableNode, statementNode) {
+    super();
+
     this.metavariableNode = metavariableNode;
     this.statementNode = statementNode;
   }

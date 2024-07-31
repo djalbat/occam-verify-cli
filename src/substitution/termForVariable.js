@@ -1,7 +1,11 @@
 "use strict";
 
-export default class TermForVariableSubstitution {
+import Substitution from "../substitution";
+
+export default class TermForVariableSubstitution extends Substitution {
   constructor(variableNode, termNode) {
+    super();
+
     this.variableNode = variableNode;
     this.termNode = termNode;
   }
