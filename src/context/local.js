@@ -5,7 +5,12 @@ import Equivalence from "../equivalence";
 import contextMixins from "../mixins/context";
 
 import { last } from "../utilities/array";
-import { mergeEquivalences, findEquivalenceByTerm } from "../utilities/equivalences";
+import { mergeEquivalences,
+         separateEquivalences,
+         findEquivalenceByTerm,
+         compressDefinedVariables,
+         definedVariablesFromGroundedEquivalences,
+         implicitlyGroundedEquivalencesFromRemainingEquivalencesAndDefinedVariables } from "../utilities/equivalences";
 
 class LocalContext {
   constructor(context, variables, proofSteps, equivalences) {
@@ -85,8 +90,50 @@ class LocalContext {
     return termType;
   }
 
-  isTermGrounded(term) {
+  isTermGrounded(term, context) {
+    let termGrounded = false;
 
+    const equivalences = this.getEquivalences(),
+          remainingEquivalences = [],
+          initiallyGroundedEquivalences = [];
+
+    separateEquivalences(equivalences, remainingEquivalences, initiallyGroundedEquivalences);
+
+    const initiallyGroundedEquivalencesLength = initiallyGroundedEquivalences.length;
+
+    if (initiallyGroundedEquivalencesLength > 0) {
+      let groundedEquivalences,
+          implicitlyGroundedEquivalences,
+          implicitlyGroundedEquivalencesLength;
+
+      const definedVariables = [];
+
+      groundedEquivalences = initiallyGroundedEquivalences; ///
+
+      definedVariablesFromGroundedEquivalences(groundedEquivalences, definedVariables, context);
+
+      implicitlyGroundedEquivalences = implicitlyGroundedEquivalencesFromRemainingEquivalencesAndDefinedVariables(remainingEquivalences, definedVariables);
+
+      implicitlyGroundedEquivalencesLength = implicitlyGroundedEquivalences.length;
+
+      while (implicitlyGroundedEquivalencesLength > 0) {
+        groundedEquivalences = implicitlyGroundedEquivalences;  ///
+
+        definedVariablesFromGroundedEquivalences(groundedEquivalences, definedVariables, context);
+
+        implicitlyGroundedEquivalences = implicitlyGroundedEquivalencesFromRemainingEquivalencesAndDefinedVariables(remainingEquivalences, definedVariables);
+
+        implicitlyGroundedEquivalencesLength = implicitlyGroundedEquivalences.length;
+      }
+
+      compressDefinedVariables(definedVariables);
+
+      const termImplicitlyGrounded = term.isImplicitlyGrounded(definedVariables);
+
+      termGrounded = termImplicitlyGrounded;  ///
+    }
+
+    return termGrounded;
   }
 
   addEquality(equality) {
@@ -105,7 +152,7 @@ class LocalContext {
       if (false) {
         ///
       } else if ((leftEquivalence === null) && (rightEquivalence === null)) {
-        const equivalence = Equivalence.fromEquality(equality);
+        const equivalence = Equivalence.fromLeftTermAndRightTerm(leftTerm, rightTerm);
 
         this.addEquivalence(equivalence);
 

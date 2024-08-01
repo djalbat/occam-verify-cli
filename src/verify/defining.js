@@ -37,7 +37,7 @@ export default function verifyDefining(argumentNode, definingNode, context) {
 function isVariableDefined(variableNode, context) {
   const variable = context.findVariableByVariableNode(variableNode),
         term = Term.fromVariable(variable, context),
-        termGrounded = context.isTermGrounded(term),
+        termGrounded = context.isTermGrounded(term, context),
         variableDefined = termGrounded; ///
 
   return variableDefined;

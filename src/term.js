@@ -2,6 +2,7 @@
 
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
+import { nodesQuery } from "./utilities/query"
 import { TERM_RULE_NAME } from "./ruleNames";
 
 const { florenceLexerFromNothing } = lexersUtilities,
@@ -9,6 +10,8 @@ const { florenceLexerFromNothing } = lexersUtilities,
 
 const florenceLexer = florenceLexerFromNothing(),
       florenceParser = florenceParserFromNothing();
+
+const variableNodesQuery = nodesQuery("//variable");
 
 export default class Term {
   constructor(node, type) {
@@ -29,6 +32,50 @@ export default class Term {
           matches = this.node.match(node);
 
     return matches;
+  }
+
+  getVariables(variables, context) {
+    const variableNodes = variableNodesQuery(this.node);
+
+    variableNodes.forEach((variableNode) => {
+      const variable = context.findVariableByVariableNode(variableNode),
+            variablesIncludesVariable = variables.includes(variable);
+
+      if (!variablesIncludesVariable) {
+        variables.push(variable);
+      }
+    });
+
+    return variables;
+  }
+
+  isInitiallyGrounded() {
+    const definedVariables = [],
+          implicitlyGrounded = this.isImplicitlyGrounded(definedVariables),
+          initiallyGrounded = implicitlyGrounded; ///
+
+    return initiallyGrounded;
+  }
+
+  isImplicitlyGrounded(definedVariables) {
+    const variableNodes = variableNodesQuery(this.node),
+          variables = definedVariables, ///
+          nodes = variableNodes,  ///
+          implicitlyGrounded = nodes.every((node) => {
+            const variableMatchesNode = variables.some((variable) => {
+              const variableMatchesNode = variable.matchNode(node);
+
+              if (variableMatchesNode) {
+                return true;
+              }
+            });
+
+            if (variableMatchesNode) {
+              return true;
+            }
+          });
+
+    return implicitlyGrounded;
   }
 
   static fromVariable(variable, context) {
