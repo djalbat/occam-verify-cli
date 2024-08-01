@@ -35,9 +35,9 @@ export default class Equality {
           rightTermNode = rightTerm.getNode(),
           nonTerminalNodeA = leftTermNode,  ///
           nonTerminalNodeB = rightTermNode, ///
-          collections = context.getCollections(),
+          equivalences = context.getEquivalences(),
           localContext = this,  ///
-          nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, collections, localContext, () => {
+          nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equivalences, localContext, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

@@ -4,7 +4,7 @@ import { nodeQuery } from "./utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
-export default class Collection {
+export default class Equivalence {
   constructor(terms) {
     this.terms = terms;
   }
@@ -107,16 +107,16 @@ export default class Collection {
     return termNodesMatch;
   }
 
-  static merge(leftCollection, rightCollection) {
-    const leftCollectionTerms = leftCollection.getTerms(),
-          rightCollectionTerms = rightCollection.getTerms(),
+  static merge(leftEquivalence, rightEquivalence) {
+    const leftEquivalenceTerms = leftEquivalence.getTerms(),
+          rightEquivalenceTerms = rightEquivalence.getTerms(),
           terms = [
-            ...leftCollectionTerms,
-            ...rightCollectionTerms
+            ...leftEquivalenceTerms,
+            ...rightEquivalenceTerms
           ],
-          collection = new Collection(terms);
+          equivalence = new Equivalence(terms);
 
-    return collection;
+    return equivalence;
   }
 
   static fromEquality(equality) {
@@ -126,21 +126,21 @@ export default class Collection {
             leftTerm,
             rightTerm
           ],
-          collection = new Collection(terms);
+          equivalence = new Equivalence(terms);
 
-    return collection;
+    return equivalence;
   }
 
-  static fromCollections(collectionA, collectionB) {
-    const collectionATerms = collectionA.getTerms(),
-          collectionBTerms = collectionB.getTerms(),
+  static fromEquivalences(equivalenceA, equivalenceB) {
+    const equivalenceATerms = equivalenceA.getTerms(),
+          equivalenceBTerms = equivalenceB.getTerms(),
           terms = [
-            ...collectionATerms,
-            ...collectionBTerms
+            ...equivalenceATerms,
+            ...equivalenceBTerms
           ],
-          collection = new Collection(terms);
+          equivalence = new Equivalence(terms);
 
-    return collection;
+    return equivalence;
   }
 }
 

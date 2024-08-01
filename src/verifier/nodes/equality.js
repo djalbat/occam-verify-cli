@@ -3,10 +3,10 @@
 import NodesVerifier from "../../verifier/nodes";
 
 import { TERM_RULE_NAME } from "../../ruleNames";
-import { areTermNodesEqual } from "../../utilities/collection";
+import { areTermNodesEqual } from "../../utilities/equivalences";
 
 class EqualityNodesVerifier extends NodesVerifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, collections, localContext, verifyAhead) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equivalences, localContext, verifyAhead) {
     let nonTerminalNodeVerified = false;
 
     const ruleNameA = nonTerminalNodeA.getRuleName(), ///
@@ -17,7 +17,7 @@ class EqualityNodesVerifier extends NodesVerifier {
         case TERM_RULE_NAME: {
           const termNodeA = nonTerminalNodeA, ///
                 termNodeB = nonTerminalNodeB, ///
-                termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, collections, localContext, verifyAhead);
+                termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, equivalences, localContext, verifyAhead);
 
           nonTerminalNodeVerified = termNodeVerified;  ///
 
@@ -25,7 +25,7 @@ class EqualityNodesVerifier extends NodesVerifier {
         }
 
         default: {
-          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, collections, localContext, verifyAhead);
+          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equivalences, localContext, verifyAhead);
 
           break;
         }
@@ -35,12 +35,12 @@ class EqualityNodesVerifier extends NodesVerifier {
     return nonTerminalNodeVerified;
   }
 
-  verifyTermNode(termNodeA, termNodeB, collections, localContext, verifyAhead) {
+  verifyTermNode(termNodeA, termNodeB, equivalences, localContext, verifyAhead) {
     let termNodeVerified;
 
     const leftTermNode = termNodeA, ///
           rightTermNode = termNodeB, ///
-          termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, collections);
+          termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, equivalences);
 
     if (termNodesEqual) {
       const verifiedAhead = verifyAhead();
@@ -50,7 +50,7 @@ class EqualityNodesVerifier extends NodesVerifier {
       const nonTerminalNodeA = termNodeA, ///
             nonTerminalNodeB = termNodeB; ///
 
-      termNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, collections, localContext, verifyAhead);
+      termNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equivalences, localContext, verifyAhead);
     }
 
     return termNodeVerified;

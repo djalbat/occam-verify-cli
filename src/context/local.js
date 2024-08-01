@@ -1,18 +1,18 @@
 "use strict";
 
 import Variable from "../variable";
-import Collection from "../collection";
+import Equivalence from "../equivalence";
 import contextMixins from "../mixins/context";
 
 import { last } from "../utilities/array";
-import { mergeCollections, findCollectionByTerm } from "../utilities/collection";
+import { mergeEquivalences, findEquivalenceByTerm } from "../utilities/equivalences";
 
 class LocalContext {
-  constructor(context, variables, proofSteps, collections) {
+  constructor(context, variables, proofSteps, equivalences) {
     this.context = context;
     this.variables = variables;
     this.proofSteps = proofSteps;
-    this.collections = collections;
+    this.equivalences = equivalences;
   }
 
   getContext() {
@@ -41,16 +41,16 @@ class LocalContext {
     return proofSteps;
   }
 
-  getCollections() {
-    let collections = this.context.getCollections();
+  getEquivalences() {
+    let equivalences = this.context.getEquivalences();
 
-    const collectionsA = this.collections, ///
-          collectionsB = collections,
+    const equivalencesA = this.equivalences, ///
+          equivalencesB = equivalences,
           localContext = this;  ///
 
-    collections = mergeCollections(collectionsA, collectionsB, localContext); ///
+    equivalences = mergeEquivalences(equivalencesA, equivalencesB, localContext); ///
 
-    return collections;
+    return equivalences;
   }
 
   getLastProofStep() {
@@ -70,19 +70,23 @@ class LocalContext {
   getTermType(term) {
     let termType;
 
-    const collections = this.getCollections(),
-          collection = findCollectionByTerm(collections, term);
+    const equivalences = this.getEquivalences(),
+          equivalence = findEquivalenceByTerm(equivalences, term);
 
-    if (collection !== null) {
+    if (equivalence !== null) {
       const localContext = this,  ///
-            collectionType = collection.getType(localContext);
+            equivalenceType = equivalence.getType(localContext);
 
-      termType = collectionType;  ///
+      termType = equivalenceType;  ///
     } else {
       termType = term.getType();
     }
 
     return termType;
+  }
+
+  isTermGrounded(term) {
+
   }
 
   addEquality(equality) {
@@ -95,43 +99,43 @@ class LocalContext {
     } else {
       const leftTerm = equality.getLeftTerm(),
             rightTerm = equality.getRightTerm(),
-            leftCollection = findCollectionByTerm(this.collections, leftTerm),
-            rightCollection = findCollectionByTerm(this.collections, rightTerm);
+            leftEquivalence = findEquivalenceByTerm(this.equivalences, leftTerm),
+            rightEquivalence = findEquivalenceByTerm(this.equivalences, rightTerm);
 
       if (false) {
         ///
-      } else if ((leftCollection === null) && (rightCollection === null)) {
-        const collection = Collection.fromEquality(equality);
+      } else if ((leftEquivalence === null) && (rightEquivalence === null)) {
+        const equivalence = Equivalence.fromEquality(equality);
 
-        this.addCollection(collection);
-
-        equalityAdded = true;
-      } else if ((leftCollection !== null) && (rightCollection === null)) {
-        leftCollection.addTerm(rightTerm);
+        this.addEquivalence(equivalence);
 
         equalityAdded = true;
-      } else if ((leftCollection === null) && (rightCollection !== null)) {
-        rightCollection.addTerm(leftTerm);
+      } else if ((leftEquivalence !== null) && (rightEquivalence === null)) {
+        leftEquivalence.addTerm(rightTerm);
 
         equalityAdded = true;
-      } else if ((leftCollection !== null) && (rightCollection !== null)) {
-        let collection;
+      } else if ((leftEquivalence === null) && (rightEquivalence !== null)) {
+        rightEquivalence.addTerm(leftTerm);
 
-        if (leftCollection === rightCollection) {
-          collection = leftCollection;  ///
+        equalityAdded = true;
+      } else if ((leftEquivalence !== null) && (rightEquivalence !== null)) {
+        let equivalence;
+
+        if (leftEquivalence === rightEquivalence) {
+          equivalence = leftEquivalence;  ///
         } else {
-          collection = Collection.merge(leftCollection, rightCollection);
+          equivalence = Equivalence.merge(leftEquivalence, rightEquivalence);
 
-          this.removeCollection(leftCollection);
+          this.removeEquivalence(leftEquivalence);
 
-          this.removeCollection(rightCollection);
+          this.removeEquivalence(rightEquivalence);
 
-          this.addCollection(collection);
+          this.addEquivalence(equivalence);
         }
 
-        collection.addTerm(leftTerm);
+        equivalence.addTerm(leftTerm);
 
-        collection.addTerm(rightTerm);
+        equivalence.addTerm(rightTerm);
 
         equalityAdded = true;
       }
@@ -165,8 +169,8 @@ class LocalContext {
     this.proofSteps.push(proofStep);
   }
 
-  addCollection(collection) {
-    this.collections.push(collection);
+  addEquivalence(equivalence) {
+    this.equivalences.push(equivalence);
   }
 
   matchStatement(statementNode) {
@@ -191,12 +195,12 @@ class LocalContext {
     return statementMatches;
   }
 
-  removeCollection(collection) {
-    const index = this.collections.indexOf(collection),
+  removeEquivalence(equivalence) {
+    const index = this.equivalences.indexOf(equivalence),
           start = index,  ///
           deleteCount = 1;
 
-    this.collections.splice(start, deleteCount);
+    this.equivalences.splice(start, deleteCount);
   }
 
   findVariableByVariableNode(variableNode) {
@@ -239,8 +243,8 @@ class LocalContext {
     const context = fileContext,  ///
           variables = [],
           proofSteps = [],
-          collections = [],
-          localContext = new LocalContext(context, variables, proofSteps, collections);
+          equivalences = [],
+          localContext = new LocalContext(context, variables, proofSteps, equivalences);
 
     return localContext;
   }
@@ -249,9 +253,9 @@ class LocalContext {
     const context = localContext,  ///
           variables = [],
           proofSteps = [],
-          collections = [];
+          equivalences = [];
 
-    localContext = new LocalContext(context, variables, proofSteps, collections);
+    localContext = new LocalContext(context, variables, proofSteps, equivalences);
 
     return localContext;
   }
@@ -270,8 +274,8 @@ class LocalContext {
 
     const context = fileContext,  ///
           proofSteps = [],
-          collections = [],
-          localContext = new LocalContext(context, variables, proofSteps, collections);
+          equivalences = [],
+          localContext = new LocalContext(context, variables, proofSteps, equivalences);
 
     return localContext;
   }

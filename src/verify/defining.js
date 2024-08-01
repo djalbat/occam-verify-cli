@@ -1,5 +1,7 @@
 "use strict";
 
+import Term from "../term";
+
 import { second } from "../utilities/array";
 import { DEFINED } from "../constants";
 import { nodeQuery } from "../utilities/query";
@@ -33,7 +35,10 @@ export default function verifyDefining(argumentNode, definingNode, context) {
 }
 
 function isVariableDefined(variableNode, context) {
-  let variableDefined = false;
+  const variable = context.findVariableByVariableNode(variableNode),
+        term = Term.fromVariable(variable, context),
+        termGrounded = context.isTermGrounded(term),
+        variableDefined = termGrounded; ///
 
   return variableDefined;
 }

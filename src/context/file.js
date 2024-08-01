@@ -70,10 +70,10 @@ export default class FileContext {
     return proofSteps;
   }
 
-  getCollections(localContext) {
-    const collections = []; ///
+  getEquivalences(localContext) {
+    const equivalences = []; ///
 
-    return collections;
+    return equivalences;
   }
 
   getMetaproofSteps() {
@@ -389,11 +389,10 @@ export default class FileContext {
     return metavariable;
   }
 
-  isLabelPresentByLabelName(labelName) {
-    const label = this.findLabelByLabelName(labelName),
-          labelPresent = (label !== null);
+  isTermGrounded(term) {
+    const termGrounded = false; ///
 
-    return labelPresent;
+    return termGrounded;
   }
 
   isTypePresentByTypeName(typeName) {
@@ -401,6 +400,13 @@ export default class FileContext {
           typePresent = (type !== null);
 
     return typePresent;
+  }
+
+  isLabelPresentByLabelName(labelName) {
+    const label = this.findLabelByLabelName(labelName),
+          labelPresent = (label !== null);
+
+    return labelPresent;
   }
 
   isVariablePresentByVariableNode(variableNode) {
