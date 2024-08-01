@@ -115,16 +115,25 @@ class LocalContext {
 
         equalityAdded = true;
       } else if ((leftCollection !== null) && (rightCollection !== null)) {
+        let collection;
+
         if (leftCollection === rightCollection) {
-          const collection = leftCollection;  ///
-
-          collection.addTerm(leftTerm);
-          collection.addTerm(rightTerm);
-
-          equalityAdded = true;
+          collection = leftCollection;  ///
         } else {
-          debugger
+          collection = Collection.merge(leftCollection, rightCollection);
+
+          this.removeCollection(leftCollection);
+
+          this.removeCollection(rightCollection);
+
+          this.addCollection(collection);
         }
+
+        collection.addTerm(leftTerm);
+
+        collection.addTerm(rightTerm);
+
+        equalityAdded = true;
       }
     }
 
@@ -180,6 +189,14 @@ class LocalContext {
     }
 
     return statementMatches;
+  }
+
+  removeCollection(collection) {
+    const index = this.collections.indexOf(collection),
+          start = index,  ///
+          deleteCount = 1;
+
+    this.collections.splice(start, deleteCount);
   }
 
   findVariableByVariableNode(variableNode) {

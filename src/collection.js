@@ -107,6 +107,18 @@ export default class Collection {
     return termNodesMatch;
   }
 
+  static merge(leftCollection, rightCollection) {
+    const leftCollectionTerms = leftCollection.getTerms(),
+          rightCollectionTerms = rightCollection.getTerms(),
+          terms = [
+            ...leftCollectionTerms,
+            ...rightCollectionTerms
+          ],
+          collection = new Collection(terms);
+
+    return collection;
+  }
+
   static fromEquality(equality) {
     const leftTerm = equality.getLeftTerm(),
           rightTerm = equality.getRightTerm(),

@@ -1,37 +1,48 @@
 "use strict";
 
-import { third } from "../utilities/array";
+import { second } from "../utilities/array";
 import { CONTAINED } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const statementVariableNodesQuery = nodesQuery("/statement//variable"),
-      containmentVariableNodeQuery = nodeQuery("/containment/argument/term/variable!");
+const variableNodesQuery = nodesQuery("/metaArgument//variable"),
+      containmentVariableNodeQuery = nodeQuery("/argument/term/variable!");
 
-export default function verifyContainment(containmentNode, statementNode) {
+export default function verifyContainment(argumentNode, containmentNode, metaArgumentNode, context) {
   let containmentVerified = false;
 
-  const contained = containedFromContainmendNode(containmentNode),
-        statementVariableNodes = statementVariableNodesQuery(statementNode),
-        containmentVariableNode = containmentVariableNodeQuery(containmentNode),
-        containmentVariableNodeMatchesStatementVariableNode = statementVariableNodes.some((statementVariableNode) => {
-          const containmentVariableNodeMatchesStatementVariableNode = containmentVariableNode.match(statementVariableNode);
+  const containmentVariableNode = containmentVariableNodeQuery(argumentNode);
 
-          if (containmentVariableNodeMatchesStatementVariableNode) {
-            return true;
-          }
-        });
+  if (containmentVariableNode !== null) {
+    const contained = containedFromContainmentNode(containmentNode),
+          variableNodes = variableNodesQuery(metaArgumentNode),
+          containmentVariableNodeMatchesStatementVariableNode = variableNodes.some((statementVariableNode) => {
+            const containmentVariableNodeMatchesStatementVariableNode = containmentVariableNode.match(statementVariableNode);
 
-  if (contained === containmentVariableNodeMatchesStatementVariableNode) {
-    containmentVerified = true;
+            if (containmentVariableNodeMatchesStatementVariableNode) {
+              return true;
+            }
+          });
+
+    if (contained) {
+      if (containmentVariableNodeMatchesStatementVariableNode) {
+        containmentVerified = true;
+      }
+    }
+
+    if (!contained) {
+      if (!containmentVariableNodeMatchesStatementVariableNode) {
+        containmentVerified = true;
+      }
+    }
   }
 
   return containmentVerified;
 }
 
-function containedFromContainmendNode(containmentNode) {
+function containedFromContainmentNode(containmentNode) {
   const childNodes = containmentNode.getChildNodes(),
-        thirdChildNode = third(childNodes),
-        terminalNode = thirdChildNode,  ///
+        secondChildNode = second(childNodes),
+        terminalNode = secondChildNode,  ///
         content = terminalNode.getContent(),
         contained = (content === CONTAINED);
 
