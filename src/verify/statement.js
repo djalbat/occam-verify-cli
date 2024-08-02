@@ -207,22 +207,29 @@ function verifyStatementAgainstCombinator(statementNode, combinator, context, ve
 }
 
 function verifyStatementAgainstCombinators(statementNode, assignments, derived, context, verifyAhead) {
-  let statementVerifiedAgainstCombinators;
+  let statementVerifiedAgainstCombinators = false;
 
-  let combinators = context.getCombinators();
+  const equalityNode = equalityNodeQuery(statementNode),
+        definingNode = definingNodeQuery(statementNode),
+        containmentNode = containmentNodeQuery(statementNode),
+        typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
-  combinators = [ ///
-    bracketedCombinator,
-    ...combinators
-  ];
+  if ((equalityNode === null) && (definingNode === null) && (containmentNode === null) && (typeAssertionNode === null)) {
+    let combinators = context.getCombinators();
 
-  statementVerifiedAgainstCombinators = combinators.some((combinator) => {
-    const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context, verifyAhead);
+    combinators = [ ///
+      bracketedCombinator,
+      ...combinators
+    ];
 
-    if (statementVerifiedAgainstCombinator) {
-      return true;
-    }
-  });
+    statementVerifiedAgainstCombinators = combinators.some((combinator) => {
+      const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, context, verifyAhead);
+
+      if (statementVerifiedAgainstCombinator) {
+        return true;
+      }
+    });
+  }
 
   return statementVerifiedAgainstCombinators;
 }
