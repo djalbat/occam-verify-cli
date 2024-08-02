@@ -25,8 +25,8 @@ class LocalMetaContext {
     let metavariables = this.context.getMetavariables();
 
     metavariables = [ ///
-      ...this.metavariables,
       ...metavariables,
+      ...this.metavariables
     ]
 
     return metavariables;
@@ -36,8 +36,8 @@ class LocalMetaContext {
     let metaproofSteps = this.context.getMetaproofSteps();
 
     metaproofSteps = [  ///
-      ...this.metaproofSteps,
-      ...metaproofSteps
+      ...metaproofSteps,
+      ...this.metaproofSteps
     ];
 
     return metaproofSteps;

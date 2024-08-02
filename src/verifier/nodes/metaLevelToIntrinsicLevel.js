@@ -1,16 +1,20 @@
 "use strict";
 
+import verifyTerm from "../../verify/term";
 import LocalContext from "../../context/local";
 import NodesVerifier from "../../verifier/nodes";
+import TermForVariableSubstitution from "../../substitution/termForVariable";
 import intrinsicLevelNodesVerifierMixins from "../../mixins/nodesVerifier/intrinsiclevel";
 import StatementForMetavariableSubstitution from "../../substitution/statementForMetavariable";
 
 import { nodeQuery } from "../../utilities/query";
 import { TERM_RULE_NAME, STATEMENT_RULE_NAME, METASTATEMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../../ruleNames";
 
-const variableNodeQuery = nodeQuery("/term/variable!"),
+const termNodeQuery = nodeQuery("/substitution/term!"),
+      variableNodeQuery = nodeQuery("/*/variable!"),
       statementNodeQuery = nodeQuery("/metaArgument/statement"),
-      metavariableNodeQuery = nodeQuery("/metastatement/metavariable!");
+      metavariableNodeQuery = nodeQuery("/metastatement/metavariable!"),
+      substitutionNodeQuery = nodeQuery("/metastatement/substitution!");
 
 class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContextB, verifyAhead) {
@@ -80,9 +84,28 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
           metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
     if ((metavariableNodeA !== null) && (statementNodeB !== null)) {
-      const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, localContextB, verifyAhead);
+      const substitutionNode = substitutionNodeQuery(metastatementNodeA);
 
-      metaArgumentNodeVerified = metavariableNodeVerified;  ///
+      if (substitutionNode !== null) {
+        const variableNode = variableNodeQuery(substitutionNode),
+              variable = fileContextA.findVariableByVariableNode(variableNode);
+
+        if (variable !== null) {
+          const termNode = termNodeQuery(substitutionNode),
+                terms = [],
+                context = fileContextA, ///
+                termVerified = verifyTerm(termNode, terms, context, () => {
+
+                });
+
+
+
+        }
+      } else {
+        const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, localContextB, verifyAhead);
+
+        metaArgumentNodeVerified = metavariableNodeVerified;  ///
+      }
     }
 
     return metaArgumentNodeVerified;
@@ -121,15 +144,23 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
   verifyStatementNode(metastatementNodeA, statementNodeB, substitutions, fileContextA, localContextB, verifyAhead) {
     let statementNodeVerified;
 
-    const nonTerminalNodeA = metastatementNodeA,  ///
-          nonTerminalNodeB = statementNodeB,  ///
-          nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-          nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
-          childNodesA = nonTerminalNodeAChildNodes, ///
-          childNodesB = nonTerminalNodeBChildNodes, ///
-          childNodesVerified = super.verifyChildNodes(childNodesA, childNodesB, substitutions, fileContextA, localContextB, verifyAhead);
+    const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
-    statementNodeVerified = childNodesVerified;  ///
+    if (metavariableNodeA !== null) {
+      const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, localContextB, verifyAhead);
+
+      statementNodeVerified = metavariableNodeVerified;  ///
+    } else {
+      const nonTerminalNodeA = metastatementNodeA,  ///
+            nonTerminalNodeB = statementNodeB,  ///
+            nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
+            nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
+            childNodesA = nonTerminalNodeAChildNodes, ///
+            childNodesB = nonTerminalNodeBChildNodes, ///
+            childNodesVerified = super.verifyChildNodes(childNodesA, childNodesB, substitutions, fileContextA, localContextB, verifyAhead);
+
+      statementNodeVerified = childNodesVerified;  ///
+    }
 
     return statementNodeVerified;
   }

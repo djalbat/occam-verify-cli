@@ -360,10 +360,7 @@ export default class ReleaseContext {
 
       fileContextsJSON.forEach((fileContextJSON) => {
         const json = fileContextJSON, ///
-              { filePath } = json,
-              fileContext = FileContext.fromFilePathAndReleaseContext(filePath, releaseContext);
-
-        fileContext.initialise(json);
+              fileContext = FileContext.fromJSONAndReleaseContext(json, releaseContext);
 
         this.fileContexts.push(fileContext);
       });

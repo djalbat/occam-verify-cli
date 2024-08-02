@@ -28,8 +28,8 @@ class LocalContext {
     let variables = this.context.getVariables();
 
     variables = [ ///
-      ...this.variables,
-      ...variables
+      ...variables,
+      ...this.variables
     ];
 
     return variables;
@@ -39,8 +39,8 @@ class LocalContext {
     let proofSteps = this.context.getProofSteps();
 
     proofSteps = [  ///
-      ...this.proofSteps,
-      ...proofSteps
+      ...proofSteps,
+      ...this.proofSteps
     ];
 
     return proofSteps;

@@ -710,6 +710,27 @@ export default class FileContext {
     });
   }
 
+  static fromJSONAndReleaseContext(json, releaseContext) {
+    const { filePath } = json,
+          tokens = null,
+          node = null,
+          types = [],
+          rules = [],
+          axioms = [],
+          lemmas = [],
+          theorems = [],
+          variables = [],
+          conjectures = [],
+          combinators = [],
+          constructors = [],
+          metavariables = [],
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, theorems, conjectures, combinators, constructors, metavariables);
+
+    fileContext.initialise(json);
+
+    return fileContext;
+  }
+
   static fromFilePathAndReleaseContext(filePath, releaseContext) {
     const file = releaseContext.getFile(filePath),
           content = file.getContent(),
