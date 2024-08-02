@@ -90,8 +90,8 @@ class LocalContext {
     return termType;
   }
 
-  isTermGrounded(term, context) {
-    let termGrounded = false;
+  isVariableDefined(variable) {
+    let variableDefined = false;
 
     const equivalences = this.getEquivalences(),
           remainingEquivalences = [],
@@ -106,7 +106,8 @@ class LocalContext {
           implicitlyGroundedEquivalences,
           implicitlyGroundedEquivalencesLength;
 
-      const definedVariables = [];
+      const context = this,
+            definedVariables = [];
 
       groundedEquivalences = initiallyGroundedEquivalences; ///
 
@@ -128,12 +129,12 @@ class LocalContext {
 
       compressDefinedVariables(definedVariables);
 
-      const termImplicitlyGrounded = term.isImplicitlyGrounded(definedVariables);
+      const definedVariablesIncludesVariable = definedVariables.includes(variable);
 
-      termGrounded = termImplicitlyGrounded;  ///
+      variableDefined = definedVariablesIncludesVariable;  ///
     }
 
-    return termGrounded;
+    return variableDefined;
   }
 
   addEquality(equality) {
