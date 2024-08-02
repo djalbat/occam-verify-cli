@@ -52,3 +52,25 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
 
   return variableVerified;
 }
+
+export function verifyStandaloneVariable(variableNode, context, verifyAhead) {
+  let standaloneVariableVerified = false;
+
+  const variableString = context.nodeAsString(variableNode);
+
+  context.trace(`Verifying the '${variableString}' standalone variable...`, variableNode);
+
+  const variablePresent = context.isVariablePresentByVariableNode(variableNode);
+
+  if (variablePresent) {
+    const verifiedAhead = verifyAhead();
+
+    standaloneVariableVerified = verifiedAhead; ///
+  }
+
+  if (standaloneVariableVerified) {
+    context.debug(`...verified the '${variableString}' standalone variable.`, variableNode);
+  }
+
+  return standaloneVariableVerified;
+}

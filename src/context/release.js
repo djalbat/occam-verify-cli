@@ -343,15 +343,15 @@ export default class ReleaseContext {
     releaseContexts = releaseContexts.slice();  ///
 
     const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
-          releaseContext = releaseContexts.shift(),
-          dependencyReleaseContexts = releaseContexts;  ///
-
-    const florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
+          florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
           florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
     this.lexer = florenceLexer; ///
 
     this.parser = florenceParser; ///
+
+    const releaseContext = releaseContexts.shift(),
+          dependencyReleaseContexts = releaseContexts;  ///
 
     this.dependencyReleaseContexts = dependencyReleaseContexts;
 

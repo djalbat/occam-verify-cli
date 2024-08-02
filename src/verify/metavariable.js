@@ -34,3 +34,25 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
 
   return metavariableVerified;
 }
+
+export function verifyStandaloneMetavariable(metavariableNode, contexct, verifyAhead) {
+  let standaloneMetavariableVerified = false;
+
+  const metavariableString = contexct.nodeAsString(metavariableNode);
+
+  contexct.trace(`Verifying the '${metavariableString}' standalone metavariable...`, metavariableNode);
+
+  const metavariablePresent = contexct.isMetavariablePresentByMetavariableNode(metavariableNode);
+
+  if (metavariablePresent) {
+    const verifiedAhead = verifyAhead();
+
+    standaloneMetavariableVerified = verifiedAhead; ///
+  }
+
+  if (standaloneMetavariableVerified) {
+    contexct.debug(`...verified the '${metavariableString}' standalone metavariable.`, metavariableNode);
+  }
+
+  return standaloneMetavariableVerified;
+}

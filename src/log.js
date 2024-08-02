@@ -106,8 +106,8 @@ export default class Log {
 function formatMessage(level, message, node = null, tokens = null, filePath = null) {
   const upperCaseLevel = level.toUpperCase();
 
-  if (node === null) {
-    message = `${upperCaseLevel}: ${message}`;
+  if ((node === null) || (tokens === null)) {
+    message = `${upperCaseLevel}: ${filePath} - ${message}`;
   } else {
     const leastLineIndex = leastLineIndexFromNodeAndTokens(node, tokens),
           leastLineNumber = leastLineIndex, ///

@@ -1,6 +1,5 @@
 "use strict";
 
-import verifyTerm from "../../verify/term";
 import LocalContext from "../../context/local";
 import NodesVerifier from "../../verifier/nodes";
 import TermForVariableSubstitution from "../../substitution/termForVariable";
@@ -91,13 +90,9 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
               variable = fileContextA.findVariableByVariableNode(variableNode);
 
         if (variable !== null) {
-          const termNode = termNodeQuery(substitutionNode),
-                terms = [],
-                context = fileContextA, ///
-                termVerified = verifyTerm(termNode, terms, context, () => {
+          const termNode = termNodeQuery(substitutionNode);
 
-                });
-
+          debugger
 
 
         }
