@@ -2,6 +2,12 @@
 
 import Substitution from "../substitution";
 
+import { nodeQuery } from "../utilities/query";
+import term from "../verify/term";
+
+const termNodeQuery = nodeQuery("/*/term!"),
+      variableNodeQuery = nodeQuery("/*/variable!");
+
 export default class TermForVariableSubstitution extends Substitution {
   constructor(variableNode, termNode) {
     super();
@@ -35,4 +41,54 @@ export default class TermForVariableSubstitution extends Substitution {
 
     return termForVariableSubstitution;
   }
+
+  static fromSubstitutionNodeAndSubstitutions(substitutionNode, substitutions) {
+    let termNode = termNodeQuery(substitutionNode),
+        variableNode = variableNodeQuery(substitutionNode);
+
+    termNode = substituteTermNode(termNode, substitutions); ///
+
+    variableNode = substituteVariableNode(variableNode, substitutions); ///
+
+    const termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
+
+    return termForVariableSubstitution;
+  }
+}
+
+function substituteTermNode(termNode, substitutions) {
+  const termVariableNode = variableNodeQuery(termNode);
+
+  if (termVariableNode !== null) {
+    substitutions.some((substitution) => {
+      const variableNodeMatches = substitution.matchVariableNode(termVariableNode);
+
+      if (variableNodeMatches) {
+        termNode = substitution.getTermNode();  ///
+
+        return true;
+      }
+    });
+  }
+
+  return termNode;
+}
+
+function substituteVariableNode(variableNode, substitutions) {
+  substitutions.some((substitution) => {
+    const variableNodeMatches = substitution.matchVariableNode(variableNode);
+
+    if (variableNodeMatches) {
+      const termNode = substitution.getTermNode(),
+            termVariableNode = variableNodeQuery(termNode);
+
+      if (termVariableNode !== null) {
+        variableNode = termVariableNode;  ///
+
+        return true;
+      }
+    }
+  });
+
+  return variableNode;
 }

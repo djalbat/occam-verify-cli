@@ -2,6 +2,7 @@
 
 import LocalContext from "../../context/local";
 import NodesVerifier from "../../verifier/nodes";
+import TermForVariableSubstitution from "../../substitution/termForVariable";
 import intrinsicLevelNodesVerifierMixins from "../../mixins/nodesVerifier/intrinsiclevel";
 import StatementForMetavariableSubstitution from "../../substitution/statementForMetavariable";
 
@@ -86,16 +87,14 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
       const substitutionNodeA = substitutionNodeQuery(metastatementNodeA);
 
       if (substitutionNodeA !== null) {
-        const variableNode = variableNodeQuery(substitutionNode),
-              variable = fileContextA.findVariableByVariableNode(variableNode);
+        const substitutionNode = substitutionNodeA, ///
+              termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNodeAndSubstitutions(substitutionNode, substitutions),
+              substitution = termForVariableSubstitution; ///
 
-        if (variable !== null) {
-          const termNode = termNodeQuery(substitutionNode);
-
-          debugger
-
-
-        }
+        substitutions = [
+          substitution,
+          ...substitutions
+        ];
       }
 
       const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, localContextB, verifyAhead);
