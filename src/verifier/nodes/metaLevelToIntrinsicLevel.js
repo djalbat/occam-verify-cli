@@ -83,9 +83,9 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
           metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
     if ((metavariableNodeA !== null) && (statementNodeB !== null)) {
-      const substitutionNode = substitutionNodeQuery(metastatementNodeA);
+      const substitutionNodeA = substitutionNodeQuery(metastatementNodeA);
 
-      if (substitutionNode !== null) {
+      if (substitutionNodeA !== null) {
         const variableNode = variableNodeQuery(substitutionNode),
               variable = fileContextA.findVariableByVariableNode(variableNode);
 
@@ -96,11 +96,11 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
 
 
         }
-      } else {
-        const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, localContextB, verifyAhead);
-
-        metaArgumentNodeVerified = metavariableNodeVerified;  ///
       }
+
+      const metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, fileContextA, localContextB, verifyAhead);
+
+      metaArgumentNodeVerified = metavariableNodeVerified;  ///
     }
 
     return metaArgumentNodeVerified;
