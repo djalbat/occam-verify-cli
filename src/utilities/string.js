@@ -46,20 +46,35 @@ export function terminalNodeAsString(terminalNode) {
 }
 
 export function nonTerminalNodeAsString(nonTerminalNode, tokens) {
-  const lastSignificantTokenIndex = nonTerminalNode.getLastSignificantTokenIndex(tokens),
-        firstSignificantTokenIndex = nonTerminalNode.getFirstSignificantTokenIndex(tokens),
-        start = firstSignificantTokenIndex, ///
-        end = lastSignificantTokenIndex + 1;
+  let string;
 
-  tokens = tokens.slice(start, end);  ///
+  if (tokens === null) {
+    const childNodes = nonTerminalNode.getChildNodes();
 
-  const string = tokens.reduce((string, token) => {
-    const content = token.getContent();
+    string = childNodes.reduce((string, childNode) => {
+      const node = childNode, ///
+            nodeString = nodeAsString(node, tokens);
 
-    string = `${string}${content}`;
+      string = `${string}${nodeString}`;
 
-    return string;
-  }, EMPTY_STRING);
+      return string;
+    }, EMPTY_STRING);
+  } else {
+    const lastSignificantTokenIndex = nonTerminalNode.getLastSignificantTokenIndex(tokens),
+          firstSignificantTokenIndex = nonTerminalNode.getFirstSignificantTokenIndex(tokens),
+          start = firstSignificantTokenIndex, ///
+          end = lastSignificantTokenIndex + 1;
+
+    tokens = tokens.slice(start, end);  ///
+
+    string = tokens.reduce((string, token) => {
+      const content = token.getContent();
+
+      string = `${string}${content}`;
+
+      return string;
+    }, EMPTY_STRING);
+  }
 
   return string;
 }

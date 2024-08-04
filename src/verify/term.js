@@ -1,7 +1,7 @@
 "use strict";
 
 import Term from "../term";
-import termNodesVerifier from "../verifier/nodes/term";
+import termAgainstConstructorNodesVerifier from "../verifier/nodes/termAgainstConstructor";
 import verifyGivenVariable from "../verify/givenVariable";
 import bracketedConstructor from "../constructor/bracketed";
 
@@ -58,7 +58,7 @@ export function verifyStandaloneTerm(termNode, context, verifyAhead) {
   return standaloneTermVerified;
 }
 
-Object.assign(termNodesVerifier, {
+Object.assign(termAgainstConstructorNodesVerifier, {
   verifyTerm
 });
 
@@ -115,7 +115,7 @@ function verifyTermAgainstConstructor(termNode, terms, constructor, context, ver
   const constructorTermNode = constructor.getTermNode(),
         nonTerminalNNdeA = termNode,  ///
         nonTerminalNodeB = constructorTermNode,  ///
-        nodeVerified = termNodesVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context, () => {
+        nodeVerified = termAgainstConstructorNodesVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context, () => {
           let verifiedAhead;
 
           const type = constructor.getType(),
@@ -172,7 +172,7 @@ function verifyTermAgainstBracketedConstructor(termNode, terms, context, verifyA
   const bracketedConstructorTermNode = bracketedConstructor.getTermNode(),
         nonTerminalNNdeA = termNode,  ///
         nonTerminalNodeB = bracketedConstructorTermNode,  ///
-        nodeVerified = termNodesVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context, () => {
+        nodeVerified = termAgainstConstructorNodesVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, context, () => {
           let verifiedAhead;
 
           const bracketedTermNode = termNode; ///

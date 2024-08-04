@@ -1,7 +1,7 @@
 "use strict";
 
 import NodesVerifier from "../../verifier/nodes";
-import termNodesVerifier from "../../verifier/nodes/term";
+import termAgainstConstructorNodesVerifier from "../../verifier/nodes/termAgainstConstructor";
 
 import { nodeQuery } from "../../utilities/query";
 import { STATEMENT_META_TYPE } from "../../metaTypes";
@@ -11,7 +11,7 @@ const metaTypeNodeQuery = nodeQuery("/metaArgument/metaType!"),
       statementNodeQuery = nodeQuery("/metaArgument/statement!"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type");
 
-class StatementNodesVerifier extends NodesVerifier {
+class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context, verifyAhead) {
     let nonTerminalNodeVerified = false;
 
@@ -35,7 +35,7 @@ class StatementNodesVerifier extends NodesVerifier {
         case ARGUMENT_RULE_NAME: {
           const argumentNode = nonTerminalNode, ///
                 constructorArgumentNode = combinatorNonTerminalNode, ///
-                argumentNodeVerified = termNodesVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead);
+                argumentNodeVerified = termAgainstConstructorNodesVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead);
 
           nonTerminalNodeVerified = argumentNodeVerified; ///
 
@@ -87,6 +87,6 @@ class StatementNodesVerifier extends NodesVerifier {
   }
 }
 
-const statementNodesVerifier = new StatementNodesVerifier();
+const statementAgainstCombinatorNodesVerifier = new StatementAgainstCombinatorNodesVerifier();
 
-export default statementNodesVerifier;
+export default statementAgainstCombinatorNodesVerifier;

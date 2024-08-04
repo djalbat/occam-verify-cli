@@ -9,7 +9,7 @@ import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!");
 
-class TermNodesVerifier extends NodesVerifier {
+class TermAgainstConstructorNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context, verifyAhead) {
     let nonTerminalNodeVerified = false;
 
@@ -69,7 +69,7 @@ class TermNodesVerifier extends NodesVerifier {
         const constructorTypeNode = typeNodeQuery(constructorArgumentNode);
 
         if (constructorTypeNode !== null) {
-          const { verifyTerm } = termNodesVerifier,
+          const { verifyTerm } = termAgainstConstructorNodesVerifier,
                 terms = [],
                 termVerified = verifyTerm(termNode, terms, context, () => {
                   let verifiedAhead = false;
@@ -97,7 +97,7 @@ class TermNodesVerifier extends NodesVerifier {
   }
 }
 
-const termNodesVerifier = new TermNodesVerifier();
+const termAgainstConstructorNodesVerifier = new TermAgainstConstructorNodesVerifier();
 
-export default termNodesVerifier;
+export default termAgainstConstructorNodesVerifier;
 

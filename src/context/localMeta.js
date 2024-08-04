@@ -25,8 +25,8 @@ class LocalMetaContext {
     let metavariables = this.context.getMetavariables();
 
     metavariables = [ ///
-      ...metavariables,
-      ...this.metavariables
+      ...this.metavariables,
+      ...metavariables
     ]
 
     return metavariables;

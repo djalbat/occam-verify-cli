@@ -5,7 +5,7 @@ import verifyDefining from "../verify/defining";
 import verifyContainment from "../verify/containment";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/typeAssertion";
-import statementNodesVerifier from "../verifier/nodes/statement";
+import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statementAgainstCombinator";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -67,7 +67,7 @@ export function verifyStandaloneStatement(statementNode, context, verifyAhead) {
   return standaloneStatementVerified;
 }
 
-Object.assign(statementNodesVerifier, {
+Object.assign(statementAgainstCombinatorNodesVerifier, {
   verifyStatement
 });
 
@@ -194,7 +194,7 @@ function verifyStatementAgainstCombinator(statementNode, combinator, context, ve
   const combinatorStatementNode = combinator.getStatementNode(),
         nonTerminalNodeA = statementNode, ///
         nonTerminalNodeB = combinatorStatementNode, ///
-        nonTerminalNodeVerified = statementNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context, verifyAhead);
+        nonTerminalNodeVerified = statementAgainstCombinatorNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context, verifyAhead);
 
   statementVerifiedAgainstCombinator = nonTerminalNodeVerified;  ///
 

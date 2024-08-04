@@ -28,8 +28,8 @@ class LocalContext {
     let variables = this.context.getVariables();
 
     variables = [ ///
-      ...variables,
-      ...this.variables
+      ...this.variables,
+      ...variables
     ];
 
     return variables;

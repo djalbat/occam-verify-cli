@@ -2,7 +2,6 @@
 
 import LocalContext from "../../context/local";
 import NodesVerifier from "../../verifier/nodes";
-import TermForVariableSubstitution from "../../substitution/termForVariable";
 import intrinsicLevelNodesVerifierMixins from "../../mixins/nodesVerifier/intrinsiclevel";
 import StatementForMetavariableSubstitution from "../../substitution/statementForMetavariable";
 
@@ -33,7 +32,8 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
 
       case TERM_RULE_NAME: {
         const termNodeA = nonTerminalNodeA, ///
-              termNodeVerified = this.verifyTermNode(termNodeA, nonTerminalNodeB, substitutions, fileContextA, localContextB, verifyAhead);
+              localContextA = LocalContext.fromFileContext(fileContextA),
+              termNodeVerified = this.verifyTermNode(termNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
         nonTerminalNodeVerified = termNodeVerified; ///
 
