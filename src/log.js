@@ -107,7 +107,9 @@ function formatMessage(level, message, node = null, tokens = null, filePath = nu
   const upperCaseLevel = level.toUpperCase();
 
   if ((node === null) || (tokens === null)) {
-    message = `${upperCaseLevel}: ${filePath} - ${message}`;
+    message = (filePath !== null) ?
+              `${upperCaseLevel}: ${filePath} - ${message}`:
+                `${upperCaseLevel}: ${message}`;
   } else {
     const leastLineIndex = leastLineIndexFromNodeAndTokens(node, tokens),
           leastLineNumber = leastLineIndex, ///
