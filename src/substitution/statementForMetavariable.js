@@ -52,22 +52,11 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     if (this.substitution === null) {
       statementNodeMatches = this.statementNode.match(statementNode);
     } else {
-      const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionAndSubstitutions(this.substitution, substitutions),
-            substitution = termForVariableSubstitution; ///
+      const substitution = this.substitution,
+            statementNodeA = statementNode, ///
+            statementNodeB = this.statementNode;  ///
 
-      substitutions = [ ///
-        substitution
-      ];
-
-      const nonTerminalNodeA = statementNode, ///
-            nonTerminalNodeB = this.statementNode,  ///
-            nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-              const verifiedAhead = true;
-
-              return verifiedAhead;
-            });
-
-      statementNodeMatches = nonTerminalNodeVerified; ///
+      statementNodeMatches = matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
     }
 
     return statementNodeMatches;
@@ -108,4 +97,28 @@ export default class StatementForMetavariableSubstitution extends Substitution {
 
     return statementForMetavariableSubstitution;
   }
+}
+
+export function matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB) {
+  let statementNodeMatches;
+
+  const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionAndSubstitutions(substitution, substitutions);
+
+  substitution = termForVariableSubstitution; ///
+
+  substitutions = [ ///
+    substitution
+  ];
+
+  const nonTerminalNodeA = statementNodeA, ///
+        nonTerminalNodeB = statementNodeB,  ///
+        nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+          const verifiedAhead = true;
+
+          return verifiedAhead;
+        });
+
+  statementNodeMatches = nonTerminalNodeVerified; ///
+
+  return statementNodeMatches;
 }
