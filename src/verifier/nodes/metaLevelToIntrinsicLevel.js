@@ -96,7 +96,7 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
   }
 
   verifyMetavariableNodeEx(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, fileContextA, localContextB, verifyAhead) {
-    let metavariableNodeVerified = false;
+    let metavariableNodeVerified;
 
     let substitution = substitutions.find((substitution) => {
       const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNodeA);
@@ -108,6 +108,7 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
 
     if (substitution !== null) {
       const statementNode = substitution.getStatementNode(),
+            localContextA = LocalContext.fromFileContext(fileContextA),
             substitutionNode = substitutionNodeA, ///
             termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNodeAndSubstitutions(substitutionNode, substitutions);
 
@@ -120,10 +121,24 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
         substitution
       ];
 
-      const localContextA = LocalContext.fromFileContext(fileContextA),
-            nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
+      const nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
       metavariableNodeVerified = nonTerminalNodeVerified; ///
+    } else {
+      const substitutionNode = substitutionNodeA, ///
+            termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode);
+
+      substitution = termForVariableSubstitution; ///
+
+      const statementNode = statementNodeB, ///
+            metavariableNode = metavariableNodeA, ///
+            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitution(metavariableNode, statementNode, substitution);
+
+      substitution = statementForMetavariableSubstitution;  ///
+
+      substitutions.push(substitution);
+
+      metavariableNodeVerified = true;
     }
 
     return metavariableNodeVerified;
@@ -142,12 +157,13 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
 
     if (substitution !== null) {
       const statementNode = statementNodeB, ///
-            statementNodeMatches = substitution.matchStatementNode(statementNode);
+            localContextA = LocalContext.fromFileContext(fileContextA),
+            statementNodeMatches = substitution.matchStatementNode(statementNode, substitutions, localContextA, localContextB);
 
       metavariableNodeVerified = statementNodeMatches;  ///
     } else {
-      const metavariableNode = metavariableNodeA, ///
-            statementNode = statementNodeB, ///
+      const statementNode = statementNodeB, ///
+            metavariableNode = metavariableNodeA, ///
             statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode),
             substitution = statementForMetavariableSubstitution;  ///
 

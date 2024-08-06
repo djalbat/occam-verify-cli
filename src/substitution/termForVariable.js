@@ -3,7 +3,6 @@
 import Substitution from "../substitution";
 
 import { nodeQuery } from "../utilities/query";
-import term from "../verify/term";
 
 const termNodeQuery = nodeQuery("/*/term!"),
       variableNodeQuery = nodeQuery("/*/variable!");
@@ -36,7 +35,28 @@ export default class TermForVariableSubstitution extends Substitution {
     return variableNodeMatches;
   }
 
+  static fromSubstitutionNode(substitutionNode) {
+    const termNode = termNodeQuery(substitutionNode),
+          variableNode = variableNodeQuery(substitutionNode),
+          termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
+
+    return termForVariableSubstitution;
+  }
+
   static fromVariableNodeAndTermNode(variableNode, termNode) {
+    const termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
+
+    return termForVariableSubstitution;
+  }
+
+  static fromSubstitutionAndSubstitutions(substitution, substitutions) {
+    let termNode = substitution.getTermNode(),
+        variableNode = substitution.getVariableNode();
+
+    termNode = substituteTermNode(termNode, substitutions); ///
+
+    variableNode = substituteVariableNode(variableNode, substitutions); ///
+
     const termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
 
     return termForVariableSubstitution;
