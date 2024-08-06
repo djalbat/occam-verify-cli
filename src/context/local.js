@@ -90,6 +90,14 @@ class LocalContext {
     return termType;
   }
 
+  isTermGrounded(term) {
+    let termGrounded = false;
+
+
+
+    return termGrounded;
+  }
+
   isVariableDefined(variable) {
     let variableDefined = false;
 

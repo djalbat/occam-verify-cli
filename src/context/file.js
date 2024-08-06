@@ -395,6 +395,12 @@ export default class FileContext {
     return termGrounded;
   }
 
+  isVariableDefined(variable) {
+    const variableDefined = false;  ///
+
+    return variableDefined;
+  }
+
   isTypePresentByTypeName(typeName) {
     const type = this.findTypeByTypeName(typeName),
           typePresent = (type !== null);
