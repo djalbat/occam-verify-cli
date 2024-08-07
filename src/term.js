@@ -1,5 +1,6 @@
 "use strict";
 
+import { filter } from "./utilities/array";
 import { nodesQuery } from "./utilities/query"
 
 const variableNodesQuery = nodesQuery("//variable");
@@ -25,8 +26,9 @@ export default class Term {
     return matches;
   }
 
-  getVariables(variables, context) {
-    const variableNodes = variableNodesQuery(this.node);
+  getVariables(context) {
+    const variables = [],
+          variableNodes = variableNodesQuery(this.node);
 
     variableNodes.forEach((variableNode) => {
       const variable = context.findVariableByVariableNode(variableNode),
@@ -40,31 +42,35 @@ export default class Term {
     return variables;
   }
 
-  isInitiallyGrounded() {
-    const definedVariables = [],
-          implicitlyGrounded = this.isImplicitlyGrounded(definedVariables),
-          initiallyGrounded = implicitlyGrounded; ///
+  isGrounded(definedVariables, context) {
+    const variables = this.getVariables(context);
+
+    filter(variables, (variable) => {
+      const definedVariablesIncludesVariable = definedVariables.includes(variable);
+
+      if (!definedVariablesIncludesVariable) {
+        return true;
+      }
+    });
+
+    const undefinedVariables = variables, ///
+          undefinedVariablesLength = undefinedVariables.length,
+          grounded = (undefinedVariablesLength <= 1);
+
+    return grounded;
+  }
+
+  isInitiallyGrounded(context) {
+    const variables = this.getVariables(context),
+          variablesLength = variables.length,
+          initiallyGrounded = (variablesLength === 0);
 
     return initiallyGrounded;
   }
 
-  isImplicitlyGrounded(definedVariables) {
-    const variableNodes = variableNodesQuery(this.node),
-          variables = definedVariables, ///
-          nodes = variableNodes,  ///
-          implicitlyGrounded = nodes.every((node) => {
-            const variableMatchesNode = variables.some((variable) => {
-              const variableMatchesNode = variable.matchNode(node);
-
-              if (variableMatchesNode) {
-                return true;
-              }
-            });
-
-            if (variableMatchesNode) {
-              return true;
-            }
-          });
+  isImplicitlyGrounded(definedVariables, context) {
+    const grounded = this.isGrounded(definedVariables, context),
+          implicitlyGrounded = grounded;  ///
 
     return implicitlyGrounded;
   }

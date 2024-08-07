@@ -5,12 +5,7 @@ import Equivalence from "../equivalence";
 import contextMixins from "../mixins/context";
 
 import { last } from "../utilities/array";
-import { mergeEquivalences,
-         separateEquivalences,
-         findEquivalenceByTerm,
-         compressDefinedVariables,
-         definedVariablesFromGroundedEquivalences,
-         implicitlyGroundedEquivalencesFromRemainingEquivalencesAndDefinedVariables } from "../utilities/equivalences";
+import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../utilities/equivalences";
 
 class LocalContext {
   constructor(context, variables, proofSteps, equivalences) {
@@ -91,56 +86,41 @@ class LocalContext {
   }
 
   isTermGrounded(term) {
-    let termGrounded = false;
+    const context = this,
+          equivalences = this.getEquivalences(),
+          groundedTerms = [],
+          definedVariables = [];
 
+    groundedTermsAndDefinedVariablesFromFromEquivalences(equivalences, groundedTerms, definedVariables, context);
 
+    const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
+            const termMatchesGroundedTerm = term.match(groundedTerm);
+
+            if (termMatchesGroundedTerm) {
+              return true;
+            }
+          }),
+          termGrounded = termMatchesGroundedTerm; ///
 
     return termGrounded;
   }
 
   isVariableDefined(variable) {
-    let variableDefined = false;
+    const context = this,
+          equivalences = this.getEquivalences(),
+          groundedTerms = [],
+          definedVariables = [];
 
-    const equivalences = this.getEquivalences(),
-          remainingEquivalences = [],
-          initiallyGroundedEquivalences = [];
+    groundedTermsAndDefinedVariablesFromFromEquivalences(equivalences, groundedTerms, definedVariables, context);
 
-    separateEquivalences(equivalences, remainingEquivalences, initiallyGroundedEquivalences);
+    const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
+            const variableMatchesDefinedVariable = variable.match(definedVariable);
 
-    const initiallyGroundedEquivalencesLength = initiallyGroundedEquivalences.length;
-
-    if (initiallyGroundedEquivalencesLength > 0) {
-      let groundedEquivalences,
-          implicitlyGroundedEquivalences,
-          implicitlyGroundedEquivalencesLength;
-
-      const context = this,
-            definedVariables = [];
-
-      groundedEquivalences = initiallyGroundedEquivalences; ///
-
-      definedVariablesFromGroundedEquivalences(groundedEquivalences, definedVariables, context);
-
-      implicitlyGroundedEquivalences = implicitlyGroundedEquivalencesFromRemainingEquivalencesAndDefinedVariables(remainingEquivalences, definedVariables);
-
-      implicitlyGroundedEquivalencesLength = implicitlyGroundedEquivalences.length;
-
-      while (implicitlyGroundedEquivalencesLength > 0) {
-        groundedEquivalences = implicitlyGroundedEquivalences;  ///
-
-        definedVariablesFromGroundedEquivalences(groundedEquivalences, definedVariables, context);
-
-        implicitlyGroundedEquivalences = implicitlyGroundedEquivalencesFromRemainingEquivalencesAndDefinedVariables(remainingEquivalences, definedVariables);
-
-        implicitlyGroundedEquivalencesLength = implicitlyGroundedEquivalences.length;
-      }
-
-      compressDefinedVariables(definedVariables);
-
-      const definedVariablesIncludesVariable = definedVariables.includes(variable);
-
-      variableDefined = definedVariablesIncludesVariable;  ///
-    }
+            if (variableMatchesDefinedVariable) {
+              return true;
+            }
+          }),
+          variableDefined = variableMatchesDefinedVariable; ///
 
     return variableDefined;
   }
