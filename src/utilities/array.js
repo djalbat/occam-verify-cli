@@ -29,9 +29,15 @@ export function someSubArray(array, subArrayLength, callback) {
       permutations = permutationsMatrix[indexesLength][permutationLength];
     }
 
-    if (subArrayLength === 4) {
+    if (subArrayLength === 1) {
       permutations = [
-        [ 0, 2, 3, 4 ]
+        [ 1 ]
+      ];
+    }
+
+    if (subArrayLength === 5) {
+      permutations = [
+        [ 0, 2, 3, 4, 5 ]
       ];
     }
 

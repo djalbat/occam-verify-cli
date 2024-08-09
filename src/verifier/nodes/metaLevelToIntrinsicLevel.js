@@ -142,7 +142,7 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
     const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
 
     if (metavariableNodeA !== null) {
-      const substitutionNodeA = null, ///
+      const substitutionNodeA = substitutionNodeQuery(metastatementNodeA),
             metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, substitutionNodeA, statementNodeB, substitutions, fileContextA, localContextB, verifyAhead);
 
       statementNodeVerified = metavariableNodeVerified;  ///

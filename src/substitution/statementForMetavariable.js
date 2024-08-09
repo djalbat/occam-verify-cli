@@ -2,9 +2,11 @@
 
 import Substitution from "../substitution";
 
+import substitutionNodesVerifier from "../verifier/nodes/substitution";
 import TermForVariableSubstitution from "./termForVariable";
 import intrinsicLevelNodesVerifier from "../verifier/nodes/intrinsicLevel";
 
+import { push } from "../utilities/array";
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/proof";
 
 export default class StatementForMetavariableSubstitution extends Substitution {
@@ -53,10 +55,44 @@ export default class StatementForMetavariableSubstitution extends Substitution {
       statementNodeMatches = this.statementNode.match(statementNode);
     } else {
       const substitution = this.substitution,
-            statementNodeA = statementNode, ///
-            statementNodeB = this.statementNode;  ///
+            statementNodeA = statementNode,  ///
+            statementNodeB = this.statementNode; ///
 
-      statementNodeMatches = matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
+      // statementNodeMatches = matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
+
+      const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionAndSubstitutions(substitution, substitutions),
+            intrinsic = termForVariableSubstitution.isIntrinsic(substitution);
+
+      let substitutionsA = []; ///
+
+      if (intrinsic) {
+        const substitutionA = termForVariableSubstitution;  ///
+
+        substitutionsA.push(substitutionA);
+      }
+
+      const nonTerminalNodeA = statementNodeA, ///
+            nonTerminalNodeB = statementNodeB,  ///
+            nonTerminalNodeVerified = substitutionNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutionsA, localContextA, localContextB, () => {
+              const verifiedAhead = true;
+
+              return verifiedAhead;
+            });
+
+      if (nonTerminalNodeVerified) {
+        if (!intrinsic) {
+          const substitutionB = termForVariableSubstitution,  ///
+                substitutionsB = [
+                  substitutionB
+                ];
+
+          substitutionsA = transformSubstitutions(substitutionsA, substitutionsB);
+
+          push(substitutions, substitutionsA);
+        }
+
+        statementNodeMatches = true;
+      }
     }
 
     return statementNodeMatches;
@@ -97,6 +133,20 @@ export default class StatementForMetavariableSubstitution extends Substitution {
 
     return statementForMetavariableSubstitution;
   }
+}
+
+function transformSubstitutions(substitutionsA, substitutionsB) {
+  substitutionsA = substitutionsA.map((substitutionA) => {
+    const substitution = substitutionA,  ///
+          substitutions = substitutionsB,
+          termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionAndSubstitutions(substitution, substitutions);
+
+    substitutionA = termForVariableSubstitution; ///
+
+    return substitutionA;
+  });
+
+  return substitutionsA;
 }
 
 export function matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB) {

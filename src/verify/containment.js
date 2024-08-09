@@ -4,33 +4,59 @@ import { second } from "../utilities/array";
 import { CONTAINED } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const variableNodesQuery = nodesQuery("/metaArgument//variable"),
-      containmentVariableNodeQuery = nodeQuery("/argument/term/variable!");
+const termNodeQuery = nodeQuery("/argument/term!"),
+      variableNodeQuery = nodeQuery("/argument/term/variable!"),
+      metaArgumentTermNodesQuery = nodesQuery("/metaArgument//term"),
+      metaArgumentVariableNodesQuery = nodesQuery("/metaArgument//variable");
 
 export default function verifyContainment(argumentNode, containmentNode, metaArgumentNode, context) {
   let containmentVerified = false;
 
-  const containmentVariableNode = containmentVariableNodeQuery(argumentNode);
+  const contained = containedFromContainmentNode(containmentNode),
+        termNode = termNodeQuery(argumentNode),
+        variableNode = variableNodeQuery(argumentNode);
 
-  if (containmentVariableNode !== null) {
-    const contained = containedFromContainmentNode(containmentNode),
-          variableNodes = variableNodesQuery(metaArgumentNode),
-          containmentVariableNodeMatchesStatementVariableNode = variableNodes.some((statementVariableNode) => {
-            const containmentVariableNodeMatchesStatementVariableNode = containmentVariableNode.match(statementVariableNode);
+  if (false) {
+    ///
+  } else if (variableNode !== null) {
+    const metaArgumentVariableNodes = metaArgumentVariableNodesQuery(metaArgumentNode),
+          variableNodeMatchesMetaArgumentVariableNode = metaArgumentVariableNodes.some((metaArgumentVariableNode) => {
+            const variableNodeMatchesMetaArgumentVariableNode = variableNode.match(metaArgumentVariableNode);
 
-            if (containmentVariableNodeMatchesStatementVariableNode) {
+            if (variableNodeMatchesMetaArgumentVariableNode) {
               return true;
             }
           });
 
     if (contained) {
-      if (containmentVariableNodeMatchesStatementVariableNode) {
+      if (variableNodeMatchesMetaArgumentVariableNode) {
         containmentVerified = true;
       }
     }
 
     if (!contained) {
-      if (!containmentVariableNodeMatchesStatementVariableNode) {
+      if (!variableNodeMatchesMetaArgumentVariableNode) {
+        containmentVerified = true;
+      }
+    }
+  } else if (termNode !== null) {
+    const metaArgumentTermNodes = metaArgumentTermNodesQuery(metaArgumentNode),
+          termNodeMatchesMetaArgumentTermNode = metaArgumentTermNodes.some((metaArgumentTermNode) => {
+            const termNodeMatchesMetaArgumentTermNode = termNode.match(metaArgumentTermNode);
+
+            if (termNodeMatchesMetaArgumentTermNode) {
+              return true;
+            }
+          });
+
+    if (contained) {
+      if (termNodeMatchesMetaArgumentTermNode) {
+        containmentVerified = true;
+      }
+    }
+
+    if (!contained) {
+      if (!termNodeMatchesMetaArgumentTermNode) {
         containmentVerified = true;
       }
     }
