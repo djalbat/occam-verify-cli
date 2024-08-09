@@ -23,6 +23,16 @@ export default class TermForVariableSubstitution extends Substitution {
     return this.termNode;
   }
 
+  isIntrinsic(substitution) {
+    const termNod = substitution.getTermNode(),
+          variableNode = substitution.getVariableNode(),
+          termNodeMatches = this.termNode.match(termNod),
+          variableNodeMatches = this.variableNode.match(variableNode),
+          intrinsic = ((!termNodeMatches) && (!variableNodeMatches));
+
+    return intrinsic;
+  }
+
   matchTermNode(termNode) {
     const termNodeMatches = this.termNode.match(termNode);
 
@@ -33,16 +43,6 @@ export default class TermForVariableSubstitution extends Substitution {
     const variableNodeMatches = this.variableNode.match(variableNode);
 
     return variableNodeMatches;
-  }
-
-  isIntrinsic(substitution) {
-    const termNod = substitution.getTermNode(),
-          variableNode = substitution.getVariableNode(),
-          termNodeMatches = this.termNode.match(termNod),
-          variableNodeMatches = this.variableNode.match(variableNode),
-          intrinsic = ((!termNodeMatches) && (!variableNodeMatches));
-
-    return intrinsic;
   }
 
   static fromSubstitutionNode(substitutionNode) {

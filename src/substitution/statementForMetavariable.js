@@ -54,45 +54,11 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     if (this.substitution === null) {
       statementNodeMatches = this.statementNode.match(statementNode);
     } else {
-      const substitution = this.substitution,
+      const substitution = this.substitution, ///
             statementNodeA = statementNode,  ///
             statementNodeB = this.statementNode; ///
 
-      // statementNodeMatches = matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
-
-      const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionAndSubstitutions(substitution, substitutions),
-            intrinsic = termForVariableSubstitution.isIntrinsic(substitution);
-
-      let substitutionsA = []; ///
-
-      if (intrinsic) {
-        const substitutionA = termForVariableSubstitution;  ///
-
-        substitutionsA.push(substitutionA);
-      }
-
-      const nonTerminalNodeA = statementNodeA, ///
-            nonTerminalNodeB = statementNodeB,  ///
-            nonTerminalNodeVerified = substitutionNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutionsA, localContextA, localContextB, () => {
-              const verifiedAhead = true;
-
-              return verifiedAhead;
-            });
-
-      if (nonTerminalNodeVerified) {
-        if (!intrinsic) {
-          const substitutionB = termForVariableSubstitution,  ///
-                substitutionsB = [
-                  substitutionB
-                ];
-
-          substitutionsA = transformSubstitutions(substitutionsA, substitutionsB);
-
-          push(substitutions, substitutionsA);
-        }
-
-        statementNodeMatches = true;
-      }
+      statementNodeMatches = matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
     }
 
     return statementNodeMatches;
@@ -150,25 +116,41 @@ function transformSubstitutions(substitutionsA, substitutionsB) {
 }
 
 export function matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB) {
-  let statementNodeMatches;
+  let statementNodeMatches = false;
 
-  const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionAndSubstitutions(substitution, substitutions);
+  const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionAndSubstitutions(substitution, substitutions),
+        intrinsic = termForVariableSubstitution.isIntrinsic(substitution);
 
-  substitution = termForVariableSubstitution; ///
+  let substitutionsA = []; ///
 
-  substitutions = [ ///
-    substitution
-  ];
+  if (intrinsic) {
+    const substitutionA = termForVariableSubstitution;  ///
 
-  const nonTerminalNodeA = statementNodeA, ///
+    substitutionsA.push(substitutionA);
+  }
+
+  const nonTerminalNodeA = statementNodeA,  ///
         nonTerminalNodeB = statementNodeB,  ///
-        nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+        nonTerminalNodeVerified = substitutionNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutionsA, localContextA, localContextB, () => {
           const verifiedAhead = true;
 
           return verifiedAhead;
         });
 
-  statementNodeMatches = nonTerminalNodeVerified; ///
+  if (nonTerminalNodeVerified) {
+    if (!intrinsic) {
+      const substitutionB = termForVariableSubstitution,  ///
+            substitutionsB = [
+              substitutionB
+            ];
+
+      substitutionsA = transformSubstitutions(substitutionsA, substitutionsB);
+
+      push(substitutions, substitutionsA);
+    }
+
+    statementNodeMatches = true;
+  }
 
   return statementNodeMatches;
 }
