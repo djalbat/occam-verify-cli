@@ -2,15 +2,15 @@
 
 import { typeNameFromTypeNode } from "../utilities/query";
 
-export default function verifyGivenType(typeNode, types, context, verifyAhead) {
+export default function verifyGivenType(typeNode, types, localContext, verifyAhead) {
   let givenTypeVerified = false;
 
-  const typeString = context.nodeAsString(typeNode);
+  const typeString = localContext.nodeAsString(typeNode);
 
-  context.trace(`Verifying the given '${typeString}' type...`, typeNode);
+  localContext.trace(`Verifying the given '${typeString}' type...`, typeNode);
 
   const typeName = typeNameFromTypeNode(typeNode),
-        type = context.findTypeByTypeName(typeName);
+        type = localContext.findTypeByTypeName(typeName);
 
   if (type !== null) {
     let verifiedAhead;
@@ -27,7 +27,7 @@ export default function verifyGivenType(typeNode, types, context, verifyAhead) {
   }
 
   if (givenTypeVerified) {
-    context.debug(`...verified the given '${typeString}' type.`, typeNode);
+    localContext.debug(`...verified the given '${typeString}' type.`, typeNode);
   }
 
   return givenTypeVerified;

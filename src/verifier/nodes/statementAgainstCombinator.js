@@ -12,7 +12,7 @@ const metaTypeNodeQuery = nodeQuery("/metaArgument/metaType!"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type");
 
 class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context, verifyAhead) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead) {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNode = nonTerminalNodeA, ///
@@ -25,7 +25,7 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
         case META_ARGUMENT_RULE_NAME: {
           const metaArgumentNode = nonTerminalNode, ///
                 combinatorMetaargumentNode = combinatorNonTerminalNode, ///
-                metaArgumentNodeVerified = this.verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead);
+                metaArgumentNodeVerified = this.verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = metaArgumentNodeVerified; ///
 
@@ -35,7 +35,7 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
         case ARGUMENT_RULE_NAME: {
           const argumentNode = nonTerminalNode, ///
                 constructorArgumentNode = combinatorNonTerminalNode, ///
-                argumentNodeVerified = termAgainstConstructorNodesVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead);
+                argumentNodeVerified = termAgainstConstructorNodesVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = argumentNodeVerified; ///
 
@@ -43,7 +43,7 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
         }
 
         default: {
-          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context, verifyAhead);
+          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
 
           break;
         }
@@ -53,28 +53,28 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
     return nonTerminalNodeVerified;
   }
 
-  verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, context, verifyAhead) {
+  verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, localContext, verifyAhead) {
     let metaArgumentNodeVerified = false;
 
-    const metaArgumentString = context.nodeAsString(metaArgumentNode);
+    const metaArgumentString = localContext.nodeAsString(metaArgumentNode);
 
     const statementNode = statementNodeQuery(metaArgumentNode),
           combinatorMetaTYpeNode = metaTypeNodeQuery(combinatorMetaargumentNode);
 
     if (statementNode === null) {
-      context.debug(`Expected a statement but got a '${metaArgumentString}' meta-type.`, metaArgumentNode);
+      localContext.debug(`Expected a statement but got a '${metaArgumentString}' meta-type.`, metaArgumentNode);
     } else {
       if (combinatorMetaTYpeNode === null) {
-        const combinatorMetaargumentString = context.nodeAsString(combinatorMetaargumentNode);
+        const combinatorMetaargumentString = localContext.nodeAsString(combinatorMetaargumentNode);
 
-        context.debug(`Expected a meta-type but got a '${combinatorMetaargumentString}' statement.`, metaArgumentNode);
+        localContext.debug(`Expected a meta-type but got a '${combinatorMetaargumentString}' statement.`, metaArgumentNode);
       } else {
         const combinatorMetaTypeTerminalNode = metaTypeTerminalNodeQuery(combinatorMetaTYpeNode),
               content = combinatorMetaTypeTerminalNode.getContent(),
               contentStatementMetaType = (content === STATEMENT_META_TYPE);
 
         if (!contentStatementMetaType) {
-          context.debug(`Expected the meta-type of the combinator to be '${STATEMENT_META_TYPE}' but got '${content}' instead.`, metaArgumentNode);
+          localContext.debug(`Expected the meta-type of the combinator to be '${STATEMENT_META_TYPE}' but got '${content}' instead.`, metaArgumentNode);
         } else {
           const verifiedAhead = verifyAhead();
 

@@ -1,5 +1,6 @@
 "use strict";
 
+import LocalContext from "./context/local";
 import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
 import metaLevelToIntrinsicLevelNodesVerifier from "./verifier/nodes/metaLevelToIntrinsicLevel";
 
@@ -45,8 +46,9 @@ export default class Premise {
           const nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = subproofStatementNode, ///
                 fileContextA = fileContext, ///
+                localContextA = LocalContext.fromFileContext(fileContextA),
                 localContextB = statementLocalContext,  ///
-                nonTerminalNodeVerified = metaLevelToIntrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContextB, () => {
+                nonTerminalNodeVerified = metaLevelToIntrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
                   const verifiedAhead = true;
 
                   return verifiedAhead;
@@ -66,8 +68,9 @@ export default class Premise {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = statementNode,  ///
           fileContextA = fileContext, ///
+          localContextA = LocalContext.fromFileContext(fileContextA),
           localContextB = statementLocalContext,  ///
-          nonTerminalNodeVerified = metaLevelToIntrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContextB, () => {
+          nonTerminalNodeVerified = metaLevelToIntrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;
@@ -98,8 +101,9 @@ export default class Premise {
           const nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = ruleSubproofMetastatementNode, ///
                 fileContextA = fileContext, ///
+                localContextA = LocalContext.fromFileContext(fileContextA),
                 localMetaContextB = metastatementLocalMetaContext,  ///
-                nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localMetaContextB, () => {
+                nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, () => {
                   const verifiedAhead = true;
 
                   return verifiedAhead;
@@ -119,8 +123,9 @@ export default class Premise {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = metastatementNode,  ///
           fileContextA = fileContext, ///
+          localContextA = LocalContext.fromFileContext(fileContextA),
           localMetaContextB = metastatementLocalMetaContext,  ///
-          nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localMetaContextB, () => {
+          nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

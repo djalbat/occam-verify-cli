@@ -64,26 +64,29 @@ class SubstitutionNodesVerifier extends NodesVerifier {
   verifyVariableNode(variableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
     let variableNodeVerified = false;
 
-    const variableNodeB = variableNodeQuery(termNodeB);
+    if (variableNodeVerified === false) {
+      const variableNodeB = variableNodeQuery(termNodeB);
 
-    if (variableNodeB !== null) {
-      const variableNodeAMatchedVariableNodeB = variableNodeA.match(variableNodeB);
+      if (variableNodeB !== null) {
+        const variableNodeAMatchedVariableNodeB = variableNodeA.match(variableNodeB);
 
-      if (variableNodeAMatchedVariableNodeB) {
-        const verifiedAhead = verifyAhead();
+        if (variableNodeAMatchedVariableNodeB) {
+          const verifiedAhead = verifyAhead();
 
-        variableNodeVerified = verifiedAhead;
-      }
-    } else {
-      const variableNode = variableNodeA; ///
-
-      const substitution = substitutions.find((substitution) => {
-        const matches = substitution.matchVariableNode(variableNode);
-
-        if (matches) {
-          return true;
+          variableNodeVerified = verifiedAhead; ///
         }
-      }) || null;
+      }
+    }
+
+    if (variableNodeVerified === false) {
+      const variableNode = variableNodeA,
+            substitution = substitutions.find((substitution) => {
+              const matches = substitution.matchVariableNode(variableNode);
+
+              if (matches) {
+                return true;
+              }
+            }) || null;
 
       if (substitution !== null) {
         const termNode = termNodeB, ///
@@ -109,7 +112,7 @@ class SubstitutionNodesVerifier extends NodesVerifier {
           substitutions.pop();
         }
 
-        variableNodeVerified = verifiedAhead;
+        variableNodeVerified = verifiedAhead; ///
       }
     }
 

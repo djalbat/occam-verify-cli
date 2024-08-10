@@ -28,16 +28,18 @@ export default class Equality {
     return reflexive;
   }
 
-  isEqual(context) {
+  isEqual(localContext) {
     const leftTerm = this.getLeftTerm(),
           rightTerm = this.getRightTerm(),
           leftTermNode = leftTerm.getNode(),
           rightTermNode = rightTerm.getNode(),
           nonTerminalNodeA = leftTermNode,  ///
           nonTerminalNodeB = rightTermNode, ///
-          equivalences = context.getEquivalences(),
-          localContext = this,  ///
-          nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equivalences, localContext, () => {
+          equivalences = localContext.getEquivalences();
+
+    localContext = this;  ///
+
+    const nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equivalences, localContext, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

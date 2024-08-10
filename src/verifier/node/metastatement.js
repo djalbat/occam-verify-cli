@@ -1,5 +1,6 @@
 "use strict";
 
+import LocalContext from "../../context/local";
 import NodeVerifier from "../../verifier/node";
 
 import { verifyStandaloneTerm } from "../../verify/term";
@@ -15,9 +16,8 @@ class MetastatementNodeVerifier extends NodeVerifier {
 
     switch (ruleName) {
       case METAVARIABLE_RULE_NAME: {
-        const context = localMetaContext, ///
-              metavariableNode = nonTerminalNode, ///
-              standaloneMetavariableVerified = verifyStandaloneMetavariable(metavariableNode, context, verifyAhead),
+        const metavariableNode = nonTerminalNode, ///
+              standaloneMetavariableVerified = verifyStandaloneMetavariable(metavariableNode, localMetaContext, verifyAhead),
               metavariableNodeVerified = standaloneMetavariableVerified;  ///
 
         nonTerminalNodeVerified = metavariableNodeVerified; ///
@@ -26,9 +26,8 @@ class MetastatementNodeVerifier extends NodeVerifier {
       }
 
       case VARIABLE_RULE_NAME: {
-        const context = localMetaContext, ///
-              variableNode = nonTerminalNode, ///
-              standaloneVariableVerified = verifyStandaloneVariable(variableNode, context, verifyAhead),
+        const variableNode = nonTerminalNode, ///
+              standaloneVariableVerified = verifyStandaloneVariable(variableNode, localMetaContext, verifyAhead),
               variableNodeVerified = standaloneVariableVerified;  ///
 
         nonTerminalNodeVerified = variableNodeVerified; ///
@@ -37,9 +36,9 @@ class MetastatementNodeVerifier extends NodeVerifier {
       }
 
       case TERM_RULE_NAME: {
-        const context = localMetaContext, ///
-              termNode = nonTerminalNode, ///
-              standaloneTermVerified = verifyStandaloneTerm(termNode, context, verifyAhead),
+        const termNode = nonTerminalNode, ///
+              localContext = LocalContext.fromLocalMetaContext(localMetaContext),
+              standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
               termNodeVerified = standaloneTermVerified;  ///
 
         nonTerminalNodeVerified = termNodeVerified; ///

@@ -1,13 +1,13 @@
 "use strict";
 
-export default function verifyGivenVariable(variableNode, variables, context, verifyAhead) {
+export default function verifyGivenVariable(variableNode, variables, localContext, verifyAhead) {
   let givenVariableVerified = false;
 
-  const variableString = context.nodeAsString(variableNode);
+  const variableString = localContext.nodeAsString(variableNode);
 
-  context.trace(`Verifying the '${variableString}' given variable...`, variableNode);
+  localContext.trace(`Verifying the '${variableString}' given variable...`, variableNode);
 
-  const variable = context.findVariableByVariableNode(variableNode);
+  const variable = localContext.findVariableByVariableNode(variableNode);
 
   if (variable !== null) {
     let verifiedAhead;
@@ -24,7 +24,7 @@ export default function verifyGivenVariable(variableNode, variables, context, ve
   }
 
   if (givenVariableVerified) {
-    context.debug(`...verified the '${variableString}' given variable.`, variableNode);
+    localContext.debug(`...verified the '${variableString}' given variable.`, variableNode);
   }
 
   return givenVariableVerified;

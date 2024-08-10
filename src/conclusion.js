@@ -15,12 +15,12 @@ export default class Conclusion {
     return this.metastatementNode;
   }
 
-  matchStatementNode(statementNode, substitutions, fileContext, statementLocalContext) {
+  matchStatementNode(statementNode, substitutions, localContext, statementLocalContext) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = statementNode,  ///
-          fileContextA = fileContext, ///
+          localContextA = localContext, ///
           localContextB = statementLocalContext,  ///
-          nonTerminalNodeVerified = metaLevelToIntrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localContextB, () => {
+          nonTerminalNodeVerified = metaLevelToIntrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
             const verifyAhead = true;
 
             return verifyAhead;
@@ -30,12 +30,12 @@ export default class Conclusion {
     return statementNodeMatches;
   }
 
-  matchMetastatementNode(metastatementNode, substitutions, fileContext, metastatementLocalMetaContext) {
+  matchMetastatementNode(metastatementNode, substitutions, localContext, metastatementLocalMetaContext) {
     const nonTerminalNodeA = this.metastatementNode,  ///
           nonTerminalNodeB = metastatementNode,  ///
-          fileContextA = fileContext, ///
+          localContextA = localContext, ///
           localMetaContextB = metastatementLocalMetaContext,  ///
-          nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, fileContextA, localMetaContextB, () => {
+          nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

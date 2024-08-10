@@ -3,18 +3,18 @@
 import verifyTerm from "../verify/term";
 import verifyGivenType from "../verify/givenType";
 
-export default function verifyTermAndGivenType(termNode, typeNode, terms, types, context, verifyAhead) {
+export default function verifyTermAndGivenType(termNode, typeNode, terms, types, localContext, verifyAhead) {
   let termAndGivenTypeVerified;
 
-  const termString = context.nodeAsString(termNode),
-        typeString = context.nodeAsString(typeNode);
+  const termString = localContext.nodeAsString(termNode),
+        typeString = localContext.nodeAsString(typeNode);
 
-  context.trace(`Verifying the '${termString}' term and the given '${typeString}' type...`, termNode);
+  localContext.trace(`Verifying the '${termString}' term and the given '${typeString}' type...`, termNode);
 
-  const termVerified = verifyTerm(termNode, terms, context, () => {
+  const termVerified = verifyTerm(termNode, terms, localContext, () => {
           let verifiedAhead;
 
-          const givenTypeVerified = verifyGivenType(typeNode, types, context, () => {
+          const givenTypeVerified = verifyGivenType(typeNode, types, localContext, () => {
             let verifiedAhead;
 
             verifiedAhead = verifyAhead();
@@ -30,7 +30,7 @@ export default function verifyTermAndGivenType(termNode, typeNode, terms, types,
   termAndGivenTypeVerified = termVerified; ///
 
   if (termAndGivenTypeVerified) {
-    context.debug(`...verified the '${termString}' term and the given '${typeString}' type.`, termNode);
+    localContext.debug(`...verified the '${termString}' term and the given '${typeString}' type.`, termNode);
   }
 
   return termAndGivenTypeVerified

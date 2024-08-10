@@ -9,7 +9,7 @@ import { first, second } from "../utilities/array";
 const termNodeQuery = nodeQuery("/argument/term!"),
       variableNodeQuery = nodeQuery("/argument/term/variable!");
 
-export default function verifyDefining(argumentNode, definingNode, context) {
+export default function verifyDefining(argumentNode, definingNode, localContext) {
   let definingVerified = false;
 
   const defined = definedFromDefiningNode(definingNode),
@@ -19,10 +19,10 @@ export default function verifyDefining(argumentNode, definingNode, context) {
   if (false) {
     ///
   } else if (variableNode !== null) {
-    const variable = context.findVariableByVariableNode(variableNode);
+    const variable = localContext.findVariableByVariableNode(variableNode);
 
     if (variable !== null) {
-      const variableDefined = context.isVariableDefined(variable);
+      const variableDefined = localContext.isVariableDefined(variable);
 
       if (defined) {
         if (variableDefined) {
@@ -38,12 +38,12 @@ export default function verifyDefining(argumentNode, definingNode, context) {
     }
   } else if (termNode !== null) {
     const terms = [],
-          termVerified = verifyTerm(termNode, terms, context, () => {
+          termVerified = verifyTerm(termNode, terms, localContext, () => {
             let verifiedAhead;
 
             const firstTerm = first(terms),
                   term = firstTerm, ///
-                  termGrounded = context.isTermGrounded(term);
+                  termGrounded = localContext.isTermGrounded(term);
 
             if (defined) {
               if (termGrounded) {

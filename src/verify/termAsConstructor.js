@@ -1,6 +1,7 @@
 "use strict";
 
 import Constructor from "../constructor";
+import LocalContext from "../context/local";
 import termAsConstructorNodeVerifier from "../verifier/node/termAsConstructor";
 
 import { typeNameFromTypeNode } from "../utilities/query";
@@ -14,7 +15,8 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
 
   const nonTerminalNode = termNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
-        childNodesVerified = termAsConstructorNodeVerifier.verifyChildNodes(childNodes, fileContext, () => {
+        localContext = LocalContext.fromFileContext(fileContext),
+        childNodesVerified = termAsConstructorNodeVerifier.verifyChildNodes(childNodes, localContext, () => {
           const verifiedAhead = true;
 
           return verifiedAhead;

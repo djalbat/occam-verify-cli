@@ -10,12 +10,12 @@ import { first, second } from "../utilities/array";
 const leftTermNodeQuery = nodeQuery("/equality/argument[0]/term!"),
       rightTermNodeQuery = nodeQuery("/equality/argument[1]/term!");
 
-export default function verifyEquality(equalityNode, assignments, derived, context, verifyAhead) {
+export default function verifyEquality(equalityNode, assignments, derived, localContext, verifyAhead) {
   let equalityVerified;
 
-  const equalityString = context.nodeAsString(equalityNode);
+  const equalityString = localContext.nodeAsString(equalityNode);
 
-  context.trace(`Verifying the '${equalityString}' equality...`, equalityNode);
+  localContext.trace(`Verifying the '${equalityString}' equality...`, equalityNode);
 
   const verifyEqualityFunctions = [
     verifyDerivedEquality,
@@ -23,7 +23,7 @@ export default function verifyEquality(equalityNode, assignments, derived, conte
   ];
 
   equalityVerified = verifyEqualityFunctions.some((verifyEqualityFunction) => {
-    const equalityVerified = verifyEqualityFunction(equalityNode, assignments, derived, context, verifyAhead);
+    const equalityVerified = verifyEqualityFunction(equalityNode, assignments, derived, localContext, verifyAhead);
 
     if (equalityVerified) {
       return true;
@@ -31,19 +31,19 @@ export default function verifyEquality(equalityNode, assignments, derived, conte
   });
 
   if (equalityVerified) {
-    context.debug(`...verified the '${equalityString}' equality.`, equalityNode);
+    localContext.debug(`...verified the '${equalityString}' equality.`, equalityNode);
   }
 
   return equalityVerified;
 }
 
-function verifyDerivedEquality(equalityNode, assignments, derived, context, verifyAhead) {
+function verifyDerivedEquality(equalityNode, assignments, derived, localContext, verifyAhead) {
   let derivedEqualityVerified = false;
 
   if (derived) {
-    const equalityString = context.nodeAsString(equalityNode);
+    const equalityString = localContext.nodeAsString(equalityNode);
 
-    context.trace(`Verifying the '${equalityString}' derived equality...`, equalityNode);
+    localContext.trace(`Verifying the '${equalityString}' derived equality...`, equalityNode);
 
     const terms = [],
           leftTermNode = leftTermNodeQuery(equalityNode),
@@ -52,7 +52,7 @@ function verifyDerivedEquality(equalityNode, assignments, derived, context, veri
             leftTermNode,
             rightTermNode
           ],
-          termsVerified = verifyTerms(termNodes, terms, context, () => {
+          termsVerified = verifyTerms(termNodes, terms, localContext, () => {
             let verifiedAhead = false;
 
             const firstTerm = first(terms),
@@ -62,7 +62,7 @@ function verifyDerivedEquality(equalityNode, assignments, derived, context, veri
                   equality = Equality.fromLeftTermRightTermAndEqualityNode(leftTerm, rightTerm, equalityNode);
 
             if (equality !== null) {
-              const equalityEqual = equality.isEqual(context);
+              const equalityEqual = equality.isEqual(localContext);
 
               if (equalityEqual) {
                 const equalityAssignment = EqualityAssignment.fromEquality(equality),
@@ -84,20 +84,20 @@ function verifyDerivedEquality(equalityNode, assignments, derived, context, veri
     derivedEqualityVerified = termsVerified; ///
 
     if (derivedEqualityVerified) {
-      context.trace(`...verified the '${equalityString}' derived equality.`, equalityNode);
+      localContext.trace(`...verified the '${equalityString}' derived equality.`, equalityNode);
     }
   }
 
   return derivedEqualityVerified;
 }
 
-function verifyGivenEquality(equalityNode, assignments, derived, context, verifyAhead) {
+function verifyGivenEquality(equalityNode, assignments, derived, localContext, verifyAhead) {
   let givenEqualityVerified = false;
 
   if (!derived) {
-    const equalityString = context.nodeAsString(equalityNode);
+    const equalityString = localContext.nodeAsString(equalityNode);
 
-    context.trace(`Verifying the '${equalityString}' given equality...`, equalityNode);
+    localContext.trace(`Verifying the '${equalityString}' given equality...`, equalityNode);
 
     const terms = [],
           leftTermNode = leftTermNodeQuery(equalityNode),
@@ -106,7 +106,7 @@ function verifyGivenEquality(equalityNode, assignments, derived, context, verify
             leftTermNode,
             rightTermNode
           ],
-          termsVerified = verifyTerms(termNodes, terms, context, () => {
+          termsVerified = verifyTerms(termNodes, terms, localContext, () => {
             let verifiedAhead = false;
 
             const firstTerm = first(terms),
@@ -134,7 +134,7 @@ function verifyGivenEquality(equalityNode, assignments, derived, context, verify
     givenEqualityVerified = termsVerified; ///
 
     if (givenEqualityVerified) {
-      context.trace(`...verified the '${equalityString}' given equality.`, equalityNode);
+      localContext.trace(`...verified the '${equalityString}' given equality.`, equalityNode);
     }
   }
 

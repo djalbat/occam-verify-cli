@@ -253,6 +253,8 @@ class LocalContext {
     return variable;
   }
 
+  findMetaTypeByMetaTypeName(metaTypeName) { return this.context.findMetaTypeByMetaTypeName(metaTypeName); }
+
   isVariablePresentByVariableNode(variableNode) {
     const variable = this.findVariableByVariableNode(variableNode),
           variablePresent = (variable !== null);
@@ -292,6 +294,16 @@ class LocalContext {
           equivalences = [];
 
     localContext = new LocalContext(context, variables, proofSteps, equivalences);
+
+    return localContext;
+  }
+
+  static fromLocalMetaContext(localMetaContext) {
+    const context = localMetaContext,  ///
+          variables = [],
+          proofSteps = [],
+          equivalences = [],
+          localContext = new LocalContext(context, variables, proofSteps, equivalences);
 
     return localContext;
   }

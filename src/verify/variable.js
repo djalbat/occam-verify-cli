@@ -53,14 +53,14 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
   return variableVerified;
 }
 
-export function verifyStandaloneVariable(variableNode, context, verifyAhead) {
+export function verifyStandaloneVariable(variableNode, localMetaContext, verifyAhead) {
   let standaloneVariableVerified = false;
 
-  const variableString = context.nodeAsString(variableNode);
+  const variableString = localMetaContext.nodeAsString(variableNode);
 
-  context.trace(`Verifying the '${variableString}' standalone variable...`, variableNode);
+  localMetaContext.trace(`Verifying the '${variableString}' standalone variable...`, variableNode);
 
-  const variablePresent = context.isVariablePresentByVariableNode(variableNode);
+  const variablePresent = localMetaContext.isVariablePresentByVariableNode(variableNode);
 
   if (variablePresent) {
     const verifiedAhead = verifyAhead();
@@ -69,7 +69,7 @@ export function verifyStandaloneVariable(variableNode, context, verifyAhead) {
   }
 
   if (standaloneVariableVerified) {
-    context.debug(`...verified the '${variableString}' standalone variable.`, variableNode);
+    localMetaContext.debug(`...verified the '${variableString}' standalone variable.`, variableNode);
   }
 
   return standaloneVariableVerified;

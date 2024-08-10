@@ -10,7 +10,7 @@ const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!");
 
 class TermAgainstConstructorNodesVerifier extends NodesVerifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context, verifyAhead) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead) {
     let nonTerminalNodeVerified = false;
 
     const nonTerminalNode = nonTerminalNodeA, ///
@@ -23,7 +23,7 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
         case ARGUMENT_RULE_NAME: {
           const argumentNode = nonTerminalNode, ///
                 constructorArgumentNode = constructorNonTerminalNode, ///
-                argumentNodeVerified = this.verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead);
+                argumentNodeVerified = this.verifyArgumentNode(argumentNode, constructorArgumentNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = argumentNodeVerified; ///
 
@@ -31,7 +31,7 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
         }
 
         default: {
-          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, context, verifyAhead);
+          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNode, constructorNonTerminalNode, localContext, verifyAhead);
 
           break;
         }
@@ -41,15 +41,15 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
     return nonTerminalNodeVerified;
   }
 
-  verifyArgumentNode(argumentNode, constructorArgumentNode, context, verifyAhead) {
+  verifyArgumentNode(argumentNode, constructorArgumentNode, localContext, verifyAhead) {
     let argumentNodeVerified = false;
 
-    const argumentString = context.nodeAsString(argumentNode);
+    const argumentString = localContext.nodeAsString(argumentNode);
 
     const typeNode = typeNodeQuery(argumentNode);
 
     if (typeNode !== null) {
-      context.debug(`The '${argumentString}' argument should be a term, not a type.`, argumentNode);
+      localContext.debug(`The '${argumentString}' argument should be a term, not a type.`, argumentNode);
     } else {
       const termNode = termNodeQuery(argumentNode);
 
@@ -59,7 +59,7 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
         if (constructorTermNode !== null) {
           const node = termNode,  ///
                 constructorNode = constructorTermNode,  ///
-                nodeVerified = this.verifyNode(node, constructorNode, context, verifyAhead);
+                nodeVerified = this.verifyNode(node, constructorNode, localContext, verifyAhead);
 
           argumentNodeVerified = nodeVerified;  ///
         }
@@ -71,14 +71,14 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
         if (constructorTypeNode !== null) {
           const { verifyTerm } = termAgainstConstructorNodesVerifier,
                 terms = [],
-                termVerified = verifyTerm(termNode, terms, context, () => {
+                termVerified = verifyTerm(termNode, terms, localContext, () => {
                   let verifiedAhead = false;
 
                   const constructorTypeName = typeNameFromTypeNode(constructorTypeNode),
                         firstTerm = first(terms),
                         term = firstTerm, ///
                         termType = term.getType(),
-                        constructorType = context.findTypeByTypeName(constructorTypeName),
+                        constructorType = localContext.findTypeByTypeName(constructorTypeName),
                         termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(constructorType);
 
                   if (termTypeEqualToOrSubTypeOfType) {

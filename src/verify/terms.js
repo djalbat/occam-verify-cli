@@ -4,20 +4,20 @@ import verifyTerm from "../verify/term";
 
 import { first, second } from "../utilities/array";
 
-export default function verifyTerms(termNodes, terms, context, verifyAhead) {
+export default function verifyTerms(termNodes, terms, localContext, verifyAhead) {
   let termsVerified;
 
   const firstTermNode = first(termNodes),
         secondTermNode = second(termNodes),
-        firstTermString = context.nodeAsString(firstTermNode),
-        secondTermString = context.nodeAsString(secondTermNode);
+        firstTermString = localContext.nodeAsString(firstTermNode),
+        secondTermString = localContext.nodeAsString(secondTermNode);
 
-  context.trace(`Verifying the '${firstTermString}' and '${secondTermString}' terms...`, firstTermNode);
+  localContext.trace(`Verifying the '${firstTermString}' and '${secondTermString}' terms...`, firstTermNode);
 
-  const firstTermVerified = verifyTerm(firstTermNode, terms, context, () => {
+  const firstTermVerified = verifyTerm(firstTermNode, terms, localContext, () => {
           let verifiedAhead;
 
-          const secondTermVerified = verifyTerm(secondTermNode, terms, context, () => {
+          const secondTermVerified = verifyTerm(secondTermNode, terms, localContext, () => {
             let verifiedAhead;
 
             verifiedAhead = verifyAhead();
@@ -33,7 +33,7 @@ export default function verifyTerms(termNodes, terms, context, verifyAhead) {
   termsVerified = firstTermVerified; ///
 
   if (termsVerified) {
-    context.debug(`...verified the '${firstTermString}' and '${secondTermString}' terms.`, firstTermNode);
+    localContext.debug(`...verified the '${firstTermString}' and '${secondTermString}' terms.`, firstTermNode);
   }
 
   return termsVerified

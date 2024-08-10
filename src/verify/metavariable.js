@@ -35,14 +35,14 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
   return metavariableVerified;
 }
 
-export function verifyStandaloneMetavariable(metavariableNode, contexct, verifyAhead) {
+export function verifyStandaloneMetavariable(metavariableNode, localMetaContext, verifyAhead) {
   let standaloneMetavariableVerified = false;
 
-  const metavariableString = contexct.nodeAsString(metavariableNode);
+  const metavariableString = localMetaContext.nodeAsString(metavariableNode);
 
-  contexct.trace(`Verifying the '${metavariableString}' standalone metavariable...`, metavariableNode);
+  localMetaContext.trace(`Verifying the '${metavariableString}' standalone metavariable...`, metavariableNode);
 
-  const metavariablePresent = contexct.isMetavariablePresentByMetavariableNode(metavariableNode);
+  const metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode);
 
   if (metavariablePresent) {
     const verifiedAhead = verifyAhead();
@@ -51,7 +51,7 @@ export function verifyStandaloneMetavariable(metavariableNode, contexct, verifyA
   }
 
   if (standaloneMetavariableVerified) {
-    contexct.debug(`...verified the '${metavariableString}' standalone metavariable.`, metavariableNode);
+    localMetaContext.debug(`...verified the '${metavariableString}' standalone metavariable.`, metavariableNode);
   }
 
   return standaloneMetavariableVerified;

@@ -1,6 +1,7 @@
 "use strict";
 
 import Combinator from "../combinator";
+import LocalContext from "../context/local";
 import statementAsCombinatorNodeVerifier from "../verifier/node/statementAsCombinator";
 
 export default function verifyStatementAsCombinator(statementNode, fileContext) {

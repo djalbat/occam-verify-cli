@@ -41,14 +41,13 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
     if (qualifiedStatementVerified) {
       derived = false;  ///
 
-      const context = localContext, ///
-            verifyQualifiedStatementFunctions = [
+      const verifyQualifiedStatementFunctions = [
               verifyQualifiedStatementAsEquality,
               verifyQualifiedStatementAsTypeAssertion
             ];
 
       qualifiedStatementVerified = verifyQualifiedStatementFunctions.every((verifyQualifiedStatementFunction) => { ///
-        const qualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, assignments, derived, context, () => {
+        const qualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, assignments, derived, localContext, () => {
           const verifiedAhead = true;
 
           return verifiedAhead;
@@ -188,44 +187,44 @@ function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, refe
   return qualifiedStatementVerifiedAgainstConjecture;
 }
 
-function verifyQualifiedStatementAsEquality(qualifiedStatementNode, assignments, derived, context, verifyAhead) {
+function verifyQualifiedStatementAsEquality(qualifiedStatementNode, assignments, derived, localContext, verifyAhead) {
   let statementVerifiedAsEquality = true; ///
 
   const equalityNode = equalityNodeQuery(qualifiedStatementNode);
 
   if (equalityNode !== null) {
-    const qualifiedStatementString = context.nodeAsString(qualifiedStatementNode);
+    const qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    context.trace(`Verifying the '${qualifiedStatementString}' qualified statement as an equality...`, qualifiedStatementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement as an equality...`, qualifiedStatementNode);
 
-    const equalityVerified = verifyEquality(equalityNode, assignments, derived, context, verifyAhead);
+    const equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext, verifyAhead);
 
     statementVerifiedAsEquality = equalityVerified; ///
 
     if (statementVerifiedAsEquality) {
-      context.debug(`...verified the '${qualifiedStatementString}' qualified statement as an equality.`, qualifiedStatementNode);
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement as an equality.`, qualifiedStatementNode);
     }
   }
 
   return statementVerifiedAsEquality;
 }
 
-function verifyQualifiedStatementAsTypeAssertion(qualifiedStatementNode, assignments, derived, context, verifyAhead) {
+function verifyQualifiedStatementAsTypeAssertion(qualifiedStatementNode, assignments, derived, localContext, verifyAhead) {
   let statementVerifiedAsTypeAssertion = true;  ///
 
   const typeAssertionNode = typeAssertionNodeQuery(qualifiedStatementNode);
 
   if (typeAssertionNode !== null) {
-    const qualifiedStatementString = context.nodeAsString(qualifiedStatementNode);
+    const qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    context.trace(`Verifying the '${qualifiedStatementString}' qualified statement as a type assertion...`, qualifiedStatementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement as a type assertion...`, qualifiedStatementNode);
 
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, context, verifyAhead);
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext, verifyAhead);
 
     statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
 
     if (statementVerifiedAsTypeAssertion) {
-      context.debug(`...verified the '${qualifiedStatementString}' qualified statement as a type assertion.`, qualifiedStatementNode);
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement as a type assertion.`, qualifiedStatementNode);
     }
   }
 

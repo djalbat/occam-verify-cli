@@ -32,9 +32,9 @@ function verifyVariableNode(variableNodeA, termNodeB, substitutions, localContex
 
     if (variable !== null) {
       const terms = [],
-            context = localContextB, ///
             termNode = termNodeB, ///
-            termVerified = verifyTerm(termNode, terms, context, () => {
+            localContext = localContextB, ///
+            termVerified = verifyTerm(termNode, terms, localContext, () => {
               let verifiedAhead = false;
 
               const firstTerm = first(terms),

@@ -7,16 +7,15 @@ import { verifyStandaloneTerm } from "../../verify/term";
 import { TERM_RULE_NAME, TYPE_RULE_NAME } from "../../ruleNames";
 
 class TermAsConstructorNodeVerifier extends NodeVerifier {
-  verifyNonTerminalNode(nonTerminalNode, fileContext, verifyAhead) {
+  verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead) {
     let nonTerminalNodeVerified;
 
     const ruleName = nonTerminalNode.getRuleName();
 
     switch (ruleName) {
       case TERM_RULE_NAME: {
-        const context = fileContext,  ///
-              termNode = nonTerminalNode, ///
-              standaloneTermVerified = verifyStandaloneTerm(termNode, context, verifyAhead),
+        const termNode = nonTerminalNode, ///
+              standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
               termNodeVerified = standaloneTermVerified;  ///
 
         nonTerminalNodeVerified = termNodeVerified; ///
@@ -25,9 +24,8 @@ class TermAsConstructorNodeVerifier extends NodeVerifier {
       }
 
       case TYPE_RULE_NAME: {
-        const context = fileContext,  ///
-              typeNode = nonTerminalNode, ///
-              standaloneTypeVerified = verifyStandaloneType(typeNode, context, verifyAhead),
+        const typeNode = nonTerminalNode, ///
+              standaloneTypeVerified = verifyStandaloneType(typeNode, localContext, verifyAhead),
               typeNodeVerified = standaloneTypeVerified;  ///
 
         nonTerminalNodeVerified = typeNodeVerified; ///
@@ -36,7 +34,7 @@ class TermAsConstructorNodeVerifier extends NodeVerifier {
       }
 
       default: {
-        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNode, fileContext, verifyAhead);
+        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead);
 
         break;
       }

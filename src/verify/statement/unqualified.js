@@ -23,8 +23,7 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
     }
 
     if (!unqualifiedStatementVerified) {
-      const context = localContext, ///
-            statementVerified = verifyStatement(statementNode, assignments, derived, context, () => {
+      const statementVerified = verifyStatement(statementNode, assignments, derived, localContext, () => {
               const verifiedAhead = true;
 
               return verifiedAhead;

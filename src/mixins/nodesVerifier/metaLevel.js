@@ -2,7 +2,7 @@
 
 import MetastatementForMetavariableSubstitution from "../../substitution/metastatementForMetavariable";
 
-function verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions, fileContextA, localMetaContextB, verifyAhead) {
+function verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead) {
   let metavariableNodeVerified;
 
   const substitution = substitutions.find((substitution) => {

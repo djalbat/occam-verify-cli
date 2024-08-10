@@ -9,7 +9,7 @@ const termNodeQuery = nodeQuery("/argument/term!"),
       metaArgumentTermNodesQuery = nodesQuery("/metaArgument//term"),
       metaArgumentVariableNodesQuery = nodesQuery("/metaArgument//variable");
 
-export default function verifyContainment(argumentNode, containmentNode, metaArgumentNode, context) {
+export default function verifyContainment(argumentNode, containmentNode, metaArgumentNode, localContext) {
   let containmentVerified = false;
 
   const contained = containedFromContainmentNode(containmentNode),

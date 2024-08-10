@@ -26,12 +26,12 @@ export default class Term {
     return matches;
   }
 
-  getVariables(context) {
+  getVariables(localContext) {
     const variables = [],
           variableNodes = variableNodesQuery(this.node);
 
     variableNodes.forEach((variableNode) => {
-      const variable = context.findVariableByVariableNode(variableNode),
+      const variable = localContext.findVariableByVariableNode(variableNode),
             variablesIncludesVariable = variables.includes(variable);
 
       if (!variablesIncludesVariable) {
@@ -42,8 +42,8 @@ export default class Term {
     return variables;
   }
 
-  isGrounded(definedVariables, context) {
-    const variables = this.getVariables(context);
+  isGrounded(definedVariables, localContext) {
+    const variables = this.getVariables(localContext);
 
     filter(variables, (variable) => {
       const definedVariablesIncludesVariable = definedVariables.includes(variable);
@@ -60,16 +60,16 @@ export default class Term {
     return grounded;
   }
 
-  isInitiallyGrounded(context) {
-    const variables = this.getVariables(context),
+  isInitiallyGrounded(localContext) {
+    const variables = this.getVariables(localContext),
           variablesLength = variables.length,
           initiallyGrounded = (variablesLength === 0);
 
     return initiallyGrounded;
   }
 
-  isImplicitlyGrounded(definedVariables, context) {
-    const grounded = this.isGrounded(definedVariables, context),
+  isImplicitlyGrounded(definedVariables, localContext) {
+    const grounded = this.isGrounded(definedVariables, localContext),
           implicitlyGrounded = grounded;  ///
 
     return implicitlyGrounded;
