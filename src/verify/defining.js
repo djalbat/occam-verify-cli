@@ -6,15 +6,13 @@ import { DEFINED } from "../constants";
 import { nodeQuery } from "../utilities/query";
 import { first, second } from "../utilities/array";
 
-const termNodeQuery = nodeQuery("/argument/term!"),
-      variableNodeQuery = nodeQuery("/argument/term/variable!");
+const variableNodeQuery = nodeQuery("/term/variable!");
 
-export default function verifyDefining(argumentNode, definingNode, localContext) {
+export default function verifyDefining(termNode, definingNode, localContext) {
   let definingVerified = false;
 
   const defined = definedFromDefiningNode(definingNode),
-        termNode = termNodeQuery(argumentNode),
-        variableNode = variableNodeQuery(argumentNode);
+        variableNode = variableNodeQuery(termNode);
 
   if (false) {
     ///

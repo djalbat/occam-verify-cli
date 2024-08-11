@@ -4,17 +4,15 @@ import { second } from "../utilities/array";
 import { CONTAINED } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const termNodeQuery = nodeQuery("/argument/term!"),
-      variableNodeQuery = nodeQuery("/argument/term/variable!"),
+const variableNodeQuery = nodeQuery("/term/variable!"),
       metaArgumentTermNodesQuery = nodesQuery("/metaArgument//term"),
       metaArgumentVariableNodesQuery = nodesQuery("/metaArgument//variable");
 
-export default function verifyContainment(argumentNode, containmentNode, metaArgumentNode, localContext) {
+export default function verifyContainment(termNode, containmentNode, metaArgumentNode, localContext) {
   let containmentVerified = false;
 
   const contained = containedFromContainmentNode(containmentNode),
-        termNode = termNodeQuery(argumentNode),
-        variableNode = variableNodeQuery(argumentNode);
+        variableNode = variableNodeQuery(termNode);
 
   if (false) {
     ///

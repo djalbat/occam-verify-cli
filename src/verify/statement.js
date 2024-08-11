@@ -9,8 +9,8 @@ import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statement
 
 import { nodeQuery } from "../utilities/query";
 
-const equalityNodeQuery = nodeQuery("/statement/equality!"),
-      argumentNodeQuery = nodeQuery("/statement/argument!"),
+const termNodeQuery = nodeQuery("/statement/term!"),
+      equalityNodeQuery = nodeQuery("/statement/equality!"),
       definingNodeQuery = nodeQuery("/statement/defining!"),
       statementNodeQuery = nodeQuery("/metaArgument/statement!"),
       containmentNodeQuery = nodeQuery("/statement/containment!"),
@@ -105,8 +105,8 @@ function verifyStatementAboutDefining(statementNode, assignments, derived, local
 
     localContext.trace(`Verifying the '${statementString}' statement about defining...`, statementNode);
 
-    const argumentNode = argumentNodeQuery(statementNode),
-          definingVerified = verifyDefining(argumentNode, definingNode, localContext);
+    const termNode = termNodeQuery(statementNode),
+          definingVerified = verifyDefining(termNode, definingNode, localContext);
 
     statementVerifiedAboutDefining = definingVerified; ///
 
@@ -150,9 +150,9 @@ function verifyStatementAboutContainment(statementNode, assignments, derived, lo
 
     localContext.trace(`Verifying the '${statementString}' statement about containment...`, statementNode);
 
-    const argumentNode = argumentNodeQuery(statementNode),
+    const termNode = termNodeQuery(statementNode),
           metaArgumentNode = metaArgumentNodeQuery(statementNode),
-          containmentVerified = verifyContainment(argumentNode, containmentNode, metaArgumentNode, localContext);
+          containmentVerified = verifyContainment(termNode, containmentNode, metaArgumentNode, localContext);
 
     if (containmentVerified) {
       statementNode = statementNodeQuery(metaArgumentNode); ///
