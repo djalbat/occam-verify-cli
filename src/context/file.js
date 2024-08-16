@@ -8,6 +8,7 @@ import Variable from "../variable";
 import Conjecture from "../conjecture";
 import Combinator from "../combinator";
 import Constructor from "../constructor";
+import Metatheorem from "../metatheorem";
 import Metavariable from "../metavariable";
 
 import { push } from "../utilities/array";
@@ -21,7 +22,7 @@ const metaTypes = [
 ];
 
 export default class FileContext {
-  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, conjectures, combinators, constructors, metavariables) {
+  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, conjectures, combinators, constructors, metatheorems, metavariables) {
     this.releaseContext = releaseContext;
     this.filePath = filePath;
     this.tokens = tokens;
@@ -35,6 +36,7 @@ export default class FileContext {
     this.conjectures = conjectures;
     this.combinators = combinators;
     this.constructors = constructors;
+    this.metatheorems = metatheorems;
     this.metavariables = metavariables;
   }
 
@@ -244,6 +246,20 @@ export default class FileContext {
     return constructors;
   }
 
+  getMetatheorems(includeRelease = true) {
+    const metatheorems = [];
+
+    push(metatheorems, this.metatheorems);
+
+    if (includeRelease) {
+      const releaseContextMetatheorems = this.releaseContext.getMetatheorems();
+
+      push(metatheorems, releaseContextMetatheorems);
+    }
+
+    return metatheorems;
+  }
+
   getMetavariables(includeRelease = true) {
     return this.metavariables;
   }
@@ -389,6 +405,20 @@ export default class FileContext {
     return metavariable;
   }
 
+  findMetatheoremByReferenceName(referenceName) {
+    const labelName = referenceName,  ///
+          metatheorems = this.getMetatheorems(),
+          metatheorem = metatheorems.find((metatheorem) => {
+            const metatheoremMatchesLabelName = metatheorem.matchLabelName(labelName);
+
+            if (metatheoremMatchesLabelName) {
+              return true;
+            }
+          }) || null;
+
+    return metatheorem;
+  }
+
   isTermGrounded(term) {
     const termGrounded = false; ///
 
@@ -500,6 +530,10 @@ export default class FileContext {
     this.constructors.push(constructor);
   }
 
+  addMetatheorem(metatheorem) {
+    this.metatheorems.push(metatheorem);
+  }
+
   addMetavariable(metavariable) {
     let metavariableAdded = false;
 
@@ -598,6 +632,13 @@ export default class FileContext {
 
             return constructor;
           }),
+          metatheorems = this.metatheorems.map((metatheorem) => {
+            const metatheoremJSON = metatheorem.toJSON(this.tokens);
+
+            metatheorem = metatheoremJSON; ///
+
+            return metatheorem;
+          }),
           metavariables = this.metavariables.map((metavariable) => {
             const metavariableJSON = metavariable.toJSON(this.tokens);
 
@@ -616,6 +657,7 @@ export default class FileContext {
             conjectures,
             combinators,
             constructors,
+            metatheorems,
             metavariables
           };
 
@@ -623,27 +665,19 @@ export default class FileContext {
   }
 
   initialise(json) {
-    const fileContext = this, ///
-          { types,
-            rules,
-            axioms,
-            lemmas,
-            theorems,
-            variables,
-            conjectures,
-            combinators,
-            constructors,
-            metavariables } = json,
-          typesJSON = types,
-          rulesJSON = rules,
-          axiomsJSON = axioms,
-          lemmasJSON = lemmas,
-          theoremsJSON = theorems,
-          variablesJSON = variables,
-          conjecturesJSON = conjectures,
-          combinatorsJSON = combinators,
-          constructorsJSON = constructors,
-          metavariablesJSON = metavariables;
+    const { types, rules, axioms, lemmas, theorems, variables, conjectures, combinators, constructors, metatheorems, metavariables } = json,
+          fileContext = this, ///
+          typesJSON = types,  ///
+          rulesJSON = rules,  ///
+          axiomsJSON = axioms,  ///
+          lemmasJSON = lemmas,  ///
+          theoremsJSON = theorems,  ///
+          variablesJSON = variables,  ///
+          conjecturesJSON = conjectures,  ///
+          combinatorsJSON = combinators,  ///
+          constructorsJSON = constructors,  ///
+          metatheoremsJSON = metatheorems,  ///
+          metavariablesJSON = metavariables;  ///
 
     typesJSON.forEach((typeJSON) => {
       const json = typeJSON,  ///
@@ -708,6 +742,13 @@ export default class FileContext {
       this.constructors.push(constructor);
     });
 
+    metatheoremsJSON.forEach((metatheoremJSON) => {
+      const json = metatheoremJSON,  ///
+            metatheorem = Metatheorem.fromJSONAndFileContext(json, fileContext);
+
+      this.metatheorems.push(metatheorem);
+    });
+
     metavariablesJSON.forEach((metavariableJSON) => {
       const json = metavariableJSON,  ///
             metavariable = Metavariable.fromJSONAndFileContext(json, fileContext);
@@ -729,8 +770,9 @@ export default class FileContext {
           conjectures = [],
           combinators = [],
           constructors = [],
+          metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, theorems, conjectures, combinators, constructors, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
 
     fileContext.initialise(json);
 
@@ -751,8 +793,9 @@ export default class FileContext {
           conjectures = [],
           combinators = [],
           constructors = [],
+          metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, theorems, conjectures, combinators, constructors, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
 
     return fileContext;
   }

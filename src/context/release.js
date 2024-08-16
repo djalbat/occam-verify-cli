@@ -270,6 +270,30 @@ export default class ReleaseContext {
     return constructors;
   }
 
+  getMetatheorems(includeDependencies = true) {
+    const metatheorems = [];
+
+    this.fileContexts.forEach((fileContext) => {
+      const includeRelease = false,
+            fileContextMetatheorems = fileContext.getMetatheorems(includeRelease);
+
+      push(metatheorems, fileContextMetatheorems);
+    });
+
+    if (includeDependencies) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencies = false,
+              releaseContextMetatheorems = releaseContext.getMetatheorems(includeDependencies);
+
+        push(metatheorems, releaseContextMetatheorems);
+      });
+    }
+
+    return metatheorems;
+  }
+
   addFileContext(fileContext) {
     this.fileContexts.push(fileContext);
   }
