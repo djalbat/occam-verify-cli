@@ -5,6 +5,7 @@ import Axiom from "../axiom";
 import Lemma from "../lemma";
 import Theorem from "../theorem";
 import Variable from "../variable";
+import MetaLemma from "../metaLemma";
 import Conjecture from "../conjecture";
 import Combinator from "../combinator";
 import Constructor from "../constructor";
@@ -22,7 +23,7 @@ const metaTypes = [
 ];
 
 export default class FileContext {
-  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, conjectures, combinators, constructors, metatheorems, metavariables) {
+  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables) {
     this.releaseContext = releaseContext;
     this.filePath = filePath;
     this.tokens = tokens;
@@ -33,6 +34,7 @@ export default class FileContext {
     this.lemmas = lemmas;
     this.theorems = theorems;
     this.variables = variables;
+    this.metaLemmas = metaLemmas;
     this.conjectures = conjectures;
     this.combinators = combinators;
     this.constructors = constructors;
@@ -200,6 +202,20 @@ export default class FileContext {
     return this.variables;
   }
 
+  getMetaLemmas(includeRelease = true) {
+    const metaLemmas = [];
+
+    push(metaLemmas, this.metaLemmas);
+
+    if (includeRelease) {
+      const releaseContextMetaLemmas = this.releaseContext.getMetaLemmas();
+
+      push(metaLemmas, releaseContextMetaLemmas);
+    }
+
+    return metaLemmas;
+  }
+
   getMetaTypes(includeRelease = true) {
     return metaTypes;
   }
@@ -348,6 +364,20 @@ export default class FileContext {
           }) || null;
 
     return theorem;
+  }
+
+  findMetaLemmaByReferenceName(referenceName) {
+    const labelName = referenceName,  ///
+          metaLemmas = this.getMetaLemmas(),
+          metaLemma = metaLemmas.find((metaLemma) => {
+            const metaLemmaMatchesLabelName = metaLemma.matchLabelName(labelName);
+
+            if (metaLemmaMatchesLabelName) {
+              return true;
+            }
+          }) || null;
+
+    return metaLemma;
   }
 
   findVariableByVariableNode(variableNode) {
@@ -518,6 +548,10 @@ export default class FileContext {
     return variableAdded;
   }
 
+  addMetaLemma(metaLemma) {
+    this.metaLemmas.push(metaLemma);
+  }
+
   addConjecture(conjecture) {
     this.conjectures.push(conjecture);
   }
@@ -611,6 +645,13 @@ export default class FileContext {
 
             return variable;
           }),
+          metaLemmas = this.metaLemmas.map((metaLemma) => {
+            const metaLemmaJSON = metaLemma.toJSON(this.tokens);
+
+            metaLemma = metaLemmaJSON; ///
+
+            return metaLemma;
+          }),
           conjectures = this.conjectures.map((conjecture) => {
             const conjectureJSON = conjecture.toJSON(this.tokens);
 
@@ -654,6 +695,7 @@ export default class FileContext {
             lemmas,
             theorems,
             variables,
+            metaLemmas,
             conjectures,
             combinators,
             constructors,
@@ -665,7 +707,7 @@ export default class FileContext {
   }
 
   initialise(json) {
-    const { types, rules, axioms, lemmas, theorems, variables, conjectures, combinators, constructors, metatheorems, metavariables } = json,
+    const { types, rules, axioms, lemmas, theorems, metaLemmas, variables, conjectures, combinators, constructors, metatheorems, metavariables } = json,
           fileContext = this, ///
           typesJSON = types,  ///
           rulesJSON = rules,  ///
@@ -673,10 +715,11 @@ export default class FileContext {
           lemmasJSON = lemmas,  ///
           theoremsJSON = theorems,  ///
           variablesJSON = variables,  ///
+          metaLemmasJSON = metaLemmas || [],  ///
           conjecturesJSON = conjectures,  ///
           combinatorsJSON = combinators,  ///
           constructorsJSON = constructors,  ///
-          metatheoremsJSON = metatheorems,  ///
+          metatheoremsJSON = metatheorems || [],  ///
           metavariablesJSON = metavariables;  ///
 
     typesJSON.forEach((typeJSON) => {
@@ -719,6 +762,13 @@ export default class FileContext {
             variable = Variable.fromJSONAndFileContext(json, fileContext);
 
       this.variables.push(variable);
+    });
+
+    metaLemmasJSON.forEach((metaLemmaJSON) => {
+      const json = metaLemmaJSON,  ///
+            metaLemma = MetaLemma.fromJSONAndFileContext(json, fileContext);
+
+      this.metaLemmas.push(metaLemma);
     });
 
     conjecturesJSON.forEach((conjectureJSON) => {
@@ -767,12 +817,13 @@ export default class FileContext {
           lemmas = [],
           theorems = [],
           variables = [],
+          metaLemmas = [],
           conjectures = [],
           combinators = [],
           constructors = [],
           metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, metaLemmas, variables, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
 
     fileContext.initialise(json);
 
@@ -790,12 +841,13 @@ export default class FileContext {
           lemmas = [],
           theorems = [],
           variables = [],
+          metaLemmas = [],
           conjectures = [],
           combinators = [],
           constructors = [],
           metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
 
     return fileContext;
   }

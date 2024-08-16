@@ -1,9 +1,9 @@
 "use strict";
 
-import AxiomLemmaTheoremConjecture from "./axiomLemmaTheoremConjecture";
+import MetaLemmaMetatheorem from "./metaLemmaMetatheorem";
 
-export default class Metatheorem extends AxiomLemmaTheoremConjecture {
-  static fromJSONAndFileContext(json, fileContext) { return AxiomLemmaTheoremConjecture.fromJSONAndFileContext(Metatheorem, json, fileContext); }
+export default class Metatheorem extends MetaLemmaMetatheorem {
+  static fromJSONAndFileContext(json, fileContext) { return MetaLemmaMetatheorem.fromJSONAndFileContext(Metatheorem, json, fileContext); }
 
-  static fromLabelsSuppositionsConsequentAndLocalContext(labels, suppositions, consequent, localContext) { return AxiomLemmaTheoremConjecture.fromLabelsSuppositionsConsequentAndLocalContext(Metatheorem, labels, suppositions, consequent, localContext); }
+  static fromLabelsMetaSuppositionsMetaConsequentAndLocalContext(labels, suppositions, consequent, localContext) { return MetaLemmaMetatheorem.fromLabelsMetaSuppositionsMetaConsequentAndLocalContext(Metatheorem, labels, suppositions, consequent, localContext); }
 }

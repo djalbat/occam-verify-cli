@@ -198,6 +198,30 @@ export default class ReleaseContext {
     return theorems;
   }
 
+  getMetaLemmas(includeDependencies = true) {
+    const metaLemmas = [];
+
+    this.fileContexts.forEach((fileContext) => {
+      const includeRelease = false,
+            fileContextMetaLemmas = fileContext.getMetaLemmas(includeRelease);
+
+      push(metaLemmas, fileContextMetaLemmas);
+    });
+
+    if (includeDependencies) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencies = false,
+              releaseContextMetaLemmas = releaseContext.getMetaLemmas(includeDependencies);
+
+        push(metaLemmas, releaseContextMetaLemmas);
+      });
+    }
+
+    return metaLemmas;
+  }
+
   getConjectures(includeDependencies = true) {
     const conjectures = [];
 
