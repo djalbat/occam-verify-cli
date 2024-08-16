@@ -31,7 +31,7 @@ export default class NodesVerifier {
   }
 
   verifyChildNodes(childNodesA, childNodesB, ...remainingArguments) {
-    let childNodesVerify = false;
+    let childNodesVerified = false;
 
     const childNodesALength = childNodesA.length,
           childNodesBLength = childNodesB.length;
@@ -45,11 +45,11 @@ export default class NodesVerifier {
         const index = 0,
               childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments);
 
-        childNodesVerify = childNodesVerifyAhead; ///
+        childNodesVerified = childNodesVerifyAhead; ///
       }
     }
 
-    return childNodesVerify;
+    return childNodesVerified;
   }
 
   verifyTerminalNode(terminalNodeA, terminalNodeB, ...remainingArguments) { ///
@@ -74,16 +74,16 @@ export default class NodesVerifier {
             nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
             childNodesA = nonTerminalNodeAChildNodes, ///
             childNodesB = nonTerminalNodeBChildNodes, ///
-            childNodesVerify = this.verifyChildNodes(childNodesA, childNodesB, ...remainingArguments);
+            childNodesVerified = this.verifyChildNodes(childNodesA, childNodesB, ...remainingArguments);
 
-      nonTerminalNodeVerified = childNodesVerify; ///
+      nonTerminalNodeVerified = childNodesVerified; ///
     }
 
     return nonTerminalNodeVerified;
   }
 
   verifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments) {
-    let childNodesVerify;
+    let childNodesVerified;
 
     const verifyAhead = remainingArguments.pop(), ///
           childNodesALength = childNodesA.length;
@@ -91,7 +91,7 @@ export default class NodesVerifier {
     if (index === childNodesALength) {
       const verifiedAhead = verifyAhead();
 
-      childNodesVerify = verifiedAhead; ///
+      childNodesVerified = verifiedAhead; ///
     } else {
       const childNodeA = childNodesA[index],
             childNodeB = childNodesB[index],
@@ -106,9 +106,9 @@ export default class NodesVerifier {
               return childNodesVerifyAhead;
             });
 
-      childNodesVerify = nodeVerified;  ///
+      childNodesVerified = nodeVerified;  ///
     }
 
-    return childNodesVerify;
+    return childNodesVerified;
   }
 }
