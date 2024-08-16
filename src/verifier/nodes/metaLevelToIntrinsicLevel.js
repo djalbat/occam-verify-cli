@@ -10,7 +10,7 @@ import { matchStatementNode } from "../../substitution/statementForMetavariable"
 import { TERM_RULE_NAME, STATEMENT_RULE_NAME, METASTATEMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../../ruleNames";
 
 const variableNodeQuery = nodeQuery("/*/variable!"),
-      statementNodeQuery = nodeQuery("/metaArgument/statement"),
+      statementNodeQuery = nodeQuery("/*/statement"),
       metavariableNodeQuery = nodeQuery("/metastatement/metavariable!"),
       substitutionNodeQuery = nodeQuery("/metastatement/substitution!");
 
@@ -50,25 +50,34 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
   verifyMetastatementNode(metastatementNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead) {
     let metastatementNodeVerified;
 
-    const nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
+    const statementNodeA = statementNodeQuery(metastatementNodeA);
 
-    switch (nonTerminalNodeBRuleName) {
-      case META_ARGUMENT_RULE_NAME: {
-        const metaArgumentNodeB = nonTerminalNodeB, ///
-              metaArgumentNodeVerified = this.verifyMetaArgumentNode(metastatementNodeA, metaArgumentNodeB, substitutions, localContextA, localContextB, verifyAhead);
+    if (statementNodeA !== null) {
+      const nonTerminalNodeA = statementNodeA,  ///
+            nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
-        metastatementNodeVerified = metaArgumentNodeVerified; ///
+      metastatementNodeVerified = nonTerminalNodeVerified; ///
+    } else {
+      const nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
 
-        break;
-      }
+      switch (nonTerminalNodeBRuleName) {
+        case META_ARGUMENT_RULE_NAME: {
+          const metaArgumentNodeB = nonTerminalNodeB, ///
+                metaArgumentNodeVerified = this.verifyMetaArgumentNode(metastatementNodeA, metaArgumentNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
-      case STATEMENT_RULE_NAME: {
-        const statementNodeB = nonTerminalNodeB,  ///
-              statementNodeVerified = this.verifyStatementNode(metastatementNodeA, statementNodeB, substitutions, localContextA, localContextB, verifyAhead);
+          metastatementNodeVerified = metaArgumentNodeVerified; ///
 
-        metastatementNodeVerified = statementNodeVerified;  ///
+          break;
+        }
 
-        break;
+        case STATEMENT_RULE_NAME: {
+          const statementNodeB = nonTerminalNodeB,  ///
+                statementNodeVerified = this.verifyStatementNode(metastatementNodeA, statementNodeB, substitutions, localContextA, localContextB, verifyAhead);
+
+          metastatementNodeVerified = statementNodeVerified;  ///
+
+          break;
+        }
       }
     }
 
