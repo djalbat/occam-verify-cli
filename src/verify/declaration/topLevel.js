@@ -4,7 +4,9 @@ import verifyRule from "../../verify/rule";
 import verifyAxiom from "../../verify/axiom";
 import verifyLemma from "../../verify/lemma";
 import verifyTheorem from "../../verify/theorem";
+import verifyMetaLemma from "../../verify/metaLemma";
 import verifyConjecture from "../../verify/conjecture";
+import verifyMetatheorem from "../../verify/metatheorem";
 import verifyTypeDeclaration from "../../verify/declaration/type";
 import verifyVariableDeclaration from "../../verify/declaration/variable";
 import verifyCombinatorDeclaration from "../../verify/declaration/combinator";
@@ -17,7 +19,9 @@ const ruleNodeQuery = nodeQuery("/topLevelDeclaration/rule!"),
       axiomNodeQuery = nodeQuery("/topLevelDeclaration/axiom!"),
       lemmaNodeQuery = nodeQuery("/topLevelDeclaration/lemma!"),
       theoremNodeQuery = nodeQuery("/topLevelDeclaration/theorem!"),
+      metaLemmaNodeQuery = nodeQuery("/topLevelDeclaration/metaLemma!"),
       conjectureNodeQuery = nodeQuery("/topLevelDeclaration/conjecture!"),
+      metatheoremNodeQuery = nodeQuery("/topLevelDeclaration/metatheorem!"),
       typeDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/typeDeclaration!"),
       variableDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/variableDeclaration!"),
       combinatorDeclarationNodeQuery = nodeQuery("/topLevelDeclaration/combinatorDeclaration!"),
@@ -32,7 +36,9 @@ export default function verifyTopLevelDeclaration(topLevelDeclarationNode, fileC
         axiomNode = axiomNodeQuery(node),
         lemmaNode = lemmaNodeQuery(node),
         theoremNode = theoremNodeQuery(node),
+        metaLemmaNode = metaLemmaNodeQuery(node),
         conjectureNode = conjectureNodeQuery(node),
+        metatheoremNode = metatheoremNodeQuery(node),
         typeDeclarationNode = typeDeclarationNodeQuery(node),
         variableDeclarationNode = variableDeclarationNodeQuery(node),
         combinatorDeclarationNode = combinatorDeclarationNodeQuery(node),
@@ -57,10 +63,18 @@ export default function verifyTopLevelDeclaration(topLevelDeclarationNode, fileC
     const theoremVerified = verifyTheorem(theoremNode, fileContext);
 
     topLevelDeclarationVerified = theoremVerified;  ///
+  } else if (metaLemmaNode !== null) {
+    const metaLemmaVerified = verifyMetaLemma(metaLemmaNode, fileContext);
+
+    topLevelDeclarationVerified = metaLemmaVerified;  ///
   } else if (conjectureNode !== null) {
     const conjectureVerified = verifyConjecture(conjectureNode, fileContext);
 
     topLevelDeclarationVerified = conjectureVerified;  ///
+  } else if (metatheoremNode !== null) {
+    const metatheoremVerified = verifyMetatheorem(metatheoremNode, fileContext);
+
+    topLevelDeclarationVerified = metatheoremVerified;  ///
   } else if (typeDeclarationNode !== null) {
     const typeDeclarationVerified = verifyTypeDeclaration(typeDeclarationNode, fileContext);
 

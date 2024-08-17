@@ -14,11 +14,12 @@ import Metavariable from "../metavariable";
 
 import { push } from "../utilities/array";
 import { objectType } from "../type";
-import { statementMetaType } from "../metaType";
 import { typeFromJSONAndFileContext } from "../type";
 import { nodeAsString, nodesAsString } from "../utilities/string";
+import { contextMetaType, statementMetaType } from "../metaType";
 
 const metaTypes = [
+  contextMetaType,
   statementMetaType
 ];
 

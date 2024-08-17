@@ -1,6 +1,6 @@
 "use strict";
 
-import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
+import { CONTEXT_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 
 export default class MetaType {
   constructor(name) {
@@ -59,14 +59,25 @@ export default class MetaType {
   }
 }
 
+class ContextMetaType extends MetaType {
+  static fromNothing() {
+    const name = CONTEXT_META_TYPE_NAME,
+          contextMetaType = new ContextMetaType(name);
+
+    return contextMetaType;
+  }
+}
+
 class StatementMetaType extends MetaType {
   static fromNothing() {
     const name = STATEMENT_META_TYPE_NAME,
-          objectMetaType = new StatementMetaType(name);
+          statementMetaType = new StatementMetaType(name);
 
-    return objectMetaType;
+    return statementMetaType;
   }
 }
+
+export const contextMetaType = ContextMetaType.fromNothing();
 
 export const statementMetaType = StatementMetaType.fromNothing();
 

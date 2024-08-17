@@ -9,13 +9,18 @@ const metastatementNodesQuery = nodesQuery("/ruleSubproofAssertion/metastatement
       qualifiedOrUnqualifiedMetastatementMetastatementNodesQuery = nodesQuery("/ruleSubproof/qualifiedMetastatement|unqualifiedMetastatement/metastatement!");
 
 export default class MetaproofStep {
-  constructor(ruleSubproofNode, metastatementNode) {
+  constructor(ruleSubproofNode, metaSubproofNode, metastatementNode) {
     this.ruleSubproofNode = ruleSubproofNode;
+    this.metaSubproofNode = metaSubproofNode;
     this.metastatementNode = metastatementNode;
   }
 
   getRuleSubproofNode() {
     return this.ruleSubproofNode;
+  }
+
+  getMetaSubproofNode() {
+    return this.metaSubproofNode;
   }
 
   getMetastatementNode() {
@@ -87,15 +92,26 @@ export default class MetaproofStep {
   }
 
   static fromRuleSubproofNode(ruleSubproofNode) {
-    const metastatementNode = null,
-          metaProofStep = new MetaproofStep(ruleSubproofNode, metastatementNode);
+    const metaSubproofNode = null,
+          metastatementNode = null,
+          metaProofStep = new MetaproofStep(ruleSubproofNode, metaSubproofNode, metastatementNode);
 
     return metaProofStep;
   }
 
+  static fromMetaSubproofNode(metaSubproofNode) {
+    const ruleSubproofNode = null,
+          metastatementNode = null,
+          metaProofStep = new MetaproofStep(ruleSubproofNode, metaSubproofNode, metastatementNode);
+
+    return metaProofStep;
+
+  }
+
   static fromMetastatementNode(metastatementNode) {
     const ruleSubproofNode = null,
-          metaProofStep = new MetaproofStep(ruleSubproofNode, metastatementNode);
+          metaSubproofNode = null,
+          metaProofStep = new MetaproofStep(ruleSubproofNode, metaSubproofNode, metastatementNode);
 
     return metaProofStep;
   }

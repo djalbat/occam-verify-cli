@@ -22,9 +22,9 @@ export default function verifyProof(proofNode, conclusion, localContext) {
       const proofStep = lastProofStep, ///
             statementNode = proofStep.getStatementNode(),
             conclusionStatementNode = conclusion.getStatementNode(),
-            statementNodeMatchConclusionStatementNode = statementNode.match(conclusionStatementNode);
+            statementNodeMatchesConclusionStatementNode = statementNode.match(conclusionStatementNode);
 
-      proofVerified = statementNodeMatchConclusionStatementNode;  ///
+      proofVerified = statementNodeMatchesConclusionStatementNode;  ///
     }
   }
 

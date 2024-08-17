@@ -208,17 +208,6 @@ export default class ReleaseContext {
       push(metaLemmas, fileContextMetaLemmas);
     });
 
-    if (includeDependencies) {
-      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
-
-      dependencyReleaseContexts.forEach((releaseContext) => {
-        const includeDependencies = false,
-              releaseContextMetaLemmas = releaseContext.getMetaLemmas(includeDependencies);
-
-        push(metaLemmas, releaseContextMetaLemmas);
-      });
-    }
-
     return metaLemmas;
   }
 
