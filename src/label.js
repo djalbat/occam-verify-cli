@@ -1,7 +1,7 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { labelNameFromLabelNode } from "./utilities/query";
+import { labelNameFromLabelNode } from "./utilities/name";
 import { labelNodeFromLabelString } from "./utilities/node";
 
 export default class Label {

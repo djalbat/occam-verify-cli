@@ -5,6 +5,7 @@ import Axiom from "../axiom";
 import Lemma from "../lemma";
 import Theorem from "../theorem";
 import Variable from "../variable";
+import metaTypes from "../metaTypes";
 import MetaLemma from "../metaLemma";
 import Conjecture from "../conjecture";
 import Combinator from "../combinator";
@@ -16,12 +17,6 @@ import { push } from "../utilities/array";
 import { objectType } from "../type";
 import { typeFromJSONAndFileContext } from "../type";
 import { nodeAsString, nodesAsString } from "../utilities/string";
-import { contextMetaType, statementMetaType } from "../metaType";
-
-const metaTypes = [
-  contextMetaType,
-  statementMetaType
-];
 
 export default class FileContext {
   constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables) {

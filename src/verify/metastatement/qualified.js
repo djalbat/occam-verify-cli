@@ -1,6 +1,7 @@
 "use strict";
 
-import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
+import { nodeQuery } from "../../utilities/query";
+import { referenceNameFromReferenceNode } from "../../utilities/name";
 
 const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/reference!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");

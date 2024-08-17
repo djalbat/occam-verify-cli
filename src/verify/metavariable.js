@@ -3,7 +3,7 @@
 import Metavariable from "../metavariable";
 import MetavariableAssignment from "../assignment/metavariable";
 
-import { metaTypeNameFromMetaTypeNode } from "../utilities/query";
+import { metaTypeNameFromMetaTypeNode } from "../utilities/name";
 
 export default function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
   let metavariableVerified = false;

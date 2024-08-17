@@ -3,7 +3,8 @@
 import verifyEquality from "../equality";
 import verifyTypeAssertion from "../typeAssertion";
 
-import { nodeQuery, referenceNameFromReferenceNode } from "../../utilities/query";
+import { nodeQuery } from "../../utilities/query";
+import { referenceNameFromReferenceNode } from "../../utilities/name";
 
 const equalityNodeQuery = nodeQuery("/qualifiedStatement/statement/equality!"),
       referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!"),

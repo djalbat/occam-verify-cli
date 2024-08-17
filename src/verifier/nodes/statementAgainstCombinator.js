@@ -4,7 +4,7 @@ import NodesVerifier from "../../verifier/nodes";
 import termAgainstConstructorNodesVerifier from "../../verifier/nodes/termAgainstConstructor";
 
 import { nodeQuery } from "../../utilities/query";
-import { STATEMENT_META_TYPE } from "../../metaTypes";
+import { STATEMENT_META_TYPE_NAME } from "../../metaTypeNames";
 import { ARGUMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../../ruleNames";
 
 const metaTypeNodeQuery = nodeQuery("/metaArgument/metaType!"),
@@ -71,10 +71,10 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
       } else {
         const combinatorMetaTypeTerminalNode = metaTypeTerminalNodeQuery(combinatorMetaTYpeNode),
               content = combinatorMetaTypeTerminalNode.getContent(),
-              contentStatementMetaType = (content === STATEMENT_META_TYPE);
+              contentStatementMetaType = (content === STATEMENT_META_TYPE_NAME);
 
         if (!contentStatementMetaType) {
-          localContext.debug(`Expected the meta-type of the combinator to be '${STATEMENT_META_TYPE}' but got '${content}' instead.`, metaArgumentNode);
+          localContext.debug(`Expected the meta-type of the combinator to be '${STATEMENT_META_TYPE_NAME}' but got '${content}' instead.`, metaArgumentNode);
         } else {
           const verifiedAhead = verifyAhead();
 

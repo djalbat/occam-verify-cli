@@ -2,7 +2,7 @@
 
 import Label from "../label";
 
-import { labelNameFromLabelNode } from "../utilities/query";
+import { labelNameFromLabelNode } from "../utilities/name";
 
 export default function verifyLabel(labelNode, labels, fileContext) {
   let labelVerified = false;

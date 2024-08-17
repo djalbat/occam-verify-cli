@@ -1,6 +1,6 @@
 "use strict";
 
-import { typeNameFromTypeNode } from "../utilities/query";
+import { typeNameFromTypeNode } from "../utilities/name";
 
 export default function verifyGivenType(typeNode, types, localContext, verifyAhead) {
   let givenTypeVerified = false;

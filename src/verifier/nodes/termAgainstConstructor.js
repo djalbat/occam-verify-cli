@@ -3,8 +3,9 @@
 import NodesVerifier from "../../verifier/nodes";
 
 import { first } from "../../utilities/array";
+import { nodeQuery } from "../../utilities/query";
 import { ARGUMENT_RULE_NAME } from "../../ruleNames";
-import { nodeQuery, typeNameFromTypeNode } from "../../utilities/query";
+import { typeNameFromTypeNode } from "../../utilities/name";
 
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!");

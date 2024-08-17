@@ -2,7 +2,7 @@
 
 import Type from "../type";
 
-import { typeNameFromTypeNode } from "../utilities/query";
+import { typeNameFromTypeNode } from "../utilities/name";
 
 export default function verifyType(typeNode, superTypeNode, fileContext) {
   let typeVerified = false;

@@ -4,7 +4,7 @@ import Constructor from "../constructor";
 import LocalContext from "../context/local";
 import termAsConstructorNodeVerifier from "../verifier/node/termAsConstructor";
 
-import { typeNameFromTypeNode } from "../utilities/query";
+import { typeNameFromTypeNode } from "../utilities/name";
 
 export default function verifyTermAsConstructor(termNode, typeNode, fileContext) {
   let termVerifiedAsConstructor = false;

@@ -1,3 +1,10 @@
 "use strict";
 
-export const STATEMENT_META_TYPE = "Statement";
+import { contextMetaType, statementMetaType } from "./metaType";
+
+const metaTypes = [
+  contextMetaType,
+  statementMetaType
+];
+
+export default metaTypes;

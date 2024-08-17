@@ -4,7 +4,7 @@ import Variable from "../variable";
 import VariableAssignment from "../assignment/variable";
 
 import { objectType } from "../type";
-import { typeNameFromTypeNode } from "../utilities/query";
+import { typeNameFromTypeNode } from "../utilities/name";
 
 export default function verifyVariable(variableNode, typeNode, fileContext) {
   let variableVerified = false;
