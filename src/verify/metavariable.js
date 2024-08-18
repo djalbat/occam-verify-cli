@@ -3,7 +3,11 @@
 import Metavariable from "../metavariable";
 import MetavariableAssignment from "../assignment/metavariable";
 
-import { metaTypeNameFromMetaTypeNode } from "../utilities/name";
+import { nodeQuery } from "../utilities/query";
+import { typeNameFromTypeNode, metaTypeNameFromMetaTypeNode } from "../utilities/name";
+
+const typeNodeQuery = nodeQuery("/argument/type"),
+      argumentNodeQuery = nodeQuery("/metavariable/argument!");
 
 export default function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
   let metavariableVerified = false;
@@ -17,14 +21,19 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
   if (metavariablePresent) {
     fileContext.debug(`The metavariable '${metavariableString}' is already present.`, metavariableNode);
   } else {
-    const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
-          metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName),
-          metavariable = Metavariable.fromMetavariableNodeAndMetaType(metavariableNode, metaType),
-          metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
-          metavariableAssigned = metavariableAssignment.assign(fileContext);
+    const argumentNode = argumentNodeQuery(metavariableNode),
+          argumentVerified = verifyArgument(metavariableNode, argumentNode, fileContext);
 
-    if (metavariableAssigned) {
-      metavariableVerified = true;
+    if (argumentVerified) {
+      const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
+            metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName),
+            metavariable = Metavariable.fromMetavariableNodeAndMetaType(metavariableNode, metaType),
+            metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
+            metavariableAssigned = metavariableAssignment.assign(fileContext);
+
+      if (metavariableAssigned) {
+        metavariableVerified = true;
+      }
     }
   }
 
@@ -55,4 +64,29 @@ export function verifyStandaloneMetavariable(metavariableNode, localMetaContext,
   }
 
   return standaloneMetavariableVerified;
+}
+
+function verifyArgument(metavariableNode, argumentNode, fileContext) {
+  let argumentVerified = false;
+
+  if (argumentNode === null) {
+    argumentVerified = true;
+  } else {
+    const typeNode = typeNodeQuery(argumentNode);
+
+    if (typeNode !== null) {
+      const typeName = typeNameFromTypeNode(typeNode),
+            type = fileContext.findTypeByTypeName(typeName);
+
+      if (type !== null) {
+        argumentVerified = true;
+      } else {
+        const metavariableString = fileContext.nodeAsString(metavariableNode);
+
+        fileContext.debug(`The '${metavariableString}' metavariable's '${typeName}' type is not present.`, metavariableNode);
+      }
+    }
+  }
+
+  return argumentVerified;
 }
