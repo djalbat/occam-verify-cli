@@ -78,6 +78,26 @@ class MetaLevelToIntrinsicLevelNodesVerifier extends NodesVerifier {
 
           break;
         }
+
+        case METASTATEMENT_RULE_NAME: {
+          const metastatementNodeB = nonTerminalNodeB,  ///
+                metavariableNodeA = metavariableNodeQuery(metastatementNodeA),
+                statementNodeB = statementNodeQuery(metastatementNodeB);
+
+          if ((metavariableNodeA !== null) && (statementNodeB !== null)) {
+            const substitutionNodeA = null,
+                  metavariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, substitutionNodeA, statementNodeB, substitutions, localContextA, localContextB, verifyAhead);
+
+            metastatementNodeVerified = metavariableNodeVerified;  ///
+          } else {
+            const nonTerminalNodeA = metastatementNodeA,  ///
+                  nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
+
+            metastatementNodeVerified = nonTerminalNodeVerified;  ///
+          }
+
+          break;
+        }
       }
     }
 

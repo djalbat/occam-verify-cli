@@ -12,9 +12,9 @@ import { nodeQuery } from "../utilities/query";
 const termNodeQuery = nodeQuery("/statement/term!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
       definingNodeQuery = nodeQuery("/statement/defining!"),
-      statementNodeQuery = nodeQuery("/metaArgument/statement!"),
+      statementNodeQuery = nodeQuery("/metastatement/statement!"),
       containmentNodeQuery = nodeQuery("/statement/containment!"),
-      metaArgumentNodeQuery = nodeQuery("/statement/metaArgument!"),
+      metastatementNodeQuery = nodeQuery("/statement/metastatement!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 function verifyStatement(statementNode, assignments, derived, localContext, verifyAhead) {
@@ -151,11 +151,11 @@ function verifyStatementAboutContainment(statementNode, assignments, derived, lo
     localContext.trace(`Verifying the '${statementString}' statement about containment...`, statementNode);
 
     const termNode = termNodeQuery(statementNode),
-          metaArgumentNode = metaArgumentNodeQuery(statementNode),
-          containmentVerified = verifyContainment(termNode, containmentNode, metaArgumentNode, localContext);
+          metastatementNode = metastatementNodeQuery(statementNode),
+          containmentVerified = verifyContainment(termNode, containmentNode, metastatementNode, localContext);
 
     if (containmentVerified) {
-      statementNode = statementNodeQuery(metaArgumentNode); ///
+      statementNode = statementNodeQuery(metastatementNode); ///
 
       const verifyStatementFunctions = [
         verifyStatementAsEquality,

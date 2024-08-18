@@ -6,9 +6,9 @@ import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!"),
       metaArgumentTermNodesQuery = nodesQuery("/metaArgument//term"),
-      metaArgumentVariableNodesQuery = nodesQuery("/metaArgument//variable");
+      metastatementVariableNodesQuery = nodesQuery("/metastatement//variable");
 
-export default function verifyContainment(termNode, containmentNode, metaArgumentNode, localContext) {
+export default function verifyContainment(termNode, containmentNode, metastatementNode, localContext) {
   let containmentVerified = false;
 
   const contained = containedFromContainmentNode(containmentNode),
@@ -17,7 +17,7 @@ export default function verifyContainment(termNode, containmentNode, metaArgumen
   if (false) {
     ///
   } else if (variableNode !== null) {
-    const metaArgumentVariableNodes = metaArgumentVariableNodesQuery(metaArgumentNode),
+    const metaArgumentVariableNodes = metastatementVariableNodesQuery(metastatementNode),
           variableNodeMatchesMetaArgumentVariableNode = metaArgumentVariableNodes.some((metaArgumentVariableNode) => {
             const variableNodeMatchesMetaArgumentVariableNode = variableNode.match(metaArgumentVariableNode);
 
@@ -38,7 +38,7 @@ export default function verifyContainment(termNode, containmentNode, metaArgumen
       }
     }
   } else if (termNode !== null) {
-    const metaArgumentTermNodes = metaArgumentTermNodesQuery(metaArgumentNode),
+    const metaArgumentTermNodes = metaArgumentTermNodesQuery(metastatementNode),
           termNodeMatchesMetaArgumentTermNode = metaArgumentTermNodes.some((metaArgumentTermNode) => {
             const termNodeMatchesMetaArgumentTermNode = termNode.match(metaArgumentTermNode);
 
