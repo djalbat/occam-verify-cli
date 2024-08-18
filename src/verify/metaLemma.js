@@ -11,7 +11,7 @@ import { first } from "../utilities/array";
 import { EMPTY_STRING } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const labelNodesQuery = nodesQuery("/metaLemma//labels/label"),
+const labelNodesQuery = nodesQuery("/metaLemma//reference/label"),
       metaproofNodeQuery = nodeQuery("/metaLemma/metaproof!"),
       metaConsequentNodeQuery = nodeQuery("/metaLemma/metaConsequent!"),
       metaSuppositionsNodeQuery = nodesQuery("/metaLemma/metaSupposition");

@@ -10,7 +10,7 @@ import verifyMetaSuppositions from "../verify/metaSuppositions";
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const labelNodesQuery = nodesQuery("/metatheorem//labels/label"),
+const labelNodesQuery = nodesQuery("/metatheorem//reference/label"),
       metaproofNodeQuery = nodeQuery("/metatheorem/metaproof!"),
       metaConsequentNodeQuery = nodeQuery("/metatheorem/metaConsequent!"),
       metaSuppositionsNodeQuery = nodesQuery("/metatheorem/metaSupposition");

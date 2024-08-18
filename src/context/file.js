@@ -322,9 +322,8 @@ export default class FileContext {
     return label;
   }
 
-  findRuleByReferenceNode(referenceNode) {
-    const labelNode = referenceNode,  ///
-          rules = this.getRules(),
+  findRuleByLabelNode(labelNode) {
+    const rules = this.getRules(),
           rule = rules.find((rule) => {
             const ruleMatchesLabelNode = rule.matchLabelNode(labelNode);
 
@@ -336,9 +335,8 @@ export default class FileContext {
     return rule;
   }
 
-  findAxiomByReferenceNode(referenceNode) {
-    const labelNode = referenceNode,  ///
-          axioms = this.getAxioms(),
+  findAxiomByLabelNode(labelNode) {
+    const axioms = this.getAxioms(),
           axiom = axioms.find((axiom) => {
             const axiomMatchesLabelNode = axiom.matchLabelNode(labelNode);
 
@@ -350,9 +348,8 @@ export default class FileContext {
     return axiom;
   }
 
-  findLemmaByReferenceNode(referenceNode) {
-    const labelNode = referenceNode,  ///
-          lemmas = this.getLemmas(),
+  findLemmaByLabelNode(labelNode) {
+    const lemmas = this.getLemmas(),
           lemma = lemmas.find((lemma) => {
             const lemmaMatchesLabelNode = lemma.matchLabelNode(labelNode);
 
@@ -364,9 +361,8 @@ export default class FileContext {
     return lemma;
   }
 
-  findTheoremByReferenceNode(referenceNode) {
-    const labelNode = referenceNode,  ///
-          theorems = this.getTheorems(),
+  findTheoremByLabelNode(labelNode) {
+    const theorems = this.getTheorems(),
           theorem = theorems.find((theorem) => {
             const theoremMatchesLabelNode = theorem.matchLabelNode(labelNode);
 
@@ -378,9 +374,8 @@ export default class FileContext {
     return theorem;
   }
 
-  findMetaLemmaByReferenceNode(referenceNode) {
-    const labelNode = referenceNode,  ///
-          metaLemmas = this.getMetaLemmas(),
+  findMetaLemmaByLabelNode(labelNode) {
+    const metaLemmas = this.getMetaLemmas(),
           metaLemma = metaLemmas.find((metaLemma) => {
             const metaLemmaMatchesLabelNode = metaLemma.matchLabelNode(labelNode);
 
@@ -419,9 +414,8 @@ export default class FileContext {
     return metaType;
   }
 
-  findConjectureByReferenceNode(referenceNode) {
-    const labelNode = referenceNode,  ///
-          conjectures = this.getConjectures(),
+  findConjectureByLabelNode(labelNode) {
+    const conjectures = this.getConjectures(),
           conjecture = conjectures.find((conjecture) => {
             const conjectureMatchesLabelNode = conjecture.matchLabelNode(labelNode);
 
@@ -447,9 +441,8 @@ export default class FileContext {
     return metavariable;
   }
 
-  findMetatheoremByReferenceNode(referenceNode) {
-    const labelNode = referenceNode,  ///
-          metatheorems = this.getMetatheorems(),
+  findMetatheoremByLabelNode(labelNode) {
+    const metatheorems = this.getMetatheorems(),
           metatheorem = metatheorems.find((metatheorem) => {
             const metatheoremMatchesLabelNode = metatheorem.matchLabelNode(labelNode);
 

@@ -12,7 +12,7 @@ import { EMPTY_STRING } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const proofNodeQuery = nodeQuery("/lemma/proof!"),
-      labelNodesQuery = nodesQuery("/lemma//labels/label"),
+      labelNodesQuery = nodesQuery("/lemma//reference/label"),
       consequentNodeQuery = nodeQuery("/lemma/consequent!"),
       suppositionsNodeQuery = nodesQuery("/lemma/supposition");
 

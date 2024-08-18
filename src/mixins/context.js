@@ -30,15 +30,15 @@ function findTypeByTypeNode(labelNode) { return this.context.findTypeByTypeNode(
 
 function findLabelByLabelNode(labelNode) { return this.context.findLabelByLabelNode(labelNode); }
 
-function findRuleByReferenceNode(referenceNode) { return this.context.findRuleByReferenceNode(referenceNode); }
+function findRuleByLabelNode(labelNode) { return this.context.findRuleByLabelNode(labelNode); }
 
-function findAxiomByReferenceNode(referenceNode) { return this.context.findAxiomByReferenceNode(referenceNode); }
+function findAxiomByLabelNode(labelNode) { return this.context.findAxiomByLabelNode(labelNode); }
 
-function findLemmaByReferenceNode(referenceNode) { return this.context.findLemmaByReferenceNode(referenceNode); }
+function findLemmaByLabelNode(labelNode) { return this.context.findLemmaByLabelNode(labelNode); }
 
-function findTheoremByReferenceNode(referenceNode) { return this.context.findTheoremByReferenceNode(referenceNode); }
+function findTheoremByLabelNode(labelNode) { return this.context.findTheoremByLabelNode(labelNode); }
 
-function findConjectureByReferenceNode(referenceNode) { return this.context.findConjectureByReferenceNode(referenceNode); }
+function findConjectureByLabelNode(labelNode) { return this.context.findConjectureByLabelNode(labelNode); }
 
 function isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
@@ -66,11 +66,11 @@ const contextMixins = {
   findTypeByTypeName,
   findTypeByTypeNode,
   findLabelByLabelNode,
-  findRuleByReferenceNode,
-  findAxiomByReferenceNode,
-  findLemmaByReferenceNode,
-  findTheoremByReferenceNode,
-  findConjectureByReferenceNode,
+  findRuleByLabelNode,
+  findAxiomByLabelNode,
+  findLemmaByLabelNode,
+  findTheoremByLabelNode,
+  findConjectureByLabelNode,
   isTypePresentByTypeName,
   isTypePresentByTypeNode,
   isLabelPresentByLabelNode,

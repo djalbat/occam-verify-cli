@@ -4,8 +4,7 @@ import { nodeQuery } from "../utilities/query";
 
 const typeTerminalNodeQuery = nodeQuery("/type/@type"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type"),
-      labelNameTerminalNodeQuery = nodeQuery("/label/@name"),
-      referenceNameTerminalNodeQuery = nodeQuery("/reference/@name");
+      labelNameTerminalNodeQuery = nodeQuery("/label/@name");
 
 export function typeNameFromTypeNode(typeNode) {
   let typeName = null;
@@ -39,12 +38,4 @@ export function metaTypeNameFromMetaTypeNode(metaTypeNode) {
   }
 
   return metaTypeName;
-}
-
-export function referenceNameFromReferenceNode(referenceNode) {
-  const referenceNameTerminalNode = referenceNameTerminalNodeQuery(referenceNode),
-        referenceNameTerminalNodeContent = referenceNameTerminalNode.getContent(),
-        referenceName = referenceNameTerminalNodeContent; ///
-
-  return referenceName;
 }

@@ -9,7 +9,7 @@ import verifySuppositions from "../verify/suppositions";
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const labelNodesQuery = nodesQuery("/axiom//labels/label"),
+const labelNodesQuery = nodesQuery("/axiom//reference/label"),
       consequentNodeQuery = nodeQuery("/axiom/consequent!"),
       suppositionsNodeQuery = nodesQuery("/axiom/supposition");
 

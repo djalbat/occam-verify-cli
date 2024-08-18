@@ -5,8 +5,8 @@ import verifyTypeAssertion from "../typeAssertion";
 
 import { nodeQuery } from "../../utilities/query";
 
-const equalityNodeQuery = nodeQuery("/qualifiedStatement/statement/equality!"),
-      referenceNodeQuery = nodeQuery("/qualifiedStatement/qualification!/reference!"),
+const labelNodeQuery = nodeQuery("/qualifiedStatement/qualification!/label!"),
+      equalityNodeQuery = nodeQuery("/qualifiedStatement/statement/equality!"),
       statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
       typeAssertionNodeQuery = nodeQuery("/qualifiedStatement/statement/typeAssertion!");
 
@@ -20,7 +20,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
 
     localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`, qualifiedStatementNode);
 
-    const referenceNode = referenceNodeQuery(qualifiedStatementNode),
+    const labelNode = labelNodeQuery(qualifiedStatementNode),
           verifyQualifiedStatementFunctions = [
             verifyQualifiedStatementAAgainstRule,
             verifyQualifiedStatementAAgainstAxiom,
@@ -30,7 +30,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
           ];
 
     qualifiedStatementVerified = verifyQualifiedStatementFunctions.some((verifyQualifiedStatementFunction) => {  ///
-      const qualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, referenceNode, localContext);
+      const qualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, labelNode, localContext);
 
       if (qualifiedStatementVerified) {
         return true;
@@ -66,125 +66,125 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
   return qualifiedStatementVerified;
 }
 
-function verifyQualifiedStatementAAgainstRule(qualifiedStatementNode, referenceNode, localContext) {
+function verifyQualifiedStatementAAgainstRule(qualifiedStatementNode, labelNode, localContext) {
   let qualifiedStatementVerifiedAgainstRule = false;
 
-  const rule = localContext.findRuleByReferenceNode(referenceNode);
+  const rule = localContext.findRuleByLabelNode(labelNode);
 
   if (rule !== null) {
-    const statementNode = statementNodeQuery(qualifiedStatementNode),
-          referenceString = localContext.nodeAsString(referenceNode),
+    const labelString = localContext.nodeAsString(labelNode),
+          statementNode = statementNodeQuery(qualifiedStatementNode),
           statementLocalContext = localContext, ///
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${referenceString}' rule...`, statementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${labelString}' rule...`, statementNode);
 
     const ruleMatchesStatement = rule.matchStatement(statementNode, statementLocalContext);
 
     qualifiedStatementVerifiedAgainstRule = ruleMatchesStatement;  ///
 
     if (qualifiedStatementVerifiedAgainstRule) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${referenceString}' rule.`, statementNode);
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${labelString}' rule.`, statementNode);
     }
   }
 
   return qualifiedStatementVerifiedAgainstRule;
 }
 
-function verifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, referenceNode, localContext) {
+function verifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, labelNode, localContext) {
   let qualifiedStatementVerifiedAgainstAxiom = false;
 
-  const axiom = localContext.findAxiomByReferenceNode(referenceNode);
+  const axiom = localContext.findAxiomByLabelNode(labelNode);
 
   if (axiom !== null) {
-    const statementNode = statementNodeQuery(qualifiedStatementNode),
-          referenceString = localContext.nodeAsString(referenceNode),
+    const labelString = localContext.nodeAsString(labelNode),
+          statementNode = statementNodeQuery(qualifiedStatementNode),
           statementLocalContext = localContext, ///
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${referenceString}' axiom...`, statementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${labelString}' axiom...`, statementNode);
 
     const axiomMatchesStatement = axiom.matchStatement(statementNode, statementLocalContext);
 
     qualifiedStatementVerifiedAgainstAxiom = axiomMatchesStatement; ///
 
     if (qualifiedStatementVerifiedAgainstAxiom) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${referenceString}' axiom.`, statementNode);
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${labelString}' axiom.`, statementNode);
     }
   }
 
   return qualifiedStatementVerifiedAgainstAxiom;
 }
 
-function verifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, referenceNode, localContext) {
+function verifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, labelNode, localContext) {
   let qualifiedStatementVerifiedAgainstLemma = false;
 
-  const lemma = localContext.findLemmaByReferenceNode(referenceNode);
+  const lemma = localContext.findLemmaByLabelNode(labelNode);
 
   if (lemma !== null) {
-    const statementNode = statementNodeQuery(qualifiedStatementNode),
-          referenceString = localContext.nodeAsString(referenceNode),
+    const labelString = localContext.nodeAsString(labelNode),
+          statementNode = statementNodeQuery(qualifiedStatementNode),
           statementLocalContext = localContext, ///
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${referenceString}' lemma...`, statementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${labelString}' lemma...`, statementNode);
 
     const lemmaMatchesStatement = lemma.matchStatement(statementNode, statementLocalContext);
 
     qualifiedStatementVerifiedAgainstLemma = lemmaMatchesStatement; ///
 
     if (qualifiedStatementVerifiedAgainstLemma) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${referenceString}' lemma.`, statementNode);
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${labelString}' lemma.`, statementNode);
     }
   }
 
   return qualifiedStatementVerifiedAgainstLemma;
 }
 
-function verifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, referenceNode, localContext) {
+function verifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, labelNode, localContext) {
   let qualifiedStatementVerifiedAgainstTheorem = false;
 
-  const theorem = localContext.findTheoremByReferenceNode(referenceNode);
+  const theorem = localContext.findTheoremByLabelNode(labelNode);
 
   if (theorem !== null) {
-    const statementNode = statementNodeQuery(qualifiedStatementNode),
-          referenceString = localContext.nodeAsString(referenceNode),
+    const labelString = localContext.nodeAsString(labelNode),
+          statementNode = statementNodeQuery(qualifiedStatementNode),
           statementLocalContext = localContext, ///
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${referenceString}' theorem...`, statementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${labelString}' theorem...`, statementNode);
 
     const theoremMatchesStatement = theorem.matchStatement(statementNode, statementLocalContext);
 
     qualifiedStatementVerifiedAgainstTheorem = theoremMatchesStatement; ///
 
     if (qualifiedStatementVerifiedAgainstTheorem) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${referenceString}' theorem.`, statementNode);
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${labelString}' theorem.`, statementNode);
     }
   }
 
   return qualifiedStatementVerifiedAgainstTheorem;
 }
 
-function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, referenceNode, localContext) {
+function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, labelNode, localContext) {
   let qualifiedStatementVerifiedAgainstConjecture = false;
 
-  const conjecture = localContext.findConjectureByReferenceNode(referenceNode);
+  const conjecture = localContext.findConjectureByLabelNode(labelNode);
 
   if (conjecture !== null) {
-    const statementNode = statementNodeQuery(qualifiedStatementNode),
-          referenceString = localContext.nodeAsString(referenceNode),
+    const labelString = localContext.nodeAsString(labelNode),
+          statementNode = statementNodeQuery(qualifiedStatementNode),
           statementLocalContext = localContext, ///
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${referenceString}' conjecture...`, statementNode);
+    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${labelString}' conjecture...`, statementNode);
 
     const conjectureMatchesStatement = conjecture.matchStatement(statementNode, statementLocalContext);
 
     qualifiedStatementVerifiedAgainstConjecture = conjectureMatchesStatement; ///
 
     if (qualifiedStatementVerifiedAgainstConjecture) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${referenceString}' conjecture.`, statementNode);
+      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${labelString}' conjecture.`, statementNode);
     }
   }
 
