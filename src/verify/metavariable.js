@@ -2,9 +2,9 @@
 
 import Metavariable from "../metavariable";
 import MetavariableAssignment from "../assignment/metavariable";
+import verifyGivenMetavariable from "../verify/givenMetavariable";
 
 import { nodeQuery } from "../utilities/query";
-import { typeNameFromTypeNode, metaTypeNameFromMetaTypeNode } from "../utilities/name";
 
 const typeNodeQuery = nodeQuery("/argument/type"),
       argumentNodeQuery = nodeQuery("/metavariable/argument!");
@@ -25,8 +25,7 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
           argumentVerified = verifyArgument(metavariableNode, argumentNode, fileContext);
 
     if (argumentVerified) {
-      const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
-            metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName),
+      const metaType = fileContext.findMetaTypeByMetaTypeNode(metaTypeNode),
             metavariable = Metavariable.fromMetavariableNodeAndMetaType(metavariableNode, metaType),
             metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
             metavariableAssigned = metavariableAssignment.assign(fileContext);
@@ -45,19 +44,16 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
 }
 
 export function verifyStandaloneMetavariable(metavariableNode, localMetaContext, verifyAhead) {
-  let standaloneMetavariableVerified = false;
+  let standaloneMetavariableVerified;
 
   const metavariableString = localMetaContext.nodeAsString(metavariableNode);
 
   localMetaContext.trace(`Verifying the '${metavariableString}' standalone metavariable...`, metavariableNode);
 
-  const metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+  const metavariables = [],
+        givenMetavariableVerified = verifyGivenMetavariable(metavariableNode, metavariables, localMetaContext, verifyAhead);
 
-  if (metavariablePresent) {
-    const verifiedAhead = verifyAhead();
-
-    standaloneMetavariableVerified = verifiedAhead; ///
-  }
+  standaloneMetavariableVerified = givenMetavariableVerified; ///
 
   if (standaloneMetavariableVerified) {
     localMetaContext.debug(`...verified the '${metavariableString}' standalone metavariable.`, metavariableNode);
@@ -75,15 +71,15 @@ function verifyArgument(metavariableNode, argumentNode, fileContext) {
     const typeNode = typeNodeQuery(argumentNode);
 
     if (typeNode !== null) {
-      const typeName = typeNameFromTypeNode(typeNode),
-            type = fileContext.findTypeByTypeName(typeName);
+      const type = fileContext.findTypeByTypeNode(typeNode);
 
       if (type !== null) {
         argumentVerified = true;
       } else {
-        const metavariableString = fileContext.nodeAsString(metavariableNode);
+        const typeString = fileContext.nodeAsString(typeNode),
+              metavariableString = fileContext.nodeAsString(metavariableNode);
 
-        fileContext.debug(`The '${metavariableString}' metavariable's '${typeName}' type is not present.`, metavariableNode);
+        fileContext.debug(`The '${metavariableString}' metavariable's '${typeString}' type is not present.`, metavariableNode);
       }
     }
   }

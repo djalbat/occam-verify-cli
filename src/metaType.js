@@ -1,5 +1,6 @@
 "use strict";
 
+import { metaTypeNameFromMetaTypeNode } from "./utilities/name";
 import { CONTEXT_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 
 export default class MetaType {
@@ -34,6 +35,14 @@ export default class MetaType {
     const metaTypeNameMatches = (this.name === metaTypeName);
 
     return metaTypeNameMatches;
+  }
+
+  matchMetaTypeNode(metaTypeNode) {
+    const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
+          metaTypeNameMatches = this.matchMetaTypeName(metaTypeName),
+          metaTypeNodeMatches = metaTypeNameMatches;  ///
+
+    return metaTypeNodeMatches;
   }
 
   asString(tokens) {

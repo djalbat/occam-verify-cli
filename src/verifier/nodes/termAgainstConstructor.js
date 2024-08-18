@@ -5,7 +5,6 @@ import NodesVerifier from "../../verifier/nodes";
 import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
 import { ARGUMENT_RULE_NAME } from "../../ruleNames";
-import { typeNameFromTypeNode } from "../../utilities/name";
 
 const termNodeQuery = nodeQuery("/argument/term!"),
       typeNodeQuery = nodeQuery("/argument/type!");
@@ -75,11 +74,10 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
                 termVerified = verifyTerm(termNode, terms, localContext, () => {
                   let verifiedAhead = false;
 
-                  const constructorTypeName = typeNameFromTypeNode(constructorTypeNode),
-                        firstTerm = first(terms),
+                  const firstTerm = first(terms),
                         term = firstTerm, ///
                         termType = term.getType(),
-                        constructorType = localContext.findTypeByTypeName(constructorTypeName),
+                        constructorType = localContext.findTypeByTypeNode(constructorTypeNode),
                         termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(constructorType);
 
                   if (termTypeEqualToOrSubTypeOfType) {

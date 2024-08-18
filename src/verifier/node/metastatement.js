@@ -27,7 +27,8 @@ class MetastatementNodeVerifier extends NodeVerifier {
 
       case VARIABLE_RULE_NAME: {
         const variableNode = nonTerminalNode, ///
-              standaloneVariableVerified = verifyStandaloneVariable(variableNode, localMetaContext, verifyAhead),
+              localContext = LocalContext.fromLocalMetaContext(localMetaContext),
+              standaloneVariableVerified = verifyStandaloneVariable(variableNode, localContext, verifyAhead),
               variableNodeVerified = standaloneVariableVerified;  ///
 
         nonTerminalNodeVerified = variableNodeVerified; ///

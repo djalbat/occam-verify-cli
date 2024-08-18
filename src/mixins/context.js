@@ -26,21 +26,25 @@ function getConstructors() { return this.context.getConstructors(); }
 
 function findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
 
-function findLabelByTypeName(labelName) { return this.context.findLabelByTypeName(labelName); }
+function findTypeByTypeNode(labelNode) { return this.context.findTypeByTypeNode(labelNode); }
 
-function findRuleByReferenceName(referenceName) { return this.context.findRuleByReferenceName(referenceName); }
+function findLabelByLabelNode(labelNode) { return this.context.findLabelByLabelNode(labelNode); }
 
-function findAxiomByReferenceName(referenceName) { return this.context.findAxiomByReferenceName(referenceName); }
+function findRuleByReferenceNode(referenceNode) { return this.context.findRuleByReferenceNode(referenceNode); }
 
-function findLemmaByReferenceName(referenceName) { return this.context.findLemmaByReferenceName(referenceName); }
+function findAxiomByReferenceNode(referenceNode) { return this.context.findAxiomByReferenceNode(referenceNode); }
 
-function findTheoremByReferenceName(referenceName) { return this.context.findTheoremByReferenceName(referenceName); }
+function findLemmaByReferenceNode(referenceNode) { return this.context.findLemmaByReferenceNode(referenceNode); }
 
-function findConjectureByReferenceName(referenceName) { return this.context.findConjectureByReferenceName(referenceName); }
+function findTheoremByReferenceNode(referenceNode) { return this.context.findTheoremByReferenceNode(referenceNode); }
 
-function isLabelPresentByLabelName(labelName) { return this.context.isLabelPresentByLabelName(labelName); }
+function findConjectureByReferenceNode(referenceNode) { return this.context.findConjectureByReferenceNode(referenceNode); }
 
 function isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
+
+function isTypePresentByTypeNode(typeNode) { return this.context.isTypePresentByTypeNode(typeNode); }
+
+function isLabelPresentByLabelNode(labelNode) { return this.context.isLabelPresentByLabelNode(labelNode); }
 
 function nodeAsString(node) { return this.context.nodeAsString(node); }
 
@@ -60,14 +64,16 @@ const contextMixins = {
   getCombinators,
   getConstructors,
   findTypeByTypeName,
-  findLabelByTypeName,
-  findRuleByReferenceName,
-  findAxiomByReferenceName,
-  findLemmaByReferenceName,
-  findTheoremByReferenceName,
-  findConjectureByReferenceName,
-  isLabelPresentByLabelName,
+  findTypeByTypeNode,
+  findLabelByLabelNode,
+  findRuleByReferenceNode,
+  findAxiomByReferenceNode,
+  findLemmaByReferenceNode,
+  findTheoremByReferenceNode,
+  findConjectureByReferenceNode,
   isTypePresentByTypeName,
+  isTypePresentByTypeNode,
+  isLabelPresentByLabelNode,
   nodeAsString,
   nodesAsString
 };

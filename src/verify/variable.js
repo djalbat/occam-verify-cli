@@ -2,9 +2,9 @@
 
 import Variable from "../variable";
 import VariableAssignment from "../assignment/variable";
+import verifyGivenVariable from "../verify/givenVariable";
 
 import { objectType } from "../type";
-import { typeNameFromTypeNode } from "../utilities/name";
 
 export default function verifyVariable(variableNode, typeNode, fileContext) {
   let variableVerified = false;
@@ -20,17 +20,17 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
   } else {
     let variable;
 
-    const typeName = typeNameFromTypeNode(typeNode);
-    
-    if (typeName === null) {
+    if (typeNode === null) {
       const type = objectType;
 
       variable = Variable.fromVariableNodeAndType(variableNode, type);
     } else {
-      const type = fileContext.findTypeByTypeName(typeName);
+      const type = fileContext.findTypeByTypeNode(typeNode);
 
       if (type === null) {
-        fileContext.debug(`The '${variableString}' variable's '${typeName}' type is not present.`, variableNode);
+        const typeString = fileContext.nodeAsString(typeNode);
+
+        fileContext.debug(`The '${variableString}' variable's '${typeString}' type is not present.`, variableNode);
       } else {
         variable = Variable.fromVariableNodeAndType(variableNode, type);
       }
@@ -53,23 +53,20 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
   return variableVerified;
 }
 
-export function verifyStandaloneVariable(variableNode, localMetaContext, verifyAhead) {
-  let standaloneVariableVerified = false;
+export function verifyStandaloneVariable(variableNode, localContext, verifyAhead) {
+  let standaloneVariableVerified;
 
-  const variableString = localMetaContext.nodeAsString(variableNode);
+  const variableString = localContext.nodeAsString(variableNode);
 
-  localMetaContext.trace(`Verifying the '${variableString}' standalone variable...`, variableNode);
+  localContext.trace(`Verifying the '${variableString}' standalone variable...`, variableNode);
 
-  const variablePresent = localMetaContext.isVariablePresentByVariableNode(variableNode);
+  const variables = [],
+        givenVariableVerified = verifyGivenVariable(variableNode, variables, localContext, verifyAhead);
 
-  if (variablePresent) {
-    const verifiedAhead = verifyAhead();
-
-    standaloneVariableVerified = verifiedAhead; ///
-  }
+  standaloneVariableVerified = givenVariableVerified; ///
 
   if (standaloneVariableVerified) {
-    localMetaContext.debug(`...verified the '${variableString}' standalone variable.`, variableNode);
+    localContext.debug(`...verified the '${variableString}' standalone variable.`, variableNode);
   }
 
   return standaloneVariableVerified;

@@ -253,7 +253,7 @@ class LocalContext {
     return variable;
   }
 
-  findMetaTypeByMetaTypeName(metaTypeName) { return this.context.findMetaTypeByMetaTypeName(metaTypeName); }
+  findMetaTypeByMetaTypeNode(metaTypeNode) { return this.context.findMetaTypeByMetaTypeNode(metaTypeNode); }
 
   isVariablePresentByVariableNode(variableNode) {
     const variable = this.findVariableByVariableNode(variableNode),

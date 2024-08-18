@@ -4,8 +4,6 @@ import Constructor from "../constructor";
 import LocalContext from "../context/local";
 import termAsConstructorNodeVerifier from "../verifier/node/termAsConstructor";
 
-import { typeNameFromTypeNode } from "../utilities/name";
-
 export default function verifyTermAsConstructor(termNode, typeNode, fileContext) {
   let termVerifiedAsConstructor = false;
 
@@ -28,14 +26,14 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
     if (typeNode === null) {
       termVerifiedAsConstructor = true;
     } else {
-      const typeName = typeNameFromTypeNode(typeNode);
-
-      type = fileContext.findTypeByTypeName(typeName);
+      type = fileContext.findTypeByTypeNode(typeNode);
 
       if (type !== null) {
         termVerifiedAsConstructor = true;
       } else {
-        fileContext.debug(`The '${termString}' constructor's '${typeName}' type is not present.`, termNode);
+        const typeString = fileContext.nodeAsString(typeNode);
+
+        fileContext.debug(`The '${termString}' constructor's '${typeString}' type is not present.`, termNode);
       }
     }
 

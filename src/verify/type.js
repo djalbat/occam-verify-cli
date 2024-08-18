@@ -1,6 +1,7 @@
 "use strict";
 
 import Type from "../type";
+import verifyGivenType from "../verify/givenType";
 
 import { typeNameFromTypeNode } from "../utilities/name";
 
@@ -11,23 +12,26 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
 
   fileContext.trace(`Verifying the '${typeString}' type...`, typeNode);
 
-  const typeName = typeNameFromTypeNode(typeNode),
-        typePresent = fileContext.isTypePresentByTypeName(typeName);
+  const typePresent = fileContext.isTypePresentByTypeNode(typeNode);
 
   if (typePresent) {
-    fileContext.debug(`The type '${typeName}' is already present.`, typeNode);
+    const typeString = fileContext.nodeAsString(typeNode);
+
+    fileContext.debug(`The type '${typeString}' is already present.`, typeNode);
   } else {
     let type;
 
-    const superTypeName = typeNameFromTypeNode(superTypeNode);
+    const typeName = typeNameFromTypeNode(typeNode);
 
-    if (superTypeName === null) {
+    if (superTypeNode === null) {
       type = Type.fromTypeName(typeName);
     } else {
-      const superType = fileContext.findTypeByTypeName(superTypeName);
+      const superType = fileContext.findTypeByTypeNode(superTypeNode);
 
       if (superType === null) {
-        fileContext.debug(`The super-type '${superTypeName}' is not present.`, typeNode);
+        const superTypeString = fileContext.nodeAsString(superTypeNode);
+
+        fileContext.debug(`The super-type '${superTypeString}' is not present.`, typeNode);
       } else {
         type = Type.fromTypeNameAndSuperType(typeName, superType);
       }
@@ -47,26 +51,20 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
   return typeVerified;
 }
 
-export function verifyStandaloneType(typeNode, fileContext, verifyAhead) {
-  let standaloneTypeVerified = false;
+export function verifyStandaloneType(typeNode, localContext, verifyAhead) {
+  let standaloneTypeVerified;
 
-  const typeString = fileContext.nodeAsString(typeNode);
+  const typeString = localContext.nodeAsString(typeNode);
 
-  fileContext.trace(`Verifying the '${typeString}' standalone type...`, typeNode);
+  localContext.trace(`Verifying the '${typeString}' standalone type...`, typeNode);
 
-  const typeName = typeNameFromTypeNode(typeNode),
-        typePresent = fileContext.isTypePresentByTypeName(typeName);
+  const types = [],
+        givenTypeVerified = verifyGivenType(typeNode, types, localContext, verifyAhead);
 
-  if (!typePresent) {
-    fileContext.debug(`The type '${typeName}' is not present.`, typeNode);
-  } else {
-    const verifiedAhead = verifyAhead();
-
-    standaloneTypeVerified = verifiedAhead;  ///
-  }
+  standaloneTypeVerified = givenTypeVerified;  ///
 
   if (standaloneTypeVerified) {
-    fileContext.debug(`...verified the '${typeString}' standalone type.`, typeNode);
+    localContext.debug(`...verified the '${typeString}' standalone type.`, typeNode);
   }
 
   return standaloneTypeVerified;

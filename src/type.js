@@ -2,6 +2,8 @@
 
 import { OBJECT_TYPE_NAME } from "./typeNames";
 
+import { typeNameFromTypeNode } from "./utilities/name";
+
 export default class Type {
   constructor(name, superType) {
     this.name = name;
@@ -99,6 +101,14 @@ export default class Type {
     const typeNameMatches = (this.name === typeName);
 
     return typeNameMatches;
+  }
+
+  matchTypeNode(typeNode) {
+    const typeName = typeNameFromTypeNode(typeNode),
+          typeNameMatches = this.matchTypeName(typeName),
+          typeNodeMatches = typeNameMatches;  ///
+
+    return typeNodeMatches;
   }
 
   asString(tokens, noSuperType = false) {

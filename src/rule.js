@@ -31,17 +31,17 @@ export default class Rule {
     return this.fileContext;
   }
 
-  matchLabelName(labelName) {
-    const labelNameMatches = this.labels.some((label) => {
-      const name = labelName, ///
-            labelMatchesName = label.matchName(name);
+  matchLabelNode(labelNode) {
+    const labelNodeMatches = this.labels.some((label) => {
+      const node = labelNode, ///
+            labelMatchesNode = label.matchNode(node);
 
-      if (labelMatchesName) {
+      if (labelMatchesNode) {
         return true;
       }
     });
 
-    return labelNameMatches;
+    return labelNodeMatches;
   }
 
   matchStatement(statementNode, statementLocalContext) {

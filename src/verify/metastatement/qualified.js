@@ -1,7 +1,6 @@
 "use strict";
 
 import { nodeQuery } from "../../utilities/query";
-import { referenceNameFromReferenceNode } from "../../utilities/name";
 
 const referenceNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/reference!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
@@ -18,8 +17,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
     localMetaContext.trace(`Verifying the '${metastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
 
     const referenceNode = referenceNodeQuery(qualifiedMetastatementNode),
-          referenceName = referenceNameFromReferenceNode(referenceNode),
-          rule = localMetaContext.findRuleByReferenceName(referenceName);
+          rule = localMetaContext.findRuleByReferenceNode(referenceNode);
 
     if (rule !== null) {
       const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, metastatementLocalMetaContext);

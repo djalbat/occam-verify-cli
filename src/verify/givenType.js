@@ -1,7 +1,5 @@
 "use strict";
 
-import { typeNameFromTypeNode } from "../utilities/name";
-
 export default function verifyGivenType(typeNode, types, localContext, verifyAhead) {
   let givenTypeVerified = false;
 
@@ -9,8 +7,7 @@ export default function verifyGivenType(typeNode, types, localContext, verifyAhe
 
   localContext.trace(`Verifying the given '${typeString}' type...`, typeNode);
 
-  const typeName = typeNameFromTypeNode(typeNode),
-        type = localContext.findTypeByTypeName(typeName);
+  const type = localContext.findTypeByTypeNode(typeNode);
 
   if (type !== null) {
     let verifiedAhead;

@@ -13,12 +13,10 @@ export default class Label {
     return this.node;
   }
 
-  matchName(name) {
-    const labelNode = this.node,
-          labelName = labelNameFromLabelNode(labelNode),
-          matchesName = (labelName === name);
+  matchNode(node) {
+    const matches = this.node.match(node);
 
-    return matchesName;
+    return matches;
   }
 
   asString(tokens) {

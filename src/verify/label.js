@@ -2,17 +2,14 @@
 
 import Label from "../label";
 
-import { labelNameFromLabelNode } from "../utilities/name";
-
 export default function verifyLabel(labelNode, labels, fileContext) {
   let labelVerified = false;
 
-  const labelName = labelNameFromLabelNode(labelNode),
-        labelString = fileContext.nodeAsString(labelNode);
+  const labelString = fileContext.nodeAsString(labelNode);
 
   fileContext.trace(`Verifying the '${labelString}' label...`, labelNode);
 
-  const labelPresent = fileContext.isLabelPresentByLabelName(labelName);
+  const labelPresent = fileContext.isLabelPresentByLabelNode(labelNode);
 
   if (labelPresent) {
     const labelString = fileContext.nodeAsString(labelNode);
