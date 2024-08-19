@@ -3,58 +3,65 @@
 import LocalContext from "../../context/local";
 import NodeVerifier from "../../verifier/node";
 
+import { nodeQuery } from "../../utilities/query";
+import { verifyNode } from "../../utilities/verifier";
 import { verifyStandaloneTerm } from "../../verify/term";
 import { verifyStandaloneVariable } from "../../verify/variable";
 import { verifyStandaloneMetavariable } from "../../verify/metavariable";
-import { TERM_RULE_NAME, VARIABLE_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
+
+const termNodeQuery = nodeQuery("/term"),
+      variableNodeQuery = nodeQuery("/variable"),
+      metavariableNodeQuery = nodeQuery("/metavariable");
 
 class MetastatementNodeVerifier extends NodeVerifier {
   verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead) {
     let nonTerminalNodeVerified;
 
-    const ruleName = nonTerminalNode.getRuleName(); ///
-
-    switch (ruleName) {
-      case METAVARIABLE_RULE_NAME: {
-        const metavariableNode = nonTerminalNode, ///
-              standaloneMetavariableVerified = verifyStandaloneMetavariable(metavariableNode, localMetaContext, verifyAhead),
-              metavariableNodeVerified = standaloneMetavariableVerified;  ///
-
-        nonTerminalNodeVerified = metavariableNodeVerified; ///
-
-        break;
+    const nodeQueryMaps = [
+      {
+        nodeQuery :termNodeQuery,
+        verifyNode: this.verifyTermNode
+      },
+      {
+        nodeQuery :variableNodeQuery,
+        verifyNode: this.verifyVariableNode
+      },
+      {
+        nodeQuery :metavariableNodeQuery,
+        verifyNode: this.verifyMetavariableNode
       }
+    ];
 
-      case VARIABLE_RULE_NAME: {
-        const variableNode = nonTerminalNode, ///
-              localContext = LocalContext.fromLocalMetaContext(localMetaContext),
-              standaloneVariableVerified = verifyStandaloneVariable(variableNode, localContext, verifyAhead),
-              variableNodeVerified = standaloneVariableVerified;  ///
+    const nodeVerified = verifyNode(nodeQueryMaps, nonTerminalNode, localMetaContext, verifyAhead);
 
-        nonTerminalNodeVerified = variableNodeVerified; ///
-
-        break;
-      }
-
-      case TERM_RULE_NAME: {
-        const termNode = nonTerminalNode, ///
-              localContext = LocalContext.fromLocalMetaContext(localMetaContext),
-              standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
-              termNodeVerified = standaloneTermVerified;  ///
-
-        nonTerminalNodeVerified = termNodeVerified; ///
-
-        break;
-      }
-
-      default: {
-        nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead);
-
-        break;
-      }
-    }
+    nonTerminalNodeVerified = nodeVerified ?
+                                true :
+                                  super.verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead);
 
     return nonTerminalNodeVerified;
+  }
+
+  verifyMetavariableNode(metavariableNode, localMetaContext, verifyAhead) {
+    const standaloneMetavariableVerified = verifyStandaloneMetavariable(metavariableNode, localMetaContext, verifyAhead),
+          metavariableNodeVerified = standaloneMetavariableVerified;  ///
+
+    return metavariableNodeVerified;
+  }
+
+  verifyVariableNode(variableNode, localMetaContext, verifyAhead) {
+    const localContext = LocalContext.fromLocalMetaContext(localMetaContext),
+          standaloneVariableVerified = verifyStandaloneVariable(variableNode, localContext, verifyAhead),
+          variableNodeVerified = standaloneVariableVerified;  ///
+
+    return variableNodeVerified;
+  }
+
+  verifyTermNode(termNode, localMetaContext, verifyAhead) {
+    const localContext = LocalContext.fromLocalMetaContext(localMetaContext),
+          standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
+          termNodeVerified = standaloneTermVerified;  ///
+
+    return termNodeVerified;
   }
 }
 
