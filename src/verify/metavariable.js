@@ -2,7 +2,6 @@
 
 import Metavariable from "../metavariable";
 import MetavariableAssignment from "../assignment/metavariable";
-import verifyGivenMetavariable from "../verify/givenMetavariable";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -44,16 +43,19 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
 }
 
 export function verifyStandaloneMetavariable(metavariableNode, localMetaContext, verifyAhead) {
-  let standaloneMetavariableVerified;
+  let standaloneMetavariableVerified = false;
 
   const metavariableString = localMetaContext.nodeAsString(metavariableNode);
 
   localMetaContext.trace(`Verifying the '${metavariableString}' standalone metavariable...`, metavariableNode);
 
-  const metavariables = [],
-        givenMetavariableVerified = verifyGivenMetavariable(metavariableNode, metavariables, localMetaContext, verifyAhead);
+  const metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode);
 
-  standaloneMetavariableVerified = givenMetavariableVerified; ///
+  if (metavariablePresent) {
+    const verifiedAhead = verifyAhead();
+
+    standaloneMetavariableVerified = verifiedAhead; ///
+  }
 
   if (standaloneMetavariableVerified) {
     localMetaContext.debug(`...verified the '${metavariableString}' standalone metavariable.`, metavariableNode);

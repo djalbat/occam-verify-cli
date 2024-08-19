@@ -1,9 +1,8 @@
 "use strict";
 
 import Term from "../term";
-import termAgainstConstructorNodesVerifier from "../verifier/nodes/termAgainstConstructor";
-import verifyGivenVariable from "../verify/givenVariable";
 import bracketedConstructor from "../constructor/bracketed";
+import termAgainstConstructorNodesVerifier from "../verifier/nodes/termAgainstConstructor";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
@@ -74,27 +73,24 @@ function verifyTermAsVariable(termNode, terms, localContext, verifyAhead) {
 
     localContext.trace(`Verifying the '${termString}' term as a variable...`, termNode);
 
-    const variables = [],
-          givenVariableVerified = verifyGivenVariable(variableNode, variables, localContext, () => {
-            let verifiedAhead;
+    const variable = localContext.findVariableByVariableNode(variableNode);
 
-            const firstVariable = first(variables),
-                  variable = firstVariable, ///
-                  type = variable.getType(),
-                  term = Term.fromTermNodeAndType(termNode, type);
+    if (variable !== null) {
+      let verifiedAhead;
 
-            terms.push(term);
+      const type = variable.getType(),
+            term = Term.fromTermNodeAndType(termNode, type);
 
-            verifiedAhead = verifyAhead();
+      terms.push(term);
 
-            if (!verifiedAhead) {
-              terms.pop();
-            }
+      verifiedAhead = verifyAhead();
 
-            return verifiedAhead;
-          });
+      if (!verifiedAhead) {
+        terms.pop();
+      }
 
-    termVerifiedAsVariable = givenVariableVerified;  ///
+      termVerifiedAsVariable = verifiedAhead;  ///
+    }
 
     if (termVerifiedAsVariable) {
       localContext.debug(`...verified the '${termString}' term as a variable.`, termNode);

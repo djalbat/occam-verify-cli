@@ -1,12 +1,11 @@
 "use strict";
 
 import Variable from "../variable";
+import verifyTerm from "../verify/term";
 import VariableAssignment from "../assignment/variable";
-import verifyTermAndGivenType from "../verify/termAndGivenType";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
-import { verifyTermAsGivenVariable } from "./term";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term!"),
       typeNodeQuery = nodeQuery("/typeAssertion/type!"),
@@ -21,7 +20,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
 
   const verifyTypeAssertionFunctions = [
     verifyDerivedTypeAssertion,
-    verifyGivenTypeAssertion
+    verifyStatedTypeAssertion
   ];
 
   typeAssertionVerified = verifyTypeAssertionFunctions.some((verifyTypeAssertionFunction) => {
@@ -48,38 +47,39 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, loc
     localContext.trace(`Verifying the '${typeAssertionString}' derived type assertion...`, typeAssertionNode);
 
     const terms = [],
-          types = [],
           termNode = termNodeQuery(typeAssertionNode),
-          typeNode = typeNodeQuery(typeAssertionNode),
-          termAndGivenTypeVerified = verifyTermAndGivenType(termNode, typeNode, terms, types, localContext, () => {
+          termVerified = verifyTerm(termNode, terms, localContext, () => {
             let verifiedAhead = false;
 
-            const firstTerm = first(terms),
-                  firstType = first(types),
-                  term = firstTerm, ///
-                  type = firstType, ///
-                  termType = localContext.getTermType(term),
-                  typeEqualToOrSuperTypeOfTermType = type.isEqualToOrSuperTypeOf(termType);
+            const typeNode = typeNodeQuery(typeAssertionNode),
+                  type = localContext.findTypeByTypeNode(typeNode);
 
-            if (typeEqualToOrSuperTypeOfTermType) {
-              const variableNode = variableNodeQuery(termNode);
+            if (type !== null) {
+              const firstTerm = first(terms),
+                    term = firstTerm, ///
+                    termType = localContext.getTermType(term),
+                    typeEqualToOrSuperTypeOfTermType = type.isEqualToOrSuperTypeOf(termType);
 
-              if (variableNode === null) {
-                verifiedAhead = verifyAhead();
-              } else {
-                let variable = localContext.findVariableByVariableNode(variableNode);
+              if (typeEqualToOrSuperTypeOfTermType) {
+                const variableNode = variableNodeQuery(termNode);
 
-                variable = Variable.fromVariableAndType(variable, type);
+                if (variableNode === null) {
+                  verifiedAhead = verifyAhead();
+                } else {
+                  let variable = localContext.findVariableByVariableNode(variableNode);
 
-                const variableAssignment = VariableAssignment.fromVariable(variable),
-                      assignment = variableAssignment;  ///
+                  variable = Variable.fromVariableAndType(variable, type);
 
-                assignments.push(assignment);
+                  const variableAssignment = VariableAssignment.fromVariable(variable),
+                        assignment = variableAssignment;  ///
 
-                verifiedAhead = verifyAhead();
+                  assignments.push(assignment);
 
-                if (!verifiedAhead) {
-                  assignments.pop();
+                  verifiedAhead = verifyAhead();
+
+                  if (!verifiedAhead) {
+                    assignments.pop();
+                  }
                 }
               }
             }
@@ -87,7 +87,7 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, loc
             return verifiedAhead;
           });
 
-    derivedTypeAssertionVerified = termAndGivenTypeVerified; ///
+    derivedTypeAssertionVerified = termVerified; ///
 
     if (derivedTypeAssertionVerified) {
       localContext.trace(`...verified the '${typeAssertionString}' derived type assertion.`, typeAssertionNode);
@@ -97,47 +97,48 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, loc
   return derivedTypeAssertionVerified;
 }
 
-function verifyGivenTypeAssertion(typeAssertionNode, assignments, derived, localContext, verifyAhead) {
-  let givenTypeAssertionVerified = false;
+function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, localContext, verifyAhead) {
+  let statedTypeAssertionVerified = false;
 
   if (!derived) {
     const typeAssertionString = localContext.nodeAsString(typeAssertionNode);
 
-    localContext.trace(`Verifying the '${typeAssertionString}' given type assertion...`, typeAssertionNode);
+    localContext.trace(`Verifying the '${typeAssertionString}' stated type assertion...`, typeAssertionNode);
 
     const terms = [],
-          types = [],
           termNode = termNodeQuery(typeAssertionNode),
-          typeNode = typeNodeQuery(typeAssertionNode),
-          termAndGivenTypeVerified = verifyTermAndGivenType(termNode, typeNode, terms, types, localContext, () => {
+          termVerified = verifyTerm(termNode, terms, localContext, () => {
             let verifiedAhead = false;
 
-            const firstTerm = first(terms),
-                  firstType = first(types),
-                  term = firstTerm, ///
-                  type = firstType, ///
-                  termType = term.getType(),
-                  typeEqualToOrSubTypeOfTermType = type.isEqualToOrSubTypeOf(termType);
+            const typeNode = typeNodeQuery(typeAssertionNode),
+                  type = localContext.findTypeByTypeNode(typeNode);
 
-            if (typeEqualToOrSubTypeOfTermType) {
-              const variableNode = variableNodeQuery(termNode);
+            if (type !== null) {
+              const firstTerm = first(terms),
+                    term = firstTerm, ///
+                    termType = term.getType(),
+                    typeEqualToOrSubTypeOfTermType = type.isEqualToOrSubTypeOf(termType);
 
-              if (variableNode === null) {
-                verifiedAhead = verifyAhead();
-              } else {
-                let variable = localContext.findVariableByVariableNode(variableNode);
+              if (typeEqualToOrSubTypeOfTermType) {
+                const variableNode = variableNodeQuery(termNode);
 
-                variable = Variable.fromVariableAndType(variable, type);
+                if (variableNode === null) {
+                  verifiedAhead = verifyAhead();
+                } else {
+                  let variable = localContext.findVariableByVariableNode(variableNode);
 
-                const variableAssignment = VariableAssignment.fromVariable(variable),
-                      assignment = variableAssignment;  ///
+                  variable = Variable.fromVariableAndType(variable, type);
 
-                assignments.push(assignment);
+                  const variableAssignment = VariableAssignment.fromVariable(variable),
+                        assignment = variableAssignment;  ///
 
-                verifiedAhead = verifyAhead();
+                  assignments.push(assignment);
 
-                if (!verifiedAhead) {
-                  assignments.pop();
+                  verifiedAhead = verifyAhead();
+
+                  if (!verifiedAhead) {
+                    assignments.pop();
+                  }
                 }
               }
             }
@@ -145,12 +146,12 @@ function verifyGivenTypeAssertion(typeAssertionNode, assignments, derived, local
             return verifiedAhead;
           });
 
-    givenTypeAssertionVerified = termAndGivenTypeVerified; ///
+    statedTypeAssertionVerified = termVerified; ///
 
-    if (givenTypeAssertionVerified) {
-      localContext.trace(`...verified the '${typeAssertionString}' given type assertion.`, typeAssertionNode);
+    if (statedTypeAssertionVerified) {
+      localContext.trace(`...verified the '${typeAssertionString}' stated type assertion.`, typeAssertionNode);
     }
   }
 
-  return givenTypeAssertionVerified;
+  return statedTypeAssertionVerified;
 }

@@ -1,7 +1,6 @@
 "use strict";
 
 import Type from "../type";
-import verifyGivenType from "../verify/givenType";
 
 import { typeNameFromTypeNode } from "../utilities/name";
 
@@ -52,16 +51,19 @@ export default function verifyType(typeNode, superTypeNode, fileContext) {
 }
 
 export function verifyStandaloneType(typeNode, localContext, verifyAhead) {
-  let standaloneTypeVerified;
+  let standaloneTypeVerified = false;
 
   const typeString = localContext.nodeAsString(typeNode);
 
   localContext.trace(`Verifying the '${typeString}' standalone type...`, typeNode);
 
-  const types = [],
-        givenTypeVerified = verifyGivenType(typeNode, types, localContext, verifyAhead);
+  const typePresent = localContext.isTypePresentByTypeNode(typeNode);
 
-  standaloneTypeVerified = givenTypeVerified;  ///
+  if (typePresent) {
+    const verifiedAhead = verifyAhead();
+
+    standaloneTypeVerified = verifiedAhead; ///
+  }
 
   if (standaloneTypeVerified) {
     localContext.debug(`...verified the '${typeString}' standalone type.`, typeNode);

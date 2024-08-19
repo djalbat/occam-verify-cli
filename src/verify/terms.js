@@ -18,9 +18,7 @@ export default function verifyTerms(termNodes, terms, localContext, verifyAhead)
           let verifiedAhead;
 
           const secondTermVerified = verifyTerm(secondTermNode, terms, localContext, () => {
-            let verifiedAhead;
-
-            verifiedAhead = verifyAhead();
+            const verifiedAhead = verifyAhead();
 
             return verifiedAhead;
           });

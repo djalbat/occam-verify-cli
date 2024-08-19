@@ -2,7 +2,6 @@
 
 import Variable from "../variable";
 import VariableAssignment from "../assignment/variable";
-import verifyGivenVariable from "../verify/givenVariable";
 
 import { objectType } from "../type";
 
@@ -54,16 +53,19 @@ export default function verifyVariable(variableNode, typeNode, fileContext) {
 }
 
 export function verifyStandaloneVariable(variableNode, localContext, verifyAhead) {
-  let standaloneVariableVerified;
+  let standaloneVariableVerified = false;
 
   const variableString = localContext.nodeAsString(variableNode);
 
   localContext.trace(`Verifying the '${variableString}' standalone variable...`, variableNode);
 
-  const variables = [],
-        givenVariableVerified = verifyGivenVariable(variableNode, variables, localContext, verifyAhead);
+  const variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
 
-  standaloneVariableVerified = givenVariableVerified; ///
+  if (variablePresent) {
+    const verifiedAhead = verifyAhead();
+
+    standaloneVariableVerified = verifiedAhead; ///
+  }
 
   if (standaloneVariableVerified) {
     localContext.debug(`...verified the '${variableString}' standalone variable.`, variableNode);
