@@ -1,67 +1,59 @@
 "use strict";
 
 import NodesVerifier from "../../verifier/nodes";
-import intrinsicLevelNodesVerifierMixins from "../../mixins/nodesVerifier/intrinsiclevel";
+import verifyVariableAgainstTerm from "../../verify/variableAgainstTerm";
 
 import { nodeQuery } from "../../utilities/query";
-import { TERM_RULE_NAME } from "../../ruleNames";
+import { verifyNodes } from "../../utilities/verifier";
 
-const variableNodeQuery = nodeQuery("/term/variable!");
+const termNodeQuery = nodeQuery("/term!"),
+      termVariableNodeQuery = nodeQuery("/term/variable!");
 
 class IntrinsicLevelNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead) {
-    let nonTerminalNodeVerified = false;
+    let nonTerminalNodeVerified;
 
-    const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
-          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
+    const nodeQueryMaps = [
+      {
+        nodeQueryA: termVariableNodeQuery,
+        nodeQueryB: termNodeQuery,
+        verifyNodes: (nodeA, nodeB, substitutions, localContextA, localContextB, verifyAhead) => {
+          let nonTerminalNodeVerified;
 
-    if (nonTerminalNodeARuleName === nonTerminalNodeBRuleName) {
-      const ruleName = nonTerminalNodeARuleName;  ///
+          const termNodeB = nodeB,  ///
+                termVariableNodeA = nodeA,  ///
+                termVariableNodeVerifiedAgainstTermNode =
 
-      switch (ruleName) {
-        case TERM_RULE_NAME: {
-          const termNodeA = nonTerminalNodeA,  ///
-                termNodeB = nonTerminalNodeB,  ///
-                termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
+                  this.verifyTermVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
-          nonTerminalNodeVerified = termNodeVerified;  ///
+          nonTerminalNodeVerified = termVariableNodeVerifiedAgainstTermNode;  ///
 
-          break;
-        }
-
-        default: {
-          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
-
-          break;
+          return nonTerminalNodeVerified;
         }
       }
-    }
+    ];
+
+    const nodesVerified = verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
+
+    nonTerminalNodeVerified = nodesVerified ?
+                                true :
+                                  super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
     return nonTerminalNodeVerified;
   }
 
-  verifyTermNode(termNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
-    let termNodeVerified;
+  verifyTermVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
+    let termVariableNodeVerifiedAgainstTermNode;
 
-    const variableNodeA = variableNodeQuery(termNodeA);
+    const termNode = termNodeB, ///
+          variableNode = termVariableNodeA, ///
+          variableVerifiedAgainstTerm = verifyVariableAgainstTerm(variableNode, termNode, substitutions, localContextA, localContextB, verifyAhead);
 
-    if (variableNodeA !== null) {
-      const variableNodeVerified = this.verifyVariableNode(variableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
+    termVariableNodeVerifiedAgainstTermNode = variableVerifiedAgainstTerm;  ///
 
-      termNodeVerified = variableNodeVerified; ///
-    } else {
-      const nonTerminalNodeA = termNodeA, ///
-            nonTerminalNodeB = termNodeB, ///
-            nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
-
-      termNodeVerified = nonTerminalNodeVerified; ///
-    }
-
-    return termNodeVerified;
+    return termVariableNodeVerifiedAgainstTermNode;
   }
 }
-
-Object.assign(IntrinsicLevelNodesVerifier.prototype, intrinsicLevelNodesVerifierMixins);
 
 const intrinsicLevelNodesVerifier = new IntrinsicLevelNodesVerifier();
 

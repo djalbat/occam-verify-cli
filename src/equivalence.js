@@ -102,7 +102,7 @@ export default class Equivalence {
       if (termNodeMatches) {
         return true;
       }
-    })
+    });
 
     return termNodesMatch;
   }

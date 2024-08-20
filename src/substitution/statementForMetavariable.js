@@ -1,8 +1,6 @@
 "use strict";
 
 import Substitution from "../substitution";
-
-import substitutionNodesVerifier from "../verifier/nodes/substitution";
 import TermForVariableSubstitution from "./termForVariable";
 import intrinsicLevelNodesVerifier from "../verifier/nodes/intrinsicLevel";
 
@@ -131,7 +129,7 @@ export function matchStatementNode(statementNodeA, statementNodeB, substitution,
 
   const nonTerminalNodeA = statementNodeA,  ///
         nonTerminalNodeB = statementNodeB,  ///
-        nonTerminalNodeVerified = substitutionNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutionsA, localContextA, localContextB, () => {
+        nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutionsA, localContextA, localContextB, () => {
           const verifiedAhead = true;
 
           return verifiedAhead;

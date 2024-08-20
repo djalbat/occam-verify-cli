@@ -1,7 +1,7 @@
 "use strict";
 
 import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
-import metaLevelToIntrinsicLevelNodesVerifier from "./verifier/nodes/metaLevelToIntrinsicLevel";
+import intrinsicLevelAgainstMetaLevelNodesVerifier from "./verifier/nodes/intrinsicLevelAgainstMetaLevel";
 
 import { nodeAsString } from "./utilities/string";
 import { metastatementNodeFromMetastatementString } from "./utilities/node";
@@ -20,7 +20,7 @@ export default class Conclusion {
           nonTerminalNodeB = statementNode,  ///
           localContextA = localContext, ///
           localContextB = statementLocalContext,  ///
-          nonTerminalNodeVerified = metaLevelToIntrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+          nonTerminalNodeVerified = intrinsicLevelAgainstMetaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
             const verifyAhead = true;
 
             return verifyAhead;

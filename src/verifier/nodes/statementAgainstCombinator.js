@@ -4,86 +4,90 @@ import NodesVerifier from "../../verifier/nodes";
 import termAgainstConstructorNodesVerifier from "../../verifier/nodes/termAgainstConstructor";
 
 import { nodeQuery } from "../../utilities/query";
+import { verifyNodes } from "../../utilities/verifier";
 import { STATEMENT_META_TYPE_NAME } from "../../metaTypeNames";
-import { ARGUMENT_RULE_NAME, META_ARGUMENT_RULE_NAME } from "../../ruleNames";
 
-const metaTypeNodeQuery = nodeQuery("/metaArgument/metaType!"),
-      statementNodeQuery = nodeQuery("/metaArgument/statement!"),
-      metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type");
+const argumentNodeQuery = nodeQuery("/argument!"),
+      metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type!"),
+      metaArgumentMetaTypeNodeQuery = nodeQuery("/metaArgument/metaType!"),
+      metaArgumentStatementNodeQuery = nodeQuery("/metaArgument/statement!");
 
 class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead) {
-    let nonTerminalNodeVerified = false;
+    let nonTerminalNodeVerified;
 
-    const nonTerminalNode = nonTerminalNodeA, ///
-          combinatorNonTerminalNode = nonTerminalNodeB, ///
-          ruleName = nonTerminalNode.getRuleName(), ///
-          combinatorRuleName = combinatorNonTerminalNode.getRuleName(); ///
+    const nodeQueryMaps = [
+      {
+        nodeQueryA: argumentNodeQuery,
+        nodeQueryB: argumentNodeQuery,
+        verifyNodes: (nodeA, nodeB, localContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
 
-    if (ruleName === combinatorRuleName) {
-      switch (ruleName) {
-        case META_ARGUMENT_RULE_NAME: {
-          const metaArgumentNode = nonTerminalNode, ///
-                combinatorMetaargumentNode = combinatorNonTerminalNode, ///
-                metaArgumentNodeVerified = this.verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, localContext, verifyAhead);
+          const argumentNodeA = nodeA,  ///
+                argumentNodeB = nodeB,  ///
+                argumentNodeVerifiedAgainstArgumentNode =
 
-          nonTerminalNodeVerified = metaArgumentNodeVerified; ///
+                  this.verifyArgumentNodeAgainstArgumentNode(argumentNodeA, argumentNodeB, localContext, verifyAhead);
 
-          break;
+          nonTerminalNodeVerified = argumentNodeVerifiedAgainstArgumentNode; ///
+
+          return nonTerminalNodeVerified;
         }
+      },
+      {
+        nodeQueryA: metaArgumentStatementNodeQuery,
+        nodeQueryB: metaArgumentMetaTypeNodeQuery,
+        verifyNodes: (nodeA, nodeB, localContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
 
-        case ARGUMENT_RULE_NAME: {
-          const argumentNode = nonTerminalNode, ///
-                constructorArgumentNode = combinatorNonTerminalNode, ///
-                argumentNodeVerified = termAgainstConstructorNodesVerifier.verifyArgumentNode(argumentNode, constructorArgumentNode, localContext, verifyAhead);
+          const metaArgumentMetaTypeNodeB = nodeB,  ///
+                metaArgumentStatementNodeA = nodeA, ///
+                metaArgumentStatementVerifiedAgainstMetaArgumentMetaType =
 
-          nonTerminalNodeVerified = argumentNodeVerified; ///
+                  this.verifyMetaArgumentStatementAgainstMetaArgumentMetaType(metaArgumentStatementNodeA, metaArgumentMetaTypeNodeB, localContext, verifyAhead);
 
-          break;
-        }
+          nonTerminalNodeVerified = metaArgumentStatementVerifiedAgainstMetaArgumentMetaType; ///
 
-        default: {
-          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
-
-          break;
+          return nonTerminalNodeVerified;
         }
       }
-    }
+    ];
+
+    const nodesVerified = verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
+
+    nonTerminalNodeVerified = nodesVerified ?
+                                true :
+                                  super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
 
     return nonTerminalNodeVerified;
   }
 
-  verifyMetaargumentNode(metaArgumentNode, combinatorMetaargumentNode, localContext, verifyAhead) {
-    let metaArgumentNodeVerified = false;
+  verifyMetaArgumentStatementAgainstMetaArgumentMetaType(metaArgumentStatementNodeA, metaArgumentMetaTypeNodeB, localContext, verifyAhead) {
+    let metaArgumentStatementVerifiedAgainstMetaArgumentMetaType = false;
 
-    const metaArgumentString = localContext.nodeAsString(metaArgumentNode);
+    const metaTypeNode = metaArgumentMetaTypeNodeB, ///
+          metaTypeTerminalNode = metaTypeTerminalNodeQuery(metaTypeNode),
+          content = metaTypeTerminalNode.getContent();
 
-    const statementNode = statementNodeQuery(metaArgumentNode),
-          combinatorMetaTYpeNode = metaTypeNodeQuery(combinatorMetaargumentNode);
+    if (content === STATEMENT_META_TYPE_NAME) {
+      const verifiedAhead = verifyAhead();
 
-    if (statementNode === null) {
-      localContext.debug(`Expected a statement but got a '${metaArgumentString}' meta-type.`, metaArgumentNode);
-    } else {
-      if (combinatorMetaTYpeNode === null) {
-        const combinatorMetaargumentString = localContext.nodeAsString(combinatorMetaargumentNode);
-
-        localContext.debug(`Expected a meta-type but got a '${combinatorMetaargumentString}' statement.`, metaArgumentNode);
-      } else {
-        const combinatorMetaTypeTerminalNode = metaTypeTerminalNodeQuery(combinatorMetaTYpeNode),
-              content = combinatorMetaTypeTerminalNode.getContent(),
-              contentStatementMetaType = (content === STATEMENT_META_TYPE_NAME);
-
-        if (!contentStatementMetaType) {
-          localContext.debug(`Expected the meta-type of the combinator to be '${STATEMENT_META_TYPE_NAME}' but got '${content}' instead.`, metaArgumentNode);
-        } else {
-          const verifiedAhead = verifyAhead();
-
-          metaArgumentNodeVerified = verifiedAhead; ///
-        }
-      }
+      metaArgumentStatementVerifiedAgainstMetaArgumentMetaType = verifiedAhead; ///
     }
 
-    return metaArgumentNodeVerified;
+    return metaArgumentStatementVerifiedAgainstMetaArgumentMetaType;
+  }
+
+  verifyArgumentNodeAgainstArgumentNode(argumentNodeA, argumentNodeB, localContext, verifyAhead) {
+    let argumentNodeVerifiedAgainstArgumentNode;
+
+    const nonTerminalNodeA = argumentNodeA, ///
+          nonTerminalNodeB = argumentNodeB, ///
+          nonTerminalNodeVerified = termAgainstConstructorNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
+
+    argumentNodeVerifiedAgainstArgumentNode = nonTerminalNodeVerified; ///
+
+    return argumentNodeVerifiedAgainstArgumentNode;
   }
 }
 

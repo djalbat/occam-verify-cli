@@ -9,9 +9,9 @@ import { verifyStandaloneTerm } from "../../verify/term";
 import { verifyStandaloneVariable } from "../../verify/variable";
 import { verifyStandaloneMetavariable } from "../../verify/metavariable";
 
-const termNodeQuery = nodeQuery("/term"),
-      variableNodeQuery = nodeQuery("/variable"),
-      metavariableNodeQuery = nodeQuery("/metavariable");
+const termNodeQuery = nodeQuery("/term!"),
+      variableNodeQuery = nodeQuery("/variable!"),
+      metavariableNodeQuery = nodeQuery("/metavariable!");
 
 class MetastatementNodeVerifier extends NodeVerifier {
   verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead) {
@@ -19,15 +19,15 @@ class MetastatementNodeVerifier extends NodeVerifier {
 
     const nodeQueryMaps = [
       {
-        nodeQuery :termNodeQuery,
+        nodeQuery: termNodeQuery,
         verifyNode: this.verifyTermNode
       },
       {
-        nodeQuery :variableNodeQuery,
+        nodeQuery: variableNodeQuery,
         verifyNode: this.verifyVariableNode
       },
       {
-        nodeQuery :metavariableNodeQuery,
+        nodeQuery: metavariableNodeQuery,
         verifyNode: this.verifyMetavariableNode
       }
     ];

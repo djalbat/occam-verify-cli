@@ -29,17 +29,11 @@ export default class Equality {
   }
 
   isEqual(localContext) {
-    const leftTerm = this.getLeftTerm(),
-          rightTerm = this.getRightTerm(),
-          leftTermNode = leftTerm.getNode(),
-          rightTermNode = rightTerm.getNode(),
+    const leftTermNode = this.leftTerm.getNode(),
+          rightTermNode = this.rightTerm.getNode(),
           nonTerminalNodeA = leftTermNode,  ///
           nonTerminalNodeB = rightTermNode, ///
-          equivalences = localContext.getEquivalences();
-
-    localContext = this;  ///
-
-    const nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equivalences, localContext, () => {
+          nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

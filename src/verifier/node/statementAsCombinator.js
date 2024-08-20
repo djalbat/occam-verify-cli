@@ -8,9 +8,9 @@ import { verifyStandaloneType } from "./../../verify/type";
 import { verifyStandaloneTerm } from "./../../verify/term";
 import { verifyStandaloneStatement } from "../../verify/statement";
 
-const termNodeQuery = nodeQuery("/term"),
-      typeNodeQuery = nodeQuery("/type"),
-      statementNodeQuery = nodeQuery("/statement");
+const termNodeQuery = nodeQuery("/term!"),
+      typeNodeQuery = nodeQuery("/type!"),
+      statementNodeQuery = nodeQuery("/statement!");
 
 class StatementAsCombinatorNodeVerifier extends NodeVerifier {
   verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead) {
@@ -18,15 +18,15 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
 
     const nodeQueryMaps = [
       {
-        nodeQuery :termNodeQuery,
+        nodeQuery: termNodeQuery,
         verifyNode: this.verifyTermNode
       },
       {
-        nodeQuery :typeNodeQuery,
+        nodeQuery: typeNodeQuery,
         verifyNode: this.verifyTypeNode
       },
       {
-        nodeQuery :statementNodeQuery,
+        nodeQuery: statementNodeQuery,
         verifyNode: this.verifyStatementNode
       }
     ];

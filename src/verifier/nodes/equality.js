@@ -2,58 +2,60 @@
 
 import NodesVerifier from "../../verifier/nodes";
 
-import { TERM_RULE_NAME } from "../../ruleNames";
+import { nodeQuery } from "../../utilities/query";
+import { verifyNodes } from "../../utilities/verifier";
 import { areTermNodesEqual } from "../../utilities/equivalences";
 
+const termNodeQuery = nodeQuery("/term!");
+
 class EqualityNodesVerifier extends NodesVerifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equivalences, localContext, verifyAhead) {
-    let nonTerminalNodeVerified = false;
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead) {
+    let nonTerminalNodeVerified;
 
-    const ruleNameA = nonTerminalNodeA.getRuleName(), ///
-          ruleNameB = nonTerminalNodeB.getRuleName(); ///
+    const nodeQueryMaps = [
+      {
+        nodeQueryA: termNodeQuery,
+        nodeQueryB: termNodeQuery,
+        verifyNodes: (nodeA, nodeB, localContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
 
-    if (ruleNameA === ruleNameB) {
-      switch (ruleNameA) {
-        case TERM_RULE_NAME: {
-          const termNodeA = nonTerminalNodeA, ///
-                termNodeB = nonTerminalNodeB, ///
-                termNodeVerified = this.verifyTermNode(termNodeA, termNodeB, equivalences, localContext, verifyAhead);
+          const termNodeA = nodeA,  ///
+                termNodeB = nodeB,  ///
+                termNodeVerifiedAgainstTermNode =
 
-          nonTerminalNodeVerified = termNodeVerified;  ///
+                  this.verifyTermNodeAgainstTermNode(termNodeA, termNodeB, localContext, verifyAhead);
 
-          break;
-        }
+          nonTerminalNodeVerified = termNodeVerifiedAgainstTermNode; ///
 
-        default: {
-          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equivalences, localContext, verifyAhead);
-
-          break;
+          return nonTerminalNodeVerified;
         }
       }
-    }
+    ];
+
+    const nodesVerified = verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
+
+    nonTerminalNodeVerified = nodesVerified ?
+                                 true :
+                                   super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
 
     return nonTerminalNodeVerified;
   }
 
-  verifyTermNode(termNodeA, termNodeB, equivalences, localContext, verifyAhead) {
-    let termNodeVerified;
+  verifyTermNodeAgainstTermNode(termNodeA, termNodeB, localContext, verifyAhead) {
+    let termNodeVerifiedAgainstTermNode;
 
     const leftTermNode = termNodeA, ///
           rightTermNode = termNodeB, ///
+          equivalences = localContext.getEquivalences(),
           termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, equivalences);
 
     if (termNodesEqual) {
       const verifiedAhead = verifyAhead();
 
-      termNodeVerified = verifiedAhead;  ///
-    } else {
-      const nonTerminalNodeA = termNodeA, ///
-            nonTerminalNodeB = termNodeB; ///
-
-      termNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, equivalences, localContext, verifyAhead);
+      termNodeVerifiedAgainstTermNode = verifiedAhead;  ///
     }
 
-    return termNodeVerified;
+    return termNodeVerifiedAgainstTermNode;
   }
 }
 

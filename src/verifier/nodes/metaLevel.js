@@ -1,67 +1,62 @@
 "use strict";
 
+import LocalContext from "../../context/local";
 import NodesVerifier from "../../verifier/nodes";
-import metaLevelNodesVerifierMixins from "../../mixins/nodesVerifier/metaLevel";
+import verifyMetavariableAgainstStatement from "../../verify/metavariableAgainstStatement";
 
 import { nodeQuery } from "../../utilities/query";
-import { METASTATEMENT_RULE_NAME } from "../../ruleNames";
+import { verifyNodes } from "../../utilities/verifier";
 
-const metavariableNodeQuery = nodeQuery("/metastatement/metavariable!");
+const metastatementNodeQuery = nodeQuery("/metastatement!"),
+      metastatementMetavariableNodeQuery = nodeQuery("/metastatement/metavariable!");
 
 class MetaLevelNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, verifyAhead) {
-    let nonTerminalNodeVerified = false;
+    let nonTerminalNodeVerified;
 
-    const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(),
-          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName();
+    const nodeQueryMaps = [
+      {
+        nodeQueryA: metastatementMetavariableNodeQuery,
+        nodeQueryB: metastatementNodeQuery,
+        verifyNodes: (nodeA, nodeB, substitutions, localContextA, localMetaContextB, verifyAhead) => {
+          let nonTerminalNodeVerified;
 
-    if (nonTerminalNodeARuleName === nonTerminalNodeBRuleName) {
-      const ruleName = nonTerminalNodeARuleName;  ///
+          const statementNodeB = nodeB, ///
+                metastatementMetavariableNodeA = nodeA, ///
+                metastatementMetavariableNodeVerifiedAgainstStatementNode =
 
-      switch (ruleName) {
-        case METASTATEMENT_RULE_NAME: {
-          const metastatementNodeA = nonTerminalNodeA,  ///
-                metastatementNodeB = nonTerminalNodeB,  ///
-                metastatementNodeVerified = this.verifyMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
+                  this.verifyMetastatementMetavariableNodeAgainstTermNode(metastatementMetavariableNodeA, statementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
 
-          nonTerminalNodeVerified = metastatementNodeVerified;  ///
+          nonTerminalNodeVerified = metastatementMetavariableNodeVerifiedAgainstStatementNode;  ///
 
-          break;
-        }
-
-        default: {
-          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
-
-          break;
+          return nonTerminalNodeVerified;
         }
       }
-    }
+    ];
+
+    const nodesVerified = verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
+
+    nonTerminalNodeVerified = nodesVerified ?
+                                true :
+                                  super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
 
     return nonTerminalNodeVerified;
   }
 
-  verifyMetastatementNode(metastatementNodeA, metastatementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead) {
-    let metastatementNodeVerified;
+  verifyMetastatementMetavariableNodeAgainstTermNode(metastatementMetavariableNodeA, statementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead) {
+    let metastatementMetavariableNodeVerifiedAgainstStatementNode;
 
-    const metavariableNodeA = metavariableNodeQuery(metastatementNodeA);
+    const localContextB = LocalContext.fromLocalMetaContext(localMetaContextB),
+          statementNode = statementNodeB, ///
+          metavariableNode = metastatementMetavariableNodeA, ///
+          substitutionNode = null,
+          metavariableVerifiedAgainstStatement = verifyMetavariableAgainstStatement(metavariableNode, statementNode, substitutionNode, substitutions, localContextA, localContextB, verifyAhead);
 
-    if (metavariableNodeA !== null) {
-      const metaVariableNodeVerified = this.verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
+    metastatementMetavariableNodeVerifiedAgainstStatementNode = metavariableVerifiedAgainstStatement;  ///
 
-      metastatementNodeVerified = metaVariableNodeVerified; ///
-    } else {
-      const nonTerminalNodeA = metastatementNodeA,  ///
-            nonTerminalNodeB = metastatementNodeB, ///
-            nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
-
-      metastatementNodeVerified = nonTerminalNodeVerified;  ///
-    }
-
-    return metastatementNodeVerified;
+    return metastatementMetavariableNodeVerifiedAgainstStatementNode;
   }
 }
-
-Object.assign(MetaLevelNodesVerifier.prototype, metaLevelNodesVerifierMixins);
 
 const metaLevelNodesVerifier = new MetaLevelNodesVerifier();
 

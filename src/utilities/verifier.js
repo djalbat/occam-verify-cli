@@ -1,6 +1,6 @@
 "use strict";
 
-export function verifyNode(nodeQueryMaps, nonTerminalNode, localMetaContext, verifyAhead) {
+export function verifyNode(nodeQueryMaps, nonTerminalNode, ...remainingArguments) {
   let nodeVerified;
 
   nodeVerified = nodeQueryMaps.some((nodeQueryMap) => {
@@ -11,7 +11,7 @@ export function verifyNode(nodeQueryMaps, nonTerminalNode, localMetaContext, ver
     const node = nodeQuery(nonTerminalNode);
 
     if (node !== null) {
-      nodeVerified = verifyNode(node, localMetaContext, verifyAhead);
+      nodeVerified = verifyNode(node, ...remainingArguments);
     }
 
     if (nodeVerified) {
@@ -20,4 +20,27 @@ export function verifyNode(nodeQueryMaps, nonTerminalNode, localMetaContext, ver
   });
 
   return nodeVerified;
+}
+
+export function verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments) {
+  let nodesVerified;
+
+  nodesVerified = nodeQueryMaps.some((nodeQueryMap) => {
+    let nodesVerified = false;
+
+    const { nodeQueryA, nodeQueryB, verifyNodes } = nodeQueryMap;
+
+    const nodeA = nodeQueryA(nonTerminalNodeA),  ///
+          nodeB = nodeQueryB(nonTerminalNodeB);  ///
+
+    if ((nodeA !== null) && (nodeB !== null)) {
+      nodesVerified = verifyNodes(nodeA, nodeB, ...remainingArguments);
+    }
+
+    if (nodesVerified) {
+      return true;
+    }
+  });
+
+  return nodesVerified;
 }
