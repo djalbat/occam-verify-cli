@@ -35,6 +35,12 @@ export function someSubArray(array, subArrayLength, callback) {
       ];
     }
 
+    if (subArrayLength === 5) {
+      permutations = [
+        [ 0, 3, 4, 5, 1 ]
+      ];
+    }
+
     if (permutations !== null) {
       found = permutations.some((permutation) => {
         if (permutation !== null) {
