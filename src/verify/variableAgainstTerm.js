@@ -4,9 +4,12 @@ import verifyTerm from "../verify/term";
 import TermForVariableSubstitution from "../substitution/termForVariable";
 
 import { first } from "../utilities/array";
+import { nodeQuery } from "../utilities/query";
+
+const variableNodeQuery = nodeQuery("/term/variable");
 
 export default function verifyVariableAgainstTerm(variableNode, termNode, substitutions, localContextA, localContextB, verifyAhead) {
-  let variableVerifiedAginastTerm = false;
+  let variableVerifiedAgainstTerm = false;
 
   const substitution = substitutions.find((substitution) => {
     const substitutionMatchesVariableNodeA = substitution.matchVariableNode(variableNode);
@@ -22,43 +25,62 @@ export default function verifyVariableAgainstTerm(variableNode, termNode, substi
     if (termNodeMatches) {
       const verifiedAhead = verifyAhead();
 
-      variableVerifiedAginastTerm = verifiedAhead;  ///
+      variableVerifiedAgainstTerm = verifiedAhead;  ///
     }
   } else {
-    const localContext = localContextA, ///
-          variable = localContext.findVariableByVariableNode(variableNode);
+    const variableA = localContextA.findVariableByVariableNode(variableNode);
 
-    if (variable !== null) {
+    if (variableA !== null) {
       const terms = [],
-            localContext = localContextB, ///
-            termVerified = verifyTerm(termNode, terms, localContext, () => {
+            termVerified = verifyTerm(termNode, terms, localContextB, () => {
               let verifiedAhead = false;
 
               const firstTerm = first(terms),
-                    term = firstTerm, ///
-                    termType = term.getType(),
-                    variableType = variable.getType(),
-                    variableTypeEqualToOrSuperTypeOfTermType = variableType.isEqualToOrSuperTypeOf(termType);
+                    termB = firstTerm, ///
+                    variableB = variableFromTerm(termB, localContextB);
 
-              if (variableTypeEqualToOrSuperTypeOfTermType) {
-                const termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
-                      substitution = termForVariableSubstitution;  ///
-
-                substitutions.push(substitution);
-
+              if (variableA === variableB) {
                 verifiedAhead = verifyAhead();
+              } else {
+                const term = termB, ///
+                      variable = variableA, ///
+                      termType = term.getType(),
+                      variableType = variable.getType(),
+                      variableTypeEqualToOrSuperTypeOfTermType = variableType.isEqualToOrSuperTypeOf(termType);
 
-                if (!verifiedAhead) {
-                  substitutions.pop();
+                if (variableTypeEqualToOrSuperTypeOfTermType) {
+                  const termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
+                        substitution = termForVariableSubstitution;  ///
+
+                  substitutions.push(substitution);
+
+                  verifiedAhead = verifyAhead();
+
+                  if (!verifiedAhead) {
+                    substitutions.pop();
+                  }
                 }
               }
 
               return verifiedAhead;
             });
 
-      variableVerifiedAginastTerm = termVerified;  ///
+      variableVerifiedAgainstTerm = termVerified;  ///
     }
   }
 
-  return variableVerifiedAginastTerm;
+  return variableVerifiedAgainstTerm;
+}
+
+function variableFromTerm(term, localContext) {
+  let variable = null;
+
+  const termNode = term.getNode(),
+        variableNode = variableNodeQuery(termNode);
+
+  if (variableNode !== null) {
+    variable = localContext.findVariableByVariableNode(variableNode);
+  }
+
+  return variable;
 }
