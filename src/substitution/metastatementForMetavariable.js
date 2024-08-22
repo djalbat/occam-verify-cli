@@ -45,7 +45,9 @@ export default class MetastatementForMetavariableSubstitution extends Substituti
   }
 
   static fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode) {
-    let metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableNode, metastatementNode);
+    let metastatementForMetavariableSubstitution;
+
+    metastatementForMetavariableSubstitution = new MetastatementForMetavariableSubstitution(metavariableNode, metastatementNode);
 
     const bracketedMetastatementChildNode = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode);
 

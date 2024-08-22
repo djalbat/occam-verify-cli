@@ -31,13 +31,13 @@ export function someSubArray(array, subArrayLength, callback) {
 
     if (subArrayLength === 1) {
       permutations = [
-        [ 2 ]
+        [ 1 ]
       ];
     }
 
     if (subArrayLength === 5) {
       permutations = [
-        [ 0, 3, 4, 5, 1 ]
+        [ 0, 2, 3, 4, 5 ]
       ];
     }
 

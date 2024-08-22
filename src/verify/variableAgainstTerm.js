@@ -6,7 +6,7 @@ import TermForVariableSubstitution from "../substitution/termForVariable";
 import { first } from "../utilities/array";
 
 export default function verifyVariableAgainstTerm(variableNode, termNode, substitutions, localContextA, localContextB, verifyAhead) {
-  let variableVerifiedAgainstTerm = false;
+  let variableVerifiedAginastTerm = false;
 
   const substitution = substitutions.find((substitution) => {
     const substitutionMatchesVariableNodeA = substitution.matchVariableNode(variableNode);
@@ -22,7 +22,7 @@ export default function verifyVariableAgainstTerm(variableNode, termNode, substi
     if (termNodeMatches) {
       const verifiedAhead = verifyAhead();
 
-      variableVerifiedAgainstTerm = verifiedAhead;  ///
+      variableVerifiedAginastTerm = verifiedAhead;  ///
     }
   } else {
     const localContext = localContextA, ///
@@ -56,9 +56,9 @@ export default function verifyVariableAgainstTerm(variableNode, termNode, substi
               return verifiedAhead;
             });
 
-      variableVerifiedAgainstTerm = termVerified;  ///
+      variableVerifiedAginastTerm = termVerified;  ///
     }
   }
 
-  return variableVerifiedAgainstTerm;
+  return variableVerifiedAginastTerm;
 }

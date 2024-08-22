@@ -1,10 +1,10 @@
 "use strict";
 
 import NodesVerifier from "../../verifier/nodes";
+import verifyTermAgainstTerm from "../../verify/termAgainstTerm";
 
 import { nodeQuery } from "../../utilities/query";
 import { verifyNodes } from "../../utilities/verifier";
-import { areTermNodesEqual } from "../../utilities/equivalences";
 
 const termNodeQuery = nodeQuery("/term!");
 
@@ -44,16 +44,9 @@ class EqualityNodesVerifier extends NodesVerifier {
   verifyTermNodeAgainstTermNode(termNodeA, termNodeB, localContext, verifyAhead) {
     let termNodeVerifiedAgainstTermNode;
 
-    const leftTermNode = termNodeA, ///
-          rightTermNode = termNodeB, ///
-          equivalences = localContext.getEquivalences(),
-          termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, equivalences);
+    const termVerifiedAgainstTerm = verifyTermAgainstTerm(termNodeA, termNodeB, localContext, verifyAhead);
 
-    if (termNodesEqual) {
-      const verifiedAhead = verifyAhead();
-
-      termNodeVerifiedAgainstTermNode = verifiedAhead;  ///
-    }
+    termNodeVerifiedAgainstTermNode = termVerifiedAgainstTerm;  ///
 
     return termNodeVerifiedAgainstTermNode;
   }

@@ -23,14 +23,14 @@ export default class TermForVariableSubstitution extends Substitution {
     return this.termNode;
   }
 
-  isIntrinsic(substitution) {
+  isTransformed(substitution) {
     const termNod = substitution.getTermNode(),
           variableNode = substitution.getVariableNode(),
           termNodeMatches = this.termNode.match(termNod),
           variableNodeMatches = this.variableNode.match(variableNode),
-          intrinsic = ((!termNodeMatches) && (!variableNodeMatches));
+          transformed = ((!termNodeMatches) && (!variableNodeMatches));
 
-    return intrinsic;
+    return transformed;
   }
 
   matchTermNode(termNode) {

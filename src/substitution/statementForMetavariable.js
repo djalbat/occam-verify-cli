@@ -69,9 +69,11 @@ export default class StatementForMetavariableSubstitution extends Substitution {
   }
 
   static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {
+    let statementForMetavariableSubstitution;
+
     const substitution = null;
 
-    let statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableNode, statementNode, substitution);
+    statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableNode, statementNode, substitution);
 
     const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
@@ -84,8 +86,18 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return statementForMetavariableSubstitution;
   }
 
-  static fromMetavariableNodeStatementNodeAndSubstitution(metavariableNode, statementNode, substitution) {
-    let statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableNode, statementNode, substitution);
+  static fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode) {
+    let statementForMetavariableSubstitution;
+
+    let substitution = null;
+
+    if (substitutionNode !== null) {
+      const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode);
+
+      substitution = termForVariableSubstitution; ///
+    }
+
+    statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableNode, statementNode, substitution);
 
     const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
@@ -117,11 +129,11 @@ export function matchStatementNode(statementNodeA, statementNodeB, substitution,
   let statementNodeMatches = false;
 
   const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionAndSubstitutions(substitution, substitutions),
-        intrinsic = termForVariableSubstitution.isIntrinsic(substitution);
+        transformed = termForVariableSubstitution.isTransformed(substitution);
 
   let substitutionsA = []; ///
 
-  if (intrinsic) {
+  if (transformed) {
     const substitutionA = termForVariableSubstitution;  ///
 
     substitutionsA.push(substitutionA);
@@ -136,7 +148,7 @@ export function matchStatementNode(statementNodeA, statementNodeB, substitution,
         });
 
   if (nonTerminalNodeVerified) {
-    if (!intrinsic) {
+    if (!transformed) {
       const substitutionB = termForVariableSubstitution,  ///
             substitutionsB = [
               substitutionB

@@ -25,7 +25,7 @@ class MetaLevelNodesVerifier extends NodesVerifier {
                 metastatementMetavariableNodeA = nodeA, ///
                 metastatementMetavariableNodeVerifiedAgainstStatementNode =
 
-                  this.verifyMetastatementMetavariableNodeAgainstTermNode(metastatementMetavariableNodeA, statementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
+                  this.verifyMetastatementMetavariableNodeAgainstStatementNode(metastatementMetavariableNodeA, statementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
 
           nonTerminalNodeVerified = metastatementMetavariableNodeVerifiedAgainstStatementNode;  ///
 
@@ -43,7 +43,7 @@ class MetaLevelNodesVerifier extends NodesVerifier {
     return nonTerminalNodeVerified;
   }
 
-  verifyMetastatementMetavariableNodeAgainstTermNode(metastatementMetavariableNodeA, statementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead) {
+  verifyMetastatementMetavariableNodeAgainstStatementNode(metastatementMetavariableNodeA, statementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead) {
     let metastatementMetavariableNodeVerifiedAgainstStatementNode;
 
     const localContextB = LocalContext.fromLocalMetaContext(localMetaContextB),

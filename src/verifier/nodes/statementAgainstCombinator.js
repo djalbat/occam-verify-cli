@@ -1,14 +1,13 @@
 "use strict";
 
 import NodesVerifier from "../../verifier/nodes";
-import termAgainstConstructorNodesVerifier from "../../verifier/nodes/termAgainstConstructor";
+import verifyArgumentAgainstArgument from "../../verify/argumentAgainstArgument";
+import verifyStatementAgainstMetaType from "../../verify/statementAgainstMetaType";
 
 import { nodeQuery } from "../../utilities/query";
 import { verifyNodes } from "../../utilities/verifier";
-import { STATEMENT_META_TYPE_NAME } from "../../metaTypeNames";
 
 const argumentNodeQuery = nodeQuery("/argument!"),
-      metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type!"),
       metaArgumentMetaTypeNodeQuery = nodeQuery("/metaArgument/metaType!"),
       metaArgumentStatementNodeQuery = nodeQuery("/metaArgument/statement!");
 
@@ -17,23 +16,6 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
     let nonTerminalNodeVerified;
 
     const nodeQueryMaps = [
-      {
-        nodeQueryA: argumentNodeQuery,
-        nodeQueryB: argumentNodeQuery,
-        verifyNodes: (nodeA, nodeB, localContext, verifyAhead) => {
-          let nonTerminalNodeVerified;
-
-          const argumentNodeA = nodeA,  ///
-                argumentNodeB = nodeB,  ///
-                argumentNodeVerifiedAgainstArgumentNode =
-
-                  this.verifyArgumentNodeAgainstArgumentNode(argumentNodeA, argumentNodeB, localContext, verifyAhead);
-
-          nonTerminalNodeVerified = argumentNodeVerifiedAgainstArgumentNode; ///
-
-          return nonTerminalNodeVerified;
-        }
-      },
       {
         nodeQueryA: metaArgumentStatementNodeQuery,
         nodeQueryB: metaArgumentMetaTypeNodeQuery,
@@ -47,6 +29,23 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
                   this.verifyMetaArgumentStatementAgainstMetaArgumentMetaType(metaArgumentStatementNodeA, metaArgumentMetaTypeNodeB, localContext, verifyAhead);
 
           nonTerminalNodeVerified = metaArgumentStatementVerifiedAgainstMetaArgumentMetaType; ///
+
+          return nonTerminalNodeVerified;
+        }
+      },
+      {
+        nodeQueryA: argumentNodeQuery,
+        nodeQueryB: argumentNodeQuery,
+        verifyNodes: (nodeA, nodeB, localContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const argumentNodeA = nodeA,  ///
+                argumentNodeB = nodeB,  ///
+                argumentNodeVerifiedAgainstArgumentNode =
+
+                  this.verifyArgumentNodeAgainstArgumentNode(argumentNodeA, argumentNodeB, localContext, verifyAhead);
+
+          nonTerminalNodeVerified = argumentNodeVerifiedAgainstArgumentNode; ///
 
           return nonTerminalNodeVerified;
         }
@@ -66,14 +65,10 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
     let metaArgumentStatementVerifiedAgainstMetaArgumentMetaType = false;
 
     const metaTypeNode = metaArgumentMetaTypeNodeB, ///
-          metaTypeTerminalNode = metaTypeTerminalNodeQuery(metaTypeNode),
-          content = metaTypeTerminalNode.getContent();
+          statementNode = metaArgumentStatementNodeA,  ///
+          statementVerifiedAgainstMetaType = verifyStatementAgainstMetaType(statementNode, metaTypeNode, localContext, verifyAhead);
 
-    if (content === STATEMENT_META_TYPE_NAME) {
-      const verifiedAhead = verifyAhead();
-
-      metaArgumentStatementVerifiedAgainstMetaArgumentMetaType = verifiedAhead; ///
-    }
+    metaArgumentStatementVerifiedAgainstMetaArgumentMetaType = statementVerifiedAgainstMetaType; ///
 
     return metaArgumentStatementVerifiedAgainstMetaArgumentMetaType;
   }
@@ -81,11 +76,9 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
   verifyArgumentNodeAgainstArgumentNode(argumentNodeA, argumentNodeB, localContext, verifyAhead) {
     let argumentNodeVerifiedAgainstArgumentNode;
 
-    const nonTerminalNodeA = argumentNodeA, ///
-          nonTerminalNodeB = argumentNodeB, ///
-          nonTerminalNodeVerified = termAgainstConstructorNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
+    const argumentVerifiedAgainstArgument = verifyArgumentAgainstArgument(argumentNodeA, argumentNodeB, localContext, verifyAhead);
 
-    argumentNodeVerifiedAgainstArgumentNode = nonTerminalNodeVerified; ///
+    argumentNodeVerifiedAgainstArgumentNode = argumentVerifiedAgainstArgument; ///
 
     return argumentNodeVerifiedAgainstArgumentNode;
   }

@@ -47,9 +47,9 @@ class IntrinsicLevelNodesVerifier extends NodesVerifier {
 
     const termNode = termNodeB, ///
           variableNode = termVariableNodeA, ///
-          variableVerifiedAgainstTerm = verifyVariableAgainstTerm(variableNode, termNode, substitutions, localContextA, localContextB, verifyAhead);
+          termVerifiedAgainstVariable = verifyVariableAgainstTerm(variableNode, termNode, substitutions, localContextA, localContextB, verifyAhead);
 
-    termVariableNodeVerifiedAgainstTermNode = variableVerifiedAgainstTerm;  ///
+    termVariableNodeVerifiedAgainstTermNode = termVerifiedAgainstVariable;  ///
 
     return termVariableNodeVerifiedAgainstTermNode;
   }

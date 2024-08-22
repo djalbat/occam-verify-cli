@@ -30,11 +30,11 @@ class IntrinsicLevelAgainstMetaLevelNodesVerifier extends NodesVerifier {
           const metastatementStatementNodeB = nodeB,  ///
                 metastatementMetavariableNodeA = nodeA, ///
                 metastatementSubstitutionNodeA = metastatementSubstitutionNodeQuery(nonTerminalNodeA),
-                metastatementMetavariableNodeVerifiedAgainstMetaArgumentStatementNode =
+                metastatementMetavariableNodeVerifiedAgainstMetastatementStatementNode =
 
                   this.verifyMetastatementMetavariableNodeAgainstMetastatementStatementNode(metastatementMetavariableNodeA, metastatementStatementNodeB, metastatementSubstitutionNodeA, substitutions, localContextA, localContextB, verifyAhead);
 
-          nonTerminalNodeVerified = metastatementMetavariableNodeVerifiedAgainstMetaArgumentStatementNode;  ///
+          nonTerminalNodeVerified = metastatementMetavariableNodeVerifiedAgainstMetastatementStatementNode;  ///
 
           return nonTerminalNodeVerified;
         }
@@ -66,11 +66,11 @@ class IntrinsicLevelAgainstMetaLevelNodesVerifier extends NodesVerifier {
           const statementNodeB = nodeB,  ///
                 metastatementMetavariableNodeA = nodeA, ///
                 metastatementSubstitutionNodeA = metastatementSubstitutionNodeQuery(nonTerminalNodeA),
-                metastatementMetavariableNodeVerifiedAgainstMetaArgumentStatementNode =
+                metastatementMetavariableNodeVerifiedAgainstStatementNode =
 
-              this.verifyMetastatementMetavariableNodeAgainstStatementNode(metastatementMetavariableNodeA, statementNodeB, metastatementSubstitutionNodeA, substitutions, localContextA, localContextB, verifyAhead);
+                  this.verifyMetastatementMetavariableNodeAgainstStatementNode(metastatementMetavariableNodeA, statementNodeB, metastatementSubstitutionNodeA, substitutions, localContextA, localContextB, verifyAhead);
 
-          nonTerminalNodeVerified = metastatementMetavariableNodeVerifiedAgainstMetaArgumentStatementNode;  ///
+          nonTerminalNodeVerified = metastatementMetavariableNodeVerifiedAgainstStatementNode;  ///
 
           return nonTerminalNodeVerified;
         }
@@ -100,11 +100,11 @@ class IntrinsicLevelAgainstMetaLevelNodesVerifier extends NodesVerifier {
 
           const statementNodeB = nodeB,  ///
                 metastatementNodeA = nodeA, ///
-                metastatementMetavariableNodeVerifiedAgainstMetaArgumentStatementNode =
+                metastatementNodeVerifiedAgainstStatementNode =
 
                   this.verifyMetastatementNodeAgainstStatementNode(metastatementNodeA, statementNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
-          nonTerminalNodeVerified = metastatementMetavariableNodeVerifiedAgainstMetaArgumentStatementNode;  ///
+          nonTerminalNodeVerified = metastatementNodeVerifiedAgainstStatementNode;  ///
 
           return nonTerminalNodeVerified;
         }
@@ -119,7 +119,7 @@ class IntrinsicLevelAgainstMetaLevelNodesVerifier extends NodesVerifier {
                 termVariableNodeA = nodeA,  ///
                 variableNodeVerifiedAgainstTermNode =
 
-                  this.verifyTermVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
+                  this.verifyVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
           nonTerminalNodeVerified = variableNodeVerifiedAgainstTermNode; ///
 
@@ -138,16 +138,16 @@ class IntrinsicLevelAgainstMetaLevelNodesVerifier extends NodesVerifier {
   }
 
   verifyMetastatementMetavariableNodeAgainstMetastatementStatementNode(metastatementMetavariableNodeA, metastatementStatementNodeB, metastatementSubstitutionNodeA, substitutions, localContextA, localContextB, verifyAhead) {
-    let metastatementMetavariableNodeVerifiedAgainstMetaArgumentStatementNode;
+    let metastatementMetavariableNodeVerifiedAgainstMetastatementStatementNode;
 
     const statementNode = metastatementStatementNodeB, ///
           metavariableNode = metastatementMetavariableNodeA,  ///
           substitutionNode = metastatementSubstitutionNodeA,  ///
           metavariableVerifiedAgainstStatement = verifyMetavariableAgainstStatement(metavariableNode, statementNode, substitutionNode, substitutions, localContextA, localContextB, verifyAhead)
 
-    metastatementMetavariableNodeVerifiedAgainstMetaArgumentStatementNode = metavariableVerifiedAgainstStatement; ///
+    metastatementMetavariableNodeVerifiedAgainstMetastatementStatementNode = metavariableVerifiedAgainstStatement; ///
 
-    return metastatementMetavariableNodeVerifiedAgainstMetaArgumentStatementNode;
+    return metastatementMetavariableNodeVerifiedAgainstMetastatementStatementNode;
   }
 
   verifyMetastatementMetavariableNodeAgainstMetaArgumentStatementNode(metastatementMetavariableNodeA, metaArgumentStatementNodeB, metastatementSubstitutionNodeA, substitutions, localContextA, localContextB, verifyAhead) {
@@ -204,7 +204,7 @@ class IntrinsicLevelAgainstMetaLevelNodesVerifier extends NodesVerifier {
     return metastatementNodeVerifiedAgainstStatementNode;
   }
 
-  verifyTermVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
+  verifyVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
     let variableNodeVerifiedAgainstTermNode;
 
     const termNode = termNodeB, ///

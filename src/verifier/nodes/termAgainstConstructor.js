@@ -1,8 +1,8 @@
 "use strict";
 
 import NodesVerifier from "../../verifier/nodes";
+import verifyTermAgainstType from "../../verify/termAgainstType";
 
-import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
 import { verifyNodes } from "../../utilities/verifier";
 
@@ -22,11 +22,11 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
 
           const termNodeA = nodeA,  ///
                 typeNodeB = nodeB,  ///
-                termVerifiedAgainstType =
+                termNodeVerifiedAgainstTypeNode =
 
-              this.verifyTermNodeAgainstTypeNode(termNodeA, typeNodeB, localContext, verifyAhead);
+                  this.verifyTermNodeAgainstTypeNode(termNodeA, typeNodeB, localContext, verifyAhead);
 
-          nonTerminalNodeVerified = termVerifiedAgainstType;  ///
+          nonTerminalNodeVerified = termNodeVerifiedAgainstTypeNode;  ///
 
           return nonTerminalNodeVerified;
         }
@@ -43,31 +43,16 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
   }
 
   verifyTermNodeAgainstTypeNode(termNodeA, typeNodeB, localContext, verifyAhead) {
-    let termVerifiedAgainstType;
+    let termNodeVerifiedAgainstTypeNode;
 
     const { verifyTerm } = termAgainstConstructorNodesVerifier,
-          terms = [],
           termNode = termNodeA, ///
-          termVerified = verifyTerm(termNode, terms, localContext, () => {
-            let verifiedAhead = false;
+          typeNode = typeNodeB, ///
+          typeVerifiedAgainstTerm = verifyTermAgainstType(termNode, typeNode, localContext, verifyAhead, verifyTerm);
 
-            const firstTerm = first(terms),
-                  term = firstTerm, ///
-                  termType = term.getType(),
-                  typeNode = typeNodeB, ///
-                  type = localContext.findTypeByTypeNode(typeNode),
-                  termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
+    termNodeVerifiedAgainstTypeNode = typeVerifiedAgainstTerm; ///
 
-            if (termTypeEqualToOrSubTypeOfType) {
-              verifiedAhead = verifyAhead();
-            }
-
-            return verifiedAhead;
-          });
-
-    termVerifiedAgainstType = termVerified; ///
-
-    return termVerifiedAgainstType;
+    return termNodeVerifiedAgainstTypeNode;
   }
 }
 

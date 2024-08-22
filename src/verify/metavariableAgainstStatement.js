@@ -22,8 +22,8 @@ export default function verifyMetavariableAgainstStatement(metavariableNode, sta
     if (substitutionNode !== null) {
       const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode),
             substitution = termForVariableSubstitution, ///
-            statementNodeB = statementNode, ///
             statementNodeA = substitutionStatementNode, ///
+            statementNodeB = statementNode, ///
             statementNodeMatches = matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
 
       if (statementNodeMatches) {
@@ -32,29 +32,29 @@ export default function verifyMetavariableAgainstStatement(metavariableNode, sta
         metavariableVerifiedAgainstStatement = verifiedAhead;  ///
       }
     } else {
-      const statementNodeMatches = substitution.matchStatementNode(statementNode);
+      const substitutionSubstitution = substitution.getSubstitution();
 
-      if (statementNodeMatches) {
-        const verifiedAhead = verifyAhead();
+      if (substitutionSubstitution !== null) {
+        const substitution = substitutionSubstitution,
+              statementNodeA = substitutionStatementNode, ///
+              statementNodeB = statementNode, ///
+              statementNodeMatches = matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
 
-        metavariableVerifiedAgainstStatement = verifiedAhead;  ///
+      } else {
+        const statementNodeMatches = substitution.matchStatementNode(statementNode);
+
+        if (statementNodeMatches) {
+          const verifiedAhead = verifyAhead();
+
+          metavariableVerifiedAgainstStatement = verifiedAhead;  ///
+        }
       }
     }
   } else {
-    let statementForMetavariableSubstitution;
-
-    if (substitutionNode !== null) {
-      const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode),
-            substitution = termForVariableSubstitution; ///
-
-      statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitution(metavariableNode, statementNode, substitution);
-    } else {
-      statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode);
-    }
-
-    const substitution = statementForMetavariableSubstitution;  ///
-
     let verifiedAhead;
+
+    const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
+          substitution = statementForMetavariableSubstitution;  ///
 
     substitutions.push(substitution);
 
