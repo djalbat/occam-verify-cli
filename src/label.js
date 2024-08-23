@@ -1,8 +1,7 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { labelNameFromLabelNode } from "./utilities/name";
-import { labelNodeFromLabelString } from "./utilities/node";
+import { metavariableNodeFromMetavariableString } from "./utilities/node";
 
 export default class Label {
   constructor(node) {
@@ -32,19 +31,19 @@ export default class Label {
     return json;
   }
 
-  static fromLabelNode(labelNode) {
-    const node = labelNode, ///
+  static fromMetavariableNode(metavariableNode) {
+    const node = metavariableNode, ///
           variable = new Label(node);
 
     return variable;
   }
 
   static fromJSONAndFileContext(json, fileContext) {
-    const labelString = json, ///
+    const metavariableString = json, ///
           lexer  = fileContext.getLexer(),
           parser = fileContext.getParser(),
-          labelNode = labelNodeFromLabelString(labelString, lexer, parser),
-          node = labelNode, ///
+          metavariableNode = metavariableNodeFromMetavariableString(metavariableString, lexer, parser),
+          node = metavariableNode, ///
           label = new Label(node);
 
     return label;

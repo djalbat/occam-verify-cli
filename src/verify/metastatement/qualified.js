@@ -2,8 +2,8 @@
 
 import { nodeQuery } from "../../utilities/query";
 
-const labelNodeQuery = nodeQuery("/qualifiedMetastatement/qualification!/label!"),
-      metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
+const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!"),
+      referenceMetavariableNodeQuery = nodeQuery("/qualifiedMetastatement/reference!/metavariable!");
 
 export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, assignments, derived, localMetaContext) {
   let qualifiedMetastatementVerified = false;
@@ -16,8 +16,9 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
     localMetaContext.trace(`Verifying the '${metastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
 
-    const labelNode = labelNodeQuery(qualifiedMetastatementNode),
-          rule = localMetaContext.findRuleByLabelNode(labelNode);
+    const referenceMetavariableNode = referenceMetavariableNodeQuery(qualifiedMetastatementNode),
+          labelMetavariableNode = referenceMetavariableNode,  ///
+          rule = localMetaContext.findRuleByLabelMetavariableNode(labelMetavariableNode);
 
     if (rule !== null) {
       const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, metastatementLocalMetaContext);

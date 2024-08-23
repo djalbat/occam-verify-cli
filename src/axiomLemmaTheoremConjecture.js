@@ -32,19 +32,6 @@ export default class AxiomLemmaTheoremConjecture {
     return this.localContext;
   }
 
-  matchLabelNode(labelNode) {
-    const labelNodeMatches = this.labels.some((label) => {
-      const node = labelNode, ///
-            labelMatchesNode = label.matchNode(node);
-
-      if (labelMatchesNode) {
-        return true;
-      }
-    });
-
-    return labelNodeMatches;
-  }
-
   matchStatement(statementNode, statementLocalContext) {
     let statementNatches;
 
@@ -77,6 +64,19 @@ export default class AxiomLemmaTheoremConjecture {
     }
 
     return statementNatches;
+  }
+
+  matchLabelMetavariableNode(labelMetavariableNode) {
+    const labelMetavariableNodeMatches = this.labels.some((label) => {
+      const node = labelMetavariableNode, ///
+            labelMatchesNode = label.matchNode(node);
+
+      if (labelMatchesNode) {
+        return true;
+      }
+    });
+
+    return labelMetavariableNodeMatches;
   }
 
   toJSON(tokens) {

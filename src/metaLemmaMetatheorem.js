@@ -32,19 +32,6 @@ export default class MetaLemmaMetatheorem {
     return this.localContext;
   }
 
-  matchLabelNode(labelNode) {
-    const labelNodeMatches = this.labels.some((label) => {
-      const node = labelNode, ///
-            labelMatchesNode = label.matchNode(node);
-
-      if (labelMatchesNode) {
-        return true;
-      }
-    });
-
-    return labelNodeMatches;
-  }
-
   matchMetastatement(metastatementNode, metastatementLocalContext) {
     let metastatementNatches;
 
@@ -77,6 +64,19 @@ export default class MetaLemmaMetatheorem {
     }
 
     return metastatementNatches;
+  }
+
+  matchLabelMetavariableNode(labelMetavariableNode) {
+    const labelMetavariableNodeMatches = this.labels.some((label) => {
+      const node = labelMetavariableNode, ///
+            labelMatchesNode = label.matchNode(node);
+
+      if (labelMatchesNode) {
+        return true;
+      }
+    });
+
+    return labelMetavariableNodeMatches;
   }
 
   toJSON(tokens) {

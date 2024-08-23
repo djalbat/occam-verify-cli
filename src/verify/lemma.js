@@ -12,15 +12,15 @@ import { EMPTY_STRING } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const proofNodeQuery = nodeQuery("/lemma/proof!"),
-      labelNodesQuery = nodesQuery("/lemma//reference/label"),
+      labelsNodeQuery = nodeQuery("/lemma/labels!"),
       consequentNodeQuery = nodeQuery("/lemma/consequent!"),
       suppositionsNodeQuery = nodesQuery("/lemma/supposition");
 
 export default function verifyLemma(lemmaNode, fileContext) {
   let lemmaVerified = false;
 
-  const labelNodes = labelNodesQuery(lemmaNode),
-        labelsString = fileContext.nodesAsString(labelNodes),
+  const labelsNode = labelsNodeQuery(lemmaNode),
+        labelsString = fileContext.nodeAsString(labelsNode),
         localContext = LocalContext.fromFileContext(fileContext);
 
   (labelsString === EMPTY_STRING) ?
@@ -28,7 +28,7 @@ export default function verifyLemma(lemmaNode, fileContext) {
       fileContext.trace(`Verifying the '${labelsString}' lemma...`, lemmaNode);
 
   const labels = [],
-        labelsVerified = verifyLabels(labelNodes, labels, fileContext);
+        labelsVerified = verifyLabels(labelsNode, labels, fileContext);
 
   if (labelsVerified) {
     const suppositions = [],

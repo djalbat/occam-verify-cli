@@ -9,11 +9,11 @@ const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities;
 const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 
-export function labelTokensFromLabelString(labelString, lexer) {
-  const labelContent = `${labelString}`,
-        labelTokens = tokensFromContentAndLexer(labelContent, lexer);
+export function metavariableTokensFromMetavariableString(metavariableString, lexer) {
+  const metavariableContent = `${metavariableString}`,
+        metavariableTokens = tokensFromContentAndLexer(metavariableContent, lexer);
 
-  return labelTokens;
+  return metavariableTokens;
 }
 
 export function constructorDeclarationTokensFromTermString(termString, lexer) {

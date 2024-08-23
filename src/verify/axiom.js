@@ -9,21 +9,21 @@ import verifySuppositions from "../verify/suppositions";
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const labelNodesQuery = nodesQuery("/axiom//reference/label"),
+const labelsNodeQuery = nodeQuery("/axiom/labels!"),
       consequentNodeQuery = nodeQuery("/axiom/consequent!"),
       suppositionsNodeQuery = nodesQuery("/axiom/supposition");
 
 export default function verifyAxiom(axiomNode, fileContext) {
   let axiomVerified = false;
 
-  const labelNodes = labelNodesQuery(axiomNode),
-        labelsString = fileContext.nodesAsString(labelNodes),
+  const labelsNode = labelsNodeQuery(axiomNode),
+        labelsString = fileContext.nodeAsString(labelsNode),
         localContext = LocalContext.fromFileContext(fileContext);
 
   fileContext.trace(`Verifying the '${labelsString}' axiom...`, axiomNode);
 
   const labels = [],
-        labelsVerified = verifyLabels(labelNodes, labels, fileContext);
+        labelsVerified = verifyLabels(labelsNode, labels, fileContext);
 
   if (labelsVerified) {
     const suppositions = [],

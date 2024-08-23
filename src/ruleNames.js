@@ -1,7 +1,7 @@
 "use strict";
 
-export const LABEL_RULE_NAME = "label";
 export const SUBPROOF_RULE_NAME = "subproof";
+export const METAVARIABLE_RULE_NAME = "metavariable";
 export const RULE_SUBPROOF_RULE_NAME = "ruleSubproof";
 export const META_SUBPROOF_RULE_NAME = "metaSubproof";
 export const META_ARGUMENT_RULE_NAME = "metaArgument";

@@ -3,8 +3,8 @@
 import { nodeQuery } from "../utilities/query";
 
 const typeTerminalNodeQuery = nodeQuery("/type/@type"),
-      metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type"),
-      labelNameTerminalNodeQuery = nodeQuery("/label/@name");
+      nameTerminalNodeQuery = nodeQuery("/metavariable/@name"),
+      metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type");
 
 export function typeNameFromTypeNode(typeNode) {
   let typeName = null;
@@ -19,12 +19,12 @@ export function typeNameFromTypeNode(typeNode) {
   return typeName;
 }
 
-export function labelNameFromLabelNode(labelNode) {
-  const labelNameTerminalNode = labelNameTerminalNodeQuery(labelNode),
-        labelNameTerminalNodeContent = labelNameTerminalNode.getContent(),
-        labelName = labelNameTerminalNodeContent; ///
+export function nameFromMetavariableNode(metavariableNode) {
+  const nameTerminalNode = nameTerminalNodeQuery(metavariableNode),
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        name = nameTerminalNodeContent; ///
 
-  return labelName;
+  return name;
 }
 
 export function metaTypeNameFromMetaTypeNode(metaTypeNode) {

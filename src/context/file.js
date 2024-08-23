@@ -115,6 +115,12 @@ export default class FileContext {
       push(labels, conjectureLabels);
     });
 
+    this.metatheorems.forEach((metatheorem) => {
+      const metatheoremLabels = metatheorem.getLabels();
+
+      push(labels, metatheoremLabels);
+    });
+
     if (includeRelease) {
       const releaseContextLabels = this.releaseContext.getLabels();
 
@@ -308,85 +314,6 @@ export default class FileContext {
     return type;
   }
 
-  findLabelByLabelNode(labelNode) {
-    const name = labelNode,  ///
-          labels = this.getLabels(),
-          label = labels.find((label) => {
-            const matches = label.matchNode(name);
-
-            if (matches) {
-              return true;
-            }
-          }) || null;
-
-    return label;
-  }
-
-  findRuleByLabelNode(labelNode) {
-    const rules = this.getRules(),
-          rule = rules.find((rule) => {
-            const ruleMatchesLabelNode = rule.matchLabelNode(labelNode);
-
-            if (ruleMatchesLabelNode) {
-              return true;
-            }
-          }) || null;
-
-    return rule;
-  }
-
-  findAxiomByLabelNode(labelNode) {
-    const axioms = this.getAxioms(),
-          axiom = axioms.find((axiom) => {
-            const axiomMatchesLabelNode = axiom.matchLabelNode(labelNode);
-
-            if (axiomMatchesLabelNode) {
-              return true;
-            }
-          }) || null;
-
-    return axiom;
-  }
-
-  findLemmaByLabelNode(labelNode) {
-    const lemmas = this.getLemmas(),
-          lemma = lemmas.find((lemma) => {
-            const lemmaMatchesLabelNode = lemma.matchLabelNode(labelNode);
-
-            if (lemmaMatchesLabelNode) {
-              return true;
-            }
-          }) || null;
-
-    return lemma;
-  }
-
-  findTheoremByLabelNode(labelNode) {
-    const theorems = this.getTheorems(),
-          theorem = theorems.find((theorem) => {
-            const theoremMatchesLabelNode = theorem.matchLabelNode(labelNode);
-
-            if (theoremMatchesLabelNode) {
-              return true;
-            }
-          }) || null;
-
-    return theorem;
-  }
-
-  findMetaLemmaByLabelNode(labelNode) {
-    const metaLemmas = this.getMetaLemmas(),
-          metaLemma = metaLemmas.find((metaLemma) => {
-            const metaLemmaMatchesLabelNode = metaLemma.matchLabelNode(labelNode);
-
-            if (metaLemmaMatchesLabelNode) {
-              return true;
-            }
-          }) || null;
-
-    return metaLemma;
-  }
-
   findVariableByVariableNode(variableNode) {
     const node = variableNode,  ///
           variables = this.getVariables(),
@@ -414,19 +341,6 @@ export default class FileContext {
     return metaType;
   }
 
-  findConjectureByLabelNode(labelNode) {
-    const conjectures = this.getConjectures(),
-          conjecture = conjectures.find((conjecture) => {
-            const conjectureMatchesLabelNode = conjecture.matchLabelNode(labelNode);
-
-            if (conjectureMatchesLabelNode) {
-              return true;
-            }
-          }) || null;
-
-    return conjecture;
-  }
-
   findMetavariableByMetavariableNode(metavariableNode) {
     const node = metavariableNode,  ///
           metavariables = this.getMetavariables(),
@@ -441,12 +355,104 @@ export default class FileContext {
     return metavariable;
   }
 
-  findMetatheoremByLabelNode(labelNode) {
+  findLabelByLabelMetavariableNode(labelMetavariableNode) {
+    const name = labelMetavariableNode,  ///
+          labels = this.getLabels(),
+          label = labels.find((label) => {
+            const matches = label.matchNode(name);
+
+            if (matches) {
+              return true;
+            }
+          }) || null;
+
+    return label;
+  }
+
+  findRuleByLabelMetavariableNode(labelMetavariableNode) {
+    const rules = this.getRules(),
+          rule = rules.find((rule) => {
+            const ruleMatchesLabelMetavariableNode = rule.matchLabelMetavariableNode(labelMetavariableNode);
+
+            if (ruleMatchesLabelMetavariableNode) {
+              return true;
+            }
+          }) || null;
+
+    return rule;
+  }
+
+  findAxiomByLabelMetavariableNode(labelMetavariableNode) {
+    const axioms = this.getAxioms(),
+          axiom = axioms.find((axiom) => {
+            const axiomMatchesLabelMetavariableNode = axiom.matchLabelMetavariableNode(labelMetavariableNode);
+
+            if (axiomMatchesLabelMetavariableNode) {
+              return true;
+            }
+          }) || null;
+
+    return axiom;
+  }
+
+  findLemmaByLabelMetavariableNode(labelMetavariableNode) {
+    const lemmas = this.getLemmas(),
+          lemma = lemmas.find((lemma) => {
+            const lemmaMatchesLabelMetavariableNode = lemma.matchLabelMetavariableNode(labelMetavariableNode);
+
+            if (lemmaMatchesLabelMetavariableNode) {
+              return true;
+            }
+          }) || null;
+
+    return lemma;
+  }
+
+  findTheoremByLabelMetavariableNode(labelMetavariableNode) {
+    const theorems = this.getTheorems(),
+          theorem = theorems.find((theorem) => {
+            const theoremMatchesLabelMetavariableNode = theorem.matchLabelMetavariableNode(labelMetavariableNode);
+
+            if (theoremMatchesLabelMetavariableNode) {
+              return true;
+            }
+          }) || null;
+
+    return theorem;
+  }
+
+  findMetaLemmaByLabelMetavariableNode(labelMetavariableNode) {
+    const metaLemmas = this.getMetaLemmas(),
+          metaLemma = metaLemmas.find((metaLemma) => {
+            const metaLemmaMatchesLabelMetavariableNode = metaLemma.matchLabelMetavariableNode(labelMetavariableNode);
+
+            if (metaLemmaMatchesLabelMetavariableNode) {
+              return true;
+            }
+          }) || null;
+
+    return metaLemma;
+  }
+
+  findConjectureByLabelMetavariableNode(labelMetavariableNode) {
+    const conjectures = this.getConjectures(),
+          conjecture = conjectures.find((conjecture) => {
+            const conjectureMatchesLabelMetavariableNode = conjecture.matchLabelMetavariableNode(labelMetavariableNode);
+
+            if (conjectureMatchesLabelMetavariableNode) {
+              return true;
+            }
+          }) || null;
+
+    return conjecture;
+  }
+
+  findMetatheoremByLabelMetavariableNode(labelMetavariableNode) {
     const metatheorems = this.getMetatheorems(),
           metatheorem = metatheorems.find((metatheorem) => {
-            const metatheoremMatchesLabelNode = metatheorem.matchLabelNode(labelNode);
+            const metatheoremMatchesLabelMetavariableNode = metatheorem.matchLabelMetavariableNode(labelMetavariableNode);
 
-            if (metatheoremMatchesLabelNode) {
+            if (metatheoremMatchesLabelMetavariableNode) {
               return true;
             }
           }) || null;
@@ -468,18 +474,18 @@ export default class FileContext {
     return typePresent;
   }
 
-  isLabelPresentByLabelNode(labelNode) {
-    const label = this.findLabelByLabelNode(labelNode),
-          labelPresent = (label !== null);
-
-    return labelPresent;
-  }
-
   isVariablePresentByVariableNode(variableNode) {
     const variable = this.findVariableByVariableNode(variableNode),
           variablePresent = (variable !== null);
 
     return variablePresent;
+  }
+
+  isLabelPresentByLabelMetavariableNode(labelMetavariableNode) {
+    const label = this.findLabelByLabelMetavariableNode(labelMetavariableNode),
+          labelPresent = (label !== null);
+
+    return labelPresent;
   }
 
   isMetavariablePresentByMetavariableNode(metavariableNode) {
@@ -727,11 +733,11 @@ export default class FileContext {
           lemmasJSON = lemmas,  ///
           theoremsJSON = theorems,  ///
           variablesJSON = variables,  ///
-          metaLemmasJSON = metaLemmas || [],  ///
+          metaLemmasJSON = metaLemmas,  ///
           conjecturesJSON = conjectures,  ///
           combinatorsJSON = combinators,  ///
           constructorsJSON = constructors,  ///
-          metatheoremsJSON = metatheorems || [],  ///
+          metatheoremsJSON = metatheorems,  ///
           metavariablesJSON = metavariables;  ///
 
     typesJSON.forEach((typeJSON) => {
