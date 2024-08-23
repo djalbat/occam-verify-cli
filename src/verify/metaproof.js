@@ -1,22 +1,19 @@
 "use strict";
 
-import LocalContext from "../context/local";
 import verifyMetaDerivation from "../verify/metaDerivation";
 
 import { nodeQuery } from "../utilities/query";
 
 const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!");
 
-export default function verifyMetaproof(metaproofNode, conclusion, localContext) {
+export default function verifyMetaproof(metaproofNode, conclusion, localMetaproof) {
   let metaproofVerified = false;
 
-  localContext = LocalContext.fromLocalContext(localContext); ///
-
   const metaDerivationNode = metaDerivationNodeQuery(metaproofNode),
-        metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, localContext);
+        metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, localMetaproof);
 
   if (metaDerivationVerified) {
-    const lastMetaproofStep = localContext.getLastMetaproofStep();
+    const lastMetaproofStep = localMetaproof.getLastMetaproofStep();
 
     if (lastMetaproofStep !== null) {
       const metaproofStep = lastMetaproofStep, ///

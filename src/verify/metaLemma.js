@@ -2,7 +2,7 @@
 
 import MetaLemma from "../metaLemma";
 import verifyLabels from "../verify/labels";
-import verifyMetaProof from "../verify/metaproof";
+import verifyMetaproof from "../verify/metaproof";
 import LocalMetaContext from "../context/localMeta";
 import verifyMetaConsequent from "../verify/metaConsequent";
 import verifyMetaSuppositions from "../verify/metaSuppositions";
@@ -44,7 +44,7 @@ export default function verifyMetaLemma(metaLemmaNode, fileContext) {
         const metaproofNode = metaproofNodeQuery(metaLemmaNode),
               firstMetaConsequent = first(metaConsequents),
               metaConsequent = firstMetaConsequent, ///
-              metaproofVerified = verifyMetaProof(metaproofNode, metaConsequent, localMetaContext);
+              metaproofVerified = verifyMetaproof(metaproofNode, metaConsequent, localMetaContext);
 
         if (metaproofVerified) {
           const metaLemma = MetaLemma.fromLabelsMetaSuppositionsMetaConsequentAndLocalMetaContext(labels, metaSuppositions, metaConsequent, localMetaContext);

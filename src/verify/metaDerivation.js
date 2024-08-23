@@ -1,7 +1,7 @@
 "use strict";
 
-import LocalContext from "../context/local";
 import MetaproofStep from "../step/metaproof";
+import LocalMetaContext from "../context/localMeta";
 import verifyMetaSuppositions from "../verify/metaSuppositions";
 import verifyQualifiedMetastatement from "../verify/metastatement/qualified";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
@@ -15,13 +15,13 @@ const childNodesQuery = nodesQuery("/metaDerivation|metaSubDerivation/*"),
       metaSuppositionNodesQuery = nodesQuery("/metaSubproof/metaSupposition"),
       metaSubDerivationNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation");
 
-export default function verifyMetaDerivation(metaDerivationNode, localContext) {
+export default function verifyMetaDerivation(metaDerivationNode, localMetaContext) {
   let metaDerivationVerified;
 
   const childNodes = childNodesQuery(metaDerivationNode);
 
   metaDerivationVerified = childNodes.every((childNode) => {
-    const childVerified = verifyChild(childNode, localContext);
+    const childVerified = verifyChild(childNode, localMetaContext);
 
     if (childVerified) {
       return true;
@@ -31,13 +31,13 @@ export default function verifyMetaDerivation(metaDerivationNode, localContext) {
   return metaDerivationVerified;
 }
 
-function verifyMetaSubDerivation(metaSubDerivationNode, localContext) {
+function verifyMetaSubDerivation(metaSubDerivationNode, localMetaContext) {
   let metaSubDerivationVerified;
 
   const childNodes = childNodesQuery(metaSubDerivationNode);
 
   metaSubDerivationVerified = childNodes.every((childNode) => {
-    const childVerified = verifyChild(childNode, localContext);
+    const childVerified = verifyChild(childNode, localMetaContext);
 
     if (childVerified) {
       return true;
@@ -47,18 +47,18 @@ function verifyMetaSubDerivation(metaSubDerivationNode, localContext) {
   return metaSubDerivationVerified;
 }
 
-function verifyMetaSubproof(metaSubproofNode, localContext) {
+function verifyMetaSubproof(metaSubproofNode, localMetaContext) {
   let metaSubproofVerified = false;
 
-  localContext = LocalContext.fromLocalContext(localContext); ///
+  localMetaContext = LocalMetaContext.fromLocalMetaContext(localMetaContext); ///
 
   const metaSuppositions = [],
         metaSuppositionNodes = metaSuppositionNodesQuery(metaSubproofNode),
-        metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, localContext);
+        metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, localMetaContext);
 
   if (metaSuppositionsVerified) {
     const metaSubDerivationNode = metaSubDerivationNodeQuery(metaSubproofNode),
-          metaSubDerivationVerified = verifyMetaSubDerivation(metaSubDerivationNode, localContext);
+          metaSubDerivationVerified = verifyMetaSubDerivation(metaSubDerivationNode, localMetaContext);
 
     if (metaSubDerivationVerified) {
       metaSubproofVerified = true;
@@ -68,7 +68,7 @@ function verifyMetaSubproof(metaSubproofNode, localContext) {
   return metaSubproofVerified;
 }
 
-function verifyChild(childNode, localContext) {
+function verifyChild(childNode, localMetaContext) {
   let childVerified = false;
 
   const childNodeRuleName = childNode.getRuleName();
@@ -79,12 +79,12 @@ function verifyChild(childNode, localContext) {
 
       const metaSubproofNode = childNode;  ///
 
-      metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, localContext);
+      metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, localMetaContext);
 
       if (metaSubproofVerified) {
         const metaproofStep = MetaproofStep.fromMetaSubproofNode(metaSubproofNode);
 
-        localContext.addMetaproofStep(metaproofStep);
+        localMetaContext.addMetaproofStep(metaproofStep);
 
         childVerified = true;
       }
@@ -99,10 +99,10 @@ function verifyChild(childNode, localContext) {
             assignments = [],
             qualifiedMetastatementNode = childNode;  ///
 
-      qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, assignments, derived, localContext);
+      qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, assignments, derived, localMetaContext);
 
       if (qualifiedMetastatementVerified) {
-        const assignmentAssigned = assignAssignment(assignments, localContext);
+        const assignmentAssigned = assignAssignment(assignments, localMetaContext);
 
         qualifiedMetastatementVerified = assignmentAssigned; ///
       }
@@ -111,7 +111,7 @@ function verifyChild(childNode, localContext) {
         const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
               metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
 
-        localContext.addMetaproofStep(metaproofStep);
+        localMetaContext.addMetaproofStep(metaproofStep);
 
         childVerified = true; ///
       }
@@ -126,10 +126,10 @@ function verifyChild(childNode, localContext) {
             assignments = [],
             unqualifiedMetastatementNode = childNode;  ///
 
-      unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localContext);
+      unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
 
       if (unqualifiedMetastatementVerified) {
-        const assignmentAssigned = assignAssignment(assignments, localContext);
+        const assignmentAssigned = assignAssignment(assignments, localMetaContext);
 
         unqualifiedMetastatementVerified = assignmentAssigned;  ///
       }
@@ -138,7 +138,7 @@ function verifyChild(childNode, localContext) {
         const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
               metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
 
-        localContext.addMetaproofStep(metaproofStep);
+        localMetaContext.addMetaproofStep(metaproofStep);
 
         childVerified = true;
       }
