@@ -28,9 +28,13 @@ function findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(t
 
 function findTypeByTypeNode(labelMetavariableNode) { return this.context.findTypeByTypeNode(labelMetavariableNode); }
 
+function findMetavariableByName(name) { return this.context.findMetavariableByName(name); }
+
 function isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
 function isTypePresentByTypeNode(typeNode) { return this.context.isTypePresentByTypeNode(typeNode); }
+
+function isMetavariablePresentByName(name) { return this.context.isMetavariablePresentByName(name); }
 
 function findLabelByLabelMetavariableNode(labelMetavariableNode) { return this.context.findLabelByLabelMetavariableNode(labelMetavariableNode); }
 
@@ -65,8 +69,10 @@ const contextMixins = {
   getConstructors,
   findTypeByTypeName,
   findTypeByTypeNode,
+  findMetavariableByName,
   isTypePresentByTypeName,
   isTypePresentByTypeNode,
+  isMetavariablePresentByName,
   findLabelByLabelMetavariableNode,
   findRuleByLabelMetavariableNode,
   findAxiomByLabelMetavariableNode,

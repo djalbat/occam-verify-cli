@@ -3,9 +3,12 @@
 import Metavariable from "../metavariable";
 import MetavariableAssignment from "../assignment/metavariable";
 
+import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
+import { nameFromMetavariableNode } from "../utilities/name";
 
-const typeNodeQuery = nodeQuery("/argument/type"),
+const termNodeQuery = nodeQuery("/argument/term"),
+      typeNodeQuery = nodeQuery("/argument/type"),
       argumentNodeQuery = nodeQuery("/metavariable/argument!");
 
 export default function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
@@ -15,17 +18,38 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
 
   fileContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
-  const metavariablePresent = fileContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+  const name = nameFromMetavariableNode(metavariableNode),
+        metavariablePresent = fileContext.isMetavariablePresentByName(name);
 
   if (metavariablePresent) {
     fileContext.debug(`The metavariable '${metavariableString}' is already present.`, metavariableNode);
   } else {
-    const argumentNode = argumentNodeQuery(metavariableNode),
-          argumentVerified = verifyArgument(metavariableNode, argumentNode, fileContext);
+    const termTypes = [],
+          metaTypes = [],
+          argumentNode = argumentNodeQuery(metavariableNode),
+          argumentVerified = verifyArgument(argumentNode, termTypes, fileContext),
+          metaTypeVerified = verifyMetaType(metaTypeNode, metaTypes, fileContext);
 
-    if (argumentVerified) {
-      const metaType = fileContext.findMetaTypeByMetaTypeNode(metaTypeNode),
-            metavariable = Metavariable.fromMetavariableNodeAndMetaType(metavariableNode, metaType),
+    if (argumentVerified && metaTypeVerified) {
+      let termType,
+          metaType;
+
+      const firstMetaType = first(metaTypes);
+
+      metaType = firstMetaType; ///
+
+      const termTypesLength = termTypes.length;
+
+      if (termTypesLength === 0) {
+        termType = null;
+      } else {
+        const firstTermType = first(termTypes);
+
+        termType = firstTermType; ///
+      }
+
+      const node = metavariableNode,  ///
+            metavariable = Metavariable.fromNodeNameTermTypeAndMetaType(node, name, termType, metaType),
             metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
             metavariableAssigned = metavariableAssignment.assign(fileContext);
 
@@ -64,27 +88,51 @@ export function verifyStandaloneMetavariable(metavariableNode, localMetaContext,
   return standaloneMetavariableVerified;
 }
 
-function verifyArgument(metavariableNode, argumentNode, fileContext) {
+function verifyArgument(argumentNode, termTypes, fileContext) {
   let argumentVerified = false;
 
   if (argumentNode === null) {
     argumentVerified = true;
   } else {
+    const termNode = termNodeQuery(argumentNode);
+
+    if (termNode === null) {
+
+    } else {
+      const termString = fileContext.nodeAsString(termNode);
+
+      fileContext.debug(`The '${termString}' term was found when a type should have been present.`, termNode);
+    }
     const typeNode = typeNodeQuery(argumentNode);
 
     if (typeNode !== null) {
       const type = fileContext.findTypeByTypeNode(typeNode);
 
       if (type !== null) {
+        const termType = type;  ///
+
+        termTypes.push(termType);
+
         argumentVerified = true;
       } else {
-        const typeString = fileContext.nodeAsString(typeNode),
-              metavariableString = fileContext.nodeAsString(metavariableNode);
+        const typeString = fileContext.nodeAsString(typeNode);
 
-        fileContext.debug(`The '${metavariableString}' metavariable's '${typeString}' type is not present.`, metavariableNode);
+        fileContext.debug(`The '${typeString}' type is not present.`, typeNode);
       }
     }
   }
 
   return argumentVerified;
+}
+
+function verifyMetaType(metaTypeNode, metaTypes, fileContext) {
+  let metaTypeVerified;
+
+  const metaType = fileContext.findMetaTypeByMetaTypeNode(metaTypeNode);
+
+  metaTypes.push(metaType);
+
+  metaTypeVerified = true;
+
+  return metaTypeVerified;
 }

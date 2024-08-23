@@ -314,6 +314,19 @@ export default class FileContext {
     return type;
   }
 
+  findMetavariableByName(name) {
+    const metavariables = this.getMetavariables(),
+          metavariable = metavariables.find((metavariable) => {
+        const matches = metavariable.matchName(name);
+
+        if (matches) {
+          return true;
+        }
+      }) || null;
+
+    return metavariable;
+  }
+
   findVariableByVariableNode(variableNode) {
     const node = variableNode,  ///
           variables = this.getVariables(),
@@ -474,6 +487,13 @@ export default class FileContext {
     return typePresent;
   }
 
+  isMetavariablePresentByName(name) {
+    const metavariable = this.findMetavariableByName(name),
+          metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
+  }
+
   isVariablePresentByVariableNode(variableNode) {
     const variable = this.findVariableByVariableNode(variableNode),
           variablePresent = (variable !== null);
@@ -589,9 +609,9 @@ export default class FileContext {
   addMetavariable(metavariable) {
     let metavariableAdded = false;
 
-    const node = metavariable.getNode(),
+    const name = metavariable.getName(),
           metavariablePresent = this.metavariables.some((metavariable) => {
-            const nodeMatches = metavariable.matchNode(node);
+            const nodeMatches = metavariable.matchName(name);
 
             if (nodeMatches) {
               return true;

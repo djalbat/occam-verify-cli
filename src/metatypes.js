@@ -1,8 +1,11 @@
 "use strict";
 
-import { contextMetaType, statementMetaType } from "./metaType";
+import labelMetaType from "./metaType/label";
+import contextMetaType from "./metaType/context";
+import statementMetaType from "./metaType/statement";
 
 const metaTypes = [
+  labelMetaType,
   contextMetaType,
   statementMetaType
 ];

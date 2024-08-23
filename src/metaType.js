@@ -1,7 +1,6 @@
 "use strict";
 
 import { metaTypeNameFromMetaTypeNode } from "./utilities/name";
-import { CONTEXT_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 
 export default class MetaType {
   constructor(name) {
@@ -67,28 +66,6 @@ export default class MetaType {
     return metaType;
   }
 }
-
-class ContextMetaType extends MetaType {
-  static fromNothing() {
-    const name = CONTEXT_META_TYPE_NAME,
-          contextMetaType = new ContextMetaType(name);
-
-    return contextMetaType;
-  }
-}
-
-class StatementMetaType extends MetaType {
-  static fromNothing() {
-    const name = STATEMENT_META_TYPE_NAME,
-          statementMetaType = new StatementMetaType(name);
-
-    return statementMetaType;
-  }
-}
-
-export const contextMetaType = ContextMetaType.fromNothing();
-
-export const statementMetaType = StatementMetaType.fromNothing();
 
 export function metaTypeFromJSONAndFileContext(json, fileContext) {
   let metaType;
