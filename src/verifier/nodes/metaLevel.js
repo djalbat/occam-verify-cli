@@ -47,7 +47,7 @@ class MetaLevelNodesVerifier extends NodesVerifier {
 
     const metavariableNode = metastatementMetavariableNodeA, ///
           metastatementNode = metastatementNodeB, ///
-          metavariableVerifiedAgainstMetastatement = verifyMetavariableAgainstMetastatement(metavariableNode, metastatementNode, substitutions, localContextA, localMetaContextB, verifyAhead);
+          metavariableVerifiedAgainstMetastatement = verifyMetavariableAgainstMetastatement(metavariableNode, metastatementNode, substitutions, verifyAhead);
 
     metastatementMetavariableNodeVerifiedAgainstMetastatementNode = metavariableVerifiedAgainstMetastatement;  ///
 

@@ -8,7 +8,7 @@ import { nodeQuery } from "../utilities/query";
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/metaConsequent/unqualifiedMetastatement!");
 
-export default function verifyMetaConsequent(metaConsequentNode, metaConsequents, localMetaContext) {
+export default function verifyMetaConsequent(metaConsequentNode, metaConsequents, substitutions, localMetaContext) {
   let metaConsequentVerified = false;
 
   const metaConsequentString = localMetaContext.nodeAsString(metaConsequentNode);

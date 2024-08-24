@@ -6,11 +6,11 @@ import { nodeQuery } from "../utilities/query";
 
 const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!");
 
-export default function verifyMetaproof(metaproofNode, conclusion, localMetaproof) {
+export default function verifyMetaproof(metaproofNode, conclusion, substitutions, localMetaproof) {
   let metaproofVerified = false;
 
   const metaDerivationNode = metaDerivationNodeQuery(metaproofNode),
-        metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, localMetaproof);
+        metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, substitutions, localMetaproof);
 
   if (metaDerivationVerified) {
     const lastMetaproofStep = localMetaproof.getLastMetaproofStep();

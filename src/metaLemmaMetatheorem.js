@@ -7,12 +7,14 @@ import LocalMetaContext from "./context/localMeta";
 
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
+import MetastatementForMetavariableSubstitution from "./substitution/metastatementForMetavariable";
 
 export default class MetaLemmaMetatheorem {
-  constructor(labels, metaSuppositions, metaConsequent, fileContext) {
+  constructor(labels, metaSuppositions, metaConsequent, substitutions, fileContext) {
     this.labels = labels;
     this.metaSuppositions = metaSuppositions;
     this.metaConsequent = metaConsequent;
+    this.substitutions = substitutions;
     this.fileContext = fileContext;
   }
 
@@ -26,6 +28,10 @@ export default class MetaLemmaMetatheorem {
 
   getMetaConsequent() {
     return this.metaConsequent;
+  }
+
+  getSubstitutions() {
+    return this.substitutions;
   }
 
   getFileContext() {
@@ -91,15 +97,22 @@ export default class MetaLemmaMetatheorem {
             return metaSuppositionJSON;
           }),
           metaConsequentJSON = this.metaConsequent.toJSON(tokens),
+          substitutionsJSON = this.substitutions.map((substitution) => {
+            const substitutionJSON = substitution.toJSON();
+
+            return substitutionJSON;
+          }),
           localContextJSON = this.fileContext.toJSON(tokens),
           labels = labelsJSON,  ///
           metaSuppositions = metaSuppositionsJSON,  ///
           metaConsequent = metaConsequentJSON,  ///
+          substitutions = substitutionsJSON,  ///
           fileContext = localContextJSON,  ///
           json = {
             labels,
             metaSuppositions,
             metaConsequent,
+            substitutions,
             fileContext
           };
 
@@ -118,7 +131,7 @@ export default class MetaLemmaMetatheorem {
       return label;
     });
 
-    let { metaSuppositions, metaConsequent } = json;
+    let { metaSuppositions, metaConsequent, substitutions } = json;
 
     const metaSuppositionsJSON = metaSuppositions;  ///
 
@@ -135,10 +148,20 @@ export default class MetaLemmaMetatheorem {
 
     metaConsequent = MetaConsequent.fromJSONAndFileContext(json, fileContext);
 
-    return new Class(labels, metaSuppositions, metaConsequent, fileContext);  ///
+    const substitutionsJSON = substitutions;  ///
+
+    substitutions = substitutionsJSON.map((substitutionJSON) => {
+      const json = substitutionJSON,  ///
+            metastatementForMetavariableSubstitution = MetastatementForMetavariableSubstitution.fromJSONAndFileContext(json, fileContext),
+            substitution = metastatementForMetavariableSubstitution;  ///
+
+      return substitution;
+    });
+
+    return new Class(labels, metaSuppositions, metaConsequent, substitutions, fileContext);  ///
   }
 
-  static fromLabelsMetaSuppositionsMetaConsequentAndFileContext(Class, labels, metaSuppositions, metaConsequent, fileContext) { return new Class(labels, metaSuppositions, metaConsequent, fileContext); }
+  static fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(Class, labels, metaSuppositions, metaConsequent, substitutions, fileContext) { return new Class(labels, metaSuppositions, metaConsequent, substitutions, fileContext); }
 }
 
 function matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fileContext, metastatementLocalContext) {

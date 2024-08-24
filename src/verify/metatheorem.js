@@ -28,23 +28,24 @@ export default function verifyMetatheorem(metatheoremNode, fileContext) {
         labelsVerified = verifyLabels(labelsNode, labels, fileContext);
 
   if (labelsVerified) {
-    const metaSuppositions = [],
+    const substitutions = [],
+          metaSuppositions = [],
           metaSuppositionNodes = metaSuppositionsNodeQuery(metatheoremNode),
-          metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, localMetaContext);
+          metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, substitutions, localMetaContext);
 
     if (metaSuppositionsVerified) {
       const metaConsequents = [],
             metaConsequentNode = metaConsequentNodeQuery(metatheoremNode),
-            metaConsequentVerified = verifyMetaConsequent(metaConsequentNode, metaConsequents, localMetaContext);
+            metaConsequentVerified = verifyMetaConsequent(metaConsequentNode, metaConsequents, substitutions, localMetaContext);
 
       if (metaConsequentVerified) {
         const metaproofNode = metaproofNodeQuery(metatheoremNode),
               firstMetaConsequent = first(metaConsequents),
               metaConsequent = firstMetaConsequent, ///
-              metaproofVerified = verifyMetaproof(metaproofNode, metaConsequent, localMetaContext);
+              metaproofVerified = verifyMetaproof(metaproofNode, metaConsequent, substitutions, localMetaContext);
 
         if (metaproofVerified) {
-          const metatheorem = Metatheorem.fromLabelsMetaSuppositionsMetaConsequentAndFileContext(labels, metaSuppositions, metaConsequent, fileContext);
+          const metatheorem = Metatheorem.fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(labels, metaSuppositions, metaConsequent, substitutions, fileContext);
 
           fileContext.addMetatheorem(metatheorem);
 

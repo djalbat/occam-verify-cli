@@ -1,13 +1,14 @@
 "use strict";
 
 import verifyMetastatement from "../metastatement";
+import verifyMetavariableAgainstMetastatement from "../../verify/metavariableAgainstMetastatement";
 
 import { nodeQuery } from "../../utilities/query";
 
 const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!"),
       referenceMetavariableNodeQuery = nodeQuery("/qualifiedMetastatement/reference!/metavariable!");
 
-export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, metavariableReferences, assignments, derived, localMetaContext) {
+export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, derived, localMetaContext) {
   let qualifiedMetastatementVerified = false;
 
   const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
@@ -27,18 +28,26 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
       qualifiedMetastatementVerified = ruleMatchesMetastatement;  ///
     } else {
-      if (metavariableReferences) {
+      if (substitutions !== null) {
         const metavariableNode = referenceMetavariableNode, ///
               metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext);
 
         if (metavariablePresent) {
           const metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {
-                  const verifiedAhead = true;
+            const verifiedAhead = true;
 
-                  return verifiedAhead;
-                });
+            return verifiedAhead;
+          });
 
-          qualifiedMetastatementVerified = metastatementVerified; ///
+          if (metastatementVerified) {
+            const metavariableVerifiedAgainstMetastatement = verifyMetavariableAgainstMetastatement(metavariableNode, metastatementNode, substitutions, () => {
+              const verifiedAhead = true;
+
+              return verifiedAhead;
+            });
+
+            qualifiedMetastatementVerified = metavariableVerifiedAgainstMetastatement; ///
+          }
         }
       }
     }

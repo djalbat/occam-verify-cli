@@ -15,13 +15,13 @@ const childNodesQuery = nodesQuery("/metaDerivation|metaSubDerivation/*"),
       metaSuppositionNodesQuery = nodesQuery("/metaSubproof/metaSupposition"),
       metaSubDerivationNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation");
 
-export default function verifyMetaDerivation(metaDerivationNode, localMetaContext) {
+export default function verifyMetaDerivation(metaDerivationNode, substitutions, localMetaContext) {
   let metaDerivationVerified;
 
   const childNodes = childNodesQuery(metaDerivationNode);
 
   metaDerivationVerified = childNodes.every((childNode) => {
-    const childVerified = verifyChild(childNode, localMetaContext);
+    const childVerified = verifyChild(childNode, substitutions, localMetaContext);
 
     if (childVerified) {
       return true;
@@ -31,13 +31,13 @@ export default function verifyMetaDerivation(metaDerivationNode, localMetaContex
   return metaDerivationVerified;
 }
 
-function verifyMetaSubDerivation(metaSubDerivationNode, localMetaContext) {
+function verifyMetaSubDerivation(metaSubDerivationNode, substitutions, localMetaContext) {
   let metaSubDerivationVerified;
 
   const childNodes = childNodesQuery(metaSubDerivationNode);
 
   metaSubDerivationVerified = childNodes.every((childNode) => {
-    const childVerified = verifyChild(childNode, localMetaContext);
+    const childVerified = verifyChild(childNode, substitutions, localMetaContext);
 
     if (childVerified) {
       return true;
@@ -47,18 +47,18 @@ function verifyMetaSubDerivation(metaSubDerivationNode, localMetaContext) {
   return metaSubDerivationVerified;
 }
 
-function verifyMetaSubproof(metaSubproofNode, localMetaContext) {
+function verifyMetaSubproof(metaSubproofNode, substitutions, localMetaContext) {
   let metaSubproofVerified = false;
 
   localMetaContext = LocalMetaContext.fromLocalMetaContext(localMetaContext); ///
 
   const metaSuppositions = [],
         metaSuppositionNodes = metaSuppositionNodesQuery(metaSubproofNode),
-        metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, localMetaContext);
+        metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, substitutions, localMetaContext);
 
   if (metaSuppositionsVerified) {
     const metaSubDerivationNode = metaSubDerivationNodeQuery(metaSubproofNode),
-          metaSubDerivationVerified = verifyMetaSubDerivation(metaSubDerivationNode, localMetaContext);
+          metaSubDerivationVerified = verifyMetaSubDerivation(metaSubDerivationNode, substitutions, localMetaContext);
 
     if (metaSubDerivationVerified) {
       metaSubproofVerified = true;
@@ -68,7 +68,7 @@ function verifyMetaSubproof(metaSubproofNode, localMetaContext) {
   return metaSubproofVerified;
 }
 
-function verifyChild(childNode, localMetaContext) {
+function verifyChild(childNode, substitutions, localMetaContext) {
   let childVerified = false;
 
   const childNodeRuleName = childNode.getRuleName();
@@ -79,7 +79,7 @@ function verifyChild(childNode, localMetaContext) {
 
       const metaSubproofNode = childNode;  ///
 
-      metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, localMetaContext);
+      metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, substitutions, localMetaContext);
 
       if (metaSubproofVerified) {
         const metaproofStep = MetaproofStep.fromMetaSubproofNode(metaSubproofNode);
@@ -97,10 +97,9 @@ function verifyChild(childNode, localMetaContext) {
 
       const derived = true,
             assignments = [],
-            metavariableReferences = true,
             qualifiedMetastatementNode = childNode;  ///
 
-      qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metavariableReferences, assignments, derived, localMetaContext);
+      qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, derived, localMetaContext);
 
       if (qualifiedMetastatementVerified) {
         const assignmentAssigned = assignAssignment(assignments, localMetaContext);
