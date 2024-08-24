@@ -29,7 +29,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
     } else {
       if (metavariableReferences) {
         const metavariableNode = referenceMetavariableNode, ///
-              metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+              metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext);
 
         if (metavariablePresent) {
           const metastatementVerified = verifyMetastatement(metastatementNode, derived, localMetaContext, () => {
