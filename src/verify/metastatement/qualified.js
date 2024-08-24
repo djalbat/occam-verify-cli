@@ -1,11 +1,13 @@
 "use strict";
 
+import verifyMetastatement from "../metastatement";
+
 import { nodeQuery } from "../../utilities/query";
 
 const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!"),
       referenceMetavariableNodeQuery = nodeQuery("/qualifiedMetastatement/reference!/metavariable!");
 
-export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, assignments, derived, localMetaContext) {
+export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, metavariableReferences, assignments, derived, localMetaContext) {
   let qualifiedMetastatementVerified = false;
 
   const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
@@ -24,6 +26,21 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
       const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, metastatementLocalMetaContext);
 
       qualifiedMetastatementVerified = ruleMatchesMetastatement;  ///
+    } else {
+      if (metavariableReferences) {
+        const metavariableNode = referenceMetavariableNode, ///
+              metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+
+        if (metavariablePresent) {
+          const metastatementVerified = verifyMetastatement(metastatementNode, derived, localMetaContext, () => {
+            const verifiedAhead = true;
+
+            return verifiedAhead;
+          });
+
+          qualifiedMetastatementVerified = metastatementVerified; ///
+        }
+      }
     }
 
     if (qualifiedMetastatementVerified) {

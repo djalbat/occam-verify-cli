@@ -91,8 +91,9 @@ function verifyChild(childNode, localMetaContext) {
     case QUALIFIED_METASTATEMENT_RULE_NAME: {
       const derived = true,
             assignments = [],
+            metavariableReferences = true,
             qualifiedMetastatementNode = childNode,  ///
-            qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, assignments, derived, localMetaContext);
+            qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metavariableReferences, assignments, derived, localMetaContext);
 
       if (qualifiedMetastatementVerified) {
         const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
@@ -108,8 +109,9 @@ function verifyChild(childNode, localMetaContext) {
 
     case UNQUALIFIED_METASTATEMENT_RULE_NAME: {
       const derived = true,
+            assignments = false,
             unqualifiedMetastatementNode = childNode,  ///
-            unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, localMetaContext);
+            unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
 
       if (unqualifiedMetastatementVerified) {
         const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),

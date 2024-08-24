@@ -125,11 +125,11 @@ class LocalMetaContext {
     return variablePresent;
   }
 
-  findMetavariableByMetavariableNode(metavariableNode) {
+  findMetavariableByMetavariableNode(metavariableNode, localMetaContext) {
     const node = metavariableNode,  ///
           metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-            const matches = metavariable.matchNode(node);
+            const matches = metavariable.matchNode(node, localMetaContext);
 
             if (matches) {
               return true;
@@ -139,8 +139,8 @@ class LocalMetaContext {
     return metavariable;
   }
 
-  isMetavariablePresentByMetavariableNode(metavariableNode) {
-    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode),
+  isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext) {
+    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, localMetaContext),
           metavariablePresent = (metavariable !== null);
 
     return metavariablePresent;

@@ -10,20 +10,20 @@ import { assignAssignment } from "../utilities/assignments";
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/metaSupposition/unqualifiedMetastatement!");
 
-export default function verifyMetaSupposition(metaSuppositionNode, metaSuppositions, localContext) {
+export default function verifyMetaSupposition(metaSuppositionNode, metaSuppositions, localMetaContext) {
   let metaSuppositionVerified = false;
 
-  const metaSuppositionString = localContext.nodeAsString(metaSuppositionNode);
+  const metaSuppositionString = localMetaContext.nodeAsString(metaSuppositionNode);
 
-  localContext.trace(`Verifying the '${metaSuppositionString}' meta-supposition...`, metaSuppositionNode);
+  localMetaContext.trace(`Verifying the '${metaSuppositionString}' meta-supposition...`, metaSuppositionNode);
 
   const derived = false,
         assignments = [],
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaSuppositionNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localContext);
+        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
 
   if (unqualifiedMetastatementVerified) {
-    const assignmentAssigned = assignAssignment(assignments, localContext);
+    const assignmentAssigned = assignAssignment(assignments, localMetaContext);
 
     metaSuppositionVerified = assignmentAssigned; ///
   }
@@ -35,9 +35,9 @@ export default function verifyMetaSupposition(metaSuppositionNode, metaSuppositi
 
     metaSuppositions.push(metaSupposition);
 
-    localContext.addMetaproofStep(metaproofStep);
+    localMetaContext.addMetaproofStep(metaproofStep);
 
-    localContext.debug(`...verified the '${metaSuppositionString}' meta-supposition.`, metaSuppositionNode);
+    localMetaContext.debug(`...verified the '${metaSuppositionString}' meta-supposition.`, metaSuppositionNode);
   }
 
   return metaSuppositionVerified;

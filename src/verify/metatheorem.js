@@ -44,7 +44,7 @@ export default function verifyMetatheorem(metatheoremNode, fileContext) {
               metaproofVerified = verifyMetaproof(metaproofNode, metaConsequent, localMetaContext);
 
         if (metaproofVerified) {
-          const metatheorem = Metatheorem.fromLabelsMetaSuppositionsMetaConsequentAndLocalMetaContext(labels, metaSuppositions, metaConsequent, localMetaContext);
+          const metatheorem = Metatheorem.fromLabelsMetaSuppositionsMetaConsequentAndFileContext(labels, metaSuppositions, metaConsequent, fileContext);
 
           fileContext.addMetatheorem(metatheorem);
 

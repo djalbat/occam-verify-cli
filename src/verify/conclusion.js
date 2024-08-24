@@ -16,8 +16,9 @@ export default function verifyConclusion(conclusionNode, conclusions, localMetaC
   localMetaContext.trace(`Verifying the '${conclusionString}' conclusion...`, conclusionNode);
 
   const derived = false,
+        assignments = [],
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, localMetaContext);
+        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
 
   if (unqualifiedMetastatementVerified) {
     const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),

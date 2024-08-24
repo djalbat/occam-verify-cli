@@ -17,8 +17,9 @@ export default function verifyPremise(premiseNode, premises, localMetaContext) {
   localMetaContext.trace(`Verifying the '${premiseString}' premise...`, premiseNode);
 
   const derived = false,
+        assignments = [],
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(premiseNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, localMetaContext);
+        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
 
   if (unqualifiedMetastatementVerified) {
     const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),

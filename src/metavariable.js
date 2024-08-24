@@ -1,12 +1,17 @@
 "use strict";
 
+import verifyTerm from "./verify/term";
+import LocalContext from "./context/local";
+
+import { first } from "./utilities/array";
 import { nodeQuery } from "./utilities/query";
 import { nodeAsString } from "./utilities/string";
 import { nameFromMetavariableNode } from "./utilities/name";
 import { metaTypeFromJSONAndFileContext } from "./metaType";
 import { metavariableNodeFromMetavariableString } from "./utilities/node";
 
-const typeNodeQuery = nodeQuery("/metavariable/argument!/type!");
+const termNodeQuery = nodeQuery("/metavariable/argument!/term!"),
+      typeNodeQuery = nodeQuery("/metavariable/argument!/type!");
 
 export default class Metavariable {
   constructor(node, name, termType, metaType) {
@@ -38,14 +43,28 @@ export default class Metavariable {
     return nameMatches;
   }
 
-  matchNode(node) {
-    let nodeMatches;
+  matchNode(node, localMetaContext) {
+    let nodeMatches = false;
 
     const metavariableNode = node,  ///
-          name = nameFromMetavariableNode(metavariableNode);
+          typeNode = typeNodeQuery(metavariableNode);
 
-    if (this.name === name) {
-      nodeMatches = true;
+    if (typeNode === null) {
+      const name = nameFromMetavariableNode(metavariableNode);
+
+      if (this.name === name) {
+        const termNode = termNodeQuery(metavariableNode);
+
+        if (false) {
+          ///
+        } else if ((termNode === null) && (this.termType === null)) {
+          nodeMatches = true;
+        } else if ((termNode !== null) && (this.termType !== null)) {
+          const termVerifiedAgainstTermType = verifyTermAgainstTermType(termNode, this.termType, localMetaContext);
+
+          nodeMatches = termVerifiedAgainstTermType;  ///
+        }
+      }
     }
 
     return nodeMatches;
@@ -102,6 +121,31 @@ export default class Metavariable {
 
     return metavariable;
   }
+}
+
+function verifyTermAgainstTermType(termNode, termType, localMetaContext) {
+  let termVerifiedAgainstTermType;
+
+  const type = termType,  ///
+        terms = [],
+        localContext = LocalContext.fromLocalMetaContext(localMetaContext);
+
+  termVerifiedAgainstTermType = verifyTerm(termNode, terms, localContext, () => {
+    let verifiedAhead = false;
+
+    const firstTerm = first(terms),
+          term = firstTerm, ///
+          termType = term.getType(),
+          termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
+
+    if (termTypeEqualToOrSubTypeOfType) {
+      verifiedAhead = true;
+    }
+
+    return verifiedAhead;
+  });
+
+  return termVerifiedAgainstTermType;
 }
 
 function termTypeFromMetavariableNode(metavariableNode, fileContext) {

@@ -97,9 +97,10 @@ function verifyChild(childNode, localMetaContext) {
 
       const derived = true,
             assignments = [],
+            metavariableReferences = true,
             qualifiedMetastatementNode = childNode;  ///
 
-      qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, assignments, derived, localMetaContext);
+      qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metavariableReferences, assignments, derived, localMetaContext);
 
       if (qualifiedMetastatementVerified) {
         const assignmentAssigned = assignAssignment(assignments, localMetaContext);

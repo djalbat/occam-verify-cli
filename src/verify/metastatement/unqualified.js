@@ -6,7 +6,7 @@ import { nodeQuery } from "../../utilities/query";
 
 const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
 
-export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, derived, localMetaContext) {
+export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext) {
   let unqualifiedMetastatementVerified = false;
 
   const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);

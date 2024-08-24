@@ -47,7 +47,7 @@ export default function verifyMetaLemma(metaLemmaNode, fileContext) {
               metaproofVerified = verifyMetaproof(metaproofNode, metaConsequent, localMetaContext);
 
         if (metaproofVerified) {
-          const metaLemma = MetaLemma.fromLabelsMetaSuppositionsMetaConsequentAndLocalMetaContext(labels, metaSuppositions, metaConsequent, localMetaContext);
+          const metaLemma = MetaLemma.fromLabelsMetaSuppositionsMetaConsequentAndFileContext(labels, metaSuppositions, metaConsequent, fileContext);
 
           fileContext.addMetaLemma(metaLemma);
 
