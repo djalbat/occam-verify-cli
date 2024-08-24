@@ -71,7 +71,7 @@ export default class FileContext {
     return proofSteps;
   }
 
-  getEquivalences(localContext) {
+  getEquivalences() {
     const equivalences = []; ///
 
     return equivalences;
@@ -81,6 +81,12 @@ export default class FileContext {
     const metaproofSteps = [];  ///
 
     return metaproofSteps;
+  }
+
+  getMetaEquivalences() {
+    const metaEquivalences = []; ///
+
+    return metaEquivalences;
   }
 
   getLabels(includeRelease = true) {

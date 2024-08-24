@@ -3,12 +3,14 @@
 import contextMixins from "../mixins/context";
 
 import { last } from "../utilities/array";
+import { mergeMetaEquivalences } from "../utilities/metaEquivalences";
 
 class LocalMetaContext {
-  constructor(context, metavariables, metaproofSteps) {
+  constructor(context, metavariables, metaproofSteps, metaEquivalences) {
     this.context = context;
     this.metavariables = metavariables;
     this.metaproofSteps = metaproofSteps;
+    this.metaEquivalences = metaEquivalences;
   }
 
   getContext() {
@@ -19,17 +21,6 @@ class LocalMetaContext {
     const termType = term.getType();
 
     return termType;
-  }
-
-  getMetavariables() {
-    let metavariables = this.context.getMetavariables();
-
-    metavariables = [ ///
-      ...this.metavariables,
-      ...metavariables
-    ]
-
-    return metavariables;
   }
 
   getMetaproofSteps() {
@@ -43,7 +34,32 @@ class LocalMetaContext {
     return metaproofSteps;
   }
 
+  getMetaEquivalences() {
+    let metaEquivalences = this.context.getMetaEquivalences();
+
+    const metaEquivalencesA = this.metaEquivalences, ///
+          metaEquivalencesB = metaEquivalences,
+          localMetaContext = this;  ///
+
+    metaEquivalences = mergeMetaEquivalences(metaEquivalencesA, metaEquivalencesB, localMetaContext); ///
+
+    return metaEquivalences;
+  }
+
   getVariables() { return this.context.getVariables(); }
+
+  getEquivalences() { return this.context.getEquivalences(); }
+
+  getMetavariables() {
+    let metavariables = this.context.getMetavariables();
+
+    metavariables = [ ///
+      ...this.metavariables,
+      ...metavariables
+    ]
+
+    return metavariables;
+  }
 
   getLastMetaproofStep() {
     let lastMetaproofStep = null;
@@ -80,6 +96,10 @@ class LocalMetaContext {
 
   addMetaproofStep(metaproofStep) {
     this.metaproofSteps.push(metaproofStep);
+  }
+
+  addMetaEquivalence(metaEquivalence) {
+    this.metaEquivalences.push(metaEquivalence);
   }
 
   matchMetastatement(metastatementNode) {
@@ -150,7 +170,8 @@ class LocalMetaContext {
     const context = fileContext,  ///
           metavariables = [],
           metaproofSteps = [],
-          localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps);
+          metaEquivalences = [],
+          localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps, metaEquivalences);
 
     return localMetaContext;
   }
@@ -158,9 +179,10 @@ class LocalMetaContext {
   static fromLocalMetaContext(localMetaContext) {
     const context = localMetaContext,  ///
           metavariables = [],
-          metaproofSteps = [];
+          metaproofSteps = [],
+          metaEquivalences = [];
 
-    localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps);  ///
+    localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps, metaEquivalences);  ///
 
     return localMetaContext;
   }

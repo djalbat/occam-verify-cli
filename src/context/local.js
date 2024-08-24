@@ -53,6 +53,8 @@ class LocalContext {
     return equivalences;
   }
 
+  getMetaEquivalences() { return this.context.getMetaEquivalences(); }
+
   getLastProofStep() {
     let lastProofStep = null;
 

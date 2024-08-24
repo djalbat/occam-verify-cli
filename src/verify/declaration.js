@@ -4,7 +4,6 @@ import labelMetaType from "../metaType/label";
 import metastatementNodeVerifier from "../verifier/node/metastatement";
 
 import { nodeQuery } from "../utilities/query";
-import { LABEL_META_TYPE_NAME } from "../metaTypeNames";
 
 const metavariableNodeQuery = nodeQuery("/declaration/metavariable!"),
       metastatementNodeQuery = nodeQuery("/declaration/metastatement!");
@@ -37,9 +36,10 @@ export default function verifyDeclaration(declarationNode, derived, localMetaCon
       }
     } else {
       const metavariableString = localMetaContext.nodeAsString(metavariableNode),
+            labelMetaTypeName = labelMetaType.getName(),
             metaTypeString = metaType.asString();
 
-      localMetaContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${LABEL_META_TYPE_NAME}'.`, declarationNode);
+      localMetaContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${labelMetaTypeName}'.`, declarationNode);
     }
   }
 
