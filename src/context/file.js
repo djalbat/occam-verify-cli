@@ -533,6 +533,12 @@ export default class FileContext {
     return statementMatches;
   }
 
+  matchMetastatement(metastatementNode) {
+    const metastatementMatches = false;
+
+    return metastatementMatches;
+  }
+
   nodeAsString(node) {
     const string = nodeAsString(node, this.tokens);
 

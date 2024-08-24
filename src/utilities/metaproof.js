@@ -7,36 +7,36 @@ import { BRACKETED_METASTATEMENT_DEPTH } from "../constants";
 
 const bracketedMetastatementChildNodeQuery = nodeQuery("/metastatement/metastatement!");
 
-export function matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB) {
-  let metastatementMatchesModuloBrackets = false;
+export function matchMetastatement(metastatementNodeA, metastatementNodeB) {
+  let metastatementMatches = false;
 
-  if (!metastatementMatchesModuloBrackets) {
+  if (!metastatementMatches) {
     const metastatementNodeMatches = metastatementNodeA.match(metastatementNodeB);
 
-    metastatementMatchesModuloBrackets = metastatementNodeMatches;  ///
+    metastatementMatches = metastatementNodeMatches;  ///
   }
 
-  if (!metastatementMatchesModuloBrackets) {
+  if (!metastatementMatches) {
     const bracketedMetastatementChildNodeA = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNodeA);
 
     if (bracketedMetastatementChildNodeA !== null) {
       const bracketedMetastatementChildNodeAMatchesMetastatementNodeB = bracketedMetastatementChildNodeA.match(metastatementNodeB);
 
-      metastatementMatchesModuloBrackets = bracketedMetastatementChildNodeAMatchesMetastatementNodeB; ///
+      metastatementMatches = bracketedMetastatementChildNodeAMatchesMetastatementNodeB; ///
     }
   }
 
-  if (!metastatementMatchesModuloBrackets) {
+  if (!metastatementMatches) {
     const bracketedMetastatementChildNodeB = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNodeB);
 
     if (bracketedMetastatementChildNodeB !== null) {
       const metastatementNodeAMatchesBracketedMetastatementChildNodeB = metastatementNodeA.match(bracketedMetastatementChildNodeB);
 
-      metastatementMatchesModuloBrackets = metastatementNodeAMatchesBracketedMetastatementChildNodeB; ///
+      metastatementMatches = metastatementNodeAMatchesBracketedMetastatementChildNodeB; ///
     }
   }
 
-  return metastatementMatchesModuloBrackets;
+  return metastatementMatches;
 }
 
 export function bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode) {

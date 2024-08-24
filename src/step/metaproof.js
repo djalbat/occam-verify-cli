@@ -1,8 +1,8 @@
 "use strict";
 
 import { first, second } from "../utilities/array";
+import { matchMetastatement } from "../utilities/metaproof";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import { matchMetastatementModuloBrackets } from "../utilities/metaproof";
 
 const metastatementNodesQuery = nodesQuery("/ruleSubproofAssertion/metastatement"),
       ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/ruleSubproofAssertion"),
@@ -54,10 +54,9 @@ export default class MetaproofStep {
 
     if (this.metastatementNode !== null) {
       const metastatementNodeA = metastatementNode, ///
-            metastatementNodeB = this.metastatementNode,  ///
-            metastatementMatchesModuloBrackets = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB);
+            metastatementNodeB = this.metastatementNode;  ///
 
-      metastatementMatches = metastatementMatchesModuloBrackets;  ///
+      metastatementMatches = matchMetastatement(metastatementNodeA, metastatementNodeB);
     }
 
     return metastatementMatches;
@@ -74,17 +73,17 @@ export default class MetaproofStep {
 
       const metastatementNodeA = firstRuleSubproofAssertionMetastatementNode,  ///
             metastatementNodeB = firstQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
-            metastatementMatchesModuloBrackets = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB);
+            metastatementMatches = matchMetastatement(metastatementNodeA, metastatementNodeB);
 
-      if (metastatementMatchesModuloBrackets) {
+      if (metastatementMatches) {
         const secondRuleSubproofAssertionMetastatementNode = second(ruleSubproofAssertionMetastatementNodes),
               secondQualifiedOrUnqualifiedMetastatementMetastatementNode = second(qualifiedOrUnqualifiedMetastatementMetastatementNodes);
 
         const metastatementNodeA = secondRuleSubproofAssertionMetastatementNode, ///
               metastatementNodeB = secondQualifiedOrUnqualifiedMetastatementMetastatementNode, ///
-              metastatementMatchesModuloBrackets = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB);
+              metastatementMatches = matchMetastatement(metastatementNodeA, metastatementNodeB);
 
-        ruleSubproofAssertionMatches = metastatementMatchesModuloBrackets; ///
+        ruleSubproofAssertionMatches = metastatementMatches; ///
       }
     }
 
