@@ -26,7 +26,8 @@ export default function verifyDeclaration(declarationNode, derived, localMetaCon
 
       if (metastatementNode !== null) {
         const { verifyMetastatement } = metastatementNodeVerifier,
-              metastatementVerified = verifyMetastatement(metastatementNode, derived, localMetaContext, () => {
+              assignments = [],
+              metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {
                 const verifiedAhead = true;
 
                 return verifiedAhead;

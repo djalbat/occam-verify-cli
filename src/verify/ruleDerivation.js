@@ -6,6 +6,7 @@ import LocalMetaContext from "../context/localMeta";
 import verifyQualifiedMetastatement from "../verify/metastatement/qualified";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
+import { assignAssignment } from "../utilities/assignments";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { RULE_SUBPROOF_RULE_NAME, QUALIFIED_METASTATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME } from "../ruleNames";
 
@@ -89,11 +90,20 @@ function verifyChild(childNode, localMetaContext) {
     }
 
     case QUALIFIED_METASTATEMENT_RULE_NAME: {
+      let qualifiedMetastatementVerified;
+
       const derived = true,
             assignments = [],
             metavariableReferences = true,
-            qualifiedMetastatementNode = childNode,  ///
-            qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metavariableReferences, assignments, derived, localMetaContext);
+            qualifiedMetastatementNode = childNode;  ///
+
+      qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, metavariableReferences, assignments, derived, localMetaContext);
+
+      if (qualifiedMetastatementVerified) {
+        const assignmentAssigned = assignAssignment(assignments, localMetaContext);
+
+        qualifiedMetastatementVerified = assignmentAssigned; ///
+      }
 
       if (qualifiedMetastatementVerified) {
         const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
@@ -108,10 +118,19 @@ function verifyChild(childNode, localMetaContext) {
     }
 
     case UNQUALIFIED_METASTATEMENT_RULE_NAME: {
+      let unqualifiedMetastatementVerified;
+
       const derived = true,
-            assignments = false,
-            unqualifiedMetastatementNode = childNode,  ///
-            unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+            assignments = [],
+            unqualifiedMetastatementNode = childNode;  ///
+
+      unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+
+      if (unqualifiedMetastatementVerified) {
+        const assignmentAssigned = assignAssignment(assignments, localMetaContext);
+
+        unqualifiedMetastatementVerified = assignmentAssigned; ///
+      }
 
       if (unqualifiedMetastatementVerified) {
         const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),

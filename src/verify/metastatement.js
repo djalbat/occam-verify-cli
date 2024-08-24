@@ -9,7 +9,7 @@ import { nodeQuery } from "../utilities/query";
 const judgementNodeQuery = nodeQuery("/metastatement/judgement!"),
       metaEqualityNodeQuery = nodeQuery("/metastatement/metaEquality!");
 
-function verifyMetastatement(metastatementNode, derived, localMetaContext) {
+function verifyMetastatement(metastatementNode, assignments, derived, localMetaContext) {
   let metastatementVerified;
 
   const metastatementString = localMetaContext.nodeAsString(metastatementNode);
@@ -23,7 +23,7 @@ function verifyMetastatement(metastatementNode, derived, localMetaContext) {
   ];
 
   metastatementVerified = verifyMetaStatementFunctions.some((verifyStatementFunction) => {
-    const metastatementVerified = verifyStatementFunction(metastatementNode, derived, localMetaContext);
+    const metastatementVerified = verifyStatementFunction(metastatementNode, assignments, derived, localMetaContext);
 
     if (metastatementVerified) {
       return true;
@@ -43,7 +43,7 @@ Object.assign(metastatementNodeVerifier, {
 
 export default verifyMetastatement;
 
-function verifyMetastatementAsMetaEquality(metastatementNode, derived, localMetaContext) {
+function verifyMetastatementAsMetaEquality(metastatementNode, assignments, derived, localMetaContext) {
   let metastatementVerifiedAsMetaEquality = false;
 
   const metaEqualityNode = metaEqualityNodeQuery(metastatementNode);
@@ -53,7 +53,7 @@ function verifyMetastatementAsMetaEquality(metastatementNode, derived, localMeta
 
     localMetaContext.trace(`Verifying the '${metastatementString}' metastatement as a meta-equality...`, metastatementNode);
 
-    const metaEqualityVerified = verifyMetaEquality(metaEqualityNode, derived, localMetaContext);
+    const metaEqualityVerified = verifyMetaEquality(metaEqualityNode, assignments, derived, localMetaContext);
 
     metastatementVerifiedAsMetaEquality = metaEqualityVerified;  ///
 
@@ -65,7 +65,7 @@ function verifyMetastatementAsMetaEquality(metastatementNode, derived, localMeta
   return metastatementVerifiedAsMetaEquality;
 }
 
-function verifyMetastatementAsJudgement(metastatementNode, derived, localMetaContext) {
+function verifyMetastatementAsJudgement(metastatementNode, assignments, derived, localMetaContext) {
   let metastatementVerifiedAsJudgement = false;
 
   const judgementNode = judgementNodeQuery(metastatementNode);
@@ -87,7 +87,7 @@ function verifyMetastatementAsJudgement(metastatementNode, derived, localMetaCon
   return metastatementVerifiedAsJudgement;
 }
 
-function verifyMetastatementAsIs(metastatementNode, derived, localMetaContext) {
+function verifyMetastatementAsIs(metastatementNode, assignments, derived, localMetaContext) {
   let metastatementVerifiedAsIs = false;
 
   const judgementNode = judgementNodeQuery(metastatementNode),

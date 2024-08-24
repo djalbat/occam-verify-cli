@@ -32,11 +32,11 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
               metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext);
 
         if (metavariablePresent) {
-          const metastatementVerified = verifyMetastatement(metastatementNode, derived, localMetaContext, () => {
-            const verifiedAhead = true;
+          const metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {
+                  const verifiedAhead = true;
 
-            return verifiedAhead;
-          });
+                  return verifiedAhead;
+                });
 
           qualifiedMetastatementVerified = metastatementVerified; ///
         }

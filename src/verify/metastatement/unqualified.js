@@ -23,11 +23,11 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
     }
 
     if (!unqualifiedMetastatementVerified) {
-      const metastatementVerified = verifyMetastatement(metastatementNode, derived, localMetaContext, () => {
-        const verifiedAhead = true;
+      const metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {
+              const verifiedAhead = true;
 
-        return verifiedAhead;
-      });
+              return verifiedAhead;
+            });
 
       unqualifiedMetastatementVerified = metastatementVerified; ///
     }

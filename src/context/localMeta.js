@@ -73,6 +73,10 @@ class LocalMetaContext {
     return lastMetaproofStep;
   }
 
+  addMetaEquality(metaEquality) {
+
+  }
+
   addMetavariable(metavariable) {
     let metavariableAdded = false;
 

@@ -1,13 +1,14 @@
 "use strict";
 
 import MetaEquality from "../metaEquality";
+import MetaEqualityAssignment from "../assignment/metaEquality";
 
 import { nodeQuery } from "../utilities/query";
 
 const leftMetastatementNodeQuery = nodeQuery("/metaEquality/metastatement[0]"),
       rightMetastatementNodeQuery = nodeQuery("/metaEquality/metastatement[1]");
 
-export default function verifyMetaEquality(metaEqualityNode, derived, localMetaContext) {
+export default function verifyMetaEquality(metaEqualityNode, assignments, derived, localMetaContext) {
   let metaEqualityVerified;
 
   const metaEqualityString = localMetaContext.nodeAsString(metaEqualityNode);
@@ -20,7 +21,7 @@ export default function verifyMetaEquality(metaEqualityNode, derived, localMetaC
   ];
 
   metaEqualityVerified = verifyMetaEqualityFunctions.some((verifyMetaEqualityFunction) => {
-    const metaEqualityVerified = verifyMetaEqualityFunction(metaEqualityNode, derived, localMetaContext);
+    const metaEqualityVerified = verifyMetaEqualityFunction(metaEqualityNode, assignments, derived, localMetaContext);
 
     if (metaEqualityVerified) {
       return true;
@@ -34,7 +35,7 @@ export default function verifyMetaEquality(metaEqualityNode, derived, localMetaC
   return metaEqualityVerified;
 }
 
-function verifyDerivedMetaEquality(metaEqualityNode, derived, localMetaContext) {
+function verifyDerivedMetaEquality(metaEqualityNode, assignments, derived, localMetaContext) {
   let derivedMetaEqualityVerified = false;
 
   if (derived) {
@@ -47,7 +48,12 @@ function verifyDerivedMetaEquality(metaEqualityNode, derived, localMetaContext) 
           metaEquality = MetaEquality.fromLeftMetastatementNodeRightMetastatementNodeAndMetaEqualityNode(leftMetastatementNode, rightMetastatementNode, metaEqualityNode, localMetaContext);
 
     if (metaEquality !== null) {
-      debugger
+      const metaEqualityAssignment = MetaEqualityAssignment.fromMetaEquality(metaEquality),
+            assignment = metaEqualityAssignment;  ///
+
+      assignments.push(assignment);
+
+      derivedMetaEqualityVerified = true;
     }
 
     if (derivedMetaEqualityVerified) {
@@ -58,7 +64,7 @@ function verifyDerivedMetaEquality(metaEqualityNode, derived, localMetaContext) 
   return derivedMetaEqualityVerified;
 }
 
-function verifyStatedMetaEquality(metaEqualityNode, derived, localMetaContext) {
+function verifyStatedMetaEquality(metaEqualityNode, assignments, derived, localMetaContext) {
   let statedMetaEqualityVerified = false;
 
   if (!derived) {

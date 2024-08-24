@@ -2,7 +2,7 @@
 
 import { first } from "../utilities/array";
 
-export function assignAssignment(assignments, localContext) {
+export function assignAssignment(assignments, localContextOrLocalMetaContext) {
   let assignmentAssigned = true;
 
   const assignmentsLength = assignments.length;
@@ -11,7 +11,7 @@ export function assignAssignment(assignments, localContext) {
     const firstAssignment = first(assignments),
           assignment = firstAssignment;
 
-    assignmentAssigned = assignment.assign(localContext);
+    assignmentAssigned = assignment.assign(localContextOrLocalMetaContext);
   }
 
   return assignmentAssigned;

@@ -51,7 +51,8 @@ function verifyMetastatementAsMetavariableOrContext(metastatementNode, metaTypes
 
   const { verifyMetastatement } = metastatementNodeVerifier,
         derived = false,  ///
-        metastatementVerified = verifyMetastatement(metastatementNode, derived, localMetaContext, () => {
+        assignments = [],
+        metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {
           const verifiedAhead = true;
 
           return verifiedAhead;
