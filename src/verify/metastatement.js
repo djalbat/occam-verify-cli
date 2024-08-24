@@ -1,6 +1,11 @@
 "use strict";
 
+import verifyJudgement from "../verify/judgement";
 import metastatementNodeVerifier from "../verifier/node/metastatement";
+
+import { nodeQuery } from "../utilities/query";
+
+const judgementNodeQuery = nodeQuery("/metastatement/judgement!");
 
 function verifyMetastatement(metastatementNode, derived, localMetaContext) {
   let metastatementVerified;
@@ -9,14 +14,18 @@ function verifyMetastatement(metastatementNode, derived, localMetaContext) {
 
   localMetaContext.trace(`Verifying the '${metastatementString}' metastatement...`, metastatementNode);
 
-  const nonTerminalNode = metastatementNode, ///
-        nonTerminalNodeVerified = metastatementNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localMetaContext, () => {
-          const verifiedAhead = true;
+  const verifyMetaStatementFunctions = [
+    verifyMetastatementAsJudgement,
+    verifyMetastatementAsIs
+  ];
 
-          return verifiedAhead;
-        });
+  metastatementVerified = verifyMetaStatementFunctions.some((verifyStatementFunction) => {
+    const metastatementVerified = verifyStatementFunction(metastatementNode, derived, localMetaContext);
 
-  metastatementVerified = nonTerminalNodeVerified;  ///
+    if (metastatementVerified) {
+      return true;
+    }
+  });
 
   if (metastatementVerified) {
     localMetaContext.debug(`...verified the '${metastatementString}' metastatement.`, metastatementNode);
@@ -30,3 +39,52 @@ Object.assign(metastatementNodeVerifier, {
 });
 
 export default verifyMetastatement;
+
+function verifyMetastatementAsJudgement(metastatementNode, derived, localMetaContext) {
+  let metastatementVerifiedAsJudgement = false;
+
+  const judgementNode = judgementNodeQuery(metastatementNode);
+
+  if (judgementNode !== null) {
+    const metastatementString = localMetaContext.nodeAsString(metastatementNode);
+
+    localMetaContext.trace(`Verifying the '${metastatementString}' metastatement as a judgement...`, metastatementNode);
+
+    const judgementVerified = verifyJudgement(judgementNode, derived, localMetaContext);
+
+    metastatementVerifiedAsJudgement = judgementVerified;  ///
+
+    if (metastatementVerifiedAsJudgement) {
+      localMetaContext.debug(`...verified the '${metastatementString}' metastatement as a judgement.`, metastatementNode);
+    }
+  }
+
+  return metastatementVerifiedAsJudgement;
+}
+
+function verifyMetastatementAsIs(metastatementNode, derived, localMetaContext) {
+  let metastatementVerifiedAsIs = false;
+
+  const judgementNode = judgementNodeQuery(metastatementNode);
+
+  if (judgementNode === null) {
+    const metastatementString = localMetaContext.nodeAsString(metastatementNode);
+
+    localMetaContext.trace(`Verifying the '${metastatementString}' metastatement as is...`, metastatementNode);
+
+    const nonTerminalNode = metastatementNode, ///
+          nonTerminalNodeVerified = metastatementNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localMetaContext, () => {
+            const verifiedAhead = true;
+
+            return verifiedAhead;
+          });
+
+    metastatementVerifiedAsIs = nonTerminalNodeVerified;  ///
+
+    if (metastatementVerifiedAsIs) {
+      localMetaContext.debug(`...verified the '${metastatementString}' metastatement as is.`, metastatementNode);
+    }
+  }
+
+  return metastatementVerifiedAsIs;
+}
