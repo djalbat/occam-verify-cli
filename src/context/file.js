@@ -17,6 +17,7 @@ import { push } from "../utilities/array";
 import { objectType } from "../type";
 import { typeFromJSONAndFileContext } from "../type";
 import { nodeAsString, nodesAsString } from "../utilities/string";
+import localMeta from "./localMeta";
 
 export default class FileContext {
   constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables) {
@@ -508,8 +509,8 @@ export default class FileContext {
     return labelPresent;
   }
 
-  isMetavariablePresentByMetavariableNode(metavariableNode) {
-    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode),
+  isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext) {
+    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, localMetaContext),
           metavariablePresent = (metavariable !== null);
 
     return metavariablePresent;
