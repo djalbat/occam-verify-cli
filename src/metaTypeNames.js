@@ -1,5 +1,5 @@
 "use strict";
 
+export const FRAME_META_TYPE_NAME = "frame";
+export const REFERENCE_META_TYPE_NAME = "reference";
 export const STATEMENT_META_TYPE_NAME = "Statement";
-export const CONTEXT_META_TYPE_NAME = "Context";
-export const LABEL_META_TYPE_NAME = "Label";

@@ -1,12 +1,12 @@
 "use strict";
 
-import labelMetaType from "./metaType/label";
-import contextMetaType from "./metaType/context";
+import frameMetaType from "./metaType/frame";
+import referenceMetaType from "./metaType/reference";
 import statementMetaType from "./metaType/statement";
 
 const metaTypes = [
-  labelMetaType,
-  contextMetaType,
+  frameMetaType,
+  referenceMetaType,
   statementMetaType
 ];
 

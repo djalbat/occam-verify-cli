@@ -1,6 +1,6 @@
 "use strict";
 
-import labelMetaType from "../metaType/label";
+import referenceMetaType from "../metaType/reference";
 import metastatementNodeVerifier from "../verifier/node/metastatement";
 
 import { nodeQuery } from "../utilities/query";
@@ -21,7 +21,7 @@ export default function verifyDeclaration(declarationNode, derived, localMetaCon
   if (metavariable !== null) {
     const metaType = metavariable.getMetaType();
 
-    if (metaType === labelMetaType) {
+    if (metaType === referenceMetaType) {
       const metastatementNode = metastatementNodeQuery(declarationNode);
 
       if (metastatementNode !== null) {
@@ -36,11 +36,11 @@ export default function verifyDeclaration(declarationNode, derived, localMetaCon
         declarationVerified = metastatementVerified;  ///
       }
     } else {
-      const metavariableString = localMetaContext.nodeAsString(metavariableNode),
-            labelMetaTypeName = labelMetaType.getName(),
+      const referenceMetaTypeName = referenceMetaType.getName(),
+            metavariableString = localMetaContext.nodeAsString(metavariableNode),
             metaTypeString = metaType.asString();
 
-      localMetaContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${labelMetaTypeName}'.`, declarationNode);
+      localMetaContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${referenceMetaTypeName}'.`, declarationNode);
     }
   }
 

@@ -71,6 +71,12 @@ export default class FileContext {
     return proofSteps;
   }
 
+  getJudgements() {
+    const judgements = [];
+
+    return judgements;
+  }
+
   getEquivalences() {
     const equivalences = []; ///
 

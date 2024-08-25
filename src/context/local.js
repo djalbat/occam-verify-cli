@@ -53,6 +53,12 @@ class LocalContext {
     return equivalences;
   }
 
+  getJudgements() { return this.context.getJudgements(); }
+
+  getMetavariables() { return this.context.getMetavariables(); }
+
+  getMetaproofSteps() { return this.context.getMetaproofSteps(); }
+
   getLastProofStep() {
     let lastProofStep = null;
 
@@ -64,8 +70,6 @@ class LocalContext {
 
     return lastProofStep;
   }
-
-  getMetavariables() { return this.context.getMetavariables(); }
 
   getTermType(term) {
     let termType;

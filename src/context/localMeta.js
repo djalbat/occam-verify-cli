@@ -5,8 +5,9 @@ import contextMixins from "../mixins/context";
 import { last } from "../utilities/array";
 
 class LocalMetaContext {
-  constructor(context, metavariables, metaproofSteps) {
+  constructor(context, judgements, metavariables, metaproofSteps) {
     this.context = context;
+    this.judgements = judgements;
     this.metavariables = metavariables;
     this.metaproofSteps = metaproofSteps;
   }
@@ -15,10 +16,26 @@ class LocalMetaContext {
     return this.context;
   }
 
-  getTermType(term) {
-    const termType = term.getType();
+  getJudgements() {
+    let judgements = this.context.getJudgements();
 
-    return termType;
+    judgements = [ ///
+      ...this.judgements,
+      ...judgements
+    ]
+
+    return judgements;
+  }
+
+  getMetavariables() {
+    let metavariables = this.context.getMetavariables();
+
+    metavariables = [ ///
+      ...this.metavariables,
+      ...metavariables
+    ]
+
+    return metavariables;
   }
 
   getMetaproofSteps() {
@@ -34,17 +51,14 @@ class LocalMetaContext {
 
   getVariables() { return this.context.getVariables(); }
 
+  getProofSteps() { return this.context.getProofSteps(); }
+
   getEquivalences() { return this.context.getEquivalences(); }
 
-  getMetavariables() {
-    let metavariables = this.context.getMetavariables();
+  getTermType(term) {
+    const termType = term.getType();
 
-    metavariables = [ ///
-      ...this.metavariables,
-      ...metavariables
-    ]
-
-    return metavariables;
+    return termType;
   }
 
   getLastMetaproofStep() {
@@ -59,8 +73,8 @@ class LocalMetaContext {
     return lastMetaproofStep;
   }
 
-  addMetaEquality(metaEquality) {
-
+  addJudgement(judgement) {
+    this.judgements.push(judgement);
   }
 
   addMetavariable(metavariable) {
@@ -154,19 +168,21 @@ class LocalMetaContext {
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
+          judgements = [],
           metavariables = [],
           metaproofSteps = [],
-          localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps);
+          localMetaContext = new LocalMetaContext(context, judgements, metavariables, metaproofSteps);
 
     return localMetaContext;
   }
 
   static fromLocalMetaContext(localMetaContext) {
     const context = localMetaContext,  ///
+          judgements = [],
           metavariables = [],
           metaproofSteps = [];
 
-    localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps);  ///
+    localMetaContext = new LocalMetaContext(context, judgements, metavariables, metaproofSteps);  ///
 
     return localMetaContext;
   }

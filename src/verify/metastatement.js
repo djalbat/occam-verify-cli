@@ -1,7 +1,6 @@
 "use strict";
 
 import verifyJudgement from "../verify/judgement";
-import verifyMetaEquality from "../verify/metaEquality";
 import metastatementNodeVerifier from "../verifier/node/metastatement";
 
 import { nodeQuery } from "../utilities/query";
@@ -17,7 +16,6 @@ function verifyMetastatement(metastatementNode, assignments, derived, localMetaC
   localMetaContext.trace(`Verifying the '${metastatementString}' metastatement...`, metastatementNode);
 
   const verifyMetaStatementFunctions = [
-    verifyMetastatementAsMetaEquality,
     verifyMetastatementAsJudgement,
     verifyMetastatementAsIs
   ];
@@ -43,28 +41,6 @@ Object.assign(metastatementNodeVerifier, {
 
 export default verifyMetastatement;
 
-function verifyMetastatementAsMetaEquality(metastatementNode, assignments, derived, localMetaContext) {
-  let metastatementVerifiedAsMetaEquality = false;
-
-  const metaEqualityNode = metaEqualityNodeQuery(metastatementNode);
-
-  if (metaEqualityNode !== null) {
-    const metastatementString = localMetaContext.nodeAsString(metastatementNode);
-
-    localMetaContext.trace(`Verifying the '${metastatementString}' metastatement as a meta-equality...`, metastatementNode);
-
-    const metaEqualityVerified = verifyMetaEquality(metaEqualityNode, assignments, derived, localMetaContext);
-
-    metastatementVerifiedAsMetaEquality = metaEqualityVerified;  ///
-
-    if (metastatementVerifiedAsMetaEquality) {
-      localMetaContext.debug(`...verified the '${metastatementString}' metastatement as a meta-equality.`, metastatementNode);
-    }
-  }
-
-  return metastatementVerifiedAsMetaEquality;
-}
-
 function verifyMetastatementAsJudgement(metastatementNode, assignments, derived, localMetaContext) {
   let metastatementVerifiedAsJudgement = false;
 
@@ -75,7 +51,7 @@ function verifyMetastatementAsJudgement(metastatementNode, assignments, derived,
 
     localMetaContext.trace(`Verifying the '${metastatementString}' metastatement as a judgement...`, metastatementNode);
 
-    const judgementVerified = verifyJudgement(judgementNode, derived, localMetaContext);
+    const judgementVerified = verifyJudgement(judgementNode, assignments, derived, localMetaContext);
 
     metastatementVerifiedAsJudgement = judgementVerified;  ///
 
@@ -90,10 +66,9 @@ function verifyMetastatementAsJudgement(metastatementNode, assignments, derived,
 function verifyMetastatementAsIs(metastatementNode, assignments, derived, localMetaContext) {
   let metastatementVerifiedAsIs = false;
 
-  const judgementNode = judgementNodeQuery(metastatementNode),
-        metaEqualityNode = metaEqualityNodeQuery(metastatementNode);
+  const judgementNode = judgementNodeQuery(metastatementNode);
 
-  if ((judgementNode === null) && (metaEqualityNode === null)) {
+  if (judgementNode === null) {
     const metastatementString = localMetaContext.nodeAsString(metastatementNode);
 
     localMetaContext.trace(`Verifying the '${metastatementString}' metastatement as is...`, metastatementNode);
