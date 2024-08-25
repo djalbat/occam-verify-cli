@@ -5,8 +5,7 @@ import metastatementNodeVerifier from "../verifier/node/metastatement";
 
 import { nodeQuery } from "../utilities/query";
 
-const judgementNodeQuery = nodeQuery("/metastatement/judgement!"),
-      metaEqualityNodeQuery = nodeQuery("/metastatement/metaEquality!");
+const judgementNodeQuery = nodeQuery("/metastatement/judgement!");
 
 function verifyMetastatement(metastatementNode, assignments, derived, localMetaContext) {
   let metastatementVerified;

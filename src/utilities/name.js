@@ -7,14 +7,9 @@ const typeTerminalNodeQuery = nodeQuery("/type/@type"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type");
 
 export function typeNameFromTypeNode(typeNode) {
-  let typeName = null;
-
-  if (typeNode !== null) {
-    const typeTerminalNode = typeTerminalNodeQuery(typeNode),
-          typeTerminalNodeContent = typeTerminalNode.getContent();
-
-    typeName = typeTerminalNodeContent; ///
-  }
+  const typeTerminalNode = typeTerminalNodeQuery(typeNode),
+        typeTerminalNodeContent = typeTerminalNode.getContent(),
+        typeName = typeTerminalNodeContent; ///
 
   return typeName;
 }
@@ -28,14 +23,9 @@ export function nameFromMetavariableNode(metavariableNode) {
 }
 
 export function metaTypeNameFromMetaTypeNode(metaTypeNode) {
-  let metaTypeName = null;
-
-  if (metaTypeNode !== null) {
     const metaTypeTerminalNode = metaTypeTerminalNodeQuery(metaTypeNode),
-          metaTypeTerminalNodeContent = metaTypeTerminalNode.getContent();
-
-    metaTypeName = metaTypeTerminalNodeContent; ///
-  }
+          metaTypeTerminalNodeContent = metaTypeTerminalNode.getContent(),
+          metaTypeName = metaTypeTerminalNodeContent; ///
 
   return metaTypeName;
 }

@@ -2,7 +2,6 @@
 
 import verifyFrame from "../verify/frame";
 import frameMetaType from "../metaType/frame";
-import JudgementAssignment from "../assignment/judgement";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -85,7 +84,30 @@ function verifyStatedJudgement(judgementNode, assignments, derived, localMetaCon
 
     localMetaContext.trace(`Verifying the '${judgementString}' stated judgement...`, judgementNode);
 
-    debugger
+    const metavariableNode = metavariableNodeQuery(judgementNode),
+          metavariable = localMetaContext.findMetavariableByMetavariableNode(metavariableNode, localMetaContext);
+
+    if (metavariable !== null) {
+      const metaType = metavariable.getMetaType();
+
+      if (metaType === frameMetaType) {
+        const frameNode = frameNodeQuery(judgementNode);
+
+        if (frameNode !== null) {
+          const frameVerified = verifyFrame(frameNode, derived, localMetaContext);
+
+          statedJudgementVerified = frameVerified;  ///
+        } else {
+          localMetaContext.debug(`The right hand side of the '${judgementString}' judgement must be a frame.`, judgementNode);
+        }
+      } else {
+        const frameMetaTypeName = frameMetaType.getName(),
+              metavariableString = localMetaContext.nodeAsString(metavariableNode),
+              metaTypeString = metaType.asString();
+
+        localMetaContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${frameMetaTypeName}'.`, judgementNode);
+      }
+    }
 
     if (statedJudgementVerified) {
       localMetaContext.debug(`...verified the '${judgementString}' stated judgement.`, judgementNode);

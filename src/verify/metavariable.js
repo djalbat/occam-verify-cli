@@ -18,8 +18,7 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
 
   fileContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
-  const name = nameFromMetavariableNode(metavariableNode),
-        metavariablePresent = fileContext.isMetavariablePresentByName(name);
+  const metavariablePresent = fileContext.isMetavariablePresentByMetavariableNode(metavariableNode);
 
   if (metavariablePresent) {
     fileContext.debug(`The metavariable '${metavariableString}' is already present.`, metavariableNode);
@@ -49,6 +48,7 @@ export default function verifyMetavariable(metavariableNode, metaTypeNode, fileC
       }
 
       const node = metavariableNode,  ///
+            name = nameFromMetavariableNode(metavariableNode),
             metavariable = Metavariable.fromNodeNameTermTypeAndMetaType(node, name, termType, metaType),
             metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
             metavariableAssigned = metavariableAssignment.assign(fileContext);
