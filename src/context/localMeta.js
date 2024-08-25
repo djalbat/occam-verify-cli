@@ -3,14 +3,12 @@
 import contextMixins from "../mixins/context";
 
 import { last } from "../utilities/array";
-import { mergeMetaEquivalences } from "../utilities/metaEquivalences";
 
 class LocalMetaContext {
-  constructor(context, metavariables, metaproofSteps, metaEquivalences) {
+  constructor(context, metavariables, metaproofSteps) {
     this.context = context;
     this.metavariables = metavariables;
     this.metaproofSteps = metaproofSteps;
-    this.metaEquivalences = metaEquivalences;
   }
 
   getContext() {
@@ -32,18 +30,6 @@ class LocalMetaContext {
     ];
 
     return metaproofSteps;
-  }
-
-  getMetaEquivalences() {
-    let metaEquivalences = this.context.getMetaEquivalences();
-
-    const metaEquivalencesA = this.metaEquivalences, ///
-          metaEquivalencesB = metaEquivalences,
-          localMetaContext = this;  ///
-
-    metaEquivalences = mergeMetaEquivalences(metaEquivalencesA, metaEquivalencesB, localMetaContext); ///
-
-    return metaEquivalences;
   }
 
   getVariables() { return this.context.getVariables(); }
@@ -100,10 +86,6 @@ class LocalMetaContext {
 
   addMetaproofStep(metaproofStep) {
     this.metaproofSteps.push(metaproofStep);
-  }
-
-  addMetaEquivalence(metaEquivalence) {
-    this.metaEquivalences.push(metaEquivalence);
   }
 
   matchMetastatement(metastatementNode) {
@@ -174,8 +156,7 @@ class LocalMetaContext {
     const context = fileContext,  ///
           metavariables = [],
           metaproofSteps = [],
-          metaEquivalences = [],
-          localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps, metaEquivalences);
+          localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps);
 
     return localMetaContext;
   }
@@ -183,10 +164,9 @@ class LocalMetaContext {
   static fromLocalMetaContext(localMetaContext) {
     const context = localMetaContext,  ///
           metavariables = [],
-          metaproofSteps = [],
-          metaEquivalences = [];
+          metaproofSteps = [];
 
-    localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps, metaEquivalences);  ///
+    localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps);  ///
 
     return localMetaContext;
   }

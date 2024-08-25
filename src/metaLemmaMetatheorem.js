@@ -3,7 +3,6 @@
 import Label from "./label";
 import MetaConsequent from "./metaConsequent";
 import MetaSupposition from "./metaSupposition";
-import LocalMetaContext from "./context/localMeta";
 
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";

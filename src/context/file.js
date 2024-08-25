@@ -83,12 +83,6 @@ export default class FileContext {
     return metaproofSteps;
   }
 
-  getMetaEquivalences() {
-    const metaEquivalences = []; ///
-
-    return metaEquivalences;
-  }
-
   getLabels(includeRelease = true) {
     const labels = [];
 
