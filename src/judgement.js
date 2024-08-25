@@ -1,10 +1,10 @@
 "use strict";
 
 export default class Judgement {
-  constructor(node, frame, metavariable) {
+  constructor(node, frame, metavariableNode) {
     this.node = node;
     this.frame = frame;
-    this.metavariable = metavariable;
+    this.metavariableNode = metavariableNode;
   }
 
   getNode() {
@@ -15,19 +15,21 @@ export default class Judgement {
     return this.frame;
   }
 
-  getMetavariable() {
-    return this.metavariable;
+  getMetavariableNode() {
+    return this.metavariableNode;
   }
 
-  matchMetavariable(metavariable) {
-    const metavariableMatches = (this.metavariable ===metavariable);
+  getDeclarations() { return this.frame.getDeclarations(); }
 
-    return metavariableMatches;
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+
+    return metavariableNodeMatches;
   }
 
-  static fromJudgementNodeFrameAndMetavariable(judgementNode, frame, metavariable) {
+  static fromJudgementNodeFrameAndMetavariableNode(judgementNode, frame, metavariableNode) {
     const node = judgementNode,
-          judgement = new Judgement(node, frame, metavariable);
+          judgement = new Judgement(node, frame, metavariableNode);
 
     return judgement;
   }

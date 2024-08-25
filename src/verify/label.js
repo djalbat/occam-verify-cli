@@ -2,20 +2,19 @@
 
 import Label from "../label";
 
-export default function verifyLabel(labelsMetavariableNode, labels, fileContext) {
+export default function verifyLabel(metavariableNode, labels, fileContext) {
   let labelVerified = false;
 
-  const labelMetavariableString = fileContext.nodeAsString(labelsMetavariableNode);
+  const labelMetavariableString = fileContext.nodeAsString(metavariableNode);
 
-  fileContext.trace(`Verifying the '${labelMetavariableString}' label...`, labelsMetavariableNode);
+  fileContext.trace(`Verifying the '${labelMetavariableString}' label...`, metavariableNode);
 
-  const labelPresent = fileContext.isLabelPresentByLabelMetavariableNode(labelsMetavariableNode);
+  const labelPresent = fileContext.isLabelPresentByMetavariableNode(metavariableNode);
 
   if (labelPresent) {
-    fileContext.debug(`The '${labelMetavariableString}' label is already present.`, labelsMetavariableNode);
+    fileContext.debug(`The '${labelMetavariableString}' label is already present.`, metavariableNode);
   } else {
-    const metavariableNode = labelsMetavariableNode,  ///
-          label = Label.fromMetavariableNode(metavariableNode);
+    const label = Label.fromMetavariableNode(metavariableNode);
 
     labels.push(label);
 
@@ -23,7 +22,7 @@ export default function verifyLabel(labelsMetavariableNode, labels, fileContext)
   }
 
   if (labelVerified) {
-    fileContext.debug(`...verified the '${labelMetavariableString}' label.`, labelsMetavariableNode);
+    fileContext.debug(`...verified the '${labelMetavariableString}' label.`, metavariableNode);
   }
 
   return labelVerified;

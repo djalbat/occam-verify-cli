@@ -26,7 +26,7 @@ function getConstructors() { return this.context.getConstructors(); }
 
 function findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
 
-function findTypeByTypeNode(labelMetavariableNode) { return this.context.findTypeByTypeNode(labelMetavariableNode); }
+function findTypeByTypeNode(typeNode) { return this.context.findTypeByTypeNode(typeNode); }
 
 function findMetavariableByName(name) { return this.context.findMetavariableByName(name); }
 
@@ -36,19 +36,23 @@ function isTypePresentByTypeNode(typeNode) { return this.context.isTypePresentBy
 
 function isMetavariablePresentByName(name) { return this.context.isMetavariablePresentByName(name); }
 
-function findLabelByLabelMetavariableNode(labelMetavariableNode) { return this.context.findLabelByLabelMetavariableNode(labelMetavariableNode); }
+function isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
 
-function findRuleByLabelMetavariableNode(labelMetavariableNode) { return this.context.findRuleByLabelMetavariableNode(labelMetavariableNode); }
+function findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
 
-function findAxiomByLabelMetavariableNode(labelMetavariableNode) { return this.context.findAxiomByLabelMetavariableNode(labelMetavariableNode); }
+function findRuleByMetavariableNode(metavariableNode) { return this.context.findRuleByMetavariableNode(metavariableNode); }
 
-function findLemmaByLabelMetavariableNode(labelMetavariableNode) { return this.context.findLemmaByLabelMetavariableNode(labelMetavariableNode); }
+function findAxiomByMetavariableNode(metavariableNode) { return this.context.findAxiomByMetavariableNode(metavariableNode); }
 
-function findTheoremByLabelMetavariableNode(labelMetavariableNode) { return this.context.findTheoremByLabelMetavariableNode(labelMetavariableNode); }
+function findLemmaByMetavariableNode(metavariableNode) { return this.context.findLemmaByMetavariableNode(metavariableNode); }
 
-function findConjectureByLabelMetavariableNode(labelMetavariableNode) { return this.context.findConjectureByLabelMetavariableNode(labelMetavariableNode); }
+function findTheoremByMetavariableNode(metavariableNode) { return this.context.findTheoremByMetavariableNode(metavariableNode); }
 
-function isLabelPresentByLabelMetavariableNode(labelMetavariableNode) { return this.context.isLabelPresentByLabelMetavariableNode(labelMetavariableNode); }
+function findMetaLemmaByMetavariableNode(metavariableNode) { return this.context.findMetaLemmaByMetavariableNode(metavariableNode); }
+
+function findConjectureByMetavariableNode(metavariableNode) { return this.context.findConjectureByMetavariableNode(metavariableNode); }
+
+function findMetatheoremByMetavariableNode(metavariableNode) { return this.context.findMetatheoremByMetavariableNode(metavariableNode); }
 
 function nodeAsString(node) { return this.context.nodeAsString(node); }
 
@@ -73,13 +77,15 @@ const contextMixins = {
   isTypePresentByTypeName,
   isTypePresentByTypeNode,
   isMetavariablePresentByName,
-  findLabelByLabelMetavariableNode,
-  findRuleByLabelMetavariableNode,
-  findAxiomByLabelMetavariableNode,
-  findLemmaByLabelMetavariableNode,
-  findTheoremByLabelMetavariableNode,
-  findConjectureByLabelMetavariableNode,
-  isLabelPresentByLabelMetavariableNode,
+  isLabelPresentByMetavariableNode,
+  findLabelByMetavariableNode,
+  findRuleByMetavariableNode,
+  findAxiomByMetavariableNode,
+  findLemmaByMetavariableNode,
+  findTheoremByMetavariableNode,
+  findMetaLemmaByMetavariableNode,
+  findConjectureByMetavariableNode,
+  findMetatheoremByMetavariableNode,
   nodeAsString,
   nodesAsString
 };

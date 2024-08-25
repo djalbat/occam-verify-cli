@@ -4,7 +4,6 @@ import Declaration from "../declaration"
 import referenceMetaType from "../metaType/reference";
 import metastatementNodeVerifier from "../verifier/node/metastatement";
 
-import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
 
 const metavariableNodeQuery = nodeQuery("/declaration/metavariable!"),
@@ -17,9 +16,8 @@ export default function verifyDeclaration(declarationNode, declarations, localMe
 
   localMetaContext.trace(`Verifying the '${declarationString}' declaration...`, declarationNode);
 
-  const metavariables = [],
-        metavariableNode = metavariableNodeQuery(declarationNode),
-        metavariableVerified = verifyMetavariable(metavariableNode, metavariables, localMetaContext);
+  const metavariableNode = metavariableNodeQuery(declarationNode),
+        metavariableVerified = verifyMetavariable(metavariableNode, localMetaContext);
 
   if (metavariableVerified) {
     const metastatementNode = metastatementNodeQuery(declarationNode);
@@ -34,9 +32,7 @@ export default function verifyDeclaration(declarationNode, declarations, localMe
           });
 
     if (metastatementVerified) {
-      const firstMetavariable = first(metavariables),
-            metavariable = firstMetavariable, ///
-            declaration = Declaration.fromMetavariableAndMetastatementNode(metavariable, metastatementNode);
+      const declaration = Declaration.fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode);
 
       declarations.push(declaration);
 
@@ -51,7 +47,7 @@ export default function verifyDeclaration(declarationNode, declarations, localMe
   return declarationVerified;
 }
 
-function verifyMetavariable(metavariableNode, metavariables, localMetaContext) {
+function verifyMetavariable(metavariableNode, localMetaContext) {
   let metavariableVerified = false;
 
   const metavariableString = localMetaContext.nodeAsString(metavariableNode);
@@ -64,8 +60,6 @@ function verifyMetavariable(metavariableNode, metavariables, localMetaContext) {
     const metaType = metavariable.getMetaType();
 
     if (metaType === referenceMetaType) {
-      metavariables.push(metavariable);
-
       metavariableVerified = true;
     } else {
       const referenceMetaTypeName = referenceMetaType.getName(),

@@ -5,8 +5,8 @@ import verifyMetavariableAgainstMetastatement from "../../verify/metavariableAga
 
 import { nodeQuery } from "../../utilities/query";
 
-const metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!"),
-      referenceMetavariableNodeQuery = nodeQuery("/qualifiedMetastatement/reference!/metavariable!");
+const metavariableNodeQuery = nodeQuery("/qualifiedMetastatement/reference!/metavariable!"),
+      metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
 
 export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, derived, localMetaContext) {
   let qualifiedMetastatementVerified = false;
@@ -19,9 +19,8 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
     localMetaContext.trace(`Verifying the '${metastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
 
-    const referenceMetavariableNode = referenceMetavariableNodeQuery(qualifiedMetastatementNode),
-          labelMetavariableNode = referenceMetavariableNode,  ///
-          rule = localMetaContext.findRuleByLabelMetavariableNode(labelMetavariableNode);
+    const metavariableNode = metavariableNodeQuery(qualifiedMetastatementNode),
+          rule = localMetaContext.findRuleByMetavariableNode(metavariableNode);
 
     if (rule !== null) {
       const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, metastatementLocalMetaContext);
@@ -29,8 +28,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
       qualifiedMetastatementVerified = ruleMatchesMetastatement;  ///
     } else {
       if (substitutions !== null) {
-        const metavariableNode = referenceMetavariableNode, ///
-              metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext);
+        const metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext);
 
         if (metavariablePresent) {
           const metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {

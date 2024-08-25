@@ -99,9 +99,9 @@ export default class Rule {
     return metastatementNatches;
   }
 
-  matchLabelMetavariableNode(labelMetavariableNode) {
+  matchLabelMetavariableNode(metavariableNode) {
     const labelMetavariableNodeMatches = this.labels.some((label) => {
-      const node = labelMetavariableNode, ///
+      const node = metavariableNode, ///
             labelMatchesNode = label.matchNode(node);
 
       if (labelMatchesNode) {

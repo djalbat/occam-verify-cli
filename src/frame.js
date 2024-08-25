@@ -1,6 +1,6 @@
 "use strict";
 
-import { push } from "./utilities/array";
+import { push, first } from "./utilities/array";
 
 export default class Frame {
   constructor(declarations) {
@@ -9,6 +9,27 @@ export default class Frame {
 
   getDeclarations() {
     return this.declarations;
+  }
+
+  getDeclaration() {
+    let declaration = null;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const firstDeclaration = first(this.declarations);
+
+      declaration = firstDeclaration; ///
+    }
+
+    return declaration;
+  }
+
+  isSingular() {
+    const declarationsLength = this.declarations.length,
+          singular = (declarationsLength === 1);
+
+    return singular;
   }
 
   addDeclarations(declarations) {

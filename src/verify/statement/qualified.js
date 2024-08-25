@@ -69,8 +69,8 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
 function verifyQualifiedStatementAAgainstRule(qualifiedStatementNode, referenceMetavariableNode, localContext) {
   let qualifiedStatementVerifiedAgainstRule = false;
 
-  const labelMetavariableNode = referenceMetavariableNode,  ///
-        rule = localContext.findRuleByLabelMetavariableNode(labelMetavariableNode);
+  const metavariableNode = referenceMetavariableNode,  ///
+        rule = localContext.findRuleByMetavariableNode(metavariableNode);
 
   if (rule !== null) {
     const referenceMetavariableString = localContext.nodeAsString(referenceMetavariableNode),
@@ -95,8 +95,8 @@ function verifyQualifiedStatementAAgainstRule(qualifiedStatementNode, referenceM
 function verifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, referenceMetavariableNode, localContext) {
   let qualifiedStatementVerifiedAgainstAxiom = false;
 
-  const labelMetavariableNode = referenceMetavariableNode,  ///
-        axiom = localContext.findAxiomByLabelMetavariableNode(labelMetavariableNode);
+  const metavariableNode = referenceMetavariableNode,  ///
+        axiom = localContext.findAxiomByMetavariableNode(metavariableNode);
 
   if (axiom !== null) {
     const referenceMetavariableString = localContext.nodeAsString(referenceMetavariableNode),
@@ -121,8 +121,8 @@ function verifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, reference
 function verifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, referenceMetavariableNode, localContext) {
   let qualifiedStatementVerifiedAgainstLemma = false;
 
-  const labelMetavariableNode = referenceMetavariableNode,  ///
-        lemma = localContext.findLemmaByLabelMetavariableNode(labelMetavariableNode);
+  const metavariableNode = referenceMetavariableNode,  ///
+        lemma = localContext.findLemmaByMetavariableNode(metavariableNode);
 
   if (lemma !== null) {
     const referenceMetavariableString = localContext.nodeAsString(referenceMetavariableNode),
@@ -147,8 +147,8 @@ function verifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, reference
 function verifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, referenceMetavariableNode, localContext) {
   let qualifiedStatementVerifiedAgainstTheorem = false;
 
-  const labelMetavariableNode = referenceMetavariableNode,  ///
-        theorem = localContext.findTheoremByLabelMetavariableNode(labelMetavariableNode);
+  const metavariableNode = referenceMetavariableNode,  ///
+        theorem = localContext.findTheoremByMetavariableNode(metavariableNode);
 
   if (theorem !== null) {
     const referenceMetavariableString = localContext.nodeAsString(referenceMetavariableNode),
@@ -173,8 +173,8 @@ function verifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, referen
 function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, referenceMetavariableNode, localContext) {
   let qualifiedStatementVerifiedAgainstConjecture = false;
 
-  const labelMetavariableNode = referenceMetavariableNode,  ///
-        conjecture = localContext.findConjectureByLabelMetavariableNode(labelMetavariableNode);
+  const metavariableNode = referenceMetavariableNode,  ///
+        conjecture = localContext.findConjectureByMetavariableNode(metavariableNode);
 
   if (conjecture !== null) {
     const referenceMetavariableString = localContext.nodeAsString(referenceMetavariableNode),

@@ -1,21 +1,21 @@
 "use strict";
 
 export default class Declaration {
-  constructor(metavariable, metastatementNode) {
-    this.metavariable = metavariable;
+  constructor(metavariableNode, metastatementNode) {
+    this.metavariableNode = metavariableNode;
     this.metastatementNode = metastatementNode;
   }
 
-  getMetavariable() {
-    return this.metavariable;
+  getMetavariableNode() {
+    return this.metavariableNode;
   }
 
   getMetastatementNode() {
     return this.metastatementNode;
   }
 
-  static fromMetavariableAndMetastatementNode(metavariable, metastatementNode) {
-    const declaration = new Declaration(metavariable, metastatementNode);
+  static fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode) {
+    const declaration = new Declaration(metavariableNode, metastatementNode);
 
     return declaration;
   }

@@ -12,10 +12,11 @@ export default function verifyLabels(labelsNode, labels, fileContext) {
   if (labelsNode === null) {
     labelsVerified = true;
   } else {
-    const labelsMetavariableNodes = labelsMetavariableNodesQuery(labelsNode);
+    const labelsMetavariableNodes = labelsMetavariableNodesQuery(labelsNode),
+          metavariableNodes = labelsMetavariableNodes;  ///
 
-    labelsVerified = labelsMetavariableNodes.every((labelsMetavariableNode) => {
-      const labelVerified = verifyLabel(labelsMetavariableNode, labels, fileContext);
+    labelsVerified = metavariableNodes.every((metavariableNode) => {
+      const labelVerified = verifyLabel(metavariableNode, labels, fileContext);
 
       if (labelVerified) {
         return true;

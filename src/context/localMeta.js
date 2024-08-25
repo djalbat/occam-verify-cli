@@ -142,10 +142,10 @@ class LocalMetaContext {
     return variable;
   }
 
-  findJudgementByMetavariable(metavariable) {
+  findJudgementByMetavariableNode(metavariableNode) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const metavariableMatches = judgement.matchMetavariable(metavariable);
+            const metavariableMatches = judgement.matchMetavariableNode(metavariableNode);
 
             if (metavariableMatches) {
               return true;
@@ -162,8 +162,8 @@ class LocalMetaContext {
     return variablePresent;
   }
 
-  isJudgementPresentByMetavariable(metavariable) {
-    const judgement = this.findJudgementByMetavariable(metavariable),
+  isJudgementPresentByMetavariableNode(metavariableNode) {
+    const judgement = this.findJudgementByMetavariableNode(metavariableNode),
           judgementPresent = (judgement !== null);
 
     return judgementPresent;

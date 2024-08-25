@@ -33,9 +33,9 @@ export default class Label {
 
   static fromMetavariableNode(metavariableNode) {
     const node = metavariableNode, ///
-          variable = new Label(node);
+          label = new Label(node);
 
-    return variable;
+    return label;
   }
 
   static fromJSONAndFileContext(json, fileContext) {
