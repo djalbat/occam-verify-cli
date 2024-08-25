@@ -36,6 +36,31 @@ export default class Frame {
     push(this.declarations, declarations);
   }
 
+  matchSubstitution(substitution) {
+    const substitutionMatches = this.declarations.some((declaration) => {
+      const declarationMatchesSubstitution = declaration.matchSubstitution(substitution);
+
+      if (declarationMatchesSubstitution) {
+        return true;
+      }
+    });
+
+    return substitutionMatches;
+  }
+
+  matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
+    const substitutions = metaLemmaMetatheorem.getSubstitutions(),
+          metaLemmaOrMetaTheoremMatches = substitutions.every((substitution) => {
+            const frameMatchesSubstitution = this.matchSubstitution(substitution);
+
+            if (frameMatchesSubstitution) {
+              return true;
+            }
+          });
+
+    return metaLemmaOrMetaTheoremMatches;
+  }
+
   static fromDeclarations(declarations) {
     const frame = new Frame(declarations);
 

@@ -14,6 +14,25 @@ export default class Declaration {
     return this.metastatementNode;
   }
 
+  matchSubstitution(substitution) {
+    const metavariableNode = substitution.getMetavariableNode(),
+          metastatementNode = substitution.getMetastatementNode(),
+          metavariableNodeMatches = this.metavariableNode.match(metavariableNode),
+          metastatementNodeMatches = this.metastatementNode.match(metastatementNode),
+          substitutionMatches = (metavariableNodeMatches && metastatementNodeMatches);
+
+    return substitutionMatches;
+  }
+
+  matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
+    const metaConsequent = metaLemmaMetatheorem.getMetaConsequent(),
+          metastatementNode = metaConsequent.getMetastatementNode(),
+          matches = this.metastatementNode.match(metastatementNode),
+          metaLemmaOrMetaTheoremMatches = matches;  ///
+
+    return metaLemmaOrMetaTheoremMatches;
+  }
+
   static fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode) {
     const declaration = new Declaration(metavariableNode, metastatementNode);
 

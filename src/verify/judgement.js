@@ -66,12 +66,14 @@ function verifyDerivedJudgement(judgementNode, assignments, derived, localMetaCo
             const declaration = frame.getDeclaration(),
                   metavariableNode = declaration.getMetavariableNode(),
                   metaLemma = localMetaContext.findMetaLemmaByMetavariableNode(metavariableNode),
-                  metatheorem = localMetaContext.findMetatheoremByMetavariableNode(metavariableNode);
+                  metatheorem = localMetaContext.findMetatheoremByMetavariableNode(metavariableNode),
+                  metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
 
-            if ((metaLemma !== null) || (metatheorem !== null)) {
+            if (metaLemmaMetatheorem !== null) {
+              const judgementMatchesMetaLemmaMetatheorem = judgement.matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem),
+                    declarationMatchesMetaLemmaMetatheorem = declaration.matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem);
 
-              debugger
-
+              derivedJudgementVerified = (judgementMatchesMetaLemmaMetatheorem && declarationMatchesMetaLemmaMetatheorem);
             } else {
               const metavariableString = localMetaContext.nodeAsString(metavariableNode);
 
@@ -84,10 +86,14 @@ function verifyDerivedJudgement(judgementNode, assignments, derived, localMetaCo
           }
         }
       } else {
-        const metavariableString = localMetaContext.nodeAsString(metavariable);
+        const metavariableString = localMetaContext.nodeAsString(metavariableNode);
 
         localMetaContext.debug(`There is no judgement present for the '${metavariableString}' metavariable.`, judgementNode);
       }
+    }
+
+    if (derivedJudgementVerified) {
+      localMetaContext.debug(`...verified the '${judgementString}' derived judgement.`, judgementNode);
     }
   }
 

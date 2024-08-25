@@ -3,10 +3,10 @@
 import Label from "./label";
 import MetaConsequent from "./metaConsequent";
 import MetaSupposition from "./metaSupposition";
+import MetastatementForMetavariableSubstitution from "./substitution/metastatementForMetavariable";
 
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
-import MetastatementForMetavariableSubstitution from "./substitution/metastatementForMetavariable";
 
 export default class MetaLemmaMetatheorem {
   constructor(labels, metaSuppositions, metaConsequent, substitutions, fileContext) {

@@ -17,7 +17,6 @@ import { push } from "../utilities/array";
 import { objectType } from "../type";
 import { typeFromJSONAndFileContext } from "../type";
 import { nodeAsString, nodesAsString } from "../utilities/string";
-import localMeta from "./localMeta";
 
 export default class FileContext {
   constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables) {

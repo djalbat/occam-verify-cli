@@ -27,6 +27,8 @@ export default class Judgement {
     return metavariableNodeMatches;
   }
 
+  matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) { return this.frame.matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem); }
+
   static fromJudgementNodeFrameAndMetavariableNode(judgementNode, frame, metavariableNode) {
     const node = judgementNode,
           judgement = new Judgement(node, frame, metavariableNode);
