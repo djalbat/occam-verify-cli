@@ -1,13 +1,10 @@
 "use strict";
 
-export default class Frame {
-  constructor(node, declarations) {
-    this.node = node;
-    this.declarations = declarations;
-  }
+import { push } from "./utilities/array";
 
-  getNode() {
-    return this.node;
+export default class Frame {
+  constructor(declarations) {
+    this.declarations = declarations;
   }
 
   getDeclarations() {
@@ -18,9 +15,8 @@ export default class Frame {
     push(this.declarations, declarations);
   }
 
-  fromFrameNodeAndDeclarations(frameNode, declarations) {
-    const node = frameNode, ///
-          frame = new Frame(node, declarations);
+  static fromDeclarations(declarations) {
+    const frame = new Frame(declarations);
 
     return frame;
   }

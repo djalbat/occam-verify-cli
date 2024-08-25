@@ -1,9 +1,12 @@
 "use strict";
 
+import Judgement from "../judgement";
 import verifyFrame from "../verify/frame";
 import frameMetaType from "../metaType/frame";
 
+import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
+import JudgementAssignment from "../assignment/judgement";
 
 const frameNodeQuery = nodeQuery("/judgement/frame!"),
       metavariableNodeQuery = nodeQuery("/judgement/metavariable!");
@@ -84,28 +87,35 @@ function verifyStatedJudgement(judgementNode, assignments, derived, localMetaCon
 
     localMetaContext.trace(`Verifying the '${judgementString}' stated judgement...`, judgementNode);
 
-    const metavariableNode = metavariableNodeQuery(judgementNode),
-          metavariable = localMetaContext.findMetavariableByMetavariableNode(metavariableNode, localMetaContext);
+    const metavariables = [],
+          metavariableNode = metavariableNodeQuery(judgementNode),
+          metavariableVerified = verifyMetavariable(metavariableNode, metavariables, localMetaContext);
 
-    if (metavariable !== null) {
-      const metaType = metavariable.getMetaType();
+    if (metavariableVerified) {
+      const firstMetavariable = first(metavariables),
+            metavariable = firstMetavariable, ///
+            judgementPresent = localMetaContext.isJudgementPresentByMetavariable(metavariable);
 
-      if (metaType === frameMetaType) {
-        const frameNode = frameNodeQuery(judgementNode);
+      if (!judgementPresent) {
+        const frameNode = frameNodeQuery(judgementNode),
+              frames = [],
+              frameVerified = verifyFrame(frameNode, frames, derived, localMetaContext);
 
-        if (frameNode !== null) {
-          const frameVerified = verifyFrame(frameNode, derived, localMetaContext);
+        if (frameVerified) {
+          const firstFrame = first(frames),
+                frame = firstFrame, ///
+                judgement = Judgement.fromJudgementNodeFrameAndMetavariable(judgementNode, frame, metavariable),
+                judgementAssignment = JudgementAssignment.fromJudgement(judgement),
+                assignment = judgementAssignment;
 
-          statedJudgementVerified = frameVerified;  ///
-        } else {
-          localMetaContext.debug(`The right hand side of the '${judgementString}' judgement must be a frame.`, judgementNode);
+          assignments.push(assignment);
+
+          statedJudgementVerified = true;
         }
       } else {
-        const frameMetaTypeName = frameMetaType.getName(),
-              metavariableString = localMetaContext.nodeAsString(metavariableNode),
-              metaTypeString = metaType.asString();
+        const metavariableString = localMetaContext.nodeAsString(metavariable);
 
-        localMetaContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${frameMetaTypeName}'.`, judgementNode);
+        localMetaContext.debug(`There is already a judgement present for the '${metavariableString}' metavariable.`, judgementNode);
       }
     }
 
@@ -115,4 +125,37 @@ function verifyStatedJudgement(judgementNode, assignments, derived, localMetaCon
   }
 
   return statedJudgementVerified;
+}
+
+function verifyMetavariable(metavariableNode, metavariables, localMetaContext) {
+  let metavariableVerified = false;
+
+  const metavariableString = localMetaContext.nodeAsString(metavariableNode);
+
+  localMetaContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
+
+  const metavariable = localMetaContext.findMetavariableByMetavariableNode(metavariableNode, localMetaContext);
+
+  if (metavariable !== null) {
+    const metaType = metavariable.getMetaType();
+
+    if (metaType === frameMetaType) {
+      metavariables.push(metavariable);
+
+      metavariableVerified = true;
+    } else {
+      const frameMetaTypeName = frameMetaType.getName(),
+            metaTypeString = metaType.asString();
+
+      localMetaContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${frameMetaTypeName}'.`, metavariableNode);
+    }
+  } else {
+    localMetaContext.debug(`The '${metavariableString}' metavariable is not present'.`, metavariableNode);
+  }
+
+  if (metavariableVerified) {
+    localMetaContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
+  }
+
+  return metavariableVerified;
 }

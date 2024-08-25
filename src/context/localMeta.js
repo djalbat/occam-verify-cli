@@ -74,7 +74,11 @@ class LocalMetaContext {
   }
 
   addJudgement(judgement) {
+    const judgementAdded = true;
+
     this.judgements.push(judgement);
+
+    return judgementAdded;
   }
 
   addMetavariable(metavariable) {
@@ -138,11 +142,31 @@ class LocalMetaContext {
     return variable;
   }
 
+  findJudgementByMetavariable(metavariable) {
+    const judgements = this.getJudgements(),
+          judgement = judgements.find((judgement) => {
+            const metavariableMatches = judgement.matchMetavariable(metavariable);
+
+            if (metavariableMatches) {
+              return true;
+            }
+          }) || null;
+
+    return judgement;
+  }
+
   isVariablePresentByVariableNode(variableNode) {
     const variable = this.findVariableByVariableNode(variableNode),
           variablePresent = (variable !== null);
 
     return variablePresent;
+  }
+
+  isJudgementPresentByMetavariable(metavariable) {
+    const judgement = this.findJudgementByMetavariable(metavariable),
+          judgementPresent = (judgement !== null);
+
+    return judgementPresent;
   }
 
   findMetavariableByMetavariableNode(metavariableNode, localMetaContext) {

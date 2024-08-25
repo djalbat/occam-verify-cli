@@ -19,6 +19,12 @@ export default class Judgement {
     return this.metavariable;
   }
 
+  matchMetavariable(metavariable) {
+    const metavariableMatches = (this.metavariable ===metavariable);
+
+    return metavariableMatches;
+  }
+
   static fromJudgementNodeFrameAndMetavariable(judgementNode, frame, metavariable) {
     const node = judgementNode,
           judgement = new Judgement(node, frame, metavariable);
