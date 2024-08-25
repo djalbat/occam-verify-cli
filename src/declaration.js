@@ -1,5 +1,7 @@
 "use strict";
 
+import { matchMetastatement } from "./utilities/metaproof";
+
 export default class Declaration {
   constructor(metavariableNode, metastatementNode) {
     this.metavariableNode = metavariableNode;
@@ -17,11 +19,26 @@ export default class Declaration {
   matchSubstitution(substitution) {
     const metavariableNode = substitution.getMetavariableNode(),
           metastatementNode = substitution.getMetastatementNode(),
-          metavariableNodeMatches = this.metavariableNode.match(metavariableNode),
-          metastatementNodeMatches = this.metastatementNode.match(metastatementNode),
+          metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
+          metastatementNodeMatches = this.matchMetastatementNode(metastatementNode),
           substitutionMatches = (metavariableNodeMatches && metastatementNodeMatches);
 
     return substitutionMatches;
+  }
+
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+
+    return metavariableNodeMatches;
+  }
+
+  matchMetastatementNode(metastatementNode) {
+    const metastatementNodeA = metastatementNode, ///
+          metastatementNodeB = this.metastatementNode,  ///
+          metastatementMatches = matchMetastatement(metastatementNodeA, metastatementNodeB),
+          metastatementNodeMatches = metastatementMatches;  ///
+
+    return metastatementNodeMatches;
   }
 
   matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
