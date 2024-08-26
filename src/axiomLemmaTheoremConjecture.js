@@ -66,17 +66,16 @@ export default class AxiomLemmaTheoremConjecture {
     return statementNatches;
   }
 
-  matchLabelMetavariableNode(metavariableNode) {
-    const labelMetavariableNodeMatches = this.labels.some((label) => {
-      const node = metavariableNode, ///
-            labelMatchesNode = label.matchNode(node);
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = this.labels.some((label) => {
+      const labelMatchesMetavariableNode = label.matchMetavariableNode(metavariableNode);
 
-      if (labelMatchesNode) {
+      if (labelMatchesMetavariableNode) {
         return true;
       }
     });
 
-    return labelMetavariableNodeMatches;
+    return metavariableNodeMatches;
   }
 
   toJSON(tokens) {

@@ -4,36 +4,35 @@ import { nodeAsString } from "./utilities/string";
 import { metavariableNodeFromMetavariableString } from "./utilities/node";
 
 export default class Label {
-  constructor(node) {
-    this.node = node;
+  constructor(metavariableNode) {
+    this.metavariableNode = metavariableNode;
   }
 
-  getNode() {
-    return this.node;
+  getMetavariableNode() {
+    return this.metavariableNode;
   }
 
-  matchNode(node) {
-    const matches = this.node.match(node);
+  matchMetavariableNode(metavariableNode) {
+    const matches = this.metavariableNode.match(metavariableNode);
 
     return matches;
   }
 
   asString(tokens) {
-    const string = nodeAsString(this.node, tokens);
+    const string = nodeAsString(this.metavariableNode, tokens);
 
     return string;
   }
 
   toJSON(tokens) {
-    const string = nodeAsString(this.node, tokens),
+    const string = nodeAsString(this.metavariableNode, tokens),
           json = string;  ///
 
     return json;
   }
 
   static fromMetavariableNode(metavariableNode) {
-    const node = metavariableNode, ///
-          label = new Label(node);
+    const label = new Label(metavariableNode);
 
     return label;
   }
@@ -43,8 +42,7 @@ export default class Label {
           lexer  = fileContext.getLexer(),
           parser = fileContext.getParser(),
           metavariableNode = metavariableNodeFromMetavariableString(metavariableString, lexer, parser),
-          node = metavariableNode, ///
-          label = new Label(node);
+          label = new Label(metavariableNode);
 
     return label;
   }

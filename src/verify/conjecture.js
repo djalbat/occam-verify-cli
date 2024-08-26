@@ -11,21 +11,21 @@ import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const proofNodeQuery = nodeQuery("/conjecture/proof!"),
-      labelsNodeQuery = nodeQuery("/conjecture/labels!"),
+      labelNodesQuery = nodesQuery("/conjecture/label!"),
       consequentNodeQuery = nodeQuery("/conjecture/consequent!"),
       suppositionsNodeQuery = nodesQuery("/conjecture/supposition");
 
 export default function verifyConjecture(conjectureNode, fileContext) {
   let conjectureVerified = false;
 
-  const labelsNode = labelsNodeQuery(conjectureNode),
-        labelsString = fileContext.nodeAsString(labelsNode),
+  const labelNodes = labelNodesQuery(conjectureNode),
+        labelsString = fileContext.nodesAsString(labelNodes),
         localContext = LocalContext.fromFileContext(fileContext);
 
   fileContext.trace(`Verifying the '${labelsString}' conjecture...`, conjectureNode);
 
   const labels = [],
-        labelsVerified = verifyLabels(labelsNode, labels, fileContext);
+        labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
     const suppositions = [],

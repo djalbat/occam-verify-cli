@@ -11,7 +11,7 @@ import { first } from "../utilities/array";
 import { EMPTY_STRING } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const labelsNodeQuery = nodeQuery("/metaLemma/labels!"),
+const labelNodesQuery = nodesQuery("/metaLemma/label"),
       metaproofNodeQuery = nodeQuery("/metaLemma/metaproof!"),
       metaConsequentNodeQuery = nodeQuery("/metaLemma/metaConsequent!"),
       metaSuppositionsNodeQuery = nodesQuery("/metaLemma/metaSupposition");
@@ -19,8 +19,8 @@ const labelsNodeQuery = nodeQuery("/metaLemma/labels!"),
 export default function verifyMetaLemma(metaLemmaNode, fileContext) {
   let metaLemmaVerified = false;
 
-  const labelsNode = labelsNodeQuery(metaLemmaNode),
-        labelsString = fileContext.nodeAsString(labelsNode),
+  const labelNodes = labelNodesQuery(metaLemmaNode),
+        labelsString = fileContext.nodesAsString(labelNodes),
         localMetaContext = LocalMetaContext.fromFileContext(fileContext);
 
   (labelsString === EMPTY_STRING) ?
@@ -28,7 +28,7 @@ export default function verifyMetaLemma(metaLemmaNode, fileContext) {
       fileContext.trace(`Verifying the '${labelsString}' meta-lLemma...`, metaLemmaNode);
 
   const labels = [],
-        labelsVerified = verifyLabels(labelsNode, labels, fileContext);
+        labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
     const substitutions = [],

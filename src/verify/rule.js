@@ -10,7 +10,7 @@ import verifyConclusion from "../verify/conclusion";
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const labelsNodeQuery = nodeQuery("/rule/labels!"),
+const labelNodesQuery = nodesQuery("/rule/label"),
       premisesNodeQuery = nodesQuery("/rule/premise"),
       ruleProofNodeQuery = nodeQuery("/rule/ruleProof!"),
       conclusionNodeQuery = nodeQuery("/rule/conclusion!");
@@ -18,14 +18,14 @@ const labelsNodeQuery = nodeQuery("/rule/labels!"),
 export default function verifyRule(ruleNode, fileContext) {
   let ruleVerified = false;
 
-  const labelsNode = labelsNodeQuery(ruleNode),
-        labelsString = fileContext.nodeAsString(labelsNode),
+  const labelNodes = labelNodesQuery(ruleNode),
+        labelsString = fileContext.nodesAsString(labelNodes),
         localMetaContext = LocalMetaContext.fromFileContext(fileContext);
 
   fileContext.trace(`Verifying the '${labelsString}' rule...`, ruleNode);
 
   const labels = [],
-        labelsVerified = verifyLabels(labelsNode, labels, fileContext);
+        labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
     const premises = [],

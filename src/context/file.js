@@ -361,10 +361,9 @@ export default class FileContext {
   }
 
   findLabelByMetavariableNode(metavariableNode) {
-    const name = metavariableNode,  ///
-          labels = this.getLabels(),
+    const labels = this.getLabels(),
           label = labels.find((label) => {
-            const matches = label.matchNode(name);
+            const matches = label.matchMetavariableNode(metavariableNode);
 
             if (matches) {
               return true;
@@ -377,9 +376,9 @@ export default class FileContext {
   findRuleByMetavariableNode(metavariableNode) {
     const rules = this.getRules(),
           rule = rules.find((rule) => {
-            const ruleMatchesLabelMetavariableNode = rule.matchLabelMetavariableNode(metavariableNode);
+            const ruleMatchesMetavariableNode = rule.matchMetavariableNode(metavariableNode);
 
-            if (ruleMatchesLabelMetavariableNode) {
+            if (ruleMatchesMetavariableNode) {
               return true;
             }
           }) || null;
@@ -390,9 +389,9 @@ export default class FileContext {
   findAxiomByMetavariableNode(metavariableNode) {
     const axioms = this.getAxioms(),
           axiom = axioms.find((axiom) => {
-            const axiomMatchesLabelMetavariableNode = axiom.matchLabelMetavariableNode(metavariableNode);
+            const axiomMatchesMetavariableNode = axiom.matchMetavariableNode(metavariableNode);
 
-            if (axiomMatchesLabelMetavariableNode) {
+            if (axiomMatchesMetavariableNode) {
               return true;
             }
           }) || null;
@@ -403,9 +402,9 @@ export default class FileContext {
   findLemmaByMetavariableNode(metavariableNode) {
     const lemmas = this.getLemmas(),
           lemma = lemmas.find((lemma) => {
-            const lemmaMatchesLabelMetavariableNode = lemma.matchLabelMetavariableNode(metavariableNode);
+            const lemmaMatchesMetavariableNode = lemma.matchMetavariableNode(metavariableNode);
 
-            if (lemmaMatchesLabelMetavariableNode) {
+            if (lemmaMatchesMetavariableNode) {
               return true;
             }
           }) || null;
@@ -416,9 +415,9 @@ export default class FileContext {
   findTheoremByMetavariableNode(metavariableNode) {
     const theorems = this.getTheorems(),
           theorem = theorems.find((theorem) => {
-            const theoremMatchesLabelMetavariableNode = theorem.matchLabelMetavariableNode(metavariableNode);
+            const theoremMatchesMetavariableNode = theorem.matchMetavariableNode(metavariableNode);
 
-            if (theoremMatchesLabelMetavariableNode) {
+            if (theoremMatchesMetavariableNode) {
               return true;
             }
           }) || null;
@@ -429,9 +428,9 @@ export default class FileContext {
   findMetaLemmaByMetavariableNode(metavariableNode) {
     const metaLemmas = this.getMetaLemmas(),
           metaLemma = metaLemmas.find((metaLemma) => {
-            const metaLemmaMatchesLabelMetavariableNode = metaLemma.matchLabelMetavariableNode(metavariableNode);
+            const metaLemmaMatchesMetavariableNode = metaLemma.matchMetavariableNode(metavariableNode);
 
-            if (metaLemmaMatchesLabelMetavariableNode) {
+            if (metaLemmaMatchesMetavariableNode) {
               return true;
             }
           }) || null;
@@ -442,9 +441,9 @@ export default class FileContext {
   findConjectureByMetavariableNode(metavariableNode) {
     const conjectures = this.getConjectures(),
           conjecture = conjectures.find((conjecture) => {
-            const conjectureMatchesLabelMetavariableNode = conjecture.matchLabelMetavariableNode(metavariableNode);
+            const conjectureMatchesMetavariableNode = conjecture.matchMetavariableNode(metavariableNode);
 
-            if (conjectureMatchesLabelMetavariableNode) {
+            if (conjectureMatchesMetavariableNode) {
               return true;
             }
           }) || null;
@@ -455,9 +454,9 @@ export default class FileContext {
   findMetatheoremByMetavariableNode(metavariableNode) {
     const metatheorems = this.getMetatheorems(),
           metatheorem = metatheorems.find((metatheorem) => {
-            const metatheoremMatchesLabelMetavariableNode = metatheorem.matchLabelMetavariableNode(metavariableNode);
+            const metatheoremMatchesMetavariableNode = metatheorem.matchMetavariableNode(metavariableNode);
 
-            if (metatheoremMatchesLabelMetavariableNode) {
+            if (metatheoremMatchesMetavariableNode) {
               return true;
             }
           }) || null;

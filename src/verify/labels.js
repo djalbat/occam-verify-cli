@@ -2,27 +2,16 @@
 
 import verifyLabel from "../verify/label";
 
-import { nodesQuery } from "../utilities/query";
-
-const labelsMetavariableNodesQuery = nodesQuery("/labels/metavariable");
-
-export default function verifyLabels(labelsNode, labels, fileContext) {
+export default function verifyLabels(labelNodes, labels, fileContext) {
   let labelsVerified;
 
-  if (labelsNode === null) {
-    labelsVerified = true;
-  } else {
-    const labelsMetavariableNodes = labelsMetavariableNodesQuery(labelsNode),
-          metavariableNodes = labelsMetavariableNodes;  ///
+  labelsVerified = labelNodes.every((labelNode) => {
+    const labelVerified = verifyLabel(labelNode, labels, fileContext);
 
-    labelsVerified = metavariableNodes.every((metavariableNode) => {
-      const labelVerified = verifyLabel(metavariableNode, labels, fileContext);
-
-      if (labelVerified) {
-        return true;
-      }
-    });
-  }
+    if (labelVerified) {
+      return true;
+    }
+  });
 
   return labelsVerified;
 }

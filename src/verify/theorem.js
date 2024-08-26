@@ -11,21 +11,21 @@ import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const proofNodeQuery = nodeQuery("/theorem/proof!"),
-      labelsNodeQuery = nodeQuery("/theorem/labels!"),
+      labelNodesQuery = nodesQuery("/theorem/label"),
       consequentNodeQuery = nodeQuery("/theorem/consequent!"),
       suppositionsNodeQuery = nodesQuery("/theorem/supposition");
 
 export default function verifyTheorem(theoremNode, fileContext) {
   let theoremVerified = false;
 
-  const labelsNode = labelsNodeQuery(theoremNode),
-        labelsString = fileContext.nodeAsString(labelsNode),
+  const labelNodes = labelNodesQuery(theoremNode),
+        labelsString = fileContext.nodesAsString(labelNodes),
         localContext = LocalContext.fromFileContext(fileContext);
 
   fileContext.trace(`Verifying the '${labelsString}' theorem...`, theoremNode);
 
   const labels = [],
-        labelsVerified = verifyLabels(labelsNode, labels, fileContext);
+        labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
     const suppositions = [],

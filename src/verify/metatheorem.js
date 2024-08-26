@@ -10,7 +10,7 @@ import verifyMetaSuppositions from "../verify/metaSuppositions";
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const labelsNodeQuery = nodeQuery("/metatheorem/labels!"),
+const labelNodesQuery = nodesQuery("/metatheorem/label"),
       metaproofNodeQuery = nodeQuery("/metatheorem/metaproof!"),
       metaConsequentNodeQuery = nodeQuery("/metatheorem/metaConsequent!"),
       metaSuppositionsNodeQuery = nodesQuery("/metatheorem/metaSupposition");
@@ -18,14 +18,14 @@ const labelsNodeQuery = nodeQuery("/metatheorem/labels!"),
 export default function verifyMetatheorem(metatheoremNode, fileContext) {
   let metatheoremVerified = false;
 
-  const labelsNode = labelsNodeQuery(metatheoremNode),
-        labelsString = fileContext.nodeAsString(labelsNode),
+  const labelNodes = labelNodesQuery(metatheoremNode),
+        labelsString = fileContext.nodesAsString(labelNodes),
         localMetaContext = LocalMetaContext.fromFileContext(fileContext);
 
   fileContext.trace(`Verifying the '${labelsString}' metatheorem...`, metatheoremNode);
 
   const labels = [],
-        labelsVerified = verifyLabels(labelsNode, labels, fileContext);
+        labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
     const substitutions = [],
