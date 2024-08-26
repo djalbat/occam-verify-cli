@@ -112,28 +112,20 @@ function verifyStatedJudgement(judgementNode, assignments, derived, localMetaCon
           metavariableVerified = verifyMetavariable(metavariableNode, localMetaContext);
 
     if (metavariableVerified) {
-      const judgementPresent = localMetaContext.isJudgementPresentByMetavariableNode(metavariableNode);
+      const frames = [],
+            frameNode = frameNodeQuery(judgementNode),
+            frameVerified = verifyFrame(frameNode, frames, derived, localMetaContext);
 
-      if (!judgementPresent) {
-        const frames = [],
-              frameNode = frameNodeQuery(judgementNode),
-              frameVerified = verifyFrame(frameNode, frames, derived, localMetaContext);
+      if (frameVerified) {
+        const firstFrame = first(frames),
+              frame = firstFrame, ///
+              judgement = Judgement.fromJudgementNodeFrameAndMetavariableNode(judgementNode, frame, metavariableNode),
+              judgementAssignment = JudgementAssignment.fromJudgement(judgement),
+              assignment = judgementAssignment;
 
-        if (frameVerified) {
-          const firstFrame = first(frames),
-                frame = firstFrame, ///
-                judgement = Judgement.fromJudgementNodeFrameAndMetavariableNode(judgementNode, frame, metavariableNode),
-                judgementAssignment = JudgementAssignment.fromJudgement(judgement),
-                assignment = judgementAssignment;
+        assignments.push(assignment);
 
-          assignments.push(assignment);
-
-          statedJudgementVerified = true;
-        }
-      } else {
-        const metavariableString = localMetaContext.nodeAsString(metavariableNode);
-
-        localMetaContext.debug(`There is already a judgement present for the '${metavariableString}' metavariable.`, judgementNode);
+        statedJudgementVerified = true;
       }
     }
 

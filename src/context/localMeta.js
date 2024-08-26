@@ -74,9 +74,16 @@ class LocalMetaContext {
   }
 
   addJudgement(judgement) {
-    const judgementAdded = true;
+    let judgementAdded = false;
 
-    this.judgements.push(judgement);
+    const metavariableNode = judgement.getMetavariableNode(),
+          judgementPresent = this.isJudgementPresentByMetavariableNode(metavariableNode);
+
+    if (!judgementPresent) {
+      this.judgements.push(judgement);
+
+      judgementAdded = true;
+    }
 
     return judgementAdded;
   }

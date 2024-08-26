@@ -19,14 +19,19 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
 
     localMetaContext.trace(`Verifying the '${metastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
 
-    const metavariableNode = metavariableNodeQuery(qualifiedMetastatementNode),
-          rule = localMetaContext.findRuleByMetavariableNode(metavariableNode);
+    const metavariableNode = metavariableNodeQuery(qualifiedMetastatementNode);
 
-    if (rule !== null) {
-      const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, metastatementLocalMetaContext);
+    if (!qualifiedMetastatementVerified) {
+      const rule = localMetaContext.findRuleByMetavariableNode(metavariableNode);
 
-      qualifiedMetastatementVerified = ruleMatchesMetastatement;  ///
-    } else {
+      if (rule !== null) {
+        const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, metastatementLocalMetaContext);
+
+        qualifiedMetastatementVerified = ruleMatchesMetastatement;  ///
+      }
+    }
+
+    if (!qualifiedMetastatementVerified) {
       if (substitutions !== null) {
         const metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext);
 
