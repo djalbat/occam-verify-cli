@@ -9,9 +9,9 @@ import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { metastatementNodeFromMetastatementString } from "./utilities/node";
 
-const ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/ruleSubproofAssertion!"),
+const subproofAssertionNodeQuery = nodeQuery("/metastatement/subproofAssertion!"),
       ruleSubproofPremiseMetastatementQuery = nodesQuery("/ruleSubproof/premise/unqualifiedMetastatement!/metastatement!"),
-      ruleSubproofAssertionMetastatementNodesQuery = nodesQuery("/ruleSubproofAssertion/metastatement"),
+      subproofAssertionMetastatementNodesQuery = nodesQuery("/subproofAssertion/metastatement"),
       ruleSubproofSubDerivationLastMetastatementQuery = nodeQuery("/ruleSubproof/ruleSubDerivation/qualifiedMetastatement|unqualifiedMetastatement[-1]/metastatement!");
 
 export default class Premise {
@@ -42,9 +42,9 @@ export default class Premise {
   matchRuleSubproofNode(ruleSubproofNode, substitutions, fileContext, metastatementLocalMetaContext) {
     let ruleSubproofNodeMatches = false;
 
-    const ruleSubproofAssertionNode = ruleSubproofAssertionNodeQuery(this.metastatementNode);
+    const subproofAssertionNode = subproofAssertionNodeQuery(this.metastatementNode);
 
-    if (ruleSubproofAssertionNode !== null) {
+    if (subproofAssertionNode !== null) {
       const ruleSubproofPremiseMetastatement = ruleSubproofPremiseMetastatementQuery(ruleSubproofNode),
             ruleSubproofSubDerivationLastMetastatement = ruleSubproofSubDerivationLastMetastatementQuery(ruleSubproofNode),
             ruleSubproofMetastatementNodes = [
@@ -52,12 +52,12 @@ export default class Premise {
               ruleSubproofSubDerivationLastMetastatement
             ],
             ruleSubproofMetastatementNodesLength = ruleSubproofMetastatementNodes.length,
-            ruleSubproofAssertionMetastatementNodes = ruleSubproofAssertionMetastatementNodesQuery(ruleSubproofAssertionNode),
-            ruleSubproofAssertionMetastatementNodesLength = ruleSubproofAssertionMetastatementNodes.length;
+            subproofAssertionMetastatementNodes = subproofAssertionMetastatementNodesQuery(subproofAssertionNode),
+            subproofAssertionMetastatementNodesLength = subproofAssertionMetastatementNodes.length;
 
-      if (ruleSubproofMetastatementNodesLength === ruleSubproofAssertionMetastatementNodesLength) {
-        ruleSubproofNodeMatches = match(ruleSubproofAssertionMetastatementNodes, ruleSubproofMetastatementNodes, (ruleSubproofAssertionMetastatementNode, ruleSubproofMetastatementNode) => {
-          const nonTerminalNodeA = ruleSubproofAssertionMetastatementNode,  ///
+      if (ruleSubproofMetastatementNodesLength === subproofAssertionMetastatementNodesLength) {
+        ruleSubproofNodeMatches = match(subproofAssertionMetastatementNodes, ruleSubproofMetastatementNodes, (subproofAssertionMetastatementNode, ruleSubproofMetastatementNode) => {
+          const nonTerminalNodeA = subproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = ruleSubproofMetastatementNode, ///
                 fileContextA = fileContext, ///
                 localContextA = LocalContext.fromFileContext(fileContextA),

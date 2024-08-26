@@ -4,8 +4,8 @@ import { first, second } from "../utilities/array";
 import { matchMetastatement } from "../utilities/metaproof";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const metastatementNodesQuery = nodesQuery("/ruleSubproofAssertion/metastatement"),
-      ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/ruleSubproofAssertion"),
+const metastatementNodesQuery = nodesQuery("/subproofAssertion/metastatement"),
+      ruleSubproofAssertionNodeQuery = nodeQuery("/metastatement/subproofAssertion"),
       qualifiedOrUnqualifiedMetastatementMetastatementNodesQuery = nodesQuery("/ruleSubproof/qualifiedMetastatement|unqualifiedMetastatement/metastatement!");
 
 export default class MetaproofStep {
