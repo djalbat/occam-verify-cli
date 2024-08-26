@@ -149,16 +149,7 @@ export default class AxiomLemmaTheoremConjecture {
 
 function matchSupposition(supposition, proofSteps, substitutions, localContext, statementLocalContext) {
   const proofStep = prune(proofSteps, (proofStep) => {
-    const subproofNode = proofStep.getSubproofNode(),
-          statementNode = proofStep.getStatementNode();
-
-    if (subproofNode !== null) {
-      const subProofMatches = supposition.matchSubproofNode(subproofNode, substitutions, localContext, statementLocalContext);
-
-      if (!subProofMatches) {  ///
-        return true;
-      }
-    }
+    const statementNode = proofStep.getStatementNode();
 
     if (statementNode !== null) {
       const statementMatches = supposition.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext);

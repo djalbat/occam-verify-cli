@@ -183,16 +183,7 @@ export default class Rule {
 
 function matchPremise(premise, proofSteps, substitutions, fileContext, statementLocalContext) {
   const proofStep = prune(proofSteps, (proofStep) => {
-    const subproofNode = proofStep.getSubproofNode(),
-          statementNode = proofStep.getStatementNode()
-
-    if (subproofNode !== null) {
-      const subProofNodeMatches = premise.matchSubproofNode(subproofNode, substitutions, fileContext, statementLocalContext);
-
-      if (!subProofNodeMatches) {  ///
-        return true;
-      }
-    }
+    const statementNode = proofStep.getStatementNode()
 
     if (statementNode !== null) {
       const statementNodeMatches = premise.matchStatementNode(statementNode, substitutions, fileContext, statementLocalContext);
