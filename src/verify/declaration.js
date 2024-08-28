@@ -6,7 +6,8 @@ import metastatementNodeVerifier from "../verifier/node/metastatement";
 
 import { nodeQuery } from "../utilities/query";
 
-const metavariableNodeQuery = nodeQuery("/declaration/metavariable!"),
+const referenceNodeQuery = nodeQuery("/declaration/reference!"),
+      metavariableNodeQuery = nodeQuery("/reference/metavariable!"),
       metastatementNodeQuery = nodeQuery("/declaration/metastatement!");
 
 export default function verifyDeclaration(declarationNode, declarations, localMetaContext) {
@@ -16,10 +17,10 @@ export default function verifyDeclaration(declarationNode, declarations, localMe
 
   localMetaContext.trace(`Verifying the '${declarationString}' declaration...`, declarationNode);
 
-  const metavariableNode = metavariableNodeQuery(declarationNode),
-        metavariableVerified = verifyMetavariable(metavariableNode, localMetaContext);
+  const referenceNode = referenceNodeQuery(declarationNode),
+        referenceVerified = verifyReference(referenceNode, localMetaContext);
 
-  if (metavariableVerified) {
+  if (referenceVerified) {
     const metastatementNode = metastatementNodeQuery(declarationNode);
 
     const { verifyMetastatement } = metastatementNodeVerifier,
@@ -32,7 +33,8 @@ export default function verifyDeclaration(declarationNode, declarations, localMe
           });
 
     if (metastatementVerified) {
-      const declaration = Declaration.fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode);
+      const metavariableNode = metavariableNodeQuery(referenceNode),
+            declaration = Declaration.fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode);
 
       declarations.push(declaration);
 
@@ -47,33 +49,34 @@ export default function verifyDeclaration(declarationNode, declarations, localMe
   return declarationVerified;
 }
 
-function verifyMetavariable(metavariableNode, localMetaContext) {
-  let metavariableVerified = false;
+function verifyReference(referenceNode, localMetaContext) {
+  let referenceVerified = false;
 
-  const metavariableString = localMetaContext.nodeAsString(metavariableNode);
+  const referenceString = localMetaContext.nodeAsString(referenceNode);
 
-  localMetaContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
+  localMetaContext.trace(`Verifying the '${referenceString}' reference...`, referenceNode);
 
-  const metavariable = localMetaContext.findMetavariableByMetavariableNode(metavariableNode, localMetaContext);
+  const metavariableNode = metavariableNodeQuery(referenceNode),
+        metavariable = localMetaContext.findMetavariableByMetavariableNode(metavariableNode, localMetaContext);
 
   if (metavariable !== null) {
     const metaType = metavariable.getMetaType();
 
     if (metaType === referenceMetaType) {
-      metavariableVerified = true;
+      referenceVerified = true;
     } else {
       const referenceMetaTypeName = referenceMetaType.getName(),
             metaTypeString = metaType.asString();
 
-      localMetaContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${referenceMetaTypeName}'.`, metavariableNode);
+      localMetaContext.debug(`The '${referenceString}' metavariable's meta-type is '${metaTypeString}' when it should be '${referenceMetaTypeName}'.`, referenceNode);
     }
   } else {
-    localMetaContext.debug(`The '${metavariableString}' metavariable is not present'.`, metavariableNode);
+    localMetaContext.debug(`The '${referenceString}' metavariable is not present'.`, referenceNode);
   }
 
-  if (metavariableVerified) {
-    localMetaContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
+  if (referenceVerified) {
+    localMetaContext.debug(`...verified the '${referenceString}' reference.`, referenceNode);
   }
 
-  return metavariableVerified;
+  return referenceVerified;
 }
