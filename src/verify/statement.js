@@ -1,21 +1,19 @@
 "use strict";
 
 import verifyEquality from "../verify/equality";
-import verifyDefining from "../verify/defining";
-import verifyContainment from "../verify/containment";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/typeAssertion";
+import verifyDefinedAssertion from "../verify/definedAssertion";
+import verifyContainedAssertion from "../verify/containedAssertion";
 import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statementAgainstCombinator";
 
 import { nodeQuery } from "../utilities/query";
 
-const termNodeQuery = nodeQuery("/statement/term!"),
-      equalityNodeQuery = nodeQuery("/statement/equality!"),
-      definingNodeQuery = nodeQuery("/statement/defining!"),
-      statementNodeQuery = nodeQuery("/metastatement/statement!"),
-      containmentNodeQuery = nodeQuery("/statement/containment!"),
-      metastatementNodeQuery = nodeQuery("/statement/metastatement!"),
-      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
+const equalityNodeQuery = nodeQuery("/statement/equality!"),
+      statementNodeQuery = nodeQuery("/statement/metastatement/statement!"),
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
+      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
+      containedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!");
 
 function verifyStatement(statementNode, assignments, derived, localContext, verifyAhead) {
   let statementVerified;
@@ -26,9 +24,9 @@ function verifyStatement(statementNode, assignments, derived, localContext, veri
 
   const verifyStatementFunctions = [
     verifyStatementAsEquality,
-    verifyStatementAboutDefining,
     verifyStatementAsTypeAssertion,
-    verifyStatementAboutContainment,
+    verifyStatementAsDefinedAssertion,
+    verifyStatementAsContainedAssertion,
     verifyStatementAgainstCombinators
   ];
 
@@ -95,29 +93,6 @@ function verifyStatementAsEquality(statementNode, assignments, derived, localCon
   return statementVerifiedAsEquality;
 }
 
-function verifyStatementAboutDefining(statementNode, assignments, derived, localContext, verifyAhead) {
-  let statementVerifiedAboutDefining = false;
-
-  const definingNode = definingNodeQuery(statementNode);
-
-  if (definingNode !== null) {
-    const statementString = localContext.nodeAsString(statementNode);
-
-    localContext.trace(`Verifying the '${statementString}' statement about defining...`, statementNode);
-
-    const termNode = termNodeQuery(statementNode),
-          definingVerified = verifyDefining(termNode, definingNode, localContext);
-
-    statementVerifiedAboutDefining = definingVerified; ///
-
-    if (statementVerifiedAboutDefining) {
-      localContext.debug(`...verified the '${statementString}' statement about defining.`, statementNode);
-    }
-  }
-
-  return statementVerifiedAboutDefining;
-}
-
 function verifyStatementAsTypeAssertion(statementNode, assignments, derived, localContext, verifyAhead) {
   let statementVerifiedAsTypeAssertion = false;
 
@@ -140,22 +115,42 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, loc
   return statementVerifiedAsTypeAssertion;
 }
 
-function verifyStatementAboutContainment(statementNode, assignments, derived, localContext, verifyAhead) {
-  let statementVerifiedAboutContainment = false;
+function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, localContext, verifyAhead) {
+  let statementVerifiedAsDefinedAssertion = false;
 
-  const containmentNode = containmentNodeQuery(statementNode);
+  const definedAssertionNode = definedAssertionNodeQuery(statementNode);
 
-  if (containmentNode !== null) {
+  if (definedAssertionNode !== null) {
     const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${statementString}' statement about containment...`, statementNode);
+    localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, statementNode);
 
-    const termNode = termNodeQuery(statementNode),
-          metastatementNode = metastatementNodeQuery(statementNode),
-          containmentVerified = verifyContainment(termNode, containmentNode, metastatementNode, localContext);
+    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, localContext, verifyAhead);
 
-    if (containmentVerified) {
-      statementNode = statementNodeQuery(metastatementNode); ///
+    statementVerifiedAsDefinedAssertion = definedAssertionVerified; ///
+
+    if (statementVerifiedAsDefinedAssertion) {
+      localContext.debug(`...verified the '${statementString}' statement as a defined assertion.`, statementNode);
+    }
+  }
+
+  return statementVerifiedAsDefinedAssertion;
+}
+
+function verifyStatementAsContainedAssertion(statementNode, assignments, derived, localContext, verifyAhead) {
+  let statementVerifiedAsContainedAssertion = false;
+
+  const containedAssertionNode = containedAssertionNodeQuery(statementNode);
+
+  if (containedAssertionNode !== null) {
+    const statementString = localContext.nodeAsString(statementNode);
+
+    localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`, statementNode);
+
+    const containedVerified = verifyContainedAssertion(containedAssertionNode);
+
+    if (containedVerified) {
+      statementNode = statementNodeQuery(statementNode); ///
 
       const verifyStatementFunctions = [
         verifyStatementAsEquality,
@@ -172,15 +167,43 @@ function verifyStatementAboutContainment(statementNode, assignments, derived, lo
         }
       });
 
-      statementVerifiedAboutContainment = statementVerified; ///
+      statementVerifiedAsContainedAssertion = statementVerified; ///
     }
 
-    if (statementVerifiedAboutContainment) {
-      localContext.debug(`...verified the '${statementString}' statement about containment.`, statementNode);
+    if (statementVerifiedAsContainedAssertion) {
+      localContext.debug(`...verified the '${statementString}' statement as a contained assertion.`, statementNode);
     }
   }
 
-  return statementVerifiedAboutContainment;
+  return statementVerifiedAsContainedAssertion;
+}
+
+function verifyStatementAgainstCombinators(statementNode, assignments, derived, localContext, verifyAhead) {
+  let statementVerifiedAgainstCombinators = false;
+
+  const equalityNode = equalityNodeQuery(statementNode),
+        typeAssertionNode = typeAssertionNodeQuery(statementNode),
+        definedAssertionNode = definedAssertionNodeQuery(statementNode),
+        containedAssertionNode = containedAssertionNodeQuery(statementNode);
+
+  if ((equalityNode === null) && (typeAssertionNode === null) && (definedAssertionNode === null) && (containedAssertionNode === null)) {
+    let combinators = localContext.getCombinators();
+
+    combinators = [ ///
+      bracketedCombinator,
+      ...combinators
+    ];
+
+    statementVerifiedAgainstCombinators = combinators.some((combinator) => {
+      const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, localContext, verifyAhead);
+
+      if (statementVerifiedAgainstCombinator) {
+        return true;
+      }
+    });
+  }
+
+  return statementVerifiedAgainstCombinators;
 }
 
 function verifyStatementAgainstCombinator(statementNode, combinator, localContext, verifyAhead) {
@@ -203,32 +226,4 @@ function verifyStatementAgainstCombinator(statementNode, combinator, localContex
   }
 
   return statementVerifiedAgainstCombinator;
-}
-
-function verifyStatementAgainstCombinators(statementNode, assignments, derived, localContext, verifyAhead) {
-  let statementVerifiedAgainstCombinators = false;
-
-  const equalityNode = equalityNodeQuery(statementNode),
-        definingNode = definingNodeQuery(statementNode),
-        containmentNode = containmentNodeQuery(statementNode),
-        typeAssertionNode = typeAssertionNodeQuery(statementNode);
-
-  if ((equalityNode === null) && (definingNode === null) && (containmentNode === null) && (typeAssertionNode === null)) {
-    let combinators = localContext.getCombinators();
-
-    combinators = [ ///
-      bracketedCombinator,
-      ...combinators
-    ];
-
-    statementVerifiedAgainstCombinators = combinators.some((combinator) => {
-      const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, localContext, verifyAhead);
-
-      if (statementVerifiedAgainstCombinator) {
-        return true;
-      }
-    });
-  }
-
-  return statementVerifiedAgainstCombinators;
 }

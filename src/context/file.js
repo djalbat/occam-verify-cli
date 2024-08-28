@@ -70,12 +70,6 @@ export default class FileContext {
     return proofSteps;
   }
 
-  getJudgements() {
-    const judgements = [];
-
-    return judgements;
-  }
-
   getEquivalences() {
     const equivalences = []; ///
 
@@ -86,6 +80,12 @@ export default class FileContext {
     const metaproofSteps = [];  ///
 
     return metaproofSteps;
+  }
+
+  getFrameAssertions() {
+    const frameAssertionss = [];
+
+    return frameAssertionss;
   }
 
   getLabels(includeRelease = true) {

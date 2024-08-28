@@ -53,11 +53,11 @@ class LocalContext {
     return equivalences;
   }
 
-  getJudgements() { return this.context.getJudgements(); }
-
   getMetavariables() { return this.context.getMetavariables(); }
 
   getMetaproofSteps() { return this.context.getMetaproofSteps(); }
+
+  getFrameAssertions() { return this.context.getFrameAssertions(); }
 
   getLastProofStep() {
     let lastProofStep = null;

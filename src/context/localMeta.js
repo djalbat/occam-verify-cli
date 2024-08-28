@@ -5,26 +5,15 @@ import contextMixins from "../mixins/context";
 import { last } from "../utilities/array";
 
 class LocalMetaContext {
-  constructor(context, judgements, metavariables, metaproofSteps) {
+  constructor(context, metavariables, metaproofSteps, frameAssertions) {
     this.context = context;
-    this.judgements = judgements;
     this.metavariables = metavariables;
     this.metaproofSteps = metaproofSteps;
+    this.frameAssertions = frameAssertions;
   }
 
   getContext() {
     return this.context;
-  }
-
-  getJudgements() {
-    let judgements = this.context.getJudgements();
-
-    judgements = [ ///
-      ...this.judgements,
-      ...judgements
-    ]
-
-    return judgements;
   }
 
   getMetavariables() {
@@ -47,6 +36,17 @@ class LocalMetaContext {
     ];
 
     return metaproofSteps;
+  }
+
+  getFrameAssertions() {
+    let frameAssertions = this.context.getFrameAssertions();
+
+    frameAssertions = [ ///
+      ...this.frameAssertions,
+      ...frameAssertions
+    ]
+
+    return frameAssertions;
   }
 
   getVariables() { return this.context.getVariables(); }
@@ -73,19 +73,19 @@ class LocalMetaContext {
     return lastMetaproofStep;
   }
 
-  addJudgement(judgement) {
-    let judgementAdded = false;
+  addFrameAssertion(frameAssertion) {
+    let frameAssertionAdded = false;
 
-    const metavariableNode = judgement.getMetavariableNode(),
-          judgementPresent = this.isJudgementPresentByMetavariableNode(metavariableNode);
+    const metavariableNode = frameAssertion.getMetavariableNode(),
+          frameAssertionPresent = this.isFrameAssertionPresentByMetavariableNode(metavariableNode);
 
-    if (!judgementPresent) {
-      this.judgements.push(judgement);
+    if (!frameAssertionPresent) {
+      this.frameAssertions.push(frameAssertion);
 
-      judgementAdded = true;
+      frameAssertionAdded = true;
     }
 
-    return judgementAdded;
+    return frameAssertionAdded;
   }
 
   addMetavariable(metavariable) {
@@ -149,17 +149,17 @@ class LocalMetaContext {
     return variable;
   }
 
-  findJudgementByMetavariableNode(metavariableNode) {
-    const judgements = this.getJudgements(),
-          judgement = judgements.find((judgement) => {
-            const metavariableMatches = judgement.matchMetavariableNode(metavariableNode);
+  findFrameAssertionByMetavariableNode(metavariableNode) {
+    const frameAssertions = this.getFrameAssertions(),
+          frameAssertion = frameAssertions.find((frameAssertion) => {
+            const metavariableMatches = frameAssertion.matchMetavariableNode(metavariableNode);
 
             if (metavariableMatches) {
               return true;
             }
           }) || null;
 
-    return judgement;
+    return frameAssertion;
   }
 
   isVariablePresentByVariableNode(variableNode) {
@@ -169,11 +169,11 @@ class LocalMetaContext {
     return variablePresent;
   }
 
-  isJudgementPresentByMetavariableNode(metavariableNode) {
-    const judgement = this.findJudgementByMetavariableNode(metavariableNode),
-          judgementPresent = (judgement !== null);
+  isFrameAssertionPresentByMetavariableNode(metavariableNode) {
+    const frameAssertion = this.findFrameAssertionByMetavariableNode(metavariableNode),
+          frameAssertionPresent = (frameAssertion !== null);
 
-    return judgementPresent;
+    return frameAssertionPresent;
   }
 
   findMetavariableByMetavariableNode(metavariableNode, localMetaContext) {
@@ -199,21 +199,21 @@ class LocalMetaContext {
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
-          judgements = [],
           metavariables = [],
           metaproofSteps = [],
-          localMetaContext = new LocalMetaContext(context, judgements, metavariables, metaproofSteps);
+          frameAssertions = [],
+          localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps, frameAssertions);
 
     return localMetaContext;
   }
 
   static fromLocalMetaContext(localMetaContext) {
     const context = localMetaContext,  ///
-          judgements = [],
           metavariables = [],
-          metaproofSteps = [];
+          metaproofSteps = [],
+          frameAssertions = [];
 
-    localMetaContext = new LocalMetaContext(context, judgements, metavariables, metaproofSteps);  ///
+    localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps, frameAssertions);  ///
 
     return localMetaContext;
   }

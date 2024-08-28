@@ -62,16 +62,16 @@ function verifyMetavariable(metavariableNode, declarations, localMetaContext) {
     const metaType = metavariable.getMetaType();
 
     if (metaType === frameMetaType) {
-      const judgement = localMetaContext.findJudgementByMetavariableNode(metavariableNode);
+      const frameAssertion = localMetaContext.findFrameAssertionByMetavariableNode(metavariableNode);
 
-      if (judgement !== null) {
-        const judgementDeclarations = judgement.getDeclarations();
+      if (frameAssertion !== null) {
+        const frameAssertionDeclarations = frameAssertion.getDeclarations();
 
-        push(declarations, judgementDeclarations);
+        push(declarations, frameAssertionDeclarations);
 
         metavariableVerified = true;
       } else {
-        localMetaContext.debug(`There is no judgement for the '${metavariableString}' metavariable.`, metavariableNode);
+        localMetaContext.debug(`There is no frame assertion for the '${metavariableString}' metavariable.`, metavariableNode);
       }
     } else {
       const frameMetaTypeName = frameMetaType.getName(),
