@@ -3,7 +3,7 @@
 import { NOT } from "../constants";
 import { nodeQuery } from "../utilities/query";
 
-const secondOperatorTerminalNodeQuery = nodeQuery("*/@operator[2]");
+const secondOperatorTerminalNodeQuery = nodeQuery("/*/@operator[2]");
 
 export function isAssertionNegated(assertionNode) {
   const secondOperatorTerminalNode = secondOperatorTerminalNodeQuery(assertionNode),
