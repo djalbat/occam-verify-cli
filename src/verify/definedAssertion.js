@@ -6,8 +6,8 @@ import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
 import { isAssertionNegated } from "../utilities/verify";
 
-const termNodeQuery = nodeQuery("/definedAssertionNode/term!"),
-      variableNodeQuery = nodeQuery("/definedAssertionNode/term/variable!");
+const termNodeQuery = nodeQuery("/definedAssertion/term!"),
+      variableNodeQuery = nodeQuery("/definedAssertion/term/variable!");
 
 export default function verifyDefinedAssertion(definedAssertionNode, localContext) {
   let definedAssertionVerified = false;

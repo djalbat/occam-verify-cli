@@ -10,10 +10,10 @@ import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statement
 import { nodeQuery } from "../utilities/query";
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
-      statementNodeQuery = nodeQuery("/statement/metastatement/statement!"),
+      statementNodeQuery = nodeQuery("/containedAssertion/metastatement/statement!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
-      containedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!");
+      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
 
 function verifyStatement(statementNode, assignments, derived, localContext, verifyAhead) {
   let statementVerified;
@@ -79,14 +79,14 @@ function verifyStatementAsEquality(statementNode, assignments, derived, localCon
   if (equalityNode !== null) {
     const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${statementString}' statement as an equality...`, statementNode);
+    localContext.trace(`Verifying the '${statementString}' statement as an equality...`, equalityNode);
 
     const equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext, verifyAhead);
 
     statementVerifiedAsEquality = equalityVerified; ///
 
     if (statementVerifiedAsEquality) {
-      localContext.debug(`...verified the '${statementString}' statement as an equality.`, statementNode);
+      localContext.debug(`...verified the '${statementString}' statement as an equality.`, equalityNode);
     }
   }
 
@@ -101,14 +101,14 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, loc
   if (typeAssertionNode !== null) {
     const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${statementString}' statement as a type assertion...`, statementNode);
+    localContext.trace(`Verifying the '${statementString}' statement as a type assertion...`, typeAssertionNode);
 
     const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext, verifyAhead);
 
     statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
 
     if (statementVerifiedAsTypeAssertion) {
-      localContext.debug(`...verified the '${statementString}' statement as a type assertion.`, statementNode);
+      localContext.debug(`...verified the '${statementString}' statement as a type assertion.`, typeAssertionNode);
     }
   }
 
@@ -123,14 +123,14 @@ function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, 
   if (definedAssertionNode !== null) {
     const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, statementNode);
+    localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, definedAssertionNode);
 
     const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, localContext, verifyAhead);
 
     statementVerifiedAsDefinedAssertion = definedAssertionVerified; ///
 
     if (statementVerifiedAsDefinedAssertion) {
-      localContext.debug(`...verified the '${statementString}' statement as a defined assertion.`, statementNode);
+      localContext.debug(`...verified the '${statementString}' statement as a defined assertion.`, definedAssertionNode);
     }
   }
 
@@ -145,12 +145,12 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
   if (containedAssertionNode !== null) {
     const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`, statementNode);
+    localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`, containedAssertionNode);
 
     const containedVerified = verifyContainedAssertion(containedAssertionNode);
 
     if (containedVerified) {
-      statementNode = statementNodeQuery(statementNode); ///
+      statementNode = statementNodeQuery(containedAssertionNode); ///
 
       const verifyStatementFunctions = [
         verifyStatementAsEquality,
@@ -171,7 +171,7 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
     }
 
     if (statementVerifiedAsContainedAssertion) {
-      localContext.debug(`...verified the '${statementString}' statement as a contained assertion.`, statementNode);
+      localContext.debug(`...verified the '${statementString}' statement as a contained assertion.`, containedAssertionNode);
     }
   }
 
