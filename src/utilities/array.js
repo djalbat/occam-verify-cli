@@ -29,12 +29,6 @@ export function someSubArray(array, subArrayLength, callback) {
       permutations = permutationsMatrix[indexesLength][permutationLength];
     }
 
-    if (subArrayLength === 1) {
-      permutations = [
-        [ 2 ]
-      ];
-    }
-
     if (permutations !== null) {
       found = permutations.some((permutation) => {
         if (permutation !== null) {

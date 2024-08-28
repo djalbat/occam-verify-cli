@@ -94,23 +94,6 @@ class IntrinsicLevelAgainstMetaLevelNodesVerifier extends NodesVerifier {
         }
       },
       {
-        nodeQueryA: statementNodeQuery,
-        nodeQueryB: statementNodeQuery,
-        verifyNodes: (nodeA, nodeB, substitutions, localContextA, localContextB, verifyAhead) => {
-          let nonTerminalNodeVerified;
-
-          const statementNodeB = nodeB, ///
-                statementNodeA = nodeA,  ///
-                statementNodeVerifiedAgainstStatementNode =
-
-              this.verifyStatementNodeAgainstStatementNode(statementNodeA, statementNodeB, substitutions, localContextA, localContextB, verifyAhead);
-
-          nonTerminalNodeVerified = statementNodeVerifiedAgainstStatementNode; ///
-
-          return nonTerminalNodeVerified;
-        }
-      },
-      {
         nodeQueryA: metastatementNodeQuery,
         nodeQueryB: statementNodeQuery,
         verifyNodes: (nodeA, nodeB, substitutions, localContextA, localContextB, verifyAhead) => {
@@ -135,11 +118,11 @@ class IntrinsicLevelAgainstMetaLevelNodesVerifier extends NodesVerifier {
 
           const termNodeB = nodeB,  ///
                 termVariableNodeA = nodeA,  ///
-                variableNodeVerifiedAgainstTermNode =
+                termVariableNodeVerifiedAgainstTermNode =
 
-                  this.verifyVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
+                  this.verifyTermVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
-          nonTerminalNodeVerified = variableNodeVerifiedAgainstTermNode; ///
+          nonTerminalNodeVerified = termVariableNodeVerifiedAgainstTermNode;  ///
 
           return nonTerminalNodeVerified;
         }
@@ -199,7 +182,7 @@ class IntrinsicLevelAgainstMetaLevelNodesVerifier extends NodesVerifier {
 
     const nonTerminalNodeA = metastatementStatementNodeA, ///
           nonTerminalNodeB = statementNodeB,  ///
-          nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
+          nonTerminalNodeVerified = super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
     metastatementStatementNodeVerifiedAgainstStatementNode = nonTerminalNodeVerified; ///
 
@@ -222,28 +205,16 @@ class IntrinsicLevelAgainstMetaLevelNodesVerifier extends NodesVerifier {
     return metastatementNodeVerifiedAgainstStatementNode;
   }
 
-  verifyStatementNodeAgainstStatementNode(statementNodeA, statementNodeB, substitutions, localContextA, localContextB, verifyAhead) {
-    let statementVerifiedAgainstStatement;
-
-    const nonTerminalNodeA = statementNodeA,  ///
-          nonTerminalNodeB = statementNodeB,  ///
-          nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
-
-    statementVerifiedAgainstStatement = nonTerminalNodeVerified;  ////
-
-    return statementVerifiedAgainstStatement;
-  }
-
-  verifyVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
-    let variableNodeVerifiedAgainstTermNode;
+  verifyTermVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
+    let termVariableNodeVerifiedAgainstTermNode;
 
     const termNode = termNodeB, ///
           variableNode = termVariableNodeA, ///
-          variableVerifiedAgainstTerm = verifyVariableAgainstTerm(variableNode, termNode, substitutions, localContextA, localContextB, verifyAhead);
+          termVerifiedAgainstVariable = verifyVariableAgainstTerm(variableNode, termNode, substitutions, localContextA, localContextB, verifyAhead);
 
-    variableNodeVerifiedAgainstTermNode = variableVerifiedAgainstTerm;  ///
+    termVariableNodeVerifiedAgainstTermNode = termVerifiedAgainstVariable;  ///
 
-    return variableNodeVerifiedAgainstTermNode;
+    return termVariableNodeVerifiedAgainstTermNode;
   }
 }
 
