@@ -1,7 +1,7 @@
 "use strict";
 
-import verifyMetastatement from "../metastatement";
-import verifyMetavariableAgainstMetastatement from "../../verify/metavariableAgainstMetastatement";
+// import verifyMetastatement from "../metastatement";
+// import verifyMetavariableAgainstMetastatement from "../../verify/metavariableAgainstMetastatement";
 
 import { nodeQuery } from "../../utilities/query";
 
@@ -11,53 +11,46 @@ const metavariableNodeQuery = nodeQuery("/qualifiedMetastatement/reference!/meta
 export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, derived, localMetaContext) {
   let qualifiedMetastatementVerified = false;
 
-  const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode);
+  const qualifiedMetastatementString = localMetaContext.nodeAsString(qualifiedMetastatementNode);
 
-  if (metastatementNode !== null) {
-    const metastatementString = localMetaContext.nodeAsString(metastatementNode),
-          metastatementLocalMetaContext = localMetaContext; ///
+  localMetaContext.trace(`Verifying the '${qualifiedMetastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
 
-    localMetaContext.trace(`Verifying the '${metastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
+  const metavariableNode = metavariableNodeQuery(qualifiedMetastatementNode),
+        rule = localMetaContext.findRuleByMetavariableNode(metavariableNode);
 
-    const metavariableNode = metavariableNodeQuery(qualifiedMetastatementNode);
+  if (rule !== null) {
+    const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
+          ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, localMetaContext);
 
-    if (!qualifiedMetastatementVerified) {
-      const rule = localMetaContext.findRuleByMetavariableNode(metavariableNode);
+    qualifiedMetastatementVerified = ruleMatchesMetastatement;  ///
+  }
 
-      if (rule !== null) {
-        const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, metastatementLocalMetaContext);
+  // if (!qualifiedMetastatementVerified) {
+  //   if (substitutions !== null) {
+  //     const metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext);
+  //
+  //     if (metavariablePresent) {
+  //       const metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {
+  //         const verifiedAhead = true;
+  //
+  //         return verifiedAhead;
+  //       });
+  //
+  //       if (metastatementVerified) {
+  //         const metavariableVerifiedAgainstMetastatement = verifyMetavariableAgainstMetastatement(metavariableNode, metastatementNode, substitutions, () => {
+  //           const verifiedAhead = true;
+  //
+  //           return verifiedAhead;
+  //         });
+  //
+  //         qualifiedMetastatementVerified = metavariableVerifiedAgainstMetastatement; ///
+  //       }
+  //     }
+  //   }
+  // }
 
-        qualifiedMetastatementVerified = ruleMatchesMetastatement;  ///
-      }
-    }
-
-    if (!qualifiedMetastatementVerified) {
-      if (substitutions !== null) {
-        const metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext);
-
-        if (metavariablePresent) {
-          const metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {
-            const verifiedAhead = true;
-
-            return verifiedAhead;
-          });
-
-          if (metastatementVerified) {
-            const metavariableVerifiedAgainstMetastatement = verifyMetavariableAgainstMetastatement(metavariableNode, metastatementNode, substitutions, () => {
-              const verifiedAhead = true;
-
-              return verifiedAhead;
-            });
-
-            qualifiedMetastatementVerified = metavariableVerifiedAgainstMetastatement; ///
-          }
-        }
-      }
-    }
-
-    if (qualifiedMetastatementVerified) {
-      localMetaContext.debug(`...verified the '${metastatementString}' qualified metastatement.`, qualifiedMetastatementNode);
-    }
+  if (qualifiedMetastatementVerified) {
+    localMetaContext.debug(`...verified the '${qualifiedMetastatementString}' qualified metastatement.`, qualifiedMetastatementNode);
   }
 
   return qualifiedMetastatementVerified;

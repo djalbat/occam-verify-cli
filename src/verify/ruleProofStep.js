@@ -1,6 +1,6 @@
 "use strict";
 
-import RuleProofStep from "../step/ruleProof";
+import MetaproofStep from "../step/metaproof";
 import verifyRuleSubproof from "../verify/ruleSubproof";
 import verifyRuleSubDerivation from "../verify/ruleSubDerivation";
 import verifyQualifiedStatement from "../verify/statement/qualified";
@@ -35,9 +35,9 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
     ruleSubproofVerified = verifyRuleSubproof(ruleSubproofNode, localMetaContext);
 
     if (ruleSubproofVerified) {
-      const ruleProofStep = RuleProofStep.fromRuleSubproofNode(ruleSubproofNode);
+      const metaproofStep = MetaproofStep.fromRuleSubproofNode(ruleSubproofNode);
 
-      localMetaContext.addRuleProofStep(ruleProofStep);
+      localMetaContext.addMetaproofStep(metaproofStep);
 
       ruleProofStepVerified = true;
     }
@@ -62,9 +62,9 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
 
     if (qualifiedMetastatementVerified) {
       const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
-            ruleProofStep = RuleProofStep.fromMetastatementNode(metastatementNode);
+            metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
 
-      localMetaContext.addRuleProofStep(ruleProofStep);
+      localMetaContext.addMetaproofStep(metaproofStep);
 
       ruleProofStepVerified = qualifiedMetastatementVerified; ///
     }
@@ -84,9 +84,9 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
 
     if (unqualifiedMetastatementVerified) {
       const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-            ruleProofStep = RuleProofStep.fromMetastatementNode(metastatementNode);
+            metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
 
-      localMetaContext.addRuleProofStep(ruleProofStep);
+      localMetaContext.addMetaproofStep(metaproofStep);
 
       ruleProofStepVerified = true;
     }

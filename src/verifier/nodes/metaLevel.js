@@ -10,21 +10,21 @@ const metastatementNodeQuery = nodeQuery("/metastatement!"),
       metastatementMetavariableNodeQuery = nodeQuery("/metastatement/metavariable!");
 
 class MetaLevelNodesVerifier extends NodesVerifier {
-  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, verifyAhead) {
+  verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) {
     let nonTerminalNodeVerified;
 
     const nodeQueryMaps = [
       {
         nodeQueryA: metastatementMetavariableNodeQuery,
         nodeQueryB: metastatementNodeQuery,
-        verifyNodes: (nodeA, nodeB, substitutions, localContextA, localMetaContextB, verifyAhead) => {
+        verifyNodes: (nodeA, nodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const metastatementNodeB = nodeB, ///
                 metastatementMetavariableNodeA = nodeA, ///
                 metastatementMetavariableNodeVerifiedAgainstMetastatementNode =
 
-                  this.verifyMetastatementMetavariableNodeAgainstMetastatementNode(metastatementMetavariableNodeA, metastatementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
+                  this.verifyMetastatementMetavariableNodeAgainstMetastatementNode(metastatementMetavariableNodeA, metastatementNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
 
           nonTerminalNodeVerified = metastatementMetavariableNodeVerifiedAgainstMetastatementNode;  ///
 
@@ -33,16 +33,16 @@ class MetaLevelNodesVerifier extends NodesVerifier {
       }
     ];
 
-    const nodesVerified = verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
+    const nodesVerified = verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
 
     nonTerminalNodeVerified = nodesVerified ?
                                 true :
-                                  super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localMetaContextB, verifyAhead);
+                                  super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
 
     return nonTerminalNodeVerified;
   }
 
-  verifyMetastatementMetavariableNodeAgainstMetastatementNode(metastatementMetavariableNodeA, metastatementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead) {
+  verifyMetastatementMetavariableNodeAgainstMetastatementNode(metastatementMetavariableNodeA, metastatementNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) {
     let metastatementMetavariableNodeVerifiedAgainstMetastatementNode;
 
     const metavariableNode = metastatementMetavariableNodeA, ///

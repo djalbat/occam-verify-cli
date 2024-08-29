@@ -37,27 +37,27 @@ export default class MetaLemmaMetatheorem {
     return this.fileContext;
   }
 
-  matchMetastatement(metastatementNode, metastatementLocalContext) {
+  matchMetastatement(metastatementNode, localMetaContext) {
     let metastatementNatches;
 
     const metaSuppositionsLength = this.metaSuppositions.length;
 
     if (metaSuppositionsLength === 0) {
       const substitutions = [],
-            metaConsequentMatches = matchMetaConsequent(this.metaConsequent, metastatementNode, substitutions, this.fileContext, metastatementLocalContext);
+            metaConsequentMatches = matchMetaConsequent(this.metaConsequent, metastatementNode, substitutions, this.fileContext, localMetaContext);
 
       metastatementNatches = metaConsequentMatches; ///
     } else {
-      const metaproofSteps = metastatementLocalContext.getProofSteps();
+      const metaproofSteps = localMetaContext.getProofSteps();
 
       metastatementNatches = someSubArray(metaproofSteps, metaSuppositionsLength, (metaproofSteps) => {
         let metaSuppositionsMatchMetaConsequent = false;
 
         const substitutions = [],
-              metaSuppositionsMatch = matchMetaSuppositions(this.metaSuppositions, metaproofSteps, substitutions, this.fileContext, metastatementLocalContext);
+              metaSuppositionsMatch = matchMetaSuppositions(this.metaSuppositions, metaproofSteps, substitutions, this.fileContext, localMetaContext);
 
         if (metaSuppositionsMatch) {
-          const metaConsequentMatches = matchMetaConsequent(this.metaConsequent, metastatementNode, substitutions, this.fileContext, metastatementLocalContext);
+          const metaConsequentMatches = matchMetaConsequent(this.metaConsequent, metastatementNode, substitutions, this.fileContext, localMetaContext);
 
           metaSuppositionsMatchMetaConsequent = metaConsequentMatches;  ///
         }
@@ -162,13 +162,13 @@ export default class MetaLemmaMetatheorem {
   static fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(Class, labels, metaSuppositions, metaConsequent, substitutions, fileContext) { return new Class(labels, metaSuppositions, metaConsequent, substitutions, fileContext); }
 }
 
-function matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fileContext, metastatementLocalContext) {
+function matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fileContext, localMetaContext) {
   const metaproofStep = prune(metaproofSteps, (metaproofStep) => {
     const metaSubproofNode = metaproofStep.getMetaSubproofNode(),
           metastatementNode = metaproofStep.getMetastatementNode();
 
     if (metaSubproofNode !== null) {
-      const metaSubProofMatches = metaSupposition.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, metastatementLocalContext);
+      const metaSubProofMatches = metaSupposition.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
 
       if (!metaSubProofMatches) {  ///
         return true;
@@ -176,7 +176,7 @@ function matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fi
     }
 
     if (metastatementNode !== null) {
-      const metastatementMatches = metaSupposition.matchMetastatementNode(metastatementNode, substitutions, fileContext, metastatementLocalContext);
+      const metastatementMatches = metaSupposition.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
 
       if (!metastatementMatches) {  ///
         return true;
@@ -189,9 +189,9 @@ function matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fi
   return metaSuppositionMatches;
 }
 
-function matchMetaSuppositions(metaSuppositions, metaproofSteps, substitutions, fileContext, metastatementLocalContext) {
+function matchMetaSuppositions(metaSuppositions, metaproofSteps, substitutions, fileContext, localMetaContext) {
   const metaSuppositionsMatch = metaSuppositions.every((metaSupposition) => {
-    const metaSuppositionMatches = matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fileContext, metastatementLocalContext);
+    const metaSuppositionMatches = matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fileContext, localMetaContext);
 
     if (metaSuppositionMatches) {
       return true;
@@ -201,8 +201,8 @@ function matchMetaSuppositions(metaSuppositions, metaproofSteps, substitutions, 
   return metaSuppositionsMatch;
 }
 
-function matchMetaConsequent(metaConsequent, metastatementNode, substitutions, fileContext, metastatementLocalContext) {
-  const nonTerminalNodeMatches = metaConsequent.matchMetastatementNode(metastatementNode, substitutions, fileContext, metastatementLocalContext),
+function matchMetaConsequent(metaConsequent, metastatementNode, substitutions, fileContext, localMetaContext) {
+  const nonTerminalNodeMatches = metaConsequent.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext),
         metaConsequentMatches = nonTerminalNodeMatches; ///
 
   return metaConsequentMatches;
