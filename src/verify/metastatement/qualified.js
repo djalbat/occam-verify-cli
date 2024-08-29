@@ -3,7 +3,6 @@
 import verifyMetavariableAgainstMetastatement from "../../verify/metavariableAgainstMetastatement";
 
 import { nodeQuery } from "../../utilities/query";
-import { verifyMetastatementAsFrameAssertion } from "../../verify/metastatement";
 
 const metavariableNodeQuery = nodeQuery("/qualifiedMetastatement/reference!/metavariable!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
@@ -109,7 +108,7 @@ function verifyMetastatement(metastatementNode, assignments, derived, localMetaC
   localMetaContext.trace(`Verifying the '${metastatementString}' metastatement...`, metastatementNode);
 
   const verifyMetaStatementFunctions = [
-    verifyMetastatementAsFrameAssertion
+    ///
   ];
 
   verifyMetaStatementFunctions.some((verifyStatementFunction) => {

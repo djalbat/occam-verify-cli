@@ -9,10 +9,15 @@ const metastatementNodesQuery = nodesQuery("/subproofAssertion/metastatement"),
       qualifiedOrUnqualifiedMetastatementMetastatementNodesQuery = nodesQuery("/ruleSubproof/qualifiedMetastatement|unqualifiedMetastatement/metastatement!");
 
 export default class MetaproofStep {
-  constructor(ruleSubproofNode, metaSubproofNode, metastatementNode) {
+  constructor(statementNode, ruleSubproofNode, metaSubproofNode, metastatementNode) {
+    this.statementNode = statementNode;
     this.ruleSubproofNode = ruleSubproofNode;
     this.metaSubproofNode = metaSubproofNode;
     this.metastatementNode = metastatementNode;
+  }
+
+  getStatementNode() {
+    return this.statementNode;
   }
 
   getRuleSubproofNode() {
@@ -90,27 +95,39 @@ export default class MetaproofStep {
     return ruleSubproofAssertionMatches;
   }
 
-  static fromRuleSubproofNode(ruleSubproofNode) {
-    const metaSubproofNode = null,
+  static fromStatementNode(statementNode) {
+    const ruleSubproofNode = null,
+          metaSubproofNode = null,
           metastatementNode = null,
-          metaProofStep = new MetaproofStep(ruleSubproofNode, metaSubproofNode, metastatementNode);
+          metaProofStep = new MetaproofStep(statementNode, ruleSubproofNode, metaSubproofNode, metastatementNode);
+
+    return metaProofStep;
+  }
+
+  static fromRuleSubproofNode(ruleSubproofNode) {
+    const statementNode = null,
+          metaSubproofNode = null,
+          metastatementNode = null,
+          metaProofStep = new MetaproofStep(statementNode, ruleSubproofNode, metaSubproofNode, metastatementNode);
 
     return metaProofStep;
   }
 
   static fromMetaSubproofNode(metaSubproofNode) {
-    const ruleSubproofNode = null,
+    const statementNode = null,
+          ruleSubproofNode = null,
           metastatementNode = null,
-          metaProofStep = new MetaproofStep(ruleSubproofNode, metaSubproofNode, metastatementNode);
+          metaProofStep = new MetaproofStep(statementNode, ruleSubproofNode, metaSubproofNode, metastatementNode);
 
     return metaProofStep;
 
   }
 
   static fromMetastatementNode(metastatementNode) {
-    const ruleSubproofNode = null,
+    const statementNode = null,
+          ruleSubproofNode = null,
           metaSubproofNode = null,
-          metaProofStep = new MetaproofStep(ruleSubproofNode, metaSubproofNode, metastatementNode);
+          metaProofStep = new MetaproofStep(statementNode, ruleSubproofNode, metaSubproofNode, metastatementNode);
 
     return metaProofStep;
   }

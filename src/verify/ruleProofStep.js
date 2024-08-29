@@ -1,5 +1,6 @@
 "use strict";
 
+import LocalContext from "../context/local";
 import MetaproofStep from "../step/metaproof";
 import verifyRuleSubproof from "../verify/ruleSubproof";
 import verifyRuleSubDerivation from "../verify/ruleSubDerivation";
@@ -11,7 +12,8 @@ import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified"
 import { nodeQuery } from "../utilities/query";
 import { assignAssignment } from "../utilities/assignments";
 
-const ruleSubproofNodeQuery = nodeQuery("/ruleProofStep|lastRuleProofStep/ruleSubproof!"),
+const statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/statement!"),
+      ruleSubproofNodeQuery = nodeQuery("/ruleProofStep|lastRuleProofStep/ruleSubproof!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement|unqualifiedMetastatement/metastatement!"),
       qualifiedStatementNodeQuery = nodeQuery("/ruleProofStep|lastRuleProofStep/qualifiedStatement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/ruleProofStep|lastRuleProofStep/unqualifiedStatement!"),
@@ -42,7 +44,27 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
       ruleProofStepVerified = true;
     }
   } else if (qualifiedStatementNode !== null) {
-    debugger
+    let qualifiedStatementVerified;
+
+    const assignments = [],
+          localContext = LocalContext.fromLocalMetaContext(localMetaContext);
+
+    qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assignments, localContext);
+
+    if (qualifiedStatementVerified) {
+      const assignmentAssigned = assignAssignment(assignments, localContext);
+
+      qualifiedStatementVerified = assignmentAssigned; ///
+    }
+
+    if (qualifiedStatementVerified) {
+      const statementNode = statementNodeQuery(qualifiedStatementNode),
+            metaproofStep = MetaproofStep.fromStatementNode(statementNode);
+
+      localMetaContext.addMetaproofStep(metaproofStep);
+
+      ruleProofStepVerified = true;
+    }
   } else if (unqualifiedStatementNode !== null) {
     debugger
   } else if (qualifiedMetastatementNode !== null) {
