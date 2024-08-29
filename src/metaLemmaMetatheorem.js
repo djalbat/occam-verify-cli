@@ -170,7 +170,7 @@ function matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fi
     if (metaSubproofNode !== null) {
       const metaSubProofMatches = metaSupposition.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
 
-      if (metaSubProofMatches) {  ///
+      if (metaSubProofMatches) {
         return true;
       }
     }
@@ -178,7 +178,7 @@ function matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fi
     if (metastatementNode !== null) {
       const metastatementMatches = metaSupposition.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
 
-      if (metastatementMatches) {  ///
+      if (metastatementMatches) {
         return true;
       }
     }

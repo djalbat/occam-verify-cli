@@ -71,7 +71,7 @@ Object.assign(statementAgainstCombinatorNodesVerifier, {
 
 export default verifyStatement;
 
-function verifyStatementAsEquality(statementNode, assignments, derived, localContext, verifyAhead) {
+export function verifyStatementAsEquality(statementNode, assignments, derived, localContext, verifyAhead) {
   let statementVerifiedAsEquality = false;
 
   const equalityNode = equalityNodeQuery(statementNode);
@@ -93,7 +93,7 @@ function verifyStatementAsEquality(statementNode, assignments, derived, localCon
   return statementVerifiedAsEquality;
 }
 
-function verifyStatementAsTypeAssertion(statementNode, assignments, derived, localContext, verifyAhead) {
+export function verifyStatementAsTypeAssertion(statementNode, assignments, derived, localContext, verifyAhead) {
   let statementVerifiedAsTypeAssertion = false;
 
   const typeAssertionNode = typeAssertionNodeQuery(statementNode);

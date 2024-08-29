@@ -34,25 +34,24 @@ export default class Rule {
   matchStatement(statementNode, localContext) {
     let statementNatches;
 
-    const premisesLength = this.premises.length,
-          statementLocalContext = localContext; ///
+    const premisesLength = this.premises.length;
 
     if (premisesLength === 0) {
       const substitutions = [],
-            conclusionMatches = matchConclusion(this.conclusion, statementNode, substitutions, this.fileContext, statementLocalContext);
+            conclusionMatches = matchConclusion(this.conclusion, statementNode, substitutions, this.fileContext, localContext);
 
       statementNatches = conclusionMatches; ///
     } else {
-      const proofSteps = statementLocalContext.getProofSteps();
+      const proofSteps = localContext.getProofSteps();
 
       statementNatches = someSubArray(proofSteps, premisesLength, (proofSteps) => {
         let premisesMatchConclusion = false;
 
         const substitutions = [],
-              premisesMatch = matchPremises(this.premises, proofSteps, substitutions, this.fileContext, statementLocalContext);
+              premisesMatch = matchPremises(this.premises, proofSteps, substitutions, this.fileContext, localContext);
 
         if (premisesMatch) {
-          const conclusionMatches = matchConclusion(this.conclusion, statementNode, substitutions, this.fileContext, statementLocalContext);
+          const conclusionMatches = matchConclusion(this.conclusion, statementNode, substitutions, this.fileContext, localContext);
 
           premisesMatchConclusion = conclusionMatches;  ///
         }
@@ -181,14 +180,23 @@ export default class Rule {
   }
 }
 
-function matchPremise(premise, proofSteps, substitutions, fileContext, statementLocalContext) {
+function matchPremise(premise, proofSteps, substitutions, fileContext, localContext) {
   const proofStep = extract(proofSteps, (proofStep) => {
-    const statementNode = proofStep.getStatementNode()
+    const subproofNode = proofStep.getSubproofNode(),
+          statementNode = proofStep.getStatementNode();
+
+    if (subproofNode !== null) {
+      const subproofNodeMatches = premise.matchSubproofNode(subproofNode, substitutions, fileContext, localContext);
+
+      if (subproofNodeMatches) {
+        return true;
+      }
+    }
 
     if (statementNode !== null) {
-      const statementNodeMatches = premise.matchStatementNode(statementNode, substitutions, fileContext, statementLocalContext);
+      const statementNodeMatches = premise.matchStatementNode(statementNode, substitutions, fileContext, localContext);
 
-      if (statementNodeMatches) {  ///
+      if (statementNodeMatches) {
         return true;
       }
     }
@@ -199,9 +207,9 @@ function matchPremise(premise, proofSteps, substitutions, fileContext, statement
   return premiseMatches;
 }
 
-function matchPremises(premise, proofSteps, substitutions, fileContext, statementLocalContext) {
+function matchPremises(premise, proofSteps, substitutions, fileContext, localContext) {
   const premisesMatch = premise.every((premise) => {
-    const premiseMatches = matchPremise(premise, proofSteps, substitutions, fileContext, statementLocalContext);
+    const premiseMatches = matchPremise(premise, proofSteps, substitutions, fileContext, localContext);
 
     if (premiseMatches) {
       return true;
@@ -211,8 +219,8 @@ function matchPremises(premise, proofSteps, substitutions, fileContext, statemen
   return premisesMatch;
 }
 
-function matchConclusion(conclusion, statementNode, substitutions, fileContext, statementLocalContext) {
-  const statementNodeMatches = conclusion.matchStatementNode(statementNode, substitutions, fileContext, statementLocalContext),
+function matchConclusion(conclusion, statementNode, substitutions, fileContext, localContext) {
+  const statementNodeMatches = conclusion.matchStatementNode(statementNode, substitutions, fileContext, localContext),
         conclusionMatches = statementNodeMatches; ///
 
   return conclusionMatches;
@@ -227,7 +235,7 @@ function metaMatchPremise(premise, metaproofSteps, substitutions, fileContext, l
     if (ruleSubproofNode !== null) {
       const ruleSubProofNodeMatches = premise.matchRuleSubproofNode(ruleSubproofNode, substitutions, fileContext, localMetaContext);
 
-      if (ruleSubProofNodeMatches) {  ///
+      if (ruleSubProofNodeMatches) {
         return true;
       }
     }
@@ -235,7 +243,7 @@ function metaMatchPremise(premise, metaproofSteps, substitutions, fileContext, l
     if (metaSubproofNode !== null) {
       const metaSubProofNodeMatches = premise.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
 
-      if (metaSubProofNodeMatches) {  ///
+      if (metaSubProofNodeMatches) {
         return true;
       }
     }
@@ -243,7 +251,7 @@ function metaMatchPremise(premise, metaproofSteps, substitutions, fileContext, l
     if (metastatementNode !== null) {
       const metastatementNodeMatches = premise.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
 
-      if (metastatementNodeMatches) {  ///
+      if (metastatementNodeMatches) {
         return true;
       }
     }

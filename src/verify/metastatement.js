@@ -40,7 +40,7 @@ Object.assign(metastatementNodeVerifier, {
 
 export default verifyMetastatement;
 
-function verifyMetastatementAsFrameAssertion(metastatementNode, assignments, derived, localMetaContext) {
+export function verifyMetastatementAsFrameAssertion(metastatementNode, assignments, derived, localMetaContext) {
   let metastatementVerifiedAsFrameAssertion = false;
 
   const frameAssertionNode = frameAssertionNodeQuery(metastatementNode);

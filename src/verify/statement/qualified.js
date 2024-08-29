@@ -1,8 +1,7 @@
 "use strict";
 
-import verifyStatement from "../../verify/statement";
-
 import { nodeQuery } from "../../utilities/query";
+import { verifyStatementAsEquality, verifyStatementAsTypeAssertion } from "../../verify/statement";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
       metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference!/metavariable!");
@@ -14,31 +13,33 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
 
   localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`, qualifiedStatementNode);
 
-  const derived = false,
-        statementNode = statementNodeQuery(qualifiedStatementNode),
-        statementVerified = verifyStatement(statementNode, assignments, derived, localContext, () => {
-          const verifiedAhead = true;
+  const metavariableNode = metavariableNodeQuery(qualifiedStatementNode),
+        verifyQualifiedStatementFunctions = [
+          verifyQualifiedStatementAAgainstRule,
+          verifyQualifiedStatementAAgainstAxiom,
+          verifyQualifiedStatementAAgainstLemma,
+          verifyQualifiedStatementAAgainstTheorem,
+          verifyQualifiedStatementAAgainstConjecture
+        ];
 
-          return verifiedAhead;
-        });
+  qualifiedStatementVerified = verifyQualifiedStatementFunctions.some((verifyQualifiedStatementFunction) => {  ///
+    const qualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, metavariableNode, localContext);
 
-  if (statementVerified) {
-    const metavariableNode = metavariableNodeQuery(qualifiedStatementNode),
-          verifyQualifiedStatementFunctions = [
-            verifyQualifiedStatementAAgainstRule,
-            verifyQualifiedStatementAAgainstAxiom,
-            verifyQualifiedStatementAAgainstLemma,
-            verifyQualifiedStatementAAgainstTheorem,
-            verifyQualifiedStatementAAgainstConjecture
-          ];
+    if (qualifiedStatementVerified) {
+      return true;
+    }
+  });
 
-    qualifiedStatementVerified = verifyQualifiedStatementFunctions.some((verifyQualifiedStatementFunction) => {  ///
-      const qualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, metavariableNode, localContext);
+  if (qualifiedStatementVerified) {
+    const derived = false,
+          statementNode = statementNodeQuery(qualifiedStatementNode),
+          statementVerified = verifyStatement(statementNode, assignments, derived, localContext, () => {
+            const verifiedAhead = true;
 
-      if (qualifiedStatementVerified) {
-        return true;
-      }
-    });
+            return verifiedAhead;
+          });
+
+    qualifiedStatementVerified = statementVerified;  ///
   }
 
   if (qualifiedStatementVerified) {
@@ -166,4 +167,33 @@ function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, meta
   }
 
   return qualifiedStatementVerifiedAgainstConjecture;
+}
+
+function verifyStatement(statementNode, assignments, derived, localContext, verifyAhead) {
+  let statementVerified;
+
+  const statementString = localContext.nodeAsString(statementNode);
+
+  localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
+
+  const verifyStatementFunctions = [
+    verifyStatementAsEquality,
+    verifyStatementAsTypeAssertion
+  ];
+
+  verifyStatementFunctions.some((verifyStatementFunction) => {
+    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext, verifyAhead);
+
+    if (statementVerified) {
+      return true;
+    }
+  });
+
+  statementVerified = true; ///
+
+  if (statementVerified) {
+    localContext.debug(`...verified the '${statementString}' statement.`, statementNode);
+  }
+
+  return statementVerified;
 }

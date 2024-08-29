@@ -154,7 +154,7 @@ function matchSupposition(supposition, proofSteps, substitutions, localContext, 
     if (statementNode !== null) {
       const statementMatches = supposition.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext);
 
-      if (statementMatches) {  ///
+      if (statementMatches) {
         return true;
       }
     }
