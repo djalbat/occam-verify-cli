@@ -1,150 +1,23 @@
 "use strict";
 
-import MetaproofStep from "../step/metaproof";
-import LocalMetaContext from "../context/localMeta";
-import verifyMetaSuppositions from "../verify/metaSuppositions";
-import verifyQualifiedMetastatement from "../verify/metastatement/qualified";
-import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
+import verifyMetaProofStep from "../verify/metaProofStep";
 
-import { assignAssignment } from "../utilities/assignments";
-import { nodeQuery, nodesQuery } from "../utilities/query";
-import { META_SUBPROOF_RULE_NAME, QUALIFIED_METASTATEMENT_RULE_NAME, UNQUALIFIED_METASTATEMENT_RULE_NAME } from "../ruleNames";
+import { nodesQuery } from "../utilities/query";
 
-const childNodesQuery = nodesQuery("/metaDerivation|metaSubDerivation/*"),
-      metastatementNodeQuery = nodeQuery("/qualifiedMetastatement|unqualifiedMetastatement/metastatement!"),
-      metaSuppositionNodesQuery = nodesQuery("/metaSubproof/metaSupposition"),
-      metaSubDerivationNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation");
+const metaProofStepNodesQuery = nodesQuery("/metaDerivation/metaProofStep|lastMetaProofStep");
 
 export default function verifyMetaDerivation(metaDerivationNode, substitutions, localMetaContext) {
   let metaDerivationVerified;
 
-  const childNodes = childNodesQuery(metaDerivationNode);
+  const metaProofStepNodes = metaProofStepNodesQuery(metaDerivationNode);
 
-  metaDerivationVerified = childNodes.every((childNode) => {
-    const childVerified = verifyChild(childNode, substitutions, localMetaContext);
+  metaDerivationVerified = metaProofStepNodes.every((metaProofStepNode) => {
+    const metaProofStepVerified = verifyMetaProofStep(metaProofStepNode, substitutions, localMetaContext);
 
-    if (childVerified) {
+    if (metaProofStepVerified) {
       return true;
     }
   });
 
   return metaDerivationVerified;
-}
-
-function verifyMetaSubDerivation(metaSubDerivationNode, substitutions, localMetaContext) {
-  let metaSubDerivationVerified;
-
-  const childNodes = childNodesQuery(metaSubDerivationNode);
-
-  metaSubDerivationVerified = childNodes.every((childNode) => {
-    const childVerified = verifyChild(childNode, substitutions, localMetaContext);
-
-    if (childVerified) {
-      return true;
-    }
-  });
-
-  return metaSubDerivationVerified;
-}
-
-function verifyMetaSubproof(metaSubproofNode, substitutions, localMetaContext) {
-  let metaSubproofVerified = false;
-
-  localMetaContext = LocalMetaContext.fromLocalMetaContext(localMetaContext); ///
-
-  const metaSuppositions = [],
-        metaSuppositionNodes = metaSuppositionNodesQuery(metaSubproofNode),
-        metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, substitutions, localMetaContext);
-
-  if (metaSuppositionsVerified) {
-    const metaSubDerivationNode = metaSubDerivationNodeQuery(metaSubproofNode),
-          metaSubDerivationVerified = verifyMetaSubDerivation(metaSubDerivationNode, substitutions, localMetaContext);
-
-    if (metaSubDerivationVerified) {
-      metaSubproofVerified = true;
-    }
-  }
-
-  return metaSubproofVerified;
-}
-
-function verifyChild(childNode, substitutions, localMetaContext) {
-  let childVerified = false;
-
-  const childNodeRuleName = childNode.getRuleName();
-
-  switch (childNodeRuleName) {
-    case META_SUBPROOF_RULE_NAME: {
-      let metaSubproofVerified;
-
-      const metaSubproofNode = childNode;  ///
-
-      metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, substitutions, localMetaContext);
-
-      if (metaSubproofVerified) {
-        const metaproofStep = MetaproofStep.fromMetaSubproofNode(metaSubproofNode);
-
-        localMetaContext.addMetaproofStep(metaproofStep);
-
-        childVerified = true;
-      }
-
-      break;
-    }
-
-    case QUALIFIED_METASTATEMENT_RULE_NAME: {
-      let qualifiedMetastatementVerified;
-
-      const assignments = [],
-            qualifiedMetastatementNode = childNode;  ///
-
-      qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, localMetaContext);
-
-      if (qualifiedMetastatementVerified) {
-        const assignmentAssigned = assignAssignment(assignments, localMetaContext);
-
-        qualifiedMetastatementVerified = assignmentAssigned; ///
-      }
-
-      if (qualifiedMetastatementVerified) {
-        const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
-              metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
-
-        localMetaContext.addMetaproofStep(metaproofStep);
-
-        childVerified = true; ///
-      }
-
-      break;
-    }
-
-    case UNQUALIFIED_METASTATEMENT_RULE_NAME: {
-      let unqualifiedMetastatementVerified;
-
-      const derived = true,
-            assignments = [],
-            unqualifiedMetastatementNode = childNode;  ///
-
-      unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
-
-      if (unqualifiedMetastatementVerified) {
-        const assignmentAssigned = assignAssignment(assignments, localMetaContext);
-
-        unqualifiedMetastatementVerified = assignmentAssigned;  ///
-      }
-
-      if (unqualifiedMetastatementVerified) {
-        const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-              metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
-
-        localMetaContext.addMetaproofStep(metaproofStep);
-
-        childVerified = true;
-      }
-
-      break;
-    }
-  }
-
-  return childVerified;
 }

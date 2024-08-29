@@ -1,28 +1,28 @@
 "use strict";
 
+import LocalMetaContext from "../context/localMeta";
 import verifyMetaDerivation from "../verify/metaDerivation";
 
 import { nodeQuery } from "../utilities/query";
 
 const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!");
 
-export default function verifyMetaproof(metaproofNode, conclusion, substitutions, localMetaproof) {
+export default function verifyMetaproof(metaproofNode, conclusion, substitutions, localMetaContext) {
   let metaproofVerified = false;
 
+  localMetaContext = LocalMetaContext.fromLocalMetaContext(localMetaContext); ///
+
   const metaDerivationNode = metaDerivationNodeQuery(metaproofNode),
-        metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, substitutions, localMetaproof);
+        metaDerivationVerified = verifyMetaDerivation(metaDerivationNode, substitutions, localMetaContext);
 
   if (metaDerivationVerified) {
-    const lastMetaproofStep = localMetaproof.getLastMetaproofStep();
+    const lastMetaproofStep = localMetaContext.getLastMetaproofStep(),
+          metaproofStep = lastMetaproofStep, ///
+          metastatementNode = metaproofStep.getMetastatementNode(),
+          conclusionMetastatementNode = conclusion.getMetastatementNode(),
+          metastatementNodeMatchesConclusionMetastatementNode = metastatementNode.match(conclusionMetastatementNode);
 
-    if (lastMetaproofStep !== null) {
-      const metaproofStep = lastMetaproofStep, ///
-            metastatementNode = metaproofStep.getMetastatementNode(),
-            conclusionMetastatementNode = conclusion.getMetastatementNode(),
-            metastatementNodeMatchesConclusionMetastatementNode = metastatementNode.match(conclusionMetastatementNode);
-
-      metaproofVerified = metastatementNodeMatchesConclusionMetastatementNode;  ///
-    }
+    metaproofVerified = metastatementNodeMatchesConclusionMetastatementNode;  ///
   }
 
   return metaproofVerified;
