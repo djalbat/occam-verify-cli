@@ -8,10 +8,10 @@ import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { metastatementNodeFromMetastatementString } from "./utilities/node";
 
-const metaSubproofAssertionNodeQuery = nodeQuery("/metastatement/metaSubproofAssertion!"),
-      metaSubproofAssertionMetastatementNodesQuery = nodesQuery("/metaSubproofAssertion/metastatement"),
+const subproofAssertionNodeQuery = nodeQuery("/metastatement/subproofAssertion!"),
+      subproofAssertionMetastatementNodesQuery = nodesQuery("/subproofAssertion/metastatement"),
       metaSubproofMetaSuppositionMetastatementNodesQuery = nodesQuery("/metaSubproof/metaSupposition/unqualifiedMetastatement/metastatement!"),
-      metaSubproofSubDerivationLastMetastatementNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation/qualifiedMetastatement|unqualifiedMetastatement[-1]/metastatement!");
+      metaSubproofLastMetaProofStepMetastatementNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation/lastMetaProofStep/unqualifiedMetastatement|qualifiedMetastatement/metastatement!");
 
 export default class MetaSupposition {
   constructor(metastatementNode) {
@@ -25,37 +25,33 @@ export default class MetaSupposition {
   matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext) {
     let metaSubproofNodeMatches = false;
 
-    const metaSubproofAssertionNode = metaSubproofAssertionNodeQuery(this.metastatementNode);
+    const subproofAssertionNode = subproofAssertionNodeQuery(this.metastatementNode);
 
-    if (metaSubproofAssertionNode !== null) {
+    if (subproofAssertionNode !== null) {
       const metaSubproofMetaSuppositionMetastatementNodes = metaSubproofMetaSuppositionMetastatementNodesQuery(metaSubproofNode),
-            metaSubproofSubDerivationLastMetastatementNode = metaSubproofSubDerivationLastMetastatementNodeQuery(metaSubproofNode),
+            metaSubproofLastMetaProofStepMetastatementNode = metaSubproofLastMetaProofStepMetastatementNodeQuery(metaSubproofNode),
             metaSubproofMetastatementNodes = [
               ...metaSubproofMetaSuppositionMetastatementNodes,
-              metaSubproofSubDerivationLastMetastatementNode
+              metaSubproofLastMetaProofStepMetastatementNode
             ],
-            metaSubproofAssertionMetastatementNodes = metaSubproofAssertionMetastatementNodesQuery(metaSubproofAssertionNode),
-            metaSubproofMetastatementNodesLength = metaSubproofMetastatementNodes.length,
-            metaSubproofAssertionMetastatementNodesLength = metaSubproofAssertionMetastatementNodes.length;
+            subproofAssertionMetastatementNodes = subproofAssertionMetastatementNodesQuery(subproofAssertionNode);
 
-      if (metaSubproofMetastatementNodesLength === metaSubproofAssertionMetastatementNodesLength) {
-        metaSubproofNodeMatches = match(metaSubproofAssertionMetastatementNodes, metaSubproofMetastatementNodes, (metaSubproofAssertionMetastatementNode, metaSubproofMetastatementNode) => {
-          const nonTerminalNodeA = metaSubproofAssertionMetastatementNode,  ///
-                nonTerminalNodeB = metaSubproofMetastatementNode, ///
-                fileContextA = fileContext, ///
-                localMetaContextA = LocalMetaContext.fromFileContext(fileContextA),
-                localMetaContextB = localMetaContext,  ///
-                nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, () => {
-                  const verifiedAhead = true;
+      metaSubproofNodeMatches = match(subproofAssertionMetastatementNodes, metaSubproofMetastatementNodes, (subproofAssertionMetastatementNode, ruleSubproofMetastatementNode) => {
+        const nonTerminalNodeA = subproofAssertionMetastatementNode,  ///
+              nonTerminalNodeB = ruleSubproofMetastatementNode, ///
+              fileContextA = fileContext, ///
+              localMetaContextA = LocalMetaContext.fromFileContext(fileContextA),
+              localMetaContextB = localMetaContext,  ///
+              nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, () => {
+                const verifiedAhead = true;
 
-                  return verifiedAhead;
-                });
+                return verifiedAhead;
+              });
 
-          if (nonTerminalNodeVerified) {
-            return true;
-          }
-        });
-      }
+        if (nonTerminalNodeVerified) {
+          return true;
+        }
+      });
     }
 
     return metaSubproofNodeMatches;
