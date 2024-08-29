@@ -5,7 +5,7 @@ import MetaConsequent from "./metaConsequent";
 import MetaSupposition from "./metaSupposition";
 import MetastatementForMetavariableSubstitution from "./substitution/metastatementForMetavariable";
 
-import { prune } from "./utilities/array";
+import { extract } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
 
 export default class MetaLemmaMetatheorem {
@@ -163,14 +163,14 @@ export default class MetaLemmaMetatheorem {
 }
 
 function matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fileContext, localMetaContext) {
-  const metaproofStep = prune(metaproofSteps, (metaproofStep) => {
+  const metaproofStep = extract(metaproofSteps, (metaproofStep) => {
     const metaSubproofNode = metaproofStep.getMetaSubproofNode(),
           metastatementNode = metaproofStep.getMetastatementNode();
 
     if (metaSubproofNode !== null) {
       const metaSubProofMatches = metaSupposition.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
 
-      if (!metaSubProofMatches) {  ///
+      if (metaSubProofMatches) {  ///
         return true;
       }
     }
@@ -178,7 +178,7 @@ function matchMetaSupposition(metaSupposition, metaproofSteps, substitutions, fi
     if (metastatementNode !== null) {
       const metastatementMatches = metaSupposition.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
 
-      if (!metastatementMatches) {  ///
+      if (metastatementMatches) {  ///
         return true;
       }
     }

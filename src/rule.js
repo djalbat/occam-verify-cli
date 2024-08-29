@@ -4,9 +4,8 @@ import Label from "./label";
 import Premise from "./premise";
 import Conclusion from "./conclusion";
 
-import { prune } from "./utilities/array";
+import { extract } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
-import local from "./context/local";
 
 export default class Rule {
   constructor(labels, premises, conclusion, fileContext) {
@@ -183,13 +182,13 @@ export default class Rule {
 }
 
 function matchPremise(premise, proofSteps, substitutions, fileContext, statementLocalContext) {
-  const proofStep = prune(proofSteps, (proofStep) => {
+  const proofStep = extract(proofSteps, (proofStep) => {
     const statementNode = proofStep.getStatementNode()
 
     if (statementNode !== null) {
       const statementNodeMatches = premise.matchStatementNode(statementNode, substitutions, fileContext, statementLocalContext);
 
-      if (!statementNodeMatches) {  ///
+      if (statementNodeMatches) {  ///
         return true;
       }
     }
@@ -220,14 +219,23 @@ function matchConclusion(conclusion, statementNode, substitutions, fileContext, 
 }
 
 function metaMatchPremise(premise, metaproofSteps, substitutions, fileContext, localMetaContext) {
-  const metaproofStep = prune(metaproofSteps, (metaproofStep) => {
+  const metaproofStep = extract(metaproofSteps, (metaproofStep) => {
     const ruleSubproofNode = metaproofStep.getRuleSubproofNode(),
+          metaSubproofNode = metaproofStep.getMetaSubproofNode(),
           metastatementNode = metaproofStep.getMetastatementNode()
 
     if (ruleSubproofNode !== null) {
       const ruleSubProofNodeMatches = premise.matchRuleSubproofNode(ruleSubproofNode, substitutions, fileContext, localMetaContext);
 
-      if (!ruleSubProofNodeMatches) {  ///
+      if (ruleSubProofNodeMatches) {  ///
+        return true;
+      }
+    }
+
+    if (metaSubproofNode !== null) {
+      const metaSubProofNodeMatches = premise.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
+
+      if (metaSubProofNodeMatches) {  ///
         return true;
       }
     }
@@ -235,7 +243,7 @@ function metaMatchPremise(premise, metaproofSteps, substitutions, fileContext, l
     if (metastatementNode !== null) {
       const metastatementNodeMatches = premise.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
 
-      if (!metastatementNodeMatches) {  ///
+      if (metastatementNodeMatches) {  ///
         return true;
       }
     }

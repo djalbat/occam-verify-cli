@@ -5,9 +5,8 @@ import Consequent from "./consequent";
 import Supposition from "./supposition";
 import LocalContext from "./context/local";
 
-import { prune } from "./utilities/array";
+import { extract } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
-import local from "./context/local";
 
 export default class AxiomLemmaTheoremConjecture {
   constructor(labels, suppositions, consequent, localContext) {
@@ -149,13 +148,13 @@ export default class AxiomLemmaTheoremConjecture {
 }
 
 function matchSupposition(supposition, proofSteps, substitutions, localContext, statementLocalContext) {
-  const proofStep = prune(proofSteps, (proofStep) => {
+  const proofStep = extract(proofSteps, (proofStep) => {
     const statementNode = proofStep.getStatementNode();
 
     if (statementNode !== null) {
       const statementMatches = supposition.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext);
 
-      if (!statementMatches) {  ///
+      if (statementMatches) {  ///
         return true;
       }
     }

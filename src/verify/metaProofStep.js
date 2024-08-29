@@ -32,7 +32,7 @@ export default function verifyMetaProofStep(metaProofStepNode, substitutions, lo
   } else if (metaSubproofNode !== null) {
     let metaSubproofVerified;
 
-    metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, localMetaContext);
+    metaSubproofVerified = verifyMetaSubproof(metaSubproofNode, substitutions, localMetaContext);
 
     if (metaSubproofVerified) {
       const metaproofStep = MetaproofStep.fromMetaSubproofNode(metaSubproofNode);
