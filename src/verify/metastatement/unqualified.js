@@ -9,32 +9,29 @@ const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatemen
 export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext) {
   let unqualifiedMetastatementVerified = false;
 
-  const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
+  const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
+        unqualifiedMetastatementString = localMetaContext.nodeAsString(unqualifiedMetastatementNode);
 
-  if (metastatementNode !== null) {
-    const metastatementString = localMetaContext.nodeAsString(metastatementNode);
+  localMetaContext.trace(`Verifying the '${unqualifiedMetastatementString}' unqualified metastatement...`, unqualifiedMetastatementNode);
 
-    localMetaContext.trace(`Verifying the '${metastatementString}' unqualified metastatement...`, unqualifiedMetastatementNode);
+  if (derived) {
+    const metastatementMatches = localMetaContext.matchMetastatement(metastatementNode);
 
-    if (derived) {
-      const metastatementMatches = localMetaContext.matchMetastatement(metastatementNode);
+    unqualifiedMetastatementVerified = metastatementMatches;  ///
+  }
 
-      unqualifiedMetastatementVerified = metastatementMatches;  ///
-    }
+  if (!unqualifiedMetastatementVerified) {
+    const metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {
+            const verifiedAhead = true;
 
-    if (!unqualifiedMetastatementVerified) {
-      const metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {
-              const verifiedAhead = true;
+            return verifiedAhead;
+          });
 
-              return verifiedAhead;
-            });
+    unqualifiedMetastatementVerified = metastatementVerified; ///
+  }
 
-      unqualifiedMetastatementVerified = metastatementVerified; ///
-    }
-
-    if (unqualifiedMetastatementVerified) {
-      localMetaContext.debug(`...verified the '${metastatementString}' unqualified metastatement.`, unqualifiedMetastatementNode);
-    }
+  if (unqualifiedMetastatementVerified) {
+    localMetaContext.debug(`...verified the '${unqualifiedMetastatementString}' unqualified metastatement.`, unqualifiedMetastatementNode);
   }
 
   return unqualifiedMetastatementVerified;

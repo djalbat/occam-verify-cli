@@ -95,11 +95,10 @@ function verifyChild(childNode, substitutions, localMetaContext) {
     case QUALIFIED_METASTATEMENT_RULE_NAME: {
       let qualifiedMetastatementVerified;
 
-      const derived = true,
-            assignments = [],
+      const assignments = [],
             qualifiedMetastatementNode = childNode;  ///
 
-      qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, derived, localMetaContext);
+      qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, localMetaContext);
 
       if (qualifiedMetastatementVerified) {
         const assignmentAssigned = assignAssignment(assignments, localMetaContext);

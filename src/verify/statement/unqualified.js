@@ -9,32 +9,29 @@ const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 export default function verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext) {
   let unqualifiedStatementVerified = false;
 
-  const statementNode = statementNodeQuery(unqualifiedStatementNode);
+  const statementNode = statementNodeQuery(unqualifiedStatementNode),
+        unqualifiedStatementString = localContext.nodeAsString(unqualifiedStatementNode);
 
-  if (statementNode !== null) {
-    const statementString = localContext.nodeAsString(statementNode);
+  localContext.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`, unqualifiedStatementNode);
 
-    localContext.trace(`Verifying the '${statementString}' unqualified statement...`, unqualifiedStatementNode);
+  if (derived) {
+    const statementMatches = localContext.matchStatement(statementNode);
 
-    if (derived) {
-      const statementMatches = localContext.matchStatement(statementNode);
+    unqualifiedStatementVerified = statementMatches;  ///
+  }
 
-      unqualifiedStatementVerified = statementMatches;  ///
-    }
+  if (!unqualifiedStatementVerified) {
+    const statementVerified = verifyStatement(statementNode, assignments, derived, localContext, () => {
+            const verifiedAhead = true;
 
-    if (!unqualifiedStatementVerified) {
-      const statementVerified = verifyStatement(statementNode, assignments, derived, localContext, () => {
-              const verifiedAhead = true;
+            return verifiedAhead;
+          });
 
-              return verifiedAhead;
-            });
+    unqualifiedStatementVerified = statementVerified;  ///
+  }
 
-      unqualifiedStatementVerified = statementVerified;  ///
-    }
-
-    if (unqualifiedStatementVerified) {
-      localContext.debug(`...verified the '${statementString}' unqualified statement.`, unqualifiedStatementNode);
-    }
+  if (unqualifiedStatementVerified) {
+    localContext.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`, unqualifiedStatementNode);
   }
 
   return unqualifiedStatementVerified;

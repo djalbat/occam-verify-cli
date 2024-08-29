@@ -7,6 +7,7 @@ import LocalContext from "./context/local";
 
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
+import local from "./context/local";
 
 export default class AxiomLemmaTheoremConjecture {
   constructor(labels, suppositions, consequent, localContext) {
@@ -32,10 +33,11 @@ export default class AxiomLemmaTheoremConjecture {
     return this.localContext;
   }
 
-  matchStatement(statementNode, statementLocalContext) {
+  matchStatement(statementNode, localContext) {
     let statementNatches;
 
-    const suppositionsLength = this.suppositions.length;
+    const suppositionsLength = this.suppositions.length,
+          statementLocalContext = localContext; ///
 
     if (suppositionsLength === 0) {
       const substitutions = [],

@@ -6,6 +6,7 @@ import Conclusion from "./conclusion";
 
 import { prune } from "./utilities/array";
 import { someSubArray } from "./utilities/array";
+import local from "./context/local";
 
 export default class Rule {
   constructor(labels, premises, conclusion, fileContext) {
@@ -31,10 +32,11 @@ export default class Rule {
     return this.fileContext;
   }
 
-  matchStatement(statementNode, statementLocalContext) {
+  matchStatement(statementNode, localContext) {
     let statementNatches;
 
-    const premisesLength = this.premises.length;
+    const premisesLength = this.premises.length,
+          statementLocalContext = localContext; ///
 
     if (premisesLength === 0) {
       const substitutions = [],

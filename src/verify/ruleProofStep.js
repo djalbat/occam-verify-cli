@@ -48,11 +48,10 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
   } else if (qualifiedMetastatementNode !== null) {
     let qualifiedMetastatementVerified;
 
-    const derived = true,
-          assignments = [],
+    const assignments = [],
           substitutions = null;
 
-    qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, derived, localMetaContext);
+    qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, localMetaContext);
 
     if (qualifiedMetastatementVerified) {
       const assignmentAssigned = assignAssignment(assignments, localMetaContext);
