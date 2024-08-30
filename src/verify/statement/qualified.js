@@ -33,11 +33,7 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, assignm
   if (qualifiedStatementVerified) {
     const derived = false,
           statementNode = statementNodeQuery(qualifiedStatementNode),
-          statementVerified = verifyStatement(statementNode, assignments, derived, localContext, () => {
-            const verifiedAhead = true;
-
-            return verifiedAhead;
-          });
+          statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 
     qualifiedStatementVerified = statementVerified;  ///
   }
@@ -169,7 +165,7 @@ function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, meta
   return qualifiedStatementVerifiedAgainstConjecture;
 }
 
-function verifyStatement(statementNode, assignments, derived, localContext, verifyAhead) {
+function verifyStatement(statementNode, assignments, derived, localContext) {
   let statementVerified;
 
   const statementString = localContext.nodeAsString(statementNode);
@@ -182,7 +178,7 @@ function verifyStatement(statementNode, assignments, derived, localContext, veri
   ];
 
   verifyStatementFunctions.some((verifyStatementFunction) => {
-    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext, verifyAhead);
+    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
 
     if (statementVerified) {
       return true;

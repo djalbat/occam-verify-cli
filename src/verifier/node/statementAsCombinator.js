@@ -41,22 +41,29 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
   }
 
   verifyStatementNode(statementNode, localContext, verifyAhead) {
-    const standaloneStatementVerified = verifyStandaloneStatement(statementNode, localContext, verifyAhead),
-          statementNodeVerified = standaloneStatementVerified; ///
+    let statementNodeVerified = false;
+
+    const standaloneStatementVerified = verifyStandaloneStatement(statementNode, localContext);
+
+    if (standaloneStatementVerified) {
+      const verifiedAhead = verifyAhead;  ///
+
+      statementNodeVerified = verifiedAhead; ///
+    }
 
     return statementNodeVerified;
   }
 
   verifyTermNode(termNode, localContext, verifyAhead) {
     const standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
-      termNodeVerified = standaloneTermVerified;  ///
+          termNodeVerified = standaloneTermVerified;  ///
 
     return termNodeVerified;
   }
 
   verifyTypeNode(typeNode, localContext, verifyAhead) {
     const standaloneTypeVerified = verifyStandaloneType(typeNode, localContext, verifyAhead),
-      typeNodeVerified = standaloneTypeVerified;  ///
+          typeNodeVerified = standaloneTypeVerified;  ///
 
     return typeNodeVerified;
   }

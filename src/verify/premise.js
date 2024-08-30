@@ -29,8 +29,6 @@ export default function verifyPremise(premiseNode, premises, localMetaContext) {
 
       premiseVerified = assignmentAssigned; ///
     }
-  } else {
-    debugger
   }
 
   if (premiseVerified) {

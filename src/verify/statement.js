@@ -10,12 +10,12 @@ import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statement
 import { nodeQuery } from "../utilities/query";
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
-      statementNodeQuery = nodeQuery("/containedAssertion/metastatement/statement!"),
+      statementNodeQuery = nodeQuery("/containedAssertion/statement!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
       containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
 
-function verifyStatement(statementNode, assignments, derived, localContext, verifyAhead) {
+function verifyStatement(statementNode, assignments, derived, localContext) {
   let statementVerified;
 
   const statementString = localContext.nodeAsString(statementNode);
@@ -31,7 +31,7 @@ function verifyStatement(statementNode, assignments, derived, localContext, veri
   ];
 
   statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
-    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext, verifyAhead);
+    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
 
     if (statementVerified) {
       return true;
@@ -45,7 +45,7 @@ function verifyStatement(statementNode, assignments, derived, localContext, veri
   return statementVerified;
 }
 
-export function verifyStandaloneStatement(statementNode, localContext, verifyAhead) {
+export function verifyStandaloneStatement(statementNode, localContext) {
   let standaloneStatementVerified;
 
   const statementString = localContext.nodeAsString(statementNode);
@@ -54,7 +54,7 @@ export function verifyStandaloneStatement(statementNode, localContext, verifyAhe
 
   const derived = false,
         assignments = [],
-        statementVerified = verifyStatement(statementNode, assignments, derived, localContext, verifyAhead);
+        statementVerified = verifyStatement(statementNode, assignments, derived);
 
   standaloneStatementVerified = statementVerified;  ///
 
@@ -71,7 +71,7 @@ Object.assign(statementAgainstCombinatorNodesVerifier, {
 
 export default verifyStatement;
 
-export function verifyStatementAsEquality(statementNode, assignments, derived, localContext, verifyAhead) {
+export function verifyStatementAsEquality(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsEquality = false;
 
   const equalityNode = equalityNodeQuery(statementNode);
@@ -81,7 +81,11 @@ export function verifyStatementAsEquality(statementNode, assignments, derived, l
 
     localContext.trace(`Verifying the '${statementString}' statement as an equality...`, equalityNode);
 
-    const equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext, verifyAhead);
+    const equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext, () => {
+      const verifiedAhead = true;
+
+      return verifiedAhead;
+    });
 
     statementVerifiedAsEquality = equalityVerified; ///
 
@@ -93,7 +97,7 @@ export function verifyStatementAsEquality(statementNode, assignments, derived, l
   return statementVerifiedAsEquality;
 }
 
-export function verifyStatementAsTypeAssertion(statementNode, assignments, derived, localContext, verifyAhead) {
+export function verifyStatementAsTypeAssertion(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsTypeAssertion = false;
 
   const typeAssertionNode = typeAssertionNodeQuery(statementNode);
@@ -103,7 +107,11 @@ export function verifyStatementAsTypeAssertion(statementNode, assignments, deriv
 
     localContext.trace(`Verifying the '${statementString}' statement as a type assertion...`, typeAssertionNode);
 
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext, verifyAhead);
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext, () => {
+      const verifiedAhead = true;
+
+      return verifiedAhead;
+    });
 
     statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
 
@@ -115,7 +123,7 @@ export function verifyStatementAsTypeAssertion(statementNode, assignments, deriv
   return statementVerifiedAsTypeAssertion;
 }
 
-function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, localContext, verifyAhead) {
+function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsDefinedAssertion = false;
 
   const definedAssertionNode = definedAssertionNodeQuery(statementNode);
@@ -125,7 +133,11 @@ function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, 
 
     localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, definedAssertionNode);
 
-    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, localContext, verifyAhead);
+    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, localContext, () => {
+      const verifiedAhead = true;
+
+      return verifiedAhead;
+    });
 
     statementVerifiedAsDefinedAssertion = definedAssertionVerified; ///
 
@@ -137,7 +149,7 @@ function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, 
   return statementVerifiedAsDefinedAssertion;
 }
 
-function verifyStatementAsContainedAssertion(statementNode, assignments, derived, localContext, verifyAhead) {
+function verifyStatementAsContainedAssertion(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsContainedAssertion = false;
 
   const containedAssertionNode = containedAssertionNodeQuery(statementNode);
@@ -160,7 +172,7 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
       const statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
         const derived = false,
               assignments = [],
-              statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext, verifyAhead);
+              statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
 
         if (statementVerified) {
           return true;
@@ -178,7 +190,7 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
   return statementVerifiedAsContainedAssertion;
 }
 
-function verifyStatementAgainstCombinators(statementNode, assignments, derived, localContext, verifyAhead) {
+function verifyStatementAgainstCombinators(statementNode, assignments, derived, localContext) {
   let statementVerifiedAgainstCombinators = false;
 
   const equalityNode = equalityNodeQuery(statementNode),
@@ -195,7 +207,7 @@ function verifyStatementAgainstCombinators(statementNode, assignments, derived, 
     ];
 
     statementVerifiedAgainstCombinators = combinators.some((combinator) => {
-      const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, localContext, verifyAhead);
+      const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, localContext);
 
       if (statementVerifiedAgainstCombinator) {
         return true;
@@ -206,7 +218,7 @@ function verifyStatementAgainstCombinators(statementNode, assignments, derived, 
   return statementVerifiedAgainstCombinators;
 }
 
-function verifyStatementAgainstCombinator(statementNode, combinator, localContext, verifyAhead) {
+function verifyStatementAgainstCombinator(statementNode, combinator, localContext) {
   let statementVerifiedAgainstCombinator;
 
   const statementString = localContext.nodeAsString(statementNode),
@@ -217,7 +229,11 @@ function verifyStatementAgainstCombinator(statementNode, combinator, localContex
   const combinatorStatementNode = combinator.getStatementNode(),
         nonTerminalNodeA = statementNode, ///
         nonTerminalNodeB = combinatorStatementNode, ///
-        nonTerminalNodeVerified = statementAgainstCombinatorNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
+        nonTerminalNodeVerified = statementAgainstCombinatorNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, () => {
+          const verifiedAhead = true;
+
+          return verifiedAhead;
+        });
 
   statementVerifiedAgainstCombinator = nonTerminalNodeVerified;  ///
 

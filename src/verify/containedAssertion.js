@@ -4,7 +4,7 @@ import { isAssertionNegated } from "../utilities/verify";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/containedAssertion/term/variable!"),
-      metastatementVariableNodesQuery = nodesQuery("/containedAssertion/metastatement//variable");
+      metastatementVariableNodesQuery = nodesQuery("/containedAssertion/statement//variable");
 
 export default function verifyContainedAssertion(containedAssertionNode) {
   let containedAssertionVerified = false;
