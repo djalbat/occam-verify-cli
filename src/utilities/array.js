@@ -2,62 +2,28 @@
 
 import { arrayUtilities } from "necessary";
 
-import permutationsMatrix from "../permutationsMatrix";
+export const { first, second, last, extract, push, match, filter, compress, separate } = arrayUtilities;
 
-import { MAXIMUM_INDEXES_LENGTH, MAXIMUM_PERMUTATION_LENGTH } from "../constants";
+export function correlate(arrayA, arrayB, callback) {
+  arrayB = [
+    ...arrayB
+  ];  ///
 
-export const { first, second, last, push, prune, extract, match, filter, compress, separate } = arrayUtilities;
+  const correlates = arrayA.every((elementA) => {
+    const elementB = extract(arrayB, (elementB) => {
+      const result = callback(elementA, elementB);
 
-export function someSubArray(array, subArrayLength, callback) {
-  let found = false;
+      if (result) {
+        return true;
+      }
+    }) || null;
 
-  const arrayLength = array.length,
-        indexesLength = arrayLength, ///
-        permutationLength = subArrayLength; ///
-
-  if (permutationLength <= MAXIMUM_PERMUTATION_LENGTH) {
-    let offset,
-        permutations;
-
-    if (indexesLength > MAXIMUM_INDEXES_LENGTH) {
-      offset = indexesLength - MAXIMUM_INDEXES_LENGTH;
-
-      permutations = permutationsMatrix[MAXIMUM_INDEXES_LENGTH][permutationLength];
-    } else {
-      offset = 0;
-
-      permutations = permutationsMatrix[indexesLength][permutationLength];
+    if (elementB !== null) {
+      return true;
     }
+  });
 
-    if (subArrayLength === 5) {
-      permutations = [
-        [ 0, 3, 4, 5, 1 ]
-      ];
-    }
-
-    if (permutations !== null) {
-      found = permutations.some((permutation) => {
-        if (permutation !== null) {
-          const subArray = [];
-
-          for (let position = 0; position < permutationLength; position++) {
-            const index = permutation[position] + offset,
-                  element = array[index];
-
-            subArray.push(element);
-          }
-
-          const passed = callback(subArray);
-
-          if (passed) {
-            return true;
-          }
-        }
-      });
-    }
-  }
-
-  return found;
+  return correlates;
 }
 
 export function leftDifference(arrayA, arrayB) {

@@ -5,8 +5,7 @@ import Consequent from "./consequent";
 import Supposition from "./supposition";
 import LocalContext from "./context/local";
 
-import { extract } from "./utilities/array";
-import { someSubArray } from "./utilities/array";
+import { correlate } from "./utilities/array";
 
 export default class AxiomLemmaTheoremConjecture {
   constructor(labels, suppositions, consequent, localContext) {
@@ -33,35 +32,16 @@ export default class AxiomLemmaTheoremConjecture {
   }
 
   matchStatement(statementNode, localContext) {
-    let statementNatches;
+    let statementNatches = false;
 
-    const suppositionsLength = this.suppositions.length,
-          statementLocalContext = localContext; ///
+    const proofSteps = localContext.getProofSteps(),
+          substitutions = [],
+          suppositionsMatch = matchSuppositions(this.suppositions, proofSteps, substitutions, this.localContext, localContext);
 
-    if (suppositionsLength === 0) {
-      const substitutions = [],
-            consequentMatches = matchConsequent(this.consequent, statementNode, substitutions, this.localContext, statementLocalContext);
+    if (suppositionsMatch) {
+      const consequentMatches = matchConsequent(this.consequent, statementNode, substitutions, this.localContext, localContext);
 
-      statementNatches = consequentMatches; ///
-    } else {
-      const proofSteps = statementLocalContext.getProofSteps();
-
-      statementNatches = someSubArray(proofSteps, suppositionsLength, (proofSteps) => {
-        let suppositionsMatchConsequent = false;
-
-        const substitutions = [],
-              suppositionsMatch = matchSuppositions(this.suppositions, proofSteps, substitutions, this.localContext, statementLocalContext);
-
-        if (suppositionsMatch) {
-          const consequentMatches = matchConsequent(this.consequent, statementNode, substitutions, this.localContext, statementLocalContext);
-
-          suppositionsMatchConsequent = consequentMatches;  ///
-        }
-
-        if (suppositionsMatchConsequent) {
-          return true;
-        }
-      });
+      statementNatches = consequentMatches;  ///
     }
 
     return statementNatches;
@@ -147,27 +127,9 @@ export default class AxiomLemmaTheoremConjecture {
   static fromLabelsSuppositionsConsequentAndLocalContext(Class, labels, suppositions, consequent, localContext) { return new Class(labels, suppositions, consequent, localContext); }
 }
 
-function matchSupposition(supposition, proofSteps, substitutions, localContext, statementLocalContext) {
-  const proofStep = extract(proofSteps, (proofStep) => {
-    const statementNode = proofStep.getStatementNode();
-
-    if (statementNode !== null) {
-      const statementMatches = supposition.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext);
-
-      if (statementMatches) {
-        return true;
-      }
-    }
-  }) || null;
-
-  const suppositionMatches = (proofStep !== null);
-
-  return suppositionMatches;
-}
-
 function matchSuppositions(suppositions, proofSteps, substitutions, localContext, statementLocalContext) {
-  const suppositionsMatch = suppositions.every((supposition) => {
-    const suppositionMatches = matchSupposition(supposition, proofSteps, substitutions, localContext, statementLocalContext);
+  const suppositionsMatch = correlate(suppositions, proofSteps, (supposition, proofStep) => {
+    const suppositionMatches = matchSupposition(supposition, proofStep, substitutions, localContext, statementLocalContext);
 
     if (suppositionMatches) {
       return true;
@@ -175,6 +137,20 @@ function matchSuppositions(suppositions, proofSteps, substitutions, localContext
   });
 
   return suppositionsMatch;
+}
+
+function matchSupposition(supposition, proofStep, substitutions, localContext, statementLocalContext) {
+  let suppositionMatches = false;
+
+  const statementNode = proofStep.getStatementNode();
+
+  if (statementNode !== null) {
+    const statementMatches = supposition.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext);
+
+    suppositionMatches = statementMatches;  ///
+  }
+
+  return suppositionMatches;
 }
 
 function matchConsequent(consequent, statementNode, substitutions, localContext, statementLocalContext) {
