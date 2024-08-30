@@ -17,15 +17,20 @@ export default function verifyPremise(premiseNode, premises, localMetaContext) {
 
   localMetaContext.trace(`Verifying the '${premiseString}' premise...`, premiseNode);
 
-  const derived = false,
-        assignments = [],
-        unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(premiseNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(premiseNode);
 
-  if (unqualifiedMetastatementVerified) {
-    const assignmentAssigned = assignAssignment(assignments, localMetaContext);
+  if (unqualifiedMetastatementNode !== null) {
+    const derived = false,
+          assignments = [],
+          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
 
-    premiseVerified = assignmentAssigned; ///
+    if (unqualifiedMetastatementVerified) {
+      const assignmentAssigned = assignAssignment(assignments, localMetaContext);
+
+      premiseVerified = assignmentAssigned; ///
+    }
+  } else {
+    debugger
   }
 
   if (premiseVerified) {
