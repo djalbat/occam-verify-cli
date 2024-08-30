@@ -4,10 +4,18 @@ import { arrayUtilities } from "necessary";
 
 export const { first, second, last, extract, push, match, filter, compress, separate } = arrayUtilities;
 
+export function reverse(array) {
+  array = [ ///
+    ...array
+  ].reverse();
+
+  return array;
+}
+
 export function correlate(arrayA, arrayB, callback) {
-  arrayB = [
+  arrayB = [  ///
     ...arrayB
-  ];  ///
+  ];
 
   const correlates = arrayA.every((elementA) => {
     const elementB = extract(arrayB, (elementB) => {

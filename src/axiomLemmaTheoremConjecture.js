@@ -5,7 +5,7 @@ import Consequent from "./consequent";
 import Supposition from "./supposition";
 import LocalContext from "./context/local";
 
-import { correlate } from "./utilities/array";
+import { reverse, correlate } from "./utilities/array";
 
 export default class AxiomLemmaTheoremConjecture {
   constructor(labels, suppositions, consequent, localContext) {
@@ -128,6 +128,10 @@ export default class AxiomLemmaTheoremConjecture {
 }
 
 function matchSuppositions(suppositions, proofSteps, substitutions, localContext, statementLocalContext) {
+  suppositions = reverse(suppositions); ///
+
+  proofSteps = reverse(proofSteps); ///
+
   const suppositionsMatch = correlate(suppositions, proofSteps, (supposition, proofStep) => {
     const suppositionMatches = matchSupposition(supposition, proofStep, substitutions, localContext, statementLocalContext);
 

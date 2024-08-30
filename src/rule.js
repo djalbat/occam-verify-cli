@@ -4,7 +4,7 @@ import Label from "./label";
 import Premise from "./premise";
 import Conclusion from "./conclusion";
 
-import { correlate } from "./utilities/array";
+import { reverse, correlate } from "./utilities/array";
 
 export default class Rule {
   constructor(labels, premises, conclusion, fileContext) {
@@ -165,6 +165,10 @@ function matchPremise(premise, proofStep, substitutions, fileContext, localConte
 }
 
 function matchPremises(premises, proofSteps, substitutions, fileContext, localContext) {
+  premises = reverse(premises); ///
+
+  proofSteps = reverse(proofSteps); ///
+
   const premisesMatch = correlate(premises, proofSteps, (premise, proofStep) => {
     const premiseMatches = matchPremise(premise, proofStep, substitutions, fileContext, localContext);
 
@@ -212,6 +216,10 @@ function metaMatchPremise(premise, metaproofStep, substitutions, fileContext, lo
 }
 
 function metaMatchPremises(premises, metaproofSteps, substitutions, fileContext, localMetaContext) {
+  premises = reverse(premises); ///
+
+  metaproofSteps = reverse(metaproofSteps); ///
+
   const premisesMatch = correlate(premises, metaproofSteps, (premise, metaproofStep) => {
     const premiseMatches = metaMatchPremise(premise, metaproofStep, substitutions, fileContext, localMetaContext);
 

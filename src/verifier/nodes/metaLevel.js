@@ -6,7 +6,8 @@ import verifyMetavariableAgainstMetastatement from "../../verify/metavariableAga
 import { nodeQuery } from "../../utilities/query";
 import { verifyNodes } from "../../utilities/verifier";
 
-const metastatementNodeQuery = nodeQuery("/metastatement!"),
+const nonTerminalNodeQuery = nodeQuery("/*"),
+      metastatementNodeQuery = nodeQuery("/metastatement!"),
       metastatementMetavariableNodeQuery = nodeQuery("/metastatement/metavariable!");
 
 class MetaLevelNodesVerifier extends NodesVerifier {
@@ -30,14 +31,28 @@ class MetaLevelNodesVerifier extends NodesVerifier {
 
           return nonTerminalNodeVerified;
         }
+      },
+      {
+        nodeQueryA: nonTerminalNodeQuery,
+        nodeQueryB: nonTerminalNodeQuery,
+        verifyNodes: (nodeA, nodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const nonTerminalNodeA = nodeA, ///
+                nonTerminalNodeB = nodeB; ///
+
+          nonTerminalNodeVerified =
+
+            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
+
+          return nonTerminalNodeVerified;
+        }
       }
     ];
 
     const nodesVerified = verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
 
-    nonTerminalNodeVerified = nodesVerified ?
-                                true :
-                                  super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
+    nonTerminalNodeVerified = nodesVerified;  ///
 
     return nonTerminalNodeVerified;
   }

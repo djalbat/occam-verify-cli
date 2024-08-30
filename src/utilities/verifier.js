@@ -1,20 +1,16 @@
 "use strict";
 
 export function verifyNode(nodeQueryMaps, nonTerminalNode, ...remainingArguments) {
-  let nodeVerified;
+  let nodeVerified = false;
 
   nodeVerified = nodeQueryMaps.some((nodeQueryMap) => {
-    let nodeVerified = false;
-
     const { nodeQuery, verifyNode } = nodeQueryMap;
 
     const node = nodeQuery(nonTerminalNode);
 
     if (node !== null) {
       nodeVerified = verifyNode(node, ...remainingArguments);
-    }
 
-    if (nodeVerified) {
       return true;
     }
   });
@@ -23,11 +19,9 @@ export function verifyNode(nodeQueryMaps, nonTerminalNode, ...remainingArguments
 }
 
 export function verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments) {
-  let nodesVerified;
+  let nodesVerified = false;
 
-  nodesVerified = nodeQueryMaps.some((nodeQueryMap) => {
-    let nodesVerified = false;
-
+  nodeQueryMaps.some((nodeQueryMap) => {
     const { nodeQueryA, nodeQueryB, verifyNodes } = nodeQueryMap;
 
     const nodeA = nodeQueryA(nonTerminalNodeA),  ///
@@ -35,9 +29,7 @@ export function verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, .
 
     if ((nodeA !== null) && (nodeB !== null)) {
       nodesVerified = verifyNodes(nodeA, nodeB, ...remainingArguments);
-    }
 
-    if (nodesVerified) {
       return true;
     }
   });

@@ -5,7 +5,7 @@ import MetaConsequent from "./metaConsequent";
 import MetaSupposition from "./metaSupposition";
 import MetastatementForMetavariableSubstitution from "./substitution/metastatementForMetavariable";
 
-import { correlate } from "./utilities/array";
+import { reverse, correlate } from "./utilities/array";
 
 export default class MetaLemmaMetatheorem {
   constructor(labels, metaSuppositions, metaConsequent, substitutions, fileContext) {
@@ -144,6 +144,10 @@ export default class MetaLemmaMetatheorem {
 }
 
 function matchMetaSuppositions(metaSuppositions, metaproofSteps, substitutions, fileContext, localMetaContext) {
+  metaSuppositions = reverse(metaSuppositions); ///
+
+  metaproofSteps = reverse(metaproofSteps); ///
+
   const metaSuppositionsMatch = correlate(metaSuppositions, metaproofSteps, (metaSupposition, metaproofStep) => {
     const metaSuppositionMatches = matchMetaSupposition(metaSupposition, metaproofStep, substitutions, fileContext, localMetaContext);
 
