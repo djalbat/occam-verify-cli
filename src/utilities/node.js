@@ -53,29 +53,49 @@ export function metastatementNodeFromMetastatementString(metastatementString, le
 }
 
 export function termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
-  const constructorDeclarationNode = constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser),
-        termNode = termNodeQuery(constructorDeclarationNode);
+  let termNode = null;
+
+  const constructorDeclarationNode = constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser);
+
+  if (constructorDeclarationNode !== null) {
+    termNode = termNodeQuery(constructorDeclarationNode);
+  }
 
   return termNode;
 }
 
 export function statementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {
-  const unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
-        statementNode = statementNodeQuery(unqualifiedStatementNode);
+  let statementNode = null;
+
+  const unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser);
+
+  if (unqualifiedStatementNode !== null) {
+    statementNode = statementNodeQuery(unqualifiedStatementNode);
+  }
 
   return statementNode;
 }
 
 export function variableNodeFromVariableVariableTDeclarationTokens(variableTDeclarationTokens, parser) {
-  const variableDeclarationNode = variableDeclarationNodeFromVariableTDeclarationTokens(variableTDeclarationTokens, parser),
-        variableNode = variableNodeQuery(variableDeclarationNode);
+  let variableNode = null;
+
+  const variableDeclarationNode = variableDeclarationNodeFromVariableTDeclarationTokens(variableTDeclarationTokens, parser);
+
+  if (variableDeclarationNode !== null) {
+    variableNode = variableNodeQuery(variableDeclarationNode);
+  }
 
   return variableNode;
 }
 
 export function metastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser) {
-  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser),
-        metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
+  let metastatementNode = null;
+
+  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser);
+
+  if (unqualifiedMetastatementNode !== null) {
+    metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
+  }
 
   return metastatementNode;
 }
