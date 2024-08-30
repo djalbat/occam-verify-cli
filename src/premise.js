@@ -190,7 +190,7 @@ export default class Premise {
     const metastatementString = nodeAsString(this.metastatementNode, tokens),
           statementString = nodeAsString(this.statementnode, tokens),
           metastatement = metastatementString, ///
-          statement = metastatement,  ///
+          statement = statementString,  ///
           json = {
             metastatement,
             statement
