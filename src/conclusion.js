@@ -5,71 +5,99 @@ import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
 import intrinsicLevelAgainstMetaLevelNodesVerifier from "./verifier/nodes/intrinsicLevelAgainstMetaLevel";
 
 import { nodeAsString } from "./utilities/string";
-import { metastatementNodeFromMetastatementString } from "./utilities/node";
+import { statementNodeFromStatementString, metastatementNodeFromMetastatementString } from "./utilities/node";
 
 export default class Conclusion {
-  constructor(metastatementNode) {
+  constructor(metastatementNode, statementNode) {
     this.metastatementNode = metastatementNode;
+    this.statementNode = statementNode;
   }
 
   getMetastatementNode() {
     return this.metastatementNode;
   }
 
-  matchStatementNode(statementNode, substitutions, localContext, statementLocalContext) {
-    const nonTerminalNodeA = this.metastatementNode,  ///
-          nonTerminalNodeB = statementNode,  ///
-          localContextA = localContext, ///
-          localContextB = statementLocalContext,  ///
-          nonTerminalNodeVerified = intrinsicLevelAgainstMetaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-            const verifyAhead = true;
+  getStatementNode() {
+    return this.statementNode;
+  }
 
-            return verifyAhead;
-          }),
-          statementNodeMatches = nonTerminalNodeVerified; ///
+  matchStatementNode(statementNode, substitutions, localContext, statementLocalContext) {
+    let statementNodeMatches = false;
+
+    if (this.metastatementNode !== null) {
+      const nonTerminalNodeA = this.metastatementNode,  ///
+            nonTerminalNodeB = statementNode,  ///
+            localContextA = localContext, ///
+            localContextB = statementLocalContext,  ///
+            nonTerminalNodeVerified = intrinsicLevelAgainstMetaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+              const verifyAhead = true;
+
+              return verifyAhead;
+            });
+
+      statementNodeMatches = nonTerminalNodeVerified; ///
+    }
 
     return statementNodeMatches;
   }
 
   matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext) {
-    const nonTerminalNodeA = this.metastatementNode,  ///
-          nonTerminalNodeB = metastatementNode,  ///
-          fileContextA = fileContext, ///
-          localMetaContextA = LocalMetaContext.fromFileContext(fileContextA),
-          localMetaContextB = localMetaContext,  ///
-          nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, () => {
-            const verifiedAhead = true;
+    let metastatementNodeMatches = false;
 
-            return verifiedAhead;
-          }),
-          metastatementNodeMatches = nonTerminalNodeVerified; ///
+    if (this.metastatementNode !== null) {
+      const nonTerminalNodeA = this.metastatementNode,  ///
+            nonTerminalNodeB = metastatementNode,  ///
+            fileContextA = fileContext, ///
+            localMetaContextA = LocalMetaContext.fromFileContext(fileContextA),
+            localMetaContextB = localMetaContext,  ///
+            nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, () => {
+              const verifiedAhead = true;
+
+              return verifiedAhead;
+            });
+
+      metastatementNodeMatches = nonTerminalNodeVerified; ///
+    }
 
     return metastatementNodeMatches;
   }
 
   toJSON(tokens) {
     const metastatementString = nodeAsString(this.metastatementNode, tokens),
+          statementString = nodeAsString(this.statementNode, tokens),
           metastatement = metastatementString,  ///
+          statement = statementString,  ///
           json = {
-            metastatement
+            metastatement,
+            statement
           };
 
     return json;
   }
 
   static fromMetastatementNode(metastatementNode) {
-    const conclusion = new Conclusion(metastatementNode);
+    const statementNode = null,
+          conclusion = new Conclusion(metastatementNode, statementNode);
+
+    return conclusion;
+  }
+
+  static fromStatementNode(statementNode) {
+    const metastatementNode = null,
+          conclusion = new Conclusion(metastatementNode, statementNode);
 
     return conclusion;
   }
 
   static fromJSONAndFileContext(json, fileContext) {
-    const { metastatement } = json,
+    const { metastatement, statement } = json,
           metastatementString = metastatement,  ///
+          statementString = statement,  ///
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
           metastatementNode = metastatementNodeFromMetastatementString(metastatementString, lexer, parser),
-          conclusion = new Conclusion(metastatementNode);
+          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
+          conclusion = new Conclusion(metastatementNode, statementNode);
 
     return conclusion;
   }
