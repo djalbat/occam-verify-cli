@@ -10,7 +10,8 @@ import { verifyStandaloneStatement } from "../../verify/statement";
 
 const termNodeQuery = nodeQuery("/term!"),
       typeNodeQuery = nodeQuery("/type!"),
-      statementNodeQuery = nodeQuery("/statement!");
+      statementNodeQuery = nodeQuery("/statement!"),
+      nonTerminalNodeQuery = nodeQuery("/*");
 
 class StatementAsCombinatorNodeVerifier extends NodeVerifier {
   verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead) {
@@ -19,37 +20,69 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
     const nodeQueryMaps = [
       {
         nodeQuery: termNodeQuery,
-        verifyNode: this.verifyTermNode
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const termNode = node, ///
+                termNodeVerified = this.verifyTermNode(termNode, localMetaContext, verifyAhead);
+
+          nonTerminalNodeVerified = termNodeVerified; ///
+
+          return nonTerminalNodeVerified;
+        }
       },
       {
         nodeQuery: typeNodeQuery,
-        verifyNode: this.verifyTypeNode
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const typeNode = node, ///
+                typeNodeVerified = this.verifyTypeNode(typeNode, localMetaContext, verifyAhead);
+
+          nonTerminalNodeVerified = typeNodeVerified; ///
+
+          return nonTerminalNodeVerified;
+        }
       },
       {
         nodeQuery: statementNodeQuery,
-        verifyNode: this.verifyStatementNode
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const statementNode = node, ///
+                statementNodeVerified = this.verifyStatementNode(statementNode, localMetaContext, verifyAhead);
+
+          nonTerminalNodeVerified = statementNodeVerified; ///
+
+          return nonTerminalNodeVerified;
+        }
+      },
+      {
+        nodeQuery: nonTerminalNodeQuery,
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const nonTerminalNode = node; ///
+
+          nonTerminalNodeVerified =
+
+            super.verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead);
+
+          return nonTerminalNodeVerified;
+        }
       }
     ];
 
     const nodeVerified = verifyNode(nodeQueryMaps, nonTerminalNode, localContext, verifyAhead);
 
-    nonTerminalNodeVerified = nodeVerified ?
-                                true :
-                                  super.verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead);
+    nonTerminalNodeVerified = nodeVerified; ///
 
     return nonTerminalNodeVerified;
   }
 
   verifyStatementNode(statementNode, localContext, verifyAhead) {
-    let statementNodeVerified = false;
-
-    const standaloneStatementVerified = verifyStandaloneStatement(statementNode, localContext);
-
-    if (standaloneStatementVerified) {
-      const verifiedAhead = verifyAhead;  ///
-
-      statementNodeVerified = verifiedAhead; ///
-    }
+    const standaloneStatementVerified = verifyStandaloneStatement(statementNode, localContext, verifyAhead),
+          statementNodeVerified = standaloneStatementVerified;  ///
 
     return statementNodeVerified;
   }

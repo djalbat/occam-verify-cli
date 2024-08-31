@@ -8,7 +8,8 @@ import { verifyStandaloneType } from "../../verify/type";
 import { verifyStandaloneTerm } from "../../verify/term";
 
 const termNodeQuery = nodeQuery("/term!"),
-      typeNodeQuery = nodeQuery("/type!");
+      typeNodeQuery = nodeQuery("/type!"),
+      nonTerminalNodeQuery = nodeQuery("/*");
 
 class TermAsConstructorNodeVerifier extends NodeVerifier {
   verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead) {
@@ -17,19 +18,49 @@ class TermAsConstructorNodeVerifier extends NodeVerifier {
     const nodeQueryMaps = [
       {
         nodeQuery: termNodeQuery,
-        verifyNode: this.verifyTermNode
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const termNode = node, ///
+            termNodeVerified = this.verifyTermNode(termNode, localMetaContext, verifyAhead);
+
+          nonTerminalNodeVerified = termNodeVerified; ///
+
+          return nonTerminalNodeVerified;
+        }
       },
       {
         nodeQuery: typeNodeQuery,
-        verifyNode: this.verifyTypeNode
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const typeNode = node, ///
+            typeNodeVerified = this.verifyTypeNode(typeNode, localMetaContext, verifyAhead);
+
+          nonTerminalNodeVerified = typeNodeVerified; ///
+
+          return nonTerminalNodeVerified;
+        }
+      },
+      {
+        nodeQuery: nonTerminalNodeQuery,
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const nonTerminalNode = node; ///
+
+          nonTerminalNodeVerified =
+
+            super.verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead);
+
+          return nonTerminalNodeVerified;
+        }
       }
     ];
 
     const nodeVerified = verifyNode(nodeQueryMaps, nonTerminalNode, localContext, verifyAhead);
 
-    nonTerminalNodeVerified = nodeVerified ?
-                                true :
-                                  super.verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead);
+    nonTerminalNodeVerified = nodeVerified; ///
 
     return nonTerminalNodeVerified;
   }

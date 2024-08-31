@@ -30,9 +30,9 @@ export default class Conclusion {
             localContextA = localContext, ///
             localContextB = statementLocalContext,  ///
             nonTerminalNodeVerified = intrinsicLevelAgainstMetaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-              const verifyAhead = true;
+              const verifiedAhead = true;
 
-              return verifyAhead;
+              return verifiedAhead;
             });
 
       statementNodeMatches = nonTerminalNodeVerified; ///

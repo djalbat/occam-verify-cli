@@ -45,8 +45,8 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
   return statementVerified;
 }
 
-export function verifyStandaloneStatement(statementNode, localContext) {
-  let standaloneStatementVerified;
+export function verifyStandaloneStatement(statementNode, localContext, verifyAhead) {
+  let standaloneStatementVerified = false;
 
   const statementString = localContext.nodeAsString(statementNode);
 
@@ -56,7 +56,11 @@ export function verifyStandaloneStatement(statementNode, localContext) {
         assignments = [],
         statementVerified = verifyStatement(statementNode, assignments, derived);
 
-  standaloneStatementVerified = statementVerified;  ///
+  if (statementVerified) {
+    const verifiedAhead = verifyAhead();
+
+    standaloneStatementVerified = verifiedAhead; ///
+  }
 
   if (standaloneStatementVerified) {
     localContext.debug(`...verified the '${statementString}' standalone statement.`, statementNode);

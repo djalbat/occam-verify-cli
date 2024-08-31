@@ -7,7 +7,8 @@ import { nodeQuery } from "../../utilities/query";
 import { verifyNodes } from "../../utilities/verifier";
 
 const termNodeQuery = nodeQuery("/argument/term!"),
-      typeNodeQuery = nodeQuery("/argument/type!");
+      typeNodeQuery = nodeQuery("/argument/type!"),
+      nonTerminalNodeQuery = nodeQuery("/*");
 
 class TermAgainstConstructorNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead) {
@@ -30,14 +31,28 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
 
           return nonTerminalNodeVerified;
         }
+      },
+      {
+        nodeQueryA: nonTerminalNodeQuery,
+        nodeQueryB: nonTerminalNodeQuery,
+        verifyNodes: (nodeA, nodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const nonTerminalNodeA = nodeA, ///
+                nonTerminalNodeB = nodeB; ///
+
+          nonTerminalNodeVerified =
+
+            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
+
+          return nonTerminalNodeVerified;
+        }
       }
     ];
 
     const nodesVerified = verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
 
-    nonTerminalNodeVerified = nodesVerified ?
-                                true :
-                                  super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
+    nonTerminalNodeVerified = nodesVerified;  ///
 
     return nonTerminalNodeVerified;
   }

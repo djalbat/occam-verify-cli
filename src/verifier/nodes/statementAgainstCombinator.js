@@ -8,6 +8,7 @@ import { nodeQuery } from "../../utilities/query";
 import { verifyNodes } from "../../utilities/verifier";
 
 const argumentNodeQuery = nodeQuery("/argument!"),
+      nonTerminalNodeQuery = nodeQuery("/*"),
       metaArgumentMetaTypeNodeQuery = nodeQuery("/metaArgument/metaType!"),
       metaArgumentStatementNodeQuery = nodeQuery("/metaArgument/statement!");
 
@@ -49,14 +50,28 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
 
           return nonTerminalNodeVerified;
         }
+      },
+      {
+        nodeQueryA: nonTerminalNodeQuery,
+        nodeQueryB: nonTerminalNodeQuery,
+        verifyNodes: (nodeA, nodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const nonTerminalNodeA = nodeA, ///
+               nonTerminalNodeB = nodeB; ///
+
+          nonTerminalNodeVerified =
+
+            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
+
+          return nonTerminalNodeVerified;
+        }
       }
     ];
 
     const nodesVerified = verifyNodes(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
 
-    nonTerminalNodeVerified = nodesVerified ?
-                                true :
-                                  super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
+    nonTerminalNodeVerified = nodesVerified;  ///
 
     return nonTerminalNodeVerified;
   }

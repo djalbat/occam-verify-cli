@@ -11,6 +11,7 @@ import { verifyStandaloneMetavariable } from "../../verify/metavariable";
 
 const termNodeQuery = nodeQuery("/term!"),
       variableNodeQuery = nodeQuery("/variable!"),
+      nonTerminalNodeQuery = nodeQuery("/*"),
       metavariableNodeQuery = nodeQuery("/metavariable!");
 
 class MetastatementNodeVerifier extends NodeVerifier {
@@ -20,23 +21,62 @@ class MetastatementNodeVerifier extends NodeVerifier {
     const nodeQueryMaps = [
       {
         nodeQuery: termNodeQuery,
-        verifyNode: this.verifyTermNode
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const termNode = node, ///
+                termNodeVerified = this.verifyTermNode(termNode, localMetaContext, verifyAhead);
+
+          nonTerminalNodeVerified = termNodeVerified; ///
+
+          return nonTerminalNodeVerified;
+        }
       },
       {
         nodeQuery: variableNodeQuery,
-        verifyNode: this.verifyVariableNode
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const variableNode = node, ///
+                variableNodeVerified = this.verifyVariableNode(variableNode, localMetaContext, verifyAhead);
+
+          nonTerminalNodeVerified = variableNodeVerified; ///
+
+          return nonTerminalNodeVerified;
+        }
       },
       {
         nodeQuery: metavariableNodeQuery,
-        verifyNode: this.verifyMetavariableNode
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const metavariableNode = node, ///
+                metavariableNodeVerified = this.verifyMetavariableNode(metavariableNode, localMetaContext, verifyAhead);
+
+          nonTerminalNodeVerified = metavariableNodeVerified; ///
+
+          return nonTerminalNodeVerified;
+        }
+      },
+      {
+        nodeQuery: nonTerminalNodeQuery,
+        verifyNode: (node, localMetaContext, verifyAhead) => {
+          let nonTerminalNodeVerified;
+
+          const nonTerminalNode = node; ///
+
+          nonTerminalNodeVerified =
+
+            super.verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead);
+
+          return nonTerminalNodeVerified;
+        }
       }
     ];
 
     const nodeVerified = verifyNode(nodeQueryMaps, nonTerminalNode, localMetaContext, verifyAhead);
 
-    nonTerminalNodeVerified = nodeVerified ?
-                                true :
-                                  super.verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead);
+    nonTerminalNodeVerified = nodeVerified; ///
 
     return nonTerminalNodeVerified;
   }
