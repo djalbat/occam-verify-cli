@@ -100,43 +100,6 @@ function verifyTermAsVariable(termNode, terms, localContext, verifyAhead) {
   return termVerifiedAsVariable;
 }
 
-function verifyTermAgainstConstructor(termNode, terms, constructor, localContext, verifyAhead) {
-  let termVerifiedAgainstConstructor;
-
-  const termString = localContext.nodeAsString(termNode),
-        constructorString = constructor.getString();
-
-  localContext.trace(`Verifying the '${termString}' term against the '${constructorString}' constructor...`, termNode);
-
-  const constructorTermNode = constructor.getTermNode(),
-        nonTerminalNNdeA = termNode,  ///
-        nonTerminalNodeB = constructorTermNode,  ///
-        nodeVerified = termAgainstConstructorNodesVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, localContext, () => {
-          let verifiedAhead;
-
-          const type = constructor.getType(),
-                term = Term.fromTermNodeAndType(termNode, type);
-
-          terms.push(term);
-
-          verifiedAhead = verifyAhead();
-
-          if (!verifiedAhead) {
-            terms.pop();
-          }
-
-          return verifiedAhead;
-        });
-
-  termVerifiedAgainstConstructor = nodeVerified;  ///
-
-  if (termVerifiedAgainstConstructor) {
-    localContext.debug(`...verified the '${termString}' term against the '${constructorString}' constructor.`, termNode);
-  }
-
-  return termVerifiedAgainstConstructor;
-}
-
 function verifyTermAgainstConstructors(termNode, terms, localContext, verifyAhead) {
   let termVerifiedAgainstConstructors = false;
 
@@ -218,5 +181,42 @@ function verifyTermAgainstBracketedConstructor(termNode, terms, localContext, ve
   }
 
   return termVerifiedAgainstBracketedConstructor;
+}
+
+function verifyTermAgainstConstructor(termNode, terms, constructor, localContext, verifyAhead) {
+  let termVerifiedAgainstConstructor;
+
+  const termString = localContext.nodeAsString(termNode),
+        constructorString = constructor.getString();
+
+  localContext.trace(`Verifying the '${termString}' term against the '${constructorString}' constructor...`, termNode);
+
+  const constructorTermNode = constructor.getTermNode(),
+        nonTerminalNNdeA = termNode,  ///
+        nonTerminalNodeB = constructorTermNode,  ///
+        nodeVerified = termAgainstConstructorNodesVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, localContext, () => {
+          let verifiedAhead;
+
+          const type = constructor.getType(),
+                term = Term.fromTermNodeAndType(termNode, type);
+
+          terms.push(term);
+
+          verifiedAhead = verifyAhead();
+
+          if (!verifiedAhead) {
+            terms.pop();
+          }
+
+          return verifiedAhead;
+        });
+
+  termVerifiedAgainstConstructor = nodeVerified;  ///
+
+  if (termVerifiedAgainstConstructor) {
+    localContext.debug(`...verified the '${termString}' term against the '${constructorString}' constructor.`, termNode);
+  }
+
+  return termVerifiedAgainstConstructor;
 }
 

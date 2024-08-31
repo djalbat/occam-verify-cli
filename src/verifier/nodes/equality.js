@@ -34,7 +34,7 @@ class EqualityNodesVerifier extends NodesVerifier {
       {
         nodeQueryA: nonTerminalNodeQuery,
         nodeQueryB: nonTerminalNodeQuery,
-        verifyNodes: (nodeA, nodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) => {
+        verifyNodes: (nodeA, nodeB, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const nonTerminalNodeA = nodeA, ///
@@ -42,7 +42,7 @@ class EqualityNodesVerifier extends NodesVerifier {
 
           nonTerminalNodeVerified =
 
-            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
+            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
 
           return nonTerminalNodeVerified;
         }
@@ -61,7 +61,19 @@ class EqualityNodesVerifier extends NodesVerifier {
 
     const termVerifiedAgainstTerm = verifyTermAgainstTerm(termNodeA, termNodeB, localContext, verifyAhead);
 
-    termNodeVerifiedAgainstTermNode = termVerifiedAgainstTerm;  ///
+    if (termVerifiedAgainstTerm) {
+      termNodeVerifiedAgainstTermNode = true;
+    } else {
+      const nonTerminalNodeA = termNodeA, ///
+            nonTerminalNodeB = termNodeB, ///
+            nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
+            nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
+            childNodesA = nonTerminalNodeAChildNodes, ///
+            childNodesB = nonTerminalNodeBChildNodes, ///
+            childNodesVerified = this.verifyChildNodes(childNodesA, childNodesB, localContext, verifyAhead);
+
+      termNodeVerifiedAgainstTermNode = childNodesVerified; ///
+    }
 
     return termNodeVerifiedAgainstTermNode;
   }

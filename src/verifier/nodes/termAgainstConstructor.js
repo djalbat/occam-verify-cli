@@ -35,7 +35,7 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
       {
         nodeQueryA: nonTerminalNodeQuery,
         nodeQueryB: nonTerminalNodeQuery,
-        verifyNodes: (nodeA, nodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) => {
+        verifyNodes: (nodeA, nodeB, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const nonTerminalNodeA = nodeA, ///
@@ -43,7 +43,7 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
 
           nonTerminalNodeVerified =
 
-            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
+            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
 
           return nonTerminalNodeVerified;
         }

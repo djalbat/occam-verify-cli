@@ -54,15 +54,15 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
       {
         nodeQueryA: nonTerminalNodeQuery,
         nodeQueryB: nonTerminalNodeQuery,
-        verifyNodes: (nodeA, nodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) => {
+        verifyNodes: (nodeA, nodeB, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const nonTerminalNodeA = nodeA, ///
-               nonTerminalNodeB = nodeB; ///
+                nonTerminalNodeB = nodeB; ///
 
           nonTerminalNodeVerified =
 
-            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
+            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, verifyAhead);
 
           return nonTerminalNodeVerified;
         }
