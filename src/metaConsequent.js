@@ -54,15 +54,15 @@ export default class MetaConsequent {
     return json;
   }
 
-  static fromMetastatementNode(metastatementNode) {
-    const statementNode = null,
+  static fromStatementNode(statementNode) {
+    const metastatementNode = null,
           metaConsequent = new MetaConsequent(metastatementNode, statementNode);
 
     return metaConsequent;
   }
 
-  static fromStatementNode(statementNode) {
-    const metastatementNode = null,
+  static fromMetastatementNode(metastatementNode) {
+    const statementNode = null,
           metaConsequent = new MetaConsequent(metastatementNode, statementNode);
 
     return metaConsequent;

@@ -23,7 +23,8 @@ export default function verifyMetaSupposition(metaSuppositionNode, metaSuppositi
         unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
 
   if (unqualifiedMetastatementVerified) {
-    const assignmentAssigned = assignAssignment(assignments, localMetaContext);
+    const localContext = localMetaContext,  ///
+          assignmentAssigned = assignAssignment(assignments, localContext);
 
     metaSuppositionVerified = assignmentAssigned; ///
   }

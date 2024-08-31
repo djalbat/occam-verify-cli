@@ -1,19 +1,16 @@
 "use strict";
 
-import contextMixins from "../mixins/context";
+import LocalContext from "../context/local";
 
 import { last } from "../utilities/array";
 
-class LocalMetaContext {
-  constructor(context, metavariables, metaproofSteps, frameAssertions) {
-    this.context = context;
+class LocalMetaContext extends LocalContext {
+  constructor(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions) {
+    super(context, variables, proofSteps, equivalences);
+
     this.metavariables = metavariables;
     this.metaproofSteps = metaproofSteps;
     this.frameAssertions = frameAssertions;
-  }
-
-  getContext() {
-    return this.context;
   }
 
   getMetavariables() {
@@ -47,18 +44,6 @@ class LocalMetaContext {
     ]
 
     return frameAssertions;
-  }
-
-  getVariables() { return this.context.getVariables(); }
-
-  getProofSteps() { return this.context.getProofSteps(); }
-
-  getEquivalences() { return this.context.getEquivalences(); }
-
-  getTermType(term) {
-    const termType = term.getType();
-
-    return termType;
   }
 
   getLastMetaproofStep() {
@@ -135,18 +120,18 @@ class LocalMetaContext {
     return metastatementMatches;
   }
 
-  findVariableByVariableNode(variableNode) {
-    const node = variableNode,  ///
-          variables = this.getVariables(),
-          variable = variables.find((variable) => {
-            const matches = variable.matchNode(node);
+  findMetavariableByMetavariableNode(metavariableNode, localMetaContext) {
+    const node = metavariableNode,  ///
+          metavariables = this.getMetavariables(),
+          metavariable = metavariables.find((metavariable) => {
+            const matches = metavariable.matchNode(node, localMetaContext);
 
             if (matches) {
               return true;
             }
           }) || null;
 
-    return variable;
+    return metavariable;
   }
 
   findFrameAssertionByMetavariableNode(metavariableNode) {
@@ -162,11 +147,11 @@ class LocalMetaContext {
     return frameAssertion;
   }
 
-  isVariablePresentByVariableNode(variableNode) {
-    const variable = this.findVariableByVariableNode(variableNode),
-          variablePresent = (variable !== null);
+  isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext) {
+    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, localMetaContext),
+          metavariablePresent = (metavariable !== null);
 
-    return variablePresent;
+    return metavariablePresent;
   }
 
   isFrameAssertionPresentByMetavariableNode(metavariableNode) {
@@ -176,49 +161,32 @@ class LocalMetaContext {
     return frameAssertionPresent;
   }
 
-  findMetavariableByMetavariableNode(metavariableNode, localMetaContext) {
-    const node = metavariableNode,  ///
-          metavariables = this.getMetavariables(),
-          metavariable = metavariables.find((metavariable) => {
-            const matches = metavariable.matchNode(node, localMetaContext);
-
-            if (matches) {
-              return true;
-            }
-          }) || null;
-
-    return metavariable;
-  }
-
-  isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext) {
-    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, localMetaContext),
-          metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
-  }
-
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
+          variables = [],
+          proofSteps = [],
+          equivalences = [],
           metavariables = [],
           metaproofSteps = [],
           frameAssertions = [],
-          localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps, frameAssertions);
+          localMetaContext = new LocalMetaContext(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions);
 
     return localMetaContext;
   }
 
   static fromLocalMetaContext(localMetaContext) {
     const context = localMetaContext,  ///
+          variables = [],
+          proofSteps = [],
+          equivalences = [],
           metavariables = [],
           metaproofSteps = [],
           frameAssertions = [];
 
-    localMetaContext = new LocalMetaContext(context, metavariables, metaproofSteps, frameAssertions);  ///
+    localMetaContext = new LocalMetaContext(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions);  ///
 
     return localMetaContext;
   }
 }
-
-Object.assign(LocalMetaContext.prototype, contextMixins);
 
 export default LocalMetaContext;

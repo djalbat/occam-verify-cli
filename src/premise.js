@@ -199,14 +199,8 @@ export default class Premise {
     return json;
   }
 
-  static fromJSONAndFileContext(json, fileContext) {
-    const { metastatement, statement } = json,
-          metastatementString = metastatement,  ///
-          statementString = statement, ///
-          lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
-          metastatementNode = metastatementNodeFromMetastatementString(metastatementString, lexer, parser),
-          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
+  static fromStatementNode(statementNode) {
+    const metastatementNode = null,
           premise = new Premise(metastatementNode, statementNode);
 
     return premise;
@@ -219,8 +213,14 @@ export default class Premise {
     return premise;
   }
 
-  static fromStatementNode(statementNode) {
-    const metastatementNode = null,
+  static fromJSONAndFileContext(json, fileContext) {
+    const { metastatement, statement } = json,
+          metastatementString = metastatement,  ///
+          statementString = statement, ///
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          metastatementNode = metastatementNodeFromMetastatementString(metastatementString, lexer, parser),
+          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
           premise = new Premise(metastatementNode, statementNode);
 
     return premise;

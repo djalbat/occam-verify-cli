@@ -1,7 +1,6 @@
 "use strict";
 
 import verifyTerm from "./verify/term";
-import LocalContext from "./context/local";
 
 import { first } from "./utilities/array";
 import { nodeQuery } from "./utilities/query";
@@ -128,7 +127,7 @@ function verifyTermAgainstTermType(termNode, termType, localMetaContext) {
 
   const type = termType,  ///
         terms = [],
-        localContext = LocalContext.fromLocalMetaContext(localMetaContext);
+        localContext = localMetaContext;  ///
 
   termVerifiedAgainstTermType = verifyTerm(termNode, terms, localContext, () => {
     let verifiedAhead = false;

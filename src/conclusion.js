@@ -75,15 +75,15 @@ export default class Conclusion {
     return json;
   }
 
-  static fromMetastatementNode(metastatementNode) {
-    const statementNode = null,
+  static fromStatementNode(statementNode) {
+    const metastatementNode = null,
           conclusion = new Conclusion(metastatementNode, statementNode);
 
     return conclusion;
   }
 
-  static fromStatementNode(statementNode) {
-    const metastatementNode = null,
+  static fromMetastatementNode(metastatementNode) {
+    const statementNode = null,
           conclusion = new Conclusion(metastatementNode, statementNode);
 
     return conclusion;

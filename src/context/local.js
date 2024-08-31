@@ -53,12 +53,6 @@ class LocalContext {
     return equivalences;
   }
 
-  getMetavariables() { return this.context.getMetavariables(); }
-
-  getMetaproofSteps() { return this.context.getMetaproofSteps(); }
-
-  getFrameAssertions() { return this.context.getFrameAssertions(); }
-
   getLastProofStep() {
     let lastProofStep = null;
 
@@ -213,6 +207,14 @@ class LocalContext {
     this.equivalences.push(equivalence);
   }
 
+  removeEquivalence(equivalence) {
+    const index = this.equivalences.indexOf(equivalence),
+          start = index,  ///
+          deleteCount = 1;
+
+    this.equivalences.splice(start, deleteCount);
+  }
+
   matchStatement(statementNode) {
     let statementMatches = false;
 
@@ -233,14 +235,6 @@ class LocalContext {
     }
 
     return statementMatches;
-  }
-
-  removeEquivalence(equivalence) {
-    const index = this.equivalences.indexOf(equivalence),
-          start = index,  ///
-          deleteCount = 1;
-
-    this.equivalences.splice(start, deleteCount);
   }
 
   findVariableByVariableNode(variableNode) {

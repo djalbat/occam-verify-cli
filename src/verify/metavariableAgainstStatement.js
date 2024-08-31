@@ -38,8 +38,8 @@ export default function verifyMetavariableAgainstStatement(metavariableNodeA, st
 
         statementNodeB = substitutionStatementNode; ///
 
-        const substitution = substitutionSubstitution,
-              localContext = localContextB,  ///
+        const localContext = localContextB,  ///
+              substitution = substitutionSubstitution,
               statementVerifiedAgainstStatement = verifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
 
         if (statementVerifiedAgainstStatement) {
@@ -60,8 +60,8 @@ export default function verifyMetavariableAgainstStatement(metavariableNodeA, st
   } else {
     let verifiedAhead;
 
-    const metavariableNode = metavariableNodeA, ///
-          statementNode = statementNodeB, ///
+    const statementNode = statementNodeB, ///
+          metavariableNode = metavariableNodeA, ///
           statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
           substitution = statementForMetavariableSubstitution;  ///
 

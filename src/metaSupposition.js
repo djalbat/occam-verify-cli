@@ -98,15 +98,15 @@ export default class MetaSupposition {
     return json;
   }
 
-  static fromMetastatementNode(metastatementNode) {
-    const statementNode = null,
+  static fromStatementNode(statementNode) {
+    const metastatementNode = null,
           metaSupposition = new MetaSupposition(metastatementNode, statementNode);
 
     return metaSupposition;
   }
 
-  static fromStatementNode(statementNode) {
-    const metastatementNode = null,
+  static fromMetastatementNode(metastatementNode) {
+    const statementNode = null,
           metaSupposition = new MetaSupposition(metastatementNode, statementNode);
 
     return metaSupposition;

@@ -1,6 +1,5 @@
 "use strict";
 
-import LocalContext from "../../context/local";
 import NodeVerifier from "../../verifier/node";
 
 import { nodeQuery } from "../../utilities/query";
@@ -89,7 +88,7 @@ class MetastatementNodeVerifier extends NodeVerifier {
   }
 
   verifyVariableNode(variableNode, localMetaContext, verifyAhead) {
-    const localContext = LocalContext.fromLocalMetaContext(localMetaContext),
+    const localContext = localMetaContext,  ///
           standaloneVariableVerified = verifyStandaloneVariable(variableNode, localContext, verifyAhead),
           variableNodeVerified = standaloneVariableVerified;  ///
 
@@ -97,7 +96,7 @@ class MetastatementNodeVerifier extends NodeVerifier {
   }
 
   verifyTermNode(termNode, localMetaContext, verifyAhead) {
-    const localContext = LocalContext.fromLocalMetaContext(localMetaContext),
+    const localContext = localMetaContext,  ///
           standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
           termNodeVerified = standaloneTermVerified;  ///
 

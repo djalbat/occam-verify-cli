@@ -53,7 +53,8 @@ export default function verifyMetaProofStep(metaProofStepNode, substitutions, lo
     qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, localMetaContext);
 
     if (qualifiedMetastatementVerified) {
-      const assignmentAssigned = assignAssignment(assignments, localMetaContext);
+      const localContext = localMetaContext,  ///
+            assignmentAssigned = assignAssignment(assignments, localContext);
 
       qualifiedMetastatementVerified = assignmentAssigned; ///
     }
@@ -75,7 +76,8 @@ export default function verifyMetaProofStep(metaProofStepNode, substitutions, lo
     unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
 
     if (unqualifiedMetastatementVerified) {
-      const assignmentAssigned = assignAssignment(assignments, localMetaContext);
+      const localContext = localMetaContext,  ///
+            assignmentAssigned = assignAssignment(assignments, localContext);
 
       unqualifiedMetastatementVerified = assignmentAssigned; ///
     }

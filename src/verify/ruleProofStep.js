@@ -1,11 +1,9 @@
 "use strict";
 
-import LocalContext from "../context/local";
 import MetaproofStep from "../step/metaproof";
 import verifyRuleSubproof from "../verify/ruleSubproof";
 import verifyRuleSubDerivation from "../verify/ruleSubDerivation";
 import verifyQualifiedStatement from "../verify/statement/qualified";
-import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 import verifyQualifiedMetastatement from "../verify/metastatement/qualified";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
@@ -47,7 +45,7 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
     let qualifiedStatementVerified;
 
     const assignments = [],
-          localContext = LocalContext.fromLocalMetaContext(localMetaContext);
+          localContext = localMetaContext;  ///
 
     qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assignments, localContext);
 
@@ -76,7 +74,8 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
     qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, localMetaContext);
 
     if (qualifiedMetastatementVerified) {
-      const assignmentAssigned = assignAssignment(assignments, localMetaContext);
+      const localContext = localMetaContext,  ///
+            assignmentAssigned = assignAssignment(assignments, localContext);
 
       qualifiedMetastatementVerified = assignmentAssigned; ///
     }
@@ -98,7 +97,8 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
     unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
 
     if (unqualifiedMetastatementVerified) {
-      const assignmentAssigned = assignAssignment(assignments, localMetaContext);
+      const localContext = localMetaContext,  ///
+            assignmentAssigned = assignAssignment(assignments, localContext);
 
       unqualifiedMetastatementVerified = assignmentAssigned; ///
     }
