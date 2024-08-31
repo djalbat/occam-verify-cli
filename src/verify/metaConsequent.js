@@ -1,11 +1,14 @@
 "use strict";
 
 import MetaConsequent from "../metaConsequent";
+import verifyUnqualifiedStatement from "./statement/unqualified";
 import verifyUnqualifiedMetastatement from "./metastatement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
 
-const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
+const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
+      metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
+      unqualifiedStatementNodeQuery = nodeQuery("/metaConsequent/unqualifiedStatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/metaConsequent/unqualifiedMetastatement!");
 
 export default function verifyMetaConsequent(metaConsequentNode, metaConsequents, substitutions, localMetaContext) {
@@ -15,18 +18,40 @@ export default function verifyMetaConsequent(metaConsequentNode, metaConsequents
 
   localMetaContext.trace(`Verifying the '${metaConsequentString}' meta-consequent...`, metaConsequentNode);
 
-  const derived = false,
-        assignments = [],
-        unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaConsequentNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(metaConsequentNode),
+        unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaConsequentNode);
 
-  if (unqualifiedMetastatementVerified) {
-    metaConsequentVerified = true;
+  if (unqualifiedStatementNode !== null) {
+    const derived = false,
+          assignments = [],
+          localContext = localMetaContext,  ///
+          unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+
+    metaConsequentVerified = unqualifiedStatementVerified; ///
+  }
+
+  if (unqualifiedMetastatementNode !== null) {
+    const derived = false,
+          assignments = [],
+          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+
+    metaConsequentVerified = unqualifiedMetastatementVerified; ///
   }
 
   if (metaConsequentVerified) {
-    const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-          metaConsequent = MetaConsequent.fromMetastatementNode(metastatementNode);
+    let metaConsequent;
+
+    if (unqualifiedStatementNode !== null) {
+      const statementNode = statementNodeQuery(unqualifiedStatementNode);
+
+      metaConsequent = MetaConsequent.fromStatementNode(statementNode);
+    }
+
+    if (unqualifiedMetastatementNode !== null) {
+      const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
+
+      metaConsequent = MetaConsequent.fromMetastatementNode(metastatementNode);
+    }
 
     metaConsequents.push(metaConsequent);
 

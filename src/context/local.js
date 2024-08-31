@@ -296,16 +296,6 @@ class LocalContext {
     return localContext;
   }
 
-  static fromLocalMetaContext(localMetaContext) {
-    const context = localMetaContext,  ///
-          variables = [],
-          proofSteps = [],
-          equivalences = [],
-          localContext = new LocalContext(context, variables, proofSteps, equivalences);
-
-    return localContext;
-  }
-
   static fromJSONAndFileContext(json, fileContext) {
     let { variables } = json;
 

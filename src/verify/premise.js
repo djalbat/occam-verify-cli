@@ -8,7 +8,7 @@ import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified"
 import { nodeQuery } from "../utilities/query";
 import { assignAssignment } from "../utilities/assignments";
 
-const statementNodeQuery = nodeQuery("/unqualifiedMetastatement/statement!"),
+const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/premise/unqualifiedMetastatement!");

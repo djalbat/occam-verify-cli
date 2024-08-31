@@ -1,11 +1,14 @@
 "use strict";
 
 import Conclusion from "../conclusion";
+import verifyUnqualifiedStatement from "./statement/unqualified";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
 
-const metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
+const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
+      metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
+      unqualifiedStatementNodeQuery = nodeQuery("/conclusion/unqualifiedStatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/conclusion/unqualifiedMetastatement!");
 
 export default function verifyConclusion(conclusionNode, conclusions, localMetaContext) {
@@ -15,21 +18,43 @@ export default function verifyConclusion(conclusionNode, conclusions, localMetaC
 
   localMetaContext.trace(`Verifying the '${conclusionString}' conclusion...`, conclusionNode);
 
-  const derived = false,
-        assignments = [],
-        unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode),
-        unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode),
+        unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode);
 
-  if (unqualifiedMetastatementVerified) {
-    const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
-          conclusion = Conclusion.fromMetastatementNode(metastatementNode);
+  if (unqualifiedStatementNode !== null) {
+    const derived = false,
+          assignments = [],
+          localContext = localMetaContext,  ///
+          unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
-    conclusions.push(conclusion);
+    conclusionVerified = unqualifiedStatementVerified; ///
+  }
 
-    conclusionVerified = true;
+  if (unqualifiedMetastatementNode !== null) {
+    const derived = false,
+          assignments = [],
+          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+
+    conclusionVerified = unqualifiedMetastatementVerified; ///
   }
 
   if (conclusionVerified) {
+    let conclusion;
+
+    if (unqualifiedStatementNode !== null) {
+      const statementNode = statementNodeQuery(unqualifiedStatementNode);
+
+      conclusion = Conclusion.fromStatementNode(statementNode);
+    }
+
+    if (unqualifiedMetastatementNode !== null) {
+      const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
+
+      conclusion = Conclusion.fromMetastatementNode(metastatementNode);
+    }
+
+    conclusions.push(conclusion);
+
     localMetaContext.debug(`...verified the '${conclusionString}' conclusion.`, conclusionNode);
   }
 
