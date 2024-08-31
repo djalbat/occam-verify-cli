@@ -4,11 +4,11 @@ import TermForVariableSubstitution from "../substitution/termForVariable";
 import verifyStatementAgainstStatement from "../verify/statementAtainstStatement";
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
 
-export default function verifyMetavariableAgainstStatement(metavariableNode, statementNode, substitutionNode, substitutions, localContextA, localContextB, verifyAhead) {
+export default function verifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNode, substitutions, localContextA, localContextB, verifyAhead) {
   let metavariableVerifiedAgainstStatement = false;
 
   const substitution = substitutions.find((substitution) => {
-    const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNode);
+    const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNodeA);
 
     if (substitutionMatchesMetavariableNodeA) {
       return true;
@@ -20,10 +20,10 @@ export default function verifyMetavariableAgainstStatement(metavariableNode, sta
 
     if (substitutionNode !== null) {
       const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode),
+            localContext = localContextB,  ///
             substitution = termForVariableSubstitution, ///
             statementNodeA = substitutionStatementNode, ///
-            statementNodeB = statementNode, ///
-            statementVerifiedAgainstStatement = verifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
+            statementVerifiedAgainstStatement = verifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
 
       if (statementVerifiedAgainstStatement) {
         const verifiedAhead = verifyAhead();
@@ -34,12 +34,13 @@ export default function verifyMetavariableAgainstStatement(metavariableNode, sta
       const substitutionSubstitution = substitution.getSubstitution();
 
       if (substitutionSubstitution !== null) {
-        localContextA = localContextB;  ///
+        const statementNodeA = statementNodeB; ///
+
+        statementNodeB = substitutionStatementNode; ///
 
         const substitution = substitutionSubstitution,
-              statementNodeA = statementNode, ///
-              statementNodeB = substitutionStatementNode, ///
-              statementVerifiedAgainstStatement = verifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
+              localContext = localContextB,  ///
+              statementVerifiedAgainstStatement = verifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
 
         if (statementVerifiedAgainstStatement) {
           const verifiedAhead = verifyAhead();
@@ -47,9 +48,9 @@ export default function verifyMetavariableAgainstStatement(metavariableNode, sta
           metavariableVerifiedAgainstStatement = verifiedAhead;  ///
         }
       } else {
-        const statementNodeMatches = substitution.matchStatementNode(statementNode);
+        const substitutionMatchesStatementNodeB = substitution.matchStatementNode(statementNodeB);
 
-        if (statementNodeMatches) {
+        if (substitutionMatchesStatementNodeB) {
           const verifiedAhead = verifyAhead();
 
           metavariableVerifiedAgainstStatement = verifiedAhead;  ///
@@ -59,7 +60,9 @@ export default function verifyMetavariableAgainstStatement(metavariableNode, sta
   } else {
     let verifiedAhead;
 
-    const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
+    const metavariableNode = metavariableNodeA, ///
+          statementNode = statementNodeB, ///
+          statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
           substitution = statementForMetavariableSubstitution;  ///
 
     substitutions.push(substitution);

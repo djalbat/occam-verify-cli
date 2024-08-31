@@ -8,11 +8,11 @@ import { nodeQuery } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable");
 
-export default function verifyVariableAgainstTerm(variableNode, termNode, substitutions, localContextA, localContextB, verifyAhead) {
+export default function verifyVariableAgainstTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
   let variableVerifiedAgainstTerm = false;
 
   const substitution = substitutions.find((substitution) => {
-    const substitutionMatchesVariableNodeA = substitution.matchVariableNode(variableNode);
+    const substitutionMatchesVariableNodeA = substitution.matchVariableNode(variableNodeA);
 
     if (substitutionMatchesVariableNodeA) {
       return true;
@@ -20,19 +20,19 @@ export default function verifyVariableAgainstTerm(variableNode, termNode, substi
   }) || null;
 
   if (substitution !== null) {
-    const termNodeMatches = substitution.matchTermNode(termNode);
+    const substitutionMatchesTermNodeB = substitution.matchTermNode(termNodeB);
 
-    if (termNodeMatches) {
+    if (substitutionMatchesTermNodeB) {
       const verifiedAhead = verifyAhead();
 
       variableVerifiedAgainstTerm = verifiedAhead;  ///
     }
   } else {
-    const variableA = localContextA.findVariableByVariableNode(variableNode);
+    const variableA = localContextA.findVariableByVariableNode(variableNodeA);
 
     if (variableA !== null) {
       const terms = [],
-            termVerified = verifyTerm(termNode, terms, localContextB, () => {
+            termVerified = verifyTerm(termNodeB, terms, localContextB, () => {
               let verifiedAhead = false;
 
               const firstTerm = first(terms),
@@ -49,7 +49,9 @@ export default function verifyVariableAgainstTerm(variableNode, termNode, substi
                       variableTypeEqualToOrSuperTypeOfTermType = variableType.isEqualToOrSuperTypeOf(termType);
 
                 if (variableTypeEqualToOrSuperTypeOfTermType) {
-                  const termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
+                  const termNode = termNodeB, ///
+                        variableNode = variableNodeA, ///
+                        termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
                         substitution = termForVariableSubstitution;  ///
 
                   substitutions.push(substitution);
