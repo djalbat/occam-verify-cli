@@ -215,20 +215,20 @@ class LocalContext {
     this.equivalences.splice(start, deleteCount);
   }
 
-  matchStatement(statementNode) {
+  matchStatementNode(statementNode) {
     let proofSteps = this.getProofSteps();
 
     proofSteps = reverse(proofSteps); ///
 
-    const matchesStatement = proofSteps.some((proofStep) => {
-      const proofStepMatchesStatement = proofStep.matchStatement(statementNode);
+    const matchesStatementNode = proofSteps.some((proofStep) => {
+      const proofStepMatchesStatementNode = proofStep.matchStatementNode(statementNode);
 
-      if (proofStepMatchesStatement) {
+      if (proofStepMatchesStatementNode) {
         return true;
       }
     });
 
-    return matchesStatement;
+    return matchesStatementNode;
   }
 
   findVariableByVariableNode(variableNode) {

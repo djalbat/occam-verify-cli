@@ -24,14 +24,14 @@ export default class MetaproofStep {
     return this.metastatementNode;
   }
 
-  matchMetastatement(metastatementNode) {
-    let matches = false;
+  matchMetastatementNode(metastatementNode) {
+    let matchesMetastatementNode = false;
 
     if (this.metastatementNode !== null) {
-      matches = this.metastatementNode.match(metastatementNode);
+      matchesMetastatementNode = this.metastatementNode.match(metastatementNode);
     }
 
-    return matches;
+    return matchesMetastatementNode;
   }
 
   static fromStatementNode(statementNode) {

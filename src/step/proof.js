@@ -14,14 +14,14 @@ export default class ProofStep {
     return this.statementNode;
   }
 
-  matchStatement(statementNode) {
-    let matches = false;
+  matchStatementNode(statementNode) {
+    let matchesStatementNode = false;
 
     if (this.statementNode !== null) {
-      matches = this.statementNode.match(statementNode);
+      matchesStatementNode = this.statementNode.match(statementNode);
     }
 
-    return matches;
+    return matchesStatementNode;
   }
 
   static fromSubproofNode(subproofNode) {

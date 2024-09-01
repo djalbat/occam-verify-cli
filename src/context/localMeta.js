@@ -98,20 +98,20 @@ class LocalMetaContext extends LocalContext {
     this.metaproofSteps.push(metaproofStep);
   }
 
-  matchMetastatement(metastatementNode) {
+  matchMetastatementNode(metastatementNode) {
     let metaproofSteps = this.getMetaproofSteps();
 
     metaproofSteps = reverse(metaproofSteps); ///
 
-    const matchesMetastatement = metaproofSteps.some((metaproofStep) => {
-      const metaproofStepMatchesMetastatement = metaproofStep.matchMetastatement(metastatementNode);
+    const matchesMetastatementNode = metaproofSteps.some((metaproofStep) => {
+      const metaproofStepMatchesMetastatementNode = metaproofStep.matchMetastatementNode(metastatementNode);
 
-      if (metaproofStepMatchesMetastatement) {
+      if (metaproofStepMatchesMetastatementNode) {
         return true;
       }
     });
 
-    return matchesMetastatement;
+    return matchesMetastatementNode;
   }
 
   findMetavariableByMetavariableNode(metavariableNode, localMetaContext) {

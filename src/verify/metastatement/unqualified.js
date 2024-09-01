@@ -15,9 +15,9 @@ export default function verifyUnqualifiedMetastatement(unqualifiedMetastatementN
   localMetaContext.trace(`Verifying the '${unqualifiedMetastatementString}' unqualified metastatement...`, unqualifiedMetastatementNode);
 
   if (derived) {
-    const matchesMetastatement = localMetaContext.matchMetastatement(metastatementNode);
+    const matchesMetastatementNode = localMetaContext.matchMetastatementNode(metastatementNode);
 
-    unqualifiedMetastatementVerified = matchesMetastatement;  ///
+    unqualifiedMetastatementVerified = matchesMetastatementNode;  ///
   }
 
   if (!unqualifiedMetastatementVerified) {
