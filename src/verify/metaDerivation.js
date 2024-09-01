@@ -1,20 +1,20 @@
 "use strict";
 
-import verifyMetaProofStep from "../verify/metaProofStep";
+import verifyMetaproofStep from "../verify/metaproofStep";
 
 import { nodesQuery } from "../utilities/query";
 
-const metaProofStepNodesQuery = nodesQuery("/metaDerivation/metaProofStep|lastMetaProofStep");
+const metaproofStepNodesQuery = nodesQuery("/metaDerivation/metaproofStep|lastMetaproofStep");
 
 export default function verifyMetaDerivation(metaDerivationNode, substitutions, localMetaContext) {
   let metaDerivationVerified;
 
-  const metaProofStepNodes = metaProofStepNodesQuery(metaDerivationNode);
+  const metaproofStepNodes = metaproofStepNodesQuery(metaDerivationNode);
 
-  metaDerivationVerified = metaProofStepNodes.every((metaProofStepNode) => {
-    const metaProofStepVerified = verifyMetaProofStep(metaProofStepNode, substitutions, localMetaContext);
+  metaDerivationVerified = metaproofStepNodes.every((metaproofStepNode) => {
+    const metaproofStepVerified = verifyMetaproofStep(metaproofStepNode, substitutions, localMetaContext);
 
-    if (metaProofStepVerified) {
+    if (metaproofStepVerified) {
       return true;
     }
   });

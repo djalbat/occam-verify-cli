@@ -2,7 +2,7 @@
 
 import LocalContext from "../context/local";
 
-import { last } from "../utilities/array";
+import { last, reverse } from "../utilities/array";
 
 class LocalMetaContext extends LocalContext {
   constructor(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions) {
@@ -99,23 +99,17 @@ class LocalMetaContext extends LocalContext {
   }
 
   matchMetastatement(metastatementNode) {
-    let metastatementMatches = false;
+    let metaproofSteps = this.getMetaproofSteps();
 
-    if (!metastatementMatches) {
-      const proofStepMatchesMetastatement = this.metaproofSteps.some((metaproofStep) => {
-        const proofStepMatchesMetastatement = metaproofStep.match(metastatementNode);
+    metaproofSteps = reverse(metaproofSteps); ///
 
-        if (proofStepMatchesMetastatement) {
-          return true;
-        }
-      });
+    const metastatementMatches = metaproofSteps.some((metaproofStep) => {
+      const proofStepMatchesMetastatement = metaproofStep.matchMetastatement(metastatementNode);
 
-      metastatementMatches = proofStepMatchesMetastatement; ///
-    }
-
-    if (!metastatementMatches) {
-      metastatementMatches = this.context.matchMetastatement(metastatementNode);
-    }
+      if (proofStepMatchesMetastatement) {
+        return true;
+      }
+    });
 
     return metastatementMatches;
   }

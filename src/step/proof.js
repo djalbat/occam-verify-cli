@@ -1,8 +1,5 @@
 "use strict";
 
-import { META_ARGUMENT_RULE_NAME } from "../ruleNames";
-import { matchStatementModuloBrackets } from "../utilities/proof";
-
 export default class ProofStep {
   constructor(subproofNode, statementNode) {
     this.subproofNode = subproofNode;
@@ -17,42 +14,27 @@ export default class ProofStep {
     return this.statementNode;
   }
 
-  match(statementNode) {
-    let matches;
+  matchStatement(statementNode) {
+    let matches = false;
 
-    const statementMatches = this.matchStatement(statementNode);
-
-    matches = statementMatches; //
+    if (this.statementNode !== null) {
+      matches = this.statementNode.match(statementNode);
+    }
 
     return matches;
   }
 
-  matchStatement(statementNode) {
-    let statementMatches = false;
-
-    if (this.statementNode !== null) {
-      const ruleName = META_ARGUMENT_RULE_NAME,
-            statementNodeA = statementNode, ///
-            statementNodeB = this.statementNode,  ///
-            statementMatchesModuloBrackets = matchStatementModuloBrackets(statementNodeA, statementNodeB, ruleName);
-
-      statementMatches = statementMatchesModuloBrackets;  ///
-    }
-
-    return statementMatches;
-  }
-
   static fromSubproofNode(subproofNode) {
     const statementNode = null,
-          metaProofStep = new ProofStep(subproofNode, statementNode);
+          proofStep = new ProofStep(subproofNode, statementNode);
 
-    return metaProofStep;
+    return proofStep;
   }
 
   static fromStatementNode(statementNode) {
     const subproofNode = null,
-          metaProofStep = new ProofStep(subproofNode, statementNode);
+          proofStep = new ProofStep(subproofNode, statementNode);
 
-    return metaProofStep;
+    return proofStep;
   }
 }

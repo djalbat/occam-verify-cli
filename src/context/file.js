@@ -520,30 +520,6 @@ export default class FileContext {
     return metavariablePresent;
   }
 
-  isTermGrounded(term) {
-    const termGrounded = false; ///
-
-    return termGrounded;
-  }
-
-  isVariableDefined(variable) {
-    const variableDefined = false;  ///
-
-    return variableDefined;
-  }
-
-  matchStatement(statementNode) {
-    const statementMatches = false;
-
-    return statementMatches;
-  }
-
-  matchMetastatement(metastatementNode) {
-    const metastatementMatches = false;
-
-    return metastatementMatches;
-  }
-
   nodeAsString(node) {
     const string = nodeAsString(node, this.tokens);
 

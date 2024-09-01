@@ -1,6 +1,6 @@
 "use strict";
 
-import { matchMetastatement } from "./utilities/metaproof";
+import { matchMetastatementModuloBrackets } from "./utilities/match";
 
 export default class Declaration {
   constructor(metavariableNode, metastatementNode) {
@@ -35,7 +35,7 @@ export default class Declaration {
   matchMetastatementNode(metastatementNode) {
     const metastatementNodeA = metastatementNode, ///
           metastatementNodeB = this.metastatementNode,  ///
-          metastatementMatches = matchMetastatement(metastatementNodeA, metastatementNodeB),
+          metastatementMatches = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB),
           metastatementNodeMatches = metastatementMatches;  ///
 
     return metastatementNodeMatches;

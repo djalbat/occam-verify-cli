@@ -4,7 +4,7 @@ import Substitution from "../substitution";
 import TermForVariableSubstitution from "./termForVariable";
 import verifyStatementAgainstStatement from "../verify/statementAtainstStatement";
 
-import { bracketedStatementChildNodeFromStatementNode } from "../utilities/proof";
+import { bracketedStatementChildNodeFromStatementNode } from "../utilities/match";
 
 export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(metavariableNode, statementNode, substitution) {

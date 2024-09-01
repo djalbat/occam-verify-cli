@@ -11,21 +11,21 @@ import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified"
 import { nodeQuery } from "../utilities/query";
 import { assignAssignment } from "../utilities/assignments";
 
-const metaSubproofNodeQuery = nodeQuery("/metaProofStep|lastMetaProofStep/metaSubproof!"),
+const metaSubproofNodeQuery = nodeQuery("/metaproofStep|lastMetaproofStep/metaSubproof!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement|unqualifiedMetastatement/metastatement!"),
-      qualifiedStatementNodeQuery = nodeQuery("/metaProofStep|lastMetaProofStep/qualifiedStatement!"),
-      unqualifiedStatementNodeQuery = nodeQuery("/metaProofStep|lastMetaProofStep/unqualifiedStatement!"),
-      qualifiedMetastatementNodeQuery = nodeQuery("/metaProofStep|lastMetaProofStep/qualifiedMetastatement!"),
-      unqualifiedMetastatementNodeQuery = nodeQuery("/metaProofStep|lastMetaProofStep/unqualifiedMetastatement!");
+      qualifiedStatementNodeQuery = nodeQuery("/metaproofStep|lastMetaproofStep/qualifiedStatement!"),
+      unqualifiedStatementNodeQuery = nodeQuery("/metaproofStep|lastMetaproofStep/unqualifiedStatement!"),
+      qualifiedMetastatementNodeQuery = nodeQuery("/metaproofStep|lastMetaproofStep/qualifiedMetastatement!"),
+      unqualifiedMetastatementNodeQuery = nodeQuery("/metaproofStep|lastMetaproofStep/unqualifiedMetastatement!");
 
-export default function verifyMetaProofStep(metaProofStepNode, substitutions, localMetaContext) {
-  let metaProofStepVerified = false;
+export default function verifyMetaproofStep(metaproofStepNode, substitutions, localMetaContext) {
+  let metaproofStepVerified = false;
 
-  const metaSubproofNode = metaSubproofNodeQuery(metaProofStepNode),
-        qualifiedStatementNode = qualifiedStatementNodeQuery(metaProofStepNode),
-        unqualifiedStatementNode = unqualifiedStatementNodeQuery(metaProofStepNode),
-        qualifiedMetastatementNode = qualifiedMetastatementNodeQuery(metaProofStepNode),
-        unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaProofStepNode);
+  const metaSubproofNode = metaSubproofNodeQuery(metaproofStepNode),
+        qualifiedStatementNode = qualifiedStatementNodeQuery(metaproofStepNode),
+        unqualifiedStatementNode = unqualifiedStatementNodeQuery(metaproofStepNode),
+        qualifiedMetastatementNode = qualifiedMetastatementNodeQuery(metaproofStepNode),
+        unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaproofStepNode);
 
   if (false) {
     ///
@@ -39,7 +39,7 @@ export default function verifyMetaProofStep(metaProofStepNode, substitutions, lo
 
       localMetaContext.addMetaproofStep(metaproofStep);
 
-      metaProofStepVerified = true;
+      metaproofStepVerified = true;
     }
   } else if (qualifiedStatementNode !== null) {
     debugger
@@ -65,7 +65,7 @@ export default function verifyMetaProofStep(metaProofStepNode, substitutions, lo
 
       localMetaContext.addMetaproofStep(metaproofStep);
 
-      metaProofStepVerified = qualifiedMetastatementVerified; ///
+      metaproofStepVerified = qualifiedMetastatementVerified; ///
     }
   } else if (unqualifiedMetastatementNode !== null) {
     let unqualifiedMetastatementVerified;
@@ -88,13 +88,13 @@ export default function verifyMetaProofStep(metaProofStepNode, substitutions, lo
 
       localMetaContext.addMetaproofStep(metaproofStep);
 
-      metaProofStepVerified = true;
+      metaproofStepVerified = true;
     }
   }
 
-  return metaProofStepVerified;
+  return metaproofStepVerified;
 }
 
 Object.assign(verifyMetaSubDerivation, {
-  verifyMetaProofStep
+  verifyMetaproofStep
 });

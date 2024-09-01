@@ -2,18 +2,18 @@
 
 import { nodesQuery } from "../utilities/query";
 
-const metaProofStepNodesQuery = nodesQuery("/metaSubDerivation/metaProofStep|lastMetaProofStep");
+const metaproofStepNodesQuery = nodesQuery("/metaSubDerivation/metaproofStep|lastMetaproofStep");
 
 export default function verifyMetaSubDerivation(metaSubDerivationNode, substitutions, localMetaContext) {
   let metaSubDerivationVerified;
 
-  const metaProofStepNodes = metaProofStepNodesQuery(metaSubDerivationNode);
+  const metaproofStepNodes = metaproofStepNodesQuery(metaSubDerivationNode);
 
-  metaSubDerivationVerified = metaProofStepNodes.every((metaProofStepNode) => {
-    const { verifyMetaProofStep } = verifyMetaSubDerivation,
-          metaProofStepVerified = verifyMetaProofStep(metaProofStepNode, substitutions, localMetaContext);
+  metaSubDerivationVerified = metaproofStepNodes.every((metaproofStepNode) => {
+    const { verifyMetaproofStep } = verifyMetaSubDerivation,
+          metaproofStepVerified = verifyMetaproofStep(metaproofStepNode, substitutions, localMetaContext);
 
-    if (metaProofStepVerified) {
+    if (metaproofStepVerified) {
       return true;
     }
   });

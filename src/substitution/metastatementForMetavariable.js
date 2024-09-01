@@ -2,9 +2,9 @@
 
 import Substitution from "../substitution";
 
-import { bracketedMetastatementChildNodeFromMetastatementNode } from "../utilities/metaproof";
-import {nodeAsString} from "../utilities/string";
-import {metastatementNodeFromMetastatementString, metavariableNodeFromMetavariableString} from "../utilities/node";
+import { nodeAsString } from "../utilities/string";
+import { bracketedMetastatementChildNodeFromMetastatementNode } from "../utilities/match";
+import { metavariableNodeFromMetavariableString, metastatementNodeFromMetastatementString } from "../utilities/node";
 
 export default class MetastatementForMetavariableSubstitution extends Substitution {
   constructor(metavariableNode, metastatementNode) {

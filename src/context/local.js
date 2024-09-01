@@ -4,7 +4,7 @@ import Variable from "../variable";
 import Equivalence from "../equivalence";
 import contextMixins from "../mixins/context";
 
-import { last } from "../utilities/array";
+import { last, reverse } from "../utilities/array";
 import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../utilities/equivalences";
 
 class LocalContext {
@@ -216,23 +216,17 @@ class LocalContext {
   }
 
   matchStatement(statementNode) {
-    let statementMatches = false;
+    let proofSteps = this.getProofSteps();
 
-    if (!statementMatches) {
-      const proofStepMatchesStatement = this.proofSteps.some((proofStep) => {
-        const proofStepMatchesStatement = proofStep.match(statementNode);
+    proofSteps = reverse(proofSteps); ///
 
-        if (proofStepMatchesStatement) {
-          return true;
-        }
-      });
+    const statementMatches = proofSteps.some((proofStep) => {
+      const proofStepMatchesStatement = proofStep.matchStatement(statementNode);
 
-      statementMatches = proofStepMatchesStatement; ///
-    }
-
-    if (!statementMatches) {
-      statementMatches = this.context.matchStatement(statementNode);
-    }
+      if (proofStepMatchesStatement) {
+        return true;
+      }
+    });
 
     return statementMatches;
   }

@@ -11,7 +11,7 @@ import { statementNodeFromStatementString, metastatementNodeFromMetastatementStr
 const subproofAssertionNodeQuery = nodeQuery("/metastatement/subproofAssertion!"),
       subproofAssertionMetastatementNodesQuery = nodesQuery("/subproofAssertion/metastatement"),
       metaSubproofMetaSuppositionMetastatementNodesQuery = nodesQuery("/metaSubproof/metaSupposition/unqualifiedMetastatement/metastatement!"),
-      metaSubproofLastMetaProofStepMetastatementNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation/lastMetaProofStep/unqualifiedMetastatement|qualifiedMetastatement/metastatement!");
+      metaSubproofLastMetpProofStepMetastatementNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation/lastMetpProofStep/unqualifiedMetastatement|qualifiedMetastatement/metastatement!");
 
 export default class MetaSupposition {
   constructor(metastatementNode, statementNode) {
@@ -35,10 +35,10 @@ export default class MetaSupposition {
 
       if (subproofAssertionNode !== null) {
         const metaSubproofMetaSuppositionMetastatementNodes = metaSubproofMetaSuppositionMetastatementNodesQuery(metaSubproofNode),
-              metaSubproofLastMetaProofStepMetastatementNode = metaSubproofLastMetaProofStepMetastatementNodeQuery(metaSubproofNode),
+              metaSubproofLastMetpProofStepMetastatementNode = metaSubproofLastMetpProofStepMetastatementNodeQuery(metaSubproofNode),
               metaSubproofMetastatementNodes = [
                 ...metaSubproofMetaSuppositionMetastatementNodes,
-                metaSubproofLastMetaProofStepMetastatementNode
+                metaSubproofLastMetpProofStepMetastatementNode
               ],
               subproofAssertionMetastatementNodes = subproofAssertionMetastatementNodesQuery(subproofAssertionNode);
 
