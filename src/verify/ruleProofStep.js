@@ -64,7 +64,28 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
       ruleProofStepVerified = true;
     }
   } else if (unqualifiedStatementNode !== null) {
-    debugger
+    let qualifiedStatementVerified;
+
+    const assignments = [],
+          localContext = localMetaContext,  ///
+          substitutions = null;
+
+    qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, localContext);
+
+    if (qualifiedStatementVerified) {
+      const assignmentAssigned = assignAssignment(assignments, localContext);
+
+      qualifiedStatementVerified = assignmentAssigned; ///
+    }
+
+    if (qualifiedStatementVerified) {
+      const statementNode = statementNodeQuery(qualifiedStatementNode),
+            metaproofStep = MetaproofStep.fromStatementNode(statementNode);
+
+      localMetaContext.addMetaproofStep(metaproofStep);
+
+      ruleProofStepVerified = qualifiedStatementVerified; ///
+    }
   } else if (qualifiedMetastatementNode !== null) {
     let qualifiedMetastatementVerified;
 
