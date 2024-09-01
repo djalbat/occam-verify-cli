@@ -22,7 +22,7 @@ export default class Conclusion {
   }
 
   matchStatementNode(statementNode, substitutions, localContext, statementLocalContext) {
-    let statementNodeMatches = false;
+    let matchesStatementNose = false;
 
     if (this.metastatementNode !== null) {
       const nonTerminalNodeA = this.metastatementNode,  ///
@@ -35,14 +35,14 @@ export default class Conclusion {
               return verifiedAhead;
             });
 
-      statementNodeMatches = nonTerminalNodeVerified; ///
+      matchesStatementNose = nonTerminalNodeVerified; ///
     }
 
-    return statementNodeMatches;
+    return matchesStatementNose;
   }
 
   matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext) {
-    let metastatementNodeMatches = false;
+    let matchesMetastatementNode = false;
 
     if (this.metastatementNode !== null) {
       const nonTerminalNodeA = this.metastatementNode,  ///
@@ -56,10 +56,10 @@ export default class Conclusion {
               return verifiedAhead;
             });
 
-      metastatementNodeMatches = nonTerminalNodeVerified; ///
+      matchesMetastatementNode = nonTerminalNodeVerified; ///
     }
 
-    return metastatementNodeMatches;
+    return matchesMetastatementNode;
   }
 
   toJSON(tokens) {

@@ -2,32 +2,32 @@
 
 export default class Substitution {
   matchTermNode(termNode) {
-    const termNodeMatches = false;
+    const matchesTermNode = false;
 
-    return termNodeMatches;
+    return matchesTermNode;
   }
 
   matchVariableNode(variableNode) {
-    const variableNodeMatches = false;
+    const matchesMetavariableNode = false;
 
-    return variableNodeMatches;
+    return matchesMetavariableNode;
   }
 
   matchStatementNode(statementNode) {
-    const statementNodeMatches = false;
+    const matchesStatementNode = false;
 
-    return statementNodeMatches;
+    return matchesStatementNode;
   }
 
   matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = false;
+    const matchesMetavariableNode = false;
 
-    return metavariableNodeMatches;
+    return matchesMetavariableNode;
   }
 
   matchMetastatementNode(metastatementNode) {
-    const metastatementNodeMatches = false;
+    const matchesMetastatementNode = false;
 
-    return metastatementNodeMatches;
+    return matchesMetastatementNode;
   }
 }

@@ -78,9 +78,9 @@ class LocalMetaContext extends LocalContext {
 
     const node = metavariable.getName(),
           metavariablePresent = this.metavariables.some((metavariable) => {
-            const nodeMatches = metavariable.matchNode(node);
+            const metavariableMatchesNode = metavariable.matchNode(node);
 
-            if (nodeMatches) {
+            if (metavariableMatchesNode) {
               return true;
             }
           });
@@ -103,15 +103,15 @@ class LocalMetaContext extends LocalContext {
 
     metaproofSteps = reverse(metaproofSteps); ///
 
-    const metastatementMatches = metaproofSteps.some((metaproofStep) => {
-      const proofStepMatchesMetastatement = metaproofStep.matchMetastatement(metastatementNode);
+    const matchesMetastatement = metaproofSteps.some((metaproofStep) => {
+      const metaproofStepMatchesMetastatement = metaproofStep.matchMetastatement(metastatementNode);
 
-      if (proofStepMatchesMetastatement) {
+      if (metaproofStepMatchesMetastatement) {
         return true;
       }
     });
 
-    return metastatementMatches;
+    return matchesMetastatement;
   }
 
   findMetavariableByMetavariableNode(metavariableNode, localMetaContext) {
@@ -131,9 +131,9 @@ class LocalMetaContext extends LocalContext {
   findFrameAssertionByMetavariableNode(metavariableNode) {
     const frameAssertions = this.getFrameAssertions(),
           frameAssertion = frameAssertions.find((frameAssertion) => {
-            const metavariableMatches = frameAssertion.matchMetavariableNode(metavariableNode);
+            const frameAssertionMatchesMetavariableNode = frameAssertion.matchMetavariableNode(metavariableNode);
 
-            if (metavariableMatches) {
+            if (frameAssertionMatchesMetavariableNode) {
               return true;
             }
           }) || null;

@@ -48,7 +48,7 @@ export default class AxiomLemmaTheoremConjecture {
   }
 
   matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.labels.some((label) => {
+    const matchesMetavariableNode = this.labels.some((label) => {
       const labelMatchesMetavariableNode = label.matchMetavariableNode(metavariableNode);
 
       if (labelMatchesMetavariableNode) {
@@ -56,7 +56,7 @@ export default class AxiomLemmaTheoremConjecture {
       }
     });
 
-    return metavariableNodeMatches;
+    return matchesMetavariableNode;
   }
 
   toJSON(tokens) {
@@ -149,17 +149,17 @@ function matchSupposition(supposition, proofStep, substitutions, localContext, s
   const statementNode = proofStep.getStatementNode();
 
   if (statementNode !== null) {
-    const statementMatches = supposition.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext);
+    const suppositionMatchesStatementNode = supposition.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext);
 
-    suppositionMatches = statementMatches;  ///
+    suppositionMatches = suppositionMatchesStatementNode;  ///
   }
 
   return suppositionMatches;
 }
 
 function matchConsequent(consequent, statementNode, substitutions, localContext, statementLocalContext) {
-  const nonTerminalNodeMatches = consequent.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext),
-        consequentMatches = nonTerminalNodeMatches; ///
+  const consequentMatchesStatementNode = consequent.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext),
+        consequentMatches = consequentMatchesStatementNode; ///
 
   return consequentMatches;
 }

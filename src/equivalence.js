@@ -49,14 +49,14 @@ export default class Equivalence {
     const typeB = type; ///
 
     const typeAEqualToTypeB = typeA.isEqualTo(typeB),
-          typeMatches = typeAEqualToTypeB;  ///
+          matchesType = typeAEqualToTypeB;  ///
 
-    return typeMatches;
+    return matchesType;
   }
 
   matchTerm(term) {
     const termA = term, ///
-          termMatches = this.terms.some((term) => {
+          matchesTerm = this.terms.some((term) => {
             const termB = term, ///
                   termAMatchesTermB = termA.match(termB);
 
@@ -65,24 +65,24 @@ export default class Equivalence {
             }
           });
 
-    return termMatches;
+    return matchesTerm;
   }
 
   matchTerms(terms) {
-    const termsMatch = terms.every((term) => {
-      const termMatches = this.matchTerm(term);
+    const matchesTerms = terms.every((term) => {
+      const matchesTerm = this.matchTerm(term);
 
-      if (termMatches) {
+      if (matchesTerm) {
         return true;
       }
     })
 
-    return termsMatch;
+    return matchesTerms;
   }
 
   matchTermNode(termNode) {
     const termNodeA = termNode, ///
-          termNodeMatches = this.terms.some((term) => {
+          matchesTermNode = this.terms.some((term) => {
             const termNode = term.getNode(),
                   termNodeB = termNode, ///
                   termNodeAMatchesTermB = termNodeA.match(termNodeB);
@@ -92,19 +92,19 @@ export default class Equivalence {
             }
           });
 
-    return termNodeMatches;
+    return matchesTermNode;
   }
 
   matchTermNodes(termNodes) {
-    const termNodesMatch = termNodes.every((termNode) => {
-      const termNodeMatches = this.matchTermNode(termNode);
+    const matchesTermNodes = termNodes.every((termNode) => {
+      const matchesTermNode = this.matchTermNode(termNode);
 
-      if (termNodeMatches) {
+      if (matchesTermNode) {
         return true;
       }
     });
 
-    return termNodesMatch;
+    return matchesTermNodes;
   }
 
   getGroundedTerms(definedVariables, groundedTerms, localContext) {

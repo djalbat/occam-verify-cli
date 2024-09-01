@@ -22,9 +22,9 @@ export default class FrameAssertion {
   getDeclarations() { return this.frame.getDeclarations(); }
 
   matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+    const matchesMetavariableNode = this.metavariableNode.match(metavariableNode);
 
-    return metavariableNodeMatches;
+    return matchesMetavariableNode;
   }
 
   matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) { return this.frame.matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem); }

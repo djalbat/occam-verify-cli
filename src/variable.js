@@ -21,31 +21,31 @@ export default class Variable {
   match(variable) {
     const type = variable.getType(),
           node = variable.getNode(),
-          typeMatches = this.matchType(type),
-          nodeMatches = this.matchNode(node),
-          matches = nodeMatches && typeMatches;
+          matchesType = this.matchType(type),
+          matchesNode = this.matchNode(node),
+          matches = matchesNode && matchesType;
 
     return matches;
   }
 
   matchNode(node) {
-    const nodeMatches = this.node.match(node);
+    const matchesNode = this.node.match(node);
 
-    return nodeMatches;
+    return matchesNode;
   }
 
   matchType(type) {
-    const typeMatches = this.type.match(type);
+    const matchesType = this.type.match(type);
 
-    return typeMatches;
+    return matchesType;
   }
 
   matchNodeAndType(node, type) {
-    const nodeMatches = this.matchNode(node),
-          typeMatches = this.matchType(type),
-          nodeAndTypeMatch = nodeMatches && typeMatches;
+    const matchesNode = this.matchNode(node),
+          matchesType = this.matchType(type),
+          matchesNodeAndType = matchesNode && matchesType;
 
-    return nodeAndTypeMatch;
+    return matchesNodeAndType;
   }
 
   asString(tokens) {

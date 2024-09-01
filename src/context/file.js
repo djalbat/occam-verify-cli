@@ -337,9 +337,9 @@ export default class FileContext {
     const node = variableNode,  ///
           variables = this.getVariables(),
           variable = variables.find((variable) => {
-            const nodeMatches = variable.matchNode(node);
+            const variableMatchesNode = variable.matchNode(node);
 
-            if (nodeMatches) {
+            if (variableMatchesNode) {
               return true;
             }
           }) || null;
@@ -557,9 +557,9 @@ export default class FileContext {
 
     const node = variable.getNode(),
           variablePresent = this.variables.some((variable) => {
-            const nodeMatches = variable.matchNode(node);
+            const variableMatchesNode = variable.matchNode(node);
 
-            if (nodeMatches) {
+            if (variableMatchesNode) {
               return true;
             }
           });
@@ -598,9 +598,9 @@ export default class FileContext {
 
     const name = metavariable.getName(),
           metavariablePresent = this.metavariables.some((metavariable) => {
-            const nodeMatches = metavariable.matchName(name);
+            const metavariableMatchesNode = metavariable.matchName(name);
 
-            if (nodeMatches) {
+            if (metavariableMatchesNode) {
               return true;
             }
           });

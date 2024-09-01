@@ -183,9 +183,9 @@ class LocalContext {
 
     const node = variable.getNode(),
           variablePresent = this.variables.some((variable) => {
-            const nodeMatches = variable.matchNode(node);
+            const variableMatchesNode = variable.matchNode(node);
 
-            if (nodeMatches) {
+            if (variableMatchesNode) {
               return true;
             }
           });
@@ -220,7 +220,7 @@ class LocalContext {
 
     proofSteps = reverse(proofSteps); ///
 
-    const statementMatches = proofSteps.some((proofStep) => {
+    const matchesStatement = proofSteps.some((proofStep) => {
       const proofStepMatchesStatement = proofStep.matchStatement(statementNode);
 
       if (proofStepMatchesStatement) {
@@ -228,7 +228,7 @@ class LocalContext {
       }
     });
 
-    return statementMatches;
+    return matchesStatement;
   }
 
   findVariableByVariableNode(variableNode) {

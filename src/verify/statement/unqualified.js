@@ -15,9 +15,9 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
   localContext.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`, unqualifiedStatementNode);
 
   if (derived) {
-    const statementMatches = localContext.matchStatement(statementNode);
+    const matchesStatement = localContext.matchStatement(statementNode);
 
-    unqualifiedStatementVerified = statementMatches;  ///
+    unqualifiedStatementVerified = matchesStatement;  ///
   }
 
   if (!unqualifiedStatementVerified) {

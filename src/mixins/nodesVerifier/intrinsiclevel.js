@@ -18,9 +18,9 @@ function verifyVariableNode(variableNodeA, termNodeB, substitutions, localContex
 
   if (substitution !== null) {
     const termNode = termNodeB, ///
-          termNodeMatches = substitution.matchTermNode(termNode);
+          substitutionMatchesTermNode = substitution.matchTermNode(termNode);
 
-    if (termNodeMatches) {
+    if (substitutionMatchesTermNode) {
       const verifiedAhead = verifyAhead();
 
       variableNodeVerified = verifiedAhead;  ///

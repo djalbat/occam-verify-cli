@@ -25,23 +25,23 @@ export default class MetaType {
   }
 
   matchName(name) {
-    const nameMatches = (this.name === name);
+    const matchesName = (this.name === name);
 
-    return nameMatches;
+    return matchesName;
   }
 
   matchMetaTypeName(metaTypeName) {
-    const metaTypeNameMatches = (this.name === metaTypeName);
+    const matchesMetaTypeName = (this.name === metaTypeName);
 
-    return metaTypeNameMatches;
+    return matchesMetaTypeName;
   }
 
   matchMetaTypeNode(metaTypeNode) {
     const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
-          metaTypeNameMatches = this.matchMetaTypeName(metaTypeName),
-          metaTypeNodeMatches = metaTypeNameMatches;  ///
+          matchesMetaTypeName = this.matchMetaTypeName(metaTypeName),
+          matchesMetaTypeNode = matchesMetaTypeName;  ///
 
-    return metaTypeNodeMatches;
+    return matchesMetaTypeNode;
   }
 
   asString(tokens) {

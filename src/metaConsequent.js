@@ -21,7 +21,7 @@ export default class MetaConsequent {
   }
 
   matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext) {
-    let metastatementNodeMatches = false;
+    let matchesMetastatementNode = false;
 
     if (this.metastatementNode !== null) {
       const nonTerminalNodeA = this.metastatementNode,  ///
@@ -35,10 +35,10 @@ export default class MetaConsequent {
               return verifiedAhead;
             });
 
-      metastatementNodeMatches = nonTerminalNodeVerified; ///
+      matchesMetastatementNode = nonTerminalNodeVerified; ///
     }
 
-    return metastatementNodeMatches;
+    return matchesMetastatementNode;
   }
 
   toJSON(tokens) {

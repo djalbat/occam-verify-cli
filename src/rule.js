@@ -31,7 +31,7 @@ export default class Rule {
   }
 
   matchStatement(statementNode, localContext) {
-    let statementNatches = false;
+    let matchesStatement = false;
 
     const proofSteps = localContext.getProofSteps(),
           substitutions = [],
@@ -40,14 +40,14 @@ export default class Rule {
     if (premisesMatch) {
       const conclusionMatches = matchConclusion(this.conclusion, statementNode, substitutions, this.fileContext, localContext);
 
-      statementNatches = conclusionMatches;  ///
+      matchesStatement = conclusionMatches;  ///
     }
 
-    return statementNatches;
+    return matchesStatement;
   }
 
   matchMetastatement(metastatementNode, localMetaContext) {
-    let metastatementNatches = false;
+    let matchesMetastatement = false;
 
     const metaproofSteps = localMetaContext.getMetaproofSteps(),
           substitutions = [],
@@ -56,14 +56,14 @@ export default class Rule {
     if (premisesMatch) {
       const conclusionMatches = metaMatchConclusion(this.conclusion, metastatementNode, substitutions, this.fileContext, localMetaContext);
 
-      metastatementNatches = conclusionMatches;  ///
+      matchesMetastatement = conclusionMatches;  ///
     }
 
-    return metastatementNatches;
+    return matchesMetastatement;
   }
 
   matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.labels.some((label) => {
+    const matchesMetavariableNode = this.labels.some((label) => {
       const labelMatchesMetavariableNode = label.matchMetavariableNode(metavariableNode);
 
       if (labelMatchesMetavariableNode) {
@@ -71,7 +71,7 @@ export default class Rule {
       }
     });
 
-    return metavariableNodeMatches;
+    return matchesMetavariableNode;
   }
 
   toJSON(tokens) {
@@ -150,15 +150,15 @@ function matchPremise(premise, proofStep, substitutions, fileContext, localConte
         statementNode = proofStep.getStatementNode();
 
   if (subproofNode !== null) {
-    const subproofNodeMatches = premise.matchSubproofNode(subproofNode, substitutions, fileContext, localContext);
+    const premiseMatchesSubproofNode = premise.matchSubproofNode(subproofNode, substitutions, fileContext, localContext);
 
-    premiseMatches = subproofNodeMatches; ///
+    premiseMatches = premiseMatchesSubproofNode; ///
   }
 
   if (statementNode !== null) {
-    const statementNodeMatches = premise.matchStatementNode(statementNode, substitutions, fileContext, localContext);
+    const premiseMatchesStatementNode = premise.matchStatementNode(statementNode, substitutions, fileContext, localContext);
 
-    premiseMatches = statementNodeMatches;  ///
+    premiseMatches = premiseMatchesStatementNode;  ///
   }
 
   return premiseMatches;
@@ -181,8 +181,8 @@ function matchPremises(premises, proofSteps, substitutions, fileContext, localCo
 }
 
 function matchConclusion(conclusion, statementNode, substitutions, fileContext, localContext) {
-  const statementNodeMatches = conclusion.matchStatementNode(statementNode, substitutions, fileContext, localContext),
-        conclusionMatches = statementNodeMatches; ///
+  const conclusionMatchesStatementNode = conclusion.matchStatementNode(statementNode, substitutions, fileContext, localContext),
+        conclusionMatches = conclusionMatchesStatementNode; ///
 
   return conclusionMatches;
 }
@@ -195,21 +195,21 @@ function metaMatchPremise(premise, metaproofStep, substitutions, fileContext, lo
         metastatementNode = metaproofStep.getMetastatementNode()
 
   if (ruleSubproofNode !== null) {
-    const ruleSubProofNodeMatches = premise.matchRuleSubproofNode(ruleSubproofNode, substitutions, fileContext, localMetaContext);
+    const premiseMatchesRuleSubproofNode = premise.matchRuleSubproofNode(ruleSubproofNode, substitutions, fileContext, localMetaContext);
 
-    premiseMatches = ruleSubProofNodeMatches; ///
+    premiseMatches = premiseMatchesRuleSubproofNode; ///
   }
 
   if (metaSubproofNode !== null) {
-    const metaSubProofNodeMatches = premise.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
+    const premiseMatchesMetaSubproofNode = premise.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
 
-    premiseMatches = metaSubProofNodeMatches; ///
+    premiseMatches = premiseMatchesMetaSubproofNode; ///
   }
 
   if (metastatementNode !== null) {
-    const metastatementNodeMatches = premise.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
+    const premiseMatchesMetastatementNode = premise.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
 
-    premiseMatches = metastatementNodeMatches;  ///
+    premiseMatches = premiseMatchesMetastatementNode;  ///
   }
 
   return premiseMatches;
@@ -232,8 +232,8 @@ function metaMatchPremises(premises, metaproofSteps, substitutions, fileContext,
 }
 
 function metaMatchConclusion(conclusion, metastatementNode, substitutions, fileContext, localMetaContext) {
-  const metastatementNodeMatches = conclusion.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext),
-        conclusionMatches = metastatementNodeMatches; ///
+  const conclusionMatchesMetastatementNode = conclusion.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext),
+        conclusionMatches = conclusionMatchesMetastatementNode; ///
 
   return conclusionMatches;
 }

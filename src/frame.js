@@ -37,7 +37,7 @@ export default class Frame {
   }
 
   matchSubstitution(substitution) {
-    const substitutionMatches = this.declarations.some((declaration) => {
+    const matchesSubstitution = this.declarations.some((declaration) => {
       const declarationMatchesSubstitution = declaration.matchSubstitution(substitution);
 
       if (declarationMatchesSubstitution) {
@@ -45,12 +45,12 @@ export default class Frame {
       }
     });
 
-    return substitutionMatches;
+    return matchesSubstitution;
   }
 
   matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
     const substitutions = metaLemmaMetatheorem.getSubstitutions(),
-          metaLemmaOrMetaTheoremMatches = substitutions.every((substitution) => {
+          matchesMetaLemmaOrMetaTheorem = substitutions.every((substitution) => {
             const frameMatchesSubstitution = this.matchSubstitution(substitution);
 
             if (frameMatchesSubstitution) {
@@ -58,7 +58,7 @@ export default class Frame {
             }
           });
 
-    return metaLemmaOrMetaTheoremMatches;
+    return matchesMetaLemmaOrMetaTheorem;
   }
 
   static fromDeclarations(declarations) {

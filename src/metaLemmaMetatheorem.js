@@ -53,7 +53,7 @@ export default class MetaLemmaMetatheorem {
   }
 
   matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.labels.some((label) => {
+    const matchesMetavariableNode = this.labels.some((label) => {
       const labelMatchesMetavariableNode = label.matchMetavariableNode(metavariableNode);
 
       if (labelMatchesMetavariableNode) {
@@ -61,7 +61,7 @@ export default class MetaLemmaMetatheorem {
       }
     });
 
-    return metavariableNodeMatches;
+    return matchesMetavariableNode;
   }
 
   toJSON(tokens) {
@@ -160,29 +160,29 @@ function matchMetaSuppositions(metaSuppositions, metaproofSteps, substitutions, 
 }
 
 function matchMetaSupposition(metaSupposition, metaproofStep, substitutions, fileContext, localMetaContext) {
-  let suppositionMatches = false;
+  let matchesMetaSupposition = false;
 
   const metaSubproofNode = metaproofStep.getMetaSubproofNode(),
         metastatementNode = metaproofStep.getMetastatementNode();
 
   if (metaSubproofNode !== null) {
-    const metaSubProofMatches = metaSupposition.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
+    const metaSuppositionMatchesMetaSubproofNode = metaSupposition.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
 
-    suppositionMatches - metaSubProofMatches; ///
+    matchesMetaSupposition - metaSuppositionMatchesMetaSubproofNode; ///
   }
 
   if (metastatementNode !== null) {
-    const metastatementMatches = metaSupposition.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
+    const metaSuppositionMatchesMetastatementNode = metaSupposition.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
 
-    suppositionMatches - metastatementMatches; ///
+    matchesMetaSupposition - metaSuppositionMatchesMetastatementNode; ///
   }
 
-  return suppositionMatches;
+  return matchesMetaSupposition;
 }
 
 function matchMetaConsequent(metaConsequent, metastatementNode, substitutions, fileContext, localMetaContext) {
-  const nonTerminalNodeMatches = metaConsequent.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext),
-        metaConsequentMatches = nonTerminalNodeMatches; ///
+  const metaConsequentMatchesMetastatementNode = metaConsequent.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext),
+        metaConsequentMatches = metaConsequentMatchesMetastatementNode; ///
 
   return metaConsequentMatches;
 }

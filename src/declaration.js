@@ -19,35 +19,35 @@ export default class Declaration {
   matchSubstitution(substitution) {
     const metavariableNode = substitution.getMetavariableNode(),
           metastatementNode = substitution.getMetastatementNode(),
-          metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
-          metastatementNodeMatches = this.matchMetastatementNode(metastatementNode),
-          substitutionMatches = (metavariableNodeMatches && metastatementNodeMatches);
+          matchesMetavariableNode = this.matchMetavariableNode(metavariableNode),
+          matchesMetastatementNode = this.matchMetastatementNode(metastatementNode),
+          matchesSubstitution = (matchesMetavariableNode && matchesMetastatementNode);
 
-    return substitutionMatches;
+    return matchesSubstitution;
   }
 
   matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+    const matchesMetavariableNode = this.metavariableNode.match(metavariableNode);
 
-    return metavariableNodeMatches;
+    return matchesMetavariableNode;
   }
 
   matchMetastatementNode(metastatementNode) {
     const metastatementNodeA = metastatementNode, ///
           metastatementNodeB = this.metastatementNode,  ///
           metastatementMatches = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB),
-          metastatementNodeMatches = metastatementMatches;  ///
+          matchesMetastatementNode = metastatementMatches;  ///
 
-    return metastatementNodeMatches;
+    return matchesMetastatementNode;
   }
 
   matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
     const metaConsequent = metaLemmaMetatheorem.getMetaConsequent(),
           metastatementNode = metaConsequent.getMetastatementNode(),
           matches = this.metastatementNode.match(metastatementNode),
-          metaLemmaOrMetaTheoremMatches = matches;  ///
+          matchesMetaLemmaOrMetaTheorem = matches;  ///
 
-    return metaLemmaOrMetaTheoremMatches;
+    return matchesMetaLemmaOrMetaTheorem;
   }
 
   static fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode) {

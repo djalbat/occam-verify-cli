@@ -15,9 +15,9 @@ function verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitut
 
   if (substitution !== null) {
     const metastatementNode = metastatementNodeB, ///
-          metastatementNodeMatches = substitution.matchMetastatementNode(metastatementNode);
+          substitutionMetastatementNode = substitution.matchMetastatementNode(metastatementNode);
 
-    metavariableNodeVerified = metastatementNodeMatches;  ///
+    metavariableNodeVerified = substitutionMetastatementNode;  ///
   } else {
     const metavariableNode = metavariableNodeA, ///
           metastatementNode = metastatementNodeB, ///

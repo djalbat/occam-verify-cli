@@ -23,27 +23,27 @@ export default class MetastatementForMetavariableSubstitution extends Substituti
   }
 
   matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+    const matchesMetavariableNode = this.metavariableNode.match(metavariableNode);
 
-    return metavariableNodeMatches;
+    return matchesMetavariableNode;
   }
 
   matchMetastatementNode(metastatementNode) {
-    let metastatementNodeMatches;
+    let matchesMetastatementNode;
 
-    metastatementNodeMatches = this.metastatementNode.match(metastatementNode)
+    matchesMetastatementNode = this.metastatementNode.match(metastatementNode)
 
-    if (!metastatementNodeMatches) {
+    if (!matchesMetastatementNode) {
       const bracketedMetastatementChildNode = bracketedMetastatementChildNodeFromMetastatementNode(metastatementNode);
 
       if (bracketedMetastatementChildNode !== null) {
         const metastatementNode = bracketedMetastatementChildNode; ///
 
-        metastatementNodeMatches = this.metastatementNode.match(metastatementNode);
+        matchesMetastatementNode = this.metastatementNode.match(metastatementNode);
       }
     }
 
-    return metastatementNodeMatches;
+    return matchesMetastatementNode;
   }
 
   toJSON(tokens) {

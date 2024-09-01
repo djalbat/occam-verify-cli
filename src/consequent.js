@@ -24,9 +24,9 @@ export default class Consequent {
 
             return verifiedAhead;
           }),
-          statementNodeMatches = nonTerminalNodeVerified; ///
+          matchesStatementNode = nonTerminalNodeVerified; ///
 
-    return statementNodeMatches;
+    return matchesStatementNode;
   }
 
   toJSON(tokens) {

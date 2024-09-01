@@ -37,13 +37,13 @@ export default class Metavariable {
   }
 
   matchName(name) {
-    const nameMatches = (this.name === name);
+    const matchesName = (this.name === name);
 
-    return nameMatches;
+    return matchesName;
   }
 
   matchNode(node, localMetaContext) {
-    let nodeMatches = false;
+    let matchesNode = false;
 
     const metavariableNode = node,  ///
           typeNode = typeNodeQuery(metavariableNode);
@@ -57,16 +57,16 @@ export default class Metavariable {
         if (false) {
           ///
         } else if ((termNode === null) && (this.termType === null)) {
-          nodeMatches = true;
+          matchesNode = true;
         } else if ((termNode !== null) && (this.termType !== null)) {
           const termVerifiedAgainstTermType = verifyTermAgainstTermType(termNode, this.termType, localMetaContext);
 
-          nodeMatches = termVerifiedAgainstTermType;  ///
+          matchesNode = termVerifiedAgainstTermType;  ///
         }
       }
     }
 
-    return nodeMatches;
+    return matchesNode;
   }
 
   toJSON(tokens) {

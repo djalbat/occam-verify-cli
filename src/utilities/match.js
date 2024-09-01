@@ -13,9 +13,9 @@ export function matchStatementModuloBrackets(statementNodeA, statementNodeB) {
   let statementMatchesModuloBrackets = false;
 
   if (!statementMatchesModuloBrackets) {
-    const statementNodeMatches = statementNodeA.match(statementNodeB);
+    const statementNodeAMatchesStatementNodeB = statementNodeA.match(statementNodeB);
 
-    statementMatchesModuloBrackets = statementNodeMatches;  ///
+    statementMatchesModuloBrackets = statementNodeAMatchesStatementNodeB;  ///
   }
 
   if (!statementMatchesModuloBrackets) {

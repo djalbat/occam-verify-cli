@@ -28,7 +28,7 @@ export default class MetaSupposition {
   }
 
   matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext) {
-    let metaSubproofNodeMatches = false;
+    let matchesMetaSubproofNode = false;
 
     if (this.metastatementNode !== null) {
       const subproofAssertionNode = subproofAssertionNodeQuery(this.metastatementNode);
@@ -42,7 +42,7 @@ export default class MetaSupposition {
               ],
               subproofAssertionMetastatementNodes = subproofAssertionMetastatementNodesQuery(subproofAssertionNode);
 
-        metaSubproofNodeMatches = match(subproofAssertionMetastatementNodes, metaSubproofMetastatementNodes, (subproofAssertionMetastatementNode, ruleSubproofMetastatementNode) => {
+        matchesMetaSubproofNode = match(subproofAssertionMetastatementNodes, metaSubproofMetastatementNodes, (subproofAssertionMetastatementNode, ruleSubproofMetastatementNode) => {
           const nonTerminalNodeA = subproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = ruleSubproofMetastatementNode, ///
                 fileContextA = fileContext, ///
@@ -61,11 +61,11 @@ export default class MetaSupposition {
       }
     }
 
-    return metaSubproofNodeMatches;
+    return matchesMetaSubproofNode;
   }
 
   matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext) {
-    let metastatementNodeMatches = false;
+    let matchesMetastatementNode = false;
 
     if (this.metastatementNode !== null) {
       const nonTerminalNodeA = this.metastatementNode,  ///
@@ -79,10 +79,10 @@ export default class MetaSupposition {
               return verifiedAhead;
             });
 
-      metastatementNodeMatches = nonTerminalNodeVerified; ///
+      matchesMetastatementNode = nonTerminalNodeVerified; ///
     }
 
-    return metastatementNodeMatches;
+    return matchesMetastatementNode;
   }
 
   toJSON(tokens) {

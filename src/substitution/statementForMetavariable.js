@@ -50,9 +50,9 @@ export default class StatementForMetavariableSubstitution extends Substitution {
   }
 
   matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+    const matchesMetavariableNode = this.metavariableNode.match(metavariableNode);
 
-    return metavariableNodeMatches;
+    return matchesMetavariableNode;
   }
 
   static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {
@@ -102,7 +102,9 @@ function matchStatementNode(statementNodeA, statementNodeB, substitution, substi
   let statementNodeMatches;
 
   if (substitution === null) {
-    statementNodeMatches = statementNodeB.match(statementNodeA);
+    const statementNodeAMatchesStatementNodeB = statementNodeB.match(statementNodeA);
+
+    statementNodeMatches = statementNodeAMatchesStatementNodeB; ///
   } else {
     const statementVerifiedAgainstStatement = verifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
 

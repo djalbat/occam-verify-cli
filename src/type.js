@@ -92,23 +92,23 @@ export default class Type {
   }
 
   matchName(name) {
-    const nameMatches = (this.name === name);
+    const matchesName = (this.name === name);
 
-    return nameMatches;
+    return matchesName;
   }
 
   matchTypeName(typeName) {
-    const typeNameMatches = (this.name === typeName);
+    const matchesTypeName = (this.name === typeName);
 
-    return typeNameMatches;
+    return matchesTypeName;
   }
 
   matchTypeNode(typeNode) {
     const typeName = typeNameFromTypeNode(typeNode),
-          typeNameMatches = this.matchTypeName(typeName),
-          typeNodeMatches = typeNameMatches;  ///
+          matchesTypeName = this.matchTypeName(typeName),
+          matchesTypeNode = matchesTypeName;  ///
 
-    return typeNodeMatches;
+    return matchesTypeNode;
   }
 
   asString(tokens, noSuperType = false) {

@@ -24,9 +24,9 @@ export default class Supposition {
 
             return verifiedAhead;
           }),
-          statementNodeMatches = nonTerminalNodeVerified; ///
+          matchesStatementNode = nonTerminalNodeVerified; ///
 
-    return statementNodeMatches;
+    return matchesStatementNode;
   }
 
   toJSON(tokens) {

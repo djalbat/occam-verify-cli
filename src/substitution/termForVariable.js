@@ -34,15 +34,15 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   matchTermNode(termNode) {
-    const termNodeMatches = this.termNode.match(termNode);
+    const matchesTermNode = this.termNode.match(termNode);
 
-    return termNodeMatches;
+    return matchesTermNode;
   }
 
   matchVariableNode(variableNode) {
-    const variableNodeMatches = this.variableNode.match(variableNode);
+    const matchesVariableNode = this.variableNode.match(variableNode);
 
-    return variableNodeMatches;
+    return matchesVariableNode;
   }
 
   static fromSubstitutionNode(substitutionNode) {
@@ -91,9 +91,9 @@ function substituteTermNode(termNode, substitutions) {
 
   if (termVariableNode !== null) {
     substitutions.some((substitution) => {
-      const variableNodeMatches = substitution.matchVariableNode(termVariableNode);
+      const substitutionMatchesVariableNode = substitution.matchVariableNode(termVariableNode);
 
-      if (variableNodeMatches) {
+      if (substitutionMatchesVariableNode) {
         termNode = substitution.getTermNode();  ///
 
         return true;
@@ -106,9 +106,9 @@ function substituteTermNode(termNode, substitutions) {
 
 function substituteVariableNode(variableNode, substitutions) {
   substitutions.some((substitution) => {
-    const variableNodeMatches = substitution.matchVariableNode(variableNode);
+    const substitutionMatchesVariableNode = substitution.matchVariableNode(variableNode);
 
-    if (variableNodeMatches) {
+    if (substitutionMatchesVariableNode) {
       const termNode = substitution.getTermNode(),
             termVariableNode = variableNodeQuery(termNode);
 
