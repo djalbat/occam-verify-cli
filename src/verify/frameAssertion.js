@@ -55,7 +55,7 @@ function verifyDerivedFrameAssertion(frameAssertionNode, assignments, derived, l
       if (frameAssertion !== null) {
         const frames = [],
               frameNode = frameNodeQuery(frameAssertionNode),
-              frameVerified = verifyFrame(frameNode, frames, derived, localMetaContext);
+              frameVerified = verifyFrame(frameNode, frames, assignments, derived, localMetaContext);
 
         if (frameVerified) {
           const firstFrame = first(frames),
@@ -114,7 +114,7 @@ function verifyStatedFrameAssertion(frameAssertionNode, assignments, derived, lo
     if (metavariableVerified) {
       const frames = [],
             frameNode = frameNodeQuery(frameAssertionNode),
-            frameVerified = verifyFrame(frameNode, frames, derived, localMetaContext);
+            frameVerified = verifyFrame(frameNode, frames, assignments, derived, localMetaContext);
 
       if (frameVerified) {
         const firstFrame = first(frames),

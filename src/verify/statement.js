@@ -137,11 +137,7 @@ function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, 
 
     localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, definedAssertionNode);
 
-    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, localContext, () => {
-      const verifiedAhead = true;
-
-      return verifiedAhead;
-    });
+    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, assignments, derived, localContext);
 
     statementVerifiedAsDefinedAssertion = definedAssertionVerified; ///
 
@@ -163,7 +159,7 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
 
     localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`, containedAssertionNode);
 
-    const containedVerified = verifyContainedAssertion(containedAssertionNode);
+    const containedVerified = verifyContainedAssertion(containedAssertionNode, assignments, derived, localContext);
 
     if (containedVerified) {
       statementNode = statementNodeQuery(containedAssertionNode); ///

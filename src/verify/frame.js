@@ -10,7 +10,7 @@ import { nodesQuery } from "../utilities/query";
 const declarationNodesQuery = nodesQuery("/frame/declaration"),
       metavariableNodesQuery = nodesQuery("/frame/metavariable");
 
-export default function verifyFrame(frameNode, frames, derived, localMetaContext) {
+export default function verifyFrame(frameNode, frames, assignments, derived, localMetaContext) {
   let frameVerified;
 
   const frameString = localMetaContext.nodeAsString(frameNode);

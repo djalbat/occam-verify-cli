@@ -63,7 +63,7 @@ function verifyMetastatementAsFrameAssertion(metastatementNode, assignments, der
 }
 
 function verifyMetastatementAsIs(metastatementNode, assignments, derived, localMetaContext) {
-  let metastatementVerifiedAsIs = false;
+  let metastatementVerifiedAsIs;
 
   const frameAssertionNode = frameAssertionNodeQuery(metastatementNode);
 
@@ -72,14 +72,18 @@ function verifyMetastatementAsIs(metastatementNode, assignments, derived, localM
 
     localMetaContext.trace(`Verifying the '${metastatementString}' metastatement as is...`, metastatementNode);
 
-    const nonTerminalNode = metastatementNode, ///
-          nonTerminalNodeVerified = metastatementNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localMetaContext, () => {
-            const verifiedAhead = true;
+    const verifyMetastatementAsIsFunctions = [
+      verifyDerivedMetastatementAsIs,
+      verifyStatedMetastatementAsIs
+    ];
 
-            return verifiedAhead;
-          });
+    metastatementVerifiedAsIs = verifyMetastatementAsIsFunctions.some((verifyMetastatementAsIsFunction) => {
+      const metastatementVerifiedAsIs = verifyMetastatementAsIsFunction(metastatementNode, assignments, derived, localMetaContext);
 
-    metastatementVerifiedAsIs = nonTerminalNodeVerified;  ///
+      if (metastatementVerifiedAsIs) {
+        return true;
+      }
+    });
 
     if (metastatementVerifiedAsIs) {
       localMetaContext.debug(`...verified the '${metastatementString}' metastatement as is.`, metastatementNode);
@@ -87,4 +91,41 @@ function verifyMetastatementAsIs(metastatementNode, assignments, derived, localM
   }
 
   return metastatementVerifiedAsIs;
+}
+
+function verifyDerivedMetastatementAsIs(metastatementNode, assignments, derived, localMetaContext) {
+  let derivedMetastatementVerifiedAsIs = false;
+
+  if (derived) {
+    const metastatementString = localMetaContext.nodeAsString(metastatementNode);
+
+    localMetaContext.debug(`Cannot verify the derived '${metastatementString}' metastatement as is.`, metastatementNode);
+  }
+
+  return derivedMetastatementVerifiedAsIs;
+}
+
+function verifyStatedMetastatementAsIs(metastatementNode, assignments, derived, localMetaContext) {
+  let statedMetastatementVerifiedAsIs = false;
+
+  if (!derived) {
+    const metastatementString = localMetaContext.nodeAsString(metastatementNode);
+
+    localMetaContext.trace(`Verifying the stated '${metastatementString}' metastatement as is...`, metastatementNode);
+
+    const nonTerminalNode = metastatementNode, ///
+          nonTerminalNodeVerified = metastatementNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localMetaContext, () => {
+            const verifiedAhead = true;
+
+            return verifiedAhead;
+          });
+
+    statedMetastatementVerifiedAsIs = nonTerminalNodeVerified;  ///
+
+    if (statedMetastatementVerifiedAsIs) {
+      localMetaContext.debug(`...verified the stated '${metastatementString}' metastatement as is.`, metastatementNode);
+    }
+  }
+
+  return statedMetastatementVerifiedAsIs;
 }
