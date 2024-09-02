@@ -82,10 +82,10 @@ export default class FileContext {
     return metaproofSteps;
   }
 
-  getFrameAssertions() {
-    const frameAssertionss = [];
+  getJudgements() {
+    const judgements = [];
 
-    return frameAssertionss;
+    return judgements;
   }
 
   getLabels(includeRelease = true) {

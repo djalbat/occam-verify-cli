@@ -1,6 +1,6 @@
 "use strict";
 
-export default class FrameAssertion {
+export default class Judgement {
   constructor(node, frame, metavariableNode) {
     this.node = node;
     this.frame = frame;
@@ -29,10 +29,10 @@ export default class FrameAssertion {
 
   matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) { return this.frame.matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem); }
 
-  static fromFrameAssertionNodeFrameAndMetavariableNode(frameAssertionNode, frame, metavariableNode) {
-    const node = frameAssertionNode,
-          frameAssertion = new FrameAssertion(node, frame, metavariableNode);
+  static fromJudgementNodeFrameAndMetavariableNode(judgementNode, frame, metavariableNode) {
+    const node = judgementNode,
+          judgement = new Judgement(node, frame, metavariableNode);
 
-    return frameAssertion;
+    return judgement;
   }
 }

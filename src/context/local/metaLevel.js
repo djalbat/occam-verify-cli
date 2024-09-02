@@ -5,12 +5,23 @@ import IntrinsicLevelLocalContext from "../../context/local/intrinsicLevel";
 import { last, reverse } from "../../utilities/array";
 
 class MetaLevelLocalContext extends IntrinsicLevelLocalContext {
-  constructor(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions) {
+  constructor(context, variables, proofSteps, equivalences, judgements, metavariables, metaproofSteps) {
     super(context, variables, proofSteps, equivalences);
 
+    this.judgements = judgements;
     this.metavariables = metavariables;
     this.metaproofSteps = metaproofSteps;
-    this.frameAssertions = frameAssertions;
+  }
+
+  getJudgements() {
+    let judgements = this.context.getJudgements();
+
+    judgements = [ ///
+      ...this.judgements,
+      ...judgements
+    ]
+
+    return judgements;
   }
 
   getMetavariables() {
@@ -35,17 +46,6 @@ class MetaLevelLocalContext extends IntrinsicLevelLocalContext {
     return metaproofSteps;
   }
 
-  getFrameAssertions() {
-    let frameAssertions = this.context.getFrameAssertions();
-
-    frameAssertions = [ ///
-      ...this.frameAssertions,
-      ...frameAssertions
-    ]
-
-    return frameAssertions;
-  }
-
   isIntrinsicLevel() {
     const intrinsicLevel = false;
 
@@ -64,19 +64,19 @@ class MetaLevelLocalContext extends IntrinsicLevelLocalContext {
     return lastMetaproofStep;
   }
 
-  addFrameAssertion(frameAssertion) {
-    let frameAssertionAdded = false;
+  addJudgement(judgement) {
+    let judgementAdded = false;
 
-    const metavariableNode = frameAssertion.getMetavariableNode(),
-          frameAssertionPresent = this.isFrameAssertionPresentByMetavariableNode(metavariableNode);
+    const metavariableNode = judgement.getMetavariableNode(),
+          judgementPresent = this.isJudgementPresentByMetavariableNode(metavariableNode);
 
-    if (!frameAssertionPresent) {
-      this.frameAssertions.push(frameAssertion);
+    if (!judgementPresent) {
+      this.judgements.push(judgement);
 
-      frameAssertionAdded = true;
+      judgementAdded = true;
     }
 
-    return frameAssertionAdded;
+    return judgementAdded;
   }
 
   addMetavariable(metavariable) {
@@ -134,17 +134,17 @@ class MetaLevelLocalContext extends IntrinsicLevelLocalContext {
     return metavariable;
   }
 
-  findFrameAssertionByMetavariableNode(metavariableNode) {
-    const frameAssertions = this.getFrameAssertions(),
-          frameAssertion = frameAssertions.find((frameAssertion) => {
-            const frameAssertionMatchesMetavariableNode = frameAssertion.matchMetavariableNode(metavariableNode);
+  findJudgementByMetavariableNode(metavariableNode) {
+    const judgements = this.getJudgements(),
+          judgement = judgements.find((judgement) => {
+            const judgementMatchesMetavariableNode = judgement.matchMetavariableNode(metavariableNode);
 
-            if (frameAssertionMatchesMetavariableNode) {
+            if (judgementMatchesMetavariableNode) {
               return true;
             }
           }) || null;
 
-    return frameAssertion;
+    return judgement;
   }
 
   isMetavariablePresentByMetavariableNode(metavariableNode, metaLevelLocalContext) {
@@ -154,11 +154,11 @@ class MetaLevelLocalContext extends IntrinsicLevelLocalContext {
     return metavariablePresent;
   }
 
-  isFrameAssertionPresentByMetavariableNode(metavariableNode) {
-    const frameAssertion = this.findFrameAssertionByMetavariableNode(metavariableNode),
-          frameAssertionPresent = (frameAssertion !== null);
+  isJudgementPresentByMetavariableNode(metavariableNode) {
+    const judgement = this.findJudgementByMetavariableNode(metavariableNode),
+          judgementPresent = (judgement !== null);
 
-    return frameAssertionPresent;
+    return judgementPresent;
   }
 
   static fromFileContext(fileContext) {
@@ -166,10 +166,10 @@ class MetaLevelLocalContext extends IntrinsicLevelLocalContext {
           variables = [],
           proofSteps = [],
           equivalences = [],
+          judgements = [],
           metavariables = [],
           metaproofSteps = [],
-          frameAssertions = [],
-          metaLevelLocalContext = new MetaLevelLocalContext(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions);
+          metaLevelLocalContext = new MetaLevelLocalContext(context, variables, proofSteps, equivalences, judgements, metavariables, metaproofSteps);
 
     return metaLevelLocalContext;
   }
@@ -179,10 +179,10 @@ class MetaLevelLocalContext extends IntrinsicLevelLocalContext {
           variables = [],
           proofSteps = [],
           equivalences = [],
+          judgements = [],
           metavariables = [],
           metaproofSteps = [],
-          frameAssertions = [],
-          metaLevelLocalContext = new MetaLevelLocalContext(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions);  ///
+          metaLevelLocalContext = new MetaLevelLocalContext(context, variables, proofSteps, equivalences, judgements, metavariables, metaproofSteps);  ///
 
     return metaLevelLocalContext;
   }
