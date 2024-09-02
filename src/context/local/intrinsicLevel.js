@@ -1,13 +1,13 @@
 "use strict";
 
-import Variable from "../variable";
-import Equivalence from "../equivalence";
-import contextMixins from "../mixins/context";
+import Variable from "../../variable";
+import Equivalence from "../../equivalence";
+import contextMixins from "../../mixins/context";
 
-import { last, reverse } from "../utilities/array";
-import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../utilities/equivalences";
+import { last, reverse } from "../../utilities/array";
+import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../../utilities/equivalences";
 
-class LocalContext {
+class IntrinsicLevelLocalContext {
   constructor(context, variables, proofSteps, equivalences) {
     this.context = context;
     this.variables = variables;
@@ -46,11 +46,17 @@ class LocalContext {
 
     const equivalencesA = this.equivalences, ///
           equivalencesB = equivalences,
-          localContext = this;  ///
+          intrinsicLevelLocalContext = this;  ///
 
-    equivalences = mergeEquivalences(equivalencesA, equivalencesB, localContext); ///
+    equivalences = mergeEquivalences(equivalencesA, equivalencesB, intrinsicLevelLocalContext); ///
 
     return equivalences;
+  }
+
+  isIntrinsicLevel() {
+    const intrinsicLevel = true;
+
+    return intrinsicLevel;
   }
 
   getLastProofStep() {
@@ -72,8 +78,8 @@ class LocalContext {
           equivalence = findEquivalenceByTerm(equivalences, term);
 
     if (equivalence !== null) {
-      const localContext = this,  ///
-            equivalenceType = equivalence.getType(localContext);
+      const intrinsicLevelLocalContext = this,  ///
+            equivalenceType = equivalence.getType(intrinsicLevelLocalContext);
 
       termType = equivalenceType;  ///
     } else {
@@ -274,20 +280,19 @@ class LocalContext {
           variables = [],
           proofSteps = [],
           equivalences = [],
-          localContext = new LocalContext(context, variables, proofSteps, equivalences);
+          intrinsicLevelLocalContext = new IntrinsicLevelLocalContext(context, variables, proofSteps, equivalences);
 
-    return localContext;
+    return intrinsicLevelLocalContext;
   }
 
   static fromLocalContext(localContext) {
     const context = localContext,  ///
           variables = [],
           proofSteps = [],
-          equivalences = [];
+          equivalences = [],
+          intrinsicLevelLocalContext = new IntrinsicLevelLocalContext(context, variables, proofSteps, equivalences);
 
-    localContext = new LocalContext(context, variables, proofSteps, equivalences);
-
-    return localContext;
+    return intrinsicLevelLocalContext;
   }
 
   static fromJSONAndFileContext(json, fileContext) {
@@ -305,12 +310,12 @@ class LocalContext {
     const context = fileContext,  ///
           proofSteps = [],
           equivalences = [],
-          localContext = new LocalContext(context, variables, proofSteps, equivalences);
+          intrinsicLevelLocalContext = new IntrinsicLevelLocalContext(context, variables, proofSteps, equivalences);
 
-    return localContext;
+    return intrinsicLevelLocalContext;
   }
 }
 
-Object.assign(LocalContext.prototype, contextMixins);
+Object.assign(IntrinsicLevelLocalContext.prototype, contextMixins);
 
-export default LocalContext;
+export default IntrinsicLevelLocalContext;

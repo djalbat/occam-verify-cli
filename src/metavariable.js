@@ -42,7 +42,7 @@ export default class Metavariable {
     return matchesName;
   }
 
-  matchNode(node, localMetaContext) {
+  matchNode(node, localContext) {
     let matchesNode = false;
 
     const metavariableNode = node,  ///
@@ -59,7 +59,7 @@ export default class Metavariable {
         } else if ((termNode === null) && (this.termType === null)) {
           matchesNode = true;
         } else if ((termNode !== null) && (this.termType !== null)) {
-          const termVerifiedAgainstTermType = verifyTermAgainstTermType(termNode, this.termType, localMetaContext);
+          const termVerifiedAgainstTermType = verifyTermAgainstTermType(termNode, this.termType, localContext);
 
           matchesNode = termVerifiedAgainstTermType;  ///
         }
@@ -122,12 +122,11 @@ export default class Metavariable {
   }
 }
 
-function verifyTermAgainstTermType(termNode, termType, localMetaContext) {
+function verifyTermAgainstTermType(termNode, termType, localContext) {
   let termVerifiedAgainstTermType;
 
   const type = termType,  ///
-        terms = [],
-        localContext = localMetaContext;  ///
+        terms = [];
 
   termVerifiedAgainstTermType = verifyTerm(termNode, terms, localContext, () => {
     let verifiedAhead = false;
@@ -153,9 +152,9 @@ function termTypeFromMetavariableNode(metavariableNode, fileContext) {
   const typeNode = typeNodeQuery(metavariableNode);
 
   if (typeNode !== null) {
-      const type = fileContext.findTypeByTypeNode(typeNode);
+    const type = fileContext.findTypeByTypeNode(typeNode);
 
-      termType = type;  ///
+    termType = type;  ///
   }
 
   return termType;

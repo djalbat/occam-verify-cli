@@ -13,12 +13,12 @@ const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/metaSupposition/unqualifiedStatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/metaSupposition/unqualifiedMetastatement!");
 
-export default function verifyMetaSupposition(metaSuppositionNode, metaSuppositions, localMetaContext) {
+export default function verifyMetaSupposition(metaSuppositionNode, metaSuppositions, localContext) {
   let metaSuppositionVerified = false;
 
-  const metaSuppositionString = localMetaContext.nodeAsString(metaSuppositionNode);
+  const metaSuppositionString = localContext.nodeAsString(metaSuppositionNode);
 
-  localMetaContext.trace(`Verifying the '${metaSuppositionString}' meta-supposition...`, metaSuppositionNode);
+  localContext.trace(`Verifying the '${metaSuppositionString}' meta-supposition...`, metaSuppositionNode);
 
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(metaSuppositionNode),
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaSuppositionNode);
@@ -26,7 +26,6 @@ export default function verifyMetaSupposition(metaSuppositionNode, metaSuppositi
   if (unqualifiedStatementNode !== null) {
     const derived = false,
           assignments = [],
-          localContext = localMetaContext,  ///
           unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
     if (unqualifiedStatementVerified) {
@@ -39,10 +38,10 @@ export default function verifyMetaSupposition(metaSuppositionNode, metaSuppositi
   if (unqualifiedMetastatementNode !== null) {
     const derived = false,
           assignments = [],
-          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localContext);
 
     if (unqualifiedMetastatementVerified) {
-      const localContext = localMetaContext,  ///
+      const localContext = localContext,  ///
             assignmentAssigned = assignAssignment(assignments, localContext);
 
       metaSuppositionVerified = assignmentAssigned; ///
@@ -71,9 +70,9 @@ export default function verifyMetaSupposition(metaSuppositionNode, metaSuppositi
 
     metaSuppositions.push(metaSupposition);
 
-    localMetaContext.addMetaproofStep(metaproofStep);
+    localContext.addMetaproofStep(metaproofStep);
 
-    localMetaContext.debug(`...verified the '${metaSuppositionString}' meta-supposition.`, metaSuppositionNode);
+    localContext.debug(`...verified the '${metaSuppositionString}' meta-supposition.`, metaSuppositionNode);
   }
 
   return metaSuppositionVerified;

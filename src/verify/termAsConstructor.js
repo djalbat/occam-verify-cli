@@ -1,7 +1,7 @@
 "use strict";
 
 import Constructor from "../constructor";
-import LocalContext from "../context/local";
+import IntrinsicLevelLocalContext from "../context/local/intrinsicLevel";
 import termAsConstructorNodeVerifier from "../verifier/node/termAsConstructor";
 
 export default function verifyTermAsConstructor(termNode, typeNode, fileContext) {
@@ -11,9 +11,10 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
 
   fileContext.debug(`Verifying the '${termString}' term as a constructor...`, termNode);
 
-  const nonTerminalNode = termNode, ///
+  const intrinsicLevelLocalContext = IntrinsicLevelLocalContext.fromFileContext(fileContext),
+        nonTerminalNode = termNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
-        localContext = LocalContext.fromFileContext(fileContext),
+        localContext = intrinsicLevelLocalContext,  ///
         childNodesVerified = termAsConstructorNodeVerifier.verifyChildNodes(childNodes, localContext, () => {
           const verifiedAhead = true;
 

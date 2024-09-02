@@ -14,17 +14,17 @@ const termNodeQuery = nodeQuery("/term!"),
       metavariableNodeQuery = nodeQuery("/metavariable!");
 
 class MetastatementNodeVerifier extends NodeVerifier {
-  verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead) {
+  verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead) {
     let nonTerminalNodeVerified;
 
     const nodeQueryMaps = [
       {
         nodeQuery: termNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const termNode = node, ///
-                termNodeVerified = this.verifyTermNode(termNode, localMetaContext, verifyAhead);
+                termNodeVerified = this.verifyTermNode(termNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = termNodeVerified; ///
 
@@ -33,11 +33,11 @@ class MetastatementNodeVerifier extends NodeVerifier {
       },
       {
         nodeQuery: variableNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const variableNode = node, ///
-                variableNodeVerified = this.verifyVariableNode(variableNode, localMetaContext, verifyAhead);
+                variableNodeVerified = this.verifyVariableNode(variableNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = variableNodeVerified; ///
 
@@ -46,11 +46,11 @@ class MetastatementNodeVerifier extends NodeVerifier {
       },
       {
         nodeQuery: metavariableNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const metavariableNode = node, ///
-                metavariableNodeVerified = this.verifyMetavariableNode(metavariableNode, localMetaContext, verifyAhead);
+                metavariableNodeVerified = this.verifyMetavariableNode(metavariableNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = metavariableNodeVerified; ///
 
@@ -59,45 +59,43 @@ class MetastatementNodeVerifier extends NodeVerifier {
       },
       {
         nodeQuery: nonTerminalNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const nonTerminalNode = node; ///
 
           nonTerminalNodeVerified =
 
-            super.verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead);
+            super.verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead);
 
           return nonTerminalNodeVerified;
         }
       }
     ];
 
-    const nodeVerified = verifyNode(nodeQueryMaps, nonTerminalNode, localMetaContext, verifyAhead);
+    const nodeVerified = verifyNode(nodeQueryMaps, nonTerminalNode, localContext, verifyAhead);
 
     nonTerminalNodeVerified = nodeVerified; ///
 
     return nonTerminalNodeVerified;
   }
 
-  verifyMetavariableNode(metavariableNode, localMetaContext, verifyAhead) {
-    const standaloneMetavariableVerified = verifyStandaloneMetavariable(metavariableNode, localMetaContext, verifyAhead),
+  verifyMetavariableNode(metavariableNode, localContext, verifyAhead) {
+    const standaloneMetavariableVerified = verifyStandaloneMetavariable(metavariableNode, localContext, verifyAhead),
           metavariableNodeVerified = standaloneMetavariableVerified;  ///
 
     return metavariableNodeVerified;
   }
 
-  verifyVariableNode(variableNode, localMetaContext, verifyAhead) {
-    const localContext = localMetaContext,  ///
-          standaloneVariableVerified = verifyStandaloneVariable(variableNode, localContext, verifyAhead),
+  verifyVariableNode(variableNode, localContext, verifyAhead) {
+    const standaloneVariableVerified = verifyStandaloneVariable(variableNode, localContext, verifyAhead),
           variableNodeVerified = standaloneVariableVerified;  ///
 
     return variableNodeVerified;
   }
 
-  verifyTermNode(termNode, localMetaContext, verifyAhead) {
-    const localContext = localMetaContext,  ///
-          standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
+  verifyTermNode(termNode, localContext, verifyAhead) {
+    const standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
           termNodeVerified = standaloneTermVerified;  ///
 
     return termNodeVerified;

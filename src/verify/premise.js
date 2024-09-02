@@ -13,12 +13,12 @@ const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/premise/unqualifiedMetastatement!");
 
-export default function verifyPremise(premiseNode, premises, localMetaContext) {
+export default function verifyPremise(premiseNode, premises, localContext) {
   let premiseVerified;
 
-  const premiseString = localMetaContext.nodeAsString(premiseNode);
+  const premiseString = localContext.nodeAsString(premiseNode);
 
-  localMetaContext.trace(`Verifying the '${premiseString}' premise...`, premiseNode);
+  localContext.trace(`Verifying the '${premiseString}' premise...`, premiseNode);
 
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(premiseNode),
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(premiseNode);
@@ -26,7 +26,6 @@ export default function verifyPremise(premiseNode, premises, localMetaContext) {
   if (unqualifiedStatementNode !== null) {
     const derived = false,
           assignments = [],
-          localContext = localMetaContext,  ///
           unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
     if (unqualifiedStatementVerified) {
@@ -39,10 +38,10 @@ export default function verifyPremise(premiseNode, premises, localMetaContext) {
   if (unqualifiedMetastatementNode !== null) {
     const derived = false,
           assignments = [],
-          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localContext);
 
     if (unqualifiedMetastatementVerified) {
-      const localContext = localMetaContext,  ///
+      const localContext = localContext,  ///
             assignmentAssigned = assignAssignment(assignments, localContext);
 
       premiseVerified = assignmentAssigned; ///
@@ -71,9 +70,9 @@ export default function verifyPremise(premiseNode, premises, localMetaContext) {
 
     premises.push(premise);
 
-    localMetaContext.addMetaproofStep(metaproofStep);
+    localContext.addMetaproofStep(metaproofStep);
 
-    localMetaContext.debug(`...verified the '${premiseString}' premise.`, premiseNode);
+    localContext.debug(`...verified the '${premiseString}' premise.`, premiseNode);
   }
 
   return premiseVerified;

@@ -11,12 +11,12 @@ const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/conclusion/unqualifiedStatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/conclusion/unqualifiedMetastatement!");
 
-export default function verifyConclusion(conclusionNode, conclusions, localMetaContext) {
+export default function verifyConclusion(conclusionNode, conclusions, localContext) {
   let conclusionVerified = false;
 
-  const conclusionString = localMetaContext.nodeAsString(conclusionNode);
+  const conclusionString = localContext.nodeAsString(conclusionNode);
 
-  localMetaContext.trace(`Verifying the '${conclusionString}' conclusion...`, conclusionNode);
+  localContext.trace(`Verifying the '${conclusionString}' conclusion...`, conclusionNode);
 
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode),
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode);
@@ -24,7 +24,6 @@ export default function verifyConclusion(conclusionNode, conclusions, localMetaC
   if (unqualifiedStatementNode !== null) {
     const derived = false,
           assignments = [],
-          localContext = localMetaContext,  ///
           unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
     conclusionVerified = unqualifiedStatementVerified; ///
@@ -33,7 +32,7 @@ export default function verifyConclusion(conclusionNode, conclusions, localMetaC
   if (unqualifiedMetastatementNode !== null) {
     const derived = false,
           assignments = [],
-          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localContext);
 
     conclusionVerified = unqualifiedMetastatementVerified; ///
   }
@@ -55,7 +54,7 @@ export default function verifyConclusion(conclusionNode, conclusions, localMetaC
 
     conclusions.push(conclusion);
 
-    localMetaContext.debug(`...verified the '${conclusionString}' conclusion.`, conclusionNode);
+    localContext.debug(`...verified the '${conclusionString}' conclusion.`, conclusionNode);
   }
 
   return conclusionVerified;

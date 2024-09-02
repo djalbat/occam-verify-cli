@@ -18,11 +18,11 @@ class TermAsConstructorNodeVerifier extends NodeVerifier {
     const nodeQueryMaps = [
       {
         nodeQuery: termNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const termNode = node, ///
-            termNodeVerified = this.verifyTermNode(termNode, localMetaContext, verifyAhead);
+            termNodeVerified = this.verifyTermNode(termNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = termNodeVerified; ///
 
@@ -31,11 +31,11 @@ class TermAsConstructorNodeVerifier extends NodeVerifier {
       },
       {
         nodeQuery: typeNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const typeNode = node, ///
-            typeNodeVerified = this.verifyTypeNode(typeNode, localMetaContext, verifyAhead);
+            typeNodeVerified = this.verifyTypeNode(typeNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = typeNodeVerified; ///
 
@@ -44,14 +44,14 @@ class TermAsConstructorNodeVerifier extends NodeVerifier {
       },
       {
         nodeQuery: nonTerminalNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const nonTerminalNode = node; ///
 
           nonTerminalNodeVerified =
 
-            super.verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead);
+            super.verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead);
 
           return nonTerminalNodeVerified;
         }

@@ -4,8 +4,8 @@ import Rule from "../rule";
 import verifyLabels from "../verify/labels";
 import verifyPremises from "../verify/premises";
 import verifyRuleProof from "../verify/ruleProof";
-import LocalMetaContext from "../context/localMeta";
 import verifyConclusion from "../verify/conclusion";
+import MetaLevelLocalContext from "../context/local/metaLevel";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -19,8 +19,7 @@ export default function verifyRule(ruleNode, fileContext) {
   let ruleVerified = false;
 
   const labelNodes = labelNodesQuery(ruleNode),
-        labelsString = fileContext.nodesAsString(labelNodes),
-        localMetaContext = LocalMetaContext.fromFileContext(fileContext);
+        labelsString = fileContext.nodesAsString(labelNodes);
 
   fileContext.trace(`Verifying the '${labelsString}' rule...`, ruleNode);
 
@@ -28,14 +27,16 @@ export default function verifyRule(ruleNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const premises = [],
+    const metaLevelLocalContext = MetaLevelLocalContext.fromFileContext(fileContext),
+          premises = [],
+          localContext = metaLevelLocalContext, ///
           premiseNodes = premisesNodeQuery(ruleNode),
-          premisesVerified = verifyPremises(premiseNodes, premises, localMetaContext);
+          premisesVerified = verifyPremises(premiseNodes, premises, localContext);
 
     if (premisesVerified) {
       const conclusions = [],
             conclusionNode = conclusionNodeQuery(ruleNode),
-            conclusionVerified = verifyConclusion(conclusionNode, conclusions, localMetaContext);
+            conclusionVerified = verifyConclusion(conclusionNode, conclusions, localContext);
 
       if (conclusionVerified) {
         const ruleProofNode = ruleProofNodeQuery(ruleNode),
@@ -45,7 +46,7 @@ export default function verifyRule(ruleNode, fileContext) {
         let ruleProofVerified = true; ///
 
         if (ruleProofNode !== null) {
-          ruleProofVerified = verifyRuleProof(ruleProofNode, conclusion, localMetaContext);
+          ruleProofVerified = verifyRuleProof(ruleProofNode, conclusion, localContext);
         }
 
         if (ruleProofVerified) {

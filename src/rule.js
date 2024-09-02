@@ -46,15 +46,15 @@ export default class Rule {
     return matchesStatement;
   }
 
-  matchMetastatement(metastatementNode, localMetaContext) {
+  matchMetastatement(metastatementNode, localContext) {
     let matchesMetastatement = false;
 
-    const metaproofSteps = localMetaContext.getMetaproofSteps(),
+    const metaproofSteps = localContext.getMetaproofSteps(),
           substitutions = [],
-          premisesMatch = metaMatchPremises(this.premises, metaproofSteps, substitutions, this.fileContext, localMetaContext);
+          premisesMatch = metaMatchPremises(this.premises, metaproofSteps, substitutions, this.fileContext, localContext);
 
     if (premisesMatch) {
-      const conclusionMatches = metaMatchConclusion(this.conclusion, metastatementNode, substitutions, this.fileContext, localMetaContext);
+      const conclusionMatches = metaMatchConclusion(this.conclusion, metastatementNode, substitutions, this.fileContext, localContext);
 
       matchesMetastatement = conclusionMatches;  ///
     }
@@ -187,7 +187,7 @@ function matchConclusion(conclusion, statementNode, substitutions, fileContext, 
   return conclusionMatches;
 }
 
-function metaMatchPremise(premise, metaproofStep, substitutions, fileContext, localMetaContext) {
+function metaMatchPremise(premise, metaproofStep, substitutions, fileContext, localContext) {
   let premiseMatches = false;
 
   const ruleSubproofNode = metaproofStep.getRuleSubproofNode(),
@@ -195,19 +195,19 @@ function metaMatchPremise(premise, metaproofStep, substitutions, fileContext, lo
         metastatementNode = metaproofStep.getMetastatementNode()
 
   if (ruleSubproofNode !== null) {
-    const premiseMatchesRuleSubproofNode = premise.matchRuleSubproofNode(ruleSubproofNode, substitutions, fileContext, localMetaContext);
+    const premiseMatchesRuleSubproofNode = premise.matchRuleSubproofNode(ruleSubproofNode, substitutions, fileContext, localContext);
 
     premiseMatches = premiseMatchesRuleSubproofNode; ///
   }
 
   if (metaSubproofNode !== null) {
-    const premiseMatchesMetaSubproofNode = premise.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
+    const premiseMatchesMetaSubproofNode = premise.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localContext);
 
     premiseMatches = premiseMatchesMetaSubproofNode; ///
   }
 
   if (metastatementNode !== null) {
-    const premiseMatchesMetastatementNode = premise.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
+    const premiseMatchesMetastatementNode = premise.matchMetastatementNode(metastatementNode, substitutions, fileContext, localContext);
 
     premiseMatches = premiseMatchesMetastatementNode;  ///
   }
@@ -215,13 +215,13 @@ function metaMatchPremise(premise, metaproofStep, substitutions, fileContext, lo
   return premiseMatches;
 }
 
-function metaMatchPremises(premises, metaproofSteps, substitutions, fileContext, localMetaContext) {
+function metaMatchPremises(premises, metaproofSteps, substitutions, fileContext, localContext) {
   premises = reverse(premises); ///
 
   metaproofSteps = reverse(metaproofSteps); ///
 
   const premisesMatch = correlate(premises, metaproofSteps, (premise, metaproofStep) => {
-    const premiseMatches = metaMatchPremise(premise, metaproofStep, substitutions, fileContext, localMetaContext);
+    const premiseMatches = metaMatchPremise(premise, metaproofStep, substitutions, fileContext, localContext);
 
     if (premiseMatches) {
       return true;
@@ -231,8 +231,8 @@ function metaMatchPremises(premises, metaproofSteps, substitutions, fileContext,
   return premisesMatch;
 }
 
-function metaMatchConclusion(conclusion, metastatementNode, substitutions, fileContext, localMetaContext) {
-  const conclusionMatchesMetastatementNode = conclusion.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext),
+function metaMatchConclusion(conclusion, metastatementNode, substitutions, fileContext, localContext) {
+  const conclusionMatchesMetastatementNode = conclusion.matchMetastatementNode(metastatementNode, substitutions, fileContext, localContext),
         conclusionMatches = conclusionMatchesMetastatementNode; ///
 
   return conclusionMatches;

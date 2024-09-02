@@ -36,15 +36,15 @@ export default class MetaLemmaMetatheorem {
     return this.fileContext;
   }
 
-  matchMetastatement(metastatementNode, localMetaContext) {
+  matchMetastatement(metastatementNode, localContext) {
     let metastatementNatches = false;
 
-    const metaproofSteps = localMetaContext.getProofSteps(),
+    const metaproofSteps = localContext.getProofSteps(),
           substitutions = [],
-          metaSuppositionsMatch = matchMetaSuppositions(this.metaSuppositions, metaproofSteps, substitutions, this.fileContext, localMetaContext);
+          metaSuppositionsMatch = matchMetaSuppositions(this.metaSuppositions, metaproofSteps, substitutions, this.fileContext, localContext);
 
     if (metaSuppositionsMatch) {
-      const metaConsequentMatches = matchMetaConsequent(this.metaConsequent, metastatementNode, substitutions, this.fileContext, localMetaContext);
+      const metaConsequentMatches = matchMetaConsequent(this.metaConsequent, metastatementNode, substitutions, this.fileContext, localContext);
 
       metastatementNatches = metaConsequentMatches;  ///
     }
@@ -143,13 +143,13 @@ export default class MetaLemmaMetatheorem {
   static fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(Class, labels, metaSuppositions, metaConsequent, substitutions, fileContext) { return new Class(labels, metaSuppositions, metaConsequent, substitutions, fileContext); }
 }
 
-function matchMetaSuppositions(metaSuppositions, metaproofSteps, substitutions, fileContext, localMetaContext) {
+function matchMetaSuppositions(metaSuppositions, metaproofSteps, substitutions, fileContext, localContext) {
   metaSuppositions = reverse(metaSuppositions); ///
 
   metaproofSteps = reverse(metaproofSteps); ///
 
   const metaSuppositionsMatch = correlate(metaSuppositions, metaproofSteps, (metaSupposition, metaproofStep) => {
-    const metaSuppositionMatches = matchMetaSupposition(metaSupposition, metaproofStep, substitutions, fileContext, localMetaContext);
+    const metaSuppositionMatches = matchMetaSupposition(metaSupposition, metaproofStep, substitutions, fileContext, localContext);
 
     if (metaSuppositionMatches) {
       return true;
@@ -159,20 +159,20 @@ function matchMetaSuppositions(metaSuppositions, metaproofSteps, substitutions, 
   return metaSuppositionsMatch;
 }
 
-function matchMetaSupposition(metaSupposition, metaproofStep, substitutions, fileContext, localMetaContext) {
+function matchMetaSupposition(metaSupposition, metaproofStep, substitutions, fileContext, localContext) {
   let matchesMetaSupposition = false;
 
   const metaSubproofNode = metaproofStep.getMetaSubproofNode(),
         metastatementNode = metaproofStep.getMetastatementNode();
 
   if (metaSubproofNode !== null) {
-    const metaSuppositionMatchesMetaSubproofNode = metaSupposition.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localMetaContext);
+    const metaSuppositionMatchesMetaSubproofNode = metaSupposition.matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localContext);
 
     matchesMetaSupposition - metaSuppositionMatchesMetaSubproofNode; ///
   }
 
   if (metastatementNode !== null) {
-    const metaSuppositionMatchesMetastatementNode = metaSupposition.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext);
+    const metaSuppositionMatchesMetastatementNode = metaSupposition.matchMetastatementNode(metastatementNode, substitutions, fileContext, localContext);
 
     matchesMetaSupposition - metaSuppositionMatchesMetastatementNode; ///
   }
@@ -180,8 +180,8 @@ function matchMetaSupposition(metaSupposition, metaproofStep, substitutions, fil
   return matchesMetaSupposition;
 }
 
-function matchMetaConsequent(metaConsequent, metastatementNode, substitutions, fileContext, localMetaContext) {
-  const metaConsequentMatchesMetastatementNode = metaConsequent.matchMetastatementNode(metastatementNode, substitutions, fileContext, localMetaContext),
+function matchMetaConsequent(metaConsequent, metastatementNode, substitutions, fileContext, localContext) {
+  const metaConsequentMatchesMetastatementNode = metaConsequent.matchMetastatementNode(metastatementNode, substitutions, fileContext, localContext),
         metaConsequentMatches = metaConsequentMatchesMetastatementNode; ///
 
   return metaConsequentMatches;

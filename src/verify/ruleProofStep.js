@@ -19,7 +19,7 @@ const statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/s
       qualifiedMetastatementNodeQuery = nodeQuery("/ruleProofStep|lastRuleProofStep/qualifiedMetastatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/ruleProofStep|lastRuleProofStep/unqualifiedMetastatement!");
 
-export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext) {
+export default function verifyRuleProofStep(ruleProofStepNode, localContext) {
   let ruleProofStepVerified = false;
 
   const ruleSubproofNode = ruleSubproofNodeQuery(ruleProofStepNode),
@@ -33,20 +33,19 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
   } else if (ruleSubproofNode !== null) {
     let ruleSubproofVerified;
 
-    ruleSubproofVerified = verifyRuleSubproof(ruleSubproofNode, localMetaContext);
+    ruleSubproofVerified = verifyRuleSubproof(ruleSubproofNode, localContext);
 
     if (ruleSubproofVerified) {
       const metaproofStep = MetaproofStep.fromRuleSubproofNode(ruleSubproofNode);
 
-      localMetaContext.addMetaproofStep(metaproofStep);
+      localContext.addMetaproofStep(metaproofStep);
 
       ruleProofStepVerified = true;
     }
   } else if (qualifiedStatementNode !== null) {
     let qualifiedStatementVerified;
 
-    const assignments = [],
-          localContext = localMetaContext;  ///
+    const assignments = [];
 
     qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assignments, localContext);
 
@@ -60,7 +59,7 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
       const statementNode = statementNodeQuery(qualifiedStatementNode),
             metaproofStep = MetaproofStep.fromStatementNode(statementNode);
 
-      localMetaContext.addMetaproofStep(metaproofStep);
+      localContext.addMetaproofStep(metaproofStep);
 
       ruleProofStepVerified = true;
     }
@@ -68,8 +67,7 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
     let unqualifiedStatementVerified;
 
     const derived = true,
-          assignments = [],
-          localContext = localMetaContext;
+          assignments = [];
 
     unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
@@ -83,7 +81,7 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
       const statementNode = statementNodeQuery(unqualifiedStatementNode),
             metaproofStep = MetaproofStep.fromStatementNode(statementNode);
 
-      localMetaContext.addMetaproofStep(metaproofStep);
+      localContext.addMetaproofStep(metaproofStep);
 
       ruleProofStepVerified = unqualifiedStatementVerified; ///
     }
@@ -93,11 +91,10 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
     const assignments = [],
           substitutions = null;
 
-    qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, localMetaContext);
+    qualifiedMetastatementVerified = verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, localContext);
 
     if (qualifiedMetastatementVerified) {
-      const localContext = localMetaContext,  ///
-            assignmentAssigned = assignAssignment(assignments, localContext);
+      const assignmentAssigned = assignAssignment(assignments, localContext);
 
       qualifiedMetastatementVerified = assignmentAssigned; ///
     }
@@ -106,7 +103,7 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
       const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
             metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
 
-      localMetaContext.addMetaproofStep(metaproofStep);
+      localContext.addMetaproofStep(metaproofStep);
 
       ruleProofStepVerified = qualifiedMetastatementVerified; ///
     }
@@ -116,11 +113,10 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
     const derived = true,
           assignments = [];
 
-    unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+    unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localContext);
 
     if (unqualifiedMetastatementVerified) {
-      const localContext = localMetaContext,  ///
-            assignmentAssigned = assignAssignment(assignments, localContext);
+      const assignmentAssigned = assignAssignment(assignments, localContext);
 
       unqualifiedMetastatementVerified = assignmentAssigned; ///
     }
@@ -129,7 +125,7 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
       const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode),
             metaproofStep = MetaproofStep.fromMetastatementNode(metastatementNode);
 
-      localMetaContext.addMetaproofStep(metaproofStep);
+      localContext.addMetaproofStep(metaproofStep);
 
       ruleProofStepVerified = true;
     }

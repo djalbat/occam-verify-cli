@@ -10,17 +10,17 @@ import { nodesQuery } from "../utilities/query";
 const declarationNodesQuery = nodesQuery("/frame/declaration"),
       metavariableNodesQuery = nodesQuery("/frame/metavariable");
 
-export default function verifyFrame(frameNode, frames, assignments, derived, localMetaContext) {
+export default function verifyFrame(frameNode, frames, assignments, derived, localContext) {
   let frameVerified;
 
-  const frameString = localMetaContext.nodeAsString(frameNode);
+  const frameString = localContext.nodeAsString(frameNode);
 
-  localMetaContext.trace(`Verifying the '${frameString}' frame...`, frameNode);
+  localContext.trace(`Verifying the '${frameString}' frame...`, frameNode);
 
   const declarations = [],
         declarationNodes = declarationNodesQuery(frameNode),
         declarationsVerified = declarationNodes.every((declarationNode) => {
-          const declarationVerified = verifyDeclaration(declarationNode, declarations, localMetaContext);
+          const declarationVerified = verifyDeclaration(declarationNode, declarations, localContext);
 
           return declarationVerified;
         });
@@ -28,7 +28,7 @@ export default function verifyFrame(frameNode, frames, assignments, derived, loc
   if (declarationsVerified) {
     const metavariableNodes = metavariableNodesQuery(frameNode),
           metavariablesVerified = metavariableNodes.every((metavariableNode) => {
-            const metavariableVerified = verifyMetavariable(metavariableNode, declarations, localMetaContext);
+            const metavariableVerified = verifyMetavariable(metavariableNode, declarations, localContext);
 
             return metavariableVerified;
           });
@@ -43,26 +43,26 @@ export default function verifyFrame(frameNode, frames, assignments, derived, loc
   }
 
   if (frameVerified) {
-    localMetaContext.debug(`...verified the '${frameString}' frame.`, frameNode);
+    localContext.debug(`...verified the '${frameString}' frame.`, frameNode);
   }
 
   return frameVerified;
 }
 
-function verifyMetavariable(metavariableNode, declarations, localMetaContext) {
+function verifyMetavariable(metavariableNode, declarations, localContext) {
   let metavariableVerified = false;
 
-  const metavariableString = localMetaContext.nodeAsString(metavariableNode);
+  const metavariableString = localContext.nodeAsString(metavariableNode);
 
-  localMetaContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
+  localContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
-  const metavariable = localMetaContext.findMetavariableByMetavariableNode(metavariableNode, localMetaContext);
+  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode, localContext);
 
   if (metavariable !== null) {
     const metaType = metavariable.getMetaType();
 
     if (metaType === frameMetaType) {
-      const frameAssertion = localMetaContext.findFrameAssertionByMetavariableNode(metavariableNode);
+      const frameAssertion = localContext.findFrameAssertionByMetavariableNode(metavariableNode);
 
       if (frameAssertion !== null) {
         const frameAssertionDeclarations = frameAssertion.getDeclarations();
@@ -71,20 +71,20 @@ function verifyMetavariable(metavariableNode, declarations, localMetaContext) {
 
         metavariableVerified = true;
       } else {
-        localMetaContext.debug(`There is no frame assertion for the '${metavariableString}' metavariable.`, metavariableNode);
+        localContext.debug(`There is no frame assertion for the '${metavariableString}' metavariable.`, metavariableNode);
       }
     } else {
       const frameMetaTypeName = frameMetaType.getName(),
             metaTypeString = metaType.asString();
 
-      localMetaContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${frameMetaTypeName}'.`, metavariableNode);
+      localContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${frameMetaTypeName}'.`, metavariableNode);
     }
   } else {
-    localMetaContext.debug(`The '${metavariableString}' metavariable is not present'.`, metavariableNode);
+    localContext.debug(`The '${metavariableString}' metavariable is not present'.`, metavariableNode);
   }
 
   if (metavariableVerified) {
-    localMetaContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
+    localContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
   }
 
   return metavariableVerified;

@@ -84,7 +84,13 @@ function verifyStatedContainedAssertion(containedAssertionNode, assignments, der
   if (!derived) {
     const containedAssertionString = localContext.nodeAsString(containedAssertionNode);
 
-    localContext.debug(`The stated '${containedAssertionString}' contained assertion cannot be verified.`, containedAssertionNode);
+    localContext.trace(`Verifying the stated '${containedAssertionString}' contained assertion...`, containedAssertionNode);
+
+    debugger
+
+    if (derivedStatedAssertionVerified) {
+      localContext.debug(`...verified the stated '${containedAssertionString}' contained assertion.`, containedAssertionNode);
+    }
   }
 
   return derivedStatedAssertionVerified;

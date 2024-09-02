@@ -9,15 +9,15 @@ export default class FrameAssertionAssignment {
     return this.frameAssertion;
   }
 
-  assign(localMetaContext) {
-    const frameAssertionAdded = localMetaContext.addFrameAssertion(this.frameAssertion),
+  assign(localContext) {
+    const frameAssertionAdded = localContext.addFrameAssertion(this.frameAssertion),
           frameAssertionNode = this.frameAssertion.getNode(),
-          frameAssertionString = localMetaContext.nodeAsString(frameAssertionNode),
+          frameAssertionString = localContext.nodeAsString(frameAssertionNode),
           frameAssertionAssigned = frameAssertionAdded; ///
 
     frameAssertionAssigned ?
-      localMetaContext.trace(`Assigned the '${frameAssertionString}' frame assertion.`, frameAssertionNode) :
-        localMetaContext.debug(`Unable to assign the '${frameAssertionString}' frame assertion.`, frameAssertionNode);
+      localContext.trace(`Assigned the '${frameAssertionString}' frame assertion.`, frameAssertionNode) :
+        localContext.debug(`Unable to assign the '${frameAssertionString}' frame assertion.`, frameAssertionNode);
 
     return frameAssertionAssigned;
   }

@@ -7,12 +7,12 @@ import { nodeQuery } from "../../utilities/query";
 const metavariableNodeQuery = nodeQuery("/qualifiedMetastatement/reference!/metavariable!"),
       metastatementNodeQuery = nodeQuery("/qualifiedMetastatement/metastatement!");
 
-export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, localMetaContext) {
+export default function verifyQualifiedMetastatement(qualifiedMetastatementNode, substitutions, assignments, localContext) {
   let qualifiedMetastatementVerified;
 
-  const qualifiedMetastatementString = localMetaContext.nodeAsString(qualifiedMetastatementNode);
+  const qualifiedMetastatementString = localContext.nodeAsString(qualifiedMetastatementNode);
 
-  localMetaContext.trace(`Verifying the '${qualifiedMetastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
+  localContext.trace(`Verifying the '${qualifiedMetastatementString}' qualified metastatement...`, qualifiedMetastatementNode);
 
   const metavariableNode = metavariableNodeQuery(qualifiedMetastatementNode),
         verifyQualifiedMetastatementFunctions = [
@@ -21,7 +21,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
         ];
 
   qualifiedMetastatementVerified = verifyQualifiedMetastatementFunctions.some((verifyQualifiedMetastatementFunction) => {  ///
-    const qualifiedMetastatementVerified = verifyQualifiedMetastatementFunction(qualifiedMetastatementNode, metavariableNode, substitutions, localMetaContext);
+    const qualifiedMetastatementVerified = verifyQualifiedMetastatementFunction(qualifiedMetastatementNode, metavariableNode, substitutions, localContext);
 
     if (qualifiedMetastatementVerified) {
       return true;
@@ -31,7 +31,7 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
   if (qualifiedMetastatementVerified) {
     const derived = false,
           metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
-          metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localMetaContext, () => {
+          metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localContext, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;
@@ -41,45 +41,45 @@ export default function verifyQualifiedMetastatement(qualifiedMetastatementNode,
   }
 
   if (qualifiedMetastatementVerified) {
-    localMetaContext.debug(`...verified the '${qualifiedMetastatementString}' qualified metastatement.`, qualifiedMetastatementNode);
+    localContext.debug(`...verified the '${qualifiedMetastatementString}' qualified metastatement.`, qualifiedMetastatementNode);
   }
 
   return qualifiedMetastatementVerified;
 }
 
-function verifyQualifiedMetastatementAAgainstRule(qualifiedMetastatementNode, metavariableNode, substitutions, localMetaContext) {
+function verifyQualifiedMetastatementAAgainstRule(qualifiedMetastatementNode, metavariableNode, substitutions, localContext) {
   let qualifiedMetastatementVerifiedAgainstRule = false;
 
-  const rule = localMetaContext.findRuleByMetavariableNode(metavariableNode);
+  const rule = localContext.findRuleByMetavariableNode(metavariableNode);
 
   if (rule !== null) {
     const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
-          metavariableString = localMetaContext.nodeAsString(metavariableNode),
-          qualifiedMetastatementString = localMetaContext.nodeAsString(qualifiedMetastatementNode);
+          metavariableString = localContext.nodeAsString(metavariableNode),
+          qualifiedMetastatementString = localContext.nodeAsString(qualifiedMetastatementNode);
 
-    localMetaContext.trace(`Verifying the '${qualifiedMetastatementString}' qualified metastatement against the '${metavariableString}' rule...`, qualifiedMetastatementNode);
+    localContext.trace(`Verifying the '${qualifiedMetastatementString}' qualified metastatement against the '${metavariableString}' rule...`, qualifiedMetastatementNode);
 
-    const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, localMetaContext);
+    const ruleMatchesMetastatement = rule.matchMetastatement(metastatementNode, localContext);
 
     qualifiedMetastatementVerifiedAgainstRule = ruleMatchesMetastatement;  ///
 
     if (qualifiedMetastatementVerifiedAgainstRule) {
-      localMetaContext.debug(`...verified the '${qualifiedMetastatementString}' qualified metastatement against the '${metavariableString}' rule.`, qualifiedMetastatementNode);
+      localContext.debug(`...verified the '${qualifiedMetastatementString}' qualified metastatement against the '${metavariableString}' rule.`, qualifiedMetastatementNode);
     }
   }
 
   return qualifiedMetastatementVerifiedAgainstRule;
 }
 
-function verifyQualifiedMetastatementAAgainstReference(qualifiedMetastatementNode, metavariableNode, substitutions, localMetaContext) {
+function verifyQualifiedMetastatementAAgainstReference(qualifiedMetastatementNode, metavariableNode, substitutions, localContext) {
   let qualifiedMetastatementVerifiedAgainstReference = false;
 
   if (substitutions !== null) {
-    const metavariableString = localMetaContext.nodeAsString(metavariableNode),
-          metavariablePresent = localMetaContext.isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext),
-          qualifiedMetastatementString = localMetaContext.nodeAsString(qualifiedMetastatementNode);
+    const metavariableString = localContext.nodeAsString(metavariableNode),
+          metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode, localContext),
+          qualifiedMetastatementString = localContext.nodeAsString(qualifiedMetastatementNode);
 
-    localMetaContext.trace(`Verifying the '${qualifiedMetastatementString}' qualified metastatement against the '${metavariableString}' reference...`, qualifiedMetastatementNode);
+    localContext.trace(`Verifying the '${qualifiedMetastatementString}' qualified metastatement against the '${metavariableString}' reference...`, qualifiedMetastatementNode);
 
     if (metavariablePresent) {
       const metastatementNode = metastatementNodeQuery(qualifiedMetastatementNode),
@@ -93,26 +93,26 @@ function verifyQualifiedMetastatementAAgainstReference(qualifiedMetastatementNod
     }
 
     if (qualifiedMetastatementVerifiedAgainstReference) {
-      localMetaContext.debug(`...verified the '${qualifiedMetastatementString}' qualified metastatement against the '${metavariableString}' reference.`, qualifiedMetastatementNode);
+      localContext.debug(`...verified the '${qualifiedMetastatementString}' qualified metastatement against the '${metavariableString}' reference.`, qualifiedMetastatementNode);
     }
   }
 
   return qualifiedMetastatementVerifiedAgainstReference;
 }
 
-function verifyMetastatement(metastatementNode, assignments, derived, localMetaContext) {
+function verifyMetastatement(metastatementNode, assignments, derived, localContext) {
   let metastatementVerified;
 
-  const metastatementString = localMetaContext.nodeAsString(metastatementNode);
+  const metastatementString = localContext.nodeAsString(metastatementNode);
 
-  localMetaContext.trace(`Verifying the '${metastatementString}' metastatement...`, metastatementNode);
+  localContext.trace(`Verifying the '${metastatementString}' metastatement...`, metastatementNode);
 
   const verifyMetaStatementFunctions = [
     ///
   ];
 
   verifyMetaStatementFunctions.some((verifyStatementFunction) => {
-    const metastatementVerified = verifyStatementFunction(metastatementNode, assignments, derived, localMetaContext);
+    const metastatementVerified = verifyStatementFunction(metastatementNode, assignments, derived, localContext);
 
     if (metastatementVerified) {
       return true;
@@ -122,7 +122,7 @@ function verifyMetastatement(metastatementNode, assignments, derived, localMetaC
   metastatementVerified = true; ///
 
   if (metastatementVerified) {
-    localMetaContext.debug(`...verified the '${metastatementString}' metastatement.`, metastatementNode);
+    localContext.debug(`...verified the '${metastatementString}' metastatement.`, metastatementNode);
   }
 
   return metastatementVerified;

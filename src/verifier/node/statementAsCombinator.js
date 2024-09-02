@@ -20,11 +20,11 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
     const nodeQueryMaps = [
       {
         nodeQuery: termNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const termNode = node, ///
-                termNodeVerified = this.verifyTermNode(termNode, localMetaContext, verifyAhead);
+                termNodeVerified = this.verifyTermNode(termNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = termNodeVerified; ///
 
@@ -33,11 +33,11 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
       },
       {
         nodeQuery: typeNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const typeNode = node, ///
-                typeNodeVerified = this.verifyTypeNode(typeNode, localMetaContext, verifyAhead);
+                typeNodeVerified = this.verifyTypeNode(typeNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = typeNodeVerified; ///
 
@@ -46,11 +46,11 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
       },
       {
         nodeQuery: statementNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const statementNode = node, ///
-                statementNodeVerified = this.verifyStatementNode(statementNode, localMetaContext, verifyAhead);
+                statementNodeVerified = this.verifyStatementNode(statementNode, localContext, verifyAhead);
 
           nonTerminalNodeVerified = statementNodeVerified; ///
 
@@ -59,14 +59,14 @@ class StatementAsCombinatorNodeVerifier extends NodeVerifier {
       },
       {
         nodeQuery: nonTerminalNodeQuery,
-        verifyNode: (node, localMetaContext, verifyAhead) => {
+        verifyNode: (node, localContext, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const nonTerminalNode = node; ///
 
           nonTerminalNodeVerified =
 
-            super.verifyNonTerminalNode(nonTerminalNode, localMetaContext, verifyAhead);
+            super.verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead);
 
           return nonTerminalNodeVerified;
         }

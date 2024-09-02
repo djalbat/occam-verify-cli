@@ -2,11 +2,11 @@
 
 import verifyMetaSupposition from "../verify/metaSupposition";
 
-export default function verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, substitutions, localMetaContext) {
+export default function verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, substitutions, localContext) {
   let metaSuppositionsVerified;
 
   metaSuppositionsVerified = metaSuppositionNodes.every((metaSuppositionNode) => {
-    const metaSuppositionVerified = verifyMetaSupposition(metaSuppositionNode, metaSuppositions, localMetaContext);
+    const metaSuppositionVerified = verifyMetaSupposition(metaSuppositionNode, metaSuppositions, localContext);
 
     if (metaSuppositionVerified) {
       return true;

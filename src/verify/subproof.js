@@ -1,8 +1,8 @@
 "use strict";
 
-import LocalContext from "../context/local";
 import verifySuppositions from "../verify/suppositions";
 import verifySubDerivation from "../verify/subDerivation";
+import IntrinsicLevelLocalContext from "../context/local/intrinsicLevel";
 
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
@@ -12,7 +12,9 @@ const suppositionNodesQuery = nodesQuery("/subproof/supposition"),
 export default function verifySubproof(subproofNode, localContext) {
   let subproofVerified = false;
 
-  localContext = LocalContext.fromLocalContext(localContext); ///
+  const intrinsicLevelLocalContext = IntrinsicLevelLocalContext.fromLocalContext(localContext); ///
+
+  localContext = intrinsicLevelLocalContext;  ///
 
   const suppositions = [],
         suppositionNodes = suppositionNodesQuery(subproofNode),

@@ -1,10 +1,10 @@
 "use strict";
 
 import Axiom from "../axiom";
-import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";
+import IntrinsicLevelLocalContext from "../context/local/intrinsicLevel";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -16,9 +16,10 @@ const labelNodesQuery = nodesQuery("/axiom/label"),
 export default function verifyAxiom(axiomNode, fileContext) {
   let axiomVerified = false;
 
-  const labelNodes = labelNodesQuery(axiomNode),
+  const intrinsicLevelLocalContext = IntrinsicLevelLocalContext.fromFileContext(fileContext),
+        labelNodes = labelNodesQuery(axiomNode),
         labelsString = fileContext.nodesAsString(labelNodes),
-        localContext = LocalContext.fromFileContext(fileContext);
+        localContext = intrinsicLevelLocalContext;  ///
 
   fileContext.trace(`Verifying the '${labelsString}' axiom...`, axiomNode);
 

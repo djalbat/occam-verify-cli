@@ -3,8 +3,8 @@
 import MetaLemma from "../metaLemma";
 import verifyLabels from "../verify/labels";
 import verifyMetaproof from "../verify/metaproof";
-import LocalMetaContext from "../context/localMeta";
 import verifyMetaConsequent from "../verify/metaConsequent";
+import MetaLevelLocalContext from "../context/local/metaLevel";
 import verifyMetaSuppositions from "../verify/metaSuppositions";
 
 import { first } from "../utilities/array";
@@ -20,8 +20,7 @@ export default function verifyMetaLemma(metaLemmaNode, fileContext) {
   let metaLemmaVerified = false;
 
   const labelNodes = labelNodesQuery(metaLemmaNode),
-        labelsString = fileContext.nodesAsString(labelNodes),
-        localMetaContext = LocalMetaContext.fromFileContext(fileContext);
+        labelsString = fileContext.nodesAsString(labelNodes);
 
   (labelsString === EMPTY_STRING) ?
     fileContext.trace(`Verifying a meta-lLemma...`, metaLemmaNode) :
@@ -31,21 +30,23 @@ export default function verifyMetaLemma(metaLemmaNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const substitutions = [],
+    const metaLevelLocalContext = MetaLevelLocalContext.fromFileContext(fileContext),
+          localContext = metaLevelLocalContext, ///
+          substitutions = [],
           metaSuppositions = [],
           metaSuppositionNodes = metaSuppositionsNodeQuery(metaLemmaNode),
-          metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, substitutions, localMetaContext);
+          metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, substitutions, localContext);
 
     if (metaSuppositionsVerified) {
       const metaConsequents = [],
             metaConsequentNode = metaConsequentNodeQuery(metaLemmaNode),
-            metaConsequentVerified = verifyMetaConsequent(metaConsequentNode, metaConsequents, substitutions, localMetaContext);
+            metaConsequentVerified = verifyMetaConsequent(metaConsequentNode, metaConsequents, substitutions, localContext);
 
       if (metaConsequentVerified) {
         const metaproofNode = metaproofNodeQuery(metaLemmaNode),
               firstMetaConsequent = first(metaConsequents),
               metaConsequent = firstMetaConsequent, ///
-              metaproofVerified = verifyMetaproof(metaproofNode, metaConsequent, substitutions, localMetaContext);
+              metaproofVerified = verifyMetaproof(metaproofNode, metaConsequent, substitutions, localContext);
 
         if (metaproofVerified) {
           const metaLemma = MetaLemma.fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(labels, metaSuppositions, metaConsequent, substitutions, fileContext);

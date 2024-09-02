@@ -11,12 +11,12 @@ import { nodeQuery } from "../utilities/query";
 const frameNodeQuery = nodeQuery("/frameAssertion/frame!"),
       metavariableNodeQuery = nodeQuery("/frameAssertion/metavariable!");
 
-export default function verifyFrameAssertion(frameAssertionNode, assignments, derived, localMetaContext) {
+export default function verifyFrameAssertion(frameAssertionNode, assignments, derived, localContext) {
   let frameAssertionVerified;
 
-  const frameAssertionString = localMetaContext.nodeAsString(frameAssertionNode);
+  const frameAssertionString = localContext.nodeAsString(frameAssertionNode);
 
-  localMetaContext.trace(`Verifying the '${frameAssertionString}' frame assertion...`, frameAssertionNode);
+  localContext.trace(`Verifying the '${frameAssertionString}' frame assertion...`, frameAssertionNode);
 
   const verifyFrameAssertionFunctions = [
     verifyDerivedFrameAssertion,
@@ -24,7 +24,7 @@ export default function verifyFrameAssertion(frameAssertionNode, assignments, de
   ];
 
   frameAssertionVerified = verifyFrameAssertionFunctions.some((verifyFrameAssertionFunction) => {
-    const frameAssertionVerified = verifyFrameAssertionFunction(frameAssertionNode, assignments, derived, localMetaContext);
+    const frameAssertionVerified = verifyFrameAssertionFunction(frameAssertionNode, assignments, derived, localContext);
 
     if (frameAssertionVerified) {
       return true;
@@ -32,30 +32,30 @@ export default function verifyFrameAssertion(frameAssertionNode, assignments, de
   });
 
   if (frameAssertionVerified) {
-    localMetaContext.debug(`...verified the '${frameAssertionString}' frame assertion.`, frameAssertionNode);
+    localContext.debug(`...verified the '${frameAssertionString}' frame assertion.`, frameAssertionNode);
   }
 
   return frameAssertionVerified;
 }
 
-function verifyDerivedFrameAssertion(frameAssertionNode, assignments, derived, localMetaContext) {
+function verifyDerivedFrameAssertion(frameAssertionNode, assignments, derived, localContext) {
   let derivedFrameAssertionVerified = false;
 
   if (derived) {
-    const frameAssertionString = localMetaContext.nodeAsString(frameAssertionNode);
+    const frameAssertionString = localContext.nodeAsString(frameAssertionNode);
 
-    localMetaContext.trace(`Verifying the '${frameAssertionString}' derived frame assertion...`, frameAssertionNode);
+    localContext.trace(`Verifying the '${frameAssertionString}' derived frame assertion...`, frameAssertionNode);
 
     const metavariableNode = metavariableNodeQuery(frameAssertionNode),
-          metavariableVerified = verifyMetavariable(metavariableNode, localMetaContext);
+          metavariableVerified = verifyMetavariable(metavariableNode, localContext);
 
     if (metavariableVerified) {
-      const frameAssertion = localMetaContext.findFrameAssertionByMetavariableNode(metavariableNode);
+      const frameAssertion = localContext.findFrameAssertionByMetavariableNode(metavariableNode);
 
       if (frameAssertion !== null) {
         const frames = [],
               frameNode = frameNodeQuery(frameAssertionNode),
-              frameVerified = verifyFrame(frameNode, frames, assignments, derived, localMetaContext);
+              frameVerified = verifyFrame(frameNode, frames, assignments, derived, localContext);
 
         if (frameVerified) {
           const firstFrame = first(frames),
@@ -65,8 +65,8 @@ function verifyDerivedFrameAssertion(frameAssertionNode, assignments, derived, l
           if (frameSingular) {
             const declaration = frame.getDeclaration(),
                   metavariableNode = declaration.getMetavariableNode(),
-                  metaLemma = localMetaContext.findMetaLemmaByMetavariableNode(metavariableNode),
-                  metatheorem = localMetaContext.findMetatheoremByMetavariableNode(metavariableNode),
+                  metaLemma = localContext.findMetaLemmaByMetavariableNode(metavariableNode),
+                  metatheorem = localContext.findMetatheoremByMetavariableNode(metavariableNode),
                   metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
 
             if (metaLemmaMetatheorem !== null) {
@@ -75,46 +75,46 @@ function verifyDerivedFrameAssertion(frameAssertionNode, assignments, derived, l
 
               derivedFrameAssertionVerified = (declarationMatchesMetaLemmaMetatheorem && frameAssertionMatchesMetaLemmaMetatheorem);
             } else {
-              const metavariableString = localMetaContext.nodeAsString(metavariableNode);
+              const metavariableString = localContext.nodeAsString(metavariableNode);
 
-              localMetaContext.debug(`There are no meta-lemmas or metatheorems corresponding to the '${metavariableString}' metavariable.`, frameAssertionNode);
+              localContext.debug(`There are no meta-lemmas or metatheorems corresponding to the '${metavariableString}' metavariable.`, frameAssertionNode);
             }
           } else {
-            const frameString = localMetaContext.nodeAsString(frameNode);
+            const frameString = localContext.nodeAsString(frameNode);
 
-            localMetaContext.debug(`The '${frameString}' is not singular.`, frameAssertionNode);
+            localContext.debug(`The '${frameString}' is not singular.`, frameAssertionNode);
           }
         }
       } else {
-        const metavariableString = localMetaContext.nodeAsString(metavariableNode);
+        const metavariableString = localContext.nodeAsString(metavariableNode);
 
-        localMetaContext.debug(`There is no frameAssertion present for the '${metavariableString}' metavariable.`, frameAssertionNode);
+        localContext.debug(`There is no frameAssertion present for the '${metavariableString}' metavariable.`, frameAssertionNode);
       }
     }
 
     if (derivedFrameAssertionVerified) {
-      localMetaContext.debug(`...verified the '${frameAssertionString}' derived frame assertion.`, frameAssertionNode);
+      localContext.debug(`...verified the '${frameAssertionString}' derived frame assertion.`, frameAssertionNode);
     }
   }
 
   return derivedFrameAssertionVerified;
 }
 
-function verifyStatedFrameAssertion(frameAssertionNode, assignments, derived, localMetaContext) {
+function verifyStatedFrameAssertion(frameAssertionNode, assignments, derived, localContext) {
   let statedFrameAssertionVerified = false;
 
   if (!derived) {
-    const frameAssertionString = localMetaContext.nodeAsString(frameAssertionNode);
+    const frameAssertionString = localContext.nodeAsString(frameAssertionNode);
 
-    localMetaContext.trace(`Verifying the '${frameAssertionString}' stated frame assertion...`, frameAssertionNode);
+    localContext.trace(`Verifying the '${frameAssertionString}' stated frame assertion...`, frameAssertionNode);
 
     const metavariableNode = metavariableNodeQuery(frameAssertionNode),
-          metavariableVerified = verifyMetavariable(metavariableNode, localMetaContext);
+          metavariableVerified = verifyMetavariable(metavariableNode, localContext);
 
     if (metavariableVerified) {
       const frames = [],
             frameNode = frameNodeQuery(frameAssertionNode),
-            frameVerified = verifyFrame(frameNode, frames, assignments, derived, localMetaContext);
+            frameVerified = verifyFrame(frameNode, frames, assignments, derived, localContext);
 
       if (frameVerified) {
         const firstFrame = first(frames),
@@ -130,21 +130,21 @@ function verifyStatedFrameAssertion(frameAssertionNode, assignments, derived, lo
     }
 
     if (statedFrameAssertionVerified) {
-      localMetaContext.debug(`...verified the '${frameAssertionString}' stated frame assertion.`, frameAssertionNode);
+      localContext.debug(`...verified the '${frameAssertionString}' stated frame assertion.`, frameAssertionNode);
     }
   }
 
   return statedFrameAssertionVerified;
 }
 
-function verifyMetavariable(metavariableNode, localMetaContext) {
+function verifyMetavariable(metavariableNode, localContext) {
   let metavariableVerified = false;
 
-  const metavariableString = localMetaContext.nodeAsString(metavariableNode);
+  const metavariableString = localContext.nodeAsString(metavariableNode);
 
-  localMetaContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
+  localContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
-  const metavariable = localMetaContext.findMetavariableByMetavariableNode(metavariableNode, localMetaContext);
+  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode, localContext);
 
   if (metavariable !== null) {
     const metaType = metavariable.getMetaType();
@@ -155,14 +155,14 @@ function verifyMetavariable(metavariableNode, localMetaContext) {
       const frameMetaTypeName = frameMetaType.getName(),
             metaTypeString = metaType.asString();
 
-      localMetaContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${frameMetaTypeName}'.`, metavariableNode);
+      localContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${frameMetaTypeName}'.`, metavariableNode);
     }
   } else {
-    localMetaContext.debug(`The '${metavariableString}' metavariable is not present'.`, metavariableNode);
+    localContext.debug(`The '${metavariableString}' metavariable is not present'.`, metavariableNode);
   }
 
   if (metavariableVerified) {
-    localMetaContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
+    localContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
   }
 
   return metavariableVerified;

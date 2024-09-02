@@ -11,12 +11,12 @@ const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/metaConsequent/unqualifiedStatement!"),
       unqualifiedMetastatementNodeQuery = nodeQuery("/metaConsequent/unqualifiedMetastatement!");
 
-export default function verifyMetaConsequent(metaConsequentNode, metaConsequents, substitutions, localMetaContext) {
+export default function verifyMetaConsequent(metaConsequentNode, metaConsequents, substitutions, localContext) {
   let metaConsequentVerified = false;
 
-  const metaConsequentString = localMetaContext.nodeAsString(metaConsequentNode);
+  const metaConsequentString = localContext.nodeAsString(metaConsequentNode);
 
-  localMetaContext.trace(`Verifying the '${metaConsequentString}' meta-consequent...`, metaConsequentNode);
+  localContext.trace(`Verifying the '${metaConsequentString}' meta-consequent...`, metaConsequentNode);
 
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(metaConsequentNode),
         unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(metaConsequentNode);
@@ -24,7 +24,6 @@ export default function verifyMetaConsequent(metaConsequentNode, metaConsequents
   if (unqualifiedStatementNode !== null) {
     const derived = false,
           assignments = [],
-          localContext = localMetaContext,  ///
           unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
     metaConsequentVerified = unqualifiedStatementVerified; ///
@@ -33,7 +32,7 @@ export default function verifyMetaConsequent(metaConsequentNode, metaConsequents
   if (unqualifiedMetastatementNode !== null) {
     const derived = false,
           assignments = [],
-          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localMetaContext);
+          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localContext);
 
     metaConsequentVerified = unqualifiedMetastatementVerified; ///
   }
@@ -55,7 +54,7 @@ export default function verifyMetaConsequent(metaConsequentNode, metaConsequents
 
     metaConsequents.push(metaConsequent);
 
-    localMetaContext.debug(`...verified the '${metaConsequentString}' meta-consequent.`, metaConsequentNode);
+    localContext.debug(`...verified the '${metaConsequentString}' meta-consequent.`, metaConsequentNode);
   }
 
   return metaConsequentVerified;

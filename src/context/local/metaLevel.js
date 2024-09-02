@@ -1,10 +1,10 @@
 "use strict";
 
-import LocalContext from "../context/local";
+import IntrinsicLevelLocalContext from "../../context/local/intrinsicLevel";
 
-import { last, reverse } from "../utilities/array";
+import { last, reverse } from "../../utilities/array";
 
-class LocalMetaContext extends LocalContext {
+class MetaLevelLocalContext extends IntrinsicLevelLocalContext {
   constructor(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions) {
     super(context, variables, proofSteps, equivalences);
 
@@ -44,6 +44,12 @@ class LocalMetaContext extends LocalContext {
     ]
 
     return frameAssertions;
+  }
+
+  isIntrinsicLevel() {
+    const intrinsicLevel = false;
+
+    return intrinsicLevel;
   }
 
   getLastMetaproofStep() {
@@ -114,11 +120,11 @@ class LocalMetaContext extends LocalContext {
     return matchesMetastatementNode;
   }
 
-  findMetavariableByMetavariableNode(metavariableNode, localMetaContext) {
+  findMetavariableByMetavariableNode(metavariableNode, metaLevelLocalContext) {
     const node = metavariableNode,  ///
           metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-            const matches = metavariable.matchNode(node, localMetaContext);
+            const matches = metavariable.matchNode(node, metaLevelLocalContext);
 
             if (matches) {
               return true;
@@ -141,8 +147,8 @@ class LocalMetaContext extends LocalContext {
     return frameAssertion;
   }
 
-  isMetavariablePresentByMetavariableNode(metavariableNode, localMetaContext) {
-    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, localMetaContext),
+  isMetavariablePresentByMetavariableNode(metavariableNode, metaLevelLocalContext) {
+    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, metaLevelLocalContext),
           metavariablePresent = (metavariable !== null);
 
     return metavariablePresent;
@@ -163,24 +169,23 @@ class LocalMetaContext extends LocalContext {
           metavariables = [],
           metaproofSteps = [],
           frameAssertions = [],
-          localMetaContext = new LocalMetaContext(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions);
+          metaLevelLocalContext = new MetaLevelLocalContext(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions);
 
-    return localMetaContext;
+    return metaLevelLocalContext;
   }
 
-  static fromLocalMetaContext(localMetaContext) {
-    const context = localMetaContext,  ///
+  static fromLocalContext(localContext) {
+    const context = localContext,  ///
           variables = [],
           proofSteps = [],
           equivalences = [],
           metavariables = [],
           metaproofSteps = [],
-          frameAssertions = [];
+          frameAssertions = [],
+          metaLevelLocalContext = new MetaLevelLocalContext(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions);  ///
 
-    localMetaContext = new LocalMetaContext(context, variables, proofSteps, equivalences, metavariables, metaproofSteps, frameAssertions);  ///
-
-    return localMetaContext;
+    return metaLevelLocalContext;
   }
 }
 
-export default LocalMetaContext;
+export default MetaLevelLocalContext;
