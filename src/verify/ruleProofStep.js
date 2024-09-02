@@ -4,6 +4,7 @@ import MetaproofStep from "../step/metaproof";
 import verifyRuleSubproof from "../verify/ruleSubproof";
 import verifyRuleSubDerivation from "../verify/ruleSubDerivation";
 import verifyQualifiedStatement from "../verify/statement/qualified";
+import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 import verifyQualifiedMetastatement from "../verify/metastatement/qualified";
 import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
 
@@ -64,27 +65,27 @@ export default function verifyRuleProofStep(ruleProofStepNode, localMetaContext)
       ruleProofStepVerified = true;
     }
   } else if (unqualifiedStatementNode !== null) {
-    let qualifiedStatementVerified;
+    let unqualifiedStatementVerified;
 
-    const assignments = [],
-          localContext = localMetaContext,  ///
-          substitutions = null;
+    const derived = true,
+          assignments = [],
+          localContext = localMetaContext;
 
-    qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, localContext);
+    unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
-    if (qualifiedStatementVerified) {
+    if (unqualifiedStatementVerified) {
       const assignmentAssigned = assignAssignment(assignments, localContext);
 
-      qualifiedStatementVerified = assignmentAssigned; ///
+      unqualifiedStatementVerified = assignmentAssigned; ///
     }
 
-    if (qualifiedStatementVerified) {
-      const statementNode = statementNodeQuery(qualifiedStatementNode),
+    if (unqualifiedStatementVerified) {
+      const statementNode = statementNodeQuery(unqualifiedStatementNode),
             metaproofStep = MetaproofStep.fromStatementNode(statementNode);
 
       localMetaContext.addMetaproofStep(metaproofStep);
 
-      ruleProofStepVerified = qualifiedStatementVerified; ///
+      ruleProofStepVerified = unqualifiedStatementVerified; ///
     }
   } else if (qualifiedMetastatementNode !== null) {
     let qualifiedMetastatementVerified;

@@ -64,27 +64,27 @@ export default function verifyMetaproofStep(metaproofStepNode, substitutions, lo
       metaproofStepVerified = true;
     }
   } else if (unqualifiedStatementNode !== null) {
-    let qualifiedStatementVerified;
+    let unqualifiedStatementVerified;
 
-    const assignments = [],
-          localContext = localMetaContext,  ///
-          substitutions = null;
+    const derived = true,
+          assignments = [],
+          localContext = localMetaContext;
 
-    qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, localContext);
+    unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
-    if (qualifiedStatementVerified) {
+    if (unqualifiedStatementVerified) {
       const assignmentAssigned = assignAssignment(assignments, localContext);
 
-      qualifiedStatementVerified = assignmentAssigned; ///
+      unqualifiedStatementVerified = assignmentAssigned; ///
     }
 
-    if (qualifiedStatementVerified) {
-      const statementNode = statementNodeQuery(qualifiedStatementNode),
+    if (unqualifiedStatementVerified) {
+      const statementNode = statementNodeQuery(unqualifiedStatementNode),
             metaproofStep = MetaproofStep.fromStatementNode(statementNode);
 
       localMetaContext.addMetaproofStep(metaproofStep);
 
-      metaproofStepVerified = qualifiedStatementVerified; ///
+      metaproofStepVerified = unqualifiedStatementVerified; ///
     }
   } else if (qualifiedMetastatementNode !== null) {
     let qualifiedMetastatementVerified;
