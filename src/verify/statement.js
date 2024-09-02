@@ -10,7 +10,6 @@ import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statement
 import { nodeQuery } from "../utilities/query";
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
-      statementNodeQuery = nodeQuery("/containedAssertion/statement!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
       containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
@@ -159,28 +158,9 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
 
     localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`, containedAssertionNode);
 
-    const containedVerified = verifyContainedAssertion(containedAssertionNode, assignments, derived, localContext);
+    const containedAssertionVerified = verifyContainedAssertion(containedAssertionNode, assignments, derived, localContext);
 
-    if (containedVerified) {
-      statementNode = statementNodeQuery(containedAssertionNode); ///
-
-      const verifyStatementFunctions = [
-        verifyStatementAsEquality,
-        verifyStatementAgainstCombinators
-      ];
-
-      const statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
-        const derived = false,
-              assignments = [],
-              statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
-
-        if (statementVerified) {
-          return true;
-        }
-      });
-
-      statementVerifiedAsContainedAssertion = statementVerified; ///
-    }
+    statementVerifiedAsContainedAssertion = containedAssertionVerified; ///
 
     if (statementVerifiedAsContainedAssertion) {
       localContext.debug(`...verified the '${statementString}' statement as a contained assertion.`, containedAssertionNode);

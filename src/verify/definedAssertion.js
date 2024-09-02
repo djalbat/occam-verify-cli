@@ -1,6 +1,7 @@
 "use strict";
 
 import verifyTerm from "./term";
+import metaLevelNodeVerifier from "../verifier/node/metaLevel";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
@@ -105,13 +106,32 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, derive
 }
 
 function verifyStatedDefinedAssertion(definedAssertionNode, assignments, derived, localContext) {
-  let derivedStatedAssertionVerified = false;
+  let statedDefinedAssertionVerified = false;
 
   if (!derived) {
     const definedAssertionString = localContext.nodeAsString(definedAssertionNode);
 
-    localContext.debug(`The stated '${definedAssertionString}' defined assertion cannot be verified.`, definedAssertionNode);
+    localContext.trace(`Verifying the stated '${definedAssertionString}' defined assertion...`, definedAssertionNode);
+
+    const intrinsicLevel = localContext.isIntrinsicLevel();
+
+    if (intrinsicLevel) {
+      localContext.debug(`The stated '${definedAssertionString}' defined assertion cannot be verified at intrinsic level.`, definedAssertionNode);
+    } else {
+      const nonTerminalNode = definedAssertionNode, ///
+            nonTerminalNodeVerified = metaLevelNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
+              const verifiedAhead = true;
+
+              return verifiedAhead;
+            });
+
+      statedDefinedAssertionVerified = nonTerminalNodeVerified; ///
+    }
+
+    if (statedDefinedAssertionVerified) {
+      localContext.debug(`...verified the stated '${definedAssertionString}' defined assertion.`, definedAssertionNode);
+    }
   }
 
-  return derivedStatedAssertionVerified;
+  return statedDefinedAssertionVerified;
 }

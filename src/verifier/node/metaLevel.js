@@ -13,7 +13,7 @@ const termNodeQuery = nodeQuery("/term!"),
       nonTerminalNodeQuery = nodeQuery("/*"),
       metavariableNodeQuery = nodeQuery("/metavariable!");
 
-class MetastatementNodeVerifier extends NodeVerifier {
+class MetaLevelNodeVerifier extends NodeVerifier {
   verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead) {
     let nonTerminalNodeVerified;
 
@@ -102,6 +102,6 @@ class MetastatementNodeVerifier extends NodeVerifier {
   }
 }
 
-const metastatementNodeVerifier = new MetastatementNodeVerifier();
+const metaLevelNodeVerifier = new MetaLevelNodeVerifier();
 
-export default metastatementNodeVerifier;
+export default metaLevelNodeVerifier;

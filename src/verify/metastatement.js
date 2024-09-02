@@ -1,7 +1,7 @@
 "use strict";
 
 import verifyFrameAssertion from "../verify/frameAssertion";
-import metastatementNodeVerifier from "../verifier/node/metastatement";
+import metaLevelNodeVerifier from "../verifier/node/metaLevel";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -34,7 +34,7 @@ function verifyMetastatement(metastatementNode, assignments, derived, localConte
   return metastatementVerified;
 }
 
-Object.assign(metastatementNodeVerifier, {
+Object.assign(metaLevelNodeVerifier, {
   verifyMetastatement
 });
 
@@ -114,7 +114,7 @@ function verifyStatedMetastatementAsIs(metastatementNode, assignments, derived, 
     localContext.trace(`Verifying the stated '${metastatementString}' metastatement as is...`, metastatementNode);
 
     const nonTerminalNode = metastatementNode, ///
-          nonTerminalNodeVerified = metastatementNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
+          nonTerminalNodeVerified = metaLevelNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;
