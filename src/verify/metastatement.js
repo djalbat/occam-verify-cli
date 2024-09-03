@@ -2,6 +2,8 @@
 
 import verifyJudgement from "../verify/judgement";
 import metaLevelNodeVerifier from "../verifier/node/metaLevel";
+import verifyMetastatementAsDefinedAssertion from "./metastatementAsDefinedAssertion";
+import verifyMetastatementAsContainedAssertion from "./metastatementAsContainedAssertion";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -16,6 +18,8 @@ function verifyMetastatement(metastatementNode, assignments, derived, localConte
 
   const verifyMetaStatementFunctions = [
     verifyMetastatementAsJudgement,
+    verifyMetastatementAsDefinedAssertion,
+    verifyMetastatementAsContainedAssertion,
     verifyMetastatementAsIs
   ];
 

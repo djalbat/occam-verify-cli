@@ -6,9 +6,9 @@ import { CONTAINED } from "../constants";
 import { isStatementNegated } from "../utilities/verify";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const variableNodeQuery = nodeQuery("/statement/term/variable!"),
-      operatorTerminalNodesQuery = nodesQuery("/statement/@operator"),
-      statementVariableNodesQuery = nodesQuery("/statement/metaArgument/statement//variable");
+const termNodeQuery = nodeQuery("/statement/term!"),
+      statementTermNodesQuery = nodesQuery("/statement/metaArgument/statement//term"),
+      operatorTerminalNodesQuery = nodesQuery("/statement/@operator");
 
 export default function verifyStatementAsContainedAssertion(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsContainedAssertion;
@@ -50,31 +50,26 @@ function verifyStatementAsDerivedContainedAssertion(statementNode, assignments, 
     localContext.trace(`Verifying the derived '${statementString}' statement as a contained assertion...`, statementNode);
 
     const statementNegated = isStatementNegated(statementNode),
-          variableNode = variableNodeQuery(statementNode),
-          negated = statementNegated;  ///
+          termNode = termNodeQuery(statementNode),
+          negated = statementNegated, ///
+          statementTermNodes = statementTermNodesQuery(statementNode),
+          termNodeMatchesMetaArgumentVariableNode = statementTermNodes.some((statementTermNode) => {
+            const termNodeMatchesMetaArgumentVariableNode = termNode.match(statementTermNode);
 
-    if (false) {
-      ///
-    } else if (variableNode !== null) {
-      const statementVariableNodes = statementVariableNodesQuery(statementNode),
-            variableNodeMatchesMetaArgumentVariableNode = statementVariableNodes.some((statementVariableNode) => {
-              const variableNodeMatchesMetaArgumentVariableNode = variableNode.match(statementVariableNode);
+            if (termNodeMatchesMetaArgumentVariableNode) {
+              return true;
+            }
+          });
 
-              if (variableNodeMatchesMetaArgumentVariableNode) {
-                return true;
-              }
-            });
-
-      if (!negated) {
-        if (variableNodeMatchesMetaArgumentVariableNode) {
-          statementVerifiedAsDefinedContainedAssertion = true;
-        }
+    if (!negated) {
+      if (termNodeMatchesMetaArgumentVariableNode) {
+        statementVerifiedAsDefinedContainedAssertion = true;
       }
+    }
 
-      if (negated) {
-        if (!variableNodeMatchesMetaArgumentVariableNode) {
-          statementVerifiedAsDefinedContainedAssertion = true;
-        }
+    if (negated) {
+      if (!termNodeMatchesMetaArgumentVariableNode) {
+        statementVerifiedAsDefinedContainedAssertion = true;
       }
     }
 

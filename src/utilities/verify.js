@@ -3,12 +3,28 @@
 import { NOT } from "../constants";
 import { nodeQuery } from "../utilities/query";
 
-const secondOperatorTerminalNodeQuery = nodeQuery("/statement/@operator[1]");
+const secondOperatorTerminalNodeQuery = nodeQuery("/*/@operator[1]");
 
 export function isStatementNegated(statementNode) {
-  const secondOperatorTerminalNode = secondOperatorTerminalNodeQuery(statementNode),
-        content = secondOperatorTerminalNode.getContent(),
-        statementNegated = (content === NOT);
+  const node = statementNode, ///
+        negated = isNegated(node),
+        statementNegated = negated; ///
 
   return statementNegated;
+}
+
+export function isMetastatementNegated(metastatementNode) {
+  const node = metastatementNode, ///
+        negated = isNegated(node),
+        statementNegated = negated; ///
+
+  return statementNegated;
+}
+
+function isNegated(node) {
+  const secondOperatorTerminalNode = secondOperatorTerminalNodeQuery(node),
+        content = secondOperatorTerminalNode.getContent(),
+        negated = (content === NOT);
+
+  return negated;
 }

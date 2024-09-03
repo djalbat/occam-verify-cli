@@ -41,8 +41,7 @@ export default function verifyPremise(premiseNode, premises, localContext) {
           unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localContext);
 
     if (unqualifiedMetastatementVerified) {
-      const localContext = localContext,  ///
-            assignmentAssigned = assignAssignment(assignments, localContext);
+      const assignmentAssigned = assignAssignment(assignments, localContext);
 
       premiseVerified = assignmentAssigned; ///
     }
