@@ -1,11 +1,11 @@
 "use strict";
 
 import Rule from "../rule";
+import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
 import verifyPremises from "../verify/premises";
 import verifyMetaproof from "../verify/metaproof";
 import verifyConclusion from "../verify/conclusion";
-import MetaLevelLocalContext from "../context/local/metaLevel";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -27,9 +27,8 @@ export default function verifyRule(ruleNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const metaLevelLocalContext = MetaLevelLocalContext.fromFileContext(fileContext),
-          premises = [],
-          localContext = metaLevelLocalContext, ///
+    const premises = [],
+          localContext = LocalContext.fromFileContext(fileContext),
           premiseNodes = premisesNodeQuery(ruleNode),
           premisesVerified = verifyPremises(premiseNodes, premises, localContext);
 

@@ -3,7 +3,7 @@
 import Label from "./label";
 import Consequent from "./consequent";
 import Supposition from "./supposition";
-import IntrinsicLevelLocalContext from "./context/local/intrinsicLevel";
+import LocalContext from "./context/local";
 
 import { reverse, correlate } from "./utilities/array";
 
@@ -119,9 +119,7 @@ export default class AxiomLemmaTheoremConjecture {
 
     json = localContextJSON;  ///
 
-    const intrinsicLevelLocalContext = IntrinsicLevelLocalContext.fromJSONAndFileContext(json, fileContext);
-
-    localContext = intrinsicLevelLocalContext;  ///
+    localContext = LocalContext.fromJSONAndFileContext(json, fileContext);
 
     return new Class(labels, suppositions, consequent, localContext);  ///
   }

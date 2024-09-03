@@ -2,9 +2,9 @@
 
 import Metatheorem from "../metatheorem";
 import verifyLabels from "../verify/labels";
+import LocalContext from "../context/local";
 import verifyMetaproof from "../verify/metaproof";
 import verifyMetaConsequent from "../verify/metaConsequent";
-import MetaLevelLocalContext from "../context/local/metaLevel";
 import verifyMetaSuppositions from "../verify/metaSuppositions";
 
 import { first } from "../utilities/array";
@@ -27,8 +27,7 @@ export default function verifyMetatheorem(metatheoremNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const metaLevelLocalContext = MetaLevelLocalContext.fromFileContext(fileContext),
-          localContext = metaLevelLocalContext, ///
+    const localContext = LocalContext.fromFileContext(fileContext), ///
           substitutions = [],
           metaSuppositions = [],
           metaSuppositionNodes = metaSuppositionsNodeQuery(metatheoremNode),

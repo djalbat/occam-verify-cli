@@ -3,9 +3,9 @@
 import Lemma from "../lemma";
 import verifyProof from "../verify/proof";
 import verifyLabels from "../verify/labels";
+import LocalContext from "../context/local";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";
-import IntrinsicLevelLocalContext from "../context/local/intrinsicLevel";
 
 import { first } from "../utilities/array";
 import { EMPTY_STRING } from "../constants";
@@ -19,10 +19,9 @@ const proofNodeQuery = nodeQuery("/lemma/proof!"),
 export default function verifyLemma(lemmaNode, fileContext) {
   let lemmaVerified = false;
 
-  const intrinsicLevelLocalContext = IntrinsicLevelLocalContext.fromFileContext(fileContext),
-        labelNodes = labelNodesQuery(lemmaNode),
+  const labelNodes = labelNodesQuery(lemmaNode),
         labelsString = fileContext.nodesAsString(labelNodes),
-        localContext = intrinsicLevelLocalContext;  ///
+        localContext = LocalContext.fromFileContext(fileContext);
 
   (labelsString === EMPTY_STRING) ?
     fileContext.trace(`Verifying a lemma...`, lemmaNode) :

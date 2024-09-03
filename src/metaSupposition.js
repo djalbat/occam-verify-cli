@@ -1,6 +1,6 @@
 "use strict";
 
-import MetaLevelLocalContext from "./context/local/metaLevel";
+import LocalContext from "./context/local";
 import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
 
 import { match } from "./utilities/array";
@@ -43,10 +43,10 @@ export default class MetaSupposition {
               subproofAssertionMetastatementNodes = subproofAssertionMetastatementNodesQuery(subproofAssertionNode);
 
         matchesMetaSubproofNode = match(subproofAssertionMetastatementNodes, metaSubproofMetastatementNodes, (subproofAssertionMetastatementNode, ruleSubproofMetastatementNode) => {
-          const metaLevelLocalContext = MetaLevelLocalContext.fromFileContext(fileContext),
+          const fileContextA = fileContext, ///
                 nonTerminalNodeA = subproofAssertionMetastatementNode,  ///
                 nonTerminalNodeB = ruleSubproofMetastatementNode, ///
-                localContextA = metaLevelLocalContext,  ///
+                localContextA = LocalContext.fromFileContext(fileContextA),  ///
                 localContextB = localContext,  ///
                 nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
                   const verifiedAhead = true;
@@ -68,10 +68,10 @@ export default class MetaSupposition {
     let matchesMetastatementNode = false;
 
     if (this.metastatementNode !== null) {
-      const metaLevelLocalContext = MetaLevelLocalContext.fromFileContext(fileContext),
+      const fileContextA = fileContext, ///
             nonTerminalNodeA = this.metastatementNode,  ///
             nonTerminalNodeB = metastatementNode,  ///
-            localContextA = metaLevelLocalContext,  ///
+            localContextA = LocalContext.fromFileContext(fileContextA),  ///
             localContextB = localContext,  ///
             nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
               const verifiedAhead = true;

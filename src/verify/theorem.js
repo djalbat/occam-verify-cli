@@ -3,9 +3,9 @@
 import Theorem from "../theorem";
 import verifyProof from "../verify/proof";
 import verifyLabels from "../verify/labels";
+import LocalContext from "../context/local";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";
-import IntrinsicLevelLocalContext from "../context/local/intrinsicLevel";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -27,10 +27,9 @@ export default function verifyTheorem(theoremNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const intrinsicLevelLocalContext = IntrinsicLevelLocalContext.fromFileContext(fileContext),
-          suppositionNodes = suppositionsNodeQuery(theoremNode),
+    const suppositionNodes = suppositionsNodeQuery(theoremNode),
           suppositions = [],
-          localContext = intrinsicLevelLocalContext,
+          localContext = LocalContext.fromFileContext(fileContext),
           suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
     if (suppositionsVerified) {

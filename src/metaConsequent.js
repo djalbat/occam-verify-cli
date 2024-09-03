@@ -1,7 +1,7 @@
 "use strict";
 
+import LocalContext from "./context/local";
 import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
-import MetaLevelLocalContext from "./context/local/metaLevel";
 
 import { nodeAsString } from "./utilities/string";
 import { statementNodeFromStatementString, metastatementNodeFromMetastatementString } from "./utilities/node";
@@ -24,10 +24,10 @@ export default class MetaConsequent {
     let matchesMetastatementNode = false;
 
     if (this.metastatementNode !== null) {
-      const metaLevelLocalContext = MetaLevelLocalContext.fromFileContext(fileContext),
+      const fileContextA = fileContext, ///
             nonTerminalNodeA = this.metastatementNode,  ///
             nonTerminalNodeB = metastatementNode,  ///
-            localContextA = metaLevelLocalContext,  ///
+            localContextA = LocalContext.fromFileContext(fileContextA),
             localContextB = localContext, ///
             nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
               const verifiedAhead = true;

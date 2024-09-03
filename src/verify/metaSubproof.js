@@ -1,6 +1,6 @@
 "use strict";
 
-import MetaLevelLocalContext from "../context/local/metaLevel";
+import LocalContext from "../context/local";
 import verifyMetaSuppositions from "../verify/metaSuppositions";
 import verifyMetaSubDerivation from "../verify/metaSubDerivation";
 
@@ -12,9 +12,7 @@ const metaSuppositionNodesQuery = nodesQuery("/metaSubproof/metaSupposition"),
 export default function verifyMetaSubproof(metaSubproofNode, substitutions, localContext) {
   let metaSubproofVerified = false;
 
-  const metaLevelLocalContext = MetaLevelLocalContext.fromLocalContext(localContext);
-
-  localContext = metaLevelLocalContext; ///
+  localContext = LocalContext.fromLocalContext(localContext); ///
 
   const metaSuppositions = [],
         metaSuppositionNodes = metaSuppositionNodesQuery(metaSubproofNode),

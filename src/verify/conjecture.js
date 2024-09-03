@@ -3,9 +3,9 @@
 import Conjecture from "../conjecture";
 import verifyProof from "../verify/proof";
 import verifyLabels from "../verify/labels";
+import LocalContext from "../context/local";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";
-import IntrinsicLevelLocalContext from "../context/local/intrinsicLevel";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -18,10 +18,9 @@ const proofNodeQuery = nodeQuery("/conjecture/proof!"),
 export default function verifyConjecture(conjectureNode, fileContext) {
   let conjectureVerified = false;
 
-  const intrinsicLevelLocalContext = IntrinsicLevelLocalContext.fromFileContext(fileContext),
-        labelNodes = labelNodesQuery(conjectureNode),
+  const labelNodes = labelNodesQuery(conjectureNode),
         labelsString = fileContext.nodesAsString(labelNodes),
-        localContext = intrinsicLevelLocalContext;  ///
+        localContext = LocalContext.fromFileContext(fileContext);  ///
 
   fileContext.trace(`Verifying the '${labelsString}' conjecture...`, conjectureNode);
 

@@ -1,6 +1,6 @@
 "use strict";
 
-import MetaLevelLocalContext from "./context/local/metaLevel";
+import LocalContext from "./context/local";
 import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
 import intrinsicLevelAgainstMetaLevelNodesVerifier from "./verifier/nodes/intrinsicLevelAgainstMetaLevel";
 
@@ -45,10 +45,10 @@ export default class Conclusion {
     let matchesMetastatementNode = false;
 
     if (this.metastatementNode !== null) {
-      const metaLevelLocalContext = MetaLevelLocalContext.fromFileContext(fileContext),
+      const fileContextA = fileContext, ///
             nonTerminalNodeA = this.metastatementNode,  ///
             nonTerminalNodeB = metastatementNode,  ///
-            localContextA = metaLevelLocalContext,  ///
+            localContextA = LocalContext.fromFileContext(fileContextA),
             localContextB = localContext,  ///
             nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
               const verifiedAhead = true;

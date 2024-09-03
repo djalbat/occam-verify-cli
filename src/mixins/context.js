@@ -24,12 +24,6 @@ function getCombinators() { return this.context.getCombinators(); }
 
 function getConstructors() { return this.context.getConstructors(); }
 
-function findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
-
-function findTypeByTypeNode(typeNode) { return this.context.findTypeByTypeNode(typeNode); }
-
-function findMetavariableByName(name) { return this.context.findMetavariableByName(name); }
-
 function isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
 function isTypePresentByTypeNode(typeNode) { return this.context.isTypePresentByTypeNode(typeNode); }
@@ -38,7 +32,15 @@ function isMetavariablePresentByName(name) { return this.context.isMetavariableP
 
 function isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
 
+function findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
+
+function findTypeByTypeNode(typeNode) { return this.context.findTypeByTypeNode(typeNode); }
+
+function findMetavariableByName(name) { return this.context.findMetavariableByName(name); }
+
 function findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
+
+function findMetaTypeByMetaTypeNode(metaTypeNode) { return this.context.findMetaTypeByMetaTypeNode(metaTypeNode); }
 
 function findRuleByMetavariableNode(metavariableNode) { return this.context.findRuleByMetavariableNode(metavariableNode); }
 
@@ -71,14 +73,15 @@ const contextMixins = {
   getConjectures,
   getCombinators,
   getConstructors,
-  findTypeByTypeName,
-  findTypeByTypeNode,
-  findMetavariableByName,
   isTypePresentByTypeName,
   isTypePresentByTypeNode,
   isMetavariablePresentByName,
   isLabelPresentByMetavariableNode,
+  findTypeByTypeName,
+  findTypeByTypeNode,
+  findMetavariableByName,
   findLabelByMetavariableNode,
+  findMetaTypeByMetaTypeNode,
   findRuleByMetavariableNode,
   findAxiomByMetavariableNode,
   findLemmaByMetavariableNode,
