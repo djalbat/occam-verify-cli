@@ -4,34 +4,40 @@ import verifyTerm from "./term";
 import metaLevelNodeVerifier from "../verifier/node/metaLevel";
 
 import { first } from "../utilities/array";
-import { nodeQuery } from "../utilities/query";
+import { DEFINED } from "../constants";
 import { isStatementNegated } from "../utilities/verify";
+import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const termNodeQuery = nodeQuery("/statement/term!"),
-      variableNodeQuery = nodeQuery("/statement/term/variable!");
+      variableNodeQuery = nodeQuery("/statement/term/variable!"),
+      operatorTerminalNodesQuery = nodesQuery("/statement/@operator");
 
 export default function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, localContext) {
-  let statementVerifiedAsDefinedAssertion;
+  let statementVerifiedAsDefinedAssertion = false;
 
-  const statementString = localContext.nodeAsString(statementNode);
+  const statementDefinedAssertion = isStatementDefinedAssertion(statementNode);
 
-  localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, statementNode);
+  if (statementDefinedAssertion) {
+    const statementString = localContext.nodeAsString(statementNode);
 
-  const definedAssertionFunctions = [
-    verifyDerivedStatementAsDefinedAssertion,
-    verifyStatedStatementAsDefinedAssertion
-  ];
+    localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, statementNode);
 
-  statementVerifiedAsDefinedAssertion = definedAssertionFunctions.some((definedAssertionFunction) => {
-    const statementVerifiedAsDefinedAssertion = definedAssertionFunction(statementNode, assignments, derived, localContext);
+    const definedAssertionFunctions = [
+      verifyDerivedStatementAsDefinedAssertion,
+      verifyStatedStatementAsDefinedAssertion
+    ];
+
+    statementVerifiedAsDefinedAssertion = definedAssertionFunctions.some((definedAssertionFunction) => {
+      const statementVerifiedAsDefinedAssertion = definedAssertionFunction(statementNode, assignments, derived, localContext);
+
+      if (statementVerifiedAsDefinedAssertion) {
+        return true;
+      }
+    });
 
     if (statementVerifiedAsDefinedAssertion) {
-      return true;
+      localContext.debug(`...verified the '${statementString}' statement as a defined assertion.`, statementNode);
     }
-  });
-
-  if (statementVerifiedAsDefinedAssertion) {
-    localContext.debug(`...verified the '${statementString}' statement as a defined assertion.`, statementNode);
   }
 
   return statementVerifiedAsDefinedAssertion;
@@ -133,4 +139,18 @@ function verifyStatedStatementAsDefinedAssertion(statementNode, assignments, der
   }
 
   return statedStatementVerifiedAsDefinedAssertion;
+}
+
+export function isStatementDefinedAssertion(statementNode) {
+  const operatorTerminalNodes = operatorTerminalNodesQuery(statementNode),
+        statementDefinedAssertion = operatorTerminalNodes.some((operatorTerminalNode) => {
+          const content = operatorTerminalNode.getContent(),
+                contentDefined = (content === DEFINED);
+
+          if (contentDefined) {
+            return true;
+          }
+        });
+
+  return statementDefinedAssertion;
 }

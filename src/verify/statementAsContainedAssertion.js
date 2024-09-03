@@ -2,34 +2,40 @@
 
 import metaLevelNodeVerifier from "../verifier/node/metaLevel";
 
-import { isAssertionNegated } from "../utilities/verify";
+import { CONTAINED } from "../constants";
+import { isStatementNegated } from "../utilities/verify";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/statement/term/variable!"),
-      metastatementVariableNodesQuery = nodesQuery("/statement/statement//variable");
+      operatorTerminalNodesQuery = nodesQuery("/statement/@operator"),
+      statementVariableNodesQuery = nodesQuery("/statement/metaArgument/statement//variable");
 
 export default function verifyStatementAsContainedAssertion(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsContainedAssertion;
 
-  const statementString = localContext.nodeAsString(statementNode);
+  const statementContainedAssertion = isStatementContainedAssertion(statementNode);
 
-  localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`, statementNode);
+  if (statementContainedAssertion) {
+    const statementString = localContext.nodeAsString(statementNode);
 
-  const statementFunctions = [
-    verifyStatementAsDerivedContainedAssertion,
-    verifyStatementAsStatedContainedAssertion
-  ];
+    localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`, statementNode);
 
-  statementVerifiedAsContainedAssertion = statementFunctions.some((statementFunction) => {
-    const statementVerifiedAsContainedAssertion = statementFunction(statementNode, assignments, derived, localContext);
+    const statementFunctions = [
+      verifyStatementAsDerivedContainedAssertion,
+      verifyStatementAsStatedContainedAssertion
+    ];
+
+    statementVerifiedAsContainedAssertion = statementFunctions.some((statementFunction) => {
+      const statementVerifiedAsContainedAssertion = statementFunction(statementNode, assignments, derived, localContext);
+
+      if (statementVerifiedAsContainedAssertion) {
+        return true;
+      }
+    });
 
     if (statementVerifiedAsContainedAssertion) {
-      return true;
+      localContext.debug(`...verified the '${statementString}' statement as a contained assertion.`, statementNode);
     }
-  });
-
-  if (statementVerifiedAsContainedAssertion) {
-    localContext.debug(`...verified the '${statementString}' statement as a contained assertion.`, statementNode);
   }
 
   return statementVerifiedAsContainedAssertion;
@@ -43,16 +49,16 @@ function verifyStatementAsDerivedContainedAssertion(statementNode, assignments, 
 
     localContext.trace(`Verifying the derived '${statementString}' statement as a contained assertion...`, statementNode);
 
-    const statementNegated = isAssertionNegated(statementNode),
+    const statementNegated = isStatementNegated(statementNode),
           variableNode = variableNodeQuery(statementNode),
           negated = statementNegated;  ///
 
     if (false) {
       ///
     } else if (variableNode !== null) {
-      const metastatementVariableNodes = metastatementVariableNodesQuery(statementNode),
-            variableNodeMatchesMetaArgumentVariableNode = metastatementVariableNodes.some((metastatementVariableNode) => {
-              const variableNodeMatchesMetaArgumentVariableNode = variableNode.match(metastatementVariableNode);
+      const statementVariableNodes = statementVariableNodesQuery(statementNode),
+            variableNodeMatchesMetaArgumentVariableNode = statementVariableNodes.some((statementVariableNode) => {
+              const variableNodeMatchesMetaArgumentVariableNode = variableNode.match(statementVariableNode);
 
               if (variableNodeMatchesMetaArgumentVariableNode) {
                 return true;
@@ -109,4 +115,18 @@ function verifyStatementAsStatedContainedAssertion(statementNode, assignments, d
   }
 
   return statementVerifiedAsStatedContainedAssertion;
+}
+
+export function isStatementContainedAssertion(statementNode) {
+  const operatorTerminalNodes = operatorTerminalNodesQuery(statementNode),
+        statementContainedAssertion = operatorTerminalNodes.some((operatorTerminalNode) => {
+          const content = operatorTerminalNode.getContent(),
+                contentContained = (content === CONTAINED);
+
+          if (contentContained) {
+            return true;
+          }
+        });
+
+  return statementContainedAssertion;
 }

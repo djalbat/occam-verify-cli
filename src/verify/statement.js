@@ -7,12 +7,12 @@ import verifyStatementAsDefinedAssertion from "../verify/statementAsDefinedAsser
 import verifyStatementAsContainedAssertion from "../verify/statementAsContainedAssertion";
 import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statementAgainstCombinator";
 
-import { DEFINED, CONTAINED } from "../constants";
-import { nodeQuery, nodesQuery } from "../utilities/query";
+import { nodeQuery } from "../utilities/query";
+import { isStatementDefinedAssertion } from "../verify/statementAsDefinedAssertion";
+import { isStatementContainedAssertion } from "../verify/statementAsContainedAssertion";
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
-      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
-      operatorTerminalNodesQuery = nodesQuery("/statement/@operator");
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 function verifyStatement(statementNode, assignments, derived, localContext) {
   let statementVerified;
@@ -191,35 +191,7 @@ function isStatementEquality(statementNode) {
 
 function isStatementTypeAssertion(statementNode) {
   const typeAssertionNode = typeAssertionNodeQuery(statementNode),
-        statementTypeAssertion = (typeAssertionNode === null);
+        statementTypeAssertion = (typeAssertionNode !== null);
 
   return statementTypeAssertion;
-}
-
-function isStatementDefinedAssertion(statementNode) {
-  const operatorTerminalNodes = operatorTerminalNodesQuery(statementNode),
-        statementDefinedAssertion = operatorTerminalNodes.some((operatorTerminalNode) => {
-          const content = operatorTerminalNode.getContent(),
-                contentDefined = (content === DEFINED);
-
-          if (contentDefined) {
-            return true;
-          }
-        });
-
-  return statementDefinedAssertion;
-}
-
-function isStatementContainedAssertion(statementNode) {
-  const operatorTerminalNodes = operatorTerminalNodesQuery(statementNode),
-        statementContainedAssertion = operatorTerminalNodes.some((operatorTerminalNode) => {
-          const content = operatorTerminalNode.getContent(),
-                contentContained = (content === CONTAINED);
-
-          if (contentContained) {
-            return true;
-          }
-        });
-
-  return statementContainedAssertion;
 }
