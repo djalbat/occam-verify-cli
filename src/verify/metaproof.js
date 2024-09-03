@@ -7,7 +7,7 @@ import { nodeQuery } from "../utilities/query";
 
 const metaDerivationNodeQuery = nodeQuery("/metaproof/metaDerivation!");
 
-export default function verifyMetaproof(metaproofNode, conclusion, substitutions, localContext) {
+export default function verifyMetaproof(metaproofNode, metastatementNode, substitutions, localContext) {
   let metaproofVerified = false;
 
   const metaLevelLocalContext = MetaLevelLocalContext.fromLocalContext(localContext);
@@ -19,12 +19,11 @@ export default function verifyMetaproof(metaproofNode, conclusion, substitutions
 
   if (metaDerivationVerified) {
     const lastMetaproofStep = localContext.getLastMetaproofStep(),
-          metaproofStep = lastMetaproofStep, ///
-          metastatementNode = metaproofStep.getMetastatementNode(),
-          conclusionMetastatementNode = conclusion.getMetastatementNode(),
-          metastatementNodeMatchesConclusionMetastatementNode = metastatementNode.match(conclusionMetastatementNode);
+          lastMetaproofStepMetastatementNode = lastMetaproofStep.getMetastatementNode(),
+          lastMetastatementNode = lastMetaproofStepMetastatementNode, ///
+          lastMetastatementNodeMatchesMetastatementNode = lastMetastatementNode.match(metastatementNode);
 
-    metaproofVerified = metastatementNodeMatchesConclusionMetastatementNode;  ///
+    metaproofVerified = lastMetastatementNodeMatchesMetastatementNode;  ///
   }
 
   return metaproofVerified;

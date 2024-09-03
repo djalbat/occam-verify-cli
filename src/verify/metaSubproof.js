@@ -6,7 +6,7 @@ import verifyMetaSubDerivation from "../verify/metaSubDerivation";
 
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const suppositionNodesQuery = nodesQuery("/metaSubproof/supposition"),
+const metaSuppositionNodesQuery = nodesQuery("/metaSubproof/metaSupposition"),
       metaSubDerivationNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation");
 
 export default function verifyMetaSubproof(metaSubproofNode, substitutions, localContext) {
@@ -17,8 +17,8 @@ export default function verifyMetaSubproof(metaSubproofNode, substitutions, loca
   localContext = metaLevelLocalContext; ///
 
   const metaSuppositions = [],
-        suppositionNodes = suppositionNodesQuery(metaSubproofNode),
-        metaSuppositionsVerified = verifyMetaSuppositions(suppositionNodes, metaSuppositions, localContext);
+        metaSuppositionNodes = metaSuppositionNodesQuery(metaSubproofNode),
+        metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, substitutions, localContext);
 
   if (metaSuppositionsVerified) {
     const metaSubDerivationNode = metaSubDerivationNodeQuery(metaSubproofNode),

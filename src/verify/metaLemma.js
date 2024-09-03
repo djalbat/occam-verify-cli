@@ -46,7 +46,8 @@ export default function verifyMetaLemma(metaLemmaNode, fileContext) {
         const metaproofNode = metaproofNodeQuery(metaLemmaNode),
               firstMetaConsequent = first(metaConsequents),
               metaConsequent = firstMetaConsequent, ///
-              metaproofVerified = verifyMetaproof(metaproofNode, metaConsequent, substitutions, localContext);
+              metastatementNode = metaConsequent.getMetastatementNode(),
+              metaproofVerified = verifyMetaproof(metaproofNode, metastatementNode, substitutions, localContext);
 
         if (metaproofVerified) {
           const metaLemma = MetaLemma.fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(labels, metaSuppositions, metaConsequent, substitutions, fileContext);
