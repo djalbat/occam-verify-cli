@@ -43,14 +43,15 @@ export default verifyMetastatement;
 function verifyMetastatementAsJudgement(metastatementNode, assignments, derived, localContext) {
   let metastatementVerifiedAsJudgement = false;
 
-  const judgementNode = judgementNodeQuery(metastatementNode);
+  const metastatementJudgement = isMetastatementJudgement(metastatementNode);
 
-  if (judgementNode !== null) {
+  if (metastatementJudgement) {
     const metastatementString = localContext.nodeAsString(metastatementNode);
 
     localContext.trace(`Verifying the '${metastatementString}' metastatement as a judgement...`, metastatementNode);
 
-    const judgementVerified = verifyJudgement(judgementNode, assignments, derived, localContext);
+    const judgementNode = judgementNodeQuery(metastatementNode),
+          judgementVerified = verifyJudgement(judgementNode, assignments, derived, localContext);
 
     metastatementVerifiedAsJudgement = judgementVerified;  ///
 
@@ -65,9 +66,9 @@ function verifyMetastatementAsJudgement(metastatementNode, assignments, derived,
 function verifyMetastatementAsIs(metastatementNode, assignments, derived, localContext) {
   let metastatementVerifiedAsIs;
 
-  const judgementNode = judgementNodeQuery(metastatementNode);
+  const metastatementJudgement = isMetastatementJudgement(metastatementNode);
 
-  if (judgementNode === null) {
+  if (!metastatementJudgement) {
     const metastatementString = localContext.nodeAsString(metastatementNode);
 
     localContext.trace(`Verifying the '${metastatementString}' metastatement as is...`, metastatementNode);
@@ -128,4 +129,11 @@ function verifyStatedMetastatementAsIs(metastatementNode, assignments, derived, 
   }
 
   return statedMetastatementVerifiedAsIs;
+}
+
+function isMetastatementJudgement(metastatementNode) {
+  const judgementNode = judgementNodeQuery(metastatementNode),
+        metastatementJudgement = (judgementNode !== null);
+
+  return metastatementJudgement;
 }

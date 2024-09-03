@@ -3,16 +3,16 @@
 import verifyEquality from "../verify/equality";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/typeAssertion";
-import verifyDefinedAssertion from "../verify/definedAssertion";
-import verifyContainedAssertion from "../verify/containedAssertion";
+import verifyStatementAsDefinedAssertion from "../verify/statementAsDefinedAssertion";
+import verifyStatementAsContainedAssertion from "../verify/statementAsContainedAssertion";
 import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statementAgainstCombinator";
 
-import { nodeQuery } from "../utilities/query";
+import { DEFINED, CONTAINED } from "../constants";
+import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
-      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
-      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
+      operatorTerminalNodesQuery = nodesQuery("/statement/@operator");
 
 function verifyStatement(statementNode, assignments, derived, localContext) {
   let statementVerified;
@@ -77,23 +77,24 @@ export default verifyStatement;
 export function verifyStatementAsEquality(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsEquality = false;
 
-  const equalityNode = equalityNodeQuery(statementNode);
+  const statementEquality = isStatementEquality(statementNode);
 
-  if (equalityNode !== null) {
+  if (statementEquality) {
     const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${statementString}' statement as an equality...`, equalityNode);
+    localContext.trace(`Verifying the '${statementString}' statement as an equality...`, statementNode);
 
-    const equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext, () => {
-      const verifiedAhead = true;
+    const equalityNode = equalityNodeQuery(statementNode),
+          equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext, () => {
+            const verifiedAhead = true;
 
-      return verifiedAhead;
-    });
+            return verifiedAhead;
+          });
 
     statementVerifiedAsEquality = equalityVerified; ///
 
     if (statementVerifiedAsEquality) {
-      localContext.debug(`...verified the '${statementString}' statement as an equality.`, equalityNode);
+      localContext.debug(`...verified the '${statementString}' statement as an equality.`, statementNode);
     }
   }
 
@@ -103,82 +104,39 @@ export function verifyStatementAsEquality(statementNode, assignments, derived, l
 export function verifyStatementAsTypeAssertion(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsTypeAssertion = false;
 
-  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
+  const statementTypeAssertion = isStatementTypeAssertion(statementNode);
 
-  if (typeAssertionNode !== null) {
+  if (statementTypeAssertion) {
     const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${statementString}' statement as a type assertion...`, typeAssertionNode);
+    localContext.trace(`Verifying the '${statementString}' statement as a type assertion...`, statementNode);
 
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext, () => {
-      const verifiedAhead = true;
+    const typeAssertionNode = typeAssertionNodeQuery(statementNode),
+          typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext, () => {
+            const verifiedAhead = true;
 
-      return verifiedAhead;
-    });
+            return verifiedAhead;
+          });
 
     statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
 
     if (statementVerifiedAsTypeAssertion) {
-      localContext.debug(`...verified the '${statementString}' statement as a type assertion.`, typeAssertionNode);
+      localContext.debug(`...verified the '${statementString}' statement as a type assertion.`, statementNode);
     }
   }
 
   return statementVerifiedAsTypeAssertion;
 }
 
-function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, localContext) {
-  let statementVerifiedAsDefinedAssertion = false;
-
-  const definedAssertionNode = definedAssertionNodeQuery(statementNode);
-
-  if (definedAssertionNode !== null) {
-    const statementString = localContext.nodeAsString(statementNode);
-
-    localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, definedAssertionNode);
-
-    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, assignments, derived, localContext);
-
-    statementVerifiedAsDefinedAssertion = definedAssertionVerified; ///
-
-    if (statementVerifiedAsDefinedAssertion) {
-      localContext.debug(`...verified the '${statementString}' statement as a defined assertion.`, definedAssertionNode);
-    }
-  }
-
-  return statementVerifiedAsDefinedAssertion;
-}
-
-function verifyStatementAsContainedAssertion(statementNode, assignments, derived, localContext) {
-  let statementVerifiedAsContainedAssertion = false;
-
-  const containedAssertionNode = containedAssertionNodeQuery(statementNode);
-
-  if (containedAssertionNode !== null) {
-    const statementString = localContext.nodeAsString(statementNode);
-
-    localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`, containedAssertionNode);
-
-    const containedAssertionVerified = verifyContainedAssertion(containedAssertionNode, assignments, derived, localContext);
-
-    statementVerifiedAsContainedAssertion = containedAssertionVerified; ///
-
-    if (statementVerifiedAsContainedAssertion) {
-      localContext.debug(`...verified the '${statementString}' statement as a contained assertion.`, containedAssertionNode);
-    }
-  }
-
-  return statementVerifiedAsContainedAssertion;
-}
-
 function verifyStatementAgainstCombinators(statementNode, assignments, derived, localContext) {
   let statementVerifiedAgainstCombinators = false;
 
-  const equalityNode = equalityNodeQuery(statementNode),
-        typeAssertionNode = typeAssertionNodeQuery(statementNode),
-        definedAssertionNode = definedAssertionNodeQuery(statementNode),
-        containedAssertionNode = containedAssertionNodeQuery(statementNode);
+  const statementEquality = isStatementEquality(statementNode),
+        statementTypeAssertion = isStatementTypeAssertion(statementNode),
+        statementDefinedAssertion = isStatementDefinedAssertion(statementNode),
+        statementContainedAssertion = isStatementContainedAssertion(statementNode);
 
-  if ((equalityNode === null) && (typeAssertionNode === null) && (definedAssertionNode === null) && (containedAssertionNode === null)) {
+  if (!statementEquality && !statementTypeAssertion && !statementDefinedAssertion && !statementContainedAssertion) {
     let combinators = localContext.getCombinators();
 
     combinators = [ ///
@@ -222,4 +180,46 @@ function verifyStatementAgainstCombinator(statementNode, combinator, localContex
   }
 
   return statementVerifiedAgainstCombinator;
+}
+
+function isStatementEquality(statementNode) {
+  const equalityNode = equalityNodeQuery(statementNode),
+        statementEquality = (equalityNode !== null);
+
+  return statementEquality;
+}
+
+function isStatementTypeAssertion(statementNode) {
+  const typeAssertionNode = typeAssertionNodeQuery(statementNode),
+        statementTypeAssertion = (typeAssertionNode === null);
+
+  return statementTypeAssertion;
+}
+
+function isStatementDefinedAssertion(statementNode) {
+  const operatorTerminalNodes = operatorTerminalNodesQuery(statementNode),
+        statementDefinedAssertion = operatorTerminalNodes.some((operatorTerminalNode) => {
+          const content = operatorTerminalNode.getContent(),
+                contentDefined = (content === DEFINED);
+
+          if (contentDefined) {
+            return true;
+          }
+        });
+
+  return statementDefinedAssertion;
+}
+
+function isStatementContainedAssertion(statementNode) {
+  const operatorTerminalNodes = operatorTerminalNodesQuery(statementNode),
+        statementContainedAssertion = operatorTerminalNodes.some((operatorTerminalNode) => {
+          const content = operatorTerminalNode.getContent(),
+                contentContained = (content === CONTAINED);
+
+          if (contentContained) {
+            return true;
+          }
+        });
+
+  return statementContainedAssertion;
 }
