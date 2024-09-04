@@ -1,9 +1,9 @@
 "use strict";
 
-import metaLevelNodeVerifier from "../verifier/node/metaLevel";
+import metaLevelNodeVerifier from "../../verifier/node/metaLevel";
 
-import { isStatementNegated } from "../utilities/verify";
-import { nodeQuery, nodesQuery } from "../utilities/query";
+import { isStatementNegated } from "../../utilities/verify";
+import { nodeQuery, nodesQuery } from "../../utilities/query";
 
 const termNodeQuery = nodeQuery("/statement/term!"),
       statementTermNodesQuery = nodesQuery("/statement/metaArgument/statement//term");

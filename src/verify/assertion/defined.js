@@ -1,12 +1,11 @@
 "use strict";
 
-import verifyTerm from "./term";
-import metaLevelNodeVerifier from "../verifier/node/metaLevel";
+import verifyTerm from "../../verify/term";
+import metaLevelNodeVerifier from "../../verifier/node/metaLevel";
 
-import { first } from "../utilities/array";
-import { DEFINED } from "../constants";
-import { nodeQuery } from "../utilities/query";
-import { isAssertionNegated } from "../utilities/verify";
+import { first } from "../../utilities/array";
+import { nodeQuery } from "../../utilities/query";
+import { isAssertionNegated } from "../../utilities/verify";
 
 const termNodeQuery = nodeQuery("/statement/term!"),
       variableNodeQuery = nodeQuery("/statement/term/variable!");

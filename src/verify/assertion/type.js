@@ -1,17 +1,17 @@
 "use strict";
 
-import Variable from "../variable";
-import verifyTerm from "../verify/term";
-import VariableAssignment from "../assignment/variable";
+import Variable from "../../variable";
+import verifyTerm from "../../verify/term";
+import VariableAssignment from "../../assignment/variable";
 
-import { first } from "../utilities/array";
-import { nodeQuery } from "../utilities/query";
+import { first } from "../../utilities/array";
+import { nodeQuery } from "../../utilities/query";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term!"),
       typeNodeQuery = nodeQuery("/typeAssertion/type!"),
       variableNodeQuery = nodeQuery("/term/variable!");
 
-export default function verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext, verifyAhead) {
+export default function verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext) {
   let typeAssertionVerified;
 
   const typeAssertionString = localContext.nodeAsString(typeAssertionNode);
@@ -24,7 +24,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
   ];
 
   typeAssertionVerified = verifyTypeAssertionFunctions.some((verifyTypeAssertionFunction) => {
-    const typeAssertionVerified = verifyTypeAssertionFunction(typeAssertionNode, assignments, derived, localContext, verifyAhead);
+    const typeAssertionVerified = verifyTypeAssertionFunction(typeAssertionNode, assignments, derived, localContext);
 
     if (typeAssertionVerified) {
       return true;
@@ -38,7 +38,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
   return typeAssertionVerified;
 }
 
-function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, localContext, verifyAhead) {
+function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, localContext) {
   let derivedTypeAssertionVerified = false;
 
   if (derived) {
@@ -64,7 +64,7 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, loc
                 const variableNode = variableNodeQuery(termNode);
 
                 if (variableNode === null) {
-                  verifiedAhead = verifyAhead();
+                  verifiedAhead = true;
                 } else {
                   let variable = localContext.findVariableByVariableNode(variableNode);
 
@@ -75,7 +75,7 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, loc
 
                   assignments.push(assignment);
 
-                  verifiedAhead = verifyAhead();
+                  verifiedAhead = true;
 
                   if (!verifiedAhead) {
                     assignments.pop();
@@ -90,14 +90,14 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, loc
     derivedTypeAssertionVerified = termVerified; ///
 
     if (derivedTypeAssertionVerified) {
-      localContext.trace(`...verified the '${typeAssertionString}' derived type assertion.`, typeAssertionNode);
+      localContext.debug(`...verified the '${typeAssertionString}' derived type assertion.`, typeAssertionNode);
     }
   }
 
   return derivedTypeAssertionVerified;
 }
 
-function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, localContext, verifyAhead) {
+function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, localContext) {
   let statedTypeAssertionVerified = false;
 
   if (!derived) {
@@ -123,7 +123,7 @@ function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, loca
                 const variableNode = variableNodeQuery(termNode);
 
                 if (variableNode === null) {
-                  verifiedAhead = verifyAhead();
+                  verifiedAhead = true;
                 } else {
                   let variable = localContext.findVariableByVariableNode(variableNode);
 
@@ -134,7 +134,7 @@ function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, loca
 
                   assignments.push(assignment);
 
-                  verifiedAhead = verifyAhead();
+                  verifiedAhead = true;
 
                   if (!verifiedAhead) {
                     assignments.pop();
@@ -149,7 +149,7 @@ function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, loca
     statedTypeAssertionVerified = termVerified; ///
 
     if (statedTypeAssertionVerified) {
-      localContext.trace(`...verified the '${typeAssertionString}' stated type assertion.`, typeAssertionNode);
+      localContext.debug(`...verified the '${typeAssertionString}' stated type assertion.`, typeAssertionNode);
     }
   }
 

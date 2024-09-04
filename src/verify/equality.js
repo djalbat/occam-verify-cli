@@ -84,7 +84,7 @@ function verifyDerivedEquality(equalityNode, assignments, derived, localContext,
     derivedEqualityVerified = termsVerified; ///
 
     if (derivedEqualityVerified) {
-      localContext.trace(`...verified the '${equalityString}' derived equality.`, equalityNode);
+      localContext.debug(`...verified the '${equalityString}' derived equality.`, equalityNode);
     }
   }
 
@@ -134,7 +134,7 @@ function verifyStatedEquality(equalityNode, assignments, derived, localContext, 
     statedEqualityVerified = termsVerified; ///
 
     if (statedEqualityVerified) {
-      localContext.trace(`...verified the '${equalityString}' stated equality.`, equalityNode);
+      localContext.debug(`...verified the '${equalityString}' stated equality.`, equalityNode);
     }
   }
 

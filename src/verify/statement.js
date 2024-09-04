@@ -2,9 +2,10 @@
 
 import verifyEquality from "../verify/equality";
 import verifyJudgement from "../verify/judgement";
-import verifyTypeAssertion from "../verify/typeAssertion";
-import verifyDefinedAssertion from "./definedAssertion";
-import verifyContainedAssertion from "./containedAssertion";
+import verifyTypeAssertion from "../verify/assertion/type";
+import verifyDefinedAssertion from "../verify/assertion/defined";
+import verifySubproofAssertion from "../verify/assertion/subproof";
+import verifyContainedAssertion from "../verify/assertion/contained";
 import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statementAgainstCombinator";
 
 import { nodeQuery } from "../utilities/query";
@@ -15,6 +16,7 @@ const equalityNodeQuery = nodeQuery("/statement/equality!"),
       metavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
+      subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
       containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
 
 function verifyStatement(statementNode, assignments, derived, localContext) {
@@ -30,6 +32,7 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
     verifyStatementAsJudgement,
     verifyStatementAsTypeAssertion,
     verifyStatementAsDefinedAssertion,
+    verifyStatementAsSubproofAssertion,
     verifyStatementAsContainedAssertion,
     verifyStatementAgainstCombinators
   ];
@@ -58,7 +61,7 @@ export function verifyStandaloneStatement(statementNode, localContext, verifyAhe
 
   const derived = false,
         assignments = [],
-        statementVerified = verifyStatement(statementNode, assignments, derived);
+        statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 
   if (statementVerified) {
     const verifiedAhead = verifyAhead();
@@ -115,11 +118,7 @@ export function verifyStatementAsTypeAssertion(statementNode, assignments, deriv
 
     localContext.trace(`Verifying the '${statementString}' statement as a type assertion...`, statementNode);
 
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext, () => {
-            const verifiedAhead = true;
-
-            return verifiedAhead;
-          });
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext);
 
     statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
 
@@ -207,6 +206,32 @@ function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, 
   return statementVerifiedAsDefinedAssertion;
 }
 
+function verifyStatementAsSubproofAssertion(statementNode, assignments, derived, localContext) {
+  let statementVerifiedAsSubproofAssertion = false;
+
+  const subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
+
+  if (subproofAssertionNode !== null) {
+    const statementString = localContext.nodeAsString(statementNode);
+
+    localContext.trace(`Verifying the '${statementString}' statement as a subproof assertion...`, statementNode);
+
+    const subproofAssertionVerified = verifySubproofAssertion(subproofAssertionNode, assignments, derived, localContext, () => {
+      const verifiedAhead = true;
+
+      return verifiedAhead;
+    });
+
+    statementVerifiedAsSubproofAssertion = subproofAssertionVerified; ///
+
+    if (statementVerifiedAsSubproofAssertion) {
+      localContext.debug(`...verified the '${statementString}' statement as a defined assertion.`, statementNode);
+    }
+  }
+
+  return statementVerifiedAsSubproofAssertion;
+}
+
 function verifyStatementAsContainedAssertion(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsContainedAssertion = false;
 
@@ -241,6 +266,7 @@ function verifyStatementAgainstCombinators(statementNode, assignments, derived, 
         metavariableNode = metavariableNodeQuery(statementNode),
         typeAssertionNode = typeAssertionNodeQuery(statementNode),
         definedAssertionNode = definedAssertionNodeQuery(statementNode),
+        subproofAssertionNode = subproofAssertionNodeQuery(statementNode),
         containedAssertionNode = containedAssertionNodeQuery(statementNode);
 
   if (  (equalityNode === null) &&
@@ -248,6 +274,7 @@ function verifyStatementAgainstCombinators(statementNode, assignments, derived, 
         (metavariableNode === null) &&
         (typeAssertionNode === null) &&
         (definedAssertionNode === null) &&
+        (subproofAssertionNode === null) &&
         (containedAssertionNode === null) ) {
 
     const combinators = localContext.getCombinators();

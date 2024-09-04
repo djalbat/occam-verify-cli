@@ -35,7 +35,7 @@ class IntrinsicLevelNodesVerifier extends NodesVerifier {
       {
         nodeQueryA: nonTerminalNodeQuery,
         nodeQueryB: nonTerminalNodeQuery,
-        verifyNodes: (nodeA, nodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) => {
+        verifyNodes: (nodeA, nodeB, substitutions, localContextA, localContextB, verifyAhead) => {
           let nonTerminalNodeVerified;
 
           const nonTerminalNodeA = nodeA, ///
@@ -43,7 +43,7 @@ class IntrinsicLevelNodesVerifier extends NodesVerifier {
 
           nonTerminalNodeVerified =
 
-            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
+            super.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, verifyAhead);
 
           return nonTerminalNodeVerified;
         }

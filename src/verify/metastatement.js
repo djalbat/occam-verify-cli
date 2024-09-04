@@ -1,6 +1,5 @@
 "use strict";
 
-import verifyJudgement from "../verify/judgement";
 import metaLevelNodeVerifier from "../verifier/node/metaLevel";
 
 import { nodeQuery } from "../utilities/query";

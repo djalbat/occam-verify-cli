@@ -10,17 +10,17 @@ import { nodeQuery, nodesQuery } from "./utilities/query";
 import { statementNodeFromStatementString } from "./utilities/node";
 
 const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
-      subproofPremiseStatementNodesQuery = nodesQuery("/subproof/premise/unqualifiedStatement!/statement!"),
       subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
+      subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement!/statement!"),
       subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!");
 
 export default class Premise {
   constructor(statementNode) {
-    this.statementnode = statementNode;
+    this.statementNode = statementNode;
   }
 
   getStatementNode() {
-    return this.statementnode;
+    return this.statementNode;
   }
 
   matchStatementNode(statementNode, substitutions, fileContext, localContext) {
@@ -51,10 +51,10 @@ export default class Premise {
       const subproofAssertionNode = subproofAssertionNodeQuery(this.statementNode);
 
       if (subproofAssertionNode !== null) {
-        const subproofPremiseStatementNodes = subproofPremiseStatementNodesQuery(subproofNode),
+        const subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
               subproofLastProofStepStatementNode = subproofLastProofStepStatementNodeQuery(subproofNode),
               subproofStatementNodes = [
-                ...subproofPremiseStatementNodes,
+                ...subproofSuppositionStatementNodes,
                 subproofLastProofStepStatementNode
               ],
               subproofAssertionStatementNodes = subproofAssertionStatementNodesQuery(subproofAssertionNode);
@@ -82,7 +82,7 @@ export default class Premise {
   }
 
   toJSON(tokens) {
-    const statementString = nodeAsString(this.statementnode, tokens),
+    const statementString = nodeAsString(this.statementNode, tokens),
           statement = statementString,  ///
           json = {
             statement

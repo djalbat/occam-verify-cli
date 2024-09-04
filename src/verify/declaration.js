@@ -26,11 +26,7 @@ export default function verifyDeclaration(declarationNode, declarations, localCo
     const { verifyStatement } = metaLevelNodeVerifier,
           derived = false,
           assignments = [],
-          statementVerified = verifyStatement(statementNode, assignments, derived, localContext, () => {
-            const verifiedAhead = true;
-
-            return verifiedAhead;
-          });
+          statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 
     if (statementVerified) {
       const metavariableNode = metavariableNodeQuery(referenceNode),
