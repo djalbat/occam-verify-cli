@@ -2,8 +2,6 @@
 
 import verifyJudgement from "../verify/judgement";
 import metaLevelNodeVerifier from "../verifier/node/metaLevel";
-import verifyStatementAsDefinedAssertion from "./statementAsDefinedAssertion";
-import verifyStatementAsContainedAssertion from "./statementAsContainedAssertion";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -17,9 +15,6 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
   localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
 
   const verifyStatementFunctions = [
-    verifyStatementAsJudgement,
-    verifyStatementAsDefinedAssertion,
-    verifyStatementAsContainedAssertion,
     verifyStatementAsIs
   ];
 
@@ -43,29 +38,6 @@ Object.assign(metaLevelNodeVerifier, {
 });
 
 export default verifyStatement;
-
-function verifyStatementAsJudgement(statementNode, assignments, derived, localContext) {
-  let statementVerifiedAsJudgement = false;
-
-  const statementJudgement = isStatementJudgement(statementNode);
-
-  if (statementJudgement) {
-    const statementString = localContext.nodeAsString(statementNode);
-
-    localContext.trace(`Verifying the '${statementString}' statement as a judgement...`, statementNode);
-
-    const judgementNode = judgementNodeQuery(statementNode),
-          judgementVerified = verifyJudgement(judgementNode, assignments, derived, localContext);
-
-    statementVerifiedAsJudgement = judgementVerified;  ///
-
-    if (statementVerifiedAsJudgement) {
-      localContext.debug(`...verified the '${statementString}' statement as a judgement.`, statementNode);
-    }
-  }
-
-  return statementVerifiedAsJudgement;
-}
 
 function verifyStatementAsIs(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsIs;
@@ -104,7 +76,7 @@ function verifyDerivedStatementAsIs(statementNode, assignments, derived, localCo
   if (derived) {
     const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.debug(`Cannot verify the derived '${statementString}' statement as is.`, statementNode);
+    localContext.debug(`Cannot verify the '${statementString}' derived statement as is.`, statementNode);
   }
 
   return derivedStatementVerifiedAsIs;
@@ -116,7 +88,7 @@ function verifyStatedStatementAsIs(statementNode, assignments, derived, localCon
   if (!derived) {
     const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the stated '${statementString}' statement as is...`, statementNode);
+    localContext.trace(`Verifying the '${statementString}' stated statement as is...`, statementNode);
 
     const nonTerminalNode = statementNode, ///
           nonTerminalNodeVerified = metaLevelNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
@@ -128,7 +100,7 @@ function verifyStatedStatementAsIs(statementNode, assignments, derived, localCon
     statedStatementVerifiedAsIs = nonTerminalNodeVerified;  ///
 
     if (statedStatementVerifiedAsIs) {
-      localContext.debug(`...verified the stated '${statementString}' statement as is.`, statementNode);
+      localContext.debug(`...verified the '${statementString}' stated statement as is.`, statementNode);
     }
   }
 

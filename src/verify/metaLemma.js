@@ -30,22 +30,22 @@ export default function verifyMetaLemma(metaLemmaNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const localContext = LocalContext.fromFileContext(fileContext), ///
-          substitutions = [],
+    const localContext = LocalContext.fromFileContext(fileContext),
           suppositions = [],
           suppositionNodes = suppositionsNodeQuery(metaLemmaNode),
-          suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, substitutions, localContext);
+          suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
     if (suppositionsVerified) {
       const consequents = [],
             consequentNode = consequentNodeQuery(metaLemmaNode),
-            consequentVerified = verifyConsequent(consequentNode, consequents, substitutions, localContext);
+            consequentVerified = verifyConsequent(consequentNode, consequents, localContext);
 
       if (consequentVerified) {
         const proofNode = proofNodeQuery(metaLemmaNode),
               firstConsequent = first(consequents),
               consequent = firstConsequent, ///
               statementNode = consequent.getStatementNode(),
+              substitutions = [],
               proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
 
         if (proofVerified) {

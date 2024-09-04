@@ -73,7 +73,7 @@ export function verifyStandaloneMetavariable(metavariableNode, localContext, ver
 
   localContext.trace(`Verifying the '${metavariableString}' standalone metavariable...`, metavariableNode);
 
-  const metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode, localContext);
+  const metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode);
 
   if (metavariablePresent) {
     const verifiedAhead = verifyAhead();

@@ -513,8 +513,8 @@ export default class FileContext {
     return labelPresent;
   }
 
-  isMetavariablePresentByMetavariableNode(metavariableNode, localContext) {
-    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, localContext),
+  isMetavariablePresentByMetavariableNode(metavariableNode) {
+    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode),
           metavariablePresent = (metavariable !== null);
 
     return metavariablePresent;

@@ -27,21 +27,21 @@ export default function verifyMetatheorem(metatheoremNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const localContext = LocalContext.fromFileContext(fileContext), ///
-          substitutions = [],
+    const localContext = LocalContext.fromFileContext(fileContext),
           suppositions = [],
           suppositionNodes = suppositionsNodeQuery(metatheoremNode),
-          suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, substitutions, localContext);
+          suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
     if (suppositionsVerified) {
       const consequents = [],
             consequentNode = consequentNodeQuery(metatheoremNode),
-            consequentVerified = verifyConsequent(consequentNode, consequents, substitutions, localContext);
+            consequentVerified = verifyConsequent(consequentNode, consequents, localContext);
 
       if (consequentVerified) {
         const proofNode = proofNodeQuery(metatheoremNode),
               firstConsequent = first(consequents),
               consequent = firstConsequent, ///
+              substitutions = [],
               statementNode = consequent.getStatementNode(),
               proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
 

@@ -9,7 +9,7 @@ import { nodeQuery, nodesQuery } from "../utilities/query";
 const suppositionNodesQuery = nodesQuery("/subproof/supposition"),
       subDerivationNodeQuery = nodeQuery("/subproof/subDerivation");
 
-export default function verifySubproof(subproofNode, localContext) {
+export default function verifySubproof(subproofNode, substitutions, localContext) {
   let subproofVerified = false;
 
   localContext = LocalContext.fromLocalContext(localContext);  ///
@@ -20,7 +20,7 @@ export default function verifySubproof(subproofNode, localContext) {
 
   if (suppositionsVerified) {
     const subDerivationNode = subDerivationNodeQuery(subproofNode),
-          subDerivationVerified = verifySubDerivation(subDerivationNode, localContext);
+          subDerivationVerified = verifySubDerivation(subDerivationNode, substitutions, localContext);
 
     if (subDerivationVerified) {
       subproofVerified = true;

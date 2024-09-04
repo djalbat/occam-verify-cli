@@ -144,7 +144,7 @@ function verifyMetavariable(metavariableNode, localContext) {
 
   localContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
-  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode, localContext);
+  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
 
   if (metavariable !== null) {
     const metaType = metavariable.getMetaType();

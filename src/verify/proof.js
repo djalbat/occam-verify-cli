@@ -7,13 +7,13 @@ import { nodeQuery } from "../utilities/query";
 
 const derivationNodeQuery = nodeQuery("/proof/derivation!");
 
-export default function verifyProof(proofNode, conclusion, localContext) {
+export default function verifyProof(proofNode, conclusion, substitutions, localContext) {
   let proofVerified = false;
 
   localContext = LocalContext.fromLocalContext(localContext); ///
 
   const derivationNode = derivationNodeQuery(proofNode),
-        derivationVerified = verifyDerivation(derivationNode, localContext);
+        derivationVerified = verifyDerivation(derivationNode, substitutions, localContext);
 
   if (derivationVerified) {
     const lastProofStep = localContext.getLastProofStep();

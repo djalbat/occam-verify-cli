@@ -44,7 +44,9 @@ export default function verifyLemma(lemmaNode, fileContext) {
         const proofNode = proofNodeQuery(lemmaNode),
               firstConsequent = first(consequents),
               consequent = firstConsequent, ///
-              proofVerified = verifyProof(proofNode, consequent, localContext);
+              statementNode = consequent.getStatementNode(),
+              substitutions = [],
+              proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
 
         if (proofVerified) {
           const substitutions = [],

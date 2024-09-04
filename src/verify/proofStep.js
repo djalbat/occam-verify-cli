@@ -14,7 +14,7 @@ const subproofNodeQuery = nodeQuery("/proofStep|lastProofStep/subproof!"),
       qualifiedStatementNodeQuery = nodeQuery("/proofStep|lastProofStep/qualifiedStatement!"),
       unqualifiedStatementNodeQuery = nodeQuery("/proofStep|lastProofStep/unqualifiedStatement!");
 
-export default function verifyProofStep(proofStepNode, localContext) {
+export default function verifyProofStep(proofStepNode, substitutions, localContext) {
   let proofStepVerified = false;
 
   const subproofNode = subproofNodeQuery(proofStepNode),
@@ -26,7 +26,7 @@ export default function verifyProofStep(proofStepNode, localContext) {
   } else if (subproofNode !== null) {
     let subproofVerified;
 
-    subproofVerified = verifySubproof(subproofNode, localContext);
+    subproofVerified = verifySubproof(subproofNode, substitutions, localContext);
 
     if (subproofVerified) {
       const proofStep = ProofStep.fromSubproofNode(subproofNode);
@@ -40,7 +40,7 @@ export default function verifyProofStep(proofStepNode, localContext) {
 
     const assignments = [];
 
-    qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, assignments, localContext);
+    qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, localContext);
 
     if (qualifiedStatementVerified) {
       const assignmentAssigned = assignAssignment(assignments, localContext);

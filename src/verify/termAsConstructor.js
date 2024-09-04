@@ -11,9 +11,9 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
 
   fileContext.debug(`Verifying the '${termString}' term as a constructor...`, termNode);
 
-  const nonTerminalNode = termNode, ///
+  const localContext = LocalContext.fromFileContext(fileContext),
+        nonTerminalNode = termNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
-        localContext = LocalContext.fromFileContext(fileContext),
         childNodesVerified = termAsConstructorNodeVerifier.verifyChildNodes(childNodes, localContext, () => {
           const verifiedAhead = true;
 

@@ -57,7 +57,7 @@ function verifyReference(referenceNode, localContext) {
   localContext.trace(`Verifying the '${referenceString}' reference...`, referenceNode);
 
   const metavariableNode = metavariableNodeQuery(referenceNode),
-        metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode, localContext);
+        metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
 
   if (metavariable !== null) {
     const metaType = metavariable.getMetaType();

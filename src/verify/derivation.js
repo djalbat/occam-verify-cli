@@ -6,18 +6,18 @@ import { nodesQuery } from "../utilities/query";
 
 const proofStepNodesQuery = nodesQuery("/derivation/proofStep|lastProofStep");
 
-export default function verifyDerivation(ruleDerivationNode, localContext) {
-  let ruleDerivationVerified;
+export default function verifyDerivation(derivationNode, substitutions, localContext) {
+  let derivationVerified;
 
-  const proofStepNodes = proofStepNodesQuery(ruleDerivationNode);
+  const proofStepNodes = proofStepNodesQuery(derivationNode);
 
-  ruleDerivationVerified = proofStepNodes.every((proofStepNode) => {
-    const proofStepVerified = verifyProofStep(proofStepNode, localContext);
+  derivationVerified = proofStepNodes.every((proofStepNode) => {
+    const proofStepVerified = verifyProofStep(proofStepNode, substitutions, localContext);
 
     if (proofStepVerified) {
       return true;
     }
   });
 
-  return ruleDerivationVerified;
+  return derivationVerified;
 }

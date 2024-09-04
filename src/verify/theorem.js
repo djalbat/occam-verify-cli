@@ -28,8 +28,8 @@ export default function verifyTheorem(theoremNode, fileContext) {
 
   if (labelsVerified) {
     const localContext = LocalContext.fromFileContext(fileContext),
-          suppositionNodes = suppositionsNodeQuery(theoremNode),
           suppositions = [],
+          suppositionNodes = suppositionsNodeQuery(theoremNode),
           suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
     if (suppositionsVerified) {
@@ -41,7 +41,9 @@ export default function verifyTheorem(theoremNode, fileContext) {
         const proofNode = proofNodeQuery(theoremNode),
               firstConsequent = first(consequents),
               consequent = firstConsequent, ///
-              proofVerified = verifyProof(proofNode, consequent, localContext);
+              statementNode = consequent.getStatementNode(),
+              substitutions = [],
+              proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
 
         if (proofVerified) {
           const substitutions = [],

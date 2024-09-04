@@ -36,6 +36,12 @@ export default class Metavariable {
     return this.metaType;
   }
 
+  getMetaTypeName() {
+    const metaTypeName = this.metaType.getName();
+
+    return metaTypeName;
+  }
+
   matchName(name) {
     const matchesName = (this.name === name);
 
