@@ -1,6 +1,6 @@
 "use strict";
 
-import ProofStep from "../step/proof";
+import ProofStep from "../proofStep";
 import Supposition from "../supposition";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 

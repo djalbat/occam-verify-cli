@@ -5,6 +5,7 @@ import TermForVariableSubstitution from "./termForVariable";
 import verifyStatementAgainstStatement from "../verify/statementAtainstStatement";
 
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/match";
+import { statementNodeFromStatementString, metavariableNodeFromMetavariableString } from "../utilities/node";
 
 export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(metavariableNode, statementNode, substitution) {
@@ -53,6 +54,19 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     const matchesMetavariableNode = this.metavariableNode.match(metavariableNode);
 
     return matchesMetavariableNode;
+  }
+
+  static fromJSONAndFileContext(json, fileContext) {
+    const { metavariable, statement } = json,
+            metavariableString = metavariable,  ///
+            statementString = statement,  ///
+            lexer = fileContext.getLexer(),
+            parser = fileContext.getParser(),
+            statementNode = statementNodeFromStatementString(statementString, lexer, parser),
+            metavariableNode = metavariableNodeFromMetavariableString(metavariableString, lexer, parser),
+            statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(statementNode, metavariableNode);
+
+    return statementForMetavariableSubstitution;
   }
 
   static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {

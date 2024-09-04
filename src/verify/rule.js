@@ -1,10 +1,10 @@
 "use strict";
 
 import Rule from "../rule";
+import verifyProof from "../verify/proof";
 import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
 import verifyPremises from "../verify/premises";
-import verifyMetaproof from "../verify/metaproof";
 import verifyConclusion from "../verify/conclusion";
 
 import { first } from "../utilities/array";
@@ -12,7 +12,7 @@ import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const labelNodesQuery = nodesQuery("/rule/label"),
       premisesNodeQuery = nodesQuery("/rule/premise"),
-      metaproofNodeQuery = nodeQuery("/rule/metaproof!"),
+      proofNodeQuery = nodeQuery("/rule/proof!"),
       conclusionNodeQuery = nodeQuery("/rule/conclusion!");
 
 export default function verifyRule(ruleNode, fileContext) {
@@ -38,20 +38,20 @@ export default function verifyRule(ruleNode, fileContext) {
             conclusionVerified = verifyConclusion(conclusionNode, conclusions, localContext);
 
       if (conclusionVerified) {
-        let metaproofVerified = true; ///
+        let proofVerified = true; ///
 
         const firstConclusion = first(conclusions),
-              metaproofNode = metaproofNodeQuery(ruleNode),
+              proofNode = proofNodeQuery(ruleNode),
               conclusion = firstConclusion; ///
 
-        if (metaproofNode !== null) {
+        if (proofNode !== null) {
           const substitutions = [],
-                metastatementNode = conclusion.getMetastatementNode();
+                statementNode = conclusion.getStatementNode();
 
-          metaproofVerified = verifyMetaproof(metaproofNode, metastatementNode, substitutions, localContext);
+          proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
         }
 
-        if (metaproofVerified) {
+        if (proofVerified) {
           const rule = Rule.fromLabelsPremisesConclusionAndFileContext(labels, premises, conclusion, fileContext);
 
           fileContext.addRule(rule);

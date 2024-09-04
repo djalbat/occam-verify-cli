@@ -2,142 +2,142 @@
 
 import verifyJudgement from "../verify/judgement";
 import metaLevelNodeVerifier from "../verifier/node/metaLevel";
-import verifyMetastatementAsDefinedAssertion from "./metastatementAsDefinedAssertion";
-import verifyMetastatementAsContainedAssertion from "./metastatementAsContainedAssertion";
+import verifyStatementAsDefinedAssertion from "./statementAsDefinedAssertion";
+import verifyStatementAsContainedAssertion from "./statementAsContainedAssertion";
 
 import { nodeQuery } from "../utilities/query";
 
-const judgementNodeQuery = nodeQuery("/metastatement/judgement!");
+const judgementNodeQuery = nodeQuery("/statement/judgement!");
 
-function verifyMetastatement(metastatementNode, assignments, derived, localContext) {
-  let metastatementVerified;
+function verifyStatement(statementNode, assignments, derived, localContext) {
+  let statementVerified;
 
-  const metastatementString = localContext.nodeAsString(metastatementNode);
+  const statementString = localContext.nodeAsString(statementNode);
 
-  localContext.trace(`Verifying the '${metastatementString}' metastatement...`, metastatementNode);
+  localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
 
-  const verifyMetaStatementFunctions = [
-    verifyMetastatementAsJudgement,
-    verifyMetastatementAsDefinedAssertion,
-    verifyMetastatementAsContainedAssertion,
-    verifyMetastatementAsIs
+  const verifyStatementFunctions = [
+    verifyStatementAsJudgement,
+    verifyStatementAsDefinedAssertion,
+    verifyStatementAsContainedAssertion,
+    verifyStatementAsIs
   ];
 
-  metastatementVerified = verifyMetaStatementFunctions.some((verifyStatementFunction) => {
-    const metastatementVerified = verifyStatementFunction(metastatementNode, assignments, derived, localContext);
+  statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
+    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
 
-    if (metastatementVerified) {
+    if (statementVerified) {
       return true;
     }
   });
 
-  if (metastatementVerified) {
-    localContext.debug(`...verified the '${metastatementString}' metastatement.`, metastatementNode);
+  if (statementVerified) {
+    localContext.debug(`...verified the '${statementString}' statement.`, statementNode);
   }
 
-  return metastatementVerified;
+  return statementVerified;
 }
 
 Object.assign(metaLevelNodeVerifier, {
-  verifyMetastatement
+  verifyStatement
 });
 
-export default verifyMetastatement;
+export default verifyStatement;
 
-function verifyMetastatementAsJudgement(metastatementNode, assignments, derived, localContext) {
-  let metastatementVerifiedAsJudgement = false;
+function verifyStatementAsJudgement(statementNode, assignments, derived, localContext) {
+  let statementVerifiedAsJudgement = false;
 
-  const metastatementJudgement = isMetastatementJudgement(metastatementNode);
+  const statementJudgement = isStatementJudgement(statementNode);
 
-  if (metastatementJudgement) {
-    const metastatementString = localContext.nodeAsString(metastatementNode);
+  if (statementJudgement) {
+    const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${metastatementString}' metastatement as a judgement...`, metastatementNode);
+    localContext.trace(`Verifying the '${statementString}' statement as a judgement...`, statementNode);
 
-    const judgementNode = judgementNodeQuery(metastatementNode),
+    const judgementNode = judgementNodeQuery(statementNode),
           judgementVerified = verifyJudgement(judgementNode, assignments, derived, localContext);
 
-    metastatementVerifiedAsJudgement = judgementVerified;  ///
+    statementVerifiedAsJudgement = judgementVerified;  ///
 
-    if (metastatementVerifiedAsJudgement) {
-      localContext.debug(`...verified the '${metastatementString}' metastatement as a judgement.`, metastatementNode);
+    if (statementVerifiedAsJudgement) {
+      localContext.debug(`...verified the '${statementString}' statement as a judgement.`, statementNode);
     }
   }
 
-  return metastatementVerifiedAsJudgement;
+  return statementVerifiedAsJudgement;
 }
 
-function verifyMetastatementAsIs(metastatementNode, assignments, derived, localContext) {
-  let metastatementVerifiedAsIs;
+function verifyStatementAsIs(statementNode, assignments, derived, localContext) {
+  let statementVerifiedAsIs;
 
-  const metastatementJudgement = isMetastatementJudgement(metastatementNode);
+  const statementJudgement = isStatementJudgement(statementNode);
 
-  if (!metastatementJudgement) {
-    const metastatementString = localContext.nodeAsString(metastatementNode);
+  if (!statementJudgement) {
+    const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${metastatementString}' metastatement as is...`, metastatementNode);
+    localContext.trace(`Verifying the '${statementString}' statement as is...`, statementNode);
 
-    const verifyMetastatementAsIsFunctions = [
-      verifyDerivedMetastatementAsIs,
-      verifyStatedMetastatementAsIs
+    const verifyStatementAsIsFunctions = [
+      verifyDerivedStatementAsIs,
+      verifyStatedStatementAsIs
     ];
 
-    metastatementVerifiedAsIs = verifyMetastatementAsIsFunctions.some((verifyMetastatementAsIsFunction) => {
-      const metastatementVerifiedAsIs = verifyMetastatementAsIsFunction(metastatementNode, assignments, derived, localContext);
+    statementVerifiedAsIs = verifyStatementAsIsFunctions.some((verifyStatementAsIsFunction) => {
+      const statementVerifiedAsIs = verifyStatementAsIsFunction(statementNode, assignments, derived, localContext);
 
-      if (metastatementVerifiedAsIs) {
+      if (statementVerifiedAsIs) {
         return true;
       }
     });
 
-    if (metastatementVerifiedAsIs) {
-      localContext.debug(`...verified the '${metastatementString}' metastatement as is.`, metastatementNode);
+    if (statementVerifiedAsIs) {
+      localContext.debug(`...verified the '${statementString}' statement as is.`, statementNode);
     }
   }
 
-  return metastatementVerifiedAsIs;
+  return statementVerifiedAsIs;
 }
 
-function verifyDerivedMetastatementAsIs(metastatementNode, assignments, derived, localContext) {
-  let derivedMetastatementVerifiedAsIs = false;
+function verifyDerivedStatementAsIs(statementNode, assignments, derived, localContext) {
+  let derivedStatementVerifiedAsIs = false;
 
   if (derived) {
-    const metastatementString = localContext.nodeAsString(metastatementNode);
+    const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.debug(`Cannot verify the derived '${metastatementString}' metastatement as is.`, metastatementNode);
+    localContext.debug(`Cannot verify the derived '${statementString}' statement as is.`, statementNode);
   }
 
-  return derivedMetastatementVerifiedAsIs;
+  return derivedStatementVerifiedAsIs;
 }
 
-function verifyStatedMetastatementAsIs(metastatementNode, assignments, derived, localContext) {
-  let statedMetastatementVerifiedAsIs = false;
+function verifyStatedStatementAsIs(statementNode, assignments, derived, localContext) {
+  let statedStatementVerifiedAsIs = false;
 
   if (!derived) {
-    const metastatementString = localContext.nodeAsString(metastatementNode);
+    const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the stated '${metastatementString}' metastatement as is...`, metastatementNode);
+    localContext.trace(`Verifying the stated '${statementString}' statement as is...`, statementNode);
 
-    const nonTerminalNode = metastatementNode, ///
+    const nonTerminalNode = statementNode, ///
           nonTerminalNodeVerified = metaLevelNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;
           });
 
-    statedMetastatementVerifiedAsIs = nonTerminalNodeVerified;  ///
+    statedStatementVerifiedAsIs = nonTerminalNodeVerified;  ///
 
-    if (statedMetastatementVerifiedAsIs) {
-      localContext.debug(`...verified the stated '${metastatementString}' metastatement as is.`, metastatementNode);
+    if (statedStatementVerifiedAsIs) {
+      localContext.debug(`...verified the stated '${statementString}' statement as is.`, statementNode);
     }
   }
 
-  return statedMetastatementVerifiedAsIs;
+  return statedStatementVerifiedAsIs;
 }
 
-function isMetastatementJudgement(metastatementNode) {
-  const judgementNode = judgementNodeQuery(metastatementNode),
-        metastatementJudgement = (judgementNode !== null);
+function isStatementJudgement(statementNode) {
+  const judgementNode = judgementNodeQuery(statementNode),
+        statementJudgement = (judgementNode !== null);
 
-  return metastatementJudgement;
+  return statementJudgement;
 }

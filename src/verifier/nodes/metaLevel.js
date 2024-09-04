@@ -2,16 +2,16 @@
 
 import NodesVerifier from "../../verifier/nodes";
 import verifyVariableAgainstTerm from "../../verify/variableAgainstTerm";
-import verifyMetavariableAgainstMetastatement from "../../verify/metavariableAgainstMetastatement";
+import verifyMetavariableAgainstStatement from "../../verify/metavariableAgainstStatement";
 
 import { nodeQuery } from "../../utilities/query";
 import { verifyNodes } from "../../utilities/verifier";
 
 const termNodeQuery = nodeQuery("/term!"),
       nonTerminalNodeQuery = nodeQuery("/*"),
+      statementNodeQuery = nodeQuery("/statement!"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
-      metastatementNodeQuery = nodeQuery("/metastatement!"),
-      metastatementMetavariableNodeQuery = nodeQuery("/metastatement/metavariable!");
+      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 class MetaLevelNodesVerifier extends NodesVerifier {
   verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) {
@@ -19,18 +19,18 @@ class MetaLevelNodesVerifier extends NodesVerifier {
 
     const nodeQueryMaps = [
       {
-        nodeQueryA: metastatementMetavariableNodeQuery,
-        nodeQueryB: metastatementNodeQuery,
+        nodeQueryA: statementMetavariableNodeQuery,
+        nodeQueryB: statementNodeQuery,
         verifyNodes: (nodeA, nodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) => {
           let nonTerminalNodeVerified;
 
-          const metastatementNodeB = nodeB, ///
-                metastatementMetavariableNodeA = nodeA, ///
-                metastatementMetavariableNodeVerifiedAgainstMetastatementNode =
+          const statementNodeB = nodeB, ///
+                statementMetavariableNodeA = nodeA, ///
+                statementMetavariableNodeVerifiedAgainstStatementNode =
 
-                  this.verifyMetastatementMetavariableNodeAgainstMetastatementNode(metastatementMetavariableNodeA, metastatementNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
+                  this.verifyStatementMetavariableNodeAgainstStatementNode(statementMetavariableNodeA, statementNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead);
 
-          nonTerminalNodeVerified = metastatementMetavariableNodeVerifiedAgainstMetastatementNode;  ///
+          nonTerminalNodeVerified = statementMetavariableNodeVerifiedAgainstStatementNode;  ///
 
           return nonTerminalNodeVerified;
         }
@@ -77,16 +77,16 @@ class MetaLevelNodesVerifier extends NodesVerifier {
     return nonTerminalNodeVerified;
   }
 
-  verifyMetastatementMetavariableNodeAgainstMetastatementNode(metastatementMetavariableNodeA, metastatementNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) {
-    let metastatementMetavariableNodeVerifiedAgainstMetastatementNode;
+  verifyStatementMetavariableNodeAgainstStatementNode(statementMetavariableNodeA, statementNodeB, substitutions, localMetaContextA, localMetaContextB, verifyAhead) {
+    let statementMetavariableNodeVerifiedAgainstStatementNode;
 
-    const metavariableNode = metastatementMetavariableNodeA, ///
-          metastatementNode = metastatementNodeB, ///
-          metavariableVerifiedAgainstMetastatement = verifyMetavariableAgainstMetastatement(metavariableNode, metastatementNode, substitutions, verifyAhead);
+    const metavariableNode = statementMetavariableNodeA, ///
+          statementNode = statementNodeB, ///
+          metavariableVerifiedAgainstStatement = verifyMetavariableAgainstStatement(metavariableNode, statementNode, substitutions, verifyAhead);
 
-    metastatementMetavariableNodeVerifiedAgainstMetastatementNode = metavariableVerifiedAgainstMetastatement;  ///
+    statementMetavariableNodeVerifiedAgainstStatementNode = metavariableVerifiedAgainstStatement;  ///
 
-    return metastatementMetavariableNodeVerifiedAgainstMetastatementNode;
+    return statementMetavariableNodeVerifiedAgainstStatementNode;
   }
 
   verifyTermVariableNodeAgainstTermNode(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {

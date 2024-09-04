@@ -3,58 +3,58 @@
 import metaLevelNodeVerifier from "../verifier/node/metaLevel";
 
 import { CONTAINED } from "../constants";
+import { isAssertionNegated } from "../utilities/verify";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import { isMetastatementNegated } from "../utilities/verify";
 
-const termNodeQuery = nodeQuery("/metastatement/term!"),
-      operatorTerminalNodesQuery = nodesQuery("/metastatement/@operator"),
-      metastatementTermNodesQuery = nodesQuery("/metastatement/metastatement//term");
+const termNodeQuery = nodeQuery("/statement/term!"),
+      statementTermNodesQuery = nodesQuery("/statement/statement//term"),
+      operatorTerminalNodesQuery = nodesQuery("/statement/@operator");
 
-export default function verifyMetastatementAsContainedAssertion(metastatementNode, assignments, derived, localContext) {
-  let metastatementVerifiedAsContainedAssertion;
+export default function verifyStatementAsContainedAssertion(statementNode, assignments, derived, localContext) {
+  let statementVerifiedAsContainedAssertion;
 
-  const metastatementContainedAssertion = isMetastatementContainedAssertion(metastatementNode);
+  const statementContainedAssertion = isStatementContainedAssertion(statementNode);
 
-  if (metastatementContainedAssertion) {
-    const metastatementString = localContext.nodeAsString(metastatementNode);
+  if (statementContainedAssertion) {
+    const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${metastatementString}' metastatement as a contained assertion...`, metastatementNode);
+    localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`, statementNode);
 
-    const metastatementFunctions = [
-      verifyMetastatementAsDerivedContainedAssertion,
-      verifyMetastatementAsStatedContainedAssertion
+    const statementFunctions = [
+      verifyStatementAsDerivedContainedAssertion,
+      verifyStatementAsStatedContainedAssertion
     ];
 
-    metastatementVerifiedAsContainedAssertion = metastatementFunctions.some((metastatementFunction) => {
-      const metastatementVerifiedAsContainedAssertion = metastatementFunction(metastatementNode, assignments, derived, localContext);
+    statementVerifiedAsContainedAssertion = statementFunctions.some((statementFunction) => {
+      const statementVerifiedAsContainedAssertion = statementFunction(statementNode, assignments, derived, localContext);
 
-      if (metastatementVerifiedAsContainedAssertion) {
+      if (statementVerifiedAsContainedAssertion) {
         return true;
       }
     });
 
-    if (metastatementVerifiedAsContainedAssertion) {
-      localContext.debug(`...verified the '${metastatementString}' metastatement as a contained assertion.`, metastatementNode);
+    if (statementVerifiedAsContainedAssertion) {
+      localContext.debug(`...verified the '${statementString}' statement as a contained assertion.`, statementNode);
     }
   }
 
-  return metastatementVerifiedAsContainedAssertion;
+  return statementVerifiedAsContainedAssertion;
 }
 
-function verifyMetastatementAsDerivedContainedAssertion(metastatementNode, assignments, derived, localContext) {
-  let metastatementVerifiedAsDefinedContainedAssertion = false;
+function verifyStatementAsDerivedContainedAssertion(statementNode, assignments, derived, localContext) {
+  let statementVerifiedAsDefinedContainedAssertion = false;
 
   if (derived) {
-    const metastatementString = localContext.nodeAsString(metastatementNode);
+    const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the derived '${metastatementString}' metastatement as a contained assertion...`, metastatementNode);
+    localContext.trace(`Verifying the derived '${statementString}' statement as a contained assertion...`, statementNode);
 
-    const metastatementNegated = isMetastatementNegated(metastatementNode),
-          negated = metastatementNegated,
-          termNode = termNodeQuery(metastatementNode),
-          metastatementTermNodes = metastatementTermNodesQuery(metastatementNode),
-          termNodeMatchesMetaArgumentTermNode = metastatementTermNodes.some((metastatementTermNode) => {
-            const termNodeMatchesMetaArgumentTermNode = termNode.match(metastatementTermNode);
+    const statementNegated = isAssertionNegated(statementNode),
+          negated = statementNegated,
+          termNode = termNodeQuery(statementNode),
+          statementTermNodes = statementTermNodesQuery(statementNode),
+          termNodeMatchesMetaArgumentTermNode = statementTermNodes.some((statementTermNode) => {
+            const termNodeMatchesMetaArgumentTermNode = termNode.match(statementTermNode);
 
             if (termNodeMatchesMetaArgumentTermNode) {
               return true;
@@ -63,58 +63,58 @@ function verifyMetastatementAsDerivedContainedAssertion(metastatementNode, assig
 
     if (!negated) {
       if (termNodeMatchesMetaArgumentTermNode) {
-        metastatementVerifiedAsDefinedContainedAssertion = true;
+        statementVerifiedAsDefinedContainedAssertion = true;
       }
     }
 
     if (negated) {
       if (!termNodeMatchesMetaArgumentTermNode) {
-        metastatementVerifiedAsDefinedContainedAssertion = true;
+        statementVerifiedAsDefinedContainedAssertion = true;
       }
     }
 
-    if (metastatementVerifiedAsDefinedContainedAssertion) {
-      localContext.debug(`...verified the derived '${metastatementString}' metastatement as a contained assertion.`, metastatementNode);
+    if (statementVerifiedAsDefinedContainedAssertion) {
+      localContext.debug(`...verified the derived '${statementString}' statement as a contained assertion.`, statementNode);
     }
   }
 
-  return metastatementVerifiedAsDefinedContainedAssertion;
+  return statementVerifiedAsDefinedContainedAssertion;
 }
 
-function verifyMetastatementAsStatedContainedAssertion(metastatementNode, assignments, derived, localContext) {
-  let metastatementVerifiedAsStatedContainedAssertion = false;
+function verifyStatementAsStatedContainedAssertion(statementNode, assignments, derived, localContext) {
+  let statementVerifiedAsStatedContainedAssertion = false;
 
   if (!derived) {
-    const metastatementString = localContext.nodeAsString(metastatementNode);
+    const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the stated '${metastatementString}' metastatement as a contained assertion...`, metastatementNode);
+    localContext.trace(`Verifying the stated '${statementString}' statement as a contained assertion...`, statementNode);
 
     const intrinsicLevel = localContext.isIntrinsicLevel();
 
     if (intrinsicLevel) {
-      localContext.debug(`The stated '${metastatementString}' metastatement as a contained assertion cannot be verified at intrinsic level.`, metastatementNode);
+      localContext.debug(`The stated '${statementString}' statement as a contained assertion cannot be verified at intrinsic level.`, statementNode);
     } else {
-      const nonTerminalNode = metastatementNode, ///
+      const nonTerminalNode = statementNode, ///
             nonTerminalNodeVerified = metaLevelNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
               const verifiedAhead = true;
 
               return verifiedAhead;
             });
 
-      metastatementVerifiedAsStatedContainedAssertion = nonTerminalNodeVerified; ///
+      statementVerifiedAsStatedContainedAssertion = nonTerminalNodeVerified; ///
     }
 
-    if (metastatementVerifiedAsStatedContainedAssertion) {
-      localContext.debug(`...verified the stated '${metastatementString}' metastatement as a contained assertion.`, metastatementNode);
+    if (statementVerifiedAsStatedContainedAssertion) {
+      localContext.debug(`...verified the stated '${statementString}' statement as a contained assertion.`, statementNode);
     }
   }
 
-  return metastatementVerifiedAsStatedContainedAssertion;
+  return statementVerifiedAsStatedContainedAssertion;
 }
 
-export function isMetastatementContainedAssertion(metastatementNode) {
-  const operatorTerminalNodes = operatorTerminalNodesQuery(metastatementNode),
-        metastatementContainedAssertion = operatorTerminalNodes.some((operatorTerminalNode) => {
+export function isStatementContainedAssertion(statementNode) {
+  const operatorTerminalNodes = operatorTerminalNodesQuery(statementNode),
+        statementContainedAssertion = operatorTerminalNodes.some((operatorTerminalNode) => {
           const content = operatorTerminalNode.getContent(),
                 contentContained = (content === CONTAINED);
 
@@ -123,5 +123,5 @@ export function isMetastatementContainedAssertion(metastatementNode) {
           }
         });
 
-  return metastatementContainedAssertion;
+  return statementContainedAssertion;
 }

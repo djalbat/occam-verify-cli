@@ -1,19 +1,19 @@
 "use strict";
 
+import verifyProof from "../verify/proof";
 import Metatheorem from "../metatheorem";
 import verifyLabels from "../verify/labels";
 import LocalContext from "../context/local";
-import verifyMetaproof from "../verify/metaproof";
-import verifyMetaConsequent from "../verify/metaConsequent";
-import verifyMetaSuppositions from "../verify/metaSuppositions";
+import verifyConsequent from "../verify/consequent";
+import verifySuppositions from "../verify/suppositions";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const labelNodesQuery = nodesQuery("/metatheorem/label"),
-      metaproofNodeQuery = nodeQuery("/metatheorem/metaproof!"),
-      metaConsequentNodeQuery = nodeQuery("/metatheorem/metaConsequent!"),
-      metaSuppositionsNodeQuery = nodesQuery("/metatheorem/metaSupposition");
+      proofNodeQuery = nodeQuery("/metatheorem/proof!"),
+      consequentNodeQuery = nodeQuery("/metatheorem/consequent!"),
+      suppositionsNodeQuery = nodesQuery("/metatheorem/supposition");
 
 export default function verifyMetatheorem(metatheoremNode, fileContext) {
   let metatheoremVerified = false;
@@ -29,24 +29,24 @@ export default function verifyMetatheorem(metatheoremNode, fileContext) {
   if (labelsVerified) {
     const localContext = LocalContext.fromFileContext(fileContext), ///
           substitutions = [],
-          metaSuppositions = [],
-          metaSuppositionNodes = metaSuppositionsNodeQuery(metatheoremNode),
-          metaSuppositionsVerified = verifyMetaSuppositions(metaSuppositionNodes, metaSuppositions, substitutions, localContext);
+          suppositions = [],
+          suppositionNodes = suppositionsNodeQuery(metatheoremNode),
+          suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, substitutions, localContext);
 
-    if (metaSuppositionsVerified) {
-      const metaConsequents = [],
-            metaConsequentNode = metaConsequentNodeQuery(metatheoremNode),
-            metaConsequentVerified = verifyMetaConsequent(metaConsequentNode, metaConsequents, substitutions, localContext);
+    if (suppositionsVerified) {
+      const consequents = [],
+            consequentNode = consequentNodeQuery(metatheoremNode),
+            consequentVerified = verifyConsequent(consequentNode, consequents, substitutions, localContext);
 
-      if (metaConsequentVerified) {
-        const metaproofNode = metaproofNodeQuery(metatheoremNode),
-              firstMetaConsequent = first(metaConsequents),
-              metaConsequent = firstMetaConsequent, ///
-              metastatementNode = metaConsequent.getMetastatementNode(),
-              metaproofVerified = verifyMetaproof(metaproofNode, metastatementNode, substitutions, localContext);
+      if (consequentVerified) {
+        const proofNode = proofNodeQuery(metatheoremNode),
+              firstConsequent = first(consequents),
+              consequent = firstConsequent, ///
+              statementNode = consequent.getStatementNode(),
+              proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
 
-        if (metaproofVerified) {
-          const metatheorem = Metatheorem.fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(labels, metaSuppositions, metaConsequent, substitutions, fileContext);
+        if (proofVerified) {
+          const metatheorem = Metatheorem.fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(labels, suppositions, consequent, substitutions, fileContext);
 
           fileContext.addMetatheorem(metatheorem);
 

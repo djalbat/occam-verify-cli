@@ -8,14 +8,13 @@ import { last, reverse } from "../utilities/array";
 import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../utilities/equivalences";
 
 class LocalContext {
-  constructor(context, variables, proofSteps, equivalences, judgements, metavariables, metaproofSteps) {
+  constructor(context, variables, proofSteps, judgements, equivalences, metavariables) {
     this.context = context;
     this.variables = variables;
     this.proofSteps = proofSteps;
-    this.equivalences = equivalences;
     this.judgements = judgements;
+    this.equivalences = equivalences;
     this.metavariables = metavariables;
-    this.metaproofSteps = metaproofSteps;
   }
 
   getContext() {
@@ -44,6 +43,17 @@ class LocalContext {
     return proofSteps;
   }
 
+  getJudgements() {
+    let judgements = this.context.getJudgements();
+
+    judgements = [ ///
+      ...this.judgements,
+      ...judgements
+    ]
+
+    return judgements;
+  }
+
   getEquivalences() {
     let equivalences = this.context.getEquivalences();
 
@@ -54,17 +64,6 @@ class LocalContext {
     equivalences = mergeEquivalences(equivalencesA, equivalencesB, LocalContext); ///
 
     return equivalences;
-  }
-
-  getJudgements() {
-    let judgements = this.context.getJudgements();
-
-    judgements = [ ///
-      ...this.judgements,
-      ...judgements
-    ]
-
-    return judgements;
   }
 
   getMetavariables() {
@@ -78,17 +77,6 @@ class LocalContext {
     return metavariables;
   }
 
-  getMetaproofSteps() {
-    let metaproofSteps = this.context.getMetaproofSteps();
-
-    metaproofSteps = [  ///
-      ...metaproofSteps,
-      ...this.metaproofSteps
-    ];
-
-    return metaproofSteps;
-  }
-
   getLastProofStep() {
     let lastProofStep = null;
 
@@ -99,18 +87,6 @@ class LocalContext {
     }
 
     return lastProofStep;
-  }
-
-  getLastMetaproofStep() {
-    let lastMetaproofStep = null;
-
-    const metaproofStepsLength = this.metaproofSteps.length;
-
-    if (metaproofStepsLength > 0) {
-      lastMetaproofStep = last(this.metaproofSteps);
-    }
-
-    return lastMetaproofStep;
   }
 
   addEquality(equality) {
@@ -241,10 +217,6 @@ class LocalContext {
     return metavariableAdded;
   }
 
-  addMetaproofStep(metaproofStep) {
-    this.metaproofSteps.push(metaproofStep);
-  }
-
   matchStatementNode(statementNode) {
     let proofSteps = this.getProofSteps();
 
@@ -259,22 +231,6 @@ class LocalContext {
     });
 
     return matchesStatementNode;
-  }
-
-  matchMetastatementNode(metastatementNode) {
-    let metaproofSteps = this.getMetaproofSteps();
-
-    metaproofSteps = reverse(metaproofSteps); ///
-
-    const matchesMetastatementNode = metaproofSteps.some((metaproofStep) => {
-      const metaproofStepMatchesMetastatementNode = metaproofStep.matchMetastatementNode(metastatementNode);
-
-      if (metaproofStepMatchesMetastatementNode) {
-        return true;
-      }
-    });
-
-    return matchesMetastatementNode;
   }
 
   getTermType(term) {
@@ -404,8 +360,7 @@ class LocalContext {
           equivalences = [],
           judgements = [],
           metavariables = [],
-          metaproofSteps = [],
-          localContext = new LocalContext(context, variables, proofSteps, equivalences, judgements, metavariables, metaproofSteps);
+          localContext = new LocalContext(context, variables, proofSteps, judgements, equivalences, metavariables);
 
     return localContext;
   }
@@ -416,10 +371,9 @@ class LocalContext {
           proofSteps = [],
           equivalences = [],
           judgements = [],
-          metavariables = [],
-          metaproofSteps = [];
+          metavariables = [];
 
-    localContext = new LocalContext(context, variables, proofSteps, equivalences, judgements, metavariables, metaproofSteps);  ///
+    localContext = new LocalContext(context, variables, proofSteps, judgements, equivalences, metavariables);  ///
 
     return localContext;
   }
@@ -441,8 +395,7 @@ class LocalContext {
           equivalences = [],
           judgements = [],
           metavariables = [],
-          metaproofSteps = [],
-          localContext = new LocalContext(context, variables, proofSteps, equivalences, judgements, metavariables, metaproofSteps);  ///
+          localContext = new LocalContext(context, variables, proofSteps, judgements, equivalences, metavariables);  ///
 
     return localContext;
   }

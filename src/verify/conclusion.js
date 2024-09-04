@@ -1,15 +1,12 @@
 "use strict";
 
 import Conclusion from "../conclusion";
-import verifyUnqualifiedStatement from "./statement/unqualified";
-import verifyUnqualifiedMetastatement from "../verify/metastatement/unqualified";
+import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
-      metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!"),
-      unqualifiedStatementNodeQuery = nodeQuery("/conclusion/unqualifiedStatement!"),
-      unqualifiedMetastatementNodeQuery = nodeQuery("/conclusion/unqualifiedMetastatement!");
+      unqualifiedStatementNodeQuery = nodeQuery("/conclusion/unqualifiedStatement!");
 
 export default function verifyConclusion(conclusionNode, conclusions, localContext) {
   let conclusionVerified = false;
@@ -18,8 +15,7 @@ export default function verifyConclusion(conclusionNode, conclusions, localConte
 
   localContext.trace(`Verifying the '${conclusionString}' conclusion...`, conclusionNode);
 
-  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode),
-        unqualifiedMetastatementNode = unqualifiedMetastatementNodeQuery(conclusionNode);
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode);
 
   if (unqualifiedStatementNode !== null) {
     const derived = false,
@@ -29,12 +25,12 @@ export default function verifyConclusion(conclusionNode, conclusions, localConte
     conclusionVerified = unqualifiedStatementVerified; ///
   }
 
-  if (unqualifiedMetastatementNode !== null) {
+  if (unqualifiedStatementNode !== null) {
     const derived = false,
           assignments = [],
-          unqualifiedMetastatementVerified = verifyUnqualifiedMetastatement(unqualifiedMetastatementNode, assignments, derived, localContext);
+          unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
-    conclusionVerified = unqualifiedMetastatementVerified; ///
+    conclusionVerified = unqualifiedStatementVerified; ///
   }
 
   if (conclusionVerified) {
@@ -46,10 +42,10 @@ export default function verifyConclusion(conclusionNode, conclusions, localConte
       conclusion = Conclusion.fromStatementNode(statementNode);
     }
 
-    if (unqualifiedMetastatementNode !== null) {
-      const metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
+    if (unqualifiedStatementNode !== null) {
+      const statementNode = statementNodeQuery(unqualifiedStatementNode);
 
-      conclusion = Conclusion.fromMetastatementNode(metastatementNode);
+      conclusion = Conclusion.fromStatementNode(statementNode);
     }
 
     conclusions.push(conclusion);

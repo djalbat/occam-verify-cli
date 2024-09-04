@@ -6,54 +6,54 @@ import metaLevelNodeVerifier from "../verifier/node/metaLevel";
 import { first } from "../utilities/array";
 import { DEFINED } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import { isMetastatementNegated } from "../utilities/verify";
+import { isAssertinoNegated } from "../utilities/verify";
 
-const termNodeQuery = nodeQuery("/metastatement/term!"),
-      variableNodeQuery = nodeQuery("/metastatement/term/variable!"),
-      operatorTerminalNodesQuery = nodesQuery("/metastatement/@operator");
+const termNodeQuery = nodeQuery("/statement/term!"),
+      variableNodeQuery = nodeQuery("/statement/term/variable!"),
+      operatorTerminalNodesQuery = nodesQuery("/statement/@operator");
 
-export default function verifyMetastatementAsDefinedAssertion(metastatementNode, assignments, derived, localContext) {
-  let metastatementVerifiedAsDefinedAssertion = false;
+export default function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, localContext) {
+  let statementVerifiedAsDefinedAssertion = false;
 
-  const metastatementDefinedAssertion = isMetastatementDefinedAssertion(metastatementNode);
+  const statementDefinedAssertion = isStatementDefinedAssertion(statementNode);
 
-  if (metastatementDefinedAssertion) {
-    const metastatementString = localContext.nodeAsString(metastatementNode);
+  if (statementDefinedAssertion) {
+    const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the '${metastatementString}' metastatement as a defined assertion...`, metastatementNode);
+    localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, statementNode);
 
     const definedAssertionFunctions = [
-      verifyDerivedMetastatementAsDefinedAssertion,
-      verifyStatedMetastatementAsDefinedAssertion
+      verifyDerivedStatementAsDefinedAssertion,
+      verifyStatedStatementAsDefinedAssertion
     ];
 
-    metastatementVerifiedAsDefinedAssertion = definedAssertionFunctions.some((definedAssertionFunction) => {
-      const metastatementVerifiedAsDefinedAssertion = definedAssertionFunction(metastatementNode, assignments, derived, localContext);
+    statementVerifiedAsDefinedAssertion = definedAssertionFunctions.some((definedAssertionFunction) => {
+      const statementVerifiedAsDefinedAssertion = definedAssertionFunction(statementNode, assignments, derived, localContext);
 
-      if (metastatementVerifiedAsDefinedAssertion) {
+      if (statementVerifiedAsDefinedAssertion) {
         return true;
       }
     });
 
-    if (metastatementVerifiedAsDefinedAssertion) {
-      localContext.debug(`...verified the '${metastatementString}' metastatement as a defined assertion.`, metastatementNode);
+    if (statementVerifiedAsDefinedAssertion) {
+      localContext.debug(`...verified the '${statementString}' statement as a defined assertion.`, statementNode);
     }
   }
 
-  return metastatementVerifiedAsDefinedAssertion;
+  return statementVerifiedAsDefinedAssertion;
 }
 
-function verifyDerivedMetastatementAsDefinedAssertion(metastatementNode, assignments, derived, localContext) {
-  let derivedMetastatementVerifiedAsDefeindAssertion = false;
+function verifyDerivedStatementAsDefinedAssertion(statementNode, assignments, derived, localContext) {
+  let derivedStatementVerifiedAsDefeindAssertion = false;
 
   if (derived) {
-    const metastatementString = localContext.nodeAsString(metastatementNode);
+    const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the derived '${metastatementString}' metastatement as a defined assertion...`, metastatementNode);
+    localContext.trace(`Verifying the derived '${statementString}' statement as a defined assertion...`, statementNode);
 
-    const metastatementNegated = isMetastatementNegated(metastatementNode),
-          variableNode = variableNodeQuery(metastatementNode),
-          termNode = termNodeQuery(metastatementNode);
+    const statementNegated = isAssertinoNegated(statementNode),
+          variableNode = variableNodeQuery(statementNode),
+          termNode = termNodeQuery(statementNode);
 
     if (false) {
       ///
@@ -63,15 +63,15 @@ function verifyDerivedMetastatementAsDefinedAssertion(metastatementNode, assignm
       if (variable !== null) {
         const variableDefined = localContext.isVariableDefined(variable);
 
-        if (!metastatementNegated) {
+        if (!statementNegated) {
           if (variableDefined) {
-            derivedMetastatementVerifiedAsDefeindAssertion = true;
+            derivedStatementVerifiedAsDefeindAssertion = true;
           }
         }
 
-        if (metastatementNegated) {
+        if (statementNegated) {
           if (!variableDefined) {
-            derivedMetastatementVerifiedAsDefeindAssertion = true;
+            derivedStatementVerifiedAsDefeindAssertion = true;
           }
         }
       }
@@ -88,62 +88,62 @@ function verifyDerivedMetastatementAsDefinedAssertion(metastatementNode, assignm
               term = firstTerm, ///
               termGrounded = localContext.isTermGrounded(term);
 
-        if (!metastatementNegated) {
+        if (!statementNegated) {
           if (termGrounded) {
-            derivedMetastatementVerifiedAsDefeindAssertion = true;
+            derivedStatementVerifiedAsDefeindAssertion = true;
           }
         }
 
-        if (metastatementNegated) {
+        if (statementNegated) {
           if (!termGrounded) {
-            derivedMetastatementVerifiedAsDefeindAssertion = true;
+            derivedStatementVerifiedAsDefeindAssertion = true;
           }
         }
       }
     }
 
-    if (derivedMetastatementVerifiedAsDefeindAssertion) {
-      localContext.debug(`...verified the derived '${metastatementString}' metastatement as a defined assertion.`, metastatementNode);
+    if (derivedStatementVerifiedAsDefeindAssertion) {
+      localContext.debug(`...verified the derived '${statementString}' statement as a defined assertion.`, statementNode);
     }
   }
 
-  return derivedMetastatementVerifiedAsDefeindAssertion;
+  return derivedStatementVerifiedAsDefeindAssertion;
 }
 
-function verifyStatedMetastatementAsDefinedAssertion(metastatementNode, assignments, derived, localContext) {
-  let statedMetastatementVerifiedAsDefinedAssertion = false;
+function verifyStatedStatementAsDefinedAssertion(statementNode, assignments, derived, localContext) {
+  let statedStatementVerifiedAsDefinedAssertion = false;
 
   if (!derived) {
-    const metastatementString = localContext.nodeAsString(metastatementNode);
+    const statementString = localContext.nodeAsString(statementNode);
 
-    localContext.trace(`Verifying the stated '${metastatementString}' metastatement as a defined assertion...`, metastatementNode);
+    localContext.trace(`Verifying the stated '${statementString}' statement as a defined assertion...`, statementNode);
 
     const intrinsicLevel = localContext.isIntrinsicLevel();
 
     if (intrinsicLevel) {
-      localContext.debug(`The stated '${metastatementString}' metastatement as a defined assertion cannot be verified at intrinsic level.`, metastatementNode);
+      localContext.debug(`The stated '${statementString}' statement as a defined assertion cannot be verified at intrinsic level.`, statementNode);
     } else {
-      const nonTerminalNode = metastatementNode, ///
+      const nonTerminalNode = statementNode, ///
             nonTerminalNodeVerified = metaLevelNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
               const verifiedAhead = true;
 
               return verifiedAhead;
             });
 
-      statedMetastatementVerifiedAsDefinedAssertion = nonTerminalNodeVerified; ///
+      statedStatementVerifiedAsDefinedAssertion = nonTerminalNodeVerified; ///
     }
 
-    if (statedMetastatementVerifiedAsDefinedAssertion) {
-      localContext.debug(`...verified the stated '${metastatementString}' metastatement as a defined assertion.`, metastatementNode);
+    if (statedStatementVerifiedAsDefinedAssertion) {
+      localContext.debug(`...verified the stated '${statementString}' statement as a defined assertion.`, statementNode);
     }
   }
 
-  return statedMetastatementVerifiedAsDefinedAssertion;
+  return statedStatementVerifiedAsDefinedAssertion;
 }
 
-export function isMetastatementDefinedAssertion(metastatementNode) {
-  const operatorTerminalNodes = operatorTerminalNodesQuery(metastatementNode),
-        metastatementDefinedAssertion = operatorTerminalNodes.some((operatorTerminalNode) => {
+export function isStatementDefinedAssertion(statementNode) {
+  const operatorTerminalNodes = operatorTerminalNodesQuery(statementNode),
+        statementDefinedAssertion = operatorTerminalNodes.some((operatorTerminalNode) => {
           const content = operatorTerminalNode.getContent(),
                 contentDefined = (content === DEFINED);
 
@@ -152,5 +152,5 @@ export function isMetastatementDefinedAssertion(metastatementNode) {
           }
         });
 
-  return metastatementDefinedAssertion;
+  return statementDefinedAssertion;
 }

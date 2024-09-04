@@ -1,9 +1,18 @@
 "use strict";
 
+import LocalContext from "./context/local";
+import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
 import intrinsicLevelNodesVerifier from "./verifier/nodes/intrinsicLevel";
 
+import { match } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
 import { statementNodeFromStatementString } from "./utilities/node";
+import {nodeQuery, nodesQuery} from "./utilities/query";
+
+const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
+      subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
+      subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement!"),
+      subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!");
 
 export default class Supposition {
   constructor(statementNode) {
@@ -27,6 +36,43 @@ export default class Supposition {
           matchesStatementNode = nonTerminalNodeVerified; ///
 
     return matchesStatementNode;
+  }
+
+  matchSubproofNode(subproofNode, substitutions, fileContext, localContext) {
+    let matchesSubproofNode = false;
+
+    if (this.statementNode !== null) {
+      const subproofAssertionNode = subproofAssertionNodeQuery(this.statementNode);
+
+      if (subproofAssertionNode !== null) {
+        const subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
+              subproofLastProofStepStatementNode = subproofLastProofStepStatementNodeQuery(subproofNode),
+              subproofStatementNodes = [
+                ...subproofSuppositionStatementNodes,
+                subproofLastProofStepStatementNode
+              ],
+              subproofAssertionStatementNodes = subproofAssertionStatementNodesQuery(subproofAssertionNode);
+
+        matchesSubproofNode = match(subproofAssertionStatementNodes, subproofStatementNodes, (subproofAssertionStatementNode, ruleSubproofStatementNode) => {
+          const fileContextA = fileContext, ///
+                nonTerminalNodeA = subproofAssertionStatementNode,  ///
+                nonTerminalNodeB = ruleSubproofStatementNode, ///
+                localContextA = LocalContext.fromFileContext(fileContextA),  ///
+                localContextB = localContext,  ///
+                nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+                  const verifiedAhead = true;
+
+                  return verifiedAhead;
+                });
+
+          if (nonTerminalNodeVerified) {
+            return true;
+          }
+        });
+      }
+    }
+
+    return matchesSubproofNode;
   }
 
   toJSON(tokens) {

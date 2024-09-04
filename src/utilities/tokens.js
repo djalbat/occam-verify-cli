@@ -40,14 +40,6 @@ export function unqualifiedStatementTokensFromStatementString(statementString, l
   return unqualifiedStatementTokens;
 }
 
-export function unqualifiedMetastatementTokensFromMetastatementString(metastatementString, lexer) {
-  const unqualifiedMetastatementContent = `${metastatementString}
-`,
-        unqualifiedMetastatementTokens = tokensFromContentAndLexer(unqualifiedMetastatementContent, lexer);
-
-  return unqualifiedMetastatementTokens;
-}
-
 function tokensFromContentAndLexer(content, lexer = florenceLexer) {
   const tokens = lexer.tokenise(content);
 

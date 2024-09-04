@@ -24,10 +24,4 @@ export default class Substitution {
 
     return matchesMetavariableNode;
   }
-
-  matchMetastatementNode(metastatementNode) {
-    const matchesMetastatementNode = false;
-
-    return matchesMetastatementNode;
-  }
 }

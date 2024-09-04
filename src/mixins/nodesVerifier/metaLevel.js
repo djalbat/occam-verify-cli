@@ -1,8 +1,8 @@
 "use strict";
 
-import MetastatementForMetavariableSubstitution from "../../substitution/metastatementForMetavariable";
+import StatementForMetavariableSubstitution from "../../substitution/statementForMetavariable";
 
-function verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead) {
+function verifyMetavariableNode(metavariableNodeA, statementNodeB, substitutions, localContextA, localMetaContextB, verifyAhead) {
   let metavariableNodeVerified;
 
   const substitution = substitutions.find((substitution) => {
@@ -14,15 +14,15 @@ function verifyMetavariableNode(metavariableNodeA, metastatementNodeB, substitut
   }) || null;
 
   if (substitution !== null) {
-    const metastatementNode = metastatementNodeB, ///
-          substitutionMetastatementNode = substitution.matchMetastatementNode(metastatementNode);
+    const statementNode = statementNodeB, ///
+          substitutionStatementNode = substitution.matchStatementNode(statementNode);
 
-    metavariableNodeVerified = substitutionMetastatementNode;  ///
+    metavariableNodeVerified = substitutionStatementNode;  ///
   } else {
     const metavariableNode = metavariableNodeA, ///
-          metastatementNode = metastatementNodeB, ///
-          metastatementForMetavariableSubstitution = MetastatementForMetavariableSubstitution.fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode),
-          substitution = metastatementForMetavariableSubstitution;  ///
+          statementNode = statementNodeB, ///
+          statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode),
+          substitution = statementForMetavariableSubstitution;  ///
 
     substitutions.push(substitution);
 

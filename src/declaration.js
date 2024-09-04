@@ -1,27 +1,27 @@
 "use strict";
 
-import { matchMetastatementModuloBrackets } from "./utilities/match";
+import { matchStatementModuloBrackets } from "./utilities/match";
 
 export default class Declaration {
-  constructor(metavariableNode, metastatementNode) {
+  constructor(metavariableNode, statementNode) {
     this.metavariableNode = metavariableNode;
-    this.metastatementNode = metastatementNode;
+    this.statementNode = statementNode;
   }
 
   getMetavariableNode() {
     return this.metavariableNode;
   }
 
-  getMetastatementNode() {
-    return this.metastatementNode;
+  getStatementNode() {
+    return this.statementNode;
   }
 
   matchSubstitution(substitution) {
-    const metavariableNode = substitution.getMetavariableNode(),
-          metastatementNode = substitution.getMetastatementNode(),
+    const statementNode = substitution.getStatementNode(),
+          metavariableNode = substitution.getMetavariableNode(),
+          matchesStatementNode = this.matchStatementNode(statementNode),
           matchesMetavariableNode = this.matchMetavariableNode(metavariableNode),
-          matchesMetastatementNode = this.matchMetastatementNode(metastatementNode),
-          matchesSubstitution = (matchesMetavariableNode && matchesMetastatementNode);
+          matchesSubstitution = (matchesMetavariableNode && matchesStatementNode);
 
     return matchesSubstitution;
   }
@@ -32,26 +32,26 @@ export default class Declaration {
     return matchesMetavariableNode;
   }
 
-  matchMetastatementNode(metastatementNode) {
-    const metastatementNodeA = metastatementNode, ///
-          metastatementNodeB = this.metastatementNode,  ///
-          metastatementMatches = matchMetastatementModuloBrackets(metastatementNodeA, metastatementNodeB),
-          matchesMetastatementNode = metastatementMatches;  ///
+  matchStatementNode(statementNode) {
+    const statementNodeA = statementNode, ///
+          statementNodeB = this.statementNode,  ///
+          statementMatches = matchStatementModuloBrackets(statementNodeA, statementNodeB),
+          matchesStatementNode = statementMatches;  ///
 
-    return matchesMetastatementNode;
+    return matchesStatementNode;
   }
 
   matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
     const metaConsequent = metaLemmaMetatheorem.getMetaConsequent(),
-          metastatementNode = metaConsequent.getMetastatementNode(),
-          matches = this.metastatementNode.match(metastatementNode),
+          statementNode = metaConsequent.getStatementNode(),
+          matches = this.statementNode.match(statementNode),
           matchesMetaLemmaOrMetaTheorem = matches;  ///
 
     return matchesMetaLemmaOrMetaTheorem;
   }
 
-  static fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode) {
-    const declaration = new Declaration(metavariableNode, metastatementNode);
+  static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {
+    const declaration = new Declaration(metavariableNode, statementNode);
 
     return declaration;
   }

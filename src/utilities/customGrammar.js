@@ -5,11 +5,10 @@ import { CustomGrammar, CombinedCustomGrammar } from "occam-custom-grammars";
 export function customGrammarFromNameAndEntries(name, entries) {
   const termBNF = entries.getTermBNF(),
         statementBNF = entries.getStatementBNF(),
-        metastatementBNF = entries.getMetastatementBNF(),
         typePattern = entries.getTypePattern(),
         symbolPattern = entries.getSymbolPattern(),
         operatorPattern = entries.getOperatorPattern(),
-        customGrammar = CustomGrammar.fromNameTermBNFStatementBNFMetastatementBNFTypePatternSymbolPatternAndOperatorPattern(name, termBNF, statementBNF, metastatementBNF, typePattern, symbolPattern, operatorPattern);
+        customGrammar = CustomGrammar.fromNameTermBNFStatementBNFTypePatternSymbolPatternAndOperatorPattern(name, termBNF, statementBNF, typePattern, symbolPattern, operatorPattern);
 
   return customGrammar;
 }

@@ -7,25 +7,16 @@ import intrinsicLevelAgainstMetaLevelNodesVerifier from "./verifier/nodes/intrin
 import { match } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { statementNodeFromStatementString, metastatementNodeFromMetastatementString } from "./utilities/node";
+import { statementNodeFromStatementString } from "./utilities/node";
 
-const subproofAssertionNodeQuery = nodeQuery("/metastatement/subproofAssertion!"),
-      subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement!/statement!"),
-      subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!"),
-      subproofAssertionMetastatementNodesQuery = nodesQuery("/subproofAssertion/metastatement"),
-      ruleSubproofPremiseMetastatementNodesQuery = nodesQuery("/ruleSubproof/premise/unqualifiedMetastatement!/metastatement!"),
-      metaSubproofMetaSuppositionMetastatementNodesQuery = nodesQuery("/metaSubproof/metaSupposition/unqualifiedMetastatement!/metastatement!"),
-      ruleSubproofLastRuleProofStepMetastatementNodeQuery = nodeQuery("/ruleSubproof/ruleSubDerivation/lastRuleProofStep/unqualifiedMetastatement|qualifiedMetastatement/metastatement!"),
-      metaSubproofLastMetaproofStepMetastatementNodeQuery = nodeQuery("/metaSubproof/metaSubDerivation/lastMetaproofStep/unqualifiedMetastatement|qualifiedMetastatement/metastatement!");
+const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
+      subproofPremiseStatementNodesQuery = nodesQuery("/subproof/premise/unqualifiedStatement!/statement!"),
+      subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
+      subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!");
 
 export default class Premise {
-  constructor(metastatementNode, statementNode) {
-    this.metastatementNode = metastatementNode;
+  constructor(statementNode) {
     this.statementnode = statementNode;
-  }
-
-  getMetastatementNode() {
-    return this.metastatementNode;
   }
 
   getStatementNode() {
@@ -35,9 +26,9 @@ export default class Premise {
   matchStatementNode(statementNode, substitutions, fileContext, localContext) {
     let matchesStatementNode = false;
 
-    if (this.metastatementNode !== null) {
+    if (this.statementNode !== null) {
       const fileContextA = fileContext, ///
-            nonTerminalNodeA = this.metastatementNode,  ///
+            nonTerminalNodeA = this.statementNode,  ///
             nonTerminalNodeB = statementNode,  ///
             localContextA = LocalContext.fromFileContext(fileContextA),
             localContextB = localContext,  ///
@@ -56,25 +47,25 @@ export default class Premise {
   matchSubproofNode(subproofNode, substitutions, fileContext, localContext) {
     let matchesSubproofNode = false;
 
-    if (this.metastatementNode !== null) {
-      const subproofAssertionNode = subproofAssertionNodeQuery(this.metastatementNode);
+    if (this.statementNode !== null) {
+      const subproofAssertionNode = subproofAssertionNodeQuery(this.statementNode);
 
       if (subproofAssertionNode !== null) {
-        const subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
+        const subproofPremiseStatementNodes = subproofPremiseStatementNodesQuery(subproofNode),
               subproofLastProofStepStatementNode = subproofLastProofStepStatementNodeQuery(subproofNode),
               subproofStatementNodes = [
-                ...subproofSuppositionStatementNodes,
+                ...subproofPremiseStatementNodes,
                 subproofLastProofStepStatementNode
               ],
-              subproofAssertionMetastatementNodes = subproofAssertionMetastatementNodesQuery(subproofAssertionNode);
+              subproofAssertionStatementNodes = subproofAssertionStatementNodesQuery(subproofAssertionNode);
 
-        matchesSubproofNode = match(subproofAssertionMetastatementNodes, subproofStatementNodes, (subproofAssertionMetastatementNode, subproofStatementNode) => {
+        matchesSubproofNode = match(subproofAssertionStatementNodes, subproofStatementNodes, (subproofAssertionStatementNode, subproofStatementNode) => {
           const fileContextA = fileContext, ///
-                nonTerminalNodeA = subproofAssertionMetastatementNode,  ///
+                nonTerminalNodeA = subproofAssertionStatementNode,  ///
                 nonTerminalNodeB = subproofStatementNode, ///
                 localContextA = LocalContext.fromFileContext(fileContextA),
                 localContextB = localContext,  ///
-                nonTerminalNodeVerified = intrinsicLevelAgainstMetaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+                nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
                   const verifiedAhead = true;
 
                   return verifiedAhead;
@@ -90,108 +81,10 @@ export default class Premise {
     return matchesSubproofNode;
   }
 
-  matchRuleSubproofNode(ruleSubproofNode, substitutions, fileContext, localContext) {
-    let matchesRuleSubproofNode = false;
-
-    if (this.metastatementNode !== null) {
-      const subproofAssertionNode = subproofAssertionNodeQuery(this.metastatementNode);
-
-      if (subproofAssertionNode !== null) {
-        const ruleSubproofPremiseMetastatementNodes = ruleSubproofPremiseMetastatementNodesQuery(ruleSubproofNode),
-              ruleSubproofLastRuleProofStepMetastatementNode = ruleSubproofLastRuleProofStepMetastatementNodeQuery(ruleSubproofNode),
-              ruleSubproofMetastatementNodes = [
-                ...ruleSubproofPremiseMetastatementNodes,
-                ruleSubproofLastRuleProofStepMetastatementNode
-              ],
-              subproofAssertionMetastatementNodes = subproofAssertionMetastatementNodesQuery(subproofAssertionNode);
-
-        matchesRuleSubproofNode = match(subproofAssertionMetastatementNodes, ruleSubproofMetastatementNodes, (subproofAssertionMetastatementNode, ruleSubproofMetastatementNode) => {
-          const fileContextA = fileContext, ///
-                nonTerminalNodeA = subproofAssertionMetastatementNode,  ///
-                nonTerminalNodeB = ruleSubproofMetastatementNode, ///
-                localContextA = LocalContext.fromFileContext(fileContextA),
-                localContextB = localContext,  ///
-                nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-                  const verifiedAhead = true;
-
-                  return verifiedAhead;
-                });
-
-          if (nonTerminalNodeVerified) {
-            return true;
-          }
-        });
-      }
-    }
-
-    return matchesRuleSubproofNode;
-  }
-
-  matchMetaSubproofNode(metaSubproofNode, substitutions, fileContext, localContext) {
-    let matchesMetaSubproofNode = false;
-
-    if (this.metastatementNode !== null) {
-      const subproofAssertionNode = subproofAssertionNodeQuery(this.metastatementNode);
-
-      if (subproofAssertionNode !== null) {
-        const metaSubproofMetaSuppositionMetastatementNodes = metaSubproofMetaSuppositionMetastatementNodesQuery(metaSubproofNode),
-              metaSubproofLastMetaproofStepMetastatementNode = metaSubproofLastMetaproofStepMetastatementNodeQuery(metaSubproofNode),
-              metaSubproofMetastatementNodes = [
-                ...metaSubproofMetaSuppositionMetastatementNodes,
-                metaSubproofLastMetaproofStepMetastatementNode
-              ],
-              subproofAssertionMetastatementNodes = subproofAssertionMetastatementNodesQuery(subproofAssertionNode);
-
-        matchesMetaSubproofNode = match(subproofAssertionMetastatementNodes, metaSubproofMetastatementNodes, (subproofAssertionMetastatementNode, ruleSubproofMetastatementNode) => {
-          const fileContextA = fileContext, ///
-                nonTerminalNodeA = subproofAssertionMetastatementNode,  ///
-                nonTerminalNodeB = ruleSubproofMetastatementNode, ///
-                localContextA = LocalContext.fromFileContext(fileContextA),
-                localContextB = localContext,  ///
-                nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-                  const verifiedAhead = true;
-
-                  return verifiedAhead;
-                });
-
-          if (nonTerminalNodeVerified) {
-            return true;
-          }
-        });
-      }
-    }
-
-    return matchesMetaSubproofNode;
-  }
-
-  matchMetastatementNode(metastatementNode, substitutions, fileContext, localContext) {
-    let matchesMetastatementNode = false;
-
-    if (this.metastatementNode !== null) {
-      const fileContextA = fileContext, ///
-            nonTerminalNodeA = this.metastatementNode,  ///
-            nonTerminalNodeB = metastatementNode,  ///
-            localContextA = LocalContext.fromFileContext(fileContextA),
-            localContextB = localContext,  ///
-            nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-              const verifiedAhead = true;
-
-              return verifiedAhead;
-            });
-
-      matchesMetastatementNode = nonTerminalNodeVerified; ///
-    }
-
-    return matchesMetastatementNode;
-  }
-
   toJSON(tokens) {
-    const metastatementString = nodeAsString(this.metastatementNode, tokens),
-          statementString = nodeAsString(this.statementnode, tokens),
-          metastatement = metastatementString, ///
+    const statementString = nodeAsString(this.statementnode, tokens),
           statement = statementString,  ///
           json = {
-            metastatement,
             statement
           };
 
@@ -199,28 +92,18 @@ export default class Premise {
   }
 
   static fromStatementNode(statementNode) {
-    const metastatementNode = null,
-          premise = new Premise(metastatementNode, statementNode);
-
-    return premise;
-  }
-
-  static fromMetastatementNode(metastatementNode) {
-    const statementNode = null,
-          premise = new Premise(metastatementNode, statementNode);
+    const premise = new Premise(statementNode);
 
     return premise;
   }
 
   static fromJSONAndFileContext(json, fileContext) {
-    const { metastatement, statement } = json,
-          metastatementString = metastatement,  ///
+    const { statement } = json,
           statementString = statement, ///
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
-          metastatementNode = metastatementNodeFromMetastatementString(metastatementString, lexer, parser),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-          premise = new Premise(metastatementNode, statementNode);
+          premise = new Premise(statementNode, statementNode);
 
     return premise;
   }

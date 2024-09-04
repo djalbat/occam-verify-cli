@@ -7,8 +7,8 @@ import metaLevelNodeVerifier from "../verifier/node/metaLevel";
 import { nodeQuery } from "../utilities/query";
 
 const referenceNodeQuery = nodeQuery("/declaration/reference!"),
-      metavariableNodeQuery = nodeQuery("/reference/metavariable!"),
-      metastatementNodeQuery = nodeQuery("/declaration/metastatement!");
+      statementNodeQuery = nodeQuery("/declaration/statement!"),
+      metavariableNodeQuery = nodeQuery("/reference/metavariable!");
 
 export default function verifyDeclaration(declarationNode, declarations, localContext) {
   let declarationVerified = false;
@@ -21,20 +21,20 @@ export default function verifyDeclaration(declarationNode, declarations, localCo
         referenceVerified = verifyReference(referenceNode, localContext);
 
   if (referenceVerified) {
-    const metastatementNode = metastatementNodeQuery(declarationNode);
+    const statementNode = statementNodeQuery(declarationNode);
 
-    const { verifyMetastatement } = metaLevelNodeVerifier,
+    const { verifyStatement } = metaLevelNodeVerifier,
           derived = false,
           assignments = [],
-          metastatementVerified = verifyMetastatement(metastatementNode, assignments, derived, localContext, () => {
+          statementVerified = verifyStatement(statementNode, assignments, derived, localContext, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;
           });
 
-    if (metastatementVerified) {
+    if (statementVerified) {
       const metavariableNode = metavariableNodeQuery(referenceNode),
-            declaration = Declaration.fromMetavariableNodeAndMetastatementNode(metavariableNode, metastatementNode);
+            declaration = Declaration.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode);
 
       declarations.push(declaration);
 

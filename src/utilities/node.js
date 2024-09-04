@@ -7,12 +7,10 @@ import { combinedCustomGrammarFromNothing } from "./customGrammar";
 import { METAVARIABLE_RULE_NAME,
          VARIABLE_DECLARATION_RULE_NAME,
          UNQUALIFIED_STATEMENT_RULE_NAME,
-         CONSTRUCTOR_DECLARATION_RULE_NAME,
-         UNQUALIFIED_METASTATEMENT_RULE_NAME } from "../ruleNames";
+         CONSTRUCTOR_DECLARATION_RULE_NAME } from "../ruleNames";
 import { metavariableTokensFromMetavariableString,
          variableDeclarationTokensFromVariableString,
-         unqualifiedStatementTokensFromStatementString,
-         unqualifiedMetastatementTokensFromMetastatementString } from "../utilities/tokens";
+         unqualifiedStatementTokensFromStatementString } from "../utilities/tokens";
 
 const { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
@@ -21,8 +19,7 @@ const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
       variableNodeQuery = nodeQuery("/variableDeclaration/variable!"),
-      statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
-      metastatementNodeQuery = nodeQuery("/unqualifiedMetastatement/metastatement!");
+      statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
 export function variableNodeFromVariableString(variableString, lexer, parser) {
   const variableTDeclarationTokens = variableDeclarationTokensFromVariableString(variableString, lexer),
@@ -43,13 +40,6 @@ export function metavariableNodeFromMetavariableString(metavariableString, lexer
         metavariableNode = metavariableNodeFromMetavariableTokens(metavariableTokens, parser);
 
   return metavariableNode;
-}
-
-export function metastatementNodeFromMetastatementString(metastatementString, lexer, parser) {
-  const unqualifiedMetastatementTokens = unqualifiedMetastatementTokensFromMetastatementString(metastatementString, lexer),
-        metastatementNode = metastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser);
-
-  return metastatementNode;
 }
 
 export function termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
@@ -88,18 +78,6 @@ export function variableNodeFromVariableVariableTDeclarationTokens(variableTDecl
   return variableNode;
 }
 
-export function metastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser) {
-  let metastatementNode = null;
-
-  const unqualifiedMetastatementNode = unqualifiedMetastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser);
-
-  if (unqualifiedMetastatementNode !== null) {
-    metastatementNode = metastatementNodeQuery(unqualifiedMetastatementNode);
-  }
-
-  return metastatementNode;
-}
-
 export function metavariableNodeFromMetavariableTokens(metavariableTokens, parser) {
   const ruleName = METAVARIABLE_RULE_NAME,
         metavariableNode = nodeFromTokensRuleNameAndParser(metavariableTokens, ruleName, parser);
@@ -126,13 +104,6 @@ export function constructorDeclarationNodeFromConstructorDeclarationTokens(const
         constructorDeclarationNode = nodeFromTokensRuleNameAndParser(constructorDeclarationTokens, ruleName, parser);
 
   return constructorDeclarationNode;
-}
-
-export function unqualifiedMetastatementNodeFromUnqualifiedMetastatementTokens(unqualifiedMetastatementTokens, parser) {
-  const ruleName = UNQUALIFIED_METASTATEMENT_RULE_NAME,
-        unqualifiedMetastatementNode = nodeFromTokensRuleNameAndParser(unqualifiedMetastatementTokens, ruleName, parser);
-
-  return unqualifiedMetastatementNode;
 }
 
 function nodeFromTokensRuleNameAndParser(tokens, ruleName, parser = florenceParser) {
