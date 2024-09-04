@@ -7,7 +7,7 @@ import { nodeQuery } from "../utilities/query";
 
 const derivationNodeQuery = nodeQuery("/proof/derivation!");
 
-export default function verifyProof(proofNode, conclusion, substitutions, localContext) {
+export default function verifyProof(proofNode, statementNode, substitutions, localContext) {
   let proofVerified = false;
 
   localContext = LocalContext.fromLocalContext(localContext); ///
@@ -19,12 +19,11 @@ export default function verifyProof(proofNode, conclusion, substitutions, localC
     const lastProofStep = localContext.getLastProofStep();
 
     if (lastProofStep !== null) {
-      const proofStep = lastProofStep, ///
-            statementNode = proofStep.getStatementNode(),
-            conclusionStatementNode = conclusion.getStatementNode(),
-            statementNodeMatchesConclusionStatementNode = statementNode.match(conclusionStatementNode);
+      const lastProofStepStatementNode = lastProofStep.getStatementNode(),
+            lastStatementNode = lastProofStepStatementNode, ///
+            statementNodeMatchesLastStatementNode = statementNode.match(lastStatementNode);
 
-      proofVerified = statementNodeMatchesConclusionStatementNode;  ///
+      proofVerified = statementNodeMatchesLastStatementNode;  ///
     }
   }
 
