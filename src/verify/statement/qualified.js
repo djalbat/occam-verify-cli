@@ -1,11 +1,12 @@
 "use strict";
 
-import verifyMetavariableAgainstStatement from "../../verify/metavariableAgainstStatement";
-
 import { nodeQuery } from "../../utilities/query";
+import { verifyStatementAsEquality, verifyStatementAsTypeAssertion } from "../../verify/statement";
 
-const metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference!/metavariable!"),
-  statementNodeQuery = nodeQuery("/qualifiedStatement/statement!");
+const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
+      metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference!/metavariable!");
+
+import verifyMetavariableAgainstStatement from "../../verify/metavariableAgainstStatement";
 
 export default function verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, localContext) {
   let qualifiedStatementVerified;
@@ -15,10 +16,14 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, substit
   localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`, qualifiedStatementNode);
 
   const metavariableNode = metavariableNodeQuery(qualifiedStatementNode),
-    verifyQualifiedStatementFunctions = [
-      verifyQualifiedStatementAAgainstRule,
-      verifyQualifiedStatementAAgainstReference
-    ];
+        verifyQualifiedStatementFunctions = [
+          verifyQualifiedStatementAAgainstRule,
+          verifyQualifiedStatementAAgainstReference,
+          verifyQualifiedStatementAAgainstAxiom,
+          verifyQualifiedStatementAAgainstLemma,
+          verifyQualifiedStatementAAgainstTheorem,
+          verifyQualifiedStatementAAgainstConjecture
+        ];
 
   qualifiedStatementVerified = verifyQualifiedStatementFunctions.some((verifyQualifiedStatementFunction) => {  ///
     const qualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, metavariableNode, substitutions, localContext);
@@ -30,12 +35,12 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, substit
 
   if (qualifiedStatementVerified) {
     const derived = false,
-      statementNode = statementNodeQuery(qualifiedStatementNode),
-      statementVerified = verifyStatement(statementNode, assignments, derived, localContext, () => {
-        const verifiedAhead = true;
+          statementNode = statementNodeQuery(qualifiedStatementNode),
+          statementVerified = verifyStatement(statementNode, assignments, derived, localContext, () => {
+            const verifiedAhead = true;
 
-        return verifiedAhead;
-      });
+            return verifiedAhead;
+          });
 
     qualifiedStatementVerified = statementVerified; ///
   }
@@ -48,134 +53,6 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, substit
 }
 
 function verifyQualifiedStatementAAgainstRule(qualifiedStatementNode, metavariableNode, substitutions, localContext) {
-  let qualifiedStatementVerifiedAgainstRule = false;
-
-  const rule = localContext.findRuleByMetavariableNode(metavariableNode);
-
-  if (rule !== null) {
-    const statementNode = statementNodeQuery(qualifiedStatementNode),
-      metavariableString = localContext.nodeAsString(metavariableNode),
-      qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
-
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' rule...`, qualifiedStatementNode);
-
-    const ruleMatchesStatement = rule.matchStatement(statementNode, localContext);
-
-    qualifiedStatementVerifiedAgainstRule = ruleMatchesStatement;  ///
-
-    if (qualifiedStatementVerifiedAgainstRule) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' rule.`, qualifiedStatementNode);
-    }
-  }
-
-  return qualifiedStatementVerifiedAgainstRule;
-}
-
-function verifyQualifiedStatementAAgainstReference(qualifiedStatementNode, metavariableNode, substitutions, localContext) {
-  let qualifiedStatementVerifiedAgainstReference = false;
-
-  if (substitutions !== null) {
-    const metavariableString = localContext.nodeAsString(metavariableNode),
-      metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode, localContext),
-      qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
-
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' reference...`, qualifiedStatementNode);
-
-    if (metavariablePresent) {
-      const statementNode = statementNodeQuery(qualifiedStatementNode),
-        metavariableVerifiedAgainstStatement = verifyMetavariableAgainstStatement(metavariableNode, statementNode, substitutions, () => {
-          const verifiedAhead = true;
-
-          return verifiedAhead;
-        });
-
-      qualifiedStatementVerifiedAgainstReference = metavariableVerifiedAgainstStatement; ///
-    }
-
-    if (qualifiedStatementVerifiedAgainstReference) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' reference.`, qualifiedStatementNode);
-    }
-  }
-
-  return qualifiedStatementVerifiedAgainstReference;
-}
-
-function verifyStatement(statementNode, assignments, derived, localContext) {
-  let statementVerified;
-
-  const statementString = localContext.nodeAsString(statementNode);
-
-  localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
-
-  const verifyStatementFunctions = [
-    ///
-  ];
-
-  verifyStatementFunctions.some((verifyStatementFunction) => {
-    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
-
-    if (statementVerified) {
-      return true;
-    }
-  });
-
-  statementVerified = true; ///
-
-  if (statementVerified) {
-    localContext.debug(`...verified the '${statementString}' statement.`, statementNode);
-  }
-
-  return statementVerified;
-}
-
-"use strict";
-
-import { nodeQuery } from "../../utilities/query";
-import { verifyStatementAsEquality, verifyStatementAsTypeAssertion } from "../../verify/statement";
-
-const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
-      metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference!/metavariable!");
-
-export default function verifyQualifiedStatement(qualifiedStatementNode, assignments, localContext) {
-  let qualifiedStatementVerified;
-
-  const qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
-
-  localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`, qualifiedStatementNode);
-
-  const metavariableNode = metavariableNodeQuery(qualifiedStatementNode),
-        verifyQualifiedStatementFunctions = [
-          verifyQualifiedStatementAAgainstRule,
-          verifyQualifiedStatementAAgainstAxiom,
-          verifyQualifiedStatementAAgainstLemma,
-          verifyQualifiedStatementAAgainstTheorem,
-          verifyQualifiedStatementAAgainstConjecture
-        ];
-
-  qualifiedStatementVerified = verifyQualifiedStatementFunctions.some((verifyQualifiedStatementFunction) => {  ///
-    const qualifiedStatementVerified = verifyQualifiedStatementFunction(qualifiedStatementNode, metavariableNode, localContext);
-
-    if (qualifiedStatementVerified) {
-      return true;
-    }
-  });
-
-  if (qualifiedStatementVerified) {
-    const derived = false,
-          statementNode = statementNodeQuery(qualifiedStatementNode),
-          statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
-
-    qualifiedStatementVerified = statementVerified;  ///
-  }
-
-  if (qualifiedStatementVerified) {
-    localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement.`, qualifiedStatementNode);
-  }
-
-  return qualifiedStatementVerified;
-}
-
-function verifyQualifiedStatementAAgainstRule(qualifiedStatementNode, metavariableNode, localContext) {
   let qualifiedStatementVerifiedAgainstRule = false;
 
   const rule = localContext.findRuleByMetavariableNode(metavariableNode);
@@ -199,7 +76,7 @@ function verifyQualifiedStatementAAgainstRule(qualifiedStatementNode, metavariab
   return qualifiedStatementVerifiedAgainstRule;
 }
 
-function verifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, metavariableNode, localContext) {
+function verifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, metavariableNode, substitutions, localContext) {
   let qualifiedStatementVerifiedAgainstAxiom = false;
 
   const axiom = localContext.findAxiomByMetavariableNode(metavariableNode);
@@ -223,7 +100,7 @@ function verifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, metavaria
   return qualifiedStatementVerifiedAgainstAxiom;
 }
 
-function verifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, metavariableNode, localContext) {
+function verifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, metavariableNode, substitutions, localContext) {
   let qualifiedStatementVerifiedAgainstLemma = false;
 
   const lemma = localContext.findLemmaByMetavariableNode(metavariableNode);
@@ -247,7 +124,7 @@ function verifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, metavaria
   return qualifiedStatementVerifiedAgainstLemma;
 }
 
-function verifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, metavariableNode, localContext) {
+function verifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, metavariableNode, substitutions, localContext) {
   let qualifiedStatementVerifiedAgainstTheorem = false;
 
   const theorem = localContext.findTheoremByMetavariableNode(metavariableNode);
@@ -271,7 +148,7 @@ function verifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, metavar
   return qualifiedStatementVerifiedAgainstTheorem;
 }
 
-function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, metavariableNode, localContext) {
+function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, metavariableNode, substitutions, localContext) {
   let qualifiedStatementVerifiedAgainstConjecture = false;
 
   const conjecture = localContext.findConjectureByMetavariableNode(metavariableNode);
@@ -293,6 +170,33 @@ function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, meta
   }
 
   return qualifiedStatementVerifiedAgainstConjecture;
+}
+
+function verifyQualifiedStatementAAgainstReference(qualifiedStatementNode, metavariableNode, substitutions, localContext) {
+  let qualifiedStatementVerifiedAgainstReference = false;
+
+  const metavariableString = localContext.nodeAsString(metavariableNode),
+        metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode, localContext),
+        qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
+
+  localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' reference...`, qualifiedStatementNode);
+
+  if (metavariablePresent) {
+    const statementNode = statementNodeQuery(qualifiedStatementNode),
+      metavariableVerifiedAgainstStatement = verifyMetavariableAgainstStatement(metavariableNode, statementNode, substitutions, () => {
+        const verifiedAhead = true;
+
+        return verifiedAhead;
+      });
+
+    qualifiedStatementVerifiedAgainstReference = metavariableVerifiedAgainstStatement; ///
+  }
+
+  if (qualifiedStatementVerifiedAgainstReference) {
+    localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' reference.`, qualifiedStatementNode);
+  }
+
+  return qualifiedStatementVerifiedAgainstReference;
 }
 
 function verifyStatement(statementNode, assignments, derived, localContext) {
