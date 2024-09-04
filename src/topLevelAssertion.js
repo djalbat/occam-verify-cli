@@ -3,16 +3,17 @@
 import Label from "./label";
 import Consequent from "./consequent";
 import Supposition from "./supposition";
-import LocalContext from "./context/local";
+import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
 
 import { reverse, correlate } from "./utilities/array";
 
-export default class AxiomLemmaTheoremConjecture {
-  constructor(labels, suppositions, consequent, localContext) {
+export default class TopLevelAssertion {
+  constructor(labels, suppositions, consequent, substitutions, fileContext) {
     this.labels = labels;
     this.suppositions = suppositions;
     this.consequent = consequent;
-    this.localContext = localContext;
+    this.substitutions = substitutions;
+    this.fileContext = fileContext;
   }
 
   getLabels() {
@@ -27,8 +28,12 @@ export default class AxiomLemmaTheoremConjecture {
     return this.consequent;
   }
 
-  getLocalContext() {
-    return this.localContext;
+  getSubstitutions() {
+    return this.substitutions;
+  }
+
+  getFileContext() {
+    return this.fileContext;
   }
 
   matchStatement(statementNode, localContext) {
@@ -36,10 +41,10 @@ export default class AxiomLemmaTheoremConjecture {
 
     const proofSteps = localContext.getProofSteps(),
           substitutions = [],
-          suppositionsMatch = matchSuppositions(this.suppositions, proofSteps, substitutions, this.localContext, localContext);
+          suppositionsMatch = matchSuppositions(this.suppositions, proofSteps, substitutions, this.fileContext, localContext);
 
     if (suppositionsMatch) {
-      const consequentMatches = matchConsequent(this.consequent, statementNode, substitutions, this.localContext, localContext);
+      const consequentMatches = matchConsequent(this.consequent, statementNode, substitutions, this.fileContext, localContext);
 
       statementNatches = consequentMatches;  ///
     }
@@ -71,16 +76,20 @@ export default class AxiomLemmaTheoremConjecture {
             return suppositionJSON;
           }),
           consequentJSON = this.consequent.toJSON(tokens),
-          localContextJSON = this.localContext.toJSON(tokens),
+          substitutionsJSON = this.substitutions.map((substitution) => {
+        const substitutionJSON = substitution.toJSON();
+
+        return substitutionJSON;
+      }),
           labels = labelsJSON,  ///
           suppositions = suppositionsJSON,  ///
           consequent = consequentJSON,  ///
-          localContext = localContextJSON,  ///
+          substitutions = substitutionsJSON,  ///
           json = {
             labels,
             suppositions,
             consequent,
-            localContext
+            substitutions
           };
 
     return json;
@@ -98,7 +107,7 @@ export default class AxiomLemmaTheoremConjecture {
       return label;
     });
 
-    let { suppositions, consequent, localContext } = json;
+    let { suppositions, consequent, substitutions } = json;
 
     const suppositionsJSON = suppositions;  ///
 
@@ -115,25 +124,29 @@ export default class AxiomLemmaTheoremConjecture {
 
     consequent = Consequent.fromJSONAndFileContext(json, fileContext);
 
-    const localContextJSON = localContext;  ///
+    const substitutionsJSON = substitutions;  ///
 
-    json = localContextJSON;  ///
+    substitutions = substitutionsJSON.map((substitutionJSON) => {
+      const json = substitutionJSON,  ///
+            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromJSONAndFileContext(json, fileContext),
+            substitution = statementForMetavariableSubstitution;  ///
 
-    localContext = LocalContext.fromJSONAndFileContext(json, fileContext);
+      return substitution;
+    });
 
-    return new Class(labels, suppositions, consequent, localContext);  ///
+    return new Class(labels, suppositions, consequent, substitutions, fileContext);  ///
   }
 
-  static fromLabelsSuppositionsConsequentAndLocalContext(Class, labels, suppositions, consequent, localContext) { return new Class(labels, suppositions, consequent, localContext); }
+  static fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(Class, labels, suppositions, consequent, substitutions, fileContext) { return new Class(labels, suppositions, consequent, substitutions, fileContext); }
 }
 
-function matchSuppositions(suppositions, proofSteps, substitutions, localContext, statementLocalContext) {
+function matchSuppositions(suppositions, proofSteps, substitutions, fileContext, localContext) {
   suppositions = reverse(suppositions); ///
 
   proofSteps = reverse(proofSteps); ///
 
   const suppositionsMatch = correlate(suppositions, proofSteps, (supposition, proofStep) => {
-    const suppositionMatches = matchSupposition(supposition, proofStep, substitutions, localContext, statementLocalContext);
+    const suppositionMatches = matchSupposition(supposition, proofStep, substitutions, fileContext, localContext);
 
     if (suppositionMatches) {
       return true;
@@ -143,13 +156,13 @@ function matchSuppositions(suppositions, proofSteps, substitutions, localContext
   return suppositionsMatch;
 }
 
-function matchSupposition(supposition, proofStep, substitutions, localContext, statementLocalContext) {
+function matchSupposition(supposition, proofStep, substitutions, fileContext, localContext) {
   let suppositionMatches = false;
 
   const statementNode = proofStep.getStatementNode();
 
   if (statementNode !== null) {
-    const suppositionMatchesStatementNode = supposition.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext);
+    const suppositionMatchesStatementNode = supposition.matchStatementNode(statementNode, substitutions, fileContext, localContext);
 
     suppositionMatches = suppositionMatchesStatementNode;  ///
   }
@@ -157,8 +170,8 @@ function matchSupposition(supposition, proofStep, substitutions, localContext, s
   return suppositionMatches;
 }
 
-function matchConsequent(consequent, statementNode, substitutions, localContext, statementLocalContext) {
-  const consequentMatchesStatementNode = consequent.matchStatementNode(statementNode, substitutions, localContext, statementLocalContext),
+function matchConsequent(consequent, statementNode, substitutions, fileContext, localContext) {
+  const consequentMatchesStatementNode = consequent.matchStatementNode(statementNode, substitutions, fileContext, localContext),
         consequentMatches = consequentMatchesStatementNode; ///
 
   return consequentMatches;

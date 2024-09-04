@@ -1,9 +1,9 @@
 "use strict";
 
-import MetaLemmaMetatheorem from "./metaLemmaMetatheorem";
+import TopLevelAssertion from "./topLevelAssertion";
 
-export default class Metatheorem extends MetaLemmaMetatheorem {
-  static fromJSONAndFileContext(json, fileContext) { return MetaLemmaMetatheorem.fromJSONAndFileContext(Metatheorem, json, fileContext); }
+export default class Metatheorem extends TopLevelAssertion {
+  static fromJSONAndFileContext(json, fileContext) { return TopLevelAssertion.fromJSONAndFileContext(Metatheorem, json, fileContext); }
 
-  static fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(labels, suppositions, consequent, fileContext) { return MetaLemmaMetatheorem.fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(Metatheorem, labels, suppositions, consequent, fileContext); }
+  static fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(labels, suppositions, consequent, fileContext) { return TopLevelAssertion.fromLabelsMetaSuppositionsMetaConsequentSubstitutionsAndFileContext(Metatheorem, labels, suppositions, consequent, fileContext); }
 }

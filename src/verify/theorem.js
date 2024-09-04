@@ -27,9 +27,9 @@ export default function verifyTheorem(theoremNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const suppositionNodes = suppositionsNodeQuery(theoremNode),
+    const localContext = LocalContext.fromFileContext(fileContext),
+          suppositionNodes = suppositionsNodeQuery(theoremNode),
           suppositions = [],
-          localContext = LocalContext.fromFileContext(fileContext),
           suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
     if (suppositionsVerified) {
@@ -44,7 +44,8 @@ export default function verifyTheorem(theoremNode, fileContext) {
               proofVerified = verifyProof(proofNode, consequent, localContext);
 
         if (proofVerified) {
-          const theorem = Theorem.fromLabelsSuppositionsConsequentAndLocalContext(labels, suppositions, consequent, localContext);
+          const substitutions = [],
+                theorem = Theorem.fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(labels, suppositions, consequent, substitutions, fileContext);
 
           fileContext.addTheorem(theorem);
 

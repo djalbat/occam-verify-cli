@@ -17,8 +17,7 @@ export default function verifyAxiom(axiomNode, fileContext) {
   let axiomVerified = false;
 
   const labelNodes = labelNodesQuery(axiomNode),
-        labelsString = fileContext.nodesAsString(labelNodes),
-        localContext = LocalContext.fromFileContext(fileContext);
+        labelsString = fileContext.nodesAsString(labelNodes);
 
   fileContext.trace(`Verifying the '${labelsString}' axiom...`, axiomNode);
 
@@ -26,7 +25,8 @@ export default function verifyAxiom(axiomNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const suppositions = [],
+    const localContext = LocalContext.fromFileContext(fileContext),
+          suppositions = [],
           suppositionNodes = suppositionsNodeQuery(axiomNode),
           suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
@@ -38,7 +38,8 @@ export default function verifyAxiom(axiomNode, fileContext) {
       if (consequentVerified) {
         const firstConsequent = first(consequents),
               consequent = firstConsequent, ///
-              axiom = Axiom.fromLabelsSuppositionsConsequentAndLocalContext(labels, suppositions, consequent, localContext);
+              substitutions = [],
+              axiom = Axiom.fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(labels, suppositions, consequent, substitutions, fileContext);
 
         fileContext.addAxiom(axiom);
 

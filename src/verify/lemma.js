@@ -20,8 +20,7 @@ export default function verifyLemma(lemmaNode, fileContext) {
   let lemmaVerified = false;
 
   const labelNodes = labelNodesQuery(lemmaNode),
-        labelsString = fileContext.nodesAsString(labelNodes),
-        localContext = LocalContext.fromFileContext(fileContext);
+        labelsString = fileContext.nodesAsString(labelNodes);
 
   (labelsString === EMPTY_STRING) ?
     fileContext.trace(`Verifying a lemma...`, lemmaNode) :
@@ -31,7 +30,8 @@ export default function verifyLemma(lemmaNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const suppositions = [],
+    const localContext = LocalContext.fromFileContext(fileContext),
+          suppositions = [],
           suppositionNodes = suppositionsNodeQuery(lemmaNode),
           suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
@@ -47,7 +47,8 @@ export default function verifyLemma(lemmaNode, fileContext) {
               proofVerified = verifyProof(proofNode, consequent, localContext);
 
         if (proofVerified) {
-          const lemma = Lemma.fromLabelsSuppositionsConsequentAndLocalContext(labels, suppositions, consequent, localContext);
+          const substitutions = [],
+                lemma = Lemma.fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(labels, suppositions, consequent, substitutions, fileContext);
 
           fileContext.addLemma(lemma);
 

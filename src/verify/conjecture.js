@@ -19,8 +19,7 @@ export default function verifyConjecture(conjectureNode, fileContext) {
   let conjectureVerified = false;
 
   const labelNodes = labelNodesQuery(conjectureNode),
-        labelsString = fileContext.nodesAsString(labelNodes),
-        localContext = LocalContext.fromFileContext(fileContext);  ///
+        labelsString = fileContext.nodesAsString(labelNodes);
 
   fileContext.trace(`Verifying the '${labelsString}' conjecture...`, conjectureNode);
 
@@ -28,7 +27,8 @@ export default function verifyConjecture(conjectureNode, fileContext) {
         labelsVerified = verifyLabels(labelNodes, labels, fileContext);
 
   if (labelsVerified) {
-    const suppositions = [],
+    const localContext = LocalContext.fromFileContext(fileContext),
+          suppositions = [],
           suppositionNodes = suppositionsNodeQuery(conjectureNode),
           suppositionsVerified = verifySuppositions(suppositionNodes, suppositions, localContext);
 
@@ -46,7 +46,8 @@ export default function verifyConjecture(conjectureNode, fileContext) {
           verifyProof(proofNode, consequent, localContext);
         }
 
-        const conjecture = Conjecture.fromLabelsSuppositionsConsequentAndLocalContext(labels, suppositions, consequent, localContext);
+        const substitutions = [],
+              conjecture = Conjecture.fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(labels, suppositions, consequent, substitutions, fileContext);
 
         fileContext.addConjecture(conjecture);
 
