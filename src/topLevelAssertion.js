@@ -77,10 +77,10 @@ export default class TopLevelAssertion {
           }),
           consequentJSON = this.consequent.toJSON(tokens),
           substitutionsJSON = this.substitutions.map((substitution) => {
-        const substitutionJSON = substitution.toJSON();
+            const substitutionJSON = substitution.toJSON();
 
-        return substitutionJSON;
-      }),
+            return substitutionJSON;
+          }),
           labels = labelsJSON,  ///
           suppositions = suppositionsJSON,  ///
           consequent = consequentJSON,  ///
