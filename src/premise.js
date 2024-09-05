@@ -2,7 +2,6 @@
 
 import LocalContext from "./context/local";
 import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
-import intrinsicLevelAgainstMetaLevelNodesVerifier from "./verifier/nodes/intrinsicLevelAgainstMetaLevel";
 
 import { match } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
@@ -11,7 +10,7 @@ import { statementNodeFromStatementString } from "./utilities/node";
 
 const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
       subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
-      subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement!/statement!"),
+      subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement!"),
       subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!");
 
 export default class Premise {
@@ -32,7 +31,7 @@ export default class Premise {
             nonTerminalNodeB = statementNode,  ///
             localContextA = LocalContext.fromFileContext(fileContextA),
             localContextB = localContext,  ///
-            nonTerminalNodeVerified = intrinsicLevelAgainstMetaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+            nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
               const verifiedAhead = true;
 
               return verifiedAhead;
@@ -99,11 +98,11 @@ export default class Premise {
 
   static fromJSONAndFileContext(json, fileContext) {
     const { statement } = json,
-          statementString = statement, ///
+          statementString = statement,  ///
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-          premise = new Premise(statementNode, statementNode);
+          premise = new Premise(statementNode);
 
     return premise;
   }

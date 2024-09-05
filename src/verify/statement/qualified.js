@@ -4,7 +4,7 @@ import { nodeQuery } from "../../utilities/query";
 import { verifyStatementAsEquality, verifyStatementAsTypeAssertion } from "../../verify/statement";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
-      metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference!/metavariable!");
+      metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference/metavariable!");
 
 import verifyMetavariableAgainstStatement from "../../verify/metavariableAgainstStatement";
 

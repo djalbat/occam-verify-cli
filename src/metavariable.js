@@ -9,8 +9,8 @@ import { nameFromMetavariableNode } from "./utilities/name";
 import { metaTypeFromJSONAndFileContext } from "./metaType";
 import { metavariableNodeFromMetavariableString } from "./utilities/node";
 
-const termNodeQuery = nodeQuery("/metavariable/argument!/term!"),
-      typeNodeQuery = nodeQuery("/metavariable/argument!/type!");
+const termNodeQuery = nodeQuery("/metavariable/argument/term!"),
+      typeNodeQuery = nodeQuery("/metavariable/argument/type!");
 
 export default class Metavariable {
   constructor(node, name, termType, metaType) {
