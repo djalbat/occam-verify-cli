@@ -7,8 +7,8 @@ import EqualityAssignment from "../assignment/equality";
 import { nodeQuery } from "../utilities/query";
 import { first, second } from "../utilities/array";
 
-const leftTermNodeQuery = nodeQuery("/equality/argument[0]/term!"),
-      rightTermNodeQuery = nodeQuery("/equality/argument[1]/term!");
+const leftTermNodeQuery = nodeQuery("/equality/term[0]"),
+      rightTermNodeQuery = nodeQuery("/equality/term[1]");
 
 export default function verifyEquality(equalityNode, assignments, derived, localContext, verifyAhead) {
   let equalityVerified;

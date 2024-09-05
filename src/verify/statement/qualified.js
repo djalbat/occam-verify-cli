@@ -35,9 +35,9 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, substit
   if (qualifiedStatementVerified) {
     const derived = false,
           statementNode = statementNodeQuery(qualifiedStatementNode),
-          statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
+          statedStatementVerified = verifyStatedStatement(statementNode, assignments, derived, localContext);
 
-    qualifiedStatementVerified = statementVerified; ///
+    qualifiedStatementVerified = statedStatementVerified; ///
   }
 
   if (qualifiedStatementVerified) {
@@ -196,12 +196,12 @@ function verifyQualifiedStatementAAgainstReference(qualifiedStatementNode, subst
   return qualifiedStatementVerifiedAgainstReference;
 }
 
-function verifyStatement(statementNode, assignments, derived, localContext) {
-  let statementVerified;
+function verifyStatedStatement(statementNode, assignments, derived, localContext) {
+  let statedStatementVerified;
 
   const statementString = localContext.nodeAsString(statementNode);
 
-  localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
+  localContext.trace(`Verifying the '${statementString}' stated statement...`, statementNode);
 
   const verifyStatementFunctions = [
     verifyStatementAsEquality,
@@ -209,18 +209,18 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
   ];
 
   verifyStatementFunctions.some((verifyStatementFunction) => {
-    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
+    const statedStatementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
 
-    if (statementVerified) {
+    if (statedStatementVerified) {
       return true;
     }
   });
 
-  statementVerified = true; ///
+  statedStatementVerified = true; ///
 
-  if (statementVerified) {
-    localContext.debug(`...verified the '${statementString}' statement.`, statementNode);
+  if (statedStatementVerified) {
+    localContext.debug(`...verified the '${statementString}' stated statement.`, statementNode);
   }
 
-  return statementVerified;
+  return statedStatementVerified;
 }

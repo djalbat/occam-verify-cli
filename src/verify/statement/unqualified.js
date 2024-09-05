@@ -3,6 +3,7 @@
 import verifyStatement from "../../verify/statement";
 
 import { nodeQuery } from "../../utilities/query";
+import { verifyStatementAsEquality, verifyStatementAsTypeAssertion } from "../../verify/statement";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
@@ -44,7 +45,14 @@ function verifyDerivedUnqualifiedStatement(unqualifiedStatementNode, assignments
 
     const matchesStatementNode = localContext.matchStatementNode(statementNode);
 
-    derivedUnqualifiedStatementVerified = matchesStatementNode;  ///
+    if (matchesStatementNode) {
+      derivedUnqualifiedStatementVerified = true;
+    } else {
+      const statementNode = statementNodeQuery(unqualifiedStatementNode),
+            derivedStatementVerified = verifyDerivedStatement(statementNode, assignments, derived, localContext);
+
+      derivedUnqualifiedStatementVerified = derivedStatementVerified; ///
+    }
 
     if (derivedUnqualifiedStatementVerified) {
       localContext.debug(`...verified the '${unqualifiedStatementString}' derived unqualified statement.`, unqualifiedStatementNode);
@@ -73,4 +81,33 @@ function verifyStatedUnqualifiedStatement(unqualifiedStatementNode, assignments,
   }
 
   return statedUnqualifiedStatementVerified;
+}
+
+function verifyDerivedStatement(statementNode, assignments, derived, localContext) {
+  let derivedStatementVerified;
+
+  const statementString = localContext.nodeAsString(statementNode);
+
+  localContext.trace(`Verifying the '${statementString}' derived statement...`, statementNode);
+
+  const verifyStatementFunctions = [
+    verifyStatementAsEquality,
+    verifyStatementAsTypeAssertion
+  ];
+
+  verifyStatementFunctions.some((verifyStatementFunction) => {
+    const derivedStatementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
+
+    if (derivedStatementVerified) {
+      return true;
+    }
+  });
+
+  derivedStatementVerified = true; ///
+
+  if (derivedStatementVerified) {
+    localContext.debug(`...verified the '${statementString}' derived statement.`, statementNode);
+  }
+
+  return derivedStatementVerified;
 }

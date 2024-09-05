@@ -15,41 +15,24 @@ export default function verifyConclusion(conclusionNode, conclusions, localConte
 
   localContext.trace(`Verifying the '${conclusionString}' conclusion...`, conclusionNode);
 
-  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode);
+  const derived = false,
+        assignments = [],
+        unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode);
 
   if (unqualifiedStatementNode !== null) {
-    const derived = false,
-          assignments = [],
-          unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
-    conclusionVerified = unqualifiedStatementVerified; ///
-  }
+    if (unqualifiedStatementVerified) {
+      const statementNode = statementNodeQuery(unqualifiedStatementNode),
+            conclusion = Conclusion.fromStatementNode(statementNode);
 
-  if (unqualifiedStatementNode !== null) {
-    const derived = false,
-          assignments = [],
-          unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+      conclusions.push(conclusion);
 
-    conclusionVerified = unqualifiedStatementVerified; ///
+      conclusionVerified = true;
+    }
   }
 
   if (conclusionVerified) {
-    let conclusion;
-
-    if (unqualifiedStatementNode !== null) {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode);
-
-      conclusion = Conclusion.fromStatementNode(statementNode);
-    }
-
-    if (unqualifiedStatementNode !== null) {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode);
-
-      conclusion = Conclusion.fromStatementNode(statementNode);
-    }
-
-    conclusions.push(conclusion);
-
     localContext.debug(`...verified the '${conclusionString}' conclusion.`, conclusionNode);
   }
 
