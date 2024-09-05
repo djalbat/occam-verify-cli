@@ -1,7 +1,7 @@
 "use strict";
 
+import metaLevelNodesVerifier from "../verifier/nodes/metaLevel";
 import TermForVariableSubstitution from "../substitution/termForVariable";
-import intrinsicLevelNodesVerifier from "../verifier/nodes/intrinsicLevel";
 
 import { push } from "../utilities/array";
 
@@ -21,7 +21,7 @@ export default function verifyStatementAgainstStatement(statementNodeA, statemen
 
   const nonTerminalNodeA = statementNodeA,  ///
         nonTerminalNodeB = statementNodeB,  ///
-        nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutionsA, localContextA, localContextB, () => {
+        nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutionsA, localContextA, localContextB, () => {
           const verifiedAhead = true;
 
           return verifiedAhead;
