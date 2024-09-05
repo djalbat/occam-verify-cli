@@ -58,7 +58,7 @@ export default class Conclusion {
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-          conclusion = new Conclusion(statementNode, statementNode);
+          conclusion = new Conclusion(statementNode);
 
     return conclusion;
   }

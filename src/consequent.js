@@ -1,6 +1,7 @@
 "use strict";
 
-import intrinsicLevelNodesVerifier from "./verifier/nodes/intrinsicLevel";
+import LocalContext from "./context/local";
+import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
 
 import { nodeAsString } from "./utilities/string";
 import { statementNodeFromStatementString } from "./utilities/node";
@@ -14,17 +15,23 @@ export default class Consequent {
     return this.statementNode;
   }
 
-  matchStatementNode(statementNode, substitutions, localContext, statementLocalContext) {
-    const nonTerminalNodeA = this.statementNode,  ///
-          nonTerminalNodeB = statementNode,  ///
-          localContextA = localContext, ///
-          localContextB = statementLocalContext, ///
-          nonTerminalNodeVerified = intrinsicLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-            const verifiedAhead = true;
+  matchStatementNode(statementNode, substitutions, fileContext, localContext) {
+    let matchesStatementNode = false;
 
-            return verifiedAhead;
-          }),
-          matchesStatementNode = nonTerminalNodeVerified; ///
+    if (this.statementNode !== null) {
+      const fileContextA = fileContext, ///
+            nonTerminalNodeA = this.statementNode,  ///
+            nonTerminalNodeB = statementNode,  ///
+            localContextA = LocalContext.fromFileContext(fileContextA),
+            localContextB = localContext,  ///
+            nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+              const verifiedAhead = true;
+
+              return verifiedAhead;
+            });
+
+      matchesStatementNode = nonTerminalNodeVerified; ///
+    }
 
     return matchesStatementNode;
   }
