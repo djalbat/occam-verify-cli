@@ -60,7 +60,7 @@ class TermAgainstConstructorNodesVerifier extends NodesVerifier {
   verifyTermNodeAgainstTypeNode(termNodeA, typeNodeB, localContext, verifyAhead) {
     let termNodeVerifiedAgainstTypeNode;
 
-    const { verifyTerm } = termAgainstConstructorNodesVerifier,
+    const { verifyTerm } = this,
           termNode = termNodeA, ///
           typeNode = typeNodeB, ///
           typeVerifiedAgainstTerm = verifyTermAgainstType(termNode, typeNode, localContext, verifyAhead, verifyTerm);

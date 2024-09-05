@@ -77,11 +77,12 @@ class StatementAgainstCombinatorNodesVerifier extends NodesVerifier {
   }
 
   verifyMetaArgumentStatementAgainstMetaArgumentMetaType(metaArgumentStatementNodeA, metaArgumentMetaTypeNodeB, localContext, verifyAhead) {
-    let metaArgumentStatementVerifiedAgainstMetaArgumentMetaType = false;
+    let metaArgumentStatementVerifiedAgainstMetaArgumentMetaType;
 
-    const metaTypeNode = metaArgumentMetaTypeNodeB, ///
+    const { verifyStatement } = this,
+          metaTypeNode = metaArgumentMetaTypeNodeB, ///
           statementNode = metaArgumentStatementNodeA,  ///
-          statementVerifiedAgainstMetaType = verifyStatementAgainstMetaType(statementNode, metaTypeNode, localContext, verifyAhead);
+          statementVerifiedAgainstMetaType = verifyStatementAgainstMetaType(statementNode, metaTypeNode, localContext, verifyAhead, verifyStatement);
 
     metaArgumentStatementVerifiedAgainstMetaArgumentMetaType = statementVerifiedAgainstMetaType; ///
 

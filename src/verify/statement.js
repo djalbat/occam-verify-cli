@@ -8,12 +8,14 @@ import verifySubproofAssertion from "../verify/assertion/subproof";
 import verifyContainedAssertion from "../verify/assertion/contained";
 import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statementAgainstCombinator";
 
-import { nodeQuery } from "../utilities/query";
+import { nodeQuery, nodesQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
 const equalityNodeQuery = nodeQuery("/statement/equality!"),
       judgementNodeQuery = nodeQuery("/statement/judgement!"),
+      variableNodesQuery = nodesQuery("/substitution/term/variable!"),
       metavariableNodeQuery = nodeQuery("/statement/metavariable!"),
+      substitutionNodeQuery = nodeQuery("/statement/substitution!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
@@ -162,12 +164,13 @@ function verifyStatementAsMetavariable(statementNode, assignments, derived, loca
 
     localContext.trace(`Verifying the '${statementString}' statement as a metavariable...`, statementNode);
 
-    const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+    const metavariableVerified = verifyMetavariable(metavariableNode, localContext);
 
-    if (metavariable !== null) {
-      const metaTypeName  = metavariable.getMetaTypeName();
+    if (metavariableVerified) {
+      const substitutionNode = substitutionNodeQuery(statementNode),
+            substitutionVerified = verifySubstitution(substitutionNode, localContext);
 
-      if (metaTypeName === STATEMENT_META_TYPE_NAME) {
+      if (substitutionVerified) {
         statementVerifiedAsMetavariable = true;
       }
     }
@@ -315,4 +318,40 @@ function verifyStatementAgainstCombinator(statementNode, combinator, localContex
   }
 
   return statementVerifiedAgainstCombinator;
+}
+
+function verifyMetavariable(metavariableNode, localContext) {
+  let metavariableVerified = false;
+
+  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+
+  if (metavariable !== null) {
+    const metaTypeName  = metavariable.getMetaTypeName();
+
+    if (metaTypeName === STATEMENT_META_TYPE_NAME) {
+      metavariableVerified = true;
+    }
+  }
+
+  return metavariableVerified;
+}
+
+function verifySubstitution(substitutionNode, localContext) {
+  let substitutionVerified;
+
+  if (substitutionNode === null) {
+    substitutionVerified = true;
+  } else {
+    const variableNodes = variableNodesQuery(substitutionNode);
+
+    substitutionVerified = variableNodes.every((variableNode) => {
+      const variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
+
+      if (variablePresent) {
+        return true;
+      }
+    });
+  }
+
+  return substitutionVerified;
 }

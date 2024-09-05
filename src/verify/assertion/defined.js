@@ -11,43 +11,39 @@ const termNodeQuery = nodeQuery("/statement/term!"),
       variableNodeQuery = nodeQuery("/statement/term/variable!");
 
 export default function verifyDefinedAssertion(definedAssertionNode, assignments, derived, localContext) {
-  let statementVerifiedAsDefinedAssertion = false;
+  let definedAssertionVerified;
 
-  const statementDefinedAssertion = isStatementDefinedAssertion(definedAssertionNode);
+  const definedAssertionString = localContext.nodeAsString(definedAssertionNode);
 
-  if (statementDefinedAssertion) {
-    const definedAssertionString = localContext.nodeAsString(definedAssertionNode);
+  localContext.trace(`Verifying the '${definedAssertionString}' defined assertion...`, definedAssertionNode);
 
-    localContext.trace(`Verifying the '${definedAssertionString}' statement as a defined assertion...`, definedAssertionNode);
+  const verifyDefinedAssertionFunctions = [
+    verifyDerivedDefinedAssertion,
+    verifyStatedDefinedAssertion
+  ];
 
-    const definedAssertionFunctions = [
-      verifyDerivedStatementAsDefinedAssertion,
-      verifyStatedStatementAsDefinedAssertion
-    ];
+  definedAssertionVerified = verifyDefinedAssertionFunctions.some((verifyDefinedAssertionFunction) => {
+    const definedAssertionVerified = verifyDefinedAssertionFunction(definedAssertionNode, assignments, derived, localContext);
 
-    statementVerifiedAsDefinedAssertion = definedAssertionFunctions.some((definedAssertionFunction) => {
-      const statementVerifiedAsDefinedAssertion = definedAssertionFunction(definedAssertionNode, assignments, derived, localContext);
-
-      if (statementVerifiedAsDefinedAssertion) {
-        return true;
-      }
-    });
-
-    if (statementVerifiedAsDefinedAssertion) {
-      localContext.debug(`...verified the '${definedAssertionString}' statement as a defined assertion.`, definedAssertionNode);
+    if (definedAssertionVerified) {
+      return true;
     }
+  });
+
+  if (definedAssertionVerified) {
+    localContext.debug(`...verified the '${definedAssertionString}' defined assertion.`, definedAssertionNode);
   }
 
-  return statementVerifiedAsDefinedAssertion;
+  return definedAssertionVerified;
 }
 
-function verifyDerivedStatementAsDefinedAssertion(definedAssertionNode, assignments, derived, localContext) {
-  let derivedStatementVerifiedAsDefeindAssertion = false;
+function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, derived, localContext) {
+  let derivedDefinedAssertionVerified = false;
 
   if (derived) {
     const definedAssertionString = localContext.nodeAsString(definedAssertionNode);
 
-    localContext.trace(`Verifying the '${definedAssertionString}' derived statement as a defined assertion...`, definedAssertionNode);
+    localContext.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`, definedAssertionNode);
 
     const statementNegated = isAssertionNegated(definedAssertionNode),
           variableNode = variableNodeQuery(definedAssertionNode),
@@ -63,13 +59,13 @@ function verifyDerivedStatementAsDefinedAssertion(definedAssertionNode, assignme
 
         if (!statementNegated) {
           if (variableDefined) {
-            derivedStatementVerifiedAsDefeindAssertion = true;
+            derivedDefinedAssertionVerified = true;
           }
         }
 
         if (statementNegated) {
           if (!variableDefined) {
-            derivedStatementVerifiedAsDefeindAssertion = true;
+            derivedDefinedAssertionVerified = true;
           }
         }
       }
@@ -88,53 +84,47 @@ function verifyDerivedStatementAsDefinedAssertion(definedAssertionNode, assignme
 
         if (!statementNegated) {
           if (termGrounded) {
-            derivedStatementVerifiedAsDefeindAssertion = true;
+            derivedDefinedAssertionVerified = true;
           }
         }
 
         if (statementNegated) {
           if (!termGrounded) {
-            derivedStatementVerifiedAsDefeindAssertion = true;
+            derivedDefinedAssertionVerified = true;
           }
         }
       }
     }
 
-    if (derivedStatementVerifiedAsDefeindAssertion) {
-      localContext.debug(`...verified the '${definedAssertionString}' derived statement as a defined assertion.`, definedAssertionNode);
+    if (derivedDefinedAssertionVerified) {
+      localContext.debug(`...verified the '${definedAssertionString}' derived defined assertion.`, definedAssertionNode);
     }
   }
 
-  return derivedStatementVerifiedAsDefeindAssertion;
+  return derivedDefinedAssertionVerified;
 }
 
-function verifyStatedStatementAsDefinedAssertion(definedAssertionNode, assignments, derived, localContext) {
-  let statedStatementVerifiedAsDefinedAssertion = false;
+function verifyStatedDefinedAssertion(definedAssertionNode, assignments, derived, localContext) {
+  let statedDefinedAssertionVerified = false;
 
   if (!derived) {
     const definedAssertionString = localContext.nodeAsString(definedAssertionNode);
 
-    localContext.trace(`Verifying the '${definedAssertionString}' stated statement as a defined assertion...`, definedAssertionNode);
+    localContext.trace(`Verifying the '${definedAssertionString}' stated defined assertion...`, definedAssertionNode);
 
-    const intrinsicLevel = localContext.isIntrinsicLevel();
+    const nonTerminalNode = definedAssertionNode, ///
+          nonTerminalNodeVerified = metaLevelNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
+            const verifiedAhead = true;
 
-    if (intrinsicLevel) {
-      localContext.debug(`The '${definedAssertionString}' stated statement as a defined assertion cannot be verified at intrinsic level.`, definedAssertionNode);
-    } else {
-      const nonTerminalNode = definedAssertionNode, ///
-            nonTerminalNodeVerified = metaLevelNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
-              const verifiedAhead = true;
+            return verifiedAhead;
+          });
 
-              return verifiedAhead;
-            });
+    statedDefinedAssertionVerified = nonTerminalNodeVerified; ///
 
-      statedStatementVerifiedAsDefinedAssertion = nonTerminalNodeVerified; ///
-    }
-
-    if (statedStatementVerifiedAsDefinedAssertion) {
-      localContext.debug(`...verified the '${definedAssertionString}' stated statement as a defined assertion.`, definedAssertionNode);
+    if (statedDefinedAssertionVerified) {
+      localContext.debug(`...verified the '${definedAssertionString}' stated defined assertion.`, definedAssertionNode);
     }
   }
 
-  return statedStatementVerifiedAsDefinedAssertion;
+  return statedDefinedAssertionVerified;
 }
