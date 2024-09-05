@@ -2,7 +2,7 @@
 
 import Declaration from "../declaration"
 import referenceMetaType from "../metaType/reference";
-import metaLevelNodeVerifier from "../verifier/node/metaLevel";
+import metaLevelNodesVerifier from "../verifier/nodes/metaLevel";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -23,7 +23,7 @@ export default function verifyDeclaration(declarationNode, declarations, localCo
   if (referenceVerified) {
     const statementNode = statementNodeQuery(declarationNode);
 
-    const { verifyStatement } = metaLevelNodeVerifier,
+    const { verifyStatement } = metaLevelNodesVerifier,
           derived = false,
           assignments = [],
           statementVerified = verifyStatement(statementNode, assignments, derived, localContext);

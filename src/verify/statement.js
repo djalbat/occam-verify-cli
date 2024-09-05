@@ -4,6 +4,7 @@ import verifyEquality from "../verify/equality";
 import verifyJudgement from "../verify/judgement";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/assertion/type";
+import metaLevelNodesVerifier from "../verifier/nodes/metaLevel";
 import verifyDefinedAssertion from "../verify/assertion/defined";
 import verifySubproofAssertion from "../verify/assertion/subproof";
 import verifyContainedAssertion from "../verify/assertion/contained";
@@ -15,10 +16,10 @@ import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 const variableNodeQuery = nodeQuery("/substitution/variable!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
       judgementNodeQuery = nodeQuery("/statement/judgement!"),
-      termVariableNodeQuery = nodeQuery("/substitution/term/variable!"),
       metavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       substitutionNodeQuery = nodeQuery("/statement/substitution!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
+      termVariableNodeQuery = nodeQuery("/substitution/term/variable!"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
       containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
@@ -79,6 +80,10 @@ export function verifyStandaloneStatement(statementNode, localContext, verifyAhe
 
   return standaloneStatementVerified;
 }
+
+Object.assign(metaLevelNodesVerifier, {
+  verifyStatement
+});
 
 Object.assign(statementAgainstCombinatorNodesVerifier, {
   verifyStatement
