@@ -2,18 +2,20 @@
 
 import verifyEquality from "../verify/equality";
 import verifyJudgement from "../verify/judgement";
+import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/assertion/type";
 import verifyDefinedAssertion from "../verify/assertion/defined";
 import verifySubproofAssertion from "../verify/assertion/subproof";
 import verifyContainedAssertion from "../verify/assertion/contained";
 import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statementAgainstCombinator";
 
-import { nodeQuery, nodesQuery } from "../utilities/query";
+import { nodeQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
-const equalityNodeQuery = nodeQuery("/statement/equality!"),
+const variableNodeQuery = nodeQuery("/substitution/variable!"),
+      equalityNodeQuery = nodeQuery("/statement/equality!"),
       judgementNodeQuery = nodeQuery("/statement/judgement!"),
-      variableNodesQuery = nodesQuery("/substitution/term/variable!"),
+      termVariableNodeQuery = nodeQuery("/substitution/term/variable!"),
       metavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       substitutionNodeQuery = nodeQuery("/statement/substitution!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
@@ -280,7 +282,12 @@ function verifyStatementAgainstCombinators(statementNode, assignments, derived, 
         (subproofAssertionNode === null) &&
         (containedAssertionNode === null) ) {
 
-    const combinators = localContext.getCombinators();
+    let combinators = localContext.getCombinators();
+
+    combinators = [ ///
+      bracketedCombinator,
+      ...combinators
+    ];
 
     statementVerifiedAgainstCombinators = combinators.some((combinator) => {
       const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, localContext);
@@ -337,20 +344,23 @@ function verifyMetavariable(metavariableNode, localContext) {
 }
 
 function verifySubstitution(substitutionNode, localContext) {
-  let substitutionVerified;
+  let substitutionVerified = false;
 
   if (substitutionNode === null) {
     substitutionVerified = true;
   } else {
-    const variableNodes = variableNodesQuery(substitutionNode);
+    const variableNode = variableNodeQuery(substitutionNode),
+          variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
 
-    substitutionVerified = variableNodes.every((variableNode) => {
-      const variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
+    if (variablePresent) {
+      const termVariableNode = termVariableNodeQuery(substitutionNode);
 
-      if (variablePresent) {
-        return true;
+      if (termVariableNode !== null) {
+        const termVariablePresent = localContext.isVariablePresentByVariableNode(termVariableNode);
+
+        substitutionVerified = termVariablePresent; ///
       }
-    });
+    }
   }
 
   return substitutionVerified;
