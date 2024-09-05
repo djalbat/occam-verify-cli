@@ -184,7 +184,16 @@ function verifyQualifiedStatementAAgainstReference(qualifiedStatementNode, subst
 
   if (metavariablePresent) {
     const statementNode = statementNodeQuery(qualifiedStatementNode),
-          metavariableVerifiedAgainstStatement = verifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNode, substitutions, localContextA, localContextB, verifyAhead);
+          localContextA = null,
+          localContextB = localContext, ///
+          statementNodeB = statementNode, ///
+          substitutionNode = null,
+          metavariableNodeA = metavariableString, ///
+          metavariableVerifiedAgainstStatement = verifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNode, substitutions, localContextA, localContextB, () => {
+            const verifiedAhead = true;
+
+            return verifiedAhead;
+          });
 
     qualifiedStatementVerifiedAgainstReference = metavariableVerifiedAgainstStatement; ///
   }
