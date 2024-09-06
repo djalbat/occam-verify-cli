@@ -1,7 +1,7 @@
 "use strict";
 
+import shim from "../shim";
 import Declaration from "../declaration"
-import metaLevelUnifier from "../unifier/metaLevel";
 import referenceMetaType from "../metaType/reference";
 
 import { nodeQuery } from "../utilities/query";
@@ -22,7 +22,7 @@ export default function verifyDeclaration(declarationNode, declarations, localCo
   if (metavariableVerified) {
     const statementNode = statementNodeQuery(declarationNode);
 
-    const { verifyStatement } = metaLevelUnifier,
+    const { verifyStatement } = shim,
           derived = false,
           assignments = [],
           statementVerified = verifyStatement(statementNode, assignments, derived, localContext);

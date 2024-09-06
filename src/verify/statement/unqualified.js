@@ -48,9 +48,9 @@ function verifyDerivedUnqualifiedStatement(unqualifiedStatementNode, assignments
 
     localContext.trace(`Verifying the '${unqualifiedStatementString}' derived unqualified statement...`, unqualifiedStatementNode);
 
-    const matchesStatementNode = localContext.matchStatementNode(statementNode);
+    const statementUnified = localContext.unifyStatement(statementNode);
 
-    if (matchesStatementNode) {
+    if (statementUnified) {
       derivedUnqualifiedStatementVerified = true;
     } else {
       const statementNode = statementNodeQuery(unqualifiedStatementNode),
@@ -116,7 +116,7 @@ function verifyDerivedStatement(statementNode, assignments, derived, localContex
   return derivedStatementVerified;
 }
 
- function verifyDerivedStatementAsEquality(statementNode, assignments, derived, localContext) {
+function verifyDerivedStatementAsEquality(statementNode, assignments, derived, localContext) {
   let derivedStatementVerifiedAsEquality = true; ///
 
   const equalityNode = equalityNodeQuery(statementNode);
@@ -142,7 +142,7 @@ function verifyDerivedStatement(statementNode, assignments, derived, localContex
   return derivedStatementVerifiedAsEquality;
 }
 
- function verifyDerivedStatementAsJudgement(statementNode, assignments, derived, localContext) {
+function verifyDerivedStatementAsJudgement(statementNode, assignments, derived, localContext) {
   let derivedStatementVerifiedAsJudgement = true;
 
   const judgementNode = judgementNodeQuery(statementNode);
@@ -164,7 +164,7 @@ function verifyDerivedStatement(statementNode, assignments, derived, localContex
   return derivedStatementVerifiedAsJudgement;
 }
 
- function verifyDerivedStatementAsTypeAssertion(statementNode, assignments, derived, localContext) {
+function verifyDerivedStatementAsTypeAssertion(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsTypeAssertion = true;  ///
 
   const typeAssertionNode = typeAssertionNodeQuery(statementNode);

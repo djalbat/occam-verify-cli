@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "../shim";
 import Unifier from "../unifier";
 import unifyTermAgainstType from "../unify/termAgainstType";
 
@@ -60,7 +61,7 @@ class TermAgainstConstructorUnifier extends Unifier {
   unifyTermNodeAgainstTypeNode(termNodeA, typeNodeB, localContext, unifyAhead) {
     let termNodUnifiedAgainstTypeNode;
 
-    const { verifyTerm } = this,
+    const { verifyTerm } = shim,
           termNode = termNodeA, ///
           typeNode = typeNodeB, ///
           typeUnifiedAgainstTerm = unifyTermAgainstType(termNode, typeNode, localContext, unifyAhead, verifyTerm);

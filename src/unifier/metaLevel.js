@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "../shim";
 import Unifier from "../unifier";
 import unifyVariableAgainstTerm from "../unify/variableAgainstTerm";
 import unifyMetavariableAgainstStatement from "../unify/metavariableAgainstStatement";
@@ -105,5 +106,9 @@ class MetaLevelUnifier extends Unifier {
 }
 
 const metaLevelUnifier = new MetaLevelUnifier();
+
+Object.assign(shim, {
+  metaLevelUnifier
+});
 
 export default metaLevelUnifier;

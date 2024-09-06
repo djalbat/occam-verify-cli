@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "../shim";
 import Term from "../term";
 import bracketedConstructor from "../constructor/bracketed";
 import termAgainstConstructorUnifier from "../unifier/termAgainstConstructor";
@@ -57,7 +58,7 @@ export function verifyStandaloneTerm(termNode, localContext, verifyAhead) {
   return standaloneTermVerified;
 }
 
-Object.assign(termAgainstConstructorUnifier, {
+Object.assign(shim, {
   verifyTerm
 });
 

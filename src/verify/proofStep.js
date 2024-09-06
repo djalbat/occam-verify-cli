@@ -1,8 +1,8 @@
 "use strict";
 
+import shim from "../shim";
 import ProofStep from "../proofStep";
 import verifySubproof from "../verify/subproof";
-import verifySubDerivation from "../verify/subDerivation";
 import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
@@ -83,6 +83,6 @@ export default function verifyProofStep(proofStepNode, substitutions, localConte
   return proofStepVerified;
 }
 
-Object.assign(verifySubDerivation, {
+Object.assign(shim, {
   verifyProofStep
 });

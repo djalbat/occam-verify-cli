@@ -95,6 +95,25 @@ export default class Equivalence {
     return matchesTermNode;
   }
 
+  matchVariableNode(variableNode) {
+    const variableNodeA = variableNode, ///
+          matchesVariableNode = this.terms.some((term) => {
+            const termNode = term.getNode(),
+                  variableNode = variableNodeQuery(termNode);
+
+            if (variableNode !== null) {
+              const variableNodeB = variableNode, ///
+                    variableNodeAMatchesVariableNodeB = variableNodeA.match(variableNodeB);
+
+              if (variableNodeAMatchesVariableNodeB) {
+                return true;
+              }
+            }
+          });
+
+    return matchesVariableNode;
+  }
+
   matchTermNodes(termNodes) {
     const matchesTermNodes = termNodes.every((termNode) => {
       const matchesTermNode = this.matchTermNode(termNode);

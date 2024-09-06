@@ -1,5 +1,7 @@
 "use strict";
 
+import metaLevelUnifier from "./unifier/metaLevel";
+
 export default class ProofStep {
   constructor(subproofNode, statementNode) {
     this.subproofNode = subproofNode;
@@ -14,14 +16,30 @@ export default class ProofStep {
     return this.statementNode;
   }
 
-  matchStatementNode(statementNode) {
-    let matchesStatementNode = false;
+  unifyStatement(statementNode, equivalences, localContext) {
+    let statementUnified = false;
 
     if (this.statementNode !== null) {
-      matchesStatementNode = this.statementNode.match(statementNode);
+      let statementUnifiedAgainstStatement = false;
+
+      if (!statementUnifiedAgainstStatement) {
+        const statementNodeA = statementNode, ///
+              statementNodeB = this.statementNode;  ///
+
+        statementUnifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivalences, localContext);
+      }
+
+      if (!statementUnifiedAgainstStatement) {
+        const statementNodeA = statementNode, ///
+              statementNodeB = this.statementNode;  ///
+
+        statementUnifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivalences, localContext);
+      }
+
+      statementUnified = statementUnifiedAgainstStatement;  ///
     }
 
-    return matchesStatementNode;
+    return statementUnified;
   }
 
   static fromSubproofNode(subproofNode) {
@@ -37,4 +55,39 @@ export default class ProofStep {
 
     return proofStep;
   }
+}
+
+function unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivalences, localContext) {
+  let statementUnifiedAgainstStatement = false;
+
+  const nonTerminalNodeA = statementNodeA,  ///
+        nonTerminalNodeB = statementNodeB,  ///
+        substitutions = [],
+        localContextA = localContext, ///
+        localContextB = localContext,  ///
+        nonTerminalNodeUnified = metaLevelUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+          const verifiedAhead = true;
+
+          return verifiedAhead;
+        });
+
+  if (nonTerminalNodeUnified) {
+    const substitutionsUnified = substitutions.every((substitution) => {
+      const substitutionUnified = equivalences.some((equivalence) => {
+        const substitutionUnifiedAgainstEquivalence = substitution.unifyAgainstEquivalence(equivalence, substitutions, localContext);
+
+        if (substitutionUnifiedAgainstEquivalence) {
+          return true;
+        }
+      });
+
+      if (substitutionUnified) {
+        return true;
+      }
+    });
+
+    statementUnifiedAgainstStatement = substitutionsUnified;  ///
+  }
+
+  return statementUnifiedAgainstStatement;
 }

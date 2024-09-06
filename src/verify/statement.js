@@ -1,8 +1,8 @@
 "use strict";
 
+import shim from "../shim";
 import verifyEquality from "../verify/equality";
 import verifyJudgement from "../verify/judgement";
-import metaLevelUnifier from "../unifier/metaLevel";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/assertion/type";
 import verifyDefinedAssertion from "../verify/assertion/defined";
@@ -81,13 +81,10 @@ export function verifyStandaloneStatement(statementNode, localContext, verifyAhe
   return standaloneStatementVerified;
 }
 
-Object.assign(metaLevelUnifier, {
+Object.assign(shim, {
   verifyStatement
 });
 
-Object.assign(statementAgainstCombinatorUnifier, {
-  verifyStatement
-});
 
 export default verifyStatement;
 

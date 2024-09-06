@@ -228,20 +228,23 @@ class LocalContext {
     return metavariableAdded;
   }
 
-  matchStatementNode(statementNode) {
+  unifyStatement(statementNode) {
     let proofSteps = this.getProofSteps();
 
     proofSteps = reverse(proofSteps); ///
 
-    const matchesStatementNode = proofSteps.some((proofStep) => {
-      const proofStepMatchesStatementNode = proofStep.matchStatementNode(statementNode);
+    const localContext = this,  ///
+          equivalences = this.getEquivalences();
 
-      if (proofStepMatchesStatementNode) {
+    const statementUnified = proofSteps.some((proofStep) => {
+      const statementUnified = proofStep.unifyStatement(statementNode, equivalences, localContext);
+
+      if (statementUnified) {
         return true;
       }
     });
 
-    return matchesStatementNode;
+    return statementUnified;
   }
 
   getTermType(term) {

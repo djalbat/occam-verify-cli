@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "../shim";
 import Unifier from "../unifier";
 import unifyArgumentAgainstArgument from "../unify/argumentAgainstArgument";
 import unifyStatementAgainstMetaType from "../unify/statementAgainstMetaType";
@@ -79,7 +80,7 @@ class StatementAgainstCombinatorUnifier extends Unifier {
   unifyMetaArgumentStatementAgainstMetaType(statementNodeA, metaTypeNodeB, localContext, unifyAhead) {
     let statementUnifiedAgainstMetaType;
 
-    const { verifyStatement } = this,
+    const { verifyStatement } = shim,
           metaTypeNode = metaTypeNodeB, ///
           statementNode = statementNodeA;  ///
 

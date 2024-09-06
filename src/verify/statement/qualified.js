@@ -1,11 +1,11 @@
 "use strict";
 
-import unifyMetavariableAgainstStatement from "../../unify/metavariableAgainstStatement";
-
-import { nodeQuery } from "../../utilities/query";
 import verifyEquality from "../equality";
 import verifyJudgement from "../judgement";
 import verifyTypeAssertion from "../assertion/type";
+import unifyMetavariableAgainstStatement from "../../unify/metavariableAgainstStatement";
+
+import { nodeQuery } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),

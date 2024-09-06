@@ -1,11 +1,15 @@
 "use strict";
 
+import shim from "../shim";
 import Substitution from "../substitution";
 import TermForVariableSubstitution from "./termForVariable";
 import unifyStatementAgainstStatement from "../unify/statementAtainstStatement";
 
+import { nodeQuery } from "../utilities/query";
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/match";
 import { statementNodeFromStatementString, metavariableNodeFromMetavariableString } from "../utilities/node";
+
+const metavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(metavariableNode, statementNode, substitution) {
@@ -54,6 +58,33 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     const matchesMetavariableNode = this.metavariableNode.match(metavariableNode);
 
     return matchesMetavariableNode;
+  }
+
+  unifyAgainstEquivalence(equivalence, substitutions, localContext) {
+    let unifiedAgainstEquivalence = false;  ///
+
+    const metavariableNode = metavariableNodeQuery(this.statementNode);
+
+    if (metavariableNode !== null) {
+      substitutions = [ ///
+        ...substitutions
+      ];
+
+      const { metaLevelUnifier } = shim,
+            nonTerminalNodeA = this.metavariableNode, ///
+            nonTerminalNodeB = metavariableNode, ///
+            localContextA = localContext, ///
+            localContextB = localContext,  ///
+            nonTerminalNodeUnified = metaLevelUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+              const verifiedAhead = true;
+
+              return verifiedAhead;
+            });
+
+      unifiedAgainstEquivalence = nonTerminalNodeUnified; ///
+    }
+
+    return unifiedAgainstEquivalence;
   }
 
   static fromJSONAndFileContext(json, fileContext) {
