@@ -87,12 +87,12 @@ export function verify(nodeQueryMaps, nonTerminalNode, ...remainingArguments) {
   let nodeVerified = false;
 
   nodeVerified = nodeQueryMaps.some((nodeQueryMap) => {
-    const { nodeQuery, verifyNode } = nodeQueryMap;
+    const { nodeQuery, verify } = nodeQueryMap;
 
     const node = nodeQuery(nonTerminalNode);
 
     if (node !== null) {
-      nodeVerified = verifyNode(node, ...remainingArguments);
+      nodeVerified = verify(node, ...remainingArguments);
 
       return true;
     }
