@@ -188,7 +188,7 @@ function verifyQualifiedStatementAAgainstReference(qualifiedStatementNode, subst
           localContextB = localContext, ///
           statementNodeB = statementNode, ///
           substitutionNode = null,
-          metavariableNodeA = metavariableString, ///
+          metavariableNodeA = metavariableNode, ///
           metavariableVerifiedAgainstStatement = unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNode, substitutions, localContextA, localContextB, () => {
             const verifiedAhead = true;
 

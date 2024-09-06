@@ -42,8 +42,8 @@ export default class Declaration {
   }
 
   matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
-    const metaConsequent = metaLemmaMetatheorem.getMetaConsequent(),
-          statementNode = metaConsequent.getStatementNode(),
+    const consequent = metaLemmaMetatheorem.getConsequent(),
+          statementNode = consequent.getStatementNode(),
           matches = this.statementNode.match(statementNode),
           matchesMetaLemmaOrMetaTheorem = matches;  ///
 
