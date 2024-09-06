@@ -2,13 +2,13 @@
 
 import verifyEquality from "../verify/equality";
 import verifyJudgement from "../verify/judgement";
+import metaLevelUnifier from "../unifier/metaLevel";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/assertion/type";
-import metaLevelNodesVerifier from "../verifier/nodes/metaLevel";
 import verifyDefinedAssertion from "../verify/assertion/defined";
 import verifySubproofAssertion from "../verify/assertion/subproof";
 import verifyContainedAssertion from "../verify/assertion/contained";
-import statementAgainstCombinatorNodesVerifier from "../verifier/nodes/statementAgainstCombinator";
+import statementAgainstCombinatorUnifier from "../unifier/statementAgainstCombinator";
 
 import { nodeQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
@@ -81,11 +81,11 @@ export function verifyStandaloneStatement(statementNode, localContext, verifyAhe
   return standaloneStatementVerified;
 }
 
-Object.assign(metaLevelNodesVerifier, {
+Object.assign(metaLevelUnifier, {
   verifyStatement
 });
 
-Object.assign(statementAgainstCombinatorNodesVerifier, {
+Object.assign(statementAgainstCombinatorUnifier, {
   verifyStatement
 });
 
@@ -317,13 +317,13 @@ function verifyStatementAgainstCombinator(statementNode, combinator, localContex
   const combinatorStatementNode = combinator.getStatementNode(),
         nonTerminalNodeA = statementNode, ///
         nonTerminalNodeB = combinatorStatementNode, ///
-        nonTerminalNodeVerified = statementAgainstCombinatorNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, () => {
+        nonTerminalNodeUnify = statementAgainstCombinatorUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, () => {
           const verifiedAhead = true;
 
           return verifiedAhead;
         });
 
-  statementVerifiedAgainstCombinator = nonTerminalNodeVerified;  ///
+  statementVerifiedAgainstCombinator = nonTerminalNodeUnify;  ///
 
   if (statementVerifiedAgainstCombinator) {
     localContext.debug(`...verified the '${statementString}' statement against the '${combinatorString}' combinator.`, statementNode);

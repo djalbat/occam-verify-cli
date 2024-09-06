@@ -2,7 +2,6 @@
 
 import Variable from "../variable";
 import Equivalence from "../equivalence";
-import contextMixins from "../mixins/context";
 
 import { last, reverse } from "../utilities/array";
 import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../utilities/equivalences";
@@ -88,6 +87,18 @@ class LocalContext {
 
     return lastProofStep;
   }
+
+  getAxioms() { return this.context.getAxioms(); }
+
+  getLemmas() { return this.context.getLemmas(); }
+
+  getTheorems() { return this.context.getTheorems(); }
+
+  getConjectures() { return this.context.getConjectures(); }
+
+  getCombinators() { return this.context.getCombinators(); }
+
+  getConstructors() { return this.context.getConstructors(); }
 
   addEquality(equality) {
     let equalityAdded;
@@ -305,6 +316,14 @@ class LocalContext {
     return judgementPresent;
   }
 
+  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
+
+  isTypePresentByTypeNode(typeNode) { return this.context.isTypePresentByTypeNode(typeNode); }
+
+  isMetavariablePresentByName(name) { return this.context.isMetavariablePresentByName(name); }
+
+  isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
+
   isMetavariablePresentByMetavariableNode(metavariableNode) {
     const metavariable = this.findMetavariableByMetavariableNode(metavariableNode),
           metavariablePresent = (metavariable !== null);
@@ -354,6 +373,46 @@ class LocalContext {
     return metavariable;
   }
 
+  findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
+
+  findTypeByTypeNode(typeNode) { return this.context.findTypeByTypeNode(typeNode); }
+
+  findMetavariableByName(name) { return this.context.findMetavariableByName(name); }
+
+  findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
+
+  findMetaTypeByMetaTypeNode(metaTypeNode) { return this.context.findMetaTypeByMetaTypeNode(metaTypeNode); }
+
+  findRuleByMetavariableNode(metavariableNode) { return this.context.findRuleByMetavariableNode(metavariableNode); }
+
+  findAxiomByMetavariableNode(metavariableNode) { return this.context.findAxiomByMetavariableNode(metavariableNode); }
+
+  findLemmaByMetavariableNode(metavariableNode) { return this.context.findLemmaByMetavariableNode(metavariableNode); }
+
+  findTheoremByMetavariableNode(metavariableNode) { return this.context.findTheoremByMetavariableNode(metavariableNode); }
+
+  findMetaLemmaByMetavariableNode(metavariableNode) { return this.context.findMetaLemmaByMetavariableNode(metavariableNode); }
+
+  findConjectureByMetavariableNode(metavariableNode) { return this.context.findConjectureByMetavariableNode(metavariableNode); }
+
+  findMetatheoremByMetavariableNode(metavariableNode) { return this.context.findMetatheoremByMetavariableNode(metavariableNode); }
+
+  nodeAsString(node) { return this.context.nodeAsString(node); }
+
+  nodesAsString(node) { return this.context.nodesAsString(node); }
+
+  trace(node, message) { this.context.trace(node, message); }
+
+  debug(node, message) { this.context.debug(node, message); }
+
+  info(node, message) { this.context.info(node, message); }
+
+  warning(node, message) { this.context.warning(node, message); }
+
+  error(node, message) { this.context.error(node, message); }
+
+  fatal(node, message) { this.context.fatal(node, message); }
+
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
           variables = [],
@@ -401,7 +460,5 @@ class LocalContext {
     return localContext;
   }
 }
-
-Object.assign(LocalContext.prototype, contextMixins);
 
 export default LocalContext;

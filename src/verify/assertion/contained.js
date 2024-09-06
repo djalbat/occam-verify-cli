@@ -1,6 +1,6 @@
 "use strict";
 
-import metaLevelNodeVerifier from "../../verifier/node/metaLevel";
+import metaLevelVerifier from "../../verifier/metaLevel";
 
 import { isAssertionNegated } from "../../utilities/verify";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
@@ -84,7 +84,7 @@ function verifyStatedContainedAssertion(containedAssertionNode, assignments, der
     localContext.debug(`The '${containedAssertionString}' stated contained assertion cannot be verified.`, containedAssertionNode);
 
     const nonTerminalNode = containedAssertionNode, ///
-          nonTerminalNodeVerified = metaLevelNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
+          nonTerminalNodeVerified = metaLevelVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

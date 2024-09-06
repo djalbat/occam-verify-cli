@@ -2,7 +2,7 @@
 
 import Term from "../term";
 import bracketedConstructor from "../constructor/bracketed";
-import termAgainstConstructorNodesVerifier from "../verifier/nodes/termAgainstConstructor";
+import termAgainstConstructorUnifier from "../unifier/termAgainstConstructor";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
@@ -57,7 +57,7 @@ export function verifyStandaloneTerm(termNode, localContext, verifyAhead) {
   return standaloneTermVerified;
 }
 
-Object.assign(termAgainstConstructorNodesVerifier, {
+Object.assign(termAgainstConstructorUnifier, {
   verifyTerm
 });
 
@@ -131,7 +131,7 @@ function verifyTermAgainstBracketedConstructor(termNode, terms, localContext, ve
   const bracketedConstructorTermNode = bracketedConstructor.getTermNode(),
         nonTerminalNNdeA = termNode,  ///
         nonTerminalNodeB = bracketedConstructorTermNode,  ///
-        nodeVerified = termAgainstConstructorNodesVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, localContext, () => {
+        nodeUnified = termAgainstConstructorUnifier.unifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, localContext, () => {
           let verifiedAhead;
 
           const bracketedTermNode = termNode; ///
@@ -174,7 +174,7 @@ function verifyTermAgainstBracketedConstructor(termNode, terms, localContext, ve
           return verifiedAhead;
         });
 
-  termVerifiedAgainstBracketedConstructor = nodeVerified;  ///
+  termVerifiedAgainstBracketedConstructor = nodeUnified;  ///
 
   if (termVerifiedAgainstBracketedConstructor) {
     localContext.debug(`...verified the '${termString}' term against the '${bracketedConstructorString}' constructor.`, termNode);
@@ -194,7 +194,7 @@ function verifyTermAgainstConstructor(termNode, terms, constructor, localContext
   const constructorTermNode = constructor.getTermNode(),
         nonTerminalNNdeA = termNode,  ///
         nonTerminalNodeB = constructorTermNode,  ///
-        nodeVerified = termAgainstConstructorNodesVerifier.verifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, localContext, () => {
+        nodeUnify = termAgainstConstructorUnifier.unifyNonTerminalNode(nonTerminalNNdeA, nonTerminalNodeB, localContext, () => {
           let verifiedAhead;
 
           const type = constructor.getType(),
@@ -211,7 +211,7 @@ function verifyTermAgainstConstructor(termNode, terms, constructor, localContext
           return verifiedAhead;
         });
 
-  termVerifiedAgainstConstructor = nodeVerified;  ///
+  termVerifiedAgainstConstructor = nodeUnify;  ///
 
   if (termVerifiedAgainstConstructor) {
     localContext.debug(`...verified the '${termString}' term against the '${constructorString}' constructor.`, termNode);

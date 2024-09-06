@@ -1,7 +1,7 @@
 "use strict";
 
 import LocalContext from "./context/local";
-import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
+import metaLevelUnifier from "./unifier/metaLevel";
 
 import { nodeAsString } from "./utilities/string";
 import { statementNodeFromStatementString } from "./utilities/node";
@@ -24,13 +24,13 @@ export default class Consequent {
             nonTerminalNodeB = statementNode,  ///
             localContextA = LocalContext.fromFileContext(fileContextA),
             localContextB = localContext,  ///
-            nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+            nonTerminalNodeUnified = metaLevelUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
               const verifiedAhead = true;
 
               return verifiedAhead;
             });
 
-      matchesStatementNode = nonTerminalNodeVerified; ///
+      matchesStatementNode = nonTerminalNodeUnified; ///
     }
 
     return matchesStatementNode;

@@ -1,7 +1,7 @@
 "use strict";
 
 import Combinator from "../combinator";
-import statementAsCombinatorNodeVerifier from "../verifier/node/statementAsCombinator";
+import statementAsCombinatorVerifier from "../verifier/statementAsCombinator";
 
 export default function verifyStatementAsCombinator(statementNode, fileContext) {
   let statementVerifiedAsCombinator = false;
@@ -12,7 +12,7 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
 
   const nonTerminalNode = statementNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
-        childNodesVerified = statementAsCombinatorNodeVerifier.verifyChildNodes(childNodes, fileContext, () => {
+        childNodesVerified = statementAsCombinatorVerifier.verifyChildNodes(childNodes, fileContext, () => {
           const verifiedAhead = true;
 
           return verifiedAhead;

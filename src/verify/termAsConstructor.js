@@ -2,7 +2,7 @@
 
 import Constructor from "../constructor";
 import LocalContext from "../context/local";
-import termAsConstructorNodeVerifier from "../verifier/node/termAsConstructor";
+import termAsConstructorVerifier from "../verifier/termAsConstructor";
 
 export default function verifyTermAsConstructor(termNode, typeNode, fileContext) {
   let termVerifiedAsConstructor = false;
@@ -14,7 +14,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
   const localContext = LocalContext.fromFileContext(fileContext),
         nonTerminalNode = termNode, ///
         childNodes = nonTerminalNode.getChildNodes(),
-        childNodesVerified = termAsConstructorNodeVerifier.verifyChildNodes(childNodes, localContext, () => {
+        childNodesVerified = termAsConstructorVerifier.verifyChildNodes(childNodes, localContext, () => {
           const verifiedAhead = true;
 
           return verifiedAhead;

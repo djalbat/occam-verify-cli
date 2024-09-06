@@ -1,8 +1,8 @@
 "use strict";
 
 import Declaration from "../declaration"
+import metaLevelUnifier from "../unifier/metaLevel";
 import referenceMetaType from "../metaType/reference";
-import metaLevelNodesVerifier from "../verifier/nodes/metaLevel";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -23,7 +23,7 @@ export default function verifyDeclaration(declarationNode, declarations, localCo
   if (referenceVerified) {
     const statementNode = statementNodeQuery(declarationNode);
 
-    const { verifyStatement } = metaLevelNodesVerifier,
+    const { verifyStatement } = metaLevelUnifier,
           derived = false,
           assignments = [],
           statementVerified = verifyStatement(statementNode, assignments, derived, localContext);

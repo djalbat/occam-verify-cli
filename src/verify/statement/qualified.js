@@ -1,12 +1,12 @@
 "use strict";
 
+import unifyMetavariableAgainstStatement from "../../unify/metavariableAgainstStatement";
+
 import { nodeQuery } from "../../utilities/query";
 import { verifyStatementAsEquality, verifyStatementAsTypeAssertion } from "../../verify/statement";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
       metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference/metavariable!");
-
-import verifyMetavariableAgainstStatement from "../../verify/metavariableAgainstStatement";
 
 export default function verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, localContext) {
   let qualifiedStatementVerified;
@@ -189,7 +189,7 @@ function verifyQualifiedStatementAAgainstReference(qualifiedStatementNode, subst
           statementNodeB = statementNode, ///
           substitutionNode = null,
           metavariableNodeA = metavariableString, ///
-          metavariableVerifiedAgainstStatement = verifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNode, substitutions, localContextA, localContextB, () => {
+          metavariableVerifiedAgainstStatement = unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNode, substitutions, localContextA, localContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

@@ -1,7 +1,7 @@
 "use strict";
 
 import LocalContext from "./context/local";
-import metaLevelNodesVerifier from "./verifier/nodes/metaLevel";
+import metaLevelUnifier from "./unifier/metaLevel";
 
 import { match } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
@@ -31,13 +31,13 @@ export default class Supposition {
             nonTerminalNodeB = statementNode,  ///
             localContextA = LocalContext.fromFileContext(fileContextA),
             localContextB = localContext,  ///
-            nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+            nonTerminalNodeUnified = metaLevelUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
               const verifiedAhead = true;
 
               return verifiedAhead;
             });
 
-      matchesStatementNode = nonTerminalNodeVerified; ///
+      matchesStatementNode = nonTerminalNodeUnified; ///
     }
 
     return matchesStatementNode;
@@ -64,13 +64,13 @@ export default class Supposition {
                 nonTerminalNodeB = subproofStatementNode, ///
                 localContextA = LocalContext.fromFileContext(fileContextA),
                 localContextB = localContext,  ///
-                nonTerminalNodeVerified = metaLevelNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+                nonTerminalNodeUnified = metaLevelUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
                   const verifiedAhead = true;
 
                   return verifiedAhead;
                 });
 
-          if (nonTerminalNodeVerified) {
+          if (nonTerminalNodeUnified) {
             return true;
           }
         });

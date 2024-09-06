@@ -2,7 +2,7 @@
 
 import Substitution from "../substitution";
 import TermForVariableSubstitution from "./termForVariable";
-import verifyStatementAgainstStatement from "../verify/statementAtainstStatement";
+import unifyStatementAgainstStatement from "../unify/statementAtainstStatement";
 
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/match";
 import { statementNodeFromStatementString, metavariableNodeFromMetavariableString } from "../utilities/node";
@@ -120,7 +120,7 @@ function matchStatementNode(statementNodeA, statementNodeB, substitution, substi
 
     statementNodeMatches = statementNodeAMatchesStatementNodeB; ///
   } else {
-    const statementVerifiedAgainstStatement = verifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
+    const statementVerifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
 
     statementNodeMatches = statementVerifiedAgainstStatement; ///
   }

@@ -1,7 +1,7 @@
 "use strict";
 
 import verifyTerm from "../../verify/term";
-import metaLevelNodeVerifier from "../../verifier/node/metaLevel";
+import metaLevelVerifier from "../../verifier/metaLevel";
 
 import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
@@ -113,7 +113,7 @@ function verifyStatedDefinedAssertion(definedAssertionNode, assignments, derived
     localContext.trace(`Verifying the '${definedAssertionString}' stated defined assertion...`, definedAssertionNode);
 
     const nonTerminalNode = definedAssertionNode, ///
-          nonTerminalNodeVerified = metaLevelNodeVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
+          nonTerminalNodeVerified = metaLevelVerifier.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;

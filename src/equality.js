@@ -1,6 +1,6 @@
 "use strict";
 
-import equalityNodesVerifier from "./verifier/nodes/equality";
+import equalityUnifier from "./unifier/equality";
 
 export default class Equality {
   constructor(node, leftTerm, rightTerm) {
@@ -33,12 +33,12 @@ export default class Equality {
           rightTermNode = this.rightTerm.getNode(),
           nonTerminalNodeA = leftTermNode,  ///
           nonTerminalNodeB = rightTermNode, ///
-          nonTerminalNodeVerified = equalityNodesVerifier.verifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, () => {
+          nonTerminalNodeUnified = equalityUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;
           }),
-          equal = nonTerminalNodeVerified;  ///
+          equal = nonTerminalNodeUnified;  ///
 
     return equal;
   }
