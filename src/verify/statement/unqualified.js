@@ -1,11 +1,16 @@
 "use strict";
 
+import verifyEquality from "../../verify/equality";
+import verifyJudgement from "../../verify/judgement";
 import verifyStatement from "../../verify/statement";
+import verifyTypeAssertion from "../assertion/type";
 
 import { nodeQuery } from "../../utilities/query";
-import { verifyStatementAsEquality, verifyStatementAsJudgement, verifyStatementAsTypeAssertion } from "../../verify/statement";
 
-const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
+const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!"),
+      equalityNodeQuery = nodeQuery("/statement/equality!"),
+      judgementNodeQuery = nodeQuery("/statement/judgement!"),
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 export default function verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext) {
   let unqualifiedStatementVerified;
@@ -90,25 +95,93 @@ function verifyDerivedStatement(statementNode, assignments, derived, localContex
 
   localContext.trace(`Verifying the '${statementString}' derived statement...`, statementNode);
 
-  const verifyStatementFunctions = [
-    verifyStatementAsEquality,
-    verifyStatementAsJudgement,
-    verifyStatementAsTypeAssertion
+  const verifyDerivedStatementFunctions = [
+    verifyDerivedStatementAsEquality,
+    verifyDerivedStatementAsJudgement,
+    verifyDerivedStatementAsTypeAssertion
   ];
 
-  verifyStatementFunctions.some((verifyStatementFunction) => {
-    const derivedStatementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
+  derivedStatementVerified = verifyDerivedStatementFunctions.every((verifyDerivedStatementFunction) => {  ///
+    const derivedStatementVerified = verifyDerivedStatementFunction(statementNode, assignments, derived, localContext);
 
     if (derivedStatementVerified) {
       return true;
     }
   });
 
-  derivedStatementVerified = true; ///
-
   if (derivedStatementVerified) {
     localContext.debug(`...verified the '${statementString}' derived statement.`, statementNode);
   }
 
   return derivedStatementVerified;
+}
+
+ function verifyDerivedStatementAsEquality(statementNode, assignments, derived, localContext) {
+  let derivedStatementVerifiedAsEquality = true; ///
+
+  const equalityNode = equalityNodeQuery(statementNode);
+
+  if (equalityNode !== null) {
+    const statementString = localContext.nodeAsString(statementNode);
+
+    localContext.trace(`Verifying the '${statementString}' derived statement as an equality...`, statementNode);
+
+    const equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext, () => {
+      const verifiedAhead = true;
+
+      return verifiedAhead;
+    });
+
+    derivedStatementVerifiedAsEquality = equalityVerified; ///
+
+    if (derivedStatementVerifiedAsEquality) {
+      localContext.debug(`...verified the '${statementString}' derived statement as an equality.`, statementNode);
+    }
+  }
+
+  return derivedStatementVerifiedAsEquality;
+}
+
+ function verifyDerivedStatementAsJudgement(statementNode, assignments, derived, localContext) {
+  let derivedStatementVerifiedAsJudgement = true;
+
+  const judgementNode = judgementNodeQuery(statementNode);
+
+  if (judgementNode !== null) {
+    const statementString = localContext.nodeAsString(statementNode);
+
+    localContext.trace(`Verifying the '${statementString}' derived statement as a judgement...`, statementNode);
+
+    const judgementVerified = verifyJudgement(judgementNode, assignments, derived, localContext);
+
+    derivedStatementVerifiedAsJudgement = judgementVerified;  ///
+
+    if (derivedStatementVerifiedAsJudgement) {
+      localContext.debug(`...verified the '${statementString}' derived statement as a judgement.`, statementNode);
+    }
+  }
+
+  return derivedStatementVerifiedAsJudgement;
+}
+
+ function verifyDerivedStatementAsTypeAssertion(statementNode, assignments, derived, localContext) {
+  let statementVerifiedAsTypeAssertion = true;  ///
+
+  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
+
+  if (typeAssertionNode !== null) {
+    const statementString = localContext.nodeAsString(statementNode);
+
+    localContext.trace(`Verifying the '${statementString}' derived statement as a type assertion...`, statementNode);
+
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext);
+
+    statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
+
+    if (statementVerifiedAsTypeAssertion) {
+      localContext.debug(`...verified the '${statementString}' derived statement as a type assertion.`, statementNode);
+    }
+  }
+
+  return statementVerifiedAsTypeAssertion;
 }

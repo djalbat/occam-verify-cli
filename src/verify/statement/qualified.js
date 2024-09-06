@@ -3,10 +3,15 @@
 import unifyMetavariableAgainstStatement from "../../unify/metavariableAgainstStatement";
 
 import { nodeQuery } from "../../utilities/query";
-import { verifyStatementAsEquality, verifyStatementAsTypeAssertion } from "../../verify/statement";
+import verifyEquality from "../equality";
+import verifyJudgement from "../judgement";
+import verifyTypeAssertion from "../assertion/type";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
-      metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference/metavariable!");
+      equalityNodeQuery = nodeQuery("/statement/equality!"),
+      judgementNodeQuery = nodeQuery("/statement/judgement!"),
+      metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference/metavariable!"),
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!");
 
 export default function verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, localContext) {
   let qualifiedStatementVerified;
@@ -212,13 +217,14 @@ function verifyStatedStatement(statementNode, assignments, derived, localContext
 
   localContext.trace(`Verifying the '${statementString}' stated statement...`, statementNode);
 
-  const verifyStatementFunctions = [
-    verifyStatementAsEquality,
-    verifyStatementAsTypeAssertion
+  const verifyStatedStatementFunctions = [
+    verifyStatedStatementAsEquality,
+    verifyStatedStatementAsJudgement,
+    verifyStatedStatementAsTypeAssertion
   ];
 
-  verifyStatementFunctions.some((verifyStatementFunction) => {
-    const statedStatementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
+  verifyStatedStatementFunctions.every((verifyStatedStatementFunction) => { ///
+    const statedStatementVerified = verifyStatedStatementFunction(statementNode, assignments, derived, localContext);
 
     if (statedStatementVerified) {
       return true;
@@ -232,4 +238,74 @@ function verifyStatedStatement(statementNode, assignments, derived, localContext
   }
 
   return statedStatementVerified;
+}
+
+function verifyStatedStatementAsEquality(statementNode, assignments, derived, localContext) {
+  let statedStatementVerifiedAsEquality = true; ///
+
+  const equalityNode = equalityNodeQuery(statementNode);
+
+  if (equalityNode !== null) {
+    const statementString = localContext.nodeAsString(statementNode);
+
+    localContext.trace(`Verifying the '${statementString}' stated statement as an equality...`, statementNode);
+
+    const equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext, () => {
+      const verifiedAhead = true;
+
+      return verifiedAhead;
+    });
+
+    statedStatementVerifiedAsEquality = equalityVerified; ///
+
+    if (statedStatementVerifiedAsEquality) {
+      localContext.debug(`...verified the '${statementString}' stated statement as an equality.`, statementNode);
+    }
+  }
+
+  return statedStatementVerifiedAsEquality;
+}
+
+function verifyStatedStatementAsJudgement(statementNode, assignments, derived, localContext) {
+  let statedStatementVerifiedAsJudgement = true;
+
+  const judgementNode = judgementNodeQuery(statementNode);
+
+  if (judgementNode !== null) {
+    const statementString = localContext.nodeAsString(statementNode);
+
+    localContext.trace(`Verifying the '${statementString}' stated statement as a judgement...`, statementNode);
+
+    const judgementVerified = verifyJudgement(judgementNode, assignments, derived, localContext);
+
+    statedStatementVerifiedAsJudgement = judgementVerified;  ///
+
+    if (statedStatementVerifiedAsJudgement) {
+      localContext.debug(`...verified the '${statementString}' stated statement as a judgement.`, statementNode);
+    }
+  }
+
+  return statedStatementVerifiedAsJudgement;
+}
+
+function verifyStatedStatementAsTypeAssertion(statementNode, assignments, derived, localContext) {
+  let statementVerifiedAsTypeAssertion = true;  ///
+
+  const typeAssertionNode = typeAssertionNodeQuery(statementNode);
+
+  if (typeAssertionNode !== null) {
+    const statementString = localContext.nodeAsString(statementNode);
+
+    localContext.trace(`Verifying the '${statementString}' stated statement as a type assertion...`, statementNode);
+
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext);
+
+    statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
+
+    if (statementVerifiedAsTypeAssertion) {
+      localContext.debug(`...verified the '${statementString}' stated statement as a type assertion.`, statementNode);
+    }
+  }
+
+  return statementVerifiedAsTypeAssertion;
 }
