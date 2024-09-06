@@ -3,7 +3,7 @@
 import verifyStatement from "../../verify/statement";
 
 import { nodeQuery } from "../../utilities/query";
-import { verifyStatementAsEquality, verifyStatementAsTypeAssertion } from "../../verify/statement";
+import { verifyStatementAsEquality, verifyStatementAsJudgement, verifyStatementAsTypeAssertion } from "../../verify/statement";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
@@ -92,6 +92,7 @@ function verifyDerivedStatement(statementNode, assignments, derived, localContex
 
   const verifyStatementFunctions = [
     verifyStatementAsEquality,
+    verifyStatementAsJudgement,
     verifyStatementAsTypeAssertion
   ];
 

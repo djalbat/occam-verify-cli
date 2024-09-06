@@ -117,6 +117,28 @@ export function verifyStatementAsEquality(statementNode, assignments, derived, l
   return statementVerifiedAsEquality;
 }
 
+export function verifyStatementAsJudgement(statementNode, assignments, derived, localContext) {
+  let statementVerifiedAsJudgement = false;
+
+  const judgementNode = judgementNodeQuery(statementNode);
+
+  if (judgementNode !== null) {
+    const statementString = localContext.nodeAsString(statementNode);
+
+    localContext.trace(`Verifying the '${statementString}' statement as a judgement...`, statementNode);
+
+    const judgementVerified = verifyJudgement(judgementNode, assignments, derived, localContext);
+
+    statementVerifiedAsJudgement = judgementVerified;  ///
+
+    if (statementVerifiedAsJudgement) {
+      localContext.debug(`...verified the '${statementString}' statement as a judgement.`, statementNode);
+    }
+  }
+
+  return statementVerifiedAsJudgement;
+}
+
 export function verifyStatementAsTypeAssertion(statementNode, assignments, derived, localContext) {
   let statementVerifiedAsTypeAssertion = false;
 
@@ -137,28 +159,6 @@ export function verifyStatementAsTypeAssertion(statementNode, assignments, deriv
   }
 
   return statementVerifiedAsTypeAssertion;
-}
-
-function verifyStatementAsJudgement(statementNode, assignments, derived, localContext) {
-  let statementVerifiedAsJudgement = false;
-
-  const judgementNode = judgementNodeQuery(statementNode);
-
-  if (judgementNode !== null) {
-    const statementString = localContext.nodeAsString(statementNode);
-
-    localContext.trace(`Verifying the '${statementString}' statement as a judgement...`, statementNode);
-
-    const judgementVerified = verifyJudgement(judgementNode, assignments, derived, localContext);
-
-    statementVerifiedAsJudgement = judgementVerified;  ///
-
-    if (statementVerifiedAsJudgement) {
-      localContext.debug(`...verified the '${statementString}' statement as a judgement.`, statementNode);
-    }
-  }
-
-  return statementVerifiedAsJudgement;
 }
 
 function verifyStatementAsMetavariable(statementNode, assignments, derived, localContext) {

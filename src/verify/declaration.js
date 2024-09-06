@@ -8,7 +8,7 @@ import { nodeQuery } from "../utilities/query";
 
 const referenceNodeQuery = nodeQuery("/declaration/reference!"),
       statementNodeQuery = nodeQuery("/declaration/statement!"),
-      metavariableNodeQuery = nodeQuery("/reference/metavariable!");
+      metavariableNodeQuery = nodeQuery("/metavariable!");
 
 export default function verifyDeclaration(declarationNode, declarations, localContext) {
   let declarationVerified = false;

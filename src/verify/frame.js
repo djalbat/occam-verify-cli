@@ -19,27 +19,24 @@ export default function verifyFrame(frameNode, frames, assignments, derived, loc
 
   const declarations = [],
         declarationNodes = declarationNodesQuery(frameNode),
+        metavariableNodes = metavariableNodesQuery(frameNode),
         declarationsVerified = declarationNodes.every((declarationNode) => {
           const declarationVerified = verifyDeclaration(declarationNode, declarations, localContext);
 
           return declarationVerified;
+        }),
+        metavariablesVerified = metavariableNodes.every((metavariableNode) => {
+          const metavariableVerified = verifyMetavariable(metavariableNode, declarations, localContext);
+
+          return metavariableVerified;
         });
 
-  if (declarationsVerified) {
-    const metavariableNodes = metavariableNodesQuery(frameNode),
-          metavariablesVerified = metavariableNodes.every((metavariableNode) => {
-            const metavariableVerified = verifyMetavariable(metavariableNode, declarations, localContext);
+  if (declarationsVerified && metavariablesVerified) {
+    const frame = Frame.fromDeclarations(declarations);
 
-            return metavariableVerified;
-          });
+    frames.push(frame);
 
-    if (metavariablesVerified) {
-      const frame = Frame.fromDeclarations(declarations);
-
-      frames.push(frame);
-
-      frameVerified = true;
-    }
+    frameVerified = true;
   }
 
   if (frameVerified) {
