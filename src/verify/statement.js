@@ -13,16 +13,17 @@ import statementAgainstCombinatorUnifier from "../unifier/statementAgainstCombin
 import { nodeQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
-const variableNodeQuery = nodeQuery("/substitution/variable!"),
+const variableNodeQuery = nodeQuery("/*/variable!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
       judgementNodeQuery = nodeQuery("/statement/judgement!"),
-      metavariableNodeQuery = nodeQuery("/statement/metavariable!"),
+      metavariableNodeQuery = nodeQuery("/*/metavariable!"),
       substitutionNodeQuery = nodeQuery("/statement/substitution!"),
-      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       termVariableNodeQuery = nodeQuery("/substitution/term/variable!"),
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
-      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
+      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!"),
+      statementMetavariableNodeQuery = nodeQuery("/substitution/statement/metavariable!");
 
 function verifyStatement(statementNode, assignments, derived, localContext) {
   let statementVerified;
@@ -352,15 +353,33 @@ function verifySubstitution(substitutionNode, localContext) {
     substitutionVerified = true;
   } else {
     const variableNode = variableNodeQuery(substitutionNode),
-          variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
+          metavariableNode = metavariableNodeQuery(substitutionNode);
 
-    if (variablePresent) {
-      const termVariableNode = termVariableNodeQuery(substitutionNode);
+    if (variableNode !== null) {
+      const variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
 
-      if (termVariableNode !== null) {
-        const termVariablePresent = localContext.isVariablePresentByVariableNode(termVariableNode);
+      if (variablePresent) {
+        const termVariableNode = termVariableNodeQuery(substitutionNode);
 
-        substitutionVerified = termVariablePresent; ///
+        if (termVariableNode !== null) {
+          const termVariablePresent = localContext.isVariablePresentByVariableNode(termVariableNode);
+
+          substitutionVerified = termVariablePresent; ///
+        }
+      }
+    }
+
+    if (metavariableNode !== null) {
+      const metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+
+      if (metavariablePresent) {
+        const statementMetavariableNode = statementMetavariableNodeQuery(substitutionNode);
+
+        if (statementMetavariableNode !== null) {
+          const statementMetavariablePresent = localContext.isMetavariablePresentByMetavariableNode(statementMetavariableNode);
+
+          substitutionVerified = statementMetavariablePresent; ///
+        }
       }
     }
   }

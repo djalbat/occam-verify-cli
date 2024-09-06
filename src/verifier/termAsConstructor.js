@@ -22,9 +22,9 @@ class TermAsConstructorVerifier extends Verifier {
           let nonTerminalNodeVerified;
 
           const termNode = node, ///
-            termNodeVerified = this.verifyTermNode(termNode, localContext, verifyAhead);
+                termVerified = this.verifyNode(termNode, localContext, verifyAhead);
 
-          nonTerminalNodeVerified = termNodeVerified; ///
+          nonTerminalNodeVerified = termVerified; ///
 
           return nonTerminalNodeVerified;
         }
@@ -35,9 +35,9 @@ class TermAsConstructorVerifier extends Verifier {
           let nonTerminalNodeVerified;
 
           const typeNode = node, ///
-            typeNodeVerified = this.verifyTypeNode(typeNode, localContext, verifyAhead);
+                typeVerified = this.verifyType(typeNode, localContext, verifyAhead);
 
-          nonTerminalNodeVerified = typeNodeVerified; ///
+          nonTerminalNodeVerified = typeVerified; ///
 
           return nonTerminalNodeVerified;
         }
@@ -45,38 +45,32 @@ class TermAsConstructorVerifier extends Verifier {
       {
         nodeQuery: nonTerminalNodeQuery,
         verify: (node, localContext, verifyAhead) => {
-          let nonTerminalNodeVerified;
+          const verified = super.verify(node, localContext, verifyAhead);
 
-          const nonTerminalNode = node; ///
-
-          nonTerminalNodeVerified =
-
-            super.verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead);
-
-          return nonTerminalNodeVerified;
+          return verified;
         }
       }
     ];
 
-    const nodeVerified = verify(nodeQueryMaps, nonTerminalNode, localContext, verifyAhead);
+    const verified = verify(nodeQueryMaps, nonTerminalNode, localContext, verifyAhead);
 
-    nonTerminalNodeVerified = nodeVerified; ///
+    nonTerminalNodeVerified = verified; ///
 
     return nonTerminalNodeVerified;
   }
 
-  verifyTermNode(termNode, localContext, verifyAhead) {
+  verifyNode(termNode, localContext, verifyAhead) {
     const standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
-          termNodeVerified = standaloneTermVerified;  ///
+          termVerified = standaloneTermVerified;  ///
 
-    return termNodeVerified;
+    return termVerified;
   }
 
-  verifyTypeNode(typeNode, localContext, verifyAhead) {
+  verifyType(typeNode, localContext, verifyAhead) {
     const standaloneTypeVerified = verifyStandaloneType(typeNode, localContext, verifyAhead),
-          typeNodeVerified = standaloneTypeVerified;  ///
+          typeVerified = standaloneTypeVerified;  ///
 
-    return typeNodeVerified;
+    return typeVerified;
   }
 }
 

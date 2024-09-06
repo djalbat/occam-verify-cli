@@ -336,14 +336,14 @@ class LocalContext {
 
   findVariableByVariableNode(variableNode) {
     const node = variableNode,  ///
-      variables = this.getVariables(),
-      variable = variables.find((variable) => {
-        const matches = variable.matchNode(node);
+          variables = this.getVariables(),
+          variable = variables.find((variable) => {
+            const matches = variable.matchNode(node);
 
-        if (matches) {
-          return true;
-        }
-      }) || null;
+            if (matches) {
+              return true;
+            }
+          }) || null;
 
     return variable;
   }

@@ -7,8 +7,8 @@ import unifyTermAgainstType from "../unify/termAgainstType";
 import { unify } from "../unifier";
 import { nodeQuery } from "../utilities/query";
 
-const termNodeQuery = nodeQuery("/argument/term!"),
-      typeNodeQuery = nodeQuery("/argument/type!"),
+const termNodeQuery = nodeQuery("/term"),
+      typeNodeQuery = nodeQuery("/type"),
       nonTerminalNodeQuery = nodeQuery("/*");
 
 class TermAgainstConstructorUnifier extends Unifier {
@@ -24,11 +24,11 @@ class TermAgainstConstructorUnifier extends Unifier {
 
           const termNodeA = nodeA,  ///
                 typeNodeB = nodeB,  ///
-                termNodUnifiedAgainstTypeNode =
+                termUnifiedAgainstType =
 
-                  this.unifyTermNodeAgainstTypeNode(termNodeA, typeNodeB, localContext, unifyAhead);
+                  this.unifyTermAgainstType(termNodeA, typeNodeB, localContext, unifyAhead);
 
-          nonTerminalNodUnified = termNodUnifiedAgainstTypeNode;  ///
+          nonTerminalNodUnified = termUnifiedAgainstType;  ///
 
           return nonTerminalNodUnified;
         }
@@ -37,38 +37,31 @@ class TermAgainstConstructorUnifier extends Unifier {
         nodeQueryA: nonTerminalNodeQuery,
         nodeQueryB: nonTerminalNodeQuery,
         unify: (nodeA, nodeB, localContext, unifyAhead) => {
-          let nonTerminalNodUnified;
+          const unified = super.unify(nodeA, nodeB, localContext, unifyAhead);
 
-          const nonTerminalNodeA = nodeA, ///
-                nonTerminalNodeB = nodeB; ///
-
-          nonTerminalNodUnified =
-
-            super.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, unifyAhead);
-
-          return nonTerminalNodUnified;
+          return unified;
         }
       }
     ];
 
-    const nodesVerified = unify(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, localContext, unifyAhead);
+    const unified = unify(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, localContext, unifyAhead);
 
-    nonTerminalNodUnified = nodesVerified;  ///
+    nonTerminalNodUnified = unified;  ///
 
     return nonTerminalNodUnified;
   }
 
-  unifyTermNodeAgainstTypeNode(termNodeA, typeNodeB, localContext, unifyAhead) {
-    let termNodUnifiedAgainstTypeNode;
+  unifyTermAgainstType(termNodeA, typeNodeB, localContext, unifyAhead) {
+    let termUnifiedAgainstType;
 
     const { verifyTerm } = shim,
           termNode = termNodeA, ///
           typeNode = typeNodeB, ///
           typeUnifiedAgainstTerm = unifyTermAgainstType(termNode, typeNode, localContext, unifyAhead, verifyTerm);
 
-    termNodUnifiedAgainstTypeNode = typeUnifiedAgainstTerm; ///
+    termUnifiedAgainstType = typeUnifiedAgainstTerm; ///
 
-    return termNodUnifiedAgainstTypeNode;
+    return termUnifiedAgainstType;
   }
 }
 

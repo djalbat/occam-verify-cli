@@ -1,6 +1,16 @@
 "use strict";
 
 export default class Verifier {
+  verify(node, ...remainingArguments) {
+    let verified;
+
+    const nodeVerified = this.verifyNode(node, ...remainingArguments);
+
+    verified = nodeVerified;  ///
+
+    return verified;
+  }
+
   verifyNode(node, ...remainingArguments) {
     let nodeVerified;
 

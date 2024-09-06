@@ -3,6 +3,16 @@
 import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual } from "./utilities/terminalNodes";
 
 export default class Unifier {
+  unify(nodeA, nodeB, ...remainingArguments) {
+    let unified;
+
+    const nodeUnified = this.unifyNode(nodeA, nodeB, ...remainingArguments);
+
+    unified = nodeUnified;  ///
+
+    return unified;
+  }
+
   unifyNode(nodeA, nodeB, ...remainingArguments) {
     let nodeUnified = false;
 

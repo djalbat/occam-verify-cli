@@ -43,11 +43,11 @@ class StatementAgainstCombinatorUnifier extends Unifier {
 
           const argumentNodeA = nodeA,  ///
                 argumentNodeB = nodeB,  ///
-                argumentNodeUnifiedAgainstArgumentNode =
+                argumentUnifiedAgainstArgument =
 
-                  this.unifyArgumentNodeAgainstArgumentNode(argumentNodeA, argumentNodeB, localContext, unifyAhead);
+                  this.unifyArgumentAgainstArgument(argumentNodeA, argumentNodeB, localContext, unifyAhead);
 
-          nonTerminalNodeUnified = argumentNodeUnifiedAgainstArgumentNode; ///
+          nonTerminalNodeUnified = argumentUnifiedAgainstArgument; ///
 
           return nonTerminalNodeUnified;
         }
@@ -56,23 +56,16 @@ class StatementAgainstCombinatorUnifier extends Unifier {
         nodeQueryA: nonTerminalNodeQuery,
         nodeQueryB: nonTerminalNodeQuery,
         unify: (nodeA, nodeB, localContext, unifyAhead) => {
-          let nonTerminalNodeUnified;
+          const unified = super.unify(nodeA, nodeB, localContext, unifyAhead);
 
-          const nonTerminalNodeA = nodeA, ///
-                nonTerminalNodeB = nodeB; ///
-
-          nonTerminalNodeUnified =
-
-            super.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, unifyAhead);
-
-          return nonTerminalNodeUnified;
+          return unified;
         }
       }
     ];
 
-    const nodesUnified = unify(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, localContext, unifyAhead);
+    const unified = unify(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, localContext, unifyAhead);
 
-    nonTerminalNodeUnified = nodesUnified;  ///
+    nonTerminalNodeUnified = unified;  ///
 
     return nonTerminalNodeUnified;
   }
@@ -89,14 +82,12 @@ class StatementAgainstCombinatorUnifier extends Unifier {
     return statementUnifiedAgainstMetaType;
   }
 
-  unifyArgumentNodeAgainstArgumentNode(argumentNodeA, argumentNodeB, localContext, unifyAhead) {
-    let argumentNodeUnifiedAgainstArgumentNode;
+  unifyArgumentAgainstArgument(argumentNodeA, argumentNodeB, localContext, unifyAhead) {
+    let argumentUnifiedAgainstArgument;
 
-    const argumentUnifiedAgainstArgument = unifyArgumentAgainstArgument(argumentNodeA, argumentNodeB, localContext, unifyAhead);
+    argumentUnifiedAgainstArgument = unifyArgumentAgainstArgument(argumentNodeA, argumentNodeB, localContext, unifyAhead);
 
-    argumentNodeUnifiedAgainstArgumentNode = argumentUnifiedAgainstArgument; ///
-
-    return argumentNodeUnifiedAgainstArgumentNode;
+    return argumentUnifiedAgainstArgument;
   }
 }
 

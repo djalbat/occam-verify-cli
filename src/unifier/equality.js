@@ -22,11 +22,11 @@ class EqualityUnifier extends Unifier {
 
           const termNodeA = nodeA,  ///
                 termNodeB = nodeB,  ///
-                termNodUnifiedAgainstTermNode =
+                termUnifiedAgainstTerm =
 
-                  this.unifyTermNodeAgainstTermNode(termNodeA, termNodeB, localContext, unifyAhead);
+                  this.unifyTermAgainstTerm(termNodeA, termNodeB, localContext, unifyAhead);
 
-          nonTerminalNodUnified = termNodUnifiedAgainstTermNode; ///
+          nonTerminalNodUnified = termUnifiedAgainstTerm; ///
 
           return nonTerminalNodUnified;
         }
@@ -35,34 +35,27 @@ class EqualityUnifier extends Unifier {
         nodeQueryA: nonTerminalNodeQuery,
         nodeQueryB: nonTerminalNodeQuery,
         unify: (nodeA, nodeB, localContext, unifyAhead) => {
-          let nonTerminalNodUnified;
+          const unified = super.unify(nodeA, nodeB, localContext, unifyAhead);
 
-          const nonTerminalNodeA = nodeA, ///
-                nonTerminalNodeB = nodeB; ///
-
-          nonTerminalNodUnified =
-
-            super.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, unifyAhead);
-
-          return nonTerminalNodUnified;
+          return unified;
         }
       }
     ];
 
-    const nodesVerified = unify(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, localContext, unifyAhead);
+    const unified = unify(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, localContext, unifyAhead);
 
-    nonTerminalNodUnified = nodesVerified;  ///
+    nonTerminalNodUnified = unified;  ///
 
     return nonTerminalNodUnified;
   }
 
-  unifyTermNodeAgainstTermNode(termNodeA, termNodeB, localContext, unifyAhead) {
-    let termNodUnifiedAgainstTermNode;
+  unifyTermAgainstTerm(termNodeA, termNodeB, localContext, unifyAhead) {
+    let termUnifiedAgainstTerm;
 
     const termVerifiedAgainstTerm = unifyTermAgainstTerm(termNodeA, termNodeB, localContext, unifyAhead);
 
     if (termVerifiedAgainstTerm) {
-      termNodUnifiedAgainstTermNode = true;
+      termUnifiedAgainstTerm = true;
     } else {
       const nonTerminalNodeA = termNodeA, ///
             nonTerminalNodeB = termNodeB, ///
@@ -72,10 +65,10 @@ class EqualityUnifier extends Unifier {
             childNodesB = nonTerminalNodeBChildNodes, ///
             childNodesVerified = this.unifyChildNodes(childNodesA, childNodesB, localContext, unifyAhead);
 
-      termNodUnifiedAgainstTermNode = childNodesVerified; ///
+      termUnifiedAgainstTerm = childNodesVerified; ///
     }
 
-    return termNodUnifiedAgainstTermNode;
+    return termUnifiedAgainstTerm;
   }
 }
 

@@ -24,9 +24,9 @@ class MetaLevelVerifier extends Verifier {
           let nonTerminalNodeVerified;
 
           const termNode = node, ///
-                termNodeVerified = this.verifyTermNode(termNode, localContext, verifyAhead);
+                termVerified = this.verifyTerm(termNode, localContext, verifyAhead);
 
-          nonTerminalNodeVerified = termNodeVerified; ///
+          nonTerminalNodeVerified = termVerified; ///
 
           return nonTerminalNodeVerified;
         }
@@ -37,9 +37,9 @@ class MetaLevelVerifier extends Verifier {
           let nonTerminalNodeVerified;
 
           const variableNode = node, ///
-                variableNodeVerified = this.verifyVariableNode(variableNode, localContext, verifyAhead);
+                variableVerified = this.verifyVariable(variableNode, localContext, verifyAhead);
 
-          nonTerminalNodeVerified = variableNodeVerified; ///
+          nonTerminalNodeVerified = variableVerified; ///
 
           return nonTerminalNodeVerified;
         }
@@ -50,9 +50,9 @@ class MetaLevelVerifier extends Verifier {
           let nonTerminalNodeVerified;
 
           const metavariableNode = node, ///
-                metavariableNodeVerified = this.verifyMetavariableNode(metavariableNode, localContext, verifyAhead);
+                metavariableVerified = this.verifyMetavariable(metavariableNode, localContext, verifyAhead);
 
-          nonTerminalNodeVerified = metavariableNodeVerified; ///
+          nonTerminalNodeVerified = metavariableVerified; ///
 
           return nonTerminalNodeVerified;
         }
@@ -60,45 +60,39 @@ class MetaLevelVerifier extends Verifier {
       {
         nodeQuery: nonTerminalNodeQuery,
         verify: (node, localContext, verifyAhead) => {
-          let nonTerminalNodeVerified;
+          const verified = super.verify(node, localContext, verifyAhead);
 
-          const nonTerminalNode = node; ///
-
-          nonTerminalNodeVerified =
-
-            super.verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead);
-
-          return nonTerminalNodeVerified;
+          return verified;
         }
       }
     ];
 
-    const nodeVerified = verify(nodeQueryMaps, nonTerminalNode, localContext, verifyAhead);
+    const verified = verify(nodeQueryMaps, nonTerminalNode, localContext, verifyAhead);
 
-    nonTerminalNodeVerified = nodeVerified; ///
+    nonTerminalNodeVerified = verified; ///
 
     return nonTerminalNodeVerified;
   }
 
-  verifyMetavariableNode(metavariableNode, localContext, verifyAhead) {
+  verifyMetavariable(metavariableNode, localContext, verifyAhead) {
     const standaloneMetavariableVerified = verifyStandaloneMetavariable(metavariableNode, localContext, verifyAhead),
-          metavariableNodeVerified = standaloneMetavariableVerified;  ///
+          metavariableVerified = standaloneMetavariableVerified;  ///
 
-    return metavariableNodeVerified;
+    return metavariableVerified;
   }
 
-  verifyVariableNode(variableNode, localContext, verifyAhead) {
+  verifyVariable(variableNode, localContext, verifyAhead) {
     const standaloneVariableVerified = verifyStandaloneVariable(variableNode, localContext, verifyAhead),
-          variableNodeVerified = standaloneVariableVerified;  ///
+          variableVerified = standaloneVariableVerified;  ///
 
-    return variableNodeVerified;
+    return variableVerified;
   }
 
-  verifyTermNode(termNode, localContext, verifyAhead) {
+  verifyTerm(termNode, localContext, verifyAhead) {
     const standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
-          termNodeVerified = standaloneTermVerified;  ///
+          termVerified = standaloneTermVerified;  ///
 
-    return termNodeVerified;
+    return termVerified;
   }
 }
 

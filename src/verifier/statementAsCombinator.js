@@ -24,9 +24,9 @@ class StatementAsCombinatorVerifier extends Verifier {
           let nonTerminalNodeVerified;
 
           const termNode = node, ///
-                termNodeVerified = this.verifyTermNode(termNode, localContext, verifyAhead);
+                termVerified = this.verifyTerm(termNode, localContext, verifyAhead);
 
-          nonTerminalNodeVerified = termNodeVerified; ///
+          nonTerminalNodeVerified = termVerified; ///
 
           return nonTerminalNodeVerified;
         }
@@ -37,9 +37,9 @@ class StatementAsCombinatorVerifier extends Verifier {
           let nonTerminalNodeVerified;
 
           const typeNode = node, ///
-                typeNodeVerified = this.verifyTypeNode(typeNode, localContext, verifyAhead);
+                typeVerified = this.verifyType(typeNode, localContext, verifyAhead);
 
-          nonTerminalNodeVerified = typeNodeVerified; ///
+          nonTerminalNodeVerified = typeVerified; ///
 
           return nonTerminalNodeVerified;
         }
@@ -50,9 +50,9 @@ class StatementAsCombinatorVerifier extends Verifier {
           let nonTerminalNodeVerified;
 
           const statementNode = node, ///
-                statementNodeVerified = this.verifyStatementNode(statementNode, localContext, verifyAhead);
+                statementVerified = this.verifyStatement(statementNode, localContext, verifyAhead);
 
-          nonTerminalNodeVerified = statementNodeVerified; ///
+          nonTerminalNodeVerified = statementVerified; ///
 
           return nonTerminalNodeVerified;
         }
@@ -60,45 +60,39 @@ class StatementAsCombinatorVerifier extends Verifier {
       {
         nodeQuery: nonTerminalNodeQuery,
         verify: (node, localContext, verifyAhead) => {
-          let nonTerminalNodeVerified;
+          const verified = super.verify(node, localContext, verifyAhead);
 
-          const nonTerminalNode = node; ///
-
-          nonTerminalNodeVerified =
-
-            super.verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead);
-
-          return nonTerminalNodeVerified;
+          return verified;
         }
       }
     ];
 
-    const nodeVerified = verify(nodeQueryMaps, nonTerminalNode, localContext, verifyAhead);
+    const verified = verify(nodeQueryMaps, nonTerminalNode, localContext, verifyAhead);
 
-    nonTerminalNodeVerified = nodeVerified; ///
+    nonTerminalNodeVerified = verified; ///
 
     return nonTerminalNodeVerified;
   }
 
-  verifyStatementNode(statementNode, localContext, verifyAhead) {
+  verifyStatement(statementNode, localContext, verifyAhead) {
     const standaloneStatementVerified = verifyStandaloneStatement(statementNode, localContext, verifyAhead),
-          statementNodeVerified = standaloneStatementVerified;  ///
+          statementVerified = standaloneStatementVerified;  ///
 
-    return statementNodeVerified;
+    return statementVerified;
   }
 
-  verifyTermNode(termNode, localContext, verifyAhead) {
+  verifyTerm(termNode, localContext, verifyAhead) {
     const standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
-          termNodeVerified = standaloneTermVerified;  ///
+          termVerified = standaloneTermVerified;  ///
 
-    return termNodeVerified;
+    return termVerified;
   }
 
-  verifyTypeNode(typeNode, localContext, verifyAhead) {
+  verifyType(typeNode, localContext, verifyAhead) {
     const standaloneTypeVerified = verifyStandaloneType(typeNode, localContext, verifyAhead),
-          typeNodeVerified = standaloneTypeVerified;  ///
+          typeVerified = standaloneTypeVerified;  ///
 
-    return typeNodeVerified;
+    return typeVerified;
   }
 }
 
