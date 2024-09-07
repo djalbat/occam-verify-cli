@@ -18,7 +18,7 @@ export function nodeAsString(node, tokens) {
       string = nonTerminalNodeAsString(nonTerminalNode, tokens);
     }
 
-    string = string.replace(/[\r\n]/, EMPTY_STRING);
+    string = string.replace(/\s+$/, EMPTY_STRING);
   }
 
   return string;
