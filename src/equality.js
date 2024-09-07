@@ -31,14 +31,8 @@ export default class Equality {
   isEqual(localContext) {
     const leftTermNode = this.leftTerm.getNode(),
           rightTermNode = this.rightTerm.getNode(),
-          nonTerminalNodeA = leftTermNode,  ///
-          nonTerminalNodeB = rightTermNode, ///
-          nonTerminalNodeUnified = equalityUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, () => {
-            const verifiedAhead = true;
-
-            return verifiedAhead;
-          }),
-          equal = nonTerminalNodeUnified;  ///
+          equalityUnified = equalityUnifier.unify(leftTermNode, rightTermNode, localContext),
+          equal = equalityUnified;  ///
 
     return equal;
   }

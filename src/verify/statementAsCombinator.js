@@ -4,27 +4,19 @@ import Combinator from "../combinator";
 import statementAsCombinatorVerifier from "../verifier/statementAsCombinator";
 
 export default function verifyStatementAsCombinator(statementNode, fileContext) {
-  let statementVerifiedAsCombinator = false;
+  let statementVerifiedAsCombinator;
 
   const statementString = fileContext.nodeAsString(statementNode);
 
   fileContext.trace(`Verifying the '${statementString}' statement as a combinator....`, statementNode);
 
-  const nonTerminalNode = statementNode, ///
-        childNodes = nonTerminalNode.getChildNodes(),
-        childNodesVerified = statementAsCombinatorVerifier.verifyChildNodes(childNodes, fileContext, () => {
-          const verifiedAhead = true;
+  statementVerifiedAsCombinator = statementAsCombinatorVerifier.verify(statementNode, fileContext);
 
-          return verifiedAhead;
-        });
-
-  if (childNodesVerified) {
+  if (statementVerifiedAsCombinator) {
     const tokens = fileContext.getTokens(),
           combinator = Combinator.fromStatementNodeAndTokens(statementNode, tokens);
 
     fileContext.addCombinator(combinator);
-
-    statementVerifiedAsCombinator = true;
   }
 
   if (statementVerifiedAsCombinator) {

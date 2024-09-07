@@ -4,7 +4,7 @@ import TermForVariableSubstitution from "../substitution/termForVariable";
 import unifyStatementAgainstStatement from "../unify/statementAtainstStatement";
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
 
-export default function unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNode, substitutions, localContextA, localContextB, unifyAhead) {
+export default function unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB, unifyAhead) {
   let metavariableUnifiedAgainstStatement = false;
 
   const substitution = substitutions.find((substitution) => {
@@ -18,8 +18,9 @@ export default function unifyMetavariableAgainstStatement(metavariableNodeA, sta
   if (substitution !== null) {
     const substitutionStatementNode = substitution.getStatementNode();
 
-    if (substitutionNode !== null) {
-      const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode),
+    if (substitutionNodeA !== null) {
+      const substitutionNode = substitutionNodeA, ///
+            termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode),
             localContext = localContextB,  ///
             substitution = termForVariableSubstitution, ///
             statementNodeA = substitutionStatementNode, ///
@@ -61,6 +62,7 @@ export default function unifyMetavariableAgainstStatement(metavariableNodeA, sta
     let unifiedAhead;
 
     const statementNode = statementNodeB, ///
+          substitutionNode = substitutionNodeA, ///
           metavariableNode = metavariableNodeA, ///
           statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
           substitution = statementForMetavariableSubstitution;  ///

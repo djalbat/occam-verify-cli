@@ -312,16 +312,9 @@ function verifyStatementAgainstCombinator(statementNode, combinator, localContex
 
   localContext.trace(`Verifying the '${statementString}' statement against the '${combinatorString}' combinator...`, statementNode);
 
-  const combinatorStatementNode = combinator.getStatementNode(),
-        nonTerminalNodeA = statementNode, ///
-        nonTerminalNodeB = combinatorStatementNode, ///
-        nonTerminalNodeUnify = statementAgainstCombinatorUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, () => {
-          const verifiedAhead = true;
+  const combinatorStatementNode = combinator.getStatementNode();
 
-          return verifiedAhead;
-        });
-
-  statementVerifiedAgainstCombinator = nonTerminalNodeUnify;  ///
+  statementVerifiedAgainstCombinator = statementAgainstCombinatorUnifier.unify(statementNode, combinatorStatementNode, localContext);
 
   if (statementVerifiedAgainstCombinator) {
     localContext.debug(`...verified the '${statementString}' statement against the '${combinatorString}' combinator.`, statementNode);

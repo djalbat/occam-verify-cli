@@ -1,5 +1,9 @@
 "use strict";
 
+import { nodeQuery } from "./utilities/query";
+
+const nonTerminalNodeQuery = nodeQuery("/*");
+
 export default class Verifier {
   verify(node, ...remainingArguments) {
     let verified;
@@ -56,10 +60,40 @@ export default class Verifier {
   verifyNonTerminalNode(nonTerminalNode, ...remainingArguments) {
     let nonTerminalNodeVerified;
 
-    const childNodes = nonTerminalNode.getChildNodes(), ///
-          childNodesVerify = this.verifyChildNodes(childNodes, ...remainingArguments);
+    let { maps } = this.constructor;
 
-    nonTerminalNodeVerified = childNodesVerify; ///
+    maps = [ ///
+      ...maps,
+      {
+        nodeQuery: nonTerminalNodeQuery,
+        verify: (node, ...remainingArguments) => {
+          let nonTerminalNodeVerified;
+
+          const childNodes = nonTerminalNode.getChildNodes(), ///
+                childNodesVerify = this.verifyChildNodes(childNodes, ...remainingArguments);
+
+          nonTerminalNodeVerified = childNodesVerify; ///
+
+          return nonTerminalNodeVerified;
+        }
+      }
+    ]
+
+    let nodeVerified = false;
+
+    maps.some((map) => {
+      const { nodeQuery, verify } = map;
+
+      const node = nodeQuery(nonTerminalNode);
+
+      if (node !== null) {
+        nodeVerified = verify(node, ...remainingArguments);
+
+        return true;
+      }
+    });
+
+    nonTerminalNodeVerified = nodeVerified; ///
 
     return nonTerminalNodeVerified;
   }
@@ -91,22 +125,4 @@ export default class Verifier {
 
     return childNodesVerify;
   }
-}
-
-export function verify(nodeQueryMaps, nonTerminalNode, ...remainingArguments) {
-  let nodeVerified = false;
-
-  nodeVerified = nodeQueryMaps.some((nodeQueryMap) => {
-    const { nodeQuery, verify } = nodeQueryMap;
-
-    const node = nodeQuery(nonTerminalNode);
-
-    if (node !== null) {
-      nodeVerified = verify(node, ...remainingArguments);
-
-      return true;
-    }
-  });
-
-  return nodeVerified;
 }

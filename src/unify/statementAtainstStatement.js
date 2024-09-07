@@ -19,15 +19,11 @@ export default function unifyStatementAgainstStatement(statementNodeA, statement
     substitutionsA.push(substitutionA);
   }
 
-  const nonTerminalNodeA = statementNodeA,  ///
-        nonTerminalNodeB = statementNodeB,  ///
-        nonTerminalNodeUnified = metaLevelUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutionsA, localContextA, localContextB, () => {
-          const verifiedAhead = true;
+  const nodeA = statementNodeA,  ///
+        nodeB = statementNodeB,  ///
+        unified = metaLevelUnifier.unify(nodeA, nodeB, substitutionsA, localContextA, localContextB);
 
-          return verifiedAhead;
-        });
-
-  if (nonTerminalNodeUnified) {
+  if (unified) {
     if (!transformed) {
       const substitutionB = termForVariableSubstitution,  ///
             substitutionsB = [

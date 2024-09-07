@@ -6,7 +6,7 @@ export default function unifyTermAgainstTerm(termNodeA, termNodeB, localContext,
   let termUnifiedAgainstTerm = false;
 
   const leftTermNode = termNodeA, ///
-        rightTermNode = termNodeB, ///
+        rightTermNode = termNodeB,  ///
         equivalences = localContext.getEquivalences(),
         termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, equivalences);
 

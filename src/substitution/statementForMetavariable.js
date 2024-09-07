@@ -71,17 +71,13 @@ export default class StatementForMetavariableSubstitution extends Substitution {
       ];
 
       const { metaLevelUnifier } = shim,
-            nonTerminalNodeA = this.metavariableNode, ///
-            nonTerminalNodeB = metavariableNode, ///
+            nodeA = this.metavariableNode, ///
+            nodeB = metavariableNode, ///
             localContextA = localContext, ///
             localContextB = localContext,  ///
-            nonTerminalNodeUnified = metaLevelUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-              const verifiedAhead = true;
+            unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
-              return verifiedAhead;
-            });
-
-      unifiedAgainstEquivalence = nonTerminalNodeUnified; ///
+      unifiedAgainstEquivalence = unified; ///
     }
 
     return unifiedAgainstEquivalence;

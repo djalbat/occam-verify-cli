@@ -1,8 +1,9 @@
 "use strict";
 
 import Constructor from "../constructor";
-import LocalContext from "../context/local";
 import termAsConstructorVerifier from "../verifier/termAsConstructor";
+
+import { first } from "../utilities/array";
 
 export default function verifyTermAsConstructor(termNode, typeNode, fileContext) {
   let termVerifiedAsConstructor = false;
@@ -11,38 +12,24 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
 
   fileContext.debug(`Verifying the '${termString}' term as a constructor...`, termNode);
 
-  const localContext = LocalContext.fromFileContext(fileContext),
-        nonTerminalNode = termNode, ///
-        childNodes = nonTerminalNode.getChildNodes(),
-        childNodesVerified = termAsConstructorVerifier.verifyChildNodes(childNodes, localContext, () => {
-          const verifiedAhead = true;
+  const types = [],
+        typeVerified = verifyType(typeNode, types, fileContext);
 
-          return verifiedAhead;
-        });
+  let type;
 
-  if (childNodesVerified) {
-    let type = null;
+  if (typeVerified) {
+    const firstType = first(types);
 
-    if (typeNode === null) {
-      termVerifiedAsConstructor = true;
-    } else {
-      type = fileContext.findTypeByTypeNode(typeNode);
+    type = firstType; ///
 
-      if (type !== null) {
-        termVerifiedAsConstructor = true;
-      } else {
-        const typeString = fileContext.nodeAsString(typeNode);
+    termVerifiedAsConstructor = termAsConstructorVerifier.verify(termNode, fileContext);
+  }
 
-        fileContext.debug(`The '${termString}' constructor's '${typeString}' type is not present.`, termNode);
-      }
-    }
+  if (termVerifiedAsConstructor) {
+    const tokens = fileContext.getTokens(),
+          constructor = Constructor.fromTermNodeTypeAndTokens(termNode, type, tokens);
 
-    if (termVerifiedAsConstructor) {
-      const tokens = fileContext.getTokens(),
-            constructor = Constructor.fromTermNodeTypeAndTokens(termNode, type, tokens);
-
-      fileContext.addConstructor(constructor);
-    }
+    fileContext.addConstructor(constructor);
   }
 
   if (termVerifiedAsConstructor) {
@@ -50,4 +37,30 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
   }
 
   return termVerifiedAsConstructor;
+}
+
+function verifyType(typeNode, types, fileContext) {
+  let typeVerified = false;
+
+  if (typeNode === null) {
+    const type = null;
+
+    types.push(type);
+
+    typeVerified = true;
+  } else {
+    const type = fileContext.findTypeByTypeNode(typeNode);
+
+    if (type !== null) {
+      types.push(type);
+
+      typeVerified = true;
+    } else {
+      const typeString = fileContext.nodeAsString(typeNode);
+
+      fileContext.debug(`The '${typeString}' type is not present.`, typeNode);
+    }
+  }
+
+  return typeVerified;
 }

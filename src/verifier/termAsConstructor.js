@@ -1,77 +1,54 @@
 "use strict";
 
 import Verifier from "../verifier";
+import LocalContext from "../context/local";
 
-import { verify } from "../verifier";
 import { nodeQuery } from "../utilities/query";
 import { verifyStandaloneType } from "../verify/type";
 import { verifyStandaloneTerm } from "../verify/term";
 
 const termNodeQuery = nodeQuery("/term!"),
-      typeNodeQuery = nodeQuery("/type!"),
-      nonTerminalNodeQuery = nodeQuery("/*");
+      typeNodeQuery = nodeQuery("/type!");
 
 class TermAsConstructorVerifier extends Verifier {
-  verifyNonTerminalNode(nonTerminalNode, localContext, verifyAhead) {
-    let nonTerminalNodeVerified;
+  verify(termNode, fileContext) {
+    let termVerifiedAsConstructor;
 
-    const nodeQueryMaps = [
-      {
-        nodeQuery: termNodeQuery,
-        verify: (node, localContext, verifyAhead) => {
-          let nonTerminalNodeVerified;
+    const nonTerminalNode = termNode, ///
+          childNodes = nonTerminalNode.getChildNodes(),
+          childNodesVerified = this.verifyChildNodes(childNodes, fileContext, () => {
+            const verifiedAhead = true;
 
-          const termNode = node, ///
-                termVerified = this.verifyNode(termNode, localContext, verifyAhead);
+            return verifiedAhead;
+          });
 
-          nonTerminalNodeVerified = termVerified; ///
+    termVerifiedAsConstructor = childNodesVerified;  ///
 
-          return nonTerminalNodeVerified;
-        }
-      },
-      {
-        nodeQuery: typeNodeQuery,
-        verify: (node, localContext, verifyAhead) => {
-          let nonTerminalNodeVerified;
+    return termVerifiedAsConstructor;
+  }
 
-          const typeNode = node, ///
-                typeVerified = this.verifyType(typeNode, localContext, verifyAhead);
+  static maps = [
+    {
+      nodeQuery: termNodeQuery,
+      verify: (termNode, fileContext, verifyAhead) => {
+        const localContext = LocalContext.fromFileContext(fileContext),
+              standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
+              termVerified = standaloneTermVerified;  ///
 
-          nonTerminalNodeVerified = typeVerified; ///
-
-          return nonTerminalNodeVerified;
-        }
-      },
-      {
-        nodeQuery: nonTerminalNodeQuery,
-        verify: (node, localContext, verifyAhead) => {
-          const verified = super.verify(node, localContext, verifyAhead);
-
-          return verified;
-        }
+        return termVerified;
       }
-    ];
+    },
+    {
+      nodeQuery: typeNodeQuery,
+      verify: (typeNode, fileContext, verifyAhead) => {
+        const localContext = LocalContext.fromFileContext(fileContext),
+              standaloneTypeVerified = verifyStandaloneType(typeNode, localContext, verifyAhead),
+              typeVerified = standaloneTypeVerified;  ///
 
-    const verified = verify(nodeQueryMaps, nonTerminalNode, localContext, verifyAhead);
-
-    nonTerminalNodeVerified = verified; ///
-
-    return nonTerminalNodeVerified;
-  }
-
-  verifyNode(termNode, localContext, verifyAhead) {
-    const standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
-          termVerified = standaloneTermVerified;  ///
-
-    return termVerified;
-  }
-
-  verifyType(typeNode, localContext, verifyAhead) {
-    const standaloneTypeVerified = verifyStandaloneType(typeNode, localContext, verifyAhead),
-          typeVerified = standaloneTypeVerified;  ///
-
-    return typeVerified;
-  }
+        return typeVerified;
+      }
+    }
+  ];
 }
 
 const termAsConstructorVerifier = new TermAsConstructorVerifier();

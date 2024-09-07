@@ -1,17 +1,21 @@
 "use strict";
 
+import shim from "../shim";
+
 import { first } from "../utilities/array";
 
-export default function unifyTermAgainstType(termNode, typeNode, localContext, unifyAhead, verifyTerm) {
+export default function unifyTermAgainstType(termNodeA, typeNodeB, localContext, unifyAhead) {
   let termUnifiedAgainstType;
 
-  const terms = [],
-        termVerified = verifyTerm(termNode, terms, localContext, () => {
+  const { verifyTerm } = shim,
+        terms = [],
+        termVerified = verifyTerm(termNodeA, terms, localContext, () => {
           let unifiedAhead = false;
 
           const firstTerm = first(terms),
                 term = firstTerm, ///
                 termType = term.getType(),
+                typeNode = typeNodeB, ///
                 type = localContext.findTypeByTypeNode(typeNode),
                 termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
 

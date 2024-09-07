@@ -60,18 +60,14 @@ export default class ProofStep {
 function unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivalences, localContext) {
   let statementUnifiedAgainstStatement = false;
 
-  const nonTerminalNodeA = statementNodeA,  ///
-        nonTerminalNodeB = statementNodeB,  ///
-        substitutions = [],
+  const nodeA = statementNodeA,  ///
+        nodeB = statementNodeB,  ///
         localContextA = localContext, ///
         localContextB = localContext,  ///
-        nonTerminalNodeUnified = metaLevelUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-          const verifiedAhead = true;
+        substitutions = [],
+        unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
-          return verifiedAhead;
-        });
-
-  if (nonTerminalNodeUnified) {
+  if (unified) {
     const substitutionsUnified = substitutions.every((substitution) => {
       const substitutionUnified = equivalences.some((equivalence) => {
         const substitutionUnifiedAgainstEquivalence = substitution.unifyAgainstEquivalence(equivalence, substitutions, localContext);

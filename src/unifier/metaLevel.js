@@ -5,96 +5,71 @@ import Unifier from "../unifier";
 import unifyVariableAgainstTerm from "../unify/variableAgainstTerm";
 import unifyMetavariableAgainstStatement from "../unify/metavariableAgainstStatement";
 
-import { unify } from "../unifier";
 import { nodeQuery } from "../utilities/query";
 
 const termNodeQuery = nodeQuery("/term!"),
       statementNodeQuery = nodeQuery("/statement!"),
-      nonTerminalNodeQuery = nodeQuery("/*"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
-      statementSubstitutionNodeQuery = nodeQuery("/statement/substitution!"),
-      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
+      substitutionNodeQuery = nodeQuery("/statement/substitution!"),
+      metavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 class MetaLevelUnifier extends Unifier {
-  unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, unifyAhead) {
-    let nonTerminalNodeUnified;
+  unify(nodeA, nodeB, substitutions, localContextA, localContextB) {
+    let unified;
 
-    const nodeQueryMaps = [
-      {
-        nodeQueryA: statementMetavariableNodeQuery,
-        nodeQueryB: statementNodeQuery,
-        unify: (nodeA, nodeB, substitutions, localContextA, localContextB, unifyAhead) => {
-          let nonTerminalNodeUnified;
+    const nonTerminalNodeA = nodeA, ///
+          nonTerminalNodeB = nodeB, ///
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
+            const unifiedAhead = true;
 
-          const statementNodeA = nonTerminalNodeA,  ///
-                statementNodeB = nodeB, ///
-                statementMetavariableNodeA = nodeA, ///
-                statementSubstitutionNodeA = statementSubstitutionNodeQuery(statementNodeA),
-                metavariableUnifiedAgainstStatement =
+            return unifiedAhead;
+          });
 
-                  this.unifyStatementMetavariableAgainstStatement(statementMetavariableNodeA, statementSubstitutionNodeA, statementNodeB, substitutions, localContextA, localContextB, unifyAhead);
+    unified = nonTerminalNodeUnified; ///
 
-          nonTerminalNodeUnified = metavariableUnifiedAgainstStatement;  ///
+    return unified;
+  }
 
-          return nonTerminalNodeUnified;
+  static maps = [
+    {
+      nodeQueryA: statementNodeQuery,
+      nodeQueryB: statementNodeQuery,
+      unify: (statementNodeA, statementNodeB, substitutions, localContextA, localContextB, unifyAhead) => {
+        let statementVerifiedAgainstStatement;
+
+        const metavariableNodeA = metavariableNodeQuery(statementNodeA);
+
+        if (metavariableNodeA !== null) {
+          const substitutionNodeA = substitutionNodeQuery(statementNodeA),
+                metavariableUnifiedAgainstStatement = unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB, unifyAhead);
+
+          statementVerifiedAgainstStatement = metavariableUnifiedAgainstStatement;  ///
+        } else {
+          const nonTerminalNodeA = statementNodeA, ///
+                nonTerminalNodeB = statementNodeB, ///
+                nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
+                nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
+                childNodesA = nonTerminalNodeAChildNodes, ///
+                childNodesB = nonTerminalNodeBChildNodes, ///
+                childNodesVerified = metaLevelUnifier.unifyChildNodes(childNodesA, childNodesB, substitutions, localContextA, localContextB, unifyAhead);
+
+          statementVerifiedAgainstStatement = childNodesVerified; ///
         }
-      },
-      {
-        nodeQueryA: termVariableNodeQuery,
-        nodeQueryB: termNodeQuery,
-        unify: (nodeA, nodeB, substitutions, localContextA, localContextB, unifyAhead) => {
-          let nonTerminalNodeUnified;
 
-          const termNodeB = nodeB,  ///
-                termVariableNodeA = nodeA,  ///
-                termVariableUnifiedAgainstTerm =
-
-                  this.unifyTermVariableAgainstTerm(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, unifyAhead);
-
-          nonTerminalNodeUnified = termVariableUnifiedAgainstTerm;  ///
-
-          return nonTerminalNodeUnified;
-        }
-      },
-      {
-        nodeQueryA: nonTerminalNodeQuery,
-        nodeQueryB: nonTerminalNodeQuery,
-        unify: (nodeA, nodeB, substitutions, localContextA, localContextB, unifyAhead) => {
-          const unified = super.unify(nodeA, nodeB, substitutions, localContextA, localContextB, unifyAhead);
-
-          return unified;
-        }
+        return statementVerifiedAgainstStatement;
       }
-    ];
+    },
+    {
+      nodeQueryA: termVariableNodeQuery,
+      nodeQueryB: termNodeQuery,
+      unify: (termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, unifyAhead) => {
+        const variableNodeA = termVariableNodeA, ///
+              variableUnifiedAgainstTerm = unifyVariableAgainstTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB, unifyAhead);
 
-    const unified = unify(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, unifyAhead);
-
-    nonTerminalNodeUnified = unified;  ///
-
-    return nonTerminalNodeUnified;
-  }
-
-  unifyStatementMetavariableAgainstStatement(statementMetavariableNodeA, statementSubstitutionNodeA, statementNodeB, substitutions, localContextA, localContextB, unifyAhead) {
-    let metavariableUnifiedAgainstStatement;
-
-    const substitutionNode = statementSubstitutionNodeA,  ///
-          metavariableNodeA = statementMetavariableNodeA; ///
-
-    metavariableUnifiedAgainstStatement = unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNode, substitutions, localContextA, localContextB, unifyAhead);
-
-    return metavariableUnifiedAgainstStatement;
-  }
-
-  unifyTermVariableAgainstTerm(termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, unifyAhead) {
-    let termVariableUnifiedAgainstTerm;
-
-    const variableNodeA = termVariableNodeA, ///
-          termUnifiedAgainstVariable = unifyVariableAgainstTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB, unifyAhead);
-
-    termVariableUnifiedAgainstTerm = termUnifiedAgainstVariable;  ///
-
-    return termVariableUnifiedAgainstTerm;
-  }
+        return variableUnifiedAgainstTerm;
+      }
+    }
+  ];
 }
 
 const metaLevelUnifier = new MetaLevelUnifier();

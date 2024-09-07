@@ -26,18 +26,14 @@ export default class Premise {
     let matchesStatementNode = false;
 
     if (this.statementNode !== null) {
-      const fileContextA = fileContext, ///
-            nonTerminalNodeA = this.statementNode,  ///
-            nonTerminalNodeB = statementNode,  ///
+      const nodeA = this.statementNode,  ///
+            nodeB = statementNode,  ///
+            fileContextA = fileContext, ///
             localContextA = LocalContext.fromFileContext(fileContextA),
             localContextB = localContext,  ///
-            nonTerminalNodeUnified = metaLevelUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-              const verifiedAhead = true;
+            unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
-              return verifiedAhead;
-            });
-
-      matchesStatementNode = nonTerminalNodeUnified; ///
+      matchesStatementNode = unified; ///
     }
 
     return matchesStatementNode;
@@ -59,18 +55,14 @@ export default class Premise {
               subproofAssertionStatementNodes = subproofAssertionStatementNodesQuery(subproofAssertionNode);
 
         matchesSubproofNode = match(subproofAssertionStatementNodes, subproofStatementNodes, (subproofAssertionStatementNode, subproofStatementNode) => {
-          const fileContextA = fileContext, ///
-                nonTerminalNodeA = subproofAssertionStatementNode,  ///
-                nonTerminalNodeB = subproofStatementNode, ///
+          const nodeA = subproofAssertionStatementNode,  ///
+                nodeB = subproofStatementNode, ///
+                fileContextA = fileContext, ///
                 localContextA = LocalContext.fromFileContext(fileContextA),
                 localContextB = localContext,  ///
-                nonTerminalNodeUnified = metaLevelUnifier.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-                  const verifiedAhead = true;
+                unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
-                  return verifiedAhead;
-                });
-
-          if (nonTerminalNodeUnified) {
+          if (unified) {
             return true;
           }
         });

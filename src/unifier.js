@@ -1,6 +1,9 @@
 "use strict";
 
-import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual } from "./utilities/terminalNodes";
+import { nodeQuery } from "./utilities/query";
+import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual } from "./utilities/unifier";
+
+const nonTerminalNodeQuery = nodeQuery("/*");
 
 export default class Unifier {
   unify(nodeA, nodeB, ...remainingArguments) {
@@ -74,20 +77,52 @@ export default class Unifier {
   }
 
   unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments) {
-    let nonTerminalNodeUnified = false;
+    let nonTerminalNodeUnified;
 
-    const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(), ///
-          nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(); ///
+    let { maps } = this.constructor;
 
-    if (nonTerminalNodeARuleName === nonTerminalNodeBRuleName) {
-      const nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-            nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
-            childNodesA = nonTerminalNodeAChildNodes, ///
-            childNodesB = nonTerminalNodeBChildNodes, ///
-            childNodesUnified = this.unifyChildNodes(childNodesA, childNodesB, ...remainingArguments);
+    maps = [ ///
+      ...maps,
+      {
+        nodeQueryA: nonTerminalNodeQuery,
+        nodeQueryB: nonTerminalNodeQuery,
+        unify: (nodeA, nobeB, ...remainingArguments) => {
+          let nonTerminalNodeUnified;
 
-      nonTerminalNodeUnified = childNodesUnified; ///
-    }
+          const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(), ///
+                nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(); ///
+
+          if (nonTerminalNodeARuleName === nonTerminalNodeBRuleName) {
+            const nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
+                  nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
+                  childNodesA = nonTerminalNodeAChildNodes, ///
+                  childNodesB = nonTerminalNodeBChildNodes, ///
+                  childNodesUnified = this.unifyChildNodes(childNodesA, childNodesB, ...remainingArguments);
+
+            nonTerminalNodeUnified = childNodesUnified; ///
+          }
+
+          return nonTerminalNodeUnified;
+        }
+      }
+    ]
+
+    let nodeUnified = false;
+
+    maps.some((map) => {
+      const { nodeQueryA, nodeQueryB, unify } = map;
+
+      const nodeA = nodeQueryA(nonTerminalNodeA),  ///
+            nodeB = nodeQueryB(nonTerminalNodeB);  ///
+
+      if ((nodeA !== null) && (nodeB !== null)) {
+        nodeUnified = unify(nodeA, nodeB, ...remainingArguments);
+
+        return true;
+      }
+    });
+
+    nonTerminalNodeUnified = nodeUnified; ///
 
     return nonTerminalNodeUnified;
   }
@@ -121,23 +156,4 @@ export default class Unifier {
 
     return childNodesUnified;
   }
-}
-
-export function unify(nodeQueryMaps, nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments) {
-  let unified = false;
-
-  nodeQueryMaps.some((nodeQueryMap) => {
-    const { nodeQueryA, nodeQueryB, unify } = nodeQueryMap;
-
-    const nodeA = nodeQueryA(nonTerminalNodeA),  ///
-          nodeB = nodeQueryB(nonTerminalNodeB);  ///
-
-    if ((nodeA !== null) && (nodeB !== null)) {
-      unified = unify(nodeA, nodeB, ...remainingArguments);
-
-      return true;
-    }
-  });
-
-  return unified;
 }
