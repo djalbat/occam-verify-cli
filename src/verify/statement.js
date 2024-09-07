@@ -3,6 +3,7 @@
 import shim from "../shim";
 import verifyEquality from "../verify/equality";
 import verifyJudgement from "../verify/judgement";
+import metaLevelVerifier from "../verifier/metaLevel";
 import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/assertion/type";
 import verifyDefinedAssertion from "../verify/assertion/defined";
@@ -11,19 +12,14 @@ import verifyContainedAssertion from "../verify/assertion/contained";
 import statementAgainstCombinatorUnifier from "../unifier/statementAgainstCombinator";
 
 import { nodeQuery } from "../utilities/query";
-import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
-const variableNodeQuery = nodeQuery("/*/variable!"),
-      equalityNodeQuery = nodeQuery("/statement/equality!"),
+const equalityNodeQuery = nodeQuery("/statement/equality!"),
       judgementNodeQuery = nodeQuery("/statement/judgement!"),
       metavariableNodeQuery = nodeQuery("/*/metavariable!"),
-      substitutionNodeQuery = nodeQuery("/statement/substitution!"),
-      termVariableNodeQuery = nodeQuery("/substitution/term/variable!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
-      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!"),
-      statementMetavariableNodeQuery = nodeQuery("/substitution/statement/metavariable!");
+      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
 
 function verifyStatement(statementNode, assignments, derived, localContext) {
   let statementVerified;
@@ -99,16 +95,9 @@ function verifyStatementAsMetavariable(statementNode, assignments, derived, loca
 
     localContext.trace(`Verifying the '${statementString}' statement as a metavariable...`, statementNode);
 
-    const metavariableVerified = verifyMetavariable(metavariableNode, localContext);
+    const verified = metaLevelVerifier.verify(statementNode, localContext);
 
-    if (metavariableVerified) {
-      const substitutionNode = substitutionNodeQuery(statementNode),
-            substitutionVerified = verifySubstitution(substitutionNode, localContext);
-
-      if (substitutionVerified) {
-        statementVerifiedAsMetavariable = true;
-      }
-    }
+    statementVerifiedAsMetavariable = verified; ///
 
     if (statementVerifiedAsMetavariable) {
       localContext.debug(`...verified the '${statementString}' statement as a metavariable.`, statementNode);
@@ -198,11 +187,7 @@ function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, 
 
     localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, statementNode);
 
-    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, assignments, derived, localContext, () => {
-      const verifiedAhead = true;
-
-      return verifiedAhead;
-    });
+    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, assignments, derived, localContext);
 
     statementVerifiedAsDefinedAssertion = definedAssertionVerified; ///
 
@@ -224,11 +209,7 @@ function verifyStatementAsSubproofAssertion(statementNode, assignments, derived,
 
     localContext.trace(`Verifying the '${statementString}' statement as a subproof assertion...`, statementNode);
 
-    const subproofAssertionVerified = verifySubproofAssertion(subproofAssertionNode, assignments, derived, localContext, () => {
-      const verifiedAhead = true;
-
-      return verifiedAhead;
-    });
+    const subproofAssertionVerified = verifySubproofAssertion(subproofAssertionNode, assignments, derived, localContext);
 
     statementVerifiedAsSubproofAssertion = subproofAssertionVerified; ///
 
@@ -250,11 +231,7 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
 
     localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, statementNode);
 
-    const containedAssertionVerified = verifyContainedAssertion(containedAssertionNode, assignments, derived, localContext, () => {
-      const verifiedAhead = true;
-
-      return verifiedAhead;
-    });
+    const containedAssertionVerified = verifyContainedAssertion(containedAssertionNode, assignments, derived, localContext);
 
     statementVerifiedAsContainedAssertion = containedAssertionVerified; ///
 
@@ -321,61 +298,4 @@ function verifyStatementAgainstCombinator(statementNode, combinator, localContex
   }
 
   return statementVerifiedAgainstCombinator;
-}
-
-function verifyMetavariable(metavariableNode, localContext) {
-  let metavariableVerified = false;
-
-  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
-
-  if (metavariable !== null) {
-    const metaTypeName  = metavariable.getMetaTypeName();
-
-    if (metaTypeName === STATEMENT_META_TYPE_NAME) {
-      metavariableVerified = true;
-    }
-  }
-
-  return metavariableVerified;
-}
-
-function verifySubstitution(substitutionNode, localContext) {
-  let substitutionVerified = false;
-
-  if (substitutionNode === null) {
-    substitutionVerified = true;
-  } else {
-    const variableNode = variableNodeQuery(substitutionNode),
-          metavariableNode = metavariableNodeQuery(substitutionNode);
-
-    if (variableNode !== null) {
-      const variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
-
-      if (variablePresent) {
-        const termVariableNode = termVariableNodeQuery(substitutionNode);
-
-        if (termVariableNode !== null) {
-          const termVariablePresent = localContext.isVariablePresentByVariableNode(termVariableNode);
-
-          substitutionVerified = termVariablePresent; ///
-        }
-      }
-    }
-
-    if (metavariableNode !== null) {
-      const metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode);
-
-      if (metavariablePresent) {
-        const statementMetavariableNode = statementMetavariableNodeQuery(substitutionNode);
-
-        if (statementMetavariableNode !== null) {
-          const statementMetavariablePresent = localContext.isMetavariablePresentByMetavariableNode(statementMetavariableNode);
-
-          substitutionVerified = statementMetavariablePresent; ///
-        }
-      }
-    }
-  }
-
-  return substitutionVerified;
 }

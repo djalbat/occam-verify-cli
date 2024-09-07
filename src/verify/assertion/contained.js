@@ -83,10 +83,9 @@ function verifyStatedContainedAssertion(containedAssertionNode, assignments, der
 
     localContext.debug(`The '${containedAssertionString}' stated contained assertion cannot be verified.`, containedAssertionNode);
 
-    const nonTerminalNode = containedAssertionNode, ///
-          nonTerminalNodeVerified = metaLevelVerifier.verify(nonTerminalNode, localContext);
+    const verified = metaLevelVerifier.verify(containedAssertionNode, localContext);
 
-    statedContainedAssertionVerified = nonTerminalNodeVerified; ///
+    statedContainedAssertionVerified = verified; ///
 
     if (statedContainedAssertionVerified) {
       localContext.debug(`...verified the '${containedAssertionString}' stated contained assertion.`, containedAssertionNode);

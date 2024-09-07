@@ -112,10 +112,9 @@ function verifyStatedDefinedAssertion(definedAssertionNode, assignments, derived
 
     localContext.trace(`Verifying the '${definedAssertionString}' stated defined assertion...`, definedAssertionNode);
 
-    const nonTerminalNode = definedAssertionNode, ///
-          nonTerminalNodeVerified = metaLevelVerifier.verify(nonTerminalNode, localContext);
+    const verified = metaLevelVerifier.verify(definedAssertionNode, localContext);
 
-    statedDefinedAssertionVerified = nonTerminalNodeVerified; ///
+    statedDefinedAssertionVerified = verified; ///
 
     if (statedDefinedAssertionVerified) {
       localContext.debug(`...verified the '${definedAssertionString}' stated defined assertion.`, definedAssertionNode);

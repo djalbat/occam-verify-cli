@@ -1,9 +1,6 @@
 "use strict";
 
-import { nodesQuery } from "../../utilities/query";
-import { STATEMENT_META_TYPE_NAME } from "../../metaTypeNames";
-
-const metavariableNodesQuery = nodesQuery("/subproofAssertion/statement/metavariable!");
+import metaLevelVerifier from "../../verifier/metaLevel";
 
 export default function verifySubproofAssertion(subproofAssertionNode, assignments, derived, localContext) {
   let subproofAssertionVerified;
@@ -54,19 +51,9 @@ function verifyStatedSubproofAssertion(subproofAssertionNode, assignments, deriv
 
     localContext.trace(`Verifying the '${subproofAssertionString}' stated subproof assertion...`, subproofAssertionNode);
 
-    const metavariableNodes = metavariableNodesQuery(subproofAssertionNode);
+    const verified = metaLevelVerifier.verify(subproofAssertionNode, localContext);
 
-    statedSubproofAssertionVerified = metavariableNodes.every((metavariableNode) => {
-      const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
-
-      if (metavariable !== null) {
-        const metaTypeName = metavariable.getMetaTypeName();
-
-        if (metaTypeName === STATEMENT_META_TYPE_NAME) {
-          return true;
-        }
-      }
-    });
+    statedSubproofAssertionVerified = verified; ///
 
     if (statedSubproofAssertionVerified) {
       localContext.debug(`...verified the '${subproofAssertionString}' stated subproof assertion.`, subproofAssertionNode);
