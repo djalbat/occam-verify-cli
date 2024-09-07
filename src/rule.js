@@ -30,20 +30,20 @@ export default class Rule {
     return this.fileContext;
   }
 
-  matchStatement(statementNode, localContext) {
-    let matchesStatement = false;
+  unifyStatement(statementNode, localContext) {
+    let statementUnified = false;
 
     const proofSteps = localContext.getProofSteps(),
           substitutions = [],
-          premisesMatch = matchPremises(this.premises, proofSteps, substitutions, this.fileContext, localContext);
+          premisesUnified = unifyPremises(this.premises, proofSteps, substitutions, this.fileContext, localContext);
 
-    if (premisesMatch) {
-      const conclusionMatches = matchConclusion(this.conclusion, statementNode, substitutions, this.fileContext, localContext);
+    if (premisesUnified) {
+      const conclusionUnified = unifyConclusion(this.conclusion, statementNode, substitutions, this.fileContext, localContext);
 
-      matchesStatement = conclusionMatches;  ///
+      statementUnified = conclusionUnified;  ///
     }
 
-    return matchesStatement;
+    return statementUnified;
   }
 
   matchMetavariableNode(metavariableNode) {
@@ -128,45 +128,45 @@ export default class Rule {
 }
 
 function matchPremise(premise, proofStep, substitutions, fileContext, localContext) {
-  let premiseMatches = false;
+  let premiseUnified = false;
 
   const subproofNode = proofStep.getSubproofNode(),
         statementNode = proofStep.getStatementNode();
 
   if (subproofNode !== null) {
-    const premiseMatchesSubproofNode = premise.matchSubproofNode(subproofNode, substitutions, fileContext, localContext);
+    const subproofUnified = premise.unifySubproof(subproofNode, substitutions, fileContext, localContext);
 
-    premiseMatches = premiseMatchesSubproofNode; ///
+    premiseUnified = subproofUnified; ///
   }
 
   if (statementNode !== null) {
-    const premiseMatchesStatementNode = premise.matchStatementNode(statementNode, substitutions, fileContext, localContext);
+    const statementUnified = premise.unifyStatement(statementNode, substitutions, fileContext, localContext);
 
-    premiseMatches = premiseMatchesStatementNode;  ///
+    premiseUnified = statementUnified;  ///
   }
 
-  return premiseMatches;
+  return premiseUnified;
 }
 
-function matchPremises(premises, proofSteps, substitutions, fileContext, localContext) {
+function unifyPremises(premises, proofSteps, substitutions, fileContext, localContext) {
   premises = reverse(premises); ///
 
   proofSteps = reverse(proofSteps); ///
 
-  const premisesMatch = correlate(premises, proofSteps, (premise, proofStep) => {
-    const premiseMatches = matchPremise(premise, proofStep, substitutions, fileContext, localContext);
+  const premisesUnified = correlate(premises, proofSteps, (premise, proofStep) => {
+    const premiseUnified = matchPremise(premise, proofStep, substitutions, fileContext, localContext);
 
-    if (premiseMatches) {
+    if (premiseUnified) {
       return true;
     }
   });
 
-  return premisesMatch;
+  return premisesUnified;
 }
 
-function matchConclusion(conclusion, statementNode, substitutions, fileContext, localContext) {
-  const conclusionMatchesStatementNode = conclusion.matchStatementNode(statementNode, substitutions, fileContext, localContext),
-        conclusionMatches = conclusionMatchesStatementNode; ///
+function unifyConclusion(conclusion, statementNode, substitutions, fileContext, localContext) {
+  const statementUnified = conclusion.unifyStatement(statementNode, substitutions, fileContext, localContext),
+        conclusionUnified = statementUnified; ///
 
-  return conclusionMatches;
+  return conclusionUnified;
 }

@@ -36,20 +36,20 @@ export default class TopLevelAssertion {
     return this.fileContext;
   }
 
-  matchStatement(statementNode, localContext) {
-    let statementNatches = false;
+  unifyStatement(statementNode, localContext) {
+    let statementUnified = false;
 
     const proofSteps = localContext.getProofSteps(),
           substitutions = [],
-          suppositionsMatch = matchSuppositions(this.suppositions, proofSteps, substitutions, this.fileContext, localContext);
+          suppositionsUnified = unifySuppositions(this.suppositions, proofSteps, substitutions, this.fileContext, localContext);
 
-    if (suppositionsMatch) {
-      const consequentMatches = matchConsequent(this.consequent, statementNode, substitutions, this.fileContext, localContext);
+    if (suppositionsUnified) {
+      const consequentUnified = unifyConsequent(this.consequent, statementNode, substitutions, this.fileContext, localContext);
 
-      statementNatches = consequentMatches;  ///
+      statementUnified = consequentUnified;  ///
     }
 
-    return statementNatches;
+    return statementUnified;
   }
 
   matchMetavariableNode(metavariableNode) {
@@ -140,39 +140,46 @@ export default class TopLevelAssertion {
   static fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(Class, labels, suppositions, consequent, substitutions, fileContext) { return new Class(labels, suppositions, consequent, substitutions, fileContext); }
 }
 
-function matchSuppositions(suppositions, proofSteps, substitutions, fileContext, localContext) {
+function unifySuppositions(suppositions, proofSteps, substitutions, fileContext, localContext) {
   suppositions = reverse(suppositions); ///
 
   proofSteps = reverse(proofSteps); ///
 
-  const suppositionsMatch = correlate(suppositions, proofSteps, (supposition, proofStep) => {
-    const suppositionMatches = matchSupposition(supposition, proofStep, substitutions, fileContext, localContext);
+  const suppositionsUnified = correlate(suppositions, proofSteps, (supposition, proofStep) => {
+    const suppositionUnified = unifySupposition(supposition, proofStep, substitutions, fileContext, localContext);
 
-    if (suppositionMatches) {
+    if (suppositionUnified) {
       return true;
     }
   });
 
-  return suppositionsMatch;
+  return suppositionsUnified;
 }
 
-function matchSupposition(supposition, proofStep, substitutions, fileContext, localContext) {
-  let suppositionMatches = false;
+function unifySupposition(supposition, proofStep, substitutions, fileContext, localContext) {
+  let suppositionUnified = false;
 
-  const statementNode = proofStep.getStatementNode();
+  const subproofNode = proofStep.getSubproofNode(),
+        statementNode = proofStep.getStatementNode();
 
-  if (statementNode !== null) {
-    const suppositionMatchesStatementNode = supposition.matchStatementNode(statementNode, substitutions, fileContext, localContext);
+  if (subproofNode !== null) {
+    const subproofUnified = supposition.unifySubproof(subproofNode, substitutions, fileContext, localContext);
 
-    suppositionMatches = suppositionMatchesStatementNode;  ///
+    suppositionUnified = subproofUnified; ///
   }
 
-  return suppositionMatches;
+  if (statementNode !== null) {
+    const statementUnified = supposition.unifyStatement(statementNode, substitutions, fileContext, localContext);
+
+    suppositionUnified = statementUnified;  ///
+  }
+
+  return suppositionUnified;
 }
 
-function matchConsequent(consequent, statementNode, substitutions, fileContext, localContext) {
-  const consequentMatchesStatementNode = consequent.matchStatementNode(statementNode, substitutions, fileContext, localContext),
-        consequentMatches = consequentMatchesStatementNode; ///
+function unifyConsequent(consequent, statementNode, substitutions, fileContext, localContext) {
+  const statementUnified = consequent.unifyStatement(statementNode, substitutions, fileContext, localContext),
+        consequentUnified = statementUnified; ///
 
-  return consequentMatches;
+  return consequentUnified;
 }

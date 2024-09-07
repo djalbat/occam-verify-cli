@@ -65,7 +65,7 @@ function verifyQualifiedStatementAAgainstRule(qualifiedStatementNode, substituti
 
     localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' rule...`, qualifiedStatementNode);
 
-    const ruleMatchesStatement = rule.matchStatement(statementNode, localContext);
+    const ruleMatchesStatement = rule.unifyStatement(statementNode, localContext);
 
     qualifiedStatementVerifiedAgainstRule = ruleMatchesStatement;  ///
 
@@ -90,7 +90,7 @@ function verifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, substitut
 
     localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' axiom...`, qualifiedStatementNode);
 
-    const axiomMatchesStatement = axiom.matchStatement(statementNode, localContext);
+    const axiomMatchesStatement = axiom.unifyStatement(statementNode, localContext);
 
     qualifiedStatementVerifiedAgainstAxiom = axiomMatchesStatement; ///
 
@@ -115,7 +115,7 @@ function verifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, substitut
 
     localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' lemma...`, qualifiedStatementNode);
 
-    const lemmaMatchesStatement = lemma.matchStatement(statementNode, localContext);
+    const lemmaMatchesStatement = lemma.unifyStatement(statementNode, localContext);
 
     qualifiedStatementVerifiedAgainstLemma = lemmaMatchesStatement; ///
 
@@ -140,7 +140,7 @@ function verifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, substit
 
     localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' theorem...`, qualifiedStatementNode);
 
-    const theoremMatchesStatement = theorem.matchStatement(statementNode, localContext);
+    const theoremMatchesStatement = theorem.unifyStatement(statementNode, localContext);
 
     qualifiedStatementVerifiedAgainstTheorem = theoremMatchesStatement; ///
 
@@ -165,7 +165,7 @@ function verifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, subs
 
     localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' conjecture...`, qualifiedStatementNode);
 
-    const conjectureMatchesStatement = conjecture.matchStatement(statementNode, localContext);
+    const conjectureMatchesStatement = conjecture.unifyStatement(statementNode, localContext);
 
     qualifiedStatementVerifiedAgainstConjecture = conjectureMatchesStatement; ///
 

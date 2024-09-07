@@ -22,8 +22,8 @@ export default class Premise {
     return this.statementNode;
   }
 
-  matchStatementNode(statementNode, substitutions, fileContext, localContext) {
-    let matchesStatementNode = false;
+  unifyStatement(statementNode, substitutions, fileContext, localContext) {
+    let statementUnified = false;
 
     if (this.statementNode !== null) {
       const nodeA = this.statementNode,  ///
@@ -33,20 +33,23 @@ export default class Premise {
             localContextB = localContext,  ///
             unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
-      matchesStatementNode = unified; ///
+      statementUnified = unified; ///
     }
 
-    return matchesStatementNode;
+    return statementUnified;
   }
 
-  matchSubproofNode(subproofNode, substitutions, fileContext, localContext) {
-    let matchesSubproofNode = false;
+  unifySubproof(subproofNode, substitutions, fileContext, localContext) {
+    let subproofUnified = false;
 
     if (this.statementNode !== null) {
       const subproofAssertionNode = subproofAssertionNodeQuery(this.statementNode);
 
       if (subproofAssertionNode !== null) {
-        const subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
+        const fileContextA = fileContext, ///
+              localContextA = LocalContext.fromFileContext(fileContextA),
+              localContextB = localContext,  ///
+              subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
               subproofLastProofStepStatementNode = subproofLastProofStepStatementNodeQuery(subproofNode),
               subproofStatementNodes = [
                 ...subproofSuppositionStatementNodes,
@@ -54,12 +57,9 @@ export default class Premise {
               ],
               subproofAssertionStatementNodes = subproofAssertionStatementNodesQuery(subproofAssertionNode);
 
-        matchesSubproofNode = match(subproofAssertionStatementNodes, subproofStatementNodes, (subproofAssertionStatementNode, subproofStatementNode) => {
+        subproofUnified = match(subproofAssertionStatementNodes, subproofStatementNodes, (subproofAssertionStatementNode, subproofStatementNode) => {
           const nodeA = subproofAssertionStatementNode,  ///
                 nodeB = subproofStatementNode, ///
-                fileContextA = fileContext, ///
-                localContextA = LocalContext.fromFileContext(fileContextA),
-                localContextB = localContext,  ///
                 unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
           if (unified) {
@@ -69,7 +69,7 @@ export default class Premise {
       }
     }
 
-    return matchesSubproofNode;
+    return subproofUnified;
   }
 
   toJSON(tokens) {

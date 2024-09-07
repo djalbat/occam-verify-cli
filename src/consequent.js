@@ -15,8 +15,8 @@ export default class Consequent {
     return this.statementNode;
   }
 
-  matchStatementNode(statementNode, substitutions, fileContext, localContext) {
-    let matchesStatementNode = false;
+  unifyStatement(statementNode, substitutions, fileContext, localContext) {
+    let statementUnified = false;
 
     if (this.statementNode !== null) {
       const nodeA = this.statementNode,  ///
@@ -26,10 +26,10 @@ export default class Consequent {
             localContextB = localContext,  ///
             unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
-      matchesStatementNode = unified; ///
+      statementUnified = unified; ///
     }
 
-    return matchesStatementNode;
+    return statementUnified;
   }
 
   toJSON(tokens) {
