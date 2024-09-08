@@ -3,7 +3,7 @@
 import Label from "./label";
 import Consequent from "./consequent";
 import Supposition from "./supposition";
-import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
+import Substitutions from "./substitutions";
 
 import { reverse, correlate } from "./utilities/array";
 
@@ -40,7 +40,7 @@ export default class TopLevelAssertion {
     let statementUnified = false;
 
     const proofSteps = localContext.getProofSteps(),
-          substitutions = [],
+          substitutions = Substitutions.fromNothing(),
           suppositionsUnified = unifySuppositions(this.suppositions, proofSteps, substitutions, this.fileContext, localContext);
 
     if (suppositionsUnified) {
@@ -76,11 +76,7 @@ export default class TopLevelAssertion {
             return suppositionJSON;
           }),
           consequentJSON = this.consequent.toJSON(tokens),
-          substitutionsJSON = this.substitutions.map((substitution) => {
-            const substitutionJSON = substitution.toJSON();
-
-            return substitutionJSON;
-          }),
+          substitutionsJSON = this.substitutions.toJSON(tokens),
           labels = labelsJSON,  ///
           suppositions = suppositionsJSON,  ///
           consequent = consequentJSON,  ///
@@ -126,13 +122,9 @@ export default class TopLevelAssertion {
 
     const substitutionsJSON = substitutions;  ///
 
-    substitutions = substitutionsJSON.map((substitutionJSON) => {
-      const json = substitutionJSON,  ///
-            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromJSONAndFileContext(json, fileContext),
-            substitution = statementForMetavariableSubstitution;  ///
+    json = substitutionsJSON; ///
 
-      return substitution;
-    });
+    substitutions = Substitutions.fromJSONAndFileContext(json, fileContext);
 
     return new Class(labels, suppositions, consequent, substitutions, fileContext);  ///
   }
@@ -159,6 +151,8 @@ function unifySuppositions(suppositions, proofSteps, substitutions, fileContext,
 function unifySupposition(supposition, proofStep, substitutions, fileContext, localContext) {
   let suppositionUnified = false;
 
+  substitutions.snapshot();
+
   const subproofNode = proofStep.getSubproofNode(),
         statementNode = proofStep.getStatementNode();
 
@@ -174,12 +168,25 @@ function unifySupposition(supposition, proofStep, substitutions, fileContext, lo
     suppositionUnified = statementUnified;  ///
   }
 
+  suppositionUnified ?
+    substitutions.continue() :
+      substitutions.rollback();
+
   return suppositionUnified;
 }
 
 function unifyConsequent(consequent, statementNode, substitutions, fileContext, localContext) {
-  const statementUnified = consequent.unifyStatement(statementNode, substitutions, fileContext, localContext),
-        consequentUnified = statementUnified; ///
+  let consequentUnified;
+
+  substitutions.snapshot();
+
+  const statementUnified = consequent.unifyStatement(statementNode, substitutions, fileContext, localContext);
+
+  consequentUnified = statementUnified; ///
+
+  consequentUnified ?
+    substitutions.continue() :
+      substitutions.rollback();
 
   return consequentUnified;
 }

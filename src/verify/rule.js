@@ -9,6 +9,7 @@ import verifyConclusion from "../verify/conclusion";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
+import Substitutions from "../substitutions";
 
 const proofNodeQuery = nodeQuery("/rule/proof!"),
       labelNodesQuery = nodesQuery("/rule/label"),
@@ -45,7 +46,7 @@ export default function verifyRule(ruleNode, fileContext) {
               conclusion = firstConclusion; ///
 
         if (proofNode !== null) {
-          const substitutions = [],
+          const substitutions = Substitutions.fromNothing(),
                 statementNode = conclusion.getStatementNode();
 
           proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);

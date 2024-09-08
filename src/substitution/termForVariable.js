@@ -106,7 +106,7 @@ function substituteTermNode(termNode, substitutions) {
   const termVariableNode = variableNodeQuery(termNode);
 
   if (termVariableNode !== null) {
-    substitutions.some((substitution) => {
+    substitutions.someSubstitution((substitution) => {
       const substitutionMatchesVariableNode = substitution.matchVariableNode(termVariableNode);
 
       if (substitutionMatchesVariableNode) {
@@ -121,7 +121,7 @@ function substituteTermNode(termNode, substitutions) {
 }
 
 function substituteVariableNode(variableNode, substitutions) {
-  substitutions.some((substitution) => {
+  substitutions.someSubstitution((substitution) => {
     const substitutionMatchesVariableNode = substitution.matchVariableNode(variableNode);
 
     if (substitutionMatchesVariableNode) {

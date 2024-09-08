@@ -4,6 +4,7 @@ import Conjecture from "../conjecture";
 import verifyProof from "../verify/proof";
 import verifyLabels from "../verify/labels";
 import LocalContext from "../context/local";
+import Substitutions from "../substitutions";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";
 
@@ -43,10 +44,12 @@ export default function verifyConjecture(conjectureNode, fileContext) {
               consequent = firstConsequent; ///
 
         if (proofNode !== null) {
-          verifyProof(proofNode, consequent, localContext);
+          const substitutions = Substitutions.fromNothing();
+
+          verifyProof(proofNode, consequent, substitutions, localContext);
         }
 
-        const substitutions = [],
+        const substitutions = Substitutions.fromNothing(),
               conjecture = Conjecture.fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(labels, suppositions, consequent, substitutions, fileContext);
 
         fileContext.addConjecture(conjecture);

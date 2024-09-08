@@ -4,6 +4,7 @@ import verifyProof from "../verify/proof";
 import Metatheorem from "../metatheorem";
 import verifyLabels from "../verify/labels";
 import LocalContext from "../context/local";
+import Substitutions from "../substitutions";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";
 
@@ -41,7 +42,7 @@ export default function verifyMetatheorem(metatheoremNode, fileContext) {
         const proofNode = proofNodeQuery(metatheoremNode),
               firstConsequent = first(consequents),
               consequent = firstConsequent, ///
-              substitutions = [],
+              substitutions = Substitutions.fromNothing(),
               statementNode = consequent.getStatementNode(),
               proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
 

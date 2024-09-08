@@ -11,7 +11,7 @@ const variableNodeQuery = nodeQuery("/term/variable");
 export default function unifyVariableAgainstTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
   let variableUnifiedAgainstTerm = false;
 
-  const substitution = substitutions.find((substitution) => {
+  const substitution = substitutions.findSubstitution((substitution) => {
     const substitutionMatchesVariableNodeA = substitution.matchVariableNode(variableNodeA);
 
     if (substitutionMatchesVariableNodeA) {
@@ -54,12 +54,12 @@ export default function unifyVariableAgainstTerm(variableNodeA, termNodeB, subst
                         termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
                         substitution = termForVariableSubstitution;  ///
 
-                  substitutions.push(substitution);
+                  substitutions.addSubstitution(substitution);
 
                   verifiedAhead = verifyAhead();
 
                   if (!verifiedAhead) {
-                    substitutions.pop();
+                    substitutions.removeSubstitution(substitution);
                   }
                 }
               }

@@ -3,6 +3,7 @@
 import Axiom from "../axiom";
 import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
+import Substitutions from "../substitutions";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";
 
@@ -37,8 +38,8 @@ export default function verifyAxiom(axiomNode, fileContext) {
 
       if (consequentVerified) {
         const firstConsequent = first(consequents),
+              substitutions = Substitutions.fromNothing(),
               consequent = firstConsequent, ///
-              substitutions = [],
               axiom = Axiom.fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(labels, suppositions, consequent, substitutions, fileContext);
 
         fileContext.addAxiom(axiom);

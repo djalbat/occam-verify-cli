@@ -1,5 +1,6 @@
 "use strict";
 
+import Substitutions from "./substitutions";
 import metaLevelUnifier from "./unifier/metaLevel";
 
 export default class ProofStep {
@@ -64,11 +65,11 @@ function unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivale
         nodeB = statementNodeB,  ///
         localContextA = localContext, ///
         localContextB = localContext,  ///
-        substitutions = [],
+        substitutions = Substitutions.fromNothing(),
         unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
   if (unified) {
-    const substitutionsUnified = substitutions.every((substitution) => {
+    const substitutionsUnified = substitutions.everySubstitution((substitution) => {
       const substitutionUnified = equivalences.some((equivalence) => {
         const substitutionUnifiedAgainstEquivalence = substitution.unifyAgainstEquivalence(equivalence, substitutions, localContext);
 

@@ -7,7 +7,7 @@ import StatementForMetavariableSubstitution from "../substitution/statementForMe
 export default function unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB, unifyAhead) {
   let metavariableUnifiedAgainstStatement = false;
 
-  const substitution = substitutions.find((substitution) => {
+  const substitution = substitutions.findSubstitution((substitution) => {
     const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNodeA);
 
     if (substitutionMatchesMetavariableNodeA) {
@@ -67,12 +67,12 @@ export default function unifyMetavariableAgainstStatement(metavariableNodeA, sta
           statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
           substitution = statementForMetavariableSubstitution;  ///
 
-    substitutions.push(substitution);
+    substitutions.addSubstitution(substitution);
 
     unifiedAhead = unifyAhead();
 
     if (!unifiedAhead) {
-      substitutions.pop();
+      substitutions.removeSubstitution(substitution);
     }
 
     metavariableUnifiedAgainstStatement = unifiedAhead;  ///

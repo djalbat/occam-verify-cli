@@ -50,7 +50,7 @@ export default class Frame {
 
   matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
     const substitutions = metaLemmaMetatheorem.getSubstitutions(),
-          matchesMetaLemmaOrMetaTheorem = substitutions.every((substitution) => {
+          matchesMetaLemmaOrMetaTheorem = substitutions.everySubstitution((substitution) => {
             const frameMatchesSubstitution = this.matchSubstitution(substitution);
 
             if (frameMatchesSubstitution) {

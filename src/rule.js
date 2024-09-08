@@ -3,6 +3,7 @@
 import Label from "./label";
 import Premise from "./premise";
 import Conclusion from "./conclusion";
+import Substitutions from "./substitutions";
 
 import { reverse, correlate } from "./utilities/array";
 
@@ -34,7 +35,7 @@ export default class Rule {
     let statementUnified = false;
 
     const proofSteps = localContext.getProofSteps(),
-          substitutions = [],
+          substitutions = Substitutions.fromNothing(),
           premisesUnified = unifyPremises(this.premises, proofSteps, substitutions, this.fileContext, localContext);
 
     if (premisesUnified) {
@@ -133,6 +134,8 @@ function matchPremise(premise, proofStep, substitutions, fileContext, localConte
   const subproofNode = proofStep.getSubproofNode(),
         statementNode = proofStep.getStatementNode();
 
+  substitutions.snapshot();
+
   if (subproofNode !== null) {
     const subproofUnified = premise.unifySubproof(subproofNode, substitutions, fileContext, localContext);
 
@@ -144,6 +147,10 @@ function matchPremise(premise, proofStep, substitutions, fileContext, localConte
 
     premiseUnified = statementUnified;  ///
   }
+
+  premiseUnified ?
+    substitutions.continue() :
+      substitutions.rollback();
 
   return premiseUnified;
 }
@@ -165,8 +172,17 @@ function unifyPremises(premises, proofSteps, substitutions, fileContext, localCo
 }
 
 function unifyConclusion(conclusion, statementNode, substitutions, fileContext, localContext) {
-  const statementUnified = conclusion.unifyStatement(statementNode, substitutions, fileContext, localContext),
-        conclusionUnified = statementUnified; ///
+  let conclusionUnified;
+
+  substitutions.snapshot();
+
+  const statementUnified = conclusion.unifyStatement(statementNode, substitutions, fileContext, localContext);
+
+  conclusionUnified = statementUnified; ///
+
+  conclusionUnified ?
+    substitutions.continue() :
+      substitutions.rollback();
 
   return conclusionUnified;
 }

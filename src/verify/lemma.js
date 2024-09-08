@@ -4,6 +4,7 @@ import Lemma from "../lemma";
 import verifyProof from "../verify/proof";
 import verifyLabels from "../verify/labels";
 import LocalContext from "../context/local";
+import Substitutions from "../substitutions";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";
 
@@ -45,11 +46,11 @@ export default function verifyLemma(lemmaNode, fileContext) {
               firstConsequent = first(consequents),
               consequent = firstConsequent, ///
               statementNode = consequent.getStatementNode(),
-              substitutions = [],
+              substitutions = Substitutions.fromNothing(),
               proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
 
         if (proofVerified) {
-          const substitutions = [],
+          const substitutions = Substitutions.fromNothing(),
                 lemma = Lemma.fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(labels, suppositions, consequent, substitutions, fileContext);
 
           fileContext.addLemma(lemma);

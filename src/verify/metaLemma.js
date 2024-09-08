@@ -4,6 +4,7 @@ import MetaLemma from "../metaLemma";
 import verifyProof from "../verify/proof";
 import LocalContext from "../context/local";
 import verifyLabels from "../verify/labels";
+import Substitutions from "../substitutions";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";
 
@@ -45,7 +46,7 @@ export default function verifyMetaLemma(metaLemmaNode, fileContext) {
               firstConsequent = first(consequents),
               consequent = firstConsequent, ///
               statementNode = consequent.getStatementNode(),
-              substitutions = [],
+              substitutions = Substitutions.fromNothing(),
               proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
 
         if (proofVerified) {

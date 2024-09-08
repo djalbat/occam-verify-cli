@@ -12,6 +12,21 @@ export function reverse(array) {
   return array;
 }
 
+export function compare(arrayA, arrayB) {
+  let compares = false;
+
+  const arrayALength = arrayA.length,
+        arrayBLength = arrayB.length;
+
+  if (arrayALength === arrayBLength) {
+    const correlates = correlate(arrayA, arrayB);
+
+    compares = correlates;  ///
+  }
+
+  return compares;
+}
+
 export function correlate(arrayA, arrayB, callback) {
   arrayB = [  ///
     ...arrayB
