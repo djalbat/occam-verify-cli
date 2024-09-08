@@ -39,25 +39,6 @@ function verifyTerm(termNode, terms, localContext, verifyAhead) {
   return termVerified;
 }
 
-export function verifyStandaloneTerm(termNode, localContext, verifyAhead) {
-  let standaloneTermVerified;
-
-  const termString = localContext.nodeAsString(termNode);
-
-  localContext.trace(`Verifying the '${termString}' standalone term...`, termNode);
-
-  const terms = [],
-        termVerified = verifyTerm(termNode, terms, localContext, verifyAhead);
-
-  standaloneTermVerified = termVerified;  ///
-
-  if (standaloneTermVerified) {
-    localContext.debug(`...verified the '${termString}' standalone term.`, termNode);
-  }
-
-  return standaloneTermVerified;
-}
-
 Object.assign(shim, {
   verifyTerm
 });

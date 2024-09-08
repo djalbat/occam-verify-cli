@@ -1,11 +1,11 @@
 "use strict";
 
 import Verifier from "../verifier";
+import verifyTerm from "../verify/term";
+import verifyVariable from "../verify/variable";
+import verifyMetavariable from "../verify/metavariable";
 
 import { nodeQuery } from "../utilities/query";
-import { verifyStandaloneTerm } from "../verify/term";
-import { verifyStandaloneVariable } from "../verify/variable";
-import { verifyStandaloneMetavariable } from "../verify/metavariable";
 
 const termNodeQuery = nodeQuery("/term!"),
       variableNodeQuery = nodeQuery("/variable!"),
@@ -31,8 +31,7 @@ class MetaLevelVerifier extends Verifier {
     {
       nodeQuery: metavariableNodeQuery,
       verify: (metavariableNode, localContext, verifyAhead) => {
-        const standaloneMetavariableVerified = verifyStandaloneMetavariable(metavariableNode, localContext, verifyAhead),
-              metavariableVerified = standaloneMetavariableVerified;  ///
+        const metavariableVerified = verifyMetavariable(metavariableNode, localContext, verifyAhead);
 
         return metavariableVerified;
       }
@@ -40,8 +39,7 @@ class MetaLevelVerifier extends Verifier {
     {
       nodeQuery: variableNodeQuery,
       verify: (variableNode, localContext, verifyAhead) => {
-        const standaloneVariableVerified = verifyStandaloneVariable(variableNode, localContext, verifyAhead),
-              variableVerified = standaloneVariableVerified;  ///
+        const variableVerified = verifyVariable(variableNode, localContext, verifyAhead);
 
         return variableVerified;
       }
@@ -49,8 +47,8 @@ class MetaLevelVerifier extends Verifier {
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, localContext, verifyAhead) => {
-        const standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
-              termVerified = standaloneTermVerified;  ///
+        const terms = [],
+              termVerified = verifyTerm(termNode, terms, localContext, verifyAhead);
 
         return termVerified;
       }

@@ -54,34 +54,9 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
   return statementVerified;
 }
 
-export function verifyStandaloneStatement(statementNode, localContext, verifyAhead) {
-  let standaloneStatementVerified = false;
-
-  const statementString = localContext.nodeAsString(statementNode);
-
-  localContext.trace(`Verifying the '${statementString}' standalone statement...`, statementNode);
-
-  const derived = false,
-        assignments = [],
-        statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
-
-  if (statementVerified) {
-    const verifiedAhead = verifyAhead();
-
-    standaloneStatementVerified = verifiedAhead; ///
-  }
-
-  if (standaloneStatementVerified) {
-    localContext.debug(`...verified the '${statementString}' standalone statement.`, statementNode);
-  }
-
-  return standaloneStatementVerified;
-}
-
 Object.assign(shim, {
   verifyStatement
 });
-
 
 export default verifyStatement;
 

@@ -1,11 +1,11 @@
 "use strict";
 
 import Verifier from "../verifier";
+import verifyTerm from "../verify/term";
+import verifyType from "../verify/type";
 import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
-import { verifyStandaloneType } from "../verify/type";
-import { verifyStandaloneTerm } from "../verify/term";
 
 const termNodeQuery = nodeQuery("/term!"),
       typeNodeQuery = nodeQuery("/type!");
@@ -31,9 +31,9 @@ class TermAsConstructorVerifier extends Verifier {
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, fileContext, verifyAhead) => {
-        const localContext = LocalContext.fromFileContext(fileContext),
-              standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
-              termVerified = standaloneTermVerified;  ///
+        const terms = [],
+              localContext = LocalContext.fromFileContext(fileContext),
+              termVerified = verifyTerm(termNode, terms, localContext, verifyAhead);
 
         return termVerified;
       }
@@ -42,8 +42,7 @@ class TermAsConstructorVerifier extends Verifier {
       nodeQuery: typeNodeQuery,
       verify: (typeNode, fileContext, verifyAhead) => {
         const localContext = LocalContext.fromFileContext(fileContext),
-              standaloneTypeVerified = verifyStandaloneType(typeNode, localContext, verifyAhead),
-              typeVerified = standaloneTypeVerified;  ///
+              typeVerified = verifyType(typeNode, localContext, verifyAhead);
 
         return typeVerified;
       }

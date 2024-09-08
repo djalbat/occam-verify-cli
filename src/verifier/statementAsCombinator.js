@@ -1,11 +1,11 @@
 "use strict";
 
 import Verifier from "../verifier";
+import verifyType from "../verify/type";
+import verifyTerm from "../verify/term";
+import verifyStatement from "../verify/statement";
 
 import { nodeQuery } from "../utilities/query";
-import { verifyStandaloneType } from "../verify/type";
-import { verifyStandaloneTerm } from "../verify/term";
-import { verifyStandaloneStatement } from "../verify/statement";
 
 const termNodeQuery = nodeQuery("/term!"),
       typeNodeQuery = nodeQuery("/type!"),
@@ -32,8 +32,8 @@ class StatementAsCombinatorVerifier extends Verifier {
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, localContext, verifyAhead) => {
-        const standaloneTermVerified = verifyStandaloneTerm(termNode, localContext, verifyAhead),
-              termVerified = standaloneTermVerified;  ///
+        const terms = [],
+              termVerified = verifyTerm(termNode, terms, localContext, verifyAhead);
 
         return termVerified;
       }
@@ -41,8 +41,7 @@ class StatementAsCombinatorVerifier extends Verifier {
     {
       nodeQuery: typeNodeQuery,
       verify: (typeNode, localContext, verifyAhead) => {
-        const standaloneTypeVerified = verifyStandaloneType(typeNode, localContext, verifyAhead),
-              typeVerified = standaloneTypeVerified;  ///
+        const typeVerified = verifyType(typeNode, localContext, verifyAhead);
 
         return typeVerified;
       }
@@ -50,8 +49,18 @@ class StatementAsCombinatorVerifier extends Verifier {
     {
       nodeQuery: statementNodeQuery,
       verify: (statementNode, localContext, verifyAhead) => {
-        const standaloneStatementVerified = verifyStandaloneStatement(statementNode, localContext, verifyAhead),
-              statementVerified = standaloneStatementVerified;  ///
+        let statementVerified;
+
+        const derived = false,
+              assignments = [];
+
+        statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
+
+        if (statementVerified) {
+          const verifiedAhead = verifyAhead();
+
+          statementVerified = verifiedAhead;  ///
+        }
 
         return statementVerified;
       }
