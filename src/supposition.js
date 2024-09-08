@@ -47,7 +47,6 @@ export default class Supposition {
 
       if (subproofAssertionNode !== null) {
         const fileContextA = fileContext, ///
-              localContextA = LocalContext.fromFileContext(fileContextA),
               localContextB = localContext,  ///
               subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
               subproofLastProofStepStatementNode = subproofLastProofStepStatementNodeQuery(subproofNode),
@@ -58,7 +57,8 @@ export default class Supposition {
               subproofAssertionStatementNodes = subproofAssertionStatementNodesQuery(subproofAssertionNode);
 
         subproofUnified = match(subproofAssertionStatementNodes, subproofStatementNodes, (subproofAssertionStatementNode, subproofStatementNode) => {
-          const nodeA = subproofAssertionStatementNode,  ///
+          const localContextA = LocalContext.fromFileContext(fileContextA),
+                nodeA = subproofAssertionStatementNode,  ///
                 nodeB = subproofStatementNode, ///
                 unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
