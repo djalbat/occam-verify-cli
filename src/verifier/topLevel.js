@@ -18,18 +18,18 @@ import verifyMetavariableDeclaration from "../verify/declaration/metavariable";
 import { nodeQuery } from "../utilities/query";
 
 const errorNodeQuery = nodeQuery("/error"),
-      ruleNodeQuery = nodeQuery("/topLevelAssertion/rule!"),
-      axiomNodeQuery = nodeQuery("/topLevelAssertion/axiom!"),
-      lemmaNodeQuery = nodeQuery("/topLevelAssertion/lemma!"),
-      theoremNodeQuery = nodeQuery("/topLevelAssertion/theorem!"),
-      metaLemmaNodeQuery = nodeQuery("/topLevelAssertion/metaLemma!"),
-      conjectureNodeQuery = nodeQuery("/topLevelAssertion/conjecture!"),
-      metatheoremNodeQuery = nodeQuery("/topLevelAssertion/metatheorem!"),
-      typeDeclarationNodeQuery = nodeQuery("/topLevelAssertion/typeDeclaration!"),
-      variableDeclarationNodeQuery = nodeQuery("/topLevelAssertion/variableDeclaration!"),
-      combinatorDeclarationNodeQuery = nodeQuery("/topLevelAssertion/combinatorDeclaration!"),
-      constructorDeclarationNodeQuery = nodeQuery("/topLevelAssertion/constructorDeclaration!"),
-      metavariableDeclarationNodeQuery = nodeQuery("/topLevelAssertion/metavariableDeclaration!");
+      ruleNodeQuery = nodeQuery("/rule!"),
+      axiomNodeQuery = nodeQuery("/axiom!"),
+      lemmaNodeQuery = nodeQuery("/lemma!"),
+      theoremNodeQuery = nodeQuery("/theorem!"),
+      metaLemmaNodeQuery = nodeQuery("/metaLemma!"),
+      conjectureNodeQuery = nodeQuery("/conjecture!"),
+      metatheoremNodeQuery = nodeQuery("/metatheorem!"),
+      typeDeclarationNodeQuery = nodeQuery("/typeDeclaration!"),
+      variableDeclarationNodeQuery = nodeQuery("/variableDeclaration!"),
+      combinatorDeclarationNodeQuery = nodeQuery("/combinatorDeclaration!"),
+      constructorDeclarationNodeQuery = nodeQuery("/constructorDeclaration!"),
+      metavariableDeclarationNodeQuery = nodeQuery("/metavariableDeclaration!");
 
 class TopLevelVerifier extends Verifier {
   verify(node, fileContext) {
