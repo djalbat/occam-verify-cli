@@ -1,6 +1,5 @@
 "use strict";
 
-import LocalContext from "./context/local";
 import metaLevelUnifier from "./unifier/metaLevel";
 
 import { nodeAsString } from "./utilities/string";
@@ -15,15 +14,12 @@ export default class Consequent {
     return this.statementNode;
   }
 
-  unifyStatement(statementNode, substitutions, fileContext, localContext) {
+  unifyStatement(statementNodeB, substitutions, localContextA, localContextB) {
     let statementUnified = false;
 
     if (this.statementNode !== null) {
       const nodeA = this.statementNode,  ///
-            nodeB = statementNode,  ///
-            fileContextA = fileContext, ///
-            localContextA = LocalContext.fromFileContext(fileContextA),
-            localContextB = localContext,  ///
+            nodeB = statementNodeB,  ///
             unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
       statementUnified = unified; ///

@@ -33,7 +33,9 @@ class StatementAgainstCombinatorUnifier extends Unifier {
       nodeQueryA: statementNodeQuery,
       nodeQueryB: metaTypeNodeQuery,
       unify: (statementNodeA, metaTypeNodeB, localContext, unifyAhead) => {
-        const statementUnifiedAgainstMetaType = unifyStatementAgainstMetaType(statementNodeA, metaTypeNodeB, localContext, unifyAhead);
+        const metaTypeNode = metaTypeNodeB, ///
+              statementNode = statementNodeA, ///
+              statementUnifiedAgainstMetaType = unifyStatementAgainstMetaType(statementNode, metaTypeNode, localContext, unifyAhead);
 
         return statementUnifiedAgainstMetaType;
       }
@@ -42,7 +44,9 @@ class StatementAgainstCombinatorUnifier extends Unifier {
       nodeQueryA: termNodeQuery,
       nodeQueryB: typeNodeQuery,
       unify: (termNodeA, typeNodeB, localContext, unifyAhead) => {
-        const termUnifiedAgainstType = unifyTermAgainstType(termNodeA, typeNodeB, localContext, unifyAhead);
+        const termNode = termNodeA, ///
+              typeNode = typeNodeB, ///
+              termUnifiedAgainstType = unifyTermAgainstType(termNode, typeNode, localContext, unifyAhead);
 
         return termUnifiedAgainstType;
       }

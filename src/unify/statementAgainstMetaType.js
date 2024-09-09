@@ -7,11 +7,10 @@ import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
 const metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type!");
 
-export default function unifyStatementAgainstMetaType(statementNodeA, metaTypeNodeB, localContext, unifyAhead) {
+export default function unifyStatementAgainstMetaType(statementNode, metaTypeNode, localContext, unifyAhead) {
   let statementVerifiedAgainstMetaType = false;
 
-  const metaTypeNode = metaTypeNodeB, ///
-        metaTypeTerminalNode = metaTypeTerminalNodeQuery(metaTypeNode),
+  const metaTypeTerminalNode = metaTypeTerminalNodeQuery(metaTypeNode),
         content = metaTypeTerminalNode.getContent();
 
   if (content === STATEMENT_META_TYPE_NAME) {
@@ -20,7 +19,6 @@ export default function unifyStatementAgainstMetaType(statementNodeA, metaTypeNo
     const { verifyStatement } = shim,
           derived = false,
           assignments = [],
-          statementNode = statementNodeA, ///
           statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 
     if (statementVerified) {

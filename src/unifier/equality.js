@@ -31,7 +31,10 @@ class EqualityUnifier extends Unifier {
       unify: (termNodeA, termNodeB, localContext, unifyAhead) => {
         let termVerifiedAgainstTerm;
 
-        termVerifiedAgainstTerm = unifyTermAgainstTerm(termNodeA, termNodeB, localContext, unifyAhead);
+        const leftTermNode = termNodeA, ///
+              rightTermNode = termNodeB;  ///
+
+        termVerifiedAgainstTerm = unifyTermAgainstTerm(leftTermNode, rightTermNode, localContext, unifyAhead);
 
         if (!termVerifiedAgainstTerm) {
           const nonTerminalNodeA = termNodeA, ///

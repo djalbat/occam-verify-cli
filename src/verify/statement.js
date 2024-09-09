@@ -28,24 +28,30 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
 
   localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
 
-  const verifyStatementFunctions = [
-    verifyStatementAsMetavariable,
-    verifyStatementAsEquality,
-    verifyStatementAsJudgement,
-    verifyStatementAsTypeAssertion,
-    verifyStatementAsDefinedAssertion,
-    verifyStatementAsSubproofAssertion,
-    verifyStatementAsContainedAssertion,
-    verifyStatementAgainstCombinators
-  ];
+  const statementUnifiedAgainstCombinators = unifyStatementAgainstCombinators(statementNode, assignments, derived, localContext);
 
-  statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
-    const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
+  if (statementUnifiedAgainstCombinators) {
+    statementVerified = true;
+  } else {
+    const verifyStatementFunctions = [
+      verifyStatementAsMetavariable,
+      verifyStatementAsEquality,
+      verifyStatementAsJudgement,
+      verifyStatementAsTypeAssertion,
+      verifyStatementAsDefinedAssertion,
+      verifyStatementAsSubproofAssertion,
+      verifyStatementAsContainedAssertion,
+      unifyStatementAgainstCombinators
+    ];
 
-    if (statementVerified) {
-      return true;
-    }
-  });
+    statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
+      const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
+
+      if (statementVerified) {
+        return true;
+      }
+    });
+  }
 
   if (statementVerified) {
     localContext.debug(`...verified the '${statementString}' statement.`, statementNode);
@@ -218,8 +224,8 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
   return statementVerifiedAsContainedAssertion;
 }
 
-function verifyStatementAgainstCombinators(statementNode, assignments, derived, localContext) {
-  let statementVerifiedAgainstCombinators = false;
+function unifyStatementAgainstCombinators(statementNode, assignments, derived, localContext) {
+  let statementUnifiedAgainstCombinators = false;
 
   const equalityNode = equalityNodeQuery(statementNode),
         judgementNode = judgementNodeQuery(statementNode),
@@ -244,33 +250,33 @@ function verifyStatementAgainstCombinators(statementNode, assignments, derived, 
       ...combinators
     ];
 
-    statementVerifiedAgainstCombinators = combinators.some((combinator) => {
-      const statementVerifiedAgainstCombinator = verifyStatementAgainstCombinator(statementNode, combinator, localContext);
+    statementUnifiedAgainstCombinators = combinators.some((combinator) => {
+      const statementUnifiedAgainstCombinator = unifyStatementAgainstCombinator(statementNode, combinator, localContext);
 
-      if (statementVerifiedAgainstCombinator) {
+      if (statementUnifiedAgainstCombinator) {
         return true;
       }
     });
   }
 
-  return statementVerifiedAgainstCombinators;
+  return statementUnifiedAgainstCombinators;
 }
 
-function verifyStatementAgainstCombinator(statementNode, combinator, localContext) {
-  let statementVerifiedAgainstCombinator;
+function unifyStatementAgainstCombinator(statementNode, combinator, localContext) {
+  let statementUnifiedAgainstCombinator;
 
   const statementString = localContext.nodeAsString(statementNode),
         combinatorString = combinator.getString();
 
-  localContext.trace(`Verifying the '${statementString}' statement against the '${combinatorString}' combinator...`, statementNode);
+  localContext.trace(`Unifying the '${statementString}' statement against the '${combinatorString}' combinator...`, statementNode);
 
   const combinatorStatementNode = combinator.getStatementNode();
 
-  statementVerifiedAgainstCombinator = statementAgainstCombinatorUnifier.unify(statementNode, combinatorStatementNode, localContext);
+  statementUnifiedAgainstCombinator = statementAgainstCombinatorUnifier.unify(statementNode, combinatorStatementNode, localContext);
 
-  if (statementVerifiedAgainstCombinator) {
-    localContext.debug(`...verified the '${statementString}' statement against the '${combinatorString}' combinator.`, statementNode);
+  if (statementUnifiedAgainstCombinator) {
+    localContext.debug(`...unified the '${statementString}' statement against the '${combinatorString}' combinator.`, statementNode);
   }
 
-  return statementVerifiedAgainstCombinator;
+  return statementUnifiedAgainstCombinator;
 }

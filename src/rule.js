@@ -4,8 +4,8 @@ import Label from "./label";
 import Premise from "./premise";
 import Conclusion from "./conclusion";
 import Substitutions from "./substitutions";
-
-import { reverse, correlate } from "./utilities/array";
+import unifyPremisesAgainstProofSteps from "./unify/premisesAgainstProofSteps";
+import unifyConclusionAgainstStatement from "./unify/conclusionAgainstStatement";
 
 export default class Rule {
   constructor(labels, premises, conclusion, fileContext) {
@@ -34,12 +34,17 @@ export default class Rule {
   unifyStatement(statementNode, localContext) {
     let statementUnified = false;
 
-    const proofSteps = localContext.getProofSteps(),
-          substitutions = Substitutions.fromNothing(),
-          premisesUnified = unifyPremises(this.premises, proofSteps, substitutions, this.fileContext, localContext);
+    const substitutions = Substitutions.fromNothing(),
+          proofSteps = localContext.getProofSteps(),
+          premisesA = this.premises,
+          proofStepsB = proofSteps, ///
+          fileContextA = this.fileContext,  ///
+          localContextB = localContext, ///
+          premisesUnified = unifyPremisesAgainstProofSteps(premisesA, proofStepsB, substitutions, fileContextA, localContextB);
 
     if (premisesUnified) {
-      const conclusionUnified = unifyConclusion(this.conclusion, statementNode, substitutions, this.fileContext, localContext);
+      const conclusionA = this.conclusion,  ///
+            conclusionUnified = unifyConclusionAgainstStatement(conclusionA, statementNode, substitutions, fileContextA, localContextB);
 
       statementUnified = conclusionUnified;  ///
     }
@@ -126,63 +131,4 @@ export default class Rule {
 
     return rule;
   }
-}
-
-function matchPremise(premise, proofStep, substitutions, fileContext, localContext) {
-  let premiseUnified = false;
-
-  const subproofNode = proofStep.getSubproofNode(),
-        statementNode = proofStep.getStatementNode();
-
-  substitutions.snapshot();
-
-  if (subproofNode !== null) {
-    const subproofUnified = premise.unifySubproof(subproofNode, substitutions, fileContext, localContext);
-
-    premiseUnified = subproofUnified; ///
-  }
-
-  if (statementNode !== null) {
-    const statementUnified = premise.unifyStatement(statementNode, substitutions, fileContext, localContext);
-
-    premiseUnified = statementUnified;  ///
-  }
-
-  premiseUnified ?
-    substitutions.continue() :
-      substitutions.rollback();
-
-  return premiseUnified;
-}
-
-function unifyPremises(premises, proofSteps, substitutions, fileContext, localContext) {
-  premises = reverse(premises); ///
-
-  proofSteps = reverse(proofSteps); ///
-
-  const premisesUnified = correlate(premises, proofSteps, (premise, proofStep) => {
-    const premiseUnified = matchPremise(premise, proofStep, substitutions, fileContext, localContext);
-
-    if (premiseUnified) {
-      return true;
-    }
-  });
-
-  return premisesUnified;
-}
-
-function unifyConclusion(conclusion, statementNode, substitutions, fileContext, localContext) {
-  let conclusionUnified;
-
-  substitutions.snapshot();
-
-  const statementUnified = conclusion.unifyStatement(statementNode, substitutions, fileContext, localContext);
-
-  conclusionUnified = statementUnified; ///
-
-  conclusionUnified ?
-    substitutions.continue() :
-      substitutions.rollback();
-
-  return conclusionUnified;
 }

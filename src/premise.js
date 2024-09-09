@@ -1,6 +1,5 @@
 "use strict";
 
-import LocalContext from "./context/local";
 import metaLevelUnifier from "./unifier/metaLevel";
 
 import { match } from "./utilities/array";
@@ -22,15 +21,12 @@ export default class Premise {
     return this.statementNode;
   }
 
-  unifyStatement(statementNode, substitutions, fileContext, localContext) {
+  unifyStatement(statementNodeB, substitutions, localContextA, localContextB) {
     let statementUnified = false;
 
     if (this.statementNode !== null) {
       const nodeA = this.statementNode,  ///
-            nodeB = statementNode,  ///
-            fileContextA = fileContext, ///
-            localContextA = LocalContext.fromFileContext(fileContextA),
-            localContextB = localContext,  ///
+            nodeB = statementNodeB,  ///
             unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
       statementUnified = unified; ///
@@ -39,27 +35,25 @@ export default class Premise {
     return statementUnified;
   }
 
-  unifySubproof(subproofNode, substitutions, fileContext, localContext) {
+  unifySubproof(subproofNodeB, substitutions, localContextA, localContextB) {
     let subproofUnified = false;
 
     if (this.statementNode !== null) {
-      const subproofAssertionNode = subproofAssertionNodeQuery(this.statementNode);
+      const statementNodeA = this.statementNode,
+            subproofAssertionNodeA = subproofAssertionNodeQuery(statementNodeA);  ///
 
-      if (subproofAssertionNode !== null) {
-        const fileContextA = fileContext, ///
-              localContextB = localContext,  ///
-              subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
-              subproofLastProofStepStatementNode = subproofLastProofStepStatementNodeQuery(subproofNode),
-              subproofStatementNodes = [
-                ...subproofSuppositionStatementNodes,
-                subproofLastProofStepStatementNode
-              ],
-              subproofAssertionStatementNodes = subproofAssertionStatementNodesQuery(subproofAssertionNode);
+      if (subproofAssertionNodeA !== null) {
+        const subproofAssertionStatementNodesA = subproofAssertionStatementNodesQuery(subproofAssertionNodeA),  ///
+              subproofSuppositionStatementNodesB = subproofSuppositionStatementNodesQuery(subproofNodeB), ///
+              subproofLastProofStepStatementNodeB = subproofLastProofStepStatementNodeQuery(subproofNodeB), ///
+              subproofStatementNodesB = [
+                ...subproofSuppositionStatementNodesB,
+                subproofLastProofStepStatementNodeB
+              ];
 
-        subproofUnified = match(subproofAssertionStatementNodes, subproofStatementNodes, (subproofAssertionStatementNode, subproofStatementNode) => {
-          const localContextA = LocalContext.fromFileContext(fileContextA),
-                nodeA = subproofAssertionStatementNode,  ///
-                nodeB = subproofStatementNode, ///
+        subproofUnified = match(subproofAssertionStatementNodesA, subproofStatementNodesB, (subproofAssertionStatementNodeA, subproofStatementNodeB) => {
+          const nodeA = subproofAssertionStatementNodeA,  ///
+                nodeB = subproofStatementNodeB, ///
                 unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
           if (unified) {

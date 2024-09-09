@@ -4,8 +4,8 @@ import Label from "./label";
 import Consequent from "./consequent";
 import Supposition from "./supposition";
 import Substitutions from "./substitutions";
-
-import { reverse, correlate } from "./utilities/array";
+import unifyConsequentAgainstStatement from "./unify/consequentAgainstStatement";
+import unifySuppositionsAgainstProofSteps from "./unify/suppositionsAgainstProofSteps";
 
 export default class TopLevelAssertion {
   constructor(labels, suppositions, consequent, substitutions, fileContext) {
@@ -39,12 +39,17 @@ export default class TopLevelAssertion {
   unifyStatement(statementNode, localContext) {
     let statementUnified = false;
 
-    const proofSteps = localContext.getProofSteps(),
-          substitutions = Substitutions.fromNothing(),
-          suppositionsUnified = unifySuppositions(this.suppositions, proofSteps, substitutions, this.fileContext, localContext);
+    const substitutions = Substitutions.fromNothing(),
+          proofSteps = localContext.getProofSteps(),
+          proofStepsB = proofSteps, ///
+          fileContextA = this.fileContext,  ///
+          suppositionsA = this.suppositions,  ///
+          localContextB = localContext, ///
+          suppositionsUnified = unifySuppositionsAgainstProofSteps(suppositionsA, proofStepsB, substitutions, fileContextA, localContextB);
 
     if (suppositionsUnified) {
-      const consequentUnified = unifyConsequent(this.consequent, statementNode, substitutions, this.fileContext, localContext);
+      const consequentA = this.consequent,  ///
+            consequentUnified = unifyConsequentAgainstStatement(consequentA, statementNode, substitutions, fileContextA, localContext);
 
       statementUnified = consequentUnified;  ///
     }
@@ -130,63 +135,4 @@ export default class TopLevelAssertion {
   }
 
   static fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(Class, labels, suppositions, consequent, substitutions, fileContext) { return new Class(labels, suppositions, consequent, substitutions, fileContext); }
-}
-
-function unifySuppositions(suppositions, proofSteps, substitutions, fileContext, localContext) {
-  suppositions = reverse(suppositions); ///
-
-  proofSteps = reverse(proofSteps); ///
-
-  const suppositionsUnified = correlate(suppositions, proofSteps, (supposition, proofStep) => {
-    const suppositionUnified = unifySupposition(supposition, proofStep, substitutions, fileContext, localContext);
-
-    if (suppositionUnified) {
-      return true;
-    }
-  });
-
-  return suppositionsUnified;
-}
-
-function unifySupposition(supposition, proofStep, substitutions, fileContext, localContext) {
-  let suppositionUnified = false;
-
-  substitutions.snapshot();
-
-  const subproofNode = proofStep.getSubproofNode(),
-        statementNode = proofStep.getStatementNode();
-
-  if (subproofNode !== null) {
-    const subproofUnified = supposition.unifySubproof(subproofNode, substitutions, fileContext, localContext);
-
-    suppositionUnified = subproofUnified; ///
-  }
-
-  if (statementNode !== null) {
-    const statementUnified = supposition.unifyStatement(statementNode, substitutions, fileContext, localContext);
-
-    suppositionUnified = statementUnified;  ///
-  }
-
-  suppositionUnified ?
-    substitutions.continue() :
-      substitutions.rollback();
-
-  return suppositionUnified;
-}
-
-function unifyConsequent(consequent, statementNode, substitutions, fileContext, localContext) {
-  let consequentUnified;
-
-  substitutions.snapshot();
-
-  const statementUnified = consequent.unifyStatement(statementNode, substitutions, fileContext, localContext);
-
-  consequentUnified = statementUnified; ///
-
-  consequentUnified ?
-    substitutions.continue() :
-      substitutions.rollback();
-
-  return consequentUnified;
 }

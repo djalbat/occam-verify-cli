@@ -26,7 +26,9 @@ class TermAgainstConstructorUnifier extends Unifier {
       nodeQueryA: termNodeQuery,
       nodeQueryB: typeNodeQuery,
       unify: (termNodeA, typeNodeB, localContext, unifyAhead) => {
-        const termUnifiedAgainstType = unifyTermAgainstType(termNodeA, typeNodeB, localContext, unifyAhead);
+        const termNode = termNodeA, ///
+              typeNode = typeNodeB, ///
+              termUnifiedAgainstType = unifyTermAgainstType(termNode, typeNode, localContext, unifyAhead);
 
         return termUnifiedAgainstType;
       }
