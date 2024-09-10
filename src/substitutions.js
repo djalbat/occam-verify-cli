@@ -2,7 +2,7 @@
 
 import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
 
-import { prune, compare } from "./utilities/array";
+import { prune, compare, rightDifference } from "./utilities/array";
 
 export default class Substitutions {
   constructor(array, savedArray) {
@@ -31,9 +31,16 @@ export default class Substitutions {
 
   everySubstitution(callback) { return this.array.every(callback); }
 
-  addSubstitution(substitution) { this.array.push(substitution); }
+  addSubstitution(substitution, localContextA, localContextB) {
+    this.array.push(substitution);
 
-  removeSubstitution(substitution) {
+    const substitutionNode = substitution.getNode(),
+          substitutionString = substitution.asString(localContextA, localContextB);
+
+    localContextB.trace(`Added the '${substitutionString}' substitution.`, substitutionNode);
+  }
+
+  removeSubstitution(substitution, localContextA, localContextB) {
     const substitutionA = substitution; ///
 
     prune(this.array, (substitution) => {
@@ -43,6 +50,30 @@ export default class Substitutions {
         return true;
       }
     });
+
+    const substitutionNode = substitution.getNode(),
+          substitutionString = substitution.asString(localContextA, localContextB);
+
+    localContextB.trace(`Removed the '${substitutionString}' substitution.`, substitutionNode);
+  }
+
+  unifyAgainstEquivalences(equivalences, localContextA, localContextB) {
+    const substitutions = this, ///
+          unifiedAgainstEquivalences = this.everySubstitution((substitution) => {
+            const substitutionUnified = equivalences.some((equivalence) => {
+              const substitutionUnifiedAgainstEquivalence = substitution.unifyAgainstEquivalence(equivalence, substitutions, localContextA, localContextB);
+
+              if (substitutionUnifiedAgainstEquivalence) {
+                return true;
+              }
+            });
+
+            if (substitutionUnified) {
+              return true;
+            }
+          });
+
+    return unifiedAgainstEquivalences;
   }
 
   snapshot() {
@@ -51,11 +82,20 @@ export default class Substitutions {
     ];
   }
 
-  rollback() {
-    const start = 0,
-          end = Infinity;
+  rollback(localContextA, localContextB) {
+    const array = [
+      ...this.array
+    ];
 
-    this.array.splice(start, end, ...this.savedArray);
+    rightDifference(this.savedArray, array);
+
+    array.forEach((substitution) => {
+      this.removeSubstitution(substitution, localContextA, localContextB);
+    });
+
+    this.array = [
+      ...this.savedArray
+    ];
 
     this.savedArray = null;
   }

@@ -23,7 +23,7 @@ export default function unifyConsequentAgainstStatement(consequentA, statementNo
 
     consequentUnified ?
       substitutions.continue() :
-        substitutions.rollback();
+        substitutions.rollback(localContextA, localContextB);
 
     if (consequentUnified) {
       localContextB.debug(`...unified the '${statementStringB}' statement against the consequent's '${statementStringA}' statement.`, statementNodeB);

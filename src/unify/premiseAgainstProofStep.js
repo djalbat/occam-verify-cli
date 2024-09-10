@@ -47,7 +47,7 @@ export default function unifyPremiseAgainstProofStep(premiseA, proofStepB, subst
 
     premiseUnified ?
       substitutions.continue() :
-        substitutions.rollback();
+        substitutions.rollback(localContextA, localContextB);
   }
 
   return premiseUnified;

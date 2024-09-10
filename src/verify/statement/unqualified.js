@@ -48,7 +48,7 @@ function verifyDerivedUnqualifiedStatement(unqualifiedStatementNode, assignments
 
     localContext.trace(`Verifying the '${unqualifiedStatementString}' derived unqualified statement...`, unqualifiedStatementNode);
 
-    const statementUnified = localContext.unifyStatement(statementNode);
+    const statementUnified = localContext.unifyStatement(statementNode, localContext);
 
     if (statementUnified) {
       derivedUnqualifiedStatementVerified = true;

@@ -230,21 +230,30 @@ class LocalContext {
     return metavariableAdded;
   }
 
-  unifyStatement(statementNode) {
+  unifyStatement(statementNode, localContext) {
     let proofSteps = this.getProofSteps();
 
     proofSteps = reverse(proofSteps); ///
 
-    const localContext = this,  ///
-          equivalences = this.getEquivalences();
+    const localContextA = this,  ///
+          localContextB = localContext, ///
+          statementNodeAB = statementNode, ///
+          statementStringB = localContextA.nodeAsString(statementNodeAB);
 
-    const statementUnified = proofSteps.some((proofStep) => {
-      const statementUnified = proofStep.unifyStatement(statementNode, equivalences, localContext);
+    localContextB.trace(`Unifying the '${statementStringB}' statement...`, statementNodeAB);
 
-      if (statementUnified) {
-        return true;
-      }
-    });
+    const equivalences = this.getEquivalences(),
+          statementUnified = proofSteps.some((proofStep) => {
+            const statementUnified = proofStep.unifyStatement(statementNode, equivalences, localContextA, localContextB);
+
+            if (statementUnified) {
+              return true;
+            }
+          });
+
+    if (statementUnified) {
+      localContextB.debug(`...unified the '${statementStringB}' statement.`, statementNodeAB);
+    }
 
     return statementUnified;
   }

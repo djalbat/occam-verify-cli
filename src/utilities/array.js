@@ -2,7 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-export const { first, second, last, extract, push, match, filter, compress, separate } = arrayUtilities;
+export const { first, second, last, extract, push, match, prune, filter, compress, separate } = arrayUtilities;
 
 export function reverse(array) {
   array = [ ///

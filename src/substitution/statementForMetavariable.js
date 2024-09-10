@@ -32,6 +32,12 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return this.substitution;
   }
 
+  getNode() {
+    const node = this.statementNode;  ///
+
+    return node;
+  }
+
   matchStatementNode(statementNode, substitutions, localContextA, localContextB) {
     let statementNodeMatches;
 
@@ -81,6 +87,16 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     }
 
     return unifiedAgainstEquivalence;
+  }
+
+  asString(localContextA, localContextB) {
+    const statementNodeB = this.statementNode,  ///
+          statementStringB = localContextB.nodeAsString(statementNodeB),
+          metavariableNodeA = this.metavariableNode,  ///
+          metavariableStringA = localContextA.nodeAsString(metavariableNodeA),
+          string = `[${statementStringB} for ${metavariableStringA}]`;
+
+    return string;
   }
 
   static fromJSONAndFileContext(json, fileContext) {

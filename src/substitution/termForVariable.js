@@ -23,6 +23,12 @@ export default class TermForVariableSubstitution extends Substitution {
     return this.termNode;
   }
 
+  getNode() {
+    const node = this.termNode; ///
+
+    return node;
+  }
+
   isTransformed(substitution) {
     const termNod = substitution.getTermNode(),
           variableNode = substitution.getVariableNode(),
@@ -59,6 +65,16 @@ export default class TermForVariableSubstitution extends Substitution {
     }
 
     return unifiedAgainstEquivalence;
+  }
+
+  asString(localContextA, localContextB) {
+    const termNodeB = this.termNode,  ///
+          termStringB = localContextB.nodeAsString(termNodeB),
+          variableNodeA = this.variableNode,  ///
+          variableStringA = localContextA.nodeAsString(variableNodeA),
+          string = `[${termStringB} for ${variableStringA}]`;
+
+    return string;
   }
 
   static fromSubstitutionNode(substitutionNode) {

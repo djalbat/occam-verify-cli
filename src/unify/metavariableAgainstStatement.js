@@ -57,16 +57,36 @@ export default function unifyMetavariableAgainstStatement(metavariableNodeA, sta
       }
     }
   } else {
-    const statementNode = statementNodeB, ///
-          substitutionNode = substitutionNodeA, ///
-          metavariableNode = metavariableNodeA, ///
-          statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
-          substitution = statementForMetavariableSubstitution;  ///
+    const metavariableA = localContextA.findMetavariableByMetavariableNode(metavariableNodeA);
 
-    substitutions.addSubstitution(substitution, localContextA, localContextB);
+    if (metavariableA !== null) {
+      const metavariableB = metavariableFromStatementNode(statementNodeB, localContextB);
 
-    metavariableUnifiedAgainstStatement = true;
+      if (metavariableA !== metavariableB) {
+        const statementNode = statementNodeB, ///
+              substitutionNode = substitutionNodeA, ///
+              metavariableNode = metavariableNodeA, ///
+              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
+              substitution = statementForMetavariableSubstitution;  ///
+
+        substitutions.addSubstitution(substitution, localContextA, localContextB);
+      }
+
+      metavariableUnifiedAgainstStatement = true;
+    }
   }
 
   return metavariableUnifiedAgainstStatement;
+}
+
+function metavariableFromStatementNode(statementNode, localContext) {
+  let metavariable = null;
+
+  const metavariableNode = metavariableNodeQuery(statementNode)
+
+  if (metavariableNode !== null) {
+    metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+  }
+
+  return metavariable;
 }

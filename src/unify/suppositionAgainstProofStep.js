@@ -47,7 +47,7 @@ export default function unifySuppositionAgainstProofStep(suppositionA, proofStep
 
     suppositionUnified ?
       substitutions.continue() :
-        substitutions.rollback();
+        substitutions.rollback(localContextA, localContextB);
   }
 
   return suppositionUnified;

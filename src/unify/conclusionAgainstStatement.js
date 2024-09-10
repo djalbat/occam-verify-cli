@@ -23,7 +23,7 @@ export default function unifyConclusionAgainstStatement(conclusionA, statementNo
 
     conclusionUnified ?
       substitutions.continue() :
-        substitutions.rollback();
+        substitutions.rollback(localContextA, localContextB);
 
     if (conclusionUnified) {
       localContextB.debug(`...unified the '${statementStringB}' statement against the conclusion's '${statementStringA}' statement.`, statementNodeB);
