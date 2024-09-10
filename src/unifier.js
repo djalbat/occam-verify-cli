@@ -2,6 +2,7 @@
 
 import { nodeQuery } from "./utilities/query";
 import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual } from "./utilities/unifier";
+import {isLastRemainingArgumentFunction} from "./utilities/arguments";
 
 const nonTerminalNodeQuery = nodeQuery("/*");
 
@@ -55,10 +56,25 @@ export default class Unifier {
             terminalNodeMapsEqual = areTerminalNodeMapsEqual(childTerminalNodeMapA, childTerminalNodeMapB);
 
       if (terminalNodeMapsEqual) {
-        const index = 0,
-              childNodesVerifyAhead = this.unifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments);
+        const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
 
-        childNodesUnified = childNodesVerifyAhead; ///
+        if (lastRemainingArgumentFunction) {
+          const index = 0,
+                childNodesUnifiedAhead = this.unifyChildNodesAhead(index, childNodesA, childNodesB,...remainingArguments);
+
+          childNodesUnified = childNodesUnifiedAhead; ///
+        } else {
+          childNodesUnified = childNodesA.every((childNodeA, index) => {
+            const childNodeB = childNodesB[index],
+                  nodeA = childNodeA, ///
+                  nodeB = childNodeB, ///
+                  nodeUnified = this.unifyNode(nodeA, nodeB, ...remainingArguments);
+
+            if (nodeUnified) {
+              return true;
+            }
+          });
+        }
       }
     }
 
@@ -68,10 +84,18 @@ export default class Unifier {
   unifyTerminalNode(terminalNodeA, terminalNodeB, ...remainingArguments) { ///
     let terminalNodeUnified;
 
-    const unifyAhead = remainingArguments.pop(),
-          unifyiedAhead = unifyAhead();
+    const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
 
-    terminalNodeUnified = unifyiedAhead;  ///
+    if (lastRemainingArgumentFunction) {
+      const unifyAhead = remainingArguments.pop(),
+            unifiedAhead = unifyAhead();
+
+      terminalNodeUnified = unifiedAhead;  ///
+
+      remainingArguments.push(unifiedAhead);
+    } else {
+      terminalNodeUnified = true;
+    }
 
     return terminalNodeUnified;
   }
@@ -134,9 +158,9 @@ export default class Unifier {
           childNodesALength = childNodesA.length;
 
     if (index === childNodesALength) {
-      const unifyiedAhead = unifyAhead();
+      const unifiedAhead = unifyAhead();
 
-      childNodesUnified = unifyiedAhead; ///
+      childNodesUnified = unifiedAhead; ///
     } else {
       const childNodeA = childNodesA[index],
             childNodeB = childNodesB[index],
@@ -146,9 +170,9 @@ export default class Unifier {
               remainingArguments.push(unifyAhead); ///
 
               const aheadIndex = index + 1,
-                    childNodesVerifyAhead = this.unifyChildNodesAhead(aheadIndex, childNodesA, childNodesB, ...remainingArguments);
+                    childNodesUnifiedAhead = this.unifyChildNodesAhead(aheadIndex, childNodesA, childNodesB, ...remainingArguments);
 
-              return childNodesVerifyAhead;
+              return childNodesUnifiedAhead;
             });
 
       childNodesUnified = nodeUnified;  ///

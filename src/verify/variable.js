@@ -1,6 +1,6 @@
 "use strict";
 
-export default function verifyVariable(variableNode, localContext, verifyAhead) {
+export default function verifyVariable(variableNode, localContext) {
   let variableVerified = false;
 
   const variableString = localContext.nodeAsString(variableNode);
@@ -10,9 +10,7 @@ export default function verifyVariable(variableNode, localContext, verifyAhead) 
   const variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
 
   if (variablePresent) {
-    const verifiedAhead = verifyAhead();
-
-    variableVerified = verifiedAhead; ///
+    variableVerified = true;
   }
 
   if (variableVerified) {

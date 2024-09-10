@@ -19,11 +19,7 @@ class MetaLevelUnifier extends Unifier {
 
     const nonTerminalNodeA = nodeA, ///
           nonTerminalNodeB = nodeB, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB, () => {
-            const unifiedAhead = true;
-
-            return unifiedAhead;
-          });
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB);
 
     unified = nonTerminalNodeUnified; ///
 
@@ -34,14 +30,14 @@ class MetaLevelUnifier extends Unifier {
     {
       nodeQueryA: statementNodeQuery,
       nodeQueryB: statementNodeQuery,
-      unify: (statementNodeA, statementNodeB, substitutions, localContextA, localContextB, unifyAhead) => {
+      unify: (statementNodeA, statementNodeB, substitutions, localContextA, localContextB) => {
         let statementVerifiedAgainstStatement;
 
         const metavariableNodeA = metavariableNodeQuery(statementNodeA);
 
         if (metavariableNodeA !== null) {
           const substitutionNodeA = substitutionNodeQuery(statementNodeA),
-                metavariableUnifiedAgainstStatement = unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB, unifyAhead);
+                metavariableUnifiedAgainstStatement = unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB);
 
           statementVerifiedAgainstStatement = metavariableUnifiedAgainstStatement;  ///
         } else {
@@ -51,7 +47,7 @@ class MetaLevelUnifier extends Unifier {
                 nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
                 childNodesA = nonTerminalNodeAChildNodes, ///
                 childNodesB = nonTerminalNodeBChildNodes, ///
-                childNodesVerified = metaLevelUnifier.unifyChildNodes(childNodesA, childNodesB, substitutions, localContextA, localContextB, unifyAhead);
+                childNodesVerified = metaLevelUnifier.unifyChildNodes(childNodesA, childNodesB, substitutions, localContextA, localContextB);
 
           statementVerifiedAgainstStatement = childNodesVerified; ///
         }
@@ -62,9 +58,9 @@ class MetaLevelUnifier extends Unifier {
     {
       nodeQueryA: termVariableNodeQuery,
       nodeQueryB: termNodeQuery,
-      unify: (termVariableNodeA, termNodeB, substitutions, localContextA, localContextB, unifyAhead) => {
+      unify: (termVariableNodeA, termNodeB, substitutions, localContextA, localContextB) => {
         const variableNodeA = termVariableNodeA, ///
-              variableUnifiedAgainstTerm = unifyVariableAgainstTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB, unifyAhead);
+              variableUnifiedAgainstTerm = unifyVariableAgainstTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB);
 
         return variableUnifiedAgainstTerm;
       }

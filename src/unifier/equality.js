@@ -13,11 +13,7 @@ class EqualityUnifier extends Unifier {
 
     const nonTerminalNodeA = leftTermNode, ///
           nonTerminalNodeB = rightTermNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, () => {
-            const unifiedAhead = true;
-
-            return unifiedAhead;
-          });
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext);
 
     equalityUnified = nonTerminalNodeUnified; ///
 
@@ -28,13 +24,13 @@ class EqualityUnifier extends Unifier {
     {
       nodeQueryA: termNodeQuery,
       nodeQueryB: termNodeQuery,
-      unify: (termNodeA, termNodeB, localContext, unifyAhead) => {
+      unify: (termNodeA, termNodeB, localContext) => {
         let termVerifiedAgainstTerm;
 
         const leftTermNode = termNodeA, ///
               rightTermNode = termNodeB;  ///
 
-        termVerifiedAgainstTerm = unifyTermAgainstTerm(leftTermNode, rightTermNode, localContext, unifyAhead);
+        termVerifiedAgainstTerm = unifyTermAgainstTerm(leftTermNode, rightTermNode, localContext);
 
         if (!termVerifiedAgainstTerm) {
           const nonTerminalNodeA = termNodeA, ///
@@ -43,7 +39,7 @@ class EqualityUnifier extends Unifier {
                 nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
                 childNodesA = nonTerminalNodeAChildNodes, ///
                 childNodesB = nonTerminalNodeBChildNodes, ///
-                childNodesVerified = equalityUnifier.unifyChildNodes(childNodesA, childNodesB, localContext, unifyAhead);
+                childNodesVerified = equalityUnifier.unifyChildNodes(childNodesA, childNodesB, localContext);
 
           termVerifiedAgainstTerm = childNodesVerified; ///
         }

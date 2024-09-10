@@ -15,7 +15,7 @@ export default function unifyConclusionAgainstStatement(conclusionA, statementNo
 
     substitutions.snapshot();
 
-    localContextA.trace(`Unifying the '${statementStringB}' statement against the conclusion's '${statementStringA}' statement...`, statementNodeA);
+    localContextB.trace(`Unifying the '${statementStringB}' statement against the conclusion's '${statementStringA}' statement...`, statementNodeB);
 
     const statementUnified = conclusionA.unifyStatement(statementNodeB, substitutions, localContextA, localContextB);
 
@@ -26,7 +26,7 @@ export default function unifyConclusionAgainstStatement(conclusionA, statementNo
         substitutions.rollback();
 
     if (conclusionUnified) {
-      localContextA.debug(`...unified the '${statementStringB}' statement against the conclusion's '${statementStringA}' statement.`, statementNodeA);
+      localContextB.debug(`...unified the '${statementStringB}' statement against the conclusion's '${statementStringA}' statement.`, statementNodeB);
     }
   }
 

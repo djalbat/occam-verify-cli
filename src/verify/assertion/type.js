@@ -77,9 +77,7 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, loc
 
                   verifiedAhead = true;
 
-                  if (!verifiedAhead) {
-                    assignments.pop();
-                  }
+                  assignments.pop();
                 }
               }
             }
@@ -136,9 +134,7 @@ function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, loca
 
                   verifiedAhead = true;
 
-                  if (!verifiedAhead) {
-                    assignments.pop();
-                  }
+                  assignments.pop();
                 }
               }
             }

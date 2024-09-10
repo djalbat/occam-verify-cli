@@ -67,9 +67,7 @@ function verifyTermAsVariable(termNode, terms, localContext, verifyAhead) {
 
       verifiedAhead = verifyAhead();
 
-      if (!verifiedAhead) {
-        terms.pop();
-      }
+      terms.pop();
 
       termVerifiedAsVariable = verifiedAhead;  ///
     }
@@ -148,9 +146,7 @@ function unifyTermAgainstBracketedConstructor(termNode, terms, localContext, ver
 
             verifiedAhead = verifyAhead();
 
-            if (!verifiedAhead) {
-              terms.pop();
-            }
+            terms.pop();
           }
 
           return verifiedAhead;
@@ -186,9 +182,7 @@ function unifyTermAgainstConstructor(termNode, terms, constructor, localContext,
 
           verifiedAhead = verifyAhead();
 
-          if (!verifiedAhead) {
-            terms.pop();
-          }
+          terms.pop();
 
           return verifiedAhead;
         });

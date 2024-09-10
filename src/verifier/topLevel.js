@@ -18,29 +18,25 @@ import verifyMetavariableDeclaration from "../verify/declaration/metavariable";
 import { nodeQuery } from "../utilities/query";
 
 const errorNodeQuery = nodeQuery("/error"),
-      ruleNodeQuery = nodeQuery("/rule!"),
-      axiomNodeQuery = nodeQuery("/axiom!"),
-      lemmaNodeQuery = nodeQuery("/lemma!"),
-      theoremNodeQuery = nodeQuery("/theorem!"),
-      metaLemmaNodeQuery = nodeQuery("/metaLemma!"),
-      conjectureNodeQuery = nodeQuery("/conjecture!"),
-      metatheoremNodeQuery = nodeQuery("/metatheorem!"),
-      typeDeclarationNodeQuery = nodeQuery("/typeDeclaration!"),
-      variableDeclarationNodeQuery = nodeQuery("/variableDeclaration!"),
-      combinatorDeclarationNodeQuery = nodeQuery("/combinatorDeclaration!"),
-      constructorDeclarationNodeQuery = nodeQuery("/constructorDeclaration!"),
-      metavariableDeclarationNodeQuery = nodeQuery("/metavariableDeclaration!");
+      ruleNodeQuery = nodeQuery("/rule"),
+      axiomNodeQuery = nodeQuery("/axiom"),
+      lemmaNodeQuery = nodeQuery("/lemma"),
+      theoremNodeQuery = nodeQuery("/theorem"),
+      metaLemmaNodeQuery = nodeQuery("/metaLemma"),
+      conjectureNodeQuery = nodeQuery("/conjecture"),
+      metatheoremNodeQuery = nodeQuery("/metatheorem"),
+      typeDeclarationNodeQuery = nodeQuery("/typeDeclaration"),
+      variableDeclarationNodeQuery = nodeQuery("/variableDeclaration"),
+      combinatorDeclarationNodeQuery = nodeQuery("/combinatorDeclaration"),
+      constructorDeclarationNodeQuery = nodeQuery("/constructorDeclaration"),
+      metavariableDeclarationNodeQuery = nodeQuery("/metavariableDeclaration");
 
 class TopLevelVerifier extends Verifier {
   verify(node, fileContext) {
     let verified;
 
     const nonTerminalNode = node, ///
-          nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNode, fileContext, () => {
-            const verifiedAhead = true;
-
-            return verifiedAhead;
-          });
+          nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNode, fileContext);
 
     verified = nonTerminalNodeVerified;  ///
 

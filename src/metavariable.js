@@ -128,7 +128,7 @@ export default class Metavariable {
   }
 }
 
-function verifyTermAgainstTermType(termNode, termType, localContext) {
+export function verifyTermAgainstTermType(termNode, termType, localContext) {
   let termVerifiedAgainstTermType;
 
   const type = termType,  ///

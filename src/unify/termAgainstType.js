@@ -4,13 +4,13 @@ import shim from "../shim";
 
 import { first } from "../utilities/array";
 
-export default function unifyTermAgainstType(termNode, typeNode, localContext, unifyAhead) {
+export default function unifyTermAgainstType(termNode, typeNode, localContext) {
   let termUnifiedAgainstType;
 
   const { verifyTerm } = shim,
         terms = [],
         termVerified = verifyTerm(termNode, terms, localContext, () => {
-          let unifiedAhead = false;
+          let verifiedAhead = false;
 
           const firstTerm = first(terms),
                 term = firstTerm, ///
@@ -19,10 +19,10 @@ export default function unifyTermAgainstType(termNode, typeNode, localContext, u
                 termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
 
           if (termTypeEqualToOrSubTypeOfType) {
-            unifiedAhead = unifyAhead();
+            verifiedAhead = true;
           }
 
-          return unifiedAhead;
+          return verifiedAhead;
         });
 
   termUnifiedAgainstType = termVerified; ///

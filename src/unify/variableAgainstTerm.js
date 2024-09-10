@@ -1,14 +1,12 @@
 "use strict";
 
-import verifyTerm from "../verify/term";
 import TermForVariableSubstitution from "../substitution/termForVariable";
 
-import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable");
 
-export default function unifyVariableAgainstTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB, verifyAhead) {
+export default function unifyVariableAgainstTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB) {
   let variableUnifiedAgainstTerm = false;
 
   const substitution = substitutions.findSubstitution((substitution) => {
@@ -23,62 +21,34 @@ export default function unifyVariableAgainstTerm(variableNodeA, termNodeB, subst
     const substitutionMatchesTermNodeB = substitution.matchTermNode(termNodeB);
 
     if (substitutionMatchesTermNodeB) {
-      const verifiedAhead = verifyAhead();
-
-      variableUnifiedAgainstTerm = verifiedAhead;  ///
+      variableUnifiedAgainstTerm = true;
     }
   } else {
     const variableA = localContextA.findVariableByVariableNode(variableNodeA);
 
     if (variableA !== null) {
-      const terms = [],
-            termUnified = verifyTerm(termNodeB, terms, localContextB, () => {
-              let verifiedAhead = false;
+      const variableB = variableFromTermNode(termNodeB, localContextB);
 
-              const firstTerm = first(terms),
-                    termB = firstTerm, ///
-                    variableB = variableFromTerm(termB, localContextB);
+      if (variableA !== variableB) {
+        const termNode = termNodeB, ///
+              variableNode = variableNodeA, ///
+              termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
+              substitution = termForVariableSubstitution;  ///
 
-              if (variableA === variableB) {
-                verifiedAhead = verifyAhead();
-              } else {
-                const term = termB, ///
-                      variable = variableA, ///
-                      termType = term.getType(),
-                      variableType = variable.getType(),
-                      variableTypeEqualToOrSuperTypeOfTermType = variableType.isEqualToOrSuperTypeOf(termType);
+        substitutions.addSubstitution(substitution, localContextA, localContextB);
+      }
 
-                if (variableTypeEqualToOrSuperTypeOfTermType) {
-                  const termNode = termNodeB, ///
-                        variableNode = variableNodeA, ///
-                        termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
-                        substitution = termForVariableSubstitution;  ///
-
-                  substitutions.addSubstitution(substitution);
-
-                  verifiedAhead = verifyAhead();
-
-                  if (!verifiedAhead) {
-                    substitutions.removeSubstitution(substitution);
-                  }
-                }
-              }
-
-              return verifiedAhead;
-            });
-
-      variableUnifiedAgainstTerm = termUnified;  ///
+      variableUnifiedAgainstTerm = true;
     }
   }
 
   return variableUnifiedAgainstTerm;
 }
 
-function variableFromTerm(term, localContext) {
+function variableFromTermNode(termNode, localContext) {
   let variable = null;
 
-  const termNode = term.getNode(),
-        variableNode = variableNodeQuery(termNode);
+  const variableNode = variableNodeQuery(termNode);
 
   if (variableNode !== null) {
     variable = localContext.findVariableByVariableNode(variableNode);

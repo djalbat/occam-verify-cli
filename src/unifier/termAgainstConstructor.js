@@ -9,12 +9,12 @@ const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type");
 
 class TermAgainstConstructorUnifier extends Unifier {
-  unify(termNode, constructorTermNode, localContext, unifyAhead) {
+  unify(termNode, constructorTermNode, localContext) {
     let termUnifiedAgainstConstructor;
 
     const nonTerminalNodeA = termNode, ///
           nonTerminalNodeB = constructorTermNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext, unifyAhead);
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext);
 
     termUnifiedAgainstConstructor = nonTerminalNodeUnified; ///
 
@@ -25,10 +25,10 @@ class TermAgainstConstructorUnifier extends Unifier {
     {
       nodeQueryA: termNodeQuery,
       nodeQueryB: typeNodeQuery,
-      unify: (termNodeA, typeNodeB, localContext, unifyAhead) => {
+      unify: (termNodeA, typeNodeB, localContext) => {
         const termNode = termNodeA, ///
               typeNode = typeNodeB, ///
-              termUnifiedAgainstType = unifyTermAgainstType(termNode, typeNode, localContext, unifyAhead);
+              termUnifiedAgainstType = unifyTermAgainstType(termNode, typeNode, localContext);
 
         return termUnifiedAgainstType;
       }

@@ -15,7 +15,7 @@ export default function unifyConsequentAgainstStatement(consequentA, statementNo
 
     substitutions.snapshot();
 
-    localContextA.trace(`Unifying the '${statementStringB}' statement against the consequent's '${statementStringA}' statement...`, statementNodeA);
+    localContextB.trace(`Unifying the '${statementStringB}' statement against the consequent's '${statementStringA}' statement...`, statementNodeB);
 
     const statementUnified = consequentA.unifyStatement(statementNodeB, substitutions, localContextA, localContextB);
 
@@ -26,7 +26,7 @@ export default function unifyConsequentAgainstStatement(consequentA, statementNo
         substitutions.rollback();
 
     if (consequentUnified) {
-      localContextA.debug(`...unified the '${statementStringB}' statement against the consequent's '${statementStringA}' statement.`, statementNodeA);
+      localContextB.debug(`...unified the '${statementStringB}' statement against the consequent's '${statementStringA}' statement.`, statementNodeB);
     }
   }
 

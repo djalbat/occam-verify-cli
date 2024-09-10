@@ -17,11 +17,7 @@ class StatementAsCombinatorVerifier extends Verifier {
 
     const nonTerminalNode = statementNode, ///
           childNodes = nonTerminalNode.getChildNodes(),
-          childNodesVerified = this.verifyChildNodes(childNodes, fileContext, () => {
-            const verifiedAhead = true;
-
-            return verifiedAhead;
-          });
+          childNodesVerified = this.verifyChildNodes(childNodes, fileContext);
 
     statementVerifiedAsCombinator = childNodesVerified;  ///
 
@@ -30,39 +26,30 @@ class StatementAsCombinatorVerifier extends Verifier {
 
   static maps = [
     {
+      nodeQuery: statementNodeQuery,
+      verify: (statementNode, localContext) => {
+        const derived = false,
+              assignments = [],
+              statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
+
+        return statementVerified;
+      }
+    },
+    {
       nodeQuery: termNodeQuery,
-      verify: (termNode, localContext, verifyAhead) => {
+      verify: (termNode, localContext) => {
         const terms = [],
-              termVerified = verifyTerm(termNode, terms, localContext, verifyAhead);
+              termVerified = verifyTerm(termNode, terms, localContext);
 
         return termVerified;
       }
     },
     {
       nodeQuery: typeNodeQuery,
-      verify: (typeNode, localContext, verifyAhead) => {
-        const typeVerified = verifyType(typeNode, localContext, verifyAhead);
+      verify: (typeNode, localContext) => {
+        const typeVerified = verifyType(typeNode, localContext);
 
         return typeVerified;
-      }
-    },
-    {
-      nodeQuery: statementNodeQuery,
-      verify: (statementNode, localContext, verifyAhead) => {
-        let statementVerified;
-
-        const derived = false,
-              assignments = [];
-
-        statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
-
-        if (statementVerified) {
-          const verifiedAhead = verifyAhead();
-
-          statementVerified = verifiedAhead;  ///
-        }
-
-        return statementVerified;
       }
     }
   ];

@@ -1,116 +1,56 @@
 "use strict";
 
-import Metavariable from "../metavariable";
-import MetavariableAssignment from "../assignment/metavariable";
-
-import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
 import { nameFromMetavariableNode } from "../utilities/name";
+import { verifyTermAgainstTermType } from "../metavariable";
 
-const termNodeQuery = nodeQuery("/argument/term"),
-      typeNodeQuery = nodeQuery("/argument/type"),
-      argumentNodeQuery = nodeQuery("/metavariable/argument!");
+const termNodeQuery = nodeQuery("/metavariable/argument/term"),
+      typeNodeQuery = nodeQuery("/metavariable/argument/type");
 
-export default function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
+export default function verifyMetavariable(metavariableNode, localContext) {
   let metavariableVerified = false;
 
-  const metavariableString = fileContext.nodeAsString(metavariableNode);
+  const metavariableString = localContext.nodeAsString(metavariableNode);
 
-  fileContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
+  localContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
-  const metavariablePresent = fileContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+  const name = nameFromMetavariableNode(metavariableNode),
+        metavariable = localContext.findMetavariableByName(name);
 
-  if (metavariablePresent) {
-    fileContext.debug(`The metavariable '${metavariableString}' is already present.`, metavariableNode);
+  if (metavariable === null) {
+    localContext.debug(`The metavariable '${metavariableString}' is not present.`, metavariableNode);
   } else {
-    const termTypes = [],
-          metaTypes = [],
-          argumentNode = argumentNodeQuery(metavariableNode),
-          argumentVerified = verifyArgument(argumentNode, termTypes, fileContext),
-          metaTypeVerified = verifyMetaType(metaTypeNode, metaTypes, fileContext);
+    const typeNode = typeNodeQuery(metavariableNode);
 
-    if (argumentVerified && metaTypeVerified) {
-      let termType,
-          metaType;
+    if (typeNode !== null) {
+      const typeString = localContext.nodeAsString(typeNode);
 
-      const firstMetaType = first(metaTypes);
+      localContext.debug(`The '${typeString}' type was found when a term should be present.`, typeNode);
+    } else {
+      const termType = metavariable.getTermType(),
+            termNode = termNodeQuery(metavariableNode),
+            typeString = localContext.nodeAsString(typeNode),
+            termString = localContext.nodeAsString(termNode);
 
-      metaType = firstMetaType; ///
-
-      const termTypesLength = termTypes.length;
-
-      if (termTypesLength === 0) {
-        termType = null;
-      } else {
-        const firstTermType = first(termTypes);
-
-        termType = firstTermType; ///
-      }
-
-      const node = metavariableNode,  ///
-            name = nameFromMetavariableNode(metavariableNode),
-            metavariable = Metavariable.fromNodeNameTermTypeAndMetaType(node, name, termType, metaType),
-            metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
-            metavariableAssigned = metavariableAssignment.assign(fileContext);
-
-      if (metavariableAssigned) {
+      if (false) {
+        ///
+      } else if ((termType === null) && (termNode === null)) {
         metavariableVerified = true;
+      } else if ((termType === null) && (termNode !== null)) {
+        localContext.debug(`The '${termString}' term was found when none is expected.`, termNode);
+      } else if ((termType !== null) && (termNode === null)) {
+        localContext.debug(`No term was found when the metavariable's term type is '${typeString}'.`, termNode);
+      } else {
+        const termVerifiedAgainstTermType = verifyTermAgainstTermType(termNode, termType, localContext);
+
+        metavariableVerified = termVerifiedAgainstTermType; ///
       }
     }
   }
 
   if (metavariableVerified) {
-    fileContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
+    localContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
   }
 
   return metavariableVerified;
-}
-
-function verifyArgument(argumentNode, termTypes, fileContext) {
-  let argumentVerified = false;
-
-  if (argumentNode === null) {
-    argumentVerified = true;
-  } else {
-    const termNode = termNodeQuery(argumentNode);
-
-    if (termNode === null) {
-
-    } else {
-      const termString = fileContext.nodeAsString(termNode);
-
-      fileContext.debug(`The '${termString}' term was found when a type should have been present.`, termNode);
-    }
-    const typeNode = typeNodeQuery(argumentNode);
-
-    if (typeNode !== null) {
-      const type = fileContext.findTypeByTypeNode(typeNode);
-
-      if (type !== null) {
-        const termType = type;  ///
-
-        termTypes.push(termType);
-
-        argumentVerified = true;
-      } else {
-        const typeString = fileContext.nodeAsString(typeNode);
-
-        fileContext.debug(`The '${typeString}' type is not present.`, typeNode);
-      }
-    }
-  }
-
-  return argumentVerified;
-}
-
-function verifyMetaType(metaTypeNode, metaTypes, fileContext) {
-  let metaTypeVerified;
-
-  const metaType = fileContext.findMetaTypeByMetaTypeNode(metaTypeNode);
-
-  metaTypes.push(metaType);
-
-  metaTypeVerified = true;
-
-  return metaTypeVerified;
 }

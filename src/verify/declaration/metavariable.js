@@ -47,14 +47,14 @@ function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
     fileContext.debug(`The metavariable '${metavariableString}' is already present.`, metavariableNode);
   } else {
     const termTypes = [],
-      metaTypes = [],
-      argumentNode = argumentNodeQuery(metavariableNode),
-      argumentVerified = verifyArgument(argumentNode, termTypes, fileContext),
-      metaTypeVerified = verifyMetaType(metaTypeNode, metaTypes, fileContext);
+          metaTypes = [],
+          argumentNode = argumentNodeQuery(metavariableNode),
+          argumentVerified = verifyArgument(argumentNode, termTypes, fileContext),
+          metaTypeVerified = verifyMetaType(metaTypeNode, metaTypes, fileContext);
 
     if (argumentVerified && metaTypeVerified) {
       let termType,
-        metaType;
+          metaType;
 
       const firstMetaType = first(metaTypes);
 
@@ -71,10 +71,10 @@ function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
       }
 
       const node = metavariableNode,  ///
-        name = nameFromMetavariableNode(metavariableNode),
-        metavariable = Metavariable.fromNodeNameTermTypeAndMetaType(node, name, termType, metaType),
-        metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
-        metavariableAssigned = metavariableAssignment.assign(fileContext);
+            name = nameFromMetavariableNode(metavariableNode),
+            metavariable = Metavariable.fromNodeNameTermTypeAndMetaType(node, name, termType, metaType),
+            metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
+            metavariableAssigned = metavariableAssignment.assign(fileContext);
 
       if (metavariableAssigned) {
         metavariableVerified = true;

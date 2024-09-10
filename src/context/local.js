@@ -88,6 +88,8 @@ class LocalContext {
     return lastProofStep;
   }
 
+  getTokens() { return this.context.getTokens(); }
+
   getAxioms() { return this.context.getAxioms(); }
 
   getLemmas() { return this.context.getLemmas(); }

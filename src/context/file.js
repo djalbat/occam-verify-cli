@@ -323,12 +323,12 @@ export default class FileContext {
   findMetavariableByName(name) {
     const metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-        const matches = metavariable.matchName(name);
+            const matches = metavariable.matchName(name);
 
-        if (matches) {
-          return true;
-        }
-      }) || null;
+            if (matches) {
+              return true;
+            }
+          }) || null;
 
     return metavariable;
   }

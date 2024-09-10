@@ -4,7 +4,11 @@ import TermForVariableSubstitution from "../substitution/termForVariable";
 import unifyStatementAgainstStatement from "../unify/statementAtainstStatement";
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
 
-export default function unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB, unifyAhead) {
+import { nodeQuery } from "../utilities/query";
+
+const metavariableNodeQuery = nodeQuery("/statement/metavariable");
+
+export default function unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB) {
   let metavariableUnifiedAgainstStatement = false;
 
   const substitution = substitutions.findSubstitution((substitution) => {
@@ -27,9 +31,7 @@ export default function unifyMetavariableAgainstStatement(metavariableNodeA, sta
             statementUnifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
 
       if (statementUnifiedAgainstStatement) {
-        const unifiedAhead = unifyAhead();
-
-        metavariableUnifiedAgainstStatement = unifiedAhead;  ///
+        metavariableUnifiedAgainstStatement = true;
       }
     } else {
       const substitutionSubstitution = substitution.getSubstitution();
@@ -44,38 +46,26 @@ export default function unifyMetavariableAgainstStatement(metavariableNodeA, sta
               statementUnifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
 
         if (statementUnifiedAgainstStatement) {
-          const unifiedAhead = unifyAhead();
-
-          metavariableUnifiedAgainstStatement = unifiedAhead;  ///
+          metavariableUnifiedAgainstStatement = true;
         }
       } else {
         const substitutionMatchesStatementNodeB = substitution.matchStatementNode(statementNodeB);
 
         if (substitutionMatchesStatementNodeB) {
-          const unifiedAhead = unifyAhead();
-
-          metavariableUnifiedAgainstStatement = unifiedAhead;  ///
+          metavariableUnifiedAgainstStatement = true;
         }
       }
     }
   } else {
-    let unifiedAhead;
-
     const statementNode = statementNodeB, ///
           substitutionNode = substitutionNodeA, ///
           metavariableNode = metavariableNodeA, ///
           statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
           substitution = statementForMetavariableSubstitution;  ///
 
-    substitutions.addSubstitution(substitution);
+    substitutions.addSubstitution(substitution, localContextA, localContextB);
 
-    unifiedAhead = unifyAhead();
-
-    if (!unifiedAhead) {
-      substitutions.removeSubstitution(substitution);
-    }
-
-    metavariableUnifiedAgainstStatement = unifiedAhead;  ///
+    metavariableUnifiedAgainstStatement = true;
   }
 
   return metavariableUnifiedAgainstStatement;

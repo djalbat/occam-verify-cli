@@ -20,12 +20,12 @@ export default function unifyPremiseAgainstProofStep(premiseA, proofStepB, subst
     if (subproofNodeB !== null) {
       const subproofStringB = subproofNodeAsSubproofString(subproofNodeB, localContextB);
 
-      localContextA.trace(`Unifying the proof step's '${subproofStringB}' subproof against the premise's '${statementStringA}' statement...`, statementNodeA);
+      localContextB.trace(`Unifying the '${subproofStringB}' subproof against the premise's '${statementStringA}' statement...`, subproofNodeB);
 
       const subproofUnified = premiseA.unifySubproof(subproofNodeB, substitutions, localContextA, localContextB);
 
       if (subproofUnified) {
-        localContextA.debug(`...unified the proof step's '${subproofStringB}' subproof against the premise's '${statementStringA}' statement.`, statementNodeA);
+        localContextB.debug(`...unified the '${subproofStringB}' subproof against the premise's '${statementStringA}' statement.`, subproofNodeB);
 
         premiseUnified = true;
       }
@@ -34,12 +34,12 @@ export default function unifyPremiseAgainstProofStep(premiseA, proofStepB, subst
     if (statementNodeB !== null) {
       const statementStringB = localContextB.nodeAsString(statementNodeB);
 
-      localContextA.trace(`Unifying the proof step's '${statementStringB}' statement against the premise's '${statementStringA}' statement...`, statementNodeA);
+      localContextB.trace(`Unifying the '${statementStringB}' statement against the premise's '${statementStringA}' statement...`, statementNodeB);
 
       const statementUnified = premiseA.unifyStatement(statementNodeB, substitutions, localContextA, localContextB);
 
       if (statementUnified) {
-        localContextA.debug(`...unified the proof step's '${statementStringB}' statement against the premise's '${statementStringA}' statement.`, statementNodeA);
+        localContextB.debug(`...unified the '${statementStringB}' statement against the premise's '${statementStringA}' statement.`, statementNodeB);
 
         premiseUnified = true;
       }

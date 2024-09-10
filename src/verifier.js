@@ -1,6 +1,7 @@
 "use strict";
 
 import { nodeQuery } from "./utilities/query";
+import { isLastRemainingArgumentFunction } from "./utilities/arguments";
 
 const nonTerminalNodeQuery = nodeQuery("/*");
 
@@ -38,10 +39,23 @@ export default class Verifier {
   verifyChildNodes(childNodes, ...remainingArguments) {
     let childNodesVerify;
 
-    const index = 0,
-          childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodes, ...remainingArguments);
+    const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
 
-    childNodesVerify = childNodesVerifyAhead; ///
+    if (lastRemainingArgumentFunction) {
+      const index = 0,
+            childNodesVerifyAhead = this.verifyChildNodesAhead(index, childNodes, ...remainingArguments);
+
+      childNodesVerify = childNodesVerifyAhead; ///
+    } else {
+      childNodesVerify = childNodes.every((childNode) => {
+        const node = childNode,
+              nodeVerified = this.verifyNode(node, ...remainingArguments);
+
+        if (nodeVerified) {
+          return true;
+        }
+      });
+    }
 
     return childNodesVerify;
   }
@@ -49,10 +63,18 @@ export default class Verifier {
   verifyTerminalNode(terminalNode, ...remainingArguments) {
     let terminalNodeVerified;
 
-    const verifyAhead = remainingArguments.pop(), ///
-          verifiedAhead = verifyAhead();  ///
+    const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
 
-    terminalNodeVerified = verifiedAhead; ///
+    if (lastRemainingArgumentFunction) {
+      const verifyAhead = remainingArguments.pop(), ///
+            verifiedAhead = verifyAhead();
+
+      terminalNodeVerified = verifiedAhead; ///
+
+      remainingArguments.push(verifyAhead);
+    } else {
+      terminalNodeVerified = true;
+    }
 
     return terminalNodeVerified;
   }

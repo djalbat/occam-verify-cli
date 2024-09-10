@@ -72,9 +72,7 @@ function verifyDerivedEquality(equalityNode, assignments, derived, localContext,
 
                 verifiedAhead = verifyAhead();
 
-                if (!verifiedAhead) {
-                  assignments.pop();
-                }
+                assignments.pop();
               }
             }
 
@@ -123,9 +121,7 @@ function verifyStatedEquality(equalityNode, assignments, derived, localContext, 
 
               verifiedAhead = verifyAhead();
 
-              if (!verifiedAhead) {
-                assignments.pop();
-              }
+              assignments.pop();
             }
 
             return verifiedAhead;

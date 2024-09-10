@@ -16,11 +16,7 @@ class MetaLevelVerifier extends Verifier {
     let verified;
 
     const nonTerminalNode = node, ///
-          nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNode, localContext, () => {
-            const verifiedAhead = true;
-
-            return verifiedAhead;
-          });
+          nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNode, localContext);
 
     verified = nonTerminalNodeVerified;  ///
 
@@ -30,25 +26,25 @@ class MetaLevelVerifier extends Verifier {
   static maps = [
     {
       nodeQuery: metavariableNodeQuery,
-      verify: (metavariableNode, localContext, verifyAhead) => {
-        const metavariableVerified = verifyMetavariable(metavariableNode, localContext, verifyAhead);
+      verify: (metavariableNode, localContext) => {
+        const metavariableVerified = verifyMetavariable(metavariableNode, localContext);
 
         return metavariableVerified;
       }
     },
     {
       nodeQuery: variableNodeQuery,
-      verify: (variableNode, localContext, verifyAhead) => {
-        const variableVerified = verifyVariable(variableNode, localContext, verifyAhead);
+      verify: (variableNode, localContext) => {
+        const variableVerified = verifyVariable(variableNode, localContext);
 
         return variableVerified;
       }
     },
     {
       nodeQuery: termNodeQuery,
-      verify: (termNode, localContext, verifyAhead) => {
+      verify: (termNode, localContext) => {
         const terms = [],
-              termVerified = verifyTerm(termNode, terms, localContext, verifyAhead);
+              termVerified = verifyTerm(termNode, terms, localContext);
 
         return termVerified;
       }
