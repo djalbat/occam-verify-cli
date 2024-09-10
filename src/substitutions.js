@@ -58,20 +58,14 @@ export default class Substitutions {
   }
 
   unifyAgainstEquivalences(equivalences, localContextA, localContextB) {
-    const substitutions = this, ///
-          unifiedAgainstEquivalences = this.everySubstitution((substitution) => {
-            const substitutionUnified = equivalences.some((equivalence) => {
-              const substitutionUnifiedAgainstEquivalence = substitution.unifyAgainstEquivalence(equivalence, substitutions, localContextA, localContextB);
+    const unifiedAgainstEquivalences = this.everySubstitution((substitution) => {
+      const substitutions = this, ///
+            substitutionUnifiedAgainstEquivalence = substitution.unifyAgainstEquivalences(equivalences, substitutions, localContextA, localContextB);
 
-              if (substitutionUnifiedAgainstEquivalence) {
-                return true;
-              }
-            });
-
-            if (substitutionUnified) {
-              return true;
-            }
-          });
+      if (substitutionUnifiedAgainstEquivalence) {
+        return true;
+      }
+    });
 
     return unifiedAgainstEquivalences;
   }

@@ -66,7 +66,7 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return matchesMetavariableNode;
   }
 
-  unifyAgainstEquivalence(equivalence, substitutions, localContext) {
+  unifyAgainstEquivalence(equivalence, substitutions, localContextA, localContextB) {
     let unifiedAgainstEquivalence = false;  ///
 
     const metavariableNode = metavariableNodeQuery(this.statementNode);
@@ -79,8 +79,6 @@ export default class StatementForMetavariableSubstitution extends Substitution {
       const { metaLevelUnifier } = shim,
             nodeA = this.metavariableNode, ///
             nodeB = metavariableNode, ///
-            localContextA = localContext, ///
-            localContextB = localContext,  ///
             unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
       unifiedAgainstEquivalence = unified; ///

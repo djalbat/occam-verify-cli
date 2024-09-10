@@ -2,6 +2,8 @@
 
 import equalityUnifier from "./unifier/equality";
 
+import { first, second } from "./utilities/array";
+
 export default class Equality {
   constructor(node, leftTerm, rightTerm) {
     this.node = node;
@@ -35,6 +37,26 @@ export default class Equality {
           equal = equalityUnified;  ///
 
     return equal;
+  }
+
+  static fromTermsAndEqualityNode(terms, equalityNode) {
+    let equality = null;
+
+    const firstTerm = first(terms),
+          secondTerm = second(terms),
+          leftTerm = firstTerm, ///
+          rightTerm = secondTerm, ///
+          leftTermType = leftTerm.getType(),
+          rightTermType = rightTerm.getType(),
+          leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
+
+    if (leftTermTypeComparableToRightTermType) {
+      const node = equalityNode;  ///
+
+      equality = new Equality(node, leftTerm, rightTerm);
+    }
+
+    return equality;
   }
 
   static fromLeftTermRightTermAndEqualityNode(leftTerm, rightTerm, equalityNode) {

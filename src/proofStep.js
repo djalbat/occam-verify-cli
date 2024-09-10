@@ -61,14 +61,14 @@ export default class ProofStep {
 function unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB) {
   let statementUnifiedAgainstStatement = false;
 
-  const nodeA = statementNodeA,  ///
-        nodeB = statementNodeB,  ///
-        statementStringA = localContextA.nodeAsString(statementNodeA),
+  const statementStringA = localContextA.nodeAsString(statementNodeA),
         statementStringB = localContextB.nodeAsString(statementNodeB);
 
   localContextB.trace(`Unifying the '${statementStringB}' statement against the '${statementStringA}' statement...`, statementNodeB);
 
   const substitutions = Substitutions.fromNothing(),
+        nodeA = statementNodeA,  ///
+        nodeB = statementNodeB,  ///
         unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
   if (unified) {

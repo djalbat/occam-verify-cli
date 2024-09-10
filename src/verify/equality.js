@@ -4,13 +4,11 @@ import Equality from "../equality";
 import verifyTerms from "../verify/terms";
 import EqualityAssignment from "../assignment/equality";
 
-import { nodeQuery } from "../utilities/query";
-import { first, second } from "../utilities/array";
+import { nodesQuery } from "../utilities/query";
 
-const leftTermNodeQuery = nodeQuery("/equality/term[0]"),
-      rightTermNodeQuery = nodeQuery("/equality/term[1]");
+const termNodesQuery = nodesQuery("/equality/term");
 
-export default function verifyEquality(equalityNode, assignments, derived, localContext, verifyAhead) {
+export default function verifyEquality(equalityNode, assignments, derived, localContext) {
   let equalityVerified;
 
   const equalityString = localContext.nodeAsString(equalityNode);
@@ -23,7 +21,7 @@ export default function verifyEquality(equalityNode, assignments, derived, local
   ];
 
   equalityVerified = verifyEqualityFunctions.some((verifyEqualityFunction) => {
-    const equalityVerified = verifyEqualityFunction(equalityNode, assignments, derived, localContext, verifyAhead);
+    const equalityVerified = verifyEqualityFunction(equalityNode, assignments, derived, localContext);
 
     if (equalityVerified) {
       return true;
@@ -37,7 +35,7 @@ export default function verifyEquality(equalityNode, assignments, derived, local
   return equalityVerified;
 }
 
-function verifyDerivedEquality(equalityNode, assignments, derived, localContext, verifyAhead) {
+function verifyDerivedEquality(equalityNode, assignments, derived, localContext) {
   let derivedEqualityVerified = false;
 
   if (derived) {
@@ -46,20 +44,11 @@ function verifyDerivedEquality(equalityNode, assignments, derived, localContext,
     localContext.trace(`Verifying the '${equalityString}' derived equality...`, equalityNode);
 
     const terms = [],
-          leftTermNode = leftTermNodeQuery(equalityNode),
-          rightTermNode = rightTermNodeQuery(equalityNode),
-          termNodes = [
-            leftTermNode,
-            rightTermNode
-          ],
+          termNodes = termNodesQuery(equalityNode),
           termsVerified = verifyTerms(termNodes, terms, localContext, () => {
             let verifiedAhead = false;
 
-            const firstTerm = first(terms),
-                  secondTerm = second(terms),
-                  leftTerm = firstTerm, ///
-                  rightTerm = secondTerm, ///
-                  equality = Equality.fromLeftTermRightTermAndEqualityNode(leftTerm, rightTerm, equalityNode);
+            const equality = Equality.fromTermsAndEqualityNode(terms, equalityNode);
 
             if (equality !== null) {
               const equalityEqual = equality.isEqual(localContext);
@@ -70,9 +59,7 @@ function verifyDerivedEquality(equalityNode, assignments, derived, localContext,
 
                 assignments.push(assignment);
 
-                verifiedAhead = verifyAhead();
-
-                assignments.pop();
+                verifiedAhead = true;
               }
             }
 
@@ -89,7 +76,7 @@ function verifyDerivedEquality(equalityNode, assignments, derived, localContext,
   return derivedEqualityVerified;
 }
 
-function verifyStatedEquality(equalityNode, assignments, derived, localContext, verifyAhead) {
+function verifyStatedEquality(equalityNode, assignments, derived, localContext) {
   let statedEqualityVerified = false;
 
   if (!derived) {
@@ -98,20 +85,11 @@ function verifyStatedEquality(equalityNode, assignments, derived, localContext, 
     localContext.trace(`Verifying the '${equalityString}' stated equality...`, equalityNode);
 
     const terms = [],
-          leftTermNode = leftTermNodeQuery(equalityNode),
-          rightTermNode = rightTermNodeQuery(equalityNode),
-          termNodes = [
-            leftTermNode,
-            rightTermNode
-          ],
+          termNodes = termNodesQuery(equalityNode),
           termsVerified = verifyTerms(termNodes, terms, localContext, () => {
             let verifiedAhead = false;
 
-            const firstTerm = first(terms),
-                  secondTerm = second(terms),
-                  leftTerm = firstTerm, ///
-                  rightTerm = secondTerm, ///
-                  equality = Equality.fromLeftTermRightTermAndEqualityNode(leftTerm, rightTerm, equalityNode);
+            const equality = Equality.fromTermsAndEqualityNode(terms, equalityNode);
 
             if (equality !== null) {
               const equalityAssignment = EqualityAssignment.fromEquality(equality),
@@ -119,9 +97,7 @@ function verifyStatedEquality(equalityNode, assignments, derived, localContext, 
 
               assignments.push(assignment);
 
-              verifiedAhead = verifyAhead();
-
-              assignments.pop();
+              verifiedAhead = true;
             }
 
             return verifiedAhead;

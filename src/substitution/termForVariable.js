@@ -51,7 +51,7 @@ export default class TermForVariableSubstitution extends Substitution {
     return matchesVariableNode;
   }
 
-  unifyAgainstEquivalence(equivalence, substitutions, localContext) {
+  unifyAgainstEquivalence(equivalence, substitutions, localContextA, localContextB) {
     let unifiedAgainstEquivalence;
 
     const equivalenceMatchesVariableNode = equivalence.matchVariableNode(this.variableNode);

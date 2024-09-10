@@ -24,4 +24,16 @@ export default class Substitution {
 
     return matchesMetavariableNode;
   }
+
+  unifyAgainstEquivalences(equivalences, substitutions, localContextA, localContextB) {
+    const unifiedAgainstEquivalences = equivalences.some((equivalence) => {
+      const substitutionUnifiedAgainstEquivalence = this.unifyAgainstEquivalence(equivalence, substitutions, localContextA, localContextB);
+
+      if (substitutionUnifiedAgainstEquivalence) {
+        return true;
+      }
+    });
+
+    return unifiedAgainstEquivalences;
+  }
 }

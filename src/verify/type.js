@@ -1,7 +1,7 @@
 "use strict";
 
-export default function verifyType(typeNode, localContext, verifyAhead) {
-  let typeVerified = false;
+export default function verifyType(typeNode, localContext) {
+  let typeVerified;
 
   const typeString = localContext.nodeAsString(typeNode);
 
@@ -9,11 +9,7 @@ export default function verifyType(typeNode, localContext, verifyAhead) {
 
   const typePresent = localContext.isTypePresentByTypeNode(typeNode);
 
-  if (typePresent) {
-    const verifiedAhead = verifyAhead();
-
-    typeVerified = verifiedAhead; ///
-  }
+  typeVerified = typePresent; ///
 
   if (typeVerified) {
     localContext.debug(`...verified the '${typeString}' type.`, typeNode);

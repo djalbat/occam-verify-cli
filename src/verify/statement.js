@@ -98,11 +98,7 @@ function verifyStatementAsEquality(statementNode, assignments, derived, localCon
 
     localContext.trace(`Verifying the '${statementString}' statement as an equality...`, statementNode);
 
-    const equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext, () => {
-            const verifiedAhead = true;
-
-            return verifiedAhead;
-          });
+    const equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext);
 
     statementVerifiedAsEquality = equalityVerified; ///
 
