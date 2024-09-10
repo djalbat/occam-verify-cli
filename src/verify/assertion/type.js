@@ -6,6 +6,7 @@ import VariableAssignment from "../../assignment/variable";
 
 import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
+import local from "../../context/local";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term!"),
       typeNodeQuery = nodeQuery("/typeAssertion/type!"),
@@ -46,39 +47,43 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, loc
 
     localContext.trace(`Verifying the '${typeAssertionString}' derived type assertion...`, typeAssertionNode);
 
+    const typeNode = typeNodeQuery(typeAssertionNode),
+          type = localContext.findTypeByTypeNode(typeNode);
+
+    if (type === null) {
+      const typeString = localContext.nodeAsString(typeNode);
+
+      localContext.debug(`The '${typeString}' type is not present.`, typeNode);
+    }
+
     const terms = [],
           termNode = termNodeQuery(typeAssertionNode),
           termVerified = verifyTerm(termNode, terms, localContext, () => {
             let verifiedAhead = false;
 
-            const typeNode = typeNodeQuery(typeAssertionNode),
-                  type = localContext.findTypeByTypeNode(typeNode);
+            const firstTerm = first(terms),
+                  term = firstTerm, ///
+                  termType = localContext.getTermType(term),
+                  typeEqualToOrSuperTypeOfTermType = type.isEqualToOrSuperTypeOf(termType);
 
-            if (type !== null) {
-              const firstTerm = first(terms),
-                    term = firstTerm, ///
-                    termType = localContext.getTermType(term),
-                    typeEqualToOrSuperTypeOfTermType = type.isEqualToOrSuperTypeOf(termType);
+            if (typeEqualToOrSuperTypeOfTermType) {
+              const variableNode = variableNodeQuery(termNode);
 
-              if (typeEqualToOrSuperTypeOfTermType) {
-                const variableNode = variableNodeQuery(termNode);
+              if (variableNode === null) {
+                verifiedAhead = true;
+              } else {
+                let variable;
 
-                if (variableNode === null) {
-                  verifiedAhead = true;
-                } else {
-                  let variable = localContext.findVariableByVariableNode(variableNode);
+                variable = localContext.findVariableByVariableNode(variableNode);
 
-                  variable = Variable.fromVariableAndType(variable, type);
+                variable = Variable.fromVariableAndType(variable, type);  ///
 
-                  const variableAssignment = VariableAssignment.fromVariable(variable),
-                        assignment = variableAssignment;  ///
+                const variableAssignment = VariableAssignment.fromVariable(variable),
+                      assignment = variableAssignment;  ///
 
-                  assignments.push(assignment);
+                assignments.push(assignment);
 
-                  verifiedAhead = true;
-
-                  assignments.pop();
-                }
+                verifiedAhead = true;
               }
             }
 
@@ -103,39 +108,43 @@ function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, loca
 
     localContext.trace(`Verifying the '${typeAssertionString}' stated type assertion...`, typeAssertionNode);
 
+    const typeNode = typeNodeQuery(typeAssertionNode),
+          type = localContext.findTypeByTypeNode(typeNode);
+
+    if (type === null) {
+      const typeString = localContext.nodeAsString(typeNode);
+
+      localContext.debug(`The '${typeString}' type is not present.`, typeNode);
+    }
+
     const terms = [],
           termNode = termNodeQuery(typeAssertionNode),
           termVerified = verifyTerm(termNode, terms, localContext, () => {
             let verifiedAhead = false;
 
-            const typeNode = typeNodeQuery(typeAssertionNode),
-                  type = localContext.findTypeByTypeNode(typeNode);
+            const firstTerm = first(terms),
+                  term = firstTerm, ///
+                  termType = term.getType(),
+                  typeEqualToOrSubTypeOfTermType = type.isEqualToOrSubTypeOf(termType);
 
-            if (type !== null) {
-              const firstTerm = first(terms),
-                    term = firstTerm, ///
-                    termType = term.getType(),
-                    typeEqualToOrSubTypeOfTermType = type.isEqualToOrSubTypeOf(termType);
+            if (typeEqualToOrSubTypeOfTermType) {
+              const variableNode = variableNodeQuery(termNode);
 
-              if (typeEqualToOrSubTypeOfTermType) {
-                const variableNode = variableNodeQuery(termNode);
+              if (variableNode === null) {
+                verifiedAhead = true;
+              } else {
+                let variable;
 
-                if (variableNode === null) {
-                  verifiedAhead = true;
-                } else {
-                  let variable = localContext.findVariableByVariableNode(variableNode);
+                variable = localContext.findVariableByVariableNode(variableNode);
 
-                  variable = Variable.fromVariableAndType(variable, type);
+                variable = Variable.fromVariableAndType(variable, type);  ///
 
-                  const variableAssignment = VariableAssignment.fromVariable(variable),
-                        assignment = variableAssignment;  ///
+                const variableAssignment = VariableAssignment.fromVariable(variable),
+                      assignment = variableAssignment;  ///
 
-                  assignments.push(assignment);
+                assignments.push(assignment);
 
-                  verifiedAhead = true;
-
-                  assignments.pop();
-                }
+                verifiedAhead = true;
               }
             }
 

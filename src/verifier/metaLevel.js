@@ -44,7 +44,11 @@ class MetaLevelVerifier extends Verifier {
       nodeQuery: termNodeQuery,
       verify: (termNode, localContext) => {
         const terms = [],
-              termVerified = verifyTerm(termNode, terms, localContext);
+              termVerified = verifyTerm(termNode, terms, localContext, () => {
+                const verifiedAhead = true;
+
+                return verifiedAhead;
+              });
 
         return termVerified;
       }
