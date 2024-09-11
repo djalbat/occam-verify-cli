@@ -1,6 +1,6 @@
 "use strict";
 
-export default function initialiseReleaseContext(dependency, dependentName, dependentReleased, context) {
+export default function verifyReleaseContext(dependency, dependentName, dependentReleased, context) {
   let releaseContextInitialised = false;
 
   const { releaseContextMap } = context,
@@ -11,11 +11,11 @@ export default function initialiseReleaseContext(dependency, dependentName, depe
   if (releaseContext === null) {
     const { log } = context;
 
-    log.error(`Unable to initialise the '${dependencyName}' dependency's context because it has not been created.`);
+    log.error(`Unable to verify the '${dependencyName}' dependency's context because it has not been created.`);
   } else {
-    const initialised = releaseContext.isInitialised();
+    const verified = releaseContext.isInitialised();
 
-    if (initialised) {
+    if (verified) {
       releaseContextInitialised = true;
     } else {
       const released = releaseContext.isReleased();
@@ -23,7 +23,7 @@ export default function initialiseReleaseContext(dependency, dependentName, depe
       if (!released && dependentReleased) {
         const { log } = context;
 
-        log.error(`Unable to initialise the '${dependencyName}' dependency's context because its '${dependentName}' dependent is a package.`);
+        log.error(`Unable to verify the '${dependencyName}' dependency's context because its '${dependentName}' dependent is a package.`);
       } else {
         const dependencies = releaseContext.getDependencies();
 
@@ -32,7 +32,7 @@ export default function initialiseReleaseContext(dependency, dependentName, depe
         dependentReleased = released;  ///
 
         releaseContextInitialised = dependencies.everyDependency((dependency) => {  ///
-          const releaseContextInitialised = initialiseReleaseContext(dependency, dependentName, dependentReleased, context);
+          const releaseContextInitialised = verifyReleaseContext(dependency, dependentName, dependentReleased, context);
 
           if (releaseContextInitialised) {
             return true;
