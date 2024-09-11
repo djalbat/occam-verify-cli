@@ -115,43 +115,43 @@ function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, loca
       const typeString = localContext.nodeAsString(typeNode);
 
       localContext.debug(`The '${typeString}' type is not present.`, typeNode);
-    }
+    } else {
+      const terms = [],
+            termNode = termNodeQuery(typeAssertionNode),
+            termVerified = verifyTerm(termNode, terms, localContext, () => {
+              let verifiedAhead = false;
 
-    const terms = [],
-          termNode = termNodeQuery(typeAssertionNode),
-          termVerified = verifyTerm(termNode, terms, localContext, () => {
-            let verifiedAhead = false;
+              const firstTerm = first(terms),
+                    term = firstTerm, ///
+                    termType = term.getType(),
+                    typeEqualToOrSubTypeOfTermType = type.isEqualToOrSubTypeOf(termType);
 
-            const firstTerm = first(terms),
-                  term = firstTerm, ///
-                  termType = term.getType(),
-                  typeEqualToOrSubTypeOfTermType = type.isEqualToOrSubTypeOf(termType);
+              if (typeEqualToOrSubTypeOfTermType) {
+                const variableNode = variableNodeQuery(termNode);
 
-            if (typeEqualToOrSubTypeOfTermType) {
-              const variableNode = variableNodeQuery(termNode);
+                if (variableNode === null) {
+                  verifiedAhead = true;
+                } else {
+                  let variable;
 
-              if (variableNode === null) {
-                verifiedAhead = true;
-              } else {
-                let variable;
+                  variable = localContext.findVariableByVariableNode(variableNode);
 
-                variable = localContext.findVariableByVariableNode(variableNode);
+                  variable = Variable.fromVariableAndType(variable, type);  ///
 
-                variable = Variable.fromVariableAndType(variable, type);  ///
+                  const variableAssignment = VariableAssignment.fromVariable(variable),
+                        assignment = variableAssignment;  ///
 
-                const variableAssignment = VariableAssignment.fromVariable(variable),
-                      assignment = variableAssignment;  ///
+                  assignments.push(assignment);
 
-                assignments.push(assignment);
-
-                verifiedAhead = true;
+                  verifiedAhead = true;
+                }
               }
-            }
 
-            return verifiedAhead;
-          });
+              return verifiedAhead;
+            });
 
-    statedTypeAssertionVerified = termVerified; ///
+      statedTypeAssertionVerified = termVerified; ///
+    }
 
     if (statedTypeAssertionVerified) {
       localContext.debug(`...verified the '${typeAssertionString}' stated type assertion.`, typeAssertionNode);
