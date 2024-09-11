@@ -28,18 +28,20 @@ export default function verifyMetavariable(metavariableNode, localContext) {
       localContext.debug(`The '${typeString}' type was found when a term should be present.`, typeNode);
     } else {
       const termType = metavariable.getTermType(),
-            termNode = termNodeQuery(metavariableNode),
-            typeString = localContext.nodeAsString(typeNode),
-            termString = localContext.nodeAsString(termNode);
+            termNode = termNodeQuery(metavariableNode);
 
       if (false) {
         ///
       } else if ((termType === null) && (termNode === null)) {
         metavariableVerified = true;
       } else if ((termType === null) && (termNode !== null)) {
+        const termString = localContext.nodeAsString(termNode);
+
         localContext.debug(`The '${termString}' term was found when none is expected.`, termNode);
       } else if ((termType !== null) && (termNode === null)) {
-        localContext.debug(`No term was found when the metavariable's term type is '${typeString}'.`, termNode);
+        const termTypeName = termType.getName();
+
+        localContext.debug(`No term was found when the metavariable's term type is '${termTypeName}'.`, termNode);
       } else {
         const termVerifiedAgainstTermType = verifyTermAgainstTermType(termNode, termType, localContext);
 

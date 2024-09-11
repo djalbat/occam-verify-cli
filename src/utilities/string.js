@@ -3,23 +3,21 @@
 import { COMMA, EMPTY_STRING } from "../constants";
 
 export function nodeAsString(node, tokens) {
-  let string = EMPTY_STRING;
+  let string;
 
-  if (node !== null) {
-    const nodeTerminalNode = node.isTerminalNode();
+  const nodeTerminalNode = node.isTerminalNode();
 
-    if (nodeTerminalNode) {
-      const terminalNode = node;  ///
+  if (nodeTerminalNode) {
+    const terminalNode = node;  ///
 
-      string = terminalNodeAsString(terminalNode);
-    } else {
-      const nonTerminalNode = node; ///
+    string = terminalNodeAsString(terminalNode);
+  } else {
+    const nonTerminalNode = node; ///
 
-      string = nonTerminalNodeAsString(nonTerminalNode, tokens);
-    }
-
-    string = string.replace(/\s+$/, EMPTY_STRING);
+    string = nonTerminalNodeAsString(nonTerminalNode, tokens);
   }
+
+  string = string.replace(/\s+$/, EMPTY_STRING);
 
   return string;
 }
@@ -46,35 +44,20 @@ export function terminalNodeAsString(terminalNode) {
 }
 
 export function nonTerminalNodeAsString(nonTerminalNode, tokens) {
-  let string;
+  const lastSignificantTokenIndex = nonTerminalNode.getLastSignificantTokenIndex(tokens),
+        firstSignificantTokenIndex = nonTerminalNode.getFirstSignificantTokenIndex(tokens),
+        start = firstSignificantTokenIndex, ///
+        end = lastSignificantTokenIndex + 1;
 
-  if (tokens === null) {
-    const childNodes = nonTerminalNode.getChildNodes();
+  tokens = tokens.slice(start, end);  ///
 
-    string = childNodes.reduce((string, childNode) => {
-      const node = childNode, ///
-            nodeString = nodeAsString(node, tokens);
+  const string = tokens.reduce((string, token) => {
+    const content = token.getContent();
 
-      string = `${string}${nodeString}`;
+    string = `${string}${content}`;
 
-      return string;
-    }, EMPTY_STRING);
-  } else {
-    const lastSignificantTokenIndex = nonTerminalNode.getLastSignificantTokenIndex(tokens),
-          firstSignificantTokenIndex = nonTerminalNode.getFirstSignificantTokenIndex(tokens),
-          start = firstSignificantTokenIndex, ///
-          end = lastSignificantTokenIndex + 1;
-
-    tokens = tokens.slice(start, end);  ///
-
-    string = tokens.reduce((string, token) => {
-      const content = token.getContent();
-
-      string = `${string}${content}`;
-
-      return string;
-    }, EMPTY_STRING);
-  }
+    return string;
+  }, EMPTY_STRING);
 
   return string;
 }

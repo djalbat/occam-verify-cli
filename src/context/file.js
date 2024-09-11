@@ -872,7 +872,8 @@ export default class FileContext {
     const file = releaseContext.getFile(filePath),
           lexer = releaseContext.getLexer(),
           parser = releaseContext.getParser(),
-          content = file.getContent(),
+          fileContent = file.getContent(),
+          content = fileContent,  ///
           tokens = lexer.tokenise(content),
           node = parser.parse(tokens),
           types = [],
