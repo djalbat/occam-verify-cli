@@ -16,23 +16,23 @@ export default class Declaration {
     return this.statementNode;
   }
 
-  matchSubstitution(substitution) {
+  unifySubstitution(substitution) {
     const statementNode = substitution.getStatementNode(),
           metavariableNode = substitution.getMetavariableNode(),
-          matchesStatementNode = this.matchStatementNode(statementNode),
-          matchesMetavariableNode = this.matchMetavariableNode(metavariableNode),
-          matchesSubstitution = (matchesMetavariableNode && matchesStatementNode);
+          statementUnified = this.unifyStatement(statementNode),
+          metavariableUnified = this.unifyMetavariable(metavariableNode),
+          substitutionUnified = (metavariableUnified && statementUnified);
 
-    return matchesSubstitution;
+    return substitutionUnified;
   }
 
-  matchMetavariableNode(metavariableNode) {
+  unifyMetavariable(metavariableNode) {
     const matchesMetavariableNode = this.metavariableNode.match(metavariableNode);
 
     return matchesMetavariableNode;
   }
 
-  matchStatementNode(statementNode) {
+  unifyStatement(statementNode) {
     const statementNodeA = statementNode, ///
           statementNodeB = this.statementNode,  ///
           statementMatches = matchStatementModuloBrackets(statementNodeA, statementNodeB),
@@ -41,13 +41,13 @@ export default class Declaration {
     return matchesStatementNode;
   }
 
-  matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
+  unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) {
     const consequent = metaLemmaMetatheorem.getConsequent(),
           statementNode = consequent.getStatementNode(),
           matches = this.statementNode.match(statementNode),
-          matchesMetaLemmaOrMetaTheorem = matches;  ///
+          metaLemmaOrMetaTheoremUnified = matches;  ///
 
-    return matchesMetaLemmaOrMetaTheorem;
+    return metaLemmaOrMetaTheoremUnified;
   }
 
   static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {

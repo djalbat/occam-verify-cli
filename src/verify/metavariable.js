@@ -2,7 +2,7 @@
 
 import { nodeQuery } from "../utilities/query";
 import { nameFromMetavariableNode } from "../utilities/name";
-import { verifyTermAgainstTermType } from "../metavariable";
+import { unifyTermAgainstTermType } from "../metavariable";
 
 const termNodeQuery = nodeQuery("/metavariable/argument/term"),
       typeNodeQuery = nodeQuery("/metavariable/argument/type");
@@ -43,9 +43,9 @@ export default function verifyMetavariable(metavariableNode, localContext) {
 
         localContext.debug(`No term was found when the metavariable's term type is '${termTypeName}'.`, termNode);
       } else {
-        const termVerifiedAgainstTermType = verifyTermAgainstTermType(termNode, termType, localContext);
+        const termUnifiedAgainstTermType = unifyTermAgainstTermType(termNode, termType, localContext);
 
-        metavariableVerified = termVerifiedAgainstTermType; ///
+        metavariableVerified = termUnifiedAgainstTermType; ///
       }
     }
   }

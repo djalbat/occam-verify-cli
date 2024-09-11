@@ -9,7 +9,7 @@ const metavariableNodeQuery = nodeQuery("/statement/metavariable"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type!");
 
 export default function unifyStatementAgainstMetaType(statementNode, metaTypeNode, localContext) {
-  let statementVerifiedAgainstMetaType = false;
+  let statementUnifiedAgainstMetaType = false;
 
   const metaTypeTerminalNode = metaTypeTerminalNodeQuery(metaTypeNode),
         metaTypeTerminalNodeContent = metaTypeTerminalNode.getContent(),
@@ -26,7 +26,7 @@ export default function unifyStatementAgainstMetaType(statementNode, metaTypeNod
           const metavariableMetaTypeName = metavariable.getMetaTypeName();
 
           if (metavariableMetaTypeName === metaTypeName) {
-            statementVerifiedAgainstMetaType = true;
+            statementUnifiedAgainstMetaType = true;
           }
         }
       }
@@ -40,11 +40,11 @@ export default function unifyStatementAgainstMetaType(statementNode, metaTypeNod
             assignments = [],
             statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 
-      statementVerifiedAgainstMetaType = statementVerified;
+      statementUnifiedAgainstMetaType = statementVerified;
 
       break;
     }
   }
 
-  return statementVerifiedAgainstMetaType;
+  return statementUnifiedAgainstMetaType;
 }

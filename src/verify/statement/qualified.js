@@ -194,13 +194,13 @@ function unifyQualifiedStatementAAgainstReference(qualifiedStatementNode, substi
           statementNodeB = statementNode, ///
           substitutionNodeA = null,
           metavariableNodeA = metavariableNode, ///
-          metavariableVerifiedAgainstStatement = unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB, () => {
+          metavariableUnifiedAgainstStatement = unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;
           });
 
-    qualifiedStatementUnifiedAgainstReference = metavariableVerifiedAgainstStatement; ///
+    qualifiedStatementUnifiedAgainstReference = metavariableUnifiedAgainstStatement; ///
   }
 
   if (qualifiedStatementUnifiedAgainstReference) {

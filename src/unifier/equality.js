@@ -25,14 +25,14 @@ class EqualityUnifier extends Unifier {
       nodeQueryA: termNodeQuery,
       nodeQueryB: termNodeQuery,
       unify: (termNodeA, termNodeB, localContext) => {
-        let termVerifiedAgainstTerm;
+        let termUnifiedAgainstTerm;
 
         const leftTermNode = termNodeA, ///
               rightTermNode = termNodeB;  ///
 
-        termVerifiedAgainstTerm = unifyTermAgainstTerm(leftTermNode, rightTermNode, localContext);
+        termUnifiedAgainstTerm = unifyTermAgainstTerm(leftTermNode, rightTermNode, localContext);
 
-        if (!termVerifiedAgainstTerm) {
+        if (!termUnifiedAgainstTerm) {
           const nonTerminalNodeA = termNodeA, ///
                 nonTerminalNodeB = termNodeB, ///
                 nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
@@ -41,10 +41,10 @@ class EqualityUnifier extends Unifier {
                 childNodesB = nonTerminalNodeBChildNodes, ///
                 childNodesVerified = equalityUnifier.unifyChildNodes(childNodesA, childNodesB, localContext);
 
-          termVerifiedAgainstTerm = childNodesVerified; ///
+          termUnifiedAgainstTerm = childNodesVerified; ///
         }
 
-        return termVerifiedAgainstTerm;
+        return termUnifiedAgainstTerm;
       }
     }
   ];

@@ -70,10 +70,10 @@ function verifyDerivedJudgement(judgementNode, assignments, derived, localContex
                   metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
 
             if (metaLemmaMetatheorem !== null) {
-              const declarationMatchesMetaLemmaMetatheorem = declaration.matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem),
-                    judgementMatchesMetaLemmaMetatheorem = judgement.matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem);
+              const metaLemmaMetatheoremUnifiedAgainstDeclaration = declaration.unifyMetaLemmaOrMetaTheorem(metaLemmaMetatheorem),
+                    metaLemmaMetatheoremUnifiedAgainstJudgement = judgement.unifyMetaLemmaOrMetaTheorem(metaLemmaMetatheorem);
 
-              derivedJudgementVerified = (declarationMatchesMetaLemmaMetatheorem && judgementMatchesMetaLemmaMetatheorem);
+              derivedJudgementVerified = (metaLemmaMetatheoremUnifiedAgainstDeclaration && metaLemmaMetatheoremUnifiedAgainstJudgement);
             } else {
               const metavariableString = localContext.nodeAsString(metavariableNode);
 

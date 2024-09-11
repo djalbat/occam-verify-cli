@@ -36,29 +36,30 @@ export default class Frame {
     push(this.declarations, declarations);
   }
 
-  matchSubstitution(substitution) {
-    const matchesSubstitution = this.declarations.some((declaration) => {
-      const declarationMatchesSubstitution = declaration.matchSubstitution(substitution);
+  unifySubstitution(substitution) {
+    const substitutionUnified = this.declarations.some((declaration) => {
+      const substitutionUnifiedAgainstDeclaration = declaration.unifySubstitution(substitution);
 
-      if (declarationMatchesSubstitution) {
+      if (substitutionUnifiedAgainstDeclaration) {
         return true;
       }
     });
 
-    return matchesSubstitution;
+    return substitutionUnified;
   }
 
-  matchMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
+  unifyMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
     const substitutions = metaLemmaMetatheorem.getSubstitutions(),
-          matchesMetaLemmaOrMetaTheorem = substitutions.everySubstitution((substitution) => {
-            const frameMatchesSubstitution = this.matchSubstitution(substitution);
+          substitutionsUnified = substitutions.everySubstitution((substitution) => {
+            const substitutionUnified = this.unifySubstitution(substitution);
 
-            if (frameMatchesSubstitution) {
+            if (substitutionUnified) {
               return true;
             }
-          });
+          }),
+          metaLemmaOrMetaTheoremUnified = substitutionsUnified; ///
 
-    return matchesMetaLemmaOrMetaTheorem;
+    return metaLemmaOrMetaTheoremUnified;
   }
 
   static fromDeclarations(declarations) {

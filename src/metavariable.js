@@ -65,9 +65,9 @@ export default class Metavariable {
         } else if ((termNode === null) && (this.termType === null)) {
           matchesNode = true;
         } else if ((termNode !== null) && (this.termType !== null)) {
-          const termVerifiedAgainstTermType = verifyTermAgainstTermType(termNode, this.termType, localContext);
+          const termUnifiedAgainstTermType = unifyTermAgainstTermType(termNode, this.termType, localContext);
 
-          matchesNode = termVerifiedAgainstTermType;  ///
+          matchesNode = termUnifiedAgainstTermType;  ///
         }
       }
     }
@@ -128,28 +128,29 @@ export default class Metavariable {
   }
 }
 
-export function verifyTermAgainstTermType(termNode, termType, localContext) {
-  let termVerifiedAgainstTermType;
+export function unifyTermAgainstTermType(termNode, termType, localContext) {
+  let termUnifiedAgainstTermType;
 
   const type = termType,  ///
-        terms = [];
+        terms = [],
+        termVerified = verifyTerm(termNode, terms, localContext, () => {
+          let verifiedAhead = false;
 
-  termVerifiedAgainstTermType = verifyTerm(termNode, terms, localContext, () => {
-    let verifiedAhead = false;
+          const firstTerm = first(terms),
+                term = firstTerm, ///
+                termType = term.getType(),
+                termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
 
-    const firstTerm = first(terms),
-          term = firstTerm, ///
-          termType = term.getType(),
-          termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
+          if (termTypeEqualToOrSubTypeOfType) {
+            verifiedAhead = true;
+          }
 
-    if (termTypeEqualToOrSubTypeOfType) {
-      verifiedAhead = true;
-    }
+          return verifiedAhead;
+        });
 
-    return verifiedAhead;
-  });
+  termUnifiedAgainstTermType = termVerified;  ///
 
-  return termVerifiedAgainstTermType;
+  return termUnifiedAgainstTermType;
 }
 
 function termTypeFromMetavariableNode(metavariableNode, fileContext) {

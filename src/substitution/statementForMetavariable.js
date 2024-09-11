@@ -38,14 +38,14 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return node;
   }
 
-  matchStatementNode(statementNode, substitutions, localContextA, localContextB) {
+  unifyStatement(statementNode, substitutions, localContextA, localContextB) {
     let statementNodeMatches;
 
     const substitution = this.substitution, ///
           statementNodeA = statementNode,  ///
           statementNodeB = this.statementNode; ///
 
-    statementNodeMatches = matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
+    statementNodeMatches = unifyStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
 
     if (!statementNodeMatches) {
       const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
@@ -53,7 +53,7 @@ export default class StatementForMetavariableSubstitution extends Substitution {
       if (bracketedStatementChildNode !== null) {
         const statementNodeA = bracketedStatementChildNode; ///
 
-        statementNodeMatches = matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
+        statementNodeMatches = unifyStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
       }
     }
 
@@ -153,19 +153,18 @@ export default class StatementForMetavariableSubstitution extends Substitution {
   }
 }
 
-function matchStatementNode(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB) {
-  let statementNodeMatches;
+function unifyStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB) {
+  let statementUnified;
 
   if (substitution === null) {
     const statementNodeAMatchesStatementNodeB = statementNodeB.match(statementNodeA);
 
-    statementNodeMatches = statementNodeAMatchesStatementNodeB; ///
+    statementUnified = statementNodeAMatchesStatementNodeB; ///
   } else {
-    const statementVerifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
+    const statementUnifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
 
-    statementNodeMatches = statementVerifiedAgainstStatement; ///
+    statementUnified = statementUnifiedAgainstStatement; ///
   }
 
-  return statementNodeMatches;
-
+  return statementUnified;
 }
