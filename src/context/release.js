@@ -4,15 +4,15 @@ import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import FileContext from "./file";
 
-import { push } from "../utilities/array";
 import { objectType } from "../type";
+import { tail, push, leftDifference } from "../utilities/array";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(log, json, name, entries, lexer, parser, verified, customGrammar, fileContexts, dependencyReleaseContexts) {
+  constructor(log, json, name, entries, lexer, parser, verified, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts) {
     this.log = log;
     this.json = json;
     this.name = name;
@@ -20,8 +20,9 @@ export default class ReleaseContext {
     this.lexer = lexer;
     this.parser = parser;
     this.verified = verified;
-    this.customGrammar = customGrammar;
     this.fileContexts = fileContexts;
+    this.customGrammar = customGrammar;
+    this.loggingDisabled = loggingDisabled;
     this.dependencyReleaseContexts = dependencyReleaseContexts;
   }
 
@@ -53,16 +54,64 @@ export default class ReleaseContext {
     return this.verified;
   }
 
-  getCustomGrammar() {
-    return this.customGrammar;
-  }
-
   getFileContexts() {
     return this.fileContexts;
   }
 
+  getCustomGrammar() {
+    return this.customGrammar;
+  }
+
+  isLoggingDisabled() {
+    return this.loggingDisabled;
+  }
+
   getDependencyReleaseContexts() {
     return this.dependencyReleaseContexts;
+  }
+
+  setLog(log) {
+    this.log = log;
+  }
+
+  setJSON(json) {
+    this.json = json;
+  }
+
+  setName(name) {
+    this.name = name;
+  }
+
+  setEntries(entries) {
+    this.entries = entries;
+  }
+
+  setLexer(lexer) {
+    this.lexer = lexer;
+  }
+
+  setParser(parser) {
+    this.parser = parser;
+  }
+
+  setVerified(verified) {
+    this.verified = verified;
+  }
+
+  setFileContexts(fileContexts) {
+    this.fileContexts = fileContexts;
+  }
+
+  setCustomGrammar(customGrammar) {
+    this.customGrammar = customGrammar;
+  }
+
+  setLoggingDisabled(loggingDisabled) {
+    this.loggingDisabled = loggingDisabled;
+  }
+
+  setDependencyReleaseContexts(dependencyReleaseContexts) {
+    this.dependencyReleaseContexts = dependencyReleaseContexts;
   }
 
   getLabels(includeDependencies = true) {
@@ -356,53 +405,87 @@ export default class ReleaseContext {
 
   matchShortenedVersion(shortenedVersion) { return this.entries.matchShortenedVersion(shortenedVersion); }
 
-  setVerified(verified) {
-    this.verified = verified;
+  disableLogging() {
+    const loggingDisabled = true;
+
+    this.setLoggingDisabled(loggingDisabled);
   }
 
-  tokenise(content) { return this.lexer.tokenise(content); }
+  enableLogging() {
+    const loggingDisabled = false;
 
-  parse(tokens) { return this.parser.parse(tokens); }
+    this.setLoggingDisabled(loggingDisabled);
+  }
 
-  trace(message, node = null, tokens = null, filePath = null) { this.log.trace(message, node, tokens, filePath); }
+  trace(message, node = null, tokens = null, filePath = null) {
+    if (this.loggingDisabled) {
+      return;
+    }
 
-  debug(message, node = null, tokens = null, filePath = null) { this.log.debug(message, node, tokens, filePath); }
+    this.log.trace(message, node, tokens, filePath);
+  }
 
-  info(message, node = null, tokens = null, filePath = null) { this.log.info(message, node, tokens, filePath); }
+  debug(message, node = null, tokens = null, filePath = null) {
+    if (this.loggingDisabled) {
+      return;
+    }
 
-  warning(message, node = null, tokens = null, filePath = null) { this.log.warning(message, node, tokens, filePath); }
+    this.log.debug(message, node, tokens, filePath);
+  }
 
-  error(message, node = null, tokens = null, filePath = null) { this.log.error(message, node, tokens, filePath); }
+  info(message, node = null, tokens = null, filePath = null) {
+    if (this.loggingDisabled) {
+      return;
+    }
 
-  fatal(message, node = null, tokens = null, filePath = null) { this.log.fatal(message, node, tokens, filePath); }
+    this.log.info(message, node, tokens, filePath);
+  }
 
-  initialise(releaseContexts) {
-    releaseContexts = releaseContexts.slice();  ///
+  warning(message, node = null, tokens = null, filePath = null) {
+    if (this.loggingDisabled) {
+      return;
+    }
 
+    this.log.warning(message, node, tokens, filePath);
+  }
+
+  error(message, node = null, tokens = null, filePath = null) {
+    if (this.loggingDisabled) {
+      return;
+    }
+
+    this.log.error(message, node, tokens, filePath);
+  }
+
+  fatal(message, node = null, tokens = null, filePath = null) {
+    if (this.loggingDisabled) {
+      return;
+    }
+
+    this.log.fatal(message, node, tokens, filePath);
+  }
+
+  verify(releaseContexts) {
     const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
-          florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar),
-          florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
+          florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar),
+          florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 
     this.lexer = florenceLexer; ///
 
     this.parser = florenceParser; ///
 
-    const releaseContext = releaseContexts.shift(),
-          dependencyReleaseContexts = releaseContexts;  ///
-
-    this.dependencyReleaseContexts = dependencyReleaseContexts;
+    this.dependencyReleaseContexts = tail(releaseContexts)
 
     if (this.json !== null) {
-      const fileContextsJSON = this.json; ///
+      const releaseContext = this;
 
-      fileContextsJSON.forEach((fileContextJSON) => {
-        const json = fileContextJSON, ///
-              fileContext = FileContext.fromJSONAndReleaseContext(json, releaseContext);
+      releaseContext.disableLogging();
 
-        fileContext.initialise(json);
+      this.fileContexts = fileContextsFromJSON(this.json, releaseContext);
 
-        this.fileContexts.push(fileContext);
-      });
+      verifyFileContexts(this.fileContexts, releaseContext);
+
+      releaseContext.enableLogging();
 
       this.verified = true;
     }
@@ -423,11 +506,59 @@ export default class ReleaseContext {
     const lexer = null,
           parser = null,
           verified = false,
-          customGrammar = customGrammarFromNameAndEntries(name, entries),
           fileContexts = [],
+          customGrammar = customGrammarFromNameAndEntries(name, entries),
+          loggingDisabled = false,
           dependencyReleaseContexts = null,
-          releaseContext = new ReleaseContext(log, json, name, entries, lexer, parser, verified, customGrammar, fileContexts, dependencyReleaseContexts);
+          releaseContext = new ReleaseContext(log, json, name, entries, lexer, parser, verified, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts);
 
     return releaseContext;
   }
+}
+
+function verifyFileContexts(fileContexts, releaseContext) {
+  fileContexts = [  ///
+    ...fileContexts
+  ];
+
+  for (;;) {
+    const fileContextsLength = fileContexts.length;
+
+    if (fileContextsLength === 0) {
+      break;
+    }
+
+    const verifiedFileContexts = [];
+
+    fileContexts.forEach((fileContext) => {
+      const verified = fileContext.verify(releaseContext);
+
+      if (verified) {
+        const verifiedFileContext = fileContext;  ///
+
+        verifiedFileContexts.push(verifiedFileContext);
+      }
+    });
+
+    const verifiedFileContextsLength = verifiedFileContexts.length,
+          fileVerified = (verifiedFileContextsLength > 0);
+
+    if (!fileVerified) {
+      break;
+    }
+
+    leftDifference(fileContexts, verifiedFileContexts);
+  }
+}
+
+function fileContextsFromJSON(json, releaseContext) {
+  const fileContextsJSON = json, ///
+        fileContexts = fileContextsJSON.map((fileContextJSON) => {
+          const json = fileContextJSON, ///
+                fileContext = FileContext.fromJSONAndReleaseContext(json, releaseContext);
+
+          return fileContext;
+        });
+
+  return fileContexts;
 }

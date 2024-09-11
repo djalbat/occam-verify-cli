@@ -1,21 +1,10 @@
 "use strict";
 
-import Rule from "../rule";
-import Axiom from "../axiom";
-import Lemma from "../lemma";
-import Theorem from "../theorem";
-import Variable from "../variable";
 import metaTypes from "../metaTypes";
-import MetaLemma from "../metaLemma";
-import Conjecture from "../conjecture";
-import Combinator from "../combinator";
-import Constructor from "../constructor";
-import Metatheorem from "../metatheorem";
-import Metavariable from "../metavariable";
+import topLevelVerifier from "../verifier/topLevel";
 
 import { push } from "../utilities/array";
 import { objectType } from "../type";
-import { typeFromJSONAndFileContext } from "../type";
 import { nodeAsString, nodesAsString } from "../utilities/string";
 
 export default class FileContext {
@@ -632,219 +621,29 @@ export default class FileContext {
   fatal(message, node) { this.releaseContext.fatal(message, node, this.tokens, this.filePath); }
 
   toJSON() {
-    const fileContent = this.fileContent,
-          filePath =  this.filePath,
-          types = this.types.map((type) => {
-            const typeJSON = type.toJSON(this.tokens);
-
-            type = typeJSON; ///
-
-            return type;
-          }),
-          rules = this.rules.map((rule) => {
-            const ruleJSON = rule.toJSON(this.tokens);
-
-            rule = ruleJSON; ///
-
-            return rule;
-          }),
-          axioms = this.axioms.map((axiom) => {
-            const axiomJSON = axiom.toJSON(this.tokens);
-
-            axiom = axiomJSON; ///
-
-            return axiom;
-          }),
-          lemmas = this.lemmas.map((lemma) => {
-            const lemmaJSON = lemma.toJSON(this.tokens);
-
-            lemma = lemmaJSON; ///
-
-            return lemma;
-          }),
-          theorems = this.theorems.map((theorem) => {
-            const theoremJSON = theorem.toJSON(this.tokens);
-
-            theorem = theoremJSON; ///
-
-            return theorem;
-          }),
-          variables = this.variables.map((variable) => {
-            const variableJSON = variable.toJSON(this.tokens);
-
-            variable = variableJSON;  ///
-
-            return variable;
-          }),
-          metaLemmas = this.metaLemmas.map((metaLemma) => {
-            const metaLemmaJSON = metaLemma.toJSON(this.tokens);
-
-            metaLemma = metaLemmaJSON; ///
-
-            return metaLemma;
-          }),
-          conjectures = this.conjectures.map((conjecture) => {
-            const conjectureJSON = conjecture.toJSON(this.tokens);
-
-            conjecture = conjectureJSON; ///
-
-            return conjecture;
-          }),
-          combinators = this.combinators.map((combinator) => {
-            const combinatorJSON = combinator.toJSON(this.tokens);
-
-            combinator = combinatorJSON; ///
-
-            return combinator;
-          }),
-          constructors = this.constructors.map((constructor) => {
-            const constructorJSON = constructor.toJSON(this.tokens);
-
-            constructor = constructorJSON;  ///
-
-            return constructor;
-          }),
-          metatheorems = this.metatheorems.map((metatheorem) => {
-            const metatheoremJSON = metatheorem.toJSON(this.tokens);
-
-            metatheorem = metatheoremJSON; ///
-
-            return metatheorem;
-          }),
-          metavariables = this.metavariables.map((metavariable) => {
-            const metavariableJSON = metavariable.toJSON(this.tokens);
-
-            metavariable = metavariableJSON;  ///
-
-            return metavariable;
-          }),
+    const filePath =  this.filePath,
+          fileContent = this.fileContent,
           json = {
-            fileContent,
             filePath,
-            types,
-            rules,
-            axioms,
-            lemmas,
-            theorems,
-            variables,
-            metaLemmas,
-            conjectures,
-            combinators,
-            constructors,
-            metatheorems,
-            metavariables
+            fileContent
           };
 
     return json;
   }
 
-  initialise(json) {
-    const { types, rules, axioms, lemmas, theorems, metaLemmas, variables, conjectures, combinators, constructors, metatheorems, metavariables } = json,
-          fileContext = this, ///
-          typesJSON = types,  ///
-          rulesJSON = rules,  ///
-          axiomsJSON = axioms,  ///
-          lemmasJSON = lemmas,  ///
-          theoremsJSON = theorems,  ///
-          variablesJSON = variables,  ///
-          metaLemmasJSON = metaLemmas,  ///
-          conjecturesJSON = conjectures,  ///
-          combinatorsJSON = combinators,  ///
-          constructorsJSON = constructors,  ///
-          metatheoremsJSON = metatheorems,  ///
-          metavariablesJSON = metavariables;  ///
-
-    typesJSON.forEach((typeJSON) => {
-      const json = typeJSON,  ///
-            type = typeFromJSONAndFileContext(json, fileContext);
-
-      this.types.push(type);
-    });
-
-    rulesJSON.forEach((ruleJSON) => {
-      const json = ruleJSON,  ///
-            rule = Rule.fromJSONAndFileContext(json, fileContext);
-
-      this.rules.push(rule);
-    });
-
-    axiomsJSON.forEach((axiomJSON) => {
-      const json = axiomJSON,  ///
-            axiom = Axiom.fromJSONAndFileContext(json, fileContext);
-
-      this.axioms.push(axiom);
-    });
-
-    lemmasJSON.forEach((lemmaJSON) => {
-      const json = lemmaJSON,  ///
-            lemma = Lemma.fromJSONAndFileContext(json, fileContext);
-
-      this.lemmas.push(lemma);
-    });
-
-    theoremsJSON.forEach((theoremJSON) => {
-      const json = theoremJSON,  ///
-            theorem = Theorem.fromJSONAndFileContext(json, fileContext);
-
-      this.theorems.push(theorem);
-    });
-
-    variablesJSON.forEach((variableJSON) => {
-      const json = variableJSON,  ///
-            variable = Variable.fromJSONAndFileContext(json, fileContext);
-
-      this.variables.push(variable);
-    });
-
-    metaLemmasJSON.forEach((metaLemmaJSON) => {
-      const json = metaLemmaJSON,  ///
-            metaLemma = MetaLemma.fromJSONAndFileContext(json, fileContext);
-
-      this.metaLemmas.push(metaLemma);
-    });
-
-    conjecturesJSON.forEach((conjectureJSON) => {
-      const json = conjectureJSON,  ///
-            conjecture = Conjecture.fromJSONAndFileContext(json, fileContext);
-
-      this.conjectures.push(conjecture);
-    });
-
-    combinatorsJSON.forEach((combinatorJSON) => {
-      const json = combinatorJSON,  ///
-            combinator = Combinator.fromJSONAndFileContext(json, fileContext);
-
-      this.combinators.push(combinator);
-    });
-
-    constructorsJSON.forEach((constructorJSON) => {
-      const json = constructorJSON,  ///
-            constructor = Constructor.fromJSONAndFileContext(json, fileContext);
-
-      this.constructors.push(constructor);
-    });
-
-    metatheoremsJSON.forEach((metatheoremJSON) => {
-      const json = metatheoremJSON,  ///
-            metatheorem = Metatheorem.fromJSONAndFileContext(json, fileContext);
-
-      this.metatheorems.push(metatheorem);
-    });
-
-    metavariablesJSON.forEach((metavariableJSON) => {
-      const json = metavariableJSON,  ///
-            metavariable = Metavariable.fromJSONAndFileContext(json, fileContext);
-
-      this.metavariables.push(metavariable);
-    });
-
+  verify() {
     const lexer = this.getLexer(),
           parser = this.getParser(),
-          content = this.fileContent;  ///
+          content = this.fileContent,  ///
+          fileContext = this;
 
     this.tokens = lexer.tokenise(content);
 
     this.node = parser.parse(this.tokens);
+
+    const verified = topLevelVerifier.verify(this.node, fileContext);
+
+    return verified;
   }
 
   static fromJSONAndReleaseContext(json, releaseContext) {

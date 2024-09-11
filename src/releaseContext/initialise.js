@@ -42,7 +42,7 @@ export default function initialiseReleaseContext(dependency, dependentName, depe
         if (releaseContextInitialised) {
           const releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
 
-          releaseContext.initialise(releaseContexts);
+          releaseContext.verify(releaseContexts);
         }
       }
     }
