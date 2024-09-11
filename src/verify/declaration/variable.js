@@ -15,7 +15,9 @@ export default function verifyVariableDeclaration(variableDeclarationNode, fileC
 
   const typeNode = typeNodeQuery(variableDeclarationNode),
         variableNode = variableNodeQuery(variableDeclarationNode),
-        typeString = fileContext.nodeAsString(typeNode),
+        typeString = (typeNode === null) ?
+                       EMPTY_STRING :
+                         fileContext.nodeAsString(typeNode),
         variableString = fileContext.nodeAsString(variableNode);
 
   (typeString === EMPTY_STRING) ?
