@@ -399,6 +399,8 @@ export default class ReleaseContext {
         const json = fileContextJSON, ///
               fileContext = FileContext.fromJSONAndReleaseContext(json, releaseContext);
 
+        fileContext.initialise(json);
+
         this.fileContexts.push(fileContext);
       });
 

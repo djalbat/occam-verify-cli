@@ -19,8 +19,9 @@ import { typeFromJSONAndFileContext } from "../type";
 import { nodeAsString, nodesAsString } from "../utilities/string";
 
 export default class FileContext {
-  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables) {
+  constructor(releaseContext, fileContent, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables) {
     this.releaseContext = releaseContext;
+    this.fileContent = fileContent;
     this.filePath = filePath;
     this.tokens = tokens;
     this.node = node;
@@ -40,6 +41,10 @@ export default class FileContext {
 
   getReleaseContext() {
     return this.releaseContext;
+  }
+
+  getFileContent() {
+    return this.fileContent;
   }
 
   getFilePath() {
@@ -627,7 +632,8 @@ export default class FileContext {
   fatal(message, node) { this.releaseContext.fatal(message, node, this.tokens, this.filePath); }
 
   toJSON() {
-    const filePath =  this.filePath,
+    const fileContent = this.fileContent,
+          filePath =  this.filePath,
           types = this.types.map((type) => {
             const typeJSON = type.toJSON(this.tokens);
 
@@ -713,6 +719,7 @@ export default class FileContext {
             return metavariable;
           }),
           json = {
+            fileContent,
             filePath,
             types,
             rules,
@@ -830,10 +837,18 @@ export default class FileContext {
 
       this.metavariables.push(metavariable);
     });
+
+    const lexer = this.getLexer(),
+          parser = this.getParser(),
+          content = this.fileContent;  ///
+
+    this.tokens = lexer.tokenise(content);
+
+    this.node = parser.parse(this.tokens);
   }
 
   static fromJSONAndReleaseContext(json, releaseContext) {
-    const { filePath } = json,
+    const { fileContent, filePath } = json,
           tokens = null,
           node = null,
           types = [],
@@ -848,18 +863,18 @@ export default class FileContext {
           constructors = [],
           metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, metaLemmas, variables, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
-
-    fileContext.initialise(json);
+          fileContext = new FileContext(releaseContext, fileContent, filePath, tokens, node, types, rules, axioms, lemmas, metaLemmas, variables, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
 
     return fileContext;
   }
 
   static fromFilePathAndReleaseContext(filePath, releaseContext) {
     const file = releaseContext.getFile(filePath),
+          lexer = releaseContext.getLexer(),
+          parser = releaseContext.getParser(),
           content = file.getContent(),
-          tokens = releaseContext.tokenise(content),
-          node = releaseContext.parse(tokens),
+          tokens = lexer.tokenise(content),
+          node = parser.parse(tokens),
           types = [],
           rules = [],
           axioms = [],
@@ -872,7 +887,7 @@ export default class FileContext {
           constructors = [],
           metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(releaseContext, fileContent, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
 
     return fileContext;
   }
