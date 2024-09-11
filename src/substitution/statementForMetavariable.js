@@ -6,8 +6,8 @@ import TermForVariableSubstitution from "./termForVariable";
 import unifyStatementAgainstStatement from "../unify/statementAtainstStatement";
 
 import { nodeQuery } from "../utilities/query";
-import { bracketedStatementChildNodeFromStatementNode } from "../utilities/match";
 import { statementNodeFromStatementString, metavariableNodeFromMetavariableString } from "../utilities/node";
+import { matchStatementModuloBrackets, bracketedStatementChildNodeFromStatementNode } from "../utilities/match";
 
 const metavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
@@ -38,6 +38,21 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return node;
   }
 
+  matchStatementNode(statementNode) {
+    const statementNodeA = statementNode, ///
+          statementNodeB = this.statementNode,  ///
+          statementNodesMatch = matchStatementModuloBrackets(statementNodeA, statementNodeB),
+          statementNodeMatches = statementNodesMatch; ///
+
+    return statementNodeMatches;
+  }
+
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+
+    return metavariableNodeMatches;
+  }
+
   unifyStatement(statementNode, substitutions, localContextA, localContextB) {
     let statementNodeMatches;
 
@@ -58,12 +73,6 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     }
 
     return statementNodeMatches;
-  }
-
-  matchMetavariableNode(metavariableNode) {
-    const matchesMetavariableNode = this.metavariableNode.match(metavariableNode);
-
-    return matchesMetavariableNode;
   }
 
   unifyAgainstEquivalence(equivalence, substitutions, localContextA, localContextB) {

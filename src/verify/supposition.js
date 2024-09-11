@@ -17,26 +17,31 @@ export default function verifySupposition(suppositionNode, suppositions, localCo
 
   localContext.trace(`Verifying the '${suppositionString}' supposition...`, suppositionNode);
 
-  const derived = false,
-        assignments = [],
-        unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
-        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode);
 
-  if (unqualifiedStatementVerified) {
-    const assignmentAssigned = assignAssignment(assignments, localContext);
+  if (unqualifiedStatementNode !== null) {
+    const derived = false,
+          assignments = [],
+          unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
-    suppositionVerified = assignmentAssigned; ///
+    if (unqualifiedStatementVerified) {
+      const assignmentAssigned = assignAssignment(assignments, localContext);
+
+      if (assignmentAssigned) {
+        const statementNode = statementNodeQuery(unqualifiedStatementNode),
+              supposition = Supposition.fromStatementNode(statementNode),
+              proofStep = ProofStep.fromStatementNode(statementNode);
+
+        suppositions.push(supposition);
+
+        localContext.addProofStep(proofStep);
+
+        suppositionVerified = true;
+      }
+    }
   }
 
   if (suppositionVerified) {
-    const statementNode = statementNodeQuery(unqualifiedStatementNode),
-          supposition = Supposition.fromStatementNode(statementNode),
-          proofStep = ProofStep.fromStatementNode(statementNode);
-
-    suppositions.push(supposition);
-
-    localContext.addProofStep(proofStep);
-
     localContext.debug(`...verified the '${suppositionString}' supposition.`, suppositionNode);
   }
 

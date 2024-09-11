@@ -12,13 +12,13 @@ const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
       { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(log, json, name, entries, lexer, parser, verified, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts) {
+  constructor(log, json, name, lexer, parser, entries, verified, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts) {
     this.log = log;
     this.json = json;
     this.name = name;
-    this.entries = entries;
     this.lexer = lexer;
     this.parser = parser;
+    this.entries = entries;
     this.verified = verified;
     this.fileContexts = fileContexts;
     this.customGrammar = customGrammar;
@@ -38,16 +38,16 @@ export default class ReleaseContext {
     return this.name;
   }
 
-  getEntries() {
-    return this.entries;
-  }
-
   getLexer() {
     return this.lexer;
   }
 
   getParser() {
     return this.parser;
+  }
+
+  getEntries() {
+    return this.entries;
   }
 
   isVerified() {
@@ -82,16 +82,16 @@ export default class ReleaseContext {
     this.name = name;
   }
 
-  setEntries(entries) {
-    this.entries = entries;
-  }
-
   setLexer(lexer) {
     this.lexer = lexer;
   }
 
   setParser(parser) {
     this.parser = parser;
+  }
+
+  setEntries(entries) {
+    this.entries = entries;
   }
 
   setVerified(verified) {
@@ -382,12 +382,6 @@ export default class ReleaseContext {
     return released;
   }
 
-  isInitialised() {
-    const initialised = (this.dependencyReleaseContexts !== null);  ///
-
-    return initialised;
-  }
-
   getReleaseName() {
     const name = this.getName(),
           releaseName = name; ///
@@ -510,7 +504,7 @@ export default class ReleaseContext {
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           loggingDisabled = false,
           dependencyReleaseContexts = null,
-          releaseContext = new ReleaseContext(log, json, name, entries, lexer, parser, verified, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts);
+          releaseContext = new ReleaseContext(log, json, name, lexer, parser, entries, verified, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts);
 
     return releaseContext;
   }

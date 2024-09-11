@@ -1,7 +1,7 @@
 "use strict";
 
 import Substitutions from "./substitutions";
-import metaLevelUnifier from "./unifier/metaLevel";
+import intrinsicLevelUnifier from "./unifier/intrinsicLevel";
 
 export default class ProofStep {
   constructor(subproofNode, statementNode) {
@@ -69,7 +69,7 @@ function unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivale
   const substitutions = Substitutions.fromNothing(),
         nodeA = statementNodeA,  ///
         nodeB = statementNodeB,  ///
-        unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+        unified = intrinsicLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
   if (unified) {
     const substitutionsUnifiedAgainstEquivalences = substitutions.unifyAgainstEquivalences(equivalences, localContextA, localContextB);

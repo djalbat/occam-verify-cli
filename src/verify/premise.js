@@ -17,24 +17,27 @@ export default function verifyPremise(premiseNode, premises, localContext) {
 
   localContext.trace(`Verifying the '${premiseString}' premise...`, premiseNode);
 
-  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(premiseNode),
-        derived = false,
-        assignments = [],
-        unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(premiseNode);
 
-  if (unqualifiedStatementVerified) {
-    const assignmentAssigned = assignAssignment(assignments, localContext);
+  if (unqualifiedStatementNode !== null) {
+    const derived = false,
+          assignments = [],
+          unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
-    if (assignmentAssigned) {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode),
-            metaproofStep = ProofStep.fromStatementNode(statementNode),
-            premise = Premise.fromStatementNode(statementNode);
+    if (unqualifiedStatementVerified) {
+      const assignmentAssigned = assignAssignment(assignments, localContext);
 
-      premises.push(premise);
+      if (assignmentAssigned) {
+        const statementNode = statementNodeQuery(unqualifiedStatementNode),
+              metaproofStep = ProofStep.fromStatementNode(statementNode),
+              premise = Premise.fromStatementNode(statementNode);
 
-      localContext.addProofStep(metaproofStep);
+        premises.push(premise);
 
-      premiseVerified = true;
+        localContext.addProofStep(metaproofStep);
+
+        premiseVerified = true;
+      }
     }
   }
 

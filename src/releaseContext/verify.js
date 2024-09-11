@@ -1,7 +1,7 @@
 "use strict";
 
 export default function verifyReleaseContext(dependency, dependentName, dependentReleased, context) {
-  let releaseContextInitialised = false;
+  let releaseContextVerified = false;
 
   const { releaseContextMap } = context,
         dependencyName = dependency.getName(),
@@ -13,10 +13,10 @@ export default function verifyReleaseContext(dependency, dependentName, dependen
 
     log.error(`Unable to verify the '${dependencyName}' dependency's context because it has not been created.`);
   } else {
-    const verified = releaseContext.isInitialised();
+    const verified = releaseContext.isVerified();
 
     if (verified) {
-      releaseContextInitialised = true;
+      releaseContextVerified = true;
     } else {
       const released = releaseContext.isReleased();
 
@@ -31,15 +31,15 @@ export default function verifyReleaseContext(dependency, dependentName, dependen
 
         dependentReleased = released;  ///
 
-        releaseContextInitialised = dependencies.everyDependency((dependency) => {  ///
-          const releaseContextInitialised = verifyReleaseContext(dependency, dependentName, dependentReleased, context);
+        releaseContextVerified = dependencies.everyDependency((dependency) => {  ///
+          const releaseContextVerified = verifyReleaseContext(dependency, dependentName, dependentReleased, context);
 
-          if (releaseContextInitialised) {
+          if (releaseContextVerified) {
             return true;
           }
         });
 
-        if (releaseContextInitialised) {
+        if (releaseContextVerified) {
           const releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
 
           releaseContext.verify(releaseContexts);
@@ -48,7 +48,7 @@ export default function verifyReleaseContext(dependency, dependentName, dependen
     }
   }
 
-  return releaseContextInitialised;
+  return releaseContextVerified;
 }
 
 function retrieveReleaseContexts(releaseContext, releaseContextMap) {
