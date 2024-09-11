@@ -121,7 +121,6 @@ function unifyTermAgainstBracketedConstructor(termNode, terms, localContext, ver
     return verifiedAhead;
   });
 
-
   if (termUnifiedAgainstBracketedConstructor) {
     localContext.debug(`...unified the '${termString}' term against the bracketed constructor.`, termNode);
   }
