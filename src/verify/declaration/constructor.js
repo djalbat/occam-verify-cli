@@ -14,7 +14,9 @@ export default function verifyConstructorDeclaration(constructorDeclarationNode,
   const termNode = termNodeQuery(constructorDeclarationNode),
         typeNode = typeNodeQuery(constructorDeclarationNode),
         termString = fileContext.nodeAsString(termNode),
-        typeString = fileContext.nodeAsString(typeNode);
+        typeString = (typeNode === null) ?
+                       EMPTY_STRING :
+                         fileContext.nodeAsString(typeNode);
 
   (typeString === EMPTY_STRING) ?
     fileContext.trace(`Verifying the '${termString}' constructor declaration...`, constructorDeclarationNode) :

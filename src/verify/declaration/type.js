@@ -17,7 +17,9 @@ export default function verifyTypeDeclaration(typeDeclarationNode, fileContext) 
         typeNode = firstTypeNode, ///
         superTypeNode = secondTypeNode, ///
         typeString = fileContext.nodeAsString(typeNode),
-        superTypeString = fileContext.nodeAsString(superTypeNode);
+        superTypeString = (superTypeNode === null) ?
+                            EMPTY_STRING :
+                              fileContext.nodeAsString(superTypeNode);
 
   (superTypeString === EMPTY_STRING) ?
     fileContext.trace(`Verifying the '${typeString}' type declaration...`, typeDeclarationNode) :
