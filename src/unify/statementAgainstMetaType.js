@@ -3,23 +3,47 @@
 import shim from "../shim";
 
 import { nodeQuery } from "../utilities/query";
-import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
+import { FRAME_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
-const metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type!");
+const metavariableNodeQuery = nodeQuery("/statement/metavariable"),
+      metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type!");
 
 export default function unifyStatementAgainstMetaType(statementNode, metaTypeNode, localContext) {
   let statementVerifiedAgainstMetaType = false;
 
   const metaTypeTerminalNode = metaTypeTerminalNodeQuery(metaTypeNode),
-        content = metaTypeTerminalNode.getContent();
+        metaTypeTerminalNodeContent = metaTypeTerminalNode.getContent(),
+        metaTypeName = metaTypeTerminalNodeContent; ///
 
-  if (content === STATEMENT_META_TYPE_NAME) {
-    const { verifyStatement } = shim,
-          derived = false,
-          assignments = [],
-          statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
+  switch (metaTypeName) {
+    case FRAME_META_TYPE_NAME: {
+      const metavariableNode = metavariableNodeQuery(statementNode);
 
-    statementVerifiedAgainstMetaType = statementVerified;
+      if (metavariableNode !== null) {
+        const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+
+        if (metavariable !== null) {
+          const metavariableMetaTypeName = metavariable.getMetaTypeName();
+
+          if (metavariableMetaTypeName === metaTypeName) {
+            statementVerifiedAgainstMetaType = true;
+          }
+        }
+      }
+
+      break;
+    }
+
+    case STATEMENT_META_TYPE_NAME: {
+      const { verifyStatement } = shim,
+            derived = false,
+            assignments = [],
+            statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
+
+      statementVerifiedAgainstMetaType = statementVerified;
+
+      break;
+    }
   }
 
   return statementVerifiedAgainstMetaType;
