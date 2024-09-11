@@ -1,9 +1,6 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { typeFromJSONAndFileContext } from "./type";
-import { termNodeFromConstructorDeclarationTokens } from "./utilities/node";
-import { constructorDeclarationTokensFromTermString } from "./utilities/tokens";
 
 export default class Constructor {
   constructor(termNode, string, type) {
@@ -24,48 +21,8 @@ export default class Constructor {
     return this.type;
   }
 
-  toJSON(tokens) {
-    const termString = nodeAsString(this.termNode, tokens),
-          typeJSON = (this.type === null) ?
-                        null :
-                          this.type.toJSON(tokens),
-          term = termString,  ///
-          type = typeJSON,  ///
-          json = {
-            term,
-            type
-          };
-
-    return json;
-  }
-
   static fromTermNodeTypeAndTokens(termNode, type, tokens) {
     const string = stringFromTermNodeTypeAndTokens(termNode, type, tokens),
-          constructor = new Constructor(termNode, string, type);
-
-    return constructor;
-  }
-
-  static fromJSONAndFileContext(json, fileContext) {
-    const { term } = json,
-          termString = term,  ///
-          lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
-          constructorDeclarationTokens = constructorDeclarationTokensFromTermString(termString, lexer),
-          termNode = termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser);
-
-    let { type } = json;
-
-    if (type !== null) {
-      const typeJSON = type;  ///
-
-      json = typeJSON;  ///
-
-      type = typeFromJSONAndFileContext(json, fileContext);
-    }
-
-    const tokens = constructorDeclarationTokens,  ///
-          string = stringFromTermNodeTypeAndTokens(termNode, type, tokens),
           constructor = new Constructor(termNode, string, type);
 
     return constructor;

@@ -9,27 +9,12 @@ const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities;
 const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 
-export function metavariableTokensFromMetavariableString(metavariableString, lexer) {
-  const metavariableContent = `${metavariableString}`,
-        metavariableTokens = tokensFromContentAndLexer(metavariableContent, lexer);
-
-  return metavariableTokens;
-}
-
 export function constructorDeclarationTokensFromTermString(termString, lexer) {
   const constructorDeclarationContent = `Constructor ${termString}
 `,
         constructorDeclarationTokens = tokensFromContentAndLexer(constructorDeclarationContent, lexer);
 
   return constructorDeclarationTokens;
-}
-
-export function variableDeclarationTokensFromVariableString(variableString, lexer) {
-  const variableDeclarationContent = `Variable ${variableString}
-`,
-        variableDeclarationTokens = tokensFromContentAndLexer(variableDeclarationContent, lexer);
-
-  return variableDeclarationTokens;
 }
 
 export function unqualifiedStatementTokensFromStatementString(statementString, lexer) {

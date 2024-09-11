@@ -1,8 +1,6 @@
 "use strict";
 
 import { nodeAsString } from "./utilities/string";
-import { typeFromJSONAndFileContext } from "./type";
-import { variableNodeFromVariableString } from "./utilities/node";
 
 export default class Variable {
   constructor(node, type) {
@@ -56,40 +54,6 @@ export default class Variable {
     string = `${string}:${typeName}`; ///
 
     return string;
-  }
-
-  toJSON(tokens) {
-    const typeJSON = this.type.toJSON(tokens),
-          string = nodeAsString(this.node, tokens),
-          node = string,  //
-          type = typeJSON,  ///
-          json = {
-            node,
-            type
-          };
-
-    return json;
-  }
-
-  static fromJSONAndFileContext(json, fileContext) {
-    let { node } = json;
-
-    const lexer  = fileContext.getLexer(),
-          parser = fileContext.getParser(),
-          variableString = node,  ///
-          variableNode = variableNodeFromVariableString(variableString, lexer, parser);
-
-    node = variableNode;  ///
-
-    let { type } = json;
-
-    json = type;  ///
-
-    type = typeFromJSONAndFileContext(json, fileContext);
-
-    const variable = new Variable(node, type);
-
-    return variable;
   }
 
   static fromVariableAndType(variable, type) {

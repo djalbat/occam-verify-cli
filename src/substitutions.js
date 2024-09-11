@@ -1,7 +1,5 @@
 "use strict";
 
-import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
-
 import { prune, compare, rightDifference } from "./utilities/array";
 
 export default class Substitutions {
@@ -102,33 +100,8 @@ export default class Substitutions {
     ///
   }
 
-  toJSON(tokens) {
-    const json = this.array.map((substitution) => {
-      const substitutionJSON = substitution.toJSON(tokens);
-
-      return substitutionJSON;
-    });
-
-    return json;
-  }
-
   static fromNothing() {
     const array = [],
-          savedArray = null,
-          substitutions = new Substitutions(array, savedArray);
-
-    return substitutions;
-  }
-
-  static fromJSONAndFileContext(json, fileContext) {
-    const substitutionsJSON = json, ///
-          array = substitutionsJSON.map((substitutionJSON) => {
-            const json = substitutionJSON,  ///
-                  statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromJSONAndFileContext(json, fileContext),
-                  substitution = statementForMetavariableSubstitution;  ///
-
-            return substitution;
-          }),
           savedArray = null,
           substitutions = new Substitutions(array, savedArray);
 

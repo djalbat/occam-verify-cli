@@ -5,7 +5,6 @@ import metaLevelUnifier from "./unifier/metaLevel";
 import { match } from "./utilities/array";
 import { nodeAsString } from "./utilities/string";
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { statementNodeFromStatementString } from "./utilities/node";
 
 const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
       subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
@@ -66,29 +65,8 @@ export default class Premise {
     return subproofUnified;
   }
 
-  toJSON(tokens) {
-    const statementString = nodeAsString(this.statementNode, tokens),
-          statement = statementString,  ///
-          json = {
-            statement
-          };
-
-    return json;
-  }
-
   static fromStatementNode(statementNode) {
     const premise = new Premise(statementNode);
-
-    return premise;
-  }
-
-  static fromJSONAndFileContext(json, fileContext) {
-    const { statement } = json,
-          statementString = statement,  ///
-          lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
-          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-          premise = new Premise(statementNode);
 
     return premise;
   }

@@ -4,13 +4,8 @@ import { parsersUtilities } from "occam-custom-grammars";
 
 import { nodeQuery } from "../utilities/query";
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
-import { METAVARIABLE_RULE_NAME,
-         VARIABLE_DECLARATION_RULE_NAME,
-         UNQUALIFIED_STATEMENT_RULE_NAME,
-         CONSTRUCTOR_DECLARATION_RULE_NAME } from "../ruleNames";
-import { metavariableTokensFromMetavariableString,
-         variableDeclarationTokensFromVariableString,
-         unqualifiedStatementTokensFromStatementString } from "../utilities/tokens";
+import { unqualifiedStatementTokensFromStatementString } from "../utilities/tokens";
+import { UNQUALIFIED_STATEMENT_RULE_NAME, CONSTRUCTOR_DECLARATION_RULE_NAME } from "../ruleNames";
 
 const { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
@@ -18,28 +13,13 @@ const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
-      variableNodeQuery = nodeQuery("/variableDeclaration/variable!"),
       statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
-
-export function variableNodeFromVariableString(variableString, lexer, parser) {
-  const variableTDeclarationTokens = variableDeclarationTokensFromVariableString(variableString, lexer),
-        variableNode = variableNodeFromVariableVariableTDeclarationTokens(variableTDeclarationTokens, parser);
-
-  return variableNode;
-}
 
 export function statementNodeFromStatementString(statementString, lexer, parser) {
   const unqualifiedStatementTokens = unqualifiedStatementTokensFromStatementString(statementString, lexer),
         statementNode = statementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser);
 
   return statementNode;
-}
-
-export function metavariableNodeFromMetavariableString(metavariableString, lexer, parser) {
-  const metavariableTokens = metavariableTokensFromMetavariableString(metavariableString, lexer),
-        metavariableNode = metavariableNodeFromMetavariableTokens(metavariableTokens, parser);
-
-  return metavariableNode;
 }
 
 export function termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
@@ -64,32 +44,6 @@ export function statementNodeFromUnqualifiedStatementTokens(unqualifiedStatement
   }
 
   return statementNode;
-}
-
-export function variableNodeFromVariableVariableTDeclarationTokens(variableTDeclarationTokens, parser) {
-  let variableNode = null;
-
-  const variableDeclarationNode = variableDeclarationNodeFromVariableTDeclarationTokens(variableTDeclarationTokens, parser);
-
-  if (variableDeclarationNode !== null) {
-    variableNode = variableNodeQuery(variableDeclarationNode);
-  }
-
-  return variableNode;
-}
-
-export function metavariableNodeFromMetavariableTokens(metavariableTokens, parser) {
-  const ruleName = METAVARIABLE_RULE_NAME,
-        metavariableNode = nodeFromTokensRuleNameAndParser(metavariableTokens, ruleName, parser);
-
-  return metavariableNode;
-}
-
-export function variableDeclarationNodeFromVariableTDeclarationTokens(variableTDeclarationTokens, parser) {
-  const ruleName = VARIABLE_DECLARATION_RULE_NAME,
-        variableDeclarationNode = nodeFromTokensRuleNameAndParser(variableTDeclarationTokens, ruleName, parser);
-
-  return variableDeclarationNode;
 }
 
 export function unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {

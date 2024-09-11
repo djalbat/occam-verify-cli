@@ -6,7 +6,6 @@ import TermForVariableSubstitution from "./termForVariable";
 import unifyStatementAgainstStatement from "../unify/statementAtainstStatement";
 
 import { nodeQuery } from "../utilities/query";
-import { statementNodeFromStatementString, metavariableNodeFromMetavariableString } from "../utilities/node";
 import { matchStatementModuloBrackets, bracketedStatementChildNodeFromStatementNode } from "../utilities/match";
 
 const metavariableNodeQuery = nodeQuery("/statement/metavariable!");
@@ -104,19 +103,6 @@ export default class StatementForMetavariableSubstitution extends Substitution {
           string = `[${statementStringB} for ${metavariableStringA}]`;
 
     return string;
-  }
-
-  static fromJSONAndFileContext(json, fileContext) {
-    const { metavariable, statement } = json,
-            metavariableString = metavariable,  ///
-            statementString = statement,  ///
-            lexer = fileContext.getLexer(),
-            parser = fileContext.getParser(),
-            statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-            metavariableNode = metavariableNodeFromMetavariableString(metavariableString, lexer, parser),
-            statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(statementNode, metavariableNode);
-
-    return statementForMetavariableSubstitution;
   }
 
   static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {

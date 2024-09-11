@@ -50,15 +50,6 @@ export default class MetaType {
     return string;
   }
 
-  toJSON(tokens) {
-    const name = this.name,
-          json = {
-            name
-          };
-
-    return json;
-  }
-
   static fromMetaTypeName(metaTypeName) {
     const name = metaTypeName,  ///
           metaType = new MetaType(name);

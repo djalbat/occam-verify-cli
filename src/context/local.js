@@ -451,28 +451,6 @@ class LocalContext {
 
     return localContext;
   }
-
-  static fromJSONAndFileContext(json, fileContext) {
-    let { variables } = json;
-
-    const variablesJSON = variables;
-
-    variables = variablesJSON.map((variableJSON) => {
-      const json = variableJSON,  ///
-            variable = Variable.fromJSONAndFileContext(json, fileContext);
-
-      return variable;
-    });
-
-    const context = fileContext,  ///
-          proofSteps = [],
-          equivalences = [],
-          judgements = [],
-          metavariables = [],
-          localContext = new LocalContext(context, variables, proofSteps, judgements, equivalences, metavariables);  ///
-
-    return localContext;
-  }
 }
 
 export default LocalContext;

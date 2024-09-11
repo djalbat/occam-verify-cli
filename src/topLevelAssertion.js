@@ -1,8 +1,5 @@
 "use strict";
 
-import Label from "./label";
-import Consequent from "./consequent";
-import Supposition from "./supposition";
 import Substitutions from "./substitutions";
 import unifyConsequentAgainstStatement from "./unify/consequentAgainstStatement";
 import unifySuppositionsAgainstProofSteps from "./unify/suppositionsAgainstProofSteps";
@@ -67,71 +64,6 @@ export default class TopLevelAssertion {
     });
 
     return matchesMetavariableNode;
-  }
-
-  toJSON(tokens) {
-    const labelsJSON = this.labels.map((label) => {
-            const labelJSON = label.toJSON(tokens);
-
-            return labelJSON;
-          }),
-          suppositionsJSON = this.suppositions.map((supposition) => {
-            const suppositionJSON = supposition.toJSON(tokens);
-
-            return suppositionJSON;
-          }),
-          consequentJSON = this.consequent.toJSON(tokens),
-          substitutionsJSON = this.substitutions.toJSON(tokens),
-          labels = labelsJSON,  ///
-          suppositions = suppositionsJSON,  ///
-          consequent = consequentJSON,  ///
-          substitutions = substitutionsJSON,  ///
-          json = {
-            labels,
-            suppositions,
-            consequent,
-            substitutions
-          };
-
-    return json;
-  }
-
-  static fromJSONAndFileContext(Class, json, fileContext) {
-    let { labels } = json;
-
-    const labelsJSON = labels;  ///
-
-    labels = labelsJSON.map((labelJSON) => {
-      const json = labelJSON, ///
-            label = Label.fromJSONAndFileContext(json, fileContext);
-
-      return label;
-    });
-
-    let { suppositions, consequent, substitutions } = json;
-
-    const suppositionsJSON = suppositions;  ///
-
-    suppositions = suppositionsJSON.map((suppositionJSON) => {
-      const json = suppositionJSON, ///
-            supposition = Supposition.fromJSONAndFileContext(json, fileContext);
-
-      return supposition;
-    });
-
-    const consequentJSON = consequent;  ///
-
-    json = consequentJSON;  ///
-
-    consequent = Consequent.fromJSONAndFileContext(json, fileContext);
-
-    const substitutionsJSON = substitutions;  ///
-
-    json = substitutionsJSON; ///
-
-    substitutions = Substitutions.fromJSONAndFileContext(json, fileContext);
-
-    return new Class(labels, suppositions, consequent, substitutions, fileContext);  ///
   }
 
   static fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(Class, labels, suppositions, consequent, substitutions, fileContext) { return new Class(labels, suppositions, consequent, substitutions, fileContext); }

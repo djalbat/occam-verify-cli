@@ -125,18 +125,6 @@ export default class Type {
     return string;
   }
 
-  toJSON(tokens) {
-    const superTypeJSON = this.superType.toJSON(tokens),
-          name = this.name,
-          superType = superTypeJSON,  ///
-          json = {
-            name,
-            superType
-          };
-
-    return json;
-  }
-
   static fromTypeName(typeName) {
     const name = typeName,  ///
           superType = objectType, ///
@@ -154,17 +142,6 @@ export default class Type {
 }
 
 class ObjectType extends Type {
-  toJSON(tokens) {
-    const name = this.name,
-          superType = null,  ///
-          json = {
-            name,
-            superType
-          };
-
-    return json;
-  }
-
   static fromNothing() {
     const name = OBJECT_TYPE_NAME,
           superType = null,
@@ -175,24 +152,3 @@ class ObjectType extends Type {
 }
 
 export const objectType = ObjectType.fromNothing();
-
-export function typeFromJSONAndFileContext(json, fileContext) {
-  let type;
-
-  const { name } = json,
-        typeName = name;  ///
-
-  type = fileContext.findTypeByTypeName(typeName);
-
-  if (type === null) {
-    let { superType } = json;
-
-    const superJSON = superType;  ///
-
-    superType = typeFromJSONAndFileContext(superJSON, fileContext);
-
-    type = new Type(name, superType);
-  }
-
-  return type;
-}

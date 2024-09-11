@@ -1,8 +1,5 @@
 "use strict";
 
-import Label from "./label";
-import Premise from "./premise";
-import Conclusion from "./conclusion";
 import Substitutions from "./substitutions";
 import unifyPremisesAgainstProofSteps from "./unify/premisesAgainstProofSteps";
 import unifyConclusionAgainstStatement from "./unify/conclusionAgainstStatement";
@@ -62,68 +59,6 @@ export default class Rule {
     });
 
     return matchesMetavariableNode;
-  }
-
-  toJSON(tokens) {
-    const labelsJSON = this.labels.map((label) => {
-            const labelJSON = label.toJSON(tokens);
-
-            return labelJSON;
-          }),
-          premisesJSON = this.premises.map((premise) => {
-            const premiseJSON = premise.toJSON(tokens);
-
-            return premiseJSON;
-          }),
-          conclusionJSON = this.conclusion.toJSON(tokens),
-          labels = labelsJSON,  ///
-          premises = premisesJSON,  ///
-          conclusion = conclusionJSON,  ///
-          json = {
-            labels,
-            premises,
-            conclusion
-          };
-
-    return json;
-  }
-
-  static fromJSONAndFileContext(json, fileContext) {
-    let rule;
-
-    let { labels } = json;
-
-    const labelsJSON = labels;  ///
-
-    labels = labelsJSON.map((labelJSON) => {
-      const json = labelJSON, ///
-            label = Label.fromJSONAndFileContext(json, fileContext);
-
-      return label;
-    });
-
-    let { premises } = json;
-
-    const premisesJSON = premises;  ///
-
-    premises = premisesJSON.map((premiseJSON) => {
-      const json = premiseJSON, ///
-            premise = Premise.fromJSONAndFileContext(json, fileContext);
-
-      return premise;
-    });
-
-    let { conclusion } = json;
-
-    const conclusionJSON = conclusion;  ///
-
-    json = conclusionJSON;  ///
-
-    conclusion = Conclusion.fromJSONAndFileContext(json, fileContext);
-
-    rule = new Rule(labels, premises, conclusion, fileContext);
-
-    return rule;
   }
 
   static fromLabelsPremisesConclusionAndFileContext(labels, premises, conclusion, fileContext) {

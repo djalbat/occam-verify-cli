@@ -6,8 +6,6 @@ import { first } from "./utilities/array";
 import { nodeQuery } from "./utilities/query";
 import { nodeAsString } from "./utilities/string";
 import { nameFromMetavariableNode } from "./utilities/name";
-import { metaTypeFromJSONAndFileContext } from "./metaType";
-import { metavariableNodeFromMetavariableString } from "./utilities/node";
 
 const termNodeQuery = nodeQuery("/metavariable/argument/term!"),
       typeNodeQuery = nodeQuery("/metavariable/argument/type!");
@@ -75,19 +73,6 @@ export default class Metavariable {
     return matchesNode;
   }
 
-  toJSON(tokens) {
-    const metaTypeJSON = this.metaType.toJSON(tokens),
-          string = nodeAsString(this.node, tokens),
-          node = string,  //
-          metaType = metaTypeJSON,  ///
-          json = {
-            node,
-            metaType
-          };
-
-    return json;
-  }
-
   asString(tokens) {
     const metaTypeName = this.metaType.getName();
 
@@ -96,29 +81,6 @@ export default class Metavariable {
     string = `${string}:${metaTypeName}`; ///
 
     return string;
-  }
-
-  static fromJSONAndFileContext(json, fileContext) {
-    let { node } = json;
-
-    const lexer  = fileContext.getLexer(),
-          parser = fileContext.getParser(),
-          variableString = node,  ///
-          metavariableNode = metavariableNodeFromMetavariableString(variableString, lexer, parser);
-
-    node = metavariableNode;  ///
-
-    let { metaType } = json;
-
-    json = metaType;  ///
-
-    metaType = metaTypeFromJSONAndFileContext(json, fileContext);
-
-    const name = nameFromMetavariableNode(metavariableNode),
-          termType = termTypeFromMetavariableNode(metavariableNode, fileContext),
-          metavariable = new Metavariable(node, name, termType, metaType);
-
-    return metavariable;
   }
 
   static fromNodeNameTermTypeAndMetaType(node, name, termType, metaType) {
