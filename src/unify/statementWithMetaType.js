@@ -1,7 +1,5 @@
 "use strict";
 
-import shim from "../shim";
-
 import { nodeQuery } from "../utilities/query";
 import { FRAME_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
@@ -35,10 +33,8 @@ export default function unifyStatementWithMetaType(statementNode, metaTypeNode, 
     }
 
     case STATEMENT_META_TYPE_NAME: {
-      const { verifyStatement } = shim,
-            derived = false,
-            assignments = [],
-            statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
+
+      debugger
 
       statementUnifiedWithMetaType = statementVerified;
 

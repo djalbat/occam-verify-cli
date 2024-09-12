@@ -51,9 +51,7 @@ function verifyStatedSubproofAssertion(subproofAssertionNode, assignments, deriv
 
     localContext.trace(`Verifying the '${subproofAssertionString}' stated subproof assertion...`, subproofAssertionNode);
 
-    const verified = metaLevelVerifier.verify(subproofAssertionNode, localContext);
-
-    statedSubproofAssertionVerified = verified; ///
+    debugger
 
     if (statedSubproofAssertionVerified) {
       localContext.debug(`...verified the '${subproofAssertionString}' stated subproof assertion.`, subproofAssertionNode);

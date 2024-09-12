@@ -17,22 +17,27 @@ export default class ProofStep {
     return this.statementNode;
   }
 
-  unifyStatement(statementNode, equivalences, localContextA, localContextB) {
+  unifyStatement(statementNodeB, equivalences, localContextA, localContextB) {
     let statementUnified = false;
 
     if (this.statementNode !== null) {
       let statementUnifiedWithStatement = false;
 
       if (!statementUnifiedWithStatement) {
-        const statementNodeA = statementNode, ///
-              statementNodeB = this.statementNode;  ///
+        const statementNodeA = this.statementNode;  ///
 
         statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB);
       }
 
       if (!statementUnifiedWithStatement) {
-        const statementNodeA = statementNode, ///
-              statementNodeB = this.statementNode;  ///
+        const statementNodeA = statementNodeB,  ///
+              localContext = localContextA; ///
+
+        statementNodeB = this.statementNode;  ///
+
+        localContextA = localContextB;  ///
+
+        localContextB = localContext; ///
 
         statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB);
       }

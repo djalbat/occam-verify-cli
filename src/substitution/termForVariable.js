@@ -29,14 +29,21 @@ export default class TermForVariableSubstitution extends Substitution {
     return node;
   }
 
-  isTransformed(substitution) {
-    const termNod = substitution.getTermNode(),
-          variableNode = substitution.getVariableNode(),
-          termNodeMatches = this.termNode.match(termNod),
-          variableNodeMatches = this.variableNode.match(variableNode),
-          transformed = ((!termNodeMatches) && (!variableNodeMatches));
+  transformed(substitutions) {
+    let transformedSubstitution = null;
 
-    return transformed;
+    const transformedTermNode = transformTermNode(this.termNode, substitutions),
+          transformedVariableNode = transformVariableNode(this.variableNode, substitutions);
+
+    if ((transformedTermNode !== null) && (transformedVariableNode !== null)) {
+      const termNode = transformedTermNode, ///
+            variableNode = transformedVariableNode,
+            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
+
+      transformedSubstitution = termForVariableSubstitution;  ///
+    }
+
+    return transformedSubstitution;
   }
 
   matchTermNode(termNode) {
@@ -95,22 +102,12 @@ export default class TermForVariableSubstitution extends Substitution {
     let termNode = substitution.getTermNode(),
         variableNode = substitution.getVariableNode();
 
-    termNode = substituteTermNode(termNode, substitutions); ///
+    const transformedTermNode = transformTermNode(termNode, substitutions),
+          transformedVariableNode = transformVariableNode(variableNode, substitutions); ///
 
-    variableNode = substituteVariableNode(variableNode, substitutions); ///
+    termNode = transformedTermNode; ///
 
-    const termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
-
-    return termForVariableSubstitution;
-  }
-
-  static fromSubstitutionNodeAndSubstitutions(substitutionNode, substitutions) {
-    let termNode = termNodeQuery(substitutionNode),
-        variableNode = variableNodeQuery(substitutionNode);
-
-    termNode = substituteTermNode(termNode, substitutions); ///
-
-    variableNode = substituteVariableNode(variableNode, substitutions); ///
+    variableNode = transformedVariableNode; ///
 
     const termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
 
@@ -118,7 +115,9 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 }
 
-function substituteTermNode(termNode, substitutions) {
+function transformTermNode(termNode, substitutions) {
+  let transformedTermNode = null;
+
   const termVariableNode = variableNodeQuery(termNode);
 
   if (termVariableNode !== null) {
@@ -126,31 +125,35 @@ function substituteTermNode(termNode, substitutions) {
       const substitutionMatchesVariableNode = substitution.matchVariableNode(termVariableNode);
 
       if (substitutionMatchesVariableNode) {
-        termNode = substitution.getTermNode();  ///
+        const termNode = substitution.getTermNode();
+
+        transformedTermNode = termNode; ////
 
         return true;
       }
     });
   }
 
-  return termNode;
+  return transformedTermNode;
 }
 
-function substituteVariableNode(variableNode, substitutions) {
+function transformVariableNode(variableNode, substitutions) {
+  let transformedVariableNode = null;
+
   substitutions.someSubstitution((substitution) => {
     const substitutionMatchesVariableNode = substitution.matchVariableNode(variableNode);
 
     if (substitutionMatchesVariableNode) {
       const termNode = substitution.getTermNode(),
-            termVariableNode = variableNodeQuery(termNode);
+            variableNode = variableNodeQuery(termNode);
 
-      if (termVariableNode !== null) {
-        variableNode = termVariableNode;  ///
+      if (variableNode !== null) {
+        transformedVariableNode = variableNode;  ///
 
         return true;
       }
     }
   });
 
-  return variableNode;
+  return transformedVariableNode;
 }

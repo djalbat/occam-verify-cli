@@ -1,30 +1,30 @@
 "use strict";
 
+import Substitutions from "../substitutions";
 import metaLevelUnifier from "../unifier/metaLevel";
 import TermForVariableSubstitution from "../substitution/termForVariable";
 
 import { push } from "../utilities/array";
 
 export default function unifyStatementWithStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB) {
-  let statementUnifiedWithtatement = false;
+  let statementUnifiedWithStatement = false;
 
-  const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionAndSubstitutions(substitution, substitutions),
-        transformed = termForVariableSubstitution.isTransformed(substitution);
+  const transformedSubstitutions = Substitutions.fromNothing(),
+        transformedSubstitution = substitution.transformed(substitutions);
 
-  let substitutionsA = []; ///
-
-  if (transformed) {
-    const substitutionA = termForVariableSubstitution;  ///
-
-    substitutionsA.push(substitutionA);
+  if (transformedSubstitution !== null) {
+    transformedSubstitutions.addSubstitution(transformedSubstitution, localContextA, localContextB);
   }
 
   const nodeA = statementNodeA,  ///
         nodeB = statementNodeB,  ///
-        unified = metaLevelUnifier.unify(nodeA, nodeB, substitutionsA, localContextA, localContextB);
+        unified = metaLevelUnifier.unify(nodeA, nodeB, transformedSubstitutions, localContextA, localContextB);
 
   if (unified) {
-    if (!transformed) {
+    if (transformedSubstitution === null) {
+
+      debugger
+
       const substitutionB = termForVariableSubstitution,  ///
             substitutionsB = [
               substitutionB
@@ -35,10 +35,10 @@ export default function unifyStatementWithStatement(statementNodeA, statementNod
       push(substitutions, substitutionsA);
     }
 
-    statementUnifiedWithtatement = true;
+    statementUnifiedWithStatement = true;
   }
 
-  return statementUnifiedWithtatement;
+  return statementUnifiedWithStatement;
 }
 
 function transformSubstitutions(substitutionsA, substitutionsB) {

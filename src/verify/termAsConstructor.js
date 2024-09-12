@@ -22,7 +22,7 @@ export default function verifyTermAsConstructor(termNode, typeNode, fileContext)
 
     type = firstType; ///
 
-    termVerifiedAsConstructor = termAsConstructorVerifier.verify(termNode, fileContext);
+    termVerifiedAsConstructor = termAsConstructorVerifier.verifyTerm(termNode, fileContext);
   }
 
   if (termVerifiedAsConstructor) {

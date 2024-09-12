@@ -4,17 +4,20 @@ import shim from "../shim";
 import verifyEquality from "../verify/equality";
 import verifyJudgement from "../verify/judgement";
 import metaLevelVerifier from "../verifier/metaLevel";
-import bracketedCombinator from "../ocmbinator/bracketed";
 import verifyTypeAssertion from "../verify/assertion/type";
 import verifyDefinedAssertion from "../verify/assertion/defined";
 import verifySubproofAssertion from "../verify/assertion/subproof";
 import verifyContainedAssertion from "../verify/assertion/contained";
-import statementWithCombinatorUnifier from "../unifier/statementWithCombinator";
+import unifyStatementWithCombinators from "../unify/statementWithCombinators";
+import unifyStatementWithBracketedCombinator from "../unify/statementWithBracketedCombinator";
 
 import { nodeQuery } from "../utilities/query";
 
-const equalityNodeQuery = nodeQuery("/statement/equality!"),
+const frameNodeQuery = nodeQuery("/statement/frame!"),
+      equalityNodeQuery = nodeQuery("/statement/equality!"),
       judgementNodeQuery = nodeQuery("/statement/judgement!"),
+      declarationNodeQuery = nodeQuery("/statement/declaration!"),
+      substitutionNodeQuery = nodeQuery("/statement/substitution!"),
       metavariableNodeQuery = nodeQuery("/*/metavariable!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
@@ -28,20 +31,22 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
 
   localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
 
-  const statementUnifiedWithCombinators = unifyStatementWithCombinators(statementNode, assignments, derived, localContext);
+  const verified = metaLevelVerifier.verifyStatement(statementNode, assignments, derived, localContext);
 
-  if (statementUnifiedWithCombinators) {
-    statementVerified = true;
-  } else {
+  if (verified) {
     const verifyStatementFunctions = [
       verifyStatementAsMetavariable,
+      unifyStatementWithCombinators,  ///
+      unifyStatementWithBracketedCombinator,  ///
       verifyStatementAsEquality,
-      verifyStatementAsJudgement,
       verifyStatementAsTypeAssertion,
       verifyStatementAsDefinedAssertion,
-      verifyStatementAsSubproofAssertion,
       verifyStatementAsContainedAssertion,
-      unifyStatementWithCombinators
+      verifyStatementAsSubproofAssertion,
+      verifyStatementAsJudgement,
+      verifyStatementAsFrame,
+      verifyStatementAsDeclaration,
+      verifyStatementAsSubstitution
     ];
 
     statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
@@ -76,9 +81,15 @@ function verifyStatementAsMetavariable(statementNode, assignments, derived, loca
 
     localContext.trace(`Verifying the '${statementString}' statement as a metavariable...`, statementNode);
 
-    const verified = metaLevelVerifier.verify(statementNode, localContext);
+    const metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode);
 
-    statementVerifiedAsMetavariable = verified; ///
+    if (!metavariablePresent) {
+      const metavariableString = localContext.nodeAsString(metavariableNode);
+
+      localContext.trace(`The '${metavariableString}' metavariable is not present.`, statementNode);
+    } else {
+      statementVerifiedAsMetavariable = true; ///
+    }
 
     if (statementVerifiedAsMetavariable) {
       localContext.debug(`...verified the '${statementString}' statement as a metavariable.`, statementNode);
@@ -218,61 +229,4 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
   }
 
   return statementVerifiedAsContainedAssertion;
-}
-
-function unifyStatementWithCombinators(statementNode, assignments, derived, localContext) {
-  let statementUnifiedWithCombinators = false;
-
-  const equalityNode = equalityNodeQuery(statementNode),
-        judgementNode = judgementNodeQuery(statementNode),
-        metavariableNode = metavariableNodeQuery(statementNode),
-        typeAssertionNode = typeAssertionNodeQuery(statementNode),
-        definedAssertionNode = definedAssertionNodeQuery(statementNode),
-        subproofAssertionNode = subproofAssertionNodeQuery(statementNode),
-        containedAssertionNode = containedAssertionNodeQuery(statementNode);
-
-  if (  (equalityNode === null) &&
-        (judgementNode === null) &&
-        (metavariableNode === null) &&
-        (typeAssertionNode === null) &&
-        (definedAssertionNode === null) &&
-        (subproofAssertionNode === null) &&
-        (containedAssertionNode === null) ) {
-
-    let combinators = localContext.getCombinators();
-
-    combinators = [ ///
-      bracketedCombinator,
-      ...combinators
-    ];
-
-    statementUnifiedWithCombinators = combinators.some((combinator) => {
-      const statementUnifiedWithCombinator = unifyStatementWithCombinator(statementNode, combinator, localContext);
-
-      if (statementUnifiedWithCombinator) {
-        return true;
-      }
-    });
-  }
-
-  return statementUnifiedWithCombinators;
-}
-
-function unifyStatementWithCombinator(statementNode, combinator, localContext) {
-  let statementUnifiedWithCombinator;
-
-  const statementString = localContext.nodeAsString(statementNode),
-        combinatorString = combinator.getString();
-
-  localContext.trace(`Unifying the '${statementString}' statement with the '${combinatorString}' combinator...`, statementNode);
-
-  const combinatorStatementNode = combinator.getStatementNode();
-
-  statementUnifiedWithCombinator = statementWithCombinatorUnifier.unify(statementNode, combinatorStatementNode, localContext);
-
-  if (statementUnifiedWithCombinator) {
-    localContext.debug(`...unified the '${statementString}' statement with the '${combinatorString}' combinator.`, statementNode);
-  }
-
-  return statementUnifiedWithCombinator;
 }

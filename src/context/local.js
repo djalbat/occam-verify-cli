@@ -1,6 +1,5 @@
 "use strict";
 
-import Variable from "../variable";
 import Equivalence from "../equivalence";
 
 import { last, reverse } from "../utilities/array";
@@ -235,25 +234,17 @@ class LocalContext {
 
     proofSteps = reverse(proofSteps); ///
 
-    const localContextA = this,  ///
-          localContextB = localContext, ///
-          statementNodeAB = statementNode, ///
-          statementStringB = localContextA.nodeAsString(statementNodeAB);
-
-    localContextB.trace(`Unifying the '${statementStringB}' statement...`, statementNodeAB);
-
     const equivalences = this.getEquivalences(),
+          localContextA = this,  ///
+          localContextB = localContext, ///
+          statementNodeB = statementNode, ///
           statementUnified = proofSteps.some((proofStep) => {
-            const statementUnified = proofStep.unifyStatement(statementNode, equivalences, localContextA, localContextB);
+            const statementUnified = proofStep.unifyStatement(statementNodeB, equivalences, localContextA, localContextB);
 
             if (statementUnified) {
               return true;
             }
           });
-
-    if (statementUnified) {
-      localContextB.debug(`...unified the '${statementStringB}' statement.`, statementNodeAB);
-    }
 
     return statementUnified;
   }

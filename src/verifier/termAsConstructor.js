@@ -1,7 +1,7 @@
 "use strict";
 
+import shim from "../shim";
 import Verifier from "../verifier";
-import verifyTerm from "../verify/term";
 import verifyType from "../verify/type";
 import LocalContext from "../context/local";
 
@@ -11,7 +11,7 @@ const termNodeQuery = nodeQuery("/term!"),
       typeNodeQuery = nodeQuery("/type!");
 
 class TermAsConstructorVerifier extends Verifier {
-  verify(termNode, fileContext) {
+  verifyTerm(termNode, fileContext) {
     let termVerifiedAsConstructor;
 
     const nonTerminalNode = termNode, ///
@@ -31,7 +31,8 @@ class TermAsConstructorVerifier extends Verifier {
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, fileContext, verifyAhead) => {
-        const terms = [],
+        const { verifyTerm } = shim,
+              terms = [],
               localContext = LocalContext.fromFileContext(fileContext),
               termVerified = verifyTerm(termNode, terms, localContext, verifyAhead);
 

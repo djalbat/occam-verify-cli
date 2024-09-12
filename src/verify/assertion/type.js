@@ -6,7 +6,6 @@ import VariableAssignment from "../../assignment/variable";
 
 import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
-import local from "../../context/local";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term!"),
       typeNodeQuery = nodeQuery("/typeAssertion/type!"),

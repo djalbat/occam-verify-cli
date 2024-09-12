@@ -10,7 +10,7 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
 
   fileContext.trace(`Verifying the '${statementString}' statement as a combinator...`, statementNode);
 
-  statementVerifiedAsCombinator = statementAsCombinatorVerifier.verify(statementNode, fileContext);
+  statementVerifiedAsCombinator = statementAsCombinatorVerifier.verifyStatement(statementNode, fileContext);
 
   if (statementVerifiedAsCombinator) {
     const tokens = fileContext.getTokens(),

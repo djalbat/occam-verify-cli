@@ -1,6 +1,5 @@
 "use strict";
 
-import shim from "../shim";
 import Declaration from "../declaration"
 import referenceMetaType from "../metaType/reference";
 
@@ -22,10 +21,7 @@ export default function verifyDeclaration(declarationNode, declarations, localCo
   if (metavariableVerified) {
     const statementNode = statementNodeQuery(declarationNode);
 
-    const { verifyStatement } = shim,
-          derived = false,
-          assignments = [],
-          statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
+    debugger
 
     if (statementVerified) {
       const declaration = Declaration.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode);

@@ -76,9 +76,7 @@ function verifyStatedUnqualifiedStatement(unqualifiedStatementNode, assignments,
 
     localContext.trace(`Verifying the '${unqualifiedStatementString}' stated unqualified statement...`, unqualifiedStatementNode);
 
-    const statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
-
-    statedUnqualifiedStatementVerified = statementVerified; ///
+    debugger
 
     if (statedUnqualifiedStatementVerified) {
       localContext.debug(`...verified the '${unqualifiedStatementString}' stated unqualified statement.`, unqualifiedStatementNode);

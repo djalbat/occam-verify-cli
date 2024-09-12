@@ -1,18 +1,18 @@
 "use strict";
 
+import shim from "../shim";
 import Verifier from "../verifier";
 import verifyType from "../verify/type";
-import verifyTerm from "../verify/term";
-import verifyStatement from "../verify/statement";
 
 import { nodeQuery } from "../utilities/query";
+import LocalContext from "../context/local";
 
 const termNodeQuery = nodeQuery("/term!"),
       typeNodeQuery = nodeQuery("/type!"),
       statementNodeQuery = nodeQuery("/statement!");
 
 class StatementAsCombinatorVerifier extends Verifier {
-  verify(statementNode, fileContext) {
+  verifyStatement(statementNode, fileContext) {
     let statementVerifiedAsCombinator;
 
     const nonTerminalNode = statementNode, ///
@@ -27,9 +27,11 @@ class StatementAsCombinatorVerifier extends Verifier {
   static maps = [
     {
       nodeQuery: statementNodeQuery,
-      verify: (statementNode, localContext) => {
-        const derived = false,
+      verify: (statementNode, fileContext) => {
+        const { verifyStatement } = shim,
+              derived = false,
               assignments = [],
+              localContext = LocalContext.fromFileContext(fileContext),
               statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 
         return statementVerified;
@@ -37,8 +39,10 @@ class StatementAsCombinatorVerifier extends Verifier {
     },
     {
       nodeQuery: termNodeQuery,
-      verify: (termNode, localContext) => {
-        const terms = [],
+      verify: (termNode, fileContext) => {
+        const { verifyTerm } = shim,
+              terms = [],
+              localContext = LocalContext.fromFileContext(fileContext),
               termVerified = verifyTerm(termNode, terms, localContext, () => {
                 const verifiedAhead = true;
 

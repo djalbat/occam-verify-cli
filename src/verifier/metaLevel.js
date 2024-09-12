@@ -1,22 +1,20 @@
 "use strict";
 
+import shim from "../shim";
 import Verifier from "../verifier";
-import verifyTerm from "../verify/term";
-import verifyVariable from "../verify/variable";
-import verifyMetavariable from "../verify/metavariable";
 
 import { nodeQuery } from "../utilities/query";
 
 const termNodeQuery = nodeQuery("/term!"),
-      variableNodeQuery = nodeQuery("/variable!"),
-      metavariableNodeQuery = nodeQuery("/metavariable!");
+      statementNodeQuery = nodeQuery("/statement!");
 
 class MetaLevelVerifier extends Verifier {
-  verify(node, localContext) {
+  verifyStatement(statementNode, assignments, derived, localContext) {
     let verified;
 
-    const nonTerminalNode = node, ///
-          nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNode, localContext);
+    const nonTerminalNode = statementNode, ///
+          childNodes = nonTerminalNode.getChildNodes(),
+          nonTerminalNodeVerified = this.verifyChildNodes(childNodes, assignments, derived, localContext);
 
     verified = nonTerminalNodeVerified;  ///
 
@@ -25,25 +23,19 @@ class MetaLevelVerifier extends Verifier {
 
   static maps = [
     {
-      nodeQuery: metavariableNodeQuery,
-      verify: (metavariableNode, localContext) => {
-        const metavariableVerified = verifyMetavariable(metavariableNode, localContext);
+      nodeQuery: statementNodeQuery,
+      verify: (statementNode, assignments, derived, localContext) => {
+        const { verifyStatement } = shim,
+              statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 
-        return metavariableVerified;
-      }
-    },
-    {
-      nodeQuery: variableNodeQuery,
-      verify: (variableNode, localContext) => {
-        const variableVerified = verifyVariable(variableNode, localContext);
-
-        return variableVerified;
+        return statementVerified;
       }
     },
     {
       nodeQuery: termNodeQuery,
-      verify: (termNode, localContext) => {
-        const terms = [],
+      verify: (termNode, assignments, derived, localContext) => {
+        const { verifyTerm } = shim,
+              terms = [],
               termVerified = verifyTerm(termNode, terms, localContext, () => {
                 const verifiedAhead = true;
 

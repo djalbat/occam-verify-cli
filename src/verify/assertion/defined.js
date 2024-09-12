@@ -1,7 +1,6 @@
 "use strict";
 
 import verifyTerm from "../../verify/term";
-import metaLevelVerifier from "../../verifier/metaLevel";
 
 import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
@@ -112,9 +111,7 @@ function verifyStatedDefinedAssertion(definedAssertionNode, assignments, derived
 
     localContext.trace(`Verifying the '${definedAssertionString}' stated defined assertion...`, definedAssertionNode);
 
-    const verified = metaLevelVerifier.verify(definedAssertionNode, localContext);
-
-    statedDefinedAssertionVerified = verified; ///
+    debugger
 
     if (statedDefinedAssertionVerified) {
       localContext.debug(`...verified the '${definedAssertionString}' stated defined assertion.`, definedAssertionNode);
