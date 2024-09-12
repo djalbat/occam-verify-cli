@@ -9,26 +9,42 @@ import { nodeQuery } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
+const unifyTermFunctions = [
+        unifyTermWithBracketedConstructor,
+        unifyTermWithConstructors,
+      ],
+      verifyTermFunctions = [
+        verifyTermAsVariable
+      ];
+
 function verifyTerm(termNode, terms, localContext, verifyAhead) {
-  let termVerified;
+  let termVerified = false;
 
   const termString = localContext.nodeAsString(termNode);
 
   localContext.trace(`Verifying the '${termString}' term...`, termNode);
 
-  const verifyTermFunctions = [
-    verifyTermAsVariable,
-    unifyTermWithConstructors,
-    unifyTermWithBracketedConstructor
-  ];
+  if (!termVerified) {
+    const termUnified = unifyTermFunctions.some((unifyTermFunction) => {
+      const termUnified = unifyTermFunction(termNode, terms, localContext, verifyAhead);
 
-  termVerified = verifyTermFunctions.some((verifyTermFunction) => {
-    const termVerified = verifyTermFunction(termNode, terms, localContext, verifyAhead);
+      if (termUnified) {
+        return true;
+      }
+    });
 
-    if (termVerified) {
-      return true;
-    }
-  });
+    termVerified = termUnified; ///
+  }
+
+  if (!termVerified) {
+    termVerified = verifyTermFunctions.some((verifyTermFunction) => {
+      const termVerified = verifyTermFunction(termNode, terms, localContext, verifyAhead);
+
+      if (termVerified) {
+        return true;
+      }
+    });
+  }
 
   if (termVerified) {
     localContext.debug(`...verified the '${termString}' term.`, termNode);
@@ -53,13 +69,9 @@ function verifyTermAsVariable(termNode, terms, localContext, verifyAhead) {
 
     localContext.trace(`Verifying the '${termString}' term as a variable...`, termNode);
 
-    const variable = localContext.findVariableByVariableNode(variableNode);
+    const variableVerified = verifyVariable(variableNode, localContext);
 
-    if (variable === null) {
-      const variableString = localContext.nodeAsString(variableNode);
-
-      localContext.trace(`The '${variableString}' variable is not present.`, termNode);
-    } else {
+    if (variableVerified) {
       let verifiedAhead;
 
       const type = variable.getType(),
@@ -80,4 +92,26 @@ function verifyTermAsVariable(termNode, terms, localContext, verifyAhead) {
   }
 
   return termVerifiedAsVariable;
+}
+
+function verifyVariable(variableNode, localContext) {
+  let variableVerified = false;
+
+  const variableString = localContext.nodeAsString(variableNode);
+
+  localContext.trace(`Verifying the '${variableString}' variable...`, variableNode);
+
+  const variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
+
+  if (!variablePresent) {
+    localContext.trace(`The '${variableString}' variable is not present.`, variableNode);
+  } else {
+    variableVerified = true;
+  }
+
+  if (variableVerified) {
+    localContext.debug(`...verified the '${variableString}' variable.`, variableNode);
+  }
+
+  return variableVerified;
 }

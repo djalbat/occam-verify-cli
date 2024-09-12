@@ -21,63 +21,49 @@ export default function verifyProofStep(proofStepNode, substitutions, localConte
         qualifiedStatementNode = qualifiedStatementNodeQuery(proofStepNode),
         unqualifiedStatementNode = unqualifiedStatementNodeQuery(proofStepNode);
 
-  if (false) {
-    ///
-  } else if (subproofNode !== null) {
+  let proofStep = null;
+
+  if (subproofNode !== null) {
     let subproofVerified;
 
     subproofVerified = verifySubproof(subproofNode, substitutions, localContext);
 
     if (subproofVerified) {
-      const proofStep = ProofStep.fromSubproofNode(subproofNode);
-
-      localContext.addProofStep(proofStep);
-
-      proofStepVerified = true;
+      proofStep = ProofStep.fromSubproofNode(subproofNode);
     }
-  } else if (qualifiedStatementNode !== null) {
-    let qualifiedStatementVerified;
-
-    const assignments = [];
-
-    qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, localContext);
-
-    if (qualifiedStatementVerified) {
-      const assignmentAssigned = assignAssignment(assignments, localContext);
-
-      qualifiedStatementVerified = assignmentAssigned; ///
-    }
-
-    if (qualifiedStatementVerified) {
-      const statementNode = statementNodeQuery(qualifiedStatementNode),
-            proofStep = ProofStep.fromStatementNode(statementNode);
-
-      localContext.addProofStep(proofStep);
-
-      proofStepVerified = true;
-    }
-  } else if (unqualifiedStatementNode !== null) {
-    let unqualifiedStatementVerified;
-
-    const derived = true,
+  } else {
+    const derived = false,
           assignments = [];
 
-    unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+    let statementVerified = false;
 
-    if (unqualifiedStatementVerified) {
+    if (qualifiedStatementNode !== null) {
+      const qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, derived, localContext);
+
+      statementVerified = qualifiedStatementVerified; ///
+    }
+
+    if (unqualifiedStatementNode !== null) {
+      const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+
+      statementVerified = unqualifiedStatementVerified; ///
+    }
+
+    if (statementVerified) {
       const assignmentAssigned = assignAssignment(assignments, localContext);
 
-      unqualifiedStatementVerified = assignmentAssigned;  ///
+      if (assignmentAssigned) {
+        const statementNode = statementNodeQuery(unqualifiedStatementNode);
+
+        proofStep = ProofStep.fromStatementNode(statementNode);
+      }
     }
+  }
 
-    if (unqualifiedStatementVerified) {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode),
-            proofStep = ProofStep.fromStatementNode(statementNode);
+  if (proofStep !== null) {
+    localContext.addProofStep(proofStep);
 
-      localContext.addProofStep(proofStep);
-
-      proofStepVerified = true;
-    }
+    proofStepVerified = true;
   }
 
   return proofStepVerified;

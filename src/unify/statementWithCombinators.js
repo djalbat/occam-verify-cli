@@ -8,7 +8,7 @@ export default function unifyStatementWithCombinators(statementNode, assignments
   const combinators = localContext.getCombinators();
 
   statementUnifiedWithCombinators = combinators.some((combinator) => {
-    const statementUnifiedWithCombinator = unifyStatementWithCombinator(statementNode, combinator, localContext);
+    const statementUnifiedWithCombinator = unifyStatementWithCombinator(statementNode, combinator, assignments, derived, localContext);
 
     if (statementUnifiedWithCombinator) {
       return true;
@@ -18,7 +18,7 @@ export default function unifyStatementWithCombinators(statementNode, assignments
   return statementUnifiedWithCombinators;
 }
 
-function unifyStatementWithCombinator(statementNode, combinator, localContext) {
+function unifyStatementWithCombinator(statementNode, combinator, assignments, derived, localContext) {
   let statementUnifiedWithCombinator;
 
   const statementString = localContext.nodeAsString(statementNode),
@@ -28,7 +28,7 @@ function unifyStatementWithCombinator(statementNode, combinator, localContext) {
 
   const combinatorStatementNode = combinator.getStatementNode();
 
-  statementUnifiedWithCombinator = statementWithCombinatorUnifier.unify(statementNode, combinatorStatementNode, localContext);
+  statementUnifiedWithCombinator = statementWithCombinatorUnifier.unify(statementNode, combinatorStatementNode, assignments, derived, localContext);
 
   if (statementUnifiedWithCombinator) {
     localContext.debug(`...unified the '${statementString}' statement with the '${combinatorString}' combinator.`, statementNode);

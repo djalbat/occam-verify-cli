@@ -3,7 +3,7 @@
 import bracketedCombinator from "../ocmbinator/bracketed";
 import statementWithCombinatorUnifier from "../unifier/statementWithCombinator";
 
-export default function unifyStatementWithBracketedCombinator(statementNode, localContext) {
+export default function unifyStatementWithBracketedCombinator(statementNode, assignments, derived, localContext) {
   let statementUnifiedWithBracketedCombinator;
 
   const statementString = localContext.nodeAsString(statementNode);

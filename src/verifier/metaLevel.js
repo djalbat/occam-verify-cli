@@ -9,10 +9,10 @@ const termNodeQuery = nodeQuery("/term!"),
       statementNodeQuery = nodeQuery("/statement!");
 
 class MetaLevelVerifier extends Verifier {
-  verifyStatement(statementNode, assignments, derived, localContext) {
+  verify(node, assignments, derived, localContext) {
     let verified;
 
-    const nonTerminalNode = statementNode, ///
+    const nonTerminalNode = node, ///
           childNodes = nonTerminalNode.getChildNodes(),
           nonTerminalNodeVerified = this.verifyChildNodes(childNodes, assignments, derived, localContext);
 

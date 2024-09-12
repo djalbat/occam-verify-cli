@@ -10,12 +10,39 @@ import { nodesQuery } from "../utilities/query";
 const declarationNodesQuery = nodesQuery("/frame/declaration"),
       metavariableNodesQuery = nodesQuery("/frame/metavariable");
 
-export default function verifyFrame(frameNode, frames, assignments, derived, localContext) {
+export default function verifyFrame(frameNode, assignments, derived, localContext) {
   let frameVerified;
 
   const frameString = localContext.nodeAsString(frameNode);
 
   localContext.trace(`Verifying the '${frameString}' frame...`, frameNode);
+
+  const verifyFrameFunctions = [
+    verifyDerivedFrame,
+    verifyStatedFrame
+  ];
+
+  frameVerified = verifyFrameFunctions.some((verifyFrameFunction) => {
+    const frameVerified = verifyFrameFunction(frameNode, assignments, derived, localContext);
+
+    if (frameVerified) {
+      return true;
+    }
+  });
+
+  if (frameVerified) {
+    localContext.debug(`...verified the '${frameString}' frame.`, frameNode);
+  }
+
+  return frameVerified;
+}
+
+function verifyStatedFrame(frameNode, frames, assignments, derived, localContext) {
+  let statedFrameVerified;
+
+  const frameString = localContext.nodeAsString(frameNode);
+
+  localContext.trace(`Verifying the '${frameString}' stated frame...`, frameNode);
 
   const declarations = [],
         declarationNodes = declarationNodesQuery(frameNode),
@@ -36,14 +63,14 @@ export default function verifyFrame(frameNode, frames, assignments, derived, loc
 
     frames.push(frame);
 
-    frameVerified = true;
+    statedFrameVerified = true;
   }
 
-  if (frameVerified) {
-    localContext.debug(`...verified the '${frameString}' frame.`, frameNode);
+  if (statedFrameVerified) {
+    localContext.debug(`...verified the '${frameString}' stated frame.`, frameNode);
   }
 
-  return frameVerified;
+  return statedFrameVerified;
 }
 
 function verifyMetavariable(metavariableNode, declarations, localContext) {

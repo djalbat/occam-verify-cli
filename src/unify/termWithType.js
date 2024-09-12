@@ -1,31 +1,15 @@
 "use strict";
 
-import shim from "../shim";
-
-import { first } from "../utilities/array";
+import verifyTermGivenType from "../verify/termGivenType";
 
 export default function unifyTermWithType(termNode, typeNode, localContext) {
   let termUnifiedWithType;
 
-  const { verifyTerm } = shim,
-        terms = [],
-        termVerified = verifyTerm(termNode, terms, localContext, () => {
-          let verifiedAhead = false;
+  const type = localContext.findTypeByTypeNode(typeNode),
+        termVerifiedGivenType = verifyTermGivenType(termNode, type, localContext);
 
-          const firstTerm = first(terms),
-                term = firstTerm, ///
-                termType = term.getType(),
-                type = localContext.findTypeByTypeNode(typeNode),
-                termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
+  termUnifiedWithType = termVerifiedGivenType;  ///
 
-          if (termTypeEqualToOrSubTypeOfType) {
-            verifiedAhead = true;
-          }
-
-          return verifiedAhead;
-        });
-
-  termUnifiedWithType = termVerified; ///
 
   return termUnifiedWithType;
 }

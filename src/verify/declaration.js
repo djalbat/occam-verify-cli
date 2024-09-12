@@ -8,12 +8,39 @@ import { nodeQuery } from "../utilities/query";
 const statementNodeQuery = nodeQuery("/declaration/statement!"),
       metavariableNodeQuery = nodeQuery("/declaration/metavariable!");
 
-export default function verifyDeclaration(declarationNode, declarations, localContext) {
-  let declarationVerified = false;
+export default function verifyDeclaration(declarationNode, assignments, derived, localContext) {
+  let declarationVerified;
 
   const declarationString = localContext.nodeAsString(declarationNode);
 
   localContext.trace(`Verifying the '${declarationString}' declaration...`, declarationNode);
+
+  const verifyDeclarationFunctions = [
+    verifyDerivedDeclaration,
+    verifyStatedDeclaration
+  ];
+
+  declarationVerified = verifyDeclarationFunctions.some((verifyDeclarationFunction) => {
+    const declarationVerified = verifyDeclarationFunction(declarationNode, assignments, derived, localContext);
+
+    if (declarationVerified) {
+      return true;
+    }
+  });
+
+  if (declarationVerified) {
+    localContext.debug(`...verified the '${declarationString}' declaration.`, declarationNode);
+  }
+
+  return declarationVerified;
+}
+
+function verifyStatedDeclaration(declarationNode, declarations, localContext) {
+  let statedDeclarationVerified = false;
+
+  const declarationString = localContext.nodeAsString(declarationNode);
+
+  localContext.trace(`Verifying the '${declarationString}' stated declaration...`, declarationNode);
 
   const metavariableNode = metavariableNodeQuery(declarationNode),
         metavariableVerified = verifyMetavariable(metavariableNode, localContext);
@@ -28,15 +55,15 @@ export default function verifyDeclaration(declarationNode, declarations, localCo
 
       declarations.push(declaration);
 
-      declarationVerified = true;
+      statedDeclarationVerified = true;
     }
   }
 
-  if (declarationVerified) {
-    localContext.debug(`...verified the '${declarationString}' declaration.`, declarationNode);
+  if (statedDeclarationVerified) {
+    localContext.debug(`...verified the '${declarationString}' stated declaration.`, declarationNode);
   }
 
-  return declarationVerified;
+  return statedDeclarationVerified;
 }
 
 function verifyMetavariable(metavariableNode, localContext) {

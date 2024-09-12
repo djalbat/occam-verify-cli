@@ -2,6 +2,11 @@
 
 import metaLevelVerifier from "../../verifier/metaLevel";
 
+const verifySubproofAssertionFunctions = [
+  verifyDerivedSubproofAssertion,
+  verifyStatedSubproofAssertion
+];
+
 export default function verifySubproofAssertion(subproofAssertionNode, assignments, derived, localContext) {
   let subproofAssertionVerified;
 
@@ -9,18 +14,17 @@ export default function verifySubproofAssertion(subproofAssertionNode, assignmen
 
   localContext.trace(`Verifying the '${subproofAssertionString}' subproof assertion...`, subproofAssertionNode);
 
-  const verifySubproofAssertionFunctions = [
-    verifyDerivedSubproofAssertion,
-    verifyStatedSubproofAssertion
-  ];
+  const verified = metaLevelVerifier.verify(subproofAssertionNode, assignments, derived, localContext);
 
-  subproofAssertionVerified = verifySubproofAssertionFunctions.some((verifySubproofAssertionFunction) => {
-    const subproofAssertionVerified = verifySubproofAssertionFunction(subproofAssertionNode, assignments, derived, localContext);
+  if (verified) {
+    subproofAssertionVerified = verifySubproofAssertionFunctions.some((verifySubproofAssertionFunction) => {
+      const subproofAssertionVerified = verifySubproofAssertionFunction(subproofAssertionNode, assignments, derived, localContext);
 
-    if (subproofAssertionVerified) {
-      return true;
-    }
-  });
+      if (subproofAssertionVerified) {
+        return true;
+      }
+    });
+  }
 
   if (subproofAssertionVerified) {
     localContext.debug(`...verified the '${subproofAssertionString}' subproof assertion.`, subproofAssertionNode);
@@ -30,28 +34,30 @@ export default function verifySubproofAssertion(subproofAssertionNode, assignmen
 }
 
 function verifyDerivedSubproofAssertion(subproofAssertionNode, assignments, derived, localContext) {
-  let derivedSubproofAssertionVerified = false;
+  let derivedSubproofAssertionVerified;
 
   if (derived) {
     const subproofAssertionString = localContext.nodeAsString(subproofAssertionNode);
 
-    if (derivedSubproofAssertionVerified) {
-      localContext.debug(`The '${subproofAssertionString}' derived subproof assertion cannot be verified.`, subproofAssertionNode);
-    }
+    localContext.trace(`Verifying the '${subproofAssertionString}' derived subproof assertion...`, subproofAssertionNode);
+
+    derivedSubproofAssertionVerified = false;
+
+    localContext.debug(`The '${subproofAssertionString}' derived subproof assertion cannot be verified.`, subproofAssertionNode);
   }
 
   return derivedSubproofAssertionVerified;
 }
 
 function verifyStatedSubproofAssertion(subproofAssertionNode, assignments, derived, localContext) {
-  let statedSubproofAssertionVerified = false;
+  let statedSubproofAssertionVerified;
 
   if (!derived) {
     const subproofAssertionString = localContext.nodeAsString(subproofAssertionNode);
 
     localContext.trace(`Verifying the '${subproofAssertionString}' stated subproof assertion...`, subproofAssertionNode);
 
-    debugger
+    statedSubproofAssertionVerified = true;
 
     if (statedSubproofAssertionVerified) {
       localContext.debug(`...verified the '${subproofAssertionString}' stated subproof assertion.`, subproofAssertionNode);
