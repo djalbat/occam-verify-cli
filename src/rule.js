@@ -1,8 +1,8 @@
 "use strict";
 
 import Substitutions from "./substitutions";
-import unifyPremisesAgainstProofSteps from "./unify/premisesAgainstProofSteps";
-import unifyConclusionAgainstStatement from "./unify/conclusionAgainstStatement";
+import unifyPremisesWithProofSteps from "./unify/premisesWithProofSteps";
+import unifyConclusionWithStatement from "./unify/conclusionWithStatement";
 
 export default class Rule {
   constructor(labels, premises, conclusion, fileContext) {
@@ -37,11 +37,11 @@ export default class Rule {
           proofStepsB = proofSteps, ///
           fileContextA = this.fileContext,  ///
           localContextB = localContext, ///
-          premisesUnified = unifyPremisesAgainstProofSteps(premisesA, proofStepsB, substitutions, fileContextA, localContextB);
+          premisesUnified = unifyPremisesWithProofSteps(premisesA, proofStepsB, substitutions, fileContextA, localContextB);
 
     if (premisesUnified) {
       const conclusionA = this.conclusion,  ///
-            conclusionUnified = unifyConclusionAgainstStatement(conclusionA, statementNode, substitutions, fileContextA, localContextB);
+            conclusionUnified = unifyConclusionWithStatement(conclusionA, statementNode, substitutions, fileContextA, localContextB);
 
       statementUnified = conclusionUnified;  ///
     }

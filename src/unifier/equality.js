@@ -1,7 +1,7 @@
 "use strict";
 
 import Unifier from "../unifier";
-import unifyTermAgainstTerm from "../unify/termAgainstTerm";
+import unifyTermWithTerm from "../unify/termWithTerm";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -25,14 +25,14 @@ class EqualityUnifier extends Unifier {
       nodeQueryA: termNodeQuery,
       nodeQueryB: termNodeQuery,
       unify: (termNodeA, termNodeB, localContext) => {
-        let termUnifiedAgainstTerm;
+        let termUnifiedWithTerm;
 
         const leftTermNode = termNodeA, ///
               rightTermNode = termNodeB;  ///
 
-        termUnifiedAgainstTerm = unifyTermAgainstTerm(leftTermNode, rightTermNode, localContext);
+        termUnifiedWithTerm = unifyTermWithTerm(leftTermNode, rightTermNode, localContext);
 
-        if (!termUnifiedAgainstTerm) {
+        if (!termUnifiedWithTerm) {
           const nonTerminalNodeA = termNodeA, ///
                 nonTerminalNodeB = termNodeB, ///
                 nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
@@ -41,10 +41,10 @@ class EqualityUnifier extends Unifier {
                 childNodesB = nonTerminalNodeBChildNodes, ///
                 childNodesVerified = equalityUnifier.unifyChildNodes(childNodesA, childNodesB, localContext);
 
-          termUnifiedAgainstTerm = childNodesVerified; ///
+          termUnifiedWithTerm = childNodesVerified; ///
         }
 
-        return termUnifiedAgainstTerm;
+        return termUnifiedWithTerm;
       }
     }
   ];

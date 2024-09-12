@@ -1,7 +1,7 @@
 "use strict";
 
 const { Dependency } = require("occam-entities"),
-      { verifyRelease, createReleaseContext, verifyReleaseContext } = require("../../lib/index");  ///
+      { verifyRelease, createReleaseContext, initialiseReleaseContext } = require("../../lib/index");  ///
 
 const { trimTrailingSlash } = require("../utilities/string"),
       { releaseContextFromDependency } = require("../utilities/releaseContext");
@@ -31,7 +31,7 @@ function verifyAction(argument, log) {
           releaseContext = releaseContextMap[releaseName] || null;
 
     if (releaseContext === null) {
-      log.warning(`The '${name}' project or package does not exist.`);
+      log.warning(`The '${name}' project or package context cannot be created.`);
 
       return;
     }
@@ -44,15 +44,26 @@ function verifyAction(argument, log) {
       return;
     }
 
-    const dependentReleased = released; ///
+    const dependentReleased = released, ///
+          releaseContextInitialised = initialiseReleaseContext(dependency, dependentName, dependentReleased, context);
 
-    verifyReleaseContext(dependency, dependentName, dependentReleased, context);
+    if (!releaseContextInitialised) {
+      log.warning(`The '${name}' project or package context cannot be initialised.`);
+
+      return;
+    }
 
     let now;
 
     now = Date.now();
 
-    verifyRelease(releaseName, releaseContextMap);
+    const releaseVerified = verifyRelease(releaseName, releaseContextMap);
+
+    if (!releaseVerified) {
+      log.warning(`The '${name}' project or package context cannot be verified.`);
+
+      return;
+    }
 
     const then = now; ///
 

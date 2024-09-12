@@ -2,7 +2,7 @@
 
 import { subproofNodeAsSubproofString } from "../utilities/unify";
 
-export default function unifyPremiseAgainstProofStep(premiseA, proofStepB, substitutions, localContextA, localContextB) {
+export default function unifyPremiseWithProofStep(premiseA, proofStepB, substitutions, localContextA, localContextB) {
   let premiseUnified = false;
 
   const premiseAStatementNode = premiseA.getStatementNode();
@@ -20,12 +20,12 @@ export default function unifyPremiseAgainstProofStep(premiseA, proofStepB, subst
     if (subproofNodeB !== null) {
       const subproofStringB = subproofNodeAsSubproofString(subproofNodeB, localContextB);
 
-      localContextB.trace(`Unifying the '${subproofStringB}' subproof against the premise's '${statementStringA}' statement...`, subproofNodeB);
+      localContextB.trace(`Unifying the '${subproofStringB}' subproof with the premise's '${statementStringA}' statement...`, subproofNodeB);
 
       const subproofUnified = premiseA.unifySubproof(subproofNodeB, substitutions, localContextA, localContextB);
 
       if (subproofUnified) {
-        localContextB.debug(`...unified the '${subproofStringB}' subproof against the premise's '${statementStringA}' statement.`, subproofNodeB);
+        localContextB.debug(`...unified the '${subproofStringB}' subproof with the premise's '${statementStringA}' statement.`, subproofNodeB);
 
         premiseUnified = true;
       }
@@ -34,12 +34,12 @@ export default function unifyPremiseAgainstProofStep(premiseA, proofStepB, subst
     if (statementNodeB !== null) {
       const statementStringB = localContextB.nodeAsString(statementNodeB);
 
-      localContextB.trace(`Unifying the '${statementStringB}' statement against the premise's '${statementStringA}' statement...`, statementNodeB);
+      localContextB.trace(`Unifying the '${statementStringB}' statement with the premise's '${statementStringA}' statement...`, statementNodeB);
 
       const statementUnified = premiseA.unifyStatement(statementNodeB, substitutions, localContextA, localContextB);
 
       if (statementUnified) {
-        localContextB.debug(`...unified the '${statementStringB}' statement against the premise's '${statementStringA}' statement.`, statementNodeB);
+        localContextB.debug(`...unified the '${statementStringB}' statement with the premise's '${statementStringA}' statement.`, statementNodeB);
 
         premiseUnified = true;
       }

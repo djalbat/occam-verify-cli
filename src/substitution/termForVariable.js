@@ -51,8 +51,8 @@ export default class TermForVariableSubstitution extends Substitution {
     return matchesVariableNode;
   }
 
-  unifyAgainstEquivalence(equivalence, substitutions, localContextA, localContextB) {
-    let unifiedAgainstEquivalence;
+  unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {
+    let unifiedWithEquivalence;
 
     const equivalenceMatchesVariableNode = equivalence.matchVariableNode(this.variableNode);
 
@@ -60,11 +60,11 @@ export default class TermForVariableSubstitution extends Substitution {
       const equivalenceMatchesTermNode = equivalence.matchTermNode(this.termNode);
 
       if (equivalenceMatchesTermNode) {
-        unifiedAgainstEquivalence = true;
+        unifiedWithEquivalence = true;
       }
     }
 
-    return unifiedAgainstEquivalence;
+    return unifiedWithEquivalence;
   }
 
   asString(localContextA, localContextB) {

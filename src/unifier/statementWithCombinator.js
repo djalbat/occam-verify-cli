@@ -1,8 +1,8 @@
 "use strict";
 
 import Unifier from "../unifier";
-import unifyTermAgainstType from "../unify/termAgainstType";
-import unifyStatementAgainstMetaType from "../unify/statementAgainstMetaType";
+import unifyTermWithType from "../unify/termWithType";
+import unifyStatementWithMetaType from "../unify/statementWithMetaType";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -11,17 +11,17 @@ const termNodeQuery = nodeQuery("/term!"),
       metaTypeNodeQuery = nodeQuery("/metaType!"),
       statementNodeQuery = nodeQuery("/statement!");
 
-class StatementAgainstCombinatorUnifier extends Unifier {
+class StatementWithCombinatorUnifier extends Unifier {
   unify(statementNode, combinatorStatementNode, localContext) {
-    let statementUnifiedAgainstCombinator;
+    let statementUnifiedWithCombinator;
 
     const nonTerminalNodeA = statementNode, ///
           nonTerminalNodeB = combinatorStatementNode, ///
           nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext);
 
-    statementUnifiedAgainstCombinator = nonTerminalNodeUnified; ///
+    statementUnifiedWithCombinator = nonTerminalNodeUnified; ///
 
-    return statementUnifiedAgainstCombinator;
+    return statementUnifiedWithCombinator;
   };
 
   static maps = [
@@ -31,9 +31,9 @@ class StatementAgainstCombinatorUnifier extends Unifier {
       unify: (statementNodeA, metaTypeNodeB, localContext) => {
         const metaTypeNode = metaTypeNodeB, ///
               statementNode = statementNodeA, ///
-              statementUnifiedAgainstMetaType = unifyStatementAgainstMetaType(statementNode, metaTypeNode, localContext);
+              statementUnifiedWithMetaType = unifyStatementWithMetaType(statementNode, metaTypeNode, localContext);
 
-        return statementUnifiedAgainstMetaType;
+        return statementUnifiedWithMetaType;
       }
     },
     {
@@ -42,14 +42,14 @@ class StatementAgainstCombinatorUnifier extends Unifier {
       unify: (termNodeA, typeNodeB, localContext) => {
         const termNode = termNodeA, ///
               typeNode = typeNodeB, ///
-              termUnifiedAgainstType = unifyTermAgainstType(termNode, typeNode, localContext);
+              termUnifiedWithType = unifyTermWithType(termNode, typeNode, localContext);
 
-        return termUnifiedAgainstType;
+        return termUnifiedWithType;
       }
     }
   ];
 }
 
-const statementAgainstCombinatorUnifier = new StatementAgainstCombinatorUnifier();
+const statementWithCombinatorUnifier = new StatementWithCombinatorUnifier();
 
-export default statementAgainstCombinatorUnifier;
+export default statementWithCombinatorUnifier;

@@ -3,7 +3,7 @@
 import shim from "../shim";
 import Substitution from "../substitution";
 import TermForVariableSubstitution from "./termForVariable";
-import unifyStatementAgainstStatement from "../unify/statementAtainstStatement";
+import unifyStatementWithStatement from "../unify/statementAtainstStatement";
 
 import { nodeQuery } from "../utilities/query";
 import { matchStatementModuloBrackets, bracketedStatementChildNodeFromStatementNode } from "../utilities/match";
@@ -74,8 +74,8 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return statementNodeMatches;
   }
 
-  unifyAgainstEquivalence(equivalence, substitutions, localContextA, localContextB) {
-    let unifiedAgainstEquivalence = false;  ///
+  unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {
+    let unifiedWithEquivalence = false;  ///
 
     const metavariableNode = metavariableNodeQuery(this.statementNode);
 
@@ -89,10 +89,10 @@ export default class StatementForMetavariableSubstitution extends Substitution {
             nodeB = metavariableNode, ///
             unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
-      unifiedAgainstEquivalence = unified; ///
+      unifiedWithEquivalence = unified; ///
     }
 
-    return unifiedAgainstEquivalence;
+    return unifiedWithEquivalence;
   }
 
   asString(localContextA, localContextB) {
@@ -156,9 +156,9 @@ function unifyStatement(statementNodeA, statementNodeB, substitution, substituti
 
     statementUnified = statementNodeAMatchesStatementNodeB; ///
   } else {
-    const statementUnifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
+    const statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB);
 
-    statementUnified = statementUnifiedAgainstStatement; ///
+    statementUnified = statementUnifiedWithStatement; ///
   }
 
   return statementUnified;

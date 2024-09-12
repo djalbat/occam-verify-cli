@@ -2,7 +2,7 @@
 
 import LocalContext from "../context/local";
 
-export default function unifyConclusionAgainstStatement(conclusionA, statementNodeB, substitutions, fileContextA, localContextB) {
+export default function unifyConclusionWithStatement(conclusionA, statementNodeB, substitutions, fileContextA, localContextB) {
   let conclusionUnified = false;
 
   const conclusionAStatementNode = conclusionA.getStatementNode();
@@ -15,7 +15,7 @@ export default function unifyConclusionAgainstStatement(conclusionA, statementNo
 
     substitutions.snapshot();
 
-    localContextB.trace(`Unifying the '${statementStringB}' statement against the conclusion's '${statementStringA}' statement...`, statementNodeB);
+    localContextB.trace(`Unifying the '${statementStringB}' statement with the conclusion's '${statementStringA}' statement...`, statementNodeB);
 
     const statementUnified = conclusionA.unifyStatement(statementNodeB, substitutions, localContextA, localContextB);
 
@@ -26,7 +26,7 @@ export default function unifyConclusionAgainstStatement(conclusionA, statementNo
         substitutions.rollback(localContextA, localContextB);
 
     if (conclusionUnified) {
-      localContextB.debug(`...unified the '${statementStringB}' statement against the conclusion's '${statementStringA}' statement.`, statementNodeB);
+      localContextB.debug(`...unified the '${statementStringB}' statement with the conclusion's '${statementStringA}' statement.`, statementNodeB);
     }
   }
 

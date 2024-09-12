@@ -1,15 +1,15 @@
 "use strict";
 
 import TermForVariableSubstitution from "../substitution/termForVariable";
-import unifyStatementAgainstStatement from "../unify/statementAtainstStatement";
+import unifyStatementWithStatement from "../unify/statementAtainstStatement";
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
 
 import { nodeQuery } from "../utilities/query";
 
 const metavariableNodeQuery = nodeQuery("/statement/metavariable");
 
-export default function unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB) {
-  let metavariableUnifiedAgainstStatement = false;
+export default function unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB) {
+  let metavariableUnifiedWithStatement = false;
 
   const substitution = substitutions.findSubstitution((substitution) => {
     const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNodeA);
@@ -28,10 +28,10 @@ export default function unifyMetavariableAgainstStatement(metavariableNodeA, sta
             localContext = localContextB,  ///
             substitution = termForVariableSubstitution, ///
             statementNodeA = substitutionStatementNode, ///
-            statementUnifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
+            statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
 
-      if (statementUnifiedAgainstStatement) {
-        metavariableUnifiedAgainstStatement = true;
+      if (statementUnifiedWithStatement) {
+        metavariableUnifiedWithStatement = true;
       }
     } else {
       const substitutionSubstitution = substitution.getSubstitution();
@@ -43,16 +43,16 @@ export default function unifyMetavariableAgainstStatement(metavariableNodeA, sta
 
         const localContext = localContextB,  ///
               substitution = substitutionSubstitution,
-              statementUnifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
+              statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
 
-        if (statementUnifiedAgainstStatement) {
-          metavariableUnifiedAgainstStatement = true;
+        if (statementUnifiedWithStatement) {
+          metavariableUnifiedWithStatement = true;
         }
       } else {
         const substitutionMatchesStatementNodeB = substitution.matchStatementNode(statementNodeB);
 
         if (substitutionMatchesStatementNodeB) {
-          metavariableUnifiedAgainstStatement = true;
+          metavariableUnifiedWithStatement = true;
         }
       }
     }
@@ -72,11 +72,11 @@ export default function unifyMetavariableAgainstStatement(metavariableNodeA, sta
         substitutions.addSubstitution(substitution, localContextA, localContextB);
       }
 
-      metavariableUnifiedAgainstStatement = true;
+      metavariableUnifiedWithStatement = true;
     }
   }
 
-  return metavariableUnifiedAgainstStatement;
+  return metavariableUnifiedWithStatement;
 }
 
 function metavariableFromStatementNode(statementNode, localContext) {

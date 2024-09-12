@@ -1,24 +1,24 @@
 "use strict";
 
 import Unifier from "../unifier";
-import unifyTermAgainstType from "../unify/termAgainstType";
+import unifyTermWithType from "../unify/termWithType";
 
 import { nodeQuery } from "../utilities/query";
 
 const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type");
 
-class TermAgainstConstructorUnifier extends Unifier {
+class TermWithConstructorUnifier extends Unifier {
   unify(termNode, constructorTermNode, localContext) {
-    let termUnifiedAgainstConstructor;
+    let termUnifiedWithConstructor;
 
     const nonTerminalNodeA = termNode, ///
           nonTerminalNodeB = constructorTermNode, ///
           nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext);
 
-    termUnifiedAgainstConstructor = nonTerminalNodeUnified; ///
+    termUnifiedWithConstructor = nonTerminalNodeUnified; ///
 
-    return termUnifiedAgainstConstructor;
+    return termUnifiedWithConstructor;
   };
 
   static maps = [
@@ -28,14 +28,14 @@ class TermAgainstConstructorUnifier extends Unifier {
       unify: (termNodeA, typeNodeB, localContext) => {
         const termNode = termNodeA, ///
               typeNode = typeNodeB, ///
-              termUnifiedAgainstType = unifyTermAgainstType(termNode, typeNode, localContext);
+              termUnifiedWithType = unifyTermWithType(termNode, typeNode, localContext);
 
-        return termUnifiedAgainstType;
+        return termUnifiedWithType;
       }
     }
   ];
 }
 
-const termAgainstConstructorUnifier = new TermAgainstConstructorUnifier();
+const termWithConstructorUnifier = new TermWithConstructorUnifier();
 
-export default termAgainstConstructorUnifier;
+export default termWithConstructorUnifier;

@@ -5,8 +5,8 @@ import TermForVariableSubstitution from "../substitution/termForVariable";
 
 import { push } from "../utilities/array";
 
-export default function unifyStatementAgainstStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB) {
-  let statementUnifiedAgainstStatement = false;
+export default function unifyStatementWithStatement(statementNodeA, statementNodeB, substitution, substitutions, localContextA, localContextB) {
+  let statementUnifiedWithtatement = false;
 
   const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionAndSubstitutions(substitution, substitutions),
         transformed = termForVariableSubstitution.isTransformed(substitution);
@@ -35,10 +35,10 @@ export default function unifyStatementAgainstStatement(statementNodeA, statement
       push(substitutions, substitutionsA);
     }
 
-    statementUnifiedAgainstStatement = true;
+    statementUnifiedWithtatement = true;
   }
 
-  return statementUnifiedAgainstStatement;
+  return statementUnifiedWithtatement;
 }
 
 function transformSubstitutions(substitutionsA, substitutionsB) {

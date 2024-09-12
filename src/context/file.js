@@ -620,6 +620,45 @@ export default class FileContext {
 
   fatal(message, node) { this.releaseContext.fatal(message, node, this.tokens, this.filePath); }
 
+  reset() {
+    this.types = [];
+    this.rules = [];
+    this.axioms = [];
+    this.lemmas = [];
+    this.theorems = [];
+    this.variables = [];
+    this.metaLemmas = [];
+    this.conjectures = [];
+    this.combinators = [];
+    this.constructors = [];
+    this.metatheorems = [];
+    this.metavariables = [];
+  }
+
+  verify() {
+    let verified = false;
+
+    if (this.tokens === null) {
+      const lexer = this.getLexer(),
+            parser = this.getParser(),
+            content = this.fileContent; ///
+
+      this.tokens = lexer.tokenise(content);
+
+      this.node = parser.parse(this.tokens);
+    }
+
+    if (this.node !== null) {
+      this.reset();
+
+      const fileContext = this; ///
+
+      verified = topLevelVerifier.verify(this.node, fileContext);
+    }
+
+    return verified;
+  }
+
   toJSON() {
     const filePath =  this.filePath,
           fileContent = this.fileContent,
@@ -631,23 +670,9 @@ export default class FileContext {
     return json;
   }
 
-  verify() {
-    const lexer = this.getLexer(),
-          parser = this.getParser(),
-          content = this.fileContent,  ///
-          fileContext = this;
-
-    this.tokens = lexer.tokenise(content);
-
-    this.node = parser.parse(this.tokens);
-
-    const verified = topLevelVerifier.verify(this.node, fileContext);
-
-    return verified;
-  }
-
-  static fromJSONAndReleaseContext(json, releaseContext) {
-    const { fileContent, filePath } = json,
+  static fromFileAndReleaseContext(file, releaseContext) {
+    const fileContent = file.getContent(),
+          filePath = file.getPath(),
           tokens = null,
           node = null,
           types = [],

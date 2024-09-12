@@ -55,17 +55,17 @@ export default class Substitutions {
     localContextB.trace(`Removed the '${substitutionString}' substitution.`, substitutionNode);
   }
 
-  unifyAgainstEquivalences(equivalences, localContextA, localContextB) {
-    const unifiedAgainstEquivalences = this.everySubstitution((substitution) => {
+  unifyWithEquivalences(equivalences, localContextA, localContextB) {
+    const unifiedWithEquivalences = this.everySubstitution((substitution) => {
       const substitutions = this, ///
-            substitutionUnifiedAgainstEquivalence = substitution.unifyAgainstEquivalences(equivalences, substitutions, localContextA, localContextB);
+            substitutionUnifiedWithEquivalence = substitution.unifyWithEquivalences(equivalences, substitutions, localContextA, localContextB);
 
-      if (substitutionUnifiedAgainstEquivalence) {
+      if (substitutionUnifiedWithEquivalence) {
         return true;
       }
     });
 
-    return unifiedAgainstEquivalences;
+    return unifiedWithEquivalences;
   }
 
   snapshot() {

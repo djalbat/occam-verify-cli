@@ -21,23 +21,23 @@ export default class ProofStep {
     let statementUnified = false;
 
     if (this.statementNode !== null) {
-      let statementUnifiedAgainstStatement = false;
+      let statementUnifiedWithStatement = false;
 
-      if (!statementUnifiedAgainstStatement) {
+      if (!statementUnifiedWithStatement) {
         const statementNodeA = statementNode, ///
               statementNodeB = this.statementNode;  ///
 
-        statementUnifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB);
+        statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB);
       }
 
-      if (!statementUnifiedAgainstStatement) {
+      if (!statementUnifiedWithStatement) {
         const statementNodeA = statementNode, ///
               statementNodeB = this.statementNode;  ///
 
-        statementUnifiedAgainstStatement = unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB);
+        statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB);
       }
 
-      statementUnified = statementUnifiedAgainstStatement;  ///
+      statementUnified = statementUnifiedWithStatement;  ///
     }
 
     return statementUnified;
@@ -58,13 +58,13 @@ export default class ProofStep {
   }
 }
 
-function unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB) {
-  let statementUnifiedAgainstStatement = false;
+function unifyStatementWithStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB) {
+  let statementUnifiedWithStatement = false;
 
   const statementStringA = localContextA.nodeAsString(statementNodeA),
         statementStringB = localContextB.nodeAsString(statementNodeB);
 
-  localContextB.trace(`Unifying the '${statementStringB}' statement against the '${statementStringA}' statement...`, statementNodeB);
+  localContextB.trace(`Unifying the '${statementStringB}' statement with the '${statementStringA}' statement...`, statementNodeB);
 
   const substitutions = Substitutions.fromNothing(),
         nodeA = statementNodeA,  ///
@@ -72,14 +72,14 @@ function unifyStatementAgainstStatement(statementNodeA, statementNodeB, equivale
         unified = intrinsicLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
   if (unified) {
-    const substitutionsUnifiedAgainstEquivalences = substitutions.unifyAgainstEquivalences(equivalences, localContextA, localContextB);
+    const substitutionsUnifiedWithEquivalences = substitutions.unifyWithEquivalences(equivalences, localContextA, localContextB);
 
-    statementUnifiedAgainstStatement = substitutionsUnifiedAgainstEquivalences;  ///
+    statementUnifiedWithStatement = substitutionsUnifiedWithEquivalences;  ///
   }
 
-  if (statementUnifiedAgainstStatement) {
-    localContextB.debug(`...unified the '${statementStringB}' statement against the '${statementStringA}' statement.`, statementNodeB);
+  if (statementUnifiedWithStatement) {
+    localContextB.debug(`...unified the '${statementStringB}' statement with the '${statementStringA}' statement.`, statementNodeB);
   }
 
-  return statementUnifiedAgainstStatement;
+  return statementUnifiedWithStatement;
 }

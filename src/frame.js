@@ -38,9 +38,9 @@ export default class Frame {
 
   unifySubstitution(substitution) {
     const substitutionUnified = this.declarations.some((declaration) => {
-      const substitutionUnifiedAgainstDeclaration = declaration.unifySubstitution(substitution);
+      const substitutionUnifiedWithDeclaration = declaration.unifySubstitution(substitution);
 
-      if (substitutionUnifiedAgainstDeclaration) {
+      if (substitutionUnifiedWithDeclaration) {
         return true;
       }
     });

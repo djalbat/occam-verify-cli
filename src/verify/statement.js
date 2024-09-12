@@ -9,7 +9,7 @@ import verifyTypeAssertion from "../verify/assertion/type";
 import verifyDefinedAssertion from "../verify/assertion/defined";
 import verifySubproofAssertion from "../verify/assertion/subproof";
 import verifyContainedAssertion from "../verify/assertion/contained";
-import statementAgainstCombinatorUnifier from "../unifier/statementAgainstCombinator";
+import statementWithCombinatorUnifier from "../unifier/statementWithCombinator";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -28,9 +28,9 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
 
   localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
 
-  const statementUnifiedAgainstCombinators = unifyStatementAgainstCombinators(statementNode, assignments, derived, localContext);
+  const statementUnifiedWithCombinators = unifyStatementWithCombinators(statementNode, assignments, derived, localContext);
 
-  if (statementUnifiedAgainstCombinators) {
+  if (statementUnifiedWithCombinators) {
     statementVerified = true;
   } else {
     const verifyStatementFunctions = [
@@ -41,7 +41,7 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
       verifyStatementAsDefinedAssertion,
       verifyStatementAsSubproofAssertion,
       verifyStatementAsContainedAssertion,
-      unifyStatementAgainstCombinators
+      unifyStatementWithCombinators
     ];
 
     statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
@@ -220,8 +220,8 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
   return statementVerifiedAsContainedAssertion;
 }
 
-function unifyStatementAgainstCombinators(statementNode, assignments, derived, localContext) {
-  let statementUnifiedAgainstCombinators = false;
+function unifyStatementWithCombinators(statementNode, assignments, derived, localContext) {
+  let statementUnifiedWithCombinators = false;
 
   const equalityNode = equalityNodeQuery(statementNode),
         judgementNode = judgementNodeQuery(statementNode),
@@ -246,33 +246,33 @@ function unifyStatementAgainstCombinators(statementNode, assignments, derived, l
       ...combinators
     ];
 
-    statementUnifiedAgainstCombinators = combinators.some((combinator) => {
-      const statementUnifiedAgainstCombinator = unifyStatementAgainstCombinator(statementNode, combinator, localContext);
+    statementUnifiedWithCombinators = combinators.some((combinator) => {
+      const statementUnifiedWithCombinator = unifyStatementWithCombinator(statementNode, combinator, localContext);
 
-      if (statementUnifiedAgainstCombinator) {
+      if (statementUnifiedWithCombinator) {
         return true;
       }
     });
   }
 
-  return statementUnifiedAgainstCombinators;
+  return statementUnifiedWithCombinators;
 }
 
-function unifyStatementAgainstCombinator(statementNode, combinator, localContext) {
-  let statementUnifiedAgainstCombinator;
+function unifyStatementWithCombinator(statementNode, combinator, localContext) {
+  let statementUnifiedWithCombinator;
 
   const statementString = localContext.nodeAsString(statementNode),
         combinatorString = combinator.getString();
 
-  localContext.trace(`Unifying the '${statementString}' statement against the '${combinatorString}' combinator...`, statementNode);
+  localContext.trace(`Unifying the '${statementString}' statement with the '${combinatorString}' combinator...`, statementNode);
 
   const combinatorStatementNode = combinator.getStatementNode();
 
-  statementUnifiedAgainstCombinator = statementAgainstCombinatorUnifier.unify(statementNode, combinatorStatementNode, localContext);
+  statementUnifiedWithCombinator = statementWithCombinatorUnifier.unify(statementNode, combinatorStatementNode, localContext);
 
-  if (statementUnifiedAgainstCombinator) {
-    localContext.debug(`...unified the '${statementString}' statement against the '${combinatorString}' combinator.`, statementNode);
+  if (statementUnifiedWithCombinator) {
+    localContext.debug(`...unified the '${statementString}' statement with the '${combinatorString}' combinator.`, statementNode);
   }
 
-  return statementUnifiedAgainstCombinator;
+  return statementUnifiedWithCombinator;
 }

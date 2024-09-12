@@ -2,7 +2,7 @@
 
 import LocalContext from "../context/local";
 
-export default function unifyConsequentAgainstStatement(consequentA, statementNodeB, substitutions, fileContextA, localContextB) {
+export default function unifyConsequentWithStatement(consequentA, statementNodeB, substitutions, fileContextA, localContextB) {
   let consequentUnified = false;
 
   const consequentAStatementNode = consequentA.getStatementNode();
@@ -15,7 +15,7 @@ export default function unifyConsequentAgainstStatement(consequentA, statementNo
 
     substitutions.snapshot();
 
-    localContextB.trace(`Unifying the '${statementStringB}' statement against the consequent's '${statementStringA}' statement...`, statementNodeB);
+    localContextB.trace(`Unifying the '${statementStringB}' statement with the consequent's '${statementStringA}' statement...`, statementNodeB);
 
     const statementUnified = consequentA.unifyStatement(statementNodeB, substitutions, localContextA, localContextB);
 
@@ -26,7 +26,7 @@ export default function unifyConsequentAgainstStatement(consequentA, statementNo
         substitutions.rollback(localContextA, localContextB);
 
     if (consequentUnified) {
-      localContextB.debug(`...unified the '${statementStringB}' statement against the consequent's '${statementStringA}' statement.`, statementNodeB);
+      localContextB.debug(`...unified the '${statementStringB}' statement with the consequent's '${statementStringA}' statement.`, statementNodeB);
     }
   }
 

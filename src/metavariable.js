@@ -63,9 +63,9 @@ export default class Metavariable {
         } else if ((termNode === null) && (this.termType === null)) {
           matchesNode = true;
         } else if ((termNode !== null) && (this.termType !== null)) {
-          const termUnifiedAgainstTermType = unifyTermAgainstTermType(termNode, this.termType, localContext);
+          const termUnifiedWithTermType = unifyTermWithTermType(termNode, this.termType, localContext);
 
-          matchesNode = termUnifiedAgainstTermType;  ///
+          matchesNode = termUnifiedWithTermType;  ///
         }
       }
     }
@@ -90,8 +90,8 @@ export default class Metavariable {
   }
 }
 
-export function unifyTermAgainstTermType(termNode, termType, localContext) {
-  let termUnifiedAgainstTermType;
+export function unifyTermWithTermType(termNode, termType, localContext) {
+  let termUnifiedWithTermType;
 
   const type = termType,  ///
         terms = [],
@@ -110,9 +110,9 @@ export function unifyTermAgainstTermType(termNode, termType, localContext) {
           return verifiedAhead;
         });
 
-  termUnifiedAgainstTermType = termVerified;  ///
+  termUnifiedWithTermType = termVerified;  ///
 
-  return termUnifiedAgainstTermType;
+  return termUnifiedWithTermType;
 }
 
 function termTypeFromMetavariableNode(metavariableNode, fileContext) {

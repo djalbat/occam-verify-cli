@@ -6,8 +6,8 @@ import { nodeQuery } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable");
 
-export default function unifyVariableAgainstTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB) {
-  let variableUnifiedAgainstTerm = false;
+export default function unifyVariableWithTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB) {
+  let variableUnifiedWithTerm = false;
 
   const substitution = substitutions.findSubstitution((substitution) => {
     const substitutionMatchesVariableNodeA = substitution.matchVariableNode(variableNodeA);
@@ -21,7 +21,7 @@ export default function unifyVariableAgainstTerm(variableNodeA, termNodeB, subst
     const substitutionMatchesTermNodeB = substitution.matchTermNode(termNodeB);
 
     if (substitutionMatchesTermNodeB) {
-      variableUnifiedAgainstTerm = true;
+      variableUnifiedWithTerm = true;
     }
   } else {
     const variableA = localContextA.findVariableByVariableNode(variableNodeA);
@@ -38,11 +38,11 @@ export default function unifyVariableAgainstTerm(variableNodeA, termNodeB, subst
         substitutions.addSubstitution(substitution, localContextA, localContextB);
       }
 
-      variableUnifiedAgainstTerm = true;
+      variableUnifiedWithTerm = true;
     }
   }
 
-  return variableUnifiedAgainstTerm;
+  return variableUnifiedWithTerm;
 }
 
 function variableFromTermNode(termNode, localContext) {

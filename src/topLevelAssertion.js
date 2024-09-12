@@ -1,8 +1,8 @@
 "use strict";
 
 import Substitutions from "./substitutions";
-import unifyConsequentAgainstStatement from "./unify/consequentAgainstStatement";
-import unifySuppositionsAgainstProofSteps from "./unify/suppositionsAgainstProofSteps";
+import unifyConsequentWithStatement from "./unify/consequentWithStatement";
+import unifySuppositionsWithProofSteps from "./unify/suppositionsWithProofSteps";
 
 export default class TopLevelAssertion {
   constructor(labels, suppositions, consequent, substitutions, fileContext) {
@@ -42,11 +42,11 @@ export default class TopLevelAssertion {
           fileContextA = this.fileContext,  ///
           suppositionsA = this.suppositions,  ///
           localContextB = localContext, ///
-          suppositionsUnified = unifySuppositionsAgainstProofSteps(suppositionsA, proofStepsB, substitutions, fileContextA, localContextB);
+          suppositionsUnified = unifySuppositionsWithProofSteps(suppositionsA, proofStepsB, substitutions, fileContextA, localContextB);
 
     if (suppositionsUnified) {
       const consequentA = this.consequent,  ///
-            consequentUnified = unifyConsequentAgainstStatement(consequentA, statementNode, substitutions, fileContextA, localContext);
+            consequentUnified = unifyConsequentWithStatement(consequentA, statementNode, substitutions, fileContextA, localContext);
 
       statementUnified = consequentUnified;  ///
     }

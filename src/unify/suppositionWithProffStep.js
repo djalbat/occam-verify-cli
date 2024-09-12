@@ -2,7 +2,7 @@
 
 import { subproofNodeAsSubproofString } from "../utilities/unify";
 
-export default function unifySuppositionAgainstProofStep(suppositionA, proofStepB, substitutions, localContextA, localContextB) {
+export default function unifySuppositionWithProofStep(suppositionA, proofStepB, substitutions, localContextA, localContextB) {
   let suppositionUnified = false;
 
   const suppositionAStatementNode = suppositionA.getStatementNode();
@@ -20,12 +20,12 @@ export default function unifySuppositionAgainstProofStep(suppositionA, proofStep
     if (subproofNodeB !== null) {
       const subproofStringB = subproofNodeAsSubproofString(subproofNodeB, localContextB);
 
-      localContextB.trace(`Unifying the '${subproofStringB}' subproof against the supposition's '${statementStringA}' statement...`, subproofNodeB);
+      localContextB.trace(`Unifying the '${subproofStringB}' subproof with the supposition's '${statementStringA}' statement...`, subproofNodeB);
 
       const subproofUnified = suppositionA.unifySubproof(subproofNodeB, substitutions, localContextA, localContextB);
 
       if (subproofUnified) {
-        localContextB.debug(`...unified the '${subproofStringB}' subproof against the supposition's '${statementStringA}' statement.`, subproofNodeB);
+        localContextB.debug(`...unified the '${subproofStringB}' subproof with the supposition's '${statementStringA}' statement.`, subproofNodeB);
 
         suppositionUnified = true;
       }
@@ -34,12 +34,12 @@ export default function unifySuppositionAgainstProofStep(suppositionA, proofStep
     if (statementNodeB !== null) {
       const statementStringB = localContextB.nodeAsString(statementNodeB);
 
-      localContextB.trace(`Unifying the '${statementStringB}' statement against the supposition's '${statementStringA}' statement...`, statementNodeB);
+      localContextB.trace(`Unifying the '${statementStringB}' statement with the supposition's '${statementStringA}' statement...`, statementNodeB);
 
       const statementUnified = suppositionA.unifyStatement(statementNodeB, substitutions, localContextA, localContextB);
 
       if (statementUnified) {
-        localContextB.debug(`...unified the '${statementStringB}' statement against the supposition's '${statementStringA}' statement.`, statementNodeB);
+        localContextB.debug(`...unified the '${statementStringB}' statement with the supposition's '${statementStringA}' statement.`, statementNodeB);
 
         suppositionUnified = true;
       }

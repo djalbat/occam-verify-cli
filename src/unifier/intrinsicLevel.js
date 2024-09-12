@@ -2,7 +2,7 @@
 
 import shim from "../shim";
 import Unifier from "../unifier";
-import unifyVariableAgainstTerm from "../unify/variableAgainstTerm";
+import unifyVariableWithTerm from "../unify/variableWithTerm";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -28,9 +28,9 @@ class IntrinsicLevelUnifier extends Unifier {
       nodeQueryB: termNodeQuery,
       unify: (termVariableNodeA, termNodeB, substitutions, localContextA, localContextB) => {
         const variableNodeA = termVariableNodeA, ///
-              variableUnifiedAgainstTerm = unifyVariableAgainstTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB);
+              variableUnifiedWithTerm = unifyVariableWithTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB);
 
-        return variableUnifiedAgainstTerm;
+        return variableUnifiedWithTerm;
       }
     }
   ];

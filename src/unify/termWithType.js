@@ -4,8 +4,8 @@ import shim from "../shim";
 
 import { first } from "../utilities/array";
 
-export default function unifyTermAgainstType(termNode, typeNode, localContext) {
-  let termUnifiedAgainstType;
+export default function unifyTermWithType(termNode, typeNode, localContext) {
+  let termUnifiedWithType;
 
   const { verifyTerm } = shim,
         terms = [],
@@ -25,7 +25,7 @@ export default function unifyTermAgainstType(termNode, typeNode, localContext) {
           return verifiedAhead;
         });
 
-  termUnifiedAgainstType = termVerified; ///
+  termUnifiedWithType = termVerified; ///
 
-  return termUnifiedAgainstType;
+  return termUnifiedWithType;
 }

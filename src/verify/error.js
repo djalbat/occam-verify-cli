@@ -5,7 +5,7 @@ export default function verifyError(errorNode, fileContext) {
 
   const errorString = fileContext.nodeAsString(errorNode)
 
-  fileContext.debug(`The '${errorString}' cannot be verified.`, errorNode);
+  fileContext.debug(`The '${errorString}' error cannot be verified.`, errorNode);
 
   return errorVerified;
 }

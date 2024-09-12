@@ -12,11 +12,9 @@ export default function createReleaseContext(dependency, dependentNames, context
   log.debug(`Creating the '${releaseName}' context given the '${dependencyString}' dependency...`);
 
   if (releaseContext !== null) {
-    const error = null,
-          version = releaseContext.getVersion(),
-          versionString = version.toString();
+    const error = null;
 
-    log.debug(`...already created the '${releaseName}:${versionString}' context.`);
+    log.debug(`...already created the '${releaseName}' context.`);
 
     callback(error);
 
@@ -52,19 +50,16 @@ export default function createReleaseContext(dependency, dependentNames, context
       return;
     }
 
-    const version = releaseContext.getVersion(),
-          versionString = version.toString();
-
     releaseContextMap[releaseName] = releaseContext;
 
-    createDependencyReleaseContexts(dependency, dependentNames, context, (error) => {
+    log.info(`...created the '${releaseName}' context.`);
+
+    createDependencyReleaseContexts(dependency, releaseContext, dependentNames, context, (error) => {
       if (error) {
         callback(error);
 
         return;
       }
-
-      log.info(`...created the '${releaseName}@${versionString}' context.`);
 
       callback(error);
     });
@@ -122,7 +117,7 @@ function checkReleaseMatchesDependency(releaseContext, dependency, dependentName
             versionString = version.toString(),
             dependencyString = dependency.asString();
 
-      log.error(`Version mismatch: '${dependentName}' requires the '${dependencyString}' dependency but a context with version '${versionString}' was created.`);
+      log.warning(`Version mismatch: The '${dependentName}' dependent requires the '${dependencyString}' dependency but a context with version '${versionString}' was provided.`);
 
       releaseMatchesDependency = false;
     }
@@ -131,11 +126,8 @@ function checkReleaseMatchesDependency(releaseContext, dependency, dependentName
   return releaseMatchesDependency;
 }
 
-function createDependencyReleaseContexts(dependency, dependentNames, context, callback) {
-  const { releaseContextMap } = context,
-        dependencyName = dependency.getName(),
-        releaseName = dependencyName, ///
-        releaseContext = releaseContextMap[releaseName],
+function createDependencyReleaseContexts(dependency, releaseContext, dependentNames, context, callback) {
+  const dependencyName = dependency.getName(),
         dependencies = releaseContext.getDependencies();
 
   dependentNames = [ ...dependentNames, dependencyName ];  ///

@@ -25,15 +25,15 @@ export default class Substitution {
     return matchesMetavariableNode;
   }
 
-  unifyAgainstEquivalences(equivalences, substitutions, localContextA, localContextB) {
-    const unifiedAgainstEquivalences = equivalences.some((equivalence) => {
-      const substitutionUnifiedAgainstEquivalence = this.unifyAgainstEquivalence(equivalence, substitutions, localContextA, localContextB);
+  unifyWithEquivalences(equivalences, substitutions, localContextA, localContextB) {
+    const unifiedWithEquivalences = equivalences.some((equivalence) => {
+      const substitutionUnifiedWithEquivalence = this.unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB);
 
-      if (substitutionUnifiedAgainstEquivalence) {
+      if (substitutionUnifiedWithEquivalence) {
         return true;
       }
     });
 
-    return unifiedAgainstEquivalences;
+    return unifiedWithEquivalences;
   }
 }

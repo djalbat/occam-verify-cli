@@ -2,15 +2,15 @@
 
 import { areTermNodesEqual } from "../utilities/equivalences";
 
-export default function unifyTermAgainstTerm(leftTermNode, rightTermNode, localContext) {
-  let termUnifiedAgainstTerm = false;
+export default function unifyTermWithTerm(leftTermNode, rightTermNode, localContext) {
+  let termUnifiedWithTerm = false;
 
   const equivalences = localContext.getEquivalences(),
         termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, equivalences);
 
   if (termNodesEqual) {
-    termUnifiedAgainstTerm = true;
+    termUnifiedWithTerm = true;
   }
 
-  return termUnifiedAgainstTerm;
+  return termUnifiedWithTerm;
 }

@@ -8,7 +8,7 @@ export default function verifyStatementAsCombinator(statementNode, fileContext) 
 
   const statementString = fileContext.nodeAsString(statementNode);
 
-  fileContext.trace(`Verifying the '${statementString}' statement as a combinator....`, statementNode);
+  fileContext.trace(`Verifying the '${statementString}' statement as a combinator...`, statementNode);
 
   statementVerifiedAsCombinator = statementAsCombinatorVerifier.verify(statementNode, fileContext);
 

@@ -1,8 +1,8 @@
 "use strict";
 
 import { nodeQuery } from "../utilities/query";
+import { unifyTermWithTermType } from "../metavariable";
 import { nameFromMetavariableNode } from "../utilities/name";
-import { unifyTermAgainstTermType } from "../metavariable";
 
 const termNodeQuery = nodeQuery("/metavariable/argument/term"),
       typeNodeQuery = nodeQuery("/metavariable/argument/type");
@@ -43,9 +43,9 @@ export default function verifyMetavariable(metavariableNode, localContext) {
 
         localContext.debug(`No term was found when the metavariable's term type is '${termTypeName}'.`, termNode);
       } else {
-        const termUnifiedAgainstTermType = unifyTermAgainstTermType(termNode, termType, localContext);
+        const termUnifiedWithTermType = unifyTermWithTermType(termNode, termType, localContext);
 
-        metavariableVerified = termUnifiedAgainstTermType; ///
+        metavariableVerified = termUnifiedWithTermType; ///
       }
     }
   }

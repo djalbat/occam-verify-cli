@@ -3,7 +3,7 @@
 import shim from "../shim";
 import Term from "../term";
 import bracketedConstructor from "../constructor/bracketed";
-import termAgainstConstructorUnifier from "../unifier/termAgainstConstructor";
+import termWithConstructorUnifier from "../unifier/termWithConstructor";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -19,8 +19,8 @@ function verifyTerm(termNode, terms, localContext, verifyAhead) {
 
   const verifyTermFunctions = [
     verifyTermAsVariable,
-    unifyTermAgainstConstructors,
-    unifyTermAgainstBracketedConstructor
+    unifyTermWithConstructors,
+    unifyTermWithBracketedConstructor
   ];
 
   termVerified = verifyTermFunctions.some((verifyTermFunction) => {
@@ -79,35 +79,35 @@ function verifyTermAsVariable(termNode, terms, localContext, verifyAhead) {
   return termVerifiedAsVariable;
 }
 
-function unifyTermAgainstConstructors(termNode, terms, localContext, verifyAhead) {
-  let termUnifiedAgainstConstructors = false;
+function unifyTermWithConstructors(termNode, terms, localContext, verifyAhead) {
+  let termUnifiedWithConstructors = false;
 
   const variableNode = variableNodeQuery(termNode);
 
   if (variableNode === null) {
     const constructors = localContext.getConstructors();
 
-    termUnifiedAgainstConstructors = constructors.some((constructor) => {
-      const termUnifiedAgainstConstructor = unifyTermAgainstConstructor(termNode, terms, constructor, localContext, verifyAhead);
+    termUnifiedWithConstructors = constructors.some((constructor) => {
+      const termUnifiedWithConstructor = unifyTermWithConstructor(termNode, terms, constructor, localContext, verifyAhead);
 
-      if (termUnifiedAgainstConstructor) {
+      if (termUnifiedWithConstructor) {
         return true;
       }
     });
   }
 
-  return termUnifiedAgainstConstructors;
+  return termUnifiedWithConstructors;
 }
 
-function unifyTermAgainstBracketedConstructor(termNode, terms, localContext, verifyAhead) {
-  let termUnifiedAgainstBracketedConstructor;
+function unifyTermWithBracketedConstructor(termNode, terms, localContext, verifyAhead) {
+  let termUnifiedWithBracketedConstructor;
 
   const termString = localContext.nodeAsString(termNode),
         bracketedTerms = [];
 
-  localContext.trace(`Unifying the '${termString}' term against the bracketed constructor...`, termNode);
+  localContext.trace(`Unifying the '${termString}' term with the bracketed constructor...`, termNode);
 
-  termUnifiedAgainstBracketedConstructor = unifyTermAgainstConstructor(termNode, bracketedTerms, bracketedConstructor, localContext, () => {
+  termUnifiedWithBracketedConstructor = unifyTermWithConstructor(termNode, bracketedTerms, bracketedConstructor, localContext, () => {
     let verifiedAhead;
 
     const bracketedTermNode = termNode; ///
@@ -121,25 +121,25 @@ function unifyTermAgainstBracketedConstructor(termNode, terms, localContext, ver
     return verifiedAhead;
   });
 
-  if (termUnifiedAgainstBracketedConstructor) {
-    localContext.debug(`...unified the '${termString}' term against the bracketed constructor.`, termNode);
+  if (termUnifiedWithBracketedConstructor) {
+    localContext.debug(`...unified the '${termString}' term with the bracketed constructor.`, termNode);
   }
 
-  return termUnifiedAgainstBracketedConstructor;
+  return termUnifiedWithBracketedConstructor;
 }
 
-function unifyTermAgainstConstructor(termNode, terms, constructor, localContext, verifyAhead) {
-  let termUnifiedAgainstConstructor = false;
+function unifyTermWithConstructor(termNode, terms, constructor, localContext, verifyAhead) {
+  let termUnifiedWithConstructor = false;
 
   const termString = localContext.nodeAsString(termNode),
         constructorString = constructor.getString(),
         constructorTermNode = constructor.getTermNode();
 
-  localContext.trace(`Unifying the '${termString}' term against the '${constructorString}' constructor...`, termNode);
+  localContext.trace(`Unifying the '${termString}' term with the '${constructorString}' constructor...`, termNode);
 
   const termNodeA = termNode,  ///
         constructorTermNodeB = constructorTermNode,  ///
-        unified = termAgainstConstructorUnifier.unify(termNodeA, constructorTermNodeB, localContext);
+        unified = termWithConstructorUnifier.unify(termNodeA, constructorTermNodeB, localContext);
 
   if (unified) {
     let verifiedAhead;
@@ -153,13 +153,13 @@ function unifyTermAgainstConstructor(termNode, terms, constructor, localContext,
 
     terms.pop();
 
-    termUnifiedAgainstConstructor = verifiedAhead;  ///
+    termUnifiedWithConstructor = verifiedAhead;  ///
   }
 
-  if (termUnifiedAgainstConstructor) {
-    localContext.debug(`...unified the '${termString}' term against the '${constructorString}' constructor.`, termNode);
+  if (termUnifiedWithConstructor) {
+    localContext.debug(`...unified the '${termString}' term with the '${constructorString}' constructor.`, termNode);
   }
 
-  return termUnifiedAgainstConstructor;
+  return termUnifiedWithConstructor;
 }
 

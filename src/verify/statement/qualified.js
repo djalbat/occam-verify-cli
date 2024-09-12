@@ -3,7 +3,7 @@
 import verifyEquality from "../equality";
 import verifyJudgement from "../judgement";
 import verifyTypeAssertion from "../assertion/type";
-import unifyMetavariableAgainstStatement from "../../unify/metavariableAgainstStatement";
+import unifyMetavariableWithStatement from "../../unify/metavariableWithStatement";
 
 import { nodeQuery } from "../../utilities/query";
 
@@ -21,12 +21,12 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, substit
   localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`, qualifiedStatementNode);
 
   const unifyQualifiedStatementFunctions = [
-    unifyQualifiedStatementAAgainstRule,
-    unifyQualifiedStatementAAgainstAxiom,
-    unifyQualifiedStatementAAgainstLemma,
-    unifyQualifiedStatementAAgainstTheorem,
-    unifyQualifiedStatementAAgainstConjecture,
-    unifyQualifiedStatementAAgainstReference
+    unifyQualifiedStatementAWithRule,
+    unifyQualifiedStatementAWithAxiom,
+    unifyQualifiedStatementAWithLemma,
+    unifyQualifiedStatementAWithTheorem,
+    unifyQualifiedStatementAWithConjecture,
+    unifyQualifiedStatementAWithReference
   ];
 
   const qualifiedStatementUnified = unifyQualifiedStatementFunctions.some((unifyQualifiedStatementFunction) => {  ///
@@ -52,8 +52,8 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, substit
   return qualifiedStatementVerified;
 }
 
-function unifyQualifiedStatementAAgainstRule(qualifiedStatementNode, substitutions, localContext) {
-  let qualifiedStatementUnifiedAgainstRule = false;
+function unifyQualifiedStatementAWithRule(qualifiedStatementNode, substitutions, localContext) {
+  let qualifiedStatementUnifiedWithRule = false;
 
   const metavariableNode = metavariableNodeQuery(qualifiedStatementNode),
         rule = localContext.findRuleByMetavariableNode(metavariableNode);
@@ -63,22 +63,22 @@ function unifyQualifiedStatementAAgainstRule(qualifiedStatementNode, substitutio
           metavariableString = localContext.nodeAsString(metavariableNode),
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' rule...`, qualifiedStatementNode);
+    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' rule...`, qualifiedStatementNode);
 
     const ruleMatchesStatement = rule.unifyStatement(statementNode, localContext);
 
-    qualifiedStatementUnifiedAgainstRule = ruleMatchesStatement;  ///
+    qualifiedStatementUnifiedWithRule = ruleMatchesStatement;  ///
 
-    if (qualifiedStatementUnifiedAgainstRule) {
-      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' rule.`, qualifiedStatementNode);
+    if (qualifiedStatementUnifiedWithRule) {
+      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' rule.`, qualifiedStatementNode);
     }
   }
 
-  return qualifiedStatementUnifiedAgainstRule;
+  return qualifiedStatementUnifiedWithRule;
 }
 
-function unifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, substitutions, localContext) {
-  let qualifiedStatementUnifiedAgainstAxiom = false;
+function unifyQualifiedStatementAWithAxiom(qualifiedStatementNode, substitutions, localContext) {
+  let qualifiedStatementUnifiedWithAxiom = false;
 
   const metavariableNode = metavariableNodeQuery(qualifiedStatementNode),
         axiom = localContext.findAxiomByMetavariableNode(metavariableNode);
@@ -88,22 +88,22 @@ function unifyQualifiedStatementAAgainstAxiom(qualifiedStatementNode, substituti
           metavariableString = localContext.nodeAsString(metavariableNode),
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' axiom...`, qualifiedStatementNode);
+    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' axiom...`, qualifiedStatementNode);
 
     const axiomMatchesStatement = axiom.unifyStatement(statementNode, localContext);
 
-    qualifiedStatementUnifiedAgainstAxiom = axiomMatchesStatement; ///
+    qualifiedStatementUnifiedWithAxiom = axiomMatchesStatement; ///
 
-    if (qualifiedStatementUnifiedAgainstAxiom) {
-      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' axiom.`, qualifiedStatementNode);
+    if (qualifiedStatementUnifiedWithAxiom) {
+      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' axiom.`, qualifiedStatementNode);
     }
   }
 
-  return qualifiedStatementUnifiedAgainstAxiom;
+  return qualifiedStatementUnifiedWithAxiom;
 }
 
-function unifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, substitutions, localContext) {
-  let qualifiedStatementUnifiedAgainstLemma = false;
+function unifyQualifiedStatementAWithLemma(qualifiedStatementNode, substitutions, localContext) {
+  let qualifiedStatementUnifiedWithLemma = false;
 
   const metavariableNode = metavariableNodeQuery(qualifiedStatementNode),
         lemma = localContext.findLemmaByMetavariableNode(metavariableNode);
@@ -113,22 +113,22 @@ function unifyQualifiedStatementAAgainstLemma(qualifiedStatementNode, substituti
           metavariableString = localContext.nodeAsString(metavariableNode),
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' lemma...`, qualifiedStatementNode);
+    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' lemma...`, qualifiedStatementNode);
 
     const lemmaMatchesStatement = lemma.unifyStatement(statementNode, localContext);
 
-    qualifiedStatementUnifiedAgainstLemma = lemmaMatchesStatement; ///
+    qualifiedStatementUnifiedWithLemma = lemmaMatchesStatement; ///
 
-    if (qualifiedStatementUnifiedAgainstLemma) {
-      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' lemma.`, qualifiedStatementNode);
+    if (qualifiedStatementUnifiedWithLemma) {
+      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' lemma.`, qualifiedStatementNode);
     }
   }
 
-  return qualifiedStatementUnifiedAgainstLemma;
+  return qualifiedStatementUnifiedWithLemma;
 }
 
-function unifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, substitutions, localContext) {
-  let qualifiedStatementUnifiedAgainstTheorem = false;
+function unifyQualifiedStatementAWithTheorem(qualifiedStatementNode, substitutions, localContext) {
+  let qualifiedStatementUnifiedWithTheorem = false;
 
   const metavariableNode = metavariableNodeQuery(qualifiedStatementNode),
         theorem = localContext.findTheoremByMetavariableNode(metavariableNode);
@@ -138,22 +138,22 @@ function unifyQualifiedStatementAAgainstTheorem(qualifiedStatementNode, substitu
           metavariableString = localContext.nodeAsString(metavariableNode),
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' theorem...`, qualifiedStatementNode);
+    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' theorem...`, qualifiedStatementNode);
 
     const theoremMatchesStatement = theorem.unifyStatement(statementNode, localContext);
 
-    qualifiedStatementUnifiedAgainstTheorem = theoremMatchesStatement; ///
+    qualifiedStatementUnifiedWithTheorem = theoremMatchesStatement; ///
 
-    if (qualifiedStatementUnifiedAgainstTheorem) {
-      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' theorem.`, qualifiedStatementNode);
+    if (qualifiedStatementUnifiedWithTheorem) {
+      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' theorem.`, qualifiedStatementNode);
     }
   }
 
-  return qualifiedStatementUnifiedAgainstTheorem;
+  return qualifiedStatementUnifiedWithTheorem;
 }
 
-function unifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, substitutions, localContext) {
-  let qualifiedStatementUnifiedAgainstConjecture = false;
+function unifyQualifiedStatementAWithConjecture(qualifiedStatementNode, substitutions, localContext) {
+  let qualifiedStatementUnifiedWithConjecture = false;
 
   const metavariableNode = metavariableNodeQuery(qualifiedStatementNode),
         conjecture = localContext.findConjectureByMetavariableNode(metavariableNode);
@@ -163,29 +163,29 @@ function unifyQualifiedStatementAAgainstConjecture(qualifiedStatementNode, subst
           metavariableString = localContext.nodeAsString(metavariableNode),
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' conjecture...`, qualifiedStatementNode);
+    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' conjecture...`, qualifiedStatementNode);
 
     const conjectureMatchesStatement = conjecture.unifyStatement(statementNode, localContext);
 
-    qualifiedStatementUnifiedAgainstConjecture = conjectureMatchesStatement; ///
+    qualifiedStatementUnifiedWithConjecture = conjectureMatchesStatement; ///
 
-    if (qualifiedStatementUnifiedAgainstConjecture) {
-      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' conjecture.`, qualifiedStatementNode);
+    if (qualifiedStatementUnifiedWithConjecture) {
+      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' conjecture.`, qualifiedStatementNode);
     }
   }
 
-  return qualifiedStatementUnifiedAgainstConjecture;
+  return qualifiedStatementUnifiedWithConjecture;
 }
 
-function unifyQualifiedStatementAAgainstReference(qualifiedStatementNode, substitutions, localContext) {
-  let qualifiedStatementUnifiedAgainstReference = false;
+function unifyQualifiedStatementAWithReference(qualifiedStatementNode, substitutions, localContext) {
+  let qualifiedStatementUnifiedWithReference = false;
 
   const metavariableNode = metavariableNodeQuery(qualifiedStatementNode),
         metavariableString = localContext.nodeAsString(metavariableNode),
         metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode),
         qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-  localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' reference...`, qualifiedStatementNode);
+  localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' reference...`, qualifiedStatementNode);
 
   if (metavariablePresent) {
     const statementNode = statementNodeQuery(qualifiedStatementNode),
@@ -194,20 +194,20 @@ function unifyQualifiedStatementAAgainstReference(qualifiedStatementNode, substi
           statementNodeB = statementNode, ///
           substitutionNodeA = null,
           metavariableNodeA = metavariableNode, ///
-          metavariableUnifiedAgainstStatement = unifyMetavariableAgainstStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB, () => {
+          metavariableUnifiedWithStatement = unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB, () => {
             const verifiedAhead = true;
 
             return verifiedAhead;
           });
 
-    qualifiedStatementUnifiedAgainstReference = metavariableUnifiedAgainstStatement; ///
+    qualifiedStatementUnifiedWithReference = metavariableUnifiedWithStatement; ///
   }
 
-  if (qualifiedStatementUnifiedAgainstReference) {
-    localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement against the '${metavariableString}' reference.`, qualifiedStatementNode);
+  if (qualifiedStatementUnifiedWithReference) {
+    localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${metavariableString}' reference.`, qualifiedStatementNode);
   }
 
-  return qualifiedStatementUnifiedAgainstReference;
+  return qualifiedStatementUnifiedWithReference;
 }
 
 function verifyStatedStatement(statementNode, assignments, derived, localContext) {
