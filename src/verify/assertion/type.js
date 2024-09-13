@@ -66,24 +66,7 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, loc
                   typeEqualToOrSuperTypeOfTermType = type.isEqualToOrSuperTypeOf(termType);
 
             if (typeEqualToOrSuperTypeOfTermType) {
-              const variableNode = variableNodeQuery(termNode);
-
-              if (variableNode === null) {
-                verifiedAhead = true;
-              } else {
-                let variable;
-
-                variable = localContext.findVariableByVariableNode(variableNode);
-
-                variable = Variable.fromVariableAndType(variable, type);  ///
-
-                const variableAssignment = VariableAssignment.fromVariable(variable),
-                      assignment = variableAssignment;  ///
-
-                assignments.push(assignment);
-
-                verifiedAhead = true;
-              }
+              verifiedAhead = true;
             }
 
             return verifiedAhead;
@@ -128,9 +111,7 @@ function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, loca
               if (typeEqualToOrSubTypeOfTermType) {
                 const variableNode = variableNodeQuery(termNode);
 
-                if (variableNode === null) {
-                  verifiedAhead = true;
-                } else {
+                if (variableNode !== null) {
                   let variable;
 
                   variable = localContext.findVariableByVariableNode(variableNode);
@@ -141,9 +122,9 @@ function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, loca
                         assignment = variableAssignment;  ///
 
                   assignments.push(assignment);
-
-                  verifiedAhead = true;
                 }
+
+                verifiedAhead = true;
               }
 
               return verifiedAhead;
