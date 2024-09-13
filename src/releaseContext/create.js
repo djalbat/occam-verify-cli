@@ -74,7 +74,7 @@ function checkReleaseContextCreated(releaseContext, dependency, context) {
           dependencyName = dependency.getName(),
           releaseName = dependencyName; ///
 
-    log.error(`The '${releaseName}' context could not be created. Perhaps the 'meta.json' file is missing or invalid. Or there could be a dependency mismatch.`);
+    log.warning(`The '${releaseName}' context could not be created. Perhaps the 'meta.json' file is missing or invalid. Or there could be a dependency mismatch.`);
   }
 
   return releaseContextCreated;
@@ -94,7 +94,7 @@ function checkCyclicDependencyExists(dependency, dependentNames, context) {
           ],
           dependencyNamesString = dependencyNames.join(`' -> '`);
 
-    log.error(`There is a cyclic dependency: '${dependencyNamesString}'.`);
+    log.warning(`There is a cyclic dependency: '${dependencyNamesString}'.`);
   }
 
   return cyclicDependencyExists;

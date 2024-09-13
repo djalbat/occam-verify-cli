@@ -29,8 +29,8 @@ class StatementAsCombinatorVerifier extends Verifier {
       nodeQuery: statementNodeQuery,
       verify: (statementNode, fileContext) => {
         const { verifyStatement } = shim,
-              derived = false,
-              assignments = [],
+              derived = true, ///
+              assignments = null,
               localContext = LocalContext.fromFileContext(fileContext),
               statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 
