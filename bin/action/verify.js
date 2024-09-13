@@ -53,25 +53,11 @@ function verifyAction(argument, log) {
       return;
     }
 
-    let now;
-
-    now = Date.now();
-
     const releaseVerified = verifyRelease(releaseName, releaseContextMap);
 
     if (!releaseVerified) {
       log.warning(`The '${name}' project or package context cannot be verified.`);
-
-      return;
     }
-
-    const then = now; ///
-
-    now = Date.now();
-
-    const seconds = Math.floor(now - then) / 1000;
-
-    log.info(`Verification time ${seconds} seconds.`);
   });
 }
 

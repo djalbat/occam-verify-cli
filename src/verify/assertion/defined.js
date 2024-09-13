@@ -104,14 +104,14 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, derive
 }
 
 function verifyStatedDefinedAssertion(definedAssertionNode, assignments, derived, localContext) {
-  let statedDefinedAssertionVerified = false;
+  let statedDefinedAssertionVerified;
 
   if (!derived) {
     const definedAssertionString = localContext.nodeAsString(definedAssertionNode);
 
     localContext.trace(`Verifying the '${definedAssertionString}' stated defined assertion...`, definedAssertionNode);
 
-    debugger
+    statedDefinedAssertionVerified = true;
 
     if (statedDefinedAssertionVerified) {
       localContext.debug(`...verified the '${definedAssertionString}' stated defined assertion.`, definedAssertionNode);

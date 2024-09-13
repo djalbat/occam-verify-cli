@@ -1,8 +1,7 @@
 "use strict";
 
-import verifyTerm from "./verify/term";
+import verifyTermGivenType from "./verify/termGivenType";
 
-import { first } from "./utilities/array";
 import { nodeQuery } from "./utilities/query";
 import { nodeAsString } from "./utilities/string";
 import { nameFromMetavariableNode } from "./utilities/name";
@@ -63,7 +62,8 @@ export default class Metavariable {
         } else if ((termNode === null) && (this.termType === null)) {
           matchesNode = true;
         } else if ((termNode !== null) && (this.termType !== null)) {
-          const termUnifiedWithTermType = unifyTermWithTermType(termNode, this.termType, localContext);
+          const type = this.termType,  ///
+                termUnifiedWithTermType = verifyTermGivenType(termNode, type, localContext);
 
           matchesNode = termUnifiedWithTermType;  ///
         }
@@ -88,43 +88,4 @@ export default class Metavariable {
 
     return metavariable;
   }
-}
-
-export function unifyTermWithTermType(termNode, termType, localContext) {
-  let termUnifiedWithTermType;
-
-  const type = termType,  ///
-        terms = [],
-        termVerified = verifyTerm(termNode, terms, localContext, () => {
-          let verifiedAhead = false;
-
-          const firstTerm = first(terms),
-                term = firstTerm, ///
-                termType = term.getType(),
-                termTypeEqualToOrSubTypeOfType = termType.isEqualToOrSubTypeOf(type);
-
-          if (termTypeEqualToOrSubTypeOfType) {
-            verifiedAhead = true;
-          }
-
-          return verifiedAhead;
-        });
-
-  termUnifiedWithTermType = termVerified;  ///
-
-  return termUnifiedWithTermType;
-}
-
-function termTypeFromMetavariableNode(metavariableNode, fileContext) {
-  let termType = null;
-
-  const typeNode = typeNodeQuery(metavariableNode);
-
-  if (typeNode !== null) {
-    const type = fileContext.findTypeByTypeNode(typeNode);
-
-    termType = type;  ///
-  }
-
-  return termType;
 }

@@ -2,7 +2,10 @@
 
 import shim from "../shim";
 
-import { FRAME_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
+import { nodeQuery } from "../utilities/query";
+import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
+
+const metavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 export default function verifyStatementGivenMetaType(statementNode, metaType, assignments, derived, localContext) {
   let statementVerifiedGivenMetaType;
@@ -10,9 +13,23 @@ export default function verifyStatementGivenMetaType(statementNode, metaType, as
   const metaTypeName = metaType.getName();
 
   switch (metaTypeName) {
-    case FRAME_META_TYPE_NAME: {
+    case FRAME_META_TYPE_NAME:
+    case REFERENCE_META_TYPE_NAME: {
+      statementVerifiedGivenMetaType = false;
 
-      debugger
+      const metavariableNode = metavariableNodeQuery(statementNode);
+
+      if (metavariableNode !== null) {
+        const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+
+        if (metavariable !== null) {
+          const metavariableMetaType = metavariable.getMetaType();
+
+          if (metavariableMetaType === metaType) {
+            statementVerifiedGivenMetaType = true;
+          }
+        }
+      }
 
       break;
     }
@@ -21,15 +38,9 @@ export default function verifyStatementGivenMetaType(statementNode, metaType, as
       const { verifyStatement } = shim,
             statementVerified = verifyStatement(statementNode, assignments, derived, localContext)
 
-      statementVerifiedGivenMetaType = statementVerified;
+      statementVerifiedGivenMetaType = statementVerified; ///
 
       break;
-    }
-
-    default: {
-
-      debugger
-
     }
   }
 

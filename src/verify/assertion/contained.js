@@ -1,7 +1,5 @@
 "use strict";
 
-import metaLevelVerifier from "../../verifier/metaLevel";
-
 import { isAssertionNegated } from "../../utilities/verify";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
 
@@ -76,14 +74,14 @@ function verifyDerivedContainedAssertion(containedAssertionNode, assignments, de
 }
 
 function verifyStatedContainedAssertion(containedAssertionNode, assignments, derived, localContext) {
-  let statedContainedAssertionVerified = false;
+  let statedContainedAssertionVerified;
 
   if (!derived) {
     const containedAssertionString = localContext.nodeAsString(containedAssertionNode);
 
     localContext.trace(`Verifying the '${containedAssertionString}' stated contained assertion...`, containedAssertionNode);
 
-    debugger
+    statedContainedAssertionVerified = true;
 
     if (statedContainedAssertionVerified) {
       localContext.debug(`...verified the '${containedAssertionString}' stated contained assertion.`, containedAssertionNode);
