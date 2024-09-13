@@ -32,7 +32,7 @@ export default function verifyProofStep(proofStepNode, substitutions, localConte
       proofStep = ProofStep.fromSubproofNode(subproofNode);
     }
   } else {
-    const derived = false,
+    const derived = true,
           assignments = [];
 
     let statementVerified = false;
@@ -40,23 +40,25 @@ export default function verifyProofStep(proofStepNode, substitutions, localConte
     if (qualifiedStatementNode !== null) {
       const qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, derived, localContext);
 
+      const statementNode = statementNodeQuery(qualifiedStatementNode);
+
+      proofStep = ProofStep.fromStatementNode(statementNode);
+
       statementVerified = qualifiedStatementVerified; ///
     }
 
     if (unqualifiedStatementNode !== null) {
       const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
+      const statementNode = statementNodeQuery(unqualifiedStatementNode);
+
+      proofStep = ProofStep.fromStatementNode(statementNode);
+
       statementVerified = unqualifiedStatementVerified; ///
     }
 
     if (statementVerified) {
-      const assignmentsAssigned = assignAssignments(assignments, localContext);
-
-      if (assignmentsAssigned) {
-        const statementNode = statementNodeQuery(unqualifiedStatementNode);
-
-        proofStep = ProofStep.fromStatementNode(statementNode);
-      }
+      assignAssignments(assignments, localContext);
     }
   }
 

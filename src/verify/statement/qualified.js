@@ -5,7 +5,7 @@ import verifyStatement from "../../verify/statement";
 import { nodeQuery } from "../../utilities/query";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
-      metavariableNodeQuery = nodeQuery("/qualifiedStatement/metavariable!");
+      metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference/metavariable!");
 
 const unifyDerivedQualifiedStatementFunctions = [
   unifyDerivedQualifiedStatementAWithRule,
@@ -21,34 +21,34 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, substit
 
   const qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-  localContext.trace(`Verifying the '${qualifiedStatementString}'derived qualified statement...`, qualifiedStatementNode);
+  localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`, qualifiedStatementNode);
 
   const statementNode = statementNodeQuery(qualifiedStatementNode),
         statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 
   if (statementVerified) {
     if (derived) {
-      const derivedUnqualifiedStatementVerified = verifyDerivedUnqualifiedStatement(qualifiedStatementNode, substitutions, localContext);
+      const derivedQualifiedStatementVerified = verifyDerivedQualifiedStatement(qualifiedStatementNode, substitutions, localContext);
 
-      qualifiedStatementVerified = derivedUnqualifiedStatementVerified; ///
+      qualifiedStatementVerified = derivedQualifiedStatementVerified; ///
     } else {
       qualifiedStatementVerified = true;
     }
   }
 
   if (qualifiedStatementVerified) {
-    localContext.debug(`...verified the '${qualifiedStatementString}'derived qualified statement.`, qualifiedStatementNode);
+    localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement.`, qualifiedStatementNode);
   }
 
   return qualifiedStatementVerified;
 }
 
-function verifyDerivedUnqualifiedStatement(qualifiedStatementNode, substitutions, localContext) {
-  let derivedUnqualifiedStatementVerified = false;
+function verifyDerivedQualifiedStatement(qualifiedStatementNode, substitutions, localContext) {
+  let derivedQualifiedStatementVerified;
 
   const qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-  localContext.trace(`Verifying the '${qualifiedStatementString}' derivedderived qualified statement...`, qualifiedStatementNode);
+  localContext.trace(`Verifying the '${qualifiedStatementString}' derived qualified statement...`, qualifiedStatementNode);
 
   const derivedQualifiedStatementUnified = unifyDerivedQualifiedStatementFunctions.some((unifyDerivedQualifiedStatementFunction) => {
     const derivedQualifiedStatementUnified = unifyDerivedQualifiedStatementFunction(qualifiedStatementNode, substitutions, localContext);
@@ -56,13 +56,13 @@ function verifyDerivedUnqualifiedStatement(qualifiedStatementNode, substitutions
     return derivedQualifiedStatementUnified;
   });
 
-  derivedUnqualifiedStatementVerified = derivedQualifiedStatementUnified; ///
+  derivedQualifiedStatementVerified = derivedQualifiedStatementUnified; ///
 
-  if (derivedUnqualifiedStatementVerified) {
-    localContext.debug(`...verified the '${qualifiedStatementString}' derivedderived qualified statement.`, qualifiedStatementNode);
+  if (derivedQualifiedStatementVerified) {
+    localContext.debug(`...verified the '${qualifiedStatementString}' derived qualified statement.`, qualifiedStatementNode);
   }
 
-  return derivedUnqualifiedStatementVerified;
+  return derivedQualifiedStatementVerified;
 }
 
 function unifyDerivedQualifiedStatementAWithRule(qualifiedStatementNode, substitutions, localContext) {
@@ -76,14 +76,14 @@ function unifyDerivedQualifiedStatementAWithRule(qualifiedStatementNode, substit
           metavariableString = localContext.nodeAsString(metavariableNode),
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' rule...`, qualifiedStatementNode);
+    localContext.trace(`Unifying the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' rule...`, qualifiedStatementNode);
 
     const statementUnified = rule.unifyStatement(statementNode, localContext);
 
     derivedQualifiedStatementUnifiedWithRule = statementUnified;  ///
 
     if (derivedQualifiedStatementUnifiedWithRule) {
-      localContext.debug(`...unified the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' rule.`, qualifiedStatementNode);
+      localContext.debug(`...unified the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' rule.`, qualifiedStatementNode);
     }
   }
 
@@ -101,14 +101,14 @@ function unifyDerivedQualifiedStatementAWithAxiom(qualifiedStatementNode, substi
           metavariableString = localContext.nodeAsString(metavariableNode),
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' axiom...`, qualifiedStatementNode);
+    localContext.trace(`Unifying the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' axiom...`, qualifiedStatementNode);
 
     const statementUnified = axiom.unifyStatement(statementNode, localContext);
 
     derivedQualifiedStatementUnifiedWithAxiom = statementUnified; ///
 
     if (derivedQualifiedStatementUnifiedWithAxiom) {
-      localContext.debug(`...unified the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' axiom.`, qualifiedStatementNode);
+      localContext.debug(`...unified the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' axiom.`, qualifiedStatementNode);
     }
   }
 
@@ -126,14 +126,14 @@ function unifyDerivedQualifiedStatementAWithLemma(qualifiedStatementNode, substi
           metavariableString = localContext.nodeAsString(metavariableNode),
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' lemma...`, qualifiedStatementNode);
+    localContext.trace(`Unifying the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' lemma...`, qualifiedStatementNode);
 
     const statementUnified = lemma.unifyStatement(statementNode, localContext);
 
     derivedQualifiedStatementUnifiedWithLemma = statementUnified; ///
 
     if (derivedQualifiedStatementUnifiedWithLemma) {
-      localContext.debug(`...unified the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' lemma.`, qualifiedStatementNode);
+      localContext.debug(`...unified the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' lemma.`, qualifiedStatementNode);
     }
   }
 
@@ -151,14 +151,14 @@ function unifyDerivedQualifiedStatementAWithTheorem(qualifiedStatementNode, subs
           metavariableString = localContext.nodeAsString(metavariableNode),
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' theorem...`, qualifiedStatementNode);
+    localContext.trace(`Unifying the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' theorem...`, qualifiedStatementNode);
 
     const statementUnified = theorem.unifyStatement(statementNode, localContext);
 
     derivedQualifiedStatementUnifiedWithTheorem = statementUnified; ///
 
     if (derivedQualifiedStatementUnifiedWithTheorem) {
-      localContext.debug(`...unified the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' theorem.`, qualifiedStatementNode);
+      localContext.debug(`...unified the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' theorem.`, qualifiedStatementNode);
     }
   }
 
@@ -176,14 +176,14 @@ function unifyDerivedQualifiedStatementAWithConjecture(qualifiedStatementNode, s
           metavariableString = localContext.nodeAsString(metavariableNode),
           qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' conjecture...`, qualifiedStatementNode);
+    localContext.trace(`Unifying the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' conjecture...`, qualifiedStatementNode);
 
     const statementUnified = conjecture.unifyStatement(statementNode, localContext);
 
     derivedQualifiedStatementUnifiedWithConjecture = statementUnified; ///
 
     if (derivedQualifiedStatementUnifiedWithConjecture) {
-      localContext.debug(`...unified the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' conjecture.`, qualifiedStatementNode);
+      localContext.debug(`...unified the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' conjecture.`, qualifiedStatementNode);
     }
   }
 
@@ -198,7 +198,7 @@ function unifyDerivedQualifiedStatementAWithReference(qualifiedStatementNode, su
         metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode),
         qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-  localContext.trace(`Unifying the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' reference...`, qualifiedStatementNode);
+  localContext.trace(`Unifying the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' reference...`, qualifiedStatementNode);
 
   if (metavariablePresent) {
 
@@ -220,7 +220,7 @@ function unifyDerivedQualifiedStatementAWithReference(qualifiedStatementNode, su
   }
 
   if (derivedQualifiedStatementUnifiedWithReference) {
-    localContext.debug(`...unified the '${qualifiedStatementString}'derived qualified statement with the '${metavariableString}' reference.`, qualifiedStatementNode);
+    localContext.debug(`...unified the '${qualifiedStatementString}' derived qualified statement with the '${metavariableString}' reference.`, qualifiedStatementNode);
   }
 
   return derivedQualifiedStatementUnifiedWithReference;

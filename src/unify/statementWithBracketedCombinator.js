@@ -12,7 +12,7 @@ export default function unifyStatementWithBracketedCombinator(statementNode, ass
 
   const bracketedCombinatorStatementNode = bracketedCombinator.getStatementNode();
 
-  statementUnifiedWithBracketedCombinator = statementWithCombinatorUnifier.unify(statementNode, bracketedCombinatorStatementNode, localContext);
+  statementUnifiedWithBracketedCombinator = statementWithCombinatorUnifier.unify(statementNode, bracketedCombinatorStatementNode, assignments, derived, localContext);
 
   if (statementUnifiedWithBracketedCombinator) {
     localContext.debug(`...unified the '${statementString}' statement with the bracketed combinator.`, statementNode);

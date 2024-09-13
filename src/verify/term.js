@@ -12,9 +12,6 @@ const variableNodeQuery = nodeQuery("/term/variable!");
 const unifyTermFunctions = [
         unifyTermWithBracketedConstructor,
         unifyTermWithConstructors,
-      ],
-      verifyTermFunctions = [
-        verifyTermAsVariable
       ];
 
 function verifyTerm(termNode, terms, localContext, verifyAhead) {
@@ -23,6 +20,12 @@ function verifyTerm(termNode, terms, localContext, verifyAhead) {
   const termString = localContext.nodeAsString(termNode);
 
   localContext.trace(`Verifying the '${termString}' term...`, termNode);
+
+  if (!termVerified) {
+    const termVerifiedAsVariable = verifyTermAsVariable(termNode, terms, localContext, verifyAhead);
+
+    termVerified = termVerifiedAsVariable; ///
+  }
 
   if (!termVerified) {
     const termUnified = unifyTermFunctions.some((unifyTermFunction) => {
@@ -34,16 +37,6 @@ function verifyTerm(termNode, terms, localContext, verifyAhead) {
     });
 
     termVerified = termUnified; ///
-  }
-
-  if (!termVerified) {
-    termVerified = verifyTermFunctions.some((verifyTermFunction) => {
-      const termVerified = verifyTermFunction(termNode, terms, localContext, verifyAhead);
-
-      if (termVerified) {
-        return true;
-      }
-    });
   }
 
   if (termVerified) {

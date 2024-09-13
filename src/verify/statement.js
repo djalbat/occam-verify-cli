@@ -30,7 +30,6 @@ const unifyStatementFunctions = [
         unifyStatementWithBracketedCombinator
       ],
       verifyStatementFunctions = [
-        verifyStatementAsMetavariable,
         verifyStatementAsEquality,
         verifyStatementAsFrame,
         verifyStatementAsJudgement,
@@ -48,6 +47,12 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
   const statementString = localContext.nodeAsString(statementNode);
 
   localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
+
+  if (!statementVerified) {
+    const statementVerifiedAsMetavariable = verifyStatementAsMetavariable(statementNode, assignments, derived, localContext);
+
+    statementVerified = statementVerifiedAsMetavariable;  ///
+  }
 
   if (!statementVerified) {
     const statementUnified = unifyStatementFunctions.some((unifyStatementFunction) => {
