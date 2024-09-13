@@ -7,7 +7,7 @@ import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
-import { assignAssignment } from "../utilities/assignments";
+import { assignAssignments } from "../utilities/assignments";
 
 const subproofNodeQuery = nodeQuery("/proofStep|lastProofStep/subproof!"),
       statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/statement!"),
@@ -50,9 +50,9 @@ export default function verifyProofStep(proofStepNode, substitutions, localConte
     }
 
     if (statementVerified) {
-      const assignmentAssigned = assignAssignment(assignments, localContext);
+      const assignmentsAssigned = assignAssignments(assignments, localContext);
 
-      if (assignmentAssigned) {
+      if (assignmentsAssigned) {
         const statementNode = statementNodeQuery(unqualifiedStatementNode);
 
         proofStep = ProofStep.fromStatementNode(statementNode);

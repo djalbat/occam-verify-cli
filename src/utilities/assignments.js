@@ -1,18 +1,11 @@
 "use strict";
 
-import { first } from "../utilities/array";
+export function assignAssignments(assignments, localContext) {
+  const assignmentsAssigned = assignments.every((assigment) => {
+    const assignmentAssigned = assigment.assign(localContext);
 
-export function assignAssignment(assignments, localContext) {
-  let assignmentAssigned = true;
+    return assignmentAssigned
+  });
 
-  const assignmentsLength = assignments.length;
-
-  if (assignmentsLength === 1) {
-    const firstAssignment = first(assignments),
-          assignment = firstAssignment;
-
-    assignmentAssigned = assignment.assign(localContext);
-  }
-
-  return assignmentAssigned;
+  return assignmentsAssigned;
 }
