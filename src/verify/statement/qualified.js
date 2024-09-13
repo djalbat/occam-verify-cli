@@ -7,6 +7,12 @@ import { nodeQuery } from "../../utilities/query";
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
       metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference/metavariable!");
 
+const equalityNodeQuery = nodeQuery("/statement/equality!"),
+      judgementNodeQuery = nodeQuery("/statement/judgement!"),
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
+      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
+      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
+
 const unifyDerivedQualifiedStatementFunctions = [
   unifyDerivedQualifiedStatementAWithRule,
   unifyDerivedQualifiedStatementAWithAxiom,
@@ -44,25 +50,55 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, substit
 }
 
 function verifyDerivedQualifiedStatement(qualifiedStatementNode, substitutions, localContext) {
-  let derivedQualifiedStatementVerified;
+  let derivedQualifiedStatementVerified = false;
 
   const qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
   localContext.trace(`Verifying the '${qualifiedStatementString}' derived qualified statement...`, qualifiedStatementNode);
 
-  const derivedQualifiedStatementUnified = unifyDerivedQualifiedStatementFunctions.some((unifyDerivedQualifiedStatementFunction) => {
-    const derivedQualifiedStatementUnified = unifyDerivedQualifiedStatementFunction(qualifiedStatementNode, substitutions, localContext);
+  if (!derivedQualifiedStatementVerified) {
+    const derivedQualifiedStatementVerifiedTrivially = verifyDerivedQualifiedStatementATrivially(qualifiedStatementNode, substitutions, localContext);
 
-    return derivedQualifiedStatementUnified;
-  });
+    derivedQualifiedStatementVerified = derivedQualifiedStatementVerifiedTrivially; ///
+  }
 
-  derivedQualifiedStatementVerified = derivedQualifiedStatementUnified; ///
+  if (!derivedQualifiedStatementVerified) {
+    const derivedQualifiedStatementUnified = unifyDerivedQualifiedStatementFunctions.some((unifyDerivedQualifiedStatementFunction) => {
+      const derivedQualifiedStatementUnified = unifyDerivedQualifiedStatementFunction(qualifiedStatementNode, substitutions, localContext);
+
+      return derivedQualifiedStatementUnified;
+    });
+
+    derivedQualifiedStatementVerified = derivedQualifiedStatementUnified; ///
+  }
 
   if (derivedQualifiedStatementVerified) {
     localContext.debug(`...verified the '${qualifiedStatementString}' derived qualified statement.`, qualifiedStatementNode);
   }
 
   return derivedQualifiedStatementVerified;
+}
+
+function verifyDerivedQualifiedStatementATrivially(qualifiedStatementNode, substitutions, localContext) {
+  let derivedQualifiedStatementVerifiedTrivially = false;
+
+  const metavariableNode = metavariableNodeQuery(qualifiedStatementNode);
+
+  if (metavariableNode === null) {
+    const statementNode = statementNodeQuery(qualifiedStatementNode),
+          qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
+
+    localContext.trace(`Unifying the '${qualifiedStatementString}' derived qualified statement trivially...`, qualifiedStatementNode);
+
+    debugger
+
+
+    if (derivedQualifiedStatementVerifiedTrivially) {
+      localContext.debug(`...unified the '${qualifiedStatementString}' derived qualified statement trivially.`, qualifiedStatementNode);
+    }
+  }
+
+  return derivedQualifiedStatementVerifiedTrivially;
 }
 
 function unifyDerivedQualifiedStatementAWithRule(qualifiedStatementNode, substitutions, localContext) {
