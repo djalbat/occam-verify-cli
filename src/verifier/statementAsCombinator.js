@@ -30,7 +30,7 @@ class StatementAsCombinatorVerifier extends Verifier {
       verify: (statementNode, fileContext) => {
         const { verifyStatement } = shim,
               derived = true, ///
-              assignments = null,
+              assignments = [],
               localContext = LocalContext.fromFileContext(fileContext),
               statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 

@@ -56,14 +56,6 @@ export default class Variable {
     return string;
   }
 
-  static fromVariableAndType(variable, type) {
-    const node = variable.getNode();
-
-    variable = new Variable(node, type);  ///
-
-    return variable;
-  }
-
   static fromVariableNodeAndType(variableNode, type) {
     const node = variableNode,  ///
           variable = new Variable(node, type);

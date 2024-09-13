@@ -7,6 +7,7 @@ import verifyQualifiedStatement from "../verify/statement/qualified";
 import verifyUnqualifiedStatement from "../verify/statement/unqualified";
 
 import { nodeQuery } from "../utilities/query";
+import { assignAssignments } from "../utilities/assignments";
 
 const subproofNodeQuery = nodeQuery("/proofStep|lastProofStep/subproof!"),
       statementNodeQuery = nodeQuery("/qualifiedStatement|unqualifiedStatement/statement!"),
@@ -31,26 +32,35 @@ export default function verifyProofStep(proofStepNode, substitutions, localConte
       proofStep = ProofStep.fromSubproofNode(subproofNode);
     }
   } else {
-    const derived = true,
-          assignments = null;
-
     if (qualifiedStatementNode !== null) {
-      const qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, derived, localContext);
+      const derived = false,  ///
+            assignments = [],
+            qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, derived, localContext);
 
       if (qualifiedStatementVerified) {
-        const statementNode = statementNodeQuery(qualifiedStatementNode);
+        const assignmentsAssigned = assignAssignments(assignments, localContext);
 
-        proofStep = ProofStep.fromStatementNode(statementNode);
+        if (assignmentsAssigned) {
+          const statementNode = statementNodeQuery(qualifiedStatementNode);
+
+          proofStep = ProofStep.fromStatementNode(statementNode);
+        }
       }
     }
 
     if (unqualifiedStatementNode !== null) {
-      const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+      const derived = true,
+            assignments = [],
+            unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
 
       if (unqualifiedStatementVerified) {
-        const statementNode = statementNodeQuery(unqualifiedStatementNode);
+        const assignmentsAssigned = assignAssignments(assignments, localContext);
 
-        proofStep = ProofStep.fromStatementNode(statementNode);
+        if (assignmentsAssigned) {
+          const statementNode = statementNodeQuery(unqualifiedStatementNode);
+
+          proofStep = ProofStep.fromStatementNode(statementNode);
+        }
       }
     }
   }

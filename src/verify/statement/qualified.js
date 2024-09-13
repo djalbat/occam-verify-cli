@@ -7,12 +7,6 @@ import { nodeQuery } from "../../utilities/query";
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
       metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference/metavariable!");
 
-const equalityNodeQuery = nodeQuery("/statement/equality!"),
-      judgementNodeQuery = nodeQuery("/statement/judgement!"),
-      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
-      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
-      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
-
 const unifyDerivedQualifiedStatementFunctions = [
   unifyDerivedQualifiedStatementAWithRule,
   unifyDerivedQualifiedStatementAWithAxiom,
@@ -33,13 +27,9 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, substit
         statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
 
   if (statementVerified) {
-    if (derived) {
-      const derivedQualifiedStatementVerified = verifyDerivedQualifiedStatement(qualifiedStatementNode, substitutions, localContext);
+    const derivedQualifiedStatementUnified = unifyDerivedQualifiedStatement(qualifiedStatementNode, substitutions, localContext);
 
-      qualifiedStatementVerified = derivedQualifiedStatementVerified; ///
-    } else {
-      qualifiedStatementVerified = true;
-    }
+    qualifiedStatementVerified = derivedQualifiedStatementUnified; ///
   }
 
   if (qualifiedStatementVerified) {
@@ -49,56 +39,24 @@ export default function verifyQualifiedStatement(qualifiedStatementNode, substit
   return qualifiedStatementVerified;
 }
 
-function verifyDerivedQualifiedStatement(qualifiedStatementNode, substitutions, localContext) {
-  let derivedQualifiedStatementVerified = false;
+function unifyDerivedQualifiedStatement(qualifiedStatementNode, substitutions, localContext) {
+  let derivedQualifiedStatementUnified;
 
   const qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
 
-  localContext.trace(`Verifying the '${qualifiedStatementString}' derived qualified statement...`, qualifiedStatementNode);
+  localContext.trace(`Unifying the '${qualifiedStatementString}' derived qualified statement...`, qualifiedStatementNode);
 
-  if (!derivedQualifiedStatementVerified) {
-    const derivedQualifiedStatementVerifiedTrivially = verifyDerivedQualifiedStatementATrivially(qualifiedStatementNode, substitutions, localContext);
+  derivedQualifiedStatementUnified = unifyDerivedQualifiedStatementFunctions.some((unifyDerivedQualifiedStatementFunction) => {
+    const derivedQualifiedStatementUnified = unifyDerivedQualifiedStatementFunction(qualifiedStatementNode, substitutions, localContext);
 
-    derivedQualifiedStatementVerified = derivedQualifiedStatementVerifiedTrivially; ///
+    return derivedQualifiedStatementUnified;
+  });
+
+  if (derivedQualifiedStatementUnified) {
+    localContext.debug(`...unified the '${qualifiedStatementString}' derived qualified statement.`, qualifiedStatementNode);
   }
 
-  if (!derivedQualifiedStatementVerified) {
-    const derivedQualifiedStatementUnified = unifyDerivedQualifiedStatementFunctions.some((unifyDerivedQualifiedStatementFunction) => {
-      const derivedQualifiedStatementUnified = unifyDerivedQualifiedStatementFunction(qualifiedStatementNode, substitutions, localContext);
-
-      return derivedQualifiedStatementUnified;
-    });
-
-    derivedQualifiedStatementVerified = derivedQualifiedStatementUnified; ///
-  }
-
-  if (derivedQualifiedStatementVerified) {
-    localContext.debug(`...verified the '${qualifiedStatementString}' derived qualified statement.`, qualifiedStatementNode);
-  }
-
-  return derivedQualifiedStatementVerified;
-}
-
-function verifyDerivedQualifiedStatementATrivially(qualifiedStatementNode, substitutions, localContext) {
-  let derivedQualifiedStatementVerifiedTrivially = false;
-
-  const metavariableNode = metavariableNodeQuery(qualifiedStatementNode);
-
-  if (metavariableNode === null) {
-    const statementNode = statementNodeQuery(qualifiedStatementNode),
-          qualifiedStatementString = localContext.nodeAsString(qualifiedStatementNode);
-
-    localContext.trace(`Unifying the '${qualifiedStatementString}' derived qualified statement trivially...`, qualifiedStatementNode);
-
-    debugger
-
-
-    if (derivedQualifiedStatementVerifiedTrivially) {
-      localContext.debug(`...unified the '${qualifiedStatementString}' derived qualified statement trivially.`, qualifiedStatementNode);
-    }
-  }
-
-  return derivedQualifiedStatementVerifiedTrivially;
+  return derivedQualifiedStatementUnified;
 }
 
 function unifyDerivedQualifiedStatementAWithRule(qualifiedStatementNode, substitutions, localContext) {

@@ -54,6 +54,11 @@ function verifyDerivedEquality(equalityNode, assignments, derived, localContext)
               const equalityEqual = equality.isEqual(localContext);
 
               if (equalityEqual) {
+                const equalityAssignment = EqualityAssignment.fromEquality(equality),
+                      assignment = equalityAssignment; ///
+
+                assignments.push(assignment);
+
                 verifiedAhead = true;
               }
             }

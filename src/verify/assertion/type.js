@@ -112,13 +112,8 @@ function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, loca
                 const variableNode = variableNodeQuery(termNode);
 
                 if (variableNode !== null) {
-                  let variable;
-
-                  variable = localContext.findVariableByVariableNode(variableNode);
-
-                  variable = Variable.fromVariableAndType(variable, type);  ///
-
-                  const variableAssignment = VariableAssignment.fromVariable(variable),
+                  const variable = Variable.fromVariableNodeAndType(variableNode, type),
+                        variableAssignment = VariableAssignment.fromVariable(variable),
                         assignment = variableAssignment;  ///
 
                   assignments.push(assignment);

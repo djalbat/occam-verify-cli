@@ -3,6 +3,7 @@
 import verifyStatement from "../../verify/statement";
 
 import { nodeQuery } from "../../utilities/query";
+import { verifyStatementTrivially } from "../../verify/statement";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
@@ -18,9 +19,15 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
 
   if (statementVerified) {
     if (derived) {
-      const derivedUnqualifiedStatementVerified = verifyDerivedUnqualifiedStatement(unqualifiedStatementNode, localContext);
+      const statementVerifiedTrivially = verifyStatementTrivially(statementNode, localContext);
 
-      unqualifiedStatementVerified = derivedUnqualifiedStatementVerified; ///
+      if (statementVerifiedTrivially) {
+        unqualifiedStatementVerified = true;
+      } else {
+        const derivedUnqualifiedStatementUnified = unifyDerivedUnqualifiedStatement(unqualifiedStatementNode, localContext);
+
+        unqualifiedStatementVerified = derivedUnqualifiedStatementUnified; ///
+      }
     } else {
       unqualifiedStatementVerified = true;
     }
@@ -33,21 +40,21 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
   return unqualifiedStatementVerified;
 }
 
-function verifyDerivedUnqualifiedStatement(unqualifiedStatementNode, localContext) {
-  let derivedUnqualifiedStatementVerified;
+function unifyDerivedUnqualifiedStatement(unqualifiedStatementNode, localContext) {
+  let derivedUnqualifiedStatementUnified;
 
   const unqualifiedStatementString = localContext.nodeAsString(unqualifiedStatementNode);
 
-  localContext.trace(`Verifying the '${unqualifiedStatementString}' derived unqualified statement...`, unqualifiedStatementNode);
+  localContext.trace(`Unifying the '${unqualifiedStatementString}' derived unqualified statement...`, unqualifiedStatementNode);
 
   const statementNode = statementNodeQuery(unqualifiedStatementNode),
         statementUnified = localContext.unifyStatement(statementNode, localContext);
 
-  derivedUnqualifiedStatementVerified = statementUnified;  ///
+  derivedUnqualifiedStatementUnified = statementUnified;  ///
 
-  if (derivedUnqualifiedStatementVerified) {
-    localContext.debug(`...verified the '${unqualifiedStatementString}' derived unqualified statement.`, unqualifiedStatementNode);
+  if (derivedUnqualifiedStatementUnified) {
+    localContext.debug(`...unified the '${unqualifiedStatementString}' derived unqualified statement.`, unqualifiedStatementNode);
   }
 
-  return derivedUnqualifiedStatementVerified;
+  return derivedUnqualifiedStatementUnified;
 }

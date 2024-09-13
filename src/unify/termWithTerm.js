@@ -1,15 +1,23 @@
 "use strict";
 
-import { areTermNodesEqual } from "../utilities/equivalences";
+import { findEquivalenceByTermNodes } from "../utilities/equivalences";
 
 export default function unifyTermWithTerm(leftTermNode, rightTermNode, localContext) {
-  let termUnifiedWithTerm = false;
+  let termUnifiedWithTerm;
 
-  const equivalences = localContext.getEquivalences(),
-        termNodesEqual = areTermNodesEqual(leftTermNode, rightTermNode, equivalences);
+  const leftTermNodeMatchesRightTermNode = leftTermNode.match(rightTermNode);
 
-  if (termNodesEqual) {
+  if (leftTermNodeMatchesRightTermNode) {
     termUnifiedWithTerm = true;
+  } else {
+    const equivalences = localContext.getEquivalences(),
+          termNodes = [
+            leftTermNode,
+            rightTermNode
+          ],
+          equivalence = findEquivalenceByTermNodes(equivalences, termNodes);
+
+    termUnifiedWithTerm = (equivalence !== null);
   }
 
   return termUnifiedWithTerm;

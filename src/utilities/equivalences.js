@@ -1,5 +1,7 @@
 "use strict";
 
+import Equivalence from "../equivalence";
+
 import { push, compress, separate } from "../utilities/array";
 
 export function mergeEquivalences(equivalencesA, equivalencesB, localContext) {
@@ -39,26 +41,6 @@ export function mergeEquivalences(equivalencesA, equivalencesB, localContext) {
   return equivalences;
 }
 
-export function areTermNodesEqual(leftTermNode, rightTermNode, equivalences) {
-  let termNodesEqual;
-
-  const leftTermNodeMatchesRightTermNode = leftTermNode.match(rightTermNode);
-
-  if (leftTermNodeMatchesRightTermNode) {
-    termNodesEqual = true;
-  } else {
-    const termNodes = [
-            leftTermNode,
-            rightTermNode
-          ],
-          equivalence = findEquivalenceByTermNodes(equivalences, termNodes);
-
-    termNodesEqual = (equivalence !== null);
-  }
-
-  return termNodesEqual;
-}
-
 export function findEquivalenceByType(equivalences, type, localContext) {
   const equivalence = equivalences.find((equivalence) => {
     const equivalenceMatchesType = equivalence.matchType(type, localContext);
@@ -76,6 +58,18 @@ export function findEquivalenceByTerm(equivalences, term) {
     const equivalenceMatchesTerm = equivalence.matchTerm(term);
 
     if (equivalenceMatchesTerm) {
+      return true;
+    }
+  }) || null;
+
+  return equivalence;
+}
+
+export function findEquivalenceByTermNodes(equivalences, termNodes) {
+  const equivalence = equivalences.find((equivalence) => {
+    const equivalenceMatchesTerms = equivalence.matchTermNodes(termNodes);
+
+    if (equivalenceMatchesTerms) {
       return true;
     }
   }) || null;
@@ -139,18 +133,6 @@ function typesFromEquivalences(equivalences, localContext) {
   });
 
   return types;
-}
-
-function findEquivalenceByTermNodes(equivalences, termNodes) {
-  const equivalence = equivalences.find((equivalence) => {
-    const equivalenceMatchesTerms = equivalence.matchTermNodes(termNodes);
-
-    if (equivalenceMatchesTerms) {
-      return true;
-    }
-  }) || null;
-
-  return equivalence;
 }
 
 function definedVariablesFromGroundedTerms(groundedTerms, definedVariables, localContext) {
