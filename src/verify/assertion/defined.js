@@ -6,8 +6,13 @@ import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
 import { isAssertionNegated } from "../../utilities/verify";
 
-const termNodeQuery = nodeQuery("/statement/term!"),
-      variableNodeQuery = nodeQuery("/statement/term/variable!");
+const termNodeQuery = nodeQuery("/definedAssertion/term!"),
+      variableNodeQuery = nodeQuery("/definedAssertion/term/variable!");
+
+const verifyDefinedAssertionFunctions = [
+  verifyDerivedDefinedAssertion,
+  verifyStatedDefinedAssertion
+];
 
 export default function verifyDefinedAssertion(definedAssertionNode, assignments, derived, localContext) {
   let definedAssertionVerified;
@@ -15,11 +20,6 @@ export default function verifyDefinedAssertion(definedAssertionNode, assignments
   const definedAssertionString = localContext.nodeAsString(definedAssertionNode);
 
   localContext.trace(`Verifying the '${definedAssertionString}' defined assertion...`, definedAssertionNode);
-
-  const verifyDefinedAssertionFunctions = [
-    verifyDerivedDefinedAssertion,
-    verifyStatedDefinedAssertion
-  ];
 
   definedAssertionVerified = verifyDefinedAssertionFunctions.some((verifyDefinedAssertionFunction) => {
     const definedAssertionVerified = verifyDefinedAssertionFunction(definedAssertionNode, assignments, derived, localContext);
@@ -44,7 +44,7 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, derive
 
     localContext.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`, definedAssertionNode);
 
-    const statementNegated = isAssertionNegated(definedAssertionNode),
+    const assertionNegated = isAssertionNegated(definedAssertionNode),
           variableNode = variableNodeQuery(definedAssertionNode),
           termNode = termNodeQuery(definedAssertionNode);
 
@@ -56,13 +56,13 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, derive
       if (variable !== null) {
         const variableDefined = localContext.isVariableDefined(variable);
 
-        if (!statementNegated) {
+        if (!assertionNegated) {
           if (variableDefined) {
             derivedDefinedAssertionVerified = true;
           }
         }
 
-        if (statementNegated) {
+        if (assertionNegated) {
           if (!variableDefined) {
             derivedDefinedAssertionVerified = true;
           }
@@ -81,13 +81,13 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, derive
               term = firstTerm, ///
               termGrounded = localContext.isTermGrounded(term);
 
-        if (!statementNegated) {
+        if (!assertionNegated) {
           if (termGrounded) {
             derivedDefinedAssertionVerified = true;
           }
         }
 
-        if (statementNegated) {
+        if (assertionNegated) {
           if (!termGrounded) {
             derivedDefinedAssertionVerified = true;
           }

@@ -11,17 +11,17 @@ const termNodeQuery = nodeQuery("/typeAssertion/term!"),
       typeNodeQuery = nodeQuery("/typeAssertion/type!"),
       variableNodeQuery = nodeQuery("/term/variable!");
 
+const verifyTypeAssertionFunctions = [
+  verifyDerivedTypeAssertion,
+  verifyStatedTypeAssertion
+];
+
 export default function verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext) {
   let typeAssertionVerified;
 
   const typeAssertionString = localContext.nodeAsString(typeAssertionNode);
 
   localContext.trace(`Verifying the '${typeAssertionString}' type assertion...`, typeAssertionNode);
-
-  const verifyTypeAssertionFunctions = [
-    verifyDerivedTypeAssertion,
-    verifyStatedTypeAssertion
-  ];
 
   typeAssertionVerified = verifyTypeAssertionFunctions.some((verifyTypeAssertionFunction) => {
     const typeAssertionVerified = verifyTypeAssertionFunction(typeAssertionNode, assignments, derived, localContext);

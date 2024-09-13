@@ -8,17 +8,17 @@ import { nodesQuery } from "../utilities/query";
 
 const termNodesQuery = nodesQuery("/equality/term");
 
+const verifyEqualityFunctions = [
+  verifyDerivedEquality,
+  verifyStatedEquality
+];
+
 export default function verifyEquality(equalityNode, assignments, derived, localContext) {
   let equalityVerified;
 
   const equalityString = localContext.nodeAsString(equalityNode);
 
   localContext.trace(`Verifying the '${equalityString}' equality...`, equalityNode);
-
-  const verifyEqualityFunctions = [
-    verifyDerivedEquality,
-    verifyStatedEquality
-  ];
 
   equalityVerified = verifyEqualityFunctions.some((verifyEqualityFunction) => {
     const equalityVerified = verifyEqualityFunction(equalityNode, assignments, derived, localContext);

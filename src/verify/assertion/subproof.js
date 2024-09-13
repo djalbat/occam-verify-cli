@@ -8,7 +8,7 @@ const verifySubproofAssertionFunctions = [
 ];
 
 export default function verifySubproofAssertion(subproofAssertionNode, assignments, derived, localContext) {
-  let subproofAssertionVerified;
+  let subproofAssertionVerified = false;
 
   const subproofAssertionString = localContext.nodeAsString(subproofAssertionNode);
 

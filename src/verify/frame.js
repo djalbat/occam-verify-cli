@@ -10,17 +10,17 @@ import { nodesQuery } from "../utilities/query";
 const declarationNodesQuery = nodesQuery("/frame/declaration"),
       metavariableNodesQuery = nodesQuery("/frame/metavariable");
 
+const verifyFrameFunctions = [
+  verifyDerivedFrame,
+  verifyStatedFrame
+];
+
 export default function verifyFrame(frameNode, assignments, derived, localContext) {
   let frameVerified;
 
   const frameString = localContext.nodeAsString(frameNode);
 
   localContext.trace(`Verifying the '${frameString}' frame...`, frameNode);
-
-  const verifyFrameFunctions = [
-    verifyDerivedFrame,
-    verifyStatedFrame
-  ];
 
   frameVerified = verifyFrameFunctions.some((verifyFrameFunction) => {
     const frameVerified = verifyFrameFunction(frameNode, assignments, derived, localContext);
@@ -35,6 +35,22 @@ export default function verifyFrame(frameNode, assignments, derived, localContex
   }
 
   return frameVerified;
+}
+
+function verifyDerivedFrame(frameNode, frames, assignments, derived, localContext) {
+  let derivedFrameVerified;
+
+  const frameString = localContext.nodeAsString(frameNode);
+
+  localContext.trace(`Verifying the '${frameString}' derived frame...`, frameNode);
+
+  debugger
+
+  if (derivedFrameVerified) {
+    localContext.debug(`...verified the '${frameString}' derived frame.`, frameNode);
+  }
+
+  return derivedFrameVerified;
 }
 
 function verifyStatedFrame(frameNode, frames, assignments, derived, localContext) {

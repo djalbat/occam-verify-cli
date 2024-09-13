@@ -33,7 +33,7 @@ export default function verifyProofStep(proofStepNode, substitutions, localConte
     }
   } else {
     if (qualifiedStatementNode !== null) {
-      const derived = false,  ///
+      const derived = false,
             assignments = [],
             qualifiedStatementVerified = verifyQualifiedStatement(qualifiedStatementNode, substitutions, assignments, derived, localContext);
 

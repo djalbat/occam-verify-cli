@@ -3,6 +3,7 @@
 import Judgement from "../judgement";
 import verifyFrame from "../verify/frame";
 import frameMetaType from "../metaType/frame";
+import metaLevelVerifier from "../verifier/metaLevel";
 import JudgementAssignment from "../assignment/judgement";
 
 import { first } from "../utilities/array";
@@ -11,25 +12,29 @@ import { nodeQuery } from "../utilities/query";
 const frameNodeQuery = nodeQuery("/judgement/frame!"),
       metavariableNodeQuery = nodeQuery("/judgement/metavariable!");
 
+const verifyJudgementFunctions = [
+  verifyDerivedJudgement,
+  verifyStatedJudgement
+];
+
 export default function verifyJudgement(judgementNode, assignments, derived, localContext) {
-  let judgementVerified;
+  let judgementVerified = false;
 
   const judgementString = localContext.nodeAsString(judgementNode);
 
   localContext.trace(`Verifying the '${judgementString}' judgement...`, judgementNode);
 
-  const verifyJudgementFunctions = [
-    verifyDerivedJudgement,
-    verifyStatedJudgement
-  ];
+  const verified = metaLevelVerifier.verify(judgementNode, assignments, derived, localContext);
 
-  judgementVerified = verifyJudgementFunctions.some((verifyJudgementFunction) => {
-    const judgementVerified = verifyJudgementFunction(judgementNode, assignments, derived, localContext);
+  if (verified) {
+    judgementVerified = verifyJudgementFunctions.some((verifyJudgementFunction) => {
+      const judgementVerified = verifyJudgementFunction(judgementNode, assignments, derived, localContext);
 
-    if (judgementVerified) {
-      return true;
-    }
-  });
+      if (judgementVerified) {
+        return true;
+      }
+    });
+  }
 
   if (judgementVerified) {
     localContext.debug(`...verified the '${judgementString}' judgement.`, judgementNode);

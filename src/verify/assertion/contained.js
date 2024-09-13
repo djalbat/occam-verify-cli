@@ -1,30 +1,43 @@
 "use strict";
 
+import metaLevelVerifier from "../../verifier/metaLevel";
+
 import { isAssertionNegated } from "../../utilities/verify";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
 
-const termNodeQuery = nodeQuery("/statement/term!"),
-      statementTermNodesQuery = nodesQuery("/statement/metaArgument/statement//term");
+const termNodeQuery = nodeQuery("/containedAssertion/term!"),
+      statementTermNodesQuery = nodesQuery("/containedAssertion/statement//term");
+
+const verifyContainedAssertionFunctions = [
+  verifyDerivedContainedAssertion,
+  verifyStatedContainedAssertion
+];
 
 export default function verifyContainedAssertion(containedAssertionNode, assignments, derived, localContext) {
-  let containedAssertionVerified;
+  let containedAssertionVerified = false;
 
-  const containedAssertionString = localContext.nodeAsString(containedAssertionNode);
+  const containedAssertionString = localContext.nodeAsString(containedAssertionNode),
+        savedDerived = derived; ///
 
   localContext.trace(`Verifying the '${containedAssertionString}' contained assertion...`, containedAssertionNode);
 
-  const verifyContainedAssertionFunctions = [
-    verifyDerivedContainedAssertion,
-    verifyStatedContainedAssertion
-  ];
+  assignments = []; ///
 
-  containedAssertionVerified = verifyContainedAssertionFunctions.some((verifyContainedAssertionFunction) => {
-    const containedAssertionVerified = verifyContainedAssertionFunction(containedAssertionNode, assignments, derived, localContext);
+  derived = false;  ///
 
-    if (containedAssertionVerified) {
-      return true;
-    }
-  });
+  const verified = metaLevelVerifier.verify(containedAssertionNode, assignments, derived, localContext);
+
+  derived = savedDerived; ///
+
+  if (verified) {
+    containedAssertionVerified = verifyContainedAssertionFunctions.some((verifyContainedAssertionFunction) => {
+      const containedAssertionVerified = verifyContainedAssertionFunction(containedAssertionNode, assignments, derived, localContext);
+
+      if (containedAssertionVerified) {
+        return true;
+      }
+    });
+  }
 
   if (containedAssertionVerified) {
     localContext.debug(`...verified the '${containedAssertionString}' contained assertion.`, containedAssertionNode);
@@ -45,22 +58,22 @@ function verifyDerivedContainedAssertion(containedAssertionNode, assignments, de
           termNode = termNodeQuery(containedAssertionNode),
           negated = assertionNegated, ///
           statementTermNodes = statementTermNodesQuery(containedAssertionNode),
-          termNodeMatchesMetaArgumentVariableNode = statementTermNodes.some((statementTermNode) => {
-            const termNodeMatchesMetaArgumentVariableNode = termNode.match(statementTermNode);
+          termNodeMatchesAssertionTermNode = statementTermNodes.some((statementTermNode) => {
+            const termNodeMatchesAssertionTermNode = termNode.match(statementTermNode);
 
-            if (termNodeMatchesMetaArgumentVariableNode) {
+            if (termNodeMatchesAssertionTermNode) {
               return true;
             }
           });
 
     if (!negated) {
-      if (termNodeMatchesMetaArgumentVariableNode) {
+      if (termNodeMatchesAssertionTermNode) {
         derivedContainedAssertionVerified = true;
       }
     }
 
     if (negated) {
-      if (!termNodeMatchesMetaArgumentVariableNode) {
+      if (!termNodeMatchesAssertionTermNode) {
         derivedContainedAssertionVerified = true;
       }
     }
