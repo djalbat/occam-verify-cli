@@ -5,6 +5,7 @@ import Term from "../term";
 import unifyTermWithConstructors from "../unify/termWithConstructors";
 import unifyTermWithBracketedConstructor from "../unify/termWithBracketedConstructor";
 
+import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
@@ -62,12 +63,15 @@ function verifyTermAsVariable(termNode, terms, localContext, verifyAhead) {
 
     localContext.trace(`Verifying the '${termString}' term as a variable...`, termNode);
 
-    const variableVerified = verifyVariable(variableNode, localContext);
+    const variables = [],
+          variableVerified = verifyVariable(variableNode, variables, localContext);
 
     if (variableVerified) {
       let verifiedAhead;
 
-      const type = variable.getType(),
+      const firstVariable = first(variables),
+            variable = firstVariable, ///
+            type = variable.getType(),
             term = Term.fromTermNodeAndType(termNode, type);
 
       terms.push(term);
@@ -87,18 +91,20 @@ function verifyTermAsVariable(termNode, terms, localContext, verifyAhead) {
   return termVerifiedAsVariable;
 }
 
-function verifyVariable(variableNode, localContext) {
+function verifyVariable(variableNode, variables, localContext) {
   let variableVerified = false;
 
   const variableString = localContext.nodeAsString(variableNode);
 
   localContext.trace(`Verifying the '${variableString}' variable...`, variableNode);
 
-  const variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
+  const variable = localContext.findVariableByVariableNode(variableNode);
 
-  if (!variablePresent) {
+  if (variable === null) {
     localContext.trace(`The '${variableString}' variable is not present.`, variableNode);
   } else {
+    variables.push(variable);
+
     variableVerified = true;
   }
 

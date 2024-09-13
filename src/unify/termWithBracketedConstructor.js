@@ -1,8 +1,10 @@
 "use strict";
 
+import shim from "../shim";
 import bracketedConstructor from "../constructor/bracketed";
 
 import { nodeQuery } from "../utilities/query";
+import { unifyTermWithConstructor } from "../unify/termWithConstructors";
 
 const termNodeQuery = nodeQuery("/term/argument/term");
 
@@ -21,7 +23,8 @@ export default function unifyTermWithBracketedConstructor(termNode, terms, local
 
     termNode = termNodeQuery(bracketedTermNode); ///
 
-    const termVVerified = verifyTerm(termNode, terms, localContext, verifyAhead);
+    const { verifyTerm } = shim,
+          termVVerified = verifyTerm(termNode, terms, localContext, verifyAhead);
 
     verifiedAhead = termVVerified;  ///
 

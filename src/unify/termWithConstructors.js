@@ -27,7 +27,7 @@ export default function unifyTermWithConstructors(termNode, terms, localContext,
   return termUnifiedWithConstructors;
 }
 
-function unifyTermWithConstructor(termNode, terms, constructor, localContext, verifyAhead) {
+export function unifyTermWithConstructor(termNode, terms, constructor, localContext, verifyAhead) {
   let termUnifiedWithConstructor = false;
 
   const termString = localContext.nodeAsString(termNode),
