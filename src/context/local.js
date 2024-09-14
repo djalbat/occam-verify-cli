@@ -406,17 +406,17 @@ class LocalContext {
 
   nodesAsString(node) { return this.context.nodesAsString(node); }
 
-  trace(node, message) { this.context.trace(node, message); }
+  trace(message, node) { this.context.trace(message, node); }
 
-  debug(node, message) { this.context.debug(node, message); }
+  debug(message, node) { this.context.debug(message, node); }
 
-  info(node, message) { this.context.info(node, message); }
+  info(message, node) { this.context.info(message, node); }
 
-  warning(node, message) { this.context.warning(node, message); }
+  warning(message, node) { this.context.warning(message, node); }
 
-  error(node, message) { this.context.error(node, message); }
+  error(message, node) { this.context.error(message, node); }
 
-  fatal(node, message) { this.context.fatal(node, message); }
+  fatal(message, node) { this.context.fatal(node, message); }
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///

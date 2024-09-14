@@ -1,6 +1,5 @@
 "use strict";
 
-import Substitutions from "../substitutions";
 import metaLevelUnifier from "../unifier/metaLevel";
 
 export default function unifyStatementWithStatementGivenSubstitution(statementNodeA, statementNodeB, substitutionA, substitutions, localContextA, localContextB) {
@@ -12,8 +11,9 @@ export default function unifyStatementWithStatementGivenSubstitution(statementNo
 
   localContextB.trace(`Unifying the '${statementStringB}' statement with the '${statementStringA}' statement given the ${substitutionStringA} substitution...`, statementNodeB);
 
-  const transformedSubstitutionA = substitutionA.transformed(substitutions),
-        substitutionsB = Substitutions.fromNothing(),
+  const substitutionASubstitutions = substitutionA.getSubstitutions(),
+        transformedSubstitutionA = substitutionA.transformed(substitutions),
+        substitutionsB = substitutionASubstitutions,  ///
         substitutionB = transformedSubstitutionA; ///
 
   if (substitutionB !== null) {

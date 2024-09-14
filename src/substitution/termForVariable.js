@@ -1,6 +1,7 @@
 "use strict";
 
 import Substitution from "../substitution";
+import Substitutions from "../substitutions";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -8,11 +9,12 @@ const termNodeQuery = nodeQuery("/*/term!"),
       variableNodeQuery = nodeQuery("/*/variable!");
 
 export default class TermForVariableSubstitution extends Substitution {
-  constructor(variableNode, termNode) {
+  constructor(variableNode, termNode, substitutions) {
     super();
 
     this.variableNode = variableNode;
     this.termNode = termNode;
+    this.substitutions = substitutions;
   }
 
   getVariableNode() {
@@ -21,6 +23,10 @@ export default class TermForVariableSubstitution extends Substitution {
 
   getTermNode() {
     return this.termNode;
+  }
+
+  getSubstitutions() {
+    return this.substitutions;
   }
 
   getNode() {
@@ -37,8 +43,9 @@ export default class TermForVariableSubstitution extends Substitution {
 
     if ((transformedTermNode !== null) && (transformedVariableNode !== null)) {
       const termNode = transformedTermNode, ///
-            variableNode = transformedVariableNode,
-            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
+            variableNode = transformedVariableNode, ///
+            substitutions = Substitutions.fromNothing(),
+            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode, substitutions);
 
       transformedSubstitution = termForVariableSubstitution;  ///
     }
@@ -53,7 +60,9 @@ export default class TermForVariableSubstitution extends Substitution {
 
     if (transformedTermNode !== null) {
       const termNode = transformedTermNode, ///
-            termForVariableSubstitution = new TermForVariableSubstitution(termNode, this.variableNode);
+            variableNode = this.variableNode, ///
+            substitutions = Substitutions.fromNothing(),
+            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode, substitutions);
 
       transformedSubstitution = termForVariableSubstitution;  ///
     }
@@ -67,20 +76,15 @@ export default class TermForVariableSubstitution extends Substitution {
     const transformedVariableNode = transformVariableNode(this.variableNode, substitutions);
 
     if (transformedVariableNode !== null) {
-      const variableNode = transformedVariableNode,
-            termForVariableSubstitution = new TermForVariableSubstitution(this.termNode, variableNode);
+      const termNode = this.termNode,
+            variableNode = transformedVariableNode, ///
+            substitutions = Substitutions.fromNothing(),
+            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode, substitutions);
 
       transformedSubstitution = termForVariableSubstitution;  ///
     }
 
     return transformedSubstitution;
-  }
-
-  unifyTerm(termNode) {
-    const matchesTermNode = this.matchTermNode(termNode),
-          termUnified = matchesTermNode;  ///
-
-    return termUnified;
   }
 
   matchTermNode(termNode) {
@@ -116,7 +120,9 @@ export default class TermForVariableSubstitution extends Substitution {
           termStringB = localContextB.nodeAsString(termNodeB),
           variableNodeA = this.variableNode,  ///
           variableStringA = localContextA.nodeAsString(variableNodeA),
-          string = `[${termStringB} for ${variableStringA}]`;
+          substitutionsString = this.substitutions.asString(localContextB, localContextB);  ///
+
+    const string = `[${termStringB} for ${variableStringA}${substitutionsString}]`;
 
     return string;
   }
@@ -124,13 +130,15 @@ export default class TermForVariableSubstitution extends Substitution {
   static fromSubstitutionNode(substitutionNode) {
     const termNode = termNodeQuery(substitutionNode),
           variableNode = variableNodeQuery(substitutionNode),
-          termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
+          substitutions = Substitutions.fromNothing(),
+          termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode, substitutions);
 
     return termForVariableSubstitution;
   }
 
   static fromVariableNodeAndTermNode(variableNode, termNode) {
-    const termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
+    const substitutions = Substitutions.fromNothing(),
+          termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode, substitutions);
 
     return termForVariableSubstitution;
   }

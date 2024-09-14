@@ -1,5 +1,6 @@
 "use strict";
 
+import { EMPTY_STRING } from "./constants";
 import { prune, compare, rightDifference } from "./utilities/array";
 
 export default class Substitutions {
@@ -99,7 +100,7 @@ export default class Substitutions {
   }
 
   asString(localContextA, localContextB) {
-    const string = this.array.reduce((string, substitution) => {
+    let string = this.array.reduce((string, substitution) => {
       const substitutionString = substitution.asString(localContextA, localContextB);
 
       string = (string === null) ?
@@ -107,7 +108,11 @@ export default class Substitutions {
                    `${string}, ${substitutionString}`;
 
       return string;
-    }, null);
+    }, EMPTY_STRING);
+
+    if (string !== EMPTY_STRING) {
+      string = ` ${string}`;
+    }
 
     return string;
   }

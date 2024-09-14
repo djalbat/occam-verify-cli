@@ -32,9 +32,9 @@ export default function unifyVariableWithTerm(variableNodeA, termNodeB, substitu
 
     variableUnifiedWithTerm = true;
   } else {
-    const termUnified = substitution.unifyTerm(termNodeB);
+    const termNodeMatches = substitution.matchTermNode(termNodeB);
 
-    if (termUnified) {
+    if (termNodeMatches) {
       variableUnifiedWithTerm = true;
     }
   }

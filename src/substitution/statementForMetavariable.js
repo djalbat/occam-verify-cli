@@ -1,10 +1,10 @@
 "use strict";
 
 import Substitution from "../substitution";
+import Substitutions from "../substitutions";
 import TermForVariableSubstitution from "../substitution/termForVariable";
 
 import { matchStatementModuloBrackets, bracketedStatementChildNodeFromStatementNode } from "../utilities/match";
-import Substitutions from "../substitutions";
 
 export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(metavariableNode, statementNode, substitution, substitutions) {
@@ -59,56 +59,45 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     const statementNodeB = this.statementNode,  ///
           statementStringB = localContextB.nodeAsString(statementNodeB),
           metavariableNodeA = this.metavariableNode,  ///
-          metavariableStringA = localContextA.nodeAsString(metavariableNodeA);
+          metavariableStringA = localContextA.nodeAsString(metavariableNodeA),
+          substitutionsString = this.substitutions.asString(localContextB, localContextB);  ///
 
     if (this.substitution === null) {
-      string = `[${statementStringB} for ${metavariableStringA}]`;
+      string = `[${statementStringB} for ${metavariableStringA}${substitutionsString}]`;
     } else {
-      localContextB = localContextA;  ///
-
       const substitutionString = this.substitution.asString(localContextA, localContextB);
 
-      string = `[${statementStringB} for ${metavariableStringA}${substitutionString}]`;
+      string = `[${statementStringB} for ${metavariableStringA}${substitutionString}${substitutionsString}]`;
     }
 
     return string;
   }
 
   static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {
-    let statementForMetavariableSubstitution;
-
-    const substitution = null,
-          substitutions = Substitutions.fromNothing(),
-          bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
+    const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
     if (bracketedStatementChildNode !== null) {
       statementNode = bracketedStatementChildNode; ///
     }
 
-    statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableNode, statementNode, substitution, substitutions);
+    const substitution = null,
+          substitutions = Substitutions.fromNothing(),
+          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableNode, statementNode, substitution, substitutions);
 
     return statementForMetavariableSubstitution;
   }
 
   static fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode) {
-    let statementForMetavariableSubstitution;
-
-    let substitution = null;
-
-    if (substitutionNode !== null) {
-      const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode);
-
-      substitution = termForVariableSubstitution; ///
-    }
-
-    const substitutions = Substitutions.fromNothing(),
-          bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
+    const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
     if (bracketedStatementChildNode !== null) {
       statementNode = bracketedStatementChildNode; ///
     }
 
-    statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableNode, statementNode, substitution, substitutions);
+    const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode),
+          substitution = termForVariableSubstitution, ///
+          substitutions = Substitutions.fromNothing(),
+          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(metavariableNode, statementNode, substitution, substitutions);
 
     return statementForMetavariableSubstitution;
   }
