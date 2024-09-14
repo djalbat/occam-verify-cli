@@ -1,7 +1,6 @@
 "use strict";
 
-import Substitutions from "./substitutions";
-import intrinsicLevelUnifier from "./unifier/intrinsicLevel";
+import unifyStatementWithStatementGivenEquivalences from "./unify/statementWithSttaemetnGivenEquivalences";
 
 export default class ProofStep {
   constructor(subproofNode, statementNode) {
@@ -21,26 +20,8 @@ export default class ProofStep {
     let statementUnified = false;
 
     if (this.statementNode !== null) {
-      let statementUnifiedWithStatement = false;
-
-      if (!statementUnifiedWithStatement) {
-        const statementNodeA = this.statementNode;  ///
-
-        statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB);
-      }
-
-      if (!statementUnifiedWithStatement) {
-        const statementNodeA = statementNodeB,  ///
-              localContext = localContextA; ///
-
-        statementNodeB = this.statementNode;  ///
-
-        localContextA = localContextB;  ///
-
-        localContextB = localContext; ///
-
-        statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB);
-      }
+      const statementNodeA = this.statementNode,  ///
+            statementUnifiedWithStatement = unifyStatementWithStatementGivenEquivalences(statementNodeA, statementNodeB, equivalences, localContextA, localContextB);
 
       statementUnified = statementUnifiedWithStatement;  ///
     }
@@ -61,30 +42,4 @@ export default class ProofStep {
 
     return proofStep;
   }
-}
-
-function unifyStatementWithStatement(statementNodeA, statementNodeB, equivalences, localContextA, localContextB) {
-  let statementUnifiedWithStatement = false;
-
-  const statementStringA = localContextA.nodeAsString(statementNodeA),
-        statementStringB = localContextB.nodeAsString(statementNodeB);
-
-  localContextB.trace(`Unifying the '${statementStringB}' statement with the '${statementStringA}' statement...`, statementNodeB);
-
-  const substitutions = Substitutions.fromNothing(),
-        nodeA = statementNodeA,  ///
-        nodeB = statementNodeB,  ///
-        unified = intrinsicLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
-
-  if (unified) {
-    const substitutionsUnifiedWithEquivalences = substitutions.unifyWithEquivalences(equivalences, localContextA, localContextB);
-
-    statementUnifiedWithStatement = substitutionsUnifiedWithEquivalences;  ///
-  }
-
-  if (statementUnifiedWithStatement) {
-    localContextB.debug(`...unified the '${statementStringB}' statement with the '${statementStringA}' statement.`, statementNodeB);
-  }
-
-  return statementUnifiedWithStatement;
 }

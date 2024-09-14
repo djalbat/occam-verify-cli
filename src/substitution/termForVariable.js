@@ -46,6 +46,43 @@ export default class TermForVariableSubstitution extends Substitution {
     return transformedSubstitution;
   }
 
+  transformedTermNode(substitutions) {
+    let transformedSubstitution = null;
+
+    const transformedTermNode = transformTermNode(this.termNode, substitutions);
+
+    if (transformedTermNode !== null) {
+      const termNode = transformedTermNode, ///
+            termForVariableSubstitution = new TermForVariableSubstitution(termNode, this.variableNode);
+
+      transformedSubstitution = termForVariableSubstitution;  ///
+    }
+
+    return transformedSubstitution;
+  }
+
+  transformedVariableNode(substitutions) {
+    let transformedSubstitution = null;
+
+    const transformedVariableNode = transformVariableNode(this.variableNode, substitutions);
+
+    if (transformedVariableNode !== null) {
+      const variableNode = transformedVariableNode,
+            termForVariableSubstitution = new TermForVariableSubstitution(this.termNode, variableNode);
+
+      transformedSubstitution = termForVariableSubstitution;  ///
+    }
+
+    return transformedSubstitution;
+  }
+
+  unifyTerm(termNode) {
+    const matchesTermNode = this.matchTermNode(termNode),
+          termUnified = matchesTermNode;  ///
+
+    return termUnified;
+  }
+
   matchTermNode(termNode) {
     const matchesTermNode = this.termNode.match(termNode);
 
@@ -93,22 +130,6 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   static fromVariableNodeAndTermNode(variableNode, termNode) {
-    const termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
-
-    return termForVariableSubstitution;
-  }
-
-  static fromSubstitutionAndSubstitutions(substitution, substitutions) {
-    let termNode = substitution.getTermNode(),
-        variableNode = substitution.getVariableNode();
-
-    const transformedTermNode = transformTermNode(termNode, substitutions),
-          transformedVariableNode = transformVariableNode(variableNode, substitutions); ///
-
-    termNode = transformedTermNode; ///
-
-    variableNode = transformedVariableNode; ///
-
     const termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode);
 
     return termForVariableSubstitution;

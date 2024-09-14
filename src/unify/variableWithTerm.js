@@ -17,27 +17,24 @@ export default function unifyVariableWithTerm(variableNodeA, termNodeB, substitu
     }
   }) || null;
 
-  if (substitution !== null) {
-    const substitutionMatchesTermNodeB = substitution.matchTermNode(termNodeB);
+  if (substitution === null) {
+    const variableA = localContextA.findVariableByVariableNode(variableNodeA),
+          variableB = variableFromTermNode(termNodeB, localContextB);
 
-    if (substitutionMatchesTermNodeB) {
-      variableUnifiedWithTerm = true;
+    if (variableA !== variableB) {
+      const termNode = termNodeB, ///
+            variableNode = variableNodeA, ///
+            termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
+            substitution = termForVariableSubstitution;  ///
+
+      substitutions.addSubstitution(substitution, localContextA, localContextB);
     }
+
+    variableUnifiedWithTerm = true;
   } else {
-    const variableA = localContextA.findVariableByVariableNode(variableNodeA);
+    const termUnified = substitution.unifyTerm(termNodeB);
 
-    if (variableA !== null) {
-      const variableB = variableFromTermNode(termNodeB, localContextB);
-
-      if (variableA !== variableB) {
-        const termNode = termNodeB, ///
-              variableNode = variableNodeA, ///
-              termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
-              substitution = termForVariableSubstitution;  ///
-
-        substitutions.addSubstitution(substitution, localContextA, localContextB);
-      }
-
+    if (termUnified) {
       variableUnifiedWithTerm = true;
     }
   }

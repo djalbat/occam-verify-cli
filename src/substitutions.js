@@ -29,13 +29,15 @@ export default class Substitutions {
 
   everySubstitution(callback) { return this.array.every(callback); }
 
+  forEachSubstitution(callback) { this.array.forEach(callback); }
+
   addSubstitution(substitution, localContextA, localContextB) {
     this.array.push(substitution);
 
     const substitutionNode = substitution.getNode(),
           substitutionString = substitution.asString(localContextA, localContextB);
 
-    localContextB.trace(`Added the '${substitutionString}' substitution.`, substitutionNode);
+    localContextB.trace(`Added the ${substitutionString} substitution.`, substitutionNode);
   }
 
   removeSubstitution(substitution, localContextA, localContextB) {
@@ -52,7 +54,7 @@ export default class Substitutions {
     const substitutionNode = substitution.getNode(),
           substitutionString = substitution.asString(localContextA, localContextB);
 
-    localContextB.trace(`Removed the '${substitutionString}' substitution.`, substitutionNode);
+    localContextB.trace(`Removed the ${substitutionString} substitution.`, substitutionNode);
   }
 
   unifyWithEquivalences(equivalences, localContextA, localContextB) {
@@ -96,8 +98,18 @@ export default class Substitutions {
     this.savedArray = null;
   }
 
-  transform() {
-    ///
+  asString(localContextA, localContextB) {
+    const string = this.array.reduce((string, substitution) => {
+      const substitutionString = substitution.asString(localContextA, localContextB);
+
+      string = (string === null) ?
+                 substitutionString :
+                   `${string}, ${substitutionString}`;
+
+      return string;
+    }, null);
+
+    return string;
   }
 
   static fromNothing() {

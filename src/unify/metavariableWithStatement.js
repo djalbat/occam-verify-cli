@@ -1,8 +1,8 @@
 "use strict";
 
 import TermForVariableSubstitution from "../substitution/termForVariable";
-import unifyStatementWithStatement from "../unify/statementAtainstStatement";
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
+import unifyStatementWithStatementGivenSubstitution from "../unify/statementWithStatementGivenSubstitution";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -19,60 +19,50 @@ export default function unifyMetavariableWithStatement(metavariableNodeA, statem
     }
   }) || null;
 
-  if (substitution !== null) {
-    const substitutionStatementNode = substitution.getStatementNode();
+  if (substitution === null) {
+    const metavariableA = localContextA.findMetavariableByMetavariableNode(metavariableNodeA),
+          metavariableB = metavariableFromStatementNode(statementNodeB, localContextB);
 
-    if (substitutionNodeA !== null) {
-      const substitutionNode = substitutionNodeA, ///
-            termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode),
-            localContext = localContextB,  ///
-            substitution = termForVariableSubstitution, ///
+    if (metavariableA !== metavariableB) {
+      const statementNode = statementNodeB, ///
+            substitutionNode = substitutionNodeA, ///
+            metavariableNode = metavariableNodeA, ///
+            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
+            substitution = statementForMetavariableSubstitution;  ///
+
+      substitutions.addSubstitution(substitution, localContextA, localContextB);
+    }
+
+    metavariableUnifiedWithStatement = true;
+  } else {
+    const substitutionSubstitution = substitution.getSubstitution(),
+          substitutionStatementNode = substitution.getStatementNode();
+
+    if ((substitutionNodeA !== null) && (substitutionSubstitution !== null)) {
+      ///
+    } else if (substitutionNodeA !== null) {
+      const termForVariableSubstitutionA = TermForVariableSubstitution.fromSubstitutionNode(substitutionNodeA),
+            substitutionA = termForVariableSubstitutionA, ///
             statementNodeA = substitutionStatementNode, ///
-            statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
+            statementUnifiedWithStatementGivenSubstitution = unifyStatementWithStatementGivenSubstitution(statementNodeA, statementNodeB, substitutionA, substitutions, localContextA, localContextB);
 
-      if (statementUnifiedWithStatement) {
+      if (statementUnifiedWithStatementGivenSubstitution) {
+        metavariableUnifiedWithStatement = true;
+      }
+    } else if (substitutionSubstitution !== null) {
+      const substitutionA = substitutionSubstitution,
+            statementNodeA = substitutionStatementNode, ///
+            statementUnifiedWithStatementGivenSubstitution = unifyStatementWithStatementGivenSubstitution(statementNodeA, statementNodeB, substitutionA, substitutions, localContextA, localContextB);
+
+      if (statementUnifiedWithStatementGivenSubstitution) {
         metavariableUnifiedWithStatement = true;
       }
     } else {
-      const substitutionSubstitution = substitution.getSubstitution();
+      const substitutionMatchesStatementNodeB = substitution.matchStatementNode(statementNodeB);
 
-      if (substitutionSubstitution !== null) {
-        const statementNodeA = statementNodeB; ///
-
-        statementNodeB = substitutionStatementNode; ///
-
-        const localContext = localContextB,  ///
-              substitution = substitutionSubstitution,
-              statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, substitution, substitutions, localContext, localContext);
-
-        if (statementUnifiedWithStatement) {
-          metavariableUnifiedWithStatement = true;
-        }
-      } else {
-        const substitutionMatchesStatementNodeB = substitution.matchStatementNode(statementNodeB);
-
-        if (substitutionMatchesStatementNodeB) {
-          metavariableUnifiedWithStatement = true;
-        }
+      if (substitutionMatchesStatementNodeB) {
+        metavariableUnifiedWithStatement = true;
       }
-    }
-  } else {
-    const metavariableA = localContextA.findMetavariableByMetavariableNode(metavariableNodeA);
-
-    if (metavariableA !== null) {
-      const metavariableB = metavariableFromStatementNode(statementNodeB, localContextB);
-
-      if (metavariableA !== metavariableB) {
-        const statementNode = statementNodeB, ///
-              substitutionNode = substitutionNodeA, ///
-              metavariableNode = metavariableNodeA, ///
-              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromMetavariableNodeStatementNodeAndSubstitutionNode(metavariableNode, statementNode, substitutionNode),
-              substitution = statementForMetavariableSubstitution;  ///
-
-        substitutions.addSubstitution(substitution, localContextA, localContextB);
-      }
-
-      metavariableUnifiedWithStatement = true;
     }
   }
 
