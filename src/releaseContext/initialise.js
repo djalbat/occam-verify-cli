@@ -1,6 +1,6 @@
 "use strict";
 
-export default function initialiseReleaseContext(dependency, dependentName, dependentReleased, context) {
+export default function initialiseReleaseContext(dependency, context) {
   let releaseContextInitialised = false;
 
   const { releaseContextMap } = context,
@@ -16,27 +16,19 @@ export default function initialiseReleaseContext(dependency, dependentName, depe
     releaseContextInitialised = releaseContext.isInitialised();
 
     if (!releaseContextInitialised) {
-      const released = releaseContext.isReleased();
+      const dependencyReleaseContextsInitialised = initialiseDependencyReleaseContexts(dependency, releaseContext, context);
 
-      if (!released && dependentReleased) {
-        const { log } = context;
+      if (dependencyReleaseContextsInitialised) {
+        const { log } = context,
+              releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
 
-        log.warning(`Unable to initialise the '${dependencyName}' dependency's context because its '${dependentName}' dependent is a package.`);
-      } else {
-        const dependencyReleaseContextsInitialised = initialiseDependencyReleaseContexts(dependency, releaseContext, released, context);
+        log.debug(`Initialising the '${dependencyName}' context...`);
 
-        if (dependencyReleaseContextsInitialised) {
-          const { log } = context,
-                releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
+        releaseContextInitialised = releaseContext.initialise(releaseContexts);
 
-          log.debug(`Initialising the '${dependencyName}' context...`);
-
-          releaseContextInitialised = releaseContext.initialise(releaseContexts);
-
-          releaseContextInitialised ?
-            log.info(`...initialised the '${dependencyName}' context.`) :
-              log.warning(`...unable to initialise the '${dependencyName}' context.`);
-        }
+        releaseContextInitialised ?
+          log.info(`...initialised the '${dependencyName}' context.`) :
+            log.warning(`...unable to initialise the '${dependencyName}' context.`);
       }
     }
   }
@@ -81,13 +73,10 @@ function retrieveReleaseContexts(releaseContext, releaseContextMap) {
   return releaseContexts;
 }
 
-function initialiseDependencyReleaseContexts(dependency, releaseContext, released, context) {
-  const dependencyName = dependency.getName(),
-        dependentName = dependencyName,  ///
-        dependencies = releaseContext.getDependencies(),
-        dependentReleased = released,  ///
+function initialiseDependencyReleaseContexts(dependency, releaseContext, context) {
+  const dependencies = releaseContext.getDependencies(),
         dependencyReleaseContextsInitialised = dependencies.everyDependency((dependency) => {  ///
-          const releaseContextInitialised = initialiseReleaseContext(dependency, dependentName, dependentReleased, context);
+          const releaseContextInitialised = initialiseReleaseContext(dependency, context);
 
           if (releaseContextInitialised) {
             return true;

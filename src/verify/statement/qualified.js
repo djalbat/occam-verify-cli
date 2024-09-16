@@ -198,19 +198,6 @@ function unifyDerivedQualifiedStatementAWithReference(qualifiedStatementNode, su
 
     debugger
 
-    // const statementNode = statementNodeQuery(qualifiedStatementNode),
-    //       localContextA = null,
-    //       localContextB = localContext, ///
-    //       statementNodeB = statementNode, ///
-    //       substitutionNodeA = null,
-    //       metavariableNodeA = metavariableNode, ///
-    //       metavariableUnifiedWithStatement = unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB, () => {
-    //         const verifiedAhead = true;
-    //
-    //         return verifiedAhead;
-    //       });
-    //
-    // derivedQualifiedStatementUnifiedWithReference = metavariableUnifiedWithStatement; ///
   }
 
   if (derivedQualifiedStatementUnifiedWithReference) {

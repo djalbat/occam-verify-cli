@@ -17,26 +17,26 @@ export default function unifyVariableWithTerm(variableNodeA, termNodeB, substitu
     }
   }) || null;
 
-  if (substitution === null) {
+  if (substitution !== null) {
+    const termNodeMatches = substitution.matchTermNode(termNodeB);
+
+    if (termNodeMatches) {
+      variableUnifiedWithTerm = true;
+    }
+  } else {
     const variableA = localContextA.findVariableByVariableNode(variableNodeA),
           variableB = variableFromTermNode(termNodeB, localContextB);
 
     if (variableA !== variableB) {
       const termNode = termNodeB, ///
             variableNode = variableNodeA, ///
-            termForVariableSubstitution = TermForVariableSubstitution.fromVariableNodeAndTermNode(variableNode, termNode),
+            termForVariableSubstitution = TermForVariableSubstitution.fromTernNodeAndVariableNode(termNode, variableNode),
             substitution = termForVariableSubstitution;  ///
 
       substitutions.addSubstitution(substitution, localContextA, localContextB);
     }
 
     variableUnifiedWithTerm = true;
-  } else {
-    const termNodeMatches = substitution.matchTermNode(termNodeB);
-
-    if (termNodeMatches) {
-      variableUnifiedWithTerm = true;
-    }
   }
 
   return variableUnifiedWithTerm;

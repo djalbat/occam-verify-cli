@@ -27,7 +27,6 @@ function verifyAction(argument, log) {
     }
 
     const releaseName = name, ///
-          dependentName = releaseName,  ///
           releaseContext = releaseContextMap[releaseName] || null;
 
     if (releaseContext === null) {
@@ -36,19 +35,18 @@ function verifyAction(argument, log) {
       return;
     }
 
-    const released = releaseContext.isReleased();
+    const releaseContextInitialised = initialiseReleaseContext(dependency, context);
 
-    if (released) {
-      log.warning(`The '${name}' package does not need to be verified.`);
+    if (!releaseContextInitialised) {
+      log.warning(`The '${name}' project or package context cannot be initialised.`);
 
       return;
     }
 
-    const dependentReleased = released, ///
-          releaseContextInitialised = initialiseReleaseContext(dependency, dependentName, dependentReleased, context);
+    const releaseContextVerified = releaseContext.isVerified();
 
-    if (!releaseContextInitialised) {
-      log.warning(`The '${name}' project or package context cannot be initialised.`);
+    if (releaseContextVerified) {
+      log.warning(`The '${name}' package does not need to be verified.`);
 
       return;
     }

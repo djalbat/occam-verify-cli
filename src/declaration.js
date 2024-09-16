@@ -1,6 +1,6 @@
 "use strict";
 
-import { matchStatementModuloBrackets } from "./utilities/match";
+import { stripBrackets } from "./utilities/statement";
 
 export default class Declaration {
   constructor(metavariableNode, statementNode) {
@@ -33,24 +33,26 @@ export default class Declaration {
   }
 
   unifyStatement(statementNode) {
-    const statementNodeA = statementNode, ///
-          statementNodeB = this.statementNode,  ///
-          statementMatches = matchStatementModuloBrackets(statementNodeA, statementNodeB),
-          matchesStatementNode = statementMatches;  ///
+    statementNode = stripBrackets(statementNode); ///
 
-    return matchesStatementNode;
+    const statementNodeMatches = this.statementNode.match(statementNode),
+          statementUnified = statementNodeMatches;  ///
+
+    return statementUnified;
   }
 
   unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) {
     const consequent = metaLemmaMetatheorem.getConsequent(),
           statementNode = consequent.getStatementNode(),
-          matches = this.statementNode.match(statementNode),
-          metaLemmaOrMetaTheoremUnified = matches;  ///
+          statementNodeMatches = this.statementNode.match(statementNode),
+          metaLemmaOrMetaTheoremUnified = statementNodeMatches;  ///
 
     return metaLemmaOrMetaTheoremUnified;
   }
 
   static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {
+    statementNode = stripBrackets(statementNode); ///
+
     const declaration = new Declaration(metavariableNode, statementNode);
 
     return declaration;

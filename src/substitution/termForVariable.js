@@ -1,7 +1,6 @@
 "use strict";
 
 import Substitution from "../substitution";
-import Substitutions from "../substitutions";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -9,24 +8,19 @@ const termNodeQuery = nodeQuery("/*/term!"),
       variableNodeQuery = nodeQuery("/*/variable!");
 
 export default class TermForVariableSubstitution extends Substitution {
-  constructor(variableNode, termNode, substitutions) {
+  constructor(termNode, variableNode) {
     super();
 
-    this.variableNode = variableNode;
     this.termNode = termNode;
-    this.substitutions = substitutions;
-  }
-
-  getVariableNode() {
-    return this.variableNode;
+    this.variableNode = variableNode;
   }
 
   getTermNode() {
     return this.termNode;
   }
 
-  getSubstitutions() {
-    return this.substitutions;
+  getVariableNode() {
+    return this.variableNode;
   }
 
   getNode() {
@@ -44,8 +38,7 @@ export default class TermForVariableSubstitution extends Substitution {
     if ((transformedTermNode !== null) && (transformedVariableNode !== null)) {
       const termNode = transformedTermNode, ///
             variableNode = transformedVariableNode, ///
-            substitutions = Substitutions.fromNothing(),
-            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode, substitutions);
+            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
 
       transformedSubstitution = termForVariableSubstitution;  ///
     }
@@ -61,8 +54,7 @@ export default class TermForVariableSubstitution extends Substitution {
     if (transformedTermNode !== null) {
       const termNode = transformedTermNode, ///
             variableNode = this.variableNode, ///
-            substitutions = Substitutions.fromNothing(),
-            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode, substitutions);
+            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
 
       transformedSubstitution = termForVariableSubstitution;  ///
     }
@@ -78,13 +70,22 @@ export default class TermForVariableSubstitution extends Substitution {
     if (transformedVariableNode !== null) {
       const termNode = this.termNode,
             variableNode = transformedVariableNode, ///
-            substitutions = Substitutions.fromNothing(),
-            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode, substitutions);
+            termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
 
       transformedSubstitution = termForVariableSubstitution;  ///
     }
 
     return transformedSubstitution;
+  }
+
+  match(substitution) {
+    const termNode = substitution.getTermNode(),
+          variableNode = substitution.getVariableNode(),
+          matchesTermNode = this.matchTermNode(termNode),
+          matchesVariableNode = this.matchVariableNode(variableNode),
+          matches = (matchesTermNode && matchesVariableNode);
+
+    return matches;
   }
 
   matchTermNode(termNode) {
@@ -102,14 +103,14 @@ export default class TermForVariableSubstitution extends Substitution {
   unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {
     let unifiedWithEquivalence;
 
-    const equivalenceMatchesVariableNode = equivalence.matchVariableNode(this.variableNode);
+    const equivalenceMatchesTermNode = equivalence.matchTermNode(this.termNode);
 
-    if (equivalenceMatchesVariableNode) {
-      const equivalenceMatchesTermNode = equivalence.matchTermNode(this.termNode);
+    if (equivalenceMatchesTermNode) {
+      const equivalenceMatchesVariableNode = equivalence.matchVariableNode(this.variableNode);
 
-      if (equivalenceMatchesTermNode) {
-        unifiedWithEquivalence = true;
-      }
+      if (equivalenceMatchesVariableNode) {
+          unifiedWithEquivalence = true;
+        }
     }
 
     return unifiedWithEquivalence;
@@ -119,10 +120,9 @@ export default class TermForVariableSubstitution extends Substitution {
     const termNodeB = this.termNode,  ///
           termStringB = localContextB.nodeAsString(termNodeB),
           variableNodeA = this.variableNode,  ///
-          variableStringA = localContextA.nodeAsString(variableNodeA),
-          substitutionsString = this.substitutions.asString(localContextB, localContextB);  ///
+          variableStringA = localContextA.nodeAsString(variableNodeA);
 
-    const string = `[${termStringB} for ${variableStringA}${substitutionsString}]`;
+    const string = `[${termStringB} for ${variableStringA}]`;
 
     return string;
   }
@@ -130,15 +130,13 @@ export default class TermForVariableSubstitution extends Substitution {
   static fromSubstitutionNode(substitutionNode) {
     const termNode = termNodeQuery(substitutionNode),
           variableNode = variableNodeQuery(substitutionNode),
-          substitutions = Substitutions.fromNothing(),
-          termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode, substitutions);
+          termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
 
     return termForVariableSubstitution;
   }
 
-  static fromVariableNodeAndTermNode(variableNode, termNode) {
-    const substitutions = Substitutions.fromNothing(),
-          termForVariableSubstitution = new TermForVariableSubstitution(variableNode, termNode, substitutions);
+  static fromTernNodeAndVariableNode(termNode, variableNode) {
+    const termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
 
     return termForVariableSubstitution;
   }

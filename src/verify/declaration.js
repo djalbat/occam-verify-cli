@@ -36,7 +36,7 @@ export default function verifyDeclaration(declarationNode, assignments, derived,
 }
 
 function verifyDerivedDeclaration(declarationNode, declarations, localContext) {
-  let derivedDeclarationVerified = false;
+  let derivedDeclarationVerified;
 
   const declarationString = localContext.nodeAsString(declarationNode);
 
@@ -62,17 +62,9 @@ function verifyStatedDeclaration(declarationNode, declarations, localContext) {
         metavariableVerified = verifyMetavariable(metavariableNode, localContext);
 
   if (metavariableVerified) {
-    const statementNode = statementNodeQuery(declarationNode);
 
     debugger
 
-    if (statementVerified) {
-      const declaration = Declaration.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode);
-
-      declarations.push(declaration);
-
-      statedDeclarationVerified = true;
-    }
   }
 
   if (statedDeclarationVerified) {

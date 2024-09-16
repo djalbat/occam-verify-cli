@@ -1,6 +1,12 @@
 "use strict";
 
 export default class Substitution {
+  isStraightForward() {
+    const straightforward = true;
+
+    return straightforward;
+  }
+
   matchTermNode(termNode) {
     const matchesTermNode = false;
 
@@ -23,6 +29,12 @@ export default class Substitution {
     const matchesMetavariableNode = false;
 
     return matchesMetavariableNode;
+  }
+
+  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
+    const matchesMetavariableNodeAndSubstitutionNode = false;
+
+    return matchesMetavariableNodeAndSubstitutionNode;
   }
 
   unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {

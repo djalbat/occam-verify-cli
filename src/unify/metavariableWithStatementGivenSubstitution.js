@@ -6,18 +6,14 @@ import { nodeQuery } from "../utilities/query";
 
 const metavariableNodeQuery = nodeQuery("/statement/metavariable");
 
-export default function unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutions, localContextA, localContextB) {
+export default function unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB) {
   let metavariableUnifiedWithStatement = false;
 
   const substitution = substitutions.findSubstitution((substitution) => {
-    const substitutionStraightforward = substitution.isStraightForward();
+    const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNodeA);
 
-    if (substitutionStraightforward) {
-      const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNodeA);
-
-      if (substitutionMatchesMetavariableNodeA) {
-        return true;
-      }
+    if (substitutionMatchesMetavariableNodeA) {
+      return true;
     }
   }) || null;
 
@@ -33,8 +29,11 @@ export default function unifyMetavariableWithStatement(metavariableNodeA, statem
 
     if (metavariableA !== metavariableB) {
       const statementNode = statementNodeB, ///
+            substitutionNode = substitutionNodeA, ///
             metavariableNode = metavariableNodeA, ///
-            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementNodeAndMetavariableNode(statementNode, metavariableNode),
+            statementForMetavariableSubstitution = (substitutionNode !== null) ?
+                                                     StatementForMetavariableSubstitution.fromStatementNodeMetavariableNodeAndSubstitutionNode(statementNode, metavariableNode, substitutionNode) :
+                                                       StatementForMetavariableSubstitution.fromStatementNodeAndMetavariableNode(statementNode, metavariableNode),
             substitution = statementForMetavariableSubstitution;  ///
 
       substitutions.addSubstitution(substitution, localContextA, localContextB);

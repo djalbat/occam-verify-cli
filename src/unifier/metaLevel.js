@@ -36,10 +36,17 @@ class MetaLevelUnifier extends Unifier {
         const metavariableNodeA = metavariableNodeQuery(statementNodeA);
 
         if (metavariableNodeA !== null) {
-          const substitutionNodeA = substitutionNodeQuery(statementNodeA),
-                metavariableUnifiedWithStatement = unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB);
+          const substitutionNodeA = substitutionNodeQuery(statementNodeA);
 
-          statementUnifiedWithStatement = metavariableUnifiedWithStatement;  ///
+          if (substitutionNodeA === null) {
+            const metavariableUnifiedWithStatement = unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutions, localContextA, localContextB);
+
+            statementUnifiedWithStatement = metavariableUnifiedWithStatement; ///
+          } else {
+            const metavariableUnifiedWithStatementGivenSubstitution = unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB);
+
+            statementUnifiedWithStatement = metavariableUnifiedWithStatementGivenSubstitution; ///
+          }
         } else {
           const nonTerminalNodeA = statementNodeA, ///
                 nonTerminalNodeB = statementNodeB, ///
