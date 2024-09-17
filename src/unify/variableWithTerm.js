@@ -9,13 +9,7 @@ const variableNodeQuery = nodeQuery("/term/variable");
 export default function unifyVariableWithTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB) {
   let variableUnifiedWithTerm = false;
 
-  const substitution = substitutions.findSubstitution((substitution) => {
-    const substitutionMatchesVariableNodeA = substitution.matchVariableNode(variableNodeA);
-
-    if (substitutionMatchesVariableNodeA) {
-      return true;
-    }
-  }) || null;
+  const substitution = substitutions.findSubstitutionByVariableNode(variableNodeA);
 
   if (substitution !== null) {
     const termNodeMatches = substitution.matchTermNode(termNodeB);

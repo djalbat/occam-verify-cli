@@ -2,57 +2,33 @@
 
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
 
-import { nodeQuery } from "../utilities/query";
-
-const metavariableNodeQuery = nodeQuery("/statement/metavariable");
+import { resolveSubstitutionsByMetavariableNode } from "../utilities/substitutions";
 
 export default function unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB) {
-  let metavariableUnifiedWithStatement = false;
+  let metavariableUnifiedWithStatementGivenSubstitution = false;
 
-  const substitution = substitutions.findSubstitution((substitution) => {
-    const substitutionMatchesMetavariableNodeA = substitution.matchMetavariableNode(metavariableNodeA);
-
-    if (substitutionMatchesMetavariableNodeA) {
-      return true;
-    }
-  }) || null;
+  const complexSubstitution = substitutions.findComplexSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNodeA, substitutionNodeA),
+        substitution = complexSubstitution; ///
 
   if (substitution !== null) {
     const statementNodeMatches = substitution.matchStatementNode(statementNodeB);
 
     if (statementNodeMatches) {
-      metavariableUnifiedWithStatement = true;
+      metavariableUnifiedWithStatementGivenSubstitution = true;
     }
   } else {
-    const metavariableA = localContextA.findMetavariableByMetavariableNode(metavariableNodeA),
-          metavariableB = metavariableFromStatementNode(statementNodeB, localContextB);
+    const statementNode = statementNodeB, ///
+          substitutionNode = substitutionNodeA, ///
+          metavariableNode = metavariableNodeA, ///
+          statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementNodeMetavariableNodeAndSubstitutionNode(statementNode, metavariableNode, substitutionNode),
+          substitution = statementForMetavariableSubstitution;  ///
 
-    if (metavariableA !== metavariableB) {
-      const statementNode = statementNodeB, ///
-            substitutionNode = substitutionNodeA, ///
-            metavariableNode = metavariableNodeA, ///
-            statementForMetavariableSubstitution = (substitutionNode !== null) ?
-                                                     StatementForMetavariableSubstitution.fromStatementNodeMetavariableNodeAndSubstitutionNode(statementNode, metavariableNode, substitutionNode) :
-                                                       StatementForMetavariableSubstitution.fromStatementNodeAndMetavariableNode(statementNode, metavariableNode),
-            substitution = statementForMetavariableSubstitution;  ///
+    substitutions.addSubstitution(substitution, localContextA, localContextB);
 
-      substitutions.addSubstitution(substitution, localContextA, localContextB);
-    }
+    const substitutionsResolvedByMetavariableNode = resolveSubstitutionsByMetavariableNode(metavariableNodeA, substitutions, localContextA, localContextB);
 
-    metavariableUnifiedWithStatement = true;
+    metavariableUnifiedWithStatementGivenSubstitution = substitutionsResolvedByMetavariableNode; ///
   }
 
-  return metavariableUnifiedWithStatement;
-}
-
-function metavariableFromStatementNode(statementNode, localContext) {
-  let metavariable = null;
-
-  const metavariableNode = metavariableNodeQuery(statementNode)
-
-  if (metavariableNode !== null) {
-    metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
-  }
-
-  return metavariable;
+  return metavariableUnifiedWithStatementGivenSubstitution;
 }

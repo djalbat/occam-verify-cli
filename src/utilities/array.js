@@ -2,7 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-export const { first, second, last, extract, tail, push, match, prune, filter, compress, separate } = arrayUtilities;
+export const { first, second, last, extract, tail, push, find, match, prune, filter, compress, separate } = arrayUtilities;
 
 export function reverse(array) {
   array = [ ///
@@ -10,21 +10,6 @@ export function reverse(array) {
   ].reverse();
 
   return array;
-}
-
-export function compare(arrayA, arrayB) {
-  let compares = false;
-
-  const arrayALength = arrayA.length,
-        arrayBLength = arrayB.length;
-
-  if (arrayALength === arrayBLength) {
-    const correlates = correlate(arrayA, arrayB);
-
-    compares = correlates;  ///
-  }
-
-  return compares;
 }
 
 export function correlate(arrayA, arrayB, callback) {

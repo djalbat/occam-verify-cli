@@ -43,7 +43,15 @@ export default class Rule {
       const conclusionA = this.conclusion,  ///
             conclusionUnified = unifyConclusionWithStatement(conclusionA, statementNode, substitutions, fileContextA, localContextB);
 
-      statementUnified = conclusionUnified;  ///
+      if (conclusionUnified) {
+        const substitutionsResolved = substitutions.areResolved();
+
+        if (!substitutionsResolved) {
+          localContext.debug(`The substitutions are not resolved.`, statementNode);
+        }
+
+        statementUnified = substitutionsResolved; ///
+      }
     }
 
     return statementUnified;

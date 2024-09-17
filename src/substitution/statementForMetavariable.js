@@ -32,10 +32,10 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return node;
   }
 
-  isStraightForward() {
-    const straightforward = (this.substitution !== null);
+  isSimple() {
+    const simple = (this.substitution === null);
 
-    return straightforward;
+    return simple;
   }
 
   matchStatementNode(statementNode) {
@@ -69,7 +69,7 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     if (this.substitution === null) {
       string = `[${statementStringB} for ${metavariableStringA}]`;
     } else {
-      const substitutionString = this.substitution.asString(localContextA, localContextB);
+      const substitutionString = this.substitution.asString(localContextA, localContextA);
 
       string = `[${statementStringB} for ${metavariableStringA}${substitutionString}]`;
     }

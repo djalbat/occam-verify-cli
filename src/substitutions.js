@@ -1,7 +1,8 @@
 "use strict";
 
+import { find, first } from "./utilities/array";
 import { EMPTY_STRING } from "./constants";
-import { prune, compare, rightDifference } from "./utilities/array";
+import { prune, rightDifference } from "./utilities/array";
 
 export default class Substitutions {
   constructor(array, savedArray) {
@@ -17,20 +18,117 @@ export default class Substitutions {
     return this.savedArray;
   }
 
-  hasChanged() {
-    const compares = compare(this.array, this.savedArray),
-          changed = !compares;  ///
-
-    return changed;
-  }
-
-  findSubstitution(callback) { return this.array.find(callback); }
+  findSubstitution(callback) { return this.array.find(callback) || null; }  ///
 
   someSubstitution(callback) { return this.array.some(callback); }
 
   everySubstitution(callback) { return this.array.every(callback); }
 
   forEachSubstitution(callback) { this.array.forEach(callback); }
+
+  findSubstitutions(callback) {
+    const array = find(this.array, callback),
+          substitutions = Substitutions.fromArray(array);
+
+    return substitutions;
+  }
+
+  filterSubstitution(callback) {
+    const array = this.array.filter(callback),
+          substitutions = Substitutions.fromArray(array);
+
+    return substitutions;
+  }
+
+  getFirstSubstitution() {
+    let firstSubstitution = null;
+
+    const length = this.array.length;
+
+    if (length > 0) {
+      firstSubstitution = first(this.array);
+    }
+
+    return firstSubstitution;
+  }
+
+  findSimpleSubstitution() {
+    const simpleSubstitution = this.findSubstitution((substitution) => {
+      const substitutionSimple = substitution.isSimple();
+
+      if (substitutionSimple) {
+        return true;
+      }
+    });
+
+    return simpleSubstitution;
+  }
+
+  findSubstitutionByVariableNode(variableNode) {
+    const substitution = this.findSubstitution((substitution) => {
+      const substitutionMatchesVariableNode = substitution.matchVariableNode(variableNode);
+
+      if (substitutionMatchesVariableNode) {
+        return true;
+      }
+    });
+
+    return substitution;
+  }
+
+  findSubstitutionsByMetavariableNode(metavariableNode) {
+    const substitutions = this.findSubstitutions((substitution) => {
+      const substitutionMatchesMetavariableNode = substitution.matchMetavariableNode(metavariableNode);
+
+      if (substitutionMatchesMetavariableNode) {
+        return true;
+      }
+    });
+
+    return substitutions;
+  }
+
+  findSimpleSubstitutionByMetavariableNode(metavariableNode) {
+    const substitutions = this.findSubstitutionsByMetavariableNode(metavariableNode),
+          simpleSubstitutions = substitutions.filterSubstitution((substitution) => {
+            const substitutionSimple = substitution.isSimple();
+
+            if (substitutionSimple) {
+              return true;
+            }
+          }),
+          firstSimpleSubstitution = simpleSubstitutions.getFirstSubstitution(),
+          simpleSubstitution = firstSimpleSubstitution; ///
+
+    return simpleSubstitution;
+  }
+
+  findSubstitutionsByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
+    const substitutions = this.findSubstitutions((substitution) => {
+      const substitutionMatchesMetavariableNodeAndSubstitutionNode = substitution.matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
+
+      if (substitutionMatchesMetavariableNodeAndSubstitutionNode) {
+        return true;
+      }
+    });
+
+    return substitutions;
+  }
+
+  findComplexSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
+    const substitutions = this.findSubstitutionsByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode),
+          complexSubstitutions = substitutions.filterSubstitution((substitution) => {
+            const substitutionComplex = substitution.isComplex();
+
+            if (substitutionComplex) {
+              return true;
+            }
+          }),
+          firstComplexSubstitution = complexSubstitutions.getFirstSubstitution(),
+          complexSubstitution = firstComplexSubstitution; ///
+
+    return complexSubstitution;
+  }
 
   addSubstitution(substitution, localContextA, localContextB) {
     this.array.push(substitution);
@@ -69,6 +167,16 @@ export default class Substitutions {
     });
 
     return unifiedWithEquivalences;
+  }
+
+  areResolved() {
+    const resolved = this.everySubstitution((substitution) => {
+      const substitutionResolved = substitution.isResolved();
+
+      return substitutionResolved;
+    });
+
+    return resolved;
   }
 
   snapshot() {
@@ -115,6 +223,13 @@ export default class Substitutions {
     }
 
     return string;
+  }
+
+  static fromArray(array) {
+    const savedArray = [],
+          substitutions = new Substitutions(array, savedArray);
+
+    return substitutions;
   }
 
   static fromNothing() {

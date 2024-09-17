@@ -48,7 +48,15 @@ export default class TopLevelAssertion {
       const consequentA = this.consequent,  ///
             consequentUnified = unifyConsequentWithStatement(consequentA, statementNode, substitutions, fileContextA, localContext);
 
-      statementUnified = consequentUnified;  ///
+      if (consequentUnified) {
+        const substitutionsResolved = substitutions.areResolved();
+
+        if (!substitutionsResolved) {
+          localContext.debug(`The substitutions are not resolved.`, statementNode);
+        }
+
+        statementUnified = substitutionsResolved; ///
+      }
     }
 
     return statementUnified;

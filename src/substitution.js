@@ -1,10 +1,24 @@
 "use strict";
 
 export default class Substitution {
-  isStraightForward() {
-    const straightforward = true;
+  isSimple() {
+    const simple = true;
 
-    return straightforward;
+    return simple;
+  }
+
+  isComplex() {
+    const simple = this.isSimple(),
+          complex = !simple;
+
+    return complex;
+  }
+
+  isResolved() {
+    const simple = this.isSimple(),
+          resolved = simple; ///
+
+    return resolved;
   }
 
   matchTermNode(termNode) {
