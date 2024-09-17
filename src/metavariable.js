@@ -4,7 +4,7 @@ import verifyTermGivenType from "./verify/termGivenType";
 
 import { nodeQuery } from "./utilities/query";
 import { nodeAsString } from "./utilities/string";
-import { nameFromMetavariableNode } from "./utilities/name";
+import { metavariableNameFromMetavariableNode } from "./utilities/name";
 
 const termNodeQuery = nodeQuery("/metavariable/argument/term!"),
       typeNodeQuery = nodeQuery("/metavariable/argument/type!");
@@ -51,7 +51,8 @@ export default class Metavariable {
     const typeNode = typeNodeQuery(metavariableNode);
 
     if (typeNode === null) {
-      const name = nameFromMetavariableNode(metavariableNode);
+      const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+            name = metavariableName;  ///
 
       if (this.name === name) {
         const termNode = termNodeQuery(metavariableNode);

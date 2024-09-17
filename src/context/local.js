@@ -211,14 +211,8 @@ class LocalContext {
   addMetavariable(metavariable) {
     let metavariableAdded = false;
 
-    const name = metavariable.getName(),
-          metavariablePresent = this.metavariables.some((metavariable) => {
-            const metavariableMatchesNode = metavariable.matchName(name);
-
-            if (metavariableMatchesNode) {
-              return true;
-            }
-          });
+    const metavariableName = metavariable.getName(),
+          metavariablePresent = this.isMetavariablePresentByMetavariableName(metavariableName);
 
     if (!metavariablePresent) {
       this.metavariables.push(metavariable);
@@ -326,16 +320,11 @@ class LocalContext {
 
   isTypePresentByTypeNode(typeNode) { return this.context.isTypePresentByTypeNode(typeNode); }
 
-  isMetavariablePresentByName(name) { return this.context.isMetavariablePresentByName(name); }
-
   isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
 
-  isMetavariablePresentByMetavariableNode(metavariableNode) {
-    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode),
-          metavariablePresent = (metavariable !== null);
+  isMetavariablePresentByMetavariableName(metavariableName) { return this.context.isMetavariablePresentByMetavariableName(metavariableName); }
 
-    return metavariablePresent;
-  }
+  isMetavariablePresentByMetavariableNode(metavariableNode) { return this.context.isMetavariablePresentByMetavariableNode(metavariableNode); }
 
   findVariableByVariableNode(variableNode) {
     const node = variableNode,  ///
@@ -382,8 +371,6 @@ class LocalContext {
 
   findTypeByTypeNode(typeNode) { return this.context.findTypeByTypeNode(typeNode); }
 
-  findMetavariableByName(name) { return this.context.findMetavariableByName(name); }
-
   findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
 
   findMetaTypeByMetaTypeNode(metaTypeNode) { return this.context.findMetaTypeByMetaTypeNode(metaTypeNode); }
@@ -401,6 +388,8 @@ class LocalContext {
   findConjectureByMetavariableNode(metavariableNode) { return this.context.findConjectureByMetavariableNode(metavariableNode); }
 
   findMetatheoremByMetavariableNode(metavariableNode) { return this.context.findMetatheoremByMetavariableNode(metavariableNode); }
+
+  findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
 
   nodeAsString(node) { return this.context.nodeAsString(node); }
 

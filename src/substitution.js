@@ -21,6 +21,12 @@ export default class Substitution {
     return resolved;
   }
 
+  getMetavariableNode() {
+    const metavariableNode = null;
+
+    return metavariableNode;
+  }
+
   matchTermNode(termNode) {
     const matchesTermNode = false;
 

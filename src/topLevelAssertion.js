@@ -1,6 +1,7 @@
 "use strict";
 
 import Substitutions from "./substitutions";
+import resolveSubstitutions from "./resolve/substitutions";
 import unifyConsequentWithStatement from "./unify/consequentWithStatement";
 import unifySuppositionsWithProofSteps from "./unify/suppositionsWithProofSteps";
 
@@ -49,11 +50,7 @@ export default class TopLevelAssertion {
             consequentUnified = unifyConsequentWithStatement(consequentA, statementNode, substitutions, fileContextA, localContext);
 
       if (consequentUnified) {
-        const substitutionsResolved = substitutions.areResolved();
-
-        if (!substitutionsResolved) {
-          localContext.debug(`The substitutions are not resolved.`, statementNode);
-        }
+        const substitutionsResolved = resolveSubstitutions(substitutions, fileContextA, localContextB);
 
         statementUnified = substitutionsResolved; ///
       }

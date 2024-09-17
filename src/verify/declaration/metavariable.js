@@ -5,7 +5,7 @@ import MetavariableAssignment from "../../assignment/metavariable";
 
 import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
-import { nameFromMetavariableNode } from "../../utilities/name";
+import { metavariableNameFromMetavariableNode } from "../../utilities/name";
 
 const termNodeQuery = nodeQuery("/argument/term"),
       typeNodeQuery = nodeQuery("/argument/type"),
@@ -70,8 +70,9 @@ function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
         termType = firstTermType; ///
       }
 
-      const node = metavariableNode,  ///
-            name = nameFromMetavariableNode(metavariableNode),
+      const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+            node = metavariableNode,  ///
+            name = metavariableName,  ///
             metavariable = Metavariable.fromNodeNameTermTypeAndMetaType(node, name, termType, metaType),
             metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
             metavariableAssigned = metavariableAssignment.assign(fileContext);

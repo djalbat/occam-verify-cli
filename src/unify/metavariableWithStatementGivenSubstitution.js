@@ -2,8 +2,6 @@
 
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
 
-import { resolveSubstitutionsByMetavariableNode } from "../utilities/substitutions";
-
 export default function unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB) {
   let metavariableUnifiedWithStatementGivenSubstitution = false;
 
@@ -17,17 +15,15 @@ export default function unifyMetavariableWithStatementGivenSubstitution(metavari
       metavariableUnifiedWithStatementGivenSubstitution = true;
     }
   } else {
-    const statementNode = statementNodeB, ///
-          substitutionNode = substitutionNodeA, ///
-          metavariableNode = metavariableNodeA, ///
-          statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementNodeMetavariableNodeAndSubstitutionNode(statementNode, metavariableNode, substitutionNode),
-          substitution = statementForMetavariableSubstitution;  ///
+      const statementNode = statementNodeB, ///
+            substitutionNode = substitutionNodeA, ///
+            metavariableNode = metavariableNodeA, ///
+            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementNodeMetavariableNodeAndSubstitutionNode(statementNode, metavariableNode, substitutionNode),
+            substitution = statementForMetavariableSubstitution;  ///
 
-    substitutions.addSubstitution(substitution, localContextA, localContextB);
+      substitutions.addSubstitution(substitution, localContextA, localContextB);
 
-    const substitutionsResolvedByMetavariableNode = resolveSubstitutionsByMetavariableNode(metavariableNodeA, substitutions, localContextA, localContextB);
-
-    metavariableUnifiedWithStatementGivenSubstitution = substitutionsResolvedByMetavariableNode; ///
+      metavariableUnifiedWithStatementGivenSubstitution = true;
   }
 
   return metavariableUnifiedWithStatementGivenSubstitution;

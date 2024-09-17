@@ -1,6 +1,7 @@
 "use strict";
 
 import Substitutions from "./substitutions";
+import resolveSubstitutions from "./resolve/substitutions";
 import unifyPremisesWithProofSteps from "./unify/premisesWithProofSteps";
 import unifyConclusionWithStatement from "./unify/conclusionWithStatement";
 
@@ -44,11 +45,7 @@ export default class Rule {
             conclusionUnified = unifyConclusionWithStatement(conclusionA, statementNode, substitutions, fileContextA, localContextB);
 
       if (conclusionUnified) {
-        const substitutionsResolved = substitutions.areResolved();
-
-        if (!substitutionsResolved) {
-          localContext.debug(`The substitutions are not resolved.`, statementNode);
-        }
+        const substitutionsResolved = resolveSubstitutions(substitutions, fileContextA, localContextB);
 
         statementUnified = substitutionsResolved; ///
       }

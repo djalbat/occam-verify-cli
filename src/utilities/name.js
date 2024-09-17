@@ -14,18 +14,18 @@ export function typeNameFromTypeNode(typeNode) {
   return typeName;
 }
 
-export function nameFromMetavariableNode(metavariableNode) {
-  const nameTerminalNode = nameTerminalNodeQuery(metavariableNode),
-        nameTerminalNodeContent = nameTerminalNode.getContent(),
-        name = nameTerminalNodeContent; ///
-
-  return name;
-}
-
 export function metaTypeNameFromMetaTypeNode(metaTypeNode) {
     const metaTypeTerminalNode = metaTypeTerminalNodeQuery(metaTypeNode),
           metaTypeTerminalNodeContent = metaTypeTerminalNode.getContent(),
           metaTypeName = metaTypeTerminalNodeContent; ///
 
   return metaTypeName;
+}
+
+export function metavariableNameFromMetavariableNode(metavariableNode) {
+  const nameTerminalNode = nameTerminalNodeQuery(metavariableNode),
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        metavariableName = nameTerminalNodeContent; ///
+
+  return metavariableName;
 }

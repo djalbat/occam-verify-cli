@@ -3,7 +3,6 @@
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
 
 import { nodeQuery } from "../utilities/query";
-import { resolveSubstitutionsByMetavariableNode } from "../utilities/substitutions";
 
 const metavariableNodeQuery = nodeQuery("/statement/metavariable");
 
@@ -28,14 +27,13 @@ export default function unifyMetavariableWithStatement(metavariableNodeA, statem
     } else {
       const statementNode = statementNodeB, ///
             metavariableNode = metavariableNodeA, ///
+
             statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementNodeAndMetavariableNode(statementNode, metavariableNode),
             substitution = statementForMetavariableSubstitution;  ///
 
       substitutions.addSubstitution(substitution, localContextA, localContextB);
 
-      const substitutionsResolvedByMetavariableNode = resolveSubstitutionsByMetavariableNode(metavariableNodeA, substitutions, localContextA, localContextB);
-
-      metavariableUnifiedWithStatement = substitutionsResolvedByMetavariableNode; ///
+      metavariableUnifiedWithStatement = true;
     }
   }
 

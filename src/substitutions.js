@@ -1,8 +1,7 @@
 "use strict";
 
-import { find, first } from "./utilities/array";
 import { EMPTY_STRING } from "./constants";
-import { prune, rightDifference } from "./utilities/array";
+import { find, first, prune, compress, rightDifference } from "./utilities/array";
 
 export default class Substitutions {
   constructor(array, savedArray) {
@@ -16,6 +15,40 @@ export default class Substitutions {
 
   getSavedArray() {
     return this.savedArray;
+  }
+
+  getFirstSubstitution() {
+    let firstSubstitution = null;
+
+    const length = this.array.length;
+
+    if (length > 0) {
+      firstSubstitution = first(this.array);
+    }
+
+    return firstSubstitution;
+  }
+
+  getMetavariableNodes() {
+    const metavariableNodes = [];
+
+    this.forEachSubstitution((substitution) => {
+      const metavariableNode = substitution.getMetavariableNode();
+
+      if (metavariableNode !== null) {
+        metavariableNodes.push(metavariableNode);
+      }
+    });
+
+    compress(metavariableNodes, (metavariableNodeA, metavariableNodeB) => {
+      const metavariableNodeAMatchesMetavariableNodeB = metavariableNodeA.match(metavariableNodeB);
+
+      if (metavariableNodeAMatchesMetavariableNodeB) {
+        return true;
+      }
+    });
+
+    return metavariableNodes;
   }
 
   findSubstitution(callback) { return this.array.find(callback) || null; }  ///
@@ -38,18 +71,6 @@ export default class Substitutions {
           substitutions = Substitutions.fromArray(array);
 
     return substitutions;
-  }
-
-  getFirstSubstitution() {
-    let firstSubstitution = null;
-
-    const length = this.array.length;
-
-    if (length > 0) {
-      firstSubstitution = first(this.array);
-    }
-
-    return firstSubstitution;
   }
 
   findSimpleSubstitution() {
@@ -101,6 +122,19 @@ export default class Substitutions {
           simpleSubstitution = firstSimpleSubstitution; ///
 
     return simpleSubstitution;
+  }
+
+  findComplexSubstitutionsByMetavariableNode(metavariableNode) {
+    const substitutions = this.findSubstitutionsByMetavariableNode(metavariableNode),
+          complexSubstitutions = substitutions.filterSubstitution((substitution) => {
+            const substitutionComplex = substitution.isComplex();
+
+            if (substitutionComplex) {
+              return true;
+            }
+          });
+
+    return complexSubstitutions;
   }
 
   findSubstitutionsByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {

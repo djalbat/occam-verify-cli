@@ -2,7 +2,7 @@
 
 import { nodeQuery } from "../utilities/query";
 import { unifyTermWithTermType } from "../metavariable";
-import { nameFromMetavariableNode } from "../utilities/name";
+import { metavariableNameFromMetavariableNode } from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/metavariable/argument/term"),
       typeNodeQuery = nodeQuery("/metavariable/argument/type");
@@ -14,8 +14,8 @@ export default function verifyMetavariable(metavariableNode, localContext) {
 
   localContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
-  const name = nameFromMetavariableNode(metavariableNode),
-        metavariable = localContext.findMetavariableByName(name);
+  const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+        metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
 
   if (metavariable === null) {
     localContext.debug(`The metavariable '${metavariableString}' is not present.`, metavariableNode);
