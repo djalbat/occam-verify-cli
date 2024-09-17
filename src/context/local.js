@@ -211,9 +211,9 @@ class LocalContext {
   addMetavariable(metavariable) {
     let metavariableAdded = false;
 
-    const node = metavariable.getName(),
+    const name = metavariable.getName(),
           metavariablePresent = this.metavariables.some((metavariable) => {
-            const metavariableMatchesNode = metavariable.matchNode(node);
+            const metavariableMatchesNode = metavariable.matchName(name);
 
             if (metavariableMatchesNode) {
               return true;
@@ -276,9 +276,10 @@ class LocalContext {
     groundedTermsAndDefinedVariablesFromFromEquivalences(equivalences, groundedTerms, definedVariables, context);
 
     const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
-            const termMatchesGroundedTerm = term.match(groundedTerm);
+            const groundedTermNode = groundedTerm.getNode(),
+                  groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
 
-            if (termMatchesGroundedTerm) {
+            if (groundedTermNodeMatches) {
               return true;
             }
           }),
@@ -364,13 +365,12 @@ class LocalContext {
   }
 
   findMetavariableByMetavariableNode(metavariableNode) {
-    const node = metavariableNode,  ///
-          localContext = this,  ///
+    const localContext = this,  ///
           metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-            const matches = metavariable.matchNode(node, localContext);
+            const metavariableNodeMatches = metavariable.matchMetavariableNode(metavariableNode, localContext);
 
-            if (matches) {
+            if (metavariableNodeMatches) {
               return true;
             }
           }) || null;

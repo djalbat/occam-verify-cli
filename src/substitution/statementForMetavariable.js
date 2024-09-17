@@ -3,7 +3,7 @@
 import Substitution from "../substitution";
 import TermForVariableSubstitution from "../substitution/termForVariable";
 
-import { stripBrackets } from "../utilities/statement";
+import { stripBracketsFromStatement } from "../utilities/brackets";
 
 export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(statementNode, metavariableNode, substitution) {
@@ -39,7 +39,7 @@ export default class StatementForMetavariableSubstitution extends Substitution {
   }
 
   matchStatementNode(statementNode) {
-    statementNode = stripBrackets(statementNode); ///
+    statementNode = stripBracketsFromStatement(statementNode); ///
 
     const statementNodeMatches = this.statementNode.match(statementNode);
 
@@ -78,7 +78,7 @@ export default class StatementForMetavariableSubstitution extends Substitution {
   }
 
   static fromStatementNodeAndMetavariableNode(statementNode, metavariableNode) {
-    statementNode = stripBrackets(statementNode); ///
+    statementNode = stripBracketsFromStatement(statementNode); ///
 
     const substitution = null,
           statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(statementNode, metavariableNode, substitution);
@@ -87,7 +87,7 @@ export default class StatementForMetavariableSubstitution extends Substitution {
   }
 
   static fromStatementNodeMetavariableNodeAndSubstitutionNode(statementNode, metavariableNode, substitutionNode) {
-    statementNode = stripBrackets(statementNode); ///
+    statementNode = stripBracketsFromStatement(statementNode); ///
 
     const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode),
           substitution = termForVariableSubstitution, ///

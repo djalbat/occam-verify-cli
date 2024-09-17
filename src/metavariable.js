@@ -45,11 +45,10 @@ export default class Metavariable {
     return matchesName;
   }
 
-  matchNode(node, localContext) {
+  matchMetavariableNode(metavariableNode, localContext) {
     let matchesNode = false;
 
-    const metavariableNode = node,  ///
-          typeNode = typeNodeQuery(metavariableNode);
+    const typeNode = typeNodeQuery(metavariableNode);
 
     if (typeNode === null) {
       const name = nameFromMetavariableNode(metavariableNode);

@@ -4,8 +4,8 @@ import { parsersUtilities } from "occam-custom-grammars";
 
 import { nodeQuery } from "../utilities/query";
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
-import { unqualifiedStatementTokensFromStatementString } from "../utilities/tokens";
 import { UNQUALIFIED_STATEMENT_RULE_NAME, CONSTRUCTOR_DECLARATION_RULE_NAME } from "../ruleNames";
+import { constructorDeclarationTokensFromTermString, unqualifiedStatementTokensFromStatementString } from "../utilities/tokens";
 
 const { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
@@ -15,6 +15,13 @@ const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
 const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
       statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
+export function termNodeFromTermString(termString, lexer, parser) {
+  const constructorDeclarationTokens = constructorDeclarationTokensFromTermString(termString, lexer),
+        termNode = termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser);
+
+  return termNode;
+}
+
 export function statementNodeFromStatementString(statementString, lexer, parser) {
   const unqualifiedStatementTokens = unqualifiedStatementTokensFromStatementString(statementString, lexer),
         statementNode = statementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser);
@@ -23,25 +30,15 @@ export function statementNodeFromStatementString(statementString, lexer, parser)
 }
 
 export function termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
-  let termNode = null;
-
-  const constructorDeclarationNode = constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser);
-
-  if (constructorDeclarationNode !== null) {
-    termNode = termNodeQuery(constructorDeclarationNode);
-  }
+  const constructorDeclarationNode = constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser),
+        termNode = termNodeQuery(constructorDeclarationNode);
 
   return termNode;
 }
 
 export function statementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {
-  let statementNode = null;
-
-  const unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser);
-
-  if (unqualifiedStatementNode !== null) {
-    statementNode = statementNodeQuery(unqualifiedStatementNode);
-  }
+  const unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
+        statementNode = statementNodeQuery(unqualifiedStatementNode);
 
   return statementNode;
 }

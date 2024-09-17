@@ -1,6 +1,7 @@
 "use strict";
 
 import { nodeQuery } from "./utilities/query";
+import { stripBracketsFromTerm } from "./utilities/brackets";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
@@ -81,18 +82,17 @@ export default class Equivalence {
   }
 
   matchTermNode(termNode) {
-    const termNodeA = termNode, ///
-          matchesTermNode = this.terms.some((term) => {
-            const termNode = term.getNode(),
-                  termNodeB = termNode, ///
-                  termNodeAMatchesTermB = termNodeA.match(termNodeB);
+    termNode = stripBracketsFromTerm(termNode); ///
 
-            if (termNodeAMatchesTermB) {
-              return true;
-            }
-          });
+    const termNodeMatches = this.terms.some((term) => {
+      const termNodeMatches = term.matchTermNode(termNode);
 
-    return matchesTermNode;
+      if (termNodeMatches) {
+        return true;
+      }
+    });
+
+    return termNodeMatches;
   }
 
   matchVariableNode(variableNode) {
@@ -132,9 +132,10 @@ export default class Equivalence {
 
       if (termGrounded) {
         const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
-          const termMatchesGroundedTerm = term.match(groundedTerm);
+          const groundedTermNode = groundedTerm.getNode(),
+                groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
 
-          if (termMatchesGroundedTerm) {
+          if (groundedTermNodeMatches) {
             return true;
           }
         })

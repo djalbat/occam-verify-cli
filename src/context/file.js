@@ -459,12 +459,11 @@ export default class FileContext {
   }
 
   findMetavariableByMetavariableNode(metavariableNode) {
-    const node = metavariableNode,  ///
-          metavariables = this.getMetavariables(),
+    const metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-            const matches = metavariable.matchNode(node);
+            const metavariableNodeMatches = metavariable.matchMetavariableNode(metavariableNode);
 
-            if (matches) {
+            if (metavariableNodeMatches) {
               return true;
             }
           }) || null;

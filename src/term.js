@@ -60,6 +60,12 @@ export default class Term {
     return grounded;
   }
 
+  matchTermNode(termNode) {
+    const termNodeMatches = this.node.match(termNode);
+
+    return termNodeMatches;
+  }
+
   isInitiallyGrounded(localContext) {
     const variables = this.getVariables(localContext),
           variablesLength = variables.length,

@@ -4,6 +4,7 @@ import shim from "../shim";
 import Unifier from "../unifier";
 import unifyVariableWithTerm from "../unify/variableWithTerm";
 import unifyMetavariableWithStatement from "../unify/metavariableWithStatement";
+import unifyMetavariableWithStatementGivenSubstitution from "../unify/metavariableWithStatementGivenSubstitution";
 
 import { nodeQuery } from "../utilities/query";
 

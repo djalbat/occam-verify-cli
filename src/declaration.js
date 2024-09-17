@@ -1,6 +1,6 @@
 "use strict";
 
-import { stripBrackets } from "./utilities/statement";
+import { stripBracketsFromStatement } from "./utilities/brackets";
 
 export default class Declaration {
   constructor(metavariableNode, statementNode) {
@@ -33,7 +33,7 @@ export default class Declaration {
   }
 
   unifyStatement(statementNode) {
-    statementNode = stripBrackets(statementNode); ///
+    statementNode = stripBracketsFromStatement(statementNode); ///
 
     const statementNodeMatches = this.statementNode.match(statementNode),
           statementUnified = statementNodeMatches;  ///
@@ -51,7 +51,7 @@ export default class Declaration {
   }
 
   static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {
-    statementNode = stripBrackets(statementNode); ///
+    statementNode = stripBracketsFromStatement(statementNode); ///
 
     const declaration = new Declaration(metavariableNode, statementNode);
 

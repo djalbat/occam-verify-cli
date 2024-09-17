@@ -3,6 +3,7 @@
 import Substitution from "../substitution";
 
 import { nodeQuery } from "../utilities/query";
+import { stripBracketsFromTerm } from "../utilities/brackets";
 
 const termNodeQuery = nodeQuery("/*/term!"),
       variableNodeQuery = nodeQuery("/*/variable!");
@@ -89,6 +90,8 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   matchTermNode(termNode) {
+    termNode = stripBracketsFromTerm(termNode); ///
+
     const matchesTermNode = this.termNode.match(termNode);
 
     return matchesTermNode;
@@ -128,14 +131,19 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   static fromSubstitutionNode(substitutionNode) {
-    const termNode = termNodeQuery(substitutionNode),
-          variableNode = variableNodeQuery(substitutionNode),
-          termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
+    let termNode = termNodeQuery(substitutionNode),
+        variableNode = variableNodeQuery(substitutionNode);
+
+    termNode = stripBracketsFromTerm(termNode); ///
+
+    const termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
 
     return termForVariableSubstitution;
   }
 
   static fromTernNodeAndVariableNode(termNode, variableNode) {
+    termNode = stripBracketsFromTerm(termNode); ///
+
     const termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
 
     return termForVariableSubstitution;
