@@ -1,18 +1,30 @@
 "use strict";
 
-import { nodeQuery, nodesQuery } from "./query";
-import { nodeAsString, nodesAsString } from "./string";
+import { nodeQuery } from "../utilities/query";
 
-const subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement!"),
-      subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!");
+const variableNodeQuery = nodeQuery("/term/variable"),
+      metavariableNodeQuery = nodeQuery("/statement/metavariable");
 
-export function subproofNodeAsSubproofString(subproofNode, localContext) {
-  const tokens = localContext.getTokens(),
-        subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
-        subproofLastProofStepStatementNode = subproofLastProofStepStatementNodeQuery(subproofNode),
-        subproofSuppositionStatementsString = nodesAsString(subproofSuppositionStatementNodes, tokens),
-        subproofLastProofStepStatementString = nodeAsString(subproofLastProofStepStatementNode, tokens),
-        subproofString = `[${subproofSuppositionStatementsString}]...${subproofLastProofStepStatementString}`;
+export function variableFromTermNode(termNode, localContext) {
+  let variable = null;
 
-  return subproofString;
+  const variableNode = variableNodeQuery(termNode);
+
+  if (variableNode !== null) {
+    variable = localContext.findVariableByVariableNode(variableNode);
+  }
+
+  return variable;
+}
+
+export function metavariableFromStatementNode(statementNode, localContext) {
+  let metavariable = null;
+
+  const metavariableNode = metavariableNodeQuery(statementNode)
+
+  if (metavariableNode !== null) {
+    metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+  }
+
+  return metavariable;
 }

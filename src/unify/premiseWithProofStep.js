@@ -1,6 +1,6 @@
 "use strict";
 
-import { subproofNodeAsSubproofString } from "../utilities/unify";
+import { subproofNodeAsSubproofString } from "../utilities/subproof";
 
 export default function unifyPremiseWithProofStep(premiseA, proofStepB, substitutions, localContextA, localContextB) {
   let premiseUnified = false;

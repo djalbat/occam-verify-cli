@@ -1,8 +1,8 @@
 "use strict";
 
 import { nodeQuery } from "./utilities/query";
+import { isLastRemainingArgumentFunction } from "./utilities/arguments";
 import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual } from "./utilities/unifier";
-import {isLastRemainingArgumentFunction} from "./utilities/arguments";
 
 const nonTerminalNodeQuery = nodeQuery("/*");
 

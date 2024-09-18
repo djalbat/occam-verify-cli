@@ -1,6 +1,6 @@
 "use strict";
 
-import { subproofNodeAsSubproofString } from "../utilities/unify";
+import { subproofNodeAsSubproofString } from "../utilities/subproof";
 
 export default function unifySuppositionWithProofStep(suppositionA, proofStepB, substitutions, localContextA, localContextB) {
   let suppositionUnified = false;

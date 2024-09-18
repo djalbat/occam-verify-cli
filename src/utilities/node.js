@@ -43,14 +43,14 @@ export function statementNodeFromUnqualifiedStatementTokens(unqualifiedStatement
   return statementNode;
 }
 
-export function unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {
+function unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {
   const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME,
         unqualifiedStatementNode = nodeFromTokensRuleNameAndParser(unqualifiedStatementTokens, ruleName, parser);
 
   return unqualifiedStatementNode;
 }
 
-export function constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
+function constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
   const ruleName = CONSTRUCTOR_DECLARATION_RULE_NAME,
         constructorDeclarationNode = nodeFromTokensRuleNameAndParser(constructorDeclarationTokens, ruleName, parser);
 

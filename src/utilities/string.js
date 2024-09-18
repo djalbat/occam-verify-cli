@@ -36,14 +36,14 @@ export function nodesAsString(nodes, tokens) {
   return string;
 }
 
-export function terminalNodeAsString(terminalNode) {
+function terminalNodeAsString(terminalNode) {
   const content = terminalNode.getContent(),
         string = content; ///
 
   return string;
 }
 
-export function nonTerminalNodeAsString(nonTerminalNode, tokens) {
+function nonTerminalNodeAsString(nonTerminalNode, tokens) {
   const lastSignificantTokenIndex = nonTerminalNode.getLastSignificantTokenIndex(tokens),
         firstSignificantTokenIndex = nonTerminalNode.getFirstSignificantTokenIndex(tokens),
         start = firstSignificantTokenIndex, ///

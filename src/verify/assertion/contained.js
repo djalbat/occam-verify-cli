@@ -2,7 +2,7 @@
 
 import metaLevelVerifier from "../../verifier/metaLevel";
 
-import { isAssertionNegated } from "../../utilities/verify";
+import { isAssertionNegated } from "../../utilities/assertion";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
 
 const termNodeQuery = nodeQuery("/containedAssertion/term!"),

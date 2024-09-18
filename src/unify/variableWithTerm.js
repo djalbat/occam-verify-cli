@@ -2,9 +2,7 @@
 
 import TermForVariableSubstitution from "../substitution/termForVariable";
 
-import { nodeQuery } from "../utilities/query";
-
-const variableNodeQuery = nodeQuery("/term/variable");
+import { variableFromTermNode } from "../utilities/unify";
 
 export default function unifyVariableWithTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB) {
   let variableUnifiedWithTerm = false;
@@ -21,29 +19,19 @@ export default function unifyVariableWithTerm(variableNodeA, termNodeB, substitu
     const variableA = localContextA.findVariableByVariableNode(variableNodeA),
           variableB = variableFromTermNode(termNodeB, localContextB);
 
-    if (variableA !== variableB) {
+    if (variableA === variableB) {
+      variableUnifiedWithTerm = true;
+    } else {
       const termNode = termNodeB, ///
             variableNode = variableNodeA, ///
             termForVariableSubstitution = TermForVariableSubstitution.fromTernNodeAndVariableNode(termNode, variableNode),
             substitution = termForVariableSubstitution;  ///
 
       substitutions.addSubstitution(substitution, localContextA, localContextB);
-    }
 
-    variableUnifiedWithTerm = true;
+      variableUnifiedWithTerm = true;
+    }
   }
 
   return variableUnifiedWithTerm;
-}
-
-function variableFromTermNode(termNode, localContext) {
-  let variable = null;
-
-  const variableNode = variableNodeQuery(termNode);
-
-  if (variableNode !== null) {
-    variable = localContext.findVariableByVariableNode(variableNode);
-  }
-
-  return variable;
 }

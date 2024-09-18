@@ -2,6 +2,8 @@
 
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
 
+import { metavariableFromStatementNode } from "../utilities/unify";
+
 export default function unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB) {
   let metavariableUnifiedWithStatementGivenSubstitution = false;
 
@@ -15,6 +17,12 @@ export default function unifyMetavariableWithStatementGivenSubstitution(metavari
       metavariableUnifiedWithStatementGivenSubstitution = true;
     }
   } else {
+    const metavariableA = localContextA.findMetavariableByMetavariableNode(metavariableNodeA),
+          metavariableB = metavariableFromStatementNode(statementNodeB, localContextB);
+
+    if (metavariableA === metavariableB) {
+      metavariableUnifiedWithStatementGivenSubstitution = false;  ///
+    } else {
       const statementNode = statementNodeB, ///
             substitutionNode = substitutionNodeA, ///
             metavariableNode = metavariableNodeA, ///
@@ -24,6 +32,7 @@ export default function unifyMetavariableWithStatementGivenSubstitution(metavari
       substitutions.addSubstitution(substitution, localContextA, localContextB);
 
       metavariableUnifiedWithStatementGivenSubstitution = true;
+    }
   }
 
   return metavariableUnifiedWithStatementGivenSubstitution;

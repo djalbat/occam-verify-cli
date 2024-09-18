@@ -60,36 +60,28 @@ function resolveComplexSubstitutionAgainstSimpleSubstitution(complexSubstitution
 
   localContextB.trace(`Resolving the complex ${complexSubstitutionString} substitution against the simple ${simpleSubstitutionString} substitution...`, statementNode);
 
-  let substitution,
-      transformedSubstitution;
-
-  substitution = complexSubstitution.getSubstitution();
-
-  transformedSubstitution = substitution.transformed(substitutions);
+  const transformedSubstitution = transformedSubstitutionFromComplexSubstitutionSimpleSubstitutionAndSubstitutions(complexSubstitution, simpleSubstitution, substitutions, localContextA, localContextB);
 
   if (transformedSubstitution !== null) {
-    const complexSubstitutionStatementNode = complexSubstitution.getStatementNode(),
-          simpleSubstitutionStatementNode = simpleSubstitution.getStatementNode(),
-          outerSubstitutions = substitutions, ///
-          innerSubstitutions = Substitutions.fromNothing(),
-          nodeA = complexSubstitutionStatementNode,  ///
-          nodeB = simpleSubstitutionStatementNode; ///
+    const variableNode = transformedSubstitution.getVariableNode(),
+          substitution = substitutions.findSubstitutionByVariableNode(variableNode);
 
-    substitutions = innerSubstitutions; ///
+    if (substitution === null) {
+      simpleSubstitution = transformedSubstitution; ///
 
-    localContextA = localContextB;  ///
+      substitutions.addSubstitution(simpleSubstitution, localContextA, localContextB);
 
-    const unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+      substitutions.removeSubstitution(complexSubstitution, localContextA, localContextB);
 
-    if (unified) {
-      substitution = transformedSubstitution; ///
+      complexSubstitutionResolvedAgainstSimpleSubstitution = true;
+    } else {
+      const termNode = transformedSubstitution.getTermNode(),
+            termNodeMatches = substitution.matchTermNode(termNode);
 
-      transformedSubstitution = substitution.transformed(substitutions);
+      if (termNodeMatches) {
+        substitutions.removeSubstitution(complexSubstitution, localContextA, localContextB);
 
-      if (transformedSubstitution !== null) {
-        substitution = transformedSubstitution; ///
-
-        ///
+        complexSubstitutionResolvedAgainstSimpleSubstitution = true;
       }
     }
   }
@@ -99,4 +91,44 @@ function resolveComplexSubstitutionAgainstSimpleSubstitution(complexSubstitution
   }
 
   return complexSubstitutionResolvedAgainstSimpleSubstitution;
+}
+
+function unifyComplexSubstitutionStatementWithSimpleSubstitutionStatement(complexSubstitutionStatementNode, simpleSubstitutionStatementNode, substitutions, localContextA, localContextB) {
+  let complexSubstitutionStatementWithSimpleSubstitutionStatement;
+
+  const nodeA = complexSubstitutionStatementNode,  ///
+        nodeB = simpleSubstitutionStatementNode;  ///
+
+  localContextA = localContextB;  ///
+
+  const unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+
+  complexSubstitutionStatementWithSimpleSubstitutionStatement = unified;  ///
+
+  return complexSubstitutionStatementWithSimpleSubstitutionStatement;
+}
+
+function transformedSubstitutionFromComplexSubstitutionSimpleSubstitutionAndSubstitutions(complexSubstitution, simpleSubstitution, substitutions, localContextA, localContextB) {
+  let transformedSubstitution;
+
+  const substitution = complexSubstitution.getSubstitution();
+
+  transformedSubstitution = substitution.transformed(substitutions);
+
+  if (transformedSubstitution !== null) {
+    const simpleSubstitutionStatementNode = simpleSubstitution.getStatementNode(),
+          complexSubstitutionStatementNode = complexSubstitution.getStatementNode();
+
+    substitutions = Substitutions.fromNothing();  ///
+
+    const complexSubstitutionStatementWithSimpleSubstitutionStatement = unifyComplexSubstitutionStatementWithSimpleSubstitutionStatement(complexSubstitutionStatementNode, simpleSubstitutionStatementNode, substitutions, localContextA, localContextB);
+
+    if (complexSubstitutionStatementWithSimpleSubstitutionStatement) {
+      const substitution = transformedSubstitution; ///
+
+      transformedSubstitution = substitution.transformed(substitutions);
+    }
+  }
+
+  return transformedSubstitution;
 }

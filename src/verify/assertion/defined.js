@@ -4,7 +4,7 @@ import verifyTerm from "../../verify/term";
 
 import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
-import { isAssertionNegated } from "../../utilities/verify";
+import { isAssertionNegated } from "../../utilities/assertion";
 
 const termNodeQuery = nodeQuery("/definedAssertion/term!"),
       variableNodeQuery = nodeQuery("/definedAssertion/term/variable!");
