@@ -7,7 +7,7 @@ import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAM
 
 const metavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
-export default function verifyStatementGivenMetaType(statementNode, metaType, assignments, derived, localContext) {
+export default function verifyStatementGivenMetaType(statementNode, metaType, assignments, stated, localContext) {
   let statementVerifiedGivenMetaType;
 
   const metaTypeName = metaType.getName();
@@ -36,7 +36,7 @@ export default function verifyStatementGivenMetaType(statementNode, metaType, as
 
     case STATEMENT_META_TYPE_NAME: {
       const { verifyStatement } = shim,
-            statementVerified = verifyStatement(statementNode, assignments, derived, localContext)
+            statementVerified = verifyStatement(statementNode, assignments, stated, localContext)
 
       statementVerifiedGivenMetaType = statementVerified; ///
 

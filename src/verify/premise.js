@@ -2,7 +2,7 @@
 
 import Premise from "../premise";
 import ProofStep from "../proofStep";
-import verifyUnqualifiedStatement from "../verify/statement/unqualified";
+import verifyStatement from "../verify/statement";
 
 import { nodeQuery } from "../utilities/query";
 import { assignAssignments } from "../utilities/assignments";
@@ -20,16 +20,16 @@ export default function verifyPremise(premiseNode, premises, localContext) {
   const unqualifiedStatementNode = unqualifiedStatementNodeQuery(premiseNode);
 
   if (unqualifiedStatementNode !== null) {
-    const derived = false,
+    const stated = true,
           assignments = [],
-          unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+          statementNode = statementNodeQuery(unqualifiedStatementNode),
+          statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
-    if (unqualifiedStatementVerified) {
+    if (statementVerified) {
       const assignmentsAssigned = assignAssignments(assignments, localContext);
 
       if (assignmentsAssigned) {
-        const statementNode = statementNodeQuery(unqualifiedStatementNode),
-              metaproofStep = ProofStep.fromStatementNode(statementNode),
+        const metaproofStep = ProofStep.fromStatementNode(statementNode),
               premise = Premise.fromStatementNode(statementNode);
 
         premises.push(premise);

@@ -9,12 +9,12 @@ const termNodeQuery = nodeQuery("/term!"),
       statementNodeQuery = nodeQuery("/statement!");
 
 class MetaLevelVerifier extends Verifier {
-  verify(node, assignments, derived, localContext) {
+  verify(node, assignments, stated, localContext) {
     let verified;
 
     const nonTerminalNode = node, ///
           childNodes = nonTerminalNode.getChildNodes(),
-          nonTerminalNodeVerified = this.verifyChildNodes(childNodes, assignments, derived, localContext);
+          nonTerminalNodeVerified = this.verifyChildNodes(childNodes, assignments, stated, localContext);
 
     verified = nonTerminalNodeVerified;  ///
 
@@ -24,16 +24,16 @@ class MetaLevelVerifier extends Verifier {
   static maps = [
     {
       nodeQuery: statementNodeQuery,
-      verify: (statementNode, assignments, derived, localContext) => {
+      verify: (statementNode, assignments, stated, localContext) => {
         const { verifyStatement } = shim,
-              statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
+              statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
         return statementVerified;
       }
     },
     {
       nodeQuery: termNodeQuery,
-      verify: (termNode, assignments, derived, localContext) => {
+      verify: (termNode, assignments, stated, localContext) => {
         const { verifyTerm } = shim,
               terms = [],
               termVerified = verifyTerm(termNode, terms, localContext, () => {

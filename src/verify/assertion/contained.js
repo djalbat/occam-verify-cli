@@ -13,25 +13,25 @@ const verifyContainedAssertionFunctions = [
   verifyStatedContainedAssertion
 ];
 
-export default function verifyContainedAssertion(containedAssertionNode, assignments, derived, localContext) {
+export default function verifyContainedAssertion(containedAssertionNode, assignments, stated, localContext) {
   let containedAssertionVerified = false;
 
   const containedAssertionString = localContext.nodeAsString(containedAssertionNode),
-        savedDerived = derived; ///
+        savedStated = stated; ///
 
   localContext.trace(`Verifying the '${containedAssertionString}' contained assertion...`, containedAssertionNode);
 
   assignments = []; ///
 
-  derived = false;  ///
+  stated = true;  ///
 
-  const verified = metaLevelVerifier.verify(containedAssertionNode, assignments, derived, localContext);
+  const verified = metaLevelVerifier.verify(containedAssertionNode, assignments, stated, localContext);
 
-  derived = savedDerived; ///
+  stated = savedStated; ///
 
   if (verified) {
     containedAssertionVerified = verifyContainedAssertionFunctions.some((verifyContainedAssertionFunction) => {
-      const containedAssertionVerified = verifyContainedAssertionFunction(containedAssertionNode, assignments, derived, localContext);
+      const containedAssertionVerified = verifyContainedAssertionFunction(containedAssertionNode, assignments, stated, localContext);
 
       if (containedAssertionVerified) {
         return true;
@@ -46,10 +46,10 @@ export default function verifyContainedAssertion(containedAssertionNode, assignm
   return containedAssertionVerified;
 }
 
-function verifyDerivedContainedAssertion(containedAssertionNode, assignments, derived, localContext) {
+function verifyDerivedContainedAssertion(containedAssertionNode, assignments, stated, localContext) {
   let derivedContainedAssertionVerified = false;
 
-  if (derived) {
+  if (!stated) {
     const containedAssertionString = localContext.nodeAsString(containedAssertionNode);
 
     localContext.trace(`Verifying the '${containedAssertionString}' derived contained assertion...`, containedAssertionNode);
@@ -86,10 +86,10 @@ function verifyDerivedContainedAssertion(containedAssertionNode, assignments, de
   return derivedContainedAssertionVerified;
 }
 
-function verifyStatedContainedAssertion(containedAssertionNode, assignments, derived, localContext) {
+function verifyStatedContainedAssertion(containedAssertionNode, assignments, stated, localContext) {
   let statedContainedAssertionVerified;
 
-  if (!derived) {
+  if (stated) {
     const containedAssertionString = localContext.nodeAsString(containedAssertionNode);
 
     localContext.trace(`Verifying the '${containedAssertionString}' stated contained assertion...`, containedAssertionNode);

@@ -1,7 +1,7 @@
 "use strict";
 
 import Conclusion from "../conclusion";
-import verifyUnqualifiedStatement from "../verify/statement/unqualified";
+import verifyStatement from "../verify/statement";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -15,16 +15,16 @@ export default function verifyConclusion(conclusionNode, conclusions, localConte
 
   localContext.trace(`Verifying the '${conclusionString}' conclusion...`, conclusionNode);
 
-  const derived = false,
-        assignments = [],
-        unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode);
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode);
 
   if (unqualifiedStatementNode !== null) {
-    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+    const stated = true,
+          assignments = [],
+          statementNode = statementNodeQuery(unqualifiedStatementNode),
+          statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
-    if (unqualifiedStatementVerified) {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode),
-            conclusion = Conclusion.fromStatementNode(statementNode);
+    if (statementVerified) {
+      const conclusion = Conclusion.fromStatementNode(statementNode);
 
       conclusions.push(conclusion);
 

@@ -12,12 +12,12 @@ const termNodeQuery = nodeQuery("/term!"),
       statementNodeQuery = nodeQuery("/statement!");
 
 class StatementWithCombinatorUnifier extends Unifier {
-  unify(statementNode, combinatorStatementNode, assignments, derived, localContext) {
+  unify(statementNode, combinatorStatementNode, assignments, stated, localContext) {
     let statementUnifiedWithCombinator;
 
     const nonTerminalNodeA = statementNode, ///
           nonTerminalNodeB = combinatorStatementNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, assignments, derived, localContext);
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, assignments, stated, localContext);
 
     statementUnifiedWithCombinator = nonTerminalNodeUnified; ///
 
@@ -28,10 +28,10 @@ class StatementWithCombinatorUnifier extends Unifier {
     {
       nodeQueryA: statementNodeQuery,
       nodeQueryB: metaTypeNodeQuery,
-      unify: (statementNodeA, metaTypeNodeB, assignments, derived, localContext) => {
+      unify: (statementNodeA, metaTypeNodeB, assignments, stated, localContext) => {
         const metaTypeNode = metaTypeNodeB, ///
               statementNode = statementNodeA, ///
-              statementUnifiedWithMetaType = unifyStatementWithMetaType(statementNode, metaTypeNode, assignments, derived, localContext);
+              statementUnifiedWithMetaType = unifyStatementWithMetaType(statementNode, metaTypeNode, assignments, stated, localContext);
 
         return statementUnifiedWithMetaType;
       }
@@ -39,7 +39,7 @@ class StatementWithCombinatorUnifier extends Unifier {
     {
       nodeQueryA: termNodeQuery,
       nodeQueryB: typeNodeQuery,
-      unify: (termNodeA, typeNodeB, assignments, derived, localContext) => {
+      unify: (termNodeA, typeNodeB, assignments, stated, localContext) => {
         const termNode = termNodeA, ///
               typeNode = typeNodeB, ///
               termUnifiedWithType = unifyTermWithType(termNode, typeNode, localContext);

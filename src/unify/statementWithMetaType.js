@@ -2,11 +2,11 @@
 
 import verifyStatementGivenMetaType from "../verify/statementGivenMetaType";
 
-export default function unifyStatementWithMetaType(statementNode, metaTypeNode, assignments, derived, localContext) {
+export default function unifyStatementWithMetaType(statementNode, metaTypeNode, assignments, stated, localContext) {
   let statementUnifiedWithMetaType;
 
   const metaType = localContext.findMetaTypeByMetaTypeNode(metaTypeNode),
-        statementVerifiedGivenMetaType = verifyStatementGivenMetaType(statementNode, metaType, assignments, derived, localContext);
+        statementVerifiedGivenMetaType = verifyStatementGivenMetaType(statementNode, metaType, assignments, stated, localContext);
 
   statementUnifiedWithMetaType = statementVerifiedGivenMetaType;  ///
 

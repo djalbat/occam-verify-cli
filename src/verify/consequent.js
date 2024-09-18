@@ -1,7 +1,7 @@
 "use strict";
 
 import Consequent from "../consequent";
-import verifyUnqualifiedStatement from "../verify/statement/unqualified";
+import verifyStatement from "../verify/statement";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -15,16 +15,16 @@ export default function verifyConsequent(consequentNode, consequents, localConte
 
   localContext.trace(`Verifying the '${consequentString}' consequent...`, consequentNode);
 
-  const derived = false,
-        assignments = [],
-        unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode);
+  const unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode);
 
   if (unqualifiedStatementNode !== null) {
-    const unqualifiedStatementVerified = verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext);
+    const stated = true,
+          assignments = [],
+          statementNode = statementNodeQuery(unqualifiedStatementNode),
+          statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
-    if (unqualifiedStatementVerified) {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode),
-            consequent = Consequent.fromStatementNode(statementNode);
+    if (statementVerified) {
+      const consequent = Consequent.fromStatementNode(statementNode);
 
       consequents.push(consequent);
 

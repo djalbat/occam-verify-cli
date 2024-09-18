@@ -13,7 +13,7 @@ const verifyDeclarationFunctions = [
   verifyStatedDeclaration
 ];
 
-export default function verifyDeclaration(declarationNode, assignments, derived, localContext) {
+export default function verifyDeclaration(declarationNode, assignments, stated, localContext) {
   let declarationVerified;
 
   const declarationString = localContext.nodeAsString(declarationNode);
@@ -21,7 +21,7 @@ export default function verifyDeclaration(declarationNode, assignments, derived,
   localContext.trace(`Verifying the '${declarationString}' declaration...`, declarationNode);
 
   declarationVerified = verifyDeclarationFunctions.some((verifyDeclarationFunction) => {
-    const declarationVerified = verifyDeclarationFunction(declarationNode, assignments, derived, localContext);
+    const declarationVerified = verifyDeclarationFunction(declarationNode, assignments, stated, localContext);
 
     if (declarationVerified) {
       return true;

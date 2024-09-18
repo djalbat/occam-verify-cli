@@ -16,7 +16,7 @@ const verifyTypeAssertionFunctions = [
   verifyStatedTypeAssertion
 ];
 
-export default function verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext) {
+export default function verifyTypeAssertion(typeAssertionNode, assignments, stated, localContext) {
   let typeAssertionVerified;
 
   const typeAssertionString = localContext.nodeAsString(typeAssertionNode);
@@ -24,7 +24,7 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
   localContext.trace(`Verifying the '${typeAssertionString}' type assertion...`, typeAssertionNode);
 
   typeAssertionVerified = verifyTypeAssertionFunctions.some((verifyTypeAssertionFunction) => {
-    const typeAssertionVerified = verifyTypeAssertionFunction(typeAssertionNode, assignments, derived, localContext);
+    const typeAssertionVerified = verifyTypeAssertionFunction(typeAssertionNode, assignments, stated, localContext);
 
     if (typeAssertionVerified) {
       return true;
@@ -38,10 +38,10 @@ export default function verifyTypeAssertion(typeAssertionNode, assignments, deri
   return typeAssertionVerified;
 }
 
-function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, localContext) {
+function verifyDerivedTypeAssertion(typeAssertionNode, assignments, stated, localContext) {
   let derivedTypeAssertionVerified = false;
 
-  if (derived) {
+  if (!stated) {
     const typeAssertionString = localContext.nodeAsString(typeAssertionNode);
 
     localContext.trace(`Verifying the '${typeAssertionString}' derived type assertion...`, typeAssertionNode);
@@ -82,10 +82,10 @@ function verifyDerivedTypeAssertion(typeAssertionNode, assignments, derived, loc
   return derivedTypeAssertionVerified;
 }
 
-function verifyStatedTypeAssertion(typeAssertionNode, assignments, derived, localContext) {
+function verifyStatedTypeAssertion(typeAssertionNode, assignments, stated, localContext) {
   let statedTypeAssertionVerified = false;
 
-  if (!derived) {
+  if (stated) {
     const typeAssertionString = localContext.nodeAsString(typeAssertionNode);
 
     localContext.trace(`Verifying the '${typeAssertionString}' stated type assertion...`, typeAssertionNode);

@@ -15,7 +15,7 @@ const verifyFrameFunctions = [
   verifyStatedFrame
 ];
 
-export default function verifyFrame(frameNode, assignments, derived, localContext) {
+export default function verifyFrame(frameNode, assignments, stated, localContext) {
   let frameVerified;
 
   const frameString = localContext.nodeAsString(frameNode);
@@ -23,7 +23,7 @@ export default function verifyFrame(frameNode, assignments, derived, localContex
   localContext.trace(`Verifying the '${frameString}' frame...`, frameNode);
 
   frameVerified = verifyFrameFunctions.some((verifyFrameFunction) => {
-    const frameVerified = verifyFrameFunction(frameNode, assignments, derived, localContext);
+    const frameVerified = verifyFrameFunction(frameNode, assignments, stated, localContext);
 
     if (frameVerified) {
       return true;
@@ -37,7 +37,7 @@ export default function verifyFrame(frameNode, assignments, derived, localContex
   return frameVerified;
 }
 
-function verifyDerivedFrame(frameNode, frames, assignments, derived, localContext) {
+function verifyDerivedFrame(frameNode, frames, assignments, stated, localContext) {
   let derivedFrameVerified;
 
   const frameString = localContext.nodeAsString(frameNode);
@@ -53,7 +53,7 @@ function verifyDerivedFrame(frameNode, frames, assignments, derived, localContex
   return derivedFrameVerified;
 }
 
-function verifyStatedFrame(frameNode, frames, assignments, derived, localContext) {
+function verifyStatedFrame(frameNode, frames, assignments, stated, localContext) {
   let statedFrameVerified;
 
   const frameString = localContext.nodeAsString(frameNode);

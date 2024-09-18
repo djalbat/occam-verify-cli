@@ -13,7 +13,7 @@ const verifyEqualityFunctions = [
   verifyStatedEquality
 ];
 
-export default function verifyEquality(equalityNode, assignments, derived, localContext) {
+export default function verifyEquality(equalityNode, assignments, stated, localContext) {
   let equalityVerified;
 
   const equalityString = localContext.nodeAsString(equalityNode);
@@ -21,7 +21,7 @@ export default function verifyEquality(equalityNode, assignments, derived, local
   localContext.trace(`Verifying the '${equalityString}' equality...`, equalityNode);
 
   equalityVerified = verifyEqualityFunctions.some((verifyEqualityFunction) => {
-    const equalityVerified = verifyEqualityFunction(equalityNode, assignments, derived, localContext);
+    const equalityVerified = verifyEqualityFunction(equalityNode, assignments, stated, localContext);
 
     if (equalityVerified) {
       return true;
@@ -35,13 +35,13 @@ export default function verifyEquality(equalityNode, assignments, derived, local
   return equalityVerified;
 }
 
-function verifyDerivedEquality(equalityNode, assignments, derived, localContext) {
+function verifyDerivedEquality(equalityNode, assignments, stated, localContext) {
   let derivedEqualityVerified = false;
 
-  if (derived) {
+  if (!stated) {
     const equalityString = localContext.nodeAsString(equalityNode);
 
-    localContext.trace(`Verifying the '${equalityString}' derived equality...`, equalityNode);
+    localContext.trace(`Verifying the '${equalityString}' stated equality...`, equalityNode);
 
     const terms = [],
           termNodes = termNodesQuery(equalityNode),
@@ -69,17 +69,17 @@ function verifyDerivedEquality(equalityNode, assignments, derived, localContext)
     derivedEqualityVerified = termsVerified; ///
 
     if (derivedEqualityVerified) {
-      localContext.debug(`...verified the '${equalityString}' derived equality.`, equalityNode);
+      localContext.debug(`...verified the '${equalityString}' stated equality.`, equalityNode);
     }
   }
 
   return derivedEqualityVerified;
 }
 
-function verifyStatedEquality(equalityNode, assignments, derived, localContext) {
+function verifyStatedEquality(equalityNode, assignments, stated, localContext) {
   let statedEqualityVerified = false;
 
-  if (!derived) {
+  if (stated) {
     const equalityString = localContext.nodeAsString(equalityNode);
 
     localContext.trace(`Verifying the '${equalityString}' stated equality...`, equalityNode);

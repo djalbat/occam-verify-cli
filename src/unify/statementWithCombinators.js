@@ -2,13 +2,13 @@
 
 import statementWithCombinatorUnifier from "../unifier/statementWithCombinator";
 
-export default function unifyStatementWithCombinators(statementNode, assignments, derived, localContext) {
+export default function unifyStatementWithCombinators(statementNode, assignments, stated, localContext) {
   let statementUnifiedWithCombinators;
 
   const combinators = localContext.getCombinators();
 
   statementUnifiedWithCombinators = combinators.some((combinator) => {
-    const statementUnifiedWithCombinator = unifyStatementWithCombinator(statementNode, combinator, assignments, derived, localContext);
+    const statementUnifiedWithCombinator = unifyStatementWithCombinator(statementNode, combinator, assignments, stated, localContext);
 
     if (statementUnifiedWithCombinator) {
       return true;
@@ -18,7 +18,7 @@ export default function unifyStatementWithCombinators(statementNode, assignments
   return statementUnifiedWithCombinators;
 }
 
-function unifyStatementWithCombinator(statementNode, combinator, assignments, derived, localContext) {
+function unifyStatementWithCombinator(statementNode, combinator, assignments, stated, localContext) {
   let statementUnifiedWithCombinator;
 
   const statementString = localContext.nodeAsString(statementNode),
@@ -28,7 +28,7 @@ function unifyStatementWithCombinator(statementNode, combinator, assignments, de
 
   const combinatorStatementNode = combinator.getStatementNode();
 
-  statementUnifiedWithCombinator = statementWithCombinatorUnifier.unify(statementNode, combinatorStatementNode, assignments, derived, localContext);
+  statementUnifiedWithCombinator = statementWithCombinatorUnifier.unify(statementNode, combinatorStatementNode, assignments, stated, localContext);
 
   if (statementUnifiedWithCombinator) {
     localContext.debug(`...unified the '${statementString}' statement with the '${combinatorString}' combinator.`, statementNode);

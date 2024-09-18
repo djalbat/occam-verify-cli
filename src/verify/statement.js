@@ -41,7 +41,7 @@ const unifyStatementFunctions = [
         verifyStatementAsContainedAssertion
       ];
 
-function verifyStatement(statementNode, assignments, derived, localContext) {
+function verifyStatement(statementNode, assignments, stated, localContext) {
   let statementVerified = false;
 
   const statementString = localContext.nodeAsString(statementNode);
@@ -49,14 +49,14 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
   localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
 
   if (!statementVerified) {
-    const statementVerifiedAsMetavariable = verifyStatementAsMetavariable(statementNode, assignments, derived, localContext);
+    const statementVerifiedAsMetavariable = verifyStatementAsMetavariable(statementNode, assignments, stated, localContext);
 
     statementVerified = statementVerifiedAsMetavariable;  ///
   }
 
   if (!statementVerified) {
     const statementUnified = unifyStatementFunctions.some((unifyStatementFunction) => {
-      const statementUnified = unifyStatementFunction(statementNode, assignments, derived, localContext);
+      const statementUnified = unifyStatementFunction(statementNode, assignments, stated, localContext);
 
       if (statementUnified) {
         return true;
@@ -68,7 +68,7 @@ function verifyStatement(statementNode, assignments, derived, localContext) {
 
   if (!statementVerified) {
     statementVerified = verifyStatementFunctions.some((verifyStatementFunction) => {
-      const statementVerified = verifyStatementFunction(statementNode, assignments, derived, localContext);
+      const statementVerified = verifyStatementFunction(statementNode, assignments, stated, localContext);
 
       if (statementVerified) {
         return true;
@@ -113,7 +113,7 @@ export function verifyStatementTrivially(statementNode, localContext) {
   return statementVerifiedTrivially;
 }
 
-function verifyStatementAsMetavariable(statementNode, assignments, derived, localContext) {
+function verifyStatementAsMetavariable(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsMetavariable = false;
 
   const metavariableNode = metavariableNodeQuery(statementNode);
@@ -135,7 +135,7 @@ function verifyStatementAsMetavariable(statementNode, assignments, derived, loca
   return statementVerifiedAsMetavariable;
 }
 
-function verifyStatementAsEquality(statementNode, assignments, derived, localContext) {
+function verifyStatementAsEquality(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsEquality = false;
 
   const equalityNode = equalityNodeQuery(statementNode);
@@ -145,7 +145,7 @@ function verifyStatementAsEquality(statementNode, assignments, derived, localCon
 
     localContext.trace(`Verifying the '${statementString}' statement as an equality...`, statementNode);
 
-    const equalityVerified = verifyEquality(equalityNode, assignments, derived, localContext);
+    const equalityVerified = verifyEquality(equalityNode, assignments, stated, localContext);
 
     statementVerifiedAsEquality = equalityVerified; ///
 
@@ -157,7 +157,7 @@ function verifyStatementAsEquality(statementNode, assignments, derived, localCon
   return statementVerifiedAsEquality;
 }
 
-function verifyStatementAsFrame(statementNode, assignments, derived, localContext) {
+function verifyStatementAsFrame(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsFrame = false;
 
   const frameNode = frameNodeQuery(statementNode);
@@ -167,7 +167,7 @@ function verifyStatementAsFrame(statementNode, assignments, derived, localContex
 
     localContext.trace(`Verifying the '${statementString}' statement as a frame...`, statementNode);
 
-    const frameVerified = verifyFrame(frameNode, assignments, derived, localContext);
+    const frameVerified = verifyFrame(frameNode, assignments, stated, localContext);
 
     statementVerifiedAsFrame = frameVerified; ///
 
@@ -179,7 +179,7 @@ function verifyStatementAsFrame(statementNode, assignments, derived, localContex
   return statementVerifiedAsFrame;
 }
 
-function verifyStatementAsJudgement(statementNode, assignments, derived, localContext) {
+function verifyStatementAsJudgement(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsJudgement = false;
 
   const judgementNode = judgementNodeQuery(statementNode);
@@ -189,7 +189,7 @@ function verifyStatementAsJudgement(statementNode, assignments, derived, localCo
 
     localContext.trace(`Verifying the '${statementString}' statement as a judgement...`, statementNode);
 
-    const judgementVerified = verifyJudgement(judgementNode, assignments, derived, localContext);
+    const judgementVerified = verifyJudgement(judgementNode, assignments, stated, localContext);
 
     statementVerifiedAsJudgement = judgementVerified;  ///
 
@@ -201,7 +201,7 @@ function verifyStatementAsJudgement(statementNode, assignments, derived, localCo
   return statementVerifiedAsJudgement;
 }
 
-function verifyStatementAsDeclaration(statementNode, assignments, derived, localContext) {
+function verifyStatementAsDeclaration(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsDeclaration = false;
 
   const declarationNode = declarationNodeQuery(statementNode);
@@ -211,7 +211,7 @@ function verifyStatementAsDeclaration(statementNode, assignments, derived, local
 
     localContext.trace(`Verifying the '${statementString}' statement as a declaration...`, statementNode);
 
-    const declarationVerified = verifyDeclaration(declarationNode, assignments, derived, localContext);
+    const declarationVerified = verifyDeclaration(declarationNode, assignments, stated, localContext);
 
     statementVerifiedAsDeclaration = declarationVerified; ///
 
@@ -223,7 +223,7 @@ function verifyStatementAsDeclaration(statementNode, assignments, derived, local
   return statementVerifiedAsDeclaration;
 }
 
-function verifyStatementAsSubstitution(statementNode, assignments, derived, localContext) {
+function verifyStatementAsSubstitution(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsSubstitution = false;
 
   const substitutionNode = substitutionNodeQuery(statementNode);
@@ -233,7 +233,7 @@ function verifyStatementAsSubstitution(statementNode, assignments, derived, loca
 
     localContext.trace(`Verifying the '${statementString}' statement as a substitution...`, statementNode);
 
-    const substitutionVerified = verifySubstitution(substitutionNode, assignments, derived, localContext);
+    const substitutionVerified = verifySubstitution(substitutionNode, assignments, stated, localContext);
 
     statementVerifiedAsSubstitution = substitutionVerified; ///
 
@@ -245,7 +245,7 @@ function verifyStatementAsSubstitution(statementNode, assignments, derived, loca
   return statementVerifiedAsSubstitution;
 }
 
-function verifyStatementAsTypeAssertion(statementNode, assignments, derived, localContext) {
+function verifyStatementAsTypeAssertion(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsTypeAssertion = false;
 
   const typeAssertionNode = typeAssertionNodeQuery(statementNode);
@@ -255,7 +255,7 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, loc
 
     localContext.trace(`Verifying the '${statementString}' statement as a type assertion...`, statementNode);
 
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, derived, localContext);
+    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, stated, localContext);
 
     statementVerifiedAsTypeAssertion = typeAssertionVerified; ///
 
@@ -267,7 +267,7 @@ function verifyStatementAsTypeAssertion(statementNode, assignments, derived, loc
   return statementVerifiedAsTypeAssertion;
 }
 
-function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, localContext) {
+function verifyStatementAsDefinedAssertion(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsDefinedAssertion = false;
 
   const definedAssertionNode = definedAssertionNodeQuery(statementNode);
@@ -277,7 +277,7 @@ function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, 
 
     localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`, statementNode);
 
-    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, assignments, derived, localContext);
+    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, assignments, stated, localContext);
 
     statementVerifiedAsDefinedAssertion = definedAssertionVerified; ///
 
@@ -289,7 +289,7 @@ function verifyStatementAsDefinedAssertion(statementNode, assignments, derived, 
   return statementVerifiedAsDefinedAssertion;
 }
 
-function verifyStatementAsSubproofAssertion(statementNode, assignments, derived, localContext) {
+function verifyStatementAsSubproofAssertion(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsSubproofAssertion = false;
 
   const subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
@@ -299,7 +299,7 @@ function verifyStatementAsSubproofAssertion(statementNode, assignments, derived,
 
     localContext.trace(`Verifying the '${statementString}' statement as a subproof assertion...`, statementNode);
 
-    const subproofAssertionVerified = verifySubproofAssertion(subproofAssertionNode, assignments, derived, localContext);
+    const subproofAssertionVerified = verifySubproofAssertion(subproofAssertionNode, assignments, stated, localContext);
 
     statementVerifiedAsSubproofAssertion = subproofAssertionVerified; ///
 
@@ -311,7 +311,7 @@ function verifyStatementAsSubproofAssertion(statementNode, assignments, derived,
   return statementVerifiedAsSubproofAssertion;
 }
 
-function verifyStatementAsContainedAssertion(statementNode, assignments, derived, localContext) {
+function verifyStatementAsContainedAssertion(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsContainedAssertion = false;
 
   const containedAssertionNode = containedAssertionNodeQuery(statementNode);
@@ -321,7 +321,7 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, derived
 
     localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`, statementNode);
 
-    const containedAssertionVerified = verifyContainedAssertion(containedAssertionNode, assignments, derived, localContext);
+    const containedAssertionVerified = verifyContainedAssertion(containedAssertionNode, assignments, stated, localContext);
 
     statementVerifiedAsContainedAssertion = containedAssertionVerified; ///
 

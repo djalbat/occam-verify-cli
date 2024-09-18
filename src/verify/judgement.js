@@ -17,18 +17,18 @@ const verifyJudgementFunctions = [
   verifyStatedJudgement
 ];
 
-export default function verifyJudgement(judgementNode, assignments, derived, localContext) {
+export default function verifyJudgement(judgementNode, assignments, stated, localContext) {
   let judgementVerified = false;
 
   const judgementString = localContext.nodeAsString(judgementNode);
 
   localContext.trace(`Verifying the '${judgementString}' judgement...`, judgementNode);
 
-  const verified = metaLevelVerifier.verify(judgementNode, assignments, derived, localContext);
+  const verified = metaLevelVerifier.verify(judgementNode, assignments, stated, localContext);
 
   if (verified) {
     judgementVerified = verifyJudgementFunctions.some((verifyJudgementFunction) => {
-      const judgementVerified = verifyJudgementFunction(judgementNode, assignments, derived, localContext);
+      const judgementVerified = verifyJudgementFunction(judgementNode, assignments, stated, localContext);
 
       if (judgementVerified) {
         return true;
@@ -43,10 +43,10 @@ export default function verifyJudgement(judgementNode, assignments, derived, loc
   return judgementVerified;
 }
 
-function verifyDerivedJudgement(judgementNode, assignments, derived, localContext) {
+function verifyDerivedJudgement(judgementNode, assignments, stated, localContext) {
   let derivedJudgementVerified = false;
 
-  if (derived) {
+  if (!stated) {
     const judgementString = localContext.nodeAsString(judgementNode);
 
     localContext.trace(`Verifying the '${judgementString}' derived judgement...`, judgementNode);
@@ -60,7 +60,7 @@ function verifyDerivedJudgement(judgementNode, assignments, derived, localContex
       if (judgement !== null) {
         const frames = [],
               frameNode = frameNodeQuery(judgementNode),
-              frameVerified = verifyFrame(frameNode, frames, assignments, derived, localContext);
+              frameVerified = verifyFrame(frameNode, frames, assignments, stated, localContext);
 
         if (frameVerified) {
           const firstFrame = first(frames),
@@ -105,10 +105,10 @@ function verifyDerivedJudgement(judgementNode, assignments, derived, localContex
   return derivedJudgementVerified;
 }
 
-function verifyStatedJudgement(judgementNode, assignments, derived, localContext) {
+function verifyStatedJudgement(judgementNode, assignments, stated, localContext) {
   let statedJudgementVerified = false;
 
-  if (!derived) {
+  if (stated) {
     const judgementString = localContext.nodeAsString(judgementNode);
 
     localContext.trace(`Verifying the '${judgementString}' stated judgement...`, judgementNode);
@@ -119,7 +119,7 @@ function verifyStatedJudgement(judgementNode, assignments, derived, localContext
     if (metavariableVerified) {
       const frames = [],
             frameNode = frameNodeQuery(judgementNode),
-            frameVerified = verifyFrame(frameNode, frames, assignments, derived, localContext);
+            frameVerified = verifyFrame(frameNode, frames, assignments, stated, localContext);
 
       if (frameVerified) {
         const firstFrame = first(frames),

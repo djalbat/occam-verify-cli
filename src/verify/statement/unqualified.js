@@ -1,35 +1,48 @@
 "use strict";
 
 import verifyStatement from "../../verify/statement";
+import unifyUnqualifiedStatement from "../../unify/statement/unqualified";
 
 import { nodeQuery } from "../../utilities/query";
+import { assignAssignments } from "../../utilities/assignments";
 import { verifyStatementTrivially } from "../../verify/statement";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
 
-export default function verifyUnqualifiedStatement(unqualifiedStatementNode, assignments, derived, localContext) {
-  let unqualifiedStatementVerified;
+export default function verifyUnqualifiedStatement(unqualifiedStatementNode, localContext) {
+  let unqualifiedStatementVerified = false;
 
   const unqualifiedStatementString = localContext.nodeAsString(unqualifiedStatementNode);
 
   localContext.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`, unqualifiedStatementNode);
 
-  const statementNode = statementNodeQuery(unqualifiedStatementNode),
-        statementVerified = verifyStatement(statementNode, assignments, derived, localContext);
+  if (!unqualifiedStatementVerified) {
+    const stated = true,
+          assignments = [],
+          statementNode = statementNodeQuery(unqualifiedStatementNode),
+          statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
-  if (statementVerified) {
-    if (derived) {
+    if (statementVerified) {
+      const unqualifiedStatementUnified = unifyUnqualifiedStatement(unqualifiedStatementNode, localContext);
+
+      unqualifiedStatementVerified = unqualifiedStatementUnified; ///
+    }
+  }
+
+  if (!unqualifiedStatementVerified) {
+    const stated = false,
+          assignments = [],
+          statementNode = statementNodeQuery(unqualifiedStatementNode),
+          statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
+
+    if (statementVerified) {
       const statementVerifiedTrivially = verifyStatementTrivially(statementNode, localContext);
 
       if (statementVerifiedTrivially) {
-        unqualifiedStatementVerified = true;
-      } else {
-        const derivedUnqualifiedStatementUnified = unifyDerivedUnqualifiedStatement(unqualifiedStatementNode, localContext);
+        const assignmentsAssigned = assignAssignments(assignments, localContext);
 
-        unqualifiedStatementVerified = derivedUnqualifiedStatementUnified; ///
+        unqualifiedStatementVerified = assignmentsAssigned;  ///
       }
-    } else {
-      unqualifiedStatementVerified = true;
     }
   }
 
@@ -38,23 +51,4 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, ass
   }
 
   return unqualifiedStatementVerified;
-}
-
-function unifyDerivedUnqualifiedStatement(unqualifiedStatementNode, localContext) {
-  let derivedUnqualifiedStatementUnified;
-
-  const unqualifiedStatementString = localContext.nodeAsString(unqualifiedStatementNode);
-
-  localContext.trace(`Unifying the '${unqualifiedStatementString}' derived unqualified statement...`, unqualifiedStatementNode);
-
-  const statementNode = statementNodeQuery(unqualifiedStatementNode),
-        statementUnified = localContext.unifyStatement(statementNode, localContext);
-
-  derivedUnqualifiedStatementUnified = statementUnified;  ///
-
-  if (derivedUnqualifiedStatementUnified) {
-    localContext.debug(`...unified the '${unqualifiedStatementString}' derived unqualified statement.`, unqualifiedStatementNode);
-  }
-
-  return derivedUnqualifiedStatementUnified;
 }
