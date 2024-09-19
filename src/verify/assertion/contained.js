@@ -23,7 +23,7 @@ export default function verifyContainedAssertion(containedAssertionNode, assignm
 
   localContext.trace(`Verifying the '${containedAssertionString}' contained assertion...`, containedAssertionNode);
 
-  assignments = []; ///
+  assignments = null; ///
 
   stated = true;  ///
 

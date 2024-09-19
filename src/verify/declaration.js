@@ -68,7 +68,7 @@ function verifyStatedDeclaration(declarationNode, declarations, stated, localCon
     if (metavariableVerified) {
       const { verifyStatement } = shim,
             stated = true,
-            assignments = [],
+            assignments = null,
             statementNode = statementNodeQuery(declarationNode),
             statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 

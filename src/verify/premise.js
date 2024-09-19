@@ -29,12 +29,12 @@ export default function verifyPremise(premiseNode, premises, localContext) {
       const assignmentsAssigned = assignAssignments(assignments, localContext);
 
       if (assignmentsAssigned) {
-        const metaproofStep = ProofStep.fromStatementNode(statementNode),
-              premise = Premise.fromStatementNode(statementNode);
+        const premise = Premise.fromStatementNode(statementNode),
+              proofStep = ProofStep.fromStatementNode(statementNode);
 
         premises.push(premise);
 
-        localContext.addProofStep(metaproofStep);
+        localContext.addProofStep(proofStep);
 
         premiseVerified = true;
       }

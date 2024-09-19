@@ -54,10 +54,12 @@ function verifyDerivedEquality(equalityNode, assignments, stated, localContext) 
               const equalityEqual = equality.isEqual(localContext);
 
               if (equalityEqual) {
-                const equalityAssignment = EqualityAssignment.fromEquality(equality),
-                      assignment = equalityAssignment; ///
+                if (assignments !== null) {
+                  const equalityAssignment = EqualityAssignment.fromEquality(equality),
+                        assignment = equalityAssignment; ///
 
-                assignments.push(assignment);
+                  assignments.push(assignment);
+                }
 
                 verifiedAhead = true;
               }
@@ -92,10 +94,12 @@ function verifyStatedEquality(equalityNode, assignments, stated, localContext) {
             const equality = Equality.fromTermsAndEqualityNode(terms, equalityNode);
 
             if (equality !== null) {
-              const equalityAssignment = EqualityAssignment.fromEquality(equality),
-                    assignment = equalityAssignment; ///
+              if (assignments !== null) {
+                const equalityAssignment = EqualityAssignment.fromEquality(equality),
+                      assignment = equalityAssignment; ///
 
-              assignments.push(assignment);
+                assignments.push(assignment);
+              }
 
               verifiedAhead = true;
             }

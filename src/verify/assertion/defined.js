@@ -23,7 +23,7 @@ export default function verifyDefinedAssertion(definedAssertionNode, assignments
 
   localContext.trace(`Verifying the '${definedAssertionString}' defined assertion...`, definedAssertionNode);
 
-  assignments = []; ///
+  assignments = null; ///
 
   stated = true;  ///
 

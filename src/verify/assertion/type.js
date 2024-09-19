@@ -112,11 +112,13 @@ function verifyStatedTypeAssertion(typeAssertionNode, assignments, stated, local
                 const variableNode = variableNodeQuery(termNode);
 
                 if (variableNode !== null) {
-                  const variable = Variable.fromVariableNodeAndType(variableNode, type),
-                        variableAssignment = VariableAssignment.fromVariable(variable),
-                        assignment = variableAssignment;  ///
+                  if (assignments !== null) {
+                    const variable = Variable.fromVariableNodeAndType(variableNode, type),
+                          variableAssignment = VariableAssignment.fromVariable(variable),
+                          assignment = variableAssignment;  ///
 
-                  assignments.push(assignment);
+                    assignments.push(assignment);
+                  }
                 }
 
                 verifiedAhead = true;

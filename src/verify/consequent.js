@@ -19,7 +19,7 @@ export default function verifyConsequent(consequentNode, consequents, localConte
 
   if (unqualifiedStatementNode !== null) {
     const stated = true,
-          assignments = [],
+          assignments = null,
           statementNode = statementNodeQuery(unqualifiedStatementNode),
           statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 

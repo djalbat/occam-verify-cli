@@ -30,7 +30,7 @@ export default function verifyUnqualifiedStatement(unqualifiedStatementNode, loc
 
   if (!unqualifiedStatementVerified) {
     const stated = true,
-          assignments = [],
+          assignments = null,
           statementNode = statementNodeQuery(unqualifiedStatementNode),
           statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 

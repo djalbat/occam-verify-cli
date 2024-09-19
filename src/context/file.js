@@ -70,12 +70,6 @@ export default class FileContext {
     return equivalences;
   }
 
-  getMetaproofSteps() {
-    const metaproofSteps = [];  ///
-
-    return metaproofSteps;
-  }
-
   getJudgements() {
     const judgements = [];
 

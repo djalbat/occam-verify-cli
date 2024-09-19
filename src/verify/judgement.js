@@ -122,13 +122,15 @@ function verifyStatedJudgement(judgementNode, assignments, stated, localContext)
               frameVerified = verifyFrame(frameNode, frames, stated, localContext);
 
         if (frameVerified) {
-          const firstFrame = first(frames),
-                frame = firstFrame, ///
-                judgement = Judgement.fromJudgementNodeFrameAndMetavariableNode(judgementNode, frame, metavariableNode),
-                judgementAssignment = JudgementAssignment.fromJudgement(judgement),
-                assignment = judgementAssignment;
+          if (assignments !== null) {
+            const firstFrame = first(frames),
+                  frame = firstFrame, ///
+                  judgement = Judgement.fromJudgementNodeFrameAndMetavariableNode(judgementNode, frame, metavariableNode),
+                  judgementAssignment = JudgementAssignment.fromJudgement(judgement),
+                  assignment = judgementAssignment;
 
-          assignments.push(assignment);
+            assignments.push(assignment);
+          }
 
           statedJudgementVerified = true;
         }

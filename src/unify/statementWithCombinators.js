@@ -7,6 +7,8 @@ export default function unifyStatementWithCombinators(statementNode, assignments
 
   const combinators = localContext.getCombinators();
 
+  assignments = null; ///
+
   statementUnifiedWithCombinators = combinators.some((combinator) => {
     const statementUnifiedWithCombinator = unifyStatementWithCombinator(statementNode, combinator, assignments, stated, localContext);
 
