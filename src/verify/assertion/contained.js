@@ -5,10 +5,10 @@ import metaLevelVerifier from "../../verifier/metaLevel";
 import { isAssertionNegated } from "../../utilities/assertion";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
 
-const variableNodeQuery = nodeQuery("/containedAssertion/variable!"),
-      metavariableNodeQuery = nodeQuery("/containedAssertion/metavariable"),
-      statementVariableNodesQuery = nodesQuery("/containedAssertion/statement//variable"),
-      statementMetavariableNodesQuery = nodesQuery("/containedAssertion/statement//metavariable");
+const variableNodeQuery = nodeQuery("/containedAssertion/term/variable!"),
+      metavariableNodeQuery = nodeQuery("/containedAssertion/statement[0]/metavariable"),
+      statementVariableNodesQuery = nodesQuery("/containedAssertion/statement[-1]//variable"),
+      statementMetavariableNodesQuery = nodesQuery("/containedAssertion/statement[-1]//metavariable");
 
 const verifyContainedAssertionFunctions = [
   verifyDerivedContainedAssertion,
@@ -66,7 +66,7 @@ function verifyDerivedContainedAssertion(containedAssertionNode, assignments, st
     } else if (metavariableNode !== null) {
       const statementMetavariableNodes = statementMetavariableNodesQuery(containedAssertionNode),
             variableNodeMatchesStatementMetavariableNode = statementMetavariableNodes.some((statementMetavariableNode) => {
-              const variableNodeMatchesStatementMetavariableNode = variableNode.match(statementMetavariableNode);
+              const variableNodeMatchesStatementMetavariableNode = metavariableNode.match(statementMetavariableNode);
 
               if (variableNodeMatchesStatementMetavariableNode) {
                 return true;

@@ -7,8 +7,8 @@ import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
 import { isAssertionNegated } from "../../utilities/assertion";
 
-const variableNodeQuery = nodeQuery("/definedAssertion/variable!"),
-      metavariableNodeQuery = nodeQuery("/definedAssertion/metavariable!");
+const variableNodeQuery = nodeQuery("/definedAssertion/term/variable!"),
+      metavariableNodeQuery = nodeQuery("/definedAssertion/statement[-1]/metavariable!");
 
 const verifyDefinedAssertionFunctions = [
   verifyDerivedDefinedAssertion,

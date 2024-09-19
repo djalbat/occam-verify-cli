@@ -6,8 +6,8 @@ import referenceMetaType from "../metaType/reference";
 
 import { nodeQuery } from "../utilities/query";
 
-const statementNodeQuery = nodeQuery("/declaration/statement!"),
-      metavariableNodeQuery = nodeQuery("/declaration/metavariable!");
+const statementNodeQuery = nodeQuery("/declaration/statement[1]"),
+      metavariableNodeQuery = nodeQuery("/declaration/statement[0]/metavariable!");
 
 const verifyDeclarationFunctions = [
   verifyDerivedDeclaration,

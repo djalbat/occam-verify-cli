@@ -9,7 +9,7 @@ import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
 
 const frameNodeQuery = nodeQuery("/judgement/frame!"),
-      metavariableNodeQuery = nodeQuery("/judgement/metavariable!");
+      metavariableNodeQuery = nodeQuery("/judgement/statement/metavariable!");
 
 const verifyJudgementFunctions = [
   verifyDerivedJudgement,
