@@ -1,6 +1,6 @@
 "use strict";
 
-import { nodeQuery } from "../../utilities/query";
+import { nodeQuery } from "../utilities/query";
 
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement!"),
       metavariableNodeQuery = nodeQuery("/qualifiedStatement/reference/metavariable!");

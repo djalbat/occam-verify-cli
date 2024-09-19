@@ -87,9 +87,9 @@ export default class Substitutions {
 
   findSubstitutionByVariableNode(variableNode) {
     const substitution = this.findSubstitution((substitution) => {
-      const substitutionMatchesVariableNode = substitution.matchVariableNode(variableNode);
+      const variableNodeMatches = substitution.matchVariableNode(variableNode);
 
-      if (substitutionMatchesVariableNode) {
+      if (variableNodeMatches) {
         return true;
       }
     });
@@ -97,11 +97,22 @@ export default class Substitutions {
     return substitution;
   }
 
+  findSubstitutionByMetavariableNode(metavariableNode) {
+    const substitution = this.findSubstitution((substitution) => {
+      const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
+
+      if (metavariableNodeMatches) {
+        return true;
+      }
+    });
+
+    return substitution;
+  }
   findSubstitutionsByMetavariableNode(metavariableNode) {
     const substitutions = this.findSubstitutions((substitution) => {
-      const substitutionMatchesMetavariableNode = substitution.matchMetavariableNode(metavariableNode);
+      const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
 
-      if (substitutionMatchesMetavariableNode) {
+      if (metavariableNodeMatches) {
         return true;
       }
     });
@@ -139,9 +150,9 @@ export default class Substitutions {
 
   findSubstitutionsByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
     const substitutions = this.findSubstitutions((substitution) => {
-      const substitutionMatchesMetavariableNodeAndSubstitutionNode = substitution.matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
+      const metavariableNodeAndSubstitutionNodeMatch = substitution.matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
 
-      if (substitutionMatchesMetavariableNodeAndSubstitutionNode) {
+      if (metavariableNodeAndSubstitutionNodeMatch) {
         return true;
       }
     });

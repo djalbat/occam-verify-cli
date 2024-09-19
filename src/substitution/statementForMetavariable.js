@@ -163,7 +163,7 @@ function transformStatementNode(statementNode, substitutions) {
 
   if (metavariableNode !== null) {
     substitutions.someSubstitution((substitution) => {
-      const substitutionMatchesVariableNode = substitution.matchVariableNode(metavariableNode);
+      const substitutionMatchesVariableNode = substitution.matchMetavariableNode(metavariableNode);
 
       if (substitutionMatchesVariableNode) {
         const statementNode = substitution.getStatementNode();

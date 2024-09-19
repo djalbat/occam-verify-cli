@@ -18,7 +18,6 @@ const frameNodeQuery = nodeQuery("/statement/frame!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
       judgementNodeQuery = nodeQuery("/statement/judgement!"),
       declarationNodeQuery = nodeQuery("/statement/declaration!"),
-      substitutionNodeQuery = nodeQuery("/statement/substitution!"),
       metavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
@@ -34,7 +33,6 @@ const unifyStatementFunctions = [
         verifyStatementAsFrame,
         verifyStatementAsJudgement,
         verifyStatementAsDeclaration,
-        verifyStatementAsSubstitution,
         verifyStatementAsTypeAssertion,
         verifyStatementAsDefinedAssertion,
         verifyStatementAsSubproofAssertion,
@@ -221,28 +219,6 @@ function verifyStatementAsDeclaration(statementNode, assignments, stated, localC
   }
 
   return statementVerifiedAsDeclaration;
-}
-
-function verifyStatementAsSubstitution(statementNode, assignments, stated, localContext) {
-  let statementVerifiedAsSubstitution = false;
-
-  const substitutionNode = substitutionNodeQuery(statementNode);
-
-  if (substitutionNode !== null) {
-    const statementString = localContext.nodeAsString(statementNode);
-
-    localContext.trace(`Verifying the '${statementString}' statement as a substitution...`, statementNode);
-
-    const substitutionVerified = verifySubstitution(substitutionNode, assignments, stated, localContext);
-
-    statementVerifiedAsSubstitution = substitutionVerified; ///
-
-    if (statementVerifiedAsSubstitution) {
-      localContext.debug(`...verified the '${statementString}' statement as a substitution.`, statementNode);
-    }
-  }
-
-  return statementVerifiedAsSubstitution;
 }
 
 function verifyStatementAsTypeAssertion(statementNode, assignments, stated, localContext) {

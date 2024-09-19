@@ -1,7 +1,7 @@
 "use strict";
 
 import verifyStatement from "../../verify/statement";
-import unifyUnqualifiedStatement from "../../unify/statement/unqualified";
+import unifyUnqualifiedStatement from "../../unify/unqualifiedStatement";
 
 import { nodeQuery } from "../../utilities/query";
 import { assignAssignments } from "../../utilities/assignments";
