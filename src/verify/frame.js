@@ -15,7 +15,7 @@ const verifyFrameFunctions = [
   verifyStatedFrame
 ];
 
-export default function verifyFrame(frameNode, assignments, stated, localContext) {
+export default function verifyFrame(frameNode, frames, stated, localContext) {
   let frameVerified;
 
   const frameString = localContext.nodeAsString(frameNode);
@@ -23,7 +23,7 @@ export default function verifyFrame(frameNode, assignments, stated, localContext
   localContext.trace(`Verifying the '${frameString}' frame...`, frameNode);
 
   frameVerified = verifyFrameFunctions.some((verifyFrameFunction) => {
-    const frameVerified = verifyFrameFunction(frameNode, assignments, stated, localContext);
+    const frameVerified = verifyFrameFunction(frameNode, frames, stated, localContext);
 
     if (frameVerified) {
       return true;
@@ -37,53 +37,57 @@ export default function verifyFrame(frameNode, assignments, stated, localContext
   return frameVerified;
 }
 
-function verifyDerivedFrame(frameNode, frames, assignments, stated, localContext) {
+function verifyDerivedFrame(frameNode, frames, stated, localContext) {
   let derivedFrameVerified;
 
-  const frameString = localContext.nodeAsString(frameNode);
+  if (!stated) {
+    const frameString = localContext.nodeAsString(frameNode);
 
-  localContext.trace(`Verifying the '${frameString}' derived frame...`, frameNode);
+    localContext.trace(`Verifying the '${frameString}' derived frame...`, frameNode);
 
-  debugger
+    debugger
 
-  if (derivedFrameVerified) {
-    localContext.debug(`...verified the '${frameString}' derived frame.`, frameNode);
+    if (derivedFrameVerified) {
+      localContext.debug(`...verified the '${frameString}' derived frame.`, frameNode);
+    }
   }
 
   return derivedFrameVerified;
 }
 
-function verifyStatedFrame(frameNode, frames, assignments, stated, localContext) {
+function verifyStatedFrame(frameNode, frames, stated, localContext) {
   let statedFrameVerified;
 
-  const frameString = localContext.nodeAsString(frameNode);
+  if (stated) {
+    const frameString = localContext.nodeAsString(frameNode);
 
-  localContext.trace(`Verifying the '${frameString}' stated frame...`, frameNode);
+    localContext.trace(`Verifying the '${frameString}' stated frame...`, frameNode);
 
-  const declarations = [],
-        declarationNodes = declarationNodesQuery(frameNode),
-        metavariableNodes = metavariableNodesQuery(frameNode),
-        declarationsVerified = declarationNodes.every((declarationNode) => {
-          const declarationVerified = verifyDeclaration(declarationNode, declarations, localContext);
+    const declarations = [],
+          declarationNodes = declarationNodesQuery(frameNode),
+          metavariableNodes = metavariableNodesQuery(frameNode),
+          declarationsVerified = declarationNodes.every((declarationNode) => {
+            const declarationVerified = verifyDeclaration(declarationNode, declarations, stated, localContext);
 
-          return declarationVerified;
-        }),
-        metavariablesVerified = metavariableNodes.every((metavariableNode) => {
-          const metavariableVerified = verifyMetavariable(metavariableNode, declarations, localContext);
+            return declarationVerified;
+          }),
+          metavariablesVerified = metavariableNodes.every((metavariableNode) => {
+            const metavariableVerified = verifyMetavariable(metavariableNode, declarations, localContext);
 
-          return metavariableVerified;
-        });
+            return metavariableVerified;
+          });
 
-  if (declarationsVerified && metavariablesVerified) {
-    const frame = Frame.fromDeclarations(declarations);
+    if (declarationsVerified && metavariablesVerified) {
+      const frame = Frame.fromDeclarations(declarations);
 
-    frames.push(frame);
+      frames.push(frame);
 
-    statedFrameVerified = true;
-  }
+      statedFrameVerified = true;
+    }
 
-  if (statedFrameVerified) {
-    localContext.debug(`...verified the '${frameString}' stated frame.`, frameNode);
+    if (statedFrameVerified) {
+      localContext.debug(`...verified the '${frameString}' stated frame.`, frameNode);
+    }
   }
 
   return statedFrameVerified;

@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "../shim";
 import Declaration from "../declaration"
 import referenceMetaType from "../metaType/reference";
 
@@ -13,7 +14,7 @@ const verifyDeclarationFunctions = [
   verifyStatedDeclaration
 ];
 
-export default function verifyDeclaration(declarationNode, assignments, stated, localContext) {
+export default function verifyDeclaration(declarationNode, declarations, stated, localContext) {
   let declarationVerified;
 
   const declarationString = localContext.nodeAsString(declarationNode);
@@ -21,7 +22,7 @@ export default function verifyDeclaration(declarationNode, assignments, stated, 
   localContext.trace(`Verifying the '${declarationString}' declaration...`, declarationNode);
 
   declarationVerified = verifyDeclarationFunctions.some((verifyDeclarationFunction) => {
-    const declarationVerified = verifyDeclarationFunction(declarationNode, assignments, stated, localContext);
+    const declarationVerified = verifyDeclarationFunction(declarationNode, declarations, stated, localContext);
 
     if (declarationVerified) {
       return true;
@@ -35,40 +36,54 @@ export default function verifyDeclaration(declarationNode, assignments, stated, 
   return declarationVerified;
 }
 
-function verifyDerivedDeclaration(declarationNode, declarations, localContext) {
+function verifyDerivedDeclaration(declarationNode, declarations, stated, localContext) {
   let derivedDeclarationVerified;
 
-  const declarationString = localContext.nodeAsString(declarationNode);
+  if (!stated) {
+    const declarationString = localContext.nodeAsString(declarationNode);
 
-  localContext.trace(`Verifying the '${declarationString}' derived declaration...`, declarationNode);
+    localContext.trace(`Verifying the '${declarationString}' derived declaration...`, declarationNode);
 
-  debugger
+    debugger
 
-  if (derivedDeclarationVerified) {
-    localContext.debug(`...verified the '${declarationString}' derived declaration.`, declarationNode);
+    if (derivedDeclarationVerified) {
+      localContext.debug(`...verified the '${declarationString}' derived declaration.`, declarationNode);
+    }
   }
 
   return derivedDeclarationVerified;
 }
 
-function verifyStatedDeclaration(declarationNode, declarations, localContext) {
+function verifyStatedDeclaration(declarationNode, declarations, stated, localContext) {
   let statedDeclarationVerified = false;
 
-  const declarationString = localContext.nodeAsString(declarationNode);
+  if (stated) {
+    const declarationString = localContext.nodeAsString(declarationNode);
 
-  localContext.trace(`Verifying the '${declarationString}' stated declaration...`, declarationNode);
+    localContext.trace(`Verifying the '${declarationString}' stated declaration...`, declarationNode);
 
-  const metavariableNode = metavariableNodeQuery(declarationNode),
-        metavariableVerified = verifyMetavariable(metavariableNode, localContext);
+    const metavariableNode = metavariableNodeQuery(declarationNode),
+          metavariableVerified = verifyMetavariable(metavariableNode, localContext);
 
-  if (metavariableVerified) {
+    if (metavariableVerified) {
+      const { verifyStatement } = shim,
+            stated = true,
+            assignments = [],
+            statementNode = statementNodeQuery(declarationNode),
+            statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
-    debugger
+      if (statementVerified) {
+        const declaration = Declaration.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode);
 
-  }
+        declarations.push(declaration);
 
-  if (statedDeclarationVerified) {
-    localContext.debug(`...verified the '${declarationString}' stated declaration.`, declarationNode);
+        statedDeclarationVerified = true;
+      }
+    }
+
+    if (statedDeclarationVerified) {
+      localContext.debug(`...verified the '${declarationString}' stated declaration.`, declarationNode);
+    }
   }
 
   return statedDeclarationVerified;

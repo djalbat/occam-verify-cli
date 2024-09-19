@@ -8,10 +8,11 @@ import { nodeQuery } from "../../utilities/query";
 import { isAssertionNegated } from "../../utilities/assertion";
 
 const termNodeQuery = nodeQuery("/definedAssertion/term!"),
-      variableNodeQuery = nodeQuery("/definedAssertion/term/variable!");
+      variableNodeQuery = nodeQuery("/definedAssertion/term/variable!"),
+      metavariableNodeQuery = nodeQuery("/definedAssertion/statement/metavariable!");
 
 const verifyDefinedAssertionFunctions = [
-  verifyUnstatedDefinedAssertion,
+  verifyDerivedDefinedAssertion,
   verifyStatedDefinedAssertion
 ];
 
@@ -43,33 +44,49 @@ export default function verifyDefinedAssertion(definedAssertionNode, assignments
   return definedAssertionVerified;
 }
 
-function verifyUnstatedDefinedAssertion(definedAssertionNode, assignments, stated, localContext) {
-  let unstatedDefinedAssertionVerified = false;
+function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, stated, localContext) {
+  let derivedDefinedAssertionVerified = false;
 
   if (!stated) {
     const definedAssertionString = localContext.nodeAsString(definedAssertionNode);
 
-    localContext.trace(`Verifying the '${definedAssertionString}' unstated defined assertion...`, definedAssertionNode);
+    localContext.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`, definedAssertionNode);
 
     const assertionNegated = isAssertionNegated(definedAssertionNode),
+          metavariableNode = metavariableNodeQuery(definedAssertionNode),
           variableNode = variableNodeQuery(definedAssertionNode),
           termNode = termNodeQuery(definedAssertionNode);
 
     if (false) {
       ///
+    } else if (metavariableNode !== null) {
+      const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode),
+            metavariableDefined = localContext.isMetavariableDefined(metavariable);
+
+      if (!assertionNegated) {
+        if (metavariableDefined) {
+          derivedDefinedAssertionVerified = true;
+        }
+      }
+
+      if (assertionNegated) {
+        if (!metavariableDefined) {
+          derivedDefinedAssertionVerified = true;
+        }
+      }
     } else if (variableNode !== null) {
       const variable = localContext.findVariableByVariableNode(variableNode),
             variableDefined = localContext.isVariableDefined(variable);
 
       if (!assertionNegated) {
         if (variableDefined) {
-          unstatedDefinedAssertionVerified = true;
+          derivedDefinedAssertionVerified = true;
         }
       }
 
       if (assertionNegated) {
         if (!variableDefined) {
-          unstatedDefinedAssertionVerified = true;
+          derivedDefinedAssertionVerified = true;
         }
       }
     } else if (termNode !== null) {
@@ -78,23 +95,23 @@ function verifyUnstatedDefinedAssertion(definedAssertionNode, assignments, state
 
       if (!assertionNegated) {
         if (termGrounded) {
-          unstatedDefinedAssertionVerified = true;
+          derivedDefinedAssertionVerified = true;
         }
       }
 
       if (assertionNegated) {
         if (!termGrounded) {
-          unstatedDefinedAssertionVerified = true;
+          derivedDefinedAssertionVerified = true;
         }
       }
     }
 
-    if (unstatedDefinedAssertionVerified) {
-      localContext.debug(`...verified the '${definedAssertionString}' unstated defined assertion.`, definedAssertionNode);
+    if (derivedDefinedAssertionVerified) {
+      localContext.debug(`...verified the '${definedAssertionString}' derived defined assertion.`, definedAssertionNode);
     }
   }
 
-  return unstatedDefinedAssertionVerified;
+  return derivedDefinedAssertionVerified;
 }
 
 function verifyStatedDefinedAssertion(definedAssertionNode, assignments, stated, localContext) {

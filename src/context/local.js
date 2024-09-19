@@ -302,6 +302,14 @@ class LocalContext {
     return variableDefined;
   }
 
+  isMetavariableDefined(metavariable) {
+    let metavariableDefined;
+
+    debugger
+
+    return metavariableDefined
+  }
+
   isVariablePresentByVariableNode(variableNode) {
     const variable = this.findVariableByVariableNode(variableNode),
           variablePresent = (variable !== null);
