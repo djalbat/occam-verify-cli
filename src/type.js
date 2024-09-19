@@ -105,10 +105,10 @@ export default class Type {
 
   matchTypeNode(typeNode) {
     const typeName = typeNameFromTypeNode(typeNode),
-          matchesTypeName = this.matchTypeName(typeName),
-          matchesTypeNode = matchesTypeName;  ///
+          typeNameMatches = this.matchTypeName(typeName),
+          typeNodeMatches = typeNameMatches;  ///
 
-    return matchesTypeNode;
+    return typeNodeMatches;
   }
 
   asString(tokens, noSuperType = false) {
