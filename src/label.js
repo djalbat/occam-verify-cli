@@ -12,9 +12,9 @@ export default class Label {
   }
 
   matchMetavariableNode(metavariableNode) {
-    const matches = this.metavariableNode.match(metavariableNode);
+    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
 
-    return matches;
+    return metavariableNodeMatches;
   }
 
   asString(tokens) {

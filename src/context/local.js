@@ -303,9 +303,15 @@ class LocalContext {
   }
 
   isMetavariableDefined(metavariable) {
-    let metavariableDefined;
+    const judgements = this.getJudgements(),
+          metavariableNode = metavariable.getNode(),
+          metavariableDefined = judgements.some((judgement) => {
+            const metavariableNodeMatchesJudgement = judgement.matchMetavariableNode(metavariableNode);
 
-    debugger
+            if (metavariableNodeMatchesJudgement) {
+              return true;
+            }
+          });
 
     return metavariableDefined
   }
@@ -338,9 +344,9 @@ class LocalContext {
     const node = variableNode,  ///
           variables = this.getVariables(),
           variable = variables.find((variable) => {
-            const matches = variable.matchNode(node);
+            const nodeMatches = variable.matchNode(node);
 
-            if (matches) {
+            if (nodeMatches) {
               return true;
             }
           }) || null;

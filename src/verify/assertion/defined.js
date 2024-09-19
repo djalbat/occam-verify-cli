@@ -7,9 +7,8 @@ import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
 import { isAssertionNegated } from "../../utilities/assertion";
 
-const termNodeQuery = nodeQuery("/definedAssertion/term!"),
-      variableNodeQuery = nodeQuery("/definedAssertion/term/variable!"),
-      metavariableNodeQuery = nodeQuery("/definedAssertion/statement/metavariable!");
+const variableNodeQuery = nodeQuery("/definedAssertion/variable!"),
+      metavariableNodeQuery = nodeQuery("/definedAssertion/metavariable!");
 
 const verifyDefinedAssertionFunctions = [
   verifyDerivedDefinedAssertion,
@@ -54,8 +53,7 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, stated
 
     const assertionNegated = isAssertionNegated(definedAssertionNode),
           metavariableNode = metavariableNodeQuery(definedAssertionNode),
-          variableNode = variableNodeQuery(definedAssertionNode),
-          termNode = termNodeQuery(definedAssertionNode);
+          variableNode = variableNodeQuery(definedAssertionNode);
 
     if (false) {
       ///
@@ -86,21 +84,6 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, stated
 
       if (assertionNegated) {
         if (!variableDefined) {
-          derivedDefinedAssertionVerified = true;
-        }
-      }
-    } else if (termNode !== null) {
-      const term = termFromTermNode(termNode, localContext),
-            termGrounded = localContext.isTermGrounded(term);
-
-      if (!assertionNegated) {
-        if (termGrounded) {
-          derivedDefinedAssertionVerified = true;
-        }
-      }
-
-      if (assertionNegated) {
-        if (!termGrounded) {
           derivedDefinedAssertionVerified = true;
         }
       }

@@ -22,9 +22,9 @@ export default class Judgement {
   getDeclarations() { return this.frame.getDeclarations(); }
 
   matchMetavariableNode(metavariableNode) {
-    const matchesMetavariableNode = this.metavariableNode.match(metavariableNode);
+    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
 
-    return matchesMetavariableNode;
+    return metavariableNodeMatches;
   }
 
   unifyMetaLemmaOrmetatheorem(metaLemmaMetatheorem) { return this.frame.unifyMetaLemmaOrmetatheorem(metaLemmaMetatheorem); }

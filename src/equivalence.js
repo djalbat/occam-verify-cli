@@ -50,14 +50,14 @@ export default class Equivalence {
     const typeB = type; ///
 
     const typeAEqualToTypeB = typeA.isEqualTo(typeB),
-          matchesType = typeAEqualToTypeB;  ///
+          typeMatches = typeAEqualToTypeB;  ///
 
-    return matchesType;
+    return typeMatches;
   }
 
   matchTerm(term) {
     const termA = term, ///
-          matchesTerm = this.terms.some((term) => {
+          termMatches = this.terms.some((term) => {
             const termB = term, ///
                   termAMatchesTermB = termA.match(termB);
 
@@ -66,19 +66,19 @@ export default class Equivalence {
             }
           });
 
-    return matchesTerm;
+    return termMatches;
   }
 
   matchTerms(terms) {
-    const matchesTerms = terms.every((term) => {
-      const matchesTerm = this.matchTerm(term);
+    const termsMatch = terms.every((term) => {
+      const termMatches = this.matchTerm(term);
 
-      if (matchesTerm) {
+      if (termMatches) {
         return true;
       }
     })
 
-    return matchesTerms;
+    return termsMatch;
   }
 
   matchTermNode(termNode) {
@@ -97,7 +97,7 @@ export default class Equivalence {
 
   matchVariableNode(variableNode) {
     const variableNodeA = variableNode, ///
-          matchesVariableNode = this.terms.some((term) => {
+          variableNodeMatches = this.terms.some((term) => {
             const termNode = term.getNode(),
                   variableNode = variableNodeQuery(termNode);
 
@@ -111,19 +111,19 @@ export default class Equivalence {
             }
           });
 
-    return matchesVariableNode;
+    return variableNodeMatches;
   }
 
   matchTermNodes(termNodes) {
-    const matchesTermNodes = termNodes.every((termNode) => {
-      const matchesTermNode = this.matchTermNode(termNode);
+    const termNodesMatch = termNodes.every((termNode) => {
+      const termNodeMatches = this.matchTermNode(termNode);
 
-      if (matchesTermNode) {
+      if (termNodeMatches) {
         return true;
       }
     });
 
-    return matchesTermNodes;
+    return termNodesMatch;
   }
 
   getGroundedTerms(definedVariables, groundedTerms, localContext) {

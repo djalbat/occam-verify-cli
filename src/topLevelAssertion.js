@@ -60,15 +60,15 @@ export default class TopLevelAssertion {
   }
 
   matchMetavariableNode(metavariableNode) {
-    const matchesMetavariableNode = this.labels.some((label) => {
-      const labelMatchesMetavariableNode = label.matchMetavariableNode(metavariableNode);
+    const metavariableNodeMatches = this.labels.some((label) => {
+      const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
 
-      if (labelMatchesMetavariableNode) {
+      if (metavariableNodeMatches) {
         return true;
       }
     });
 
-    return matchesMetavariableNode;
+    return metavariableNodeMatches;
   }
 
   static fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(Class, labels, suppositions, consequent, substitutions, fileContext) { return new Class(labels, suppositions, consequent, substitutions, fileContext); }

@@ -377,9 +377,9 @@ export default class ReleaseContext {
     types.push(objectType);
 
     const type = types.find((type) => {
-      const matches = type.matchTypeName(typeName);
+      const typeNameMatches = type.matchTypeName(typeName);
 
-      if (matches) {
+      if (typeNameMatches) {
         return true;
       }
     }) || null;

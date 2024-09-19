@@ -55,15 +55,15 @@ export default class Rule {
   }
 
   matchMetavariableNode(metavariableNode) {
-    const matchesMetavariableNode = this.labels.some((label) => {
-      const labelMatchesMetavariableNode = label.matchMetavariableNode(metavariableNode);
+    const metavariableNodeMatches = this.labels.some((label) => {
+      const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
 
-      if (labelMatchesMetavariableNode) {
+      if (metavariableNodeMatches) {
         return true;
       }
     });
 
-    return matchesMetavariableNode;
+    return metavariableNodeMatches;
   }
 
   static fromLabelsPremisesConclusionAndFileContext(labels, premises, conclusion, fileContext) {

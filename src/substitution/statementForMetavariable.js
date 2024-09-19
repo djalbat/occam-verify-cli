@@ -74,9 +74,9 @@ export default class StatementForMetavariableSubstitution extends Substitution {
   }
 
   matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
-    const matchesMetavariableNodeAndSubstitutionNode = false;
+    const metavariableNodeAndSubstitutionNodeMatches = false;
 
-    return matchesMetavariableNodeAndSubstitutionNode;
+    return metavariableNodeAndSubstitutionNodeMatches;
   }
 
   asString(localContextA, localContextB) {

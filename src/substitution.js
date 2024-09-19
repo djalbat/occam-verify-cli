@@ -28,33 +28,33 @@ export default class Substitution {
   }
 
   matchTermNode(termNode) {
-    const matchesTermNode = false;
+    const termNodeMatches = false;
 
-    return matchesTermNode;
+    return termNodeMatches;
   }
 
   matchVariableNode(variableNode) {
-    const matchesMetavariableNode = false;
+    const variableNodeMatches = false;
 
-    return matchesMetavariableNode;
+    return variableNodeMatches;
   }
 
   matchStatementNode(statementNode) {
-    const matchesStatementNode = false;
+    const statementNodeMatches = false;
 
-    return matchesStatementNode;
+    return statementNodeMatches;
   }
 
   matchMetavariableNode(metavariableNode) {
-    const matchesMetavariableNode = false;
+    const metavariableNodeMatches = false;
 
-    return matchesMetavariableNode;
+    return metavariableNodeMatches;
   }
 
   matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
-    const matchesMetavariableNodeAndSubstitutionNode = false;
+    const metavariableNodeAndSubstitutionNodeMatches = false;
 
-    return matchesMetavariableNodeAndSubstitutionNode;
+    return metavariableNodeAndSubstitutionNodeMatches;
   }
 
   unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {

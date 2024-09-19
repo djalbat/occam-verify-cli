@@ -92,15 +92,15 @@ export default class Type {
   }
 
   matchName(name) {
-    const matchesName = (this.name === name);
+    const nodeMatches = (this.name === name);
 
-    return matchesName;
+    return nodeMatches;
   }
 
   matchTypeName(typeName) {
-    const matchesTypeName = (this.name === typeName);
+    const typeNameMatches = (this.name === typeName);
 
-    return matchesTypeName;
+    return typeNameMatches;
   }
 
   matchTypeNode(typeNode) {

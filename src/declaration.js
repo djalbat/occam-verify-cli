@@ -27,9 +27,9 @@ export default class Declaration {
   }
 
   unifyMetavariable(metavariableNode) {
-    const matchesMetavariableNode = this.metavariableNode.match(metavariableNode);
+    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
 
-    return matchesMetavariableNode;
+    return metavariableNodeMatches;
   }
 
   unifyStatement(statementNode) {

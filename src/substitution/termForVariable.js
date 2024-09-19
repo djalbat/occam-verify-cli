@@ -49,9 +49,9 @@ export default class TermForVariableSubstitution extends Substitution {
   match(substitution) {
     const termNode = substitution.getTermNode(),
           variableNode = substitution.getVariableNode(),
-          matchesTermNode = this.matchTermNode(termNode),
-          matchesVariableNode = this.matchVariableNode(variableNode),
-          matches = (matchesTermNode && matchesVariableNode);
+          termNodeMatches = this.matchTermNode(termNode),
+          variableNodeMatches = this.matchVariableNode(variableNode),
+          matches = (termNodeMatches && variableNodeMatches);
 
     return matches;
   }
@@ -59,15 +59,15 @@ export default class TermForVariableSubstitution extends Substitution {
   matchTermNode(termNode) {
     termNode = stripBracketsFromTerm(termNode); ///
 
-    const matchesTermNode = this.termNode.match(termNode);
+    const termNodeMatches = this.termNode.match(termNode);
 
-    return matchesTermNode;
+    return termNodeMatches;
   }
 
   matchVariableNode(variableNode) {
-    const matchesVariableNode = this.variableNode.match(variableNode);
+    const metavariableNodeMatches = this.variableNode.match(variableNode);
 
-    return matchesVariableNode;
+    return metavariableNodeMatches;
   }
 
   unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {
