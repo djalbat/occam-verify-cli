@@ -57,7 +57,7 @@ function verifyDerivedJudgement(judgementNode, assignments, stated, localContext
         if (judgement !== null) {
           const frames = [],
                 frameNode = frameNodeQuery(judgementNode),
-                frameVerified = verifyFrame(frameNode, frames, assignments, stated, localContext);
+                frameVerified = verifyFrame(frameNode, frames, stated, localContext);
 
           if (frameVerified) {
             const firstFrame = first(frames),

@@ -41,7 +41,7 @@ function verifyDerivedEquality(equalityNode, assignments, stated, localContext) 
   if (!stated) {
     const equalityString = localContext.nodeAsString(equalityNode);
 
-    localContext.trace(`Verifying the '${equalityString}' stated equality...`, equalityNode);
+    localContext.trace(`Verifying the '${equalityString}' derived equality...`, equalityNode);
 
     const terms = [],
           termNodes = termNodesQuery(equalityNode),
@@ -69,7 +69,7 @@ function verifyDerivedEquality(equalityNode, assignments, stated, localContext) 
     derivedEqualityVerified = termsVerified; ///
 
     if (derivedEqualityVerified) {
-      localContext.debug(`...verified the '${equalityString}' stated equality.`, equalityNode);
+      localContext.debug(`...verified the '${equalityString}' derived equality.`, equalityNode);
     }
   }
 

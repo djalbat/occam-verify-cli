@@ -18,13 +18,18 @@ const verifyDefinedAssertionFunctions = [
 export default function verifyDefinedAssertion(definedAssertionNode, assignments, stated, localContext) {
   let definedAssertionVerified;
 
-  const definedAssertionString = localContext.nodeAsString(definedAssertionNode);
+  const definedAssertionString = localContext.nodeAsString(definedAssertionNode),
+        savedStated = stated; ///;
 
   localContext.trace(`Verifying the '${definedAssertionString}' defined assertion...`, definedAssertionNode);
 
   assignments = []; ///
 
+  stated = true;  ///
+
   const verified = metaLevelVerifier.verify(definedAssertionNode, assignments, stated, localContext);
+
+  stated = savedStated; ///
 
   if (verified) {
     definedAssertionVerified = verifyDefinedAssertionFunctions.some((verifyDefinedAssertionFunction) => {

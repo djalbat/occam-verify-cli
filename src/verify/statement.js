@@ -87,30 +87,6 @@ Object.assign(shim, {
 
 export default verifyStatement;
 
-export function verifyStatementTrivially(statementNode, localContext) {
-  let statementVerifiedTrivially = false;
-
-  const statementString = localContext.nodeAsString(statementNode);
-
-  localContext.trace(`Verifying the '${statementString}' statement trivially...`, statementNode);
-
-  const equalityNode = equalityNodeQuery(statementNode),
-        judgementNode = judgementNodeQuery(statementNode),
-        typeAssertionNode = typeAssertionNodeQuery(statementNode),
-        definedAssertionNode = definedAssertionNodeQuery(statementNode),
-        containedAssertionNode = containedAssertionNodeQuery(statementNode);
-
-  if ((equalityNode !== null) || (judgementNode !== null) || (typeAssertionNode !== null) || (definedAssertionNode !== null) || (containedAssertionNode !== null)) {
-    statementVerifiedTrivially = true;
-  }
-
-  if (statementVerifiedTrivially) {
-    localContext.debug(`...verified the '${statementString}' statement trivially.`, statementNode);
-  }
-
-  return statementVerifiedTrivially;
-}
-
 function verifyStatementAsMetavariable(statementNode, assignments, stated, localContext) {
   let statementVerifiedAsMetavariable = false;
 
