@@ -48,7 +48,7 @@ export default class Frame {
     return substitutionUnified;
   }
 
-  unifyMetaLemmaOrMetaTheorem(metaLemmaMetatheorem) {
+  unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) {
     const substitutions = metaLemmaMetatheorem.getSubstitutions(),
           substitutionsUnified = substitutions.everySubstitution((substitution) => {
             const substitutionUnified = this.unifySubstitution(substitution);

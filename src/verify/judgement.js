@@ -4,6 +4,7 @@ import Judgement from "../judgement";
 import verifyFrame from "../verify/frame";
 import frameMetaType from "../metaType/frame";
 import JudgementAssignment from "../assignment/judgement";
+import verifyMetavariableGivenMetaType from "../verify/metavariableGivenMetaType";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
@@ -49,9 +50,10 @@ function verifyDerivedJudgement(judgementNode, assignments, stated, localContext
     const metavariableNode = metavariableNodeQuery(judgementNode);
 
     if (metavariableNode !== null) {
-      const metavariableVerified = verifyMetavariable(metavariableNode, localContext);
+      const metaType = frameMetaType, ///
+            metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
 
-      if (metavariableVerified) {
+      if (metavariableVerifiedGivenMetaType) {
         const judgement = localContext.findJudgementByMetavariableNode(metavariableNode);
 
         if (judgement !== null) {
@@ -62,35 +64,19 @@ function verifyDerivedJudgement(judgementNode, assignments, stated, localContext
           if (frameVerified) {
             const firstFrame = first(frames),
                   frame = firstFrame, ///
-                  frameSingular = frame.isSingular();
+                  declaration = frame.getDeclaration(),
+                  metavariableNode = declaration.getMetavariableNode(),
+                  metatheorem = localContext.findMetatheoremByMetavariableNode(metavariableNode),
+                  metaLemma = localContext.findMetaLemmaByMetavariableNode(metavariableNode),
+                  metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
 
-            if (frameSingular) {
-              const declaration = frame.getDeclaration(),
-                    metavariableNode = declaration.getMetavariableNode(),
-                    metaLemma = localContext.findMetaLemmaByMetavariableNode(metavariableNode),
-                    metatheorem = localContext.findMetatheoremByMetavariableNode(metavariableNode),
-                    metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
+            if (metaLemmaMetatheorem !== null) {
+              const metaLemmaMetatheoremUnifiedWithJudgement = judgement.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem),
+                    metaLemmaMetatheoremUnifiedWithDeclaration = declaration.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem);
 
-              if (metaLemmaMetatheorem !== null) {
-                const metaLemmaMetatheoremUnifiedWithDeclaration = declaration.unifyMetaLemmaOrMetaTheorem(metaLemmaMetatheorem),
-                      metaLemmaMetatheoremUnifiedWithJudgement = judgement.unifyMetaLemmaOrMetaTheorem(metaLemmaMetatheorem);
-
-                derivedJudgementVerified = (metaLemmaMetatheoremUnifiedWithDeclaration && metaLemmaMetatheoremUnifiedWithJudgement);
-              } else {
-                const metavariableString = localContext.nodeAsString(metavariableNode);
-
-                localContext.debug(`There are no meta-lemmas or metatheorems corresponding to the '${metavariableString}' metavariable.`, judgementNode);
-              }
-            } else {
-              const frameString = localContext.nodeAsString(frameNode);
-
-              localContext.debug(`The '${frameString}' is not singular.`, judgementNode);
+              derivedJudgementVerified = (metaLemmaMetatheoremUnifiedWithJudgement && metaLemmaMetatheoremUnifiedWithDeclaration);
             }
           }
-        } else {
-          const metavariableString = localContext.nodeAsString(metavariableNode);
-
-          localContext.debug(`There is no judgement present for the '${metavariableString}' metavariable.`, judgementNode);
         }
       }
     }
@@ -114,9 +100,10 @@ function verifyStatedJudgement(judgementNode, assignments, stated, localContext)
     const metavariableNode = metavariableNodeQuery(judgementNode);
 
     if (metavariableNode !== null) {
-      const metavariableVerified = verifyMetavariable(metavariableNode, localContext);
+      const metaType = frameMetaType, ///
+            metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
 
-      if (metavariableVerified) {
+      if (metavariableVerifiedGivenMetaType) {
         const frames = [],
               frameNode = frameNodeQuery(judgementNode),
               frameVerified = verifyFrame(frameNode, frames, stated, localContext);
@@ -143,35 +130,4 @@ function verifyStatedJudgement(judgementNode, assignments, stated, localContext)
   }
 
   return statedJudgementVerified;
-}
-
-function verifyMetavariable(metavariableNode, localContext) {
-  let metavariableVerified = false;
-
-  const metavariableString = localContext.nodeAsString(metavariableNode);
-
-  localContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
-
-  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
-
-  if (metavariable !== null) {
-    const metaType = metavariable.getMetaType();
-
-    if (metaType === frameMetaType) {
-      metavariableVerified = true;
-    } else {
-      const frameMetaTypeName = frameMetaType.getName(),
-            metaTypeString = metaType.asString();
-
-      localContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${frameMetaTypeName}'.`, metavariableNode);
-    }
-  } else {
-    localContext.debug(`The '${metavariableString}' metavariable is not present'.`, metavariableNode);
-  }
-
-  if (metavariableVerified) {
-    localContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
-  }
-
-  return metavariableVerified;
 }

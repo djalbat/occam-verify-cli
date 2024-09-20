@@ -27,7 +27,7 @@ export default class Judgement {
     return metavariableNodeMatches;
   }
 
-  unifyMetaLemmaOrmetatheorem(metaLemmaMetatheorem) { return this.frame.unifyMetaLemmaOrmetatheorem(metaLemmaMetatheorem); }
+  unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) { return this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem); }
 
   static fromJudgementNodeFrameAndMetavariableNode(judgementNode, frame, metavariableNode) {
     const node = judgementNode,

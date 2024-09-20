@@ -3,6 +3,7 @@
 import shim from "../shim";
 import Declaration from "../declaration"
 import referenceMetaType from "../metaType/reference";
+import verifyMetavariableGivenMetaType from "../verify/metavariableGivenMetaType";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -44,7 +45,25 @@ function verifyDerivedDeclaration(declarationNode, declarations, stated, localCo
 
     localContext.trace(`Verifying the '${declarationString}' derived declaration...`, declarationNode);
 
-    derivedDeclarationVerified = false; ///
+    const metaType = referenceMetaType, ///
+          metavariableNode = metavariableNodeQuery(declarationNode),
+          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
+
+    if (metavariableVerifiedGivenMetaType) {
+      const { verifyStatement } = shim,
+            stated = true,
+            assignments = null,
+            statementNode = statementNodeQuery(declarationNode),
+            statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
+
+      if (statementVerified) {
+        const declaration = Declaration.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode);
+
+        declarations.push(declaration);
+
+        derivedDeclarationVerified = true;
+      }
+    }
 
     if (derivedDeclarationVerified) {
       localContext.debug(`...verified the '${declarationString}' derived declaration.`, declarationNode);
@@ -62,10 +81,11 @@ function verifyStatedDeclaration(declarationNode, declarations, stated, localCon
 
     localContext.trace(`Verifying the '${declarationString}' stated declaration...`, declarationNode);
 
-    const metavariableNode = metavariableNodeQuery(declarationNode),
-          metavariableVerified = verifyMetavariable(metavariableNode, localContext);
+    const metaType = referenceMetaType, ///
+          metavariableNode = metavariableNodeQuery(declarationNode),
+          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
 
-    if (metavariableVerified) {
+    if (metavariableVerifiedGivenMetaType) {
       const { verifyStatement } = shim,
             stated = true,
             assignments = null,
@@ -87,35 +107,4 @@ function verifyStatedDeclaration(declarationNode, declarations, stated, localCon
   }
 
   return statedDeclarationVerified;
-}
-
-function verifyMetavariable(metavariableNode, localContext) {
-  let metavariableVerified = false;
-
-  const metavariableString = localContext.nodeAsString(metavariableNode);
-
-  localContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
-
-  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
-
-  if (metavariable !== null) {
-    const metaType = metavariable.getMetaType();
-
-    if (metaType === referenceMetaType) {
-      metavariableVerified = true;
-    } else {
-      const referenceMetaTypeName = referenceMetaType.getName(),
-            metaTypeString = metaType.asString();
-
-      localContext.debug(`The '${metavariableString}' metavariable's meta-type is '${metaTypeString}' when it should be '${referenceMetaTypeName}'.`, metavariableNode);
-    }
-  } else {
-    localContext.debug(`The '${metavariableString}' metavariable is not present'.`, metavariableNode);
-  }
-
-  if (metavariableVerified) {
-    localContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
-  }
-
-  return metavariableVerified;
 }
