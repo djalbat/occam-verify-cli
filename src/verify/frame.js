@@ -45,7 +45,7 @@ function verifyDerivedFrame(frameNode, frames, stated, localContext) {
 
     localContext.trace(`Verifying the '${frameString}' derived frame...`, frameNode);
 
-    debugger
+    derivedFrameVerified = false; ///
 
     if (derivedFrameVerified) {
       localContext.debug(`...verified the '${frameString}' derived frame.`, frameNode);

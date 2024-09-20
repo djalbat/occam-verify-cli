@@ -44,7 +44,7 @@ function verifyDerivedDeclaration(declarationNode, declarations, stated, localCo
 
     localContext.trace(`Verifying the '${declarationString}' derived declaration...`, declarationNode);
 
-    debugger
+    derivedDeclarationVerified = false; ///
 
     if (derivedDeclarationVerified) {
       localContext.debug(`...verified the '${declarationString}' derived declaration.`, declarationNode);
