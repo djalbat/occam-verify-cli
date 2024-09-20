@@ -1,13 +1,6 @@
 "use strict";
 
-import verifyTermGivenType from "./verify/termGivenType";
-
-import { nodeQuery } from "./utilities/query";
 import { nodeAsString } from "./utilities/string";
-import { metavariableNameFromMetavariableNode } from "./utilities/name";
-
-const termNodeQuery = nodeQuery("/metavariable/argument/term!"),
-      typeNodeQuery = nodeQuery("/metavariable/argument/type!");
 
 export default class Metavariable {
   constructor(node, name, termType, metaType) {
@@ -45,32 +38,10 @@ export default class Metavariable {
     return nameMatches;
   }
 
-  matchMetavariableNode(metavariableNode, localContext) {
-    let matchesNode = false;
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = this.node.match(metavariableNode);
 
-    const typeNode = typeNodeQuery(metavariableNode);
-
-    if (typeNode === null) {
-      const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-            name = metavariableName;  ///
-
-      if (this.name === name) {
-        const termNode = termNodeQuery(metavariableNode);
-
-        if (false) {
-          ///
-        } else if ((termNode === null) && (this.termType === null)) {
-          matchesNode = true;
-        } else if ((termNode !== null) && (this.termType !== null)) {
-          const type = this.termType,  ///
-                termUnifiedWithTermType = verifyTermGivenType(termNode, type, localContext);
-
-          matchesNode = termUnifiedWithTermType;  ///
-        }
-      }
-    }
-
-    return matchesNode;
+    return metavariableNodeMatches;
   }
 
   asString(tokens) {

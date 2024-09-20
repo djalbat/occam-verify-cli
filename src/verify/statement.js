@@ -6,6 +6,7 @@ import verifyEquality from "../verify/equality";
 import verifyJudgement from "../verify/judgement";
 import verifyDeclaration from "../verify/declaration";
 import verifyTypeAssertion from "../verify/assertion/type";
+import metavariableUnifier from "../unifier/metavariable";
 import verifyDefinedAssertion from "../verify/assertion/defined";
 import verifySubproofAssertion from "../verify/assertion/subproof";
 import verifyContainedAssertion from "../verify/assertion/contained";
@@ -13,6 +14,7 @@ import unifyStatementWithCombinators from "../unify/statementWithCombinators";
 import unifyStatementWithBracketedCombinator from "../unify/statementWithBracketedCombinator";
 
 import { nodeQuery } from "../utilities/query";
+import { metavariableNameFromMetavariableNode } from "../utilities/name";
 
 const frameNodeQuery = nodeQuery("/statement/frame!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
@@ -92,9 +94,9 @@ function verifyStatementAsMetavariable(statementNode, assignments, stated, local
 
     localContext.trace(`Verifying the '${statementString}' statement as a metavariable...`, statementNode);
 
-    const metavariableVerified = verifyMetavariable(metavariableNode, localContext);
+    const metavariableUnified = unifyMetavariable(metavariableNode, localContext);
 
-    statementVerifiedAsMetavariable = metavariableVerified;
+    statementVerifiedAsMetavariable = metavariableUnified;
 
     if (statementVerifiedAsMetavariable) {
       localContext.debug(`...verified the '${statementString}' statement as a metavariable.`, statementNode);
@@ -280,24 +282,31 @@ function verifyStatementAsContainedAssertion(statementNode, assignments, stated,
   return statementVerifiedAsContainedAssertion;
 }
 
-function verifyMetavariable(metavariableNode, localContext) {
-  let metavariableVerified = false;
+function unifyMetavariable(metavariableNode, localContext) {
+  let metavariableUnified;
 
   const metavariableString = localContext.nodeAsString(metavariableNode);
 
-  localContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
+  localContext.trace(`Unifying the '${metavariableString}' metavariable...`, metavariableNode);
 
-  const metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+  const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+        metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
 
-  if (!metavariablePresent) {
-    localContext.trace(`The '${metavariableString}' metavariable is not present.`, metavariableNode);
-  } else {
-    metavariableVerified = true;
+  if (metavariable !== null) {
+    const metavariableNodeA = metavariableNode; ///
+
+    metavariableNode = metavariable.getNode();
+
+    const metavariableNodeB = metavariableNode; ///
+
+    const unified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
+
+    metavariableUnified = unified;  ///
   }
 
-  if (metavariableVerified) {
-    localContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
+  if (metavariableUnified) {
+    localContext.debug(`...unified the '${metavariableString}' metavariable.`, metavariableNode);
   }
 
-  return metavariableVerified;
+  return metavariableUnified;
 }

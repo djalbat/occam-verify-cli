@@ -29,6 +29,16 @@ export default class Rule {
     return this.fileContext;
   }
 
+  getLabelMetavariableNodes() {
+    const labelMetavariableNodes = this.labels.map((label) => {
+      const labelMetavariableNode = label.getMetavariableNode();
+
+      return labelMetavariableNode;
+    });
+
+    return labelMetavariableNodes;
+  }
+
   unifyStatement(statementNode, localContext) {
     let statementUnified = false;
 

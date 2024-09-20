@@ -19,9 +19,13 @@ function verifyAction(argument, log) {
     releaseContextFromDependency
   });
 
+  let now = startClock();
+
   createReleaseContext(dependency, dependentNames, context, (error) => {
     if (error) {
       log.error(error);
+
+      stopClock(now, log);
 
       return;
     }
@@ -32,6 +36,8 @@ function verifyAction(argument, log) {
     if (releaseContext === null) {
       log.warning(`The '${name}' project or package context cannot be created.`);
 
+      stopClock(now, log);
+
       return;
     }
 
@@ -39,6 +45,8 @@ function verifyAction(argument, log) {
 
     if (!releaseContextInitialised) {
       log.warning(`The '${name}' project or package context cannot be initialised.`);
+
+      stopClock(now, log);
 
       return;
     }
@@ -48,6 +56,8 @@ function verifyAction(argument, log) {
     if (releaseContextVerified) {
       log.warning(`The '${name}' package does not need to be verified.`);
 
+      stopClock(now, log);
+
       return;
     }
 
@@ -56,7 +66,27 @@ function verifyAction(argument, log) {
     if (!releaseVerified) {
       log.warning(`The '${name}' project or package context cannot be verified.`);
     }
+
+    stopClock(now, log);
   });
 }
 
 module.exports = verifyAction;
+
+function startClock() {
+  let now;
+
+  now = Date.now();
+
+  return now;
+}
+
+function stopClock(now, log) {
+  const then = now; ///
+
+  now = Date.now();
+
+  const seconds = Math.floor(now - then) / 1000;
+
+  log.info(`Time ${seconds} seconds.`);
+}

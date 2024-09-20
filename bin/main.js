@@ -31,11 +31,7 @@ function main(command, argument, options) {
     }
 
     case VERIFY_COMMAND: {
-      let now = startClock();
-
       verifyAction(argument, log);
-
-      stopClock(now, log);
 
       break;
     }
@@ -49,11 +45,7 @@ function main(command, argument, options) {
     default: {
       argument = command; ///
 
-      let now = startClock();
-
       verifyAction(argument, log);
-
-      stopClock(now, log);
 
       break;
     }
@@ -73,22 +65,3 @@ function main(command, argument, options) {
 }
 
 module.exports = main;
-
-
-function startClock() {
-  let now;
-
-  now = Date.now();
-
-  return now;
-}
-
-function stopClock(now, log) {
-  const then = now; ///
-
-  now = Date.now();
-
-  const seconds = Math.floor(now - then) / 1000;
-
-  log.info(`Time ${seconds} seconds.`);
-}
