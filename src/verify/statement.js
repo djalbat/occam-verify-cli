@@ -25,10 +25,11 @@ const frameNodeQuery = nodeQuery("/statement/frame!"),
       containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
 
 const unifyStatementFunctions = [
-        unifyStatementWithCombinators,
-        unifyStatementWithBracketedCombinator
+        unifyStatementWithBracketedCombinator,
+        unifyStatementWithCombinators
       ],
       verifyStatementFunctions = [
+        verifyStatementAsMetavariable,
         verifyStatementAsEquality,
         verifyStatementAsFrame,
         verifyStatementAsJudgement,
@@ -45,12 +46,6 @@ function verifyStatement(statementNode, assignments, stated, localContext) {
   const statementString = localContext.nodeAsString(statementNode);
 
   localContext.trace(`Verifying the '${statementString}' statement...`, statementNode);
-
-  if (!statementVerified) {
-    const statementVerifiedAsMetavariable = verifyStatementAsMetavariable(statementNode, assignments, stated, localContext);
-
-    statementVerified = statementVerifiedAsMetavariable;  ///
-  }
 
   if (!statementVerified) {
     const statementUnified = unifyStatementFunctions.some((unifyStatementFunction) => {

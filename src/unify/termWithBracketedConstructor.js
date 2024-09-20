@@ -2,9 +2,9 @@
 
 import shim from "../shim";
 import bracketedConstructor from "../constructor/bracketed";
+import unifyTermWithConstructor from "../unify/termWithConstructor";
 
 import { nodeQuery } from "../utilities/query";
-import { unifyTermWithConstructor } from "../unify/termWithConstructors";
 
 const termNodeQuery = nodeQuery("/term/argument/term");
 
