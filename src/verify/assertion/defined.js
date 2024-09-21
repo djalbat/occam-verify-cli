@@ -6,6 +6,7 @@ import metaLevelVerifier from "../../verifier/metaLevel";
 import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
 import { isAssertionNegated } from "../../utilities/assertion";
+import { metavariableNameFromMetavariableNode } from "../../utilities/name";
 
 const variableNodeQuery = nodeQuery("/definedAssertion/term/variable!"),
       metavariableNodeQuery = nodeQuery("/definedAssertion/statement[-1]/metavariable!");
@@ -63,7 +64,8 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, stated
     if (false) {
       ///
     } else if (metavariableNode !== null) {
-      const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode),
+      const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+            metavariable = localContext.findMetavariableByMetavariableName(metavariableName),
             metavariableDefined = localContext.isMetavariableDefined(metavariable);
 
       if (!assertionNegated) {

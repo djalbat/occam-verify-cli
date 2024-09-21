@@ -80,7 +80,7 @@ function verifyDerivedJudgement(judgementNode, assignments, stated, localContext
         } else {
           const metavariableString = localContext.nodeAsString(metavariableNode);
 
-          localContext.debug(`This is no judgement for the '${metavariableString}' metavariable.`, metavariableNode)
+          localContext.debug(`There is no judgement for the '${metavariableString}' metavariable.`, metavariableNode)
         }
       }
     }

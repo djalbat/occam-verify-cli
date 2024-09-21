@@ -9,6 +9,8 @@ export default function unifyStatementWithCombinators(statementNode, assignments
 
   assignments = null; ///
 
+  stated = true;  ///
+
   statementUnifiedWithCombinators = combinators.some((combinator) => {
     const statementUnifiedWithCombinator = unifyStatementWithCombinator(statementNode, combinator, assignments, stated, localContext);
 
