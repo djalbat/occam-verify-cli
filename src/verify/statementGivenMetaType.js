@@ -3,6 +3,7 @@
 import shim from "../shim";
 
 import { nodeQuery } from "../utilities/query";
+import { metavariableNameFromMetavariableNode } from "../utilities/name";
 import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
 const metavariableNodeQuery = nodeQuery("/statement/metavariable!");
@@ -20,7 +21,8 @@ export default function verifyStatementGivenMetaType(statementNode, metaType, as
       const metavariableNode = metavariableNodeQuery(statementNode);
 
       if (metavariableNode !== null) {
-        const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+        const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+              metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
 
         if (metavariable !== null) {
           const metavariableMetaType = metavariable.getMetaType();

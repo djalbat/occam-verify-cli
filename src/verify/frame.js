@@ -137,6 +137,10 @@ function verifyMetavariable(metavariableNode, declarations, localContext) {
       push(declarations, judgementDeclarations);
 
       metavariableVerified = true;
+    } else {
+      const metavariableString = localContext.nodeAsString(metavariableNode);
+
+      localContext.debug(`This is no judgement for the '${metavariableString}' metavariable.`, metavariableNode)
     }
   }
 
