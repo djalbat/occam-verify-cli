@@ -1,10 +1,10 @@
 "use strict";
 
 export default class Judgement {
-  constructor(node, frame, metavariableNode) {
+  constructor(node, frame, declaration) {
     this.node = node;
     this.frame = frame;
-    this.metavariableNode = metavariableNode;
+    this.declaration = declaration;
   }
 
   getNode() {
@@ -15,23 +15,21 @@ export default class Judgement {
     return this.frame;
   }
 
-  getMetavariableNode() {
-    return this.metavariableNode;
+  getDeclaration() {
+    return this.declaration;
   }
 
-  getDeclarations() { return this.frame.getDeclarations(); }
+  // matchMetavariableNode(metavariableNode) {
+  //   const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+  //
+  //   return metavariableNodeMatches;
+  // }
 
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+  // unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) { return this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem); }
 
-    return metavariableNodeMatches;
-  }
-
-  unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) { return this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem); }
-
-  static fromJudgementNodeFrameAndMetavariableNode(judgementNode, frame, metavariableNode) {
+  static fromJudgementNodeFrameAndDeclaration(judgementNode, frame, declaration) {
     const node = judgementNode,
-          judgement = new Judgement(node, frame, metavariableNode);
+          judgement = new Judgement(node, frame, declaration);
 
     return judgement;
   }

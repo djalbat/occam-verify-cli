@@ -51,7 +51,9 @@ export default class Declaration {
   }
 
   static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {
-    statementNode = stripBracketsFromStatement(statementNode); ///
+    if (statementNode !== null) {
+      statementNode = stripBracketsFromStatement(statementNode); ///
+    }
 
     const declaration = new Declaration(metavariableNode, statementNode);
 

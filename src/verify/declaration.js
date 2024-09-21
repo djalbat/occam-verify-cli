@@ -2,13 +2,14 @@
 
 import shim from "../shim";
 import Declaration from "../declaration"
+import frameMetaType from "../metaType/frame";
 import referenceMetaType from "../metaType/reference";
 import verifyMetavariableGivenMetaType from "../verify/metavariableGivenMetaType";
 
 import { nodeQuery } from "../utilities/query";
 
-const statementNodeQuery = nodeQuery("/declaration/statement[1]"),
-      metavariableNodeQuery = nodeQuery("/declaration/statement[0]/metavariable!");
+const statementNodeQuery = nodeQuery("/declaration/statement"),
+      metavariableNodeQuery = nodeQuery("/declaration/metavariable");
 
 const verifyDeclarationFunctions = [
   verifyDerivedDeclaration,
@@ -81,16 +82,23 @@ function verifyStatedDeclaration(declarationNode, declarations, stated, localCon
 
     localContext.trace(`Verifying the '${declarationString}' stated declaration...`, declarationNode);
 
-    const metaType = referenceMetaType, ///
+    const statementNode = statementNodeQuery(declarationNode),
+          metaType = (statementNode === null) ?
+                       frameMetaType :
+                         referenceMetaType,
           metavariableNode = metavariableNodeQuery(declarationNode),
           metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
 
     if (metavariableVerifiedGivenMetaType) {
-      const { verifyStatement } = shim,
-            stated = true,
-            assignments = null,
-            statementNode = statementNodeQuery(declarationNode),
-            statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
+      let statementVerified = true; ///
+
+      if (statementNode !== null) {
+        const { verifyStatement } = shim,
+              stated = true,
+              assignments = null;
+
+        statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
+      }
 
       if (statementVerified) {
         const declaration = Declaration.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode);

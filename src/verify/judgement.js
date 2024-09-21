@@ -2,15 +2,14 @@
 
 import Judgement from "../judgement";
 import verifyFrame from "../verify/frame";
-import declarationMetaType from "../metaType/frame";
 import JudgementAssignment from "../assignment/judgement";
-import verifyMetavariableGivenMetaType from "../verify/metavariableGivenMetaType";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
+import verifyDeclaration from "./declaration";
 
-const frameNodeQuery = nodeQuery("/judgement/frame!"),
-      metavariableNodeQuery = nodeQuery("/judgement/statement/metavariable!");
+const frameNodeQuery = nodeQuery("/judgement/frame"),
+      declarationNodeQuery = nodeQuery("/judgement/declaration");
 
 const verifyJudgementFunctions = [
   verifyDerivedJudgement,
@@ -47,42 +46,29 @@ function verifyDerivedJudgement(judgementNode, assignments, stated, localContext
 
     localContext.trace(`Verifying the '${judgementString}' derived judgement...`, judgementNode);
 
-    const metavariableNode = metavariableNodeQuery(judgementNode);
+    const frames = [],
+          frameNode = frameNodeQuery(judgementNode),
+          frameVerified = verifyFrame(frameNode, frames, stated, localContext);
 
-    if (metavariableNode !== null) {
-      const metaType = declarationMetaType, ///
-            metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
-
-      if (metavariableVerifiedGivenMetaType) {
-        const judgement = localContext.findJudgementByMetavariableNode(metavariableNode);
-
-        if (judgement !== null) {
-          const frames = [],
-                frameNode = frameNodeQuery(judgementNode),
-                frameVerified = verifyFrame(frameNode, frames, stated, localContext);
-
-          if (frameVerified) {
-            const firstFrame = first(frames),
-                  frame = firstFrame, ///
-                  declaration = frame.getDeclaration(),
-                  metavariableNode = declaration.getMetavariableNode(),
-                  metatheorem = localContext.findMetatheoremByMetavariableNode(metavariableNode),
-                  metaLemma = localContext.findMetaLemmaByMetavariableNode(metavariableNode),
-                  metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
-
-            if (metaLemmaMetatheorem !== null) {
-              const metaLemmaMetatheoremUnifiedWithJudgement = judgement.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem),
-                    metaLemmaMetatheoremUnifiedWithDeclaration = declaration.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem);
-
-              derivedJudgementVerified = (metaLemmaMetatheoremUnifiedWithJudgement && metaLemmaMetatheoremUnifiedWithDeclaration);
-            }
-          }
-        } else {
-          const metavariableString = localContext.nodeAsString(metavariableNode);
-
-          localContext.debug(`There is no judgement for the '${metavariableString}' metavariable.`, metavariableNode)
-        }
-      }
+    if (frameVerified) {
+      // const firstFrame = first(frames),
+      //       frame = firstFrame, ///
+      //       declaration = frame.getDeclaration(),
+      //       metavariableNode = declaration.getMetavariableNode(),
+      //       metatheorem = localContext.findMetatheoremByMetavariableNode(metavariableNode),
+      //       metaLemma = localContext.findMetaLemmaByMetavariableNode(metavariableNode),
+      //       metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
+      //
+      // if (metaLemmaMetatheorem !== null) {
+      //   const metaLemmaMetatheoremUnifiedWithJudgement = judgement.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem),
+      //         metaLemmaMetatheoremUnifiedWithDeclaration = declaration.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem);
+      //
+      //   derivedJudgementVerified = (metaLemmaMetatheoremUnifiedWithJudgement && metaLemmaMetatheoremUnifiedWithDeclaration);
+      // }
+    } else {
+      // const metavariableString = localContext.nodeAsString(metavariableNode);
+      //
+      // localContext.debug(`There is no judgement for the '${metavariableString}' metavariable.`, metavariableNode)
     }
 
     if (derivedJudgementVerified) {
@@ -101,30 +87,29 @@ function verifyStatedJudgement(judgementNode, assignments, stated, localContext)
 
     localContext.trace(`Verifying the '${judgementString}' stated judgement...`, judgementNode);
 
-    const metavariableNode = metavariableNodeQuery(judgementNode);
+    const frames = [],
+          frameNode = frameNodeQuery(judgementNode),
+          frameVerified = verifyFrame(frameNode, frames, stated, localContext);
 
-    if (metavariableNode !== null) {
-      const metaType = declarationMetaType, ///
-            metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
+    if (frameVerified) {
+      const declarations = [],
+            declarationNode = declarationNodeQuery(judgementNode),
+            declarationVerified = verifyDeclaration(declarationNode, declarations, stated, localContext);
 
-      if (metavariableVerifiedGivenMetaType) {
-        const frames = [],
-              frameNode = frameNodeQuery(judgementNode),
-              frameVerified = verifyFrame(frameNode, frames, stated, localContext);
+      if (declarationVerified) {
+        if (assignments !== null) {
+          const firstDeclaration = first(declarations),
+                declaration = firstDeclaration, ///
+                firstFrame = first(frames),
+                frame = firstFrame, ///
+                judgement = Judgement.fromJudgementNodeFrameAndDeclaration(judgementNode, frame, declaration),
+                judgementAssignment = JudgementAssignment.fromJudgement(judgement),
+                assignment = judgementAssignment;
 
-        if (frameVerified) {
-          if (assignments !== null) {
-            const firstFrame = first(frames),
-                  frame = firstFrame, ///
-                  judgement = Judgement.fromJudgementNodeFrameAndMetavariableNode(judgementNode, frame, metavariableNode),
-                  judgementAssignment = JudgementAssignment.fromJudgement(judgement),
-                  assignment = judgementAssignment;
-
-            assignments.push(assignment);
-          }
-
-          statedJudgementVerified = true;
+          assignments.push(assignment);
         }
+
+        statedJudgementVerified = true;
       }
     }
 
