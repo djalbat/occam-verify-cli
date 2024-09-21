@@ -2,7 +2,7 @@
 
 import Judgement from "../judgement";
 import verifyFrame from "../verify/frame";
-import frameMetaType from "../metaType/frame";
+import declarationMetaType from "../metaType/frame";
 import JudgementAssignment from "../assignment/judgement";
 import verifyMetavariableGivenMetaType from "../verify/metavariableGivenMetaType";
 
@@ -50,7 +50,7 @@ function verifyDerivedJudgement(judgementNode, assignments, stated, localContext
     const metavariableNode = metavariableNodeQuery(judgementNode);
 
     if (metavariableNode !== null) {
-      const metaType = frameMetaType, ///
+      const metaType = declarationMetaType, ///
             metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
 
       if (metavariableVerifiedGivenMetaType) {
@@ -104,7 +104,7 @@ function verifyStatedJudgement(judgementNode, assignments, stated, localContext)
     const metavariableNode = metavariableNodeQuery(judgementNode);
 
     if (metavariableNode !== null) {
-      const metaType = frameMetaType, ///
+      const metaType = declarationMetaType, ///
             metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
 
       if (metavariableVerifiedGivenMetaType) {
