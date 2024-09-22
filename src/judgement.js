@@ -19,13 +19,9 @@ export default class Judgement {
     return this.declaration;
   }
 
-  // matchMetavariableNode(metavariableNode) {
-  //   const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
-  //
-  //   return metavariableNodeMatches;
-  // }
+  getMetavariableName() { return this.frame.getMetavariableName(); }
 
-  // unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) { return this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem); }
+  unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) { return this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem); }
 
   static fromJudgementNodeFrameAndDeclaration(judgementNode, frame, declaration) {
     const node = judgementNode,

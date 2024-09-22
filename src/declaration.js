@@ -3,13 +3,13 @@
 import { stripBracketsFromStatement } from "./utilities/brackets";
 
 export default class Declaration {
-  constructor(metavariableNode, statementNode) {
-    this.metavariableNode = metavariableNode;
+  constructor(reference, statementNode) {
+    this.reference = reference;
     this.statementNode = statementNode;
   }
 
-  getMetavariableNode() {
-    return this.metavariableNode;
+  getReference() {
+    return this.reference;
   }
 
   getStatementNode() {
@@ -26,8 +26,8 @@ export default class Declaration {
     return substitutionUnified;
   }
 
-  unifyMetavariable(metavariableNode) {
-    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+  unifyMetavariable(metavariable) {
+    const metavariableNodeMatches = this.reference.matchMetavariableNode(metavariable);
 
     return metavariableNodeMatches;
   }
@@ -50,12 +50,10 @@ export default class Declaration {
     return metaLemmaOrMetaTheoremUnified;
   }
 
-  static fromMetavariableNodeAndStatementNode(metavariableNode, statementNode) {
-    if (statementNode !== null) {
-      statementNode = stripBracketsFromStatement(statementNode); ///
-    }
+  static fromReferenceAndStatementNode(reference, statementNode) {
+    statementNode = stripBracketsFromStatement(statementNode); ///
 
-    const declaration = new Declaration(metavariableNode, statementNode);
+    const declaration = new Declaration(reference, statementNode);
 
     return declaration;
   }

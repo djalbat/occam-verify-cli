@@ -3,6 +3,7 @@
 import Equivalence from "../equivalence";
 
 import { last, reverse } from "../utilities/array";
+import { metavariableNameFromMetavariableNode } from "../utilities/name";
 import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../utilities/equivalences";
 
 class LocalContext {
@@ -197,7 +198,8 @@ class LocalContext {
     let judgementAdded = false;
 
     const metavariableNode = judgement.getMetavariableNode(),
-          judgementPresent = this.isJudgementPresentByMetavariableNode(metavariableNode);
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          judgementPresent = this.isJudgementPresentByMetavariableName(metavariableName);
 
     if (!judgementPresent) {
       this.judgements.push(judgement);
@@ -323,8 +325,8 @@ class LocalContext {
     return variablePresent;
   }
 
-  isJudgementPresentByMetavariableNode(metavariableNode) {
-    const judgement = this.findJudgementByMetavariableNode(metavariableNode),
+  isJudgementPresentByMetavariableName(metavariableName) {
+    const judgement = this.findJudgementByMetavariableName(metavariableName),
           judgementPresent = (judgement !== null);
 
     return judgementPresent;
@@ -354,12 +356,12 @@ class LocalContext {
     return variable;
   }
 
-  findJudgementByMetavariableNode(metavariableNode) {
+  findJudgementByMetavariableName(metavariableName) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementMatchesMetavariableNode = judgement.matchMetavariableNode(metavariableNode);
+            const judgementMatchesMetavariableName = judgement.matchMetavariableName(metavariableName);
 
-            if (judgementMatchesMetavariableNode) {
+            if (judgementMatchesMetavariableName) {
               return true;
             }
           }) || null;

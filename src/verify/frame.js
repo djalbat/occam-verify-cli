@@ -1,7 +1,9 @@
 "use strict";
 
 import Frame from "../frame";
+import frameMetaType from "../metaType/frame";
 import verifyDeclaration from "../verify/declaration";
+import verifyMetavariableGivenMetaType from "./metavariableGivenMetaType";
 
 import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -92,29 +94,35 @@ function verifyStatedFrame(frameNode, frames, stated, localContext) {
 
     localContext.trace(`Verifying the '${frameString}' stated frame...`, frameNode);
 
-    const declarationNode = declarationNodeQuery(frameNode);
+    const declarationNodes = declarationNodesQuery(frameNode),
+          declarationNodesLength = declarationNodes.length;
 
-    if (declarationNode !== null) {
-      const declarations = [],
-            declarationVerified = verifyDeclaration(declarationNode, declarations, stated, localContext);
+    if (declarationNodesLength === 0) {
+      const metavariableNodes = metavariableNodesQuery(frameNode),
+            metavariableNodesLength = metavariableNodes.length;
 
-      if (declarationVerified) {
-        const firstDeclaration = first(declarations),
-              declaration = firstDeclaration, ///
-              statementNode = declaration.getStatementNode();
+      if (metavariableNodesLength === 1) {
+        const firstMetavariableNode = first(metavariableNodes),
+              metavariableNode = firstMetavariableNode,
+              metaType = frameMetaType, ///
+              metavariables = [],
+              metavariableVerified = verifyMetavariableGivenMetaType(metavariableNode, metaType, metavariables, localContext);
 
-        if (statementNode === null) {
-          const frame = Frame.fromDeclarations(declarations);
+        if (metavariableVerified) {
+          const firstMetavariable = first(metavariables),
+                metavariable = firstMetavariable,
+
+          frame = Frame.fromMetavariable(metavariable);
 
           frames.push(frame);
 
           statedFrameVerified = true;
-        } else {
-          localContext.trace(`The '${frameString}' stated frame's declaration cannot contain a statement.`, frameNode);
         }
+      } else {
+        localContext.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`, frameNode);
       }
     } else {
-      localContext.trace(`The '${frameString}' stated frame has more than one declaration .`, frameNode);
+      localContext.trace(`The '${frameString}' stated frame cannot have declarations.`, frameNode);
     }
 
     if (statedFrameVerified) {

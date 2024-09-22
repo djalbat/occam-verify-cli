@@ -4,7 +4,7 @@ import metavariableUnifier from "../unifier/metavariable";
 
 import { metavariableNameFromMetavariableNode } from "../utilities/name";
 
-export default function verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext) {
+export default function verifyMetavariableGivenMetaType(metavariableNode, metaType, metavariables, localContext) {
   let metavariableVerifiedGivenMetaType = false;
 
   const metaTypeName = metaType.getName(),
@@ -27,7 +27,11 @@ export default function verifyMetavariableGivenMetaType(metavariableNode, metaTy
 
       const unified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
 
-      metavariableVerifiedGivenMetaType = unified; ///
+      if (unified) {
+        metavariables.push(metavariable);
+
+        metavariableVerifiedGivenMetaType = true;
+      }
     } else {
       const metavariableMetaTypeName = metavariableMetaType.getName();
 

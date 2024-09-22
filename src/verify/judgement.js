@@ -7,6 +7,7 @@ import JudgementAssignment from "../assignment/judgement";
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
 import verifyDeclaration from "./declaration";
+import {metavariableNameFromMetavariableNode} from "../utilities/name";
 
 const frameNodeQuery = nodeQuery("/judgement/frame"),
       declarationNodeQuery = nodeQuery("/judgement/declaration");
@@ -92,24 +93,33 @@ function verifyStatedJudgement(judgementNode, assignments, stated, localContext)
           frameVerified = verifyFrame(frameNode, frames, stated, localContext);
 
     if (frameVerified) {
-      const declarations = [],
-            declarationNode = declarationNodeQuery(judgementNode),
-            declarationVerified = verifyDeclaration(declarationNode, declarations, stated, localContext);
+      const firstFrame = first(frames),
+            frame = firstFrame, ///
+            metavariable = frame.getMetavariable(),
+            metavariableNode = metavariable.getNode(),
+            metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+            judgementPresent = localContext.isJudgementPresentByMetavariableName(metavariableName);
 
-      if (declarationVerified) {
-        if (assignments !== null) {
-          const firstDeclaration = first(declarations),
-                declaration = firstDeclaration, ///
-                firstFrame = first(frames),
-                frame = firstFrame, ///
-                judgement = Judgement.fromJudgementNodeFrameAndDeclaration(judgementNode, frame, declaration),
-                judgementAssignment = JudgementAssignment.fromJudgement(judgement),
-                assignment = judgementAssignment;
+      if (!judgementPresent) {
+        const declarations = [],
+              declarationNode = declarationNodeQuery(judgementNode),
+              declarationVerified = verifyDeclaration(declarationNode, declarations, stated, localContext);
 
-          assignments.push(assignment);
+        if (declarationVerified) {
+          if (assignments !== null) {
+            const firstDeclaration = first(declarations),
+                  declaration = firstDeclaration, ///
+                  judgement = Judgement.fromJudgementNodeFrameAndDeclaration(judgementNode, frame, declaration),
+                  judgementAssignment = JudgementAssignment.fromJudgement(judgement),
+                  assignment = judgementAssignment;
+
+            assignments.push(assignment);
+          }
+
+          statedJudgementVerified = true;
         }
-
-        statedJudgementVerified = true;
+      } else {
+        localContext.trace(`There is already a judgement for the '${metavariableName}' metavariable.`, judgementNode);
       }
     }
 

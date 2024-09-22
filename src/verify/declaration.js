@@ -1,15 +1,15 @@
 "use strict";
 
 import shim from "../shim";
+import Reference from "../reference";
 import Declaration from "../declaration"
-import frameMetaType from "../metaType/frame";
 import referenceMetaType from "../metaType/reference";
 import verifyMetavariableGivenMetaType from "../verify/metavariableGivenMetaType";
 
 import { nodeQuery } from "../utilities/query";
 
 const statementNodeQuery = nodeQuery("/declaration/statement"),
-      metavariableNodeQuery = nodeQuery("/declaration/metavariable");
+      metavariableNodeQuery = nodeQuery("/declaration/reference/metavariable"); ///
 
 const verifyDeclarationFunctions = [
   verifyDerivedDeclaration,
@@ -47,8 +47,9 @@ function verifyDerivedDeclaration(declarationNode, declarations, stated, localCo
     localContext.trace(`Verifying the '${declarationString}' derived declaration...`, declarationNode);
 
     const metaType = referenceMetaType, ///
-          metavariableNode = metavariableNodeQuery(declarationNode),
-          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
+          metavariables = [],
+          reference = referenceQuery(declarationNode),
+          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(reference, metaType, metavariables, localContext);
 
     if (metavariableVerifiedGivenMetaType) {
       const { verifyStatement } = shim,
@@ -58,7 +59,7 @@ function verifyDerivedDeclaration(declarationNode, declarations, stated, localCo
             statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
       if (statementVerified) {
-        const declaration = Declaration.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode);
+        const declaration = Declaration.fromMetavariableNodeAndStatementNode(reference, statementNode);
 
         declarations.push(declaration);
 
@@ -83,25 +84,20 @@ function verifyStatedDeclaration(declarationNode, declarations, stated, localCon
     localContext.trace(`Verifying the '${declarationString}' stated declaration...`, declarationNode);
 
     const statementNode = statementNodeQuery(declarationNode),
-          metaType = (statementNode === null) ?
-                       frameMetaType :
-                         referenceMetaType,
+          metaType = referenceMetaType,
+          metavariables = [],
           metavariableNode = metavariableNodeQuery(declarationNode),
-          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
+          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, metavariables, localContext);
 
     if (metavariableVerifiedGivenMetaType) {
-      let statementVerified = true; ///
-
-      if (statementNode !== null) {
         const { verifyStatement } = shim,
               stated = true,
-              assignments = null;
-
-        statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
-      }
+              assignments = null,
+              statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
       if (statementVerified) {
-        const declaration = Declaration.fromMetavariableNodeAndStatementNode(metavariableNode, statementNode);
+        const reference = Reference.fromMetavariableNode(metavariableNode),
+              declaration = Declaration.fromReferenceAndStatementNode(reference, statementNode);
 
         declarations.push(declaration);
 

@@ -1,39 +1,52 @@
 "use strict";
 
-import { push, first } from "./utilities/array";
+import { first } from "./utilities/array";
 
 export default class Frame {
-  constructor(declarations) {
+  constructor(declarations, metavariables) {
     this.declarations = declarations;
+    this.metavariables = metavariables;
   }
 
   getDeclarations() {
     return this.declarations;
   }
 
-  getDeclaration() {
-    let declaration = null;
+  getMetavariables() {
+    return this.metavariables;
+  }
 
-    const singular = this.isSingular();
+  getMetavariable() {
+    let metavariable = null;
 
-    if (singular) {
-      const firstDeclaration = first(this.declarations);
+    const declarationsLength = this.declarations.length;
 
-      declaration = firstDeclaration; ///
+    if (declarationsLength === 0) {
+      const metavariablesLength = this.metavariables.length;
+
+      if (metavariablesLength === 1) {
+        const firstMetavariable = first(this.metavariables);
+
+        metavariable = firstMetavariable; ///
+      }
     }
 
-    return declaration;
+    return metavariable;
   }
 
-  isSingular() {
-    const declarationsLength = this.declarations.length,
-          singular = (declarationsLength === 1);
+  matchMetavariableName(metavariableName) {
+    let metavariableNameMatches = false;
 
-    return singular;
-  }
+    const metavariable = this.getMetavariable();
 
-  addDeclarations(declarations) {
-    push(this.declarations, declarations);
+    if (metavariable !== null) {
+      const name = metavariableName,  ///
+            nameMatches = metavariable.matchName(name);
+
+      metavariableNameMatches = nameMatches;  ///
+    }
+
+    return metavariableNameMatches;
   }
 
   unifySubstitution(substitution) {
@@ -62,8 +75,25 @@ export default class Frame {
     return metaLemmaOrMetaTheoremUnified;
   }
 
+  static fromMetavariable(metavariable) {
+    const declarations = [],
+          metavariables = [
+            metavariable
+          ],
+          frame = new Frame(declarations, metavariables);
+
+    return frame;
+  }
+
   static fromDeclarations(declarations) {
-    const frame = new Frame(declarations);
+    const metavariables = [],
+          frame = new Frame(declarations, metavariables);
+
+    return frame;
+  }
+
+  static fromDeclarationsAndMetavariables(declarations, metavariables) {
+    const frame = new Frame(declarations, metavariables);
 
     return frame;
   }
