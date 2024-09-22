@@ -10,6 +10,5 @@ export default function unifyTermWithType(termNode, typeNode, localContext) {
 
   termUnifiedWithType = termVerifiedGivenType;  ///
 
-
   return termUnifiedWithType;
 }

@@ -19,12 +19,12 @@ export default class Judgement {
     return this.declaration;
   }
 
-  getMetavariableName() { return this.frame.getMetavariableName(); }
+  getMetavariable() { return this.frame.getMetavariable(); }
 
   unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) { return this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem); }
 
   static fromJudgementNodeFrameAndDeclaration(judgementNode, frame, declaration) {
-    const node = judgementNode,
+    const node = judgementNode, ///
           judgement = new Judgement(node, frame, declaration);
 
     return judgement;

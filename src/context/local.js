@@ -197,7 +197,8 @@ class LocalContext {
   addJudgement(judgement) {
     let judgementAdded = false;
 
-    const metavariableNode = judgement.getMetavariableNode(),
+    const metavariable = judgement.getMetavariable(),
+          metavariableNode = metavariable.getNode(),
           metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           judgementPresent = this.isJudgementPresentByMetavariableName(metavariableName);
 

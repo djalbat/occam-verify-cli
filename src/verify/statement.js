@@ -96,7 +96,7 @@ function verifyStatementAsMetavariable(statementNode, assignments, stated, local
 
     const metavariableUnified = unifyMetavariable(metavariableNode, localContext);
 
-    statementVerifiedAsMetavariable = metavariableUnified;
+    statementVerifiedAsMetavariable = metavariableUnified;  ///
 
     if (statementVerifiedAsMetavariable) {
       localContext.debug(`...verified the '${statementString}' statement as a metavariable.`, statementNode);
