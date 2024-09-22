@@ -198,9 +198,8 @@ class LocalContext {
     let judgementAdded = false;
 
     const metavariable = judgement.getMetavariable(),
-          metavariableNode = metavariable.getNode(),
-          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-          judgementPresent = this.isJudgementPresentByMetavariableName(metavariableName);
+          metavariableDefined = this.isMetavariableDefined(metavariable),
+          judgementPresent = metavariableDefined; ///
 
     if (!judgementPresent) {
       this.judgements.push(judgement);
@@ -306,15 +305,10 @@ class LocalContext {
   }
 
   isMetavariableDefined(metavariable) {
-    const judgements = this.getJudgements(),
-          metavariableNode = metavariable.getNode(),
-          metavariableDefined = judgements.some((judgement) => {
-            const metavariableNodeMatchesJudgement = judgement.matchMetavariableNode(metavariableNode);
-
-            if (metavariableNodeMatchesJudgement) {
-              return true;
-            }
-          });
+    const metavariableNode = metavariable.getNode(),
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          judgementPresent = this.isJudgementPresentByMetavariableName(metavariableName),
+          metavariableDefined = judgementPresent; ///
 
     return metavariableDefined
   }
