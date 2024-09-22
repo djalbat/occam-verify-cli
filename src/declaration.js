@@ -16,6 +16,17 @@ export default class Declaration {
     return this.statementNode;
   }
 
+  getMetavariableNode() { return this.reference.getMetavariableNode(); }
+
+  unifyStatement(statementNode) {
+    statementNode = stripBracketsFromStatement(statementNode); ///
+
+    const statementNodeMatches = this.statementNode.match(statementNode),
+          statementUnified = statementNodeMatches;  ///
+
+    return statementUnified;
+  }
+
   unifySubstitution(substitution) {
     const statementNode = substitution.getStatementNode(),
           metavariableNode = substitution.getMetavariableNode(),
@@ -30,15 +41,6 @@ export default class Declaration {
     const metavariableNodeMatches = this.reference.matchMetavariableNode(metavariable);
 
     return metavariableNodeMatches;
-  }
-
-  unifyStatement(statementNode) {
-    statementNode = stripBracketsFromStatement(statementNode); ///
-
-    const statementNodeMatches = this.statementNode.match(statementNode),
-          statementUnified = statementNodeMatches;  ///
-
-    return statementUnified;
   }
 
   unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) {

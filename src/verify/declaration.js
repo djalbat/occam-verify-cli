@@ -48,8 +48,8 @@ function verifyDerivedDeclaration(declarationNode, declarations, stated, localCo
 
     const metaType = referenceMetaType, ///
           metavariables = [],
-          reference = referenceQuery(declarationNode),
-          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(reference, metaType, metavariables, localContext);
+          metavariableNode = metavariableNodeQuery(declarationNode),
+          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, metavariables, localContext);
 
     if (metavariableVerifiedGivenMetaType) {
       const { verifyStatement } = shim,
@@ -59,7 +59,8 @@ function verifyDerivedDeclaration(declarationNode, declarations, stated, localCo
             statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
       if (statementVerified) {
-        const declaration = Declaration.fromMetavariableNodeAndStatementNode(reference, statementNode);
+        const reference = Reference.fromMetavariableNode(metavariableNode),
+          declaration = Declaration.fromReferenceAndStatementNode(reference, statementNode);
 
         declarations.push(declaration);
 
@@ -83,8 +84,7 @@ function verifyStatedDeclaration(declarationNode, declarations, stated, localCon
 
     localContext.trace(`Verifying the '${declarationString}' stated declaration...`, declarationNode);
 
-    const statementNode = statementNodeQuery(declarationNode),
-          metaType = referenceMetaType,
+    const metaType = referenceMetaType, ///
           metavariables = [],
           metavariableNode = metavariableNodeQuery(declarationNode),
           metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, metavariables, localContext);
@@ -93,6 +93,7 @@ function verifyStatedDeclaration(declarationNode, declarations, stated, localCon
         const { verifyStatement } = shim,
               stated = true,
               assignments = null,
+              statementNode = statementNodeQuery(declarationNode),
               statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
       if (statementVerified) {

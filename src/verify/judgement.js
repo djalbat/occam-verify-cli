@@ -2,12 +2,12 @@
 
 import Judgement from "../judgement";
 import verifyFrame from "../verify/frame";
+import verifyDeclaration from "./declaration";
 import JudgementAssignment from "../assignment/judgement";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
-import verifyDeclaration from "./declaration";
-import {metavariableNameFromMetavariableNode} from "../utilities/name";
+import { metavariableNameFromMetavariableNode } from "../utilities/name";
 
 const frameNodeQuery = nodeQuery("/judgement/frame"),
       declarationNodeQuery = nodeQuery("/judgement/declaration");
@@ -47,29 +47,31 @@ function verifyDerivedJudgement(judgementNode, assignments, stated, localContext
 
     localContext.trace(`Verifying the '${judgementString}' derived judgement...`, judgementNode);
 
-    const frames = [],
-          frameNode = frameNodeQuery(judgementNode),
-          frameVerified = verifyFrame(frameNode, frames, stated, localContext);
+    const declarations = [],
+          declarationNode = declarationNodeQuery(judgementNode),
+          declarationVerified = verifyDeclaration(declarationNode, declarations, stated, localContext);
 
-    if (frameVerified) {
-      // const firstFrame = first(frames),
-      //       frame = firstFrame, ///
-      //       declaration = frame.getDeclaration(),
-      //       metavariableNode = declaration.getMetavariableNode(),
-      //       metatheorem = localContext.findMetatheoremByMetavariableNode(metavariableNode),
-      //       metaLemma = localContext.findMetaLemmaByMetavariableNode(metavariableNode),
-      //       metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
-      //
-      // if (metaLemmaMetatheorem !== null) {
-      //   const metaLemmaMetatheoremUnifiedWithJudgement = judgement.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem),
-      //         metaLemmaMetatheoremUnifiedWithDeclaration = declaration.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem);
-      //
-      //   derivedJudgementVerified = (metaLemmaMetatheoremUnifiedWithJudgement && metaLemmaMetatheoremUnifiedWithDeclaration);
-      // }
-    } else {
-      // const metavariableString = localContext.nodeAsString(metavariableNode);
-      //
-      // localContext.debug(`There is no judgement for the '${metavariableString}' metavariable.`, metavariableNode)
+    if (declarationVerified) {
+      const firstDeclaration = first(declarations),
+            declaration = firstDeclaration, ///
+            metavariableNode = declaration.getMetavariableNode(),
+            metatheorem = localContext.findMetatheoremByMetavariableNode(metavariableNode),
+            metaLemma = localContext.findMetaLemmaByMetavariableNode(metavariableNode),
+            metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
+
+      if (metaLemmaMetatheorem !== null) {
+        const frames = [],
+              frameNode = frameNodeQuery(judgementNode),
+              frameVerified = verifyFrame(frameNode, frames, stated, localContext);
+
+        if (frameVerified) {
+          const firstFrame = first(frames),
+                frame = firstFrame, ///
+                metaLemmaMetatheoremUnified = frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem);
+
+          derivedJudgementVerified = metaLemmaMetatheoremUnified; ///
+        }
+      }
     }
 
     if (derivedJudgementVerified) {
