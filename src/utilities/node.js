@@ -2,59 +2,58 @@
 
 import { parsersUtilities } from "occam-custom-grammars";
 
-import { nodeQuery } from "../utilities/query";
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
-import { UNQUALIFIED_STATEMENT_RULE_NAME, CONSTRUCTOR_DECLARATION_RULE_NAME } from "../ruleNames";
-import { constructorDeclarationTokensFromTermString, unqualifiedStatementTokensFromStatementString } from "../utilities/tokens";
+import { TERM_RULE_NAME, FRAME_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
+import { termTokensFromTermString, frameTokensFromFrameString, statementTokensFromStatementString } from "../utilities/tokens";
 
 const { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
 const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
-const termNodeQuery = nodeQuery("/constructorDeclaration/term!"),
-      statementNodeQuery = nodeQuery("/unqualifiedStatement/statement!");
-
 export function termNodeFromTermString(termString, lexer, parser) {
-  const constructorDeclarationTokens = constructorDeclarationTokensFromTermString(termString, lexer),
-        termNode = termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser);
+  const termTokens = termTokensFromTermString(termString, lexer),
+        termNode = termNodeFromTermTokens(termTokens, parser);
 
   return termNode;
+}
+
+export function frameNodeFromFrameString(frameString, lexer, parser) {
+  const frameTokens = frameTokensFromFrameString(frameString, lexer),
+        frameNode = frameNodeFromFrameTokens(frameTokens, parser);
+
+  return frameNode;
 }
 
 export function statementNodeFromStatementString(statementString, lexer, parser) {
-  const unqualifiedStatementTokens = unqualifiedStatementTokensFromStatementString(statementString, lexer),
-        statementNode = statementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser);
+  const statementTokens = statementTokensFromStatementString(statementString, lexer),
+        statementNode = statementNodeFromStatementTokens(statementTokens, parser);
 
   return statementNode;
 }
 
-export function termNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
-  const constructorDeclarationNode = constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser),
-        termNode = termNodeQuery(constructorDeclarationNode);
+export function termNodeFromTermTokens(termTokens, parser) {
+  const tokens = termTokens,  ///
+        ruleName = TERM_RULE_NAME,
+        termNode = nodeFromTokensRuleNameAndParser(tokens, ruleName, parser);
 
   return termNode;
 }
 
-export function statementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {
-  const unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
-        statementNode = statementNodeQuery(unqualifiedStatementNode);
+export function frameNodeFromFrameTokens(frameTokens, parser) {
+  const tokens = frameTokens,  ///
+        ruleName = FRAME_RULE_NAME,
+        frameNode = nodeFromTokensRuleNameAndParser(tokens, ruleName, parser);
+
+  return frameNode;
+}
+
+export function statementNodeFromStatementTokens(statementTokens, parser) {
+  const tokens = statementTokens,  ///
+        ruleName = STATEMENT_RULE_NAME,
+        statementNode = nodeFromTokensRuleNameAndParser(tokens, ruleName, parser);
 
   return statementNode;
-}
-
-function unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {
-  const ruleName = UNQUALIFIED_STATEMENT_RULE_NAME,
-        unqualifiedStatementNode = nodeFromTokensRuleNameAndParser(unqualifiedStatementTokens, ruleName, parser);
-
-  return unqualifiedStatementNode;
-}
-
-function constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
-  const ruleName = CONSTRUCTOR_DECLARATION_RULE_NAME,
-        constructorDeclarationNode = nodeFromTokensRuleNameAndParser(constructorDeclarationTokens, ruleName, parser);
-
-  return constructorDeclarationNode;
 }
 
 function nodeFromTokensRuleNameAndParser(tokens, ruleName, parser = florenceParser) {

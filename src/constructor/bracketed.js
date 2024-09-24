@@ -2,7 +2,7 @@
 
 import Constructor from "../constructor";
 import bracketedConstructorTermNode from "../node/term/constructor/bracketed";
-import bracketedConstructorDeclarationTokens from "../tokens/constructorDeclaration/bracketed";
+import bracketedConstructorDeclarationTokens from "../tokens/constructorTerm/bracketed";
 
 import { nodeAsString } from "../utilities/string";
 

@@ -1,15 +1,13 @@
 "use strict";
 
-import verifyTerm from "../../verify/term";
 import metaLevelVerifier from "../../verifier/metaLevel";
 
-import { first } from "../../utilities/array";
 import { nodeQuery } from "../../utilities/query";
 import { isAssertionNegated } from "../../utilities/assertion";
 import { metavariableNameFromMetavariableNode } from "../../utilities/name";
 
 const variableNodeQuery = nodeQuery("/definedAssertion/term/variable!"),
-      metavariableNodeQuery = nodeQuery("/definedAssertion/frame[-1]/metavariable!");
+      metavariableNodeQuery = nodeQuery("/definedAssertion/frame/statement!/metavariable!");
 
 const verifyDefinedAssertionFunctions = [
   verifyDerivedDefinedAssertion,
@@ -57,40 +55,43 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, stated
 
     localContext.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`, definedAssertionNode);
 
-    const assertionNegated = isAssertionNegated(definedAssertionNode),
-          metavariableNode = metavariableNodeQuery(definedAssertionNode),
-          variableNode = variableNodeQuery(definedAssertionNode);
+    const metavariableNode = metavariableNodeQuery(definedAssertionNode);
 
-    if (false) {
-      ///
-    } else if (metavariableNode !== null) {
-      const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-            metavariableDefinedByMetavariableName = localContext.isMetavariableDefinedByMetavariableName(metavariableName);
+    if (metavariableNode !== null) {
+      const assertionNegated = isAssertionNegated(definedAssertionNode),
+        variableNode = variableNodeQuery(definedAssertionNode);
 
-      if (!assertionNegated) {
-        if (metavariableDefinedByMetavariableName) {
-          derivedDefinedAssertionVerified = true;
+      if (false) {
+        ///
+      } else if (metavariableNode !== null) {
+        const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+              metavariableDefinedByMetavariableName = localContext.isMetavariableDefinedByMetavariableName(metavariableName);
+
+        if (!assertionNegated) {
+          if (metavariableDefinedByMetavariableName) {
+            derivedDefinedAssertionVerified = true;
+          }
         }
-      }
 
-      if (assertionNegated) {
-        if (!metavariableDefinedByMetavariableName) {
-          derivedDefinedAssertionVerified = true;
+        if (assertionNegated) {
+          if (!metavariableDefinedByMetavariableName) {
+            derivedDefinedAssertionVerified = true;
+          }
         }
-      }
-    } else if (variableNode !== null) {
-      const variable = localContext.findVariableByVariableNode(variableNode),
-            variableDefined = localContext.isVariableDefined(variable);
+      } else if (variableNode !== null) {
+        const variable = localContext.findVariableByVariableNode(variableNode),
+              variableDefined = localContext.isVariableDefined(variable);
 
-      if (!assertionNegated) {
-        if (variableDefined) {
-          derivedDefinedAssertionVerified = true;
+        if (!assertionNegated) {
+          if (variableDefined) {
+            derivedDefinedAssertionVerified = true;
+          }
         }
-      }
 
-      if (assertionNegated) {
-        if (!variableDefined) {
-          derivedDefinedAssertionVerified = true;
+        if (assertionNegated) {
+          if (!variableDefined) {
+            derivedDefinedAssertionVerified = true;
+          }
         }
       }
     }
@@ -119,19 +120,4 @@ function verifyStatedDefinedAssertion(definedAssertionNode, assignments, stated,
   }
 
   return statedDefinedAssertionVerified;
-}
-
-function termFromTermNode(termNode, localContext) {
-  const terms = [];
-
-  verifyTerm(termNode, terms, localContext, () => {
-    const verifiedAhead = true;
-
-    return verifiedAhead;
-  });
-
-  const firstTerm = first(terms),
-        term = firstTerm; ///
-
-  return term;
 }

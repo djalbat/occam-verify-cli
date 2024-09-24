@@ -1,9 +1,9 @@
 "use strict";
 
-import bracketedCombinatorUnqualifiedStatementTokens from "../../../tokens/unqualifiedStatement/combinator/bracketed";
+import bracketedCombinatorStatementTokens from "../../../tokens/combinatorStatement/bracketed";
 
-import { statementNodeFromUnqualifiedStatementTokens } from "../../../utilities/node";
+import { statementNodeFromStatementTokens } from "../../../utilities/node";
 
-const bracketedCombinatorStatementNode = statementNodeFromUnqualifiedStatementTokens(bracketedCombinatorUnqualifiedStatementTokens);
+const bracketedCombinatorStatementNode = statementNodeFromStatementTokens(bracketedCombinatorStatementTokens);
 
 export default bracketedCombinatorStatementNode;

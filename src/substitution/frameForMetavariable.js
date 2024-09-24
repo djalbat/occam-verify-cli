@@ -7,7 +7,8 @@ import { nodeQuery } from "../utilities/query";
 import { stripBracketsFromFrame } from "../utilities/brackets";
 
 const frameNodeQuery = nodeQuery("/substitution/frame!"),
-      metavariableNodeQuery = nodeQuery("/*/metavariable!");
+      substitutionMetavariableNodeQuery = nodeQuery("/substitution/metavariable!"),
+      frameStatementMetavariableNodeQuery = nodeQuery("/frame/statement/metavariable!");
 
 export default class FrameForMetavariableSubstitution extends Substitution {
   constructor(frameNode, metavariableNode, substitution) {
@@ -101,13 +102,14 @@ export default class FrameForMetavariableSubstitution extends Substitution {
   static fromSubstitutionNode(substitutionNode) {
     let frameForMetavariableSubstitution = null;
 
-    let frameNode = frameNodeQuery(substitutionNode),
-        metavariableNode = metavariableNodeQuery(substitutionNode);
+    let frameNode = frameNodeQuery(substitutionNode);
 
     if (frameNode !== null) {
       frameNode = stripBracketsFromFrame(frameNode); ///
 
-      const substitution = null;
+      const substitutionMetavariableNode = substitutionMetavariableNodeQuery(substitutionNode),
+            metavariableNode = substitutionMetavariableNode,  ///
+            substitution = null;
 
       frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode, substitution);
     }
@@ -159,9 +161,11 @@ function substitutionFromSubstitutionNode(substitutionNode) {
 function transformFrameNode(frameNode, substitutions) {
   let transformedFrameNode = null;
 
-  const metavariableNode = metavariableNodeQuery(frameNode);
+  const frameStatementMetavariableNode = frameStatementMetavariableNodeQuery(frameNode);
 
-  if (metavariableNode !== null) {
+  if (frameStatementMetavariableNode !== null) {
+    const metavariableNode = frameStatementMetavariableNode;  ///
+
     substitutions.someSubstitution((substitution) => {
       const substitutionMatchesVariableNode = substitution.matchMetavariableNode(metavariableNode);
 

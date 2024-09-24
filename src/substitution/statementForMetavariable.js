@@ -7,8 +7,7 @@ import FrameForMetavariableSubstitution from "../substitution/frameForMetavariab
 import { nodeQuery } from "../utilities/query";
 import { stripBracketsFromStatement } from "../utilities/brackets";
 
-const statementNodeQuery = nodeQuery("/substitution/statement!"),
-      metavariableNodeQuery = nodeQuery("/*/metavariable!");
+const statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(statementNode, metavariableNode, substitution) {
@@ -99,23 +98,6 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return string;
   }
 
-  // static fromSubstitutionNode(substitutionNode) {
-  //   let statementForMetavariableSubstitution = null;
-  //
-  //   let statementNode = statementNodeQuery(substitutionNode),
-  //       metavariableNode = metavariableNodeQuery(substitutionNode);
-  //
-  //   if (statementNode !== null) {
-  //     statementNode = stripBracketsFromStatement(statementNode); ///
-  //
-  //     const substitution = null;
-  //
-  //     statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(statementNode, metavariableNode, substitution);
-  //   }
-  //
-  //   return statementForMetavariableSubstitution;
-  // }
-
   static fromStatementNodeAndMetavariableNode(statementNode, metavariableNode) {
     statementNode = stripBracketsFromStatement(statementNode); ///
 
@@ -160,9 +142,11 @@ function substitutionFromSubstitutionNode(substitutionNode) {
 function transformStatementNode(statementNode, substitutions) {
   let transformedStatementNode = null;
 
-  const metavariableNode = metavariableNodeQuery(statementNode);
+  const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
-  if (metavariableNode !== null) {
+  if (statementMetavariableNode !== null) {
+    const metavariableNode = statementMetavariableNode; ///
+
     substitutions.someSubstitution((substitution) => {
       const substitutionMatchesVariableNode = substitution.matchMetavariableNode(metavariableNode);
 

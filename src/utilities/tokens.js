@@ -9,20 +9,25 @@ const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities;
 const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 
-export function constructorDeclarationTokensFromTermString(termString, lexer) {
-  const constructorDeclarationContent = `Constructor ${termString}
-`,
-        constructorDeclarationTokens = tokensFromContentAndLexer(constructorDeclarationContent, lexer);
+export function termTokensFromTermString(termString, lexer) {
+  const content = termString, ///
+        termTokens = tokensFromContentAndLexer(content, lexer);
 
-  return constructorDeclarationTokens;
+  return termTokens;
 }
 
-export function unqualifiedStatementTokensFromStatementString(statementString, lexer) {
-  const unqualifiedStatementContent = `${statementString}
-`,
-        unqualifiedStatementTokens = tokensFromContentAndLexer(unqualifiedStatementContent, lexer);
+export function frameTokensFromFrameString(frameString, lexer) {
+  const content = frameString,  ///
+        frameTokens = tokensFromContentAndLexer(content, lexer);
 
-  return unqualifiedStatementTokens;
+  return frameTokens;
+}
+
+export function statementTokensFromStatementString(statementString, lexer) {
+  const content = statementString,  ///
+        statementTokens = tokensFromContentAndLexer(content, lexer);
+
+  return statementTokens;
 }
 
 function tokensFromContentAndLexer(content, lexer = florenceLexer) {

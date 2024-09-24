@@ -1,9 +1,9 @@
 "use strict";
 
-import bracketedConstructorDeclarationTokens from "../../../tokens/constructorDeclaration/bracketed";
+import bracketedConstructorTermTokens from "../../../tokens/constructorTerm/bracketed";
 
-import { termNodeFromConstructorDeclarationTokens } from "../../../utilities/node";
+import { termNodeFromTermTokens } from "../../../utilities/node";
 
-const bracketedConstructorTermNode = termNodeFromConstructorDeclarationTokens(bracketedConstructorDeclarationTokens);
+const bracketedConstructorTermNode = termNodeFromTermTokens(bracketedConstructorTermTokens);
 
 export default bracketedConstructorTermNode;
