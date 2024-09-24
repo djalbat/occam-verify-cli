@@ -47,9 +47,8 @@ function verifyDerivedDeclaration(declarationNode, declarations, stated, localCo
     localContext.trace(`Verifying the '${declarationString}' derived declaration...`, declarationNode);
 
     const metaType = referenceMetaType, ///
-          metavariables = [],
           metavariableNode = metavariableNodeQuery(declarationNode),
-          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, metavariables, localContext);
+          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
 
     if (metavariableVerifiedGivenMetaType) {
       const { verifyStatement } = shim,
@@ -60,7 +59,7 @@ function verifyDerivedDeclaration(declarationNode, declarations, stated, localCo
 
       if (statementVerified) {
         const reference = Reference.fromMetavariableNode(metavariableNode),
-          declaration = Declaration.fromReferenceAndStatementNode(reference, statementNode);
+              declaration = Declaration.fromReferenceAndStatementNode(reference, statementNode);
 
         declarations.push(declaration);
 
@@ -85,16 +84,15 @@ function verifyStatedDeclaration(declarationNode, declarations, stated, localCon
     localContext.trace(`Verifying the '${declarationString}' stated declaration...`, declarationNode);
 
     const metaType = referenceMetaType, ///
-          metavariables = [],
           metavariableNode = metavariableNodeQuery(declarationNode),
-          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, metavariables, localContext);
+          metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
 
     if (metavariableVerifiedGivenMetaType) {
-        const { verifyStatement } = shim,
-              stated = true,
-              assignments = null,
-              statementNode = statementNodeQuery(declarationNode),
-              statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
+      const { verifyStatement } = shim,
+            stated = true,
+            assignments = null,
+            statementNode = statementNodeQuery(declarationNode),
+            statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
 
       if (statementVerified) {
         const reference = Reference.fromMetavariableNode(metavariableNode),

@@ -2,6 +2,7 @@
 
 import Substitution from "../substitution";
 import TermForVariableSubstitution from "../substitution/termForVariable";
+import FrameForMetavariableSubstitution from "../substitution/frameForMetavariable";
 
 import { nodeQuery } from "../utilities/query";
 import { stripBracketsFromStatement } from "../utilities/brackets";
@@ -98,22 +99,22 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return string;
   }
 
-  static fromSubstitutionNode(substitutionNode) {
-    let statementForMetavariableSubstitution = null;
-
-    let statementNode = statementNodeQuery(substitutionNode),
-        metavariableNode = metavariableNodeQuery(substitutionNode);
-
-    if (statementNode !== null) {
-      statementNode = stripBracketsFromStatement(statementNode); ///
-
-      const substitution = null;
-
-      statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(statementNode, metavariableNode, substitution);
-    }
-
-    return statementForMetavariableSubstitution;
-  }
+  // static fromSubstitutionNode(substitutionNode) {
+  //   let statementForMetavariableSubstitution = null;
+  //
+  //   let statementNode = statementNodeQuery(substitutionNode),
+  //       metavariableNode = metavariableNodeQuery(substitutionNode);
+  //
+  //   if (statementNode !== null) {
+  //     statementNode = stripBracketsFromStatement(statementNode); ///
+  //
+  //     const substitution = null;
+  //
+  //     statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(statementNode, metavariableNode, substitution);
+  //   }
+  //
+  //   return statementForMetavariableSubstitution;
+  // }
 
   static fromStatementNodeAndMetavariableNode(statementNode, metavariableNode) {
     statementNode = stripBracketsFromStatement(statementNode); ///
@@ -146,10 +147,10 @@ function substitutionFromSubstitutionNode(substitutionNode) {
   }
 
   if (substitution === null) {
-    const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromSubstitutionNode(substitutionNode);
+    const frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromSubstitutionNode(substitutionNode);
 
-    if (statementForMetavariableSubstitution !== null) {
-      substitution = statementForMetavariableSubstitution;  ///
+    if (frameForMetavariableSubstitution !== null) {
+      substitution = frameForMetavariableSubstitution;  ///
     }
   }
 

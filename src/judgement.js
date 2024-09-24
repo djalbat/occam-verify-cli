@@ -19,7 +19,7 @@ export default class Judgement {
     return this.declaration;
   }
 
-  getMetavariable() { return this.frame.getMetavariable(); }
+  getMetavariableNode() { return this.frame.getMetavariableNode(); }
 
   matchMetavariableName(metavariableName) { return this.frame.matchMetavariableName(metavariableName); }
 

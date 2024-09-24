@@ -6,10 +6,12 @@ import verifyDeclaration from "../verify/declaration";
 import verifyMetavariableGivenMetaType from "./metavariableGivenMetaType";
 
 import { first } from "../utilities/array";
-import { nodesQuery } from "../utilities/query";
+import { nodeQuery, nodesQuery } from "../utilities/query";
+import { metavariableNameFromMetavariableNode } from "../utilities/name";
 
 const declarationNodesQuery = nodesQuery("/frame/declaration"),
-      metavariableNodesQuery = nodesQuery("/frame/metavariable");
+      metavariableNodeQuery = nodeQuery("/frame/statement!/metavariable"),
+      metavariableNodesQuery = nodesQuery("/frame/statement/metavariable");
 
 const verifyFrameFunctions = [
   verifyDerivedFrame,
@@ -95,21 +97,14 @@ function verifyStatedFrame(frameNode, frames, stated, localContext) {
           declarationNodesLength = declarationNodes.length;
 
     if (declarationNodesLength === 0) {
-      const metavariableNodes = metavariableNodesQuery(frameNode),
-            metavariableNodesLength = metavariableNodes.length;
+      const metavariableNode = metavariableNodeQuery(frameNode);
 
-      if (metavariableNodesLength === 1) {
-        const firstMetavariableNode = first(metavariableNodes),
-              metavariableNode = firstMetavariableNode,
-              metaType = frameMetaType, ///
-              metavariables = [],
-              metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, metavariables, localContext);
+      if (metavariableNode !== null) {
+        const metaType = frameMetaType, ///
+              metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
 
         if (metavariableVerifiedGivenMetaType) {
-          const firstMetavariable = first(metavariables),
-                metavariable = firstMetavariable,
-
-          frame = Frame.fromMetavariable(metavariable);
+          const frame = Frame.fromMetavariableNode(metavariableNode);
 
           frames.push(frame);
 
@@ -138,13 +133,10 @@ function verifyMetavariable(metavariableNode, declarations, localContext) {
   localContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
 
   const metaType = frameMetaType, ///
-        metavariables = [],
-        metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, metavariables, localContext);
+        metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
 
   if (metavariableVerifiedGivenMetaType) {
-    const firstMetavariable = first(metavariables),
-          metavariable = firstMetavariable, ///
-          metavariableName = metavariable.getName(),
+    const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           judgement = localContext.findJudgementByMetavariableName(metavariableName);
 
     if (judgement !== null) {

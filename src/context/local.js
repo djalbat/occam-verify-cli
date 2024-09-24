@@ -197,9 +197,10 @@ class LocalContext {
   addJudgement(judgement) {
     let judgementAdded = false;
 
-    const metavariable = judgement.getMetavariable(),
-          metavariableDefined = this.isMetavariableDefined(metavariable),
-          judgementPresent = metavariableDefined; ///
+    const metavariableNode = judgement.getMetavariableNode(),
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          metavariableDefinedByMetavariableName = this.isMetavariableDefinedByMetavariableName(metavariableName),
+          judgementPresent = metavariableDefinedByMetavariableName; ///
 
     if (!judgementPresent) {
       this.judgements.push(judgement);
@@ -304,15 +305,6 @@ class LocalContext {
     return variableDefined;
   }
 
-  isMetavariableDefined(metavariable) {
-    const metavariableNode = metavariable.getNode(),
-          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-          judgementPresent = this.isJudgementPresentByMetavariableName(metavariableName),
-          metavariableDefined = judgementPresent; ///
-
-    return metavariableDefined
-  }
-
   isVariablePresentByVariableNode(variableNode) {
     const variable = this.findVariableByVariableNode(variableNode),
           variablePresent = (variable !== null);
@@ -325,6 +317,13 @@ class LocalContext {
           judgementPresent = (judgement !== null);
 
     return judgementPresent;
+  }
+
+  isMetavariableDefinedByMetavariableName(metavariableName) {
+    const judgementPresent = this.isJudgementPresentByMetavariableName(metavariableName),
+      metavariableDefinedByMetavariableName = judgementPresent; ///
+
+    return metavariableDefinedByMetavariableName
   }
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
