@@ -3,8 +3,8 @@
 import { parsersUtilities } from "occam-custom-grammars";
 
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
-import { TERM_RULE_NAME, FRAME_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
-import { termTokensFromTermString, frameTokensFromFrameString, statementTokensFromStatementString } from "../utilities/tokens";
+import { TERM_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
+import { termTokensFromTermString, statementTokensFromStatementString } from "../utilities/tokens";
 
 const { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
 
@@ -16,13 +16,6 @@ export function termNodeFromTermString(termString, lexer, parser) {
         termNode = termNodeFromTermTokens(termTokens, parser);
 
   return termNode;
-}
-
-export function frameNodeFromFrameString(frameString, lexer, parser) {
-  const frameTokens = frameTokensFromFrameString(frameString, lexer),
-        frameNode = frameNodeFromFrameTokens(frameTokens, parser);
-
-  return frameNode;
 }
 
 export function statementNodeFromStatementString(statementString, lexer, parser) {
@@ -38,14 +31,6 @@ export function termNodeFromTermTokens(termTokens, parser) {
         termNode = nodeFromTokensRuleNameAndParser(tokens, ruleName, parser);
 
   return termNode;
-}
-
-export function frameNodeFromFrameTokens(frameTokens, parser) {
-  const tokens = frameTokens,  ///
-        ruleName = FRAME_RULE_NAME,
-        frameNode = nodeFromTokensRuleNameAndParser(tokens, ruleName, parser);
-
-  return frameNode;
 }
 
 export function statementNodeFromStatementTokens(statementTokens, parser) {

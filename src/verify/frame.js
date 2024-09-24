@@ -5,13 +5,12 @@ import frameMetaType from "../metaType/frame";
 import verifyDeclaration from "../verify/declaration";
 import verifyMetavariableGivenMetaType from "./metavariableGivenMetaType";
 
-import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { metavariableNameFromMetavariableNode } from "../utilities/name";
 
-const declarationNodesQuery = nodesQuery("/frame/declaration"),
-      metavariableNodeQuery = nodeQuery("/frame/statement!/metavariable"),
-      metavariableNodesQuery = nodesQuery("/frame/statement/metavariable");
+const metavariableNodeQuery = nodeQuery("/frame/metavariable"),
+      declarationNodesQuery = nodesQuery("/frame/declaration"),
+      metavariableNodesQuery = nodesQuery("/frame/metavariable");
 
 const verifyFrameFunctions = [
   verifyDerivedFrame,

@@ -7,7 +7,7 @@ import { isAssertionNegated } from "../../utilities/assertion";
 import { metavariableNameFromMetavariableNode } from "../../utilities/name";
 
 const variableNodeQuery = nodeQuery("/definedAssertion/term/variable!"),
-      metavariableNodeQuery = nodeQuery("/definedAssertion/frame/statement!/metavariable!");
+      metavariableNodeQuery = nodeQuery("/definedAssertion/frame/metavariable!");
 
 const verifyDefinedAssertionFunctions = [
   verifyDerivedDefinedAssertion,

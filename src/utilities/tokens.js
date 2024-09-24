@@ -16,13 +16,6 @@ export function termTokensFromTermString(termString, lexer) {
   return termTokens;
 }
 
-export function frameTokensFromFrameString(frameString, lexer) {
-  const content = frameString,  ///
-        frameTokens = tokensFromContentAndLexer(content, lexer);
-
-  return frameTokens;
-}
-
 export function statementTokensFromStatementString(statementString, lexer) {
   const content = statementString,  ///
         statementTokens = tokensFromContentAndLexer(content, lexer);

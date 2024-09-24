@@ -4,11 +4,10 @@ import Substitution from "../substitution";
 import TermForVariableSubstitution from "../substitution/termForVariable";
 
 import { nodeQuery } from "../utilities/query";
-import { stripBracketsFromFrame } from "../utilities/brackets";
 
 const frameNodeQuery = nodeQuery("/substitution/frame!"),
-      substitutionMetavariableNodeQuery = nodeQuery("/substitution/metavariable!"),
-      frameStatementMetavariableNodeQuery = nodeQuery("/frame/statement/metavariable!");
+      frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
+      substitutionMetavariableNodeQuery = nodeQuery("/substitution/metavariable!");
 
 export default class FrameForMetavariableSubstitution extends Substitution {
   constructor(frameNode, metavariableNode, substitution) {
@@ -61,8 +60,6 @@ export default class FrameForMetavariableSubstitution extends Substitution {
   }
 
   matchFrameNode(frameNode) {
-    frameNode = stripBracketsFromFrame(frameNode); ///
-
     const frameNodeMatches = this.frameNode.match(frameNode);
 
     return frameNodeMatches;
@@ -105,8 +102,6 @@ export default class FrameForMetavariableSubstitution extends Substitution {
     let frameNode = frameNodeQuery(substitutionNode);
 
     if (frameNode !== null) {
-      frameNode = stripBracketsFromFrame(frameNode); ///
-
       const substitutionMetavariableNode = substitutionMetavariableNodeQuery(substitutionNode),
             metavariableNode = substitutionMetavariableNode,  ///
             substitution = null;
@@ -118,8 +113,6 @@ export default class FrameForMetavariableSubstitution extends Substitution {
   }
 
   static fromFrameNodeAndMetavariableNode(frameNode, metavariableNode) {
-    frameNode = stripBracketsFromFrame(frameNode); ///
-
     const substitution = null,
           frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode, substitution);
 
@@ -127,8 +120,6 @@ export default class FrameForMetavariableSubstitution extends Substitution {
   }
 
   static fromFrameNodeMetavariableNodeAndSubstitutionNode(frameNode, metavariableNode, substitutionNode) {
-    frameNode = stripBracketsFromFrame(frameNode); ///
-
     const substitution = substitutionFromSubstitutionNode(substitutionNode),
           frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode, substitution);
 
@@ -161,10 +152,10 @@ function substitutionFromSubstitutionNode(substitutionNode) {
 function transformFrameNode(frameNode, substitutions) {
   let transformedFrameNode = null;
 
-  const frameStatementMetavariableNode = frameStatementMetavariableNodeQuery(frameNode);
+  const frameMetavariableNode = frameMetavariableNodeQuery(frameNode);
 
-  if (frameStatementMetavariableNode !== null) {
-    const metavariableNode = frameStatementMetavariableNode;  ///
+  if (frameMetavariableNode !== null) {
+    const metavariableNode = frameMetavariableNode;  ///
 
     substitutions.someSubstitution((substitution) => {
       const substitutionMatchesVariableNode = substitution.matchMetavariableNode(metavariableNode);

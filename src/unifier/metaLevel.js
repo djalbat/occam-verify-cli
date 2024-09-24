@@ -3,16 +3,19 @@
 import shim from "../shim";
 import Unifier from "../unifier";
 import unifyVariableWithTerm from "../unify/variableWithTerm";
+import unifyMetavariableWithFrame from "../unify/metavariableWithFrame";
 import unifyMetavariableWithStatement from "../unify/metavariableWithStatement";
 import unifyMetavariableWithStatementGivenSubstitution from "../unify/metavariableWithStatementGivenSubstitution";
 
 import { nodeQuery } from "../utilities/query";
 
 const termNodeQuery = nodeQuery("/term!"),
+      frameNodeQuery = nodeQuery("/frame!"),
       statementNodeQuery = nodeQuery("/statement!"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
-      substitutionNodeQuery = nodeQuery("/statement/substitution!"),
-      metavariableNodeQuery = nodeQuery("/statement/metavariable!");
+      frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
+      statementSubstitutionNodeQuery = nodeQuery("/statement/substitution!"),
+      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 class MetaLevelUnifier extends Unifier {
   unify(nodeA, nodeB, substitutions, localContextA, localContextB) {
@@ -34,17 +37,19 @@ class MetaLevelUnifier extends Unifier {
       unify: (statementNodeA, statementNodeB, substitutions, localContextA, localContextB) => {
         let statementUnifiedWithStatement;
 
-        const metavariableNodeA = metavariableNodeQuery(statementNodeA);
+        const statementMetavariableNodeA = statementMetavariableNodeQuery(statementNodeA);
 
-        if (metavariableNodeA !== null) {
-          const substitutionNodeA = substitutionNodeQuery(statementNodeA);
+        if (statementMetavariableNodeA !== null) {
+          const metavariableNodeA = statementMetavariableNodeA, ///
+                statementSubstitutionNodeA = statementSubstitutionNodeQuery(statementNodeA);
 
-          if (substitutionNodeA === null) {
+          if (statementSubstitutionNodeA === null) {
             const metavariableUnifiedWithStatement = unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutions, localContextA, localContextB);
 
             statementUnifiedWithStatement = metavariableUnifiedWithStatement; ///
           } else {
-            const metavariableUnifiedWithStatementGivenSubstitution = unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB);
+            const substitutionNodeA = statementSubstitutionNodeA, ///
+                  metavariableUnifiedWithStatementGivenSubstitution = unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB);
 
             statementUnifiedWithStatement = metavariableUnifiedWithStatementGivenSubstitution; ///
           }
@@ -61,6 +66,16 @@ class MetaLevelUnifier extends Unifier {
         }
 
         return statementUnifiedWithStatement;
+      }
+    },
+    {
+      nodeQueryA: frameMetavariableNodeQuery,
+      nodeQueryB: frameNodeQuery,
+      unify: (frameMetavariableNodeA, frameNodeB, substitutions, localContextA, localContextB) => {
+        const metavariableNodeA = frameMetavariableNodeA, ///
+              metavariableUnifiedWithFrame = unifyMetavariableWithFrame(metavariableNodeA, frameNodeB, substitutions, localContextA, localContextB);
+
+        return metavariableUnifiedWithFrame;
       }
     },
     {

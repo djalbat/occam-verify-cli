@@ -6,7 +6,7 @@ import { isAssertionNegated } from "../../utilities/assertion";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
 
 const variableNodeQuery = nodeQuery("/containedAssertion/term/variable!"),
-      metavariableNodeQuery = nodeQuery("/containedAssertion/frame/statement!/metavariable!"),
+      metavariableNodeQuery = nodeQuery("/containedAssertion/frame/metavariable!"),
       statementVariableNodesQuery = nodesQuery("/containedAssertion/statement//variable"),
       statementMetavariableNodesQuery = nodesQuery("/containedAssertion/statement//metavariable");
 
