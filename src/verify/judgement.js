@@ -7,7 +7,6 @@ import JudgementAssignment from "../assignment/judgement";
 
 import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
-import { metavariableNameFromMetavariableNode } from "../utilities/name";
 
 const frameNodeQuery = nodeQuery("/judgement/frame"),
       declarationNodeQuery = nodeQuery("/judgement/declaration");
