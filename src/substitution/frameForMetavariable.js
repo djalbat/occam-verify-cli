@@ -1,7 +1,6 @@
 "use strict";
 
 import Substitution from "../substitution";
-import TermForVariableSubstitution from "../substitution/termForVariable";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -10,12 +9,11 @@ const frameNodeQuery = nodeQuery("/substitution/frame!"),
       substitutionMetavariableNodeQuery = nodeQuery("/substitution/metavariable!");
 
 export default class FrameForMetavariableSubstitution extends Substitution {
-  constructor(frameNode, metavariableNode, substitution) {
+  constructor(frameNode, metavariableNode) {
     super();
 
     this.frameNode = frameNode;
     this.metavariableNode = metavariableNode;
-    this.substitution = substitution;
   }
 
   getFrameNode() {
@@ -26,20 +24,10 @@ export default class FrameForMetavariableSubstitution extends Substitution {
     return this.metavariableNode;
   }
 
-  getSubstitution() {
-    return this.substitution;
-  }
-
   getNode() {
     const node = this.frameNode;  ///
 
     return node;
-  }
-
-  isSimple() {
-    const simple = (this.substitution === null);
-
-    return simple;
   }
 
   transformed(substitutions) {
@@ -48,10 +36,9 @@ export default class FrameForMetavariableSubstitution extends Substitution {
     const transformedFrameNode = transformFrameNode(this.frameNode, substitutions);
 
     if (transformedFrameNode !== null) {
-      const substitution = null,
-            frameNode = transformedFrameNode, ///
+      const frameNode = transformedFrameNode, ///
             metavariableNode = this.metavariableNode, ///
-            frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode, substitution);
+            frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode);
 
       transformedSubstitution = frameForMetavariableSubstitution;  ///
     }
@@ -71,27 +58,12 @@ export default class FrameForMetavariableSubstitution extends Substitution {
     return metavariableNodeMatches;
   }
 
-  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
-    const metavariableNodeAndSubstitutionNodeMatches = false;
-
-    return metavariableNodeAndSubstitutionNodeMatches;
-  }
-
   asString(localContextA, localContextB) {
-    let string;
-
     const frameNodeB = this.frameNode,  ///
           frameStringB = localContextB.nodeAsString(frameNodeB),
           metavariableNodeA = this.metavariableNode,  ///
-          metavariableStringA = localContextA.nodeAsString(metavariableNodeA);
-
-    if (this.substitution === null) {
-      string = `[${frameStringB} for ${metavariableStringA}]`;
-    } else {
-      const substitutionString = this.substitution.asString(localContextA, localContextA);
-
-      string = `[${frameStringB} for ${metavariableStringA}${substitutionString}]`;
-    }
+          metavariableStringA = localContextA.nodeAsString(metavariableNodeA),
+          string = `[${frameStringB} for ${metavariableStringA}]`;
 
     return string;
   }
@@ -103,50 +75,19 @@ export default class FrameForMetavariableSubstitution extends Substitution {
 
     if (frameNode !== null) {
       const substitutionMetavariableNode = substitutionMetavariableNodeQuery(substitutionNode),
-            metavariableNode = substitutionMetavariableNode,  ///
-            substitution = null;
+            metavariableNode = substitutionMetavariableNode;  ///
 
-      frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode, substitution);
+      frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode);
     }
 
     return frameForMetavariableSubstitution;
   }
 
   static fromFrameNodeAndMetavariableNode(frameNode, metavariableNode) {
-    const substitution = null,
-          frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode, substitution);
+    const frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode);
 
     return frameForMetavariableSubstitution;
   }
-
-  static fromFrameNodeMetavariableNodeAndSubstitutionNode(frameNode, metavariableNode, substitutionNode) {
-    const substitution = substitutionFromSubstitutionNode(substitutionNode),
-          frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode, substitution);
-
-    return frameForMetavariableSubstitution;
-  }
-}
-
-function substitutionFromSubstitutionNode(substitutionNode) {
-  let substitution = null;
-
-  if (substitution === null) {
-    const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitutionNode(substitutionNode);
-
-    if (termForVariableSubstitution !== null) {
-      substitution = termForVariableSubstitution; ///
-    }
-  }
-
-  if (substitution === null) {
-    const frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromSubstitutionNode(substitutionNode);
-
-    if (frameForMetavariableSubstitution !== null) {
-      substitution = frameForMetavariableSubstitution;  ///
-    }
-  }
-
-  return substitution;
 }
 
 function transformFrameNode(frameNode, substitutions) {

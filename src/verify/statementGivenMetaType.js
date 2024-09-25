@@ -16,6 +16,8 @@ export default function verifyStatementGivenMetaType(statementNode, metaType, as
   switch (metaTypeName) {
     case FRAME_META_TYPE_NAME:
     case REFERENCE_META_TYPE_NAME: {
+      debugger
+
       statementVerifiedGivenMetaType = false;
 
       const metavariableNode = metavariableNodeQuery(statementNode);

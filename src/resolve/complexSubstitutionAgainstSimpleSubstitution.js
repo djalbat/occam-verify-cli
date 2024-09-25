@@ -49,10 +49,10 @@ export default function resolveComplexSubstitutionAgainstSimpleSubstitution(comp
 
         complexSubstitutionResolvedAgainstSimpleSubstitution = true;
       } else {
-        const statementNode = transformedSubstitution.getStatementNode(),
-              statementNodeMatches = substitution.matchStatementNode(statementNode);
+        const frameNode = transformedSubstitution.getFrameNode(),
+              frameNodeMatches = substitution.matchFrameNode(frameNode);
 
-        if (statementNodeMatches) {
+        if (frameNodeMatches) {
           substitutions.removeSubstitution(complexSubstitution, localContextA, localContextB);
 
           complexSubstitutionResolvedAgainstSimpleSubstitution = true;

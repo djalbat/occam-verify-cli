@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "../shim";
 import Frame from "../frame";
 import frameMetaType from "../metaType/frame";
 import verifyDeclaration from "../verify/declaration";
@@ -17,7 +18,7 @@ const verifyFrameFunctions = [
   verifyStatedFrame
 ];
 
-export default function verifyFrame(frameNode, frames, stated, localContext) {
+function verifyFrame(frameNode, frames, stated, localContext) {
   let frameVerified;
 
   const frameString = localContext.nodeAsString(frameNode);
@@ -38,6 +39,12 @@ export default function verifyFrame(frameNode, frames, stated, localContext) {
 
   return frameVerified;
 }
+
+Object.assign(shim, {
+  verifyFrame
+});
+
+export default verifyFrame;
 
 function verifyDerivedFrame(frameNode, frames, stated, localContext) {
   let derivedFrameVerified;

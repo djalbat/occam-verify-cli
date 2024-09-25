@@ -90,9 +90,8 @@ export default class TermForVariableSubstitution extends Substitution {
     const termNodeB = this.termNode,  ///
           termStringB = localContextB.nodeAsString(termNodeB),
           variableNodeA = this.variableNode,  ///
-          variableStringA = localContextA.nodeAsString(variableNodeA);
-
-    const string = `[${termStringB} for ${variableStringA}]`;
+          variableStringA = localContextA.nodeAsString(variableNodeA),
+          string = `[${termStringB} for ${variableStringA}]`;
 
     return string;
   }

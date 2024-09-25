@@ -2,12 +2,14 @@
 
 import Unifier from "../unifier";
 import unifyTermWithType from "../unify/termWithType";
+import unifyFrameWithMetaType from "../unify/frameWithMetaType";
 import unifyStatementWithMetaType from "../unify/statementWithMetaType";
 
 import { nodeQuery } from "../utilities/query";
 
 const termNodeQuery = nodeQuery("/term!"),
       typeNodeQuery = nodeQuery("/type!"),
+      frameNodeQuery = nodeQuery("/frame!"),
       metaTypeNodeQuery = nodeQuery("/metaType!"),
       statementNodeQuery = nodeQuery("/statement!");
 
@@ -34,6 +36,17 @@ class StatementWithCombinatorUnifier extends Unifier {
               statementUnifiedWithMetaType = unifyStatementWithMetaType(statementNode, metaTypeNode, assignments, stated, localContext);
 
         return statementUnifiedWithMetaType;
+      }
+    },
+    {
+      nodeQueryA: frameNodeQuery,
+      nodeQueryB: metaTypeNodeQuery,
+      unify: (frameNodeA, metaTypeNodeB, assignments, stated, localContext) => {
+        const metaTypeNode = metaTypeNodeB, ///
+              frameNode = frameNodeA, ///
+              frameUnifiedWithMetaType = unifyFrameWithMetaType(frameNode, metaTypeNode, assignments, stated, localContext);
+
+        return frameUnifiedWithMetaType;
       }
     },
     {
