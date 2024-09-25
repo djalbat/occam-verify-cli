@@ -12,6 +12,10 @@ export default function verifySubproofAssertion(subproofAssertionNode, assignmen
 
   const subproofAssertionString = localContext.nodeAsString(subproofAssertionNode);
 
+  assignments = null; ///
+
+  stated = true;  ///
+
   localContext.trace(`Verifying the '${subproofAssertionString}' subproof assertion...`, subproofAssertionNode);
 
   const verified = metaLevelVerifier.verify(subproofAssertionNode, assignments, stated, localContext);
