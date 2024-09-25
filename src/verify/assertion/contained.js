@@ -5,8 +5,8 @@ import metaLevelVerifier from "../../verifier/metaLevel";
 import { isAssertionNegated } from "../../utilities/assertion";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
 
-const variableNodeQuery = nodeQuery("/containedAssertion/term/variable!"),
-      metavariableNodeQuery = nodeQuery("/containedAssertion/frame/metavariable!"),
+const termVariableNodeQuery = nodeQuery("/containedAssertion/term/variable!"),
+      frameMetavariableNodeQuery = nodeQuery("/containedAssertion/frame/metavariable!"),
       statementVariableNodesQuery = nodesQuery("/containedAssertion/statement//variable"),
       statementMetavariableNodesQuery = nodesQuery("/containedAssertion/statement//metavariable");
 
@@ -57,51 +57,51 @@ function verifyDerivedContainedAssertion(containedAssertionNode, assignments, st
     localContext.trace(`Verifying the '${containedAssertionString}' derived contained assertion...`, containedAssertionNode);
 
     const assertionNegated = isAssertionNegated(containedAssertionNode),
-          metavariableNode = metavariableNodeQuery(containedAssertionNode),
-          variableNode = variableNodeQuery(containedAssertionNode),
+          frameMetavariableNode = frameMetavariableNodeQuery(containedAssertionNode),
+          termVariableNode = termVariableNodeQuery(containedAssertionNode),
           negated = assertionNegated; ///
 
     if (false) {
       ///
-    } else if (metavariableNode !== null) {
+    } else if (frameMetavariableNode !== null) {
       const statementMetavariableNodes = statementMetavariableNodesQuery(containedAssertionNode),
-            variableNodeMatchesStatementMetavariableNode = statementMetavariableNodes.some((statementMetavariableNode) => {
-              const variableNodeMatchesStatementMetavariableNode = metavariableNode.match(statementMetavariableNode);
+            frameMetavariableNodeMatchesStatementMetavariableNode = statementMetavariableNodes.some((statementMetavariableNode) => {
+              const frameMetavariableNodeMatchesStatementMetavariableNode = frameMetavariableNode.match(statementMetavariableNode);
 
-              if (variableNodeMatchesStatementMetavariableNode) {
+              if (frameMetavariableNodeMatchesStatementMetavariableNode) {
                 return true;
               }
             });
 
       if (!negated) {
-        if (variableNodeMatchesStatementMetavariableNode) {
+        if (frameMetavariableNodeMatchesStatementMetavariableNode) {
           derivedContainedAssertionVerified = true;
         }
       }
 
       if (negated) {
-        if (!variableNodeMatchesStatementMetavariableNode) {
+        if (!frameMetavariableNodeMatchesStatementMetavariableNode) {
           derivedContainedAssertionVerified = true;
         }
       }
-    } else if (variableNode !== null) {
+    } else if (termVariableNode !== null) {
       const statementVariableNodes = statementVariableNodesQuery(containedAssertionNode),
-            variableNodeMatchesStatementVariableNode = statementVariableNodes.some((statementVariableNode) => {
-              const variableNodeMatchesStatementVariableNode = variableNode.match(statementVariableNode);
+            termVariableNodeMatchesStatementVariableNode = statementVariableNodes.some((statementVariableNode) => {
+              const termVariableNodeMatchesStatementVariableNode = termVariableNode.match(statementVariableNode);
 
-              if (variableNodeMatchesStatementVariableNode) {
+              if (termVariableNodeMatchesStatementVariableNode) {
                 return true;
               }
             });
 
       if (!negated) {
-        if (variableNodeMatchesStatementVariableNode) {
+        if (termVariableNodeMatchesStatementVariableNode) {
           derivedContainedAssertionVerified = true;
         }
       }
 
       if (negated) {
-        if (!variableNodeMatchesStatementVariableNode) {
+        if (!termVariableNodeMatchesStatementVariableNode) {
           derivedContainedAssertionVerified = true;
         }
       }

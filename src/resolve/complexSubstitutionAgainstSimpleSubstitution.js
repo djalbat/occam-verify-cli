@@ -76,10 +76,14 @@ function transformedSubstitutionFromComplexSubstitutionSimpleSubstitutionAndSubs
   transformedSubstitution = substitution.transformed(substitutions);
 
   if (transformedSubstitution !== null) {
-    const simpleSubstitutionStatementNode = simpleSubstitution.getStatementNode(),
+    substitutions = Substitutions.fromNothing();  ///
+
+    const substitutionString = substitution.asString(localContextA, localContextA),
+          transformedSubstitutionString = transformedSubstitution.asString(localContextA, localContextB),
+          simpleSubstitutionStatementNode = simpleSubstitution.getStatementNode(),
           complexSubstitutionStatementNode = complexSubstitution.getStatementNode();
 
-    substitutions = Substitutions.fromNothing();  ///
+    localContextB.trace(`Transformed the complex substitution's '${substitutionString}' substitution into the '${transformedSubstitutionString}' substitution.`, complexSubstitutionStatementNode);
 
     const complexSubstitutionStatementWithSimpleSubstitutionStatement = unifyComplexSubstitutionStatementWithSimpleSubstitutionStatement(complexSubstitutionStatementNode, simpleSubstitutionStatementNode, substitutions, localContextA, localContextB);
 
@@ -87,6 +91,11 @@ function transformedSubstitutionFromComplexSubstitutionSimpleSubstitutionAndSubs
       const substitution = transformedSubstitution; ///
 
       transformedSubstitution = substitution.transformed(substitutions);
+
+      const substitutionString = substitution.asString(localContextA, localContextB),
+            transformedSubstitutionString = transformedSubstitution.asString(localContextA, localContextB);
+
+      localContextB.trace(`Transformed the complex substitution's transformed '${substitutionString}' substitution into the '${transformedSubstitutionString}' substitution.`, complexSubstitutionStatementNode);
     }
   }
 
