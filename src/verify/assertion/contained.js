@@ -56,56 +56,53 @@ function verifyDerivedContainedAssertion(containedAssertionNode, assignments, st
 
     localContext.trace(`Verifying the '${containedAssertionString}' derived contained assertion...`, containedAssertionNode);
 
-    const metavariableNode = metavariableNodeQuery(containedAssertionNode);
+    const assertionNegated = isAssertionNegated(containedAssertionNode),
+          metavariableNode = metavariableNodeQuery(containedAssertionNode),
+          variableNode = variableNodeQuery(containedAssertionNode),
+          negated = assertionNegated; ///
 
-    if (metavariableNode !== null) {
-      const assertionNegated = isAssertionNegated(containedAssertionNode),
-            variableNode = variableNodeQuery(containedAssertionNode),
-            negated = assertionNegated; ///
+    if (false) {
+      ///
+    } else if (metavariableNode !== null) {
+      const statementMetavariableNodes = statementMetavariableNodesQuery(containedAssertionNode),
+            variableNodeMatchesStatementMetavariableNode = statementMetavariableNodes.some((statementMetavariableNode) => {
+              const variableNodeMatchesStatementMetavariableNode = metavariableNode.match(statementMetavariableNode);
 
-      if (false) {
-        ///
-      } else if (metavariableNode !== null) {
-        const statementMetavariableNodes = statementMetavariableNodesQuery(containedAssertionNode),
-              variableNodeMatchesStatementMetavariableNode = statementMetavariableNodes.some((statementMetavariableNode) => {
-                const variableNodeMatchesStatementMetavariableNode = metavariableNode.match(statementMetavariableNode);
+              if (variableNodeMatchesStatementMetavariableNode) {
+                return true;
+              }
+            });
 
-                if (variableNodeMatchesStatementMetavariableNode) {
-                  return true;
-                }
-              });
-
-        if (!negated) {
-          if (variableNodeMatchesStatementMetavariableNode) {
-            derivedContainedAssertionVerified = true;
-          }
+      if (!negated) {
+        if (variableNodeMatchesStatementMetavariableNode) {
+          derivedContainedAssertionVerified = true;
         }
+      }
 
-        if (negated) {
-          if (!variableNodeMatchesStatementMetavariableNode) {
-            derivedContainedAssertionVerified = true;
-          }
+      if (negated) {
+        if (!variableNodeMatchesStatementMetavariableNode) {
+          derivedContainedAssertionVerified = true;
         }
-      } else if (variableNode !== null) {
-        const statementVariableNodes = statementVariableNodesQuery(containedAssertionNode),
-              variableNodeMatchesStatementVariableNode = statementVariableNodes.some((statementVariableNode) => {
-                const variableNodeMatchesStatementVariableNode = variableNode.match(statementVariableNode);
+      }
+    } else if (variableNode !== null) {
+      const statementVariableNodes = statementVariableNodesQuery(containedAssertionNode),
+            variableNodeMatchesStatementVariableNode = statementVariableNodes.some((statementVariableNode) => {
+              const variableNodeMatchesStatementVariableNode = variableNode.match(statementVariableNode);
 
-                if (variableNodeMatchesStatementVariableNode) {
-                  return true;
-                }
-              });
+              if (variableNodeMatchesStatementVariableNode) {
+                return true;
+              }
+            });
 
-        if (!negated) {
-          if (variableNodeMatchesStatementVariableNode) {
-            derivedContainedAssertionVerified = true;
-          }
+      if (!negated) {
+        if (variableNodeMatchesStatementVariableNode) {
+          derivedContainedAssertionVerified = true;
         }
+      }
 
-        if (negated) {
-          if (!variableNodeMatchesStatementVariableNode) {
-            derivedContainedAssertionVerified = true;
-          }
+      if (negated) {
+        if (!variableNodeMatchesStatementVariableNode) {
+          derivedContainedAssertionVerified = true;
         }
       }
     }

@@ -55,43 +55,40 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, stated
 
     localContext.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`, definedAssertionNode);
 
-    const metavariableNode = metavariableNodeQuery(definedAssertionNode);
+    const assertionNegated = isAssertionNegated(definedAssertionNode),
+          metavariableNode = metavariableNodeQuery(definedAssertionNode),
+          variableNode = variableNodeQuery(definedAssertionNode);
 
-    if (metavariableNode !== null) {
-      const assertionNegated = isAssertionNegated(definedAssertionNode),
-        variableNode = variableNodeQuery(definedAssertionNode);
+    if (false) {
+      ///
+    } else if (metavariableNode !== null) {
+      const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+            metavariableDefinedByMetavariableName = localContext.isMetavariableDefinedByMetavariableName(metavariableName);
 
-      if (false) {
-        ///
-      } else if (metavariableNode !== null) {
-        const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-              metavariableDefinedByMetavariableName = localContext.isMetavariableDefinedByMetavariableName(metavariableName);
-
-        if (!assertionNegated) {
-          if (metavariableDefinedByMetavariableName) {
-            derivedDefinedAssertionVerified = true;
-          }
+      if (!assertionNegated) {
+        if (metavariableDefinedByMetavariableName) {
+          derivedDefinedAssertionVerified = true;
         }
+      }
 
-        if (assertionNegated) {
-          if (!metavariableDefinedByMetavariableName) {
-            derivedDefinedAssertionVerified = true;
-          }
+      if (assertionNegated) {
+        if (!metavariableDefinedByMetavariableName) {
+          derivedDefinedAssertionVerified = true;
         }
-      } else if (variableNode !== null) {
-        const variable = localContext.findVariableByVariableNode(variableNode),
-              variableDefined = localContext.isVariableDefined(variable);
+      }
+    } else if (variableNode !== null) {
+      const variable = localContext.findVariableByVariableNode(variableNode),
+            variableDefined = localContext.isVariableDefined(variable);
 
-        if (!assertionNegated) {
-          if (variableDefined) {
-            derivedDefinedAssertionVerified = true;
-          }
+      if (!assertionNegated) {
+        if (variableDefined) {
+          derivedDefinedAssertionVerified = true;
         }
+      }
 
-        if (assertionNegated) {
-          if (!variableDefined) {
-            derivedDefinedAssertionVerified = true;
-          }
+      if (assertionNegated) {
+        if (!variableDefined) {
+          derivedDefinedAssertionVerified = true;
         }
       }
     }
