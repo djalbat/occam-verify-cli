@@ -8,11 +8,12 @@ const helpAction = require("./action/help"),
 
 const { NO_COMMAND_GIVEN_MESSAGE } = require("./messages"),
       { HELP_COMMAND, VERIFY_COMMAND, VERSION_COMMAND } = require("./commands"),
-      { DEFAULT_TAIL, DEFAULT_FOLLOW, DEFAULT_LOG_LEVEL } = require("./defaults");
+      { DEFAULT_TAIL, DEFAULT_FOLLOW, DEFAULT_VERBOSE, DEFAULT_LOG_LEVEL } = require("./defaults");
 
 function main(command, argument, options) {
   const { tail = DEFAULT_TAIL,
           follow = DEFAULT_FOLLOW,
+          verbose = DEFAULT_VERBOSE,
           logLevel = DEFAULT_LOG_LEVEL } = options;
 
   const log = Log.fromFollowAndLogLevel(follow, logLevel);
@@ -31,7 +32,7 @@ function main(command, argument, options) {
     }
 
     case VERIFY_COMMAND: {
-      verifyAction(argument, log);
+      verifyAction(argument, verbose, log);
 
       break;
     }
@@ -45,7 +46,7 @@ function main(command, argument, options) {
     default: {
       argument = command; ///
 
-      verifyAction(argument, log);
+      verifyAction(argument, verbose, log);
 
       break;
     }

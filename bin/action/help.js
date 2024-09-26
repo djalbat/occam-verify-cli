@@ -21,6 +21,8 @@ Options:
 
   --follow|-f                                     Show the log messages immediately instead of tailing them. The default is false.
 
+  --verbose|-x                                    Verbose output. This shows the output for the dependency as well as the project verification.
+
 Further information:
 
 Please see the readme file on GitHub:

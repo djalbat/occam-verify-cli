@@ -11,7 +11,7 @@ export default function initialiseReleaseContext(dependency, context) {
   if (releaseContext === null) {
     const { log } = context;
 
-    log.warning(`Unable to initialise the '${dependencyName}' ontext because it has not been created.`);
+    log.warning(`Unable to initialise the '${dependencyName}' context because it has not been created.`);
   } else {
     releaseContextInitialised = releaseContext.isInitialised();
 
@@ -19,12 +19,12 @@ export default function initialiseReleaseContext(dependency, context) {
       const dependencyReleaseContextsInitialised = initialiseDependencyReleaseContexts(dependency, releaseContext, context);
 
       if (dependencyReleaseContextsInitialised) {
-        const { log } = context,
+        const { log, verbose } = context,
               releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
 
         log.debug(`Initialising the '${dependencyName}' context...`);
 
-        releaseContextInitialised = releaseContext.initialise(releaseContexts);
+        releaseContextInitialised = releaseContext.initialise(releaseContexts, verbose);
 
         releaseContextInitialised ?
           log.info(`...initialised the '${dependencyName}' context.`) :

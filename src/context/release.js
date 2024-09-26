@@ -464,7 +464,7 @@ export default class ReleaseContext {
     this.log.fatal(message, node, tokens, filePath);
   }
 
-  initialise(releaseContexts) {
+  initialise(releaseContexts, verbose) {
     let initialised;
 
     const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
@@ -478,7 +478,7 @@ export default class ReleaseContext {
     this.dependencyReleaseContexts = tail(releaseContexts);
 
     if (this.released) {
-      const verified = this.verify();
+      const verified = this.verify(verbose);
 
       initialised = verified;  ///
     } else {
@@ -490,12 +490,14 @@ export default class ReleaseContext {
     return initialised;
   }
 
-  verify() {
+  verify(verbose = true) {
     let verified;
 
     const releaseContext = this;
 
-    releaseContext.disableLogging();
+    if (!verbose) {
+      releaseContext.disableLogging();
+    }
 
     this.fileContexts = fileContextsFromEntries(this.entries, releaseContext);
 
@@ -503,7 +505,9 @@ export default class ReleaseContext {
 
     verified = fileContextsVerified;  ///
 
-    releaseContext.enableLogging();
+    if (!verbose) {
+      releaseContext.enableLogging();
+    }
 
     this.verified = verified;
 

@@ -6,7 +6,7 @@ const { Dependency } = require("occam-entities"),
 const { trimTrailingSlash } = require("../utilities/string"),
       { releaseContextFromDependency } = require("../utilities/releaseContext");
 
-function verifyAction(argument, log) {
+function verifyAction(argument, verbose, log) {
   const name = trimTrailingSlash(argument), ///
         context = {},
         dependency = Dependency.fromName(name),
@@ -15,6 +15,7 @@ function verifyAction(argument, log) {
 
   Object.assign(context, {
     log,
+    verbose,
     releaseContextMap,
     releaseContextFromDependency
   });
