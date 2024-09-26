@@ -4,7 +4,7 @@ import Substitution from "../substitution";
 
 import { nodeQuery } from "../utilities/query";
 
-const frameNodeQuery = nodeQuery("/substitution/frame!"),
+const substitutionFrameNodeQuery = nodeQuery("/substitution/frame!"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       substitutionMetavariableNodeQuery = nodeQuery("/substitution/metavariable!");
 
@@ -33,17 +33,28 @@ export default class FrameForMetavariableSubstitution extends Substitution {
   transformed(substitutions) {
     let transformedSubstitution = null;
 
-    const transformedFrameNode = transformFrameNode(this.frameNode, substitutions);
+    const transformedFrameNode = transformFrameNode(this.frameNode, substitutions),
+          transformedMetavariableNode = transformMetavariableNode(this.metavariableNode, substitutions);
 
-    if (transformedFrameNode !== null) {
+    if ((transformedFrameNode !== null) && (transformedMetavariableNode !== null)) {
       const frameNode = transformedFrameNode, ///
-            metavariableNode = this.metavariableNode, ///
+            metavariableNode = transformedMetavariableNode, ///
             frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode);
 
       transformedSubstitution = frameForMetavariableSubstitution;  ///
     }
 
     return transformedSubstitution;
+  }
+
+  isEqualTo(substitution) {
+    const frameNode = substitution.getFrameNode(),
+          metavariableNode = substitution.getMetavariableNode(),
+          frameNodeMatches = this.matchFrameNode(frameNode),
+          metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
+          equalTo = (frameNodeMatches && metavariableNodeMatches);
+
+    return equalTo;
   }
 
   matchFrameNode(frameNode) {
@@ -71,11 +82,12 @@ export default class FrameForMetavariableSubstitution extends Substitution {
   static fromSubstitutionNode(substitutionNode) {
     let frameForMetavariableSubstitution = null;
 
-    let frameNode = frameNodeQuery(substitutionNode);
+    const substitutionFrameNode = substitutionFrameNodeQuery(substitutionNode);
 
-    if (frameNode !== null) {
+    if (substitutionFrameNode !== null) {
       const substitutionMetavariableNode = substitutionMetavariableNodeQuery(substitutionNode),
-            metavariableNode = substitutionMetavariableNode;  ///
+            metavariableNode = substitutionMetavariableNode,  ///
+            frameNode = substitutionFrameNode;  ///
 
       frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(frameNode, metavariableNode);
     }
@@ -99,9 +111,9 @@ function transformFrameNode(frameNode, substitutions) {
     const metavariableNode = frameMetavariableNode;  ///
 
     substitutions.someSubstitution((substitution) => {
-      const substitutionMatchesVariableNode = substitution.matchMetavariableNode(metavariableNode);
+      const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
 
-      if (substitutionMatchesVariableNode) {
+      if (metavariableNodeMatches) {
         const frameNode = substitution.getFrameNode();
 
         transformedFrameNode = frameNode; ////
@@ -112,4 +124,25 @@ function transformFrameNode(frameNode, substitutions) {
   }
 
   return transformedFrameNode;
+}
+
+function transformMetavariableNode(metavariableNode, substitutions) {
+  let transformedMetavariableNode = null;
+
+  substitutions.someSubstitution((substitution) => {
+    const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
+
+    if (metavariableNodeMatches) {
+      const frameNode = substitution.getFrameNode(),
+            frameMetavariableNode = frameMetavariableNodeQuery(frameNode);
+
+      if (frameMetavariableNode !== null) {
+        transformedMetavariableNode = frameMetavariableNode;  ///
+
+        return true;
+      }
+    }
+  });
+
+  return transformedMetavariableNode;
 }

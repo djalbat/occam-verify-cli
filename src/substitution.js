@@ -33,6 +33,12 @@ export default class Substitution {
     return metavariableNode;
   }
 
+  isEqualTo(substitution) {
+    const equalTo = false;
+
+    return equalTo;
+  }
+
   matchTermNode(termNode) {
     const termNodeMatches = false;
 

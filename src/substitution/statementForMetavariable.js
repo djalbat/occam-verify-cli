@@ -4,10 +4,7 @@ import Substitution from "../substitution";
 import TermForVariableSubstitution from "../substitution/termForVariable";
 import FrameForMetavariableSubstitution from "../substitution/frameForMetavariable";
 
-import { nodeQuery } from "../utilities/query";
 import { stripBracketsFromStatement } from "../utilities/brackets";
-
-const statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(statementNode, metavariableNode, substitution) {
@@ -40,23 +37,6 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     const simple = (this.substitution === null);
 
     return simple;
-  }
-
-  transformed(substitutions) {
-    let transformedSubstitution = null;
-
-    const transformedStatementNode = transformStatementNode(this.statementNode, substitutions);
-
-    if (transformedStatementNode !== null) {
-      const substitution = null,
-            statementNode = transformedStatementNode, ///
-            metavariableNode = this.metavariableNode, ///
-            statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(statementNode, metavariableNode, substitution);
-
-      transformedSubstitution = statementForMetavariableSubstitution;  ///
-    }
-
-    return transformedSubstitution;
   }
 
   matchStatementNode(statementNode) {
@@ -131,28 +111,4 @@ function substitutionFromSubstitutionNode(substitutionNode) {
   }
 
   return substitution;
-}
-
-function transformStatementNode(statementNode, substitutions) {
-  let transformedStatementNode = null;
-
-  const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
-
-  if (statementMetavariableNode !== null) {
-    const metavariableNode = statementMetavariableNode; ///
-
-    substitutions.someSubstitution((substitution) => {
-      const substitutionMatchesVariableNode = substitution.matchMetavariableNode(metavariableNode);
-
-      if (substitutionMatchesVariableNode) {
-        const statementNode = substitution.getStatementNode();
-
-        transformedStatementNode = statementNode; ////
-
-        return true;
-      }
-    });
-  }
-
-  return transformedStatementNode;
 }

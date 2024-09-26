@@ -17,10 +17,12 @@ export default class Substitutions {
     return this.savedArray;
   }
 
+  getLength() { return this.array.length; }
+
   getFirstSubstitution() {
     let firstSubstitution = null;
 
-    const length = this.array.length;
+    const length = this.getLength();
 
     if (length > 0) {
       firstSubstitution = first(this.array);
