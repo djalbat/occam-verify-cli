@@ -3,6 +3,7 @@
 import FrameForMetavariableSubstitution from "../substitution/frameForMetavariable";
 
 import { metavariableFromFrameNode } from "../utilities/unify";
+import {metavariableNameFromMetavariableNode} from "../utilities/name";
 
 export default function unifyMetavariableWithFrame(metavariableNodeA, frameNodeB, substitutions, localContextA, localContextB) {
   let metavariableUnifiedWithFrame = false;
@@ -17,7 +18,8 @@ export default function unifyMetavariableWithFrame(metavariableNodeA, frameNodeB
       metavariableUnifiedWithFrame = true;
     }
   } else {
-    const metavariableA = localContextA.findMetavariableByMetavariableNode(metavariableNodeA),
+    const metavariableNameA = metavariableNameFromMetavariableNode(metavariableNodeA),
+          metavariableA = localContextA.findMetavariableByMetavariableName(metavariableNameA),
           metavariableB = metavariableFromFrameNode(frameNodeB, localContextB);
 
     if (metavariableA === metavariableB) {

@@ -37,32 +37,30 @@ class MetaLevelUnifier extends Unifier {
       unify: (statementNodeA, statementNodeB, substitutions, localContextA, localContextB) => {
         let statementUnifiedWithStatement;
 
-        const statementMetavariableNodeA = statementMetavariableNodeQuery(statementNodeA);
+        const matches = statementNodeA.match(statementNodeB);
 
-        if (statementMetavariableNodeA !== null) {
-          const metavariableNodeA = statementMetavariableNodeA, ///
-                statementSubstitutionNodeA = statementSubstitutionNodeQuery(statementNodeA);
-
-          if (statementSubstitutionNodeA === null) {
-            const metavariableUnifiedWithStatement = unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutions, localContextA, localContextB);
-
-            statementUnifiedWithStatement = metavariableUnifiedWithStatement; ///
-          } else {
-            const substitutionNodeA = statementSubstitutionNodeA, ///
-                  metavariableUnifiedWithStatementGivenSubstitution = unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB);
-
-            statementUnifiedWithStatement = metavariableUnifiedWithStatementGivenSubstitution; ///
-          }
+        if (matches) {
+          statementUnifiedWithStatement = true;
         } else {
-          const nonTerminalNodeA = statementNodeA, ///
-                nonTerminalNodeB = statementNodeB, ///
-                nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-                nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
-                childNodesA = nonTerminalNodeAChildNodes, ///
-                childNodesB = nonTerminalNodeBChildNodes, ///
-                childNodesVerified = metaLevelUnifier.unifyChildNodes(childNodesA, childNodesB, substitutions, localContextA, localContextB);
+          const statementMetavariableNodeA = statementMetavariableNodeQuery(statementNodeA);
 
-          statementUnifiedWithStatement = childNodesVerified; ///
+          if (statementMetavariableNodeA !== null) {
+            const metavariableNodeA = statementMetavariableNodeA, ///
+                  statementSubstitutionNodeA = statementSubstitutionNodeQuery(statementNodeA);
+
+            if (statementSubstitutionNodeA === null) {
+              const metavariableUnifiedWithStatement = unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutions, localContextA, localContextB);
+
+              statementUnifiedWithStatement = metavariableUnifiedWithStatement; ///
+            } else {
+              const substitutionNodeA = statementSubstitutionNodeA, ///
+                    metavariableUnifiedWithStatementGivenSubstitution = unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB);
+
+              statementUnifiedWithStatement = metavariableUnifiedWithStatementGivenSubstitution; ///
+            }
+          } else {
+            statementUnifiedWithStatement = unifyStatementWithStatement(statementNodeA, statementNodeB, substitutions, localContextA, localContextB);
+          }
         }
 
         return statementUnifiedWithStatement;
@@ -98,3 +96,16 @@ Object.assign(shim, {
 });
 
 export default metaLevelUnifier;
+
+function unifyStatementWithStatement(statementNodeA, statementNodeB, substitutions, localContextA, localContextB) {
+  const nonTerminalNodeA = statementNodeA, ///
+        nonTerminalNodeB = statementNodeB, ///
+        nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
+        nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
+        childNodesA = nonTerminalNodeAChildNodes, ///
+        childNodesB = nonTerminalNodeBChildNodes, ///
+        childNodesVerified = metaLevelUnifier.unifyChildNodes(childNodesA, childNodesB, substitutions, localContextA, localContextB),
+        statementUnifiedWithStatement = childNodesVerified; ///
+
+  return statementUnifiedWithStatement;
+}
