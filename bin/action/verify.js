@@ -1,10 +1,12 @@
 "use strict";
 
 const { Dependency } = require("occam-entities"),
-      { verifyRelease, createReleaseContext, initialiseReleaseContext } = require("../../lib/index");  ///
+      { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
 
 const { trimTrailingSlash } = require("../utilities/string"),
       { releaseContextFromDependency } = require("../utilities/releaseContext");
+
+const { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
 function verifyAction(argument, verbose, log) {
   const name = trimTrailingSlash(argument), ///
@@ -22,7 +24,7 @@ function verifyAction(argument, verbose, log) {
 
   let now = startClock();
 
-  createReleaseContext(dependency, dependentNames, context, (error) => {
+  createReleaseContext(dependency, dependentNames, context, (error, success) => {
     if (error) {
       log.error(error);
 
@@ -31,10 +33,7 @@ function verifyAction(argument, verbose, log) {
       return;
     }
 
-    const releaseName = name, ///
-          releaseContext = releaseContextMap[releaseName] || null;
-
-    if (releaseContext === null) {
+    if (!success) {
       log.warning(`The '${name}' project or package context cannot be created.`);
 
       stopClock(now, log);
@@ -42,7 +41,9 @@ function verifyAction(argument, verbose, log) {
       return;
     }
 
-    const releaseContextInitialised = initialiseReleaseContext(dependency, context);
+    const releaseName = name, ///
+          releaseContext = releaseContextMap[releaseName],
+          releaseContextInitialised = initialiseReleaseContext(dependency, context);
 
     if (!releaseContextInitialised) {
       log.warning(`The '${name}' project or package context cannot be initialised.`);

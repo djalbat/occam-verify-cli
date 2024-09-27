@@ -5,23 +5,24 @@ import { last } from "../utilities/array";
 export function createReleaseContext(dependency, dependentNames, context, callback) {
   const { log, releaseContextMap } = context,
         dependencyName = dependency.getName(),
-        dependencyString = dependency.asString(),
         releaseName = dependencyName, ///
         releaseContext = releaseContextMap[releaseName] || null;
 
-  log.debug(`Creating the '${releaseName}' context given the '${dependencyString}' dependency...`);
-
   if (releaseContext !== null) {
-    const error = null;
+    const error = null,
+          success = true;
 
-    log.debug(`...already created the '${releaseName}' context.`);
+    log.debug(`Already created the '${releaseName}' context.`);
 
-    callback(error);
+    callback(error, success);
 
     return;
   }
 
-  const { releaseContextFromDependency } = context;
+  const { releaseContextFromDependency } = context,
+        dependencyString = dependency.asString();
+
+  log.debug(`Creating the '${releaseName}' context given the '${dependencyString}' dependency...`);
 
   releaseContextFromDependency(dependency, context, (error, releaseContext) => {
     if (error) {
@@ -33,9 +34,10 @@ export function createReleaseContext(dependency, dependentNames, context, callba
     const releaseContextCreated = checkReleaseContextCreated(releaseContext, dependency, context);
 
     if (!releaseContextCreated) {
-      const error = null;
+      const error = null,
+            success = false;
 
-      callback(error);
+      callback(error, success);
 
       return;
     }
@@ -43,25 +45,34 @@ export function createReleaseContext(dependency, dependentNames, context, callba
     const releaseMatchesDependency = checkReleaseMatchesDependency(releaseContext, dependency, dependentNames, context);
 
     if (!releaseMatchesDependency) {
-      const error = null;
+      const error = null,
+            success = false;
 
-      callback(error);
+      callback(error, success);
 
       return;
     }
 
-    releaseContextMap[releaseName] = releaseContext;
-
-    log.info(`...created the '${releaseName}' context.`);
-
-    createDependencyReleaseContexts(dependency, releaseContext, dependentNames, context, (error) => {
+    createDependencyReleaseContexts(dependency, releaseContext, dependentNames, context, (error, success) => {
       if (error) {
         callback(error);
 
         return;
       }
 
-      callback(error);
+      if (!success) {
+        log.warning(`...unable to create the '${releaseName}' context.`);
+
+        callback(error, success);
+
+        return;
+      }
+
+      releaseContextMap[releaseName] = releaseContext;
+
+      log.info(`...created the '${releaseName}' context.`);
+
+      callback(error, success);
     });
   }, context);
 }
@@ -214,16 +225,35 @@ function createDependencyReleaseContexts(dependency, releaseContext, dependentNa
     const cyclicDependencyExists = checkCyclicDependencyExists(dependency, dependentNames);
 
     if (cyclicDependencyExists) {
-      const error = null;
+      const error = null,
+            success = false;
 
-      callback(error);
+      callback(error, success);
+
+      callback = null;
+
+      done();
 
       return;
     }
 
-    createReleaseContext(dependency, dependentNames, context, (error) => {
+    createReleaseContext(dependency, dependentNames, context, (error, success) => {
       if (error) {
         callback(error);
+
+        callback = null;
+
+        done();
+
+        return;
+      }
+
+      if (!success) {
+        callback(error, success);
+
+        callback = null;
+
+        done();
 
         return;
       }
@@ -231,9 +261,12 @@ function createDependencyReleaseContexts(dependency, releaseContext, dependentNa
       next();
     });
   }, () => {
-    const error = null;
+    if (callback !== null) {
+      const error = null,
+            success = true;
 
-    callback(error);
+      callback(error, success);
+    }
   });
 }
 
