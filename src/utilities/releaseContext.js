@@ -9,10 +9,19 @@ export function createReleaseContext(dependency, dependentNames, context, callba
         releaseContext = releaseContextMap[releaseName] || null;
 
   if (releaseContext !== null) {
-    const error = null,
-          success = true;
+    const releaseMatchesDependency = checkReleaseMatchesDependency(releaseContext, dependency, dependentNames, context);
 
-    log.debug(`Already created the '${releaseName}' context.`);
+    const error = null;
+
+    let success;
+
+    if (releaseMatchesDependency) {
+      log.debug(`Already created the '${releaseName}' context.`);
+
+      success = true;
+    } else {
+      success = false;
+    }
 
     callback(error, success);
 
@@ -260,14 +269,16 @@ function createDependencyReleaseContexts(dependency, releaseContext, dependentNa
 
       next();
     });
-  }, () => {
+  }, done);
+
+  function done() {
     if (callback !== null) {
       const error = null,
             success = true;
 
       callback(error, success);
     }
-  });
+  }
 }
 
 function initialiseDependencyReleaseContexts(dependency, releaseContext, context) {
