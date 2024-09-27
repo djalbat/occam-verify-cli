@@ -62,6 +62,10 @@ export function createReleaseContext(dependency, dependentNames, context, callba
       return;
     }
 
+    releaseContextMap[releaseName] = releaseContext;
+
+    log.info(`...created the '${releaseName}' context.`);
+
     createDependencyReleaseContexts(dependency, releaseContext, dependentNames, context, (error, success) => {
       if (error) {
         callback(error);
@@ -76,10 +80,6 @@ export function createReleaseContext(dependency, dependentNames, context, callba
 
         return;
       }
-
-      releaseContextMap[releaseName] = releaseContext;
-
-      log.info(`...created the '${releaseName}' context.`);
 
       callback(error, success);
     });
