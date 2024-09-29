@@ -8,7 +8,7 @@ const { trimTrailingSlash } = require("../utilities/string"),
 
 const { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
-function verifyAction(argument, verbose, log) {
+function verifyAction(argument, log) {
   const name = trimTrailingSlash(argument), ///
         context = {},
         dependency = Dependency.fromName(name),
@@ -17,7 +17,6 @@ function verifyAction(argument, verbose, log) {
 
   Object.assign(context, {
     log,
-    verbose,
     releaseContextMap,
     releaseContextFromDependency
   });
@@ -41,29 +40,10 @@ function verifyAction(argument, verbose, log) {
       return;
     }
 
+    initialiseReleaseContext(dependency, context);
+
     const releaseName = name, ///
-          releaseContext = releaseContextMap[releaseName],
-          releaseContextInitialised = initialiseReleaseContext(dependency, context);
-
-    if (!releaseContextInitialised) {
-      log.warning(`The '${name}' project or package context cannot be initialised.`);
-
-      stopClock(now, log);
-
-      return;
-    }
-
-    const releaseContextVerified = releaseContext.isVerified();
-
-    if (releaseContextVerified) {
-      log.warning(`The '${name}' package does not need to be verified.`);
-
-      stopClock(now, log);
-
-      return;
-    }
-
-    const releaseVerified = verifyRelease(releaseName, releaseContextMap);
+          releaseVerified = verifyRelease(releaseName, releaseContextMap);
 
     if (!releaseVerified) {
       log.warning(`The '${name}' project or package context cannot be verified.`);

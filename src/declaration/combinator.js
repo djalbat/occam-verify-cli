@@ -1,6 +1,7 @@
 "use strict";
 
 import Statement from "../statement";
+import Combinator from "../combinator";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -22,9 +23,14 @@ export default class CombinatorDeclaration {
 
     fileContext.trace(`Verifying the '${statementString}' combinator declaration...`);
 
-    const statementVerifiedAsCombinator = this.statement.verifyAsCombinator(fileContext);
+    const combinator = Combinator.fromStatement(this.statement),
+          combinatorVerified = combinator.verify(fileContext);
 
-    combinatorDeclarationVerified = statementVerifiedAsCombinator; ///
+    if (combinatorVerified) {
+      fileContext.addCombinator(combinator);
+
+      combinatorDeclarationVerified = true;
+    }
 
     if (combinatorDeclarationVerified) {
       fileContext.debug(`...verified the '${statementString}' combinator declaration.`);

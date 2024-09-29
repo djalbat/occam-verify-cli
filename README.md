@@ -46,8 +46,6 @@ Options:
   --tail|-t                                       Sets the size of the tail of the log messages. The default is ten. 
 
   --follow|-f                                     Show the log messages immediately instead of tailing them. The default is false.
-
-  --verbose|-x                                    Verbose output. This shows the output for the dependency as well as the project verification.
 ```
 
 ## Building

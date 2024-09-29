@@ -105,12 +105,12 @@ export function initialiseReleaseContext(dependency, context) {
       const dependencyReleaseContextsInitialised = initialiseDependencyReleaseContexts(dependency, releaseContext, context);
 
       if (dependencyReleaseContextsInitialised) {
-        const { log, verbose } = context,
+        const { log } = context,
               releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
 
         log.debug(`Initialising the '${dependencyName}' context...`);
 
-        releaseContextInitialised = releaseContext.initialise(releaseContexts, verbose);
+        releaseContextInitialised = releaseContext.initialise(releaseContexts);
 
         releaseContextInitialised ?
           log.info(`...initialised the '${dependencyName}' context.`) :

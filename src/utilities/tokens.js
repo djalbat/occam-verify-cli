@@ -16,11 +16,11 @@ export function termTokensFromTermString(termString, lexer) {
   return termTokens;
 }
 
-export function statementTokensFromStatementString(statementString, lexer) {
-  const content = statementString,  ///
-        statementTokens = tokensFromContentAndLexer(content, lexer);
+export function unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer) {
+  const content = unqualifiedStatementString,  ///
+        unqualifiedStatementTokens = tokensFromContentAndLexer(content, lexer);
 
-  return statementTokens;
+  return unqualifiedStatementTokens;
 }
 
 function tokensFromContentAndLexer(content, lexer = nominalLexer) {

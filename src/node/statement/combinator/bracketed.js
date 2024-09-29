@@ -1,9 +1,10 @@
 "use strict";
 
-import bracketedCombinatorStatementTokens from "../../../tokens/combinatorStatement/bracketed";
+import { STATEMENT_META_TYPE_NAME } from "../../../metaTypeNames";
+import { statementNodeFromStatementString } from "../../../utilities/node";
 
-import { statementNodeFromStatementTokens } from "../../../utilities/node";
+export const bracketedCombinatorStatementString = `(${STATEMENT_META_TYPE_NAME})`;
 
-const bracketedCombinatorStatementNode = statementNodeFromStatementTokens(bracketedCombinatorStatementTokens);
+const bracketedCombinatorStatementNode = statementNodeFromStatementString(bracketedCombinatorStatementString)
 
 export default bracketedCombinatorStatementNode;

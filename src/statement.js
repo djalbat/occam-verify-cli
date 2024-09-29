@@ -1,5 +1,9 @@
 "use strict";
 
+import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
+
+import { statementNodeFromStatementString } from "./utilities/node";
+
 export default class Statement {
   constructor(string, node) {
     this.string = string;
@@ -15,7 +19,20 @@ export default class Statement {
   }
 
   verifyAsCombinator(fileContext) {
-    debugger
+    let verifiedAsCombinator;
+
+    const statementNode = this.node,  ///
+          statementString = this.string;  ///
+
+    fileContext.trace(`Verifying the '${statementString}' statement as a combinator...`);
+
+    verifiedAsCombinator = statementAsCombinatorVerifier.verifyStatement(statementNode, fileContext);
+
+    if (verifiedAsCombinator) {
+      fileContext.debug(`...verified the '${statementString}' statement as a combinator.`, statementNode);
+    }
+
+    return verifiedAsCombinator;
   }
 
   toJSON(fileContext) {
@@ -28,7 +45,15 @@ export default class Statement {
   }
 
   static fromJSON(json, fileContext) {
-    debugger
+    const { string } = json,
+          statementString = string, ///
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
+          node = statementNode,  ///
+          statement = new Statement(string, node);
+
+    return statement;
   }
 
   static fromStatementNode(statementNode, fileContext) {

@@ -1,18 +1,24 @@
 "use strict";
 
+import Statement from "../statement";
 import Combinator from "../combinator";
 import bracketedCombinatorStatementNode from "../node/statement/combinator/bracketed";
-import bracketedCombinatorStatementTokens from "../tokens/combinatorStatement/bracketed";
 
-import { nodeAsString } from "../utilities/string";
+import { bracketedCombinatorStatementString } from "../node/statement/combinator/bracketed";
+
+const fileContext = {
+  nodeAsString: (node) => {
+    const string = bracketedCombinatorStatementString;  ///
+
+    return string;
+  }
+};
 
 class BracketedCombinator extends Combinator {
   static fromNothing() {
-    const node = bracketedCombinatorStatementNode,  ///
-          tokens = bracketedCombinatorStatementTokens, ///
-          string = nodeAsString(node, tokens),
-          statementNode = node, ///
-          bracketedCombinator = new BracketedCombinator(statementNode, string);
+    const statementNode = bracketedCombinatorStatementNode,  ///
+          statement = Statement.fromStatementNode(statementNode, fileContext),
+          bracketedCombinator = new BracketedCombinator(statement);
 
     return bracketedCombinator;
   }

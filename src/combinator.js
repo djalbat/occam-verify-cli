@@ -1,32 +1,26 @@
 "use strict";
 
-import { nodeAsString } from "./utilities/string";
-
 export default class Combinator {
-  constructor(statementNode, string) {
-    this.statementNode = statementNode;
-    this.string = string;
+  constructor(statement) {
+    this.statement = statement;
   }
 
-  getStatementNode() {
-    return this.statementNode;
+  getStatement() {
+    return this.statement;
   }
 
-  getString() {
-    return this.string;
+  getString() { return this.statement.string; }
+
+  verify(fileContext) {
+    const statementVerifiedAsCombinator = this.statement.verifyAsCombinator(fileContext),
+          verified = statementVerifiedAsCombinator; ///
+
+    return verified;
   }
 
-  static fromStatementNodeAndTokens(statementNode, tokens) {
-    const string = stringFromStatementNodeAndTokens(statementNode, tokens),
-          combinator = new Combinator(statementNode, string);
+  static fromStatement(statement) {
+    const combinator = new Combinator(statement);
 
     return combinator;
   }
-}
-
-function stringFromStatementNodeAndTokens(statementNode, tokens) {
-  const statementString = nodeAsString(statementNode, tokens),
-        string = statementString; ///
-
-  return string;
 }

@@ -14,14 +14,13 @@ const { isFilePathFlorenceFilePath } = filePathUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(log, name, entries, released, lexer, parser, verified, initialised, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts) {
+  constructor(log, name, lexer, parser, entries, released, initialised, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts) {
     this.log = log;
     this.name = name;
-    this.entries = entries;
-    this.released = released;
     this.lexer = lexer;
     this.parser = parser;
-    this.verified = verified;
+    this.entries = entries;
+    this.released = released;
     this.initialised = initialised;
     this.fileContexts = fileContexts;
     this.customGrammar = customGrammar;
@@ -37,14 +36,6 @@ export default class ReleaseContext {
     return this.name;
   }
 
-  getEntries() {
-    return this.entries;
-  }
-
-  isReleased() {
-    return this.released;
-  }
-
   getLexer() {
     return this.lexer;
   }
@@ -53,8 +44,12 @@ export default class ReleaseContext {
     return this.parser;
   }
 
-  isVerified() {
-    return this.verified;
+  getEntries() {
+    return this.entries;
+  }
+
+  isReleased() {
+    return this.released;
   }
 
   isInitialised() {
@@ -99,10 +94,6 @@ export default class ReleaseContext {
 
   setParser(parser) {
     this.parser = parser;
-  }
-
-  setVerified(verified) {
-    this.verified = verified;
   }
 
   setInitialised(initialised) {
@@ -476,33 +467,14 @@ export default class ReleaseContext {
     this.dependencyReleaseContexts = tail(releaseContexts);
 
     if (this.released) {
-      const releaseContext = this,  ///
-            fileContexts = fileContextsFromEntries(this.entries, releaseContext);
+      const releaseContext = this;  ///
 
-      initialiseFileContexts(fileContexts, releaseContext);
+      this.fileContexts = fileContextsFromEntries(this.entries, releaseContext);
 
-      this.fileContexts = fileContexts;
+      initialiseFileContexts(this.fileContexts, releaseContext);
     }
 
     this.initialised = true;
-  }
-
-  verify() {
-    let verified = false;
-
-    const releaseContext = this,  ///
-          fileContexts = fileContextsFromEntries(this.entries, releaseContext),
-          fileContextsVerified = verifyFileContexts(fileContexts, releaseContext);
-
-    if (fileContextsVerified) {
-      this.fileContexts = fileContexts;
-
-      this.verified = true;
-
-      verified = true;
-    }
-
-    return verified;
   }
 
   toJSON() {
@@ -519,59 +491,15 @@ export default class ReleaseContext {
   static fromLogNameEntriesAndReleased(log, name, entries, released) {
     const lexer = null,
           parser = null,
-          verified = false,
           initialised = false,
           fileContexts = [],
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           loggingDisabled = false,
           dependencyReleaseContexts = null,
-          releaseContext = new ReleaseContext(log, name, entries, released, lexer, parser, verified, initialised, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts);
+          releaseContext = new ReleaseContext(log, name, lexer, parser, entries, released, initialised, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts);
 
     return releaseContext;
   }
-}
-
-function verifyFileContexts(fileContexts, releaseContext) {
-  let fileContextsVerified;
-
-  fileContexts = [  ///
-    ...fileContexts
-  ];
-
-  for (;;) {
-    const fileContextsLength = fileContexts.length;
-
-    if (fileContextsLength === 0) {
-      break;
-    }
-
-    const verifiedFileContexts = [];
-
-    fileContexts.forEach((fileContext) => {
-      const verified = fileContext.verify(releaseContext);
-
-      if (verified) {
-        const verifiedFileContext = fileContext;  ///
-
-        verifiedFileContexts.push(verifiedFileContext);
-      }
-    });
-
-    const verifiedFileContextsLength = verifiedFileContexts.length,
-          fileVerified = (verifiedFileContextsLength > 0);
-
-    if (!fileVerified) {
-      break;
-    }
-
-    leftDifference(fileContexts, verifiedFileContexts);
-  }
-
-  const fileContextsLength = fileContexts.length;
-
-  fileContextsVerified = (fileContextsLength === 0);
-
-  return fileContextsVerified;
 }
 
 function initialiseFileContexts(fileContexts, releaseContext) {
