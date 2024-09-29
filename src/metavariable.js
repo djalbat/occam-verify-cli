@@ -84,6 +84,10 @@ export default class Metavariable {
     return metavariable;
   }
 
+  static fromMetavariableNode(metavariableNode, fileContext) {
+
+  }
+
   static fromMetavariableNodeNameTermTypeAndMetaType(metavariableNode, termType, metaType, fileContext) {
     const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           name = metavariableName,  ///

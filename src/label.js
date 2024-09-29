@@ -2,6 +2,8 @@
 
 import Metavariable from "./metavariable";
 
+
+
 export default class Label {
   constructor(string, metavariable) {
     this.string = string;
@@ -44,9 +46,10 @@ export default class Label {
     return label;
   }
 
-  static fromLabelNodeAndMetavariable(labelNode, metavariable, fileContext) {
+  static fromLabelNode(labelNode, fileContext) {
     const node = labelNode, ///
           string = fileContext.nodeAsString(node),
+          metavariable = Metavariable.fromMetavariableNode(metavariableNode),
           label = new Label(string, metavariable);
 
     return label;

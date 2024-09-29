@@ -1,8 +1,8 @@
 "use strict";
 
+import Rule from "../rule";
 import Verifier from "../verifier";
 import verifyError from "../verify/error";
-import verifyRule from "../verify/rule";
 import verifyAxiom from "../verify/axiom";
 import verifyLemma from "../verify/lemma";
 import verifyTheorem from "../verify/theorem";
@@ -55,7 +55,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: ruleNodeQuery,
       verify: (ruleNode, fileContext) => {
-        const ruleVerified = verifyRule(ruleNode, fileContext);
+        const rule = Rule.fromRuleNode(ruleNode, fileContext),
+              ruleVerified = rule.verify(ruleNode, fileContext);
 
         return ruleVerified;
       }

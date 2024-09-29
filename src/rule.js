@@ -1,9 +1,18 @@
 "use strict";
 
+import Label from "./label";
+import Premise from "./premise";
+import Conclusion from "./conclusion";
 import Substitutions from "./substitutions";
 import resolveSubstitutions from "./resolve/substitutions";
 import unifyPremisesWithProofSteps from "./unify/premisesWithProofSteps";
 import unifyConclusionWithStatement from "./unify/conclusionWithStatement";
+
+import { nodeQuery, nodesQuery } from "./utilities/query";
+
+const labelNodesQuery = nodesQuery("/rule/label"),
+      premiseNodesQuery = nodesQuery("/rule/premise"),
+      conclusionNodeQuery = nodeQuery("/rule/conclusion");
 
 export default class Rule {
   constructor(labels, premises, conclusion) {
@@ -119,6 +128,26 @@ export default class Rule {
     conclusion = Conclusion.fromJSON(json, fileContext);
 
     rule = new Rule(labels, premises, conclusion);
+
+    return rule;
+  }
+
+  static fromRuleNode(ruleNode, fileContext) {
+    const labelNodes = labelNodesQuery(ruleNode),
+          premiseNodes = premiseNodesQuery(ruleNode),
+          conclusionNode = conclusionNodeQuery(ruleNode),
+          labels = labelNodes.map((labelNode) => {
+            const label = Label.fromLabelNode(labelNode, fileContext);
+
+            return label;
+          }),
+          premises = premiseNodes.map((premiseNode) => {
+            const premise = Premise.fromPremiseNode(premiseNode, fileContext);
+
+            return premise;
+          }),
+          conclusion = Conclusion.fromConclusionNode(conclusionNode, fileContext),
+          rule = new Rule(labels, premises, conclusion);
 
     return rule;
   }
