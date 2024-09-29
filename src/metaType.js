@@ -58,7 +58,7 @@ export default class MetaType {
   }
 }
 
-export function metaTypeFromJSONAndFileContext(json, fileContext) {
+export function metaTypeFromJSON(json, fileContext) {
   let metaType;
 
   const { name } = json;

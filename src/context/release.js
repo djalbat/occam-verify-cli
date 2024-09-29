@@ -10,8 +10,8 @@ import { tail, push, leftDifference } from "../utilities/array";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { isFilePathFlorenceFilePath } = filePathUtilities,
-      { florenceLexerFromCombinedCustomGrammar } = lexersUtilities,
-      { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
+      { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
+      { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
   constructor(log, name, entries, released, lexer, parser, verified, initialised, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts) {
@@ -468,12 +468,12 @@ export default class ReleaseContext {
     let initialised;
 
     const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
-          florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar),
-          florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
+          nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar),
+          nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 
-    this.lexer = florenceLexer; ///
+    this.lexer = nominalLexer; ///
 
-    this.parser = florenceParser; ///
+    this.parser = nominalParser; ///
 
     this.dependencyReleaseContexts = tail(releaseContexts);
 

@@ -1,30 +1,53 @@
 "use strict";
 
-import { nodeAsString } from "./utilities/string";
+import Metavariable from "./metavariable";
 
 export default class Label {
-  constructor(metavariableNode) {
-    this.metavariableNode = metavariableNode;
+  constructor(string, metavariable) {
+    this.string = string;
+    this.metavariable = metavariable;
   }
 
-  getMetavariableNode() {
-    return this.metavariableNode;
+  getString() {
+    return this.string;
   }
 
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
-
-    return metavariableNodeMatches;
+  getMetavariable() {
+    return this.metavariable;
   }
 
-  asString(tokens) {
-    const string = nodeAsString(this.metavariableNode, tokens);
+  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
-    return string;
+  toJSON(fileContext) {
+    const metavariableJSON = this.metavariable.toJSON(fileContext),
+          metavariable = metavariableJSON,  ///
+          string = this.string,
+          json = {
+            string,
+            metavariable
+          };
+
+    return json;
   }
 
-  static fromMetavariableNode(metavariableNode) {
-    const label = new Label(metavariableNode);
+  static fromJSON(json, fileContext) {
+    const { string } = json;
+
+    let { metavariable } = json;
+
+    json = metavariable;  ///
+
+    metavariable = Metavariable.fromJSON(json, fileContext);
+
+    const label = new Label(string, metavariable);
+
+    return label;
+  }
+
+  static fromLabelNodeAndMetavariable(labelNode, metavariable, fileContext) {
+    const node = labelNode, ///
+          string = fileContext.nodeAsString(node),
+          label = new Label(string, metavariable);
 
     return label;
   }

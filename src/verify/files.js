@@ -6,7 +6,7 @@ import { filePathUtilities } from "occam-entities";
 
 import { filter, leftDifference } from "../utilities/array";
 
-const { isFilePathFlorenceFilePath } = filePathUtilities;
+const { isFilePathNominalFilePath } = filePathUtilities;
 
 export default function verifyFiles(releaseContext) {
   let filesVerified = false;
@@ -14,9 +14,9 @@ export default function verifyFiles(releaseContext) {
   const filePaths = releaseContext.getFilePaths();
 
   filter(filePaths, (filePath) => {
-    const filePathFlorenceFilePath = isFilePathFlorenceFilePath(filePath);
+    const filePathNominalFilePath = isFilePathNominalFilePath(filePath);
 
-    if (filePathFlorenceFilePath) {
+    if (filePathNominalFilePath) {
       return true;
     }
   })

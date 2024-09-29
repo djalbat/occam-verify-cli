@@ -6,11 +6,10 @@ import unifyPremisesWithProofSteps from "./unify/premisesWithProofSteps";
 import unifyConclusionWithStatement from "./unify/conclusionWithStatement";
 
 export default class Rule {
-  constructor(labels, premises, conclusion, fileContext) {
+  constructor(labels, premises, conclusion) {
     this.labels = labels;
     this.premises = premises;
     this.conclusion = conclusion;
-    this.fileContext = fileContext;
   }
 
   getLabels() {
@@ -23,10 +22,6 @@ export default class Rule {
 
   getConclusion() {
     return this.conclusion;
-  }
-
-  getFileContext() {
-    return this.fileContext;
   }
 
   unifyStatement(statementNode, localContext) {
@@ -66,8 +61,70 @@ export default class Rule {
     return metavariableNodeMatches;
   }
 
-  static fromLabelsPremisesConclusionAndFileContext(labels, premises, conclusion, fileContext) {
-    const rule = new Rule(labels, premises, conclusion, fileContext);
+  toJSON(fileContext) {
+    const labelsJSON = this.labels.map((label) => {
+            const labelJSON = label.toJSON(fileContext);
+
+            return labelJSON;
+          }),
+          premisesJSON = this.premises.map((premise) => {
+            const premiseJSON = premise.toJSON(fileContext);
+
+            return premiseJSON;
+          }),
+          conclusionJSON = this.conclusion.toJSON(fileContext),
+          labels = labelsJSON,  ///
+          premises = premisesJSON,  ///
+          conclusion = conclusionJSON,  ///
+          json = {
+            labels,
+            premises,
+            conclusion
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    let rule;
+
+    let { labels } = json;
+
+    const labelsJSON = labels;  ///
+
+    labels = labelsJSON.map((labelJSON) => {
+      const json = labelJSON, ///
+            label = Label.fromJSON(json, fileContext);
+
+      return label;
+    });
+
+    let { premises } = json;
+
+    const premisesJSON = premises;  ///
+
+    premises = premisesJSON.map((premiseJSON) => {
+      const json = premiseJSON, ///
+            premise = Premise.fromJSON(json, fileContext);
+
+      return premise;
+    });
+
+    let { conclusion } = json;
+
+    const conclusionJSON = conclusion;  ///
+
+    json = conclusionJSON;  ///
+
+    conclusion = Conclusion.fromJSON(json, fileContext);
+
+    rule = new Rule(labels, premises, conclusion);
+
+    return rule;
+  }
+
+  static fromRuleNodeLabelsPremisesAndConclusion(ruleNode, labels, premises, conclusion) {
+    const rule = new Rule(labels, premises, conclusion);
 
     return rule;
   }

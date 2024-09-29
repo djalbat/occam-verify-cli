@@ -4,10 +4,10 @@ import { lexersUtilities } from "occam-custom-grammars";
 
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
 
-const { florenceLexerFromCombinedCustomGrammar } = lexersUtilities;
+const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities;
 
 const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
-      florenceLexer = florenceLexerFromCombinedCustomGrammar(combinedCustomGrammar);
+      nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 
 export function termTokensFromTermString(termString, lexer) {
   const content = termString, ///
@@ -23,7 +23,7 @@ export function statementTokensFromStatementString(statementString, lexer) {
   return statementTokens;
 }
 
-function tokensFromContentAndLexer(content, lexer = florenceLexer) {
+function tokensFromContentAndLexer(content, lexer = nominalLexer) {
   const tokens = lexer.tokenise(content);
 
   return tokens;

@@ -9,9 +9,9 @@ import verifyTheorem from "../verify/theorem";
 import verifyMetaLemma from "../verify/metaLemma";
 import verifyConjecture from "../verify/conjecture";
 import verifyMetatheorem from "../verify/metatheorem";
+import CombinatorDeclaration from "../declaration/combinator";
 import verifyTypeDeclaration from "../verify/declaration/type";
 import verifyVariableDeclaration from "../verify/declaration/variable";
-import verifyCombinatorDeclaration from "../verify/declaration/combinator";
 import verifyConstructorDeclaration from "../verify/declaration/constructor";
 import verifyMetavariableDeclaration from "../verify/declaration/metavariable";
 
@@ -127,7 +127,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: combinatorDeclarationNodeQuery,
       verify: (combinatorDeclarationNode, fileContext) => {
-        const combinatorDeclarationVerified = verifyCombinatorDeclaration(combinatorDeclarationNode, fileContext);
+        const combinatorDeclaration = CombinatorDeclaration.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
+              combinatorDeclarationVerified = combinatorDeclaration.verify(fileContext);
 
         return combinatorDeclarationVerified;
       }

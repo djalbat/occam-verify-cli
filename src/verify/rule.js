@@ -53,7 +53,7 @@ export default function verifyRule(ruleNode, fileContext) {
         }
 
         if (proofVerified) {
-          const rule = Rule.fromLabelsPremisesConclusionAndFileContext(labels, premises, conclusion, fileContext);
+          const rule = Rule.fromRuleNodeLabelsPremisesAndConclusion(ruleNode, labels, premises, conclusion);
 
           fileContext.addRule(rule);
 

@@ -6,10 +6,10 @@ import { combinedCustomGrammarFromNothing } from "./customGrammar";
 import { TERM_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
 import { termTokensFromTermString, statementTokensFromStatementString } from "../utilities/tokens";
 
-const { florenceParserFromCombinedCustomGrammar } = parsersUtilities;
+const { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
-      florenceParser = florenceParserFromCombinedCustomGrammar(combinedCustomGrammar);
+      nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
 export function termNodeFromTermString(termString, lexer, parser) {
   const termTokens = termTokensFromTermString(termString, lexer),
@@ -41,7 +41,7 @@ export function statementNodeFromStatementTokens(statementTokens, parser) {
   return statementNode;
 }
 
-function nodeFromTokensRuleNameAndParser(tokens, ruleName, parser = florenceParser) {
+function nodeFromTokensRuleNameAndParser(tokens, ruleName, parser = nominalParser) {
   const ruleMap = parser.getRuleMap(),
         rule = ruleMap[ruleName],
         node = parser.parse(tokens, rule);

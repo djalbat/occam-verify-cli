@@ -1,13 +1,19 @@
 "use strict";
 
-import { nodeAsString } from "./utilities/string";
+import { metaTypeFromJSON } from "./metaType";
+import { metavariableNameFromMetavariableNode } from "./utilities/name";
 
 export default class Metavariable {
-  constructor(node, name, termType, metaType) {
+  constructor(string, node, name, termType, metaType) {
+    this.string = string;
     this.node = node;
     this.name = name;
     this.termType = termType;
     this.metaType = metaType;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getNode() {
@@ -44,18 +50,46 @@ export default class Metavariable {
     return metavariableNodeMatches;
   }
 
-  asString(tokens) {
-    const metaTypeName = this.metaType.getName();
+  toJSON(fileContext) {
+    const metaTypeJSON = this.metaType.toJSON(fileContext),
+          string = this.string,
+          metaType = metaTypeJSON,  ///
+          json = {
+            string,
+            metaType
+          };
 
-    let string = nodeAsString(this.node, tokens);
-
-    string = `${string}:${metaTypeName}`; ///
-
-    return string;
+    return json;
   }
 
-  static fromNodeNameTermTypeAndMetaType(node, name, termType, metaType) {
-    const metavariable = new Metavariable(node, name, termType, metaType);
+  static fromJSON(json, fileContext) {
+    const { string } = json,
+          lexer  = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          metavariableString = string,  ///
+          metavariableNode = metavariableNodeFromMetavariableString(metavariableString, lexer, parser),
+          node = metavariableNode;  ///
+
+    let { metaType } = json;
+
+    json = metaType;  ///
+
+    metaType = metaTypeFromJSON(json, fileContext);
+
+    const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          name = metavariableName,  ///
+          termType = termTypeFromMetavariableNode(metavariableNode, fileContext),
+          metavariable = new Metavariable(string, node, name, termType, metaType);
+
+    return metavariable;
+  }
+
+  static fromMetavariableNodeNameTermTypeAndMetaType(metavariableNode, termType, metaType, fileContext) {
+    const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          name = metavariableName,  ///
+          node = metavariableNode,  ///
+          string = fileContext.nodeAsString(node),
+          metavariable = new Metavariable(string, node, name, termType, metaType);
 
     return metavariable;
   }
