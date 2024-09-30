@@ -1,7 +1,7 @@
 "use strict";
 
 import Consequent from "../consequent";
-import verifyStatement from "../verify/statement";
+// import verifyStatement from "../verify/statement";
 
 import { nodeQuery } from "../utilities/query";
 

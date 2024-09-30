@@ -1,6 +1,6 @@
 "use strict";
 
-import Statement from "../statement";
+import shim from "../shim";
 import Combinator from "../combinator";
 import bracketedCombinatorStatementNode from "../node/statement/combinator/bracketed";
 
@@ -14,16 +14,13 @@ const fileContext = {
   }
 };
 
-class BracketedCombinator extends Combinator {
+export default class BracketedCombinator extends Combinator {
   static fromNothing() {
-    const statementNode = bracketedCombinatorStatementNode,  ///
+    const { Statement } = shim,
+          statementNode = bracketedCombinatorStatementNode,  ///
           statement = Statement.fromStatementNode(statementNode, fileContext),
           bracketedCombinator = new BracketedCombinator(statement);
 
     return bracketedCombinator;
   }
 }
-
-const bracketedCombinator = BracketedCombinator.fromNothing();
-
-export default bracketedCombinator;

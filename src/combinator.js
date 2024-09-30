@@ -1,6 +1,6 @@
 "use strict";
 
-import Statement from "./statement";
+import shim from "./shim";
 
 import { nodeQuery } from "./utilities/query";
 
@@ -17,6 +17,12 @@ export default class Combinator {
 
   getString() { return this.statement.getString(); }
 
+  getStatementNode() {
+    const statementNode = this.statement.getNode();
+
+    return statementNode;
+  }
+
   verify(fileContext) {
     const statementVerifiedAsCombinator = this.statement.verifyAsCombinator(fileContext),
           verified = statementVerifiedAsCombinator; ///
@@ -25,7 +31,8 @@ export default class Combinator {
   }
 
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
-    const statementNode = statementNodeQuery(combinatorDeclarationNode),
+    const { Statement } = shim,
+          statementNode = statementNodeQuery(combinatorDeclarationNode),
           statement = Statement.fromStatementNode(statementNode, fileContext),
           combinator = new Combinator(statement);
 

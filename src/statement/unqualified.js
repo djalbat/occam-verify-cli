@@ -21,7 +21,7 @@ export default class UnqualifiedStatement {
     return this.statement;
   }
 
-  verify(assignments, localContext) {
+  verify(assignments, stated, localContext) {
     let verified = false;
 
     const unqualifiedStatementString = this.string;
@@ -29,12 +29,20 @@ export default class UnqualifiedStatement {
     if (this.statement !== null) {
       localContext.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
 
-      const statementVerified = this.statement.verify(assignments, localContext);
+      const statementUnified = this.statement.unify(assignments, stated, localContext);
 
-      if (statementVerified) {
-        localContext.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);
-
+      if (statementUnified) {
         verified = true;
+      } else {
+        const statementVerified = this.statement.verify(assignments, stated, localContext);
+
+        if (statementVerified) {
+          verified = true;
+        }
+      }
+
+      if (verified) {
+        localContext.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);
       }
     } else {
       localContext.debug(`The '${unqualifiedStatementString}' unqualified statement cannot be verified because it is nonsense.`);

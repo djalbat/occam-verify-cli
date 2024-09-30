@@ -1,10 +1,38 @@
 "use strict";
 
+import shim from "./shim";
+import unifyMixins from "./mixins/unify";
 import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
 import { statementNodeFromStatementString } from "./utilities/node";
+import { unifyWithCombinators, unifyWithBracketedCombinator } from "./mixins/unify";
+import { verifyAsMetavariable,
+         verifyAsEquality,
+         verifyAsFrame,
+         verifyAsJudgement,
+         verifyAsDeclaration,
+         verifyAsTypeAssertion,
+         verifyAsDefinedAssertion,
+         verifyAsSubproofAssertion,
+         verifyAsContainedAssertion } from "./mixins/verify";
 
-export default class Statement {
+const unifyFunctions = [
+        unifyWithBracketedCombinator,
+        unifyWithCombinators
+      ],
+      verifyFunctions = [
+        verifyAsMetavariable,
+        verifyAsEquality,
+        verifyAsFrame,
+        verifyAsJudgement,
+        verifyAsDeclaration,
+        verifyAsTypeAssertion,
+        verifyAsDefinedAssertion,
+        verifyAsSubproofAssertion,
+        verifyAsContainedAssertion
+      ];
+
+class Statement {
   constructor(string, node) {
     this.string = string;
     this.node = node;
@@ -18,10 +46,48 @@ export default class Statement {
     return this.node;
   }
 
-  verify(assignments, localContext) {
+  unify(assignments, stated, localContext) {
+    let unified;
+
+    const statement = this, ///
+          statementString = this.string;  ///
+
+    localContext.trace(`Unifying the '${statementString}' statement...`);
+
+    unified = unifyFunctions.some((unifyFunction) => {
+      const unified = unifyFunction(statement, assignments, stated, localContext);
+
+      if (unified) {
+        return true;
+      }
+    });
+
+    if (unified) {
+      localContext.debug(`...unified the '${statementString}' statement.`);
+    }
+
+    return unified;
+  }
+
+  verify(assignments, stated, localContext) {
     let verified;
 
-    debugger
+    const statement = this, ///
+          statementString = this.string;  ///
+
+    localContext.trace(`Verifying the '${statementString}' statement...`);
+
+    verified = verifyFunctions.some((verifyFunction) => {
+      const verified = verifyFunction(statement, assignments, stated, localContext);
+
+      if (verified) {
+        return true;
+      }
+    });
+
+    if (verified) {
+      localContext.debug(`...verified the '${statementString}' statement.`);
+    }
 
     return verified;
   }
@@ -72,3 +138,12 @@ export default class Statement {
     return statement;
   }
 }
+
+Object.assign(shim, {
+  Statement
+});
+
+Object.assign(Statement.prototype, unifyMixins);
+
+export default Statement;
+

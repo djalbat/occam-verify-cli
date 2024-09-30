@@ -1,6 +1,6 @@
 "use strict";
 
-import verifyStatement from "../../verify/statement";
+// import verifyStatement from "../../verify/statement";
 import unifyQualifiedStatement from "../../unify/qualifiedStatement";
 
 import { nodeQuery } from "../../utilities/query";

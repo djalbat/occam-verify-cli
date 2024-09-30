@@ -79,8 +79,9 @@ export default class Premise {
 
     localContext.trace(`Verifying the '${premiseString}' premise...`);
 
-    const assignments = [],
-          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, localContext);
+    const stated = true,
+          assignments = [],
+          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
 
     if (unqualifiedStatementVerified) {
       const assignmentsAssigned = assignAssignments(assignments, localContext);

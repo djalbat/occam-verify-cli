@@ -2,7 +2,7 @@
 
 import ProofStep from "../proofStep";
 import Supposition from "../supposition";
-import verifyStatement from "../verify/statement";
+// import verifyStatement from "../verify/statement";
 
 import { nodeQuery } from "../utilities/query";
 import { assignAssignments } from "../utilities/assignments";
