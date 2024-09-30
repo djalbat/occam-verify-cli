@@ -22,7 +22,7 @@ export default class Label {
   verify(fileContext) {
     let verified = false;
 
-    const labelString = this.string;  ///
+    const labelString = this.getString(); ///
 
     fileContext.trace(`Verifying the '${labelString}' label...`);
 

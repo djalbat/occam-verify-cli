@@ -55,14 +55,6 @@ class Statement {
 
     localContext.trace(`Unifying the '${statementString}' statement...`);
 
-    unified = unifyFunctions.some((unifyFunction) => {
-      const unified = unifyFunction(statement, assignments, stated, localContext);
-
-      if (unified) {
-        return true;
-      }
-    });
-
     if (unified) {
       localContext.debug(`...unified the '${statementString}' statement.`);
     }
@@ -71,20 +63,32 @@ class Statement {
   }
 
   verify(assignments, stated, localContext) {
-    let verified;
+    let verified = false;
 
     const statement = this, ///
           statementString = this.string;  ///
 
     localContext.trace(`Verifying the '${statementString}' statement...`);
 
-    verified = verifyFunctions.some((verifyFunction) => {
-      const verified = verifyFunction(statement, assignments, stated, localContext);
+    if (!verified) {
+      verified = unifyFunctions.some((unifyFunction) => { ///
+        const unified = unifyFunction(statement, assignments, stated, localContext);
 
-      if (verified) {
-        return true;
-      }
-    });
+        if (unified) {
+          return true;
+        }
+      });
+    }
+
+    if (!verified) {
+      verified = verifyFunctions.some((verifyFunction) => {
+        const verified = verifyFunction(statement, assignments, stated, localContext);
+
+        if (verified) {
+          return true;
+        }
+      });
+    }
 
     if (verified) {
       localContext.debug(`...verified the '${statementString}' statement.`);
@@ -183,9 +187,9 @@ class Statement {
     return statement;
   }
 
-  static fromStatementNode(statementNode, fileContext) {
+  static fromStatementNode(statementNode, localContext) {
     const node = statementNode, ///
-          string = fileContext.nodeAsString(node),
+          string = localContext.nodeAsString(node),
           statement = new Statement(string, node);
 
     return statement;

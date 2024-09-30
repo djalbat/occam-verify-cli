@@ -30,17 +30,9 @@ export default class UnqualifiedStatement {
     if (this.statement !== null) {
       localContext.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
 
-      const statementUnified = this.statement.unify(assignments, stated, localContext);
+      const statementVerified = this.statement.verify(assignments, stated, localContext);
 
-      if (statementUnified) {
-        verified = true;
-      } else {
-        const statementVerified = this.statement.verify(assignments, stated, localContext);
-
-        if (statementVerified) {
-          verified = true;
-        }
-      }
+      verified = statementVerified;
 
       if (verified) {
         localContext.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);

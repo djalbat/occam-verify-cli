@@ -25,8 +25,9 @@ class MetaLevelVerifier extends Verifier {
     {
       nodeQuery: statementNodeQuery,
       verify: (statementNode, assignments, stated, localContext) => {
-        const { verifyStatement } = shim,
-              statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
+        const { Statement } = shim,
+              statement = Statement.fromStatementNode(statementNode, localContext),
+              statementVerified = statement.verify(assignments, stated, localContext);
 
         return statementVerified;
       }
