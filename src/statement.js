@@ -188,9 +188,14 @@ class Statement {
   }
 
   static fromStatementNode(statementNode, localContext) {
-    const node = statementNode, ///
-          string = localContext.nodeAsString(node),
-          statement = new Statement(string, node);
+    let statement;
+
+    if (statementNode !== null) {
+      const node = statementNode, ///
+            string = localContext.nodeAsString(node);
+
+      statement = new Statement(string, node);
+    }
 
     return statement;
   }

@@ -41,42 +41,42 @@ export default class Rule {
     return this.proof;
   }
 
-  unifyStatement(statementNode, localContext) {
-    let statementUnified = false;
+  // unifyStatement(statementNode, localContext) {
+  //   let statementUnified = false;
+  //
+  //   const substitutions = Substitutions.fromNothing(),
+  //         proofSteps = localContext.getProofSteps(),
+  //         premisesA = this.premises,
+  //         proofStepsB = proofSteps, ///
+  //         fileContextA = this.fileContext,  ///
+  //         localContextB = localContext, ///
+  //         premisesUnified = unifyPremisesWithProofSteps(premisesA, proofStepsB, substitutions, fileContextA, localContextB);
+  //
+  //   if (premisesUnified) {
+  //     const conclusionA = this.conclusion,  ///
+  //           conclusionUnified = unifyConclusionWithStatement(conclusionA, statementNode, substitutions, fileContextA, localContextB);
+  //
+  //     if (conclusionUnified) {
+  //       const substitutionsResolved = resolveSubstitutions(substitutions, fileContextA, localContextB);
+  //
+  //       statementUnified = substitutionsResolved; ///
+  //     }
+  //   }
+  //
+  //   return statementUnified;
+  // }
 
-    const substitutions = Substitutions.fromNothing(),
-          proofSteps = localContext.getProofSteps(),
-          premisesA = this.premises,
-          proofStepsB = proofSteps, ///
-          fileContextA = this.fileContext,  ///
-          localContextB = localContext, ///
-          premisesUnified = unifyPremisesWithProofSteps(premisesA, proofStepsB, substitutions, fileContextA, localContextB);
-
-    if (premisesUnified) {
-      const conclusionA = this.conclusion,  ///
-            conclusionUnified = unifyConclusionWithStatement(conclusionA, statementNode, substitutions, fileContextA, localContextB);
-
-      if (conclusionUnified) {
-        const substitutionsResolved = resolveSubstitutions(substitutions, fileContextA, localContextB);
-
-        statementUnified = substitutionsResolved; ///
-      }
-    }
-
-    return statementUnified;
-  }
-
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.labels.some((label) => {
-      const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
-
-      if (metavariableNodeMatches) {
-        return true;
-      }
-    });
-
-    return metavariableNodeMatches;
-  }
+  // matchMetavariableNode(metavariableNode) {
+  //   const metavariableNodeMatches = this.labels.some((label) => {
+  //     const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
+  //
+  //     if (metavariableNodeMatches) {
+  //       return true;
+  //     }
+  //   });
+  //
+  //   return metavariableNodeMatches;
+  // }
 
   verify(fileContext) {
     let verified = false;

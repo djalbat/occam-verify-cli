@@ -73,31 +73,34 @@ export default class Premise {
   }
 
   verify(localContext) {
-    let verified;
+    let verified = false;
 
     const premiseString = this.getString(); ///
 
-    localContext.trace(`Verifying the '${premiseString}' premise...`);
+    if (this.unqualifiedStatement !== null) {
+      localContext.trace(`Verifying the '${premiseString}' premise...`);
 
-    const stated = true,
-          assignments = [],
-          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
+      const stated = true,
+            assignments = [],
+            unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
 
-    if (unqualifiedStatementVerified) {
-      const assignmentsAssigned = assignAssignments(assignments, localContext);
+      if (unqualifiedStatementVerified) {
+        const assignmentsAssigned = assignAssignments(assignments, localContext);
 
-      if (assignmentsAssigned) {
-        const statement = this.getStatement(),
-              proofStep = ProofStep.fromStatement(statement);
+        if (assignmentsAssigned) {
+          const proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
 
-        localContext.addProofStep(proofStep);
+          localContext.addProofStep(proofStep);
 
-        verified = true;
+          verified = true;
+        }
       }
-    }
 
-    if (verified) {
-      localContext.debug(`...verified the '${premiseString}' premise.`);
+      if (verified) {
+        localContext.debug(`...verified the '${premiseString}' premise.`);
+      }
+    } else {
+      localContext.debug(`The '${premiseString}' premise cannot be verified because it is nonsense.`);
     }
 
     return verified;

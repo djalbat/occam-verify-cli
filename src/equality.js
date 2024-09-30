@@ -5,14 +5,9 @@ import equalityUnifier from "./unifier/equality";
 import { first, second } from "./utilities/array";
 
 export default class Equality {
-  constructor(node, leftTerm, rightTerm) {
-    this.node = node;
+  constructor(leftTerm, rightTerm) {
     this.leftTerm = leftTerm;
     this.rightTerm = rightTerm;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getLeftTerm() {
@@ -67,9 +62,7 @@ export default class Equality {
           leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
 
     if (leftTermTypeComparableToRightTermType) {
-      const node = equalityNode;  ///
-
-      equality = new Equality(node, leftTerm, rightTerm);
+      equality = new Equality(leftTerm, rightTerm);
     }
 
     return equality;

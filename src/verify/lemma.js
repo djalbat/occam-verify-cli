@@ -1,11 +1,11 @@
 "use strict";
 
 import Lemma from "../lemma";
-import verifyProof from "../verify/proof";
+// import verifyProof from "../verify/proof";
 import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 import verifyConsequent from "../verify/consequent";
-import verifySuppositions from "../verify/suppositions";
+// import verifySuppositions from "../verify/suppositions";
 
 import { first } from "../utilities/array";
 import { EMPTY_STRING } from "../constants";

@@ -1,8 +1,17 @@
 "use strict";
 
-import unifyStatementWithStatementGivenEquivalences from "./unify/statementWithSttaemetnGivenEquivalences";
+import shim from "./shim";
+import Subproof from "./subproof";
+import QualifiedStatement from "./statement/qualified";
+import UnqualifiedStatement from "./statement/unqualified";
 
-export default class ProofStep {
+import { nodeQuery } from "./utilities/query";
+
+const subproofNodeQuery = nodeQuery("/proofStep|lastProofStep/subproof"),
+      qualifiedStatementNodeQuery = nodeQuery("/proofStep|lastProofStep/qualifiedStatement"),
+      unqualifiedStatementNodeQuery = nodeQuery("/proofStep|lastProofStep/unqualifiedStatement");
+
+class ProofStep {
   constructor(subproof, statement) {
     this.subproof = subproof;
     this.statement = statement;
@@ -16,30 +25,70 @@ export default class ProofStep {
     return this.statement;
   }
 
-  unifyStatement(statementB, equivalences, localContextA, localContextB) {
-    let statementUnified = false;
+  // unifyStatement(statementB, equivalences, localContextA, localContextB) {
+  //   let statementUnified = false;
+  //
+  //   if (this.statement !== null) {
+  //     const statementA = this.statement,  ///
+  //           statementUnifiedWithStatement = unifyStatementWithStatementGivenEquivalences(statementA, statementB, equivalences, localContextA, localContextB);
+  //
+  //     statementUnified = statementUnifiedWithStatement;  ///
+  //   }
+  //
+  //   return statementUnified;
+  // }
 
-    if (this.statement !== null) {
-      const statementA = this.statement,  ///
-            statementUnifiedWithStatement = unifyStatementWithStatementGivenEquivalences(statementA, statementB, equivalences, localContextA, localContextB);
+  verify(substitutions, localContext) {
+    let verified = false;
 
-      statementUnified = statementUnifiedWithStatement;  ///
+    if (false) {
+      ///
+    } else if (this.subproof !== null) {
+      const subproofVerified = this.subproof.verify(substitutions, localContext);
+
+      verified = subproofVerified;  ///
+    } else if (this.qualifiedStatement !== null) {
+      const qualifiedStatementVerified = this.qualifiedStatment.verify(substitutions, localContext);
+
+      verified = qualifiedStatementVerified;  ///
+    } else if (this.unqualifiedStatement !== null) {
+      const unqualifiedStatementVerified = this.unqualifiedStatement.verify(localContext);
+
+      verified = unqualifiedStatementVerified;  ///
     }
 
-    return statementUnified;
+    if (verified) {
+      const proofStep = this; ///
+
+      localContext.addProofStep(proofStep);
+    }
+
+    return verified;
   }
 
-  static fromSubproof(subproof) {
-    const statement = null,
-          proofStep = new ProofStep(subproof, statement);
+  static fromProofStepNode(proofStepNode, fileContext) {
+    const subproofNode = subproofNodeQuery(proofStepNode),
+          qualifiedStatementNode = qualifiedStatementNodeQuery(proofStepNode),
+          unqualifiedStatementNode = unqualifiedStatementNodeQuery(proofStepNode),
+          subproof = Subproof.fromSubproofNode(subproofNode, fileContext),
+          qualifiedStatement = QualifiedStatement.fromQualifiedStatementNode(qualifiedStatementNode, fileContext),
+          unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
+          proofStep = new ProofStep(subproof, qualifiedStatement, unqualifiedStatement);
 
     return proofStep;
   }
 
-  static fromStatement(statement) {
+  static fromUnqualifiedStatement(unqualifiedStatement) {
     const subproof = null,
-          proofStep = new ProofStep(subproof, statement);
+          qualifiedStatement = null,
+          proofStep = new ProofStep(subproof, qualifiedStatement, unqualifiedStatement);
 
     return proofStep;
   }
 }
+
+Object.assign(shim, {
+  ProofStep
+});
+
+export default ProofStep;
