@@ -56,7 +56,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: ruleNodeQuery,
       verify: (ruleNode, fileContext) => {
         const rule = Rule.fromRuleNode(ruleNode, fileContext),
-              ruleVerified = rule.verify(ruleNode, fileContext);
+              ruleVerified = rule.verify(fileContext);
 
         return ruleVerified;
       }

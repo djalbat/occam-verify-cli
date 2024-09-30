@@ -2,7 +2,6 @@
 
 import Axiom from "../axiom";
 import LocalContext from "../context/local";
-import verifyLabels from "../verify/labels";
 import Substitutions from "../substitutions";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";

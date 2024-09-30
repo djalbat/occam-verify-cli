@@ -1,48 +1,43 @@
 "use strict";
 
-import Statement from "../statement";
 import Combinator from "../combinator";
 
-import { nodeQuery } from "../utilities/query";
-
-const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
-
 export default class CombinatorDeclaration {
-  constructor(statement) {
-    this.statement = statement;
+  constructor(combinator) {
+    this.combinator = combinator;
   }
 
-  getStatement() {
-    return this.statement;
+  getCombinator() {
+    return this.combinator;
   }
+
+  getString() { return this.combinator.getString(); }
 
   verify(fileContext) {
-    let combinatorDeclarationVerified;
+    let verified;
 
-    const statementString = this.statement.getString();
+    const ocmbinatorDeclarationString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${statementString}' combinator declaration...`);
+    fileContext.trace(`Verifying the '${ocmbinatorDeclarationString}' combinator declaration...`);
 
-    const combinator = Combinator.fromStatement(this.statement),
-          combinatorVerified = combinator.verify(fileContext);
+    const combinatorVerified = this.combinator.verify(fileContext);
 
     if (combinatorVerified) {
-      fileContext.addCombinator(combinator);
+      fileContext.addCombinator(this.combinator);
 
-      combinatorDeclarationVerified = true;
+      verified = true;
     }
 
-    if (combinatorDeclarationVerified) {
-      fileContext.debug(`...verified the '${statementString}' combinator declaration.`);
+    if (verified) {
+      fileContext.debug(`...verified the '${ocmbinatorDeclarationString}' combinator declaration.`);
     }
 
-    return combinatorDeclarationVerified;
+    return verified;
   }
 
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
-    const statementNode = statementNodeQuery(combinatorDeclarationNode),
-          statement = Statement.fromStatementNode(statementNode, fileContext),
-          combinatorDeclaration = new CombinatorDeclaration(statement);
+    const combinator = Combinator.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
+          combinatorDeclaration = new CombinatorDeclaration(combinator);
 
     return combinatorDeclaration;
   }

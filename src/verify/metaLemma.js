@@ -3,7 +3,6 @@
 import MetaLemma from "../metaLemma";
 import verifyProof from "../verify/proof";
 import LocalContext from "../context/local";
-import verifyLabels from "../verify/labels";
 import Substitutions from "../substitutions";
 import verifyConsequent from "../verify/consequent";
 import verifySuppositions from "../verify/suppositions";

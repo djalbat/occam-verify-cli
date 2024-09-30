@@ -1,24 +1,31 @@
 "use strict";
 
+import ProofStep from "./proofStep";
 import metaLevelUnifier from "./unifier/metaLevel";
+import UnqualifiedStatement from "./statement/unqualified";
 
 import { match } from "./utilities/array";
-import { nodeAsString } from "./utilities/string";
+import { assignAssignments } from "./utilities/assignments";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 
-const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
+const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement"),
+      subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
       subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
       subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement!"),
       subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!");
 
 export default class Premise {
-  constructor(statementNode) {
-    this.statementNode = statementNode;
+  constructor(unqualifiedStatement) {
+    this.unqualifiedStatement = unqualifiedStatement;
   }
 
-  getStatementNode() {
-    return this.statementNode;
+  getUnqualifiedStatement() {
+    return this.unqualifiedStatement;
   }
+
+  getString() { return this.unqualifiedStatement.getString(); }
+
+  getStatement() { return this.unqualifiedStatement.getStatement(); }
 
   unifyStatement(statementNodeB, substitutions, localContextA, localContextB) {
     let statementUnified = false;
@@ -65,9 +72,41 @@ export default class Premise {
     return subproofUnified;
   }
 
-  static fromStatementNode(statementNode) {
-    const premise = new Premise(statementNode);
+  verify(localContext) {
+    let verified;
 
-    return premise;
+    const premiseString = this.getString(); ///
+
+    localContext.trace(`Verifying the '${premiseString}' premise...`);
+
+    const assignments = [],
+          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, localContext);
+
+    if (unqualifiedStatementVerified) {
+      const assignmentsAssigned = assignAssignments(assignments, localContext);
+
+      if (assignmentsAssigned) {
+        const statement = this.getStatement(),
+              proofStep = ProofStep.fromStatement(statement);
+
+        localContext.addProofStep(proofStep);
+
+        verified = true;
+      }
+    }
+
+    if (verified) {
+      localContext.debug(`...verified the '${premiseString}' premise.`);
+    }
+
+    return verified;
+  }
+
+  static fromPremiseNode(premiseNode, fileContext) {
+    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(premiseNode),
+          unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
+          premise = new Premise(unqualifiedStatement);
+
+    return premise
   }
 }

@@ -18,6 +18,14 @@ export default class Statement {
     return this.node;
   }
 
+  verify(assignments, localContext) {
+    let verified;
+
+    debugger
+
+    return verified;
+  }
+
   verifyAsCombinator(fileContext) {
     let verifiedAsCombinator;
 

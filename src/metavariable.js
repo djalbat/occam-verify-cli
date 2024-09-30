@@ -85,7 +85,15 @@ export default class Metavariable {
   }
 
   static fromMetavariableNode(metavariableNode, fileContext) {
+    const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          name = metavariableName,  ///
+          node = metavariableNode,  ///
+          string = fileContext.nodeAsString(node),
+          termType = null,
+          metaType = null,
+          metavariable = new Metavariable(string, node, name, termType, metaType);
 
+    return metavariable;
   }
 
   static fromMetavariableNodeNameTermTypeAndMetaType(metavariableNode, termType, metaType, fileContext) {

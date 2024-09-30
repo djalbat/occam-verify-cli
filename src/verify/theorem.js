@@ -2,7 +2,6 @@
 
 import Theorem from "../theorem";
 import verifyProof from "../verify/proof";
-import verifyLabels from "../verify/labels";
 import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 import verifyConsequent from "../verify/consequent";

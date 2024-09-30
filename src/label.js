@@ -2,23 +2,45 @@
 
 import Metavariable from "./metavariable";
 
+import { nodeQuery } from "./utilities/query";
 
+const metavariableNodeQuery = nodeQuery("//label/metavariable");
 
 export default class Label {
-  constructor(string, metavariable) {
-    this.string = string;
+  constructor(metavariable) {
     this.metavariable = metavariable;
   }
 
-  getString() {
-    return this.string;
-  }
+  getString() { return this.metavariable.getString(); }
 
   getMetavariable() {
     return this.metavariable;
   }
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
+
+  verify(fileContext) {
+    let verified = false;
+
+    const labelString = this.string;  ///
+
+    fileContext.trace(`Verifying the '${labelString}' label...`);
+
+    const metavariableNode = this.metavariable.getNode(),
+          labelPresent = fileContext.isLabelPresentByMetavariableNode(metavariableNode);
+
+    if (labelPresent) {
+      fileContext.debug(`The '${labelString}' label is already present.`);
+    } else {
+      verified = true;
+    }
+
+    if (verified) {
+      fileContext.debug(`...verified the '${labelString}' label.`);
+    }
+
+    return verified;
+  }
 
   toJSON(fileContext) {
     const metavariableJSON = this.metavariable.toJSON(fileContext),
@@ -47,10 +69,9 @@ export default class Label {
   }
 
   static fromLabelNode(labelNode, fileContext) {
-    const node = labelNode, ///
-          string = fileContext.nodeAsString(node),
-          metavariable = Metavariable.fromMetavariableNode(metavariableNode),
-          label = new Label(string, metavariable);
+    const metavariableNode = metavariableNodeQuery(labelNode),
+          metavariable = Metavariable.fromMetavariableNode(metavariableNode, fileContext),
+          label = new Label(metavariable);
 
     return label;
   }

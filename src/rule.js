@@ -3,6 +3,7 @@
 import Label from "./label";
 import Premise from "./premise";
 import Conclusion from "./conclusion";
+import LocalContext from "./context/local";
 import Substitutions from "./substitutions";
 import resolveSubstitutions from "./resolve/substitutions";
 import unifyPremisesWithProofSteps from "./unify/premisesWithProofSteps";
@@ -68,6 +69,68 @@ export default class Rule {
     });
 
     return metavariableNodeMatches;
+  }
+
+  verify(fileContext) {
+    let veriried = false;
+
+    const labelsString = labelsStringFromLabels(this.labels);
+
+    fileContext.trace(`Verifying the '${labelsString}' rule...`);
+
+    const labelsVerified = this.labels.every((label) => {
+      const labelVVerified = label.verify(fileContext);
+
+      if (labelVVerified) {
+        return true;
+      }
+    });
+
+    if (labelsVerified) {
+      const localContext = LocalContext.fromFileContext(fileContext),
+            premisesVerified = this.premises.every((premise) => {
+              const premiseVerified = premise.verify(fileContext);
+
+              if (premiseVerified) {
+                return true;
+              }
+            });
+
+      if (premisesVerified) {
+        const conclusions = [],
+          conclusionNode = conclusionNodeQuery(ruleNode),
+          conclusionVerified = verifyConclusion(conclusionNode, conclusions, localContext);
+
+        if (conclusionVerified) {
+          let proofVerified = true; ///
+
+          const firstConclusion = first(conclusions),
+            proofNode = proofNodeQuery(ruleNode),
+            conclusion = firstConclusion; ///
+
+          if (proofNode !== null) {
+            const substitutions = Substitutions.fromNothing(),
+              statementNode = conclusion.getStatementNode();
+
+            proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
+          }
+
+          if (proofVerified) {
+            const rule = Rule.fromRuleNodeLabelsPremisesAndConclusion(ruleNode, labels, premises, conclusion);
+
+            fileContext.addRule(rule);
+
+            veriried = true;
+          }
+        }
+      }
+    }
+
+    if (veriried) {
+      fileContext.debug(`...verified the '${labelsString}' rule.`, ruleNode);
+    }
+
+    return veriried;
   }
 
   toJSON(fileContext) {
@@ -157,4 +220,14 @@ export default class Rule {
 
     return rule;
   }
+}
+
+function labelsStringFromLabels(labels) {
+  const labelsString = labels.map((label) => {
+          const labelString = label.getString();
+
+          return labelString;
+        });
+
+  return labelsString;
 }

@@ -2,6 +2,12 @@
 
 import { COMMA, EMPTY_STRING } from "../constants";
 
+export function trim(string) {
+  string = string.replace(/\s+$/, EMPTY_STRING);  ///
+
+  return string;
+}
+
 export function nodeAsString(node, tokens) {
   let string;
 
