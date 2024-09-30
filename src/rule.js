@@ -1,6 +1,7 @@
 "use strict";
 
 import Label from "./label";
+import Proof from "./proof";
 import Premise from "./premise";
 import Conclusion from "./conclusion";
 import LocalContext from "./context/local";
@@ -11,15 +12,17 @@ import unifyConclusionWithStatement from "./unify/conclusionWithStatement";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
 
-const labelNodesQuery = nodesQuery("/rule/label"),
+const proofNodeQuery = nodeQuery("/rule/proof"),
+      labelNodesQuery = nodesQuery("/rule/label"),
       premiseNodesQuery = nodesQuery("/rule/premise"),
       conclusionNodeQuery = nodeQuery("/rule/conclusion");
 
 export default class Rule {
-  constructor(labels, premises, conclusion) {
+  constructor(labels, premises, conclusion, proof) {
     this.labels = labels;
     this.premises = premises;
     this.conclusion = conclusion;
+    this.proof = proof;
   }
 
   getLabels() {
@@ -32,6 +35,10 @@ export default class Rule {
 
   getConclusion() {
     return this.conclusion;
+  }
+
+  getProof() {
+    return this.proof;
   }
 
   unifyStatement(statementNode, localContext) {
@@ -72,7 +79,7 @@ export default class Rule {
   }
 
   verify(fileContext) {
-    let veriried = false;
+    let verified = false;
 
     const labelsString = labelsStringFromLabels(this.labels);
 
@@ -89,7 +96,7 @@ export default class Rule {
     if (labelsVerified) {
       const localContext = LocalContext.fromFileContext(fileContext),
             premisesVerified = this.premises.every((premise) => {
-              const premiseVerified = premise.verify(fileContext);
+              const premiseVerified = premise.verify(localContext);
 
               if (premiseVerified) {
                 return true;
@@ -97,40 +104,33 @@ export default class Rule {
             });
 
       if (premisesVerified) {
-        const conclusions = [],
-          conclusionNode = conclusionNodeQuery(ruleNode),
-          conclusionVerified = verifyConclusion(conclusionNode, conclusions, localContext);
+        const conclusionVerified = this.conclusion.verify(localContext);
 
         if (conclusionVerified) {
           let proofVerified = true; ///
 
-          const firstConclusion = first(conclusions),
-            proofNode = proofNodeQuery(ruleNode),
-            conclusion = firstConclusion; ///
+          if (this.proof !== null) {
+            const substitutions = Substitutions.fromNothing();
 
-          if (proofNode !== null) {
-            const substitutions = Substitutions.fromNothing(),
-              statementNode = conclusion.getStatementNode();
-
-            proofVerified = verifyProof(proofNode, statementNode, substitutions, localContext);
+            proofVerified = this.proof.verify(substitutions, this.conclusion, localContext);
           }
 
           if (proofVerified) {
-            const rule = Rule.fromRuleNodeLabelsPremisesAndConclusion(ruleNode, labels, premises, conclusion);
+            const rule = this;  ///
 
             fileContext.addRule(rule);
 
-            veriried = true;
+            verified = true;
           }
         }
       }
     }
 
-    if (veriried) {
-      fileContext.debug(`...verified the '${labelsString}' rule.`, ruleNode);
+    if (verified) {
+      fileContext.debug(`...verified the '${labelsString}' rule.`);
     }
 
-    return veriried;
+    return verified;
   }
 
   toJSON(fileContext) {
@@ -190,13 +190,16 @@ export default class Rule {
 
     conclusion = Conclusion.fromJSON(json, fileContext);
 
-    rule = new Rule(labels, premises, conclusion);
+    const proof = null;
+
+    rule = new Rule(labels, premises, conclusion, proof);
 
     return rule;
   }
 
   static fromRuleNode(ruleNode, fileContext) {
-    const labelNodes = labelNodesQuery(ruleNode),
+    const proofNode = proofNodeQuery(ruleNode),
+          labelNodes = labelNodesQuery(ruleNode),
           premiseNodes = premiseNodesQuery(ruleNode),
           conclusionNode = conclusionNodeQuery(ruleNode),
           labels = labelNodes.map((labelNode) => {
@@ -210,13 +213,8 @@ export default class Rule {
             return premise;
           }),
           conclusion = Conclusion.fromConclusionNode(conclusionNode, fileContext),
-          rule = new Rule(labels, premises, conclusion);
-
-    return rule;
-  }
-
-  static fromRuleNodeLabelsPremisesAndConclusion(ruleNode, labels, premises, conclusion) {
-    const rule = new Rule(labels, premises, conclusion);
+          proof = Proof.fromProofNode(proofNode, fileContext),
+          rule = new Rule(labels, premises, conclusion, proof);
 
     return rule;
   }

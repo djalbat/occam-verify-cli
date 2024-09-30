@@ -3,25 +3,25 @@
 import unifyStatementWithStatementGivenEquivalences from "./unify/statementWithSttaemetnGivenEquivalences";
 
 export default class ProofStep {
-  constructor(subproofNode, statementNode) {
-    this.subproofNode = subproofNode;
-    this.statementNode = statementNode;
+  constructor(subproof, statement) {
+    this.subproof = subproof;
+    this.statement = statement;
   }
 
-  getSubproofNode() {
-    return this.subproofNode;
+  getSubproof() {
+    return this.subproof;
   }
 
-  getStatementNode() {
-    return this.statementNode;
+  getStatement() {
+    return this.statement;
   }
 
-  unifyStatement(statementNodeB, equivalences, localContextA, localContextB) {
+  unifyStatement(statementB, equivalences, localContextA, localContextB) {
     let statementUnified = false;
 
-    if (this.statementNode !== null) {
-      const statementNodeA = this.statementNode,  ///
-            statementUnifiedWithStatement = unifyStatementWithStatementGivenEquivalences(statementNodeA, statementNodeB, equivalences, localContextA, localContextB);
+    if (this.statement !== null) {
+      const statementA = this.statement,  ///
+            statementUnifiedWithStatement = unifyStatementWithStatementGivenEquivalences(statementA, statementB, equivalences, localContextA, localContextB);
 
       statementUnified = statementUnifiedWithStatement;  ///
     }
@@ -29,16 +29,16 @@ export default class ProofStep {
     return statementUnified;
   }
 
-  static fromSubproofNode(subproofNode) {
-    const statementNode = null,
-          proofStep = new ProofStep(subproofNode, statementNode);
+  static fromSubproof(subproof) {
+    const statement = null,
+          proofStep = new ProofStep(subproof, statement);
 
     return proofStep;
   }
 
-  static fromStatementNode(statementNode) {
-    const subproofNode = null,
-          proofStep = new ProofStep(subproofNode, statementNode);
+  static fromStatement(statement) {
+    const subproof = null,
+          proofStep = new ProofStep(subproof, statement);
 
     return proofStep;
   }
