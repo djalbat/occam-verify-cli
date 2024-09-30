@@ -235,7 +235,7 @@ function unifyMetavariable(metavariableNode, localContext) {
 
   const metavariableString = localContext.nodeAsString(metavariableNode);
 
-  localContext.trace(`Unifying the '${metavariableString}' metavariable...`, metavariableNode);
+  localContext.trace(`Unifying the '${metavariableString}' metavariable...`);
 
   const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
         metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
@@ -253,7 +253,7 @@ function unifyMetavariable(metavariableNode, localContext) {
   }
 
   if (metavariableUnified) {
-    localContext.debug(`...unified the '${metavariableString}' metavariable.`, metavariableNode);
+    localContext.debug(`...unified the '${metavariableString}' metavariable.`);
   }
 
   return metavariableUnified;

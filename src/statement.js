@@ -6,6 +6,7 @@ import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
 import { statementNodeFromStatementString } from "./utilities/node";
 import { unifyWithCombinators, unifyWithBracketedCombinator } from "./mixins/unify";
+import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 import { verifyAsMetavariable,
          verifyAsEquality,
          verifyAsFrame,
@@ -92,21 +93,73 @@ class Statement {
     return verified;
   }
 
-  verifyAsCombinator(fileContext) {
+  unifyWithMetaType(metaType, assignments, stated, localContext) {
+    let unifiedWithMetaType;
+
+    const verifiedGivenMetaType = this.verifyGivenMetaType(metaType, assignments, stated, localContext);
+
+    unifiedWithMetaType = verifiedGivenMetaType;  ///
+
+    return unifiedWithMetaType;
+  }
+
+  verifyAsCombinator(localContext) {
     let verifiedAsCombinator;
 
     const statementNode = this.node,  ///
           statementString = this.string;  ///
 
-    fileContext.trace(`Verifying the '${statementString}' statement as a combinator...`);
+    localContext.trace(`Verifying the '${statementString}' statement as a combinator...`);
 
-    verifiedAsCombinator = statementAsCombinatorVerifier.verifyStatement(statementNode, fileContext);
+    verifiedAsCombinator = statementAsCombinatorVerifier.verifyStatement(statementNode, localContext);
 
     if (verifiedAsCombinator) {
-      fileContext.debug(`...verified the '${statementString}' statement as a combinator.`, statementNode);
+      localContext.debug(`...verified the '${statementString}' statement as a combinator.`, statementNode);
     }
 
     return verifiedAsCombinator;
+  }
+
+  verifyGivenMetaType(metaType, assignments, stated, localContext) {
+    let verifiedGivenMetaType;
+
+    const metaTypeName = metaType.getName();
+
+    switch (metaTypeName) {
+      case FRAME_META_TYPE_NAME:
+      case REFERENCE_META_TYPE_NAME: {
+        debugger
+
+        // verifiedGivenMetaType = false;
+        //
+        // const metavariableNode = metavariableNodeQuery(statementNode);
+        //
+        // if (metavariableNode !== null) {
+        //   const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+        //     metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
+        //
+        //   if (metavariable !== null) {
+        //     const metavariableMetaType = metavariable.getMetaType();
+        //
+        //     if (metavariableMetaType === metaType) {
+        //       verifiedGivenMetaType = true;
+        //     }
+        //   }
+        // }
+
+        break;
+      }
+
+      case STATEMENT_META_TYPE_NAME: {
+        const verified = this.verify(assignments, stated, localContext)
+
+        verifiedGivenMetaType = verified; ///
+
+        break;
+      }
+    }
+
+    return verifiedGivenMetaType;
   }
 
   toJSON(fileContext) {

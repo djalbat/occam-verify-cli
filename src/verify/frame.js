@@ -23,7 +23,7 @@ function verifyFrame(frameNode, frames, stated, localContext) {
 
   const frameString = localContext.nodeAsString(frameNode);
 
-  localContext.trace(`Verifying the '${frameString}' frame...`, frameNode);
+  localContext.trace(`Verifying the '${frameString}' frame...`);
 
   frameVerified = verifyFrameFunctions.some((verifyFrameFunction) => {
     const frameVerified = verifyFrameFunction(frameNode, frames, stated, localContext);
@@ -34,7 +34,7 @@ function verifyFrame(frameNode, frames, stated, localContext) {
   });
 
   if (frameVerified) {
-    localContext.debug(`...verified the '${frameString}' frame.`, frameNode);
+    localContext.debug(`...verified the '${frameString}' frame.`);
   }
 
   return frameVerified;
@@ -52,7 +52,7 @@ function verifyDerivedFrame(frameNode, frames, stated, localContext) {
   if (!stated) {
     const frameString = localContext.nodeAsString(frameNode);
 
-    localContext.trace(`Verifying the '${frameString}' derived frame...`, frameNode);
+    localContext.trace(`Verifying the '${frameString}' derived frame...`);
 
     const declarations = [],
           declarationNodes = declarationNodesQuery(frameNode),
@@ -84,7 +84,7 @@ function verifyDerivedFrame(frameNode, frames, stated, localContext) {
     }
 
     if (derivedFrameVerified) {
-      localContext.debug(`...verified the '${frameString}' derived frame.`, frameNode);
+      localContext.debug(`...verified the '${frameString}' derived frame.`);
     }
   }
 
@@ -97,7 +97,7 @@ function verifyStatedFrame(frameNode, frames, stated, localContext) {
   if (stated) {
     const frameString = localContext.nodeAsString(frameNode);
 
-    localContext.trace(`Verifying the '${frameString}' stated frame...`, frameNode);
+    localContext.trace(`Verifying the '${frameString}' stated frame...`);
 
     const declarationNodes = declarationNodesQuery(frameNode),
           declarationNodesLength = declarationNodes.length;
@@ -117,14 +117,14 @@ function verifyStatedFrame(frameNode, frames, stated, localContext) {
           statedFrameVerified = true;
         }
       } else {
-        localContext.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`, frameNode);
+        localContext.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
       }
     } else {
-      localContext.trace(`The '${frameString}' stated frame cannot have declarations.`, frameNode);
+      localContext.trace(`The '${frameString}' stated frame cannot have declarations.`);
     }
 
     if (statedFrameVerified) {
-      localContext.debug(`...verified the '${frameString}' stated frame.`, frameNode);
+      localContext.debug(`...verified the '${frameString}' stated frame.`);
     }
   }
 
@@ -136,7 +136,7 @@ function verifyMetavariable(metavariableNode, declarations, localContext) {
 
   const metavariableString = localContext.nodeAsString(metavariableNode);
 
-  localContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
+  localContext.trace(`Verifying the '${metavariableString}' metavariable...`);
 
   const metaType = frameMetaType, ///
         metavariableVerifiedGivenMetaType = verifyMetavariableGivenMetaType(metavariableNode, metaType, localContext);
@@ -152,12 +152,12 @@ function verifyMetavariable(metavariableNode, declarations, localContext) {
 
       metavariableVerified = true;
     } else {
-      localContext.trace(`There is no judgement for the '${metavariableString}' metavariable.`, metavariableNode);
+      localContext.trace(`There is no judgement for the '${metavariableString}' metavariable.`);
     }
   }
 
   if (metavariableVerified) {
-    localContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
+    localContext.debug(`...verified the '${metavariableString}' metavariable.`);
   }
 
   return metavariableVerified;

@@ -1,6 +1,7 @@
 "use strict";
 
 import Statement from "../statement";
+import LocalContext from "../context/local";
 
 import { trim } from "../utilities/string";
 import { nodeQuery } from "../utilities/query";
@@ -53,8 +54,9 @@ export default class UnqualifiedStatement {
 
   static fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext) {
     const statementNode = statementNodeQuery(unqualifiedStatementNode),
+          localContext = LocalContext.fromFileContext(fileContext),
           statement = (statementNode !== null) ?
-                        Statement.fromStatementNode(statementNode, fileContext) :
+                        Statement.fromStatementNode(statementNode, localContext) :
                           null,
           node = unqualifiedStatementNode,  ///
           string = trim(fileContext.nodeAsString(node)),

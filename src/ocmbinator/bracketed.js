@@ -6,7 +6,7 @@ import bracketedCombinatorStatementNode from "../node/statement/combinator/brack
 
 import { bracketedCombinatorStatementString } from "../node/statement/combinator/bracketed";
 
-const fileContext = {
+const localContext = {
   nodeAsString: (node) => {
     const string = bracketedCombinatorStatementString;  ///
 
@@ -18,7 +18,7 @@ export default class BracketedCombinator extends Combinator {
   static fromNothing() {
     const { Statement } = shim,
           statementNode = bracketedCombinatorStatementNode,  ///
-          statement = Statement.fromStatementNode(statementNode, fileContext),
+          statement = Statement.fromStatementNode(statementNode, localContext),
           bracketedCombinator = new BracketedCombinator(statement);
 
     return bracketedCombinator;

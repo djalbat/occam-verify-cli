@@ -20,14 +20,14 @@ export default function verifyMetavariableDeclaration(metavariableDeclarationNod
         metaTypeString = fileContext.nodeAsString(metaTypeNode),
         metavariableString = fileContext.nodeAsString(metavariableNode);
 
-  fileContext.trace(`Verifying the '${metavariableString}:${metaTypeString}' metavariable declaration...`, metavariableDeclarationNode);
+  fileContext.trace(`Verifying the '${metavariableString}:${metaTypeString}' metavariable declaration...`);
 
   const metavariableVVerified = verifyMetavariable(metavariableNode, metaTypeNode, fileContext);
 
   metavariableDeclarationVerified = metavariableVVerified;  ///
 
   if (metavariableDeclarationVerified) {
-    fileContext.debug(`...verified the '${metavariableString}:${metaTypeString}' metavariable declaration.`, metavariableDeclarationNode);
+    fileContext.debug(`...verified the '${metavariableString}:${metaTypeString}' metavariable declaration.`);
   }
 
   return metavariableDeclarationVerified;
@@ -38,12 +38,12 @@ function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
 
   const metavariableString = fileContext.nodeAsString(metavariableNode);
 
-  fileContext.trace(`Verifying the '${metavariableString}' metavariable...`, metavariableNode);
+  fileContext.trace(`Verifying the '${metavariableString}' metavariable...`);
 
   const metavariablePresent = fileContext.isMetavariablePresentByMetavariableNode(metavariableNode);
 
   if (metavariablePresent) {
-    fileContext.debug(`The metavariable '${metavariableString}' is already present.`, metavariableNode);
+    fileContext.debug(`The metavariable '${metavariableString}' is already present.`);
   } else {
     const termTypes = [],
           metaTypes = [],
@@ -80,7 +80,7 @@ function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
   }
 
   if (metavariableVerified) {
-    fileContext.debug(`...verified the '${metavariableString}' metavariable.`, metavariableNode);
+    fileContext.debug(`...verified the '${metavariableString}' metavariable.`);
   }
 
   return metavariableVerified;
@@ -99,7 +99,7 @@ function verifyArgument(argumentNode, termTypes, fileContext) {
     } else {
       const termString = fileContext.nodeAsString(termNode);
 
-      fileContext.debug(`The '${termString}' term was found when a type should have been present.`, termNode);
+      fileContext.debug(`The '${termString}' term was found when a type should have been present.`);
     }
     const typeNode = typeNodeQuery(argumentNode);
 
@@ -115,7 +115,7 @@ function verifyArgument(argumentNode, termTypes, fileContext) {
       } else {
         const typeString = fileContext.nodeAsString(typeNode);
 
-        fileContext.debug(`The '${typeString}' type is not present.`, typeNode);
+        fileContext.debug(`The '${typeString}' type is not present.`);
       }
     }
   }

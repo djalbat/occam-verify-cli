@@ -1,6 +1,7 @@
 "use strict";
 
 import shim from "./shim";
+import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
 
@@ -24,7 +25,8 @@ export default class Combinator {
   }
 
   verify(fileContext) {
-    const statementVerifiedAsCombinator = this.statement.verifyAsCombinator(fileContext),
+    const localContext = LocalContext.fromFileContext(fileContext),
+          statementVerifiedAsCombinator = this.statement.verifyAsCombinator(localContext),
           verified = statementVerifiedAsCombinator; ///
 
     return verified;
@@ -33,7 +35,8 @@ export default class Combinator {
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
     const { Statement } = shim,
           statementNode = statementNodeQuery(combinatorDeclarationNode),
-          statement = Statement.fromStatementNode(statementNode, fileContext),
+          localContext = LocalContext.fromFileContext(fileContext),
+          statement = Statement.fromStatementNode(statementNode, localContext),
           combinator = new Combinator(statement);
 
     return combinator;

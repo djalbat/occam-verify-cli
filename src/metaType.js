@@ -1,8 +1,10 @@
 "use strict";
 
+import shim from "./shim";
+
 import { metaTypeNameFromMetaTypeNode } from "./utilities/name";
 
-export default class MetaType {
+class MetaType {
   constructor(name) {
     this.name = name;
   }
@@ -50,13 +52,20 @@ export default class MetaType {
     return string;
   }
 
-  static fromMetaTypeName(metaTypeName) {
-    const name = metaTypeName,  ///
+  static fromMetaTypeNode(metaTypeNode, localContext) {
+    const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
+          name = metaTypeName,  ///
           metaType = new MetaType(name);
 
     return metaType;
   }
 }
+
+Object.assign(shim, {
+  MetaType
+});
+
+export default MetaType;
 
 export function metaTypeFromJSON(json, fileContext) {
   let metaType;

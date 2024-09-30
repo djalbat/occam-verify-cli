@@ -1,9 +1,9 @@
 "use strict";
 
+import shim from "../shim";
 import Unifier from "../unifier";
 import unifyTermWithType from "../unify/termWithType";
 import unifyFrameWithMetaType from "../unify/frameWithMetaType";
-import unifyStatementWithMetaType from "../unify/statementWithMetaType";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -31,9 +31,12 @@ class StatementWithCombinatorUnifier extends Unifier {
       nodeQueryA: statementNodeQuery,
       nodeQueryB: metaTypeNodeQuery,
       unify: (statementNodeA, metaTypeNodeB, assignments, stated, localContext) => {
-        const metaTypeNode = metaTypeNodeB, ///
+        const { MetaType, Statement } = shim,
+              metaTypeNode = metaTypeNodeB, ///
               statementNode = statementNodeA, ///
-              statementUnifiedWithMetaType = unifyStatementWithMetaType(statementNode, metaTypeNode, assignments, stated, localContext);
+              metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
+              statement = Statement.fromStatementNode(statementNode, localContext),
+              statementUnifiedWithMetaType = statement.unifyWithMetaType(metaType, assignments, stated, localContext);
 
         return statementUnifiedWithMetaType;
       }
