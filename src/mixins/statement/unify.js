@@ -14,7 +14,7 @@ function unifyWithBracketedCombinator(statement, assignments, stated, localConte
 
   localContext.trace(`Unifying the '${statementString}' statement with the bracketed combinator...`);
 
-  unifiedWithBracketedCombinator = statementWithCombinatorUnifier.unify(statementNode, combinatorStatementNode, statement, assignments, stated, localContext);
+  unifiedWithBracketedCombinator = statementWithCombinatorUnifier.unify(statementNode, combinatorStatementNode, assignments, stated, localContext);
 
   if (unifiedWithBracketedCombinator) {
     localContext.debug(`...unified the '${statementString}' statement with the bracketed combinator.`);
