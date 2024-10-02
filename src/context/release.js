@@ -492,10 +492,9 @@ function fileContextsFromJSONEntriesAndReleaseContext(json, entries, releaseCont
 
       fileContexts.push(fileContext);
 
-      const fileContextJSON = findFileContextJSON(json, filePath),
-            json = fileContextJSON; ///
+      const fileContextJSON = findFileContextJSON(json, filePath);
 
-      fileContext.initialise(json);
+      fileContext.initialise(fileContextJSON);
     }
   });
 

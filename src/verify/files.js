@@ -19,7 +19,7 @@ export default function verifyFiles(releaseContext) {
     if (filePathNominalFilePath) {
       return true;
     }
-  })
+  });
 
   for (;;) {
     const filePathsLength = filePaths.length;

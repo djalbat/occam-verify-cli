@@ -2,34 +2,46 @@
 
 import verifyFiles from "../verify/files";
 
-export default function verifyRelease(releaseName, releaseContextMap) {
+export default function verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap) {
   let releaseVerified = false;
 
   const releaseContext = releaseContextMap[releaseName];
 
   if (releaseContext !== null) {
-    const dependencyReleasesVVerified = verifyDependencyReleases(releaseContext, releaseContextMap);
+    const released = releaseContext.isReleased();
 
-    if (dependencyReleasesVVerified) {
-      const verified = releaseContext.isVerified();
-
-      if (verified) {
-        releaseVerified = true;
+    if (released) {
+      releaseVerified = true;
+    } else {
+      if (dependentReleased) {
+        releaseContext.warning(`The '${releaseName}' project cannot be verified because its '${dependentName}' dependent is a package.`);
       } else {
-        releaseContext.info(`Verifying the '${releaseName}' project...`);
+        const dependentName = releaseName,  ///
+              dependentReleased = released, ///
+              dependencyReleasesVVerified = verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap);
 
-        const releaseFilesVerified = verifyReleaseFiles(releaseContext);
+        if (dependencyReleasesVVerified) {
+          const verified = releaseContext.isVerified();
 
-        if (releaseFilesVerified) {
-          const verified = true;
+          if (verified) {
+            releaseVerified = true;
+          } else {
+            releaseContext.info(`Verifying the '${releaseName}' project...`);
 
-          releaseContext.setVerified(verified);
+            const releaseFilesVerified = verifyReleaseFiles(releaseContext);
 
-          releaseVerified = verified; ///
-        }
+            if (releaseFilesVerified) {
+              const verified = true;
 
-        if (releaseVerified) {
-          releaseContext.info(`...verified the '${releaseName}' project.`);
+              releaseContext.setVerified(verified);
+
+              releaseVerified = verified; ///
+            }
+
+            if (releaseVerified) {
+              releaseContext.info(`...verified the '${releaseName}' project.`);
+            }
+          }
         }
       }
     }
@@ -45,12 +57,12 @@ function verifyReleaseFiles(releaseContext) {
   return releaseFilesVerified;
 }
 
-function verifyDependencyReleases(releaseContext, releaseContextMap) {
+function verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap) {
   const dependencies = releaseContext.getDependencies(),
         dependencyReleasesVVerified = dependencies.everyDependency((dependency) => {
           const name = dependency.getName(),
                 releaseName = name, ///
-                releaseVerified = verifyRelease(releaseName, releaseContextMap);
+                releaseVerified = verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap);
 
           if (releaseVerified) {
             return true;

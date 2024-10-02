@@ -101,18 +101,16 @@ export function initialiseReleaseContext(dependency, context) {
     releaseContextInitialised = releaseContext.isInitialised();
 
     if (!releaseContextInitialised) {
-      const dependencyReleaseContextsInitialised = initialiseDependencyReleaseContexts(dependency, releaseContext, context);
+      initialiseDependencyReleaseContexts(dependency, releaseContext, context);
 
-      if (dependencyReleaseContextsInitialised) {
-        const { log } = context,
-              releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
+      const { log } = context,
+            releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
 
-        log.debug(`Initialising the '${dependencyName}' context...`);
+      log.debug(`Initialising the '${dependencyName}' context...`);
 
-        releaseContext.initialise(releaseContexts);
+      releaseContext.initialise(releaseContexts);
 
-        log.info(`...initialised the '${dependencyName}' context.`);
-      }
+      log.info(`...initialised the '${dependencyName}' context.`);
     }
   }
 

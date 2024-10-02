@@ -805,8 +805,8 @@ export default class FileContext {
     return json;
   }
 
-  initialise(json) {
-    const { types, rules, axioms, lemmas, theorems, metaLemmas, variables, conjectures, combinators, constructors, metatheorems, metavariables } = json,
+  initialise(fileContextJSON) {
+    const { types, rules, axioms, lemmas, theorems, metaLemmas, variables, conjectures, combinators, constructors, metatheorems, metavariables } = fileContextJSON,
           fileContext = this, ///
           typesJSON = types,  ///
           rulesJSON = rules,  ///
