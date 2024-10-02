@@ -9,9 +9,8 @@ export function createReleaseContext(dependency, dependentNames, context, callba
         releaseContext = releaseContextMap[releaseName] || null;
 
   if (releaseContext !== null) {
-    const releaseMatchesDependency = checkReleaseMatchesDependency(releaseContext, dependency, dependentNames, context);
-
-    const error = null;
+    const error = null,
+          releaseMatchesDependency = checkReleaseMatchesDependency(releaseContext, dependency, dependentNames, context);
 
     let success;
 
@@ -110,11 +109,9 @@ export function initialiseReleaseContext(dependency, context) {
 
         log.debug(`Initialising the '${dependencyName}' context...`);
 
-        releaseContextInitialised = releaseContext.initialise(releaseContexts);
+        releaseContext.initialise(releaseContexts);
 
-        releaseContextInitialised ?
-          log.info(`...initialised the '${dependencyName}' context.`) :
-            log.warning(`...unable to initialise the '${dependencyName}' context.`);
+        log.info(`...initialised the '${dependencyName}' context.`);
       }
     }
   }

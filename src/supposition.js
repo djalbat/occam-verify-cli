@@ -3,17 +3,11 @@
 import ProofStep from "./proofStep";
 import UnqualifiedStatement from "./statement/unqualified";
 
-import metaLevelUnifier from "./unifier/metaLevel";
-
-import { match } from "./utilities/array";
+import { trim } from "./utilities/string";
+import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
-import { nodeQuery, nodesQuery } from "./utilities/query";
 
-const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
-      unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement"),
-      subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
-      subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement!"),
-      subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!");
+const unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement");
 
 export default class Supposition {
   constructor(fileContext, unqualifiedStatement) {
@@ -79,9 +73,10 @@ export default class Supposition {
   // }
 
   verify(localContext) {
-    let verified = false;
+    let verified = false,
+        suppositionString = this.getString(); ///
 
-    const suppositionString = this.getString(); ///
+    suppositionString = trim(suppositionString);  ///
 
     if (this.unqualifiedStatement !== null) {
       localContext.trace(`Verifying the '${suppositionString}' supposition...`);

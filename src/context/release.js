@@ -468,12 +468,7 @@ export default class ReleaseContext {
     this.dependencyReleaseContexts = tail(releaseContexts);
 
     if (this.released) {
-      const releaseContext = this,  ///
-            fileContexts = fileContextsFromEntries(this.entries, releaseContext);
-
-      initialiseFileContexts(fileContexts, releaseContext);
-
-      this.fileContexts = fileContexts;
+      debugger
     }
 
     this.initialised = true;
@@ -564,41 +559,6 @@ function verifyFileContexts(fileContexts, releaseContext) {
   fileContextsVerified = (fileContextsLength === 0);
 
   return fileContextsVerified;
-}
-
-function initialiseFileContexts(fileContexts, releaseContext) {
-  fileContexts = [  ///
-    ...fileContexts
-  ];
-
-  for (;;) {
-    const fileContextsLength = fileContexts.length;
-
-    if (fileContextsLength === 0) {
-      break;
-    }
-
-    const initialisedFileContexts = [];
-
-    fileContexts.forEach((fileContext) => {
-      const initialised = fileContext.initialise(releaseContext);
-
-      if (initialised) {
-        const initialisedFileContext = fileContext;  ///
-
-        initialisedFileContexts.push(initialisedFileContext);
-      }
-    });
-
-    const initialisedFileContextsLength = initialisedFileContexts.length,
-          fileInitialised = (initialisedFileContextsLength > 0);
-
-    if (!fileInitialised) {
-      break;
-    }
-
-    leftDifference(fileContexts, initialisedFileContexts);
-  }
 }
 
 function fileContextsFromEntries(entries, releaseContext) {
