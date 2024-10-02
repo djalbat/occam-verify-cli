@@ -1,22 +1,29 @@
 "use strict";
 
 import ProofStep from "./proofStep";
+import LocalContext from "./context/local";
 import metaLevelUnifier from "./unifier/metaLevel";
+import SubproofAssertion from "./assertion/subproof";
 import UnqualifiedStatement from "./statement/unqualified";
 
-import { match } from "./utilities/array";
+import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
-import { nodeQuery, nodesQuery } from "./utilities/query";
 
-const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement"),
-      subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
-      subproofAssertionStatementNodesQuery = nodesQuery("/subproofAssertion/statement"),
-      subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement!"),
-      subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!");
+const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement");
 
 export default class Premise {
-  constructor(unqualifiedStatement) {
+  constructor(fileContext, subproofAssertion, unqualifiedStatement) {
+    this.fileContext = fileContext;
+    this.subproofAssertion = subproofAssertion;
     this.unqualifiedStatement = unqualifiedStatement;
+  }
+
+  getFileContext() {
+    return this.fileContext;
+  }
+
+  getSubproofAssertion() {
+    return this.subproofAssertion;
   }
 
   getUnqualifiedStatement() {
@@ -27,46 +34,73 @@ export default class Premise {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
-  unifyStatement(statementNodeB, substitutions, localContextA, localContextB) {
-    let statementUnified = false;
+  unifyProofStep(proofStep, substitutions, localContext) {
+    let proofStepUnified = false;
 
-    if (this.statementNode !== null) {
-      const nodeA = this.statementNode,  ///
-            nodeB = statementNodeB,  ///
-            unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+    const subproof = proofStep.getSubproof(),
+          statement = proofStep.getStatement();
 
-      statementUnified = unified; ///
+    substitutions.snapshot();
+
+    if (false) {
+      ///
+    } else if (subproof !== null) {
+      proofStepUnified = this.unifySubproof(subproof, substitutions, localContext);
+    } else if (statement !== null) {
+      proofStepUnified = this.unifyStatement(statement, substitutions, localContext);
+    }
+
+    proofStepUnified ?
+      substitutions.continue() :
+        substitutions.rollback(localContext);
+
+    return proofStepUnified;
+  }
+
+  unifyStatement(statement, substitutions, localContext) {
+    let statementUnified;
+
+    const premise = this, ///
+          statementString = statement.getString(),
+          premiseStatement = premise.getStatement(),
+          premiseStatementString = premiseStatement.getString();
+
+    localContext.trace(`Unifying the '${statementString}' statement with the premise's '${premiseStatementString}' statement...`);
+
+    const statementNode = statement.getNode(),
+          premiseStatementNode = premiseStatement.getNode(),
+          nodeA = premiseStatementNode,  ///
+          nodeB = statementNode,  ///
+          fileContextA = this.fileContext,  ///
+          localContextA = LocalContext.fromFileContext(fileContextA),
+          localContextB = localContext, ///
+          unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+
+    statementUnified = unified; ///
+
+    if (statementUnified) {
+      localContext.debug(`...unified the '${statementString}' statement with the premise's '${premiseStatementString}' statement.`);
     }
 
     return statementUnified;
   }
 
-  unifySubproof(subproofNodeB, substitutions, localContextA, localContextB) {
+  unifySubproof(subproof, substitutions, localContext) {
     let subproofUnified = false;
 
-    if (this.statementNode !== null) {
-      const statementNodeA = this.statementNode,
-            subproofAssertionNodeA = subproofAssertionNodeQuery(statementNodeA);  ///
+    const premise = this, ///
+          subproofString = subproof.getString(),
+          premiseStatement = premise.getStatement(),
+          premiseStatementString = premiseStatement.getString();
 
-      if (subproofAssertionNodeA !== null) {
-        const subproofAssertionStatementNodesA = subproofAssertionStatementNodesQuery(subproofAssertionNodeA),  ///
-              subproofSuppositionStatementNodesB = subproofSuppositionStatementNodesQuery(subproofNodeB), ///
-              subproofLastProofStepStatementNodeB = subproofLastProofStepStatementNodeQuery(subproofNodeB), ///
-              subproofStatementNodesB = [
-                ...subproofSuppositionStatementNodesB,
-                subproofLastProofStepStatementNodeB
-              ];
+    localContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
 
-        subproofUnified = match(subproofAssertionStatementNodesA, subproofStatementNodesB, (subproofAssertionStatementNodeA, subproofStatementNodeB) => {
-          const nodeA = subproofAssertionStatementNodeA,  ///
-                nodeB = subproofStatementNodeB, ///
-                unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+    if (this.subproofAssertion !== null) {
+      subproofUnified = this.subproofAssertion.unifySubproof(subproof, substitutions, localContext);
+    }
 
-          if (unified) {
-            return true;
-          }
-        });
-      }
+    if (subproofUnified) {
+      localContext.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
     }
 
     return subproofUnified;
@@ -109,7 +143,8 @@ export default class Premise {
   static fromPremiseNode(premiseNode, fileContext) {
     const unqualifiedStatementNode = unqualifiedStatementNodeQuery(premiseNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          premise = new Premise(unqualifiedStatement);
+          subproofAssertion = SubproofAssertion.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
+          premise = new Premise(fileContext, subproofAssertion, unqualifiedStatement);
 
     return premise
   }

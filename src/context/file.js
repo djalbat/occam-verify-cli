@@ -348,8 +348,9 @@ export default class FileContext {
     return label;
   }
 
-  findRuleByMetavariableNode(metavariableNode) {
+  findRuleByReference(reference) {
     const rules = this.getRules(),
+          metavariableNode = reference.getMetavariableNode(),
           rule = rules.find((rule) => {
             const metavariableNodeMatches = rule.matchMetavariableNode(metavariableNode);
 
@@ -361,8 +362,9 @@ export default class FileContext {
     return rule;
   }
 
-  findAxiomByMetavariableNode(metavariableNode) {
+  findAxiomByReference(reference) {
     const axioms = this.getAxioms(),
+          metavariableNode = reference.getMetavariableNode(),
           axiom = axioms.find((axiom) => {
             const metavariableNodeMatches = axiom.matchMetavariableNode(metavariableNode);
 
@@ -374,8 +376,9 @@ export default class FileContext {
     return axiom;
   }
 
-  findLemmaByMetavariableNode(metavariableNode) {
+  findLemmaByReference(reference) {
     const lemmas = this.getLemmas(),
+          metavariableNode = reference.getMetavariableNode(),
           lemma = lemmas.find((lemma) => {
             const metavariableNodeMatches = lemma.matchMetavariableNode(metavariableNode);
 
@@ -387,8 +390,9 @@ export default class FileContext {
     return lemma;
   }
 
-  findTheoremByMetavariableNode(metavariableNode) {
+  findTheoremByReference(reference) {
     const theorems = this.getTheorems(),
+          metavariableNode = reference.getMetavariableNode(),
           theorem = theorems.find((theorem) => {
             const metavariableNodeMatches = theorem.matchMetavariableNode(metavariableNode);
 
@@ -400,8 +404,9 @@ export default class FileContext {
     return theorem;
   }
 
-  findMetaLemmaByMetavariableNode(metavariableNode) {
+  findMetaLemmaByReference(reference) {
     const metaLemmas = this.getMetaLemmas(),
+          metavariableNode = reference.getMetavariableNode(),
           metaLemma = metaLemmas.find((metaLemma) => {
             const metavariableNodeMatches = metaLemma.matchMetavariableNode(metavariableNode);
 
@@ -413,8 +418,9 @@ export default class FileContext {
     return metaLemma;
   }
 
-  findConjectureByMetavariableNode(metavariableNode) {
+  findConjectureByReference(reference) {
     const conjectures = this.getConjectures(),
+          metavariableNode = reference.getMetavariableNode(),
           conjecture = conjectures.find((conjecture) => {
             const metavariableNodeMatches = conjecture.matchMetavariableNode(metavariableNode);
 
@@ -426,8 +432,9 @@ export default class FileContext {
     return conjecture;
   }
 
-  findMetatheoremByMetavariableNode(metavariableNode) {
+  findMetatheoremByReference(reference) {
     const metatheorems = this.getMetatheorems(),
+          metavariableNode = reference.getMetavariableNode(),
           metatheorem = metatheorems.find((metatheorem) => {
             const metavariableNodeMatches = metatheorem.matchMetavariableNode(metavariableNode);
 

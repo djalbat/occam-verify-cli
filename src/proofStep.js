@@ -12,17 +12,36 @@ const subproofNodeQuery = nodeQuery("/proofStep|lastProofStep/subproof"),
       unqualifiedStatementNodeQuery = nodeQuery("/proofStep|lastProofStep/unqualifiedStatement");
 
 class ProofStep {
-  constructor(subproof, statement) {
+  constructor(subproof, qualifiedStatement, unqualifiedStatement) {
     this.subproof = subproof;
-    this.statement = statement;
+    this.qualifiedStatement = qualifiedStatement;
+    this.unqualifiedStatement = unqualifiedStatement;
   }
 
   getSubproof() {
     return this.subproof;
   }
 
+  getQualifiedStatement() {
+    return this.qualifiedStatement;
+  }
+
+  getUnqualifiedStatement() {
+    return this.unqualifiedStatement;
+  }
+
   getStatement() {
-    return this.statement;
+    let statement = null;
+
+    if (this.qualifiedStatement !== null) {
+      statement = this.qualifiedStatement.getStatement();
+    }
+
+    if (this.unqualifiedStatement !== null) {
+      statement = this.unqualifiedStatement.getStatement();
+    }
+
+    return statement;
   }
 
   // unifyStatement(statementB, equivalences, localContextA, localContextB) {
@@ -48,11 +67,13 @@ class ProofStep {
 
       verified = subproofVerified;  ///
     } else if (this.qualifiedStatement !== null) {
-      const qualifiedStatementVerified = this.qualifiedStatment.verify(substitutions, localContext);
+      const qualifiedStatementVerified = this.qualifiedStatement.verify(substitutions, localContext);
 
       verified = qualifiedStatementVerified;  ///
     } else if (this.unqualifiedStatement !== null) {
-      const unqualifiedStatementVerified = this.unqualifiedStatement.verify(localContext);
+      const stated = true,
+            assignments = [],
+            unqualifiedStatementVerified = this.unqualifiedStatement.verify(stated, assignments, localContext);
 
       verified = unqualifiedStatementVerified;  ///
     }

@@ -5,14 +5,24 @@ import LocalContext from "./context/local";
 import SubDerivation from "./subDerivation";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
+import {subproofNodeAsSubproofString, subproofStringFromSubproofNode} from "./utilities/subproof";
 
 const suppositionNodesQuery = nodesQuery("/subproof/supposition"),
       subDerivationNodeQuery = nodeQuery("/subproof/subDerivation");
 
 export default class Subproof {
-  constructor(suppositions, subDerivation) {
+  constructor(string, suppositions, subDerivation) {
+    this.string = string;
     this.suppositions = suppositions;
     this.subDerivation = subDerivation;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getSuppositions() {
@@ -22,6 +32,25 @@ export default class Subproof {
   getSubDerivation() {
     return this.subDerivation;
   }
+
+  getLastProofStep() { return this.subDerivation.getLastProofStep(); }
+
+  getStatements() {
+    const lastProofStep = this.getLastProofStep(),
+          suppositionStatements = this.suppositions.map((supposition) => {
+            const suppositionStatement = supposition.getStatement();
+
+            return suppositionStatement;
+          }),
+          lastProofStepStatement = lastProofStep.getStatement(),
+          statements = [
+            ...suppositionStatements,
+            lastProofStepStatement
+          ];
+
+    return statements;
+  }
+
 
   verify(substitutions, localContext) {
     let subproofVerified = false;
@@ -51,8 +80,10 @@ export default class Subproof {
     let subproof = null;
 
     if (subproofNode !== null) {
-      const suppositionNodes = suppositionNodesQuery(subproofNode),
+      const subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
+            suppositionNodes = suppositionNodesQuery(subproofNode),
             subDerivationNode = subDerivationNodeQuery(subproofNode),
+            string = subproofString,  ///
             suppositions = suppositionNodes.map((suppositionNode) => {
               const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
 
@@ -60,7 +91,7 @@ export default class Subproof {
             }),
             subDerivation = SubDerivation.fromSubDerivationNode(subDerivationNode, fileContext);
 
-      subproof = new Subproof(suppositions, subDerivation);
+      subproof = new Subproof(string, suppositions, subDerivation);
     }
 
     return subproof;

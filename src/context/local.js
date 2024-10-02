@@ -88,8 +88,6 @@ class LocalContext {
     return lastProofStep;
   }
 
-  getTokens() { return this.context.getTokens(); }
-
   getAxioms() { return this.context.getAxioms(); }
 
   getLemmas() { return this.context.getLemmas(); }
@@ -377,29 +375,29 @@ class LocalContext {
     return metavariable;
   }
 
+  findMetaTypeByMetaTypeNode(metaTypeNode) { return this.context.findMetaTypeByMetaTypeNode(metaTypeNode); }
+
+  findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
+
+  findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
+
   findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
 
   findTypeByTypeNode(typeNode) { return this.context.findTypeByTypeNode(typeNode); }
 
-  findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
+  findRuleByReference(reference) { return this.context.findRuleByReference(reference); }
 
-  findMetaTypeByMetaTypeNode(metaTypeNode) { return this.context.findMetaTypeByMetaTypeNode(metaTypeNode); }
+  findAxiomByReference(reference) { return this.context.findAxiomByReference(reference); }
 
-  findRuleByMetavariableNode(metavariableNode) { return this.context.findRuleByMetavariableNode(metavariableNode); }
+  findLemmaByReference(reference) { return this.context.findLemmaByReference(reference); }
 
-  findAxiomByMetavariableNode(metavariableNode) { return this.context.findAxiomByMetavariableNode(metavariableNode); }
+  findTheoremByReference(reference) { return this.context.findTheoremByReference(reference); }
 
-  findLemmaByMetavariableNode(metavariableNode) { return this.context.findLemmaByMetavariableNode(metavariableNode); }
+  findMetaLemmaByReference(reference) { return this.context.findMetaLemmaByReference(reference); }
 
-  findTheoremByMetavariableNode(metavariableNode) { return this.context.findTheoremByMetavariableNode(metavariableNode); }
+  findConjectureByReference(reference) { return this.context.findConjectureByReference(reference); }
 
-  findMetaLemmaByMetavariableNode(metavariableNode) { return this.context.findMetaLemmaByMetavariableNode(metavariableNode); }
-
-  findConjectureByMetavariableNode(metavariableNode) { return this.context.findConjectureByMetavariableNode(metavariableNode); }
-
-  findMetatheoremByMetavariableNode(metavariableNode) { return this.context.findMetatheoremByMetavariableNode(metavariableNode); }
-
-  findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
+  findMetatheoremByReference(reference) { return this.context.findMetatheoremByReference(reference); }
 
   nodeAsString(node) { return this.context.nodeAsString(node); }
 

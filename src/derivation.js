@@ -2,6 +2,7 @@
 
 import ProofStep from "./proofStep";
 
+import { last } from "./utilities/array";
 import { nodesQuery } from "./utilities/query";
 
 const proofStepNodesQuery = nodesQuery("/derivation/proofStep|lastProofStep");
@@ -13,6 +14,12 @@ export default class Derivation {
 
   getProofSteps() {
     return this.proofSteps;
+  }
+
+  getLastProofStep() {
+    const lastProofStep = last(this.proofSteps);
+
+    return lastProofStep;
   }
 
   verify(substitutions, localContext) {

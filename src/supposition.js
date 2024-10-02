@@ -16,8 +16,13 @@ const subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
       subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!");
 
 export default class Supposition {
-  constructor(unqualifiedStatement) {
+  constructor(fileContext, unqualifiedStatement) {
+    this.fileContext = fileContext;
     this.unqualifiedStatement = unqualifiedStatement;
+  }
+
+  getFileContext() {
+    return this.fileContext;
   }
 
   getUnqualifiedStatement() {
@@ -111,7 +116,7 @@ export default class Supposition {
   static fromSuppositionNode(suppositionNode, fileContext) {
     const unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          supposition = new Supposition(unqualifiedStatement);
+          supposition = new Supposition(fileContext, unqualifiedStatement);
 
     return supposition;
   }

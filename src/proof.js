@@ -16,6 +16,8 @@ export default class Proof {
     return this.derivation;
   }
 
+  getLastProofStep() { return this.derivation.getLastProofStep(); }
+
   verify(substitutions, conclusion, localContext) {
     let verified = false;
 
@@ -27,10 +29,14 @@ export default class Proof {
       const lastProofStep = localContext.getLastProofStep();
 
       if (lastProofStep !== null) {
-        const conclusionStatementNode = conclusion.getStatementNode(),
-              conclusionStatementNodeMatches = lastProofStep.matchStatementNode(conclusionStatementNode);
+        const lastProofStep = this.getLastProofStep(),
+              conclusionStatement = conclusion.getStatement(),
+              lastProofStepStatement = lastProofStep.getStatement(),
+              conclusionStatementEqualToLastProofStepStatement = conclusionStatement.isEqualTo(lastProofStepStatement);
 
-        verified = conclusionStatementNodeMatches;  ///
+        if (conclusionStatementEqualToLastProofStepStatement) {
+          verified = true;
+        }
       }
     }
 

@@ -24,7 +24,7 @@ export default function unifyVariableWithTerm(variableNodeA, termNodeB, substitu
     } else {
       const termNode = termNodeB, ///
             variableNode = variableNodeA, ///
-            termForVariableSubstitution = TermForVariableSubstitution.fromTernNodeAndVariableNode(termNode, variableNode),
+            termForVariableSubstitution = TermForVariableSubstitution.fromTernNodeAndVariableNode(termNode, variableNode, localContextA, localContextB),
             substitution = termForVariableSubstitution;  ///
 
       substitutions.addSubstitution(substitution, localContextA, localContextB);

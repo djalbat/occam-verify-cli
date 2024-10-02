@@ -19,13 +19,6 @@ class MetaType {
     return equalTo;
   }
 
-  match(metaType) {
-    const equalToMetaType = this.isEqualTo(metaType),
-          matches = equalToMetaType;  ///
-
-    return matches;
-  }
-
   matchName(name) {
     const nameMatches = (this.name === name);
 

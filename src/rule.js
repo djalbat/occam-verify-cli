@@ -6,10 +6,8 @@ import Premise from "./premise";
 import Conclusion from "./conclusion";
 import LocalContext from "./context/local";
 import Substitutions from "./substitutions";
-import resolveSubstitutions from "./resolve/substitutions";
-import unifyPremisesWithProofSteps from "./unify/premisesWithProofSteps";
-import unifyConclusionWithStatement from "./unify/conclusionWithStatement";
 
+import { reverse, correlate } from "./utilities/array";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 
 const proofNodeQuery = nodeQuery("/rule/proof"),
@@ -18,11 +16,16 @@ const proofNodeQuery = nodeQuery("/rule/proof"),
       conclusionNodeQuery = nodeQuery("/rule/conclusion");
 
 export default class Rule {
-  constructor(labels, premises, conclusion, proof) {
+  constructor(fileContext, labels, premises, conclusion, proof) {
+    this.fileContext = fileContext;
     this.labels = labels;
     this.premises = premises;
     this.conclusion = conclusion;
     this.proof = proof;
+  }
+
+  getFileContext() {
+    return this.fileContext;
   }
 
   getLabels() {
@@ -41,42 +44,51 @@ export default class Rule {
     return this.proof;
   }
 
-  // unifyStatement(statementNode, localContext) {
-  //   let statementUnified = false;
-  //
-  //   const substitutions = Substitutions.fromNothing(),
-  //         proofSteps = localContext.getProofSteps(),
-  //         premisesA = this.premises,
-  //         proofStepsB = proofSteps, ///
-  //         fileContextA = this.fileContext,  ///
-  //         localContextB = localContext, ///
-  //         premisesUnified = unifyPremisesWithProofSteps(premisesA, proofStepsB, substitutions, fileContextA, localContextB);
-  //
-  //   if (premisesUnified) {
-  //     const conclusionA = this.conclusion,  ///
-  //           conclusionUnified = unifyConclusionWithStatement(conclusionA, statementNode, substitutions, fileContextA, localContextB);
-  //
-  //     if (conclusionUnified) {
-  //       const substitutionsResolved = resolveSubstitutions(substitutions, fileContextA, localContextB);
-  //
-  //       statementUnified = substitutionsResolved; ///
-  //     }
-  //   }
-  //
-  //   return statementUnified;
-  // }
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = this.labels.some((label) => {
+      const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
 
-  // matchMetavariableNode(metavariableNode) {
-  //   const metavariableNodeMatches = this.labels.some((label) => {
-  //     const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
-  //
-  //     if (metavariableNodeMatches) {
-  //       return true;
-  //     }
-  //   });
-  //
-  //   return metavariableNodeMatches;
-  // }
+      if (metavariableNodeMatches) {
+        return true;
+      }
+    });
+
+    return metavariableNodeMatches;
+  }
+
+  unifyStatement(statement, localContext) {
+    let statementUnified = false;
+
+    const proofSteps = localContext.getProofSteps(),
+          substitutions = Substitutions.fromNothing(),
+          proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
+
+    if (proofStepsUnified) {
+      statementUnified = this.conclusion.unifyStatement(statement, substitutions, localContext);
+    }
+
+    return statementUnified;
+  }
+
+  unifyProofSteps(proofSteps, substitutions, localContext) {
+    let proofStepsUnified;
+
+    let premises = this.premises;
+
+    premises = reverse(premises); ///
+
+    proofSteps = reverse(proofSteps); ///
+
+    proofStepsUnified = correlate(premises, proofSteps, (premise, proofStep) => {
+      const proofStepUnified = premise.unifyProofStep(proofStep, substitutions, localContext);
+
+      if (proofStepUnified) {
+        return true;
+      }
+    });
+
+    return proofStepsUnified;
+  }
 
   verify(fileContext) {
     let verified = false;
@@ -192,7 +204,7 @@ export default class Rule {
 
     const proof = null;
 
-    rule = new Rule(labels, premises, conclusion, proof);
+    rule = new Rule(fileContext, labels, premises, conclusion, proof);
 
     return rule;
   }
@@ -214,7 +226,7 @@ export default class Rule {
           }),
           conclusion = Conclusion.fromConclusionNode(conclusionNode, fileContext),
           proof = Proof.fromProofNode(proofNode, fileContext),
-          rule = new Rule(labels, premises, conclusion, proof);
+          rule = new Rule(fileContext, labels, premises, conclusion, proof);
 
     return rule;
   }

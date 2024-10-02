@@ -10,8 +10,8 @@ const termVariableNodeQuery = nodeQuery("/term/variable!"),
       substitutionsVariableNodeQuery = nodeQuery("/substitution/variable!");
 
 export default class TermForVariableSubstitution extends Substitution {
-  constructor(termNode, variableNode) {
-    super();
+  constructor(string, termNode, variableNode) {
+    super(string);
 
     this.termNode = termNode;
     this.variableNode = variableNode;
@@ -88,16 +88,6 @@ export default class TermForVariableSubstitution extends Substitution {
     return unifiedWithEquivalence;
   }
 
-  asString(localContextA, localContextB) {
-    const termNodeB = this.termNode,  ///
-          termStringB = localContextB.nodeAsString(termNodeB),
-          variableNodeA = this.variableNode,  ///
-          variableStringA = localContextA.nodeAsString(variableNodeA),
-          string = `[${termStringB} for ${variableStringA}]`;
-
-    return string;
-  }
-
   static fromSubstitutionNode(substitutionNode) {
     let termForVariableSubstitution = null;
 
@@ -117,10 +107,11 @@ export default class TermForVariableSubstitution extends Substitution {
     return termForVariableSubstitution;
   }
 
-  static fromTernNodeAndVariableNode(termNode, variableNode) {
+  static fromTernNodeAndVariableNode(termNode, variableNode, localContextA, localContextB) {
     termNode = stripBracketsFromTerm(termNode); ///
 
-    const termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
+    const string = stringFromTermNodeAndVariableNode(termNode, variableNode, localContextA, localContextB),
+          termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode);
 
     return termForVariableSubstitution;
   }
@@ -169,4 +160,14 @@ function transformVariableNode(variableNode, substitutions) {
   });
 
   return transformedVariableNode;
+}
+
+function stringFromTermNodeAndVariableNode(termNode, variableNode, localContextA, localContextB) {
+  const termNodeB = termNode,  ///
+        termStringB = localContextB.nodeAsString(termNodeB),
+        variableNodeA = variableNode,  ///
+        variableStringA = localContextA.nodeAsString(variableNodeA),
+        string = `[${termStringB} for ${variableStringA}]`;
+
+  return string;
 }

@@ -4,12 +4,18 @@ import metaLevelUnifier from "./unifier/metaLevel";
 import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
+import LocalContext from "./context/local";
 
 const unqualifiedStatementNodeQuery = nodeQuery("/conclusion/unqualifiedStatement");
 
 export default class Conclusion {
-  constructor(unqualifiedStatement) {
+  constructor(fileContext, unqualifiedStatement) {
+    this.fileContext = fileContext;
     this.unqualifiedStatement = unqualifiedStatement;
+  }
+
+  getFileContext() {
+    return this.fileContext;
   }
 
   getUnqualifiedStatement() {
@@ -20,16 +26,29 @@ export default class Conclusion {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
+  unifyStatement(statement, substitutions, localContext) {
+    let statementUnified;
 
-  unifyStatement(statementNodeB, substitutions, localContextA, localContextB) {
-    let statementUnified = false;
+    const conclusion = this, ///
+          statementString = statement.getString(),
+          conclusionStatement = conclusion.getStatement(),
+          conclusionStatementString = conclusionStatement.getString();
 
-    if (this.statementNode !== null) {
-      const nodeA = this.statementNode,  ///
-            nodeB = statementNodeB,  ///
-            unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+    localContext.trace(`Unifying the '${statementString}' statement with the conclusion's '${conclusionStatementString}' statement...`);
 
-      statementUnified = unified; ///
+    const statementNode = statement.getNode(),
+          conclusionStatementNode = conclusionStatement.getNode(),
+          nodeA = conclusionStatementNode,  ///
+          nodeB = statementNode,  ///
+          fileContextA = this.fileContext,  ///
+          localContextA = LocalContext.fromFileContext(fileContextA),
+          localContextB = localContext, ///
+          unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+
+    statementUnified = unified; ///
+
+    if (statementUnified) {
+      localContext.debug(`...unified the '${statementString}' statement with the conclusion's '${conclusionStatementString}' statement.`);
     }
 
     return statementUnified;
@@ -60,7 +79,7 @@ export default class Conclusion {
   static fromConclusionNode(conclusionNode, fileContext) {
     const unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          conclusion = new Conclusion(unqualifiedStatement);
+          conclusion = new Conclusion(fileContext, unqualifiedStatement);
 
     return conclusion;
   }

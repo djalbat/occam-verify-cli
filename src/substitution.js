@@ -1,6 +1,14 @@
 "use strict";
 
 export default class Substitution {
+  constructor(string) {
+    this.string = string;
+  }
+
+  getString() {
+    return this.string;
+  }
+
   isSimple() {
     const simple = true;
 

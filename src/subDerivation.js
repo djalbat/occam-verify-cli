@@ -2,6 +2,7 @@
 
 import shim from "./shim";
 
+import { last } from "./utilities/array";
 import { nodesQuery } from "./utilities/query";
 
 const proofStepNodesQuery = nodesQuery("/subDerivation/proofStep|lastProofStep");
@@ -13,6 +14,12 @@ export default class SubDerivation {
 
   getProofSteps() {
     return this.proofSteps;
+  }
+
+  getLastProofStep() {
+    const lastProofStep = last(this.proofSteps);
+
+    return lastProofStep;
   }
 
   verify(substitutions, localContext) {

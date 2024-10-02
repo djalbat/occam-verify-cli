@@ -1,30 +1,76 @@
 "use strict";
 
-import { nodeAsString } from "./utilities/string";
+import Metavariable from "./metavariable";
+
+import { nodeQuery } from "./utilities/query";
+
+const metavariableNodeQuery = nodeQuery("//reference/metavariable");
 
 export default class Reference {
-  constructor(metavariableNode) {
-    this.metavariableNode = metavariableNode;
+  constructor(metavariable) {
+    this.metavariable = metavariable;
   }
+
+  getMetavariable() {
+    return this.metavariable;
+  }
+
+  getString() { return this.metavariable.getString(); }
+
+  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
   getMetavariableNode() {
-    return this.metavariableNode;
+    const metavariableNode = this.metavariable.getNode();
+
+    return metavariableNode;
   }
 
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.metavariableNode.match(metavariableNode);
+  verify(fileContext) {
+    let verified;
 
-    return metavariableNodeMatches;
+    const referenceString = this.getString(); ///
+
+    fileContext.trace(`Verifying the '${referenceString}' reference...`);
+
+    verified = true;
+
+    if (verified) {
+      fileContext.debug(`...verified the '${referenceString}' reference.`);
+    }
+
+    return verified;
   }
 
-  asString(tokens) {
-    const string = nodeAsString(this.metavariableNode, tokens);
+  toJSON(fileContext) {
+    const metavariableJSON = this.metavariable.toJSON(fileContext),
+          metavariable = metavariableJSON,  ///
+          string = this.string,
+          json = {
+            string,
+            metavariable
+          };
 
-    return string;
+    return json;
   }
 
-  static fromMetavariableNode(metavariableNode) {
-    const reference = new Reference(metavariableNode);
+  static fromJSON(json, fileContext) {
+    const { string } = json;
+
+    let { metavariable } = json;
+
+    json = metavariable;  ///
+
+    metavariable = Metavariable.fromJSON(json, fileContext);
+
+    const reference = new Reference(string, metavariable);
+
+    return reference;
+  }
+
+  static fromReferenceNode(referenceNode, fileContext) {
+    const metavariableNode = metavariableNodeQuery(referenceNode),
+          metavariable = Metavariable.fromMetavariableNode(metavariableNode, fileContext),
+          reference = new Reference(metavariable);
 
     return reference;
   }

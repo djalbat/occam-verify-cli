@@ -27,7 +27,7 @@ export default function unifyMetavariableWithFrame(metavariableNodeA, frameNodeB
     } else {
       const frameNode = frameNodeB, ///
             metavariableNode = metavariableNodeA, ///
-            frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromFrameNodeAndMetavariableNode(frameNode, metavariableNode),
+            frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromFrameNodeAndMetavariableNode(frameNode, metavariableNode, localContextA, localContextB),
             substitution = frameForMetavariableSubstitution;  ///
 
       substitutions.addSubstitution(substitution, localContextA, localContextB);

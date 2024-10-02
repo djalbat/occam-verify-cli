@@ -28,7 +28,7 @@ export default function unifyMetavariableWithStatementGivenSubstitution(metavari
       const statementNode = statementNodeB, ///
             substitutionNode = substitutionNodeA, ///
             metavariableNode = metavariableNodeA, ///
-            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementNodeMetavariableNodeAndSubstitutionNode(statementNode, metavariableNode, substitutionNode),
+            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementNodeMetavariableNodeAndSubstitutionNode(statementNode, metavariableNode, substitutionNode, localContextA, localContextB),
             substitution = statementForMetavariableSubstitution;  ///
 
       substitutions.addSubstitution(substitution, localContextA, localContextB);

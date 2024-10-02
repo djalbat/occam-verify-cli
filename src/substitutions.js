@@ -177,16 +177,15 @@ export default class Substitutions {
     return complexSubstitution;
   }
 
-  addSubstitution(substitution, localContextA, localContextB) {
+  addSubstitution(substitution, localContext) {
     this.array.push(substitution);
 
-    const substitutionNode = substitution.getNode(),
-          substitutionString = substitution.asString(localContextA, localContextB);
+    const substitutionString = substitution.getString();
 
-    localContextB.trace(`Added the ${substitutionString} substitution.`, substitutionNode);
+    localContext.trace(`Added the ${substitutionString} substitution.`);
   }
 
-  removeSubstitution(substitution, localContextA, localContextB) {
+  removeSubstitution(substitution, localContext) {
     const substitutionA = substitution; ///
 
     prune(this.array, (substitution) => {
@@ -198,15 +197,15 @@ export default class Substitutions {
     });
 
     const substitutionNode = substitution.getNode(),
-          substitutionString = substitution.asString(localContextA, localContextB);
+          substitutionString = substitution.getString();
 
-    localContextB.trace(`Removed the ${substitutionString} substitution.`, substitutionNode);
+    localContext.trace(`Removed the ${substitutionString} substitution.`, substitutionNode);
   }
 
-  unifyWithEquivalences(equivalences, localContextA, localContextB) {
+  unifyWithEquivalences(equivalences, localContext) {
     const unifiedWithEquivalences = this.everySubstitution((substitution) => {
       const substitutions = this, ///
-            substitutionUnifiedWithEquivalence = substitution.unifyWithEquivalences(equivalences, substitutions, localContextA, localContextB);
+            substitutionUnifiedWithEquivalence = substitution.unifyWithEquivalences(equivalences, substitutions, localContext);
 
       if (substitutionUnifiedWithEquivalence) {
         return true;
@@ -232,7 +231,7 @@ export default class Substitutions {
     ];
   }
 
-  rollback(localContextA, localContextB) {
+  rollback(localContext) {
     const array = [
       ...this.array
     ];
@@ -240,7 +239,7 @@ export default class Substitutions {
     rightDifference(this.savedArray, array);
 
     array.forEach((substitution) => {
-      this.removeSubstitution(substitution, localContextA, localContextB);
+      this.removeSubstitution(substitution, localContext);
     });
 
     this.array = [
@@ -254,9 +253,9 @@ export default class Substitutions {
     this.savedArray = null;
   }
 
-  asString(localContextA, localContextB) {
+  getString(localContextA, localContextB) {
     let string = this.array.reduce((string, substitution) => {
-      const substitutionString = substitution.asString(localContextA, localContextB);
+      const substitutionString = substitution.getString(localContextA, localContextB);
 
       string = (string === null) ?
                  substitutionString :

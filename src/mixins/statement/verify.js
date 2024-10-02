@@ -1,17 +1,17 @@
 "use strict";
 
-import verifyFrame from "../verify/frame";
-import verifyEquality from "../verify/equality";
-import verifyJudgement from "../verify/judgement";
-import verifyDeclaration from "../verify/declaration";
-import verifyTypeAssertion from "../verify/assertion/type";
-import metavariableUnifier from "../unifier/metavariable";
-import verifyDefinedAssertion from "../verify/assertion/defined";
-import verifySubproofAssertion from "../verify/assertion/subproof";
-import verifyContainedAssertion from "../verify/assertion/contained";
+import verifyFrame from "../../verify/frame";
+import verifyEquality from "../../verify/equality";
+import verifyJudgement from "../../verify/judgement";
+import verifyDeclaration from "../../verify/declaration";
+import verifyTypeAssertion from "../../verify/assertion/type";
+import metavariableUnifier from "../../unifier/metavariable";
+import verifyDefinedAssertion from "../../verify/assertion/defined";
+import verifySubproofAssertion from "../../verify/assertion/subproof";
+import verifyContainedAssertion from "../../verify/assertion/contained";
 
-import { nodeQuery } from "../utilities/query";
-import { metavariableNameFromMetavariableNode } from "../utilities/name";
+import { nodeQuery } from "../../utilities/query";
+import { metavariableNameFromMetavariableNode } from "../../utilities/name";
 
 const frameNodeQuery = nodeQuery("/statement/frame!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
@@ -23,7 +23,7 @@ const frameNodeQuery = nodeQuery("/statement/frame!"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
       containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
 
-export function verifyAsMetavariable(statement, assignments, stated, localContext) {
+function verifyAsMetavariable(statement, assignments, stated, localContext) {
   let verifiedAsMetavariable = false;
 
   const statementNode = statement.getNode(),
@@ -46,7 +46,7 @@ export function verifyAsMetavariable(statement, assignments, stated, localContex
   return verifiedAsMetavariable;
 }
 
-export function verifyAsEquality(statement, assignments, stated, localContext) {
+function verifyAsEquality(statement, assignments, stated, localContext) {
   let verifiedAsEquality = false;
 
   const statementNode = statement.getNode(),
@@ -69,7 +69,7 @@ export function verifyAsEquality(statement, assignments, stated, localContext) {
   return verifiedAsEquality;
 }
 
-export function verifyAsFrame(statement, assignments, stated, localContext) {
+function verifyAsFrame(statement, assignments, stated, localContext) {
   let verifiedAsFrame = false;
 
   const statementNode = statement.getNode(),
@@ -92,7 +92,7 @@ export function verifyAsFrame(statement, assignments, stated, localContext) {
   return verifiedAsFrame;
 }
 
-export function verifyAsJudgement(statement, assignments, stated, localContext) {
+function verifyAsJudgement(statement, assignments, stated, localContext) {
   let verifiedAsJudgement = false;
 
   const statementNode = statement.getNode(),
@@ -115,7 +115,7 @@ export function verifyAsJudgement(statement, assignments, stated, localContext) 
   return verifiedAsJudgement;
 }
 
-export function verifyAsDeclaration(statement, assignments, stated, localContext) {
+function verifyAsDeclaration(statement, assignments, stated, localContext) {
   let verifiedAsDeclaration = false;
 
   const statementNode = statement.getNode(),
@@ -138,7 +138,7 @@ export function verifyAsDeclaration(statement, assignments, stated, localContext
   return verifiedAsDeclaration;
 }
 
-export function verifyAsTypeAssertion(statement, assignments, stated, localContext) {
+function verifyAsTypeAssertion(statement, assignments, stated, localContext) {
   let verifiedAsTypeAssertion = false;
 
   const statementNode = statement.getNode(),
@@ -161,7 +161,7 @@ export function verifyAsTypeAssertion(statement, assignments, stated, localConte
   return verifiedAsTypeAssertion;
 }
 
-export function verifyAsDefinedAssertion(statement, assignments, stated, localContext) {
+function verifyAsDefinedAssertion(statement, assignments, stated, localContext) {
   let verifiedAsDefinedAssertion = false;
 
   const statementNode = statement.getNode(),
@@ -184,7 +184,7 @@ export function verifyAsDefinedAssertion(statement, assignments, stated, localCo
   return verifiedAsDefinedAssertion;
 }
 
-export function verifyAsSubproofAssertion(statement, assignments, stated, localContext) {
+function verifyAsSubproofAssertion(statement, assignments, stated, localContext) {
   let verifiedAsSubproofAssertion = false;
 
   const statementNode = statement.getNode(),
@@ -207,7 +207,7 @@ export function verifyAsSubproofAssertion(statement, assignments, stated, localC
   return verifiedAsSubproofAssertion;
 }
 
-export function verifyAsContainedAssertion(statement, assignments, stated, localContext) {
+function verifyAsContainedAssertion(statement, assignments, stated, localContext) {
   let verifiedAsContainedAssertion = false;
 
   const statementNode = statement.getNode(),
@@ -229,6 +229,20 @@ export function verifyAsContainedAssertion(statement, assignments, stated, local
 
   return verifiedAsContainedAssertion;
 }
+
+const verifyMixins = [
+  verifyAsMetavariable,
+  verifyAsEquality,
+  verifyAsFrame,
+  verifyAsJudgement,
+  verifyAsDeclaration,
+  verifyAsTypeAssertion,
+  verifyAsDefinedAssertion,
+  verifyAsSubproofAssertion,
+  verifyAsContainedAssertion
+];
+
+export default verifyMixins;
 
 function unifyMetavariable(metavariableNode, localContext) {
   let metavariableUnified;

@@ -1,37 +1,12 @@
 "use strict";
 
 import shim from "./shim";
-import unifyMixins from "./mixins/unify";
+import unifyMixins from "./mixins/statement/unify";
+import verifyMixins from "./mixins/statement/verify";
 import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
 import { statementNodeFromStatementString } from "./utilities/node";
-import { unifyWithCombinators, unifyWithBracketedCombinator } from "./mixins/unify";
 import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
-import { verifyAsMetavariable,
-         verifyAsEquality,
-         verifyAsFrame,
-         verifyAsJudgement,
-         verifyAsDeclaration,
-         verifyAsTypeAssertion,
-         verifyAsDefinedAssertion,
-         verifyAsSubproofAssertion,
-         verifyAsContainedAssertion } from "./mixins/verify";
-
-const unifyFunctions = [
-        unifyWithBracketedCombinator,
-        unifyWithCombinators
-      ],
-      verifyFunctions = [
-        verifyAsMetavariable,
-        verifyAsEquality,
-        verifyAsFrame,
-        verifyAsJudgement,
-        verifyAsDeclaration,
-        verifyAsTypeAssertion,
-        verifyAsDefinedAssertion,
-        verifyAsSubproofAssertion,
-        verifyAsContainedAssertion
-      ];
 
 class Statement {
   constructor(string, node) {
@@ -47,19 +22,12 @@ class Statement {
     return this.node;
   }
 
-  unify(assignments, stated, localContext) {
-    let unified;
+  isEqualTo(statement) {
+    const node = statement.getNode(),
+          matches = this.node.match(node),
+          equalTo = matches;  ///
 
-    const statement = this, ///
-          statementString = this.string;  ///
-
-    localContext.trace(`Unifying the '${statementString}' statement...`);
-
-    if (unified) {
-      localContext.debug(`...unified the '${statementString}' statement.`);
-    }
-
-    return unified;
+    return equalTo;
   }
 
   verify(assignments, stated, localContext) {
@@ -71,8 +39,8 @@ class Statement {
     localContext.trace(`Verifying the '${statementString}' statement...`);
 
     if (!verified) {
-      verified = unifyFunctions.some((unifyFunction) => { ///
-        const unified = unifyFunction(statement, assignments, stated, localContext);
+      verified = unifyMixins.some((unifyMixin) => { ///
+        const unified = unifyMixin(statement, assignments, stated, localContext);
 
         if (unified) {
           return true;
@@ -81,8 +49,8 @@ class Statement {
     }
 
     if (!verified) {
-      verified = verifyFunctions.some((verifyFunction) => {
-        const verified = verifyFunction(statement, assignments, stated, localContext);
+      verified = verifyMixins.some((verifyMixin) => {
+        const verified = verifyMixin(statement, assignments, stated, localContext);
 
         if (verified) {
           return true;
