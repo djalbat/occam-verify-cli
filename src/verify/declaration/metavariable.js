@@ -52,24 +52,13 @@ function verifyMetavariable(metavariableNode, metaTypeNode, fileContext) {
           metaTypeVerified = verifyMetaType(metaTypeNode, metaTypes, fileContext);
 
     if (argumentVerified && metaTypeVerified) {
-      let termType,
-          metaType;
+      let metaType;
 
       const firstMetaType = first(metaTypes);
 
       metaType = firstMetaType; ///
 
-      const termTypesLength = termTypes.length;
-
-      if (termTypesLength === 0) {
-        termType = null;
-      } else {
-        const firstTermType = first(termTypes);
-
-        termType = firstTermType; ///
-      }
-
-      const metavariable = Metavariable.fromMetavariableNodeNameTermTypeAndMetaType(metavariableNode, termType, metaType, fileContext),
+      const metavariable = Metavariable.fromMetavariableNodeAndMetaType(metavariableNode, metaType, fileContext),
             metavariableAssignment = MetavariableAssignment.fromMetavariable(metavariable),
             metavariableAssigned = metavariableAssignment.assign(fileContext);
 

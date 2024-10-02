@@ -40,10 +40,21 @@ function verifyAction(argument, log) {
       return;
     }
 
+    const releaseName = name, ///
+          releaseContext = releaseContextMap[releaseName],
+          released = releaseContext.isReleased();
+
+    if (released) {
+      log.warning(`The '${name}' package does not need to be verified.`);
+
+      stopClock(now, log);
+
+      return;
+    }
+
     initialiseReleaseContext(dependency, context);
 
-    const releaseName = name, ///
-          releaseVerified = verifyRelease(releaseName, releaseContextMap);
+    const releaseVerified = verifyRelease(releaseName, releaseContextMap);
 
     if (!releaseVerified) {
       log.warning(`The '${name}' project or package context cannot be verified.`);

@@ -1,25 +1,25 @@
 "use strict";
 
+import FileContext from "./file";
+import topLevelVerifier from "../verifier/topLevel";
+
 import { filePathUtilities } from "occam-entities";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
-
-import FileContext from "./file";
 
 import { objectType } from "../type";
 import { tail, push, leftDifference } from "../utilities/array";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
-const { isFilePathFlorenceFilePath } = filePathUtilities,
+const { isFilePathNominalFilePath } = filePathUtilities,
       { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(log, name, json, entries, released, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts) {
+  constructor(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts) {
     this.log = log;
     this.name = name;
     this.json = json;
     this.entries = entries;
-    this.released = released;
     this.lexer = lexer;
     this.parser = parser;
     this.verified = verified;
@@ -43,10 +43,6 @@ export default class ReleaseContext {
 
   getEntries() {
     return this.entries;
-  }
-
-  isReleased() {
-    return this.released;
   }
 
   getLexer() {
@@ -89,10 +85,6 @@ export default class ReleaseContext {
     this.entries = entries;
   }
 
-  setReleased(released) {
-    this.released = released;
-  }
-
   setLexer(lexer) {
     this.lexer = lexer;
   }
@@ -119,6 +111,24 @@ export default class ReleaseContext {
 
   setDependencyReleaseContexts(dependencyReleaseContexts) {
     this.dependencyReleaseContexts = dependencyReleaseContexts;
+  }
+
+  findFileContext(filePath) {
+    const fileContext = this.fileContexts.find((fileContext) => {
+      const fileContextFilePath = fileContext.getFilePath();
+
+      if (fileContextFilePath === filePath) {
+        return true;
+      }
+    });
+
+    return fileContext;
+  }
+
+  isReleased() {
+    const released = (this.json !== null);
+
+    return released;
   }
 
   getLabels(includeDependencies = true) {
@@ -400,30 +410,32 @@ export default class ReleaseContext {
 
   matchShortenedVersion(shortenedVersion) { return this.entries.matchShortenedVersion(shortenedVersion); }
 
-  trace(message, node = null, tokens = null, filePath = null) { this.log.trace(message, node, tokens, filePath); }
+  trace(message, filePath = null) { this.log.trace(message, filePath); }
 
-  debug(message, node = null, tokens = null, filePath = null) { this.log.debug(message, node, tokens, filePath); }
+  debug(message, filePath = null) { this.log.debug(message, filePath); }
 
-  info(message, node = null, tokens = null, filePath = null) { this.log.info(message, node, tokens, filePath); }
+  info(message, filePath = null) { this.log.info(message, filePath); }
 
-  warning(message, node = null, tokens = null, filePath = null) { this.log.warning(message, node, tokens, filePath); }
+  warning(message, filePath = null) { this.log.warning(message, filePath); }
 
-  error(message, node = null, tokens = null, filePath = null) { this.log.error(message, node, tokens, filePath); }
+  error(message, filePath = null) { this.log.error(message, filePath); }
 
   initialise(releaseContexts) {
     const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
+          nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar),
           nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar),
-          nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar);
+          releaseContext = this,  ///
+          released = this.isReleased();
+
+    this.dependencyReleaseContexts = tail(releaseContexts); ///
 
     this.lexer = nominalLexer; ///
 
     this.parser = nominalParser; ///
 
-    this.dependencyReleaseContexts = tail(releaseContexts);
-
-    if (this.released) {
-      debugger
-    }
+    this.fileContexts = released ?
+                          fileContextsFromJSONEntriesAndReleaseContext(this.json, this.entries, releaseContext) :
+                            fileContextsFromEntriesAndReleaseContext(this.entries, releaseContext);
 
     this.initialised = true;
   }
@@ -431,13 +443,9 @@ export default class ReleaseContext {
   verify() {
     let verified = false;
 
-    const releaseContext = this,  ///
-          fileContexts = fileContextsFromEntries(this.entries, releaseContext),
-          fileContextsVerified = verifyFileContexts(fileContexts, releaseContext);
+    const fileContextsVerified = verifyFileContexts(this.fileContexts);
 
     if (fileContextsVerified) {
-      this.fileContexts = fileContexts;
-
       this.verified = true;
 
       verified = true;
@@ -457,21 +465,74 @@ export default class ReleaseContext {
     return json;
   }
 
-  static fromLogNameJSONEntriesAndReleased(log, name, json, entries, released) {
+  static fromLogNameJSONAndEntries(log, name, json, entries) {
     const lexer = null,
           parser = null,
           verified = false,
           initialised = false,
-          fileContexts = [],
+          fileContexts = null,
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           dependencyReleaseContexts = null,
-          releaseContext = new ReleaseContext(log, name, json, entries, released, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts);
+          releaseContext = new ReleaseContext(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts);
 
     return releaseContext;
   }
 }
 
-function verifyFileContexts(fileContexts, releaseContext) {
+function fileContextsFromJSONEntriesAndReleaseContext(json, entries, releaseContext) {
+  const fileContexts = [];
+
+  entries.forEachFile((file) => {
+    const filePath = file.getPath(),
+          filePathNominalFilePath = isFilePathNominalFilePath(filePath);
+
+    if (filePathNominalFilePath) {
+      const fileContext = FileContext.fromFileAndReleaseContext(file, releaseContext),
+            filePath = fileContext.getFilePath();
+
+      fileContexts.push(fileContext);
+
+      const fileContextJSON = findFileContextJSON(json, filePath),
+            json = fileContextJSON; ///
+
+      fileContext.initialise(json);
+    }
+  });
+
+  return fileContexts;
+}
+
+function fileContextsFromEntriesAndReleaseContext(entries, releaseContext) {
+  const fileContexts = [];
+
+  entries.forEachFile((file) => {
+    const filePath = file.getPath(),
+          filePathNominalFilePath = isFilePathNominalFilePath(filePath);
+
+    if (filePathNominalFilePath) {
+      const fileContext = FileContext.fromFileAndReleaseContext(file, releaseContext);
+
+      fileContexts.push(fileContext);
+    }
+  });
+
+  return fileContexts;
+}
+
+function findFileContextJSON(json, filePath) {
+  const fileContextsJSON = json,  ///
+        fileContextJSON = fileContextsJSON.find((fileContextJSON) => {
+          const { filePath: fileContextFilePath } = fileContextJSON;
+
+          if (fileContextFilePath === filePath) {
+            return true;
+          }
+        });
+
+  return fileContextJSON;
+}
+
+function verifyFileContexts(fileContexts) {
   let fileContextsVerified;
 
   fileContexts = [  ///
@@ -488,9 +549,9 @@ function verifyFileContexts(fileContexts, releaseContext) {
     const verifiedFileContexts = [];
 
     fileContexts.forEach((fileContext) => {
-      const verified = fileContext.verify(releaseContext);
+      const fileContextVerified = verifyFileContext(fileContext);
 
-      if (verified) {
+      if (fileContextVerified) {
         const verifiedFileContext = fileContext;  ///
 
         verifiedFileContexts.push(verifiedFileContext);
@@ -498,7 +559,7 @@ function verifyFileContexts(fileContexts, releaseContext) {
     });
 
     const verifiedFileContextsLength = verifiedFileContexts.length,
-          fileVerified = (verifiedFileContextsLength > 0);
+      fileVerified = (verifiedFileContextsLength > 0);
 
     if (!fileVerified) {
       break;
@@ -514,19 +575,32 @@ function verifyFileContexts(fileContexts, releaseContext) {
   return fileContextsVerified;
 }
 
-function fileContextsFromEntries(entries, releaseContext) {
-  const fileContexts = [];
+function verifyFileContext(fileContext) {
+  let fileContextVerified = false;
 
-  entries.forEachFile((file) => {
-    const filePath = file.getPath(),
-          filePathFlorenceFilePath = isFilePathFlorenceFilePath(filePath);
+  const tokens = fileContext.getTokens();
 
-    if (filePathFlorenceFilePath) {
-      const fileContext = FileContext.fromFileAndReleaseContext(file, releaseContext);
+  if (tokens === null) {
+    const filePath = fileContext.getFilePath(),
+          file = fileContext.getFile(filePath),
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          content = file.getContent(),
+          tokens = lexer.tokenise(content),
+          node = parser.parse(tokens);
 
-      fileContexts.push(fileContext);
-    }
-  });
+    fileContext.setTokens(tokens);
 
-  return fileContexts;
+    fileContext.setNode(node);
+  }
+
+  const node = fileContext.getNode();
+
+  if (node !== null) {
+    fileContext.reset();
+
+    fileContextVerified = topLevelVerifier.verify(node, fileContext);
+  }
+
+  return fileContextVerified;
 }

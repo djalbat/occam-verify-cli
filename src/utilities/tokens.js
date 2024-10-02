@@ -16,6 +16,13 @@ export function termTokensFromTermString(termString, lexer) {
   return termTokens;
 }
 
+export function metavariableTokensFromMetavariableString(metavariableString, lexer) {
+  const metavariableContent = `${metavariableString}`,
+        metavariableTokens = tokensFromContentAndLexer(metavariableContent, lexer);
+
+  return metavariableTokens;
+}
+
 export function unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer) {
   const content = unqualifiedStatementString,  ///
         unqualifiedStatementTokens = tokensFromContentAndLexer(content, lexer);

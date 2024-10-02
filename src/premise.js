@@ -9,6 +9,7 @@ import UnqualifiedStatement from "./statement/unqualified";
 import { trim } from "./utilities/string";
 import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
+import { unqualifiedStatementNodeFromUnqualifiedStatementString } from "./utilities/node";
 
 const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement");
 
@@ -152,7 +153,16 @@ export default class Premise {
   }
 
   static fromJSON(json, fileContext) {
-    let premise = null;
+    let { unqualifiedStatement } = json;
+
+    const lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          unqualifiedStatementString = unqualifiedStatement,  ///
+          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementString(unqualifiedStatementString, lexer, parser);
+
+    unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext);
+
+    const premise = new Premise(fileContext, unqualifiedStatement);
 
     return premise;
   }

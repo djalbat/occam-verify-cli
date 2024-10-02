@@ -25,37 +25,37 @@ export default class Log {
     return this.follow;
   }
 
-  trace(message, node, tokens, filePath) {
+  trace(message, filePath) {
     const level = TRACE_LEVEL;
 
-    this.write(level, message, node, tokens, filePath);
+    this.write(level, message, filePath);
   }
 
-  debug(message, node, tokens, filePath) {
+  debug(message, filePath) {
     const level = DEBUG_LEVEL;
 
-    this.write(level, message, node, tokens, filePath);
+    this.write(level, message, filePath);
   }
 
-  info(message, node, tokens, filePath) {
+  info(message, filePath) {
     const level = INFO_LEVEL;
 
-    this.write(level, message, node, tokens, filePath);
+    this.write(level, message, filePath);
   }
 
-  warning(message, node, tokens, filePath) {
+  warning(message, filePath) {
     const level = WARNING_LEVEL;
 
-    this.write(level, message, node, tokens, filePath);
+    this.write(level, message, filePath);
   }
 
-  error(message, node, tokens, filePath) {
+  error(message, filePath) {
     const level = ERROR_LEVEL;
 
-    this.write(level, message, node, tokens, filePath);
+    this.write(level, message, filePath);
   }
 
-  write(level, message, node, tokens, filePath) {
+  write(level, message, filePath) {
     const levels = [
             TRACE_LEVEL,
             DEBUG_LEVEL,
@@ -70,7 +70,7 @@ export default class Log {
       return;
     }
 
-    message = formatMessage(level, message, node, tokens, filePath);  ///
+    message = formatMessage(level, message, filePath);  ///
 
     this.follow ?
       console.log(message) :
@@ -96,27 +96,12 @@ export default class Log {
   }
 }
 
-function formatMessage(level, message, node = null, tokens = null, filePath = null) {
+function formatMessage(level, message, filePath = null) {
   const upperCaseLevel = level.toUpperCase();
 
-  if ((node === null) || (tokens === null)) {
-    message = (filePath !== null) ?
-              `${upperCaseLevel}: ${filePath} - ${message}`:
-                `${upperCaseLevel}: ${message}`;
-  } else {
-    const leastLineIndex = leastLineIndexFromNodeAndTokens(node, tokens),
-          leastLineNumber = leastLineIndex, ///
-          greatestLineIndex = greatestLineIndexFromNodeAndTokens(node, tokens),
-          greatestLineNumber = greatestLineIndex; ///
-
-    if (leastLineNumber === greatestLineNumber) {
-      const lineNumber = leastLineNumber; ///
-
-      message = `${upperCaseLevel}: ${filePath} (${lineNumber}) - ${message}`;
-    } else {
-      message = `${upperCaseLevel}: ${filePath} (${leastLineNumber}-${greatestLineNumber}) - ${message}`;
-    }
-  }
+  message = (filePath !== null) ?
+            `${upperCaseLevel}: ${filePath} - ${message}`:
+              `${upperCaseLevel}: ${message}`;
 
   return message;
 }

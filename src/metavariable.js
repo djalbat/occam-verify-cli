@@ -2,13 +2,13 @@
 
 import { metaTypeFromJSON } from "./metaType";
 import { metavariableNameFromMetavariableNode } from "./utilities/name";
+import { metavariableNodeFromMetavariableString } from "./utilities/node";
 
 export default class Metavariable {
-  constructor(string, node, name, termType, metaType) {
+  constructor(string, node, name, metaType) {
     this.string = string;
     this.node = node;
     this.name = name;
-    this.termType = termType;
     this.metaType = metaType;
   }
 
@@ -22,10 +22,6 @@ export default class Metavariable {
 
   getName() {
     return this.name;
-  }
-
-  getTermType() {
-    return this.termType;
   }
 
   getMetaType() {
@@ -80,8 +76,7 @@ export default class Metavariable {
 
     const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           name = metavariableName,  ///
-          termType = termTypeFromMetavariableNode(metavariableNode, fileContext),
-          metavariable = new Metavariable(string, node, name, termType, metaType);
+          metavariable = new Metavariable(string, node, name, metaType);
 
     return metavariable;
   }
@@ -91,19 +86,18 @@ export default class Metavariable {
           name = metavariableName,  ///
           node = metavariableNode,  ///
           string = fileContext.nodeAsString(node),
-          termType = null,
           metaType = null,
-          metavariable = new Metavariable(string, node, name, termType, metaType);
+          metavariable = new Metavariable(string, node, name, metaType);
 
     return metavariable;
   }
 
-  static fromMetavariableNodeNameTermTypeAndMetaType(metavariableNode, termType, metaType, fileContext) {
+  static fromMetavariableNodeAndMetaType(metavariableNode, metaType, fileContext) {
     const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           name = metavariableName,  ///
           node = metavariableNode,  ///
           string = fileContext.nodeAsString(node),
-          metavariable = new Metavariable(string, node, name, termType, metaType);
+          metavariable = new Metavariable(string, node, name, metaType);
 
     return metavariable;
   }

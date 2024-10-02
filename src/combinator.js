@@ -1,9 +1,11 @@
 "use strict";
 
 import shim from "./shim";
+import Statement from "./statement";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
+import { statementNodeFromStatementString } from "./utilities/node";
 
 const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
@@ -43,9 +45,17 @@ export default class Combinator {
   }
 
   static fromJSON(json, fileContext) {
-    let combinator = null;
+    let { statement } = json;
 
-    debugger
+    const lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          statementString = statement,  ///
+          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
+          localContext = LocalContext.fromFileContext(fileContext);
+
+    statement = Statement.fromStatementNode(statementNode, localContext);
+
+    const combinator = new Combinator(statement);
 
     return combinator;
   }

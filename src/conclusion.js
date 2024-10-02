@@ -6,6 +6,7 @@ import UnqualifiedStatement from "./statement/unqualified";
 
 import { trim } from "./utilities/string";
 import { nodeQuery } from "./utilities/query";
+import { unqualifiedStatementNodeFromUnqualifiedStatementString } from "./utilities/node";
 
 const unqualifiedStatementNodeQuery = nodeQuery("/conclusion/unqualifiedStatement");
 
@@ -89,9 +90,16 @@ export default class Conclusion {
   }
 
   static fromJSON(json, fileContext) {
-    let conclusion = null;
+    let { unqualifiedStatement } = json;
 
-    debugger
+    const lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          unqualifiedStatementString = unqualifiedStatement,  ///
+          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementString(unqualifiedStatementString, lexer, parser);
+
+    unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext);
+
+    const conclusion = new Conclusion(fileContext, unqualifiedStatement);
 
     return conclusion;
   }

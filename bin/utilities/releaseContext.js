@@ -64,20 +64,19 @@ function releaseContextFromJSON(json, context) {
   const { log } = context,
         { name } = json;
 
+  ({context} = json); ///
+
   let { entries } = json;
 
   json = entries; ///
 
   entries = Entries.fromJSON(json);
 
-  ({context} = json); ///
-
   const contextJSON = context;  ///
 
   json = contextJSON; ///
 
-  const released = true,
-        releaseContext = ReleaseContext.fromLogNameJSONEntriesAndReleased(log, name, json, entries, released);
+  const releaseContext = ReleaseContext.fromLogNameJSONAndEntries(log, name, json, entries);
 
   return releaseContext;
 }
@@ -94,10 +93,9 @@ function releaseContextFromProject(project, context) {
       const { log } = context,
             name = project.getName(),
             json = null,
-            entries = project.getEntries(),
-            released = false;
+            entries = project.getEntries();
 
-      releaseContext = ReleaseContext.fromLogNameJSONEntriesAndReleased(log, name, json, entries, released);
+      releaseContext = ReleaseContext.fromLogNameJSONAndEntries(log, name, json, entries);
     }
   }
 

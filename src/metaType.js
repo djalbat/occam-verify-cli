@@ -71,11 +71,13 @@ Object.assign(shim, {
 export default MetaType;
 
 export function metaTypeFromJSON(json, fileContext) {
-  let metaType;
+  let metaType = null;
 
-  const { name } = json;
+  if (json !== null) {
+    const { name } = json;
 
-  metaType = new MetaType(name);
+    metaType = new MetaType(name);
+  }
 
   return metaType;
 }
