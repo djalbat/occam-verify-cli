@@ -4,7 +4,7 @@ import { levels } from "necessary";
 
 import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "./utilities/message";
 
-const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL, FATAL_LEVEL } = levels;
+const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL } = levels;
 
 export default class Log {
   constructor(messages, logLevel, follow) {
@@ -55,20 +55,13 @@ export default class Log {
     this.write(level, message, node, tokens, filePath);
   }
 
-  fatal(message, node, tokens, filePath) {
-    const level = FATAL_LEVEL;
-
-    this.write(level, message, node, tokens, filePath);
-  }
-
   write(level, message, node, tokens, filePath) {
     const levels = [
             TRACE_LEVEL,
             DEBUG_LEVEL,
             INFO_LEVEL,
             WARNING_LEVEL,
-            ERROR_LEVEL,
-            FATAL_LEVEL,
+            ERROR_LEVEL
           ],
           levelIndex = levels.indexOf(level),
           logLevelIndex = levels.indexOf(this.logLevel);

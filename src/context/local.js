@@ -413,8 +413,6 @@ class LocalContext {
 
   error(message, node) { this.context.error(message, node); }
 
-  fatal(message, node) { this.context.fatal(node, message); }
-
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
           variables = [],

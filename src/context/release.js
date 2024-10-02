@@ -456,14 +456,6 @@ export default class ReleaseContext {
     this.log.error(message, node, tokens, filePath);
   }
 
-  fatal(message, node = null, tokens = null, filePath = null) {
-    if (this.loggingDisabled) {
-      return;
-    }
-
-    this.log.fatal(message, node, tokens, filePath);
-  }
-
   initialise(releaseContexts) {
     const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
           nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar),

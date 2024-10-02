@@ -625,8 +625,6 @@ export default class FileContext {
 
   error(message, node) { this.releaseContext.error(message, node, this.tokens, this.filePath); }
 
-  fatal(message, node) { this.releaseContext.fatal(message, node, this.tokens, this.filePath); }
-
   reset() {
     this.types = [];
     this.rules = [];
@@ -771,7 +769,7 @@ export default class FileContext {
     return json;
   }
 
-  fromJSON(json) {
+  static fromJSON(json) {
     const { types, rules, axioms, lemmas, theorems, metaLemmas, variables, conjectures, combinators, constructors, metatheorems, metavariables } = json,
           fileContext = this, ///
           typesJSON = types,  ///
