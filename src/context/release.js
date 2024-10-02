@@ -14,9 +14,10 @@ const { isFilePathFlorenceFilePath } = filePathUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(log, name, entries, released, lexer, parser, verified, initialised, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts) {
+  constructor(log, name, json, entries, released, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts) {
     this.log = log;
     this.name = name;
+    this.json = json;
     this.entries = entries;
     this.released = released;
     this.lexer = lexer;
@@ -25,7 +26,6 @@ export default class ReleaseContext {
     this.initialised = initialised;
     this.fileContexts = fileContexts;
     this.customGrammar = customGrammar;
-    this.loggingDisabled = loggingDisabled;
     this.dependencyReleaseContexts = dependencyReleaseContexts;
   }
 
@@ -35,6 +35,10 @@ export default class ReleaseContext {
 
   getName() {
     return this.name;
+  }
+
+  getJSON() {
+    return this.json;
   }
 
   getEntries() {
@@ -67,10 +71,6 @@ export default class ReleaseContext {
 
   getCustomGrammar() {
     return this.customGrammar;
-  }
-
-  isLoggingDisabled() {
-    return this.loggingDisabled;
   }
 
   getDependencyReleaseContexts() {
@@ -115,10 +115,6 @@ export default class ReleaseContext {
 
   setCustomGrammar(customGrammar) {
     this.customGrammar = customGrammar;
-  }
-
-  setLoggingDisabled(loggingDisabled) {
-    this.loggingDisabled = loggingDisabled;
   }
 
   setDependencyReleaseContexts(dependencyReleaseContexts) {
@@ -404,57 +400,15 @@ export default class ReleaseContext {
 
   matchShortenedVersion(shortenedVersion) { return this.entries.matchShortenedVersion(shortenedVersion); }
 
-  disableLogging() {
-    const loggingDisabled = true;
+  trace(message, node = null, tokens = null, filePath = null) { this.log.trace(message, node, tokens, filePath); }
 
-    this.setLoggingDisabled(loggingDisabled);
-  }
+  debug(message, node = null, tokens = null, filePath = null) { this.log.debug(message, node, tokens, filePath); }
 
-  enableLogging() {
-    const loggingDisabled = false;
+  info(message, node = null, tokens = null, filePath = null) { this.log.info(message, node, tokens, filePath); }
 
-    this.setLoggingDisabled(loggingDisabled);
-  }
+  warning(message, node = null, tokens = null, filePath = null) { this.log.warning(message, node, tokens, filePath); }
 
-  trace(message, node = null, tokens = null, filePath = null) {
-    if (this.loggingDisabled) {
-      return;
-    }
-
-    this.log.trace(message, node, tokens, filePath);
-  }
-
-  debug(message, node = null, tokens = null, filePath = null) {
-    if (this.loggingDisabled) {
-      return;
-    }
-
-    this.log.debug(message, node, tokens, filePath);
-  }
-
-  info(message, node = null, tokens = null, filePath = null) {
-    if (this.loggingDisabled) {
-      return;
-    }
-
-    this.log.info(message, node, tokens, filePath);
-  }
-
-  warning(message, node = null, tokens = null, filePath = null) {
-    if (this.loggingDisabled) {
-      return;
-    }
-
-    this.log.warning(message, node, tokens, filePath);
-  }
-
-  error(message, node = null, tokens = null, filePath = null) {
-    if (this.loggingDisabled) {
-      return;
-    }
-
-    this.log.error(message, node, tokens, filePath);
-  }
+  error(message, node = null, tokens = null, filePath = null) { this.log.error(message, node, tokens, filePath); }
 
   initialise(releaseContexts) {
     const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
@@ -503,16 +457,15 @@ export default class ReleaseContext {
     return json;
   }
 
-  static fromLogNameEntriesAndReleased(log, name, entries, released) {
+  static fromLogNameJSONEntriesAndReleased(log, name, json, entries, released) {
     const lexer = null,
           parser = null,
           verified = false,
           initialised = false,
           fileContexts = [],
           customGrammar = customGrammarFromNameAndEntries(name, entries),
-          loggingDisabled = false,
           dependencyReleaseContexts = null,
-          releaseContext = new ReleaseContext(log, name, entries, released, lexer, parser, verified, initialised, fileContexts, customGrammar, loggingDisabled, dependencyReleaseContexts);
+          releaseContext = new ReleaseContext(log, name, json, entries, released, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts);
 
     return releaseContext;
   }

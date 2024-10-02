@@ -70,8 +70,14 @@ function releaseContextFromJSON(json, context) {
 
   entries = Entries.fromJSON(json);
 
+  ({context} = json); ///
+
+  const contextJSON = context;  ///
+
+  json = contextJSON; ///
+
   const released = true,
-        releaseContext = ReleaseContext.fromLogNameEntriesAndReleased(log, name, entries, released);
+        releaseContext = ReleaseContext.fromLogNameJSONEntriesAndReleased(log, name, json, entries, released);
 
   return releaseContext;
 }
@@ -87,10 +93,11 @@ function releaseContextFromProject(project, context) {
     if (metaJSONFileValid) {
       const { log } = context,
             name = project.getName(),
+            json = null,
             entries = project.getEntries(),
             released = false;
 
-      releaseContext = ReleaseContext.fromLogNameEntriesAndReleased(log, name, entries, released);
+      releaseContext = ReleaseContext.fromLogNameJSONEntriesAndReleased(log, name, json, entries, released);
     }
   }
 
