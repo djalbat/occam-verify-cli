@@ -3,6 +3,7 @@
 import metavariableUnifier from "../../../unifier/metavariable";
 import StatementForMetavariableSubstitution from "../../../substitution/statementForMetavariable";
 
+import { trim } from "../../../utilities/string";
 import { metavariableNameFromMetavariableNode } from "../../../utilities/name";
 
 function unifyAWithRule(qualifiedStatement, substitutions, localContext) {
@@ -13,7 +14,7 @@ function unifyAWithRule(qualifiedStatement, substitutions, localContext) {
 
   if (rule !== null) {
     const referenceString = reference.getString(),
-          qualifiedStatementString = qualifiedStatement.getString();
+          qualifiedStatementString = trim(qualifiedStatement.getString());  ///
 
     localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${referenceString}' rule...`);
 
@@ -38,7 +39,7 @@ function unifyAWithAxiom(qualifiedStatement, substitutions, localContext) {
 
   if (axiom !== null) {
     const referenceString = reference.getString(),
-          qualifiedStatementString = qualifiedStatement.getString();
+          qualifiedStatementString = trim(qualifiedStatement.getString());  ///
 
     localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${referenceString}' axiom...`);
 
@@ -63,7 +64,7 @@ function unifyAWithLemma(qualifiedStatement, substitutions, localContext) {
 
   if (lemma !== null) {
     const referenceString = reference.getString(),
-          qualifiedStatementString = qualifiedStatement.getString();
+          qualifiedStatementString = trim(qualifiedStatement.getString());  ///
 
     localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${referenceString}' lemma...`);
 
@@ -88,7 +89,7 @@ function unifyAWithTheorem(qualifiedStatement, substitutions, localContext) {
 
   if (theorem !== null) {
     const referenceString = reference.getString(),
-          qualifiedStatementString = qualifiedStatement.getString();
+          qualifiedStatementString = trim(qualifiedStatement.getString());  ///
 
     localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${referenceString}' theorem...`);
 
@@ -113,7 +114,7 @@ function unifyAWithConjecture(qualifiedStatement, substitutions, localContext) {
 
   if (conjecture !== null) {
     const referenceString = reference.getString(),
-          qualifiedStatementString = qualifiedStatement.getString();
+          qualifiedStatementString = trim(qualifiedStatement.getString());  ///
 
     localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${referenceString}' conjecture...`);
 

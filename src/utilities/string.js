@@ -23,8 +23,6 @@ export function nodeAsString(node, tokens) {
     string = nonTerminalNodeAsString(nonTerminalNode, tokens);
   }
 
-  string = string.replace(/\s+$/, EMPTY_STRING);
-
   return string;
 }
 

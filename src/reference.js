@@ -41,8 +41,8 @@ export default class Reference {
     return verified;
   }
 
-  toJSON(fileContext) {
-    const metavariableJSON = this.metavariable.toJSON(fileContext),
+  toJSON() {
+    const metavariableJSON = this.metavariable.toJSON(),
           metavariable = metavariableJSON,  ///
           string = this.string,
           json = {

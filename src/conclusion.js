@@ -76,6 +76,23 @@ export default class Conclusion {
     return verified;
   }
 
+  toJSON() {
+    const unqualifiedStatementString = this.unqualifiedStatement.getString(),
+          unqualifiedStatement = unqualifiedStatementString,  ///
+          json = {
+            unqualifiedStatement
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    let conclusion = null;
+
+    debugger
+
+    return conclusion;
+  }
   static fromConclusionNode(conclusionNode, fileContext) {
     const unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),

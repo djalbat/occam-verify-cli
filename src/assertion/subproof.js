@@ -8,7 +8,7 @@ import { match } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
-      subproofAssertionNodeQuery = nodeQuery("/unqualifiedStatement/statement/subproofAssertion");
+      subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion");
 
 export default class SubproofAssertion {
   constructor(fileContext, string, statements) {
@@ -60,25 +60,23 @@ export default class SubproofAssertion {
     return subproofUnified;
   }
 
-  static fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext) {
+  static fromStatementNode(statementNode, fileContext) {
     let subproofAssertion = null;
 
-    if (unqualifiedStatementNode !== null) {
-      const subproofAssertionNode = subproofAssertionNodeQuery(unqualifiedStatementNode);
+    const subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
 
-      if (subproofAssertionNode !== null) {
-        const node = subproofAssertionNode, ///
-              string = fileContext.nodeAsString(node),
-              localContext = LocalContext.fromFileContext(fileContext),
-              statementNodes = statementNodesQuery(subproofAssertionNode),
-              statements = statementNodes.map((statementNode) => {
-                const statement = Statement.fromStatementNode(statementNode, localContext);
+    if (subproofAssertionNode !== null) {
+      const node = subproofAssertionNode, ///
+            string = fileContext.nodeAsString(node),
+            localContext = LocalContext.fromFileContext(fileContext),
+            statementNodes = statementNodesQuery(subproofAssertionNode),
+            statements = statementNodes.map((statementNode) => {
+              const statement = Statement.fromStatementNode(statementNode, localContext);
 
-                return statement;
-              });
+              return statement;
+            });
 
-        subproofAssertion = new SubproofAssertion(fileContext, string, statements);
-      }
+      subproofAssertion = new SubproofAssertion(fileContext, string, statements);
     }
 
     return subproofAssertion;

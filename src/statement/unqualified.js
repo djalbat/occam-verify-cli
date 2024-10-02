@@ -25,7 +25,7 @@ export default class UnqualifiedStatement {
   verify(assignments, stated, localContext) {
     let verified;
 
-    const unqualifiedStatementString = this.string;
+    const unqualifiedStatementString = trim(this.string); ///
 
     localContext.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
 
@@ -50,7 +50,7 @@ export default class UnqualifiedStatement {
                           Statement.fromStatementNode(statementNode, localContext) :
                             null,
             node = unqualifiedStatementNode,  ///
-            string = trim(fileContext.nodeAsString(node));
+            string = fileContext.nodeAsString(node);
 
       unqualifiedStatement = new UnqualifiedStatement(string, statement);
     }

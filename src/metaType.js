@@ -39,10 +39,20 @@ class MetaType {
     return metaTypeNodeMatches;
   }
 
-  asString(tokens) {
-    const string = `${this.name}`;
+  toJSON() {
+    const name = this.name,
+          json = {
+            name
+          };
 
-    return string;
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    const { name } = json,
+          metaType = new MetaType(name);
+
+    return metaType;
   }
 
   static fromMetaTypeNode(metaTypeNode, localContext) {

@@ -32,6 +32,24 @@ export default class Combinator {
     return verified;
   }
 
+  toJSON() {
+    const statementString = this.statement.getString(),
+          statement = statementString,  ///
+          json = {
+            statement
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    let combinator = null;
+
+    debugger
+
+    return combinator;
+  }
+
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
     const { Statement } = shim,
           statementNode = statementNodeQuery(combinatorDeclarationNode),

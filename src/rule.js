@@ -145,18 +145,18 @@ export default class Rule {
     return verified;
   }
 
-  toJSON(fileContext) {
+  toJSON() {
     const labelsJSON = this.labels.map((label) => {
-            const labelJSON = label.toJSON(fileContext);
+            const labelJSON = label.toJSON();
 
             return labelJSON;
           }),
           premisesJSON = this.premises.map((premise) => {
-            const premiseJSON = premise.toJSON(fileContext);
+            const premiseJSON = premise.toJSON();
 
             return premiseJSON;
           }),
-          conclusionJSON = this.conclusion.toJSON(fileContext),
+          conclusionJSON = this.conclusion.toJSON(),
           labels = labelsJSON,  ///
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///

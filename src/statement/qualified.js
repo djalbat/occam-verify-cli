@@ -36,7 +36,7 @@ export default class QualifiedStatement {
   verify(substitutions, localContext) {
     let verified;
 
-    const qualifiedStatementString = this.string; ///
+    const qualifiedStatementString = trim(this.string); ///
 
     localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`);
 
@@ -65,7 +65,7 @@ export default class QualifiedStatement {
     let unified;
 
     const qualifiedStatement = this,  ///
-          qualifiedStatementString = this.string; ///
+          qualifiedStatementString = trim(this.string); ///
 
     localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement...`);
 
@@ -94,7 +94,7 @@ export default class QualifiedStatement {
                             null,
             reference = Reference.fromReferenceNode(referenceNode, fileContext),
             node = qualifiedStatementNode,  ///
-            string = trim(fileContext.nodeAsString(node));
+            string = fileContext.nodeAsString(node);
 
         qualifiedStatement = new QualifiedStatement(string, statement, reference);
     }

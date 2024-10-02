@@ -46,16 +46,6 @@ export default class Variable {
     return nodeAndTypeMatch;
   }
 
-  asString(tokens) {
-    const typeName = this.type.getName();
-
-    let string = nodeAsString(this.node, tokens);
-
-    string = `${string}:${typeName}`; ///
-
-    return string;
-  }
-
   static fromVariableNodeAndType(variableNode, type) {
     const node = variableNode,  ///
           variable = new Variable(node, type);

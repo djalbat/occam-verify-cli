@@ -12,18 +12,13 @@ import { assignAssignments } from "./utilities/assignments";
 const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement");
 
 export default class Premise {
-  constructor(fileContext, subproofAssertion, unqualifiedStatement) {
+  constructor(fileContext, unqualifiedStatement) {
     this.fileContext = fileContext;
-    this.subproofAssertion = subproofAssertion;
     this.unqualifiedStatement = unqualifiedStatement;
   }
 
   getFileContext() {
     return this.fileContext;
-  }
-
-  getSubproofAssertion() {
-    return this.subproofAssertion;
   }
 
   getUnqualifiedStatement() {
@@ -95,8 +90,12 @@ export default class Premise {
 
     localContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
 
-    if (this.subproofAssertion !== null) {
-      subproofUnified = this.subproofAssertion.unifySubproof(subproof, substitutions, localContext);
+    const statement = this.unqualifiedStatement.getStatement(),
+          statementNode = statement.getNode(),
+          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, this.fileContext);
+
+    if (subproofAssertion !== null) {
+      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, localContext);
     }
 
     if (subproofUnified) {
@@ -140,11 +139,26 @@ export default class Premise {
     return verified;
   }
 
+  toJSON() {
+    const unqualifiedStatementString = this.unqualifiedStatement.getString(),
+          unqualifiedStatement = unqualifiedStatementString,  ///
+          json = {
+            unqualifiedStatement
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    let premise = null;
+
+    return premise;
+  }
+
   static fromPremiseNode(premiseNode, fileContext) {
     const unqualifiedStatementNode = unqualifiedStatementNodeQuery(premiseNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          subproofAssertion = SubproofAssertion.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          premise = new Premise(fileContext, subproofAssertion, unqualifiedStatement);
+          premise = new Premise(fileContext, unqualifiedStatement);
 
     return premise
   }

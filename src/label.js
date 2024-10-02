@@ -11,11 +11,11 @@ export default class Label {
     this.metavariable = metavariable;
   }
 
-  getString() { return this.metavariable.getString(); }
-
   getMetavariable() {
     return this.metavariable;
   }
+
+  getString() { return this.metavariable.getString(); }
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
@@ -42,12 +42,10 @@ export default class Label {
     return verified;
   }
 
-  toJSON(fileContext) {
-    const metavariableJSON = this.metavariable.toJSON(fileContext),
+  toJSON() {
+    const metavariableJSON = this.metavariable.toJSON(),
           metavariable = metavariableJSON,  ///
-          string = this.string,
           json = {
-            string,
             metavariable
           };
 
@@ -55,15 +53,13 @@ export default class Label {
   }
 
   static fromJSON(json, fileContext) {
-    const { string } = json;
-
     let { metavariable } = json;
 
     json = metavariable;  ///
 
     metavariable = Metavariable.fromJSON(json, fileContext);
 
-    const label = new Label(string, metavariable);
+    const label = new Label(metavariable);
 
     return label;
   }

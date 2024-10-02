@@ -50,8 +50,10 @@ export default class Metavariable {
     return metavariableNodeMatches;
   }
 
-  toJSON(fileContext) {
-    const metaTypeJSON = this.metaType.toJSON(fileContext),
+  toJSON() {
+    const metaTypeJSON = (this.metaType !== null) ?
+                            this.metaType.toJSON() :
+                              null,
           string = this.string,
           metaType = metaTypeJSON,  ///
           json = {

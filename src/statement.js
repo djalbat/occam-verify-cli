@@ -134,7 +134,7 @@ class Statement {
     return verifiedGivenMetaType;
   }
 
-  toJSON(fileContext) {
+  toJSON() {
     const string = this.string, ///
           json = {
             string
