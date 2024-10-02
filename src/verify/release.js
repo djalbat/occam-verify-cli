@@ -1,7 +1,5 @@
 "use strict";
 
-import verifyFiles from "../verify/files";
-
 export default function verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap) {
   let releaseVerified = false;
 
@@ -21,40 +19,27 @@ export default function verifyRelease(releaseName, dependentName, dependentRelea
               dependencyReleasesVVerified = verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap);
 
         if (dependencyReleasesVVerified) {
-          const verified = releaseContext.isVerified();
+          let releaseContextVerified;
 
-          if (verified) {
-            releaseVerified = true;
-          } else {
+          releaseContextVerified = releaseContext.isVerified();
+
+          if (!releaseContextVerified) {
             releaseContext.info(`Verifying the '${releaseName}' project...`);
 
-            const releaseFilesVerified = verifyReleaseFiles(releaseContext);
+            releaseContextVerified = releaseContext.verify();
 
-            if (releaseFilesVerified) {
-              const verified = true;
-
-              releaseContext.setVerified(verified);
-
-              releaseVerified = verified; ///
-            }
-
-            if (releaseVerified) {
+            if (releaseContextVerified) {
               releaseContext.info(`...verified the '${releaseName}' project.`);
             }
           }
+
+          releaseVerified = releaseContextVerified; ///
         }
       }
     }
   }
 
   return releaseVerified;
-}
-
-function verifyReleaseFiles(releaseContext) {
-  const filesVerified = verifyFiles(releaseContext),
-        releaseFilesVerified = filesVerified; ///
-
-  return releaseFilesVerified;
 }
 
 function verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap) {
