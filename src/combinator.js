@@ -26,9 +26,19 @@ export default class Combinator {
   }
 
   verify(fileContext) {
-    const localContext = LocalContext.fromFileContext(fileContext),
-          statementVerifiedAsCombinator = this.statement.verifyAsCombinator(localContext),
-          verified = statementVerifiedAsCombinator; ///
+    let verified;
+
+    const combinatorString = this.string; ///
+
+    fileContext.trace(`Verifying the '${combinatorString}' combinator...`);
+
+    const statementVerifiedAsCombinator = this.statement.verifyAsCombinator(fileContext);
+
+    verified = statementVerifiedAsCombinator; ///
+
+    if (verified) {
+      fileContext.debug(`...verified the '${combinatorString}' combinator.`);
+    }
 
     return verified;
   }

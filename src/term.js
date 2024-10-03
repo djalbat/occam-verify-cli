@@ -1,14 +1,22 @@
 "use strict";
 
+import shim from "./shim";
+import termAsConstructorVerifier from "./verifier/termAsConstructor";
+
 import { filter } from "./utilities/array";
 import { nodesQuery } from "./utilities/query"
 
 const variableNodesQuery = nodesQuery("//variable");
 
-export default class Term {
-  constructor(node, type) {
+class Term {
+  constructor(string, node, type) {
+    this.string = string;
     this.node = node;
     this.type = type;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getNode() {
@@ -81,10 +89,79 @@ export default class Term {
     return implicitlyGrounded;
   }
 
-  static fromTermNodeAndType(termNode, type) {
+  verify(localContext, verifyAhead) {
+    let verified = false;
+
+    debugger
+
+    return verified;
+  }
+
+  verifyType(fileContext) {
+    let typeVerified;
+
+    if (this.type === null) {
+      typeVerified = true;
+    } else {
+      const typeName = this.type.getName();
+
+      fileContext.trace(`Verifying the '${typeName}' type...`);
+
+      const type = fileContext.findTypeByTypeName(typeName);
+
+      if (type === null) {
+        fileContext.debug(`The '${typeName}' type is missing.`);
+      } else {
+        this.type = type; ///
+
+        typeVerified = true;
+      }
+
+      if (typeVerified) {
+        fileContext.debug(`...verified the '${typeName}' type.`);
+      }
+    }
+
+    return typeVerified;
+  }
+
+  verifyAsConstructor(fileContext) {
+    let verifiedAsConstructor;
+
+    const termNode = this.node,  ///
+          termString = this.string;  ///
+
+    fileContext.trace(`Verifying the '${termString}' term as a constructor...`);
+
+    verifiedAsConstructor = termAsConstructorVerifier.verifyTerm(termNode, fileContext);
+
+    if (verifiedAsConstructor) {
+      fileContext.debug(`...verified the '${termString}' term as a constructor.`, termNode);
+    }
+
+    return verifiedAsConstructor;
+  }
+
+  static fromTermNode(termNode, fileContext) {
     const node = termNode,  ///
-          term = new Term(node, type);
+          string = fileContext.nodeAsString(node),
+          type = null,
+          term = new Term(string, node, type);
+
+    return term;
+  }
+
+  static fromTermNodeAndType(termNode, type, fileContext) {
+    const node = termNode,  ///
+          string = fileContext.nodeAsString(node),
+          term = new Term(string, node, type);
 
     return term;
   }
 }
+
+Object.assign(shim, {
+  Term
+});
+
+export default Term;

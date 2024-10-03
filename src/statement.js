@@ -75,18 +75,18 @@ class Statement {
     return unifiedWithMetaType;
   }
 
-  verifyAsCombinator(localContext) {
+  verifyAsCombinator(fileContext) {
     let verifiedAsCombinator;
 
     const statementNode = this.node,  ///
           statementString = this.string;  ///
 
-    localContext.trace(`Verifying the '${statementString}' statement as a combinator...`);
+    fileContext.trace(`Verifying the '${statementString}' statement as a combinator...`);
 
-    verifiedAsCombinator = statementAsCombinatorVerifier.verifyStatement(statementNode, localContext);
+    verifiedAsCombinator = statementAsCombinatorVerifier.verifyStatement(statementNode, fileContext);
 
     if (verifiedAsCombinator) {
-      localContext.debug(`...verified the '${statementString}' statement as a combinator.`, statementNode);
+      fileContext.debug(`...verified the '${statementString}' statement as a combinator.`, statementNode);
     }
 
     return verifiedAsCombinator;

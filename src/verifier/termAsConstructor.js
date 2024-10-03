@@ -2,7 +2,6 @@
 
 import shim from "../shim";
 import Verifier from "../verifier";
-import verifyType from "../verify/type";
 import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
@@ -31,10 +30,10 @@ class TermAsConstructorVerifier extends Verifier {
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, fileContext, verifyAhead) => {
-        const { verifyTerm } = shim,
-              terms = [],
+        const { Term } = shim,
+              term = Term.fromTermNode(termNode, fileContext),
               localContext = LocalContext.fromFileContext(fileContext),
-              termVerified = verifyTerm(termNode, terms, localContext, verifyAhead);
+              termVerified = term.verify(localContext, verifyAhead);
 
         return termVerified;
       }
@@ -42,8 +41,10 @@ class TermAsConstructorVerifier extends Verifier {
     {
       nodeQuery: typeNodeQuery,
       verify: (typeNode, fileContext, verifyAhead) => {
-        const localContext = LocalContext.fromFileContext(fileContext),
-              typeVerified = verifyType(typeNode, localContext, verifyAhead);
+        const { Type } = shim,
+              type = Type.fromTypeNode(typeNode, fileContext),
+              localContext = LocalContext.fromFileContext(fileContext),
+              typeVerified = type.verify(localContext, verifyAhead);
 
         return typeVerified;
       }

@@ -1,5 +1,7 @@
 "use strict";
 
+import shim from "./shim";
+
 import { nodeQuery } from "./utilities/query";
 import { OBJECT_TYPE_NAME } from "./typeNames";
 import { typeNameFromTypeNode } from "./utilities/name";
@@ -7,7 +9,7 @@ import { typeNameFromTypeNode } from "./utilities/name";
 const typeNodeQuery = nodeQuery("/typeDeclaration/type[0]"),
       superTypeNodeQuery = nodeQuery("/typeDeclaration/type[1]");
 
-export default class Type {
+class Type {
   constructor(string, name, superType) {
     this.string = string;
     this.name = name;
@@ -194,6 +196,12 @@ function stringFromTypeNameAndSuperType(typeName, superType) {
 
   return string;
 }
+
+Object.assign(shim, {
+  Type
+});
+
+export default Type;
 
 class ObjectType extends Type {
   static fromNothing() {
