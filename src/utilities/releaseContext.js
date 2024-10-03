@@ -86,8 +86,6 @@ export function createReleaseContext(dependency, dependentNames, context, callba
 }
 
 export function initialiseReleaseContext(dependency, context) {
-  let releaseContextInitialised = false;
-
   const { releaseContextMap } = context,
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///
@@ -98,7 +96,7 @@ export function initialiseReleaseContext(dependency, context) {
 
     log.warning(`Unable to initialise the '${dependencyName}' context because it has not been created.`);
   } else {
-    releaseContextInitialised = releaseContext.isInitialised();
+    const releaseContextInitialised = releaseContext.isInitialised();
 
     if (!releaseContextInitialised) {
       initialiseDependencyReleaseContexts(dependency, releaseContext, context);
@@ -113,8 +111,6 @@ export function initialiseReleaseContext(dependency, context) {
       log.info(`...initialised the '${dependencyName}' context.`);
     }
   }
-
-  return releaseContextInitialised;
 }
 
 export default {
@@ -277,14 +273,9 @@ function createDependencyReleaseContexts(dependency, releaseContext, dependentNa
 }
 
 function initialiseDependencyReleaseContexts(dependency, releaseContext, context) {
-  const dependencies = releaseContext.getDependencies(),
-        dependencyReleaseContextsInitialised = dependencies.everyDependency((dependency) => {  ///
-          const releaseContextInitialised = initialiseReleaseContext(dependency, context);
+  const dependencies = releaseContext.getDependencies();
 
-          if (releaseContextInitialised) {
-            return true;
-          }
-        });
-
-  return dependencyReleaseContextsInitialised;
+  dependencies.forEachDependency((dependency) => {  ///
+    initialiseReleaseContext(dependency, context);
+  });
 }
