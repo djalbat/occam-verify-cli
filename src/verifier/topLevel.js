@@ -2,6 +2,7 @@
 
 import Rule from "../rule";
 import Error from "../error";
+import TypeDeclaration from "../declaration/type";
 import CombinatorDeclaration from "../declaration/combinator";
 import MetavariableDeclaration from "../declaration/metavariable";
 
@@ -12,7 +13,6 @@ import verifyTheorem from "../verify/theorem";
 import verifyMetaLemma from "../verify/metaLemma";
 import verifyConjecture from "../verify/conjecture";
 import verifyMetatheorem from "../verify/metatheorem";
-import verifyTypeDeclaration from "../verify/declaration/type";
 import verifyVariableDeclaration from "../verify/declaration/variable";
 import verifyConstructorDeclaration from "../verify/declaration/constructor";
 
@@ -114,7 +114,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: typeDeclarationNodeQuery,
       verify: (typeDeclarationNode, fileContext) => {
-        const typeDeclarationVerified = verifyTypeDeclaration(typeDeclarationNode, fileContext);
+        const typeDeclaration = TypeDeclaration.fromTypeDeclarationNode(typeDeclarationNode, fileContext),
+              typeDeclarationVerified = typeDeclaration.verify(fileContext);
 
         return typeDeclarationVerified;
       }

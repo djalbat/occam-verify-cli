@@ -1,13 +1,21 @@
 "use strict";
 
+import { nodeQuery } from "./utilities/query";
 import { OBJECT_TYPE_NAME } from "./typeNames";
-
 import { typeNameFromTypeNode } from "./utilities/name";
 
+const typeNodeQuery = nodeQuery("/typeDeclaration/type[0]"),
+      superTypeNodeQuery = nodeQuery("/typeDeclaration/type[1]");
+
 export default class Type {
-  constructor(name, superType) {
+  constructor(string, name, superType) {
+    this.string = string;
     this.name = name;
     this.superType = superType;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getName() {
@@ -111,34 +119,80 @@ export default class Type {
     return typeNodeMatches;
   }
 
-  asString(tokens, noSuperType = false) {
-    let string;
+  verify(fileContext) {
+    let verified = false;
 
-    if (noSuperType) {
-      string = `${this.name}`;
+    const typeString = this.string; ///
+
+    fileContext.trace(`Verifying the '${typeString}' type...`);
+
+    const typePresent = fileContext.isTypePresentByTypeName(this.name);
+
+    if (typePresent) {
+      fileContext.debug(`The type '${typeString}' is already present.`);
     } else {
-      const superTypeName = this.superType.getName();
+      if (this.superType === null) {
+        verified = true;
+      } else {
+        const name = this.superType.getName(),
+              superTypePresent = fileContext.isTypePresentByTypeName(name);
 
-      string = `${this.name}:${superTypeName}`;
+        if (superTypePresent) {
+          verified = true;
+        } else {
+          const superTypeString = this.superType.getString();
+
+          fileContext.debug(`The super-type '${superTypeString}' is not present.`);
+        }
+      }
     }
 
-    return string;
+    if (verified) {
+      fileContext.debug(`...verified the '${typeString}' type.`);
+    }
+
+    return verified;
   }
 
-  static fromTypeName(typeName) {
-    const name = typeName,  ///
-          superType = objectType, ///
-          type = new Type(name, superType);
+  static fromTypeNode(typeNode) {
+    let type = null;
+
+    if (typeNode !== null) {
+      const typeName = typeNameFromTypeNode(typeNode),
+            name = typeName,  ///
+            string = name,  ///
+            superType = null;
+
+      type = new Type(string, name, superType);
+    }
 
     return type;
   }
 
-  static fromTypeNameAndSuperType(typeName, superType) {
-    const name = typeName,  ///
-          type = new Type(name, superType);
+  static fromTypeDeclarationNode(typeDeclarationNode, fileContext) {
+    const typeNode = typeNodeQuery(typeDeclarationNode),
+          superTypeNode = superTypeNodeQuery(typeDeclarationNode),
+          typeName = typeNameFromTypeNode(typeNode),
+          superType = Type.fromTypeNode(superTypeNode),
+          string = stringFromTypeNameAndSuperType(typeName, superType),
+          name = typeName,
+          type = new Type(string, name, superType);
 
     return type;
   }
+}
+
+function stringFromTypeNameAndSuperType(typeName, superType) {
+  let string = typeName;  ///
+
+  if (superType !== null) {
+    const typeString = string,  ///
+          superTypeString = superType.getString();
+
+    string = `${typeString}:${superTypeString}`;
+  }
+
+  return string;
 }
 
 class ObjectType extends Type {

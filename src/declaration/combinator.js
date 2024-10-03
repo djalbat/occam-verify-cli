@@ -18,23 +18,23 @@ export default class CombinatorDeclaration {
 
   getString() { return this.combinator.getString(); }
 
-  verify() {
+  verify(fileContext) {
     let verified;
 
     const combinatorDeclarationString = this.getString(); ///
 
-    this.fileContext.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
+    fileContext.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
 
-    const combinatorVerified = this.combinator.verify(this.fileContext);
+    const combinatorVerified = this.combinator.verify(fileContext);
 
     if (combinatorVerified) {
-      this.fileContext.addCombinator(this.combinator);
+      fileContext.addCombinator(this.combinator);
 
       verified = true;
     }
 
     if (verified) {
-      this.fileContext.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`);
+      fileContext.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`);
     }
 
     return verified;
