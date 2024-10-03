@@ -36,7 +36,7 @@ export default class QualifiedStatement {
   verify(substitutions, localContext) {
     let verified;
 
-    const qualifiedStatementString = trim(this.string); ///
+    const qualifiedStatementString = this.string; ///
 
     localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`);
 
@@ -89,12 +89,10 @@ export default class QualifiedStatement {
       const statementNode = statementNodeQuery(qualifiedStatementNode),
             referenceNode = referenceNodeQuery(qualifiedStatementNode),
             localContext = LocalContext.fromFileContext(fileContext),
-            statement = (statementNode !== null) ?
-                          Statement.fromStatementNode(statementNode, localContext) :
-                            null,
+            statement = Statement.fromStatementNode(statementNode, localContext),
             reference = Reference.fromReferenceNode(referenceNode, fileContext),
             node = qualifiedStatementNode,  ///
-            string = fileContext.nodeAsString(node);
+            string = trim(fileContext.nodeAsString(node));  ///
 
         qualifiedStatement = new QualifiedStatement(string, statement, reference);
     }

@@ -13,6 +13,12 @@ class MetaType {
     return this.name;
   }
 
+  getString() {
+    const string = this.name; ///
+
+    return string;
+  }
+
   isEqualTo(metaType) {
     const equalTo = (this === metaType);
 
@@ -69,15 +75,3 @@ Object.assign(shim, {
 });
 
 export default MetaType;
-
-export function metaTypeFromJSON(json, fileContext) {
-  let metaType = null;
-
-  if (json !== null) {
-    const { name } = json;
-
-    metaType = new MetaType(name);
-  }
-
-  return metaType;
-}

@@ -3,8 +3,13 @@
 import Combinator from "../combinator";
 
 export default class CombinatorDeclaration {
-  constructor(combinator) {
+  constructor(fileContext, combinator) {
+    this.fileContext = fileContext;
     this.combinator = combinator;
+  }
+
+  getFileContext() {
+    return this.fileContext;
   }
 
   getCombinator() {
@@ -13,23 +18,23 @@ export default class CombinatorDeclaration {
 
   getString() { return this.combinator.getString(); }
 
-  verify(fileContext) {
+  verify() {
     let verified;
 
-    const ocmbinatorDeclarationString = this.getString(); ///
+    const combinatorDeclarationString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${ocmbinatorDeclarationString}' combinator declaration...`);
+    this.fileContext.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
 
-    const combinatorVerified = this.combinator.verify(fileContext);
+    const combinatorVerified = this.combinator.verify(this.fileContext);
 
     if (combinatorVerified) {
-      fileContext.addCombinator(this.combinator);
+      this.fileContext.addCombinator(this.combinator);
 
       verified = true;
     }
 
     if (verified) {
-      fileContext.debug(`...verified the '${ocmbinatorDeclarationString}' combinator declaration.`);
+      this.fileContext.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`);
     }
 
     return verified;
@@ -37,7 +42,7 @@ export default class CombinatorDeclaration {
 
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
     const combinator = Combinator.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
-          combinatorDeclaration = new CombinatorDeclaration(combinator);
+          combinatorDeclaration = new CombinatorDeclaration(fileContext, combinator);
 
     return combinatorDeclaration;
   }

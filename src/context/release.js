@@ -470,7 +470,7 @@ export default class ReleaseContext {
           parser = null,
           verified = false,
           initialised = false,
-          fileContexts = null,
+          fileContexts = [],
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           dependencyReleaseContexts = null,
           releaseContext = new ReleaseContext(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts);

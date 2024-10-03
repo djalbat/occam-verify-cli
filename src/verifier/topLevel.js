@@ -1,6 +1,9 @@
 "use strict";
 
 import Rule from "../rule";
+import CombinatorDeclaration from "../declaration/combinator";
+import MetavariableDeclaration from "../declaration/metavariable";
+
 import Verifier from "../verifier";
 import verifyError from "../verify/error";
 import verifyAxiom from "../verify/axiom";
@@ -9,11 +12,9 @@ import verifyTheorem from "../verify/theorem";
 import verifyMetaLemma from "../verify/metaLemma";
 import verifyConjecture from "../verify/conjecture";
 import verifyMetatheorem from "../verify/metatheorem";
-import CombinatorDeclaration from "../declaration/combinator";
 import verifyTypeDeclaration from "../verify/declaration/type";
 import verifyVariableDeclaration from "../verify/declaration/variable";
 import verifyConstructorDeclaration from "../verify/declaration/constructor";
-import verifyMetavariableDeclaration from "../verify/declaration/metavariable";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -145,7 +146,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metavariableDeclarationNodeQuery,
       verify: (metavariableDeclarationNode, fileContext) => {
-        const metavariableDeclarationVerified = verifyMetavariableDeclaration(metavariableDeclarationNode, fileContext);
+        const metavariableDeclaration = MetavariableDeclaration.fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
+              metavariableDeclarationVerified = metavariableDeclaration.verify(fileContext);
 
         return metavariableDeclarationVerified;
       }

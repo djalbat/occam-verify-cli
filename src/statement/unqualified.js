@@ -3,29 +3,25 @@
 import Statement from "../statement";
 import LocalContext from "../context/local";
 
-import { trim } from "../utilities/string";
 import { nodeQuery } from "../utilities/query";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement");
 
 export default class UnqualifiedStatement {
-  constructor(string, statement) {
-    this.string = string;
+  constructor(statement) {
     this.statement = statement;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getStatement() {
     return this.statement;
   }
 
+  getString() { return this.statement.getString(); }
+
   verify(assignments, stated, localContext) {
     let verified;
 
-    const unqualifiedStatementString = trim(this.string); ///
+    const unqualifiedStatementString = this.getString(); ///
 
     localContext.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
 
@@ -40,19 +36,37 @@ export default class UnqualifiedStatement {
     return verified;
   }
 
+  toJSON() {
+    const statementJSON = this.statement.toJSON(),
+          statement = statementJSON,  ///
+          json = {
+            statement
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    let { statement } = json;
+
+    json = statement; ///
+
+    statement = Statement.fromJSON(json, fileContext);
+
+    const unqualifiedStatement = new UnqualifiedStatement(statement);
+
+    return unqualifiedStatement;
+  }
+
   static fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext) {
     let unqualifiedStatement = null;
 
     if (unqualifiedStatementNode !== null) {
       const statementNode = statementNodeQuery(unqualifiedStatementNode),
             localContext = LocalContext.fromFileContext(fileContext),
-            statement = (statementNode !== null) ?
-                          Statement.fromStatementNode(statementNode, localContext) :
-                            null,
-            node = unqualifiedStatementNode,  ///
-            string = fileContext.nodeAsString(node);
+            statement = Statement.fromStatementNode(statementNode, localContext);
 
-      unqualifiedStatement = new UnqualifiedStatement(string, statement);
+      unqualifiedStatement = new UnqualifiedStatement(statement);
     }
 
     return unqualifiedStatement;

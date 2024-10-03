@@ -143,8 +143,8 @@ export default class Premise {
   }
 
   toJSON() {
-    const unqualifiedStatementString = this.unqualifiedStatement.getString(),
-          unqualifiedStatement = unqualifiedStatementString,  ///
+    const unqualifiedStatementJSON = this.unqualifiedStatement.toJSON(),
+          unqualifiedStatement = unqualifiedStatementJSON,  ///
           json = {
             unqualifiedStatement
           };
@@ -155,12 +155,9 @@ export default class Premise {
   static fromJSON(json, fileContext) {
     let { unqualifiedStatement } = json;
 
-    const lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
-          unqualifiedStatementString = unqualifiedStatement,  ///
-          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementString(unqualifiedStatementString, lexer, parser);
+    json = unqualifiedStatement;  ///
 
-    unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext);
+    unqualifiedStatement = UnqualifiedStatement.fromJSON(json, fileContext);
 
     const premise = new Premise(fileContext, unqualifiedStatement);
 

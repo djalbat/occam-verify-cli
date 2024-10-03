@@ -1,8 +1,16 @@
 "use strict";
 
-import { metaTypeFromJSON } from "./metaType";
+import Argument from "./argument";
+import MetaType from "./metaType";
+import LocalContext from "./context/local";
+
+import { nodeQuery } from "./utilities/query";
 import { metavariableNameFromMetavariableNode } from "./utilities/name";
 import { metavariableNodeFromMetavariableString } from "./utilities/node";
+
+const argumentNodeQuery = nodeQuery("/metavariable/argument"),
+      metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType"),
+      metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable");
 
 export default class Metavariable {
   constructor(string, node, name, metaType) {
@@ -46,6 +54,40 @@ export default class Metavariable {
     return metavariableNodeMatches;
   }
 
+  verify(fileContext) {
+    let metavariableVerified = false;
+
+    const metavariableString = this.string; ///
+
+    fileContext.trace(`Verifying the '${metavariableString}' metavariable...`);
+
+    const metavariableNode = this.node, ///
+          metavariablePresent = fileContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+
+    if (metavariablePresent) {
+      fileContext.debug(`The metavariable '${metavariableString}' is already present.`);
+    } else {
+      const argumentNode = argumentNodeQuery(metavariableNode),
+            argument = Argument.fromArgumentNode(argumentNode, fileContext);
+
+      if (argument === null) {
+        metavariableVerified = true;
+      } else {
+        const argumentVerified = argument.verify(fileContext);
+
+        if (argumentVerified) {
+          metavariableVerified = true;
+        }
+      }
+    }
+
+    if (metavariableVerified) {
+      fileContext.debug(`...verified the '${metavariableString}' metavariable.`);
+    }
+
+    return metavariableVerified;
+  }
+
   toJSON() {
     const metaTypeJSON = (this.metaType !== null) ?
                             this.metaType.toJSON() :
@@ -70,9 +112,11 @@ export default class Metavariable {
 
     let { metaType } = json;
 
-    json = metaType;  ///
+    if (metaType !== null) {
+      json = metaType;  ///
 
-    metaType = metaTypeFromJSON(json, fileContext);
+      metaType = MetaType.fromJSON(json, fileContext);
+    }
 
     const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           name = metavariableName,  ///
@@ -83,8 +127,8 @@ export default class Metavariable {
 
   static fromMetavariableNode(metavariableNode, fileContext) {
     const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-          name = metavariableName,  ///
           node = metavariableNode,  ///
+          name = metavariableName,  ///
           string = fileContext.nodeAsString(node),
           metaType = null,
           metavariable = new Metavariable(string, node, name, metaType);
@@ -94,9 +138,24 @@ export default class Metavariable {
 
   static fromMetavariableNodeAndMetaType(metavariableNode, metaType, fileContext) {
     const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-          name = metavariableName,  ///
           node = metavariableNode,  ///
+          name = metavariableName,  ///
           string = fileContext.nodeAsString(node),
+          metavariable = new Metavariable(string, node, name, metaType);
+
+    return metavariable;
+  }
+
+  static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
+    const metaTypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
+          metavariableNode = metavariableNodeQuery(metavariableDeclarationNode),
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          localContext = LocalContext.fromFileContext(fileContext),
+          metavariableString = fileContext.nodeAsString(metavariableNode),
+          string = metavariableString,  ///
+          node = metavariableNode,  ///
+          name = metavariableName,  ///
+          metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
           metavariable = new Metavariable(string, node, name, metaType);
 
     return metavariable;

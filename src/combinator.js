@@ -5,7 +5,6 @@ import Statement from "./statement";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
-import { statementNodeFromStatementString } from "./utilities/node";
 
 const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
@@ -47,13 +46,13 @@ export default class Combinator {
   static fromJSON(json, fileContext) {
     let { statement } = json;
 
-    const lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
-          statementString = statement,  ///
-          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-          localContext = LocalContext.fromFileContext(fileContext);
+    const string = statement;  ///
 
-    statement = Statement.fromStatementNode(statementNode, localContext);
+    json = {  ///
+      string
+    };
+
+    statement = Statement.fromJSON(json, fileContext);
 
     const combinator = new Combinator(statement);
 
