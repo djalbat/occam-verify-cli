@@ -8,9 +8,14 @@ import { nodeQuery } from "../utilities/query";
 const metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType");
 
 export default class MetavariableDeclaration {
-  constructor(string, metavariable) {
+  constructor(fileContext, string, metavariable) {
+    this.fileContext = fileContext;
     this.string = string;
     this.metavariable = metavariable;
+  }
+
+  getFileContext() {
+    return this.fileContext;
   }
 
   getString() {
@@ -50,7 +55,7 @@ export default class MetavariableDeclaration {
           metavariableString = metavariable.getString(),
           metaTypeString = metaType.getString(),
           string = `${metavariableString}:${metaTypeString}`,
-          metavariableDeclaration = new MetavariableDeclaration(string, metavariable);
+          metavariableDeclaration = new MetavariableDeclaration(fileContext, string, metavariable);
 
     return metavariableDeclaration;
   }

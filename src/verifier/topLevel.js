@@ -1,11 +1,11 @@
 "use strict";
 
 import Rule from "../rule";
+import Error from "../error";
 import CombinatorDeclaration from "../declaration/combinator";
 import MetavariableDeclaration from "../declaration/metavariable";
 
 import Verifier from "../verifier";
-import verifyError from "../verify/error";
 import verifyAxiom from "../verify/axiom";
 import verifyLemma from "../verify/lemma";
 import verifyTheorem from "../verify/theorem";
@@ -48,7 +48,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: errorNodeQuery,
       verify: (errorNode, fileContext) => {
-        const errorVerified = verifyError(errorNode, fileContext);
+        const error = Error.fromErrorNode(errorNode, fileContext),
+              errorVerified = error.verify(fileContext);
 
         return errorVerified;
       }
