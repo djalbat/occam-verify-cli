@@ -124,9 +124,37 @@ class Type {
   verify(fileContext) {
     let verified = false;
 
+    const nameObjectTypeName = (this.name === OBJECT_TYPE_NAME);
+
+    if (nameObjectTypeName) {
+      verified = true;
+    } else {
+      const typeString = this.string; ///
+
+      fileContext.trace(`Verifying the '${typeString}' type...`);
+
+      const typePresent = fileContext.isTypePresentByTypeName(this.name);
+
+      if (typePresent) {
+        verified = true;
+      } else {
+        fileContext.debug(`The type '${typeString}' is not present.`);
+      }
+
+      if (verified) {
+        fileContext.debug(`...verified the '${typeString}' type.`);
+      }
+    }
+
+    return verified;
+  }
+
+  verifyWhenDeclared(fileContext) {
+    let verifiedWhenDeclared = false;
+
     const typeString = this.string; ///
 
-    fileContext.trace(`Verifying the '${typeString}' type...`);
+    fileContext.trace(`Verifying the '${typeString}' type when declared...`);
 
     const typePresent = fileContext.isTypePresentByTypeName(this.name);
 
@@ -134,13 +162,13 @@ class Type {
       fileContext.debug(`The type '${typeString}' is already present.`);
     } else {
       if (this.superType === null) {
-        verified = true;
+        verifiedWhenDeclared = true;
       } else {
         const name = this.superType.getName(),
-              superTypePresent = fileContext.isTypePresentByTypeName(name);
+          superTypePresent = fileContext.isTypePresentByTypeName(name);
 
         if (superTypePresent) {
-          verified = true;
+          verifiedWhenDeclared = true;
         } else {
           const superTypeString = this.superType.getString();
 
@@ -149,11 +177,11 @@ class Type {
       }
     }
 
-    if (verified) {
-      fileContext.debug(`...verified the '${typeString}' type.`);
+    if (verifiedWhenDeclared) {
+      fileContext.debug(`...verifiedWhenDeclared the '${typeString}' type when declared.`);
     }
 
-    return verified;
+    return verifiedWhenDeclared;
   }
 
   toJSON() {

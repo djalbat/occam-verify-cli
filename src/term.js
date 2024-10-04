@@ -91,10 +91,18 @@ class Term {
     return implicitlyGrounded;
   }
 
-  verify(localContext, verifyAhead) {
+  verify(fileContext) {
     let verified = false;
 
+    const termString = this.string; ///
+
+    fileContext.trace(`Verifying the '${termString}' term...`);
+
     debugger
+
+    if (verified) {
+      fileContext.debug(`...verified the '${termString}' type.`);
+    }
 
     return verified;
   }
@@ -130,10 +138,11 @@ class Term {
   verifyAsConstructor(fileContext) {
     let verifiedAsConstructor;
 
-    const termNode = this.node,  ///
-          termString = this.string;  ///
+    const termString = this.string;  ///
 
     fileContext.trace(`Verifying the '${termString}' term as a constructor...`);
+
+    const termNode = this.node;  ///
 
     verifiedAsConstructor = termAsConstructorVerifier.verifyTerm(termNode, fileContext);
 

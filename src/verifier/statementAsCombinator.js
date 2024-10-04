@@ -2,7 +2,6 @@
 
 import shim from "../shim";
 import Verifier from "../verifier";
-import verifyType from "../verify/type";
 
 import { nodeQuery } from "../utilities/query";
 import LocalContext from "../context/local";
@@ -28,11 +27,12 @@ class StatementAsCombinatorVerifier extends Verifier {
     {
       nodeQuery: statementNodeQuery,
       verify: (statementNode, fileContext) => {
-        const { verifyStatement } = shim,
+        const { Statement } = shim,
+              statement = Statement.fromStatementNode(statementNode, fileContext),
               stated = false,
               assignments = null,
               localContext = LocalContext.fromFileContext(fileContext),
-              statementVerified = verifyStatement(statementNode, assignments, stated, localContext);
+              statementVerified = statement.verify(statementNode, assignments, stated, localContext);
 
         return statementVerified;
       }
@@ -40,10 +40,10 @@ class StatementAsCombinatorVerifier extends Verifier {
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, fileContext) => {
-        const { verifyTerm } = shim,
-              terms = [],
+        const { Term } = shim,
+              term = Term.fromTermNode(termNode, fileContext),
               localContext = LocalContext.fromFileContext(fileContext),
-              termVerified = verifyTerm(termNode, terms, localContext, () => {
+              termVerified = term.verify(localContext, () => {
                 const verifiedAhead = true;
 
                 return verifiedAhead;
@@ -54,8 +54,10 @@ class StatementAsCombinatorVerifier extends Verifier {
     },
     {
       nodeQuery: typeNodeQuery,
-      verify: (typeNode, localContext) => {
-        const typeVerified = verifyType(typeNode, localContext);
+      verify: (typeNode, fileContext) => {
+        const { Type } = shim,
+              type = Type.fromTypeNode(typeNode, fileContext),
+              typeVerified = type.verify(fileContext);
 
         return typeVerified;
       }

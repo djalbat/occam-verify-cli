@@ -55,11 +55,27 @@ export default class Metavariable {
   }
 
   verify(fileContext) {
-    let metavariableVerified = false;
+    let verified = false;
 
     const metavariableString = this.string; ///
 
     fileContext.trace(`Verifying the '${metavariableString}' metavariable...`);
+
+    debugger
+
+    if (verified) {
+      fileContext.debug(`...verified the '${metavariableString}' metavariable.`);
+    }
+
+    return verified;
+  }
+
+  verifyWhenDeclared(fileContext) {
+    let verifiedWhenDeclared = false;
+
+    const metavariableString = this.string; ///
+
+    fileContext.trace(`Verifying the '${metavariableString}' metavariable when declared...`);
 
     const metavariableNode = this.node, ///
           metavariablePresent = fileContext.isMetavariablePresentByMetavariableNode(metavariableNode);
@@ -71,21 +87,21 @@ export default class Metavariable {
             argument = Argument.fromArgumentNode(argumentNode, fileContext);
 
       if (argument === null) {
-        metavariableVerified = true;
+        verifiedWhenDeclared = true;
       } else {
         const argumentVerified = argument.verify(fileContext);
 
         if (argumentVerified) {
-          metavariableVerified = true;
+          verifiedWhenDeclared = true;
         }
       }
     }
 
-    if (metavariableVerified) {
-      fileContext.debug(`...verified the '${metavariableString}' metavariable.`);
+    if (verifiedWhenDeclared) {
+      fileContext.debug(`...verified the '${metavariableString}' metavariable when declared.`);
     }
 
-    return metavariableVerified;
+    return verifiedWhenDeclared;
   }
 
   toJSON() {

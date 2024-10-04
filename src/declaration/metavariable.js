@@ -33,7 +33,7 @@ export default class MetavariableDeclaration {
 
     this.fileContext.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
 
-    const metavariableVerified = this.metavariable.verify(this.fileContext);
+    const metavariableVerified = this.metavariable.verifyWhenDeclared(this.fileContext);
 
     if (metavariableVerified) {
       this.fileContext.addMetavariable(this.metavariable);

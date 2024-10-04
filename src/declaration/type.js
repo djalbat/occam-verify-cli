@@ -25,7 +25,7 @@ export default class TypeDeclaration {
 
     this.fileContext.trace(`Verifying the '${typeDeclarationString}' type declaration...`);
 
-    const typeVerified = this.type.verify(this.fileContext);
+    const typeVerified = this.type.verifyWhenDeclared(this.fileContext);
 
     if (typeVerified) {
       this.fileContext.addType(this.type);

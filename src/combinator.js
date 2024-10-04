@@ -28,7 +28,7 @@ export default class Combinator {
   verify(fileContext) {
     let verified;
 
-    const combinatorString = this.string; ///
+    const combinatorString = this.getString(); ///
 
     fileContext.trace(`Verifying the '${combinatorString}' combinator...`);
 
