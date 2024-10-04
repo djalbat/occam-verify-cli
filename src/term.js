@@ -1,6 +1,7 @@
 "use strict";
 
 import shim from "./shim";
+import Type from "./type";
 import termAsConstructorVerifier from "./verifier/termAsConstructor";
 
 import { filter } from "./utilities/array";
@@ -172,8 +173,8 @@ class Term {
     json = typeJSON;  ///
 
     type = (json !== null) ?
-            Type.fromJSON(json, fileContext) :
-              null;
+             Type.fromJSON(json, fileContext) :
+               null;
 
     const term = new Term(string, node, type);
 
