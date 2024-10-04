@@ -48,6 +48,32 @@ export default class Constructor {
     return verified;
   }
 
+  toJSON() {
+    const termJSON = this.term.toJSON(),
+          term = termJSON,  ///
+          json = {
+            term
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    let { term } = json;
+
+    const termJSON = term;  ///
+
+    json = termJSON;  ///
+
+    term = Term.fromJSON(json, fileContext);
+
+    const type = term.getType(),
+          string = stringFromTermAndType(term, type),
+          constructor = new Constructor(string, term);
+
+    return constructor;
+  }
+
   static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
     const termNode = termNodeQuery(constructorDeclarationNode),
           typeNode = typeNodeQuery(constructorDeclarationNode),

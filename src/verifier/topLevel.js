@@ -49,7 +49,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: errorNodeQuery,
       verify: (errorNode, fileContext) => {
         const error = Error.fromErrorNode(errorNode, fileContext),
-              errorVerified = error.verify(fileContext);
+              errorVerified = error.verify();
 
         return errorVerified;
       }
@@ -58,7 +58,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: ruleNodeQuery,
       verify: (ruleNode, fileContext) => {
         const rule = Rule.fromRuleNode(ruleNode, fileContext),
-              ruleVerified = rule.verify(fileContext);
+              ruleVerified = rule.verify();
 
         return ruleVerified;
       }
@@ -115,7 +115,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: typeDeclarationNodeQuery,
       verify: (typeDeclarationNode, fileContext) => {
         const typeDeclaration = TypeDeclaration.fromTypeDeclarationNode(typeDeclarationNode, fileContext),
-              typeDeclarationVerified = typeDeclaration.verify(fileContext);
+              typeDeclarationVerified = typeDeclaration.verify();
 
         return typeDeclarationVerified;
       }
@@ -132,7 +132,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: combinatorDeclarationNodeQuery,
       verify: (combinatorDeclarationNode, fileContext) => {
         const combinatorDeclaration = CombinatorDeclaration.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
-              combinatorDeclarationVerified = combinatorDeclaration.verify(fileContext);
+              combinatorDeclarationVerified = combinatorDeclaration.verify();
 
         return combinatorDeclarationVerified;
       }
@@ -141,7 +141,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: constructorDeclarationNodeQuery,
       verify: (constructorDeclarationNode, fileContext) => {
         const constructorDeclaration = ConstructorDeclaration.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
-              constructorDeclarationVerified = constructorDeclaration.verify(fileContext);
+              constructorDeclarationVerified = constructorDeclaration.verify();
 
         return constructorDeclarationVerified;
       }
@@ -150,7 +150,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: metavariableDeclarationNodeQuery,
       verify: (metavariableDeclarationNode, fileContext) => {
         const metavariableDeclaration = MetavariableDeclaration.fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
-              metavariableDeclarationVerified = metavariableDeclaration.verify(fileContext);
+              metavariableDeclarationVerified = metavariableDeclaration.verify();
 
         return metavariableDeclarationVerified;
       }

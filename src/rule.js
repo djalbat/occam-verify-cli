@@ -90,15 +90,15 @@ export default class Rule {
     return proofStepsUnified;
   }
 
-  verify(fileContext) {
+  verify() {
     let verified = false;
 
     const labelsString = labelsStringFromLabels(this.labels);
 
-    fileContext.trace(`Verifying the '${labelsString}' rule...`);
+    this.fileContext.trace(`Verifying the '${labelsString}' rule...`);
 
     const labelsVerified = this.labels.every((label) => {
-      const labelVVerified = label.verify(fileContext);
+      const labelVVerified = label.verify(this.fileContext);
 
       if (labelVVerified) {
         return true;
@@ -106,7 +106,7 @@ export default class Rule {
     });
 
     if (labelsVerified) {
-      const localContext = LocalContext.fromFileContext(fileContext),
+      const localContext = LocalContext.fromFileContext(this.fileContext),
             premisesVerified = this.premises.every((premise) => {
               const premiseVerified = premise.verify(localContext);
 
@@ -130,7 +130,7 @@ export default class Rule {
           if (proofVerified) {
             const rule = this;  ///
 
-            fileContext.addRule(rule);
+            this.fileContext.addRule(rule);
 
             verified = true;
           }
@@ -139,7 +139,7 @@ export default class Rule {
     }
 
     if (verified) {
-      fileContext.debug(`...verified the '${labelsString}' rule.`);
+      this.fileContext.debug(`...verified the '${labelsString}' rule.`);
     }
 
     return verified;

@@ -6,21 +6,26 @@ import { nodeQuery } from "../utilities/query";
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
 import { TERM_RULE_NAME,
          METAVARIABLE_RULE_NAME,
-         UNQUALIFIED_STATEMENT_RULE_NAME } from "../ruleNames";
-import { termTokensFromTermString,
-         metavariableTokensFromMetavariableString,
-         unqualifiedStatementTokensFromUnqualifiedStatementString } from "../utilities/tokens";
+         UNQUALIFIED_STATEMENT_RULE_NAME,
+         CONSTRUCTOR_DECLARATION_RULE_NAME } from "../ruleNames";
+import { metavariableTokensFromMetavariableString,
+         unqualifiedStatementTokensFromUnqualifiedStatementString,
+         constructorDeclarationTokensFromConstructorDeclarationString } from "../utilities/tokens";
 
 const { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
-const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement");
+const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
+      statementNodeQuery = nodeQuery("/unqualifiedStatement/statement");
 
 export function termNodeFromTermString(termString, lexer, parser) {
-  const termTokens = termTokensFromTermString(termString, lexer),
-        termNode = termNodeFromTermTokens(termTokens, parser);
+  const constructorDeclarationString = `Constructor ${termString}
+`,
+        constructorDeclarationTokens = constructorDeclarationTokensFromConstructorDeclarationString(constructorDeclarationString, lexer),
+        constructorDeclarationNode = constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser),
+        termNode = termNodeQuery(constructorDeclarationNode, constructorDeclarationNode);
 
   return termNode;
 }
@@ -70,6 +75,14 @@ export function unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifi
         unqualifiedStatementNode = nodeFromTokensRuleNameAndParser(tokens, ruleName, parser);
 
   return unqualifiedStatementNode;
+}
+
+export function constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser) {
+  const tokens = constructorDeclarationTokens,  ///
+        ruleName = CONSTRUCTOR_DECLARATION_RULE_NAME,
+        constructorDeclarationNode = nodeFromTokensRuleNameAndParser(tokens, ruleName, parser);
+
+  return constructorDeclarationNode;
 }
 
 function nodeFromTokensRuleNameAndParser(tokens, ruleName, parser = nominalParser) {

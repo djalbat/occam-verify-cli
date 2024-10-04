@@ -30,6 +30,13 @@ export function unqualifiedStatementTokensFromUnqualifiedStatementString(unquali
   return unqualifiedStatementTokens;
 }
 
+export function constructorDeclarationTokensFromConstructorDeclarationString(constructorDeclarationString, lexer) {
+  const content = constructorDeclarationString,  ///
+        constructorDeclarationTokens = tokensFromContentAndLexer(content, lexer);
+
+  return constructorDeclarationTokens;
+}
+
 function tokensFromContentAndLexer(content, lexer = nominalLexer) {
   const tokens = lexer.tokenise(content);
 

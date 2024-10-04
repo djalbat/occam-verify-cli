@@ -1,23 +1,26 @@
 "use strict";
 
+import shim from "../shim";
 import Constructor from "../constructor";
 import bracketedConstructorTermNode from "../node/term/constructor/bracketed";
-import bracketedConstructorDeclarationTokens from "../tokens/constructorTerm/bracketed";
 
-import { nodeAsString } from "../utilities/string";
+import { bracketedConstructorTermString } from "../node/term/constructor/bracketed";
 
-class BracketedConstructor extends Constructor {
+const localContext = {
+  nodeAsString: (node) => {
+    const string = bracketedConstructorTermString;  ///
+
+    return string;
+  }
+};
+
+export default class BracketedConstructor extends Constructor {
   static fromNothing() {
-    const node = bracketedConstructorTermNode,  ///
-          tokens = bracketedConstructorDeclarationTokens, ///
-          string = nodeAsString(node, tokens),
-          termNode = node, ///
-          bracketedConstructor = new BracketedConstructor(termNode, string);
+    const { Term } = shim,
+          termNode = bracketedConstructorTermNode,  ///
+          term = Term.fromTermNode(termNode, localContext),
+          bracketedConstructor = new BracketedConstructor(term);
 
     return bracketedConstructor;
   }
 }
-
-const bracketedConstructor = BracketedConstructor.fromNothing();
-
-export default bracketedConstructor;

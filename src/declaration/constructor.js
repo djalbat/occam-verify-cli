@@ -18,23 +18,23 @@ export default class ConstructorDeclaration {
 
   getString() { return this.constructor.getString(); }
 
-  verify(fileContext) {
+  verify() {
     let verified;
 
     const constructorDeclarationString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
+    this.fileContext.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
 
-    const constructorVerified = this.constructor.verify(fileContext);
+    const constructorVerified = this.constructor.verify(this.fileContext);
 
     if (constructorVerified) {
-      fileContext.addConstructor(this.constructor);
+      this.fileContext.addConstructor(this.constructor);
 
       verified = true;
     }
 
     if (verified) {
-      fileContext.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`);
+      this.fileContext.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`);
     }
 
     return verified;

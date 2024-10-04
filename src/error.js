@@ -14,12 +14,12 @@ export default class Error {
     return this.string;
   }
 
-  verify(errorNode, fileContext) {
+  verify(errorNode) {
     let verified = false;
 
     const errorString = this.string;  ///
 
-    fileContext.debug(`The '${errorString}' error cannot be verified.`, errorNode);
+    this.fileContext.debug(`The '${errorString}' error cannot be verified.`, errorNode);
 
     return verified;
   }

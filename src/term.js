@@ -5,6 +5,7 @@ import termAsConstructorVerifier from "./verifier/termAsConstructor";
 
 import { filter } from "./utilities/array";
 import { nodesQuery } from "./utilities/query"
+import { termNodeFromTermString } from "./utilities/node";
 
 const variableNodesQuery = nodesQuery("//variable");
 
@@ -140,6 +141,43 @@ class Term {
     }
 
     return verifiedAsConstructor;
+  }
+
+  toJSON() {
+    const typeJSON = (this.type !== null) ?
+                       this.type.toJSON() :
+                         null,
+          string = this.string,
+          type = typeJSON,  ///
+          json = {
+            string,
+            type
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    const { string } = json,
+          termString = string,  ///
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          termNode = termNodeFromTermString(termString, lexer, parser),
+          node = termNode;
+
+    let { type } = json;
+
+    const typeJSON = type;  ///
+
+    json = typeJSON;  ///
+
+    type = (json !== null) ?
+            Type.fromJSON(json, fileContext) :
+              null;
+
+    const term = new Term(string, node, type);
+
+    return term;
   }
 
   static fromTermNode(termNode, fileContext) {

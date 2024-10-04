@@ -18,23 +18,23 @@ export default class TypeDeclaration {
 
   getString() { return this.type.getString(); }
 
-  verify(fileContext) {
+  verify() {
     let verified = false;
 
     const typeDeclarationString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${typeDeclarationString}' type declaration...`);
+    this.fileContext.trace(`Verifying the '${typeDeclarationString}' type declaration...`);
 
-    const typeVerified = this.type.verify(fileContext);
+    const typeVerified = this.type.verify(this.fileContext);
 
     if (typeVerified) {
-      fileContext.addType(this.type);
+      this.fileContext.addType(this.type);
 
       verified = true;
     }
 
     if (verified) {
-      fileContext.debug(`...verified the '${typeDeclarationString}' type declaration.`);
+      this.fileContext.debug(`...verified the '${typeDeclarationString}' type declaration.`);
     }
 
     return verified;

@@ -26,23 +26,23 @@ export default class MetavariableDeclaration {
     return this.metavariable;
   }
 
-  verify(fileContext) {
+  verify() {
     let verified;
 
     const metavariableDeclarationString = this.string; ///
 
-    fileContext.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
+    this.fileContext.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
 
-    const metavariableVerified = this.metavariable.verify(fileContext);
+    const metavariableVerified = this.metavariable.verify(this.fileContext);
 
     if (metavariableVerified) {
-      fileContext.addMetavariable(this.metavariable);
+      this.fileContext.addMetavariable(this.metavariable);
 
       verified = true;
     }
 
     if (verified) {
-      fileContext.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`);
+      this.fileContext.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`);
     }
 
     return verified;

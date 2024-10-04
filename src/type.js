@@ -156,6 +156,40 @@ class Type {
     return verified;
   }
 
+  toJSON() {
+    const superTypeJSON = (this.superType !== null) ?
+                            this.superType.toJSON() :
+                              null,
+          name = this.name,
+          superType = superTypeJSON,  ///
+          json = {
+            name,
+            superType
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    const { name } = json;
+
+    let { superType } = json;
+
+    const superTypeJSON = superType;  ///
+
+    json = superTypeJSON; ///
+
+    superType = (json !== null) ?
+                   Type.fromJSON(json, fileContext) :
+                      null;
+
+    const typeName = name,  ///
+          string = stringFromTypeNameAndSuperType(typeName, superType),
+          type = new Type(string, name, superType);
+
+    return type;
+  }
+
   static fromTypeNode(typeNode) {
     let type = null;
 
@@ -177,7 +211,7 @@ class Type {
           typeName = typeNameFromTypeNode(typeNode),
           superType = Type.fromTypeNode(superTypeNode),
           string = stringFromTypeNameAndSuperType(typeName, superType),
-          name = typeName,
+          name = typeName,  ///
           type = new Type(string, name, superType);
 
     return type;
