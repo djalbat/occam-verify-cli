@@ -7,7 +7,7 @@ export default function verifyVariable(variableNode, localContext) {
 
   localContext.trace(`Verifying the '${variableString}' variable...`, variableNode);
 
-  const variablePresent = localContext.isVariablePresentByVariableNode(variableNode);
+  const variablePresent = localContext.isVariablePresentByVariableName(variableNode);
 
   if (variablePresent) {
     variableVerified = true;

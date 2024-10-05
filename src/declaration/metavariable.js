@@ -33,9 +33,9 @@ export default class MetavariableDeclaration {
 
     this.fileContext.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
 
-    const metavariableVerified = this.metavariable.verifyWhenDeclared(this.fileContext);
+    const metavariableVerifiedAtTopLevel = this.metavariable.verifyAtTopLevel(this.fileContext);
 
-    if (metavariableVerified) {
+    if (metavariableVerifiedAtTopLevel) {
       this.fileContext.addMetavariable(this.metavariable);
 
       verified = true;
@@ -52,11 +52,25 @@ export default class MetavariableDeclaration {
     const metaTypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
           metaType = MetaType.fromMetaTypeNode(metaTypeNode, fileContext),
           metavariable = Metavariable.fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
-          metavariableString = metavariable.getString(),
-          metaTypeString = metaType.getString(),
-          string = `${metavariableString}:${metaTypeString}`,
+          string = stringFromMetavariableAndMetaType(metavariable, metaType),
           metavariableDeclaration = new MetavariableDeclaration(fileContext, string, metavariable);
 
     return metavariableDeclaration;
   }
+}
+
+function stringFromMetavariableAndMetaType(metavariable, metaType) {
+  let string;
+
+  const metavariableString = metavariable.getString();
+
+  if (metaType === null) {
+    string = metavariableString; ///
+  } else {
+    const metaTypeString = metaType.getString();
+
+    string = `${metavariableString}:${metaTypeString}`;
+  }
+
+  return string;
 }

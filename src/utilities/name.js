@@ -3,7 +3,7 @@
 import { nodeQuery } from "../utilities/query";
 
 const typeTerminalNodeQuery = nodeQuery("/type/@type"),
-      nameTerminalNodeQuery = nodeQuery("/metavariable/@name"),
+      nameTerminalNodeQuery = nodeQuery("/variable|metavariable/@name"),
       metaTypeTerminalNodeQuery = nodeQuery("/metaType/@meta-type");
 
 export function typeNameFromTypeNode(typeNode) {
@@ -12,6 +12,14 @@ export function typeNameFromTypeNode(typeNode) {
         typeName = typeTerminalNodeContent; ///
 
   return typeName;
+}
+
+export function variableNameFromVariableNode(variableNode) {
+  const nameTerminalNode = nameTerminalNodeQuery(variableNode),
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        variableName = nameTerminalNodeContent; ///
+
+  return variableName;
 }
 
 export function metaTypeNameFromMetaTypeNode(metaTypeNode) {

@@ -1,9 +1,10 @@
 "use strict";
 
-import bracketedConstructorTermTokens from "../../../tokens/constructorTerm/bracketed";
+import { OBJECT_TYPE_NAME } from "../../../typeNames";
+import { termNodeFromTermString } from "../../../utilities/node";
 
-import { termNodeFromTermTokens } from "../../../utilities/node";
+export const bracketedConstructorTermString = `(${OBJECT_TYPE_NAME})`;
 
-const bracketedConstructorTermNode = termNodeFromTermTokens(bracketedConstructorTermTokens);
+const bracketedConstructorTermNode = termNodeFromTermString(bracketedConstructorTermString)
 
 export default bracketedConstructorTermNode;

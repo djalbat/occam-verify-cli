@@ -149,12 +149,12 @@ class Type {
     return verified;
   }
 
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared = false;
+  verifyAtTopLevel(fileContext) {
+    let verifiedAtTopLevel = false;
 
     const typeString = this.string; ///
 
-    fileContext.trace(`Verifying the '${typeString}' type when declared...`);
+    fileContext.trace(`Verifying the '${typeString}' type at top level...`);
 
     const typePresent = fileContext.isTypePresentByTypeName(this.name);
 
@@ -162,13 +162,13 @@ class Type {
       fileContext.debug(`The type '${typeString}' is already present.`);
     } else {
       if (this.superType === null) {
-        verifiedWhenDeclared = true;
+        verifiedAtTopLevel = true;
       } else {
         const name = this.superType.getName(),
           superTypePresent = fileContext.isTypePresentByTypeName(name);
 
         if (superTypePresent) {
-          verifiedWhenDeclared = true;
+          verifiedAtTopLevel = true;
         } else {
           const superTypeString = this.superType.getString();
 
@@ -177,11 +177,11 @@ class Type {
       }
     }
 
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verifiedWhenDeclared the '${typeString}' type when declared.`);
+    if (verifiedAtTopLevel) {
+      fileContext.debug(`...verifiedAtTopLevel the '${typeString}' type at top level.`);
     }
 
-    return verifiedWhenDeclared;
+    return verifiedAtTopLevel;
   }
 
   toJSON() {

@@ -1,7 +1,7 @@
 "use strict";
 
+import shim from "./shim";
 import Type from "./type";
-import Term from "./term";
 
 import { nodeQuery } from "./utilities/query";
 
@@ -24,28 +24,28 @@ export default class Constructor {
 
   getType() { return this.term.getType(); }
 
-  verify(fileContext) {
-    let verified;
+  verifyAtTopLevel(fileContext) {
+    let verifiedAtTopLevel;
 
     const constructorString = this.string;  ///
 
-    fileContext.trace(`Verifying the '${constructorString}' constructor...`);
+    fileContext.trace(`Verifying the '${constructorString}' constructor at top level...`);
 
     const termTypeVerified = this.term.verifyType(fileContext);
 
     if (termTypeVerified) {
-      const termVerifiedAsConstructor = this.term.verifyAsConstructor(fileContext);
+      const termVerifiedAtTopLevel = this.term.verifyAtTopLevel(fileContext);
 
-      if (termVerifiedAsConstructor) {
-        verified = true; ///
+      if (termVerifiedAtTopLevel) {
+        verifiedAtTopLevel = true; ///
       }
     }
 
-    if (verified) {
-      fileContext.debug(`...verified the '${constructorString}' constructor.`);
+    if (verifiedAtTopLevel) {
+      fileContext.debug(`...verified the '${constructorString}' constructor at top level.`);
     }
 
-    return verified;
+    return verifiedAtTopLevel;
   }
 
   toJSON() {
@@ -65,6 +65,8 @@ export default class Constructor {
 
     json = termJSON;  ///
 
+    const { Term } = shim;
+
     term = Term.fromJSON(json, fileContext);
 
     const type = term.getType(),
@@ -78,7 +80,7 @@ export default class Constructor {
     const termNode = termNodeQuery(constructorDeclarationNode),
           typeNode = typeNodeQuery(constructorDeclarationNode),
           type = Type.fromTypeNode(typeNode),
-          term = Term.fromTermNodeAndType(termNode, type, fileContext),
+          term = Term.fromTermNodeAndType(termNode, type),
           string = stringFromTermAndType(term, type),
           constructor = new Constructor(string, term);
 
@@ -86,7 +88,7 @@ export default class Constructor {
   }
 }
 
-function stringFromTermAndType(term, type) {
+export function stringFromTermAndType(term, type) {
   let string;
 
   const termString = term.getString();

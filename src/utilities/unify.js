@@ -28,7 +28,7 @@ export function metavariableFromFrameNode(frameNode, localContext) {
   if (frameMetavariableNode !== null) {
     const metavariableNode = frameMetavariableNode; ///
 
-    metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+    metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
   }
 
   return metavariable;
@@ -42,7 +42,7 @@ export function metavariableFromStatementNode(statementNode, localContext) {
   if (statementMetavariableNode !== null) {
     const metavariableNode = statementMetavariableNode; ///
 
-    metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+    metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
   }
 
   return metavariable;

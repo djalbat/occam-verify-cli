@@ -1,7 +1,6 @@
 "use strict";
 
 import shim from "./shim";
-import Statement from "./statement";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
@@ -25,22 +24,22 @@ export default class Combinator {
     return statementNode;
   }
 
-  verify(fileContext) {
-    let verified;
+  verifyAtTopLevel(fileContext) {
+    let verifiedAtTopLevel;
 
     const combinatorString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${combinatorString}' combinator...`);
+    fileContext.trace(`Verifying the '${combinatorString}' combinator at top level...`);
 
-    const statementVerifiedAsCombinator = this.statement.verifyAsCombinator(fileContext);
+    const statementVerifiedAtTopLevel = this.statement.verifyAtTopLevel(fileContext);
 
-    verified = statementVerifiedAsCombinator; ///
+    verifiedAtTopLevel = statementVerifiedAtTopLevel; ///
 
-    if (verified) {
-      fileContext.debug(`...verified the '${combinatorString}' combinator.`);
+    if (verifiedAtTopLevel) {
+      fileContext.debug(`...verified the '${combinatorString}' combinator at top level.`);
     }
 
-    return verified;
+    return verifiedAtTopLevel;
   }
 
   toJSON() {
@@ -61,6 +60,8 @@ export default class Combinator {
     json = {  ///
       string
     };
+
+    const { Statement } = shim;
 
     statement = Statement.fromJSON(json, fileContext);
 

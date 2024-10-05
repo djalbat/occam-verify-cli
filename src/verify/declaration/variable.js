@@ -44,7 +44,7 @@ function verifyVariable(variableNode, typeNode, fileContext) {
 
   fileContext.trace(`Verifying the '${variableString}' variable...`, variableNode);
 
-  const variablePresent = fileContext.isVariablePresentByVariableNode(variableNode);
+  const variablePresent = fileContext.isVariablePresentByVariableName(variableName);
 
   if (variablePresent) {
     fileContext.debug(`The variable '${variableString}' is already present.`, variableNode);

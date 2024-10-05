@@ -364,40 +364,10 @@ export default class FileContext {
     return type;
   }
 
-  findTypeByTypeNode(typeNode) {
-    let types = this.getTypes();
-
-    types.push(objectType);
-
-    const type = types.find((type) => {
-      const nodeMatches = type.matchTypeNode(typeNode);
-
-      if (nodeMatches) {
-        return true;
-      }
-    }) || null;
-
-    return type;
-  }
-
-  findVariableByVariableNode(variableNode) {
-    const node = variableNode,  ///
-          variables = this.getVariables(),
-          variable = variables.find((variable) => {
-            const nodeMatches = variable.matchNode(node);
-
-            if (nodeMatches) {
-              return true;
-            }
-          }) || null;
-
-    return variable;
-  }
-
-  findMetaTypeByMetaTypeNode(metaTypeNode) {
+  findMetaTypeByMetaTypeName(metaTypeName) {
     const metaTypes = this.getMetaTypes(),
           metaType = metaTypes.find((metaType) => {
-            const metaTypeNodeMatches = metaType.matchMetaTypeNode(metaTypeNode);
+            const metaTypeNodeMatches = metaType.matchMetaTypeName(metaTypeName);
 
             if (metaTypeNodeMatches) {
               return true;
@@ -418,6 +388,48 @@ export default class FileContext {
           }) || null;
 
     return label;
+  }
+
+  findMetavariableByMetavariableName(metavariableName) {
+    const name = metavariableName,  ///
+          metavariables = this.getMetavariables(),
+          metavariable = metavariables.find((metavariable) => {
+            const nameMatches = metavariable.matchName(name);
+
+            if (nameMatches) {
+              return true;
+            }
+          }) || null;
+
+    return metavariable;
+  }
+
+  isTypePresentByTypeName(typeName) {
+    const type = this.findTypeByTypeName(typeName),
+          typePresent = (type !== null);
+
+    return typePresent;
+  }
+
+  isVariablePresentByVariableName(variableName) {
+    const variable = this.findVariableByVariableName(variableName),
+          variablePresent = (variable !== null);
+
+    return variablePresent;
+  }
+
+  isLabelPresentByMetavariableNode(metavariableNode) {
+    const label = this.findLabelByMetavariableNode(metavariableNode),
+          labelPresent = (label !== null);
+
+    return labelPresent;
+  }
+
+  isMetavariablePresentByMetavariableName(metavariableName) {
+    const metavariable = this.findMetavariableByMetavariableName(metavariableName),
+          metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
   }
 
   findRuleByReference(reference) {
@@ -518,73 +530,18 @@ export default class FileContext {
     return metatheorem;
   }
 
-  findMetavariableByMetavariableNode(metavariableNode) {
-    const metavariables = this.getMetavariables(),
-          metavariable = metavariables.find((metavariable) => {
-            const metavariableNodeMatches = metavariable.matchMetavariableNode(metavariableNode);
-
-            if (metavariableNodeMatches) {
-              return true;
-            }
-          }) || null;
-
-    return metavariable;
-  }
-
-  findMetavariableByMetavariableName(metavariableName) {
-    const name = metavariableName,  ///
-          metavariables = this.getMetavariables(),
-          metavariable = metavariables.find((metavariable) => {
-            const nameMatches = metavariable.matchName(name);
+  findVariableByVariableName(variableName) {
+    const name = variableName,  ///
+          variables = this.getVariables(),
+          variable = variables.find((variable) => {
+            const nameMatches = variable.matchName(name);
 
             if (nameMatches) {
               return true;
             }
           }) || null;
 
-    return metavariable;
-  }
-
-  isTypePresentByTypeName(typeName) {
-    const type = this.findTypeByTypeName(typeName),
-          typePresent = (type !== null);
-
-    return typePresent;
-  }
-
-  isTypePresentByTypeNode(typeNode) {
-    const type = this.findTypeByTypeNode(typeNode),
-          typePresent = (type !== null);
-
-    return typePresent;
-  }
-
-  isVariablePresentByVariableNode(variableNode) {
-    const variable = this.findVariableByVariableNode(variableNode),
-          variablePresent = (variable !== null);
-
-    return variablePresent;
-  }
-
-  isLabelPresentByMetavariableNode(metavariableNode) {
-    const label = this.findLabelByMetavariableNode(metavariableNode),
-          labelPresent = (label !== null);
-
-    return labelPresent;
-  }
-
-  isMetavariablePresentByMetavariableName(metavariablename) {
-    const metavariable = this.findMetavariableByMetavariableName(metavariablename),
-          metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
-  }
-
-  isMetavariablePresentByMetavariableNode(metavariableNode) {
-    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode),
-          metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
+    return variable;
   }
 
   nodeAsString(node) {

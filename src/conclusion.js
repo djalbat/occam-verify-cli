@@ -4,7 +4,6 @@ import LocalContext from "./context/local";
 import metaLevelUnifier from "./unifier/metaLevel";
 import UnqualifiedStatement from "./statement/unqualified";
 
-import { trim } from "./utilities/string";
 import { nodeQuery } from "./utilities/query";
 
 const unqualifiedStatementNodeQuery = nodeQuery("/conclusion/unqualifiedStatement");
@@ -56,10 +55,9 @@ export default class Conclusion {
   }
 
   verify(localContext) {
-    let verified = false,
-        conclusionString = this.getString();  ///
+    let verified = false;
 
-    conclusionString = trim(conclusionString);  ///
+    const conclusionString = this.getString();  ///
 
     localContext.trace(`Verifying the '${conclusionString}' conclusion...`);
 

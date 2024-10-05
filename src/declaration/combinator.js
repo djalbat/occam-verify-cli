@@ -25,9 +25,9 @@ export default class CombinatorDeclaration {
 
     this.fileContext.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
 
-    const combinatorVerified = this.combinator.verify(this.fileContext);
+    const combinatorVerifiedAtTopLevel = this.combinator.verifyAtTopLevel(this.fileContext);
 
-    if (combinatorVerified) {
+    if (combinatorVerifiedAtTopLevel) {
       this.fileContext.addCombinator(this.combinator);
 
       verified = true;

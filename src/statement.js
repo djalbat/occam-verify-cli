@@ -39,13 +39,15 @@ class Statement {
     localContext.trace(`Verifying the '${statementString}' statement...`);
 
     if (!verified) {
-      verified = unifyMixins.some((unifyMixin) => { ///
+      const unified = unifyMixins.some((unifyMixin) => {
         const unified = unifyMixin(statement, assignments, stated, localContext);
 
         if (unified) {
           return true;
         }
       });
+
+      verified = unified; ///
     }
 
     if (!verified) {
@@ -75,21 +77,21 @@ class Statement {
     return unifiedWithMetaType;
   }
 
-  verifyAsCombinator(fileContext) {
-    let verifiedAsCombinator;
+  verifyAtTopLevel(fileContext) {
+    let verifiedAtTopLevel;
 
     const statementNode = this.node,  ///
           statementString = this.string;  ///
 
-    fileContext.trace(`Verifying the '${statementString}' statement as a combinator...`);
+    fileContext.trace(`Verifying the '${statementString}' statement at top level...`);
 
-    verifiedAsCombinator = statementAsCombinatorVerifier.verifyStatement(statementNode, fileContext);
+    verifiedAtTopLevel = statementAsCombinatorVerifier.verifyStatement(statementNode, fileContext);
 
-    if (verifiedAsCombinator) {
-      fileContext.debug(`...verified the '${statementString}' statement as a combinator.`, statementNode);
+    if (verifiedAtTopLevel) {
+      fileContext.debug(`...verified the '${statementString}' statement at top level.`, statementNode);
     }
 
-    return verifiedAsCombinator;
+    return verifiedAtTopLevel;
   }
 
   verifyGivenMetaType(metaType, assignments, stated, localContext) {

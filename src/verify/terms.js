@@ -1,6 +1,6 @@
 "use strict";
 
-import verifyTerm from "../verify/term";
+// import verifyTerm from "../verify/term";
 
 import { first, second } from "../utilities/array";
 

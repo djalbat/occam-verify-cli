@@ -6,10 +6,8 @@ import metaLevelUnifier from "./unifier/metaLevel";
 import SubproofAssertion from "./assertion/subproof";
 import UnqualifiedStatement from "./statement/unqualified";
 
-import { trim } from "./utilities/string";
 import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
-import { unqualifiedStatementNodeFromUnqualifiedStatementString } from "./utilities/node";
 
 const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement");
 
@@ -108,10 +106,9 @@ export default class Premise {
   }
 
   verify(localContext) {
-    let verified = false,
-        premiseString = this.getString(); ///
+    let verified = false;
 
-    premiseString = trim(premiseString);  ///
+    const premiseString = this.getString(); ///
 
     if (this.unqualifiedStatement !== null) {
       localContext.trace(`Verifying the '${premiseString}' premise...`);

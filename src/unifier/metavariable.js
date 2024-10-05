@@ -4,7 +4,6 @@ import shim from "../shim";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
-import unifyTermWithType from "../unify/termWithType";
 
 const typeNodeQuery = nodeQuery("/type!"),
       termNodeQuery = nodeQuery("/term!");
@@ -38,9 +37,5 @@ class MetavariableUnifier extends Unifier {
 }
 
 const metavariableUnifier = new MetavariableUnifier();
-
-Object.assign(shim, {
-  metavariableUnifier
-});
 
 export default metavariableUnifier;

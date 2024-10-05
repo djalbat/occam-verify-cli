@@ -1,29 +1,36 @@
 "use strict";
 
-import { nodeAsString } from "./utilities/string";
+import Type from "./type";
+import LocalContext from "./context/local";
+
+import { nodeQuery } from "./utilities/query";
+import { variableNameFromVariableNode } from "./utilities/name";
+
+const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
+      variableNodeQuery = nodeQuery("/variableDeclaration/variable");
 
 export default class Variable {
-  constructor(node, type) {
+  constructor(string, node, name, type) {
+    this.string = string;
     this.node = node;
+    this.name = name;
     this.type = type;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getNode() {
     return this.node;
   }
 
-  getType() {
-    return this.type;
+  getName() {
+    return this.name;
   }
 
-  match(variable) {
-    const type = variable.getType(),
-          node = variable.getNode(),
-          typeMatches = this.matchType(type),
-          nodeMatches = this.matchNode(node),
-          matches = nodeMatches && typeMatches;
-
-    return matches;
+  getType() {
+    return this.type;
   }
 
   matchNode(node) {
@@ -32,23 +39,111 @@ export default class Variable {
     return nodeMatches;
   }
 
-  matchType(type) {
-    const typeMatches = this.type.match(type);
+  matchName(name) {
+    const nameMatches = (this.name === name);
 
-    return typeMatches;
+    return nameMatches;
   }
 
-  matchNodeAndType(node, type) {
-    const nodeMatches = this.matchNode(node),
-          typeNatches = this.matchType(type),
-          nodeAndTypeMatch = (nodeMatches && typeNatches);
+  verify(localContext) {
+    let verified;
 
-    return nodeAndTypeMatch;
+    const variableString = this.string; ///
+
+    localContext.trace(`Verifying the '${variableString}' variable at top level...`);
+
+    const variableNode = this.node, ///
+          variableName = variableNameFromVariableNode(variableNode),
+          variable = localContext.findVariableByVariableName(variableName);
+
+    if (variable === null) {
+      localContext.debug(`The '${variableString}' variable is not present.`);
+    } else {
+      const type = variable.getType();
+
+      this.type = type;
+
+      verified = true;
+    }
+
+    if (verified) {
+      localContext.debug(`...verified the '${variableString}' variable.`);
+    }
+
+    return verified;
   }
 
-  static fromVariableNodeAndType(variableNode, type) {
+  verifyAtTopLevel(localContext) {
+    let verifiedAtTopLevel;
+
+    const variableString = this.string; ///
+
+    localContext.trace(`Verifying the '${variableString}' variable at top level...`);
+
+    const variableNode = this.node, ///
+          variableName = variableNameFromVariableNode(variableNode),
+          variablePresent = localContext.isVariablePresentByVariableName(variableName);
+
+    if (variablePresent) {
+      localContext.debug(`The '${variableString}' variable is already present.`);
+    } else {
+      if (this.type === null) {
+        verifiedAtTopLevel = true;
+      } else {
+        const typeName = this.type.getName(),
+              type = localContext.findTypeByTypeName(typeName);
+
+        if (type === null) {
+          const typeString = this.type.getString();
+
+          localContext.debug(`The '${typeString}' type is not present.`);
+        } else {
+          this.type = type;
+
+          verifiedAtTopLevel = true;
+        }
+      }
+    }
+
+    if (verifiedAtTopLevel) {
+      localContext.debug(`...verified the '${variableString}' variable at top level.`);
+    }
+
+    return verifiedAtTopLevel;
+  }
+
+  static fromVariableNode(variableNode, localContext) {
     const node = variableNode,  ///
-          variable = new Variable(node, type);
+          variableName = variableNameFromVariableNode(variableNode),
+          string = localContext.nodeAsString(node),
+          name = variableName,  ///
+          type = null,
+          variable = new Variable(string, node, name, type);
+
+    return variable;
+  }
+
+  static fromVariableNodeAndType(variableNode, type, localContext) {
+    const node = variableNode,  ///
+          variableName = variableNameFromVariableNode(variableNode),
+          string = localContext.nodeAsString(node),
+          name = variableName,  ///
+          variable = new Variable(string, node, name, type);
+
+    return variable;
+  }
+
+  static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
+    const typeNode = typeNodeQuery(variableDeclarationNode),
+          variableNode = variableNodeQuery(variableDeclarationNode),
+          variableName = variableNameFromVariableNode(variableNode),
+          localContext = LocalContext.fromFileContext(fileContext),
+          variableString = fileContext.nodeAsString(variableNode),
+          string = variableString,  ///
+          node = variableNode,  ///
+          name = variableName,  ///
+          type = Type.fromTypeNode(typeNode, localContext),
+          variable = new Variable(string, node, name, type);
 
     return variable;
   }

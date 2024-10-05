@@ -18,7 +18,7 @@ const verifyFrameFunctions = [
   verifyStatedFrame
 ];
 
-function verifyFrame(frameNode, frames, stated, localContext) {
+export default function verifyFrame(frameNode, frames, stated, localContext) {
   let frameVerified;
 
   const frameString = localContext.nodeAsString(frameNode);
@@ -39,12 +39,6 @@ function verifyFrame(frameNode, frames, stated, localContext) {
 
   return frameVerified;
 }
-
-Object.assign(shim, {
-  verifyFrame
-});
-
-export default verifyFrame;
 
 function verifyDerivedFrame(frameNode, frames, stated, localContext) {
   let derivedFrameVerified;

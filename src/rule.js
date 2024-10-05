@@ -97,15 +97,15 @@ export default class Rule {
 
     this.fileContext.trace(`Verifying the '${labelsString}' rule...`);
 
-    const labelsVerified = this.labels.every((label) => {
-      const labelVVerified = label.verify(this.fileContext);
+    const labelsVerifiedAtTopLevel = this.labels.every((label) => {
+      const labelVVerifiedAtTopLevel = label.verifyAtTopLevel(this.fileContext);
 
-      if (labelVVerified) {
+      if (labelVVerifiedAtTopLevel) {
         return true;
       }
     });
 
-    if (labelsVerified) {
+    if (labelsVerifiedAtTopLevel) {
       const localContext = LocalContext.fromFileContext(this.fileContext),
             premisesVerified = this.premises.every((premise) => {
               const premiseVerified = premise.verify(localContext);

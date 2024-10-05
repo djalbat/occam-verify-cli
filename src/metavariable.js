@@ -54,31 +54,32 @@ export default class Metavariable {
     return metavariableNodeMatches;
   }
 
-  verify(fileContext) {
+  verify(localContext) {
     let verified = false;
 
     const metavariableString = this.string; ///
 
-    fileContext.trace(`Verifying the '${metavariableString}' metavariable...`);
+    localContext.trace(`Verifying the '${metavariableString}' metavariable...`);
 
     debugger
 
     if (verified) {
-      fileContext.debug(`...verified the '${metavariableString}' metavariable.`);
+      localContext.debug(`...verified the '${metavariableString}' metavariable.`);
     }
 
     return verified;
   }
 
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared = false;
+  verifyAtTopLevel(fileContext) {
+    let verifiedAtTopLevel = false;
 
     const metavariableString = this.string; ///
 
-    fileContext.trace(`Verifying the '${metavariableString}' metavariable when declared...`);
+    fileContext.trace(`Verifying the '${metavariableString}' metavariable at top level...`);
 
     const metavariableNode = this.node, ///
-          metavariablePresent = fileContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
 
     if (metavariablePresent) {
       fileContext.debug(`The metavariable '${metavariableString}' is already present.`);
@@ -87,21 +88,21 @@ export default class Metavariable {
             argument = Argument.fromArgumentNode(argumentNode, fileContext);
 
       if (argument === null) {
-        verifiedWhenDeclared = true;
+        verifiedAtTopLevel = true;
       } else {
         const argumentVerified = argument.verify(fileContext);
 
         if (argumentVerified) {
-          verifiedWhenDeclared = true;
+          verifiedAtTopLevel = true;
         }
       }
     }
 
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${metavariableString}' metavariable when declared.`);
+    if (verifiedAtTopLevel) {
+      fileContext.debug(`...verified the '${metavariableString}' metavariable at top level.`);
     }
 
-    return verifiedWhenDeclared;
+    return verifiedAtTopLevel;
   }
 
   toJSON() {

@@ -19,12 +19,12 @@ export default class Label {
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
-  verify(fileContext) {
-    let verified = false;
+  verifyAtTopLevel(fileContext) {
+    let verifiedAtTopLevel = false;
 
     const labelString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${labelString}' label...`);
+    fileContext.trace(`Verifying the '${labelString}' label at top level...`);
 
     const metavariableNode = this.metavariable.getNode(),
           labelPresent = fileContext.isLabelPresentByMetavariableNode(metavariableNode);
@@ -32,14 +32,14 @@ export default class Label {
     if (labelPresent) {
       fileContext.debug(`The '${labelString}' label is already present.`);
     } else {
-      verified = true;
+      verifiedAtTopLevel = true;
     }
 
-    if (verified) {
-      fileContext.debug(`...verified the '${labelString}' label.`);
+    if (verifiedAtTopLevel) {
+      fileContext.debug(`...verifiedAtTopLevel the '${labelString}' label at top level.`);
     }
 
-    return verified;
+    return verifiedAtTopLevel;
   }
 
   toJSON() {

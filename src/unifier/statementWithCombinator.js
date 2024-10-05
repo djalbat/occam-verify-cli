@@ -2,8 +2,6 @@
 
 import shim from "../shim";
 import Unifier from "../unifier";
-import unifyTermWithType from "../unify/termWithType";
-import unifyFrameWithMetaType from "../unify/frameWithMetaType";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -31,7 +29,7 @@ class StatementWithCombinatorUnifier extends Unifier {
       nodeQueryA: statementNodeQuery,
       nodeQueryB: metaTypeNodeQuery,
       unify: (statementNodeA, metaTypeNodeB, assignments, stated, localContext) => {
-        const { MetaType, Statement } = shim,
+        const { Statement, MetaType } = shim,
               metaTypeNode = metaTypeNodeB, ///
               statementNode = statementNodeA, ///
               metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
@@ -45,9 +43,12 @@ class StatementWithCombinatorUnifier extends Unifier {
       nodeQueryA: frameNodeQuery,
       nodeQueryB: metaTypeNodeQuery,
       unify: (frameNodeA, metaTypeNodeB, assignments, stated, localContext) => {
-        const metaTypeNode = metaTypeNodeB, ///
+        const { Frame, MetaType } = shim,
+              metaTypeNode = metaTypeNodeB, ///
               frameNode = frameNodeA, ///
-              frameUnifiedWithMetaType = unifyFrameWithMetaType(frameNode, metaTypeNode, assignments, stated, localContext);
+              metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
+              frame = Frame.fromFrameNode(frameNode, localContext),
+              frameUnifiedWithMetaType = frame.unifyWithMetaType(metaType, assignments, stated, localContext);
 
         return frameUnifiedWithMetaType;
       }
@@ -56,9 +57,12 @@ class StatementWithCombinatorUnifier extends Unifier {
       nodeQueryA: termNodeQuery,
       nodeQueryB: typeNodeQuery,
       unify: (termNodeA, typeNodeB, assignments, stated, localContext) => {
-        const termNode = termNodeA, ///
+        const { Term, Type } = shim,
               typeNode = typeNodeB, ///
-              termUnifiedWithType = unifyTermWithType(termNode, typeNode, localContext);
+              termNode = termNodeA, ///
+              type = Type.fromTypeNode(typeNode, localContext),
+              term = Term.fromTermNode(termNode, localContext),
+              termUnifiedWithType = term.unifyWithType(type, localContext);
 
         return termUnifiedWithType;
       }

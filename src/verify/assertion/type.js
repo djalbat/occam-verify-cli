@@ -1,7 +1,7 @@
 "use strict";
 
 import Variable from "../../variable";
-import verifyTerm from "../../verify/term";
+// import verifyTerm from "../../verify/term";
 import VariableAssignment from "../../assignment/variable";
 
 import { first } from "../../utilities/array";

@@ -25,20 +25,20 @@ export default class Reference {
     return metavariableNode;
   }
 
-  verify(fileContext) {
-    let verified;
+  verifyAtTopLevel(fileContext) {
+    let verifiedAtTopLevel;
 
     const referenceString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${referenceString}' reference...`);
+    fileContext.trace(`Verifying the '${referenceString}' reference at top level...`);
 
-    verified = true;
+    verifiedAtTopLevel = true;
 
-    if (verified) {
-      fileContext.debug(`...verified the '${referenceString}' reference.`);
+    if (verifiedAtTopLevel) {
+      fileContext.debug(`...verified the '${referenceString}' reference at top level.`);
     }
 
-    return verified;
+    return verifiedAtTopLevel;
   }
 
   toJSON() {

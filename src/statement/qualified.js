@@ -65,7 +65,7 @@ export default class QualifiedStatement {
     let unified;
 
     const qualifiedStatement = this,  ///
-          qualifiedStatementString = trim(this.string); ///
+          qualifiedStatementString = this.string; ///
 
     localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement...`);
 
@@ -86,13 +86,17 @@ export default class QualifiedStatement {
     let qualifiedStatement = null;
 
     if (qualifiedStatementNode !== null) {
+      let string;
       const statementNode = statementNodeQuery(qualifiedStatementNode),
             referenceNode = referenceNodeQuery(qualifiedStatementNode),
             localContext = LocalContext.fromFileContext(fileContext),
             statement = Statement.fromStatementNode(statementNode, localContext),
             reference = Reference.fromReferenceNode(referenceNode, fileContext),
-            node = qualifiedStatementNode,  ///
-            string = trim(fileContext.nodeAsString(node));  ///
+            node = qualifiedStatementNode;  ///
+
+      string = fileContext.nodeAsString(node);
+
+      string = trim(string);  ///
 
         qualifiedStatement = new QualifiedStatement(string, statement, reference);
     }

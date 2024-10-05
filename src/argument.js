@@ -1,6 +1,7 @@
 "use strict";
 
 import { nodeQuery } from "./utilities/query";
+import { typeNameFromTypeNode } from "./utilities/name";
 
 const termNodeQuery = nodeQuery("/argument/term"),
       typeNodeQuery = nodeQuery("/argument//type");
@@ -24,15 +25,15 @@ export default class Argument {
     return this.fileContext;
   }
 
-  verify(fileContext) {
-    let verified = false;
+  verifyAtTopLevel(fileContext) {
+    let verifiedAtTopLevel = false;
 
     const argumentString = this.string; ///
 
-    fileContext.trace(`Verifying the '${argumentString}' argument...`);
+    fileContext.trace(`Verifying the '${argumentString}' argument at top level...`);
 
     if (this.node === null) {
-      verified = true;
+      verifiedAtTopLevel = true;
     } else {
       const termNode = termNodeQuery(this.node);
 
@@ -44,10 +45,11 @@ export default class Argument {
         const typeNode = typeNodeQuery(this.node);
 
         if (typeNode !== null) {
-          const typePresent = this.fileContext.isTypePresentByTypeNode(typeNode);
+          const typeName = typeNameFromTypeNode(typeNode),
+                typePresent = this.fileContext.isTypePresentByTypeName(typeName);
 
           if (typePresent) {
-            verified = true;
+            verifiedAtTopLevel = true;
           } else {
             const typeString = this.fileContext.nodeAsString(typeNode);
 
@@ -57,11 +59,11 @@ export default class Argument {
       }
     }
 
-    if (verified) {
-      fileContext.debug(`...verified the '${argumentString}' argument.`);
+    if (verifiedAtTopLevel) {
+      fileContext.debug(`...verified the '${argumentString}' argument at top level.`);
     }
 
-    return verified;
+    return verifiedAtTopLevel;
   }
 
   static fromArgumentNode(argumentNode, fileContext) {

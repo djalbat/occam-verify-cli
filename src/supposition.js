@@ -1,9 +1,11 @@
 "use strict";
 
 import ProofStep from "./proofStep";
+import LocalContext from "./context/local";
+import metaLevelUnifier from "./unifier/metaLevel";
+import SubproofAssertion from "./assertion/subproof";
 import UnqualifiedStatement from "./statement/unqualified";
 
-import { trim } from "./utilities/string";
 import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
 
@@ -27,56 +29,86 @@ export default class Supposition {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
-  // unifyStatement(statementNodeB, substitutions, localContextA, localContextB) {
-  //   let statementUnified = false;
-  //
-  //   if (this.statementNode !== null) {
-  //     const nodeA = this.statementNode,  ///
-  //           nodeB = statementNodeB,  ///
-  //           unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
-  //
-  //     statementUnified = unified; ///
-  //   }
-  //
-  //   return statementUnified;
-  // }
+  unifyProofStep(proofStep, substitutions, localContext) {
+    let proofStepUnified = false;
 
-  // unifySubproof(subproofNodeB, substitutions, localContextA, localContextB) {
-  //   let subproofUnified = false;
-  //
-  //   if (this.statementNode !== null) {
-  //     const statementNodeA = this.statementNode,
-  //           subproofAssertionNodeA = subproofAssertionNodeQuery(statementNodeA);  ///
-  //
-  //     if (subproofAssertionNodeA !== null) {
-  //       const subproofAssertionStatementNodesA = subproofAssertionStatementNodesQuery(subproofAssertionNodeA),  ///
-  //             subproofSuppositionStatementNodesB = subproofSuppositionStatementNodesQuery(subproofNodeB), ///
-  //             subproofLastProofStepStatementNodeB = subproofLastProofStepStatementNodeQuery(subproofNodeB), ///
-  //             subproofStatementNodesB = [
-  //               ...subproofSuppositionStatementNodesB,
-  //               subproofLastProofStepStatementNodeB
-  //             ];
-  //
-  //       subproofUnified = match(subproofAssertionStatementNodesA, subproofStatementNodesB, (subproofAssertionStatementNodeA, subproofStatementNodeB) => {
-  //         const nodeA = subproofAssertionStatementNodeA,  ///
-  //               nodeB = subproofStatementNodeB, ///
-  //               unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
-  //
-  //         if (unified) {
-  //           return true;
-  //         }
-  //       });
-  //     }
-  //   }
-  //
-  //   return subproofUnified;
-  // }
+    const subproof = proofStep.getSubproof(),
+          statement = proofStep.getStatement();
+
+    substitutions.snapshot();
+
+    if (false) {
+      ///
+    } else if (subproof !== null) {
+      proofStepUnified = this.unifySubproof(subproof, substitutions, localContext);
+    } else if (statement !== null) {
+      proofStepUnified = this.unifyStatement(statement, substitutions, localContext);
+    }
+
+    proofStepUnified ?
+      substitutions.continue() :
+        substitutions.rollback(localContext);
+
+    return proofStepUnified;
+  }
+
+  unifyStatement(statement, substitutions, localContext) {
+    let statementUnified;
+
+    const supposition = this, ///
+          statementString = statement.getString(),
+          suppositionStatement = supposition.getStatement(),
+          suppositionStatementString = suppositionStatement.getString();
+
+    localContext.trace(`Unifying the '${statementString}' statement with the supposition's '${suppositionStatementString}' statement...`);
+
+    const statementNode = statement.getNode(),
+          suppositionStatementNode = suppositionStatement.getNode(),
+          nodeA = suppositionStatementNode,  ///
+          nodeB = statementNode,  ///
+          fileContextA = this.fileContext,  ///
+          localContextA = LocalContext.fromFileContext(fileContextA),
+          localContextB = localContext, ///
+          unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+
+    statementUnified = unified; ///
+
+    if (statementUnified) {
+      localContext.debug(`...unified the '${statementString}' statement with the supposition's '${suppositionStatementString}' statement.`);
+    }
+
+    return statementUnified;
+  }
+
+  unifySubproof(subproof, substitutions, localContext) {
+    let subproofUnified = false;
+
+    const supposition = this, ///
+          subproofString = subproof.getString(),
+          suppositionStatement = supposition.getStatement(),
+          suppositionStatementString = suppositionStatement.getString();
+
+    localContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
+
+    const statement = this.unqualifiedStatement.getStatement(),
+          statementNode = statement.getNode(),
+          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, this.fileContext);
+
+    if (subproofAssertion !== null) {
+      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, localContext);
+    }
+
+    if (subproofUnified) {
+      localContext.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`);
+    }
+
+    return subproofUnified;
+  }
 
   verify(localContext) {
-    let verified = false,
-        suppositionString = this.getString(); ///
+    let verified = false;
 
-    suppositionString = trim(suppositionString);  ///
+    const suppositionString = this.getString(); ///
 
     if (this.unqualifiedStatement !== null) {
       localContext.trace(`Verifying the '${suppositionString}' supposition...`);
@@ -97,15 +129,36 @@ export default class Supposition {
         }
       }
 
+      if (verified) {
+        localContext.debug(`...verified the '${suppositionString}' supposition.`);
+      }
     } else {
       localContext.debug(`The '${suppositionString}' supposition cannot be verified because it is nonsense.`);
     }
 
-    if (verified) {
-      localContext.debug(`...verified the '${suppositionString}' supposition.`);
-    }
-
     return verified;
+  }
+
+  toJSON() {
+    const unqualifiedStatementJSON = this.unqualifiedStatement.toJSON(),
+          unqualifiedStatement = unqualifiedStatementJSON,  ///
+          json = {
+            unqualifiedStatement
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    let { unqualifiedStatement } = json;
+
+    json = unqualifiedStatement;  ///
+
+    unqualifiedStatement = UnqualifiedStatement.fromJSON(json, fileContext);
+
+    const supposition = new Supposition(fileContext, unqualifiedStatement);
+
+    return supposition;
   }
 
   static fromSuppositionNode(suppositionNode, fileContext) {
@@ -113,6 +166,6 @@ export default class Supposition {
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
           supposition = new Supposition(fileContext, unqualifiedStatement);
 
-    return supposition;
+    return supposition
   }
 }

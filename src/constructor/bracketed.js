@@ -4,6 +4,7 @@ import shim from "../shim";
 import Constructor from "../constructor";
 import bracketedConstructorTermNode from "../node/term/constructor/bracketed";
 
+import { stringFromTermAndType } from "../constructor";
 import { bracketedConstructorTermString } from "../node/term/constructor/bracketed";
 
 const localContext = {
@@ -19,7 +20,9 @@ export default class BracketedConstructor extends Constructor {
     const { Term } = shim,
           termNode = bracketedConstructorTermNode,  ///
           term = Term.fromTermNode(termNode, localContext),
-          bracketedConstructor = new BracketedConstructor(term);
+          type = null,
+          string = stringFromTermAndType(term, type),
+          bracketedConstructor = new BracketedConstructor(string, term);
 
     return bracketedConstructor;
   }

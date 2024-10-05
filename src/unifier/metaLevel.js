@@ -91,10 +91,6 @@ class MetaLevelUnifier extends Unifier {
 
 const metaLevelUnifier = new MetaLevelUnifier();
 
-Object.assign(shim, {
-  metaLevelUnifier
-});
-
 export default metaLevelUnifier;
 
 function unifyStatementWithStatement(statementNodeA, statementNodeB, substitutions, localContextA, localContextB) {

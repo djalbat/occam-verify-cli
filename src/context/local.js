@@ -303,8 +303,14 @@ class LocalContext {
     return variableDefined;
   }
 
-  isVariablePresentByVariableNode(variableNode) {
-    const variable = this.findVariableByVariableNode(variableNode),
+  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
+
+  isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
+
+  isMetavariablePresentByMetavariableName(metavariableName) { return this.context.isMetavariablePresentByMetavariableName(metavariableName); }
+
+  isVariablePresentByVariableName(variableName) {
+    const variable = this.findVariableByVariableName(variableName),
           variablePresent = (variable !== null);
 
     return variablePresent;
@@ -319,34 +325,18 @@ class LocalContext {
 
   isMetavariableDefinedByMetavariableName(metavariableName) {
     const judgementPresent = this.isJudgementPresentByMetavariableName(metavariableName),
-      metavariableDefinedByMetavariableName = judgementPresent; ///
+          metavariableDefinedByMetavariableName = judgementPresent; ///
 
     return metavariableDefinedByMetavariableName
   }
 
-  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
+  findMetaTypeByMetaTypeName(metaTypeName) { return this.context.findMetaTypeByMetaTypeName(metaTypeName); }
 
-  isTypePresentByTypeNode(typeNode) { return this.context.isTypePresentByTypeNode(typeNode); }
+  findVariableByVariableName(variableName) { return this.context.findVariableByVariableName(variableName); }
 
-  isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
+  findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
 
-  isMetavariablePresentByMetavariableName(metavariableName) { return this.context.isMetavariablePresentByMetavariableName(metavariableName); }
-
-  isMetavariablePresentByMetavariableNode(metavariableNode) { return this.context.isMetavariablePresentByMetavariableNode(metavariableNode); }
-
-  findVariableByVariableNode(variableNode) {
-    const node = variableNode,  ///
-          variables = this.getVariables(),
-          variable = variables.find((variable) => {
-            const nodeMatches = variable.matchNode(node);
-
-            if (nodeMatches) {
-              return true;
-            }
-          }) || null;
-
-    return variable;
-  }
+  findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
 
   findJudgementByMetavariableName(metavariableName) {
     const judgements = this.getJudgements(),
@@ -375,15 +365,7 @@ class LocalContext {
     return metavariable;
   }
 
-  findMetaTypeByMetaTypeNode(metaTypeNode) { return this.context.findMetaTypeByMetaTypeNode(metaTypeNode); }
-
-  findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
-
-  findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
-
   findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
-
-  findTypeByTypeNode(typeNode) { return this.context.findTypeByTypeNode(typeNode); }
 
   findRuleByReference(reference) { return this.context.findRuleByReference(reference); }
 

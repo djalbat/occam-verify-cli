@@ -38,8 +38,4 @@ class IntrinsicLevelUnifier extends Unifier {
 
 const intrinsicLevelUnifier = new IntrinsicLevelUnifier();
 
-Object.assign(shim, {
-  intrinsicLevelUnifier
-});
-
 export default intrinsicLevelUnifier;

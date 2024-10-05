@@ -2,19 +2,19 @@
 
 import Rule from "../rule";
 import Error from "../error";
+import Axiom from "../axiom";
 import TypeDeclaration from "../declaration/type";
+import VariableDeclaration from "../declaration/variable";
 import CombinatorDeclaration from "../declaration/combinator";
 import ConstructorDeclaration from "../declaration/constructor";
 import MetavariableDeclaration from "../declaration/metavariable";
 
 import Verifier from "../verifier";
-import verifyAxiom from "../verify/axiom";
 import verifyLemma from "../verify/lemma";
 import verifyTheorem from "../verify/theorem";
 import verifyMetaLemma from "../verify/metaLemma";
 import verifyConjecture from "../verify/conjecture";
 import verifyMetatheorem from "../verify/metatheorem";
-import verifyVariableDeclaration from "../verify/declaration/variable";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -66,7 +66,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: axiomNodeQuery,
       verify: (axiomNode, fileContext) => {
-        const axiomVerified = verifyAxiom(axiomNode, fileContext);
+        const axiom = Axiom.fromAxiomNode(axiomNode, fileContext),
+              axiomVerified = axiom.verify();
 
         return axiomVerified;
       }
@@ -123,7 +124,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: variableDeclarationNodeQuery,
       verify: (variableDeclarationNode, fileContext) => {
-        const variableDeclarationVerified = verifyVariableDeclaration(variableDeclarationNode, fileContext);
+        const variableDeclaration = VariableDeclaration.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
+              variableDeclarationVerified = variableDeclaration.verify();
 
         return variableDeclarationVerified;
       }

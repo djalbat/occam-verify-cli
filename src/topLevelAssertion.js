@@ -1,17 +1,23 @@
 "use strict";
 
+import Label from "./label";
+import Consequent from "./consequent";
+import Supposition from "./supposition";
 import Substitutions from "./substitutions";
-import resolveSubstitutions from "./resolve/substitutions";
-import unifyConsequentWithStatement from "./unify/consequentWithStatement";
-import unifySuppositionsWithProofSteps from "./unify/suppositionsWithProofSteps";
+
+import { reverse, correlate } from "./utilities/array";
 
 export default class TopLevelAssertion {
-  constructor(labels, suppositions, consequent, substitutions, fileContext) {
+  constructor(fileContext, labels, suppositions, consequent, proof) {
+    this.fileContext = fileContext;
     this.labels = labels;
     this.suppositions = suppositions;
     this.consequent = consequent;
-    this.substitutions = substitutions;
-    this.fileContext = fileContext;
+    this.proof = proof;
+  }
+
+  getFileContext() {
+    return this.fileContext;
   }
 
   getLabels() {
@@ -26,37 +32,8 @@ export default class TopLevelAssertion {
     return this.consequent;
   }
 
-  getSubstitutions() {
-    return this.substitutions;
-  }
-
-  getFileContext() {
-    return this.fileContext;
-  }
-
-  unifyStatement(statementNode, localContext) {
-    let statementUnified = false;
-
-    const substitutions = Substitutions.fromNothing(),
-          proofSteps = localContext.getProofSteps(),
-          proofStepsB = proofSteps, ///
-          fileContextA = this.fileContext,  ///
-          suppositionsA = this.suppositions,  ///
-          localContextB = localContext, ///
-          suppositionsUnified = unifySuppositionsWithProofSteps(suppositionsA, proofStepsB, substitutions, fileContextA, localContextB);
-
-    if (suppositionsUnified) {
-      const consequentA = this.consequent,  ///
-            consequentUnified = unifyConsequentWithStatement(consequentA, statementNode, substitutions, fileContextA, localContext);
-
-      if (consequentUnified) {
-        const substitutionsResolved = resolveSubstitutions(substitutions, fileContextA, localContextB);
-
-        statementUnified = substitutionsResolved; ///
-      }
-    }
-
-    return statementUnified;
+  getProof() {
+    return this.proof;
   }
 
   matchMetavariableNode(metavariableNode) {
@@ -71,5 +48,111 @@ export default class TopLevelAssertion {
     return metavariableNodeMatches;
   }
 
-  static fromLabelsSuppositionsConsequentSubstitutionsAndFileContext(Class, labels, suppositions, consequent, substitutions, fileContext) { return new Class(labels, suppositions, consequent, substitutions, fileContext); }
+  unifyStatement(statement, localContext) {
+    let statementUnified = false;
+
+    const proofSteps = localContext.getProofSteps(),
+          substitutions = Substitutions.fromNothing(),
+          proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
+
+    if (proofStepsUnified) {
+      statementUnified = this.consequent.unifyStatement(statement, substitutions, localContext);
+    }
+
+    return statementUnified;
+  }
+
+  unifyProofSteps(proofSteps, substitutions, localContext) {
+    let proofStepsUnified;
+
+    let suppositions = this.suppositions;
+
+    suppositions = reverse(suppositions); ///
+
+    proofSteps = reverse(proofSteps); ///
+
+    proofStepsUnified = correlate(suppositions, proofSteps, (supposition, proofStep) => {
+      const proofStepUnified = supposition.unifyProofStep(proofStep, substitutions, localContext);
+
+      if (proofStepUnified) {
+        return true;
+      }
+    });
+
+    return proofStepsUnified;
+  }
+
+  toJSON() {
+    const labelsJSON = this.labels.map((label) => {
+            const labelJSON = label.toJSON();
+
+            return labelJSON;
+          }),
+          suppositionsJSON = this.suppositions.map((supposition) => {
+            const suppositionJSON = supposition.toJSON();
+
+            return suppositionJSON;
+          }),
+          consequentJSON = this.consequent.toJSON(),
+          labels = labelsJSON,  ///
+          suppositions = suppositionsJSON,  ///
+          consequent = consequentJSON,  ///
+          json = {
+            labels,
+            suppositions,
+            consequent
+          };
+
+    return json;
+  }
+
+  static fromJSON(Class, json, fileContext) {
+    let rule;
+
+    let { labels } = json;
+
+    const labelsJSON = labels;  ///
+
+    labels = labelsJSON.map((labelJSON) => {
+      const json = labelJSON, ///
+            label = Label.fromJSON(json, fileContext);
+
+      return label;
+    });
+
+    let { suppositions } = json;
+
+    const suppositionsJSON = suppositions;  ///
+
+    suppositions = suppositionsJSON.map((suppositionJSON) => {
+      const json = suppositionJSON, ///
+            supposition = Supposition.fromJSON(json, fileContext);
+
+      return supposition;
+    });
+
+    let { consequent } = json;
+
+    const consequentJSON = consequent;  ///
+
+    json = consequentJSON;  ///
+
+    consequent = Consequent.fromJSON(json, fileContext);
+
+    const proof = null;
+
+    rule = new Class(fileContext, labels, suppositions, consequent, proof);
+
+    return rule;
+  }
+}
+
+export function labelsStringFromLabels(labels) {
+  const labelsString = labels.map((label) => {
+    const labelString = label.getString();
+
+    return labelString;
+  });
+
+  return labelsString;
 }

@@ -1,7 +1,7 @@
 "use strict";
 
+import shim from "../shim";
 import Unifier from "../unifier";
-import unifyTermWithType from "../unify/termWithType";
 
 import { nodeQuery } from "../utilities/query";
 
