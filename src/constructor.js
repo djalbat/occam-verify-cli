@@ -83,7 +83,7 @@ export default class Constructor {
           type = (typeNode === null) ?
                    objectType :
                      Type.fromTypeNode(typeNode),
-          term = Term.fromTermNodeAndType(termNode, type),
+          term = Term.fromTermNodeAndType(termNode, type, fileContext),
           string = stringFromTermAndType(term, type),
           constructor = new Constructor(string, term);
 
