@@ -36,7 +36,7 @@ export default class Label {
     }
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verifiedAtTopLevel the '${labelString}' label at top level.`);
+      fileContext.debug(`...verified the '${labelString}' label at top level.`);
     }
 
     return verifiedAtTopLevel;

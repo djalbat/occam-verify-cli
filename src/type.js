@@ -159,7 +159,7 @@ class Type {
         verifiedAtTopLevel = true;
       } else {
         const name = this.superType.getName(),
-          superTypePresent = fileContext.isTypePresentByTypeName(name);
+              superTypePresent = fileContext.isTypePresentByTypeName(name);
 
         if (superTypePresent) {
           verifiedAtTopLevel = true;
@@ -172,7 +172,7 @@ class Type {
     }
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verifiedAtTopLevel the '${typeString}' type at top level.`);
+      fileContext.debug(`...verified the '${typeString}' type at top level.`);
     }
 
     return verifiedAtTopLevel;
@@ -207,7 +207,10 @@ class Type {
 
     const typeName = name,  ///
           string = stringFromTypeNameAndSuperType(typeName, superType),
-          type = new Type(string, name, superType);
+          typeNameObjectTypeName = (typeName === OBJECT_TYPE_NAME),
+          type = typeNameObjectTypeName ?
+                   objectType :
+                     new Type(string, name, superType);
 
     return type;
   }
@@ -217,7 +220,10 @@ class Type {
           name = typeName,  ///
           string = name,  ///
           superType = null,
-          type = new Type(string, name, superType);
+          typeNameObjectTypeName = (typeName === OBJECT_TYPE_NAME),
+          type = typeNameObjectTypeName ?
+                   objectType :
+                     new Type(string, name, superType);
 
     return type;
   }

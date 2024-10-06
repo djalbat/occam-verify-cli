@@ -6,8 +6,8 @@ import Supposition from "./supposition";
 import LocalContext from "./context/local";
 import TopLevelAssertion from "./topLevelAssertion";
 
+import { nodeQuery, nodesQuery } from "./utilities/query";
 import { labelsStringFromLabels } from "./topLevelAssertion";
-import {nodeQuery, nodesQuery} from "./utilities/query";
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
       consequentNodeQuery = nodeQuery("/axiom/consequent"),
@@ -32,12 +32,12 @@ export default class Axiom extends TopLevelAssertion {
     if (labelsVerifiedAtTopLevel) {
       const localContext = LocalContext.fromFileContext(this.fileContext),
             suppositionsVerified = this.suppositions.every((supposition) => {
-          const suppositionVerified = supposition.verify(localContext);
+              const suppositionVerified = supposition.verify(localContext);
 
-          if (suppositionVerified) {
-            return true;
-          }
-        });
+              if (suppositionVerified) {
+                return true;
+              }
+            });
 
       if (suppositionsVerified) {
         const consequentVerified = this.consequent.verify(localContext);

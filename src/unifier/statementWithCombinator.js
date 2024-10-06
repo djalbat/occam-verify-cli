@@ -33,12 +33,12 @@ class StatementWithCombinatorUnifier extends Unifier {
 
         const { Statement, MetaType } = shim,
               metaTypeNode = metaTypeNodeB, ///
-              statementeNode = statementeNodeA, ///
+              statementNode = statementNodeA, ///
               metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
-              statemente = Statement.fromTermNode(statementeNode, localContext),
-              statementeVerifiedGivenType = statemente.verifyGivenMetaType(metaType, localContext);
+              statement = Statement.fromStatementNode(statementNode, localContext),
+              statementVerifiedGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, localContext);
 
-        unified = statementeVerifiedGivenType;
+        unified = statementVerifiedGivenType;
 
         return unified;
       }

@@ -97,6 +97,10 @@ export default class Variable {
       } else {
         this.type = type;
 
+        const variable = this;  ///
+
+        localContext.addVariable(variable);
+
         verifiedAtTopLevel = true;
       }
     }

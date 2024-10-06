@@ -5,8 +5,8 @@ import unifyMixins from "./mixins/statement/unify";
 import verifyMixins from "./mixins/statement/verify";
 import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
+import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 import { statementNodeFromStatementString } from "./utilities/node";
-import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 
 class Statement {
   constructor(string, node) {
@@ -85,42 +85,23 @@ class Statement {
   }
 
   verifyGivenMetaType(metaType, assignments, stated, localContext) {
-    let verifiedGivenMetaType;
+    let verifiedGivenMetaType = false;
+
+    const metaTypeString = metaType.getString(),
+          statementString = this.string;  ///
+
+    localContext.trace(`Verifying the '${statementString}' given the '${metaTypeString}' meta-type...`);
 
     const metaTypeName = metaType.getName();
 
-    switch (metaTypeName) {
-      case FRAME_META_TYPE_NAME:
-      case REFERENCE_META_TYPE_NAME: {
-        debugger
+    if (metaTypeName === STATEMENT_META_TYPE_NAME) {
+      const verified = this.verify(assignments, stated, localContext)
 
-        // verifiedGivenMetaType = false;
-        //
-        // const metavariableNode = metavariableNodeQuery(statementNode);
-        //
-        // if (metavariableNode !== null) {
-        //   const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-        //     metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
-        //
-        //   if (metavariable !== null) {
-        //     const metavariableMetaType = metavariable.getMetaType();
-        //
-        //     if (metavariableMetaType === metaType) {
-        //       verifiedGivenMetaType = true;
-        //     }
-        //   }
-        // }
+      verifiedGivenMetaType = verified; ///
+    }
 
-        break;
-      }
-
-      case STATEMENT_META_TYPE_NAME: {
-        const verified = this.verify(assignments, stated, localContext)
-
-        verifiedGivenMetaType = verified; ///
-
-        break;
-      }
+    if (verifiedGivenMetaType) {
+      localContext.debug(`...verified the '${statementString}' given the '${metaTypeString}' meta-type.`);
     }
 
     return verifiedGivenMetaType;
@@ -148,14 +129,9 @@ class Statement {
   }
 
   static fromStatementNode(statementNode, localContext) {
-    let statement;
-
-    if (statementNode !== null) {
-      const node = statementNode, ///
-            string = localContext.nodeAsString(node);
-
-      statement = new Statement(string, node);
-    }
+    const node = statementNode, ///
+          string = localContext.nodeAsString(node),
+          statement = new Statement(string, node);
 
     return statement;
   }
