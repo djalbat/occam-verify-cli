@@ -7,9 +7,7 @@ import verifyMixins from "./mixins/term/verify";
 import termAsConstructorVerifier from "./verifier/termAsConstructor";
 
 import { filter } from "./utilities/array";
-import { objectType } from "./type";
 import { nodesQuery } from "./utilities/query"
-import { OBJECT_TYPE_NAME } from "./typeNames";
 import { termNodeFromTermString } from "./utilities/node";
 
 const variableNodesQuery = nodesQuery("//variable");
@@ -164,39 +162,13 @@ class Term {
     return typeVerified;
   }
 
-  unifyWithType(type, localContext) {
-    let unifiedWithType;
-
-    const termString = this.getString(),
-          typeString = type.getString();
-
-    localContext.trace(`Unifying the '${termString}' term with the '${typeString}' type...`);
-
-    const typeName = type.getName(),
-          typeNameObjectTypeName = (typeName === OBJECT_TYPE_NAME);
-
-    type = typeNameObjectTypeName ?
-             objectType :
-               localContext.findTypeByTypeName(typeName); ///
-
-    const verifiedGivenType = this.verifyGivenType(type, localContext);
-
-    unifiedWithType = verifiedGivenType;  ///
-
-    if (unifiedWithType) {
-      localContext.debug(`...unified the '${termString}' term with the '${typeString}' type.`);
-    }
-
-    return unifiedWithType;
-  }
-
   verifyGivenType(type, localContext) {
     let verifiedGivenType;
 
     const termString = this.getString(),
           typeString = type.getString();
 
-    localContext.trace(`Verifying the '${termString}'  term given the '${typeString}' type...`);
+    localContext.trace(`Verifying the '${termString}' term given the '${typeString}' type...`);
 
     const verified = this.verify(localContext, () => {
       let verifiedAhead;
@@ -213,7 +185,7 @@ class Term {
     verifiedGivenType = verified; ///
 
     if (verifiedGivenType) {
-      localContext.debug(`...verified the '${termString}'  term given the '${typeString}' type.`);
+      localContext.debug(`...verified the '${termString}' term given the '${typeString}' type.`);
     }
 
     return verifiedGivenType;

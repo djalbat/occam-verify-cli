@@ -1,6 +1,6 @@
 "use strict";
 
-import Type from "../type";
+import Type, {objectType} from "../type";
 import Variable from "../variable";
 
 import { nodeQuery } from "../utilities/query";
@@ -50,7 +50,9 @@ export default class VariableDeclaration {
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
     const typeNode = typeNodeQuery(variableDeclarationNode),
-          type = Type.fromTypeNode(typeNode, fileContext),
+          type = (typeNode === null) ?
+                   objectType :
+                     Type.fromTypeNode(typeNode, fileContext),
           variable = Variable.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
           string = stringFromVariableAndType(variable, type),
           variableDeclaration = new VariableDeclaration(fileContext, string, variable);

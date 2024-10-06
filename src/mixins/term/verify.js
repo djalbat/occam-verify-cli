@@ -45,27 +45,3 @@ const verifyMixins = [
 ];
 
 export default verifyMixins;
-
-function verifyVariable(variableNode, variables, localContext) {
-  let variableVerified = false;
-
-  const variableString = localContext.nodeAsString(variableNode);
-
-  localContext.trace(`Verifying the '${variableString}' variable...`, variableNode);
-
-  const variable = localContext.findVariableByVariableNode(variableNode);
-
-  if (variable === null) {
-    localContext.trace(`The '${variableString}' variable is not present.`, variableNode);
-  } else {
-    variables.push(variable);
-
-    variableVerified = true;
-  }
-
-  if (variableVerified) {
-    localContext.debug(`...verified the '${variableString}' variable.`, variableNode);
-  }
-
-  return variableVerified;
-}

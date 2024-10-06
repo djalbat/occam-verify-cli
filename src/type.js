@@ -74,7 +74,7 @@ class Type {
     const equalTo = this.isEqualTo(type),
           subTypeOf = this.isSubTypeOf(type),
           superTypeOf = this.isSuperTypeOf(type),
-          comparableTo = equalTo || subTypeOf || superTypeOf;
+          comparableTo = (equalTo || subTypeOf || superTypeOf);
 
     return comparableTo;
   }
@@ -82,7 +82,7 @@ class Type {
   isEqualToOrSubTypeOf(type) {
     const equalTo = this.isEqualTo(type),
           subTypeOf = this.isSubTypeOf(type),
-          equalToOrSubTypeOf = equalTo || subTypeOf;
+          equalToOrSubTypeOf = (equalTo || subTypeOf);
 
     return equalToOrSubTypeOf;
   }
@@ -90,7 +90,7 @@ class Type {
   isEqualToOrSuperTypeOf(type) {
     const equalTo = this.isEqualTo(type),
           superTypeOf = this.isSuperTypeOf(type),
-          equalToOrSuperTypeOf = equalTo || superTypeOf;
+          equalToOrSuperTypeOf = (equalTo || superTypeOf);
 
     return equalToOrSuperTypeOf;
   }
@@ -124,26 +124,20 @@ class Type {
   verify(fileContext) {
     let verified = false;
 
-    const nameObjectTypeName = (this.name === OBJECT_TYPE_NAME);
+    const typeString = this.string; ///
 
-    if (nameObjectTypeName) {
+    fileContext.trace(`Verifying the '${typeString}' type...`);
+
+    const typePresent = fileContext.isTypePresentByTypeName(this.name);
+
+    if (typePresent) {
       verified = true;
     } else {
-      const typeString = this.string; ///
+      fileContext.debug(`The type '${typeString}' is not present.`);
+    }
 
-      fileContext.trace(`Verifying the '${typeString}' type...`);
-
-      const typePresent = fileContext.isTypePresentByTypeName(this.name);
-
-      if (typePresent) {
-        verified = true;
-      } else {
-        fileContext.debug(`The type '${typeString}' is not present.`);
-      }
-
-      if (verified) {
-        fileContext.debug(`...verified the '${typeString}' type.`);
-      }
+    if (verified) {
+      fileContext.debug(`...verified the '${typeString}' type.`);
     }
 
     return verified;
@@ -219,16 +213,11 @@ class Type {
   }
 
   static fromTypeNode(typeNode) {
-    let type = null;
-
-    if (typeNode !== null) {
-      const typeName = typeNameFromTypeNode(typeNode),
-            name = typeName,  ///
-            string = name,  ///
-            superType = null;
-
-      type = new Type(string, name, superType);
-    }
+    const typeName = typeNameFromTypeNode(typeNode),
+          name = typeName,  ///
+          string = name,  ///
+          superType = null,
+          type = new Type(string, name, superType);
 
     return type;
   }
@@ -237,7 +226,9 @@ class Type {
     const typeNode = typeNodeQuery(typeDeclarationNode),
           superTypeNode = superTypeNodeQuery(typeDeclarationNode),
           typeName = typeNameFromTypeNode(typeNode),
-          superType = Type.fromTypeNode(superTypeNode),
+          superType = (superTypeNode === null) ?
+                        objectType :
+                          Type.fromTypeNode(superTypeNode),
           string = stringFromTypeNameAndSuperType(typeName, superType),
           name = typeName,  ///
           type = new Type(string, name, superType);
@@ -268,8 +259,9 @@ export default Type;
 class ObjectType extends Type {
   static fromNothing() {
     const name = OBJECT_TYPE_NAME,
+          string = name,  //
           superType = null,
-          objectType = new ObjectType(name, superType);
+          objectType = new ObjectType(string, name, superType);
 
     return objectType;
   }

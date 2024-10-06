@@ -29,42 +29,60 @@ class StatementWithCombinatorUnifier extends Unifier {
       nodeQueryA: statementNodeQuery,
       nodeQueryB: metaTypeNodeQuery,
       unify: (statementNodeA, metaTypeNodeB, assignments, stated, localContext) => {
+        let unified;
+
         const { Statement, MetaType } = shim,
               metaTypeNode = metaTypeNodeB, ///
-              statementNode = statementNodeA, ///
+              statementeNode = statementeNodeA, ///
               metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
-              statement = Statement.fromStatementNode(statementNode, localContext),
-              statementUnifiedWithMetaType = statement.unifyWithMetaType(metaType, assignments, stated, localContext);
+              statemente = Statement.fromTermNode(statementeNode, localContext),
+              statementeVerifiedGivenType = statemente.verifyGivenMetaType(metaType, localContext);
 
-        return statementUnifiedWithMetaType;
+        unified = statementeVerifiedGivenType;
+
+        return unified;
       }
     },
     {
       nodeQueryA: frameNodeQuery,
       nodeQueryB: metaTypeNodeQuery,
       unify: (frameNodeA, metaTypeNodeB, assignments, stated, localContext) => {
+        let unified;
+
         const { Frame, MetaType } = shim,
               metaTypeNode = metaTypeNodeB, ///
               frameNode = frameNodeA, ///
               metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
-              frame = Frame.fromFrameNode(frameNode, localContext),
-              frameUnifiedWithMetaType = frame.unifyWithMetaType(metaType, assignments, stated, localContext);
+              frame = Frame.fromTermNode(frameNode, localContext),
+              frameVerifiedGivenType = frame.verifyGivenMetaType(metaType, localContext);
 
-        return frameUnifiedWithMetaType;
+        unified = frameVerifiedGivenType;
+
+        return unified;
       }
     },
     {
       nodeQueryA: termNodeQuery,
       nodeQueryB: typeNodeQuery,
       unify: (termNodeA, typeNodeB, assignments, stated, localContext) => {
+        let unified = false;
+
         const { Term, Type } = shim,
               typeNode = typeNodeB, ///
-              termNode = termNodeA, ///
               type = Type.fromTypeNode(typeNode, localContext),
-              term = Term.fromTermNode(termNode, localContext),
-              termUnifiedWithType = term.unifyWithType(type, localContext);
+              typeVerified = type.verify(localContext);
 
-        return termUnifiedWithType;
+        if (typeVerified) {
+          const termNode = termNodeA, ///
+                term = Term.fromTermNode(termNode, localContext),
+                termVerifiedGivenType = term.verifyGivenType(type, localContext);
+
+          if (termVerifiedGivenType) {
+            unified = true;
+          }
+        }
+
+        return unified;
       }
     }
   ];

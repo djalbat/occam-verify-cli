@@ -67,16 +67,6 @@ class Statement {
     return verified;
   }
 
-  unifyWithMetaType(metaType, assignments, stated, localContext) {
-    let unifiedWithMetaType;
-
-    const verifiedGivenMetaType = this.verifyGivenMetaType(metaType, assignments, stated, localContext);
-
-    unifiedWithMetaType = verifiedGivenMetaType;  ///
-
-    return unifiedWithMetaType;
-  }
-
   verifyAtTopLevel(fileContext) {
     let verifiedAtTopLevel;
 

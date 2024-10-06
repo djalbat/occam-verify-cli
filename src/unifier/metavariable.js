@@ -26,11 +26,24 @@ class MetavariableUnifier extends Unifier {
       nodeQueryA: termNodeQuery,
       nodeQueryB: typeNodeQuery,
       unify: (termNodeA, typeNodeB, localContext) => {
-        const termNode = termNodeA, ///
-              typeNode = typeNodeB, ///
-              termUnifiedWithType = unifyTermWithType(termNode, typeNode, localContext);
+        let unified = false;
 
-        return termUnifiedWithType;
+        const { Term, Type } = shim,
+              typeNode = typeNodeB, ///
+              type = Type.fromTypeNode(typeNode, localContext),
+              typeVerified = type.verify(localContext);
+
+        if (typeVerified) {
+          const termNode = termNodeA, ///
+                term = Term.fromTermNode(termNode, localContext),
+                termVerifiedGivenType = term.verifyGivenType(type, localContext);
+
+          if (termVerifiedGivenType) {
+            unified = true;
+          }
+        }
+
+        return unified;
       }
     }
   ];

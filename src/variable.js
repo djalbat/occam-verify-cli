@@ -1,6 +1,6 @@
 "use strict";
 
-import Type from "./type";
+import Type, {objectType} from "./type";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
@@ -50,7 +50,7 @@ export default class Variable {
 
     const variableString = this.string; ///
 
-    localContext.trace(`Verifying the '${variableString}' variable at top level...`);
+    localContext.trace(`Verifying the '${variableString}' variable...`);
 
     const variableNode = this.node, ///
           variableName = variableNameFromVariableNode(variableNode),
@@ -87,21 +87,17 @@ export default class Variable {
     if (variablePresent) {
       localContext.debug(`The '${variableString}' variable is already present.`);
     } else {
-      if (this.type === null) {
-        verifiedAtTopLevel = true;
+      const typeName = this.type.getName(),
+            type = localContext.findTypeByTypeName(typeName);
+
+      if (type === null) {
+        const typeString = this.type.getString();
+
+        localContext.debug(`The '${typeString}' type is not present.`);
       } else {
-        const typeName = this.type.getName(),
-              type = localContext.findTypeByTypeName(typeName);
+        this.type = type;
 
-        if (type === null) {
-          const typeString = this.type.getString();
-
-          localContext.debug(`The '${typeString}' type is not present.`);
-        } else {
-          this.type = type;
-
-          verifiedAtTopLevel = true;
-        }
+        verifiedAtTopLevel = true;
       }
     }
 
@@ -142,7 +138,9 @@ export default class Variable {
           string = variableString,  ///
           node = variableNode,  ///
           name = variableName,  ///
-          type = Type.fromTypeNode(typeNode, localContext),
+          type = (typeNode === null) ?
+                   objectType :
+                     Type.fromTypeNode(typeNode, localContext),
           variable = new Variable(string, node, name, type);
 
     return variable;
