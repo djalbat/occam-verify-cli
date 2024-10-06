@@ -62,6 +62,8 @@ function verifyAction(argument, log) {
       log.warning(`The '${name}' project or package context cannot be verified.`);
     }
 
+    releaseContext.toJSON();
+
     stopClock(now, log);
   });
 }

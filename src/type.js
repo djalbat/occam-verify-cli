@@ -155,19 +155,17 @@ class Type {
     if (typePresent) {
       fileContext.debug(`The type '${typeString}' is already present.`);
     } else {
-      if (this.superType === null) {
-        verifiedAtTopLevel = true;
+      const superTypeName = this.superType.getName(),
+            superType = fileContext.isTypePresentByTypeName(superTypeName);
+
+      if (superType === null) {
+        const superTypeString = this.superType.getString();
+
+        fileContext.debug(`The super-type '${superTypeString}' is not present.`);
       } else {
-        const name = this.superType.getName(),
-              superTypePresent = fileContext.isTypePresentByTypeName(name);
+        this.superType = superType;
 
-        if (superTypePresent) {
-          verifiedAtTopLevel = true;
-        } else {
-          const superTypeString = this.superType.getString();
-
-          fileContext.debug(`The super-type '${superTypeString}' is not present.`);
-        }
+        verifiedAtTopLevel = true;
       }
     }
 
@@ -193,24 +191,11 @@ class Type {
   }
 
   static fromJSON(json, fileContext) {
-    const { name } = json;
-
-    let { superType } = json;
-
-    const superTypeJSON = superType;  ///
-
-    json = superTypeJSON; ///
-
-    superType = (json !== null) ?
-                   Type.fromJSON(json, fileContext) :
-                      null;
-
-    const typeName = name,  ///
+    const { name } = json,
+          typeName = name,  ///
+          superType = superTypeFromJSON(json, fileContext),
           string = stringFromTypeNameAndSuperType(typeName, superType),
-          typeNameObjectTypeName = (typeName === OBJECT_TYPE_NAME),
-          type = typeNameObjectTypeName ?
-                   objectType :
-                     new Type(string, name, superType);
+          type = new Type(string, name, superType);
 
     return type;
   }
@@ -220,10 +205,7 @@ class Type {
           name = typeName,  ///
           string = name,  ///
           superType = null,
-          typeNameObjectTypeName = (typeName === OBJECT_TYPE_NAME),
-          type = typeNameObjectTypeName ?
-                   objectType :
-                     new Type(string, name, superType);
+          type = new Type(string, name, superType);
 
     return type;
   }
@@ -274,3 +256,19 @@ class ObjectType extends Type {
 }
 
 export const objectType = ObjectType.fromNothing();
+
+function superTypeFromJSON(json, fileContext) {
+  let { superType } = json;
+
+  const superTypeJSON = superType;  ///
+
+  json = superTypeJSON; ///
+
+  const { name } = json,
+        typeName = name,  ///
+        type = fileContext.findTypeByTypeName(typeName);
+
+  superType = type; ///
+
+  return superType;
+}

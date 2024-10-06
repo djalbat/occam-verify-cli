@@ -89,22 +89,7 @@ export default class Variable {
     if (variablePresent) {
       localContext.debug(`The '${variableString}' variable is already present.`);
     } else {
-      const typeName = this.type.getName(),
-            type = localContext.findTypeByTypeName(typeName);
-
-      if (type === null) {
-        const typeString = this.type.getString();
-
-        localContext.debug(`The '${typeString}' type is not present.`);
-      } else {
-        this.type = type;
-
-        const variable = this;  ///
-
-        localContext.addVariable(variable);
-
-        verifiedAtTopLevel = true;
-      }
+      verifiedAtTopLevel = true;
     }
 
     if (verifiedAtTopLevel) {
@@ -129,24 +114,15 @@ export default class Variable {
   }
 
   static fromJSON(json, fileContext) {
-    const { Type } = shim,
-          { string } = json,
+    const { string } = json,
           lexer  = fileContext.getLexer(),
           parser = fileContext.getParser(),
           variableString = string,  ///
           variableNode = variableNodeFromVariableString(variableString, lexer, parser),
-          node = variableNode;  ///
-
-    let { type } = json;
-
-    if (type !== null) {
-      json = type;  ///
-
-      type = Type.fromJSON(json, fileContext);
-    }
-
-    const variableName = variableNameFromVariableNode(variableNode),
+          variableName = variableNameFromVariableNode(variableNode),
+          node = variableNode,
           name = variableName,  ///
+          type = typeFromJSON(json, fileContext),
           variable = new Variable(string, node, name, type);
 
     return variable;
@@ -190,4 +166,15 @@ export default class Variable {
 
     return variable;
   }
+}
+
+function typeFromJSON(json, fileContext) {
+  let { type } = json;
+
+  const { name } = type,
+        typeName = name;  ///
+
+  type = fileContext.findTypeByTypeName(typeName);
+
+  return type;
 }

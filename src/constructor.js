@@ -31,14 +31,10 @@ export default class Constructor {
 
     fileContext.trace(`Verifying the '${constructorString}' constructor at top level...`);
 
-    const termTypeVerified = this.term.verifyType(fileContext);
+    const termVerifiedAtTopLevel = this.term.verifyAtTopLevel(fileContext);
 
-    if (termTypeVerified) {
-      const termVerifiedAtTopLevel = this.term.verifyAtTopLevel(fileContext);
-
-      if (termVerifiedAtTopLevel) {
-        verifiedAtTopLevel = true; ///
-      }
+    if (termVerifiedAtTopLevel) {
+      verifiedAtTopLevel = true; ///
     }
 
     if (verifiedAtTopLevel) {
@@ -99,9 +95,9 @@ export function stringFromTermAndType(term, type) {
   if (type === null) {
     string = `${termString}`;
   } else {
-    const typeString = type.getString();
+    const typeName = type.getName();
 
-    string = `${termString}:${typeString}`;
+    string = `${termString}:${typeName}`;
   }
 
   return string;

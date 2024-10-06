@@ -197,9 +197,12 @@ class Term {
 
     fileContext.trace(`Verifying the '${termString}' term at top level...`);
 
-    const termNode = this.node;  ///
+    const termNode = this.node,
+          termVerifiedAsConstructor = termAsConstructorVerifier.verifyTerm(termNode, fileContext);
 
-    verifiedAtTopLevel = termAsConstructorVerifier.verifyTerm(termNode, fileContext);
+    if (termVerifiedAsConstructor) {
+      verifiedAtTopLevel = true;
+    }
 
     if (verifiedAtTopLevel) {
       fileContext.debug(`...verified the '${termString}' term at top level.`, termNode);
@@ -223,25 +226,14 @@ class Term {
   }
 
   static fromJSON(json, fileContext) {
-    const { Type } = shim,
-          { string } = json,
+    const { string } = json,
           termString = string,  ///
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
           termNode = termNodeFromTermString(termString, lexer, parser),
-          node = termNode;
-
-    let { type } = json;
-
-    const typeJSON = type;  ///
-
-    json = typeJSON;  ///
-
-    type = (json !== null) ?
-             Type.fromJSON(json, fileContext) :
-               null;
-
-    const term = new Term(string, node, type);
+          node = termNode,  ///
+          type = typeFromJSON(json, fileContext),
+          term = new Term(string, node, type);
 
     return term;
   }
@@ -269,3 +261,14 @@ Object.assign(shim, {
 });
 
 export default Term;
+
+function typeFromJSON(json, fileContext) {
+  let { type } = json;
+
+  const { name } = type,
+        typeName = name;  ///
+
+  type = fileContext.findTypeByTypeName(typeName);
+
+  return type;
+}

@@ -3,7 +3,7 @@
 import StatementForMetavariableSubstitution from "../substitution/statementForMetavariable";
 
 import { metavariableFromStatementNode } from "../utilities/unify";
-import {metavariableNameFromMetavariableNode} from "../utilities/name";
+import { metavariableNameFromMetavariableNode } from "../utilities/name";
 
 export default function unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB) {
   let metavariableUnifiedWithStatementGivenSubstitution = false;

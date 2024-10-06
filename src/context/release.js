@@ -7,7 +7,7 @@ import { filePathUtilities } from "occam-entities";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import { objectType } from "../type";
-import { tail, push, leftDifference } from "../utilities/array";
+import { tail, push, clear, leftDifference } from "../utilities/array";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { isFilePathNominalFilePath } = filePathUtilities,
@@ -15,7 +15,7 @@ const { isFilePathNominalFilePath } = filePathUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts) {
+  constructor(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, verifiedFileContexts, dependencyReleaseContexts) {
     this.log = log;
     this.name = name;
     this.json = json;
@@ -26,6 +26,7 @@ export default class ReleaseContext {
     this.initialised = initialised;
     this.fileContexts = fileContexts;
     this.customGrammar = customGrammar;
+    this.verifiedFileContexts = verifiedFileContexts;
     this.dependencyReleaseContexts = dependencyReleaseContexts;
   }
 
@@ -67,6 +68,10 @@ export default class ReleaseContext {
 
   getCustomGrammar() {
     return this.customGrammar;
+  }
+
+  getVerifiedFileContexts() {
+    return this.verifiedFileContexts;
   }
 
   getDependencyReleaseContexts() {
@@ -443,7 +448,9 @@ export default class ReleaseContext {
   verify() {
     let verified = false;
 
-    const fileContextsVerified = verifyFileContexts(this.fileContexts);
+    clear(this.verifiedFileContexts);
+
+    const fileContextsVerified = verifyFileContexts(this.fileContexts, this.verifiedFileContexts);
 
     if (fileContextsVerified) {
       this.verified = true;
@@ -455,12 +462,12 @@ export default class ReleaseContext {
   }
 
   toJSON() {
-    const fileContextsJSON = this.fileContexts.map((fileContext) => {
-            const fileContextJSON = fileContext.toJSON();
+    const verifiedFileContextsJSON = this.verifiedFileContexts.map((verifiedFileContext) => {
+            const verifiedFileContextJSON = verifiedFileContext.toJSON();
 
-            return fileContextJSON;
+            return verifiedFileContextJSON;
           }),
-          json = fileContextsJSON;  ///
+          json = verifiedFileContextsJSON;  ///
 
     return json;
   }
@@ -472,8 +479,9 @@ export default class ReleaseContext {
           initialised = false,
           fileContexts = [],
           customGrammar = customGrammarFromNameAndEntries(name, entries),
+          verifiedFileContexts = [],
           dependencyReleaseContexts = null,
-          releaseContext = new ReleaseContext(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts);
+          releaseContext = new ReleaseContext(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, verifiedFileContexts, dependencyReleaseContexts);
 
     return releaseContext;
   }
@@ -531,7 +539,7 @@ function findFileContextJSON(json, filePath) {
   return fileContextJSON;
 }
 
-function verifyFileContexts(fileContexts) {
+function verifyFileContexts(fileContexts, verifiedFileContexts) {
   let fileContextsVerified;
 
   fileContexts = [  ///
@@ -545,22 +553,19 @@ function verifyFileContexts(fileContexts) {
       break;
     }
 
-    const verifiedFileContexts = [];
-
-    fileContexts.forEach((fileContext) => {
+    const fileContextVerified = fileContexts.some((fileContext) => {
       const fileContextVerified = verifyFileContext(fileContext);
 
       if (fileContextVerified) {
         const verifiedFileContext = fileContext;  ///
 
         verifiedFileContexts.push(verifiedFileContext);
+
+        return true;
       }
     });
 
-    const verifiedFileContextsLength = verifiedFileContexts.length,
-      fileVerified = (verifiedFileContextsLength > 0);
-
-    if (!fileVerified) {
+    if (!fileContextVerified) {
       break;
     }
 

@@ -120,24 +120,15 @@ export default class Metavariable {
   }
 
   static fromJSON(json, fileContext) {
-    const { MetaType } = shim,
-          { string } = json,
+    const { string } = json,
           lexer  = fileContext.getLexer(),
           parser = fileContext.getParser(),
           metavariableString = string,  ///
           metavariableNode = metavariableNodeFromMetavariableString(metavariableString, lexer, parser),
-          node = metavariableNode;  ///
-
-    let { metaType } = json;
-
-    if (metaType !== null) {
-      json = metaType;  ///
-
-      metaType = MetaType.fromJSON(json, fileContext);
-    }
-
-    const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          node = metavariableNode,  ///
           name = metavariableName,  ///
+          metaType = metaTypeFromJSON(json, fileContext),
           metavariable = new Metavariable(string, node, name, metaType);
 
     return metavariable;
@@ -169,4 +160,15 @@ export default class Metavariable {
 
     return metavariable;
   }
+}
+
+function metaTypeFromJSON(json, fileContext) {
+  let { metaType } = json;
+
+  const { name } = metaType,
+        metaTypeName = name;  ///
+
+  metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName);
+
+  return metaType;
 }

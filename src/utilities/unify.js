@@ -1,6 +1,7 @@
 "use strict";
 
 import { nodeQuery } from "../utilities/query";
+import { metavariableNameFromMetavariableNode}  from "../utilities/name";
 
 const termVariableNodeQuery = nodeQuery("/term/variable"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable"),
@@ -26,7 +27,8 @@ export function metavariableFromFrameNode(frameNode, localContext) {
   const frameMetavariableNode = frameMetavariableNodeQuery(frameNode)
 
   if (frameMetavariableNode !== null) {
-    const metavariableNode = frameMetavariableNode; ///
+    const metavariableNode = statementMetavariableNode, ///
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
 
     metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
   }
@@ -40,7 +42,8 @@ export function metavariableFromStatementNode(statementNode, localContext) {
   const statementMetavariableNode = statementMetavariableNodeQuery(statementNode)
 
   if (statementMetavariableNode !== null) {
-    const metavariableNode = statementMetavariableNode; ///
+    const metavariableNode = statementMetavariableNode, ///
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
 
     metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
   }
