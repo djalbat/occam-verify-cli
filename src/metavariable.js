@@ -165,10 +165,12 @@ export default class Metavariable {
 function metaTypeFromJSON(json, fileContext) {
   let { metaType } = json;
 
-  const { name } = metaType,
-        metaTypeName = name;  ///
+  if (metaType !== null) {
+    const { name } = metaType,
+          metaTypeName = name;  ///
 
-  metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName);
+    metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName);
+  }
 
   return metaType;
 }
