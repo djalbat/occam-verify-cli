@@ -1,10 +1,12 @@
 "use strict";
 
-import Type, {objectType} from "./type";
+import Type from "./type";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
-import { variableNameFromVariableNode } from "./utilities/name";
+import { objectType } from "./type";
+import { variableNameFromVariableNode} from "./utilities/name";
+import { variableNodeFromVariableString } from "./utilities/node";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
       variableNodeQuery = nodeQuery("/variableDeclaration/variable");
@@ -110,6 +112,43 @@ export default class Variable {
     }
 
     return verifiedAtTopLevel;
+  }
+
+  toJSON() {
+    const typeJSON = (this.type !== null) ?
+                       this.type.toJSON() :
+                         null,
+          string = this.string,
+          type = typeJSON,  ///
+          json = {
+            string,
+            type
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    const { string } = json,
+          lexer  = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          variableString = string,  ///
+          variableNode = variableNodeFromVariableString(variableString, lexer, parser),
+          node = variableNode;  ///
+
+    let { type } = json;
+
+    if (type !== null) {
+      json = type;  ///
+
+      type = Type.fromJSON(json, fileContext);
+    }
+
+    const variableName = variableNameFromVariableNode(variableNode),
+      name = variableName,  ///
+      variable = new Variable(string, node, name, type);
+
+    return variable;
   }
 
   static fromVariableNode(variableNode, localContext) {

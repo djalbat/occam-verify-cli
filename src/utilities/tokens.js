@@ -9,11 +9,11 @@ const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities;
 const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar);
 
-export function termTokensFromTermString(termString, lexer) {
-  const content = termString, ///
-        termTokens = tokensFromContentAndLexer(content, lexer);
+export function variableTokensFromVariableString(variableString, lexer) {
+  const variableContent = `${variableString}`,
+        variableTokens = tokensFromContentAndLexer(variableContent, lexer);
 
-  return termTokens;
+  return variableTokens;
 }
 
 export function metavariableTokensFromMetavariableString(metavariableString, lexer) {
