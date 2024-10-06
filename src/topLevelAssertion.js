@@ -148,11 +148,15 @@ export default class TopLevelAssertion {
 }
 
 export function labelsStringFromLabels(labels) {
-  const labelsString = labels.map((label) => {
+  const labelsString = labels.reduce((labelsString, label) => {
     const labelString = label.getString();
 
-    return labelString;
-  });
+    labelsString = (labelsString === null) ?
+                     labelString: ///
+                       `${labelString}, ${labelString}`;
+
+    return labelsString;
+  }, null);
 
   return labelsString;
 }

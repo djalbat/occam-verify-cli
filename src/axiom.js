@@ -77,8 +77,8 @@ export default class Axiom extends TopLevelAssertion {
           }),
           consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
           proof = null,
-          rule = new Axiom(fileContext, labels, suppositions, consequent, proof);
+          axiom = new Axiom(fileContext, labels, suppositions, consequent, proof);
 
-    return rule;
+    return axiom;
   }
 }

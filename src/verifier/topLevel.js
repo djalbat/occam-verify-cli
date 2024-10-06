@@ -3,6 +3,7 @@
 import Rule from "../rule";
 import Error from "../error";
 import Axiom from "../axiom";
+import Lemma from "../lemma";
 import TypeDeclaration from "../declaration/type";
 import VariableDeclaration from "../declaration/variable";
 import CombinatorDeclaration from "../declaration/combinator";
@@ -10,7 +11,6 @@ import ConstructorDeclaration from "../declaration/constructor";
 import MetavariableDeclaration from "../declaration/metavariable";
 
 import Verifier from "../verifier";
-import verifyLemma from "../verify/lemma";
 import verifyTheorem from "../verify/theorem";
 import verifyMetaLemma from "../verify/metaLemma";
 import verifyConjecture from "../verify/conjecture";
@@ -75,7 +75,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: lemmaNodeQuery,
       verify: (lemmaNode, fileContext) => {
-        const lemmaVerified = verifyLemma(lemmaNode, fileContext);
+        const lemma = Lemma.fromLemmaNode(lemmaNode, fileContext),
+              lemmaVerified = lemma.verify();
 
         return lemmaVerified;
       }
