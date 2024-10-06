@@ -25,9 +25,9 @@ export default function verifyMetavariableGivenMetaType(metavariableNode, metaTy
 
       const metavariableNodeB = metavariableNode; ///
 
-      const unified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
+      const metavariableUnified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
 
-      metavariableVerifiedGivenMetaType = unified;  ///
+      metavariableVerifiedGivenMetaType = metavariableUnified;  ///
     } else {
       const metavariableMetaTypeName = metavariableMetaType.getName();
 

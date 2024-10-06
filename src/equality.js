@@ -1,13 +1,23 @@
 "use strict";
 
+import shim from "./shim";
 import equalityUnifier from "./unifier/equality";
+import EqualityAssignment from "./assignment/equality";
 
-import { first, second } from "./utilities/array";
+import { nodeQuery } from "./utilities/query";
+
+const leftTermNodeQuery = nodeQuery("/equality/term[0]"),
+      rightTermNodeQuery = nodeQuery("/equality/term[1]");
 
 export default class Equality {
-  constructor(leftTerm, rightTerm) {
+  constructor(string,leftTerm, rightTerm) {
+    this.string = string;
     this.leftTerm = leftTerm;
     this.rightTerm = rightTerm;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getLeftTerm() {
@@ -34,36 +44,127 @@ export default class Equality {
     return equal;
   }
 
-  static fromTermsAndEqualityNode(terms, equalityNode) {
-    let equality = null;
+  verify(assignments, stated, localContext) {
+    let verified;
 
-    const firstTerm = first(terms),
-          secondTerm = second(terms),
-          leftTerm = firstTerm, ///
-          rightTerm = secondTerm, ///
-          leftTermType = leftTerm.getType(),
-          rightTermType = rightTerm.getType(),
-          leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
+    const equalityString = this.string; ///
 
-    if (leftTermTypeComparableToRightTermType) {
-      const node = equalityNode;  ///
+    localContext.trace(`Verifying the '${equalityString}' equality...`);
 
-      equality = new Equality(node, leftTerm, rightTerm);
+    if (stated) {
+      const verifiedWhenStated = this.verifyWhenStated(localContext);
+
+      verified = verifiedWhenStated;  ///
+    } else {
+      const verifiedWhenDerived = this.verifyWhenDerived(localContext);
+
+      verified = verifiedWhenDerived; ///
     }
 
-    return equality;
+    if (verified) {
+      if (assignments !== null) {
+        const equality = this,  //
+              equalityAssignment = EqualityAssignment.fromEquality(equality),
+              assignment = equalityAssignment; ///
+
+        assignments.push(assignment);
+      }
+
+      verified = true;
+    }
+
+    if (verified) {
+      localContext.debug(`...verified the '${equalityString}' equality.`);
+    }
+
+    return verified;
   }
 
-  static fromLeftTermRightTermAndEqualityNode(leftTerm, rightTerm, equalityNode) {
-    let equality = null;
+  verifyTerms(localContext) {
+    let termsVerified;
 
-    const leftTermType = leftTerm.getType(),
-          rightTermType = rightTerm.getType(),
-          leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
+    const equalityString = this.string; ///
 
-    if (leftTermTypeComparableToRightTermType) {
-      equality = new Equality(leftTerm, rightTerm);
+    localContext.trace(`Verifying the '${equalityString}' equality's terms...`);
+
+    const leftTermVerified = this.leftTerm.verify(localContext, () => {
+      let verifiedAhead;
+
+      const rightTermVerified = this.rightTerm.verify(localContext, () => {
+        let verifiedAhead;
+
+        const leftTermType = this.leftTerm.getType(),
+              rightTermType = this.rightTerm.getType(),
+              leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
+
+        verifiedAhead = leftTermTypeComparableToRightTermType;  ///
+
+        return verifiedAhead;
+      });
+
+      verifiedAhead = rightTermVerified; ///
+
+      return verifiedAhead;
+    });
+
+    termsVerified = leftTermVerified; ///
+
+    if (termsVerified) {
+      localContext.debug(`...verified the '${equalityString}' equality's terms.`);
     }
+
+    return termsVerified;
+  }
+
+  verifyWhenStated(localContext) {
+    let verifiedWhenStated = false;
+
+    const equalityString = this.string; ///
+
+    localContext.trace(`Verifying the '${equalityString}' equality when stated...`);
+
+    const termsVerified = this.verifyTerms(localContext);
+
+    verifiedWhenStated = termsVerified; ///
+
+    if (verifiedWhenStated) {
+      localContext.debug(`...verified the '${equalityString}' equality when stated.`);
+    }
+
+    return verifiedWhenStated;
+  }
+
+  verifyWhenDerived(localContext) {
+    let verifiedWhenDerived = false;
+
+    const equalityString = this.string; ///
+
+    localContext.trace(`Verifying the '${equalityString}' equality when derived...`);
+
+    const termsVerified = this.verifyTerms(localContext);
+
+    if (termsVerified) {
+      const equal = this.isEqual(localContext);
+
+      verifiedWhenDerived = equal;  ///
+    }
+
+    if (verifiedWhenDerived) {
+      localContext.debug(`...verified the '${equalityString}' equality when derived.`);
+    }
+
+    return verifiedWhenDerived;
+  }
+
+  static fromEqualityNode(equalityNode, localContext) {
+    const { Term } = shim,
+          leftTermNode = leftTermNodeQuery(equalityNode),
+          rightTermNode = rightTermNodeQuery(equalityNode),
+          leftTerm = Term.fromTermNode(leftTermNode, localContext),
+          rightTerm = Term.fromTermNode(rightTermNode, localContext),
+          node = equalityNode,  ///
+          string = localContext.nodeAsString(node),
+          equality = new Equality(string, leftTerm, rightTerm);
 
     return equality;
   }

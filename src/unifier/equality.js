@@ -1,9 +1,9 @@
 "use strict";
 
 import Unifier from "../unifier";
-import unifyTermWithTerm from "../unify/termWithTerm";
 
 import { nodeQuery } from "../utilities/query";
+import { findEquivalenceByTermNodes } from "../utilities/equivalences";
 
 const termNodeQuery = nodeQuery("/term!");
 
@@ -28,9 +28,21 @@ class EqualityUnifier extends Unifier {
         let termUnifiedWithTerm;
 
         const leftTermNode = termNodeA, ///
-              rightTermNode = termNodeB;  ///
+              rightTermNode = termNodeB,  ///
+              leftTermNodeMatchesRightTermNode = leftTermNode.match(rightTermNode);
 
-        termUnifiedWithTerm = unifyTermWithTerm(leftTermNode, rightTermNode, localContext);
+        if (leftTermNodeMatchesRightTermNode) {
+          termUnifiedWithTerm = true;
+        } else {
+          const equivalences = localContext.getEquivalences(),
+                termNodes = [
+                  leftTermNode,
+                  rightTermNode
+                ],
+                equivalence = findEquivalenceByTermNodes(equivalences, termNodes);
+
+          termUnifiedWithTerm = (equivalence !== null);
+        }
 
         if (!termUnifiedWithTerm) {
           const nonTerminalNodeA = termNodeA, ///

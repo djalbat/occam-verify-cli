@@ -150,9 +150,9 @@ function unifyAWithReference(qualifiedStatement, substitutions, localContext) {
           referenceMetavariableNode = reference.getMetavariableNode(),
           metavariableNodeA = referenceMetavariableNode, ///
           metavariableNodeB = metavariableNode, ///
-          unified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
+          metavariableUnified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
 
-    if (unified) {
+    if (metavariableUnified) {
       const statementNode = statement.getNode(),
             metavariableNode = metavariableNodeA, ///
             statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementNodeAndMetavariableNode(statementNode, metavariableNode, localContextA, localContextB),

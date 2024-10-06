@@ -1,7 +1,8 @@
 "use strict";
 
+import Equality from "../../equality";
+
 import verifyFrame from "../../verify/frame";
-import verifyEquality from "../../verify/equality";
 import verifyJudgement from "../../verify/judgement";
 import verifyDeclaration from "../../verify/declaration";
 import verifyTypeAssertion from "../../verify/assertion/type";
@@ -57,7 +58,8 @@ function verifyAsEquality(statement, assignments, stated, localContext) {
 
     localContext.trace(`Verifying the '${statementString}' statement as an equality...`);
 
-    const equalityVerified = verifyEquality(equalityNode, assignments, stated, localContext);
+    const equality = Equality.fromEqualityNode(equalityNode, localContext),
+          equalityVerified = equality.verify(assignments, stated, localContext);
 
     verifiedAsEquality = equalityVerified; ///
 
@@ -261,9 +263,7 @@ function unifyMetavariable(metavariableNode, localContext) {
 
     const metavariableNodeB = metavariableNode; ///
 
-    const unified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
-
-    metavariableUnified = unified;  ///
+    metavariableUnified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
   }
 
   if (metavariableUnified) {
