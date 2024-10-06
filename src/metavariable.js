@@ -1,7 +1,7 @@
 "use strict";
 
+import shim from "./shim";
 import Argument from "./argument";
-import MetaType from "./metaType";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
@@ -120,7 +120,8 @@ export default class Metavariable {
   }
 
   static fromJSON(json, fileContext) {
-    const { string } = json,
+    const { MetaType } = shim,
+          { string } = json,
           lexer  = fileContext.getLexer(),
           parser = fileContext.getParser(),
           metavariableString = string,  ///
@@ -154,7 +155,8 @@ export default class Metavariable {
   }
 
   static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
-    const metaTypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
+    const { MetaType } = shim,
+          metaTypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
           metavariableNode = metavariableNodeQuery(metavariableDeclarationNode),
           metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           localContext = LocalContext.fromFileContext(fileContext),

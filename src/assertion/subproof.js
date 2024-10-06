@@ -1,6 +1,6 @@
 "use strict";
 
-import Statement from "../statement";
+import shim from "../shim";
 import LocalContext from "../context/local";
 import metaLevelUnifier from "../unifier/metaLevel";
 
@@ -66,7 +66,8 @@ export default class SubproofAssertion {
     const subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
 
     if (subproofAssertionNode !== null) {
-      const node = subproofAssertionNode, ///
+      const { Statement } = shim,
+            node = subproofAssertionNode, ///
             string = fileContext.nodeAsString(node),
             localContext = LocalContext.fromFileContext(fileContext),
             statementNodes = statementNodesQuery(subproofAssertionNode),

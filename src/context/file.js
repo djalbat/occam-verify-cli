@@ -1,6 +1,6 @@
 "use strict";
 
-import Type from "../type";
+import shim from "../shim";
 import Rule from "../rule";
 import Axiom from "../axiom";
 import Lemma from "../lemma";
@@ -779,7 +779,8 @@ export default class FileContext {
           metavariablesJSON = metavariables;  ///
 
     typesJSON.forEach((typeJSON) => {
-      const json = typeJSON,  ///
+      const { Type } = shim,
+            json = typeJSON,  ///
             type = Type.fromJSON(json, fileContext);
 
       this.types.push(type);

@@ -1,9 +1,9 @@
 "use strict";
 
 import shim from "./shim";
-import Type, {objectType} from "./type";
 
 import { nodeQuery } from "./utilities/query";
+import { objectType } from "./type";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
@@ -77,7 +77,8 @@ export default class Constructor {
   }
 
   static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
-    const termNode = termNodeQuery(constructorDeclarationNode),
+    const { Term, Type } = shim,
+          termNode = termNodeQuery(constructorDeclarationNode),
           typeNode = typeNodeQuery(constructorDeclarationNode),
           type = (typeNode === null) ?
                    objectType :

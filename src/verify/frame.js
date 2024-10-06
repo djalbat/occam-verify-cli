@@ -1,11 +1,10 @@
 "use strict";
 
-import shim from "../shim";
 import Frame from "../frame";
-import frameMetaType from "../metaType/frame";
 import verifyDeclaration from "../verify/declaration";
 import verifyMetavariableGivenMetaType from "./metavariableGivenMetaType";
 
+import { frameMetaType } from "../metaType";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { metavariableNameFromMetavariableNode } from "../utilities/name";
 

@@ -1,6 +1,6 @@
 "use strict";
 
-import Statement from "../statement";
+import shim from "../shim";
 import Reference from "../reference";
 import unifyMixins from "../mixins/statement/qualified/unify";
 import LocalContext from "../context/local";
@@ -87,7 +87,9 @@ export default class QualifiedStatement {
 
     if (qualifiedStatementNode !== null) {
       let string;
-      const statementNode = statementNodeQuery(qualifiedStatementNode),
+
+      const { Statement } = shim,
+            statementNode = statementNodeQuery(qualifiedStatementNode),
             referenceNode = referenceNodeQuery(qualifiedStatementNode),
             localContext = LocalContext.fromFileContext(fileContext),
             statement = Statement.fromStatementNode(statementNode, localContext),
@@ -98,7 +100,7 @@ export default class QualifiedStatement {
 
       string = trim(string);  ///
 
-        qualifiedStatement = new QualifiedStatement(string, statement, reference);
+      qualifiedStatement = new QualifiedStatement(string, statement, reference);
     }
 
     return qualifiedStatement;

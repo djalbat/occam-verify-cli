@@ -3,10 +3,10 @@
 import shim from "../shim";
 import Reference from "../reference";
 import Declaration from "../declaration"
-import referenceMetaType from "../metaType/reference";
 import verifyMetavariableGivenMetaType from "../verify/metavariableGivenMetaType";
 
 import { nodeQuery } from "../utilities/query";
+import { referenceMetaType } from "../metaType";
 
 const statementNodeQuery = nodeQuery("/declaration/statement"),
       metavariableNodeQuery = nodeQuery("/declaration/reference/metavariable"); ///

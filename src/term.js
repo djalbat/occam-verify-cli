@@ -1,7 +1,6 @@
 "use strict";
 
 import shim from "./shim";
-import Type from "./type";
 import unifyMixins from "./mixins/term/unify";
 import verifyMixins from "./mixins/term/verify";
 import termAsConstructorVerifier from "./verifier/termAsConstructor";
@@ -224,7 +223,8 @@ class Term {
   }
 
   static fromJSON(json, fileContext) {
-    const { string } = json,
+    const { Type } = shim,
+          { string } = json,
           termString = string,  ///
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),

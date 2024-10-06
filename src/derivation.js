@@ -1,6 +1,6 @@
 "use strict";
 
-import ProofStep from "./proofStep";
+import shim from "./shim";
 
 import { last } from "./utilities/array";
 import { nodesQuery } from "./utilities/query";
@@ -37,7 +37,8 @@ export default class Derivation {
   }
 
   static fromDerivationNode(derivationNode, fileContext) {
-    const proofStepNodes = proofStepNodesQuery(derivationNode),
+    const { ProofStep } = shim,
+          proofStepNodes = proofStepNodesQuery(derivationNode),
           proofSteps = proofStepNodes.map((proofStepNode) => {
             const proofStep = ProofStep.fromProofStepNode(proofStepNode, fileContext);
 

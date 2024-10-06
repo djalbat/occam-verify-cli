@@ -1,8 +1,6 @@
 "use strict";
 
-import frameMetaType from "./metaType/frame";
-import referenceMetaType from "./metaType/reference";
-import statementMetaType from "./metaType/statement";
+import { frameMetaType, referenceMetaType, statementMetaType } from "./metaType";
 
 const metaTypes = [
   frameMetaType,

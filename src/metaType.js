@@ -3,6 +3,7 @@
 import shim from "./shim";
 
 import { metaTypeNameFromMetaTypeNode } from "./utilities/name";
+import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 
 class MetaType {
   constructor(name) {
@@ -75,3 +76,34 @@ Object.assign(shim, {
 });
 
 export default MetaType;
+
+class FrameMetaType extends MetaType {
+  static fromNothing() {
+    const name = FRAME_META_TYPE_NAME,
+          frameMetaType = new FrameMetaType(name);
+
+    return frameMetaType;
+  }
+}
+
+class ReferenceMetaType extends MetaType {
+  static fromNothing() {
+    const name = REFERENCE_META_TYPE_NAME,
+          referenceMetaType = new ReferenceMetaType(name);
+
+    return referenceMetaType;
+  }
+}
+
+class StatementMetaType extends MetaType {
+  static fromNothing() {
+    const name = STATEMENT_META_TYPE_NAME,
+          statementMetaType = new StatementMetaType(name);
+
+    return statementMetaType;
+  }
+}
+
+export const frameMetaType = FrameMetaType.fromNothing();
+export const referenceMetaType = ReferenceMetaType.fromNothing();
+export const statementMetaType = StatementMetaType.fromNothing();

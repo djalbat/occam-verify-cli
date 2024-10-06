@@ -1,9 +1,10 @@
 "use strict";
 
-import Type, {objectType} from "../type";
+import shim from "../shim";
 import Variable from "../variable";
 
 import { nodeQuery } from "../utilities/query";
+import { objectType } from "../type";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type");
 
@@ -49,7 +50,8 @@ export default class VariableDeclaration {
   }
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-    const typeNode = typeNodeQuery(variableDeclarationNode),
+    const { Type } = shim,
+          typeNode = typeNodeQuery(variableDeclarationNode),
           type = (typeNode === null) ?
                    objectType :
                      Type.fromTypeNode(typeNode, fileContext),

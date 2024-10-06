@@ -1,6 +1,6 @@
 "use strict";
 
-import ProofStep from "./proofStep";
+import shim from "./shim";
 import LocalContext from "./context/local";
 import metaLevelUnifier from "./unifier/metaLevel";
 import SubproofAssertion from "./assertion/subproof";
@@ -121,7 +121,8 @@ export default class Supposition {
         const assignmentsAssigned = assignAssignments(assignments, localContext);
 
         if (assignmentsAssigned) {
-          const proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
+          const { ProofStep } = shim,
+                proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
 
           localContext.addProofStep(proofStep);
 

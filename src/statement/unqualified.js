@@ -1,6 +1,6 @@
 "use strict";
 
-import Statement from "../statement";
+import shim from "../shim";
 import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
@@ -47,6 +47,8 @@ export default class UnqualifiedStatement {
   }
 
   static fromJSON(json, fileContext) {
+    const { Statement } = shim;
+
     let { statement } = json;
 
     json = statement; ///
@@ -62,7 +64,8 @@ export default class UnqualifiedStatement {
     let unqualifiedStatement = null;
 
     if (unqualifiedStatementNode !== null) {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode),
+      const { Statement } = shim,
+            statementNode = statementNodeQuery(unqualifiedStatementNode),
             localContext = LocalContext.fromFileContext(fileContext),
             statement = Statement.fromStatementNode(statementNode, localContext);
 

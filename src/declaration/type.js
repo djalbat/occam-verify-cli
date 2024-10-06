@@ -1,6 +1,6 @@
 "use strict";
 
-import Type from "../type";
+import shim from "../shim";
 
 export default class TypeDeclaration {
   constructor(fileContext, type) {
@@ -41,7 +41,8 @@ export default class TypeDeclaration {
   }
 
   static fromTypeDeclarationNode(typeDeclarationNode, fileContext) {
-    const type = Type.fromTypeDeclarationNode(typeDeclarationNode, fileContext),
+    const { Type } = shim,
+          type = Type.fromTypeDeclarationNode(typeDeclarationNode, fileContext),
           typeDeclaration = new TypeDeclaration(fileContext, type);
 
     return typeDeclaration;

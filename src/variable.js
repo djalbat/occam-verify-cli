@@ -1,6 +1,6 @@
 "use strict";
 
-import Type from "./type";
+import shim from "./shim";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
@@ -129,7 +129,8 @@ export default class Variable {
   }
 
   static fromJSON(json, fileContext) {
-    const { string } = json,
+    const { Type } = shim,
+          { string } = json,
           lexer  = fileContext.getLexer(),
           parser = fileContext.getParser(),
           variableString = string,  ///
@@ -145,8 +146,8 @@ export default class Variable {
     }
 
     const variableName = variableNameFromVariableNode(variableNode),
-      name = variableName,  ///
-      variable = new Variable(string, node, name, type);
+          name = variableName,  ///
+          variable = new Variable(string, node, name, type);
 
     return variable;
   }
@@ -173,7 +174,8 @@ export default class Variable {
   }
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-    const typeNode = typeNodeQuery(variableDeclarationNode),
+    const { Type } = shim,
+          typeNode = typeNodeQuery(variableDeclarationNode),
           variableNode = variableNodeQuery(variableDeclarationNode),
           variableName = variableNameFromVariableNode(variableNode),
           localContext = LocalContext.fromFileContext(fileContext),
