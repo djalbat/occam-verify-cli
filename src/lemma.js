@@ -1,15 +1,18 @@
 "use strict";
 
 import Label from "./label";
+import Proof from "./proof";
 import Consequent from "./consequent";
 import Supposition from "./supposition";
 import LocalContext from "./context/local";
+import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { labelsStringFromLabels } from "./topLevelAssertion";
 
-const labelNodesQuery = nodesQuery("/lemma/label"),
+const proofNodeQuery = nodeQuery("/lemma/proof"),
+      labelNodesQuery = nodesQuery("/lemma/label"),
       consequentNodeQuery = nodeQuery("/lemma/consequent"),
       suppositionNodesQuery = nodesQuery("/lemma/supposition");
 
@@ -45,11 +48,16 @@ export default class Lemma extends TopLevelAssertion {
         const consequentVerified = this.consequent.verify(localContext);
 
         if (consequentVerified) {
-          const lemma = this;  ///
+          const substitutions = Substitutions.fromNothing(),
+                proofVerified = this.proof.verify(substitutions, this.consequent, localContext);
 
-          this.fileContext.addLemma(lemma);
+          if (proofVerified) {
+            const lemma = this;  ///
 
-          verified = true;
+            this.fileContext.addLemma(lemma);
+
+            verified = true;
+          }
         }
       }
     }
@@ -66,9 +74,10 @@ export default class Lemma extends TopLevelAssertion {
   static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Lemma, json, fileContext); }
 
   static fromLemmaNode(lemmaNode, fileContext) {
-    const labelNodes = labelNodesQuery(lemmaNode),
-          suppositionNodes = suppositionNodesQuery(lemmaNode),
+    const proofNode = proofNodeQuery(lemmaNode),
+          labelNodes = labelNodesQuery(lemmaNode),
           consequentNode = consequentNodeQuery(lemmaNode),
+          suppositionNodes = suppositionNodesQuery(lemmaNode),
           labels = labelNodes.map((labelNode) => {
             const label = Label.fromLabelNode(labelNode, fileContext);
 
@@ -80,7 +89,7 @@ export default class Lemma extends TopLevelAssertion {
             return supposition;
           }),
           consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
-          proof = null, ///
+          proof = Proof.fromProofNode(proofNode, fileContext),
           lemma = new Lemma(fileContext, labels, suppositions, consequent, proof);
 
     return lemma;

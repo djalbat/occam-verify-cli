@@ -63,8 +63,8 @@ export default class Axiom extends TopLevelAssertion {
 
   static fromAxiomNode(axiomNode, fileContext) {
     const labelNodes = labelNodesQuery(axiomNode),
-          suppositionNodes = suppositionNodesQuery(axiomNode),
           consequentNode = consequentNodeQuery(axiomNode),
+          suppositionNodes = suppositionNodesQuery(axiomNode),
           labels = labelNodes.map((labelNode) => {
             const label = Label.fromLabelNode(labelNode, fileContext);
 

@@ -117,7 +117,7 @@ export default class Equality {
   }
 
   verifyWhenStated(localContext) {
-    let verifiedWhenStated = false;
+    let verifiedWhenStated;
 
     const equalityString = this.string; ///
 

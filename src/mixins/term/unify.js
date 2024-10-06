@@ -1,7 +1,12 @@
 "use strict";
 
+import shim from "../../shim";
 import BracketedConstructor from "../../constructor/bracketed";
 import termWithConstructorUnifier from "../../unifier/termWithConstructor";
+
+import { nodeQuery } from "../../utilities/query";
+
+const termNodeQuery = nodeQuery("/term/argument/term");
 
 function unifyTermWithBracketedConstructor(term, localContext, verifyAhead) {
   let termUnifiedWithBracketedConstructor;
@@ -13,18 +18,31 @@ function unifyTermWithBracketedConstructor(term, localContext, verifyAhead) {
   const bracketedConstructor = BracketedConstructor.fromNothing();
 
   termUnifiedWithBracketedConstructor = unifyTermWithConstructor(term, bracketedConstructor, localContext, () => {
-    let verifiedAhead;
+    let verifiedAhead = false;
 
-    debugger
+    const bracketedTerm = term, ///
+          bracketedTermNode = bracketedTerm.getNode(),
+          termNode = termNodeQuery(bracketedTermNode); ///
 
-    // const bracketedTermNode = term; ///
-    //
-    // term = termQuery(bracketedTermNode); ///
-    //
-    // const { Term } = shim,
-    //       termVVerified = verifyTerm(term, localContext, verifyAhead);
-    //
-    // verifiedAhead = termVVerified;  ///
+    if (termNode !== null) {
+      const { Term } = shim;
+
+      term = Term.fromTermNode(termNode, localContext);
+
+      const termVVerified = term.verify(localContext, () => {
+        let verifiedAhead;
+
+        const type = term.getType();
+
+        bracketedTerm.setType(type);
+
+        verifiedAhead = verifyAhead();
+
+        return verifiedAhead;
+      });
+
+      verifiedAhead = termVVerified;  ///
+    }
 
     return verifiedAhead;
   });
@@ -75,18 +93,13 @@ function unifyTermWithConstructor(term, constructor, localContext, verifyAhead) 
   if (unified) {
     let verifiedAhead;
 
-    debugger
+    const type = constructor.getType();
 
-    // const type = constructor.getType(),
-    //       term = Term.fromTermNodeAndType(term, type);
-    //
-    // terms.push(term);
-    //
-    // verifiedAhead = verifyAhead();
-    //
-    // terms.pop();
-    //
-    // termUnifiedWithConstructor = verifiedAhead;  ///
+    term.setType(type);
+
+    verifiedAhead = verifyAhead();
+
+    termUnifiedWithConstructor = verifiedAhead;  ///
   }
 
   if (termUnifiedWithConstructor) {

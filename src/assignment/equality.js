@@ -11,13 +11,12 @@ export default class EqualityAssignment {
 
   assign(localContext) {
     const equalityAdded = localContext.addEquality(this.equality),
-          equalityNode = this.equality.getNode(),
-          equalityString = localContext.nodeAsString(equalityNode),
+          equalityString = this.equality.getString(),
           equalityAssigned = equalityAdded; ///
 
     equalityAssigned ?
-      localContext.trace(`Assigned the '${equalityString}' equality.`, equalityNode) :
-        localContext.debug(`Unable to assign the '${equalityString}' equality.`, equalityNode);
+      localContext.trace(`Assigned the '${equalityString}' equality.`) :
+        localContext.debug(`Unable to assign the '${equalityString}' equality.`);
 
     return equalityAssigned;
   }

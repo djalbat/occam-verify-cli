@@ -73,7 +73,7 @@ class ProofStep {
     } else if (this.unqualifiedStatement !== null) {
       const stated = true,
             assignments = [],
-            unqualifiedStatementVerified = this.unqualifiedStatement.verify(stated, assignments, localContext);
+            unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
 
       verified = unqualifiedStatementVerified;  ///
     }
