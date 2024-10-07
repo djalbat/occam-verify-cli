@@ -248,9 +248,9 @@ class Term {
     return term;
   }
 
-  static fromTermNodeAndType(termNode, type, fileContext) {
+  static fromTermNodeAndType(termNode, type, localContext) {
     const node = termNode,  ///
-          string = fileContext.nodeAsString(node),
+          string = localContext.nodeAsString(node),
           term = new Term(string, node, type);
 
     return term;

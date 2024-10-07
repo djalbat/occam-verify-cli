@@ -1,6 +1,7 @@
 "use strict";
 
 import shim from "./shim";
+import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
 import { objectType } from "./type";
@@ -79,7 +80,8 @@ export default class Constructor {
           type = (typeNode === null) ?
                    objectType :
                      Type.fromTypeNode(typeNode),
-          term = Term.fromTermNodeAndType(termNode, type, fileContext),
+          localContext = LocalContext.fromFileContext(fileContext),
+          term = Term.fromTermNodeAndType(termNode, type, localContext),
           string = stringFromTermAndType(term, type),
           constructor = new Constructor(string, term);
 

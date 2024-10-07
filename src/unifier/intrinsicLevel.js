@@ -1,8 +1,6 @@
 "use strict";
 
-import shim from "../shim";
 import Unifier from "../unifier";
-import unifyVariableWithTerm from "../unify/variableWithTerm";
 
 import { nodeQuery } from "../utilities/query";
 

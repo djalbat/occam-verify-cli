@@ -2,14 +2,16 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
+import TermForVariableSubstitution from "./substitution/termForVariable";
 
 import { nodeQuery } from "./utilities/query";
+import { objectType } from "./type";
 import { variableNameFromVariableNode} from "./utilities/name";
 import { variableNodeFromVariableString } from "./utilities/node";
-import {objectType} from "./type";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
-      variableNodeQuery = nodeQuery("/variableDeclaration/variable");
+      variableNodeQuery = nodeQuery("/variableDeclaration/variable"),
+      termVariableNodeQuery = nodeQuery("/term/variable");
 
 export default class Variable {
   constructor(string, node, name, type) {
@@ -133,6 +135,47 @@ export default class Variable {
     return verifiedAtTopLevel;
   }
 
+  unifyTerm(term, substitutions, localContext) {
+    let termUnified = false;
+
+    const termString = term.getString(),
+          variableString = this.string; ///
+
+    localContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
+
+    const termNode = term.getNode(),
+          variableNode = this.node, ///
+          substitution = substitutions.findSubstitutionByVariableNode(variableNode);
+
+    if (substitution !== null) {
+      const termNodeMatches = substitution.matchTermNode(termNode);
+
+      if (termNodeMatches) {
+        termUnified = true;
+      }
+    } else {
+      const variable = this,  ///
+            termVariable = termVariableFromTermNode(termNode, localContext);
+
+      if (termVariable === variable) {
+        termUnified = true;
+      } else {
+        const termForVariableSubstitution = TermForVariableSubstitution.fromTernNodeAndVariableNode(term, variable, localContext),
+              substitution = termForVariableSubstitution;  ///
+
+        substitutions.addSubstitution(substitution, localContext);
+
+        termUnified = true;
+      }
+    }
+
+    if (termUnified) {
+      localContext.trace(`...unified the '${termString}' term with the '${variableString}' variable.`);
+    }
+
+    return termUnified;
+  }
+
   toJSON() {
     const typeJSON = this.type.toJSON(),
           string = this.string,
@@ -212,4 +255,18 @@ function typeFromJSON(json, fileContext) {
   type = fileContext.findTypeByTypeName(typeName);
 
   return type;
+}
+
+function termVariableFromTermNode(termNode, localContext) {
+  let termVariable = null;
+
+  const termVariableNode = termVariableNodeQuery(termNode);
+
+  if (termVariableNode !== null) {
+    const termVariableName = variableNameFromVariableNode(termVariableNode);
+
+    termVariable = localContext.findVariableByVariableName(termVariableName);
+  }
+
+  return termVariable;
 }

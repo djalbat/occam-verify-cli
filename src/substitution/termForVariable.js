@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "../shim";
 import Substitution from "../substitution";
 
 import { nodeQuery } from "../utilities/query";
@@ -10,29 +11,25 @@ const termVariableNodeQuery = nodeQuery("/term/variable!"),
       substitutionsVariableNodeQuery = nodeQuery("/substitution/variable!");
 
 export default class TermForVariableSubstitution extends Substitution {
-  constructor(string, termNode, variableNode) {
+  constructor(string, term, variable) {
     super(string);
 
-    this.termNode = termNode;
-    this.variableNode = variableNode;
+    this.term = term;
+    this.variable = variable;
   }
 
-  getTermNode() {
-    return this.termNode;
+  getTerm() {
+    return this.term;
   }
 
-  getVariableNode() {
-    return this.variableNode;
-  }
-
-  getNode() {
-    const node = this.termNode; ///
-
-    return node;
+  getVariable() {
+    return this.variable;
   }
 
   transformed(substitutions) {
     let transformedSubstitution = null;
+
+    debugger
 
     const transformedTermNode = transformTermNode(this.termNode, substitutions),
           transformedVariableNode = transformVariableNode(this.variableNode, substitutions);
@@ -49,6 +46,8 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   isEqualTo(substitution) {
+    debugger
+
     const termNode = substitution.getTermNode(),
           variableNode = substitution.getVariableNode(),
           termNodeMatches = this.matchTermNode(termNode),
@@ -59,6 +58,8 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   matchTermNode(termNode) {
+    debugger
+
     termNode = stripBracketsFromTerm(termNode); ///
 
     const termNodeMatches = this.termNode.match(termNode);
@@ -67,12 +68,16 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   matchVariableNode(variableNode) {
+    debugger
+
     const variableNodeMatches = this.variableNode.match(variableNode);
 
     return variableNodeMatches;
   }
 
   unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {
+    debugger
+
     let unifiedWithEquivalence;
 
     const equivalenceMatchesTermNode = equivalence.matchTermNode(this.termNode);
@@ -89,6 +94,8 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   static fromSubstitutionNode(substitutionNode) {
+    debugger
+
     let termForVariableSubstitution = null;
 
     let substitutionTermNode = substitutionTermmNodeQuery(substitutionNode);
@@ -107,11 +114,18 @@ export default class TermForVariableSubstitution extends Substitution {
     return termForVariableSubstitution;
   }
 
-  static fromTernNodeAndVariableNode(termNode, variableNode, localContextA, localContextB) {
+  static fromTernNodeAndVariableNode(term, variable, localContext) {
+    let termNode = term.getNode();
+
     termNode = stripBracketsFromTerm(termNode); ///
 
-    const string = stringFromTermNodeAndVariableNode(termNode, variableNode, localContextA, localContextB),
-          termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode);
+    const { Term } = shim,
+          type = term.getType();
+
+    term = Term.fromTermNodeAndType(termNode, type, localContext)
+
+    const string = stringFromTermAndVariable(term, variable),
+          termForVariableSubstitution = new TermForVariableSubstitution(string, term, variable);
 
     return termForVariableSubstitution;
   }
@@ -162,12 +176,10 @@ function transformVariableNode(variableNode, substitutions) {
   return transformedVariableNode;
 }
 
-function stringFromTermNodeAndVariableNode(termNode, variableNode, localContextA, localContextB) {
-  const termNodeB = termNode,  ///
-        termStringB = localContextB.nodeAsString(termNodeB),
-        variableNodeA = variableNode,  ///
-        variableStringA = localContextA.nodeAsString(variableNodeA),
-        string = `[${termStringB} for ${variableStringA}]`;
+function stringFromTermAndVariable(term, variable) {
+  const termString = term.getString(),
+        variableString = variable.getString(),
+        string = `[${termString} for ${variableString}]`;
 
   return string;
 }

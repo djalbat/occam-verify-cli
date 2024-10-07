@@ -2,12 +2,12 @@
 
 import shim from "../shim";
 import Unifier from "../unifier";
-import unifyVariableWithTerm from "../unify/variableWithTerm";
 import unifyMetavariableWithFrame from "../unify/metavariableWithFrame";
 import unifyMetavariableWithStatement from "../unify/metavariableWithStatement";
 import unifyMetavariableWithStatementGivenSubstitution from "../unify/metavariableWithStatementGivenSubstitution";
 
 import { nodeQuery } from "../utilities/query";
+import { variableNameFromVariableNode } from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/term!"),
       frameNodeQuery = nodeQuery("/frame!"),
@@ -70,6 +70,8 @@ class MetaLevelUnifier extends Unifier {
       nodeQueryA: frameMetavariableNodeQuery,
       nodeQueryB: frameNodeQuery,
       unify: (frameMetavariableNodeA, frameNodeB, substitutions, localContextA, localContextB) => {
+        debugger
+
         const metavariableNodeA = frameMetavariableNodeA, ///
               metavariableUnifiedWithFrame = unifyMetavariableWithFrame(metavariableNodeA, frameNodeB, substitutions, localContextA, localContextB);
 
@@ -80,10 +82,23 @@ class MetaLevelUnifier extends Unifier {
       nodeQueryA: termVariableNodeQuery,
       nodeQueryB: termNodeQuery,
       unify: (termVariableNodeA, termNodeB, substitutions, localContextA, localContextB) => {
-        const variableNodeA = termVariableNodeA, ///
-              variableUnifiedWithTerm = unifyVariableWithTerm(variableNodeA, termNodeB, substitutions, localContextA, localContextB);
+        let termUnified = false;
 
-        return variableUnifiedWithTerm;
+        const variableNodeA = termVariableNodeA, ///
+              variableNameA = variableNameFromVariableNode(variableNodeA),
+              variableA = localContextA.findVariableByVariableName(variableNameA);
+
+        if (variableA !== null) {
+          const { Term } = shim,
+                termB = Term.fromTermNode(termNodeB, localContextB),
+                localContext = localContextB, ///
+                variable = variableA, ///
+                term = termB; ///
+
+          termUnified = variable.unifyTerm(term, substitutions, localContext);
+        }
+
+        return termUnified;
       }
     }
   ];

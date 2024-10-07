@@ -3,23 +3,8 @@
 import { nodeQuery } from "../utilities/query";
 import { metavariableNameFromMetavariableNode}  from "../utilities/name";
 
-const termVariableNodeQuery = nodeQuery("/term/variable"),
-      frameMetavariableNodeQuery = nodeQuery("/frame/metavariable"),
+const frameMetavariableNodeQuery = nodeQuery("/frame/metavariable"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable");
-
-export function variableFromTermNode(termNode, localContext) {
-  let variable = null;
-
-  const termVariableNode = termVariableNodeQuery(termNode);
-
-  if (termVariableNode !== null) {
-    const variableNode = termVariableNode;  ///
-
-    variable = localContext.findVariableByVariableNode(variableNode);
-  }
-
-  return variable;
-}
 
 export function metavariableFromFrameNode(frameNode, localContext) {
   let metavariable = null;
