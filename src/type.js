@@ -121,39 +121,6 @@ class Type {
     return typeNodeMatches;
   }
 
-  verify(fileContext) {
-    let verified = false;
-
-    const typeString = this.string; ///
-
-    fileContext.trace(`Verifying the '${typeString}' type...`);
-
-    const typePresent = fileContext.isTypePresentByTypeName(this.name);
-
-    if (typePresent) {
-      const superTypeName = this.superType.getName(),
-            superType = fileContext.findTypeByTypeName(superTypeName);
-
-      if (superType === null) {
-        const superTypeString = this.superType.asString();
-
-        fileContext.debug(`The '${superTypeString}' super-type is not present.`);
-      } else {
-        this.superType = superType;
-
-        verified = true;
-      }
-    } else {
-      fileContext.debug(`The '${typeString}' type is not present.`);
-    }
-
-    if (verified) {
-      fileContext.debug(`...verified the '${typeString}' type.`);
-    }
-
-    return verified;
-  }
-
   verifyAtTopLevel(fileContext) {
     let verifiedAtTopLevel = false;
 
@@ -167,7 +134,7 @@ class Type {
       fileContext.debug(`The type '${typeString}' is already present.`);
     } else {
       const superTypeName = this.superType.getName(),
-            superType = fileContext.isTypePresentByTypeName(superTypeName);
+            superType = fileContext.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
         const superTypeString = this.superType.getString();
@@ -243,10 +210,12 @@ function stringFromTypeNameAndSuperType(typeName, superType) {
   let string = typeName;  ///
 
   if (superType !== null) {
-    const typeString = string,  ///
-          superTypeString = superType.getString();
+    if (superType !== objectType) {
+      const typeString = string,  ///
+            superTypeName = superType.getName();
 
-    string = `${typeString}:${superTypeString}`;
+      string = `${typeString}:${superTypeName}`;
+    }
   }
 
   return string;
