@@ -4,6 +4,7 @@ import shim from "../shim";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
+import { typeNameFromTypeNode } from "../utilities/name";
 
 const typeNodeQuery = nodeQuery("/type!"),
       termNodeQuery = nodeQuery("/term!");
@@ -28,12 +29,12 @@ class MetavariableUnifier extends Unifier {
       unify: (termNodeA, typeNodeB, localContext) => {
         let unified = false;
 
-        const { Term, Type } = shim,
+        const { Term } = shim,
               typeNode = typeNodeB, ///
-              type = Type.fromTypeNode(typeNode, localContext),
-              typeVerified = type.verify(localContext);
+              typeName = typeNameFromTypeNode(typeNode),
+              type = localContext.findTypeByTypeName(typeName);
 
-        if (typeVerified) {
+        if (type !== null) {
           const termNode = termNodeA, ///
                 term = Term.fromTermNode(termNode, localContext),
                 termVerifiedGivenType = term.verifyGivenType(type, localContext);

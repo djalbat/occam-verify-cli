@@ -5,6 +5,7 @@ import Verifier from "../verifier";
 import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
+import {typeNameFromTypeNode} from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/term!"),
       typeNodeQuery = nodeQuery("/type!");
@@ -41,10 +42,18 @@ class TermAsConstructorVerifier extends Verifier {
     {
       nodeQuery: typeNodeQuery,
       verify: (typeNode, fileContext, verifyAhead) => {
-        const { Type } = shim,
-              type = Type.fromTypeNode(typeNode, fileContext),
-              localContext = LocalContext.fromFileContext(fileContext),
-              typeVerified = type.verify(localContext, verifyAhead);
+        let typeVerified = false;
+
+        const typeName = typeNameFromTypeNode(typeNode),
+              type = fileContext.findTypeByTypeName(typeName);
+
+        if (type !== null) {
+          const verifiedAhead = verifyAhead();
+
+          if (verifiedAhead) {
+            typeVerified = true;
+          }
+        }
 
         return typeVerified;
       }

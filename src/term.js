@@ -136,26 +136,22 @@ class Term {
   verifyType(fileContext) {
     let typeVerified;
 
-    if (this.type === null) {
-      typeVerified = true;
+    const typeName = this.type.getName();
+
+    fileContext.trace(`Verifying the '${typeName}' type...`);
+
+    const type = fileContext.findTypeByTypeName(typeName);
+
+    if (type === null) {
+      fileContext.debug(`The '${typeName}' type is missing.`);
     } else {
-      const typeName = this.type.getName();
+      this.type = type; ///
 
-      fileContext.trace(`Verifying the '${typeName}' type...`);
+      typeVerified = true;
+    }
 
-      const type = fileContext.findTypeByTypeName(typeName);
-
-      if (type === null) {
-        fileContext.debug(`The '${typeName}' type is missing.`);
-      } else {
-        this.type = type; ///
-
-        typeVerified = true;
-      }
-
-      if (typeVerified) {
-        fileContext.debug(`...verified the '${typeName}' type.`);
-      }
+    if (typeVerified) {
+      fileContext.debug(`...verified the '${typeName}' type.`);
     }
 
     return typeVerified;
@@ -197,11 +193,13 @@ class Term {
 
     fileContext.trace(`Verifying the '${termString}' term at top level...`);
 
-    const termNode = this.node,
+    const termNode = this.node, ///
           termVerifiedAsConstructor = termAsConstructorVerifier.verifyTerm(termNode, fileContext);
 
     if (termVerifiedAsConstructor) {
-      verifiedAtTopLevel = true;
+      const typeVerified = this.verifyType(fileContext);
+
+      verifiedAtTopLevel = typeVerified;  ///
     }
 
     if (verifiedAtTopLevel) {
@@ -212,9 +210,7 @@ class Term {
   }
 
   toJSON() {
-    const typeJSON = (this.type !== null) ?
-                       this.type.toJSON() :
-                         null,
+    const typeJSON = this.type.toJSON(),
           string = this.string,
           type = typeJSON,  ///
           json = {

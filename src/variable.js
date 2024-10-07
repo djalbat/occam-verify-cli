@@ -75,34 +75,58 @@ export default class Variable {
     return verified;
   }
 
-  verifyAtTopLevel(localContext) {
+  verifyType(fileContext) {
+    let typeVerified;
+
+    const typeName = this.type.getName();
+
+    fileContext.trace(`Verifying the '${typeName}' type...`);
+
+    const type = fileContext.findTypeByTypeName(typeName);
+
+    if (type === null) {
+      fileContext.debug(`The '${typeName}' type is missing.`);
+    } else {
+      this.type = type; ///
+
+      typeVerified = true;
+    }
+
+    if (typeVerified) {
+      fileContext.debug(`...verified the '${typeName}' type.`);
+    }
+
+    return typeVerified;
+  }
+
+  verifyAtTopLevel(fileContext) {
     let verifiedAtTopLevel;
 
     const variableString = this.string; ///
 
-    localContext.trace(`Verifying the '${variableString}' variable at top level...`);
+    fileContext.trace(`Verifying the '${variableString}' variable at top level...`);
 
     const variableNode = this.node, ///
           variableName = variableNameFromVariableNode(variableNode),
-          variablePresent = localContext.isVariablePresentByVariableName(variableName);
+          variablePresent = fileContext.isVariablePresentByVariableName(variableName);
 
     if (variablePresent) {
-      localContext.debug(`The '${variableString}' variable is already present.`);
+      fileContext.debug(`The '${variableString}' variable is already present.`);
     } else {
-      verifiedAtTopLevel = true;
+      const typeVerified = this.verifyType(fileContext);
+
+      verifiedAtTopLevel = typeVerified;  ///
     }
 
     if (verifiedAtTopLevel) {
-      localContext.debug(`...verified the '${variableString}' variable at top level.`);
+      fileContext.debug(`...verified the '${variableString}' variable at top level.`);
     }
 
     return verifiedAtTopLevel;
   }
 
   toJSON() {
-    const typeJSON = (this.type !== null) ?
-                       this.type.toJSON() :
-                         null,
+    const typeJSON = this.type.toJSON(),
           string = this.string,
           type = typeJSON,  ///
           json = {
@@ -159,9 +183,7 @@ export default class Variable {
           string = variableString,  ///
           node = variableNode,  ///
           name = variableName,  ///
-          type = (typeNode === null) ?
-                   objectType :
-                     Type.fromTypeNode(typeNode, localContext),
+          type = Type.fromTypeNode(typeNode, localContext),
           variable = new Variable(string, node, name, type);
 
     return variable;

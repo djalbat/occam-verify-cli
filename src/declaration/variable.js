@@ -1,10 +1,9 @@
 "use strict";
 
-import shim from "../shim";
 import Variable from "../variable";
 
 import { nodeQuery } from "../utilities/query";
-import { objectType } from "../type";
+import { typeNameFromTypeNode } from "../utilities/name";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type");
 
@@ -50,30 +49,26 @@ export default class VariableDeclaration {
   }
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-    const { Type } = shim,
-          typeNode = typeNodeQuery(variableDeclarationNode),
-          type = (typeNode === null) ?
-                   objectType :
-                     Type.fromTypeNode(typeNode, fileContext),
+    const typeNode = typeNodeQuery(variableDeclarationNode),
           variable = Variable.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
-          string = stringFromVariableAndType(variable, type),
+          string = stringFromVariableAndTypeNode(variable, typeNode),
           variableDeclaration = new VariableDeclaration(fileContext, string, variable);
 
     return variableDeclaration;
   }
 }
 
-function stringFromVariableAndType(variable, type) {
+function stringFromVariableAndTypeNode(variable, typeNode) {
   let string;
 
   const variableString = variable.getString();
 
-  if (type === null) {
+  if (typeNode === null) {
     string = variableString;  ///
   } else {
-    const typeString = type.getString();
+    const typeName = typeNameFromTypeNode(typeNode);
 
-    string = `${variableString}:${typeString}`;
+    string = `${variableString}:${typeName}`;
   }
 
   return string;

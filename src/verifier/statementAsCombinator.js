@@ -2,9 +2,10 @@
 
 import shim from "../shim";
 import Verifier from "../verifier";
+import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
-import LocalContext from "../context/local";
+import { typeNameFromTypeNode } from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/term!"),
       typeNodeQuery = nodeQuery("/type!"),
@@ -55,9 +56,14 @@ class StatementAsCombinatorVerifier extends Verifier {
     {
       nodeQuery: typeNodeQuery,
       verify: (typeNode, fileContext) => {
-        const { Type } = shim,
-              type = Type.fromTypeNode(typeNode, fileContext),
-              typeVerified = type.verify(fileContext);
+        let typeVerified = false;
+
+        const typeName = typeNameFromTypeNode(typeNode),
+              type = fileContext.findTypeByTypeName(typeName);
+
+        if (type !== null) {
+          typeVerified = true;
+        }
 
         return typeVerified;
       }

@@ -131,9 +131,20 @@ class Type {
     const typePresent = fileContext.isTypePresentByTypeName(this.name);
 
     if (typePresent) {
-      verified = true;
+      const superTypeName = this.superType.getName(),
+            superType = fileContext.findTypeByTypeName(superTypeName);
+
+      if (superType === null) {
+        const superTypeString = this.superType.asString();
+
+        fileContext.debug(`The '${superTypeString}' super-type is not present.`);
+      } else {
+        this.superType = superType;
+
+        verified = true;
+      }
     } else {
-      fileContext.debug(`The type '${typeString}' is not present.`);
+      fileContext.debug(`The '${typeString}' type is not present.`);
     }
 
     if (verified) {
@@ -177,9 +188,7 @@ class Type {
   }
 
   toJSON() {
-    const superTypeJSON = (this.superType !== null) ?
-                            this.superType.toJSON() :
-                              null,
+    const superTypeJSON = this.superType.toJSON(),
           name = this.name,
           superType = superTypeJSON,  ///
           json = {
@@ -201,11 +210,18 @@ class Type {
   }
 
   static fromTypeNode(typeNode) {
-    const typeName = typeNameFromTypeNode(typeNode),
-          name = typeName,  ///
-          string = name,  ///
-          superType = null,
-          type = new Type(string, name, superType);
+    let type;
+
+    if (typeNode === null) {
+      type = objectType;
+    } else {
+      const typeName = typeNameFromTypeNode(typeNode),
+            name = typeName,  ///
+            string = name,  ///
+            superType = null;
+
+      type = new Type(string, name, superType);
+    }
 
     return type;
   }
@@ -214,9 +230,7 @@ class Type {
     const typeNode = typeNodeQuery(typeDeclarationNode),
           superTypeNode = superTypeNodeQuery(typeDeclarationNode),
           typeName = typeNameFromTypeNode(typeNode),
-          superType = (superTypeNode === null) ?
-                        objectType :
-                          Type.fromTypeNode(superTypeNode),
+          superType = Type.fromTypeNode(superTypeNode),
           string = stringFromTypeNameAndSuperType(typeName, superType),
           name = typeName,  ///
           type = new Type(string, name, superType);
