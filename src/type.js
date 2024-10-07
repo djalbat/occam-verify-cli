@@ -228,6 +228,17 @@ Object.assign(shim, {
 export default Type;
 
 class ObjectType extends Type {
+  toJSON() {
+    const name = this.name,
+          superType = null,
+          json = {
+            name,
+            superType
+          };
+
+    return json;
+  }
+
   static fromNothing() {
     const name = OBJECT_TYPE_NAME,
           string = name,  //
