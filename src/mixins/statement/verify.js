@@ -1,11 +1,11 @@
 "use strict";
 
 import Equality from "../../equality";
+import TypeAssertion from "../../assertion/type";
 
 import verifyFrame from "../../verify/frame";
 import verifyJudgement from "../../verify/judgement";
 import verifyDeclaration from "../../verify/declaration";
-import verifyTypeAssertion from "../../verify/assertion/type";
 import metavariableUnifier from "../../unifier/metavariable";
 import verifyDefinedAssertion from "../../verify/assertion/defined";
 import verifySubproofAssertion from "../../verify/assertion/subproof";
@@ -151,7 +151,8 @@ function verifyAsTypeAssertion(statement, assignments, stated, localContext) {
 
     localContext.trace(`Verifying the '${statementString}' statement as a type assertion...`);
 
-    const typeAssertionVerified = verifyTypeAssertion(typeAssertionNode, assignments, stated, localContext);
+    const typeAssertion = TypeAssertion.fromTypeAssertionNode(typeAssertionNode, localContext),
+          typeAssertionVerified = typeAssertion.verify(assignments, stated, localContext);
 
     verifiedAsTypeAssertion = typeAssertionVerified; ///
 

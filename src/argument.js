@@ -51,9 +51,7 @@ export default class Argument {
           if (typePresent) {
             verifiedAtTopLevel = true;
           } else {
-            const typeString = this.fileContext.nodeAsString(typeNode);
-
-            this.fileContext.debug(`The '${typeString}' type is not present.`);
+            this.fileContext.debug(`The '${typeName}' type is not present.`);
           }
         }
       }

@@ -332,11 +332,21 @@ class LocalContext {
 
   findMetaTypeByMetaTypeName(metaTypeName) { return this.context.findMetaTypeByMetaTypeName(metaTypeName); }
 
-  findVariableByVariableName(variableName) { return this.context.findVariableByVariableName(variableName); }
-
   findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
 
-  findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
+  findVariableByVariableName(variableName) {
+    const name = variableName,  ///
+          variables = this.getVariables(),
+          variable = variables.find((variable) => {
+            const nameMatches = variable.matchName(name);
+
+            if (nameMatches) {
+              return true;
+            }
+          }) || null;
+
+    return variable;
+  }
 
   findJudgementByMetavariableName(metavariableName) {
     const judgements = this.getJudgements(),
@@ -351,13 +361,13 @@ class LocalContext {
     return judgement;
   }
 
-  findMetavariableByMetavariableNode(metavariableNode) {
-    const localContext = this,  ///
+  findMetavariableByMetavariableName(metavariableName) {
+    const name = metavariableName,  ///
           metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-            const metavariableNodeMatches = metavariable.matchMetavariableNode(metavariableNode, localContext);
+            const nameMatches = metavariable.matchName(name);
 
-            if (metavariableNodeMatches) {
+            if (nameMatches) {
               return true;
             }
           }) || null;

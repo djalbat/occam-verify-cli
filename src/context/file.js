@@ -390,20 +390,6 @@ export default class FileContext {
     return label;
   }
 
-  findMetavariableByMetavariableName(metavariableName) {
-    const name = metavariableName,  ///
-          metavariables = this.getMetavariables(),
-          metavariable = metavariables.find((metavariable) => {
-            const nameMatches = metavariable.matchName(name);
-
-            if (nameMatches) {
-              return true;
-            }
-          }) || null;
-
-    return metavariable;
-  }
-
   isTypePresentByTypeName(typeName) {
     const type = this.findTypeByTypeName(typeName),
           typePresent = (type !== null);
@@ -542,6 +528,33 @@ export default class FileContext {
           }) || null;
 
     return variable;
+  }
+
+  findJudgementByMetavariableName(metavariableName) {
+    const judgements = this.getJudgements(),
+          judgement = judgements.find((judgement) => {
+            const judgementMatchesMetavariableName = judgement.matchMetavariableName(metavariableName);
+
+            if (judgementMatchesMetavariableName) {
+              return true;
+            }
+          }) || null;
+
+    return judgement;
+  }
+
+  findMetavariableByMetavariableName(metavariableName) {
+    const name = metavariableName,  ///
+          metavariables = this.getMetavariables(),
+          metavariable = metavariables.find((metavariable) => {
+            const nameMatches = metavariable.matchName(name);
+
+            if (nameMatches) {
+              return true;
+            }
+          }) || null;
+
+    return metavariable;
   }
 
   nodeAsString(node) {
@@ -862,6 +875,27 @@ export default class FileContext {
 
       this.metavariables.push(metavariable);
     });
+  }
+
+  static fromJSONAndReleaseContext(json, releaseContext) {
+    const { filePath } = json,
+          tokens = null,
+          node = null,
+          types = [],
+          rules = [],
+          axioms = [],
+          lemmas = [],
+          theorems = [],
+          variables = [],
+          metaLemmas = [],
+          conjectures = [],
+          combinators = [],
+          constructors = [],
+          metatheorems = [],
+          metavariables = [],
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
+
+    return fileContext;
   }
 
   static fromFileAndReleaseContext(file, releaseContext) {

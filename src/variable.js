@@ -4,9 +4,9 @@ import shim from "./shim";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
-import { objectType } from "./type";
 import { variableNameFromVariableNode} from "./utilities/name";
 import { variableNodeFromVariableString } from "./utilities/node";
+import {objectType} from "./type";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
       variableNodeQuery = nodeQuery("/variableDeclaration/variable");
@@ -33,6 +33,10 @@ export default class Variable {
 
   getType() {
     return this.type;
+  }
+
+  setType(type) {
+    this.type = type;
   }
 
   matchNode(node) {
@@ -78,22 +82,26 @@ export default class Variable {
   verifyType(fileContext) {
     let typeVerified;
 
-    const typeName = this.type.getName();
-
-    fileContext.trace(`Verifying the '${typeName}' type...`);
-
-    const type = fileContext.findTypeByTypeName(typeName);
-
-    if (type === null) {
-      fileContext.debug(`The '${typeName}' type is missing.`);
-    } else {
-      this.type = type; ///
-
+    if (this.type === objectType) {
       typeVerified = true;
-    }
+    } else {
+      const typeName = this.type.getName();
 
-    if (typeVerified) {
-      fileContext.debug(`...verified the '${typeName}' type.`);
+      fileContext.trace(`Verifying the '${typeName}' type...`);
+
+      const type = fileContext.findTypeByTypeName(typeName);
+
+      if (type === null) {
+        fileContext.debug(`The '${typeName}' type is missing.`);
+      } else {
+        this.type = type; ///
+
+        typeVerified = true;
+      }
+
+      if (typeVerified) {
+        fileContext.debug(`...verified the '${typeName}' type.`);
+      }
     }
 
     return typeVerified;
@@ -153,12 +161,17 @@ export default class Variable {
   }
 
   static fromVariableNode(variableNode, localContext) {
-    const node = variableNode,  ///
-          variableName = variableNameFromVariableNode(variableNode),
-          string = localContext.nodeAsString(node),
-          name = variableName,  ///
-          type = null,
-          variable = new Variable(string, node, name, type);
+    let variable = null;
+
+    if (variableNode !== null) {
+      const node = variableNode,  ///
+            variableName = variableNameFromVariableNode(variableNode),
+            string = localContext.nodeAsString(node),
+            name = variableName,  ///
+            type = null;
+
+      variable = new Variable(string, node, name, type);
+    }
 
     return variable;
   }

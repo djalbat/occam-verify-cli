@@ -55,7 +55,7 @@ class StatementWithCombinatorUnifier extends Unifier {
               metaTypeNode = metaTypeNodeB, ///
               frameNode = frameNodeA, ///
               metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
-              frame = Frame.fromTermNode(frameNode, localContext),
+              frame = Frame.fromFrameNode(frameNode, localContext),
               frameVerifiedGivenType = frame.verifyGivenMetaType(metaType, localContext);
 
         unified = frameVerifiedGivenType;

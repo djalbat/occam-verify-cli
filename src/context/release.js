@@ -438,9 +438,9 @@ export default class ReleaseContext {
 
     this.parser = nominalParser; ///
 
-    this.fileContexts = released ?
-                          fileContextsFromJSONEntriesAndReleaseContext(this.json, this.entries, releaseContext) :
-                            fileContextsFromEntriesAndReleaseContext(this.entries, releaseContext);
+    released ?
+       fileContextsFromJSONAndReleaseContext(this.json, this.fileContexts, releaseContext) :
+         fileContextsFromEntriesAndReleaseContext(this.entries, this.fileContexts, releaseContext);
 
     this.initialised = true;
   }
@@ -487,31 +487,20 @@ export default class ReleaseContext {
   }
 }
 
-function fileContextsFromJSONEntriesAndReleaseContext(json, entries, releaseContext) {
-  const fileContexts = [];
+function fileContextsFromJSONAndReleaseContext(json, fileContexts, releaseContext) {
+  const fileContextsJSON = json;  ///
 
-  entries.forEachFile((file) => {
-    const filePath = file.getPath(),
-          filePathNominalFilePath = isFilePathNominalFilePath(filePath);
+  fileContextsJSON.forEach((fileContextJSON) => {
+    const json = fileContextJSON,
+          fileContext = FileContext.fromJSONAndReleaseContext(json, releaseContext);
 
-    if (filePathNominalFilePath) {
-      const fileContext = FileContext.fromFileAndReleaseContext(file, releaseContext),
-            filePath = fileContext.getFilePath();
+    fileContext.initialise(fileContextJSON);
 
-      fileContexts.push(fileContext);
-
-      const fileContextJSON = findFileContextJSON(json, filePath);
-
-      fileContext.initialise(fileContextJSON);
-    }
+    fileContexts.push(fileContext);
   });
-
-  return fileContexts;
 }
 
-function fileContextsFromEntriesAndReleaseContext(entries, releaseContext) {
-  const fileContexts = [];
-
+function fileContextsFromEntriesAndReleaseContext(entries, fileContexts, releaseContext) {
   entries.forEachFile((file) => {
     const filePath = file.getPath(),
           filePathNominalFilePath = isFilePathNominalFilePath(filePath);
@@ -524,19 +513,6 @@ function fileContextsFromEntriesAndReleaseContext(entries, releaseContext) {
   });
 
   return fileContexts;
-}
-
-function findFileContextJSON(json, filePath) {
-  const fileContextsJSON = json,  ///
-        fileContextJSON = fileContextsJSON.find((fileContextJSON) => {
-          const { filePath: fileContextFilePath } = fileContextJSON;
-
-          if (fileContextFilePath === filePath) {
-            return true;
-          }
-        });
-
-  return fileContextJSON;
 }
 
 function verifyFileContexts(fileContexts, verifiedFileContexts) {

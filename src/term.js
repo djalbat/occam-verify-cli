@@ -8,6 +8,7 @@ import termAsConstructorVerifier from "./verifier/termAsConstructor";
 import { filter } from "./utilities/array";
 import { nodesQuery } from "./utilities/query"
 import { termNodeFromTermString } from "./utilities/node";
+import {objectType} from "./type";
 
 const variableNodesQuery = nodesQuery("//variable");
 
@@ -136,22 +137,26 @@ class Term {
   verifyType(fileContext) {
     let typeVerified;
 
-    const typeName = this.type.getName();
-
-    fileContext.trace(`Verifying the '${typeName}' type...`);
-
-    const type = fileContext.findTypeByTypeName(typeName);
-
-    if (type === null) {
-      fileContext.debug(`The '${typeName}' type is missing.`);
-    } else {
-      this.type = type; ///
-
+    if (this.type === objectType) {
       typeVerified = true;
-    }
+    } else {
+      const typeName = this.type.getName();
 
-    if (typeVerified) {
-      fileContext.debug(`...verified the '${typeName}' type.`);
+      fileContext.trace(`Verifying the '${typeName}' type...`);
+
+      const type = fileContext.findTypeByTypeName(typeName);
+
+      if (type === null) {
+        fileContext.debug(`The '${typeName}' type is missing.`);
+      } else {
+        this.type = type; ///
+
+        typeVerified = true;
+      }
+
+      if (typeVerified) {
+        fileContext.debug(`...verified the '${typeName}' type.`);
+      }
     }
 
     return typeVerified;
@@ -160,10 +165,10 @@ class Term {
   verifyGivenType(type, localContext) {
     let verifiedGivenType;
 
-    const termString = this.getString(),
-          typeString = type.getString();
+    const typeName = type.getName(),
+          termString = this.getString();
 
-    localContext.trace(`Verifying the '${termString}' term given the '${typeString}' type...`);
+    localContext.trace(`Verifying the '${termString}' term given the '${typeName}' type...`);
 
     const verified = this.verify(localContext, () => {
       let verifiedAhead;
@@ -180,7 +185,7 @@ class Term {
     verifiedGivenType = verified; ///
 
     if (verifiedGivenType) {
-      localContext.debug(`...verified the '${termString}' term given the '${typeString}' type.`);
+      localContext.debug(`...verified the '${termString}' term given the '${typeName}' type.`);
     }
 
     return verifiedGivenType;
