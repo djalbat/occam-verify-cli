@@ -39,8 +39,8 @@ export default class Premise {
 
     localContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
 
-    const statementNode = this.unqualifiedStatement.getStatementNode(),
-          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
+    const statement = this.unqualifiedStatement.getStatement(),
+          subproofAssertion = SubproofAssertion.fromStatement(statement, this.fileContext);
 
     if (subproofAssertion !== null) {
       subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, this.fileContext, localContext);

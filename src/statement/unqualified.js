@@ -16,12 +16,6 @@ export default class UnqualifiedStatement {
     return this.statement;
   }
 
-  getStatementNode() {
-    const statementNode = this.statement.getNode();
-
-    return statementNode;
-  }
-
   getString() { return this.statement.getString(); }
 
   verify(assignments, stated, localContext) {

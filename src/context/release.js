@@ -7,7 +7,7 @@ import { filePathUtilities } from "occam-entities";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import { objectType } from "../type";
-import { tail, push, clear, leftDifference } from "../utilities/array";
+import { tail, push, leftDifference } from "../utilities/array";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { isFilePathNominalFilePath } = filePathUtilities,
@@ -15,7 +15,7 @@ const { isFilePathNominalFilePath } = filePathUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
 export default class ReleaseContext {
-  constructor(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, verifiedFileContexts, dependencyReleaseContexts) {
+  constructor(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts) {
     this.log = log;
     this.name = name;
     this.json = json;
@@ -26,7 +26,6 @@ export default class ReleaseContext {
     this.initialised = initialised;
     this.fileContexts = fileContexts;
     this.customGrammar = customGrammar;
-    this.verifiedFileContexts = verifiedFileContexts;
     this.dependencyReleaseContexts = dependencyReleaseContexts;
   }
 
@@ -70,52 +69,20 @@ export default class ReleaseContext {
     return this.customGrammar;
   }
 
-  getVerifiedFileContexts() {
-    return this.verifiedFileContexts;
-  }
-
   getDependencyReleaseContexts() {
     return this.dependencyReleaseContexts;
   }
 
-  setLog(log) {
-    this.log = log;
+  isReleased() {
+    const released = (this.json !== null);
+
+    return released;
   }
 
-  setName(name) {
-    this.name = name;
-  }
+  findFile(filePath) {
+    const file = this.entries.getFile(filePath);
 
-  setEntries(entries) {
-    this.entries = entries;
-  }
-
-  setLexer(lexer) {
-    this.lexer = lexer;
-  }
-
-  setParser(parser) {
-    this.parser = parser;
-  }
-
-  setVerified(verified) {
-    this.verified = verified;
-  }
-
-  setInitialised(initialised) {
-    return this.initialised = initialised;
-  }
-
-  setFileContexts(fileContexts) {
-    this.fileContexts = fileContexts;
-  }
-
-  setCustomGrammar(customGrammar) {
-    this.customGrammar = customGrammar;
-  }
-
-  setDependencyReleaseContexts(dependencyReleaseContexts) {
-    this.dependencyReleaseContexts = dependencyReleaseContexts;
+    return file;
   }
 
   findFileContext(filePath) {
@@ -128,12 +95,6 @@ export default class ReleaseContext {
     });
 
     return fileContext;
-  }
-
-  isReleased() {
-    const released = (this.json !== null);
-
-    return released;
   }
 
   getLabels(includeDependencies = true) {
@@ -438,9 +399,9 @@ export default class ReleaseContext {
 
     this.parser = nominalParser; ///
 
-    released ?
-       fileContextsFromJSONAndReleaseContext(this.json, this.fileContexts, releaseContext) :
-         fileContextsFromEntriesAndReleaseContext(this.entries, this.fileContexts, releaseContext);
+    this.fileContexts = released ?
+                          fileContextsFromJSONAndEntries(this.json, this.entries, releaseContext) :
+                            fileContextsFromEntries(this.entries, releaseContext);
 
     this.initialised = true;
   }
@@ -448,11 +409,12 @@ export default class ReleaseContext {
   verify() {
     let verified = false;
 
-    clear(this.verifiedFileContexts);
-
-    const fileContextsVerified = verifyFileContexts(this.fileContexts, this.verifiedFileContexts);
+    const verifiedFileContexts = [],
+          fileContextsVerified = verifyFileContexts(this.fileContexts, verifiedFileContexts);
 
     if (fileContextsVerified) {
+      this.fileContexts = verifiedFileContexts; ///
+
       this.verified = true;
 
       verified = true;
@@ -462,12 +424,12 @@ export default class ReleaseContext {
   }
 
   toJSON() {
-    const verifiedFileContextsJSON = this.verifiedFileContexts.map((verifiedFileContext) => {
-            const verifiedFileContextJSON = verifiedFileContext.toJSON();
+    const fileContextsJSON = this.fileContexts.map((fileContext) => {
+            const fileContextJSON = fileContext.toJSON();
 
-            return verifiedFileContextJSON;
+            return fileContextJSON;
           }),
-          json = verifiedFileContextsJSON;  ///
+          json = fileContextsJSON;  ///
 
     return json;
   }
@@ -479,34 +441,39 @@ export default class ReleaseContext {
           initialised = false,
           fileContexts = [],
           customGrammar = customGrammarFromNameAndEntries(name, entries),
-          verifiedFileContexts = [],
           dependencyReleaseContexts = null,
-          releaseContext = new ReleaseContext(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, verifiedFileContexts, dependencyReleaseContexts);
+          releaseContext = new ReleaseContext(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts);
 
     return releaseContext;
   }
 }
 
-function fileContextsFromJSONAndReleaseContext(json, fileContexts, releaseContext) {
-  const fileContextsJSON = json;  ///
+function fileContextsFromJSONAndEntries(json, entries, releaseContext) {
+  const fileContexts = [],
+        fileContextsJSON = json;  ///
 
   fileContextsJSON.forEach((fileContextJSON) => {
-    const json = fileContextJSON,
-          fileContext = FileContext.fromJSONAndReleaseContext(json, releaseContext);
+    const { filePath } = fileContextJSON,
+          file = entries.getFile(filePath),
+          fileContext = FileContext.fromFile(file, releaseContext);
 
     fileContext.initialise(fileContextJSON);
 
     fileContexts.push(fileContext);
   });
+
+  return fileContexts;
 }
 
-function fileContextsFromEntriesAndReleaseContext(entries, fileContexts, releaseContext) {
+function fileContextsFromEntries(entries, releaseContext) {
+  const fileContexts = [];
+
   entries.forEachFile((file) => {
     const filePath = file.getPath(),
           filePathNominalFilePath = isFilePathNominalFilePath(filePath);
 
     if (filePathNominalFilePath) {
-      const fileContext = FileContext.fromFileAndReleaseContext(file, releaseContext);
+      const fileContext = FileContext.fromFile(file, releaseContext);
 
       fileContexts.push(fileContext);
     }
@@ -562,7 +529,7 @@ function verifyFileContext(fileContext) {
 
   if (tokens === null) {
     const filePath = fileContext.getFilePath(),
-          file = fileContext.getFile(filePath),
+          file = fileContext.findFile(filePath),
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
           content = file.getContent(),

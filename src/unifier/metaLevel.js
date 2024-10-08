@@ -7,7 +7,7 @@ import unifyMetavariableWithStatement from "../unify/metavariableWithStatement";
 import unifyMetavariableWithStatementGivenSubstitution from "../unify/metavariableWithStatementGivenSubstitution";
 
 import { nodeQuery } from "../utilities/query";
-import { variableNameFromVariableNode } from "../utilities/name";
+import { variableNameFromVariableNode, metavariableNameFromMetavariableNode } from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/term!"),
       frameNodeQuery = nodeQuery("/frame!"),
@@ -49,6 +49,15 @@ class MetaLevelUnifier extends Unifier {
                   statementSubstitutionNodeA = statementSubstitutionNodeQuery(statementNodeA);
 
             if (statementSubstitutionNodeA === null) {
+              const { Statement } = shim,
+                    metavariableNameA = metavariableNameFromMetavariableNode(metavariableNodeA),
+                    metavariableA = localContextA.findMetavariableByMetavariableName(metavariableNameA),
+                    statementB = Statement.fromStatementNode(statementNodeB, localContextB),
+                    localContext = localContextB, ///
+                    metavariable = metavariableA, ///
+                    statement = statementB, ///
+                    statementUnified = metavariable.unifyStatement(statement, localContext);
+
               const metavariableUnifiedWithStatement = unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutions, localContextA, localContextB);
 
               statementUnifiedWithStatement = metavariableUnifiedWithStatement; ///

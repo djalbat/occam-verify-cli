@@ -119,20 +119,23 @@ export default class SubproofAssertion {
     return subproofUnified;
   }
 
-  static fromStatementNode(statementNode, localContext) {
+  static fromStatement(statement, fileContext) {
     let subproofAssertion = null;
 
-    const subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
+    const statementNode = statement.getNode(),
+          subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
 
     if (subproofAssertionNode !== null) {
       const { Statement } = shim,
             statementNodes = statementNodesQuery(subproofAssertionNode),
+            statementString = statement.getString(),
+            localContext = LocalContext.fromFileContext(fileContext),
             statements = statementNodes.map((statementNode) => {
               const statement = Statement.fromStatementNode(statementNode, localContext);
 
               return statement;
             }),
-            string = stringFromStatements(statements);
+            string = statementString; ///
 
       subproofAssertion = new SubproofAssertion(string, statements);
     }

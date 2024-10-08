@@ -54,7 +54,7 @@ export default class FileContext {
     return this.node;
   }
 
-  getFile(filePath) { return this.releaseContext.getFile(filePath); }
+  findFile(filePath) { return this.releaseContext.findFile(filePath); }
 
   getLexer() { return this.releaseContext.getLexer(); }
 
@@ -877,56 +877,10 @@ export default class FileContext {
     });
   }
 
-  static fromJSONAndReleaseContext(json, releaseContext) {
-    const { filePath } = json,
-          tokens = null,
-          node = null,
-          types = [],
-          rules = [],
-          axioms = [],
-          lemmas = [],
-          theorems = [],
-          variables = [],
-          metaLemmas = [],
-          conjectures = [],
-          combinators = [],
-          constructors = [],
-          metatheorems = [],
-          metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
-
-    return fileContext;
-  }
-
-  static fromFileAndReleaseContext(file, releaseContext) {
+  static fromFile(file, releaseContext) {
     const lexer = releaseContext.getLexer(),
           parser = releaseContext.getParser(),
           filePath = file.getPath(),
-          fileContent = file.getContent(),
-          content = fileContent,  ////
-          tokens = lexer.tokenise(content),
-          node = parser.parse(tokens),
-          types = [],
-          rules = [],
-          axioms = [],
-          lemmas = [],
-          theorems = [],
-          variables = [],
-          metaLemmas = [],
-          conjectures = [],
-          combinators = [],
-          constructors = [],
-          metatheorems = [],
-          metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
-
-    return fileContext;
-  }
-
-  static fromFilePathAndReleaseContext(filePath, releaseContext) {
-    const file = releaseContext.getFile(filePath),
-          lexer = releaseContext.getLexer(),
-          parser = releaseContext.getParser(),
           fileContent = file.getContent(),
           content = fileContent,  ////
           tokens = lexer.tokenise(content),
