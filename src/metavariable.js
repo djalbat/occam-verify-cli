@@ -230,7 +230,7 @@ function statementMetavariableFromStatementNode(statementNode, localContext) {
   const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
   if (statementMetavariableNode !== null) {
-    const statementMetavariableName = variableNameFromMetavariableNode(statementMetavariableNode);
+    const statementMetavariableName = metavariableNameFromMetavariableNode(statementMetavariableNode);
 
     statementMetavariable = localContext.findMetavariableByMetavariableName(statementMetavariableName);
   }

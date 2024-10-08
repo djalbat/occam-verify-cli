@@ -90,16 +90,15 @@ class MetaLevelUnifier extends Unifier {
       unify: (termVariableNodeA, termNodeB, substitutions, localContextA, localContextB) => {
         let termUnified = false;
 
-        const variableNodeA = termVariableNodeA, ///
-              variableNameA = variableNameFromVariableNode(variableNodeA),
-              variableA = localContextA.findVariableByVariableName(variableNameA);
+        const variableNode = termVariableNodeA, ///
+              variableName = variableNameFromVariableNode(variableNode),
+              variable = localContextA.findVariableByVariableName(variableName);
 
-        if (variableA !== null) {
+        if (variable !== null) {
           const { Term } = shim,
-                termB = Term.fromTermNode(termNodeB, localContextB),
                 localContext = localContextB, ///
-                variable = variableA, ///
-                term = termB; ///
+                termNode = termNodeB, ///
+                term = Term.fromTermNode(termNode, localContextB);
 
           termUnified = variable.unifyTerm(term, substitutions, localContext);
         }

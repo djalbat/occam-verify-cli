@@ -161,7 +161,7 @@ export default class Premise {
     return premise;
   }
 
-  static fromSuppositionNode(suppositionNode, fileContext) {
+  static fromPremiseNode(suppositionNode, fileContext) {
     const unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
           premise = new Premise(fileContext, unqualifiedStatement);

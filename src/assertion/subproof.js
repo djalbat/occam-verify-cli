@@ -12,13 +12,18 @@ const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion");
 
 export default class SubproofAssertion {
-  constructor(string, statements) {
+  constructor(string, node, statements) {
     this.string = string;
+    this.node = node;
     this.statements = statements;
   }
 
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getStatements() {
@@ -36,7 +41,7 @@ export default class SubproofAssertion {
         verifiedWhenDerived = false;
 
     if (stated) {
-      verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+      verifiedWhenStated = this.verifyWhenStated(localContext);
     } else {
       verifiedWhenDerived = this.verifyWhenDerived(localContext);
     }
@@ -135,9 +140,10 @@ export default class SubproofAssertion {
 
               return statement;
             }),
+            node = subproofAssertionNode, ///
             string = statementString; ///
 
-      subproofAssertion = new SubproofAssertion(string, statements);
+      subproofAssertion = new SubproofAssertion(string, node, statements);
     }
 
     return subproofAssertion;
@@ -151,8 +157,9 @@ export default class SubproofAssertion {
 
             return statement;
           }),
+          node = subproofAssertionNode, ///
           string = stringFromStatements(statements),
-          subproofAssertion = new SubproofAssertion(string, statements);
+          subproofAssertion = new SubproofAssertion(string, node, statements);
 
     return subproofAssertion;
   }
