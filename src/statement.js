@@ -114,8 +114,13 @@ class Statement {
   }
 
   toJSON() {
-    const string = this.string, ///
+    const substitutionJSON = (this.substitution !== null) ?
+                                this.substitution.toJSON() :
+                                  null,
+          substitution = substitutionJSON,  ///
+          string = this.string, ///
           json = {
+            substitution,
             string
           };
 

@@ -18,6 +18,15 @@ export default class StatementSubstitution extends Substitution {
     return this.node;
   }
 
+  toJSON() {
+    const string = this.getString(),
+          json = {
+            string
+          };
+
+    return json;
+  }
+
   static fromJSON(json, fileContext) {
     let statementSubstitution = null;
 
