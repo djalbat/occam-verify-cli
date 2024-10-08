@@ -43,8 +43,8 @@ export default class Combinator {
   }
 
   toJSON() {
-    const statementString = this.statement.getString(),
-          statement = statementString,  ///
+    const statementJSON = this.statement.toJSON(),
+          statement = statementJSON,  ///
           json = {
             statement
           };
