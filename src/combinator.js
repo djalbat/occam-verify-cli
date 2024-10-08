@@ -55,11 +55,9 @@ export default class Combinator {
   static fromJSON(json, fileContext) {
     let { statement } = json;
 
-    const string = statement;  ///
+    const statementJSON = statement;  ///
 
-    json = {  ///
-      string
-    };
+    json = statementJSON; ///
 
     const { Statement } = shim;
 
