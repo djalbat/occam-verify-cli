@@ -121,14 +121,14 @@ export default class Equality {
 
     const equalityString = this.string; ///
 
-    localContext.trace(`Verifying the stated '${equalityString}' equality...`);
+    localContext.trace(`Verifying the '${equalityString}' stated equality...`);
 
     const termsVerified = this.verifyTerms(localContext);
 
     verifiedWhenStated = termsVerified; ///
 
     if (verifiedWhenStated) {
-      localContext.debug(`...verified the stated '${equalityString}' equality.`);
+      localContext.debug(`...verified the '${equalityString}' stated equality.`);
     }
 
     return verifiedWhenStated;
@@ -139,7 +139,7 @@ export default class Equality {
 
     const equalityString = this.string; ///
 
-    localContext.trace(`Verifying the derived '${equalityString}' equality...`);
+    localContext.trace(`Verifying the '${equalityString}' derived equality...`);
 
     const termsVerified = this.verifyTerms(localContext);
 
@@ -150,7 +150,7 @@ export default class Equality {
     }
 
     if (verifiedWhenDerived) {
-      localContext.debug(`...verified the derived '${equalityString}' equality.`);
+      localContext.debug(`...verified the '${equalityString}' derived equality.`);
     }
 
     return verifiedWhenDerived;

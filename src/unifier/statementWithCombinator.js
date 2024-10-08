@@ -5,7 +5,6 @@ import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
 import { typeNameFromTypeNode } from "../utilities/name";
-import local from "../context/local";
 
 const termNodeQuery = nodeQuery("/term!"),
       typeNodeQuery = nodeQuery("/type!"),

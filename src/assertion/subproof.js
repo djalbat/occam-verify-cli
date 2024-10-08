@@ -3,23 +3,18 @@
 import shim from "../shim";
 import LocalContext from "../context/local";
 import metaLevelUnifier from "../unifier/metaLevel";
+import metaLevelVerifier from "../verifier/metaLevel";
 
 import { front, last, match } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement"),
-      statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
+const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion");
 
 export default class SubproofAssertion {
-  constructor(fileContext, string, statements) {
-    this.fileContext = fileContext;
+  constructor(string, statements) {
     this.string = string;
     this.statements = statements;
-  }
-
-  getFileContext() {
-    return this.fileContext;
   }
 
   getString() {
@@ -30,7 +25,70 @@ export default class SubproofAssertion {
     return this.statements;
   }
 
-  unifySubproof(subproof, substitutions, localContext) {
+  verify(assignments, stated, localContext) {
+    let verified;
+
+    const subproofAssertionString = this.string;  ///
+
+    localContext.trace(`Verifying the '${subproofAssertionString}' subproof assertion...`);
+
+    let verifiedWhenStated = false,
+        verifiedWhenDerived = false;
+
+    if (stated) {
+      verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+    } else {
+      verifiedWhenDerived = this.verifyWhenDerived(localContext);
+    }
+
+    if (verifiedWhenStated || verifiedWhenDerived) {
+      assignments = null; ///
+
+      stated = true;  ///
+
+      const subproofAssertionNode = this.node;  ///
+
+      verified = metaLevelVerifier.verify(subproofAssertionNode, assignments, stated, localContext);
+    }
+
+    if (verified) {
+      localContext.debug(`...verified the '${subproofAssertionString}' subproof assertion.`);
+    }
+
+    return verified;
+  }
+
+  verifyWhenStated(localContext) {
+    let verifiedWhenStated;
+
+    const subproofAssertionString = this.string;  ///
+
+    localContext.trace(`Verifying the '${subproofAssertionString}' stated subproof assertion...`);
+
+    verifiedWhenStated = true;
+
+    if (verifiedWhenStated) {
+      localContext.debug(`...verified the '${subproofAssertionString}' stated subproof assertion.`);
+    }
+
+    return verifiedWhenStated;
+  }
+
+  verifyWhenDerived(localContext) {
+    let derivedSubproofAssertionVerified;
+
+    const subproofAssertionString = this.string;  ///
+
+    localContext.trace(`Verifying the '${subproofAssertionString}' derived subproof assertion...`);
+
+    derivedSubproofAssertionVerified = false;
+
+    localContext.debug(`The '${subproofAssertionString}' derived subproof assertion cannot be verified.`);
+
+    return derivedSubproofAssertionVerified;
+  }
+
+  unifySubproof(subproof, substitutions, fileContext, localContext) {
     let subproofUnified;
 
     const subproofString = subproof.getString(),
@@ -44,7 +102,7 @@ export default class SubproofAssertion {
             subproofStatementNode = subproofStatement.getNode(),
             nodeA = statementNode,  ///
             nodeB = subproofStatementNode,  ///
-            fileContextA = this.fileContext,  ///
+            fileContextA = fileContext,  ///
             localContextA = LocalContext.fromFileContext(fileContextA),
             localContextB = localContext, ///
             unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
@@ -61,59 +119,37 @@ export default class SubproofAssertion {
     return subproofUnified;
   }
 
-  toJSON() {
-    const statementStings = this.statements.map((statement) => {
-            const statementString = statement.getString();
+  static fromStatementNode(statementNode, localContext) {
+    let subproofAssertion = null;
 
-            return statementString;
-          }),
-          statements = statementStings, ///
-          json = {
-            statements
-          };
+    const subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
 
-    return json;
-  }
+    if (subproofAssertionNode !== null) {
+      const { Statement } = shim,
+            statementNodes = statementNodesQuery(subproofAssertionNode),
+            statements = statementNodes.map((statementNode) => {
+              const statement = Statement.fromStatementNode(statementNode, localContext);
 
-  static fromJSON(json, fileContext) {
-    let { statements } = json;
+              return statement;
+            }),
+            string = stringFromStatements(statements);
 
-    const statementsJSON = statements;  ///
-
-    statements = statementsJSON.map((statementJSON) => {
-      const json = statementJSON,
-            statement = Statement.fromJSON(json, fileContext);
-
-      return statement;
-    });
-
-    const string = stringFromStatements(statements),
-          subproofAssertion = new SubproofAssertion(fileContext, string, statements);
+      subproofAssertion = new SubproofAssertion(string, statements);
+    }
 
     return subproofAssertion;
   }
 
-  static fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext) {
-    let subproofAssertion = null;
+  static fromSubproofAssertionNode(subproofAssertionNode, localContext) {
+    const { Statement } = shim,
+          statementNodes = statementNodesQuery(subproofAssertionNode),
+          statements = statementNodes.map((statementNode) => {
+            const statement = Statement.fromStatementNode(statementNode, localContext);
 
-    if (unqualifiedStatementNode !== null) {
-      const statementNode = statementNodeQuery(unqualifiedStatementNode),
-            subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
-
-      if (subproofAssertionNode !== null) {
-        const { Statement } = shim,
-              localContext = LocalContext.fromFileContext(fileContext),
-              statementNodes = statementNodesQuery(subproofAssertionNode),
-              statements = statementNodes.map((statementNode) => {
-                const statement = Statement.fromStatementNode(statementNode, localContext);
-
-                return statement;
-              }),
-              string = stringFromStatements(statements);
-
-        subproofAssertion = new SubproofAssertion(fileContext, string, statements);
-      }
-    }
+            return statement;
+          }),
+          string = stringFromStatements(statements),
+          subproofAssertion = new SubproofAssertion(string, statements);
 
     return subproofAssertion;
   }
@@ -122,14 +158,14 @@ export default class SubproofAssertion {
 function stringFromStatements(statements) {
   const frontStatements = front(statements),
         lastStatement = last(statements),
-        frontStatementsString = statementsStringtatements(frontStatements),
+        frontStatementsString = statementsStringFromStatements(frontStatements),
         lastStatementString = lastStatement.getString(),
         string = `[${frontStatementsString}] ... ${lastStatementString}`;
 
   return string;
 }
 
-function statementsStringtatements(statements) {
+function statementsStringFromStatements(statements) {
   const statementsString = statements.reduce((statementsString, statement) => {
     const statementString = statement.getString();
 

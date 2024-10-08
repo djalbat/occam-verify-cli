@@ -8,11 +8,11 @@ import verifyJudgement from "../../verify/judgement";
 import verifyDeclaration from "../../verify/declaration";
 import metavariableUnifier from "../../unifier/metavariable";
 import verifyDefinedAssertion from "../../verify/assertion/defined";
-import verifySubproofAssertion from "../../verify/assertion/subproof";
 import verifyContainedAssertion from "../../verify/assertion/contained";
 
 import { nodeQuery } from "../../utilities/query";
 import { metavariableNameFromMetavariableNode } from "../../utilities/name";
+import SubproofAssertion from "../../assertion/subproof";
 
 const frameNodeQuery = nodeQuery("/statement/frame!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
@@ -198,7 +198,8 @@ function verifyAsSubproofAssertion(statement, assignments, stated, localContext)
 
     localContext.trace(`Verifying the '${statementString}' statement as a subproof assertion...`);
 
-    const subproofAssertionVerified = verifySubproofAssertion(subproofAssertionNode, assignments, stated, localContext);
+    const subproofAssertion = SubproofAssertion.fromSubproofAssertionNode(subproofAssertionNode, localContext),
+          subproofAssertionVerified = subproofAssertion.verify(assignments, stated, localContext);
 
     verifiedAsSubproofAssertion = subproofAssertionVerified; ///
 

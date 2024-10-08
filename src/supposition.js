@@ -12,18 +12,13 @@ import { assignAssignments } from "./utilities/assignments";
 const unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement");
 
 export default class Supposition {
-  constructor(fileContext, subproofAssertion, unqualifiedStatement) {
+  constructor(fileContext, unqualifiedStatement) {
     this.fileContext = fileContext;
-    this.subproofAssertion = subproofAssertion;
     this.unqualifiedStatement = unqualifiedStatement;
   }
 
   getFileContext() {
     return this.fileContext;
-  }
-
-  getSubproofAssertion() {
-    return this.subproofAssertion;
   }
 
   getUnqualifiedStatement() {
@@ -33,6 +28,65 @@ export default class Supposition {
   getString() { return this.unqualifiedStatement.getString(); }
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
+
+  verify(localContext) {
+    let verified = false;
+
+    const suppositionString = this.getString(); ///
+
+    if (this.unqualifiedStatement !== null) {
+      localContext.trace(`Verifying the '${suppositionString}' supposition...`);
+
+      const stated = true,
+            assignments = [],
+            unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
+
+      if (unqualifiedStatementVerified) {
+        const assignmentsAssigned = assignAssignments(assignments, localContext);
+
+        if (assignmentsAssigned) {
+          const { ProofStep } = shim,
+                proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
+
+          localContext.addProofStep(proofStep);
+
+          verified = true;
+        }
+      }
+
+      if (verified) {
+        localContext.debug(`...verified the '${suppositionString}' supposition.`);
+      }
+    } else {
+      localContext.debug(`The '${suppositionString}' supposition cannot be verified because it is nonsense.`);
+    }
+
+    return verified;
+  }
+
+  unifySubproof(subproof, substitutions, localContext) {
+    let subproofUnified = false;
+
+    const supposition = this, ///
+          subproofString = subproof.getString(),
+          suppositionStatement = supposition.getStatement(),
+          suppositionStatementString = suppositionStatement.getString();
+
+    localContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
+
+    const statementNode = this.unqualifiedStatement.getStatementNode(),
+          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
+
+    if (subproofAssertion !== null) {
+      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, this.fileContext, localContext);
+    }
+
+    if (subproofUnified) {
+      localContext.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`);
+    }
+
+    return subproofUnified;
+  }
 
   unifyProofStep(proofStep, substitutions, localContext) {
     let proofStepUnified = false;
@@ -85,91 +139,24 @@ export default class Supposition {
     return statementUnified;
   }
 
-  unifySubproof(subproof, substitutions, localContext) {
-    let subproofUnified = false;
-
-    const supposition = this, ///
-          subproofString = subproof.getString(),
-          suppositionStatement = supposition.getStatement(),
-          suppositionStatementString = suppositionStatement.getString();
-
-    localContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
-
-    if (this.subproofAssertion !== null) {
-      subproofUnified = this.subproofAssertion.unifySubproof(subproof, substitutions, localContext);
-    }
-
-    if (subproofUnified) {
-      localContext.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`);
-    }
-
-    return subproofUnified;
-  }
-
-  verify(localContext) {
-    let verified = false;
-
-    const suppositionString = this.getString(); ///
-
-    if (this.unqualifiedStatement !== null) {
-      localContext.trace(`Verifying the '${suppositionString}' supposition...`);
-
-      const stated = true,
-            assignments = [],
-            unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
-
-      if (unqualifiedStatementVerified) {
-        const assignmentsAssigned = assignAssignments(assignments, localContext);
-
-        if (assignmentsAssigned) {
-          const { ProofStep } = shim,
-                proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
-
-          localContext.addProofStep(proofStep);
-
-          verified = true;
-        }
-      }
-
-      if (verified) {
-        localContext.debug(`...verified the '${suppositionString}' supposition.`);
-      }
-    } else {
-      localContext.debug(`The '${suppositionString}' supposition cannot be verified because it is nonsense.`);
-    }
-
-    return verified;
-  }
-
   toJSON() {
     const unqualifiedStatementJSON = this.unqualifiedStatement.toJSON(),
-          subproofAssertionJSON = (this.subproofAssertion !== null) ?
-                                     this.subproofAssertion.toJSON() :
-                                       null,
           unqualifiedStatement = unqualifiedStatementJSON,  ///
-          subproofAssertion = subproofAssertionJSON,  ///
           json = {
-            unqualifiedStatement,
-            subproofAssertion
+            unqualifiedStatement
           };
 
     return json;
   }
 
   static fromJSON(json, fileContext) {
-    let { subproofAssertion, unqualifiedStatement } = json;
+    let { unqualifiedStatement } = json;
 
     json = unqualifiedStatement;  ///
 
     unqualifiedStatement = UnqualifiedStatement.fromJSON(json, fileContext);
 
-    json = subproofAssertion; ///
-
-    subproofAssertion = (json !== null) ?
-                          SubproofAssertion.fromJSON(json, fileContext) :
-                            null;
-
-    const supposition = new Supposition(fileContext, subproofAssertion, unqualifiedStatement);
+    const supposition = new Supposition(fileContext, unqualifiedStatement);
 
     return supposition;
   }
@@ -177,8 +164,7 @@ export default class Supposition {
   static fromSuppositionNode(suppositionNode, fileContext) {
     const unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          subproofAssertion = SubproofAssertion.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          supposition = new Supposition(fileContext, subproofAssertion, unqualifiedStatement);
+          supposition = new Supposition(fileContext, unqualifiedStatement);
 
     return supposition
   }

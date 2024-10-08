@@ -84,7 +84,7 @@ export default class TypeAssertion {
 
     const typeAssertionString = this.string; ///
 
-    localContext.trace(`Verifying the stated '${typeAssertionString}' type assertion...`);
+    localContext.trace(`Verifying the '${typeAssertionString}' stated type assertion...`);
 
     const typeVerified = this.verifyType(localContext);
 
@@ -115,7 +115,7 @@ export default class TypeAssertion {
     }
 
     if (verifiedWhenStated) {
-      localContext.debug(`...verified the stated '${typeAssertionString}' type assertion.`);
+      localContext.debug(`...verified the '${typeAssertionString}' stated type assertion.`);
     }
 
     return verifiedWhenStated;
@@ -126,7 +126,7 @@ export default class TypeAssertion {
 
     const typeAssertionString = this.string; ///
 
-    localContext.trace(`Verifying the derived '${typeAssertionString}' type assertion...`);
+    localContext.trace(`Verifying the '${typeAssertionString}' derived type assertion...`);
 
     const typeVerified = this.verifyType(localContext);
 
@@ -146,7 +146,7 @@ export default class TypeAssertion {
     }
 
     if (verifiedWhenDerived) {
-      localContext.debug(`...verified the derived '${typeAssertionString}' type assertion.`);
+      localContext.debug(`...verified the '${typeAssertionString}' derived type assertion.`);
     }
 
     return verifiedWhenDerived;
