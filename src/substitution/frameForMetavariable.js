@@ -69,10 +69,11 @@ export default class FrameForMetavariableSubstitution extends Substitution {
     return metavariableNodeMatches;
   }
 
-  static fromSubstitutionNode(substitutionNode, localContextA, localContextB) {
+  static fromSubstitution(substitution, localContextA, localContextB) {
     let frameForMetavariableSubstitution = null;
 
-    const substitutionFrameNode = substitutionFrameNodeQuery(substitutionNode);
+    const substitutionNode = substitution.getNode(),
+          substitutionFrameNode = substitutionFrameNodeQuery(substitutionNode);
 
     if (substitutionFrameNode !== null) {
       const substitutionMetavariableNode = substitutionMetavariableNodeQuery(substitutionNode),

@@ -7,7 +7,7 @@ import { nodeQuery } from "../utilities/query";
 import { stripBracketsFromTerm } from "../utilities/brackets";
 
 const termVariableNodeQuery = nodeQuery("/term/variable!"),
-      substitutionTermmNodeQuery = nodeQuery("/substitution/term!"),
+      substitutionTermNodeQuery = nodeQuery("/substitution/term!"),
       substitutionsVariableNodeQuery = nodeQuery("/substitution/variable!");
 
 export default class TermForVariableSubstitution extends Substitution {
@@ -83,6 +83,27 @@ export default class TermForVariableSubstitution extends Substitution {
     return unifiedWithEquivalence;
   }
 
+  static fromSubstitution(substitution) {
+    let termForVariableSubstitution = null;
+
+    const substitutionNode = substitution.getNode();
+
+    let substitutionTermNode = substitutionTermNodeQuery(substitutionNode);
+
+    if (substitutionTermNode !== null) {
+      let termNode = substitutionTermNode;  ///
+
+      termNode = stripBracketsFromTerm(termNode); ///
+
+      const substitutionVariableNode = substitutionsVariableNodeQuery(substitutionNode),
+            variableNode = substitutionVariableNode;  ///
+
+      termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
+    }
+
+    return termForVariableSubstitution;
+  }
+
   static fromTernAndVariable(term, variable, localContext) {
     let termNode = term.getNode();
 
@@ -95,25 +116,6 @@ export default class TermForVariableSubstitution extends Substitution {
     const string = stringFromTermAndVariable(term, variable),
           variableNode = variable.getNode(),
           termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode);
-
-    return termForVariableSubstitution;
-  }
-
-  static fromSubstitutionNode(substitutionNode) {
-    let termForVariableSubstitution = null;
-
-    let substitutionTermNode = substitutionTermmNodeQuery(substitutionNode);
-
-    if (substitutionTermNode !== null) {
-      let termNode = substitutionTermNode;  ///
-
-      termNode = stripBracketsFromTerm(termNode); ///
-
-      const substitutionVariableNode = substitutionsVariableNodeQuery(substitutionNode),
-            variableNode = substitutionVariableNode;  ///
-
-      termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
-    }
 
     return termForVariableSubstitution;
   }

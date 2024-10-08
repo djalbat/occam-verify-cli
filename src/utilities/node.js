@@ -6,10 +6,12 @@ import { nodeQuery } from "../utilities/query";
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
 import { VARIABLE_RULE_NAME,
          METAVARIABLE_RULE_NAME,
+         SUBSTITUTION_RULE_NAME,
          UNQUALIFIED_STATEMENT_RULE_NAME,
          CONSTRUCTOR_DECLARATION_RULE_NAME } from "../ruleNames";
 import { variableTokensFromVariableString,
          metavariableTokensFromMetavariableString,
+         substitutionTokensFromSubstitutionString,
          unqualifiedStatementTokensFromUnqualifiedStatementString,
          constructorDeclarationTokensFromConstructorDeclarationString } from "../utilities/tokens";
 
@@ -55,6 +57,13 @@ export function metavariableNodeFromMetavariableString(metavariableString, lexer
   return metavariableNode;
 }
 
+export function substitutionNodeFromSubstitutionString(substitutionString, lexer, parser) {
+  const substitutionTokens = substitutionTokensFromSubstitutionString(substitutionString, lexer),
+        substitutionNode = substitutionNodeFromSubstitutionTokens(substitutionTokens, parser);
+
+  return substitutionNode;
+}
+
 export function variableNodeFromVariableTokens(variableTokens, parser) {
   const ruleName = VARIABLE_RULE_NAME,
         variableNode = nodeFromTokensRuleNameAndParser(variableTokens, ruleName, parser);
@@ -67,6 +76,13 @@ export function metavariableNodeFromMetavariableTokens(metavariableTokens, parse
         metavariableNode = nodeFromTokensRuleNameAndParser(metavariableTokens, ruleName, parser);
 
   return metavariableNode;
+}
+
+export function substitutionNodeFromSubstitutionTokens(substitutionTokens, parser) {
+  const ruleName = SUBSTITUTION_RULE_NAME,
+        substitutionNode = nodeFromTokensRuleNameAndParser(substitutionTokens, ruleName, parser);
+
+  return substitutionNode;
 }
 
 export function unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {

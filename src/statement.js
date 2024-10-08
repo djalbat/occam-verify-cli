@@ -3,15 +3,17 @@
 import shim from "./shim";
 import unifyMixins from "./mixins/statement/unify";
 import verifyMixins from "./mixins/statement/verify";
+import StatementSubstitution from "./substitution/statement";
 import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 import { statementNodeFromStatementString } from "./utilities/node";
 
 class Statement {
-  constructor(string, node) {
+  constructor(string, node, substitution) {
     this.string = string;
     this.node = node;
+    this.substitution = substitution;
   }
 
   getString() {
@@ -20,6 +22,10 @@ class Statement {
 
   getNode() {
     return this.node;
+  }
+
+  getSubstitution() {
+    return this.substitution;
   }
 
   isEqualTo(statement) {
@@ -122,8 +128,17 @@ class Statement {
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-          node = statementNode,  ///
-          statement = new Statement(string, node);
+          node = statementNode;  ///
+
+    let { substitution } = json;
+
+    json = substitution;  ///
+
+    const statementSubstitution = StatementSubstitution.fromJSON(json, fileContext);
+
+    substitution = statementSubstitution; ///
+
+    const statement = new Statement(string, node, substitution);
 
     return statement;
   }
@@ -131,7 +146,9 @@ class Statement {
   static fromStatementNode(statementNode, localContext) {
     const node = statementNode, ///
           string = localContext.nodeAsString(node),
-          statement = new Statement(string, node);
+          statementSubstitution = StatementSubstitution.fromStatementNode(statementNode, localContext),
+          substitution = statementSubstitution, ///
+          statement = new Statement(string, node, substitution);
 
     return statement;
   }

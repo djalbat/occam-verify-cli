@@ -154,6 +154,52 @@ export default class Metavariable {
     return statementUnified;
   }
 
+  unifyStatementGivenSubstitution(statement, substitution, substitutions, localContext) {
+    let statementUnifiedGivenSubstitution = false;
+
+    const statementString = statement.getString(),
+          substitutionString = substitution.getString(),
+          metavariableString = this.string;
+
+    localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable givne the '${substitutionString}' substitution...`);
+
+    // let metavariableUnifiedWithStatementGivenSubstitution = false;
+    //
+    // const metavariableNode = metavariable.getNode(),
+    //   substitutionNode = substitution.getNode(),
+    //   complexSubstitution = substitutions.findComplexSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
+    //
+    // if (complexSubstitution !== null) {
+    //   const statementNode = statement.getNode(),
+    //     statementNodeMatches = complexSubstitution.matchStatementNode(statementNode);
+    //
+    //   if (statementNodeMatches) {
+    //     metavariableUnifiedWithStatementGivenSubstitution = true;
+    //   }
+    // } else {
+    //   const metavariableNameA = metavariableNameFromMetavariableNode(metavariableNode),
+    //     metavariableA = localContextA.findMetavariableByMetavariableName(metavariableNameA),
+    //     metavariableB = metavariableFromStatementNode(statement, localContextB);
+    //
+    //   if (metavariableA === metavariableB) {
+    //     metavariableUnifiedWithStatementGivenSubstitution = false;  ///
+    //   } else {
+    //     const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContextA, localContextB),
+    //       substitution = statementForMetavariableSubstitution;  ///
+    //
+    //     substitutions.addSubstitution(substitution, localContextA, localContextB);
+    //
+    //     metavariableUnifiedWithStatementGivenSubstitution = true;
+    //   }
+    // }
+
+    if (statementUnifiedGivenSubstitution) {
+      localContext.trace(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable givne the '${substitutionString}' substitution.`);
+    }
+
+    return statementUnifiedGivenSubstitution;
+  }
+
   toJSON() {
     const metaTypeJSON = (this.metaType !== null) ?
                             this.metaType.toJSON() :

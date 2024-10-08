@@ -23,9 +23,9 @@ class IntrinsicLevelVerifier extends Verifier {
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, localContext) => {
-        const { verifyTerm } = shim,
-              terms = [],
-              termVerified = verifyTerm(termNode, terms, localContext, () => {
+        const { Term } = shim,
+              term = Term.fromTermNode(termNode, localContext),
+              termVerified = term.verify(localContext, () => {
                 const verifiedAhead = true;
 
                 return verifiedAhead;

@@ -23,6 +23,13 @@ export function metavariableTokensFromMetavariableString(metavariableString, lex
   return metavariableTokens;
 }
 
+export function substitutionTokensFromSubstitutionString(substitutionString, lexer) {
+  const substitutionContent = `${substitutionString}`,
+        substitutionTokens = tokensFromContentAndLexer(substitutionContent, lexer);
+
+  return substitutionTokens;
+}
+
 export function unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer) {
   const content = unqualifiedStatementString,  ///
         unqualifiedStatementTokens = tokensFromContentAndLexer(content, lexer);
