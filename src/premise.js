@@ -12,13 +12,18 @@ import { assignAssignments } from "./utilities/assignments";
 const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement");
 
 export default class Premise {
-  constructor(fileContext, unqualifiedStatement) {
+  constructor(fileContext, subproofAssertion, unqualifiedStatement) {
     this.fileContext = fileContext;
+    this.subproofAssertion = subproofAssertion;
     this.unqualifiedStatement = unqualifiedStatement;
   }
 
   getFileContext() {
     return this.fileContext;
+  }
+
+  getSubproofAssertion() {
+    return this.subproofAssertion;
   }
 
   getUnqualifiedStatement() {
@@ -90,12 +95,8 @@ export default class Premise {
 
     localContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
 
-    const statement = this.unqualifiedStatement.getStatement(),
-          statementNode = statement.getNode(),
-          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, this.fileContext);
-
-    if (subproofAssertion !== null) {
-      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, localContext);
+    if (this.subproofAssertion !== null) {
+      subproofUnified = this.subproofAssertion.unifySubproof(subproof, substitutions, localContext);
     }
 
     if (subproofUnified) {
@@ -142,30 +143,42 @@ export default class Premise {
 
   toJSON() {
     const unqualifiedStatementJSON = this.unqualifiedStatement.toJSON(),
-          unqualifiedStatement = unqualifiedStatementJSON,  ///
-          json = {
-            unqualifiedStatement
-          };
+      subproofAssertionJSON = (this.subproofAssertion !== null) ?
+        this.subproofAssertion.toJSON() :
+        null,
+      unqualifiedStatement = unqualifiedStatementJSON,  ///
+      subproofAssertion = subproofAssertionJSON,  ///
+      json = {
+        unqualifiedStatement,
+        subproofAssertion
+      };
 
     return json;
   }
 
   static fromJSON(json, fileContext) {
-    let { unqualifiedStatement } = json;
+    let { subproofAssertion, unqualifiedStatement } = json;
 
     json = unqualifiedStatement;  ///
 
     unqualifiedStatement = UnqualifiedStatement.fromJSON(json, fileContext);
 
-    const premise = new Premise(fileContext, unqualifiedStatement);
+    json = subproofAssertion; ///
+
+    subproofAssertion = (json !== null) ?
+                          SubproofAssertion.fromJSON(json, fileContext) :
+                            null;
+
+    const premise = new Premise(fileContext, subproofAssertion, unqualifiedStatement);
 
     return premise;
   }
 
-  static fromPremiseNode(premiseNode, fileContext) {
-    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(premiseNode),
+  static fromSuppositionNode(suppositionNode, fileContext) {
+    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          premise = new Premise(fileContext, unqualifiedStatement);
+          subproofAssertion = SubproofAssertion.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
+          premise = new Premise(fileContext, subproofAssertion, unqualifiedStatement);
 
     return premise
   }

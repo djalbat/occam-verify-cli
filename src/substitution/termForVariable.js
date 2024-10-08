@@ -11,25 +11,23 @@ const termVariableNodeQuery = nodeQuery("/term/variable!"),
       substitutionsVariableNodeQuery = nodeQuery("/substitution/variable!");
 
 export default class TermForVariableSubstitution extends Substitution {
-  constructor(string, term, variable) {
+  constructor(string, termNode, variableNode) {
     super(string);
 
-    this.term = term;
-    this.variable = variable;
+    this.termNode = termNode;
+    this.variableNode = variableNode;
   }
 
-  getTerm() {
-    return this.term;
+  getTermNode() {
+    return this.termNode;
   }
 
-  getVariable() {
-    return this.variable;
+  getVariableNode() {
+    return this.variableNode;
   }
 
   transformed(substitutions) {
     let transformedSubstitution = null;
-
-    debugger
 
     const transformedTermNode = transformTermNode(this.termNode, substitutions),
           transformedVariableNode = transformVariableNode(this.variableNode, substitutions);
@@ -46,8 +44,6 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   isEqualTo(substitution) {
-    debugger
-
     const termNode = substitution.getTermNode(),
           variableNode = substitution.getVariableNode(),
           termNodeMatches = this.matchTermNode(termNode),
@@ -58,8 +54,6 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   matchTermNode(termNode) {
-    debugger
-
     termNode = stripBracketsFromTerm(termNode); ///
 
     const termNodeMatches = this.termNode.match(termNode);
@@ -68,16 +62,12 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   matchVariableNode(variableNode) {
-    debugger
-
     const variableNodeMatches = this.variableNode.match(variableNode);
 
     return variableNodeMatches;
   }
 
   unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {
-    debugger
-
     let unifiedWithEquivalence;
 
     const equivalenceMatchesTermNode = equivalence.matchTermNode(this.termNode);
@@ -93,9 +83,23 @@ export default class TermForVariableSubstitution extends Substitution {
     return unifiedWithEquivalence;
   }
 
-  static fromSubstitutionNode(substitutionNode) {
-    debugger
+  static fromTernAndVariable(term, variable, localContext) {
+    let termNode = term.getNode();
 
+    termNode = stripBracketsFromTerm(termNode); ///
+
+    const { Term } = shim;
+
+    term = Term.fromTermNode(termNode, localContext)
+
+    const string = stringFromTermAndVariable(term, variable),
+          variableNode = variable.getNode(),
+          termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode);
+
+    return termForVariableSubstitution;
+  }
+
+  static fromSubstitutionNode(substitutionNode) {
     let termForVariableSubstitution = null;
 
     let substitutionTermNode = substitutionTermmNodeQuery(substitutionNode);
@@ -110,22 +114,6 @@ export default class TermForVariableSubstitution extends Substitution {
 
       termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
     }
-
-    return termForVariableSubstitution;
-  }
-
-  static fromTernNodeAndVariableNode(term, variable, localContext) {
-    let termNode = term.getNode();
-
-    termNode = stripBracketsFromTerm(termNode); ///
-
-    const { Term } = shim,
-          type = term.getType();
-
-    term = Term.fromTermNodeAndType(termNode, type, localContext)
-
-    const string = stringFromTermAndVariable(term, variable),
-          termForVariableSubstitution = new TermForVariableSubstitution(string, term, variable);
 
     return termForVariableSubstitution;
   }

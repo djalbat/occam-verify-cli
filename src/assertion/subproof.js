@@ -4,10 +4,11 @@ import shim from "../shim";
 import LocalContext from "../context/local";
 import metaLevelUnifier from "../unifier/metaLevel";
 
-import { match } from "../utilities/array";
+import { front, last, match } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
+const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement"),
+      statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion");
 
 export default class SubproofAssertion {
@@ -60,26 +61,84 @@ export default class SubproofAssertion {
     return subproofUnified;
   }
 
-  static fromStatementNode(statementNode, fileContext) {
+  toJSON() {
+    const statementStings = this.statements.map((statement) => {
+            const statementString = statement.getString();
+
+            return statementString;
+          }),
+          statements = statementStings, ///
+          json = {
+            statements
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    let { statements } = json;
+
+    const statementsJSON = statements;  ///
+
+    statements = statementsJSON.map((statementJSON) => {
+      const json = statementJSON,
+            statement = Statement.fromJSON(json, fileContext);
+
+      return statement;
+    });
+
+    const string = stringFromStatements(statements),
+          subproofAssertion = new SubproofAssertion(fileContext, string, statements);
+
+    return subproofAssertion;
+  }
+
+  static fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext) {
     let subproofAssertion = null;
 
-    const subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
+    if (unqualifiedStatementNode !== null) {
+      const statementNode = statementNodeQuery(unqualifiedStatementNode),
+            subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
 
-    if (subproofAssertionNode !== null) {
-      const { Statement } = shim,
-            node = subproofAssertionNode, ///
-            string = fileContext.nodeAsString(node),
-            localContext = LocalContext.fromFileContext(fileContext),
-            statementNodes = statementNodesQuery(subproofAssertionNode),
-            statements = statementNodes.map((statementNode) => {
-              const statement = Statement.fromStatementNode(statementNode, localContext);
+      if (subproofAssertionNode !== null) {
+        const { Statement } = shim,
+              localContext = LocalContext.fromFileContext(fileContext),
+              statementNodes = statementNodesQuery(subproofAssertionNode),
+              statements = statementNodes.map((statementNode) => {
+                const statement = Statement.fromStatementNode(statementNode, localContext);
 
-              return statement;
-            });
+                return statement;
+              }),
+              string = stringFromStatements(statements);
 
-      subproofAssertion = new SubproofAssertion(fileContext, string, statements);
+        subproofAssertion = new SubproofAssertion(fileContext, string, statements);
+      }
     }
 
     return subproofAssertion;
   }
+}
+
+function stringFromStatements(statements) {
+  const frontStatements = front(statements),
+        lastStatement = last(statements),
+        frontStatementsString = statementsStringtatements(frontStatements),
+        lastStatementString = lastStatement.getString(),
+        string = `[${frontStatementsString}] ... ${lastStatementString}`;
+
+  return string;
+}
+
+function statementsStringtatements(statements) {
+  const statementsString = statements.reduce((statementsString, statement) => {
+    const statementString = statement.getString();
+
+    statementsString = (statementsString !== null) ?
+                        `${statementsString}, ${statementString}` :
+                           statementString;  ///
+
+    return statementsString;
+  }, null);
+
+  return statementsString
 }

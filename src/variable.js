@@ -160,7 +160,7 @@ export default class Variable {
       if (termVariable === variable) {
         termUnified = true;
       } else {
-        const termForVariableSubstitution = TermForVariableSubstitution.fromTernNodeAndVariableNode(term, variable, localContext),
+        const termForVariableSubstitution = TermForVariableSubstitution.fromTernAndVariable(term, variable, localContext),
               substitution = termForVariableSubstitution;  ///
 
         substitutions.addSubstitution(substitution, localContext);
