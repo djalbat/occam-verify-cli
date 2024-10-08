@@ -3,6 +3,7 @@
 import shim from "./shim";
 import Argument from "./argument";
 import LocalContext from "./context/local";
+import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
 
 import { nodeQuery } from "./utilities/query";
 import { metavariableNameFromMetavariableNode } from "./utilities/name";
@@ -10,14 +11,20 @@ import { metavariableNodeFromMetavariableString } from "./utilities/node";
 
 const argumentNodeQuery = nodeQuery("/metavariable/argument"),
       metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType"),
-      metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable");
+      metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable"),
+      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable");
 
 export default class Metavariable {
-  constructor(string, node, name, metaType) {
+  constructor(fileContext, string, node, name, metaType) {
+    this.fileContext = fileContext;
     this.string = string;
     this.node = node;
     this.name = name;
     this.metaType = metaType;
+  }
+
+  getFileContext() {
+    return this.fileContext;
   }
 
   getString() {
@@ -105,6 +112,48 @@ export default class Metavariable {
     return verifiedAtTopLevel;
   }
 
+  unifyStatement(statement, substitutions, localContext) {
+    let statementUnified = false;
+
+    const statementString = statement.getString(),
+          metavariableString = this.string;
+
+    localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable...`);
+
+    const statementNode = statement.getNode(),
+          metavariableNode = this.node, ///
+          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableNode(metavariableNode),
+          substitution = simpleSubstitution;  ///
+
+    if (substitution !== null) {
+      const statementNodeMatches = substitution.matchStatementNode(statementNode);
+
+      if (statementNodeMatches) {
+        statementUnified = true;
+      }
+    } else {
+      const metavariable = this, ///
+            statementMetavariable = statementMetavariableFromStatementNode(statementNode, localContext);
+
+      if (metavariable === statementMetavariable) {
+        statementUnified = true;
+      } else {
+        const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementAndMetavariable(statement, metavariable, localContext),
+              substitution = statementForMetavariableSubstitution;  ///
+
+        substitutions.addSubstitution(substitution, localContext);
+
+        statementUnified = true;
+      }
+    }
+
+    if (statementUnified) {
+      localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable.`);
+    }
+
+    return statementUnified;
+  }
+
   toJSON() {
     const metaTypeJSON = (this.metaType !== null) ?
                             this.metaType.toJSON() :
@@ -129,7 +178,7 @@ export default class Metavariable {
           node = metavariableNode,  ///
           name = metavariableName,  ///
           metaType = metaTypeFromJSON(json, fileContext),
-          metavariable = new Metavariable(string, node, name, metaType);
+          metavariable = new Metavariable(fileContext, string, node, name, metaType);
 
     return metavariable;
   }
@@ -140,7 +189,7 @@ export default class Metavariable {
           name = metavariableName,  ///
           string = fileContext.nodeAsString(node),
           metaType = null,
-          metavariable = new Metavariable(string, node, name, metaType);
+          metavariable = new Metavariable(fileContext, string, node, name, metaType);
 
     return metavariable;
   }
@@ -156,7 +205,7 @@ export default class Metavariable {
           node = metavariableNode,  ///
           name = metavariableName,  ///
           metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
-          metavariable = new Metavariable(string, node, name, metaType);
+          metavariable = new Metavariable(fileContext, string, node, name, metaType);
 
     return metavariable;
   }
@@ -173,4 +222,18 @@ function metaTypeFromJSON(json, fileContext) {
   }
 
   return metaType;
+}
+
+function statementMetavariableFromStatementNode(statementNode, localContext) {
+  let statementMetavariable = null;
+
+  const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
+
+  if (statementMetavariableNode !== null) {
+    const statementMetavariableName = variableNameFromMetavariableNode(statementMetavariableNode);
+
+    statementMetavariable = localContext.findMetavariableByMetavariableName(statementMetavariableName);
+  }
+
+  return statementMetavariable;
 }

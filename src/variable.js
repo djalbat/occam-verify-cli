@@ -8,17 +8,23 @@ import { nodeQuery } from "./utilities/query";
 import { objectType } from "./type";
 import { variableNameFromVariableNode} from "./utilities/name";
 import { variableNodeFromVariableString } from "./utilities/node";
+import local from "./context/local";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
       variableNodeQuery = nodeQuery("/variableDeclaration/variable"),
       termVariableNodeQuery = nodeQuery("/term/variable");
 
 export default class Variable {
-  constructor(string, node, name, type) {
+  constructor(localContext, string, node, name, type) {
+    this.localContext = localContext; ///
     this.string = string;
     this.node = node;
     this.name = name;
     this.type = type;
+  }
+
+  getLocalContext() {
+    return this.localContext;
   }
 
   getString() {
@@ -195,10 +201,11 @@ export default class Variable {
           variableString = string,  ///
           variableNode = variableNodeFromVariableString(variableString, lexer, parser),
           variableName = variableNameFromVariableNode(variableNode),
+          localContext = LocalContext.fromFileContext(fileContext),
           node = variableNode,
           name = variableName,  ///
           type = typeFromJSON(json, fileContext),
-          variable = new Variable(string, node, name, type);
+          variable = new Variable(localContext, string, node, name, type);
 
     return variable;
   }
@@ -213,7 +220,7 @@ export default class Variable {
             name = variableName,  ///
             type = null;
 
-      variable = new Variable(string, node, name, type);
+      variable = new Variable(localContext, string, node, name, type);
     }
 
     return variable;
@@ -224,7 +231,7 @@ export default class Variable {
           variableName = variableNameFromVariableNode(variableNode),
           string = localContext.nodeAsString(node),
           name = variableName,  ///
-          variable = new Variable(string, node, name, type);
+          variable = new Variable(localContext, string, node, name, type);
 
     return variable;
   }
@@ -240,7 +247,7 @@ export default class Variable {
           node = variableNode,  ///
           name = variableName,  ///
           type = Type.fromTypeNode(typeNode, localContext),
-          variable = new Variable(string, node, name, type);
+          variable = new Variable(localContext, string, node, name, type);
 
     return variable;
   }

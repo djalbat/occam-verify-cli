@@ -3,7 +3,6 @@
 import shim from "../shim";
 import Unifier from "../unifier";
 import unifyMetavariableWithFrame from "../unify/metavariableWithFrame";
-import unifyMetavariableWithStatement from "../unify/metavariableWithStatement";
 import unifyMetavariableWithStatementGivenSubstitution from "../unify/metavariableWithStatementGivenSubstitution";
 
 import { nodeQuery } from "../utilities/query";
@@ -56,11 +55,9 @@ class MetaLevelUnifier extends Unifier {
                     localContext = localContextB, ///
                     metavariable = metavariableA, ///
                     statement = statementB, ///
-                    statementUnified = metavariable.unifyStatement(statement, localContext);
+                    statementUnified = metavariable.unifyStatement(statement, substitutions, localContext);
 
-              const metavariableUnifiedWithStatement = unifyMetavariableWithStatement(metavariableNodeA, statementNodeB, substitutions, localContextA, localContextB);
-
-              statementUnifiedWithStatement = metavariableUnifiedWithStatement; ///
+              statementUnifiedWithStatement = statementUnified; ///
             } else {
               const substitutionNodeA = statementSubstitutionNodeA, ///
                     metavariableUnifiedWithStatementGivenSubstitution = unifyMetavariableWithStatementGivenSubstitution(metavariableNodeA, statementNodeB, substitutionNodeA, substitutions, localContextA, localContextB);

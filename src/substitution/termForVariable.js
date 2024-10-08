@@ -90,7 +90,7 @@ export default class TermForVariableSubstitution extends Substitution {
 
     const { Term } = shim;
 
-    term = Term.fromTermNode(termNode, localContext)
+    term = Term.fromTermNode(termNode, localContext); ///
 
     const string = stringFromTermAndVariable(term, variable),
           variableNode = variable.getNode(),

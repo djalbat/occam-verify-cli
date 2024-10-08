@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "../shim";
 import Substitution from "../substitution";
 import TermForVariableSubstitution from "../substitution/termForVariable";
 import FrameForMetavariableSubstitution from "../substitution/frameForMetavariable";
@@ -53,11 +54,18 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return metavariableNodeMatches;
   }
 
-  static fromStatementNodeAndMetavariableNode(statementNode, metavariableNode, localContextA, localContextB) {
+  static fromStatementAndMetavariable(statement, metavariable, localContext) {
+    let statementNode = statement.getNode();
+
     statementNode = stripBracketsFromStatement(statementNode); ///
 
-    const substitution = null,
-          string = stringFromStatementNodeMetavariableNodeAndSubstitution(statementNode, metavariableNode, substitution, localContextA, localContextB),
+    const { Statement } = shim;
+
+    statement = Statement.fromStatementNode(statementNode, localContext); ///
+
+    const string = stringFromStatementAndMetavariable(statement, metavariable),
+          substitution = null,
+          metavariableNode = metavariable.getNode(),
           statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, statementNode, metavariableNode, substitution);
 
     return statementForMetavariableSubstitution;
@@ -73,6 +81,15 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return statementForMetavariableSubstitution;
   }
 }
+
+function stringFromStatementAndMetavariable(statement, metavariable) {
+  const statementString = statement.getString(),
+        metavariableString = metavariable.getString(),
+        string = `[${statementString} for ${metavariableString}]`;
+
+  return string;
+}
+
 
 function substitutionFromSubstitutionNode(substitutionNode, localContextA, localContextB) {
   let substitution = null;

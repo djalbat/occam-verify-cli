@@ -7,7 +7,7 @@ import { filePathUtilities } from "occam-entities";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import { objectType } from "../type";
-import { tail, push, leftDifference } from "../utilities/array";
+import { tail, push, clear, leftDifference } from "../utilities/array";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { isFilePathNominalFilePath } = filePathUtilities,
@@ -399,9 +399,11 @@ export default class ReleaseContext {
 
     this.parser = nominalParser; ///
 
-    this.fileContexts = released ?
-                          fileContextsFromJSONAndEntries(this.json, this.entries, releaseContext) :
-                            fileContextsFromEntries(this.entries, releaseContext);
+    clear(this.fileContexts);
+
+    released ?
+      fileContextsFromJSONAndEntries(this.json, this.entries, this.fileContexts, releaseContext) :
+        fileContextsFromEntries(this.entries, this.fileContexts, releaseContext);
 
     this.initialised = true;
   }
@@ -448,9 +450,8 @@ export default class ReleaseContext {
   }
 }
 
-function fileContextsFromJSONAndEntries(json, entries, releaseContext) {
-  const fileContexts = [],
-        fileContextsJSON = json;  ///
+function fileContextsFromJSONAndEntries(json, entries, fileContexts, releaseContext) {
+  const fileContextsJSON = json;  ///
 
   fileContextsJSON.forEach((fileContextJSON) => {
     const { filePath } = fileContextJSON,
@@ -461,13 +462,9 @@ function fileContextsFromJSONAndEntries(json, entries, releaseContext) {
 
     fileContexts.push(fileContext);
   });
-
-  return fileContexts;
 }
 
-function fileContextsFromEntries(entries, releaseContext) {
-  const fileContexts = [];
-
+function fileContextsFromEntries(entries, fileContexts, releaseContext) {
   entries.forEachFile((file) => {
     const filePath = file.getPath(),
           filePathNominalFilePath = isFilePathNominalFilePath(filePath);
@@ -478,8 +475,6 @@ function fileContextsFromEntries(entries, releaseContext) {
       fileContexts.push(fileContext);
     }
   });
-
-  return fileContexts;
 }
 
 function verifyFileContexts(fileContexts, verifiedFileContexts) {
