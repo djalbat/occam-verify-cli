@@ -3,34 +3,43 @@
 import shim from "../shim";
 import LocalContext from "../context/local";
 
+import { trim } from "../utilities/string";
 import { nodeQuery } from "../utilities/query";
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement");
 
 export default class UnqualifiedStatement {
-  constructor(statement) {
+  constructor(string, statement) {
+    this.string = string;
     this.statement = statement;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getStatement() {
     return this.statement;
   }
 
-  getString() { return this.statement.getString(); }
-
   verify(assignments, stated, localContext) {
     let verified;
 
     const unqualifiedStatementString = this.getString(); ///
 
-    localContext.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
+    if (this.statement !== null) {
+      localContext.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
 
-    const statementVerified = this.statement.verify(assignments, stated, localContext);
+      const statementVerified = this.statement.verify(assignments, stated, localContext);
 
-    verified = statementVerified; ///
+      verified = statementVerified; ///
 
-    if (verified) {
-      localContext.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);
+      if (verified) {
+        localContext.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);
+      }
+
+    } else {
+      localContext.debug(`Cannot verify the '${unqualifiedStatementString}' unqualified statement because it is nonsense.`);
     }
 
     return verified;
@@ -61,16 +70,19 @@ export default class UnqualifiedStatement {
   }
 
   static fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext) {
-    let unqualifiedStatement = null;
+    let string;
 
-    if (unqualifiedStatementNode !== null) {
-      const { Statement } = shim,
-            statementNode = statementNodeQuery(unqualifiedStatementNode),
-            localContext = LocalContext.fromFileContext(fileContext),
-            statement = Statement.fromStatementNode(statementNode, localContext);
+    const { Statement } = shim,
+          statementNode = statementNodeQuery(unqualifiedStatementNode),
+          localContext = LocalContext.fromFileContext(fileContext),
+          statement = Statement.fromStatementNode(statementNode, localContext),
+          node = unqualifiedStatementNode;  ///
 
-      unqualifiedStatement = new UnqualifiedStatement(statement);
-    }
+    string = fileContext.nodeAsString(node);
+
+    string = trim(string);  ///
+
+    const unqualifiedStatement = new UnqualifiedStatement(string, statement);
 
     return unqualifiedStatement;
   }

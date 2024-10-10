@@ -38,24 +38,28 @@ export default class QualifiedStatement {
 
     const qualifiedStatementString = this.string; ///
 
-    localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`);
+    if (this.statement !== null) {
+      localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`);
 
-    const stated = true,
-          assignments = [],
-          statementVerified = this.statement.verify(assignments, stated, localContext);
+      const stated = true,
+            assignments = [],
+            statementVerified = this.statement.verify(assignments, stated, localContext);
 
-    if (statementVerified) {
-      const unified = this.unify(substitutions, localContext);
+      if (statementVerified) {
+        const unified = this.unify(substitutions, localContext);
 
-      if (unified) {
-        const assignmentsAssigned = assignAssignments(assignments, localContext);
+        if (unified) {
+          const assignmentsAssigned = assignAssignments(assignments, localContext);
 
-        verified = assignmentsAssigned; ///
+          verified = assignmentsAssigned; ///
+        }
       }
-    }
 
-    if (verified) {
-      localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement.`);
+      if (verified) {
+        localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement.`);
+      }
+    } else {
+      localContext.debug(`Cannot verify the '${qualifiedStatementString}' qualified statement because it is nonsense.`);
     }
 
     return verified;
@@ -83,25 +87,21 @@ export default class QualifiedStatement {
   }
 
   static fromQualifiedStatementNode(qualifiedStatementNode, fileContext) {
-    let qualifiedStatement = null;
+    let string;
 
-    if (qualifiedStatementNode !== null) {
-      let string;
+    const { Statement } = shim,
+          statementNode = statementNodeQuery(qualifiedStatementNode),
+          referenceNode = referenceNodeQuery(qualifiedStatementNode),
+          localContext = LocalContext.fromFileContext(fileContext),
+          statement = Statement.fromStatementNode(statementNode, localContext),
+          reference = Reference.fromReferenceNode(referenceNode, fileContext),
+          node = qualifiedStatementNode;  ///
 
-      const { Statement } = shim,
-            statementNode = statementNodeQuery(qualifiedStatementNode),
-            referenceNode = referenceNodeQuery(qualifiedStatementNode),
-            localContext = LocalContext.fromFileContext(fileContext),
-            statement = Statement.fromStatementNode(statementNode, localContext),
-            reference = Reference.fromReferenceNode(referenceNode, fileContext),
-            node = qualifiedStatementNode;  ///
+    string = fileContext.nodeAsString(node);
 
-      string = fileContext.nodeAsString(node);
+    string = trim(string);  ///
 
-      string = trim(string);  ///
-
-      qualifiedStatement = new QualifiedStatement(string, statement, reference);
-    }
+    const qualifiedStatement = new QualifiedStatement(string, statement, reference);
 
     return qualifiedStatement;
   }

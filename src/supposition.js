@@ -34,31 +34,27 @@ export default class Supposition {
 
     const suppositionString = this.getString(); ///
 
-    if (this.unqualifiedStatement !== null) {
-      localContext.trace(`Verifying the '${suppositionString}' supposition...`);
+    localContext.trace(`Verifying the '${suppositionString}' supposition...`);
 
-      const stated = true,
-            assignments = [],
-            unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
+    const stated = true,
+          assignments = [],
+          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
 
-      if (unqualifiedStatementVerified) {
-        const assignmentsAssigned = assignAssignments(assignments, localContext);
+    if (unqualifiedStatementVerified) {
+      const assignmentsAssigned = assignAssignments(assignments, localContext);
 
-        if (assignmentsAssigned) {
-          const { ProofStep } = shim,
-                proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
+      if (assignmentsAssigned) {
+        const { ProofStep } = shim,
+              proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
 
-          localContext.addProofStep(proofStep);
+        localContext.addProofStep(proofStep);
 
-          verified = true;
-        }
+        verified = true;
       }
+    }
 
-      if (verified) {
-        localContext.debug(`...verified the '${suppositionString}' supposition.`);
-      }
-    } else {
-      localContext.debug(`The '${suppositionString}' supposition cannot be verified because it is nonsense.`);
+    if (verified) {
+      localContext.debug(`...verified the '${suppositionString}' supposition.`);
     }
 
     return verified;

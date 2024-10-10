@@ -77,22 +77,17 @@ export default class Subproof {
   }
 
   static fromSubproofNode(subproofNode, fileContext) {
-    let subproof = null;
+    const subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
+          suppositionNodes = suppositionNodesQuery(subproofNode),
+          subDerivationNode = subDerivationNodeQuery(subproofNode),
+          string = subproofString,  ///
+          suppositions = suppositionNodes.map((suppositionNode) => {
+            const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
 
-    if (subproofNode !== null) {
-      const subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
-            suppositionNodes = suppositionNodesQuery(subproofNode),
-            subDerivationNode = subDerivationNodeQuery(subproofNode),
-            string = subproofString,  ///
-            suppositions = suppositionNodes.map((suppositionNode) => {
-              const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
-
-              return supposition;
-            }),
-            subDerivation = SubDerivation.fromSubDerivationNode(subDerivationNode, fileContext);
-
-      subproof = new Subproof(string, suppositions, subDerivation);
-    }
+            return supposition;
+          }),
+          subDerivation = SubDerivation.fromSubDerivationNode(subDerivationNode, fileContext),
+          subproof = new Subproof(string, suppositions, subDerivation);
 
     return subproof;
   }

@@ -149,11 +149,16 @@ class Statement {
   }
 
   static fromStatementNode(statementNode, localContext) {
-    const node = statementNode, ///
+    let statement = null;
+
+    if (statementNode !== null) {
+      const node = statementNode, ///
           string = localContext.nodeAsString(node),
           statementSubstitution = StatementSubstitution.fromStatementNode(statementNode, localContext),
-          substitution = statementSubstitution, ///
-          statement = new Statement(string, node, substitution);
+          substitution = statementSubstitution; ///
+
+      statement = new Statement(string, node, substitution);
+    }
 
     return statement;
   }
