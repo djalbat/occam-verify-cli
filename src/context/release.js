@@ -491,7 +491,9 @@ function verifyFileContexts(fileContexts, verifiedFileContexts) {
       break;
     }
 
-    const fileContextVerified = fileContexts.some((fileContext) => {
+    let fileContextsVerified = false;
+
+    fileContexts.forEach((fileContext) => {
       const fileContextVerified = verifyFileContext(fileContext);
 
       if (fileContextVerified) {
@@ -499,11 +501,11 @@ function verifyFileContexts(fileContexts, verifiedFileContexts) {
 
         verifiedFileContexts.push(verifiedFileContext);
 
-        return true;
+        fileContextsVerified = true;
       }
     });
 
-    if (!fileContextVerified) {
+    if (!fileContextsVerified) {
       break;
     }
 
