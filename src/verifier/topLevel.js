@@ -5,6 +5,7 @@ import Error from "../error";
 import Axiom from "../axiom";
 import Lemma from "../lemma";
 import Theorem from "../theorem";
+import Conjecture from "../conjecture";
 import TypeDeclaration from "../declaration/type";
 import VariableDeclaration from "../declaration/variable";
 import CombinatorDeclaration from "../declaration/combinator";
@@ -13,7 +14,6 @@ import MetavariableDeclaration from "../declaration/metavariable";
 
 import Verifier from "../verifier";
 import verifyMetaLemma from "../verify/metaLemma";
-import verifyConjecture from "../verify/conjecture";
 import verifyMetatheorem from "../verify/metatheorem";
 
 import { nodeQuery } from "../utilities/query";
@@ -101,7 +101,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: conjectureNodeQuery,
       verify: (conjectureNode, fileContext) => {
-        const conjectureVerified = verifyConjecture(conjectureNode, fileContext);
+        const conjecture = Conjecture.fromConjectureNode(conjectureNode, fileContext),
+              conjectureVerified = conjecture.verify();
 
         return conjectureVerified;
       }
