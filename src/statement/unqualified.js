@@ -48,7 +48,9 @@ export default class UnqualifiedStatement {
   toJSON() {
     const statementJSON = this.statement.toJSON(),
           statement = statementJSON,  ///
+          string = this.string, ///
           json = {
+            string,
             statement
           };
 
@@ -64,7 +66,8 @@ export default class UnqualifiedStatement {
 
     statement = Statement.fromJSON(json, fileContext);
 
-    const unqualifiedStatement = new UnqualifiedStatement(statement);
+    const { string } = json,
+          unqualifiedStatement = new UnqualifiedStatement(string, statement);
 
     return unqualifiedStatement;
   }
