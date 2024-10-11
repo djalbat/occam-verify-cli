@@ -132,6 +132,7 @@ export default class SubproofAssertion {
     if (subproofAssertionNode !== null) {
       const { Statement } = shim,
             statementNodes = statementNodesQuery(subproofAssertionNode),
+            statement = Statement.fromStatementNode(statementNode, fileContext),
             statementString = statement.getString(),
             localContext = LocalContext.fromFileContext(fileContext),
             statements = statementNodes.map((statementNode) => {
