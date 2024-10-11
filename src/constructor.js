@@ -4,7 +4,6 @@ import shim from "./shim";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
-import { objectType } from "./type";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
@@ -77,9 +76,7 @@ export default class Constructor {
     const { Term, Type } = shim,
           termNode = termNodeQuery(constructorDeclarationNode),
           typeNode = typeNodeQuery(constructorDeclarationNode),
-          type = (typeNode === null) ?
-                   objectType :
-                     Type.fromTypeNode(typeNode),
+          type = Type.fromTypeNode(typeNode),
           localContext = LocalContext.fromFileContext(fileContext),
           term = Term.fromTermNodeAndType(termNode, type, localContext),
           string = stringFromTermAndType(term, type),

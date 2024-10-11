@@ -153,15 +153,20 @@ export default class TypeAssertion {
   }
 
   static fromTypeAssertionNode(typeAssertionNode, localContext) {
-    const { Term, Type } = shim,
-          termNode = termNodeQuery(typeAssertionNode),
-          typeNode = typeNodeQuery(typeAssertionNode),
-          variableNode = variableNodeQuery(termNode),
-          term = Term.fromTermNode(termNode, localContext),
-          type = Type.fromTypeNode(typeNode, localContext),
-          variable = Variable.fromVariableNode(variableNode, localContext),
-          string = stringFromTermAndType(term, type),
-          typeAssertion = new TypeAssertion(string, term, type, variable);
+    let typeAssertion = null;
+
+    if (typeAssertionNode !== null) {
+      const { Term, Type } = shim,
+            termNode = termNodeQuery(typeAssertionNode),
+            typeNode = typeNodeQuery(typeAssertionNode),
+            variableNode = variableNodeQuery(termNode),
+            term = Term.fromTermNode(termNode, localContext),
+            type = Type.fromTypeNode(typeNode, localContext),
+            variable = Variable.fromVariableNode(variableNode, localContext),
+            string = stringFromTermAndType(term, type);
+
+      typeAssertion = new TypeAssertion(string, term, type, variable);
+    }
 
     return typeAssertion;
   }

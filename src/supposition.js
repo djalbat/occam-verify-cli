@@ -71,7 +71,8 @@ export default class Supposition {
     localContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
 
     const statement = this.unqualifiedStatement.getStatement(),
-          subproofAssertion = SubproofAssertion.fromStatement(statement, this.fileContext);
+          statementNode = statement.getNode(),
+          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, this.fileContext);
 
     if (subproofAssertion !== null) {
       subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, this.fileContext, localContext);

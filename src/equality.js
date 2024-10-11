@@ -157,14 +157,19 @@ export default class Equality {
   }
 
   static fromEqualityNode(equalityNode, localContext) {
-    const { Term } = shim,
-          leftTermNode = leftTermNodeQuery(equalityNode),
-          rightTermNode = rightTermNodeQuery(equalityNode),
-          leftTerm = Term.fromTermNode(leftTermNode, localContext),
-          rightTerm = Term.fromTermNode(rightTermNode, localContext),
-          node = equalityNode,  ///
-          string = localContext.nodeAsString(node),
-          equality = new Equality(string, leftTerm, rightTerm);
+    let equality = null;
+
+    if (equalityNode !== null) {
+      const { Term } = shim,
+            leftTermNode = leftTermNodeQuery(equalityNode),
+            rightTermNode = rightTermNodeQuery(equalityNode),
+            leftTerm = Term.fromTermNode(leftTermNode, localContext),
+            rightTerm = Term.fromTermNode(rightTermNode, localContext),
+            node = equalityNode,  ///
+            string = localContext.nodeAsString(node);
+
+      equality = new Equality(string, leftTerm, rightTerm);
+    }
 
     return equality;
   }

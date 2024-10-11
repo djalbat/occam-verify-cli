@@ -240,10 +240,15 @@ class Term {
   }
 
   static fromTermNode(termNode, localContext) {
-    const node = termNode,  ///
-          string = localContext.nodeAsString(node),
-          type = null,
-          term = new Term(string, node, type);
+    let term = null;
+
+    if (termNode !== null) {
+      const node = termNode,  ///
+            string = localContext.nodeAsString(node),
+            type = null;
+
+      term = new Term(string, node, type);
+    }
 
     return term;
   }

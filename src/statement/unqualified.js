@@ -73,19 +73,23 @@ export default class UnqualifiedStatement {
   }
 
   static fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext) {
-    let string;
+    let unqualifiedStatement = null;
 
-    const { Statement } = shim,
-          statementNode = statementNodeQuery(unqualifiedStatementNode),
-          localContext = LocalContext.fromFileContext(fileContext),
-          statement = Statement.fromStatementNode(statementNode, localContext),
-          node = unqualifiedStatementNode;  ///
+    if (unqualifiedStatementNode !== null) {
+      let string;
 
-    string = fileContext.nodeAsString(node);
+      const { Statement } = shim,
+            statementNode = statementNodeQuery(unqualifiedStatementNode),
+            localContext = LocalContext.fromFileContext(fileContext),
+            statement = Statement.fromStatementNode(statementNode, localContext),
+            node = unqualifiedStatementNode;  ///
 
-    string = trim(string);  ///
+      string = fileContext.nodeAsString(node);
 
-    const unqualifiedStatement = new UnqualifiedStatement(string, statement);
+      string = trim(string);  ///
+
+      unqualifiedStatement = new UnqualifiedStatement(string, statement);
+    }
 
     return unqualifiedStatement;
   }

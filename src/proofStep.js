@@ -90,23 +90,11 @@ class ProofStep {
   static fromProofStepNode(proofStepNode, fileContext) {
     const subproofNode = subproofNodeQuery(proofStepNode),
           qualifiedStatementNode = qualifiedStatementNodeQuery(proofStepNode),
-          unqualifiedStatementNode = unqualifiedStatementNodeQuery(proofStepNode);
-
-    let subproof = null,
-        qualifiedStatement = null,
-        unqualifiedStatement = null;
-
-    if (false) {
-      ///
-    } else if (subproofNode !== null) {
-      subproof = Subproof.fromSubproofNode(subproofNode, fileContext);
-    } else if (qualifiedStatementNode !== null) {
-      qualifiedStatement = QualifiedStatement.fromQualifiedStatementNode(qualifiedStatementNode, fileContext);
-    } else if (unqualifiedStatementNode !== null) {
-      unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext);
-    }
-
-    const proofStep = new ProofStep(subproof, qualifiedStatement, unqualifiedStatement);
+          unqualifiedStatementNode = unqualifiedStatementNodeQuery(proofStepNode),
+          subproof = Subproof.fromSubproofNode(subproofNode, fileContext),
+          qualifiedStatement = QualifiedStatement.fromQualifiedStatementNode(qualifiedStatementNode, fileContext),
+          unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
+          proofStep = new ProofStep(subproof, qualifiedStatement, unqualifiedStatement);
 
     return proofStep;
   }

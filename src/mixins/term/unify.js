@@ -20,15 +20,14 @@ function unifyTermWithBracketedConstructor(term, localContext, verifyAhead) {
   termUnifiedWithBracketedConstructor = unifyTermWithConstructor(term, bracketedConstructor, localContext, () => {
     let verifiedAhead = false;
 
-    const bracketedTerm = term, ///
+    const { Term } = shim,
+          bracketedTerm = term, ///
           bracketedTermNode = bracketedTerm.getNode(),
           termNode = termNodeQuery(bracketedTermNode); ///
 
-    if (termNode !== null) {
-      const { Term } = shim;
+    term = Term.fromTermNode(termNode, localContext);
 
-      term = Term.fromTermNode(termNode, localContext);
-
+    if (term !== null) {
       const termVVerified = term.verify(localContext, () => {
         let verifiedAhead;
 

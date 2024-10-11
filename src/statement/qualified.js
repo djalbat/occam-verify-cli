@@ -87,21 +87,25 @@ export default class QualifiedStatement {
   }
 
   static fromQualifiedStatementNode(qualifiedStatementNode, fileContext) {
-    let string;
+    let qualifiedStatement = null;
 
-    const { Statement } = shim,
-          statementNode = statementNodeQuery(qualifiedStatementNode),
-          referenceNode = referenceNodeQuery(qualifiedStatementNode),
-          localContext = LocalContext.fromFileContext(fileContext),
-          statement = Statement.fromStatementNode(statementNode, localContext),
-          reference = Reference.fromReferenceNode(referenceNode, fileContext),
-          node = qualifiedStatementNode;  ///
+    if (qualifiedStatementNode !== null) {
+      let string;
 
-    string = fileContext.nodeAsString(node);
+      const { Statement } = shim,
+            statementNode = statementNodeQuery(qualifiedStatementNode),
+            referenceNode = referenceNodeQuery(qualifiedStatementNode),
+            localContext = LocalContext.fromFileContext(fileContext),
+            statement = Statement.fromStatementNode(statementNode, localContext),
+            reference = Reference.fromReferenceNode(referenceNode, fileContext),
+            node = qualifiedStatementNode;  ///
 
-    string = trim(string);  ///
+      string = fileContext.nodeAsString(node);
 
-    const qualifiedStatement = new QualifiedStatement(string, statement, reference);
+      string = trim(string);  ///
+
+      qualifiedStatement = new QualifiedStatement(string, statement, reference);
+    }
 
     return qualifiedStatement;
   }

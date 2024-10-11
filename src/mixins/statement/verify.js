@@ -51,15 +51,15 @@ function verifyAsEquality(statement, assignments, stated, localContext) {
   let verifiedAsEquality = false;
 
   const statementNode = statement.getNode(),
-        equalityNode = equalityNodeQuery(statementNode);
+        equalityNode = equalityNodeQuery(statementNode),
+        equality = Equality.fromEqualityNode(equalityNode, localContext);
 
-  if (equalityNode !== null) {
+  if (equality !== null) {
     const statementString = statement.getString();
 
     localContext.trace(`Verifying the '${statementString}' statement as an equality...`);
 
-    const equality = Equality.fromEqualityNode(equalityNode, localContext),
-          equalityVerified = equality.verify(assignments, stated, localContext);
+    const equalityVerified = equality.verify(assignments, stated, localContext);
 
     verifiedAsEquality = equalityVerified; ///
 
@@ -144,15 +144,15 @@ function verifyAsTypeAssertion(statement, assignments, stated, localContext) {
   let verifiedAsTypeAssertion = false;
 
   const statementNode = statement.getNode(),
-        typeAssertionNode = typeAssertionNodeQuery(statementNode);
+        typeAssertionNode = typeAssertionNodeQuery(statementNode),
+        typeAssertion = TypeAssertion.fromTypeAssertionNode(typeAssertionNode, localContext);
 
-  if (typeAssertionNode !== null) {
+  if (typeAssertion !== null) {
     const statementString = statement.getString();
 
     localContext.trace(`Verifying the '${statementString}' statement as a type assertion...`);
 
-    const typeAssertion = TypeAssertion.fromTypeAssertionNode(typeAssertionNode, localContext),
-          typeAssertionVerified = typeAssertion.verify(assignments, stated, localContext);
+    const typeAssertionVerified = typeAssertion.verify(assignments, stated, localContext);
 
     verifiedAsTypeAssertion = typeAssertionVerified; ///
 
@@ -191,15 +191,15 @@ function verifyAsSubproofAssertion(statement, assignments, stated, localContext)
   let verifiedAsSubproofAssertion = false;
 
   const statementNode = statement.getNode(),
-        subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
+        subproofAssertionNode = subproofAssertionNodeQuery(statementNode),
+        subproofAssertion = SubproofAssertion.fromSubproofAssertionNode(subproofAssertionNode, localContext);
 
   if (subproofAssertionNode !== null) {
     const statementString = statement.getString();
 
     localContext.trace(`Verifying the '${statementString}' statement as a subproof assertion...`);
 
-    const subproofAssertion = SubproofAssertion.fromSubproofAssertionNode(subproofAssertionNode, localContext),
-          subproofAssertionVerified = subproofAssertion.verify(assignments, stated, localContext);
+    const subproofAssertionVerified = subproofAssertion.verify(assignments, stated, localContext);
 
     verifiedAsSubproofAssertion = subproofAssertionVerified; ///
 

@@ -153,9 +153,9 @@ class Statement {
 
     if (statementNode !== null) {
       const node = statementNode, ///
-          string = localContext.nodeAsString(node),
-          statementSubstitution = StatementSubstitution.fromStatementNode(statementNode, localContext),
-          substitution = statementSubstitution; ///
+            string = localContext.nodeAsString(node),
+            statementSubstitution = StatementSubstitution.fromStatementNode(statementNode, localContext),
+            substitution = statementSubstitution; ///
 
       statement = new Statement(string, node, substitution);
     }

@@ -10,15 +10,15 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
   let termVerifiedAsVariable = false;
 
   const termNode = term.getNode(),
-        variableNode = variableNodeQuery(termNode);
+        variableNode = variableNodeQuery(termNode),
+        variable = Variable.fromVariableNode(variableNode, localContext);
 
-  if (variableNode !== null) {
+  if (variable !== null) {
     const termString = localContext.nodeAsString(termNode);
 
     localContext.trace(`Verifying the '${termString}' term as a variable...`, termNode);
 
-    const variable = Variable.fromVariableNode(variableNode, localContext),
-          variableVerified = variable.verify(localContext);
+    const variableVerified = variable.verify(localContext);
 
     if (variableVerified) {
       let verifiedAhead;
