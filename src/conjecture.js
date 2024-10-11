@@ -46,11 +46,11 @@ export default class Conjecture extends TopLevelAssertion {
         const consequentVerified = this.consequent.verify(localContext);
 
         if (consequentVerified) {
-          if (this.proof !== null) {
+          // if (this.proof !== null) {
             const substitutions = Substitutions.fromNothing();
 
             this.proof.verify(substitutions, this.consequent, localContext);
-          }
+          // }
 
           const conjecture = this;  ///
 
