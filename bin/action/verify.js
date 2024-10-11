@@ -27,15 +27,11 @@ function verifyAction(argument, log) {
     if (error) {
       log.error(error);
 
-      stopClock(now, log);
-
       return;
     }
 
     if (!success) {
       log.warning(`The '${name}' project or package context cannot be created.`);
-
-      stopClock(now, log);
 
       return;
     }
@@ -46,8 +42,6 @@ function verifyAction(argument, log) {
 
     if (released) {
       log.warning(`The '${name}' package does not need to be verified.`);
-
-      stopClock(now, log);
 
       return;
     }
@@ -60,6 +54,8 @@ function verifyAction(argument, log) {
 
     if (!releaseVerified) {
       log.warning(`The '${name}' project or package context cannot be verified.`);
+
+      return;
     }
 
     stopClock(now, log);
