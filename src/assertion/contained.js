@@ -117,6 +117,22 @@ export default class ContainedAssertion {
       }
     }
 
+    if (this.frame !== null) {
+      const metavariable = this.frame.getVariable(localContext);
+
+      if (metavariable !== null) {
+        const metavariableContained = this.statement.isMetavariableContained(metavariable, localContext);
+
+        if (!this.negated && metavariableContained) {
+          verifiedWhenDerived = true;
+        }
+
+        if (this.negated && !metavariableContained) {
+          verifiedWhenDerived = true;
+        }
+      }
+    }
+
     if (verifiedWhenDerived) {
       localContext.debug(`...verified the '${containedAssertionString}' derived contained assertion.`);
     }
@@ -143,53 +159,4 @@ export default class ContainedAssertion {
 
     return containedAssertion;
   }
-}
-
-// const frameMetavariableNodeQuery = nodeQuery("/containedAssertion/frame/metavariable!"),
-//       statementMetavariableNodesQuery = nodesQuery("/containedAssertion/statement//metavariable");
-
-function verifyDerivedContainedAssertion(containedAssertionNode, assignments, stated, localContext) {
-  let derivedContainedAssertionVerified = false;
-
-  if (!stated) {
-    const frameMetavariableNode = frameMetavariableNodeQuery(containedAssertionNode),
-          termVariableNode = termVariableNodeQuery(containedAssertionNode);
-
-    if (false) {
-      ///
-    } else if (frameMetavariableNode !== null) {
-      const statementMetavariableNodes = statementMetavariableNodesQuery(containedAssertionNode),
-            frameMetavariableNodeMatchesStatementMetavariableNode = statementMetavariableNodes.some((statementMetavariableNode) => {
-              const frameMetavariableNodeMatchesStatementMetavariableNode = frameMetavariableNode.match(statementMetavariableNode);
-
-              if (frameMetavariableNodeMatchesStatementMetavariableNode) {
-                return true;
-              }
-            });
-
-      if (!negated) {
-        if (frameMetavariableNodeMatchesStatementMetavariableNode) {
-          derivedContainedAssertionVerified = true;
-        }
-      }
-
-      if (negated) {
-        if (!frameMetavariableNodeMatchesStatementMetavariableNode) {
-          derivedContainedAssertionVerified = true;
-        }
-      }
-    } else if (termVariableNode !== null) {
-      const statementVariableNodes = statementVariableNodesQuery(containedAssertionNode),
-            termVariableNodeMatchesStatementVariableNode = statementVariableNodes.some((statementVariableNode) => {
-          const termVariableNodeMatchesStatementVariableNode = termVariableNode.match(statementVariableNode);
-
-          if (termVariableNodeMatchesStatementVariableNode) {
-            return true;
-          }
-        });
-
-    }
-  }
-
-  return derivedContainedAssertionVerified;
 }

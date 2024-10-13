@@ -8,7 +8,6 @@ import { nodeQuery } from "./utilities/query";
 import { objectType } from "./type";
 import { variableNameFromVariableNode} from "./utilities/name";
 import { variableNodeFromVariableString } from "./utilities/node";
-import local from "./context/local";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
       variableNodeQuery = nodeQuery("/variableDeclaration/variable"),

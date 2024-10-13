@@ -68,7 +68,10 @@ export default class Metavariable {
 
     localContext.trace(`Verifying the '${metavariableString}' metavariable...`);
 
-    debugger
+    const metavariableName = this.name, ///
+          metavariablePresent = localContext.isMetavariablePresentByMetavariableName(metavariableName);
+
+    verified = metavariablePresent; ///
 
     if (verified) {
       localContext.debug(`...verified the '${metavariableString}' metavariable.`);

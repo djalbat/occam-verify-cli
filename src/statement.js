@@ -10,7 +10,8 @@ import { nodesQuery } from "./utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 import { statementNodeFromStatementString } from "./utilities/node";
 
-const statementVariableNodesQuery = nodesQuery("/statement//variable");
+const statementVariableNodesQuery = nodesQuery("/statement//variable"),
+      statementMetavariableNodesQuery = nodesQuery("/statement//metavariable");
 
 class Statement {
   constructor(string, node, substitution) {
@@ -64,6 +65,33 @@ class Statement {
     }
 
     return variableContained;
+  }
+
+  isMetavariableContained(metavariable, localContext) {
+    let metavariableContained;
+
+    const metavariableString = metavariable.getString(),
+          statementString = this.string;  ///
+
+    localContext.trace(`The '${metavariableString}' metavariable is contained in hte '${statementString}' statement...`);
+
+    const metavariableNode = metavariable.getNode(),
+          statementNode = this.node,
+          statementMetavariableNodes = statementMetavariableNodesQuery(statementNode);
+
+    metavariableContained = statementMetavariableNodes.some((statementMetavariableNode) => {  ///
+      const metavariableNodeMatchesStatementMetavariableNode = metavariableNode.match(statementMetavariableNode);
+
+      if (metavariableNodeMatchesStatementMetavariableNode) {
+        return true;
+      }
+    });
+
+    if (metavariableContained) {
+      localContext.debug(`...the '${metavariableString}' metavariable is contained in hte '${statementString}' statement.`);
+    }
+
+    return metavariableContained;
   }
 
   verify(assignments, stated, localContext) {
@@ -126,7 +154,7 @@ class Statement {
     const metaTypeString = metaType.getString(),
           statementString = this.string;  ///
 
-    localContext.trace(`Verifying the '${statementString}' given the '${metaTypeString}' meta-type...`);
+    localContext.trace(`Verifying the '${statementString}' statement given the '${metaTypeString}' meta-type...`);
 
     const metaTypeName = metaType.getName();
 
@@ -137,7 +165,7 @@ class Statement {
     }
 
     if (verifiedGivenMetaType) {
-      localContext.debug(`...verified the '${statementString}' given the '${metaTypeString}' meta-type.`);
+      localContext.debug(`...verified the '${statementString}' statement given the '${metaTypeString}' meta-type.`);
     }
 
     return verifiedGivenMetaType;
