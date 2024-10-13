@@ -1,9 +1,12 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import shim from "./shim";
 
-import { last } from "./utilities/array";
 import { nodesQuery } from "./utilities/query";
+
+const { last } = arrayUtilities;
 
 const proofStepNodesQuery = nodesQuery("/subDerivation/proofStep|lastProofStep");
 

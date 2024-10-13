@@ -1,12 +1,15 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import shim from "../shim";
 import LocalContext from "../context/local";
 import metaLevelUnifier from "../unifier/metaLevel";
 import metaLevelVerifier from "../verifier/metaLevel";
 
-import { front, last, match } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
+
+const { front, last, match } = arrayUtilities;
 
 const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion");

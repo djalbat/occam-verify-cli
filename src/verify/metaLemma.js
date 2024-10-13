@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import MetaLemma from "../metaLemma";
 // import verifyProof from "../verify/proof";
 import LocalContext from "../context/local";
@@ -7,9 +9,10 @@ import Substitutions from "../substitutions";
 // import verifyConsequent from "../verify/consequent";
 // import verifySuppositions from "../verify/suppositions";
 
-import { first } from "../utilities/array";
 import { EMPTY_STRING } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
+
+const { first } = arrayUtilities;
 
 const proofNodeQuery = nodeQuery("/metaLemma/proof!"),
       labelNodesQuery = nodesQuery("/metaLemma/label"),

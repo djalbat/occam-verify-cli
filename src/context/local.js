@@ -1,10 +1,13 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import Equivalence from "../equivalence";
 
-import { last, reverse } from "../utilities/array";
 import { metavariableNameFromMetavariableNode } from "../utilities/name";
 import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../utilities/equivalences";
+
+const { last, reverse } = arrayUtilities;
 
 class LocalContext {
   constructor(context, variables, proofSteps, judgements, equivalences, metavariables) {

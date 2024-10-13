@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import FileContext from "./file";
 import topLevelVerifier from "../verifier/topLevel";
 
@@ -7,10 +9,10 @@ import { filePathUtilities } from "occam-entities";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import { objectType } from "../type";
-import { tail, push, clear, leftDifference } from "../utilities/array";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { isFilePathNominalFilePath } = filePathUtilities,
+      { tail, push, clear, resolve } = arrayUtilities,
       { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
 
@@ -478,43 +480,14 @@ function fileContextsFromEntries(entries, fileContexts, releaseContext) {
 }
 
 function verifyFileContexts(fileContexts, verifiedFileContexts) {
-  let fileContextsVerified;
+  const resolved = resolve(fileContexts, verifiedFileContexts, (fileContext) => {
+          const fileContextVerified = verifyFileContext(fileContext);
 
-  fileContexts = [  ///
-    ...fileContexts
-  ];
-
-  for (;;) {
-    const fileContextsLength = fileContexts.length;
-
-    if (fileContextsLength === 0) {
-      break;
-    }
-
-    let fileContextsVerified = false;
-
-    fileContexts.forEach((fileContext) => {
-      const fileContextVerified = verifyFileContext(fileContext);
-
-      if (fileContextVerified) {
-        const verifiedFileContext = fileContext;  ///
-
-        verifiedFileContexts.push(verifiedFileContext);
-
-        fileContextsVerified = true;
-      }
-    });
-
-    if (!fileContextsVerified) {
-      break;
-    }
-
-    leftDifference(fileContexts, verifiedFileContexts);
-  }
-
-  const fileContextsLength = fileContexts.length;
-
-  fileContextsVerified = (fileContextsLength === 0);
+          if (fileContextVerified) {
+            return true;
+          }
+        }),
+        fileContextsVerified = resolved;  ///
 
   return fileContextsVerified;
 }

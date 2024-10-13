@@ -1,8 +1,10 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import Equivalence from "../equivalence";
 
-import { push, compress, separate } from "../utilities/array";
+const { push, compress, separate } = arrayUtilities;
 
 export function mergeEquivalences(equivalencesA, equivalencesB, localContext) {
   const typesA = typesFromEquivalences(equivalencesA, localContext),

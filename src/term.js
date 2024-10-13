@@ -1,14 +1,17 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import shim from "./shim";
 import unifyMixins from "./mixins/term/unify";
 import verifyMixins from "./mixins/term/verify";
 import termAsConstructorVerifier from "./verifier/termAsConstructor";
 
-import { filter } from "./utilities/array";
+import { objectType } from "./type";
 import { nodesQuery } from "./utilities/query"
 import { termNodeFromTermString } from "./utilities/node";
-import {objectType} from "./type";
+
+const { filter } = arrayUtilities;
 
 const variableNodesQuery = nodesQuery("//variable");
 

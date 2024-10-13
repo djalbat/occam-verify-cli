@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import shim from "../shim";
 import Rule from "../rule";
 import Axiom from "../axiom";
@@ -14,9 +16,10 @@ import Constructor from "../constructor";
 import Metatheorem from "../metatheorem";
 import Metavariable from "../metavariable";
 
-import { push } from "../utilities/array";
 import { objectType } from "../type";
 import { nodeAsString, nodesAsString } from "../utilities/string";
+
+const { push } = arrayUtilities;
 
 export default class FileContext {
   constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables) {

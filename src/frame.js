@@ -1,7 +1,10 @@
 "use strict";
 
-import { first } from "./utilities/array";
+import { arrayUtilities } from "necessary";
+
 import { metavariableNameFromMetavariableNode } from "./utilities/name";
+
+const { first } = arrayUtilities;
 
 export default class Frame {
   constructor(declarations, metavariableNodes) {

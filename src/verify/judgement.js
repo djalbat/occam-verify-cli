@@ -1,12 +1,15 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import Judgement from "../judgement";
 import verifyFrame from "../verify/frame";
 import verifyDeclaration from "./declaration";
 import JudgementAssignment from "../assignment/judgement";
 
-import { first } from "../utilities/array";
 import { nodeQuery } from "../utilities/query";
+
+const { first } = arrayUtilities;
 
 const frameNodeQuery = nodeQuery("/judgement/frame"),
       declarationNodeQuery = nodeQuery("/judgement/declaration");

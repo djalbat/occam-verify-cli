@@ -1,6 +1,8 @@
 "use strict";
 
-import { match } from "../utilities/array";
+import { arrayUtilities } from "necessary";
+
+const { match } = arrayUtilities;
 
 export function terminalNodeMapFromNodes(nodes) {
   const terminalNodeMap = {};

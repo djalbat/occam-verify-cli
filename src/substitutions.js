@@ -1,7 +1,10 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import { EMPTY_STRING } from "./constants";
-import { find, first, prune, compress, rightDifference } from "./utilities/array";
+
+const { find, first, prune, filter, compress } = arrayUtilities;
 
 export default class Substitutions {
   constructor(array, savedArray) {
@@ -285,4 +288,14 @@ export default class Substitutions {
 
     return substitutions;
   }
+}
+
+function rightDifference(arrayA, arrayB) {
+  filter(arrayB, (elementB) => {
+    const arrayAIncludesElementB = arrayA.includes(elementB);
+
+    if (!arrayAIncludesElementB) {
+      return true;
+    }
+  });
 }

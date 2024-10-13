@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 // import verifyProof from "../verify/proof";
 import Metatheorem from "../metatheorem";
 import LocalContext from "../context/local";
@@ -7,8 +9,9 @@ import Substitutions from "../substitutions";
 // import verifyConsequent from "../verify/consequent";
 // import verifySuppositions from "../verify/suppositions";
 
-import { first } from "../utilities/array";
 import { nodeQuery, nodesQuery } from "../utilities/query";
+
+const { first } = arrayUtilities;
 
 const labelNodesQuery = nodesQuery("/metatheorem/label"),
       proofNodeQuery = nodeQuery("/metatheorem/proof!"),

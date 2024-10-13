@@ -1,11 +1,13 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import Label from "./label";
 import Consequent from "./consequent";
 import Supposition from "./supposition";
 import Substitutions from "./substitutions";
 
-import { reverse, correlate } from "./utilities/array";
+const { reverse, correlate } = arrayUtilities;
 
 export default class TopLevelAssertion {
   constructor(fileContext, labels, suppositions, consequent, proof) {

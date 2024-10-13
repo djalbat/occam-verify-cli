@@ -1,7 +1,10 @@
 "use strict";
 
-import { last } from "./array";
+import { arrayUtilities } from "necessary";
+
 import { FUNCTION } from "../constants";
+
+const { last } = arrayUtilities;
 
 export function isLastRemainingArgumentFunction(remainingArguments) {
   let lastRemainingArgumentFunction = false;

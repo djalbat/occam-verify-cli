@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import Label from "./label";
 import Proof from "./proof";
 import Premise from "./premise";
@@ -7,8 +9,9 @@ import Conclusion from "./conclusion";
 import LocalContext from "./context/local";
 import Substitutions from "./substitutions";
 
-import { reverse, correlate } from "./utilities/array";
 import { nodeQuery, nodesQuery } from "./utilities/query";
+
+const { reverse, correlate } = arrayUtilities;
 
 const proofNodeQuery = nodeQuery("/rule/proof"),
       labelNodesQuery = nodesQuery("/rule/label"),

@@ -1,6 +1,8 @@
 "use strict";
 
-import { last } from "../utilities/array";
+import { arrayUtilities } from "necessary";
+
+const { last } = arrayUtilities;
 
 export function createReleaseContext(dependency, dependentNames, context, callback) {
   const { log, releaseContextMap } = context,
