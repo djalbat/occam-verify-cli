@@ -4,7 +4,7 @@ import metaLevelVerifier from "../../verifier/metaLevel";
 
 import { nodeQuery } from "../../utilities/query";
 import { isAssertionNegated } from "../../utilities/assertion";
-import { metavariableNameFromMetavariableNode } from "../../utilities/name";
+import { variableNameFromVariableNode, metavariableNameFromMetavariableNode } from "../../utilities/name";
 
 const variableNodeQuery = nodeQuery("/definedAssertion/term/variable!"),
       metavariableNodeQuery = nodeQuery("/definedAssertion/frame/metavariable!");
@@ -26,11 +26,11 @@ export default function verifyDefinedAssertion(definedAssertionNode, assignments
 
   stated = true;  ///
 
-  const verified = metaLevelVerifier.verify(definedAssertionNode, assignments, stated, localContext);
+  const verifiedAtMetaLevel = metaLevelVerifier.verify(definedAssertionNode, assignments, stated, localContext);
 
   stated = savedStated; ///
 
-  if (verified) {
+  if (verifiedAtMetaLevel) {
     definedAssertionVerified = verifyDefinedAssertionFunctions.some((verifyDefinedAssertionFunction) => {
       const definedAssertionVerified = verifyDefinedAssertionFunction(definedAssertionNode, assignments, stated, localContext);
 
@@ -77,7 +77,8 @@ function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, stated
         }
       }
     } else if (variableNode !== null) {
-      const variable = localContext.findVariableByVariableNode(variableNode),
+      const variableName = variableNameFromVariableNode(variableNode),
+            variable = localContext.findVariableByVariableName(variableName),
             variableDefined = localContext.isVariableDefined(variable);
 
       if (!assertionNegated) {

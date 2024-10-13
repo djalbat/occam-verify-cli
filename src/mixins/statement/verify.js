@@ -2,17 +2,17 @@
 
 import Equality from "../../equality";
 import TypeAssertion from "../../assertion/type";
+import SubproofAssertion from "../../assertion/subproof";
+import ContainedAssertion from "../../assertion/contained";
 
 import verifyFrame from "../../verify/frame";
 import verifyJudgement from "../../verify/judgement";
 import verifyDeclaration from "../../verify/declaration";
 import metavariableUnifier from "../../unifier/metavariable";
 import verifyDefinedAssertion from "../../verify/assertion/defined";
-import verifyContainedAssertion from "../../verify/assertion/contained";
 
 import { nodeQuery } from "../../utilities/query";
 import { metavariableNameFromMetavariableNode } from "../../utilities/name";
-import SubproofAssertion from "../../assertion/subproof";
 
 const frameNodeQuery = nodeQuery("/statement/frame!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
@@ -215,14 +215,15 @@ function verifyAsContainedAssertion(statement, assignments, stated, localContext
   let verifiedAsContainedAssertion = false;
 
   const statementNode = statement.getNode(),
-        containedAssertionNode = containedAssertionNodeQuery(statementNode);
+        containedAssertionNode = containedAssertionNodeQuery(statementNode),
+        containedAssertion = ContainedAssertion.fromContainedAssertionNode(containedAssertionNode, localContext);
 
-  if (containedAssertionNode !== null) {
+  if (containedAssertion !== null) {
     const statementString = statement.getString();
 
     localContext.trace(`Verifying the '${statementString}' statement as a contained assertion...`);
 
-    const containedAssertionVerified = verifyContainedAssertion(containedAssertionNode, assignments, stated, localContext);
+    const containedAssertionVerified = containedAssertion.verify(assignments, stated, localContext);
 
     verifiedAsContainedAssertion = containedAssertionVerified; ///
 

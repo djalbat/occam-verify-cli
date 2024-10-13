@@ -116,7 +116,7 @@ export default class Metavariable {
     let statementUnified = false;
 
     const statementString = statement.getString(),
-          metavariableString = this.string;
+          metavariableString = this.string; ///
 
     localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable...`);
 
@@ -159,7 +159,7 @@ export default class Metavariable {
 
     const statementString = statement.getString(),
           substitutionString = substitution.getString(),
-          metavariableString = this.string;
+          metavariableString = this.string; ///
 
     localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable givne the '${substitutionString}' substitution...`);
 

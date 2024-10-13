@@ -10,15 +10,15 @@ const termNodeQuery = nodeQuery("/term!"),
 
 class MetaLevelVerifier extends Verifier {
   verify(node, assignments, stated, localContext) {
-    let verified;
+    let verifiedAtMetaLevel;
 
     const nonTerminalNode = node, ///
           childNodes = nonTerminalNode.getChildNodes(),
           nonTerminalNodeVerified = this.verifyChildNodes(childNodes, assignments, stated, localContext);
 
-    verified = nonTerminalNodeVerified;  ///
+    verifiedAtMetaLevel = nonTerminalNodeVerified;  ///
 
-    return verified;
+    return verifiedAtMetaLevel;
   }
 
   static maps = [

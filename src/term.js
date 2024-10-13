@@ -8,12 +8,15 @@ import verifyMixins from "./mixins/term/verify";
 import termAsConstructorVerifier from "./verifier/termAsConstructor";
 
 import { objectType } from "./type";
-import { nodesQuery } from "./utilities/query"
+import { nodeQuery, nodesQuery } from "./utilities/query"
 import { termNodeFromTermString } from "./utilities/node";
+import { variableNameFromVariableNode } from "./utilities/name";
 
 const { filter } = arrayUtilities;
 
-const variableNodesQuery = nodesQuery("//variable");
+const termNodeQuery = nodeQuery("/containedAssertion/term[0]"),
+      variableNodeQuery = nodeQuery("/term/variable!"),
+      variableNodesQuery = nodesQuery("//variable");
 
 class Term {
   constructor(string, node, type) {
@@ -45,12 +48,27 @@ class Term {
     return matches;
   }
 
+  getVariable(localContext) {
+    let variable = null;
+
+    const variableNode = variableNodeQuery(this.node);
+
+    if (variableNode !== null) {
+      const variableName = variableNameFromVariableNode(variableNode);
+
+      variable = localContext.findVariableByVariableName(variableName);
+    }
+
+    return variable;
+  }
+
   getVariables(localContext) {
     const variables = [],
           variableNodes = variableNodesQuery(this.node);
 
     variableNodes.forEach((variableNode) => {
-      const variable = localContext.findVariableByVariableNode(variableNode),
+      const variableName = variableNameFromVariableNode(variableNode),
+            variable = localContext.findVariableByVariableName(variableName),
             variablesIncludesVariable = variables.includes(variable);
 
       if (!variablesIncludesVariable) {
@@ -260,6 +278,26 @@ class Term {
     const node = termNode,  ///
           string = localContext.nodeAsString(node),
           term = new Term(string, node, type);
+
+    return term;
+  }
+
+  static fromContainedAssertionNode(containedAssertionNode, localContext) {
+    let term = null;
+
+    const termNode = termNodeQuery(containedAssertionNode);
+
+    if (termNode !== null) {
+      const variableNode = variableNodeQuery(termNode);
+
+      if (variableNode !== null) {
+        const node = termNode,  ///
+              string = localContext.nodeAsString(node),
+              type = null;
+
+        term = new Term(string, node, type);
+      }
+    }
 
     return term;
   }

@@ -45,23 +45,22 @@ export default class Equality {
   }
 
   verify(assignments, stated, localContext) {
-    let verified;
+    let verified = false;
 
     const equalityString = this.string; ///
 
     localContext.trace(`Verifying the '${equalityString}' equality...`);
 
+    let verifiedWhenStated = false,
+        verifiedWhenDerived = false;
+
     if (stated) {
-      const verifiedWhenStated = this.verifyWhenStated(localContext);
-
-      verified = verifiedWhenStated;  ///
+      verifiedWhenStated = this.verifyWhenStated(localContext);
     } else {
-      const verifiedWhenDerived = this.verifyWhenDerived(localContext);
-
-      verified = verifiedWhenDerived; ///
+      verifiedWhenDerived = this.verifyWhenDerived(localContext);
     }
 
-    if (verified) {
+    if (verifiedWhenStated || verifiedWhenDerived) {
       if (assignments !== null) {
         const equality = this,  //
               equalityAssignment = EqualityAssignment.fromEquality(equality),

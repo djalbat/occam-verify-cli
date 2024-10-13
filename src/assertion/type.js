@@ -5,7 +5,7 @@ import Variable from "../variable";
 import VariableAssignment from "../assignment/variable";
 
 import { nodeQuery } from "../utilities/query";
-import {objectType} from "../type";
+import { objectType } from "../type";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeNodeQuery = nodeQuery("/typeAssertion/type"),
@@ -36,16 +36,27 @@ export default class TypeAssertion {
   }
 
   verify(assignments, stated, localContext) {
-    let verified;
+    let verified = false;
+
+    let typeAssertionString = this.string;  ///
+
+    localContext.trace(`Verifying the '$${typeAssertionString}' type assertion...`);
+
+    let verifiedWhenStated = false,
+        verifiedWhenDerived = false;
 
     if (stated) {
-      const verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
-
-      verified = verifiedWhenStated;  ///
+      verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
     } else {
-      const verifiedWhenDerived = this.verifyWhenDerived(localContext);
+      verifiedWhenDerived = this.verifyWhenDerived(localContext);
+    }
 
-      verified = verifiedWhenDerived; ///
+    if (verifiedWhenStated || verifiedWhenDerived) {
+      verified = true;
+    }
+
+    if (verified) {
+      localContext.debug(`...verified the '$${typeAssertionString}' type assertion.`);
     }
 
     return verified;

@@ -9,14 +9,14 @@ const termNodeQuery = nodeQuery("/term!");
 
 class IntrinsicLevelVerifier extends Verifier {
   verify(node, localContext) {
-    let verified;
+    let verifiedAtIntrinsicLevel;
 
     const nonTerminalNode = node, ///
           nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNode, localContext);
 
-    verified = nonTerminalNodeVerified;  ///
+    verifiedAtIntrinsicLevel = nonTerminalNodeVerified;  ///
 
-    return verified;
+    return verifiedAtIntrinsicLevel;
   }
 
   static maps = [

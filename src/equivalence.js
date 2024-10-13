@@ -2,6 +2,7 @@
 
 import { nodeQuery } from "./utilities/query";
 import { stripBracketsFromTerm } from "./utilities/brackets";
+import { variableNameFromVariableNode } from "./utilities/name";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
@@ -227,7 +228,8 @@ function termTypeFromTerm(term, localContext) {
         variableNode = variableNodeQuery(termNode);
 
   if (variableNode !== null) {
-    const variable = localContext.findVariableByVariableNode(variableNode),
+    const variableName = variableNameFromVariableNode(variableNode),
+          variable = localContext.findVariableByVariableName(variableName),
           variableType = variable.getType();
 
     termType = variableType;  ///

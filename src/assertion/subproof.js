@@ -54,9 +54,10 @@ export default class SubproofAssertion {
 
       stated = true;  ///
 
-      const subproofAssertionNode = this.node;  ///
+      const subproofAssertionNode = this.node,  ///
+            verifiedAtMetaLevel = metaLevelVerifier.verify(subproofAssertionNode, assignments, stated, localContext);
 
-      verified = metaLevelVerifier.verify(subproofAssertionNode, assignments, stated, localContext);
+      verified = verifiedAtMetaLevel; ///
     }
 
     if (verified) {

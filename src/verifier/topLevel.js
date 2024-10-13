@@ -34,14 +34,14 @@ const errorNodeQuery = nodeQuery("/error"),
 
 class TopLevelVerifier extends Verifier {
   verify(node, fileContext) {
-    let verified;
+    let verifiedAtTopLevel;
 
     const nonTerminalNode = node, ///
           nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNode, fileContext);
 
-    verified = nonTerminalNodeVerified;  ///
+    verifiedAtTopLevel = nonTerminalNodeVerified;  ///
 
-    return verified;
+    return verifiedAtTopLevel;
   }
 
   static maps = [

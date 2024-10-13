@@ -6,8 +6,11 @@ import verifyMixins from "./mixins/statement/verify";
 import StatementSubstitution from "./substitution/statement";
 import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
+import { nodesQuery } from "./utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 import { statementNodeFromStatementString } from "./utilities/node";
+
+const statementVariableNodesQuery = nodesQuery("/statement//variable");
 
 class Statement {
   constructor(string, node, substitution) {
@@ -34,6 +37,33 @@ class Statement {
           equalTo = matches;  ///
 
     return equalTo;
+  }
+
+  isVariableContained(variable, localContext) {
+    let variableContained;
+
+    const variableString = variable.getString(),
+          statementString = this.string;  ///
+
+    localContext.trace(`The '${variableString}' variable is contained in hte '${statementString}' statement...`);
+
+    const variableNode = variable.getNode(),
+          statementNode = this.node,
+          statementVariableNodes = statementVariableNodesQuery(statementNode);
+
+    variableContained = statementVariableNodes.some((statementVariableNode) => {  ///
+      const variableNodeMatchesStatementVariableNode = variableNode.match(statementVariableNode);
+
+      if (variableNodeMatchesStatementVariableNode) {
+        return true;
+      }
+    });
+
+    if (variableContained) {
+      localContext.debug(`...the '${variableString}' variable is contained in hte '${statementString}' statement.`);
+    }
+
+    return variableContained;
   }
 
   verify(assignments, stated, localContext) {
@@ -164,11 +194,11 @@ class Statement {
   }
 }
 
+Object.assign(Statement.prototype, unifyMixins);
+
 Object.assign(shim, {
   Statement
 });
-
-Object.assign(Statement.prototype, unifyMixins);
 
 export default Statement;
 

@@ -512,7 +512,9 @@ function verifyFileContext(fileContext) {
   if (node !== null) {
     fileContext.reset();
 
-    fileContextVerified = topLevelVerifier.verify(node, fileContext);
+    const verifiedAtTopLevel = topLevelVerifier.verify(node, fileContext);
+
+    fileContextVerified = verifiedAtTopLevel; ///
   }
 
   return fileContextVerified;
