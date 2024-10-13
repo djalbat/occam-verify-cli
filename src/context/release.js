@@ -81,11 +81,7 @@ export default class ReleaseContext {
     return released;
   }
 
-  findFile(filePath) {
-    const file = this.entries.getFile(filePath);
-
-    return file;
-  }
+  findFile(filePath) { return this.entries.findFile(filePath); }
 
   findFileContext(filePath) {
     const fileContext = this.fileContexts.find((fileContext) => {
@@ -457,7 +453,7 @@ function fileContextsFromJSONAndEntries(json, entries, fileContexts, releaseCont
 
   fileContextsJSON.forEach((fileContextJSON) => {
     const { filePath } = fileContextJSON,
-          file = entries.getFile(filePath),
+          file = entries.findFile(filePath),
           fileContext = FileContext.fromFile(file, releaseContext);
 
     fileContext.initialise(fileContextJSON);
