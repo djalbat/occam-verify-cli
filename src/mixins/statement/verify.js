@@ -2,6 +2,7 @@
 
 import Equality from "../../equality";
 import TypeAssertion from "../../assertion/type";
+import DefinedAssertion from "../../assertion/defined";
 import SubproofAssertion from "../../assertion/subproof";
 import ContainedAssertion from "../../assertion/contained";
 
@@ -9,7 +10,6 @@ import verifyFrame from "../../verify/frame";
 import verifyJudgement from "../../verify/judgement";
 import verifyDeclaration from "../../verify/declaration";
 import metavariableUnifier from "../../unifier/metavariable";
-import verifyDefinedAssertion from "../../verify/assertion/defined";
 
 import { nodeQuery } from "../../utilities/query";
 import { metavariableNameFromMetavariableNode } from "../../utilities/name";
@@ -168,14 +168,15 @@ function verifyAsDefinedAssertion(statement, assignments, stated, localContext) 
   let verifiedAsDefinedAssertion = false;
 
   const statementNode = statement.getNode(),
-        definedAssertionNode = definedAssertionNodeQuery(statementNode);
+        definedAssertionNode = definedAssertionNodeQuery(statementNode),
+        definedAssertion = DefinedAssertion.fromDefinedAssertionNode(definedAssertionNode, localContext);
 
-  if (definedAssertionNode !== null) {
+  if (definedAssertion !== null) {
     const statementString = statement.getString();
 
     localContext.trace(`Verifying the '${statementString}' statement as a defined assertion...`);
 
-    const definedAssertionVerified = verifyDefinedAssertion(definedAssertionNode, assignments, stated, localContext);
+    const definedAssertionVerified = definedAssertion.verify(assignments, stated, localContext);
 
     verifiedAsDefinedAssertion = definedAssertionVerified; ///
 

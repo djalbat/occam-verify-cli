@@ -6,11 +6,12 @@ import verifyMixins from "./mixins/statement/verify";
 import StatementSubstitution from "./substitution/statement";
 import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
-import { nodesQuery } from "./utilities/query";
+import { nodeQuery, nodesQuery } from "./utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 import { statementNodeFromStatementString } from "./utilities/node";
 
-const statementVariableNodesQuery = nodesQuery("/statement//variable"),
+const statementNodeQuery = nodeQuery("/*//statement"),
+      statementVariableNodesQuery = nodesQuery("/statement//variable"),
       statementMetavariableNodesQuery = nodesQuery("/statement//metavariable");
 
 class Statement {
@@ -217,6 +218,28 @@ class Statement {
 
       statement = new Statement(string, node, substitution);
     }
+
+    return statement;
+  }
+
+  static fromDefinedAssertionNode(definedAssertionNode, localContext) {
+    const statementNode = statementNodeQuery(definedAssertionNode),
+          node = statementNode, ///
+          string = localContext.nodeAsString(node),
+          statementSubstitution = StatementSubstitution.fromStatementNode(statementNode, localContext),
+          substitution = statementSubstitution, ///
+          statement = new Statement(string, node, substitution);
+
+    return statement;
+  }
+
+  static fromContainedAssertionNode(containedAssertionNode, localContext) {
+    const statementNode = statementNodeQuery(containedAssertionNode),
+          node = statementNode, ///
+          string = localContext.nodeAsString(node),
+          statementSubstitution = StatementSubstitution.fromStatementNode(statementNode, localContext),
+          substitution = statementSubstitution, ///
+          statement = new Statement(string, node, substitution);
 
     return statement;
   }

@@ -14,7 +14,7 @@ import { variableNameFromVariableNode } from "./utilities/name";
 
 const { filter } = arrayUtilities;
 
-const termNodeQuery = nodeQuery("/containedAssertion/term[0]"),
+const termNodeQuery = nodeQuery("/*/term[0]"),
       variableNodeQuery = nodeQuery("/term/variable!"),
       variableNodesQuery = nodesQuery("//variable");
 
@@ -278,6 +278,26 @@ class Term {
     const node = termNode,  ///
           string = localContext.nodeAsString(node),
           term = new Term(string, node, type);
+
+    return term;
+  }
+
+  static fromDefinedAssertionNode(definedAssertionNode, localContext) {
+    let term = null;
+
+    const termNode = termNodeQuery(definedAssertionNode);
+
+    if (termNode !== null) {
+      const variableNode = variableNodeQuery(termNode);
+
+      if (variableNode !== null) {
+        const node = termNode,  ///
+              string = localContext.nodeAsString(node),
+              type = null;
+
+        term = new Term(string, node, type);
+      }
+    }
 
     return term;
   }

@@ -9,7 +9,7 @@ import { nodeQuery, nodesQuery } from "./utilities/query";
 
 const declarationNodesQuery = nodesQuery("/frame/declaration"),
       metavariableNodesQuery = nodesQuery("/frame/metavariable"),
-      frameMetavariableNodeQuery = nodeQuery("/containedAssertion/frame/metavariable!");
+      frameMetavariableNodeQuery = nodeQuery("/*/frame/metavariable!");
 
 class Frame {
   constructor(string, declarations, metavariables) {
@@ -175,6 +175,27 @@ class Frame {
           node = frameNode, ///
           string = localContext.nodeAsString(node),
           frame = new Frame(string, declarations, metavariables);
+
+    return frame;
+  }
+
+  static fromDefinedAssertionNode(definedAssertionNode, localContext) {
+    let frame = null;
+
+    const frameMetavariableNode = frameMetavariableNodeQuery(definedAssertionNode);
+
+    if (frameMetavariableNode !== null) {
+      const metavariableNode = frameMetavariableNode, ///
+            metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
+            declarations = [],
+            metavariables = [
+              metavariable
+            ],
+            node = metavariableNode,  ///
+            string = localContext.nodeAsString(node);
+
+      frame = new Frame(string, declarations, metavariables);
+    }
 
     return frame;
   }

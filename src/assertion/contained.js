@@ -1,21 +1,17 @@
 "use strict";
 
 import shim from "../shim";
-import metaLevelVerifier from "../verifier/metaLevel";
 
-import { nodeQuery } from "../utilities/query";
 import { isAssertionNegated } from "../utilities/assertion";
 
-const statementNodeQuery = nodeQuery("/containedAssertion/statement");
-
 export default class ContainedAssertion {
-  constructor(string, node, term, frame, negated, statements) {
+  constructor(string, node, term, frame, negated, statement) {
     this.string = string;
     this.node = node;
     this.term = term;
     this.frame = frame;
     this.negated = negated;
-    this.statements = statements;
+    this.statement = statement;
   }
 
   getString() {
@@ -38,8 +34,8 @@ export default class ContainedAssertion {
     return this.negated;
   }
 
-  getStatements() {
-    return this.statements;
+  getStatement() {
+    return this.statement;
   }
 
   verify(assignments, stated, localContext) {
@@ -53,10 +49,25 @@ export default class ContainedAssertion {
 
     stated = true;  ///
 
-    const containedAssertionNode = this.node, ///
-          verifiedAtMetaLevel = metaLevelVerifier.verify(containedAssertionNode, assignments, stated, localContext);
+    let termVerified = true,  ///
+        frameVerified = true, ///
+        statementVerified;
 
-    if (verifiedAtMetaLevel) {
+    if (this.term !== null) {
+      termVerified = this.term.verify(localContext, () => {
+        const verifiedAhead = true;
+
+        return verifiedAhead;
+      });
+    }
+
+    if (this.frame !== null) {
+      frameVerified = this.frame.verify(localContext);
+    }
+
+    statementVerified = this.statement.verify(assignments, stated, localContext);
+
+    if (termVerified && frameVerified && statementVerified) {
       let verifiedWhenStated = false,
           verifiedWhenDerived = false;
 
@@ -145,14 +156,13 @@ export default class ContainedAssertion {
 
     if (containedAssertionNode !== null) {
       const { Term, Frame, Statement } = shim,
-            term = Term.fromContainedAssertionNode(containedAssertionNode, localContext),
-            frame = Frame.fromContainedAssertionNode(containedAssertionNode, localContext),
-            statementNode = statementNodeQuery(containedAssertionNode),
-            containedAssertionNegated = isAssertionNegated(containedAssertionNode),
             node = containedAssertionNode,  ///
             string = localContext.nodeAsString(node),
-            negated = containedAssertionNegated,  ///
-            statement = Statement.fromStatementNode(statementNode, localContext);
+            term = Term.fromContainedAssertionNode(containedAssertionNode, localContext),
+            frame = Frame.fromContainedAssertionNode(containedAssertionNode, localContext),
+            statement = Statement.fromContainedAssertionNode(containedAssertionNode, localContext),
+            containedAssertionNegated = isAssertionNegated(containedAssertionNode),
+            negated = containedAssertionNegated;  ///
 
       containedAssertion = new ContainedAssertion(string, node, term, frame, negated, statement);
     }

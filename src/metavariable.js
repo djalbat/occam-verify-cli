@@ -62,7 +62,7 @@ export default class Metavariable {
   }
 
   verify(localContext) {
-    let verified = false;
+    let verified;
 
     const metavariableString = this.string; ///
 
