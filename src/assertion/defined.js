@@ -3,7 +3,7 @@
 import shim from "../shim";
 
 import { isAssertionNegated } from "../utilities/assertion";
-import {metavariableNameFromMetavariableNode, variableNameFromVariableNode} from "../utilities/name";
+import { variableNameFromVariableNode, metavariableNameFromMetavariableNode } from "../utilities/name";
 
 export default class DefinedAssertion {
   constructor(string, node, term, frame) {
@@ -36,10 +36,6 @@ export default class DefinedAssertion {
 
     localContext.trace(`Verifying the '${definedAssertionString}' defined assertion...`);
 
-    assignments = null; ///
-
-    stated = true;  ///
-
     let termVerified = true,  ///
         frameVerified = true; ///
 
@@ -52,7 +48,7 @@ export default class DefinedAssertion {
     }
 
     if (this.frame!== null) {
-      frameVerified = this.frame.verify(assignments, stated, localContext);
+      frameVerified = this.frame.verify(localContext);
     }
 
     if (termVerified && frameVerified) {
@@ -60,7 +56,7 @@ export default class DefinedAssertion {
           verifiedWhenDerived = false;
 
       if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+        verifiedWhenStated = this.verifyWhenStated(localContext);
       } else {
         verifiedWhenDerived = this.verifyWhenDerived(localContext);
       }
@@ -77,7 +73,7 @@ export default class DefinedAssertion {
     return verified;
   }
 
-  verifyWhenStated(assignments, localContext) {
+  verifyWhenStated(localContext) {
     let verifiedWhenStated;
 
     const definedAssertionString = this.string; ///

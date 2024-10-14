@@ -13,7 +13,7 @@ const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
       variableNodeQuery = nodeQuery("/variableDeclaration/variable"),
       termVariableNodeQuery = nodeQuery("/term/variable");
 
-export default class Variable {
+class Variable {
   constructor(localContext, string, node, name, type) {
     this.localContext = localContext; ///
     this.string = string;
@@ -251,6 +251,12 @@ export default class Variable {
     return variable;
   }
 }
+
+Object.assign(shim, {
+  Variable
+});
+
+export default Variable;
 
 function typeFromJSON(json, fileContext) {
   let { type } = json;

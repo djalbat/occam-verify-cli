@@ -1,6 +1,7 @@
 "use strict";
 
 import Substitution from "../substitution";
+import substitutionVerifier from "../verifier/substitution";
 
 import { nodeQuery } from "../utilities/query";
 import { substitutionNodeFromSubstitutionString } from "../utilities/node";
@@ -16,6 +17,25 @@ export default class StatementSubstitution extends Substitution {
 
   getNode() {
     return this.node;
+  }
+
+  verify(assignments, stated, localContext) {
+    let verified;
+
+    const statementSubstitutionString = this.string;  ///
+
+    localContext.trace(`Verifying the '${statementSubstitutionString}' statement substitution...`);
+
+    const substitutionNode = this.node, ///
+          substitutionVerified = substitutionVerifier.verify(substitutionNode, assignments, stated, localContext);
+
+    verified = substitutionVerified;  ///
+
+    if (verified) {
+      localContext.debug(`...verified the '${statementSubstitutionString}' statement substitution.`);
+    }
+
+    return verified;
   }
 
   toJSON() {
@@ -50,10 +70,10 @@ export default class StatementSubstitution extends Substitution {
     const substitutionNode = substitutionNodeQuery(statementNode);
 
     if (substitutionNode) {
-      const node = substitutionNode,
+      const node = substitutionNode,  ///
             string = fileContext.nodeAsString(substitutionNode);
 
-      statementSubstitution = new Substitution(string, node);
+      statementSubstitution = new StatementSubstitution(string, node);
     }
 
     return statementSubstitution;

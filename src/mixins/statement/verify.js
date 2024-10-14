@@ -1,18 +1,18 @@
 "use strict";
 
 import Equality from "../../equality";
+import Metavariable from "../../metavariable";
 import TypeAssertion from "../../assertion/type";
 import DefinedAssertion from "../../assertion/defined";
 import SubproofAssertion from "../../assertion/subproof";
 import ContainedAssertion from "../../assertion/contained";
+import StatementSubstitution from "../../substitution/statement";
 
 import verifyFrame from "../../verify/frame";
 import verifyJudgement from "../../verify/judgement";
 import verifyDeclaration from "../../verify/declaration";
-import metavariableUnifier from "../../unifier/metavariable";
 
 import { nodeQuery } from "../../utilities/query";
-import { metavariableNameFromMetavariableNode } from "../../utilities/name";
 
 const frameNodeQuery = nodeQuery("/statement/frame!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
@@ -28,16 +28,29 @@ function verifyAsMetavariable(statement, assignments, stated, localContext) {
   let verifiedAsMetavariable = false;
 
   const statementNode = statement.getNode(),
-        metavariableNode = metavariableNodeQuery(statementNode);
+        metavariableNode = metavariableNodeQuery(statementNode),
+        metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext);
 
-  if (metavariableNode !== null) {
+  if (metavariable !== null) {
     const statementString = statement.getString();
 
     localContext.trace(`Verifying the '${statementString}' statement as a metavariable...`);
 
-    const metavariableUnified = unifyMetavariable(metavariableNode, localContext);
+    const metavariableVerified = metavariable.verify(localContext);
 
-    verifiedAsMetavariable = metavariableUnified;  ///
+    if (metavariableVerified) {
+      let substitutionVerified = true;
+
+      const statementSubstitution = StatementSubstitution.fromStatementNode(statementNode, localContext);
+
+      if (statementSubstitution !== null) {
+        const statementSubstitutionVerified = statementSubstitution.verify(assignments, stated, localContext);
+
+        substitutionVerified = statementSubstitutionVerified; ///
+      }
+
+      verifiedAsMetavariable = substitutionVerified; ///
+    }
 
     if (verifiedAsMetavariable) {
       localContext.debug(`...verified the '${statementString}' statement as a metavariable.`);
@@ -249,30 +262,3 @@ const verifyMixins = [
 ];
 
 export default verifyMixins;
-
-function unifyMetavariable(metavariableNode, localContext) {
-  let metavariableUnified;
-
-  const metavariableString = localContext.nodeAsString(metavariableNode);
-
-  localContext.trace(`Unifying the '${metavariableString}' metavariable...`);
-
-  const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-        metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
-
-  if (metavariable !== null) {
-    const metavariableNodeA = metavariableNode; ///
-
-    metavariableNode = metavariable.getNode();
-
-    const metavariableNodeB = metavariableNode; ///
-
-    metavariableUnified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
-  }
-
-  if (metavariableUnified) {
-    localContext.debug(`...unified the '${metavariableString}' metavariable.`);
-  }
-
-  return metavariableUnified;
-}

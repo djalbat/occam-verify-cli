@@ -3,6 +3,7 @@
 import shim from "./shim";
 import Argument from "./argument";
 import LocalContext from "./context/local";
+import metavariableUnifier from "./unifier/metavariable";
 import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
 
 import { nodeQuery } from "./utilities/query";
@@ -14,7 +15,7 @@ const argumentNodeQuery = nodeQuery("/metavariable/argument"),
       metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable");
 
-export default class Metavariable {
+class Metavariable {
   constructor(fileContext, string, node, name, metaType) {
     this.fileContext = fileContext;
     this.string = string;
@@ -68,10 +69,19 @@ export default class Metavariable {
 
     localContext.trace(`Verifying the '${metavariableString}' metavariable...`);
 
-    const metavariableName = this.name, ///
-          metavariablePresent = localContext.isMetavariablePresentByMetavariableName(metavariableName);
+    const metavariableName = this.name,
+          metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
 
-    verified = metavariablePresent; ///
+    if (metavariable !== null) {
+      const metavariableA = metavariable, ///
+            metavariableB = this,
+            metavariableNodeA = metavariableA.getNode(), ///
+            metavariableNodeB = metavariableB.getNode(),
+            metavariableUnified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
+
+      verified = metavariableUnified; ///
+
+    }
 
     if (verified) {
       localContext.debug(`...verified the '${metavariableString}' metavariable.`);
@@ -233,12 +243,17 @@ export default class Metavariable {
   }
 
   static fromMetavariableNode(metavariableNode, fileContext) {
-    const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-          node = metavariableNode,  ///
-          name = metavariableName,  ///
-          string = fileContext.nodeAsString(node),
-          metaType = null,
-          metavariable = new Metavariable(fileContext, string, node, name, metaType);
+    let metavariable = null;
+
+    if (metavariableNode !== null) {
+      const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+            node = metavariableNode,  ///
+            name = metavariableName,  ///
+            string = fileContext.nodeAsString(node),
+            metaType = null;
+
+      metavariable = new Metavariable(fileContext, string, node, name, metaType);
+    }
 
     return metavariable;
   }
@@ -259,6 +274,12 @@ export default class Metavariable {
     return metavariable;
   }
 }
+
+Object.assign(shim, {
+  Metavariable
+});
+
+export default Metavariable;
 
 function metaTypeFromJSON(json, fileContext) {
   let { metaType } = json;
