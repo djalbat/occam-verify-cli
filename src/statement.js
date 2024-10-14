@@ -5,7 +5,6 @@ import unifyMixins from "./mixins/statement/unify";
 import verifyMixins from "./mixins/statement/verify";
 import LocalContext from "./context/local";
 import metaLevelUnifier from "./unifier/metaLevel";
-import StatementSubstitution from "./substitution/statement";
 import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
@@ -13,14 +12,14 @@ import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
 import { statementNodeFromStatementString } from "./utilities/node";
 
 const statementNodeQuery = nodeQuery("/*//statement"),
+      substitutionNodeQuery = nodeQuery("/statement/substitution"),
       statementVariableNodesQuery = nodesQuery("/statement//variable"),
       statementMetavariableNodesQuery = nodesQuery("/statement//metavariable");
 
 class Statement {
-  constructor(string, node, substitution) {
+  constructor(string, node) {
     this.string = string;
     this.node = node;
-    this.substitution = substitution;
   }
 
   getString() {
@@ -29,10 +28,6 @@ class Statement {
 
   getNode() {
     return this.node;
-  }
-
-  getSubstitution() {
-    return this.substitution;
   }
 
   isEqualTo(statement) {
@@ -179,43 +174,30 @@ class Statement {
 
     const statementA = this,  ///
           statementB = statement, ///
-          substitutionString = (this.substitution !== null) ?
-                                  this.substitution.getString() :
-                                    null,
           statementAString = statementA.getString(),
           statementBString = statementB.getString();
 
-    (substitutionString !== null) ?
-      localContext.trace(`Unifying the '${statementBString}' statement with the '${statementAString}' statement with the '${substitutionString}' substitution...`) :
-        localContext.trace(`Unifying the '${statementBString}' statement with the '${statementAString}' statement...`);
+    localContext.trace(`Unifying the '${statementBString}' statement with the '${statementAString}' statement...`);
 
     const statementANode = statementA.getNode(),
           statementBNode = statementB.getNode(),
           nodeA = statementANode, ///
           nodeB = statementBNode, ///
-          substitutionA = this.substitution,  ///
           fileContextA = fileContext, ///
           localContextA = LocalContext.fromFileContext(fileContextA),
           localContextB = localContext, ///
-          unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutionA, substitutions, localContextA, localContextB);
+          unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
     statementUnified = unifiedAtMetaLevel; ///
 
-    (substitutionString !== null) ?
-      localContext.debug(`...unified the '${statementBString}' statement with the '${statementAString}' statement with the '${substitutionString}' substitution.`) :
-        localContext.debug(`...unified the '${statementBString}' statement with the '${statementAString}' statement.`);
+    localContext.debug(`...unified the '${statementBString}' statement with the '${statementAString}' statement.`);
 
     return statementUnified;
   }
 
   toJSON() {
-    const substitutionJSON = (this.substitution !== null) ?
-                                this.substitution.toJSON() :
-                                  null,
-          substitution = substitutionJSON,  ///
-          string = this.string, ///
+    const string = this.string, ///
           json = {
-            substitution,
             string
           };
 
@@ -228,17 +210,8 @@ class Statement {
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
           statementNode = statementNodeFromStatementString(statementString, lexer, parser),
-          node = statementNode;  ///
-
-    let { substitution } = json;
-
-    json = substitution;  ///
-
-    const statementSubstitution = StatementSubstitution.fromJSON(json, fileContext);
-
-    substitution = statementSubstitution; ///
-
-    const statement = new Statement(string, node, substitution);
+          node = statementNode,  ///
+          statement = new Statement(string, node);
 
     return statement;
   }
@@ -248,11 +221,9 @@ class Statement {
 
     if (statementNode !== null) {
       const node = statementNode, ///
-            string = localContext.nodeAsString(node),
-            statementSubstitution = StatementSubstitution.fromStatementNode(statementNode, localContext),
-            substitution = statementSubstitution; ///
+            string = localContext.nodeAsString(node);
 
-      statement = new Statement(string, node, substitution);
+      statement = new Statement(string, node);
     }
 
     return statement;
@@ -262,8 +233,7 @@ class Statement {
     const statementNode = statementNodeQuery(definedAssertionNode),
           node = statementNode, ///
           string = localContext.nodeAsString(node),
-          substitution = null,
-          statement = new Statement(string, node, substitution);
+          statement = new Statement(string, node);
 
     return statement;
   }
@@ -272,8 +242,7 @@ class Statement {
     const statementNode = statementNodeQuery(containedAssertionNode),
           node = statementNode, ///
           string = localContext.nodeAsString(node),
-          substitution = null,
-          statement = new Statement(string, node, substitution);
+          statement = new Statement(string, node);
 
     return statement;
   }

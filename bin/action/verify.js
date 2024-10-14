@@ -58,6 +58,8 @@ function verifyAction(argument, log) {
       return;
     }
 
+    releaseContext.toJSON()
+
     stopClock(now, log);
   });
 }

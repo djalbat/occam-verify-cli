@@ -15,7 +15,7 @@ export default function unifyComplexSubstitutionStatementWithSimpleSubstitutionS
 
   localContextA = localContextB;  ///
 
-  const unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutionA, substitutions, localContextA, localContextB);
+  const unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
   simpleSubstitutionStatementUnifiedWithComplexSubstitutionStatement = unifiedAtMetaLevel;  ///
 
