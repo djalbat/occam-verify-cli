@@ -81,7 +81,7 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     statement = Statement.fromStatementNode(statementNode, localContext); ///
 
     const metavariableNode = metavariable.getNode(),
-          string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext);
+          string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution);
 
     substitution = substitutionFromSubstitution(substitution, localContext);
 
@@ -89,6 +89,26 @@ export default class StatementForMetavariableSubstitution extends Substitution {
 
     return statementForMetavariableSubstitution;
   }
+}
+
+function substitutionFromSubstitution(substitution, localContext) {
+  if (substitution === null) {
+    const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitution(substitution, localContext);
+
+    if (termForVariableSubstitution !== null) {
+      substitution = termForVariableSubstitution; ///
+    }
+  }
+
+  if (substitution === null) {
+    const frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromSubstitution(substitution, localContext);
+
+    if (frameForMetavariableSubstitution !== null) {
+      substitution = frameForMetavariableSubstitution;  ///
+    }
+  }
+
+  return substitution;
 }
 
 function stringFromStatementAndMetavariable(statement, metavariable) {
@@ -99,45 +119,18 @@ function stringFromStatementAndMetavariable(statement, metavariable) {
   return string;
 }
 
-
-function substitutionFromSubstitution(substitution, localContextA, localContextB) {
-  // let substitution = null;
-
-  debugger
-
-  // if (substitution === null) {
-  //   const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitution(substitutionNode, localContextA, localContextB);
-  //
-  //   if (termForVariableSubstitution !== null) {
-  //     substitution = termForVariableSubstitution; ///
-  //   }
-  // }
-  //
-  // if (substitution === null) {
-  //   const frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromSubstitution(substitutionNode, localContextA, localContextB);
-  //
-  //   if (frameForMetavariableSubstitution !== null) {
-  //     substitution = frameForMetavariableSubstitution;  ///
-  //   }
-  // }
-
-  return substitution;
-}
-
-function stringFromStatementMetavariableAndSubstitution(statementNode, metavariableNode, substitution, localContextA, localContextB) {
+function stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution) {
   let string;
 
-  const statementNodeB = statementNode,  ///
-        statementStringB = localContextB.nodeAsString(statementNodeB),
-        metavariableNodeA = metavariableNode,  ///
-        metavariableStringA = localContextA.nodeAsString(metavariableNodeA);
+  const statementString = statement.getString(),
+        metavariableString = metavariable.getString();
 
   if (substitution === null) {
-    string = `[${statementStringB} for ${metavariableStringA}]`;
+    string = `[${statementString} for ${metavariableString}]`;
   } else {
-    const substitutionString = substitution.asString(localContextA, localContextA);
+    const substitutionString = substitution.getString();
 
-    string = `[${statementStringB} for ${metavariableStringA}${substitutionString}]`;
+    string = `[${statementString} for ${metavariableString}${substitutionString}]`;
   }
 
   return string;

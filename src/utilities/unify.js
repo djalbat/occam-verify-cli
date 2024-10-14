@@ -21,17 +21,3 @@ export function metavariableFromFrameNode(frameNode, localContext) {
   return metavariable;
 }
 
-export function metavariableFromStatementNode(statementNode, localContext) {
-  let metavariable = null;
-
-  const statementMetavariableNode = statementMetavariableNodeQuery(statementNode)
-
-  if (statementMetavariableNode !== null) {
-    const metavariableNode = statementMetavariableNode, ///
-          metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
-
-    metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
-  }
-
-  return metavariable;
-}

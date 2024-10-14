@@ -83,7 +83,7 @@ export default class TermForVariableSubstitution extends Substitution {
     return unifiedWithEquivalence;
   }
 
-  static fromSubstitution(substitution) {
+  static fromSubstitution(substitution, localContext) {
     let termForVariableSubstitution = null;
 
     const substitutionNode = substitution.getNode();
@@ -91,14 +91,18 @@ export default class TermForVariableSubstitution extends Substitution {
     let substitutionTermNode = substitutionTermNodeQuery(substitutionNode);
 
     if (substitutionTermNode !== null) {
-      let termNode = substitutionTermNode;  ///
-
-      termNode = stripBracketsFromTerm(termNode); ///
+      let termNode;
 
       const substitutionVariableNode = substitutionsVariableNodeQuery(substitutionNode),
             variableNode = substitutionVariableNode;  ///
 
-      termForVariableSubstitution = new TermForVariableSubstitution(termNode, variableNode);
+      termNode = substitutionTermNode;  ///
+
+      termNode = stripBracketsFromTerm(termNode); ///
+
+      const string = stringFromTermNodeAndVariableNode(termNode, variableNode, localContext);
+
+      termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode);
     }
 
     return termForVariableSubstitution;
@@ -109,12 +113,8 @@ export default class TermForVariableSubstitution extends Substitution {
 
     termNode = stripBracketsFromTerm(termNode); ///
 
-    const { Term } = shim;
-
-    term = Term.fromTermNode(termNode, localContext); ///
-
-    const string = stringFromTermAndVariable(term, variable),
-          variableNode = variable.getNode(),
+    const variableNode = variable.getNode(),
+          string = stringFromTermNodeAndVariableNode(termNode, variableNode, localContext),
           termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode);
 
     return termForVariableSubstitution;
@@ -166,9 +166,9 @@ function transformVariableNode(variableNode, substitutions) {
   return transformedVariableNode;
 }
 
-function stringFromTermAndVariable(term, variable) {
-  const termString = term.getString(),
-        variableString = variable.getString(),
+function stringFromTermNodeAndVariableNode(termNode, variableNode, localContext) {
+  const termString = localContext.nodeAsString(termNode),
+        variableString = localContext.nodeAsString(variableNode),
         string = `[${termString} for ${variableString}]`;
 
   return string;

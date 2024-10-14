@@ -3,14 +3,14 @@
 import shim from "../shim";
 
 import { isAssertionNegated } from "../utilities/assertion";
-import { variableNameFromVariableNode, metavariableNameFromMetavariableNode } from "../utilities/name";
 
 export default class DefinedAssertion {
-  constructor(string, node, term, frame) {
+  constructor(string, node, term, frame, negated) {
     this.string = string;
     this.node = node;
     this.term = term;
-    this.frame= frame
+    this.frame= frame;
+    this.negated = negated;
   }
 
   getString() {
@@ -25,8 +25,12 @@ export default class DefinedAssertion {
     return this.term;
   }
 
-  getStatement() {
+  getFrame() {
     return this.frame;
+  }
+
+  isNegated() {
+    return this.negated;
   }
 
   verify(assignments, stated, localContext) {
@@ -35,6 +39,8 @@ export default class DefinedAssertion {
     const definedAssertionString = this.string; ///
 
     localContext.trace(`Verifying the '${definedAssertionString}' defined assertion...`);
+
+    assignments = null; ///
 
     let termVerified = true,  ///
         frameVerified = true; ///
@@ -96,14 +102,36 @@ export default class DefinedAssertion {
 
     localContext.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`);
 
-    debugger
-
     if (this.term !== null) {
+      const { Variable } = shim,
+            termNode = this.term.getNode(),
+            variable = Variable.fromTermNode(termNode, localContext),
+            variableDefined = localContext.isVariableDefined(variable);
 
+      if (!this.negated && variableDefined) {
+        verifiedWhenDerived = true;
+      }
+
+      if (this.negated && !variableDefined) {
+        verifiedWhenDerived = true;
+      }
     }
 
     if (this.frame!== null) {
+      debugger
 
+      const { Metavariable } = shim,
+            frameNode = this.frame.getNode(),
+            metavariable = Metavariable.fromTermNode(frameNode, localContext),
+            metavariableDefined = localContext.isMetametavariableDefined(metavariable);
+
+      if (!this.negated && metavariableDefined) {
+        verifiedWhenDerived = true;
+      }
+
+      if (this.negated && !metavariableDefined) {
+        verifiedWhenDerived = true;
+      }
     }
 
     if (verifiedWhenDerived) {
@@ -130,59 +158,4 @@ export default class DefinedAssertion {
 
     return definedAssertion;
   }
-}
-
-function verifyDerivedDefinedAssertion(definedAssertionNode, assignments, stated, localContext) {
-  let derivedDefinedAssertionVerified = false;
-
-  if (!stated) {
-    const definedAssertionString = localContext.nodeAsString(definedAssertionNode);
-
-    localContext.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`, definedAssertionNode);
-
-    const assertionNegated = isAssertionNegated(definedAssertionNode),
-      metavariableNode = metavariableNodeQuery(definedAssertionNode),
-      variableNode = variableNodeQuery(definedAssertionNode);
-
-    if (false) {
-      ///
-    } else if (metavariableNode !== null) {
-      const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-        metavariableDefinedByMetavariableName = localContext.isMetavariableDefinedByMetavariableName(metavariableName);
-
-      if (!assertionNegated) {
-        if (metavariableDefinedByMetavariableName) {
-          derivedDefinedAssertionVerified = true;
-        }
-      }
-
-      if (assertionNegated) {
-        if (!metavariableDefinedByMetavariableName) {
-          derivedDefinedAssertionVerified = true;
-        }
-      }
-    } else if (variableNode !== null) {
-      const variableName = variableNameFromVariableNode(variableNode),
-        variable = localContext.findVariableByVariableName(variableName),
-        variableDefined = localContext.isVariableDefined(variable);
-
-      if (!assertionNegated) {
-        if (variableDefined) {
-          derivedDefinedAssertionVerified = true;
-        }
-      }
-
-      if (assertionNegated) {
-        if (!variableDefined) {
-          derivedDefinedAssertionVerified = true;
-        }
-      }
-    }
-
-    if (derivedDefinedAssertionVerified) {
-      localContext.debug(`...verified the '${definedAssertionString}' derived defined assertion.`, definedAssertionNode);
-    }
-  }
-
-  return derivedDefinedAssertionVerified;
 }

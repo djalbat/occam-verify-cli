@@ -209,6 +209,25 @@ class Variable {
     return variable;
   }
 
+  static fromTermNode(termNode, localContext) {
+    let variable = null;
+
+    const termVariableNode = termVariableNodeQuery(termNode);
+
+    if (termVariableNode !== null) {
+      const variableNode = termVariableNode,  ///
+            variableName = variableNameFromVariableNode(variableNode),
+            node = variableNode,  ///
+            string = localContext.nodeAsString(node),
+            name = variableName,  ///
+            type = null;
+
+      variable = new Variable(localContext, string, node, name, type);
+    }
+
+    return variable;
+  }
+
   static fromVariableNode(variableNode, localContext) {
     let variable = null;
 

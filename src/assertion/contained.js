@@ -47,8 +47,6 @@ export default class ContainedAssertion {
 
     assignments = null; ///
 
-    stated = true;  ///
-
     let termVerified = true,  ///
         frameVerified = true, ///
         statementVerified;

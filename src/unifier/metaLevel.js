@@ -62,7 +62,7 @@ class MetaLevelUnifier extends Unifier {
             if (substitution === null) {
               statementUnified = metavariable.unifyStatement(statement, substitutions, localContext);
             } else {
-              const statementUnifiedGivenSubstitution = metavariableNode.unifyStatementGivenSubstitution(statement, substitution, substitutions, localContext);
+              const statementUnifiedGivenSubstitution = metavariable.unifyStatementGivenSubstitution(statement, substitution, substitutions, localContext);
 
               statementUnified = statementUnifiedGivenSubstitution; ///
             }

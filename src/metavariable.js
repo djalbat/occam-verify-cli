@@ -13,7 +13,7 @@ import { metavariableNodeFromMetavariableString } from "./utilities/node";
 const argumentNodeQuery = nodeQuery("/metavariable/argument"),
       metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType"),
       metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable"),
-      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable");
+      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 class Metavariable {
   constructor(fileContext, string, node, name, metaType) {
@@ -174,40 +174,38 @@ class Metavariable {
           substitutionString = substitution.getString(),
           metavariableString = this.string; ///
 
-    localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable givne the '${substitutionString}' substitution...`);
+    localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable given the '${substitutionString}' substitution...`);
 
-    // let metavariableUnifiedWithStatementGivenSubstitution = false;
-    //
-    // const metavariableNode = metavariable.getNode(),
-    //   substitutionNode = substitution.getNode(),
-    //   complexSubstitution = substitutions.findComplexSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
-    //
-    // if (complexSubstitution !== null) {
-    //   const statementNode = statement.getNode(),
-    //     statementNodeMatches = complexSubstitution.matchStatementNode(statementNode);
-    //
-    //   if (statementNodeMatches) {
-    //     metavariableUnifiedWithStatementGivenSubstitution = true;
-    //   }
-    // } else {
-    //   const metavariableNameA = metavariableNameFromMetavariableNode(metavariableNode),
-    //     metavariableA = localContextA.findMetavariableByMetavariableName(metavariableNameA),
-    //     metavariableB = metavariableFromStatementNode(statement, localContextB);
-    //
-    //   if (metavariableA === metavariableB) {
-    //     metavariableUnifiedWithStatementGivenSubstitution = false;  ///
-    //   } else {
-    //     const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContextA, localContextB),
-    //       substitution = statementForMetavariableSubstitution;  ///
-    //
-    //     substitutions.addSubstitution(substitution, localContextA, localContextB);
-    //
-    //     metavariableUnifiedWithStatementGivenSubstitution = true;
-    //   }
-    // }
+    const statementNode = statement.getNode(),
+          metavariableNode = this.node, ///
+          substitutionNode = substitution.getNode(),
+          complexSubstitution = substitutions.findComplexSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
+
+    if (complexSubstitution !== null) {
+      const statementNodeMatches = complexSubstitution.matchStatementNode(statementNode);
+
+      if (statementNodeMatches) {
+        statementUnifiedGivenSubstitution = true;
+      }
+    } else {
+      const metavariable = metavariableFromStatementNode(statementNode, localContext);
+
+      if (this === metavariable) {  ///
+        statementUnifiedGivenSubstitution = false;  ///
+      } else {
+        const metavariable = this,  ///
+              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext);
+
+        substitution = statementForMetavariableSubstitution;  ///
+
+        substitutions.addSubstitution(substitution, localContext);
+
+        statementUnifiedGivenSubstitution = true;
+      }
+    }
 
     if (statementUnifiedGivenSubstitution) {
-      localContext.trace(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable givne the '${substitutionString}' substitution.`);
+      localContext.trace(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable given the '${substitutionString}' substitution.`);
     }
 
     return statementUnifiedGivenSubstitution;
@@ -292,6 +290,21 @@ function metaTypeFromJSON(json, fileContext) {
   }
 
   return metaType;
+}
+
+function metavariableFromStatementNode(statementNode, localContext) {
+  let metavariable = null;
+
+  const statementMetavariableNode = statementMetavariableNodeQuery(statementNode)
+
+  if (statementMetavariableNode !== null) {
+    const metavariableNode = statementMetavariableNode, ///
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
+
+    metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
+  }
+
+  return metavariable;
 }
 
 function statementMetavariableFromStatementNode(statementNode, localContext) {
