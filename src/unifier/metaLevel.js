@@ -40,6 +40,7 @@ class MetaLevelUnifier extends Unifier {
           statementUnified = true;
         } else {
           const statementNode = statementNodeA, ///
+                statementSubstitution = null, ///
                 statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
           if (statementMetavariableNode !== null) {
@@ -47,7 +48,7 @@ class MetaLevelUnifier extends Unifier {
                   metavariableNode = statementMetavariableNode, ///
                   metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
                   metavariable = localContextA.findMetavariableByMetavariableName(metavariableName),
-                  substitution = substitutionA,  ///
+                  substitution = statementSubstitution, ///
                   localContext = localContextB, ///
                   statementNode = statementNodeB, ///
                   statement = Statement.fromStatementNode(statementNode, localContext);
@@ -109,8 +110,6 @@ const metaLevelUnifier = new MetaLevelUnifier();
 export default metaLevelUnifier;
 
 function unifyStatementWithStatement(statementNodeA, statementNodeB, substitutions, localContextA, localContextB) {
-  substitutionA = null;
-
   const nonTerminalNodeA = statementNodeA, ///
         nonTerminalNodeB = statementNodeB, ///
         nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),

@@ -6,7 +6,8 @@ import Substitution from "../substitution";
 import { nodeQuery } from "../utilities/query";
 import { stripBracketsFromTerm } from "../utilities/brackets";
 
-const termVariableNodeQuery = nodeQuery("/term/variable!"),
+const substitutionNodeQuery = nodeQuery("/statement/substitution"),
+      termVariableNodeQuery = nodeQuery("/term/variable!"),
       substitutionTermNodeQuery = nodeQuery("/substitution/term!"),
       substitutionsVariableNodeQuery = nodeQuery("/substitution/variable!");
 
@@ -106,6 +107,34 @@ export default class TermForVariableSubstitution extends Substitution {
             string = stringFromTermAndVariable(term, variable);
 
       termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode);
+    }
+
+    return termForVariableSubstitution;
+  }
+
+  static fromStatementNode(statementNode, localContext) {
+    let termForVariableSubstitution = null;
+
+    const substitutionNode = substitutionNodeQuery(statementNode);
+
+    if (substitutionNode !== null) {
+      let substitutionTermNode = substitutionTermNodeQuery(substitutionNode);
+
+      if (substitutionTermNode !== null) {
+        let termNode;
+
+        const substitutionVariableNode = substitutionsVariableNodeQuery(substitutionNode),
+              variableNode = substitutionVariableNode;  ///
+
+        termNode = substitutionTermNode;  ///
+
+        const { Term, Variable } = shim,
+              term = Term.fromTermNode(termNode, localContext),
+              variable = Variable.fromVariableNode(variableNode, localContext),
+              string = stringFromTermAndVariable(term, variable);
+
+        termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode);
+      }
     }
 
     return termForVariableSubstitution;

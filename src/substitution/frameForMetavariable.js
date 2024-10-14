@@ -4,7 +4,8 @@ import Substitution from "../substitution";
 
 import { nodeQuery } from "../utilities/query";
 
-const substitutionFrameNodeQuery = nodeQuery("/substitution/frame!"),
+const substitutionNodeQuery = nodeQuery("/statement/substitution"),
+      substitutionFrameNodeQuery = nodeQuery("/substitution/frame!"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       substitutionMetavariableNodeQuery = nodeQuery("/substitution/metavariable!");
 
@@ -82,6 +83,30 @@ export default class FrameForMetavariableSubstitution extends Substitution {
             string = stringFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, localContextA, localContextB);
 
         frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(string, frameNode, metavariableNode);
+    }
+
+    return frameForMetavariableSubstitution;
+  }
+
+  static fromStatementNode(statementNode, localContext) {
+    let frameForMetavariableSubstitution = null;
+
+    const substitutionNode = substitutionNodeQuery(statementNode);
+
+    if (substitutionNode !== null) {
+      const substitutionFrameNode = substitutionFrameNodeQuery(substitutionNode);
+
+      if (substitutionFrameNode !== null) {
+        const substitutionMetavariableNode = substitutionMetavariableNodeQuery(substitutionNode),
+              metavariableNode = substitutionMetavariableNode,  ///
+              frameNode = substitutionFrameNode,  ///
+              localContextA = localContext, ///
+              localContextB = localContext, ///
+              string = stringFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, localContextA, localContextB);
+
+        frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(string, frameNode, metavariableNode);
+      }
+
     }
 
     return frameForMetavariableSubstitution;

@@ -6,13 +6,14 @@ import TypeAssertion from "../../assertion/type";
 import DefinedAssertion from "../../assertion/defined";
 import SubproofAssertion from "../../assertion/subproof";
 import ContainedAssertion from "../../assertion/contained";
-import StatementSubstitution from "../../substitution/statement";
 
 import verifyFrame from "../../verify/frame";
 import verifyJudgement from "../../verify/judgement";
 import verifyDeclaration from "../../verify/declaration";
 
 import { nodeQuery } from "../../utilities/query";
+import TermForVariableSubstitution from "../../substitution/termForVariable";
+import FrameForMetavariableSubstitution from "../../substitution/frameForMetavariable";
 
 const frameNodeQuery = nodeQuery("/statement/frame!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),
@@ -41,12 +42,12 @@ function verifyAsMetavariable(statement, assignments, stated, localContext) {
     if (metavariableVerified) {
       let substitutionVerified = true;
 
-      const statementSubstitution = StatementSubstitution.fromStatementNode(statementNode, localContext);
+      const substitution = FrameForMetavariableSubstitution.fromStatementNode(statementNode, localContext) ||
+                             TermForVariableSubstitution.fromStatementNode(statementNode, localContext) ||
+                               null;
 
-      if (statementSubstitution !== null) {
-        const statementSubstitutionVerified = statementSubstitution.verify(assignments, stated, localContext);
-
-        substitutionVerified = statementSubstitutionVerified; ///
+      if (substitution !== null) {
+        substitutionVerified = substitution.verify(assignments, stated, localContext);
       }
 
       verifiedAsMetavariable = substitutionVerified; ///

@@ -13,7 +13,7 @@ export function nodeAsString(node, tokens) {
 
   const nodeTerminalNode = node.isTerminalNode();
 
-  if (nodeTerminalNode) {
+  if (nodeTerminalNode) {z
     const terminalNode = node;  ///
 
     string = terminalNodeAsString(terminalNode);
