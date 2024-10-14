@@ -114,9 +114,9 @@ export default class SubproofAssertion {
             fileContextA = fileContext,  ///
             localContextA = LocalContext.fromFileContext(fileContextA),
             localContextB = localContext, ///
-            unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+            unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutionA, substitutions, localContextA, localContextB);
 
-      if (unified) {
+      if (unifiedAtMetaLevel) {
         return true;
       }
     });

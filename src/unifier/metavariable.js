@@ -11,15 +11,15 @@ const typeNodeQuery = nodeQuery("/type!"),
 
 class MetavariableUnifier extends Unifier {
   unify(metavariableNodeA, metavariableNodeB, localContext) {
-    let unified;
+    let metavariableUnified;
 
     const nonTerminalNodeA = metavariableNodeA, ///
           nonTerminalNodeB = metavariableNodeB, ///
           nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext);
 
-    unified = nonTerminalNodeUnified; ///
+    metavariableUnified = nonTerminalNodeUnified; ///
 
-    return unified;
+    return metavariableUnified;
   }
 
   static maps = [

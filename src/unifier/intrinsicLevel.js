@@ -11,15 +11,15 @@ const termNodeQuery = nodeQuery("/term!"),
 
 class IntrinsicLevelUnifier extends Unifier {
   unify(nodeA, nodeB, substitutions, localContextA, localContextB) {
-    let unified;
+    let unifiedAtIntrinsicLevel;
 
     const nonTerminalNodeA = nodeA, ///
           nonTerminalNodeB = nodeB, ///
           nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB);
 
-    unified = nonTerminalNodeUnified; ///
+    unifiedAtIntrinsicLevel = nonTerminalNodeUnified; ///
 
-    return unified;
+    return unifiedAtIntrinsicLevel;
   }
 
   static maps = [

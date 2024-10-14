@@ -1,8 +1,6 @@
 "use strict";
 
 import shim from "./shim";
-import LocalContext from "./context/local";
-import metaLevelUnifier from "./unifier/metaLevel";
 import SubproofAssertion from "./assertion/subproof";
 import UnqualifiedStatement from "./statement/unqualified";
 
@@ -80,26 +78,15 @@ export default class Premise {
   unifyStatement(statement, substitutions, localContext) {
     let statementUnified;
 
-    const premise = this, ///
-          statementString = statement.getString(),
-          premiseStatement = premise.getStatement(),
-          premiseStatementString = premiseStatement.getString();
+    const statementString = statement.getString(),
+          premiseString = this.getString();
 
-    localContext.trace(`Unifying the '${statementString}' statement with the premise's '${premiseStatementString}' statement...`);
+    localContext.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`);
 
-    const statementNode = statement.getNode(),
-          premiseStatementNode = premiseStatement.getNode(),
-          nodeA = premiseStatementNode,  ///
-          nodeB = statementNode,  ///
-          fileContextA = this.fileContext,  ///
-          localContextA = LocalContext.fromFileContext(fileContextA),
-          localContextB = localContext, ///
-          unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
-
-    statementUnified = unified; ///
+    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, this.fileContext, localContext);
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the premise's '${premiseStatementString}' statement.`);
+      localContext.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`);
     }
 
     return statementUnified;

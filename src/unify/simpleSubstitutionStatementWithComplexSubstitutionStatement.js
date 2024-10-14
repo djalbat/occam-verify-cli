@@ -15,9 +15,9 @@ export default function unifyComplexSubstitutionStatementWithSimpleSubstitutionS
 
   localContextA = localContextB;  ///
 
-  const unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+  const unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutionA, substitutions, localContextA, localContextB);
 
-  simpleSubstitutionStatementUnifiedWithComplexSubstitutionStatement = unified;  ///
+  simpleSubstitutionStatementUnifiedWithComplexSubstitutionStatement = unifiedAtMetaLevel;  ///
 
   if (simpleSubstitutionStatementUnifiedWithComplexSubstitutionStatement) {
     localContextB.trace(`...unified the simple substitution's '${simpleSubstitutionStatementString}' statement with the complex substitution's '${complexSubstitutionStatementString}' statement.`, simpleSubstitutionStatementNode);

@@ -100,7 +100,10 @@ export default class TermForVariableSubstitution extends Substitution {
 
       termNode = stripBracketsFromTerm(termNode); ///
 
-      const string = stringFromTermNodeAndVariableNode(termNode, variableNode, localContext);
+      const { Term, Variable } = shim,
+            term = Term.fromTermNode(termNode, localContext),
+            variable = Variable.fromVariableNode(variableNode, localContext),
+            string = stringFromTermAndVariable(term, variable);
 
       termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode);
     }
@@ -108,13 +111,13 @@ export default class TermForVariableSubstitution extends Substitution {
     return termForVariableSubstitution;
   }
 
-  static fromTernAndVariable(term, variable, localContext) {
+  static fromTernAndVariable(term, variable) {
     let termNode = term.getNode();
 
     termNode = stripBracketsFromTerm(termNode); ///
 
     const variableNode = variable.getNode(),
-          string = stringFromTermNodeAndVariableNode(termNode, variableNode, localContext),
+          string = stringFromTermAndVariable(term, variable),
           termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode);
 
     return termForVariableSubstitution;
@@ -166,9 +169,9 @@ function transformVariableNode(variableNode, substitutions) {
   return transformedVariableNode;
 }
 
-function stringFromTermNodeAndVariableNode(termNode, variableNode, localContext) {
-  const termString = localContext.nodeAsString(termNode),
-        variableString = localContext.nodeAsString(variableNode),
+function stringFromTermAndVariable(term, variable) {
+  const termString = term.getString(),
+        variableString = variable.getString(),
         string = `[${termString} for ${variableString}]`;
 
   return string;

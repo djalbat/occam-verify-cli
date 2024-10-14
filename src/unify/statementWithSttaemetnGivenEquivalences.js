@@ -15,9 +15,9 @@ export default function unifyStatementWithStatementGivenEquivalences(statementNo
     const substitutions = Substitutions.fromNothing(),
           nodeA = statementNodeA,  ///
           nodeB = statementNodeB,  ///
-          unified = intrinsicLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+          unifiedAtIntrinsicLevel = intrinsicLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
-    if (unified) {
+    if (unifiedAtIntrinsicLevel) {
       const substitutionsUnifiedWithEquivalences = substitutions.unifyWithEquivalences(equivalences, localContextA, localContextB);
 
       statementUnifiedWithStatementGivenEquivalences = substitutionsUnifiedWithEquivalences;  ///
@@ -34,9 +34,9 @@ export default function unifyStatementWithStatementGivenEquivalences(statementNo
     const substitutions = Substitutions.fromNothing(),
           nodeA = statementNodeB,  ///
           nodeB = statementNodeA,  ///
-          unified = intrinsicLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+          unifiedAtIntrinsicLevel = intrinsicLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
-    if (unified) {
+    if (unifiedAtIntrinsicLevel) {
       const substitutionsUnifiedWithEquivalences = substitutions.unifyWithEquivalences(equivalences, localContextA, localContextB);
 
       statementUnifiedWithStatementGivenEquivalences = substitutionsUnifiedWithEquivalences;  ///

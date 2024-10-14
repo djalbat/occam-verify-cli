@@ -1,8 +1,6 @@
 "use strict";
 
 import shim from "./shim";
-import LocalContext from "./context/local";
-import metaLevelUnifier from "./unifier/metaLevel";
 import SubproofAssertion from "./assertion/subproof";
 import UnqualifiedStatement from "./statement/unqualified";
 
@@ -111,26 +109,15 @@ export default class Supposition {
   unifyStatement(statement, substitutions, localContext) {
     let statementUnified;
 
-    const supposition = this, ///
-          statementString = statement.getString(),
-          suppositionStatement = supposition.getStatement(),
-          suppositionStatementString = suppositionStatement.getString();
+    const statementString = statement.getString(),
+          suppositionString = this.getString();
 
-    localContext.trace(`Unifying the '${statementString}' statement with the supposition's '${suppositionStatementString}' statement...`);
+    localContext.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`);
 
-    const statementNode = statement.getNode(),
-          suppositionStatementNode = suppositionStatement.getNode(),
-          nodeA = suppositionStatementNode,  ///
-          nodeB = statementNode,  ///
-          fileContextA = this.fileContext,  ///
-          localContextA = LocalContext.fromFileContext(fileContextA),
-          localContextB = localContext, ///
-          unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
-
-    statementUnified = unified; ///
+    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, this.fileContext, localContext);
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the supposition's '${suppositionStatementString}' statement.`);
+      localContext.debug(`...unified the '${statementString}' statement with the '${suppositionString}' supposition.`);
     }
 
     return statementUnified;

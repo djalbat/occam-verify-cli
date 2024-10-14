@@ -45,6 +45,23 @@ export default class UnqualifiedStatement {
     return verified;
   }
 
+  unifyStatement(statement, substitutions, fileContext, localContext) {
+    let statementUnified;
+
+    const statementString = statement.getString(),
+          unqualifiedStatementString = this.getString();  ///
+
+    localContext.trace(`Unifying the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement...`);
+
+    statementUnified = this.statement.unifyStatement(statement, substitutions, fileContext, localContext);
+
+    if (statementUnified) {
+      localContext.debug(`...unified the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement.`);
+    }
+
+    return statementUnified;
+  }
+
   toJSON() {
     const statementJSON = this.statement.toJSON(),
           statement = statementJSON,  ///

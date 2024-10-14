@@ -1,7 +1,5 @@
 "use strict";
 
-import LocalContext from "./context/local";
-import metaLevelUnifier from "./unifier/metaLevel";
 import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
@@ -29,26 +27,15 @@ export default class Conclusion {
   unifyStatement(statement, substitutions, localContext) {
     let statementUnified;
 
-    const conclusion = this, ///
-          statementString = statement.getString(),
-          conclusionStatement = conclusion.getStatement(),
-          conclusionStatementString = conclusionStatement.getString();
+    const statementString = statement.getString(),
+          conclusionString = this.getString();
 
-    localContext.trace(`Unifying the '${statementString}' statement with the conclusion's '${conclusionStatementString}' statement...`);
+    localContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
 
-    const statementNode = statement.getNode(),
-          conclusionStatementNode = conclusionStatement.getNode(),
-          nodeA = conclusionStatementNode,  ///
-          nodeB = statementNode,  ///
-          fileContextA = this.fileContext,  ///
-          localContextA = LocalContext.fromFileContext(fileContextA),
-          localContextB = localContext, ///
-          unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
-
-    statementUnified = unified; ///
+    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, this.fileContext, localContext);
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the conclusion's '${conclusionStatementString}' statement.`);
+      localContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
     }
 
     return statementUnified;

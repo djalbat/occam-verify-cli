@@ -1,7 +1,5 @@
 "use strict";
 
-import LocalContext from "./context/local";
-import metaLevelUnifier from "./unifier/metaLevel";
 import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
@@ -29,26 +27,15 @@ export default class Consequent {
   unifyStatement(statement, substitutions, localContext) {
     let statementUnified;
 
-    const consequent = this, ///
-          statementString = statement.getString(),
-          consequentStatement = consequent.getStatement(),
-          consequentStatementString = consequentStatement.getString();
+    const statementString = statement.getString(),
+          consequentString = this.getString();
 
-    localContext.trace(`Unifying the '${statementString}' statement with the consequent's '${consequentStatementString}' statement...`);
+    localContext.trace(`Unifying the '${statementString}' statement with the '${consequentString}' consequent...`);
 
-    const statementNode = statement.getNode(),
-          consequentStatementNode = consequentStatement.getNode(),
-          nodeA = consequentStatementNode,  ///
-          nodeB = statementNode,  ///
-          fileContextA = this.fileContext,  ///
-          localContextA = LocalContext.fromFileContext(fileContextA),
-          localContextB = localContext, ///
-          unified = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
-
-    statementUnified = unified; ///
+    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, this.fileContext, localContext);
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the consequent's '${consequentStatementString}' statement.`);
+      localContext.debug(`...unified the '${statementString}' statement with the '${consequentString}' consequent.`);
     }
 
     return statementUnified;
