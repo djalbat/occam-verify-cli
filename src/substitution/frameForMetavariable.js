@@ -72,6 +72,12 @@ export default class FrameForMetavariableSubstitution extends Substitution {
     return metavariableNodeMatches;
   }
 
+  matchSubstitutionNode(substitutionNode) {
+    const substitutionNodeMatches = this.substitutionNode.match(substitutionNode);
+
+    return substitutionNodeMatches;
+  }
+
   matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
     const metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
           substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),
@@ -164,7 +170,7 @@ function stringFromFrameAndMetavariable(frame, metavariable, localContext) {
   const frameNode = frame.getNode(),
         frameString = localContext.nodeAsString(frameNode),
         metavariableString = metavariable.getString(),
-        string = `[${frameString} for ${metavariableString}]`;
+        string = `[[${frameString}] for [${metavariableString}]]`;
 
   return string;
 }

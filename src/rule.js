@@ -67,7 +67,13 @@ export default class Rule {
           proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
 
     if (proofStepsUnified) {
-      statementUnified = this.conclusion.unifyStatement(statement, substitutions, localContext);
+      const statementUnifiedWithConclusion = this.conclusion.unifyStatement(statement, substitutions, localContext);  ///
+
+      if (statementUnifiedWithConclusion) {
+        const substitutionsResolved = substitutions.resolve(localContext);
+
+        statementUnified = substitutionsResolved; ///
+      }
     }
 
     return statementUnified;

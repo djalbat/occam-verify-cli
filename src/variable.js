@@ -46,16 +46,16 @@ class Variable {
     this.type = type;
   }
 
-  matchNode(node) {
-    const nodeMatches = this.node.match(node);
+  matchVariableName(variableName) {
+    const variableNameMatches = (this.name === variableName);
 
-    return nodeMatches;
+    return variableNameMatches;
   }
 
-  matchName(name) {
-    const nameMatches = (this.name === name);
+  matchVariableNode(variableNode) {
+    const variableNodeMatches = this.node.match(variableNode);
 
-    return nameMatches;
+    return variableNodeMatches;
   }
 
   verify(localContext) {

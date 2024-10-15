@@ -53,7 +53,13 @@ export default class UnqualifiedStatement {
 
     localContext.trace(`Unifying the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement...`);
 
-    statementUnified = this.statement.unifyStatement(statement, substitutions, fileContext, localContext);
+    const localContextB = localContext;
+
+    localContext = LocalContext.fromFileContext(fileContext);
+
+    const localContextA = localContext; ///
+
+    statementUnified = this.statement.unifyStatement(statement, substitutions, localContextA, localContextB);
 
     if (statementUnified) {
       localContext.debug(`...unified the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement.`);

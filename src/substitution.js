@@ -9,10 +9,40 @@ export default class Substitution {
     return this.string;
   }
 
-  getNode() {
-    const node = null;
+  getTermNode() {
+    const termNode = null;
 
-    return node;
+    return termNode;
+  }
+
+  getFrameNode() {
+    const frameNode = null;
+
+    return frameNode;
+  }
+
+  getStatementNode() {
+    const statementNode = null;
+
+    return statementNode;
+  }
+
+  getVariableNode() {
+    const variableNode = null;
+
+    return variableNode;
+  }
+
+  getMetavariableNode() {
+    const metavariableNode = null;
+
+    return metavariableNode;
+  }
+
+  getSubstitutionNode() {
+    const substitutionNode = null;
+
+    return substitutionNode;
   }
 
   isSimple() {
@@ -28,17 +58,16 @@ export default class Substitution {
     return complex;
   }
 
-  isResolved() {
-    const simple = this.isSimple(),
-          resolved = simple; ///
-
-    return resolved;
-  }
-
   isEqualTo(substitution) {
     const equalTo = false;
 
     return equalTo;
+  }
+
+  resolve(substitutions, localContext) {
+    const resolved = true;
+
+    return resolved;
   }
 
   matchTermNode(termNode) {

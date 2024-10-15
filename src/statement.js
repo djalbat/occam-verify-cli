@@ -99,7 +99,13 @@ class Statement {
     return metavariableContained;
   }
 
-  unifyStatement(statement, substitutions, fileContext, localContext) {
+  matchStatementNode(statementNode) {
+    const statementNodeMatches = this.node.match(statementNode);
+
+    return statementNodeMatches;
+  }
+
+  unifyStatement(statement, substitutions, localContextA, localContextB) {
     let statementUnified;
 
     const statementA = this,  ///
@@ -107,20 +113,20 @@ class Statement {
           statementAString = statementA.getString(),
           statementBString = statementB.getString();
 
-    localContext.trace(`Unifying the '${statementBString}' statement with the '${statementAString}' statement...`);
+    localContextB.trace(`Unifying the '${statementBString}' statement with the '${statementAString}' statement...`);
 
     const statementANode = statementA.getNode(),
           statementBNode = statementB.getNode(),
           nodeA = statementANode, ///
-          nodeB = statementBNode, ///
-          fileContextA = fileContext, ///
-          localContextA = LocalContext.fromFileContextAndTokens(fileContextA, this.tokens),
-          localContextB = localContext, ///
-          unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+          nodeB = statementBNode; ///
+
+    localContextA = LocalContext.fromLocalContextAndTokens(localContextA, this.tokens);
+
+    const unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
     statementUnified = unifiedAtMetaLevel; ///
 
-    localContext.debug(`...unified the '${statementBString}' statement with the '${statementAString}' statement.`);
+    localContextB.debug(`...unified the '${statementBString}' statement with the '${statementAString}' statement.`);
 
     return statementUnified;
   }

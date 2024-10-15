@@ -32,16 +32,18 @@ export default class TermForVariableSubstitution extends Substitution {
     return this.substitutionNode;
   }
 
-  transformed(substitutions) {
+  transformed(substitutions, localContext) {
     let transformedSubstitution = null;
 
     const transformedTermNode = transformTermNode(this.termNode, substitutions),
           transformedVariableNode = transformVariableNode(this.variableNode, substitutions);
 
     if ((transformedTermNode !== null) && (transformedVariableNode !== null)) {
-      const string = null,
-            termNode = transformedTermNode, ///
+      const termNode = transformedTermNode, ///
             variableNode = transformedVariableNode, ///
+            termString = localContext.nodeAsString(termNode),
+            variableString = localContext.nodeAsString(variableNode),
+            string = `[${termString} for ${variableString}]`,
             substitutionNode = null,
             termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode, substitutionNode);
 
@@ -73,6 +75,12 @@ export default class TermForVariableSubstitution extends Substitution {
     const variableNodeMatches = this.variableNode.match(variableNode);
 
     return variableNodeMatches;
+  }
+
+  matchSubstitutionNode(substitutionNode) {
+    const substitutionNodeMatches = this.substitutionNode.match(substitutionNode);
+
+    return substitutionNodeMatches;
   }
 
   unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {

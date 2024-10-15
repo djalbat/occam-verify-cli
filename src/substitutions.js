@@ -213,12 +213,24 @@ export default class Substitutions {
     return unifiedWithEquivalences;
   }
 
-  areResolved() {
-    const resolved = this.everySubstitution((substitution) => {
-      const substitutionResolved = substitution.isResolved();
+  resolve(localContext) {
+    const metavariableNodes = this.getMetavariableNodes(),
+          resolved = metavariableNodes.every((metavariableNode) => {
+            const complexSubstitutions = this.findComplexSubstitutionsByMetavariableNode(metavariableNode),
+                  complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
+                    const substitution = complexSubstitution, ///
+                          substitutions = this, ///
+                          substitutionResolved = substitution.resolve(substitutions, localContext);
 
-      return substitutionResolved;
-    });
+                    if (substitutionResolved) {
+                      return true;
+                    }
+                  });
+
+            if (complexSubstitutionsResolved) {
+              return true;
+            }
+          });
 
     return resolved;
   }

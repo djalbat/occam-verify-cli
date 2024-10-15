@@ -50,10 +50,10 @@ class Metavariable {
     return metaTypeName;
   }
 
-  matchName(name) {
-    const nameMatches = (this.name === name);
+  matchMetavariableName(metavariableName) {
+    const metavariableNameMatches = (this.name === metavariableName);
 
-    return nameMatches;
+    return metavariableNameMatches;
   }
 
   matchMetavariableNode(metavariableNode) {
@@ -135,7 +135,7 @@ class Metavariable {
                                     null;
 
     (substitutionString !== null) ?
-      localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable given the '${substitutionString}' substitution...`) :
+      localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable given the ${substitutionString} substitution...`) :
         localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable...`);
 
     const statementNode = statement.getNode(),
@@ -170,7 +170,7 @@ class Metavariable {
     }
 
     (substitutionString !== null) ?
-      localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable given the '${substitutionString}' substitution.`) :
+      localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable given the ${substitutionString} substitution.`) :
         localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable.`);
 
     return statementUnified;
@@ -255,21 +255,6 @@ function metaTypeFromJSON(json, fileContext) {
   }
 
   return metaType;
-}
-
-function metavariableFromStatementNode(statementNode, localContext) {
-  let metavariable = null;
-
-  const statementMetavariableNode = statementMetavariableNodeQuery(statementNode)
-
-  if (statementMetavariableNode !== null) {
-    const metavariableNode = statementMetavariableNode, ///
-          metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
-
-    metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
-  }
-
-  return metavariable;
 }
 
 function statementMetavariableFromStatementNode(statementNode, localContext) {

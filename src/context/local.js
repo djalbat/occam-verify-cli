@@ -166,9 +166,9 @@ class LocalContext {
   addVariable(variable) {
     let variableAdded = false;
 
-    const node = variable.getNode(),
+    const variableNode = variable.getNode(),
           variablePresent = this.variables.some((variable) => {
-            const variableMatchesNode = variable.matchNode(node);
+            const variableMatchesNode = variable.matchVariableNode(variableNode);
 
             if (variableMatchesNode) {
               return true;
@@ -343,10 +343,9 @@ class LocalContext {
   findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
 
   findVariableByVariableName(variableName) {
-    const name = variableName,  ///
-          variables = this.getVariables(),
+    const variables = this.getVariables(),
           variable = variables.find((variable) => {
-            const nameMatches = variable.matchName(name);
+            const nameMatches = variable.matchVariableName(variableName);
 
             if (nameMatches) {
               return true;
@@ -370,10 +369,9 @@ class LocalContext {
   }
 
   findMetavariableByMetavariableName(metavariableName) {
-    const name = metavariableName,  ///
-          metavariables = this.getMetavariables(),
+    const metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-            const nameMatches = metavariable.matchName(name);
+            const nameMatches = metavariable.matchMetavariableName(metavariableName);
 
             if (nameMatches) {
               return true;
@@ -478,14 +476,15 @@ class LocalContext {
     return localContext;
   }
 
-  static fromFileContextAndTokens(fileContext, tokens) {
-    const context = fileContext,  ///
+  static fromLocalContextAndTokens(localContext, tokens) {
+    const context = localContext,  ///
           variables = [],
           proofSteps = [],
           judgements = [],
           equivalences = [],
-          metavariables = [],
-          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);  ///
+          metavariables = [];
+
+    localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);  ///
 
     return localContext;
   }
