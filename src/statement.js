@@ -102,8 +102,6 @@ class Statement {
   unifyStatement(statement, substitutions, fileContext, localContext) {
     let statementUnified;
 
-    localContext = LocalContext.fromLocalContextAndTokens(localContext, this.tokens);
-
     const statementA = this,  ///
           statementB = statement, ///
           statementAString = statementA.getString(),
@@ -116,7 +114,7 @@ class Statement {
           nodeA = statementANode, ///
           nodeB = statementBNode, ///
           fileContextA = fileContext, ///
-          localContextA = LocalContext.fromFileContext(fileContextA),
+          localContextA = LocalContext.fromFileContextAndTokens(fileContextA, this.tokens),
           localContextB = localContext, ///
           unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
@@ -129,8 +127,6 @@ class Statement {
 
   verify(assignments, stated, localContext) {
     let verified = false;
-
-    localContext = LocalContext.fromLocalContextAndTokens(localContext, this.tokens);
 
     const statement = this, ///
           statementString = this.string;  ///

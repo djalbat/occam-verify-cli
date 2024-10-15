@@ -478,15 +478,14 @@ class LocalContext {
     return localContext;
   }
 
-  static fromLocalContextAndTokens(localContext, tokens) {
-    const context = localContext,  ///
+  static fromFileContextAndTokens(fileContext, tokens) {
+    const context = fileContext,  ///
           variables = [],
           proofSteps = [],
           judgements = [],
           equivalences = [],
-          metavariables = [];
-
-    localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);  ///
+          metavariables = [],
+          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);  ///
 
     return localContext;
   }
