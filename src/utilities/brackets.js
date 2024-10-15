@@ -1,9 +1,8 @@
 "use strict";
 
-import bracketedTermNode from "../node/term/bracketed";
-import bracketedStatementNode from "../node/statement/bracketed";
-
 import { nodeQuery } from "../utilities/query";
+import { bracketedTermNode } from "../constructor/bracketed";
+import { bracketedStatementNode } from "../combinator/bracketed";
 import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
 
 const bracketedTermChildNodeQuery = nodeQuery("/term/argument/term!"),

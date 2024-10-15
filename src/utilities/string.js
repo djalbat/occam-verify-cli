@@ -11,17 +11,9 @@ export function trim(string) {
 export function nodeAsString(node, tokens) {
   let string;
 
-  const nodeTerminalNode = node.isTerminalNode();
+  tokens = nodeAsTokens(node, tokens);  ///
 
-  if (nodeTerminalNode) {z
-    const terminalNode = node;  ///
-
-    string = terminalNodeAsString(terminalNode);
-  } else {
-    const nonTerminalNode = node; ///
-
-    string = nonTerminalNodeAsString(nonTerminalNode, tokens);
-  }
+  string = tokensAsString(tokens);
 
   return string;
 }
@@ -40,21 +32,7 @@ export function nodesAsString(nodes, tokens) {
   return string;
 }
 
-function terminalNodeAsString(terminalNode) {
-  const content = terminalNode.getContent(),
-        string = content; ///
-
-  return string;
-}
-
-function nonTerminalNodeAsString(nonTerminalNode, tokens) {
-  const lastSignificantTokenIndex = nonTerminalNode.getLastSignificantTokenIndex(tokens),
-        firstSignificantTokenIndex = nonTerminalNode.getFirstSignificantTokenIndex(tokens),
-        start = firstSignificantTokenIndex, ///
-        end = lastSignificantTokenIndex + 1;
-
-  tokens = tokens.slice(start, end);  ///
-
+export function tokensAsString(tokens) {
   const string = tokens.reduce((string, token) => {
     const content = token.getContent();
 
@@ -64,4 +42,42 @@ function nonTerminalNodeAsString(nonTerminalNode, tokens) {
   }, EMPTY_STRING);
 
   return string;
+}
+
+export function nodeAsTokens(node, tokens) {
+  const nodeTerminalNode = node.isTerminalNode();
+
+  if (nodeTerminalNode) {z
+    const terminalNode = node;  ///
+
+    tokens = terminalNodeAsTokens(terminalNode, tokens);
+  } else {
+    const nonTerminalNode = node; ///
+
+    tokens = nonTerminalNodeAsTokens(nonTerminalNode, tokens);
+  }
+
+  return tokens;
+}
+
+function terminalNodeAsTokens(terminalNode, tokens) {
+  const significantToken = terminalNode.getSignificantToken(),
+        token = significantToken; ///
+
+  tokens = [  ///
+    token
+  ];
+
+  return tokens;
+}
+
+function nonTerminalNodeAsTokens(nonTerminalNode, tokens) {
+  const lastSignificantTokenIndex = nonTerminalNode.getLastSignificantTokenIndex(tokens),
+        firstSignificantTokenIndex = nonTerminalNode.getFirstSignificantTokenIndex(tokens),
+        start = firstSignificantTokenIndex, ///
+        end = lastSignificantTokenIndex + 1;
+
+  tokens = tokens.slice(start, end);  ///
+
+  return tokens;
 }

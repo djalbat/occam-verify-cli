@@ -10,8 +10,9 @@ import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariab
 const { last, reverse } = arrayUtilities;
 
 class LocalContext {
-  constructor(context, variables, proofSteps, judgements, equivalences, metavariables) {
+  constructor(context, tokens, variables, proofSteps, judgements, equivalences, metavariables) {
     this.context = context;
+    this.tokens = tokens;
     this.variables = variables;
     this.proofSteps = proofSteps;
     this.judgements = judgements;
@@ -21,6 +22,10 @@ class LocalContext {
 
   getContext() {
     return this.context;
+  }
+
+  getTokens() {
+    return this.tokens;
   }
 
   getVariables() {
@@ -394,9 +399,47 @@ class LocalContext {
 
   findMetatheoremByReference(reference) { return this.context.findMetatheoremByReference(reference); }
 
-  nodeAsString(node) { return this.context.nodeAsString(node); }
+  nodeAsString(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
 
-  nodesAsString(node) { return this.context.nodesAsString(node); }
+    const string = this.context.nodeAsString(node, tokens);
+
+    return string;
+  }
+
+  nodesAsString(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
+
+    const string = this.context.nodesAsString(node, tokens);
+
+    return string;
+  }
+
+  nodeAsTokens(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
+
+    tokens = this.context.nodeAsTokens(node, tokens); ///
+
+    return tokens;
+  }
+
+  nodesAsTokens(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
+
+    tokens = this.context.nodesAsTokens(node, tokens);  ///
+
+    return tokens;
+  }
+
+  tokensAsString(tokens) { return this.context.tokensAsString(tokens); }
 
   trace(message, node) { this.context.trace(message, node); }
 
@@ -410,25 +453,40 @@ class LocalContext {
 
   static fromFileContext(fileContext) {
     const context = fileContext,  ///
+          tokens = null,
           variables = [],
           proofSteps = [],
-          equivalences = [],
           judgements = [],
+          equivalences = [],
           metavariables = [],
-          localContext = new LocalContext(context, variables, proofSteps, judgements, equivalences, metavariables);
+          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);
 
     return localContext;
   }
 
   static fromLocalContext(localContext) {
     const context = localContext,  ///
+          tokens = null,
           variables = [],
           proofSteps = [],
-          equivalences = [],
           judgements = [],
+          equivalences = [],
           metavariables = [];
 
-    localContext = new LocalContext(context, variables, proofSteps, judgements, equivalences, metavariables);  ///
+    localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);  ///
+
+    return localContext;
+  }
+
+  static fromLocalContextAndTokens(localContext, tokens) {
+    const context = localContext,  ///
+          variables = [],
+          proofSteps = [],
+          judgements = [],
+          equivalences = [],
+          metavariables = [];
+
+    localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);  ///
 
     return localContext;
   }

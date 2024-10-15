@@ -17,7 +17,7 @@ import Metatheorem from "../metatheorem";
 import Metavariable from "../metavariable";
 
 import { objectType } from "../type";
-import { nodeAsString, nodesAsString } from "../utilities/string";
+import { nodeAsTokens, nodeAsString, nodesAsString, tokensAsString } from "../utilities/string";
 
 const { push } = arrayUtilities;
 
@@ -560,17 +560,47 @@ export default class FileContext {
     return metavariable;
   }
 
-  nodeAsString(node) {
-    const string = nodeAsString(node, this.tokens);
+  nodeAsString(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
+
+    const string = nodeAsString(node, tokens);
 
     return string;
   }
 
-  nodesAsString(node) {
-    const string = nodesAsString(node, this.tokens);
+  nodesAsString(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
+
+    const string = nodesAsString(node, tokens);
 
     return string;
   }
+
+  nodeAsTokens(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
+
+    tokens = nodeAsTokens(node, tokens);  ///
+
+    return tokens;
+  }
+
+  nodesAsTokens(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
+
+    tokens = nodesAsTokens(node, tokens); ///
+
+    return tokens;
+  }
+
+  tokensAsString(tokens) { return tokensAsString(tokens); }
 
   addType(type) {
     this.types.push(type);

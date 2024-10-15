@@ -1,10 +1,12 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
 import { lexersUtilities } from "occam-custom-grammars";
 
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
 
-const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities;
+const { front } = arrayUtilities,
+      { nominalLexerFromCombinedCustomGrammar } = lexersUtilities;
 
 const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar);
@@ -23,13 +25,6 @@ export function metavariableTokensFromMetavariableString(metavariableString, lex
   return metavariableTokens;
 }
 
-export function substitutionTokensFromSubstitutionString(substitutionString, lexer) {
-  const substitutionContent = `${substitutionString}`,
-        substitutionTokens = tokensFromContentAndLexer(substitutionContent, lexer);
-
-  return substitutionTokens;
-}
-
 export function unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer) {
   const content = unqualifiedStatementString,  ///
         unqualifiedStatementTokens = tokensFromContentAndLexer(content, lexer);
@@ -42,6 +37,20 @@ export function constructorDeclarationTokensFromConstructorDeclarationString(con
         constructorDeclarationTokens = tokensFromContentAndLexer(content, lexer);
 
   return constructorDeclarationTokens;
+}
+
+export function termTokensFromConstructorDeclarationTokens(constructorDeclarationTokens) {
+  const frontConstructorDeclarationTokens = front(constructorDeclarationTokens),
+        termTokens = frontConstructorDeclarationTokens;  ///
+
+  return termTokens;
+}
+
+export function statementTokensFromUnqualifiedStatementTokens(unqualifiedStatementTokens) {
+  const frontUnqualifiedStatementTokens = front(unqualifiedStatementTokens),
+        statementTokens = frontUnqualifiedStatementTokens;  ///
+
+  return statementTokens;
 }
 
 function tokensFromContentAndLexer(content, lexer = nominalLexer) {

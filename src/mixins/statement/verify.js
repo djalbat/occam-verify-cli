@@ -6,14 +6,14 @@ import TypeAssertion from "../../assertion/type";
 import DefinedAssertion from "../../assertion/defined";
 import SubproofAssertion from "../../assertion/subproof";
 import ContainedAssertion from "../../assertion/contained";
+import TermForVariableSubstitution from "../../substitution/termForVariable";
+import FrameForMetavariableSubstitution from "../../substitution/frameForMetavariable";
 
 import verifyFrame from "../../verify/frame";
 import verifyJudgement from "../../verify/judgement";
 import verifyDeclaration from "../../verify/declaration";
 
 import { nodeQuery } from "../../utilities/query";
-import TermForVariableSubstitution from "../../substitution/termForVariable";
-import FrameForMetavariableSubstitution from "../../substitution/frameForMetavariable";
 
 const frameNodeQuery = nodeQuery("/statement/frame!"),
       equalityNodeQuery = nodeQuery("/statement/equality!"),

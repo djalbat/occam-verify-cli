@@ -1,6 +1,6 @@
 "use strict";
 
-import BracketedCombinator from "../../ocmbinator/bracketed";
+import BracketedCombinator from "../../combinator/bracketed";
 import statementWithCombinatorUnifier from "../../unifier/statementWithCombinator";
 
 function unifyWithBracketedCombinator(statement, assignments, stated, localContext) {

@@ -9,17 +9,20 @@ import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
-import { statementNodeFromStatementString } from "./utilities/node";
+import { statementTokensFromUnqualifiedStatementTokens, unqualifiedStatementTokensFromUnqualifiedStatementString } from "./utilities/tokens";
+import { statementNodeFromUnqualifiedStatementNode,
+         unqualifiedStatementStringFromStatementString,
+         unqualifiedStatementNodeFromUnqualifiedStatementTokens } from "./utilities/node";
 
 const statementNodeQuery = nodeQuery("/*//statement"),
-      substitutionNodeQuery = nodeQuery("/statement/substitution"),
       statementVariableNodesQuery = nodesQuery("/statement//variable"),
       statementMetavariableNodesQuery = nodesQuery("/statement//metavariable");
 
 class Statement {
-  constructor(string, node) {
+  constructor(string, node, tokens) {
     this.string = string;
     this.node = node;
+    this.tokens = tokens;
   }
 
   getString() {
@@ -28,6 +31,10 @@ class Statement {
 
   getNode() {
     return this.node;
+  }
+
+  getTokens() {
+    return this.tokens;
   }
 
   isEqualTo(statement) {
@@ -92,8 +99,38 @@ class Statement {
     return metavariableContained;
   }
 
+  unifyStatement(statement, substitutions, fileContext, localContext) {
+    let statementUnified;
+
+    localContext = LocalContext.fromLocalContextAndTokens(localContext, this.tokens);
+
+    const statementA = this,  ///
+          statementB = statement, ///
+          statementAString = statementA.getString(),
+          statementBString = statementB.getString();
+
+    localContext.trace(`Unifying the '${statementBString}' statement with the '${statementAString}' statement...`);
+
+    const statementANode = statementA.getNode(),
+          statementBNode = statementB.getNode(),
+          nodeA = statementANode, ///
+          nodeB = statementBNode, ///
+          fileContextA = fileContext, ///
+          localContextA = LocalContext.fromFileContext(fileContextA),
+          localContextB = localContext, ///
+          unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+
+    statementUnified = unifiedAtMetaLevel; ///
+
+    localContext.debug(`...unified the '${statementBString}' statement with the '${statementAString}' statement.`);
+
+    return statementUnified;
+  }
+
   verify(assignments, stated, localContext) {
     let verified = false;
+
+    localContext = LocalContext.fromLocalContextAndTokens(localContext, this.tokens);
 
     const statement = this, ///
           statementString = this.string;  ///
@@ -169,32 +206,6 @@ class Statement {
     return verifiedGivenMetaType;
   }
 
-  unifyStatement(statement, substitutions, fileContext, localContext) {
-    let statementUnified;
-
-    const statementA = this,  ///
-          statementB = statement, ///
-          statementAString = statementA.getString(),
-          statementBString = statementB.getString();
-
-    localContext.trace(`Unifying the '${statementBString}' statement with the '${statementAString}' statement...`);
-
-    const statementANode = statementA.getNode(),
-          statementBNode = statementB.getNode(),
-          nodeA = statementANode, ///
-          nodeB = statementBNode, ///
-          fileContextA = fileContext, ///
-          localContextA = LocalContext.fromFileContext(fileContextA),
-          localContextB = localContext, ///
-          unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
-
-    statementUnified = unifiedAtMetaLevel; ///
-
-    localContext.debug(`...unified the '${statementBString}' statement with the '${statementAString}' statement.`);
-
-    return statementUnified;
-  }
-
   toJSON() {
     const string = this.string, ///
           json = {
@@ -209,9 +220,14 @@ class Statement {
           statementString = string, ///
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
-          statementNode = statementNodeFromStatementString(statementString, lexer, parser),
+          unqualifiedStatementString = unqualifiedStatementStringFromStatementString(statementString),
+          unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
+          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
+          statementTokens = statementTokensFromUnqualifiedStatementTokens(unqualifiedStatementTokens),
+          statementNode = statementNodeFromUnqualifiedStatementNode(unqualifiedStatementNode),
           node = statementNode,  ///
-          statement = new Statement(string, node);
+          tokens = statementTokens, ///
+          statement = new Statement(string, node, tokens);
 
     return statement;
   }
@@ -221,9 +237,10 @@ class Statement {
 
     if (statementNode !== null) {
       const node = statementNode, ///
-            string = localContext.nodeAsString(node);
+            tokens = localContext.nodeAsTokens(node),
+            string = localContext.tokensAsString(tokens);
 
-      statement = new Statement(string, node);
+      statement = new Statement(string, node, tokens);
     }
 
     return statement;
@@ -232,8 +249,9 @@ class Statement {
   static fromDefinedAssertionNode(definedAssertionNode, localContext) {
     const statementNode = statementNodeQuery(definedAssertionNode),
           node = statementNode, ///
-          string = localContext.nodeAsString(node),
-          statement = new Statement(string, node);
+          tokens = localContext.nodeAsTokens(node),
+          string = localContext.tokensAsString(tokens),
+          statement = new Statement(string, node, tokens);
 
     return statement;
   }
@@ -241,8 +259,9 @@ class Statement {
   static fromContainedAssertionNode(containedAssertionNode, localContext) {
     const statementNode = statementNodeQuery(containedAssertionNode),
           node = statementNode, ///
-          string = localContext.nodeAsString(node),
-          statement = new Statement(string, node);
+          tokens = localContext.nodeAsTokens(node),
+          string = localContext.tokensAsString(tokens),
+          statement = new Statement(string, node, tokens);
 
     return statement;
   }
