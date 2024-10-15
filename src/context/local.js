@@ -7,7 +7,7 @@ import Equivalence from "../equivalence";
 import { metavariableNameFromMetavariableNode } from "../utilities/name";
 import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../utilities/equivalences";
 
-const { last, reverse } = arrayUtilities;
+const { last } = arrayUtilities;
 
 class LocalContext {
   constructor(context, tokens, variables, proofSteps, judgements, equivalences, metavariables) {
@@ -230,26 +230,6 @@ class LocalContext {
     }
 
     return metavariableAdded;
-  }
-
-  unifyStatement(statementNode, localContext) {
-    let proofSteps = this.getProofSteps();
-
-    proofSteps = reverse(proofSteps); ///
-
-    const equivalences = this.getEquivalences(),
-          localContextA = this,  ///
-          localContextB = localContext, ///
-          statementNodeB = statementNode, ///
-          statementUnified = proofSteps.some((proofStep) => {
-            const statementUnified = proofStep.unifyStatement(statementNodeB, equivalences, localContextA, localContextB);
-
-            if (statementUnified) {
-              return true;
-            }
-          });
-
-    return statementUnified;
   }
 
   getTermType(term) {

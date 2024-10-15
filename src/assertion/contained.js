@@ -45,6 +45,8 @@ export default class ContainedAssertion {
 
     localContext.trace(`Verifying the '${containedAssertionString}' contained assertion...`);
 
+    stated = true;
+
     assignments = null; ///
 
     let termVerified = true,  ///

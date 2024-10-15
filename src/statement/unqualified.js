@@ -45,24 +45,18 @@ export default class UnqualifiedStatement {
     return verified;
   }
 
-  unifyStatement(statement, substitutions, fileContext, localContext) {
+  unifyStatement(statement, substitutions, localContextA, localContextB) {
     let statementUnified;
 
     const statementString = statement.getString(),
           unqualifiedStatementString = this.getString();  ///
 
-    localContext.trace(`Unifying the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement...`);
-
-    const localContextB = localContext;
-
-    localContext = LocalContext.fromFileContext(fileContext);
-
-    const localContextA = localContext; ///
+    localContextB.trace(`Unifying the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement...`);
 
     statementUnified = this.statement.unifyStatement(statement, substitutions, localContextA, localContextB);
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement.`);
+      localContextB.debug(`...unified the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement.`);
     }
 
     return statementUnified;

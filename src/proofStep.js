@@ -2,6 +2,7 @@
 
 import shim from "./shim";
 import Subproof from "./subproof";
+import Substitutions from "./substitutions";
 import QualifiedStatement from "./statement/qualified";
 import UnqualifiedStatement from "./statement/unqualified";
 
@@ -44,18 +45,33 @@ class ProofStep {
     return statement;
   }
 
-  // unifyStatement(statementB, equivalences, localContextA, localContextB) {
-  //   let statementUnified = false;
-  //
-  //   if (this.statement !== null) {
-  //     const statementA = this.statement,  ///
-  //           statementUnifiedWithStatement = unifyStatementWithStatementGivenEquivalences(statementA, statementB, equivalences, localContextA, localContextB);
-  //
-  //     statementUnified = statementUnifiedWithStatement;  ///
-  //   }
-  //
-  //   return statementUnified;
-  // }
+  unifyStatement(statement, localContext) {
+    let statementUnified = false;
+
+    const substitutions = Substitutions.fromNothing();
+
+    if (this.qualifiedStatement !== null) {
+      const localContextA = localContext, ///
+            localContextB = localContext; ///
+
+      statementUnified = this.qualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
+    }
+
+    if (this.unqualifiedStatement !== null) {
+      const localContextA = localContext, ///
+            localContextB = localContext; ///
+
+      statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
+    }
+
+    const substitutionsLength = substitutions.getLength();
+
+    if (substitutionsLength > 0) {
+      statementUnified = false;
+    }
+
+    return statementUnified;
+  }
 
   verify(substitutions, localContext) {
     let verified = false;

@@ -51,7 +51,6 @@ export default class Subproof {
     return statements;
   }
 
-
   verify(substitutions, localContext) {
     let subproofVerified = false;
 

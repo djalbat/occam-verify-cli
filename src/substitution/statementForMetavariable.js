@@ -95,17 +95,9 @@ export default class StatementForMetavariableSubstitution extends Substitution {
         if (substitutionsLength === 1) {
           const firstSubstitution = substitutions.getFirstSubstitution(),
                 substitution = firstSubstitution, ///
-                substitutionString = substitution.getString();
+                substitutionEqualToTransformedSubstitution = substitution.isEqualTo(transformedSubstitution);
 
-          localContext.trace(`Equating the ${substitutionString} substitution to the transformed ${transformedSubstitutionString} substitution...`);
-
-          const substitutionEqualToTransformedSubstitution = substitution.isEqualTo(transformedSubstitution);
-
-          if (substitutionEqualToTransformedSubstitution) {
-            localContext.debug(`...equated the ${substitutionString} substitution to the transformed ${transformedSubstitutionString} substitution.`);
-          }
-
-          substitutionResolved = substitutionEqualToTransformedSubstitution;
+          substitutionResolved = substitutionEqualToTransformedSubstitution;  ///
         }
       }
     }

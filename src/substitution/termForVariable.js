@@ -54,11 +54,17 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   isEqualTo(substitution) {
+    let equalTo = false;
+
     const termNode = substitution.getTermNode(),
-          variableNode = substitution.getVariableNode(),
-          termNodeMatches = this.matchTermNode(termNode),
-          variableNodeMatches = this.matchVariableNode(variableNode),
-          equalTo = (termNodeMatches && variableNodeMatches);
+          variableNode = substitution.getVariableNode();
+
+    if ((termNode !== null) && (variableNode !== null)) {
+      const termNodeMatches = this.matchTermNode(termNode),
+            variableNodeMatches = this.matchVariableNode(variableNode);
+
+      equalTo = (termNodeMatches && variableNodeMatches);
+    }
 
     return equalTo;
   }

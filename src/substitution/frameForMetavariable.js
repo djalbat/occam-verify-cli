@@ -51,11 +51,17 @@ export default class FrameForMetavariableSubstitution extends Substitution {
   }
 
   isEqualTo(substitution) {
+    let equalTo = false;
+
     const frameNode = substitution.getFrameNode(),
-          metavariableNode = substitution.getMetavariableNode(),
-          frameNodeMatches = this.matchFrameNode(frameNode),
-          metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
-          equalTo = (frameNodeMatches && metavariableNodeMatches);
+          metavariableNode = substitution.getMetavariableNode();
+
+    if ((frameNode !== null) && (metavariableNode !== null)) {
+      const frameNodeMatches = this.matchFrameNode(frameNode),
+            metavariableNodeMatches = this.matchMetavariableNode(metavariableNode);
+
+      equalTo = (frameNodeMatches && metavariableNodeMatches);
+    }
 
     return equalTo;
   }

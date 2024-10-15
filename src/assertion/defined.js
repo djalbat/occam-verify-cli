@@ -40,6 +40,8 @@ export default class DefinedAssertion {
 
     localContext.trace(`Verifying the '${definedAssertionString}' defined assertion...`);
 
+    stated = true;  ///
+
     assignments = null; ///
 
     let termVerified = true,  ///

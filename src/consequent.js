@@ -1,5 +1,6 @@
 "use strict";
 
+import LocalContext from "./context/local";
 import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
@@ -32,7 +33,13 @@ export default class Consequent {
 
     localContext.trace(`Unifying the '${statementString}' statement with the '${consequentString}' consequent...`);
 
-    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, this.fileContext, localContext);
+    const localContextB = localContext;
+
+    localContext = LocalContext.fromFileContext(this.fileContext);
+
+    const localContextA = localContext; ///
+
+    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
 
     if (statementUnified) {
       localContext.debug(`...unified the '${statementString}' statement with the '${consequentString}' consequent.`);

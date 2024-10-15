@@ -33,6 +33,44 @@ export default class QualifiedStatement {
 
   getMetavariableNode() { return this.reference.getMetavariableNode(); }
 
+  unify(substitutions, localContext) {
+    let unified;
+
+    const qualifiedStatement = this,  ///
+          qualifiedStatementString = this.string; ///
+
+    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement...`);
+
+    unified = unifyMixins.some((unifyMixin) => {
+      const unified = unifyMixin(qualifiedStatement, substitutions, localContext);
+
+      return unified;
+    });
+
+    if (unified) {
+      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement.`);
+    }
+
+    return unified;
+  }
+
+  unifyStatement(statement, substitutions, localContextA, localContextB) {
+    let statementUnified;
+
+    const statementString = statement.getString(),
+          unqualifiedStatementString = this.getString();  ///
+
+    localContextB.trace(`Unifying the '${statementString}' statement with the '${unqualifiedStatementString}' qualified statement...`);
+
+    statementUnified = this.statement.unifyStatement(statement, substitutions, localContextA, localContextB);
+
+    if (statementUnified) {
+      localContextB.debug(`...unified the '${statementString}' statement with the '${unqualifiedStatementString}' qualified statement.`);
+    }
+
+    return statementUnified;
+  }
+
   verify(substitutions, localContext) {
     let verified;
 
@@ -63,27 +101,6 @@ export default class QualifiedStatement {
     }
 
     return verified;
-  }
-
-  unify(substitutions, localContext) {
-    let unified;
-
-    const qualifiedStatement = this,  ///
-          qualifiedStatementString = this.string; ///
-
-    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement...`);
-
-    unified = unifyMixins.some((unifyMixin) => {
-      const unified = unifyMixin(qualifiedStatement, substitutions, localContext);
-
-      return unified;
-    });
-
-    if (unified) {
-      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement.`);
-    }
-
-    return unified;
   }
 
   static fromQualifiedStatementNode(qualifiedStatementNode, fileContext) {
