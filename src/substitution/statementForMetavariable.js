@@ -1,19 +1,17 @@
 "use strict";
 
-import shim from "../shim";
 import Substitution from "../substitution";
-import TermForVariableSubstitution from "../substitution/termForVariable";
 import FrameForMetavariableSubstitution from "../substitution/frameForMetavariable";
 
 import { stripBracketsFromStatement } from "../utilities/brackets";
 
 export default class StatementForMetavariableSubstitution extends Substitution {
-  constructor(string, statementNode, metavariableNode, substitution) {
+  constructor(string, statementNode, metavariableNode, substitutionNode) {
     super(string);
 
     this.statementNode = statementNode;
     this.metavariableNode = metavariableNode;
-    this.substitution = substitution;
+    this.substitutionNode = substitutionNode;
   }
 
   getStatementNode() {
@@ -24,18 +22,12 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return this.metavariableNode;
   }
 
-  getSubstitution() {
-    return this.substitution;
-  }
-
-  getNode() {
-    const node = this.statementNode;  ///
-
-    return node;
+  getSubstitutionNode() {
+    return this.substitutionNode;
   }
 
   isSimple() {
-    const simple = (this.substitution === null);
+    const simple = (this.substitutionNode === null);
 
     return simple;
   }
@@ -54,21 +46,28 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return metavariableNodeMatches;
   }
 
-  static fromStatementAndMetavariable(statement, metavariable, localContext) {
-    let statementNode = statement.getNode();
+  matchSubstitutionNode(substitutionNode) {
+    let substitutionNodeMatches;
 
-    statementNode = stripBracketsFromStatement(statementNode); ///
+    if ((substitutionNode === null) && (this.substitutionNode === null)) {
+      substitutionNodeMatches = true;
+    } else if ((substitutionNode === null) && (this.substitutionNode !== null)) {
+      substitutionNodeMatches = false;
+    } else if ((substitutionNode !== null) && (this.substitutionNode === null)) {
+      substitutionNodeMatches = false;
+    } else {
+      substitutionNodeMatches = this.substitutionNode.match(substitutionNode);
+    }
 
-    const { Statement } = shim;
+    return substitutionNodeMatches;
+  }
 
-    statement = Statement.fromStatementNode(statementNode, localContext); ///
+  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
+    const metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
+          substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),
+          metavariableNodeAndSubstitutionNodeMatches = (metavariableNodeMatches && substitutionNodeMatches);
 
-    const string = stringFromStatementAndMetavariable(statement, metavariable),
-          substitution = null,
-          metavariableNode = metavariable.getNode(),
-          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, statementNode, metavariableNode, substitution);
-
-    return statementForMetavariableSubstitution;
+    return metavariableNodeAndSubstitutionNodeMatches;
   }
 
   static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext) {
@@ -76,53 +75,22 @@ export default class StatementForMetavariableSubstitution extends Substitution {
 
     statementNode = stripBracketsFromStatement(statementNode); ///
 
-    const { Statement } = shim;
-
-    statement = Statement.fromStatementNode(statementNode, localContext); ///
-
-    const metavariableNode = metavariable.getNode(),
-          string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution);
-
-    substitution = substitutionFromSubstitution(substitution, localContext);
-
-    const statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, statementNode, metavariableNode, substitution);
+    const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext),
+          metavariableNode = metavariable.getNode(),
+          substitutionNode = (substitution !== null) ?
+                                substitution.getNode() :
+                                  null,
+          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, statementNode, metavariableNode, substitutionNode);
 
     return statementForMetavariableSubstitution;
   }
 }
 
-function substitutionFromSubstitution(substitution, localContext) {
-  if (substitution === null) {
-    const termForVariableSubstitution = TermForVariableSubstitution.fromSubstitution(substitution, localContext);
-
-    if (termForVariableSubstitution !== null) {
-      substitution = termForVariableSubstitution; ///
-    }
-  }
-
-  if (substitution === null) {
-    const frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromSubstitution(substitution, localContext);
-
-    if (frameForMetavariableSubstitution !== null) {
-      substitution = frameForMetavariableSubstitution;  ///
-    }
-  }
-
-  return substitution;
-}
-
-function stringFromStatementAndMetavariable(statement, metavariable) {
-  const statementString = statement.getString(),
-        metavariableString = metavariable.getString(),
-        string = `[${statementString} for ${metavariableString}]`;
-
-  return string;
-}
-
-function stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution) {
+function stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext) {
   let string;
 
-  const statementString = statement.getString(),
+  const statementNode = statement.getNode(),
+        statementString = localContext.nodeAsString(statementNode),
         metavariableString = metavariable.getString();
 
   if (substitution === null) {

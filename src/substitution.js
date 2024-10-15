@@ -9,6 +9,12 @@ export default class Substitution {
     return this.string;
   }
 
+  getNode() {
+    const node = null;
+
+    return node;
+  }
+
   isSimple() {
     const simple = true;
 
@@ -29,18 +35,6 @@ export default class Substitution {
     return resolved;
   }
 
-  getVariableNode() {
-    const variableNode = null;
-
-    return variableNode;
-  }
-
-  getMetavariableNode() {
-    const metavariableNode = null;
-
-    return metavariableNode;
-  }
-
   isEqualTo(substitution) {
     const equalTo = false;
 
@@ -51,6 +45,12 @@ export default class Substitution {
     const termNodeMatches = false;
 
     return termNodeMatches;
+  }
+
+  matchFrameNode(frameNode) {
+    const frameNodeMatches = false;
+
+    return frameNodeMatches;
   }
 
   matchVariableNode(variableNode) {

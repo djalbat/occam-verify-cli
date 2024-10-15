@@ -51,7 +51,7 @@ class Statement {
     const variableString = variable.getString(),
           statementString = this.string;  ///
 
-    localContext.trace(`The '${variableString}' variable is contained in hte '${statementString}' statement...`);
+    localContext.trace(`Is the '${variableString}' variable contained in the '${statementString}' statement...`);
 
     const variableNode = variable.getNode(),
           statementNode = this.node,
@@ -66,7 +66,7 @@ class Statement {
     });
 
     if (variableContained) {
-      localContext.debug(`...the '${variableString}' variable is contained in hte '${statementString}' statement.`);
+      localContext.debug(`...the '${variableString}' variable is contained in the '${statementString}' statement.`);
     }
 
     return variableContained;
@@ -78,7 +78,7 @@ class Statement {
     const metavariableString = metavariable.getString(),
           statementString = this.string;  ///
 
-    localContext.trace(`The '${metavariableString}' metavariable is contained in hte '${statementString}' statement...`);
+    localContext.trace(`Is the '${metavariableString}' metavariable contained in the '${statementString}' statement...`);
 
     const metavariableNode = metavariable.getNode(),
           statementNode = this.node,
@@ -93,7 +93,7 @@ class Statement {
     });
 
     if (metavariableContained) {
-      localContext.debug(`...the '${metavariableString}' metavariable is contained in hte '${statementString}' statement.`);
+      localContext.debug(`...the '${metavariableString}' metavariable is contained in the '${statementString}' statement.`);
     }
 
     return metavariableContained;

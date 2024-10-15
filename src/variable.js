@@ -165,7 +165,7 @@ class Variable {
       if (termVariable === variable) {
         termUnified = true;
       } else {
-        const termForVariableSubstitution = TermForVariableSubstitution.fromTernAndVariable(term, variable),
+        const termForVariableSubstitution = TermForVariableSubstitution.fromTernAndVariable(term, variable, localContext),
               substitution = termForVariableSubstitution;  ///
 
         substitutions.addSubstitution(substitution, localContext);

@@ -125,21 +125,29 @@ class Metavariable {
     return verifiedAtTopLevel;
   }
 
-  unifyStatement(statement, substitutions, localContext) {
+  unifyStatement(statement, substitution, substitutions, localContext) {
     let statementUnified = false;
 
     const statementString = statement.getString(),
-          metavariableString = this.string; ///
+          metavariableString = this.string, ///
+          substitutionString = (substitution !== null) ?
+                                  substitution.getString() :
+                                    null;
 
-    localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable...`);
+    (substitutionString !== null) ?
+      localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable given the '${substitutionString}' substitution...`) :
+        localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable...`);
 
     const statementNode = statement.getNode(),
           metavariableNode = this.node, ///
-          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableNode(metavariableNode),
-          substitution = simpleSubstitution;  ///
+          substitutionNode = (substitution !== null) ?
+                               substitution.getSubstitutionNode() :
+                                 null,
+          substitutionPresent = substitutions.isSubstitutionPresentByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
 
-    if (substitution !== null) {
-      const statementNodeMatches = substitution.matchStatementNode(statementNode);
+    if (substitutionPresent) {
+      const substitution = substitutions.findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode),
+            statementNodeMatches = substitution.matchStatementNode(statementNode);
 
       if (statementNodeMatches) {
         statementUnified = true;
@@ -151,8 +159,9 @@ class Metavariable {
       if (metavariable === statementMetavariable) {
         statementUnified = true;
       } else {
-        const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementAndMetavariable(statement, metavariable, localContext),
-              substitution = statementForMetavariableSubstitution;  ///
+        const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext);
+
+        substitution = statementForMetavariableSubstitution;  ///
 
         substitutions.addSubstitution(substitution, localContext);
 
@@ -160,55 +169,11 @@ class Metavariable {
       }
     }
 
-    if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable.`);
-    }
+    (substitutionString !== null) ?
+      localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable given the '${substitutionString}' substitution.`) :
+        localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable.`);
 
     return statementUnified;
-  }
-
-  unifyStatementGivenSubstitution(statement, substitution, substitutions, localContext) {
-    let statementUnifiedGivenSubstitution = false;
-
-    const statementString = statement.getString(),
-          substitutionString = substitution.getString(),
-          metavariableString = this.string; ///
-
-    localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable given the '${substitutionString}' substitution...`);
-
-    const statementNode = statement.getNode(),
-          metavariableNode = this.node, ///
-          substitutionNode = substitution.getNode(),
-          complexSubstitution = substitutions.findComplexSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
-
-    if (complexSubstitution !== null) {
-      const statementNodeMatches = complexSubstitution.matchStatementNode(statementNode);
-
-      if (statementNodeMatches) {
-        statementUnifiedGivenSubstitution = true;
-      }
-    } else {
-      const metavariable = metavariableFromStatementNode(statementNode, localContext);
-
-      if (this === metavariable) {  ///
-        statementUnifiedGivenSubstitution = false;  ///
-      } else {
-        const metavariable = this,  ///
-              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext);
-
-        substitution = statementForMetavariableSubstitution;  ///
-
-        substitutions.addSubstitution(substitution, localContext);
-
-        statementUnifiedGivenSubstitution = true;
-      }
-    }
-
-    if (statementUnifiedGivenSubstitution) {
-      localContext.trace(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable given the '${substitutionString}' substitution.`);
-    }
-
-    return statementUnifiedGivenSubstitution;
   }
 
   toJSON() {

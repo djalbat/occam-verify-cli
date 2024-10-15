@@ -113,6 +113,7 @@ export default class Substitutions {
 
     return substitution;
   }
+
   findSubstitutionsByMetavariableNode(metavariableNode) {
     const substitutions = this.findSubstitutions((substitution) => {
       const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
@@ -153,31 +154,25 @@ export default class Substitutions {
     return complexSubstitutions;
   }
 
-  findSubstitutionsByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
+  findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
     const substitutions = this.findSubstitutions((substitution) => {
-      const metavariableNodeAndSubstitutionNodeMatch = substitution.matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
+            const metavariableNodeAndSubstitutionNodeMatch = substitution.matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
 
-      if (metavariableNodeAndSubstitutionNodeMatch) {
-        return true;
-      }
-    });
-
-    return substitutions;
-  }
-
-  findComplexSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
-    const substitutions = this.findSubstitutionsByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode),
-          complexSubstitutions = substitutions.filterSubstitution((substitution) => {
-            const substitutionComplex = substitution.isComplex();
-
-            if (substitutionComplex) {
+            if (metavariableNodeAndSubstitutionNodeMatch) {
               return true;
             }
           }),
-          firstComplexSubstitution = complexSubstitutions.getFirstSubstitution(),
-          complexSubstitution = firstComplexSubstitution; ///
+          firstSubstitution = substitutions.getFirstSubstitution(),
+          substitution = firstSubstitution; ///
 
-    return complexSubstitution;
+    return substitution;
+  }
+
+  isSubstitutionPresentByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
+    const substitution = this.findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode),
+          substitutionPresent = (substitution !== null);
+
+    return substitutionPresent;
   }
 
   addSubstitution(substitution, localContext) {

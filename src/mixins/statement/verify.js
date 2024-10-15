@@ -6,8 +6,6 @@ import TypeAssertion from "../../assertion/type";
 import DefinedAssertion from "../../assertion/defined";
 import SubproofAssertion from "../../assertion/subproof";
 import ContainedAssertion from "../../assertion/contained";
-import TermForVariableSubstitution from "../../substitution/termForVariable";
-import FrameForMetavariableSubstitution from "../../substitution/frameForMetavariable";
 
 import verifyFrame from "../../verify/frame";
 import verifyJudgement from "../../verify/judgement";
@@ -39,19 +37,7 @@ function verifyAsMetavariable(statement, assignments, stated, localContext) {
 
     const metavariableVerified = metavariable.verify(localContext);
 
-    if (metavariableVerified) {
-      let substitutionVerified = true;
-
-      const substitution = FrameForMetavariableSubstitution.fromStatementNode(statementNode, localContext) ||
-                             TermForVariableSubstitution.fromStatementNode(statementNode, localContext) ||
-                               null;
-
-      if (substitution !== null) {
-        substitutionVerified = substitution.verify(assignments, stated, localContext);
-      }
-
-      verifiedAsMetavariable = substitutionVerified; ///
-    }
+    verifiedAsMetavariable = metavariableVerified; ///
 
     if (verifiedAsMetavariable) {
       localContext.debug(`...verified the '${statementString}' statement as a metavariable.`);
