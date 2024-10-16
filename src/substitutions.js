@@ -166,6 +166,13 @@ export default class Substitutions {
     return substitution;
   }
 
+  isSimpleSubstitutionPresentByMetavariableName(metavariableName) {
+    const simpleSubstitution = this.findSimpleSubstitutionByMetavariableName(metavariableName),
+          simpleSubstitutionPresent = (simpleSubstitution !== null);
+
+    return simpleSubstitutionPresent;
+  }
+
   isSubstitutionPresentByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode) {
     const substitution = this.findSubstitutionByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode),
           substitutionPresent = (substitution !== null);

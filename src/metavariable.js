@@ -9,10 +9,13 @@ import StatementForMetavariableSubstitution from "./substitution/statementForMet
 import { nodeQuery } from "./utilities/query";
 import { metavariableNameFromMetavariableNode } from "./utilities/name";
 import { metavariableNodeFromMetavariableString } from "./utilities/node";
+import {metavariableFromFrameNode} from "./utilities/unify";
+import FrameForMetavariableSubstitution from "./substitution/frameForMetavariable";
 
 const argumentNodeQuery = nodeQuery("/metavariable/argument"),
       metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType"),
       metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable"),
+      frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 class Metavariable {
@@ -68,6 +71,49 @@ class Metavariable {
     return metavariableNodeMatches;
   }
 
+  unifyFrame(frame, substitutions, localContext) {
+    let frameUnified = false;
+
+    const frameNode = frame.getNode(),
+          frameString = frame.getString(),
+          metavariableString = this.string; ///
+
+    localContext.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
+
+    const metavariableName = this.name, ///
+          simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariableName(metavariableName);
+
+    if (simpleSubstitutionPresent) {
+      const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableName(metavariableName),
+            substitution = simpleSubstitution,  ///
+            frameNodeMatches = substitution.matchFrameNode(frameNode);
+
+      if (frameNodeMatches) {
+        frameUnified = true;
+      }
+    } else {
+      const metavariable = this,  ///
+            frameMetavariable  = frameMetavariableFromStatementNode(frameNode, localContext);
+
+      if (metavariable === frameMetavariable) {
+        frameUnified = true;
+      } else {
+        const frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromFrameAndMetavariable(frame, metavariable, localContext),
+              substitution = frameForMetavariableSubstitution;  ///
+
+        substitutions.addSubstitution(substitution, localContext);
+
+        frameUnified = true;
+      }
+    }
+
+    if (frameUnified) {
+      localContext.debug(`...unified the '${frameString}' frame with the '${metavariableString}' metavariable.`);
+    }
+
+    return frameUnified;
+  }
+
   unifyStatement(statement, substitution, substitutions, localContext) {
     let statementUnified = false;
 
@@ -113,9 +159,11 @@ class Metavariable {
       }
     }
 
-    (substitutionString !== null) ?
-      localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable given the ${substitutionString} substitution.`) :
-        localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable.`);
+    if (statementUnified) {
+      (substitutionString !== null) ?
+        localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable given the ${substitutionString} substitution.`) :
+          localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable.`);
+    }
 
     return statementUnified;
   }
@@ -286,6 +334,20 @@ function metaTypeFromJSON(json, fileContext) {
   }
 
   return metaType;
+}
+
+function frameMetavariableFromStatementNode(frameNode, localContext) {
+  let frameMetavariable = null;
+
+  const frameMetavariableNode = frameMetavariableNodeQuery(frameNode);
+
+  if (frameMetavariableNode !== null) {
+    const frameMetavariableName = metavariableNameFromMetavariableNode(frameMetavariableNode);
+
+    frameMetavariable = localContext.findMetavariableByMetavariableName(frameMetavariableName);
+  }
+
+  return frameMetavariable;
 }
 
 function statementMetavariableFromStatementNode(statementNode, localContext) {

@@ -98,7 +98,17 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   matchSubstitutionNode(substitutionNode) {
-    const substitutionNodeMatches = this.substitutionNode.match(substitutionNode);
+    let substitutionNodeMatches;
+
+    if ((substitutionNode === null) && (this.substitutionNode === null)) {
+      substitutionNodeMatches = true;
+    } else if ((substitutionNode === null) && (this.substitutionNode !== null)) {
+      substitutionNodeMatches = false;
+    } else if ((substitutionNode !== null) && (this.substitutionNode === null)) {
+      substitutionNodeMatches = false;
+    } else {
+      substitutionNodeMatches = this.substitutionNode.match(substitutionNode);
+    }
 
     return substitutionNodeMatches;
   }

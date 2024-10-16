@@ -30,13 +30,14 @@ class IntrinsicLevelUnifier extends Unifier {
         let termUnified = false;
 
         const variableNode = termVariableNodeA, ///
-              variableName = variableNameFromVariableNode(variableNode),
-              variable = localContextA.findVariableByVariableName(variableName);
+          variableName = variableNameFromVariableNode(variableNode),
+          variablePresent = localContextA.isVariablePresentByVariableName(variableName);
 
-        if (variable !== null) {
-          const { Term } = shim,
+        if (variablePresent !== null) {
+          const { Term, Variable } = shim,
                 localContext = localContextB, ///
                 termNode = termNodeB, ///
+                variable = Variable.fromVariableNode(variableNode, localContextA),
                 term = Term.fromTermNode(termNode, localContextB);
 
           termUnified = variable.unifyTerm(term, substitutions, localContext);

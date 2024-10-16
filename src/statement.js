@@ -126,7 +126,9 @@ class Statement {
 
     statementUnified = unifiedAtMetaLevel; ///
 
-    localContextB.debug(`...unified the '${statementBString}' statement with the '${statementAString}' statement.`);
+    if (statementUnified) {
+      localContextB.debug(`...unified the '${statementBString}' statement with the '${statementAString}' statement.`);
+    }
 
     return statementUnified;
   }

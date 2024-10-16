@@ -62,7 +62,7 @@ export default class ContainedAssertion {
     }
 
     if (this.frame !== null) {
-      frameVerified = this.frame.verify(localContext);
+      frameVerified = this.frame.verify(assignments, stated, localContext);
     }
 
     statementVerified = this.statement.verify(assignments, stated, localContext);

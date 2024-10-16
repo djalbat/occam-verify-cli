@@ -9,21 +9,27 @@ import Metavariable from "./metavariable";
 import { FRAME_META_TYPE_NAME } from "./metaTypeNames";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 
-const declarationNodesQuery = nodesQuery("/frame/declaration"),
-      metavariableNodesQuery = nodesQuery("/frame/metavariable"),
-      frameMetavariableNodeQuery = nodeQuery("/*/frame/metavariable!");
+const frameNodeQuery = nodeQuery("/*/frame"),
+      declarationNodesQuery = nodesQuery("/frame/declaration"),
+      metavariableNodeQuery = nodeQuery("/frame/metavariable!"),
+      metavariableNodesQuery = nodesQuery("/frame/metavariable");
 
 const { first } = arrayUtilities;
 
 class Frame {
-  constructor(string, declarations, metavariables) {
+  constructor(string, node, declarations, metavariables) {
     this.string = string;
+    this.node = node;
     this.declarations = declarations;
     this.metavariables = metavariables;
   }
 
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getDeclarations() {
@@ -243,7 +249,7 @@ class Frame {
             node = frameNode, ///
             string = localContext.nodeAsString(node);
 
-      frame = new Frame(string, declarations, metavariables);
+      frame = new Frame(string, node, declarations, metavariables);
     }
 
     return frame;
@@ -252,19 +258,22 @@ class Frame {
   static fromDefinedAssertionNode(definedAssertionNode, localContext) {
     let frame = null;
 
-    const frameMetavariableNode = frameMetavariableNodeQuery(definedAssertionNode);
+    const frameNode = frameNodeQuery(definedAssertionNode);
 
-    if (frameMetavariableNode !== null) {
-      const metavariableNode = frameMetavariableNode, ///
-            metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
-            declarations = [],
-            metavariables = [
-              metavariable
-            ],
-            node = metavariableNode,  ///
-            string = localContext.nodeAsString(node);
+    if (frameNode !== null) {
+      const metavariableNode = metavariableNodeQuery(frameNode);
 
-      frame = new Frame(string, declarations, metavariables);
+      if (metavariableNode !== null) {
+        const metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
+              declarations = [],
+              metavariables = [
+                metavariable
+              ],
+              node = frameNode,  ///
+              string = localContext.nodeAsString(node);
+
+        frame = new Frame(string, node, declarations, metavariables);
+      }
     }
 
     return frame;
@@ -273,19 +282,22 @@ class Frame {
   static fromContainedAssertionNode(containedAssertionNode, localContext) {
     let frame = null;
 
-    const frameMetavariableNode = frameMetavariableNodeQuery(containedAssertionNode);
+    const frameNode = frameNodeQuery(containedAssertionNode);
 
-    if (frameMetavariableNode !== null) {
-      const metavariableNode = frameMetavariableNode, ///
-            metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
-            declarations = [],
-            metavariables = [
-              metavariable
-            ],
-            node = metavariableNode,  ///
-            string = localContext.nodeAsString(node);
+    if (frameNode !== null) {
+      const metavariableNode = metavariableNodeQuery(frameNode);
 
-      frame = new Frame(string, declarations, metavariables);
+      if (metavariableNode !== null) {
+        const metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
+              declarations = [],
+              metavariables = [
+                metavariable
+              ],
+              node = frameNode,  ///
+              string = localContext.nodeAsString(node);
+
+        frame = new Frame(string, node, declarations, metavariables);
+      }
     }
 
     return frame;

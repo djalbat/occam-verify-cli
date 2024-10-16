@@ -56,7 +56,7 @@ export default class DefinedAssertion {
     }
 
     if (this.frame!== null) {
-      frameVerified = this.frame.verify(localContext);
+      frameVerified = this.frame.verify(assignments, stated, localContext);
     }
 
     if (termVerified && frameVerified) {

@@ -78,12 +78,23 @@ class MetaLevelUnifier extends Unifier {
       nodeQueryA: frameMetavariableNodeQuery,
       nodeQueryB: frameNodeQuery,
       unify: (frameMetavariableNodeA, frameNodeB, substitutions, localContextA, localContextB) => {
-        debugger
+        let frameUnified;
 
-        const metavariableNodeA = frameMetavariableNodeA, ///
-              metavariableUnifiedWithFrame = unifyMetavariableWithFrame(metavariableNodeA, frameNodeB, substitutions, localContextA, localContextB);
+        const metavariableNode = frameMetavariableNodeA,  ///
+              metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+              metavariablePresent = localContextA.findMetavariableByMetavariableName(metavariableName);
 
-        return metavariableUnifiedWithFrame;
+        if (metavariablePresent) {
+          const { Frame, Metavariable } = shim,
+                localContext = localContextB, ///
+                frameNode = frameNodeB, ///
+                metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContextA),
+                frame = Frame.fromFrameNode(frameNode, localContextB);
+
+          frameUnified = metavariable.unifyFrame(frame, substitutions, localContext);
+        }
+
+        return frameUnified;
       }
     },
     {
@@ -94,12 +105,13 @@ class MetaLevelUnifier extends Unifier {
 
         const variableNode = termVariableNodeA, ///
               variableName = variableNameFromVariableNode(variableNode),
-              variable = localContextA.findVariableByVariableName(variableName);
+              variablePresent = localContextA.isVariablePresentByVariableName(variableName);
 
-        if (variable !== null) {
-          const { Term } = shim,
+        if (variablePresent !== null) {
+          const { Term, Variable } = shim,
                 localContext = localContextB, ///
                 termNode = termNodeB, ///
+                variable = Variable.fromVariableNode(variableNode, localContextA),
                 term = Term.fromTermNode(termNode, localContextB);
 
           termUnified = variable.unifyTerm(term, substitutions, localContext);

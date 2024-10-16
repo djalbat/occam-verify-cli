@@ -98,14 +98,19 @@ export default class Declaration {
   }
 
   static fromDeclarationNode(declarationNode, localContext) {
-    const { Statement } = shim,
-          referenceNode = referenceNodeQuery(declarationNode),
-          statementNode = statementNodeQuery(declarationNode),
-          reference = Reference.fromReferenceNode(referenceNode, localContext),
-          statement = Statement.fromStatementNode(statementNode, localContext),
-          node = declarationNode,  ///
-          string = localContext.nodeAsString(node),
-          declaration = new Declaration(string, reference, statement);
+    let declaration = null;
+
+    if (declarationNode !== null) {
+      const { Statement } = shim,
+            referenceNode = referenceNodeQuery(declarationNode),
+            statementNode = statementNodeQuery(declarationNode),
+            reference = Reference.fromReferenceNode(referenceNode, localContext),
+            statement = Statement.fromStatementNode(statementNode, localContext),
+            node = declarationNode,  ///
+            string = localContext.nodeAsString(node);
+
+      declaration = new Declaration(string, reference, statement);
+    }
 
     return declaration;
   }
