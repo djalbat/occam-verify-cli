@@ -78,7 +78,7 @@ class MetaLevelUnifier extends Unifier {
       nodeQueryA: frameMetavariableNodeQuery,
       nodeQueryB: frameNodeQuery,
       unify: (frameMetavariableNodeA, frameNodeB, substitutions, localContextA, localContextB) => {
-        let frameUnified;
+        let frameUnified = false;
 
         const metavariableNode = frameMetavariableNodeA,  ///
               metavariableName = metavariableNameFromMetavariableNode(metavariableNode),

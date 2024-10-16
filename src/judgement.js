@@ -95,9 +95,9 @@ export default class Judgement {
 
     localContext.trace(`Verifying the '${judgementString}' judgement when derived...`);
 
-    const metavariableNode = this.declaration.getMetavariableNode(),
-          metatheorem = localContext.findMetatheoremByMetavariableNode(metavariableNode),
-          metaLemma = localContext.findMetaLemmaByMetavariableNode(metavariableNode),
+    const reference = this.declaration.getReference(),
+          metatheorem = localContext.findMetatheoremByReference(reference),
+          metaLemma = localContext.findMetaLemmaByReference(reference),
           metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
 
     if (metaLemmaMetatheorem !== null) {

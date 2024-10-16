@@ -61,12 +61,19 @@ export default class Premise {
 
     substitutions.snapshot();
 
+    let subproofUnified = false,
+        statementUnified = false;
+
     if (false) {
       ///
     } else if (subproof !== null) {
-      proofStepUnified = this.unifySubproof(subproof, substitutions, localContext);
+      subproofUnified = this.unifySubproof(subproof, substitutions, localContext);
     } else if (statement !== null) {
-      proofStepUnified = this.unifyStatement(statement, substitutions, localContext);
+      statementUnified = this.unifyStatement(statement, substitutions, localContext);
+    }
+
+    if (subproofUnified || statementUnified) {
+      proofStepUnified = true;
     }
 
     proofStepUnified ?
@@ -82,18 +89,18 @@ export default class Premise {
     const statementString = statement.getString(),
           premiseString = this.getString();
 
-    localContext.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`);
-
-    const localContextB = localContext;
+    const localContextB = localContext; ///
 
     localContext = LocalContext.fromFileContext(this.fileContext);
 
     const localContextA = localContext; ///
 
+    localContextB.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`);
+
     statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`);
+      localContextB.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`);
     }
 
     return statementUnified;

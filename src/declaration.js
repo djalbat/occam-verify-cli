@@ -27,8 +27,6 @@ export default class Declaration {
     return this.statement;
   }
 
-  // getMetavariableNode() { return this.reference.getMetavariableNode(); }
-  //
   // unifyStatement(statementNode) {
   //   statementNode = stripBracketsFromStatement(statementNode); ///
   //

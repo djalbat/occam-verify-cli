@@ -31,18 +31,18 @@ export default class Consequent {
     const statementString = statement.getString(),
           consequentString = this.getString();
 
-    localContext.trace(`Unifying the '${statementString}' statement with the '${consequentString}' consequent...`);
-
-    const localContextB = localContext;
+    const localContextB = localContext; ///
 
     localContext = LocalContext.fromFileContext(this.fileContext);
 
     const localContextA = localContext; ///
 
+    localContextB.trace(`Unifying the '${statementString}' statement with the '${consequentString}' consequent...`);
+
     statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the '${consequentString}' consequent.`);
+      localContextB.debug(`...unified the '${statementString}' statement with the '${consequentString}' consequent.`);
     }
 
     return statementUnified;

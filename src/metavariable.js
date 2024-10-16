@@ -4,13 +4,12 @@ import shim from "./shim";
 import Argument from "./argument";
 import LocalContext from "./context/local";
 import metavariableUnifier from "./unifier/metavariable";
+import FrameForMetavariableSubstitution from "./substitution/frameForMetavariable";
 import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
 
 import { nodeQuery } from "./utilities/query";
 import { metavariableNameFromMetavariableNode } from "./utilities/name";
 import { metavariableNodeFromMetavariableString } from "./utilities/node";
-import {metavariableFromFrameNode} from "./utilities/unify";
-import FrameForMetavariableSubstitution from "./substitution/frameForMetavariable";
 
 const argumentNodeQuery = nodeQuery("/metavariable/argument"),
       metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType"),
@@ -92,13 +91,15 @@ class Metavariable {
         frameUnified = true;
       }
     } else {
-      const metavariable = this,  ///
+      const metavariableNode = this.node,  ///
+            metavariable = metavariableFromMetavariableNode(metavariableNode, localContext),
             frameMetavariable  = frameMetavariableFromStatementNode(frameNode, localContext);
 
       if (metavariable === frameMetavariable) {
         frameUnified = true;
       } else {
-        const frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromFrameAndMetavariable(frame, metavariable, localContext),
+        const metavariable = this,  ///
+              frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromFrameAndMetavariable(frame, metavariable, localContext),
               substitution = frameForMetavariableSubstitution;  ///
 
         substitutions.addSubstitution(substitution, localContext);
@@ -143,13 +144,15 @@ class Metavariable {
         statementUnified = true;
       }
     } else {
-      const metavariable = this, ///
+      const metavariableNode = this.node,  ///
+            metavariable = metavariableFromMetavariableNode(metavariableNode, localContext),
             statementMetavariable = statementMetavariableFromStatementNode(statementNode, localContext);
 
       if (metavariable === statementMetavariable) {
         statementUnified = true;
       } else {
-        const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext);
+        const metavariable = this,  ///
+              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext);
 
         substitution = statementForMetavariableSubstitution;  ///
 
@@ -334,6 +337,13 @@ function metaTypeFromJSON(json, fileContext) {
   }
 
   return metaType;
+}
+
+function metavariableFromMetavariableNode(metavariableNode, localContext) {
+  const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+        metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
+
+  return metavariable;
 }
 
 function frameMetavariableFromStatementNode(frameNode, localContext) {

@@ -113,18 +113,18 @@ export default class Supposition {
     const statementString = statement.getString(),
           suppositionString = this.getString();
 
-    localContext.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`);
-
-    const localContextB = localContext;
+    const localContextB = localContext; ///
 
     localContext = LocalContext.fromFileContext(this.fileContext);
 
     const localContextA = localContext; ///
 
+    localContextB.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`);
+
     statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the '${suppositionString}' supposition.`);
+      localContextB.debug(`...unified the '${statementString}' statement with the '${suppositionString}' supposition.`);
     }
 
     return statementUnified;

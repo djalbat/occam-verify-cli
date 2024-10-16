@@ -31,18 +31,18 @@ export default class Conclusion {
     const statementString = statement.getString(),
           conclusionString = this.getString();
 
-    localContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
-
-    const localContextB = localContext;
+    const localContextB = localContext; ///
 
     localContext = LocalContext.fromFileContext(this.fileContext);
 
     const localContextA = localContext; ///
 
+    localContextB.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
+
     statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
+      localContextB.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
     }
 
     return statementUnified;

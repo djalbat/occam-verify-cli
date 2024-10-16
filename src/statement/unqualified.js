@@ -1,10 +1,14 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import shim from "../shim";
 import LocalContext from "../context/local";
 
 import { trim } from "../utilities/string";
 import { nodeQuery } from "../utilities/query";
+
+const { reverse } = arrayUtilities;
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement");
 
@@ -32,7 +36,15 @@ export default class UnqualifiedStatement {
 
       const statementVerified = this.statement.verify(assignments, stated, localContext);
 
-      verified = statementVerified; ///
+      if (statementVerified) {
+        verified = true;
+      } else {
+        const statementUnifiedWithProofSteps = this.unifyStatementWithProofSteps(this.statement, assignments, stated, localContext);
+
+        if (statementUnifiedWithProofSteps) {
+          verified = true;
+        }
+      }
 
       if (verified) {
         localContext.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);
@@ -60,6 +72,24 @@ export default class UnqualifiedStatement {
     }
 
     return statementUnified;
+  }
+
+  unifyStatementWithProofSteps(statement, assignments, stated, localContext) {
+    let statementUnifiedWithProofSteps;
+
+    let proofSteps = localContext.getProofSteps();
+
+    proofSteps = reverse(proofSteps); ///
+
+    statementUnifiedWithProofSteps = proofSteps.some((proofStep) => {
+      const statementUnified = proofStep.unifyStatement(statement, localContext);
+
+      if (statementUnified) {
+        return true;
+      }
+    });
+
+    return statementUnifiedWithProofSteps;
   }
 
   toJSON() {

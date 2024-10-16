@@ -1,11 +1,7 @@
 "use strict";
 
-import { arrayUtilities } from "necessary";
-
 import BracketedCombinator from "../../combinator/bracketed";
 import statementWithCombinatorUnifier from "../../unifier/statementWithCombinator";
-
-const { reverse } = arrayUtilities;
 
 function unifyWithBracketedCombinator(statement, assignments, stated, localContext) {
   let unifiedWithBracketedCombinator;
@@ -47,28 +43,10 @@ function unifyWithCombinators(statement, assignments, stated, localContext) {
   return unifiedWithCombinators;
 }
 
-function unifyWithProofSteps(statement, assignments, stated, localContext) {
-  let unifiedWithProofSteps;
-
-  let proofSteps = localContext.getProofSteps();
-
-  proofSteps = reverse(proofSteps); ///
-
-  unifiedWithProofSteps = proofSteps.some((proofStep) => {
-    const statementUnified = proofStep.unifyStatement(statement, localContext);
-
-    if (statementUnified) {
-      return true;
-    }
-  });
-
-  return unifiedWithProofSteps;
-}
 
 const unifyMixins = [
   unifyWithBracketedCombinator,
-  unifyWithCombinators,
-  unifyWithProofSteps
+  unifyWithCombinators
 ];
 
 export default unifyMixins;

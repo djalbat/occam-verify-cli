@@ -159,13 +159,15 @@ class Variable {
         termUnified = true;
       }
     } else {
-      const variable = this,  ///
+      const variableNode = this.node,  ///
+            variable = variableFromVariableNode(variableNode, localContext),
             termVariable = termVariableFromTermNode(termNode, localContext);
 
-      if (termVariable === variable) {
+      if (variable === termVariable) {
         termUnified = true;
       } else {
-        const termForVariableSubstitution = TermForVariableSubstitution.fromTernAndVariable(term, variable, localContext),
+        const variable = this,  ///
+              termForVariableSubstitution = TermForVariableSubstitution.fromTernAndVariable(term, variable, localContext),
               substitution = termForVariableSubstitution;  ///
 
         substitutions.addSubstitution(substitution, localContext);
@@ -300,4 +302,11 @@ function termVariableFromTermNode(termNode, localContext) {
   }
 
   return termVariable;
+}
+
+function variableFromVariableNode(variableNode, localContext) {
+  const variableName = variableNameFromVariableNode(variableNode),
+        variable = localContext.findVariableByVariableName(variableName);
+
+  return variable;
 }
