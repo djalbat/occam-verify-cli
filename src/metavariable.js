@@ -1,17 +1,17 @@
 "use strict";
 
 import shim from "./shim";
-import Argument from "./argument";
 import LocalContext from "./context/local";
 import metavariableUnifier from "./unifier/metavariable";
 import FrameForMetavariableSubstitution from "./substitution/frameForMetavariable";
 import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
 
 import { nodeQuery } from "./utilities/query";
-import { metavariableNameFromMetavariableNode } from "./utilities/name";
+import {metavariableNameFromMetavariableNode, typeNameFromTypeNode} from "./utilities/name";
 import { metavariableNodeFromMetavariableString } from "./utilities/node";
 
-const argumentNodeQuery = nodeQuery("/metavariable/argument"),
+const termNodeQuery = nodeQuery("/metavariable/argument/term"),
+      typeNodeQuery = nodeQuery("/metavariable/argument/type"),
       metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType"),
       metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
@@ -212,15 +212,25 @@ class Metavariable {
     if (metavariablePresent) {
       fileContext.debug(`The metavariable '${metavariableString}' is already present.`);
     } else {
-      const argumentNode = argumentNodeQuery(metavariableNode),
-            argument = Argument.fromArgumentNode(argumentNode, fileContext);
+      const termNode = termNodeQuery(this.node);
 
-      if (argument === null) {
-        verifiedAtTopLevel = true;
+      if (termNode !== null) {
+        const termString = this.fileContext.nodeAsString(termNode);
+
+        this.fileContext.debug(`The '${termString}' term was found when a type should have been present.`);
       } else {
-        const argumentVerified = argument.verify(fileContext);
+        const typeNode = typeNodeQuery(this.node);
 
-        if (argumentVerified) {
+        if (typeNode !== null) {
+          const typeName = typeNameFromTypeNode(typeNode),
+                typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+
+          if (typePresent) {
+            verifiedAtTopLevel = true;
+          } else {
+            this.fileContext.debug(`The '${typeName}' type is not present.`);
+          }
+        } else {
           verifiedAtTopLevel = true;
         }
       }
