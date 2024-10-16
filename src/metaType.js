@@ -57,15 +57,15 @@ class MetaType {
 
   static fromJSON(json, fileContext) {
     const { name } = json,
-          metaType = new MetaType(name);
+          metaTypeName = name,  ///
+          metaType = metaTypeFromMetaTypeName(metaTypeName);
 
     return metaType;
   }
 
   static fromMetaTypeNode(metaTypeNode, localContext) {
     const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
-          name = metaTypeName,  ///
-          metaType = new MetaType(name);
+          metaType = metaTypeFromMetaTypeName(metaTypeName);
 
     return metaType;
   }
@@ -107,3 +107,29 @@ class StatementMetaType extends MetaType {
 export const frameMetaType = FrameMetaType.fromNothing();
 export const referenceMetaType = ReferenceMetaType.fromNothing();
 export const statementMetaType = StatementMetaType.fromNothing();
+
+function metaTypeFromMetaTypeName(metaTypeName) {
+  let metaType;
+
+  switch (metaTypeName) {
+    case FRAME_META_TYPE_NAME: {
+      metaType = frameMetaType; ///
+
+      break;
+    }
+
+    case REFERENCE_META_TYPE_NAME: {
+      metaType = referenceMetaType; ///
+
+      break;
+    }
+
+    case STATEMENT_META_TYPE_NAME: {
+      metaType = statementMetaType; ///
+
+      break;
+    }
+  }
+
+  return metaType;
+}

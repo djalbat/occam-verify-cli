@@ -50,6 +50,12 @@ class Metavariable {
     return metaTypeName;
   }
 
+  matchMetaType(metaType) {
+    const metaTypeMatches = (this.metaType === metaType);
+
+    return metaTypeMatches;
+  }
+
   matchMetavariableName(metavariableName) {
     const metavariableNameMatches = (this.name === metavariableName);
 
@@ -60,6 +66,58 @@ class Metavariable {
     const metavariableNodeMatches = this.node.match(metavariableNode);
 
     return metavariableNodeMatches;
+  }
+
+  unifyStatement(statement, substitution, substitutions, localContext) {
+    let statementUnified = false;
+
+    const statementString = statement.getString(),
+          metavariableString = this.string, ///
+          substitutionString = (substitution !== null) ?
+                                  substitution.getString() :
+                                    null;
+
+    (substitutionString !== null) ?
+      localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable given the ${substitutionString} substitution...`) :
+        localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable...`);
+
+    const statementNode = statement.getNode(),
+          metavariableNode = this.node, ///
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          substitutionNode = (substitution !== null) ?
+                                substitution.getSubstitutionNode() :
+                                  null,
+          substitutionPresent = substitutions.isSubstitutionPresentByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode);
+
+    if (substitutionPresent) {
+      const substitution = substitutions.findSubstitutionByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode),
+            statementNodeMatches = substitution.matchStatementNode(statementNode);
+
+      if (statementNodeMatches) {
+        statementUnified = true;
+      }
+    } else {
+      const metavariable = this, ///
+            statementMetavariable = statementMetavariableFromStatementNode(statementNode, localContext);
+
+      if (metavariable === statementMetavariable) {
+        statementUnified = true;
+      } else {
+        const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext);
+
+        substitution = statementForMetavariableSubstitution;  ///
+
+        substitutions.addSubstitution(substitution, localContext);
+
+        statementUnified = true;
+      }
+    }
+
+    (substitutionString !== null) ?
+      localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable given the ${substitutionString} substitution.`) :
+        localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable.`);
+
+    return statementUnified;
   }
 
   verify(localContext) {
@@ -80,7 +138,6 @@ class Metavariable {
             metavariableUnified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
 
       verified = metavariableUnified; ///
-
     }
 
     if (verified) {
@@ -125,56 +182,29 @@ class Metavariable {
     return verifiedAtTopLevel;
   }
 
-  unifyStatement(statement, substitution, substitutions, localContext) {
-    let statementUnified = false;
+  verifyGivenMetaType(metaType, localContext) {
+    let verifiedGivenMetaType = false;
 
-    const statementString = statement.getString(),
-          metavariableString = this.string, ///
-          substitutionString = (substitution !== null) ?
-                                  substitution.getString() :
-                                    null;
+    const metavariableString = this.string,  ///
+          metaTypeString = metaType.getString();
 
-    (substitutionString !== null) ?
-      localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable given the ${substitutionString} substitution...`) :
-        localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable...`);
+    localContext.trace(`Verifying the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
 
-    const statementNode = statement.getNode(),
-          metavariableNode = this.node, ///
-          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-          substitutionNode = (substitution !== null) ?
-                               substitution.getSubstitutionNode() :
-                                 null,
-          substitutionPresent = substitutions.isSubstitutionPresentByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode);
+    const name = this.getName(),
+          metavariableName = name,  ///
+          metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
 
-    if (substitutionPresent) {
-      const substitution = substitutions.findSubstitutionByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode),
-            statementNodeMatches = substitution.matchStatementNode(statementNode);
+    if (metavariable !== null) {
+      const metaTypeMatches = metavariable.matchMetaType(metaType);
 
-      if (statementNodeMatches) {
-        statementUnified = true;
-      }
-    } else {
-      const metavariable = this, ///
-            statementMetavariable = statementMetavariableFromStatementNode(statementNode, localContext);
-
-      if (metavariable === statementMetavariable) {
-        statementUnified = true;
-      } else {
-        const statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext);
-
-        substitution = statementForMetavariableSubstitution;  ///
-
-        substitutions.addSubstitution(substitution, localContext);
-
-        statementUnified = true;
-      }
+      verifiedGivenMetaType = metaTypeMatches;  ///
     }
 
-    (substitutionString !== null) ?
-      localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable given the ${substitutionString} substitution.`) :
-        localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable.`);
+    if (verifiedGivenMetaType) {
+      localContext.debug(`...verified the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type.`);
+    }
 
-    return statementUnified;
+    return verifiedGivenMetaType;
   }
 
   toJSON() {

@@ -1,11 +1,22 @@
 "use strict";
 
-import { stripBracketsFromStatement } from "./utilities/brackets";
+import shim from "./shim";
+import Reference from "./reference";
+
+import { nodeQuery } from "./utilities/query";
+
+const referenceNodeQuery = nodeQuery("/declaration/reference"),
+      statementNodeQuery = nodeQuery("/declaration/statement");
 
 export default class Declaration {
-  constructor(reference, statement) {
+  constructor(string, reference, statement) {
+    this.string = string;
     this.reference = reference;
     this.statement = statement;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getReference() {
@@ -59,4 +70,43 @@ export default class Declaration {
   //
   //   return declaration;
   // }
+
+  verify(assignments, stated, localContext) {
+    let verified;
+
+    const declarationString = this.string;  ///
+
+    localContext.trace(`Verifying the '${declarationString}' declaration...`);
+
+    stated = true;
+
+    assignments = null;
+
+    const referenceVerified = this.reference.verify(localContext);
+
+    if (referenceVerified) {
+      const statementVerified = this.statement.verify(assignments, stated, localContext);
+
+      verified = statementVerified; ///
+    }
+
+    if (verified) {
+      localContext.debug(`...verified the '${declarationString}' declaration.`);
+    }
+
+    return verified;
+  }
+
+  static fromDeclarationNode(declarationNode, localContext) {
+    const { Statement } = shim,
+          referenceNode = referenceNodeQuery(declarationNode),
+          statementNode = statementNodeQuery(declarationNode),
+          reference = Reference.fromReferenceNode(referenceNode, localContext),
+          statement = Statement.fromStatementNode(statementNode, localContext),
+          node = declarationNode,  ///
+          string = localContext.nodeAsString(node),
+          declaration = new Declaration(string, reference, statement);
+
+    return declaration;
+  }
 }

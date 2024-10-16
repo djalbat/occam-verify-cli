@@ -3,6 +3,7 @@
 import Metavariable from "./metavariable";
 
 import { nodeQuery } from "./utilities/query";
+import { referenceMetaType } from "./metaType";
 
 const metavariableNodeQuery = nodeQuery("//reference/metavariable");
 
@@ -25,20 +26,23 @@ export default class Reference {
     return metavariableNode;
   }
 
-  verifyAtTopLevel(fileContext) {
-    let verifiedAtTopLevel;
+  verify(localContext) {
+    let verified;
 
     const referenceString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${referenceString}' reference at top level...`);
+    localContext.trace(`Verifying the '${referenceString}' reference...`);
 
-    verifiedAtTopLevel = true;
+    const metaType = referenceMetaType, ///
+          metavariableVerifiedGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, localContext);
 
-    if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${referenceString}' reference at top level.`);
+    verified = metavariableVerifiedGivenMetaType; ///
+
+    if (verified) {
+      localContext.debug(`...verified the '${referenceString}' reference.`);
     }
 
-    return verifiedAtTopLevel;
+    return verified;
   }
 
   toJSON() {

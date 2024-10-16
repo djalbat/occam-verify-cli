@@ -2,11 +2,11 @@
 
 import shim from "../shim";
 import Substitution from "../substitution";
+import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 import metaLevelUnifier from "../unifier/metaLevel";
 
 import { stripBracketsFromStatement } from "../utilities/brackets";
-import LocalContext from "../context/local";
 
 export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(string, statement, metavariable, substitution) {

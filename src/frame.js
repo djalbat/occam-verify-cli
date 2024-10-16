@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import shim from "./shim";
 import Declaration from "./declaration";
 import Metavariable from "./metavariable";
@@ -10,6 +12,8 @@ import { nodeQuery, nodesQuery } from "./utilities/query";
 const declarationNodesQuery = nodesQuery("/frame/declaration"),
       metavariableNodesQuery = nodesQuery("/frame/metavariable"),
       frameMetavariableNodeQuery = nodeQuery("/*/frame/metavariable!");
+
+const { first } = arrayUtilities;
 
 class Frame {
   constructor(string, declarations, metavariables) {
@@ -44,24 +48,25 @@ class Frame {
     return metavariable;
   }
 
-  // getMetavariableNode() {
-  //   let metavariableNode = null;
-  //
-  //   const declarationsLength = this.declarations.length;
-  //
-  //   if (declarationsLength === 0) {
-  //     const metavariableNodesLength = this.metavariableNodes.length;
-  //
-  //     if (metavariableNodesLength === 1) {
-  //       const firstMetavariableNode = first(this.metavariableNodes);
-  //
-  //       metavariableNode = firstMetavariableNode; ///
-  //     }
-  //   }
-  //
-  //   return metavariableNode;
-  // }
-  //
+  getMetavariableNode() {
+    let metavariableNode = null;
+
+    const declarationsLength = this.declarations.length;
+
+    if (declarationsLength === 0) {
+      const metavariablesLength = this.metavariables.length;
+
+      if (metavariablesLength === 1) {
+        const firstMetavariable = first(this.metavariables),
+              metavariable = firstMetavariable; ///
+
+        metavariableNode = metavariable.getNode();
+      }
+    }
+
+    return metavariableNode;
+  }
+
   // matchMetavariableName(metavariableName) {
   //   let metavariableNameMatches = false;
   //
@@ -106,15 +111,75 @@ class Frame {
   //   return metaLemmaOrMetaTheoremUnified;
   // }
 
-  verify(localContext) {
+  verify(assignments, stated, localContext) {
     let verified;
 
     const frameString = this.string;  ///
 
     localContext.trace(`Verifying the '${frameString}' frame...`);
 
+    let verifiedWhenStated = false,
+        verifiedWhenDerived = false;
+
+    if (stated) {
+      verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+    } else {
+      verifiedWhenDerived = this.verifyWhenDerived(assignments, localContext);
+    }
+
+    if (verifiedWhenStated || verifiedWhenDerived) {
+      verified = true;
+    }
+
+    if (verified) {
+      localContext.debug(`...verified the '${frameString}' frame.`);
+    }
+
+    return verified;
+  }
+
+  verifyWhenStated(assignments, localContext) {
+    let verifiedWhenStated = false;
+
+    const frameString = this.string;  ///
+
+    localContext.trace(`Verifying the '${frameString}' frame when stated...`);
+
+    const declarationsLength = this.declarations.length;
+
+    if (declarationsLength === 0) {
+      const metavariablesLength = this.metavariables.length;
+
+      if (metavariablesLength === 1) {
+        const firstMetavariable = first(this.metavariables),
+              metavariable = firstMetavariable, ///
+              metavariableVerified = metavariable.verify(localContext);
+
+        verifiedWhenStated = metavariableVerified;  ///
+      } else {
+        localContext.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
+      }
+    } else {
+      localContext.trace(`The '${frameString}' stated frame cannot have declarations.`);
+    }
+
+
+    if (verifiedWhenStated) {
+      localContext.debug(`...verified the '${frameString}' frame when stated.`);
+    }
+
+    return verifiedWhenStated;
+  }
+
+  verifyWhenDerived(assignments, localContext) {
+    let verifiedWhenDerived;
+
+    const frameString = this.string;  ///
+
+    localContext.trace(`Verifying the '${frameString}' frame when derived...`);
+
     const declarationsVerified = this.declarations.every((declaration) => {
-      const declarationVerified = declaration.verify(localContext);
+      const declarationVerified = declaration.verify(assignments, stated, localContext);
 
       return declarationVerified;
     });
@@ -126,17 +191,17 @@ class Frame {
         return metavariableVerified;
       });
 
-      verified = metavariablesVerified; ///
+      verifiedWhenDerived = metavariablesVerified; ///
     }
 
-    if (verified) {
-      localContext.debug(`...verified the '${frameString}' frame.`);
+    if (verifiedWhenDerived) {
+      localContext.debug(`...verified the '${frameString}' frame when derived.`);
     }
 
-    return verified;
+    return verifiedWhenDerived;
   }
 
-  verifyGivenMetaType(metaType, localContext) {
+  verifyGivenMetaType(metaType, assignments, stated, localContext) {
     let verifiedGivenMetaType = false;
 
     const frameString = this.string,  ///
@@ -147,7 +212,7 @@ class Frame {
     const metaTypeName = metaType.getName();
 
     if (metaTypeName === FRAME_META_TYPE_NAME) {
-      const verified = this.verify(localContext)
+      const verified = this.verify(assignments, stated, localContext)
 
       verifiedGivenMetaType = verified; ///
     }
@@ -160,21 +225,26 @@ class Frame {
   }
 
   static fromFrameNode(frameNode, localContext) {
-    const declarationNodes = declarationNodesQuery(frameNode),
-          metavariableNodes = metavariableNodesQuery(frameNode),
-          declarations = declarationNodes.map((declarationNode) => {
-            const declaration = Declaration.fromDeclarationNode(declarationNode, localContext);
+    let frame = null;
 
-            return declaration;
-          }),
-          metavariables = metavariableNodes.map((metavariableNode) => {
-            const metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext);
+    if (frameNode !== null) {
+      const declarationNodes = declarationNodesQuery(frameNode),
+            metavariableNodes = metavariableNodesQuery(frameNode),
+            declarations = declarationNodes.map((declarationNode) => {
+              const declaration = Declaration.fromDeclarationNode(declarationNode, localContext);
 
-            return metavariable;
-          }),
-          node = frameNode, ///
-          string = localContext.nodeAsString(node),
-          frame = new Frame(string, declarations, metavariables);
+              return declaration;
+            }),
+            metavariables = metavariableNodes.map((metavariableNode) => {
+              const metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext);
+
+              return metavariable;
+            }),
+            node = frameNode, ///
+            string = localContext.nodeAsString(node);
+
+      frame = new Frame(string, declarations, metavariables);
+    }
 
     return frame;
   }
@@ -220,29 +290,6 @@ class Frame {
 
     return frame;
   }
-
-  // static fromDeclarations(declarations) {
-  //   const metavariableNodes = [],
-  //         frame = new Frame(declarations, metavariableNodes);
-  //
-  //   return frame;
-  // }
-  //
-  // static fromMetavariableNode(metavariableNode) {
-  //   const declarations = [],
-  //         metavariableNodes = [
-  //           metavariableNode
-  //         ],
-  //         frame = new Frame(declarations, metavariableNodes);
-  //
-  //   return frame;
-  // }
-  //
-  // static fromDeclarationsAndMetavariableNodes(declarations, metavariableNodes) {
-  //   const frame = new Frame(declarations, metavariableNodes);
-  //
-  //   return frame;
-  // }
 }
 
 Object.assign(shim, {

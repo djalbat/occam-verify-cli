@@ -1,15 +1,14 @@
 "use strict";
 
+import Frame from "../../frame";
 import Equality from "../../equality";
+import Judgement from "../../judgement";
+import Declaration from "../../declaration";
 import Metavariable from "../../metavariable";
 import TypeAssertion from "../../assertion/type";
 import DefinedAssertion from "../../assertion/defined";
 import SubproofAssertion from "../../assertion/subproof";
 import ContainedAssertion from "../../assertion/contained";
-
-import verifyFrame from "../../verify/frame";
-import verifyJudgement from "../../verify/judgement";
-import verifyDeclaration from "../../verify/declaration";
 
 import { nodeQuery } from "../../utilities/query";
 
@@ -75,14 +74,15 @@ function verifyAsFrame(statement, assignments, stated, localContext) {
   let verifiedAsFrame = false;
 
   const statementNode = statement.getNode(),
-        frameNode = frameNodeQuery(statementNode);
+        frameNode = frameNodeQuery(statementNode),
+        frame = Frame.fromFrameNode(frameNode, localContext);
 
-  if (frameNode !== null) {
+  if (frame !== null) {
     const statementString = statement.getString();
 
     localContext.trace(`Verifying the '${statementString}' statement as a frame...`);
 
-    const frameVerified = verifyFrame(frameNode, assignments, stated, localContext);
+    const frameVerified = frame.verify(assignments, stated, localContext);
 
     verifiedAsFrame = frameVerified; ///
 
@@ -98,14 +98,15 @@ function verifyAsJudgement(statement, assignments, stated, localContext) {
   let verifiedAsJudgement = false;
 
   const statementNode = statement.getNode(),
-        judgementNode = judgementNodeQuery(statementNode);
+        judgementNode = judgementNodeQuery(statementNode),
+        judgement = Judgement.fromJudgementNode(judgementNode, localContext);
 
-  if (judgementNode !== null) {
+  if (judgement !== null) {
     const statementString = statement.getString();
 
     localContext.trace(`Verifying the '${statementString}' statement as a judgement...`);
 
-    const judgementVerified = verifyJudgement(judgementNode, assignments, stated, localContext);
+    const judgementVerified = judgement.verify(assignments, stated, localContext);
 
     verifiedAsJudgement = judgementVerified;  ///
 
@@ -121,14 +122,15 @@ function verifyAsDeclaration(statement, assignments, stated, localContext) {
   let verifiedAsDeclaration = false;
 
   const statementNode = statement.getNode(),
-        declarationNode = declarationNodeQuery(statementNode);
+        declarationNode = declarationNodeQuery(statementNode),
+        declaration = Declaration.fromDeclarationNode(declarationNode, localContext);
 
-  if (declarationNode !== null) {
+  if (declaration !== null) {
     const statementString = statement.getString();
 
     localContext.trace(`Verifying the '${statementString}' statement as a declaration...`);
 
-    const declarationVerified = verifyDeclaration(declarationNode, assignments, stated, localContext);
+    const declarationVerified = declaration.verify(assignments, stated, localContext);
 
     verifiedAsDeclaration = declarationVerified; ///
 
