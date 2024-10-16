@@ -1,6 +1,6 @@
 "use strict";
 
-export default function verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap) {
+function verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap) {
   let releaseVerified = false;
 
   const releaseContext = releaseContextMap[releaseName];
@@ -41,6 +41,10 @@ export default function verifyRelease(releaseName, dependentName, dependentRelea
 
   return releaseVerified;
 }
+
+export default {
+  verifyRelease
+};
 
 function verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap) {
   const dependencies = releaseContext.getDependencies(),

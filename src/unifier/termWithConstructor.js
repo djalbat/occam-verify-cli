@@ -10,11 +10,11 @@ const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type");
 
 class TermWithConstructorUnifier extends Unifier {
-  unify(termNode, constructorTermNode, localContext) {
+  unify(constructorTermNode, termNode, localContext) {
     let termUnifiedWithConstructor;
 
-    const nonTerminalNodeA = termNode, ///
-          nonTerminalNodeB = constructorTermNode, ///
+    const nonTerminalNodeA = constructorTermNode, ///
+          nonTerminalNodeB = termNode, ///
           nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext);
 
     termUnifiedWithConstructor = nonTerminalNodeUnified; ///
@@ -24,9 +24,9 @@ class TermWithConstructorUnifier extends Unifier {
 
   static maps = [
     {
-      nodeQueryA: termNodeQuery,
-      nodeQueryB: typeNodeQuery,
-      unify: (termNodeA, typeNodeB, localContext) => {
+      nodeQueryA: typeNodeQuery,
+      nodeQueryB: termNodeQuery,
+      unify: (typeNodeB, termNodeB, localContext) => {
         let unified = false;
 
         const { Term } = shim,
@@ -35,7 +35,7 @@ class TermWithConstructorUnifier extends Unifier {
               type = localContext.findTypeByTypeName(typeName);
 
         if (type !== null) {
-          const termNode = termNodeA, ///
+          const termNode = termNodeB, ///
                 term = Term.fromTermNode(termNode, localContext),
                 termVerifiedGivenType = term.verifyGivenType(type, localContext);
 

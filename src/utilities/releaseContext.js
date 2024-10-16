@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 const { last } = arrayUtilities;
 
-export function createReleaseContext(dependency, dependentNames, context, callback) {
+function createReleaseContext(dependency, dependentNames, context, callback) {
   const { log, releaseContextMap } = context,
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///
@@ -87,7 +87,7 @@ export function createReleaseContext(dependency, dependentNames, context, callba
   }, context);
 }
 
-export function initialiseReleaseContext(dependency, context) {
+function initialiseReleaseContext(dependency, context) {
   const { releaseContextMap } = context,
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///

@@ -5,7 +5,9 @@ import Error from "../error";
 import Axiom from "../axiom";
 import Lemma from "../lemma";
 import Theorem from "../theorem";
+import MetaLemma from "../metaLemma";
 import Conjecture from "../conjecture";
+import Metatheorem from "../metatheorem";
 import TypeDeclaration from "../declaration/type";
 import VariableDeclaration from "../declaration/variable";
 import CombinatorDeclaration from "../declaration/combinator";
@@ -13,8 +15,6 @@ import ConstructorDeclaration from "../declaration/constructor";
 import MetavariableDeclaration from "../declaration/metavariable";
 
 import Verifier from "../verifier";
-import verifyMetaLemma from "../verify/metaLemma";
-import verifyMetatheorem from "../verify/metatheorem";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -93,7 +93,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metaLemmaNodeQuery,
       verify: (metaLemmaNode, fileContext) => {
-        const metaLemmaVerified = verifyMetaLemma(metaLemmaNode, fileContext);
+        const metaLemma = MetaLemma.fromMetaLemmaNode(metaLemmaNode, fileContext),
+              metaLemmaVerified = metaLemma.verify();
 
         return metaLemmaVerified;
       }
@@ -110,7 +111,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metatheoremNodeQuery,
       verify: (metatheoremNode, fileContext) => {
-        const metatheoremVerified = verifyMetatheorem(metatheoremNode, fileContext);
+        const metatheorem = Metatheorem.fromMetatheoremNode(metatheoremNode, fileContext),
+              metatheoremVerified = metatheorem.verify();
 
         return metatheoremVerified;
       }

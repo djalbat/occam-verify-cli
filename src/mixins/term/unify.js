@@ -87,7 +87,7 @@ function unifyTermWithConstructor(term, constructor, localContext, verifyAhead) 
   const termNode = term.getNode(),
         constructorTerm = constructor.getTerm(),
         constructorTermNode = constructorTerm.getNode(),
-        unified = termWithConstructorUnifier.unify(termNode, constructorTermNode, localContext);
+        unified = termWithConstructorUnifier.unify(constructorTermNode, termNode, localContext);
 
   if (unified) {
     let verifiedAhead;

@@ -1,12 +1,13 @@
 "use strict";
 
 const { Dependency } = require("occam-entities"),
-      { verifyRelease, releaseContextUtilities } = require("../../lib/index");  ///
+      { releaseUtilities, releaseContextUtilities } = require("../../lib/index");  ///
 
 const { trimTrailingSlash } = require("../utilities/string"),
       { releaseContextFromDependency } = require("../utilities/releaseContext");
 
-const { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
+const { verifyRelease } = releaseUtilities,
+      { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
 function verifyAction(argument, log) {
   const name = trimTrailingSlash(argument), ///

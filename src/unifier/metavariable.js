@@ -24,18 +24,18 @@ class MetavariableUnifier extends Unifier {
 
   static maps = [
     {
-      nodeQueryA: termNodeQuery,
-      nodeQueryB: typeNodeQuery,
-      unify: (termNodeA, typeNodeB, localContext) => {
+      nodeQueryA: typeNodeQuery,
+      nodeQueryB: termNodeQuery,
+      unify: (typeNodeA, termNodeB, localContext) => {
         let unified = false;
 
         const { Term } = shim,
-              typeNode = typeNodeB, ///
+              typeNode = typeNodeA, ///
               typeName = typeNameFromTypeNode(typeNode),
               type = localContext.findTypeByTypeName(typeName);
 
         if (type !== null) {
-          const termNode = termNodeA, ///
+          const termNode = termNodeB, ///
                 term = Term.fromTermNode(termNode, localContext),
                 termVerifiedGivenType = term.verifyGivenType(type, localContext);
 
