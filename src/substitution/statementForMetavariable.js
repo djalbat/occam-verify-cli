@@ -3,8 +3,10 @@
 import shim from "../shim";
 import Substitution from "../substitution";
 import Substitutions from "../substitutions";
+import metaLevelUnifier from "../unifier/metaLevel";
 
 import { stripBracketsFromStatement } from "../utilities/brackets";
+import LocalContext from "../context/local";
 
 export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(string, statement, metavariable, substitution) {
@@ -39,74 +41,103 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return metavariableNode;
   }
 
+  getMetavariableName() {
+    const metavariableName = this.metavariable.getName();
+
+    return metavariableName;
+  }
+
   isSimple() {
     const simple = (this.substitution === null);
 
     return simple;
   }
 
-  resolve(substitutions, localContext) {
+  resolve(substitutions, localContextA, localContextB) {
     let resolved = false;
 
     const substitutionString = this.string;
 
-    localContext.trace(`Resolving the ${substitutionString} substitution...`);
+    localContextB.trace(`Resolving the ${substitutionString} substitution...`);
 
-    const metavariableNode = this.getMetavariableNode(),
-          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableNode(metavariableNode);
+    const metavariableName = this.getMetavariableName(),
+          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableName(metavariableName);
 
     if (simpleSubstitution !== null) {
       const substitution = simpleSubstitution,  ///
-            substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, localContext);
+            substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, localContextA, localContextB);
 
       resolved = substitutionResolved; ///
     }
 
     if (resolved) {
-      localContext.debug(`...resolved the ${substitutionString} substitution.`);
+      localContextB.debug(`...resolved the ${substitutionString} substitution.`);
     }
 
     return resolved;
   }
 
-  resolveSubstitution(substitution, statement, substitutions, localContext) {
+  resolveSubstitution(substitution, statement, substitutions, localContextA, localContextB) {
     let substitutionResolved = false;
 
     const substitutionString = substitution.getString();
 
-    localContext.trace(`Resolving the ${substitutionString} substitution...`);
+    localContextB.trace(`Resolving the ${substitutionString} substitution...`);
 
-    const transformedSubstitution = substitution.transformed(substitutions, localContext);
+    const substitutionA = substitution; ///
 
-    if (transformedSubstitution !== null) {
-      const transformedSubstitutionString = transformedSubstitution.getString();
+    substitution = this.unifyStatement(statement, localContextA, localContextB);
 
-      localContext.trace(`Transformed the substitution to ${transformedSubstitutionString}...`);
+    if (substitution !== null) {
+      substitutions.snapshot();
 
-      substitutions = Substitutions.fromNothing();  ///
+      const substitutionTokens = substitution.getSubstitutionTokens(),
+            tokens = substitutionTokens;  ///
 
-      const localContextA = localContext, ///
-            localContextB = localContext, ///
-            statementUnified = this.statement.unifyStatement(statement, substitutions, localContextA, localContextB);
+      localContextB = LocalContext.fromLocalContextAndTokens(localContextB, tokens);  ///
 
-      if (statementUnified) {
-        const substitutionsLength = substitutions.getLength();
+      const substitutionB = substitution, ///
+            nodeA = substitutionA.getSubstitutionNode(),  ///
+            nodeB = substitutionB.getSubstitutionNode(),  ///
+            unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 
-        if (substitutionsLength === 1) {
-          const firstSubstitution = substitutions.getFirstSubstitution(),
-                substitution = firstSubstitution, ///
-                substitutionEqualToTransformedSubstitution = substitution.isEqualTo(transformedSubstitution);
+      unifiedAtMetaLevel ?
+        substitutions.continue() :
+          substitutions.rollback(localContextB);
 
-          substitutionResolved = substitutionEqualToTransformedSubstitution;  ///
-        }
-      }
+      substitutionResolved = unifiedAtMetaLevel;  ///
     }
 
     if (substitutionResolved) {
-      localContext.debug(`...resolved the ${substitutionString} substitution.`);
+      localContextB.debug(`...resolved the ${substitutionString} substitution.`);
     }
 
     return substitutionResolved;
+  }
+
+  unifyStatement(statement, localContextA, localContextB) {
+    let substitution = null;
+
+    localContextA = localContextB;  ///
+
+    const substitutions = Substitutions.fromNothing(),
+          statementUnified = this.statement.unifyStatement(statement, substitutions, localContextA, localContextB);
+
+    if (statementUnified) {
+      const substitutionsLength = substitutions.getLength();
+
+      if (substitutionsLength === 1) {
+        const firstSubstitution = substitutions.getFirstSubstitution();
+
+        substitution = firstSubstitution; ///
+
+        substitution.setSubstitutionTokens();
+
+        substitution.setSubstitutionNode();
+      }
+    }
+
+    return substitution;
   }
 
   matchStatementNode(statementNode) {
@@ -117,7 +148,7 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return statementNodeMatches;
   }
 
-  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
+  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
   matchSubstitutionNode(substitutionNode) {
     let substitutionNodeMatches;

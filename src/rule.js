@@ -70,7 +70,13 @@ export default class Rule {
       const statementUnifiedWithConclusion = this.conclusion.unifyStatement(statement, substitutions, localContext);  ///
 
       if (statementUnifiedWithConclusion) {
-        const substitutionsResolved = substitutions.resolve(localContext);
+        const localContextB = localContext; ///
+
+        localContext = LocalContext.fromFileContext(this.fileContext);
+
+        const localContextA = localContext; ///
+
+        const substitutionsResolved = substitutions.resolve(localContextA, localContextB);
 
         statementUnified = substitutionsResolved; ///
       }

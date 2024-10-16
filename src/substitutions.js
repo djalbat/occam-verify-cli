@@ -46,9 +46,7 @@ export default class Substitutions {
     });
 
     compress(metavariableNames, (metavariableNameA, metavariableNameB) => {
-      const metavariableNameAMatchesMetavariableNameB = metavariableNameA.match(metavariableNameB);
-
-      if (metavariableNameAMatchesMetavariableNameB) {
+      if (metavariableNameA === metavariableNameB) {
         return true;
       }
     });
@@ -213,14 +211,14 @@ export default class Substitutions {
     return unifiedWithEquivalences;
   }
 
-  resolve(localContext) {
+  resolve(localContextA, localContextB) {
     const metavariableNames = this.getMetavariableNames(),
-          resolved = metavariableNames.every((metavariableNode) => {
-                        const complexSubstitutions = this.findComplexSubstitutionsByMetavariableName(metavariableNode),
+          resolved = metavariableNames.every((metavariableName) => {
+                        const complexSubstitutions = this.findComplexSubstitutionsByMetavariableName(metavariableName),
                               complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
                                 const substitution = complexSubstitution, ///
                                       substitutions = this, ///
-                                      substitutionResolved = substitution.resolve(substitutions, localContext);
+                                      substitutionResolved = substitution.resolve(substitutions, localContextA, localContextB);
 
                                 if (substitutionResolved) {
                                   return true;
