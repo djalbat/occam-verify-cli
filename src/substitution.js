@@ -27,22 +27,22 @@ export default class Substitution {
     return statementNode;
   }
 
-  getVariableNode() {
-    const variableNode = null;
-
-    return variableNode;
-  }
-
-  getMetavariableNode() {
-    const metavariableNode = null;
-
-    return metavariableNode;
-  }
-
   getSubstitutionNode() {
     const substitutionNode = null;
 
     return substitutionNode;
+  }
+
+  getVariableName() {
+    const variableName = null;
+
+    return variableName;
+  }
+
+  getMetavariableName() {
+    const metavariableName = null;
+
+    return metavariableName;
   }
 
   isSimple() {
@@ -82,28 +82,28 @@ export default class Substitution {
     return frameNodeMatches;
   }
 
-  matchVariableNode(variableNode) {
-    const variableNodeMatches = false;
-
-    return variableNodeMatches;
-  }
-
   matchStatementNode(statementNode) {
     const statementNodeMatches = false;
 
     return statementNodeMatches;
   }
 
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = false;
+  matchVariableName(variableName) {
+    const variableNameMatches = false;
 
-    return metavariableNodeMatches;
+    return variableNameMatches;
   }
 
-  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
-    const metavariableNodeAndSubstitutionNodeMatches = false;
+  matchMetavariableName(metavariableName) {
+    const metavariableNameMatches = false;
 
-    return metavariableNodeAndSubstitutionNodeMatches;
+    return metavariableNameMatches;
+  }
+
+  matchMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode) {
+    const metavariableNameAndSubstitutionNodeMatches = false;
+
+    return metavariableNameAndSubstitutionNodeMatches;
   }
 
   unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {

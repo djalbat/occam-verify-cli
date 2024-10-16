@@ -135,12 +135,12 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return substitutionNodeMatches;
   }
 
-  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
-    const metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
+  matchMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode) {
+    const metavariableNameMatches = this.matchMetavariableName(metavariableName),
           substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),
-          metavariableNodeAndSubstitutionNodeMatches = (metavariableNodeMatches && substitutionNodeMatches);
+          metavariableNameAndSubstitutionNodeMatches = (metavariableNameMatches && substitutionNodeMatches);
 
-    return metavariableNodeAndSubstitutionNodeMatches;
+    return metavariableNameAndSubstitutionNodeMatches;
   }
 
   static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext) {

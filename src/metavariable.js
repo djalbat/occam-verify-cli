@@ -140,13 +140,14 @@ class Metavariable {
 
     const statementNode = statement.getNode(),
           metavariableNode = this.node, ///
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           substitutionNode = (substitution !== null) ?
                                substitution.getSubstitutionNode() :
                                  null,
-          substitutionPresent = substitutions.isSubstitutionPresentByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
+          substitutionPresent = substitutions.isSubstitutionPresentByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode);
 
     if (substitutionPresent) {
-      const substitution = substitutions.findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode),
+      const substitution = substitutions.findSubstitutionByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode),
             statementNodeMatches = substitution.matchStatementNode(statementNode);
 
       if (statementNodeMatches) {

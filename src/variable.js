@@ -149,8 +149,8 @@ class Variable {
     localContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
     const termNode = term.getNode(),
-          variableNode = this.node, ///
-          substitution = substitutions.findSubstitutionByVariableNode(variableNode);
+          variableName = this.name, ///
+          substitution = substitutions.findSubstitutionByVariableName(variableName);
 
     if (substitution !== null) {
       const termNodeMatches = substitution.matchTermNode(termNode);
