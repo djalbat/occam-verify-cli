@@ -40,7 +40,13 @@ export default class Premise {
 
     const statement = this.unqualifiedStatement.getStatement(),
           statementNode = statement.getNode(),
-          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, this.fileContext);
+          statementTokens = statement.getTokens(),
+          context = this.fileContext, ///
+          tokens = statementTokens; ///
+
+    localContext = LocalContext.fromContextAndTokens(context, tokens);  ///
+
+    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
 
     if (subproofAssertion !== null) {
       subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, this.fileContext, localContext);

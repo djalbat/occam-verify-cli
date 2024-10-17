@@ -6,12 +6,10 @@ import { nodeQuery } from "../utilities/query";
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
 import { VARIABLE_RULE_NAME,
          METAVARIABLE_RULE_NAME,
-         SUBSTITUTION_RULE_NAME,
          UNQUALIFIED_STATEMENT_RULE_NAME,
          CONSTRUCTOR_DECLARATION_RULE_NAME } from "../ruleNames";
 import { variableTokensFromVariableString,
          metavariableTokensFromMetavariableString,
-         substitutionTokensFromSubstitutionString,
          unqualifiedStatementTokensFromUnqualifiedStatementString,
          constructorDeclarationTokensFromConstructorDeclarationString } from "../utilities/tokens";
 
@@ -21,7 +19,8 @@ const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
       nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
-      statementNodeQuery = nodeQuery("/unqualifiedStatement/statement");
+      statementNodeQuery = nodeQuery("/unqualifiedStatement/statement"),
+      substitutionNodeQuery = nodeQuery("/unqualifiedStatement/statement/substitution");
 
 export function termNodeFromTermString(termString, lexer, parser) {
   const constructorDeclarationString = constructorDeclarationStringFromTermString(termString),
@@ -39,27 +38,11 @@ export function variableNodeFromVariableString(variableString, lexer, parser) {
   return variableNode;
 }
 
-export function statementNodeFromStatementString(statementString, lexer, parser) {
-  const unqualifiedStatementString =unqualifiedStatementStringFromStatementString(statementString),
-        unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
-        unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
-        statementNode = statementNodeFromUnqualifiedStatementNode(unqualifiedStatementNode);
-
-  return statementNode;
-}
-
 export function metavariableNodeFromMetavariableString(metavariableString, lexer, parser) {
   const metavariableTokens = metavariableTokensFromMetavariableString(metavariableString, lexer),
         metavariableNode = metavariableNodeFromMetavariableTokens(metavariableTokens, parser);
 
   return metavariableNode;
-}
-
-export function substitutionNodeFromSubstitutionString(substitutionString, lexer, parser) {
-  const substitutionTokens = substitutionTokensFromSubstitutionString(substitutionString, lexer),
-        substitutionNode = substitutionNodeFromSubstitutionTokens(substitutionTokens, parser);
-
-  return substitutionNode;
 }
 
 export function constructorDeclarationStringFromTermString(termString) {
@@ -76,6 +59,13 @@ export function unqualifiedStatementStringFromStatementString(statementString) {
   return unqualifiedStatementString;
 }
 
+export function unqualifiedStatementStringFromSubstitutionString(substitutionString) {
+  const unqualifiedStatementString = `a ${substitutionString}
+`;  ///
+
+  return unqualifiedStatementString;
+}
+
 export function termNodeFromConstructorDeclarationNode(constructorDeclarationNode) {
   const termNode = termNodeQuery(constructorDeclarationNode, constructorDeclarationNode);
 
@@ -86,6 +76,12 @@ export function statementNodeFromUnqualifiedStatementNode(unqualifiedStatementNo
   const statementNode = statementNodeQuery(unqualifiedStatementNode);
 
   return statementNode;
+}
+
+export function substitutionNodeFromUnqualifiedStatementNode(unqualifiedStatementNode) {
+  const substitutionNode = substitutionNodeQuery(unqualifiedStatementNode);
+
+  return substitutionNode;
 }
 
 export function variableNodeFromVariableTokens(variableTokens, parser) {
@@ -100,13 +96,6 @@ export function metavariableNodeFromMetavariableTokens(metavariableTokens, parse
         metavariableNode = nodeFromTokensRuleNameAndParser(metavariableTokens, ruleName, parser);
 
   return metavariableNode;
-}
-
-export function substitutionNodeFromSubstitutionTokens(substitutionTokens, parser) {
-  const ruleName = SUBSTITUTION_RULE_NAME,
-        substitutionNode = nodeFromTokensRuleNameAndParser(substitutionTokens, ruleName, parser);
-
-  return substitutionNode;
 }
 
 export function unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser) {

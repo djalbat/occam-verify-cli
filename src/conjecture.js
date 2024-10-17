@@ -8,8 +8,8 @@ import LocalContext from "./context/local";
 import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
+import { stringFromLabels } from "./topLevelAssertion";
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { labelsStringFromLabels } from "./topLevelAssertion";
 
 const proofNodeQuery = nodeQuery("/conjecture/proof"),
       labelNodesQuery = nodesQuery("/conjecture/label"),
@@ -20,9 +20,9 @@ export default class Conjecture extends TopLevelAssertion {
   verify() {
     let verified = false;
 
-    const labelsString = labelsStringFromLabels(this.labels);
+    const conjectureString = this.string; ///
 
-    this.fileContext.trace(`Verifying the '${labelsString}' conjecture...`);
+    this.fileContext.trace(`Verifying the '${conjectureString}' conjecture...`);
 
     const labelsVerifiedAtTopLevel = this.labels.every((label) => {
       const labelVVerifiedAtTopLevel = label.verifyAtTopLevel(this.fileContext);
@@ -62,7 +62,7 @@ export default class Conjecture extends TopLevelAssertion {
     }
 
     if (verified) {
-      this.fileContext.debug(`...verified the '${labelsString}' conjecture.`);
+      this.fileContext.debug(`...verified the '${conjectureString}' conjecture.`);
     }
 
     return verified;
@@ -86,8 +86,9 @@ export default class Conjecture extends TopLevelAssertion {
             return supposition;
           }),
           consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
+          string = stringFromLabels(labels),
           proof = Proof.fromProofNode(proofNode, fileContext),
-          conjecture = new Conjecture(fileContext, labels, suppositions, consequent, proof);
+          conjecture = new Conjecture(fileContext, string, labels, suppositions, consequent, proof);
 
     return conjecture;
   }

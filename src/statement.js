@@ -117,10 +117,11 @@ class Statement {
 
     const statementANode = statementA.getNode(),
           statementBNode = statementB.getNode(),
+          context = localContextA,  ///
           nodeA = statementANode, ///
           nodeB = statementBNode; ///
 
-    localContextA = LocalContext.fromLocalContextAndTokens(localContextA, this.tokens);
+    localContextA = LocalContext.fromContextAndTokens(context, this.tokens);
 
     const unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
 

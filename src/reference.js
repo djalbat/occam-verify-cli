@@ -1,6 +1,7 @@
 "use strict";
 
 import Metavariable from "./metavariable";
+import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
 import { referenceMetaType } from "./metaType";
@@ -73,7 +74,8 @@ export default class Reference {
 
   static fromReferenceNode(referenceNode, fileContext) {
     const metavariableNode = metavariableNodeQuery(referenceNode),
-          metavariable = Metavariable.fromMetavariableNode(metavariableNode, fileContext),
+          localContext = LocalContext.fromFileContext(fileContext),
+          metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
           reference = new Reference(metavariable);
 
     return reference;

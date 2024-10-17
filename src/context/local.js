@@ -96,6 +96,10 @@ class LocalContext {
     return lastProofStep;
   }
 
+  getLexer() { return this.context.getLexer(); }
+
+  getParser() { return this.context.getParser(); }
+
   getAxioms() { return this.context.getAxioms(); }
 
   getLemmas() { return this.context.getLemmas(); }
@@ -456,15 +460,13 @@ class LocalContext {
     return localContext;
   }
 
-  static fromLocalContextAndTokens(localContext, tokens) {
-    const context = localContext,  ///
-          variables = [],
+  static fromContextAndTokens(context, tokens) {
+    const variables = [],
           proofSteps = [],
           judgements = [],
           equivalences = [],
-          metavariables = [];
-
-    localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);  ///
+          metavariables = [],
+          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);  ///
 
     return localContext;
   }

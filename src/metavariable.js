@@ -9,6 +9,7 @@ import StatementForMetavariableSubstitution from "./substitution/statementForMet
 import { nodeQuery } from "./utilities/query";
 import {metavariableNameFromMetavariableNode, typeNameFromTypeNode} from "./utilities/name";
 import { metavariableNodeFromMetavariableString } from "./utilities/node";
+import local from "./context/local";
 
 const termNodeQuery = nodeQuery("/metavariable/argument/term"),
       typeNodeQuery = nodeQuery("/metavariable/argument/type"),
@@ -171,6 +172,30 @@ class Metavariable {
     return statementUnified;
   }
 
+  unifySubstitution(substitution, localContext) {
+    let substitutionUnified = false;
+
+    const metavariableString = this.string,  ///
+          substitutionString = substitution.getString();
+
+    localContext.trace(`Unifying the '${substitutionString}' substitution with the '${metavariableString}' metavariable...`);
+
+    const metavariableName = this.name, ///
+          judgement = localContext.findJudgementByMetavariableName(metavariableName);
+
+    if (judgement !== null){
+      const declaration = judgement.getDeclaration();
+
+      substitutionUnified = declaration.unifySubstitution(substitution, localContext);
+    }
+
+    if (substitutionUnified) {
+      localContext.debug(`...unified the '${substitutionString}' substitution with the '${metavariableString}' metavariable.`);
+    }
+
+    return substitutionUnified;
+  }
+
   verify(localContext) {
     let verified;
 
@@ -297,17 +322,17 @@ class Metavariable {
     return metavariable;
   }
 
-  static fromMetavariableNode(metavariableNode, fileContext) {
+  static fromMetavariableNode(metavariableNode, localContext) {
     let metavariable = null;
 
     if (metavariableNode !== null) {
       const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
             node = metavariableNode,  ///
             name = metavariableName,  ///
-            string = fileContext.nodeAsString(node),
+            string = localContext.nodeAsString(node),
             metaType = null;
 
-      metavariable = new Metavariable(fileContext, string, node, name, metaType);
+      metavariable = new Metavariable(localContext, string, node, name, metaType);
     }
 
     return metavariable;

@@ -9,34 +9,28 @@ export default class Substitution {
     return this.string;
   }
 
-  getTermNode() {
-    const termNode = null;
+  getTerm() {
+    const term = null;
 
-    return termNode;
+    return term;
   }
 
-  getFrameNode() {
-    const frameNode = null;
+  getFrame() {
+    const frame = null;
 
-    return frameNode;
+    return frame;
   }
 
-  getStatementNode() {
-    const statementNode = null;
+  getStatement() {
+    const statement = null;
 
-    return statementNode;
+    return statement;
   }
 
   getSubstitutionNode() {
     const substitutionNode = null;
 
     return substitutionNode;
-  }
-
-  getVariableName() {
-    const variableName = null;
-
-    return variableName;
   }
 
   getMetavariableName() {

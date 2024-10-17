@@ -6,8 +6,8 @@ import Supposition from "./supposition";
 import LocalContext from "./context/local";
 import TopLevelAssertion from "./topLevelAssertion";
 
+import { stringFromLabels } from "./topLevelAssertion";
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { labelsStringFromLabels } from "./topLevelAssertion";
 
 const labelNodesQuery = nodesQuery("/axiom/label"),
       consequentNodeQuery = nodeQuery("/axiom/consequent"),
@@ -17,9 +17,9 @@ export default class Axiom extends TopLevelAssertion {
   verify() {
     let verified = false;
 
-    const labelsString = labelsStringFromLabels(this.labels);
+    const axiomString = this.string;  ///
 
-    this.fileContext.trace(`Verifying the '${labelsString}' axiom...`);
+    this.fileContext.trace(`Verifying the '${axiomString}' axiom...`);
 
     const labelsVerifiedAtTopLevel = this.labels.every((label) => {
       const labelVVerifiedAtTopLevel = label.verifyAtTopLevel(this.fileContext);
@@ -53,7 +53,7 @@ export default class Axiom extends TopLevelAssertion {
     }
 
     if (verified) {
-      this.fileContext.debug(`...verified the '${labelsString}' axiom.`);
+      this.fileContext.debug(`...verified the '${axiomString}' axiom.`);
     }
 
     return verified;
@@ -76,8 +76,9 @@ export default class Axiom extends TopLevelAssertion {
             return supposition;
           }),
           consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
+          string = stringFromLabels(labels),
           proof = null,
-          axiom = new Axiom(fileContext, labels, suppositions, consequent, proof);
+          axiom = new Axiom(fileContext, string, labels, suppositions, consequent, proof);
 
     return axiom;
   }

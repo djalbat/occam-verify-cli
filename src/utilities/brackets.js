@@ -8,17 +8,17 @@ import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
 const bracketedTermChildNodeQuery = nodeQuery("/term/argument/term!"),
       bracketedStatementChildNodeQuery = nodeQuery("/statement/metaArgument/statement!");
 
-export function stripBracketsFromTerm(statementNode) {
-  const bracketedTermChildNode = bracketedTermChildNodeFromTermNode(statementNode);
+export function stripBracketsFromTermNode(termNode) {
+  const bracketedTermChildNode = bracketedTermChildNodeFromTermNode(termNode);
 
   if (bracketedTermChildNode !== null) {
-    statementNode = bracketedTermChildNode;  ///
+    termNode = bracketedTermChildNode;  ///
   }
 
-  return statementNode;
+  return termNode;
 }
 
-export function stripBracketsFromStatement(statementNode) {
+export function stripBracketsFromStatementNode(statementNode) {
   const bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
   if (bracketedStatementChildNode !== null) {

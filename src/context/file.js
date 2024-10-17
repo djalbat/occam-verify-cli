@@ -806,8 +806,8 @@ export default class FileContext {
     return json;
   }
 
-  initialise(fileContextJSON) {
-    const { types, rules, axioms, lemmas, theorems, metaLemmas, variables, conjectures, combinators, constructors, metatheorems, metavariables } = fileContextJSON,
+  initialise(json) {
+    const { types, rules, axioms, lemmas, theorems, metaLemmas, variables, conjectures, combinators, constructors, metatheorems, metavariables } = json,
           fileContext = this, ///
           typesJSON = types,  ///
           rulesJSON = rules,  ///
@@ -929,6 +929,29 @@ export default class FileContext {
           metatheorems = [],
           metavariables = [],
           fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
+
+    return fileContext;
+  }
+
+  static fromFileAndJSON(file, json, releaseContext) {
+    const filePath = file.getPath(),
+          tokens = null,
+          node = null,
+          types = [],
+          rules = [],
+          axioms = [],
+          lemmas = [],
+          theorems = [],
+          variables = [],
+          metaLemmas = [],
+          conjectures = [],
+          combinators = [],
+          constructors = [],
+          metatheorems = [],
+          metavariables = [],
+          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
+
+    fileContext.initialise(json);
 
     return fileContext;
   }

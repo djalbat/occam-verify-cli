@@ -8,8 +8,9 @@ import LocalContext from "./context/local";
 import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
+import { EMPTY_STRING } from "./constants";
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { labelsStringFromLabels } from "./topLevelAssertion";
+import { stringFromLabels, labelsToLabelJSON, suppositionsToSuppositionsJSON } from "./topLevelAssertion";
 
 const proofNodeQuery = nodeQuery("/metaLemma/proof"),
       labelNodesQuery = nodesQuery("/metaLemma/label"),
@@ -17,14 +18,24 @@ const proofNodeQuery = nodeQuery("/metaLemma/proof"),
       suppositionNodesQuery = nodesQuery("/metaLemma/supposition");
 
 export default class MetaLemma extends TopLevelAssertion {
+  constructor(fileContext, string, labels, suppositions, consequent, proof, substitutions) {
+    super(fileContext, string, labels, suppositions, consequent, proof);
+
+    this.substitutions = substitutions;
+  }
+
+  getSubstitutions() {
+    return this.substitutions;
+  }
+
   verify() {
     let verified = false;
 
-    const labelsString = labelsStringFromLabels(this.labels);
+    const metaLemmaString = this.string;  ///
 
-    (labelsString === null) ?
-      this.fileContext.trace(`Verifying a meta-emma...`) :
-        this.fileContext.trace(`Verifying the '${labelsString}' meta-emma...`);
+    (metaLemmaString === EMPTY_STRING) ?
+      this.fileContext.trace(`Verifying a meta-lemma...`) :
+        this.fileContext.trace(`Verifying the '${metaLemmaString}' meta-lemma...`);
 
     const labelsVerifiedAtTopLevel = this.labels.every((label) => {
       const labelVVerifiedAtTopLevel = label.verifyAtTopLevel(this.fileContext);
@@ -48,13 +59,12 @@ export default class MetaLemma extends TopLevelAssertion {
         const consequentVerified = this.consequent.verify(localContext);
 
         if (consequentVerified) {
-          const substitutions = Substitutions.fromNothing(),
-                proofVerified = this.proof.verify(substitutions, this.consequent, localContext);
+          const proofVerified = this.proof.verify(this.substitutions, this.consequent, localContext);
 
           if (proofVerified) {
             const metaLemma = this;  ///
 
-            this.fileContext.addLemma(metaLemma);
+            this.fileContext.addMetaLemma(metaLemma);
 
             verified = true;
           }
@@ -63,15 +73,32 @@ export default class MetaLemma extends TopLevelAssertion {
     }
 
     if (verified) {
-      (labelsString === null) ?
-        this.fileContext.debug(`...verified a meta-emma.`) :
-          this.fileContext.debug(`...verified the '${labelsString}' meta-emma.`);
+      (metaLemmaString === EMPTY_STRING) ?
+        this.fileContext.debug(`...verified a meta-lemma.`) :
+          this.fileContext.debug(`...verified the '${metaLemmaString}' meta-lemma.`);
     }
 
     return verified;
   }
 
-  static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(MetaLemma, json, fileContext); }
+  toJSON() {
+    const labelsJSON = labelsToLabelJSON(this.labels),
+          suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
+          consequentJSON = this.consequent.toJSON(),
+          substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
+          labels = labelsJSON,  ///
+          suppositions = suppositionsJSON,  ///
+          consequent = consequentJSON,  ///
+          substitutions = substitutionsJSON,  ///
+          json = {
+            labels,
+            suppositions,
+            consequent,
+            substitutions
+          };
+
+    return json;
+  }
 
   static fromMetaLemmaNode(metaLemmaNode, fileContext) {
     const proofNode = proofNodeQuery(metaLemmaNode),
@@ -90,8 +117,20 @@ export default class MetaLemma extends TopLevelAssertion {
           }),
           consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
           proof = Proof.fromProofNode(proofNode, fileContext),
-          metaLemma = new MetaLemma(fileContext, labels, suppositions, consequent, proof);
+          string = stringFromLabels(labels),
+          substitutions = Substitutions.fromNothing(),
+          metaLemma = new MetaLemma(fileContext, string, labels, suppositions, consequent, proof, substitutions);
 
     return metaLemma;
   }
+}
+
+export function substitutionsToSubstitutionsJSON(substitutions) {
+  const substitutionsJSON = substitutions.map((substitution) => {
+    const substitutionJSON = substitution.toJSON();
+
+    return substitutionJSON;
+  });
+
+  return substitutionsJSON;
 }

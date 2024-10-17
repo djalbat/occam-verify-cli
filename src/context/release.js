@@ -454,9 +454,8 @@ function fileContextsFromJSONAndEntries(json, entries, fileContexts, releaseCont
   fileContextsJSON.forEach((fileContextJSON) => {
     const { filePath } = fileContextJSON,
           file = entries.findFile(filePath),
-          fileContext = FileContext.fromFile(file, releaseContext);
-
-    fileContext.initialise(fileContextJSON);
+          json = fileContextJSON, ///
+          fileContext = FileContext.fromFileAndJSON(file, json, releaseContext);
 
     fileContexts.push(fileContext);
   });

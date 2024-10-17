@@ -4,32 +4,33 @@ import shim from "../shim";
 import Substitution from "../substitution";
 
 import { nodeQuery } from "../utilities/query";
-import { stripBracketsFromTerm } from "../utilities/brackets";
-import { variableNameFromVariableNode } from "../utilities/name";
-import { substitutionNodeFromSubstitutionTokens } from "../utilities/node";
-import { substitutionTokensFromSubstitutionString } from "../utilities/tokens";
+import { stripBracketsFromTermNode } from "../utilities/brackets";
+import { substitutionNodeFromUnqualifiedStatementNode,
+         unqualifiedStatementStringFromSubstitutionString,
+         unqualifiedStatementNodeFromUnqualifiedStatementTokens } from "../utilities/node";
+import { unqualifiedStatementTokensFromUnqualifiedStatementString,
+         substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode } from "../utilities/tokens";
 
 const termNodeQuery = nodeQuery("/substitution/term[0]"),
       variableNodeQuery = nodeQuery("/substitution/term[1]/variable!"),
-      termVariableNodeQuery = nodeQuery("/term/variable"),
       substitutionNodeQuery = nodeQuery("/statement/substitution");
 
 export default class TermForVariableSubstitution extends Substitution {
-  constructor(string, termNode, variableNode, substitutionNode, substitutionTokens) {
+  constructor(string, term, variable, substitutionNode, substitutionTokens) {
     super(string);
 
-    this.termNode = termNode;
-    this.variableNode = variableNode;
+    this.term = term;
+    this.variable = variable;
     this.substitutionNode = substitutionNode;
     this.substitutionTokens = substitutionTokens;
   }
 
-  getTermNode() {
-    return this.termNode;
+  getTerm() {
+    return this.term;
   }
 
-  getVariableNode() {
-    return this.variableNode;
+  getVariable() {
+    return this.variable;
   }
 
   getSubstitutionNode() {
@@ -40,33 +41,37 @@ export default class TermForVariableSubstitution extends Substitution {
     return this.substitutionTokens;
   }
 
-  getVariableName() {
-    const variableName = variableNameFromVariableNode(this.variableNode);
+  getSubstitutionString() {
+    const termString = this.term.getString(),
+          variableString = this.variable.getString(),
+          substitutionString = `[${termString} for ${variableString}]`;
 
-    return variableName;
+    return substitutionString;
   }
 
-  setSubstitutionNode() {
-    this.substitutionNode = substitutionNodeFromSubstitutionTokens(this.substitutionTokens);
-  }
+  setSubstitutionNodeAndTokens(localContext) {
+    const lexer = localContext.getLexer(),
+          parser = localContext.getParser(),
+          substitutionString = this.getSubstitutionString(),
+          unqualifiedStatementString = unqualifiedStatementStringFromSubstitutionString(substitutionString),
+          unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
+          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser);
 
-  setSubstitutionTokens() {
-    const termVariableNode = termVariableNodeQuery(this.termNode),
-          termVariableName = variableNameFromVariableNode(termVariableNode),
-          variableName = variableNameFromVariableNode(this.variableNode),
-          substitutionString = `[${termVariableName} for ${variableName}]`;
+    this.substitutionNode = substitutionNodeFromUnqualifiedStatementNode(unqualifiedStatementNode);
 
-    this.substitutionTokens = substitutionTokensFromSubstitutionString(substitutionString);
+    this.substitutionTokens = substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode(unqualifiedStatementTokens, this.substitutionNode);
   }
 
   isEqualTo(substitution) {
     let equalTo = false;
 
-    const termNode = substitution.getTermNode(),
-          variableNode = substitution.getVariableNode();
+    const term = substitution.getTerm(),
+          variable = substitution.getVariable();
 
-    if ((termNode !== null) && (variableNode !== null)) {
-      const termNodeMatches = this.matchTermNode(termNode),
+    if ((term !== null) && (variable !== null)) {
+      const termNode = term.getNode(),
+            variableNode = variable.getNode(),
+            termNodeMatches = this.matchTermNode(termNode),
             variableNodeMatches = this.matchVariableNode(variableNode);
 
       equalTo = (termNodeMatches && variableNodeMatches);
@@ -76,9 +81,9 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 
   matchTermNode(termNode) {
-    termNode = stripBracketsFromTerm(termNode); ///
+    termNode = stripBracketsFromTermNode(termNode); ///
 
-    const termNodeMatches = this.termNode.match(termNode);
+    const termNodeMatches = this.term.matchTermNode(termNode);
 
     return termNodeMatches;
   }
@@ -88,7 +93,7 @@ export default class TermForVariableSubstitution extends Substitution {
 
     const variableNameA = variableName; ///
 
-    variableName = variableNameFromVariableNode(this.variableNode);
+    variableName = this.variable.getName();
 
     const variableNameB = variableName; ///
 
@@ -116,10 +121,12 @@ export default class TermForVariableSubstitution extends Substitution {
   unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {
     let unifiedWithEquivalence;
 
-    const equivalenceMatchesTermNode = equivalence.matchTermNode(this.termNode);
+    const termNode = this.term.getNode(),
+          equivalenceMatchesTermNode = equivalence.matchTermNode(termNode);
 
     if (equivalenceMatchesTermNode) {
-      const equivalenceMatchesVariableNode = equivalence.matchVariableNode(this.variableNode);
+      const variableNode = this.variable.getNode(),
+            equivalenceMatchesVariableNode = equivalence.matchVariableNode(variableNode);
 
       if (equivalenceMatchesVariableNode) {
           unifiedWithEquivalence = true;
@@ -145,7 +152,7 @@ export default class TermForVariableSubstitution extends Substitution {
               string = stringFromTermAndVariable(term, variable, localContext),
               substitutionTokens = localContext.nodeAsTokens(substitutionNode);
 
-        termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode, substitutionNode, substitutionTokens);
+        termForVariableSubstitution = new TermForVariableSubstitution(string, term, variable, substitutionNode, substitutionTokens);
       }
     }
 
@@ -155,13 +162,16 @@ export default class TermForVariableSubstitution extends Substitution {
   static fromTernAndVariable(term, variable, localContext) {
     let termNode = term.getNode();
 
-    termNode = stripBracketsFromTerm(termNode); ///
+    termNode = stripBracketsFromTermNode(termNode); ///
+
+    const { Term } = shim;
+
+    term = Term.fromTermNode(termNode, localContext);
 
     const string = stringFromTermAndVariable(term, variable, localContext),
-          variableNode = variable.getNode(),
           substitutionNode = null,
           substitutionTokens = null,
-          termForVariableSubstitution = new TermForVariableSubstitution(string, termNode, variableNode, substitutionNode, substitutionTokens);
+          termForVariableSubstitution = new TermForVariableSubstitution(string, term, variable, substitutionNode, substitutionTokens);
 
     return termForVariableSubstitution;
   }

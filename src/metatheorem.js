@@ -5,11 +5,18 @@ import Proof from "./proof";
 import Consequent from "./consequent";
 import Supposition from "./supposition";
 import LocalContext from "./context/local";
+import Substitution from "./substitution";
 import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { labelsStringFromLabels } from "./topLevelAssertion";
+import { substitutionsToSubstitutionsJSON } from "./metaLemma";
+import { labelsFromJSON,
+         stringFromLabels,
+         labelsToLabelJSON,
+         consequentFromJSON,
+         suppositionsFromJSON,
+         suppositionsToSuppositionsJSON } from "./topLevelAssertion";
 
 const proofNodeQuery = nodeQuery("/metatheorem/proof"),
       labelNodesQuery = nodesQuery("/metatheorem/label"),
@@ -17,12 +24,22 @@ const proofNodeQuery = nodeQuery("/metatheorem/proof"),
       suppositionNodesQuery = nodesQuery("/metatheorem/supposition");
 
 export default class Metatheorem extends TopLevelAssertion {
+  constructor(fileContext, string, labels, suppositions, consequent, proof, substitutions) {
+    super(fileContext, string, labels, suppositions, consequent, proof);
+
+    this.substitutions = substitutions;
+  }
+
+  getSubstitutions() {
+    return this.substitutions;
+  }
+
   verify() {
     let verified = false;
 
-    const labelsString = labelsStringFromLabels(this.labels);
+    const metatheoremString = this.string;  ///
 
-    this.fileContext.trace(`Verifying the '${labelsString}' metatheorem...`);
+    this.fileContext.trace(`Verifying the '${metatheoremString}' metatheorem...`);
 
     const labelsVerifiedAtTopLevel = this.labels.every((label) => {
       const labelVVerifiedAtTopLevel = label.verifyAtTopLevel(this.fileContext);
@@ -46,8 +63,7 @@ export default class Metatheorem extends TopLevelAssertion {
         const consequentVerified = this.consequent.verify(localContext);
 
         if (consequentVerified) {
-          const substitutions = Substitutions.fromNothing(),
-                proofVerified = this.proof.verify(substitutions, this.consequent, localContext);
+          const proofVerified = this.proof.verify(this.substitutions, this.consequent, localContext);
 
           if (proofVerified) {
             const metatheorem = this;  ///
@@ -61,13 +77,43 @@ export default class Metatheorem extends TopLevelAssertion {
     }
 
     if (verified) {
-      this.fileContext.debug(`...verified the '${labelsString}' metatheorem.`);
+      this.fileContext.debug(`...verified the '${metatheoremString}' metatheorem.`);
     }
 
     return verified;
   }
 
-  static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Metatheorem, json, fileContext); }
+  toJSON() {
+    const labelsJSON = labelsToLabelJSON(this.labels),
+          suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
+          consequentJSON = this.consequent.toJSON(),
+          substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
+          labels = labelsJSON,  ///
+          suppositions = suppositionsJSON,  ///
+          consequent = consequentJSON,  ///
+          substitutions = substitutionsJSON,  ///
+          json = {
+            labels,
+            suppositions,
+            consequent,
+            substitutions
+          };
+
+    return json;
+  }
+
+
+  static fromJSON(json, fileContext) {
+    const labels = labelsFromJSON(json, fileContext),
+          suppositions = suppositionsFromJSON(json, fileContext),
+          consequent = consequentFromJSON(json, fileContext),
+          substitutions = substitutionsFromJSON(json, fileContext),
+          string = stringFromLabels(labels),
+          proof = null,
+          topLevelAssertion = new Metatheorem(fileContext, string, labels, suppositions, consequent, proof, substitutions);
+
+    return topLevelAssertion;
+  }
 
   static fromMetatheoremNode(metatheoremNode, fileContext) {
     const proofNode = proofNodeQuery(metatheoremNode),
@@ -86,8 +132,25 @@ export default class Metatheorem extends TopLevelAssertion {
           }),
           consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
           proof = Proof.fromProofNode(proofNode, fileContext),
-          metatheorem = new Metatheorem(fileContext, labels, suppositions, consequent, proof);
+          string = stringFromLabels(labels),
+          substitutions = Substitutions.fromNothing(),
+          metatheorem = new Metatheorem(fileContext, string, labels, suppositions, consequent, proof, substitutions);
 
     return metatheorem;
   }
+}
+
+export function substitutionsFromJSON(json, fileContext) {
+  let { substitutions } = json;
+
+  const substitutionsJSON = substitutions;  ///
+
+  substitutions = substitutionsJSON.map((substitutionJSON) => {
+    const json = substitutionJSON,  ///
+          substitution = Substitution.fromJSON(json, fileContext);
+
+    return substitution;
+  });
+
+  return substitutions;
 }

@@ -8,8 +8,9 @@ import LocalContext from "./context/local";
 import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
+import { EMPTY_STRING } from "./constants";
+import { stringFromLabels } from "./topLevelAssertion";
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { labelsStringFromLabels } from "./topLevelAssertion";
 
 const proofNodeQuery = nodeQuery("/lemma/proof"),
       labelNodesQuery = nodesQuery("/lemma/label"),
@@ -20,11 +21,11 @@ export default class Lemma extends TopLevelAssertion {
   verify() {
     let verified = false;
 
-    const labelsString = labelsStringFromLabels(this.labels);
+    const lemmaString = this.string;  ///
 
-    (labelsString === null) ?
+    (lemmaString === EMPTY_STRING) ?
       this.fileContext.trace(`Verifying a lemma...`) :
-        this.fileContext.trace(`Verifying the '${labelsString}' lemma...`);
+        this.fileContext.trace(`Verifying the '${lemmaString}' lemma...`);
 
     const labelsVerifiedAtTopLevel = this.labels.every((label) => {
       const labelVVerifiedAtTopLevel = label.verifyAtTopLevel(this.fileContext);
@@ -63,9 +64,9 @@ export default class Lemma extends TopLevelAssertion {
     }
 
     if (verified) {
-      (labelsString === null) ?
+      (lemmaString === EMPTY_STRING) ?
         this.fileContext.debug(`...verified a lemma.`) :
-          this.fileContext.debug(`...verified the '${labelsString}' lemma.`);
+          this.fileContext.debug(`...verified the '${lemmaString}' lemma.`);
     }
 
     return verified;
@@ -89,8 +90,9 @@ export default class Lemma extends TopLevelAssertion {
             return supposition;
           }),
           consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
+          string = stringFromLabels(labels),
           proof = Proof.fromProofNode(proofNode, fileContext),
-          lemma = new Lemma(fileContext, labels, suppositions, consequent, proof);
+          lemma = new Lemma(fileContext, string, labels, suppositions, consequent, proof);
 
     return lemma;
   }

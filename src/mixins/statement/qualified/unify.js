@@ -1,6 +1,5 @@
 "use strict";
 
-import metavariableUnifier from "../../../unifier/metavariable";
 import StatementForMetavariableSubstitution from "../../../substitution/statementForMetavariable";
 
 import { trim } from "../../../utilities/string";
@@ -137,33 +136,22 @@ function unifyAWithReference(qualifiedStatement, substitutions, localContext) {
   const reference = qualifiedStatement.getReference(),
         metavariableNode = reference.getMetavariableNode(),
         metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-        metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
+        metavariablePresent = localContext.isMetavariablePresentByMetavariableName(metavariableName);
 
-  if (metavariable !== null) {
+  if (metavariablePresent) {
     const statement = qualifiedStatement.getStatement(),
           statementString = statement.getString(),
           referenceString = reference.getString();
 
     localContext.trace(`Unifying the '${statementString}' qualified statement with the '${referenceString}' reference...`);
 
-    const metavariableNode = metavariable.getNode(),
-          referenceMetavariableNode = reference.getMetavariableNode(),
-          metavariableNodeA = referenceMetavariableNode, ///
-          metavariableNodeB = metavariableNode, ///
-          metavariableUnified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
+    const metavariable = reference.getMetavariable(),
+          statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementAndMetavariable(statement, metavariable, localContext),
+          substitution = statementForMetavariableSubstitution; ///
 
-    if (metavariableUnified) {
-      const statementNode = statement.getNode(),
-            metavariableNode = metavariableNodeA, ///
-            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementNodeAndMetavariableNode(statementNode, metavariableNode, localContextA, localContextB),
-            substitution = statementForMetavariableSubstitution, ///
-            localContextA = localContext, ///
-            localContextB = localContext; ///
+    substitutions.addSubstitution(substitution, localContext);
 
-      substitutions.addSubstitution(substitution, localContextA, localContextB);
-
-      unifiedWithReference = true;
-    }
+    unifiedWithReference = true;
 
     if (unifiedWithReference) {
       localContext.debug(`...unified the '${statementString}' qualified statement with the '${referenceString}' reference.`);

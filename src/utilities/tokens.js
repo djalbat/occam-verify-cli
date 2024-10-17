@@ -25,13 +25,6 @@ export function metavariableTokensFromMetavariableString(metavariableString, lex
   return metavariableTokens;
 }
 
-export function substitutionTokensFromSubstitutionString(substitutionString, lexer) {
-  const substitutionContent = `${substitutionString}`,
-        substitutionTokens = tokensFromContentAndLexer(substitutionContent, lexer);
-
-  return substitutionTokens;
-}
-
 export function unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer) {
   const content = unqualifiedStatementString,  ///
         unqualifiedStatementTokens = tokensFromContentAndLexer(content, lexer);
@@ -58,6 +51,16 @@ export function statementTokensFromUnqualifiedStatementTokens(unqualifiedStateme
         statementTokens = frontUnqualifiedStatementTokens;  ///
 
   return statementTokens;
+}
+
+export function substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode(unqualifiedStatementTokens, substitutionNode) {
+  const lastSignificantTokenIndex = substitutionNode.getLastSignificantTokenIndex(unqualifiedStatementTokens),
+        firstSignificantTokenIndex = substitutionNode.getFirstSignificantTokenIndex(unqualifiedStatementTokens),
+        start = firstSignificantTokenIndex, ///
+        end = lastSignificantTokenIndex + 1,
+        substitutionTokens = unqualifiedStatementTokens.slice(start, end);
+
+  return substitutionTokens;
 }
 
 function tokensFromContentAndLexer(content, lexer = nominalLexer) {

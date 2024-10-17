@@ -8,8 +8,8 @@ import LocalContext from "./context/local";
 import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
+import { stringFromLabels } from "./topLevelAssertion";
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { labelsStringFromLabels } from "./topLevelAssertion";
 
 const proofNodeQuery = nodeQuery("/theorem/proof"),
       labelNodesQuery = nodesQuery("/theorem/label"),
@@ -20,9 +20,9 @@ export default class Theorem extends TopLevelAssertion {
   verify() {
     let verified = false;
 
-    const labelsString = labelsStringFromLabels(this.labels);
+    const theoremString = this.string;  ///
 
-    this.fileContext.trace(`Verifying the '${labelsString}' theorem...`);
+    this.fileContext.trace(`Verifying the '${theoremString}' theorem...`);
 
     const labelsVerifiedAtTopLevel = this.labels.every((label) => {
       const labelVVerifiedAtTopLevel = label.verifyAtTopLevel(this.fileContext);
@@ -61,7 +61,7 @@ export default class Theorem extends TopLevelAssertion {
     }
 
     if (verified) {
-      this.fileContext.debug(`...verified the '${labelsString}' theorem.`);
+      this.fileContext.debug(`...verified the '${theoremString}' theorem.`);
     }
 
     return verified;
@@ -85,8 +85,9 @@ export default class Theorem extends TopLevelAssertion {
             return supposition;
           }),
           consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
+          string = stringFromLabels(labels),
           proof = Proof.fromProofNode(proofNode, fileContext),
-          theorem = new Theorem(fileContext, labels, suppositions, consequent, proof);
+          theorem = new Theorem(fileContext, string, labels, suppositions, consequent, proof);
 
     return theorem;
   }

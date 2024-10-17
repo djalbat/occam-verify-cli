@@ -7,11 +7,14 @@ import Consequent from "./consequent";
 import Supposition from "./supposition";
 import Substitutions from "./substitutions";
 
+import { EMPTY_STRING } from "./constants";
+
 const { reverse, correlate } = arrayUtilities;
 
 export default class TopLevelAssertion {
-  constructor(fileContext, labels, suppositions, consequent, proof) {
+  constructor(fileContext, string, labels, suppositions, consequent, proof) {
     this.fileContext = fileContext;
+    this.string = string;
     this.labels = labels;
     this.suppositions = suppositions;
     this.consequent = consequent;
@@ -20,6 +23,10 @@ export default class TopLevelAssertion {
 
   getFileContext() {
     return this.fileContext;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getLabels() {
@@ -85,16 +92,8 @@ export default class TopLevelAssertion {
   }
 
   toJSON() {
-    const labelsJSON = this.labels.map((label) => {
-            const labelJSON = label.toJSON();
-
-            return labelJSON;
-          }),
-          suppositionsJSON = this.suppositions.map((supposition) => {
-            const suppositionJSON = supposition.toJSON();
-
-            return suppositionJSON;
-          }),
+    const labelsJSON = labelsToLabelJSON(this.labels),
+          suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           consequentJSON = this.consequent.toJSON(),
           labels = labelsJSON,  ///
           suppositions = suppositionsJSON,  ///
@@ -109,56 +108,89 @@ export default class TopLevelAssertion {
   }
 
   static fromJSON(Class, json, fileContext) {
-    let rule;
+    const labels = labelsFromJSON(json, fileContext),
+          suppositions = suppositionsFromJSON(json, fileContext),
+          consequent = consequentFromJSON(json, fileContext),
+          string = stringFromLabels(labels),
+          proof = null,
+          topLevelAssertion = new Class(fileContext, string, labels, suppositions, consequent, proof);
 
-    let { labels } = json;
-
-    const labelsJSON = labels;  ///
-
-    labels = labelsJSON.map((labelJSON) => {
-      const json = labelJSON, ///
-            label = Label.fromJSON(json, fileContext);
-
-      return label;
-    });
-
-    let { suppositions } = json;
-
-    const suppositionsJSON = suppositions;  ///
-
-    suppositions = suppositionsJSON.map((suppositionJSON) => {
-      const json = suppositionJSON, ///
-            supposition = Supposition.fromJSON(json, fileContext);
-
-      return supposition;
-    });
-
-    let { consequent } = json;
-
-    const consequentJSON = consequent;  ///
-
-    json = consequentJSON;  ///
-
-    consequent = Consequent.fromJSON(json, fileContext);
-
-    const proof = null;
-
-    rule = new Class(fileContext, labels, suppositions, consequent, proof);
-
-    return rule;
+    return topLevelAssertion;
   }
 }
 
-export function labelsStringFromLabels(labels) {
-  const labelsString = labels.reduce((labelsString, label) => {
+export function stringFromLabels(labels) {
+  const string = labels.reduce((string, label) => {
     const labelString = label.getString();
 
-    labelsString = (labelsString === null) ?
-                     labelString: ///
-                       `${labelString}, ${labelString}`;
+    string = (string === EMPTY_STRING) ?
+               labelString: ///
+                 `${labelString}, ${labelString}`;
 
-    return labelsString;
-  }, null);
+    return string;
+  }, EMPTY_STRING);
 
-  return labelsString;
+  return string;
+}
+
+export function labelsFromJSON(json, fileContext) {
+  let { labels } = json;
+
+  const labelsJSON = labels;  ///
+
+  labels = labelsJSON.map((labelJSON) => {
+    const json = labelJSON, ///
+          label = Label.fromJSON(json, fileContext);
+
+    return label;
+  });
+
+  return labels;
+}
+
+export function consequentFromJSON(json, fileContext) {
+  let { consequent } = json;
+
+  const consequentJSON = consequent;  ///
+
+  json = consequentJSON;  ///
+
+  consequent = Consequent.fromJSON(json, fileContext);
+
+  return consequent;
+}
+
+export function suppositionsFromJSON(json, fileContext) {
+  let { suppositions } = json;
+
+  const suppositionsJSON = suppositions;  ///
+
+  suppositions = suppositionsJSON.map((suppositionJSON) => {
+    const json = suppositionJSON, ///
+          supposition = Supposition.fromJSON(json, fileContext);
+
+    return supposition;
+  });
+
+  return suppositions;
+}
+
+export function labelsToLabelJSON(labels) {
+  const labelsJSON = labels.map((label) => {
+    const labelJSON = label.toJSON();
+
+    return labelJSON;
+  });
+
+  return labelsJSON;
+}
+
+export function suppositionsToSuppositionsJSON(suppositions) {
+  const suppositionsJSON = suppositions.map((supposition) => {
+    const suppositionJSON = supposition.toJSON();
+
+    return suppositionJSON;
+  });
+
+  return suppositionsJSON;
 }

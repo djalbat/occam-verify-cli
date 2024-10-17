@@ -1,7 +1,7 @@
 "use strict";
 
 import { nodeQuery } from "./utilities/query";
-import { stripBracketsFromTerm } from "./utilities/brackets";
+import { stripBracketsFromTermNode } from "./utilities/brackets";
 import { variableNameFromVariableNode } from "./utilities/name";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
@@ -83,7 +83,7 @@ export default class Equivalence {
   }
 
   matchTermNode(termNode) {
-    termNode = stripBracketsFromTerm(termNode); ///
+    termNode = stripBracketsFromTermNode(termNode); ///
 
     const termNodeMatches = this.terms.some((term) => {
       const termNodeMatches = term.matchTermNode(termNode);

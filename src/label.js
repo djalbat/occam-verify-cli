@@ -1,5 +1,6 @@
 "use strict";
 
+import LocalContext from "./context/local";
 import Metavariable from "./metavariable";
 
 import { nodeQuery } from "./utilities/query";
@@ -66,7 +67,8 @@ export default class Label {
 
   static fromLabelNode(labelNode, fileContext) {
     const metavariableNode = metavariableNodeQuery(labelNode),
-          metavariable = Metavariable.fromMetavariableNode(metavariableNode, fileContext),
+          localContext = LocalContext.fromFileContext(fileContext),
+          metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
           label = new Label(metavariable);
 
     return label;

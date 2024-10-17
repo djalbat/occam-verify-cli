@@ -41,14 +41,18 @@ class Frame {
   }
 
   getMetavariable() {
-    let metavariable;
+    let metavariable = null;
 
-    const metavariablesLength = this.metavariables.length;
+    const declarationsLength = this.declarations.length;
 
-    if (metavariablesLength === 1) {
-      const firstMetavariable = first(this.metavariables);
+    if (declarationsLength === 0) {
+      const metavariablesLength = this.metavariables.length;
 
-      metavariable = firstMetavariable; ///
+      if (metavariablesLength === 1) {
+        const firstMetavariable = first(this.metavariables);
+
+        metavariable = firstMetavariable; ///
+      }
     }
 
     return metavariable;
@@ -57,65 +61,91 @@ class Frame {
   getMetavariableNode() {
     let metavariableNode = null;
 
-    const declarationsLength = this.declarations.length;
+    const metavariable = this.getMetavariable();
 
-    if (declarationsLength === 0) {
-      const metavariablesLength = this.metavariables.length;
-
-      if (metavariablesLength === 1) {
-        const firstMetavariable = first(this.metavariables),
-              metavariable = firstMetavariable; ///
-
-        metavariableNode = metavariable.getNode();
-      }
+    if (metavariable !== null) {
+      metavariableNode = metavariable.getNode();
     }
 
     return metavariableNode;
   }
 
-  // matchMetavariableName(metavariableName) {
-  //   let metavariableNameMatches = false;
-  //
-  //   const metavariableNode = this.getMetavariableNode();
-  //
-  //   if (metavariableNode !== null) {
-  //     const name = metavariableName;  ///
-  //
-  //     metavariableName = metavariableNameFromMetavariableNode(metavariableNode);  ///
-  //
-  //     const nameMatchesMetavariableName = (name === metavariableName);
-  //
-  //     metavariableNameMatches = nameMatchesMetavariableName;  ///
-  //   }
-  //
-  //   return metavariableNameMatches;
-  // }
-  //
-  // unifySubstitution(substitution) {
-  //   const substitutionUnified = this.declarations.some((declaration) => {
-  //     const substitutionUnifiedWithDeclaration = declaration.unifySubstitution(substitution);
-  //
-  //     if (substitutionUnifiedWithDeclaration) {
-  //       return true;
-  //     }
-  //   });
-  //
-  //   return substitutionUnified;
-  // }
-  //
-  // unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) {
-  //   const substitutions = metaLemmaMetatheorem.getSubstitutions(),
-  //         substitutionsUnified = substitutions.everySubstitution((substitution) => {
-  //           const substitutionUnified = this.unifySubstitution(substitution);
-  //
-  //           if (substitutionUnified) {
-  //             return true;
-  //           }
-  //         }),
-  //         metaLemmaOrMetaTheoremUnified = substitutionsUnified; ///
-  //
-  //   return metaLemmaOrMetaTheoremUnified;
-  // }
+  matchFrameNode(frameNode) {
+    const frameNodeMatches = this.node.match(frameNode);
+
+    return frameNodeMatches;
+  }
+
+  matchMetavariableName(metavariableName) {
+    let metavariableNameMatches = false;
+
+    const metavariable = this.getMetavariable();
+
+    if (metavariable !== null) {
+      metavariableNameMatches = metavariable.matchMetavariableName(metavariableName);
+    }
+
+    return metavariableNameMatches;
+  }
+
+  unifySubstitution(substitution, localContext) {
+    let substitutionUnified = false;
+
+    const substitutionString = substitution.getString();
+
+    localContext.trace(`Unifying the '${substitutionString}' substitution...`)
+
+    if (!substitutionUnified) {
+      substitutionUnified = this.declarations.some((declaration) => {
+        const substitutionUnified = declaration.unifySubstitution(substitution, localContext);
+
+        if (substitutionUnified) {
+          return true;
+        }
+      });
+    }
+
+    if (!substitutionUnified) {
+      substitutionUnified = this.metavariables.some((metavariable) => {
+        const substitutionUnified = metavariable.unifySubstitution(substitution, localContext);
+
+        if (substitutionUnified) {
+          return true;
+        }
+      });
+    }
+
+    if (substitutionUnified) {
+      localContext.debug(`...unified the '${substitutionString}' substitution...`)
+    }
+
+    return substitutionUnified;
+  }
+
+  unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, localContext) {
+    let metaLemmaOrMetaTheoremUnified;
+
+    const metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
+
+    localContext.trace(`Unifying the '${metaLemmaMetatheoremString}' metatheorem or meta-lemma...`);
+
+    const substitutions = metaLemmaMetatheorem.getSubstitutions(),
+          substitutionsUnified = substitutions.everySubstitution((substitution) => {
+            const substitutionUnified = this.unifySubstitution(substitution, localContext);
+
+            if (substitutionUnified) {
+              return true;
+            }
+          });
+
+    metaLemmaOrMetaTheoremUnified = substitutionsUnified; ///
+
+    if (metaLemmaOrMetaTheoremUnified) {
+      localContext.debug(`...unified the '${metaLemmaMetatheoremString}' metatheorem or meta-lemma.`);
+    }
+
+    return metaLemmaOrMetaTheoremUnified;
+  }
 
   verify(assignments, stated, localContext) {
     let verified;
@@ -124,17 +154,30 @@ class Frame {
 
     localContext.trace(`Verifying the '${frameString}' frame...`);
 
-    let verifiedWhenStated = false,
-        verifiedWhenDerived = false;
+    const declarationsVerified = this.declarations.every((declaration) => {
+            const declarationVerified = declaration.verify(assignments, stated, localContext);
 
-    if (stated) {
-      verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
-    } else {
-      verifiedWhenDerived = this.verifyWhenDerived(assignments, localContext);
-    }
+            return declarationVerified;
+          }),
+          metavariablesVerified = this.metavariables.every((metavariable) => {
+            const metavariableVerified = metavariable.verify(localContext);
 
-    if (verifiedWhenStated || verifiedWhenDerived) {
-      verified = true;
+            return metavariableVerified;
+          });
+
+    if (declarationsVerified && metavariablesVerified) {
+      let verifiedWhenStated = false,
+          verifiedWhenDerived = false;
+
+      if (stated) {
+        verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+      } else {
+        verifiedWhenDerived = this.verifyWhenDerived(assignments, localContext);
+      }
+
+      if (verifiedWhenStated || verifiedWhenDerived) {
+        verified = true;
+      }
     }
 
     if (verified) {
@@ -157,11 +200,7 @@ class Frame {
       const metavariablesLength = this.metavariables.length;
 
       if (metavariablesLength === 1) {
-        const firstMetavariable = first(this.metavariables),
-              metavariable = firstMetavariable, ///
-              metavariableVerified = metavariable.verify(localContext);
-
-        verifiedWhenStated = metavariableVerified;  ///
+        verifiedWhenStated = true;
       } else {
         localContext.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
       }
@@ -184,21 +223,7 @@ class Frame {
 
     localContext.trace(`Verifying the '${frameString}' frame when derived...`);
 
-    const declarationsVerified = this.declarations.every((declaration) => {
-      const declarationVerified = declaration.verify(assignments, stated, localContext);
-
-      return declarationVerified;
-    });
-
-    if (declarationsVerified) {
-      const metavariablesVerified = this.metavariables.every((metavariable) => {
-        const metavariableVerified = metavariable.verify(localContext);
-
-        return metavariableVerified;
-      });
-
-      verifiedWhenDerived = metavariablesVerified; ///
-    }
+    verifiedWhenDerived = true;
 
     if (verifiedWhenDerived) {
       localContext.debug(`...verified the '${frameString}' frame when derived.`);

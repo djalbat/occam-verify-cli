@@ -96,12 +96,12 @@ export default class Judgement {
     localContext.trace(`Verifying the '${judgementString}' judgement when derived...`);
 
     const reference = this.declaration.getReference(),
-          metatheorem = localContext.findMetatheoremByReference(reference),
           metaLemma = localContext.findMetaLemmaByReference(reference),
+          metatheorem = localContext.findMetatheoremByReference(reference),
           metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
 
     if (metaLemmaMetatheorem !== null) {
-      const metaLemmaMetatheoremUnified = this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem);
+      const metaLemmaMetatheoremUnified = this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, localContext);
 
       verifiedWhenDerived = metaLemmaMetatheoremUnified; ///
     }

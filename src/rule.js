@@ -9,6 +9,7 @@ import Conclusion from "./conclusion";
 import LocalContext from "./context/local";
 import Substitutions from "./substitutions";
 
+import { stringFromLabels } from "./topLevelAssertion";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 
 const { reverse, correlate } = arrayUtilities;
@@ -19,8 +20,9 @@ const proofNodeQuery = nodeQuery("/rule/proof"),
       conclusionNodeQuery = nodeQuery("/rule/conclusion");
 
 export default class Rule {
-  constructor(fileContext, labels, premises, conclusion, proof) {
+  constructor(fileContext, string, labels, premises, conclusion, proof) {
     this.fileContext = fileContext;
+    this.string = string;
     this.labels = labels;
     this.premises = premises;
     this.conclusion = conclusion;
@@ -29,6 +31,10 @@ export default class Rule {
 
   getFileContext() {
     return this.fileContext;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getLabels() {
@@ -108,9 +114,9 @@ export default class Rule {
   verify() {
     let verified = false;
 
-    const labelsString = labelsStringFromLabels(this.labels);
+    const ruleString = this.string; ///
 
-    this.fileContext.trace(`Verifying the '${labelsString}' rule...`);
+    this.fileContext.trace(`Verifying the '${ruleString}' rule...`);
 
     const labelsVerifiedAtTopLevel = this.labels.every((label) => {
       const labelVVerifiedAtTopLevel = label.verifyAtTopLevel(this.fileContext);
@@ -154,7 +160,7 @@ export default class Rule {
     }
 
     if (verified) {
-      this.fileContext.debug(`...verified the '${labelsString}' rule.`);
+      this.fileContext.debug(`...verified the '${ruleString}' rule.`);
     }
 
     return verified;
@@ -217,9 +223,10 @@ export default class Rule {
 
     conclusion = Conclusion.fromJSON(json, fileContext);
 
-    const proof = null;
+    const proof = null,
+          string = stringFromLabels(labels);
 
-    rule = new Rule(fileContext, labels, premises, conclusion, proof);
+    rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
 
     return rule;
   }
@@ -240,19 +247,10 @@ export default class Rule {
             return premise;
           }),
           conclusion = Conclusion.fromConclusionNode(conclusionNode, fileContext),
+          string = stringFromLabels(labels),
           proof = Proof.fromProofNode(proofNode, fileContext),
-          rule = new Rule(fileContext, labels, premises, conclusion, proof);
+          rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
 
     return rule;
   }
-}
-
-function labelsStringFromLabels(labels) {
-  const labelsString = labels.map((label) => {
-          const labelString = label.getString();
-
-          return labelString;
-        });
-
-  return labelsString;
 }

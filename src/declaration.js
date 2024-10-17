@@ -4,6 +4,7 @@ import shim from "./shim";
 import Reference from "./reference";
 
 import { nodeQuery } from "./utilities/query";
+import { stripBracketsFromStatementNode } from "./utilities/brackets";
 
 const referenceNodeQuery = nodeQuery("/declaration/reference"),
       statementNodeQuery = nodeQuery("/declaration/statement");
@@ -27,47 +28,70 @@ export default class Declaration {
     return this.statement;
   }
 
-  // unifyStatement(statementNode) {
-  //   statementNode = stripBracketsFromStatement(statementNode); ///
-  //
-  //   const statementNodeMatches = this.statementNode.match(statementNode),
-  //         statementUnified = statementNodeMatches;  ///
-  //
-  //   return statementUnified;
-  // }
-  //
-  // unifySubstitution(substitution) {
-  //   const statementNode = substitution.getStatementNode(),
-  //         metavariableNode = substitution.getMetavariableNode(),
-  //         statementUnified = this.unifyStatement(statementNode),
-  //         metavariableUnified = this.unifyMetavariable(metavariableNode),
-  //         substitutionUnified = (metavariableUnified && statementUnified);
-  //
-  //   return substitutionUnified;
-  // }
-  //
-  // unifyMetavariable(metavariable) {
-  //   const metavariableNodeMatches = this.reference.matchMetavariableNode(metavariable);
-  //
-  //   return metavariableNodeMatches;
-  // }
-  //
-  // unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem) {
-  //   const consequent = metaLemmaMetatheorem.getConsequent(),
-  //         statementNode = consequent.getStatementNode(),
-  //         statementNodeMatches = this.statementNode.match(statementNode),
-  //         metaLemmaOrMetaTheoremUnified = statementNodeMatches;  ///
-  //
-  //   return metaLemmaOrMetaTheoremUnified;
-  // }
-  //
-  // static fromReferenceAndStatementNode(reference, statementNode) {
-  //   statementNode = stripBracketsFromStatement(statementNode); ///
-  //
-  //   const declaration = new Declaration(reference, statementNode);
-  //
-  //   return declaration;
-  // }
+  unifyStatement(statement, localContext) {
+    let statementUnified;
+
+    const statementString = statement.getString(),
+          declarationStatementString = this.statement.getString(); ///
+
+    localContext.trace(`Unifying the '${statementString}' statement with the '${declarationStatementString}' statement...`);
+
+    let statementNode = statement.getNode();
+
+    statementNode = stripBracketsFromStatementNode(statementNode); ///
+
+    const statementNodeMatches = this.statement.matchStatementNode(statementNode);
+
+    statementUnified = statementNodeMatches;  ///
+
+    if (statementUnified) {
+      localContext.debug(`...unified the '${statementString}' statement with the '${declarationStatementString}' statement.`);
+    }
+
+    return statementUnified;
+  }
+
+  unifyMetavariable(metavariable, localContext) {
+    let metavariableUnified;
+
+    const referenceString = this.reference.getString(),
+          metavariableString = metavariable.getString();
+
+    localContext.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
+
+    const metavariableNode = metavariable.getNode(),
+          metavariableNodeMatches = this.reference.matchMetavariableNode(metavariableNode);
+
+    metavariableUnified = metavariableNodeMatches;  ///
+
+    if (metavariableUnified) {
+      localContext.debug(`...unified the '${metavariableString}' metavariable with the '${referenceString}' reference.`);
+    }
+
+    return metavariableUnified;
+  }
+
+  unifySubstitution(substitution, localContext) {
+    let substitutionUnified;
+
+    const declarationString = this.string,  ///
+          substitutionString = substitution.getString();
+
+    localContext.trace(`Unifying the '${substitutionString}' substitution with the '${declarationString}' declaration...`);
+
+    const statement = substitution.getStatement(),
+          metavariable = substitution.getMetavariable(),
+          statementUnified = this.unifyStatement(statement, localContext),
+          metavariableUnified = this.unifyMetavariable(metavariable, localContext);
+
+    substitutionUnified = (metavariableUnified && statementUnified);
+
+    if (substitutionUnified) {
+      localContext.debug(`...unified the '${declarationString}' substitution with the '${substitutionString}' declaration.`);
+    }
+
+    return substitutionUnified;
+  }
 
   verify(assignments, stated, localContext) {
     let verified;
@@ -100,9 +124,13 @@ export default class Declaration {
 
     if (declarationNode !== null) {
       const { Statement } = shim,
-            referenceNode = referenceNodeQuery(declarationNode),
-            statementNode = statementNodeQuery(declarationNode),
-            reference = Reference.fromReferenceNode(referenceNode, localContext),
+            referenceNode = referenceNodeQuery(declarationNode);
+
+      let statementNode = statementNodeQuery(declarationNode);
+
+      statementNode = stripBracketsFromStatementNode(statementNode);  ///
+
+      const reference = Reference.fromReferenceNode(referenceNode, localContext),
             statement = Statement.fromStatementNode(statementNode, localContext),
             node = declarationNode,  ///
             string = localContext.nodeAsString(node);
