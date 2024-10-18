@@ -121,19 +121,16 @@ export function unqualifiedStatementFromJSON(json, fileContext) {
   return unqualifiedStatement;
 }
 
-export function typesFromJSON(json, fileContext) {
-  let { types } = json;
+export function typesFromJSON(json, types, fileContext) {
+  const { types: typesJSON } = json;
 
-  const typesJSON = types; ///
-        types = typesJSON.map((typeJSON) => {
-          const { Type } = shim,
-                json = typeJSON,  ///
-                type = Type.fromJSON(json, fileContext);
+  typesJSON.forEach((typeJSON) => {
+    const { Type } = shim,
+          json = typeJSON,  ///
+          type = Type.fromJSON(json, fileContext);
 
-          return (type);
-        });
-
-  return types;
+    types.push(type);
+  });
 }
 
 export function rulesFromJSON(json, fileContext) {
@@ -342,7 +339,7 @@ export function lemmasFromNothing() {
 }
 
 export function metaLemmasFromNothing() {
-  const metaLemmas =[];
+  const metaLemmas = [];
 
   return metaLemmas;
 }
