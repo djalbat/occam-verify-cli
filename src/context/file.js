@@ -706,7 +706,7 @@ export default class FileContext {
 
     this.types = [];
 
-    typesFromJSON(json, this.types, fileContext); ///
+    typesFromJSON(json, this.types, fileContext);
 
     this.rules = rulesFromJSON(json, fileContext);
 
@@ -793,18 +793,18 @@ export default class FileContext {
           content = fileContent,  ////
           tokens = lexer.tokenise(content),
           node = parser.parse(tokens),
-          types = null,
-          rules = null,
-          axioms = null,
-          lemmas = null,
-          theorems = null,
-          variables = null,
-          metaLemmas = null,
-          conjectures = null,
-          combinators = null,
-          constructors = null,
-          metatheorems = null,
-          metavariables = null,
+          types = [],
+          rules = [],
+          axioms = [],
+          lemmas = [],
+          theorems = [],
+          variables = [],
+          metaLemmas = [],
+          conjectures = [],
+          combinators = [],
+          constructors = [],
+          metatheorems = [],
+          metavariables = [],
           fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
 
     return fileContext;
