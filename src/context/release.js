@@ -400,7 +400,7 @@ export default class ReleaseContext {
     clear(this.fileContexts);
 
     released ?
-      fileContextsFromJSONAndEntries(this.json, this.entries, this.fileContexts, releaseContext) :
+      fileContextsFromJSON(this.json, this.fileContexts, releaseContext) :
         fileContextsFromEntries(this.entries, this.fileContexts, releaseContext);
 
     this.initialised = true;
@@ -448,14 +448,13 @@ export default class ReleaseContext {
   }
 }
 
-function fileContextsFromJSONAndEntries(json, entries, fileContexts, releaseContext) {
+function fileContextsFromJSON(json,fileContexts, releaseContext) {
   const fileContextsJSON = json;  ///
 
   fileContextsJSON.forEach((fileContextJSON) => {
     const { filePath } = fileContextJSON,
-          file = entries.findFile(filePath),
           json = fileContextJSON, ///
-          fileContext = FileContext.fromFileAndJSON(file, json, releaseContext);
+          fileContext = FileContext.fromFilePathAndJSON(filePath, json, releaseContext);
 
     fileContexts.push(fileContext);
   });

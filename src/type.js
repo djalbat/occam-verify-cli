@@ -210,13 +210,11 @@ class Type {
 function stringFromTypeNameAndSuperType(typeName, superType) {
   let string = typeName;  ///
 
-  if (superType !== null) {
-    if (superType !== objectType) {
-      const typeString = string,  ///
-            superTypeName = superType.getName();
+  if ((superType !== null) && (superType !== objectType)) {
+    const typeString = string,  ///
+          superTypeName = superType.getName();
 
-      string = `${typeString}:${superTypeName}`;
-    }
+    string = `${typeString}:${superTypeName}`;
   }
 
   return string;

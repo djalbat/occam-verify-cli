@@ -335,6 +335,18 @@ export function metavariablesFromJSON(json, fileContext) {
   return metavariables;
 }
 
+export function lemmasFromNothing() {
+  const lemmas = [];
+
+  return lemmas;
+}
+
+export function metaLemmasFromNothing() {
+  const metaLemmas =[];
+
+  return metaLemmas;
+}
+
 export function termToTermJSON(term) {
   const termJSON = term.toJSON();
 

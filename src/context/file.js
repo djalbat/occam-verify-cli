@@ -15,6 +15,8 @@ import { typesFromJSON,
          constructorsFromJSON,
          metatheoremsFromJSON,
          metavariablesFromJSON,
+         lemmasFromNothing,
+         metaLemmasFromNothing,
          typesToTypesJSON,
          rulesToRulesJSON,
          axiomsToAxiomsJSON,
@@ -708,9 +710,13 @@ export default class FileContext {
 
     this.axioms = axiomsFromJSON(json, fileContext);
 
+    this.lemmas = lemmasFromNothing();
+
     this.theorems = theoremsFromJSON(json, fileContext);
 
     this.variables = variablesFromJSON(json, fileContext);
+
+    this.metaLemmas = metaLemmasFromNothing();
 
     this.conjectures = conjecturesFromJSON(json, fileContext);
 
@@ -739,8 +745,7 @@ export default class FileContext {
   }
 
   toJSON() {
-    const filePath =  this.filePath,
-          typesJSON = typesToTypesJSON(this.types),
+    const typesJSON = typesToTypesJSON(this.types),
           rulesJSON = rulesToRulesJSON(this.rules),
           axiomsJSON = axiomsToAxiomsJSON(this.axioms),
           theoremsJSON = theoremsToTheoremsJSON(this.theorems),
@@ -750,6 +755,7 @@ export default class FileContext {
           constructorsJSON = constructorsToConstructorsJSON(this.constructors),
           metatheoremsJSON = metatheoremsToMetatheoremsJSON(this.metatheorems),
           metavariablesJSON = metavariablesToMetavariablesJSON(this.metavariables),
+          filePath = this.filePath,
           types = typesJSON,  ///
           rules = rulesJSON,  ///
           axioms = axiomsJSON,  ///
@@ -802,17 +808,16 @@ export default class FileContext {
     return fileContext;
   }
 
-  static fromFileAndJSON(file, json, releaseContext) {
-    const filePath = file.getPath(),
-          tokens = null,
+  static fromFilePathAndJSON(filePath, json, releaseContext) {
+    const tokens = null,
           node = null,
           types = null,
           rules = null,
           axioms = null,
-          lemmas = [],
+          lemmas = null,
           theorems = null,
           variables = null,
-          metaLemmas = [],
+          metaLemmas = null,
           conjectures = null,
           combinators = null,
           constructors = null,
