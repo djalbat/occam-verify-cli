@@ -1,6 +1,8 @@
 "use strict";
 
-export default class Substitution {
+import shim from "./shim";
+
+class Substitution {
   constructor(string) {
     this.string = string;
   }
@@ -118,3 +120,9 @@ export default class Substitution {
     return unifiedWithEquivalences;
   }
 }
+
+Object.assign(shim, {
+  Substitution
+});
+
+export default Substitution;

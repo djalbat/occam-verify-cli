@@ -7,10 +7,11 @@ import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
+import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
 
 const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement");
 
-export default class Premise {
+class Premise {
   constructor(fileContext, unqualifiedStatement) {
     this.fileContext = fileContext;
     this.unqualifiedStatement = unqualifiedStatement;
@@ -144,7 +145,7 @@ export default class Premise {
   }
 
   toJSON() {
-    const unqualifiedStatementJSON = this.unqualifiedStatement.toJSON(),
+    const unqualifiedStatementJSON = unqualifiedStatementToUnqualifiedStatementJSON(this.unqualifiedStatement),
           unqualifiedStatement = unqualifiedStatementJSON,  ///
           json = {
             unqualifiedStatement
@@ -154,13 +155,8 @@ export default class Premise {
   }
 
   static fromJSON(json, fileContext) {
-    let { unqualifiedStatement } = json;
-
-    json = unqualifiedStatement;  ///
-
-    unqualifiedStatement = UnqualifiedStatement.fromJSON(json, fileContext);
-
-    const premise = new Premise(fileContext, unqualifiedStatement);
+    const unqualifiedStatement = unqualifiedStatementFromJSON(json, fileContext),
+          premise = new Premise(fileContext, unqualifiedStatement);
 
     return premise;
   }
@@ -173,3 +169,9 @@ export default class Premise {
     return premise
   }
 }
+
+Object.assign(shim, {
+  Premise
+});
+
+export default Premise;

@@ -222,9 +222,9 @@ class Statement {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          statementString = string, ///
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
+          statementString = string, ///
           unqualifiedStatementString = unqualifiedStatementStringFromStatementString(statementString),
           unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
           unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),

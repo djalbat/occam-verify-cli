@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "./shim";
 import Label from "./label";
 import Proof from "./proof";
 import Consequent from "./consequent";
@@ -16,7 +17,7 @@ const proofNodeQuery = nodeQuery("/theorem/proof"),
       consequentNodeQuery = nodeQuery("/theorem/consequent"),
       suppositionNodesQuery = nodesQuery("/theorem/supposition");
 
-export default class Theorem extends TopLevelAssertion {
+class Theorem extends TopLevelAssertion {
   verify() {
     let verified = false;
 
@@ -92,3 +93,9 @@ export default class Theorem extends TopLevelAssertion {
     return theorem;
   }
 }
+
+Object.assign(shim, {
+  Theorem
+});
+
+export default Theorem;

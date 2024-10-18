@@ -7,6 +7,7 @@ import TermForVariableSubstitution from "./substitution/termForVariable";
 import { nodeQuery } from "./utilities/query";
 import { objectType } from "./type";
 import { variableNameFromVariableNode} from "./utilities/name";
+import { typeFromJSON, typeToTypeJSON } from "./utilities/json";
 import { variableNodeFromVariableString } from "./utilities/node";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
@@ -184,12 +185,12 @@ class Variable {
   }
 
   toJSON() {
-    const typeJSON = this.type.toJSON(),
+    const typeJSON = typeToTypeJSON(this.type),
           string = this.string,
           type = typeJSON,  ///
           json = {
-            string,
-            type
+            type,
+            string
           };
 
     return json;
@@ -278,17 +279,6 @@ Object.assign(shim, {
 });
 
 export default Variable;
-
-function typeFromJSON(json, fileContext) {
-  let { type } = json;
-
-  const { name } = type,
-        typeName = name;  ///
-
-  type = fileContext.findTypeByTypeName(typeName);
-
-  return type;
-}
 
 function termVariableFromTermNode(termNode, localContext) {
   let termVariable = null;

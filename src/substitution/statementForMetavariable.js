@@ -7,6 +7,7 @@ import Substitutions from "../substitutions";
 import metaLevelUnifier from "../unifier/metaLevel";
 
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
+import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default class StatementForMetavariableSubstitution extends Substitution {
   constructor(string, statement, metavariable, substitution) {
@@ -151,6 +152,31 @@ export default class StatementForMetavariableSubstitution extends Substitution {
           metavariableNameAndSubstitutionNodeMatches = (metavariableNameMatches && substitutionNodeMatches);
 
     return metavariableNameAndSubstitutionNodeMatches;
+  }
+
+  toJSON() {
+    const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
+          statementJSON = statementToStatementJSON(this.statement),
+          metavariable = metavariableJSON,  ///
+          statement = statementJSON,  ///
+          string = this.string,
+          json = {
+            string,
+            statement,
+            metavariable
+          };
+
+    return json;
+  }
+
+  static fromJSON(json, fileContext) {
+    const { string } = json,
+          statement = statementFromJSON(json, fileContext),
+          metavariable = metavariableFromJSON(json, fileContext),
+          substitution = null,  ///
+          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, statement, metavariable, substitution);
+
+    return statementForMetavariableSubstitution;
   }
 
   static fromStatementAndMetavariable(statement, metavariable, localContext) {

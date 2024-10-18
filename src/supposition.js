@@ -7,10 +7,11 @@ import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
+import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
 
 const unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement");
 
-export default class Supposition {
+class Supposition {
   constructor(fileContext, unqualifiedStatement) {
     this.fileContext = fileContext;
     this.unqualifiedStatement = unqualifiedStatement;
@@ -137,7 +138,7 @@ export default class Supposition {
   }
 
   toJSON() {
-    const unqualifiedStatementJSON = this.unqualifiedStatement.toJSON(),
+    const unqualifiedStatementJSON = unqualifiedStatementToUnqualifiedStatementJSON(this.unqualifiedStatement),
           unqualifiedStatement = unqualifiedStatementJSON,  ///
           json = {
             unqualifiedStatement
@@ -147,13 +148,8 @@ export default class Supposition {
   }
 
   static fromJSON(json, fileContext) {
-    let { unqualifiedStatement } = json;
-
-    json = unqualifiedStatement;  ///
-
-    unqualifiedStatement = UnqualifiedStatement.fromJSON(json, fileContext);
-
-    const supposition = new Supposition(fileContext, unqualifiedStatement);
+    const unqualifiedStatement = unqualifiedStatementFromJSON(json, fileContext),
+          supposition = new Supposition(fileContext, unqualifiedStatement);
 
     return supposition;
   }
@@ -166,3 +162,9 @@ export default class Supposition {
     return supposition
   }
 }
+
+Object.assign(shim, {
+  Supposition
+});
+
+export default Supposition;

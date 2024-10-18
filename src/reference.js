@@ -5,6 +5,7 @@ import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
 import { referenceMetaType } from "./metaType";
+import { metavariableFromJSON, metavariableToMetavariableJSON } from "./utilities/json";
 
 const metavariableNodeQuery = nodeQuery("//reference/metavariable");
 
@@ -47,7 +48,7 @@ export default class Reference {
   }
 
   toJSON() {
-    const metavariableJSON = this.metavariable.toJSON(),
+    const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
           metavariable = metavariableJSON,  ///
           string = this.string,
           json = {
@@ -59,15 +60,8 @@ export default class Reference {
   }
 
   static fromJSON(json, fileContext) {
-    const { string } = json;
-
-    let { metavariable } = json;
-
-    json = metavariable;  ///
-
-    metavariable = Metavariable.fromJSON(json, fileContext);
-
-    const reference = new Reference(string, metavariable);
+    const metavariable = metavariableFromJSON(json, fileContext),
+          reference = new Reference(string, metavariable);
 
     return reference;
   }

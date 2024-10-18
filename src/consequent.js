@@ -1,13 +1,15 @@
 "use strict";
 
+import shim from "./shim";
 import LocalContext from "./context/local";
 import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
+import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
 
 const unqualifiedStatementNodeQuery = nodeQuery("/consequent/unqualifiedStatement");
 
-export default class Consequent {
+class Consequent {
   constructor(fileContext, unqualifiedStatement) {
     this.fileContext = fileContext;
     this.unqualifiedStatement = unqualifiedStatement;
@@ -71,7 +73,7 @@ export default class Consequent {
   }
 
   toJSON() {
-    const unqualifiedStatementJSON = this.unqualifiedStatement.toJSON(),
+    const unqualifiedStatementJSON = unqualifiedStatementToUnqualifiedStatementJSON(this.unqualifiedStatement),
           unqualifiedStatement = unqualifiedStatementJSON,  ///
           json = {
             unqualifiedStatement
@@ -81,13 +83,8 @@ export default class Consequent {
   }
 
   static fromJSON(json, fileContext) {
-    let { unqualifiedStatement } = json;
-
-    json = unqualifiedStatement;  ///
-
-    unqualifiedStatement = UnqualifiedStatement.fromJSON(json, fileContext);
-
-    const consequent = new Consequent(fileContext, unqualifiedStatement);
+    const unqualifiedStatement = unqualifiedStatementFromJSON(json, fileContext),
+          consequent = new Consequent(fileContext, unqualifiedStatement);
 
     return consequent;
   }
@@ -100,3 +97,9 @@ export default class Consequent {
     return consequent;
   }
 }
+
+Object.assign(shim, {
+  Consequent
+});
+
+export default Consequent;

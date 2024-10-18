@@ -9,8 +9,8 @@ import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { EMPTY_STRING } from "./constants";
+import { stringFromLabels } from "./topLevelAssertion";
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { stringFromLabels, labelsToLabelJSON, suppositionsToSuppositionsJSON } from "./topLevelAssertion";
 
 const proofNodeQuery = nodeQuery("/metaLemma/proof"),
       labelNodesQuery = nodesQuery("/metaLemma/label"),
@@ -81,25 +81,6 @@ export default class MetaLemma extends TopLevelAssertion {
     return verified;
   }
 
-  toJSON() {
-    const labelsJSON = labelsToLabelJSON(this.labels),
-          suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
-          consequentJSON = this.consequent.toJSON(),
-          substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
-          labels = labelsJSON,  ///
-          suppositions = suppositionsJSON,  ///
-          consequent = consequentJSON,  ///
-          substitutions = substitutionsJSON,  ///
-          json = {
-            labels,
-            suppositions,
-            consequent,
-            substitutions
-          };
-
-    return json;
-  }
-
   static fromMetaLemmaNode(metaLemmaNode, fileContext) {
     const proofNode = proofNodeQuery(metaLemmaNode),
           labelNodes = labelNodesQuery(metaLemmaNode),
@@ -125,12 +106,3 @@ export default class MetaLemma extends TopLevelAssertion {
   }
 }
 
-export function substitutionsToSubstitutionsJSON(substitutions) {
-  const substitutionsJSON = substitutions.map((substitution) => {
-    const substitutionJSON = substitution.toJSON();
-
-    return substitutionJSON;
-  });
-
-  return substitutionsJSON;
-}

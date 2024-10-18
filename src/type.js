@@ -5,6 +5,7 @@ import shim from "./shim";
 import { nodeQuery } from "./utilities/query";
 import { OBJECT_TYPE_NAME } from "./typeNames";
 import { typeNameFromTypeNode } from "./utilities/name";
+import { superTypeFromJSON, superTypeToSuperTypeJSON } from "./utilities/json";
 
 const typeNodeQuery = nodeQuery("/typeDeclaration/type[0]"),
       superTypeNodeQuery = nodeQuery("/typeDeclaration/type[1]");
@@ -155,9 +156,9 @@ class Type {
   }
 
   toJSON() {
-    const superTypeJSON = this.superType.toJSON(),
-          name = this.name,
+    const superTypeJSON = superTypeToSuperTypeJSON(this.superType),
           superType = superTypeJSON,  ///
+          name = this.name,
           json = {
             name,
             superType
@@ -229,8 +230,8 @@ export default Type;
 
 class ObjectType extends Type {
   toJSON() {
-    const name = this.name,
-          superType = null,
+    const superType = null,
+          name = this.name,
           json = {
             name,
             superType
@@ -250,19 +251,3 @@ class ObjectType extends Type {
 }
 
 export const objectType = ObjectType.fromNothing();
-
-function superTypeFromJSON(json, fileContext) {
-  let { superType } = json;
-
-  const superTypeJSON = superType;  ///
-
-  json = superTypeJSON; ///
-
-  const { name } = json,
-        typeName = name,  ///
-        type = fileContext.findTypeByTypeName(typeName);
-
-  superType = type; ///
-
-  return superType;
-}

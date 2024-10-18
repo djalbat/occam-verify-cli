@@ -7,12 +7,13 @@ import LocalContext from "../context/local";
 
 import { trim } from "../utilities/string";
 import { nodeQuery } from "../utilities/query";
+import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
 const { reverse } = arrayUtilities;
 
 const statementNodeQuery = nodeQuery("/unqualifiedStatement/statement");
 
-export default class UnqualifiedStatement {
+class UnqualifiedStatement {
   constructor(string, statement) {
     this.string = string;
     this.statement = statement;
@@ -93,7 +94,7 @@ export default class UnqualifiedStatement {
   }
 
   toJSON() {
-    const statementJSON = this.statement.toJSON(),
+    const statementJSON = statementToStatementJSON(this.statement),
           statement = statementJSON,  ///
           string = this.string, ///
           json = {
@@ -105,15 +106,8 @@ export default class UnqualifiedStatement {
   }
 
   static fromJSON(json, fileContext) {
-    const { Statement } = shim;
-
-    let { statement } = json;
-
-    json = statement; ///
-
-    statement = Statement.fromJSON(json, fileContext);
-
     const { string } = json,
+          statement = statementFromJSON(json, fileContext),
           unqualifiedStatement = new UnqualifiedStatement(string, statement);
 
     return unqualifiedStatement;
@@ -141,3 +135,9 @@ export default class UnqualifiedStatement {
     return unqualifiedStatement;
   }
 }
+
+Object.assign(shim, {
+  UnqualifiedStatement
+});
+
+export default UnqualifiedStatement;

@@ -1,29 +1,31 @@
 "use strict";
 
+import shim from "./shim";
 import Label from "./label";
 import Proof from "./proof";
 import Consequent from "./consequent";
 import Supposition from "./supposition";
 import LocalContext from "./context/local";
-import Substitution from "./substitution";
 import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import { substitutionsToSubstitutionsJSON } from "./metaLemma";
+import { stringFromLabels } from "./topLevelAssertion";
 import { labelsFromJSON,
-         stringFromLabels,
-         labelsToLabelJSON,
+         labelsToLabelsJSON,
          consequentFromJSON,
          suppositionsFromJSON,
-         suppositionsToSuppositionsJSON } from "./topLevelAssertion";
+         substitutionsFromJSON,
+         consequentToConsequentJSON,
+         suppositionsToSuppositionsJSON,
+         substitutionsToSubstitutionsJSON } from "./utilities/json";
 
 const proofNodeQuery = nodeQuery("/metatheorem/proof"),
       labelNodesQuery = nodesQuery("/metatheorem/label"),
       consequentNodeQuery = nodeQuery("/metatheorem/consequent"),
       suppositionNodesQuery = nodesQuery("/metatheorem/supposition");
 
-export default class Metatheorem extends TopLevelAssertion {
+class Metatheorem extends TopLevelAssertion {
   constructor(fileContext, string, labels, suppositions, consequent, proof, substitutions) {
     super(fileContext, string, labels, suppositions, consequent, proof);
 
@@ -84,29 +86,28 @@ export default class Metatheorem extends TopLevelAssertion {
   }
 
   toJSON() {
-    const labelsJSON = labelsToLabelJSON(this.labels),
+    const labelsJSON = labelsToLabelsJSON(this.labels),
+          consequentJSON = consequentToConsequentJSON(this.consequent),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
-          consequentJSON = this.consequent.toJSON(),
           substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
           labels = labelsJSON,  ///
-          suppositions = suppositionsJSON,  ///
           consequent = consequentJSON,  ///
+          suppositions = suppositionsJSON,  ///
           substitutions = substitutionsJSON,  ///
           json = {
             labels,
-            suppositions,
             consequent,
+            suppositions,
             substitutions
           };
 
     return json;
   }
 
-
   static fromJSON(json, fileContext) {
     const labels = labelsFromJSON(json, fileContext),
-          suppositions = suppositionsFromJSON(json, fileContext),
           consequent = consequentFromJSON(json, fileContext),
+          suppositions = suppositionsFromJSON(json, fileContext),
           substitutions = substitutionsFromJSON(json, fileContext),
           string = stringFromLabels(labels),
           proof = null,
@@ -140,17 +141,8 @@ export default class Metatheorem extends TopLevelAssertion {
   }
 }
 
-export function substitutionsFromJSON(json, fileContext) {
-  let { substitutions } = json;
+Object.assign(shim, {
+  Metatheorem
+});
 
-  const substitutionsJSON = substitutions;  ///
-
-  substitutions = substitutionsJSON.map((substitutionJSON) => {
-    const json = substitutionJSON,  ///
-          substitution = Substitution.fromJSON(json, fileContext);
-
-    return substitution;
-  });
-
-  return substitutions;
-}
+export default Metatheorem;

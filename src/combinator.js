@@ -4,10 +4,11 @@ import shim from "./shim";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
+import { statementFromJSON, statementToStatementJSON } from "./utilities/json";
 
 const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
-export default class Combinator {
+class Combinator {
   constructor(statement) {
     this.statement = statement;
   }
@@ -43,7 +44,7 @@ export default class Combinator {
   }
 
   toJSON() {
-    const statementJSON = this.statement.toJSON(),
+    const statementJSON = statementToStatementJSON(this.statement),
           statement = statementJSON,  ///
           json = {
             statement
@@ -53,17 +54,8 @@ export default class Combinator {
   }
 
   static fromJSON(json, fileContext) {
-    let { statement } = json;
-
-    const statementJSON = statement;  ///
-
-    json = statementJSON; ///
-
-    const { Statement } = shim;
-
-    statement = Statement.fromJSON(json, fileContext);
-
-    const combinator = new Combinator(statement);
+    const statement = statementFromJSON(json, fileContext),
+          combinator = new Combinator(statement);
 
     return combinator;
   }
@@ -78,3 +70,10 @@ export default class Combinator {
     return combinator;
   }
 }
+
+Object.assign(shim, {
+  Combinator
+});
+
+export default Combinator;
+

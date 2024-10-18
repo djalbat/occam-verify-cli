@@ -4,11 +4,12 @@ import shim from "./shim";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
+import { termFromJSON, termToTermJSON } from "./utilities/json";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
 
-export default class Constructor {
+class Constructor {
   constructor(string, term) {
     this.string = string;
     this.term = term;
@@ -45,7 +46,7 @@ export default class Constructor {
   }
 
   toJSON() {
-    const termJSON = this.term.toJSON(),
+    const termJSON = termToTermJSON(this.term),
           term = termJSON,  ///
           json = {
             term
@@ -55,17 +56,8 @@ export default class Constructor {
   }
 
   static fromJSON(json, fileContext) {
-    let { term } = json;
-
-    const termJSON = term;  ///
-
-    json = termJSON;  ///
-
-    const { Term } = shim;
-
-    term = Term.fromJSON(json, fileContext);
-
-    const type = term.getType(),
+    const term = termFromJSON(json, fileContext),
+          type = term.getType(),
           string = stringFromTermAndType(term, type),
           constructor = new Constructor(string, term);
 
@@ -85,6 +77,12 @@ export default class Constructor {
     return constructor;
   }
 }
+
+Object.assign(shim, {
+  Constructor
+});
+
+export default Constructor;
 
 export function stringFromTermAndType(term, type) {
   let string;

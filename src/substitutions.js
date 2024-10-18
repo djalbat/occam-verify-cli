@@ -54,6 +54,8 @@ export default class Substitutions {
     return metavariableNames;
   }
 
+  mapSubstitution(callback) { return this.array.map(callback); }
+
   findSubstitution(callback) { return this.array.find(callback) || null; }  ///
 
   someSubstitution(callback) { return this.array.some(callback); }

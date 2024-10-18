@@ -7,9 +7,9 @@ import FrameForMetavariableSubstitution from "./substitution/frameForMetavariabl
 import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
 
 import { nodeQuery } from "./utilities/query";
-import {metavariableNameFromMetavariableNode, typeNameFromTypeNode} from "./utilities/name";
 import { metavariableNodeFromMetavariableString } from "./utilities/node";
-import local from "./context/local";
+import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "./utilities/json";
+import { typeNameFromTypeNode, metavariableNameFromMetavariableNode } from "./utilities/name";
 
 const termNodeQuery = nodeQuery("/metavariable/argument/term"),
       typeNodeQuery = nodeQuery("/metavariable/argument/type"),
@@ -294,11 +294,9 @@ class Metavariable {
   }
 
   toJSON() {
-    const metaTypeJSON = (this.metaType !== null) ?
-                            this.metaType.toJSON() :
-                              null,
-          string = this.string,
+    const metaTypeJSON = metaTypeToMetaTypeJSON(this.metaType),
           metaType = metaTypeJSON,  ///
+          string = this.string,
           json = {
             string,
             metaType
@@ -360,19 +358,6 @@ Object.assign(shim, {
 });
 
 export default Metavariable;
-
-function metaTypeFromJSON(json, fileContext) {
-  let { metaType } = json;
-
-  if (metaType !== null) {
-    const { name } = metaType,
-          metaTypeName = name;  ///
-
-    metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName);
-  }
-
-  return metaType;
-}
 
 function metavariableFromMetavariableNode(metavariableNode, localContext) {
   const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),

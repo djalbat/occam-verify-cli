@@ -2,6 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
+import shim from "./shim";
 import Label from "./label";
 import Proof from "./proof";
 import Premise from "./premise";
@@ -11,6 +12,12 @@ import Substitutions from "./substitutions";
 
 import { stringFromLabels } from "./topLevelAssertion";
 import { nodeQuery, nodesQuery } from "./utilities/query";
+import { labelsFromJSON,
+         premisesFromJSON,
+         conclusionFromJSON,
+         labelsToLabelsJSON,
+         premisesToPremisesJSON,
+         conclusionToConclusionJSON } from "./utilities/json";
 
 const { reverse, correlate } = arrayUtilities;
 
@@ -19,7 +26,7 @@ const proofNodeQuery = nodeQuery("/rule/proof"),
       premiseNodesQuery = nodesQuery("/rule/premise"),
       conclusionNodeQuery = nodeQuery("/rule/conclusion");
 
-export default class Rule {
+class Rule {
   constructor(fileContext, string, labels, premises, conclusion, proof) {
     this.fileContext = fileContext;
     this.string = string;
@@ -167,17 +174,9 @@ export default class Rule {
   }
 
   toJSON() {
-    const labelsJSON = this.labels.map((label) => {
-            const labelJSON = label.toJSON();
-
-            return labelJSON;
-          }),
-          premisesJSON = this.premises.map((premise) => {
-            const premiseJSON = premise.toJSON();
-
-            return premiseJSON;
-          }),
-          conclusionJSON = this.conclusion.toJSON(),
+    const labelsJSON = labelsToLabelsJSON(this.labels),
+          premisesJSON = premisesToPremisesJSON(this.premises),
+          conclusionJSON = conclusionToConclusionJSON(this.conclusion),
           labels = labelsJSON,  ///
           premises = premisesJSON,  ///
           conclusion = conclusionJSON,  ///
@@ -193,37 +192,10 @@ export default class Rule {
   static fromJSON(json, fileContext) {
     let rule;
 
-    let { labels } = json;
-
-    const labelsJSON = labels;  ///
-
-    labels = labelsJSON.map((labelJSON) => {
-      const json = labelJSON, ///
-            label = Label.fromJSON(json, fileContext);
-
-      return label;
-    });
-
-    let { premises } = json;
-
-    const premisesJSON = premises;  ///
-
-    premises = premisesJSON.map((premiseJSON) => {
-      const json = premiseJSON, ///
-            premise = Premise.fromJSON(json, fileContext);
-
-      return premise;
-    });
-
-    let { conclusion } = json;
-
-    const conclusionJSON = conclusion;  ///
-
-    json = conclusionJSON;  ///
-
-    conclusion = Conclusion.fromJSON(json, fileContext);
-
     const proof = null,
+          labels = labelsFromJSON(json, fileContext),
+          premises = premisesFromJSON(json, fileContext),
+          conclusion = conclusionFromJSON(json, fileContext),
           string = stringFromLabels(labels);
 
     rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
@@ -254,3 +226,9 @@ export default class Rule {
     return rule;
   }
 }
+
+Object.assign(shim, {
+  Rule
+});
+
+export default Rule;

@@ -11,6 +11,7 @@ import { objectType } from "./type";
 import { nodeQuery, nodesQuery } from "./utilities/query"
 import { termNodeFromTermString } from "./utilities/node";
 import { variableNameFromVariableNode } from "./utilities/name";
+import { typeFromJSON, typeToTypeJSON } from "./utilities/json";
 
 const { filter } = arrayUtilities;
 
@@ -236,12 +237,12 @@ class Term {
   }
 
   toJSON() {
-    const typeJSON = this.type.toJSON(),
+    const typeJSON = typeToTypeJSON(this.type),
           string = this.string,
           type = typeJSON,  ///
           json = {
-            string,
-            type
+            type,
+            string
           };
 
     return json;
@@ -249,9 +250,9 @@ class Term {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          termString = string,  ///
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
+          termString = string,  ///
           termNode = termNodeFromTermString(termString, lexer, parser),
           node = termNode,  ///
           type = typeFromJSON(json, fileContext),
@@ -328,14 +329,3 @@ Object.assign(shim, {
 });
 
 export default Term;
-
-function typeFromJSON(json, fileContext) {
-  let { type } = json;
-
-  const { name } = type,
-        typeName = name;  ///
-
-  type = fileContext.findTypeByTypeName(typeName);
-
-  return type;
-}

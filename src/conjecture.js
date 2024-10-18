@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "./shim";
 import Label from "./label";
 import Proof from "./proof";
 import Consequent from "./consequent";
@@ -16,7 +17,7 @@ const proofNodeQuery = nodeQuery("/conjecture/proof"),
       consequentNodeQuery = nodeQuery("/conjecture/consequent"),
       suppositionNodesQuery = nodesQuery("/conjecture/supposition");
 
-export default class Conjecture extends TopLevelAssertion {
+class Conjecture extends TopLevelAssertion {
   verify() {
     let verified = false;
 
@@ -93,3 +94,9 @@ export default class Conjecture extends TopLevelAssertion {
     return conjecture;
   }
 }
+
+Object.assign(shim, {
+  Conjecture
+});
+
+export default Conjecture;

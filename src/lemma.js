@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "./shim";
 import Label from "./label";
 import Proof from "./proof";
 import Consequent from "./consequent";
@@ -17,7 +18,7 @@ const proofNodeQuery = nodeQuery("/lemma/proof"),
       consequentNodeQuery = nodeQuery("/lemma/consequent"),
       suppositionNodesQuery = nodesQuery("/lemma/supposition");
 
-export default class Lemma extends TopLevelAssertion {
+class Lemma extends TopLevelAssertion {
   verify() {
     let verified = false;
 
@@ -72,8 +73,6 @@ export default class Lemma extends TopLevelAssertion {
     return verified;
   }
 
-  static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Lemma, json, fileContext); }
-
   static fromLemmaNode(lemmaNode, fileContext) {
     const proofNode = proofNodeQuery(lemmaNode),
           labelNodes = labelNodesQuery(lemmaNode),
@@ -97,3 +96,9 @@ export default class Lemma extends TopLevelAssertion {
     return lemma;
   }
 }
+
+Object.assign(shim, {
+  Lemma
+});
+
+export default Lemma;

@@ -1,13 +1,15 @@
 "use strict";
 
+import shim from "./shim";
 import LocalContext from "./context/local";
 import Metavariable from "./metavariable";
 
 import { nodeQuery } from "./utilities/query";
+import { metavariableFromJSON, metavariableToMetavariableJSON } from "./utilities/json";
 
 const metavariableNodeQuery = nodeQuery("//label/metavariable");
 
-export default class Label {
+class Label {
   constructor(metavariable) {
     this.metavariable = metavariable;
   }
@@ -44,7 +46,7 @@ export default class Label {
   }
 
   toJSON() {
-    const metavariableJSON = this.metavariable.toJSON(),
+    const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
           metavariable = metavariableJSON,  ///
           json = {
             metavariable
@@ -54,13 +56,8 @@ export default class Label {
   }
 
   static fromJSON(json, fileContext) {
-    let { metavariable } = json;
-
-    json = metavariable;  ///
-
-    metavariable = Metavariable.fromJSON(json, fileContext);
-
-    const label = new Label(metavariable);
+    const metavariable = metavariableFromJSON(json, fileContext),
+          label = new Label(metavariable);
 
     return label;
   }
@@ -74,3 +71,9 @@ export default class Label {
     return label;
   }
 }
+
+Object.assign(shim, {
+  Label
+});
+
+export default Label;

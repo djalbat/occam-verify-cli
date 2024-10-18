@@ -1,5 +1,6 @@
 "use strict";
 
+import shim from "./shim";
 import Label from "./label";
 import Consequent from "./consequent";
 import Supposition from "./supposition";
@@ -13,7 +14,7 @@ const labelNodesQuery = nodesQuery("/axiom/label"),
       consequentNodeQuery = nodeQuery("/axiom/consequent"),
       suppositionNodesQuery = nodesQuery("/axiom/supposition");
 
-export default class Axiom extends TopLevelAssertion {
+class Axiom extends TopLevelAssertion {
   verify() {
     let verified = false;
 
@@ -83,3 +84,9 @@ export default class Axiom extends TopLevelAssertion {
     return axiom;
   }
 }
+
+Object.assign(shim, {
+  Axiom
+});
+
+export default Axiom;
