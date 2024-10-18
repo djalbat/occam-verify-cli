@@ -201,10 +201,9 @@ export default class Substitutions {
       }
     });
 
-    const substitutionNode = substitution.getNode(),
-          substitutionString = substitution.getString();
+    const substitutionString = substitution.getString();
 
-    localContext.trace(`Removed the ${substitutionString} substitution.`, substitutionNode);
+    localContext.trace(`Removed the ${substitutionString} substitution.`);
   }
 
   unifyWithEquivalences(equivalences, localContext) {

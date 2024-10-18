@@ -182,7 +182,7 @@ class Statement {
     verifiedAtTopLevel = statementAsCombinatorVerifier.verifyStatement(statementNode, fileContext);
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${statementString}' statement at top level.`, statementNode);
+      fileContext.debug(`...verified the '${statementString}' statement at top level.`);
     }
 
     return verifiedAtTopLevel;

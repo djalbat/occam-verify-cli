@@ -230,7 +230,7 @@ class Term {
     }
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${termString}' term at top level.`, termNode);
+      fileContext.debug(`...verified the '${termString}' term at top level.`);
     }
 
     return verifiedAtTopLevel;

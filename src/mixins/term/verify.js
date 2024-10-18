@@ -16,7 +16,7 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
   if (variable !== null) {
     const termString = localContext.nodeAsString(termNode);
 
-    localContext.trace(`Verifying the '${termString}' term as a variable...`, termNode);
+    localContext.trace(`Verifying the '${termString}' term as a variable...`);
 
     const variableVerified = variable.verify(localContext);
 
@@ -33,7 +33,7 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
     }
 
     if (termVerifiedAsVariable) {
-      localContext.debug(`...verified the '${termString}' term as a variable.`, termNode);
+      localContext.debug(`...verified the '${termString}' term as a variable.`);
     }
   }
 

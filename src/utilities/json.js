@@ -361,7 +361,7 @@ export function superTypeToSuperTypeJSON(superType) {
 }
 
 export function statementToStatementJSON(statement) {
-  const statementJSON = statement.toJSNO();
+  const statementJSON = statement.toJSON();
 
   return statementJSON;
 }
@@ -379,13 +379,13 @@ export function consequentToConsequentJSON(consequent) {
 }
 
 export function metavariableToMetavariableJSON(metavariable) {
-  const metavariableJSON = metavariable.toJSNO();
+  const metavariableJSON = metavariable.toJSON();
 
   return metavariableJSON;
 }
 
 export function unqualifiedStatementToUnqualifiedStatementJSON(unqualifiedStatement) {
-  const unqualifiedStatementJSON = unqualifiedStatement.toJSNO();
+  const unqualifiedStatementJSON = unqualifiedStatement.toJSON();
 
   return unqualifiedStatementJSON;
 }
