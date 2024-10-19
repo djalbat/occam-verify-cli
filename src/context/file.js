@@ -638,14 +638,8 @@ export default class FileContext {
   addVariable(variable) {
     let variableAdded = false;
 
-    const variableNode = variable.getNode(),
-          variablePresent = this.variables.some((variable) => {
-            const variableMatchesNode = variable.matchVariableNode(variableNode);
-
-            if (variableMatchesNode) {
-              return true;
-            }
-          });
+    const variableName = variable.getName(),
+          variablePresent = this.isVariablePresentByVariableName(variableName);
 
     if (!variablePresent) {
       this.variables.push(variable);

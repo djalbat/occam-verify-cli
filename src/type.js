@@ -36,37 +36,24 @@ class Type {
   }
 
   isSubTypeOf(type) {
-    let subTypeOf = false;
+    let subTypeOf;
 
-    let superType = this.superType;
-
-    while (superType !== null) {
-      if (superType === type) {
-        subTypeOf = true;
-
-        break;
-      }
-
-      superType = superType.getSuperType();
+    if (false) {
+      ///
+    } else if (this === objectType) {
+      subTypeOf = false;
+    } else if (this.superType === type) {
+      subTypeOf = true;
+    } else {
+      subTypeOf = this.superType.isSubTypeOf(type);
     }
 
     return subTypeOf;
   }
 
   isSuperTypeOf(type) {
-    let superTypeOf = false;
-
-    let superType = type.getSuperType();
-
-    while (superType !== null) {
-      if (superType === this) {
-        superTypeOf = true;
-
-        break;
-      }
-
-      superType = superType.getSuperType();
-    }
+    const subTypeOf = type.isSubTypeOf(this),
+          superTypeOf = subTypeOf;  ///
 
     return superTypeOf;
   }

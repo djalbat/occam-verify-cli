@@ -3,10 +3,12 @@
 import shim from "./shim";
 import equalityUnifier from "./unifier/equality";
 import EqualityAssignment from "./assignment/equality";
+import VariableAssignment from "./assignment/variable";
 
 import { nodeQuery } from "./utilities/query";
 
-const leftTermNodeQuery = nodeQuery("/equality/term[0]"),
+const variableNodeQuery = nodeQuery("/term/variable!"),
+      leftTermNodeQuery = nodeQuery("/equality/term[0]"),
       rightTermNodeQuery = nodeQuery("/equality/term[1]");
 
 export default class Equality {
@@ -26,6 +28,25 @@ export default class Equality {
 
   getRightTerm() {
     return this.rightTerm;
+  }
+
+  getType() {
+    let type;
+
+    const leftTermType = this.leftTerm.getType(),
+          rightTermType = this.rightTerm.getType(),
+          leftTermTypeEqualToOrSubTypeOfRightTermType = leftTermType.isEqualToOrSubTypeOf(rightTermType),
+          rightTermTypeEqualToOrSubTypeOfLeftTermType = rightTermType.isEqualToOrSubTypeOf(leftTermType);
+
+    if (leftTermTypeEqualToOrSubTypeOfRightTermType) {
+      type = leftTermType;  ///
+    }
+
+    if (rightTermTypeEqualToOrSubTypeOfLeftTermType) {
+      type = rightTermType; ///
+    }
+
+    return type;
   }
 
   isReflexive() {
@@ -51,25 +72,57 @@ export default class Equality {
 
     localContext.trace(`Verifying the '${equalityString}' equality...`);
 
-    let verifiedWhenStated = false,
-        verifiedWhenDerived = false;
+    const termsVerified = this.verifyTerms(localContext);
 
-    if (stated) {
-      verifiedWhenStated = this.verifyWhenStated(localContext);
-    } else {
-      verifiedWhenDerived = this.verifyWhenDerived(localContext);
-    }
+    if (termsVerified) {
+      let verifiedWhenStated = false,
+          verifiedWhenDerived = false;
 
-    if (verifiedWhenStated || verifiedWhenDerived) {
-      if (assignments !== null) {
-        const equality = this,  //
-              equalityAssignment = EqualityAssignment.fromEquality(equality),
-              assignment = equalityAssignment; ///
-
-        assignments.push(assignment);
+      if (stated) {
+        verifiedWhenStated = this.verifyWhenStated(localContext);
+      } else {
+        verifiedWhenDerived = this.verifyWhenDerived(localContext);
       }
 
-      verified = true;
+      if (verifiedWhenStated || verifiedWhenDerived) {
+        if (assignments !== null) {
+          const { Variable } = shim,
+                type = this.getType(),
+                leftTermNode = this.leftTerm.getNode(),
+                rightTermNode = this.rightTerm.getNode(),
+                leftVariableNode = variableNodeQuery(leftTermNode),
+                rightVariableNode = variableNodeQuery(rightTermNode),
+                leftVariable = Variable.fromVariableNodeAndType(leftVariableNode, type, localContext),
+                rightVariable = Variable.fromVariableNodeAndType(rightVariableNode, type, localContext);
+
+          let assignment;
+
+          if (leftVariable !== null) {
+            const leftVariableAssignment = VariableAssignment.fromVariable(leftVariable);
+
+            assignment = leftVariableAssignment;  ///
+
+            assignments.push(assignment);
+          }
+
+          if (rightVariable !== null) {
+            const rightVariableAssignment = VariableAssignment.fromVariable(rightVariable);
+
+            assignment = rightVariableAssignment;  ///
+
+            assignments.push(assignment);
+          }
+
+          const equality = this,  //
+                equalityAssignment = EqualityAssignment.fromEquality(equality);
+
+          assignment = equalityAssignment; ///
+
+          assignments.push(assignment);
+        }
+
+        verified = true;
+      }
     }
 
     if (verified) {
@@ -122,9 +175,7 @@ export default class Equality {
 
     localContext.trace(`Verifying the '${equalityString}' stated equality...`);
 
-    const termsVerified = this.verifyTerms(localContext);
-
-    verifiedWhenStated = termsVerified; ///
+    verifiedWhenStated = true;
 
     if (verifiedWhenStated) {
       localContext.debug(`...verified the '${equalityString}' stated equality.`);
@@ -134,19 +185,15 @@ export default class Equality {
   }
 
   verifyWhenDerived(localContext) {
-    let verifiedWhenDerived = false;
+    let verifiedWhenDerived;
 
     const equalityString = this.string; ///
 
     localContext.trace(`Verifying the '${equalityString}' derived equality...`);
 
-    const termsVerified = this.verifyTerms(localContext);
+    const equal = this.isEqual(localContext);
 
-    if (termsVerified) {
-      const equal = this.isEqual(localContext);
-
-      verifiedWhenDerived = equal;  ///
-    }
+    verifiedWhenDerived = equal;  ///
 
     if (verifiedWhenDerived) {
       localContext.debug(`...verified the '${equalityString}' derived equality.`);

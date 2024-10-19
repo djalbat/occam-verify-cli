@@ -70,14 +70,14 @@ class Variable {
           variableName = variableNameFromVariableNode(variableNode),
           variable = localContext.findVariableByVariableName(variableName);
 
-    if (variable === null) {
-      localContext.debug(`The '${variableString}' variable is not present.`);
-    } else {
+    if (variable !== null) {
       const type = variable.getType();
 
       this.type = type;
 
       verified = true;
+    } else {
+      localContext.debug(`The '${variableString}' variable is not present.`);
     }
 
     if (verified) {
@@ -248,11 +248,16 @@ class Variable {
   }
 
   static fromVariableNodeAndType(variableNode, type, localContext) {
-    const node = variableNode,  ///
-          variableName = variableNameFromVariableNode(variableNode),
-          string = localContext.nodeAsString(node),
-          name = variableName,  ///
-          variable = new Variable(localContext, string, node, name, type);
+    let variable = null;
+
+    if (variableNode !== null) {
+      const node = variableNode,  ///
+            variableName = variableNameFromVariableNode(variableNode),
+            string = localContext.nodeAsString(node),
+            name = variableName;  ///
+
+      variable = new Variable(localContext, string, node, name, type);
+    }
 
     return variable;
   }

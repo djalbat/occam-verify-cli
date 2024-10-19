@@ -15,10 +15,6 @@ export default class Equivalence {
     return this.terms;
   }
 
-  setTerms(terms) {
-    this.terms = terms;
-  }
-
   addTerm(term) {
     this.terms.push(term);
   }

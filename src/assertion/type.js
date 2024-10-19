@@ -9,14 +9,13 @@ import { objectType } from "../type";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeNodeQuery = nodeQuery("/typeAssertion/type"),
-      variableNodeQuery = nodeQuery("/term/variable");
+      variableNodeQuery = nodeQuery("/term/variable!");
 
 export default class TypeAssertion {
-  constructor(string, term, type, variable) {
+  constructor(string, term, type) {
     this.string = string;
     this.term = term;
     this.type = type;
-    this.variable = variable;
   }
 
   getString() {
@@ -31,32 +30,32 @@ export default class TypeAssertion {
     return this.type;
   }
 
-  getVariable() {
-    return this.variable;
-  }
-
   verify(assignments, stated, localContext) {
     let verified = false;
 
     let typeAssertionString = this.string;  ///
 
-    localContext.trace(`Verifying the '$${typeAssertionString}' type assertion...`);
+    localContext.trace(`Verifying the '${typeAssertionString}' type assertion...`);
 
-    let verifiedWhenStated = false,
-        verifiedWhenDerived = false;
+    const typeVerified = this.verifyType(localContext);
 
-    if (stated) {
-      verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
-    } else {
-      verifiedWhenDerived = this.verifyWhenDerived(localContext);
-    }
+    if (typeVerified) {
+      let verifiedWhenStated = false,
+          verifiedWhenDerived = false;
 
-    if (verifiedWhenStated || verifiedWhenDerived) {
-      verified = true;
+      if (stated) {
+        verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+      } else {
+        verifiedWhenDerived = this.verifyWhenDerived(localContext);
+      }
+
+      if (verifiedWhenStated || verifiedWhenDerived) {
+        verified = true;
+      }
     }
 
     if (verified) {
-      localContext.debug(`...verified the '$${typeAssertionString}' type assertion.`);
+      localContext.debug(`...verified the '${typeAssertionString}' type assertion.`);
     }
 
     return verified;
@@ -74,12 +73,12 @@ export default class TypeAssertion {
 
       const type = localContext.findTypeByTypeName(typeName);
 
-      if (type === null) {
-        localContext.debug(`The '${typeName}' type is missing.`);
-      } else {
-        this.type = type; ///
+      if (type !== null) {
+        this.type = type;
 
         typeVerified = true;
+      } else {
+        localContext.debug(`The '${typeName}' type is missing.`);
       }
 
       if (typeVerified) {
@@ -97,32 +96,34 @@ export default class TypeAssertion {
 
     localContext.trace(`Verifying the '${typeAssertionString}' stated type assertion...`);
 
-    const typeVerified = this.verifyType(localContext);
+    const termVerified = this.term.verify(localContext, () => {
+      let verifiedAhead;
 
-    if (typeVerified) {
-      const termVerified = this.term.verify(localContext, () => {
-        let verifiedAhead;
+      const termType = this.term.getType(),
+            typeEqualToOrSubTypeOfTermType = this.type.isEqualToOrSubTypeOf(termType);
 
-        const termType = this.term.getType(),
-              typeEqualToOrSuperTypeOfTermType = this.type.isEqualToOrSubTypeOf(termType);
+      if (typeEqualToOrSubTypeOfTermType) {
+        verifiedAhead = true;
+      }
 
-        if (typeEqualToOrSuperTypeOfTermType) {
-          if (this.variable !== null) {
-            this.variable.setType(this.type);
+      return verifiedAhead;
+    });
 
-            const variableAssignment = VariableAssignment.fromVariable(this.variable),
-                  assignment = variableAssignment;  ///
+    if (termVerified) {
+      if (assignments !== null) {
+        const termNode = this.term.getNode(),
+              variableNode = variableNodeQuery(termNode),
+              variable = Variable.fromVariableNodeAndType(variableNode, this.type, localContext);
 
-            assignments.push(assignment);
-          }
+        if (variable !== null) {
+          const variableAssignment = VariableAssignment.fromVariable(variable),
+                assignment = variableAssignment;  ///
 
-          verifiedAhead = true;
+          assignments.push(assignment);
         }
+      }
 
-        return verifiedAhead;
-      });
-
-      verifiedWhenStated = termVerified; ///
+      verifiedWhenStated = true;
     }
 
     if (verifiedWhenStated) {
@@ -133,28 +134,24 @@ export default class TypeAssertion {
   }
 
   verifyWhenDerived(localContext) {
-    let verifiedWhenDerived = false;
+    let verifiedWhenDerived;
 
     const typeAssertionString = this.string; ///
 
     localContext.trace(`Verifying the '${typeAssertionString}' derived type assertion...`);
 
-    const typeVerified = this.verifyType(localContext);
+    const termVerified = this.term.verify(localContext, () => {
+      let verifiedAhead;
 
-    if (typeVerified) {
-      const termVerified = this.term.verify(localContext, () => {
-        let verifiedAhead;
+      const termType = this.term.getType(),
+            typeEqualToOrSuperTypeOfTermType = this.type.isEqualToOrSuperTypeOf(termType);
 
-        const termType = this.term.getType(),
-              typeEqualToOrSuperTypeOfTermType = this.type.isEqualToOrSuperTypeOf(termType);
+      verifiedAhead = typeEqualToOrSuperTypeOfTermType; ///
 
-        verifiedAhead = typeEqualToOrSuperTypeOfTermType; ///
+      return verifiedAhead;
+    });
 
-        return verifiedAhead;
-      });
-
-      verifiedWhenDerived = termVerified; ///
-    }
+    verifiedWhenDerived = termVerified; ///
 
     if (verifiedWhenDerived) {
       localContext.debug(`...verified the '${typeAssertionString}' derived type assertion.`);
@@ -170,13 +167,11 @@ export default class TypeAssertion {
       const { Term, Type } = shim,
             termNode = termNodeQuery(typeAssertionNode),
             typeNode = typeNodeQuery(typeAssertionNode),
-            variableNode = variableNodeQuery(termNode),
             term = Term.fromTermNode(termNode, localContext),
             type = Type.fromTypeNode(typeNode, localContext),
-            variable = Variable.fromVariableNode(variableNode, localContext),
             string = stringFromTermAndType(term, type);
 
-      typeAssertion = new TypeAssertion(string, term, type, variable);
+      typeAssertion = new TypeAssertion(string, term, type);
     }
 
     return typeAssertion;

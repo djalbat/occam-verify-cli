@@ -4,7 +4,7 @@ import Variable from "../../variable";
 
 import { nodeQuery } from "../../utilities/query";
 
-const variableNodeQuery = nodeQuery("/term/variable");
+const variableNodeQuery = nodeQuery("/term/variable!");
 
 function verifyTermAsVariable(term, localContext, verifyAhead) {
   let termVerifiedAsVariable = false;

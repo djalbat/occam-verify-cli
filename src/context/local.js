@@ -10,14 +10,13 @@ import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariab
 const { last } = arrayUtilities;
 
 class LocalContext {
-  constructor(context, tokens, variables, proofSteps, judgements, equivalences, metavariables) {
+  constructor(context, tokens, variables, proofSteps, judgements, equivalences) {
     this.context = context;
     this.tokens = tokens;
     this.variables = variables;
     this.proofSteps = proofSteps;
     this.judgements = judgements;
     this.equivalences = equivalences;
-    this.metavariables = metavariables;
   }
 
   getContext() {
@@ -28,13 +27,19 @@ class LocalContext {
     return this.tokens;
   }
 
-  getVariables() {
-    let variables = this.context.getVariables();
+  getVariables(nested = true) {
+    let variables;
 
-    variables = [ ///
-      ...this.variables,
-      ...variables
-    ];
+    if (nested) {
+      variables = this.context.getVariables();
+
+      variables = [
+        ...this.variables,
+        ...variables
+      ];
+    } else {
+      variables = this.variables;
+    }
 
     return variables;
   }
@@ -71,17 +76,6 @@ class LocalContext {
     equivalences = mergeEquivalences(equivalencesA, equivalencesB, LocalContext); ///
 
     return equivalences;
-  }
-
-  getMetavariables() {
-    let metavariables = this.context.getMetavariables();
-
-    metavariables = [ ///
-      ...this.metavariables,
-      ...metavariables
-    ]
-
-    return metavariables;
   }
 
   getLastProofStep() {
@@ -170,14 +164,9 @@ class LocalContext {
   addVariable(variable) {
     let variableAdded = false;
 
-    const variableNode = variable.getNode(),
-          variablePresent = this.variables.some((variable) => {
-            const variableMatchesNode = variable.matchVariableNode(variableNode);
-
-            if (variableMatchesNode) {
-              return true;
-            }
-          });
+    const nested = false,
+          variableName = variable.getNode(),
+          variablePresent = this.isVariablePresentByVariableName(variableName, nested);
 
     if (!variablePresent) {
       this.variables.push(variable);
@@ -219,21 +208,6 @@ class LocalContext {
     }
 
     return judgementAdded;
-  }
-
-  addMetavariable(metavariable) {
-    let metavariableAdded = false;
-
-    const metavariableName = metavariable.getName(),
-          metavariablePresent = this.isMetavariablePresentByMetavariableName(metavariableName);
-
-    if (!metavariablePresent) {
-      this.metavariables.push(metavariable);
-
-      metavariableAdded = true;
-    }
-
-    return metavariableAdded;
   }
 
   getTermType(term) {
@@ -301,8 +275,8 @@ class LocalContext {
 
   isMetavariablePresentByMetavariableName(metavariableName) { return this.context.isMetavariablePresentByMetavariableName(metavariableName); }
 
-  isVariablePresentByVariableName(variableName) {
-    const variable = this.findVariableByVariableName(variableName),
+  isVariablePresentByVariableName(variableName, nested = true) {
+    const variable = this.findVariableByVariableName(variableName, nested),
           variablePresent = (variable !== null);
 
     return variablePresent;
@@ -326,8 +300,10 @@ class LocalContext {
 
   findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
 
-  findVariableByVariableName(variableName) {
-    const variables = this.getVariables(),
+  findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
+
+  findVariableByVariableName(variableName, nested = true) {
+    const variables = this.getVariables(nested),
           variable = variables.find((variable) => {
             const nameMatches = variable.matchVariableName(variableName);
 
@@ -350,19 +326,6 @@ class LocalContext {
           }) || null;
 
     return judgement;
-  }
-
-  findMetavariableByMetavariableName(metavariableName) {
-    const metavariables = this.getMetavariables(),
-          metavariable = metavariables.find((metavariable) => {
-            const nameMatches = metavariable.matchMetavariableName(metavariableName);
-
-            if (nameMatches) {
-              return true;
-            }
-          }) || null;
-
-    return metavariable;
   }
 
   findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
@@ -440,8 +403,7 @@ class LocalContext {
           proofSteps = [],
           judgements = [],
           equivalences = [],
-          metavariables = [],
-          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);
+          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);
 
     return localContext;
   }
@@ -452,10 +414,9 @@ class LocalContext {
           variables = [],
           proofSteps = [],
           judgements = [],
-          equivalences = [],
-          metavariables = [];
+          equivalences = [];
 
-    localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);  ///
+    localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);  ///
 
     return localContext;
   }
@@ -465,8 +426,7 @@ class LocalContext {
           proofSteps = [],
           judgements = [],
           equivalences = [],
-          metavariables = [],
-          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences, metavariables);  ///
+          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);
 
     return localContext;
   }
