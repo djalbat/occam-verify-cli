@@ -70,10 +70,9 @@ class LocalContext {
     let equivalences = this.context.getEquivalences();
 
     const equivalencesA = this.equivalences, ///
-          equivalencesB = equivalences,
-          LocalContext = this;  ///
+          equivalencesB = equivalences;
 
-    equivalences = mergeEquivalences(equivalencesA, equivalencesB, LocalContext); ///
+    equivalences = mergeEquivalences(equivalencesA, equivalencesB); ///
 
     return equivalences;
   }
@@ -106,7 +105,7 @@ class LocalContext {
 
   getConstructors() { return this.context.getConstructors(); }
 
-  addEquality(equality) {
+  addEquality(equality, localContext) {
     let equalityAdded;
 
     const equalityReflexive = equality.isReflexive();
@@ -124,15 +123,15 @@ class LocalContext {
       } else if ((leftEquivalence === null) && (rightEquivalence === null)) {
         const equivalence = Equivalence.fromLeftTermAndRightTerm(leftTerm, rightTerm);
 
-        this.addEquivalence(equivalence);
+        this.addEquivalence(equivalence, localContext);
 
         equalityAdded = true;
       } else if ((leftEquivalence !== null) && (rightEquivalence === null)) {
-        leftEquivalence.addTerm(rightTerm);
+        leftEquivalence.addTerm(rightTerm, localContext);
 
         equalityAdded = true;
       } else if ((leftEquivalence === null) && (rightEquivalence !== null)) {
-        rightEquivalence.addTerm(leftTerm);
+        rightEquivalence.addTerm(leftTerm, localContext);
 
         equalityAdded = true;
       } else if ((leftEquivalence !== null) && (rightEquivalence !== null)) {
@@ -150,9 +149,9 @@ class LocalContext {
           this.addEquivalence(equivalence);
         }
 
-        equivalence.addTerm(leftTerm);
+        equivalence.addTerm(leftTerm, localContext);
 
-        equivalence.addTerm(rightTerm);
+        equivalence.addTerm(rightTerm, localContext);
 
         equalityAdded = true;
       }
@@ -181,7 +180,11 @@ class LocalContext {
     this.proofSteps.push(proofStep);
   }
 
-  addEquivalence(equivalence) {
+  addEquivalence(equivalence, localContext) {
+    const equivalenceString = equivalence.asString();
+
+    localContext.trace(`Added the '${equivalenceString}' equivalence.`);
+
     this.equivalences.push(equivalence);
   }
 

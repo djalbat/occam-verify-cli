@@ -1,5 +1,7 @@
 "use strict";
 
+import local from "../context/local";
+
 export default class EqualityAssignment {
   constructor(equality) {
     this.equality = equality;
@@ -10,7 +12,7 @@ export default class EqualityAssignment {
   }
 
   assign(localContext) {
-    const equalityAdded = localContext.addEquality(this.equality),
+    const equalityAdded = localContext.addEquality(this.equality, localContext),
           equalityString = this.equality.getString(),
           equalityAssigned = equalityAdded; ///
 

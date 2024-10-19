@@ -7,6 +7,7 @@ import QualifiedStatement from "./statement/qualified";
 import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
+import { assignAssignments } from "./utilities/assignments";
 
 const subproofNodeQuery = nodeQuery("/proofStep|lastProofStep/subproof"),
       qualifiedStatementNodeQuery = nodeQuery("/proofStep|lastProofStep/qualifiedStatement"),
@@ -91,7 +92,13 @@ class ProofStep {
             assignments = [],
             unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
 
-      verified = unqualifiedStatementVerified;  ///
+      if (unqualifiedStatementVerified) {
+        const assignmentsAssigned = assignAssignments(assignments, localContext);
+
+        if (assignmentsAssigned) {
+          verified = true;
+        }
+      }
     }
 
     if (verified) {

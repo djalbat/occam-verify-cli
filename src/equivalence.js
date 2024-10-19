@@ -2,7 +2,6 @@
 
 import { nodeQuery } from "./utilities/query";
 import { stripBracketsFromTermNode } from "./utilities/brackets";
-import { variableNameFromVariableNode } from "./utilities/name";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
@@ -15,13 +14,18 @@ export default class Equivalence {
     return this.terms;
   }
 
-  addTerm(term) {
+  addTerm(term, localContext) {
+    const termString = term.getString(),
+          equivalenceString = this.asString();  ///
+
+    localContext.trace(`Adding the '${termString}' term to the '${equivalenceString}' equivalence.`);
+
     this.terms.push(term);
   }
 
-  getType(localContext) {
+  getType() {
     const type = this.terms.reduce((type, term) => {
-      const termType = termTypeFromTerm(term, localContext);
+      const termType = term.getType();
 
       if (type === null) {
         type = termType;  ///
@@ -39,10 +43,10 @@ export default class Equivalence {
     return type;
   }
 
-  matchType(type, localContext) {
+  matchType(type) {
     const typeA = type; ///
 
-    type = this.getType(localContext);
+    type = this.getType();
 
     const typeB = type; ///
 
@@ -194,6 +198,27 @@ export default class Equivalence {
     return implicitlyGroundedTerms;
   }
 
+  asString() {
+    let string;
+
+    string = this.terms.reduce((string, term) => {
+      const termString = term.getString();
+
+      string = (string === null) ?
+                 termString :
+                    `${string} ${termString}`;
+
+      return string;
+    }, null);
+
+    const type = this.getType(),
+          typeString = type.getString();
+
+    string = `${string}:${typeString}`;
+
+    return string;
+  }
+
   static merge(leftEquivalence, rightEquivalence) {
     const leftEquivalenceTerms = leftEquivalence.getTerms(),
           rightEquivalenceTerms = rightEquivalence.getTerms(),
@@ -215,23 +240,4 @@ export default class Equivalence {
 
     return equivalence;
   }
-}
-
-function termTypeFromTerm(term, localContext) {
-  let termType;
-
-  const termNode = term.getNode(),
-        variableNode = variableNodeQuery(termNode);
-
-  if (variableNode !== null) {
-    const variableName = variableNameFromVariableNode(variableNode),
-          variable = localContext.findVariableByVariableName(variableName),
-          variableType = variable.getType();
-
-    termType = variableType;  ///
-  } else {
-    termType = term.getType();
-  }
-
-  return termType;
 }

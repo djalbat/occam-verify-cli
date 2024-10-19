@@ -50,7 +50,6 @@ class UnqualifiedStatement {
       if (verified) {
         localContext.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);
       }
-
     } else {
       localContext.debug(`Cannot verify the '${unqualifiedStatementString}' unqualified statement because it is nonsense.`);
     }

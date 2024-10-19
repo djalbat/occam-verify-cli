@@ -6,9 +6,9 @@ import Equivalence from "../equivalence";
 
 const { push, compress, separate } = arrayUtilities;
 
-export function mergeEquivalences(equivalencesA, equivalencesB, localContext) {
-  const typesA = typesFromEquivalences(equivalencesA, localContext),
-        typesB = typesFromEquivalences(equivalencesB, localContext),
+export function mergeEquivalences(equivalencesA, equivalencesB) {
+  const typesA = typesFromEquivalences(equivalencesA),
+        typesB = typesFromEquivalences(equivalencesB),
         types = [
           ...typesA,
           ...typesB
@@ -23,8 +23,8 @@ export function mergeEquivalences(equivalencesA, equivalencesB, localContext) {
   const equivalences = types.map((type) => {
     let equivalence;
 
-    const equivalenceA = findEquivalenceByType(equivalencesA, type, localContext),
-          equivalenceB = findEquivalenceByType(equivalencesB, type, localContext);
+    const equivalenceA = findEquivalenceByType(equivalencesA, type),
+          equivalenceB = findEquivalenceByType(equivalencesB, type);
 
     if ((equivalenceA !== null) && (equivalenceB !== null)) {
       const leftEquivalence = equivalenceA, ///
@@ -43,9 +43,9 @@ export function mergeEquivalences(equivalencesA, equivalencesB, localContext) {
   return equivalences;
 }
 
-export function findEquivalenceByType(equivalences, type, localContext) {
+export function findEquivalenceByType(equivalences, type) {
   const equivalence = equivalences.find((equivalence) => {
-    const equivalenceMatchesType = equivalence.matchType(type, localContext);
+    const equivalenceMatchesType = equivalence.matchType(type);
 
     if (equivalenceMatchesType) {
       return true;
@@ -127,9 +127,9 @@ export function groundedTermsAndDefinedVariablesFromFromEquivalences(equivalence
   }
 }
 
-function typesFromEquivalences(equivalences, localContext) {
+function typesFromEquivalences(equivalences) {
   const types = equivalences.map((equivalence) => {
-    const type = equivalence.getType(localContext);
+    const type = equivalence.getType();
 
     return type;
   });
