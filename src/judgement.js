@@ -30,7 +30,7 @@ export default class Judgement {
 
   getMetavariableNode() { return this.frame.getMetavariableNode(); }
 
-  matchMetavariableName(metavariableName) { return this.frame.matchMetavariableName(metavariableName); }
+  matchMetavariableNode(metavariableNode) { return this.frame.matchMetavariableNode(metavariableNode); }
 
   verify(assignments, stated, localContext) {
     let verified;

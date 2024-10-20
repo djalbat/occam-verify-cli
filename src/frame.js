@@ -76,16 +76,16 @@ class Frame {
     return frameNodeMatches;
   }
 
-  matchMetavariableName(metavariableName) {
-    let metavariableNameMatches = false;
+  matchMetavariableNode(metavariableNode) {
+    let metavariableNodeMatches = false;
 
     const metavariable = this.getMetavariable();
 
     if (metavariable !== null) {
-      metavariableNameMatches = metavariable.matchMetavariableName(metavariableName);
+      metavariableNodeMatches = metavariable.matchMetavariableNode(metavariableNode);
     }
 
-    return metavariableNameMatches;
+    return metavariableNodeMatches;
   }
 
   unifySubstitution(substitution, localContext) {

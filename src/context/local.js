@@ -301,7 +301,7 @@ class LocalContext {
 
   findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
 
-  findMetavariableByMetavariableNode(metavariableNode) { return this.context.findMetavariableByMetavariableNode(metavariableNode); }
+  findMetavariableByMetavariableNode(metavariableNode, localContext) { return this.context.findMetavariableByMetavariableNode(metavariableNode, localContext); }
 
   findVariableByVariableName(variableName, nested = true) {
     const variables = this.getVariables(nested),
