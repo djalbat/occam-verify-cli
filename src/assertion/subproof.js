@@ -8,6 +8,8 @@ import metaLevelUnifier from "../unifier/metaLevel";
 import metaLevelVerifier from "../verifier/metaLevel";
 
 import { nodeQuery, nodesQuery } from "../utilities/query";
+import proofStep from "../proofStep";
+import subproof from "../subproof";
 
 const { front, last, match } = arrayUtilities;
 
@@ -31,6 +33,39 @@ export default class SubproofAssertion {
 
   getStatements() {
     return this.statements;
+  }
+
+  unifySubproof(subproof, substitutions, fileContext, localContext) {
+    let subproofUnified;
+
+    const subproofString = subproof.getString(),
+          subproofAssertionString = this.string;  ///
+
+    localContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
+
+    const subproofStatements = subproof.getStatements(),
+          subproofAssertionStatements = this.statements;  ///
+
+    subproofUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
+      const subproofAssertionStatementNode = subproofAssertionStatement.getNode(),
+            subproofStatementNode = subproofStatement.getNode(),
+            nodeA = subproofAssertionStatementNode,  ///
+            nodeB = subproofStatementNode,  ///
+            fileContextA = fileContext,  ///
+            localContextA = LocalContext.fromFileContext(fileContextA),
+            localContextB = localContext, ///
+            unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+
+      if (unifiedAtMetaLevel) {
+        return true;
+      }
+    });
+
+    if (subproofUnified) {
+      localContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
+    }
+
+    return subproofUnified;
   }
 
   verify(assignments, stated, localContext) {
@@ -90,42 +125,22 @@ export default class SubproofAssertion {
 
     localContext.trace(`Verifying the '${subproofAssertionString}' derived subproof assertion...`);
 
-    derivedSubproofAssertionVerified = false;
+    const proofSteps = localContext.getProofSteps();
 
-    localContext.debug(`The '${subproofAssertionString}' derived subproof assertion cannot be verified.`);
+    derivedSubproofAssertionVerified = proofSteps.some((proofStep) => {
+      const subproofAssertion = this,
+            subproofAssertionUnified = proofStep.unifySubproofAssertion(subproofAssertion, localContext);
 
-    return derivedSubproofAssertionVerified;
-  }
-
-  unifySubproof(subproof, substitutions, fileContext, localContext) {
-    let subproofUnified;
-
-    const subproofString = subproof.getString(),
-          subproofStatements = subproof.getStatements(),
-          subproofAssertionString = this.string;  ///
-
-    localContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
-
-    subproofUnified = match(this.statements, subproofStatements, (statement, subproofStatement) => {
-      const statementNode = statement.getNode(),
-            subproofStatementNode = subproofStatement.getNode(),
-            nodeA = statementNode,  ///
-            nodeB = subproofStatementNode,  ///
-            fileContextA = fileContext,  ///
-            localContextA = LocalContext.fromFileContext(fileContextA),
-            localContextB = localContext, ///
-            unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
-
-      if (unifiedAtMetaLevel) {
+      if (subproofAssertionUnified) {
         return true;
       }
     });
 
-    if (subproofUnified) {
-      localContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
+    if (derivedSubproofAssertionVerified) {
+      localContext.debug(`...verified the '${subproofAssertionString}' derived subproof assertion.`);
     }
 
-    return subproofUnified;
+    return derivedSubproofAssertionVerified;
   }
 
   static fromStatementNode(statementNode, localContext) {
