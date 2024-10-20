@@ -304,6 +304,16 @@ export default class FileContext {
     return this.metavariables;
   }
 
+  getMetavariableNames(includeRelease = true) {
+    const metavariableNames = this.metavariables.map((metavariable) => {
+      const metavariableName = metavariable.getName();
+
+      return metavariableName;
+    });
+
+    return metavariableNames;
+  }
+
   setReleaseContext(releaseContext) {
     this.releaseContext = releaseContext;
   }
@@ -518,11 +528,12 @@ export default class FileContext {
   }
 
   findMetavariableByMetavariableName(metavariableName) {
-    const metavariables = this.getVariables(),
-          metavariable = metavariables.find((metavariable) => {
-            const metavariableNameMatches = metavariable.matchMetavariableName(metavariableName);
+    const metavariableNameB = metavariableName, ///
+          metavariableNames = this.getMetavariableNames(),
+          metavariable = metavariableNames.find((metavariableName) => {
+            const metavariableNameA = metavariableName; ///
 
-            if (metavariableNameMatches) {
+            if (metavariableNameA === metavariableNameB) {
               return true;
             }
           }) || null;
