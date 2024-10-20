@@ -56,8 +56,7 @@ class MetaLevelUnifier extends Unifier {
 
             const { Statement } = shim,
                   metavariableNode = statementMetavariableNode, ///
-                  metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-                  metavariable = localContextA.findMetavariableByMetavariableName(metavariableName);
+                  metavariable = localContextA.findMetavariableByMetavariableNode(metavariableNode, localContextB);
 
             localContext = localContextB; ///
 
@@ -81,8 +80,7 @@ class MetaLevelUnifier extends Unifier {
         let frameUnified = false;
 
         const metavariableNode = frameMetavariableNodeA,  ///
-              metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-              metavariablePresent = localContextA.isMetavariablePresentByMetavariableName(metavariableName);
+              metavariablePresent = localContextA.isMetavariablePresentByMetavariableNode(metavariableNode, localContextB);
 
         if (metavariablePresent) {
           const { Frame, Metavariable } = shim,

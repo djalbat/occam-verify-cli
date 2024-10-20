@@ -2,7 +2,6 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
-import metavariableUnifier from "./unifier/metavariable";
 import FrameForMetavariableSubstitution from "./substitution/frameForMetavariable";
 import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
 
@@ -80,11 +79,11 @@ class Metavariable {
 
     localContext.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
 
-    const metavariableName = this.name, ///
-          simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariableName(metavariableName);
+    const metavariableNode = this.node, ///
+          simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariableNode(metavariableNode);
 
     if (simpleSubstitutionPresent) {
-      const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableName(metavariableName),
+      const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableNode(metavariableNode),
             substitution = simpleSubstitution,  ///
             frameNodeMatches = substitution.matchFrameNode(frameNode);
 
@@ -131,14 +130,13 @@ class Metavariable {
 
     const statementNode = statement.getNode(),
           metavariableNode = this.node, ///
-          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           substitutionNode = (substitution !== null) ?
                                 substitution.getSubstitutionNode() :
                                   null,
-          substitutionPresent = substitutions.isSubstitutionPresentByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode);
+          substitutionPresent = substitutions.isSubstitutionPresentByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
 
     if (substitutionPresent) {
-      const substitution = substitutions.findSubstitutionByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode),
+      const substitution = substitutions.findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode),
             statementNodeMatches = substitution.matchStatementNode(statementNode);
 
       if (statementNodeMatches) {
@@ -180,8 +178,8 @@ class Metavariable {
 
     localContext.trace(`Unifying the '${substitutionString}' substitution with the '${metavariableString}' metavariable...`);
 
-    const metavariableName = this.name, ///
-          judgement = localContext.findJudgementByMetavariableName(metavariableName);
+    const metavariableNode = this.node, ///
+          judgement = localContext.findJudgementByMetavariableNode(metavariableNode);
 
     if (judgement !== null){
       const declaration = judgement.getDeclaration();
@@ -203,18 +201,10 @@ class Metavariable {
 
     localContext.trace(`Verifying the '${metavariableString}' metavariable...`);
 
-    const metavariableName = this.name,
-          metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
+    const metavariableNode = this.node,
+          metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode, localContext);
 
-    if (metavariable !== null) {
-      const metavariableA = metavariable, ///
-            metavariableB = this,
-            metavariableNodeA = metavariableA.getNode(), ///
-            metavariableNodeB = metavariableB.getNode(),
-            metavariableUnified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
-
-      verified = metavariableUnified; ///
-    }
+    verified = metavariablePresent; ///
 
     if (verified) {
       localContext.debug(`...verified the '${metavariableString}' metavariable.`);
@@ -223,12 +213,12 @@ class Metavariable {
     return verified;
   }
 
-  verifyAtTopLevel(fileContext) {
+  verifyWhenDeclared(fileContext) {
     let verifiedAtTopLevel = false;
 
     const metavariableString = this.string; ///
 
-    fileContext.trace(`Verifying the '${metavariableString}' metavariable at top level...`);
+    fileContext.trace(`Verifying the '${metavariableString}' metavariable when declared...`);
 
     const metavariableNode = this.node, ///
           metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
@@ -262,7 +252,7 @@ class Metavariable {
     }
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${metavariableString}' metavariable at top level.`);
+      fileContext.debug(`...verified the '${metavariableString}' metavariable when declared.`);
     }
 
     return verifiedAtTopLevel;
@@ -276,9 +266,8 @@ class Metavariable {
 
     localContext.trace(`Verifying the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
 
-    const name = this.getName(),
-          metavariableName = name,  ///
-          metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
+    const metavariableNode = this.node,  ///
+          metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode, localContext);
 
     if (metavariable !== null) {
       const metaTypeMatches = metavariable.matchMetaType(metaType);
@@ -360,8 +349,7 @@ Object.assign(shim, {
 export default Metavariable;
 
 function metavariableFromMetavariableNode(metavariableNode, localContext) {
-  const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-        metavariable = localContext.findMetavariableByMetavariableName(metavariableName);
+  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode, localContext);
 
   return metavariable;
 }
@@ -372,9 +360,7 @@ function frameMetavariableFromStatementNode(frameNode, localContext) {
   const frameMetavariableNode = frameMetavariableNodeQuery(frameNode);
 
   if (frameMetavariableNode !== null) {
-    const frameMetavariableName = metavariableNameFromMetavariableNode(frameMetavariableNode);
-
-    frameMetavariable = localContext.findMetavariableByMetavariableName(frameMetavariableName);
+    frameMetavariable = localContext.findMetavariableByMetavariableNode(frameMetavariableNode, localContext);
   }
 
   return frameMetavariable;
@@ -386,9 +372,7 @@ function statementMetavariableFromStatementNode(statementNode, localContext) {
   const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
   if (statementMetavariableNode !== null) {
-    const statementMetavariableName = metavariableNameFromMetavariableNode(statementMetavariableNode);
-
-    statementMetavariable = localContext.findMetavariableByMetavariableName(statementMetavariableName);
+    statementMetavariable = localContext.findMetavariableByMetavariableNode(statementMetavariableNode, localContext);
   }
 
   return statementMetavariable;

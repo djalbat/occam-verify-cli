@@ -25,21 +25,21 @@ class Constructor {
 
   getType() { return this.term.getType(); }
 
-  verifyAtTopLevel(fileContext) {
+  verifyWhenDeclared(fileContext) {
     let verifiedAtTopLevel;
 
     const constructorString = this.string;  ///
 
-    fileContext.trace(`Verifying the '${constructorString}' constructor at top level...`);
+    fileContext.trace(`Verifying the '${constructorString}' constructor when declared...`);
 
-    const termVerifiedAtTopLevel = this.term.verifyAtTopLevel(fileContext);
+    const termVerifiedAtTopLevel = this.term.verifyWhenDeclared(fileContext);
 
     if (termVerifiedAtTopLevel) {
       verifiedAtTopLevel = true; ///
     }
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${constructorString}' constructor at top level.`);
+      fileContext.debug(`...verified the '${constructorString}' constructor when declared.`);
     }
 
     return verifiedAtTopLevel;

@@ -2,6 +2,8 @@
 
 import { arrayUtilities } from "necessary";
 
+import metavariableUnifier from "../unifier/metavariable";
+
 import { objectType } from "../type";
 import { frameMetaType, referenceMetaType, statementMetaType } from "../metaType";
 import { nodeAsTokens, nodeAsString, nodesAsString, tokensAsString } from "../utilities/string";
@@ -314,58 +316,6 @@ export default class FileContext {
     this.tokens = tokens;
   }
 
-  setNode(node) {
-    this.node = node;
-  }
-
-  setTypes(types) {
-    this.types = types;
-  }
-
-  setRules(rules) {
-    this.rules = rules;
-  }
-
-  setAxioms(axioms) {
-    this.axioms = axioms;
-  }
-
-  setLemmas(lemmas) {
-    this.lemmas = lemmas;
-  }
-
-  setTheorems(theorems) {
-    this.theorems = theorems;
-  }
-
-  setVariables(variables) {
-    this.variables = variables;
-  }
-
-  setMetaLemmas(metaLemmas) {
-    this.metaLemmas = metaLemmas;
-  }
-
-  setConjectures(conjectures) {
-    this.conjectures = conjectures;
-  }
-
-  setCombinators(combinators) {
-    this.combinators = combinators;
-  }
-
-  setConstructors(constructors) {
-    this.constructors = constructors;
-  }
-
-  setMetatheorems(metatheorems) {
-    this.metatheorems = metatheorems;
-  }
-
-  setMetavariables(metavariables) {
-    this.metavariables = metavariables;
-  }
-
   findTypeByTypeName(typeName) {
     let types = this.getTypes();
 
@@ -431,6 +381,13 @@ export default class FileContext {
 
   isMetavariablePresentByMetavariableName(metavariableName) {
     const metavariable = this.findMetavariableByMetavariableName(metavariableName),
+          metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
+  }
+
+  isMetavariablePresentByMetavariableNode(metavariableNode, localContext) {
+    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, localContext),
           metavariablePresent = (metavariable !== null);
 
     return metavariablePresent;
@@ -537,9 +494,9 @@ export default class FileContext {
   findVariableByVariableName(variableName) {
     const variables = this.getVariables(),
           variable = variables.find((variable) => {
-            const nameMatches = variable.matchVariableName(variableName);
+            const variableNameMatches = variable.matchVariableName(variableName);
 
-            if (nameMatches) {
+            if (variableNameMatches) {
               return true;
             }
           }) || null;
@@ -547,12 +504,12 @@ export default class FileContext {
     return variable;
   }
 
-  findJudgementByMetavariableName(metavariableName) {
+  findJudgementByMetavariableNode(metavariableNode) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementMatchesMetavariableName = judgement.matchMetavariableName(metavariableName);
+            const judgementMatchesMetavariableNode = judgement.matchMetavariableNode(metavariableNode);
 
-            if (judgementMatchesMetavariableName) {
+            if (judgementMatchesMetavariableNode) {
               return true;
             }
           }) || null;
@@ -561,11 +518,27 @@ export default class FileContext {
   }
 
   findMetavariableByMetavariableName(metavariableName) {
-    const metavariables = this.getMetavariables(),
+    const metavariables = this.getVariables(),
           metavariable = metavariables.find((metavariable) => {
-            const nameMatches = metavariable.matchMetavariableName(metavariableName);
+            const metavariableNameMatches = metavariable.matchMetavariableName(metavariableName);
 
-            if (nameMatches) {
+            if (metavariableNameMatches) {
+              return true;
+            }
+          }) || null;
+
+    return metavariable;
+  }
+
+  findMetavariableByMetavariableNode(metavariableNode, localContext) {
+    const metavariableNodeB = metavariableNode, ///
+          metavariables = this.getMetavariables(),
+          metavariable = metavariables.find((metavariable) => {
+            const metavariableA = metavariable, ///
+                  metavariableNodeA = metavariableA.getNode(), ///
+                  metavariableUnified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, localContext);
+
+            if (metavariableUnified) {
               return true;
             }
           }) || null;
@@ -636,18 +609,7 @@ export default class FileContext {
   }
 
   addVariable(variable) {
-    let variableAdded = false;
-
-    const variableName = variable.getName(),
-          variablePresent = this.isVariablePresentByVariableName(variableName);
-
-    if (!variablePresent) {
-      this.variables.push(variable);
-
-      variableAdded = true;
-    }
-
-    return variableAdded;
+    this.variables.push(variable);
   }
 
   addMetaLemma(metaLemma) {
@@ -671,18 +633,7 @@ export default class FileContext {
   }
 
   addMetavariable(metavariable) {
-    let metavariableAdded = false;
-
-    const metavariableName = metavariable.getName(),
-          metavariablePresent = this.isMetavariablePresentByMetavariableName(metavariableName);
-
-    if (!metavariablePresent) {
-      this.metavariables.push(metavariable);
-
-      metavariableAdded = true;
-    }
-
-    return metavariableAdded;
+    this.metavariables.push(metavariable);
   }
 
   trace(message) { this.releaseContext.trace(message, this.filePath); }

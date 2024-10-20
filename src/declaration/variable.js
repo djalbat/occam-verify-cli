@@ -33,9 +33,9 @@ export default class VariableDeclaration {
 
     this.fileContext.trace(`Verifying the '${variableDeclarationString}' variable declaration...`);
 
-    const variableVerifiedAtTopLevel = this.variable.verifyAtTopLevel(this.fileContext);
+    const variableVerifiedWhenDeclared = this.variable.verifyWhenDeclared(this.fileContext);
 
-    if (variableVerifiedAtTopLevel) {
+    if (variableVerifiedWhenDeclared) {
       this.fileContext.addVariable(this.variable);
 
       verified = true;

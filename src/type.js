@@ -109,12 +109,12 @@ class Type {
     return typeNodeMatches;
   }
 
-  verifyAtTopLevel(fileContext) {
+  verifyWhenDeclared(fileContext) {
     let verifiedAtTopLevel = false;
 
     const typeString = this.string; ///
 
-    fileContext.trace(`Verifying the '${typeString}' type at top level...`);
+    fileContext.trace(`Verifying the '${typeString}' type when declared...`);
 
     const typePresent = fileContext.isTypePresentByTypeName(this.name);
 
@@ -136,7 +136,7 @@ class Type {
     }
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${typeString}' type at top level.`);
+      fileContext.debug(`...verified the '${typeString}' type when declared.`);
     }
 
     return verifiedAtTopLevel;

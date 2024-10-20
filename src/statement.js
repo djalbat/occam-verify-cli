@@ -171,18 +171,18 @@ class Statement {
     return verified;
   }
 
-  verifyAtTopLevel(fileContext) {
+  verifyWhenDeclared(fileContext) {
     let verifiedAtTopLevel;
 
     const statementNode = this.node,  ///
           statementString = this.string;  ///
 
-    fileContext.trace(`Verifying the '${statementString}' statement at top level...`);
+    fileContext.trace(`Verifying the '${statementString}' statement when declared...`);
 
     verifiedAtTopLevel = statementAsCombinatorVerifier.verifyStatement(statementNode, fileContext);
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${statementString}' statement at top level.`);
+      fileContext.debug(`...verified the '${statementString}' statement when declared.`);
     }
 
     return verifiedAtTopLevel;

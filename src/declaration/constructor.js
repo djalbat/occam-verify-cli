@@ -25,9 +25,9 @@ export default class ConstructorDeclaration {
 
     this.fileContext.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
 
-    const constructorVerifiedAtTopLevel = this.constructor.verifyAtTopLevel(this.fileContext);
+    const constructorVerifiedWhenDeclared = this.constructor.verifyWhenDeclared(this.fileContext);
 
-    if (constructorVerifiedAtTopLevel) {
+    if (constructorVerifiedWhenDeclared) {
       this.fileContext.addConstructor(this.constructor);
 
       verified = true;

@@ -35,10 +35,10 @@ class Substitution {
     return substitutionNode;
   }
 
-  getMetavariableName() {
-    const metavariableName = null;
+  getMetavariableNode() {
+    const metavariableNode = null;
 
-    return metavariableName;
+    return metavariableNode;
   }
 
   isSimple() {
@@ -90,16 +90,16 @@ class Substitution {
     return variableNameMatches;
   }
 
-  matchMetavariableName(metavariableName) {
-    const metavariableNameMatches = false;
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = false;
 
-    return metavariableNameMatches;
+    return metavariableNodeMatches;
   }
 
-  matchMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode) {
-    const metavariableNameAndSubstitutionNodeMatches = false;
+  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
+    const metavariableNodeAndSubstitutionNodeMatches = false;
 
-    return metavariableNameAndSubstitutionNodeMatches;
+    return metavariableNodeAndSubstitutionNodeMatches;
   }
 
   unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {

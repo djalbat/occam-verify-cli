@@ -34,24 +34,26 @@ export default class Substitutions {
     return firstSubstitution;
   }
 
-  getMetavariableNames() {
-    const metavariableNames = [];
+  getMetavariableNodes() {
+    const metavariableNodes = [];
 
     this.forEachSubstitution((substitution) => {
-      const metavariableName = substitution.getMetavariableName();
+      const metavariableNode = substitution.getMetavariableNode();
 
-      if (metavariableName !== null) {
-        metavariableNames.push(metavariableName);
+      if (metavariableNode !== null) {
+        metavariableNodes.push(metavariableNode);
       }
     });
 
-    compress(metavariableNames, (metavariableNameA, metavariableNameB) => {
-      if (metavariableNameA === metavariableNameB) {
+    compress(metavariableNodes, (metavariableNodeA, metavariableNodeB) => {
+      const metavariableNodeAMatchesMetavariableNodeB = metavariableNodeB.match(metavariableNodeA);
+
+      if (metavariableNodeAMatchesMetavariableNodeB) {
         return true;
       }
     });
 
-    return metavariableNames;
+    return metavariableNodes;
   }
 
   mapSubstitution(callback) { return this.array.map(callback); }
@@ -102,11 +104,11 @@ export default class Substitutions {
     return substitution;
   }
 
-  findSubstitutionByMetavariableName(metavariableName) {
+  findSubstitutionByMetavariableNode(metavariableNode) {
     const substitution = this.findSubstitution((substitution) => {
-      const metavariableNameMatches = substitution.matchMetavariableName(metavariableName);
+      const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
 
-      if (metavariableNameMatches) {
+      if (metavariableNodeMatches) {
         return true;
       }
     });
@@ -114,11 +116,11 @@ export default class Substitutions {
     return substitution;
   }
 
-  findSubstitutionsByMetavariableName(metavariableName) {
+  findSubstitutionsByMetavariableNode(metavariableNode) {
     const substitutions = this.findSubstitutions((substitution) => {
-      const metavariableNameMatches = substitution.matchMetavariableName(metavariableName);
+      const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
 
-      if (metavariableNameMatches) {
+      if (metavariableNodeMatches) {
         return true;
       }
     });
@@ -126,8 +128,8 @@ export default class Substitutions {
     return substitutions;
   }
 
-  findSimpleSubstitutionByMetavariableName(metavariableName) {
-    const substitutions = this.findSubstitutionsByMetavariableName(metavariableName),
+  findSimpleSubstitutionByMetavariableNode(metavariableNode) {
+    const substitutions = this.findSubstitutionsByMetavariableNode(metavariableNode),
           simpleSubstitutions = substitutions.filterSubstitution((substitution) => {
             const substitutionSimple = substitution.isSimple();
 
@@ -141,8 +143,8 @@ export default class Substitutions {
     return simpleSubstitution;
   }
 
-  findComplexSubstitutionsByMetavariableName(metavariableName) {
-    const substitutions = this.findSubstitutionsByMetavariableName(metavariableName),
+  findComplexSubstitutionsByMetavariableNode(metavariableNode) {
+    const substitutions = this.findSubstitutionsByMetavariableNode(metavariableNode),
           complexSubstitutions = substitutions.filterSubstitution((substitution) => {
             const substitutionComplex = substitution.isComplex();
 
@@ -154,11 +156,11 @@ export default class Substitutions {
     return complexSubstitutions;
   }
 
-  findSubstitutionByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode) {
+  findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
     const substitutions = this.findSubstitutions((substitution) => {
-            const metavariableNameAndSubstitutionNodeMatch = substitution.matchMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode);
+            const metavariableNodeAndSubstitutionNodeMatch = substitution.matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
 
-            if (metavariableNameAndSubstitutionNodeMatch) {
+            if (metavariableNodeAndSubstitutionNodeMatch) {
               return true;
             }
           }),
@@ -168,15 +170,15 @@ export default class Substitutions {
     return substitution;
   }
 
-  isSimpleSubstitutionPresentByMetavariableName(metavariableName) {
-    const simpleSubstitution = this.findSimpleSubstitutionByMetavariableName(metavariableName),
+  isSimpleSubstitutionPresentByMetavariableNode(metavariableNode) {
+    const simpleSubstitution = this.findSimpleSubstitutionByMetavariableNode(metavariableNode),
           simpleSubstitutionPresent = (simpleSubstitution !== null);
 
     return simpleSubstitutionPresent;
   }
 
-  isSubstitutionPresentByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode) {
-    const substitution = this.findSubstitutionByMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode),
+  isSubstitutionPresentByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
+    const substitution = this.findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode),
           substitutionPresent = (substitution !== null);
 
     return substitutionPresent;
@@ -220,9 +222,9 @@ export default class Substitutions {
   }
 
   resolve(localContextA, localContextB) {
-    const metavariableNames = this.getMetavariableNames(),
-          resolved = metavariableNames.every((metavariableName) => {
-                        const complexSubstitutions = this.findComplexSubstitutionsByMetavariableName(metavariableName),
+    const metavariableNodes = this.getMetavariableNodes(),
+          resolved = metavariableNodes.every((metavariableNode) => {
+                        const complexSubstitutions = this.findComplexSubstitutionsByMetavariableNode(metavariableNode),
                               complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
                                 const substitution = complexSubstitution, ///
                                       substitutions = this, ///

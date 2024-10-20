@@ -25,15 +25,15 @@ class Conjecture extends TopLevelAssertion {
 
     this.fileContext.trace(`Verifying the '${conjectureString}' conjecture...`);
 
-    const labelsVerifiedAtTopLevel = this.labels.every((label) => {
-      const labelVVerifiedAtTopLevel = label.verifyAtTopLevel(this.fileContext);
+    const labelsVerifiedWhenDeclared = this.labels.every((label) => {
+      const labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext);
 
-      if (labelVVerifiedAtTopLevel) {
+      if (labelVVerifiedWhenDeclared) {
         return true;
       }
     });
 
-    if (labelsVerifiedAtTopLevel) {
+    if (labelsVerifiedWhenDeclared) {
       const localContext = LocalContext.fromFileContext(this.fileContext),
             suppositionsVerified = this.suppositions.every((supposition) => {
               const suppositionVerified = supposition.verify(localContext);

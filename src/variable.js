@@ -115,12 +115,12 @@ class Variable {
     return typeVerified;
   }
 
-  verifyAtTopLevel(fileContext) {
+  verifyWhenDeclared(fileContext) {
     let verifiedAtTopLevel;
 
     const variableString = this.string; ///
 
-    fileContext.trace(`Verifying the '${variableString}' variable at top level...`);
+    fileContext.trace(`Verifying the '${variableString}' variable when declared...`);
 
     const variableNode = this.node, ///
           variableName = variableNameFromVariableNode(variableNode),
@@ -135,7 +135,7 @@ class Variable {
     }
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${variableString}' variable at top level.`);
+      fileContext.debug(`...verified the '${variableString}' variable when declared.`);
     }
 
     return verifiedAtTopLevel;

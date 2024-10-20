@@ -22,12 +22,12 @@ class Label {
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
-  verifyAtTopLevel(fileContext) {
+  verifyWhenDeclared(fileContext) {
     let verifiedAtTopLevel = false;
 
     const labelString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${labelString}' label at top level...`);
+    fileContext.trace(`Verifying the '${labelString}' label when declared...`);
 
     const metavariableNode = this.metavariable.getNode(),
           labelPresent = fileContext.isLabelPresentByMetavariableNode(metavariableNode);
@@ -39,7 +39,7 @@ class Label {
     }
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${labelString}' label at top level.`);
+      fileContext.debug(`...verified the '${labelString}' label when declared.`);
     }
 
     return verifiedAtTopLevel;

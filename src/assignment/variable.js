@@ -10,7 +10,8 @@ export default class VariableAssignment {
   }
 
   assign(localContext) {
-    const variableAdded = localContext.addVariable(this.variable),
+    const nested = false,
+          variableAdded = localContext.addVariable(this.variable, nested),
           variableType = this.variable.getType(),
           variableString = this.variable.getString(),
           variableTypeName = variableType.getName(),

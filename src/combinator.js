@@ -25,19 +25,19 @@ class Combinator {
     return statementNode;
   }
 
-  verifyAtTopLevel(fileContext) {
+  verifyWhenDeclared(fileContext) {
     let verifiedAtTopLevel;
 
     const combinatorString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${combinatorString}' combinator at top level...`);
+    fileContext.trace(`Verifying the '${combinatorString}' combinator when declared...`);
 
-    const statementVerifiedAtTopLevel = this.statement.verifyAtTopLevel(fileContext);
+    const statementVerifiedAtTopLevel = this.statement.verifyWhenDeclared(fileContext);
 
     verifiedAtTopLevel = statementVerifiedAtTopLevel; ///
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${combinatorString}' combinator at top level.`);
+      fileContext.debug(`...verified the '${combinatorString}' combinator when declared.`);
     }
 
     return verifiedAtTopLevel;

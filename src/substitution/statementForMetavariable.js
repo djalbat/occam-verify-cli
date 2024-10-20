@@ -30,10 +30,10 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return this.substitution;
   }
 
-  getMetavariableName() {
-    const metavariableName = this.metavariable.getName();
+  getMetavariableNode() {
+    const metavariableNode = this.metavariable.getNode();
 
-    return metavariableName;
+    return metavariableNode;
   }
 
   isSimple() {
@@ -49,8 +49,8 @@ export default class StatementForMetavariableSubstitution extends Substitution {
 
     localContextB.trace(`Resolving the ${substitutionString} substitution...`);
 
-    const metavariableName = this.getMetavariableName(),
-          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableName(metavariableName);
+    const metavariableNode = this.getMetavariableNode(),
+          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableNode(metavariableNode);
 
     if (simpleSubstitution !== null) {
       const substitution = simpleSubstitution,  ///
@@ -128,7 +128,7 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return statementNodeMatches;
   }
 
-  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
+  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
   matchSubstitutionNode(substitutionNode) {
     let substitutionNodeMatches;
@@ -146,12 +146,12 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return substitutionNodeMatches;
   }
 
-  matchMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode) {
-    const metavariableNameMatches = this.matchMetavariableName(metavariableName),
+  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
+    const metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
           substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),
-          metavariableNameAndSubstitutionNodeMatches = (metavariableNameMatches && substitutionNodeMatches);
+          metavariableNodeAndSubstitutionNodeMatches = (metavariableNodeMatches && substitutionNodeMatches);
 
-    return metavariableNameAndSubstitutionNodeMatches;
+    return metavariableNodeAndSubstitutionNodeMatches;
   }
 
   toJSON() {

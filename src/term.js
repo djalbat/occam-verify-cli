@@ -213,12 +213,12 @@ class Term {
     return verifiedGivenType;
   }
 
-  verifyAtTopLevel(fileContext) {
+  verifyWhenDeclared(fileContext) {
     let verifiedAtTopLevel;
 
     const termString = this.string;  ///
 
-    fileContext.trace(`Verifying the '${termString}' term at top level...`);
+    fileContext.trace(`Verifying the '${termString}' term when declared...`);
 
     const termNode = this.node, ///
           termVerifiedAsConstructor = termAsConstructorVerifier.verifyTerm(termNode, fileContext);
@@ -230,7 +230,7 @@ class Term {
     }
 
     if (verifiedAtTopLevel) {
-      fileContext.debug(`...verified the '${termString}' term at top level.`);
+      fileContext.debug(`...verified the '${termString}' term when declared.`);
     }
 
     return verifiedAtTopLevel;
