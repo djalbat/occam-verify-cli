@@ -28,9 +28,9 @@ function unifyWithCombinators(statement, assignments, stated, localContext) {
 
   const combinators = localContext.getCombinators();
 
-  assignments = null; ///
-
   stated = true;  ///
+
+  assignments = null; ///
 
   unifiedWithCombinators = combinators.some((combinator) => {
     const unifiedWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, localContext);

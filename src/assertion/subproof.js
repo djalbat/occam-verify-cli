@@ -75,6 +75,10 @@ export default class SubproofAssertion {
 
     localContext.trace(`Verifying the '${subproofAssertionString}' subproof assertion...`);
 
+    stated = true;  ///
+
+    assignments = null; ///
+
     let verifiedWhenStated = false,
         verifiedWhenDerived = false;
 
@@ -85,10 +89,6 @@ export default class SubproofAssertion {
     }
 
     if (verifiedWhenStated || verifiedWhenDerived) {
-      assignments = null; ///
-
-      stated = true;  ///
-
       const subproofAssertionNode = this.node,  ///
             verifiedAtMetaLevel = metaLevelVerifier.verify(subproofAssertionNode, assignments, stated, localContext);
 

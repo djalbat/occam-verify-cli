@@ -45,9 +45,9 @@ class TermAsConstructorVerifier extends Verifier {
         let typeVerified = false;
 
         const typeName = typeNameFromTypeNode(typeNode),
-              type = fileContext.findTypeByTypeName(typeName);
+              typePresent = fileContext.isTypePresentByTypeName(typeName);
 
-        if (type !== null) {
+        if (typePresent) {
           const verifiedAhead = verifyAhead();
 
           if (verifiedAhead) {

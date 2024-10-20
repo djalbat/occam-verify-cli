@@ -129,27 +129,33 @@ class ProofStep {
   verify(substitutions, localContext) {
     let verified = false;
 
+    let stated = false;
+
+    const assignments = [];
+
+    let subproofVerified = false,
+        qualifiedStatementVerified = false,
+        unqualifiedStatementVerified = false;
+
     if (false) {
       ///
     } else if (this.subproof !== null) {
-      const subproofVerified = this.subproof.verify(substitutions, localContext);
-
-      verified = subproofVerified;  ///
+      subproofVerified = this.subproof.verify(substitutions, localContext);
     } else if (this.qualifiedStatement !== null) {
-      const qualifiedStatementVerified = this.qualifiedStatement.verify(substitutions, localContext);
+      stated = true;
 
-      verified = qualifiedStatementVerified;  ///
+      qualifiedStatementVerified = this.qualifiedStatement.verify(substitutions, assignments, stated, localContext);
     } else if (this.unqualifiedStatement !== null) {
-      const stated = false,
-            assignments = [],
-            unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
+      stated = false;
 
-      if (unqualifiedStatementVerified) {
-        const assignmentsAssigned = assignAssignments(assignments, localContext);
+      unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
+    }
 
-        if (assignmentsAssigned) {
-          verified = true;
-        }
+    if (subproofVerified || qualifiedStatementVerified || unqualifiedStatementVerified) {
+      const assignmentsAssigned = assignAssignments(assignments, localContext);
+
+      if (assignmentsAssigned) {
+        verified = true;
       }
     }
 

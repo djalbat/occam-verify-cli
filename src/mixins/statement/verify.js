@@ -8,10 +8,8 @@ import ContainedAssertion from "../../assertion/contained";
 
 import { nodeQuery } from "../../utilities/query";
 
-const frameNodeQuery = nodeQuery("/statement/frame"),
-      equalityNodeQuery = nodeQuery("/statement/equality"),
+const equalityNodeQuery = nodeQuery("/statement/equality"),
       judgementNodeQuery = nodeQuery("/statement/judgement"),
-      declarationNodeQuery = nodeQuery("/statement/declaration"),
       metavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion"),
@@ -68,31 +66,6 @@ function verifyAsEquality(statement, assignments, stated, localContext) {
   return verifiedAsEquality;
 }
 
-function verifyAsFrame(statement, assignments, stated, localContext) {
-  let verifiedAsFrame = false;
-
-  const { Frame } = shim,
-        statementNode = statement.getNode(),
-        frameNode = frameNodeQuery(statementNode),
-        frame = Frame.fromFrameNode(frameNode, localContext);
-
-  if (frame !== null) {
-    const statementString = statement.getString();
-
-    localContext.trace(`Verifying the '${statementString}' statement as a frame...`);
-
-    const frameVerified = frame.verify(assignments, stated, localContext);
-
-    verifiedAsFrame = frameVerified; ///
-
-    if (verifiedAsFrame) {
-      localContext.debug(`...verified the '${statementString}' statement as a frame.`);
-    }
-  }
-
-  return verifiedAsFrame;
-}
-
 function verifyAsJudgement(statement, assignments, stated, localContext) {
   let verifiedAsJudgement = false;
 
@@ -116,31 +89,6 @@ function verifyAsJudgement(statement, assignments, stated, localContext) {
   }
 
   return verifiedAsJudgement;
-}
-
-function verifyAsDeclaration(statement, assignments, stated, localContext) {
-  let verifiedAsDeclaration = false;
-
-  const { Declaration } = shim,
-        statementNode = statement.getNode(),
-        declarationNode = declarationNodeQuery(statementNode),
-        declaration = Declaration.fromDeclarationNode(declarationNode, localContext);
-
-  if (declaration !== null) {
-    const statementString = statement.getString();
-
-    localContext.trace(`Verifying the '${statementString}' statement as a declaration...`);
-
-    const declarationVerified = declaration.verify(assignments, stated, localContext);
-
-    verifiedAsDeclaration = declarationVerified; ///
-
-    if (verifiedAsDeclaration) {
-      localContext.debug(`...verified the '${statementString}' statement as a declaration.`);
-    }
-  }
-
-  return verifiedAsDeclaration;
 }
 
 function verifyAsTypeAssertion(statement, assignments, stated, localContext) {
@@ -191,30 +139,6 @@ function verifyAsDefinedAssertion(statement, assignments, stated, localContext) 
   return verifiedAsDefinedAssertion;
 }
 
-function verifyAsSubproofAssertion(statement, assignments, stated, localContext) {
-  let verifiedAsSubproofAssertion = false;
-
-  const statementNode = statement.getNode(),
-        subproofAssertionNode = subproofAssertionNodeQuery(statementNode),
-        subproofAssertion = SubproofAssertion.fromSubproofAssertionNode(subproofAssertionNode, localContext);
-
-  if (subproofAssertionNode !== null) {
-    const statementString = statement.getString();
-
-    localContext.trace(`Verifying the '${statementString}' statement as a subproof assertion...`);
-
-    const subproofAssertionVerified = subproofAssertion.verify(assignments, stated, localContext);
-
-    verifiedAsSubproofAssertion = subproofAssertionVerified; ///
-
-    if (verifiedAsSubproofAssertion) {
-      localContext.debug(`...verified the '${statementString}' statement as a subproof assertion.`);
-    }
-  }
-
-  return verifiedAsSubproofAssertion;
-}
-
 function verifyAsContainedAssertion(statement, assignments, stated, localContext) {
   let verifiedAsContainedAssertion = false;
 
@@ -239,12 +163,34 @@ function verifyAsContainedAssertion(statement, assignments, stated, localContext
   return verifiedAsContainedAssertion;
 }
 
+function verifyAsSubproofAssertion(statement, assignments, stated, localContext) {
+  let verifiedAsSubproofAssertion = false;
+
+  const statementNode = statement.getNode(),
+        subproofAssertionNode = subproofAssertionNodeQuery(statementNode),
+        subproofAssertion = SubproofAssertion.fromSubproofAssertionNode(subproofAssertionNode, localContext);
+
+  if (subproofAssertionNode !== null) {
+    const statementString = statement.getString();
+
+    localContext.trace(`Verifying the '${statementString}' statement as a subproof assertion...`);
+
+    const subproofAssertionVerified = subproofAssertion.verify(assignments, stated, localContext);
+
+    verifiedAsSubproofAssertion = subproofAssertionVerified; ///
+
+    if (verifiedAsSubproofAssertion) {
+      localContext.debug(`...verified the '${statementString}' statement as a subproof assertion.`);
+    }
+  }
+
+  return verifiedAsSubproofAssertion;
+}
+
 const verifyMixins = [
   verifyAsMetavariable,
   verifyAsEquality,
-  verifyAsFrame,
   verifyAsJudgement,
-  verifyAsDeclaration,
   verifyAsTypeAssertion,
   verifyAsDefinedAssertion,
   verifyAsSubproofAssertion,

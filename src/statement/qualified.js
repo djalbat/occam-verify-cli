@@ -71,7 +71,7 @@ class QualifiedStatement {
     return statementUnified;
   }
 
-  verify(substitutions, localContext) {
+  verify(substitutions, assignments, stated, localContext) {
     let verified;
 
     const qualifiedStatementString = this.string; ///
@@ -79,9 +79,7 @@ class QualifiedStatement {
     if (this.statement !== null) {
       localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`);
 
-      const stated = true,
-            assignments = [],
-            statementVerified = this.statement.verify(assignments, stated, localContext);
+      const statementVerified = this.statement.verify(assignments, stated, localContext);
 
       if (statementVerified) {
         const unified = this.unify(substitutions, localContext);

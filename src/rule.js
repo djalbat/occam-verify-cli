@@ -68,26 +68,28 @@ class Rule {
   }
 
   unifyStatement(statement, localContext) {
-    let statementUnified = false;
+    let statementUnified;
 
     const { Substitutions } = shim,
-          proofSteps = localContext.getProofSteps(),
-          substitutions = Substitutions.fromNothing(),
-          proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
+          substitutions = Substitutions.fromNothing();
 
-    if (proofStepsUnified) {
-      const statementUnifiedWithConclusion = this.conclusion.unifyStatement(statement, substitutions, localContext);  ///
+    statementUnified = this.conclusion.unifyStatement(statement, substitutions, localContext);  ///
 
-      if (statementUnifiedWithConclusion) {
+    if (statementUnified) {
+      const proofSteps = localContext.getProofSteps(),
+            proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
+
+      if (proofStepsUnified) {
         const localContextB = localContext; ///
 
         localContext = LocalContext.fromFileContext(this.fileContext);
 
-        const localContextA = localContext; ///
-
-        const substitutionsResolved = substitutions.resolve(localContextA, localContextB);
+        const localContextA = localContext, ///
+              substitutionsResolved = substitutions.resolve(localContextA, localContextB);
 
         statementUnified = substitutionsResolved; ///
+      } else {
+        statementUnified = false;
       }
     }
 

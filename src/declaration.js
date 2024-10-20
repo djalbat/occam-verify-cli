@@ -100,9 +100,9 @@ class Declaration {
 
     localContext.trace(`Verifying the '${declarationString}' declaration...`);
 
-    stated = true;
+    stated = true;  ///
 
-    assignments = null;
+    assignments = null; ///
 
     const referenceVerified = this.reference.verify(localContext);
 

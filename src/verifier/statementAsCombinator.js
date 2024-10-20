@@ -8,8 +8,7 @@ import { nodeQuery } from "../utilities/query";
 import { typeNameFromTypeNode } from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/term"),
-      typeNodeQuery = nodeQuery("/type"),
-      statementNodeQuery = nodeQuery("/statement");
+      typeNodeQuery = nodeQuery("/type");
 
 class StatementAsCombinatorVerifier extends Verifier {
   verifyStatement(statementNode, fileContext) {
@@ -25,19 +24,6 @@ class StatementAsCombinatorVerifier extends Verifier {
   }
 
   static maps = [
-    {
-      nodeQuery: statementNodeQuery,
-      verify: (statementNode, fileContext) => {
-        const { Statement } = shim,
-              statement = Statement.fromStatementNode(statementNode, fileContext),
-              stated = false,
-              assignments = null,
-              localContext = LocalContext.fromFileContext(fileContext),
-              statementVerified = statement.verify(statementNode, assignments, stated, localContext);
-
-        return statementVerified;
-      }
-    },
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, fileContext) => {
@@ -59,9 +45,9 @@ class StatementAsCombinatorVerifier extends Verifier {
         let typeVerified = false;
 
         const typeName = typeNameFromTypeNode(typeNode),
-              type = fileContext.findTypeByTypeName(typeName);
+              typePresent = fileContext.isTypePresentByTypeName(typeName);
 
-        if (type !== null) {
+        if (typePresent) {
           typeVerified = true;
         }
 
