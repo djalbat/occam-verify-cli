@@ -1,5 +1,7 @@
 "use strict";
 
+import shim from "../shim";
+
 export default class CombinatorDeclaration {
   constructor(fileContext, combinator) {
     this.fileContext = fileContext;
