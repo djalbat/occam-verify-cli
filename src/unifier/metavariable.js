@@ -6,8 +6,8 @@ import Unifier from "../unifier";
 import { nodeQuery } from "../utilities/query";
 import { typeNameFromTypeNode } from "../utilities/name";
 
-const typeNodeQuery = nodeQuery("/type!"),
-      termNodeQuery = nodeQuery("/term!");
+const typeNodeQuery = nodeQuery("/type"),
+      termNodeQuery = nodeQuery("/term");
 
 class MetavariableUnifier extends Unifier {
   unify(metavariableNodeA, metavariableNodeB, localContext) {

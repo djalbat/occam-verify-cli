@@ -8,15 +8,15 @@ import ContainedAssertion from "../../assertion/contained";
 
 import { nodeQuery } from "../../utilities/query";
 
-const frameNodeQuery = nodeQuery("/statement/frame!"),
-      equalityNodeQuery = nodeQuery("/statement/equality!"),
-      judgementNodeQuery = nodeQuery("/statement/judgement!"),
-      declarationNodeQuery = nodeQuery("/statement/declaration!"),
+const frameNodeQuery = nodeQuery("/statement/frame"),
+      equalityNodeQuery = nodeQuery("/statement/equality"),
+      judgementNodeQuery = nodeQuery("/statement/judgement"),
+      declarationNodeQuery = nodeQuery("/statement/declaration"),
       metavariableNodeQuery = nodeQuery("/statement/metavariable!"),
-      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion!"),
-      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
-      subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion!"),
-      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion"),
+      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion"),
+      subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion"),
+      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion");
 
 function verifyAsMetavariable(statement, assignments, stated, localContext) {
   let verifiedAsMetavariable = false;

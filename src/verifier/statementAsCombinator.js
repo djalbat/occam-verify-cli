@@ -7,9 +7,9 @@ import LocalContext from "../context/local";
 import { nodeQuery } from "../utilities/query";
 import { typeNameFromTypeNode } from "../utilities/name";
 
-const termNodeQuery = nodeQuery("/term!"),
-      typeNodeQuery = nodeQuery("/type!"),
-      statementNodeQuery = nodeQuery("/statement!");
+const termNodeQuery = nodeQuery("/term"),
+      typeNodeQuery = nodeQuery("/type"),
+      statementNodeQuery = nodeQuery("/statement");
 
 class StatementAsCombinatorVerifier extends Verifier {
   verifyStatement(statementNode, fileContext) {

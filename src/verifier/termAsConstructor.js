@@ -7,8 +7,8 @@ import LocalContext from "../context/local";
 import { nodeQuery } from "../utilities/query";
 import {typeNameFromTypeNode} from "../utilities/name";
 
-const termNodeQuery = nodeQuery("/term!"),
-      typeNodeQuery = nodeQuery("/type!");
+const termNodeQuery = nodeQuery("/term"),
+      typeNodeQuery = nodeQuery("/type");
 
 class TermAsConstructorVerifier extends Verifier {
   verifyTerm(termNode, fileContext) {

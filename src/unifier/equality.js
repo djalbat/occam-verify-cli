@@ -5,7 +5,7 @@ import Unifier from "../unifier";
 import { nodeQuery } from "../utilities/query";
 import { findEquivalenceByTermNodes } from "../utilities/equivalences";
 
-const termNodeQuery = nodeQuery("/term!");
+const termNodeQuery = nodeQuery("/term");
 
 class EqualityUnifier extends Unifier {
   unify(leftTermNode, rightTermNode, localContext) {

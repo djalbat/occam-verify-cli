@@ -3,8 +3,8 @@
 import { nodeQuery, nodesQuery } from "./query";
 import { nodeAsString, nodesAsString } from "./string";
 
-const subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement!"),
-      subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement!");
+const subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement"),
+      subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement");
 
 export function subproofStringFromSubproofNode(subproofNode, fileContext) {
   const tokens = fileContext.getTokens(),

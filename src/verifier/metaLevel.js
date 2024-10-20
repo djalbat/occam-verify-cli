@@ -5,8 +5,8 @@ import Verifier from "../verifier";
 
 import { nodeQuery } from "../utilities/query";
 
-const termNodeQuery = nodeQuery("/term!"),
-      statementNodeQuery = nodeQuery("/statement!");
+const termNodeQuery = nodeQuery("/term"),
+      statementNodeQuery = nodeQuery("/statement");
 
 class MetaLevelVerifier extends Verifier {
   verify(node, assignments, stated, localContext) {

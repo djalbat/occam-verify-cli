@@ -6,11 +6,11 @@ import TermForVariableSubstitution from "../substitution/termForVariable";
 import FrameForMetavariableSubstitution from "../substitution/frameForMetavariable";
 
 import { nodeQuery } from "../utilities/query";
-import { variableNameFromVariableNode, metavariableNameFromMetavariableNode } from "../utilities/name";
+import { variableNameFromVariableNode } from "../utilities/name";
 
-const termNodeQuery = nodeQuery("/term!"),
-      frameNodeQuery = nodeQuery("/frame!"),
-      statementNodeQuery = nodeQuery("/statement!"),
+const termNodeQuery = nodeQuery("/term"),
+      frameNodeQuery = nodeQuery("/frame"),
+      statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
@@ -66,7 +66,7 @@ class MetaLevelUnifier extends Unifier {
 
             statementUnified = metavariable.unifyStatement(statement, substitution, substitutions, localContext);
           } else {
-            statementUnified = unifyStatementWithStatement(statementNodeA, statementNodeB, substitutions, localContextA, localContextB);
+            statementUnified = unifyChildNodes(statementNodeA, statementNodeB, substitutions, localContextA, localContextB);
           }
         }
 
@@ -125,7 +125,7 @@ const metaLevelUnifier = new MetaLevelUnifier();
 
 export default metaLevelUnifier;
 
-function unifyStatementWithStatement(statementNodeA, statementNodeB, substitutions, localContextA, localContextB) {
+function unifyChildNodes(statementNodeA, statementNodeB, substitutions, localContextA, localContextB) {
   const nonTerminalNodeA = statementNodeA, ///
         nonTerminalNodeB = statementNodeB, ///
         nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),

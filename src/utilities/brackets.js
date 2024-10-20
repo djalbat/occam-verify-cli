@@ -5,8 +5,8 @@ import { bracketedTermNode } from "../constructor/bracketed";
 import { bracketedStatementNode } from "../combinator/bracketed";
 import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
 
-const bracketedTermChildNodeQuery = nodeQuery("/term/argument/term!"),
-      bracketedStatementChildNodeQuery = nodeQuery("/statement/metaArgument/statement!");
+const bracketedTermChildNodeQuery = nodeQuery("/term/argument/term"),
+      bracketedStatementChildNodeQuery = nodeQuery("/statement/metaArgument/statement");
 
 export function stripBracketsFromTermNode(termNode) {
   const bracketedTermChildNode = bracketedTermChildNodeFromTermNode(termNode);

@@ -6,11 +6,11 @@ import Unifier from "../unifier";
 import { nodeQuery } from "../utilities/query";
 import { typeNameFromTypeNode } from "../utilities/name";
 
-const termNodeQuery = nodeQuery("/term!"),
-      typeNodeQuery = nodeQuery("/type!"),
-      frameNodeQuery = nodeQuery("/frame!"),
-      metaTypeNodeQuery = nodeQuery("/metaType!"),
-      statementNodeQuery = nodeQuery("/statement!");
+const termNodeQuery = nodeQuery("/term"),
+      typeNodeQuery = nodeQuery("/type"),
+      frameNodeQuery = nodeQuery("/frame"),
+      metaTypeNodeQuery = nodeQuery("/metaType"),
+      statementNodeQuery = nodeQuery("/statement");
 
 class StatementWithCombinatorUnifier extends Unifier {
   unify(combinatorStatementNode, statementNode, assignments, stated, localContext) {
