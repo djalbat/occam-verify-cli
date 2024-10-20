@@ -5,15 +5,18 @@ import Constructor from "../constructor";
 
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { stringFromTermAndType } from "../constructor";
+import { nominalLexer, nominalParser } from "../utilities/nominal";
 import { termTokensFromConstructorDeclarationTokens, constructorDeclarationTokensFromConstructorDeclarationString } from "../utilities/tokens";
 import { termNodeFromConstructorDeclarationNode,
          constructorDeclarationStringFromTermString,
          constructorDeclarationNodeFromConstructorDeclarationTokens } from "../utilities/node";
 
-const termString = `(${OBJECT_TYPE_NAME})`,  ///
+const lexer = nominalLexer, ///
+      parser = nominalParser, ///
+      termString = `(${OBJECT_TYPE_NAME})`,  ///
       constructorDeclarationString = constructorDeclarationStringFromTermString(termString),
-      constructorDeclarationTokens = constructorDeclarationTokensFromConstructorDeclarationString(constructorDeclarationString),
-      constructorDeclarationNode = constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens),
+      constructorDeclarationTokens = constructorDeclarationTokensFromConstructorDeclarationString(constructorDeclarationString, lexer),
+      constructorDeclarationNode = constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser),
       termNode = termNodeFromConstructorDeclarationNode(constructorDeclarationNode),
       termTokens = termTokensFromConstructorDeclarationTokens(constructorDeclarationTokens),
       nodeAsTokens = (node) => {

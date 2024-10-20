@@ -1,15 +1,8 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { lexersUtilities } from "occam-custom-grammars";
 
-import { combinedCustomGrammarFromNothing } from "./customGrammar";
-
-const { front } = arrayUtilities,
-      { nominalLexerFromCombinedCustomGrammar } = lexersUtilities;
-
-const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
-      nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar);
+const { front } = arrayUtilities;
 
 export function variableTokensFromVariableString(variableString, lexer) {
   const variableContent = `${variableString}`,
@@ -63,7 +56,7 @@ export function substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionN
   return substitutionTokens;
 }
 
-function tokensFromContentAndLexer(content, lexer = nominalLexer) {
+function tokensFromContentAndLexer(content, lexer) {
   const tokens = lexer.tokenise(content);
 
   return tokens;

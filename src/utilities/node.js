@@ -1,22 +1,13 @@
 "use strict";
 
-import { parsersUtilities } from "occam-custom-grammars";
-
 import { nodeQuery } from "../utilities/query";
-import { combinedCustomGrammarFromNothing } from "./customGrammar";
 import { VARIABLE_RULE_NAME,
          METAVARIABLE_RULE_NAME,
          UNQUALIFIED_STATEMENT_RULE_NAME,
          CONSTRUCTOR_DECLARATION_RULE_NAME } from "../ruleNames";
 import { variableTokensFromVariableString,
          metavariableTokensFromMetavariableString,
-         unqualifiedStatementTokensFromUnqualifiedStatementString,
          constructorDeclarationTokensFromConstructorDeclarationString } from "../utilities/tokens";
-
-const { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
-
-const combinedCustomGrammar = combinedCustomGrammarFromNothing(),
-      nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar);
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       statementNodeQuery = nodeQuery("/unqualifiedStatement/statement"),
@@ -114,7 +105,7 @@ export function constructorDeclarationNodeFromConstructorDeclarationTokens(const
   return constructorDeclarationNode;
 }
 
-function nodeFromTokensRuleNameAndParser(tokens, ruleName, parser = nominalParser) {
+function nodeFromTokensRuleNameAndParser(tokens, ruleName, parser) {
   const ruleMap = parser.getRuleMap(),
         rule = ruleMap[ruleName],
         node = parser.parse(tokens, rule);
