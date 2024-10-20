@@ -1,13 +1,7 @@
 "use strict";
 
-import Rule from "../rule";
+import shim from "../shim";
 import Error from "../error";
-import Axiom from "../axiom";
-import Lemma from "../lemma";
-import Theorem from "../theorem";
-import MetaLemma from "../metaLemma";
-import Conjecture from "../conjecture";
-import Metatheorem from "../metatheorem";
 import TypeDeclaration from "../declaration/type";
 import VariableDeclaration from "../declaration/variable";
 import CombinatorDeclaration from "../declaration/combinator";
@@ -57,7 +51,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: ruleNodeQuery,
       verify: (ruleNode, fileContext) => {
-        const rule = Rule.fromRuleNode(ruleNode, fileContext),
+        const { Rule } = shim,
+              rule = Rule.fromRuleNode(ruleNode, fileContext),
               ruleVerified = rule.verify();
 
         return ruleVerified;
@@ -66,7 +61,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: axiomNodeQuery,
       verify: (axiomNode, fileContext) => {
-        const axiom = Axiom.fromAxiomNode(axiomNode, fileContext),
+        const { Axiom } = shim,
+              axiom = Axiom.fromAxiomNode(axiomNode, fileContext),
               axiomVerified = axiom.verify();
 
         return axiomVerified;
@@ -75,7 +71,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: lemmaNodeQuery,
       verify: (lemmaNode, fileContext) => {
-        const lemma = Lemma.fromLemmaNode(lemmaNode, fileContext),
+        const { Lemma } = shim,
+              lemma = Lemma.fromLemmaNode(lemmaNode, fileContext),
               lemmaVerified = lemma.verify();
 
         return lemmaVerified;
@@ -84,7 +81,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: theoremNodeQuery,
       verify: (theoremNode, fileContext) => {
-        const theorem = Theorem.fromTheoremNode(theoremNode, fileContext),
+        const { Theorem } = shim,
+              theorem = Theorem.fromTheoremNode(theoremNode, fileContext),
               theoremVerified = theorem.verify();
 
         return theoremVerified;
@@ -93,7 +91,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metaLemmaNodeQuery,
       verify: (metaLemmaNode, fileContext) => {
-        const metaLemma = MetaLemma.fromMetaLemmaNode(metaLemmaNode, fileContext),
+        const { MetaLemma } = shim,
+              metaLemma = MetaLemma.fromMetaLemmaNode(metaLemmaNode, fileContext),
               metaLemmaVerified = metaLemma.verify();
 
         return metaLemmaVerified;
@@ -102,7 +101,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: conjectureNodeQuery,
       verify: (conjectureNode, fileContext) => {
-        const conjecture = Conjecture.fromConjectureNode(conjectureNode, fileContext),
+        const { Conjecture } = shim,
+              conjecture = Conjecture.fromConjectureNode(conjectureNode, fileContext),
               conjectureVerified = conjecture.verify();
 
         return conjectureVerified;
@@ -111,7 +111,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metatheoremNodeQuery,
       verify: (metatheoremNode, fileContext) => {
-        const metatheorem = Metatheorem.fromMetatheoremNode(metatheoremNode, fileContext),
+        const { Metatheorem } = shim,
+              metatheorem = Metatheorem.fromMetatheoremNode(metatheoremNode, fileContext),
               metatheoremVerified = metatheorem.verify();
 
         return metatheoremVerified;

@@ -3,7 +3,6 @@
 import shim from "./shim";
 import LocalContext from "./context/local";
 import SubproofAssertion from "./assertion/subproof";
-import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
@@ -162,7 +161,8 @@ class Premise {
   }
 
   static fromPremiseNode(suppositionNode, fileContext) {
-    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
+    const { UnqualifiedStatement } = shim,
+          unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
           premise = new Premise(fileContext, unqualifiedStatement);
 

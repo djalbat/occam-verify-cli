@@ -2,7 +2,6 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
-import Metavariable from "./metavariable";
 
 import { nodeQuery } from "./utilities/query";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "./utilities/json";
@@ -63,7 +62,8 @@ class Label {
   }
 
   static fromLabelNode(labelNode, fileContext) {
-    const metavariableNode = metavariableNodeQuery(labelNode),
+    const { Metavariable } = shim,
+          metavariableNode = metavariableNodeQuery(labelNode),
           localContext = LocalContext.fromFileContext(fileContext),
           metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
           label = new Label(metavariable);

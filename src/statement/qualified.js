@@ -12,7 +12,7 @@ import { assignAssignments } from "../utilities/assignments";
 const statementNodeQuery = nodeQuery("/qualifiedStatement/statement"),
       referenceNodeQuery = nodeQuery("/qualifiedStatement/reference");
 
-export default class QualifiedStatement {
+class QualifiedStatement {
   constructor(string, statement, reference) {
     this.string = string;
     this.statement = statement;
@@ -127,3 +127,9 @@ export default class QualifiedStatement {
     return qualifiedStatement;
   }
 }
+
+Object.assign(shim, {
+  QualifiedStatement
+});
+
+export default QualifiedStatement;

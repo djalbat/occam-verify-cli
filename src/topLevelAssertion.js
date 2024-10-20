@@ -2,7 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-import Substitutions from "./substitutions";
+import shim from "./shim";
 
 import { EMPTY_STRING } from "./constants";
 import { labelsFromJSON,
@@ -63,7 +63,8 @@ export default class TopLevelAssertion {
   unifyStatement(statement, localContext) {
     let statementUnified = false;
 
-    const proofSteps = localContext.getProofSteps(),
+    const { Substitutions } = shim,
+          proofSteps = localContext.getProofSteps(),
           substitutions = Substitutions.fromNothing(),
           proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
 

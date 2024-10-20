@@ -3,8 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import shim from "./shim";
-import Declaration from "./declaration";
-import Metavariable from "./metavariable";
 
 import { FRAME_META_TYPE_NAME } from "./metaTypeNames";
 import { nodeQuery, nodesQuery } from "./utilities/query";
@@ -259,7 +257,8 @@ class Frame {
     let frame = null;
 
     if (frameNode !== null) {
-      const declarationNodes = declarationNodesQuery(frameNode),
+      const { Declaration, Metavariable } = shim,
+            declarationNodes = declarationNodesQuery(frameNode),
             metavariableNodes = metavariableNodesQuery(frameNode),
             declarations = declarationNodes.map((declarationNode) => {
               const declaration = Declaration.fromDeclarationNode(declarationNode, localContext);
@@ -289,7 +288,8 @@ class Frame {
       const metavariableNode = metavariableNodeQuery(frameNode);
 
       if (metavariableNode !== null) {
-        const metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
+        const { Metavariable } = shim,
+              metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
               declarations = [],
               metavariables = [
                 metavariable
@@ -313,7 +313,8 @@ class Frame {
       const metavariableNode = metavariableNodeQuery(frameNode);
 
       if (metavariableNode !== null) {
-        const metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
+        const { Metavariable } = shim,
+              metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
               declarations = [],
               metavariables = [
                 metavariable

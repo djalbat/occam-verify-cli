@@ -1,7 +1,5 @@
 "use strict";
 
-import Combinator from "../combinator";
-
 export default class CombinatorDeclaration {
   constructor(fileContext, combinator) {
     this.fileContext = fileContext;
@@ -41,7 +39,8 @@ export default class CombinatorDeclaration {
   }
 
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
-    const combinator = Combinator.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
+    const { Combinator } = shim,
+          combinator = Combinator.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
           combinatorDeclaration = new CombinatorDeclaration(fileContext, combinator);
 
     return combinatorDeclaration;

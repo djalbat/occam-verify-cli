@@ -1,9 +1,6 @@
 "use strict";
 
 import shim from "./shim";
-import Label from "./label";
-import Consequent from "./consequent";
-import Supposition from "./supposition";
 import LocalContext from "./context/local";
 import TopLevelAssertion from "./topLevelAssertion";
 
@@ -63,7 +60,8 @@ class Axiom extends TopLevelAssertion {
   static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Axiom, json, fileContext); }
 
   static fromAxiomNode(axiomNode, fileContext) {
-    const labelNodes = labelNodesQuery(axiomNode),
+    const { Label, Supposition, Consequent } = shim,
+          labelNodes = labelNodesQuery(axiomNode),
           consequentNode = consequentNodeQuery(axiomNode),
           suppositionNodes = suppositionNodesQuery(axiomNode),
           labels = labelNodes.map((labelNode) => {

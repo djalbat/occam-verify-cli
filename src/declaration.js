@@ -9,7 +9,7 @@ import { stripBracketsFromStatementNode } from "./utilities/brackets";
 const referenceNodeQuery = nodeQuery("/declaration/reference"),
       statementNodeQuery = nodeQuery("/declaration/statement");
 
-export default class Declaration {
+class Declaration {
   constructor(string, reference, statement) {
     this.string = string;
     this.reference = reference;
@@ -141,3 +141,9 @@ export default class Declaration {
     return declaration;
   }
 }
+
+Object.assign(shim, {
+  Declaration
+});
+
+export default Declaration;

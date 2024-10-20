@@ -1,7 +1,6 @@
 "use strict";
 
 import shim from "../shim";
-import Metavariable from "../metavariable";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -49,7 +48,7 @@ export default class MetavariableDeclaration {
   }
 
   static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
-    const { MetaType } = shim,
+    const { MetaType, Metavariable } = shim,
           metaTypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
           metaType = MetaType.fromMetaTypeNode(metaTypeNode, fileContext),
           metavariable = Metavariable.fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),

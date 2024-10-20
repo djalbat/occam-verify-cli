@@ -3,12 +3,7 @@
 import { arrayUtilities } from "necessary";
 
 import shim from "./shim";
-import Label from "./label";
-import Proof from "./proof";
-import Premise from "./premise";
-import Conclusion from "./conclusion";
 import LocalContext from "./context/local";
-import Substitutions from "./substitutions";
 
 import { stringFromLabels } from "./topLevelAssertion";
 import { nodeQuery, nodesQuery } from "./utilities/query";
@@ -75,7 +70,8 @@ class Rule {
   unifyStatement(statement, localContext) {
     let statementUnified = false;
 
-    const proofSteps = localContext.getProofSteps(),
+    const { Substitutions } = shim,
+          proofSteps = localContext.getProofSteps(),
           substitutions = Substitutions.fromNothing(),
           proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
 
@@ -150,7 +146,8 @@ class Rule {
           let proofVerified = true; ///
 
           if (this.proof !== null) {
-            const substitutions = Substitutions.fromNothing();
+            const { Substitutions } = shim,
+                  substitutions = Substitutions.fromNothing();
 
             proofVerified = this.proof.verify(substitutions, this.conclusion, localContext);
           }
@@ -204,7 +201,8 @@ class Rule {
   }
 
   static fromRuleNode(ruleNode, fileContext) {
-    const proofNode = proofNodeQuery(ruleNode),
+    const { Label, Proof, Premise, Conclusion } = shim,
+          proofNode = proofNodeQuery(ruleNode),
           labelNodes = labelNodesQuery(ruleNode),
           premiseNodes = premiseNodesQuery(ruleNode),
           conclusionNode = conclusionNodeQuery(ruleNode),

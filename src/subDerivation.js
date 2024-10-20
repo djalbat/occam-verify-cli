@@ -10,7 +10,7 @@ const { last } = arrayUtilities;
 
 const proofStepNodesQuery = nodesQuery("/subDerivation/proofStep|lastProofStep");
 
-export default class SubDerivation {
+class SubDerivation {
   constructor(proofSteps) {
     this.proofSteps = proofSteps;
   }
@@ -53,3 +53,9 @@ export default class SubDerivation {
 
   }
 }
+
+Object.assign(shim, {
+  SubDerivation
+});
+
+export default SubDerivation;

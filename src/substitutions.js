@@ -1,12 +1,14 @@
 "use strict";
 
+import shim from "./shim";
+
 import { arrayUtilities } from "necessary";
 
 import { EMPTY_STRING } from "./constants";
 
 const { find, first, prune, filter, compress } = arrayUtilities;
 
-export default class Substitutions {
+class Substitutions {
   constructor(array, savedArray) {
     this.array = array;
     this.savedArray = savedArray;
@@ -254,7 +256,7 @@ export default class Substitutions {
       ...this.array
     ];
 
-    rightDifference(this.savedArray, array);
+    leftDifference(array, this.savedArray);
 
     array.forEach((substitution) => {
       this.removeSubstitution(substitution, localContext);
@@ -305,11 +307,15 @@ export default class Substitutions {
   }
 }
 
-function rightDifference(arrayA, arrayB) {
-  filter(arrayB, (elementB) => {
-    const arrayAIncludesElementB = arrayA.includes(elementB);
+Object.assign(shim, {
+  Substitutions
+});
 
-    if (!arrayAIncludesElementB) {
+function leftDifference(arrayA, arrayB) {
+  filter(arrayA, (elementA) => {
+    const arrayBIncludesElementA = arrayB.includes(elementA);
+
+    if (!arrayBIncludesElementA) {
       return true;
     }
   });

@@ -1,16 +1,16 @@
 "use strict";
 
-import Supposition from "./supposition";
+import shim from "./shim";
+
 import LocalContext from "./context/local";
-import SubDerivation from "./subDerivation";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
-import {subproofNodeAsSubproofString, subproofStringFromSubproofNode} from "./utilities/subproof";
+import { subproofStringFromSubproofNode } from "./utilities/subproof";
 
 const suppositionNodesQuery = nodesQuery("/subproof/supposition"),
       subDerivationNodeQuery = nodeQuery("/subproof/subDerivation");
 
-export default class Subproof {
+class Subproof {
   constructor(string, suppositions, subDerivation) {
     this.string = string;
     this.suppositions = suppositions;
@@ -79,7 +79,8 @@ export default class Subproof {
     let subproof = null;
 
     if (subproofNode !== null) {
-      const subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
+      const { Supposition, SubDerivation } = shim,
+            subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
             suppositionNodes = suppositionNodesQuery(subproofNode),
             subDerivationNode = subDerivationNodeQuery(subproofNode),
             string = subproofString,  ///
@@ -96,3 +97,9 @@ export default class Subproof {
     return subproof;
   }
 }
+
+Object.assign(shim, {
+  Subproof
+});
+
+export default Subproof;

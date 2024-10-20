@@ -1,12 +1,7 @@
 "use strict";
 
 import shim from "./shim";
-import Label from "./label";
-import Proof from "./proof";
-import Consequent from "./consequent";
-import Supposition from "./supposition";
 import LocalContext from "./context/local";
-import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { stringFromLabels } from "./topLevelAssertion";
@@ -48,7 +43,8 @@ class Conjecture extends TopLevelAssertion {
 
         if (consequentVerified) {
           if (this.proof !== null) {
-            const substitutions = Substitutions.fromNothing();
+            const { Substitutions } = shim,
+                  substitutions = Substitutions.fromNothing();
 
             this.proof.verify(substitutions, this.consequent, localContext);
           }
@@ -72,7 +68,8 @@ class Conjecture extends TopLevelAssertion {
   static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Conjecture, json, fileContext); }
 
   static fromConjectureNode(conjectureNode, fileContext) {
-    const proofNode = proofNodeQuery(conjectureNode),
+    const { Label, Proof, Supposition, Consequent } = shim,
+          proofNode = proofNodeQuery(conjectureNode),
           labelNodes = labelNodesQuery(conjectureNode),
           consequentNode = consequentNodeQuery(conjectureNode),
           suppositionNodes = suppositionNodesQuery(conjectureNode),

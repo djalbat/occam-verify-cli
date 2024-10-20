@@ -1,6 +1,6 @@
 "use strict";
 
-import Variable from "../variable";
+import shim from "../shim";
 
 import { nodeQuery } from "../utilities/query";
 import { typeNameFromTypeNode } from "../utilities/name";
@@ -49,7 +49,8 @@ export default class VariableDeclaration {
   }
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-    const typeNode = typeNodeQuery(variableDeclarationNode),
+    const { Variable } = shim,
+          typeNode = typeNodeQuery(variableDeclarationNode),
           variable = Variable.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
           string = stringFromVariableAndTypeNode(variable, typeNode),
           variableDeclaration = new VariableDeclaration(fileContext, string, variable);

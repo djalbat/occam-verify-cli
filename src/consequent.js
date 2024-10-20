@@ -2,7 +2,6 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
-import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
 import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
@@ -90,7 +89,8 @@ class Consequent {
   }
 
   static fromConsequentNode(consequentNode, fileContext) {
-    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode),
+    const { UnqualifiedStatement } = shim,
+          unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
           consequent = new Consequent(fileContext, unqualifiedStatement);
 

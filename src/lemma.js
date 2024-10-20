@@ -1,12 +1,7 @@
 "use strict";
 
 import shim from "./shim";
-import Label from "./label";
-import Proof from "./proof";
-import Consequent from "./consequent";
-import Supposition from "./supposition";
 import LocalContext from "./context/local";
-import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { EMPTY_STRING } from "./constants";
@@ -50,7 +45,8 @@ class Lemma extends TopLevelAssertion {
         const consequentVerified = this.consequent.verify(localContext);
 
         if (consequentVerified) {
-          const substitutions = Substitutions.fromNothing(),
+          const { Substitutions } = shim,
+                substitutions = Substitutions.fromNothing(),
                 proofVerified = this.proof.verify(substitutions, this.consequent, localContext);
 
           if (proofVerified) {
@@ -74,7 +70,8 @@ class Lemma extends TopLevelAssertion {
   }
 
   static fromLemmaNode(lemmaNode, fileContext) {
-    const proofNode = proofNodeQuery(lemmaNode),
+    const { Label, Proof, Supposition, Consequent } = shim,
+          proofNode = proofNodeQuery(lemmaNode),
           labelNodes = labelNodesQuery(lemmaNode),
           consequentNode = consequentNodeQuery(lemmaNode),
           suppositionNodes = suppositionNodesQuery(lemmaNode),

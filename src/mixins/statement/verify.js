@@ -1,10 +1,6 @@
 "use strict";
 
-import Frame from "../../frame";
-import Equality from "../../equality";
-import Judgement from "../../judgement";
-import Declaration from "../../declaration";
-import Metavariable from "../../metavariable";
+import shim from "../../shim";
 import TypeAssertion from "../../assertion/type";
 import DefinedAssertion from "../../assertion/defined";
 import SubproofAssertion from "../../assertion/subproof";
@@ -25,7 +21,8 @@ const frameNodeQuery = nodeQuery("/statement/frame!"),
 function verifyAsMetavariable(statement, assignments, stated, localContext) {
   let verifiedAsMetavariable = false;
 
-  const statementNode = statement.getNode(),
+  const { Metavariable } = shim,
+        statementNode = statement.getNode(),
         metavariableNode = metavariableNodeQuery(statementNode),
         metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext);
 
@@ -49,7 +46,8 @@ function verifyAsMetavariable(statement, assignments, stated, localContext) {
 function verifyAsEquality(statement, assignments, stated, localContext) {
   let verifiedAsEquality = false;
 
-  const statementNode = statement.getNode(),
+  const { Equality } = shim,
+        statementNode = statement.getNode(),
         equalityNode = equalityNodeQuery(statementNode),
         equality = Equality.fromEqualityNode(equalityNode, localContext);
 
@@ -73,7 +71,8 @@ function verifyAsEquality(statement, assignments, stated, localContext) {
 function verifyAsFrame(statement, assignments, stated, localContext) {
   let verifiedAsFrame = false;
 
-  const statementNode = statement.getNode(),
+  const { Frame } = shim,
+        statementNode = statement.getNode(),
         frameNode = frameNodeQuery(statementNode),
         frame = Frame.fromFrameNode(frameNode, localContext);
 
@@ -97,7 +96,8 @@ function verifyAsFrame(statement, assignments, stated, localContext) {
 function verifyAsJudgement(statement, assignments, stated, localContext) {
   let verifiedAsJudgement = false;
 
-  const statementNode = statement.getNode(),
+  const { Judgement } = shim,
+        statementNode = statement.getNode(),
         judgementNode = judgementNodeQuery(statementNode),
         judgement = Judgement.fromJudgementNode(judgementNode, localContext);
 
@@ -121,7 +121,8 @@ function verifyAsJudgement(statement, assignments, stated, localContext) {
 function verifyAsDeclaration(statement, assignments, stated, localContext) {
   let verifiedAsDeclaration = false;
 
-  const statementNode = statement.getNode(),
+  const { Declaration } = shim,
+        statementNode = statement.getNode(),
         declarationNode = declarationNodeQuery(statementNode),
         declaration = Declaration.fromDeclarationNode(declarationNode, localContext);
 

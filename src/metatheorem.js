@@ -1,12 +1,7 @@
 "use strict";
 
 import shim from "./shim";
-import Label from "./label";
-import Proof from "./proof";
-import Consequent from "./consequent";
-import Supposition from "./supposition";
 import LocalContext from "./context/local";
-import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
@@ -117,7 +112,8 @@ class Metatheorem extends TopLevelAssertion {
   }
 
   static fromMetatheoremNode(metatheoremNode, fileContext) {
-    const proofNode = proofNodeQuery(metatheoremNode),
+    const { Label, Proof, Consequent, Supposition, Substitutions } = shim,
+          proofNode = proofNodeQuery(metatheoremNode),
           labelNodes = labelNodesQuery(metatheoremNode),
           consequentNode = consequentNodeQuery(metatheoremNode),
           suppositionNodes = suppositionNodesQuery(metatheoremNode),

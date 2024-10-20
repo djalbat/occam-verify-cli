@@ -1,13 +1,13 @@
 "use strict";
 
-import Derivation from "./derivation";
+import shim from "./shim";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
 
 const derivationNodeQuery = nodeQuery("/proof/derivation");
 
-export default class Proof {
+class Proof {
   constructor(derivation) {
     this.derivation = derivation;
   }
@@ -47,7 +47,8 @@ export default class Proof {
     let proof = null;
 
     if (proofNode !== null) {
-      const derivationNode = derivationNodeQuery(proofNode),
+      const { Derivation } = shim,
+            derivationNode = derivationNodeQuery(proofNode),
             derivation = Derivation.fromDerivationNode(derivationNode, fileContext);
 
       proof = new Proof(derivation);
@@ -56,3 +57,9 @@ export default class Proof {
     return proof;
   }
 }
+
+Object.assign(shim, {
+  Proof
+});
+
+export default Proof;

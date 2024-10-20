@@ -2,7 +2,6 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
-import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
 import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
@@ -90,7 +89,8 @@ class Conclusion {
   }
 
   static fromConclusionNode(conclusionNode, fileContext) {
-    const unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode),
+    const { UnqualifiedStatement } = shim,
+          unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
           conclusion = new Conclusion(fileContext, unqualifiedStatement);
 

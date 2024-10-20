@@ -10,7 +10,7 @@ const { last } = arrayUtilities;
 
 const proofStepNodesQuery = nodesQuery("/derivation/proofStep|lastProofStep");
 
-export default class Derivation {
+class Derivation {
   constructor(proofSteps) {
     this.proofSteps = proofSteps;
   }
@@ -52,3 +52,9 @@ export default class Derivation {
     return derivation;
   }
 }
+
+Object.assign(shim, {
+  Derivation
+});
+
+export default Derivation;

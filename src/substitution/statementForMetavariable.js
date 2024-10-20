@@ -3,7 +3,6 @@
 import shim from "../shim";
 import Substitution from "../substitution";
 import LocalContext from "../context/local";
-import Substitutions from "../substitutions";
 import metaLevelUnifier from "../unifier/metaLevel";
 
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
@@ -104,7 +103,8 @@ export default class StatementForMetavariableSubstitution extends Substitution {
   unifyStatement(statement, localContextA, localContextB) {
     let substitution = null;
 
-    const substitutions = Substitutions.fromNothing(),
+    const { Substitutions } = shim,
+          substitutions = Substitutions.fromNothing(),
           statementUnified = this.statement.unifyStatement(statement, substitutions, localContextA, localContextB);
 
     if (statementUnified) {

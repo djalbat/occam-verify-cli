@@ -1,10 +1,6 @@
 "use strict";
 
 import shim from "./shim";
-import Subproof from "./subproof";
-import Substitutions from "./substitutions";
-import QualifiedStatement from "./statement/qualified";
-import UnqualifiedStatement from "./statement/unqualified";
 
 import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
@@ -49,7 +45,8 @@ class ProofStep {
   unifyStatement(statement, localContext) {
     let statementUnified = false;
 
-    const substitutions = Substitutions.fromNothing();
+    const { Substitutions } = shim,
+          substitutions = Substitutions.fromNothing();
 
     if (this.qualifiedStatement !== null) {
       const localContextA = localContext, ///
@@ -111,7 +108,8 @@ class ProofStep {
   }
 
   static fromProofStepNode(proofStepNode, fileContext) {
-    const subproofNode = subproofNodeQuery(proofStepNode),
+    const { Subproof, QualifiedStatement, UnqualifiedStatement } = shim,
+          subproofNode = subproofNodeQuery(proofStepNode),
           qualifiedStatementNode = qualifiedStatementNodeQuery(proofStepNode),
           unqualifiedStatementNode = unqualifiedStatementNodeQuery(proofStepNode),
           subproof = Subproof.fromSubproofNode(subproofNode, fileContext),

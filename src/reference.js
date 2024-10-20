@@ -1,6 +1,6 @@
 "use strict";
 
-import Metavariable from "./metavariable";
+import shim from "./shim";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
@@ -67,7 +67,8 @@ export default class Reference {
   }
 
   static fromReferenceNode(referenceNode, fileContext) {
-    const metavariableNode = metavariableNodeQuery(referenceNode),
+    const { Metavariable } = shim,
+          metavariableNode = metavariableNodeQuery(referenceNode),
           localContext = LocalContext.fromFileContext(fileContext),
           metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
           reference = new Reference(metavariable);

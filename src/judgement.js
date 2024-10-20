@@ -1,7 +1,6 @@
 "use strict";
 
-import Frame from "./frame";
-import Declaration from "./declaration";
+import shim from "./shim";
 import JudgementAssignment from "./assignment/judgement";
 
 import { nodeQuery } from "./utilities/query";
@@ -9,7 +8,7 @@ import { nodeQuery } from "./utilities/query";
 const frameNodeQuery = nodeQuery("/judgement/frame"),
       declarationNodeQuery = nodeQuery("/judgement/declaration");
 
-export default class Judgement {
+class Judgement {
   constructor(string, frame, declaration) {
     this.string = string;
     this.frame = frame;
@@ -117,7 +116,8 @@ export default class Judgement {
     let judgement = null;
 
     if (judgementNode !== null) {
-      const frameNode = frameNodeQuery(judgementNode),
+      const { Frame, Declaration } = shim,
+            frameNode = frameNodeQuery(judgementNode),
             declarationNode = declarationNodeQuery(judgementNode),
             node = judgementNode, ///
             string = localContext.nodeAsString(node),
@@ -130,3 +130,9 @@ export default class Judgement {
     return judgement;
   }
 }
+
+Object.assign(shim, {
+  Judgement
+});
+
+export default Judgement;

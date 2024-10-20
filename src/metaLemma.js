@@ -1,11 +1,7 @@
 "use strict";
 
-import Label from "./label";
-import Proof from "./proof";
-import Consequent from "./consequent";
-import Supposition from "./supposition";
+import shim from "./shim";
 import LocalContext from "./context/local";
-import Substitutions from "./substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { EMPTY_STRING } from "./constants";
@@ -17,7 +13,7 @@ const proofNodeQuery = nodeQuery("/metaLemma/proof"),
       consequentNodeQuery = nodeQuery("/metaLemma/consequent"),
       suppositionNodesQuery = nodesQuery("/metaLemma/supposition");
 
-export default class MetaLemma extends TopLevelAssertion {
+class MetaLemma extends TopLevelAssertion {
   constructor(fileContext, string, labels, suppositions, consequent, proof, substitutions) {
     super(fileContext, string, labels, suppositions, consequent, proof);
 
@@ -82,7 +78,8 @@ export default class MetaLemma extends TopLevelAssertion {
   }
 
   static fromMetaLemmaNode(metaLemmaNode, fileContext) {
-    const proofNode = proofNodeQuery(metaLemmaNode),
+    const { Label, Proof, Consequent, Supposition, Substitutions } = shim,
+          proofNode = proofNodeQuery(metaLemmaNode),
           labelNodes = labelNodesQuery(metaLemmaNode),
           consequentNode = consequentNodeQuery(metaLemmaNode),
           suppositionNodes = suppositionNodesQuery(metaLemmaNode),
@@ -106,3 +103,8 @@ export default class MetaLemma extends TopLevelAssertion {
   }
 }
 
+Object.assign(shim, {
+  MetaLemma
+});
+
+export default MetaLemma;

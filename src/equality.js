@@ -11,7 +11,7 @@ const variableNodeQuery = nodeQuery("/term/variable!"),
       leftTermNodeQuery = nodeQuery("/equality/term[0]"),
       rightTermNodeQuery = nodeQuery("/equality/term[1]");
 
-export default class Equality {
+class Equality {
   constructor(string,leftTerm, rightTerm) {
     this.string = string;
     this.leftTerm = leftTerm;
@@ -220,3 +220,9 @@ export default class Equality {
     return equality;
   }
 }
+
+Object.assign(shim, {
+  Equality
+});
+
+export default Equality;

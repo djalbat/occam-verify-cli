@@ -1,6 +1,6 @@
 "use strict";
 
-import Variable from "../../variable";
+import shim from "../../shim";
 
 import { nodeQuery } from "../../utilities/query";
 
@@ -9,7 +9,8 @@ const variableNodeQuery = nodeQuery("/term/variable!");
 function verifyTermAsVariable(term, localContext, verifyAhead) {
   let termVerifiedAsVariable = false;
 
-  const termNode = term.getNode(),
+  const { Variable } = shim,
+        termNode = term.getNode(),
         variableNode = variableNodeQuery(termNode),
         variable = Variable.fromVariableNode(variableNode, localContext);
 

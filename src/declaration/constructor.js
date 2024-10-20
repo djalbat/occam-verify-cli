@@ -1,6 +1,6 @@
 "use strict";
 
-import Constructor from "../constructor";
+import shim from "../shim";
 
 export default class ConstructorDeclaration {
   constructor(fileContext, constructor) {
@@ -41,7 +41,8 @@ export default class ConstructorDeclaration {
   }
 
   static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
-    const constructor = Constructor.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
+    const { Constructor } = shim,
+          constructor = Constructor.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
           constructorDeclaration = new ConstructorDeclaration(fileContext, constructor);
 
     return constructorDeclaration;

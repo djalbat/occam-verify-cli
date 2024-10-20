@@ -1,7 +1,6 @@
 "use strict";
 
 import shim from "../shim";
-import Variable from "../variable";
 import VariableAssignment from "../assignment/variable";
 
 import { nodeQuery } from "../utilities/query";
@@ -111,7 +110,8 @@ export default class TypeAssertion {
 
     if (termVerified) {
       if (assignments !== null) {
-        const termNode = this.term.getNode(),
+        const { Variable } = shim,
+              termNode = this.term.getNode(),
               variableNode = variableNodeQuery(termNode),
               variable = Variable.fromVariableNodeAndType(variableNode, this.type, localContext);
 
