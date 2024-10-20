@@ -104,13 +104,10 @@ class Declaration {
 
     assignments = null; ///
 
-    const referenceVerified = this.reference.verify(localContext);
+    const referenceVerified = this.reference.verify(localContext),
+          statementVerified = this.statement.verify(assignments, stated, localContext);
 
-    if (referenceVerified) {
-      const statementVerified = this.statement.verify(assignments, stated, localContext);
-
-      verified = statementVerified; ///
-    }
+    verified = (referenceVerified && statementVerified);
 
     if (verified) {
       localContext.debug(`...verified the '${declarationString}' declaration.`);

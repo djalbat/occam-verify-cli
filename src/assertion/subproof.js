@@ -5,11 +5,8 @@ import { arrayUtilities } from "necessary";
 import shim from "../shim";
 import LocalContext from "../context/local";
 import metaLevelUnifier from "../unifier/metaLevel";
-import metaLevelVerifier from "../verifier/metaLevel";
 
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import proofStep from "../proofStep";
-import subproof from "../subproof";
 
 const { front, last, match } = arrayUtilities;
 
@@ -79,20 +76,27 @@ export default class SubproofAssertion {
 
     assignments = null; ///
 
-    let verifiedWhenStated = false,
-        verifiedWhenDerived = false;
+    const statementsVerified = this.statements.map((statement) => {
+      const statementVerified = statement.verify(assignments, stated, localContext);
 
-    if (stated) {
-      verifiedWhenStated = this.verifyWhenStated(localContext);
-    } else {
-      verifiedWhenDerived = this.verifyWhenDerived(localContext);
-    }
+      if (statementVerified) {
+        return true;
+      }
+    });
 
-    if (verifiedWhenStated || verifiedWhenDerived) {
-      const subproofAssertionNode = this.node,  ///
-            verifiedAtMetaLevel = metaLevelVerifier.verify(subproofAssertionNode, assignments, stated, localContext);
+    if (statementsVerified) {
+      let verifiedWhenStated = false,
+          verifiedWhenDerived = false;
 
-      verified = verifiedAtMetaLevel; ///
+      if (stated) {
+        verifiedWhenStated = this.verifyWhenStated(localContext);
+      } else {
+        verifiedWhenDerived = this.verifyWhenDerived(localContext);
+      }
+
+      if (verifiedWhenStated || verifiedWhenDerived) {
+        verified = true; ///
+      }
     }
 
     if (verified) {

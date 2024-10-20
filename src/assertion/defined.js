@@ -44,8 +44,8 @@ export default class DefinedAssertion {
 
     assignments = null; ///
 
-    let termVerified = true,  ///
-        frameVerified = true; ///
+    let termVerified = true,
+        frameVerified = true;
 
     if (this.term !== null) {
       termVerified = this.term.verify(localContext, () => {
