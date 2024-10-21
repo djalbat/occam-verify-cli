@@ -224,25 +224,27 @@ class Substitutions {
   }
 
   resolve(localContextA, localContextB) {
-    const metavariableNodes = this.getMetavariableNodes(),
-          resolved = metavariableNodes.every((metavariableNode) => {
-                        const complexSubstitutions = this.findComplexSubstitutionsByMetavariableNode(metavariableNode),
-                              complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
-                                const substitution = complexSubstitution, ///
-                                      substitutions = this, ///
-                                      substitutionResolved = substitution.resolve(substitutions, localContextA, localContextB);
+    const metavariableNodes = this.getMetavariableNodes();
 
-                                if (substitutionResolved) {
-                                  return true;
-                                }
-                              });
+    metavariableNodes.forEach((metavariableNode) => {
+      const complexSubstitutions = this.findComplexSubstitutionsByMetavariableNode(metavariableNode),
+            complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
+              let resolved;
 
-                        if (complexSubstitutionsResolved) {
-                          return true;
-                        }
-                      });
+              const substitutions = this,
+                    substitution = complexSubstitution; ///
 
-    return resolved;
+              resolved = substitution.isResolved();
+
+              if (!resolved) {
+                substitution.resolve(substitutions, localContextA, localContextB);
+              }
+            });
+
+      if (complexSubstitutionsResolved) {
+        return true;
+      }
+    });
   }
 
   snapshot() {

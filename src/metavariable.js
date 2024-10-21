@@ -6,6 +6,7 @@ import FrameForMetavariableSubstitution from "./substitution/frameForMetavariabl
 import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
 
 import { nodeQuery } from "./utilities/query";
+import { EMPTY_STRING } from "./constants";
 import { metavariableNodeFromMetavariableString } from "./utilities/node";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "./utilities/json";
 import { typeNameFromTypeNode, metavariableNameFromMetavariableNode } from "./utilities/name";
@@ -122,11 +123,9 @@ class Metavariable {
           metavariableString = this.string, ///
           substitutionString = (substitution !== null) ?
                                   substitution.getString() :
-                                    null;
+                                    EMPTY_STRING;
 
-    (substitutionString !== null) ?
-      localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable given the ${substitutionString} substitution...`) :
-        localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}' metavariable...`);
+    localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
 
     const statementNode = statement.getNode(),
           metavariableNode = this.node, ///
@@ -147,7 +146,7 @@ class Metavariable {
             metavariable = metavariableFromMetavariableNode(metavariableNode, localContext),
             statementMetavariable = statementMetavariableFromStatementNode(statementNode, localContext);
 
-      if (metavariable === statementMetavariable) {
+      if ((metavariable !== null) && (metavariable === statementMetavariable)) {
         statementUnified = true;
       } else {
         const metavariable = this,  ///
@@ -162,9 +161,7 @@ class Metavariable {
     }
 
     if (statementUnified) {
-      (substitutionString !== null) ?
-        localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable given the ${substitutionString} substitution.`) :
-          localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}' metavariable.`);
+      localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable.`);
     }
 
     return statementUnified;

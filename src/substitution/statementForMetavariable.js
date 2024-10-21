@@ -9,12 +9,17 @@ import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default class StatementForMetavariableSubstitution extends Substitution {
-  constructor(string, statement, metavariable, substitution) {
+  constructor(string, resolved, statement, metavariable, substitution) {
     super(string);
 
+    this.resolved = resolved;
     this.statement = statement;
     this.metavariable = metavariable;
     this.substitution = substitution;
+  }
+
+  isResolved() {
+    return this.resolved;
   }
 
   getStatement() {
@@ -42,27 +47,23 @@ export default class StatementForMetavariableSubstitution extends Substitution {
   }
 
   resolve(substitutions, localContextA, localContextB) {
-    let resolved = false;
-
     const substitutionString = this.string;
-
-    localContextB.trace(`Resolving the ${substitutionString} substitution...`);
 
     const metavariableNode = this.getMetavariableNode(),
           simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableNode(metavariableNode);
 
     if (simpleSubstitution !== null) {
+      localContextB.trace(`Resolving the ${substitutionString} substitution...`);
+
       const substitution = simpleSubstitution,  ///
             substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, localContextA, localContextB);
 
-      resolved = substitutionResolved; ///
-    }
+      this.resolved = substitutionResolved; ///
 
-    if (resolved) {
-      localContextB.debug(`...resolved the ${substitutionString} substitution.`);
+      if (this.resolved) {
+        localContextB.debug(`...resolved the ${substitutionString} substitution.`);
+      }
     }
-
-    return resolved;
   }
 
   resolveSubstitution(substitution, statement, substitutions, localContextA, localContextB) {
@@ -82,9 +83,20 @@ export default class StatementForMetavariableSubstitution extends Substitution {
 
       substitutions.snapshot();
 
-      const nodeA = substitutionA.getSubstitutionNode(),  ///
-            nodeB = substitutionB.getSubstitutionNode(),  ///
+      const substitutionNodeA = substitutionA.getSubstitutionNode(),  ///
+            substitutionNodeB = substitutionB.getSubstitutionNode(),  ///
+            substitutionStringA = localContextA.nodeAsString(substitutionNodeA),
+            substitutionStringB = localContextB.nodeAsString(substitutionNodeB);
+
+      localContextB.trace(`Unifying the '${substitutionStringB}' substitution with the '${substitutionStringA}' substitution...`);
+
+      const nodeA = substitutionNodeA,  ///
+            nodeB = substitutionNodeB,  ///
             unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+
+      if (unifiedAtMetaLevel) {
+        localContextB.trace(`...unified the '${substitutionStringB}' substitution with the '${substitutionStringA}' substitution.`);
+      }
 
       unifiedAtMetaLevel ?
         substitutions.continue() :
@@ -171,10 +183,11 @@ export default class StatementForMetavariableSubstitution extends Substitution {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
+          resolved = true,
           statement = statementFromJSON(json, fileContext),
           metavariable = metavariableFromJSON(json, fileContext),
           substitution = null,  ///
-          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, statement, metavariable, substitution);
+          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, resolved, statement, metavariable, substitution);
 
     return statementForMetavariableSubstitution;
   }
@@ -188,9 +201,10 @@ export default class StatementForMetavariableSubstitution extends Substitution {
 
     statement = Statement.fromStatementNode(statementNode, localContext);
 
-    const substitution = null,
-          string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext),
-          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, statement, metavariable, substitution);
+    const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext),
+          resolved = true,
+          substitution = null,
+          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, resolved, statement, metavariable, substitution);
 
     return statementForMetavariableSubstitution;
   }
@@ -205,7 +219,8 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     statement = Statement.fromStatementNode(statementNode, localContext);
 
     const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext),
-          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, statement, metavariable, substitution);
+          resolved = false,
+          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, resolved, statement, metavariable, substitution);
 
     return statementForMetavariableSubstitution;
   }

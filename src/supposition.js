@@ -59,37 +59,6 @@ class Supposition {
     return verified;
   }
 
-  unifySubproof(subproof, substitutions, localContext) {
-    let subproofUnified = false;
-
-    const supposition = this, ///
-          subproofString = subproof.getString(),
-          suppositionStatement = supposition.getStatement(),
-          suppositionStatementString = suppositionStatement.getString();
-
-    localContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
-
-    const statement = this.unqualifiedStatement.getStatement(),
-          statementNode = statement.getNode(),
-          statementTokens = statement.getTokens(),
-          context = this.fileContext, ///
-          tokens = statementTokens; ///
-
-    localContext = LocalContext.fromContextAndTokens(context, tokens);  ///
-
-    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
-
-    if (subproofAssertion !== null) {
-      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, this.fileContext, localContext);
-    }
-
-    if (subproofUnified) {
-      localContext.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`);
-    }
-
-    return subproofUnified;
-  }
-
   unifyProofStep(proofStep, substitutions, localContext) {
     let proofStepUnified = false;
 
@@ -98,12 +67,27 @@ class Supposition {
 
     substitutions.snapshot();
 
+    let subproofUnified = false,
+        statementUnified = false;
+
     if (false) {
       ///
     } else if (subproof !== null) {
-      proofStepUnified = this.unifySubproof(subproof, substitutions, localContext);
+      subproofUnified = this.unifySubproof(subproof, substitutions, localContext);
     } else if (statement !== null) {
-      proofStepUnified = this.unifyStatement(statement, substitutions, localContext);
+      statementUnified = this.unifyStatement(statement, substitutions, localContext);
+    }
+
+    if (subproofUnified || statementUnified) {
+      const localContextB = localContext; ///
+
+      localContext = LocalContext.fromFileContext(this.fileContext);
+
+      const localContextA = localContext; ///
+
+      substitutions.resolve(localContextA, localContextB);
+
+      proofStepUnified = true;
     }
 
     proofStepUnified ?
@@ -134,6 +118,37 @@ class Supposition {
     }
 
     return statementUnified;
+  }
+
+  unifySubproof(subproof, substitutions, localContext) {
+    let subproofUnified = false;
+
+    const supposition = this, ///
+          subproofString = subproof.getString(),
+          suppositionStatement = supposition.getStatement(),
+          suppositionStatementString = suppositionStatement.getString();
+
+    localContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
+
+    const statement = this.unqualifiedStatement.getStatement(),
+          statementNode = statement.getNode(),
+          statementTokens = statement.getTokens(),
+          context = this.fileContext, ///
+          tokens = statementTokens; ///
+
+    localContext = LocalContext.fromContextAndTokens(context, tokens);  ///
+
+    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
+
+    if (subproofAssertion !== null) {
+      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, this.fileContext, localContext);
+    }
+
+    if (subproofUnified) {
+      localContext.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`);
+    }
+
+    return subproofUnified;
   }
 
   toJSON() {

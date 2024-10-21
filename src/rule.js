@@ -79,18 +79,7 @@ class Rule {
       const proofSteps = localContext.getProofSteps(),
             proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
 
-      if (proofStepsUnified) {
-        const localContextB = localContext; ///
-
-        localContext = LocalContext.fromFileContext(this.fileContext);
-
-        const localContextA = localContext, ///
-              substitutionsResolved = substitutions.resolve(localContextA, localContextB);
-
-        statementUnified = substitutionsResolved; ///
-      } else {
-        statementUnified = false;
-      }
+      statementUnified = proofStepsUnified; ///
     }
 
     return statementUnified;

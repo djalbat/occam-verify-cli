@@ -28,37 +28,6 @@ class Premise {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
-  unifySubproof(subproof, substitutions, localContext) {
-    let subproofUnified = false;
-
-    const premise = this, ///
-          subproofString = subproof.getString(),
-          premiseStatement = premise.getStatement(),
-          premiseStatementString = premiseStatement.getString();
-
-    localContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
-
-    const statement = this.unqualifiedStatement.getStatement(),
-          statementNode = statement.getNode(),
-          statementTokens = statement.getTokens(),
-          context = this.fileContext, ///
-          tokens = statementTokens; ///
-
-    localContext = LocalContext.fromContextAndTokens(context, tokens);  ///
-
-    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
-
-    if (subproofAssertion !== null) {
-      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, this.fileContext, localContext);
-    }
-
-    if (subproofUnified) {
-      localContext.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
-    }
-
-    return subproofUnified;
-  }
-
   unifyProofStep(proofStep, substitutions, localContext) {
     let proofStepUnified = false;
 
@@ -79,6 +48,14 @@ class Premise {
     }
 
     if (subproofUnified || statementUnified) {
+      const localContextB = localContext; ///
+
+      localContext = LocalContext.fromFileContext(this.fileContext);
+
+      const localContextA = localContext; ///
+
+      substitutions.resolve(localContextA, localContextB);
+
       proofStepUnified = true;
     }
 
@@ -110,6 +87,37 @@ class Premise {
     }
 
     return statementUnified;
+  }
+
+  unifySubproof(subproof, substitutions, localContext) {
+    let subproofUnified = false;
+
+    const premise = this, ///
+          subproofString = subproof.getString(),
+          premiseStatement = premise.getStatement(),
+          premiseStatementString = premiseStatement.getString();
+
+    localContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
+
+    const statement = this.unqualifiedStatement.getStatement(),
+          statementNode = statement.getNode(),
+          statementTokens = statement.getTokens(),
+          context = this.fileContext, ///
+          tokens = statementTokens; ///
+
+    localContext = LocalContext.fromContextAndTokens(context, tokens);  ///
+
+    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
+
+    if (subproofAssertion !== null) {
+      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, this.fileContext, localContext);
+    }
+
+    if (subproofUnified) {
+      localContext.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
+    }
+
+    return subproofUnified;
   }
 
   verify(localContext) {

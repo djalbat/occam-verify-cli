@@ -164,7 +164,7 @@ class Variable {
             variable = variableFromVariableNode(variableNode, localContext),
             termVariable = termVariableFromTermNode(termNode, localContext);
 
-      if (variable === termVariable) {
+      if ((variable !== null) && (variable === termVariable)) {
         termUnified = true;
       } else {
         const variable = this,  ///
