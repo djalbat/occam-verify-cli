@@ -247,6 +247,26 @@ class Substitutions {
     });
   }
 
+  areResvoled() {
+    const metavariableNodes = this.getMetavariableNodes(),
+          resolved = metavariableNodes.every((metavariableNode) => {
+            const complexSubstitutions = this.findComplexSubstitutionsByMetavariableNode(metavariableNode),
+                  complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
+                        const complexSubstitutionResolved = complexSubstitution.isResolved();
+
+                        if (complexSubstitutionResolved) {
+                          return true;
+                        }
+                      });
+
+                    if (complexSubstitutionsResolved) {
+                      return true;
+                    }
+                  });
+
+    return resolved;
+  }
+
   snapshot() {
     this.savedArray = [
       ...this.array

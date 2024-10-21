@@ -79,7 +79,11 @@ class Rule {
       const proofSteps = localContext.getProofSteps(),
             proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
 
-      statementUnified = proofStepsUnified; ///
+      if (proofStepsUnified) {
+        const substitutionsResolved = substitutions.areResvoled();
+
+        statementUnified = substitutionsResolved; ///
+      }
     }
 
     return statementUnified;
