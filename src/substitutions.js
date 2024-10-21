@@ -247,7 +247,7 @@ class Substitutions {
     });
   }
 
-  areResvoled() {
+  areResolved() {
     const metavariableNodes = this.getMetavariableNodes(),
           resolved = metavariableNodes.every((metavariableNode) => {
             const complexSubstitutions = this.findComplexSubstitutionsByMetavariableNode(metavariableNode),

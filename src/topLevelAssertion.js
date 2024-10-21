@@ -74,7 +74,7 @@ export default class TopLevelAssertion {
             proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
 
       if (proofStepsUnified) {
-        const substitutionsResolved = substitutions.areResvoled();
+        const substitutionsResolved = substitutions.areResolved();
 
         statementUnified = substitutionsResolved; ///
       }
