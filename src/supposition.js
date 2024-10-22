@@ -28,35 +28,28 @@ class Supposition {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
-  verify(localContext) {
-    let verified = false;
+  resolveIndependently(substitutions, localContext) {
+    let resolvedIndependently;
 
-    const suppositionString = this.getString(); ///
+    const suppositionString = this.getString();
 
-    localContext.trace(`Verifying the '${suppositionString}' supposition...`);
+    const localContextB = localContext; ///
 
-    const stated = true,
-          assignments = [],
-          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
+    localContext = LocalContext.fromFileContext(this.fileContext);
 
-    if (unqualifiedStatementVerified) {
-      const assignmentsAssigned = assignAssignments(assignments, localContext);
+    const localContextA = localContext; ///
 
-      if (assignmentsAssigned) {
-        const { ProofStep } = shim,
-              proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
+    localContextB.trace(`Resolving the '${suppositionString}' supposition independently...`);
 
-        localContext.addProofStep(proofStep);
+    const unqualifiedStatementResolvedIndependently = this.unqualifiedStatement.resolveIndependently(substitutions, localContextA, localContextB);
 
-        verified = true;
-      }
+    resolvedIndependently = unqualifiedStatementResolvedIndependently;  ///
+
+    if (resolvedIndependently) {
+      localContextB.trace(`...resolved the '${suppositionString}' supposition independently.`);
     }
 
-    if (verified) {
-      localContext.debug(`...verified the '${suppositionString}' supposition.`);
-    }
-
-    return verified;
+    return resolvedIndependently;
   }
 
   unifyProofStep(proofStep, substitutions, localContext) {
@@ -128,27 +121,62 @@ class Supposition {
           suppositionStatement = supposition.getStatement(),
           suppositionStatementString = suppositionStatement.getString();
 
-    localContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
+    const localContextB = localContext; ///
 
     const statement = this.unqualifiedStatement.getStatement(),
-          statementNode = statement.getNode(),
           statementTokens = statement.getTokens(),
           context = this.fileContext, ///
           tokens = statementTokens; ///
 
     localContext = LocalContext.fromContextAndTokens(context, tokens);  ///
 
-    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
+    const localContextA = localContext; ///
+
+    localContextB.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
+
+    const statementNode = statement.getNode(),
+          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
 
     if (subproofAssertion !== null) {
-      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, this.fileContext, localContext);
+      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, localContextA, localContextB);
     }
 
     if (subproofUnified) {
-      localContext.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`);
+      localContextB.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`);
     }
 
     return subproofUnified;
+  }
+
+  verify(localContext) {
+    let verified = false;
+
+    const suppositionString = this.getString(); ///
+
+    localContext.trace(`Verifying the '${suppositionString}' supposition...`);
+
+    const stated = true,
+          assignments = [],
+          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
+
+    if (unqualifiedStatementVerified) {
+      const assignmentsAssigned = assignAssignments(assignments, localContext);
+
+      if (assignmentsAssigned) {
+        const { ProofStep } = shim,
+              proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
+
+        localContext.addProofStep(proofStep);
+
+        verified = true;
+      }
+    }
+
+    if (verified) {
+      localContext.debug(`...verified the '${suppositionString}' supposition.`);
+    }
+
+    return verified;
   }
 
   toJSON() {
