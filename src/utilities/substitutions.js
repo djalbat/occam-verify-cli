@@ -45,7 +45,7 @@ export function frameFromFrameAndSubstitutions(frame, substitutions) {
       });
 
       if (substitution !== null) {
-        frame = substitution.getTerm();
+        frame = substitution.getFrame();
       }
     }
   }

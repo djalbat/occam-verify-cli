@@ -88,6 +88,8 @@ export default class FrameForMetavariableSubstitution extends Substitution {
 
   matchFrameNode(frameNode) { return this.frame.matchFrameNode(frameNode); }
 
+  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
+
   matchMetavariableName(metavariableName) {
     let metavariableNameMatches;
 
