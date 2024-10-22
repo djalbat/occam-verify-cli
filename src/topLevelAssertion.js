@@ -3,7 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import shim from "./shim";
-import LocalContext from "./context/local";
 
 import { EMPTY_STRING } from "./constants";
 import { labelsFromJSON,
@@ -13,7 +12,7 @@ import { labelsFromJSON,
          consequentToConsequentJSON,
          suppositionsToSuppositionsJSON } from "./utilities/json";
 
-const { reverse, correlate } = arrayUtilities;
+const { extract, reverse, backwardsEvery } = arrayUtilities;
 
 export default class TopLevelAssertion {
   constructor(fileContext, string, labels, suppositions, consequent, proof) {
@@ -65,15 +64,13 @@ export default class TopLevelAssertion {
     let statementUnified;
 
     const { Substitutions } = shim,
-          substitutions = Substitutions.fromNothing();
+      substitutions = Substitutions.fromNothing(),
+      consequentUnified = this.unifyConsequent(statement, substitutions, localContext);
 
-    statementUnified = this.consequent.unifyStatement(statement, substitutions, localContext);
+    if (consequentUnified) {
+      const suppositionsUnified = this.unifySupposition(substitutions, localContext);
 
-    if (statementUnified) {
-      const proofSteps = localContext.getProofSteps(),
-            proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
-
-      if (proofStepsUnified) {
+      if (suppositionsUnified) {
         const substitutionsResolved = substitutions.areResolved();
 
         statementUnified = substitutionsResolved; ///
@@ -83,24 +80,70 @@ export default class TopLevelAssertion {
     return statementUnified;
   }
 
-  unifyProofSteps(proofSteps, substitutions, localContext) {
-    let proofStepsUnified;
+  unifyConsequent(statement, substitutions, localContext) {
+    let consequentUnified;
 
-    let suppositions = this.suppositions;
+    const consequentString = this.consequent.getString();
 
-    suppositions = reverse(suppositions); ///
+    localContext.trace(`Unifying the '${consequentString}' consequent...`);
+
+    const statementUnified = this.consequent.unifyStatement(statement, substitutions, localContext);  ///
+
+    consequentUnified = statementUnified; ///
+
+    if (consequentUnified) {
+      localContext.debug(`...unified the '${consequentString}' consequent`);
+    }
+
+    return consequentUnified;
+  }
+
+  unifySupposition(substitutions, localContext) {
+    let proofSteps = localContext.getProofSteps();
 
     proofSteps = reverse(proofSteps); ///
 
-    proofStepsUnified = correlate(suppositions, proofSteps, (supposition, proofStep) => {
-      const proofStepUnified = supposition.unifyProofStep(proofStep, substitutions, localContext);
+    const suppositionsUnified = backwardsEvery(this.suppositions, (supposition) => {
+      const suppositionUnified = this.unifyPremise(supposition, proofSteps, substitutions, localContext);
 
-      if (proofStepUnified) {
+      if (suppositionUnified) {
         return true;
       }
     });
 
-    return proofStepsUnified;
+    return suppositionsUnified;
+  }
+
+  unifyPremise(supposition, proofSteps, substitutions, localContext) {
+    let suppositionUnified  =false;
+
+    const suppositionString = supposition.getString();
+
+    localContext.trace(`Unifying the '${suppositionString}' supposition...`);
+
+    const suppositionResolvedIndependently = supposition.resolveIndependently(substitutions, localContext);
+
+    if (suppositionResolvedIndependently) {
+      suppositionUnified = true;
+    } else {
+      const proofStep = extract(proofSteps, (proofStep) => {
+        const proofStepUnified = supposition.unifyProofStep(proofStep, substitutions, localContext);
+
+        if (proofStepUnified) {
+          return true;
+        }
+      });
+
+      if (proofStep !== null) {
+        suppositionUnified = true;
+      }
+    }
+
+    if (suppositionUnified) {
+      localContext.debug(`...unified the '${suppositionString}' supposition.`);
+    }
+
+    return suppositionUnified;
   }
 
   toJSON() {
