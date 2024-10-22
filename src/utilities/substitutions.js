@@ -8,8 +8,11 @@ const variableNodeQuery = nodeQuery("/term/variable!"),
 
 export function termFromTermAndSubstitutions(term, substitutions) {
   if (term !== null) {
-    const termNode = term.getNode(),
-          variableNode = variableNodeQuery(termNode);
+    const termNode = term.getNode();
+
+    term = null;
+
+    const variableNode = variableNodeQuery(termNode);
 
     if (variableNode !== null) {
       const variableName = variableNameFromVariableNode(variableNode),
@@ -32,8 +35,11 @@ export function termFromTermAndSubstitutions(term, substitutions) {
 
 export function frameFromFrameAndSubstitutions(frame, substitutions) {
   if (frame !== null) {
-    const frameNode = frame.getNode(),
-          metavariableNode = metavariableNodeQuery(frameNode);
+    const frameNode = frame.getNode();
+
+    frame = null;
+
+    const metavariableNode = metavariableNodeQuery(frameNode);
 
     if (metavariableNode !== null) {
       const substitution = substitutions.findSubstitution((substitution) => {
@@ -55,8 +61,11 @@ export function frameFromFrameAndSubstitutions(frame, substitutions) {
 
 export function statementFromStatementAndSubstitutions(statement, substitutions) {
   if (statement !== null) {
-    const statementNode = statement.getNode(),
-          metavariableNode = metavariableNodeQuery(statementNode);
+    const statementNode = statement.getNode();
+
+    statement = null;
+
+    const metavariableNode = metavariableNodeQuery(statementNode);
 
     if (metavariableNode !== null) {
       const substitution = substitutions.findSubstitution((substitution) => {
