@@ -3,6 +3,7 @@
 import shim from "../shim";
 
 import { isAssertionNegated } from "../utilities/assertion";
+import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../utilities/substitutions";
 
 export default class ContainedAssertion {
   constructor(string, node, term, frame, negated, statement) {
@@ -36,6 +37,27 @@ export default class ContainedAssertion {
 
   getStatement() {
     return this.statement;
+  }
+
+  resolve(substitutions, localContext) {
+    let resolved;
+
+    const containedAssertionString = this.string; ///
+
+    localContext.trace(`Resolving the '${containedAssertionString}' contained assertion...`);
+
+    const term = termFromTermAndSubstitutions(this.term, substitutions),
+          frame = frameFromFrameAndSubstitutions(this.frame, substitutions),
+          statement = statementFromStatementAndSubstitutions(this.statement, substitutions),
+          verifiedWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, localContext);
+
+    resolved = verifiedWhenDerived; ///
+
+    if (resolved) {
+      localContext.debug(`...resolved the '${containedAssertionString}' contained assertion.`);
+    }
+
+    return resolved;
   }
 
   verify(assignments, stated, localContext) {
@@ -108,43 +130,13 @@ export default class ContainedAssertion {
   }
 
   verifyWhenDerived(localContext) {
-    let verifiedWhenDerived = false;
+    let verifiedWhenDerived;
 
     const containedAssertionString = this.string; ///
 
     localContext.trace(`Verifying the '${containedAssertionString}' derived contained assertion...`);
 
-    if (this.term !== null) {
-      const variable = this.term.getVariable(localContext);
-
-      if (variable !== null) {
-        const variableContained = this.statement.isVariableContained(variable, localContext);
-
-        if (!this.negated && variableContained) {
-          verifiedWhenDerived = true;
-        }
-
-        if (this.negated && !variableContained) {
-          verifiedWhenDerived = true;
-        }
-      }
-    }
-
-    if (this.frame !== null) {
-      const metavariable = this.frame.getVariable(localContext);
-
-      if (metavariable !== null) {
-        const metavariableContained = this.statement.isMetavariableContained(metavariable, localContext);
-
-        if (!this.negated && metavariableContained) {
-          verifiedWhenDerived = true;
-        }
-
-        if (this.negated && !metavariableContained) {
-          verifiedWhenDerived = true;
-        }
-      }
-    }
+    verifiedWhenDerived = verifyWhenDerived(this.term, this.frame, this.statement, this.negated, localContext);
 
     if (verifiedWhenDerived) {
       localContext.debug(`...verified the '${containedAssertionString}' derived contained assertion.`);
@@ -171,4 +163,42 @@ export default class ContainedAssertion {
 
     return containedAssertion;
   }
+}
+
+function verifyWhenDerived(term, frame, statement, negated, localContext) {
+  let verifiedWhenDerived = false;
+
+  if (term !== null) {
+    const variable = term.getVariable(localContext);
+
+    if (variable !== null) {
+      const variableContained = statement.isVariableContained(variable, localContext);
+
+      if (!negated && variableContained) {
+        verifiedWhenDerived = true;
+      }
+
+      if (negated && !variableContained) {
+        verifiedWhenDerived = true;
+      }
+    }
+  }
+
+  if (frame !== null) {
+    const metavariable = frame.getMetavariable(localContext);
+
+    if (metavariable !== null) {
+      const metavariableContained = statement.isMetavariableContained(metavariable, localContext);
+
+      if (!negated && metavariableContained) {
+        verifiedWhenDerived = true;
+      }
+
+      if (negated && !metavariableContained) {
+        verifiedWhenDerived = true;
+      }
+    }
+  }
+
+  return verifiedWhenDerived;
 }

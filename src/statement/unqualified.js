@@ -74,6 +74,24 @@ class UnqualifiedStatement {
     return statementUnified;
   }
 
+  resolveIndependently(substitutions, localContextA, localContextB) {
+    let resolveIndependently;
+
+    const unqualifiedStatementString = this.getString();  ///
+
+    localContextB.trace(`Resolving the '${unqualifiedStatementString}' unqualified statement independently...`);
+
+    const statementResolvedIndependently = this.statement.resolveIndependently(substitutions, localContextA, localContextB);
+
+    resolveIndependently = statementResolvedIndependently;  ///
+
+    if (resolveIndependently) {
+      localContextB.debug(`...resolved the '${unqualifiedStatementString}' unqualified statement independently.`);
+    }
+
+    return resolveIndependently;
+  }
+
   unifyStatementWithProofSteps(statement, assignments, stated, localContext) {
     let statementUnifiedWithProofSteps;
 

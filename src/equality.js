@@ -50,8 +50,9 @@ class Equality {
   }
 
   isReflexive() {
-    const leftTermMatchesRightTerm = this.leftTerm.match(this.rightTerm),
-          reflexive = leftTermMatchesRightTerm; ///
+    const rightTermNode = this.rightTerm.getNode(),
+          leftTermNodeMatchesRightTermNode = this.leftTerm.matchTermNode(rightTermNode),
+          reflexive = leftTermNodeMatchesRightTermNode; ///
 
     return reflexive;
   }

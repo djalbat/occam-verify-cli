@@ -14,7 +14,7 @@ import { labelsFromJSON,
          premisesToPremisesJSON,
          conclusionToConclusionJSON } from "./utilities/json";
 
-const { reverse, correlate } = arrayUtilities;
+const { extract, reverse, backwardsEvery } = arrayUtilities;
 
 const proofNodeQuery = nodeQuery("/rule/proof"),
       labelNodesQuery = nodesQuery("/rule/label"),
@@ -71,15 +71,13 @@ class Rule {
     let statementUnified;
 
     const { Substitutions } = shim,
-          substitutions = Substitutions.fromNothing();
+          substitutions = Substitutions.fromNothing(),
+          conclusionUnified = this.unifyConclusion(statement, substitutions, localContext);
 
-    statementUnified = this.conclusion.unifyStatement(statement, substitutions, localContext);  ///
+    if (conclusionUnified) {
+      const premisesUnified = this.unifyPremises(substitutions, localContext);
 
-    if (statementUnified) {
-      const proofSteps = localContext.getProofSteps(),
-            proofStepsUnified = this.unifyProofSteps(proofSteps, substitutions, localContext);
-
-      if (proofStepsUnified) {
+      if (premisesUnified) {
         const substitutionsResolved = substitutions.areResolved();
 
         statementUnified = substitutionsResolved; ///
@@ -89,24 +87,70 @@ class Rule {
     return statementUnified;
   }
 
-  unifyProofSteps(proofSteps, substitutions, localContext) {
-    let proofStepsUnified;
+  unifyConclusion(statement, substitutions, localContext) {
+    let conclusionUnified;
 
-    let premises = this.premises;
+    const conclusionString = this.conclusion.getString();
 
-    premises = reverse(premises); ///
+    localContext.trace(`Unifying the '${conclusionString}' conclusion...`);
+
+    const statementUnified = this.conclusion.unifyStatement(statement, substitutions, localContext);  ///
+
+    conclusionUnified = statementUnified; ///
+
+    if (conclusionUnified) {
+      localContext.debug(`...unified the '${conclusionString}' conclusion`);
+    }
+
+    return conclusionUnified;
+  }
+
+  unifyPremises(substitutions, localContext) {
+    let proofSteps = localContext.getProofSteps();
 
     proofSteps = reverse(proofSteps); ///
 
-    proofStepsUnified = correlate(premises, proofSteps, (premise, proofStep) => {
-      const proofStepUnified = premise.unifyProofStep(proofStep, substitutions, localContext);
+    const premisesUnified = backwardsEvery(this.premises, (premise) => {
+      const premiseUnified = this.unifyPremise(premise, proofSteps, substitutions, localContext);
 
-      if (proofStepUnified) {
+      if (premiseUnified) {
         return true;
       }
     });
 
-    return proofStepsUnified;
+    return premisesUnified;
+  }
+
+  unifyPremise(premise, proofSteps, substitutions, localContext) {
+    let premiseUnified  =false;
+
+    const premiseString = premise.getString();
+
+    localContext.trace(`Unifying the '${premiseString}' premise...`);
+
+    const premiseResolvedIndependently = premise.resolveIndependently(substitutions, localContext);
+
+    if (premiseResolvedIndependently) {
+      premiseUnified = true;
+    } else {
+      const proofStep = extract(proofSteps, (proofStep) => {
+        const proofStepUnified = premise.unifyProofStep(proofStep, substitutions, localContext);
+
+        if (proofStepUnified) {
+          return true;
+        }
+      });
+
+      if (proofStep !== null) {
+        premiseUnified = true;
+      }
+    }
+
+    if (premiseUnified) {
+      localContext.debug(`...unified the '${premiseString}' premise.`);
+    }
+
+    return premiseUnified;
   }
 
   verify() {

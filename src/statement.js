@@ -4,6 +4,7 @@ import shim from "./shim";
 import unifyMixins from "./mixins/statement/unify";
 import verifyMixins from "./mixins/statement/verify";
 import LocalContext from "./context/local";
+import resolveMixins from "./mixins/statement/resolve";
 import metaLevelUnifier from "./unifier/metaLevel";
 import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
@@ -103,6 +104,35 @@ class Statement {
     const statementNodeMatches = this.node.match(statementNode);
 
     return statementNodeMatches;
+  }
+
+  resolveIndependently(substitutions, localContextA, localContextB) {
+    let resolvedIndependently;
+
+    const statement = this, ///
+          statementString = this.string;  ///
+
+    localContextB.trace(`Resolving the '${statementString}' statement independently...`);
+
+    const context = localContextA;  ///
+
+    localContextA = LocalContext.fromContextAndTokens(context, this.tokens);
+
+    const resolved = resolveMixins.some((resolveMixin) => {
+      const resolved = resolveMixin(statement, substitutions, localContextA, localContextB);
+
+      if (resolved) {
+        return true;
+      }
+    });
+
+    resolvedIndependently = resolved; ///
+
+    if (resolvedIndependently) {
+      localContextB.debug(`...resolved the '${statementString}' statement independently.`);
+    }
+
+    return resolvedIndependently;
   }
 
   unifyStatement(statement, substitutions, localContextA, localContextB) {

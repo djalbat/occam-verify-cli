@@ -28,6 +28,30 @@ class Premise {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
+  resolveIndependently(substitutions, localContext) {
+    let resolvedIndependently;
+
+    const premiseString = this.getString();
+
+    const localContextB = localContext; ///
+
+    localContext = LocalContext.fromFileContext(this.fileContext);
+
+    const localContextA = localContext; ///
+
+    localContextB.trace(`Resolving the '${premiseString}' premise independently...`);
+
+    const unqualifiedStatementResolvedIndependently = this.unqualifiedStatement.resolveIndependently(substitutions, localContextA, localContextB);
+
+    resolvedIndependently = unqualifiedStatementResolvedIndependently;  ///
+
+    if (resolvedIndependently) {
+      localContextB.trace(`...resolved the '${premiseString}' premise independently.`);
+    }
+
+    return resolvedIndependently;
+  }
+
   unifyProofStep(proofStep, substitutions, localContext) {
     let proofStepUnified = false;
 

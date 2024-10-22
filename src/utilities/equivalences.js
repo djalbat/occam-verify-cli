@@ -57,9 +57,9 @@ export function findEquivalenceByType(equivalences, type) {
 
 export function findEquivalenceByTerm(equivalences, term) {
   const equivalence = equivalences.find((equivalence) => {
-    const equivalenceMatchesTerm = equivalence.matchTerm(term);
+    const termEquates = equivalence.equateTerm(term);
 
-    if (equivalenceMatchesTerm) {
+    if (termEquates) {
       return true;
     }
   }) || null;

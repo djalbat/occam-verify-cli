@@ -250,7 +250,7 @@ class LocalContext {
     return termGrounded;
   }
 
-  isVariableDefined(variable) {
+  isVariableDefinedByVariableName(variableName) {
     const context = this,
           equivalences = this.getEquivalences(),
           groundedTerms = [],
@@ -259,9 +259,9 @@ class LocalContext {
     groundedTermsAndDefinedVariablesFromFromEquivalences(equivalences, groundedTerms, definedVariables, context);
 
     const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
-            const variableMatchesDefinedVariable = variable.match(definedVariable);
+            const definedVariableName = definedVariable.getName();
 
-            if (variableMatchesDefinedVariable) {
+            if (definedVariableName === variableName) {
               return true;
             }
           }),

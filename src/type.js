@@ -83,12 +83,6 @@ class Type {
     return equalToOrSuperTypeOf;
   }
 
-  match(type) {
-    const matches = (type === this);  ///
-
-    return matches;
-  }
-
   matchName(name) {
     const nodeMatches = (this.name === name);
 

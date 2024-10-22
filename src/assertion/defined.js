@@ -2,7 +2,13 @@
 
 import shim from "../shim";
 
+import { nodeQuery } from "../utilities/query";
 import { isAssertionNegated } from "../utilities/assertion";
+import { variableNameFromVariableNode } from "../utilities/name";
+import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../utilities/substitutions";
+
+const variableNodeQuery = nodeQuery("/term/variable!"),
+      metavariableNodeQuery = nodeQuery("/frame/metavariable!");
 
 export default class DefinedAssertion {
   constructor(string, node, term, frame, negated) {
@@ -31,6 +37,26 @@ export default class DefinedAssertion {
 
   isNegated() {
     return this.negated;
+  }
+
+  resolve(substitutions, localContext) {
+    let resolved;
+
+    const definedAssertionString = this.string; ///
+
+    localContext.trace(`Resolving the '${definedAssertionString}' defined assertion...`);
+
+    const term = termFromTermAndSubstitutions(this.term, substitutions),
+          frame = frameFromFrameAndSubstitutions(this.frame, substitutions),
+          verifiedWhenDerived = verifyWhenDerived(term, frame, this.negated, localContext);
+
+    resolved = verifiedWhenDerived; ///
+
+    if (resolved) {
+      localContext.debug(`...resolved the '${definedAssertionString}' defined assertion.`);
+    }
+
+    return resolved;
   }
 
   verify(assignments, stated, localContext) {
@@ -98,43 +124,13 @@ export default class DefinedAssertion {
   }
 
   verifyWhenDerived(localContext) {
-    let verifiedWhenDerived = false;
+    let verifiedWhenDerived;
 
     const definedAssertionString = this.string; ///
 
     localContext.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`);
 
-    if (this.term !== null) {
-      const { Variable } = shim,
-            termNode = this.term.getNode(),
-            variable = Variable.fromTermNode(termNode, localContext),
-            variableDefined = localContext.isVariableDefined(variable);
-
-      if (!this.negated && variableDefined) {
-        verifiedWhenDerived = true;
-      }
-
-      if (this.negated && !variableDefined) {
-        verifiedWhenDerived = true;
-      }
-    }
-
-    if (this.frame!== null) {
-      debugger
-
-      const { Metavariable } = shim,
-            frameNode = this.frame.getNode(),
-            metavariable = Metavariable.fromTermNode(frameNode, localContext),
-            metavariableDefined = localContext.isMetametavariableDefined(metavariable);
-
-      if (!this.negated && metavariableDefined) {
-        verifiedWhenDerived = true;
-      }
-
-      if (this.negated && !metavariableDefined) {
-        verifiedWhenDerived = true;
-      }
-    }
+    verifiedWhenDerived = verifyWhenDerived(this.term, this.frame, this.negated, localContext);
 
     if (verifiedWhenDerived) {
       localContext.debug(`...verified the '${definedAssertionString}' derived defined assertion.`);
@@ -160,4 +156,39 @@ export default class DefinedAssertion {
 
     return definedAssertion;
   }
+}
+
+function verifyWhenDerived(term, frame, negated, localContext) {
+  let verifiedWhenDerived = false;
+
+  if (term !== null) {
+    const termNode = term.getNode(),
+          variableNode = variableNodeQuery(termNode),
+          variableName = variableNameFromVariableNode(variableNode),
+          variableDefined = localContext.isVariableDefinedByVariableName(variableName);
+
+    if (!negated && variableDefined) {
+      verifiedWhenDerived = true;
+    }
+
+    if (negated && !variableDefined) {
+      verifiedWhenDerived = true;
+    }
+  }
+
+  if (frame!== null) {
+    const frameNode = frame.getNode(),
+          metavariableNode = metavariableNodeQuery(frameNode),
+          metavariableDefined = localContext.isJudgementPresentByMetavariableNode(metavariableNode);
+
+    if (!negated && metavariableDefined) {
+      verifiedWhenDerived = true;
+    }
+
+    if (negated && !metavariableDefined) {
+      verifiedWhenDerived = true;
+    }
+  }
+
+  return verifiedWhenDerived;
 }

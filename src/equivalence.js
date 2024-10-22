@@ -56,30 +56,18 @@ export default class Equivalence {
     return typeMatches;
   }
 
-  matchTerm(term) {
+  equateTerm(term) {
     const termA = term, ///
-          termMatches = this.terms.some((term) => {
+          termEquates = this.terms.some((term) => {
             const termB = term, ///
-                  termAMatchesTermB = termA.match(termB);
+                  termAEqualToTermB = termA.isEqualTo(termB);
 
-            if (termAMatchesTermB) {
+            if (termAEqualToTermB) {
               return true;
             }
           });
 
-    return termMatches;
-  }
-
-  matchTerms(terms) {
-    const termsMatch = terms.every((term) => {
-      const termMatches = this.matchTerm(term);
-
-      if (termMatches) {
-        return true;
-      }
-    })
-
-    return termsMatch;
+    return termEquates;
   }
 
   matchTermNode(termNode) {
@@ -206,7 +194,7 @@ export default class Equivalence {
 
       string = (string === null) ?
                  termString :
-                    `${string} ${termString}`;
+                    `${string} = ${termString}`;
 
       return string;
     }, null);

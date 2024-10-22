@@ -42,13 +42,6 @@ class Term {
     this.type = type;
   }
 
-  match(term) {
-    const node = term.getNode(),
-          matches = this.node.match(node);
-
-    return matches;
-  }
-
   getVariable(localContext) {
     let variable = null;
 
@@ -96,6 +89,23 @@ class Term {
           grounded = (undefinedVariablesLength <= 1);
 
     return grounded;
+  }
+
+  isEqualTo(term) {
+    let equalTo = false;
+
+    const termNode = term.getNode(),
+          termNodeMatches = this.node.match(termNode);
+
+    if (termNodeMatches) {
+      const termType = term.getType();
+
+      if (this.type === termType) {
+        equalTo = true;
+      }
+    }
+
+    return equalTo;
   }
 
   matchTermNode(termNode) {
