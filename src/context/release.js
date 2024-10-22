@@ -489,11 +489,11 @@ function verifyFileContexts(fileContexts, verifiedFileContexts) {
 function verifyFileContext(fileContext) {
   let fileContextVerified = false;
 
-  const tokens = fileContext.getTokens();
+  const filePath = fileContext.getFilePath(),
+        tokens = fileContext.getTokens();
 
   if (tokens === null) {
-    const filePath = fileContext.getFilePath(),
-          file = fileContext.findFile(filePath),
+    const file = fileContext.findFile(filePath),
           lexer = fileContext.getLexer(),
           parser = fileContext.getParser(),
           content = file.getContent(),
@@ -508,11 +508,17 @@ function verifyFileContext(fileContext) {
   const node = fileContext.getNode();
 
   if (node !== null) {
+    fileContext.debug(`Verifying the '${filePath}' file...`);
+
     fileContext.reset();
 
     const verifiedAtTopLevel = topLevelVerifier.verify(node, fileContext);
 
     fileContextVerified = verifiedAtTopLevel; ///
+
+    if (fileContextVerified) {
+      fileContext.info(`...verified the '${filePath}' file.`);
+    }
   }
 
   return fileContextVerified;
