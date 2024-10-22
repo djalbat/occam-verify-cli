@@ -121,24 +121,28 @@ class Premise {
           premiseStatement = premise.getStatement(),
           premiseStatementString = premiseStatement.getString();
 
-    localContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
+    const localContextB = localContext; ///
 
     const statement = this.unqualifiedStatement.getStatement(),
-          statementNode = statement.getNode(),
           statementTokens = statement.getTokens(),
           context = this.fileContext, ///
           tokens = statementTokens; ///
 
     localContext = LocalContext.fromContextAndTokens(context, tokens);  ///
 
-    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
+    const localContextA = localContext; ///
+
+    localContextB.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
+
+    const statementNode = statement.getNode(),
+          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, localContext);
 
     if (subproofAssertion !== null) {
-      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, this.fileContext, localContext);
+      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, localContextA, localContextB);
     }
 
     if (subproofUnified) {
-      localContext.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
+      localContextB.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
     }
 
     return subproofUnified;
