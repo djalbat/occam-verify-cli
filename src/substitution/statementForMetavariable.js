@@ -201,9 +201,9 @@ export default class StatementForMetavariableSubstitution extends Substitution {
 
     statement = Statement.fromStatementNode(statementNode, localContext);
 
-    const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext),
+    const substitution = null,
           resolved = true,
-          substitution = null,
+          string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext),
           statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, resolved, statement, metavariable, substitution);
 
     return statementForMetavariableSubstitution;
