@@ -121,7 +121,7 @@ class Frame {
   }
 
   unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, localContext) {
-    let metaLemmaOrMetaTheoremUnified;
+    let metaLemmaMetatheoremUnified;
 
     const metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
 
@@ -136,13 +136,38 @@ class Frame {
             }
           });
 
-    metaLemmaOrMetaTheoremUnified = substitutionsUnified; ///
+    metaLemmaMetatheoremUnified = substitutionsUnified; ///
 
-    if (metaLemmaOrMetaTheoremUnified) {
+    if (metaLemmaMetatheoremUnified) {
       localContext.debug(`...unified the '${metaLemmaMetatheoremString}' metatheorem or meta-lemma.`);
     }
 
-    return metaLemmaOrMetaTheoremUnified;
+    return metaLemmaMetatheoremUnified;
+  }
+
+  unifyLemmaOrTheorem(lemmaOrTheorem, localContext) {
+    let lemmaOrTheoremUnified;
+
+    const lemmaOrTheoremString = lemmaOrTheorem.getString();
+
+    localContext.trace(`Unifying the '${lemmaOrTheoremString}' theorem or lemma...`);
+
+    const substitutions = lemmaOrTheorem.getSubstitutions(),
+      substitutionsUnified = substitutions.everySubstitution((substitution) => {
+        const substitutionUnified = this.unifySubstitution(substitution, localContext);
+
+        if (substitutionUnified) {
+          return true;
+        }
+      });
+
+    lemmaOrTheoremUnified = substitutionsUnified; ///
+
+    if (lemmaOrTheoremUnified) {
+      localContext.debug(`...unified the '${lemmaOrTheoremString}' theorem or lemma.`);
+    }
+
+    return lemmaOrTheoremUnified;
   }
 
   verify(assignments, stated, localContext) {

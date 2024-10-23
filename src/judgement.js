@@ -114,7 +114,7 @@ class Judgement {
             lemmaOrTheorem = (lemma || theorem);
 
       if (lemmaOrTheorem !== null) {
-        const lemmaOrTheoremUnified = this.frame.unifyLemmaTheorem(lemmaOrTheorem, localContext);
+        const lemmaOrTheoremUnified = this.frame.unifyLemmaOrTheorem(lemmaOrTheorem, localContext);
 
         verifiedWhenDerived = lemmaOrTheoremUnified; ///
       }
