@@ -3,16 +3,23 @@
 import { nodeQuery, nodesQuery } from "./query";
 import { nodeAsString, nodesAsString } from "./string";
 
-const subproofSuppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement"),
-      subproofLastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement");
+const suppositionStatementNodesQuery = nodesQuery("/subproof/supposition/unqualifiedStatement/statement"),
+      lastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/lastProofStep/unqualifiedStatement|qualifiedStatement/statement");
 
 export function subproofStringFromSubproofNode(subproofNode, fileContext) {
+  let subproofString = null;
+
   const tokens = fileContext.getTokens(),
-        subproofSuppositionStatementNodes = subproofSuppositionStatementNodesQuery(subproofNode),
-        subproofLastProofStepStatementNode = subproofLastProofStepStatementNodeQuery(subproofNode),
-        subproofSuppositionStatementsString = nodesAsString(subproofSuppositionStatementNodes, tokens),
-        subproofLastProofStepStatementString = nodeAsString(subproofLastProofStepStatementNode, tokens),
-        subproofString = `[${subproofSuppositionStatementsString}]...${subproofLastProofStepStatementString}`;
+        suppositionStatementNodes = suppositionStatementNodesQuery(subproofNode),
+        lastProofStepStatementNode = lastProofStepStatementNodeQuery(subproofNode),
+        suppositionStatementNodesLength = suppositionStatementNodes.length;
+
+  if ((lastProofStepStatementNode !== null) && (suppositionStatementNodesLength)) {
+    const suppositionStatementsString = nodesAsString(suppositionStatementNodes, tokens),
+          lastProofStepStatementString = nodeAsString(lastProofStepStatementNode, tokens);
+
+    subproofString = `[${suppositionStatementsString}]...${lastProofStepStatementString}`;
+  }
 
   return subproofString;
 }
