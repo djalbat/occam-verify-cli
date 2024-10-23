@@ -55,8 +55,6 @@ class Rule {
     return this.proof;
   }
 
-  getStatement() { return this.proof.getStatement(); }
-
   matchMetavariableNode(metavariableNode) {
     const metavariableNodeMatches = this.labels.some((label) => {
       const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
