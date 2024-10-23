@@ -557,6 +557,20 @@ export default class FileContext {
     return metavariable;
   }
 
+  isLemmaPresentByReference(reference) {
+    const lemma = this.findLemmaByReference(reference),
+          lemmaPresent = (lemma !== null);
+
+    return lemmaPresent;
+  }
+
+  isTheoremPresentByReference(reference) {
+    const theorem = this.findTheoremByReference(reference),
+          theoremPresent = (theorem !== null);
+
+    return theoremPresent;
+  }
+
   nodeAsString(node, tokens = null) {
     if (tokens === null) {
       tokens = this.tokens;

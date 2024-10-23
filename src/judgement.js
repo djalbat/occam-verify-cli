@@ -88,21 +88,36 @@ class Judgement {
   }
 
   verifyWhenDerived(assignments, localContext) {
-    let verifiedWhenDerived;
+    let verifiedWhenDerived = false;
 
     const judgementString = this.string;  ///
 
     localContext.trace(`Verifying the '${judgementString}' judgement when derived...`);
 
-    const reference = this.declaration.getReference(),
-          metaLemma = localContext.findMetaLemmaByReference(reference),
-          metatheorem = localContext.findMetatheoremByReference(reference),
-          metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
+    if (!verifiedWhenDerived) {
+      const reference = this.declaration.getReference(),
+            metaLemma = localContext.findMetaLemmaByReference(reference),
+            metatheorem = localContext.findMetatheoremByReference(reference),
+            metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
 
-    if (metaLemmaMetatheorem !== null) {
-      const metaLemmaMetatheoremUnified = this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, localContext);
+      if (metaLemmaMetatheorem !== null) {
+        const metaLemmaMetatheoremUnified = this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, localContext);
 
-      verifiedWhenDerived = metaLemmaMetatheoremUnified; ///
+        verifiedWhenDerived = metaLemmaMetatheoremUnified; ///
+      }
+    }
+
+    if (!verifiedWhenDerived) {
+      const reference = this.declaration.getReference(),
+            theorem = localContext.findTheoremByReference(reference),
+            lemma = localContext.findLemmaByReference(reference),
+            lemmaOrTheorem = (lemma || theorem);
+
+      if (lemmaOrTheorem !== null) {
+        const lemmaOrTheoremUnified = this.frame.unifyLemmaTheorem(lemmaOrTheorem, localContext);
+
+        verifiedWhenDerived = lemmaOrTheoremUnified; ///
+      }
     }
 
     if (verifiedWhenDerived) {

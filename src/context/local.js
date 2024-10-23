@@ -345,6 +345,10 @@ class LocalContext {
 
   findMetatheoremByReference(reference) { return this.context.findMetatheoremByReference(reference); }
 
+  isLemmaPresentByReference(reference) { return this.context.isLemmaPresentByReference(reference); }
+
+  isTheoremPresentByReference(reference) { return this.context.isTheoremPresentByReference(reference); }
+
   nodeAsString(node, tokens = null) {
     if (tokens === null) {
       tokens = this.tokens;

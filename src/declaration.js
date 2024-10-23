@@ -94,37 +94,11 @@ class Declaration {
   }
 
   verify(assignments, stated, localContext) {
-    let verified = false;
+    let verified;
 
     const declarationString = this.string;  ///
 
     localContext.trace(`Verifying the '${declarationString}' declaration...`);
-
-    if (!verified) {
-      const verifiedAtMetaLevel = this.verifyAtMetaLevel(assignments, stated, localContext);
-
-      verified = verifiedAtMetaLevel; ///
-    }
-
-    if (!verified) {
-      const verifiedAtIntrinsicLevel = this.verifyAtIntrinsicLevel(assignments, stated, localContext);
-
-      verified = verifiedAtIntrinsicLevel;  ///
-    }
-
-    if (verified) {
-      localContext.debug(`...verified the '${declarationString}' declaration.`);
-    }
-
-    return verified;
-  }
-
-  verifyAtMetaLevel(assignments, stated, localContext) {
-    let verifiedAtMetaLevel;
-
-    const declarationString = this.string;  ///
-
-    localContext.trace(`Verifying the '${declarationString}' declaration at meta level...`);
 
     stated = true;  ///
 
@@ -133,38 +107,13 @@ class Declaration {
     const referenceVerified = this.reference.verify(localContext),
           statementVerified = this.statement.verify(assignments, stated, localContext);
 
-    verifiedAtMetaLevel = (referenceVerified && statementVerified);
+    verified = (referenceVerified && statementVerified);
 
-    if (verifiedAtMetaLevel) {
-      localContext.debug(`...verified the '${declarationString}' declaration at meta level.`);
+    if (verified) {
+      localContext.debug(`...verified the '${declarationString}' declaration.`);
     }
 
-    return verifiedAtMetaLevel;
-  }
-
-  verifyAtIntrinsicLevel(assignments, stated, localContext) {
-    let verifiedAtIntrinsicLevel = false;
-
-    const declarationString = this.string;  ///
-
-    localContext.trace(`Verifying the '${declarationString}' declaration at intrinsic level...`);
-
-    const lemma = localContext.findLemmaByReference(this.reference),
-          theorem = localContext.findTheoremByReference(this.reference),
-          lemmaOrTheorem = (lemma || theorem);
-
-    if (lemmaOrTheorem !== null) {
-      const lemmaOrTheoremStatement = lemmaOrTheorem.getStatement(),
-            lemmaOrTheoremStatementEqualToStatement = lemmaOrTheoremStatement.isEqualTo(this.statement);
-
-      verifiedAtIntrinsicLevel = lemmaOrTheoremStatementEqualToStatement; ///
-    }
-
-    if (verifiedAtIntrinsicLevel) {
-      localContext.debug(`...verified the '${declarationString}' declaration at intrinsic level.`);
-    }
-
-    return verifiedAtIntrinsicLevel;
+    return verified;
   }
 
   static fromDeclarationNode(declarationNode, localContext) {

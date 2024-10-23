@@ -14,6 +14,7 @@ import { labelsFromJSON,
          consequentToConsequentJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "./utilities/json";
+import LocalContext from "./context/local";
 
 const { extract, reverse, backwardsEvery } = arrayUtilities;
 
@@ -159,6 +160,45 @@ export default class TopLevelAssertion {
     }
 
     return suppositionUnified;
+  }
+
+  verify() {
+    let verified = false;
+
+    const labelsVerifiedWhenDeclared = this.labels.every((label) => {
+      const labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext);
+
+      if (labelVVerifiedWhenDeclared) {
+        return true;
+      }
+    });
+
+    if (labelsVerifiedWhenDeclared) {
+      const localContext = LocalContext.fromFileContext(this.fileContext),
+            suppositionsVerified = this.suppositions.every((supposition) => {
+              const suppositionVerified = supposition.verify(localContext);
+
+              if (suppositionVerified) {
+                return true;
+              }
+            });
+
+      if (suppositionsVerified) {
+        const consequentVerified = this.consequent.verify(localContext);
+
+        if (consequentVerified) {
+          if (this.proof === null) {
+            verified = true;
+          } else {
+            const proofVerified = this.proof.verify(this.substitutions, this.consequent, localContext);
+
+            verified = proofVerified; ///
+          }
+        }
+      }
+    }
+
+    return verified;
   }
 
   toJSON() {

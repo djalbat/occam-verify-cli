@@ -6,6 +6,7 @@ import LocalContext from "./context/local";
 import { nodeQuery } from "./utilities/query";
 import { referenceMetaType } from "./metaType";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "./utilities/json";
+import local from "./context/local";
 
 const metavariableNodeQuery = nodeQuery("//reference/metavariable");
 
@@ -29,16 +30,26 @@ export default class Reference {
   }
 
   verify(localContext) {
-    let verified;
+    let verified = false;
 
     const referenceString = this.getString(); ///
 
     localContext.trace(`Verifying the '${referenceString}' reference...`);
 
-    const metaType = referenceMetaType, ///
-          metavariableVerifiedGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, localContext);
+    if (!verified) {
+      const metaType = referenceMetaType, ///
+            metavariableVerifiedGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, localContext);
 
-    verified = metavariableVerifiedGivenMetaType; ///
+      verified = metavariableVerifiedGivenMetaType; ///
+    }
+
+    if (!verified) {
+      const reference = this, ///
+            lemmaPresent = localContext.isLemmaPresentByReference(reference),
+            theoremPresent = localContext.isTheoremPresentByReference(reference);
+
+      verified = (lemmaPresent || theoremPresent);
+    }
 
     if (verified) {
       localContext.debug(`...verified the '${referenceString}' reference.`);
