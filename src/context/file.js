@@ -29,6 +29,8 @@ import { typesFromJSON,
          constructorsToConstructorsJSON,
          metatheoremsToMetatheoremsJSON,
          metavariablesToMetavariablesJSON } from "../utilities/json";
+import local from "./local";
+import LocalContext from "./local";
 
 const { push } = arrayUtilities;
 
@@ -459,20 +461,6 @@ export default class FileContext {
     return theorem;
   }
 
-  findMetaLemmaByReference(reference) {
-    const metaLemmas = this.getMetaLemmas(),
-          metavariableNode = reference.getMetavariableNode(),
-          metaLemma = metaLemmas.find((metaLemma) => {
-            const metavariableNodeMatches = metaLemma.matchMetavariableNode(metavariableNode);
-
-            if (metavariableNodeMatches) {
-              return true;
-            }
-          }) || null;
-
-    return metaLemma;
-  }
-
   findConjectureByReference(reference) {
     const conjectures = this.getConjectures(),
           metavariableNode = reference.getMetavariableNode(),
@@ -487,13 +475,37 @@ export default class FileContext {
     return conjecture;
   }
 
-  findMetatheoremByReference(reference) {
-    const metatheorems = this.getMetatheorems(),
-          metavariableNode = reference.getMetavariableNode(),
-          metatheorem = metatheorems.find((metatheorem) => {
-            const metavariableNodeMatches = metatheorem.matchMetavariableNode(metavariableNode);
+  findMetaLemmaByReference(reference, localContext) {
+    const fileContext = this, ///
+          localContextA = localContext; ///
 
-            if (metavariableNodeMatches) {
+    localContext = LocalContext.fromFileContext(fileContext);
+
+    const localContextB = localContext, ///
+          metaLemmas = this.getMetaLemmas(),
+          metaLemma = metaLemmas.find((metaLemma) => {
+            const referenceUnified = metaLemma.unifyReference(reference, localContextA, localContextB);
+
+            if (referenceUnified) {
+              return true;
+            }
+          }) || null;
+
+    return metaLemma;
+  }
+
+  findMetatheoremByReference(reference, localContext) {
+    const fileContext = this, ///
+          localContextA = localContext; ///
+
+    localContext = LocalContext.fromFileContext(fileContext);
+
+    const localContextB = localContext, ///
+          metatheorems = this.getMetatheorems(),
+          metatheorem = metatheorems.find((metatheorem) => {
+            const referenceUnified = metatheorem.unifyReference(reference, localContextA, localContextB);
+
+            if (referenceUnified) {
               return true;
             }
           }) || null;
@@ -585,15 +597,15 @@ export default class FileContext {
     return conjecturePresent;
   }
 
-  isMetaLemmaPresentByReference(reference) {
-    const metaLemma = this.findMetaLemmaByReference(reference),
+  isMetaLemmaPresentByReference(reference, localContext) {
+    const metaLemma = this.findMetaLemmaByReference(reference, localContext),
           metaLemmaPresent = (metaLemma !== null);
 
     return metaLemmaPresent;
   }
 
-  isMetatheoremPresentByReference(reference) {
-    const metatheorem = this.findMetatheoremByReference(reference),
+  isMetatheoremPresentByReference(reference, localContext) {
+    const metatheorem = this.findMetatheoremByReference(reference, localContext),
           metatheoremPresent = (metatheorem !== null);
 
     return metatheoremPresent;

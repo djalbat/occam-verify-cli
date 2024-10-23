@@ -338,11 +338,11 @@ class LocalContext {
 
   findTheoremByReference(reference) { return this.context.findTheoremByReference(reference); }
 
-  findMetaLemmaByReference(reference) { return this.context.findMetaLemmaByReference(reference); }
-
   findConjectureByReference(reference) { return this.context.findConjectureByReference(reference); }
 
-  findMetatheoremByReference(reference) { return this.context.findMetatheoremByReference(reference); }
+  findMetaLemmaByReference(reference, localContext) { return this.context.findMetaLemmaByReference(reference, localContext); }
+
+  findMetatheoremByReference(reference, localContext) { return this.context.findMetatheoremByReference(reference, localContext); }
 
   isAxiomPresentByReference(reference) { return this.context.isAxiomPresentByReference(reference); }
 
@@ -352,9 +352,9 @@ class LocalContext {
 
   isConjecturePresentByReference(reference) { return this.context.isConjecturePresentByReference(reference); }
 
-  isMetaLemmaPresentByReference(reference) { return this.context.isMetaLemmaPresentByReference(reference); }
+  isMetaLemmaPresentByReference(reference, localContext) { return this.context.isMetaLemmaPresentByReference(reference, localContext); }
 
-  isMetatheoremPresentByReference(reference) { return this.context.isMetatheoremPresentByReference(reference); }
+  isMetatheoremPresentByReference(reference, localContext) { return this.context.isMetatheoremPresentByReference(reference, localContext); }
 
   nodeAsString(node, tokens = null) {
     if (tokens === null) {

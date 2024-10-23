@@ -99,8 +99,8 @@ class Judgement {
 
     if (!verifiedWhenDerived) {
       const reference = this.declaration.getReference(),
-            metaLemma = localContext.findMetaLemmaByReference(reference),
-            metatheorem = localContext.findMetatheoremByReference(reference),
+            metaLemma = localContext.findMetaLemmaByReference(reference, localContext),
+            metatheorem = localContext.findMetatheoremByReference(reference, localContext),
             metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
 
       if (metaLemmaMetatheorem !== null) {

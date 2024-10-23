@@ -76,6 +76,18 @@ export default class TopLevelAssertion {
     return metavariableNodeMatches;
   }
 
+  unifyReference(reference, localContextA, localContextB) {
+    const referenceUnified = this.labels.some((label) => {
+      const referenceUnified = label.unifyReference(reference, localContextA, localContextB);
+
+      if (referenceUnified) {
+        return true;
+      }
+    });
+
+    return referenceUnified;
+  }
+
   unifyStatement(statement, localContext) {
     let statementUnified;
 

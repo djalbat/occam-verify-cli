@@ -8,7 +8,7 @@ import metaLevelUnifier from "../unifier/metaLevel";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
-export default class StatementForMetavariableSubstitution extends Substitution {
+class StatementForMetavariableSubstitution extends Substitution {
   constructor(string, resolved, statement, metavariable, substitution) {
     super(string);
 
@@ -225,6 +225,12 @@ export default class StatementForMetavariableSubstitution extends Substitution {
     return statementForMetavariableSubstitution;
   }
 }
+
+Object.assign(shim, {
+  StatementForMetavariableSubstitution
+});
+
+export default StatementForMetavariableSubstitution;
 
 function localContextFromLocalContextAndSubstitution(localContext, substitution) {
   substitution.setSubstitutionNodeAndTokens(localContext);
