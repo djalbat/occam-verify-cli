@@ -49,7 +49,7 @@ export default class FrameForMetavariableSubstitution extends Substitution {
   getSubstitutionString() {
     const frameString = this.frame.getString(),
           metavariableString = this.metavariable.getString(),
-          substitutionString = `[[${frameString}] for [${metavariableString}]]`;
+          substitutionString = `[${frameString} for [${metavariableString}]]`;
 
     return substitutionString;
   }
@@ -165,7 +165,7 @@ function stringFromFrameAndMetavariable(frame, metavariable, localContext) {
   const frameNode = frame.getNode(),
         frameString = localContext.nodeAsString(frameNode),
         metavariableString = metavariable.getString(),
-        string = `[[${frameString}] for [${metavariableString}]]`;
+        string = `[${frameString} for [${metavariableString}]]`;
 
   return string;
 }
