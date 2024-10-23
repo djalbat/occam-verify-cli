@@ -557,6 +557,13 @@ export default class FileContext {
     return metavariable;
   }
 
+  isAxiomPresentByReference(reference) {
+    const axiom = this.findAxiomByReference(reference),
+          axiomPresent = (axiom !== null);
+
+    return axiomPresent;
+  }
+
   isLemmaPresentByReference(reference) {
     const lemma = this.findLemmaByReference(reference),
           lemmaPresent = (lemma !== null);

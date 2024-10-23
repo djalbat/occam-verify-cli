@@ -70,8 +70,8 @@ export default class DefinedAssertion {
 
     assignments = null; ///
 
-    let termVerified = true,
-        frameVerified = true;
+    let termVerified = false,
+        frameVerified = false;
 
     if (this.term !== null) {
       termVerified = this.term.verify(localContext, () => {
@@ -85,7 +85,7 @@ export default class DefinedAssertion {
       frameVerified = this.frame.verify(assignments, stated, localContext);
     }
 
-    if (termVerified && frameVerified) {
+    if (termVerified || frameVerified) {
       let verifiedWhenStated = false,
           verifiedWhenDerived = false;
 
@@ -179,7 +179,7 @@ function verifyWhenDerived(term, frame, negated, localContext) {
   if (frame!== null) {
     const frameNode = frame.getNode(),
           metavariableNode = metavariableNodeQuery(frameNode),
-          metavariableDefined = localContext.isJudgementPresentByMetavariableNode(metavariableNode);
+          metavariableDefined = localContext.isMetavariableDefinedByMetavariableNode(metavariableNode);
 
     if (!negated && metavariableDefined) {
       verifiedWhenDerived = true;

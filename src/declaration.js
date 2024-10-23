@@ -94,7 +94,7 @@ class Declaration {
   }
 
   verify(assignments, stated, localContext) {
-    let verified;
+    let verified = false;
 
     const declarationString = this.string;  ///
 
@@ -104,10 +104,13 @@ class Declaration {
 
     assignments = null; ///
 
-    const referenceVerified = this.reference.verify(localContext),
-          statementVerified = this.statement.verify(assignments, stated, localContext);
+    const referenceVerified = this.reference.verify(localContext);
 
-    verified = (referenceVerified && statementVerified);
+    if (referenceVerified) {
+      const statementVerified = this.statement.verify(assignments, stated, localContext);
+
+      verified = statementVerified; ///
+    }
 
     if (verified) {
       localContext.debug(`...verified the '${declarationString}' declaration.`);

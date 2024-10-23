@@ -45,10 +45,11 @@ export default class Reference {
 
     if (!verified) {
       const reference = this, ///
+            axiomPresent = localContext.isAxiomPresentByReference(reference),
             lemmaPresent = localContext.isLemmaPresentByReference(reference),
             theoremPresent = localContext.isTheoremPresentByReference(reference);
 
-      verified = (lemmaPresent || theoremPresent);
+      verified = (axiomPresent || lemmaPresent || theoremPresent);
     }
 
     if (verified) {

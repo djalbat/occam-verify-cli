@@ -199,8 +199,7 @@ class LocalContext {
     let judgementAdded = false;
 
     const metavariableNode = judgement.getMetavariableNode(),
-          metavariableDefined = this.isMetavariableDefinedByMetavariableNode(metavariableNode),
-          judgementPresent = metavariableDefined; ///
+          judgementPresent = this.isJudgementPresentByMetavariableNode(metavariableNode); ///
 
     if (!judgementPresent) {
       this.judgements.push(judgement);
@@ -344,6 +343,8 @@ class LocalContext {
   findConjectureByReference(reference) { return this.context.findConjectureByReference(reference); }
 
   findMetatheoremByReference(reference) { return this.context.findMetatheoremByReference(reference); }
+
+  isAxiomPresentByReference(reference) { return this.context.isAxiomPresentByReference(reference); }
 
   isLemmaPresentByReference(reference) { return this.context.isLemmaPresentByReference(reference); }
 

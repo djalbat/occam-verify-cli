@@ -38,21 +38,24 @@ class Judgement {
 
     localContext.trace(`Verifying the '${judgementString}' judgement...`);
 
-    const frameVerified = this.frame.verify(assignments, stated, localContext),
-          declarationVerified = this.declaration.verify(assignments, stated, localContext);
+    const frameVerified = this.frame.verify(assignments, stated, localContext);
 
-    if (frameVerified && declarationVerified) {
-      let verifiedWhenStated = false,
-          verifiedWhenDerived = false;
+    if (frameVerified) {
+      const declarationVerified = this.declaration.verify(assignments, stated, localContext);
 
-      if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
-      } else {
-        verifiedWhenDerived = this.verifyWhenDerived(assignments, localContext);
-      }
+      if (declarationVerified) {
+        let verifiedWhenStated = false,
+            verifiedWhenDerived = false;
 
-      if (verifiedWhenStated || verifiedWhenDerived) {
-        verified = true;
+        if (stated) {
+          verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+        } else {
+          verifiedWhenDerived = this.verifyWhenDerived(assignments, localContext);
+        }
+
+        if (verifiedWhenStated || verifiedWhenDerived) {
+          verified = true;
+        }
       }
     }
 
@@ -111,12 +114,13 @@ class Judgement {
       const reference = this.declaration.getReference(),
             theorem = localContext.findTheoremByReference(reference),
             lemma = localContext.findLemmaByReference(reference),
-            lemmaOrTheorem = (lemma || theorem);
+            axiom = localContext.findAxiomByReference(reference),
+            axiomLemmaOrTheorem = (axiom || lemma || theorem);
 
-      if (lemmaOrTheorem !== null) {
-        const lemmaOrTheoremUnified = this.frame.unifyLemmaOrTheorem(lemmaOrTheorem, localContext);
+      if (axiomLemmaOrTheorem !== null) {
+        const axiomLemmaOrTheoremUnified = this.frame.unifyAxiomLemmaOrTheorem(axiomLemmaOrTheorem, localContext);
 
-        verifiedWhenDerived = lemmaOrTheoremUnified; ///
+        verifiedWhenDerived = axiomLemmaOrTheoremUnified; ///
       }
     }
 

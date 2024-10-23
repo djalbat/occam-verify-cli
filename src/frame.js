@@ -125,7 +125,7 @@ class Frame {
 
     const metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
 
-    localContext.trace(`Unifying the '${metaLemmaMetatheoremString}' metatheorem or meta-lemma...`);
+    localContext.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem...`);
 
     const substitutions = metaLemmaMetatheorem.getSubstitutions(),
           substitutionsUnified = substitutions.everySubstitution((substitution) => {
@@ -139,67 +139,70 @@ class Frame {
     metaLemmaMetatheoremUnified = substitutionsUnified; ///
 
     if (metaLemmaMetatheoremUnified) {
-      localContext.debug(`...unified the '${metaLemmaMetatheoremString}' metatheorem or meta-lemma.`);
+      localContext.debug(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem.`);
     }
 
     return metaLemmaMetatheoremUnified;
   }
 
-  unifyLemmaOrTheorem(lemmaOrTheorem, localContext) {
-    let lemmaOrTheoremUnified;
+  unifyAxiomLemmaOrTheorem(axiomLemmaOrTheorem, localContext) {
+    let axiomLemmaOrTheoremUnified;
 
-    const lemmaOrTheoremString = lemmaOrTheorem.getString();
+    const axiomLemmaOrTheoremString = axiomLemmaOrTheorem.getString();
 
-    localContext.trace(`Unifying the '${lemmaOrTheoremString}' theorem or lemma...`);
+    localContext.trace(`Unifying the '${axiomLemmaOrTheoremString}' axiom, lemma or theorem...`);
 
-    const substitutions = lemmaOrTheorem.getSubstitutions(),
-      substitutionsUnified = substitutions.everySubstitution((substitution) => {
-        const substitutionUnified = this.unifySubstitution(substitution, localContext);
+    const substitutions = axiomLemmaOrTheorem.getSubstitutions(),
+          substitutionsUnified = substitutions.everySubstitution((substitution) => {
+            const substitutionUnified = this.unifySubstitution(substitution, localContext);
 
-        if (substitutionUnified) {
-          return true;
-        }
-      });
+            if (substitutionUnified) {
+              return true;
+            }
+          });
 
-    lemmaOrTheoremUnified = substitutionsUnified; ///
+    axiomLemmaOrTheoremUnified = substitutionsUnified; ///
 
-    if (lemmaOrTheoremUnified) {
-      localContext.debug(`...unified the '${lemmaOrTheoremString}' theorem or lemma.`);
+    if (axiomLemmaOrTheoremUnified) {
+      localContext.debug(`...unified the '${axiomLemmaOrTheoremString}' axiom, lemma or theorem.`);
     }
 
-    return lemmaOrTheoremUnified;
+    return axiomLemmaOrTheoremUnified;
   }
 
   verify(assignments, stated, localContext) {
-    let verified;
+    let verified = false;
 
     const frameString = this.string;  ///
 
     localContext.trace(`Verifying the '${frameString}' frame...`);
 
     const declarationsVerified = this.declarations.every((declaration) => {
-            const declarationVerified = declaration.verify(assignments, stated, localContext);
+      const declarationVerified = declaration.verify(assignments, stated, localContext);
 
-            return declarationVerified;
-          }),
-          metavariablesVerified = this.metavariables.every((metavariable) => {
-            const metavariableVerified = metavariable.verify(localContext);
+      return declarationVerified;
+    });
 
-            return metavariableVerified;
-          });
+    if (declarationsVerified) {
+      const  metavariablesVerified = this.metavariables.every((metavariable) => {
+        const metavariableVerified = metavariable.verify(localContext);
 
-    if (declarationsVerified && metavariablesVerified) {
-      let verifiedWhenStated = false,
-          verifiedWhenDerived = false;
+        return metavariableVerified;
+      });
 
-      if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
-      } else {
-        verifiedWhenDerived = this.verifyWhenDerived(assignments, localContext);
-      }
+      if (metavariablesVerified) {
+        let verifiedWhenStated = false,
+            verifiedWhenDerived = false;
 
-      if (verifiedWhenStated || verifiedWhenDerived) {
-        verified = true;
+        if (stated) {
+          verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+        } else {
+          verifiedWhenDerived = this.verifyWhenDerived(assignments, localContext);
+        }
+
+        if (verifiedWhenStated || verifiedWhenDerived) {
+          verified = true;
+        }
       }
     }
 
@@ -219,18 +222,17 @@ class Frame {
 
     const declarationsLength = this.declarations.length;
 
-    if (declarationsLength === 0) {
+    if (declarationsLength > 0) {
+      localContext.trace(`The '${frameString}' stated frame cannot have declarations.`);
+    } else {
       const metavariablesLength = this.metavariables.length;
 
-      if (metavariablesLength === 1) {
-        verifiedWhenStated = true;
-      } else {
+      if (metavariablesLength > 1) {
         localContext.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
+      } else {
+        verifiedWhenStated = true;
       }
-    } else {
-      localContext.trace(`The '${frameString}' stated frame cannot have declarations.`);
     }
-
 
     if (verifiedWhenStated) {
       localContext.debug(`...verified the '${frameString}' frame when stated.`);

@@ -137,15 +137,17 @@ class ProofStep {
         qualifiedStatementVerified = false,
         unqualifiedStatementVerified = false;
 
-    if (false) {
-      ///
-    } else if (this.subproof !== null) {
+    if (this.subproof !== null) {
       subproofVerified = this.subproof.verify(substitutions, localContext);
-    } else if (this.qualifiedStatement !== null) {
+    }
+
+    if (this.qualifiedStatement !== null) {
       stated = true;
 
       qualifiedStatementVerified = this.qualifiedStatement.verify(substitutions, assignments, stated, localContext);
-    } else if (this.unqualifiedStatement !== null) {
+    }
+
+    if (this.unqualifiedStatement !== null) {
       stated = false;
 
       unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);

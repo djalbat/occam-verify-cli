@@ -71,9 +71,9 @@ export default class ContainedAssertion {
 
     assignments = null; ///
 
-    let termVerified = true,
-        frameVerified = true,
-        statementVerified = true;
+    let termVerified = false,
+        frameVerified = false,
+        statementVerified = false;
 
     if (this.term !== null) {
       termVerified = this.term.verify(localContext, () => {
@@ -91,7 +91,7 @@ export default class ContainedAssertion {
       statementVerified = this.statement.verify(assignments, stated, localContext);
     }
 
-    if (termVerified && frameVerified && statementVerified) {
+    if (termVerified || frameVerified || statementVerified) {
       let verifiedWhenStated = false,
           verifiedWhenDerived = false;
 
