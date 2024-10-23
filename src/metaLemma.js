@@ -5,25 +5,8 @@ import LocalContext from "./context/local";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { EMPTY_STRING } from "./constants";
-import { stringFromLabels } from "./topLevelAssertion";
-import { nodeQuery, nodesQuery } from "./utilities/query";
-
-const proofNodeQuery = nodeQuery("/metaLemma/proof"),
-      labelNodesQuery = nodesQuery("/metaLemma/label"),
-      consequentNodeQuery = nodeQuery("/metaLemma/consequent"),
-      suppositionNodesQuery = nodesQuery("/metaLemma/supposition");
 
 class MetaLemma extends TopLevelAssertion {
-  constructor(fileContext, string, labels, suppositions, consequent, proof, substitutions) {
-    super(fileContext, string, labels, suppositions, consequent, proof);
-
-    this.substitutions = substitutions;
-  }
-
-  getSubstitutions() {
-    return this.substitutions;
-  }
-
   verify() {
     let verified = false;
 
@@ -77,30 +60,7 @@ class MetaLemma extends TopLevelAssertion {
     return verified;
   }
 
-  static fromMetaLemmaNode(metaLemmaNode, fileContext) {
-    const { Label, Proof, Consequent, Supposition, Substitutions } = shim,
-          proofNode = proofNodeQuery(metaLemmaNode),
-          labelNodes = labelNodesQuery(metaLemmaNode),
-          consequentNode = consequentNodeQuery(metaLemmaNode),
-          suppositionNodes = suppositionNodesQuery(metaLemmaNode),
-          labels = labelNodes.map((labelNode) => {
-            const label = Label.fromLabelNode(labelNode, fileContext);
-
-            return label;
-          }),
-          suppositions = suppositionNodes.map((suppositionNode) => {
-            const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
-
-            return supposition;
-          }),
-          consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
-          proof = Proof.fromProofNode(proofNode, fileContext),
-          string = stringFromLabels(labels),
-          substitutions = Substitutions.fromNothing(),
-          metaLemma = new MetaLemma(fileContext, string, labels, suppositions, consequent, proof, substitutions);
-
-    return metaLemma;
-  }
+  static fromMetaLemmaNode(metaLemmaNode, fileContext) { return TopLevelAssertion.fromNode(MetaLemma, metaLemmaNode, fileContext); }
 }
 
 Object.assign(shim, {

@@ -5,20 +5,29 @@ import { arrayUtilities } from "necessary";
 import shim from "./shim";
 
 import { EMPTY_STRING } from "./constants";
+import { nodeQuery, nodesQuery } from "./utilities/query";
 import { labelsFromJSON,
          labelsToLabelsJSON,
          consequentFromJSON,
          suppositionsFromJSON,
+         substitutionsFromJSON,
          consequentToConsequentJSON,
-         suppositionsToSuppositionsJSON } from "./utilities/json";
+         suppositionsToSuppositionsJSON,
+         substitutionsToSubstitutionsJSON } from "./utilities/json";
 
 const { extract, reverse, backwardsEvery } = arrayUtilities;
 
+const proofNodeQuery = nodeQuery("/*/proof"),
+      labelNodesQuery = nodesQuery("/*/label"),
+      consequentNodeQuery = nodeQuery("/*/consequent"),
+      suppositionNodesQuery = nodesQuery("/*/supposition");
+
 export default class TopLevelAssertion {
-  constructor(fileContext, string, labels, suppositions, consequent, proof) {
+  constructor(fileContext, string, labels, substitutions, suppositions, consequent, proof) {
     this.fileContext = fileContext;
     this.string = string;
     this.labels = labels;
+    this.substitutions = substitutions;
     this.suppositions = suppositions;
     this.consequent = consequent;
     this.proof = proof;
@@ -34,6 +43,10 @@ export default class TopLevelAssertion {
 
   getLabels() {
     return this.labels;
+  }
+
+  getSubstitutions() {
+    return this.substitutions;
   }
 
   getSuppositions() {
@@ -152,13 +165,16 @@ export default class TopLevelAssertion {
     const labelsJSON = labelsToLabelsJSON(this.labels),
           consequentJSON = consequentToConsequentJSON(this.consequent),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
+          substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
           labels = labelsJSON,  ///
           consequent = consequentJSON,  ///
           suppositions = suppositionsJSON,  ///
+          substitutions = substitutionsJSON,  ///
           json = {
             labels,
             consequent,
-            suppositions
+            suppositions,
+            substitutions
           };
 
     return json;
@@ -168,11 +184,37 @@ export default class TopLevelAssertion {
     const labels = labelsFromJSON(json, fileContext),
           consequent = consequentFromJSON(json, fileContext),
           suppositions = suppositionsFromJSON(json, fileContext),
+          substitutions = substitutionsFromJSON(json, fileContext),
           string = stringFromLabels(labels),
           proof = null,
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, consequent, proof);
+          topLevelAssertion = new Class(fileContext, string, labels, substitutions, suppositions, consequent, proof);
 
     return topLevelAssertion;
+  }
+
+  static fromNode(Class, node, fileContext) {
+    const { Label, Proof, Consequent, Supposition, Substitutions } = shim,
+          proofNode = proofNodeQuery(node),
+          labelNodes = labelNodesQuery(node),
+          consequentNode = consequentNodeQuery(node),
+          suppositionNodes = suppositionNodesQuery(node),
+          labels = labelNodes.map((labelNode) => {
+            const label = Label.fromLabelNode(labelNode, fileContext);
+
+            return label;
+          }),
+          substitutions = Substitutions.fromNothing(),
+          suppositions = suppositionNodes.map((suppositionNode) => {
+            const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
+
+            return supposition;
+          }),
+          consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
+          proof = Proof.fromProofNode(proofNode, fileContext),
+          string = stringFromLabels(labels),
+          metaLemma = new Class(fileContext, string, labels, substitutions, suppositions, consequent, proof);
+
+    return metaLemma;
   }
 }
 

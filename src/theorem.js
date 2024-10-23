@@ -4,14 +4,6 @@ import shim from "./shim";
 import LocalContext from "./context/local";
 import TopLevelAssertion from "./topLevelAssertion";
 
-import { stringFromLabels } from "./topLevelAssertion";
-import { nodeQuery, nodesQuery } from "./utilities/query";
-
-const proofNodeQuery = nodeQuery("/theorem/proof"),
-      labelNodesQuery = nodesQuery("/theorem/label"),
-      consequentNodeQuery = nodeQuery("/theorem/consequent"),
-      suppositionNodesQuery = nodesQuery("/theorem/supposition");
-
 class Theorem extends TopLevelAssertion {
   verify() {
     let verified = false;
@@ -66,29 +58,7 @@ class Theorem extends TopLevelAssertion {
 
   static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Theorem, json, fileContext); }
 
-  static fromTheoremNode(theoremNode, fileContext) {
-    const { Label, Proof, Consequent, Supposition } = shim,
-          proofNode = proofNodeQuery(theoremNode),
-          labelNodes = labelNodesQuery(theoremNode),
-          consequentNode = consequentNodeQuery(theoremNode),
-          suppositionNodes = suppositionNodesQuery(theoremNode),
-          labels = labelNodes.map((labelNode) => {
-            const label = Label.fromLabelNode(labelNode, fileContext);
-
-            return label;
-          }),
-          suppositions = suppositionNodes.map((suppositionNode) => {
-            const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
-
-            return supposition;
-          }),
-          consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
-          string = stringFromLabels(labels),
-          proof = Proof.fromProofNode(proofNode, fileContext),
-          theorem = new Theorem(fileContext, string, labels, suppositions, consequent, proof);
-
-    return theorem;
-  }
+  static fromTheoremNode(metaLemmaNode, fileContext) { return TopLevelAssertion.fromNode(Theorem, metaLemmaNode, fileContext); }
 }
 
 Object.assign(shim, {

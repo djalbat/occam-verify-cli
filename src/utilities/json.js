@@ -302,7 +302,7 @@ export function suppositionsFromJSON(json, fileContext) {
 }
 
 export function substitutionsFromJSON(json, fileContext) {
-  let { substitutions } = json;
+  let { substitutions = [] } = json;  ///
 
   const { Substitution } = shim,
         substitutionsJSON = substitutions;  ///

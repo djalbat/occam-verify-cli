@@ -4,7 +4,6 @@ import shim from "./shim";
 import LocalContext from "./context/local";
 import TopLevelAssertion from "./topLevelAssertion";
 
-import { nodeQuery, nodesQuery } from "./utilities/query";
 import { stringFromLabels } from "./topLevelAssertion";
 import { labelsFromJSON,
          labelsToLabelsJSON,
@@ -14,11 +13,6 @@ import { labelsFromJSON,
          consequentToConsequentJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "./utilities/json";
-
-const proofNodeQuery = nodeQuery("/metatheorem/proof"),
-      labelNodesQuery = nodesQuery("/metatheorem/label"),
-      consequentNodeQuery = nodeQuery("/metatheorem/consequent"),
-      suppositionNodesQuery = nodesQuery("/metatheorem/supposition");
 
 class Metatheorem extends TopLevelAssertion {
   constructor(fileContext, string, labels, suppositions, consequent, proof, substitutions) {
@@ -111,30 +105,7 @@ class Metatheorem extends TopLevelAssertion {
     return topLevelAssertion;
   }
 
-  static fromMetatheoremNode(metatheoremNode, fileContext) {
-    const { Label, Proof, Consequent, Supposition, Substitutions } = shim,
-          proofNode = proofNodeQuery(metatheoremNode),
-          labelNodes = labelNodesQuery(metatheoremNode),
-          consequentNode = consequentNodeQuery(metatheoremNode),
-          suppositionNodes = suppositionNodesQuery(metatheoremNode),
-          labels = labelNodes.map((labelNode) => {
-            const label = Label.fromLabelNode(labelNode, fileContext);
-
-            return label;
-          }),
-          suppositions = suppositionNodes.map((suppositionNode) => {
-            const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
-
-            return supposition;
-          }),
-          consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
-          proof = Proof.fromProofNode(proofNode, fileContext),
-          string = stringFromLabels(labels),
-          substitutions = Substitutions.fromNothing(),
-          metatheorem = new Metatheorem(fileContext, string, labels, suppositions, consequent, proof, substitutions);
-
-    return metatheorem;
-  }
+  static fromMetatheoremNode(metatheoremNode, fileContext) { return TopLevelAssertion.fromNode(Metatheorem, metatheoremNode, fileContext); }
 }
 
 Object.assign(shim, {

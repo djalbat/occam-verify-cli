@@ -5,13 +5,6 @@ import LocalContext from "./context/local";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { EMPTY_STRING } from "./constants";
-import { stringFromLabels } from "./topLevelAssertion";
-import { nodeQuery, nodesQuery } from "./utilities/query";
-
-const proofNodeQuery = nodeQuery("/lemma/proof"),
-      labelNodesQuery = nodesQuery("/lemma/label"),
-      consequentNodeQuery = nodeQuery("/lemma/consequent"),
-      suppositionNodesQuery = nodesQuery("/lemma/supposition");
 
 class Lemma extends TopLevelAssertion {
   verify() {
@@ -69,29 +62,7 @@ class Lemma extends TopLevelAssertion {
     return verified;
   }
 
-  static fromLemmaNode(lemmaNode, fileContext) {
-    const { Label, Proof, Supposition, Consequent } = shim,
-          proofNode = proofNodeQuery(lemmaNode),
-          labelNodes = labelNodesQuery(lemmaNode),
-          consequentNode = consequentNodeQuery(lemmaNode),
-          suppositionNodes = suppositionNodesQuery(lemmaNode),
-          labels = labelNodes.map((labelNode) => {
-            const label = Label.fromLabelNode(labelNode, fileContext);
-
-            return label;
-          }),
-          suppositions = suppositionNodes.map((suppositionNode) => {
-            const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
-
-            return supposition;
-          }),
-          consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
-          string = stringFromLabels(labels),
-          proof = Proof.fromProofNode(proofNode, fileContext),
-          lemma = new Lemma(fileContext, string, labels, suppositions, consequent, proof);
-
-    return lemma;
-  }
+  static fromLemmaNode(metaLemmaNode, fileContext) { return TopLevelAssertion.fromNode(Lemma, metaLemmaNode, fileContext); }
 }
 
 Object.assign(shim, {

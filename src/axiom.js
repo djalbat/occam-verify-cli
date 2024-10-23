@@ -59,28 +59,7 @@ class Axiom extends TopLevelAssertion {
 
   static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Axiom, json, fileContext); }
 
-  static fromAxiomNode(axiomNode, fileContext) {
-    const { Label, Supposition, Consequent } = shim,
-          labelNodes = labelNodesQuery(axiomNode),
-          consequentNode = consequentNodeQuery(axiomNode),
-          suppositionNodes = suppositionNodesQuery(axiomNode),
-          labels = labelNodes.map((labelNode) => {
-            const label = Label.fromLabelNode(labelNode, fileContext);
-
-            return label;
-          }),
-          suppositions = suppositionNodes.map((suppositionNode) => {
-            const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
-
-            return supposition;
-          }),
-          consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
-          string = stringFromLabels(labels),
-          proof = null,
-          axiom = new Axiom(fileContext, string, labels, suppositions, consequent, proof);
-
-    return axiom;
-  }
+  static fromAxiomNode(axiomNode, fileContext) { return TopLevelAssertion.fromNode(Axiom, axiomNode, fileContext); }
 }
 
 Object.assign(shim, {

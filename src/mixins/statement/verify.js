@@ -10,7 +10,6 @@ import { nodeQuery } from "../../utilities/query";
 
 const equalityNodeQuery = nodeQuery("/statement/equality"),
       judgementNodeQuery = nodeQuery("/statement/judgement"),
-      declarationNodeQuery = nodeQuery("/statement/declaration"),
       metavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion"),
@@ -90,31 +89,6 @@ function verifyAsJudgement(statement, assignments, stated, localContext) {
   }
 
   return verifiedAsJudgement;
-}
-
-function verifyAsDeclaration(statement, assignments, stated, localContext) {
-  let verifiedAsDeclaration = false;
-
-  const { Declaration } = shim,
-        statementNode = statement.getNode(),
-        declarationNode = declarationNodeQuery(statementNode),
-        declaration = Declaration.fromDeclarationNode(declarationNode, localContext);
-
-  if (declaration !== null) {
-    const statementString = statement.getString();
-
-    localContext.trace(`Verifying the '${statementString}' statement as a declaration...`);
-
-    const declarationVerified = declaration.verify(assignments, stated, localContext);
-
-    verifiedAsDeclaration = declarationVerified;  ///
-
-    if (verifiedAsDeclaration) {
-      localContext.debug(`...verified the '${statementString}' statement as a declaration.`);
-    }
-  }
-
-  return verifiedAsDeclaration;
 }
 
 function verifyAsTypeAssertion(statement, assignments, stated, localContext) {
@@ -217,7 +191,6 @@ const verifyMixins = [
   verifyAsMetavariable,
   verifyAsEquality,
   verifyAsJudgement,
-  verifyAsDeclaration,
   verifyAsTypeAssertion,
   verifyAsDefinedAssertion,
   verifyAsSubproofAssertion,
