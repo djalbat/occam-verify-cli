@@ -18,6 +18,14 @@ class Proof {
 
   getLastProofStep() { return this.derivation.getLastProofStep(); }
 
+  getStatement() {
+    const lastProofStep = this.getLastProofStep(),
+          lastProofStepStatement = lastProofStep.getStatement(),
+          statement = lastProofStepStatement; ///
+
+    return statement;
+  }
+
   verify(substitutions, conclusion, localContext) {
     let verified = false;
 
@@ -29,12 +37,11 @@ class Proof {
       const lastProofStep = localContext.getLastProofStep();
 
       if (lastProofStep !== null) {
-        const lastProofStep = this.getLastProofStep(),
+        const statement = this.getStatement(),
               conclusionStatement = conclusion.getStatement(),
-              lastProofStepStatement = lastProofStep.getStatement(),
-              conclusionStatementEqualToLastProofStepStatement = conclusionStatement.isEqualTo(lastProofStepStatement);
+              conclusionStatementEqualToStatement = conclusionStatement.isEqualTo(statement);
 
-        if (conclusionStatementEqualToLastProofStepStatement) {
+        if (conclusionStatementEqualToStatement) {
           verified = true;
         }
       }
