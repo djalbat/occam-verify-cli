@@ -83,7 +83,7 @@ class Variable {
     if (verified) {
       const typeName = this.type.getName();
 
-      localContext.debug(`...verified the '${variableString}' variable, giving it the '${typeName}' type.`);
+      localContext.debug(`...verified the '${variableString};${typeName}' variable.`);
     }
 
     return verified;
