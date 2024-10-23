@@ -578,6 +578,27 @@ export default class FileContext {
     return theoremPresent;
   }
 
+  isConjecturePresentByReference(reference) {
+    const conjecture = this.findConjectureByReference(reference),
+          conjecturePresent = (conjecture !== null);
+
+    return conjecturePresent;
+  }
+
+  isMetaLemmaPresentByReference(reference) {
+    const metaLemma = this.findMetaLemmaByReference(reference),
+          metaLemmaPresent = (metaLemma !== null);
+
+    return metaLemmaPresent;
+  }
+
+  isMetatheoremPresentByReference(reference) {
+    const metatheorem = this.findMetatheoremByReference(reference),
+          metatheoremPresent = (metatheorem !== null);
+
+    return metatheoremPresent;
+  }
+
   nodeAsString(node, tokens = null) {
     if (tokens === null) {
       tokens = this.tokens;

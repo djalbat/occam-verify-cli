@@ -112,15 +112,16 @@ class Judgement {
 
     if (!verifiedWhenDerived) {
       const reference = this.declaration.getReference(),
-            theorem = localContext.findTheoremByReference(reference),
-            lemma = localContext.findLemmaByReference(reference),
             axiom = localContext.findAxiomByReference(reference),
-            axiomLemmaOrTheorem = (axiom || lemma || theorem);
+            lemma = localContext.findLemmaByReference(reference),
+            theorem = localContext.findTheoremByReference(reference),
+            conjecture = localContext.findConjectureByReference(reference),
+            axiomLemmaTheoremOrConjecture = (axiom || lemma || theorem || conjecture);
 
-      if (axiomLemmaOrTheorem !== null) {
-        const axiomLemmaOrTheoremUnified = this.frame.unifyAxiomLemmaOrTheorem(axiomLemmaOrTheorem, localContext);
+      if (axiomLemmaTheoremOrConjecture !== null) {
+        const axiomLemmaTheoremOrConjectureUnified = this.frame.unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, localContext);
 
-        verifiedWhenDerived = axiomLemmaOrTheoremUnified; ///
+        verifiedWhenDerived = axiomLemmaTheoremOrConjectureUnified; ///
       }
     }
 

@@ -138,6 +138,16 @@ class Term {
     localContext.trace(`Verifying the '${termString}' term...`);
 
     if (!verified) {
+      verified = verifyMixins.some((verifyMixin) => {
+        const verified = verifyMixin(term, localContext, verifyAhead);
+
+        if (verified) {
+          return true;
+        }
+      });
+    }
+
+    if (!verified) {
       const unified = unifyMixins.some((unifyMixin) => { ///
         const unified = unifyMixin(term, localContext, verifyAhead);
 
@@ -147,16 +157,6 @@ class Term {
       });
 
       verified = unified; ///
-    }
-
-    if (!verified) {
-      verified = verifyMixins.some((verifyMixin) => {
-        const verified = verifyMixin(term, localContext, verifyAhead);
-
-        if (verified) {
-          return true;
-        }
-      });
     }
 
     if (verified) {

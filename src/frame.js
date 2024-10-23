@@ -145,14 +145,14 @@ class Frame {
     return metaLemmaMetatheoremUnified;
   }
 
-  unifyAxiomLemmaOrTheorem(axiomLemmaOrTheorem, localContext) {
-    let axiomLemmaOrTheoremUnified;
+  unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, localContext) {
+    let axiomLemmaTheoremOrConjectureUnified;
 
-    const axiomLemmaOrTheoremString = axiomLemmaOrTheorem.getString();
+    const axiomLemmaTheoremStringOrConjecture = axiomLemmaTheoremOrConjecture.getString();
 
-    localContext.trace(`Unifying the '${axiomLemmaOrTheoremString}' axiom, lemma or theorem...`);
+    localContext.trace(`Unifying the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture...`);
 
-    const substitutions = axiomLemmaOrTheorem.getSubstitutions(),
+    const substitutions = axiomLemmaTheoremOrConjecture.getSubstitutions(),
           substitutionsUnified = substitutions.everySubstitution((substitution) => {
             const substitutionUnified = this.unifySubstitution(substitution, localContext);
 
@@ -161,13 +161,13 @@ class Frame {
             }
           });
 
-    axiomLemmaOrTheoremUnified = substitutionsUnified; ///
+    axiomLemmaTheoremOrConjectureUnified = substitutionsUnified; ///
 
-    if (axiomLemmaOrTheoremUnified) {
-      localContext.debug(`...unified the '${axiomLemmaOrTheoremString}' axiom, lemma or theorem.`);
+    if (axiomLemmaTheoremOrConjectureUnified) {
+      localContext.debug(`...unified the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture.`);
     }
 
-    return axiomLemmaOrTheoremUnified;
+    return axiomLemmaTheoremOrConjectureUnified;
   }
 
   verify(assignments, stated, localContext) {

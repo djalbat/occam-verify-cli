@@ -350,6 +350,12 @@ class LocalContext {
 
   isTheoremPresentByReference(reference) { return this.context.isTheoremPresentByReference(reference); }
 
+  isConjecturePresentByReference(reference) { return this.context.isConjecturePresentByReference(reference); }
+
+  isMetaLemmaPresentByReference(reference) { return this.context.isMetaLemmaPresentByReference(reference); }
+
+  isMetatheoremPresentByReference(reference) { return this.context.isMetatheoremPresentByReference(reference); }
+
   nodeAsString(node, tokens = null) {
     if (tokens === null) {
       tokens = this.tokens;

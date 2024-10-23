@@ -45,11 +45,20 @@ export default class Reference {
 
     if (!verified) {
       const reference = this, ///
+            metaLemmaPresent = localContext.isMetaLemmaPresentByReference(reference),
+            metatheoremPresent = localContext.isMetatheoremPresentByReference(reference);
+
+      verified = (metaLemmaPresent || metatheoremPresent);
+    }
+
+    if (!verified) {
+      const reference = this, ///
             axiomPresent = localContext.isAxiomPresentByReference(reference),
             lemmaPresent = localContext.isLemmaPresentByReference(reference),
-            theoremPresent = localContext.isTheoremPresentByReference(reference);
+            theoremPresent = localContext.isTheoremPresentByReference(reference),
+            conjecturePresent = localContext.isConjecturePresentByReference(reference);
 
-      verified = (axiomPresent || lemmaPresent || theoremPresent);
+      verified = (axiomPresent || lemmaPresent || theoremPresent || conjecturePresent);
     }
 
     if (verified) {

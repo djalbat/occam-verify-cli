@@ -173,6 +173,16 @@ class Statement {
     localContext.trace(`Verifying the '${statementString}' statement...`);
 
     if (!verified) {
+      verified = verifyMixins.some((verifyMixin) => {
+        const verified = verifyMixin(statement, assignments, stated, localContext);
+
+        if (verified) {
+          return true;
+        }
+      });
+    }
+
+    if (!verified) {
       const unified = unifyMixins.some((unifyMixin) => {
         const unified = unifyMixin(statement, assignments, stated, localContext);
 
@@ -182,16 +192,6 @@ class Statement {
       });
 
       verified = unified; ///
-    }
-
-    if (!verified) {
-      verified = verifyMixins.some((verifyMixin) => {
-        const verified = verifyMixin(statement, assignments, stated, localContext);
-
-        if (verified) {
-          return true;
-        }
-      });
     }
 
     if (verified) {
