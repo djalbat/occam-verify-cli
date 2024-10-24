@@ -32,7 +32,7 @@ function verifyAction(argument, log) {
     }
 
     if (!success) {
-      log.warning(`The '${name}' project or package context cannot be created.`);
+      log.warning(`The '${name}' project or package cannot be created.`);
 
       return;
     }
@@ -54,7 +54,7 @@ function verifyAction(argument, log) {
           releaseVerified = verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap);
 
     if (!releaseVerified) {
-      log.warning(`The '${name}' project or package context cannot be verified.`);
+      log.warning(`The '${name}' project or package cannot be verified.`);
 
       return;
     }

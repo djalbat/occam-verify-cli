@@ -199,7 +199,7 @@ class Metavariable {
     localContext.trace(`Verifying the '${metavariableString}' metavariable...`);
 
     const metavariableNode = this.node,
-          metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode, localContext);
+          metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode);
 
     verified = metavariablePresent; ///
 
@@ -264,7 +264,7 @@ class Metavariable {
     localContext.trace(`Verifying the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
 
     const metavariableNode = this.node,  ///
-          metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode, localContext);
+          metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
 
     if (metavariable !== null) {
       const metaTypeMatches = metavariable.matchMetaType(metaType);
@@ -346,7 +346,7 @@ Object.assign(shim, {
 export default Metavariable;
 
 function metavariableFromMetavariableNode(metavariableNode, localContext) {
-  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode, localContext);
+  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
 
   return metavariable;
 }
@@ -357,7 +357,7 @@ function frameMetavariableFromStatementNode(frameNode, localContext) {
   const frameMetavariableNode = frameMetavariableNodeQuery(frameNode);
 
   if (frameMetavariableNode !== null) {
-    frameMetavariable = localContext.findMetavariableByMetavariableNode(frameMetavariableNode, localContext);
+    frameMetavariable = localContext.findMetavariableByMetavariableNode(frameMetavariableNode);
   }
 
   return frameMetavariable;
@@ -369,7 +369,7 @@ function statementMetavariableFromStatementNode(statementNode, localContext) {
   const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
   if (statementMetavariableNode !== null) {
-    statementMetavariable = localContext.findMetavariableByMetavariableNode(statementMetavariableNode, localContext);
+    statementMetavariable = localContext.findMetavariableByMetavariableNode(statementMetavariableNode);
   }
 
   return statementMetavariable;

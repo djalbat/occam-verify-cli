@@ -145,11 +145,11 @@ class Statement {
 
     localContextB.trace(`Unifying the '${statementBString}' statement with the '${statementAString}' statement...`);
 
-    const statementANode = statementA.getNode(),
-          statementBNode = statementB.getNode(),
+    const statementNodeA = statementA.getNode(),  ///
+          statementNodeB = statementB.getNode(),  ///
           context = localContextA,  ///
-          nodeA = statementANode, ///
-          nodeB = statementBNode; ///
+          nodeA = statementNodeA, ///
+          nodeB = statementNodeB; ///
 
     localContextA = LocalContext.fromContextAndTokens(context, this.tokens);
 

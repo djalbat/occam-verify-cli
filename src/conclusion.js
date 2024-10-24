@@ -29,14 +29,14 @@ class Conclusion {
   unifyStatement(statement, substitutions, localContext) {
     let statementUnified;
 
-    const statementString = statement.getString(),
-          conclusionString = this.getString();
-
     const localContextB = localContext; ///
 
     localContext = LocalContext.fromFileContext(this.fileContext);
 
     const localContextA = localContext; ///
+
+    const statementString = statement.getString(),
+          conclusionString = this.getString();
 
     localContextB.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
 

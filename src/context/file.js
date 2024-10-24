@@ -2,6 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
+import LocalContext from "./local";
 import metavariableUnifier from "../unifier/metavariable";
 
 import { objectType } from "../type";
@@ -29,8 +30,6 @@ import { typesFromJSON,
          constructorsToConstructorsJSON,
          metatheoremsToMetatheoremsJSON,
          metavariablesToMetavariablesJSON } from "../utilities/json";
-import local from "./local";
-import LocalContext from "./local";
 
 const { push } = arrayUtilities;
 

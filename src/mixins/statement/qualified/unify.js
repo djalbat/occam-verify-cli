@@ -34,7 +34,7 @@ function unifyAWithReference(qualifiedStatement, substitutions, localContext) {
 
   const reference = qualifiedStatement.getReference(),
         metavariableNode = reference.getMetavariableNode(),
-        metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode, localContext);
+        metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode);
 
   if (metavariablePresent) {
     const statement = qualifiedStatement.getStatement(),

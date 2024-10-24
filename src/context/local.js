@@ -273,7 +273,7 @@ class LocalContext {
 
   isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
 
-  isMetavariablePresentByMetavariableNode(metavariableNode, localContext) { return this.context.isMetavariablePresentByMetavariableNode(metavariableNode, localContext); }
+  isMetavariablePresentByMetavariableNode(metavariableNode, localContext = this) { return this.context.isMetavariablePresentByMetavariableNode(metavariableNode, localContext); }
 
   isVariablePresentByVariableName(variableName, nested = true) {
     const variable = this.findVariableByVariableName(variableName, nested),
@@ -300,7 +300,7 @@ class LocalContext {
 
   findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
 
-  findMetavariableByMetavariableNode(metavariableNode, localContext) { return this.context.findMetavariableByMetavariableNode(metavariableNode, localContext); }
+  findMetavariableByMetavariableNode(metavariableNode, localContext = this) { return this.context.findMetavariableByMetavariableNode(metavariableNode, localContext); }
 
   findVariableByVariableName(variableName, nested = true) {
     const variables = this.getVariables(nested),
@@ -340,9 +340,9 @@ class LocalContext {
 
   findConjectureByReference(reference) { return this.context.findConjectureByReference(reference); }
 
-  findMetaLemmaByReference(reference, localContext) { return this.context.findMetaLemmaByReference(reference, localContext); }
+  findMetaLemmaByReference(reference, localContext = this) { return this.context.findMetaLemmaByReference(reference, localContext); }
 
-  findMetatheoremByReference(reference, localContext) { return this.context.findMetatheoremByReference(reference, localContext); }
+  findMetatheoremByReference(reference, localContext = this) { return this.context.findMetatheoremByReference(reference, localContext); }
 
   isAxiomPresentByReference(reference) { return this.context.isAxiomPresentByReference(reference); }
 
@@ -352,9 +352,9 @@ class LocalContext {
 
   isConjecturePresentByReference(reference) { return this.context.isConjecturePresentByReference(reference); }
 
-  isMetaLemmaPresentByReference(reference, localContext) { return this.context.isMetaLemmaPresentByReference(reference, localContext); }
+  isMetaLemmaPresentByReference(reference, localContext = this) { return this.context.isMetaLemmaPresentByReference(reference, localContext); }
 
-  isMetatheoremPresentByReference(reference, localContext) { return this.context.isMetatheoremPresentByReference(reference, localContext); }
+  isMetatheoremPresentByReference(reference, localContext = this) { return this.context.isMetatheoremPresentByReference(reference, localContext); }
 
   nodeAsString(node, tokens = null) {
     if (tokens === null) {
