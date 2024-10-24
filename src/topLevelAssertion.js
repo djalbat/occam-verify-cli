@@ -160,7 +160,7 @@ export default class TopLevelAssertion {
         if (proofStepUnified) {
           return true;
         }
-      });
+      }) || null;
 
       if (proofStep !== null) {
         suppositionUnified = true;

@@ -139,7 +139,7 @@ class Rule {
         if (proofStepUnified) {
           return true;
         }
-      });
+      }) || null;
 
       if (proofStep !== null) {
         premiseUnified = true;

@@ -169,34 +169,26 @@ function verifyWhenDerived(term, frame, statement, negated, localContext) {
   let verifiedWhenDerived = false;
 
   if (term !== null) {
-    const variable = term.getVariable(localContext);
+    const termContained = statement.isTermContained(term, localContext);
 
-    if (variable !== null) {
-      const variableContained = statement.isVariableContained(variable, localContext);
+    if (!negated && termContained) {
+      verifiedWhenDerived = true;
+    }
 
-      if (!negated && variableContained) {
-        verifiedWhenDerived = true;
-      }
-
-      if (negated && !variableContained) {
-        verifiedWhenDerived = true;
-      }
+    if (negated && !termContained) {
+      verifiedWhenDerived = true;
     }
   }
 
   if (frame !== null) {
-    const metavariable = frame.getMetavariable(localContext);
+    const frameContained = statement.isFrameContained(frame, localContext);
 
-    if (metavariable !== null) {
-      const metavariableContained = statement.isMetavariableContained(metavariable, localContext);
+    if (!negated && frameContained) {
+      verifiedWhenDerived = true;
+    }
 
-      if (!negated && metavariableContained) {
-        verifiedWhenDerived = true;
-      }
-
-      if (negated && !metavariableContained) {
-        verifiedWhenDerived = true;
-      }
+    if (negated && !frameContained) {
+      verifiedWhenDerived = true;
     }
   }
 

@@ -16,8 +16,8 @@ import { statementNodeFromUnqualifiedStatementNode,
          unqualifiedStatementNodeFromUnqualifiedStatementTokens } from "./utilities/node";
 
 const statementNodeQuery = nodeQuery("/*//statement"),
-      statementVariableNodesQuery = nodesQuery("/statement//variable"),
-      statementMetavariableNodesQuery = nodesQuery("/statement//metavariable");
+      statementTermNodesQuery = nodesQuery("/statement//term"),
+      statementFrameNodesQuery = nodesQuery("/statement//frame");
 
 class Statement {
   constructor(string, node, tokens) {
@@ -46,58 +46,58 @@ class Statement {
     return equalTo;
   }
 
-  isVariableContained(variable, localContext) {
-    let variableContained;
+  isTermContained(term, localContext) {
+    let termContained;
 
-    const variableString = variable.getString(),
+    const termString = term.getString(),
           statementString = this.string;  ///
 
-    localContext.trace(`Is the '${variableString}' variable contained in the '${statementString}' statement...`);
+    localContext.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`);
 
-    const variableNode = variable.getNode(),
+    const termNode = term.getNode(),
           statementNode = this.node,
-          statementVariableNodes = statementVariableNodesQuery(statementNode);
+          statementTermNodes = statementTermNodesQuery(statementNode);
 
-    variableContained = statementVariableNodes.some((statementVariableNode) => {  ///
-      const variableNodeMatchesStatementVariableNode = variableNode.match(statementVariableNode);
+    termContained = statementTermNodes.some((statementTermNode) => {  ///
+      const termNodeMatchesStatementVariableNode = termNode.match(statementTermNode);
 
-      if (variableNodeMatchesStatementVariableNode) {
+      if (termNodeMatchesStatementVariableNode) {
         return true;
       }
     });
 
-    if (variableContained) {
-      localContext.debug(`...the '${variableString}' variable is contained in the '${statementString}' statement.`);
+    if (termContained) {
+      localContext.debug(`...the '${termString}' term is contained in the '${statementString}' statement.`);
     }
 
-    return variableContained;
+    return termContained;
   }
 
-  isMetavariableContained(metavariable, localContext) {
-    let metavariableContained;
+  isFrameContained(frame, localContext) {
+    let frameContained;
 
-    const metavariableString = metavariable.getString(),
+    const frameString = frame.getString(),
           statementString = this.string;  ///
 
-    localContext.trace(`Is the '${metavariableString}' metavariable contained in the '${statementString}' statement...`);
+    localContext.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`);
 
-    const metavariableNode = metavariable.getNode(),
+    const frameNode = frame.getNode(),
           statementNode = this.node,
-          statementMetavariableNodes = statementMetavariableNodesQuery(statementNode);
+          statementFrameNodes = statementFrameNodesQuery(statementNode);
 
-    metavariableContained = statementMetavariableNodes.some((statementMetavariableNode) => {  ///
-      const metavariableNodeMatchesStatementMetavariableNode = metavariableNode.match(statementMetavariableNode);
+    frameContained = statementFrameNodes.some((statementFrameNode) => {  ///
+      const frameNodeMatchesStatementMetavariableNode = frameNode.match(statementFrameNode);
 
-      if (metavariableNodeMatchesStatementMetavariableNode) {
+      if (frameNodeMatchesStatementMetavariableNode) {
         return true;
       }
     });
 
-    if (metavariableContained) {
-      localContext.debug(`...the '${metavariableString}' metavariable is contained in the '${statementString}' statement.`);
+    if (frameContained) {
+      localContext.debug(`...the '${frameString}' frame is contained in the '${statementString}' statement.`);
     }
 
-    return metavariableContained;
+    return frameContained;
   }
 
   matchStatementNode(statementNode) {

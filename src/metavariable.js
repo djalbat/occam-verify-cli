@@ -96,7 +96,7 @@ class Metavariable {
             metavariable = metavariableFromMetavariableNode(metavariableNode, localContext),
             frameMetavariable  = frameMetavariableFromStatementNode(frameNode, localContext);
 
-      if (metavariable === frameMetavariable) {
+      if ((metavariable !== null) && (metavariable === frameMetavariable)) {
         frameUnified = true;
       } else {
         const metavariable = this,  ///
