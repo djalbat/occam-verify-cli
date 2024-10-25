@@ -31,26 +31,26 @@ class Judgement {
 
   matchMetavariableNode(metavariableNode) { return this.frame.matchMetavariableNode(metavariableNode); }
 
-  verify(assignments, stated, localContext) {
+  verify(assignments, stated, context) {
     let verified;
 
     const judgementString = this.string;  ///
 
-    localContext.trace(`Verifying the '${judgementString}' judgement...`);
+    context.trace(`Verifying the '${judgementString}' judgement...`);
 
-    const frameVerified = this.frame.verify(assignments, stated, localContext);
+    const frameVerified = this.frame.verify(assignments, stated, context);
 
     if (frameVerified) {
-      const declarationVerified = this.declaration.verify(assignments, stated, localContext);
+      const declarationVerified = this.declaration.verify(assignments, stated, context);
 
       if (declarationVerified) {
         let verifiedWhenStated = false,
             verifiedWhenDerived = false;
 
         if (stated) {
-          verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+          verifiedWhenStated = this.verifyWhenStated(assignments, context);
         } else {
-          verifiedWhenDerived = this.verifyWhenDerived(assignments, localContext);
+          verifiedWhenDerived = this.verifyWhenDerived(assignments, context);
         }
 
         if (verifiedWhenStated || verifiedWhenDerived) {
@@ -60,18 +60,18 @@ class Judgement {
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${judgementString}' judgement.`);
+      context.debug(`...verified the '${judgementString}' judgement.`);
     }
 
     return verified;
   }
 
-  verifyWhenStated(assignments, localContext) {
+  verifyWhenStated(assignments, context) {
     let verifiedWhenStated;
 
     const judgementString = this.string;  ///
 
-    localContext.trace(`Verifying the '${judgementString}' judgement when stated...`);
+    context.trace(`Verifying the '${judgementString}' judgement when stated...`);
 
     if (assignments !== null) {
       const judgement = this, ///
@@ -84,27 +84,27 @@ class Judgement {
     verifiedWhenStated = true;
 
     if (verifiedWhenStated) {
-      localContext.debug(`...verified the '${judgementString}' judgement when stated.`);
+      context.debug(`...verified the '${judgementString}' judgement when stated.`);
     }
 
     return verifiedWhenStated;
   }
 
-  verifyWhenDerived(assignments, localContext) {
+  verifyWhenDerived(assignments, context) {
     let verifiedWhenDerived = false;
 
     const judgementString = this.string;  ///
 
-    localContext.trace(`Verifying the '${judgementString}' judgement when derived...`);
+    context.trace(`Verifying the '${judgementString}' judgement when derived...`);
 
     if (!verifiedWhenDerived) {
       const reference = this.declaration.getReference(),
-            metaLemma = localContext.findMetaLemmaByReference(reference),
-            metatheorem = localContext.findMetatheoremByReference(reference),
+            metaLemma = context.findMetaLemmaByReference(reference),
+            metatheorem = context.findMetatheoremByReference(reference),
             metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
 
       if (metaLemmaMetatheorem !== null) {
-        const metaLemmaMetatheoremUnified = this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, localContext);
+        const metaLemmaMetatheoremUnified = this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, context);
 
         verifiedWhenDerived = metaLemmaMetatheoremUnified; ///
       }
@@ -112,27 +112,27 @@ class Judgement {
 
     if (!verifiedWhenDerived) {
       const reference = this.declaration.getReference(),
-            axiom = localContext.findAxiomByReference(reference),
-            lemma = localContext.findLemmaByReference(reference),
-            theorem = localContext.findTheoremByReference(reference),
-            conjecture = localContext.findConjectureByReference(reference),
+            axiom = context.findAxiomByReference(reference),
+            lemma = context.findLemmaByReference(reference),
+            theorem = context.findTheoremByReference(reference),
+            conjecture = context.findConjectureByReference(reference),
             axiomLemmaTheoremOrConjecture = (axiom || lemma || theorem || conjecture);
 
       if (axiomLemmaTheoremOrConjecture !== null) {
-        const axiomLemmaTheoremOrConjectureUnified = this.frame.unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, localContext);
+        const axiomLemmaTheoremOrConjectureUnified = this.frame.unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, context);
 
         verifiedWhenDerived = axiomLemmaTheoremOrConjectureUnified; ///
       }
     }
 
     if (verifiedWhenDerived) {
-      localContext.debug(`...verified the '${judgementString}' judgement when derived.`);
+      context.debug(`...verified the '${judgementString}' judgement when derived.`);
     }
 
     return verifiedWhenDerived;
   }
 
-  static fromJudgementNode(judgementNode, localContext) {
+  static fromJudgementNode(judgementNode, context) {
     let judgement = null;
 
     if (judgementNode !== null) {
@@ -140,9 +140,9 @@ class Judgement {
             frameNode = frameNodeQuery(judgementNode),
             declarationNode = declarationNodeQuery(judgementNode),
             node = judgementNode, ///
-            string = localContext.nodeAsString(node),
-            frame = Frame.fromFrameNode(frameNode, localContext),
-            declaration = Declaration.fromDeclarationNode(declarationNode, localContext);
+            frame = Frame.fromFrameNode(frameNode, context),
+            string = context.nodeAsString(node),
+            declaration = Declaration.fromDeclarationNode(declarationNode, context);
 
       judgement = new Judgement(string, frame, declaration);
     }

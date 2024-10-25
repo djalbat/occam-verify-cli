@@ -60,7 +60,7 @@ class Substitution {
     return equalTo;
   }
 
-  resolve(substitutions, localContext) {
+  resolve(substitutions, context) {
     const resolved = true;
 
     return resolved;
@@ -102,15 +102,15 @@ class Substitution {
     return metavariableNodeAndSubstitutionNodeMatches;
   }
 
-  unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {
+  unifyWithEquivalence(equivalence, substitutions, generalContext, specificContext) {
     let unifiedWithEquivalence = false;
 
     return unifiedWithEquivalence;
   }
 
-  unifyWithEquivalences(equivalences, substitutions, localContextA, localContextB) {
+  unifyWithEquivalences(equivalences, substitutions, generalContext, specificContext) {
     const unifiedWithEquivalences = equivalences.some((equivalence) => {
-      const substitutionUnifiedWithEquivalence = this.unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB);
+      const substitutionUnifiedWithEquivalence = this.unifyWithEquivalence(equivalence, substitutions, generalContext, specificContext);
 
       if (substitutionUnifiedWithEquivalence) {
         return true;

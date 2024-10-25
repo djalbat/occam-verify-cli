@@ -13,12 +13,12 @@ const termNodeQuery = nodeQuery("/term"),
       statementNodeQuery = nodeQuery("/statement");
 
 class StatementWithCombinatorUnifier extends Unifier {
-  unify(combinatorStatementNode, statementNode, assignments, stated, localContext) {
+  unify(combinatorStatementNode, statementNode, assignments, stated, context) {
     let statementUnifiedWithCombinator;
 
-    const nonTerminalNodeA = combinatorStatementNode, ///
-          nonTerminalNodeB = statementNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, assignments, stated, localContext);
+    const generalNonTerminalNode = combinatorStatementNode, ///
+          specificNonTerminalNode = statementNode, ///
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, assignments, stated, context);
 
     statementUnifiedWithCombinator = nonTerminalNodeUnified; ///
 
@@ -27,17 +27,17 @@ class StatementWithCombinatorUnifier extends Unifier {
 
   static maps = [
     {
-      nodeQueryA: metaTypeNodeQuery,
-      nodeQueryB: statementNodeQuery,
-      unify: (metaTypeNodeA, statementNodeB, assignments, stated, localContext) => {
+      generalNodeQuery: metaTypeNodeQuery,
+      specificNodeQuery: statementNodeQuery,
+      unify: (generalMetaTypeNode, specificStatementNode, assignments, stated, context) => {
         let unified;
 
         const { Statement, MetaType } = shim,
-              metaTypeNode = metaTypeNodeA, ///
-              statementNode = statementNodeB, ///
-              metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
-              statement = Statement.fromStatementNode(statementNode, localContext),
-              statementVerifiedGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, localContext);
+              metaTypeNode = generalMetaTypeNode, ///
+              statementNode = specificStatementNode, ///
+              metaType = MetaType.fromMetaTypeNode(metaTypeNode, context),
+              statement = Statement.fromStatementNode(statementNode, context),
+              statementVerifiedGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, context);
 
         unified = statementVerifiedGivenType;
 
@@ -45,17 +45,17 @@ class StatementWithCombinatorUnifier extends Unifier {
       }
     },
     {
-      nodeQueryA: metaTypeNodeQuery,
-      nodeQueryB: frameNodeQuery,
-      unify: (metaTypeNodeA, frameNodeB, assignments, stated, localContext) => {
+      generalNodeQuery: metaTypeNodeQuery,
+      specificNodeQuery: frameNodeQuery,
+      unify: (generalMetaTypeNode, specificFrameNode, assignments, stated, context) => {
         let unified;
 
         const { Frame, MetaType } = shim,
-              metaTypeNode = metaTypeNodeA, ///
-              frameNode = frameNodeB, ///
-              metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
-              frame = Frame.fromFrameNode(frameNode, localContext),
-              frameVerifiedGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, localContext);
+              metaTypeNode = generalMetaTypeNode, ///
+              frameNode = specificFrameNode, ///
+              metaType = MetaType.fromMetaTypeNode(metaTypeNode, context),
+              frame = Frame.fromFrameNode(frameNode, context),
+              frameVerifiedGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, context);
 
         unified = frameVerifiedGivenType;
 
@@ -63,20 +63,20 @@ class StatementWithCombinatorUnifier extends Unifier {
       }
     },
     {
-      nodeQueryA: typeNodeQuery,
-      nodeQueryB: termNodeQuery,
-      unify: (typeNodeA, termNodeB, assignments, stated, localContext) => {
+      generalNodeQuery: typeNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      unify: (generalTypeNode, specificTermNode, assignments, stated, context) => {
         let unified = false;
 
         const { Term } = shim,
-              typeNode = typeNodeA, ///
+              typeNode = generalTypeNode, ///
               typeName = typeNameFromTypeNode(typeNode),
-              type = localContext.findTypeByTypeName(typeName);
+              type = context.findTypeByTypeName(typeName);
 
         if (type !== null) {
-          const termNode = termNodeB, ///
-                term = Term.fromTermNode(termNode, localContext),
-                termVerifiedGivenType = term.verifyGivenType(type, localContext);
+          const termNode = specificTermNode, ///
+                term = Term.fromTermNode(termNode, context),
+                termVerifiedGivenType = term.verifyGivenType(type, context);
 
           if (termVerifiedGivenType) {
             unified = true;

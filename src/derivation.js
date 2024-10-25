@@ -25,11 +25,11 @@ class Derivation {
     return lastProofStep;
   }
 
-  verify(substitutions, localContext) {
+  verify(substitutions, context) {
     let verified;
 
     verified = this.proofSteps.every((proofStep) => { ///
-      const proofStepVerified = proofStep.verify(substitutions, localContext);
+      const proofStepVerified = proofStep.verify(substitutions, context);
 
       if (proofStepVerified) {
         return true;

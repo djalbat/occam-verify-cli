@@ -510,11 +510,13 @@ function verifyFileContext(fileContext) {
   if (node !== null) {
     fileContext.debug(`Verifying the '${filePath}' file...`);
 
-    fileContext.reset();
-
     const verifiedAtTopLevel = topLevelVerifier.verify(node, fileContext);
 
-    fileContextVerified = verifiedAtTopLevel; ///
+    if (verifiedAtTopLevel) {
+      fileContextVerified = true;
+    } else {
+      fileContext.clear();
+    }
 
     if (fileContextVerified) {
       fileContext.info(`...verified the '${filePath}' file.`);

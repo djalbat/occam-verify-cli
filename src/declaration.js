@@ -28,13 +28,13 @@ class Declaration {
     return this.statement;
   }
 
-  unifyStatement(statement, localContext) {
+  unifyStatement(statement, context) {
     let statementUnified;
 
     const statementString = statement.getString(),
           declarationStatementString = this.statement.getString(); ///
 
-    localContext.trace(`Unifying the '${statementString}' statement with the '${declarationStatementString}' statement...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${declarationStatementString}' statement...`);
 
     let statementNode = statement.getNode();
 
@@ -45,19 +45,19 @@ class Declaration {
     statementUnified = statementNodeMatches;  ///
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the '${declarationStatementString}' statement.`);
+      context.debug(`...unified the '${statementString}' statement with the '${declarationStatementString}' statement.`);
     }
 
     return statementUnified;
   }
 
-  unifyMetavariable(metavariable, localContext) {
+  unifyMetavariable(metavariable, context) {
     let metavariableUnified;
 
     const referenceString = this.reference.getString(),
           metavariableString = metavariable.getString();
 
-    localContext.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
+    context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
 
     const metavariableNode = metavariable.getNode(),
           metavariableNodeMatches = this.reference.matchMetavariableNode(metavariableNode);
@@ -65,61 +65,61 @@ class Declaration {
     metavariableUnified = metavariableNodeMatches;  ///
 
     if (metavariableUnified) {
-      localContext.debug(`...unified the '${metavariableString}' metavariable with the '${referenceString}' reference.`);
+      context.debug(`...unified the '${metavariableString}' metavariable with the '${referenceString}' reference.`);
     }
 
     return metavariableUnified;
   }
 
-  unifySubstitution(substitution, localContext) {
+  unifySubstitution(substitution, context) {
     let substitutionUnified;
 
     const declarationString = this.string,  ///
           substitutionString = substitution.getString();
 
-    localContext.trace(`Unifying the '${substitutionString}' substitution with the '${declarationString}' declaration...`);
+    context.trace(`Unifying the '${substitutionString}' substitution with the '${declarationString}' declaration...`);
 
     const statement = substitution.getStatement(),
           metavariable = substitution.getMetavariable(),
-          statementUnified = this.unifyStatement(statement, localContext),
-          metavariableUnified = this.unifyMetavariable(metavariable, localContext);
+          statementUnified = this.unifyStatement(statement, context),
+          metavariableUnified = this.unifyMetavariable(metavariable, context);
 
     substitutionUnified = (metavariableUnified && statementUnified);
 
     if (substitutionUnified) {
-      localContext.debug(`...unified the '${declarationString}' substitution with the '${substitutionString}' declaration.`);
+      context.debug(`...unified the '${declarationString}' substitution with the '${substitutionString}' declaration.`);
     }
 
     return substitutionUnified;
   }
 
-  verify(assignments, stated, localContext) {
+  verify(assignments, stated, context) {
     let verified = false;
 
     const declarationString = this.string;  ///
 
-    localContext.trace(`Verifying the '${declarationString}' declaration...`);
+    context.trace(`Verifying the '${declarationString}' declaration...`);
 
     stated = true;  ///
 
     assignments = null; ///
 
-    const referenceVerified = this.reference.verify(localContext);
+    const referenceVerified = this.reference.verify(context);
 
     if (referenceVerified) {
-      const statementVerified = this.statement.verify(assignments, stated, localContext);
+      const statementVerified = this.statement.verify(assignments, stated, context);
 
       verified = statementVerified; ///
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${declarationString}' declaration.`);
+      context.debug(`...verified the '${declarationString}' declaration.`);
     }
 
     return verified;
   }
 
-  static fromDeclarationNode(declarationNode, localContext) {
+  static fromDeclarationNode(declarationNode, context) {
     let declaration = null;
 
     if (declarationNode !== null) {
@@ -130,10 +130,10 @@ class Declaration {
 
       statementNode = stripBracketsFromStatementNode(statementNode);  ///
 
-      const reference = Reference.fromReferenceNode(referenceNode, localContext),
-            statement = Statement.fromStatementNode(statementNode, localContext),
+      const reference = Reference.fromReferenceNode(referenceNode, context),
+            statement = Statement.fromStatementNode(statementNode, context),
             node = declarationNode,  ///
-            string = localContext.nodeAsString(node);
+            string = context.nodeAsString(node);
 
       declaration = new Declaration(string, reference, statement);
     }

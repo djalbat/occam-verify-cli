@@ -68,9 +68,10 @@ class Constructor {
     const { Term, Type } = shim,
           termNode = termNodeQuery(constructorDeclarationNode),
           typeNode = typeNodeQuery(constructorDeclarationNode),
-          type = Type.fromTypeNode(typeNode),
           localContext = LocalContext.fromFileContext(fileContext),
-          term = Term.fromTermNodeAndType(termNode, type, localContext),
+          context = localContext, ///
+          type = Type.fromTypeNode(typeNode),
+          term = Term.fromTermNodeAndType(termNode, type, context),
           string = stringFromTermAndType(term, type),
           constructor = new Constructor(string, term);
 

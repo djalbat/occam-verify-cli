@@ -10,12 +10,12 @@ const typeNodeQuery = nodeQuery("/type"),
       termNodeQuery = nodeQuery("/term");
 
 class MetavariableUnifier extends Unifier {
-  unify(metavariableNodeA, metavariableNodeB, localContext) {
+  unify(generalMetavariableNode, specificMetavariableNode, generalContext, specificContext) {
     let metavariableUnified;
 
-    const nonTerminalNodeA = metavariableNodeA, ///
-          nonTerminalNodeB = metavariableNodeB, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext);
+    const generalNonTerminalNode = generalMetavariableNode, ///
+          specificNonTerminalNode = specificMetavariableNode, ///
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, generalContext, specificContext);
 
     metavariableUnified = nonTerminalNodeUnified; ///
 
@@ -24,20 +24,29 @@ class MetavariableUnifier extends Unifier {
 
   static maps = [
     {
-      nodeQueryA: typeNodeQuery,
-      nodeQueryB: termNodeQuery,
-      unify: (typeNodeA, termNodeB, localContext) => {
+      generalNodeQuery: typeNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      unify: (generalTypeNode, specificTermNode, generalContext, specificContext) => {
         let termUnified = false;
 
         const { Term } = shim,
-              typeNode = typeNodeA, ///
-              typeName = typeNameFromTypeNode(typeNode),
-              type = localContext.findTypeByTypeName(typeName);
+              typeNode = generalTypeNode, ///
+              typeName = typeNameFromTypeNode(typeNode);
+
+        const type = generalContext.findTypeByTypeName(typeName);
 
         if (type !== null) {
-          const termNode = termNodeB, ///
-                term = Term.fromTermNode(termNode, localContext),
-                termVerifiedGivenType = term.verifyGivenType(type, localContext);
+          let context;
+
+          const termNode = specificTermNode; ///
+
+          context = generalContext; ///
+
+          const term = Term.fromTermNode(termNode, context);
+
+          context = specificContext; ///
+
+          const termVerifiedGivenType = term.verifyGivenType(type, context);
 
           if (termVerifiedGivenType) {
             termUnified = true;

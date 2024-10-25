@@ -39,33 +39,33 @@ export default class ContainedAssertion {
     return this.statement;
   }
 
-  resolve(substitutions, localContext) {
+  resolve(substitutions, context) {
     let resolved;
 
     const containedAssertionString = this.string; ///
 
-    localContext.trace(`Resolving the '${containedAssertionString}' contained assertion...`);
+    context.trace(`Resolving the '${containedAssertionString}' contained assertion...`);
 
     const term = termFromTermAndSubstitutions(this.term, substitutions),
           frame = frameFromFrameAndSubstitutions(this.frame, substitutions),
           statement = statementFromStatementAndSubstitutions(this.statement, substitutions),
-          verifiedWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, localContext);
+          verifiedWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, context);
 
     resolved = verifiedWhenDerived; ///
 
     if (resolved) {
-      localContext.debug(`...resolved the '${containedAssertionString}' contained assertion.`);
+      context.debug(`...resolved the '${containedAssertionString}' contained assertion.`);
     }
 
     return resolved;
   }
 
-  verify(assignments, stated, localContext) {
+  verify(assignments, stated, context) {
     let verified = false;
 
     const containedAssertionString = this.string; ///
 
-    localContext.trace(`Verifying the '${containedAssertionString}' contained assertion...`);
+    context.trace(`Verifying the '${containedAssertionString}' contained assertion...`);
 
     stated = true;  ///
 
@@ -76,7 +76,7 @@ export default class ContainedAssertion {
         statementVerified = false;
 
     if (this.term !== null) {
-      termVerified = this.term.verify(localContext, () => {
+      termVerified = this.term.verify(context, () => {
         const verifiedAhead = true;
 
         return verifiedAhead;
@@ -84,11 +84,11 @@ export default class ContainedAssertion {
     }
 
     if (this.frame !== null) {
-      frameVerified = this.frame.verify(assignments, stated, localContext);
+      frameVerified = this.frame.verify(assignments, stated, context);
     }
 
     if (this.statement !== null) {
-      statementVerified = this.statement.verify(assignments, stated, localContext);
+      statementVerified = this.statement.verify(assignments, stated, context);
     }
 
     if (termVerified || frameVerified || statementVerified) {
@@ -96,9 +96,9 @@ export default class ContainedAssertion {
           verifiedWhenDerived = false;
 
       if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+        verifiedWhenStated = this.verifyWhenStated(assignments, context);
       } else {
-        verifiedWhenDerived = this.verifyWhenDerived(localContext);
+        verifiedWhenDerived = this.verifyWhenDerived(context);
       }
 
       if (verifiedWhenStated || verifiedWhenDerived) {
@@ -107,54 +107,54 @@ export default class ContainedAssertion {
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${containedAssertionString}' contained assertion.`);
+      context.debug(`...verified the '${containedAssertionString}' contained assertion.`);
     }
 
     return verified;
   }
 
-  verifyWhenStated(assignments, localContext) {
+  verifyWhenStated(assignments, context) {
     let verifiedWhenStated;
 
     const containedAssertionString = this.string; ///
 
-    localContext.trace(`Verifying the '${containedAssertionString}' stated contained assertion...`);
+    context.trace(`Verifying the '${containedAssertionString}' stated contained assertion...`);
 
     verifiedWhenStated = true;
 
     if (verifiedWhenStated) {
-      localContext.debug(`...verified the '${containedAssertionString}' stated contained assertion.`);
+      context.debug(`...verified the '${containedAssertionString}' stated contained assertion.`);
     }
 
     return verifiedWhenStated;
   }
 
-  verifyWhenDerived(localContext) {
+  verifyWhenDerived(context) {
     let verifiedWhenDerived;
 
     const containedAssertionString = this.string; ///
 
-    localContext.trace(`Verifying the '${containedAssertionString}' derived contained assertion...`);
+    context.trace(`Verifying the '${containedAssertionString}' derived contained assertion...`);
 
-    verifiedWhenDerived = verifyWhenDerived(this.term, this.frame, this.statement, this.negated, localContext);
+    verifiedWhenDerived = verifyWhenDerived(this.term, this.frame, this.statement, this.negated, context);
 
     if (verifiedWhenDerived) {
-      localContext.debug(`...verified the '${containedAssertionString}' derived contained assertion.`);
+      context.debug(`...verified the '${containedAssertionString}' derived contained assertion.`);
     }
 
     return verifiedWhenDerived;
   }
 
-  static fromContainedAssertionNode(containedAssertionNode, localContext) {
+  static fromContainedAssertionNode(containedAssertionNode, context) {
     let containedAssertion = null;
 
     if (containedAssertionNode !== null) {
       const { Term, Frame, Statement } = shim,
             node = containedAssertionNode,  ///
-            string = localContext.nodeAsString(node),
-            term = Term.fromContainedAssertionNode(containedAssertionNode, localContext),
-            frame = Frame.fromContainedAssertionNode(containedAssertionNode, localContext),
-            statement = Statement.fromContainedAssertionNode(containedAssertionNode, localContext),
+            string = context.nodeAsString(node),
+            term = Term.fromContainedAssertionNode(containedAssertionNode, context),
+            frame = Frame.fromContainedAssertionNode(containedAssertionNode, context),
+            statement = Statement.fromContainedAssertionNode(containedAssertionNode, context),
             containedAssertionNegated = isAssertionNegated(containedAssertionNode),
             negated = containedAssertionNegated;  ///
 
@@ -165,11 +165,11 @@ export default class ContainedAssertion {
   }
 }
 
-function verifyWhenDerived(term, frame, statement, negated, localContext) {
+function verifyWhenDerived(term, frame, statement, negated, context) {
   let verifiedWhenDerived = false;
 
   if (term !== null) {
-    const termContained = statement.isTermContained(term, localContext);
+    const termContained = statement.isTermContained(term, context);
 
     if (!negated && termContained) {
       verifiedWhenDerived = true;
@@ -181,7 +181,7 @@ function verifyWhenDerived(term, frame, statement, negated, localContext) {
   }
 
   if (frame !== null) {
-    const frameContained = statement.isFrameContained(frame, localContext);
+    const frameContained = statement.isFrameContained(frame, context);
 
     if (!negated && frameContained) {
       verifiedWhenDerived = true;

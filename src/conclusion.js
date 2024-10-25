@@ -26,46 +26,44 @@ class Conclusion {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
-  unifyStatement(statement, substitutions, localContext) {
+  unifyStatement(statement, substitutions, context) {
     let statementUnified;
 
-    const localContextB = localContext; ///
-
-    localContext = LocalContext.fromFileContext(this.fileContext);
-
-    const localContextA = localContext; ///
+    const localContext = LocalContext.fromFileContext(this.fileContext),
+          generalContext = localContext, ///
+          specificContext = context; ///
 
     const statementString = statement.getString(),
           conclusionString = this.getString();
 
-    localContextB.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
 
-    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
+    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
-      localContextB.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
     }
 
     return statementUnified;
   }
 
-  verify(localContext) {
+  verify(context) {
     let verified = false;
 
     const conclusionString = this.getString();  ///
 
-    localContext.trace(`Verifying the '${conclusionString}' conclusion...`);
+    context.trace(`Verifying the '${conclusionString}' conclusion...`);
 
     const stated = true,
           assignments = [],
-          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
+          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, context);
 
     if (unqualifiedStatementVerified) {
       verified = true;
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${conclusionString}' conclusion.`);
+      context.debug(`...verified the '${conclusionString}' conclusion.`);
     }
 
     return verified;

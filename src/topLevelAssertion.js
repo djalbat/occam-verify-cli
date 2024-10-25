@@ -76,9 +76,9 @@ export default class TopLevelAssertion {
     return metavariableNodeMatches;
   }
 
-  unifyReference(reference, localContextA, localContextB) {
+  unifyReference(reference, generalContext, specificContext) {
     const referenceUnified = this.labels.some((label) => {
-      const referenceUnified = label.unifyReference(reference, localContextA, localContextB);
+      const referenceUnified = label.unifyReference(reference, generalContext, specificContext);
 
       if (referenceUnified) {
         return true;
@@ -88,15 +88,15 @@ export default class TopLevelAssertion {
     return referenceUnified;
   }
 
-  unifyStatement(statement, localContext) {
+  unifyStatement(statement, context) {
     let statementUnified;
 
     const { Substitutions } = shim,
       substitutions = Substitutions.fromNothing(),
-      consequentUnified = this.unifyConsequent(statement, substitutions, localContext);
+      consequentUnified = this.unifyConsequent(statement, substitutions, context);
 
     if (consequentUnified) {
-      const suppositionsUnified = this.unifySupposition(substitutions, localContext);
+      const suppositionsUnified = this.unifySupposition(substitutions, context);
 
       if (suppositionsUnified) {
         const substitutionsResolved = substitutions.areResolved();
@@ -108,31 +108,31 @@ export default class TopLevelAssertion {
     return statementUnified;
   }
 
-  unifyConsequent(statement, substitutions, localContext) {
+  unifyConsequent(statement, substitutions, context) {
     let consequentUnified;
 
     const consequentString = this.consequent.getString();
 
-    localContext.trace(`Unifying the '${consequentString}' consequent...`);
+    context.trace(`Unifying the '${consequentString}' consequent...`);
 
-    const statementUnified = this.consequent.unifyStatement(statement, substitutions, localContext);  ///
+    const statementUnified = this.consequent.unifyStatement(statement, substitutions, context);  ///
 
     consequentUnified = statementUnified; ///
 
     if (consequentUnified) {
-      localContext.debug(`...unified the '${consequentString}' consequent`);
+      context.debug(`...unified the '${consequentString}' consequent`);
     }
 
     return consequentUnified;
   }
 
-  unifySupposition(substitutions, localContext) {
-    let proofSteps = localContext.getProofSteps();
+  unifySupposition(substitutions, context) {
+    let proofSteps = context.getProofSteps();
 
     proofSteps = reverse(proofSteps); ///
 
     const suppositionsUnified = backwardsEvery(this.suppositions, (supposition) => {
-      const suppositionUnified = this.unifyPremise(supposition, proofSteps, substitutions, localContext);
+      const suppositionUnified = this.unifyPremise(supposition, proofSteps, substitutions, context);
 
       if (suppositionUnified) {
         return true;
@@ -142,20 +142,20 @@ export default class TopLevelAssertion {
     return suppositionsUnified;
   }
 
-  unifyPremise(supposition, proofSteps, substitutions, localContext) {
+  unifyPremise(supposition, proofSteps, substitutions, context) {
     let suppositionUnified  =false;
 
     const suppositionString = supposition.getString();
 
-    localContext.trace(`Unifying the '${suppositionString}' supposition...`);
+    context.trace(`Unifying the '${suppositionString}' supposition...`);
 
-    const suppositionResolvedIndependently = supposition.resolveIndependently(substitutions, localContext);
+    const suppositionResolvedIndependently = supposition.resolveIndependently(substitutions, context);
 
     if (suppositionResolvedIndependently) {
       suppositionUnified = true;
     } else {
       const proofStep = extract(proofSteps, (proofStep) => {
-        const proofStepUnified = supposition.unifyProofStep(proofStep, substitutions, localContext);
+        const proofStepUnified = supposition.unifyProofStep(proofStep, substitutions, context);
 
         if (proofStepUnified) {
           return true;
@@ -168,7 +168,7 @@ export default class TopLevelAssertion {
     }
 
     if (suppositionUnified) {
-      localContext.debug(`...unified the '${suppositionString}' supposition.`);
+      context.debug(`...unified the '${suppositionString}' supposition.`);
     }
 
     return suppositionUnified;
@@ -187,8 +187,9 @@ export default class TopLevelAssertion {
 
     if (labelsVerifiedWhenDeclared) {
       const localContext = LocalContext.fromFileContext(this.fileContext),
+            context = localContext, ///
             suppositionsVerified = this.suppositions.every((supposition) => {
-              const suppositionVerified = supposition.verify(localContext);
+              const suppositionVerified = supposition.verify(context);
 
               if (suppositionVerified) {
                 return true;
@@ -196,13 +197,13 @@ export default class TopLevelAssertion {
             });
 
       if (suppositionsVerified) {
-        const consequentVerified = this.consequent.verify(localContext);
+        const consequentVerified = this.consequent.verify(context);
 
         if (consequentVerified) {
           if (this.proof === null) {
             verified = true;
           } else {
-            const proofVerified = this.proof.verify(this.substitutions, this.consequent, localContext);
+            const proofVerified = this.proof.verify(this.substitutions, this.consequent, context);
 
             verified = proofVerified; ///
           }

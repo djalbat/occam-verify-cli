@@ -51,13 +51,15 @@ class Subproof {
     return statements;
   }
 
-  verify(substitutions, localContext) {
+  verify(substitutions, context) {
     let subproofVerified = false;
 
-    localContext = LocalContext.fromLocalContext(localContext);  ///
+    const localContext = LocalContext.fromContext(context);  ///
+
+    context = localContext; ///
 
     const suppositionsVerified = this.suppositions.every((supposition) => {
-      const suppositionVerified = supposition.verify(localContext);
+      const suppositionVerified = supposition.verify(context);
 
       if (suppositionVerified) {
         return true;
@@ -65,7 +67,7 @@ class Subproof {
     });
 
     if (suppositionsVerified) {
-      const subDerivationVerified = this.subDerivation.verify(substitutions, localContext);
+      const subDerivationVerified = this.subDerivation.verify(substitutions, context);
 
       if (subDerivationVerified) {
         subproofVerified = true;

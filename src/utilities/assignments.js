@@ -1,8 +1,8 @@
 "use strict";
 
-export function assignAssignments(assignments, localContext) {
+export function assignAssignments(assignments, context) {
   const assignmentsAssigned = assignments.every((assigment) => {
-    const assignmentAssigned = assigment.assign(localContext);
+    const assignmentAssigned = assigment.assign(context);
 
     return assignmentAssigned
   });

@@ -29,7 +29,8 @@ class StatementAsCombinatorVerifier extends Verifier {
       verify: (termNode, fileContext) => {
         const { Term } = shim,
               localContext = LocalContext.fromFileContext(fileContext),
-              term = Term.fromTermNode(termNode, localContext),
+              context = localContext, ///
+              term = Term.fromTermNode(termNode, context),
               termVerified = term.verify(localContext, () => {
                 const verifiedAhead = true;
 

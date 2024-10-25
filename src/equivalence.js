@@ -14,11 +14,11 @@ export default class Equivalence {
     return this.terms;
   }
 
-  addTerm(term, localContext) {
+  addTerm(term, context) {
     const termString = term.getString(),
           equivalenceString = this.asString();  ///
 
-    localContext.trace(`Adding the '${termString}' term to the '${equivalenceString}' equivalence.`);
+    context.trace(`Adding the '${termString}' term to the '${equivalenceString}' equivalence.`);
 
     this.terms.push(term);
   }
@@ -115,9 +115,9 @@ export default class Equivalence {
     return termNodesMatch;
   }
 
-  getGroundedTerms(definedVariables, groundedTerms, localContext) {
+  getGroundedTerms(definedVariables, groundedTerms, context) {
     this.terms.forEach((term) => {
-      const termGrounded = term.isGrounded(definedVariables, localContext);
+      const termGrounded = term.isGrounded(definedVariables, context);
 
       if (termGrounded) {
         const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
@@ -138,25 +138,25 @@ export default class Equivalence {
     });
   }
 
-  isInitiallyGrounded(localContext) {
-    const initiallyGroundedTerms = this.getInitiallyGroundedTerms(localContext),
+  isInitiallyGrounded(context) {
+    const initiallyGroundedTerms = this.getInitiallyGroundedTerms(context),
           initiallyGroundedTermsLength = initiallyGroundedTerms.length,
           initiallyGrounded = (initiallyGroundedTermsLength > 0);
 
     return initiallyGrounded;
   }
 
-  isImplicitlyGrounded(definedVariables, localContext) {
-    const implicitlyGroundedTerms = this.getImplicitlyGroundedTerms(definedVariables, localContext),
+  isImplicitlyGrounded(definedVariables, context) {
+    const implicitlyGroundedTerms = this.getImplicitlyGroundedTerms(definedVariables, context),
           implicitlyGroundedTermsLength = implicitlyGroundedTerms.length,
           implicitlyGrounded = (implicitlyGroundedTermsLength > 0);
 
     return implicitlyGrounded;
   }
 
-  getInitiallyGroundedTerms(localContext) {
+  getInitiallyGroundedTerms(context) {
     const initiallyGroundedTerms = this.terms.reduce((initiallyGroundedTerms, term) => {
-      const termInitiallyGrounded = term.isInitiallyGrounded(localContext);
+      const termInitiallyGrounded = term.isInitiallyGrounded(context);
 
       if (termInitiallyGrounded) {
         const initiallyGroundedTerm = term; ///
@@ -170,9 +170,9 @@ export default class Equivalence {
     return initiallyGroundedTerms;
   }
 
-  getImplicitlyGroundedTerms(definedVariables, localContext) {
+  getImplicitlyGroundedTerms(definedVariables, context) {
     const implicitlyGroundedTerms = this.terms.reduce((implicitlyGroundedTerms, term) => {
-      const termImplicitlyGrounded = term.isImplicitlyGrounded(definedVariables, localContext);
+      const termImplicitlyGrounded = term.isImplicitlyGrounded(definedVariables, context);
 
       if (termImplicitlyGrounded) {
         const implicitlyGroundedTerm = term; ///

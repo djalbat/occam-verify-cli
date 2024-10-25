@@ -9,14 +9,14 @@ export default class JudgementAssignment {
     return this.judgement;
   }
 
-  assign(localContext) {
-    const judgementAdded = localContext.addJudgement(this.judgement),
+  assign(context) {
+    const judgementAdded = context.addJudgement(this.judgement),
           judgementString = this.judgement.getString(),
           judgementAssigned = judgementAdded; ///
 
     judgementAssigned ?
-      localContext.trace(`Assigned the '${judgementString}' judgement.`) :
-        localContext.debug(`Unable to assign the '${judgementString}' judgement.`);
+      context.trace(`Assigned the '${judgementString}' judgement.`) :
+        context.debug(`Unable to assign the '${judgementString}' judgement.`);
 
     return judgementAssigned;
   }

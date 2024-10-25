@@ -8,12 +8,12 @@ import { findEquivalenceByTermNodes } from "../utilities/equivalences";
 const termNodeQuery = nodeQuery("/term");
 
 class EqualityUnifier extends Unifier {
-  unify(leftTermNode, rightTermNode, localContext) {
+  unify(leftTermNode, rightTermNode, context) {
     let equalityUnified;
 
     const nonTerminalNodeA = leftTermNode, ///
           nonTerminalNodeB = rightTermNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext);
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context);
 
     equalityUnified = nonTerminalNodeUnified; ///
 
@@ -22,9 +22,9 @@ class EqualityUnifier extends Unifier {
 
   static maps = [
     {
-      nodeQueryA: termNodeQuery,
-      nodeQueryB: termNodeQuery,
-      unify: (termNodeA, termNodeB, localContext) => {
+      generalNodeQuery: termNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      unify: (termNodeA, termNodeB, context) => {
         let termUnifiedWithTerm;
 
         const leftTermNode = termNodeA, ///
@@ -34,7 +34,7 @@ class EqualityUnifier extends Unifier {
         if (leftTermNodeMatchesRightTermNode) {
           termUnifiedWithTerm = true;
         } else {
-          const equivalences = localContext.getEquivalences(),
+          const equivalences = context.getEquivalences(),
                 termNodes = [
                   leftTermNode,
                   rightTermNode
@@ -51,7 +51,7 @@ class EqualityUnifier extends Unifier {
                 nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
                 childNodesA = nonTerminalNodeAChildNodes, ///
                 childNodesB = nonTerminalNodeBChildNodes, ///
-                childNodesVerified = equalityUnifier.unifyChildNodes(childNodesA, childNodesB, localContext);
+                childNodesVerified = equalityUnifier.unifyChildNodes(childNodesA, childNodesB, context);
 
           termUnifiedWithTerm = childNodesVerified; ///
         }

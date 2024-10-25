@@ -15,8 +15,8 @@ const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
       termVariableNodeQuery = nodeQuery("/term/variable");
 
 class Variable {
-  constructor(localContext, string, node, name, type) {
-    this.localContext = localContext; ///
+  constructor(context, string, node, name, type) {
+    this.context = context; ///
     this.string = string;
     this.node = node;
     this.name = name;
@@ -24,7 +24,7 @@ class Variable {
   }
 
   getLocalContext() {
-    return this.localContext;
+    return this.context;
   }
 
   getString() {
@@ -59,16 +59,16 @@ class Variable {
     return variableNodeMatches;
   }
 
-  verify(localContext) {
+  verify(context) {
     let verified;
 
     const variableString = this.string; ///
 
-    localContext.trace(`Verifying the '${variableString}' variable...`);
+    context.trace(`Verifying the '${variableString}' variable...`);
 
     const variableNode = this.node, ///
           variableName = variableNameFromVariableNode(variableNode),
-          variable = localContext.findVariableByVariableName(variableName);
+          variable = context.findVariableByVariableName(variableName);
 
     if (variable !== null) {
       const type = variable.getType();
@@ -77,13 +77,13 @@ class Variable {
 
       verified = true;
     } else {
-      localContext.debug(`The '${variableString}' variable is not present.`);
+      context.debug(`The '${variableString}' variable is not present.`);
     }
 
     if (verified) {
       const typeName = this.type.getName();
 
-      localContext.debug(`...verified the '${variableString}:${typeName}' variable.`);
+      context.debug(`...verified the '${variableString}:${typeName}' variable.`);
     }
 
     return verified;
@@ -143,13 +143,13 @@ class Variable {
     return verifiedAtTopLevel;
   }
 
-  unifyTerm(term, substitutions, localContext) {
+  unifyTerm(term, substitutions, context) {
     let termUnified = false;
 
     const termString = term.getString(),
           variableString = this.string; ///
 
-    localContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
+    context.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
     const termNode = term.getNode(),
           variableName = this.name, ///
@@ -163,24 +163,24 @@ class Variable {
       }
     } else {
       const variableNode = this.node,  ///
-            variable = variableFromVariableNode(variableNode, localContext),
-            termVariable = termVariableFromTermNode(termNode, localContext);
+            variable = variableFromVariableNode(variableNode, context),
+            termVariable = termVariableFromTermNode(termNode, context);
 
       if ((variable !== null) && (variable === termVariable)) {
         termUnified = true;
       } else {
         const variable = this,  ///
-              termForVariableSubstitution = TermForVariableSubstitution.fromTernAndVariable(term, variable, localContext),
+              termForVariableSubstitution = TermForVariableSubstitution.fromTernAndVariable(term, variable, context),
               substitution = termForVariableSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, localContext);
+        substitutions.addSubstitution(substitution, context);
 
         termUnified = true;
       }
     }
 
     if (termUnified) {
-      localContext.trace(`...unified the '${termString}' term with the '${variableString}' variable.`);
+      context.trace(`...unified the '${termString}' term with the '${variableString}' variable.`);
     }
 
     return termUnified;
@@ -205,16 +205,16 @@ class Variable {
           variableString = string,  ///
           variableNode = variableNodeFromVariableString(variableString, lexer, parser),
           variableName = variableNameFromVariableNode(variableNode),
-          localContext = LocalContext.fromFileContext(fileContext),
+          context = LocalContext.fromFileContext(fileContext),
           node = variableNode,
           name = variableName,  ///
           type = typeFromJSON(json, fileContext),
-          variable = new Variable(localContext, string, node, name, type);
+          variable = new Variable(context, string, node, name, type);
 
     return variable;
   }
 
-  static fromTermNode(termNode, localContext) {
+  static fromTermNode(termNode, context) {
     let variable = null;
 
     const termVariableNode = termVariableNodeQuery(termNode);
@@ -223,42 +223,42 @@ class Variable {
       const variableNode = termVariableNode,  ///
             variableName = variableNameFromVariableNode(variableNode),
             node = variableNode,  ///
-            string = localContext.nodeAsString(node),
+            string = context.nodeAsString(node),
             name = variableName,  ///
             type = null;
 
-      variable = new Variable(localContext, string, node, name, type);
+      variable = new Variable(context, string, node, name, type);
     }
 
     return variable;
   }
 
-  static fromVariableNode(variableNode, localContext) {
+  static fromVariableNode(variableNode, context) {
     let variable = null;
 
     if (variableNode !== null) {
       const node = variableNode,  ///
             variableName = variableNameFromVariableNode(variableNode),
-            string = localContext.nodeAsString(node),
+            string = context.nodeAsString(node),
             name = variableName,  ///
             type = null;
 
-      variable = new Variable(localContext, string, node, name, type);
+      variable = new Variable(context, string, node, name, type);
     }
 
     return variable;
   }
 
-  static fromVariableNodeAndType(variableNode, type, localContext) {
+  static fromVariableNodeAndType(variableNode, type, context) {
     let variable = null;
 
     if (variableNode !== null) {
       const node = variableNode,  ///
             variableName = variableNameFromVariableNode(variableNode),
-            string = localContext.nodeAsString(node),
+            string = context.nodeAsString(node),
             name = variableName;  ///
 
-      variable = new Variable(localContext, string, node, name, type);
+      variable = new Variable(context, string, node, name, type);
     }
 
     return variable;
@@ -269,13 +269,13 @@ class Variable {
           typeNode = typeNodeQuery(variableDeclarationNode),
           variableNode = variableNodeQuery(variableDeclarationNode),
           variableName = variableNameFromVariableNode(variableNode),
-          localContext = LocalContext.fromFileContext(fileContext),
+          context = LocalContext.fromFileContext(fileContext),
           variableString = fileContext.nodeAsString(variableNode),
           string = variableString,  ///
           node = variableNode,  ///
           name = variableName,  ///
-          type = Type.fromTypeNode(typeNode, localContext),
-          variable = new Variable(localContext, string, node, name, type);
+          type = Type.fromTypeNode(typeNode, context),
+          variable = new Variable(context, string, node, name, type);
 
     return variable;
   }
@@ -287,7 +287,7 @@ Object.assign(shim, {
 
 export default Variable;
 
-function termVariableFromTermNode(termNode, localContext) {
+function termVariableFromTermNode(termNode, context) {
   let termVariable = null;
 
   const termVariableNode = termVariableNodeQuery(termNode);
@@ -295,15 +295,15 @@ function termVariableFromTermNode(termNode, localContext) {
   if (termVariableNode !== null) {
     const termVariableName = variableNameFromVariableNode(termVariableNode);
 
-    termVariable = localContext.findVariableByVariableName(termVariableName);
+    termVariable = context.findVariableByVariableName(termVariableName);
   }
 
   return termVariable;
 }
 
-function variableFromVariableNode(variableNode, localContext) {
+function variableFromVariableNode(variableNode, context) {
   const variableName = variableNameFromVariableNode(variableNode),
-        variable = localContext.findVariableByVariableName(variableName);
+        variable = context.findVariableByVariableName(variableName);
 
   return variable;
 }

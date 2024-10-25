@@ -47,25 +47,25 @@ class ProofStep {
     return statement;
   }
 
-  unifyStatement(statement, localContext) {
+  unifyStatement(statement, context) {
     let statementUnified = false;
 
     if ((this.qualifiedStatement !== null) || (this.unqualifiedStatement !== null !== null)) {
       const statementString = statement.getString();
 
-      localContext.trace(`Unifying the '${statementString}' statement...`);
+      context.trace(`Unifying the '${statementString}' statement...`);
 
       const { Substitutions } = shim,
-            localContextA = localContext, ///
-            localContextB = localContext, ///
+            specificContext = context, ///
+            generalContext = context, ///
             substitutions = Substitutions.fromNothing();
 
       if (this.qualifiedStatement !== null) {
-        statementUnified = this.qualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
+        statementUnified = this.qualifiedStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
       }
 
       if (this.unqualifiedStatement !== null) {
-        statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
+        statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
       }
 
       const substitutionsLength = substitutions.getLength();
@@ -75,21 +75,21 @@ class ProofStep {
       }
 
       if (statementUnified) {
-        localContext.debug(`...unified the '${statementString}' statement.`);
+        context.debug(`...unified the '${statementString}' statement.`);
       }
     }
 
     return statementUnified;
   }
 
-  unifySubproofAssertion(subproofAssertion, localContext) {
+  unifySubproofAssertion(subproofAssertion, context) {
     let subproofAssertionUnified = false;
 
     if (this.subproof !== null) {
       const subproofString = this.subproof.getString(),
             subproofAssertionString = subproofAssertion.getString();
 
-      localContext.trace(`Unifying the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof...`);
+      context.trace(`Unifying the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof...`);
 
       const { Substitutions } = shim,
             substitutions = Substitutions.fromNothing(),
@@ -99,11 +99,11 @@ class ProofStep {
       subproofAssertionUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
         const subproofAssertionStatementNode = subproofAssertionStatement.getNode(),
               subproofStatementNode = subproofStatement.getNode(),
-              nodeA = subproofAssertionStatementNode,  ///
-              nodeB = subproofStatementNode,  ///
-              localContextA = localContext, ///
-              localContextB = localContext, ///
-              unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+              generalNode = subproofAssertionStatementNode,  ///
+              specificNode = subproofStatementNode,  ///
+              generalContext = context, ///
+              specificContext = context, ///
+              unifiedAtMetaLevel = metaLevelUnifier.unify(generalNode, specificNode, substitutions, generalContext, specificContext);
 
         if (unifiedAtMetaLevel) {
           return true;
@@ -119,14 +119,14 @@ class ProofStep {
       }
 
       if (subproofAssertionUnified) {
-        localContext.trace(`...unified the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof.`);
+        context.trace(`...unified the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof.`);
       }
     }
 
     return subproofAssertionUnified;
   }
 
-  verify(substitutions, localContext) {
+  verify(substitutions, context) {
     let verified = false;
 
     let stated = false;
@@ -138,23 +138,23 @@ class ProofStep {
         unqualifiedStatementVerified = false;
 
     if (this.subproof !== null) {
-      subproofVerified = this.subproof.verify(substitutions, localContext);
+      subproofVerified = this.subproof.verify(substitutions, context);
     }
 
     if (this.qualifiedStatement !== null) {
       stated = true;
 
-      qualifiedStatementVerified = this.qualifiedStatement.verify(substitutions, assignments, stated, localContext);
+      qualifiedStatementVerified = this.qualifiedStatement.verify(substitutions, assignments, stated, context);
     }
 
     if (this.unqualifiedStatement !== null) {
       stated = false;
 
-      unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
+      unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, context);
     }
 
     if (subproofVerified || qualifiedStatementVerified || unqualifiedStatementVerified) {
-      const assignmentsAssigned = assignAssignments(assignments, localContext);
+      const assignmentsAssigned = assignAssignments(assignments, context);
 
       if (assignmentsAssigned) {
         verified = true;
@@ -164,7 +164,7 @@ class ProofStep {
     if (verified) {
       const proofStep = this; ///
 
-      localContext.addProofStep(proofStep);
+      context.addProofStep(proofStep);
     }
 
     return verified;

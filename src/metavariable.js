@@ -71,14 +71,14 @@ class Metavariable {
     return metavariableNodeMatches;
   }
 
-  unifyFrame(frame, substitutions, localContext) {
+  unifyFrame(frame, substitutions, generalContext, specificContext) {
     let frameUnified = false;
 
     const frameNode = frame.getNode(),
           frameString = frame.getString(),
           metavariableString = this.string; ///
 
-    localContext.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
+    specificContext.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
 
     const metavariableNode = this.node, ///
           simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariableNode(metavariableNode);
@@ -93,30 +93,31 @@ class Metavariable {
       }
     } else {
       const metavariableNode = this.node,  ///
-            metavariable = metavariableFromMetavariableNode(metavariableNode, localContext),
-            frameMetavariable  = frameMetavariableFromStatementNode(frameNode, localContext);
+            metavariable = metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext),
+            frameMetavariable  = frameMetavariableFromStatementNode(frameNode, generalContext, specificContext);
 
       if ((metavariable !== null) && (metavariable === frameMetavariable)) {
         frameUnified = true;
       } else {
         const metavariable = this,  ///
-              frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromFrameAndMetavariable(frame, metavariable, localContext),
+              context = specificContext, ///
+              frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
               substitution = frameForMetavariableSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, localContext);
+        substitutions.addSubstitution(substitution, context);
 
         frameUnified = true;
       }
     }
 
     if (frameUnified) {
-      localContext.debug(`...unified the '${frameString}' frame with the '${metavariableString}' metavariable.`);
+      specificContext.debug(`...unified the '${frameString}' frame with the '${metavariableString}' metavariable.`);
     }
 
     return frameUnified;
   }
 
-  unifyStatement(statement, substitution, substitutions, localContext) {
+  unifyStatement(statement, substitution, substitutions, generalContext, specificContext) {
     let statementUnified = false;
 
     const statementString = statement.getString(),
@@ -125,7 +126,7 @@ class Metavariable {
                                   substitution.getString() :
                                     EMPTY_STRING;
 
-    localContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
 
     const statementNode = statement.getNode(),
           metavariableNode = this.node, ///
@@ -143,68 +144,69 @@ class Metavariable {
       }
     } else {
       const metavariableNode = this.node,  ///
-            metavariable = metavariableFromMetavariableNode(metavariableNode, localContext),
-            statementMetavariable = statementMetavariableFromStatementNode(statementNode, localContext);
+            metavariable = metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext),
+            statementMetavariable = statementMetavariableFromStatementNode(statementNode, generalContext, specificContext);
 
       if ((metavariable !== null) && (metavariable === statementMetavariable)) {
         statementUnified = true;
       } else {
         const metavariable = this,  ///
-              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, localContext);
+              context = specificContext, ///
+              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
 
         substitution = statementForMetavariableSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, localContext);
+        substitutions.addSubstitution(substitution, context);
 
         statementUnified = true;
       }
     }
 
     if (statementUnified) {
-      localContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable.`);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable.`);
     }
 
     return statementUnified;
   }
 
-  unifySubstitution(substitution, localContext) {
+  unifySubstitution(substitution, context) {
     let substitutionUnified = false;
 
     const metavariableString = this.string,  ///
           substitutionString = substitution.getString();
 
-    localContext.trace(`Unifying the '${substitutionString}' substitution with the '${metavariableString}' metavariable...`);
+    context.trace(`Unifying the '${substitutionString}' substitution with the '${metavariableString}' metavariable...`);
 
     const metavariableNode = this.node, ///
-          judgement = localContext.findJudgementByMetavariableNode(metavariableNode);
+          judgement = context.findJudgementByMetavariableNode(metavariableNode);
 
     if (judgement !== null){
       const declaration = judgement.getDeclaration();
 
-      substitutionUnified = declaration.unifySubstitution(substitution, localContext);
+      substitutionUnified = declaration.unifySubstitution(substitution, context);
     }
 
     if (substitutionUnified) {
-      localContext.debug(`...unified the '${substitutionString}' substitution with the '${metavariableString}' metavariable.`);
+      context.debug(`...unified the '${substitutionString}' substitution with the '${metavariableString}' metavariable.`);
     }
 
     return substitutionUnified;
   }
 
-  verify(localContext) {
+  verify(context) {
     let verified;
 
     const metavariableString = this.string; ///
 
-    localContext.trace(`Verifying the '${metavariableString}' metavariable...`);
+    context.trace(`Verifying the '${metavariableString}' metavariable...`);
 
     const metavariableNode = this.node,
-          metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+          metavariablePresent = context.isMetavariablePresentByMetavariableNode(metavariableNode);
 
     verified = metavariablePresent; ///
 
     if (verified) {
-      localContext.debug(`...verified the '${metavariableString}' metavariable.`);
+      context.debug(`...verified the '${metavariableString}' metavariable.`);
     }
 
     return verified;
@@ -255,16 +257,18 @@ class Metavariable {
     return verifiedAtTopLevel;
   }
 
-  verifyGivenMetaType(metaType, localContext) {
+  verifyGivenMetaType(metaType, context) {
     let verifiedGivenMetaType = false;
 
     const metavariableString = this.string,  ///
           metaTypeString = metaType.getString();
 
-    localContext.trace(`Verifying the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
+    context.trace(`Verifying the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
 
     const metavariableNode = this.node,  ///
-          metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+          specificContext = context,  ///
+          generalContext = context, ///
+          metavariable = generalContext.findMetavariableByMetavariableNode(metavariableNode, specificContext);
 
     if (metavariable !== null) {
       const metaTypeMatches = metavariable.matchMetaType(metaType);
@@ -273,7 +277,7 @@ class Metavariable {
     }
 
     if (verifiedGivenMetaType) {
-      localContext.debug(`...verified the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type.`);
+      context.debug(`...verified the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type.`);
     }
 
     return verifiedGivenMetaType;
@@ -306,17 +310,17 @@ class Metavariable {
     return metavariable;
   }
 
-  static fromMetavariableNode(metavariableNode, localContext) {
+  static fromMetavariableNode(metavariableNode, context) {
     let metavariable = null;
 
     if (metavariableNode !== null) {
       const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
             node = metavariableNode,  ///
             name = metavariableName,  ///
-            string = localContext.nodeAsString(node),
+            string = context.nodeAsString(node),
             metaType = null;
 
-      metavariable = new Metavariable(localContext, string, node, name, metaType);
+      metavariable = new Metavariable(context, string, node, name, metaType);
     }
 
     return metavariable;
@@ -327,12 +331,13 @@ class Metavariable {
           metaTypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
           metavariableNode = metavariableNodeQuery(metavariableDeclarationNode),
           metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-          localContext = LocalContext.fromFileContext(fileContext),
           metavariableString = fileContext.nodeAsString(metavariableNode),
+          localContext = LocalContext.fromFileContext(fileContext),
+          context = localContext, ///
           string = metavariableString,  ///
           node = metavariableNode,  ///
           name = metavariableName,  ///
-          metaType = MetaType.fromMetaTypeNode(metaTypeNode, localContext),
+          metaType = MetaType.fromMetaTypeNode(metaTypeNode, context),
           metavariable = new Metavariable(fileContext, string, node, name, metaType);
 
     return metavariable;
@@ -345,31 +350,31 @@ Object.assign(shim, {
 
 export default Metavariable;
 
-function metavariableFromMetavariableNode(metavariableNode, localContext) {
-  const metavariable = localContext.findMetavariableByMetavariableNode(metavariableNode);
+function metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext) {
+  const metavariable = generalContext.findMetavariableByMetavariableNode(metavariableNode, specificContext);
 
   return metavariable;
 }
 
-function frameMetavariableFromStatementNode(frameNode, localContext) {
+function frameMetavariableFromStatementNode(frameNode, generalContext, specificContext) {
   let frameMetavariable = null;
 
   const frameMetavariableNode = frameMetavariableNodeQuery(frameNode);
 
   if (frameMetavariableNode !== null) {
-    frameMetavariable = localContext.findMetavariableByMetavariableNode(frameMetavariableNode);
+    frameMetavariable = generalContext.findMetavariableByMetavariableNode(frameMetavariableNode, specificContext);
   }
 
   return frameMetavariable;
 }
 
-function statementMetavariableFromStatementNode(statementNode, localContext) {
+function statementMetavariableFromStatementNode(statementNode, generalContext, specificContext) {
   let statementMetavariable = null;
 
   const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
   if (statementMetavariableNode !== null) {
-    statementMetavariable = localContext.findMetavariableByMetavariableNode(statementMetavariableNode);
+    statementMetavariable = generalContext.findMetavariableByMetavariableNode(statementMetavariableNode, specificContext);
   }
 
   return statementMetavariable;

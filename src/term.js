@@ -42,7 +42,7 @@ class Term {
     this.type = type;
   }
 
-  getVariable(localContext) {
+  getVariable(context) {
     let variable = null;
 
     const variableNode = variableNodeQuery(this.node);
@@ -50,19 +50,19 @@ class Term {
     if (variableNode !== null) {
       const variableName = variableNameFromVariableNode(variableNode);
 
-      variable = localContext.findVariableByVariableName(variableName);
+      variable = context.findVariableByVariableName(variableName);
     }
 
     return variable;
   }
 
-  getVariables(localContext) {
+  getVariables(context) {
     const variables = [],
           variableNodes = variableNodesQuery(this.node);
 
     variableNodes.forEach((variableNode) => {
       const variableName = variableNameFromVariableNode(variableNode),
-            variable = localContext.findVariableByVariableName(variableName),
+            variable = context.findVariableByVariableName(variableName),
             variablesIncludesVariable = variables.includes(variable);
 
       if (!variablesIncludesVariable) {
@@ -73,8 +73,8 @@ class Term {
     return variables;
   }
 
-  isGrounded(definedVariables, localContext) {
-    const variables = this.getVariables(localContext);
+  isGrounded(definedVariables, context) {
+    const variables = this.getVariables(context);
 
     filter(variables, (variable) => {
       const definedVariablesIncludesVariable = definedVariables.includes(variable);
@@ -114,32 +114,32 @@ class Term {
     return termNodeMatches;
   }
 
-  isInitiallyGrounded(localContext) {
-    const variables = this.getVariables(localContext),
+  isInitiallyGrounded(context) {
+    const variables = this.getVariables(context),
           variablesLength = variables.length,
           initiallyGrounded = (variablesLength === 0);
 
     return initiallyGrounded;
   }
 
-  isImplicitlyGrounded(definedVariables, localContext) {
-    const grounded = this.isGrounded(definedVariables, localContext),
+  isImplicitlyGrounded(definedVariables, context) {
+    const grounded = this.isGrounded(definedVariables, context),
           implicitlyGrounded = grounded;  ///
 
     return implicitlyGrounded;
   }
 
-  verify(localContext, verifyAhead) {
+  verify(context, verifyAhead) {
     let verified = false;
 
     const term = this, ///
           termString = this.string;  ///
 
-    localContext.trace(`Verifying the '${termString}' term...`);
+    context.trace(`Verifying the '${termString}' term...`);
 
     if (!verified) {
       verified = verifyMixins.some((verifyMixin) => {
-        const verified = verifyMixin(term, localContext, verifyAhead);
+        const verified = verifyMixin(term, context, verifyAhead);
 
         if (verified) {
           return true;
@@ -149,7 +149,7 @@ class Term {
 
     if (!verified) {
       const unified = unifyMixins.some((unifyMixin) => { ///
-        const unified = unifyMixin(term, localContext, verifyAhead);
+        const unified = unifyMixin(term, context, verifyAhead);
 
         if (unified) {
           return true;
@@ -160,7 +160,7 @@ class Term {
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${termString}' term.`);
+      context.debug(`...verified the '${termString}' term.`);
     }
 
     return verified;
@@ -194,15 +194,15 @@ class Term {
     return typeVerified;
   }
 
-  verifyGivenType(type, localContext) {
+  verifyGivenType(type, context) {
     let verifiedGivenType;
 
     const typeName = type.getName(),
           termString = this.getString();
 
-    localContext.trace(`Verifying the '${termString}' term given the '${typeName}' type...`);
+    context.trace(`Verifying the '${termString}' term given the '${typeName}' type...`);
 
-    const verified = this.verify(localContext, () => {
+    const verified = this.verify(context, () => {
       let verifiedAhead;
 
       const typeEqualToOrSubTypeOfGivenTypeType = this.type.isEqualToOrSubTypeOf(type);
@@ -217,7 +217,7 @@ class Term {
     verifiedGivenType = verified; ///
 
     if (verifiedGivenType) {
-      localContext.debug(`...verified the '${termString}' term given the '${typeName}' type.`);
+      context.debug(`...verified the '${termString}' term given the '${typeName}' type.`);
     }
 
     return verifiedGivenType;
@@ -271,12 +271,12 @@ class Term {
     return term;
   }
 
-  static fromTermNode(termNode, localContext) {
+  static fromTermNode(termNode, context) {
     let term = null;
 
     if (termNode !== null) {
       const node = termNode,  ///
-            string = localContext.nodeAsString(node),
+            string = context.nodeAsString(node),
             type = null;
 
       term = new Term(string, node, type);
@@ -285,15 +285,15 @@ class Term {
     return term;
   }
 
-  static fromTermNodeAndType(termNode, type, localContext) {
+  static fromTermNodeAndType(termNode, type, context) {
     const node = termNode,  ///
-          string = localContext.nodeAsString(node),
+          string = context.nodeAsString(node),
           term = new Term(string, node, type);
 
     return term;
   }
 
-  static fromDefinedAssertionNode(definedAssertionNode, localContext) {
+  static fromDefinedAssertionNode(definedAssertionNode, context) {
     let term = null;
 
     const termNode = termNodeQuery(definedAssertionNode);
@@ -303,7 +303,7 @@ class Term {
 
       if (variableNode !== null) {
         const node = termNode,  ///
-              string = localContext.nodeAsString(node),
+              string = context.nodeAsString(node),
               type = null;
 
         term = new Term(string, node, type);
@@ -313,7 +313,7 @@ class Term {
     return term;
   }
 
-  static fromContainedAssertionNode(containedAssertionNode, localContext) {
+  static fromContainedAssertionNode(containedAssertionNode, context) {
     let term = null;
 
     const termNode = termNodeQuery(containedAssertionNode);
@@ -323,7 +323,7 @@ class Term {
 
       if (variableNode !== null) {
         const node = termNode,  ///
-              string = localContext.nodeAsString(node),
+              string = context.nodeAsString(node),
               type = null;
 
         term = new Term(string, node, type);

@@ -7,36 +7,36 @@ import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual } from "./utilities/
 const nonTerminalNodeQuery = nodeQuery("/*");
 
 export default class Unifier {
-  unify(nodeA, nodeB, ...remainingArguments) {
+  unify(generalNode, specificNode, ...remainingArguments) {
     let unified;
 
-    const nodeUnified = this.unifyNode(nodeA, nodeB, ...remainingArguments);
+    const nodeUnified = this.unifyNode(generalNode, specificNode, ...remainingArguments);
 
     unified = nodeUnified;  ///
 
     return unified;
   }
 
-  unifyNode(nodeA, nodeB, ...remainingArguments) {
+  unifyNode(generalNode, specificNode, ...remainingArguments) {
     let nodeUnified = false;
 
-    const nodeATerminalNode = nodeA.isTerminalNode(),
-          nodeBTerminalNode = nodeB.isTerminalNode(),
-          nodeANonTerminalNode = nodeA.isNonTerminalNode(),
-          nodeBNonTerminalNode = nodeB.isNonTerminalNode();
+    const generalNodeTerminalNode = generalNode.isTerminalNode(),
+          specificNodeTerminalNode = specificNode.isTerminalNode(),
+          generalNodeNonTerminalNode = generalNode.isNonTerminalNode(),
+          specificNodeNonTerminalNode = specificNode.isNonTerminalNode();
 
     if (false) {
       ///
-    } else if (nodeATerminalNode && nodeBTerminalNode) {
-      const terminalNodeA = nodeA,  ///
-            terminalNodeB = nodeB,  ///
-            terminalNodeUnified = this.unifyTerminalNode(terminalNodeA, terminalNodeB, ...remainingArguments);
+    } else if (generalNodeTerminalNode && specificNodeTerminalNode) {
+      const generalTerminalNode = generalNode,  ///
+            specificTerminalNode = specificNode,  ///
+            terminalNodeUnified = this.unifyTerminalNode(generalTerminalNode, specificTerminalNode, ...remainingArguments);
 
       nodeUnified = terminalNodeUnified;  ///
-    } else if (nodeANonTerminalNode && nodeBNonTerminalNode) {
-      const nonTerminalNodeA = nodeA,  ///
-            nonTerminalNodeB = nodeB, ///
-            nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments);
+    } else if (generalNodeNonTerminalNode && specificNodeNonTerminalNode) {
+      const generalNonTerminalNode = generalNode,  ///
+            specificNonTerminalNode = specificNode, ///
+            nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, ...remainingArguments);
 
       nodeUnified = nonTerminalNodeUnified; ///
     }
@@ -44,31 +44,31 @@ export default class Unifier {
     return nodeUnified;
   }
 
-  unifyChildNodes(childNodesA, childNodesB, ...remainingArguments) {
+  unifyChildNodes(generalChildNodes, specificChildNodes, ...remainingArguments) {
     let childNodesUnified = false;
 
-    const childNodesALength = childNodesA.length,
-          childNodesBLength = childNodesB.length;
+    const generalChildNodesLength = generalChildNodes.length,
+          specificChildNodesLength = specificChildNodes.length;
 
-    if (childNodesALength === childNodesBLength) {
-      const childTerminalNodeMapA = terminalNodeMapFromNodes(childNodesA),
-            childTerminalNodeMapB = terminalNodeMapFromNodes(childNodesB),
-            terminalNodeMapsEqual = areTerminalNodeMapsEqual(childTerminalNodeMapA, childTerminalNodeMapB);
+    if (generalChildNodesLength === specificChildNodesLength) {
+      const specificTerminalNodeMap = terminalNodeMapFromNodes(specificChildNodes),
+            generalTerminalNodeMap = terminalNodeMapFromNodes(generalChildNodes),
+            terminalNodeMapsEqual = areTerminalNodeMapsEqual(generalTerminalNodeMap, specificTerminalNodeMap);
 
       if (terminalNodeMapsEqual) {
         const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
 
         if (lastRemainingArgumentFunction) {
           const index = 0,
-                childNodesUnifiedAhead = this.unifyChildNodesAhead(index, childNodesA, childNodesB,...remainingArguments);
+                childNodesUnifiedAhead = this.unifyChildNodesAhead(index, generalChildNodes, specificChildNodes,...remainingArguments);
 
           childNodesUnified = childNodesUnifiedAhead; ///
         } else {
-          childNodesUnified = childNodesA.every((childNodeA, index) => {
-            const childNodeB = childNodesB[index],
-                  nodeA = childNodeA, ///
-                  nodeB = childNodeB, ///
-                  nodeUnified = this.unifyNode(nodeA, nodeB, ...remainingArguments);
+          childNodesUnified = generalChildNodes.every((generalChildNode, index) => {
+            const specificChildNode = specificChildNodes[index],
+                  specificNode = specificChildNode, ///
+                  generalNode = generalChildNode, ///
+                  nodeUnified = this.unifyNode(generalNode, specificNode, ...remainingArguments);
 
             if (nodeUnified) {
               return true;
@@ -81,7 +81,7 @@ export default class Unifier {
     return childNodesUnified;
   }
 
-  unifyTerminalNode(terminalNodeA, terminalNodeB, ...remainingArguments) { ///
+  unifyTerminalNode(generalTerminalNode, specificTerminalNode, ...remainingArguments) { ///
     let terminalNodeUnified;
 
     const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
@@ -100,7 +100,7 @@ export default class Unifier {
     return terminalNodeUnified;
   }
 
-  unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, ...remainingArguments) {
+  unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, ...remainingArguments) {
     let nonTerminalNodeUnified;
 
     let { maps } = this.constructor;
@@ -108,20 +108,20 @@ export default class Unifier {
     maps = [ ///
       ...maps,
       {
-        nodeQueryA: nonTerminalNodeQuery,
-        nodeQueryB: nonTerminalNodeQuery,
-        unify: (nodeA, nobeB, ...remainingArguments) => {
+        generalNodeQuery: nonTerminalNodeQuery,
+        specificNodeQuery: nonTerminalNodeQuery,
+        unify: (generalNode, specificNode, ...remainingArguments) => {
           let nonTerminalNodeUnified;
 
-          const nonTerminalNodeARuleName = nonTerminalNodeA.getRuleName(), ///
-                nonTerminalNodeBRuleName = nonTerminalNodeB.getRuleName(); ///
+          const generalNonTerminalNodeRuleName = generalNonTerminalNode.getRuleName(), ///
+                specificNonTerminalNodeBRuleNam = specificNonTerminalNode.getRuleName(); ///
 
-          if (nonTerminalNodeARuleName === nonTerminalNodeBRuleName) {
-            const nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-                  nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
-                  childNodesA = nonTerminalNodeAChildNodes, ///
-                  childNodesB = nonTerminalNodeBChildNodes, ///
-                  childNodesUnified = this.unifyChildNodes(childNodesA, childNodesB, ...remainingArguments);
+          if (generalNonTerminalNodeRuleName === specificNonTerminalNodeBRuleNam) {
+            const generalNonTerminalNodeChildNodes = generalNonTerminalNode.getChildNodes(),
+                  specificNonTerminalNodeBChildNode = specificNonTerminalNode.getChildNodes(),
+                  generalChildNodes = generalNonTerminalNodeChildNodes, ///
+                  specificChildNodes = specificNonTerminalNodeBChildNode, ///
+                  childNodesUnified = this.unifyChildNodes(generalChildNodes, specificChildNodes, ...remainingArguments);
 
             nonTerminalNodeUnified = childNodesUnified; ///
           }
@@ -134,13 +134,13 @@ export default class Unifier {
     let nodeUnified = false;
 
     maps.some((map) => {
-      const { nodeQueryA, nodeQueryB, unify } = map;
+      const { generalNodeQuery, specificNodeQuery, unify } = map;
 
-      const nodeA = nodeQueryA(nonTerminalNodeA),  ///
-            nodeB = nodeQueryB(nonTerminalNodeB);  ///
+      const generalNode = generalNodeQuery(generalNonTerminalNode),  ///
+            specificNode = specificNodeQuery(specificNonTerminalNode);  ///
 
-      if ((nodeA !== null) && (nodeB !== null)) {
-        nodeUnified = unify(nodeA, nodeB, ...remainingArguments);
+      if ((generalNode !== null) && (specificNode !== null)) {
+        nodeUnified = unify(generalNode, specificNode, ...remainingArguments);
 
         return true;
       }
@@ -151,26 +151,26 @@ export default class Unifier {
     return nonTerminalNodeUnified;
   }
 
-  unifyChildNodesAhead(index, childNodesA, childNodesB, ...remainingArguments) {
+  unifyChildNodesAhead(index, generalChildNodes, specificChildNodes, ...remainingArguments) {
     let childNodesUnified;
 
     const unifyAhead = remainingArguments.pop(), ///
-          childNodesALength = childNodesA.length;
+          generalChildNodesLength = generalChildNodes.length;
 
-    if (index === childNodesALength) {
+    if (index === generalChildNodesLength) {
       const unifiedAhead = unifyAhead();
 
       childNodesUnified = unifiedAhead; ///
     } else {
-      const childNodeA = childNodesA[index],
-            childNodeB = childNodesB[index],
-            nodeA = childNodeA, ///
-            nodeB = childNodeB, ///
-            nodeUnified = this.unifyNode(nodeA, nodeB, ...remainingArguments, () => {
+      const generalChildNode = generalChildNodes[index],
+            specificChildNode = specificChildNodes[index],
+            generalNode = generalChildNode, ///
+            specificNode = specificChildNode, ///
+            nodeUnified = this.unifyNode(generalNode, specificNode, ...remainingArguments, () => {
               remainingArguments.push(unifyAhead); ///
 
               const aheadIndex = index + 1,
-                    childNodesUnifiedAhead = this.unifyChildNodesAhead(aheadIndex, childNodesA, childNodesB, ...remainingArguments);
+                    childNodesUnifiedAhead = this.unifyChildNodesAhead(aheadIndex, generalChildNodes, specificChildNodes, ...remainingArguments);
 
               return childNodesUnifiedAhead;
             });

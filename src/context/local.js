@@ -105,7 +105,7 @@ class LocalContext {
 
   getConstructors() { return this.context.getConstructors(); }
 
-  addEquality(equality, localContext) {
+  addEquality(equality, context) {
     let equalityAdded;
 
     const equalityReflexive = equality.isReflexive();
@@ -123,15 +123,15 @@ class LocalContext {
       } else if ((leftEquivalence === null) && (rightEquivalence === null)) {
         const equivalence = Equivalence.fromLeftTermAndRightTerm(leftTerm, rightTerm);
 
-        this.addEquivalence(equivalence, localContext);
+        this.addEquivalence(equivalence, context);
 
         equalityAdded = true;
       } else if ((leftEquivalence !== null) && (rightEquivalence === null)) {
-        leftEquivalence.addTerm(rightTerm, localContext);
+        leftEquivalence.addTerm(rightTerm, context);
 
         equalityAdded = true;
       } else if ((leftEquivalence === null) && (rightEquivalence !== null)) {
-        rightEquivalence.addTerm(leftTerm, localContext);
+        rightEquivalence.addTerm(leftTerm, context);
 
         equalityAdded = true;
       } else if ((leftEquivalence !== null) && (rightEquivalence !== null)) {
@@ -149,9 +149,9 @@ class LocalContext {
           this.addEquivalence(equivalence);
         }
 
-        equivalence.addTerm(leftTerm, localContext);
+        equivalence.addTerm(leftTerm, context);
 
-        equivalence.addTerm(rightTerm, localContext);
+        equivalence.addTerm(rightTerm, context);
 
         equalityAdded = true;
       }
@@ -179,10 +179,10 @@ class LocalContext {
     this.proofSteps.push(proofStep);
   }
 
-  addEquivalence(equivalence, localContext) {
+  addEquivalence(equivalence, context) {
     const equivalenceString = equivalence.asString();
 
-    localContext.trace(`Added the '${equivalenceString}' equivalence.`);
+    context.trace(`Added the '${equivalenceString}' equivalence.`);
 
     this.equivalences.push(equivalence);
   }
@@ -273,7 +273,7 @@ class LocalContext {
 
   isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
 
-  isMetavariablePresentByMetavariableNode(metavariableNode, localContext = this) { return this.context.isMetavariablePresentByMetavariableNode(metavariableNode, localContext); }
+  isMetavariablePresentByMetavariableNode(metavariableNode, specificContext) { return this.context.isMetavariablePresentByMetavariableNode(metavariableNode, specificContext); }
 
   isVariablePresentByVariableName(variableName, nested = true) {
     const variable = this.findVariableByVariableName(variableName, nested),
@@ -300,7 +300,7 @@ class LocalContext {
 
   findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
 
-  findMetavariableByMetavariableNode(metavariableNode, localContext = this) { return this.context.findMetavariableByMetavariableNode(metavariableNode, localContext); }
+  findMetavariableByMetavariableNode(metavariableNode, specificContext) { return this.context.findMetavariableByMetavariableNode(metavariableNode, specificContext); }
 
   findVariableByVariableName(variableName, nested = true) {
     const variables = this.getVariables(nested),
@@ -340,9 +340,9 @@ class LocalContext {
 
   findConjectureByReference(reference) { return this.context.findConjectureByReference(reference); }
 
-  findMetaLemmaByReference(reference, localContext = this) { return this.context.findMetaLemmaByReference(reference, localContext); }
+  findMetaLemmaByReference(reference, specificContext) { return this.context.findMetaLemmaByReference(reference, specificContext); }
 
-  findMetatheoremByReference(reference, localContext = this) { return this.context.findMetatheoremByReference(reference, localContext); }
+  findMetatheoremByReference(reference, specificContext) { return this.context.findMetatheoremByReference(reference, specificContext); }
 
   isAxiomPresentByReference(reference) { return this.context.isAxiomPresentByReference(reference); }
 
@@ -352,9 +352,9 @@ class LocalContext {
 
   isConjecturePresentByReference(reference) { return this.context.isConjecturePresentByReference(reference); }
 
-  isMetaLemmaPresentByReference(reference, localContext = this) { return this.context.isMetaLemmaPresentByReference(reference, localContext); }
+  isMetaLemmaPresentByReference(reference, specificContext) { return this.context.isMetaLemmaPresentByReference(reference, specificContext); }
 
-  isMetatheoremPresentByReference(reference, localContext = this) { return this.context.isMetatheoremPresentByReference(reference, localContext); }
+  isMetatheoremPresentByReference(reference, specificContext) { return this.context.isMetatheoremPresentByReference(reference, specificContext); }
 
   nodeAsString(node, tokens = null) {
     if (tokens === null) {
@@ -408,9 +408,8 @@ class LocalContext {
 
   error(message, node) { this.context.error(message, node); }
 
-  static fromFileContext(fileContext) {
-    const context = fileContext,  ///
-          tokens = null,
+  static fromContext(context) {
+    const tokens = null,
           variables = [],
           proofSteps = [],
           judgements = [],
@@ -420,15 +419,14 @@ class LocalContext {
     return localContext;
   }
 
-  static fromLocalContext(localContext) {
-    const context = localContext,  ///
+  static fromFileContext(fileContext) {
+    const context = fileContext,  ///
           tokens = null,
           variables = [],
           proofSteps = [],
           judgements = [],
-          equivalences = [];
-
-    localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);  ///
+          equivalences = [],
+          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);
 
     return localContext;
   }

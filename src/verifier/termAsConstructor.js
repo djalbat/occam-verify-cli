@@ -33,7 +33,8 @@ class TermAsConstructorVerifier extends Verifier {
       verify: (termNode, fileContext, verifyAhead) => {
         const { Term } = shim,
               localContext = LocalContext.fromFileContext(fileContext),
-              term = Term.fromTermNode(termNode, localContext),
+              context = localContext, ///
+              term = Term.fromTermNode(termNode, context),
               termVerified = term.verify(localContext, verifyAhead);
 
         return termVerified;

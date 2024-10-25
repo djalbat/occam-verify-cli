@@ -29,40 +29,40 @@ export default class Reference {
     return metavariableNode;
   }
 
-  verify(localContext) {
+  verify(context) {
     let verified = false;
 
     const referenceString = this.getString(); ///
 
-    localContext.trace(`Verifying the '${referenceString}' reference...`);
+    context.trace(`Verifying the '${referenceString}' reference...`);
 
     if (!verified) {
       const metaType = referenceMetaType, ///
-            metavariableVerifiedGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, localContext);
+            metavariableVerifiedGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, context);
 
       verified = metavariableVerifiedGivenMetaType; ///
     }
 
     if (!verified) {
       const reference = this, ///
-            metaLemmaPresent = localContext.isMetaLemmaPresentByReference(reference),
-            metatheoremPresent = localContext.isMetatheoremPresentByReference(reference);
+            metaLemmaPresent = context.isMetaLemmaPresentByReference(reference),
+            metatheoremPresent = context.isMetatheoremPresentByReference(reference);
 
       verified = (metaLemmaPresent || metatheoremPresent);
     }
 
     if (!verified) {
       const reference = this, ///
-            axiomPresent = localContext.isAxiomPresentByReference(reference),
-            lemmaPresent = localContext.isLemmaPresentByReference(reference),
-            theoremPresent = localContext.isTheoremPresentByReference(reference),
-            conjecturePresent = localContext.isConjecturePresentByReference(reference);
+            axiomPresent = context.isAxiomPresentByReference(reference),
+            lemmaPresent = context.isLemmaPresentByReference(reference),
+            theoremPresent = context.isTheoremPresentByReference(reference),
+            conjecturePresent = context.isConjecturePresentByReference(reference);
 
       verified = (axiomPresent || lemmaPresent || theoremPresent || conjecturePresent);
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${referenceString}' reference.`);
+      context.debug(`...verified the '${referenceString}' reference.`);
     }
 
     return verified;
@@ -91,7 +91,8 @@ export default class Reference {
     const { Metavariable } = shim,
           metavariableNode = metavariableNodeQuery(referenceNode),
           localContext = LocalContext.fromFileContext(fileContext),
-          metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
+          context = localContext, ///
+          metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
           reference = new Reference(metavariable);
 
     return reference;

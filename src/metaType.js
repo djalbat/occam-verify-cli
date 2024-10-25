@@ -63,7 +63,7 @@ class MetaType {
     return metaType;
   }
 
-  static fromMetaTypeNode(metaTypeNode, localContext) {
+  static fromMetaTypeNode(metaTypeNode, context) {
     const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
           metaType = metaTypeFromMetaTypeName(metaTypeName);
 

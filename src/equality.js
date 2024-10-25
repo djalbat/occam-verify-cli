@@ -57,32 +57,32 @@ class Equality {
     return reflexive;
   }
 
-  isEqual(localContext) {
+  isEqual(context) {
     const leftTermNode = this.leftTerm.getNode(),
           rightTermNode = this.rightTerm.getNode(),
-          equalityUnified = equalityUnifier.unify(leftTermNode, rightTermNode, localContext),
+          equalityUnified = equalityUnifier.unify(leftTermNode, rightTermNode, context),
           equal = equalityUnified;  ///
 
     return equal;
   }
 
-  verify(assignments, stated, localContext) {
+  verify(assignments, stated, context) {
     let verified = false;
 
     const equalityString = this.string; ///
 
-    localContext.trace(`Verifying the '${equalityString}' equality...`);
+    context.trace(`Verifying the '${equalityString}' equality...`);
 
-    const termsVerified = this.verifyTerms(localContext);
+    const termsVerified = this.verifyTerms(context);
 
     if (termsVerified) {
       let verifiedWhenStated = false,
           verifiedWhenDerived = false;
 
       if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(localContext);
+        verifiedWhenStated = this.verifyWhenStated(context);
       } else {
-        verifiedWhenDerived = this.verifyWhenDerived(localContext);
+        verifiedWhenDerived = this.verifyWhenDerived(context);
       }
 
       if (verifiedWhenStated || verifiedWhenDerived) {
@@ -93,8 +93,8 @@ class Equality {
                 rightTermNode = this.rightTerm.getNode(),
                 leftVariableNode = variableNodeQuery(leftTermNode),
                 rightVariableNode = variableNodeQuery(rightTermNode),
-                leftVariable = Variable.fromVariableNodeAndType(leftVariableNode, type, localContext),
-                rightVariable = Variable.fromVariableNodeAndType(rightVariableNode, type, localContext);
+                leftVariable = Variable.fromVariableNodeAndType(leftVariableNode, type, context),
+                rightVariable = Variable.fromVariableNodeAndType(rightVariableNode, type, context);
 
           let assignment;
 
@@ -127,23 +127,23 @@ class Equality {
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${equalityString}' equality.`);
+      context.debug(`...verified the '${equalityString}' equality.`);
     }
 
     return verified;
   }
 
-  verifyTerms(localContext) {
+  verifyTerms(context) {
     let termsVerified;
 
     const equalityString = this.string; ///
 
-    localContext.trace(`Verifying the '${equalityString}' equality's terms...`);
+    context.trace(`Verifying the '${equalityString}' equality's terms...`);
 
-    const leftTermVerified = this.leftTerm.verify(localContext, () => {
+    const leftTermVerified = this.leftTerm.verify(context, () => {
       let verifiedAhead;
 
-      const rightTermVerified = this.rightTerm.verify(localContext, () => {
+      const rightTermVerified = this.rightTerm.verify(context, () => {
         let verifiedAhead;
 
         const leftTermType = this.leftTerm.getType(),
@@ -163,57 +163,57 @@ class Equality {
     termsVerified = leftTermVerified; ///
 
     if (termsVerified) {
-      localContext.debug(`...verified the '${equalityString}' equality's terms.`);
+      context.debug(`...verified the '${equalityString}' equality's terms.`);
     }
 
     return termsVerified;
   }
 
-  verifyWhenStated(localContext) {
+  verifyWhenStated(context) {
     let verifiedWhenStated;
 
     const equalityString = this.string; ///
 
-    localContext.trace(`Verifying the '${equalityString}' stated equality...`);
+    context.trace(`Verifying the '${equalityString}' stated equality...`);
 
     verifiedWhenStated = true;
 
     if (verifiedWhenStated) {
-      localContext.debug(`...verified the '${equalityString}' stated equality.`);
+      context.debug(`...verified the '${equalityString}' stated equality.`);
     }
 
     return verifiedWhenStated;
   }
 
-  verifyWhenDerived(localContext) {
+  verifyWhenDerived(context) {
     let verifiedWhenDerived;
 
     const equalityString = this.string; ///
 
-    localContext.trace(`Verifying the '${equalityString}' derived equality...`);
+    context.trace(`Verifying the '${equalityString}' derived equality...`);
 
-    const equal = this.isEqual(localContext);
+    const equal = this.isEqual(context);
 
     verifiedWhenDerived = equal;  ///
 
     if (verifiedWhenDerived) {
-      localContext.debug(`...verified the '${equalityString}' derived equality.`);
+      context.debug(`...verified the '${equalityString}' derived equality.`);
     }
 
     return verifiedWhenDerived;
   }
 
-  static fromEqualityNode(equalityNode, localContext) {
+  static fromEqualityNode(equalityNode, context) {
     let equality = null;
 
     if (equalityNode !== null) {
       const { Term } = shim,
             leftTermNode = leftTermNodeQuery(equalityNode),
             rightTermNode = rightTermNodeQuery(equalityNode),
-            leftTerm = Term.fromTermNode(leftTermNode, localContext),
-            rightTerm = Term.fromTermNode(rightTermNode, localContext),
+            leftTerm = Term.fromTermNode(leftTermNode, context),
+            rightTerm = Term.fromTermNode(rightTermNode, context),
             node = equalityNode,  ///
-            string = localContext.nodeAsString(node);
+            string = context.nodeAsString(node);
 
       equality = new Equality(string, leftTerm, rightTerm);
     }

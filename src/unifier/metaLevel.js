@@ -16,12 +16,12 @@ const termNodeQuery = nodeQuery("/term"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 class MetaLevelUnifier extends Unifier {
-  unify(nodeA, nodeB, substitutions, localContextA, localContextB) {
+  unify(generalNode, specificNode, substitutions, generalContext, specificContext) {
     let unifiedAtMetaLevel;
 
-    const nonTerminalNodeA = nodeA, ///
-          nonTerminalNodeB = nodeB, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, substitutions, localContextA, localContextB);
+    const generalNonTerminalNode = generalNode, ///
+          specificNonTerminalNode = specificNode, ///
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext);
 
     unifiedAtMetaLevel = nonTerminalNodeUnified; ///
 
@@ -30,43 +30,43 @@ class MetaLevelUnifier extends Unifier {
 
   static maps = [
     {
-      nodeQueryA: statementNodeQuery,
-      nodeQueryB: statementNodeQuery,
-      unify: (statementNodeA, statementNodeB, substitutions, localContextA, localContextB) => {
+      generalNodeQuery: statementNodeQuery,
+      specificNodeQuery: statementNodeQuery,
+      unify: (generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext) => {
         let statementUnified;
 
-        const matches = statementNodeA.match(statementNodeB);
+        const matches = generalStatementNode.match(specificStatementNode);
 
         if (matches) {
           statementUnified = true;
         } else {
-          let localContext,
+          let context,
               statementNode;
 
-          localContext = localContextA; ///
+          context = generalContext; ///
 
-          statementNode = statementNodeA; ///
+          statementNode = generalStatementNode; ///
 
           const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
           if (statementMetavariableNode !== null) {
-            const substitution = FrameForMetavariableSubstitution.fromStatementNode(statementNode, localContext) ||
-                                   TermForVariableSubstitution.fromStatementNode(statementNode, localContext) ||
+            const substitution = FrameForMetavariableSubstitution.fromStatementNode(statementNode, context) ||
+                                   TermForVariableSubstitution.fromStatementNode(statementNode, context) ||
                                      null;
 
             const { Statement } = shim,
                   metavariableNode = statementMetavariableNode, ///
-                  metavariable = localContextA.findMetavariableByMetavariableNode(metavariableNode);
+                  metavariable = generalContext.findMetavariableByMetavariableNode(metavariableNode, specificContext);
 
-            localContext = localContextB; ///
+            context = specificContext; ///
 
-            statementNode = statementNodeB; ///
+            statementNode = specificStatementNode; ///
 
-            const statement = Statement.fromStatementNode(statementNode, localContext);
+            const statement = Statement.fromStatementNode(statementNode, context);
 
-            statementUnified = metavariable.unifyStatement(statement, substitution, substitutions, localContext);
+            statementUnified = metavariable.unifyStatement(statement, substitution, substitutions, generalContext, specificContext);
           } else {
-            statementUnified = unifyChildNodes(statementNodeA, statementNodeB, substitutions, localContextA, localContextB);
+            statementUnified = unifyChildNodes(generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext);
           }
         }
 
@@ -74,46 +74,59 @@ class MetaLevelUnifier extends Unifier {
       }
     },
     {
-      nodeQueryA: frameMetavariableNodeQuery,
-      nodeQueryB: frameNodeQuery,
-      unify: (frameMetavariableNodeA, frameNodeB, substitutions, localContextA, localContextB) => {
+      generalNodeQuery: frameMetavariableNodeQuery,
+      specificNodeQuery: frameNodeQuery,
+      unify: (generalFrameMetavariableNode, specificFrameNode, substitutions, generalContext, specificContext) => {
         let frameUnified = false;
 
-        const localContext = localContextA, ///
-              metavariableNode = frameMetavariableNodeA,  ///
-              metavariablePresent = localContext.isMetavariablePresentByMetavariableNode(metavariableNode);
+        const metavariableNode = generalFrameMetavariableNode,  ///
+              metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext);
 
         if (metavariablePresent) {
-          const { Frame, Metavariable } = shim,
-                localContext = localContextB, ///
-                frameNode = frameNodeB, ///
-                metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContextA),
-                frame = Frame.fromFrameNode(frameNode, localContextB);
+          let context;
 
-          frameUnified = metavariable.unifyFrame(frame, substitutions, localContext);
+          const { Frame, Metavariable } = shim,
+                frameNode = specificFrameNode; ///
+
+          context = generalContext; ///
+
+          const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
+
+          context = specificContext;  ///
+
+          const frame = Frame.fromFrameNode(frameNode, context);
+
+          frameUnified = metavariable.unifyFrame(frame, substitutions, generalContext, specificContext);
         }
 
         return frameUnified;
       }
     },
     {
-      nodeQueryA: termVariableNodeQuery,
-      nodeQueryB: termNodeQuery,
-      unify: (termVariableNodeA, termNodeB, substitutions, localContextA, localContextB) => {
+      generalNodeQuery: termVariableNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      unify: (termVariableNodeA, termNodeB, substitutions, generalContext, specificContext) => {
         let termUnified = false;
 
         const variableNode = termVariableNodeA, ///
               variableName = variableNameFromVariableNode(variableNode),
-              variablePresent = localContextA.isVariablePresentByVariableName(variableName);
+              variablePresent = generalContext.isVariablePresentByVariableName(variableName);
 
         if (variablePresent) {
-          const { Term, Variable } = shim,
-                localContext = localContextB, ///
-                termNode = termNodeB, ///
-                variable = Variable.fromVariableNode(variableNode, localContextA),
-                term = Term.fromTermNode(termNode, localContextB);
+          let context;
 
-          termUnified = variable.unifyTerm(term, substitutions, localContext);
+          const { Term, Variable } = shim,
+                termNode = termNodeB; ///
+
+          context = generalContext; ///
+
+          const variable = Variable.fromVariableNode(variableNode, context);
+
+          context = specificContext;  ///
+
+          const term = Term.fromTermNode(termNode, context);
+
+          termUnified = variable.unifyTerm(term, substitutions, generalContext, specificContext);
         }
 
         return termUnified;
@@ -126,14 +139,14 @@ const metaLevelUnifier = new MetaLevelUnifier();
 
 export default metaLevelUnifier;
 
-function unifyChildNodes(statementNodeA, statementNodeB, substitutions, localContextA, localContextB) {
-  const nonTerminalNodeA = statementNodeA, ///
-        nonTerminalNodeB = statementNodeB, ///
-        nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-        nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
-        childNodesA = nonTerminalNodeAChildNodes, ///
-        childNodesB = nonTerminalNodeBChildNodes, ///
-        childNodesVerified = metaLevelUnifier.unifyChildNodes(childNodesA, childNodesB, substitutions, localContextA, localContextB),
+function unifyChildNodes(generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext) {
+  const generalNonTerminalNode = generalStatementNode, ///
+        specificNonTerminalNode = specificStatementNode, ///
+        generalNonTerminalNodeChildNodes = generalNonTerminalNode.getChildNodes(),
+        specificNonTerminalNodeChildNodes = specificNonTerminalNode.getChildNodes(),
+        generalChildNodes = generalNonTerminalNodeChildNodes, ///
+        specificChildNodes = specificNonTerminalNodeChildNodes, ///
+        childNodesVerified = metaLevelUnifier.unifyChildNodes(generalChildNodes, specificChildNodes, substitutions, generalContext, specificContext),
         statementUnified = childNodesVerified; ///
 
   return statementUnified;

@@ -20,26 +20,24 @@ export function terminalNodeMapFromNodes(nodes) {
   return terminalNodeMap;
 }
 
-export function areTerminalNodeMapsEqual(terminalNodeMapA, terminalNodeMapB) {
+export function areTerminalNodeMapsEqual(generalTerminalNodeMap, specificTerminalNodeMap) {
   let terminalNodeMapsEqual = false;
 
-  const indexesA = Object.keys(terminalNodeMapA), ///
-        indexesB = Object.keys(terminalNodeMapB), ///
-        terminalNodeMapKeysMatch = match(indexesA, indexesB, (indexA, indexB) => {
-          const matches = (indexA === indexB);
-
-          if (matches) {
+  const generalIndexes = Object.keys(generalTerminalNodeMap), ///
+        specificIndexes = Object.keys(specificTerminalNodeMap), ///
+        terminalNodeMapKeysMatch = match(generalIndexes, specificIndexes, (generalIndex, specificIndex) => {
+          if (generalIndex === specificIndex) {
             return true;
           }
         });
 
   if (terminalNodeMapKeysMatch) {
-    const terminalNodesA = Object.values(terminalNodeMapA), ///
-          terminalNodesB = Object.values(terminalNodeMapB), ///
-          terminalNodeMapValuesMatch = match(terminalNodesA, terminalNodesB, (terminalNodeA, terminalNodeB) => {
-            const matches = terminalNodeA.match(terminalNodeB);
+    const generalTerminalNodes = Object.values(generalTerminalNodeMap), ///
+          specificTerminalNodes = Object.values(specificTerminalNodeMap), ///
+          terminalNodeMapValuesMatch = match(generalTerminalNodes, specificTerminalNodes, (generalTerminalNode, specficTerminalNode) => {
+            const generalTerminalNodeMatchesSpecificTerminalNode = generalTerminalNode.match(specficTerminalNode);
 
-            if (matches) {
+            if (generalTerminalNodeMatchesSpecificTerminalNode) {
               return true;
             }
           });

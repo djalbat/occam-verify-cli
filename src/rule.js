@@ -67,15 +67,15 @@ class Rule {
     return metavariableNodeMatches;
   }
 
-  unifyStatement(statement, localContext) {
+  unifyStatement(statement, context) {
     let statementUnified;
 
     const { Substitutions } = shim,
           substitutions = Substitutions.fromNothing(),
-          conclusionUnified = this.unifyConclusion(statement, substitutions, localContext);
+          conclusionUnified = this.unifyConclusion(statement, substitutions, context);
 
     if (conclusionUnified) {
-      const premisesUnified = this.unifyPremises(substitutions, localContext);
+      const premisesUnified = this.unifyPremises(substitutions, context);
 
       if (premisesUnified) {
         const substitutionsResolved = substitutions.areResolved();
@@ -87,31 +87,31 @@ class Rule {
     return statementUnified;
   }
 
-  unifyConclusion(statement, substitutions, localContext) {
+  unifyConclusion(statement, substitutions, context) {
     let conclusionUnified;
 
     const conclusionString = this.conclusion.getString();
 
-    localContext.trace(`Unifying the '${conclusionString}' conclusion...`);
+    context.trace(`Unifying the '${conclusionString}' conclusion...`);
 
-    const statementUnified = this.conclusion.unifyStatement(statement, substitutions, localContext);  ///
+    const statementUnified = this.conclusion.unifyStatement(statement, substitutions, context);  ///
 
     conclusionUnified = statementUnified; ///
 
     if (conclusionUnified) {
-      localContext.debug(`...unified the '${conclusionString}' conclusion`);
+      context.debug(`...unified the '${conclusionString}' conclusion`);
     }
 
     return conclusionUnified;
   }
 
-  unifyPremises(substitutions, localContext) {
-    let proofSteps = localContext.getProofSteps();
+  unifyPremises(substitutions, context) {
+    let proofSteps = context.getProofSteps();
 
     proofSteps = reverse(proofSteps); ///
 
     const premisesUnified = backwardsEvery(this.premises, (premise) => {
-      const premiseUnified = this.unifyPremise(premise, proofSteps, substitutions, localContext);
+      const premiseUnified = this.unifyPremise(premise, proofSteps, substitutions, context);
 
       if (premiseUnified) {
         return true;
@@ -121,20 +121,20 @@ class Rule {
     return premisesUnified;
   }
 
-  unifyPremise(premise, proofSteps, substitutions, localContext) {
+  unifyPremise(premise, proofSteps, substitutions, context) {
     let premiseUnified  =false;
 
     const premiseString = premise.getString();
 
-    localContext.trace(`Unifying the '${premiseString}' premise...`);
+    context.trace(`Unifying the '${premiseString}' premise...`);
 
-    const premiseResolvedIndependently = premise.resolveIndependently(substitutions, localContext);
+    const premiseResolvedIndependently = premise.resolveIndependently(substitutions, context);
 
     if (premiseResolvedIndependently) {
       premiseUnified = true;
     } else {
       const proofStep = extract(proofSteps, (proofStep) => {
-        const proofStepUnified = premise.unifyProofStep(proofStep, substitutions, localContext);
+        const proofStepUnified = premise.unifyProofStep(proofStep, substitutions, context);
 
         if (proofStepUnified) {
           return true;
@@ -147,7 +147,7 @@ class Rule {
     }
 
     if (premiseUnified) {
-      localContext.debug(`...unified the '${premiseString}' premise.`);
+      context.debug(`...unified the '${premiseString}' premise.`);
     }
 
     return premiseUnified;
@@ -169,9 +169,9 @@ class Rule {
     });
 
     if (labelsVerifiedWhenDeclared) {
-      const localContext = LocalContext.fromFileContext(this.fileContext),
+      const context = LocalContext.fromFileContext(this.fileContext),
             premisesVerified = this.premises.every((premise) => {
-              const premiseVerified = premise.verify(localContext);
+              const premiseVerified = premise.verify(context);
 
               if (premiseVerified) {
                 return true;
@@ -179,7 +179,7 @@ class Rule {
             });
 
       if (premisesVerified) {
-        const conclusionVerified = this.conclusion.verify(localContext);
+        const conclusionVerified = this.conclusion.verify(context);
 
         if (conclusionVerified) {
           let proofVerified = true; ///
@@ -188,7 +188,7 @@ class Rule {
             const { Substitutions } = shim,
                   substitutions = Substitutions.fromNothing();
 
-            proofVerified = this.proof.verify(substitutions, this.conclusion, localContext);
+            proofVerified = this.proof.verify(substitutions, this.conclusion, context);
           }
 
           if (proofVerified) {

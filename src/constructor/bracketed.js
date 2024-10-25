@@ -34,7 +34,7 @@ const lexer = nominalLexer, ///
 
         return string;
       },
-      localContext = {
+      context = {
         nodeAsTokens,
         nodeAsString,
         tokensAsString
@@ -45,7 +45,7 @@ export const bracketedTermNode = termNode;  ///
 export default class BracketedConstructor extends Constructor {
   static fromNothing() {
     const { Term } = shim,
-          term = Term.fromTermNode(termNode, localContext),
+          term = Term.fromTermNode(termNode, context),
           type = null,
           string = stringFromTermAndType(term, type),
           bracketedConstructor = new BracketedConstructor(string, term);

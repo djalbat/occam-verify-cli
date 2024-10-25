@@ -26,15 +26,17 @@ class Proof {
     return statement;
   }
 
-  verify(substitutions, conclusion, localContext) {
+  verify(substitutions, conclusion, context) {
     let verified = false;
 
-    localContext = LocalContext.fromLocalContext(localContext); ///
+    const localContext = LocalContext.fromContext(context); ///
 
-    const derivationVerified = this.derivation.verify(substitutions, localContext);
+    context = localContext; ///
+
+    const derivationVerified = this.derivation.verify(substitutions, context);
 
     if (derivationVerified) {
-      const lastProofStep = localContext.getLastProofStep();
+      const lastProofStep = context.getLastProofStep();
 
       if (lastProofStep !== null) {
         const statement = this.getStatement(),

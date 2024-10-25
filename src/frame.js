@@ -86,16 +86,16 @@ class Frame {
     return metavariableNodeMatches;
   }
 
-  unifySubstitution(substitution, localContext) {
+  unifySubstitution(substitution, context) {
     let substitutionUnified = false;
 
     const substitutionString = substitution.getString();
 
-    localContext.trace(`Unifying the '${substitutionString}' substitution...`)
+    context.trace(`Unifying the '${substitutionString}' substitution...`)
 
     if (!substitutionUnified) {
       substitutionUnified = this.declarations.some((declaration) => {
-        const substitutionUnified = declaration.unifySubstitution(substitution, localContext);
+        const substitutionUnified = declaration.unifySubstitution(substitution, context);
 
         if (substitutionUnified) {
           return true;
@@ -105,7 +105,7 @@ class Frame {
 
     if (!substitutionUnified) {
       substitutionUnified = this.metavariables.some((metavariable) => {
-        const substitutionUnified = metavariable.unifySubstitution(substitution, localContext);
+        const substitutionUnified = metavariable.unifySubstitution(substitution, context);
 
         if (substitutionUnified) {
           return true;
@@ -114,22 +114,22 @@ class Frame {
     }
 
     if (substitutionUnified) {
-      localContext.debug(`...unified the '${substitutionString}' substitution...`)
+      context.debug(`...unified the '${substitutionString}' substitution...`)
     }
 
     return substitutionUnified;
   }
 
-  unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, localContext) {
+  unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, context) {
     let metaLemmaMetatheoremUnified;
 
     const metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
 
-    localContext.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem...`);
+    context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem...`);
 
     const substitutions = metaLemmaMetatheorem.getSubstitutions(),
           substitutionsUnified = substitutions.everySubstitution((substitution) => {
-            const substitutionUnified = this.unifySubstitution(substitution, localContext);
+            const substitutionUnified = this.unifySubstitution(substitution, context);
 
             if (substitutionUnified) {
               return true;
@@ -139,22 +139,22 @@ class Frame {
     metaLemmaMetatheoremUnified = substitutionsUnified; ///
 
     if (metaLemmaMetatheoremUnified) {
-      localContext.debug(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem.`);
+      context.debug(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem.`);
     }
 
     return metaLemmaMetatheoremUnified;
   }
 
-  unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, localContext) {
+  unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, context) {
     let axiomLemmaTheoremOrConjectureUnified;
 
     const axiomLemmaTheoremStringOrConjecture = axiomLemmaTheoremOrConjecture.getString();
 
-    localContext.trace(`Unifying the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture...`);
+    context.trace(`Unifying the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture...`);
 
     const substitutions = axiomLemmaTheoremOrConjecture.getSubstitutions(),
           substitutionsUnified = substitutions.everySubstitution((substitution) => {
-            const substitutionUnified = this.unifySubstitution(substitution, localContext);
+            const substitutionUnified = this.unifySubstitution(substitution, context);
 
             if (substitutionUnified) {
               return true;
@@ -164,28 +164,28 @@ class Frame {
     axiomLemmaTheoremOrConjectureUnified = substitutionsUnified; ///
 
     if (axiomLemmaTheoremOrConjectureUnified) {
-      localContext.debug(`...unified the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture.`);
+      context.debug(`...unified the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture.`);
     }
 
     return axiomLemmaTheoremOrConjectureUnified;
   }
 
-  verify(assignments, stated, localContext) {
+  verify(assignments, stated, context) {
     let verified = false;
 
     const frameString = this.string;  ///
 
-    localContext.trace(`Verifying the '${frameString}' frame...`);
+    context.trace(`Verifying the '${frameString}' frame...`);
 
     const declarationsVerified = this.declarations.every((declaration) => {
-      const declarationVerified = declaration.verify(assignments, stated, localContext);
+      const declarationVerified = declaration.verify(assignments, stated, context);
 
       return declarationVerified;
     });
 
     if (declarationsVerified) {
       const  metavariablesVerified = this.metavariables.every((metavariable) => {
-        const metavariableVerified = metavariable.verify(localContext);
+        const metavariableVerified = metavariable.verify(context);
 
         return metavariableVerified;
       });
@@ -195,9 +195,9 @@ class Frame {
             verifiedWhenDerived = false;
 
         if (stated) {
-          verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+          verifiedWhenStated = this.verifyWhenStated(assignments, context);
         } else {
-          verifiedWhenDerived = this.verifyWhenDerived(assignments, localContext);
+          verifiedWhenDerived = this.verifyWhenDerived(assignments, context);
         }
 
         if (verifiedWhenStated || verifiedWhenDerived) {
@@ -207,80 +207,80 @@ class Frame {
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${frameString}' frame.`);
+      context.debug(`...verified the '${frameString}' frame.`);
     }
 
     return verified;
   }
 
-  verifyWhenStated(assignments, localContext) {
+  verifyWhenStated(assignments, context) {
     let verifiedWhenStated = false;
 
     const frameString = this.string;  ///
 
-    localContext.trace(`Verifying the '${frameString}' frame when stated...`);
+    context.trace(`Verifying the '${frameString}' frame when stated...`);
 
     const declarationsLength = this.declarations.length;
 
     if (declarationsLength > 0) {
-      localContext.trace(`The '${frameString}' stated frame cannot have declarations.`);
+      context.trace(`The '${frameString}' stated frame cannot have declarations.`);
     } else {
       const metavariablesLength = this.metavariables.length;
 
       if (metavariablesLength > 1) {
-        localContext.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
+        context.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
       } else {
         verifiedWhenStated = true;
       }
     }
 
     if (verifiedWhenStated) {
-      localContext.debug(`...verified the '${frameString}' frame when stated.`);
+      context.debug(`...verified the '${frameString}' frame when stated.`);
     }
 
     return verifiedWhenStated;
   }
 
-  verifyWhenDerived(assignments, localContext) {
+  verifyWhenDerived(assignments, context) {
     let verifiedWhenDerived;
 
     const frameString = this.string;  ///
 
-    localContext.trace(`Verifying the '${frameString}' frame when derived...`);
+    context.trace(`Verifying the '${frameString}' frame when derived...`);
 
     verifiedWhenDerived = true;
 
     if (verifiedWhenDerived) {
-      localContext.debug(`...verified the '${frameString}' frame when derived.`);
+      context.debug(`...verified the '${frameString}' frame when derived.`);
     }
 
     return verifiedWhenDerived;
   }
 
-  verifyGivenMetaType(metaType, assignments, stated, localContext) {
+  verifyGivenMetaType(metaType, assignments, stated, context) {
     let verifiedGivenMetaType = false;
 
     const frameString = this.string,  ///
           metaTypeString = metaType.getString();
 
-    localContext.trace(`Verifying the '${frameString}' frame given the '${metaTypeString}' meta-type...`);
+    context.trace(`Verifying the '${frameString}' frame given the '${metaTypeString}' meta-type...`);
 
     const metaTypeName = metaType.getName();
 
     if (metaTypeName === FRAME_META_TYPE_NAME) {
-      const verified = this.verify(assignments, stated, localContext)
+      const verified = this.verify(assignments, stated, context)
 
       verifiedGivenMetaType = verified; ///
     }
 
     if (verifiedGivenMetaType) {
-      localContext.debug(`...verified the '${frameString}' frame given the '${metaTypeString}' meta-type.`);
+      context.debug(`...verified the '${frameString}' frame given the '${metaTypeString}' meta-type.`);
     }
 
     return verifiedGivenMetaType;
   }
 
-  static fromFrameNode(frameNode, localContext) {
+  static fromFrameNode(frameNode, context) {
     let frame = null;
 
     if (frameNode !== null) {
@@ -288,17 +288,17 @@ class Frame {
             declarationNodes = declarationNodesQuery(frameNode),
             metavariableNodes = metavariableNodesQuery(frameNode),
             declarations = declarationNodes.map((declarationNode) => {
-              const declaration = Declaration.fromDeclarationNode(declarationNode, localContext);
+              const declaration = Declaration.fromDeclarationNode(declarationNode, context);
 
               return declaration;
             }),
             metavariables = metavariableNodes.map((metavariableNode) => {
-              const metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext);
+              const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
 
               return metavariable;
             }),
             node = frameNode, ///
-            string = localContext.nodeAsString(node);
+            string = context.nodeAsString(node);
 
       frame = new Frame(string, node, declarations, metavariables);
     }
@@ -306,7 +306,7 @@ class Frame {
     return frame;
   }
 
-  static fromDefinedAssertionNode(definedAssertionNode, localContext) {
+  static fromDefinedAssertionNode(definedAssertionNode, context) {
     let frame = null;
 
     const frameNode = frameNodeQuery(definedAssertionNode);
@@ -316,13 +316,13 @@ class Frame {
 
       if (metavariableNode !== null) {
         const { Metavariable } = shim,
-              metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
+              metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
               declarations = [],
               metavariables = [
                 metavariable
               ],
               node = frameNode,  ///
-              string = localContext.nodeAsString(node);
+              string = context.nodeAsString(node);
 
         frame = new Frame(string, node, declarations, metavariables);
       }
@@ -331,7 +331,7 @@ class Frame {
     return frame;
   }
 
-  static fromContainedAssertionNode(containedAssertionNode, localContext) {
+  static fromContainedAssertionNode(containedAssertionNode, context) {
     let frame = null;
 
     const frameNode = frameNodeQuery(containedAssertionNode);
@@ -341,13 +341,13 @@ class Frame {
 
       if (metavariableNode !== null) {
         const { Metavariable } = shim,
-              metavariable = Metavariable.fromMetavariableNode(metavariableNode, localContext),
+              metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
               declarations = [],
               metavariables = [
                 metavariable
               ],
               node = frameNode,  ///
-              string = localContext.nodeAsString(node);
+              string = context.nodeAsString(node);
 
         frame = new Frame(string, node, declarations, metavariables);
       }

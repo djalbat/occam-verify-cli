@@ -33,69 +33,69 @@ class QualifiedStatement {
 
   getMetavariableNode() { return this.reference.getMetavariableNode(); }
 
-  unify(substitutions, localContext) {
+  unify(substitutions, context) {
     let unified;
 
     const qualifiedStatement = this,  ///
           qualifiedStatementString = this.string; ///
 
-    localContext.trace(`Unifying the '${qualifiedStatementString}' qualified statement...`);
+    context.trace(`Unifying the '${qualifiedStatementString}' qualified statement...`);
 
     unified = unifyMixins.some((unifyMixin) => {
-      const unified = unifyMixin(qualifiedStatement, substitutions, localContext);
+      const unified = unifyMixin(qualifiedStatement, substitutions, context);
 
       return unified;
     });
 
     if (unified) {
-      localContext.debug(`...unified the '${qualifiedStatementString}' qualified statement.`);
+      context.debug(`...unified the '${qualifiedStatementString}' qualified statement.`);
     }
 
     return unified;
   }
 
-  unifyStatement(statement, substitutions, localContextA, localContextB) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
 
     const statementString = statement.getString(),
           unqualifiedStatementString = this.getString();  ///
 
-    localContextB.trace(`Unifying the '${statementString}' statement with the '${unqualifiedStatementString}' qualified statement...`);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${unqualifiedStatementString}' qualified statement...`);
 
-    statementUnified = this.statement.unifyStatement(statement, substitutions, localContextA, localContextB);
+    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
-      localContextB.debug(`...unified the '${statementString}' statement with the '${unqualifiedStatementString}' qualified statement.`);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${unqualifiedStatementString}' qualified statement.`);
     }
 
     return statementUnified;
   }
 
-  verify(substitutions, assignments, stated, localContext) {
+  verify(substitutions, assignments, stated, context) {
     let verified;
 
     const qualifiedStatementString = this.string; ///
 
     if (this.statement !== null) {
-      localContext.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`);
+      context.trace(`Verifying the '${qualifiedStatementString}' qualified statement...`);
 
-      const statementVerified = this.statement.verify(assignments, stated, localContext);
+      const statementVerified = this.statement.verify(assignments, stated, context);
 
       if (statementVerified) {
-        const unified = this.unify(substitutions, localContext);
+        const unified = this.unify(substitutions, context);
 
         if (unified) {
-          const assignmentsAssigned = assignAssignments(assignments, localContext);
+          const assignmentsAssigned = assignAssignments(assignments, context);
 
           verified = assignmentsAssigned; ///
         }
       }
 
       if (verified) {
-        localContext.debug(`...verified the '${qualifiedStatementString}' qualified statement.`);
+        context.debug(`...verified the '${qualifiedStatementString}' qualified statement.`);
       }
     } else {
-      localContext.debug(`Cannot verify the '${qualifiedStatementString}' qualified statement because it is nonsense.`);
+      context.debug(`Cannot verify the '${qualifiedStatementString}' qualified statement because it is nonsense.`);
     }
 
     return verified;
@@ -111,8 +111,9 @@ class QualifiedStatement {
             statementNode = statementNodeQuery(qualifiedStatementNode),
             referenceNode = referenceNodeQuery(qualifiedStatementNode),
             localContext = LocalContext.fromFileContext(fileContext),
-            statement = Statement.fromStatementNode(statementNode, localContext),
-            reference = Reference.fromReferenceNode(referenceNode, fileContext),
+            context = localContext, ///
+            statement = Statement.fromStatementNode(statementNode, context),
+            reference = Reference.fromReferenceNode(referenceNode, context),
             node = qualifiedStatementNode;  ///
 
       string = fileContext.nodeAsString(node);

@@ -33,7 +33,7 @@ const lexer = nominalLexer, ///
 
         return string;
       },
-      localContext = {
+      context = {
         nodeAsTokens,
         nodeAsString,
         tokensAsString
@@ -44,7 +44,7 @@ export const bracketedStatementNode = statementNode;  ///
 export default class BracketedCombinator extends Combinator {
   static fromNothing() {
     const { Statement } = shim,
-          statement = Statement.fromStatementNode(statementNode, localContext),
+          statement = Statement.fromStatementNode(statementNode, context),
           bracketedCombinator = new BracketedCombinator(statement);
 
     return bracketedCombinator;

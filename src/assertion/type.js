@@ -29,23 +29,23 @@ export default class TypeAssertion {
     return this.type;
   }
 
-  verify(assignments, stated, localContext) {
+  verify(assignments, stated, context) {
     let verified = false;
 
     let typeAssertionString = this.string;  ///
 
-    localContext.trace(`Verifying the '${typeAssertionString}' type assertion...`);
+    context.trace(`Verifying the '${typeAssertionString}' type assertion...`);
 
-    const typeVerified = this.verifyType(localContext);
+    const typeVerified = this.verifyType(context);
 
     if (typeVerified) {
       let verifiedWhenStated = false,
           verifiedWhenDerived = false;
 
       if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(assignments, localContext);
+        verifiedWhenStated = this.verifyWhenStated(assignments, context);
       } else {
-        verifiedWhenDerived = this.verifyWhenDerived(localContext);
+        verifiedWhenDerived = this.verifyWhenDerived(context);
       }
 
       if (verifiedWhenStated || verifiedWhenDerived) {
@@ -54,13 +54,13 @@ export default class TypeAssertion {
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${typeAssertionString}' type assertion.`);
+      context.debug(`...verified the '${typeAssertionString}' type assertion.`);
     }
 
     return verified;
   }
 
-  verifyType(localContext) {
+  verifyType(context) {
     let typeVerified;
 
     if (this.type === objectType) {
@@ -68,34 +68,34 @@ export default class TypeAssertion {
     } else {
       const typeName = this.type.getName();
 
-      localContext.trace(`Verifying the '${typeName}' type...`);
+      context.trace(`Verifying the '${typeName}' type...`);
 
-      const type = localContext.findTypeByTypeName(typeName);
+      const type = context.findTypeByTypeName(typeName);
 
       if (type !== null) {
         this.type = type;
 
         typeVerified = true;
       } else {
-        localContext.debug(`The '${typeName}' type is missing.`);
+        context.debug(`The '${typeName}' type is missing.`);
       }
 
       if (typeVerified) {
-        localContext.debug(`...verified the '${typeName}' type.`);
+        context.debug(`...verified the '${typeName}' type.`);
       }
     }
 
     return typeVerified;
   }
 
-  verifyWhenStated(assignments, localContext) {
+  verifyWhenStated(assignments, context) {
     let verifiedWhenStated = false;
 
     const typeAssertionString = this.string; ///
 
-    localContext.trace(`Verifying the '${typeAssertionString}' stated type assertion...`);
+    context.trace(`Verifying the '${typeAssertionString}' stated type assertion...`);
 
-    const termVerified = this.term.verify(localContext, () => {
+    const termVerified = this.term.verify(context, () => {
       let verifiedAhead;
 
       const termType = this.term.getType(),
@@ -113,7 +113,7 @@ export default class TypeAssertion {
         const { Variable } = shim,
               termNode = this.term.getNode(),
               variableNode = variableNodeQuery(termNode),
-              variable = Variable.fromVariableNodeAndType(variableNode, this.type, localContext);
+              variable = Variable.fromVariableNodeAndType(variableNode, this.type, context);
 
         if (variable !== null) {
           const variableAssignment = VariableAssignment.fromVariable(variable),
@@ -127,20 +127,20 @@ export default class TypeAssertion {
     }
 
     if (verifiedWhenStated) {
-      localContext.debug(`...verified the '${typeAssertionString}' stated type assertion.`);
+      context.debug(`...verified the '${typeAssertionString}' stated type assertion.`);
     }
 
     return verifiedWhenStated;
   }
 
-  verifyWhenDerived(localContext) {
+  verifyWhenDerived(context) {
     let verifiedWhenDerived;
 
     const typeAssertionString = this.string; ///
 
-    localContext.trace(`Verifying the '${typeAssertionString}' derived type assertion...`);
+    context.trace(`Verifying the '${typeAssertionString}' derived type assertion...`);
 
-    const termVerified = this.term.verify(localContext, () => {
+    const termVerified = this.term.verify(context, () => {
       let verifiedAhead;
 
       const termType = this.term.getType(),
@@ -154,21 +154,21 @@ export default class TypeAssertion {
     verifiedWhenDerived = termVerified; ///
 
     if (verifiedWhenDerived) {
-      localContext.debug(`...verified the '${typeAssertionString}' derived type assertion.`);
+      context.debug(`...verified the '${typeAssertionString}' derived type assertion.`);
     }
 
     return verifiedWhenDerived;
   }
 
-  static fromTypeAssertionNode(typeAssertionNode, localContext) {
+  static fromTypeAssertionNode(typeAssertionNode, context) {
     let typeAssertion = null;
 
     if (typeAssertionNode !== null) {
       const { Term, Type } = shim,
             termNode = termNodeQuery(typeAssertionNode),
             typeNode = typeNodeQuery(typeAssertionNode),
-            term = Term.fromTermNode(termNode, localContext),
-            type = Type.fromTypeNode(typeNode, localContext),
+            term = Term.fromTermNode(termNode, context),
+            type = Type.fromTypeNode(typeNode, context),
             string = stringFromTermAndType(term, type);
 
       typeAssertion = new TypeAssertion(string, term, type);

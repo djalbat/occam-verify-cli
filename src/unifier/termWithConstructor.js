@@ -10,12 +10,12 @@ const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type");
 
 class TermWithConstructorUnifier extends Unifier {
-  unify(constructorTermNode, termNode, localContext) {
+  unify(constructorTermNode, termNode, context) {
     let termUnifiedWithConstructor;
 
-    const nonTerminalNodeA = constructorTermNode, ///
-          nonTerminalNodeB = termNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, localContext);
+    const generalNonTerminalNode = constructorTermNode, ///
+          specificNonTerminalNode = termNode, ///
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, context);
 
     termUnifiedWithConstructor = nonTerminalNodeUnified; ///
 
@@ -26,18 +26,18 @@ class TermWithConstructorUnifier extends Unifier {
     {
       nodeQueryA: typeNodeQuery,
       nodeQueryB: termNodeQuery,
-      unify: (typeNodeB, termNodeB, localContext) => {
+      unify: (typeNodeB, termNodeB, context) => {
         let unified = false;
 
         const { Term } = shim,
               typeNode = typeNodeB, ///
               typeName = typeNameFromTypeNode(typeNode),
-              type = localContext.findTypeByTypeName(typeName);
+              type = context.findTypeByTypeName(typeName);
 
         if (type !== null) {
           const termNode = termNodeB, ///
-                term = Term.fromTermNode(termNode, localContext),
-                termVerifiedGivenType = term.verifyGivenType(type, localContext);
+                term = Term.fromTermNode(termNode, context),
+                termVerifiedGivenType = term.verifyGivenType(type, context);
 
           if (termVerifiedGivenType) {
             unified = true;

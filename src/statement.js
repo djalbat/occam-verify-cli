@@ -46,13 +46,13 @@ class Statement {
     return equalTo;
   }
 
-  isTermContained(term, localContext) {
+  isTermContained(term, context) {
     let termContained;
 
     const termString = term.getString(),
           statementString = this.string;  ///
 
-    localContext.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`);
+    context.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`);
 
     const termNode = term.getNode(),
           statementNode = this.node,
@@ -67,19 +67,19 @@ class Statement {
     });
 
     if (termContained) {
-      localContext.debug(`...the '${termString}' term is contained in the '${statementString}' statement.`);
+      context.debug(`...the '${termString}' term is contained in the '${statementString}' statement.`);
     }
 
     return termContained;
   }
 
-  isFrameContained(frame, localContext) {
+  isFrameContained(frame, context) {
     let frameContained;
 
     const frameString = frame.getString(),
           statementString = this.string;  ///
 
-    localContext.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`);
+    context.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`);
 
     const frameNode = frame.getNode(),
           statementNode = this.node,
@@ -94,7 +94,7 @@ class Statement {
     });
 
     if (frameContained) {
-      localContext.debug(`...the '${frameString}' frame is contained in the '${statementString}' statement.`);
+      context.debug(`...the '${frameString}' frame is contained in the '${statementString}' statement.`);
     }
 
     return frameContained;
@@ -106,20 +106,21 @@ class Statement {
     return statementNodeMatches;
   }
 
-  resolveIndependently(substitutions, localContextA, localContextB) {
+  resolveIndependently(substitutions, generalContext, specificContext) {
     let resolvedIndependently;
 
     const statement = this, ///
           statementString = this.string;  ///
 
-    localContextB.trace(`Resolving the '${statementString}' statement independently...`);
+    specificContext.trace(`Resolving the '${statementString}' statement independently...`);
 
-    const context = localContextA;  ///
+    const context = generalContext,  ///
+          localContext = LocalContext.fromContextAndTokens(context, this.tokens);
 
-    localContextA = LocalContext.fromContextAndTokens(context, this.tokens);
+    generalContext = localContext;  ///
 
     const resolved = resolveMixins.some((resolveMixin) => {
-      const resolved = resolveMixin(statement, substitutions, localContextA, localContextB);
+      const resolved = resolveMixin(statement, substitutions, generalContext, specificContext);
 
       if (resolved) {
         return true;
@@ -129,52 +130,53 @@ class Statement {
     resolvedIndependently = resolved; ///
 
     if (resolvedIndependently) {
-      localContextB.debug(`...resolved the '${statementString}' statement independently.`);
+      specificContext.debug(`...resolved the '${statementString}' statement independently.`);
     }
 
     return resolvedIndependently;
   }
 
-  unifyStatement(statement, substitutions, localContextA, localContextB) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
 
-    const statementA = this,  ///
-          statementB = statement, ///
-          statementAString = statementA.getString(),
-          statementBString = statementB.getString();
+    const generalStatement = this,  ///
+          specificStatement = statement, ///
+          generalStatementString = generalStatement.getString(),
+          specificStatementString = specificStatement.getString();
 
-    localContextB.trace(`Unifying the '${statementBString}' statement with the '${statementAString}' statement...`);
+    specificContext.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`);
 
-    const statementNodeA = statementA.getNode(),  ///
-          statementNodeB = statementB.getNode(),  ///
-          context = localContextA,  ///
-          nodeA = statementNodeA, ///
-          nodeB = statementNodeB; ///
+    const generalStatementNode = generalStatement.getNode(),  ///
+          specificStatementNode = specificStatement.getNode(),  ///
+          generalNode = generalStatementNode, ///
+          specificNode = specificStatementNode, ///
+          context = generalContext,  ///
+          localContext = LocalContext.fromContextAndTokens(context, this.tokens);
 
-    localContextA = LocalContext.fromContextAndTokens(context, this.tokens);
+    generalContext = localContext;  ///
 
-    const unifiedAtMetaLevel = metaLevelUnifier.unify(nodeA, nodeB, substitutions, localContextA, localContextB);
+    const unifiedAtMetaLevel = metaLevelUnifier.unify(generalNode, specificNode, substitutions, generalContext, specificContext);
 
     statementUnified = unifiedAtMetaLevel; ///
 
     if (statementUnified) {
-      localContextB.debug(`...unified the '${statementBString}' statement with the '${statementAString}' statement.`);
+      specificContext.debug(`...unified the '${specificStatementString}' statement with the '${generalStatementString}' statement.`);
     }
 
     return statementUnified;
   }
 
-  verify(assignments, stated, localContext) {
+  verify(assignments, stated, context) {
     let verified = false;
 
     const statement = this, ///
           statementString = this.string;  ///
 
-    localContext.trace(`Verifying the '${statementString}' statement...`);
+    context.trace(`Verifying the '${statementString}' statement...`);
 
     if (!verified) {
       verified = verifyMixins.some((verifyMixin) => {
-        const verified = verifyMixin(statement, assignments, stated, localContext);
+        const verified = verifyMixin(statement, assignments, stated, context);
 
         if (verified) {
           return true;
@@ -184,7 +186,7 @@ class Statement {
 
     if (!verified) {
       const unified = unifyMixins.some((unifyMixin) => {
-        const unified = unifyMixin(statement, assignments, stated, localContext);
+        const unified = unifyMixin(statement, assignments, stated, context);
 
         if (unified) {
           return true;
@@ -195,7 +197,7 @@ class Statement {
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${statementString}' statement.`);
+      context.debug(`...verified the '${statementString}' statement.`);
     }
 
     return verified;
@@ -218,24 +220,24 @@ class Statement {
     return verifiedAtTopLevel;
   }
 
-  verifyGivenMetaType(metaType, assignments, stated, localContext) {
+  verifyGivenMetaType(metaType, assignments, stated, context) {
     let verifiedGivenMetaType = false;
 
     const metaTypeString = metaType.getString(),
           statementString = this.string;  ///
 
-    localContext.trace(`Verifying the '${statementString}' statement given the '${metaTypeString}' meta-type...`);
+    context.trace(`Verifying the '${statementString}' statement given the '${metaTypeString}' meta-type...`);
 
     const metaTypeName = metaType.getName();
 
     if (metaTypeName === STATEMENT_META_TYPE_NAME) {
-      const verified = this.verify(assignments, stated, localContext)
+      const verified = this.verify(assignments, stated, context)
 
       verifiedGivenMetaType = verified; ///
     }
 
     if (verifiedGivenMetaType) {
-      localContext.debug(`...verified the '${statementString}' statement given the '${metaTypeString}' meta-type.`);
+      context.debug(`...verified the '${statementString}' statement given the '${metaTypeString}' meta-type.`);
     }
 
     return verifiedGivenMetaType;
@@ -267,13 +269,13 @@ class Statement {
     return statement;
   }
 
-  static fromStatementNode(statementNode, localContext) {
+  static fromStatementNode(statementNode, context) {
     let statement = null;
 
     if (statementNode !== null) {
       const node = statementNode, ///
-            tokens = localContext.nodeAsTokens(node),
-            string = localContext.tokensAsString(tokens);
+            tokens = context.nodeAsTokens(node),
+            string = context.tokensAsString(tokens);
 
       statement = new Statement(string, node, tokens);
     }
@@ -281,21 +283,21 @@ class Statement {
     return statement;
   }
 
-  static fromDefinedAssertionNode(definedAssertionNode, localContext) {
+  static fromDefinedAssertionNode(definedAssertionNode, context) {
     const statementNode = statementNodeQuery(definedAssertionNode),
           node = statementNode, ///
-          tokens = localContext.nodeAsTokens(node),
-          string = localContext.tokensAsString(tokens),
+          tokens = context.nodeAsTokens(node),
+          string = context.tokensAsString(tokens),
           statement = new Statement(string, node, tokens);
 
     return statement;
   }
 
-  static fromContainedAssertionNode(containedAssertionNode, localContext) {
+  static fromContainedAssertionNode(containedAssertionNode, context) {
     const statementNode = statementNodeQuery(containedAssertionNode),
           node = statementNode, ///
-          tokens = localContext.nodeAsTokens(node),
-          string = localContext.tokensAsString(tokens),
+          tokens = context.nodeAsTokens(node),
+          string = context.tokensAsString(tokens),
           statement = new Statement(string, node, tokens);
 
     return statement;

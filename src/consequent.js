@@ -26,46 +26,44 @@ class Consequent {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
-  unifyStatement(statement, substitutions, localContext) {
+  unifyStatement(statement, substitutions, context) {
     let statementUnified;
+
+    const localContext = LocalContext.fromFileContext(this.fileContext),
+          generalContext = localContext, ///
+          specificContext = context; ///
 
     const statementString = statement.getString(),
           consequentString = this.getString();
 
-    const localContextB = localContext; ///
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${consequentString}' consequent...`);
 
-    localContext = LocalContext.fromFileContext(this.fileContext);
-
-    const localContextA = localContext; ///
-
-    localContextB.trace(`Unifying the '${statementString}' statement with the '${consequentString}' consequent...`);
-
-    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, localContextA, localContextB);
+    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
-      localContextB.debug(`...unified the '${statementString}' statement with the '${consequentString}' consequent.`);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${consequentString}' consequent.`);
     }
 
     return statementUnified;
   }
 
-  verify(localContext) {
+  verify(context) {
     let verified = false;
 
     const consequentString = this.getString();  ///
 
-    localContext.trace(`Verifying the '${consequentString}' consequent...`);
+    context.trace(`Verifying the '${consequentString}' consequent...`);
 
     const stated = true,
           assignments = [],
-          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, localContext);
+          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, context);
 
     if (unqualifiedStatementVerified) {
       verified = true;
     }
 
     if (verified) {
-      localContext.debug(`...verified the '${consequentString}' consequent.`);
+      context.debug(`...verified the '${consequentString}' consequent.`);
     }
 
     return verified;

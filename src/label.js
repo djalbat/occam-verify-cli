@@ -22,7 +22,7 @@ class Label {
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
-  unifyReference(reference, localContextA, localContextB) {
+  unifyReference(reference, generalContext, specificContext) {
     const { Substitutions } = shim,
           metavariableNode = this.metavariable.getNode(),
           referenceMetavariable = reference.getMetavariable(),
@@ -30,7 +30,7 @@ class Label {
           metavariableNodeA = referenceMetavariableNode,  ///
           metavariableNodeB = metavariableNode, ///
           substitutions = Substitutions.fromNothing(),
-          metavariableUnified = intrinsicLevelUnifier.unify(metavariableNodeA, metavariableNodeB, substitutions, localContextA, localContextB);
+          metavariableUnified = intrinsicLevelUnifier.unify(metavariableNodeA, metavariableNodeB, substitutions, generalContext, specificContext);
 
     return metavariableUnified;
   }

@@ -49,9 +49,9 @@ export default class TermForVariableSubstitution extends Substitution {
     return substitutionString;
   }
 
-  setSubstitutionNodeAndTokens(localContext) {
-    const lexer = localContext.getLexer(),
-          parser = localContext.getParser(),
+  setSubstitutionNodeAndTokens(context) {
+    const lexer = context.getLexer(),
+          parser = context.getParser(),
           substitutionString = this.getSubstitutionString(),
           unqualifiedStatementString = unqualifiedStatementStringFromSubstitutionString(substitutionString),
           unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
@@ -118,7 +118,7 @@ export default class TermForVariableSubstitution extends Substitution {
     return substitutionNodeMatches;
   }
 
-  unifyWithEquivalence(equivalence, substitutions, localContextA, localContextB) {
+  unifyWithEquivalence(equivalence, substitutions, generalContext, specificContext) {
     let unifiedWithEquivalence;
 
     const termNode = this.term.getNode(),
@@ -136,7 +136,7 @@ export default class TermForVariableSubstitution extends Substitution {
     return unifiedWithEquivalence;
   }
 
-  static fromStatementNode(statementNode, localContext) {
+  static fromStatementNode(statementNode, context) {
     let termForVariableSubstitution = null;
 
     const substitutionNode = substitutionNodeQuery(statementNode);
@@ -147,10 +147,10 @@ export default class TermForVariableSubstitution extends Substitution {
 
       if ((termNode !== null) && (variableNode !== null)) {
         const { Term, Variable } = shim,
-              term = Term.fromTermNode(termNode, localContext),
-              variable = Variable.fromVariableNode(variableNode, localContext),
-              string = stringFromTermAndVariable(term, variable, localContext),
-              substitutionTokens = localContext.nodeAsTokens(substitutionNode);
+              term = Term.fromTermNode(termNode, context),
+              variable = Variable.fromVariableNode(variableNode, context),
+              string = stringFromTermAndVariable(term, variable, context),
+              substitutionTokens = context.nodeAsTokens(substitutionNode);
 
         termForVariableSubstitution = new TermForVariableSubstitution(string, term, variable, substitutionNode, substitutionTokens);
       }
@@ -159,16 +159,16 @@ export default class TermForVariableSubstitution extends Substitution {
     return termForVariableSubstitution;
   }
 
-  static fromTernAndVariable(term, variable, localContext) {
+  static fromTernAndVariable(term, variable, context) {
     let termNode = term.getNode();
 
     termNode = stripBracketsFromTermNode(termNode); ///
 
     const { Term } = shim;
 
-    term = Term.fromTermNode(termNode, localContext);
+    term = Term.fromTermNode(termNode, context);
 
-    const string = stringFromTermAndVariable(term, variable, localContext),
+    const string = stringFromTermAndVariable(term, variable, context),
           substitutionNode = null,
           substitutionTokens = null,
           termForVariableSubstitution = new TermForVariableSubstitution(string, term, variable, substitutionNode, substitutionTokens);
@@ -177,9 +177,9 @@ export default class TermForVariableSubstitution extends Substitution {
   }
 }
 
-function stringFromTermAndVariable(term, variable, localContext) {
+function stringFromTermAndVariable(term, variable, context) {
   const termNode = term.getNode(),
-        termString = localContext.nodeAsString(termNode),
+        termString = context.nodeAsString(termNode),
         variableString = variable.getString(),
         string = `[${termString} for ${variableString}]`;
 

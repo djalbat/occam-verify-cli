@@ -8,52 +8,52 @@ import { nodeQuery } from "../../utilities/query";
 const definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion"),
       containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion");
 
-function resolveAsDefinedAssertion(statement, substitutions, localContextA, localContextB) {
+function resolveAsDefinedAssertion(statement, substitutions, generalContext, specificContext) {
   let resolvedAsDefinedAssertion = false;
 
-  const localContext = localContextA, ///
+  const context = generalContext, ///
         statementNode = statement.getNode(),
         definedAssertionNode = definedAssertionNodeQuery(statementNode),
-        definedAssertion = DefinedAssertion.fromDefinedAssertionNode(definedAssertionNode, localContext);
+        definedAssertion = DefinedAssertion.fromDefinedAssertionNode(definedAssertionNode, context);
 
   if (definedAssertion !== null) {
     const statementString = statement.getString();
 
-    localContextB.trace(`Resolving the '${statementString}' statement as a defined assertion...`);
+    specificContext.trace(`Resolving the '${statementString}' statement as a defined assertion...`);
 
-    const localContext = localContextB, ///
+    const localContext = specificContext, ///
           definedAssertionVerified = definedAssertion.resolve(substitutions, localContext);
 
     resolvedAsDefinedAssertion = definedAssertionVerified; ///
 
     if (resolvedAsDefinedAssertion) {
-      localContextB.debug(`...resolved the '${statementString}' statement as a defined assertion.`);
+      specificContext.debug(`...resolved the '${statementString}' statement as a defined assertion.`);
     }
   }
 
   return resolvedAsDefinedAssertion;
 }
 
-function resolveAsContainedAssertion(statement, substitutions, localContextA, localContextB) {
+function resolveAsContainedAssertion(statement, substitutions, generalContext, specificContext) {
   let resolvedAsContainedAssertion = false;
 
-  const localContext = localContextA, ///
+  const context = generalContext, ///
         statementNode = statement.getNode(),
         containedAssertionNode = containedAssertionNodeQuery(statementNode),
-        containedAssertion = ContainedAssertion.fromContainedAssertionNode(containedAssertionNode, localContext);
+        containedAssertion = ContainedAssertion.fromContainedAssertionNode(containedAssertionNode, context);
 
   if (containedAssertion !== null) {
     const statementString = statement.getString();
 
-    localContextB.trace(`Resolving the '${statementString}' statement as a contained assertion...`);
+    specificContext.trace(`Resolving the '${statementString}' statement as a contained assertion...`);
 
-    const localContext = localContextB, ///
+    const localContext = specificContext, ///
           containedAssertionVerified = containedAssertion.resolve(substitutions, localContext);
 
     resolvedAsContainedAssertion = containedAssertionVerified; ///
 
     if (resolvedAsContainedAssertion) {
-      localContextB.debug(`...resolved the '${statementString}' statement as a contained assertion.`);
+      specificContext.debug(`...resolved the '${statementString}' statement as a contained assertion.`);
     }
   }
 

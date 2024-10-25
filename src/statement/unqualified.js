@@ -27,20 +27,20 @@ class UnqualifiedStatement {
     return this.statement;
   }
 
-  verify(assignments, stated, localContext) {
+  verify(assignments, stated, context) {
     let verified;
 
     const unqualifiedStatementString = this.getString(); ///
 
     if (this.statement !== null) {
-      localContext.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
+      context.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
 
-      const statementVerified = this.statement.verify(assignments, stated, localContext);
+      const statementVerified = this.statement.verify(assignments, stated, context);
 
       if (statementVerified) {
         verified = true;
       } else {
-        const statementUnifiedWithProofSteps = this.unifyStatementWithProofSteps(this.statement, assignments, stated, localContext);
+        const statementUnifiedWithProofSteps = this.unifyStatementWithProofSteps(this.statement, assignments, stated, context);
 
         if (statementUnifiedWithProofSteps) {
           verified = true;
@@ -48,59 +48,59 @@ class UnqualifiedStatement {
       }
 
       if (verified) {
-        localContext.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);
+        context.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);
       }
     } else {
-      localContext.debug(`Cannot verify the '${unqualifiedStatementString}' unqualified statement because it is nonsense.`);
+      context.debug(`Cannot verify the '${unqualifiedStatementString}' unqualified statement because it is nonsense.`);
     }
 
     return verified;
   }
 
-  unifyStatement(statement, substitutions, localContextA, localContextB) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
 
     const statementString = statement.getString(),
           unqualifiedStatementString = this.getString();  ///
 
-    localContextB.trace(`Unifying the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement...`);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement...`);
 
-    statementUnified = this.statement.unifyStatement(statement, substitutions, localContextA, localContextB);
+    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
-      localContextB.debug(`...unified the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement.`);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement.`);
     }
 
     return statementUnified;
   }
 
-  resolveIndependently(substitutions, localContextA, localContextB) {
+  resolveIndependently(substitutions, generalContext, specificContext) {
     let resolveIndependently;
 
     const unqualifiedStatementString = this.getString();  ///
 
-    localContextB.trace(`Resolving the '${unqualifiedStatementString}' unqualified statement independently...`);
+    specificContext.trace(`Resolving the '${unqualifiedStatementString}' unqualified statement independently...`);
 
-    const statementResolvedIndependently = this.statement.resolveIndependently(substitutions, localContextA, localContextB);
+    const statementResolvedIndependently = this.statement.resolveIndependently(substitutions, generalContext, specificContext);
 
     resolveIndependently = statementResolvedIndependently;  ///
 
     if (resolveIndependently) {
-      localContextB.debug(`...resolved the '${unqualifiedStatementString}' unqualified statement independently.`);
+      specificContext.debug(`...resolved the '${unqualifiedStatementString}' unqualified statement independently.`);
     }
 
     return resolveIndependently;
   }
 
-  unifyStatementWithProofSteps(statement, assignments, stated, localContext) {
+  unifyStatementWithProofSteps(statement, assignments, stated, context) {
     let statementUnifiedWithProofSteps;
 
-    let proofSteps = localContext.getProofSteps();
+    let proofSteps = context.getProofSteps();
 
     proofSteps = reverse(proofSteps); ///
 
     statementUnifiedWithProofSteps = proofSteps.some((proofStep) => {
-      const statementUnified = proofStep.unifyStatement(statement, localContext);
+      const statementUnified = proofStep.unifyStatement(statement, context);
 
       if (statementUnified) {
         return true;
@@ -139,7 +139,8 @@ class UnqualifiedStatement {
       const { Statement } = shim,
             statementNode = statementNodeQuery(unqualifiedStatementNode),
             localContext = LocalContext.fromFileContext(fileContext),
-            statement = Statement.fromStatementNode(statementNode, localContext),
+            context = localContext, ///
+            statement = Statement.fromStatementNode(statementNode, context),
             node = unqualifiedStatementNode;  ///
 
       string = fileContext.nodeAsString(node);

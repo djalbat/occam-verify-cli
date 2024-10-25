@@ -79,7 +79,7 @@ export function findEquivalenceByTermNodes(equivalences, termNodes) {
   return equivalence;
 }
 
-export function groundedTermsAndDefinedVariablesFromFromEquivalences(equivalences, groundedTerms, definedVariables, localContext) {
+export function groundedTermsAndDefinedVariablesFromFromEquivalences(equivalences, groundedTerms, definedVariables, context) {
   let groundedEquivalences,
       remainingEquivalences,
       initiallyGroundedEquivalences,
@@ -89,7 +89,7 @@ export function groundedTermsAndDefinedVariablesFromFromEquivalences(equivalence
 
   initiallyGroundedEquivalences = [];
 
-  separateInitiallyGroundedEquivalences(equivalences, remainingEquivalences, initiallyGroundedEquivalences, localContext);
+  separateInitiallyGroundedEquivalences(equivalences, remainingEquivalences, initiallyGroundedEquivalences, context);
 
   const initiallyGroundedEquivalencesLength = initiallyGroundedEquivalences.length;
 
@@ -105,9 +105,9 @@ export function groundedTermsAndDefinedVariablesFromFromEquivalences(equivalence
       while (definedVariablesLength > previousDefinedVariablesLength) {
         previousDefinedVariablesLength = definedVariablesLength;  ///
 
-        groundedTermsFromGroundedEquivalencesAndDefinedVariables(groundedEquivalences, definedVariables, groundedTerms, localContext);
+        groundedTermsFromGroundedEquivalencesAndDefinedVariables(groundedEquivalences, definedVariables, groundedTerms, context);
 
-        definedVariablesFromGroundedTerms(groundedTerms, definedVariables, localContext);
+        definedVariablesFromGroundedTerms(groundedTerms, definedVariables, context);
 
         definedVariablesLength = definedVariables.length;
       }
@@ -118,7 +118,7 @@ export function groundedTermsAndDefinedVariablesFromFromEquivalences(equivalence
 
       implicitlyGroundedEquivalences = [];
 
-      separateImplicitlyGroundedEquivalences(equivalences, remainingEquivalences, implicitlyGroundedEquivalences, definedVariables, localContext);
+      separateImplicitlyGroundedEquivalences(equivalences, remainingEquivalences, implicitlyGroundedEquivalences, definedVariables, context);
 
       push(groundedEquivalences, implicitlyGroundedEquivalences);
 
@@ -137,12 +137,12 @@ function typesFromEquivalences(equivalences) {
   return types;
 }
 
-function definedVariablesFromGroundedTerms(groundedTerms, definedVariables, localContext) {
+function definedVariablesFromGroundedTerms(groundedTerms, definedVariables, context) {
   const terms = groundedTerms,  ///
         variables = definedVariables; ///
 
   terms.forEach((term) => {
-    const termVariables = term.getVariables(localContext);
+    const termVariables = term.getVariables(context);
 
     termVariables.forEach((termVariable) => {
       const variablesIncludesTermVariable = variables.includes(termVariable);
@@ -156,9 +156,9 @@ function definedVariablesFromGroundedTerms(groundedTerms, definedVariables, loca
   });
 }
 
-function separateInitiallyGroundedEquivalences(equivalences, remainingEquivalences, initiallyGroundedEquivalences, localContext) {
+function separateInitiallyGroundedEquivalences(equivalences, remainingEquivalences, initiallyGroundedEquivalences, context) {
   separate(equivalences, remainingEquivalences, initiallyGroundedEquivalences, (equivalence) => {
-    const equivalenceInitiallyGrounded = equivalence.isInitiallyGrounded(localContext);
+    const equivalenceInitiallyGrounded = equivalence.isInitiallyGrounded(context);
 
     if (!equivalenceInitiallyGrounded) {
       return true;
@@ -166,9 +166,9 @@ function separateInitiallyGroundedEquivalences(equivalences, remainingEquivalenc
   });
 }
 
-function separateImplicitlyGroundedEquivalences(equivalences, remainingEquivalences, implicitlyGroundedEquivalences, definedVariables, localContext) {
+function separateImplicitlyGroundedEquivalences(equivalences, remainingEquivalences, implicitlyGroundedEquivalences, definedVariables, context) {
   separate(equivalences, remainingEquivalences, implicitlyGroundedEquivalences, (equivalence) => {
-    const equivalenceImplicitlyGrounded = equivalence.isImplicitlyGrounded(definedVariables, localContext);
+    const equivalenceImplicitlyGrounded = equivalence.isImplicitlyGrounded(definedVariables, context);
 
     if (!equivalenceImplicitlyGrounded) {
       return true;
@@ -176,8 +176,8 @@ function separateImplicitlyGroundedEquivalences(equivalences, remainingEquivalen
   });
 }
 
-function groundedTermsFromGroundedEquivalencesAndDefinedVariables(groundedEquivalences, definedVariables, groundedTerms, localContext) {
+function groundedTermsFromGroundedEquivalencesAndDefinedVariables(groundedEquivalences, definedVariables, groundedTerms, context) {
   groundedEquivalences.forEach((groundedEquivalence) => {
-    groundedEquivalence.getGroundedTerms(definedVariables, groundedTerms, localContext);
+    groundedEquivalence.getGroundedTerms(definedVariables, groundedTerms, context);
   });
 }
