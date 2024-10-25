@@ -30,7 +30,8 @@ class UnqualifiedStatement {
   verify(assignments, stated, context) {
     let verified;
 
-    const unqualifiedStatementString = this.getString(); ///
+    const unqualifiedStatement = this,  ///
+          unqualifiedStatementString = unqualifiedStatement.getString();  ///
 
     if (this.statement !== null) {
       context.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
@@ -61,7 +62,8 @@ class UnqualifiedStatement {
     let statementUnified;
 
     const statementString = statement.getString(),
-          unqualifiedStatementString = this.getString();  ///
+          unqualifiedStatement = this,  ///
+          unqualifiedStatementString = unqualifiedStatement.getString();  ///
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${unqualifiedStatementString}' unqualified statement...`);
 
@@ -77,7 +79,8 @@ class UnqualifiedStatement {
   resolveIndependently(substitutions, generalContext, specificContext) {
     let resolveIndependently;
 
-    const unqualifiedStatementString = this.getString();  ///
+    const unqualifiedStatement = this,  ///
+          unqualifiedStatementString = unqualifiedStatement.getString();  ///
 
     specificContext.trace(`Resolving the '${unqualifiedStatementString}' unqualified statement independently...`);
 

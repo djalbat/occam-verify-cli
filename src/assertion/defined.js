@@ -39,12 +39,14 @@ export default class DefinedAssertion {
     return this.negated;
   }
 
-  resolve(substitutions, context) {
+  resolve(substitutions, generalContext, specificContext) {
+    debugger
+
     let resolved;
 
     const definedAssertionString = this.string; ///
 
-    context.trace(`Resolving the '${definedAssertionString}' defined assertion...`);
+    specificContext.trace(`Resolving the '${definedAssertionString}' defined assertion...`);
 
     const term = termFromTermAndSubstitutions(this.term, substitutions),
           frame = frameFromFrameAndSubstitutions(this.frame, substitutions),
@@ -53,7 +55,7 @@ export default class DefinedAssertion {
     resolved = verifiedWhenDerived; ///
 
     if (resolved) {
-      context.debug(`...resolved the '${definedAssertionString}' defined assertion.`);
+      specificContext.debug(`...resolved the '${definedAssertionString}' defined assertion.`);
     }
 
     return resolved;

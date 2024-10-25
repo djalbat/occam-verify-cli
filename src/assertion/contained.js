@@ -39,22 +39,23 @@ export default class ContainedAssertion {
     return this.statement;
   }
 
-  resolve(substitutions, context) {
+  resolve(substitutions, generalContext, specificContext) {
     let resolved;
 
     const containedAssertionString = this.string; ///
 
-    context.trace(`Resolving the '${containedAssertionString}' contained assertion...`);
+    specificContext.trace(`Resolving the '${containedAssertionString}' contained assertion...`);
 
     const term = termFromTermAndSubstitutions(this.term, substitutions),
           frame = frameFromFrameAndSubstitutions(this.frame, substitutions),
           statement = statementFromStatementAndSubstitutions(this.statement, substitutions),
+          context = generalContext, ///
           verifiedWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, context);
 
     resolved = verifiedWhenDerived; ///
 
     if (resolved) {
-      context.debug(`...resolved the '${containedAssertionString}' contained assertion.`);
+      specificContext.debug(`...resolved the '${containedAssertionString}' contained assertion.`);
     }
 
     return resolved;

@@ -21,8 +21,7 @@ function resolveAsDefinedAssertion(statement, substitutions, generalContext, spe
 
     specificContext.trace(`Resolving the '${statementString}' statement as a defined assertion...`);
 
-    const localContext = specificContext, ///
-          definedAssertionVerified = definedAssertion.resolve(substitutions, localContext);
+    const definedAssertionVerified = definedAssertion.resolve(substitutions, generalContext, specificContext);
 
     resolvedAsDefinedAssertion = definedAssertionVerified; ///
 
@@ -47,8 +46,7 @@ function resolveAsContainedAssertion(statement, substitutions, generalContext, s
 
     specificContext.trace(`Resolving the '${statementString}' statement as a contained assertion...`);
 
-    const localContext = specificContext, ///
-          containedAssertionVerified = containedAssertion.resolve(substitutions, localContext);
+    const containedAssertionVerified = containedAssertion.resolve(substitutions, generalContext, specificContext);
 
     resolvedAsContainedAssertion = containedAssertionVerified; ///
 
