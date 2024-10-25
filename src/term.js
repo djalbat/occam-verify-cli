@@ -9,7 +9,7 @@ import termAsConstructorVerifier from "./verifier/termAsConstructor";
 
 import { objectType } from "./type";
 import { nodeQuery, nodesQuery } from "./utilities/query"
-import { termNodeFromTermString } from "./utilities/node";
+import { termNodeFromTermString } from "./nodeAndTokens/term";
 import { variableNameFromVariableNode } from "./utilities/name";
 import { typeFromJSON, typeToTypeJSON } from "./utilities/json";
 
@@ -260,10 +260,9 @@ class Term {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
+          context = fileContext,  ///
           termString = string,  ///
-          termNode = termNodeFromTermString(termString, lexer, parser),
+          termNode = termNodeFromTermString(termString, context),
           node = termNode,  ///
           type = typeFromJSON(json, fileContext),
           term = new Term(string, node, type);

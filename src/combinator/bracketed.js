@@ -2,22 +2,21 @@
 
 import shim from "../shim";
 import Combinator from "../combinator";
+import StatementNodeAndTokens from "../nodeAndTokens/statement";
 
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { nominalLexer, nominalParser } from "../utilities/nominal";
-import { statementTokensFromUnqualifiedStatementTokens, unqualifiedStatementTokensFromUnqualifiedStatementString } from "../utilities/tokens";
-import { statementNodeFromUnqualifiedStatementNode,
-         unqualifiedStatementStringFromStatementString,
-         unqualifiedStatementNodeFromUnqualifiedStatementTokens } from "../utilities/node";
 
-const lexer = nominalLexer, ///
-      parser = nominalParser, ///
-      statementString = `(${STATEMENT_META_TYPE_NAME})`,
-      unqualifiedStatementString = unqualifiedStatementStringFromStatementString(statementString),
-      unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
-      unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
-      statementTokens = statementTokensFromUnqualifiedStatementTokens(unqualifiedStatementTokens),
-      statementNode = statementNodeFromUnqualifiedStatementNode(unqualifiedStatementNode),
+const getLexer = () => {
+        const lexer = nominalLexer; ///
+
+        return lexer;
+      },
+      getParser = () => {
+        const parser = nominalParser; ///
+
+        return parser;
+      },
       nodeAsTokens = (node) => {
         const tokens = statementTokens; ///
 
@@ -34,10 +33,16 @@ const lexer = nominalLexer, ///
         return string;
       },
       context = {
+        getLexer,
+        getParser,
         nodeAsTokens,
         nodeAsString,
         tokensAsString
-      };
+      },
+      statementString = `(${STATEMENT_META_TYPE_NAME})`,
+      statementNodeAndTokens = StatementNodeAndTokens.fromStatementString(statementString, context),
+      statementTokens = statementNodeAndTokens.getStatementTokens(),
+      statementNode = statementNodeAndTokens.getStatementNode();
 
 export const bracketedStatementNode = statementNode;  ///
 

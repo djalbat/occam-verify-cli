@@ -33,7 +33,7 @@ import Substitutions from "./substitutions";
 import SubDerivation from "./subDerivation";
 import QualifiedStatement from "./statement/qualified";
 import UnqualifiedStatement from "./statement/unqualified";
-import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
+import StatementSubstitution from "./substitution/statement";
 
 export { default as Log } from "./log";
 export { default as ReleaseContext } from "./context/release";

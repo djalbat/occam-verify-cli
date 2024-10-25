@@ -6,14 +6,11 @@ import verifyMixins from "./mixins/statement/verify";
 import LocalContext from "./context/local";
 import resolveMixins from "./mixins/statement/resolve";
 import metaLevelUnifier from "./unifier/metaLevel";
+import StatementNodeAndTokens from "./nodeAndTokens/statement";
 import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
-import { statementTokensFromUnqualifiedStatementTokens, unqualifiedStatementTokensFromUnqualifiedStatementString } from "./utilities/tokens";
-import { statementNodeFromUnqualifiedStatementNode,
-         unqualifiedStatementStringFromStatementString,
-         unqualifiedStatementNodeFromUnqualifiedStatementTokens } from "./utilities/node";
 
 const statementNodeQuery = nodeQuery("/*//statement"),
       statementTermNodesQuery = nodesQuery("/statement//term"),
@@ -254,16 +251,11 @@ class Statement {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
+          context = fileContext,  ///
           statementString = string, ///
-          unqualifiedStatementString = unqualifiedStatementStringFromStatementString(statementString),
-          unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
-          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
-          statementTokens = statementTokensFromUnqualifiedStatementTokens(unqualifiedStatementTokens),
-          statementNode = statementNodeFromUnqualifiedStatementNode(unqualifiedStatementNode),
-          node = statementNode,  ///
-          tokens = statementTokens, ///
+          statementNodeAndTokens = StatementNodeAndTokens.fromStatementString(statementString, context),
+          node = statementNodeAndTokens.getNode(),
+          tokens = statementNodeAndTokens.getTokens(),
           statement = new Statement(string, node, tokens);
 
     return statement;

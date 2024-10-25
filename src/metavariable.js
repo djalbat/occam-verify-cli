@@ -2,12 +2,12 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
-import FrameForMetavariableSubstitution from "./substitution/frameForMetavariable";
-import StatementForMetavariableSubstitution from "./substitution/statementForMetavariable";
+import FrameSubstitution from "./substitution/frame";
+import StatementSubstitution from "./substitution/statement";
 
 import { nodeQuery } from "./utilities/query";
 import { EMPTY_STRING } from "./constants";
-import { metavariableNodeFromMetavariableString } from "./utilities/node";
+import { metavariableNodeFromMetavariableString } from "./nodeAndTokens/metavariable";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "./utilities/json";
 import { typeNameFromTypeNode, metavariableNameFromMetavariableNode } from "./utilities/name";
 
@@ -101,8 +101,8 @@ class Metavariable {
       } else {
         const metavariable = this,  ///
               context = specificContext, ///
-              frameForMetavariableSubstitution = FrameForMetavariableSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
-              substitution = frameForMetavariableSubstitution;  ///
+              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
+              substitution = frameSubstitution;  ///
 
         substitutions.addSubstitution(substitution, context);
 
@@ -152,9 +152,9 @@ class Metavariable {
       } else {
         const context = specificContext, ///
               metavariable = this,  ///
-              statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
+              statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
 
-        substitution = statementForMetavariableSubstitution;  ///
+        substitution = statementSubstitution;  ///
 
         substitutions.addSubstitution(substitution, context);
 
@@ -295,10 +295,9 @@ class Metavariable {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          lexer  = fileContext.getLexer(),
-          parser = fileContext.getParser(),
+          context = fileContext,  ///
           metavariableString = string,  ///
-          metavariableNode = metavariableNodeFromMetavariableString(metavariableString, lexer, parser),
+          metavariableNode = metavariableNodeFromMetavariableString(metavariableString, context),
           metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           node = metavariableNode,  ///
           name = metavariableName,  ///

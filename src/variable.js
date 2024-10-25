@@ -2,13 +2,13 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
-import TermForVariableSubstitution from "./substitution/termForVariable";
+import TermSubstitution from "./substitution/term";
 
 import { nodeQuery } from "./utilities/query";
 import { objectType } from "./type";
 import { variableNameFromVariableNode} from "./utilities/name";
 import { typeFromJSON, typeToTypeJSON } from "./utilities/json";
-import { variableNodeFromVariableString } from "./utilities/node";
+import { variableNodeFromVariableString } from "./nodeAndTokens/variable";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
       variableNodeQuery = nodeQuery("/variableDeclaration/variable"),
@@ -171,8 +171,8 @@ class Variable {
       } else {
         const context = specificContext,  ///
               variable = this,  ///
-              termForVariableSubstitution = TermForVariableSubstitution.fromTernAndVariable(term, variable, context),
-              substitution = termForVariableSubstitution;  ///
+              termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
+              substitution = termSubstitution;  ///
 
         substitutions.addSubstitution(substitution, context);
 
@@ -201,12 +201,11 @@ class Variable {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          lexer  = fileContext.getLexer(),
-          parser = fileContext.getParser(),
+          localContext = LocalContext.fromFileContext(fileContext),
+          context = localContext, ///
           variableString = string,  ///
-          variableNode = variableNodeFromVariableString(variableString, lexer, parser),
+          variableNode = variableNodeFromVariableString(variableString, context),
           variableName = variableNameFromVariableNode(variableNode),
-          context = LocalContext.fromFileContext(fileContext),
           node = variableNode,
           name = variableName,  ///
           type = typeFromJSON(json, fileContext),

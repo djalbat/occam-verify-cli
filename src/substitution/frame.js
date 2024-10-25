@@ -2,19 +2,15 @@
 
 import shim from "../shim";
 import Substitution from "../substitution";
+import FrameSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/frame";
 
 import { nodeQuery } from "../utilities/query";
-import { substitutionNodeFromUnqualifiedStatementNode,
-         unqualifiedStatementStringFromSubstitutionString,
-         unqualifiedStatementNodeFromUnqualifiedStatementTokens } from "../utilities/node";
-import { unqualifiedStatementTokensFromUnqualifiedStatementString,
-         substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode } from "../utilities/tokens";
 
-const frameNodeQuery = nodeQuery("/substitution/frame[0]"),
-      metavariableNodeQuery = nodeQuery("/substitution/frame[1]/metavariable!"),
-      substitutionNodeQuery = nodeQuery("/statement/substitution");
+const frameNodeQuery = nodeQuery("/frameSubstitution/frame[0]"),
+      metavariableNodeQuery = nodeQuery("/frameSubstitution/frame[1]/metavariable!"),
+      frameSubstitutionNodeQuery = nodeQuery("/statement/frameSubstitution");
 
-export default class FrameForMetavariableSubstitution extends Substitution {
+export default class FrameSubstitution extends Substitution {
   constructor(string, node, tokens, frame, metavariable) {
     super(string, node, tokens);
 
@@ -87,44 +83,38 @@ export default class FrameForMetavariableSubstitution extends Substitution {
   }
 
   static fromStatementNode(statementNode, context) {
-    let frameForMetavariableSubstitution = null;
+    let frameSubstitution = null;
 
-    const substitutionNode = substitutionNodeQuery(statementNode);
+    const frameSubstitutionNode = frameSubstitutionNodeQuery(statementNode);
 
-    if (substitutionNode !== null) {
-      const frameNode = frameNodeQuery(substitutionNode),
-            metavariableNode = metavariableNodeQuery(substitutionNode);
+    if (frameSubstitutionNode !== null) {
+      const frameNode = frameNodeQuery(frameSubstitutionNode),
+            metavariableNode = metavariableNodeQuery(frameSubstitutionNode);
 
       if ((frameNode !== null) && (metavariableNode !== null)) {
         const { Frame, Metavariable } = shim,
               frame = Frame.fromFrameNode(frameNode, context),
               metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
-              node = substitutionNode,  ///
+              node = frameSubstitutionNode,  ///
               tokens = context.nodeAsTokens(node),
               string = stringFromFrameAndMetavariable(frame, metavariable);
 
-        frameForMetavariableSubstitution = new FrameForMetavariableSubstitution(string, node, tokens, frame, metavariable);
+        frameSubstitution = new FrameSubstitution(string, node, tokens, frame, metavariable);
       }
     }
 
-    return frameForMetavariableSubstitution;
+    return frameSubstitution;
   }
 
   static fromFrameAndMetavariable(frame, metavariable, context) {
-    const lexer = context.getLexer(),
-          parser = context.getParser(),
-          string = stringFromFrameAndMetavariable(frame, metavariable),
-          substitutionString = string,  ///
-          unqualifiedStatementString = unqualifiedStatementStringFromSubstitutionString(substitutionString),
-          unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
-          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
-          substitutionNode = substitutionNodeFromUnqualifiedStatementNode(unqualifiedStatementNode),
-          substitutionTokens = substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode(unqualifiedStatementTokens, substitutionNode),
-          node = substitutionNode,  //
-          tokens = substitutionTokens,  ///
-          statementForMetavariableSubstitution = new FrameForMetavariableSubstitution(string, node, tokens, frame, metavariable);
+    const string = stringFromFrameAndMetavariable(frame, metavariable),
+          frameSubstitutionString = string,  ///
+          frameSubstitutionNodeAndTokens = FrameSubstitutionNodeAndTokens.fromFrameSubstitutionString(frameSubstitutionString, context),
+          node = frameSubstitutionNodeAndTokens.getNode(),
+          tokens = frameSubstitutionNodeAndTokens.getTokens(),
+          frameSubstitution = new FrameSubstitution(string, node, tokens, frame, metavariable);
 
-    return statementForMetavariableSubstitution;
+    return frameSubstitution;
   }
 }
 

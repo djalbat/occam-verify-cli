@@ -16,6 +16,8 @@
     "occam-entities": "^1.0.176",
     "occam-file-system": "^6.0.214",
     "occam-grammar-utilities": "^8.0.220",
+    "occam-lexers": "^23.0.11",
+    "occam-parsers": "^23.0.14",
     "occam-query": "^3.1.196"
   },
   "devDependencies": {

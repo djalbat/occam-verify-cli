@@ -313,8 +313,9 @@ export function suppositionsFromJSON(json, fileContext) {
 export function substitutionsFromJSON(json, fileContext) {
   let { substitutions = [] } = json;  ///
 
-  const { StatementForMetavariableSubstitution: Substitution } = shim,  ///
-        substitutionsJSON = substitutions;  ///
+  const { StatementSubstitution } = shim,
+        substitutionsJSON = substitutions,  ///
+        Substitution = StatementSubstitution; ///
 
   substitutions = substitutionsJSON.map((substitutionJSON) => {
     const json = substitutionJSON,  ///

@@ -4,15 +4,12 @@ import shim from "../shim";
 import Substitution from "../substitution";
 import LocalContext from "../context/local";
 import metaLevelUnifier from "../unifier/metaLevel";
+import StatementSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/statement";
 
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
-import { unqualifiedStatementTokensFromUnqualifiedStatementString, substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode } from "../utilities/tokens";
-import { substitutionNodeFromUnqualifiedStatementNode,
-         unqualifiedStatementStringFromSubstitutionString,
-         unqualifiedStatementNodeFromUnqualifiedStatementTokens } from "../utilities/node";
 
-class StatementForMetavariableSubstitution extends Substitution {
+class StatementSubstitution extends Substitution {
   constructor(string, node, tokens, resolved, statement, metavariable, substitution) {
     super(string, node, tokens);
 
@@ -187,23 +184,18 @@ class StatementForMetavariableSubstitution extends Substitution {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
-          substitutionString = string,  ///
-          unqualifiedStatementString = unqualifiedStatementStringFromSubstitutionString(substitutionString),
-          unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
-          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
-          substitutionNode = substitutionNodeFromUnqualifiedStatementNode(unqualifiedStatementNode),
-          substitutionTokens = substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode(unqualifiedStatementTokens, substitutionNode),
-          node = substitutionNode,  ///
-          tokens = substitutionTokens,  ///
+          context = fileContext,  ///
+          statementSubstitutionString = string,  ///
+          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromStatementSubstitutionString(statementSubstitutionString, context),
+          node = statementSubstitutionNodeAndTokens.getNode(),
+          tokens = statementSubstitutionNodeAndTokens.getTokens(),
           resolved = true,
           statement = statementFromJSON(json, fileContext),
           metavariable = metavariableFromJSON(json, fileContext),
           substitution = null,  ///
-          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
+          statementSubstitution = new StatementSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
 
-    return statementForMetavariableSubstitution;
+    return statementSubstitution;
   }
 
   static fromStatementAndMetavariable(statement, metavariable, context) {
@@ -215,22 +207,16 @@ class StatementForMetavariableSubstitution extends Substitution {
 
     statement = Statement.fromStatementNode(statementNode, context);
 
-    const lexer = context.getLexer(),
-          parser = context.getParser(),
-          string = stringFromStatementAndMetavariable(statement, metavariable),
-          substitutionString = string,  ///
-          unqualifiedStatementString = unqualifiedStatementStringFromSubstitutionString(substitutionString),
-          unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
-          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
-          substitutionNode = substitutionNodeFromUnqualifiedStatementNode(unqualifiedStatementNode),
-          substitutionTokens = substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode(unqualifiedStatementTokens, substitutionNode),
-          node = substitutionNode,  ///
-          tokens = substitutionTokens,  ///
+    const string = stringFromStatementAndMetavariable(statement, metavariable),
+          statementSubstitutionString = string,  ///
+          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromStatementSubstitutionString(statementSubstitutionString, context),
+          node = statementSubstitutionNodeAndTokens.getNode(),
+          tokens = statementSubstitutionNodeAndTokens.getTokens(),
           resolved = true,
           substitution = null,
-          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
+          statementSubstitution = new StatementSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
 
-    return statementForMetavariableSubstitution;
+    return statementSubstitution;
   }
 
   static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) {
@@ -242,29 +228,23 @@ class StatementForMetavariableSubstitution extends Substitution {
 
     statement = Statement.fromStatementNode(statementNode, context);
 
-    const lexer = context.getLexer(),
-          parser = context.getParser(),
-          string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
-          substitutionString = string,  ///
-          unqualifiedStatementString = unqualifiedStatementStringFromSubstitutionString(substitutionString),
-          unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
-          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
-          substitutionNode = substitutionNodeFromUnqualifiedStatementNode(unqualifiedStatementNode),
-          substitutionTokens = substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode(unqualifiedStatementTokens, substitutionNode),
-          node = substitutionNode,  ///
-          tokens = substitutionTokens,  ///
+    const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
+          statementSubstitutionString = string,  ///
+          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromStatementSubstitutionString(statementSubstitutionString, context),
+          node = statementSubstitutionNodeAndTokens.getNode(),
+          tokens = statementSubstitutionNodeAndTokens.getTokens(),
           resolved = false,
-          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
+          statementSubstitution = new StatementSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
 
-    return statementForMetavariableSubstitution;
+    return statementSubstitution;
   }
 }
 
 Object.assign(shim, {
-  StatementForMetavariableSubstitution
+  StatementSubstitution
 });
 
-export default StatementForMetavariableSubstitution;
+export default StatementSubstitution;
 
 function contextFromLocalContextAndSubstitution(context, substitution) {
   const substitutionTokens = substitution.getTokens(),

@@ -2,23 +2,22 @@
 
 import shim from "../shim";
 import Constructor from "../constructor";
+import TermNodeAndTokens from "../nodeAndTokens/term";
 
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { stringFromTermAndType } from "../constructor";
 import { nominalLexer, nominalParser } from "../utilities/nominal";
-import { termTokensFromConstructorDeclarationTokens, constructorDeclarationTokensFromConstructorDeclarationString } from "../utilities/tokens";
-import { termNodeFromConstructorDeclarationNode,
-         constructorDeclarationStringFromTermString,
-         constructorDeclarationNodeFromConstructorDeclarationTokens } from "../utilities/node";
 
-const lexer = nominalLexer, ///
-      parser = nominalParser, ///
-      termString = `(${OBJECT_TYPE_NAME})`,  ///
-      constructorDeclarationString = constructorDeclarationStringFromTermString(termString),
-      constructorDeclarationTokens = constructorDeclarationTokensFromConstructorDeclarationString(constructorDeclarationString, lexer),
-      constructorDeclarationNode = constructorDeclarationNodeFromConstructorDeclarationTokens(constructorDeclarationTokens, parser),
-      termNode = termNodeFromConstructorDeclarationNode(constructorDeclarationNode),
-      termTokens = termTokensFromConstructorDeclarationTokens(constructorDeclarationTokens),
+const getLexer = () => {
+        const lexer = nominalLexer; ///
+
+        return lexer;
+      },
+      getParser = () => {
+        const parser = nominalParser; ///
+
+        return parser;
+      },
       nodeAsTokens = (node) => {
         const tokens = termTokens; ///
 
@@ -35,10 +34,16 @@ const lexer = nominalLexer, ///
         return string;
       },
       context = {
+        getLexer,
+        getParser,
         nodeAsTokens,
         nodeAsString,
         tokensAsString
-      };
+      },
+      termString = `(${OBJECT_TYPE_NAME})`,
+      termNodeAndTokens = TermNodeAndTokens.fromTermString(termString, context),
+      termTokens = termNodeAndTokens.getTermTokens(),
+      termNode = termNodeAndTokens.getTermNode();
 
 export const bracketedTermNode = termNode;  ///
 

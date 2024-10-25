@@ -1,6 +1,6 @@
 "use strict";
 
-import StatementForMetavariableSubstitution from "../../../substitution/statementForMetavariable";
+import StatementSubstitution from "../../../substitution/statement";
 
 import { trim } from "../../../utilities/string";
 
@@ -44,8 +44,8 @@ function unifyAWithReference(qualifiedStatement, substitutions, context) {
     context.trace(`Unifying the '${statementString}' qualified statement with the '${referenceString}' reference...`);
 
     const metavariable = reference.getMetavariable(),
-          statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
-          substitution = statementForMetavariableSubstitution; ///
+          statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
+          substitution = statementSubstitution; ///
 
     substitutions.addSubstitution(substitution, context);
 
@@ -80,8 +80,8 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(qualifiedStatement, substitutio
 
     if (statementUnified) {
       const metavariable = reference.getMetavariable(),
-            statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
-            substitution = statementForMetavariableSubstitution; ///
+            statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
+            substitution = statementSubstitution; ///
 
       substitutions.addSubstitution(substitution, context);
 

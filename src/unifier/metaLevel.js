@@ -2,8 +2,8 @@
 
 import shim from "../shim";
 import Unifier from "../unifier";
-import TermForVariableSubstitution from "../substitution/termForVariable";
-import FrameForMetavariableSubstitution from "../substitution/frameForMetavariable";
+import TermSubstitution from "../substitution/term";
+import FrameSubstitution from "../substitution/frame";
 
 import { nodeQuery } from "../utilities/query";
 import { variableNameFromVariableNode } from "../utilities/name";
@@ -50,9 +50,9 @@ class MetaLevelUnifier extends Unifier {
           const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
           if (statementMetavariableNode !== null) {
-            const substitution = FrameForMetavariableSubstitution.fromStatementNode(statementNode, context) ||
-                                   TermForVariableSubstitution.fromStatementNode(statementNode, context) ||
-                                     null;
+            const frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context),
+                  termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
+                  substitution = (frameSubstitution || termSubstitution);
 
             const { Statement } = shim,
                   metavariableNode = statementMetavariableNode, ///
