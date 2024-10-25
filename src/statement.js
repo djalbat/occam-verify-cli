@@ -114,6 +114,11 @@ class Statement {
 
     specificContext.trace(`Resolving the '${statementString}' statement independently...`);
 
+    const context = generalContext, ///
+          localContext = LocalContext.fromContextAndTokens(context, this.tokens);
+
+    generalContext = localContext;  ///
+
     const resolved = resolveMixins.some((resolveMixin) => {
       const resolved = resolveMixin(statement, substitutions, generalContext, specificContext);
 
