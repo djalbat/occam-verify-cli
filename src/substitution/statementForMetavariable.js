@@ -5,12 +5,19 @@ import Substitution from "../substitution";
 import LocalContext from "../context/local";
 import metaLevelUnifier from "../unifier/metaLevel";
 
+import { nodeQuery } from "../utilities/query";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
+import { unqualifiedStatementTokensFromUnqualifiedStatementString, substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode } from "../utilities/tokens";
+import { substitutionNodeFromUnqualifiedStatementNode,
+         unqualifiedStatementStringFromSubstitutionString,
+         unqualifiedStatementNodeFromUnqualifiedStatementTokens } from "../utilities/node";
+
+const substitutionNodeQuery = nodeQuery("/statement/substitution");
 
 class StatementForMetavariableSubstitution extends Substitution {
-  constructor(string, resolved, statement, metavariable, substitution) {
-    super(string);
+  constructor(string, node, tokens, resolved, statement, metavariable, substitution) {
+    super(string, node, tokens);
 
     this.resolved = resolved;
     this.statement = statement;
@@ -46,6 +53,42 @@ class StatementForMetavariableSubstitution extends Substitution {
     return simple;
   }
 
+  matchStatementNode(statementNode) {
+    statementNode = stripBracketsFromStatementNode(statementNode); ///
+
+    const statementNodeMatches = this.statement.matchStatementNode(statementNode);
+
+    return statementNodeMatches;
+  }
+
+  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
+
+  matchSubstitutionNode(substitutionNode) {
+    debugger
+
+    let substitutionNodeMatches;
+
+    if ((substitutionNode === null) && (this.substitution === null)) {
+      substitutionNodeMatches = true;
+    } else if ((substitutionNode === null) && (this.substitution !== null)) {
+      substitutionNodeMatches = false;
+    } else if ((substitutionNode !== null) && (this.substitution === null)) {
+      substitutionNodeMatches = false;
+    } else {
+      substitutionNodeMatches = this.substitution.matchSubstitutionNode(substitutionNode);
+    }
+
+    return substitutionNodeMatches;
+  }
+
+  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
+    const metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
+          substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),
+          metavariableNodeAndSubstitutionNodeMatches = (metavariableNodeMatches && substitutionNodeMatches);
+
+    return metavariableNodeAndSubstitutionNodeMatches;
+  }
+
   resolve(substitutions, generalContext, specificContext) {
     const substitutionString = this.string;
 
@@ -56,7 +99,7 @@ class StatementForMetavariableSubstitution extends Substitution {
       specificContext.trace(`Resolving the ${substitutionString} substitution...`);
 
       const substitution = simpleSubstitution,  ///
-            substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, generalContext, specificContext);
+        substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, generalContext, specificContext);
 
       this.resolved = substitutionResolved; ///
 
@@ -85,17 +128,17 @@ class StatementForMetavariableSubstitution extends Substitution {
 
       const generalSubstitutionNode = generalSubstitution.getSubstitutionNode(),  ///
             specificSubstitutionNode = specificSubstitution.getSubstitutionNode(),  ///
-            substitutionStringA = generalContext.nodeAsString(generalSubstitutionNode),
-            substitutionStringB = specificContext.nodeAsString(specificSubstitutionNode);
+            generalSubstitutionString = generalContext.nodeAsString(generalSubstitutionNode),
+            specificSubstitutionString = specificContext.nodeAsString(specificSubstitutionNode);
 
-      specificContext.trace(`Unifying the '${substitutionStringB}' substitution with the '${substitutionStringA}' substitution...`);
+      specificContext.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
 
       const generalNode = generalSubstitutionNode,  ///
             specificNode = specificSubstitutionNode,  ///
             unifiedAtMetaLevel = metaLevelUnifier.unify(generalNode, specificNode, substitutions, generalContext, specificContext);
 
       if (unifiedAtMetaLevel) {
-        specificContext.trace(`...unified the '${substitutionStringB}' substitution with the '${substitutionStringA}' substitution.`);
+        specificContext.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
       }
 
       unifiedAtMetaLevel ?
@@ -132,40 +175,6 @@ class StatementForMetavariableSubstitution extends Substitution {
     return specificSubstitution;
   }
 
-  matchStatementNode(statementNode) {
-    statementNode = stripBracketsFromStatementNode(statementNode); ///
-
-    const statementNodeMatches = this.statement.matchStatementNode(statementNode);
-
-    return statementNodeMatches;
-  }
-
-  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
-
-  matchSubstitutionNode(substitutionNode) {
-    let substitutionNodeMatches;
-
-    if ((substitutionNode === null) && (this.substitution === null)) {
-      substitutionNodeMatches = true;
-    } else if ((substitutionNode === null) && (this.substitution !== null)) {
-      substitutionNodeMatches = false;
-    } else if ((substitutionNode !== null) && (this.substitution === null)) {
-      substitutionNodeMatches = false;
-    } else {
-      substitutionNodeMatches = this.substitution.matchSubstitutionNode(substitutionNode);
-    }
-
-    return substitutionNodeMatches;
-  }
-
-  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
-    const metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
-          substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),
-          metavariableNodeAndSubstitutionNodeMatches = (metavariableNodeMatches && substitutionNodeMatches);
-
-    return metavariableNodeAndSubstitutionNodeMatches;
-  }
-
   toJSON() {
     const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
           statementJSON = statementToStatementJSON(this.statement),
@@ -183,11 +192,21 @@ class StatementForMetavariableSubstitution extends Substitution {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          substitutionString = string,  ///
+          unqualifiedStatementString = unqualifiedStatementStringFromSubstitutionString(substitutionString),
+          unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
+          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
+          substitutionNode = substitutionNodeFromUnqualifiedStatementNode(unqualifiedStatementNode),
+          substitutionTokens = substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode(unqualifiedStatementTokens, substitutionNode),
+          node = substitutionNode,  ///
+          tokens = substitutionTokens,  ///
           resolved = true,
           statement = statementFromJSON(json, fileContext),
           metavariable = metavariableFromJSON(json, fileContext),
           substitution = null,  ///
-          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, resolved, statement, metavariable, substitution);
+          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
 
     return statementForMetavariableSubstitution;
   }
@@ -201,10 +220,20 @@ class StatementForMetavariableSubstitution extends Substitution {
 
     statement = Statement.fromStatementNode(statementNode, context);
 
-    const substitution = null,
+    const lexer = context.getLexer(),
+          parser = context.getParser(),
+          string = stringFromStatementAndMetavariable(statement, metavariable),
+          substitutionString = string,  ///
+          unqualifiedStatementString = unqualifiedStatementStringFromSubstitutionString(substitutionString),
+          unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
+          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
+          substitutionNode = substitutionNodeFromUnqualifiedStatementNode(unqualifiedStatementNode),
+          substitutionTokens = substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode(unqualifiedStatementTokens, substitutionNode),
+          node = substitutionNode,  ///
+          tokens = substitutionTokens,  ///
           resolved = true,
-          string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
-          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, resolved, statement, metavariable, substitution);
+          substitution = null,
+          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
 
     return statementForMetavariableSubstitution;
   }
@@ -218,9 +247,19 @@ class StatementForMetavariableSubstitution extends Substitution {
 
     statement = Statement.fromStatementNode(statementNode, context);
 
-    const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
+    const lexer = context.getLexer(),
+          parser = context.getParser(),
+          string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
+          substitutionString = string,  ///
+          unqualifiedStatementString = unqualifiedStatementStringFromSubstitutionString(substitutionString),
+          unqualifiedStatementTokens = unqualifiedStatementTokensFromUnqualifiedStatementString(unqualifiedStatementString, lexer),
+          unqualifiedStatementNode = unqualifiedStatementNodeFromUnqualifiedStatementTokens(unqualifiedStatementTokens, parser),
+          substitutionNode = substitutionNodeFromUnqualifiedStatementNode(unqualifiedStatementNode),
+          substitutionTokens = substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode(unqualifiedStatementTokens, substitutionNode),
+          node = substitutionNode,  ///
+          tokens = substitutionTokens,  ///
           resolved = false,
-          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, resolved, statement, metavariable, substitution);
+          statementForMetavariableSubstitution = new StatementForMetavariableSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
 
     return statementForMetavariableSubstitution;
   }
@@ -233,9 +272,7 @@ Object.assign(shim, {
 export default StatementForMetavariableSubstitution;
 
 function contextFromLocalContextAndSubstitution(context, substitution) {
-  substitution.setSubstitutionNodeAndTokens(context);
-
-  const substitutionTokens = substitution.getSubstitutionTokens(),
+  const substitutionTokens = substitution.getTokens(),
         tokens = substitutionTokens, ///
         localContext = LocalContext.fromContextAndTokens(context, tokens); ///
 
@@ -244,11 +281,18 @@ function contextFromLocalContextAndSubstitution(context, substitution) {
   return context;
 }
 
-function stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) {
+function stringFromStatementAndMetavariable(statement, metavariable) {
+  const statementString = statement.getString(),
+        metavariableString = metavariable.getString(),
+        string = `[${statementString} for ${metavariableString}]`;
+
+  return string;
+}
+
+function stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution) {
   let string;
 
-  const statementNode = statement.getNode(),
-        statementString = context.nodeAsString(statementNode),
+  const statementString = statement.getString(),
         metavariableString = metavariable.getString();
 
   if (substitution === null) {

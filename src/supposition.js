@@ -54,20 +54,24 @@ class Supposition {
   unifyProofStep(proofStep, substitutions, context) {
     let proofStepUnified = false;
 
+    const localContext = LocalContext.fromFileContext(this.fileContext),
+          generalContext = localContext,  ///
+          specificContext = context; ///
+
     const subproof = proofStep.getSubproof(),
           statement = proofStep.getStatement();
 
     substitutions.snapshot();
 
     let subproofUnified = false,
-      statementUnified = false;
+        statementUnified = false;
 
     if (false) {
       ///
     } else if (subproof !== null) {
-      subproofUnified = this.unifySubproof(subproof, substitutions, context);
+      subproofUnified = this.unifySubproof(subproof, substitutions, generalContext, specificContext);
     } else if (statement !== null) {
-      statementUnified = this.unifyStatement(statement, substitutions, context);
+      statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
     }
 
     if (subproofUnified || statementUnified) {
@@ -87,12 +91,8 @@ class Supposition {
     return proofStepUnified;
   }
 
-  unifyStatement(statement, substitutions, context) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
-
-    const localContext = LocalContext.fromFileContext(this.fileContext),
-          generalContext = localContext,  ///
-          specificContext = context; ///
 
     const supposition = this, ///
           suppositionString = supposition.getString(),
@@ -109,7 +109,7 @@ class Supposition {
     return statementUnified;
   }
 
-  unifySubproof(subproof, substitutions, context) {
+  unifySubproof(subproof, substitutions, generalContext, specificContext) {
     let subproofUnified = false;
 
     const supposition = this, ///
@@ -118,19 +118,12 @@ class Supposition {
           suppositionStatementString = suppositionStatement.getString();
 
     const statement = this.unqualifiedStatement.getStatement(),
-          statementNode = statement.getNode(),
-          statementTokens = statement.getTokens(),
-          specificContext = context;  ///
-
-    context = this.fileContext; ///
-
-    const tokens = statementTokens, ///
-          localContext = LocalContext.fromContextAndTokens(context, tokens),
-          generalContext = localContext; ///
+          statementNode = statement.getNode();
 
     specificContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
 
-    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
+    const context = specificContext,  ///
+          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
 
     if (subproofAssertion !== null) {
       subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);

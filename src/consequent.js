@@ -33,8 +33,9 @@ class Consequent {
           generalContext = localContext, ///
           specificContext = context; ///
 
-    const statementString = statement.getString(),
-          consequentString = this.getString();
+    const consequent = this,  ///
+          statementString = statement.getString(),
+          consequentString = consequent.getString();
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${consequentString}' consequent...`);
 

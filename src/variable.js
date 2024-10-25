@@ -143,13 +143,13 @@ class Variable {
     return verifiedAtTopLevel;
   }
 
-  unifyTerm(term, substitutions, context) {
+  unifyTerm(term, substitutions, generalContext, specificContext) {
     let termUnified = false;
 
     const termString = term.getString(),
           variableString = this.string; ///
 
-    context.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
+    specificContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
     const termNode = term.getNode(),
           variableName = this.name, ///
@@ -163,13 +163,14 @@ class Variable {
       }
     } else {
       const variableNode = this.node,  ///
-            variable = variableFromVariableNode(variableNode, context),
-            termVariable = termVariableFromTermNode(termNode, context);
+            variable = variableFromVariableNode(variableNode, generalContext, specificContext),
+            termVariable = termVariableFromTermNode(termNode, generalContext, specificContext);
 
       if ((variable !== null) && (variable === termVariable)) {
         termUnified = true;
       } else {
-        const variable = this,  ///
+        const context = specificContext,  ///
+              variable = this,  ///
               termForVariableSubstitution = TermForVariableSubstitution.fromTernAndVariable(term, variable, context),
               substitution = termForVariableSubstitution;  ///
 
@@ -180,7 +181,7 @@ class Variable {
     }
 
     if (termUnified) {
-      context.trace(`...unified the '${termString}' term with the '${variableString}' variable.`);
+      specificContext.trace(`...unified the '${termString}' term with the '${variableString}' variable.`);
     }
 
     return termUnified;
@@ -287,23 +288,25 @@ Object.assign(shim, {
 
 export default Variable;
 
-function termVariableFromTermNode(termNode, context) {
+function variableFromVariableNode(variableNode, generalContext, specificContext) {
+  const variableName = variableNameFromVariableNode(variableNode),
+        context = generalContext, ///
+        variable = context.findVariableByVariableName(variableName);
+
+  return variable;
+}
+
+function termVariableFromTermNode(termNode, specificContext, generalContext) {
   let termVariable = null;
 
   const termVariableNode = termVariableNodeQuery(termNode);
 
   if (termVariableNode !== null) {
-    const termVariableName = variableNameFromVariableNode(termVariableNode);
+    const termVariableName = variableNameFromVariableNode(termVariableNode),
+          context = generalContext; ///
 
     termVariable = context.findVariableByVariableName(termVariableName);
   }
 
   return termVariable;
-}
-
-function variableFromVariableNode(variableNode, context) {
-  const variableName = variableNameFromVariableNode(variableNode),
-        variable = context.findVariableByVariableName(variableName);
-
-  return variable;
 }

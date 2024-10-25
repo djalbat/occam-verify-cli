@@ -7,6 +7,7 @@ import SubproofAssertion from "./assertion/subproof";
 import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
 import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
+import local from "./context/local";
 
 const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement");
 
@@ -54,6 +55,10 @@ class Premise {
   unifyProofStep(proofStep, substitutions, context) {
     let proofStepUnified = false;
 
+    const localContext = LocalContext.fromFileContext(this.fileContext),
+          generalContext = localContext,  ///
+          specificContext = context; ///
+
     const subproof = proofStep.getSubproof(),
           statement = proofStep.getStatement();
 
@@ -65,9 +70,9 @@ class Premise {
     if (false) {
       ///
     } else if (subproof !== null) {
-      subproofUnified = this.unifySubproof(subproof, substitutions, context);
+      subproofUnified = this.unifySubproof(subproof, substitutions, generalContext, specificContext);
     } else if (statement !== null) {
-      statementUnified = this.unifyStatement(statement, substitutions, context);
+      statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
     }
 
     if (subproofUnified || statementUnified) {
@@ -87,12 +92,8 @@ class Premise {
     return proofStepUnified;
   }
 
-  unifyStatement(statement, substitutions, context) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
-
-    const localContext = LocalContext.fromFileContext(this.fileContext),
-          generalContext = localContext,  ///
-          specificContext = context; ///
 
     const premise = this, ///
           premiseString = premise.getString(),
@@ -109,7 +110,7 @@ class Premise {
     return statementUnified;
   }
 
-  unifySubproof(subproof, substitutions, context) {
+  unifySubproof(subproof, substitutions, generalContext, specificContext) {
     let subproofUnified = false;
 
     const premise = this, ///
@@ -118,19 +119,12 @@ class Premise {
           premiseStatementString = premiseStatement.getString();
 
     const statement = this.unqualifiedStatement.getStatement(),
-          statementNode = statement.getNode(),
-          statementTokens = statement.getTokens(),
-          specificContext = context;  ///
-
-    context = this.fileContext; ///
-
-    const tokens = statementTokens, ///
-          localContext = LocalContext.fromContextAndTokens(context, tokens),
-          generalContext = localContext; ///
+          statementNode = statement.getNode();
 
     specificContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
 
-    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
+    const context = specificContext,  ///
+          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
 
     if (subproofAssertion !== null) {
       subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);

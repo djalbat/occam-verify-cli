@@ -114,11 +114,6 @@ class Statement {
 
     specificContext.trace(`Resolving the '${statementString}' statement independently...`);
 
-    const context = generalContext,  ///
-          localContext = LocalContext.fromContextAndTokens(context, this.tokens);
-
-    generalContext = localContext;  ///
-
     const resolved = resolveMixins.some((resolveMixin) => {
       const resolved = resolveMixin(statement, substitutions, generalContext, specificContext);
 
@@ -146,16 +141,16 @@ class Statement {
 
     specificContext.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`);
 
-    const generalStatementNode = generalStatement.getNode(),  ///
-          specificStatementNode = specificStatement.getNode(),  ///
-          generalNode = generalStatementNode, ///
-          specificNode = specificStatementNode, ///
-          context = generalContext,  ///
+    const context = generalContext, ///
           localContext = LocalContext.fromContextAndTokens(context, this.tokens);
 
     generalContext = localContext;  ///
 
-    const unifiedAtMetaLevel = metaLevelUnifier.unify(generalNode, specificNode, substitutions, generalContext, specificContext);
+    const generalStatementNode = generalStatement.getNode(),  ///
+          specificStatementNode = specificStatement.getNode(),  ///
+          generalNode = generalStatementNode, ///
+          specificNode = specificStatementNode,
+          unifiedAtMetaLevel = metaLevelUnifier.unify(generalNode, specificNode, substitutions, generalContext, specificContext);
 
     statementUnified = unifiedAtMetaLevel; ///
 

@@ -33,8 +33,9 @@ class Conclusion {
           generalContext = localContext, ///
           specificContext = context; ///
 
-    const statementString = statement.getString(),
-          conclusionString = this.getString();
+    const conclusion = this,  ///
+          statementString = statement.getString(),
+          conclusionString = conclusion.getString();
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
 

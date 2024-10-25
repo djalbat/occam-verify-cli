@@ -3,12 +3,22 @@
 import shim from "./shim";
 
 class Substitution {
-  constructor(string) {
+  constructor(string, node, tokens) {
     this.string = string;
+    this.node = node;
+    this.tokens = tokens;
   }
 
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
+  }
+
+  getTokens() {
+    return this.tokens;
   }
 
   getTerm() {

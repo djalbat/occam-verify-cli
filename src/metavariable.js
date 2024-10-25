@@ -150,8 +150,8 @@ class Metavariable {
       if ((metavariable !== null) && (metavariable === statementMetavariable)) {
         statementUnified = true;
       } else {
-        const metavariable = this,  ///
-              context = specificContext, ///
+        const context = specificContext, ///
+              metavariable = this,  ///
               statementForMetavariableSubstitution = StatementForMetavariableSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
 
         substitution = statementForMetavariableSubstitution;  ///
@@ -229,9 +229,7 @@ class Metavariable {
       const termNode = termNodeQuery(this.node);
 
       if (termNode !== null) {
-        const termString = this.fileContext.nodeAsString(termNode);
-
-        this.fileContext.debug(`The '${termString}' term was found when a type should have been present.`);
+        this.fileContext.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
       } else {
         const typeNode = typeNodeQuery(this.node);
 
@@ -351,7 +349,8 @@ Object.assign(shim, {
 export default Metavariable;
 
 function metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext) {
-  const metavariable = generalContext.findMetavariableByMetavariableNode(metavariableNode, specificContext);
+  const context = generalContext, ///
+        metavariable = context.findMetavariableByMetavariableNode(metavariableNode, specificContext);
 
   return metavariable;
 }
@@ -362,7 +361,9 @@ function frameMetavariableFromStatementNode(frameNode, generalContext, specificC
   const frameMetavariableNode = frameMetavariableNodeQuery(frameNode);
 
   if (frameMetavariableNode !== null) {
-    frameMetavariable = generalContext.findMetavariableByMetavariableNode(frameMetavariableNode, specificContext);
+    const context = generalContext; ///
+
+    frameMetavariable = context.findMetavariableByMetavariableNode(frameMetavariableNode, specificContext);
   }
 
   return frameMetavariable;
@@ -374,7 +375,9 @@ function statementMetavariableFromStatementNode(statementNode, generalContext, s
   const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
   if (statementMetavariableNode !== null) {
-    statementMetavariable = generalContext.findMetavariableByMetavariableNode(statementMetavariableNode, specificContext);
+    const context = generalContext;
+
+    statementMetavariable = context.findMetavariableByMetavariableNode(statementMetavariableNode, specificContext);
   }
 
   return statementMetavariable;
