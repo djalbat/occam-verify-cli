@@ -78,24 +78,6 @@ export default class FrameForMetavariableSubstitution extends Substitution {
     return metavariableNameMatches;
   }
 
-  matchSubstitutionNode(substitutionNode) {
-    debugger
-
-    let substitutionNodeMatches;
-
-    if ((substitutionNode === null) && (this.substitutionNode === null)) {
-      substitutionNodeMatches = true;
-    } else if ((substitutionNode === null) && (this.substitutionNode !== null)) {
-      substitutionNodeMatches = false;
-    } else if ((substitutionNode !== null) && (this.substitutionNode === null)) {
-      substitutionNodeMatches = false;
-    } else {
-      substitutionNodeMatches = this.substitutionNode.match(substitutionNode);
-    }
-
-    return substitutionNodeMatches;
-  }
-
   matchMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode) {
     const metavariableNameMatches = this.matchMetavariableName(metavariableName),
           substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),

@@ -71,24 +71,6 @@ export default class TermForVariableSubstitution extends Substitution {
     return variableNameMatches;
   }
 
-  matchSubstitutionNode(substitutionNode) {
-    debugger
-
-    let substitutionNodeMatches;
-
-    if ((substitutionNode === null) && (this.substitutionNode === null)) {
-      substitutionNodeMatches = true;
-    } else if ((substitutionNode === null) && (this.substitutionNode !== null)) {
-      substitutionNodeMatches = false;
-    } else if ((substitutionNode !== null) && (this.substitutionNode === null)) {
-      substitutionNodeMatches = false;
-    } else {
-      substitutionNodeMatches = this.substitutionNode.match(substitutionNode);
-    }
-
-    return substitutionNodeMatches;
-  }
-
   unifyWithEquivalence(equivalence, substitutions, generalContext, specificContext) {
     let unifiedWithEquivalence;
 

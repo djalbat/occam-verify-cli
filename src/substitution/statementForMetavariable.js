@@ -5,15 +5,12 @@ import Substitution from "../substitution";
 import LocalContext from "../context/local";
 import metaLevelUnifier from "../unifier/metaLevel";
 
-import { nodeQuery } from "../utilities/query";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 import { unqualifiedStatementTokensFromUnqualifiedStatementString, substitutionTokensFromUnqualifiedStatementTokensAndSubstitutionNode } from "../utilities/tokens";
 import { substitutionNodeFromUnqualifiedStatementNode,
          unqualifiedStatementStringFromSubstitutionString,
          unqualifiedStatementNodeFromUnqualifiedStatementTokens } from "../utilities/node";
-
-const substitutionNodeQuery = nodeQuery("/statement/substitution");
 
 class StatementForMetavariableSubstitution extends Substitution {
   constructor(string, node, tokens, resolved, statement, metavariable, substitution) {
@@ -64,8 +61,6 @@ class StatementForMetavariableSubstitution extends Substitution {
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
   matchSubstitutionNode(substitutionNode) {
-    debugger
-
     let substitutionNodeMatches;
 
     if ((substitutionNode === null) && (this.substitution === null)) {
