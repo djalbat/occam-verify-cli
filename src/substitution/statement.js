@@ -90,8 +90,13 @@ class StatementSubstitution extends Substitution {
     if (simpleSubstitution !== null) {
       specificContext.trace(`Resolving the ${substitutionString} substitution...`);
 
+      const context = generalContext, ///
+            localContext = LocalContext.fromContextAndTokens(context, this.tokens);
+
+      generalContext = localContext;  ///
+
       const substitution = simpleSubstitution,  ///
-        substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, generalContext, specificContext);
+            substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, generalContext, specificContext);
 
       this.resolved = substitutionResolved; ///
 
@@ -112,21 +117,40 @@ class StatementSubstitution extends Substitution {
           specificSubstitution = this.unifyStatement(statement, specificContext, specificContext);  ///
 
     if (specificSubstitution !== null) {
-      generalContext = contextFromLocalContextAndSubstitution(generalContext, generalSubstitution);  ///
-
-      specificContext = contextFromLocalContextAndSubstitution(specificContext, specificSubstitution);  ///
-
       substitutions.snapshot();
 
-      const generalSubstitutionNode = generalSubstitution.getSubstitutionNode(),  ///
-            specificSubstitutionNode = specificSubstitution.getSubstitutionNode(),  ///
-            generalSubstitutionString = generalContext.nodeAsString(generalSubstitutionNode),
-            specificSubstitutionString = specificContext.nodeAsString(specificSubstitutionNode);
+      const generalSubstitutionString = generalSubstitution.getString(),
+            specificSubstitutionString = specificSubstitution.getString();
 
       specificContext.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
 
+      const generalSubstitutionNode = generalSubstitution.getNode(),
+            specificSubstitutionNode = specificSubstitution.getNode(),
+            generalSubstitutionTokens = generalSubstitution.getTokens(),
+            specificSubstitutionTokens = specificSubstitution.getTokens();
+
+      let tokens,
+          context,
+          localContext;
+
+      tokens = generalSubstitutionTokens; ///
+
+      context = generalContext; ///
+
+      localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+      generalContext = localContext;  ///
+
+      tokens = specificSubstitutionTokens;  ///
+
+      context = specificContext;  ///
+
+      localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+      specificContext = localContext; ///
+
       const generalNode = generalSubstitutionNode,  ///
-            specificNode = specificSubstitutionNode,  ///
+            specificNode = specificSubstitutionNode,  ///,
             unifiedAtMetaLevel = metaLevelUnifier.unify(generalNode, specificNode, substitutions, generalContext, specificContext);
 
       if (unifiedAtMetaLevel) {
@@ -245,16 +269,6 @@ Object.assign(shim, {
 });
 
 export default StatementSubstitution;
-
-function contextFromLocalContextAndSubstitution(context, substitution) {
-  const substitutionTokens = substitution.getTokens(),
-        tokens = substitutionTokens, ///
-        localContext = LocalContext.fromContextAndTokens(context, tokens); ///
-
-  context = localContext; ///
-
-  return context;
-}
 
 function stringFromStatementAndMetavariable(statement, metavariable) {
   const statementString = statement.getString(),

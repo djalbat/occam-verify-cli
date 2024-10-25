@@ -131,7 +131,7 @@ class Metavariable {
     const statementNode = statement.getNode(),
           metavariableNode = this.node, ///
           substitutionNode = (substitution !== null) ?
-                                substitution.getSubstitutionNode() :
+                                substitution.getNode() :
                                   null,
           substitutionPresent = substitutions.isSubstitutionPresentByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
 

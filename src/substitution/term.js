@@ -122,7 +122,7 @@ export default class TermSubstitution extends Substitution {
           termSubstitutionString = string,  ///
           termSubstitutionNodeAndTokens = TermSubstitutionNodeAndTokens.fromTermSubstitutionString(termSubstitutionString, context),
           node = termSubstitutionNodeAndTokens.getNode(),
-          tokens = termSubstitutionNodeAndTokens.getNode(),
+          tokens = termSubstitutionNodeAndTokens.getTokens(),
           termSubstitution = new TermSubstitution(string, node, tokens, term, variable);
 
     return termSubstitution;

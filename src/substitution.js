@@ -39,12 +39,6 @@ class Substitution {
     return statement;
   }
 
-  getSubstitutionNode() {
-    const substitutionNode = null;
-
-    return substitutionNode;
-  }
-
   getMetavariableNode() {
     const metavariableNode = null;
 
