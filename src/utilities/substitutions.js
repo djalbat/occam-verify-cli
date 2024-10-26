@@ -34,11 +34,10 @@ export function frameFromFrameAndSubstitutions(frame, substitutions) {
 
     frame = null;
 
-    const metavariableNode = metavariableNodeQuery(frameNode),
-          substitutionNode = substitutionNodeQuery(frameNode);
+    const metavariableNode = metavariableNodeQuery(frameNode);
 
     if (metavariableNode !== null) {
-      const substitution = substitutions.findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
+      const substitution = substitutions.findSubstitutionByMetavariableNode(metavariableNode);
 
       if (substitution !== null) {
         frame = substitution.getFrame();
