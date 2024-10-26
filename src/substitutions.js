@@ -82,18 +82,6 @@ class Substitutions {
     return substitutions;
   }
 
-  findSimpleSubstitution() {
-    const simpleSubstitution = this.findSubstitution((substitution) => {
-      const substitutionSimple = substitution.isSimple();
-
-      if (substitutionSimple) {
-        return true;
-      }
-    });
-
-    return simpleSubstitution;
-  }
-
   findSubstitutionByVariableName(variableName) {
     const substitution = this.findSubstitution((substitution) => {
       const variableNameMatches = substitution.matchVariableName(variableName);

@@ -4,7 +4,8 @@ import { nodeQuery } from "../utilities/query";
 import { variableNameFromVariableNode } from "../utilities/name";
 
 const variableNodeQuery = nodeQuery("/term/variable!"),
-      metavariableNodeQuery = nodeQuery("/*/metavariable!");
+      metavariableNodeQuery = nodeQuery("/*/metavariable!"),
+      substitutionNodeQuery = nodeQuery("/*/substitution!");
 
 export function termFromTermAndSubstitutions(term, substitutions) {
   if (term !== null) {
@@ -16,13 +17,7 @@ export function termFromTermAndSubstitutions(term, substitutions) {
 
     if (variableNode !== null) {
       const variableName = variableNameFromVariableNode(variableNode),
-            substitution = substitutions.findSubstitution((substitution) => {
-              const variableNameMatches = substitution.matchVariableName(variableName);
-
-              if (variableNameMatches) {
-                return true;
-              }
-            });
+            substitution = substitutions.findSubstitutionByVariableName(variableName);
 
       if (substitution !== null) {
         term = substitution.getTerm();
@@ -39,16 +34,11 @@ export function frameFromFrameAndSubstitutions(frame, substitutions) {
 
     frame = null;
 
-    const metavariableNode = metavariableNodeQuery(frameNode);
+    const metavariableNode = metavariableNodeQuery(frameNode),
+          substitutionNode = substitutionNodeQuery(frameNode);
 
     if (metavariableNode !== null) {
-      const substitution = substitutions.findSubstitution((substitution) => {
-        const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
-
-        if (metavariableNodeMatches) {
-          return true;
-        }
-      });
+      const substitution = substitutions.findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
 
       if (substitution !== null) {
         frame = substitution.getFrame();
@@ -65,16 +55,11 @@ export function statementFromStatementAndSubstitutions(statement, substitutions)
 
     statement = null;
 
-    const metavariableNode = metavariableNodeQuery(statementNode);
+    const metavariableNode = metavariableNodeQuery(statementNode),
+          substitutionNode = substitutionNodeQuery(statementNode);
 
     if (metavariableNode !== null) {
-      const substitution = substitutions.findSubstitution((substitution) => {
-        const metavariableNodeMatches = substitution.matchMetavariableNode(metavariableNode);
-
-        if (metavariableNodeMatches) {
-          return true;
-        }
-      });
+      const substitution = substitutions.findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
 
       if (substitution !== null) {
         statement = substitution.getStatement();

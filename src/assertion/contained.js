@@ -39,23 +39,22 @@ export default class ContainedAssertion {
     return this.statement;
   }
 
-  resolve(substitutions, generalContext, specificContext) {
+  resolve(substitutions, context) {
     let resolved;
 
     const containedAssertionString = this.string; ///
 
-    specificContext.trace(`Resolving the '${containedAssertionString}' contained assertion...`);
+    context.trace(`Resolving the '${containedAssertionString}' contained assertion...`);
 
     const term = termFromTermAndSubstitutions(this.term, substitutions),
           frame = frameFromFrameAndSubstitutions(this.frame, substitutions),
           statement = statementFromStatementAndSubstitutions(this.statement, substitutions),
-          context = generalContext, ///
           verifiedWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, context);
 
     resolved = verifiedWhenDerived; ///
 
     if (resolved) {
-      specificContext.debug(`...resolved the '${containedAssertionString}' contained assertion.`);
+      context.debug(`...resolved the '${containedAssertionString}' contained assertion.`);
     }
 
     return resolved;
@@ -169,27 +168,29 @@ export default class ContainedAssertion {
 function verifyWhenDerived(term, frame, statement, negated, context) {
   let verifiedWhenDerived = false;
 
-  if (term !== null) {
-    const termContained = statement.isTermContained(term, context);
+  if (statement !== null) {
+    if (term !== null) {
+      const termContained = statement.isTermContained(term, context);
 
-    if (!negated && termContained) {
-      verifiedWhenDerived = true;
+      if (!negated && termContained) {
+        verifiedWhenDerived = true;
+      }
+
+      if (negated && !termContained) {
+        verifiedWhenDerived = true;
+      }
     }
 
-    if (negated && !termContained) {
-      verifiedWhenDerived = true;
-    }
-  }
+    if (frame !== null) {
+      const frameContained = statement.isFrameContained(frame, context);
 
-  if (frame !== null) {
-    const frameContained = statement.isFrameContained(frame, context);
+      if (!negated && frameContained) {
+        verifiedWhenDerived = true;
+      }
 
-    if (!negated && frameContained) {
-      verifiedWhenDerived = true;
-    }
-
-    if (negated && !frameContained) {
-      verifiedWhenDerived = true;
+      if (negated && !frameContained) {
+        verifiedWhenDerived = true;
+      }
     }
   }
 
