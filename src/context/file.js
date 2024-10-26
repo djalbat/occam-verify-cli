@@ -2,7 +2,6 @@
 
 import { arrayUtilities } from "necessary";
 
-import LocalContext from "./local";
 import metavariableUnifier from "../unifier/metavariable";
 
 import { objectType } from "../type";
@@ -489,9 +488,10 @@ export default class FileContext {
   }
 
   findMetatheoremByReference(reference, specificContext) {
-    const metatheorems = this.getMetatheorems(),
+    const generalContext = this,  ///
+          metatheorems = this.getMetatheorems(),
           metatheorem = metatheorems.find((metatheorem) => {
-            const referenceUnified = metatheorem.unifyReference(reference, specificContext);
+            const referenceUnified = metatheorem.unifyReference(reference, generalContext, specificContext);
 
             if (referenceUnified) {
               return true;
@@ -542,13 +542,13 @@ export default class FileContext {
   }
 
   findMetavariableByMetavariableNode(metavariableNode, specificContext) {
-    const metavariableNodeB = metavariableNode, ///
+    const specificMetavariableNode = metavariableNode, ///
           generalContext = this,  ///
           metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
-            const metavariableA = metavariable, ///
-                  metavariableNodeA = metavariableA.getNode(), ///
-                  metavariableUnified = metavariableUnifier.unify(metavariableNodeA, metavariableNodeB, generalContext, specificContext);
+            const generalMetavariable = metavariable, ///
+                  generalMetavariableNode = generalMetavariable.getNode(), ///
+                  metavariableUnified = metavariableUnifier.unify(generalMetavariableNode, specificMetavariableNode, generalContext, specificContext);
 
             if (metavariableUnified) {
               return true;

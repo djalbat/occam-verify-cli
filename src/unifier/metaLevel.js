@@ -80,7 +80,7 @@ class MetaLevelUnifier extends Unifier {
         let frameUnified = false;
 
         const metavariableNode = generalFrameMetavariableNode,  ///
-              metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext);
+              metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, specificContext);
 
         if (metavariablePresent) {
           let context;
@@ -105,10 +105,10 @@ class MetaLevelUnifier extends Unifier {
     {
       generalNodeQuery: termVariableNodeQuery,
       specificNodeQuery: termNodeQuery,
-      unify: (termVariableNodeA, termNodeB, substitutions, generalContext, specificContext) => {
+      unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
         let termUnified = false;
 
-        const variableNode = termVariableNodeA, ///
+        const variableNode = generalTermVariableNode, ///
               variableName = variableNameFromVariableNode(variableNode),
               variablePresent = generalContext.isVariablePresentByVariableName(variableName);
 
@@ -116,7 +116,7 @@ class MetaLevelUnifier extends Unifier {
           let context;
 
           const { Term, Variable } = shim,
-                termNode = termNodeB; ///
+                termNode = specificTermNode; ///
 
           context = generalContext; ///
 

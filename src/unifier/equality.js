@@ -11,9 +11,9 @@ class EqualityUnifier extends Unifier {
   unify(leftTermNode, rightTermNode, context) {
     let equalityUnified;
 
-    const nonTerminalNodeA = leftTermNode, ///
-          nonTerminalNodeB = rightTermNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(nonTerminalNodeA, nonTerminalNodeB, context);
+    const leftNonTerminalNode = leftTermNode, ///
+          rightNonTerminalNode = rightTermNode, ///
+          nonTerminalNodeUnified = this.unifyNonTerminalNode(leftNonTerminalNode, rightNonTerminalNode, context);
 
     equalityUnified = nonTerminalNodeUnified; ///
 
@@ -22,14 +22,12 @@ class EqualityUnifier extends Unifier {
 
   static maps = [
     {
-      generalNodeQuery: termNodeQuery,
-      specificNodeQuery: termNodeQuery,
-      unify: (termNodeA, termNodeB, context) => {
+      generalNodeQuery: termNodeQuery,  ///
+      specificNodeQuery: termNodeQuery, ///
+      unify: (leftTermNode, rightTermNode, context) => {
         let termUnifiedWithTerm;
 
-        const leftTermNode = termNodeA, ///
-              rightTermNode = termNodeB,  ///
-              leftTermNodeMatchesRightTermNode = leftTermNode.match(rightTermNode);
+        const leftTermNodeMatchesRightTermNode = leftTermNode.match(rightTermNode);
 
         if (leftTermNodeMatchesRightTermNode) {
           termUnifiedWithTerm = true;
@@ -45,13 +43,13 @@ class EqualityUnifier extends Unifier {
         }
 
         if (!termUnifiedWithTerm) {
-          const nonTerminalNodeA = termNodeA, ///
-                nonTerminalNodeB = termNodeB, ///
-                nonTerminalNodeAChildNodes = nonTerminalNodeA.getChildNodes(),
-                nonTerminalNodeBChildNodes = nonTerminalNodeB.getChildNodes(),
-                childNodesA = nonTerminalNodeAChildNodes, ///
-                childNodesB = nonTerminalNodeBChildNodes, ///
-                childNodesVerified = equalityUnifier.unifyChildNodes(childNodesA, childNodesB, context);
+          const leftNonTerminalNode = leftTermNode, ///
+                rightNonTerminalNode = rightTermNode, ///
+                leftNonTerminalNodeChildNodes = leftNonTerminalNode.getChildNodes(),
+                rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
+                leftChildNodes = leftNonTerminalNodeChildNodes, ///
+                rightChildNodes = rightNonTerminalNodeChildNodes, ///
+                childNodesVerified = equalityUnifier.unifyChildNodes(leftChildNodes, rightChildNodes, context);
 
           termUnifiedWithTerm = childNodesVerified; ///
         }

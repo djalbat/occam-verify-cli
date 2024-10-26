@@ -26,10 +26,10 @@ class IntrinsicLevelUnifier extends Unifier {
     {
       generalNodeQuery: termVariableNodeQuery,
       specificNodeQuery: termNodeQuery,
-      unify: (generalVermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
+      unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
         let termUnified = false;
 
-        const variableNode = generalVermVariableNode, ///
+        const variableNode = generalTermVariableNode, ///
               variableName = variableNameFromVariableNode(variableNode),
               variablePresent = generalContext.isVariablePresentByVariableName(variableName);
 

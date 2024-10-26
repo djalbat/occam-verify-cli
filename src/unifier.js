@@ -114,13 +114,13 @@ export default class Unifier {
           let nonTerminalNodeUnified;
 
           const generalNonTerminalNodeRuleName = generalNonTerminalNode.getRuleName(), ///
-                specificNonTerminalNodeBRuleNam = specificNonTerminalNode.getRuleName(); ///
+                specificNonTerminalNodeRuleName = specificNonTerminalNode.getRuleName(); ///
 
-          if (generalNonTerminalNodeRuleName === specificNonTerminalNodeBRuleNam) {
+          if (generalNonTerminalNodeRuleName === specificNonTerminalNodeRuleName) {
             const generalNonTerminalNodeChildNodes = generalNonTerminalNode.getChildNodes(),
-                  specificNonTerminalNodeBChildNode = specificNonTerminalNode.getChildNodes(),
+                  specificNonTerminalNodeChildNode = specificNonTerminalNode.getChildNodes(),
                   generalChildNodes = generalNonTerminalNodeChildNodes, ///
-                  specificChildNodes = specificNonTerminalNodeBChildNode, ///
+                  specificChildNodes = specificNonTerminalNodeChildNode, ///
                   childNodesUnified = this.unifyChildNodes(generalChildNodes, specificChildNodes, ...remainingArguments);
 
             nonTerminalNodeUnified = childNodesUnified; ///

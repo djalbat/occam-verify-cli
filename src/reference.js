@@ -45,8 +45,10 @@ export default class Reference {
 
     if (!verified) {
       const reference = this, ///
-            metaLemmaPresent = context.isMetaLemmaPresentByReference(reference),
-            metatheoremPresent = context.isMetatheoremPresentByReference(reference);
+            generalContext = context, ///
+            specificContext = context,  ///
+            metaLemmaPresent = generalContext.isMetaLemmaPresentByReference(reference, specificContext),
+            metatheoremPresent = generalContext.isMetatheoremPresentByReference(reference, specificContext);
 
       verified = (metaLemmaPresent || metatheoremPresent);
     }

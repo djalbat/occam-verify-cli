@@ -27,10 +27,10 @@ class Label {
           metavariableNode = this.metavariable.getNode(),
           referenceMetavariable = reference.getMetavariable(),
           referenceMetavariableNode = referenceMetavariable.getNode(),
-          metavariableNodeA = referenceMetavariableNode,  ///
-          metavariableNodeB = metavariableNode, ///
+          generalMetavariableNode = referenceMetavariableNode,  ///
+          specificMetavariableNode = metavariableNode, ///
           substitutions = Substitutions.fromNothing(),
-          metavariableUnified = intrinsicLevelUnifier.unify(metavariableNodeA, metavariableNodeB, substitutions, generalContext, specificContext);
+          metavariableUnified = intrinsicLevelUnifier.unify(generalMetavariableNode, specificMetavariableNode, substitutions, generalContext, specificContext);
 
     return metavariableUnified;
   }
