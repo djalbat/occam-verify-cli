@@ -24,18 +24,18 @@ class TermWithConstructorUnifier extends Unifier {
 
   static maps = [
     {
-      nodeQueryA: typeNodeQuery,
-      nodeQueryB: termNodeQuery,
-      unify: (typeNodeB, termNodeB, context) => {
+      generalNodeQuery: typeNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      unify: (generalTypeNode, specificTermNode, context) => {
         let unified = false;
 
         const { Term } = shim,
-              typeNode = typeNodeB, ///
+              typeNode = generalTypeNode, ///
               typeName = typeNameFromTypeNode(typeNode),
               type = context.findTypeByTypeName(typeName);
 
         if (type !== null) {
-          const termNode = termNodeB, ///
+          const termNode = specificTermNode, ///
                 term = Term.fromTermNode(termNode, context),
                 termVerifiedGivenType = term.verifyGivenType(type, context);
 
