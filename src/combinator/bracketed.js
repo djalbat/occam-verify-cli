@@ -39,8 +39,8 @@ const getLexer = () => {
         nodeAsString,
         tokensAsString
       },
-      statementString = `(${STATEMENT_META_TYPE_NAME})`,
-      statementNodeAndTokens = StatementNodeAndTokens.fromStatementString(statementString, context),
+      string = `(${STATEMENT_META_TYPE_NAME})`,
+      statementNodeAndTokens = StatementNodeAndTokens.fromString(string, context),
       statementTokens = statementNodeAndTokens.getStatementTokens(),
       statementNode = statementNodeAndTokens.getStatementNode();
 

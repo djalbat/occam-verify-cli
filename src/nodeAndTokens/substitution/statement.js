@@ -14,10 +14,5 @@ const bnf = `
 export default class StatementSubstitutionNodeAndTokens extends NodeAndTokens {
   static rule = rule;
 
-  static fromStatementSubstitutionString(statementSubstitutionString, context) {
-    const string = statementSubstitutionString, ///
-          statementSubstitutionNodeAndTokens = NodeAndTokens.fromString(StatementSubstitutionNodeAndTokens, string, context);
-
-    return statementSubstitutionNodeAndTokens;
-  }
+  static fromString(string, context) { return NodeAndTokens.fromString(StatementSubstitutionNodeAndTokens, string, context); }
 }

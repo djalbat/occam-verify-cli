@@ -252,8 +252,7 @@ class Statement {
   static fromJSON(json, fileContext) {
     const { string } = json,
           context = fileContext,  ///
-          statementString = string, ///
-          statementNodeAndTokens = StatementNodeAndTokens.fromStatementString(statementString, context),
+          statementNodeAndTokens = StatementNodeAndTokens.fromString(string, context),
           node = statementNodeAndTokens.getNode(),
           tokens = statementNodeAndTokens.getTokens(),
           statement = new Statement(string, node, tokens);

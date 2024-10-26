@@ -40,8 +40,8 @@ const getLexer = () => {
         nodeAsString,
         tokensAsString
       },
-      termString = `(${OBJECT_TYPE_NAME})`,
-      termNodeAndTokens = TermNodeAndTokens.fromTermString(termString, context),
+      string = `(${OBJECT_TYPE_NAME})`,
+      termNodeAndTokens = TermNodeAndTokens.fromString(string, context),
       termTokens = termNodeAndTokens.getTermTokens(),
       termNode = termNodeAndTokens.getTermNode();
 

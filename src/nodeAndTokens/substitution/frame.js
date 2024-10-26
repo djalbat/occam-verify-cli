@@ -14,10 +14,5 @@ const bnf = `
 export default class FrameSubstitutionNodeAndTokens extends NodeAndTokens {
   static rule = rule;
 
-  static fromFrameSubstitutionString(frameSubstitutionString, context) {
-    const string = frameSubstitutionString, ///
-          frameSubstitutionNodeAndTokens = NodeAndTokens.fromString(FrameSubstitutionNodeAndTokens, string, context);
-
-    return frameSubstitutionNodeAndTokens;
-  }
+  static fromString(string, context) { return NodeAndTokens.fromString(FrameSubstitutionNodeAndTokens, string, context); }
 }

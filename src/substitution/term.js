@@ -119,8 +119,7 @@ export default class TermSubstitution extends Substitution {
     term = Term.fromTermNode(termNode, context);
 
     const string = stringFromTermAndVariable(term, variable),
-          termSubstitutionString = string,  ///
-          termSubstitutionNodeAndTokens = TermSubstitutionNodeAndTokens.fromTermSubstitutionString(termSubstitutionString, context),
+          termSubstitutionNodeAndTokens = TermSubstitutionNodeAndTokens.fromString(string, context),
           node = termSubstitutionNodeAndTokens.getNode(),
           tokens = termSubstitutionNodeAndTokens.getTokens(),
           termSubstitution = new TermSubstitution(string, node, tokens, term, variable);

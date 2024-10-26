@@ -33,16 +33,12 @@ export default class TermNodeAndTokens extends NodeAndTokens {
     return termNodeAndTokens;
   }
 
-  static fromTermString(termString, context) {
-    const string = termString,  ///
-          termNodeAndTokens = NodeAndTokens.fromString(TermNodeAndTokens, string, context);
-
-    return termNodeAndTokens;
-  }
+  static fromString(string, context) { return NodeAndTokens.fromString(TermNodeAndTokens, string, context); }
 }
 
 export function termNodeFromTermString(termString, context) {
-  const termNodeAndTokens = TermNodeAndTokens.fromTermString(termString, context),
+  const string = termString,  ///
+        termNodeAndTokens = TermNodeAndTokens.fromString(string, context),
         termNode = termNodeAndTokens.getTermNode();
 
   return termNode;

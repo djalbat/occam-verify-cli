@@ -33,16 +33,12 @@ export default class VariableNodeAndTokens extends NodeAndTokens {
     return variableNodeAndTokens;
   }
 
-  static fromVariableString(variableString, context) {
-    const string = variableString,  ///
-          variableNodeAndTokens = NodeAndTokens.fromString(VariableNodeAndTokens, string, context);
-
-    return variableNodeAndTokens;
-  }
+  static fromString(string, context) { return NodeAndTokens.fromString(VariableNodeAndTokens, string, context); }
 }
 
 export function variableNodeFromVariableString(variableString, context) {
-  const variableNodeAndTokens = VariableNodeAndTokens.fromVariableString(variableString, context),
+  const string = variableString,  ///
+        variableNodeAndTokens = VariableNodeAndTokens.fromString(string, context),
         variableNode = variableNodeAndTokens.getVariableNode();
 
   return variableNode;

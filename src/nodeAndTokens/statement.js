@@ -33,17 +33,5 @@ export default class StatementNodeAndTokens extends NodeAndTokens {
     return statementNodeAndTokens;
   }
 
-  static fromStatementString(statementString, context) {
-    const string = statementString,  ///
-          statementNodeAndTokens = NodeAndTokens.fromString(StatementNodeAndTokens, string, context);
-
-    return statementNodeAndTokens;
-  }
-}
-
-export function statementNodeFromStatementString(statementString, context) {
-  const statementNodeAndTokens = StatementNodeAndTokens.fromStatementString(statementString, context),
-        statementNode = statementNodeAndTokens.getStatementNode();
-
-  return statementNode;
+  static fromString(string, context) { return NodeAndTokens.fromString(StatementNodeAndTokens, string, context); }
 }

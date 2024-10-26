@@ -209,8 +209,7 @@ class StatementSubstitution extends Substitution {
   static fromJSON(json, fileContext) {
     const { string } = json,
           context = fileContext,  ///
-          statementSubstitutionString = string,  ///
-          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromStatementSubstitutionString(statementSubstitutionString, context),
+          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromString(string, context),
           node = statementSubstitutionNodeAndTokens.getNode(),
           tokens = statementSubstitutionNodeAndTokens.getTokens(),
           resolved = true,
@@ -232,8 +231,7 @@ class StatementSubstitution extends Substitution {
     statement = Statement.fromStatementNode(statementNode, context);
 
     const string = stringFromStatementAndMetavariable(statement, metavariable),
-          statementSubstitutionString = string,  ///
-          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromStatementSubstitutionString(statementSubstitutionString, context),
+          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromString(string, context),
           node = statementSubstitutionNodeAndTokens.getNode(),
           tokens = statementSubstitutionNodeAndTokens.getTokens(),
           resolved = true,
@@ -253,8 +251,7 @@ class StatementSubstitution extends Substitution {
     statement = Statement.fromStatementNode(statementNode, context);
 
     const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
-          statementSubstitutionString = string,  ///
-          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromStatementSubstitutionString(statementSubstitutionString, context),
+          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromString(string, context),
           node = statementSubstitutionNodeAndTokens.getNode(),
           tokens = statementSubstitutionNodeAndTokens.getTokens(),
           resolved = false,
