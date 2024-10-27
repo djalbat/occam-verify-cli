@@ -23,13 +23,21 @@ class Label {
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
   unifyReference(reference, generalContext, specificContext) {
+    let context;
+
+    context = specificContext;  ///
+
+    specificContext = generalContext; ///
+
+    generalContext = context; ///
+
     const { Substitutions } = shim,
+          substitutions = Substitutions.fromNothing(),
           metavariableNode = this.metavariable.getNode(),
           referenceMetavariable = reference.getMetavariable(),
           referenceMetavariableNode = referenceMetavariable.getNode(),
-          generalMetavariableNode = metavariableNode,  ///
-          specificMetavariableNode = referenceMetavariableNode, ///
-          substitutions = Substitutions.fromNothing(),
+          generalMetavariableNode = referenceMetavariableNode,  ///
+          specificMetavariableNode = metavariableNode, ///
           metavariableUnified = intrinsicLevelUnifier.unify(generalMetavariableNode, specificMetavariableNode, substitutions, generalContext, specificContext);
 
     return metavariableUnified;

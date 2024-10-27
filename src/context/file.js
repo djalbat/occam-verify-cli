@@ -474,10 +474,11 @@ export default class FileContext {
     return conjecture;
   }
 
-  findMetaLemmaByReference(reference, specificContext) {
-    const metaLemmas = this.getMetaLemmas(),
+  findMetaLemmaByReference(reference) {
+    const context = this, ///
+          metaLemmas = this.getMetaLemmas(),
           metaLemma = metaLemmas.find((metaLemma) => {
-            const referenceUnified = metaLemma.unifyReference(reference, specificContext);
+            const referenceUnified = metaLemma.unifyReference(reference, context);
 
             if (referenceUnified) {
               return true;
@@ -487,11 +488,11 @@ export default class FileContext {
     return metaLemma;
   }
 
-  findMetatheoremByReference(reference, specificContext) {
-    const generalContext = this,  ///
+  findMetatheoremByReference(reference) {
+    const context = this, ///
           metatheorems = this.getMetatheorems(),
           metatheorem = metatheorems.find((metatheorem) => {
-            const referenceUnified = metatheorem.unifyReference(reference, generalContext, specificContext);
+            const referenceUnified = metatheorem.unifyReference(reference, context);
 
             if (referenceUnified) {
               return true;
@@ -586,15 +587,15 @@ export default class FileContext {
     return conjecturePresent;
   }
 
-  isMetaLemmaPresentByReference(reference, specificContext) {
-    const metaLemma = this.findMetaLemmaByReference(reference, specificContext),
+  isMetaLemmaPresentByReference(reference) {
+    const metaLemma = this.findMetaLemmaByReference(reference),
           metaLemmaPresent = (metaLemma !== null);
 
     return metaLemmaPresent;
   }
 
-  isMetatheoremPresentByReference(reference, specificContext) {
-    const metatheorem = this.findMetatheoremByReference(reference, specificContext),
+  isMetatheoremPresentByReference(reference) {
+    const metatheorem = this.findMetatheoremByReference(reference),
           metatheoremPresent = (metatheorem !== null);
 
     return metatheoremPresent;

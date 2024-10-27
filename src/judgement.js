@@ -98,11 +98,9 @@ class Judgement {
     context.trace(`Verifying the '${judgementString}' judgement when derived...`);
 
     if (!verifiedWhenDerived) {
-      const generalContext = context, ///
-            specificContext = context,  ///
-            reference = this.declaration.getReference(),
-            metaLemma = generalContext.findMetaLemmaByReference(reference, specificContext),
-            metatheorem = generalContext.findMetatheoremByReference(reference, specificContext),
+      const reference = this.declaration.getReference(),
+            metaLemma = context.findMetaLemmaByReference(reference, context),
+            metatheorem = context.findMetatheoremByReference(reference, context),
             metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
 
       if (metaLemmaMetatheorem !== null) {

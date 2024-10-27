@@ -76,7 +76,11 @@ export default class TopLevelAssertion {
     return metavariableNodeMatches;
   }
 
-  unifyReference(reference, generalContext, specificContext) {
+  unifyReference(reference, context) {
+    const localContext = LocalContext.fromFileContext(this.fileContext),
+          generalContext = localContext,  ///
+          specificContext = context; ///
+
     const referenceUnified = this.labels.some((label) => {
       const referenceUnified = label.unifyReference(reference, generalContext, specificContext);
 
@@ -92,8 +96,8 @@ export default class TopLevelAssertion {
     let statementUnified;
 
     const { Substitutions } = shim,
-      substitutions = Substitutions.fromNothing(),
-      consequentUnified = this.unifyConsequent(statement, substitutions, context);
+          substitutions = Substitutions.fromNothing(),
+          consequentUnified = this.unifyConsequent(statement, substitutions, context);
 
     if (consequentUnified) {
       const suppositionsUnified = this.unifySupposition(substitutions, context);
