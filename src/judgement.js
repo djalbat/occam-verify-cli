@@ -32,7 +32,7 @@ class Judgement {
   matchMetavariableNode(metavariableNode) { return this.frame.matchMetavariableNode(metavariableNode); }
 
   verify(assignments, stated, context) {
-    let verified;
+    let verified = false;
 
     const judgementString = this.string;  ///
 
@@ -41,7 +41,7 @@ class Judgement {
     const frameVerified = this.frame.verify(assignments, stated, context);
 
     if (frameVerified) {
-      const declarationVerified = this.declaration.verify(assignments, stated, context);
+      const declarationVerified = this.declaration.verify(this.frame, assignments, stated, context);
 
       if (declarationVerified) {
         let verifiedWhenStated = false,
@@ -50,12 +50,10 @@ class Judgement {
         if (stated) {
           verifiedWhenStated = this.verifyWhenStated(assignments, context);
         } else {
-          verifiedWhenDerived = this.verifyWhenDerived(assignments, context);
+          verifiedWhenDerived = this.verifyWhenDerived(context);
         }
 
-        if (verifiedWhenStated || verifiedWhenDerived) {
-          verified = true;
-        }
+        verified = (verifiedWhenStated || verifiedWhenDerived);
       }
     }
 
@@ -90,40 +88,14 @@ class Judgement {
     return verifiedWhenStated;
   }
 
-  verifyWhenDerived(assignments, context) {
-    let verifiedWhenDerived = false;
+  verifyWhenDerived(context) {
+    let verifiedWhenDerived ;
 
     const judgementString = this.string;  ///
 
     context.trace(`Verifying the '${judgementString}' judgement when derived...`);
 
-    if (!verifiedWhenDerived) {
-      const reference = this.declaration.getReference(),
-            metaLemma = context.findMetaLemmaByReference(reference, context),
-            metatheorem = context.findMetatheoremByReference(reference, context),
-            metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
-
-      if (metaLemmaMetatheorem !== null) {
-        const metaLemmaMetatheoremUnified = this.frame.unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, context);
-
-        verifiedWhenDerived = metaLemmaMetatheoremUnified; ///
-      }
-    }
-
-    if (!verifiedWhenDerived) {
-      const reference = this.declaration.getReference(),
-            axiom = context.findAxiomByReference(reference),
-            lemma = context.findLemmaByReference(reference),
-            theorem = context.findTheoremByReference(reference),
-            conjecture = context.findConjectureByReference(reference),
-            axiomLemmaTheoremOrConjecture = (axiom || lemma || theorem || conjecture);
-
-      if (axiomLemmaTheoremOrConjecture !== null) {
-        const axiomLemmaTheoremOrConjectureUnified = this.frame.unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, context);
-
-        verifiedWhenDerived = axiomLemmaTheoremOrConjectureUnified; ///
-      }
-    }
+    verifiedWhenDerived = true;
 
     if (verifiedWhenDerived) {
       context.debug(`...verified the '${judgementString}' judgement when derived.`);

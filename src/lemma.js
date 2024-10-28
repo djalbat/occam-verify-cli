@@ -9,8 +9,9 @@ class Lemma extends TopLevelAssertion {
   verify() {
     let verified;
 
-    const fileContext = this.getFileContext(),
-          lemmaString = this.string;  ///
+    const lemma = this, ///
+          fileContext = this.getFileContext(),
+          lemmaString = lemma.getString();
 
     (lemmaString === EMPTY_STRING) ?
       fileContext.trace(`Verifying a lemma...`) :

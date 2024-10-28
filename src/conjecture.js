@@ -7,8 +7,9 @@ class Conjecture extends TopLevelAssertion {
   verify() {
     let verified;
 
-    const fileContext = this.getFileContext(),
-          conjectureString = this.string; ///
+    const conjecture = this,  ///
+          fileContext = this.getFileContext(),
+          conjectureString = conjecture.getString();
 
     fileContext.trace(`Verifying the '${conjectureString}' conjecture...`);
 

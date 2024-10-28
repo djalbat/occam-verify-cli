@@ -6,7 +6,7 @@ import LocalContext from "./context/local";
 import { nodeQuery } from "./utilities/query";
 import { referenceMetaType } from "./metaType";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "./utilities/json";
-import local from "./context/local";
+import labelUnifier from "./unifier/label";
 
 const metavariableNodeQuery = nodeQuery("//reference/metavariable");
 
@@ -23,10 +23,39 @@ export default class Reference {
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
+  getMetavariableName() {
+    const metavariableName = this.metavariable.getName();
+
+    return metavariableName;
+  }
+
   getMetavariableNode() {
     const metavariableNode = this.metavariable.getNode();
 
     return metavariableNode;
+  }
+
+  unifyLabel(label, substitutions, generalContext, specificContext) {
+    let labelUnified;
+
+    const reference = this,
+          labelString = label.getString(),
+          referenceString = reference.getString();
+
+    specificContext.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
+
+    const labelMetavariable = label.getMetavariable(),
+          referenceMetavariable = reference.getMetavariable(),
+          labelMetavariableNode = labelMetavariable.getNode(),
+          referenceMetavariableNode = referenceMetavariable.getNode();
+
+    labelUnified = labelUnifier.unify(labelMetavariableNode, referenceMetavariableNode, substitutions, generalContext, specificContext);
+
+    if (labelUnified) {
+      specificContext.debug(`...unified the '${labelString}' label with the '${referenceString}' reference.`);
+    }
+
+    return labelUnified;
   }
 
   verify(context) {
@@ -41,24 +70,6 @@ export default class Reference {
             metavariableVerifiedGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, context);
 
       verified = metavariableVerifiedGivenMetaType; ///
-    }
-
-    if (!verified) {
-      const reference = this, ///
-            metaLemmaPresent = context.isMetaLemmaPresentByReference(reference, context),
-            metatheoremPresent = context.isMetatheoremPresentByReference(reference, context);
-
-      verified = (metaLemmaPresent || metatheoremPresent);
-    }
-
-    if (!verified) {
-      const reference = this, ///
-            axiomPresent = context.isAxiomPresentByReference(reference),
-            lemmaPresent = context.isLemmaPresentByReference(reference),
-            theoremPresent = context.isTheoremPresentByReference(reference),
-            conjecturePresent = context.isConjecturePresentByReference(reference);
-
-      verified = (axiomPresent || lemmaPresent || theoremPresent || conjecturePresent);
     }
 
     if (verified) {

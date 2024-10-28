@@ -143,8 +143,12 @@ class Variable {
     return verifiedAtTopLevel;
   }
 
-  unifyTerm(term, substitutions, generalContext, specificContext) {
+  unifyTerm(term, substitutions, generalContext, specificContext, contextsReversed = false) {
     let termUnified = false;
+
+    let context = contextsReversed ?
+                    generalContext :
+                      specificContext;
 
     const termString = term.getString(),
           variableString = this.string; ///
@@ -163,16 +167,18 @@ class Variable {
       }
     } else {
       const variableNode = this.node,  ///
-            variable = variableFromVariableNode(variableNode, generalContext, specificContext),
-            termVariable = termVariableFromTermNode(termNode, generalContext, specificContext);
+            generalContext = this.context,  ///
+            variable = variableFromVariableNode(variableNode, generalContext),
+            termVariable = termVariableFromTermNode(termNode, generalContext);
 
       if ((variable !== null) && (variable === termVariable)) {
         termUnified = true;
       } else {
-        const context = specificContext,  ///
-              variable = this,  ///
+        const variable = this,  ///
               termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
               substitution = termSubstitution;  ///
+
+        context = specificContext;  ///
 
         substitutions.addSubstitution(substitution, context);
 
@@ -287,7 +293,7 @@ Object.assign(shim, {
 
 export default Variable;
 
-function variableFromVariableNode(variableNode, generalContext, specificContext) {
+function variableFromVariableNode(variableNode, generalContext) {
   const variableName = variableNameFromVariableNode(variableNode),
         context = generalContext, ///
         variable = context.findVariableByVariableName(variableName);
@@ -295,7 +301,7 @@ function variableFromVariableNode(variableNode, generalContext, specificContext)
   return variable;
 }
 
-function termVariableFromTermNode(termNode, specificContext, generalContext) {
+function termVariableFromTermNode(termNode, generalContext) {
   let termVariable = null;
 
   const termVariableNode = termVariableNodeQuery(termNode);

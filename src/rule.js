@@ -55,16 +55,18 @@ class Rule {
     return this.proof;
   }
 
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.labels.some((label) => {
-      const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
+  matchStatementNode(statementNode) { return this.conclusion.matchStatementNode(statementNode); }
 
-      if (metavariableNodeMatches) {
+  matchMetavariableName(metavariableName) {
+    const metavariableNameMatches = this.labels.some((label) => {
+      const metavariableNameMatches = label.matchMetavariableName(metavariableName);
+
+      if (metavariableNameMatches) {
         return true;
       }
     });
 
-    return metavariableNodeMatches;
+    return metavariableNameMatches;
   }
 
   unifyStatement(statement, context) {

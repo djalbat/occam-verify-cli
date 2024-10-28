@@ -2,7 +2,7 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
-import intrinsicLevelUnifier from "./unifier/intrinsicLevel";
+import labelUnifier from "./unifier/label";
 
 import { nodeQuery } from "./utilities/query";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "./utilities/json";
@@ -20,28 +20,9 @@ class Label {
 
   getString() { return this.metavariable.getString(); }
 
+  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
+
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
-
-  unifyReference(reference, generalContext, specificContext) {
-    let context;
-
-    context = specificContext;  ///
-
-    specificContext = generalContext; ///
-
-    generalContext = context; ///
-
-    const { Substitutions } = shim,
-          substitutions = Substitutions.fromNothing(),
-          metavariableNode = this.metavariable.getNode(),
-          referenceMetavariable = reference.getMetavariable(),
-          referenceMetavariableNode = referenceMetavariable.getNode(),
-          generalMetavariableNode = referenceMetavariableNode,  ///
-          specificMetavariableNode = metavariableNode, ///
-          metavariableUnified = intrinsicLevelUnifier.unify(generalMetavariableNode, specificMetavariableNode, substitutions, generalContext, specificContext);
-
-    return metavariableUnified;
-  }
 
   verifyWhenDeclared(fileContext) {
     let verifiedAtTopLevel = false;

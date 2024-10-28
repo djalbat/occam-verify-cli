@@ -66,10 +66,6 @@ export default class DefinedAssertion {
 
     context.trace(`Verifying the '${definedAssertionString}' defined assertion...`);
 
-    stated = true;  ///
-
-    assignments = null; ///
-
     let termVerified = false,
         frameVerified = false;
 
@@ -82,7 +78,7 @@ export default class DefinedAssertion {
     }
 
     if (this.frame!== null) {
-      frameVerified = this.frame.verify(assignments, stated, context);
+      frameVerified = this.verifyFrame(this.frame, assignments, stated, context);
     }
 
     if (termVerified || frameVerified) {
@@ -105,6 +101,16 @@ export default class DefinedAssertion {
     }
 
     return verified;
+  }
+
+  verifyFrame(frame, assignments, stated, context) {
+    stated = true;  ///
+
+    assignments = null; ///
+
+    const frameVerified = frame.verify(assignments, stated, context);
+
+    return frameVerified;
   }
 
   verifyWhenStated(context) {

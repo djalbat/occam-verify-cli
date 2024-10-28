@@ -7,8 +7,9 @@ class Axiom extends TopLevelAssertion {
   verify() {
     let verified;
 
-    const fileContext = this.getFileContext(),
-          axiomString = this.string; ///
+    const axiom = this, ///
+          axiomString = axiom.getString(),
+          fileContext = this.getFileContext();
 
     fileContext.trace(`Verifying the '${axiomString}' axiom...`);
 

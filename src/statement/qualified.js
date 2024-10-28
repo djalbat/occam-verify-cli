@@ -36,13 +36,13 @@ class QualifiedStatement {
   unify(substitutions, context) {
     let unified;
 
-    const qualifiedStatement = this,  ///
-          qualifiedStatementString = this.string; ///
+    const qualifiedStatementString = this.string; ///
 
     context.trace(`Unifying the '${qualifiedStatementString}' qualified statement...`);
 
     unified = unifyMixins.some((unifyMixin) => {
-      const unified = unifyMixin(qualifiedStatement, substitutions, context);
+      const qualifiedStatement = this,  ///
+            unified = unifyMixin(qualifiedStatement, substitutions, context);
 
       return unified;
     });

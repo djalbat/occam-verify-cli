@@ -64,7 +64,7 @@ class MetaLevelUnifier extends Unifier {
 
             const statement = Statement.fromStatementNode(statementNode, context);
 
-            statementUnified = metavariable.unifyStatement(statement, substitution, substitutions, generalContext, specificContext);
+            statementUnified = metavariable.unifyStatement(statement, substitution, substitutions, context);
           } else {
             statementUnified = unifyChildNodes(generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext);
           }
@@ -96,7 +96,7 @@ class MetaLevelUnifier extends Unifier {
 
           const frame = Frame.fromFrameNode(frameNode, context);
 
-          frameUnified = metavariable.unifyFrame(frame, substitutions, generalContext, specificContext);
+          frameUnified = metavariable.unifyFrame(frame, substitutions, context);
         }
 
         return frameUnified;

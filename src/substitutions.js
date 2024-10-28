@@ -6,7 +6,7 @@ import { arrayUtilities } from "necessary";
 
 import { EMPTY_STRING } from "./constants";
 
-const { find, first, prune, filter, compress } = arrayUtilities;
+const { find, first, clear, prune, filter, compress } = arrayUtilities;
 
 class Substitutions {
   constructor(array, savedArray) {
@@ -209,6 +209,12 @@ class Substitutions {
     });
 
     return unifiedWithEquivalences;
+  }
+
+  clear() {
+    clear(this.array);
+
+    this.savedArray = null;
   }
 
   resolve(generalContext, specificContext) {

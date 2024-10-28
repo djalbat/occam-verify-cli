@@ -93,23 +93,53 @@ class Declaration {
     return substitutionUnified;
   }
 
-  verify(assignments, stated, context) {
+  unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context) {
+    let metaLemmaMetatheoremUnified = false;
+
+    const declarationString = this.string,  ///
+          metalemmaMetatheoremString = metaLemmaMetatheorem.getString();
+
+    context.trace(`Unifying the '${metalemmaMetatheoremString}' meta-lemma or metatheorem with the '${declarationString}' declaration...`);
+
+    const { Substitutions } = shim,
+          substitutions = Substitutions.fromNothing(),
+          referenceUnified = metaLemmaMetatheorem.unifyReference(this.reference, substitutions, context);
+
+    if (referenceUnified) {
+      const statementUnified = metaLemmaMetatheorem.unifyStatement(this.statement, substitutions, context);
+
+      if (statementUnified) {
+        metaLemmaMetatheoremUnified = true;
+      }
+    }
+
+    if (metaLemmaMetatheoremUnified) {
+      context.debug(`...unified the '${metalemmaMetatheoremString}' meta-lemma or metatheorem with the '${declarationString}' declaration.`);
+    }
+
+    return metaLemmaMetatheoremUnified;
+  }
+
+  verify(frame, assignments, stated, context) {
     let verified = false;
 
     const declarationString = this.string;  ///
 
     context.trace(`Verifying the '${declarationString}' declaration...`);
 
-    stated = true;  ///
+    const statementVerified = this.verifyStatement(this.statement, assignments, stated, context);
 
-    assignments = null; ///
+    if (statementVerified) {
+      let verifiedWhenStated = false,
+          verifiedWhenDerived = false;
 
-    const referenceVerified = this.reference.verify(context);
+      if (stated) {
+        verifiedWhenStated = this.verifyWhenStated(context);
+      } else {
+        verifiedWhenDerived = this.verifyWhenDerived(frame, context);
+      }
 
-    if (referenceVerified) {
-      const statementVerified = this.statement.verify(assignments, stated, context);
-
-      verified = statementVerified; ///
+      verified = (verifiedWhenStated || verifiedWhenDerived);
     }
 
     if (verified) {
@@ -117,6 +147,100 @@ class Declaration {
     }
 
     return verified;
+  }
+
+  verifyStatement(statement, assignments, stated, context) {
+    stated = true;  ///
+
+    assignments = null; ///
+
+    const statementVerified = statement.verify(assignments, stated, context);
+
+    return statementVerified;
+  }
+
+  verifyWhenStated(context) {
+    let verifiedWhenStated;
+
+    const declarationString = this.string;  ///
+
+    context.trace(`Verifying the '${declarationString}' declaration when stated...`);
+
+    const referenceVerified = this.reference.verify(context);
+
+    if (referenceVerified) {
+      verifiedWhenStated = true;
+    } else {
+      const metaLemmas = context.findMetaLemmasByReference(this.reference),
+            metatheorems = context.findMetatheoremsByReference(this.reference),
+            metaLemmaMetatheorems = [
+              ...metaLemmas,
+              ...metatheorems
+            ],
+            metaLemmaMetatheoremUnified = metaLemmaMetatheorems.every((metaLemmaMetatheorem) => {
+              const metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+
+              if (metaLemmaMetatheoremUnified) {
+                return true;
+              }
+            });
+
+      verifiedWhenStated = metaLemmaMetatheoremUnified; ///
+    }
+
+    if (verifiedWhenStated) {
+      context.debug(`...verified the '${declarationString}' declaration when stated.`);
+    }
+
+    return verifiedWhenStated;
+  }
+
+  verifyWhenDerived(frame, context) {
+    let verifiedWhenDerived;
+
+    const declarationString = this.string;  ///
+
+    context.trace(`Verifying the '${declarationString}' declaration when derived...`);
+
+    const referenceVerified = this.reference.verify(context);
+
+    if (referenceVerified) {
+      verifiedWhenDerived = true;
+    } else {
+      const metaLemmas = context.findMetaLemmasByReference(this.reference),
+            metatheorems = context.findMetatheoremsByReference(this.reference),
+            metaLemmaMetatheorems = [
+              ...metaLemmas,
+              ...metatheorems
+            ],
+            metaLemmaMetatheoremsLength = metaLemmaMetatheorems.length;
+
+      if (metaLemmaMetatheoremsLength > 0) {
+        const metaLemmaMetatheoremsUnified = metaLemmaMetatheorems.every((metaLemmaMetatheorem) => {
+          let metaLemmaMetatheoremUnified = true;
+
+          if (metaLemmaMetatheoremUnified) {
+            metaLemmaMetatheoremUnified = frame.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+          }
+
+          if (metaLemmaMetatheoremUnified) {
+            metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+          }
+
+          if (metaLemmaMetatheoremUnified) {
+            return true;
+          }
+        });
+
+        verifiedWhenDerived = metaLemmaMetatheoremsUnified;  ///
+      }
+    }
+
+    if (verifiedWhenDerived) {
+      context.debug(`...verified the '${declarationString}' declaration when derived.`);
+    }
+
+    return verifiedWhenDerived;
   }
 
   static fromDeclarationNode(declarationNode, context) {

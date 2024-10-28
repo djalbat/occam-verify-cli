@@ -71,14 +71,14 @@ class Metavariable {
     return metavariableNodeMatches;
   }
 
-  unifyFrame(frame, substitutions, generalContext, specificContext) {
+  unifyFrame(frame, substitutions, context) {
     let frameUnified = false;
 
     const frameNode = frame.getNode(),
           frameString = frame.getString(),
           metavariableString = this.string; ///
 
-    specificContext.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
+    context.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
 
     const metavariableNode = this.node, ///
           simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariableNode(metavariableNode);
@@ -92,7 +92,10 @@ class Metavariable {
         frameUnified = true;
       }
     } else {
-      const metavariableNode = this.node,  ///
+      const localContext = LocalContext.fromFileContext(this.fileContext),
+            generalContext = localContext,  ///
+            specificContext = context,  ///
+            metavariableNode = this.node,  ///
             metavariable = metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext),
             frameMetavariable  = frameMetavariableFromStatementNode(frameNode, generalContext, specificContext);
 
@@ -100,7 +103,6 @@ class Metavariable {
         frameUnified = true;
       } else {
         const metavariable = this,  ///
-              context = specificContext, ///
               frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
               substitution = frameSubstitution;  ///
 
@@ -111,13 +113,13 @@ class Metavariable {
     }
 
     if (frameUnified) {
-      specificContext.debug(`...unified the '${frameString}' frame with the '${metavariableString}' metavariable.`);
+      context.debug(`...unified the '${frameString}' frame with the '${metavariableString}' metavariable.`);
     }
 
     return frameUnified;
   }
 
-  unifyStatement(statement, substitution, substitutions, generalContext, specificContext) {
+  unifyStatement(statement, substitution, substitutions, context) {
     let statementUnified = false;
 
     const statementString = statement.getString(),
@@ -126,7 +128,7 @@ class Metavariable {
                                   substitution.getString() :
                                     EMPTY_STRING;
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
 
     const statementNode = statement.getNode(),
           metavariableNode = this.node, ///
@@ -143,15 +145,17 @@ class Metavariable {
         statementUnified = true;
       }
     } else {
-      const metavariableNode = this.node,  ///
+      const localContext = LocalContext.fromFileContext(this.fileContext),
+            generalContext = localContext,  ///
+            specificContext = context,  ///
+            metavariableNode = this.node,  ///
             metavariable = metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext),
             statementMetavariable = statementMetavariableFromStatementNode(statementNode, generalContext, specificContext);
 
       if ((metavariable !== null) && (metavariable === statementMetavariable)) {
         statementUnified = true;
       } else {
-        const context = specificContext, ///
-              metavariable = this,  ///
+        const metavariable = this,  ///
               statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
 
         substitution = statementSubstitution;  ///
@@ -163,7 +167,7 @@ class Metavariable {
     }
 
     if (statementUnified) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable.`);
+      context.debug(`...unified the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable.`);
     }
 
     return statementUnified;
@@ -376,7 +380,7 @@ function statementMetavariableFromStatementNode(statementNode, generalContext, s
   const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
   if (statementMetavariableNode !== null) {
-    const context = generalContext;
+    const context = generalContext; ///
 
     statementMetavariable = context.findMetavariableByMetavariableNode(statementMetavariableNode, specificContext);
   }

@@ -106,8 +106,7 @@ class Statement {
   resolveIndependently(substitutions, generalContext, specificContext) {
     let resolvedIndependently;
 
-    const statement = this, ///
-          statementString = this.string;  ///
+    const statementString = this.string;  ///
 
     specificContext.trace(`Resolving the '${statementString}' statement independently...`);
 
@@ -117,7 +116,8 @@ class Statement {
     generalContext = localContext;  ///
 
     const resolved = resolveMixins.some((resolveMixin) => {
-      const resolved = resolveMixin(statement, substitutions, generalContext, specificContext);
+      const statement = this, ///
+            resolved = resolveMixin(statement, substitutions, generalContext, specificContext);
 
       if (resolved) {
         return true;
@@ -166,14 +166,14 @@ class Statement {
   verify(assignments, stated, context) {
     let verified = false;
 
-    const statement = this, ///
-          statementString = this.string;  ///
+    const statementString = this.string;  ///
 
     context.trace(`Verifying the '${statementString}' statement...`);
 
     if (!verified) {
       verified = verifyMixins.some((verifyMixin) => {
-        const verified = verifyMixin(statement, assignments, stated, context);
+        const statement = this, ///
+              verified = verifyMixin(statement, assignments, stated, context);
 
         if (verified) {
           return true;
@@ -183,7 +183,8 @@ class Statement {
 
     if (!verified) {
       const unified = unifyMixins.some((unifyMixin) => {
-        const unified = unifyMixin(statement, assignments, stated, context);
+        const statement = this, ///
+              unified = unifyMixin(statement, assignments, stated, context);
 
         if (unified) {
           return true;

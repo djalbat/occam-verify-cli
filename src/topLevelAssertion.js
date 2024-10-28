@@ -62,34 +62,18 @@ export default class TopLevelAssertion {
     return this.proof;
   }
 
-  getStatement() { return this.proof.getStatement(); }
+  matchStatementNode(statementNode) { return this.consequent.matchStatementNode(statementNode); }
 
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.labels.some((label) => {
-      const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
+  matchMetavariableName(metavariableName) {
+    const metavariableNameMatches = this.labels.some((label) => {
+      const metavariableNameMatches = label.matchMetavariableName(metavariableName);
 
-      if (metavariableNodeMatches) {
+      if (metavariableNameMatches) {
         return true;
       }
     });
 
-    return metavariableNodeMatches;
-  }
-
-  unifyReference(reference, context) {
-    const localContext = LocalContext.fromFileContext(this.fileContext),
-          generalContext = localContext,  ///
-          specificContext = context; ///
-
-    const referenceUnified = this.labels.some((label) => {
-      const referenceUnified = label.unifyReference(reference, generalContext, specificContext);
-
-      if (referenceUnified) {
-        return true;
-      }
-    });
-
-    return referenceUnified;
+    return metavariableNameMatches;
   }
 
   unifyStatement(statement, context) {
@@ -100,7 +84,7 @@ export default class TopLevelAssertion {
           consequentUnified = this.unifyConsequent(statement, substitutions, context);
 
     if (consequentUnified) {
-      const suppositionsUnified = this.unifySupposition(substitutions, context);
+      const suppositionsUnified = this.unifySuppositions(substitutions, context);
 
       if (suppositionsUnified) {
         const substitutionsResolved = substitutions.areResolved();
@@ -130,7 +114,7 @@ export default class TopLevelAssertion {
     return consequentUnified;
   }
 
-  unifySupposition(substitutions, context) {
+  unifySuppositions(substitutions, context) {
     let proofSteps = context.getProofSteps();
 
     proofSteps = reverse(proofSteps); ///

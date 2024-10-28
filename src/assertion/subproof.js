@@ -3,7 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import shim from "../shim";
-import LocalContext from "../context/local";
 import metaLevelUnifier from "../unifier/metaLevel";
 
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -69,17 +68,7 @@ export default class SubproofAssertion {
 
     context.trace(`Verifying the '${subproofAssertionString}' subproof assertion...`);
 
-    stated = true;  ///
-
-    assignments = null; ///
-
-    const statementsVerified = this.statements.map((statement) => {
-      const statementVerified = statement.verify(assignments, stated, context);
-
-      if (statementVerified) {
-        return true;
-      }
-    });
+    const statementsVerified = this.verifyStatements(assignments, stated, context);
 
     if (statementsVerified) {
       let verifiedWhenStated = false,
@@ -101,6 +90,22 @@ export default class SubproofAssertion {
     }
 
     return verified;
+  }
+
+  verifyStatements(assignments, stated, context) {
+    stated = true;  ///
+
+    assignments = null; ///
+
+    const statementsVerified = this.statements.map((statement) => {
+      const statementVerified = statement.verify(assignments, stated, context);
+
+      if (statementVerified) {
+        return true;
+      }
+    });
+
+    return statementsVerified;
   }
 
   verifyWhenStated(context) {

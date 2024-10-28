@@ -1,6 +1,7 @@
 "use strict";
 
 import shim from "./shim";
+import LocalContext from "./context/local";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { stringFromLabels } from "./topLevelAssertion";
@@ -14,11 +15,64 @@ import { labelsFromJSON,
          substitutionsToSubstitutionsJSON } from "./utilities/json";
 
 class Metatheorem extends TopLevelAssertion {
+  unifyReference(reference, substitutions, context) {
+    let referenceUnified;
+
+    const metatheorem = this, ///
+          referenceString = reference.getString(),
+          metatheoremString = metatheorem.getString();
+
+    context.trace(`Unifying the '${referenceString}' reference with the '${metatheoremString}' metatheorem...`);
+
+    const fileContext = this.getFileContext(),
+          localContext = LocalContext.fromFileContext(fileContext),
+          generalContext = localContext,  ///
+          specificContext = context, ///
+          labelUnified = this.labels.some((label) => {
+            substitutions.clear();
+
+            const referenceUnified = reference.unifyLabel(label, substitutions, generalContext, specificContext);
+
+            if (referenceUnified) {
+              return true;
+            }
+          });
+
+    referenceUnified = labelUnified;  ///
+
+    if (referenceUnified) {
+      context.debug(`...unified the '${referenceString}' reference with the '${metatheoremString}' metatheorem.`);
+    }
+
+    return referenceUnified;
+  }
+
+  unifyStatement(statement, substitutions, context) {
+    let statementUnified;
+
+    const metatheorem = this, ///
+          statementString = statement.getString(),
+          metatheoremString = metatheorem.getString();
+
+    context.trace(`Unifying the '${statementString}' reference with the '${metatheoremString}' metatheorem...`);
+
+    const consequent = this.getConsequent();
+
+    statementUnified = consequent.unifyStatement(statement, substitutions, context);
+
+    if (statementUnified) {
+      context.debug(`...unified the '${statementString}' reference with the '${metatheoremString}' metatheorem.`);
+    }
+
+    return statementUnified;
+  }
+
   verify() {
     let verified;
 
-    const fileContext = this.getFileContext(),
-          metatheoremString = this.string;  ///
+    const metatheorem = this, ///
+          fileContext = this.getFileContext(),
+          metatheoremString = metatheorem.getString();
 
     fileContext.trace(`Verifying the '${metatheoremString}' metatheorem...`);
 

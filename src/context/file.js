@@ -2,6 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
+import shim from "../shim";
 import metavariableUnifier from "../unifier/metavariable";
 
 import { objectType } from "../type";
@@ -29,9 +30,8 @@ import { typesFromJSON,
          constructorsToConstructorsJSON,
          metatheoremsToMetatheoremsJSON,
          metavariablesToMetavariablesJSON } from "../utilities/json";
-import local from "./local";
 
-const { push } = arrayUtilities;
+const { push, filter } = arrayUtilities;
 
 export default class FileContext {
   constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables) {
@@ -406,11 +406,11 @@ export default class FileContext {
 
   findRuleByReference(reference) {
     const rules = this.getRules(),
-          metavariableNode = reference.getMetavariableNode(),
+          metavariableName = reference.getMetavariableName(),
           rule = rules.find((rule) => {
-            const metavariableNodeMatches = rule.matchMetavariableNode(metavariableNode);
+            const metavariableNameMatches = rule.matchMetavariableName(metavariableName);
 
-            if (metavariableNodeMatches) {
+            if (metavariableNameMatches) {
               return true;
             }
           }) || null;
@@ -420,11 +420,11 @@ export default class FileContext {
 
   findAxiomByReference(reference) {
     const axioms = this.getAxioms(),
-          metavariableNode = reference.getMetavariableNode(),
+          metavariableName = reference.getMetavariableName(),
           axiom = axioms.find((axiom) => {
-            const metavariableNodeMatches = axiom.matchMetavariableNode(metavariableNode);
+            const metavariableNameMatches = axiom.matchMetavariableName(metavariableName);
 
-            if (metavariableNodeMatches) {
+            if (metavariableNameMatches) {
               return true;
             }
           }) || null;
@@ -434,11 +434,11 @@ export default class FileContext {
 
   findLemmaByReference(reference) {
     const lemmas = this.getLemmas(),
-          metavariableNode = reference.getMetavariableNode(),
+          metavariableName = reference.getMetavariableName(),
           lemma = lemmas.find((lemma) => {
-            const metavariableNodeMatches = lemma.matchMetavariableNode(metavariableNode);
+            const metavariableNameMatches = lemma.matchMetavariableName(metavariableName);
 
-            if (metavariableNodeMatches) {
+            if (metavariableNameMatches) {
               return true;
             }
           }) || null;
@@ -448,11 +448,11 @@ export default class FileContext {
 
   findTheoremByReference(reference) {
     const theorems = this.getTheorems(),
-          metavariableNode = reference.getMetavariableNode(),
+          metavariableName = reference.getMetavariableName(),
           theorem = theorems.find((theorem) => {
-            const metavariableNodeMatches = theorem.matchMetavariableNode(metavariableNode);
+            const metavariableNameMatches = theorem.matchMetavariableName(metavariableName);
 
-            if (metavariableNodeMatches) {
+            if (metavariableNameMatches) {
               return true;
             }
           }) || null;
@@ -462,11 +462,11 @@ export default class FileContext {
 
   findConjectureByReference(reference) {
     const conjectures = this.getConjectures(),
-          metavariableNode = reference.getMetavariableNode(),
+          metavariableName = reference.getMetavariableName(),
           conjecture = conjectures.find((conjecture) => {
-            const metavariableNodeMatches = conjecture.matchMetavariableNode(metavariableNode);
+            const metavariableNameMatches = conjecture.matchMetavariableName(metavariableName);
 
-            if (metavariableNodeMatches) {
+            if (metavariableNameMatches) {
               return true;
             }
           }) || null;
@@ -474,32 +474,38 @@ export default class FileContext {
     return conjecture;
   }
 
-  findMetaLemmaByReference(reference) {
-    const context = this, ///
-          metaLemmas = this.getMetaLemmas(),
-          metaLemma = metaLemmas.find((metaLemma) => {
-            const referenceUnified = metaLemma.unifyReference(reference, context);
+  findMetaLemmasByReference(reference) {
+    const metaLemmas = this.getMetaLemmas();
 
-            if (referenceUnified) {
-              return true;
-            }
-          }) || null;
+    filter(metaLemmas, (metaLemma) => {
+      const { Substitutions } = shim,
+            context = this, ///
+            substitutions = Substitutions.fromNothing(),
+            referenceUnified = metaLemma.unifyReference(reference, substitutions, context);
 
-    return metaLemma;
+      if (referenceUnified) {
+        return true;
+      }
+    });
+
+    return metaLemmas;
   }
 
-  findMetatheoremByReference(reference) {
-    const context = this, ///
-          metatheorems = this.getMetatheorems(),
-          metatheorem = metatheorems.find((metatheorem) => {
-            const referenceUnified = metatheorem.unifyReference(reference, context);
+  findMetatheoremsByReference(reference) {
+    const metatheorems = this.getMetatheorems();
 
-            if (referenceUnified) {
-              return true;
-            }
-          }) || null;
+    filter(metatheorems, (metatheorem) => {
+      const { Substitutions } = shim,
+            context = this, ///
+            substitutions = Substitutions.fromNothing(),
+            referenceUnified = metatheorem.unifyReference(reference, substitutions, context);
 
-    return metatheorem;
+      if (referenceUnified) {
+        return true;
+      }
+    });
+
+    return metatheorems;
   }
 
   findVariableByVariableName(variableName) {
@@ -587,18 +593,20 @@ export default class FileContext {
     return conjecturePresent;
   }
 
-  isMetaLemmaPresentByReference(reference) {
-    const metaLemma = this.findMetaLemmaByReference(reference),
-          metaLemmaPresent = (metaLemma !== null);
+  areMetaLemmaPresentByReference(reference) {
+    const metaLemmas = this.findMetaLemmasByReference(reference),
+          metaLemmasLength = metaLemmas.length,
+          metaLemmasPresent = (metaLemmasLength > 0);
 
-    return metaLemmaPresent;
+    return metaLemmasPresent;
   }
 
-  isMetatheoremPresentByReference(reference) {
-    const metatheorem = this.findMetatheoremByReference(reference),
-          metatheoremPresent = (metatheorem !== null);
+  areMetatheoremPresentByReference(reference) {
+    const metatheorems = this.findMetatheoremsByReference(reference),
+          metatheoremsLength = metatheorems.length, ///
+          metatheoremsPresent = (metatheoremsLength > 0);
 
-    return metatheoremPresent;
+    return metatheoremsPresent;
   }
 
   nodeAsString(node, tokens = null) {

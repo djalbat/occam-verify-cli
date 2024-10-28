@@ -67,10 +67,6 @@ export default class ContainedAssertion {
 
     context.trace(`Verifying the '${containedAssertionString}' contained assertion...`);
 
-    stated = true;  ///
-
-    assignments = null; ///
-
     let termVerified = false,
         frameVerified = false,
         statementVerified = false;
@@ -84,11 +80,11 @@ export default class ContainedAssertion {
     }
 
     if (this.frame !== null) {
-      frameVerified = this.frame.verify(assignments, stated, context);
+      frameVerified = this.verifyFrame(this.frame, assignments, stated, context);
     }
 
     if (this.statement !== null) {
-      statementVerified = this.statement.verify(assignments, stated, context);
+      statementVerified = this.verifyStatement(this.statement, assignments, stated, context);
     }
 
     if (termVerified || frameVerified || statementVerified) {
@@ -111,6 +107,26 @@ export default class ContainedAssertion {
     }
 
     return verified;
+  }
+
+  verifyFrame(frame, assignments, stated, context) {
+    stated = true;  ///
+
+    assignments = null; ///
+
+    const frameVerified = frame.verify(assignments, stated, context);
+
+    return frameVerified;
+  }
+
+  verifyStatement(statment, assignments, stated, context) {
+    stated = true;  ///
+
+    assignments = null; ///
+
+    const statmentVerified = statment.verify(assignments, stated, context);
+
+    return statmentVerified;
   }
 
   verifyWhenStated(assignments, context) {

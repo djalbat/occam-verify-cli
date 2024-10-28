@@ -89,9 +89,10 @@ class Frame {
   unifySubstitution(substitution, context) {
     let substitutionUnified = false;
 
-    const substitutionString = substitution.getString();
+    const frameString = this.string,  ///
+          substitutionString = substitution.getString();
 
-    context.trace(`Unifying the '${substitutionString}' substitution...`)
+    context.trace(`Unifying the '${substitutionString}' substitution with the '${frameString}' frame...`)
 
     if (!substitutionUnified) {
       substitutionUnified = this.declarations.some((declaration) => {
@@ -114,18 +115,19 @@ class Frame {
     }
 
     if (substitutionUnified) {
-      context.debug(`...unified the '${substitutionString}' substitution...`)
+      context.debug(`...unified the '${substitutionString}' substitution with the '${frameString}' frame...`)
     }
 
     return substitutionUnified;
   }
 
-  unifyMetaLemmaOrMetatheorem(metaLemmaMetatheorem, context) {
+  unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context) {
     let metaLemmaMetatheoremUnified;
 
-    const metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
+    const frameString = this.string,  ///
+          metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
 
-    context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem...`);
+    context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${frameString}' frame...`);
 
     const substitutions = metaLemmaMetatheorem.getSubstitutions(),
           substitutionsUnified = substitutions.everySubstitution((substitution) => {
@@ -139,7 +141,7 @@ class Frame {
     metaLemmaMetatheoremUnified = substitutionsUnified; ///
 
     if (metaLemmaMetatheoremUnified) {
-      context.debug(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem.`);
+      context.debug(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${frameString}' frame.`);
     }
 
     return metaLemmaMetatheoremUnified;
@@ -148,9 +150,10 @@ class Frame {
   unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, context) {
     let axiomLemmaTheoremOrConjectureUnified;
 
-    const axiomLemmaTheoremStringOrConjecture = axiomLemmaTheoremOrConjecture.getString();
+    const frameString = this.string,  ///
+          axiomLemmaTheoremStringOrConjecture = axiomLemmaTheoremOrConjecture.getString();
 
-    context.trace(`Unifying the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture...`);
+    context.trace(`Unifying the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture with the '${frameString}' frame...`);
 
     const substitutions = axiomLemmaTheoremOrConjecture.getSubstitutions(),
           substitutionsUnified = substitutions.everySubstitution((substitution) => {
@@ -164,7 +167,7 @@ class Frame {
     axiomLemmaTheoremOrConjectureUnified = substitutionsUnified; ///
 
     if (axiomLemmaTheoremOrConjectureUnified) {
-      context.debug(`...unified the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture.`);
+      context.debug(`...unified the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture with the '${frameString}' frame.`);
     }
 
     return axiomLemmaTheoremOrConjectureUnified;
@@ -177,11 +180,7 @@ class Frame {
 
     context.trace(`Verifying the '${frameString}' frame...`);
 
-    const declarationsVerified = this.declarations.every((declaration) => {
-      const declarationVerified = declaration.verify(assignments, stated, context);
-
-      return declarationVerified;
-    });
+    const declarationsVerified = this.verifyDeclarations(this.declarations, assignments, stated, context);
 
     if (declarationsVerified) {
       const  metavariablesVerified = this.metavariables.every((metavariable) => {
@@ -211,6 +210,22 @@ class Frame {
     }
 
     return verified;
+  }
+
+  verifyDeclarations(declarations, assignments, stated, context) {
+    stated = true;  ///
+
+    assignments = null; ///
+
+    const frame = null; ///
+
+    const declarationsVerified = declarations.every((declaration) => {
+      const declarationVerified = declaration.verify(frame, assignments, stated, context);
+
+      return declarationVerified;
+    });
+
+    return declarationsVerified;
   }
 
   verifyWhenStated(assignments, context) {

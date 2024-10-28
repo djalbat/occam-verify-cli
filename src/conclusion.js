@@ -26,6 +26,8 @@ class Conclusion {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
+  matchStatementNode(statementNode) { return this.unqualifiedStatement.matchStatementNode(statementNode); }
+
   unifyStatement(statement, substitutions, context) {
     let statementUnified;
 

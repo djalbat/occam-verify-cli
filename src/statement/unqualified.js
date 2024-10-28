@@ -27,36 +27,7 @@ class UnqualifiedStatement {
     return this.statement;
   }
 
-  verify(assignments, stated, context) {
-    let verified;
-
-    const unqualifiedStatement = this,  ///
-          unqualifiedStatementString = unqualifiedStatement.getString();  ///
-
-    if (this.statement !== null) {
-      context.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
-
-      const statementVerified = this.statement.verify(assignments, stated, context);
-
-      if (statementVerified) {
-        verified = true;
-      } else {
-        const statementUnifiedWithProofSteps = this.unifyStatementWithProofSteps(this.statement, assignments, stated, context);
-
-        if (statementUnifiedWithProofSteps) {
-          verified = true;
-        }
-      }
-
-      if (verified) {
-        context.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);
-      }
-    } else {
-      context.debug(`Cannot verify the '${unqualifiedStatementString}' unqualified statement because it is nonsense.`);
-    }
-
-    return verified;
-  }
+  matchStatementNode(statementNode) { return this.statement.matchStatementNode(statementNode); }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
@@ -111,6 +82,37 @@ class UnqualifiedStatement {
     });
 
     return statementUnifiedWithProofSteps;
+  }
+
+  verify(assignments, stated, context) {
+    let verified;
+
+    const unqualifiedStatement = this,  ///
+          unqualifiedStatementString = unqualifiedStatement.getString();  ///
+
+    if (this.statement !== null) {
+      context.trace(`Verifying the '${unqualifiedStatementString}' unqualified statement...`);
+
+      const statementVerified = this.statement.verify(assignments, stated, context);
+
+      if (statementVerified) {
+        verified = true;
+      } else {
+        const statementUnifiedWithProofSteps = this.unifyStatementWithProofSteps(this.statement, assignments, stated, context);
+
+        if (statementUnifiedWithProofSteps) {
+          verified = true;
+        }
+      }
+
+      if (verified) {
+        context.debug(`...verified the '${unqualifiedStatementString}' unqualified statement.`);
+      }
+    } else {
+      context.debug(`Cannot verify the '${unqualifiedStatementString}' unqualified statement because it is nonsense.`);
+    }
+
+    return verified;
   }
 
   toJSON() {
