@@ -8,7 +8,8 @@ import { nodeQuery } from "../utilities/query";
 import { typeNameFromTypeNode } from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/term"),
-      typeNodeQuery = nodeQuery("/type");
+      typeNodeQuery = nodeQuery("/type"),
+      statementNodeQuery = nodeQuery("/statement");
 
 class CombinatorVerifier extends Verifier {
   verifyStatement(statementNode, fileContext) {
@@ -25,13 +26,27 @@ class CombinatorVerifier extends Verifier {
 
   static maps = [
     {
+      nodeQuery: statementNodeQuery,
+      verify: (statementNode, fileContext) => {
+        const { Statement } = shim,
+              localContext = LocalContext.fromFileContext(fileContext),
+              context = localContext, ///
+              statement = Statement.fromStatementNode(statementNode, context),
+              assignments = null,
+              stated = false,
+              statementVerified = statement.verify(assignments, stated, context);
+
+        return statementVerified;
+      }
+    },
+    {
       nodeQuery: termNodeQuery,
       verify: (termNode, fileContext) => {
         const { Term } = shim,
               localContext = LocalContext.fromFileContext(fileContext),
               context = localContext, ///
               term = Term.fromTermNode(termNode, context),
-              termVerified = term.verify(localContext, () => {
+              termVerified = term.verify(context, () => {
                 const verifiedAhead = true;
 
                 return verifiedAhead;

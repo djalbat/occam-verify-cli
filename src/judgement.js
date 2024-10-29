@@ -69,7 +69,7 @@ class Judgement {
 
     const judgementString = this.string;  ///
 
-    context.trace(`Verifying the '${judgementString}' judgement when stated...`);
+    context.trace(`Verifying the '${judgementString}' stated judgement...`);
 
     if (assignments !== null) {
       const judgement = this, ///
@@ -82,7 +82,7 @@ class Judgement {
     verifiedWhenStated = true;
 
     if (verifiedWhenStated) {
-      context.debug(`...verified the '${judgementString}' judgement when stated.`);
+      context.debug(`...verified the '${judgementString}' stated judgement.`);
     }
 
     return verifiedWhenStated;
@@ -93,12 +93,12 @@ class Judgement {
 
     const judgementString = this.string;  ///
 
-    context.trace(`Verifying the '${judgementString}' judgement when derived...`);
+    context.trace(`Verifying the '${judgementString}' derived judgement...`);
 
     verifiedWhenDerived = true;
 
     if (verifiedWhenDerived) {
-      context.debug(`...verified the '${judgementString}' judgement when derived.`);
+      context.debug(`...verified the '${judgementString}' derived judgement.`);
     }
 
     return verifiedWhenDerived;

@@ -233,7 +233,7 @@ class Frame {
 
     const frameString = this.string;  ///
 
-    context.trace(`Verifying the '${frameString}' frame when stated...`);
+    context.trace(`Verifying the '${frameString}' stated frame...`);
 
     const declarationsLength = this.declarations.length;
 
@@ -250,7 +250,7 @@ class Frame {
     }
 
     if (verifiedWhenStated) {
-      context.debug(`...verified the '${frameString}' frame when stated.`);
+      context.debug(`...verified the '${frameString}' stated frame.`);
     }
 
     return verifiedWhenStated;
@@ -261,12 +261,12 @@ class Frame {
 
     const frameString = this.string;  ///
 
-    context.trace(`Verifying the '${frameString}' frame when derived...`);
+    context.trace(`Verifying the '${frameString}' derived frame...`);
 
     verifiedWhenDerived = true;
 
     if (verifiedWhenDerived) {
-      context.debug(`...verified the '${frameString}' frame when derived.`);
+      context.debug(`...verified the '${frameString}' derived frame.`);
     }
 
     return verifiedWhenDerived;

@@ -189,7 +189,7 @@ class Declaration {
 
     const declarationString = this.string;  ///
 
-    context.trace(`Verifying the '${declarationString}' declaration when stated...`);
+    context.trace(`Verifying the '${declarationString}' stated declaration...`);
 
     const referenceVerified = this.reference.verify(context);
 
@@ -230,7 +230,7 @@ class Declaration {
     }
 
     if (verifiedWhenStated) {
-      context.debug(`...verified the '${declarationString}' declaration when stated.`);
+      context.debug(`...verified the '${declarationString}' stated declaration.`);
     }
 
     return verifiedWhenStated;
@@ -241,7 +241,7 @@ class Declaration {
 
     const declarationString = this.string;  ///
 
-    context.trace(`Verifying the '${declarationString}' declaration when derived...`);
+    context.trace(`Verifying the '${declarationString}' derived declaration...`);
 
     const referenceVerified = this.reference.verify(context);
 
@@ -290,7 +290,7 @@ class Declaration {
     }
 
     if (verifiedWhenDerived) {
-      context.debug(`...verified the '${declarationString}' declaration when derived.`);
+      context.debug(`...verified the '${declarationString}' derived declaration.`);
     }
 
     return verifiedWhenDerived;
