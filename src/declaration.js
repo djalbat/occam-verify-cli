@@ -120,6 +120,31 @@ class Declaration {
     return metaLemmaMetatheoremUnified;
   }
 
+  unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context) {
+    let axiomLemmaTheoremConjectureUnified = false;
+
+    const declarationString = this.string,  ///
+          axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjecture.getString();
+
+    context.trace(`Unifying the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture with the '${declarationString}' declaration...`);
+
+    const referenceUnified = axiomLemmaTheoremConjecture.unifyReference(this.reference, context);
+
+    if (referenceUnified) {
+      const statementUnified = axiomLemmaTheoremConjecture.unifyStatement(this.statement, context);
+
+      if (statementUnified) {
+        axiomLemmaTheoremConjectureUnified = true;
+      }
+    }
+
+    if (axiomLemmaTheoremConjectureUnified) {
+      context.debug(`...unified the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture with the '${declarationString}' declaration.`);
+    }
+
+    return axiomLemmaTheoremConjectureUnified;
+  }
+
   verify(frame, assignments, stated, context) {
     let verified = false;
 
@@ -177,7 +202,7 @@ class Declaration {
               ...metaLemmas,
               ...metatheorems
             ],
-            metaLemmaMetatheoremUnified = metaLemmaMetatheorems.every((metaLemmaMetatheorem) => {
+            metaLemmaMetatheoremUnified = metaLemmaMetatheorems.some((metaLemmaMetatheorem) => {
               const metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
 
               if (metaLemmaMetatheoremUnified) {
@@ -185,7 +210,23 @@ class Declaration {
               }
             });
 
-      verifiedWhenStated = metaLemmaMetatheoremUnified; ///
+      if (metaLemmaMetatheoremUnified) {
+        verifiedWhenStated = true;
+      } else {
+        const axiom = context.findAxiomByReference(this.reference),
+              lemma = context.findLemmaByReference(this.reference),
+              theorem = context.findTheoremByReference(this.reference),
+              conjecture = context.findConjectureByReference(this.reference),
+              axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
+
+        if (axiomLemmaTheoremConjecture !== null) {
+          const axiomLemmaTheoremConjectureUnified = this.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context);
+
+          if (axiomLemmaTheoremConjectureUnified) {
+            verifiedWhenStated = true;
+          }
+        }
+      }
     }
 
     if (verifiedWhenStated) {
@@ -213,26 +254,38 @@ class Declaration {
               ...metaLemmas,
               ...metatheorems
             ],
-            metaLemmaMetatheoremsLength = metaLemmaMetatheorems.length;
+            metaLemmaMetatheoremUnified = metaLemmaMetatheorems.some((metaLemmaMetatheorem) => {
+              let metaLemmaMetatheoremUnified = true;
 
-      if (metaLemmaMetatheoremsLength > 0) {
-        const metaLemmaMetatheoremsUnified = metaLemmaMetatheorems.every((metaLemmaMetatheorem) => {
-          let metaLemmaMetatheoremUnified = true;
+              if (metaLemmaMetatheoremUnified) {
+                metaLemmaMetatheoremUnified = frame.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+              }
 
-          if (metaLemmaMetatheoremUnified) {
-            metaLemmaMetatheoremUnified = frame.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+              if (metaLemmaMetatheoremUnified) {
+                metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+              }
+
+              if (metaLemmaMetatheoremUnified) {
+                return true;
+              }
+            });
+
+      if (metaLemmaMetatheoremUnified) {
+        verifiedWhenDerived = true;
+      } else {
+        const axiom = context.findAxiomByReference(this.reference),
+              lemma = context.findLemmaByReference(this.reference),
+              theorem = context.findTheoremByReference(this.reference),
+              conjecture = context.findConjectureByReference(this.reference),
+              axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
+
+        if (axiomLemmaTheoremConjecture !== null) {
+          const axiomLemmaTheoremConjectureUnified = this.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context);
+
+          if (axiomLemmaTheoremConjectureUnified) {
+            verifiedWhenDerived = true;
           }
-
-          if (metaLemmaMetatheoremUnified) {
-            metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
-          }
-
-          if (metaLemmaMetatheoremUnified) {
-            return true;
-          }
-        });
-
-        verifiedWhenDerived = metaLemmaMetatheoremsUnified;  ///
+        }
       }
     }
 

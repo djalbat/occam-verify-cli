@@ -17,9 +17,10 @@ function unifyAWithRule(qualifiedStatement, substitutions, context) {
     context.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${referenceString}' rule...`);
 
     const statement = qualifiedStatement.getStatement(),
-          statementUnified = rule.unifyStatement(statement, context);
+          proofSteps = context.getProofSteps(),
+          statementAndProofStepsUnified = rule.unifyStatementAndProofSteps(statement, proofSteps, context);
 
-    unifiedWithRule = statementUnified;  ///
+    unifiedWithRule = statementAndProofStepsUnified;  ///
 
     if (unifiedWithRule) {
       context.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${referenceString}' rule.`);
@@ -36,7 +37,7 @@ function unifyAWithReference(qualifiedStatement, substitutions, context) {
         generalContext = context,  ///
         specificContext = context,  ///
         metavariableNode = reference.getMetavariableNode(),
-        metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, specificContext);
+        metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext);
 
   if (metavariablePresent) {
     const statement = qualifiedStatement.getStatement(),
@@ -78,9 +79,10 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(qualifiedStatement, substitutio
     context.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${referenceString}' axiom, lemma, theorem or conjecture...`);
 
     const statement = qualifiedStatement.getStatement(),
-          statementUnified = axiomLemmaTheoremConjecture.unifyStatement(statement, context);
+          proofSteps = context.getProofSteps(),
+          statementAndProofStepsUnified = axiomLemmaTheoremConjecture.unifyStatementAndProofSteps(statement, proofSteps, context);
 
-    if (statementUnified) {
+    if (statementAndProofStepsUnified) {
       const metavariable = reference.getMetavariable(),
             statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
             substitution = statementSubstitution; ///

@@ -43,15 +43,9 @@ class EqualityUnifier extends Unifier {
         }
 
         if (!termUnifiedWithTerm) {
-          const leftNonTerminalNode = leftTermNode, ///
-                rightNonTerminalNode = rightTermNode, ///
-                leftNonTerminalNodeChildNodes = leftNonTerminalNode.getChildNodes(),
-                rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
-                leftChildNodes = leftNonTerminalNodeChildNodes, ///
-                rightChildNodes = rightNonTerminalNodeChildNodes, ///
-                childNodesVerified = equalityUnifier.unifyChildNodes(leftChildNodes, rightChildNodes, context);
+          const childNodesUnified = unifyChildNodes(leftTermNode, rightTermNode, context);
 
-          termUnifiedWithTerm = childNodesVerified; ///
+          termUnifiedWithTerm = childNodesUnified; ///
         }
 
         return termUnifiedWithTerm;
@@ -63,3 +57,15 @@ class EqualityUnifier extends Unifier {
 const equalityUnifier = new EqualityUnifier();
 
 export default equalityUnifier;
+
+function unifyChildNodes(leftTermNode, rightTermNode, context) {
+  const leftNonTerminalNode = leftTermNode, ///
+        rightNonTerminalNode = rightTermNode, ///
+        leftNonTerminalNodeChildNodes = leftNonTerminalNode.getChildNodes(),
+        rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
+        leftChildNodes = leftNonTerminalNodeChildNodes, ///
+        rightChildNodes = rightNonTerminalNodeChildNodes, ///
+        childNodesUnified = equalityUnifier.unifyChildNodes(leftChildNodes, rightChildNodes, context);
+
+  return childNodesUnified;
+}

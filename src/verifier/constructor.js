@@ -5,51 +5,55 @@ import Verifier from "../verifier";
 import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
-import { typeNameFromTypeNode } from "../utilities/name";
+import {typeNameFromTypeNode} from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type");
 
-class StatementAsCombinatorVerifier extends Verifier {
-  verifyStatement(statementNode, fileContext) {
-    let statementVerifiedAsCombinator;
+class ConstructorVerifier extends Verifier {
+  verifyTerm(termNode, fileContext) {
+    let termVerifiedAsConstructor;
 
-    const nonTerminalNode = statementNode, ///
+    const nonTerminalNode = termNode, ///
           childNodes = nonTerminalNode.getChildNodes(),
-          childNodesVerified = this.verifyChildNodes(childNodes, fileContext);
+          childNodesVerified = this.verifyChildNodes(childNodes, fileContext, () => {
+            const verifiedAhead = true;
 
-    statementVerifiedAsCombinator = childNodesVerified;  ///
+            return verifiedAhead;
+          });
 
-    return statementVerifiedAsCombinator;
+    termVerifiedAsConstructor = childNodesVerified;  ///
+
+    return termVerifiedAsConstructor;
   }
 
   static maps = [
     {
       nodeQuery: termNodeQuery,
-      verify: (termNode, fileContext) => {
+      verify: (termNode, fileContext, verifyAhead) => {
         const { Term } = shim,
               localContext = LocalContext.fromFileContext(fileContext),
               context = localContext, ///
               term = Term.fromTermNode(termNode, context),
-              termVerified = term.verify(localContext, () => {
-                const verifiedAhead = true;
-
-                return verifiedAhead;
-              });
+              termVerified = term.verify(localContext, verifyAhead);
 
         return termVerified;
       }
     },
     {
       nodeQuery: typeNodeQuery,
-      verify: (typeNode, fileContext) => {
+      verify: (typeNode, fileContext, verifyAhead) => {
         let typeVerified = false;
 
         const typeName = typeNameFromTypeNode(typeNode),
               typePresent = fileContext.isTypePresentByTypeName(typeName);
 
         if (typePresent) {
-          typeVerified = true;
+          const verifiedAhead = verifyAhead();
+
+          if (verifiedAhead) {
+            typeVerified = true;
+          }
         }
 
         return typeVerified;
@@ -58,6 +62,6 @@ class StatementAsCombinatorVerifier extends Verifier {
   ];
 }
 
-const statementAsCombinatorVerifier = new StatementAsCombinatorVerifier();
+const constructorVerifier = new ConstructorVerifier();
 
-export default statementAsCombinatorVerifier;
+export default constructorVerifier;

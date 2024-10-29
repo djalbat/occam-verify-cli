@@ -20,6 +20,8 @@ class Label {
 
   getString() { return this.metavariable.getString(); }
 
+  getTokens() { return this.metavariable.getTokens(); }
+
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }

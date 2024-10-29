@@ -35,11 +35,3 @@ export default class MetavariableNodeAndTokens extends NodeAndTokens {
 
   static fromString(string, context) { return NodeAndTokens.fromString(MetavariableNodeAndTokens, string, context); }
 }
-
-export function metavariableNodeFromMetavariableString(metavariableString, context) {
-  const string = metavariableString,  ///
-        metavariableNodeAndTokens = MetavariableNodeAndTokens.fromString(string, context),
-        metavariableNode = metavariableNodeAndTokens.getMetavariableNode();
-
-  return metavariableNode;
-}

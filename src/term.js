@@ -5,7 +5,7 @@ import { arrayUtilities } from "necessary";
 import shim from "./shim";
 import unifyMixins from "./mixins/term/unify";
 import verifyMixins from "./mixins/term/verify";
-import termAsConstructorVerifier from "./verifier/termAsConstructor";
+import constructorVerifier from "./verifier/constructor";
 
 import { objectType } from "./type";
 import { nodeQuery, nodesQuery } from "./utilities/query"
@@ -231,7 +231,7 @@ class Term {
     fileContext.trace(`Verifying the '${termString}' term when declared...`);
 
     const termNode = this.node, ///
-          termVerifiedAsConstructor = termAsConstructorVerifier.verifyTerm(termNode, fileContext);
+          termVerifiedAsConstructor = constructorVerifier.verifyTerm(termNode, fileContext);
 
     if (termVerifiedAsConstructor) {
       const typeVerified = this.verifyType(fileContext);

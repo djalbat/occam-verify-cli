@@ -54,14 +54,19 @@ class Metatheorem extends TopLevelAssertion {
           statementString = statement.getString(),
           metatheoremString = metatheorem.getString();
 
-    context.trace(`Unifying the '${statementString}' reference with the '${metatheoremString}' metatheorem...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${metatheoremString}' metatheorem...`);
 
-    const consequent = this.getConsequent();
+    const suppositions = this.getSuppositions(),
+          suppositionsLength = suppositions.length;
 
-    statementUnified = consequent.unifyStatement(statement, substitutions, context);
+    if (suppositionsLength === 0) {
+      const statementUnifiedWithConsequent = this.unifyStatementWithConsequent(statement, substitutions, context);
+
+      statementUnified = statementUnifiedWithConsequent;  ///
+    }
 
     if (statementUnified) {
-      context.debug(`...unified the '${statementString}' reference with the '${metatheoremString}' metatheorem.`);
+      context.debug(`...unified the '${statementString}' statement with the '${metatheoremString}' metatheorem.`);
     }
 
     return statementUnified;
@@ -115,7 +120,7 @@ class Metatheorem extends TopLevelAssertion {
           substitutions = substitutionsFromJSON(json, fileContext),
           string = stringFromLabels(labels),
           proof = null,
-          topLevelAssertion = new Metatheorem(fileContext, string, labels, suppositions, consequent, proof, substitutions);
+          topLevelAssertion = new Metatheorem(fileContext, string, labels, substitutions, suppositions, consequent, proof);
 
     return topLevelAssertion;
   }

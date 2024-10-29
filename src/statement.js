@@ -6,8 +6,8 @@ import verifyMixins from "./mixins/statement/verify";
 import LocalContext from "./context/local";
 import resolveMixins from "./mixins/statement/resolve";
 import metaLevelUnifier from "./unifier/metaLevel";
+import combinatorVerifier from "./verifier/combinator";
 import StatementNodeAndTokens from "./nodeAndTokens/statement";
-import statementAsCombinatorVerifier from "./verifier/statementAsCombinator";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
@@ -209,7 +209,7 @@ class Statement {
 
     fileContext.trace(`Verifying the '${statementString}' statement when declared...`);
 
-    verifiedAtTopLevel = statementAsCombinatorVerifier.verifyStatement(statementNode, fileContext);
+    verifiedAtTopLevel = combinatorVerifier.verifyStatement(statementNode, fileContext);
 
     if (verifiedAtTopLevel) {
       fileContext.debug(`...verified the '${statementString}' statement when declared.`);

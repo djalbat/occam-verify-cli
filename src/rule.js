@@ -69,62 +69,61 @@ class Rule {
     return metavariableNameMatches;
   }
 
-  unifyStatement(statement, context) {
-    let statementUnified;
+  unifyStatementAndProofSteps(statement, proofSteps, context) {
+    let statementAndProofStepsUnified;
 
     const { Substitutions } = shim,
           substitutions = Substitutions.fromNothing(),
-          conclusionUnified = this.unifyConclusion(statement, substitutions, context);
+          statementUnifiedWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, context);
 
-    if (conclusionUnified) {
-      const premisesUnified = this.unifyPremises(substitutions, context);
+    if (statementUnifiedWithConclusion) {
+      const proofStepsUnifiedWithPremises = this.unifyProofStepsWithPremises(proofSteps, substitutions, context);
 
-      if (premisesUnified) {
+      if (proofStepsUnifiedWithPremises) {
         const substitutionsResolved = substitutions.areResolved();
 
-        statementUnified = substitutionsResolved; ///
+        statementAndProofStepsUnified = substitutionsResolved; ///
       }
     }
 
-    return statementUnified;
+    return statementAndProofStepsUnified;
   }
 
-  unifyConclusion(statement, substitutions, context) {
-    let conclusionUnified;
+  unifyStatementWithConclusion(statement, substitutions, context) {
+    let statementUnifiedWithConclusion;
 
-    const conclusionString = this.conclusion.getString();
+    const statementString = statement.getString(),
+          conclusionString = this.conclusion.getString();
 
-    context.trace(`Unifying the '${conclusionString}' conclusion...`);
+    context.trace(`Unifying the '${statementString}' statement with the ${conclusionString}' conclusion...`);
 
     const statementUnified = this.conclusion.unifyStatement(statement, substitutions, context);  ///
 
-    conclusionUnified = statementUnified; ///
+    statementUnifiedWithConclusion = statementUnified; ///
 
-    if (conclusionUnified) {
-      context.debug(`...unified the '${conclusionString}' conclusion`);
+    if (statementUnifiedWithConclusion) {
+      context.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion`);
     }
 
-    return conclusionUnified;
+    return statementUnifiedWithConclusion;
   }
 
-  unifyPremises(substitutions, context) {
-    let proofSteps = context.getProofSteps();
-
+  unifyProofStepsWithPremises(proofSteps, substitutions, context) {
     proofSteps = reverse(proofSteps); ///
 
-    const premisesUnified = backwardsEvery(this.premises, (premise) => {
-      const premiseUnified = this.unifyPremise(premise, proofSteps, substitutions, context);
+    const proofStepsUnifiedWithPremises = backwardsEvery(this.premises, (premise) => {
+      const proofStepUnifiedWithPremise = this.unifyProofStepsWithPremise(proofSteps, premise, substitutions, context);
 
-      if (premiseUnified) {
+      if (proofStepUnifiedWithPremise) {
         return true;
       }
     });
 
-    return premisesUnified;
+    return proofStepsUnifiedWithPremises;
   }
 
-  unifyPremise(premise, proofSteps, substitutions, context) {
-    let premiseUnified  =false;
+  unifyProofStepsWithPremise(proofSteps, premise, substitutions, context) {
+    let proofStepsUnifiedWithPremise  =false;
 
     const premiseString = premise.getString();
 
@@ -133,7 +132,7 @@ class Rule {
     const premiseResolvedIndependently = premise.resolveIndependently(substitutions, context);
 
     if (premiseResolvedIndependently) {
-      premiseUnified = true;
+      proofStepsUnifiedWithPremise = true;
     } else {
       const proofStep = extract(proofSteps, (proofStep) => {
         const proofStepUnified = premise.unifyProofStep(proofStep, substitutions, context);
@@ -144,15 +143,15 @@ class Rule {
       }) || null;
 
       if (proofStep !== null) {
-        premiseUnified = true;
+        proofStepsUnifiedWithPremise = true;
       }
     }
 
-    if (premiseUnified) {
+    if (proofStepsUnifiedWithPremise) {
       context.debug(`...unified the '${premiseString}' premise.`);
     }
 
-    return premiseUnified;
+    return proofStepsUnifiedWithPremise;
   }
 
   verify() {

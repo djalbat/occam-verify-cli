@@ -273,7 +273,7 @@ class LocalContext {
 
   isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
 
-  isMetavariablePresentByMetavariableNode(metavariableNode, specificContext) { return this.context.isMetavariablePresentByMetavariableNode(metavariableNode, specificContext); }
+  isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext) { return this.context.isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext); }
 
   isVariablePresentByVariableName(variableName, nested = true) {
     const variable = this.findVariableByVariableName(variableName, nested),
@@ -300,7 +300,7 @@ class LocalContext {
 
   findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
 
-  findMetavariableByMetavariableNode(metavariableNode, specificContext) { return this.context.findMetavariableByMetavariableNode(metavariableNode, specificContext); }
+  findMetavariableByMetavariableNode(metavariableNode, generalContext, specificContext) { return this.context.findMetavariableByMetavariableNode(metavariableNode, generalContext, specificContext); }
 
   findVariableByVariableName(variableName, nested = true) {
     const variables = this.getVariables(nested),

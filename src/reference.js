@@ -2,11 +2,11 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
+import labelUnifier from "./unifier/label";
 
 import { nodeQuery } from "./utilities/query";
 import { referenceMetaType } from "./metaType";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "./utilities/json";
-import labelUnifier from "./unifier/label";
 
 const metavariableNodeQuery = nodeQuery("//reference/metavariable");
 
@@ -20,6 +20,8 @@ export default class Reference {
   }
 
   getString() { return this.metavariable.getString(); }
+
+  getTokens() { return this.metavariable.getTokens(); }
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
@@ -43,6 +45,30 @@ export default class Reference {
           referenceString = reference.getString();
 
     specificContext.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
+
+    let tokens,
+        context,
+        localContext;
+
+    const labelTokens = label.getTokens();
+
+    context = generalContext; ///
+
+    tokens = labelTokens; ///
+
+    localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+    generalContext = localContext;  ///
+
+    const referenceTokens = reference.getTokens();
+
+    context = specificContext; ///
+
+    tokens = referenceTokens; ///
+
+    localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+    specificContext = localContext;  ///
 
     const labelMetavariable = label.getMetavariable(),
           referenceMetavariable = reference.getMetavariable(),

@@ -397,8 +397,8 @@ export default class FileContext {
     return metavariablePresent;
   }
 
-  isMetavariablePresentByMetavariableNode(metavariableNode, specificContext) {
-    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, specificContext),
+  isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext) {
+    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, generalContext, specificContext),
           metavariablePresent = (metavariable !== null);
 
     return metavariablePresent;
@@ -548,9 +548,8 @@ export default class FileContext {
     return metavariable;
   }
 
-  findMetavariableByMetavariableNode(metavariableNode, specificContext) {
+  findMetavariableByMetavariableNode(metavariableNode, generalContext, specificContext) {
     const specificMetavariableNode = metavariableNode, ///
-          generalContext = this,  ///
           metavariables = this.getMetavariables(),
           metavariable = metavariables.find((metavariable) => {
             const generalMetavariable = metavariable, ///

@@ -44,14 +44,19 @@ class MetaLemma extends TopLevelAssertion {
           statementString = statement.getString(),
           metaLemmaString = metaLemma.getString();
 
-    context.trace(`Unifying the '${statementString}' reference with the '${metaLemmaString}' meta-lemma...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${metaLemmaString}' meta-lemma...`);
 
-    const consequent = this.getConsequent();
+    const suppositions = this.getSuppositions(),
+          suppositionsLength = suppositions.length;
 
-    statementUnified = consequent.unifyStatement(statement, substitutions, context);
+    if (suppositionsLength === 0) {
+      const statementUnifiedWithConsequent = this.unifyStatementWithConsequent(statement, substitutions, context);
+
+      statementUnified = statementUnifiedWithConsequent;  ///
+    }
 
     if (statementUnified) {
-      context.debug(`...unified the '${statementString}' reference with the '${metaLemmaString}' meta-lemma.`);
+      context.debug(`...unified the '${statementString}' statement with the '${metaLemmaString}' meta-lemma.`);
     }
 
     return statementUnified;
