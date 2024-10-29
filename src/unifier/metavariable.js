@@ -31,26 +31,22 @@ class MetavariableUnifier extends Unifier {
 
         const { Term } = shim,
               typeNode = generalTypeNode, ///
-              typeName = typeNameFromTypeNode(typeNode);
+              termNode = specificTermNode, ///
+              typeName = typeNameFromTypeNode(typeNode),
+              type = generalContext.findTypeByTypeName(typeName);
 
-        const type = generalContext.findTypeByTypeName(typeName);
+        let context;
 
-        if (type !== null) {
-          let context;
+        context = generalContext; ///
 
-          const termNode = specificTermNode; ///
+        const term = Term.fromTermNode(termNode, context);
 
-          context = generalContext; ///
+        context = specificContext;  ///
 
-          const term = Term.fromTermNode(termNode, context);
+        const termVerifiedGivenType = term.verifyGivenType(type, context);
 
-          context = specificContext; ///
-
-          const termVerifiedGivenType = term.verifyGivenType(type, context);
-
-          if (termVerifiedGivenType) {
-            termUnified = true;
-          }
+        if (termVerifiedGivenType) {
+          termUnified = true;
         }
 
         return termUnified;

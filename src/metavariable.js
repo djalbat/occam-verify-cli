@@ -210,8 +210,8 @@ class Metavariable {
     context.trace(`Verifying the '${metavariableString}' metavariable...`);
 
     const metavariableNode = this.node,
-          generalContext = context,  ///
           specificContext = context,  ///
+          generalContext = context,  ///
           metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext);
 
     verified = metavariablePresent; ///

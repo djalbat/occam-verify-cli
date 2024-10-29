@@ -11,10 +11,10 @@ function unifyAWithRule(qualifiedStatement, substitutions, context) {
         rule = context.findRuleByReference(reference);
 
   if (rule !== null) {
-    const referenceString = reference.getString(),
+    const ruleString = rule.getString(),
           qualifiedStatementString = trim(qualifiedStatement.getString());  ///
 
-    context.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${referenceString}' rule...`);
+    context.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${ruleString}' rule...`);
 
     const statement = qualifiedStatement.getStatement(),
           proofSteps = context.getProofSteps(),
@@ -23,7 +23,7 @@ function unifyAWithRule(qualifiedStatement, substitutions, context) {
     unifiedWithRule = statementAndProofStepsUnified;  ///
 
     if (unifiedWithRule) {
-      context.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${referenceString}' rule.`);
+      context.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${ruleString}' rule.`);
     }
   }
 
@@ -73,10 +73,10 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(qualifiedStatement, substitutio
         axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
 
   if (axiomLemmaTheoremConjecture !== null) {
-    const referenceString = reference.getString(),
-          qualifiedStatementString = trim(qualifiedStatement.getString());  ///
+    const qualifiedStatementString = trim(qualifiedStatement.getString()),  ///
+          axiomLemmaTheoremConjectureString = reference.getString();
 
-    context.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${referenceString}' axiom, lemma, theorem or conjecture...`);
+    context.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`);
 
     const statement = qualifiedStatement.getStatement(),
           proofSteps = context.getProofSteps(),
@@ -93,7 +93,7 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(qualifiedStatement, substitutio
     }
 
     if (unifiedWithAxiomLemmaTheoremOrConjecture) {
-      context.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${referenceString}' axiom, lemma, theorem or conjecture.`);
+      context.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture.`);
     }
   }
 

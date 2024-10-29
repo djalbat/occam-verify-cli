@@ -72,12 +72,16 @@ class Rule {
   unifyStatementAndProofSteps(statement, proofSteps, context) {
     let statementAndProofStepsUnified;
 
+    const localContext = LocalContext.fromFileContext(this.fileContext),
+          generalContext = localContext, ///
+          specificContext = context; ///
+
     const { Substitutions } = shim,
           substitutions = Substitutions.fromNothing(),
-          statementUnifiedWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, context);
+          statementUnifiedWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifiedWithConclusion) {
-      const proofStepsUnifiedWithPremises = this.unifyProofStepsWithPremises(proofSteps, substitutions, context);
+      const proofStepsUnifiedWithPremises = this.unifyProofStepsWithPremises(proofSteps, substitutions, generalContext, specificContext);
 
       if (proofStepsUnifiedWithPremises) {
         const substitutionsResolved = substitutions.areResolved();
@@ -89,30 +93,21 @@ class Rule {
     return statementAndProofStepsUnified;
   }
 
-  unifyStatementWithConclusion(statement, substitutions, context) {
+  unifyStatementWithConclusion(statement, substitutions, generalContext, specificContext) {
     let statementUnifiedWithConclusion;
 
-    const statementString = statement.getString(),
-          conclusionString = this.conclusion.getString();
-
-    context.trace(`Unifying the '${statementString}' statement with the ${conclusionString}' conclusion...`);
-
-    const statementUnified = this.conclusion.unifyStatement(statement, substitutions, context);  ///
+    const statementUnified = this.conclusion.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     statementUnifiedWithConclusion = statementUnified; ///
-
-    if (statementUnifiedWithConclusion) {
-      context.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion`);
-    }
 
     return statementUnifiedWithConclusion;
   }
 
-  unifyProofStepsWithPremises(proofSteps, substitutions, context) {
+  unifyProofStepsWithPremises(proofSteps, substitutions, generalContext, specificContext) {
     proofSteps = reverse(proofSteps); ///
 
     const proofStepsUnifiedWithPremises = backwardsEvery(this.premises, (premise) => {
-      const proofStepUnifiedWithPremise = this.unifyProofStepsWithPremise(proofSteps, premise, substitutions, context);
+      const proofStepUnifiedWithPremise = this.unifyProofStepsWithPremise(proofSteps, premise, substitutions, generalContext, specificContext);
 
       if (proofStepUnifiedWithPremise) {
         return true;
@@ -122,20 +117,16 @@ class Rule {
     return proofStepsUnifiedWithPremises;
   }
 
-  unifyProofStepsWithPremise(proofSteps, premise, substitutions, context) {
+  unifyProofStepsWithPremise(proofSteps, premise, substitutions, generalContext, specificContext) {
     let proofStepsUnifiedWithPremise  =false;
 
-    const premiseString = premise.getString();
-
-    context.trace(`Unifying the '${premiseString}' premise...`);
-
-    const premiseResolvedIndependently = premise.resolveIndependently(substitutions, context);
+    const premiseResolvedIndependently = premise.resolveIndependently(substitutions, generalContext, specificContext);
 
     if (premiseResolvedIndependently) {
       proofStepsUnifiedWithPremise = true;
     } else {
       const proofStep = extract(proofSteps, (proofStep) => {
-        const proofStepUnified = premise.unifyProofStep(proofStep, substitutions, context);
+        const proofStepUnified = premise.unifyProofStep(proofStep, substitutions, generalContext, specificContext);
 
         if (proofStepUnified) {
           return true;
@@ -145,10 +136,6 @@ class Rule {
       if (proofStep !== null) {
         proofStepsUnifiedWithPremise = true;
       }
-    }
-
-    if (proofStepsUnifiedWithPremise) {
-      context.debug(`...unified the '${premiseString}' premise.`);
     }
 
     return proofStepsUnifiedWithPremise;

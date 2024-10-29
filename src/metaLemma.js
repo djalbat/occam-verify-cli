@@ -50,7 +50,11 @@ class MetaLemma extends TopLevelAssertion {
           suppositionsLength = suppositions.length;
 
     if (suppositionsLength === 0) {
-      const statementUnifiedWithConsequent = this.unifyStatementWithConsequent(statement, substitutions, context);
+      const fileContext = this.getFileContext(),
+            localContext = LocalContext.fromFileContext(fileContext),
+            generalContext = localContext,  ///
+            specificContext = context,  ///
+            statementUnifiedWithConsequent = this.unifyStatementWithConsequent(statement, substitutions, generalContext, specificContext);
 
       statementUnified = statementUnifiedWithConsequent;  ///
     }

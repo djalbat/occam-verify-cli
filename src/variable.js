@@ -16,14 +16,14 @@ const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
 
 class Variable {
   constructor(context, string, node, name, type) {
-    this.context = context; ///
+    this.context = context;
     this.string = string;
     this.node = node;
     this.name = name;
     this.type = type;
   }
 
-  getLocalContext() {
+  getContext() {
     return this.context;
   }
 
@@ -66,9 +66,10 @@ class Variable {
 
     context.trace(`Verifying the '${variableString}' variable...`);
 
-    const variableNode = this.node, ///
+    const generalContext = context, ///
+          variableNode = this.node, ///
           variableName = variableNameFromVariableNode(variableNode),
-          variable = context.findVariableByVariableName(variableName);
+          variable = generalContext.findVariableByVariableName(variableName);
 
     if (variable !== null) {
       const type = variable.getType();
@@ -126,7 +127,8 @@ class Variable {
 
     const variableNode = this.node, ///
           variableName = variableNameFromVariableNode(variableNode),
-          variablePresent = fileContext.isVariablePresentByVariableName(variableName);
+          generalContext = fileContext, ///
+          variablePresent = generalContext.isVariablePresentByVariableName(variableName);
 
     if (variablePresent) {
       fileContext.debug(`The '${variableString}' variable is already present.`);
@@ -220,25 +222,6 @@ class Variable {
     return variable;
   }
 
-  static fromTermNode(termNode, context) {
-    let variable = null;
-
-    const termVariableNode = termVariableNodeQuery(termNode);
-
-    if (termVariableNode !== null) {
-      const variableNode = termVariableNode,  ///
-            variableName = variableNameFromVariableNode(variableNode),
-            node = variableNode,  ///
-            string = context.nodeAsString(node),
-            name = variableName,  ///
-            type = null;
-
-      variable = new Variable(context, string, node, name, type);
-    }
-
-    return variable;
-  }
-
   static fromVariableNode(variableNode, context) {
     let variable = null;
 
@@ -295,8 +278,7 @@ export default Variable;
 
 function variableFromVariableNode(variableNode, generalContext) {
   const variableName = variableNameFromVariableNode(variableNode),
-        context = generalContext, ///
-        variable = context.findVariableByVariableName(variableName);
+        variable = generalContext.findVariableByVariableName(variableName);
 
   return variable;
 }
@@ -307,10 +289,9 @@ function termVariableFromTermNode(termNode, generalContext) {
   const termVariableNode = termVariableNodeQuery(termNode);
 
   if (termVariableNode !== null) {
-    const termVariableName = variableNameFromVariableNode(termVariableNode),
-          context = generalContext; ///
+    const termVariableName = variableNameFromVariableNode(termVariableNode);
 
-    termVariable = context.findVariableByVariableName(termVariableName);
+    termVariable = generalContext.findVariableByVariableName(termVariableName);
   }
 
   return termVariable;

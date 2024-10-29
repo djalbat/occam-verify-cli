@@ -10,9 +10,10 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
   let termVerifiedAsVariable = false;
 
   const { Variable } = shim,
+        context = localContext, ///
         termNode = term.getNode(),
         variableNode = variableNodeQuery(termNode),
-        variable = Variable.fromVariableNode(variableNode, localContext);
+        variable = Variable.fromVariableNode(variableNode, context);
 
   if (variable !== null) {
     const termString = term.getString();

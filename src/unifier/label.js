@@ -29,11 +29,11 @@ class LabelUnifier extends Unifier {
       unify: (generalTermNode, specificTermVariableNode, substitutions, generalContext, specificContext) => {
         let termUnified;
 
-        let context;
-
         const { Term, Variable } = shim,
               termNode = generalTermNode, ///
               variableNode = specificTermVariableNode; ///
+
+        let context;
 
         context = specificContext;  ///
 

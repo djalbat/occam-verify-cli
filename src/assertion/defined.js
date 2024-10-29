@@ -171,7 +171,8 @@ function verifyWhenDerived(term, frame, negated, context) {
     const termNode = term.getNode(),
           variableNode = variableNodeQuery(termNode),
           variableName = variableNameFromVariableNode(variableNode),
-          variableDefined = context.isVariableDefinedByVariableName(variableName);
+          generalContext = context, ///
+          variableDefined = generalContext.isVariableDefinedByVariableName(variableName);
 
     if (!negated && variableDefined) {
       verifiedWhenDerived = true;

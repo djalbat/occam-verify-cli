@@ -11,13 +11,8 @@ import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatemen
 const unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement");
 
 class Supposition {
-  constructor(fileContext, unqualifiedStatement) {
-    this.fileContext = fileContext;
+  constructor(unqualifiedStatement) {
     this.unqualifiedStatement = unqualifiedStatement;
-  }
-
-  getFileContext() {
-    return this.fileContext;
   }
 
   getUnqualifiedStatement() {
@@ -28,12 +23,8 @@ class Supposition {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
-  resolveIndependently(substitutions, context) {
+  resolveIndependently(substitutions, generalContext, specificContext) {
     let resolvedIndependently;
-
-    const localContext = LocalContext.fromFileContext(this.fileContext),
-          generalContext = localContext,  ///
-          specificContext = context; ///
 
     const supposition = this, ///
           suppositionString = supposition.getString();
@@ -51,12 +42,8 @@ class Supposition {
     return resolvedIndependently;
   }
 
-  unifyProofStep(proofStep, substitutions, context) {
+  unifyProofStep(proofStep, substitutions, generalContext, specificContext) {
     let proofStepUnified = false;
-
-    const localContext = LocalContext.fromFileContext(this.fileContext),
-          generalContext = localContext,  ///
-          specificContext = context; ///
 
     const subproof = proofStep.getSubproof(),
           statement = proofStep.getStatement();
@@ -75,14 +62,12 @@ class Supposition {
     }
 
     if (subproofUnified || statementUnified) {
-      const localContext = LocalContext.fromFileContext(this.fileContext),
-            generalContext = localContext,  ///
-            specificContext = context; ///
-
       substitutions.resolve(generalContext, specificContext);
 
       proofStepUnified = true;
     }
+
+    const context = specificContext;  ///
 
     proofStepUnified ?
       substitutions.continue() :
@@ -117,13 +102,25 @@ class Supposition {
           suppositionStatement = supposition.getStatement(),
           suppositionStatementString = suppositionStatement.getString();
 
-    const statement = this.unqualifiedStatement.getStatement(),
-          statementNode = statement.getNode();
-
     specificContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
 
-    const context = specificContext,  ///
-          subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
+    const statement = this.unqualifiedStatement.getStatement(),
+          statementNode = statement.getNode(),
+          statementTokens = statement.getTokens();
+
+    let context;
+
+    const tokens = statementTokens; ///
+
+    context = generalContext; ///
+
+    const localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+    generalContext = localContext;  ///
+
+    context = generalContext; ///
+
+    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
 
     if (subproofAssertion !== null) {
       subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
@@ -179,7 +176,7 @@ class Supposition {
 
   static fromJSON(json, fileContext) {
     const unqualifiedStatement = unqualifiedStatementFromJSON(json, fileContext),
-          supposition = new Supposition(fileContext, unqualifiedStatement);
+          supposition = new Supposition(unqualifiedStatement);
 
     return supposition;
   }
@@ -188,7 +185,7 @@ class Supposition {
     const { UnqualifiedStatement } = shim,
           unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          supposition = new Supposition(fileContext, unqualifiedStatement);
+          supposition = new Supposition(unqualifiedStatement);
 
     return supposition
   }

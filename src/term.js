@@ -48,9 +48,10 @@ class Term {
     const variableNode = variableNodeQuery(this.node);
 
     if (variableNode !== null) {
-      const variableName = variableNameFromVariableNode(variableNode);
+      const generalContext = context, ///
+            variableName = variableNameFromVariableNode(variableNode);
 
-      variable = context.findVariableByVariableName(variableName);
+      variable = generalContext.findVariableByVariableName(variableName);
     }
 
     return variable;
@@ -61,8 +62,9 @@ class Term {
           variableNodes = variableNodesQuery(this.node);
 
     variableNodes.forEach((variableNode) => {
-      const variableName = variableNameFromVariableNode(variableNode),
-            variable = context.findVariableByVariableName(variableName),
+      const generalContext = context, ///
+            variableName = variableNameFromVariableNode(variableNode),
+            variable = generalContext.findVariableByVariableName(variableName),
             variablesIncludesVariable = variables.includes(variable);
 
       if (!variablesIncludesVariable) {

@@ -1,7 +1,6 @@
 "use strict";
 
 import shim from "./shim";
-import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
 import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
@@ -9,13 +8,8 @@ import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatemen
 const unqualifiedStatementNodeQuery = nodeQuery("/consequent/unqualifiedStatement");
 
 class Consequent {
-  constructor(fileContext, unqualifiedStatement) {
-    this.fileContext = fileContext;
+  constructor(unqualifiedStatement) {
     this.unqualifiedStatement = unqualifiedStatement;
-  }
-
-  getFileContext() {
-    return this.fileContext;
   }
 
   getUnqualifiedStatement() {
@@ -28,12 +22,8 @@ class Consequent {
 
   matchStatementNode(statementNode) { return this.unqualifiedStatement.matchStatementNode(statementNode); }
 
-  unifyStatement(statement, substitutions, context) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
-
-    const localContext = LocalContext.fromFileContext(this.fileContext),
-          generalContext = localContext, ///
-          specificContext = context; ///
 
     const consequent = this,  ///
           statementString = statement.getString(),
@@ -84,7 +74,7 @@ class Consequent {
 
   static fromJSON(json, fileContext) {
     const unqualifiedStatement = unqualifiedStatementFromJSON(json, fileContext),
-          consequent = new Consequent(fileContext, unqualifiedStatement);
+          consequent = new Consequent(unqualifiedStatement);
 
     return consequent;
   }
@@ -93,7 +83,7 @@ class Consequent {
     const { UnqualifiedStatement } = shim,
           unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          consequent = new Consequent(fileContext, unqualifiedStatement);
+          consequent = new Consequent(unqualifiedStatement);
 
     return consequent;
   }

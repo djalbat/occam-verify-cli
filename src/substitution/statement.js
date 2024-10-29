@@ -157,9 +157,11 @@ class StatementSubstitution extends Substitution {
         specificContext.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
       }
 
+      context = specificContext;  ///
+
       unifiedAtMetaLevel ?
         substitutions.continue() :
-          substitutions.rollback(specificContext);
+          substitutions.rollback(context);
 
       substitutionResolved = unifiedAtMetaLevel;  ///
     }

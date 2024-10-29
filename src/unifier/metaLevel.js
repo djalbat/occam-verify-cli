@@ -77,27 +77,23 @@ class MetaLevelUnifier extends Unifier {
       generalNodeQuery: frameMetavariableNodeQuery,
       specificNodeQuery: frameNodeQuery,
       unify: (generalFrameMetavariableNode, specificFrameNode, substitutions, generalContext, specificContext) => {
-        let frameUnified = false;
+        let frameUnified;
 
-        const metavariableNode = generalFrameMetavariableNode,  ///
-              metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext);
+        const { Frame, Metavariable } = shim,
+              frameNode = specificFrameNode, ///
+              metavariableNode = generalFrameMetavariableNode;  ///
 
-        if (metavariablePresent) {
-          let context;
+        let context;
 
-          const { Frame, Metavariable } = shim,
-                frameNode = specificFrameNode; ///
+        context = generalContext; ///
 
-          context = generalContext; ///
+        const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
 
-          const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
+        context = specificContext;  ///
 
-          context = specificContext;  ///
+        const frame = Frame.fromFrameNode(frameNode, context);
 
-          const frame = Frame.fromFrameNode(frameNode, context);
-
-          frameUnified = metavariable.unifyFrame(frame, substitutions, context);
-        }
+        frameUnified = metavariable.unifyFrame(frame, substitutions, context);
 
         return frameUnified;
       }
@@ -106,28 +102,23 @@ class MetaLevelUnifier extends Unifier {
       generalNodeQuery: termVariableNodeQuery,
       specificNodeQuery: termNodeQuery,
       unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
-        let termUnified = false;
+        let termUnified;
 
-        const variableNode = generalTermVariableNode, ///
-              variableName = variableNameFromVariableNode(variableNode),
-              variablePresent = generalContext.isVariablePresentByVariableName(variableName);
+        const { Term, Variable } = shim,
+              termNode = specificTermNode, ///
+              variableNode = generalTermVariableNode; ///
 
-        if (variablePresent) {
-          let context;
+        let context;
 
-          const { Term, Variable } = shim,
-                termNode = specificTermNode; ///
+        context = generalContext; ///
 
-          context = generalContext; ///
+        const variable = Variable.fromVariableNode(variableNode, context);
 
-          const variable = Variable.fromVariableNode(variableNode, context);
+        context = specificContext;  ///
 
-          context = specificContext;  ///
+        const term = Term.fromTermNode(termNode, context);
 
-          const term = Term.fromTermNode(termNode, context);
-
-          termUnified = variable.unifyTerm(term, substitutions, generalContext, specificContext);
-        }
+        termUnified = variable.unifyTerm(term, substitutions, generalContext, specificContext);
 
         return termUnified;
       }

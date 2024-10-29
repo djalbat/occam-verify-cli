@@ -4,7 +4,6 @@ import { arrayUtilities } from "necessary";
 
 import Equivalence from "../equivalence";
 
-import { metavariableNameFromMetavariableNode } from "../utilities/name";
 import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../utilities/equivalences";
 
 const { last } = arrayUtilities;

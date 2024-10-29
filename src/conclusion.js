@@ -1,7 +1,6 @@
 "use strict";
 
 import shim from "./shim";
-import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
 import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
@@ -9,13 +8,8 @@ import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatemen
 const unqualifiedStatementNodeQuery = nodeQuery("/conclusion/unqualifiedStatement");
 
 class Conclusion {
-  constructor(fileContext, unqualifiedStatement) {
-    this.fileContext = fileContext;
+  constructor(unqualifiedStatement) {
     this.unqualifiedStatement = unqualifiedStatement;
-  }
-
-  getFileContext() {
-    return this.fileContext;
   }
 
   getUnqualifiedStatement() {
@@ -28,12 +22,8 @@ class Conclusion {
 
   matchStatementNode(statementNode) { return this.unqualifiedStatement.matchStatementNode(statementNode); }
 
-  unifyStatement(statement, substitutions, context) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
-
-    const localContext = LocalContext.fromFileContext(this.fileContext),
-          generalContext = localContext, ///
-          specificContext = context; ///
 
     const conclusion = this,  ///
           statementString = statement.getString(),
@@ -84,7 +74,7 @@ class Conclusion {
 
   static fromJSON(json, fileContext) {
     const unqualifiedStatement = unqualifiedStatementFromJSON(json, fileContext),
-          conclusion = new Conclusion(fileContext, unqualifiedStatement);
+          conclusion = new Conclusion(unqualifiedStatement);
 
     return conclusion;
   }
@@ -93,7 +83,7 @@ class Conclusion {
     const { UnqualifiedStatement } = shim,
           unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode),
           unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          conclusion = new Conclusion(fileContext, unqualifiedStatement);
+          conclusion = new Conclusion(unqualifiedStatement);
 
     return conclusion;
   }
