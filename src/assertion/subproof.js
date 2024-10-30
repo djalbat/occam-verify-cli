@@ -3,8 +3,8 @@
 import { arrayUtilities } from "necessary";
 
 import shim from "../shim";
-import metaLevelUnifier from "../unifier/metaLevel";
 
+import { unifyStatement } from "../utilities/unification";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const { front, last, match } = arrayUtilities;
@@ -43,13 +43,11 @@ export default class SubproofAssertion {
           subproofAssertionStatements = this.statements;  ///
 
     subproofUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
-      const subproofAssertionStatementNode = subproofAssertionStatement.getNode(),
-            subproofStatementNode = subproofStatement.getNode(),
-            generalNode = subproofAssertionStatementNode,  ///
-            specificNode = subproofStatementNode,  ///
-            unifiedAtMetaLevel = metaLevelUnifier.unify(generalNode, specificNode, substitutions, generalContext, specificContext);
+      const generalStatement = subproofAssertionStatement,  ///
+            specificStatement = subproofStatement,  ///
+            statementUnified = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
-      if (unifiedAtMetaLevel) {
+      if (statementUnified) {
         return true;
       }
     });

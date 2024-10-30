@@ -2,11 +2,10 @@
 
 import shim from "../shim";
 import Substitution from "../substitution";
-import LocalContext from "../context/local";
-import metaLevelUnifier from "../unifier/metaLevel";
 import StatementSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/statement";
 
-import { stripBracketsFromStatement } from "../statement";
+import { unifySubstitution } from "../utilities/unification";
+import { stripBracketsFromStatement } from "../utilities/verification";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
@@ -91,11 +90,6 @@ class StatementSubstitution extends Substitution {
     if (simpleSubstitution !== null) {
       specificContext.trace(`Resolving the ${substitutionString} substitution...`);
 
-      const context = generalContext, ///
-            localContext = LocalContext.fromContextAndTokens(context, this.tokens);
-
-      generalContext = localContext;  ///
-
       const substitution = simpleSubstitution,  ///
             substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, generalContext, specificContext);
 
@@ -125,46 +119,20 @@ class StatementSubstitution extends Substitution {
 
       specificContext.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
 
-      const generalSubstitutionNode = generalSubstitution.getNode(),
-            specificSubstitutionNode = specificSubstitution.getNode(),
-            generalSubstitutionTokens = generalSubstitution.getTokens(),
-            specificSubstitutionTokens = specificSubstitution.getTokens();
+      const substitutionUnified = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
 
-      let tokens,
-          context,
-          localContext;
 
-      tokens = generalSubstitutionTokens; ///
-
-      context = generalContext; ///
-
-      localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-      generalContext = localContext;  ///
-
-      tokens = specificSubstitutionTokens;  ///
-
-      context = specificContext;  ///
-
-      localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-      specificContext = localContext; ///
-
-      const generalNode = generalSubstitutionNode,  ///
-            specificNode = specificSubstitutionNode,  ///,
-            unifiedAtMetaLevel = metaLevelUnifier.unify(generalNode, specificNode, substitutions, generalContext, specificContext);
-
-      if (unifiedAtMetaLevel) {
+      if (substitutionUnified) {
         specificContext.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
       }
 
-      context = specificContext;  ///
+      const context = specificContext;  ///
 
-      unifiedAtMetaLevel ?
+      substitutionUnified ?
         substitutions.continue() :
           substitutions.rollback(context);
 
-      substitutionResolved = unifiedAtMetaLevel;  ///
+      substitutionResolved = substitutionUnified;  ///
     }
 
     if (substitutionResolved) {

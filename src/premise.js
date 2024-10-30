@@ -1,11 +1,10 @@
 "use strict";
 
 import shim from "./shim";
-import LocalContext from "./context/local";
-import SubproofAssertion from "./assertion/subproof";
 
 import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
+import { subproofAssertionFromStatement } from "./utilities/verification";
 import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
 
 const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement");
@@ -104,23 +103,9 @@ class Premise {
 
     specificContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
 
-    const statement = this.unqualifiedStatement.getStatement(),
-          statementNode = statement.getNode(),
-          statementTokens = statement.getTokens();
-
-    let context;
-
-    const tokens = statementTokens; ///
-
-    context = generalContext; ///
-
-    const localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-    generalContext = localContext;  ///
-
-    context = generalContext; ///
-
-    const subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
+    const context = generalContext,
+          statement = this.unqualifiedStatement.getStatement(),
+          subproofAssertion = subproofAssertionFromStatement(statement, context);
 
     if (subproofAssertion !== null) {
       subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);

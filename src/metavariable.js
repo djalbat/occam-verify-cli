@@ -8,6 +8,7 @@ import MetavariableNodeAndTokens from "./nodeAndTokens/metavariable";
 
 import { nodeQuery } from "./utilities/query";
 import { EMPTY_STRING } from "./constants";
+import { unifyMetavariable } from "./utilities/unification";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "./utilities/json";
 import { typeNameFromTypeNode, metavariableNameFromMetavariableNode } from "./utilities/name";
 
@@ -181,6 +182,25 @@ class Metavariable {
     return statementUnified;
   }
 
+  unifyMetavariable(metavariable, generalContext, specificContext) {
+    let metavariableUnified;
+
+    const generalMetavariable = this, ///
+          specificMetavariable = metavariable,  ///
+          generalMetavariableString = generalMetavariable.getString(),
+          specificMetavariableString = specificMetavariable.getString();
+
+    specificContext.trace(`Unifying the '${specificMetavariableString}' metavariable against the '${generalMetavariableString}' metavariable...`);
+
+    metavariableUnified = unifyMetavariable(generalMetavariable, specificMetavariable, generalContext, specificContext);
+
+    if (metavariableUnified) {
+      specificContext.debug(`...unified the '${specificMetavariableString}' metavariable against the '${generalMetavariableString}' metavariable.`);
+    }
+
+    return metavariableUnified;
+  }
+
   unifySubstitution(substitution, context) {
     let substitutionUnified = false;
 
@@ -213,9 +233,8 @@ class Metavariable {
     context.trace(`Verifying the '${metavariableString}' metavariable...`);
 
     const metavariableNode = this.node,
-          localContext = LocalContext.fromContextAndTokens(context, this.tokens),
-          generalContext = localContext,  ///
-          specificContext = localContext,  ///
+          specificContext = context,  ///
+          generalContext = context,  ///
           metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext);
 
     verified = metavariablePresent; ///

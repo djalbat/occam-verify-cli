@@ -2,7 +2,6 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
-import labelUnifier from "./unifier/label";
 
 import { nodeQuery } from "./utilities/query";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "./utilities/json";

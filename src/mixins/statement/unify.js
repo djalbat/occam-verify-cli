@@ -1,20 +1,21 @@
 "use strict";
 
 import BracketedCombinator from "../../combinator/bracketed";
-import statementWithCombinatorUnifier from "../../unifier/statementWithCombinator";
+
+import { unifyStatementWithCombinator } from "../../utilities/unification";
 
 function unifyWithBracketedCombinator(statement, assignments, stated, context) {
   let unifiedWithBracketedCombinator;
 
-  const statementNode = statement.getNode(),
-        statementString = statement.getString(),
-        bracketedCombinator = BracketedCombinator.fromNothing(),
-        bracketedCombinatorStatementNode = bracketedCombinator.getStatementNode(),
-        combinatorStatementNode = bracketedCombinatorStatementNode; ///
+  const statementString = statement.getString();
 
   context.trace(`Unifying the '${statementString}' statement with the bracketed combinator...`);
 
-  unifiedWithBracketedCombinator = statementWithCombinatorUnifier.unify(combinatorStatementNode, statementNode, assignments, stated, context);
+  const bracketedCombinator = BracketedCombinator.fromNothing(),
+        combinator = bracketedCombinator, ///
+        statementUnifiedWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, context);
+
+  unifiedWithBracketedCombinator = statementUnifiedWithCombinator;
 
   if (unifiedWithBracketedCombinator) {
     context.debug(`...unified the '${statementString}' statement with the bracketed combinator.`);
@@ -33,7 +34,7 @@ function unifyWithCombinators(statement, assignments, stated, context) {
   assignments = null; ///
 
   unifiedWithCombinators = combinators.some((combinator) => {
-    const unifiedWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, context);
+    const unifiedWithCombinator = unifyWithCombinator(statement, combinator, assignments, stated, context);
 
     if (unifiedWithCombinator) {
       return true;
@@ -51,17 +52,17 @@ const unifyMixins = [
 
 export default unifyMixins;
 
-function unifyStatementWithCombinator(statement, combinator, assignments, stated, context) {
+function unifyWithCombinator(statement, combinator, assignments, stated, context) {
   let unifiedWithCombinator;
 
-  const statementNode = statement.getNode(),
-        statementString = statement.getString(),
-        combinatorString = combinator.getString(),
-        combinatorStatementNode = combinator.getStatementNode();
+  const statementString = statement.getString(),
+        combinatorString = combinator.getString();
 
   context.trace(`Unifying the '${statementString}' statement with the '${combinatorString}' combinator...`);
 
-  unifiedWithCombinator = statementWithCombinatorUnifier.unify(combinatorStatementNode, statementNode, assignments, stated, context);
+  const statementUnifiedWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, context);
+
+  unifiedWithCombinator = statementUnifiedWithCombinator; ///
 
   if (unifiedWithCombinator) {
     context.debug(`...unified the '${statementString}' statement with the '${combinatorString}' combinator.`);

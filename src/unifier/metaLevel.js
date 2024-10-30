@@ -6,7 +6,6 @@ import TermSubstitution from "../substitution/term";
 import FrameSubstitution from "../substitution/frame";
 
 import { nodeQuery } from "../utilities/query";
-import { variableNameFromVariableNode } from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/term"),
       frameNodeQuery = nodeQuery("/frame"),

@@ -3,15 +3,13 @@
 import shim from "./shim";
 import unifyMixins from "./mixins/statement/unify";
 import verifyMixins from "./mixins/statement/verify";
-import LocalContext from "./context/local";
 import resolveMixins from "./mixins/statement/resolve";
-import metaLevelUnifier from "./unifier/metaLevel";
 import combinatorVerifier from "./verifier/combinator";
 import StatementNodeAndTokens from "./nodeAndTokens/statement";
 
+import { unifyStatement } from "./utilities/unification";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
-import { bracketedStatementChildNodeFromStatementNode } from "./utilities/brackets";
 
 const statementNodeQuery = nodeQuery("/*//statement"),
       statementTermNodesQuery = nodesQuery("/statement//term"),
@@ -111,11 +109,6 @@ class Statement {
 
     specificContext.trace(`Resolving the '${statementString}' statement independently...`);
 
-    const context = generalContext, ///
-          localContext = LocalContext.fromContextAndTokens(context, this.tokens);
-
-    generalContext = localContext;  ///
-
     const resolved = resolveMixins.some((resolveMixin) => {
       const statement = this, ///
             resolved = resolveMixin(statement, substitutions, generalContext, specificContext);
@@ -144,36 +137,7 @@ class Statement {
 
     specificContext.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`);
 
-    const generalStatementNode = generalStatement.getNode(),  ///
-          specificStatementNode = specificStatement.getNode(),  ///
-          generalStatementTokens = generalStatement.getTokens(),
-          specificStatementTokens = specificStatement.getTokens();
-
-    let tokens,
-        context,
-        localContext;
-
-    tokens = generalStatementTokens;  ///
-
-    context = generalContext; ///
-
-    localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-    generalContext = localContext;  ///
-
-    tokens = specificStatementTokens; ///
-
-    context = specificContext; ///
-
-    localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-    specificContext = localContext; ///
-
-    const generalNode = generalStatementNode, ///
-          specificNode = specificStatementNode,
-          unifiedAtMetaLevel = metaLevelUnifier.unify(generalNode, specificNode, substitutions, generalContext, specificContext);
-
-    statementUnified = unifiedAtMetaLevel; ///
+    statementUnified = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
       specificContext.debug(`...unified the '${specificStatementString}' statement with the '${generalStatementString}' statement.`);
@@ -323,22 +287,3 @@ Object.assign(shim, {
 
 export default Statement;
 
-export function stripBracketsFromStatement(statement, context) {
-  const statementNode = statement.getNode(),
-        bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
-
-  if (bracketedStatementChildNode !== null) {
-    const statementTokens = statement.getTokens(),
-          tokens = statementTokens, ///
-          localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-    context = localContext; ///
-
-    const { Statement } = shim,
-          statementNode = bracketedStatementChildNode;  ///
-
-    statement = Statement.fromStatementNode(statementNode, context);
-  }
-
-  return statement;
-}

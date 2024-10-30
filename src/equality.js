@@ -1,11 +1,11 @@
 "use strict";
 
 import shim from "./shim";
-import equalityUnifier from "./unifier/equality";
 import EqualityAssignment from "./assignment/equality";
 import VariableAssignment from "./assignment/variable";
 
 import { nodeQuery } from "./utilities/query";
+import { unifyEquality } from "./utilities/unification";
 
 const variableNodeQuery = nodeQuery("/term/variable!"),
       leftTermNodeQuery = nodeQuery("/equality/term[0]"),
@@ -58,9 +58,8 @@ class Equality {
   }
 
   isEqual(context) {
-    const leftTermNode = this.leftTerm.getNode(),
-          rightTermNode = this.rightTerm.getNode(),
-          equalityUnified = equalityUnifier.unify(leftTermNode, rightTermNode, context),
+    const equality = this,  ///
+          equalityUnified = unifyEquality(equality, context),
           equal = equalityUnified;  ///
 
     return equal;

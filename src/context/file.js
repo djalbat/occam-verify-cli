@@ -3,7 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import shim from "../shim";
-import metavariableUnifier from "../unifier/metavariable";
 
 import { objectType } from "../type";
 import { frameMetaType, referenceMetaType, statementMetaType } from "../metaType";
@@ -550,11 +549,9 @@ export default class FileContext {
 
   findMetavariableByMetavariableNode(metavariableNode, generalContext, specificContext) {
     const metavariables = this.getMetavariables(),
-          specificMetavariableNode = metavariableNode, ///
           metavariable = metavariables.find((metavariable) => {
             const generalMetavariable = metavariable, ///
-                  generalMetavariableNode = generalMetavariable.getNode(), ///
-                  metavariableUnified = metavariableUnifier.unify(generalMetavariableNode, specificMetavariableNode, generalContext, specificContext);
+                  metavariableUnified = generalMetavariable.unifyMetavariable(metavariable, generalContext, specificContext);
 
             if (metavariableUnified) {
               return true;

@@ -2,10 +2,10 @@
 
 import shim from "./shim";
 import LocalContext from "./context/local";
-import labelUnifier from "./unifier/label";
 
 import { nodeQuery } from "./utilities/query";
 import { referenceMetaType } from "./metaType";
+import { unifyLabelWithReference } from "./utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "./utilities/json";
 
 const metavariableNodeQuery = nodeQuery("//reference/metavariable");
@@ -46,36 +46,9 @@ export default class Reference {
 
     specificContext.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
 
-    let tokens,
-        context,
-        localContext;
+    const labelUnifiedWithReference = unifyLabelWithReference(label, reference, substitutions, generalContext, specificContext);
 
-    const labelTokens = label.getTokens();
-
-    context = generalContext; ///
-
-    tokens = labelTokens; ///
-
-    localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-    generalContext = localContext;  ///
-
-    const referenceTokens = reference.getTokens();
-
-    context = specificContext; ///
-
-    tokens = referenceTokens; ///
-
-    localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-    specificContext = localContext;  ///
-
-    const labelMetavariable = label.getMetavariable(),
-          referenceMetavariable = reference.getMetavariable(),
-          labelMetavariableNode = labelMetavariable.getNode(),
-          referenceMetavariableNode = referenceMetavariable.getNode();
-
-    labelUnified = labelUnifier.unify(labelMetavariableNode, referenceMetavariableNode, substitutions, generalContext, specificContext);
+    labelUnified = labelUnifiedWithReference; ///
 
     if (labelUnified) {
       specificContext.debug(`...unified the '${labelString}' label with the '${referenceString}' reference.`);

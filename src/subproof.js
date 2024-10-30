@@ -1,11 +1,15 @@
 "use strict";
 
-import shim from "./shim";
+import { arrayUtilities } from "necessary";
 
+import shim from "./shim";
 import LocalContext from "./context/local";
 
+import { unifyStatement } from "./utilities/unification";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { subproofStringFromSubproofNode } from "./utilities/subproof";
+
+const { match } = arrayUtilities;
 
 const suppositionNodesQuery = nodesQuery("/subproof/supposition"),
       subDerivationNodeQuery = nodeQuery("/subproof/subDerivation");
@@ -49,6 +53,34 @@ class Subproof {
           ];
 
     return statements;
+  }
+
+  unifySubproofAssertion(subproofAssertion, substitutions, generalContext, specificContext) {
+    let subproofAssertionUnified;
+
+    const subproofString = this.string,
+          subproofAssertionString = subproofAssertion.getString();
+
+    specificContext.trace(`Unifying the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof...`);
+
+    const subproofStatements = this.getStatements(),
+          subproofAssertionStatements = subproofAssertion.getStatements();
+
+    subproofAssertionUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
+      const generalStatement = subproofAssertionStatement,  ///
+            specificStatement = subproofStatement,  ///
+            statementUnified = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+
+      if (statementUnified) {
+        return true;
+      }
+    });
+
+    if (subproofAssertionUnified) {
+      specificContext.trace(`...unified the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof.`);
+    }
+
+    return subproofAssertionUnified;
   }
 
   verify(substitutions, context) {
