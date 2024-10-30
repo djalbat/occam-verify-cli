@@ -196,30 +196,31 @@ class Term {
     return typeVerified;
   }
 
-  verifyGivenType(type, context) {
+  verifyGivenType(type, generalContext, specificContext) {
     let verifiedGivenType;
 
     const typeName = type.getName(),
           termString = this.getString();
 
-    context.trace(`Verifying the '${termString}' term given the '${typeName}' type...`);
+    specificContext.trace(`Verifying the '${termString}' term given the '${typeName}' type...`);
 
-    const verified = this.verify(context, () => {
-      let verifiedAhead;
+    const context = specificContext, ///
+          verified = this.verify(context, () => {
+            let verifiedAhead;
 
-      const typeEqualToOrSubTypeOfGivenTypeType = this.type.isEqualToOrSubTypeOf(type);
+            const typeEqualToOrSubTypeOfGivenTypeType = this.type.isEqualToOrSubTypeOf(type);
 
-      if (typeEqualToOrSubTypeOfGivenTypeType) {
-        verifiedAhead = true;
-      }
+            if (typeEqualToOrSubTypeOfGivenTypeType) {
+              verifiedAhead = true;
+            }
 
-      return verifiedAhead;
-    });
+            return verifiedAhead;
+          });
 
     verifiedGivenType = verified; ///
 
     if (verifiedGivenType) {
-      context.debug(`...verified the '${termString}' term given the '${typeName}' type.`);
+      specificContext.debug(`...verified the '${termString}' term given the '${typeName}' type.`);
     }
 
     return verifiedGivenType;

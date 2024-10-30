@@ -6,6 +6,7 @@ import LocalContext from "../context/local";
 import metaLevelUnifier from "../unifier/metaLevel";
 import StatementSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/statement";
 
+import { stripBracketsFromStatement } from "../statement";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
@@ -224,13 +225,7 @@ class StatementSubstitution extends Substitution {
   }
 
   static fromStatementAndMetavariable(statement, metavariable, context) {
-    let statementNode = statement.getNode();
-
-    statementNode = stripBracketsFromStatementNode(statementNode); ///
-
-    const { Statement } = shim;
-
-    statement = Statement.fromStatementNode(statementNode, context);
+    statement = stripBracketsFromStatement(statement, context); ///
 
     const string = stringFromStatementAndMetavariable(statement, metavariable),
           statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromString(string, context),
@@ -244,13 +239,7 @@ class StatementSubstitution extends Substitution {
   }
 
   static fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context) {
-    let statementNode = statement.getNode();
-
-    statementNode = stripBracketsFromStatementNode(statementNode); ///
-
-    const { Statement } = shim;
-
-    statement = Statement.fromStatementNode(statementNode, context);
+    statement = stripBracketsFromStatement(statement, context); ///
 
     const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
           statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromString(string, context),

@@ -19,17 +19,12 @@ const termNodeQuery = nodeQuery("/metavariable/argument/term"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 class Metavariable {
-  constructor(fileContext, string, name, node, tokens, metaType) {
-    this.fileContext = fileContext;
+  constructor(string, name, node, tokens, metaType) {
     this.string = string;
     this.name = name;
     this.node = node;
     this.tokens = tokens;
     this.metaType = metaType;
-  }
-
-  getFileContext() {
-    return this.fileContext;
   }
 
   getString() {
@@ -52,12 +47,6 @@ class Metavariable {
     return this.metaType;
   }
 
-  getMetaTypeName() {
-    const metaTypeName = this.metaType.getName();
-
-    return metaTypeName;
-  }
-
   matchMetaType(metaType) {
     const metaTypeMatches = (this.metaType === metaType);
 
@@ -76,14 +65,14 @@ class Metavariable {
     return metavariableNodeMatches;
   }
 
-  unifyFrame(frame, substitutions, context) {
+  unifyFrame(frame, substitutions, generalContext, specificContext) {
     let frameUnified = false;
 
     const frameNode = frame.getNode(),
           frameString = frame.getString(),
           metavariableString = this.string; ///
 
-    context.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
+    specificContext.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
 
     const metavariableNode = this.node, ///
           simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariableNode(metavariableNode);
@@ -97,16 +86,23 @@ class Metavariable {
         frameUnified = true;
       }
     } else {
-      const localContext = LocalContext.fromFileContext(this.fileContext),
-            generalContext = localContext,  ///
-            specificContext = context,  ///
-            metavariableNode = this.node,  ///
+      let context;
+
+      context = generalContext; ///
+
+      const localContext = LocalContext.fromContextAndTokens(context, this.tokens);
+
+      generalContext = localContext;  ///
+
+      const metavariableNode = this.node,  ///
             metavariable = metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext),
             frameMetavariable  = frameMetavariableFromStatementNode(frameNode, generalContext, specificContext);
 
       if ((metavariable !== null) && (metavariable === frameMetavariable)) {
         frameUnified = true;
       } else {
+        context = specificContext;  ///
+
         const metavariable = this,  ///
               frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
               substitution = frameSubstitution;  ///
@@ -118,13 +114,13 @@ class Metavariable {
     }
 
     if (frameUnified) {
-      context.debug(`...unified the '${frameString}' frame with the '${metavariableString}' metavariable.`);
+      specificContext.debug(`...unified the '${frameString}' frame with the '${metavariableString}' metavariable.`);
     }
 
     return frameUnified;
   }
 
-  unifyStatement(statement, substitution, substitutions, context) {
+  unifyStatement(statement, substitution, substitutions, generalContext, specificContext) {
     let statementUnified = false;
 
     const statementString = statement.getString(),
@@ -133,7 +129,7 @@ class Metavariable {
                                   substitution.getString() :
                                     EMPTY_STRING;
 
-    context.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
 
     const statementNode = statement.getNode(),
           metavariableNode = this.node, ///
@@ -150,16 +146,23 @@ class Metavariable {
         statementUnified = true;
       }
     } else {
-      const localContext = LocalContext.fromFileContext(this.fileContext),
-            generalContext = localContext,  ///
-            specificContext = context,  ///
-            metavariableNode = this.node,  ///
+      let context;
+
+      context = generalContext; ///
+
+      const localContext = LocalContext.fromContextAndTokens(context, this.tokens);
+
+      generalContext = localContext;  ///
+
+      const metavariableNode = this.node,  ///
             metavariable = metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext),
             statementMetavariable = statementMetavariableFromStatementNode(statementNode, generalContext, specificContext);
 
       if ((metavariable !== null) && (metavariable === statementMetavariable)) {
         statementUnified = true;
       } else {
+        context = specificContext;  ///
+
         const metavariable = this,  ///
               statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
 
@@ -172,7 +175,7 @@ class Metavariable {
     }
 
     if (statementUnified) {
-      context.debug(`...unified the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable.`);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable.`);
     }
 
     return statementUnified;
@@ -210,8 +213,9 @@ class Metavariable {
     context.trace(`Verifying the '${metavariableString}' metavariable...`);
 
     const metavariableNode = this.node,
-          specificContext = context,  ///
-          generalContext = context,  ///
+          localContext = LocalContext.fromContextAndTokens(context, this.tokens),
+          generalContext = localContext,  ///
+          specificContext = localContext,  ///
           metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext);
 
     verified = metavariablePresent; ///
@@ -240,18 +244,18 @@ class Metavariable {
       const termNode = termNodeQuery(this.node);
 
       if (termNode !== null) {
-        this.fileContext.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
+        fileContext.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
       } else {
         const typeNode = typeNodeQuery(this.node);
 
         if (typeNode !== null) {
           const typeName = typeNameFromTypeNode(typeNode),
-                typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+                typePresent = fileContext.isTypePresentByTypeName(typeName);
 
           if (typePresent) {
             verifiedAtTopLevel = true;
           } else {
-            this.fileContext.debug(`The '${typeName}' type is not present.`);
+            fileContext.debug(`The '${typeName}' type is not present.`);
           }
         } else {
           verifiedAtTopLevel = true;
@@ -315,7 +319,7 @@ class Metavariable {
           node = metavariableNode,  ///
           tokens = metavariableTokens, ///
           metaType = metaTypeFromJSON(json, fileContext),
-          metavariable = new Metavariable(fileContext, string, name, node, tokens, metaType);
+          metavariable = new Metavariable(string, name, node, tokens, metaType);
 
     return metavariable;
   }
@@ -337,7 +341,7 @@ class Metavariable {
             tokens = metavariableTokens, ///
             metaType = null;
 
-      metavariable = new Metavariable(context, string, name, node, tokens, metaType);
+      metavariable = new Metavariable(string, name, node, tokens, metaType);
     }
 
     return metavariable;
@@ -365,7 +369,7 @@ class Metavariable {
           node = metavariableNode,  ///
           tokens = metavariableTokens, ///
           metaType = MetaType.fromMetaTypeNode(metaTypeNode, context),
-          metavariable = new Metavariable(fileContext, string, name, node, tokens, metaType);
+          metavariable = new Metavariable(string, name, node, tokens, metaType);
 
     return metavariable;
   }

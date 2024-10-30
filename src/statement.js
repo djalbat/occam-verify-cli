@@ -11,6 +11,7 @@ import StatementNodeAndTokens from "./nodeAndTokens/statement";
 
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
+import { bracketedStatementChildNodeFromStatementNode } from "./utilities/brackets";
 
 const statementNodeQuery = nodeQuery("/*//statement"),
       statementTermNodesQuery = nodesQuery("/statement//term"),
@@ -143,14 +144,32 @@ class Statement {
 
     specificContext.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`);
 
-    const context = generalContext, ///
-          localContext = LocalContext.fromContextAndTokens(context, this.tokens);
+    const generalStatementNode = generalStatement.getNode(),  ///
+          specificStatementNode = specificStatement.getNode(),  ///
+          generalStatementTokens = generalStatement.getTokens(),
+          specificStatementTokens = specificStatement.getTokens();
+
+    let tokens,
+        context,
+        localContext;
+
+    tokens = generalStatementTokens;  ///
+
+    context = generalContext; ///
+
+    localContext = LocalContext.fromContextAndTokens(context, tokens);
 
     generalContext = localContext;  ///
 
-    const generalStatementNode = generalStatement.getNode(),  ///
-          specificStatementNode = specificStatement.getNode(),  ///
-          generalNode = generalStatementNode, ///
+    tokens = specificStatementTokens; ///
+
+    context = specificContext; ///
+
+    localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+    specificContext = localContext; ///
+
+    const generalNode = generalStatementNode, ///
           specificNode = specificStatementNode,
           unifiedAtMetaLevel = metaLevelUnifier.unify(generalNode, specificNode, substitutions, generalContext, specificContext);
 
@@ -304,3 +323,22 @@ Object.assign(shim, {
 
 export default Statement;
 
+export function stripBracketsFromStatement(statement, context) {
+  const statementNode = statement.getNode(),
+        bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
+
+  if (bracketedStatementChildNode !== null) {
+    const statementTokens = statement.getTokens(),
+          tokens = statementTokens, ///
+          localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+    context = localContext; ///
+
+    const { Statement } = shim,
+          statementNode = bracketedStatementChildNode;  ///
+
+    statement = Statement.fromStatementNode(statementNode, context);
+  }
+
+  return statement;
+}

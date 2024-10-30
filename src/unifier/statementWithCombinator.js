@@ -76,7 +76,9 @@ class StatementWithCombinatorUnifier extends Unifier {
         if (type !== null) {
           const termNode = specificTermNode, ///
                 term = Term.fromTermNode(termNode, context),
-                termVerifiedGivenType = term.verifyGivenType(type, context);
+                generalContext = context, ///
+                specificContext = context,  ///
+                termVerifiedGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
           if (termVerifiedGivenType) {
             unified = true;

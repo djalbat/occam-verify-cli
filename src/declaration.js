@@ -2,6 +2,7 @@
 
 import shim from "./shim";
 import Reference from "./reference";
+import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
 import { stripBracketsFromStatementNode } from "./utilities/brackets";

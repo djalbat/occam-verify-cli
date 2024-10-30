@@ -15,16 +15,11 @@ const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
       termVariableNodeQuery = nodeQuery("/term/variable");
 
 class Variable {
-  constructor(context, string, node, name, type) {
-    this.context = context;
+  constructor(string, node, name, type) {
     this.string = string;
     this.node = node;
     this.name = name;
     this.type = type;
-  }
-
-  getContext() {
-    return this.context;
   }
 
   getString() {
@@ -169,7 +164,6 @@ class Variable {
       }
     } else {
       const variableNode = this.node,  ///
-            generalContext = this.context,  ///
             variable = variableFromVariableNode(variableNode, generalContext),
             termVariable = termVariableFromTermNode(termNode, generalContext);
 
@@ -217,7 +211,7 @@ class Variable {
           node = variableNode,
           name = variableName,  ///
           type = typeFromJSON(json, fileContext),
-          variable = new Variable(context, string, node, name, type);
+          variable = new Variable(string, node, name, type);
 
     return variable;
   }
@@ -232,7 +226,7 @@ class Variable {
             name = variableName,  ///
             type = null;
 
-      variable = new Variable(context, string, node, name, type);
+      variable = new Variable(string, node, name, type);
     }
 
     return variable;
@@ -247,7 +241,7 @@ class Variable {
             string = context.nodeAsString(node),
             name = variableName;  ///
 
-      variable = new Variable(context, string, node, name, type);
+      variable = new Variable(string, node, name, type);
     }
 
     return variable;
@@ -264,7 +258,7 @@ class Variable {
           node = variableNode,  ///
           name = variableName,  ///
           type = Type.fromTypeNode(typeNode, context),
-          variable = new Variable(context, string, node, name, type);
+          variable = new Variable(string, node, name, type);
 
     return variable;
   }

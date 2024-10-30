@@ -35,39 +35,30 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext) => {
         let statementUnified;
 
-        const matches = generalStatementNode.match(specificStatementNode);
+        const statementNode = generalStatementNode, ///
+              statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
-        if (matches) {
-          statementUnified = true;
-        } else {
-          let context,
-              statementNode;
+        if (statementMetavariableNode !== null) {
+          const { Metavariable, Statement } = shim,
+                metavariableNode = statementMetavariableNode, ///
+                statementNode = specificStatementNode; ///
+
+          let context;
 
           context = generalContext; ///
 
-          statementNode = generalStatementNode; ///
+          const frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context),
+                termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
+                substitution = (frameSubstitution || termSubstitution),
+                metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
 
-          const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
+          context = specificContext; ///
 
-          if (statementMetavariableNode !== null) {
-            const frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context),
-                  termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
-                  substitution = (frameSubstitution || termSubstitution);
+          const statement = Statement.fromStatementNode(statementNode, context);
 
-            const { Statement } = shim,
-                  metavariableNode = statementMetavariableNode, ///
-                  metavariable = generalContext.findMetavariableByMetavariableNode(metavariableNode, generalContext, specificContext);
-
-            context = specificContext; ///
-
-            statementNode = specificStatementNode; ///
-
-            const statement = Statement.fromStatementNode(statementNode, context);
-
-            statementUnified = metavariable.unifyStatement(statement, substitution, substitutions, context);
-          } else {
-            statementUnified = unifyChildNodes(generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext);
-          }
+          statementUnified = metavariable.unifyStatement(statement, substitution, substitutions, generalContext, specificContext);
+        } else {
+          statementUnified = unifyChildNodes(generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext);
         }
 
         return statementUnified;
@@ -93,7 +84,7 @@ class MetaLevelUnifier extends Unifier {
 
         const frame = Frame.fromFrameNode(frameNode, context);
 
-        frameUnified = metavariable.unifyFrame(frame, substitutions, context);
+        frameUnified = metavariable.unifyFrame(frame, substitutions, generalContext, specificContext);
 
         return frameUnified;
       }
