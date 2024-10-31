@@ -396,9 +396,10 @@ export default class FileContext {
     return metavariablePresent;
   }
 
-  isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext) {
-    const metavariable = this.findMetavariableByMetavariableNode(metavariableNode, generalContext, specificContext),
-          metavariablePresent = (metavariable !== null);
+  isMetavariablePresent(metavariable, generalContext, specificContext) {
+    metavariable = this.findMetavariable(metavariable, generalContext, specificContext);  ///
+
+    const metavariablePresent = (metavariable !== null);
 
     return metavariablePresent;
   }
@@ -547,16 +548,21 @@ export default class FileContext {
     return metavariable;
   }
 
-  findMetavariableByMetavariableNode(metavariableNode, generalContext, specificContext) {
-    const metavariables = this.getMetavariables(),
-          metavariable = metavariables.find((metavariable) => {
-            const generalMetavariable = metavariable, ///
-                  metavariableUnified = generalMetavariable.unifyMetavariable(metavariable, generalContext, specificContext);
+  findMetavariable(metavariable, generalContext, specificContext) {
+    const specificMetavariable = metavariable,  ///
+          metavariables = this.getMetavariables();
 
-            if (metavariableUnified) {
-              return true;
-            }
-          }) || null;
+    metavariable = metavariables.find((metavariable) => {
+      const generalMetavariable = metavariable; ///
+
+      metavariable = specificMetavariable;  ///
+
+      const metavariableUnified = generalMetavariable.unifyMetavariable(metavariable, generalContext, specificContext);
+
+      if (metavariableUnified) {
+        return true;
+      }
+    }) || null;
 
     return metavariable;
   }

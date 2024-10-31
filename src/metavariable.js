@@ -10,6 +10,7 @@ import { nodeQuery } from "./utilities/query";
 import { EMPTY_STRING } from "./constants";
 import { unifyMetavariable } from "./utilities/unification";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "./utilities/json";
+import { metavariableFromFrame, metavariableFromStatement } from "./utilities/verification";
 import { typeNameFromTypeNode, metavariableNameFromMetavariableNode } from "./utilities/name";
 
 const termNodeQuery = nodeQuery("/metavariable/argument/term"),
@@ -87,24 +88,13 @@ class Metavariable {
         frameUnified = true;
       }
     } else {
-      let context;
-
-      context = generalContext; ///
-
-      const localContext = LocalContext.fromContextAndTokens(context, this.tokens);
-
-      generalContext = localContext;  ///
-
-      const metavariableNode = this.node,  ///
-            metavariable = metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext),
-            frameMetavariable  = frameMetavariableFromStatementNode(frameNode, generalContext, specificContext);
+      const metavariable = this,  ///
+            frameMetavariable = frameMetavariableFromFrame(frame, generalContext, specificContext);
 
       if ((metavariable !== null) && (metavariable === frameMetavariable)) {
         frameUnified = true;
       } else {
-        context = specificContext;  ///
-
-        const metavariable = this,  ///
+        const context = specificContext,  ///
               frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
               substitution = frameSubstitution;  ///
 
@@ -147,24 +137,13 @@ class Metavariable {
         statementUnified = true;
       }
     } else {
-      let context;
-
-      context = generalContext; ///
-
-      const localContext = LocalContext.fromContextAndTokens(context, this.tokens);
-
-      generalContext = localContext;  ///
-
-      const metavariableNode = this.node,  ///
-            metavariable = metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext),
-            statementMetavariable = statementMetavariableFromStatementNode(statementNode, generalContext, specificContext);
+      const metavariable = this,
+            statementMetavariable = statementMetavariableFromStatement(statement, generalContext, specificContext);
 
       if ((metavariable !== null) && (metavariable === statementMetavariable)) {
         statementUnified = true;
       } else {
-        context = specificContext;  ///
-
-        const metavariable = this,  ///
+        const context = specificContext,  ///
               statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
 
         substitution = statementSubstitution;  ///
@@ -232,10 +211,10 @@ class Metavariable {
 
     context.trace(`Verifying the '${metavariableString}' metavariable...`);
 
-    const metavariableNode = this.node,
-          specificContext = context,  ///
+    const metavariable = this,
           generalContext = context,  ///
-          metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext);
+          specificContext = context,  ///
+          metavariablePresent = generalContext.isMetavariablePresent(metavariable, generalContext, specificContext);
 
     verified = metavariablePresent; ///
 
@@ -297,10 +276,12 @@ class Metavariable {
 
     context.trace(`Verifying the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
 
-    const metavariableNode = this.node,  ///
-          specificContext = context,  ///
-          generalContext = context, ///
-          metavariable = generalContext.findMetavariableByMetavariableNode(metavariableNode, generalContext, specificContext);
+    let metavariable = this;  ///
+
+    const specificContext = context,  ///
+          generalContext = context; ///
+
+    metavariable = generalContext.findMetavariable(metavariable, generalContext, specificContext);
 
     if (metavariable !== null) {
       const metaTypeMatches = metavariable.matchMetaType(metaType);
@@ -343,25 +324,38 @@ class Metavariable {
     return metavariable;
   }
 
+  static fromFrameNode(frameNode, context) {
+    let metavariable = null;
+
+    const frameMetavariableNode = frameMetavariableNodeQuery(frameNode);
+
+    if (frameMetavariableNode !== null) {
+      const metavariableNode = frameMetavariableNode, ///
+            metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+            name = metavariableName,  ///
+            node = metavariableNode,  ///
+            string = context.nodeAsString(node),
+            tokens = context.nodeAsTokens(node),
+            metaType = null;
+
+      metavariable = new Metavariable(string, name, node, tokens, metaType);
+    }
+
+    return metavariable;
+  }
+
   static fromStatementNode(statementNode, context) {
     let metavariable = null;
 
     const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
     if (statementMetavariableNode !== null) {
-      let metavariableNode = statementMetavariableNode; ///
-
-      const metavariableString = context.nodeAsString(metavariableNode),
-            string = metavariableString,  ///
-            metavariableNodeAndTokens = MetavariableNodeAndTokens.fromString(string, context),
-            metavariableTokens = metavariableNodeAndTokens.getMetavariableTokens(),
-            metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
-
-      metavariableNode = metavariableNodeAndTokens.getMetavariableNode();
-
-      const name = metavariableName,  ///
+      const metavariableNode = statementMetavariableNode, ///
+            metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+            name = metavariableName,  ///
             node = metavariableNode,  ///
-            tokens = metavariableTokens, ///
+            string = context.nodeAsString(node),
+            tokens = context.nodeAsTokens(node),
             metaType = null;
 
       metavariable = new Metavariable(string, name, node, tokens, metaType);
@@ -374,17 +368,11 @@ class Metavariable {
     let metavariable = null;
 
     if (metavariableNode !== null) {
-      const metavariableString = context.nodeAsString(metavariableNode),
-            string = metavariableString,  ///
-            metavariableNodeAndTokens = MetavariableNodeAndTokens.fromString(string, context),
-            metavariableTokens = metavariableNodeAndTokens.getMetavariableTokens(),
-            metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
-
-      metavariableNode = metavariableNodeAndTokens.getMetavariableNode();
-
-      const name = metavariableName,  ///
+      const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+            name = metavariableName,  ///
             node = metavariableNode,  ///
-            tokens = metavariableTokens, ///
+            string = context.nodeAsString(node),
+            tokens = context.nodeAsTokens(node),
             metaType = null;
 
       metavariable = new Metavariable(string, name, node, tokens, metaType);
@@ -403,17 +391,11 @@ class Metavariable {
 
     const localContext = LocalContext.fromFileContext(fileContext),
           context = localContext, ///
-          metavariableString = fileContext.nodeAsString(metavariableNode),
-          string = metavariableString,  ///
-          metavariableNodeAndTokens = MetavariableNodeAndTokens.fromString(string, context),
-          metavariableTokens = metavariableNodeAndTokens.getMetavariableTokens(),
-          metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
-
-    metavariableNode = metavariableNodeAndTokens.getMetavariableNode();
-
-    const name = metavariableName,  ///
           node = metavariableNode,  ///
-          tokens = metavariableTokens, ///
+          string = fileContext.nodeAsString(node),
+          tokens = fileContext.nodeAsTokens(node),
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          name = metavariableName,  ///
           metaType = MetaType.fromMetaTypeNode(metaTypeNode, context),
           metavariable = new Metavariable(string, name, node, tokens, metaType);
 
@@ -427,31 +409,35 @@ Object.assign(shim, {
 
 export default Metavariable;
 
-function metavariableFromMetavariableNode(metavariableNode, generalContext, specificContext) {
-  const metavariable = generalContext.findMetavariableByMetavariableNode(metavariableNode, generalContext, specificContext);
-
-  return metavariable;
-}
-
-function frameMetavariableFromStatementNode(frameNode, generalContext, specificContext) {
+function frameMetavariableFromFrame(frame, generalContext, specificContext) {
   let frameMetavariable = null;
 
-  const frameMetavariableNode = frameMetavariableNodeQuery(frameNode);
+  const frameNode = frame.getNode(),
+        frameMetavariableNode = frameMetavariableNodeQuery(frameNode);
 
   if (frameMetavariableNode !== null) {
-    frameMetavariable = generalContext.findMetavariableByMetavariableNode(frameMetavariableNode, generalContext, specificContext);
+    const { Metavariable } = shim,
+          context = specificContext,  ///
+          metavariable = Metavariable.fromFrameNode(frameNode, context);
+
+    frameMetavariable = metavariable; ///
   }
 
   return frameMetavariable;
 }
 
-function statementMetavariableFromStatementNode(statementNode, generalContext, specificContext) {
+function statementMetavariableFromStatement(statement, generalContext, specificContext) {
   let statementMetavariable = null;
 
-  const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
+  const statementNode = statement.getNode(),
+        statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
   if (statementMetavariableNode !== null) {
-    statementMetavariable = generalContext.findMetavariableByMetavariableNode(statementMetavariableNode, generalContext, specificContext);
+    const { Metavariable } = shim,
+          context = specificContext,  ///
+          metavariable = Metavariable.fromStatementNode(statementNode, context);
+
+    statementMetavariable = metavariable; ///
   }
 
   return statementMetavariable;

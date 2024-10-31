@@ -68,9 +68,12 @@ export function unifyMetavariable(generalMetavariable, specificMetavariable, gen
 
   const generalMetavariableNode = generalMetavariable.getNode(),
         specificMetavariableNode = specificMetavariable.getNode(),
-        generalMetavariableTokens = generalMetavariable.getTokens();
+        generalMetavariableTokens = generalMetavariable.getTokens(),
+        specificMetavariableTokens = specificMetavariable.getTokens();
 
   generalContext = contextFromTokens(generalMetavariableTokens, generalContext); ///
+
+  specificContext = contextFromTokens(specificMetavariableTokens, specificContext); ///
 
   metavariableUnified = metavariableUnifier.unify(generalMetavariableNode, specificMetavariableNode, generalContext, specificContext);
 

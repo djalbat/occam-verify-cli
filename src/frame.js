@@ -15,9 +15,10 @@ const frameNodeQuery = nodeQuery("/*/frame"),
 const { first } = arrayUtilities;
 
 class Frame {
-  constructor(string, node, declarations, metavariables) {
+  constructor(string, node, tokens, declarations, metavariables) {
     this.string = string;
     this.node = node;
+    this.tokens = tokens;
     this.declarations = declarations;
     this.metavariables = metavariables;
   }
@@ -28,6 +29,10 @@ class Frame {
 
   getNode() {
     return this.node;
+  }
+
+  getTokens() {
+    return this.tokens;
   }
 
   getDeclarations() {
@@ -300,6 +305,9 @@ class Frame {
 
     if (frameNode !== null) {
       const { Declaration, Metavariable } = shim,
+            node = frameNode, ///
+            string = context.nodeAsString(node),
+            tokens = context.nodeAsTokens(node),
             declarationNodes = declarationNodesQuery(frameNode),
             metavariableNodes = metavariableNodesQuery(frameNode),
             declarations = declarationNodes.map((declarationNode) => {
@@ -311,11 +319,9 @@ class Frame {
               const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
 
               return metavariable;
-            }),
-            node = frameNode, ///
-            string = context.nodeAsString(node);
+            });
 
-      frame = new Frame(string, node, declarations, metavariables);
+      frame = new Frame(string, node, tokens, declarations, metavariables);
     }
 
     return frame;
@@ -337,9 +343,10 @@ class Frame {
                 metavariable
               ],
               node = frameNode,  ///
-              string = context.nodeAsString(node);
+              string = context.nodeAsString(node),
+              tokens = context.nodeAsTokens(node);
 
-        frame = new Frame(string, node, declarations, metavariables);
+        frame = new Frame(string, node, tokens, declarations, metavariables);
       }
     }
 
@@ -362,9 +369,10 @@ class Frame {
                 metavariable
               ],
               node = frameNode,  ///
-              string = context.nodeAsString(node);
+              string = context.nodeAsString(node),
+              tokens = context.nodeAsTokens(node);
 
-        frame = new Frame(string, node, declarations, metavariables);
+        frame = new Frame(string, node, tokens, declarations, metavariables);
       }
     }
 

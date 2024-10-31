@@ -34,10 +34,10 @@ function unifyAWithReference(qualifiedStatement, substitutions, context) {
   let unifiedWithReference = false;
 
   const reference = qualifiedStatement.getReference(),
+        metavariable = reference.getMetavariable(),
         generalContext = context,  ///
         specificContext = context,  ///
-        metavariableNode = reference.getMetavariableNode(),
-        metavariablePresent = generalContext.isMetavariablePresentByMetavariableNode(metavariableNode, generalContext, specificContext);
+        metavariablePresent = generalContext.isMetavariablePresent(metavariable, generalContext, specificContext);
 
   if (metavariablePresent) {
     const statement = qualifiedStatement.getStatement(),
