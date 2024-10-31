@@ -8,7 +8,8 @@ import { objectType } from "../type";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term"),
       typeNodeQuery = nodeQuery("/typeAssertion/type"),
-      variableNodeQuery = nodeQuery("/term/variable!");
+      variableNodeQuery = nodeQuery("/term/variable!"),
+      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion");
 
 export default class TypeAssertion {
   constructor(string, term, type) {
@@ -160,8 +161,10 @@ export default class TypeAssertion {
     return verifiedWhenDerived;
   }
 
-  static fromTypeAssertionNode(typeAssertionNode, context) {
+  static fromStatementNode(statementNode, context) {
     let typeAssertion = null;
+
+    const typeAssertionNode = typeAssertionNodeQuery(statementNode);
 
     if (typeAssertionNode !== null) {
       const { Term, Type } = shim,

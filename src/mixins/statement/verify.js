@@ -1,28 +1,17 @@
 "use strict";
 
-import shim from "../../shim";
-import TypeAssertion from "../../assertion/type";
-import DefinedAssertion from "../../assertion/defined";
-import SubproofAssertion from "../../assertion/subproof";
-import ContainedAssertion from "../../assertion/contained";
-
-import { nodeQuery } from "../../utilities/query";
-
-const equalityNodeQuery = nodeQuery("/statement/equality"),
-      judgementNodeQuery = nodeQuery("/statement/judgement"),
-      metavariableNodeQuery = nodeQuery("/statement/metavariable!"),
-      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion"),
-      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion"),
-      subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion"),
-      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion");
+import { equalityFromStatement,
+         judgementFromStatement,
+         metavariableFromStatement,
+         typeAssertionFromStatement,
+         definedAssertionFromStatement,
+         subproofAssertionFromStatement,
+         containedAssertionFromStatement } from "../../utilities/verification";
 
 function verifyAsMetavariable(statement, assignments, stated, context) {
   let verifiedAsMetavariable = false;
 
-  const { Metavariable } = shim,
-        statementNode = statement.getNode(),
-        metavariableNode = metavariableNodeQuery(statementNode),
-        metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
+  const metavariable = metavariableFromStatement(statement, context);
 
   if (metavariable !== null) {
     const statementString = statement.getString();
@@ -44,10 +33,7 @@ function verifyAsMetavariable(statement, assignments, stated, context) {
 function verifyAsEquality(statement, assignments, stated, context) {
   let verifiedAsEquality = false;
 
-  const { Equality } = shim,
-        statementNode = statement.getNode(),
-        equalityNode = equalityNodeQuery(statementNode),
-        equality = Equality.fromEqualityNode(equalityNode, context);
+  const equality = equalityFromStatement(statement, context);
 
   if (equality !== null) {
     const statementString = statement.getString();
@@ -69,10 +55,7 @@ function verifyAsEquality(statement, assignments, stated, context) {
 function verifyAsJudgement(statement, assignments, stated, context) {
   let verifiedAsJudgement = false;
 
-  const { Judgement } = shim,
-        statementNode = statement.getNode(),
-        judgementNode = judgementNodeQuery(statementNode),
-        judgement = Judgement.fromJudgementNode(judgementNode, context);
+  const judgement = judgementFromStatement(statement, context);
 
   if (judgement !== null) {
     const statementString = statement.getString();
@@ -94,9 +77,7 @@ function verifyAsJudgement(statement, assignments, stated, context) {
 function verifyAsTypeAssertion(statement, assignments, stated, context) {
   let verifiedAsTypeAssertion = false;
 
-  const statementNode = statement.getNode(),
-        typeAssertionNode = typeAssertionNodeQuery(statementNode),
-        typeAssertion = TypeAssertion.fromTypeAssertionNode(typeAssertionNode, context);
+  const typeAssertion = typeAssertionFromStatement(statement, context);
 
   if (typeAssertion !== null) {
     const statementString = statement.getString();
@@ -118,9 +99,7 @@ function verifyAsTypeAssertion(statement, assignments, stated, context) {
 function verifyAsDefinedAssertion(statement, assignments, stated, context) {
   let verifiedAsDefinedAssertion = false;
 
-  const statementNode = statement.getNode(),
-        definedAssertionNode = definedAssertionNodeQuery(statementNode),
-        definedAssertion = DefinedAssertion.fromDefinedAssertionNode(definedAssertionNode, context);
+  const definedAssertion = definedAssertionFromStatement(statement, context);
 
   if (definedAssertion !== null) {
     const statementString = statement.getString();
@@ -142,9 +121,7 @@ function verifyAsDefinedAssertion(statement, assignments, stated, context) {
 function verifyAsContainedAssertion(statement, assignments, stated, context) {
   let verifiedAsContainedAssertion = false;
 
-  const statementNode = statement.getNode(),
-        containedAssertionNode = containedAssertionNodeQuery(statementNode),
-        containedAssertion = ContainedAssertion.fromContainedAssertionNode(containedAssertionNode, context);
+  const containedAssertion = containedAssertionFromStatement(statement, context);
 
   if (containedAssertion !== null) {
     const statementString = statement.getString();
@@ -166,11 +143,9 @@ function verifyAsContainedAssertion(statement, assignments, stated, context) {
 function verifyAsSubproofAssertion(statement, assignments, stated, context) {
   let verifiedAsSubproofAssertion = false;
 
-  const statementNode = statement.getNode(),
-        subproofAssertionNode = subproofAssertionNodeQuery(statementNode),
-        subproofAssertion = SubproofAssertion.fromSubproofAssertionNode(subproofAssertionNode, context);
+  const subproofAssertion = subproofAssertionFromStatement(statement, context);
 
-  if (subproofAssertionNode !== null) {
+  if (subproofAssertion !== null) {
     const statementString = statement.getString();
 
     context.trace(`Verifying the '${statementString}' statement as a subproof assertion...`);

@@ -343,6 +343,33 @@ class Metavariable {
     return metavariable;
   }
 
+  static fromStatementNode(statementNode, context) {
+    let metavariable = null;
+
+    const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
+
+    if (statementMetavariableNode !== null) {
+      let metavariableNode = statementMetavariableNode; ///
+
+      const metavariableString = context.nodeAsString(metavariableNode),
+            string = metavariableString,  ///
+            metavariableNodeAndTokens = MetavariableNodeAndTokens.fromString(string, context),
+            metavariableTokens = metavariableNodeAndTokens.getMetavariableTokens(),
+            metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
+
+      metavariableNode = metavariableNodeAndTokens.getMetavariableNode();
+
+      const name = metavariableName,  ///
+            node = metavariableNode,  ///
+            tokens = metavariableTokens, ///
+            metaType = null;
+
+      metavariable = new Metavariable(string, name, node, tokens, metaType);
+    }
+
+    return metavariable;
+  }
+
   static fromMetavariableNode(metavariableNode, context) {
     let metavariable = null;
 

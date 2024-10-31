@@ -7,7 +7,8 @@ import VariableAssignment from "./assignment/variable";
 import { nodeQuery } from "./utilities/query";
 import { unifyEquality } from "./utilities/unification";
 
-const variableNodeQuery = nodeQuery("/term/variable!"),
+const equalityNodeQuery = nodeQuery("/statement/equality"),
+      variableNodeQuery = nodeQuery("/term/variable!"),
       leftTermNodeQuery = nodeQuery("/equality/term[0]"),
       rightTermNodeQuery = nodeQuery("/equality/term[1]");
 
@@ -202,8 +203,10 @@ class Equality {
     return verifiedWhenDerived;
   }
 
-  static fromEqualityNode(equalityNode, context) {
+  static fromStatementNode(statementNode, context) {
     let equality = null;
+
+    const equalityNode = equalityNodeQuery(statementNode);
 
     if (equalityNode !== null) {
       const { Term } = shim,

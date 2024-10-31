@@ -2,8 +2,11 @@
 
 import shim from "../shim";
 
+import { nodeQuery } from "../utilities/query";
 import { isAssertionNegated } from "../utilities/assertion";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../utilities/substitutions";
+
+const containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion");
 
 export default class ContainedAssertion {
   constructor(string, node, term, frame, negated, statement) {
@@ -161,8 +164,10 @@ export default class ContainedAssertion {
     return verifiedWhenDerived;
   }
 
-  static fromContainedAssertionNode(containedAssertionNode, context) {
+  static fromStatementNode(statementNode, context) {
     let containedAssertion = null;
+
+    const containedAssertionNode = containedAssertionNodeQuery(statementNode);
 
     if (containedAssertionNode !== null) {
       const { Term, Frame, Statement } = shim,

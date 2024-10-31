@@ -8,7 +8,8 @@ import { variableNameFromVariableNode } from "../utilities/name";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../utilities/substitutions";
 
 const variableNodeQuery = nodeQuery("/term/variable!"),
-      metavariableNodeQuery = nodeQuery("/frame/metavariable!");
+      metavariableNodeQuery = nodeQuery("/frame/metavariable!"),
+      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion");
 
 export default class DefinedAssertion {
   constructor(string, node, term, frame, negated) {
@@ -145,8 +146,10 @@ export default class DefinedAssertion {
     return verifiedWhenDerived;
   }
 
-  static fromDefinedAssertionNode(definedAssertionNode, context) {
+  static fromStatementNode(statementNode, context) {
     let definedAssertion = null;
+
+    const definedAssertionNode = definedAssertionNodeQuery(statementNode);
 
     if (definedAssertionNode !== null) {
       const { Term, Frame } = shim,

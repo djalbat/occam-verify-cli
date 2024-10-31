@@ -1,20 +1,12 @@
 "use strict";
 
-import DefinedAssertion from "../../assertion/defined";
-import ContainedAssertion from "../../assertion/contained";
-
-import { nodeQuery } from "../../utilities/query";
-
-const definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion"),
-      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion");
+import { definedAssertionFromStatement, containedAssertionFromStatement } from "../../utilities/verification";
 
 function resolveAsDefinedAssertion(statement, substitutions, generalContext, specificContext) {
   let resolvedAsDefinedAssertion = false;
 
   const context = generalContext, ///
-        statementNode = statement.getNode(),
-        definedAssertionNode = definedAssertionNodeQuery(statementNode),
-        definedAssertion = DefinedAssertion.fromDefinedAssertionNode(definedAssertionNode, context);
+        definedAssertion = definedAssertionFromStatement(statement, context);
 
   if (definedAssertion !== null) {
     const statementString = statement.getString();
@@ -38,9 +30,7 @@ function resolveAsContainedAssertion(statement, substitutions, generalContext, s
   let resolvedAsContainedAssertion = false;
 
   const context = generalContext, ///
-        statementNode = statement.getNode(),
-        containedAssertionNode = containedAssertionNodeQuery(statementNode),
-        containedAssertion = ContainedAssertion.fromContainedAssertionNode(containedAssertionNode, context);
+        containedAssertion = containedAssertionFromStatement(statement, context);
 
   if (containedAssertion !== null) {
     const statementString = statement.getString();

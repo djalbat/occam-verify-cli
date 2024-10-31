@@ -29,25 +29,9 @@ export function unifyStatement(generalStatement, specificStatement, substitution
         generalStatementTokens = generalStatement.getTokens(),
         specificStatementTokens = specificStatement.getTokens();
 
-  let tokens,
-      context,
-      localContext;
+  generalContext = contextFromTokens(generalStatementTokens, generalContext); ///
 
-  tokens = generalStatementTokens;  ///
-
-  context = generalContext; ///
-
-  localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-  generalContext = localContext;  ///
-
-  tokens = specificStatementTokens; ///
-
-  context = specificContext; ///
-
-  localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-  specificContext = localContext; ///
+  specificContext = contextFromTokens(specificStatementTokens, specificContext);  ///
 
   const generalNode = generalStatementNode, ///
         specificNode = specificStatementNode,
@@ -66,25 +50,9 @@ export function unifySubstitution(generalSubstitution, specificSubstitution, sub
         generalSubstitutionTokens = generalSubstitution.getTokens(),
         specificSubstitutionTokens = specificSubstitution.getTokens();
 
-  let tokens,
-        context,
-        localContext;
+  generalContext = contextFromTokens(generalSubstitutionTokens, generalContext); ///
 
-  tokens = generalSubstitutionTokens;  ///
-
-  context = generalContext; ///
-
-  localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-  generalContext = localContext;  ///
-
-  tokens = specificSubstitutionTokens; ///
-
-  context = specificContext; ///
-
-  localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-  specificContext = localContext; ///
+  specificContext = contextFromTokens(specificSubstitutionTokens, specificContext);  ///
 
   const generalNode = generalSubstitutionNode, ///
         specificNode = specificSubstitutionNode,
@@ -102,17 +70,7 @@ export function unifyMetavariable(generalMetavariable, specificMetavariable, gen
         specificMetavariableNode = specificMetavariable.getNode(),
         generalMetavariableTokens = generalMetavariable.getTokens();
 
-  let tokens,
-      context,
-      localContext;
-
-  tokens = generalMetavariableTokens;  ///
-
-  context = generalContext; ///
-
-  localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-  generalContext = localContext;  ///
+  generalContext = contextFromTokens(generalMetavariableTokens, generalContext); ///
 
   metavariableUnified = metavariableUnifier.unify(generalMetavariableNode, specificMetavariableNode, generalContext, specificContext);
 
@@ -129,25 +87,9 @@ export function unifyLabelWithReference(label, reference, substitutions, general
         referenceMetavariableNode = referenceMetavariable.getNode(),
         referenceMetavariableTokens = referenceMetavariable.getTokens();
 
-  let tokens,
-      context,
-      localContext;
+  generalContext = contextFromTokens(labelMetavariableTokens, generalContext);  ///
 
-  tokens = labelMetavariableTokens;  ///
-
-  context = generalContext; ///
-
-  localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-  generalContext = localContext;  ///
-
-  tokens = referenceMetavariableTokens; ///
-
-  context = specificContext; ///
-
-  localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-  specificContext = localContext; ///
+  specificContext = contextFromTokens(referenceMetavariableTokens, specificContext);  ///
 
   const labelUnified = labelUnifier.unify(labelMetavariableNode, referenceMetavariableNode, substitutions, generalContext, specificContext);
 
@@ -177,28 +119,22 @@ export function unifyStatementWithCombinator(statement, combinator, assignments,
         combinatorStatementNode = combinatorStatement.getNode(),
         combinatorStatementTokens = combinatorStatement.getTokens();
 
-  let tokens,
-      localContext,
-      generalContext = context, ///
+  let generalContext = context, ///
       specificContext = context;  ///
 
-  tokens = combinatorStatementTokens; ///
+  generalContext = contextFromTokens(combinatorStatementTokens, generalContext);  ///
 
-  context = generalContext; ///
-
-  localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-  generalContext = localContext;  ///
-
-  tokens = statementTokens;  ///
-
-  context = specificContext; ///
-
-  localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-  specificContext = localContext; ///
+  specificContext = contextFromTokens(statementTokens, specificContext);  ///
 
   statementUnifiedWithCombinator = statementWithCombinatorUnifier.unify(combinatorStatementNode, statementNode, assignments, stated, generalContext, specificContext);
 
   return statementUnifiedWithCombinator;
+}
+
+function contextFromTokens(tokens, context) {
+  const localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+  context = localContext;  ///
+
+  return context;
 }

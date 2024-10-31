@@ -6,6 +6,7 @@ import JudgementAssignment from "./assignment/judgement";
 import { nodeQuery } from "./utilities/query";
 
 const frameNodeQuery = nodeQuery("/judgement/frame"),
+      judgementNodeQuery = nodeQuery("/statement/judgement"),
       declarationNodeQuery = nodeQuery("/judgement/declaration");
 
 class Judgement {
@@ -104,8 +105,10 @@ class Judgement {
     return verifiedWhenDerived;
   }
 
-  static fromJudgementNode(judgementNode, context) {
+  static fromStatementNode(statementNode, context) {
     let judgement = null;
+
+    const judgementNode = judgementNodeQuery(statementNode);
 
     if (judgementNode !== null) {
       const { Frame, Declaration } = shim,
