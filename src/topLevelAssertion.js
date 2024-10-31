@@ -191,9 +191,9 @@ export default class TopLevelAssertion {
   unifyProofStepsWithSupposition(proofSteps, supposition, substitutions, generalContext, specificContext) {
     let proofStepsUnifiedWithSupposition  =false;
 
-    const suppositionResolvedIndependently = supposition.resolveIndependently(substitutions, generalContext, specificContext);
+    const suppositionUnifiedIndependently = supposition.unifyIndependently(substitutions, generalContext, specificContext);
 
-    if (suppositionResolvedIndependently) {
+    if (suppositionUnifiedIndependently) {
       proofStepsUnifiedWithSupposition = true;
     } else {
       const proofStep = extract(proofSteps, (proofStep) => {

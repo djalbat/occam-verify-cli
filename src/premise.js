@@ -22,23 +22,23 @@ class Premise {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
-  resolveIndependently(substitutions, generalContext, specificContext) {
-    let resolvedIndependently;
+  unifyIndependently(substitutions, generalContext, specificContext) {
+    let unifiedIndependently;
 
     const premise = this, ///
           premiseString = premise.getString();
 
-    specificContext.trace(`Resolving the '${premiseString}' premise independently...`);
+    specificContext.trace(`Unifying the '${premiseString}' premise independently...`);
 
-    const unqualifiedStatementResolvedIndependently = this.unqualifiedStatement.resolveIndependently(substitutions, generalContext, specificContext);
+    const unqualifiedStatementResolvedIndependently = this.unqualifiedStatement.unifyIndependently(substitutions, generalContext, specificContext);
 
-    resolvedIndependently = unqualifiedStatementResolvedIndependently;  ///
+    unifiedIndependently = unqualifiedStatementResolvedIndependently;  ///
 
-    if (resolvedIndependently) {
-      specificContext.trace(`...resolved the '${premiseString}' premise independently.`);
+    if (unifiedIndependently) {
+      specificContext.trace(`...unified the '${premiseString}' premise independently.`);
     }
 
-    return resolvedIndependently;
+    return unifiedIndependently;
   }
 
   unifyProofStep(proofStep, substitutions, generalContext, specificContext) {

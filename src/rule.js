@@ -120,9 +120,9 @@ class Rule {
   unifyProofStepsWithPremise(proofSteps, premise, substitutions, generalContext, specificContext) {
     let proofStepsUnifiedWithPremise  =false;
 
-    const premiseResolvedIndependently = premise.resolveIndependently(substitutions, generalContext, specificContext);
+    const premiseUnifiedIndependently = premise.unifyIndependently(substitutions, generalContext, specificContext);
 
-    if (premiseResolvedIndependently) {
+    if (premiseUnifiedIndependently) {
       proofStepsUnifiedWithPremise = true;
     } else {
       const proofStep = extract(proofSteps, (proofStep) => {

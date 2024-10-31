@@ -22,23 +22,23 @@ class Supposition {
 
   getStatement() { return this.unqualifiedStatement.getStatement(); }
 
-  resolveIndependently(substitutions, generalContext, specificContext) {
-    let resolvedIndependently;
+  unifyIndependently(substitutions, generalContext, specificContext) {
+    let unifiedIndependently;
 
     const supposition = this, ///
           suppositionString = supposition.getString();
 
-    specificContext.trace(`Resolving the '${suppositionString}' supposition independently...`);
+    specificContext.trace(`Unifying the '${suppositionString}' supposition independently...`);
 
-    const unqualifiedStatementResolvedIndependently = this.unqualifiedStatement.resolveIndependently(substitutions, generalContext, specificContext);
+    const unqualifiedStatementResolvedIndependently = this.unqualifiedStatement.unifyIndependently(substitutions, generalContext, specificContext);
 
-    resolvedIndependently = unqualifiedStatementResolvedIndependently;  ///
+    unifiedIndependently = unqualifiedStatementResolvedIndependently;  ///
 
-    if (resolvedIndependently) {
-      specificContext.trace(`...resolved the '${suppositionString}' supposition independently.`);
+    if (unifiedIndependently) {
+      specificContext.trace(`...unified the '${suppositionString}' supposition independently.`);
     }
 
-    return resolvedIndependently;
+    return unifiedIndependently;
   }
 
   unifyProofStep(proofStep, substitutions, generalContext, specificContext) {

@@ -102,12 +102,12 @@ class Statement {
     return statementNodeMatches;
   }
 
-  resolveIndependently(substitutions, generalContext, specificContext) {
-    let resolvedIndependently;
+  unifyIndependently(substitutions, generalContext, specificContext) {
+    let unifiedIndependently;
 
     const statementString = this.string;  ///
 
-    specificContext.trace(`Resolving the '${statementString}' statement independently...`);
+    specificContext.trace(`Unifying the '${statementString}' statement independently...`);
 
     const resolved = resolveMixins.some((resolveMixin) => {
       const statement = this, ///
@@ -118,13 +118,13 @@ class Statement {
       }
     });
 
-    resolvedIndependently = resolved; ///
+    unifiedIndependently = resolved; ///
 
-    if (resolvedIndependently) {
-      specificContext.debug(`...resolved the '${statementString}' statement independently.`);
+    if (unifiedIndependently) {
+      specificContext.debug(`...unified the '${statementString}' statement independently.`);
     }
 
-    return resolvedIndependently;
+    return unifiedIndependently;
   }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {

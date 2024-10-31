@@ -47,23 +47,23 @@ class UnqualifiedStatement {
     return statementUnified;
   }
 
-  resolveIndependently(substitutions, generalContext, specificContext) {
-    let resolveIndependently;
+  unifyIndependently(substitutions, generalContext, specificContext) {
+    let unifiedIndependently;
 
     const unqualifiedStatement = this,  ///
           unqualifiedStatementString = unqualifiedStatement.getString();  ///
 
     specificContext.trace(`Resolving the '${unqualifiedStatementString}' unqualified statement independently...`);
 
-    const statementResolvedIndependently = this.statement.resolveIndependently(substitutions, generalContext, specificContext);
+    const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
 
-    resolveIndependently = statementResolvedIndependently;  ///
+    unifiedIndependently = statementResolvedIndependently;  ///
 
-    if (resolveIndependently) {
+    if (unifiedIndependently) {
       specificContext.debug(`...resolved the '${unqualifiedStatementString}' unqualified statement independently.`);
     }
 
-    return resolveIndependently;
+    return unifiedIndependently;
   }
 
   unifyStatementWithProofSteps(statement, assignments, stated, context) {
