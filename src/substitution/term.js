@@ -27,45 +27,9 @@ export default class TermSubstitution extends Substitution {
     return this.variable;
   }
 
-  isEqualTo(substitution) {
-    let equalTo = false;
+  isTermEqualTo(term) { return this.term.isEqualTo(term); }
 
-    const term = substitution.getTerm(),
-          variable = substitution.getVariable();
-
-    if ((term !== null) && (variable !== null)) {
-      const termNode = term.getNode(),
-            variableNode = variable.getNode(),
-            termNodeMatches = this.matchTermNode(termNode),
-            variableNodeMatches = this.matchVariableNode(variableNode);
-
-      equalTo = (termNodeMatches && variableNodeMatches);
-    }
-
-    return equalTo;
-  }
-
-  matchTermNode(termNode) {
-    termNode = stripBracketsFromTermNode(termNode); ///
-
-    const termNodeMatches = this.term.matchTermNode(termNode);
-
-    return termNodeMatches;
-  }
-
-  matchVariableName(variableName) {
-    let variableNameMatches;
-
-    const variableNameA = variableName; ///
-
-    variableName = this.variable.getName();
-
-    const variableNameB = variableName; ///
-
-    variableNameMatches = (variableNameA === variableNameB);
-
-    return variableNameMatches;
-  }
+  isVariableEqualTo(variable) { return this.variable.isEqualTo(variable); }
 
   unifyWithEquivalence(equivalence, substitutions, generalContext, specificContext) {
     let unifiedWithEquivalence;

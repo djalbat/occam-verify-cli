@@ -1,6 +1,7 @@
 "use strict";
 
 import shim from "../shim";
+import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
 import { isAssertionNegated } from "../utilities/assertion";
@@ -9,9 +10,10 @@ import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statement
 const containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion");
 
 export default class ContainedAssertion {
-  constructor(string, node, term, frame, negated, statement) {
+  constructor(string, node, tokens, term, frame, negated, statement) {
     this.string = string;
     this.node = node;
+    this.tokens = tokens;
     this.term = term;
     this.frame = frame;
     this.negated = negated;
@@ -24,6 +26,10 @@ export default class ContainedAssertion {
 
   getNode() {
     return this.node;
+  }
+
+  getTokens() {
+    return this.tokens;
   }
 
   getTerm() {
@@ -42,25 +48,29 @@ export default class ContainedAssertion {
     return this.statement;
   }
 
-  resolve(substitutions, context) {
-    let resolved;
+  unifyIndependently(substitutions, context) {
+    let unifiedIndependently;
 
     const containedAssertionString = this.string; ///
 
-    context.trace(`Resolving the '${containedAssertionString}' contained assertion...`);
+    context.trace(`Unifying the '${containedAssertionString}' contained assertion independently...`);
 
-    const term = termFromTermAndSubstitutions(this.term, substitutions),
-          frame = frameFromFrameAndSubstitutions(this.frame, substitutions),
-          statement = statementFromStatementAndSubstitutions(this.statement, substitutions),
+    const localContext = LocalContext.fromContextAndTokens(context, this.tokens);
+
+    context = localContext; ///
+
+    const term = termFromTermAndSubstitutions(this.term, substitutions, context),
+          frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),
+          statement = statementFromStatementAndSubstitutions(this.statement, substitutions, context),
           verifiedWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, context);
 
-    resolved = verifiedWhenDerived; ///
+    unifiedIndependently = verifiedWhenDerived; ///
 
-    if (resolved) {
-      context.debug(`...resolved the '${containedAssertionString}' contained assertion.`);
+    if (unifiedIndependently) {
+      context.debug(`...unified the '${containedAssertionString}' contained assertion independently.`);
     }
 
-    return resolved;
+    return unifiedIndependently;
   }
 
   verify(assignments, stated, context) {
@@ -122,14 +132,14 @@ export default class ContainedAssertion {
     return frameVerified;
   }
 
-  verifyStatement(statment, assignments, stated, context) {
+  verifyStatement(statement, assignments, stated, context) {
     stated = true;  ///
 
     assignments = null; ///
 
-    const statmentVerified = statment.verify(assignments, stated, context);
+    const statementVerified = statement.verify(assignments, stated, context);
 
-    return statmentVerified;
+    return statementVerified;
   }
 
   verifyWhenStated(assignments, context) {
@@ -173,13 +183,14 @@ export default class ContainedAssertion {
       const { Term, Frame, Statement } = shim,
             node = containedAssertionNode,  ///
             string = context.nodeAsString(node),
+            tokens = context.nodeAsTokens(node),
             term = Term.fromContainedAssertionNode(containedAssertionNode, context),
             frame = Frame.fromContainedAssertionNode(containedAssertionNode, context),
             statement = Statement.fromContainedAssertionNode(containedAssertionNode, context),
             containedAssertionNegated = isAssertionNegated(containedAssertionNode),
             negated = containedAssertionNegated;  ///
 
-      containedAssertion = new ContainedAssertion(string, node, term, frame, negated, statement);
+      containedAssertion = new ContainedAssertion(string, node, tokens, term, frame, negated, statement);
     }
 
     return containedAssertion;

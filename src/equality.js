@@ -51,9 +51,9 @@ class Equality {
   }
 
   isReflexive() {
-    const rightTermNode = this.rightTerm.getNode(),
-          leftTermNodeMatchesRightTermNode = this.leftTerm.matchTermNode(rightTermNode),
-          reflexive = leftTermNodeMatchesRightTermNode; ///
+    const leftTermString = this.leftTerm.getString(),
+          rightTermString = this.rightTerm.getString(),
+          reflexive = (leftTermString === rightTermString);
 
     return reflexive;
   }

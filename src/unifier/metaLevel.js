@@ -38,20 +38,23 @@ class MetaLevelUnifier extends Unifier {
               statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
         if (statementMetavariableNode !== null) {
-          const { Metavariable, Statement } = shim,
-                metavariableNode = statementMetavariableNode, ///
-                statementNode = specificStatementNode; ///
+          const { Metavariable, Statement } = shim; ///
 
-          let context;
+          let context,
+              statementNode;
 
           context = generalContext; ///
 
+          statementNode = generalStatementNode; ///
+
           const frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context),
                 termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
-                substitution = (frameSubstitution || termSubstitution),
-                metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
+                metavariable = Metavariable.fromStatementNode(statementNode, context),
+                substitution = (frameSubstitution || termSubstitution);
 
           context = specificContext; ///
+
+          statementNode = specificStatementNode;  ///
 
           const statement = Statement.fromStatementNode(statementNode, context);
 

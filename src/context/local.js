@@ -88,6 +88,8 @@ class LocalContext {
     return lastProofStep;
   }
 
+  getFilePath() { return this.context.getFilePath(); }
+
   getLexer() { return this.context.getLexer(); }
 
   getParser() { return this.context.getParser(); }
@@ -197,8 +199,8 @@ class LocalContext {
   addJudgement(judgement) {
     let judgementAdded = false;
 
-    const metavariableNode = judgement.getMetavariableNode(),
-          judgementPresent = this.isJudgementPresentByMetavariableNode(metavariableNode); ///
+    const metavariable = judgement.getMetavariable(),
+          judgementPresent = this.isJudgementPresentByMetavariable(metavariable);
 
     if (!judgementPresent) {
       this.judgements.push(judgement);
@@ -250,7 +252,7 @@ class LocalContext {
 
   isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
 
-  isVariableDefinedByVariableName(variableName) {
+  isVariableDefined(variable) {
     const context = this,
           equivalences = this.getEquivalences(),
           groundedTerms = [],
@@ -259,15 +261,22 @@ class LocalContext {
     groundedTermsAndDefinedVariablesFromFromEquivalences(equivalences, groundedTerms, definedVariables, context);
 
     const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
-            const definedVariableName = definedVariable.getName();
+            const definedVariableEqualToVariable = definedVariable.isEqualTo(variable);
 
-            if (definedVariableName === variableName) {
+            if (definedVariableEqualToVariable === variable) {
               return true;
             }
           }),
           variableDefined = variableMatchesDefinedVariable; ///
 
     return variableDefined;
+  }
+
+  isMetavariableDefined(metavariable) {
+    const judgementPresent = this.isJudgementPresentByMetavariable(metavariable),
+      metavariableDefined = judgementPresent; ///
+
+    return metavariableDefined
   }
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
@@ -281,18 +290,11 @@ class LocalContext {
     return variablePresent;
   }
 
-  isJudgementPresentByMetavariableNode(metavariableNode) {
-    const judgement = this.findJudgementByMetavariableNode(metavariableNode),
+  isJudgementPresentByMetavariable(metavariable) {
+    const judgement = this.findJudgementByMetavariable(metavariable),
           judgementPresent = (judgement !== null);
 
     return judgementPresent;
-  }
-
-  isMetavariableDefinedByMetavariableNode(metavariableNode) {
-    const judgementPresent = this.isJudgementPresentByMetavariableNode(metavariableNode),
-          metavariableDefined = judgementPresent; ///
-
-    return metavariableDefined
   }
 
   findMetaTypeByMetaTypeName(metaTypeName) { return this.context.findMetaTypeByMetaTypeName(metaTypeName); }
@@ -314,13 +316,17 @@ class LocalContext {
     return variable;
   }
 
-  findJudgementByMetavariableNode(metavariableNode) {
+  findJudgementByMetavariable(metavariable) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementMatchesMetavariableNode = judgement.matchMetavariableNode(metavariableNode);
+            const judgementMetavariable = judgement.getMetavariable();
 
-            if (judgementMatchesMetavariableNode) {
-              return true;
+            if (judgementMetavariable !== null) {
+              const judgementMetavariableEqualToMetavariable = judgementMetavariable.isEqualTo(metavariable);
+
+              if (judgementMetavariableEqualToMetavariable) {
+                return true;
+              }
             }
           }) || null;
 

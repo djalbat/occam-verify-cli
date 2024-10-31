@@ -33,16 +33,28 @@ class Substitution {
     return frame;
   }
 
+  getVariable() {
+    const variable = null;
+
+    return variable;
+  }
+
   getStatement() {
     const statement = null;
 
     return statement;
   }
 
-  getMetavariableNode() {
+  getMetavariable() {
     const metavariableNode = null;
 
     return metavariableNode;
+  }
+
+  getSubstitution() {
+    const substitution = null;
+
+    return substitution;
   }
 
   isSimple() {
@@ -59,51 +71,51 @@ class Substitution {
   }
 
   isEqualTo(substitution) {
-    const equalTo = false;
+    let equalTo = false;
+
+    if (substitution !== null) {
+      const substitutionString = substitution.getString();
+
+      equalTo = (substitutionString === this.string);
+    }
 
     return equalTo;
+  }
+
+  isTermEqualTo(term) {
+    const termEqualTo = false;
+
+    return termEqualTo;
+  }
+
+  isFrameEqualTo(frame) {
+    const frameEqualTo = false;
+
+    return frameEqualTo;
+  }
+
+  isVariableEqualTo(variable) {
+    const variableEqualTo = false;
+
+    return variableEqualTo;
+  }
+
+  isStatementEqualTo(statement) {
+    const statementEqualTo = false;
+
+    return statementEqualTo;
+  }
+
+  isMetavariableEqualTo(metavariable) {
+    const metavariableEqualTo = false;
+
+    return metavariableEqualTo;
   }
 
   resolve(substitutions, context) {
     const resolved = true;
 
     return resolved;
-  }
-
-  matchTermNode(termNode) {
-    const termNodeMatches = false;
-
-    return termNodeMatches;
-  }
-
-  matchFrameNode(frameNode) {
-    const frameNodeMatches = false;
-
-    return frameNodeMatches;
-  }
-
-  matchStatementNode(statementNode) {
-    const statementNodeMatches = false;
-
-    return statementNodeMatches;
-  }
-
-  matchVariableName(variableName) {
-    const variableNameMatches = false;
-
-    return variableNameMatches;
-  }
-
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = false;
-
-    return metavariableNodeMatches;
-  }
-
-  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
-    const metavariableNodeAndSubstitutionNodeMatches = false;
-
-    return metavariableNodeAndSubstitutionNodeMatches;
   }
 
   unifyWithEquivalence(equivalence, substitutions, generalContext, specificContext) {

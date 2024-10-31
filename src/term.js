@@ -96,24 +96,19 @@ class Term {
   isEqualTo(term) {
     let equalTo = false;
 
-    const termNode = term.getNode(),
-          termNodeMatches = this.node.match(termNode);
+    if (term !== null) {
+      const termString = term.getString();
 
-    if (termNodeMatches) {
-      const termType = term.getType();
+      if (termString === this.string) {
+        const termType = term.getType();
 
-      if (this.type === termType) {
-        equalTo = true;
+        if (termType === this.type) {
+          equalTo = true;
+        }
       }
     }
 
     return equalTo;
-  }
-
-  matchTermNode(termNode) {
-    const termNodeMatches = this.node.match(termNode);
-
-    return termNodeMatches;
   }
 
   isInitiallyGrounded(context) {

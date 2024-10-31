@@ -26,26 +26,6 @@ class MetaType {
     return equalTo;
   }
 
-  matchName(name) {
-    const nameMatches = (this.name === name);
-
-    return nameMatches;
-  }
-
-  matchMetaTypeName(metaTypeName) {
-    const metaTypeNameMatches = (this.name === metaTypeName);
-
-    return metaTypeNameMatches;
-  }
-
-  matchMetaTypeNode(metaTypeNode) {
-    const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
-          metaTypeNameMatches = this.matchMetaTypeName(metaTypeName),
-          metaTypeNodeMatches = metaTypeNameMatches;  ///
-
-    return metaTypeNodeMatches;
-  }
-
   toJSON() {
     const name = this.name,
           json = {

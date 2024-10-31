@@ -344,10 +344,11 @@ export default class FileContext {
 
   findMetaTypeByMetaTypeName(metaTypeName) {
     const metaTypes = this.getMetaTypes(),
+          name = metaTypeName,  ///
           metaType = metaTypes.find((metaType) => {
-            const metaTypeNodeMatches = metaType.matchMetaTypeName(metaTypeName);
+            const metaTypeName = metaType.getName();
 
-            if (metaTypeNodeMatches) {
+            if (metaTypeName === name) {
               return true;
             }
           }) || null;
@@ -521,13 +522,17 @@ export default class FileContext {
     return variable;
   }
 
-  findJudgementByMetavariableNode(metavariableNode) {
+  findJudgementByMetavariable(metavariable) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementMatchesMetavariableNode = judgement.matchMetavariableNode(metavariableNode);
+            const judgementMetavariable = judgement.getMetavariable();
 
-            if (judgementMatchesMetavariableNode) {
-              return true;
+            if (judgementMetavariable !== null) {
+              const judgementMetavariableEqualToMetavariable = judgementMetavariable.isEqualTo(metavariable);
+
+              if (judgementMetavariableEqualToMetavariable) {
+                return true;
+              }
             }
           }) || null;
 

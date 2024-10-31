@@ -3,9 +3,9 @@
 import shim from "./shim";
 import unifyMixins from "./mixins/statement/unify";
 import verifyMixins from "./mixins/statement/verify";
-import resolveMixins from "./mixins/statement/resolve";
 import combinatorVerifier from "./verifier/combinator";
 import StatementNodeAndTokens from "./nodeAndTokens/statement";
+import unifyIndependentlyMixins from "./mixins/statement/unifyIndependenntly";
 
 import { unifyStatement } from "./utilities/unification";
 import { nodeQuery, nodesQuery } from "./utilities/query";
@@ -35,9 +35,13 @@ class Statement {
   }
 
   isEqualTo(statement) {
-    const node = statement.getNode(),
-          matches = this.node.match(node),
-          equalTo = matches;  ///
+    let equalTo = false;
+
+    if (statement !== null) {
+      const statementString = statement.getString();
+
+      equalTo = (statementString === this.string);
+    }
 
     return equalTo;
   }
@@ -109,16 +113,14 @@ class Statement {
 
     specificContext.trace(`Unifying the '${statementString}' statement independently...`);
 
-    const resolved = resolveMixins.some((resolveMixin) => {
+    unifiedIndependently = unifyIndependentlyMixins.some((resolveMixin) => {
       const statement = this, ///
-            resolved = resolveMixin(statement, substitutions, generalContext, specificContext);
+            unifiedIndependently = resolveMixin(statement, substitutions, generalContext, specificContext);
 
-      if (resolved) {
+      if (unifiedIndependently) {
         return true;
       }
     });
-
-    unifiedIndependently = resolved; ///
 
     if (unifiedIndependently) {
       specificContext.debug(`...unified the '${statementString}' statement independently.`);

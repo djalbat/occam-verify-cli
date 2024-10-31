@@ -26,61 +26,9 @@ export default class FrameSubstitution extends Substitution {
     return this.metavariable;
   }
 
-  getMetavariableName() {
-    const metavariableName = this.metavariable.getName();
+  isFrameEqualTo(frame) { return this.frame.isEqualTo(frame); }
 
-    return metavariableName;
-  }
-
-  getSubstitutionString() {
-    const frameString = this.frame.getString(),
-          metavariableString = this.metavariable.getString(),
-          substitutionString = `[${frameString} for [${metavariableString}]]`;
-
-    return substitutionString;
-  }
-
-  isEqualTo(substitution) {
-    let equalTo = false;
-
-    const frameNode = substitution.getFrameNode(),
-          metavariableName = substitution.getMetavariableName();
-
-    if ((frameNode !== null) && (metavariableName !== null)) {
-      const frameNodeMatches = this.matchFrameNode(frameNode),
-            metavariableNameMatches = this.matchMetavariableName(metavariableName);
-
-      equalTo = (frameNodeMatches && metavariableNameMatches);
-    }
-
-    return equalTo;
-  }
-
-  matchFrameNode(frameNode) { return this.frame.matchFrameNode(frameNode); }
-
-  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
-
-  matchMetavariableName(metavariableName) {
-    let metavariableNameMatches;
-
-    const generalMetavariableName = metavariableName; ///
-
-    metavariableName = this.metavariable.getName();
-
-    const specificMetavariableName = metavariableName; ///
-
-    metavariableNameMatches = (generalMetavariableName === specificMetavariableName);
-
-    return metavariableNameMatches;
-  }
-
-  matchMetavariableNameAndSubstitutionNode(metavariableName, substitutionNode) {
-    const metavariableNameMatches = this.matchMetavariableName(metavariableName),
-          substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),
-          metavariableNameAndSubstitutionNodeMatches = (metavariableNameMatches && substitutionNodeMatches);
-
-    return metavariableNameAndSubstitutionNodeMatches;
-  }
+  isMetavariableEqualTo(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
   static fromStatementNode(statementNode, context) {
     let frameSubstitution = null;

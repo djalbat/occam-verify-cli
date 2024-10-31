@@ -28,9 +28,7 @@ class Judgement {
     return this.declaration;
   }
 
-  getMetavariableNode() { return this.frame.getMetavariableNode(); }
-
-  matchMetavariableNode(metavariableNode) { return this.frame.matchMetavariableNode(metavariableNode); }
+  getMetavariable() { return this.frame.getMetavariable(); }
 
   verify(assignments, stated, context) {
     let verified = false;

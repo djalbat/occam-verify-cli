@@ -1,20 +1,19 @@
 "use strict";
 
 import shim from "../shim";
+import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
 import { isAssertionNegated } from "../utilities/assertion";
-import { variableNameFromVariableNode } from "../utilities/name";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../utilities/substitutions";
 
-const variableNodeQuery = nodeQuery("/term/variable!"),
-      metavariableNodeQuery = nodeQuery("/frame/metavariable!"),
-      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion");
+const definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion");
 
 export default class DefinedAssertion {
-  constructor(string, node, term, frame, negated) {
+  constructor(string, node, tokens, term, frame, negated) {
     this.string = string;
     this.node = node;
+    this.tokens = tokens;
     this.term = term;
     this.frame= frame;
     this.negated = negated;
@@ -26,6 +25,10 @@ export default class DefinedAssertion {
 
   getNode() {
     return this.node;
+  }
+
+  getTokens() {
+    return this.tokens;
   }
 
   getTerm() {
@@ -40,24 +43,28 @@ export default class DefinedAssertion {
     return this.negated;
   }
 
-  resolve(substitutions, context) {
-    let resolved;
+  unifyIndependently(substitutions, context) {
+    let unifiedIndependently;
 
     const definedAssertionString = this.string; ///
 
-    context.trace(`Resolving the '${definedAssertionString}' defined assertion...`);
+    context.trace(`Unifying the '${definedAssertionString}' defined assertion independently...`);
 
-    const term = termFromTermAndSubstitutions(this.term, substitutions),
-          frame = frameFromFrameAndSubstitutions(this.frame, substitutions),
+    const localContext = LocalContext.fromContextAndTokens(context, this.tokens);
+
+    context = localContext; ///
+
+    const term = termFromTermAndSubstitutions(this.term, substitutions, context),
+          frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),
           verifiedWhenDerived = verifyWhenDerived(term, frame, this.negated, context);
 
-    resolved = verifiedWhenDerived; ///
+    unifiedIndependently = verifiedWhenDerived; ///
 
-    if (resolved) {
-      context.debug(`...resolved the '${definedAssertionString}' defined assertion.`);
+    if (unifiedIndependently) {
+      context.debug(`...unified the '${definedAssertionString}' defined assertion independently.`);
     }
 
-    return resolved;
+    return unifiedIndependently;
   }
 
   verify(assignments, stated, context) {
@@ -155,12 +162,13 @@ export default class DefinedAssertion {
       const { Term, Frame } = shim,
             node = definedAssertionNode,  ///
             string = context.nodeAsString(node),
+            tokens = context.nodeAsTokens(node),
             term = Term.fromDefinedAssertionNode(definedAssertionNode, context),
             frame = Frame.fromDefinedAssertionNode(definedAssertionNode, context),
             definedAssertionNegated = isAssertionNegated(definedAssertionNode),
             negated = definedAssertionNegated;  ///
 
-      definedAssertion = new DefinedAssertion(string, node, term, frame, negated);
+      definedAssertion = new DefinedAssertion(string, node, tokens, term, frame, negated);
     }
 
     return definedAssertion;
@@ -171,11 +179,11 @@ function verifyWhenDerived(term, frame, negated, context) {
   let verifiedWhenDerived = false;
 
   if (term !== null) {
-    const termNode = term.getNode(),
-          variableNode = variableNodeQuery(termNode),
-          variableName = variableNameFromVariableNode(variableNode),
+    const { Variable } = shim,
+          termNode = term.getNode(),
+          variable = Variable.fromTermNode(termNode, context),
           generalContext = context, ///
-          variableDefined = generalContext.isVariableDefinedByVariableName(variableName);
+          variableDefined = generalContext.isVariableDefined(variable);
 
     if (!negated && variableDefined) {
       verifiedWhenDerived = true;
@@ -187,9 +195,10 @@ function verifyWhenDerived(term, frame, negated, context) {
   }
 
   if (frame!== null) {
-    const frameNode = frame.getNode(),
-          metavariableNode = metavariableNodeQuery(frameNode),
-          metavariableDefined = context.isMetavariableDefinedByMetavariableNode(metavariableNode);
+    const { Metavariable } = shim,
+          frameNode = frame.getNode(),
+          metavariable = Metavariable.fromFrameNode(frameNode, context),
+          metavariableDefined = context.isMetavariableDefined(metavariable);
 
     if (!negated && metavariableDefined) {
       verifiedWhenDerived = true;

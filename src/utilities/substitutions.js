@@ -1,23 +1,17 @@
 "use strict";
 
-import { nodeQuery } from "../utilities/query";
-import { variableNameFromVariableNode } from "../utilities/name";
+import shim from "../shim";
+import TermSubstitution from "../substitution/term";
+import FrameSubstitution from "../substitution/frame";
 
-const variableNodeQuery = nodeQuery("/term/variable!"),
-      metavariableNodeQuery = nodeQuery("/*/metavariable!"),
-      substitutionNodeQuery = nodeQuery("/*/substitution!");
-
-export function termFromTermAndSubstitutions(term, substitutions) {
+export function termFromTermAndSubstitutions(term, substitutions, context) {
   if (term !== null) {
-    const termNode = term.getNode();
+    const { Variable } = shim,
+          termNode = term.getNode(),
+          variable = Variable.fromTermNode(termNode, context);
 
-    term = null;
-
-    const variableNode = variableNodeQuery(termNode);
-
-    if (variableNode !== null) {
-      const variableName = variableNameFromVariableNode(variableNode),
-            substitution = substitutions.findSubstitutionByVariableName(variableName);
+    if (variable !== null) {
+      const substitution = substitutions.findSubstitutionByVariable(variable);
 
       if (substitution !== null) {
         term = substitution.getTerm();
@@ -28,16 +22,14 @@ export function termFromTermAndSubstitutions(term, substitutions) {
   return term;
 }
 
-export function frameFromFrameAndSubstitutions(frame, substitutions) {
+export function frameFromFrameAndSubstitutions(frame, substitutions, context) {
   if (frame !== null) {
-    const frameNode = frame.getNode();
+    const { Metavariable } = shim,
+          frameNode = frame.getNode(),
+          metavariable = Metavariable.fromFrameNode(frameNode, context);
 
-    frame = null;
-
-    const metavariableNode = metavariableNodeQuery(frameNode);
-
-    if (metavariableNode !== null) {
-      const substitution = substitutions.findSubstitutionByMetavariableNode(metavariableNode);
+    if (metavariable !== null) {
+      const substitution = substitutions.findSubstitutionByMetavariable(metavariable);
 
       if (substitution !== null) {
         frame = substitution.getFrame();
@@ -48,17 +40,23 @@ export function frameFromFrameAndSubstitutions(frame, substitutions) {
   return frame;
 }
 
-export function statementFromStatementAndSubstitutions(statement, substitutions) {
+export function statementFromStatementAndSubstitutions(statement, substitutions, context) {
   if (statement !== null) {
-    const statementNode = statement.getNode();
+    const { Metavariable } = shim,
+          statementNode = statement.getNode(),
+          metavariable = Metavariable.fromStatementNode(statementNode, context);
 
-    statement = null;
+    statement = null; ///
 
-    const metavariableNode = metavariableNodeQuery(statementNode),
-          substitutionNode = substitutionNodeQuery(statementNode);
+    if (metavariable !== null) {
+      let substitution;
 
-    if (metavariableNode !== null) {
-      const substitution = substitutions.findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
+      const termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
+            frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context);
+
+      substitution = (termSubstitution || frameSubstitution);
+
+      substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
 
       if (substitution !== null) {
         statement = substitution.getStatement();

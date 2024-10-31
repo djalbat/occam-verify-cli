@@ -49,11 +49,19 @@ class Metavariable {
     return this.metaType;
   }
 
-  matchMetaType(metaType) {
-    const metaTypeMatches = (this.metaType === metaType);
+  isEqualTo(metavariable) {
+    let equalTo = false;
 
-    return metaTypeMatches;
+    if (metavariable !== null) {
+      const metavariableString = metavariable.getString();
+
+      equalTo = (metavariableString === this.string);
+    }
+
+    return equalTo;
   }
+
+  isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
   matchMetavariableName(metavariableName) {
     const metavariableNameMatches = (this.name === metavariableName);
@@ -61,46 +69,79 @@ class Metavariable {
     return metavariableNameMatches;
   }
 
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = this.node.match(metavariableNode);
+  isCoincidentWithFrame(frame, generalContext, specificContext) {
+    let coincidentWithFrame = false;
 
-    return metavariableNodeMatches;
+    const generalContextFilePath = generalContext.getFilePath(),
+          specificContextFilePath = specificContext.getFilePath();
+
+    if (generalContextFilePath === specificContextFilePath) {
+      const frameString = frame.getString();
+
+      if (frameString === this.string) {
+        coincidentWithFrame = true;
+      }
+    }
+
+    return coincidentWithFrame;
+  }
+
+  isCoincidentWithStatement(statement, generalContext, specificContext) {
+    let coincidentWithStatement = false;
+
+    const generalContextFilePath = generalContext.getFilePath(),
+          specificContextFilePath = specificContext.getFilePath();
+
+    if (generalContextFilePath === specificContextFilePath) {
+      const statementString = statement.getString();
+
+      if (statementString === this.string) {
+        coincidentWithStatement = true;
+      }
+    }
+
+    return coincidentWithStatement;
   }
 
   unifyFrame(frame, substitutions, generalContext, specificContext) {
     let frameUnified = false;
 
-    const frameNode = frame.getNode(),
-          frameString = frame.getString(),
+    const frameString = frame.getString(),
           metavariableString = this.string; ///
 
     specificContext.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
 
-    const metavariableNode = this.node, ///
-          simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariableNode(metavariableNode);
+    const coincidentWithFrame = this.isCoincidentWithFrame(frame, generalContext, specificContext);
 
-    if (simpleSubstitutionPresent) {
-      const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableNode(metavariableNode),
-            substitution = simpleSubstitution,  ///
-            frameNodeMatches = substitution.matchFrameNode(frameNode);
-
-      if (frameNodeMatches) {
-        frameUnified = true;
-      }
+    if (coincidentWithFrame) {
+      frameUnified = true;
     } else {
-      const metavariable = this,  ///
-            frameMetavariable = frameMetavariableFromFrame(frame, generalContext, specificContext);
+      const metavariable = this, ///
+            simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariable(metavariable);
 
-      if ((metavariable !== null) && (metavariable === frameMetavariable)) {
-        frameUnified = true;
+      if (simpleSubstitutionPresent) {
+        const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable),
+              substitution = simpleSubstitution,  ///
+              substitutionFrameEqualToFrame = substitution.isFrameEqualTo(frame);
+
+        if (substitutionFrameEqualToFrame) {
+          frameUnified = true;
+        }
       } else {
-        const context = specificContext,  ///
-              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
-              substitution = frameSubstitution;  ///
+        const metavariable = this,  ///
+              frameMetavariable = frameMetavariableFromFrame(frame, generalContext, specificContext);
 
-        substitutions.addSubstitution(substitution, context);
+        if ((metavariable !== null) && (metavariable === frameMetavariable)) {
+          frameUnified = true;
+        } else {
+          const context = specificContext,  ///
+                frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
+                substitution = frameSubstitution;  ///
 
-        frameUnified = true;
+          substitutions.addSubstitution(substitution, context);
+
+          frameUnified = true;
+        }
       }
     }
 
@@ -122,35 +163,38 @@ class Metavariable {
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
 
-    const statementNode = statement.getNode(),
-          metavariableNode = this.node, ///
-          substitutionNode = (substitution !== null) ?
-                                substitution.getNode() :
-                                  null,
-          substitutionPresent = substitutions.isSubstitutionPresentByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode);
+    const coincidentWithStatement = this.isCoincidentWithStatement(statement, generalContext, specificContext);
 
-    if (substitutionPresent) {
-      const substitution = substitutions.findSubstitutionByMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode),
-            statementNodeMatches = substitution.matchStatementNode(statementNode);
-
-      if (statementNodeMatches) {
-        statementUnified = true;
-      }
+    if (coincidentWithStatement) {
+      statementUnified = true;
     } else {
-      const metavariable = this,
-            statementMetavariable = statementMetavariableFromStatement(statement, generalContext, specificContext);
+      const metavariable = this, ///
+            substitutionPresent = substitutions.isSubstitutionPresentByMetavariableAndSubstitution(metavariable, substitution);
 
-      if ((metavariable !== null) && (metavariable === statementMetavariable)) {
-        statementUnified = true;
+      if (substitutionPresent) {
+        substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
+
+        const substitutionStatementEqualToStatement = substitution.isStatementEqualTo(statement);
+
+        if (substitutionStatementEqualToStatement) {
+          statementUnified = true;
+        }
       } else {
-        const context = specificContext,  ///
-              statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
+        const metavariable = this,
+              statementMetavariable = statementMetavariableFromStatement(statement, generalContext, specificContext);
 
-        substitution = statementSubstitution;  ///
+        if ((metavariable !== null) && (metavariable === statementMetavariable)) {
+          statementUnified = true;
+        } else {
+          const context = specificContext,  ///
+                statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
 
-        substitutions.addSubstitution(substitution, context);
+          substitution = statementSubstitution;  ///
 
-        statementUnified = true;
+          substitutions.addSubstitution(substitution, context);
+
+          statementUnified = true;
+        }
       }
     }
 
@@ -188,8 +232,8 @@ class Metavariable {
 
     context.trace(`Unifying the '${substitutionString}' substitution with the '${metavariableString}' metavariable...`);
 
-    const metavariableNode = this.node, ///
-          judgement = context.findJudgementByMetavariableNode(metavariableNode);
+    const metavariable = this, ///
+          judgement = context.findJudgementByMetavariable(metavariable);
 
     if (judgement !== null){
       const declaration = judgement.getDeclaration();
@@ -284,9 +328,9 @@ class Metavariable {
     metavariable = generalContext.findMetavariable(metavariable, generalContext, specificContext);
 
     if (metavariable !== null) {
-      const metaTypeMatches = metavariable.matchMetaType(metaType);
+      const metavariableMetaTypeEqualToMetaType = metavariable.isMetaTypeEqualTo(metaType);
 
-      verifiedGivenMetaType = metaTypeMatches;  ///
+      verifiedGivenMetaType = metavariableMetaTypeEqualToMetaType;  ///
     }
 
     if (verifiedGivenMetaType) {

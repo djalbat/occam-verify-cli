@@ -35,11 +35,11 @@ class StatementSubstitution extends Substitution {
     return this.substitution;
   }
 
-  getMetavariableNode() {
-    const metavariableNode = this.metavariable.getNode();
+  isStatementEqualTo(statement) { return this.statement.isEqualTo(statement); }
 
-    return metavariableNode;
-  }
+  isMetavariableEqualTo(metavariable) { return this.metavariable.isEqualTo(metavariable); }
+
+  isSubstitutionEqualTo(substitution) { return this.substitution.isEqualTo(substitution); }
 
   isSimple() {
     const simple = (this.substitution === null);
@@ -47,45 +47,11 @@ class StatementSubstitution extends Substitution {
     return simple;
   }
 
-  matchStatementNode(statementNode) {
-    statementNode = stripBracketsFromStatementNode(statementNode); ///
-
-    const statementNodeMatches = this.statement.matchStatementNode(statementNode);
-
-    return statementNodeMatches;
-  }
-
-  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
-
-  matchSubstitutionNode(substitutionNode) {
-    let substitutionNodeMatches;
-
-    if ((substitutionNode === null) && (this.substitution === null)) {
-      substitutionNodeMatches = true;
-    } else if ((substitutionNode === null) && (this.substitution !== null)) {
-      substitutionNodeMatches = false;
-    } else if ((substitutionNode !== null) && (this.substitution === null)) {
-      substitutionNodeMatches = false;
-    } else {
-      substitutionNodeMatches = this.substitution.matchSubstitutionNode(substitutionNode);
-    }
-
-    return substitutionNodeMatches;
-  }
-
-  matchMetavariableNodeAndSubstitutionNode(metavariableNode, substitutionNode) {
-    const metavariableNodeMatches = this.matchMetavariableNode(metavariableNode),
-          substitutionNodeMatches = this.matchSubstitutionNode(substitutionNode),
-          metavariableNodeAndSubstitutionNodeMatches = (metavariableNodeMatches && substitutionNodeMatches);
-
-    return metavariableNodeAndSubstitutionNodeMatches;
-  }
-
   resolve(substitutions, generalContext, specificContext) {
     const substitutionString = this.string;
 
-    const metavariableNode = this.getMetavariableNode(),
-          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariableNode(metavariableNode);
+    const metavariable = this.getMetavariable(),
+          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable);
 
     if (simpleSubstitution !== null) {
       specificContext.trace(`Resolving the ${substitutionString} substitution...`);

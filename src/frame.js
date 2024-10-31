@@ -61,34 +61,16 @@ class Frame {
     return metavariable;
   }
 
-  getMetavariableNode() {
-    let metavariableNode = null;
+  isEqualTo(frame) {
+    let equalTo = false;
 
-    const metavariable = this.getMetavariable();
+    if (frame !== null) {
+      const frameString = frame.getString();
 
-    if (metavariable !== null) {
-      metavariableNode = metavariable.getNode();
+      equalTo = (frameString === this.string);
     }
 
-    return metavariableNode;
-  }
-
-  matchFrameNode(frameNode) {
-    const frameNodeMatches = this.node.match(frameNode);
-
-    return frameNodeMatches;
-  }
-
-  matchMetavariableNode(metavariableNode) {
-    let metavariableNodeMatches = false;
-
-    const metavariable = this.getMetavariable();
-
-    if (metavariable !== null) {
-      metavariableNodeMatches = metavariable.matchMetavariableNode(metavariableNode);
-    }
-
-    return metavariableNodeMatches;
+    return equalTo;
   }
 
   unifySubstitution(substitution, context) {

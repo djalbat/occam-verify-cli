@@ -42,6 +42,18 @@ class Variable {
     this.type = type;
   }
 
+  isEqualTo(variable) {
+    let equalTo = false;
+
+    if (variable !== null) {
+      const variableString = variable.getString();
+
+      equalTo = (variableString === this.string);
+    }
+
+    return equalTo;
+  }
+
   matchVariableName(variableName) {
     const variableNameMatches = (this.name === variableName);
 
