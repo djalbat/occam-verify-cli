@@ -19,10 +19,12 @@ export function termFromJSON(json, fileContext) {
 export function typeFromJSON(json, fileContext) {
   let { type } = json;
 
-  const { name } = type,
-        typeName = name;  ///
+  if (type !== null) {
+    const { name } = type,
+          typeName = name;  ///
 
-  type = fileContext.findTypeByTypeName(typeName);
+    type = fileContext.findTypeByTypeName(typeName);
+  }
 
   return type;
 }
@@ -362,7 +364,9 @@ export function termToTermJSON(term) {
 }
 
 export function typeToTypeJSON(type) {
-  const typeJSON = type.toJSON();
+  const typeJSON = (type !== null) ?
+                     type.toJSON() :
+                       null;
 
   return typeJSON;
 }
