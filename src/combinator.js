@@ -26,7 +26,7 @@ class Combinator {
   }
 
   verifyWhenDeclared(fileContext) {
-    let verifiedAtTopLevel;
+    let verifiedWhenDeclared;
 
     const combinatorString = this.getString(); ///
 
@@ -34,13 +34,13 @@ class Combinator {
 
     const statementVerifiedAtTopLevel = this.statement.verifyWhenDeclared(fileContext);
 
-    verifiedAtTopLevel = statementVerifiedAtTopLevel; ///
+    verifiedWhenDeclared = statementVerifiedAtTopLevel; ///
 
-    if (verifiedAtTopLevel) {
+    if (verifiedWhenDeclared) {
       fileContext.debug(`...verified the '${combinatorString}' combinator when declared.`);
     }
 
-    return verifiedAtTopLevel;
+    return verifiedWhenDeclared;
   }
 
   toJSON() {

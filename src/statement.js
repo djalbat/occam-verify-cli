@@ -187,20 +187,20 @@ class Statement {
   }
 
   verifyWhenDeclared(fileContext) {
-    let verifiedAtTopLevel;
+    let verifiedWhenDeclared;
 
     const statementNode = this.node,  ///
           statementString = this.string;  ///
 
     fileContext.trace(`Verifying the '${statementString}' statement when declared...`);
 
-    verifiedAtTopLevel = combinatorVerifier.verifyStatement(statementNode, fileContext);
+    verifiedWhenDeclared = combinatorVerifier.verifyStatement(statementNode, fileContext);
 
-    if (verifiedAtTopLevel) {
+    if (verifiedWhenDeclared) {
       fileContext.debug(`...verified the '${statementString}' statement when declared.`);
     }
 
-    return verifiedAtTopLevel;
+    return verifiedWhenDeclared;
   }
 
   verifyGivenMetaType(metaType, assignments, stated, context) {

@@ -26,7 +26,7 @@ class Constructor {
   getType() { return this.term.getType(); }
 
   verifyWhenDeclared(fileContext) {
-    let verifiedAtTopLevel;
+    let verifiedWhenDeclared;
 
     const constructorString = this.string;  ///
 
@@ -35,14 +35,14 @@ class Constructor {
     const termVerifiedAtTopLevel = this.term.verifyWhenDeclared(fileContext);
 
     if (termVerifiedAtTopLevel) {
-      verifiedAtTopLevel = true; ///
+      verifiedWhenDeclared = true; ///
     }
 
-    if (verifiedAtTopLevel) {
+    if (verifiedWhenDeclared) {
       fileContext.debug(`...verified the '${constructorString}' constructor when declared.`);
     }
 
-    return verifiedAtTopLevel;
+    return verifiedWhenDeclared;
   }
 
   toJSON() {

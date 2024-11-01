@@ -23,19 +23,13 @@ export default class Reference {
 
   getTokens() { return this.metavariable.getTokens(); }
 
-  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
-
   getMetavariableName() {
     const metavariableName = this.metavariable.getName();
 
     return metavariableName;
   }
 
-  getMetavariableNode() {
-    const metavariableNode = this.metavariable.getNode();
-
-    return metavariableNode;
-  }
+  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
   unifyLabel(label, substitutions, generalContext, specificContext) {
     let labelUnified;

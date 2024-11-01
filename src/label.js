@@ -21,31 +21,34 @@ class Label {
 
   getTokens() { return this.metavariable.getTokens(); }
 
+  getMetavariableName() {
+    const metavariableName = this.metavariable.getName();
+
+    return metavariableName;
+  }
+
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
-  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
-
   verifyWhenDeclared(fileContext) {
-    let verifiedAtTopLevel = false;
+    let verifiedWhenDeclared = false;
 
     const labelString = this.getString(); ///
 
     fileContext.trace(`Verifying the '${labelString}' label when declared...`);
 
-    const metavariableNode = this.metavariable.getNode(),
-          labelPresent = fileContext.isLabelPresentByMetavariableNode(metavariableNode);
+    const labelPresent = fileContext.isLabelPresentByMetavariable(this.metavariable);
 
     if (labelPresent) {
       fileContext.debug(`The '${labelString}' label is already present.`);
     } else {
-      verifiedAtTopLevel = true;
+      verifiedWhenDeclared = true;
     }
 
-    if (verifiedAtTopLevel) {
+    if (verifiedWhenDeclared) {
       fileContext.debug(`...verified the '${labelString}' label when declared.`);
     }
 
-    return verifiedAtTopLevel;
+    return verifiedWhenDeclared;
   }
 
   toJSON() {

@@ -13,7 +13,7 @@ import { termNodeFromTermString } from "./nodeAndTokens/term";
 import { variableNameFromVariableNode } from "./utilities/name";
 import { typeFromJSON, typeToTypeJSON } from "./utilities/json";
 
-const { filter } = arrayUtilities;
+const { filter, compress } = arrayUtilities;
 
 const termNodeQuery = nodeQuery("/*/term[0]"),
       variableNodeQuery = nodeQuery("/term/variable!"),
@@ -43,54 +43,31 @@ class Term {
   }
 
   getVariable(context) {
-    let variable = null;
-
-    const variableNode = variableNodeQuery(this.node);
-
-    if (variableNode !== null) {
-      const generalContext = context, ///
-            variableName = variableNameFromVariableNode(variableNode);
-
-      variable = generalContext.findVariableByVariableName(variableName);
-    }
+    const { Variable } = shim,
+          termNode = this.node, ///
+          variable = Variable.fromTermNode(termNode, context);
 
     return variable;
   }
 
   getVariables(context) {
-    const variables = [],
-          variableNodes = variableNodesQuery(this.node);
+    const variableNodes = variableNodesQuery(this.node),
+          variables = variableNodes.map((variableNode) => {
+            const { Variable } = shim,
+                  variable = Variable.fromVariableNode(variableNode, context);
 
-    variableNodes.forEach((variableNode) => {
-      const generalContext = context, ///
-            variableName = variableNameFromVariableNode(variableNode),
-            variable = generalContext.findVariableByVariableName(variableName),
-            variablesIncludesVariable = variables.includes(variable);
+            return variable;
+          });
 
-      if (!variablesIncludesVariable) {
-        variables.push(variable);
-      }
-    });
+    compress(variables, (variableA, variableB) => {
+      const variableAEqualToVariableB = variableA.isEqualTo(variableB);
 
-    return variables;
-  }
-
-  isGrounded(definedVariables, context) {
-    const variables = this.getVariables(context);
-
-    filter(variables, (variable) => {
-      const definedVariablesIncludesVariable = definedVariables.includes(variable);
-
-      if (!definedVariablesIncludesVariable) {
+      if (variableAEqualToVariableB) {
         return true;
       }
     });
 
-    const undefinedVariables = variables, ///
-          undefinedVariablesLength = undefinedVariables.length,
-          grounded = (undefinedVariablesLength <= 1);
-
-    return grounded;
+    return variables;
   }
 
   isEqualTo(term) {
@@ -109,6 +86,24 @@ class Term {
     }
 
     return equalTo;
+  }
+
+  isGrounded(definedVariables, context) {
+    const variables = this.getVariables(context);
+
+    filter(variables, (variable) => {
+      const definedVariablesIncludesVariable = definedVariables.includes(variable);
+
+      if (!definedVariablesIncludesVariable) {
+        return true;
+      }
+    });
+
+    const undefinedVariables = variables, ///
+          undefinedVariablesLength = undefinedVariables.length,
+          grounded = (undefinedVariablesLength <= 1);
+
+    return grounded;
   }
 
   isInitiallyGrounded(context) {
@@ -222,7 +217,7 @@ class Term {
   }
 
   verifyWhenDeclared(fileContext) {
-    let verifiedAtTopLevel;
+    let verifiedWhenDeclared;
 
     const termString = this.string;  ///
 
@@ -234,14 +229,14 @@ class Term {
     if (termVerifiedAsConstructor) {
       const typeVerified = this.verifyType(fileContext);
 
-      verifiedAtTopLevel = typeVerified;  ///
+      verifiedWhenDeclared = typeVerified;  ///
     }
 
-    if (verifiedAtTopLevel) {
+    if (verifiedWhenDeclared) {
       fileContext.debug(`...verified the '${termString}' term when declared.`);
     }
 
-    return verifiedAtTopLevel;
+    return verifiedWhenDeclared;
   }
 
   toJSON() {

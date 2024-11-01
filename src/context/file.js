@@ -326,6 +326,35 @@ export default class FileContext {
     this.tokens = tokens;
   }
 
+  isTypePresentByTypeName(typeName) {
+    const type = this.findTypeByTypeName(typeName),
+          typePresent = (type !== null);
+
+    return typePresent;
+  }
+
+  isVariablePresentByVariableName(variable) {
+    variable = this.findVariable(variable); ///
+
+    const variablePresent = (variable !== null);
+
+    return variablePresent;
+  }
+
+  isMetavariablePresentByMetavariableName(metavariableName) {
+    const metavariable = this.findMetavariableByMetavariableName(metavariableName),
+          metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
+  }
+
+  isLabelPresentByMetavariable(metavariable) {
+    const label = this.findLabelByMetavariable(metavariable),
+      labelPresent = (label !== null);
+
+    return labelPresent;
+  }
+
   findTypeByTypeName(typeName) {
     let types = this.getTypes();
 
@@ -344,11 +373,10 @@ export default class FileContext {
 
   findMetaTypeByMetaTypeName(metaTypeName) {
     const metaTypes = this.getMetaTypes(),
-          name = metaTypeName,  ///
           metaType = metaTypes.find((metaType) => {
-            const metaTypeName = metaType.getName();
+            const metaTypeNameMatches = metaType.matchMetaTypeName(metaTypeName);
 
-            if (metaTypeName === name) {
+            if (metaTypeNameMatches) {
               return true;
             }
           }) || null;
@@ -356,53 +384,17 @@ export default class FileContext {
     return metaType;
   }
 
-  findLabelByMetavariableNode(metavariableNode) {
+  findLabelByMetavariable(metavariable) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
-            const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
+            const labelMetavariableEqualToMetavariable = label.isMetavariableEqualTo(metavariable);
 
-            if (metavariableNodeMatches) {
+            if (labelMetavariableEqualToMetavariable) {
               return true;
             }
           }) || null;
 
     return label;
-  }
-
-  isTypePresentByTypeName(typeName) {
-    const type = this.findTypeByTypeName(typeName),
-          typePresent = (type !== null);
-
-    return typePresent;
-  }
-
-  isVariablePresentByVariableName(variableName) {
-    const variable = this.findVariableByVariableName(variableName),
-          variablePresent = (variable !== null);
-
-    return variablePresent;
-  }
-
-  isLabelPresentByMetavariableNode(metavariableNode) {
-    const label = this.findLabelByMetavariableNode(metavariableNode),
-          labelPresent = (label !== null);
-
-    return labelPresent;
-  }
-
-  isMetavariablePresentByMetavariableName(metavariableName) {
-    const metavariable = this.findMetavariableByMetavariableName(metavariableName),
-          metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
-  }
-
-  isMetavariablePresent(metavariable, generalContext, specificContext) {
-    metavariable = this.findMetavariable(metavariable, generalContext, specificContext);  ///
-
-    const metavariablePresent = (metavariable !== null);
-
-    return metavariablePresent;
   }
 
   findRuleByReference(reference) {
@@ -509,15 +501,18 @@ export default class FileContext {
     return metatheorems;
   }
 
-  findVariableByVariableName(variableName) {
-    const variables = this.getVariables(),
-          variable = variables.find((variable) => {
-            const variableNameMatches = variable.matchVariableName(variableName);
+  findVariable(variable) {
+    const specificVariable = variable,  ///
+          variables = this.getVariables();
 
-            if (variableNameMatches) {
-              return true;
-            }
-          }) || null;
+    variable = variables.find((variable) => {
+      const generalVariable = variable,
+            generalVariableEqualToSpecificVariable = generalVariable.isEqualTo(specificVariable);
+
+      if (generalVariableEqualToSpecificVariable) {
+        return true;
+      }
+    }) || null;
 
     return variable;
   }
@@ -540,12 +535,11 @@ export default class FileContext {
   }
 
   findMetavariableByMetavariableName(metavariableName) {
-    const metavariableNameB = metavariableName, ///
-          metavariableNames = this.getMetavariableNames(),
-          metavariable = metavariableNames.find((metavariableName) => {
-            const metavariableNameA = metavariableName; ///
+    const metavariables = this.getMetavariables(),
+          metavariable = metavariables.find((metavariable) => {
+            const metavariableNameMatches = metavariable.matchMetavariableName(metavariableName);
 
-            if (metavariableNameA === metavariableNameB) {
+            if (metavariableNameMatches) {
               return true;
             }
           }) || null;

@@ -250,8 +250,6 @@ class LocalContext {
     return termGrounded;
   }
 
-  isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
-
   isVariableDefined(variable) {
     const context = this,
           equivalences = this.getEquivalences(),
@@ -279,9 +277,11 @@ class LocalContext {
     return metavariableDefined
   }
 
+  isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
+
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
-  isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
+  isLabelPresentByMetavariable(metavariable) { return this.context.isLabelPresentByMetavariable(metavariable); }
 
   isVariablePresentByVariableName(variableName, nested = true) {
     const variable = this.findVariableByVariableName(variableName, nested),
@@ -297,18 +297,12 @@ class LocalContext {
     return judgementPresent;
   }
 
-  findMetaTypeByMetaTypeName(metaTypeName) { return this.context.findMetaTypeByMetaTypeName(metaTypeName); }
-
-  findLabelByMetavariableNode(metavariableNode) { return this.context.findLabelByMetavariableNode(metavariableNode); }
-
-  findMetavariable(metavariable, generalContext, specificContext) { return this.context.findMetavariable(metavariable, generalContext, specificContext); }
-
   findVariableByVariableName(variableName, nested = true) {
     const variables = this.getVariables(nested),
           variable = variables.find((variable) => {
-            const nameMatches = variable.matchVariableName(variableName);
+            const variableNameMatches = variable.matchVariableName(variableName);
 
-            if (nameMatches) {
+            if (variableNameMatches) {
               return true;
             }
           }) || null;
@@ -333,7 +327,17 @@ class LocalContext {
     return judgement;
   }
 
+  findVariable(variable) { return this.context.findVariable(variable); }
+
+  findMetavariable(metavariable, generalContext, specificContext) { return this.context.findMetavariable(metavariable, generalContext, specificContext); }
+
   findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
+
+  findMetaTypeByMetaTypeName(metaTypeName) { return this.context.findMetaTypeByMetaTypeName(metaTypeName); }
+
+  findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
+
+  findLabelByMetavariable(metavariable) { return this.context.findLabelByMetavariable(metavariable); }
 
   findRuleByReference(reference) { return this.context.findRuleByReference(reference); }
 

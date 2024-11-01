@@ -11,8 +11,7 @@ import { typeFromJSON, typeToTypeJSON } from "./utilities/json";
 import { variableNodeFromVariableString } from "./nodeAndTokens/variable";
 
 const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
-      variableNodeQuery = nodeQuery("/variableDeclaration/variable"),
-      termVariableNodeQuery = nodeQuery("/term/variable");
+      variableNodeQuery = nodeQuery("/variableDeclaration/variable");
 
 class Variable {
   constructor(string, node, name, type) {
@@ -42,6 +41,12 @@ class Variable {
     this.type = type;
   }
 
+  matchVariableName(variableName) {
+    const nameMatches = (variableName === this.name);
+
+    return nameMatches;
+  }
+
   isEqualTo(variable) {
     let equalTo = false;
 
@@ -54,16 +59,21 @@ class Variable {
     return equalTo;
   }
 
-  matchVariableName(variableName) {
-    const variableNameMatches = (this.name === variableName);
+  isEssentiallyEqualToTerm(frame, generalContext, specificContext) {
+    let essentiallyEqualToTerm = false;
 
-    return variableNameMatches;
-  }
+    const generalContextFilePath = generalContext.getFilePath(),
+          specificContextFilePath = specificContext.getFilePath();
 
-  matchVariableNode(variableNode) {
-    const variableNodeMatches = this.node.match(variableNode);
+    if (generalContextFilePath === specificContextFilePath) {
+      const frameString = frame.getString();
 
-    return variableNodeMatches;
+      if (frameString === this.string) {
+        essentiallyEqualToTerm = true;
+      }
+    }
+
+    return essentiallyEqualToTerm;
   }
 
   verify(context) {
@@ -73,10 +83,9 @@ class Variable {
 
     context.trace(`Verifying the '${variableString}' variable...`);
 
-    const generalContext = context, ///
-          variableNode = this.node, ///
-          variableName = variableNameFromVariableNode(variableNode),
-          variable = generalContext.findVariableByVariableName(variableName);
+    let variable = this;  ///
+
+    variable = context.findVariable(variable);
 
     if (variable !== null) {
       const type = variable.getType();
@@ -126,30 +135,35 @@ class Variable {
   }
 
   verifyWhenDeclared(fileContext) {
-    let verifiedAtTopLevel;
+    let verifiedWhenDeclared;
 
     const variableString = this.string; ///
 
     fileContext.trace(`Verifying the '${variableString}' variable when declared...`);
 
-    const variableNode = this.node, ///
-          variableName = variableNameFromVariableNode(variableNode),
-          generalContext = fileContext, ///
-          variablePresent = generalContext.isVariablePresentByVariableName(variableName);
+    const variableName = this.name, ///
+          variablePresent = fileContext.isVariablePresentByVariableName(variableName);
 
     if (variablePresent) {
-      fileContext.debug(`The '${variableString}' variable is already present.`);
+      fileContext.debug(`The '${variableName}' variable is already present.`);
     } else {
-      const typeVerified = this.verifyType(fileContext);
+      const metavariableName = this.name, ///
+            metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
 
-      verifiedAtTopLevel = typeVerified;  ///
+      if (metavariablePresent) {
+        fileContext.debug(`A '${metavariableName}' metavariable is already present.`);
+      } else {
+        const typeVerified = this.verifyType(fileContext);
+
+        verifiedWhenDeclared = typeVerified;  ///
+      }
     }
 
-    if (verifiedAtTopLevel) {
+    if (verifiedWhenDeclared) {
       fileContext.debug(`...verified the '${variableString}' variable when declared.`);
     }
 
-    return verifiedAtTopLevel;
+    return verifiedWhenDeclared;
   }
 
   unifyTerm(term, substitutions, generalContext, specificContext, contextsReversed = false) {
@@ -164,33 +178,37 @@ class Variable {
 
     specificContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
-    const termNode = term.getNode(),
-          variableName = this.name, ///
-          substitution = substitutions.findSubstitutionByVariableName(variableName);
+    const essentiallyEqualToTerm = this.isEssentiallyEqualToTerm(term, generalContext, specificContext);
 
-    if (substitution !== null) {
-      const termNodeMatches = substitution.matchTermNode(termNode);
-
-      if (termNodeMatches) {
-        termUnified = true;
-      }
+    if (essentiallyEqualToTerm) {
+      termUnified = true;
     } else {
-      const variableNode = this.node,  ///
-            variable = variableFromVariableNode(variableNode, generalContext),
-            termVariable = termVariableFromTermNode(termNode, generalContext);
+      const variable = this, ///
+            substitution = substitutions.findSubstitutionByVariable(variable);
 
-      if ((variable !== null) && (variable === termVariable)) {
-        termUnified = true;
+      if (substitution !== null) {
+        const substitutionTermEqualToTerm = substitution.isTermEqualTo(term);
+
+        if (substitutionTermEqualToTerm) {
+          termUnified = true;
+        }
       } else {
         const variable = this,  ///
-              termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
-              substitution = termSubstitution;  ///
+              termVariable = termVariableFromTerm(term, specificContext);
 
-        context = specificContext;  ///
+        if ((variable !== null) && (variable === termVariable)) {
+          termUnified = true;
+        } else {
+          const variable = this,  ///
+            termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
+            substitution = termSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, context);
+          context = specificContext;  ///
 
-        termUnified = true;
+          substitutions.addSubstitution(substitution, context);
+
+          termUnified = true;
+        }
       }
     }
 
@@ -282,23 +300,15 @@ Object.assign(shim, {
 
 export default Variable;
 
-function variableFromVariableNode(variableNode, generalContext) {
-  const variableName = variableNameFromVariableNode(variableNode),
-        variable = generalContext.findVariableByVariableName(variableName);
+function termVariableFromTerm(term, specificContext) {
+  let termVariable;
 
-  return variable;
-}
+  const { Variable } = shim,
+        context = specificContext,  ///
+        termNode = term.getNode(),
+        variable = Variable.fromTermNode(termNode, context);
 
-function termVariableFromTermNode(termNode, generalContext) {
-  let termVariable = null;
-
-  const termVariableNode = termVariableNodeQuery(termNode);
-
-  if (termVariableNode !== null) {
-    const termVariableName = variableNameFromVariableNode(termVariableNode);
-
-    termVariable = generalContext.findVariableByVariableName(termVariableName);
-  }
+  termVariable = variable;  //.
 
   return termVariable;
 }

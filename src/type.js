@@ -7,8 +7,9 @@ import { OBJECT_TYPE_NAME } from "./typeNames";
 import { typeNameFromTypeNode } from "./utilities/name";
 import { superTypeFromJSON, superTypeToSuperTypeJSON } from "./utilities/json";
 
-const typeNodeQuery = nodeQuery("/typeDeclaration/type[0]"),
-      superTypeNodeQuery = nodeQuery("/typeDeclaration/type[1]");
+const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration/type[0]"),
+      typeDeclarationSuperTypeNodeQuery = nodeQuery("/typeDeclaration/type[1]"),
+      metavariableDeclarationTypeNodeQuery = nodeQuery("/metavariableDeclaration/metavariable/type");
 
 class Type {
   constructor(string, name, superType) {
@@ -104,7 +105,7 @@ class Type {
   }
 
   verifyWhenDeclared(fileContext) {
-    let verifiedAtTopLevel = false;
+    let verifiedWhenDeclared = false;
 
     const typeString = this.string; ///
 
@@ -125,15 +126,15 @@ class Type {
       } else {
         this.superType = superType;
 
-        verifiedAtTopLevel = true;
+        verifiedWhenDeclared = true;
       }
     }
 
-    if (verifiedAtTopLevel) {
+    if (verifiedWhenDeclared) {
       fileContext.debug(`...verified the '${typeString}' type when declared.`);
     }
 
-    return verifiedAtTopLevel;
+    return verifiedWhenDeclared;
   }
 
   toJSON() {
@@ -176,12 +177,26 @@ class Type {
   }
 
   static fromTypeDeclarationNode(typeDeclarationNode, fileContext) {
-    const typeNode = typeNodeQuery(typeDeclarationNode),
-          superTypeNode = superTypeNodeQuery(typeDeclarationNode),
+    const typeDeclarationTypeNode = typeDeclarationTypeNodeQuery(typeDeclarationNode),
+          typeDeclarationSuperTypeNode = typeDeclarationSuperTypeNodeQuery(typeDeclarationNode),
+          typeNode = typeDeclarationTypeNode, ///
+          superTypeNode = typeDeclarationSuperTypeNode, ///
           typeName = typeNameFromTypeNode(typeNode),
           superType = Type.fromTypeNode(superTypeNode),
           string = stringFromTypeNameAndSuperType(typeName, superType),
           name = typeName,  ///
+          type = new Type(string, name, superType);
+
+    return type;
+  }
+
+  static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
+    const metavariableDeclarationTypeNode = metavariableDeclarationTypeNodeQuery(metavariableDeclarationNode),
+          typeNode = metavariableDeclarationTypeNode, ///
+          typeName = typeNameFromTypeNode(typeNode),
+          string = typeName(typeName, superType),
+          name = typeName,  ///
+          superType = null,
           type = new Type(string, name, superType);
 
     return type;

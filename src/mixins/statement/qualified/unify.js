@@ -33,30 +33,23 @@ function unifyAWithRule(qualifiedStatement, substitutions, context) {
 function unifyAWithReference(qualifiedStatement, substitutions, context) {
   let unifiedWithReference = false;
 
+  const statement = qualifiedStatement.getStatement(),
+        statementString = statement.getString(),
+        referenceString = reference.getString();
+
+  context.trace(`Unifying the '${statementString}' qualified statement with the '${referenceString}' reference...`);
+
   const reference = qualifiedStatement.getReference(),
         metavariable = reference.getMetavariable(),
-        generalContext = context,  ///
-        specificContext = context,  ///
-        metavariablePresent = generalContext.isMetavariablePresent(metavariable, generalContext, specificContext);
+        statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
+        substitution = statementSubstitution; ///
 
-  if (metavariablePresent) {
-    const statement = qualifiedStatement.getStatement(),
-          statementString = statement.getString(),
-          referenceString = reference.getString();
+  substitutions.addSubstitution(substitution, context);
 
-    context.trace(`Unifying the '${statementString}' qualified statement with the '${referenceString}' reference...`);
+  unifiedWithReference = true;
 
-    const metavariable = reference.getMetavariable(),
-          statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
-          substitution = statementSubstitution; ///
-
-    substitutions.addSubstitution(substitution, context);
-
-    unifiedWithReference = true;
-
-    if (unifiedWithReference) {
-      context.debug(`...unified the '${statementString}' qualified statement with the '${referenceString}' reference.`);
-    }
+  if (unifiedWithReference) {
+    context.debug(`...unified the '${statementString}' qualified statement with the '${referenceString}' reference.`);
   }
 
   return unifiedWithReference;
