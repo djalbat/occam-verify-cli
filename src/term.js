@@ -70,6 +70,12 @@ class Term {
     return variables;
   }
 
+  matchTermNode(termNode) {
+    const termNodeMatches = this.node.match(termNode);
+
+    return termNodeMatches;
+  }
+
   isEqualTo(term) {
     let equalTo = false;
 
