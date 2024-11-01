@@ -326,6 +326,14 @@ export default class FileContext {
     this.tokens = tokens;
   }
 
+  isMetavariablePresent(metavariable, generalContext, specificContext) {
+    metavariable = this.findMetavariable(metavariable, generalContext, specificContext);  ///
+
+    const metavariablePresent = (metavariable !== null);
+
+    return metavariablePresent;
+  }
+
   isTypePresentByTypeName(typeName) {
     const type = this.findTypeByTypeName(typeName),
           typePresent = (type !== null);
@@ -348,9 +356,9 @@ export default class FileContext {
     return metavariablePresent;
   }
 
-  isLabelPresentByMetavariable(metavariable) {
-    const label = this.findLabelByMetavariable(metavariable),
-      labelPresent = (label !== null);
+  isLabelPresentByMetavariableName(metavariableName) {
+    const label = this.findLabelByMetavariableName(metavariableName),
+          labelPresent = (label !== null);
 
     return labelPresent;
   }
@@ -384,12 +392,12 @@ export default class FileContext {
     return metaType;
   }
 
-  findLabelByMetavariable(metavariable) {
+  findLabelByMetavariableName(metavariableName) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
-            const labelMetavariableEqualToMetavariable = label.isMetavariableEqualTo(metavariable);
+            const metavariableNameMatches = label.matchMetavariableName(metavariableName);
 
-            if (labelMetavariableEqualToMetavariable) {
+            if (metavariableNameMatches) {
               return true;
             }
           }) || null;

@@ -281,7 +281,7 @@ class LocalContext {
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
-  isLabelPresentByMetavariable(metavariable) { return this.context.isLabelPresentByMetavariable(metavariable); }
+  isLabelPresentByMetavariableName(metavariableName) { return this.context.isLabelPresentByMetavariableName(metavariableName); }
 
   isVariablePresentByVariableName(variableName, nested = true) {
     const variable = this.findVariableByVariableName(variableName, nested),

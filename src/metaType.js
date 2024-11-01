@@ -2,8 +2,11 @@
 
 import shim from "./shim";
 
+import { nodeQuery } from "./utilities/query";
 import { metaTypeNameFromMetaTypeNode } from "./utilities/name";
 import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
+
+const metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType");
 
 class MetaType {
   constructor(name) {
@@ -52,6 +55,14 @@ class MetaType {
   static fromMetaTypeNode(metaTypeNode, context) {
     const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
           metaType = metaTypeFromMetaTypeName(metaTypeName);
+
+    return metaType;
+  }
+
+  static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
+    const metatypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
+          metaTypeName = metaTypeNameFromMetaTypeNode(metatypeNode),
+          metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName);
 
     return metaType;
   }

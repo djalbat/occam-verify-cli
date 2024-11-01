@@ -31,16 +31,16 @@ function unifyAWithRule(qualifiedStatement, substitutions, context) {
 }
 
 function unifyAWithReference(qualifiedStatement, substitutions, context) {
-  let unifiedWithReference = false;
+  let unifiedWithReference;
 
   const statement = qualifiedStatement.getStatement(),
+        reference = qualifiedStatement.getReference(),
         statementString = statement.getString(),
         referenceString = reference.getString();
 
   context.trace(`Unifying the '${statementString}' qualified statement with the '${referenceString}' reference...`);
 
-  const reference = qualifiedStatement.getReference(),
-        metavariable = reference.getMetavariable(),
+  const metavariable = reference.getMetavariable(),
         statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
         substitution = statementSubstitution; ///
 

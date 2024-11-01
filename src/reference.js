@@ -21,8 +21,6 @@ export default class Reference {
 
   getString() { return this.metavariable.getString(); }
 
-  getTokens() { return this.metavariable.getTokens(); }
-
   getMetavariableName() {
     const metavariableName = this.metavariable.getName();
 

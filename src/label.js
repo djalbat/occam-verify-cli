@@ -19,14 +19,6 @@ class Label {
 
   getString() { return this.metavariable.getString(); }
 
-  getTokens() { return this.metavariable.getTokens(); }
-
-  getMetavariableName() {
-    const metavariableName = this.metavariable.getName();
-
-    return metavariableName;
-  }
-
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
   verifyWhenDeclared(fileContext) {
@@ -36,7 +28,8 @@ class Label {
 
     fileContext.trace(`Verifying the '${labelString}' label when declared...`);
 
-    const labelPresent = fileContext.isLabelPresentByMetavariable(this.metavariable);
+    const metavariableName = this.metavariable.getName(),
+          labelPresent = fileContext.isLabelPresentByMetavariableName(metavariableName);
 
     if (labelPresent) {
       fileContext.debug(`The '${labelString}' label is already present.`);

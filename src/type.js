@@ -191,13 +191,16 @@ class Type {
   }
 
   static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
-    const metavariableDeclarationTypeNode = metavariableDeclarationTypeNodeQuery(metavariableDeclarationNode),
-          typeNode = metavariableDeclarationTypeNode, ///
-          typeName = typeNameFromTypeNode(typeNode),
-          string = typeName(typeName, superType),
-          name = typeName,  ///
-          superType = null,
-          type = new Type(string, name, superType);
+    let type = null;
+
+    const metavariableDeclarationTypeNode = metavariableDeclarationTypeNodeQuery(metavariableDeclarationNode);
+
+    if (metavariableDeclarationTypeNode !== null) {
+      const typeNode = metavariableDeclarationTypeNode, ///
+            typeName = typeNameFromTypeNode(typeNode);
+
+      type = fileContext.findTypeByTypeName(typeName);
+    }
 
     return type;
   }
