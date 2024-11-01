@@ -327,8 +327,6 @@ class LocalContext {
     return judgement;
   }
 
-  findVariable(variable) { return this.context.findVariable(variable); }
-
   findMetavariable(metavariable, generalContext, specificContext) { return this.context.findMetavariable(metavariable, generalContext, specificContext); }
 
   findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }

@@ -83,9 +83,8 @@ class Variable {
 
     context.trace(`Verifying the '${variableString}' variable...`);
 
-    let variable = this;  ///
-
-    variable = context.findVariable(variable);
+    const variableName = this.name,
+          variable = context.findVariableByVariableName(variableName);
 
     if (variable !== null) {
       const type = variable.getType();

@@ -341,10 +341,9 @@ export default class FileContext {
     return typePresent;
   }
 
-  isVariablePresentByVariableName(variable) {
-    variable = this.findVariable(variable); ///
-
-    const variablePresent = (variable !== null);
+  isVariablePresentByVariableName(variableName) {
+    const variable = this.findVariableByVariableName(variableName),
+          variablePresent = (variable !== null);
 
     return variablePresent;
   }
@@ -405,6 +404,18 @@ export default class FileContext {
     return label;
   }
 
+  findVariableByVariableName(variableName) {
+    const variables = this.getVariables(),
+          variable = variables.find((variable) => {
+            const variableNameMatches = variable.matchVariableName(variableName);
+
+            if (variableNameMatches) {
+              return true;
+            }
+          }) || null;
+
+    return variable;
+  }
   findRuleByReference(reference) {
     const rules = this.getRules(),
           metavariableName = reference.getMetavariableName(),
