@@ -100,8 +100,7 @@ class Substitutions {
 
   findSubstitutionByMetavariable(metavariable) {
     const substitution = this.findSubstitution((substitution) => {
-      const substitutionMetavariable = substitution.getMetavariable(),
-            substitutionMetavariableEqualToMetavariable = substitutionMetavariable.isEqualTo(metavariable);
+      const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualTo(metavariable);
 
       if (substitutionMetavariableEqualToMetavariable) {
         return true;
@@ -113,8 +112,7 @@ class Substitutions {
 
   findSubstitutionsByMetavariable(metavariable) {
     const substitutions = this.findSubstitutions((substitution) => {
-      const substitutionMetavariable = substitution.getMetavariable(),
-            substitutionMetavariableEqualToMetavariable = substitutionMetavariable.isEqualTo(metavariable);
+      const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualTo(metavariable);
 
       if (substitutionMetavariableEqualToMetavariable) {
         return true;
@@ -153,35 +151,35 @@ class Substitutions {
   }
 
   findSubstitutionByMetavariableAndSubstitution(metavariable, substitution) {
-    if (substitution === null) {
-      substitution = this.findSubstitutionByMetavariable(metavariable); ///
-    } else {
-      const generalMetavariable = metavariable, ///
-            generalSubstitution = substitution, ///
-            substitutions = this.findSubstitutions((substitution) => {
-              const substitutionMetavariable = substitution.getMetavariable(),
-                    specificMetavariable = substitutionMetavariable,  ///
-                    specificMetavariableEqualToGeneralMetavariable = specificMetavariable.isEqualTo(generalMetavariable);
+    const substitutionA = substitution, ///
+          substitutions = this.findSubstitutions((substitution) => {
+            const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualTo(metavariable);
 
-              if (specificMetavariableEqualToGeneralMetavariable) {
-                const substitutionSubstitution = substitution.getSubstitution();
+            if (substitutionMetavariableEqualToMetavariable) {
+              const substitutionSubstitution = substitution.getSubstitution();
 
-                if (substitutionSubstitution !== null) {
-                  const specificSubstitution = substitution,  ///
-                        specificSubstitutionEqualToGeneralSubstitution = specificSubstitution.isEqualTo(generalSubstitution);
+              if (substitutionSubstitution !== null) {
+                const substitutionB = substitution, ///
+                      substitutionBSubstitutionEqualToSubstitutionB = substitutionB.isSubstitutionEqualTo(substitutionA);
 
-                  if (specificSubstitutionEqualToGeneralSubstitution) {
-                    return true;
-                  }
+                if (substitutionBSubstitutionEqualToSubstitutionB) {
+                  return true;
                 }
               }
-            }),
-            firstSubstitution = substitutions.getFirstSubstitution();
+            }
+          }),
+          firstSubstitution = substitutions.getFirstSubstitution();
 
-      substitution = firstSubstitution; ///
-    }
+    substitution = firstSubstitution; ///
 
     return substitution;
+  }
+
+  isSubstitutionPresentByVariable(variable) {
+    const substitution = this.findSubstitutionByVariable(variable),
+          substitutionPresent = (substitution !== null);
+
+    return substitutionPresent;
   }
 
   isSimpleSubstitutionPresentByMetavariable(metavariable) {

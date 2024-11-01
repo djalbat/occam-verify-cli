@@ -112,6 +112,12 @@ class Substitution {
     return metavariableEqualTo;
   }
 
+  isSubstitutionEqualTo(substitution) {
+    const substitutionEqualTo = false;
+
+    return substitutionEqualTo;
+  }
+
   resolve(substitutions, context) {
     const resolved = true;
 

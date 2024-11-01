@@ -7,12 +7,12 @@ import StatementSubstitution from "./substitution/statement";
 import MetavariableNodeAndTokens from "./nodeAndTokens/metavariable";
 
 import { nodeQuery } from "./utilities/query";
-import {typeFromJSON, typeToTypeJSON} from "./utilities/json";
+import { objectType } from "./type";
 import { EMPTY_STRING } from "./constants";
 import { unifyMetavariable } from "./utilities/unification";
+import { typeFromJSON, typeToTypeJSON } from "./utilities/json";
+import { metavariableNameFromMetavariableNode } from "./utilities/name";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "./utilities/json";
-import { typeNameFromTypeNode, metavariableNameFromMetavariableNode } from "./utilities/name";
-import {objectType} from "./type";
 
 const termNodeQuery = nodeQuery("/metavariable/argument/term"),
       metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable"),
@@ -132,20 +132,14 @@ class Metavariable {
           frameUnified = true;
         }
       } else {
-        const metavariable = this,  ///
-              frameMetavariable = frameMetavariableFromFrame(frame, generalContext, specificContext);
+        const context = specificContext,  ///
+              metavariable = this,  ///
+              frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
+              substitution = frameSubstitution;  ///
 
-        if ((metavariable !== null) && (metavariable === frameMetavariable)) {
-          frameUnified = true;
-        } else {
-          const context = specificContext,  ///
-                frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
-                substitution = frameSubstitution;  ///
+        substitutions.addSubstitution(substitution, context);
 
-          substitutions.addSubstitution(substitution, context);
-
-          frameUnified = true;
-        }
+        frameUnified = true;
       }
     }
 
@@ -184,21 +178,15 @@ class Metavariable {
           statementUnified = true;
         }
       } else {
-        const metavariable = this,
-              statementMetavariable = statementMetavariableFromStatement(statement, generalContext, specificContext);
+        const context = specificContext,  ///
+              metavariable = this,
+              statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
 
-        if ((metavariable !== null) && (metavariable === statementMetavariable)) {
-          statementUnified = true;
-        } else {
-          const context = specificContext,  ///
-                statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
+        substitution = statementSubstitution;  ///
 
-          substitution = statementSubstitution;  ///
+        substitutions.addSubstitution(substitution, context);
 
-          substitutions.addSubstitution(substitution, context);
-
-          statementUnified = true;
-        }
+        statementUnified = true;
       }
     }
 
@@ -487,29 +475,3 @@ Object.assign(shim, {
 });
 
 export default Metavariable;
-
-function frameMetavariableFromFrame(frame, generalContext, specificContext) {
-  let frameMetavariable;
-
-  const { Metavariable } = shim,
-        context = specificContext,  ///
-        frameNode = frame.getNode(),
-        metavariable = Metavariable.fromFrameNode(frameNode, context);
-
-  frameMetavariable = metavariable; ///
-
-  return frameMetavariable;
-}
-
-function statementMetavariableFromStatement(statement, generalContext, specificContext) {
-  let statementMetavariable;
-
-  const { Metavariable } = shim,
-        context = specificContext,  ///
-        statementNode = statement.getNode(),
-        metavariable = Metavariable.fromStatementNode(statementNode, context);
-
-  statementMetavariable = metavariable; ///
-
-  return statementMetavariable;
-}

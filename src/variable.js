@@ -10,8 +10,9 @@ import { variableNameFromVariableNode} from "./utilities/name";
 import { typeFromJSON, typeToTypeJSON } from "./utilities/json";
 import { variableNodeFromVariableString } from "./nodeAndTokens/variable";
 
-const typeNodeQuery = nodeQuery("/variableDeclaration/type"),
-      variableNodeQuery = nodeQuery("/variableDeclaration/variable");
+const termVariableNodeQuery = nodeQuery("/term/variable!"),
+      variableDeclarationTypeNodeQuery = nodeQuery("/variableDeclaration/type"),
+      variableDeclarationVariableNodeQuery = nodeQuery("/variableDeclaration/variable");
 
 class Variable {
   constructor(string, node, name, type) {
@@ -59,16 +60,16 @@ class Variable {
     return equalTo;
   }
 
-  isEssentiallyEqualToTerm(frame, generalContext, specificContext) {
+  isEssentiallyEqualToTerm(term, generalContext, specificContext) {
     let essentiallyEqualToTerm = false;
 
     const generalContextFilePath = generalContext.getFilePath(),
           specificContextFilePath = specificContext.getFilePath();
 
     if (generalContextFilePath === specificContextFilePath) {
-      const frameString = frame.getString();
+      const termString = term.getString();
 
-      if (frameString === this.string) {
+      if (termString === this.string) {
         essentiallyEqualToTerm = true;
       }
     }
@@ -150,7 +151,7 @@ class Variable {
             metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
 
       if (metavariablePresent) {
-        fileContext.debug(`A '${metavariableName}' metavariable is already present.`);
+        fileContext.debug(`A '${metavariableName}' variable is already present.`);
       } else {
         const typeVerified = this.verifyType(fileContext);
 
@@ -168,10 +169,6 @@ class Variable {
   unifyTerm(term, substitutions, generalContext, specificContext, contextsReversed = false) {
     let termUnified = false;
 
-    let context = contextsReversed ?
-                    generalContext :
-                      specificContext;
-
     const termString = term.getString(),
           variableString = this.string; ///
 
@@ -183,36 +180,34 @@ class Variable {
       termUnified = true;
     } else {
       const variable = this, ///
-            substitution = substitutions.findSubstitutionByVariable(variable);
+            substitutionPresent = substitutions.isSubstitutionPresentByVariable(variable);
 
-      if (substitution !== null) {
-        const substitutionTermEqualToTerm = substitution.isTermEqualTo(term);
+      if (substitutionPresent) {
+        const substitution = substitutions.findSubstitutionByVariable(variable),
+              substitutionTermEqualToTerm = substitution.isTermEqualTo(term);
 
         if (substitutionTermEqualToTerm) {
           termUnified = true;
         }
       } else {
+        let context = contextsReversed ?
+                        generalContext :
+                          specificContext;
+
         const variable = this,  ///
-              termVariable = termVariableFromTerm(term, specificContext);
+              termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
+              substitution = termSubstitution;  ///
 
-        if ((variable !== null) && (variable === termVariable)) {
-          termUnified = true;
-        } else {
-          const variable = this,  ///
-            termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
-            substitution = termSubstitution;  ///
+        context = specificContext;  ///
 
-          context = specificContext;  ///
+        substitutions.addSubstitution(substitution, context);
 
-          substitutions.addSubstitution(substitution, context);
-
-          termUnified = true;
-        }
+        termUnified = true;
       }
     }
 
     if (termUnified) {
-      specificContext.trace(`...unified the '${termString}' term with the '${variableString}' variable.`);
+      specificContext.debug(`...unified the '${termString}' term with the '${variableString}' variable.`);
     }
 
     return termUnified;
@@ -241,6 +236,25 @@ class Variable {
           name = variableName,  ///
           type = typeFromJSON(json, fileContext),
           variable = new Variable(string, node, name, type);
+
+    return variable;
+  }
+
+  static fromTermNode(termNode, context) {
+    let variable = null;
+
+    const termVariableNode = termVariableNodeQuery(termNode);
+
+    if (termVariableNode !== null) {
+      const variableNode = termVariableNode,  ///
+            variableName = variableNameFromVariableNode(variableNode),
+            node = variableNode,  ///
+            string = context.nodeAsString(node),
+            name = variableName,  ///
+            type = null;
+
+      variable = new Variable(string, node, name, type);
+    }
 
     return variable;
   }
@@ -278,8 +292,10 @@ class Variable {
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
     const { Type } = shim,
-          typeNode = typeNodeQuery(variableDeclarationNode),
-          variableNode = variableNodeQuery(variableDeclarationNode),
+          variableDeclarationTypeNode = variableDeclarationTypeNodeQuery(variableDeclarationNode),
+          variableDeclarationVariableNode = variableDeclarationVariableNodeQuery(variableDeclarationNode),
+          typeNode = variableDeclarationTypeNode, ///
+          variableNode = variableDeclarationVariableNode, ///
           variableName = variableNameFromVariableNode(variableNode),
           context = LocalContext.fromFileContext(fileContext),
           variableString = fileContext.nodeAsString(variableNode),
@@ -298,16 +314,3 @@ Object.assign(shim, {
 });
 
 export default Variable;
-
-function termVariableFromTerm(term, specificContext) {
-  let termVariable;
-
-  const { Variable } = shim,
-        context = specificContext,  ///
-        termNode = term.getNode(),
-        variable = Variable.fromTermNode(termNode, context);
-
-  termVariable = variable;  //.
-
-  return termVariable;
-}

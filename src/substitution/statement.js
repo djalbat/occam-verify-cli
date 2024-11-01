@@ -39,7 +39,19 @@ class StatementSubstitution extends Substitution {
 
   isMetavariableEqualTo(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
-  isSubstitutionEqualTo(substitution) { return this.substitution.isEqualTo(substitution); }
+  isSubstitutionEqualTo(substitution) {
+    let substitutionEqualTo = false;
+
+    if (this.substitution === null) {
+      if (substitution === null) {
+        substitutionEqualTo = true;
+      }
+    } else {
+      substitutionEqualTo = this.substitution.isEqualTo(substitution);
+    }
+
+    return substitutionEqualTo;
+  }
 
   isSimple() {
     const simple = (this.substitution === null);
