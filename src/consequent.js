@@ -2,25 +2,23 @@
 
 import shim from "./shim";
 
-import { nodeQuery } from "./utilities/query";
-import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
-
-const unqualifiedStatementNodeQuery = nodeQuery("/consequent/unqualifiedStatement");
+import { statementFromJSON, statementToStatementJSON } from "./utilities/json";
 
 class Consequent {
-  constructor(unqualifiedStatement) {
-    this.unqualifiedStatement = unqualifiedStatement;
+  constructor(string, statement) {
+    this.string = string;
+    this.statement = statement;
   }
 
-  getUnqualifiedStatement() {
-    return this.unqualifiedStatement;
+  getString() {
+    return this.string;
   }
 
-  getString() { return this.unqualifiedStatement.getString(); }
+  getStatement() {
+    return this.statement;
+  }
 
-  getStatement() { return this.unqualifiedStatement.getStatement(); }
-
-  matchStatementNode(statementNode) { return this.unqualifiedStatement.matchStatementNode(statementNode); }
+  matchStatementNode(statementNode) { return this.statement.matchStatementNode(statementNode); }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
@@ -31,7 +29,7 @@ class Consequent {
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${consequentString}' consequent...`);
 
-    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
       specificContext.debug(`...unified the '${statementString}' statement with the '${consequentString}' consequent.`);
@@ -43,47 +41,53 @@ class Consequent {
   verify(context) {
     let verified = false;
 
-    const consequentString = this.getString();  ///
+    const consequentString = this.string;  ///
 
-    context.trace(`Verifying the '${consequentString}' consequent...`);
+    if (this.statement !== null) {
+      context.trace(`Verifying the '${consequentString}' consequent...`);
 
-    const stated = true,
-          assignments = [],
-          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, context);
+      const stated = true,
+            assignments = [],
+            statementVerified = this.statement.verify(assignments, stated, context);
 
-    if (unqualifiedStatementVerified) {
-      verified = true;
-    }
+      if (statementVerified) {
+        verified = true;
+      }
 
-    if (verified) {
-      context.debug(`...verified the '${consequentString}' consequent.`);
+      if (verified) {
+        context.debug(`...verified the '${consequentString}' consequent.`);
+      }
+    } else {
+      context.debug(`Unable to verify the '${consequentString}' consequent because it is nonsense.`);
     }
 
     return verified;
   }
 
   toJSON() {
-    const unqualifiedStatementJSON = unqualifiedStatementToUnqualifiedStatementJSON(this.unqualifiedStatement),
-          unqualifiedStatement = unqualifiedStatementJSON,  ///
+    const statementJSON = statementToStatementJSON(this.statement),
+          statement = statementJSON,  ///
           json = {
-            unqualifiedStatement
+            statement
           };
 
     return json;
   }
 
   static fromJSON(json, fileContext) {
-    const unqualifiedStatement = unqualifiedStatementFromJSON(json, fileContext),
-          consequent = new Consequent(unqualifiedStatement);
+    const statement = statementFromJSON(json, fileContext),
+          string = statement.getString(),
+          consequent = new Consequent(string, statement);
 
     return consequent;
   }
 
   static fromConsequentNode(consequentNode, fileContext) {
-    const { UnqualifiedStatement } = shim,
-          unqualifiedStatementNode = unqualifiedStatementNodeQuery(consequentNode),
-          unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          consequent = new Consequent(unqualifiedStatement);
+    const { Statement } = shim,
+          statement = Statement.fromConsequentNode(consequentNode, fileContext),
+          node = consequentNode,  ///
+          string = fileContext.nodeAsString(node),
+          consequent = new Consequent(string, statement);
 
     return consequent;
   }

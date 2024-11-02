@@ -1,44 +1,43 @@
 "use strict";
 
-import StatementSubstitution from "../../../substitution/statement";
+import StatementSubstitution from "../../substitution/statement";
 
-import { trim } from "../../../utilities/string";
+import { trim } from "../../utilities/string";
 
-function unifyAWithRule(qualifiedStatement, substitutions, context) {
+function unifyAWithRule(statement, substitutions, context) {
   let unifiedWithRule = false;
 
-  const reference = qualifiedStatement.getReference(),
+  const reference = statement.getReference(),
         rule = context.findRuleByReference(reference);
 
   if (rule !== null) {
     const ruleString = rule.getString(),
-          qualifiedStatementString = trim(qualifiedStatement.getString());  ///
+          statementString = trim(statement.getString());  ///
 
-    context.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${ruleString}' rule...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${ruleString}' rule...`);
 
-    const statement = qualifiedStatement.getStatement(),
+    const statement = statement.getStatement(),
           proofSteps = context.getProofSteps(),
           statementAndProofStepsUnified = rule.unifyStatementAndProofSteps(statement, proofSteps, context);
 
     unifiedWithRule = statementAndProofStepsUnified;  ///
 
     if (unifiedWithRule) {
-      context.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${ruleString}' rule.`);
+      context.debug(`...unified the '${statementString}' statement with the '${ruleString}' rule.`);
     }
   }
 
   return unifiedWithRule;
 }
 
-function unifyAWithReference(qualifiedStatement, substitutions, context) {
+function unifyAWithReference(statement, substitutions, context) {
   let unifiedWithReference;
 
-  const statement = qualifiedStatement.getStatement(),
-        reference = qualifiedStatement.getReference(),
+  const reference = statement.getReference(),
         statementString = statement.getString(),
         referenceString = reference.getString();
 
-  context.trace(`Unifying the '${statementString}' qualified statement with the '${referenceString}' reference...`);
+  context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
 
   const metavariable = reference.getMetavariable(),
         statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
@@ -49,16 +48,16 @@ function unifyAWithReference(qualifiedStatement, substitutions, context) {
   unifiedWithReference = true;
 
   if (unifiedWithReference) {
-    context.debug(`...unified the '${statementString}' qualified statement with the '${referenceString}' reference.`);
+    context.debug(`...unified the '${statementString}' statement with the '${referenceString}' reference.`);
   }
 
   return unifiedWithReference;
 }
 
-function unifyAWithAxiomLemmaTheoremOrConjecture(qualifiedStatement, substitutions, context) {
+function unifyAWithAxiomLemmaTheoremOrConjecture(statement, substitutions, context) {
   let unifiedWithAxiomLemmaTheoremOrConjecture = false;
 
-  const reference = qualifiedStatement.getReference(),
+  const reference = statement.getReference(),
         axiom = context.findAxiomByReference(reference),
         lemma = context.findLemmaByReference(reference),
         theorem = context.findTheoremByReference(reference),
@@ -66,12 +65,12 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(qualifiedStatement, substitutio
         axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
 
   if (axiomLemmaTheoremConjecture !== null) {
-    const qualifiedStatementString = trim(qualifiedStatement.getString()),  ///
+    const statementString = trim(statement.getString()),  ///
           axiomLemmaTheoremConjectureString = reference.getString();
 
-    context.trace(`Unifying the '${qualifiedStatementString}' qualified statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`);
 
-    const statement = qualifiedStatement.getStatement(),
+    const statement = statement.getStatement(),
           proofSteps = context.getProofSteps(),
           statementAndProofStepsUnified = axiomLemmaTheoremConjecture.unifyStatementAndProofSteps(statement, proofSteps, context);
 
@@ -86,7 +85,7 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(qualifiedStatement, substitutio
     }
 
     if (unifiedWithAxiomLemmaTheoremOrConjecture) {
-      context.debug(`...unified the '${qualifiedStatementString}' qualified statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture.`);
+      context.debug(`...unified the '${statementString}' statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture.`);
     }
   }
 

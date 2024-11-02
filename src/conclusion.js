@@ -2,25 +2,23 @@
 
 import shim from "./shim";
 
-import { nodeQuery } from "./utilities/query";
-import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
-
-const unqualifiedStatementNodeQuery = nodeQuery("/conclusion/unqualifiedStatement");
+import { statementFromJSON, statementToStatementJSON } from "./utilities/json";
 
 class Conclusion {
-  constructor(unqualifiedStatement) {
-    this.unqualifiedStatement = unqualifiedStatement;
+  constructor(string, statement) {
+    this.string = string;
+    this.statement = statement;
   }
 
-  getUnqualifiedStatement() {
-    return this.unqualifiedStatement;
+  getString() {
+    return this.string;
   }
 
-  getString() { return this.unqualifiedStatement.getString(); }
+  getStatement() {
+    return this.statement;
+  }
 
-  getStatement() { return this.unqualifiedStatement.getStatement(); }
-
-  matchStatementNode(statementNode) { return this.unqualifiedStatement.matchStatementNode(statementNode); }
+  matchStatementNode(statementNode) { return this.statement.matchStatementNode(statementNode); }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
@@ -31,7 +29,7 @@ class Conclusion {
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
 
-    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
       specificContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
@@ -43,47 +41,53 @@ class Conclusion {
   verify(context) {
     let verified = false;
 
-    const conclusionString = this.getString();  ///
+    const conclusionString = this.string;  ///
 
-    context.trace(`Verifying the '${conclusionString}' conclusion...`);
+    if (this.statement !== null) {
+      context.trace(`Verifying the '${conclusionString}' conclusion...`);
 
-    const stated = true,
-          assignments = [],
-          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, context);
+      const stated = true,
+            assignments = [],
+            statementVerified = this.statement.verify(assignments, stated, context);
 
-    if (unqualifiedStatementVerified) {
-      verified = true;
-    }
+      if (statementVerified) {
+        verified = true;
+      }
 
-    if (verified) {
-      context.debug(`...verified the '${conclusionString}' conclusion.`);
+      if (verified) {
+        context.debug(`...verified the '${conclusionString}' conclusion.`);
+      }
+    } else {
+      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`);
     }
 
     return verified;
   }
 
   toJSON() {
-    const unqualifiedStatementJSON = unqualifiedStatementToUnqualifiedStatementJSON(this.unqualifiedStatement),
-          unqualifiedStatement = unqualifiedStatementJSON,  ///
+    const statementJSON = statementToStatementJSON(this.statement),
+          statement = statementJSON,  ///
           json = {
-            unqualifiedStatement
+            statement
           };
 
     return json;
   }
 
   static fromJSON(json, fileContext) {
-    const unqualifiedStatement = unqualifiedStatementFromJSON(json, fileContext),
-          conclusion = new Conclusion(unqualifiedStatement);
+    const statement = statementFromJSON(json, fileContext),
+          string = statement.getString(),
+          conclusion = new Conclusion(string, statement);
 
     return conclusion;
   }
 
   static fromConclusionNode(conclusionNode, fileContext) {
-    const { UnqualifiedStatement } = shim,
-          unqualifiedStatementNode = unqualifiedStatementNodeQuery(conclusionNode),
-          unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          conclusion = new Conclusion(unqualifiedStatement);
+    const { Statement } = shim,
+          statement = Statement.fromConclusionNode(conclusionNode, fileContext),
+          node = conclusionNode,  ///
+          string = fileContext.nodeAsString(node),
+          conclusion = new Conclusion(string, statement);
 
     return conclusion;
   }

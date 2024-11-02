@@ -2,76 +2,60 @@
 
 import shim from "./shim";
 
-import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
 
-const subproofNodeQuery = nodeQuery("/proofStep/subproof"),
-      statementNodeQuery = nodeQuery("/proofStep|lastProofStep/statement"),
-      referenceNodeQuery = nodeQuery("/proofStep|lastProofStep/reference");
-
 class ProofStep {
-  constructor(subproof, statement, reference) {
+  constructor(string, subproof, statement, reference) {
+    this.string = string;
     this.subproof = subproof;
     this.statement = statement;
     this.reference = reference;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getSubproof() {
     return this.subproof;
   }
 
-  getQualifiedStatement() {
-    return this.qualifiedStatement;
-  }
-
-  getUnqualifiedStatement() {
-    return this.unqualifiedStatement;
-  }
-
   getStatement() {
-    let statement = null;
+    return this.statement;
+  }
 
-    if (this.qualifiedStatement !== null) {
-      statement = this.qualifiedStatement.getStatement();
-    }
+  getReference() {
+    return this.reference;
+  }
 
-    if (this.unqualifiedStatement !== null) {
-      statement = this.unqualifiedStatement.getStatement();
-    }
+  isQualified() {
+    const qualified = (this.reference !== null);
 
-    return statement;
+    return qualified;
   }
 
   unifyStatement(statement, context) {
-    let statementUnified = false;
+    let statementUnified;
 
-    if ((this.qualifiedStatement !== null) || (this.unqualifiedStatement !== null)) {
-      const statementString = statement.getString();
+    const statementString = this.statement.getString();
 
-      context.trace(`Unifying the '${statementString}' statement...`);
+    context.trace(`Unifying the '${statementString}' statement...`);
 
-      const { Substitutions } = shim,
-            specificContext = context, ///
-            generalContext = context, ///
-            substitutions = Substitutions.fromNothing();
+    const { Substitutions } = shim,
+          specificContext = context, ///
+          generalContext = context, ///
+          substitutions = Substitutions.fromNothing();
 
-      if (this.qualifiedStatement !== null) {
-        statementUnified = this.qualifiedStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
-      }
+    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-      if (this.unqualifiedStatement !== null) {
-        statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
-      }
+    const substitutionsLength = substitutions.getLength();
 
-      const substitutionsLength = substitutions.getLength();
+    if (substitutionsLength > 0) {
+      statementUnified = false;
+    }
 
-      if (substitutionsLength > 0) {
-        statementUnified = false;
-      }
-
-      if (statementUnified) {
-        context.debug(`...unified the '${statementString}' statement.`);
-      }
+    if (statementUnified) {
+      context.debug(`...unified the '${statementString}' statement.`);
     }
 
     return statementUnified;
@@ -111,36 +95,39 @@ class ProofStep {
   verify(substitutions, context) {
     let verified = false;
 
-    let stated = false;
+    if (false) {
+      ///
+    } else if (this.subproof !== null) {
+      const subproofVerified = this.subproof.verify(substitutions, context);
 
-    const assignments = [];
+      verified = subproofVerified;  ///
+    } else if (this.statement !== null) {
+      const qualified = this.isQualified(),
+            assignments = [],
+            stated = qualified, ///
+            statementVerified = this.statement.verify(substitutions, assignments, stated, context);
 
-    let subproofVerified = false,
-        qualifiedStatementVerified = false,
-        unqualifiedStatementVerified = false;
+      if (statementVerified) {
+        let statementUnified = false;
 
-    if (this.subproof !== null) {
-      subproofVerified = this.subproof.verify(substitutions, context);
-    }
+        debugger
 
-    if (this.qualifiedStatement !== null) {
-      stated = true;
+        if (qualified) {
 
-      qualifiedStatementVerified = this.qualifiedStatement.verify(substitutions, assignments, stated, context);
-    }
+        } else {
 
-    if (this.unqualifiedStatement !== null) {
-      stated = false;
+        }
 
-      unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, context);
-    }
+        if (statementUnified) {
+          const assignmentsAssigned = assignAssignments(assignments, context);
 
-    if (subproofVerified || qualifiedStatementVerified || unqualifiedStatementVerified) {
-      const assignmentsAssigned = assignAssignments(assignments, context);
-
-      if (assignmentsAssigned) {
-        verified = true;
+          verified = assignmentsAssigned; ///
+        }
       }
+    } else {
+      const proofStepString = this.string;
+
+      context.debug(`Cannot verify the '${proofStepString}' proof step because it is nonsense.`);
     }
 
     if (verified) {
@@ -153,22 +140,15 @@ class ProofStep {
   }
 
   static fromProofStepNode(proofStepNode, fileContext) {
-    const { Subproof, QualifiedStatement, UnqualifiedStatement } = shim,
+    const { Subproof, Statement, Reference } = shim,
           subproofNode = subproofNodeQuery(proofStepNode),
-          qualifiedStatementNode = qualifiedStatementNodeQuery(proofStepNode),
-          unqualifiedStatementNode = unqualifiedStatementNodeQuery(proofStepNode),
-          subproof = Subproof.fromSubproofNode(subproofNode, fileContext),
-          qualifiedStatement = QualifiedStatement.fromQualifiedStatementNode(qualifiedStatementNode, fileContext),
-          unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          proofStep = new ProofStep(subproof, qualifiedStatement, unqualifiedStatement);
-
-    return proofStep;
-  }
-
-  static fromUnqualifiedStatement(unqualifiedStatement) {
-    const subproof = null,
-          qualifiedStatement = null,
-          proofStep = new ProofStep(subproof, qualifiedStatement, unqualifiedStatement);
+          statementNode = statementNodeQuery(proofStepNode),
+          node = proofStepNode, ///
+          string = fileContext.nodeAsString(node),
+          subproof = Subproof.fromProofStepNode(subproofNode, fileContext),
+          statement = Statement.fromProofStepNode(statementNode, fileContext),
+          reference = Reference.fromProofStepNode(proofStepNode, fileContext),
+          proofStep = new ProofStep(string, subproof, statement, reference);
 
     return proofStep;
   }

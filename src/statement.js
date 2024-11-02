@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import shim from "./shim";
 import unifyMixins from "./mixins/statement/unify";
 import verifyMixins from "./mixins/statement/verify";
@@ -10,6 +12,8 @@ import unifyIndependentlyMixins from "./mixins/statement/unifyIndependenntly";
 import { unifyStatement } from "./utilities/unification";
 import { nodeQuery, nodesQuery } from "./utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "./metaTypeNames";
+
+const { reverse } = arrayUtilities;
 
 const statementNodeQuery = nodeQuery("/*//statement"),
       statementTermNodesQuery = nodesQuery("/statement//term"),
@@ -106,29 +110,6 @@ class Statement {
     return statementNodeMatches;
   }
 
-  unifyIndependently(substitutions, generalContext, specificContext) {
-    let unifiedIndependently;
-
-    const statementString = this.string;  ///
-
-    specificContext.trace(`Unifying the '${statementString}' statement independently...`);
-
-    unifiedIndependently = unifyIndependentlyMixins.some((resolveMixin) => {
-      const statement = this, ///
-            unifiedIndependently = resolveMixin(statement, substitutions, generalContext, specificContext);
-
-      if (unifiedIndependently) {
-        return true;
-      }
-    });
-
-    if (unifiedIndependently) {
-      specificContext.debug(`...unified the '${statementString}' statement independently.`);
-    }
-
-    return unifiedIndependently;
-  }
-
   unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
 
@@ -146,6 +127,48 @@ class Statement {
     }
 
     return statementUnified;
+  }
+
+  unifyIndependently(substitutions, generalContext, specificContext) {
+    let unifiedIndependently;
+
+    const statementString = this.string;  ///
+
+    specificContext.trace(`Unifying the '${statementString}' statement independently...`);
+
+    unifiedIndependently = unifyIndependentlyMixins.some((resolveMixin) => {
+      const statement = this, ///
+        unifiedIndependently = resolveMixin(statement, substitutions, generalContext, specificContext);
+
+      if (unifiedIndependently) {
+        return true;
+      }
+    });
+
+    if (unifiedIndependently) {
+      specificContext.debug(`...unified the '${statementString}' statement independently.`);
+    }
+
+    return unifiedIndependently;
+  }
+
+  unifyWithProofSteps(assignments, stated, context) {
+    let statementUnifiedWithProofSteps;
+
+    let proofSteps = context.getProofSteps();
+
+    proofSteps = reverse(proofSteps); ///
+
+    statementUnifiedWithProofSteps = proofSteps.some((proofStep) => {
+      const statement = this, ///
+            statementUnified = proofStep.unifyStatement(statement, context);
+
+      if (statementUnified) {
+        return true;
+      }
+    });
+
+    return statementUnifiedWithProofSteps;
   }
 
   verify(assignments, stated, context) {
@@ -246,6 +269,20 @@ class Statement {
     return statement;
   }
 
+  static fromPremiseNode(premiseNode, fileContext) {
+    const node = premiseNode, ///
+          statement = statementFromNode(node, fileContext);
+
+    return statement;
+  }
+
+  static fromProofStepNode(proofStepNode, fileContext) {
+    const node = proofStepNode, ///
+          statement = statementFromNode(node, fileContext);
+
+    return statement;
+  }
+
   static fromStatementNode(statementNode, context) {
     let statement = null;
 
@@ -256,6 +293,27 @@ class Statement {
 
       statement = new Statement(string, node, tokens);
     }
+
+    return statement;
+  }
+
+  static fromConclusionNode(conclusionNode, fileContext) {
+    const node = conclusionNode, ///
+          statement = statementFromNode(node, fileContext);
+
+    return statement;
+  }
+
+  static fromConsequentNode(consequentNode, fileContext) {
+    const node = consequentNode, ///
+          statement = statementFromNode(node, fileContext);
+
+    return statement;
+  }
+
+  static fromSuppositionNode(suppositionNode, fileContext) {
+    const node = suppositionNode, ///
+          statement = statementFromNode(node, fileContext);
 
     return statement;
   }
@@ -289,3 +347,19 @@ Object.assign(shim, {
 
 export default Statement;
 
+function statementFromNode(node, fileContext) {
+  let statement = null;
+
+  const statementNode = statementNodeQuery(node);
+
+  if (statementNode !== null) {
+    const node = statementNode, ///
+          tokens = fileContext.nodeAsTokens(node),
+          string = fileContext.tokensAsString(tokens);
+
+    statement = new Statement(string, node, tokens);
+  }
+
+  return statement;
+
+}

@@ -17,7 +17,8 @@ import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "./utilities/json";
 const termNodeQuery = nodeQuery("/metavariable/argument/term"),
       metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
-      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
+      labelMetavariableNodeQuery = nodeQuery("/label/metavariable"),
+      referenceMetavariableNodeQuery = nodeQuery("/reference/metavariable");
 
 class Metavariable {
   constructor(string, node, tokens, name, type, metaType) {
@@ -419,23 +420,32 @@ class Metavariable {
     return metavariable;
   }
 
-  static fromStatementNode(statementNode, context) {
-    let metavariable = null;
+  static fromLabelNode(labelNode, context) {
+    const labelMetavariableNode = labelMetavariableNodeQuery(labelNode),
+          metavariableNode = labelMetavariableNode, ///
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          name = metavariableName,  ///
+          node = metavariableNode,  ///
+          string = context.nodeAsString(node),
+          tokens = context.nodeAsTokens(node),
+          type = null,
+          metaType = null,
+          metavariable = new Metavariable(string, node, tokens, name, type, metaType);
 
-    const statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
+    return metavariable;
+  }
 
-    if (statementMetavariableNode !== null) {
-      const metavariableNode = statementMetavariableNode, ///
-            metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-            name = metavariableName,  ///
-            node = metavariableNode,  ///
-            string = context.nodeAsString(node),
-            tokens = context.nodeAsTokens(node),
-            type = null,
-            metaType = null;
-
-      metavariable = new Metavariable(string, node, tokens, name, type, metaType);
-    }
+  static fromReferenceNode(referenceNode, context) {
+    const referenceMetavariableNode = referenceMetavariableNodeQuery(referenceNode),
+          metavariableNode = referenceMetavariableNode, ///
+          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          name = metavariableName,  ///
+          node = metavariableNode,  ///
+          string = context.nodeAsString(node),
+          tokens = context.nodeAsTokens(node),
+          type = null,
+          metaType = null,
+          metavariable = new Metavariable(string, node, tokens, name, type, metaType);
 
     return metavariable;
   }

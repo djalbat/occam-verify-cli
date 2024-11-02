@@ -110,19 +110,6 @@ export function metavariableFromJSON(json, fileContext) {
   return metavariable;
 }
 
-export function unqualifiedStatementFromJSON(json, fileContext) {
-  let { unqualifiedStatement } = json;
-
-  const { UnqualifiedStatement } = shim,
-        unqualifiedStatementJSON = unqualifiedStatement;  ///
-
-  json = unqualifiedStatementJSON; ///
-
-  unqualifiedStatement = UnqualifiedStatement.fromJSON(json, fileContext);
-
-  return unqualifiedStatement;
-}
-
 export function typesFromJSON(json, types, fileContext) {
   const { types: typesJSON } = json;
 
@@ -406,12 +393,6 @@ export function metavariableToMetavariableJSON(metavariable) {
   const metavariableJSON = metavariable.toJSON();
 
   return metavariableJSON;
-}
-
-export function unqualifiedStatementToUnqualifiedStatementJSON(unqualifiedStatement) {
-  const unqualifiedStatementJSON = unqualifiedStatement.toJSON();
-
-  return unqualifiedStatementJSON;
 }
 
 export function typesToTypesJSON(types) {

@@ -2,25 +2,23 @@
 
 import shim from "./shim";
 
-import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
 import { subproofAssertionFromStatement } from "./utilities/verification";
-import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
-
-const unqualifiedStatementNodeQuery = nodeQuery("/premise/unqualifiedStatement");
+import { statementFromJSON, statementToStatementJSON } from "./utilities/json";
 
 class Premise {
-  constructor(unqualifiedStatement) {
-    this.unqualifiedStatement = unqualifiedStatement;
+  constructor(string, statement) {
+    this.string = string;
+    this.statement = statement;
   }
 
-  getUnqualifiedStatement() {
-    return this.unqualifiedStatement;
+  getString() {
+    return this.string;
   }
 
-  getString() { return this.unqualifiedStatement.getString(); }
-
-  getStatement() { return this.unqualifiedStatement.getStatement(); }
+  getStatement() {
+    return this.statement;
+  }
 
   unifyIndependently(substitutions, generalContext, specificContext) {
     let unifiedIndependently;
@@ -30,9 +28,9 @@ class Premise {
 
     specificContext.trace(`Unifying the '${premiseString}' premise independently...`);
 
-    const unqualifiedStatementResolvedIndependently = this.unqualifiedStatement.unifyIndependently(substitutions, generalContext, specificContext);
+    const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
 
-    unifiedIndependently = unqualifiedStatementResolvedIndependently;  ///
+    unifiedIndependently = statementResolvedIndependently;  ///
 
     if (unifiedIndependently) {
       specificContext.trace(`...unified the '${premiseString}' premise independently.`);
@@ -84,7 +82,7 @@ class Premise {
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`);
 
-    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
       specificContext.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`);
@@ -104,7 +102,7 @@ class Premise {
     specificContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
 
     const context = generalContext,
-          statement = this.unqualifiedStatement.getStatement(),
+          statement = this.statement.getStatement(),
           subproofAssertion = subproofAssertionFromStatement(statement, context);
 
     if (subproofAssertion !== null) {
@@ -121,56 +119,62 @@ class Premise {
   verify(context) {
     let verified = false;
 
-    const premiseString = this.getString(); ///
+    const premiseString = this.string; ///
 
-    context.trace(`Verifying the '${premiseString}' premise...`);
+    if (this.statement !== null) {
+      context.trace(`Verifying the '${premiseString}' premise...`);
 
-    const stated = true,
-          assignments = [],
-          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, context);
+      const stated = true,
+            assignments = [],
+            statementVerified = this.statement.verify(assignments, stated, context);
 
-    if (unqualifiedStatementVerified) {
-      const assignmentsAssigned = assignAssignments(assignments, context);
+      if (statementVerified) {
+        const assignmentsAssigned = assignAssignments(assignments, context);
 
-      if (assignmentsAssigned) {
-        const { ProofStep } = shim,
-              proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
+        if (assignmentsAssigned) {
+          const { ProofStep } = shim,
+                proofStep = ProofStep.fromStatement(this.statement);
 
-        context.addProofStep(proofStep);
+          context.addProofStep(proofStep);
 
-        verified = true;
+          verified = true;
+        }
       }
-    }
 
-    if (verified) {
-      context.debug(`...verified the '${premiseString}' premise.`);
+      if (verified) {
+        context.debug(`...verified the '${premiseString}' premise.`);
+      }
+    } else {
+      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`);
     }
 
     return verified;
   }
 
   toJSON() {
-    const unqualifiedStatementJSON = unqualifiedStatementToUnqualifiedStatementJSON(this.unqualifiedStatement),
-          unqualifiedStatement = unqualifiedStatementJSON,  ///
+    const statementJSON = statementToStatementJSON(this.statement),
+          statement = statementJSON,  ///
           json = {
-            unqualifiedStatement
+            statement
           };
 
     return json;
   }
 
   static fromJSON(json, fileContext) {
-    const unqualifiedStatement = unqualifiedStatementFromJSON(json, fileContext),
-          premise = new Premise(unqualifiedStatement);
+    const statement = statementFromJSON(json, fileContext),
+          string = statement.getString(),
+          premise = new Premise(string, statement);
 
     return premise;
   }
 
   static fromPremiseNode(suppositionNode, fileContext) {
-    const { UnqualifiedStatement } = shim,
-          unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
-          unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          premise = new Premise(unqualifiedStatement);
+    const { Statement } = shim,
+          statement = Statement.fromPremiseNode(premiseNode, fileContext),
+          node = suppositionNode, ///
+          string = fileContext.nodeAsString(node),
+          premise = new Premise(string, statement);
 
     return premise
   }

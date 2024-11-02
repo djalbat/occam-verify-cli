@@ -8,9 +8,9 @@ import { referenceMetaType } from "./metaType";
 import { unifyLabelWithReference } from "./utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "./utilities/json";
 
-const metavariableNodeQuery = nodeQuery("//reference/metavariable");
+const referenceNodeQuery = nodeQuery("/proofStep|lastProofStep/reference");
 
-export default class Reference {
+class Reference {
   constructor(metavariable) {
     this.metavariable = metavariable;
   }
@@ -97,14 +97,26 @@ export default class Reference {
     return reference;
   }
 
-  static fromReferenceNode(referenceNode, fileContext) {
-    const { Metavariable } = shim,
-          metavariableNode = metavariableNodeQuery(referenceNode),
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
-          metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
-          reference = new Reference(metavariable);
+  static fromProofStepNode(proofStepNode, fileContext) {
+    let reference = null;
+
+    const referenceNode = referenceNodeQuery(proofStepNode);
+
+    if (reference !== null) {
+      const { Metavariable } = shim,
+            localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext, ///
+            metavariable = Metavariable.fromReferenceNode(referenceNode, context);
+
+      reference = new Reference(metavariable);
+    }
 
     return reference;
   }
 }
+
+Object.assign(shim, {
+  Reference
+});
+
+export default Reference;

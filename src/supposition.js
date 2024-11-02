@@ -2,25 +2,23 @@
 
 import shim from "./shim";
 
-import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
 import { subproofAssertionFromStatement } from "./utilities/verification";
-import { unqualifiedStatementFromJSON, unqualifiedStatementToUnqualifiedStatementJSON } from "./utilities/json";
-
-const unqualifiedStatementNodeQuery = nodeQuery("/supposition/unqualifiedStatement");
+import { statementFromJSON, statementToStatementJSON } from "./utilities/json";
 
 class Supposition {
-  constructor(unqualifiedStatement) {
-    this.unqualifiedStatement = unqualifiedStatement;
+  constructor(string, statement) {
+    this.string = string;
+    this.statement = statement;
   }
 
-  getUnqualifiedStatement() {
-    return this.unqualifiedStatement;
+  getString() {
+    return this.string;
   }
 
-  getString() { return this.unqualifiedStatement.getString(); }
-
-  getStatement() { return this.unqualifiedStatement.getStatement(); }
+  getStatement() {
+    return this.statement;
+  }
 
   unifyIndependently(substitutions, generalContext, specificContext) {
     let unifiedIndependently;
@@ -30,9 +28,9 @@ class Supposition {
 
     specificContext.trace(`Unifying the '${suppositionString}' supposition independently...`);
 
-    const unqualifiedStatementResolvedIndependently = this.unqualifiedStatement.unifyIndependently(substitutions, generalContext, specificContext);
+    const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
 
-    unifiedIndependently = unqualifiedStatementResolvedIndependently;  ///
+    unifiedIndependently = statementResolvedIndependently;  ///
 
     if (unifiedIndependently) {
       specificContext.trace(`...unified the '${suppositionString}' supposition independently.`);
@@ -50,7 +48,7 @@ class Supposition {
     substitutions.snapshot();
 
     let subproofUnified = false,
-        statementUnified = false;
+          statementUnified = false;
 
     if (false) {
       ///
@@ -84,7 +82,7 @@ class Supposition {
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`);
 
-    statementUnified = this.unqualifiedStatement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
       specificContext.debug(`...unified the '${statementString}' statement with the '${suppositionString}' supposition.`);
@@ -103,8 +101,8 @@ class Supposition {
 
     specificContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
 
-    const context = generalContext, ///
-          statement = this.unqualifiedStatement.getStatement(),
+    const context = generalContext,
+          statement = this.statement.getStatement(),
           subproofAssertion = subproofAssertionFromStatement(statement, context);
 
     if (subproofAssertion !== null) {
@@ -121,56 +119,62 @@ class Supposition {
   verify(context) {
     let verified = false;
 
-    const suppositionString = this.getString(); ///
+    const suppositionString = this.string; ///
 
-    context.trace(`Verifying the '${suppositionString}' supposition...`);
+    if (this.statement !== null) {
+      context.trace(`Verifying the '${suppositionString}' supposition...`);
 
-    const stated = true,
-          assignments = [],
-          unqualifiedStatementVerified = this.unqualifiedStatement.verify(assignments, stated, context);
+      const stated = true,
+            assignments = [],
+            statementVerified = this.statement.verify(assignments, stated, context);
 
-    if (unqualifiedStatementVerified) {
-      const assignmentsAssigned = assignAssignments(assignments, context);
+      if (statementVerified) {
+        const assignmentsAssigned = assignAssignments(assignments, context);
 
-      if (assignmentsAssigned) {
-        const { ProofStep } = shim,
-              proofStep = ProofStep.fromUnqualifiedStatement(this.unqualifiedStatement);
+        if (assignmentsAssigned) {
+          const { ProofStep } = shim,
+                proofStep = ProofStep.fromStatement(this.statement);
 
-        context.addProofStep(proofStep);
+          context.addProofStep(proofStep);
 
-        verified = true;
+          verified = true;
+        }
       }
-    }
 
-    if (verified) {
-      context.debug(`...verified the '${suppositionString}' supposition.`);
+      if (verified) {
+        context.debug(`...verified the '${suppositionString}' supposition.`);
+      }
+    } else {
+      context.debug(`Unable to verify the '${suppositionString}' supposition because it is nonsense.`);
     }
 
     return verified;
   }
 
   toJSON() {
-    const unqualifiedStatementJSON = unqualifiedStatementToUnqualifiedStatementJSON(this.unqualifiedStatement),
-          unqualifiedStatement = unqualifiedStatementJSON,  ///
+    const statementJSON = statementToStatementJSON(this.statement),
+          statement = statementJSON,  ///
           json = {
-            unqualifiedStatement
+            statement
           };
 
     return json;
   }
 
   static fromJSON(json, fileContext) {
-    const unqualifiedStatement = unqualifiedStatementFromJSON(json, fileContext),
-          supposition = new Supposition(unqualifiedStatement);
+    const statement = statementFromJSON(json, fileContext),
+          string = statement.getString(),
+          supposition = new Supposition(string, statement);
 
     return supposition;
   }
 
   static fromSuppositionNode(suppositionNode, fileContext) {
-    const { UnqualifiedStatement } = shim,
-          unqualifiedStatementNode = unqualifiedStatementNodeQuery(suppositionNode),
-          unqualifiedStatement = UnqualifiedStatement.fromUnqualifiedStatementNode(unqualifiedStatementNode, fileContext),
-          supposition = new Supposition(unqualifiedStatement);
+    const { Statement } = shim,
+          statement = Statement.fromSuppositionNode(suppositionNode, fileContext),
+          node = suppositionNode, ///
+          string = fileContext.nodeAsString(node),
+          supposition = new Supposition(string, statement);
 
     return supposition
   }

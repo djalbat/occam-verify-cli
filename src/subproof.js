@@ -11,7 +11,8 @@ import { subproofStringFromSubproofNode } from "./utilities/subproof";
 
 const { match } = arrayUtilities;
 
-const suppositionNodesQuery = nodesQuery("/subproof/supposition"),
+const subproofNodeQuery = nodeQuery("/proofStep/subproof"),
+      suppositionNodesQuery = nodesQuery("/subproof/supposition"),
       subDerivationNodeQuery = nodeQuery("/subproof/subDerivation");
 
 class Subproof {
@@ -109,8 +110,10 @@ class Subproof {
     return subproofVerified;
   }
 
-  static fromSubproofNode(subproofNode, fileContext) {
+  static fromProofStepNode(proofStepNode, fileContext) {
     let subproof = null;
+
+    const subproofNode = subproofNodeQuery(proofStepNode);
 
     if (subproofNode !== null) {
       const { Supposition, SubDerivation } = shim,
