@@ -5,15 +5,15 @@ import shim from "./shim";
 import { nodeQuery } from "./utilities/query";
 import { assignAssignments } from "./utilities/assignments";
 
-const subproofNodeQuery = nodeQuery("/proofStep|lastProofStep/subproof"),
-      qualifiedStatementNodeQuery = nodeQuery("/proofStep|lastProofStep/qualifiedStatement"),
-      unqualifiedStatementNodeQuery = nodeQuery("/proofStep|lastProofStep/unqualifiedStatement");
+const subproofNodeQuery = nodeQuery("/proofStep/subproof"),
+      statementNodeQuery = nodeQuery("/proofStep|lastProofStep/statement"),
+      referenceNodeQuery = nodeQuery("/proofStep|lastProofStep/reference");
 
 class ProofStep {
-  constructor(subproof, qualifiedStatement, unqualifiedStatement) {
+  constructor(subproof, statement, reference) {
     this.subproof = subproof;
-    this.qualifiedStatement = qualifiedStatement;
-    this.unqualifiedStatement = unqualifiedStatement;
+    this.statement = statement;
+    this.reference = reference;
   }
 
   getSubproof() {

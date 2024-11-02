@@ -9,8 +9,7 @@ import { trim } from "../utilities/string";
 import { nodeQuery } from "../utilities/query";
 import { assignAssignments } from "../utilities/assignments";
 
-const statementNodeQuery = nodeQuery("/qualifiedStatement/statement"),
-      referenceNodeQuery = nodeQuery("/qualifiedStatement/reference");
+const statementNodeQuery = nodeQuery("/qualifiedStatement/statement");
 
 class QualifiedStatement {
   constructor(string, statement, reference) {
