@@ -362,6 +362,13 @@ export default class FileContext {
     return labelPresent;
   }
 
+  isLabelPresentByMetavariableNode(metavariableNode) {
+    const label = this.findLabelByMetavariableNode(metavariableNode),
+          labelPresent = (label !== null);
+
+    return labelPresent;
+  }
+
   findTypeByTypeName(typeName) {
     let types = this.getTypes();
 
@@ -391,6 +398,19 @@ export default class FileContext {
     return metaType;
   }
 
+  findVariableByVariableName(variableName) {
+    const variables = this.getVariables(),
+          variable = variables.find((variable) => {
+            const variableNameMatches = variable.matchVariableName(variableName);
+
+            if (variableNameMatches) {
+              return true;
+            }
+          }) || null;
+
+    return variable;
+  }
+
   findLabelByMetavariableName(metavariableName) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
@@ -404,18 +424,19 @@ export default class FileContext {
     return label;
   }
 
-  findVariableByVariableName(variableName) {
-    const variables = this.getVariables(),
-          variable = variables.find((variable) => {
-            const variableNameMatches = variable.matchVariableName(variableName);
+  findLabelByMetavariableNode(metavariableNode) {
+    const labels = this.getLabels(),
+      label = labels.find((label) => {
+        const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
 
-            if (variableNameMatches) {
-              return true;
-            }
-          }) || null;
+        if (metavariableNodeMatches) {
+          return true;
+        }
+      }) || null;
 
-    return variable;
+    return label;
   }
+
   findRuleByReference(reference) {
     const rules = this.getRules(),
           metavariableName = reference.getMetavariableName(),

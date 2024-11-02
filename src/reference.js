@@ -27,7 +27,15 @@ export default class Reference {
     return metavariableName;
   }
 
+  getMetavariableNode() {
+    const metavariableNode = this.metavariable.getNode();
+
+    return metavariableNode;
+  }
+
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
+
+  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
   unifyLabel(label, substitutions, generalContext, specificContext) {
     let labelUnified;

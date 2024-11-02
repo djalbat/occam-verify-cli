@@ -19,17 +19,40 @@ class Label {
 
   getString() { return this.metavariable.getString(); }
 
+  getMetavariableName() {
+    const metavariableName = this.metavariable.getName();
+
+    return metavariableName;
+  }
+
+  getMetavariableNode() {
+    const metavariableNode = this.metavariable.getNode();
+
+    return metavariableNode;
+  }
+
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
-  verifyWhenDeclared(fileContext) {
+  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
+
+  verifyWhenDeclared(fileContext, nameOnly) {
     let verifiedWhenDeclared = false;
 
     const labelString = this.getString(); ///
 
     fileContext.trace(`Verifying the '${labelString}' label when declared...`);
 
-    const metavariableName = this.metavariable.getName(),
-          labelPresent = fileContext.isLabelPresentByMetavariableName(metavariableName);
+    let labelPresent;
+
+    if (nameOnly) {
+      const metavariableName = this.getMetavariableName();
+
+      labelPresent = fileContext.isLabelPresentByMetavariableName(metavariableName);
+    } else {
+      const metavariableNode = this.getMetavariableNode();
+
+      labelPresent = fileContext.isLabelPresentByMetavariableNode(metavariableNode);
+    }
 
     if (labelPresent) {
       fileContext.debug(`The '${labelString}' label is already present.`);

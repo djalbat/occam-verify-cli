@@ -59,6 +59,12 @@ class Metavariable {
     return metavariableNameMatches;
   }
 
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeMatches = metavariableNode.match(this.node);
+
+    return metavariableNodeMatches;
+  }
+
   isEqualTo(metavariable) {
     let equalTo = false;
 

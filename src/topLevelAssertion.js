@@ -215,15 +215,9 @@ export default class TopLevelAssertion {
   verify() {
     let verified = false;
 
-    const labelsVerifiedWhenDeclared = this.labels.every((label) => {
-      const labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext);
+    const labelsVerified = this.verifyLabels();
 
-      if (labelVVerifiedWhenDeclared) {
-        return true;
-      }
-    });
-
-    if (labelsVerifiedWhenDeclared) {
+    if (labelsVerified) {
       const localContext = LocalContext.fromFileContext(this.fileContext),
             context = localContext, ///
             suppositionsVerified = this.suppositions.every((supposition) => {
@@ -250,6 +244,19 @@ export default class TopLevelAssertion {
     }
 
     return verified;
+  }
+
+  verifyLabels() {
+    const labelsVerified = this.labels.every((label) => {
+      const nameOnly = true,
+            labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext, nameOnly);
+
+      if (labelVVerifiedWhenDeclared) {
+        return true;
+      }
+    });
+
+    return labelsVerified;
   }
 
   toJSON() {

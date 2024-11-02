@@ -98,6 +98,19 @@ class Metatheorem extends TopLevelAssertion {
     return verified;
   }
 
+  verifyLabels() {
+    const labelsVerified = this.labels.every((label) => {
+      const nameOnly = false,
+            labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext, nameOnly);
+
+      if (labelVVerifiedWhenDeclared) {
+        return true;
+      }
+    });
+
+    return labelsVerified;
+  }
+
   toJSON() {
     const labelsJSON = labelsToLabelsJSON(this.labels),
           consequentJSON = consequentToConsequentJSON(this.consequent),

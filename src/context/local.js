@@ -283,6 +283,8 @@ class LocalContext {
 
   isLabelPresentByMetavariableName(metavariableName) { return this.context.isLabelPresentByMetavariableName(metavariableName); }
 
+  isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
+
   isVariablePresentByVariableName(variableName, nested = true) {
     const variable = this.findVariableByVariableName(variableName, nested),
           variablePresent = (variable !== null);

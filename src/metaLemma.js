@@ -88,6 +88,19 @@ class MetaLemma extends TopLevelAssertion {
     return verified;
   }
 
+  verifyLabels() {
+    const labelsVerified = this.labels.every((label) => {
+      const nameOnly = false,
+            labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext, nameOnly);
+
+      if (labelVVerifiedWhenDeclared) {
+        return true;
+      }
+    });
+
+    return labelsVerified;
+  }
+
   static fromMetaLemmaNode(metaLemmaNode, fileContext) { return TopLevelAssertion.fromNode(MetaLemma, metaLemmaNode, fileContext); }
 }
 

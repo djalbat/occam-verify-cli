@@ -148,15 +148,9 @@ class Rule {
 
     this.fileContext.trace(`Verifying the '${ruleString}' rule...`);
 
-    const labelsVerifiedWhenDeclared = this.labels.every((label) => {
-      const labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext);
+    const labelsVerified = this.verifyLabels();
 
-      if (labelVVerifiedWhenDeclared) {
-        return true;
-      }
-    });
-
-    if (labelsVerifiedWhenDeclared) {
+    if (labelsVerified) {
       const context = LocalContext.fromFileContext(this.fileContext),
             premisesVerified = this.premises.every((premise) => {
               const premiseVerified = premise.verify(context);
@@ -195,6 +189,19 @@ class Rule {
     }
 
     return verified;
+  }
+
+  verifyLabels() {
+    const labelsVerified = this.labels.every((label) => {
+      const nameOnly = true,
+            labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext, nameOnly);
+
+      if (labelVVerifiedWhenDeclared) {
+        return true;
+      }
+    });
+
+    return labelsVerified;
   }
 
   toJSON() {
