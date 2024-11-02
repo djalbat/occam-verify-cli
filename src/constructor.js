@@ -4,6 +4,7 @@ import shim from "./shim";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
+import { unifyTermWithConstructor } from "./utilities/unification";
 import { termFromJSON, termToTermJSON } from "./utilities/json";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
@@ -24,6 +25,36 @@ class Constructor {
   }
 
   getType() { return this.term.getType(); }
+
+  unifyTerm(term, context, verifyAhead) {
+    let termUnified = false;
+
+    const constructor = this, ///
+          termString = term.getString(),
+          constructorString = constructor.getString();
+
+    context.trace(`Unifying the '${termString}' term with the '${constructorString}' constructor...`, term);
+
+    const termUnifiedWithConstructor = unifyTermWithConstructor(term, constructor, context);
+
+    if (termUnifiedWithConstructor) {
+      let verifiedAhead;
+
+      const type = constructor.getType();
+
+      term.setType(type);
+
+      verifiedAhead = verifyAhead();
+
+      termUnified = verifiedAhead;  ///
+    }
+
+    if (termUnified) {
+      context.debug(`...unified the '${termString}' term with the '${constructorString}' constructor.`, term);
+    }
+
+    return termUnified;
+  }
 
   verifyWhenDeclared(fileContext) {
     let verifiedWhenDeclared;

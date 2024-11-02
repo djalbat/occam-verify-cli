@@ -4,6 +4,7 @@ import shim from "./shim";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
+import { unifyStatementWithCombinator } from "./utilities/unification";
 import { statementFromJSON, statementToStatementJSON } from "./utilities/json";
 
 const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
@@ -23,6 +24,26 @@ class Combinator {
     const statementNode = this.statement.getNode();
 
     return statementNode;
+  }
+
+  unifyStatement(statement, assignments, stated, context) {
+    let statementUnified;
+
+    const combinator = this,  ///
+          statementString = statement.getString(),
+          combinatorString = combinator.getString();
+
+    context.trace(`Unifying the '${statementString}' statement with the '${combinatorString}' combinator...`);
+
+    const statementUnifiedWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, context);
+
+    statementUnified = statementUnifiedWithCombinator; ///
+
+    if (statementUnified) {
+      context.debug(`...unified the '${statementString}' statement with the '${combinatorString}' combinator.`);
+    }
+
+    return statementUnified;
   }
 
   verifyWhenDeclared(fileContext) {
