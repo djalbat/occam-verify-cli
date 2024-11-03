@@ -1,15 +1,14 @@
 "use strict";
 
-import shim from "../shim";
 import Substitution from "../substitution";
+import Substitutions from "../substitutions";
 import StatementSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/statement";
 
 import { unifySubstitution } from "../utilities/unification";
 import { stripBracketsFromStatement } from "../utilities/verification";
-import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
-class StatementSubstitution extends Substitution {
+export default class StatementSubstitution extends Substitution {
   constructor(string, node, tokens, resolved, statement, metavariable, substitution) {
     super(string, node, tokens);
 
@@ -123,8 +122,7 @@ class StatementSubstitution extends Substitution {
   unifyStatement(statement, generalContext, specificContext) {
     let specificSubstitution = null;
 
-    const { Substitutions } = shim,
-          substitutions = Substitutions.fromNothing(),
+    const substitutions = Substitutions.fromNothing(),
           statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
@@ -197,12 +195,6 @@ class StatementSubstitution extends Substitution {
     return statementSubstitution;
   }
 }
-
-Object.assign(shim, {
-  StatementSubstitution
-});
-
-export default StatementSubstitution;
 
 function stringFromStatementAndMetavariable(statement, metavariable) {
   const statementString = statement.getString(),

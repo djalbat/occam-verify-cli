@@ -1,11 +1,7 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
 import LocalContext from "../context/local";
-import TypeAssertion from "../assertion/type";
-import DefinedAssertion from "../assertion/defined";
-import SubproofAssertion from "../assertion/subproof";
-import ContainedAssertion from "../assertion/contained";
 
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/brackets";
 
@@ -16,7 +12,7 @@ export function stripBracketsFromStatement(statement, context) {
   if (bracketedStatementChildNode !== null) {
     context = contextFromStatement(statement, context); ///
 
-    const { Statement } = shim,
+    const { Statement } = dom,
           statementNode = bracketedStatementChildNode;  ///
 
     statement = Statement.fromStatementNode(statementNode, context);
@@ -28,7 +24,7 @@ export function stripBracketsFromStatement(statement, context) {
 export function equalityFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { Equality } = shim,
+  const { Equality } = dom,
         statementNode = statement.getNode(),
         equality = Equality.fromStatementNode(statementNode, context);
 
@@ -38,7 +34,7 @@ export function equalityFromStatement(statement, context) {
 export function judgementFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { Judgement } = shim,
+  const { Judgement } = dom,
         statementNode = statement.getNode(),
         judgement = Judgement.fromStatementNode(statementNode, context);
 
@@ -48,7 +44,7 @@ export function judgementFromStatement(statement, context) {
 export function metavariableFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { Metavariable } = shim,
+  const { Metavariable } = dom,
         statementNode = statement.getNode(),
         metavariable = Metavariable.fromStatementNode(statementNode, context);
 
@@ -58,7 +54,8 @@ export function metavariableFromStatement(statement, context) {
 export function typeAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const statementNode = statement.getNode(),
+  const { TypeAssertion } = dom,
+        statementNode = statement.getNode(),
         typeAssertion = TypeAssertion.fromStatementNode(statementNode, context);
 
   return typeAssertion;
@@ -67,7 +64,8 @@ export function typeAssertionFromStatement(statement, context) {
 export function definedAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const statementNode = statement.getNode(),
+  const { DefinedAssertion } = dom,
+        statementNode = statement.getNode(),
         definedAssertion = DefinedAssertion.fromStatementNode(statementNode, context);
 
   return definedAssertion;
@@ -76,7 +74,8 @@ export function definedAssertionFromStatement(statement, context) {
 export function subproofAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const statementNode = statement.getNode(),
+  const { SubproofAssertion } = dom,
+        statementNode = statement.getNode(),
         subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
 
   return subproofAssertion;
@@ -85,7 +84,8 @@ export function subproofAssertionFromStatement(statement, context) {
 export function containedAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const statementNode = statement.getNode(),
+  const { ContainedAssertion } = dom,
+        statementNode = statement.getNode(),
         containedAssertion = ContainedAssertion.fromStatementNode(statementNode, context);
 
   return containedAssertion;

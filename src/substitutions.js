@@ -1,14 +1,12 @@
 "use strict";
 
-import shim from "./shim";
-
 import { arrayUtilities } from "necessary";
 
 import { EMPTY_STRING } from "./constants";
 
 const { find, first, clear, prune, filter, compress } = arrayUtilities;
 
-class Substitutions {
+export default class Substitutions {
   constructor(array, savedArray) {
     this.array = array;
     this.savedArray = savedArray;
@@ -345,10 +343,6 @@ class Substitutions {
     return substitutions;
   }
 }
-
-Object.assign(shim, {
-  Substitutions
-});
 
 function leftDifference(arrayA, arrayB) {
   filter(arrayA, (elementA) => {

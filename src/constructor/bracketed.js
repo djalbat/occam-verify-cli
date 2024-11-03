@@ -1,7 +1,6 @@
 "use strict";
 
-import shim from "../shim";
-import Constructor from "../constructor";
+import dom from "../dom";
 import ConstructorBracketedContext from "../context/bracketed/constructor";
 
 import { nodeQuery } from "../utilities/query";
@@ -13,7 +12,20 @@ const constructorBracketedContext = ConstructorBracketedContext.fromNothing();
 
 export const bracketedTermNode = constructorBracketedContext.getBracketedTermNode();
 
-export default class BracketedConstructor extends Constructor {
+export default class BracketedConstructor {
+  constructor(string, term) {
+    this.string = string;
+    this.term = term;
+  }
+
+  getString() {
+    return this.string;
+  }
+
+  getTerm() {
+    return this.term;
+  }
+
   unifyTerm(term, context, verifyAhead) {
     let termUnified;
 
@@ -24,7 +36,7 @@ export default class BracketedConstructor extends Constructor {
     termUnified = super.unifyTerm(term, context, () => {
       let verifiedAhead = false;
 
-      const { Term } = shim,
+      const { Term } = dom,
             bracketedTerm = term, ///
             bracketedTermNode = bracketedTerm.getNode(),
             termNode = termNodeQuery(bracketedTermNode); ///
@@ -58,7 +70,7 @@ export default class BracketedConstructor extends Constructor {
   }
 
   static fromNothing() {
-    const { Term } = shim,
+    const { Term } = dom,
           termNode = bracketedTermNode,  ///
           context = constructorBracketedContext, ///
           term = Term.fromTermNode(termNode, context),

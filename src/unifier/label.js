@@ -1,6 +1,6 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -28,7 +28,7 @@ class LabelUnifier extends Unifier {
       unify: (generalTermNode, specificTermVariableNode, substitutions, generalContext, specificContext) => {
         let termUnified;
 
-        const { Term, Variable } = shim,
+        const { Term, Variable } = dom,
               termNode = generalTermNode, ///
               variableNode = specificTermVariableNode; ///
 

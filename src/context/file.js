@@ -2,10 +2,10 @@
 
 import { arrayUtilities } from "necessary";
 
-import shim from "../shim";
+import Substitutions from "../substitutions";
 
-import { objectType } from "../type";
-import { frameMetaType, referenceMetaType, statementMetaType } from "../metaType";
+import { objectType } from "../dom/type";
+import { frameMetaType, referenceMetaType, statementMetaType } from "../dom/metaType";
 import { nodeAsTokens, nodeAsString, nodesAsString, tokensAsString } from "../utilities/string";
 import { typesFromJSON,
          rulesFromJSON,
@@ -511,8 +511,7 @@ export default class FileContext {
     const metaLemmas = this.getMetaLemmas();
 
     filter(metaLemmas, (metaLemma) => {
-      const { Substitutions } = shim,
-            context = this, ///
+      const context = this, ///
             substitutions = Substitutions.fromNothing(),
             referenceUnified = metaLemma.unifyReference(reference, substitutions, context);
 
@@ -528,8 +527,7 @@ export default class FileContext {
     const metatheorems = this.getMetatheorems();
 
     filter(metatheorems, (metatheorem) => {
-      const { Substitutions } = shim,
-            context = this, ///
+      const context = this, ///
             substitutions = Substitutions.fromNothing(),
             referenceUnified = metatheorem.unifyReference(reference, substitutions, context);
 

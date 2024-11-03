@@ -1,6 +1,6 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
 import Substitution from "../substitution";
 import TermSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/term";
 
@@ -59,7 +59,7 @@ export default class TermSubstitution extends Substitution {
             variableNode = variableNodeQuery(termSubstitutionNode);
 
       if ((termNode !== null) && (variableNode !== null)) {
-        const { Term, Variable } = shim,
+        const { Term, Variable } = dom,
               term = Term.fromTermNode(termNode, context),
               variable = Variable.fromVariableNode(variableNode, context),
               node = termSubstitutionNode,  ///
@@ -78,7 +78,7 @@ export default class TermSubstitution extends Substitution {
 
     termNode = stripBracketsFromTermNode(termNode); ///
 
-    const { Term } = shim;
+    const { Term } = dom;
 
     term = Term.fromTermNode(termNode, context);
 

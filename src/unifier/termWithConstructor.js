@@ -1,6 +1,6 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -29,7 +29,7 @@ class TermWithConstructorUnifier extends Unifier {
       unify: (generalTypeNode, specificTermNode, context) => {
         let unified = false;
 
-        const { Term } = shim,
+        const { Term } = dom,
               typeNode = generalTypeNode, ///
               typeName = typeNameFromTypeNode(typeNode),
               type = context.findTypeByTypeName(typeName);

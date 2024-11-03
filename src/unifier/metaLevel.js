@@ -1,6 +1,6 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
 import Unifier from "../unifier";
 import TermSubstitution from "../substitution/term";
 import FrameSubstitution from "../substitution/frame";
@@ -38,7 +38,7 @@ class MetaLevelUnifier extends Unifier {
               statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
 
         if (statementMetavariableNode !== null) {
-          const { Metavariable, Statement } = shim; ///
+          const { Metavariable, Statement } = dom; ///
 
           let context,
               statementNode;
@@ -72,7 +72,7 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalFrameMetavariableNode, specificFrameNode, substitutions, generalContext, specificContext) => {
         let frameUnified;
 
-        const { Frame, Metavariable } = shim,
+        const { Frame, Metavariable } = dom,
               frameNode = specificFrameNode, ///
               metavariableNode = generalFrameMetavariableNode;  ///
 
@@ -97,7 +97,7 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
         let termUnified;
 
-        const { Term, Variable } = shim,
+        const { Term, Variable } = dom,
               termNode = specificTermNode, ///
               variableNode = generalTermVariableNode; ///
 

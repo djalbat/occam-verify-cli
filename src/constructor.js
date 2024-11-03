@@ -1,6 +1,6 @@
 "use strict";
 
-import shim from "./shim";
+import dom from "./dom";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
@@ -10,7 +10,7 @@ import { termFromJSON, termToTermJSON } from "./utilities/json";
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
 
-class Constructor {
+export default class Constructor {
   constructor(string, term) {
     this.string = string;
     this.term = term;
@@ -96,7 +96,7 @@ class Constructor {
   }
 
   static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
-    const { Term, Type } = shim,
+    const { Term, Type } = dom,
           termNode = termNodeQuery(constructorDeclarationNode),
           typeNode = typeNodeQuery(constructorDeclarationNode),
           localContext = LocalContext.fromFileContext(fileContext),
@@ -109,12 +109,6 @@ class Constructor {
     return constructor;
   }
 }
-
-Object.assign(shim, {
-  Constructor
-});
-
-export default Constructor;
 
 export function stringFromTermAndType(term, type) {
   let string;

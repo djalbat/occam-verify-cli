@@ -1,6 +1,6 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -32,7 +32,7 @@ class StatementWithCombinatorUnifier extends Unifier {
       unify: (generalMetaTypeNode, specificStatementNode, assignments, stated, generalContext, specificContext) => {
         let unified;
 
-        const { Statement, MetaType } = shim,
+        const { Statement, MetaType } = dom,
               metaTypeNode = generalMetaTypeNode, ///
               statementNode = specificStatementNode; ///
 
@@ -58,7 +58,7 @@ class StatementWithCombinatorUnifier extends Unifier {
       unify: (generalMetaTypeNode, specificFrameNode, assignments, stated, generalContext, specificContext) => {
         let unified;
 
-        const { Frame, MetaType } = shim,
+        const { Frame, MetaType } = dom,
               metaTypeNode = generalMetaTypeNode, ///
               frameNode = specificFrameNode; ///
 
@@ -84,7 +84,7 @@ class StatementWithCombinatorUnifier extends Unifier {
       unify: (generalTypeNode, specificTermNode, assignments, stated, generalContext, specificContext) => {
         let unified = false;
 
-        const { Term } = shim,
+        const { Term } = dom,
               typeNode = generalTypeNode, ///
               termNode = specificTermNode, ///
               typeName = typeNameFromTypeNode(typeNode);

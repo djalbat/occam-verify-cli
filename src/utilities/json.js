@@ -1,6 +1,9 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
+import Combinator from "../combinator";
+import Constructor from "../constructor";
+import StatementSubstitution from "../substitution/statement";
 
 export function termFromJSON(json, fileContext) {
   let { term } = json;
@@ -9,7 +12,7 @@ export function termFromJSON(json, fileContext) {
 
   json = termJSON;  ///
 
-  const { Term } = shim;
+  const { Term } = dom;
 
   term = Term.fromJSON(json, fileContext);
 
@@ -61,7 +64,7 @@ export function superTypeFromJSON(json, fileContext) {
 export function statementFromJSON(json, fileContext) {
   let { statement } = json;
 
-  const { Statement } = shim,
+  const { Statement } = dom,
         statementJSON = statement;  ///
 
   json = statementJSON; ///
@@ -74,7 +77,7 @@ export function statementFromJSON(json, fileContext) {
 export function conclusionFromJSON(json, fileContext) {
   let { conclusion } = json;
 
-  const { Conclusion } = shim,
+  const { Conclusion } = dom,
         conclusionJSON = conclusion;  ///
 
   json = conclusionJSON;  ///
@@ -87,7 +90,7 @@ export function conclusionFromJSON(json, fileContext) {
 export function consequentFromJSON(json, fileContext) {
   let { consequent } = json;
 
-  const { Consequent } = shim,
+  const { Consequent } = dom,
         consequentJSON = consequent;  ///
 
   json = consequentJSON;  ///
@@ -100,7 +103,7 @@ export function consequentFromJSON(json, fileContext) {
 export function metavariableFromJSON(json, fileContext) {
   let { metavariable } = json;
 
-  const { Metavariable } = shim,
+  const { Metavariable } = dom,
         metavariableJSON = metavariable;  ///
 
   json = metavariableJSON; ///
@@ -113,7 +116,7 @@ export function metavariableFromJSON(json, fileContext) {
 export function typesFromJSON(json, types, fileContext) {
   const { types: typesJSON } = json;
 
-  const { Type } = shim;
+  const { Type } = dom;
 
   typesJSON.forEach((typeJSON) => {
     const json = typeJSON,  ///
@@ -126,7 +129,7 @@ export function typesFromJSON(json, types, fileContext) {
 export function rulesFromJSON(json, fileContext) {
   let { rules } = json;
 
-  const { Rule } = shim,
+  const { Rule } = dom,
         rulesJSON = rules; ///
 
   rules = rulesJSON.map((ruleJSON) => {
@@ -142,7 +145,7 @@ export function rulesFromJSON(json, fileContext) {
 export function labelsFromJSON(json, fileContext) {
   let { labels } = json;
 
-  const { Label } = shim,
+  const { Label } = dom,
         labelsJSON = labels;  ///
 
   labels = labelsJSON.map((labelJSON) => {
@@ -158,7 +161,7 @@ export function labelsFromJSON(json, fileContext) {
 export function axiomsFromJSON(json, fileContext) {
   let { axioms } = json;
 
-  const { Axiom } = shim,
+  const { Axiom } = dom,
         axiomsJSON = axioms; ///
 
   axioms = axiomsJSON.map((axiomJSON) => {
@@ -174,7 +177,7 @@ export function axiomsFromJSON(json, fileContext) {
 export function premisesFromJSON(json, fileContext) {
   let { premises } = json;
 
-  const { Premise } = shim,
+  const { Premise } = dom,
         premisesJSON = premises;  ///
 
   premises = premisesJSON.map((premiseJSON) => {
@@ -190,7 +193,7 @@ export function premisesFromJSON(json, fileContext) {
 export function theoremsFromJSON(json, fileContext) {
   let { theorems } = json;
 
-  const { Theorem } = shim,
+  const { Theorem } = dom,
         theoremsJSON = theorems; ///
 
   theorems = theoremsJSON.map((theoremJSON) => {
@@ -206,7 +209,7 @@ export function theoremsFromJSON(json, fileContext) {
 export function variablesFromJSON(json, fileContext) {
   let { variables } = json;
 
-  const { Variable } = shim,
+  const { Variable } = dom,
         variablesJSON = variables; ///
 
   variables = variablesJSON.map((variableJSON) => {
@@ -222,7 +225,7 @@ export function variablesFromJSON(json, fileContext) {
 export function conjecturesFromJSON(json, fileContext) {
   let { conjectures } = json;
 
-  const { Conjecture } = shim,
+  const { Conjecture } = dom,
         conjecturesJSON = conjectures; ///
 
   conjectures = conjecturesJSON.map((conjectureJSON) => {
@@ -238,8 +241,7 @@ export function conjecturesFromJSON(json, fileContext) {
 export function combinatorsFromJSON(json, fileContext) {
   let { combinators } = json;
 
-  const { Combinator } = shim,
-        combinatorsJSON = combinators; ///
+  const combinatorsJSON = combinators; ///
 
   combinators = combinatorsJSON.map((combinatorJSON) => {
     const json = combinatorJSON,  ///
@@ -254,8 +256,7 @@ export function combinatorsFromJSON(json, fileContext) {
 export function constructorsFromJSON(json, fileContext) {
   let { constructors } = json;
 
-  const { Constructor } = shim,
-        constructorsJSON = constructors; ///
+  const constructorsJSON = constructors; ///
 
   constructors = constructorsJSON.map((constructorJSON) => {
     const json = constructorJSON,  ///
@@ -270,7 +271,7 @@ export function constructorsFromJSON(json, fileContext) {
 export function metatheoremsFromJSON(json, fileContext) {
   let { metatheorems } = json;
 
-  const { Metatheorem } = shim,
+  const { Metatheorem } = dom,
         metatheoremsJSON = metatheorems; ///
 
   metatheorems = metatheoremsJSON.map((metatheoremJSON) => {
@@ -286,7 +287,7 @@ export function metatheoremsFromJSON(json, fileContext) {
 export function suppositionsFromJSON(json, fileContext) {
   let { suppositions } = json;
 
-  const { Supposition } = shim,
+  const { Supposition } = dom,
         suppositionsJSON = suppositions;  ///
 
   suppositions = suppositionsJSON.map((suppositionJSON) => {
@@ -302,8 +303,7 @@ export function suppositionsFromJSON(json, fileContext) {
 export function substitutionsFromJSON(json, fileContext) {
   let { substitutions = [] } = json;  ///
 
-  const { StatementSubstitution } = shim,
-        substitutionsJSON = substitutions,  ///
+  const substitutionsJSON = substitutions,  ///
         Substitution = StatementSubstitution; ///
 
   substitutions = substitutionsJSON.map((substitutionJSON) => {
@@ -319,7 +319,7 @@ export function substitutionsFromJSON(json, fileContext) {
 export function metavariablesFromJSON(json, fileContext) {
   let { metavariables } = json;
 
-  const { Metavariable } = shim,
+  const { Metavariable } = dom,
         metavariablesJSON = metavariables; ///
 
   metavariables = metavariablesJSON.map((metavariableJSON) => {

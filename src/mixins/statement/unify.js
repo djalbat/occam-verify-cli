@@ -17,10 +17,6 @@ function unifyWithCombinators(statement, assignments, stated, context) {
 
   const combinators = context.getCombinators();
 
-  stated = true;  ///
-
-  assignments = null; ///
-
   unifiedWithCombinators = combinators.some((combinator) => {
     const unifiedWithCombinator = combinator.unifyStatement(statement, assignments, stated, context);
 

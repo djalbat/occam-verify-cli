@@ -1,12 +1,12 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
 import TermSubstitution from "../substitution/term";
 import FrameSubstitution from "../substitution/frame";
 
 export function termFromTermAndSubstitutions(term, substitutions, context) {
   if (term !== null) {
-    const { Variable } = shim,
+    const { Variable } = dom,
           termNode = term.getNode(),
           variable = Variable.fromTermNode(termNode, context);
 
@@ -24,7 +24,7 @@ export function termFromTermAndSubstitutions(term, substitutions, context) {
 
 export function frameFromFrameAndSubstitutions(frame, substitutions, context) {
   if (frame !== null) {
-    const { Metavariable } = shim,
+    const { Metavariable } = dom,
           frameNode = frame.getNode(),
           metavariable = Metavariable.fromFrameNode(frameNode, context);
 
@@ -42,7 +42,7 @@ export function frameFromFrameAndSubstitutions(frame, substitutions, context) {
 
 export function statementFromStatementAndSubstitutions(statement, substitutions, context) {
   if (statement !== null) {
-    const { Metavariable } = shim,
+    const { Metavariable } = dom,
           statementNode = statement.getNode(),
           metavariable = Metavariable.fromStatementNode(statementNode, context);
 

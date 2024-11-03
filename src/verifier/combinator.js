@@ -1,6 +1,6 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
 import Verifier from "../verifier";
 import LocalContext from "../context/local";
 
@@ -28,7 +28,7 @@ class CombinatorVerifier extends Verifier {
     {
       nodeQuery: statementNodeQuery,
       verify: (statementNode, fileContext) => {
-        const { Statement } = shim,
+        const { Statement } = dom,
               localContext = LocalContext.fromFileContext(fileContext),
               context = localContext, ///
               statement = Statement.fromStatementNode(statementNode, context),
@@ -42,7 +42,7 @@ class CombinatorVerifier extends Verifier {
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, fileContext) => {
-        const { Term } = shim,
+        const { Term } = dom,
               localContext = LocalContext.fromFileContext(fileContext),
               context = localContext, ///
               term = Term.fromTermNode(termNode, context),

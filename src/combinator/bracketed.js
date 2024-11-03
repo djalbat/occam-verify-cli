@@ -1,7 +1,6 @@
 "use strict";
 
-import shim from "../shim";
-import Combinator from "../combinator";
+import dom from "../dom";
 import CombinatorBracketedContext from "../context/bracketed/combinator";
 
 import { unifyStatementWithCombinator } from "../utilities/unification";
@@ -10,7 +9,15 @@ const combinatorBracketedContext = CombinatorBracketedContext.fromNothing();
 
 export const bracketedStatementNode = combinatorBracketedContext.getBracketedStatementNode();  ///
 
-export default class BracketedCombinator extends Combinator {
+export default class BracketedCombinator {
+  constructor(statement) {
+    this.statement = statement;
+  }
+
+  getStatement() {
+    return this.statement;
+  }
+
   unifyStatement(statement, assignments, stated, context) {
     let statementUnified;
 
@@ -32,7 +39,7 @@ export default class BracketedCombinator extends Combinator {
   }
 
   static fromNothing() {
-    const { Statement } = shim,
+    const { Statement } = dom,
           statementNode = bracketedStatementNode, ///
           context = combinatorBracketedContext, ///
           statement = Statement.fromStatementNode(statementNode, context),

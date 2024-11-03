@@ -2,18 +2,14 @@
 
 import { COMMA, EMPTY_STRING } from "../constants";
 
-export function trim(string) {
-  string = string.replace(/\s+$/, EMPTY_STRING);  ///
-
-  return string;
-}
-
 export function nodeAsString(node, tokens) {
   let string;
 
   tokens = nodeAsTokens(node, tokens);  ///
 
   string = tokensAsString(tokens);
+
+  string = trimString(string);  ///
 
   return string;
 }
@@ -58,6 +54,12 @@ export function nodeAsTokens(node, tokens) {
   }
 
   return tokens;
+}
+
+function trimString(string) {
+  string = string.replace(/\s+$/, EMPTY_STRING);  ///
+
+  return string;
 }
 
 function terminalNodeAsTokens(terminalNode, tokens) {

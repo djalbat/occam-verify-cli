@@ -1,6 +1,6 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -29,7 +29,7 @@ class MetavariableUnifier extends Unifier {
       unify: (generalTypeNode, specificTermNode, generalContext, specificContext) => {
         let termUnified;
 
-        const { Term } = shim,
+        const { Term } = dom,
               typeNode = generalTypeNode, ///
               termNode = specificTermNode, ///
               typeName = typeNameFromTypeNode(typeNode),

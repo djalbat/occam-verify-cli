@@ -1,6 +1,6 @@
 "use strict";
 
-import shim from "../shim";
+import dom from "../dom";
 import Substitution from "../substitution";
 import FrameSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/frame";
 
@@ -40,7 +40,7 @@ export default class FrameSubstitution extends Substitution {
             metavariableNode = metavariableNodeQuery(frameSubstitutionNode);
 
       if ((frameNode !== null) && (metavariableNode !== null)) {
-        const { Frame, Metavariable } = shim,
+        const { Frame, Metavariable } = dom,
               frame = Frame.fromFrameNode(frameNode, context),
               metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
               node = frameSubstitutionNode,  ///

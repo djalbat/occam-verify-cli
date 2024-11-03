@@ -8,7 +8,7 @@ import topLevelVerifier from "../verifier/topLevel";
 import { filePathUtilities } from "occam-entities";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
-import { objectType } from "../type";
+import { objectType } from "../dom/type";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { isFilePathNominalFilePath } = filePathUtilities,

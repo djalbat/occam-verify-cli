@@ -1,6 +1,6 @@
 "use strict";
 
-import shim from "./shim";
+import dom from "./dom";
 import LocalContext from "./context/local";
 
 import { nodeQuery } from "./utilities/query";
@@ -9,7 +9,7 @@ import { statementFromJSON, statementToStatementJSON } from "./utilities/json";
 
 const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
-class Combinator {
+export default class Combinator {
   constructor(statement) {
     this.statement = statement;
   }
@@ -82,7 +82,7 @@ class Combinator {
   }
 
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
-    const { Statement } = shim,
+    const { Statement } = dom,
           statementNode = statementNodeQuery(combinatorDeclarationNode),
           localContext = LocalContext.fromFileContext(fileContext),
           statement = Statement.fromStatementNode(statementNode, localContext),
@@ -91,10 +91,3 @@ class Combinator {
     return combinator;
   }
 }
-
-Object.assign(shim, {
-  Combinator
-});
-
-export default Combinator;
-

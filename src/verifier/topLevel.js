@@ -1,13 +1,6 @@
 "use strict";
 
-import shim from "../shim";
-import Error from "../error";
-import TypeDeclaration from "../declaration/type";
-import VariableDeclaration from "../declaration/variable";
-import CombinatorDeclaration from "../declaration/combinator";
-import ConstructorDeclaration from "../declaration/constructor";
-import MetavariableDeclaration from "../declaration/metavariable";
-
+import dom from "../dom";
 import Verifier from "../verifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -42,7 +35,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: errorNodeQuery,
       verify: (errorNode, fileContext) => {
-        const error = Error.fromErrorNode(errorNode, fileContext),
+        const { Error } = dom,
+              error = Error.fromErrorNode(errorNode, fileContext),
               errorVerified = error.verify();
 
         return errorVerified;
@@ -51,7 +45,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: ruleNodeQuery,
       verify: (ruleNode, fileContext) => {
-        const { Rule } = shim,
+        const { Rule } = dom,
               rule = Rule.fromRuleNode(ruleNode, fileContext),
               ruleVerified = rule.verify();
 
@@ -61,7 +55,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: axiomNodeQuery,
       verify: (axiomNode, fileContext) => {
-        const { Axiom } = shim,
+        const { Axiom } = dom,
               axiom = Axiom.fromAxiomNode(axiomNode, fileContext),
               axiomVerified = axiom.verify();
 
@@ -71,7 +65,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: lemmaNodeQuery,
       verify: (lemmaNode, fileContext) => {
-        const { Lemma } = shim,
+        const { Lemma } = dom,
               lemma = Lemma.fromLemmaNode(lemmaNode, fileContext),
               lemmaVerified = lemma.verify();
 
@@ -81,7 +75,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: theoremNodeQuery,
       verify: (theoremNode, fileContext) => {
-        const { Theorem } = shim,
+        const { Theorem } = dom,
               theorem = Theorem.fromTheoremNode(theoremNode, fileContext),
               theoremVerified = theorem.verify();
 
@@ -91,7 +85,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metaLemmaNodeQuery,
       verify: (metaLemmaNode, fileContext) => {
-        const { MetaLemma } = shim,
+        const { MetaLemma } = dom,
               metaLemma = MetaLemma.fromMetaLemmaNode(metaLemmaNode, fileContext),
               metaLemmaVerified = metaLemma.verify();
 
@@ -101,7 +95,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: conjectureNodeQuery,
       verify: (conjectureNode, fileContext) => {
-        const { Conjecture } = shim,
+        const { Conjecture } = dom,
               conjecture = Conjecture.fromConjectureNode(conjectureNode, fileContext),
               conjectureVerified = conjecture.verify();
 
@@ -111,7 +105,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metatheoremNodeQuery,
       verify: (metatheoremNode, fileContext) => {
-        const { Metatheorem } = shim,
+        const { Metatheorem } = dom,
               metatheorem = Metatheorem.fromMetatheoremNode(metatheoremNode, fileContext),
               metatheoremVerified = metatheorem.verify();
 
@@ -121,7 +115,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: typeDeclarationNodeQuery,
       verify: (typeDeclarationNode, fileContext) => {
-        const typeDeclaration = TypeDeclaration.fromTypeDeclarationNode(typeDeclarationNode, fileContext),
+        const { TypeDeclaration } = dom,
+              typeDeclaration = TypeDeclaration.fromTypeDeclarationNode(typeDeclarationNode, fileContext),
               typeDeclarationVerified = typeDeclaration.verify();
 
         return typeDeclarationVerified;
@@ -130,7 +125,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: variableDeclarationNodeQuery,
       verify: (variableDeclarationNode, fileContext) => {
-        const variableDeclaration = VariableDeclaration.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
+        const { VariableDeclaration } = dom,
+              variableDeclaration = VariableDeclaration.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
               variableDeclarationVerified = variableDeclaration.verify();
 
         return variableDeclarationVerified;
@@ -139,7 +135,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: combinatorDeclarationNodeQuery,
       verify: (combinatorDeclarationNode, fileContext) => {
-        const combinatorDeclaration = CombinatorDeclaration.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
+        const { CombinatorDeclaration } = dom,
+              combinatorDeclaration = CombinatorDeclaration.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
               combinatorDeclarationVerified = combinatorDeclaration.verify();
 
         return combinatorDeclarationVerified;
@@ -148,7 +145,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: constructorDeclarationNodeQuery,
       verify: (constructorDeclarationNode, fileContext) => {
-        const constructorDeclaration = ConstructorDeclaration.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
+        const { ConstructorDeclaration } = dom,
+              constructorDeclaration = ConstructorDeclaration.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
               constructorDeclarationVerified = constructorDeclaration.verify();
 
         return constructorDeclarationVerified;
@@ -157,7 +155,8 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metavariableDeclarationNodeQuery,
       verify: (metavariableDeclarationNode, fileContext) => {
-        const metavariableDeclaration = MetavariableDeclaration.fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
+        const { MetavariableDeclaration } = dom,
+              metavariableDeclaration = MetavariableDeclaration.fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
               metavariableDeclarationVerified = metavariableDeclaration.verify();
 
         return metavariableDeclarationVerified;
