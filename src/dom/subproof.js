@@ -1,17 +1,11 @@
 "use strict";
 
-import { arrayUtilities } from "necessary";
-
 import dom from "../dom";
 import LocalContext from "../context/local";
 
 import { domAssigned } from "../dom";
-import { unifyStatement } from "../utilities/unification";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { subproofStringFromSubproofNode } from "../utilities/subproof";
-import { subproofAssertionFromStatement } from "../utilities/verification";
-
-const { match } = arrayUtilities;
 
 const subproofNodeQuery = nodeQuery("/proofStep/subproof"),
       suppositionNodesQuery = nodesQuery("/subproof/supposition"),
@@ -56,57 +50,6 @@ export default domAssigned(class Subproof {
           ];
 
     return statements;
-  }
-
-  unifyStatement(statement, substitutions, generalContext, specificContext) {
-    let statementUnified = false;
-
-    const context = specificContext,  ///
-          subproofAssertion = subproofAssertionFromStatement(statement, context);
-
-    if (subproofAssertion !== null) {
-      const subproofAssertionUnified = this.unifySubproofAssertion(subproofAssertion, substitutions, generalContext, specificContext);
-
-      statementUnified = subproofAssertionUnified;  ///
-    }
-
-    return statementUnified;
-  }
-
-  unifySubproofAssertion(subproofAssertion, substitutions, generalContext, specificContext) {
-    let subproofAssertionUnified;
-
-    const subproofString = this.string,
-          subproofAssertionString = subproofAssertion.getString();
-
-    specificContext.trace(`Unifying the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof...`);
-
-    const subproofStatements = this.getStatements(),
-          subproofAssertionStatements = subproofAssertion.getStatements();
-
-    subproofAssertionUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
-      const generalStatement = subproofAssertionStatement,  ///
-            specificStatement = subproofStatement,  ///
-            statementUnified = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
-
-      if (statementUnified) {
-        return true;
-      }
-    });
-
-    if (subproofAssertionUnified) {
-      const substitutionsLength = substitutions.getLength();
-
-      if (substitutionsLength > 0) {
-        subproofAssertionUnified = false;
-      }
-    }
-
-    if (subproofAssertionUnified) {
-      specificContext.trace(`...unified the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof.`);
-    }
-
-    return subproofAssertionUnified;
   }
 
   verify(substitutions, context) {

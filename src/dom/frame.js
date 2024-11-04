@@ -63,13 +63,8 @@ export default domAssigned(class Frame {
   }
 
   isEqualTo(frame) {
-    let equalTo = false;
-
-    if (frame !== null) {
-      const frameString = frame.getString();
-
-      equalTo = (frameString === this.string);
-    }
+    const frameString = frame.getString(),
+          equalTo = (frameString === this.string);
 
     return equalTo;
   }

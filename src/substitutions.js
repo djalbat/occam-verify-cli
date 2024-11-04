@@ -73,13 +73,6 @@ export default class Substitutions {
     return substitutions;
   }
 
-  filterSubstitution(callback) {
-    const array = this.array.filter(callback),
-          substitutions = Substitutions.fromArray(array);
-
-    return substitutions;
-  }
-
   findSubstitutionByVariable(variable) {
     const substitution = this.findSubstitution((substitution) => {
       const substitutionVariable = substitution.getVariable();
@@ -90,18 +83,6 @@ export default class Substitutions {
         if (substitutionVariableEqualToVariable) {
           return true;
         }
-      }
-    });
-
-    return substitution;
-  }
-
-  findSubstitutionByMetavariable(metavariable) {
-    const substitution = this.findSubstitution((substitution) => {
-      const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualTo(metavariable);
-
-      if (substitutionMetavariableEqualToMetavariable) {
-        return true;
       }
     });
 
@@ -121,54 +102,54 @@ export default class Substitutions {
   }
 
   findSimpleSubstitutionByMetavariable(metavariable) {
-    const substitutions = this.findSubstitutionsByMetavariable(metavariable),
-          simpleSubstitutions = substitutions.filterSubstitution((substitution) => {
-            const substitutionSimple = substitution.isSimple();
+    const simpleSubstitution = this.findSubstitution((substitution) => {
+      const substitutionSimple = substitution.isSimple();
 
-            if (substitutionSimple) {
-              return true;
-            }
-          }),
-          firstSimpleSubstitution = simpleSubstitutions.getFirstSubstitution(),
-          simpleSubstitution = firstSimpleSubstitution; ///
+      if (substitutionSimple) {
+        const simpleSubstitution = substitution,  ///
+              simpleSubstitutionMetavariableEqualToMetavariable = simpleSubstitution.isMetavariableEqualTo(metavariable);
+
+        if (simpleSubstitutionMetavariableEqualToMetavariable) {
+          return true;
+        }
+      }
+    });
 
     return simpleSubstitution;
   }
 
   findComplexSubstitutionsByMetavariable(metavariable) {
-    const substitutions = this.findSubstitutionsByMetavariable(metavariable),
-          complexSubstitutions = substitutions.filterSubstitution((substitution) => {
-            const substitutionComplex = substitution.isComplex();
+    const complexSubstitutions = this.findSubstitutions((substitution) => {
+      const substitutionComplex = substitution.isComplex();
 
-            if (substitutionComplex) {
-              return true;
-            }
-          });
+      if (substitutionComplex) {
+        const complexSubstitution = substitution, ///
+              complexSubstitutionMetavariableEqualToMetavariable = complexSubstitution.isMetavariableEqualTo(metavariable);
+
+        if (complexSubstitutionMetavariableEqualToMetavariable) {
+          return true;
+        }
+      }
+    });
 
     return complexSubstitutions;
   }
 
   findSubstitutionByMetavariableAndSubstitution(metavariable, substitution) {
-    const substitutionA = substitution, ///
-          substitutions = this.findSubstitutions((substitution) => {
-            const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualTo(metavariable);
+    const substitutionA = substitution; ///
 
-            if (substitutionMetavariableEqualToMetavariable) {
-              const substitutionSubstitution = substitution.getSubstitution();
+    substitution = this.findSubstitution((substitution) => {  ///
+      const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualTo(metavariable);
 
-              if (substitutionSubstitution !== null) {
-                const substitutionB = substitution, ///
-                      substitutionBSubstitutionEqualToSubstitutionB = substitutionB.isSubstitutionEqualTo(substitutionA);
+      if (substitutionMetavariableEqualToMetavariable) {
+        const substitutionB = substitution, ///
+              substitutionBSubstitutionEqualToSubstitutionA = substitutionB.isSubstitutionEqualTo(substitutionA);
 
-                if (substitutionBSubstitutionEqualToSubstitutionB) {
-                  return true;
-                }
-              }
-            }
-          }),
-          firstSubstitution = substitutions.getFirstSubstitution();
-
-    substitution = firstSubstitution; ///
+        if (substitutionBSubstitutionEqualToSubstitutionA) {
+          return true;
+        }
+      }
+    });
 
     return substitution;
   }

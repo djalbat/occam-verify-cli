@@ -66,6 +66,12 @@ export default domAssigned(class Reference {
     context.trace(`Verifying the '${referenceString}' reference...`);
 
     if (!verified) {
+      const metavariableVerified = this.verifyMetavariable(context);
+
+      verified = metavariableVerified; ///
+    }
+
+    if (!verified) {
       const reference = this, ///
             rulePresent = context.isRulePresentByReference(reference),
             metaLemmasMetaTheoremsPresent = context.areMetaLemmasMetaTheoremsPresentByReference(reference),
@@ -74,18 +80,22 @@ export default domAssigned(class Reference {
       verified = (rulePresent || metaLemmasMetaTheoremsPresent || axiomLemmaTheoremConjecturePresent);
     }
 
-    if (!verified) {
-      const metaType = referenceMetaType, ///
-            metavariableVerifiedGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, context);
-
-      verified = metavariableVerifiedGivenMetaType; ///
-    }
-
     if (verified) {
       context.debug(`...verified the '${referenceString}' reference.`);
     }
 
     return verified;
+  }
+
+  verifyMetavariable(context) {
+    let metavariableVerified;
+
+    const metaType = referenceMetaType, ///
+          metavariableVerifiedGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, context);
+
+    metavariableVerified = metavariableVerifiedGivenMetaType; ///
+
+    return metavariableVerified;
   }
 
   toJSON() {

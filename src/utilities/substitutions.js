@@ -29,7 +29,9 @@ export function frameFromFrameAndSubstitutions(frame, substitutions, context) {
           metavariable = Metavariable.fromFrameNode(frameNode, context);
 
     if (metavariable !== null) {
-      const substitution = substitutions.findSubstitutionByMetavariable(metavariable);
+      let substitution = null;
+
+      substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution);
 
       if (substitution !== null) {
         frame = substitution.getFrame();

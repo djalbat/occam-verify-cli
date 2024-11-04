@@ -29,24 +29,28 @@ function unifyAWithRule(statement, reference, substitutions, context) {
 }
 
 function unifyAWithReference(statement, reference, substitutions, context) {
-  let unifiedWithReference;
+  let unifiedWithReference = false;
 
   if (reference !== null) {
-    const statementString = statement.getString(),
-          referenceString = reference.getString();
+    const metavariableVerified = reference.verifyMetavariable(context);
 
-    context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
+    if (metavariableVerified) {
+      const statementString = statement.getString(),
+            referenceString = reference.getString();
 
-    const metavariable = reference.getMetavariable(),
-          statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
-          substitution = statementSubstitution; ///
+      context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
 
-    substitutions.addSubstitution(substitution, context);
+      const metavariable = reference.getMetavariable(),
+            statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
+            substitution = statementSubstitution; ///
 
-    unifiedWithReference = true;
+      substitutions.addSubstitution(substitution, context);
 
-    if (unifiedWithReference) {
-      context.debug(`...unified the '${statementString}' statement with the '${referenceString}' reference.`);
+      unifiedWithReference = true;
+
+      if (unifiedWithReference) {
+        context.debug(`...unified the '${statementString}' statement with the '${referenceString}' reference.`);
+      }
     }
   }
 

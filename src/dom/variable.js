@@ -50,19 +50,14 @@ export default domAssigned(class Variable {
   }
 
   isEqualTo(variable) {
-    let equalTo = false;
-
-    if (variable !== null) {
-      const variableString = variable.getString();
-
-      equalTo = (variableString === this.string);
-    }
+    const variableString = variable.getString(),
+          equalTo = (variableString === this.string);
 
     return equalTo;
   }
 
-  isEssentiallyEqualToTerm(term, generalContext, specificContext) {
-    let essentiallyEqualToTerm = false;
+  isEffectivelyEqualToTerm(term, generalContext, specificContext) {
+    let effectivelyEqualToTerm = false;
 
     const generalContextFilePath = generalContext.getFilePath(),
           specificContextFilePath = specificContext.getFilePath();
@@ -71,11 +66,11 @@ export default domAssigned(class Variable {
       const termString = term.getString();
 
       if (termString === this.string) {
-        essentiallyEqualToTerm = true;
+        effectivelyEqualToTerm = true;
       }
     }
 
-    return essentiallyEqualToTerm;
+    return effectivelyEqualToTerm;
   }
 
   verify(context) {
@@ -175,9 +170,9 @@ export default domAssigned(class Variable {
 
     specificContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
-    const essentiallyEqualToTerm = this.isEssentiallyEqualToTerm(term, generalContext, specificContext);
+    const effectivelyEqualToTerm = this.isEffectivelyEqualToTerm(term, generalContext, specificContext);
 
-    if (essentiallyEqualToTerm) {
+    if (effectivelyEqualToTerm) {
       termUnified = true;
     } else {
       const variable = this, ///

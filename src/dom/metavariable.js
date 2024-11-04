@@ -71,19 +71,14 @@ export default domAssigned(class Metavariable {
   isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
   isEqualTo(metavariable) {
-    let equalTo = false;
-
-    if (metavariable !== null) {
-      const metavariableString = metavariable.getString();
-
-      equalTo = (metavariableString === this.string);
-    }
+    const metavariableString = metavariable.getString(),
+          equalTo = (metavariableString === this.string);
 
     return equalTo;
   }
 
-  isEssentiallyEqualToFrame(frame, generalContext, specificContext) {
-    let essentiallyEqualToFrame = false;
+  isEffectivelyEqualToFrame(frame, generalContext, specificContext) {
+    let effectivelyEqualToFrame = false;
 
     const generalContextFilePath = generalContext.getFilePath(),
           specificContextFilePath = specificContext.getFilePath();
@@ -92,15 +87,15 @@ export default domAssigned(class Metavariable {
       const frameString = frame.getString();
 
       if (frameString === this.string) {
-        essentiallyEqualToFrame = true;
+        effectivelyEqualToFrame = true;
       }
     }
 
-    return essentiallyEqualToFrame;
+    return effectivelyEqualToFrame;
   }
 
-  isEssentiallyEqualToStatement(statement, generalContext, specificContext) {
-    let essentiallyEqualToStatement = false;
+  isEffectivelyEqualToStatement(statement, generalContext, specificContext) {
+    let effectivelyEqualToStatement = false;
 
     const generalContextFilePath = generalContext.getFilePath(),
           specificContextFilePath = specificContext.getFilePath();
@@ -109,11 +104,11 @@ export default domAssigned(class Metavariable {
       const statementString = statement.getString();
 
       if (statementString === this.string) {
-        essentiallyEqualToStatement = true;
+        effectivelyEqualToStatement = true;
       }
     }
 
-    return essentiallyEqualToStatement;
+    return effectivelyEqualToStatement;
   }
 
   unifyFrame(frame, substitutions, generalContext, specificContext) {
@@ -124,9 +119,9 @@ export default domAssigned(class Metavariable {
 
     specificContext.trace(`Unifying the '${frameString}' frame with the '${metavariableString}' metavariable...`);
 
-    const essentiallyEqualToFrame = this.isEssentiallyEqualToFrame(frame, generalContext, specificContext);
+    const effectivelyEqualToFrame = this.isEffectivelyEqualToFrame(frame, generalContext, specificContext);
 
-    if (essentiallyEqualToFrame) {
+    if (effectivelyEqualToFrame) {
       frameUnified = true;
     } else {
       const metavariable = this, ///
@@ -170,9 +165,9 @@ export default domAssigned(class Metavariable {
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${metavariableString}${substitutionString}' metavariable...`);
 
-    const essentiallyEqualToStatement = this.isEssentiallyEqualToStatement(statement, generalContext, specificContext);
+    const effectivelyEqualToStatement = this.isEffectivelyEqualToStatement(statement, generalContext, specificContext);
 
-    if (essentiallyEqualToStatement) {
+    if (effectivelyEqualToStatement) {
       statementUnified = true;
     } else {
       const metavariable = this, ///

@@ -44,22 +44,14 @@ export default domAssigned(class SubproofAssertion {
           subproofAssertionStatements = this.statements;  ///
 
     subproofUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
-      const generalStatement = subproofStatement,  ///
-            specificStatement = subproofAssertionStatement,  ///
+      const generalStatement = subproofAssertionStatement,  ///
+            specificStatement = subproofStatement,  ///
             statementUnified = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
       if (statementUnified) {
         return true;
       }
     });
-
-    if (subproofUnified) {
-      const substitutionsLength = substitutions.getLength();
-
-      if (substitutionsLength > 0) {
-        subproofUnified = false;
-      }
-    }
 
     if (subproofUnified) {
       specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);

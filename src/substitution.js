@@ -69,13 +69,8 @@ export default class Substitution {
   }
 
   isEqualTo(substitution) {
-    let equalTo = false;
-
-    if (substitution !== null) {
-      const substitutionString = substitution.getString();
-
-      equalTo = (substitutionString === this.string);
-    }
+    const substitutionString = substitution.getString(),
+          equalTo = (substitutionString === this.string);
 
     return equalTo;
   }

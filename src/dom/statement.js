@@ -11,9 +11,9 @@ import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
-import { definedAssertionFromStatement, containedAssertionFromStatement } from "../utilities/verification";
+import { definedAssertionFromStatement, subproofAssertionFromStatement, containedAssertionFromStatement } from "../utilities/verification";
 
-const { reverse } = arrayUtilities;
+const { match, backwardsSome } = arrayUtilities;
 
 const statementNodeQuery = nodeQuery("/*/statement"),
       statementTermNodesQuery = nodesQuery("/statement//term"),
@@ -39,13 +39,8 @@ export default domAssigned(class Statement {
   }
 
   isEqualTo(statement) {
-    let equalTo = false;
-
-    if (statement !== null) {
-      const statementString = statement.getString();
-
-      equalTo = (statementString === this.string);
-    }
+    const statementString = statement.getString(),
+          equalTo = (statementString === this.string);
 
     return equalTo;
   }
@@ -110,6 +105,40 @@ export default domAssigned(class Statement {
     return statementNodeMatches;
   }
 
+  unifySubproof(subproof, substitutions, generalContext, specificContext) {
+    let subproofUnified = false;
+
+    const context = specificContext,  ///
+          statement = this, ///
+          subproofAssertion = subproofAssertionFromStatement(statement, context);
+
+    if (subproofAssertion !== null) {
+      const subproofString = subproof.getString(),
+            subproofAssertionString = subproofAssertion.getString();
+
+      specificContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
+
+      const subproofStatements = subproof.getStatements(),
+            subproofAssertionStatements = subproofAssertion.getStatements();
+
+      subproofUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
+        const generalStatement = subproofAssertionStatement,  ///
+              specificStatement = subproofStatement,  ///
+              statementUnified = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+
+        if (statementUnified) {
+          return true;
+        }
+      });
+
+      if (subproofUnified) {
+        specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
+      }
+    }
+
+    return subproofUnified;
+  }
+
   unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
 
@@ -166,9 +195,7 @@ export default domAssigned(class Statement {
   unifyWithProofSteps(proofSteps, context) {
     let unifiedWithProofSteps;
 
-    proofSteps = reverse(proofSteps); ///
-
-    unifiedWithProofSteps = proofSteps.some((proofStep) => {
+    unifiedWithProofSteps = backwardsSome(proofSteps, (proofStep) => {
       const statement = this, ///
             statementUnified =proofStep.unifyStatement(statement, context);
 

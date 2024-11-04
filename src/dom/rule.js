@@ -16,7 +16,7 @@ import { labelsFromJSON,
          premisesToPremisesJSON,
          conclusionToConclusionJSON } from "../utilities/json";
 
-const { extract, reverse, backwardsEvery } = arrayUtilities;
+const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 const proofNodeQuery = nodeQuery("/rule/proof"),
       labelNodesQuery = nodesQuery("/rule/label"),
@@ -105,8 +105,6 @@ export default domAssigned(class Rule {
   }
 
   unifyProofStepsWithPremises(proofSteps, substitutions, generalContext, specificContext) {
-    proofSteps = reverse(proofSteps); ///
-
     const proofStepsUnifiedWithPremises = backwardsEvery(this.premises, (premise) => {
       const proofStepUnifiedWithPremise = this.unifyProofStepsWithPremise(proofSteps, premise, substitutions, generalContext, specificContext);
 
@@ -126,6 +124,8 @@ export default domAssigned(class Rule {
     if (premiseUnifiedIndependently) {
       proofStepsUnifiedWithPremise = true;
     } else {
+      proofSteps = reverse(proofSteps); ///
+
       const proofStep = extract(proofSteps, (proofStep) => {
         const proofStepUnified = premise.unifyProofStep(proofStep, substitutions, generalContext, specificContext);
 

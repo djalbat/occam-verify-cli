@@ -17,7 +17,7 @@ import { labelsFromJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
-const { extract, reverse, backwardsEvery } = arrayUtilities;
+const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 const proofNodeQuery = nodeQuery("/*/proof"),
       labelNodesQuery = nodesQuery("/*/label"),
@@ -173,8 +173,6 @@ export default class TopLevelAssertion {
   }
 
   unifyProofStepsWithSuppositions(proofSteps, substitutions, generalContext, specificContext) {
-    proofSteps = reverse(proofSteps); ///
-
     const proofStepsUnifiedWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
       const proofStepsUnifiedWithSupposition = this.unifyProofStepsWithSupposition(proofSteps, supposition, substitutions, generalContext, specificContext);
 
@@ -194,6 +192,8 @@ export default class TopLevelAssertion {
     if (suppositionUnifiedIndependently) {
       proofStepsUnifiedWithSupposition = true;
     } else {
+      proofSteps = reverse(proofSteps); ///
+
       const proofStep = extract(proofSteps, (proofStep) => {
         const proofStepUnified = supposition.unifyProofStep(proofStep, substitutions, generalContext, specificContext);
 

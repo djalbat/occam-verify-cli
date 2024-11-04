@@ -68,20 +68,18 @@ export default domAssigned(class ProofStep {
   unifyStatement(statement, context) {
     let statementUnified;
 
-    const statementString = statement.getString();
-
-    context.trace(`Unifying the '${statementString}' statement...`);
-
     const specificContext = context, ///
           generalContext = context, ///
           substitutions = Substitutions.fromNothing();
 
     if (this.subproof !== null) {
-      statementUnified = this.subproof.unifyStatement(statement, substitutions, generalContext, specificContext);
+      const subproofUnified = statement.unifySubproof(this.subproof, substitutions, generalContext, specificContext);
+
+      statementUnified = subproofUnified; ///
     }
 
     if (this.statement !== null) {
-      statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+      statementUnified = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
     }
 
     if (statementUnified) {
@@ -91,21 +89,7 @@ export default domAssigned(class ProofStep {
       statementUnified = substitutionsUnified;  ///
     }
 
-    if (statementUnified) {
-      context.debug(`,..unified the '${statementString}' statement.`);
-    }
-
     return statementUnified;
-  }
-
-  unifySubproofAssertion(subproofAssertion, context) {
-    let subproofAssertionUnified = false;
-
-    if (this.subproof !== null) {
-      subproofAssertionUnified = this.subproof.unifySubproofAssertion(subproofAssertion, context);
-    }
-
-    return subproofAssertionUnified;
   }
 
   verifyAndUnify(substitutions, context) {
