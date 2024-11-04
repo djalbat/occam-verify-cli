@@ -31,7 +31,7 @@ export default class TermSubstitution extends Substitution {
 
   isVariableEqualTo(variable) { return this.variable.isEqualTo(variable); }
 
-  unifyWithEquivalence(equivalence, substitutions, generalContext, specificContext) {
+  unifyWithEquivalence(equivalence) {
     let unifiedWithEquivalence;
 
     const termNode = this.term.getNode(),

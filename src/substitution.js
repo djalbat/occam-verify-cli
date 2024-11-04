@@ -122,21 +122,9 @@ export default class Substitution {
     return resolved;
   }
 
-  unifyWithEquivalence(equivalence, substitutions, generalContext, specificContext) {
+  unifyWithEquivalence(equivalence) {
     let unifiedWithEquivalence = false;
 
     return unifiedWithEquivalence;
-  }
-
-  unifyWithEquivalences(equivalences, substitutions, generalContext, specificContext) {
-    const unifiedWithEquivalences = equivalences.some((equivalence) => {
-      const substitutionUnifiedWithEquivalence = this.unifyWithEquivalence(equivalence, substitutions, generalContext, specificContext);
-
-      if (substitutionUnifiedWithEquivalence) {
-        return true;
-      }
-    });
-
-    return unifiedWithEquivalences;
   }
 }

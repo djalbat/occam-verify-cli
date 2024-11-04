@@ -41,7 +41,7 @@ export default domAssigned(class Reference {
   unifyLabel(label, substitutions, generalContext, specificContext) {
     let labelUnified;
 
-    const reference = this,
+    const reference = this, ///
           labelString = label.getString(),
           referenceString = reference.getString();
 
@@ -64,6 +64,15 @@ export default domAssigned(class Reference {
     const referenceString = this.getString(); ///
 
     context.trace(`Verifying the '${referenceString}' reference...`);
+
+    if (!verified) {
+      const reference = this, ///
+            rulePresent = context.isRulePresentByReference(reference),
+            metaLemmasMetaTheoremsPresent = context.areMetaLemmasMetaTheoremsPresentByReference(reference),
+            axiomLemmaTheoremConjecturePresent = context.isAxiomLemmaTheoremConjecturePresentByReference(reference);
+
+      verified = (rulePresent || metaLemmasMetaTheoremsPresent || axiomLemmaTheoremConjecturePresent);
+    }
 
     if (!verified) {
       const metaType = referenceMetaType, ///

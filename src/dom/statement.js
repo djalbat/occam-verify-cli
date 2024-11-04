@@ -3,7 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
-import unifyMixins from "../mixins/statement/unify";
 import verifyMixins from "../mixins/statement/verify";
 import combinatorVerifier from "../verifier/combinator";
 import StatementNodeAndTokens from "../nodeAndTokens/statement";
@@ -12,6 +11,7 @@ import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
+import { definedAssertionFromStatement, containedAssertionFromStatement } from "../utilities/verification";
 
 const { reverse } = arrayUtilities;
 
@@ -130,23 +130,34 @@ export default domAssigned(class Statement {
   }
 
   unifyIndependently(substitutions, generalContext, specificContext) {
-    let unifiedIndependently;
+    let unifiedIndependently = false;
 
-    const statementString = this.string;  ///
+    const context = specificContext,  ///
+          statement = this; ///
 
-    specificContext.trace(`Unifying the '${statementString}' statement independently...`);
+    const definedAssertion = definedAssertionFromStatement(statement, context),
+          containedAssertion = containedAssertionFromStatement(statement, context);
 
-    unifiedIndependently = unifyIndependentlyMixins.some((resolveMixin) => {
-      const statement = this, ///
-        unifiedIndependently = resolveMixin(statement, substitutions, generalContext, specificContext);
+    if ((definedAssertion !== null) || (containedAssertion !== null)) {
+      const statementString = this.string;
+
+      specificContext.trace(`Unifying the '${statementString}' statement independently...`);
+
+      if (definedAssertion !== null) {
+        const definedAssertionUnifiedIndependently = definedAssertion.unifyIndependently(substitutions, context);
+
+        unifiedIndependently = definedAssertionUnifiedIndependently; ///
+      }
+
+      if (containedAssertion !== null) {
+        const containedAssertionUnifiedIndependently = containedAssertion.unifyIndependently(substitutions, context);
+
+        unifiedIndependently = containedAssertionUnifiedIndependently; ///
+      }
 
       if (unifiedIndependently) {
-        return true;
+        specificContext.debug(`...unified the '${statementString}' statement independently.`);
       }
-    });
-
-    if (unifiedIndependently) {
-      specificContext.debug(`...unified the '${statementString}' statement independently.`);
     }
 
     return unifiedIndependently;
@@ -158,41 +169,15 @@ export default domAssigned(class Statement {
     proofSteps = reverse(proofSteps); ///
 
     unifiedWithProofSteps = proofSteps.some((proofStep) => {
-      const unifiedWithProofStep = this.unifyWithProofStep(proofStep, context);
+      const statement = this, ///
+            statementUnified =proofStep.unifyStatement(statement, context);
 
-      if (unifiedWithProofStep) {
+      if (statementUnified) {
         return true;
       }
     });
 
     return unifiedWithProofSteps;
-  }
-
-  unifyWithProofStep(proofStep, context) {
-    let unifiedWithProofStep = false;
-
-    const proofStepStatement = proofStep.getStatement();
-
-    debugger
-
-
-
-    return unifiedWithProofStep;
-  }
-
-  unify(assignments, stated, context) {
-    let unified;
-
-    unified = unifyMixins.some((unifyMixin) => {
-      const statement = this, ///
-            unified = unifyMixin(statement, assignments, stated, context);
-
-      if (unified) {
-        return true;
-      }
-    });
-
-    return unified;
   }
 
   verify(assignments, stated, context) {

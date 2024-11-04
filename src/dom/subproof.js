@@ -4,12 +4,12 @@ import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
 import LocalContext from "../context/local";
-import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { subproofStringFromSubproofNode } from "../utilities/subproof";
+import { subproofAssertionFromStatement } from "../utilities/verification";
 
 const { match } = arrayUtilities;
 
@@ -58,18 +58,30 @@ export default domAssigned(class Subproof {
     return statements;
   }
 
-  unifySubproofAssertion(subproofAssertion, context) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
+    let statementUnified = false;
+
+    const context = specificContext,  ///
+          subproofAssertion = subproofAssertionFromStatement(statement, context);
+
+    if (subproofAssertion !== null) {
+      const subproofAssertionUnified = this.unifySubproofAssertion(subproofAssertion, substitutions, generalContext, specificContext);
+
+      statementUnified = subproofAssertionUnified;  ///
+    }
+
+    return statementUnified;
+  }
+
+  unifySubproofAssertion(subproofAssertion, substitutions, generalContext, specificContext) {
     let subproofAssertionUnified;
 
     const subproofString = this.string,
           subproofAssertionString = subproofAssertion.getString();
 
-    context.trace(`Unifying the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof...`);
+    specificContext.trace(`Unifying the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof...`);
 
-    const specificContext = context, ///
-          generalContext = context, ///
-          substitutions = Substitutions.fromNothing(),
-          subproofStatements = this.getStatements(),
+    const subproofStatements = this.getStatements(),
           subproofAssertionStatements = subproofAssertion.getStatements();
 
     subproofAssertionUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
@@ -91,7 +103,7 @@ export default domAssigned(class Subproof {
     }
 
     if (subproofAssertionUnified) {
-      context.trace(`...unified the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof.`);
+      specificContext.trace(`...unified the '${subproofAssertionString}' subproof assertion with the '${subproofString}' subproof.`);
     }
 
     return subproofAssertionUnified;

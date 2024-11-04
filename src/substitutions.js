@@ -219,19 +219,6 @@ export default class Substitutions {
     context.trace(`Removed the ${substitutionString} substitution.`);
   }
 
-  unifyWithEquivalences(equivalences, context) {
-    const unifiedWithEquivalences = this.everySubstitution((substitution) => {
-      const substitutions = this, ///
-            substitutionUnifiedWithEquivalence = substitution.unifyWithEquivalences(equivalences, substitutions, context);
-
-      if (substitutionUnifiedWithEquivalence) {
-        return true;
-      }
-    });
-
-    return unifiedWithEquivalences;
-  }
-
   clear() {
     clear(this.array);
 
@@ -246,7 +233,7 @@ export default class Substitutions {
             complexSubstitutionsResolved = complexSubstitutions.everySubstitution((complexSubstitution) => {
               let resolved;
 
-              const substitutions = this,
+              const substitutions = this, ///
                     substitution = complexSubstitution; ///
 
               resolved = substitution.isResolved();

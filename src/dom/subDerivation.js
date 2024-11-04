@@ -6,7 +6,6 @@ import dom from "../dom";
 
 import { nodesQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
-import { assignAssignments } from "../utilities/assignments";
 
 const { last } = arrayUtilities;
 
@@ -31,36 +30,14 @@ export default domAssigned(class SubDerivation {
     let verified;
 
     verified = this.proofSteps.every((proofStep) => { ///
-      const proofStepVerified = this.verifyProofStep(proofStep, substitutions, context);
+      const proofStepVerifiedAndUnified = proofStep.verifyAndUnify(substitutions, context);
 
-      if (proofStepVerified) {
+      if (proofStepVerifiedAndUnified) {
         return true;
       }
     });
 
     return verified;
-  }
-
-  verifyProofStep(proofStep, substitutions, context) {
-    let proofStepVerified;
-
-    const assignments = [];
-
-    proofStepVerified = proofStep.verify(substitutions, assignments, context);
-
-    if (proofStepVerified) {
-      context.addProofStep(proofStep);
-
-      const proofStepUnified = proofStep.unify(substitutions, context);
-
-      proofStepVerified = proofStepUnified; ///
-
-      if (proofStepVerified) {
-        assignAssignments(assignments, context);
-      }
-    }
-
-    return proofStepVerified;
   }
 
   static name = "SubDerivation";

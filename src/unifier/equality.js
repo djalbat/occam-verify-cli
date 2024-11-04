@@ -3,7 +3,6 @@
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
-import { findEquivalenceByTermNodes } from "../utilities/equivalences";
 
 const termNodeQuery = nodeQuery("/term");
 
@@ -37,7 +36,7 @@ class EqualityUnifier extends Unifier {
                   leftTermNode,
                   rightTermNode
                 ],
-                equivalence = findEquivalenceByTermNodes(equivalences, termNodes);
+                equivalence = equivalences.findEquivalenceByTermNodes(termNodes);
 
           termUnifiedWithTerm = (equivalence !== null);
         }

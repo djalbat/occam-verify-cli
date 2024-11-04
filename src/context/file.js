@@ -2,6 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
+import Equivalences from "../equivalences";
 import Substitutions from "../substitutions";
 
 import { objectType } from "../dom/type";
@@ -87,7 +88,7 @@ export default class FileContext {
   }
 
   getEquivalences() {
-    const equivalences = []; ///
+    const equivalences = Equivalences.fromNothing();
 
     return equivalences;
   }
@@ -539,6 +540,16 @@ export default class FileContext {
     return metatheorems;
   }
 
+  findAxiomLemmaTheoremConjectureByReference(reference) {
+    const axiom = this.findAxiomByReference(reference),
+          lemma = this.findLemmaByReference(reference),
+          theorem = this.findTheoremByReference(reference),
+          conjecture = this.findConjectureByReference(reference),
+          axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
+
+    return axiomLemmaTheoremConjecture;
+  }
+
   findVariable(variable) {
     const specificVariable = variable,  ///
           variables = this.getVariables();
@@ -604,6 +615,13 @@ export default class FileContext {
     return metavariable;
   }
 
+  isRulePresentByReference(reference) {
+    const rule = this.findRuleByReference(reference),
+          rulePresent = (rule !== null);
+
+    return rulePresent;
+  }
+
   isAxiomPresentByReference(reference) {
     const axiom = this.findAxiomByReference(reference),
           axiomPresent = (axiom !== null);
@@ -632,7 +650,14 @@ export default class FileContext {
     return conjecturePresent;
   }
 
-  areMetaLemmaPresentByReference(reference) {
+  isAxiomLemmaTheoremConjecturePresentByReference(reference) {
+    const axiomLemmaTheoremConjecture = this.findAxiomLemmaTheoremConjectureByReference(reference),
+          axiomLemmaTheoremConjecturePresent = (axiomLemmaTheoremConjecture !== null);
+
+    return axiomLemmaTheoremConjecturePresent;
+  }
+
+  areMetaLemmasPresentByReference(reference) {
     const metaLemmas = this.findMetaLemmasByReference(reference),
           metaLemmasLength = metaLemmas.length,
           metaLemmasPresent = (metaLemmasLength > 0);
@@ -640,12 +665,20 @@ export default class FileContext {
     return metaLemmasPresent;
   }
 
-  areMetatheoremPresentByReference(reference) {
+  areMetatheoremsPresentByReference(reference) {
     const metatheorems = this.findMetatheoremsByReference(reference),
           metatheoremsLength = metatheorems.length, ///
           metatheoremsPresent = (metatheoremsLength > 0);
 
     return metatheoremsPresent;
+  }
+
+  areMetaLemmasMetaTheoremsPresentByReference(reference) {
+    const metaLemmasPresent = this.areMetaLemmasPresentByReference(reference),
+          metatheoremsPresent = this.areMetatheoremsPresentByReference(reference),
+          metaLemmasMetaTheoremsPresent = (metaLemmasPresent || metatheoremsPresent);
+
+    return metaLemmasMetaTheoremsPresent;
   }
 
   nodeAsString(node, tokens = null) {
@@ -749,7 +782,7 @@ export default class FileContext {
   error(message) { this.releaseContext.error(message, this.filePath); }
 
   initialise(json) {
-    const fileContext = this;
+    const fileContext = this; ///
 
     this.types = [];
 

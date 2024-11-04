@@ -1,13 +1,11 @@
 "use strict";
 
-const dom = WeakMap;
+const dom = {};
 
 export function domAssigned(Class) {
   const { name } = Class;
 
-  Object.assign(dom, {
-    [name]: Class
-  });
+  dom[name] = Class;
 
   return Class;
 }

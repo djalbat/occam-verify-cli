@@ -5,9 +5,10 @@ import { arrayUtilities } from "necessary";
 import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
+import { unifyStatement } from "../../utilities/unification";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
 
-const { front, last } = arrayUtilities;
+const { front, last, match } = arrayUtilities;
 
 const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion");
@@ -31,6 +32,42 @@ export default domAssigned(class SubproofAssertion {
     return this.statements;
   }
 
+  unifySubproof(subproof, substitutions, generalContext, specificContext) {
+    let subproofUnified;
+
+    const subproofString = subproof.getString(),
+          subproofAssertionString = this.string;  ///
+
+    specificContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
+
+    const subproofStatements = subproof.getStatements(),
+          subproofAssertionStatements = this.statements;  ///
+
+    subproofUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
+      const generalStatement = subproofStatement,  ///
+            specificStatement = subproofAssertionStatement,  ///
+            statementUnified = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+
+      if (statementUnified) {
+        return true;
+      }
+    });
+
+    if (subproofUnified) {
+      const substitutionsLength = substitutions.getLength();
+
+      if (substitutionsLength > 0) {
+        subproofUnified = false;
+      }
+    }
+
+    if (subproofUnified) {
+      specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
+    }
+
+    return subproofUnified;
+  }
+
   verify(assignments, stated, context) {
     let verified;
 
@@ -40,20 +77,7 @@ export default domAssigned(class SubproofAssertion {
 
     const statementsVerified = this.verifyStatements(assignments, stated, context);
 
-    if (statementsVerified) {
-      let verifiedWhenStated = false,
-          verifiedWhenDerived = false;
-
-      if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(context);
-      } else {
-        verifiedWhenDerived = this.verifyWhenDerived(context);
-      }
-
-      if (verifiedWhenStated || verifiedWhenDerived) {
-        verified = true; ///
-      }
-    }
+    verified = statementsVerified;  ///
 
     if (verified) {
       context.debug(`...verified the '${subproofAssertionString}' subproof assertion.`);
@@ -76,47 +100,6 @@ export default domAssigned(class SubproofAssertion {
     });
 
     return statementsVerified;
-  }
-
-  verifyWhenStated(context) {
-    let verifiedWhenStated;
-
-    const subproofAssertionString = this.string;  ///
-
-    context.trace(`Verifying the '${subproofAssertionString}' stated subproof assertion...`);
-
-    verifiedWhenStated = true;
-
-    if (verifiedWhenStated) {
-      context.debug(`...verified the '${subproofAssertionString}' stated subproof assertion.`);
-    }
-
-    return verifiedWhenStated;
-  }
-
-  verifyWhenDerived(context) {
-    let derivedSubproofAssertionVerified;
-
-    const subproofAssertionString = this.string;  ///
-
-    context.trace(`Verifying the '${subproofAssertionString}' derived subproof assertion...`);
-
-    const proofSteps = context.getProofSteps();
-
-    derivedSubproofAssertionVerified = proofSteps.some((proofStep) => {
-      const subproofAssertion = this,
-            subproofAssertionUnified = proofStep.unifySubproofAssertion(subproofAssertion, context);
-
-      if (subproofAssertionUnified) {
-        return true;
-      }
-    });
-
-    if (derivedSubproofAssertionVerified) {
-      context.debug(`...verified the '${subproofAssertionString}' derived subproof assertion.`);
-    }
-
-    return derivedSubproofAssertionVerified;
   }
 
   static name = "SubproofAssertion";

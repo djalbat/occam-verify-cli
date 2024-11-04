@@ -1,5 +1,7 @@
 "use strict";
 
+import BracketedCombinator from "../../combinator/bracketed";
+
 import { equalityFromStatement,
          judgementFromStatement,
          metavariableFromStatement,
@@ -162,6 +164,34 @@ function verifyAsSubproofAssertion(statement, assignments, stated, context) {
   return verifiedAsSubproofAssertion;
 }
 
+function unifyWithBracketedCombinator(statement, assignments, stated, context) {
+  stated = true;  ///
+
+  assignments = null; ///
+
+  const bracketedCombinator = BracketedCombinator.fromNothing(),
+        unifiedWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
+
+  return unifiedWithBracketedCombinator;
+}
+
+function unifyWithCombinators(statement, assignments, stated, context) {
+  stated = true;  ///
+
+  assignments = null; ///
+
+  const combinators = context.getCombinators(),
+        unifiedWithCombinators = combinators.some((combinator) => {
+          const unifiedWithCombinator = combinator.unifyStatement(statement, assignments, stated, context);
+
+          if (unifiedWithCombinator) {
+            return true;
+          }
+        });
+
+  return unifiedWithCombinators;
+}
+
 const verifyMixins = [
   verifyAsMetavariable,
   verifyAsEquality,
@@ -169,7 +199,9 @@ const verifyMixins = [
   verifyAsTypeAssertion,
   verifyAsDefinedAssertion,
   verifyAsSubproofAssertion,
-  verifyAsContainedAssertion
+  verifyAsContainedAssertion,
+  unifyWithBracketedCombinator,
+  unifyWithCombinators
 ];
 
 export default verifyMixins;

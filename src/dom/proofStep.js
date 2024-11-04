@@ -5,6 +5,7 @@ import unifyMixins from "../mixins/proofStep/unify";
 import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
+import { assignAssignments } from "../utilities/assignments";
 
 export default domAssigned(class ProofStep {
   constructor(string, subproof, statement, reference) {
@@ -37,12 +38,16 @@ export default domAssigned(class ProofStep {
   }
 
   unify(substitutions, context) {
-    let unified = false;
+    let unified;
+
+    if (this.subproof !== null) {
+      unified = true; ///
+    }
 
     if (this.statement !== null) {
       const proofStepString = this.string;  ///
 
-      context.trace(`Unifying the '${proofStepString}' proof step's statement...`);
+      context.trace(`Unifying the '${proofStepString}' proof step...`);
 
       unified = unifyMixins.some((unifyMixin) => {
         const unified = unifyMixin(this.statement, this.reference, substitutions, context);
@@ -53,7 +58,7 @@ export default domAssigned(class ProofStep {
       });
 
       if (unified) {
-        context.debug(`...unified the '${proofStepString}' proof step's statement.`);
+        context.debug(`...unified the '${proofStepString}' proof step.`);
       }
     }
 
@@ -63,7 +68,7 @@ export default domAssigned(class ProofStep {
   unifyStatement(statement, context) {
     let statementUnified;
 
-    const statementString = this.statement.getString();
+    const statementString = statement.getString();
 
     context.trace(`Unifying the '${statementString}' statement...`);
 
@@ -71,10 +76,23 @@ export default domAssigned(class ProofStep {
           generalContext = context, ///
           substitutions = Substitutions.fromNothing();
 
-    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    if (this.subproof !== null) {
+      statementUnified = this.subproof.unifyStatement(statement, substitutions, generalContext, specificContext);
+    }
+
+    if (this.statement !== null) {
+      statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    }
 
     if (statementUnified) {
-      context.debug(`...unified the '${statementString}' statement.`);
+      const equivalences = context.getEquivalences(),
+            substitutionsUnified = equivalences.unifySubstitutions(substitutions);
+
+      statementUnified = substitutionsUnified;  ///
+    }
+
+    if (statementUnified) {
+      context.debug(`,..unified the '${statementString}' statement.`);
     }
 
     return statementUnified;
@@ -90,6 +108,29 @@ export default domAssigned(class ProofStep {
     return subproofAssertionUnified;
   }
 
+  verifyAndUnify(substitutions, context) {
+    let verifiedAndUnified = false;
+
+    const assignments = [],
+          verified = this.verify(substitutions, assignments, context);
+
+    if (verified) {
+      const unified = this.unify(substitutions, context);
+
+      if (unified) {
+        const proofStep = this; ///
+
+        assignAssignments(assignments, context);
+
+        context.addProofStep(proofStep);
+      }
+
+      verifiedAndUnified = unified; ///
+    }
+
+    return verifiedAndUnified;
+  }
+
   verify(substitutions, assignments, context) {
     let verified = false;
 
@@ -100,28 +141,18 @@ export default domAssigned(class ProofStep {
 
       verified = subproofVerified;  ///
     } else if (this.statement !== null) {
-      const proofStepString = this.string;  ///
-
-      context.trace(`Verifying the '${proofStepString}' proof step's statement...`);
-
       const qualified = this.isQualified(),
-            stated = qualified; ///
+            stated = qualified, ///
+            statementVerified = this.statement.verify(assignments, stated, context);
 
-      if (!verified) {
-        const statementVerified = this.statement.verify(assignments, stated, context);
+      if (statementVerified) {
+        if (this.reference === null) {
+          verified = true;
+        } else {
+          const referenceVerified = this.reference.verify(context);
 
-        verified = statementVerified; ///
-      }
-
-      if (!verified) {
-        const assignments = null,
-              statementUnified = this.statement.unify(assignments, stated, context);
-
-        verified = statementUnified; ///
-      }
-
-      if (verified) {
-        context.debug(`...verified the '${proofStepString}' proof step's statement.`);
+          verified = referenceVerified; ///
+        }
       }
     } else {
       const proofStepString = this.string;

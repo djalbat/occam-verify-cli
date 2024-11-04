@@ -48,19 +48,10 @@ export  default domAssigned(class Conclusion {
       context.trace(`Verifying the '${conclusionString}' conclusion...`);
 
       const stated = true,
-            assignments = null;
+            assignments = null,
+            statementVerified = this.statement.verify(assignments, stated, context);
 
-      if (!verified) {
-        const statementVerified = this.statement.verify(assignments, stated, context);
-
-        verified = statementVerified; ///
-      }
-
-      if (!verified) {
-        const statementUnified = this.statement.unify(assignments, stated, context);
-
-        verified = statementUnified; ///
-      }
+      verified = statementVerified; ///
 
       if (verified) {
         context.debug(`...verified the '${conclusionString}' conclusion.`);

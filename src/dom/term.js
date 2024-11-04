@@ -3,7 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
-import unifyMixins from "../mixins/term/unify";
 import verifyMixins from "../mixins/term/verify";
 import constructorVerifier from "../verifier/constructor";
 
@@ -128,34 +127,20 @@ export default domAssigned(class Term {
   }
 
   verify(context, verifyAhead) {
-    let verified = false;
+    let verified;
 
     const term = this, ///
           termString = this.string;  ///
 
     context.trace(`Verifying the '${termString}' term...`);
 
-    if (!verified) {
-      verified = verifyMixins.some((verifyMixin) => {
-        const verified = verifyMixin(term, context, verifyAhead);
+    verified = verifyMixins.some((verifyMixin) => {
+      const verified = verifyMixin(term, context, verifyAhead);
 
-        if (verified) {
-          return true;
-        }
-      });
-    }
-
-    if (!verified) {
-      const unified = unifyMixins.some((unifyMixin) => { ///
-        const unified = unifyMixin(term, context, verifyAhead);
-
-        if (unified) {
-          return true;
-        }
-      });
-
-      verified = unified; ///
-    }
+      if (verified) {
+        return true;
+      }
+    });
 
     if (verified) {
       context.debug(`...verified the '${termString}' term.`);

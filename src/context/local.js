@@ -3,8 +3,7 @@
 import { arrayUtilities } from "necessary";
 
 import Equivalence from "../equivalence";
-
-import { mergeEquivalences, findEquivalenceByTerm, groundedTermsAndDefinedVariablesFromFromEquivalences } from "../utilities/equivalences";
+import Equivalences from "../equivalences";
 
 const { last } = arrayUtilities;
 
@@ -68,10 +67,7 @@ class LocalContext {
   getEquivalences() {
     let equivalences = this.context.getEquivalences();
 
-    const equivalencesA = this.equivalences, ///
-          equivalencesB = equivalences;
-
-    equivalences = mergeEquivalences(equivalencesA, equivalencesB); ///
+    equivalences = this.equivalences.mergedWith(equivalences);  ///
 
     return equivalences;
   }
@@ -116,8 +112,8 @@ class LocalContext {
     } else {
       const leftTerm = equality.getLeftTerm(),
             rightTerm = equality.getRightTerm(),
-            leftEquivalence = findEquivalenceByTerm(this.equivalences, leftTerm),
-            rightEquivalence = findEquivalenceByTerm(this.equivalences, rightTerm);
+            leftEquivalence = this.equivalences.findEquivalenceByTerm(leftTerm),
+            rightEquivalence = this.equivalences.findEquivalenceByTerm(rightTerm);
 
       if (false) {
         ///
@@ -143,9 +139,9 @@ class LocalContext {
         } else {
           equivalence = Equivalence.merge(leftEquivalence, rightEquivalence);
 
-          this.removeEquivalence(leftEquivalence);
+          this.removeEquivalence(leftEquivalence, context);
 
-          this.removeEquivalence(rightEquivalence);
+          this.removeEquivalence(rightEquivalence, context);
 
           this.addEquivalence(equivalence);
         }
@@ -180,21 +176,9 @@ class LocalContext {
     this.proofSteps.push(proofStep);
   }
 
-  addEquivalence(equivalence, context) {
-    const equivalenceString = equivalence.asString();
+  addEquivalence(equivalence, context) { return this.equivalences.addEquivalence(equivalence, context); }
 
-    context.trace(`Added the '${equivalenceString}' equivalence.`);
-
-    this.equivalences.push(equivalence);
-  }
-
-  removeEquivalence(equivalence) {
-    const index = this.equivalences.indexOf(equivalence),
-          start = index,  ///
-          deleteCount = 1;
-
-    this.equivalences.splice(start, deleteCount);
-  }
+  removeEquivalence(equivalence, context) { return this.equivalences.removeEquivalence(equivalence, context); }
 
   addJudgement(judgement) {
     let judgementAdded = false;
@@ -215,7 +199,7 @@ class LocalContext {
     let termType;
 
     const equivalences = this.getEquivalences(),
-          equivalence = findEquivalenceByTerm(equivalences, term);
+          equivalence = equivalences.findEquivalenceByTerm(term);
 
     if (equivalence !== null) {
       const LocalContext = this,  ///
@@ -230,12 +214,12 @@ class LocalContext {
   }
 
   isTermGrounded(term) {
-    const context = this,
+    const context = this, ///
           equivalences = this.getEquivalences(),
           groundedTerms = [],
           definedVariables = [];
 
-    groundedTermsAndDefinedVariablesFromFromEquivalences(equivalences, groundedTerms, definedVariables, context);
+    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
 
     const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
             const groundedTermNode = groundedTerm.getNode(),
@@ -251,12 +235,12 @@ class LocalContext {
   }
 
   isVariableDefined(variable) {
-    const context = this,
+    const context = this, ///
           equivalences = this.getEquivalences(),
           groundedTerms = [],
           definedVariables = [];
 
-    groundedTermsAndDefinedVariablesFromFromEquivalences(equivalences, groundedTerms, definedVariables, context);
+    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
 
     const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
             const definedVariableEqualToVariable = definedVariable.isEqualTo(variable);
@@ -353,6 +337,10 @@ class LocalContext {
 
   findMetatheoremsByReference(reference) { return this.context.findMetatheoremsByReference(reference); }
 
+  findAxiomLemmaTheoremConjectureByReference(reference) { return this.context.findAxiomLemmaTheoremConjectureByReference(reference); }
+
+  isRulePresentByReference(reference) { return this.context.isRulePresentByReference(reference); }
+
   isAxiomPresentByReference(reference) { return this.context.isAxiomPresentByReference(reference); }
 
   isLemmaPresentByReference(reference) { return this.context.isLemmaPresentByReference(reference); }
@@ -361,9 +349,13 @@ class LocalContext {
 
   isConjecturePresentByReference(reference) { return this.context.isConjecturePresentByReference(reference); }
 
-  areMetaLemmaPresentByReference(reference) { return this.context.areMetaLemmaPresentByReference(reference); }
+  areMetaLemmasPresentByReference(reference) { return this.context.areMetaLemmasPresentByReference(reference); }
 
-  areMetatheoremPresentByReference(reference) { return this.context.areMetatheoremPresentByReference(reference); }
+  areMetatheoremsPresentByReference(reference) { return this.context.areMetatheoremsPresentByReference(reference); }
+
+  areMetaLemmasMetaTheoremsPresentByReference(reference) { return this.context.areMetaLemmasMetaTheoremsPresentByReference(reference); }
+
+  isAxiomLemmaTheoremConjecturePresentByReference(reference) { return this.context.isAxiomLemmaTheoremConjecturePresentByReference(reference) }
 
   nodeAsString(node, tokens = null) {
     if (tokens === null) {
@@ -422,7 +414,7 @@ class LocalContext {
           variables = [],
           proofSteps = [],
           judgements = [],
-          equivalences = [],
+          equivalences = Equivalences.fromNothing(),
           localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);
 
     return localContext;
@@ -434,7 +426,7 @@ class LocalContext {
           variables = [],
           proofSteps = [],
           judgements = [],
-          equivalences = [],
+          equivalences = Equivalences.fromNothing(),
           localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);
 
     return localContext;
@@ -444,7 +436,7 @@ class LocalContext {
     const variables = [],
           proofSteps = [],
           judgements = [],
-          equivalences = [],
+          equivalences = Equivalences.fromNothing(),
           localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);
 
     return localContext;
