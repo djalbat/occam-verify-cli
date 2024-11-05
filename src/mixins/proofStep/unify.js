@@ -2,7 +2,7 @@
 
 import StatementSubstitution from "../../substitution/statement";
 
-import { equalityFromStatement, typeAssertionFromStatement } from "../../utilities/verification";
+import { equalityFromStatement, judgementFromStatement, typeAssertionFromStatement } from "../../utilities/verification";
 
 function unifyAWithRule(statement, reference, substitutions, context) {
   let unifiedWithRule = false;
@@ -113,6 +113,26 @@ function unifyAsEquality(statement, reference, substitutions, context) {
   return unifiedAsEquality;
 }
 
+function unifyAsJudgement(statement, reference, substitutions, context) {
+  let unifiedAsJudgement = false;
+
+  if (reference === null) {
+    const judgement = judgementFromStatement(statement, context);
+
+    if (judgement !== null) {
+      const statementString = statement.getString();
+
+      context.trace(`Unifying the '${statementString}' statement as a judgement...`);
+
+      unifiedAsJudgement = true;
+
+      context.debug(`...unified the '${statementString}' statement as a judgement.`);
+    }
+  }
+
+  return unifiedAsJudgement;
+}
+
 function unifyAsTypeAssertion(statement, reference, substitutions, context) {
   let unifiedAsTypeAssertion = false;
 
@@ -151,6 +171,7 @@ const unifyMixins = [
   unifyAWithReference,
   unifyAWithAxiomLemmaTheoremOrConjecture,
   unifyAsEquality,
+  unifyAsJudgement,
   unifyAsTypeAssertion,
   unifyWithProofSteps
 ];

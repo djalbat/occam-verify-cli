@@ -127,13 +127,13 @@ export default domAssigned(class Term {
   verify(context, verifyAhead) {
     let verified;
 
-    const term = this, ///
-          termString = this.string;  ///
+    const termString = this.string;  ///
 
     context.trace(`Verifying the '${termString}' term...`);
 
     verified = verifyMixins.some((verifyMixin) => {
-      const verified = verifyMixin(term, context, verifyAhead);
+      const term = this, ///
+            verified = verifyMixin(term, context, verifyAhead);
 
       if (verified) {
         return true;

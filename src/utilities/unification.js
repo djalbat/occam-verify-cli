@@ -5,6 +5,7 @@ import labelUnifier from "../unifier/label";
 import equalityUnifier from "../unifier/equality";
 import metaLevelUnifier from "../unifier/metaLevel";
 import metavariableUnifier from "../unifier/metavariable";
+import intrinsicLevelUnifier from "../unifier/intrinsicLevel";
 import termWithConstructorUnifier from "../unifier/termWithConstructor";
 import statementWithCombinatorUnifier from "../unifier/statementWithCombinator";
 
@@ -132,6 +133,23 @@ export function unifyStatementWithCombinator(statement, combinator, assignments,
   statementUnifiedWithCombinator = statementWithCombinatorUnifier.unify(combinatorStatementNode, statementNode, assignments, stated, generalContext, specificContext);
 
   return statementUnifiedWithCombinator;
+}
+
+export function unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext) {
+  let metavariableUnifiedIntrinsically;
+
+  const generalMetavariableNode = generalMetavariable.getNode(),
+        specificMetavariableNode = specificMetavariable.getNode(),
+        generalMetavariableTokens = generalMetavariable.getTokens(),
+        specificMetavariableTokens = specificMetavariable.getTokens();
+
+  generalContext = contextFromTokens(generalMetavariableTokens, generalContext); ///
+
+  specificContext = contextFromTokens(specificMetavariableTokens, specificContext); ///
+
+  metavariableUnifiedIntrinsically = intrinsicLevelUnifier.unify(generalMetavariableNode, specificMetavariableNode, substitutions, generalContext, specificContext);
+
+  return metavariableUnifiedIntrinsically;
 }
 
 function contextFromTokens(tokens, context) {

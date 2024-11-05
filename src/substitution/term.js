@@ -5,7 +5,7 @@ import Substitution from "../substitution";
 import TermSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/term";
 
 import { nodeQuery } from "../utilities/query";
-import { stripBracketsFromTerm } from "../utilities/verification";
+import { stripBracketsFromTerm } from "../utilities/brackets";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
 
 const termNodeQuery = nodeQuery("/termSubstitution/term[0]"),

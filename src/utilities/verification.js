@@ -3,38 +3,14 @@
 import dom from "../dom";
 import LocalContext from "../context/local";
 
-import { bracketedTermChildNodeFromTermNode, bracketedStatementChildNodeFromStatementNode } from "../utilities/brackets";
+export function metavariableFromFrame(frame, context) {
+  context = contextFromFrame(frame, context); ///
 
-export function stripBracketsFromTerm(term, context) {
-  const termNode = term.getNode(),
-        bracketedTermChildNode = bracketedTermChildNodeFromTermNode(termNode);
+  const { Metavariable } = dom,
+        frameNode = frame.getNode(),
+        metavariable = Metavariable.fromFrameNode(frameNode, context);
 
-  if (bracketedTermChildNode !== null) {
-    context = contextFromTerm(term, context); ///
-
-    const { Term } = dom,
-          termNode = bracketedTermChildNode;  ///
-
-    term = Term.fromStatementNode(termNode, context);
-  }
-
-  return term;
-}
-
-export function stripBracketsFromStatement(statement, context) {
-  const statementNode = statement.getNode(),
-        bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
-
-  if (bracketedStatementChildNode !== null) {
-    context = contextFromStatement(statement, context); ///
-
-    const { Statement } = dom,
-          statementNode = bracketedStatementChildNode;  ///
-
-    statement = Statement.fromStatementNode(statementNode, context);
-  }
-
-  return statement;
+  return metavariable;
 }
 
 export function equalityFromStatement(statement, context) {
@@ -105,6 +81,16 @@ export function containedAssertionFromStatement(statement, context) {
         containedAssertion = ContainedAssertion.fromStatementNode(statementNode, context);
 
   return containedAssertion;
+}
+
+function contextFromFrame(frame, context) {
+  const frameTokens = frame.getTokens(),
+        tokens = frameTokens, ///
+        localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+  context = localContext; ///
+
+  return context;
 }
 
 function contextFromStatement(statement, context) {

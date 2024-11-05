@@ -5,7 +5,7 @@ import Substitutions from "../substitutions";
 import StatementSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/statement";
 
 import { unifySubstitution } from "../utilities/unification";
-import { stripBracketsFromStatement } from "../utilities/verification";
+import { stripBracketsFromStatement } from "../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default class StatementSubstitution extends Substitution {

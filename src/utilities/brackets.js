@@ -1,5 +1,7 @@
 "use strict";
 
+import dom from "../dom";
+import LocalContext from "../context/local";
 import combinatorBracketedContext from "../context/bracketed/combinator";
 import constructorBracketedContext from "../context/bracketed/constructor";
 
@@ -8,6 +10,36 @@ import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
 
 const bracketedTermChildNodeQuery = nodeQuery("/term/argument/term"),
       bracketedStatementChildNodeQuery = nodeQuery("/statement/metaArgument/statement");
+
+export function stripBracketsFromTerm(term, context) {
+  const termNode = term.getNode(),
+        bracketedTermChildNode = bracketedTermChildNodeFromTermNode(termNode);
+
+  if (bracketedTermChildNode !== null) {
+    const { Term } = dom,
+          termNode = bracketedTermChildNode;  ///
+
+    term = Term.fromStatementNode(termNode, context);
+  }
+
+  return term;
+}
+
+export function stripBracketsFromStatement(statement, context) {
+  const statementNode = statement.getNode(),
+        bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
+
+  if (bracketedStatementChildNode !== null) {
+    context = contextFromStatement(statement, context); ///
+
+    const { Statement } = dom,
+          statementNode = bracketedStatementChildNode;  ///
+
+    statement = Statement.fromStatementNode(statementNode, context);
+  }
+
+  return statement;
+}
 
 export function stripBracketsFromTermNode(termNode) {
   const bracketedTermChildNode = bracketedTermChildNodeFromTermNode(termNode);
@@ -55,4 +87,14 @@ export function bracketedStatementChildNodeFromStatementNode(statementNode) {
   }
 
   return bracketedStatementChildNode;
+}
+
+function contextFromStatement(statement, context) {
+  const statementTokens = statement.getTokens(),
+    tokens = statementTokens, ///
+    localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+  context = localContext; ///
+
+  return context;
 }

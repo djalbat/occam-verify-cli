@@ -210,6 +210,10 @@ export default domAssigned(class Statement {
   verify(assignments, stated, context) {
     let verified;
 
+    const statementString = this.string;  ///
+
+    context.trace(`Verifying the '${statementString}' statement...`);
+
     verified = verifyMixins.some((verifyMixin) => {
       const statement = this, ///
             verified = verifyMixin(statement, assignments, stated, context);
@@ -218,6 +222,10 @@ export default domAssigned(class Statement {
         return true;
       }
     });
+
+    if (verified) {
+      context.debug(`...verified the '${statementString}' statement.`);
+    }
 
     return verified;
   }
