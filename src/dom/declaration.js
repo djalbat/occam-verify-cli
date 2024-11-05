@@ -6,8 +6,7 @@ import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 
-const referenceNodeQuery = nodeQuery("/declaration/reference"),
-      statementNodeQuery = nodeQuery("/declaration/statement");
+const statementNodeQuery = nodeQuery("/declaration/statement");
 
 export default domAssigned(class Declaration {
   constructor(string, reference, statement) {
@@ -301,15 +300,14 @@ export default domAssigned(class Declaration {
     let declaration = null;
 
     if (declarationNode !== null) {
-      const { Statement } = dom,
-            referenceNode = referenceNodeQuery(declarationNode);
+      const { Statement } = dom;
 
       let statementNode = statementNodeQuery(declarationNode);
 
       statementNode = stripBracketsFromStatementNode(statementNode);  ///
 
       const { Reference } = dom,
-            reference = Reference.fromReferenceNode(referenceNode, context),
+            reference = Reference.fromDeclarationNode(declarationNode, context),
             statement = Statement.fromStatementNode(statementNode, context),
             node = declarationNode,  ///
             string = context.nodeAsString(node);

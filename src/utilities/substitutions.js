@@ -10,6 +10,8 @@ export function termFromTermAndSubstitutions(term, substitutions, context) {
           termNode = term.getNode(),
           variable = Variable.fromTermNode(termNode, context);
 
+    term = null;  ///
+
     if (variable !== null) {
       const substitution = substitutions.findSubstitutionByVariable(variable);
 
@@ -27,6 +29,8 @@ export function frameFromFrameAndSubstitutions(frame, substitutions, context) {
     const { Metavariable } = dom,
           frameNode = frame.getNode(),
           metavariable = Metavariable.fromFrameNode(frameNode, context);
+
+    frame = null; ///
 
     if (metavariable !== null) {
       let substitution = null;

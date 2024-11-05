@@ -3,7 +3,7 @@
 import dom from "../dom";
 import LocalContext from "../context/local";
 
-import { bracketedStatementChildNodeFromStatementNode } from "../utilities/brackets";
+import { bracketedTermChildNodeFromTermNode, bracketedStatementChildNodeFromStatementNode } from "../utilities/brackets";
 
 export function stripBracketsFromTerm(term, context) {
   const termNode = term.getNode(),

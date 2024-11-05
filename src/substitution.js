@@ -106,7 +106,7 @@ export default class Substitution {
   }
 
   isSubstitutionEqualTo(substitution) {
-    const substitutionEqualTo = false;
+    const substitutionEqualTo = (substitution === null);
 
     return substitutionEqualTo;
   }

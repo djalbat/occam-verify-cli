@@ -9,7 +9,8 @@ import { referenceMetaType } from "../dom/metaType";
 import { unifyLabelWithReference } from "../utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
-const referenceNodeQuery = nodeQuery("/proofStep|lastProofStep/reference");
+const proofStepReferenceNodeQuery = nodeQuery("/proofStep|lastProofStep/reference"),
+      declarationReferenceNodeQuery = nodeQuery("/declaration/reference");
 
 export default domAssigned(class Reference {
   constructor(metavariable) {
@@ -122,10 +123,29 @@ export default domAssigned(class Reference {
   static fromProofStepNode(proofStepNode, fileContext) {
     let reference = null;
 
-    const referenceNode = referenceNodeQuery(proofStepNode);
+    const proofStepReferenceNode = proofStepReferenceNodeQuery(proofStepNode);
 
-    if (referenceNode !== null) {
+    if (proofStepReferenceNode !== null) {
       const { Metavariable } = dom,
+            referenceNode = proofStepReferenceNode, ///
+            localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext, ///
+            metavariable = Metavariable.fromReferenceNode(referenceNode, context);
+
+      reference = new Reference(metavariable);
+    }
+
+    return reference;
+  }
+
+  static fromDeclarationNode(declarationNode, fileContext) {
+    let reference = null;
+
+    const declarationReferenceNode = declarationReferenceNodeQuery(declarationNode);
+
+    if (declarationReferenceNode !== null) {
+      const { Metavariable } = dom,
+            referenceNode = declarationReferenceNode, ///
             localContext = LocalContext.fromFileContext(fileContext),
             context = localContext, ///
             metavariable = Metavariable.fromReferenceNode(referenceNode, context);

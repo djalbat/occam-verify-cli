@@ -16,7 +16,7 @@ export default class Equivalence {
 
   addTerm(term, context) {
     const termString = term.getString(),
-          equivalenceString = this.asString();  ///
+          equivalenceString = this.getString();
 
     context.trace(`Adding the '${termString}' term to the '${equivalenceString}' equivalence.`);
 
@@ -186,7 +186,7 @@ export default class Equivalence {
     return implicitlyGroundedTerms;
   }
 
-  asString() {
+  getString() {
     let string;
 
     string = this.terms.reduce((string, term) => {
