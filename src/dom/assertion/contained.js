@@ -1,5 +1,6 @@
 "use strict";
 
+import dom from "../../dom";
 import LocalContext from "../../context/local";
 
 import { nodeQuery } from "../../utilities/query";
