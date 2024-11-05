@@ -2,6 +2,28 @@
 
 import StatementSubstitution from "../../substitution/statement";
 
+import { equalityFromStatement } from "../../utilities/verification";
+
+function unifyAsEquality(statement, reference, substitutions, context) {
+  let unifiedAsEquality = false;
+
+  if (reference === null) {
+    const equality = equalityFromStatement(statement, context);
+
+    if (equality !== null) {
+      const statementString = statement.getString();
+
+      context.trace(`Unifying the '${statementString}' statement as an equality...`);
+
+      unifiedAsEquality = true;
+
+      context.debug(`...unified the '${statementString}' statement as an equality.`);
+    }
+  }
+
+  return unifiedAsEquality;
+}
+
 function unifyAWithRule(statement, reference, substitutions, context) {
   let unifiedWithRule = false;
 
@@ -105,6 +127,7 @@ function unifyWithProofSteps(statement, reference, substitutions, context) {
 }
 
 const unifyMixins = [
+  unifyAsEquality,
   unifyAWithRule,
   unifyAWithReference,
   unifyAWithAxiomLemmaTheoremOrConjecture,

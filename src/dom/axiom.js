@@ -27,7 +27,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return verified;
   }
 
-  static name = "TopLevelAssertion";
+  static name = "Axiom";
 
   static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Axiom, json, fileContext); }
 

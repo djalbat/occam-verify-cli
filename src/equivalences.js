@@ -73,7 +73,7 @@ export default class Equivalences {
     return equivalence;
   }
 
-  findEquivalenceByTerm(equivalences, term) {
+  findEquivalenceByTerm(term) {
     const equivalence = this.array.find((equivalence) => {
       const termEquates = equivalence.equateTerm(term);
 
@@ -85,7 +85,7 @@ export default class Equivalences {
     return equivalence;
   }
 
-  findEquivalenceByTermNodes(equivalences, termNodes) {
+  findEquivalenceByTermNodes(termNodes) {
     const equivalence = this.array.find((equivalence) => {
       const equivalenceMatchesTerms = equivalence.matchTermNodes(termNodes);
 

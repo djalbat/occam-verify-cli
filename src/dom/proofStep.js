@@ -102,14 +102,16 @@ export default domAssigned(class ProofStep {
       const unified = this.unify(substitutions, context);
 
       if (unified) {
-        const proofStep = this; ///
+        const assignmentsAssigned = assignAssignments(assignments, context);
 
-        assignAssignments(assignments, context);
+        if (assignmentsAssigned) {
+          const proofStep = this; ///
 
-        context.addProofStep(proofStep);
+          context.addProofStep(proofStep);
+
+          verifiedAndUnified = true; ///
+        }
       }
-
-      verifiedAndUnified = unified; ///
     }
 
     return verifiedAndUnified;
