@@ -173,6 +173,8 @@ export default class TopLevelAssertion {
   }
 
   unifyProofStepsWithSuppositions(proofSteps, substitutions, generalContext, specificContext) {
+    proofSteps = reverse(proofSteps); ///
+
     const proofStepsUnifiedWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
       const proofStepsUnifiedWithSupposition = this.unifyProofStepsWithSupposition(proofSteps, supposition, substitutions, generalContext, specificContext);
 
@@ -192,8 +194,6 @@ export default class TopLevelAssertion {
     if (suppositionUnifiedIndependently) {
       proofStepsUnifiedWithSupposition = true;
     } else {
-      proofSteps = reverse(proofSteps); ///
-
       const proofStep = extract(proofSteps, (proofStep) => {
         const proofStepUnified = supposition.unifyProofStep(proofStep, substitutions, generalContext, specificContext);
 
@@ -320,7 +320,7 @@ export function stringFromLabels(labels) {
 
     string = (string === EMPTY_STRING) ?
                labelString: ///
-                 `${labelString}, ${labelString}`;
+                 `${string}, ${labelString}`;
 
     return string;
   }, EMPTY_STRING);

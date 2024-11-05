@@ -24,18 +24,9 @@ export default domAssigned(class Supposition {
   unifyIndependently(substitutions, generalContext, specificContext) {
     let unifiedIndependently;
 
-    const supposition = this, ///
-          suppositionString = supposition.getString();
-
-    specificContext.trace(`Unifying the '${suppositionString}' supposition independently...`);
-
     const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
 
     unifiedIndependently = statementResolvedIndependently;  ///
-
-    if (unifiedIndependently) {
-      specificContext.trace(`...unified the '${suppositionString}' supposition independently.`);
-    }
 
     return unifiedIndependently;
   }
@@ -62,8 +53,6 @@ export default domAssigned(class Supposition {
 
     if (proofStepUnified) {
       substitutions.resolve(generalContext, specificContext);
-
-      proofStepUnified = true;
     }
 
     const context = specificContext;  ///

@@ -24,18 +24,9 @@ export default domAssigned(class Premise {
   unifyIndependently(substitutions, generalContext, specificContext) {
     let unifiedIndependently;
 
-    const premise = this, ///
-          premiseString = premise.getString();
-
-    specificContext.trace(`Unifying the '${premiseString}' premise independently...`);
-
     const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
 
     unifiedIndependently = statementResolvedIndependently;  ///
-
-    if (unifiedIndependently) {
-      specificContext.trace(`...unified the '${premiseString}' premise independently.`);
-    }
 
     return unifiedIndependently;
   }
@@ -62,8 +53,6 @@ export default domAssigned(class Premise {
 
     if (proofStepUnified) {
       substitutions.resolve(generalContext, specificContext);
-
-      proofStepUnified = true;
     }
 
     const context = specificContext;  ///

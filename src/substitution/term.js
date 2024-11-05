@@ -5,6 +5,7 @@ import Substitution from "../substitution";
 import TermSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/term";
 
 import { nodeQuery } from "../utilities/query";
+import { stripBracketsFromTerm } from "../utilities/verification";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
 
 const termNodeQuery = nodeQuery("/termSubstitution/term[0]"),
@@ -27,7 +28,13 @@ export default class TermSubstitution extends Substitution {
     return this.variable;
   }
 
-  isTermEqualTo(term) { return this.term.isEqualTo(term); }
+  isTermEqualTo(term, context) {
+    term = stripBracketsFromTerm(term); ///
+
+    const termEqualTo = this.term.isEqualTo(term);
+
+    return termEqualTo;
+  }
 
   isVariableEqualTo(variable) { return this.variable.isEqualTo(variable); }
 

@@ -5,6 +5,22 @@ import LocalContext from "../context/local";
 
 import { bracketedStatementChildNodeFromStatementNode } from "../utilities/brackets";
 
+export function stripBracketsFromTerm(term, context) {
+  const termNode = term.getNode(),
+        bracketedTermChildNode = bracketedTermChildNodeFromTermNode(termNode);
+
+  if (bracketedTermChildNode !== null) {
+    context = contextFromTerm(term, context); ///
+
+    const { Term } = dom,
+          termNode = bracketedTermChildNode;  ///
+
+    term = Term.fromStatementNode(termNode, context);
+  }
+
+  return term;
+}
+
 export function stripBracketsFromStatement(statement, context) {
   const statementNode = statement.getNode(),
         bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);

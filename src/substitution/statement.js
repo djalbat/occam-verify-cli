@@ -34,7 +34,13 @@ export default class StatementSubstitution extends Substitution {
     return this.substitution;
   }
 
-  isStatementEqualTo(statement) { return this.statement.isEqualTo(statement); }
+  isStatementEqualTo(statement, context) {
+    statement = stripBracketsFromStatement(statement, context); ///
+
+    const statementEqualTo = this.statement.isEqualTo(statement);
+
+    return statementEqualTo;
+  }
 
   isMetavariableEqualTo(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 

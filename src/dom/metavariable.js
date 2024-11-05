@@ -170,20 +170,20 @@ export default domAssigned(class Metavariable {
     if (effectivelyEqualToStatement) {
       statementUnified = true;
     } else {
-      const metavariable = this, ///
+      const context = specificContext,  ///
+            metavariable = this, ///
             substitutionPresent = substitutions.isSubstitutionPresentByMetavariableAndSubstitution(metavariable, substitution);
 
       if (substitutionPresent) {
         substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
 
-        const substitutionStatementEqualToStatement = substitution.isStatementEqualTo(statement);
+        const substitutionStatementEqualToStatement = substitution.isStatementEqualTo(statement, context);
 
         if (substitutionStatementEqualToStatement) {
           statementUnified = true;
         }
       } else {
-        const context = specificContext,  ///
-              metavariable = this,
+        const metavariable = this,
               statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
 
         substitution = statementSubstitution;  ///
