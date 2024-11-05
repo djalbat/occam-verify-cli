@@ -5,7 +5,7 @@ import StatementNodeAndTokens from "../../nodeAndTokens/statement";
 
 import { STATEMENT_META_TYPE_NAME } from "../../metaTypeNames";
 
-export default class CombinatorBracketedContext extends BracketedContext {
+class CombinatorBracketedContext extends BracketedContext {
   getBracketedStatementNode() {
     const node = this.getNode(),
           bracketedStatementNode = node;  ///
@@ -21,3 +21,7 @@ export default class CombinatorBracketedContext extends BracketedContext {
     return combinatorBracketedContext;
   }
 }
+
+const combinatorBracketedContext = CombinatorBracketedContext.fromNothing();
+
+export default  combinatorBracketedContext;

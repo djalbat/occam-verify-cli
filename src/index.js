@@ -38,7 +38,6 @@ import VariableDeclaration from "./dom/declaration/variable";
 import CombinatorDeclaration from "./dom/declaration/combinator";
 import ConstructorDeclaration from "./dom/declaration/constructor";
 import MetavariableDeclaration from "./dom/declaration/metavariable";
-import ConstructorBracketedContext from "./context/bracketed/constructor";
 
 export { default as Log } from "./log";
 export { default as ReleaseContext } from "./context/release";

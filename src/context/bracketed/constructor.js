@@ -5,7 +5,7 @@ import TermNodeAndTokens from "../../nodeAndTokens/term";
 
 import { OBJECT_TYPE_NAME } from "../../typeNames";
 
-export default class ConstructorBracketedContext extends BracketedContext {
+class ConstructorBracketedContext extends BracketedContext {
   getBracketedTermNode() {
     const node = this.getNode(),
           bracketedTermNode = node;  ///
@@ -21,3 +21,7 @@ export default class ConstructorBracketedContext extends BracketedContext {
     return constructorBracketedContext;
   }
 }
+
+const constructorBracketedContext = ConstructorBracketedContext.fromNothing();
+
+export default constructorBracketedContext;

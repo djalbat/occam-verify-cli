@@ -1,8 +1,9 @@
 "use strict";
 
+import combinatorBracketedContext from "../context/bracketed/combinator";
+import constructorBracketedContext from "../context/bracketed/constructor";
+
 import { nodeQuery } from "../utilities/query";
-import { bracketedTermNode } from "../constructor/bracketed";
-import { bracketedStatementNode } from "../combinator/bracketed";
 import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
 
 const bracketedTermChildNodeQuery = nodeQuery("/term/argument/term"),
@@ -32,6 +33,7 @@ export function bracketedTermChildNodeFromTermNode(termNode) {
   let bracketedTermChildNode = null;
 
   const depth = BRACKETED_TERM_DEPTH,
+        bracketedTermNode = constructorBracketedContext.getBracketedTermNode(),
         termNodeMatchBracketedTermNode = termNode.match(bracketedTermNode, depth);
 
   if (termNodeMatchBracketedTermNode) {
@@ -45,6 +47,7 @@ export function bracketedStatementChildNodeFromStatementNode(statementNode) {
   let bracketedStatementChildNode = null;
 
   const depth = BRACKETED_STATEMENT_DEPTH,
+        bracketedStatementNode = combinatorBracketedContext.getBracketedStatementNode(),
         statementNodeMatchBracketedStatementNode = statementNode.match(bracketedStatementNode, depth);
 
   if (statementNodeMatchBracketedStatementNode) {
