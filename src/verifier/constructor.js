@@ -46,9 +46,9 @@ class ConstructorVerifier extends Verifier {
         let typeVerified = false;
 
         const typeName = typeNameFromTypeNode(typeNode),
-              typePresent = fileContext.isTypePresentByTypeName(typeName);
+              typeDeclared = fileContext.isTypeDeclaredByTypeName(typeName);
 
-        if (typePresent) {
+        if (typeDeclared) {
           const verifiedAhead = verifyAhead();
 
           if (verifiedAhead) {

@@ -327,33 +327,33 @@ export default class FileContext {
     this.tokens = tokens;
   }
 
-  isMetavariablePresent(metavariable, generalContext, specificContext) {
+  isMetavariableDeclared(metavariable, generalContext, specificContext) {
     metavariable = this.findMetavariable(metavariable, generalContext, specificContext);  ///
 
-    const metavariablePresent = (metavariable !== null);
+    const metavariableDeclared = (metavariable !== null);
 
-    return metavariablePresent;
+    return metavariableDeclared;
   }
 
-  isTypePresentByTypeName(typeName) {
+  isTypeDeclaredByTypeName(typeName) {
     const type = this.findTypeByTypeName(typeName),
-          typePresent = (type !== null);
+          typeDeclared = (type !== null);
 
-    return typePresent;
+    return typeDeclared;
   }
 
-  isVariablePresentByVariableName(variableName) {
+  isVariableDeclaredByVariableName(variableName) {
     const variable = this.findVariableByVariableName(variableName),
-          variablePresent = (variable !== null);
+          variableDeclared = (variable !== null);
 
-    return variablePresent;
+    return variableDeclared;
   }
 
-  isMetavariablePresentByMetavariableName(metavariableName) {
+  isMetavariableDeclaredByMetavariableName(metavariableName) {
     const metavariable = this.findMetavariableByMetavariableName(metavariableName),
-          metavariablePresent = (metavariable !== null);
+          metavariableDeclared = (metavariable !== null);
 
-    return metavariablePresent;
+    return metavariableDeclared;
   }
 
   isLabelPresentByMetavariableName(metavariableName) {

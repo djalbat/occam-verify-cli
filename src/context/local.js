@@ -161,9 +161,9 @@ class LocalContext {
     let variableAdded = false;
 
     const variableName = variable.getNode(),
-          variablePresent = this.isVariablePresentByVariableName(variableName, nested);
+          variableDeclared = this.isVariableDeclaredByVariableName(variableName, nested);
 
-    if (!variablePresent) {
+    if (!variableDeclared) {
       this.variables.push(variable);
 
       variableAdded = true;
@@ -261,19 +261,19 @@ class LocalContext {
     return metavariableDefined
   }
 
-  isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
+  isMetavariableDeclared(metavariable, generalContext, specificContext) { return this.context.isMetavariableDeclared(metavariable, generalContext, specificContext); }
 
-  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
+  isTypeDeclaredByTypeName(typeName) { return this.context.isTypeDeclaredByTypeName(typeName); }
 
   isLabelPresentByMetavariableName(metavariableName) { return this.context.isLabelPresentByMetavariableName(metavariableName); }
 
   isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
 
-  isVariablePresentByVariableName(variableName, nested = true) {
+  isVariableDeclaredByVariableName(variableName, nested = true) {
     const variable = this.findVariableByVariableName(variableName, nested),
-          variablePresent = (variable !== null);
+          variableDeclared = (variable !== null);
 
-    return variablePresent;
+    return variableDeclared;
   }
 
   isJudgementPresentByMetavariable(metavariable) {

@@ -61,9 +61,9 @@ class CombinatorVerifier extends Verifier {
         let typeVerified = false;
 
         const typeName = typeNameFromTypeNode(typeNode),
-              typePresent = fileContext.isTypePresentByTypeName(typeName);
+              typeDeclared = fileContext.isTypeDeclaredByTypeName(typeName);
 
-        if (typePresent) {
+        if (typeDeclared) {
           typeVerified = true;
         }
 

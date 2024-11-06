@@ -374,9 +374,9 @@ export default domAssigned(class Metavariable {
     const metavariable = this, ///
           generalContext = context,  ///
           specificContext = context,  ///
-          metavariablePresent = generalContext.isMetavariablePresent(metavariable, generalContext, specificContext);
+          metavariableDeclared = generalContext.isMetavariableDeclared(metavariable, generalContext, specificContext);
 
-    verified = metavariablePresent; ///
+    verified = metavariableDeclared; ///
 
     if (verified) {
       context.debug(`...verified the '${metavariableString}' metavariable.`);
@@ -431,16 +431,16 @@ export default domAssigned(class Metavariable {
       fileContext.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
     } else {
       const metavariableName = this.name, ///
-            metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
+            metavariableDeclared = fileContext.isMetavariableDeclaredByMetavariableName(metavariableName);
 
-      if (metavariablePresent) {
-        fileContext.debug(`The '${metavariableName}' metavariable is already present.`);
+      if (metavariableDeclared) {
+        fileContext.debug(`The '${metavariableName}' metavariable has already been declared.`);
       } else {
         const variableName = this.name, ///
-              variablePresent = fileContext.isVariablePresentByVariableName(variableName);
+              variableDeclared = fileContext.isVariableDeclaredByVariableName(variableName);
 
-        if (variablePresent) {
-          fileContext.debug(`A '${metavariableName}' variable is already present.`);
+        if (variableDeclared) {
+          fileContext.debug(`A '${metavariableName}' variable has already been declared.`);
         } else {
           const typeVerified = this.verifyType(fileContext);
 
