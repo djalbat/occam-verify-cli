@@ -9,9 +9,11 @@ import { nodeQuery } from "../utilities/query";
 
 const termNodeQuery = nodeQuery("/term"),
       frameNodeQuery = nodeQuery("/frame"),
+      referenceNodeQuery = nodeQuery("/reference"),
       statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
+      referenceMetavariableNodeQuery = nodeQuery("/reference/metavariable!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 class MetaLevelUnifier extends Unifier {
@@ -66,6 +68,31 @@ class MetaLevelUnifier extends Unifier {
         }
 
         return statementUnified;
+      }
+    },
+    {
+      generalNodeQuery: referenceMetavariableNodeQuery,
+      specificNodeQuery: referenceNodeQuery,
+      unify: (generalReferenceMetavariableNode, specificReferenceNode, substitutions, generalContext, specificContext) => {
+        let referenceUnified;
+
+        const { Reference, Metavariable } = dom,
+              referenceNode = specificReferenceNode, ///
+              metavariableNode = generalReferenceMetavariableNode;  ///
+
+        let context;
+
+        context = generalContext; ///
+
+        const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
+
+        context = specificContext;  ///
+
+        const reference = Reference.fromReferenceNode(referenceNode, context);
+
+        referenceUnified = metavariable.unifyReference(reference, substitutions, generalContext, specificContext);
+
+        return referenceUnified;
       }
     },
     {

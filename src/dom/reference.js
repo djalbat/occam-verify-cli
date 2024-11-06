@@ -120,6 +120,16 @@ export default domAssigned(class Reference {
     return reference;
   }
 
+  static fromReferenceNode(referenceNode, fileContext) {
+    const { Metavariable } = dom,
+          localContext = LocalContext.fromFileContext(fileContext),
+          context = localContext, ///
+          metavariable = Metavariable.fromReferenceNode(referenceNode, context),
+          reference = new Reference(metavariable);
+
+    return reference;
+  }
+
   static fromProofStepNode(proofStepNode, fileContext) {
     let reference = null;
 

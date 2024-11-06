@@ -37,6 +37,12 @@ export default class Substitution {
     return variable;
   }
 
+  getReference() {
+    const reference = null;
+
+    return reference;
+  }
+
   getStatement() {
     const statement = null;
 
@@ -91,6 +97,12 @@ export default class Substitution {
     const variableEqualTo = false;
 
     return variableEqualTo;
+  }
+
+  isReferenceEqualTo(reference) {
+    const referenceEqualTo = false;
+
+    return referenceEqualTo;
   }
 
   isStatementEqualTo(statement) {
