@@ -1,6 +1,6 @@
 "use strict";
 
-import { COMMA, EMPTY_STRING } from "../constants";
+import { EMPTY_STRING } from "../constants";
 
 export function nodeAsString(node, tokens) {
   let string;
@@ -20,7 +20,7 @@ export function nodesAsString(nodes, tokens) {
 
     string = (string === EMPTY_STRING) ?
                nodeString :
-                `${string}${COMMA}${nodeString}`;
+                `${string},${nodeString}`;
 
     return string;
   }, EMPTY_STRING);

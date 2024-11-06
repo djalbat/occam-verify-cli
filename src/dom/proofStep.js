@@ -127,6 +127,10 @@ export default domAssigned(class ProofStep {
 
       verified = subproofVerified;  ///
     } else if (this.statement !== null) {
+      const proofStepString = this.string;  ///
+
+      context.trace(`Verifying the '${proofStepString}' proof step...`);
+
       const qualified = this.isQualified(),
             stated = qualified, ///
             statementVerified = this.statement.verify(assignments, stated, context);
@@ -139,6 +143,10 @@ export default domAssigned(class ProofStep {
 
           verified = referenceVerified; ///
         }
+      }
+
+      if (verified) {
+        context.debug(`...verified the '${proofStepString}' proof step.`);
       }
     } else {
       const proofStepString = this.string;

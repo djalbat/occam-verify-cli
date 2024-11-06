@@ -72,7 +72,7 @@ export default domAssigned(class Rule {
   }
 
   unifyStatementAndProofSteps(statement, proofSteps, context) {
-    let statementAndProofStepsUnified;
+    let statementAndProofStepsUnified = false;
 
     const localContext = LocalContext.fromFileContext(this.fileContext),
           generalContext = localContext, ///

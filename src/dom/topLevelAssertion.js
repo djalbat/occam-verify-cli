@@ -140,7 +140,7 @@ export default class TopLevelAssertion {
   }
 
   unifyStatementAndProofSteps(statement, proofSteps, context) {
-    let statementAndProofStepsUnified;
+    let statementAndProofStepsUnified = false;
 
     const localContext = LocalContext.fromFileContext(this.fileContext),
           generalContext = localContext, ///
@@ -320,7 +320,7 @@ export function stringFromLabels(labels) {
 
     string = (string === EMPTY_STRING) ?
                labelString: ///
-                 `${string}, ${labelString}`;
+                 `${string},${labelString}`;
 
     return string;
   }, EMPTY_STRING);

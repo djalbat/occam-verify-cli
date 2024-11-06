@@ -94,9 +94,7 @@ export default domAssigned(class Variable {
     }
 
     if (verified) {
-      const typeName = this.type.getName();
-
-      context.debug(`...verified the '${variableString}:${typeName}' variable.`);
+      context.debug(`...verified the '${variableString}' variable.`);
     }
 
     return verified;
