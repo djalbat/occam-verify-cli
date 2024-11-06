@@ -68,7 +68,7 @@ export default class ReferenceSubstitution extends Substitution {
 function stringFromReferenceAndMetavariable(reference, metavariable) {
   const referenceString = reference.getString(),
         metavariableString = metavariable.getString(),
-        string = `[${referenceString} for [${metavariableString}]]`;
+        string = `[${referenceString} for ${metavariableString}]`;
 
   return string;
 }
