@@ -19,7 +19,7 @@ import { labelsFromJSON,
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 const proofNodeQuery = nodeQuery("/rule/proof"),
-      labelNodesQuery = nodesQuery("/rule/label"),
+      labelNodesQuery = nodesQuery("/rule/labels/label"),
       premiseNodesQuery = nodesQuery("/rule/premise"),
       conclusionNodeQuery = nodeQuery("/rule/conclusion");
 
