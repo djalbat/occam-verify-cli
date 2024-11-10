@@ -16,8 +16,8 @@ function unifyAWithRule(statement, reference, substitutions, context) {
 
       context.trace(`Unifying the '${statementString}' statement with the '${ruleString}' rule...`);
 
-      const proofSteps = context.getProofSteps(),
-            statementAndProofStepsUnified = rule.unifyStatementAndProofSteps(statement, proofSteps, context);
+      const proofStepSubproofs = context.getProofStepSubproofs(),
+            statementAndProofStepsUnified = rule.unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, context);
 
       unifiedWithRule = statementAndProofStepsUnified;  ///
 
@@ -71,8 +71,8 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(statement, reference, substitut
 
       context.trace(`Unifying the '${statementString}' statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`);
 
-      const proofSteps = context.getProofSteps(),
-            statementAndProofStepsUnified = axiomLemmaTheoremConjecture.unifyStatementAndProofSteps(statement, proofSteps, context);
+      const proofStepSubproofs = context.getProofStepSubproofs(),
+            statementAndProofStepsUnified = axiomLemmaTheoremConjecture.unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, context);
 
       if (statementAndProofStepsUnified) {
         const metavariable = reference.getMetavariable(),
@@ -153,12 +153,12 @@ function unifyAsTypeAssertion(statement, reference, substitutions, context) {
   return unifiedAsTypeAssertion;
 }
 
-function unifyWithProofSteps(statement, reference, substitutions, context) {
+function unifyWithProofStepSubproofs(statement, reference, substitutions, context) {
   let unifiedWithProofSteps = false;
 
   if (reference === null) {
-    const proofSteps = context.getProofSteps(),
-          statementUnifiedWithProofSteps = statement.unifyWithProofSteps(proofSteps, context);
+    const proofStepSubproofs = context.getProofStepSubproofs(),
+          statementUnifiedWithProofSteps = statement.unifyWithProofStepSubproofs(proofStepSubproofs, context);
 
     unifiedWithProofSteps = statementUnifiedWithProofSteps; ///
   }
@@ -173,7 +173,7 @@ const unifyMixins = [
   unifyAsEquality,
   unifyAsJudgement,
   unifyAsTypeAssertion,
-  unifyWithProofSteps
+  unifyWithProofStepSubproofs
 ];
 
 export default unifyMixins;

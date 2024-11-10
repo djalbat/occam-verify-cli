@@ -71,8 +71,8 @@ export default domAssigned(class Rule {
     return metavariableNameMatches;
   }
 
-  unifyStatementAndProofSteps(statement, proofSteps, context) {
-    let statementAndProofStepsUnified = false;
+  unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, context) {
+    let statementAndProofStepSubproofsUnified = false;
 
     const localContext = LocalContext.fromFileContext(this.fileContext),
           generalContext = localContext, ///
@@ -82,16 +82,16 @@ export default domAssigned(class Rule {
           statementUnifiedWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifiedWithConclusion) {
-      const proofStepsUnifiedWithPremises = this.unifyProofStepsWithPremises(proofSteps, substitutions, generalContext, specificContext);
+      const proofStepSubproofsUnifiedWithPremises = this.unifyProofStepSubproofsWithPremises(proofStepSubproofs, substitutions, generalContext, specificContext);
 
-      if (proofStepsUnifiedWithPremises) {
+      if (proofStepSubproofsUnifiedWithPremises) {
         const substitutionsResolved = substitutions.areResolved();
 
-        statementAndProofStepsUnified = substitutionsResolved; ///
+        statementAndProofStepSubproofsUnified = substitutionsResolved; ///
       }
     }
 
-    return statementAndProofStepsUnified;
+    return statementAndProofStepSubproofsUnified;
   }
 
   unifyStatementWithConclusion(statement, substitutions, generalContext, specificContext) {
@@ -104,42 +104,42 @@ export default domAssigned(class Rule {
     return statementUnifiedWithConclusion;
   }
 
-  unifyProofStepsWithPremises(proofSteps, substitutions, generalContext, specificContext) {
-    proofSteps = reverse(proofSteps); ///
+  unifyProofStepSubproofsWithPremises(proofStepSubproofs, substitutions, generalContext, specificContext) {
+    proofStepSubproofs = reverse(proofStepSubproofs); ///
 
-    const proofStepsUnifiedWithPremises = backwardsEvery(this.premises, (premise) => {
-      const proofStepUnifiedWithPremise = this.unifyProofStepsWithPremise(proofSteps, premise, substitutions, generalContext, specificContext);
+    const proofStepSubproofsUnifiedWithPremises = backwardsEvery(this.premises, (premise) => {
+      const proofStepUnifiedWithPremise = this.unifyProofStepSubproofsWithPremise(proofStepSubproofs, premise, substitutions, generalContext, specificContext);
 
       if (proofStepUnifiedWithPremise) {
         return true;
       }
     });
 
-    return proofStepsUnifiedWithPremises;
+    return proofStepSubproofsUnifiedWithPremises;
   }
 
-  unifyProofStepsWithPremise(proofSteps, premise, substitutions, generalContext, specificContext) {
-    let proofStepsUnifiedWithPremise  =false;
+  unifyProofStepSubproofsWithPremise(proofStepSubproofs, premise, substitutions, generalContext, specificContext) {
+    let proofStepSubproofsUnifiedWithPremise  =false;
 
     const premiseUnifiedIndependently = premise.unifyIndependently(substitutions, generalContext, specificContext);
 
     if (premiseUnifiedIndependently) {
-      proofStepsUnifiedWithPremise = true;
+      proofStepSubproofsUnifiedWithPremise = true;
     } else {
-      const proofStep = extract(proofSteps, (proofStep) => {
-        const proofStepUnified = premise.unifyProofStep(proofStep, substitutions, generalContext, specificContext);
+      const proofStep = extract(proofStepSubproofs, (proofStepSubproof) => {
+        const proofStepSubproofUnified = premise.unifyProofStepSubproof(proofStepSubproof, substitutions, generalContext, specificContext);
 
-        if (proofStepUnified) {
+        if (proofStepSubproofUnified) {
           return true;
         }
       }) || null;
 
       if (proofStep !== null) {
-        proofStepsUnifiedWithPremise = true;
+        proofStepSubproofsUnifiedWithPremise = true;
       }
     }
 
-    return proofStepsUnifiedWithPremise;
+    return proofStepSubproofsUnifiedWithPremise;
   }
 
   verify() {

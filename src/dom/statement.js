@@ -192,12 +192,12 @@ export default domAssigned(class Statement {
     return unifiedIndependently;
   }
 
-  unifyWithProofSteps(proofSteps, context) {
+  unifyWithProofStepSubproofs(proofStepSubproofs, context) {
     let unifiedWithProofSteps;
 
-    unifiedWithProofSteps = backwardsSome(proofSteps, (proofStep) => {
+    unifiedWithProofSteps = backwardsSome(proofStepSubproofs, (proofStepSubproof) => {
       const statement = this, ///
-            statementUnified =proofStep.unifyStatement(statement, context);
+            statementUnified =proofStepSubproof.unifyStatement(statement, context);
 
       if (statementUnified) {
         return true;

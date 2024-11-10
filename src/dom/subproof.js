@@ -6,8 +6,11 @@ import LocalContext from "../context/local";
 import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { subproofStringFromSubproofNode } from "../utilities/subproof";
+import unifyMixins from "../mixins/proofStep/unify";
+import Substitutions from "../substitutions";
+import {assignAssignments} from "../utilities/assignments";
 
-const subproofNodeQuery = nodeQuery("/proofStep/subproof"),
+const subproofNodeQuery = nodeQuery("/subproof"),
       suppositionNodesQuery = nodesQuery("/subproof/supposition"),
       subDerivationNodeQuery = nodeQuery("/subproof/subDerivation");
 
@@ -52,6 +55,42 @@ export default domAssigned(class Subproof {
     return statements;
   }
 
+  isProofStep() {
+    const proofStep = false;
+
+    return proofStep;
+  }
+
+  unifyStatement(statement, context) {
+    let statementUnified;
+
+    const specificContext = context, ///
+          generalContext = context, ///
+          substitutions = Substitutions.fromNothing(),
+          subproof = this;
+
+    const subproofUnified = statement.unifySubproof(subproof, substitutions, generalContext, specificContext);
+
+    statementUnified = subproofUnified; ///
+
+    if (statementUnified) {
+      const equivalences = context.getEquivalences(),
+            substitutionsUnified = equivalences.unifySubstitutions(substitutions);
+
+      statementUnified = substitutionsUnified;  ///
+    }
+
+    return statementUnified;
+  }
+
+  unify(substitutions, context) {
+    let unified;
+
+    unified = true;
+
+    return unified;
+  }
+
   verify(substitutions, context) {
     let subproofVerified = false;
 
@@ -78,12 +117,32 @@ export default domAssigned(class Subproof {
     return subproofVerified;
   }
 
+  verifyAndUnify(substitutions, context) {
+    let verifiedAndUnified = false;
+
+    const verified = this.verify(substitutions, context);
+
+    if (verified) {
+      const unified = this.unify(substitutions, context);
+
+      if (unified) {
+        const proofStepSubproof = this; ///
+
+        context.addProofStepSubproof(proofStepSubproof);
+
+        verifiedAndUnified = true; ///
+      }
+    }
+
+    return verifiedAndUnified;
+  }
+
   static name = "Subproof";
 
-  static fromProofStepNode(proofStepNode, fileContext) {
+  static fromProofStepSubproofNode(proofStepSubproofNode, fileContext) {
     let subproof = null;
 
-    const subproofNode = subproofNodeQuery(proofStepNode);
+    const subproofNode = subproofNodeQuery(proofStepSubproofNode);
 
     if (subproofNode !== null) {
       const { Supposition, SubDerivation } = dom,

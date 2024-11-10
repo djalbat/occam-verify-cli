@@ -9,7 +9,7 @@ import { referenceMetaType } from "../dom/metaType";
 import { unifyLabelWithReference } from "../utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
-const proofStepReferenceNodeQuery = nodeQuery("/proofStep|lastProofStep/reference"),
+const proofStepReferenceNodeQuery = nodeQuery("/proofStep/reference"),
       declarationReferenceNodeQuery = nodeQuery("/declaration/reference");
 
 export default domAssigned(class Reference {

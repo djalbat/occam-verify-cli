@@ -44,20 +44,20 @@ export default domAssigned(class Consequent {
 
     const consequentString = this.string;  ///
 
-    if (this.statement !== null) {
-      context.trace(`Verifying the '${consequentString}' consequent...`);
+    context.trace(`Verifying the '${consequentString}' consequent...`);
 
+    if (this.statement !== null) {
       const stated = true,
             assignments = null,
             statementVerified = this.statement.verify(assignments, stated, context);
 
       verified = statementVerified; ///
-
-      if (verified) {
-        context.debug(`...verified the '${consequentString}' consequent.`);
-      }
     } else {
       context.debug(`Unable to verify the '${consequentString}' consequent because it is nonsense.`);
+    }
+
+    if (verified) {
+      context.debug(`...verified the '${consequentString}' consequent.`);
     }
 
     return verified;

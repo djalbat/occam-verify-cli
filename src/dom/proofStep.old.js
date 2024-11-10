@@ -4,21 +4,23 @@ import dom from "../dom";
 import unifyMixins from "../mixins/proofStep/unify";
 import Substitutions from "../substitutions";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { assignAssignments } from "../utilities/assignments";
 
-const proofStepNodeQuery = nodeQuery("/proofStep");
-
 export default domAssigned(class ProofStep {
-  constructor(string, statement, reference) {
+  constructor(string, subproof, statement, reference) {
     this.string = string;
+    this.subproof = subproof;
     this.statement = statement;
     this.reference = reference;
   }
 
   getString() {
     return this.string;
+  }
+
+  getSubproof() {
+    return this.subproof;
   }
 
   getStatement() {
@@ -35,29 +37,29 @@ export default domAssigned(class ProofStep {
     return qualified;
   }
 
-  isProofStep() {
-    const proofStep = true;
-
-    return proofStep;
-  }
-
   unify(substitutions, context) {
     let unified;
 
-    const proofStepString = this.string;  ///
+    if (this.subproof !== null) {
+      unified = true; ///
+    }
 
-    context.trace(`Unifying the '${proofStepString}' proof step...`);
+    if (this.statement !== null) {
+      const proofStepString = this.string;  ///
 
-    unified = unifyMixins.some((unifyMixin) => {
-      const unified = unifyMixin(this.statement, this.reference, substitutions, context);
+      context.trace(`Unifying the '${proofStepString}' proof step...`);
+
+      unified = unifyMixins.some((unifyMixin) => {
+        const unified = unifyMixin(this.statement, this.reference, substitutions, context);
+
+        if (unified) {
+          return true;
+        }
+      });
 
       if (unified) {
-        return true;
+        context.debug(`...unified the '${proofStepString}' proof step.`);
       }
-    });
-
-    if (unified) {
-      context.debug(`...unified the '${proofStepString}' proof step.`);
     }
 
     return unified;
@@ -70,7 +72,15 @@ export default domAssigned(class ProofStep {
           generalContext = context, ///
           substitutions = Substitutions.fromNothing();
 
-    statementUnified = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
+    if (this.subproof !== null) {
+      const subproofUnified = statement.unifySubproof(this.subproof, substitutions, generalContext, specificContext);
+
+      statementUnified = subproofUnified; ///
+    }
+
+    if (this.statement !== null) {
+      statementUnified = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
+    }
 
     if (statementUnified) {
       const equivalences = context.getEquivalences(),
@@ -95,9 +105,9 @@ export default domAssigned(class ProofStep {
         const assignmentsAssigned = assignAssignments(assignments, context);
 
         if (assignmentsAssigned) {
-          const proofStepSubproof = this; ///
+          const proofStep = this; ///
 
-          context.addProofStepSubproof(proofStepSubproof);
+          context.addProofStep(proofStep);
 
           verifiedAndUnified = true; ///
         }
@@ -110,11 +120,17 @@ export default domAssigned(class ProofStep {
   verify(substitutions, assignments, context) {
     let verified = false;
 
-    const proofStepString = this.string;
+    if (false) {
+      ///
+    } else if (this.subproof !== null) {
+      const subproofVerified = this.subproof.verify(substitutions, context);
 
-    context.trace(`Verifying the '${proofStepString}' proof step...`);
+      verified = subproofVerified;  ///
+    } else if (this.statement !== null) {
+      const proofStepString = this.string;  ///
 
-    if (this.statement !== null) {
+      context.trace(`Verifying the '${proofStepString}' proof step...`);
+
       const qualified = this.isQualified(),
             stated = qualified, ///
             statementVerified = this.statement.verify(assignments, stated, context);
@@ -128,12 +144,14 @@ export default domAssigned(class ProofStep {
           verified = referenceVerified; ///
         }
       }
-    } else {
-      context.debug(`Cannot verify the '${proofStepString}' proof step because it is nonsense.`);
-    }
 
-    if (verified) {
-      context.debug(`...verified the '${proofStepString}' proof step.`);
+      if (verified) {
+        context.debug(`...verified the '${proofStepString}' proof step.`);
+      }
+    } else {
+      const proofStepString = this.string;
+
+      context.debug(`Cannot verify the '${proofStepString}' proof step because it is nonsense.`);
     }
 
     return verified;
@@ -144,26 +162,21 @@ export default domAssigned(class ProofStep {
   static fromStatement(statement, context) {
     const statementString = statement.getString(),
           string = statementString, ///
+          subproof = null,
           reference = null,
-          proofStep = new ProofStep(string, statement, reference);
+          proofStep = new ProofStep(string, subproof, statement, reference);
 
     return proofStep;
   }
 
-  static fromProofStepSubproofNode(proofStepSubproofNode, fileContext) {
-    let proofStep = null;
-
-    const proofStepNode = proofStepNodeQuery(proofStepSubproofNode);
-
-    if (proofStepNode !== null) {
-      const { Statement, Reference } = dom,
-            node = proofStepNode, ///
-            string = fileContext.nodeAsString(node),
-            statement = Statement.fromProofStepNode(proofStepNode, fileContext),
-            reference = Reference.fromProofStepNode(proofStepNode, fileContext);
-
-      proofStep = new ProofStep(string, statement, reference);
-    }
+  static fromProofStepNode(proofStepNode, fileContext) {
+    const { Subproof, Statement, Reference } = dom,
+          node = proofStepNode, ///
+          string = fileContext.nodeAsString(node),
+          subproof = Subproof.fromProofStepNode(proofStepNode, fileContext),
+          statement = Statement.fromProofStepNode(proofStepNode, fileContext),
+          reference = Reference.fromProofStepNode(proofStepNode, fileContext),
+          proofStep = new ProofStep(string, subproof, statement, reference);
 
     return proofStep;
   }

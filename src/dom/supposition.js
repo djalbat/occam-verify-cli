@@ -31,55 +31,53 @@ export default domAssigned(class Supposition {
     return unifiedIndependently;
   }
 
-  unifyProofStep(proofStep, substitutions, generalContext, specificContext) {
-    let proofStepUnified = false;
+  unifyProofStepSubproof(proofStepSubproof, substitutions, generalContext, specificContext) {
+    let proofStepSubproofUnified = false;
 
-    const subproof = proofStep.getSubproof(),
-          statement = proofStep.getStatement();
+    const proofStepSubProofProofStep = proofStepSubproof.isProofStep(),
+          subproof = proofStepSubProofProofStep ?
+                       null :
+                         proofStepSubproof,
+          proofStep = proofStepSubProofProofStep ?
+                        proofStepSubproof :
+                          null;
 
     substitutions.snapshot();
 
     if (subproof !== null) {
       const subproofUnified = this.unifySubproof(subproof, substitutions, generalContext, specificContext);
 
-      proofStepUnified = subproofUnified; ///
+      proofStepSubproofUnified = subproofUnified; ///
     }
 
-    if (statement !== null) {
-      const statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+    if (proofStep !== null) {
+      const statementUnified = this.unifyProofStep(proofStep, substitutions, generalContext, specificContext);
 
-      proofStepUnified = statementUnified;  ///
+      proofStepSubproofUnified = statementUnified;  ///
     }
 
-    if (proofStepUnified) {
+    if (proofStepSubproofUnified) {
       substitutions.resolve(generalContext, specificContext);
     }
 
     const context = specificContext;  ///
 
-    proofStepUnified ?
+    proofStepSubproofUnified ?
       substitutions.continue() :
         substitutions.rollback(context);
 
-    return proofStepUnified;
+    return proofStepSubproofUnified;
   }
 
-  unifyStatement(statement, substitutions, generalContext, specificContext) {
-    let statementUnified;
+  unifyProofStep(proofStep, substitutions, generalContext, specificContext) {
+    let proofStepUnified;
 
-    const supposition = this, ///
-          suppositionString = supposition.getString(),
-          statementString = statement.getString();
+    const statement = proofStep.getStatement(),
+          statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`);
+    proofStepUnified = statementUnified;  ///
 
-    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-    if (statementUnified) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${suppositionString}' supposition.`);
-    }
-
-    return statementUnified;
+    return proofStepUnified;
   }
 
   unifySubproof(subproof, substitutions, generalContext, specificContext) {
@@ -106,14 +104,32 @@ export default domAssigned(class Supposition {
     return subproofUnified;
   }
 
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
+    let statementUnified;
+
+    const supposition = this, ///
+          suppositionString = supposition.getString(),
+          statementString = statement.getString();
+
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`);
+
+    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    if (statementUnified) {
+      specificContext.debug(`...unified the '${statementString}' statement with the '${suppositionString}' supposition.`);
+    }
+
+    return statementUnified;
+  }
+
   verify(context) {
     let verified = false;
 
     const suppositionString = this.string; ///
 
-    if (this.statement !== null) {
-      context.trace(`Verifying the '${suppositionString}' supposition...`);
+    context.trace(`Verifying the '${suppositionString}' supposition...`);
 
+    if (this.statement !== null) {
       const stated = true,
             assignments = [],
             statementVerified = this.statement.verify(assignments, stated, context);
@@ -123,19 +139,20 @@ export default domAssigned(class Supposition {
 
         if (assignmentsAssigned) {
           const { ProofStep } = dom,
-                proofStep = ProofStep.fromStatement(this.statement, context);
+                proofStep = ProofStep.fromStatement(this.statement, context),
+                proofStepSubproof = proofStep;  ///
 
-          context.addProofStep(proofStep);
+          context.addProofStepSubproof(proofStepSubproof);
 
           verified = true;
         }
       }
-
-      if (verified) {
-        context.debug(`...verified the '${suppositionString}' supposition.`);
-      }
     } else {
       context.debug(`Unable to verify the '${suppositionString}' supposition because it is nonsense.`);
+    }
+
+    if (verified) {
+      context.debug(`...verified the '${suppositionString}' supposition.`);
     }
 
     return verified;

@@ -9,19 +9,20 @@ import { domAssigned } from "../dom";
 
 const { last } = arrayUtilities;
 
-const proofStepNodesQuery = nodesQuery("/subDerivation/proofStep|lastProofStep");
+const proofStepSubproofNodesQuery = nodesQuery("/subDerivation/proofStep|subproof");
 
 export default domAssigned(class SubDerivation {
-  constructor(proofSteps) {
-    this.proofSteps = proofSteps;
+  constructor(proofStepSubproofs) {
+    this.proofStepSubproofs = proofStepSubproofs;
   }
 
-  getProofSteps() {
-    return this.proofSteps;
+  getProofStepSubproofs() {
+    return this.proofStepSubproofs;
   }
 
   getLastProofStep() {
-    const lastProofStep = last(this.proofSteps);
+    const lastProofStepSubproof = last(this.proofStepSubproofs),
+          lastProofStep = lastProofStepSubproof;  ///
 
     return lastProofStep;
   }
@@ -29,10 +30,10 @@ export default domAssigned(class SubDerivation {
   verify(substitutions, context) {
     let verified;
 
-    verified = this.proofSteps.every((proofStep) => { ///
-      const proofStepVerifiedAndUnified = proofStep.verifyAndUnify(substitutions, context);
+    verified = this.proofStepSubproofs.every((proofStepSubproof) => { ///
+      const proofStepSubproofVerifiedAndUnified = proofStepSubproof.verifyAndUnify(substitutions, context);
 
-      if (proofStepVerifiedAndUnified) {
+      if (proofStepSubproofVerifiedAndUnified) {
         return true;
       }
     });
@@ -43,14 +44,16 @@ export default domAssigned(class SubDerivation {
   static name = "SubDerivation";
 
   static fromSubDerivationNode(subDerivationNode, fileContext) {
-    const { ProofStep } = dom,
-          proofStepNodes = proofStepNodesQuery(subDerivationNode),
-          proofSteps = proofStepNodes.map((proofStepNode) => {
-            const proofStep = ProofStep.fromProofStepNode(proofStepNode, fileContext);
+    const { ProofStep, Subproof } = dom,
+          proofStepSubproofNodes = proofStepSubproofNodesQuery(subDerivationNode),
+          proofStepSubproofs = proofStepSubproofNodes.map((proofStepSubproofNode) => {
+            const subproof = Subproof.fromProofStepSubproofNode(proofStepSubproofNode, fileContext),
+                  proofStep = ProofStep.fromProofStepSubproofNode(proofStepSubproofNode, fileContext),
+                  proofStepSubproof = (proofStep || subproof);
 
-            return proofStep;
+            return proofStepSubproof;
           }),
-          subDerivation = new SubDerivation(proofSteps);
+          subDerivation = new SubDerivation(proofStepSubproofs);
 
     return subDerivation;
   }

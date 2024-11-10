@@ -8,13 +8,13 @@ import Equivalences from "../equivalences";
 const { last } = arrayUtilities;
 
 class LocalContext {
-  constructor(context, tokens, variables, proofSteps, judgements, equivalences) {
+  constructor(context, tokens, variables, judgements, equivalences, proofStepSubproofs) {
     this.context = context;
     this.tokens = tokens;
     this.variables = variables;
-    this.proofSteps = proofSteps;
     this.judgements = judgements;
     this.equivalences = equivalences;
+    this.proofStepSubproofs = proofStepSubproofs;
   }
 
   getContext() {
@@ -42,17 +42,6 @@ class LocalContext {
     return variables;
   }
 
-  getProofSteps() {
-    let proofSteps = this.context.getProofSteps();
-
-    proofSteps = [  ///
-      ...proofSteps,
-      ...this.proofSteps
-    ];
-
-    return proofSteps;
-  }
-
   getJudgements() {
     let judgements = this.context.getJudgements();
 
@@ -75,13 +64,26 @@ class LocalContext {
   getLastProofStep() {
     let lastProofStep = null;
 
-    const proofStepsLength = this.proofSteps.length;
+    const proofStepSubproofsLength = this.proofStepSubproofs.length;
 
-    if (proofStepsLength > 0) {
-      lastProofStep = last(this.proofSteps);
+    if (proofStepSubproofsLength > 0) {
+      const lastProofStepSubproof = last(this.proofStepSubproofs);
+
+      lastProofStep = lastProofStepSubproof;  ///
     }
 
     return lastProofStep;
+  }
+
+  getProofStepSubproofs() {
+    let proofStepSubproofs = this.context.getProofStepSubproofs();
+
+    proofStepSubproofs = [  ///
+      ...proofStepSubproofs,
+      ...this.proofStepSubproofs
+    ];
+
+    return proofStepSubproofs;
   }
 
   getFilePath() { return this.context.getFilePath(); }
@@ -172,13 +174,13 @@ class LocalContext {
     return variableAdded;
   }
 
-  addProofStep(proofStep) {
-    this.proofSteps.push(proofStep);
-  }
-
   addEquivalence(equivalence, context) { return this.equivalences.addEquivalence(equivalence, context); }
 
   removeEquivalence(equivalence, context) { return this.equivalences.removeEquivalence(equivalence, context); }
+
+  addProofStepSubproof(proofStepSubproof) {
+    this.proofStepSubproofs.push(proofStepSubproof);
+  }
 
   addJudgement(judgement) {
     let judgementAdded = false;
@@ -412,10 +414,10 @@ class LocalContext {
   static fromContext(context) {
     const tokens = null,
           variables = [],
-          proofSteps = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),
-          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);
+          proofStepSubproofs = [],
+          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, proofStepSubproofs);
 
     return localContext;
   }
@@ -424,20 +426,20 @@ class LocalContext {
     const context = fileContext,  ///
           tokens = null,
           variables = [],
-          proofSteps = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),
-          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);
+          proofStepSubproofs = [],
+          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, proofStepSubproofs);
 
     return localContext;
   }
 
   static fromContextAndTokens(context, tokens) {
     const variables = [],
-          proofSteps = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),
-          localContext = new LocalContext(context, tokens, variables, proofSteps, judgements, equivalences);
+          proofStepSubproofs = [],
+          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, proofStepSubproofs);
 
     return localContext;
   }

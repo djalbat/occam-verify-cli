@@ -81,10 +81,10 @@ export default class FileContext {
     return termType;
   }
 
-  getProofSteps() {
-    const proofSteps = [];  ///
+  getJudgements() {
+    const judgements = [];
 
-    return proofSteps;
+    return judgements;
   }
 
   getEquivalences() {
@@ -93,10 +93,10 @@ export default class FileContext {
     return equivalences;
   }
 
-  getJudgements() {
-    const judgements = [];
+  getProofStepSubproofs() {
+    const proofStepSubproofs = [];
 
-    return judgements;
+    return proofStepSubproofs;
   }
 
   getLabels(includeRelease = true) {

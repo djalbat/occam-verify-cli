@@ -44,20 +44,21 @@ export  default domAssigned(class Conclusion {
 
     const conclusionString = this.string;  ///
 
-    if (this.statement !== null) {
-      context.trace(`Verifying the '${conclusionString}' conclusion...`);
+    context.trace(`Verifying the '${conclusionString}' conclusion...`);
 
+    if (this.statement !== null) {
       const stated = true,
             assignments = null,
             statementVerified = this.statement.verify(assignments, stated, context);
 
       verified = statementVerified; ///
 
-      if (verified) {
-        context.debug(`...verified the '${conclusionString}' conclusion.`);
-      }
     } else {
       context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`);
+    }
+
+    if (verified) {
+      context.debug(`...verified the '${conclusionString}' conclusion.`);
     }
 
     return verified;
