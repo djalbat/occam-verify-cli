@@ -2,7 +2,7 @@
 
 import dom from "../dom";
 import Substitution from "../substitution";
-import ReferenceSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/reference";
+import ReferenceSubstitutionPartialContext from "../context/partial/substitution/reference";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -56,9 +56,9 @@ export default class ReferenceSubstitution extends Substitution {
 
   static fromReferenceAndMetavariable(reference, metavariable, context) {
     const string = stringFromReferenceAndMetavariable(reference, metavariable),
-          referenceSubstitutionNodeAndTokens = ReferenceSubstitutionNodeAndTokens.fromString(string, context),
-          node = referenceSubstitutionNodeAndTokens.getNode(),
-          tokens = referenceSubstitutionNodeAndTokens.getTokens(),
+          referenceSubstitutionPartialContext = ReferenceSubstitutionPartialContext.fromString(string, context),
+          node = referenceSubstitutionPartialContext.getNode(),
+          tokens = referenceSubstitutionPartialContext.getTokens(),
           referenceSubstitution = new ReferenceSubstitution(string, node, tokens, reference, metavariable);
 
     return referenceSubstitution;

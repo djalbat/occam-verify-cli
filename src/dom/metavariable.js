@@ -5,7 +5,7 @@ import LocalContext from "../context/local";
 import FrameSubstitution from "../substitution/frame";
 import ReferenceSubstitution from "../substitution/reference";
 import StatementSubstitution from "../substitution/statement";
-import MetavariableNodeAndTokens from "../nodeAndTokens/metavariable";
+import MetavariablePartialContext from "../context/partial/metavariable";
 
 import { nodeQuery } from "../utilities/query";
 import { objectType } from "../dom/type";
@@ -504,9 +504,9 @@ export default domAssigned(class Metavariable {
   static fromJSON(json, fileContext) {
     const { string } = json,
           context = fileContext,  ///
-          metavariableNodeAndTokens = MetavariableNodeAndTokens.fromString(string, context),
-          metavariableTokens = metavariableNodeAndTokens.getMetavariableTokens(),
-          metavariableNode = metavariableNodeAndTokens.getMetavariableNode(),
+          metavariablePartialContext = MetavariablePartialContext.fromString(string, context),
+          metavariableTokens = metavariablePartialContext.getMetavariableTokens(),
+          metavariableNode = metavariablePartialContext.getMetavariableNode(),
           metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           name = metavariableName,  ///
           node = metavariableNode,  ///

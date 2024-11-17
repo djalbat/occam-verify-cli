@@ -9,7 +9,7 @@ import { objectType } from "./type";
 import { domAssigned } from "../dom";
 import { variableNameFromVariableNode} from "../utilities/name";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
-import { variableNodeFromVariableString } from "../nodeAndTokens/variable";
+import { variableNodeFromVariableString } from "../context/partial/variable";
 
 const termVariableNodeQuery = nodeQuery("/term/variable!"),
       variableDeclarationTypeNodeQuery = nodeQuery("/variableDeclaration/type"),

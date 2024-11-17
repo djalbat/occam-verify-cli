@@ -2,7 +2,7 @@
 
 import dom from "../dom";
 import Substitution from "../substitution";
-import TermSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/term";
+import TermSubstitutionPartialContext from "../context/partial/substitution/term";
 
 import { nodeQuery } from "../utilities/query";
 import { stripBracketsFromTerm } from "../utilities/brackets";
@@ -90,9 +90,9 @@ export default class TermSubstitution extends Substitution {
     term = Term.fromTermNode(termNode, context);
 
     const string = stringFromTermAndVariable(term, variable),
-          termSubstitutionNodeAndTokens = TermSubstitutionNodeAndTokens.fromString(string, context),
-          node = termSubstitutionNodeAndTokens.getNode(),
-          tokens = termSubstitutionNodeAndTokens.getTokens(),
+          termSubstitutionPartialContext = TermSubstitutionPartialContext.fromString(string, context),
+          node = termSubstitutionPartialContext.getNode(),
+          tokens = termSubstitutionPartialContext.getTokens(),
           termSubstitution = new TermSubstitution(string, node, tokens, term, variable);
 
     return termSubstitution;

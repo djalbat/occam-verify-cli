@@ -2,7 +2,7 @@
 
 import Substitution from "../substitution";
 import Substitutions from "../substitutions";
-import StatementSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/statement";
+import StatementSubstitutionPartialContext from "../context/partial/substitution/statement";
 
 import { unifySubstitution } from "../utilities/unification";
 import { stripBracketsFromStatement } from "../utilities/brackets";
@@ -166,9 +166,9 @@ export default class StatementSubstitution extends Substitution {
   static fromJSON(json, fileContext) {
     const { string } = json,
           context = fileContext,  ///
-          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromString(string, context),
-          node = statementSubstitutionNodeAndTokens.getNode(),
-          tokens = statementSubstitutionNodeAndTokens.getTokens(),
+          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromString(string, context),
+          node = statementSubstitutionPartialContext.getNode(),
+          tokens = statementSubstitutionPartialContext.getTokens(),
           resolved = true,
           statement = statementFromJSON(json, fileContext),
           metavariable = metavariableFromJSON(json, fileContext),
@@ -182,9 +182,9 @@ export default class StatementSubstitution extends Substitution {
     statement = stripBracketsFromStatement(statement, context); ///
 
     const string = stringFromStatementAndMetavariable(statement, metavariable),
-          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromString(string, context),
-          node = statementSubstitutionNodeAndTokens.getNode(),
-          tokens = statementSubstitutionNodeAndTokens.getTokens(),
+          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromString(string, context),
+          node = statementSubstitutionPartialContext.getNode(),
+          tokens = statementSubstitutionPartialContext.getTokens(),
           resolved = true,
           substitution = null,
           statementSubstitution = new StatementSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
@@ -196,9 +196,9 @@ export default class StatementSubstitution extends Substitution {
     statement = stripBracketsFromStatement(statement, context); ///
 
     const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
-          statementSubstitutionNodeAndTokens = StatementSubstitutionNodeAndTokens.fromString(string, context),
-          node = statementSubstitutionNodeAndTokens.getNode(),
-          tokens = statementSubstitutionNodeAndTokens.getTokens(),
+          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromString(string, context),
+          node = statementSubstitutionPartialContext.getNode(),
+          tokens = statementSubstitutionPartialContext.getTokens(),
           resolved = false,
           statementSubstitution = new StatementSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
 

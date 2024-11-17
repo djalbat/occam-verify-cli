@@ -1,8 +1,8 @@
 "use strict";
 
-import NodeAndTokens from "../nodeAndTokens";
+import PartialContext from "../../context/partial";
 
-import { ruleFromBNF } from "../nodeAndTokens";
+import { ruleFromBNF } from "../../context/partial";
 
 const bnf = `
 
@@ -11,7 +11,7 @@ const bnf = `
       `,
       rule = ruleFromBNF(bnf);
 
-export default class StatementNodeAndTokens extends NodeAndTokens {
+export default class StatementPartialContext extends PartialContext {
   getStatementNode() {
     const statementNode = this.node; ///
 
@@ -28,10 +28,10 @@ export default class StatementNodeAndTokens extends NodeAndTokens {
 
   static fromStatement(statement, context) {
     const string = statement.getString(),
-          statementNodeAndTokens = NodeAndTokens.fromString(StatementNodeAndTokens, string, context);
+          statementPartialContext = PartialContext.fromString(StatementPartialContext, string, context);
 
-    return statementNodeAndTokens;
+    return statementPartialContext;
   }
 
-  static fromString(string, context) { return NodeAndTokens.fromString(StatementNodeAndTokens, string, context); }
+  static fromString(string, context) { return PartialContext.fromString(StatementPartialContext, string, context); }
 }

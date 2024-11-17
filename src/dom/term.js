@@ -9,7 +9,7 @@ import constructorVerifier from "../verifier/constructor";
 import { objectType } from "./type";
 import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query"
-import { termNodeFromTermString } from "../nodeAndTokens/term";
+import { termNodeFromTermString } from "../context/partial/term";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 const { filter, compress } = arrayUtilities;

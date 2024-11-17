@@ -4,7 +4,7 @@ import { BNFLexer } from "occam-lexers";
 import { BNFParser } from "occam-parsers";
 import { arrayUtilities } from "necessary";
 
-import { nodeQuery } from "./utilities/query";
+import { nodeQuery } from "../utilities/query";
 
 const { first } = arrayUtilities;
 
@@ -13,7 +13,7 @@ const bnfLexer = BNFLexer.fromNothing(),
 
 const childNodeQuery = nodeQuery("/*/*!");
 
-export default class NodeAndTokens {
+export default class PartialContext {
   constructor(node, tokens) {
     this.node = node;
     this.tokens = tokens;
@@ -51,9 +51,9 @@ export default class NodeAndTokens {
 
     tokens = tokensFromTokensAndNode(tokens, node);  ///
 
-    const nodeAndTokens = new Class(node, tokens);
+    const partialContext = new Class(node, tokens);
 
-    return nodeAndTokens;
+    return partialContext;
   }
 }
 

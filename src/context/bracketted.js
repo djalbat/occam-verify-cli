@@ -33,14 +33,14 @@ export default class BracketedContext {
     return this.string;
   }
 
-  static fromStringAndNodeAndTokens(Class, string, NodeAndTokens) {
+  static fromStringAndPartialContext(Class, string, PartialContext) {
     const context = { ///
             getLexer,
             getParser
           },
-          nodeAndTokens = NodeAndTokens.fromString(string, context),
-          node = nodeAndTokens.getNode(),
-          tokens = nodeAndTokens.getTokens(),
+          partialContext = PartialContext.fromString(string, context),
+          node = partialContext.getNode(),
+          tokens = partialContext.getTokens(),
           bracketedContext = new Class(string, node, tokens);
 
     return bracketedContext;

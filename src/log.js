@@ -2,8 +2,6 @@
 
 import { levels } from "necessary";
 
-import { leastLineIndexFromNodeAndTokens, greatestLineIndexFromNodeAndTokens } from "./utilities/message";
-
 const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL } = levels;
 
 export default class Log {

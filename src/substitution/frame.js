@@ -2,7 +2,7 @@
 
 import dom from "../dom";
 import Substitution from "../substitution";
-import FrameSubstitutionNodeAndTokens from "../nodeAndTokens/substitution/frame";
+import FrameSubstitutionPartialContext from "../context/partial/substitution/frame";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -56,9 +56,9 @@ export default class FrameSubstitution extends Substitution {
 
   static fromFrameAndMetavariable(frame, metavariable, context) {
     const string = stringFromFrameAndMetavariable(frame, metavariable),
-          frameSubstitutionNodeAndTokens = FrameSubstitutionNodeAndTokens.fromString(string, context),
-          node = frameSubstitutionNodeAndTokens.getNode(),
-          tokens = frameSubstitutionNodeAndTokens.getTokens(),
+          frameSubstitutionPartialContext = FrameSubstitutionPartialContext.fromString(string, context),
+          node = frameSubstitutionPartialContext.getNode(),
+          tokens = frameSubstitutionPartialContext.getTokens(),
           frameSubstitution = new FrameSubstitution(string, node, tokens, frame, metavariable);
 
     return frameSubstitution;

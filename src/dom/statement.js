@@ -5,7 +5,7 @@ import { arrayUtilities } from "necessary";
 import dom from "../dom";
 import verifyMixins from "../mixins/statement/verify";
 import combinatorVerifier from "../verifier/combinator";
-import StatementNodeAndTokens from "../nodeAndTokens/statement";
+import StatementPartialContext from "../context/partial/statement";
 
 import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
@@ -284,9 +284,9 @@ export default domAssigned(class Statement {
   static fromJSON(json, fileContext) {
     const { string } = json,
           context = fileContext,  ///
-          statementNodeAndTokens = StatementNodeAndTokens.fromString(string, context),
-          node = statementNodeAndTokens.getNode(),
-          tokens = statementNodeAndTokens.getTokens(),
+          statementPartialContext = StatementPartialContext.fromString(string, context),
+          node = statementPartialContext.getNode(),
+          tokens = statementPartialContext.getTokens(),
           statement = new Statement(string, node, tokens);
 
     return statement;

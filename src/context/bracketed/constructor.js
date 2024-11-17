@@ -1,7 +1,7 @@
 "use strict";
 
 import BracketedContext from "../../context/bracketted";
-import TermNodeAndTokens from "../../nodeAndTokens/term";
+import TermPartialContext from "../../context/partial/term";
 
 import { OBJECT_TYPE_NAME } from "../../typeNames";
 
@@ -15,8 +15,8 @@ class ConstructorBracketedContext extends BracketedContext {
 
   static fromNothing() {
     const string = `(${OBJECT_TYPE_NAME})`,
-          NodeAndTokens = TermNodeAndTokens,
-          constructorBracketedContext = BracketedContext.fromStringAndNodeAndTokens(ConstructorBracketedContext, string, NodeAndTokens);
+          PartialContext = TermPartialContext,
+          constructorBracketedContext = BracketedContext.fromStringAndPartialContext(ConstructorBracketedContext, string, PartialContext);
 
     return constructorBracketedContext;
   }

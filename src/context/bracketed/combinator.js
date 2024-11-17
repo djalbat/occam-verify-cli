@@ -1,7 +1,7 @@
 "use strict";
 
 import BracketedContext from "../../context/bracketted";
-import StatementNodeAndTokens from "../../nodeAndTokens/statement";
+import StatementPartialContext from "../../context/partial/statement";
 
 import { STATEMENT_META_TYPE_NAME } from "../../metaTypeNames";
 
@@ -15,8 +15,8 @@ class CombinatorBracketedContext extends BracketedContext {
 
   static fromNothing() {
     const string = `(${STATEMENT_META_TYPE_NAME})`,
-          NodeAndTokens = StatementNodeAndTokens,
-          combinatorBracketedContext = BracketedContext.fromStringAndNodeAndTokens(CombinatorBracketedContext, string, NodeAndTokens);
+          PartialContext = StatementPartialContext,
+          combinatorBracketedContext = BracketedContext.fromStringAndPartialContext(CombinatorBracketedContext, string, PartialContext);
 
     return combinatorBracketedContext;
   }

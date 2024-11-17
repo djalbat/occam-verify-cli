@@ -1,8 +1,8 @@
 "use strict";
 
-import NodeAndTokens from "../nodeAndTokens";
+import PartialContext from "../../context/partial";
 
-import { ruleFromBNF } from "../nodeAndTokens";
+import { ruleFromBNF } from "../../context/partial";
 
 const bnf = `
 
@@ -11,7 +11,7 @@ const bnf = `
       `,
       rule = ruleFromBNF(bnf);
 
-export default class MetavariableNodeAndTokens extends NodeAndTokens {
+export default class MetavariablePartialContext extends PartialContext {
   getMetavariableNode() {
     const metavariableNode = this.node; ///
 
@@ -28,10 +28,10 @@ export default class MetavariableNodeAndTokens extends NodeAndTokens {
 
   static fromMetavariable(metavariable, context) {
     const string = metavariable.getString(),
-          metavariableNodeAndTokens = NodeAndTokens.fromString(MetavariableNodeAndTokens, string, context);
+          metavariablePartialContext = PartialContext.fromString(MetavariablePartialContext, string, context);
 
-    return metavariableNodeAndTokens;
+    return metavariablePartialContext;
   }
 
-  static fromString(string, context) { return NodeAndTokens.fromString(MetavariableNodeAndTokens, string, context); }
+  static fromString(string, context) { return PartialContext.fromString(MetavariablePartialContext, string, context); }
 }
