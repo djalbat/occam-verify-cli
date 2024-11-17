@@ -1,7 +1,5 @@
 "use strict";
 
-import { nominalLexer, nominalParser } from "../utilities/nominal";
-
 export default class BracketedContext {
   constructor(string, node, tokens) {
     this.string = string;
@@ -33,12 +31,9 @@ export default class BracketedContext {
     return this.string;
   }
 
-  static fromStringAndPartialContext(Class, string, PartialContext) {
-    const lexer = nominalLexer, ///
-          parser = nominalParser, ///
-          partialContext = PartialContext.fromStringLexerAndParser(string, lexer, parser),
-          node = partialContext.getNode(),
-          tokens = partialContext.getTokens(),
+  static fromString(Class, string, context) {
+    const node = context.getNode(),
+          tokens = context.getTokens(),
           bracketedContext = new Class(string, node, tokens);
 
     return bracketedContext;

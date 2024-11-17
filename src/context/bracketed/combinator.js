@@ -4,6 +4,7 @@ import BracketedContext from "../../context/bracketted";
 import StatementPartialContext from "../../context/partial/statement";
 
 import { STATEMENT_META_TYPE_NAME } from "../../metaTypeNames";
+import { nominalLexer, nominalParser } from "../../utilities/nominal";
 
 class CombinatorBracketedContext extends BracketedContext {
   getBracketedStatementNode() {
@@ -15,8 +16,11 @@ class CombinatorBracketedContext extends BracketedContext {
 
   static fromNothing() {
     const string = `(${STATEMENT_META_TYPE_NAME})`,
-          PartialContext = StatementPartialContext,
-          combinatorBracketedContext = BracketedContext.fromStringAndPartialContext(CombinatorBracketedContext, string, PartialContext);
+          lexer = nominalLexer, ///
+          parser = nominalParser, ///
+          statementPartialContext = StatementPartialContext.fromStringLexerAndParser(string, lexer, parser),
+          context = statementPartialContext,  ///
+          combinatorBracketedContext = BracketedContext.fromString(CombinatorBracketedContext, string, context);
 
     return combinatorBracketedContext;
   }
