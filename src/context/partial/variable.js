@@ -28,17 +28,21 @@ export default class VariablePartialContext extends PartialContext {
 
   static fromVariable(variable, context) {
     const string = variable.getString(),
-          variablePartialContext = PartialContext.fromString(VariablePartialContext, string, context);
+          lexer = context.getLexer(),
+          parser = context.getParser(),
+          variablePartialContext = PartialContext.fromStringLexerAndParser(VariablePartialContext, string, context, lexer, parser);
 
     return variablePartialContext;
   }
 
-  static fromString(string, context) { return PartialContext.fromString(VariablePartialContext, string, context); }
+  static fromStringLexerAndParser(string, lexer, parser) { return PartialContext.fromStringLexerAndParser(VariablePartialContext, string, lexer, parser); }
 }
 
 export function variableNodeFromVariableString(variableString, context) {
   const string = variableString,  ///
-        variablePartialContext = VariablePartialContext.fromString(string, context),
+        lexer = context.getLexer(),
+        parser = context.getParser(),
+        variablePartialContext = VariablePartialContext.fromStringLexerAndParser(string, lexer, parser),
         variableNode = variablePartialContext.getVariableNode();
 
   return variableNode;

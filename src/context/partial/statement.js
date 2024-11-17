@@ -28,10 +28,12 @@ export default class StatementPartialContext extends PartialContext {
 
   static fromStatement(statement, context) {
     const string = statement.getString(),
-          statementPartialContext = PartialContext.fromString(StatementPartialContext, string, context);
+          lexer = context.getLexer(),
+          parser = context.getParser(),
+          statementPartialContext = PartialContext.fromStringLexerAndParser(StatementPartialContext, string, lexer, parser);
 
     return statementPartialContext;
   }
 
-  static fromString(string, context) { return PartialContext.fromString(StatementPartialContext, string, context); }
+  static fromStringLexerAndParser(string, lexer, parser) { return PartialContext.fromStringLexerAndParser(StatementPartialContext, string, lexer, parser); }
 }

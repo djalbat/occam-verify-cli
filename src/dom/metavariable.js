@@ -503,8 +503,9 @@ export default domAssigned(class Metavariable {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          context = fileContext,  ///
-          metavariablePartialContext = MetavariablePartialContext.fromString(string, context),
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          metavariablePartialContext = MetavariablePartialContext.fromStringLexerAndParser(string, lexer, parser),
           metavariableTokens = metavariablePartialContext.getMetavariableTokens(),
           metavariableNode = metavariablePartialContext.getMetavariableNode(),
           metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
@@ -514,6 +515,14 @@ export default domAssigned(class Metavariable {
           type = typeFromJSON(json, fileContext),
           metaType = metaTypeFromJSON(json, fileContext),
           metavariable = new Metavariable(string, node, tokens, name, type, metaType);
+
+    return metavariable;
+  }
+
+  static fromLabelNode(labelNode, context) {
+    const labelMetavariableNode = labelMetavariableNodeQuery(labelNode),
+          metavariableNode = labelMetavariableNode, ///
+          metavariable = metavariableFromMetavariableNode(metavariableNode, context);
 
     return metavariable;
   }
@@ -528,14 +537,6 @@ export default domAssigned(class Metavariable {
 
       metavariable = metavariableFromMetavariableNode(metavariableNode, context);
     }
-
-    return metavariable;
-  }
-
-  static fromLabelNode(labelNode, context) {
-    const labelMetavariableNode = labelMetavariableNodeQuery(labelNode),
-          metavariableNode = labelMetavariableNode, ///
-          metavariable = metavariableFromMetavariableNode(metavariableNode, context);
 
     return metavariable;
   }

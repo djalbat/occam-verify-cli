@@ -14,5 +14,5 @@ const bnf = `
 export default class StatementSubstitutionPartialContext extends PartialContext {
   static rule = rule;
 
-  static fromString(string, context) { return PartialContext.fromString(StatementSubstitutionPartialContext, string, context); }
+  static fromStringLexerAndParser(string, lexer, parser) { return PartialContext.fromStringLexerAndParser(StatementSubstitutionPartialContext, string, lexer, parser); }
 }

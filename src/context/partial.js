@@ -27,10 +27,8 @@ export default class PartialContext {
     return this.tokens;
   }
 
-  static fromString(Class, string, context) {
+  static fromStringLexerAndParser(Class, string, lexer, parser) {
     const { rule } = Class,
-          lexer = context.getLexer(),
-          parser = context.getParser(),
           ruleMap = parser.getRuleMap(),
           ruleName = rule.getName();
 

@@ -165,8 +165,9 @@ export default class StatementSubstitution extends Substitution {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          context = fileContext,  ///
-          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromString(string, context),
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = statementSubstitutionPartialContext.getNode(),
           tokens = statementSubstitutionPartialContext.getTokens(),
           resolved = true,
@@ -182,7 +183,9 @@ export default class StatementSubstitution extends Substitution {
     statement = stripBracketsFromStatement(statement, context); ///
 
     const string = stringFromStatementAndMetavariable(statement, metavariable),
-          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromString(string, context),
+          lexer = context.getLexer(),
+          parser = context.getParser(),
+          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = statementSubstitutionPartialContext.getNode(),
           tokens = statementSubstitutionPartialContext.getTokens(),
           resolved = true,
@@ -196,7 +199,9 @@ export default class StatementSubstitution extends Substitution {
     statement = stripBracketsFromStatement(statement, context); ///
 
     const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
-          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromString(string, context),
+          lexer = context.getLexer(),
+          parser = context.getParser(),
+          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = statementSubstitutionPartialContext.getNode(),
           tokens = statementSubstitutionPartialContext.getTokens(),
           resolved = false,

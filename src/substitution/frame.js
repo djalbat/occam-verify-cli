@@ -56,7 +56,9 @@ export default class FrameSubstitution extends Substitution {
 
   static fromFrameAndMetavariable(frame, metavariable, context) {
     const string = stringFromFrameAndMetavariable(frame, metavariable),
-          frameSubstitutionPartialContext = FrameSubstitutionPartialContext.fromString(string, context),
+          lexer = context.getLexer(),
+          parser = context.getParser(),
+          frameSubstitutionPartialContext = FrameSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = frameSubstitutionPartialContext.getNode(),
           tokens = frameSubstitutionPartialContext.getTokens(),
           frameSubstitution = new FrameSubstitution(string, node, tokens, frame, metavariable);

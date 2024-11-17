@@ -90,7 +90,9 @@ export default class TermSubstitution extends Substitution {
     term = Term.fromTermNode(termNode, context);
 
     const string = stringFromTermAndVariable(term, variable),
-          termSubstitutionPartialContext = TermSubstitutionPartialContext.fromString(string, context),
+          lexer = context.getLexer(),
+          parser = context.getParser(),
+          termSubstitutionPartialContext = TermSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = termSubstitutionPartialContext.getNode(),
           tokens = termSubstitutionPartialContext.getTokens(),
           termSubstitution = new TermSubstitution(string, node, tokens, term, variable);

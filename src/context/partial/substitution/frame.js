@@ -14,5 +14,5 @@ const bnf = `
 export default class FrameSubstitutionPartialContext extends PartialContext {
   static rule = rule;
 
-  static fromString(string, context) { return PartialContext.fromString(FrameSubstitutionPartialContext, string, context); }
+  static fromStringLexerAndParser(string, lexer, parser) { return PartialContext.fromStringLexerAndParser(FrameSubstitutionPartialContext, string, lexer, parser); }
 }

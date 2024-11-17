@@ -283,8 +283,9 @@ export default domAssigned(class Statement {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          context = fileContext,  ///
-          statementPartialContext = StatementPartialContext.fromString(string, context),
+          lexer = fileContext.getLexer(),
+          parser = fileContext.getParser(),
+          statementPartialContext = StatementPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = statementPartialContext.getNode(),
           tokens = statementPartialContext.getTokens(),
           statement = new Statement(string, node, tokens);

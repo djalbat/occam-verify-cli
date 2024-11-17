@@ -7,8 +7,8 @@ import TermSubstitution from "../substitution/term";
 import { nodeQuery } from "../utilities/query";
 import { objectType } from "./type";
 import { domAssigned } from "../dom";
-import { variableNameFromVariableNode} from "../utilities/name";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
+import { variableNameFromVariableNode } from "../utilities/name";
 import { variableNodeFromVariableString } from "../context/partial/variable";
 
 const termVariableNodeQuery = nodeQuery("/term/variable!"),

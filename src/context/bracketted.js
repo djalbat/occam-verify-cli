@@ -34,11 +34,9 @@ export default class BracketedContext {
   }
 
   static fromStringAndPartialContext(Class, string, PartialContext) {
-    const context = { ///
-            getLexer,
-            getParser
-          },
-          partialContext = PartialContext.fromString(string, context),
+    const lexer = nominalLexer, ///
+          parser = nominalParser, ///
+          partialContext = PartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = partialContext.getNode(),
           tokens = partialContext.getTokens(),
           bracketedContext = new Class(string, node, tokens);
@@ -46,16 +44,3 @@ export default class BracketedContext {
     return bracketedContext;
   }
 }
-
-function getLexer() {
-  const lexer = nominalLexer; //'
-
-  return lexer;
-}
-
-function getParser() {
-  const parser = nominalParser; //'
-
-  return parser;
-}
-

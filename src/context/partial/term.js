@@ -28,17 +28,21 @@ export default class TermPartialContext extends PartialContext {
 
   static fromTerm(term, context) {
     const string = term.getString(),
-          termPartialContext = PartialContext.fromString(TermPartialContext, string, context);
+          lexer = context.getLexer(),
+          parser = context.getParser(),
+          termPartialContext = PartialContext.fromStringLexerAndParser(TermPartialContext, string, lexer, parser);
 
     return termPartialContext;
   }
 
-  static fromString(string, context) { return PartialContext.fromString(TermPartialContext, string, context); }
+  static fromStringLexerAndParser(string, lexer, parser) { return PartialContext.fromStringLexerAndParser(TermPartialContext, string, lexer, parser); }
 }
 
 export function termNodeFromTermString(termString, context) {
   const string = termString,  ///
-        termPartialContext = TermPartialContext.fromString(string, context),
+        lexer = context.getLexer(),
+        parser = context.getParser(),
+        termPartialContext = TermPartialContext.fromStringLexerAndParser(string, lexer, parser),
         termNode = termPartialContext.getTermNode();
 
   return termNode;

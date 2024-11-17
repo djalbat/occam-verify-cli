@@ -56,7 +56,9 @@ export default class ReferenceSubstitution extends Substitution {
 
   static fromReferenceAndMetavariable(reference, metavariable, context) {
     const string = stringFromReferenceAndMetavariable(reference, metavariable),
-          referenceSubstitutionPartialContext = ReferenceSubstitutionPartialContext.fromString(string, context),
+          lexer = context.getLexer(),
+          parser = context.getParser(),
+          referenceSubstitutionPartialContext = ReferenceSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = referenceSubstitutionPartialContext.getNode(),
           tokens = referenceSubstitutionPartialContext.getTokens(),
           referenceSubstitution = new ReferenceSubstitution(string, node, tokens, reference, metavariable);

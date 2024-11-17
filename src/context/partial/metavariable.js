@@ -28,10 +28,12 @@ export default class MetavariablePartialContext extends PartialContext {
 
   static fromMetavariable(metavariable, context) {
     const string = metavariable.getString(),
-          metavariablePartialContext = PartialContext.fromString(MetavariablePartialContext, string, context);
+          lexer = context.getLexer(),
+          parser = context.getParser(),
+          metavariablePartialContext = PartialContext.fromStringLexerAndParser(MetavariablePartialContext, string, lexer, parser);
 
     return metavariablePartialContext;
   }
 
-  static fromString(string, context) { return PartialContext.fromString(MetavariablePartialContext, string, context); }
+  static fromStringLexerAndParser(string, lexer, parser) { return PartialContext.fromStringLexerAndParser(MetavariablePartialContext, string, lexer, parser); }
 }
