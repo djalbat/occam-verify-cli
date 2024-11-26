@@ -2,8 +2,8 @@
 
 import { Query } from "occam-query";
 
-export function nodeQuery(expression) {
-  const query = Query.fromExpression(expression);
+export function nodeQuery(expressionString) {
+  const query = Query.fromExpressionString(expressionString);
 
   return function(node) {
     const nodes = query.execute(node);
@@ -14,8 +14,8 @@ export function nodeQuery(expression) {
   };
 }
 
-export function nodesQuery(expression) {
-  const query = Query.fromExpression(expression);
+export function nodesQuery(expressionString) {
+  const query = Query.fromExpressionString(expressionString);
 
   return function(node) {
     const nodes = query.execute(node);
