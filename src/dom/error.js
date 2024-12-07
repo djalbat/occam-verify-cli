@@ -21,7 +21,7 @@ export default domAssigned(class Error {
 
     const errorString = this.string;  ///
 
-    this.fileContext.debug(`The '${errorString}' error cannot be verified.`);
+    this.fileContext.warning(`The '${errorString}' error cannot be verified.`);
 
     return verified;
   }

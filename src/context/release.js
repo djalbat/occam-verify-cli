@@ -1,20 +1,21 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { FileContext as FurtleFileContext } from "occam-furtle";
 
-import FileContext from "./file";
-import topLevelVerifier from "../verifier/topLevel";
+import FileContext from "../context/file";
 
 import { filePathUtilities } from "occam-entities";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import { objectType } from "../dom/type";
+import { frameMetaType, referenceMetaType, statementMetaType } from "../dom/metaType";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
-const { isFilePathNominalFilePath } = filePathUtilities,
-      { tail, push, clear, resolve } = arrayUtilities,
+const { tail, push, clear, resolve } = arrayUtilities,
       { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
-      { nominalParserFromCombinedCustomGrammar } = parsersUtilities;
+      { nominalParserFromCombinedCustomGrammar } = parsersUtilities,
+      { isFilePathFurtleFilePath, isFilePathNominalFilePath } = filePathUtilities;
 
 export default class ReleaseContext {
   constructor(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts) {
@@ -53,6 +54,16 @@ export default class ReleaseContext {
 
   getParser() {
     return this.parser;
+  }
+
+  getMetaTypes() {
+    const metaTypes = [
+      frameMetaType,
+      referenceMetaType,
+      statementMetaType
+    ];
+
+    return metaTypes;
   }
 
   isVerified() {
@@ -226,6 +237,19 @@ export default class ReleaseContext {
     }
 
     return theorems;
+  }
+
+  getProcedures(includeDependencies = true) {
+    const procedures = [];
+
+    this.fileContexts.forEach((fileContext) => {
+      const includeRelease = false,
+            fileContextProcedures = fileContext.getProcedures(includeRelease);
+
+      push(procedures, fileContextProcedures);
+    });
+
+    return procedures;
   }
 
   getMetaLemmas(includeDependencies = true) {
@@ -448,34 +472,9 @@ export default class ReleaseContext {
   }
 }
 
-function fileContextsFromJSON(json,fileContexts, releaseContext) {
-  const fileContextsJSON = json;  ///
-
-  fileContextsJSON.forEach((fileContextJSON) => {
-    const { filePath } = fileContextJSON,
-          json = fileContextJSON, ///
-          fileContext = FileContext.fromFilePathAndJSON(filePath, json, releaseContext);
-
-    fileContexts.push(fileContext);
-  });
-}
-
-function fileContextsFromEntries(entries, fileContexts, releaseContext) {
-  entries.forEachFile((file) => {
-    const filePath = file.getPath(),
-          filePathNominalFilePath = isFilePathNominalFilePath(filePath);
-
-    if (filePathNominalFilePath) {
-      const fileContext = FileContext.fromFile(file, releaseContext);
-
-      fileContexts.push(fileContext);
-    }
-  });
-}
-
 function verifyFileContexts(fileContexts, verifiedFileContexts) {
   const resolved = resolve(fileContexts, verifiedFileContexts, (fileContext) => {
-          const fileContextVerified = verifyFileContext(fileContext);
+          const fileContextVerified = fileContext.verify();
 
           if (fileContextVerified) {
             return true;
@@ -486,42 +485,47 @@ function verifyFileContexts(fileContexts, verifiedFileContexts) {
   return fileContextsVerified;
 }
 
-function verifyFileContext(fileContext) {
-  let fileContextVerified = false;
+function fileContextsFromJSON(json,fileContexts, releaseContext) {
+  const fileContextsJSON = json;  ///
 
-  const filePath = fileContext.getFilePath(),
-        tokens = fileContext.getTokens();
+  fileContextsJSON.forEach((fileContextJSON) => {
+    const { filePath } = fileContextJSON,
+          json = fileContextJSON, ///
+          filePathFurtleFilePath = isFilePathFurtleFilePath(filePath),
+          filePathNominalFilePath = isFilePathNominalFilePath(filePath);
 
-  if (tokens === null) {
-    const file = fileContext.findFile(filePath),
-          lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
-          content = file.getContent(),
-          tokens = lexer.tokenise(content),
-          node = parser.parse(tokens);
+    if (filePathFurtleFilePath) {
+      const furtleFileContext = FurtleFileContext.fromFilePathAndJSON(filePath, json, releaseContext),
+            fileContext = furtleFileContext;  ///
 
-    fileContext.setTokens(tokens);
-
-    fileContext.setNode(node);
-  }
-
-  const node = fileContext.getNode();
-
-  if (node !== null) {
-    fileContext.debug(`Verifying the '${filePath}' file...`);
-
-    const verifiedAtTopLevel = topLevelVerifier.verify(node, fileContext);
-
-    if (verifiedAtTopLevel) {
-      fileContextVerified = true;
-    } else {
-      fileContext.clear();
+      fileContexts.push(fileContext);
     }
 
-    if (fileContextVerified) {
-      fileContext.info(`...verified the '${filePath}' file.`);
-    }
-  }
+    if (filePathNominalFilePath) {
+      const fileContext = FileContext.fromFilePathAndJSON(filePath, json, releaseContext);
 
-  return fileContextVerified;
+      fileContexts.push(fileContext);
+    }
+  });
+}
+
+function fileContextsFromEntries(entries, fileContexts, releaseContext) {
+  entries.forEachFile((file) => {
+    const filePath = file.getPath(),
+          filePathFurtleFilePath = isFilePathFurtleFilePath(filePath),
+          filePathNominalFilePath = isFilePathNominalFilePath(filePath);
+
+    if (filePathFurtleFilePath) {
+      const furtleFileContext = FurtleFileContext.fromFile(file, releaseContext),
+            fileContext = furtleFileContext;  ///
+
+      fileContexts.push(fileContext);
+    }
+
+    if (filePathNominalFilePath) {
+      const fileContext = FileContext.fromFile(file, releaseContext);
+
+      fileContexts.push(fileContext);
+    }
+  });
 }
