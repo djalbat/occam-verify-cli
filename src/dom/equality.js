@@ -14,7 +14,7 @@ const equalityNodeQuery = nodeQuery("/statement/equality"),
       rightTermNodeQuery = nodeQuery("/equality/term[1]");
 
 export default domAssigned(class Equality {
-  constructor(string,leftTerm, rightTerm) {
+  constructor(string, leftTerm, rightTerm) {
     this.string = string;
     this.leftTerm = leftTerm;
     this.rightTerm = rightTerm;

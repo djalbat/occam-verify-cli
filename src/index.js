@@ -28,6 +28,7 @@ import Declaration from "./dom/declaration";
 import Supposition from "./dom/supposition";
 import Metatheorem from "./dom/metatheorem";
 import Metavariable from "./dom/metavariable";
+import ProcedureCall from "./dom/procedureCall";
 import SubDerivation from "./dom/subDerivation";
 import TypeAssertion from "./dom/assertion/type";
 import TypeDeclaration from "./dom/declaration/type";

@@ -43,6 +43,16 @@ export function metavariableFromStatement(statement, context) {
   return metavariable;
 }
 
+export function procedureCallFromStatement(statement, context) {
+  context = contextFromStatement(statement, context); ///
+
+  const { ProcedureCall } = dom,
+        statementNode = statement.getNode(),
+        procedureCall = ProcedureCall.fromStatementNode(statementNode, context);
+
+  return procedureCall;
+}
+
 export function typeAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
