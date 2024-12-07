@@ -1,17 +1,23 @@
 "use strict";
 
-import { nodeQuery } from "../utilities/query";
+import {nodeQuery, nodesQuery} from "../utilities/query";
 import { domAssigned } from "../dom";
 
-const procedureCallNodeQuery = nodeQuery("/statement/procedureCall");
+const parameterNodesQuery = nodesQuery("/procedureCall/parameter"),
+      procedureCallNodeQuery = nodeQuery("/statement/procedureCall");
 
 export default domAssigned(class ProcedureCall {
-  constructor(reference) {
+  constructor(reference, parameters) {
     this.reference = reference;
+    this.parameters = parameters;
   }
 
   getReference() {
     return this.reference;
+  }
+
+  getParameters() {
+    return this.parameters;
   }
 
   verify(assignments, stated, context) {
@@ -20,6 +26,8 @@ export default domAssigned(class ProcedureCall {
     const procedureCallString = this.string; ///
 
     context.trace(`Verifying the '${procedureCallString}' procedure call...`);
+
+    debugger
 
     if (verified) {
       context.debug(`...verified the '${procedureCallString}' procedure call.`);

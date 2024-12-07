@@ -287,20 +287,26 @@ export default domAssigned(class Variable {
   }
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-    const { Type } = dom,
-          variableDeclarationTypeNode = variableDeclarationTypeNodeQuery(variableDeclarationNode),
-          variableDeclarationVariableNode = variableDeclarationVariableNodeQuery(variableDeclarationNode),
-          typeNode = variableDeclarationTypeNode, ///
+    const variableDeclarationVariableNode = variableDeclarationVariableNodeQuery(variableDeclarationNode),
           variableNode = variableDeclarationVariableNode, ///
           variableName = variableNameFromVariableNode(variableNode),
-          context = LocalContext.fromFileContext(fileContext),
           variableString = fileContext.nodeAsString(variableNode),
           string = variableString,  ///
           node = variableNode,  ///
           name = variableName,  ///
-          type = Type.fromTypeNode(typeNode, context),
+          type = typeFromVariableDeclarationNode(variableDeclarationNode, fileContext),
           variable = new Variable(string, node, name, type);
 
     return variable;
   }
 });
+
+function typeFromVariableDeclarationNode(variableDeclarationNode, fileContext) {
+  const { Type } = dom,
+        variableDeclarationTypeNode = variableDeclarationTypeNodeQuery(variableDeclarationNode),
+        typeNode = variableDeclarationTypeNode, ///
+        context = LocalContext.fromFileContext(fileContext),
+        type = Type.fromTypeNode(typeNode, context);
+
+  return type;
+}

@@ -145,17 +145,10 @@ export default domAssigned(class Subproof {
     const subproofNode = subproofNodeQuery(proofStepSubproofNode);
 
     if (subproofNode !== null) {
-      const { Supposition, SubDerivation } = dom,
-            subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
-            suppositionNodes = suppositionNodesQuery(subproofNode),
-            subDerivationNode = subDerivationNodeQuery(subproofNode),
+      const subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
             string = subproofString,  ///
-            suppositions = suppositionNodes.map((suppositionNode) => {
-              const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
-
-              return supposition;
-            }),
-            subDerivation = SubDerivation.fromSubDerivationNode(subDerivationNode, fileContext);
+            suppositions = suppositionsFromSubproofNode(subproofNode, fileContext),
+            subDerivation = subDerivationFromSubproofNode(subproofNode, fileContext);
 
       subproof = new Subproof(string, suppositions, subDerivation);
     }
@@ -163,3 +156,23 @@ export default domAssigned(class Subproof {
     return subproof;
   }
 });
+
+function suppositionsFromSubproofNode(subproofNode, fileContext) {
+  const { Supposition } = dom,
+        suppositionNodes = suppositionNodesQuery(subproofNode),
+        suppositions = suppositionNodes.map((suppositionNode) => {
+          const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
+
+          return supposition;
+        });
+
+  return suppositions;
+}
+
+function subDerivationFromSubproofNode(subproofNode, fileContext) {
+  const { SubDerivation } = dom,
+        subDerivationNode = subDerivationNodeQuery(subproofNode),
+        subDerivation = SubDerivation.fromSubDerivationNode(subDerivationNode, fileContext);
+
+  return subDerivation;
+}

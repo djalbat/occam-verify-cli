@@ -212,13 +212,10 @@ export default domAssigned(class Equality {
     const equalityNode = equalityNodeQuery(statementNode);
 
     if (equalityNode !== null) {
-      const { Term } = dom,
-            leftTermNode = leftTermNodeQuery(equalityNode),
-            rightTermNode = rightTermNodeQuery(equalityNode),
-            leftTerm = Term.fromTermNode(leftTermNode, context),
-            rightTerm = Term.fromTermNode(rightTermNode, context),
-            node = equalityNode,  ///
-            string = context.nodeAsString(node);
+      const node = equalityNode,  ///
+            string = context.nodeAsString(node),
+            leftTerm = leftTermFromEqualityNode(equalityNode, context),
+            rightTerm = rightTermFromEqualityNode(equalityNode, context);
 
       equality = new Equality(string, leftTerm, rightTerm);
     }
@@ -226,3 +223,19 @@ export default domAssigned(class Equality {
     return equality;
   }
 });
+
+function leftTermFromEqualityNode(equalityNode, context) {
+  const { Term } = dom,
+        leftTermNode = leftTermNodeQuery(equalityNode),
+        leftTerm = Term.fromTermNode(leftTermNode, context);
+
+  return leftTerm;
+}
+
+function rightTermFromEqualityNode(equalityNode, context) {
+  const { Term } = dom,
+        rightTermNode = rightTermNodeQuery(equalityNode),
+        rightTerm = Term.fromTermNode(rightTermNode, context);
+
+  return rightTerm;
+}

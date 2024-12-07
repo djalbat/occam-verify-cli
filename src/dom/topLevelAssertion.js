@@ -289,24 +289,11 @@ export default class TopLevelAssertion {
   }
 
   static fromNode(Class, node, fileContext) {
-    const { Label, Proof, Consequent, Supposition } = dom,
-          proofNode = proofNodeQuery(node),
-          labelNodes = labelNodesQuery(node),
-          consequentNode = consequentNodeQuery(node),
-          suppositionNodes = suppositionNodesQuery(node),
-          labels = labelNodes.map((labelNode) => {
-            const label = Label.fromLabelNode(labelNode, fileContext);
-
-            return label;
-          }),
+    const labels = labelsFromNode(node, fileContext),
           substitutions = Substitutions.fromNothing(),
-          suppositions = suppositionNodes.map((suppositionNode) => {
-            const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
-
-            return supposition;
-          }),
-          consequent = Consequent.fromConsequentNode(consequentNode, fileContext),
-          proof = Proof.fromProofNode(proofNode, fileContext),
+          suppositions = suppositionsFromNode(node, fileContext),
+          consequent = consequentFromNode(node, fileContext),
+          proof = proofFromNode(node, fileContext),
           string = stringFromLabels(labels),
           metaLemma = new Class(fileContext, string, labels, substitutions, suppositions, consequent, proof);
 
@@ -326,5 +313,45 @@ export function stringFromLabels(labels) {
   }, EMPTY_STRING);
 
   return string;
+}
+
+function proofFromNode(node, fileContext) {
+  const { Proof } = dom,
+        proofNode = proofNodeQuery(node),
+        proof = Proof.fromProofNode(proofNode, fileContext);
+
+  return proof;
+}
+
+function labelsFromNode(node, fileContext) {
+  const { Label } = dom,
+        labelNodes = labelNodesQuery(node),
+        labels = labelNodes.map((labelNode) => {
+          const label = Label.fromLabelNode(labelNode, fileContext);
+
+          return label;
+        });
+
+  return labels;
+}
+
+function consequentFromNode(node, fileContext) {
+  const { Consequent } = dom,
+        consequentNode = consequentNodeQuery(node),
+        consequent = Consequent.fromConsequentNode(consequentNode, fileContext);
+
+  return consequent;
+}
+
+function suppositionsFromNode(node, fileContext) {
+  const { Supposition } = dom,
+        suppositionNodes = suppositionNodesQuery(node),
+        suppositions = suppositionNodes.map((suppositionNode) => {
+          const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
+
+          return supposition;
+        });
+
+  return suppositions;
 }
 

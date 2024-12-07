@@ -103,16 +103,11 @@ export default domAssigned(class SubproofAssertion {
 
     if (subproofAssertionNode !== null) {
       const { Statement } = dom,
-            statementNodes = statementNodesQuery(subproofAssertionNode),
             statement = Statement.fromStatementNode(statementNode, context),
             statementString = statement.getString(),
-            statements = statementNodes.map((statementNode) => {
-              const statement = Statement.fromStatementNode(statementNode, context);
-
-              return statement;
-            }),
+            string = statementString, ///
             node = subproofAssertionNode, ///
-            string = statementString; ///
+            statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context);
 
       subproofAssertion = new SubproofAssertion(string, node, statements);
     }
@@ -124,14 +119,8 @@ export default domAssigned(class SubproofAssertion {
     let subproofAssertion = null;
 
     if (subproofAssertionNode !== null) {
-      const { Statement } = dom,
-            statementNodes = statementNodesQuery(subproofAssertionNode),
-            statements = statementNodes.map((statementNode) => {
-              const statement = Statement.fromStatementNode(statementNode, context);
-
-              return statement;
-            }),
-            node = subproofAssertionNode, ///
+      const node = subproofAssertionNode, ///
+            statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),
             string = stringFromStatements(statements);
 
       subproofAssertion = new SubproofAssertion(string, node, statements);
@@ -149,6 +138,18 @@ function stringFromStatements(statements) {
         string = `[${frontStatementsString}] ... ${lastStatementString}`;
 
   return string;
+}
+
+function statementsFromSubproofAssertionNode(subproofAssertionNode, context) {
+  const { Statement } = dom,
+        statementNodes = statementNodesQuery(subproofAssertionNode),
+        statements = statementNodes.map((statementNode) => {
+          const statement = Statement.fromStatementNode(statementNode, context);
+
+          return statement;
+        });
+
+  return statements;
 }
 
 function statementsStringFromStatements(statements) {

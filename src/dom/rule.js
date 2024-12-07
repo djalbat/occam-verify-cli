@@ -237,26 +237,53 @@ export default domAssigned(class Rule {
   }
 
   static fromRuleNode(ruleNode, fileContext) {
-    const { Label, Proof, Premise, Conclusion } = dom,
-          proofNode = proofNodeQuery(ruleNode),
-          labelNodes = labelNodesQuery(ruleNode),
-          premiseNodes = premiseNodesQuery(ruleNode),
-          conclusionNode = conclusionNodeQuery(ruleNode),
-          labels = labelNodes.map((labelNode) => {
-            const label = Label.fromLabelNode(labelNode, fileContext);
-
-            return label;
-          }),
-          premises = premiseNodes.map((premiseNode) => {
-            const premise = Premise.fromPremiseNode(premiseNode, fileContext);
-
-            return premise;
-          }),
-          conclusion = Conclusion.fromConclusionNode(conclusionNode, fileContext),
+    const labels = labelsFromRuleNode(ruleNode, fileContext),
+          premises = premisesFromRuleNode(ruleNode, fileContext),
+          conclusion = conclusionFromRuleNode(ruleNode, fileContext),
+          proof = proofFromRuleNode(ruleNode, fileContext),
           string = stringFromLabels(labels),
-          proof = Proof.fromProofNode(proofNode, fileContext),
           rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
 
     return rule;
   }
 });
+
+function proofFromRuleNode(ruleNode, fileContext) {
+  const { Proof } = dom,
+        proofNode = proofNodeQuery(ruleNode),
+        proof = Proof.fromProofNode(proofNode, fileContext);
+
+  return proof;
+}
+
+function labelsFromRuleNode(ruleNode, fileContext) {
+  const { Label } = dom,
+        labelNodes = labelNodesQuery(ruleNode),
+        labels = labelNodes.map((labelNode) => {
+          const label = Label.fromLabelNode(labelNode, fileContext);
+
+          return label;
+        });
+
+  return labels;
+}
+
+function premisesFromRuleNode(ruleNode, fileContext) {
+  const { Premise } = dom,
+        premiseNodes = premiseNodesQuery(ruleNode),
+        premises = premiseNodes.map((premiseNode) => {
+          const premise = Premise.fromPremiseNode(premiseNode, fileContext);
+
+          return premise;
+        });
+
+  return premises;
+}
+
+function conclusionFromRuleNode(ruleNode, fileContext) {
+  const { Conclusion } = dom,
+        conclusionNode = conclusionNodeQuery(ruleNode),
+        conclusion = Conclusion.fromConclusionNode(conclusionNode, fileContext);
+
+  return conclusion;
+}

@@ -44,17 +44,23 @@ export default domAssigned(class Derivation {
   static name = "Derivation";
 
   static fromDerivationNode(derivationNode, fileContext) {
-    const { ProofStep, Subproof } = dom,
-          proofStepSubproofNodes = proofStepSubproofNodesQuery(derivationNode),
-          proofStepSubproofs = proofStepSubproofNodes.map((proofStepSubproofNode) => {
-            const subproof = Subproof.fromProofStepSubproofNode(proofStepSubproofNode, fileContext),
-                  proofStep = ProofStep.fromProofStepSubproofNode(proofStepSubproofNode, fileContext),
-                  proofStepSubproof = (proofStep || subproof);
-
-            return proofStepSubproof;
-          }),
+    const proofStepSubproofs = proofStepSubproofsFromDerivationNode(derivationNode, fileContext),
           derivation = new Derivation(proofStepSubproofs);
 
     return derivation;
   }
 });
+
+function proofStepSubproofsFromDerivationNode(derivationNode, fileContext) {
+  const { ProofStep, Subproof } = dom,
+        proofStepSubproofNodes = proofStepSubproofNodesQuery(derivationNode),
+        proofStepSubproofs = proofStepSubproofNodes.map((proofStepSubproofNode) => {
+          const subproof = Subproof.fromProofStepSubproofNode(proofStepSubproofNode, fileContext),
+                proofStep = ProofStep.fromProofStepSubproofNode(proofStepSubproofNode, fileContext),
+                proofStepSubproof = (proofStep || subproof);
+
+          return proofStepSubproof;
+        });
+
+  return proofStepSubproofs;
+}

@@ -14,9 +14,8 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 const { filter, compress } = arrayUtilities;
 
-const termNodeQuery = nodeQuery("/*/term[0]"),
-      variableNodeQuery = nodeQuery("/term/variable!"),
-      variableNodesQuery = nodesQuery("//variable");
+const variableNodesQuery = nodesQuery("//variable"),
+      termVariableNodeQuery = nodeQuery("/*/term[0]/variable!");
 
 export default domAssigned(class Term {
   constructor(string, node, type) {
@@ -279,18 +278,14 @@ export default domAssigned(class Term {
   static fromDefinedAssertionNode(definedAssertionNode, context) {
     let term = null;
 
-    const termNode = termNodeQuery(definedAssertionNode);
+    const termVariableNode = termVariableNodeQuery(definedAssertionNode);
 
-    if (termNode !== null) {
-      const variableNode = variableNodeQuery(termNode);
+    if (termVariableNode !== null) {
+      const node = termVariableNode,  ///
+            string = context.nodeAsString(node),
+            type = null;
 
-      if (variableNode !== null) {
-        const node = termNode,  ///
-              string = context.nodeAsString(node),
-              type = null;
-
-        term = new Term(string, node, type);
-      }
+      term = new Term(string, node, type);
     }
 
     return term;
@@ -299,18 +294,14 @@ export default domAssigned(class Term {
   static fromContainedAssertionNode(containedAssertionNode, context) {
     let term = null;
 
-    const termNode = termNodeQuery(containedAssertionNode);
+    const termVariableNode = termVariableNodeQuery(containedAssertionNode);
 
-    if (termNode !== null) {
-      const variableNode = variableNodeQuery(termNode);
+    if (termVariableNode !== null) {
+      const node = termVariableNode,  ///
+            string = context.nodeAsString(node),
+            type = null;
 
-      if (variableNode !== null) {
-        const node = termNode,  ///
-              string = context.nodeAsString(node),
-              type = null;
-
-        term = new Term(string, node, type);
-      }
+      term = new Term(string, node, type);
     }
 
     return term;

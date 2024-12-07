@@ -283,22 +283,11 @@ export default domAssigned(class Frame {
     let frame = null;
 
     if (frameNode !== null) {
-      const { Declaration, Metavariable } = dom,
-            node = frameNode, ///
+      const node = frameNode, ///
             string = context.nodeAsString(node),
             tokens = context.nodeAsTokens(node),
-            declarationNodes = declarationNodesQuery(frameNode),
-            metavariableNodes = metavariableNodesQuery(frameNode),
-            declarations = declarationNodes.map((declarationNode) => {
-              const declaration = Declaration.fromDeclarationNode(declarationNode, context);
-
-              return declaration;
-            }),
-            metavariables = metavariableNodes.map((metavariableNode) => {
-              const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
-
-              return metavariable;
-            });
+            declarations = declarationsFromFrameNode(frameNode, context),
+            metavariables = metavariablesFromFrameNode(frameNode, context);
 
       frame = new Frame(string, node, tokens, declarations, metavariables);
     }
@@ -358,3 +347,27 @@ export default domAssigned(class Frame {
     return frame;
   }
 });
+
+function declarationsFromFrameNode(frameNode, context) {
+  const { Declaration } = dom,
+        declarationNodes = declarationNodesQuery(frameNode),
+        declarations = declarationNodes.map((declarationNode) => {
+          const declaration = Declaration.fromDeclarationNode(declarationNode, context);
+
+          return declaration;
+        });
+
+  return declarations;
+}
+
+function metavariablesFromFrameNode(frameNode, context) {
+  const { Metavariable } = dom,
+        metavariableNodes = metavariableNodesQuery(frameNode),
+        metavariables = metavariableNodes.map((metavariableNode) => {
+          const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
+
+          return metavariable;
+        });
+
+  return metavariables;
+}

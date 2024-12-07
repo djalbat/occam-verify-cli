@@ -112,13 +112,10 @@ export default domAssigned(class Judgement {
     const judgementNode = judgementNodeQuery(statementNode);
 
     if (judgementNode !== null) {
-      const { Frame, Declaration } = dom,
-            frameNode = frameNodeQuery(judgementNode),
-            declarationNode = declarationNodeQuery(judgementNode),
-            node = judgementNode, ///
-            frame = Frame.fromFrameNode(frameNode, context),
+      const node = judgementNode, ///
             string = context.nodeAsString(node),
-            declaration = Declaration.fromDeclarationNode(declarationNode, context);
+            frame = frameFromJudgementNode(judgementNode, context),
+            declaration = declarationFromJudgementNode(judgementNode, context);
 
       judgement = new Judgement(string, frame, declaration);
     }
@@ -126,3 +123,19 @@ export default domAssigned(class Judgement {
     return judgement;
   }
 });
+
+function frameFromJudgementNode(judgementNode, context) {
+  const { Frame } = dom,
+        frameNode = frameNodeQuery(judgementNode),
+        frame = Frame.fromFrameNode(frameNode, context);
+
+  return frame;
+}
+
+function declarationFromJudgementNode(judgementNode, context) {
+  const { Declaration } = dom,
+        declarationNode = declarationNodeQuery(judgementNode),
+        declaration = Declaration.fromDeclarationNode(declarationNode, context);
+
+  return declaration;
+}

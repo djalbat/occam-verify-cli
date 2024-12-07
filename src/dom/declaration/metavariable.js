@@ -51,9 +51,8 @@ export default domAssigned(class MetavariableDeclaration {
   static name = "MetavariableDeclaration";
 
   static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
-    const { MetaType, Metavariable } = dom,
-          metaTypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
-          metaType = MetaType.fromMetaTypeNode(metaTypeNode, fileContext),
+    const { Metavariable } = dom,
+          metaType = metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
           metavariable = Metavariable.fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
           string = stringFromMetavariableAndMetaType(metavariable, metaType),
           metavariableDeclaration = new MetavariableDeclaration(fileContext, string, metavariable);
@@ -76,4 +75,12 @@ function stringFromMetavariableAndMetaType(metavariable, metaType) {
   }
 
   return string;
+}
+
+function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
+  const { MetaType } = dom,
+        metaTypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
+        metaType = MetaType.fromMetaTypeNode(metaTypeNode, fileContext);
+
+  return metaType;
 }

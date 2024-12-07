@@ -178,12 +178,8 @@ class Type {
   }
 
   static fromTypeDeclarationNode(typeDeclarationNode, fileContext) {
-    const typeDeclarationTypeNode = typeDeclarationTypeNodeQuery(typeDeclarationNode),
-          typeDeclarationSuperTypeNode = typeDeclarationSuperTypeNodeQuery(typeDeclarationNode),
-          typeNode = typeDeclarationTypeNode, ///
-          superTypeNode = typeDeclarationSuperTypeNode, ///
-          typeName = typeNameFromTypeNode(typeNode),
-          superType = Type.fromTypeNode(superTypeNode),
+    const typeName = typeNameFromTypeDeclarationNode(typeDeclarationNode, fileContext),
+          superType = superTypeFromTypeDeclarationNode(typeDeclarationNode, fileContext),
           string = stringFromTypeNameAndSuperType(typeName, superType),
           name = typeName,  ///
           type = new Type(string, name, superType);
@@ -220,6 +216,22 @@ function stringFromTypeNameAndSuperType(typeName, superType) {
   }
 
   return string;
+}
+
+function typeNameFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
+  const typeDeclarationTypeNode = typeDeclarationTypeNodeQuery(typeDeclarationNode),
+        typeNode = typeDeclarationTypeNode, ///
+        typeName = typeNameFromTypeNode(typeNode);
+
+  return typeName;
+}
+
+function superTypeFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
+  const typeDeclarationSuperTypeNode = typeDeclarationSuperTypeNodeQuery(typeDeclarationNode),
+        superTypeNode = typeDeclarationSuperTypeNode, ///
+        superType = Type.fromTypeNode(superTypeNode);
+
+  return superType;
 }
 
 class ObjectType extends Type {
