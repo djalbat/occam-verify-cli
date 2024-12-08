@@ -15,6 +15,7 @@ import Equality from "./dom/equality";
 import MetaType from "./dom/metaType";
 import Subproof from "./dom/subproof";
 import Variable from "./dom/variable";
+import Parameter from "./dom/parameter";
 import ProofStep from "./dom/proofStep";
 import Reference from "./dom/reference";
 import Statement from "./dom/statement";

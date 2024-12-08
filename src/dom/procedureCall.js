@@ -1,9 +1,11 @@
 "use strict";
 
-import {nodeQuery, nodesQuery} from "../utilities/query";
-import { domAssigned } from "../dom";
+import dom from "../dom";
 
-const parameterNodesQuery = nodesQuery("/procedureCall/parameter"),
+import { domAssigned } from "../dom";
+import { nodeQuery, nodesQuery } from "../utilities/query";
+
+const parameterNodesQuery = nodesQuery("/procedureCall/parameters/parameter"),
       procedureCallNodeQuery = nodeQuery("/statement/procedureCall");
 
 export default domAssigned(class ProcedureCall {
@@ -44,9 +46,23 @@ export default domAssigned(class ProcedureCall {
     const procedureCallNode = procedureCallNodeQuery(statementNode);
 
     if (procedureCallNode !== null) {
-      debugger
+      const parameters = parametersFromProcedureCallNode(procedureCallNode, context);
+
+      procedureCall = new ProcedureCall(parameters);
     }
 
     return procedureCall;
   }
 });
+
+function parametersFromProcedureCallNode(procedureCallNode, context) {
+  const { Parameter } = dom,
+        parameterNodes = parameterNodesQuery(procedureCallNode),
+        parameters = parameterNodes.map((parameterNode) => {
+          const parameter = Parameter.fromParameterNode(parameterNode, context);
+
+          return parameter;
+        });
+
+  return parameters;
+}
