@@ -85,7 +85,8 @@ export default class Combinator {
     const { Statement } = dom,
           statementNode = statementNodeQuery(combinatorDeclarationNode),
           localContext = LocalContext.fromFileContext(fileContext),
-          statement = Statement.fromStatementNode(statementNode, localContext),
+          context = localContext, ///
+          statement = Statement.fromStatementNode(statementNode, context),
           combinator = new Combinator(statement);
 
     return combinator;

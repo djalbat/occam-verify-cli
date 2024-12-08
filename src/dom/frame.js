@@ -8,10 +8,12 @@ import { domAssigned } from "../dom";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const frameNodeQuery = nodeQuery("/*/frame"),
-      declarationNodesQuery = nodesQuery("/frame/declaration"),
+const declarationNodesQuery = nodesQuery("/frame/declaration"),
       metavariableNodeQuery = nodeQuery("/frame/metavariable!"),
-      metavariableNodesQuery = nodesQuery("/frame/metavariable");
+      metavariableNodesQuery = nodesQuery("/frame/metavariable"),
+      parameterFrameNodeQuery = nodeQuery("/parameter/frame"),
+      definedAssertionFrameNodeQuery = nodeQuery("/definedAssertion/frame"),
+      containedAssertionFrameNodeQuery = nodeQuery("/containedAssertion/frame");
 
 const { first } = arrayUtilities;
 
@@ -295,26 +297,33 @@ export default domAssigned(class Frame {
     return frame;
   }
 
+  static fromParameterNode(parameterNode, context) {
+    let frame = null;
+
+    const parameterFrameNode = parameterFrameNodeQuery(parameterNode);
+
+    if (parameterFrameNode !== null) {
+      const frameNode = parameterFrameNode,///
+            metavariableNode = metavariableNodeQuery(frameNode);
+
+      if (metavariableNode !== null) {
+        frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context)      }
+    }
+
+    return frame;
+  }
+
   static fromDefinedAssertionNode(definedAssertionNode, context) {
     let frame = null;
 
-    const frameNode = frameNodeQuery(definedAssertionNode);
+    const definedAssertionFrameNode = definedAssertionFrameNodeQuery(definedAssertionNode);
 
-    if (frameNode !== null) {
-      const metavariableNode = metavariableNodeQuery(frameNode);
+    if (definedAssertionFrameNode !== null) {
+      const frameNode = definedAssertionFrameNode,  ///
+            metavariableNode = metavariableNodeQuery(frameNode);
 
       if (metavariableNode !== null) {
-        const { Metavariable } = dom,
-              metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
-              declarations = [],
-              metavariables = [
-                metavariable
-              ],
-              node = frameNode,  ///
-              string = context.nodeAsString(node),
-              tokens = context.nodeAsTokens(node);
-
-        frame = new Frame(string, node, tokens, declarations, metavariables);
+        frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context)
       }
     }
 
@@ -324,29 +333,35 @@ export default domAssigned(class Frame {
   static fromContainedAssertionNode(containedAssertionNode, context) {
     let frame = null;
 
-    const frameNode = frameNodeQuery(containedAssertionNode);
+    const containedAssertionFrameNode = containedAssertionFrameNodeQuery(containedAssertionNode);
 
-    if (frameNode !== null) {
-      const metavariableNode = metavariableNodeQuery(frameNode);
+    if (containedAssertionFrameNode !== null) {
+      const frameNode = containedAssertionFrameNode,  ///
+            metavariableNode = metavariableNodeQuery(frameNode);
 
       if (metavariableNode !== null) {
-        const { Metavariable } = dom,
-              metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
-              declarations = [],
-              metavariables = [
-                metavariable
-              ],
-              node = frameNode,  ///
-              string = context.nodeAsString(node),
-              tokens = context.nodeAsTokens(node);
-
-        frame = new Frame(string, node, tokens, declarations, metavariables);
+        frame = frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context);
       }
     }
 
     return frame;
   }
 });
+
+function frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context) {
+  const { Frame, Metavariable } = dom,
+        metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
+        declarations = [],
+        metavariables = [
+          metavariable
+        ],
+        node = frameNode,  ///
+        string = context.nodeAsString(node),
+        tokens = context.nodeAsTokens(node),
+        frame = new Frame(string, node, tokens, declarations, metavariables);
+
+  return frame;
+}
 
 function declarationsFromFrameNode(frameNode, context) {
   const { Declaration } = dom,

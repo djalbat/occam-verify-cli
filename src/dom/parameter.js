@@ -46,9 +46,9 @@ export default domAssigned(class Parameter {
 
     if (parameterNode !== null) {
       const { Term, Frame, Statement } = dom,
-            term = Term.fromParamterNode(parameterNode, context),
+            term = Term.fromParameterNode(parameterNode, context),
             frame = Frame.fromParameterNode(parameterNode, context),
-            statement = Statement.fromParamterNode(parameterNode, context);
+            statement = Statement.fromParameterNode(parameterNode, context);
 
       parameter = new Parameter(term, frame, statement);
     }

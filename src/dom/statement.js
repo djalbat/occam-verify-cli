@@ -3,6 +3,7 @@
 import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
+import LocalContext from "../context/local";
 import verifyMixins from "../mixins/statement/verify";
 import combinatorVerifier from "../verifier/combinator";
 import StatementPartialContext from "../context/partial/statement";
@@ -15,9 +16,15 @@ import { definedAssertionFromStatement, subproofAssertionFromStatement, containe
 
 const { match, backwardsSome } = arrayUtilities;
 
-const statementNodeQuery = nodeQuery("/*/statement"),
-      statementTermNodesQuery = nodesQuery("/statement//term"),
-      statementFrameNodesQuery = nodesQuery("/statement//frame");
+const statementTermNodesQuery = nodesQuery("/statement//term"),
+      statementFrameNodesQuery = nodesQuery("/statement//frame"),
+      premiseStatementNodeQuery = nodeQuery("/premise/statement"),
+      parameterStatementNodeQuery = nodeQuery("/parameter/statement"),
+      proofStepStatementNodeQuery = nodeQuery("/proofStep/statement"),
+      conclusionStatementNodeQuery = nodeQuery("/conclusion/statement"),
+      consequentStatementNodeQuery = nodeQuery("/consequent/statement"),
+      suppositionStatementNodeQuery = nodeQuery("/supposition/statement"),
+      containedAssertionStatementNodeQuery = nodeQuery("/containedAssertion/statement");
 
 export default domAssigned(class Statement {
   constructor(string, node, tokens) {
@@ -294,78 +301,118 @@ export default domAssigned(class Statement {
   }
 
   static fromPremiseNode(premiseNode, fileContext) {
-    const node = premiseNode, ///
-          statement = statementFromNode(node, fileContext);
+    let statement = null;
+
+    const premiseStatementNode = premiseStatementNodeQuery(premiseNode);
+
+    if (premiseStatementNode !== null) {
+      const statementNode = premiseStatementNode, ///
+            localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext;  ///
+
+      statement = statementFromStatementNode(statementNode, context);
+    }
 
     return statement;
   }
 
   static fromProofStepNode(proofStepNode, fileContext) {
-    const node = proofStepNode, ///
-          statement = statementFromNode(node, fileContext);
+    let statement = null;
+
+    const proofStepStatementNode = proofStepStatementNodeQuery(proofStepNode);
+
+    if (proofStepStatementNode !== null) {
+      const statementNode = proofStepStatementNode; ///
+
+      statement = statementFromStatementNode(statementNode, fileContext);
+    }
 
     return statement;
   }
 
   static fromStatementNode(statementNode, context) {
+    const statement = statementFromStatementNode(statementNode, context);
+
+    return statement;
+  }
+
+  static fromParameterNode(parameterNode, context) {
     let statement = null;
 
-    if (statementNode !== null) {
-      const node = statementNode, ///
-            tokens = context.nodeAsTokens(node),
-            string = context.tokensAsString(tokens);
+    const parameterStatementNode = parameterStatementNodeQuery(parameterNode);
 
-      statement = new Statement(string, node, tokens);
+    if (parameterStatementNode !== null) {
+      const statementNode = parameterStatementNode; ///
+
+      statement = statementFromStatementNode(statementNode, context);
     }
 
     return statement;
   }
 
   static fromConclusionNode(conclusionNode, fileContext) {
-    const node = conclusionNode, ///
-          statement = statementFromNode(node, fileContext);
+    let statement = null;
+
+    const conclusionStatementNode = conclusionStatementNodeQuery(conclusionNode);
+
+    if (conclusionStatementNode !== null) {
+      const statementNode = conclusionStatementNode,  ///
+            localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext;  ///
+
+      statement = statementFromStatementNode(statementNode, context);
+    }
 
     return statement;
   }
 
   static fromConsequentNode(consequentNode, fileContext) {
-    const node = consequentNode, ///
-          statement = statementFromNode(node, fileContext);
+    let statement = null;
+
+    const consequentStatementNode = consequentStatementNodeQuery(consequentNode);
+
+    if (consequentStatementNode !== null) {
+      const statementNode = consequentStatementNode,  ///
+            localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext;  ///
+
+      statement = statementFromStatementNode(statementNode, context);
+    }
 
     return statement;
   }
 
   static fromSuppositionNode(suppositionNode, fileContext) {
-    const node = suppositionNode, ///
-          statement = statementFromNode(node, fileContext);
+    let statement = null;
+
+    const suppositionStatementNode = suppositionStatementNodeQuery(suppositionNode);
+
+    if (suppositionStatementNode !== null) {
+      const statementNode = suppositionStatementNode, ///
+            localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext;  ///
+
+      statement = statementFromStatementNode(statementNode, context);
+    }
 
     return statement;
   }
 
   static fromContainedAssertionNode(containedAssertionNode, context) {
-    const statementNode = statementNodeQuery(containedAssertionNode),
-          node = statementNode, ///
-          tokens = context.nodeAsTokens(node),
-          string = context.tokensAsString(tokens),
-          statement = new Statement(string, node, tokens);
+    const containedAssertionStatementNode = containedAssertionStatementNodeQuery(containedAssertionNode),
+          statementNode = containedAssertionStatementNode, ///
+          statement = statementFromStatementNode(statementNode, context);
 
     return statement;
   }
 });
 
-function statementFromNode(node, fileContext) {
-  let statement = null;
-
-  const statementNode = statementNodeQuery(node);
-
-  if (statementNode !== null) {
-    const { Statement } = dom,
-          node = statementNode, ///
-          tokens = fileContext.nodeAsTokens(node),
-          string = fileContext.tokensAsString(tokens);
-
-    statement = new Statement(string, node, tokens);
-  }
+function statementFromStatementNode(statementNode, context) {
+  const { Statement } = dom,
+        node = statementNode, ///
+        tokens = context.nodeAsTokens(node),
+        string = context.tokensAsString(tokens),
+        statement = new Statement(string, node, tokens);
 
   return statement;
 }

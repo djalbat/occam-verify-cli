@@ -5,7 +5,7 @@ import dom from "../dom";
 import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
-const parameterNodesQuery = nodesQuery("/procedureCall/parameters/parameter"),
+const parameterNodesQuery = nodesQuery("/procedureCall/parameter"),
       procedureCallNodeQuery = nodeQuery("/statement/procedureCall");
 
 export default domAssigned(class ProcedureCall {

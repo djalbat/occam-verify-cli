@@ -3,6 +3,7 @@
 import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
+import LocalContext from "../context/local";
 import verifyMixins from "../mixins/term/verify";
 import constructorVerifier from "../verifier/constructor";
 
@@ -15,7 +16,8 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 const { filter, compress } = arrayUtilities;
 
 const variableNodesQuery = nodesQuery("//variable"),
-      termVariableNodeQuery = nodeQuery("/*/term[0]/variable!");
+      termVariableNodeQuery = nodeQuery("/*/term[0]/variable!"),
+      parameterTermNodeQuery = nodeQuery("/parameter/term");
 
 export default domAssigned(class Term {
   constructor(string, node, type) {
@@ -243,7 +245,8 @@ export default domAssigned(class Term {
 
   static fromJSON(json, fileContext) {
     const { string } = json,
-          context = fileContext,  ///
+          localContext = LocalContext.fromFileContext(fileContext),
+          context = localContext,  ///
           termString = string,  ///
           termNode = termNodeFromTermString(termString, context),
           node = termNode,  ///
@@ -258,6 +261,22 @@ export default domAssigned(class Term {
 
     if (termNode !== null) {
       const node = termNode,  ///
+            string = context.nodeAsString(node),
+            type = null;
+
+      term = new Term(string, node, type);
+    }
+
+    return term;
+  }
+
+  static fromParameterNode(parameterNode, context) {
+    let term = null;
+
+    const parameterTermNode = parameterTermNodeQuery(parameterNode);
+
+    if (parameterTermNode !== null) {
+      const node = parameterTermNode,  ///
             string = context.nodeAsString(node),
             type = null;
 
