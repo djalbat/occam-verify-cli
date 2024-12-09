@@ -333,6 +333,8 @@ class LocalContext {
 
   findTheoremByReference(reference) { return this.context.findTheoremByReference(reference); }
 
+  findProcedureByReference(reference) { return this.context.findProcedureByReference(reference); }
+
   findConjectureByReference(reference) { return this.context.findConjectureByReference(reference); }
 
   findMetaLemmasByReference(reference) { return this.context.findMetaLemmasByReference(reference); }

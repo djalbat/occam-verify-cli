@@ -224,6 +224,12 @@ export default class FileContext {
   getProcedures(includeRelease = true) {
     const procedures = [];
 
+    if (includeRelease) {
+      const releaseContextProcedures = this.releaseContext.getProcedures();
+
+      push(procedures, releaseContextProcedures);
+    }
+
     return procedures;
   }
 

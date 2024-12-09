@@ -34,7 +34,32 @@ export default domAssigned(class ProcedureCall {
 
     context.trace(`Verifying the '${procedureCallString}' procedure call...`);
 
-    const procedure = context.findProcedure
+    const procedure = context.findProcedureByReference(this.reference);
+
+    if (procedure !== null) {
+      const procedureString = procedure.getString(),
+            procedureBoolean = procedure.isBoolean();
+
+      if (procedureBoolean) {
+        const procedureParameterTypesNodeTypes = procedure.areParameterTypesNodeTypes();
+
+        if (procedureParameterTypesNodeTypes) {
+          const procedureParametersMatchParameters = procedure.matchParameters(this.parameters);
+
+          if (procedureParametersMatchParameters) {
+            verified = true;
+          } else {
+            context.trace(`The '${procedureString}' procedure's parameters do not match those of the '${procedureCallString}' procedure call.`);
+          }
+        } else {
+          context.trace(`Not all of the '${procedureString}' procedure's parameters' types are node types.`);
+        }
+      } else {
+        context.trace(`The '${procedureString}' procedure is not boolean.`);
+      }
+    } else {
+      context.trace(`The '${procedureCallString}' procedure is not present.`);
+    }
 
     if (verified) {
       context.debug(`...verified the '${procedureCallString}' procedure call.`);
