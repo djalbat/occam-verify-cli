@@ -1,26 +1,23 @@
 "use strict";
 
-import dom from "../dom";
-
+import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 
+const nameTerminalNodeQuery = nodeQuery("/parameter/@name");
+
 export default domAssigned(class Parameter {
-  constructor(term, frame, statement) {
-    this.term = term;
-    this.frame = frame;
-    this.statement = statement;
+  constructor(name) {
+    this.name = name;
   }
 
-  getTerm() {
-    return this.term;
+  getName() {
+    return this.name;
   }
 
-  getFrame() {
-    return this.frame;
-  }
+  getString() {
+    const string = this.name; ///
 
-  getStatement() {
-    return this.statement;
+    return string;
   }
 
   verify(assignments, stated, context) {
@@ -42,16 +39,10 @@ export default domAssigned(class Parameter {
   static name = "Parameter";
 
   static fromParameterNode(parameterNode, context) {
-    let parameter = null;
-
-    if (parameterNode !== null) {
-      const { Term, Frame, Statement } = dom,
-            term = Term.fromParameterNode(parameterNode, context),
-            frame = Frame.fromParameterNode(parameterNode, context),
-            statement = Statement.fromParameterNode(parameterNode, context);
-
-      parameter = new Parameter(term, frame, statement);
-    }
+    const nameTerminalNode = nameTerminalNodeQuery(parameterNode),
+          nameTerminalNodeContent = nameTerminalNode.getContent(),
+          name = nameTerminalNodeContent, ///
+          parameter = new Parameter(name);
 
     return parameter;
   }

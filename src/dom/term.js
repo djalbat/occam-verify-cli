@@ -16,8 +16,7 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 const { filter, compress } = arrayUtilities;
 
 const variableNodesQuery = nodesQuery("//variable"),
-      termVariableNodeQuery = nodeQuery("/*/term[0]/variable!"),
-      parameterTermNodeQuery = nodeQuery("/parameter/term");
+      termVariableNodeQuery = nodeQuery("/*/term[0]/variable!");
 
 export default domAssigned(class Term {
   constructor(string, node, type) {
@@ -261,22 +260,6 @@ export default domAssigned(class Term {
 
     if (termNode !== null) {
       const node = termNode,  ///
-            string = context.nodeAsString(node),
-            type = null;
-
-      term = new Term(string, node, type);
-    }
-
-    return term;
-  }
-
-  static fromParameterNode(parameterNode, context) {
-    let term = null;
-
-    const parameterTermNode = parameterTermNodeQuery(parameterNode);
-
-    if (parameterTermNode !== null) {
-      const node = parameterTermNode,  ///
             string = context.nodeAsString(node),
             type = null;
 

@@ -19,7 +19,6 @@ const { match, backwardsSome } = arrayUtilities;
 const statementTermNodesQuery = nodesQuery("/statement//term"),
       statementFrameNodesQuery = nodesQuery("/statement//frame"),
       premiseStatementNodeQuery = nodeQuery("/premise/statement"),
-      parameterStatementNodeQuery = nodeQuery("/parameter/statement"),
       proofStepStatementNodeQuery = nodeQuery("/proofStep/statement"),
       conclusionStatementNodeQuery = nodeQuery("/conclusion/statement"),
       consequentStatementNodeQuery = nodeQuery("/consequent/statement"),
@@ -332,20 +331,6 @@ export default domAssigned(class Statement {
 
   static fromStatementNode(statementNode, context) {
     const statement = statementFromStatementNode(statementNode, context);
-
-    return statement;
-  }
-
-  static fromParameterNode(parameterNode, context) {
-    let statement = null;
-
-    const parameterStatementNode = parameterStatementNodeQuery(parameterNode);
-
-    if (parameterStatementNode !== null) {
-      const statementNode = parameterStatementNode; ///
-
-      statement = statementFromStatementNode(statementNode, context);
-    }
 
     return statement;
   }

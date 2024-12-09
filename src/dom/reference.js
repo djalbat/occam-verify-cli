@@ -10,7 +10,8 @@ import { unifyLabelWithReference } from "../utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 const proofStepReferenceNodeQuery = nodeQuery("/proofStep/reference"),
-      declarationReferenceNodeQuery = nodeQuery("/declaration/reference");
+      declarationReferenceNodeQuery = nodeQuery("/declaration/reference"),
+      procedureCallReferenceNodeQuery = nodeQuery("/procedureCall/reference");
 
 export default domAssigned(class Reference {
   constructor(metavariable) {
@@ -156,6 +157,24 @@ export default domAssigned(class Reference {
     if (declarationReferenceNode !== null) {
       const { Metavariable } = dom,
             referenceNode = declarationReferenceNode, ///
+            localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext, ///
+            metavariable = Metavariable.fromReferenceNode(referenceNode, context);
+
+      reference = new Reference(metavariable);
+    }
+
+    return reference;
+  }
+
+  static fromProcedureCallNode(procedureCallNode, fileContext) {
+    let reference = null;
+
+    const procedureCallReferenceNode = procedureCallReferenceNodeQuery(procedureCallNode);
+
+    if (procedureCallReferenceNode !== null) {
+      const { Metavariable } = dom,
+            referenceNode = procedureCallReferenceNode, ///
             localContext = LocalContext.fromFileContext(fileContext),
             context = localContext, ///
             metavariable = Metavariable.fromReferenceNode(referenceNode, context);

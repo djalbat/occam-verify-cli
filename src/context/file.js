@@ -468,6 +468,20 @@ export default class FileContext {
     return theorem;
   }
 
+  findProcedureByReference(reference) {
+    const procedures = this.getProcedures(),
+          metavariableName = reference.getMetavariableName(),
+          procedure = procedures.find((procedure) => {
+            const metavariableNameMatches = procedure.matchMetavariableName(metavariableName);
+
+            if (metavariableNameMatches) {
+              return true;
+            }
+          }) || null;
+
+    return procedure;
+  }
+
   findConjectureByReference(reference) {
     const conjectures = this.getConjectures(),
           metavariableName = reference.getMetavariableName(),

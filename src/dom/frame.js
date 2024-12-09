@@ -11,7 +11,6 @@ import { nodeQuery, nodesQuery } from "../utilities/query";
 const declarationNodesQuery = nodesQuery("/frame/declaration"),
       metavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       metavariableNodesQuery = nodesQuery("/frame/metavariable"),
-      parameterFrameNodeQuery = nodeQuery("/parameter/frame"),
       definedAssertionFrameNodeQuery = nodeQuery("/definedAssertion/frame"),
       containedAssertionFrameNodeQuery = nodeQuery("/containedAssertion/frame");
 
@@ -292,22 +291,6 @@ export default domAssigned(class Frame {
             metavariables = metavariablesFromFrameNode(frameNode, context);
 
       frame = new Frame(string, node, tokens, declarations, metavariables);
-    }
-
-    return frame;
-  }
-
-  static fromParameterNode(parameterNode, context) {
-    let frame = null;
-
-    const parameterFrameNode = parameterFrameNodeQuery(parameterNode);
-
-    if (parameterFrameNode !== null) {
-      const frameNode = parameterFrameNode,///
-            metavariableNode = metavariableNodeQuery(frameNode);
-
-      if (metavariableNode !== null) {
-        frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context)      }
     }
 
     return frame;

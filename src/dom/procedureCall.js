@@ -9,9 +9,14 @@ const parameterNodesQuery = nodesQuery("/procedureCall/parameter"),
       procedureCallNodeQuery = nodeQuery("/statement/procedureCall");
 
 export default domAssigned(class ProcedureCall {
-  constructor(reference, parameters) {
+  constructor(string, reference, parameters) {
+    this.string = string;
     this.reference = reference;
     this.parameters = parameters;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getReference() {
@@ -29,7 +34,7 @@ export default domAssigned(class ProcedureCall {
 
     context.trace(`Verifying the '${procedureCallString}' procedure call...`);
 
-    debugger
+    const procedure = context.findProcedure
 
     if (verified) {
       context.debug(`...verified the '${procedureCallString}' procedure call.`);
@@ -46,9 +51,12 @@ export default domAssigned(class ProcedureCall {
     const procedureCallNode = procedureCallNodeQuery(statementNode);
 
     if (procedureCallNode !== null) {
-      const parameters = parametersFromProcedureCallNode(procedureCallNode, context);
+      const { Reference } = dom,
+            parameters = parametersFromProcedureCallNode(procedureCallNode, context),
+            reference = Reference.fromProcedureCallNode(procedureCallNode, context),
+            string = stringFromReferenceAndParameters(reference, parameters);
 
-      procedureCall = new ProcedureCall(parameters);
+      procedureCall = new ProcedureCall(string, reference, parameters);
     }
 
     return procedureCall;
@@ -65,4 +73,20 @@ function parametersFromProcedureCallNode(procedureCallNode, context) {
         });
 
   return parameters;
+}
+
+function stringFromReferenceAndParameters(reference, parameters) {
+  const referenceString = reference.getString(),
+        parametersString = parameters.reduce((parametersString, parameter) => {
+          const parameterString = parameter.getString();
+
+          parametersString = (parametersString === null) ?
+                                parameterString : ///
+                                  `${parametersString}, ${parameterString}`;
+
+          return parametersString;
+        }, null),
+        string = `${referenceString}(${parametersString})`;
+
+  return string;
 }
