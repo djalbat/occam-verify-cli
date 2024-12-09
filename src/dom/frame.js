@@ -306,7 +306,7 @@ export default domAssigned(class Frame {
             metavariableNode = metavariableNodeQuery(frameNode);
 
       if (metavariableNode !== null) {
-        frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context)
+        frame = frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context)
       }
     }
 
