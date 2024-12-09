@@ -16,7 +16,9 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 const { filter, compress } = arrayUtilities;
 
 const variableNodesQuery = nodesQuery("//variable"),
-      termVariableNodeQuery = nodeQuery("/*/term[0]/variable!");
+      termVariableNodeQuery = nodeQuery("/term/variable!"),
+      definedAssertionTermNodeQuery = nodeQuery("/definedAssertion/term"),
+      containedAssertionTermNodeQuery = nodeQuery("/containedAssertion/term");
 
 export default domAssigned(class Term {
   constructor(string, node, type) {
@@ -280,14 +282,19 @@ export default domAssigned(class Term {
   static fromDefinedAssertionNode(definedAssertionNode, context) {
     let term = null;
 
-    const termVariableNode = termVariableNodeQuery(definedAssertionNode);
+    const definedAssertionTermNode = definedAssertionTermNodeQuery(definedAssertionNode);
 
-    if (termVariableNode !== null) {
-      const node = termVariableNode,  ///
-            string = context.nodeAsString(node),
-            type = null;
+    if (definedAssertionTermNode !== null) {
+      const termNode = definedAssertionTermNode,  ///
+            termVariableNode = termVariableNodeQuery(termNode);
 
-      term = new Term(string, node, type);
+      if (termVariableNode !== null) {
+        const node = termNode,  ///
+              string = context.nodeAsString(node),
+              type = null;
+
+        term = new Term(string, node, type);
+      }
     }
 
     return term;
@@ -296,14 +303,19 @@ export default domAssigned(class Term {
   static fromContainedAssertionNode(containedAssertionNode, context) {
     let term = null;
 
-    const termVariableNode = termVariableNodeQuery(containedAssertionNode);
+    const containedAssertionTermNode = containedAssertionTermNodeQuery(containedAssertionNode);
 
-    if (termVariableNode !== null) {
-      const node = termVariableNode,  ///
-            string = context.nodeAsString(node),
-            type = null;
+    if (containedAssertionTermNode !== null) {
+      const termNode = containedAssertionTermNode,  ///
+            termVariableNode = termVariableNodeQuery(termNode);
 
-      term = new Term(string, node, type);
+      if (termVariableNode !== null) {
+        const node = termNode,  ///
+              string = context.nodeAsString(node),
+              type = null;
+
+        term = new Term(string, node, type);
+      }
     }
 
     return term;
