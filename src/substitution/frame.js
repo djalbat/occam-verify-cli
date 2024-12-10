@@ -30,6 +30,15 @@ export default class FrameSubstitution extends Substitution {
 
   isMetavariableEqualTo(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
+  matchName(name) { return this.metavariable.matchName(name); }
+
+  getReplacementNode() {
+    const frameNode = this.frame.getNode(),
+          replacementNode = frameNode; ///
+
+    return replacementNode;
+  }
+
   static fromStatementNode(statementNode, context) {
     let frameSubstitution = null;
 

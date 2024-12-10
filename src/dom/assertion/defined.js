@@ -44,30 +44,6 @@ export default domAssigned(class DefinedAssertion {
     return this.negated;
   }
 
-  unifyIndependently(substitutions, context) {
-    let unifiedIndependently;
-
-    const definedAssertionString = this.string; ///
-
-    context.trace(`Unifying the '${definedAssertionString}' defined assertion independently...`);
-
-    const localContext = LocalContext.fromContextAndTokens(context, this.tokens);
-
-    context = localContext; ///
-
-    const term = termFromTermAndSubstitutions(this.term, substitutions, context),
-          frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),
-          verifiedWhenDerived = verifyWhenDerived(term, frame, this.negated, context);
-
-    unifiedIndependently = verifiedWhenDerived; ///
-
-    if (unifiedIndependently) {
-      context.debug(`...unified the '${definedAssertionString}' defined assertion independently.`);
-    }
-
-    return unifiedIndependently;
-  }
-
   verify(assignments, stated, context) {
     let verified = false;
 
@@ -152,6 +128,30 @@ export default domAssigned(class DefinedAssertion {
     }
 
     return verifiedWhenDerived;
+  }
+
+  unifyIndependently(substitutions, context) {
+    let unifiedIndependently;
+
+    const definedAssertionString = this.string; ///
+
+    context.trace(`Unifying the '${definedAssertionString}' defined assertion independently...`);
+
+    const localContext = LocalContext.fromContextAndTokens(context, this.tokens);
+
+    context = localContext; ///
+
+    const term = termFromTermAndSubstitutions(this.term, substitutions, context),
+          frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),
+          verifiedWhenDerived = verifyWhenDerived(term, frame, this.negated, context);
+
+    unifiedIndependently = verifiedWhenDerived; ///
+
+    if (unifiedIndependently) {
+      context.debug(`...unified the '${definedAssertionString}' defined assertion independently.`);
+    }
+
+    return unifiedIndependently;
   }
 
   static name = "DefinedAssertion";

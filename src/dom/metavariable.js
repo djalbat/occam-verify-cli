@@ -58,6 +58,12 @@ export default domAssigned(class Metavariable {
     return this.metaType;
   }
 
+  matchName(name) {
+    const nameMatches = (name === this.name);
+
+    return nameMatches;
+  }
+
   matchMetavariableName(metavariableName) {
     const metavariableNameMatches = (metavariableName === this.name);
 

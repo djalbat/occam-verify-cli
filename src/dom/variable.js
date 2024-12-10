@@ -43,10 +43,16 @@ export default domAssigned(class Variable {
     this.type = type;
   }
 
-  matchVariableName(variableName) {
-    const nameMatches = (variableName === this.name);
+  matchName(name) {
+    const nameMatches = (name === this.name);
 
     return nameMatches;
+  }
+
+  matchVariableName(variableName) {
+    const variableNameMatches = (variableName === this.name);
+
+    return variableNameMatches;
   }
 
   isEqualTo(variable) {

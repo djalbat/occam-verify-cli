@@ -4,6 +4,12 @@ import dom from "../dom";
 
 import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query";
+import LocalContext from "../context/local";
+import {
+  frameFromFrameAndSubstitutions,
+  statementFromStatementAndSubstitutions,
+  termFromTermAndSubstitutions
+} from "../utilities/substitutions";
 
 const parameterNodesQuery = nodesQuery("/procedureCall/parameter"),
       procedureCallNodeQuery = nodeQuery("/statement/procedureCall");
@@ -25,6 +31,17 @@ export default domAssigned(class ProcedureCall {
 
   getParameters() {
     return this.parameters;
+  }
+
+  findNodes(substitutions) {
+    const nodes = this.parameters.map((parameter) => {
+      const replacementNode = parameter.findReplacementNode(substitutions),
+            node = replacementNode;  ///
+
+      return node;
+    });
+
+    return nodes;
   }
 
   verify(assignments, stated, context) {
@@ -66,6 +83,32 @@ export default domAssigned(class ProcedureCall {
     }
 
     return verified;
+  }
+
+  unifyIndependently(substitutions, context) {
+    let unifiedIndependently;
+
+    const procedureCallString = this.string; ///
+
+    context.trace(`Unifying the '${procedureCallString}' procedure call independently...`);
+
+    const procedure = context.findProcedureByReference(this.reference),
+          nodes = this.findNodes(substitutions),
+          result = procedure.call(nodes);
+
+    if (result) {
+      unifiedIndependently = true;
+    } else {
+      const procedureString = procedure.getString();
+
+      context.trace(`Unable to unify the '${procedureCallString}' procedure call independently becuase the '${procedureString}' procedure returned false.`);
+    }
+
+    if (unifiedIndependently) {
+      context.debug(`...unified the '${procedureCallString}' procedure call independently.`);
+    }
+
+    return unifiedIndependently;
   }
 
   static name = "ProcedureCall";

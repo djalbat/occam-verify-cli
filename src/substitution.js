@@ -129,6 +129,18 @@ export default class Substitution {
     return resolved;
   }
 
+  matchName(name) {
+    const nameMatches = false;
+
+    return nameMatches;
+  }
+
+  getReplacementNode() {
+    const replacementNode = null;
+
+    return replacementNode;
+  }
+
   unifyWithEquivalence(equivalence) {
     let unifiedWithEquivalence = false;
 

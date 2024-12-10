@@ -38,6 +38,15 @@ export default class TermSubstitution extends Substitution {
 
   isVariableEqualTo(variable) { return this.variable.isEqualTo(variable); }
 
+  getReplacementNode() {
+    const termNode = this.term.getNode(),
+          replacementNode = termNode; ///
+
+    return replacementNode;
+  }
+
+  matchName(name) { return this.variable.matchName(name); }
+
   unifyWithEquivalence(equivalence) {
     let unifiedWithEquivalence;
 

@@ -68,6 +68,15 @@ export default class StatementSubstitution extends Substitution {
     return simple;
   }
 
+  matchName(name) { return this.metavariable.matchName(name); }
+
+  getReplacementNode() {
+    const statementNode = this.statement.getNode(),
+          replacementNode = statementNode; ///
+
+    return replacementNode;
+  }
+
   resolve(substitutions, generalContext, specificContext) {
     const substitutionString = this.string;
 

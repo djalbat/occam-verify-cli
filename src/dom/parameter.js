@@ -20,20 +20,22 @@ export default domAssigned(class Parameter {
     return string;
   }
 
-  verify(assignments, stated, context) {
-    let verified = false;
+  findReplacementNode(substitutions) {
+    let replacementNode = null;
 
-    const parameterString = this.string; ///
+    const substitution = substitutions.findSubstitution((substitution) => {
+      const nameMatches = substitution.matchName(this.name);
 
-    context.trace(`Verifying the '${parameterString}' parameter...`);
+      if (nameMatches) {
+        return true;
+      }
+    });
 
-    debugger
-
-    if (verified) {
-      context.debug(`...verified the '${parameterString}' parameter.`);
+    if (substitution !== null) {
+      replacementNode = substitution.getReplacementNode();
     }
 
-    return verified;
+    return replacementNode;
   }
 
   static name = "Parameter";
