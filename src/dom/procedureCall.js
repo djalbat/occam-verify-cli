@@ -94,7 +94,7 @@ export default domAssigned(class ProcedureCall {
 
     const procedure = context.findProcedureByReference(this.reference),
           nodes = this.findNodes(substitutions),
-          result = procedure.call(nodes);
+          result = procedure.call(nodes, context);
 
     if (result) {
       unifiedIndependently = true;
