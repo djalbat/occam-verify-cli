@@ -351,6 +351,8 @@ class LocalContext {
 
   isTheoremPresentByReference(reference) { return this.context.isTheoremPresentByReference(reference); }
 
+  isProcedurePresentByReference(reference) { return this.context.isProcedurePresentByReference(reference); }
+
   isConjecturePresentByReference(reference) { return this.context.isConjecturePresentByReference(reference); }
 
   areMetaLemmasPresentByReference(reference) { return this.context.areMetaLemmasPresentByReference(reference); }

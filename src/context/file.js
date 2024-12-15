@@ -477,10 +477,11 @@ export default class FileContext {
   findProcedureByReference(reference) {
     const procedures = this.getProcedures(),
           metavariableName = reference.getMetavariableName(),
+          name = metavariableName,  ///
           procedure = procedures.find((procedure) => {
-            const metavariableNameMatches = procedure.matchMetavariableName(metavariableName);
+            const nameMatches = procedure.matchName(name);
 
-            if (metavariableNameMatches) {
+            if (nameMatches) {
               return true;
             }
           }) || null;
@@ -635,6 +636,13 @@ export default class FileContext {
           theoremPresent = (theorem !== null);
 
     return theoremPresent;
+  }
+
+  isProcedurePresentByReference(reference) {
+    const procedure = this.findProcedureByReference(reference),
+          procedurePresent = (procedure !== null);
+
+    return procedurePresent;
   }
 
   isConjecturePresentByReference(reference) {

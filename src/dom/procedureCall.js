@@ -1,15 +1,11 @@
 "use strict";
 
+import { Values } from "occam-furtle";
+
 import dom from "../dom";
 
 import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import LocalContext from "../context/local";
-import {
-  frameFromFrameAndSubstitutions,
-  statementFromStatementAndSubstitutions,
-  termFromTermAndSubstitutions
-} from "../utilities/substitutions";
 
 const parameterNodesQuery = nodesQuery("/procedureCall/parameter"),
       procedureCallNodeQuery = nodeQuery("/statement/procedureCall");
@@ -51,29 +47,10 @@ export default domAssigned(class ProcedureCall {
 
     context.trace(`Verifying the '${procedureCallString}' procedure call...`);
 
-    const procedure = context.findProcedureByReference(this.reference);
+    const procedurePresent = context.isProcedurePresentByReference(this.reference);
 
-    if (procedure !== null) {
-      const procedureString = procedure.getString(),
-            procedureBoolean = procedure.isBoolean();
-
-      if (procedureBoolean) {
-        const procedureParameterTypesNodeTypes = procedure.areParameterTypesNodeTypes();
-
-        if (procedureParameterTypesNodeTypes) {
-          const procedureParametersMatchParameters = procedure.matchParameters(this.parameters);
-
-          if (procedureParametersMatchParameters) {
-            verified = true;
-          } else {
-            context.trace(`The '${procedureString}' procedure's parameters do not match those of the '${procedureCallString}' procedure call.`);
-          }
-        } else {
-          context.trace(`Not all of the '${procedureString}' procedure's parameters' types are node types.`);
-        }
-      } else {
-        context.trace(`The '${procedureString}' procedure is not boolean.`);
-      }
+    if (procedurePresent) {
+      verified = true;
     } else {
       context.trace(`The '${procedureCallString}' procedure is not present.`);
     }
@@ -86,7 +63,7 @@ export default domAssigned(class ProcedureCall {
   }
 
   unifyIndependently(substitutions, context) {
-    let unifiedIndependently;
+    let unifiedIndependently = false;
 
     const procedureCallString = this.string; ///
 
@@ -94,15 +71,18 @@ export default domAssigned(class ProcedureCall {
 
     const procedure = context.findProcedureByReference(this.reference),
           nodes = this.findNodes(substitutions),
-          result = procedure.call(nodes, context);
+          values = Values.fromNodes(nodes, context);
 
-    if (result) {
-      unifiedIndependently = true;
-    } else {
-      const procedureString = procedure.getString();
+    // try {
+      const value = procedure.call(values, context),
+            boolean = value.getBoolean();
 
-      context.trace(`Unable to unify the '${procedureCallString}' procedure call independently becuase the '${procedureString}' procedure returned false.`);
-    }
+      unifiedIndependently = boolean; ///
+    // } catch (exception) {
+    //   const message = exception.getMessage();
+    //
+    //   context.info(message);
+    // }
 
     if (unifiedIndependently) {
       context.debug(`...unified the '${procedureCallString}' procedure call independently.`);
