@@ -7,8 +7,9 @@ export function customGrammarFromNameAndEntries(name, entries) {
         statementBNF = entries.getStatementBNF(),
         typePattern = entries.getTypePattern(),
         symbolPattern = entries.getSymbolPattern(),
+        propertyPattern = entries.getPropertyPattern(),
         operatorPattern = entries.getOperatorPattern(),
-        customGrammar = CustomGrammar.fromNameTermBNFStatementBNFTypePatternSymbolPatternAndOperatorPattern(name, termBNF, statementBNF, typePattern, symbolPattern, operatorPattern);
+        customGrammar = CustomGrammar.fromNameTermBNFStatementBNFTypePatternSymbolPatternPropertyPatternAndOperatorPattern(name, termBNF, statementBNF, typePattern, symbolPattern, propertyPattern, operatorPattern);
 
   return customGrammar;
 }
