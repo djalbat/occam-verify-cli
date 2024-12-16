@@ -22,6 +22,8 @@ export default domAssigned(class Reference {
     return this.metavariable;
   }
 
+  getName() { return this.metavariable.getName(); }
+
   getString() { return this.metavariable.getString(); }
 
   getMetavariableName() {

@@ -307,6 +307,12 @@ export default class FileContext {
     return this.metavariables;
   }
 
+  getFileContext() {
+    const fileContext = this; ///
+
+    return fileContext;
+  }
+
   isMetavariableDeclared(metavariable, generalContext, specificContext) {
     metavariable = this.findMetavariable(metavariable, generalContext, specificContext);  ///
 
@@ -476,8 +482,7 @@ export default class FileContext {
 
   findProcedureByReference(reference) {
     const procedures = this.getProcedures(),
-          metavariableName = reference.getMetavariableName(),
-          name = metavariableName,  ///
+          name = reference.getName(),
           procedure = procedures.find((procedure) => {
             const nameMatches = procedure.matchName(name);
 

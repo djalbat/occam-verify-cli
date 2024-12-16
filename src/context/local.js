@@ -104,6 +104,8 @@ class LocalContext {
 
   getConstructors() { return this.context.getConstructors(); }
 
+  getFileContext() { return this.context.getFileContext(); }
+
   addEquality(equality, context) {
     let equalityAdded;
 
