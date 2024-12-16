@@ -249,6 +249,17 @@ export default class ReleaseContext {
       push(procedures, fileContextProcedures);
     });
 
+    if (includeDependencies) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencies = false,
+          releaseContextProcedures = releaseContext.getProcedures(includeDependencies);
+
+        push(procedures, releaseContextProcedures);
+      });
+    }
+
     return procedures;
   }
 

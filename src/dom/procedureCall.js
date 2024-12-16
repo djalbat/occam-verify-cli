@@ -73,16 +73,16 @@ export default domAssigned(class ProcedureCall {
           nodes = this.findNodes(substitutions),
           values = Values.fromNodes(nodes, context);
 
-    // try {
+    try {
       const value = procedure.call(values, context),
             boolean = value.getBoolean();
 
       unifiedIndependently = boolean; ///
-    // } catch (exception) {
-    //   const message = exception.getMessage();
-    //
-    //   context.info(message);
-    // }
+    } catch (exception) {
+      const message = exception.getMessage();
+
+      context.info(message);
+    }
 
     if (unifiedIndependently) {
       context.debug(`...unified the '${procedureCallString}' procedure call independently.`);
