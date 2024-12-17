@@ -5,12 +5,13 @@ import dom from "../dom";
 import { domAssigned } from "../dom";
 import { assignAssignments } from "../utilities/assignments";
 import { subproofAssertionFromStatement } from "../utilities/verification";
-import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
+import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default domAssigned(class Supposition {
-  constructor(string, statement) {
+  constructor(string, statement, procedureCall) {
     this.string = string;
     this.statement = statement;
+    this.procedureCall = procedureCall;
   }
 
   getString() {
@@ -21,12 +22,24 @@ export default domAssigned(class Supposition {
     return this.statement;
   }
 
+  getProcedureCall() {
+    return this.procedureCall;
+  }
+
   unifyIndependently(substitutions, generalContext, specificContext) {
     let unifiedIndependently;
 
-    const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
+    if (this.statesment !== null) {
+      const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
 
-    unifiedIndependently = statementResolvedIndependently;  ///
+      unifiedIndependently = statementResolvedIndependently;  ///
+    }
+
+    if (this.procedureCall !== null) {
+      const procedureCallResolvedIndependently = this.procedureCall.unifyIndependently(substitutions, generalContext, specificContext);
+
+      unifiedIndependently = procedureCallResolvedIndependently;  ///
+    }
 
     return unifiedIndependently;
   }
@@ -129,7 +142,9 @@ export default domAssigned(class Supposition {
 
     context.trace(`Verifying the '${suppositionString}' supposition...`);
 
-    if (this.statement !== null) {
+    if (false) {
+      ///
+    } else if (this.statement !== null) {
       const stated = true,
             assignments = [],
             statementVerified = this.statement.verify(assignments, stated, context);
@@ -147,6 +162,14 @@ export default domAssigned(class Supposition {
           verified = true;
         }
       }
+    } else if (this.procedureCall !== null) {
+      const stated = true,
+            assignments = null,
+            procedureCallVerified = this.procedureCall.verify(assignments, stated, context);
+
+      if (procedureCallVerified) {
+        verified = true;
+      }
     } else {
       context.debug(`Unable to verify the '${suppositionString}' supposition because it is nonsense.`);
     }
@@ -160,9 +183,12 @@ export default domAssigned(class Supposition {
 
   toJSON() {
     const statementJSON = statementToStatementJSON(this.statement),
+          procedureCallJSON = procedureCallToProcedureCallJSON(this.procedureCall),
           statement = statementJSON,  ///
+          procedureCall = procedureCallJSON,  ///
           json = {
-            statement
+            statement,
+            procedureCall
           };
 
     return json;
@@ -172,18 +198,39 @@ export default domAssigned(class Supposition {
 
   static fromJSON(json, fileContext) {
     const statement = statementFromJSON(json, fileContext),
-          string = statement.getString(),
-          supposition = new Supposition(string, statement);
+          procedureCall = procedureCallFromJSON(json, fileContext);
+
+    let string;
+
+    if (statement !== null) {
+      string = statement.getString();
+    }
+
+    if (procedureCall !== null) {
+      string = procedureCall.getString();
+    }
+
+    const supposition = new Supposition(string, statement, procedureCall);
 
     return supposition;
   }
 
   static fromSuppositionNode(suppositionNode, fileContext) {
-    const { Statement } = dom,
+    const { Statement, ProcedureCall } = dom,
           statement = Statement.fromSuppositionNode(suppositionNode, fileContext),
-          statementString = statement.getString(),
-          string = statementString, ///
-          supposition = new Supposition(string, statement);
+          procedureCall = ProcedureCall.fromSuppositionNode(suppositionNode, fileContext);
+
+    let string;
+
+    if (statement !== null) {
+      string = statement.getString();
+    }
+
+    if (procedureCall !== null) {
+      string = procedureCall.getString();
+    }
+
+    const supposition = new Supposition(string, statement, procedureCall);
 
     return supposition
   }

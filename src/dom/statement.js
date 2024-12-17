@@ -12,7 +12,7 @@ import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
-import { procedureCallFromStatement, definedAssertionFromStatement, subproofAssertionFromStatement, containedAssertionFromStatement } from "../utilities/verification";
+import { definedAssertionFromStatement, subproofAssertionFromStatement, containedAssertionFromStatement } from "../utilities/verification";
 
 const { match, backwardsSome } = arrayUtilities;
 
@@ -170,20 +170,13 @@ export default domAssigned(class Statement {
     const context = specificContext,  ///
           statement = this; ///
 
-    const procedureCall = procedureCallFromStatement(statement, context),
-          definedAssertion = definedAssertionFromStatement(statement, context),
+    const definedAssertion = definedAssertionFromStatement(statement, context),
           containedAssertion = containedAssertionFromStatement(statement, context);
 
-    if ((procedureCall !== null) || (definedAssertion !== null) || (containedAssertion !== null)) {
+    if ((definedAssertion !== null) || (containedAssertion !== null)) {
       const statementString = this.string;
 
       specificContext.trace(`Unifying the '${statementString}' statement independently...`);
-
-      if (procedureCall !== null) {
-        const procedureCallUnifiedIndependently = procedureCall.unifyIndependently(substitutions, context);
-
-        unifiedIndependently = procedureCallUnifiedIndependently; ///
-      }
 
       if (definedAssertion !== null) {
         const definedAssertionUnifiedIndependently = definedAssertion.unifyIndependently(substitutions, context);

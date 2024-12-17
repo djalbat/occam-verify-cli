@@ -5,7 +5,6 @@ import BracketedCombinator from "../../combinator/bracketed";
 import { equalityFromStatement,
          judgementFromStatement,
          metavariableFromStatement,
-         procedureCallFromStatement,
          typeAssertionFromStatement,
          definedAssertionFromStatement,
          subproofAssertionFromStatement,
@@ -75,28 +74,6 @@ function verifyAsJudgement(statement, assignments, stated, context) {
   }
 
   return verifiedAsJudgement;
-}
-
-function verifyAsProcedureCall(statement, assignments, stated, context) {
-  let verifiedAsProcedureCall = false;
-
-  const procedureCall = procedureCallFromStatement(statement, context);
-
-  if (procedureCall !== null) {
-    const statementString = statement.getString();
-
-    context.trace(`Verifying the '${statementString}' statement as a procedure call...`);
-
-    const procedureCallVerified = procedureCall.verify(assignments, stated, context);
-
-    verifiedAsProcedureCall = procedureCallVerified; ///
-
-    if (verifiedAsProcedureCall) {
-      context.debug(`...verified the '${statementString}' statement as a procedure call.`);
-    }
-  }
-
-  return verifiedAsProcedureCall;
 }
 
 function verifyAsTypeAssertion(statement, assignments, stated, context) {
@@ -220,7 +197,6 @@ const verifyMixins = [
   verifyAsEquality,
   verifyAsJudgement,
   verifyAsTypeAssertion,
-  verifyAsProcedureCall,
   verifyAsDefinedAssertion,
   verifyAsSubproofAssertion,
   verifyAsContainedAssertion,

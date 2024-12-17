@@ -62,14 +62,16 @@ export function superTypeFromJSON(json, fileContext) {
 }
 
 export function statementFromJSON(json, fileContext) {
-  let { statement } = json;
+  let { statement = null } = json;
 
-  const { Statement } = dom,
-        statementJSON = statement;  ///
+  if (statement !== null) {
+    const { Statement } = dom,
+      statementJSON = statement;  ///
 
-  json = statementJSON; ///
+    json = statementJSON; ///
 
-  statement = Statement.fromJSON(json, fileContext);
+    statement = Statement.fromJSON(json, fileContext);
+  }
 
   return statement;
 }
@@ -111,6 +113,21 @@ export function metavariableFromJSON(json, fileContext) {
   metavariable = Metavariable.fromJSON(json, fileContext);
 
   return metavariable;
+}
+
+export function procedureCallFromJSON(json, fileContext) {
+  let { procedureCall = null } = json;
+
+  if (procedureCall !== null) {
+    const { ProcedureCall } = dom,
+          procedureCallJSON = procedureCall;  ///
+
+    json = procedureCallJSON; ///
+
+    procedureCall = ProcedureCall.fromJSON(json, fileContext);
+  }
+
+  return procedureCall;
 }
 
 export function typesFromJSON(json, types, fileContext) {
@@ -372,7 +389,11 @@ export function superTypeToSuperTypeJSON(superType) {
 }
 
 export function statementToStatementJSON(statement) {
-  const statementJSON = statement.toJSON();
+  let statementJSON = null;
+
+  if (statement !== null) {
+    statementJSON = statement.toJSON();
+  }
 
   return statementJSON;
 }
@@ -393,6 +414,16 @@ export function metavariableToMetavariableJSON(metavariable) {
   const metavariableJSON = metavariable.toJSON();
 
   return metavariableJSON;
+}
+
+export function procedureCallToProcedureCallJSON(procedureCall) {
+  let procedureCallJSON = null;
+
+  if (procedureCall !== null) {
+    procedureCallJSON = procedureCall.toJSON();
+  }
+
+  return procedureCallJSON;
 }
 
 export function typesToTypesJSON(types) {

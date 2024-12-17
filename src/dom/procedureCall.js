@@ -8,7 +8,8 @@ import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const parameterNodesQuery = nodesQuery("/procedureCall/parameter"),
-      procedureCallNodeQuery = nodeQuery("/statement/procedureCall");
+      premiseProcedureCallNodeQuery = nodeQuery("/premise/procedureCall"),
+      suppositionProcedureCallNodeQuery = nodeQuery("/supposition/procedureCall");
 
 export default domAssigned(class ProcedureCall {
   constructor(string, reference, parameters) {
@@ -93,13 +94,32 @@ export default domAssigned(class ProcedureCall {
 
   static name = "ProcedureCall";
 
-  static fromStatementNode(statementNode, context) {
+  static fromPremiseNode(premiseNode, context) {
     let procedureCall = null;
 
-    const procedureCallNode = procedureCallNodeQuery(statementNode);
+    const premiseProcedureCallNode = premiseProcedureCallNodeQuery(premiseNode);
 
-    if (procedureCallNode !== null) {
+    if (premiseProcedureCallNode !== null) {
       const { Reference } = dom,
+            procedureCallNode = premiseProcedureCallNode, ///
+            parameters = parametersFromProcedureCallNode(procedureCallNode, context),
+            reference = Reference.fromProcedureCallNode(procedureCallNode, context),
+            string = stringFromReferenceAndParameters(reference, parameters);
+
+      procedureCall = new ProcedureCall(string, reference, parameters);
+    }
+
+    return procedureCall;
+  }
+
+  static fromSuppositionNode(suppositionNode, context) {
+    let procedureCall = null;
+
+    const suppositionProcedureCallNode = suppositionProcedureCallNodeQuery(suppositionNode);
+
+    if (suppositionProcedureCallNode !== null) {
+      const { Reference } = dom,
+            procedureCallNode = suppositionProcedureCallNode, ///
             parameters = parametersFromProcedureCallNode(procedureCallNode, context),
             reference = Reference.fromProcedureCallNode(procedureCallNode, context),
             string = stringFromReferenceAndParameters(reference, parameters);
