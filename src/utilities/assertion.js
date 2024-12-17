@@ -3,12 +3,12 @@
 import { NOT } from "../constants";
 import { nodesQuery } from "../utilities/query";
 
-const operatorTerminalNodesQuery = nodesQuery("/*/@operator");
+const terminalNodesQuery = nodesQuery("/*/@*");
 
 export function isAssertionNegated(assertionNode) {
-  const operatorTerminalNodes = operatorTerminalNodesQuery(assertionNode),
-        assertionNegated = operatorTerminalNodes.some((operatorTerminalNode) => {
-          const content = operatorTerminalNode.getContent();
+  const terminalNodes = terminalNodesQuery(assertionNode),
+        assertionNegated = terminalNodes.some((terminalNode) => {
+          const content = terminalNode.getContent();
 
           if (content === NOT) {
             return true;
