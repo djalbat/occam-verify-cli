@@ -6,6 +6,7 @@ import dom from "../dom";
 
 import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query";
+import {parametersFromJSON, parametersToParametersJSON, referenceFromJSON} from "../utilities/json";
 
 const parameterNodesQuery = nodesQuery("/procedureCall/parameter"),
       premiseProcedureCallNodeQuery = nodeQuery("/premise/procedureCall"),
@@ -92,7 +93,29 @@ export default domAssigned(class ProcedureCall {
     return unifiedIndependently;
   }
 
+  toJSON() {
+    const referenceJSON = this.reference.toJSON(),
+          parametersJSON = parametersToParametersJSON(this.parameters),
+          reference = referenceJSON,  ///
+          parameters = parametersJSON,  ///
+          json = {
+            reference,
+            parameters
+          };
+
+    return json;
+  }
+
   static name = "ProcedureCall";
+
+  static fromJSON(json, fileContext) {
+    const reference = referenceFromJSON(json, fileContext),
+          parameters = parametersFromJSON(json, fileContext),
+          string = stringFromReferenceAndParameters(reference, parameters),
+          procedureCall = new ProcedureCall(string, reference, parameters);
+
+    return procedureCall;
+  }
 
   static fromPremiseNode(premiseNode, context) {
     let procedureCall = null;

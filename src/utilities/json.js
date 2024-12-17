@@ -66,7 +66,7 @@ export function statementFromJSON(json, fileContext) {
 
   if (statement !== null) {
     const { Statement } = dom,
-      statementJSON = statement;  ///
+          statementJSON = statement;  ///
 
     json = statementJSON; ///
 
@@ -74,6 +74,19 @@ export function statementFromJSON(json, fileContext) {
   }
 
   return statement;
+}
+
+export function referenceFromJSON(json, fileContext) {
+  let { reference } = json;
+
+  const { Reference } = dom,
+        referenceJSON = reference;  ///
+
+  json = referenceJSON;  ///
+
+  reference = Reference.fromJSON(json, fileContext);
+
+  return reference;
 }
 
 export function conclusionFromJSON(json, fileContext) {
@@ -237,6 +250,22 @@ export function variablesFromJSON(json, fileContext) {
   });
 
   return variables;
+}
+
+export function parametersFromJSON(json, fileContext) {
+  let { parameters } = json;
+
+  const { Parameter } = dom,
+        parametersJSON = parameters; ///
+
+  parameters = parametersJSON.map((parameterJSON) => {
+    const json = parameterJSON,  ///
+          parameter = Parameter.fromJSON(json, fileContext);
+
+    return (parameter);
+  });
+
+  return parameters;
 }
 
 export function conjecturesFromJSON(json, fileContext) {
@@ -504,6 +533,18 @@ export function variablesToVariablesJSON(variables) {
   });
 
   return variablesJSON;
+}
+
+export function parametersToParametersJSON(parameters) {
+  const parametersJSON = parameters.map((parameter) => {
+    const parameterJSON = parameter.toJSON();
+
+    parameter = parameterJSON;  ///
+
+    return parameter;
+  });
+
+  return parametersJSON;
 }
 
 export function conjecturesToConjecturesJSON(conjectures) {

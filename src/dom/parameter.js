@@ -38,7 +38,23 @@ export default domAssigned(class Parameter {
     return replacementNode;
   }
 
+  toJSON() {
+    const name = this.name,
+          json = {
+            name
+          };
+
+    return json;
+  }
+
   static name = "Parameter";
+
+  static fromJSON(json, fileContext) {
+    const { name } = json,
+          parameter = new Parameter(name);
+
+    return parameter;
+  }
 
   static fromParameterNode(parameterNode, context) {
     const nameTerminalNode = nameTerminalNodeQuery(parameterNode),

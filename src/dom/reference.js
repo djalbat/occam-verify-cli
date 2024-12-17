@@ -105,9 +105,7 @@ export default domAssigned(class Reference {
   toJSON() {
     const metavariableJSON = metavariableToMetavariableJSON(this.metavariable),
           metavariable = metavariableJSON,  ///
-          string = this.string,
           json = {
-            string,
             metavariable
           };
 
@@ -118,7 +116,7 @@ export default domAssigned(class Reference {
 
   static fromJSON(json, fileContext) {
     const metavariable = metavariableFromJSON(json, fileContext),
-          reference = new Reference(string, metavariable);
+          reference = new Reference(metavariable);
 
     return reference;
   }
