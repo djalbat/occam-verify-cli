@@ -3,12 +3,13 @@
 import dom from "../../dom";
 import LocalContext from "../../context/local";
 
-import { nodeQuery } from "../../utilities/query";
+import { UNDEFINED } from "../../constants";
 import { domAssigned } from "../../dom";
-import { isAssertionNegated } from "../../utilities/assertion";
+import { nodeQuery, nodesQuery } from "../../utilities/query";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
 
-const definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion");
+const terminalNodesQuery = nodesQuery("/*/@*"),
+      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion");
 
 export default domAssigned(class DefinedAssertion {
   constructor(string, node, tokens, term, frame, negated) {
@@ -168,8 +169,7 @@ export default domAssigned(class DefinedAssertion {
             tokens = context.nodeAsTokens(node),
             term = Term.fromDefinedAssertionNode(definedAssertionNode, context),
             frame = Frame.fromDefinedAssertionNode(definedAssertionNode, context),
-            definedAssertionNegated = isAssertionNegated(definedAssertionNode),
-            negated = definedAssertionNegated;  ///
+            negated = isNegated(definedAssertionNode);
 
       definedAssertion = new DefinedAssertion(string, node, tokens, term, frame, negated);
     }
@@ -177,6 +177,19 @@ export default domAssigned(class DefinedAssertion {
     return definedAssertion;
   }
 });
+
+function isNegated(assertionNode) {
+  const terminalNodes = terminalNodesQuery(assertionNode),
+        assertionNegated = terminalNodes.some((terminalNode) => {
+          const content = terminalNode.getContent();
+
+          if (content === UNDEFINED) {
+            return true;
+          }
+        });
+
+  return assertionNegated;
+}
 
 function verifyWhenDerived(term, frame, negated, context) {
   let verifiedWhenDerived = false;
