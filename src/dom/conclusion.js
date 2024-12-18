@@ -86,9 +86,9 @@ export  default domAssigned(class Conclusion {
 
   static fromConclusionNode(conclusionNode, fileContext) {
     const { Statement } = dom,
+          node = conclusionNode,  ///
+          string = fileContext.nodeAsString(node),
           statement = Statement.fromConclusionNode(conclusionNode, fileContext),
-          statementString = statement.getString(),
-          string = statementString, ///
           conclusion = new Conclusion(string, statement);
 
     return conclusion;

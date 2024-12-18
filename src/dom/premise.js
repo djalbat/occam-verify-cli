@@ -217,20 +217,11 @@ export default domAssigned(class Premise {
 
   static fromPremiseNode(premiseNode, fileContext) {
     const { Statement, ProcedureCall } = dom,
+          node = premiseNode,
+          string = fileContext.nodeAsString(node),
           statement = Statement.fromPremiseNode(premiseNode, fileContext),
-          procedureCall = ProcedureCall.fromPremiseNode(premiseNode, fileContext);
-
-    let string;
-
-    if (statement !== null) {
-      string = statement.getString();
-    }
-
-    if (procedureCall !== null) {
-      string = procedureCall.getString();
-    }
-
-    const premise = new Premise(string, statement, procedureCall);
+          procedureCall = ProcedureCall.fromPremiseNode(premiseNode, fileContext),
+          premise = new Premise(string, statement, procedureCall);
 
     return premise
   }

@@ -217,20 +217,11 @@ export default domAssigned(class Supposition {
 
   static fromSuppositionNode(suppositionNode, fileContext) {
     const { Statement, ProcedureCall } = dom,
+          node = suppositionNode, ///
+          string = fileContext.nodeAsString(node),
           statement = Statement.fromSuppositionNode(suppositionNode, fileContext),
-          procedureCall = ProcedureCall.fromSuppositionNode(suppositionNode, fileContext);
-
-    let string;
-
-    if (statement !== null) {
-      string = statement.getString();
-    }
-
-    if (procedureCall !== null) {
-      string = procedureCall.getString();
-    }
-
-    const supposition = new Supposition(string, statement, procedureCall);
+          procedureCall = ProcedureCall.fromSuppositionNode(suppositionNode, fileContext),
+          supposition = new Supposition(string, statement, procedureCall);
 
     return supposition
   }

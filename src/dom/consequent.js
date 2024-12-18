@@ -85,9 +85,9 @@ export default domAssigned(class Consequent {
 
   static fromConsequentNode(consequentNode, fileContext) {
     const { Statement } = dom,
+          node = consequentNode,  ///
+          string = fileContext.nodeAsString(node),
           statement = Statement.fromConsequentNode(consequentNode, fileContext),
-          statementString = statement.getString(),
-          string = statementString, ///
           consequent = new Consequent(string, statement);
 
     return consequent;
