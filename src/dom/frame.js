@@ -11,8 +11,7 @@ import { nodeQuery, nodesQuery } from "../utilities/query";
 const declarationNodesQuery = nodesQuery("/frame/declaration"),
       metavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       metavariableNodesQuery = nodesQuery("/frame/metavariable"),
-      definedAssertionFrameNodeQuery = nodeQuery("/definedAssertion/frame"),
-      containedAssertionFrameNodeQuery = nodeQuery("/containedAssertion/frame");
+      definedAssertionFrameNodeQuery = nodeQuery("/definedAssertion/frame");
 
 const { first } = arrayUtilities;
 
@@ -307,23 +306,6 @@ export default domAssigned(class Frame {
 
       if (metavariableNode !== null) {
         frame = frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context)
-      }
-    }
-
-    return frame;
-  }
-
-  static fromContainedAssertionNode(containedAssertionNode, context) {
-    let frame = null;
-
-    const containedAssertionFrameNode = containedAssertionFrameNodeQuery(containedAssertionNode);
-
-    if (containedAssertionFrameNode !== null) {
-      const frameNode = containedAssertionFrameNode,  ///
-            metavariableNode = metavariableNodeQuery(frameNode);
-
-      if (metavariableNode !== null) {
-        frame = frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context);
       }
     }
 

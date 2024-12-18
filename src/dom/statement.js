@@ -8,22 +8,19 @@ import verifyMixins from "../mixins/statement/verify";
 import combinatorVerifier from "../verifier/combinator";
 import StatementPartialContext from "../context/partial/statement";
 
+import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
-import { nodeQuery, nodesQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
-import { definedAssertionFromStatement, subproofAssertionFromStatement, containedAssertionFromStatement } from "../utilities/verification";
+import { definedAssertionFromStatement, subproofAssertionFromStatement } from "../utilities/verification";
 
 const { match, backwardsSome } = arrayUtilities;
 
-const statementTermNodesQuery = nodesQuery("/statement//term"),
-      statementFrameNodesQuery = nodesQuery("/statement//frame"),
-      premiseStatementNodeQuery = nodeQuery("/premise/statement"),
+const premiseStatementNodeQuery = nodeQuery("/premise/statement"),
       proofStepStatementNodeQuery = nodeQuery("/proofStep/statement"),
       conclusionStatementNodeQuery = nodeQuery("/conclusion/statement"),
       consequentStatementNodeQuery = nodeQuery("/consequent/statement"),
-      suppositionStatementNodeQuery = nodeQuery("/supposition/statement"),
-      containedAssertionStatementNodeQuery = nodeQuery("/containedAssertion/statement");
+      suppositionStatementNodeQuery = nodeQuery("/supposition/statement");
 
 export default domAssigned(class Statement {
   constructor(string, node, tokens) {
@@ -49,60 +46,6 @@ export default domAssigned(class Statement {
           equalTo = (statementString === this.string);
 
     return equalTo;
-  }
-
-  isTermContained(term, context) {
-    let termContained;
-
-    const termString = term.getString(),
-          statementString = this.string;  ///
-
-    context.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`);
-
-    const termNode = term.getNode(),
-          statementNode = this.node,
-          statementTermNodes = statementTermNodesQuery(statementNode);
-
-    termContained = statementTermNodes.some((statementTermNode) => {  ///
-      const termNodeMatchesStatementVariableNode = termNode.match(statementTermNode);
-
-      if (termNodeMatchesStatementVariableNode) {
-        return true;
-      }
-    });
-
-    if (termContained) {
-      context.debug(`...the '${termString}' term is contained in the '${statementString}' statement.`);
-    }
-
-    return termContained;
-  }
-
-  isFrameContained(frame, context) {
-    let frameContained;
-
-    const frameString = frame.getString(),
-          statementString = this.string;  ///
-
-    context.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`);
-
-    const frameNode = frame.getNode(),
-          statementNode = this.node,
-          statementFrameNodes = statementFrameNodesQuery(statementNode);
-
-    frameContained = statementFrameNodes.some((statementFrameNode) => {  ///
-      const frameNodeMatchesStatementMetavariableNode = frameNode.match(statementFrameNode);
-
-      if (frameNodeMatchesStatementMetavariableNode) {
-        return true;
-      }
-    });
-
-    if (frameContained) {
-      context.debug(`...the '${frameString}' frame is contained in the '${statementString}' statement.`);
-    }
-
-    return frameContained;
   }
 
   matchStatementNode(statementNode) {
@@ -170,25 +113,16 @@ export default domAssigned(class Statement {
     const context = specificContext,  ///
           statement = this; ///
 
-    const definedAssertion = definedAssertionFromStatement(statement, context),
-          containedAssertion = containedAssertionFromStatement(statement, context);
+    const definedAssertion = definedAssertionFromStatement(statement, context);
 
-    if ((definedAssertion !== null) || (containedAssertion !== null)) {
+    if (definedAssertion !== null) {
       const statementString = this.string;
 
       specificContext.trace(`Unifying the '${statementString}' statement independently...`);
 
-      if (definedAssertion !== null) {
-        const definedAssertionUnifiedIndependently = definedAssertion.unifyIndependently(substitutions, context);
+      const definedAssertionUnifiedIndependently = definedAssertion.unifyIndependently(substitutions, context);
 
-        unifiedIndependently = definedAssertionUnifiedIndependently; ///
-      }
-
-      if (containedAssertion !== null) {
-        const containedAssertionUnifiedIndependently = containedAssertion.unifyIndependently(substitutions, context);
-
-        unifiedIndependently = containedAssertionUnifiedIndependently; ///
-      }
+      unifiedIndependently = definedAssertionUnifiedIndependently; ///
 
       if (unifiedIndependently) {
         specificContext.debug(`...unified the '${statementString}' statement independently.`);
@@ -379,14 +313,6 @@ export default domAssigned(class Statement {
 
       statement = statementFromStatementNode(statementNode, context);
     }
-
-    return statement;
-  }
-
-  static fromContainedAssertionNode(containedAssertionNode, context) {
-    const containedAssertionStatementNode = containedAssertionStatementNodeQuery(containedAssertionNode),
-          statementNode = containedAssertionStatementNode, ///
-          statement = statementFromStatementNode(statementNode, context);
 
     return statement;
   }

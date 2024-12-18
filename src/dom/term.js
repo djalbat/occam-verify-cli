@@ -17,8 +17,7 @@ const { filter, compress } = arrayUtilities;
 
 const variableNodesQuery = nodesQuery("//variable"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
-      definedAssertionTermNodeQuery = nodeQuery("/definedAssertion/term"),
-      containedAssertionTermNodeQuery = nodeQuery("/containedAssertion/term");
+      definedAssertionTermNodeQuery = nodeQuery("/definedAssertion/term");
 
 export default domAssigned(class Term {
   constructor(string, node, type) {
@@ -286,27 +285,6 @@ export default domAssigned(class Term {
 
     if (definedAssertionTermNode !== null) {
       const termNode = definedAssertionTermNode,  ///
-            termVariableNode = termVariableNodeQuery(termNode);
-
-      if (termVariableNode !== null) {
-        const node = termNode,  ///
-              string = context.nodeAsString(node),
-              type = null;
-
-        term = new Term(string, node, type);
-      }
-    }
-
-    return term;
-  }
-
-  static fromContainedAssertionNode(containedAssertionNode, context) {
-    let term = null;
-
-    const containedAssertionTermNode = containedAssertionTermNodeQuery(containedAssertionNode);
-
-    if (containedAssertionTermNode !== null) {
-      const termNode = containedAssertionTermNode,  ///
             termVariableNode = termVariableNodeQuery(termNode);
 
       if (termVariableNode !== null) {

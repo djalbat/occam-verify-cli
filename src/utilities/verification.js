@@ -73,16 +73,6 @@ export function subproofAssertionFromStatement(statement, context) {
   return subproofAssertion;
 }
 
-export function containedAssertionFromStatement(statement, context) {
-  context = contextFromStatement(statement, context); ///
-
-  const { ContainedAssertion } = dom,
-        statementNode = statement.getNode(),
-        containedAssertion = ContainedAssertion.fromStatementNode(statementNode, context);
-
-  return containedAssertion;
-}
-
 function contextFromFrame(frame, context) {
   const frameTokens = frame.getTokens(),
         tokens = frameTokens, ///
