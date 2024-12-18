@@ -107,18 +107,17 @@ export default domAssigned(class Statement {
     return statementUnified;
   }
 
-  unifyIndependently(substitutions, generalContext, specificContext) {
+  unifyIndependently(substitutions, context) {
     let unifiedIndependently = false;
 
-    const context = specificContext,  ///
-          statement = this; ///
+    const statement = this; ///
 
     const definedAssertion = definedAssertionFromStatement(statement, context);
 
     if (definedAssertion !== null) {
       const statementString = this.string;
 
-      specificContext.trace(`Unifying the '${statementString}' statement independently...`);
+      context.trace(`Unifying the '${statementString}' statement independently...`);
 
       const definedAssertionUnifiedIndependently = definedAssertion.unifyIndependently(substitutions, context);
 

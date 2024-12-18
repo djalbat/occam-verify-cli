@@ -121,7 +121,8 @@ export default domAssigned(class Rule {
   unifyProofStepSubproofsWithPremise(proofStepSubproofs, premise, substitutions, generalContext, specificContext) {
     let proofStepSubproofsUnifiedWithPremise  =false;
 
-    const premiseUnifiedIndependently = premise.unifyIndependently(substitutions, generalContext, specificContext);
+    const context = specificContext,  ///
+          premiseUnifiedIndependently = premise.unifyIndependently(substitutions, context);
 
     if (premiseUnifiedIndependently) {
       proofStepSubproofsUnifiedWithPremise = true;

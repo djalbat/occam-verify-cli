@@ -26,17 +26,17 @@ export default domAssigned(class Supposition {
     return this.procedureCall;
   }
 
-  unifyIndependently(substitutions, generalContext, specificContext) {
+  unifyIndependently(substitutions, context) {
     let unifiedIndependently;
 
-    if (this.statesment !== null) {
-      const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
+    if (this.statement !== null) {
+      const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, context);
 
       unifiedIndependently = statementResolvedIndependently;  ///
     }
 
     if (this.procedureCall !== null) {
-      const procedureCallResolvedIndependently = this.procedureCall.unifyIndependently(substitutions, generalContext, specificContext);
+      const procedureCallResolvedIndependently = this.procedureCall.unifyIndependently(substitutions, context);
 
       unifiedIndependently = procedureCallResolvedIndependently;  ///
     }
@@ -103,11 +103,13 @@ export default domAssigned(class Supposition {
 
     specificContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
 
-    const context = generalContext,
-          subproofAssertion = subproofAssertionFromStatement(this.statement, context);
+    if (this.statement !== null) {
+      const context = generalContext, ///
+            subproofAssertion = subproofAssertionFromStatement(this.statement, context);
 
-    if (subproofAssertion !== null) {
-      subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
+      if (subproofAssertion !== null) {
+        subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
+      }
     }
 
     if (subproofUnified) {
@@ -121,12 +123,14 @@ export default domAssigned(class Supposition {
     let statementUnified;
 
     const supposition = this, ///
-          suppositionString = supposition.getString(),
-          statementString = statement.getString();
+          statementString = statement.getString(),
+          suppositionString = supposition.getString();
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`);
 
-    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    if (this.statement) {
+      statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    }
 
     if (statementUnified) {
       specificContext.debug(`...unified the '${statementString}' statement with the '${suppositionString}' supposition.`);
