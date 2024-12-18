@@ -49,10 +49,16 @@ export default domAssigned(class ProcedureCall {
 
     context.trace(`Verifying the '${procedureCallString}' procedure call...`);
 
-    const procedurePresent = context.isProcedurePresentByReference(this.reference);
+    const procedure = context.findProcedureByReference(this.reference);
 
-    if (procedurePresent) {
-      verified = true;
+    if (procedure !== null) {
+      const procedureBoolean = procedure.isBoolean();
+
+      if (procedureBoolean) {
+        verified = true;
+      } else {
+        context.trace(`The '${procedureCallString}' procedure is not boolean.`);
+      }
     } else {
       context.trace(`The '${procedureCallString}' procedure is not present.`);
     }

@@ -281,7 +281,7 @@ export default domAssigned(class Metavariable {
                 metavariableString = this.string, ///
                 frameMetavariableString = frameMetavariable.getString();
 
-          specificContext.trace(`Unifying the frame's ${frameMetavariableString}' metavariable with the '${metavariableString}' metavariable...`);
+          specificContext.trace(`Unifying the frame's '${frameMetavariableString}' metavariable with the '${metavariableString}' metavariable...`);
 
           const specificMetavariable = frameMetavariable, ///
                 generalMetavariable = this, ///
