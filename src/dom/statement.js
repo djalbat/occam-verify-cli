@@ -20,7 +20,8 @@ const premiseStatementNodeQuery = nodeQuery("/premise/statement"),
       proofStepStatementNodeQuery = nodeQuery("/proofStep/statement"),
       conclusionStatementNodeQuery = nodeQuery("/conclusion/statement"),
       consequentStatementNodeQuery = nodeQuery("/consequent/statement"),
-      suppositionStatementNodeQuery = nodeQuery("/supposition/statement");
+      suppositionStatementNodeQuery = nodeQuery("/supposition/statement"),
+      containedAssertionStatementNodeQuery = nodeQuery("/containedAssertion/statement");
 
 export default domAssigned(class Statement {
   constructor(string, node, tokens) {
@@ -313,6 +314,22 @@ export default domAssigned(class Statement {
 
     if (suppositionStatementNode !== null) {
       const statementNode = suppositionStatementNode, ///
+            localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext;  ///
+
+      statement = statementFromStatementNode(statementNode, context);
+    }
+
+    return statement;
+  }
+
+  static fromContainedAssertionNode(suppositionNode, fileContext) {
+    let statement = null;
+
+    const containedAssertionStatementNode = containedAssertionStatementNodeQuery(suppositionNode);
+
+    if (containedAssertionStatementNode !== null) {
+      const statementNode = containedAssertionStatementNode, ///
             localContext = LocalContext.fromFileContext(fileContext),
             context = localContext;  ///
 
