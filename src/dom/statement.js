@@ -8,15 +8,17 @@ import verifyMixins from "../mixins/statement/verify";
 import combinatorVerifier from "../verifier/combinator";
 import StatementPartialContext from "../context/partial/statement";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
+import { nodeQuery, nodesQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { definedAssertionFromStatement, containedAssertionFromStatement, subproofAssertionFromStatement } from "../utilities/verification";
 
 const { match, backwardsSome } = arrayUtilities;
 
-const premiseStatementNodeQuery = nodeQuery("/premise/statement"),
+const statementTermNodesQuery = nodesQuery("/statement//term"),
+      statementFrameNodesQuery = nodesQuery("/statement//frame"),
+      premiseStatementNodeQuery = nodeQuery("/premise/statement"),
       proofStepStatementNodeQuery = nodeQuery("/proofStep/statement"),
       conclusionStatementNodeQuery = nodeQuery("/conclusion/statement"),
       consequentStatementNodeQuery = nodeQuery("/consequent/statement"),
@@ -47,6 +49,60 @@ export default domAssigned(class Statement {
           equalTo = (statementString === this.string);
 
     return equalTo;
+  }
+
+  isTermContained(term, context) {
+    let termContained;
+
+    const termString = term.getString(),
+          statementString = this.string;  ///
+
+    context.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`);
+
+    const termNode = term.getNode(),
+          statementNode = this.node,
+          statementTermNodes = statementTermNodesQuery(statementNode);
+
+    termContained = statementTermNodes.some((statementTermNode) => {  ///
+      const termNodeMatchesStatementVariableNode = termNode.match(statementTermNode);
+
+      if (termNodeMatchesStatementVariableNode) {
+        return true;
+      }
+    });
+
+    if (termContained) {
+      context.debug(`...the '${termString}' term is contained in the '${statementString}' statement.`);
+    }
+
+    return termContained;
+  }
+
+  isFrameContained(frame, context) {
+    let frameContained;
+
+    const frameString = frame.getString(),
+          statementString = this.string;  ///
+
+    context.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`);
+
+    const frameNode = frame.getNode(),
+          statementNode = this.node,
+          statementFrameNodes = statementFrameNodesQuery(statementNode);
+
+    frameContained = statementFrameNodes.some((statementFrameNode) => {  ///
+      const frameNodeMatchesStatementMetavariableNode = frameNode.match(statementFrameNode);
+
+      if (frameNodeMatchesStatementMetavariableNode) {
+        return true;
+      }
+    });
+
+    if (frameContained) {
+      context.debug(`...the '${frameString}' frame is contained in the '${statementString}' statement.`);
+    }
+
+    return frameContained;
   }
 
   matchStatementNode(statementNode) {
