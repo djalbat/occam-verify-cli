@@ -8,7 +8,7 @@ import { domAssigned } from "../../dom";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
 
-const terminalNodesQuery = nodesQuery("/*/@*"),
+const terminalNodesQuery = nodesQuery("/definedAssertion/@*"),
       definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion");
 
 export default domAssigned(class DefinedAssertion {
@@ -178,9 +178,9 @@ export default domAssigned(class DefinedAssertion {
   }
 });
 
-function isNegated(assertionNode) {
-  const terminalNodes = terminalNodesQuery(assertionNode),
-        assertionNegated = terminalNodes.some((terminalNode) => {
+function isNegated(definedAssertionNode) {
+  const terminalNodes = terminalNodesQuery(definedAssertionNode),
+        negated = terminalNodes.some((terminalNode) => {
           const content = terminalNode.getContent();
 
           if (content === UNDEFINED) {
@@ -188,7 +188,7 @@ function isNegated(assertionNode) {
           }
         });
 
-  return assertionNegated;
+  return negated;
 }
 
 function verifyWhenDerived(term, frame, negated, context) {

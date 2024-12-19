@@ -7,6 +7,7 @@ import { equalityFromStatement,
          metavariableFromStatement,
          typeAssertionFromStatement,
          definedAssertionFromStatement,
+         containedAssertionFromStatement,
          subproofAssertionFromStatement } from "../../utilities/verification";
 
 function verifyAsMetavariable(statement, assignments, stated, context) {
@@ -119,6 +120,28 @@ function verifyAsDefinedAssertion(statement, assignments, stated, context) {
   return verifiedAsDefinedAssertion;
 }
 
+function verifyAsContainedAssertion(statement, assignments, stated, context) {
+  let verifiedAsContainedAssertion = false;
+
+  const containedAssertion = containedAssertionFromStatement(statement, context);
+
+  if (containedAssertion !== null) {
+    const statementString = statement.getString();
+
+    context.trace(`Verifying the '${statementString}' statement as a contained assertion...`);
+
+    const containedAssertionVerified = containedAssertion.verify(assignments, stated, context);
+
+    verifiedAsContainedAssertion = containedAssertionVerified; ///
+
+    if (verifiedAsContainedAssertion) {
+      context.debug(`...verified the '${statementString}' statement as a defined assertion.`);
+    }
+  }
+
+  return verifiedAsContainedAssertion;
+}
+
 function verifyAsSubproofAssertion(statement, assignments, stated, context) {
   let verifiedAsSubproofAssertion = false;
 
@@ -175,6 +198,7 @@ const verifyMixins = [
   verifyAsJudgement,
   verifyAsTypeAssertion,
   verifyAsDefinedAssertion,
+  verifyAsContainedAssertion,
   verifyAsSubproofAssertion,
   unifyWithBracketedCombinator,
   unifyWithCombinators

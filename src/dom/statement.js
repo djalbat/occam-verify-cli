@@ -12,7 +12,7 @@ import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
-import { definedAssertionFromStatement, subproofAssertionFromStatement } from "../utilities/verification";
+import { definedAssertionFromStatement, containedAssertionFromStatement, subproofAssertionFromStatement } from "../utilities/verification";
 
 const { match, backwardsSome } = arrayUtilities;
 
@@ -110,22 +110,28 @@ export default domAssigned(class Statement {
   unifyIndependently(substitutions, context) {
     let unifiedIndependently = false;
 
-    const statement = this; ///
+    const statement = this, ///
+          statementString = this.string;
 
-    const definedAssertion = definedAssertionFromStatement(statement, context);
+    context.trace(`Unifying the '${statementString}' statement independently...`);
+
+    const definedAssertion = definedAssertionFromStatement(statement, context),
+          containedAssertion = containedAssertionFromStatement(statement, context);
 
     if (definedAssertion !== null) {
-      const statementString = this.string;
-
-      context.trace(`Unifying the '${statementString}' statement independently...`);
-
       const definedAssertionUnifiedIndependently = definedAssertion.unifyIndependently(substitutions, context);
 
       unifiedIndependently = definedAssertionUnifiedIndependently; ///
+    }
 
-      if (unifiedIndependently) {
-        specificContext.debug(`...unified the '${statementString}' statement independently.`);
-      }
+    if (containedAssertion !== null) {
+      const containedAssertionUnifiedIndependently = containedAssertion.unifyIndependently(substitutions, context);
+
+      unifiedIndependently = containedAssertionUnifiedIndependently; ///
+    }
+
+    if (unifiedIndependently) {
+      context.debug(`...unified the '${statementString}' statement independently.`);
     }
 
     return unifiedIndependently;

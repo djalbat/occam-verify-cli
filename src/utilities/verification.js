@@ -63,6 +63,16 @@ export function definedAssertionFromStatement(statement, context) {
   return definedAssertion;
 }
 
+export function containedAssertionFromStatement(statement, context) {
+  context = contextFromStatement(statement, context); ///
+
+  const { ContainedAssertion } = dom,
+        statementNode = statement.getNode(),
+        containedAssertion = ContainedAssertion.fromStatementNode(statementNode, context);
+
+  return containedAssertion;
+}
+
 export function subproofAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 

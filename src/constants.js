@@ -1,5 +1,6 @@
 "use strict";
 
+export const MISSING = "missing";
 export const FUNCTION = "function";
 export const UNDEFINED = "undefined";
 export const EMPTY_STRING = "";
