@@ -1,12 +1,13 @@
 "use strict";
 
-import dom from "../dom";
+import dom from "../../dom";
 import Combinator from "../combinator";
-import combinatorBracketedContext from "../context/bracketed/combinator";
+import combinatorBracketedContext from "../../context/bracketed/combinator";
 
-import { unifyStatementWithCombinator } from "../utilities/unification";
+import { domAssigned } from "../../dom";
+import { unifyStatementWithCombinator } from "../../utilities/unification";
 
-export default class BracketedCombinator extends Combinator {
+export default domAssigned(class BracketedCombinator extends Combinator {
   unifyStatement(statement, assignments, stated, context) {
     let statementUnified;
 
@@ -37,4 +38,4 @@ export default class BracketedCombinator extends Combinator {
 
     return bracketedCombinator;
   }
-}
+});

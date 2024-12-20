@@ -1,8 +1,8 @@
 "use string";
 
 import LocalContext from "../context/local";
-import labelUnifier from "../unifier/label";
 import equalityUnifier from "../unifier/equality";
+import referenceUnifier from "../unifier/reference";
 import metaLevelUnifier from "../unifier/metaLevel";
 import metavariableUnifier from "../unifier/metavariable";
 import intrinsicLevelUnifier from "../unifier/intrinsicLevel";
@@ -81,23 +81,31 @@ export function unifyMetavariable(generalMetavariable, specificMetavariable, gen
   return metavariableUnified;
 }
 
-export function unifyLabelWithReference(label, reference, substitutions, generalContext, specificContext) {
+export function unifyLabelWithReference(label, reference, substitutions, context) {
   let labelUnifiedWithReference;
 
-  const labelMetavariable = label.getMetavariable(),
+  let generalContext,
+      specificContext;
+
+  const fileContext = label.getFileContext(),
+        labelMetavariable = label.getMetavariable(),
         referenceMetavariable = reference.getMetavariable(),
         labelMetavariableNode = labelMetavariable.getNode(),
         labelMetavariableTokens = labelMetavariable.getTokens(),
         referenceMetavariableNode = referenceMetavariable.getNode(),
         referenceMetavariableTokens = referenceMetavariable.getTokens();
 
+  generalContext = context; ///
+
+  specificContext = fileContext;  ///
+
   generalContext = contextFromTokens(labelMetavariableTokens, generalContext);  ///
 
   specificContext = contextFromTokens(referenceMetavariableTokens, specificContext);  ///
 
-  const labelUnified = labelUnifier.unify(labelMetavariableNode, referenceMetavariableNode, substitutions, generalContext, specificContext);
+  const referenceUnified = referenceUnifier.unify(labelMetavariableNode, referenceMetavariableNode, substitutions, generalContext, specificContext);
 
-  labelUnifiedWithReference = labelUnified; ///
+  labelUnifiedWithReference = referenceUnified; ///
 
   return labelUnifiedWithReference;
 }

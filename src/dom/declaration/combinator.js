@@ -1,7 +1,5 @@
 "use strict";
 
-import Combinator from "../../combinator";
-
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class CombinatorDeclaration {
@@ -45,7 +43,8 @@ export default domAssigned(class CombinatorDeclaration {
   static name = "CombinatorDeclaration";
 
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
-    const combinator = Combinator.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
+    const { Combinator } = dom,
+          combinator = Combinator.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
           combinatorDeclaration = new CombinatorDeclaration(fileContext, combinator);
 
     return combinatorDeclaration;

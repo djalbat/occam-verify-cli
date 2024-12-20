@@ -77,37 +77,51 @@ export default class TopLevelAssertion {
     return metavariableNameMatches;
   }
 
-  unifyReference(reference, context) {
-    let referenceUnified;
+  verify() {
+    let verified = false;
 
-    const referenceString = reference.getString(),
-          axiomLemmaTheoremConjecture = this, ///
-          axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjecture.getString();
+    const labelsVerified = this.verifyLabels();
 
-    context.trace(`Unifying the '${referenceString}' reference with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`);
+    if (labelsVerified) {
+      const localContext = LocalContext.fromFileContext(this.fileContext),
+        context = localContext, ///
+        suppositionsVerified = this.suppositions.every((supposition) => {
+          const suppositionVerified = supposition.verify(context);
 
-    const substitutions = Substitutions.fromNothing(),
-          fileContext = this.getFileContext(),
-          localContext = LocalContext.fromFileContext(fileContext),
-          generalContext = localContext,  ///
-          specificContext = context, ///
-          labelUnified = this.labels.some((label) => {
-            substitutions.clear();
+          if (suppositionVerified) {
+            return true;
+          }
+        });
 
-            const referenceUnified = reference.unifyLabel(label, substitutions, generalContext, specificContext);
+      if (suppositionsVerified) {
+        const consequentVerified = this.consequent.verify(context);
 
-            if (referenceUnified) {
-              return true;
-            }
-          });
+        if (consequentVerified) {
+          if (this.proof === null) {
+            verified = true;
+          } else {
+            const proofVerified = this.proof.verify(this.substitutions, this.consequent, context);
 
-    referenceUnified = labelUnified;  ///
-
-    if (referenceUnified) {
-      context.debug(`...unified the '${referenceString}' reference with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture.`);
+            verified = proofVerified; ///
+          }
+        }
+      }
     }
 
-    return referenceUnified;
+    return verified;
+  }
+
+  verifyLabels() {
+    const labelsVerified = this.labels.every((label) => {
+      const nameOnly = true,
+        labelVerified = label.verify(nameOnly);
+
+      if (labelVerified) {
+        return true;
+      }
+    });
+
+    return labelsVerified;
   }
 
   unifyStatement(statement, context) {
@@ -139,6 +153,16 @@ export default class TopLevelAssertion {
     return statementUnified;
   }
 
+  unifyStatementWithConsequent(statement, substitutions, generalContext, specificContext) {
+    let consequentUnified;
+
+    const statementUnified = this.consequent.unifyStatement(statement, substitutions, generalContext, specificContext);  ///
+
+    consequentUnified = statementUnified; ///
+
+    return consequentUnified;
+  }
+
   unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, context) {
     let statementAndProofStepSubproofsUnified = false;
 
@@ -160,30 +184,6 @@ export default class TopLevelAssertion {
     }
 
     return statementAndProofStepSubproofsUnified;
-  }
-
-  unifyStatementWithConsequent(statement, substitutions, generalContext, specificContext) {
-    let consequentUnified;
-
-    const statementUnified = this.consequent.unifyStatement(statement, substitutions, generalContext, specificContext);  ///
-
-    consequentUnified = statementUnified; ///
-
-    return consequentUnified;
-  }
-
-  unifyProofStepSubproofsWithSuppositions(proofStepSubproofs, substitutions, generalContext, specificContext) {
-    proofStepSubproofs = reverse(proofStepSubproofs); ///
-
-    const proofStepSubproofsUnifiedWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
-      const proofStepSubproofsUnifiedWithSupposition = this.unifyProofStepSubproofsWithSupposition(proofStepSubproofs, supposition, substitutions, generalContext, specificContext);
-
-      if (proofStepSubproofsUnifiedWithSupposition) {
-        return true;
-      }
-    });
-
-    return proofStepSubproofsUnifiedWithSuppositions;
   }
 
   unifyProofStepSubproofsWithSupposition(proofStepSubproofs, supposition, substitutions, generalContext, specificContext) {
@@ -211,51 +211,18 @@ export default class TopLevelAssertion {
     return proofStepSubproofsUnifiedWithSupposition;
   }
 
-  verify() {
-    let verified = false;
+  unifyProofStepSubproofsWithSuppositions(proofStepSubproofs, substitutions, generalContext, specificContext) {
+    proofStepSubproofs = reverse(proofStepSubproofs); ///
 
-    const labelsVerified = this.verifyLabels();
+    const proofStepSubproofsUnifiedWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
+      const proofStepSubproofsUnifiedWithSupposition = this.unifyProofStepSubproofsWithSupposition(proofStepSubproofs, supposition, substitutions, generalContext, specificContext);
 
-    if (labelsVerified) {
-      const localContext = LocalContext.fromFileContext(this.fileContext),
-            context = localContext, ///
-            suppositionsVerified = this.suppositions.every((supposition) => {
-              const suppositionVerified = supposition.verify(context);
-
-              if (suppositionVerified) {
-                return true;
-              }
-            });
-
-      if (suppositionsVerified) {
-        const consequentVerified = this.consequent.verify(context);
-
-        if (consequentVerified) {
-          if (this.proof === null) {
-            verified = true;
-          } else {
-            const proofVerified = this.proof.verify(this.substitutions, this.consequent, context);
-
-            verified = proofVerified; ///
-          }
-        }
-      }
-    }
-
-    return verified;
-  }
-
-  verifyLabels() {
-    const labelsVerified = this.labels.every((label) => {
-      const nameOnly = true,
-            labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext, nameOnly);
-
-      if (labelVVerifiedWhenDeclared) {
+      if (proofStepSubproofsUnifiedWithSupposition) {
         return true;
       }
     });
 
-    return labelsVerified;
+    return proofStepSubproofsUnifiedWithSuppositions;
   }
 
   toJSON() {

@@ -165,9 +165,9 @@ class LocalContext {
     let variableAdded = false;
 
     const variableName = variable.getNode(),
-          variableDeclared = this.isVariableDeclaredByVariableName(variableName, nested);
+          variablePresent = this.isVariablePresentByVariableName(variableName, nested);
 
-    if (!variableDeclared) {
+    if (!variablePresent) {
       this.variables.push(variable);
 
       variableAdded = true;
@@ -217,75 +217,23 @@ class LocalContext {
     return termType;
   }
 
-  isTermGrounded(term) {
-    const context = this, ///
-          equivalences = this.getEquivalences(),
-          groundedTerms = [],
-          definedVariables = [];
+  findLabelByReference(reference, context) { return this.context.findLabelByReference(reference, context); }
 
-    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
+  findRuleByReference(reference) { return this.context.findRuleByReference(reference); }
 
-    const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
-            const groundedTermNode = groundedTerm.getNode(),
-                  groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
+  findAxiomByReference(reference) { return this.context.findAxiomByReference(reference); }
 
-            if (groundedTermNodeMatches) {
-              return true;
-            }
-          }),
-          termGrounded = termMatchesGroundedTerm; ///
+  findLemmaByReference(reference) { return this.context.findLemmaByReference(reference); }
 
-    return termGrounded;
-  }
+  findTheoremByReference(reference) { return this.context.findTheoremByReference(reference); }
 
-  isVariableDefined(variable) {
-    const context = this, ///
-          equivalences = this.getEquivalences(),
-          groundedTerms = [],
-          definedVariables = [];
+  findProcedureByReference(reference) { return this.context.findProcedureByReference(reference); }
 
-    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
+  findConjectureByReference(reference) { return this.context.findConjectureByReference(reference); }
 
-    const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
-            const definedVariableEqualToVariable = definedVariable.isEqualTo(variable);
+  findMetaLemmasByReference(reference) { return this.context.findMetaLemmasByReference(reference); }
 
-            if (definedVariableEqualToVariable === variable) {
-              return true;
-            }
-          }),
-          variableDefined = variableMatchesDefinedVariable; ///
-
-    return variableDefined;
-  }
-
-  isMetavariableDefined(metavariable) {
-    const judgementPresent = this.isJudgementPresentByMetavariable(metavariable),
-      metavariableDefined = judgementPresent; ///
-
-    return metavariableDefined
-  }
-
-  isMetavariableDeclared(metavariable, generalContext, specificContext) { return this.context.isMetavariableDeclared(metavariable, generalContext, specificContext); }
-
-  isTypeDeclaredByTypeName(typeName) { return this.context.isTypeDeclaredByTypeName(typeName); }
-
-  isLabelPresentByMetavariableName(metavariableName) { return this.context.isLabelPresentByMetavariableName(metavariableName); }
-
-  isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
-
-  isVariableDeclaredByVariableName(variableName, nested = true) {
-    const variable = this.findVariableByVariableName(variableName, nested),
-          variableDeclared = (variable !== null);
-
-    return variableDeclared;
-  }
-
-  isJudgementPresentByMetavariable(metavariable) {
-    const judgement = this.findJudgementByMetavariable(metavariable),
-          judgementPresent = (judgement !== null);
-
-    return judgementPresent;
-  }
+  findMetatheoremsByReference(reference) { return this.context.findMetatheoremsByReference(reference); }
 
   findVariableByVariableName(variableName, nested = true) {
     const variables = this.getVariables(nested),
@@ -321,49 +269,89 @@ class LocalContext {
 
   findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
 
+  findLabelByMetavariable(metavariable) { return this.context.findLabelByMetavariable(metavariable); }
+
   findMetaTypeByMetaTypeName(metaTypeName) { return this.context.findMetaTypeByMetaTypeName(metaTypeName); }
 
   findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
 
-  findLabelByMetavariable(metavariable) { return this.context.findLabelByMetavariable(metavariable); }
-
-  findRuleByReference(reference) { return this.context.findRuleByReference(reference); }
-
-  findAxiomByReference(reference) { return this.context.findAxiomByReference(reference); }
-
-  findLemmaByReference(reference) { return this.context.findLemmaByReference(reference); }
-
-  findTheoremByReference(reference) { return this.context.findTheoremByReference(reference); }
-
-  findProcedureByReference(reference) { return this.context.findProcedureByReference(reference); }
-
-  findConjectureByReference(reference) { return this.context.findConjectureByReference(reference); }
-
-  findMetaLemmasByReference(reference) { return this.context.findMetaLemmasByReference(reference); }
-
-  findMetatheoremsByReference(reference) { return this.context.findMetatheoremsByReference(reference); }
-
   findAxiomLemmaTheoremConjectureByReference(reference) { return this.context.findAxiomLemmaTheoremConjectureByReference(reference); }
 
-  isRulePresentByReference(reference) { return this.context.isRulePresentByReference(reference); }
-
-  isAxiomPresentByReference(reference) { return this.context.isAxiomPresentByReference(reference); }
-
-  isLemmaPresentByReference(reference) { return this.context.isLemmaPresentByReference(reference); }
-
-  isTheoremPresentByReference(reference) { return this.context.isTheoremPresentByReference(reference); }
+  isLabelPresentByReference(reference, context) { return this.context.isLabelPresentByReference(reference, context); }
 
   isProcedurePresentByReference(reference) { return this.context.isProcedurePresentByReference(reference); }
 
-  isConjecturePresentByReference(reference) { return this.context.isConjecturePresentByReference(reference); }
+  isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
 
-  areMetaLemmasPresentByReference(reference) { return this.context.areMetaLemmasPresentByReference(reference); }
+  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
-  areMetatheoremsPresentByReference(reference) { return this.context.areMetatheoremsPresentByReference(reference); }
+  isVariablePresentByVariableName(variableName, nested = true) {
+    const variable = this.findVariableByVariableName(variableName, nested),
+          variablePresent = (variable !== null);
 
-  areMetaLemmasMetaTheoremsPresentByReference(reference) { return this.context.areMetaLemmasMetaTheoremsPresentByReference(reference); }
+    return variablePresent;
+  }
 
-  isAxiomLemmaTheoremConjecturePresentByReference(reference) { return this.context.isAxiomLemmaTheoremConjecturePresentByReference(reference) }
+  isLabelPresentByMetavariableName(metavariableName) { return this.context.isLabelPresentByMetavariableName(metavariableName); }
+
+  isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
+
+  isMetavariablePresentByMetavariableName(metavariableNode) { return this.context.isMetavariablePresentByMetavariableName(metavariableNode); }
+
+  isJudgementPresentByMetavariable(metavariable) {
+    const judgement = this.findJudgementByMetavariable(metavariable),
+          judgementPresent = (judgement !== null);
+
+    return judgementPresent;
+  }
+
+  isTermGrounded(term) {
+    const context = this, ///
+          equivalences = this.getEquivalences(),
+          groundedTerms = [],
+          definedVariables = [];
+
+    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
+
+    const termMatchesGroundedTerm = groundedTerms.some((groundedTerm) => {
+        const groundedTermNode = groundedTerm.getNode(),
+              groundedTermNodeMatches = term.matchTermNode(groundedTermNode);
+
+            if (groundedTermNodeMatches) {
+              return true;
+            }
+          }),
+          termGrounded = termMatchesGroundedTerm; ///
+
+    return termGrounded;
+  }
+
+  isVariableDefined(variable) {
+    const context = this, ///
+          equivalences = this.getEquivalences(),
+          groundedTerms = [],
+          definedVariables = [];
+
+    equivalences.separateGroundedTermsAndDefinedVariables(groundedTerms, definedVariables, context);
+
+    const variableMatchesDefinedVariable = definedVariables.some((definedVariable) => {
+            const definedVariableEqualToVariable = definedVariable.isEqualTo(variable);
+
+            if (definedVariableEqualToVariable === variable) {
+              return true;
+            }
+          }),
+          variableDefined = variableMatchesDefinedVariable; ///
+
+    return variableDefined;
+  }
+
+  isMetavariableDefined(metavariable) {
+    const judgementPresent = this.isJudgementPresentByMetavariable(metavariable),
+          metavariableDefined = judgementPresent; ///
+
+    return metavariableDefined
+  }
 
   nodeAsString(node, tokens = null) {
     if (tokens === null) {

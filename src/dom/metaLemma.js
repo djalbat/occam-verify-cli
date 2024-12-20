@@ -6,36 +6,39 @@ import TopLevelAssertion from "./topLevelAssertion";
 import { domAssigned } from "../dom";
 
 export default domAssigned(class MetaLemma extends TopLevelAssertion {
-  unifyReference(reference, substitutions, context) {
-    let referenceUnified;
+  verify() {
+    let verified;
 
     const metaLemma = this, ///
-          referenceString = reference.getString(),
+          fileContext = this.getFileContext(),
           metaLemmaString = metaLemma.getString();
 
-    context.trace(`Unifying the '${referenceString}' reference with the '${metaLemmaString}' meta-lemma...`);
+    fileContext.trace(`Verifying the '${metaLemmaString}' meta-lemma...`);
 
-    const fileContext = this.getFileContext(),
-          localContext = LocalContext.fromFileContext(fileContext),
-          generalContext = localContext,  ///
-          specificContext = context, ///
-          labelUnified = this.labels.some((label) => {
-            substitutions.clear();
+    verified = super.verify();
 
-            const referenceUnified = reference.unifyLabel(label, substitutions, generalContext, specificContext);
+    if (verified) {
+      const metaTheorem = this; ///
 
-            if (referenceUnified) {
-              return true;
-            }
-          });
+      fileContext.addMetatheorem(metaTheorem);
 
-    referenceUnified = labelUnified;  ///
-
-    if (referenceUnified) {
-      context.debug(`...unified the '${referenceString}' reference with the '${metaLemmaString}' meta-lemma.`);
+      fileContext.debug(`...verified the '${metaLemmaString}' meta-lemma.`);
     }
 
-    return referenceUnified;
+    return verified;
+  }
+
+  verifyLabels() {
+    const labelsVerified = this.labels.every((label) => {
+      const nameOnly = false,
+            labelVerified = label.verify(nameOnly);
+
+      if (labelVerified) {
+        return true;
+      }
+    });
+
+    return labelsVerified;
   }
 
   unifyStatement(statement, substitutions, context) {
@@ -65,41 +68,6 @@ export default domAssigned(class MetaLemma extends TopLevelAssertion {
     }
 
     return statementUnified;
-  }
-
-  verify() {
-    let verified;
-
-    const metaLemma = this, ///
-          fileContext = this.getFileContext(),
-          metaLemmaString = metaLemma.getString();
-
-    fileContext.trace(`Verifying the '${metaLemmaString}' meta-lemma...`);
-
-    verified = super.verify();
-
-    if (verified) {
-      const metaTheorem = this; ///
-
-      fileContext.addMetatheorem(metaTheorem);
-
-      fileContext.debug(`...verified the '${metaLemmaString}' meta-lemma.`);
-    }
-
-    return verified;
-  }
-
-  verifyLabels() {
-    const labelsVerified = this.labels.every((label) => {
-      const nameOnly = false,
-            labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext, nameOnly);
-
-      if (labelVVerifiedWhenDeclared) {
-        return true;
-      }
-    });
-
-    return labelsVerified;
   }
 
   static name = "MetaLemma";

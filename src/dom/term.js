@@ -181,7 +181,7 @@ export default domAssigned(class Term {
     let verifiedGivenType;
 
     const typeName = type.getName(),
-          termString = this.getString();
+          termString = this.getString();  ///
 
     specificContext.trace(`Verifying the '${termString}' term given the '${typeName}' type...`);
 

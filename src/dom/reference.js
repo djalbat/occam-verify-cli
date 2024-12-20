@@ -42,26 +42,6 @@ export default domAssigned(class Reference {
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
-  unifyLabel(label, substitutions, generalContext, specificContext) {
-    let labelUnified;
-
-    const reference = this, ///
-          labelString = label.getString(),
-          referenceString = reference.getString();
-
-    specificContext.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
-
-    const labelUnifiedWithReference = unifyLabelWithReference(label, reference, substitutions, generalContext, specificContext);
-
-    labelUnified = labelUnifiedWithReference; ///
-
-    if (labelUnified) {
-      specificContext.debug(`...unified the '${labelString}' label with the '${referenceString}' reference.`);
-    }
-
-    return labelUnified;
-  }
-
   verify(context) {
     let verified = false;
 
@@ -77,11 +57,9 @@ export default domAssigned(class Reference {
 
     if (!verified) {
       const reference = this, ///
-            rulePresent = context.isRulePresentByReference(reference),
-            metaLemmasMetaTheoremsPresent = context.areMetaLemmasMetaTheoremsPresentByReference(reference),
-            axiomLemmaTheoremConjecturePresent = context.isAxiomLemmaTheoremConjecturePresentByReference(reference);
+            labelPresent = context.isLabelPresentByReference(reference, context);
 
-      verified = (rulePresent || metaLemmasMetaTheoremsPresent || axiomLemmaTheoremConjecturePresent);
+      verified = labelPresent;  ///
     }
 
     if (verified) {
@@ -100,6 +78,26 @@ export default domAssigned(class Reference {
     metavariableVerified = metavariableVerifiedGivenMetaType; ///
 
     return metavariableVerified;
+  }
+
+  unifyLabel(label, substitutions, context) {
+    let labelUnified;
+
+    const reference = this, ///
+          labelString = label.getString(),
+          referenceString = reference.getString();
+
+    context.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
+
+    const labelUnifiedWithReference = unifyLabelWithReference(label, reference, substitutions,  context);
+
+    labelUnified = labelUnifiedWithReference; ///
+
+    if (labelUnified) {
+      context.debug(`...unified the '${labelString}' label with the '${referenceString}' reference.`);
+    }
+
+    return labelUnified;
   }
 
   toJSON() {

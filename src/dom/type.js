@@ -110,9 +110,9 @@ class Type {
 
     fileContext.trace(`Verifying the '${typeString}' type when declared...`);
 
-    const typeDeclared = fileContext.isTypeDeclaredByTypeName(this.name);
+    const typePresent = fileContext.isTypePresentByTypeName(this.name);
 
-    if (typeDeclared) {
+    if (typePresent) {
       fileContext.debug(`The type '${typeString}' has already been declared.`);
     } else {
       const superTypeName = this.superType.getName(),

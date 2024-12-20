@@ -1,16 +1,17 @@
 "use strict";
 
-import dom from "./dom";
-import LocalContext from "./context/local";
+import dom from "../dom";
+import LocalContext from "../context/local";
 
-import { nodeQuery } from "./utilities/query";
-import { unifyTermWithConstructor } from "./utilities/unification";
-import { termFromJSON, termToTermJSON } from "./utilities/json";
+import { nodeQuery } from "../utilities/query";
+import { domAssigned } from "../dom";
+import { unifyTermWithConstructor } from "../utilities/unification";
+import { termFromJSON, termToTermJSON } from "../utilities/json";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
 
-export default class Constructor {
+export default domAssigned(class Constructor {
   constructor(string, term) {
     this.string = string;
     this.term = term;
@@ -108,7 +109,7 @@ export default class Constructor {
 
     return constructor;
   }
-}
+});
 
 export function stringFromTermAndType(term, type) {
   let string;

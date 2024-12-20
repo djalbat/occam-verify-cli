@@ -195,9 +195,9 @@ export default domAssigned(class Rule {
   verifyLabels() {
     const labelsVerified = this.labels.every((label) => {
       const nameOnly = true,
-            labelVVerifiedWhenDeclared = label.verifyWhenDeclared(this.fileContext, nameOnly);
+            labelVerified = label.verify(nameOnly);
 
-      if (labelVVerifiedWhenDeclared) {
+      if (labelVerified) {
         return true;
       }
     });

@@ -168,7 +168,7 @@ export default domAssigned(class Statement {
     let unifiedIndependently = false;
 
     const statement = this, ///
-          statementString = this.string;
+          statementString = this.string;  ///
 
     context.trace(`Unifying the '${statementString}' statement independently...`);
 

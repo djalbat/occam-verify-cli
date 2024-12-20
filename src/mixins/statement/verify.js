@@ -1,6 +1,6 @@
 "use strict";
 
-import BracketedCombinator from "../../combinator/bracketed";
+import dom from "../../dom";
 
 import { equalityFromStatement,
          judgementFromStatement,
@@ -169,7 +169,8 @@ function unifyWithBracketedCombinator(statement, assignments, stated, context) {
 
   assignments = null; ///
 
-  const bracketedCombinator = BracketedCombinator.fromNothing(),
+  const { BracketedCombinator } = dom,
+        bracketedCombinator = BracketedCombinator.fromNothing(),
         unifiedWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
 
   return unifiedWithBracketedCombinator;

@@ -142,15 +142,15 @@ export default domAssigned(class Variable {
     fileContext.trace(`Verifying the '${variableString}' variable when declared...`);
 
     const variableName = this.name, ///
-          variableDeclared = fileContext.isVariableDeclaredByVariableName(variableName);
+          variablePresent = fileContext.isVariablePresentByVariableName(variableName);
 
-    if (variableDeclared) {
+    if (variablePresent) {
       fileContext.debug(`The '${variableName}' variable has already been declared.`);
     } else {
       const metavariableName = this.name, ///
-            metavariableDeclared = fileContext.isMetavariableDeclaredByMetavariableName(metavariableName);
+            metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
 
-      if (metavariableDeclared) {
+      if (metavariablePresent) {
         fileContext.debug(`A '${metavariableName}' variable has already been declared.`);
       } else {
         const typeVerified = this.verifyType(fileContext);

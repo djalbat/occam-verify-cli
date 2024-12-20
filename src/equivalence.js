@@ -16,7 +16,7 @@ export default class Equivalence {
 
   addTerm(term, context) {
     const termString = term.getString(),
-          equivalenceString = this.getString();
+          equivalenceString = this.getString(); ///
 
     context.trace(`Adding the '${termString}' term to the '${equivalenceString}' equivalence.`);
 

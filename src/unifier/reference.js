@@ -8,17 +8,17 @@ import { nodeQuery } from "../utilities/query";
 const termNodeQuery = nodeQuery("/term"),
       termVariableNodeQuery = nodeQuery("/term/variable!");
 
-class LabelUnifier extends Unifier {
+class ReferenceUnifier extends Unifier {
   unify(labelMetavariableNode, referenceMetavariableNode, substitutions, generalContext, specificContext) {
-    let labelUnified;
+    let referenceUnified;
 
     const generalNonTerminalNode = labelMetavariableNode, ///
           specificNonTerminalNode = referenceMetavariableNode, ///
           nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext);
 
-    labelUnified = nonTerminalNodeUnified; ///
+    referenceUnified = nonTerminalNodeUnified; ///
 
-    return labelUnified;
+    return referenceUnified;
   }
 
   static maps = [
@@ -51,6 +51,6 @@ class LabelUnifier extends Unifier {
   ];
 }
 
-const labelUnifier = new LabelUnifier();
+const referenceUnified = new ReferenceUnifier();
 
-export default labelUnifier;
+export default referenceUnified;

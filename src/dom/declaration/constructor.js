@@ -1,6 +1,6 @@
 "use strict";
 
-import Constructor from "../../constructor";
+import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
 
@@ -45,7 +45,8 @@ export default domAssigned(class ConstructorDeclaration {
   static name = "ConstructorDeclaration";
 
   static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
-    const constructor = Constructor.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
+    const { Constructor } = dom,
+          constructor = Constructor.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
           constructorDeclaration = new ConstructorDeclaration(fileContext, constructor);
 
     return constructorDeclaration;

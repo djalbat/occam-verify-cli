@@ -78,7 +78,7 @@ export default class StatementSubstitution extends Substitution {
   }
 
   resolve(substitutions, generalContext, specificContext) {
-    const substitutionString = this.string;
+    const substitutionString = this.string; ///
 
     const metavariable = this.getMetavariable(),
           simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable);

@@ -7,12 +7,17 @@ import { domAssigned } from "../dom";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default domAssigned(class Label {
-  constructor(metavariable) {
+  constructor(metavariable, fileContext) {
     this.metavariable = metavariable;
+    this.fileContext = fileContext;
   }
 
   getMetavariable() {
     return this.metavariable;
+  }
+
+  getFileContext() {
+    return this.fileContext;
   }
 
   getString() { return this.metavariable.getString(); }
@@ -33,36 +38,36 @@ export default domAssigned(class Label {
 
   matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
 
-  verifyWhenDeclared(fileContext, nameOnly) {
-    let verifiedWhenDeclared = false;
+  verify(nameOnly) {
+    let verified = false;
 
     const labelString = this.getString(); ///
 
-    fileContext.trace(`Verifying the '${labelString}' label when declared...`);
+    this.fileContext.trace(`Verifying the '${labelString}' label when declared...`);
 
     let labelPresent;
 
     if (nameOnly) {
       const metavariableName = this.getMetavariableName();
 
-      labelPresent = fileContext.isLabelPresentByMetavariableName(metavariableName);
+      labelPresent = this.fileContext.isLabelPresentByMetavariableName(metavariableName);
     } else {
       const metavariableNode = this.getMetavariableNode();
 
-      labelPresent = fileContext.isLabelPresentByMetavariableNode(metavariableNode);
+      labelPresent = this.fileContext.isLabelPresentByMetavariableNode(metavariableNode);
     }
 
     if (labelPresent) {
-      fileContext.debug(`The '${labelString}' label is already present.`);
+      this.fileContext.debug(`The '${labelString}' label is already present.`);
     } else {
-      verifiedWhenDeclared = true;
+      verified = true;
     }
 
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${labelString}' label when declared.`);
+    if (verified) {
+      this.fileContext.debug(`...verified the '${labelString}' label when declared.`);
     }
 
-    return verifiedWhenDeclared;
+    return verified;
   }
 
   toJSON() {
@@ -79,7 +84,7 @@ export default domAssigned(class Label {
 
   static fromJSON(json, fileContext) {
     const metavariable = metavariableFromJSON(json, fileContext),
-          label = new Label(metavariable);
+          label = new Label(metavariable, fileContext);
 
     return label;
   }
@@ -88,7 +93,7 @@ export default domAssigned(class Label {
     const { Metavariable } = dom,
           localContext = LocalContext.fromFileContext(fileContext),
           metavariable = Metavariable.fromLabelNode(labelNode, localContext),
-          label = new Label(metavariable);
+          label = new Label(metavariable, fileContext);
 
     return label;
   }

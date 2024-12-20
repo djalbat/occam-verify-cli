@@ -2,8 +2,6 @@
 
 import dom from "../../dom";
 
-import BracketedConstructor from "../../constructor/bracketed";
-
 import { nodeQuery } from "../../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
@@ -47,7 +45,8 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
 function unifyWithBracketedConstructor(term, context, verifyAhead) {
   let unifiedWithBracketedConstructor;
 
-  const bracketedConstructor = BracketedConstructor.fromNothing();
+  const { BracketedConstructor } = dom,
+        bracketedConstructor = BracketedConstructor.fromNothing();
 
   unifiedWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, verifyAhead);
 

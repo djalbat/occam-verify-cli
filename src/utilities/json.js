@@ -1,8 +1,6 @@
 "use strict";
 
 import dom from "../dom";
-import Combinator from "../combinator";
-import Constructor from "../constructor";
 import StatementSubstitution from "../substitution/statement";
 
 export function termFromJSON(json, fileContext) {
@@ -287,7 +285,8 @@ export function conjecturesFromJSON(json, fileContext) {
 export function combinatorsFromJSON(json, fileContext) {
   let { combinators } = json;
 
-  const combinatorsJSON = combinators; ///
+  const { Combinator } = dom,
+        combinatorsJSON = combinators; ///
 
   combinators = combinatorsJSON.map((combinatorJSON) => {
     const json = combinatorJSON,  ///
@@ -302,7 +301,8 @@ export function combinatorsFromJSON(json, fileContext) {
 export function constructorsFromJSON(json, fileContext) {
   let { constructors } = json;
 
-  const constructorsJSON = constructors; ///
+  const { Constructor } = dom,
+        constructorsJSON = constructors; ///
 
   constructors = constructorsJSON.map((constructorJSON) => {
     const json = constructorJSON,  ///

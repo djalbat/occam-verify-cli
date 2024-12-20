@@ -1,15 +1,16 @@
 "use strict";
 
-import dom from "../dom";
+import dom from "../../dom";
 import Constructor from "../constructor";
-import constructorBracketedContext from "../context/bracketed/constructor";
+import constructorBracketedContext from "../../context/bracketed/constructor";
 
-import { nodeQuery } from "../utilities/query";
+import { nodeQuery } from "../../utilities/query";
+import { domAssigned } from "../../dom";
 import { stringFromTermAndType } from "../constructor";
 
 const termNodeQuery = nodeQuery("/term/argument/term");
 
-export default class BracketedConstructor extends Constructor {
+export default domAssigned(class BracketedConstructor extends Constructor {
   unifyTerm(term, context, verifyAhead) {
     let termUnified;
 
@@ -65,4 +66,4 @@ export default class BracketedConstructor extends Constructor {
 
     return bracketedConstructor;
   }
-}
+});
