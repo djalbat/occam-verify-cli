@@ -38,10 +38,10 @@ export default domAssigned(class Judgement {
 
     context.trace(`Verifying the '${judgementString}' judgement...`);
 
-    const frameVerified = this.frame.verify(assignments, stated, context);
+    const frameVerified = this.verifyFrame(assignments, stated, context);
 
     if (frameVerified) {
-      const declarationVerified = this.declaration.verify(this.frame, assignments, stated, context);
+      const declarationVerified = this.verifyDeclaration(assignments, stated, context);
 
       if (declarationVerified) {
         let verifiedWhenStated = false,
@@ -62,6 +62,40 @@ export default domAssigned(class Judgement {
     }
 
     return verified;
+  }
+
+  verifyFrame(assignments, stated, context) {
+    let frameVerified;
+
+    const frameString = this.frame.getString(),
+          judgementString = this.string;  ///
+
+    context.trace(`Verifying the '${judgementString}' judgement's '${frameString}' frame...`);
+
+    frameVerified = this.frame.verify(assignments, stated, context);
+
+    if (frameVerified) {
+      context.debug(`...verified the '${judgementString}' judgement's '${frameString}' frame.`);
+    }
+
+    return frameVerified;
+  }
+
+  verifyDeclaration(assignments, stated, context) {
+    let declarationVerified;
+
+    const judgementString = this.string,  ///
+          declarationString = this.declaration.getString();
+
+    context.trace(`Verifying the '${judgementString}' judgement's '${declarationString}' declaration...`);
+
+    declarationVerified = this.declaration.verify(this.frame, assignments, stated, context);
+
+    if (declarationVerified) {
+      context.debug(`...verified the '${judgementString}' judgement's '${declarationString}' declaration.`);
+    }
+
+    return declarationVerified;
   }
 
   verifyWhenStated(assignments, context) {

@@ -150,12 +150,29 @@ export default domAssigned(class Declaration {
 
     context.trace(`Verifying the '${declarationString}' declaration...`);
 
-    const referenceVerified = this.verifyReference(frame, assignments, stated, context);
+    const referenceVerified = this.verifyReference(assignments, stated, context);
 
     if (referenceVerified) {
       const statementVerified = this.verifyStatement(assignments, stated, context);
 
-      verified = statementVerified; ///
+      if (statementVerified) {
+        let verifiedWhenStated = false,
+            verifiedWhenDerived = false;
+
+        if (stated) {
+          verifiedWhenStated = this.verifyWhenStated(frame, assignments, context);
+
+          verified = verifiedWhenStated;  ///
+        } else {
+          verifiedWhenDerived = this.verifyWhenDerived(context);
+
+          verified = verifiedWhenDerived; ///
+        }
+
+        if (verifiedWhenStated || verifiedWhenDerived) {
+          verified = true;
+        }
+      }
     }
 
     if (verified) {
@@ -163,6 +180,23 @@ export default domAssigned(class Declaration {
     }
 
     return verified;
+  }
+
+  verifyReference(assignments, stated, context) {
+    let referenceVerified;
+
+    const referenceString = this.reference.getString(),
+          declarationString = this.string;  ///
+
+    context.trace(`Verifying the '${declarationString}' declaration's '${referenceString}' reference...`);
+
+    referenceVerified = this.reference.verify(context);
+
+    if (referenceVerified) {
+      context.debug(`...verified the '${declarationString}' declaration's '${referenceString}' reference.`);
+    }
+
+    return referenceVerified;
   }
 
   verifyStatement(assignments, stated, context) {
@@ -186,146 +220,108 @@ export default domAssigned(class Declaration {
     return statementVerified;
   }
 
-  verifyReference(frame, assignments, stated, context) {
-    let referenceVerified;
+  verifyWhenStated(frame, assignments, context) {
+    let verifiedWhenStated;
 
-    const referenceString = this.reference.getString(),
-          declarationString = this.string;  ///
+    const declarationString = this.string;  ///
 
-    context.trace(`Verifying the '${declarationString}' declaration's '${referenceString}' reference...`);
+    context.trace(`Verifying the '${declarationString}' stated declaration...`);
 
-    let referenceVerifiedWhenStated = false,
-        referenceVerifiedWhenDerived = false;
+    debugger
 
-    if (stated) {
-      referenceVerifiedWhenStated = this.verifyReferenceWhenStated(context);
+    // const metaLemmas = context.findMetaLemmasByReference(this.reference),
+    //       metatheorems = context.findMetatheoremsByReference(this.reference),
+    //       metaLemmaMetatheorems = [
+    //         ...metaLemmas,
+    //         ...metatheorems
+    //       ],
+    //       metaLemmaMetatheoremUnified = metaLemmaMetatheorems.some((metaLemmaMetatheorem) => {
+    //         const metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+    //
+    //         if (metaLemmaMetatheoremUnified) {
+    //           return true;
+    //         }
+    //       });
+    //
+    // if (metaLemmaMetatheoremUnified) {
+    //   verifiedWhenStated = true;
+    // } else {
+    //   const axiom = context.findAxiomByReference(this.reference),
+    //         lemma = context.findLemmaByReference(this.reference),
+    //         theorem = context.findTheoremByReference(this.reference),
+    //         conjecture = context.findConjectureByReference(this.reference),
+    //         axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
+    //
+    //   if (axiomLemmaTheoremConjecture !== null) {
+    //     const axiomLemmaTheoremConjectureUnified = this.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context);
+    //
+    //     if (axiomLemmaTheoremConjectureUnified) {
+    //       verifiedWhenStated = true;
+    //     }
+    //   }
+    // }
 
-      referenceVerified = referenceVerifiedWhenStated;  ///
-    } else {
-      referenceVerifiedWhenDerived = this.verifyReferenceWhenDerived(frame, context);
-
-      referenceVerified = referenceVerifiedWhenDerived; ///
+    if (verifiedWhenStated) {
+      context.trace(`...verified the '${declarationString}' stated declaration.`);
     }
 
-    if (referenceVerified) {
-      context.debug(`...verified the '${declarationString}' declaration's '${referenceString}' reference.`);
-    }
-
-    return referenceVerified;
+    return verifiedWhenStated;
   }
 
-  verifyReferenceWhenStated(context) {
-    let referenceVerifiedWhenStated;
+  verifyWhenDerived(frame, context) {
+    let verifiedWhenDerived;
 
-    const referenceString = this.reference.getString(),
-          declarationString = this.string;  ///
+    const declarationString = this.string;  ///
 
-    context.trace(`Verifying the '${declarationString}' stated declaration's '${referenceString}' reference...`);
+    context.trace(`Verifying the '${declarationString}' derived declaration...`);
 
-    const referenceVerified = this.reference.verify(context);
+    debugger
 
-    if (referenceVerified) {
-      referenceVerifiedWhenStated = true;
-    } else {
-      const metaLemmas = context.findMetaLemmasByReference(this.reference),
-            metatheorems = context.findMetatheoremsByReference(this.reference),
-            metaLemmaMetatheorems = [
-              ...metaLemmas,
-              ...metatheorems
-            ],
-            metaLemmaMetatheoremUnified = metaLemmaMetatheorems.some((metaLemmaMetatheorem) => {
-              const metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+    // const metaLemmas = context.findMetaLemmasByReference(this.reference),
+    //       metatheorems = context.findMetatheoremsByReference(this.reference),
+    //       metaLemmaMetatheorems = [
+    //         ...metaLemmas,
+    //         ...metatheorems
+    //       ],
+    //       metaLemmaMetatheoremUnified = metaLemmaMetatheorems.some((metaLemmaMetatheorem) => {
+    //         let metaLemmaMetatheoremUnified = true;
+    //
+    //         if (metaLemmaMetatheoremUnified) {
+    //           metaLemmaMetatheoremUnified = frame.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+    //         }
+    //
+    //         if (metaLemmaMetatheoremUnified) {
+    //           metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+    //         }
+    //
+    //         if (metaLemmaMetatheoremUnified) {
+    //           return true;
+    //         }
+    //       });
+    //
+    // if (metaLemmaMetatheoremUnified) {
+    //   verifiedWhenDerived = true;
+    // } else {
+    //   const axiom = context.findAxiomByReference(this.reference),
+    //         lemma = context.findLemmaByReference(this.reference),
+    //         theorem = context.findTheoremByReference(this.reference),
+    //         conjecture = context.findConjectureByReference(this.reference),
+    //         axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
+    //
+    //   if (axiomLemmaTheoremConjecture !== null) {
+    //     const axiomLemmaTheoremConjectureUnified = this.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context);
+    //
+    //     if (axiomLemmaTheoremConjectureUnified) {
+    //       verifiedWhenDerived = true;
+    //     }
+    //   }
+    // }
 
-              if (metaLemmaMetatheoremUnified) {
-                return true;
-              }
-            });
-
-      if (metaLemmaMetatheoremUnified) {
-        referenceVerifiedWhenStated = true;
-      } else {
-        const axiom = context.findAxiomByReference(this.reference),
-              lemma = context.findLemmaByReference(this.reference),
-              theorem = context.findTheoremByReference(this.reference),
-              conjecture = context.findConjectureByReference(this.reference),
-              axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
-
-        if (axiomLemmaTheoremConjecture !== null) {
-          const axiomLemmaTheoremConjectureUnified = this.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context);
-
-          if (axiomLemmaTheoremConjectureUnified) {
-            referenceVerifiedWhenStated = true;
-          }
-        }
-      }
+    if (verifiedWhenDerived) {
+      context.trace(`...verified the '${declarationString}' derived declaration.`);
     }
 
-    if (referenceVerifiedWhenStated) {
-      context.trace(`...verified the '${declarationString}' stated declaration's '${referenceString}' reference.`);
-    }
-
-    return referenceVerifiedWhenStated;
-  }
-
-  verifyReferenceWhenDerived(frame, context) {
-    let referenceVerifiedWhenDerived;
-
-    const referenceString = this.reference.getString(),
-          declarationString = this.string;  ///
-
-    context.trace(`Verifying the '${declarationString}' derived declaration's '${referenceString}' reference...`);
-
-    const referenceVerified = this.reference.verify(context);
-
-    if (referenceVerified) {
-      referenceVerifiedWhenDerived = true;
-    } else {
-      const metaLemmas = context.findMetaLemmasByReference(this.reference),
-            metatheorems = context.findMetatheoremsByReference(this.reference),
-            metaLemmaMetatheorems = [
-              ...metaLemmas,
-              ...metatheorems
-            ],
-            metaLemmaMetatheoremUnified = metaLemmaMetatheorems.some((metaLemmaMetatheorem) => {
-              let metaLemmaMetatheoremUnified = true;
-
-              if (metaLemmaMetatheoremUnified) {
-                metaLemmaMetatheoremUnified = frame.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
-              }
-
-              if (metaLemmaMetatheoremUnified) {
-                metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
-              }
-
-              if (metaLemmaMetatheoremUnified) {
-                return true;
-              }
-            });
-
-      if (metaLemmaMetatheoremUnified) {
-        referenceVerifiedWhenDerived = true;
-      } else {
-        const axiom = context.findAxiomByReference(this.reference),
-              lemma = context.findLemmaByReference(this.reference),
-              theorem = context.findTheoremByReference(this.reference),
-              conjecture = context.findConjectureByReference(this.reference),
-              axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
-
-        if (axiomLemmaTheoremConjecture !== null) {
-          const axiomLemmaTheoremConjectureUnified = this.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context);
-
-          if (axiomLemmaTheoremConjectureUnified) {
-            referenceVerifiedWhenDerived = true;
-          }
-        }
-      }
-    }
-
-    if (referenceVerifiedWhenDerived) {
-      context.trace(`...verified the '${declarationString}' derived declaration's '${referenceString}' reference.`);
-    }
-
-    return referenceVerifiedWhenDerived;
+    return verifiedWhenDerived;
   }
 
   static name = "Declaration";

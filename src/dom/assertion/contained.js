@@ -57,25 +57,9 @@ export default domAssigned(class ContainedAssertion {
 
     context.trace(`Verifying the '${containedAssertionString}' contained assertion...`);
 
-    let termVerified = false,
-        frameVerified = false,
-        statementVerified = false;
-
-    if (this.term !== null) {
-      termVerified = this.term.verify(context, () => {
-        const verifiedAhead = true;
-
-        return verifiedAhead;
-      });
-    }
-
-    if (this.frame !== null) {
-      frameVerified = this.verifyFrame(this.frame, assignments, stated, context);
-    }
-
-    if (this.statement !== null) {
-      statementVerified = this.verifyStatement(this.statement, assignments, stated, context);
-    }
+    const termVerified = this.verifyTerm(assignments, stated, context),
+          frameVerified = this.verifyFrame(assignments, stated, context),
+          statementVerified = this.verifyStatement(assignments, stated, context)
 
     if (termVerified || frameVerified || statementVerified) {
       let verifiedWhenStated = false,
@@ -99,22 +83,71 @@ export default domAssigned(class ContainedAssertion {
     return verified;
   }
 
-  verifyFrame(frame, assignments, stated, context) {
-    stated = true;  ///
+  verifyTerm(assignments, stated, context) {
+    let termVerified = false;
 
-    assignments = null; ///
+    if (this.term !== null) {
+      const termString = this.term.getString(),
+            containedAssertionString = this.string; ///
 
-    const frameVerified = frame.verify(assignments, stated, context);
+      context.trace(`Verifying the '${containedAssertionString}' contained assertion's '${termString}' term...`);
+
+      termVerified = this.term.verify(context, () => {
+        const verifiedAhead = true;
+
+        return verifiedAhead;
+      });
+
+      if (termVerified) {
+        context.trace(`...verified the '${containedAssertionString}' contained assertion's '${termString}' term.`);
+      }
+    }
+
+    return termVerified;
+  }
+
+  verifyFrame(assignments, stated, context) {
+    let frameVerified = false;
+
+    if (this.frame !== null) {
+      const frameString = this.frame.getString(),
+            containedAssertionString = this.string; ///
+
+      context.trace(`Verifying the '${containedAssertionString}' contained assertion's '${frameString}' frame...`);
+
+      stated = true;  ///
+
+      assignments = null; ///
+
+      frameVerified = this.frame.verify(assignments, stated, context);
+
+      if (frameVerified) {
+        context.trace(`...verified the '${containedAssertionString}' contained assertion's '${frameString}' frame.`);
+      }
+    }
 
     return frameVerified;
   }
 
-  verifyStatement(statement, assignments, stated, context) {
-    stated = true;  ///
+  verifyStatement(assignments, stated, context) {
+    let statementVerified = false;
 
-    assignments = null; ///
+    if (this.statement !== null) {
+      const statementString = this.statement.getString(),
+            containedAssertionString = this.string; ///
 
-    const statementVerified = statement.verify(assignments, stated, context);
+      context.trace(`Verifying the '${containedAssertionString}' contained assertion's '${statementString}' statement...`);
+
+      stated = true;  ///
+
+      assignments = null; ///
+
+      statementVerified = this.statement.verify(assignments, stated, context);
+
+      if (statementVerified) {
+        context.trace(`...verified the '${containedAssertionString}' contained assertion's '${statementString}' statement.`);
+      }
+    }
 
     return statementVerified;
   }

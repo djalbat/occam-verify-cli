@@ -81,7 +81,7 @@ export default domAssigned(class Equality {
           verifiedWhenDerived = false;
 
       if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(context);
+        verifiedWhenStated = this.verifyWhenStated(assignments, context);
       } else {
         verifiedWhenDerived = this.verifyWhenDerived(context);
       }
@@ -170,7 +170,7 @@ export default domAssigned(class Equality {
     return termsVerified;
   }
 
-  verifyWhenStated(context) {
+  verifyWhenStated(assignments, context) {
     let verifiedWhenStated;
 
     const equalityString = this.string; ///

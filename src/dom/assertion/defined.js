@@ -52,27 +52,15 @@ export default domAssigned(class DefinedAssertion {
 
     context.trace(`Verifying the '${definedAssertionString}' defined assertion...`);
 
-    let termVerified = false,
-        frameVerified = false;
-
-    if (this.term !== null) {
-      termVerified = this.term.verify(context, () => {
-        const verifiedAhead = true;
-
-        return verifiedAhead;
-      });
-    }
-
-    if (this.frame!== null) {
-      frameVerified = this.verifyFrame(this.frame, assignments, stated, context);
-    }
+    const termVerified = this.verifyTerm(assignments, stated, context),
+          frameVerified = this.verifyFrame(assignments, stated, context);
 
     if (termVerified || frameVerified) {
       let verifiedWhenStated = false,
           verifiedWhenDerived = false;
 
       if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(context);
+        verifiedWhenStated = this.verifyWhenStated(assignments, context);
       } else {
         verifiedWhenDerived = this.verifyWhenDerived(context);
       }
@@ -89,17 +77,53 @@ export default domAssigned(class DefinedAssertion {
     return verified;
   }
 
-  verifyFrame(frame, assignments, stated, context) {
-    stated = true;  ///
+  verifyTerm(assignments, stated, context) {
+    let termVerified = false;
 
-    assignments = null; ///
+    if (this.term !== null) {
+      const termString = this.term.getString(),
+            definedAssertionString = this.string; ///
 
-    const frameVerified = frame.verify(assignments, stated, context);
+      context.trace(`Verifying the '${definedAssertionString}' defined assertion's '${termString}' term...`);
+
+      termVerified = this.term.verify(context, () => {
+        const verifiedAhead = true;
+
+        return verifiedAhead;
+      });
+
+      if (termVerified) {
+        context.debug(`...verified the '${definedAssertionString}' defined assertion's '${termString}' term.`);
+      }
+    }
+
+    return termVerified;
+  }
+
+  verifyFrame(assignments, stated, context) {
+    let frameVerified = false;
+
+    if (this.frame !== null) {
+      const frameString = this.frame.getString(),
+            definedAssertionString = this.string; ///
+
+      context.trace(`Verifying the '${definedAssertionString}' defined assertion's '${frameString}' frame...`);
+
+      stated = true;  ///
+
+      assignments = null; ///
+
+      frameVerified = this.frame.verify(assignments, stated, context);
+
+      if (frameVerified) {
+        context.debug(`...verified the '${definedAssertionString}' defined assertion's '${frameString}' frame.`);
+      }
+    }
 
     return frameVerified;
   }
 
-  verifyWhenStated(context) {
+  verifyWhenStated(assignments, context) {
     let verifiedWhenStated;
 
     const definedAssertionString = this.string; ///

@@ -70,6 +70,155 @@ export default domAssigned(class Frame {
     return equalTo;
   }
 
+  verify(assignments, stated, context) {
+    let verified = false;
+
+    const frameString = this.string;  ///
+
+    context.trace(`Verifying the '${frameString}' frame...`);
+
+    const declarationsVerified = this.verifyDeclarations(assignments, stated, context);
+
+    if (declarationsVerified) {
+      const  metavariablesVerified = this.verifyMetavariables(assignments, stated, context);
+
+      if (metavariablesVerified) {
+        let verifiedWhenStated = false,
+            verifiedWhenDerived = false;
+
+        if (stated) {
+          verifiedWhenStated = this.verifyWhenStated(assignments, context);
+        } else {
+          verifiedWhenDerived = this.verifyWhenDerived(assignments, context);
+        }
+
+        if (verifiedWhenStated || verifiedWhenDerived) {
+          verified = true;
+        }
+      }
+    }
+
+    if (verified) {
+      context.debug(`...verified the '${frameString}' frame.`);
+    }
+
+    return verified;
+  }
+
+  verifyDeclarations(assignments, stated, context) {
+    let declarationsVerified;
+
+    const frameString = this.string,  ///
+          declarationsString = declarationsStringFromDeclarations(this.declarations);
+
+    context.trace(`Verifying the '${frameString}' frame's '${declarationsString}' declarations...`);
+
+    stated = true;  ///
+
+    assignments = null; ///
+
+    declarationsVerified = this.declarations.every((declaration) => {
+      const frame = null, ///
+            declarationVerified = declaration.verify(frame, assignments, stated, context);
+
+      return declarationVerified;
+    });
+
+    if (declarationsVerified) {
+      context.debug(`...verified the '${frameString}' frame's '${declarationsString}' declarations.`);
+    }
+
+    return declarationsVerified;
+  }
+
+  verifyMetavariables(assignments, stated, context) {
+    let metavariablesVerified;
+
+    const frameString = this.string,  ///
+          metavariablesString = metavariablesStringFromDeclarations(this.metavariables);
+
+    context.trace(`Verifying the '${frameString}' frame's '${metavariablesString}' metavariables...`);
+
+    metavariablesVerified = this.metavariables.every((metavariable) => {
+      const metavariableVerified = metavariable.verify(context);
+
+      return metavariableVerified;
+    });
+
+    if (metavariablesVerified) {
+      context.debug(`...verified the '${frameString}' frame's '${metavariablesString}' metavariables.`);
+    }
+
+    return metavariablesVerified;
+  }
+
+  verifyWhenStated(assignments, context) {
+    let verifiedWhenStated = false;
+
+    const frameString = this.string;  ///
+
+    context.trace(`Verifying the '${frameString}' stated frame...`);
+
+    const declarationsLength = this.declarations.length;
+
+    if (declarationsLength > 0) {
+      context.trace(`The '${frameString}' stated frame cannot have declarations.`);
+    } else {
+      const metavariablesLength = this.metavariables.length;
+
+      if (metavariablesLength > 1) {
+        context.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
+      } else {
+        verifiedWhenStated = true;
+      }
+    }
+
+    if (verifiedWhenStated) {
+      context.debug(`...verified the '${frameString}' stated frame.`);
+    }
+
+    return verifiedWhenStated;
+  }
+
+  verifyWhenDerived(assignments, context) {
+    let verifiedWhenDerived;
+
+    const frameString = this.string;  ///
+
+    context.trace(`Verifying the '${frameString}' derived frame...`);
+
+    verifiedWhenDerived = true;
+
+    if (verifiedWhenDerived) {
+      context.debug(`...verified the '${frameString}' derived frame.`);
+    }
+
+    return verifiedWhenDerived;
+  }
+
+  verifyGivenMetaType(metaType, assignments, stated, context) {
+    let verifiedGivenMetaType = false;
+
+    const frameString = this.string,  ///
+          metaTypeString = metaType.getString();
+
+    context.trace(`Verifying the '${frameString}' frame given the '${metaTypeString}' meta-type...`);
+
+    const metaTypeName = metaType.getName();
+
+    if (metaTypeName === FRAME_META_TYPE_NAME) {
+      const verified = this.verify(assignments, stated, context)
+
+      verifiedGivenMetaType = verified; ///
+    }
+
+    if (verifiedGivenMetaType) {
+      context.debug(`...verified the '${frameString}' frame given the '${metaTypeString}' meta-type.`);
+    }
+
+    return verifiedGivenMetaType;
+  }
+
   unifySubstitution(substitution, context) {
     let substitutionUnified = false;
 
@@ -155,127 +304,6 @@ export default domAssigned(class Frame {
     }
 
     return axiomLemmaTheoremOrConjectureUnified;
-  }
-
-  verify(assignments, stated, context) {
-    let verified = false;
-
-    const frameString = this.string;  ///
-
-    context.trace(`Verifying the '${frameString}' frame...`);
-
-    const declarationsVerified = this.verifyDeclarations(this.declarations, assignments, stated, context);
-
-    if (declarationsVerified) {
-      const  metavariablesVerified = this.metavariables.every((metavariable) => {
-        const metavariableVerified = metavariable.verify(context);
-
-        return metavariableVerified;
-      });
-
-      if (metavariablesVerified) {
-        let verifiedWhenStated = false,
-            verifiedWhenDerived = false;
-
-        if (stated) {
-          verifiedWhenStated = this.verifyWhenStated(assignments, context);
-        } else {
-          verifiedWhenDerived = this.verifyWhenDerived(assignments, context);
-        }
-
-        if (verifiedWhenStated || verifiedWhenDerived) {
-          verified = true;
-        }
-      }
-    }
-
-    if (verified) {
-      context.debug(`...verified the '${frameString}' frame.`);
-    }
-
-    return verified;
-  }
-
-  verifyDeclarations(declarations, assignments, stated, context) {
-    stated = true;  ///
-
-    assignments = null; ///
-
-    const declarationsVerified = declarations.every((declaration) => {
-      const frame = null, ///
-            declarationVerified = declaration.verify(frame, assignments, stated, context);
-
-      return declarationVerified;
-    });
-
-    return declarationsVerified;
-  }
-
-  verifyWhenStated(assignments, context) {
-    let verifiedWhenStated = false;
-
-    const frameString = this.string;  ///
-
-    context.trace(`Verifying the '${frameString}' stated frame...`);
-
-    const declarationsLength = this.declarations.length;
-
-    if (declarationsLength > 0) {
-      context.trace(`The '${frameString}' stated frame cannot have declarations.`);
-    } else {
-      const metavariablesLength = this.metavariables.length;
-
-      if (metavariablesLength > 1) {
-        context.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
-      } else {
-        verifiedWhenStated = true;
-      }
-    }
-
-    if (verifiedWhenStated) {
-      context.debug(`...verified the '${frameString}' stated frame.`);
-    }
-
-    return verifiedWhenStated;
-  }
-
-  verifyWhenDerived(assignments, context) {
-    let verifiedWhenDerived;
-
-    const frameString = this.string;  ///
-
-    context.trace(`Verifying the '${frameString}' derived frame...`);
-
-    verifiedWhenDerived = true;
-
-    if (verifiedWhenDerived) {
-      context.debug(`...verified the '${frameString}' derived frame.`);
-    }
-
-    return verifiedWhenDerived;
-  }
-
-  verifyGivenMetaType(metaType, assignments, stated, context) {
-    let verifiedGivenMetaType = false;
-
-    const frameString = this.string,  ///
-          metaTypeString = metaType.getString();
-
-    context.trace(`Verifying the '${frameString}' frame given the '${metaTypeString}' meta-type...`);
-
-    const metaTypeName = metaType.getName();
-
-    if (metaTypeName === FRAME_META_TYPE_NAME) {
-      const verified = this.verify(assignments, stated, context)
-
-      verifiedGivenMetaType = verified; ///
-    }
-
-    if (verifiedGivenMetaType) {
-      context.debug(`...verified the '${frameString}' frame given the '${metaTypeString}' meta-type.`);
-    }
-
-    return verifiedGivenMetaType;
   }
 
   static name = "Frame";
@@ -368,4 +396,32 @@ function metavariablesFromFrameNode(frameNode, context) {
         });
 
   return metavariables;
+}
+
+function declarationsStringFromDeclarations(declarations) {
+  const declarationsString = declarations.reduce((declarationsString, declaration) => {
+    const declarationString = declaration.getString();
+
+    declarationsString = (declarationsString === null) ?
+                           declarationString :
+                            `${declarationsString}, ${declarationString}`;
+
+    return declarationsString;
+  }, null);
+
+  return declarationsString;
+}
+
+function metavariablesStringFromDeclarations(metavariable) {
+  const metavariablesString = metavariable.reduce((metavariablesString, metavariable) => {
+    const metavariableString = metavariable.getString();
+
+    metavariablesString = (metavariablesString === null) ?
+                            metavariableString :
+                             `${metavariablesString}, ${metavariableString}`;
+
+    return metavariablesString;
+  }, null);
+
+  return metavariablesString;
 }
