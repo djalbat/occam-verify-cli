@@ -82,7 +82,7 @@ export function unifyMetavariable(generalMetavariable, specificMetavariable, gen
   return metavariableUnified;
 }
 
-export function unifyLabelWithReference(label, reference, substitutions, context) {
+export function unifyLabelWithReference(label, reference, context) {
   let labelUnifiedWithReference;
 
   let generalContext,
@@ -104,7 +104,8 @@ export function unifyLabelWithReference(label, reference, substitutions, context
 
   specificContext = contextFromTokens(referenceMetavariableTokens, specificContext);  ///
 
-  const referenceUnified = referenceUnifier.unify(labelMetavariableNode, referenceMetavariableNode, substitutions, generalContext, specificContext);
+  const substitutions = Substitutions.fromNothing(),
+        referenceUnified = referenceUnifier.unify(labelMetavariableNode, referenceMetavariableNode, substitutions, generalContext, specificContext);
 
   labelUnifiedWithReference = referenceUnified; ///
 

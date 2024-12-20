@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import dom from "../dom";
 import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
@@ -16,6 +18,8 @@ import { labelsFromJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
+const { first } = arrayUtilities;
+
 const labelNodeQuery = nodeQuery("/metatheorem/label");
 
 export default class TopLevelMetaAssertion extends TopLevelAssertion {
@@ -27,6 +31,14 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
 
   getSubstitutions() {
     return this.substitutions;
+  }
+
+  getLabel() {
+    const labels = this.getLabels(),
+          firstLabel = first(labels),
+          label = firstLabel; ///
+
+    return label;
   }
 
   verify() {
@@ -74,6 +86,14 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
     });
 
     return labelsVerified;
+  }
+
+  verifyWhenStated(statement, reference, context) {
+    let verifiedWhenStated;
+
+    debugger
+
+    return verifiedWhenStated;
   }
 
   toJSON() {

@@ -80,7 +80,7 @@ export default domAssigned(class Reference {
     return metavariableVerified;
   }
 
-  unifyLabel(label, substitutions, context) {
+  unifyLabel(label, context) {
     let labelUnified;
 
     const reference = this, ///
@@ -89,7 +89,7 @@ export default domAssigned(class Reference {
 
     context.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
 
-    const labelUnifiedWithReference = unifyLabelWithReference(label, reference, substitutions,  context);
+    const labelUnifiedWithReference = unifyLabelWithReference(label, reference,  context);
 
     labelUnified = labelUnifiedWithReference; ///
 
@@ -98,6 +98,48 @@ export default domAssigned(class Reference {
     }
 
     return labelUnified;
+  }
+
+  unifyMetaLemma(metaLemma, context) {
+    let metaLemmaUnified;
+
+    const reference = this, ///
+          referenceString = reference.getString(),
+          metaLemmaString = metaLemma.getString();
+
+    context.trace(`Unifying the '${metaLemmaString}' meta-lemma with the '${referenceString}' reference...`);
+
+    const label = metaLemma.getLabel(),
+          labelUnified = this.unifyLabel(label, context);
+
+    metaLemmaUnified = labelUnified;  ///
+
+    if (metaLemmaUnified) {
+      context.trace(`...unified the '${metaLemmaString}' meta-lemma with the '${referenceString}' reference.`);
+    }
+
+    return metaLemmaUnified;
+  }
+
+  unifyMetatheorem(metatheorem, context) {
+    let metatheoremUnified;
+
+    const reference = this, ///
+          referenceString = reference.getString(),
+          metatheoremString = metatheorem.getString();
+
+    context.trace(`Unifying the '${metatheoremString}' metatheorem with the '${referenceString}' reference...`);
+
+    const label = metatheorem.getLabel(),
+          labelUnified = this.unifyLabel(label, context);
+
+    metatheoremUnified = labelUnified;  ///
+
+    if (metatheoremUnified) {
+      context.trace(`...unified the '${metatheoremString}' metatheorem with the '${referenceString}' reference.`);
+    }
+
+    return metatheoremUnified;
   }
 
   unifyMetavariable(metavariable, context) {

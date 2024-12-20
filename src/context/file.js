@@ -3,7 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import Equivalences from "../equivalences";
-import Substitutions from "../substitutions";
 import topLevelVerifier from "../verifier/topLevel";
 
 import { objectType } from "../dom/type";
@@ -459,12 +458,11 @@ export default class FileContext {
   }
 
   findMetaLemmasByReference(reference) {
-    const metaLemmas = this.getMetaLemmas(),
-          substitutions = Substitutions.fromNothing();
+    const metaLemmas = this.getMetaLemmas();
 
     filter(metaLemmas, (metaLemma) => {
       const context = this, ///
-            metaLemmaUnified = reference.unifyMetaLemma(metaLemma, substitutions, context);
+            metaLemmaUnified = reference.unifyMetaLemma(metaLemma, context);
 
       if (metaLemmaUnified) {
         return true;
@@ -475,12 +473,11 @@ export default class FileContext {
   }
 
   findMetatheoremsByReference(reference) {
-    const metatheorems = this.getMetatheorems(),
-          substitutions = Substitutions.fromNothing();
+    const metatheorems = this.getMetatheorems();
 
   filter(metatheorems, (metatheorem) => {
       const context = this, ///
-            metatheoremUnified = reference.unifyMetatheorem(metatheorem, substitutions, context);
+            metatheoremUnified = reference.unifyMetatheorem(metatheorem, context);
 
       if (metatheoremUnified) {
         return true;
@@ -664,8 +661,7 @@ export default class FileContext {
     const labels = this.getLabels(),
           labelPresent = labels.some((label) => {
             const context = this, ///
-                  substitutions = Substitutions.fromNothing(),
-                  labelUnified = reference.unifyLabel(label, substitutions, context);
+                  labelUnified = reference.unifyLabel(label, context);
 
             if (labelUnified) {
               return true;
