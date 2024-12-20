@@ -6,8 +6,8 @@ import LocalContext from "../context/local";
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { referenceMetaType } from "../dom/metaType";
-import { unifyLabelWithReference } from "../utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
+import { unifyLabelWithReference, unifyMetavariableWithReference } from "../utilities/unification";
 
 const proofStepReferenceNodeQuery = nodeQuery("/proofStep/reference"),
       procedureCallReferenceNodeQuery = nodeQuery("/procedureCall/reference"),
@@ -57,7 +57,7 @@ export default domAssigned(class Reference {
 
     if (!verified) {
       const reference = this, ///
-            labelPresent = context.isLabelPresentByReference(reference, context);
+            labelPresent = context.isLabelPresentByReference(reference);
 
       verified = labelPresent;  ///
     }
@@ -98,6 +98,26 @@ export default domAssigned(class Reference {
     }
 
     return labelUnified;
+  }
+
+  unifyMetavariable(metavariable, context) {
+    let metavariableUnified;
+
+    const reference = this, ///
+          metavariableString = metavariable.getString(),
+          referenceString = reference.getString();
+
+    context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
+
+    const metavariableUnifiedWithReference = unifyMetavariableWithReference(metavariable, reference,  context);
+
+    metavariableUnified = metavariableUnifiedWithReference; ///
+
+    if (metavariableUnified) {
+      context.debug(`...unified the '${metavariableString}' metavariable with the '${referenceString}' reference.`);
+    }
+
+    return metavariableUnified;
   }
 
   toJSON() {

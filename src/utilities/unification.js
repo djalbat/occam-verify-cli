@@ -1,6 +1,7 @@
 "use string";
 
 import LocalContext from "../context/local";
+import Substitutions from "../substitutions";
 import equalityUnifier from "../unifier/equality";
 import referenceUnifier from "../unifier/reference";
 import metaLevelUnifier from "../unifier/metaLevel";
@@ -108,6 +109,35 @@ export function unifyLabelWithReference(label, reference, substitutions, context
   labelUnifiedWithReference = referenceUnified; ///
 
   return labelUnifiedWithReference;
+}
+
+export function unifyMetavariableWithReference(metavariable, reference, context) {
+  let metavariableUnifiedWithReference;
+
+  let generalContext,
+      specificContext;
+
+  const fileContext = context.getFileContext(),
+        metavariableNode = metavariable.getNode(),
+        metavariableTokens = metavariable.getTokens(),
+        referenceMetavariable = reference.getMetavariable(),
+        referenceMetavariableNode = referenceMetavariable.getNode(),
+        referenceMetavariableTokens = referenceMetavariable.getTokens();
+
+  generalContext = context; ///
+
+  specificContext = fileContext;  ///
+
+  generalContext = contextFromTokens(metavariableTokens, generalContext);  ///
+
+  specificContext = contextFromTokens(referenceMetavariableTokens, specificContext);  ///
+
+  const substitutions = Substitutions.fromNothing(),
+        referenceUnified = referenceUnifier.unify(metavariableNode, referenceMetavariableNode, substitutions, generalContext, specificContext);
+
+  metavariableUnifiedWithReference = referenceUnified; ///
+
+  return metavariableUnifiedWithReference;
 }
 
 export function unifyTermWithConstructor(term, constructor, context) {

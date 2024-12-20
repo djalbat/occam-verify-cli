@@ -459,14 +459,14 @@ export default class FileContext {
   }
 
   findMetaLemmasByReference(reference) {
-    const metaLemmas = this.getMetaLemmas();
+    const metaLemmas = this.getMetaLemmas(),
+          substitutions = Substitutions.fromNothing();
 
     filter(metaLemmas, (metaLemma) => {
       const context = this, ///
-            substitutions = Substitutions.fromNothing(),
-            referenceUnified = metaLemma.unifyReference(reference, substitutions, context);
+            metaLemmaUnified = reference.unifyMetaLemma(metaLemma, substitutions, context);
 
-      if (referenceUnified) {
+      if (metaLemmaUnified) {
         return true;
       }
     });
@@ -475,14 +475,14 @@ export default class FileContext {
   }
 
   findMetatheoremsByReference(reference) {
-    const metatheorems = this.getMetatheorems();
+    const metatheorems = this.getMetatheorems(),
+          substitutions = Substitutions.fromNothing();
 
-    filter(metatheorems, (metatheorem) => {
+  filter(metatheorems, (metatheorem) => {
       const context = this, ///
-            substitutions = Substitutions.fromNothing(),
-            referenceUnified = metatheorem.unifyReference(reference, substitutions, context);
+            metatheoremUnified = reference.unifyMetatheorem(metatheorem, substitutions, context);
 
-      if (referenceUnified) {
+      if (metatheoremUnified) {
         return true;
       }
     });
@@ -660,10 +660,11 @@ export default class FileContext {
     return metavariablePresent;
   }
 
-  isLabelPresentByReference(reference, context) {
+  isLabelPresentByReference(reference) {
     const labels = this.getLabels(),
           labelPresent = labels.some((label) => {
-            const substitutions = [],
+            const context = this, ///
+                  substitutions = Substitutions.fromNothing(),
                   labelUnified = reference.unifyLabel(label, substitutions, context);
 
             if (labelUnified) {
@@ -679,6 +680,20 @@ export default class FileContext {
           procedurePresent = (procedure !== null);
 
     return procedurePresent;
+  }
+
+  isMetavariablePresentByReference(reference) {
+    const metavariables = this.getMetavariables(),
+          metavariablePresent = metavariables.some((metavariable) => {
+            const context = this, ///
+                  metavariableUnified = reference.unifyMetavariable(metavariable, context);
+
+            if (metavariableUnified) {
+              return true;
+            }
+          });
+
+    return metavariablePresent;
   }
 
   nodeAsString(node, tokens = null) {

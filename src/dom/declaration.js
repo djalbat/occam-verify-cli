@@ -227,14 +227,20 @@ export default domAssigned(class Declaration {
 
     context.trace(`Verifying the '${declarationString}' stated declaration...`);
 
-    debugger
+    const metavariablePresent = context.isMetavariablePresentByReference(this.reference);
 
-    // const metaLemmas = context.findMetaLemmasByReference(this.reference),
-    //       metatheorems = context.findMetatheoremsByReference(this.reference),
-    //       metaLemmaMetatheorems = [
-    //         ...metaLemmas,
-    //         ...metatheorems
-    //       ],
+    if (metavariablePresent) {
+      verifiedWhenStated = true;
+    } else {
+      const metaLemmas = context.findMetaLemmasByReference(this.reference),
+            metatheorems = context.findMetatheoremsByReference(this.reference),
+            metaLemmaMetatheorems = [
+              ...metaLemmas,
+              ...metatheorems
+            ];
+    }
+
+
     //       metaLemmaMetatheoremUnified = metaLemmaMetatheorems.some((metaLemmaMetatheorem) => {
     //         const metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
     //

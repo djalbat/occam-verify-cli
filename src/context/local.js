@@ -275,11 +275,13 @@ class LocalContext {
 
   findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
 
-  findAxiomLemmaTheoremConjectureByReference(reference) { return this.context.findAxiomLemmaTheoremConjectureByReference(reference); }
-
-  isLabelPresentByReference(reference, context) { return this.context.isLabelPresentByReference(reference, context); }
+  isLabelPresentByReference(reference) { return this.context.isLabelPresentByReference(reference); }
 
   isProcedurePresentByReference(reference) { return this.context.isProcedurePresentByReference(reference); }
+
+  isMetavariablePresentByReference(reference) { return this.context.isMetavariablePresentByReference(reference); }
+
+  findAxiomLemmaTheoremConjectureByReference(reference) { return this.context.findAxiomLemmaTheoremConjectureByReference(reference); }
 
   isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
 
