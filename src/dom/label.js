@@ -43,7 +43,7 @@ export default domAssigned(class Label {
 
     const labelString = this.getString(); ///
 
-    this.fileContext.trace(`Verifying the '${labelString}' label when declared...`);
+    this.fileContext.trace(`Verifying the '${labelString}' label...`);
 
     let labelPresent;
 
@@ -64,7 +64,7 @@ export default domAssigned(class Label {
     }
 
     if (verified) {
-      this.fileContext.debug(`...verified the '${labelString}' label when declared.`);
+      this.fileContext.debug(`...verified the '${labelString}' label.`);
     }
 
     return verified;

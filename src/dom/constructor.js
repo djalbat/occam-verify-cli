@@ -27,6 +27,26 @@ export default domAssigned(class Constructor {
 
   getType() { return this.term.getType(); }
 
+  verifyWhenDeclared(fileContext) {
+    let verifiedWhenDeclared;
+
+    const constructorString = this.string;  ///
+
+    fileContext.trace(`Verifying the '${constructorString}' constructor when declared...`);
+
+    const termVerifiedAtTopLevel = this.term.verifyWhenDeclared(fileContext);
+
+    if (termVerifiedAtTopLevel) {
+      verifiedWhenDeclared = true; ///
+    }
+
+    if (verifiedWhenDeclared) {
+      fileContext.debug(`...verified the '${constructorString}' constructor when declared.`);
+    }
+
+    return verifiedWhenDeclared;
+  }
+
   unifyTerm(term, context, verifyAhead) {
     let termUnified = false;
 
@@ -55,26 +75,6 @@ export default domAssigned(class Constructor {
     }
 
     return termUnified;
-  }
-
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared;
-
-    const constructorString = this.string;  ///
-
-    fileContext.trace(`Verifying the '${constructorString}' constructor when declared...`);
-
-    const termVerifiedAtTopLevel = this.term.verifyWhenDeclared(fileContext);
-
-    if (termVerifiedAtTopLevel) {
-      verifiedWhenDeclared = true; ///
-    }
-
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${constructorString}' constructor when declared.`);
-    }
-
-    return verifiedWhenDeclared;
   }
 
   toJSON() {

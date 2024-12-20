@@ -18,12 +18,12 @@ export function nodesAsString(nodes, tokens) {
   const string = nodes.reduce((string, node) => {
     const nodeString = nodeAsString(node, tokens);
 
-    string = (string === EMPTY_STRING) ?
+    string = (string === null) ?
                nodeString :
                 `${string},${nodeString}`;
 
     return string;
-  }, EMPTY_STRING);
+  }, null);
 
   return string;
 }

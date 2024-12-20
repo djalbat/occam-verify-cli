@@ -7,8 +7,8 @@ import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
-import { stringFromLabels } from "./topLevelAssertion";
 import { nodeQuery, nodesQuery } from "../utilities/query";
+import { labelsStringFromLabels } from "./topLevelAssertion";
 import { labelsFromJSON,
          premisesFromJSON,
          conclusionFromJSON,
@@ -230,7 +230,8 @@ export default domAssigned(class Rule {
           labels = labelsFromJSON(json, fileContext),
           premises = premisesFromJSON(json, fileContext),
           conclusion = conclusionFromJSON(json, fileContext),
-          string = stringFromLabels(labels);
+          labelsString = labelsStringFromLabels(labels),
+          string = labelsString;  ///
 
     rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
 
@@ -242,7 +243,8 @@ export default domAssigned(class Rule {
           premises = premisesFromRuleNode(ruleNode, fileContext),
           conclusion = conclusionFromRuleNode(ruleNode, fileContext),
           proof = proofFromRuleNode(ruleNode, fileContext),
-          string = stringFromLabels(labels),
+          labelsString = labelsStringFromLabels(labels),
+          string = labelsString,  ///
           rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
 
     return rule;

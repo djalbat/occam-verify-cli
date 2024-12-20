@@ -6,7 +6,6 @@ import dom from "../dom";
 import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
-import { EMPTY_STRING } from "../constants";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { labelsFromJSON,
          labelsToLabelsJSON,
@@ -25,11 +24,10 @@ const proofNodeQuery = nodeQuery("/*/proof"),
       suppositionNodesQuery = nodesQuery("/*/supposition");
 
 export default class TopLevelAssertion {
-  constructor(fileContext, string, labels, substitutions, suppositions, consequent, proof) {
+  constructor(fileContext, string, labels, suppositions, consequent, proof) {
     this.fileContext = fileContext;
     this.string = string;
     this.labels = labels;
-    this.substitutions = substitutions;
     this.suppositions = suppositions;
     this.consequent = consequent;
     this.proof = proof;
@@ -45,10 +43,6 @@ export default class TopLevelAssertion {
 
   getLabels() {
     return this.labels;
-  }
-
-  getSubstitutions() {
-    return this.substitutions;
   }
 
   getSuppositions() {
@@ -84,14 +78,14 @@ export default class TopLevelAssertion {
 
     if (labelsVerified) {
       const localContext = LocalContext.fromFileContext(this.fileContext),
-        context = localContext, ///
-        suppositionsVerified = this.suppositions.every((supposition) => {
-          const suppositionVerified = supposition.verify(context);
+            context = localContext, ///
+            suppositionsVerified = this.suppositions.every((supposition) => {
+              const suppositionVerified = supposition.verify(context);
 
-          if (suppositionVerified) {
-            return true;
-          }
-        });
+              if (suppositionVerified) {
+                return true;
+              }
+            });
 
       if (suppositionsVerified) {
         const consequentVerified = this.consequent.verify(context);
@@ -100,7 +94,8 @@ export default class TopLevelAssertion {
           if (this.proof === null) {
             verified = true;
           } else {
-            const proofVerified = this.proof.verify(this.substitutions, this.consequent, context);
+            const substitutions = Substitutions.fromNothing(),
+                  proofVerified = this.proof.verify(substitutions, this.consequent, context);
 
             verified = proofVerified; ///
           }
@@ -114,7 +109,7 @@ export default class TopLevelAssertion {
   verifyLabels() {
     const labelsVerified = this.labels.every((label) => {
       const nameOnly = true,
-        labelVerified = label.verify(nameOnly);
+            labelVerified = label.verify(nameOnly);
 
       if (labelVerified) {
         return true;
@@ -229,16 +224,13 @@ export default class TopLevelAssertion {
     const labelsJSON = labelsToLabelsJSON(this.labels),
           consequentJSON = consequentToConsequentJSON(this.consequent),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
-          substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
           labels = labelsJSON,  ///
           consequent = consequentJSON,  ///
           suppositions = suppositionsJSON,  ///
-          substitutions = substitutionsJSON,  ///
           json = {
             labels,
             consequent,
-            suppositions,
-            substitutions
+            suppositions
           };
 
     return json;
@@ -246,49 +238,27 @@ export default class TopLevelAssertion {
 
   static fromJSON(Class, json, fileContext) {
     const labels = labelsFromJSON(json, fileContext),
-          consequent = consequentFromJSON(json, fileContext),
+          labelsString = labelsStringFromLabels(labels),
           suppositions = suppositionsFromJSON(json, fileContext),
-          substitutions = substitutionsFromJSON(json, fileContext),
-          string = stringFromLabels(labels),
+          consequent = consequentFromJSON(json, fileContext),
           proof = null,
-          topLevelAssertion = new Class(fileContext, string, labels, substitutions, suppositions, consequent, proof);
+          string = labelsString,  ///
+          topLevelAssertion = new Class(fileContext, string, labels, suppositions, consequent, proof);
 
     return topLevelAssertion;
   }
 
   static fromNode(Class, node, fileContext) {
     const labels = labelsFromNode(node, fileContext),
-          substitutions = Substitutions.fromNothing(),
+          labelsString = labelsStringFromLabels(labels),
           suppositions = suppositionsFromNode(node, fileContext),
           consequent = consequentFromNode(node, fileContext),
           proof = proofFromNode(node, fileContext),
-          string = stringFromLabels(labels),
-          metaLemma = new Class(fileContext, string, labels, substitutions, suppositions, consequent, proof);
+          string = labelsString,  ///
+          metaLemma = new Class(fileContext, string, labels, suppositions, consequent, proof);
 
     return metaLemma;
   }
-}
-
-export function stringFromLabels(labels) {
-  const string = labels.reduce((string, label) => {
-    const labelString = label.getString();
-
-    string = (string === EMPTY_STRING) ?
-               labelString: ///
-                 `${string},${labelString}`;
-
-    return string;
-  }, EMPTY_STRING);
-
-  return string;
-}
-
-function proofFromNode(node, fileContext) {
-  const { Proof } = dom,
-        proofNode = proofNodeQuery(node),
-        proof = Proof.fromProofNode(proofNode, fileContext);
-
-  return proof;
 }
 
 function labelsFromNode(node, fileContext) {
@@ -303,7 +273,15 @@ function labelsFromNode(node, fileContext) {
   return labels;
 }
 
-function consequentFromNode(node, fileContext) {
+export function proofFromNode(node, fileContext) {
+  const { Proof } = dom,
+        proofNode = proofNodeQuery(node),
+        proof = Proof.fromProofNode(proofNode, fileContext);
+
+  return proof;
+}
+
+export function consequentFromNode(node, fileContext) {
   const { Consequent } = dom,
         consequentNode = consequentNodeQuery(node),
         consequent = Consequent.fromConsequentNode(consequentNode, fileContext);
@@ -311,7 +289,7 @@ function consequentFromNode(node, fileContext) {
   return consequent;
 }
 
-function suppositionsFromNode(node, fileContext) {
+export function suppositionsFromNode(node, fileContext) {
   const { Supposition } = dom,
         suppositionNodes = suppositionNodesQuery(node),
         suppositions = suppositionNodes.map((suppositionNode) => {
@@ -323,3 +301,16 @@ function suppositionsFromNode(node, fileContext) {
   return suppositions;
 }
 
+export function labelsStringFromLabels(labels) {
+  const labelsString = labels.reduce((labelsString, label) => {
+    const labelString = label.getString();
+
+    labelsString = (labelsString === null) ?
+                      labelString: ///
+                        `${labelsString},${labelString}`;
+
+    return labelsString;
+  }, null);
+
+  return labelsString;
+}
