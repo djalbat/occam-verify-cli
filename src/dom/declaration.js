@@ -1,11 +1,12 @@
 "use strict";
 
 import dom from "../dom";
+import Substitutions from "../substitutions";
 
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
+import { unifyStatementIntrinsically } from "../utilities/unification";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
-import metaLemma from "./metaLemma";
 
 const statementNodeQuery = nodeQuery("/declaration/statement");
 
@@ -117,21 +118,16 @@ export default domAssigned(class Declaration {
     if (metavariablePresent) {
       verifiedWhenStated = true;
     } else {
-      const metaLemmas = context.findMetaLemmasByReference(this.reference),
-            metatheorems = context.findMetatheoremsByReference(this.reference),
-            metaLemmaMetatheorems = [
-              ...metaLemmas,
-              ...metatheorems
-            ],
-            metaLemmaMetatheoremsVerifiedWhenStated = metaLemmaMetatheorems.every((metaLemmaMetatheorem) => {
-              const metaLemmaMetatheoremVerifiedWhenStated = metaLemmaMetatheorem.verifyWhenStated(this.statement, this.reference, context);
+      const metaLemmaMetatheorems = context.findMetaLemmaMetatheoremsByReference(this.reference),
+            metaLemmaMetatheoremsUnified = metaLemmaMetatheorems.every((metaLemmaMetatheorem) => {
+              const metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
 
-              if (metaLemmaMetatheoremVerifiedWhenStated) {
+              if (metaLemmaMetatheoremUnified) {
                 return true;
               }
             });
 
-      verifiedWhenStated = metaLemmaMetatheoremsVerifiedWhenStated; ///
+      verifiedWhenStated = metaLemmaMetatheoremsUnified; ///
     }
 
     if (verifiedWhenStated) {
@@ -160,7 +156,7 @@ export default domAssigned(class Declaration {
     //         let metaLemmaMetatheoremUnified = true;
     //
     //         if (metaLemmaMetatheoremUnified) {
-    //           metaLemmaMetatheoremUnified = frame.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
+    //           metaLemmaMetatheoremUnified = frame.matchetaLemmaMetatheorem(metaLemmaMetatheorem, context);
     //         }
     //
     //         if (metaLemmaMetatheoremUnified) {
@@ -197,69 +193,84 @@ export default domAssigned(class Declaration {
     return verifiedWhenDerived;
   }
 
-  unifyStatement(statement, context) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
 
-    const statementString = statement.getString(),
-          declarationStatementString = this.statement.getString(); ///
+    const context = generalContext,  ///
+          statementString = statement.getString(),
+          declarationString = this.string,  ///
+          declarationStatementString = this.statement.getString();
 
-    context.trace(`Unifying the '${statementString}' statement with the '${declarationStatementString}' statement...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${declarationString}' declaration's '${declarationStatementString}' statement...`);
 
-    let statementNode = statement.getNode();
+    const generalStatement = this.statement,
+          specificStatement = statement,  ///
+          statementUUnifiedIntrinsically = unifyStatementIntrinsically(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
-    statementNode = stripBracketsFromStatementNode(statementNode); ///
-
-    const statementNodeMatches = this.statement.matchStatementNode(statementNode);
-
-    statementUnified = statementNodeMatches;  ///
+    statementUnified = statementUUnifiedIntrinsically;  ///
 
     if (statementUnified) {
-      context.debug(`...unified the '${statementString}' statement with the '${declarationStatementString}' statement.`);
+      context.debug(`...unified the '${statementString}' statement with the '${declarationString}' declaration's '${declarationStatementString}' statement.`);
     }
 
     return statementUnified;
   }
 
-  unifyMetavariable(metavariable, context) {
-    let metavariableUnified;
+  unifyLabelWithReference(label, substitutions, generalContext, specificContext) {
+    let labelUnifiedWithReference;
 
-    const referenceString = this.reference.getString(),
-          metavariableString = metavariable.getString();
+    const context = generalContext, ///
+          labelString = label.getString(),
+          referenceString = this.reference.getString(),
+          declarationString = this.string;  ///
 
-    context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
+    context.trace(`Unifying the '${labelString}' label with the '${declarationString}' declaration's '${referenceString}' reference...`);
 
-    const metavariableNode = metavariable.getNode(),
-          metavariableNodeMatches = this.reference.matchMetavariableNode(metavariableNode);
+    const labelUnified = this.reference.unifyLabel(label, substitutions, context);
 
-    metavariableUnified = metavariableNodeMatches;  ///
+    labelUnifiedWithReference = labelUnified; ///
 
-    if (metavariableUnified) {
-      context.debug(`...unified the '${metavariableString}' metavariable with the '${referenceString}' reference.`);
+    if (labelUnifiedWithReference) {
+      context.debug(`...unified the '${labelString}' label with the '${declarationString}' declaration's '${referenceString}' reference.`);
     }
 
-    return metavariableUnified;
+    return labelUnifiedWithReference;
   }
 
-  unifySubstitution(substitution, context) {
-    let substitutionUnified;
+  unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context) {
+    let metaLemmaMetatheoremUnified;
 
     const declarationString = this.string,  ///
-          substitutionString = substitution.getString();
+          metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
 
-    context.trace(`Unifying the '${substitutionString}' substitution with the '${declarationString}' declaration...`);
+    context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${declarationString}' declaration...`);
 
-    const statement = substitution.getStatement(),
-          metavariable = substitution.getMetavariable(),
-          statementUnified = this.unifyStatement(statement, context),
-          metavariableUnified = this.unifyMetavariable(metavariable, context);
+    const fileContext = metaLemmaMetatheorem.getFileContext(),
+          generalContext = context, ///
+          specificContext = fileContext,
+          labelSubstitutions = Substitutions.fromNothing(),
+          label = metaLemmaMetatheorem.getLabel(),
+          substitutions = labelSubstitutions, ///
+          labelUnifiedWithReference = this.unifyLabelWithReference(label, substitutions, generalContext, specificContext);
 
-    substitutionUnified = (metavariableUnified && statementUnified);
+    if (labelUnifiedWithReference) {
+      const statementSubstitutions = Substitutions.fromNothing(),
+            statement = metaLemmaMetatheorem.getStatement(),
+            substitutions = statementSubstitutions, ///
+            statementUUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    if (substitutionUnified) {
-      context.debug(`...unified the '${declarationString}' substitution with the '${substitutionString}' declaration.`);
+      if (statementUUnified) {
+        const labelSubstitutionsMatchStatementSubstitutions = labelSubstitutions.matchSubstitutions(statementSubstitutions);
+
+        metaLemmaMetatheoremUnified = labelSubstitutionsMatchStatementSubstitutions;  ///
+      }
     }
 
-    return substitutionUnified;
+    if (metaLemmaMetatheoremUnified) {
+      context.trace(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${declarationString}' declaration...`);
+    }
+
+    return metaLemmaMetatheoremUnified;
   }
 
   static name = "Declaration";

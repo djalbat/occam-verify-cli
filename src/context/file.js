@@ -3,6 +3,7 @@
 import { arrayUtilities } from "necessary";
 
 import Equivalences from "../equivalences";
+import Substitutions from "../substitutions";
 import topLevelVerifier from "../verifier/topLevel";
 
 import { objectType } from "../dom/type";
@@ -462,9 +463,10 @@ export default class FileContext {
 
     filter(metaLemmas, (metaLemma) => {
       const context = this, ///
-            metaLemmaUnified = reference.unifyMetaLemma(metaLemma, context);
+            metaLemmaMetaTheorem = metaLemma, ///
+            metaLemmaMetatheoremUnified = reference.unifyMetaLemmaMetatheorem(metaLemmaMetaTheorem, context);
 
-      if (metaLemmaUnified) {
+      if (metaLemmaMetatheoremUnified) {
         return true;
       }
     });
@@ -475,16 +477,28 @@ export default class FileContext {
   findMetatheoremsByReference(reference) {
     const metatheorems = this.getMetatheorems();
 
-  filter(metatheorems, (metatheorem) => {
+    filter(metatheorems, (metatheorem) => {
       const context = this, ///
-            metatheoremUnified = reference.unifyMetatheorem(metatheorem, context);
+            metaLemmaMetaTheorem = metatheorem, ///
+            metaLemmaMetatheoremUnified = reference.unifyMetaLemmaMetatheorem(metaLemmaMetaTheorem, context);
 
-      if (metatheoremUnified) {
+      if (metaLemmaMetatheoremUnified) {
         return true;
       }
     });
 
     return metatheorems;
+  }
+
+  findMetaLemmaMetatheoremsByReference(reference) {
+    const metaLemmas = this.findMetaLemmasByReference(reference),
+          metatheorems = this.findMetatheoremsByReference(reference),
+          metaLemmaMetatheorems = [
+            ...metaLemmas,
+            ...metatheorems
+          ];
+
+    return metaLemmaMetatheorems;
   }
 
   findAxiomLemmaTheoremConjectureByReference(reference) {
@@ -661,7 +675,8 @@ export default class FileContext {
     const labels = this.getLabels(),
           labelPresent = labels.some((label) => {
             const context = this, ///
-                  labelUnified = reference.unifyLabel(label, context);
+                  substitutions = Substitutions.fromNothing(),
+                  labelUnified = reference.unifyLabel(label, substitutions, context);
 
             if (labelUnified) {
               return true;

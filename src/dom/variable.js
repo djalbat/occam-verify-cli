@@ -166,13 +166,13 @@ export default domAssigned(class Variable {
     return verifiedWhenDeclared;
   }
 
-  unifyTerm(term, substitutions, generalContext, specificContext, contextsReversed = false) {
+  unifyTerm(term, substitutions, generalContext, specificContext) {
     let termUnified = false;
 
     const termString = term.getString(),
           variableString = this.string; ///
 
-    specificContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
+    generalContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
     const effectivelyEqualToTerm = this.isEffectivelyEqualToTerm(term, generalContext, specificContext);
 
@@ -190,15 +190,15 @@ export default domAssigned(class Variable {
           termUnified = true;
         }
       } else {
-        let context = contextsReversed ?
-                        generalContext :
-                          specificContext;
+        let context;
+
+        context = specificContext;  ///
 
         const variable = this,  ///
               termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
               substitution = termSubstitution;  ///
 
-        context = specificContext;  ///
+        context = generalContext;  ///
 
         substitutions.addSubstitution(substitution, context);
 
@@ -207,7 +207,7 @@ export default domAssigned(class Variable {
     }
 
     if (termUnified) {
-      specificContext.debug(`...unified the '${termString}' term with the '${variableString}' variable.`);
+      generalContext.debug(`...unified the '${termString}' term with the '${variableString}' variable.`);
     }
 
     return termUnified;

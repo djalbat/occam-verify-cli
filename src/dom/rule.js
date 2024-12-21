@@ -230,8 +230,7 @@ export default domAssigned(class Rule {
           labels = labelsFromJSON(json, fileContext),
           premises = premisesFromJSON(json, fileContext),
           conclusion = conclusionFromJSON(json, fileContext),
-          labelsString = labelsStringFromLabels(labels),
-          string = labelsString;  ///
+          string = stringFromLabelsAndConclusion(labels, conclusion);
 
     rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
 
@@ -243,8 +242,7 @@ export default domAssigned(class Rule {
           premises = premisesFromRuleNode(ruleNode, fileContext),
           conclusion = conclusionFromRuleNode(ruleNode, fileContext),
           proof = proofFromRuleNode(ruleNode, fileContext),
-          labelsString = labelsStringFromLabels(labels),
-          string = labelsString,  ///
+          string = stringFromLabelsAndConclusion(labels, conclusion),
           rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
 
     return rule;
@@ -289,4 +287,12 @@ function conclusionFromRuleNode(ruleNode, fileContext) {
         conclusion = Conclusion.fromConclusionNode(conclusionNode, fileContext);
 
   return conclusion;
+}
+
+function stringFromLabelsAndConclusion(labels, conclusion) {
+  const conclusionString = conclusion.getString(),
+        labelsString = labelsStringFromLabels(labels),
+        string = `${labelsString} :: ${conclusionString}`;
+
+  return string;
 }

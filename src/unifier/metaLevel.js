@@ -17,12 +17,10 @@ const termNodeQuery = nodeQuery("/term"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
 
 class MetaLevelUnifier extends Unifier {
-  unify(generalNode, specificNode, substitutions, generalContext, specificContext) {
+  unify(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext) {
     let unifiedAtMetaLevel;
 
-    const generalNonTerminalNode = generalNode, ///
-          specificNonTerminalNode = specificNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext);
+    const nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext);
 
     unifiedAtMetaLevel = nonTerminalNodeUnified; ///
 

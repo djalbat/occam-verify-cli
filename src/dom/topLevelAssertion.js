@@ -57,6 +57,8 @@ export default class TopLevelAssertion {
     return this.proof;
   }
 
+  getStatement() { return this.consequent.getStatement(); }
+
   matchStatementNode(statementNode) { return this.consequent.matchStatementNode(statementNode); }
 
   matchMetavariableName(metavariableName) {
@@ -238,11 +240,10 @@ export default class TopLevelAssertion {
 
   static fromJSON(Class, json, fileContext) {
     const labels = labelsFromJSON(json, fileContext),
-          labelsString = labelsStringFromLabels(labels),
           suppositions = suppositionsFromJSON(json, fileContext),
           consequent = consequentFromJSON(json, fileContext),
           proof = null,
-          string = labelsString,  ///
+          string = stringFromLabelsAndConsequent(labels, consequent),
           topLevelAssertion = new Class(fileContext, string, labels, suppositions, consequent, proof);
 
     return topLevelAssertion;
@@ -250,11 +251,10 @@ export default class TopLevelAssertion {
 
   static fromNode(Class, node, fileContext) {
     const labels = labelsFromNode(node, fileContext),
-          labelsString = labelsStringFromLabels(labels),
           suppositions = suppositionsFromNode(node, fileContext),
           consequent = consequentFromNode(node, fileContext),
           proof = proofFromNode(node, fileContext),
-          string = labelsString,  ///
+          string = stringFromLabelsAndConsequent(labels, consequent),
           metaLemma = new Class(fileContext, string, labels, suppositions, consequent, proof);
 
     return metaLemma;
@@ -313,4 +313,12 @@ export function labelsStringFromLabels(labels) {
   }, null);
 
   return labelsString;
+}
+
+export function stringFromLabelsAndConsequent(labels, consequent) {
+  const consequentString = consequent.getString(),
+        labelsString = labelsStringFromLabels(labels),
+        string = `${labelsString} :: ${consequentString}`;
+
+  return string;
 }

@@ -8,7 +8,7 @@ import Substitutions from "../substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { nodeQuery } from "../utilities/query";
-import { proofFromNode, consequentFromNode, suppositionsFromNode, labelsStringFromLabels } from "./topLevelAssertion";
+import { proofFromNode, consequentFromNode, suppositionsFromNode, stringFromLabelsAndConsequent } from "./topLevelAssertion";
 import { labelsFromJSON,
          labelsToLabelsJSON,
          consequentFromJSON,
@@ -88,14 +88,6 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
     return labelsVerified;
   }
 
-  verifyWhenStated(statement, reference, context) {
-    let verifiedWhenStated;
-
-    debugger
-
-    return verifiedWhenStated;
-  }
-
   toJSON() {
     const labelsJSON = labelsToLabelsJSON(this.labels),
           consequentJSON = consequentToConsequentJSON(this.consequent),
@@ -118,11 +110,10 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
   static fromJSON(Class, json, fileContext) {
     const labels = labelsFromJSON(json, fileContext),
           substitutions = substitutionsFromJSON(json, fileContext),
-          labelsString = labelsStringFromLabels(labels),
           suppositions = suppositionsFromJSON(json, fileContext),
           consequent = consequentFromJSON(json, fileContext),
           proof = null,
-          string = labelsString,  ///
+          string = stringFromLabelsAndConsequent(labels, consequent),
           topLevelAssertion = new Class(fileContext, string, labels, suppositions, consequent, proof, substitutions);
 
     return topLevelAssertion;
@@ -131,11 +122,10 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
   static fromNode(Class, node, fileContext) {
     const labels = labelsFromNode(node, fileContext),
           substitutions = Substitutions.fromNothing(),
-          labelsString = labelsStringFromLabels(labels),
           suppositions = suppositionsFromNode(node, fileContext),
           consequent = consequentFromNode(node, fileContext),
           proof = proofFromNode(node, fileContext),
-          string = labelsString,  ///
+          string = stringFromLabelsAndConsequent(labels, consequent),
           metaLemma = new Class(fileContext, string, labels, suppositions, consequent, proof, substitutions);
 
     return metaLemma;

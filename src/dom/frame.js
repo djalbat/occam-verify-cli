@@ -4,6 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
 
+import { S, NOTHING } from "../constants";
 import { domAssigned } from "../dom";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { nodeQuery, nodesQuery } from "../utilities/query";
@@ -106,47 +107,61 @@ export default domAssigned(class Frame {
   }
 
   verifyDeclarations(assignments, stated, context) {
-    let declarationsVerified;
+    let declarationsVerified = true;  ///
 
-    const frameString = this.string,  ///
-          declarationsString = declarationsStringFromDeclarations(this.declarations);
+    const declarationsLength = this.declarations.length;
 
-    context.trace(`Verifying the '${frameString}' frame's '${declarationsString}' declarations...`);
+    if (declarationsLength > 0) {
+      const sOrNothing = (declarationsLength > 1) ?
+                          S :
+                            NOTHING,
+            frameString = this.string,  ///
+            declarationsString = declarationsStringFromDeclarations(this.declarations);
 
-    stated = true;  ///
+      context.trace(`Verifying the '${frameString}' frame's '${declarationsString}' declaration${sOrNothing}...`);
 
-    assignments = null; ///
+      stated = true;  ///
 
-    declarationsVerified = this.declarations.every((declaration) => {
-      const frame = null, ///
-            declarationVerified = declaration.verify(frame, assignments, stated, context);
+      assignments = null; ///
 
-      return declarationVerified;
-    });
+      declarationsVerified = this.declarations.every((declaration) => {
+        const frame = null, ///
+          declarationVerified = declaration.verify(frame, assignments, stated, context);
 
-    if (declarationsVerified) {
-      context.debug(`...verified the '${frameString}' frame's '${declarationsString}' declarations.`);
+        return declarationVerified;
+      });
+
+      if (declarationsVerified) {
+        context.debug(`...verified the '${frameString}' frame's '${declarationsString}' declaration${sOrNothing}.`);
+      }
     }
 
     return declarationsVerified;
   }
 
   verifyMetavariables(assignments, stated, context) {
-    let metavariablesVerified;
+    let metavariablesVerified = true;
 
-    const frameString = this.string,  ///
-          metavariablesString = metavariablesStringFromDeclarations(this.metavariables);
+    const metavariablesLength = this.metavariables.length;
 
-    context.trace(`Verifying the '${frameString}' frame's '${metavariablesString}' metavariables...`);
+    if (metavariablesLength > 0) {
+      const sOrNothing = (metavariablesLength > 1) ?
+                           S :
+                             NOTHING,
+            frameString = this.string,  ///
+            metavariablesString = metavariablesStringFromDeclarations(this.metavariables);
 
-    metavariablesVerified = this.metavariables.every((metavariable) => {
-      const metavariableVerified = metavariable.verify(context);
+      context.trace(`Verifying the '${frameString}' frame's '${metavariablesString}' metavariable${sOrNothing}...`);
 
-      return metavariableVerified;
-    });
+      metavariablesVerified = this.metavariables.every((metavariable) => {
+        const metavariableVerified = metavariable.verify(context);
 
-    if (metavariablesVerified) {
-      context.debug(`...verified the '${frameString}' frame's '${metavariablesString}' metavariables.`);
+        return metavariableVerified;
+      });
+
+      if (metavariablesVerified) {
+        context.debug(`...verified the '${frameString}' frame's '${metavariablesString}' metavariable${sOrNothing}.`);
+      }
     }
 
     return metavariablesVerified;
@@ -217,93 +232,6 @@ export default domAssigned(class Frame {
     }
 
     return verifiedGivenMetaType;
-  }
-
-  unifySubstitution(substitution, context) {
-    let substitutionUnified = false;
-
-    const frameString = this.string,  ///
-          substitutionString = substitution.getString();
-
-    context.trace(`Unifying the '${substitutionString}' substitution with the '${frameString}' frame...`)
-
-    if (!substitutionUnified) {
-      substitutionUnified = this.declarations.some((declaration) => {
-        const substitutionUnified = declaration.unifySubstitution(substitution, context);
-
-        if (substitutionUnified) {
-          return true;
-        }
-      });
-    }
-
-    if (!substitutionUnified) {
-      substitutionUnified = this.metavariables.some((metavariable) => {
-        const substitutionUnified = metavariable.unifySubstitution(substitution, context);
-
-        if (substitutionUnified) {
-          return true;
-        }
-      });
-    }
-
-    if (substitutionUnified) {
-      context.debug(`...unified the '${substitutionString}' substitution with the '${frameString}' frame...`)
-    }
-
-    return substitutionUnified;
-  }
-
-  unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context) {
-    let metaLemmaMetatheoremUnified;
-
-    const frameString = this.string,  ///
-          metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
-
-    context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${frameString}' frame...`);
-
-    const substitutions = metaLemmaMetatheorem.getSubstitutions(),
-          substitutionsUnified = substitutions.everySubstitution((substitution) => {
-            const substitutionUnified = this.unifySubstitution(substitution, context);
-
-            if (substitutionUnified) {
-              return true;
-            }
-          });
-
-    metaLemmaMetatheoremUnified = substitutionsUnified; ///
-
-    if (metaLemmaMetatheoremUnified) {
-      context.debug(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${frameString}' frame.`);
-    }
-
-    return metaLemmaMetatheoremUnified;
-  }
-
-  unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, context) {
-    let axiomLemmaTheoremOrConjectureUnified;
-
-    const frameString = this.string,  ///
-          axiomLemmaTheoremStringOrConjecture = axiomLemmaTheoremOrConjecture.getString();
-
-    context.trace(`Unifying the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture with the '${frameString}' frame...`);
-
-    const substitutions = axiomLemmaTheoremOrConjecture.getSubstitutions(),
-          substitutionsUnified = substitutions.everySubstitution((substitution) => {
-            const substitutionUnified = this.unifySubstitution(substitution, context);
-
-            if (substitutionUnified) {
-              return true;
-            }
-          });
-
-    axiomLemmaTheoremOrConjectureUnified = substitutionsUnified; ///
-
-    if (axiomLemmaTheoremOrConjectureUnified) {
-      context.debug(`...unified the '${axiomLemmaTheoremStringOrConjecture}' axiom, lemma, theorem or conjecture with the '${frameString}' frame.`);
-    }
-
-    return axiomLemmaTheoremOrConjectureUnified;
   }
 
   static name = "Frame";

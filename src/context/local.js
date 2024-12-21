@@ -235,6 +235,8 @@ class LocalContext {
 
   findMetatheoremsByReference(reference) { return this.context.findMetatheoremsByReference(reference); }
 
+  findMetaLemmaMetatheoremsByReference(reference) { return this.context.findMetaLemmaMetatheoremsByReference(reference); }
+
   findVariableByVariableName(variableName, nested = true) {
     const variables = this.getVariables(nested),
           variable = variables.find((variable) => {

@@ -129,6 +129,13 @@ export default class Substitution {
     return resolved;
   }
 
+  match(substitution) {
+    const equalTo = this.isEqualTo(substitution),
+          matches = equalTo;  ///
+
+    return matches;
+  }
+
   matchName(name) {
     const nameMatches = false;
 
@@ -145,5 +152,11 @@ export default class Substitution {
     let unifiedWithEquivalence = false;
 
     return unifiedWithEquivalence;
+  }
+
+  matchSubstitution(substitution) {
+    const substitutionMatches = false;
+
+    return substitutionMatches;
   }
 }

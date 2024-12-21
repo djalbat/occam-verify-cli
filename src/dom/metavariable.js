@@ -86,12 +86,12 @@ export default domAssigned(class Metavariable {
   }
 
   unifySubstitution(substitution, context) {
-    let substitutionUnified = false;
+    let substitutionMatched = false;
 
     const metavariableString = this.string,  ///
           substitutionString = substitution.getString();
 
-    context.trace(`Unifying the '${substitutionString}' substitution with the '${metavariableString}' metavariable...`);
+    context.trace(`Matching the '${substitutionString}' substitution with the '${metavariableString}' metavariable...`);
 
     const metavariable = this, ///
           judgement = context.findJudgementByMetavariable(metavariable);
@@ -99,14 +99,14 @@ export default domAssigned(class Metavariable {
     if (judgement !== null) {
       const declaration = judgement.getDeclaration();
 
-      substitutionUnified = declaration.unifySubstitution(substitution, context);
+      substitutionMatched = declaration.matchSubstitution(substitution, context);
     }
 
-    if (substitutionUnified) {
-      context.debug(`...unified the '${substitutionString}' substitution with the '${metavariableString}' metavariable.`);
+    if (substitutionMatched) {
+      context.debug(`...matched the '${substitutionString}' substitution with the '${metavariableString}' metavariable.`);
     }
 
-    return substitutionUnified;
+    return substitutionMatched;
   }
 
   unifyFrame(frame, substitutions, generalContext, specificContext) {

@@ -1,5 +1,7 @@
 "use strict";
 
+export const S = "s";
+export const NOTHING = "";
 export const MISSING = "missing";
 export const FUNCTION = "function";
 export const UNDEFINED = "undefined";

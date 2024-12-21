@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import { EMPTY_STRING } from "./constants";
 
-const { find, first, clear, prune, filter, compress } = arrayUtilities;
+const { find, first, clear, prune, filter, compress, correlate } = arrayUtilities;
 
 export default class Substitutions {
   constructor(array, savedArray) {
@@ -198,6 +198,20 @@ export default class Substitutions {
     const substitutionString = substitution.getString();
 
     context.trace(`Removed the ${substitutionString} substitution.`);
+  }
+
+  matchSubstitutions(substitutions) {
+    const array = substitutions.getArray(),
+          correlates = correlate(array, this.array, (substitutionA, substitutionB) => {
+            const substitutionAMatchesSubstitutionB = substitutionA.match(substitutionB);
+
+            if (substitutionAMatchesSubstitutionB) {
+              return true;
+            }
+          }),
+          match = correlates; ///
+
+    return match;
   }
 
   clear() {
