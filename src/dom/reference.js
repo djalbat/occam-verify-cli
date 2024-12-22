@@ -219,6 +219,16 @@ export default domAssigned(class Reference {
     return reference;
   }
 
+  static fromMetavariableNode(metavariableNode, fileContext) {
+    const { Metavariable } = dom,
+          localContext = LocalContext.fromFileContext(fileContext),
+          context = localContext, ///
+          metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
+          reference = new Reference(metavariable);
+
+    return reference;
+  }
+
   static fromProcedureCallNode(procedureCallNode, fileContext) {
     let reference = null;
 

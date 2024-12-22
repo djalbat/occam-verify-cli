@@ -26,6 +26,52 @@ export default domAssigned(class Premise {
     return this.procedureCall;
   }
 
+  verify(context) {
+    let verified = false;
+
+    const premiseString = this.string; ///
+
+    context.trace(`Verifying the '${premiseString}' premise...`);
+
+    if (false) {
+      ///
+    } else if (this.statement !== null) {
+      const stated = true,
+            assignments = [],
+            statementVerified = this.statement.verify(assignments, stated, context);
+
+      if (statementVerified) {
+        const assignmentsAssigned = assignAssignments(assignments, context);
+
+        if (assignmentsAssigned) {
+          const { ProofStep } = dom,
+                proofStep = ProofStep.fromStatement(this.statement, context),
+                proofStepSubproof = proofStep;  ///
+
+          context.addProofStepSubproof(proofStepSubproof);
+
+          verified = true;
+        }
+      }
+    } else if (this.procedureCall !== null) {
+      const stated = true,
+            assignments = null,
+            procedureCallVerified = this.procedureCall.verify(assignments, stated, context);
+
+      if (procedureCallVerified) {
+        verified = true;
+      }
+    } else {
+      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`);
+    }
+
+    if (verified) {
+      context.debug(`...verified the '${premiseString}' premise.`);
+    }
+
+    return verified;
+  }
+
   unifyIndependently(substitutions, context) {
     let unifiedIndependently;
 
@@ -137,52 +183,6 @@ export default domAssigned(class Premise {
     }
 
     return statementUnified;
-  }
-
-  verify(context) {
-    let verified = false;
-
-    const premiseString = this.string; ///
-
-    context.trace(`Verifying the '${premiseString}' premise...`);
-
-    if (false) {
-      ///
-    } else if (this.statement !== null) {
-      const stated = true,
-            assignments = [],
-            statementVerified = this.statement.verify(assignments, stated, context);
-
-      if (statementVerified) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
-
-        if (assignmentsAssigned) {
-          const { ProofStep } = dom,
-                proofStep = ProofStep.fromStatement(this.statement, context),
-                proofStepSubproof = proofStep;  ///
-
-          context.addProofStepSubproof(proofStepSubproof);
-
-          verified = true;
-        }
-      }
-    } else if (this.procedureCall !== null) {
-      const stated = true,
-            assignments = null,
-            procedureCallVerified = this.procedureCall.verify(assignments, stated, context);
-
-      if (procedureCallVerified) {
-        verified = true;
-      }
-    } else {
-      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`);
-    }
-
-    if (verified) {
-      context.debug(`...verified the '${premiseString}' premise.`);
-    }
-
-    return verified;
   }
 
   toJSON() {

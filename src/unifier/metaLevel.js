@@ -9,12 +9,11 @@ import { nodeQuery } from "../utilities/query";
 
 const termNodeQuery = nodeQuery("/term"),
       frameNodeQuery = nodeQuery("/frame"),
-      referenceNodeQuery = nodeQuery("/reference"),
       statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
-      referenceMetavariableNodeQuery = nodeQuery("/reference/metavariable!"),
-      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!");
+      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
+      declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable!");
 
 class MetaLevelUnifier extends Unifier {
   unify(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext) {
@@ -69,24 +68,27 @@ class MetaLevelUnifier extends Unifier {
       }
     },
     {
-      generalNodeQuery: referenceMetavariableNodeQuery,
-      specificNodeQuery: referenceNodeQuery,
-      unify: (generalReferenceMetavariableNode, specificReferenceNode, substitutions, generalContext, specificContext) => {
+      generalNodeQuery: declarationMetavariableNodeQuery,
+      specificNodeQuery: declarationMetavariableNodeQuery,
+      unify: (generalDeclarationMetavariableNode, specificDeclarationMetavariableNode, substitutions, generalContext, specificContext) => {
         let referenceUnified;
 
-        const { Reference, Metavariable } = dom,
-              referenceNode = specificReferenceNode, ///
-              metavariableNode = generalReferenceMetavariableNode;  ///
+        const { Reference, Metavariable } = dom;
 
-        let context;
+        let context,
+            metavariableNode;
 
         context = generalContext; ///
+
+        metavariableNode = generalDeclarationMetavariableNode;  ///
 
         const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
 
         context = specificContext;  ///
 
-        const reference = Reference.fromReferenceNode(referenceNode, context);
+        metavariableNode = specificDeclarationMetavariableNode; ///
+
+        const reference = Reference.fromMetavariableNode(metavariableNode, context);
 
         referenceUnified = metavariable.unifyReference(reference, substitutions, generalContext, specificContext);
 

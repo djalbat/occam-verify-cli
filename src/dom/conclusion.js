@@ -19,24 +19,6 @@ export  default domAssigned(class Conclusion {
     return this.statement;
   }
 
-  unifyStatement(statement, substitutions, generalContext, specificContext) {
-    let statementUnified;
-
-    const conclusion = this,  ///
-          statementString = statement.getString(),
-          conclusionString = conclusion.getString();
-
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
-
-    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-    if (statementUnified) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
-    }
-
-    return statementUnified;
-  }
-
   verify(context) {
     let verified = false;
 
@@ -60,6 +42,24 @@ export  default domAssigned(class Conclusion {
     }
 
     return verified;
+  }
+
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
+    let statementUnified;
+
+    const conclusion = this,  ///
+          statementString = statement.getString(),
+          conclusionString = conclusion.getString();
+
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
+
+    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    if (statementUnified) {
+      specificContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
+    }
+
+    return statementUnified;
   }
 
   toJSON() {

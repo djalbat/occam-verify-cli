@@ -26,6 +26,52 @@ export default domAssigned(class Supposition {
     return this.procedureCall;
   }
 
+  verify(context) {
+    let verified = false;
+
+    const suppositionString = this.string; ///
+
+    context.trace(`Verifying the '${suppositionString}' supposition...`);
+
+    if (false) {
+      ///
+    } else if (this.statement !== null) {
+      const stated = true,
+            assignments = [],
+            statementVerified = this.statement.verify(assignments, stated, context);
+
+      if (statementVerified) {
+        const assignmentsAssigned = assignAssignments(assignments, context);
+
+        if (assignmentsAssigned) {
+          const { ProofStep } = dom,
+                proofStep = ProofStep.fromStatement(this.statement, context),
+                proofStepSubproof = proofStep;  ///
+
+          context.addProofStepSubproof(proofStepSubproof);
+
+          verified = true;
+        }
+      }
+    } else if (this.procedureCall !== null) {
+      const stated = true,
+            assignments = null,
+            procedureCallVerified = this.procedureCall.verify(assignments, stated, context);
+
+      if (procedureCallVerified) {
+        verified = true;
+      }
+    } else {
+      context.debug(`Unable to verify the '${suppositionString}' supposition because it is nonsense.`);
+    }
+
+    if (verified) {
+      context.debug(`...verified the '${suppositionString}' supposition.`);
+    }
+
+    return verified;
+  }
+
   unifyIndependently(substitutions, context) {
     let unifiedIndependently;
 
@@ -137,52 +183,6 @@ export default domAssigned(class Supposition {
     }
 
     return statementUnified;
-  }
-
-  verify(context) {
-    let verified = false;
-
-    const suppositionString = this.string; ///
-
-    context.trace(`Verifying the '${suppositionString}' supposition...`);
-
-    if (false) {
-      ///
-    } else if (this.statement !== null) {
-      const stated = true,
-            assignments = [],
-            statementVerified = this.statement.verify(assignments, stated, context);
-
-      if (statementVerified) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
-
-        if (assignmentsAssigned) {
-          const { ProofStep } = dom,
-                proofStep = ProofStep.fromStatement(this.statement, context),
-                proofStepSubproof = proofStep;  ///
-
-          context.addProofStepSubproof(proofStepSubproof);
-
-          verified = true;
-        }
-      }
-    } else if (this.procedureCall !== null) {
-      const stated = true,
-            assignments = null,
-            procedureCallVerified = this.procedureCall.verify(assignments, stated, context);
-
-      if (procedureCallVerified) {
-        verified = true;
-      }
-    } else {
-      context.debug(`Unable to verify the '${suppositionString}' supposition because it is nonsense.`);
-    }
-
-    if (verified) {
-      context.debug(`...verified the '${suppositionString}' supposition.`);
-    }
-
-    return verified;
   }
 
   toJSON() {

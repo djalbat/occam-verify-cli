@@ -113,6 +113,126 @@ export default domAssigned(class Metavariable {
     return substitutionMatched;
   }
 
+  verify(context) {
+    let verified;
+
+    const metavariableString = this.string; ///
+
+    context.trace(`Verifying the '${metavariableString}' metavariable...`);
+
+    const metavariable = this, ///
+          generalContext = context,  ///
+          specificContext = context,  ///
+          metavariablePresent = generalContext.isMetavariablePresent(metavariable, generalContext, specificContext);
+
+    verified = metavariablePresent; ///
+
+    if (verified) {
+      context.debug(`...verified the '${metavariableString}' metavariable.`);
+    }
+
+    return verified;
+  }
+
+  verifyType(fileContext) {
+    let typeVerified;
+
+    if (this.type === null) {
+      typeVerified = true;
+    } else {
+      if (this.type === objectType) {
+        typeVerified = true;
+      } else {
+        const typeName = this.type.getName();
+
+        fileContext.trace(`Verifying the '${typeName}' type...`);
+
+        const type = fileContext.findTypeByTypeName(typeName);
+
+        if (type === null) {
+          fileContext.debug(`The '${typeName}' type is missing.`);
+        } else {
+          this.type = type; ///
+
+          typeVerified = true;
+        }
+
+        if (typeVerified) {
+          fileContext.debug(`...verified the '${typeName}' type.`);
+        }
+      }
+    }
+
+    return typeVerified;
+  }
+
+  verifyWhenDeclared(fileContext) {
+    let verifiedWhenDeclared = false;
+
+    const metavariableString = this.string; ///
+
+    fileContext.trace(`Verifying the '${metavariableString}' metavariable when declared...`);
+
+    const metavariableNode = this.node, ///
+          termNode = termNodeQuery(metavariableNode);
+
+    if (termNode !== null) {
+      fileContext.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
+    } else {
+      const metavariableName = this.name, ///
+        metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
+
+      if (metavariablePresent) {
+        fileContext.debug(`The '${metavariableName}' metavariable has already been declared.`);
+      } else {
+        const variableName = this.name, ///
+          variablePresent = fileContext.isVariablePresentByVariableName(variableName);
+
+        if (variablePresent) {
+          fileContext.debug(`A '${metavariableName}' variable has already been declared.`);
+        } else {
+          const typeVerified = this.verifyType(fileContext);
+
+          verifiedWhenDeclared = typeVerified;
+        }
+      }
+    }
+
+    if (verifiedWhenDeclared) {
+      fileContext.debug(`...verified the '${metavariableString}' metavariable when declared.`);
+    }
+
+    return verifiedWhenDeclared;
+  }
+
+  verifyGivenMetaType(metaType, context) {
+    let verifiedGivenMetaType = false;
+
+    const metavariableString = this.string,  ///
+          metaTypeString = metaType.getString();
+
+    context.trace(`Verifying the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
+
+    let metavariable = this;  ///
+
+    const specificContext = context,  ///
+          generalContext = context; ///
+
+    metavariable = generalContext.findMetavariable(metavariable, generalContext, specificContext);
+
+    if (metavariable !== null) {
+      const metavariableMetaTypeEqualToMetaType = metavariable.isMetaTypeEqualTo(metaType);
+
+      verifiedGivenMetaType = metavariableMetaTypeEqualToMetaType;  ///
+    }
+
+    if (verifiedGivenMetaType) {
+      context.debug(`...verified the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type.`);
+    }
+
+    return verifiedGivenMetaType;
+  }
+
   unifyFrame(frame, substitutions, generalContext, specificContext) {
     let frameUnified = false;
 
@@ -372,126 +492,6 @@ export default domAssigned(class Metavariable {
     }
 
     return statementMetavariableUnified;
-  }
-
-  verify(context) {
-    let verified;
-
-    const metavariableString = this.string; ///
-
-    context.trace(`Verifying the '${metavariableString}' metavariable...`);
-
-    const metavariable = this, ///
-          generalContext = context,  ///
-          specificContext = context,  ///
-          metavariablePresent = generalContext.isMetavariablePresent(metavariable, generalContext, specificContext);
-
-    verified = metavariablePresent; ///
-
-    if (verified) {
-      context.debug(`...verified the '${metavariableString}' metavariable.`);
-    }
-
-    return verified;
-  }
-
-  verifyType(fileContext) {
-    let typeVerified;
-
-    if (this.type === null) {
-      typeVerified = true;
-    } else {
-      if (this.type === objectType) {
-        typeVerified = true;
-      } else {
-        const typeName = this.type.getName();
-
-        fileContext.trace(`Verifying the '${typeName}' type...`);
-
-        const type = fileContext.findTypeByTypeName(typeName);
-
-        if (type === null) {
-          fileContext.debug(`The '${typeName}' type is missing.`);
-        } else {
-          this.type = type; ///
-
-          typeVerified = true;
-        }
-
-        if (typeVerified) {
-          fileContext.debug(`...verified the '${typeName}' type.`);
-        }
-      }
-    }
-
-    return typeVerified;
-  }
-
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared = false;
-
-    const metavariableString = this.string; ///
-
-    fileContext.trace(`Verifying the '${metavariableString}' metavariable when declared...`);
-
-    const metavariableNode = this.node, ///
-          termNode = termNodeQuery(metavariableNode);
-
-    if (termNode !== null) {
-      fileContext.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
-    } else {
-      const metavariableName = this.name, ///
-            metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
-
-      if (metavariablePresent) {
-        fileContext.debug(`The '${metavariableName}' metavariable has already been declared.`);
-      } else {
-        const variableName = this.name, ///
-              variablePresent = fileContext.isVariablePresentByVariableName(variableName);
-
-        if (variablePresent) {
-          fileContext.debug(`A '${metavariableName}' variable has already been declared.`);
-        } else {
-          const typeVerified = this.verifyType(fileContext);
-
-          verifiedWhenDeclared = typeVerified;
-        }
-      }
-    }
-
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${metavariableString}' metavariable when declared.`);
-    }
-
-    return verifiedWhenDeclared;
-  }
-
-  verifyGivenMetaType(metaType, context) {
-    let verifiedGivenMetaType = false;
-
-    const metavariableString = this.string,  ///
-          metaTypeString = metaType.getString();
-
-    context.trace(`Verifying the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type...`);
-
-    let metavariable = this;  ///
-
-    const specificContext = context,  ///
-          generalContext = context; ///
-
-    metavariable = generalContext.findMetavariable(metavariable, generalContext, specificContext);
-
-    if (metavariable !== null) {
-      const metavariableMetaTypeEqualToMetaType = metavariable.isMetaTypeEqualTo(metaType);
-
-      verifiedGivenMetaType = metavariableMetaTypeEqualToMetaType;  ///
-    }
-
-    if (verifiedGivenMetaType) {
-      context.debug(`...verified the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type.`);
-    }
-
-    return verifiedGivenMetaType;
   }
 
   toJSON() {
