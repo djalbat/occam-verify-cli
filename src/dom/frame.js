@@ -71,6 +71,64 @@ export default domAssigned(class Frame {
     return equalTo;
   }
 
+  matchSubstitution(substitution, context) {
+    let substitutionMatches = false;
+
+    const frameString = this.string,  ///
+          substitutionString = substitution.getString();
+
+    context.trace(`Matching the '${substitutionString}' substitution with the '${frameString}' frame...`);
+
+    if (!substitutionMatches) {
+      substitutionMatches = this.declarations.some((declaration) => {
+        const substitutionMatchesDeclaration = declaration.matchSubstitution(substitution, context);
+
+        if (substitutionMatchesDeclaration) {
+          return true;
+        }
+      });
+    }
+
+    if (!substitutionMatches) {
+      substitutionMatches = this.metavariables.some((metavariable) => {
+        const substitutionMatchesMetavariable = metavariable.matchSubstitution(substitution, context);
+
+        if (substitutionMatchesMetavariable) {
+          return true;
+        }
+      });
+    }
+
+    if (substitutionMatches) {
+      context.debug(`...matched the '${substitutionString}' substitutions with the '${frameString}' frame.`);
+    }
+
+    return substitutionMatches;
+  }
+
+  matchSubstitutions(substitutions, context) {
+    let substitutionsMatch;
+
+    const frameString = this.string,  ///
+          substitutionsString = substitutions.asString();
+
+    context.trace(`Matching the '${substitutionsString}' substitutions with the '${frameString}' frame...`);
+
+    substitutionsMatch = substitutions.everySubstitution((substitution) => {
+      const substitutionMatches = this.matchSubstitution(substitution, context);
+
+      if (substitutionMatches) {
+        return true;
+      }
+    });
+
+    if (substitutionsMatch) {
+      context.debug(`...matched the '${substitutionsString}' substitutions with the '${frameString}' frame.`);
+    }
+
+    return substitutionsMatch;
+  }
+
   verify(assignments, stated, context) {
     let verified = false;
 
@@ -90,7 +148,7 @@ export default domAssigned(class Frame {
         if (stated) {
           verifiedWhenStated = this.verifyWhenStated(assignments, context);
         } else {
-          verifiedWhenDerived = this.verifyWhenDerived(assignments, context);
+          verifiedWhenDerived = this.verifyWhenDerived(context);
         }
 
         if (verifiedWhenStated || verifiedWhenDerived) {
@@ -106,6 +164,50 @@ export default domAssigned(class Frame {
     return verified;
   }
 
+  verifyWhenStated(assignments, context) {
+    let verifiedWhenStated = false;
+
+    const frameString = this.string;  ///
+
+    context.trace(`Verifying the '${frameString}' stated frame...`);
+
+    const declarationsLength = this.declarations.length;
+
+    if (declarationsLength > 0) {
+      context.trace(`The '${frameString}' stated frame cannot have declarations.`);
+    } else {
+      const metavariablesLength = this.metavariables.length;
+
+      if (metavariablesLength > 1) {
+        context.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
+      } else {
+        verifiedWhenStated = true;
+      }
+    }
+
+    if (verifiedWhenStated) {
+      context.debug(`...verified the '${frameString}' stated frame.`);
+    }
+
+    return verifiedWhenStated;
+  }
+
+  verifyWhenDerived(context) {
+    let verifiedWhenDerived;
+
+    const frameString = this.string;  ///
+
+    context.trace(`Verifying the '${frameString}' derived frame...`);
+
+    verifiedWhenDerived = true;
+
+    if (verifiedWhenDerived) {
+      context.debug(`...verified the '${frameString}' derived frame.`);
+    }
+
+    return verifiedWhenDerived;
+  }
+
   verifyDeclarations(assignments, stated, context) {
     let declarationsVerified = true;  ///
 
@@ -113,8 +215,8 @@ export default domAssigned(class Frame {
 
     if (declarationsLength > 0) {
       const sOrNothing = (declarationsLength > 1) ?
-                          S :
-                            NOTHING,
+                           S :
+                             NOTHING,
             frameString = this.string,  ///
             declarationsString = declarationsStringFromDeclarations(this.declarations);
 
@@ -126,7 +228,7 @@ export default domAssigned(class Frame {
 
       declarationsVerified = this.declarations.every((declaration) => {
         const frame = null, ///
-          declarationVerified = declaration.verify(frame, assignments, stated, context);
+              declarationVerified = declaration.verify(frame, assignments, stated, context);
 
         return declarationVerified;
       });
@@ -165,50 +267,6 @@ export default domAssigned(class Frame {
     }
 
     return metavariablesVerified;
-  }
-
-  verifyWhenStated(assignments, context) {
-    let verifiedWhenStated = false;
-
-    const frameString = this.string;  ///
-
-    context.trace(`Verifying the '${frameString}' stated frame...`);
-
-    const declarationsLength = this.declarations.length;
-
-    if (declarationsLength > 0) {
-      context.trace(`The '${frameString}' stated frame cannot have declarations.`);
-    } else {
-      const metavariablesLength = this.metavariables.length;
-
-      if (metavariablesLength > 1) {
-        context.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
-      } else {
-        verifiedWhenStated = true;
-      }
-    }
-
-    if (verifiedWhenStated) {
-      context.debug(`...verified the '${frameString}' stated frame.`);
-    }
-
-    return verifiedWhenStated;
-  }
-
-  verifyWhenDerived(assignments, context) {
-    let verifiedWhenDerived;
-
-    const frameString = this.string;  ///
-
-    context.trace(`Verifying the '${frameString}' derived frame...`);
-
-    verifiedWhenDerived = true;
-
-    if (verifiedWhenDerived) {
-      context.debug(`...verified the '${frameString}' derived frame.`);
-    }
-
-    return verifiedWhenDerived;
   }
 
   verifyGivenMetaType(metaType, assignments, stated, context) {

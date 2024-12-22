@@ -34,9 +34,22 @@ export default domAssigned(class Label {
     return metavariableNode;
   }
 
-  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
+  matchReference(reference) {
+    const metavariable = reference.getMetavariable(),
+          metavariableMatches = this.matchMetavariable(metavariable),
+          referenceMatches = metavariableMatches; ///
 
-  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
+    return referenceMatches;
+  }
+
+  matchMetavariable(metavariable) {
+    const matches = this.metavariable.match(metavariable),
+          metavariableMatches = matches;  ///
+
+    return metavariableMatches;
+  }
+
+  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
   verify(nameOnly) {
     let verified = false;
@@ -52,9 +65,9 @@ export default domAssigned(class Label {
 
       labelPresent = this.fileContext.isLabelPresentByMetavariableName(metavariableName);
     } else {
-      const metavariableNode = this.getMetavariableNode();
+      const metavariable = this.getMetavariable();
 
-      labelPresent = this.fileContext.isLabelPresentByMetavariableNode(metavariableNode);
+      labelPresent = this.fileContext.isLabelPresentByMetavariable(metavariable);
     }
 
     if (labelPresent) {

@@ -59,8 +59,6 @@ export default class TopLevelAssertion {
 
   getStatement() { return this.consequent.getStatement(); }
 
-  matchStatementNode(statementNode) { return this.consequent.matchStatementNode(statementNode); }
-
   matchMetavariableName(metavariableName) {
     const metavariableNameMatches = this.labels.some((label) => {
       const metavariableNameMatches = label.matchMetavariableName(metavariableName);

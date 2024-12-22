@@ -374,6 +374,32 @@ export default class FileContext {
     return label;
   }
 
+  findMetaLemmaByReference(reference) {
+    const metaLemmas = this.getMetaLemmas(),
+          metaLemma = metaLemmas.find((metaLemma) => {
+            const referenceMatches = metaLemma.matchReference(reference);
+
+            if (referenceMatches) {
+              return true;
+            }
+          }) || null;
+
+    return metaLemma;
+  }
+
+  findMetatheoremByReference(reference) {
+    const metatheorems = this.getMetatheorems(),
+          metatheorem = metatheorems.find((metatheorem) => {
+            const referenceMatches = metatheorem.matchReference(reference);
+
+            if (referenceMatches) {
+              return true;
+            }
+          }) || null;
+
+    return metatheorem;
+  }
+
   findRuleByReference(reference) {
     const rules = this.getRules(),
           metavariableName = reference.getMetavariableName(),
@@ -490,6 +516,14 @@ export default class FileContext {
     return metatheorems;
   }
 
+  findMetaLemmaMetatheoremByReference(reference) {
+    const metaLemma = this.findMetaLemmaByReference(reference),
+          metatheorem = this.findMetatheoremByReference(reference),
+          metaLemmaMetatheorem = (metaLemma || metatheorem);  ///
+
+    return metaLemmaMetatheorem;
+  }
+
   findMetaLemmaMetatheoremsByReference(reference) {
     const metaLemmas = this.findMetaLemmasByReference(reference),
           metatheorems = this.findMetatheoremsByReference(reference),
@@ -585,10 +619,10 @@ export default class FileContext {
     return label;
   }
 
-  findLabelByMetavariableNode(metavariableNode) {
+  findLabelByMetavariable(metavariable) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
-            const metavariableNodeMatches = label.matchMetavariableNode(metavariableNode);
+            const metavariableNodeMatches = label.matchMetavariable(metavariable);
 
             if (metavariableNodeMatches) {
               return true;
@@ -657,8 +691,8 @@ export default class FileContext {
     return labelPresent;
   }
 
-  isLabelPresentByMetavariableNode(metavariableNode) {
-    const label = this.findLabelByMetavariableNode(metavariableNode),
+  isLabelPresentByMetavariable(metavariable) {
+    const label = this.findLabelByMetavariable(metavariable),
           labelPresent = (label !== null);
 
     return labelPresent;

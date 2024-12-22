@@ -43,7 +43,7 @@ export default class Equivalences {
   }
 
   addEquivalence(equivalence, context) {
-    const equivalenceString = equivalence.getString();
+    const equivalenceString = equivalence.asString();
 
     context.trace(`Added the '${equivalenceString}' equivalence.`);
 

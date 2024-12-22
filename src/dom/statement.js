@@ -105,10 +105,75 @@ export default domAssigned(class Statement {
     return frameContained;
   }
 
-  matchStatementNode(statementNode) {
-    const statementNodeMatches = this.node.match(statementNode);
+  match(statement) {
+    const statementNode = statement.getNode(),
+          statementNodeMatchesNode = this.node.match(statementNode),
+          matches = statementNodeMatchesNode;  ///
 
-    return statementNodeMatches;
+    return matches;
+  }
+
+  verify(assignments, stated, context) {
+    let verified;
+
+    const statementString = this.string;  ///
+
+    context.trace(`Verifying the '${statementString}' statement...`);
+
+    verified = verifyMixins.some((verifyMixin) => {
+      const statement = this, ///
+            verified = verifyMixin(statement, assignments, stated, context);
+
+      if (verified) {
+        return true;
+      }
+    });
+
+    if (verified) {
+      context.debug(`...verified the '${statementString}' statement.`);
+    }
+
+    return verified;
+  }
+
+  verifyWhenDeclared(fileContext) {
+    let verifiedWhenDeclared;
+
+    const statementNode = this.node,  ///
+          statementString = this.string;  ///
+
+    fileContext.trace(`Verifying the '${statementString}' statement when declared...`);
+
+    verifiedWhenDeclared = combinatorVerifier.verifyStatement(statementNode, fileContext);
+
+    if (verifiedWhenDeclared) {
+      fileContext.debug(`...verified the '${statementString}' statement when declared.`);
+    }
+
+    return verifiedWhenDeclared;
+  }
+
+  verifyGivenMetaType(metaType, assignments, stated, context) {
+    let verifiedGivenMetaType = false;
+
+    const metaTypeString = metaType.getString(),
+          statementString = this.string;  ///
+
+    context.trace(`Verifying the '${statementString}' statement given the '${metaTypeString}' meta-type...`);
+
+    const metaTypeName = metaType.getName();
+
+    if (metaTypeName === STATEMENT_META_TYPE_NAME) {
+      const verified = this.verify(assignments, stated, context)
+
+      verifiedGivenMetaType = verified; ///
+    }
+
+    if (verifiedGivenMetaType) {
+      context.debug(`...verified the '${statementString}' statement given the '${metaTypeString}' meta-type.`);
+    }
+
+    return verifiedGivenMetaType;
   }
 
   unifySubproof(subproof, substitutions, generalContext, specificContext) {
@@ -207,69 +272,6 @@ export default domAssigned(class Statement {
     });
 
     return unifiedWithProofSteps;
-  }
-
-  verify(assignments, stated, context) {
-    let verified;
-
-    const statementString = this.string;  ///
-
-    context.trace(`Verifying the '${statementString}' statement...`);
-
-    verified = verifyMixins.some((verifyMixin) => {
-      const statement = this, ///
-            verified = verifyMixin(statement, assignments, stated, context);
-
-      if (verified) {
-        return true;
-      }
-    });
-
-    if (verified) {
-      context.debug(`...verified the '${statementString}' statement.`);
-    }
-
-    return verified;
-  }
-
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared;
-
-    const statementNode = this.node,  ///
-          statementString = this.string;  ///
-
-    fileContext.trace(`Verifying the '${statementString}' statement when declared...`);
-
-    verifiedWhenDeclared = combinatorVerifier.verifyStatement(statementNode, fileContext);
-
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${statementString}' statement when declared.`);
-    }
-
-    return verifiedWhenDeclared;
-  }
-
-  verifyGivenMetaType(metaType, assignments, stated, context) {
-    let verifiedGivenMetaType = false;
-
-    const metaTypeString = metaType.getString(),
-          statementString = this.string;  ///
-
-    context.trace(`Verifying the '${statementString}' statement given the '${metaTypeString}' meta-type...`);
-
-    const metaTypeName = metaType.getName();
-
-    if (metaTypeName === STATEMENT_META_TYPE_NAME) {
-      const verified = this.verify(assignments, stated, context)
-
-      verifiedGivenMetaType = verified; ///
-    }
-
-    if (verifiedGivenMetaType) {
-      context.debug(`...verified the '${statementString}' statement given the '${metaTypeString}' meta-type.`);
-    }
-
-    return verifiedGivenMetaType;
   }
 
   toJSON() {

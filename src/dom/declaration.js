@@ -29,6 +29,28 @@ export default domAssigned(class Declaration {
     return this.statement;
   }
 
+  matchSubstitution(substitution, context) {
+    let substitutionMatches;
+
+    const declarationString = this.string,  ///
+          substitutionString = substitution.getString();
+
+    context.trace(`Matching the '${substitutionString}' substitution with the '${declarationString}' declaration...`);
+
+    const statement = substitution.getStatement(),
+          metavariable = substitution.getMetavariable(),
+          statementMatches = this.statement.match(statement),
+          metavariableMatchesReference = this.reference.matchMetavariable(metavariable);
+
+    substitutionMatches = (metavariableMatchesReference && statementMatches);
+
+    if (substitutionMatches) {
+      context.debug(`...matched the '${declarationString}' substitution with the '${substitutionString}' declaration.`);
+    }
+
+    return substitutionMatches;
+  }
+
   verify(frame, assignments, stated, context) {
     let verified = false;
 
@@ -47,12 +69,8 @@ export default domAssigned(class Declaration {
 
         if (stated) {
           verifiedWhenStated = this.verifyWhenStated(frame, assignments, context);
-
-          verified = verifiedWhenStated;  ///
         } else {
-          verifiedWhenDerived = this.verifyWhenDerived(context);
-
-          verified = verifiedWhenDerived; ///
+          verifiedWhenDerived = this.verifyWhenDerived(frame, context);
         }
 
         if (verifiedWhenStated || verifiedWhenDerived) {
@@ -144,47 +162,14 @@ export default domAssigned(class Declaration {
 
     context.trace(`Verifying the '${declarationString}' derived declaration...`);
 
-    debugger
+    const metaLemmaMetatheorem = context.findMetaLemmaMetatheoremByReference(this.reference);
 
-    // const metaLemmas = context.findMetaLemmasByReference(this.reference),
-    //       metatheorems = context.findMetatheoremsByReference(this.reference),
-    //       metaLemmaMetatheorems = [
-    //         ...metaLemmas,
-    //         ...metatheorems
-    //       ],
-    //       metaLemmaMetatheoremUnified = metaLemmaMetatheorems.some((metaLemmaMetatheorem) => {
-    //         let metaLemmaMetatheoremUnified = true;
-    //
-    //         if (metaLemmaMetatheoremUnified) {
-    //           metaLemmaMetatheoremUnified = frame.matchetaLemmaMetatheorem(metaLemmaMetatheorem, context);
-    //         }
-    //
-    //         if (metaLemmaMetatheoremUnified) {
-    //           metaLemmaMetatheoremUnified = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
-    //         }
-    //
-    //         if (metaLemmaMetatheoremUnified) {
-    //           return true;
-    //         }
-    //       });
-    //
-    // if (metaLemmaMetatheoremUnified) {
-    //   verifiedWhenDerived = true;
-    // } else {
-    //   const axiom = context.findAxiomByReference(this.reference),
-    //         lemma = context.findLemmaByReference(this.reference),
-    //         theorem = context.findTheoremByReference(this.reference),
-    //         conjecture = context.findConjectureByReference(this.reference),
-    //         axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
-    //
-    //   if (axiomLemmaTheoremConjecture !== null) {
-    //     const axiomLemmaTheoremConjectureUnified = this.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context);
-    //
-    //     if (axiomLemmaTheoremConjectureUnified) {
-    //       verifiedWhenDerived = true;
-    //     }
-    //   }
-    // }
+    if (metaLemmaMetatheorem !== null) {
+      const substitutions = metaLemmaMetatheorem.getSubstitutions(),
+            substitutionsMatches = frame.matchSubstitutions(substitutions, context);
+
+      verifiedWhenDerived = substitutionsMatches; ///
+    }
 
     if (verifiedWhenDerived) {
       context.trace(`...verified the '${declarationString}' derived declaration.`);

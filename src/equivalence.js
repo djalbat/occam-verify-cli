@@ -186,7 +186,7 @@ export default class Equivalence {
     return implicitlyGroundedTerms;
   }
 
-  getString() {
+  asString() {
     let string;
 
     string = this.terms.reduce((string, term) => {

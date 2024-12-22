@@ -39,9 +39,14 @@ export default domAssigned(class Reference {
     return metavariableNode;
   }
 
-  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
+  matchMetavariable(metavariable) {
+    const matches = this.metavariable.match(metavariable),
+          metavariableMatches = matches;  ///
 
-  matchMetavariableNode(metavariableNode) { return this.metavariable.matchMetavariableNode(metavariableNode); }
+    return metavariableMatches;
+  }
+
+  matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
   verify(context) {
     let verified = false;

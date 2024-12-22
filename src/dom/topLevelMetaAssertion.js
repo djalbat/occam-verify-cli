@@ -41,6 +41,13 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
     return label;
   }
 
+  matchReference(reference) {
+    const label = this.getLabel(),
+          referenceMatches = label.matchReference(reference);
+
+    return referenceMatches;
+  }
+
   verify() {
     let verified = false;
 

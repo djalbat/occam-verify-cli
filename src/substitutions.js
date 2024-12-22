@@ -292,19 +292,25 @@ export default class Substitutions {
     this.savedArray = null;
   }
 
-  getString(generalContext, specificContext) {
-    let string = this.array.reduce((string, substitution) => {
-      const substitutionString = substitution.getString(generalContext, specificContext);
+  asString() {
+    let string;
 
-      string = (string === null) ?
-                 substitutionString :
-                   `${string}, ${substitutionString}`;
+    const length = this.getLength();
 
-      return string;
-    }, EMPTY_STRING);
+    if (length === 0) {
+      string = EMPTY_STRING;
+    } else {
+      const substitutionsString = this.array.reduce((substitutionsString, substitution) => {
+        const substitutionString = substitution.getString();
 
-    if (string !== EMPTY_STRING) {
-      string = ` ${string}`;
+        substitutionsString = (substitutionsString === null) ?
+                                 substitutionString :
+                                  `${substitutionsString}, ${substitutionString}`;
+
+        return substitutionsString;
+      }, null);
+
+      string = substitutionsString; ///
     }
 
     return string;

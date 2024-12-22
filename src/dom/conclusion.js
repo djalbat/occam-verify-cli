@@ -19,8 +19,6 @@ export  default domAssigned(class Conclusion {
     return this.statement;
   }
 
-  matchStatementNode(statementNode) { return this.statement.matchStatementNode(statementNode); }
-
   unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
 

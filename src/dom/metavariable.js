@@ -70,12 +70,6 @@ export default domAssigned(class Metavariable {
     return metavariableNameMatches;
   }
 
-  matchMetavariableNode(metavariableNode) {
-    const metavariableNodeMatches = metavariableNode.match(this.node);
-
-    return metavariableNodeMatches;
-  }
-
   isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
   isEqualTo(metavariable) {
@@ -85,7 +79,15 @@ export default domAssigned(class Metavariable {
     return equalTo;
   }
 
-  unifySubstitution(substitution, context) {
+  match(metavariable) {
+    const metavariableNode = metavariable.getNode(),
+          metavariableNodeMatchesNode = this.node.match(metavariableNode),
+          matches = metavariableNodeMatchesNode;  ///
+
+    return matches;
+  }
+
+  matchSubstitution(substitution, context) {
     let substitutionMatched = false;
 
     const metavariableString = this.string,  ///
@@ -100,6 +102,8 @@ export default domAssigned(class Metavariable {
       const declaration = judgement.getDeclaration();
 
       substitutionMatched = declaration.matchSubstitution(substitution, context);
+    } else {
+      context.debug(`The '${metavariableString}' metavariable does not have a judgement.`);
     }
 
     if (substitutionMatched) {

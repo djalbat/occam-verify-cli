@@ -57,8 +57,6 @@ export default domAssigned(class Rule {
     return this.proof;
   }
 
-  matchStatementNode(statementNode) { return this.conclusion.matchStatementNode(statementNode); }
-
   matchMetavariableName(metavariableName) {
     const metavariableNameMatches = this.labels.some((label) => {
       const metavariableNameMatches = label.matchMetavariableName(metavariableName);

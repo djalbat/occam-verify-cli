@@ -235,6 +235,8 @@ class LocalContext {
 
   findMetatheoremsByReference(reference) { return this.context.findMetatheoremsByReference(reference); }
 
+  findMetaLemmaMetatheoremByReference(reference) { return this.context.findMetaLemmaMetatheoremByReference(reference); }
+
   findMetaLemmaMetatheoremsByReference(reference) { return this.context.findMetaLemmaMetatheoremsByReference(reference); }
 
   findVariableByVariableName(variableName, nested = true) {
@@ -298,7 +300,7 @@ class LocalContext {
 
   isLabelPresentByMetavariableName(metavariableName) { return this.context.isLabelPresentByMetavariableName(metavariableName); }
 
-  isLabelPresentByMetavariableNode(metavariableNode) { return this.context.isLabelPresentByMetavariableNode(metavariableNode); }
+  isLabelPresentByMetavariable(metavariable) { return this.context.isLabelPresentByMetavariable(metavariable); }
 
   isMetavariablePresentByMetavariableName(metavariableNode) { return this.context.isMetavariablePresentByMetavariableName(metavariableNode); }
 
