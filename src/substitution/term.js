@@ -47,14 +47,6 @@ export default class TermSubstitution extends Substitution {
 
   matchName(name) { return this.variable.matchName(name); }
 
-  matchSubstitution(substitution) {
-    const term = substitution.getTerm(),
-          variable = substitution.getVariable(),
-          termMatches = this.term.match
-
-    return substitutionMatches;
-  }
-
   unifyWithEquivalence(equivalence) {
     let unifiedWithEquivalence;
 

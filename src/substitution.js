@@ -153,10 +153,4 @@ export default class Substitution {
 
     return unifiedWithEquivalence;
   }
-
-  matchSubstitution(substitution) {
-    const substitutionMatches = false;
-
-    return substitutionMatches;
-  }
 }

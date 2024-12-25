@@ -1,5 +1,7 @@
 "use strict";
 
+import dom from "../../dom";
+
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class CombinatorDeclaration {
