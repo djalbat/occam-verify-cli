@@ -105,14 +105,6 @@ export default domAssigned(class Statement {
     return frameContained;
   }
 
-  match(statement) {
-    const statementNode = statement.getNode(),
-          statementNodeMatchesNode = this.node.match(statementNode),
-          matches = statementNodeMatchesNode;  ///
-
-    return matches;
-  }
-
   verify(assignments, stated, context) {
     let verified;
 

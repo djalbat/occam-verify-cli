@@ -79,14 +79,6 @@ export default domAssigned(class Metavariable {
     return equalTo;
   }
 
-  match(metavariable) {
-    const metavariableNode = metavariable.getNode(),
-          metavariableNodeMatchesNode = this.node.match(metavariableNode),
-          matches = metavariableNodeMatchesNode;  ///
-
-    return matches;
-  }
-
   matchSubstitution(substitution, context) {
     let substitutionMatched = false;
 

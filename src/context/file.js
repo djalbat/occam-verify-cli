@@ -622,9 +622,9 @@ export default class FileContext {
   findLabelByMetavariable(metavariable) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
-            const metavariableNodeMatches = label.matchMetavariable(metavariable);
+            const metavariableEqualToLabelMetavariable = label.isMetavariableEqualTo(metavariable);
 
-            if (metavariableNodeMatches) {
+            if (metavariableEqualToLabelMetavariable) {
               return true;
             }
           }) || null;

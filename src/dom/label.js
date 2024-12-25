@@ -36,17 +36,17 @@ export default domAssigned(class Label {
 
   matchReference(reference) {
     const metavariable = reference.getMetavariable(),
-          metavariableMatches = this.matchMetavariable(metavariable),
-          referenceMatches = metavariableMatches; ///
+          metavariableEqualToMetavariable = this.isMetavariableEqualTo(metavariable),
+          referenceMatches = metavariableEqualToMetavariable; ///
 
     return referenceMatches;
   }
 
-  matchMetavariable(metavariable) {
-    const matches = this.metavariable.match(metavariable),
-          metavariableMatches = matches;  ///
+  isMetavariableEqualTo(metavariable) {
+    const equalTo = this.metavariable.isEqualTo(metavariable),
+          metavariableEqualTo = equalTo;  ///
 
-    return metavariableMatches;
+    return metavariableEqualTo;
   }
 
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }

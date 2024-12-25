@@ -39,11 +39,11 @@ export default domAssigned(class Reference {
     return metavariableNode;
   }
 
-  matchMetavariable(metavariable) {
-    const matches = this.metavariable.match(metavariable),
-          metavariableMatches = matches;  ///
+  isMetavariableEqualTo(metavariable) {
+    const equalTo = this.metavariable.isEqualTo(metavariable),
+          metavariableEqualTo = equalTo;  ///
 
-    return metavariableMatches;
+    return metavariableEqualTo;
   }
 
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }

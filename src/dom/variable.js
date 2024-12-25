@@ -43,6 +43,13 @@ export default domAssigned(class Variable {
     this.type = type;
   }
 
+  isEqualTo(variable) {
+    const variableString = variable.getString(),
+          equalTo = (variableString === this.string);
+
+    return equalTo;
+  }
+
   matchName(name) {
     const nameMatches = (name === this.name);
 
@@ -53,13 +60,6 @@ export default domAssigned(class Variable {
     const variableNameMatches = (variableName === this.name);
 
     return variableNameMatches;
-  }
-
-  isEqualTo(variable) {
-    const variableString = variable.getString(),
-          equalTo = (variableString === this.string);
-
-    return equalTo;
   }
 
   isEffectivelyEqualToTerm(term, generalContext, specificContext) {

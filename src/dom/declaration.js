@@ -39,10 +39,10 @@ export default domAssigned(class Declaration {
 
     const statement = substitution.getStatement(),
           metavariable = substitution.getMetavariable(),
-          statementMatches = this.statement.match(statement),
-          metavariableMatchesReference = this.reference.matchMetavariable(metavariable);
+          statementEqualToStatement = this.statement.isEqualTo(statement),
+          referenceMetavariableEqualToMetavariable = this.reference.isMetavariableEqualTo(metavariable);
 
-    substitutionMatches = (metavariableMatchesReference && statementMatches);
+    substitutionMatches = (referenceMetavariableEqualToMetavariable && statementEqualToStatement);
 
     if (substitutionMatches) {
       context.debug(`...matched the '${declarationString}' substitution with the '${substitutionString}' declaration.`);
