@@ -43,6 +43,7 @@ import BracketedCombinator from "./dom/combinator/bracketed";
 import BracketedConstructor from "./dom/constructor/bracketed";
 import CombinatorDeclaration from "./dom/declaration/combinator";
 import ConstructorDeclaration from "./dom/declaration/constructor";
+import ComplexTypeDeclaration from "./dom/declaration/complexType";
 import MetavariableDeclaration from "./dom/declaration/metavariable";
 
 export { default as Log } from "./log";

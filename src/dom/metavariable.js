@@ -12,17 +12,18 @@ import { objectType } from "../dom/type";
 import { domAssigned } from "../dom";
 import { EMPTY_STRING } from "../constants";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
-import { metavariableNameFromMetavariableNode } from "../utilities/name";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
 import { metavariableFromFrame, metavariableFromStatement } from "../utilities/verification";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../utilities/unification";
+import { typeNameFromTypeNode, metavariableNameFromMetavariableNode } from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/metavariable/argument/term"),
       metavariableNodeQuery = nodeQuery("/metavariableDeclaration/metavariable"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       labelMetavariableNodeQuery = nodeQuery("/label/metavariable"),
       referenceMetavariableNodeQuery = nodeQuery("/reference/metavariable"),
-      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable");
+      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable"),
+      metavariableDeclarationTypeNodeQuery = nodeQuery("/metavariableDeclaration/metavariable/type");
 
 export default domAssigned(class Metavariable {
   constructor(string, node, tokens, name, type, metaType) {
@@ -585,7 +586,7 @@ export default domAssigned(class Metavariable {
           tokens = fileContext.nodeAsTokens(node),
           metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
           name = metavariableName,  ///
-          type = Type.fromMetavariableDeclarationNode(metavariableDeclarationNode, context),
+          type = typeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
           metaType = MetaType.fromMetavariableDeclarationNode(metavariableDeclarationNode, context),
           metavariable = new Metavariable(string, node, tokens, name, type, metaType);
 
@@ -605,4 +606,19 @@ function metavariableFromMetavariableNode(metavariableNode, context) {
         metavariable = new Metavariable(string, node, tokens, name, type, metaType);
 
   return metavariable;
+}
+
+function typeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
+  let type = null;
+
+  const metavariableDeclarationTypeNode = metavariableDeclarationTypeNodeQuery(metavariableDeclarationNode);
+
+  if (metavariableDeclarationTypeNode !== null) {
+    const typeNode = metavariableDeclarationTypeNode, ///
+          typeName = typeNameFromTypeNode(typeNode);
+
+    type = fileContext.findTypeByTypeName(typeName);
+  }
+
+  return type;
 }

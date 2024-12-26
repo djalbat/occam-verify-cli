@@ -7,14 +7,14 @@ import { typeNameFromTypeNode } from "../utilities/name";
 import { superTypeFromJSON, superTypeToSuperTypeJSON } from "../utilities/json";
 
 const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration/type[0]"),
-      typeDeclarationSuperTypeNodeQuery = nodeQuery("/typeDeclaration/type[1]"),
-      metavariableDeclarationTypeNodeQuery = nodeQuery("/metavariableDeclaration/metavariable/type");
+      typeDeclarationSuperTypeNodeQuery = nodeQuery("/typeDeclaration/type[1]");
 
 class Type {
-  constructor(string, name, superType) {
+  constructor(string, name, superType, properties) {
     this.string = string;
     this.name = name;
     this.superType = superType;
+    this.properties = properties;
   }
 
   getString() {
@@ -27,6 +27,10 @@ class Type {
 
   getSuperType() {
     return this.superType;
+  }
+
+  getProperties() {
+    return this.properties;
   }
 
   isEqualTo(type) {
@@ -137,12 +141,15 @@ class Type {
   }
 
   toJSON() {
-    const superTypeJSON = superTypeToSuperTypeJSON(this.superType),
+    const propertiesJSON = propertiesToPropertiesJSON(this.properties),
+          superTypeJSON = superTypeToSuperTypeJSON(this.superType),
+          properties = propertiesJSON,  ///
           superType = superTypeJSON,  ///
           name = this.name,
           json = {
             name,
-            superType
+            superType,
+            properties
           };
 
     return json;
@@ -153,9 +160,10 @@ class Type {
   static fromJSON(json, fileContext) {
     const { name } = json,
           typeName = name,  ///
+          properties = propertiesFromJSON(json, fileContext),
           superType = superTypeFromJSON(json, fileContext),
           string = stringFromTypeNameAndSuperType(typeName, superType),
-          type = new Type(string, name, superType);
+          type = new Type(string, name, superType, properties);
 
     return type;
   }
@@ -169,35 +177,33 @@ class Type {
       const typeName = typeNameFromTypeNode(typeNode),
             name = typeName,  ///
             string = name,  ///
-            superType = null;
+            superType = null,
+            properties = null;
 
-      type = new Type(string, name, superType);
+      type = new Type(string, name, superType, properties);
     }
 
     return type;
   }
 
   static fromTypeDeclarationNode(typeDeclarationNode, fileContext) {
-    const typeName = typeNameFromTypeDeclarationNode(typeDeclarationNode, fileContext),
-          superType = superTypeFromTypeDeclarationNode(typeDeclarationNode, fileContext),
+    const superType = superTypeFromTypeDeclarationNode(typeDeclarationNode, fileContext),
+          typeName = typeNameFromTypeDeclarationNode(typeDeclarationNode, fileContext),
           string = stringFromTypeNameAndSuperType(typeName, superType),
           name = typeName,  ///
-          type = new Type(string, name, superType);
+          properties = [],
+          type = new Type(string, name, superType, properties);
 
     return type;
   }
 
-  static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
-    let type = null;
-
-    const metavariableDeclarationTypeNode = metavariableDeclarationTypeNodeQuery(metavariableDeclarationNode);
-
-    if (metavariableDeclarationTypeNode !== null) {
-      const typeNode = metavariableDeclarationTypeNode, ///
-            typeName = typeNameFromTypeNode(typeNode);
-
-      type = fileContext.findTypeByTypeName(typeName);
-    }
+  static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
+    const properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+          superType = superTypeFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+          typeName = typeNameFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+          string = stringFromTypeNameAndSuperType(typeName, superType),
+          name = typeName,  ///
+          type = new Type(string, name, superType, properties);
 
     return type;
   }

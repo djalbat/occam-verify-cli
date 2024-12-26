@@ -17,6 +17,7 @@ const errorNodeQuery = nodeQuery("/error"),
       variableDeclarationNodeQuery = nodeQuery("/variableDeclaration"),
       combinatorDeclarationNodeQuery = nodeQuery("/combinatorDeclaration"),
       constructorDeclarationNodeQuery = nodeQuery("/constructorDeclaration"),
+      complexTypeDeclarationNodeQuery = nodeQuery("/complexTypeDeclaration"),
       metavariableDeclarationNodeQuery = nodeQuery("/metavariableDeclaration");
 
 class TopLevelVerifier extends Verifier {
@@ -150,6 +151,16 @@ class TopLevelVerifier extends Verifier {
               constructorDeclarationVerified = constructorDeclaration.verify();
 
         return constructorDeclarationVerified;
+      }
+    },
+    {
+      nodeQuery: complexTypeDeclarationNodeQuery,
+      verify: (complexTypeDeclarationNode, fileContext) => {
+        const { ComplexTypeDeclaration } = dom,
+              complexTypeDeclaration = ComplexTypeDeclaration.fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+              complexTypeDeclarationVerified = complexTypeDeclaration.verify();
+
+        return complexTypeDeclarationVerified;
       }
     },
     {
