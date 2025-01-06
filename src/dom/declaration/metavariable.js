@@ -4,8 +4,10 @@ import dom from "../../dom";
 
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
+import {objectType} from "../type";
 
-const metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType");
+const termNodeQuery = nodeQuery("/metavariable/argument/term"),
+      metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType");
 
 export default domAssigned(class MetavariableDeclaration {
   constructor(fileContext, string, metavariable) {
@@ -33,9 +35,9 @@ export default domAssigned(class MetavariableDeclaration {
 
     this.fileContext.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
 
-    const metavariableVerifiedWhenDeclared = this.metavariable.verifyWhenDeclared(this.fileContext);
+    const metavariableVerified = this.verifyMetavariable(this.metavariable);
 
-    if (metavariableVerifiedWhenDeclared) {
+    if (metavariableVerified) {
       this.fileContext.addMetavariable(this.metavariable);
 
       verified = true;
@@ -46,6 +48,69 @@ export default domAssigned(class MetavariableDeclaration {
     }
 
     return verified;
+  }
+
+  verifyType(type) {
+    let typeVerified;
+
+    if (type === null) {
+      typeVerified = true;
+    } else {
+      if (type === objectType) {
+        typeVerified = true;
+      } else {
+        const typeName = type.getName();
+
+        this.fileContext.trace(`Verifying the '${typeName}' type...`);
+
+        const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+
+        if (!typePresent) {
+          this.fileContext.debug(`The '${typeName}' type is not present.`);
+        } else {
+          typeVerified = true;
+        }
+
+        if (typeVerified) {
+          this.fileContext.debug(`...verified the '${typeName}' type.`);
+        }
+      }
+    }
+
+    return typeVerified;
+  }
+
+  verifyMetavariable(metavariable) {
+    let metavariableVerified = false;
+
+    const metavariableString = metavariable.getString();
+
+    this.fileContext.trace(`Verifying the '${metavariableString}' metavariable when declared...`);
+
+    const metavariableNode = metavariable.getNode(), ///
+          termNode = termNodeQuery(metavariableNode);
+
+    if (termNode !== null) {
+      this.fileContext.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
+    } else {
+      const metavariableName = metavariable.getName(),
+            metavariablePresent = this.fileContext.isMetavariablePresentByMetavariableName(metavariableName);
+
+      if (metavariablePresent) {
+        this.fileContext.debug(`The '${metavariableName}' metavariable is already present.`);
+      } else {
+        const type = metavariable.getType(),
+              typeVerified = this.verifyType(type);
+
+        metavariableVerified = typeVerified;  ///
+      }
+    }
+
+    if (metavariableVerified) {
+      this.fileContext.debug(`...verified the '${metavariableString}' metavariable when declared.`);
+    }
+
+    return metavariableVerified;
   }
 
   static name = "MetavariableDeclaration";

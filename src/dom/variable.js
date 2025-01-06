@@ -119,7 +119,7 @@ export default domAssigned(class Variable {
       const type = fileContext.findTypeByTypeName(typeName);
 
       if (type === null) {
-        fileContext.debug(`The '${typeName}' type is missing.`);
+        fileContext.debug(`The '${typeName}' type is not present.`);
       } else {
         this.type = type; ///
 
@@ -132,38 +132,6 @@ export default domAssigned(class Variable {
     }
 
     return typeVerified;
-  }
-
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared;
-
-    const variableString = this.string; ///
-
-    fileContext.trace(`Verifying the '${variableString}' variable when declared...`);
-
-    const variableName = this.name, ///
-          variablePresent = fileContext.isVariablePresentByVariableName(variableName);
-
-    if (variablePresent) {
-      fileContext.debug(`The '${variableName}' variable has already been declared.`);
-    } else {
-      const metavariableName = this.name, ///
-            metavariablePresent = fileContext.isMetavariablePresentByMetavariableName(metavariableName);
-
-      if (metavariablePresent) {
-        fileContext.debug(`A '${metavariableName}' variable has already been declared.`);
-      } else {
-        const typeVerified = this.verifyType(fileContext);
-
-        verifiedWhenDeclared = typeVerified;  ///
-      }
-    }
-
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${variableString}' variable when declared.`);
-    }
-
-    return verifiedWhenDeclared;
   }
 
   unifyTerm(term, substitutions, generalContext, specificContext) {

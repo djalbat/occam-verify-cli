@@ -1,14 +1,14 @@
 "use strict";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
-import { propertyNameFromPropertyNode } from "../utilities/name";
 
-const propertyDeclarationTypeNodeQuery = nodeQuery("/propertyDeclaration/type");
+const typeNodeQuery = nodeQuery("/property/type"),
+      propertyNodeQuery = nodeQuery("/propertyDeclaration/property"),
+      nameTerminalNodeQuery = nodeQuery("/property/@name");
 
 export default domAssigned(class Property {
   constructor(string, name, type) {
@@ -68,31 +68,30 @@ export default domAssigned(class Property {
     return property;
   }
 
-  static fromPropertyDeclarationNode(propertyDeclarationNode, context) {
-    let property = null;
-
-    const propertyNode = propertyNodeQuery(propertyDeclarationNode);
-
-    if (propertyNode !== null) {
-      const node = propertyNode,  ///
-            propertyName = propertyNameFromPropertyNode(propertyDeclarationNode),
-            string = context.nodeAsString(node),
-            name = propertyName,  ///
-            type = null;
-
-      property = new Property(string, node, name, type);
-    }
+  static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
+    const propertyNode = propertyNodeQuery(propertyDeclarationNode),
+          node = propertyNode,  ///
+          name = nameFromPropertyNode(propertyNode),
+          type = typeFromPropertyNode(propertyNode),
+          string = fileContext.nodeAsString(node),
+          property = new Property(string, name, type);
 
     return property;
   }
 });
 
-function typeFromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
+function nameFromPropertyNode(propertyNode, fileContext) {
+  const nameTerminalNode = nameTerminalNodeQuery(propertyNode),
+        nameTerminalNodeContent = nameTerminalNode.getContent(),
+        name = nameTerminalNodeContent; ///
+
+  return name;
+}
+
+function typeFromPropertyNode(propertyNode, fileContext) {
   const { Type } = dom,
-        propertyDeclarationTypeNode = propertyDeclarationTypeNodeQuery(propertyDeclarationNode),
-        typeNode = propertyDeclarationTypeNode, ///
-        context = LocalContext.fromFileContext(fileContext),
-        type = Type.fromTypeNode(typeNode, context);
+        typeNode = typeNodeQuery(propertyNode),
+        type = Type.fromTypeNode(typeNode);
 
   return type;
 }

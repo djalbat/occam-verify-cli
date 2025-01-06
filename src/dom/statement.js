@@ -5,7 +5,6 @@ import { arrayUtilities } from "necessary";
 import dom from "../dom";
 import LocalContext from "../context/local";
 import verifyMixins from "../mixins/statement/verify";
-import combinatorVerifier from "../verifier/combinator";
 import StatementPartialContext from "../context/partial/statement";
 
 import { domAssigned } from "../dom";
@@ -126,23 +125,6 @@ export default domAssigned(class Statement {
     }
 
     return verified;
-  }
-
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared;
-
-    const statementNode = this.node,  ///
-          statementString = this.string;  ///
-
-    fileContext.trace(`Verifying the '${statementString}' statement when declared...`);
-
-    verifiedWhenDeclared = combinatorVerifier.verifyStatement(statementNode, fileContext);
-
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${statementString}' statement when declared.`);
-    }
-
-    return verifiedWhenDeclared;
   }
 
   verifyGivenMetaType(metaType, assignments, stated, context) {

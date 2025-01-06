@@ -47,24 +47,6 @@ export default domAssigned(class Combinator {
     return statementUnified;
   }
 
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared;
-
-    const combinatorString = this.getString(); ///
-
-    fileContext.trace(`Verifying the '${combinatorString}' combinator when declared...`);
-
-    const statementVerifiedAtTopLevel = this.statement.verifyWhenDeclared(fileContext);
-
-    verifiedWhenDeclared = statementVerifiedAtTopLevel; ///
-
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${combinatorString}' combinator when declared.`);
-    }
-
-    return verifiedWhenDeclared;
-  }
-
   toJSON() {
     const statementJSON = statementToStatementJSON(this.statement),
           statement = statementJSON,  ///

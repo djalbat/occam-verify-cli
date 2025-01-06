@@ -5,9 +5,7 @@ import { arrayUtilities } from "necessary";
 import dom from "../dom";
 import LocalContext from "../context/local";
 import verifyMixins from "../mixins/term/verify";
-import constructorVerifier from "../verifier/constructor";
 
-import { objectType } from "./type";
 import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query"
 import { termNodeFromTermString } from "../context/partial/term";
@@ -149,34 +147,6 @@ export default domAssigned(class Term {
     return verified;
   }
 
-  verifyType(fileContext) {
-    let typeVerified;
-
-    if (this.type === objectType) {
-      typeVerified = true;
-    } else {
-      const typeName = this.type.getName();
-
-      fileContext.trace(`Verifying the '${typeName}' type...`);
-
-      const type = fileContext.findTypeByTypeName(typeName);
-
-      if (type === null) {
-        fileContext.debug(`The '${typeName}' type is missing.`);
-      } else {
-        this.type = type; ///
-
-        typeVerified = true;
-      }
-
-      if (typeVerified) {
-        fileContext.debug(`...verified the '${typeName}' type.`);
-      }
-    }
-
-    return typeVerified;
-  }
-
   verifyGivenType(type, generalContext, specificContext) {
     let verifiedGivenType;
 
@@ -205,29 +175,6 @@ export default domAssigned(class Term {
     }
 
     return verifiedGivenType;
-  }
-
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared;
-
-    const termString = this.string;  ///
-
-    fileContext.trace(`Verifying the '${termString}' term when declared...`);
-
-    const termNode = this.node, ///
-          termVerifiedAsConstructor = constructorVerifier.verifyTerm(termNode, fileContext);
-
-    if (termVerifiedAsConstructor) {
-      const typeVerified = this.verifyType(fileContext);
-
-      verifiedWhenDeclared = typeVerified;  ///
-    }
-
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${termString}' term when declared.`);
-    }
-
-    return verifiedWhenDeclared;
   }
 
   toJSON() {

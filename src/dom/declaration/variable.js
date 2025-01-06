@@ -28,18 +28,28 @@ export default domAssigned(class VariableDeclaration {
   }
 
   verify() {
-    let verified;
+    let verified = false;
 
     const variableDeclarationString = this.string; ///
 
     this.fileContext.trace(`Verifying the '${variableDeclarationString}' variable declaration...`);
 
-    const variableVerifiedWhenDeclared = this.variable.verifyWhenDeclared(this.fileContext);
+    const variableVerified = this.verifyVariable(this.variable);
 
-    if (variableVerifiedWhenDeclared) {
-      this.fileContext.addVariable(this.variable);
+    if (variableVerified) {
+      const metavariable = this.variable.getMetavariable(),
+            metavariableVerified = this.verifyMetavariable(metavariable);
 
-      verified = true;
+      if (metavariableVerified) {
+        const type = this.variable.getType(),
+              typeVerified = this.verifyType(type);
+
+        if (typeVerified) {
+          this.fileContext.addVariable(this.variable);
+
+          verified = true;
+        }
+      }
     }
 
     if (verified) {
@@ -47,6 +57,77 @@ export default domAssigned(class VariableDeclaration {
     }
 
     return verified;
+  }
+
+  verifyType(type) {
+    let typeVerified = false;
+
+    const typeName = type.getName();
+
+    this.fileContext.trace(`Verifying the '${typeName}' type...`);
+
+    const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+
+    if (!typePresent) {
+      this.fileContext.debug(`The '${typeName}' type is not present.`);
+    } else {
+      typeVerified = true;
+    }
+
+    if (typeVerified) {
+      this.fileContext.debug(`...verified the '${typeName}' type.`);
+    }
+
+    return typeVerified;
+  }
+
+  verifyVariable(variable) {
+    let  variableVerified = false;
+
+    const variableString = variable.getString();
+
+    this.fileContext.trace(`Verifying the '${variableString}' variable...`);
+
+    const variableName = variable.getName(),
+          variablePresent = this.fileContext.isVariablePresentByVariableName(variableName);
+
+    if (variablePresent) {
+      this.fileContext.debug(`The '${variableName}' variable is already present.`);
+    } else {
+      variableVerified = true;
+    }
+
+    if ( variableVerified) {
+      this.fileContext.debug(`...verified the '${variableString}' variable.`);
+    }
+
+    return  variableVerified;
+  }
+
+  verifyMetavariable(metavariable) {
+    let metavariableVerified;
+
+    if (metavariable === null) {
+      metavariableVerified = true;
+    } else {
+      const metavariableName = metavariable.getName(); ///
+
+      this.fileContext.trace(`Verifying the '${metavariableName}' metavariable...`);
+
+      const metavariablePresent = this.fileContext.isMetavariablePresentByMetavariableName(metavariableName);
+
+      if (metavariablePresent) {
+        this.fileContext.debug(`A '${metavariableName}' variable is already present.`);
+      } else {
+        metavariableVerified = true;
+      }
+
+      if (metavariableVerified) {
+        this.fileContext.debug(`...verified the '${metavariableName}' metavariable.`);
+      }
+    }
+
+    return metavariableVerified;
   }
 
   static name = "VariableDeclaration";

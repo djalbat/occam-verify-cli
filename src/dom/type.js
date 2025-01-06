@@ -1,13 +1,16 @@
 "use strict";
 
-import { nodeQuery } from "../utilities/query";
+import dom from "../dom";
+
 import { domAssigned } from "../dom";
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { typeNameFromTypeNode } from "../utilities/name";
-import { superTypeFromJSON, superTypeToSuperTypeJSON } from "../utilities/json";
+import { nodeQuery, nodesQuery } from "../utilities/query";
+import { superTypeFromJSON, superTypeToSuperTypeJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
-const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration/type[0]"),
-      typeDeclarationSuperTypeNodeQuery = nodeQuery("/typeDeclaration/type[1]");
+const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type[0]"),
+      propertyDeclarationNodesQuery = nodesQuery("/complexTypeDeclaration/propertyDeclaration"),
+      typeDeclarationSuperTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type[1]");
 
 class Type {
   constructor(string, name, superType, properties) {
@@ -31,6 +34,22 @@ class Type {
 
   getProperties() {
     return this.properties;
+  }
+
+  setString(string) {
+    this.string = string;
+  }
+
+  setName(name) {
+    this.name = name;
+  }
+
+  setSuperType(superType) {
+    this.superType = superType;
+  }
+
+  setProperties(properties) {
+    this.properties = properties;
   }
 
   isEqualTo(type) {
@@ -105,39 +124,6 @@ class Type {
           typeNodeMatches = typeNameMatches;  ///
 
     return typeNodeMatches;
-  }
-
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared = false;
-
-    const typeString = this.string; ///
-
-    fileContext.trace(`Verifying the '${typeString}' type when declared...`);
-
-    const typePresent = fileContext.isTypePresentByTypeName(this.name);
-
-    if (typePresent) {
-      fileContext.debug(`The type '${typeString}' has already been declared.`);
-    } else {
-      const superTypeName = this.superType.getName(),
-            superType = fileContext.findTypeByTypeName(superTypeName);
-
-      if (superType === null) {
-        const superTypeString = this.superType.getString();
-
-        fileContext.debug(`The super-type '${superTypeString}' is not present.`);
-      } else {
-        this.superType = superType;
-
-        verifiedWhenDeclared = true;
-      }
-    }
-
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${typeString}' type when declared.`);
-    }
-
-    return verifiedWhenDeclared;
   }
 
   toJSON() {
@@ -238,6 +224,34 @@ function superTypeFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
         superType = Type.fromTypeNode(superTypeNode);
 
   return superType;
+}
+
+function typeNameFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
+  const typeDeclarationTypeNode = typeDeclarationTypeNodeQuery(complexTypeDeclarationNode),
+        typeNode = typeDeclarationTypeNode, ///
+        typeName = typeNameFromTypeNode(typeNode);
+
+  return typeName;
+}
+
+function superTypeFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
+  const typeDeclarationSuperTypeNode = typeDeclarationSuperTypeNodeQuery(complexTypeDeclarationNode),
+        superTypeNode = typeDeclarationSuperTypeNode, ///
+        superType = Type.fromTypeNode(superTypeNode);
+
+  return superType;
+}
+
+function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
+  const propertyDeclarationNodes = propertyDeclarationNodesQuery(complexTypeDeclarationNode),
+        properties = propertyDeclarationNodes.map((propertyDeclarationNode) => {
+          const { Property } = dom,
+                property = Property.fromPropertyDeclarationNode(propertyDeclarationNode, fileContext);
+
+          return property;
+        });
+
+  return properties;
 }
 
 class ObjectType extends Type {

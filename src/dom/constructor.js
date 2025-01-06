@@ -7,6 +7,7 @@ import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { unifyTermWithConstructor } from "../utilities/unification";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
+import {objectType} from "./type";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
@@ -26,26 +27,6 @@ export default domAssigned(class Constructor {
   }
 
   getType() { return this.term.getType(); }
-
-  verifyWhenDeclared(fileContext) {
-    let verifiedWhenDeclared;
-
-    const constructorString = this.string;  ///
-
-    fileContext.trace(`Verifying the '${constructorString}' constructor when declared...`);
-
-    const termVerifiedAtTopLevel = this.term.verifyWhenDeclared(fileContext);
-
-    if (termVerifiedAtTopLevel) {
-      verifiedWhenDeclared = true; ///
-    }
-
-    if (verifiedWhenDeclared) {
-      fileContext.debug(`...verified the '${constructorString}' constructor when declared.`);
-    }
-
-    return verifiedWhenDeclared;
-  }
 
   unifyTerm(term, context, verifyAhead) {
     let termUnified = false;

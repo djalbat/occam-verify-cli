@@ -79,7 +79,7 @@ export default domAssigned(class TypeAssertion {
 
         typeVerified = true;
       } else {
-        context.debug(`The '${typeName}' type is missing.`);
+        context.debug(`The '${typeName}' type is not present.`);
       }
 
       if (typeVerified) {
@@ -174,7 +174,7 @@ export default domAssigned(class TypeAssertion {
             termNode = termNodeQuery(typeAssertionNode),
             typeNode = typeNodeQuery(typeAssertionNode),
             term = Term.fromTermNode(termNode, context),
-            type = Type.fromTypeNode(typeNode, context),
+            type = Type.fromTypeNode(typeNode),
             string = stringFromTermAndType(term, type);
 
       typeAssertion = new TypeAssertion(string, term, type);

@@ -547,6 +547,18 @@ export function parametersToParametersJSON(parameters) {
   return parametersJSON;
 }
 
+export function propertiesToPropertiesJSON(properties) {
+  const propertiesJSON = properties.map((property) => {
+    const propertyJSON = property.toJSON();
+
+    property = propertyJSON;  ///
+
+    return property;
+  });
+
+  return propertiesJSON;
+}
+
 export function conjecturesToConjecturesJSON(conjectures) {
   const conjecturesJSON = conjectures.map((conjecture) => {
     const conjectureJSON = conjecture.toJSON();

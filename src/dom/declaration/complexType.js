@@ -27,9 +27,9 @@ export default domAssigned(class ComplexTypeDeclaration {
 
     this.fileContext.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration...`);
 
-    const typeVerifiedWhenDeclared = this.type.verifyWhenDeclared(this.fileContext);
+    const typeVerified = this.verifyType(this.type);
 
-    if (typeVerifiedWhenDeclared) {
+    if (typeVerified) {
       this.fileContext.addType(this.type);
 
       verified = true;
@@ -40,6 +40,47 @@ export default domAssigned(class ComplexTypeDeclaration {
     }
 
     return verified;
+  }
+
+  verifyType(type) {
+    let typeVerified = false;
+
+    const typeString = type.getString(); ///
+
+    this.fileContext.trace(`Verifying the '${typeString}' type...`);
+
+    const typeName = type.getName(),
+          typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+
+    if (typePresent) {
+      const typeString = this.type.getString();
+
+      this.fileContext.debug(`The type '${typeString}' is not present.`);
+    } else {
+      let superType;
+
+      superType = type.getSuperType();
+
+      const superTypeName = superType.getName();
+
+      superType = this.fileContext.findTypeByTypeName(superTypeName);
+
+      if (superType === null) {
+        const superTypeString = superType.getString();
+
+        this.fileContext.debug(`The super-type '${superTypeString}' is not present.`);
+      } else {
+        type.setSuperType(superType);
+
+        typeVerified = true;
+      }
+    }
+
+    if (typeVerified) {
+      this.fileContext.debug(`...typeVerified the '${typeString}' type.`);
+    }
+
+    return typeVerified;
   }
 
   static name = "ComplexTypeDeclaration";
