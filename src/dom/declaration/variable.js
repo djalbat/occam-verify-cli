@@ -3,6 +3,7 @@
 import dom from "../../dom";
 
 import { nodeQuery } from "../../utilities/query";
+import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 import { typeNameFromTypeNode } from "../../utilities/name";
 
@@ -37,18 +38,22 @@ export default domAssigned(class VariableDeclaration {
     const variableVerified = this.verifyVariable(this.variable);
 
     if (variableVerified) {
-      const metavariable = this.variable.getMetavariable(),
-            metavariableVerified = this.verifyMetavariable(metavariable);
+      let type;
 
-      if (metavariableVerified) {
-        const type = this.variable.getType(),
-              typeVerified = this.verifyType(type);
+      type = this.variable.getType();
 
-        if (typeVerified) {
-          this.fileContext.addVariable(this.variable);
+      const typeVerified = this.verifyType(type);
 
-          verified = true;
-        }
+      if (typeVerified) {
+        const typeName = type.getName();
+
+        type = this.fileContext.findTypeByTypeName(typeName);
+
+        this.variable.setType(type);
+
+        this.fileContext.addVariable(this.variable);
+
+        verified = true;
       }
     }
 
@@ -62,20 +67,24 @@ export default domAssigned(class VariableDeclaration {
   verifyType(type) {
     let typeVerified = false;
 
-    const typeName = type.getName();
-
-    this.fileContext.trace(`Verifying the '${typeName}' type...`);
-
-    const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
-
-    if (!typePresent) {
-      this.fileContext.debug(`The '${typeName}' type is not present.`);
-    } else {
+    if (type === objectType) {
       typeVerified = true;
-    }
+    } else {
+      const typeName = type.getName();
 
-    if (typeVerified) {
-      this.fileContext.debug(`...verified the '${typeName}' type.`);
+      this.fileContext.trace(`Verifying the '${typeName}' type...`);
+
+      const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+
+      if (!typePresent) {
+        this.fileContext.debug(`The '${typeName}' type is not present.`);
+      } else {
+        typeVerified = true;
+      }
+
+      if (typeVerified) {
+        this.fileContext.debug(`...verified the '${typeName}' type.`);
+      }
     }
 
     return typeVerified;
@@ -102,32 +111,6 @@ export default domAssigned(class VariableDeclaration {
     }
 
     return  variableVerified;
-  }
-
-  verifyMetavariable(metavariable) {
-    let metavariableVerified;
-
-    if (metavariable === null) {
-      metavariableVerified = true;
-    } else {
-      const metavariableName = metavariable.getName(); ///
-
-      this.fileContext.trace(`Verifying the '${metavariableName}' metavariable...`);
-
-      const metavariablePresent = this.fileContext.isMetavariablePresentByMetavariableName(metavariableName);
-
-      if (metavariablePresent) {
-        this.fileContext.debug(`A '${metavariableName}' variable is already present.`);
-      } else {
-        metavariableVerified = true;
-      }
-
-      if (metavariableVerified) {
-        this.fileContext.debug(`...verified the '${metavariableName}' metavariable.`);
-      }
-    }
-
-    return metavariableVerified;
   }
 
   static name = "VariableDeclaration";

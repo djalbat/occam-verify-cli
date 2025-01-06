@@ -164,7 +164,7 @@ export function rulesFromJSON(json, fileContext) {
     const json = ruleJSON,  ///
           rule = Rule.fromJSON(json, fileContext);
 
-    return (rule);
+    return rule;
   });
 
   return rules;
@@ -196,7 +196,7 @@ export function axiomsFromJSON(json, fileContext) {
     const json = axiomJSON,  ///
           axiom = Axiom.fromJSON(json, fileContext);
 
-    return (axiom);
+    return axiom;
   });
 
   return axioms;
@@ -228,7 +228,7 @@ export function theoremsFromJSON(json, fileContext) {
     const json = theoremJSON,  ///
           theorem = Theorem.fromJSON(json, fileContext);
 
-    return (theorem);
+    return theorem;
   });
 
   return theorems;
@@ -244,10 +244,26 @@ export function variablesFromJSON(json, fileContext) {
     const json = variableJSON,  ///
           variable = Variable.fromJSON(json, fileContext);
 
-    return (variable);
+    return variable;
   });
 
   return variables;
+}
+
+export function propertiesFromJSON(json, fileContext) {
+  let { properties } = json;
+
+  const { Property } = dom,
+        propertiesJSON = properties; ///
+
+  properties = propertiesJSON.map((propertyJSON) => {
+    const json = propertyJSON,  ///
+          property = Property.fromJSON(json, fileContext);
+
+    return property;
+  });
+
+  return properties;
 }
 
 export function parametersFromJSON(json, fileContext) {
@@ -260,7 +276,7 @@ export function parametersFromJSON(json, fileContext) {
     const json = parameterJSON,  ///
           parameter = Parameter.fromJSON(json, fileContext);
 
-    return (parameter);
+    return parameter;
   });
 
   return parameters;
@@ -276,7 +292,7 @@ export function conjecturesFromJSON(json, fileContext) {
     const json = conjectureJSON,  ///
           conjecture = Conjecture.fromJSON(json, fileContext);
 
-    return (conjecture);
+    return conjecture;
   });
 
   return conjectures;
@@ -292,7 +308,7 @@ export function combinatorsFromJSON(json, fileContext) {
     const json = combinatorJSON,  ///
           combinator = Combinator.fromJSON(json, fileContext);
 
-    return (combinator);
+    return combinator;
   });
 
   return combinators;
@@ -308,7 +324,7 @@ export function constructorsFromJSON(json, fileContext) {
     const json = constructorJSON,  ///
           constructor = Constructor.fromJSON(json, fileContext);
 
-    return (constructor);
+    return constructor;
   });
 
   return constructors;
@@ -324,7 +340,7 @@ export function metatheoremsFromJSON(json, fileContext) {
     const json = metatheoremJSON,  ///
           metatheorem = Metatheorem.fromJSON(json, fileContext);
 
-    return (metatheorem);
+    return metatheorem;
   });
 
   return metatheorems;
@@ -372,7 +388,7 @@ export function metavariablesFromJSON(json, fileContext) {
     const json = metavariableJSON,  ///
           metavariable = Metavariable.fromJSON(json, fileContext);
 
-    return (metavariable);
+    return metavariable;
   });
 
   return metavariables;

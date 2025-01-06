@@ -6,7 +6,7 @@ import { domAssigned } from "../dom";
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { typeNameFromTypeNode } from "../utilities/name";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import { superTypeFromJSON, superTypeToSuperTypeJSON, propertiesToPropertiesJSON } from "../utilities/json";
+import { superTypeFromJSON, propertiesFromJSON, superTypeToSuperTypeJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
 const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type[0]"),
       propertyDeclarationNodesQuery = nodesQuery("/complexTypeDeclaration/propertyDeclaration"),

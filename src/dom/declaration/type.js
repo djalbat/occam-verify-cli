@@ -45,17 +45,14 @@ export default domAssigned(class TypeDeclaration {
   verifyType(type) {
     let typeVerified = false;
 
-    const typeString = type.getString(); ///
+    const typeName = type.getName();
 
-    this.fileContext.trace(`Verifying the '${typeString}' type...`);
+    this.fileContext.trace(`Verifying the '${typeName}' type...`);
 
-    const typeName = type.getName(),
-      typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+    const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
 
     if (typePresent) {
-      const typeString = this.type.getString();
-
-      this.fileContext.debug(`The type '${typeString}' is not present.`);
+      this.fileContext.debug(`The type '${typeName}' is not present.`);
     } else {
       let superType;
 
@@ -66,9 +63,7 @@ export default domAssigned(class TypeDeclaration {
       superType = this.fileContext.findTypeByTypeName(superTypeName);
 
       if (superType === null) {
-        const superTypeString = superType.getString();
-
-        this.fileContext.debug(`The super-type '${superTypeString}' is not present.`);
+        this.fileContext.debug(`The super-type '${superTypeName}' is not present.`);
       } else {
         type.setSuperType(superType);
 
@@ -77,7 +72,7 @@ export default domAssigned(class TypeDeclaration {
     }
 
     if (typeVerified) {
-      this.fileContext.debug(`...typeVerified the '${typeString}' type.`);
+      this.fileContext.debug(`...typeVerified the '${typeName}' type.`);
     }
 
     return typeVerified;
