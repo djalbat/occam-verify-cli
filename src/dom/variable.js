@@ -107,7 +107,7 @@ export default domAssigned(class Variable {
   }
 
   verifyType(fileContext) {
-    let typeVerified;
+    let typeVerified = false;
 
     if (this.type === objectType) {
       typeVerified = true;

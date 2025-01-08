@@ -2,6 +2,7 @@
 
 import dom from "../../dom";
 
+import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class ComplexTypeDeclaration {
@@ -82,7 +83,7 @@ export default domAssigned(class ComplexTypeDeclaration {
     }
 
     if (typeVerified) {
-      this.fileContext.debug(`...typeVerified the '${typeString}' type.`);
+      this.fileContext.debug(`...verified the '${typeString}' type.`);
     }
 
     return typeVerified;
@@ -121,10 +122,10 @@ export default domAssigned(class ComplexTypeDeclaration {
     if (count > 1) {
       this.fileContext.debug(`The '${propertyString}' property appears more than once.`);
     } else {
-      const type = property.getType(),
-            typeVerified = this.verifyType(type);
+      const propertyType = property.getType(),
+            propertyTypeVerified = this.verifyPropertyType(propertyType);
 
-      if (typeVerified) {
+      if (propertyTypeVerified) {
         propertyVerified = true;
       }
     }
@@ -134,6 +135,35 @@ export default domAssigned(class ComplexTypeDeclaration {
     }
 
     return propertyVerified;
+  }
+
+  verifyPropertyType(propertyType) {
+    let propertyTypeVerified = false;
+
+    if (propertyType === objectType) {
+      propertyTypeVerified = true;
+    } else {
+      const propertyTypeString = propertyType.getString(); ///
+
+      this.fileContext.trace(`Verifying the '${propertyTypeString}' property type...`);
+
+      const propertyTypeName = propertyType.getName(),
+            propertyTypePresent = this.fileContext.isTypePresentByTypeName(propertyTypeName);
+
+      if (!propertyTypePresent) {
+        const propertyTypeString = propertyType.getString();
+
+        this.fileContext.debug(`The '${propertyTypeString}' property type is not present.`);
+      } else {
+        propertyTypeVerified = true;
+      }
+
+      if (propertyTypeVerified) {
+        this.fileContext.debug(`...verified the '${propertyTypeString}' property type.`);
+      }
+    }
+
+    return propertyTypeVerified;
   }
 
   static name = "ComplexTypeDeclaration";
