@@ -89,18 +89,6 @@ export default domAssigned(class ComplexTypeDeclaration {
     return typeVerified;
   }
 
-  verifyProperties(properties) {
-    const propertiesVerified = properties.every((property) => {
-      const propertyVerified = this.verifyProperty(property, properties);
-
-      if (propertyVerified) {
-        return true;
-      }
-    });
-
-    return propertiesVerified;
-  }
-
   verifyProperty(property, properties) {
     let propertyVerified = false;
 
@@ -135,6 +123,18 @@ export default domAssigned(class ComplexTypeDeclaration {
     }
 
     return propertyVerified;
+  }
+
+  verifyProperties(properties) {
+    const propertiesVerified = properties.every((property) => {
+      const propertyVerified = this.verifyProperty(property, properties);
+
+      if (propertyVerified) {
+        return true;
+      }
+    });
+
+    return propertiesVerified;
   }
 
   verifyPropertyType(propertyType) {
