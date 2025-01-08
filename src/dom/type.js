@@ -119,14 +119,6 @@ class Type {
     return typeNameMatches;
   }
 
-  matchTypeNode(typeNode) {
-    const typeName = typeNameFromTypeNode(typeNode),
-          typeNameMatches = this.matchTypeName(typeName),
-          typeNodeMatches = typeNameMatches;  ///
-
-    return typeNodeMatches;
-  }
-
   findPropertyByPropertyName(propertyName) {
     const property = this.properties.find((property) => {
       const propertyNameMatches = property.matchPropertyName(propertyName);
