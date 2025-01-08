@@ -149,7 +149,7 @@ export default domAssigned(class Declaration {
     }
 
     if (verifiedWhenStated) {
-      context.trace(`...verified the '${declarationString}' stated declaration.`);
+      context.debug(`...verified the '${declarationString}' stated declaration.`);
     }
 
     return verifiedWhenStated;
@@ -172,7 +172,7 @@ export default domAssigned(class Declaration {
     }
 
     if (verifiedWhenDerived) {
-      context.trace(`...verified the '${declarationString}' derived declaration.`);
+      context.debug(`...verified the '${declarationString}' derived declaration.`);
     }
 
     return verifiedWhenDerived;

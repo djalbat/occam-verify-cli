@@ -38,6 +38,7 @@ import TypeAssertion from "./dom/assertion/type";
 import TypeDeclaration from "./dom/declaration/type";
 import DefinedAssertion from "./dom/assertion/defined";
 import SubproofAssertion from "./dom/assertion/subproof";
+import PropertyAssertion from "./dom/assertion/property";
 import ContainedAssertion from "./dom/assertion/contained";
 import VariableDeclaration from "./dom/declaration/variable";
 import BracketedCombinator from "./dom/combinator/bracketed";

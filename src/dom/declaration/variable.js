@@ -6,7 +6,7 @@ import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class VariableDeclaration {
-  constructor(fileContext, string, variable) {
+  constructor(fileContext, variable) {
     this.fileContext = fileContext;
     this.variable = variable;
   }

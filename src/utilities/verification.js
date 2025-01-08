@@ -63,6 +63,16 @@ export function definedAssertionFromStatement(statement, context) {
   return definedAssertion;
 }
 
+export function propertyAssertionFromStatement(statement, context) {
+  context = contextFromStatement(statement, context); ///
+
+  const { PropertyAssertion } = dom,
+        statementNode = statement.getNode(),
+        propertyAssertion = PropertyAssertion.fromStatementNode(statementNode, context);
+
+  return propertyAssertion;
+}
+
 export function containedAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 

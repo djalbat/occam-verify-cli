@@ -6,8 +6,7 @@ import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
-const typeNodeQuery = nodeQuery("/property/type"),
-      propertyNodeQuery = nodeQuery("/propertyDeclaration/property"),
+const propertyNodeQuery = nodeQuery("/propertyDeclaration/property"),
       nameTerminalNodeQuery = nodeQuery("/property/@name");
 
 export default domAssigned(class Property {
@@ -29,26 +28,14 @@ export default domAssigned(class Property {
     return this.type;
   }
 
+  setType(type) {
+    this.type = type;
+  }
+
   matchPropertyName(propertyName) {
     const propertyNameMatches = (propertyName === this.name);
 
     return propertyNameMatches;
-  }
-
-  verify(context) {
-    let verified;
-
-    const propertyString = this.string; ///
-
-    context.trace(`Verifying the '${propertyString}' property...`);
-
-    debugger
-
-    if (verified) {
-      context.debug(`...verified the '${propertyString}' property.`);
-    }
-
-    return verified;
   }
 
   toJSON() {
@@ -74,11 +61,22 @@ export default domAssigned(class Property {
     return property;
   }
 
+  static fromPropertyNode(propertyNode, fileContext) {
+    const node = propertyNode,  ///
+          name = nameFromPropertyNode(propertyNode),
+          type = null,
+          string = fileContext.nodeAsString(node),
+          property = new Property(string, name, type);
+
+    return property;
+  }
+
   static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
-    const propertyNode = propertyNodeQuery(propertyDeclarationNode),
+    const { Type } = dom,
+          propertyNode = propertyNodeQuery(propertyDeclarationNode),
           node = propertyNode,  ///
           name = nameFromPropertyNode(propertyNode),
-          type = typeFromPropertyNode(propertyNode),
+          type = Type.fromPropertyDeclarationNode(propertyDeclarationNode),
           string = fileContext.nodeAsString(node),
           property = new Property(string, name, type);
 
@@ -92,12 +90,4 @@ function nameFromPropertyNode(propertyNode, fileContext) {
         name = nameTerminalNodeContent; ///
 
   return name;
-}
-
-function typeFromPropertyNode(propertyNode, fileContext) {
-  const { Type } = dom,
-        typeNode = typeNodeQuery(propertyNode),
-        type = Type.fromTypeNode(typeNode);
-
-  return type;
 }

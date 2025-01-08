@@ -110,10 +110,21 @@ export default domAssigned(class ComplexTypeDeclaration {
     if (count > 1) {
       this.fileContext.debug(`The '${propertyString}' property appears more than once.`);
     } else {
-      const propertyType = property.getType(),
-            propertyTypeVerified = this.verifyPropertyType(propertyType);
+      let propertyType;
+
+      propertyType = property.getType();
+
+      const propertyTypeVerified = this.verifyPropertyType(propertyType);
 
       if (propertyTypeVerified) {
+        const propertyTypeName = propertyType.getName();
+
+        propertyType = this.fileContext.findTypeByTypeName(propertyTypeName);
+
+        const type = propertyType;  ///
+
+        property.setType(type);
+
         propertyVerified = true;
       }
     }

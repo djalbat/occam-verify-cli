@@ -99,7 +99,7 @@ export default domAssigned(class ContainedAssertion {
       });
 
       if (termVerified) {
-        context.trace(`...verified the '${containedAssertionString}' contained assertion's '${termString}' term.`);
+        context.debug(`...verified the '${containedAssertionString}' contained assertion's '${termString}' term.`);
       }
     }
 
@@ -122,7 +122,7 @@ export default domAssigned(class ContainedAssertion {
       frameVerified = this.frame.verify(assignments, stated, context);
 
       if (frameVerified) {
-        context.trace(`...verified the '${containedAssertionString}' contained assertion's '${frameString}' frame.`);
+        context.debug(`...verified the '${containedAssertionString}' contained assertion's '${frameString}' frame.`);
       }
     }
 
@@ -145,7 +145,7 @@ export default domAssigned(class ContainedAssertion {
       statementVerified = this.statement.verify(assignments, stated, context);
 
       if (statementVerified) {
-        context.trace(`...verified the '${containedAssertionString}' contained assertion's '${statementString}' statement.`);
+        context.debug(`...verified the '${containedAssertionString}' contained assertion's '${statementString}' statement.`);
       }
     }
 

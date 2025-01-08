@@ -10,6 +10,7 @@ import { superTypeFromJSON, propertiesFromJSON, superTypeToSuperTypeJSON, proper
 
 const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type[0]"),
       propertyDeclarationNodesQuery = nodesQuery("/complexTypeDeclaration/propertyDeclaration"),
+      propertyDeclarationTypeNodeQuery = nodeQuery("/propertyDeclaration/type"),
       typeDeclarationSuperTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type[1]");
 
 class Type {
@@ -126,6 +127,18 @@ class Type {
     return typeNodeMatches;
   }
 
+  findPropertyByPropertyName(propertyName) {
+    const property = this.properties.find((property) => {
+      const propertyNameMatches = property.matchPropertyName(propertyName);
+
+      if (propertyNameMatches) {
+        return true;
+      }
+    }) || null;
+
+    return property;
+  }
+
   toJSON() {
     const propertiesJSON = propertiesToPropertiesJSON(this.properties),
           superTypeJSON = superTypeToSuperTypeJSON(this.superType),
@@ -179,6 +192,27 @@ class Type {
           name = typeName,  ///
           properties = [],
           type = new Type(string, name, superType, properties);
+
+    return type;
+  }
+
+  static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
+    let type;
+
+    const propertyDeclarationTypeNode = propertyDeclarationTypeNodeQuery(propertyDeclarationNode);
+
+    if (propertyDeclarationTypeNode === null) {
+      type = objectType;
+    } else {
+      const typeNode = propertyDeclarationTypeNode, ///
+            typeName = typeNameFromTypeNode(typeNode),
+            name = typeName,  ///
+            string = name,  ///
+            superType = null,
+            properties = null;
+
+      type = new Type(string, name, superType, properties);
+    }
 
     return type;
   }

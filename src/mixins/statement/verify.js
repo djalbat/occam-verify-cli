@@ -7,8 +7,38 @@ import { equalityFromStatement,
          metavariableFromStatement,
          typeAssertionFromStatement,
          definedAssertionFromStatement,
+         propertyAssertionFromStatement,
          containedAssertionFromStatement,
          subproofAssertionFromStatement } from "../../utilities/verification";
+
+function unifyWithBracketedCombinator(statement, assignments, stated, context) {
+  stated = true;  ///
+
+  assignments = null; ///
+
+  const { BracketedCombinator } = dom,
+        bracketedCombinator = BracketedCombinator.fromNothing(),
+        unifiedWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
+
+  return unifiedWithBracketedCombinator;
+}
+
+function unifyWithCombinators(statement, assignments, stated, context) {
+  stated = true;  ///
+
+  assignments = null; ///
+
+  const combinators = context.getCombinators(),
+        unifiedWithCombinators = combinators.some((combinator) => {
+          const unifiedWithCombinator = combinator.unifyStatement(statement, assignments, stated, context);
+
+          if (unifiedWithCombinator) {
+            return true;
+          }
+        });
+
+  return unifiedWithCombinators;
+}
 
 function verifyAsMetavariable(statement, assignments, stated, context) {
   let verifiedAsMetavariable = false;
@@ -120,6 +150,28 @@ function verifyAsDefinedAssertion(statement, assignments, stated, context) {
   return verifiedAsDefinedAssertion;
 }
 
+function verifyAsPropertyAssertion(statement, assignments, stated, context) {
+  let verifiedAsPropertyAssertion = false;
+
+  const propertyAssertion = propertyAssertionFromStatement(statement, context);
+
+  if (propertyAssertion !== null) {
+    const statementString = statement.getString();
+
+    context.trace(`Verifying the '${statementString}' statement as a property assertion...`);
+
+    const propertyAssertionVerified = propertyAssertion.verify(assignments, stated, context);
+
+    verifiedAsPropertyAssertion = propertyAssertionVerified; ///
+
+    if (verifiedAsPropertyAssertion) {
+      context.debug(`...verified the '${statementString}' statement as a property assertion.`);
+    }
+  }
+
+  return verifiedAsPropertyAssertion;
+}
+
 function verifyAsContainedAssertion(statement, assignments, stated, context) {
   let verifiedAsContainedAssertion = false;
 
@@ -164,45 +216,17 @@ function verifyAsSubproofAssertion(statement, assignments, stated, context) {
   return verifiedAsSubproofAssertion;
 }
 
-function unifyWithBracketedCombinator(statement, assignments, stated, context) {
-  stated = true;  ///
-
-  assignments = null; ///
-
-  const { BracketedCombinator } = dom,
-        bracketedCombinator = BracketedCombinator.fromNothing(),
-        unifiedWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
-
-  return unifiedWithBracketedCombinator;
-}
-
-function unifyWithCombinators(statement, assignments, stated, context) {
-  stated = true;  ///
-
-  assignments = null; ///
-
-  const combinators = context.getCombinators(),
-        unifiedWithCombinators = combinators.some((combinator) => {
-          const unifiedWithCombinator = combinator.unifyStatement(statement, assignments, stated, context);
-
-          if (unifiedWithCombinator) {
-            return true;
-          }
-        });
-
-  return unifiedWithCombinators;
-}
-
 const verifyMixins = [
+  unifyWithBracketedCombinator,
+  unifyWithCombinators,
   verifyAsMetavariable,
   verifyAsEquality,
   verifyAsJudgement,
   verifyAsTypeAssertion,
   verifyAsDefinedAssertion,
   verifyAsContainedAssertion,
-  verifyAsSubproofAssertion,
-  unifyWithBracketedCombinator,
-  unifyWithCombinators
+  verifyAsPropertyAssertion,
+  verifyAsSubproofAssertion
 ];
 
 export default verifyMixins;
