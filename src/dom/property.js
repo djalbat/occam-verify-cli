@@ -29,6 +29,12 @@ export default domAssigned(class Property {
     return this.type;
   }
 
+  matchPropertyName(propertyName) {
+    const propertyNameMatches = (propertyName === this.name);
+
+    return propertyNameMatches;
+  }
+
   verify(context) {
     let verified;
 

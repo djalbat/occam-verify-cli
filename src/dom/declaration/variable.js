@@ -2,17 +2,12 @@
 
 import dom from "../../dom";
 
-import { nodeQuery } from "../../utilities/query";
 import { objectType } from "../type";
 import { domAssigned } from "../../dom";
-import { typeNameFromTypeNode } from "../../utilities/name";
-
-const typeNodeQuery = nodeQuery("/variableDeclaration/type");
 
 export default domAssigned(class VariableDeclaration {
   constructor(fileContext, string, variable) {
     this.fileContext = fileContext;
-    this.string = string;
     this.variable = variable;
   }
 
@@ -20,18 +15,16 @@ export default domAssigned(class VariableDeclaration {
     return this.fileContext;
   }
 
-  getString() {
-    return this.string;
-  }
-
   getVariable() {
     return this.variable;
   }
 
+  getString() { return this.variable.getString(); }
+
   verify() {
     let verified = false;
 
-    const variableDeclarationString = this.string; ///
+    const variableDeclarationString = this.getString();
 
     this.fileContext.trace(`Verifying the '${variableDeclarationString}' variable declaration...`);
 
@@ -117,27 +110,9 @@ export default domAssigned(class VariableDeclaration {
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
     const { Variable } = dom,
-          typeNode = typeNodeQuery(variableDeclarationNode),
           variable = Variable.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
-          string = stringFromVariableAndTypeNode(variable, typeNode),
-          variableDeclaration = new VariableDeclaration(fileContext, string, variable);
+          variableDeclaration = new VariableDeclaration(fileContext, variable);
 
     return variableDeclaration;
   }
 });
-
-function stringFromVariableAndTypeNode(variable, typeNode) {
-  let string;
-
-  const variableString = variable.getString();
-
-  if (typeNode === null) {
-    string = variableString;  ///
-  } else {
-    const typeName = typeNameFromTypeNode(typeNode);
-
-    string = `${variableString}:${typeName}`;
-  }
-
-  return string;
-}
