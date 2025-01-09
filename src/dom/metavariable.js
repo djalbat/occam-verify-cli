@@ -13,7 +13,7 @@ import { domAssigned } from "../dom";
 import { EMPTY_STRING } from "../constants";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
-import { metavariableFromFrame, metavariableFromStatement } from "../utilities/verification";
+import { metavariableFromFrame, metavariableFromStatement } from "../utilities/context";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../utilities/unification";
 import { typeNameFromTypeNode, metavariableNameFromMetavariableNode } from "../utilities/name";
 

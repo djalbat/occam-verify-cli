@@ -6,6 +6,33 @@ import { nodeQuery } from "../../utilities/query";
 
 const variableNodeQuery = nodeQuery("/term/variable!");
 
+function unifyWithBracketedConstructor(term, context, verifyAhead) {
+  let unifiedWithBracketedConstructor;
+
+  const { BracketedConstructor } = dom,
+        bracketedConstructor = BracketedConstructor.fromNothing();
+
+  unifiedWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, verifyAhead);
+
+  return unifiedWithBracketedConstructor;
+}
+
+function unifyWithConstructors(term, context, verifyAhead) {
+  let unifiedWithConstructors;
+
+  const constructors = context.getConstructors();
+
+  unifiedWithConstructors = constructors.some((constructor) => {
+    const unifiedWithConstructor = constructor.unifyTerm(term, context, verifyAhead);
+
+    if (unifiedWithConstructor) {
+      return true;
+    }
+  });
+
+  return unifiedWithConstructors;
+}
+
 function verifyTermAsVariable(term, localContext, verifyAhead) {
   let termVerifiedAsVariable = false;
 
@@ -42,37 +69,45 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
   return termVerifiedAsVariable;
 }
 
-function unifyWithBracketedConstructor(term, context, verifyAhead) {
-  let unifiedWithBracketedConstructor;
+function verifyAsPropertyRelation(term, context, verifyAhead) {
+  let verifiedAsPropertyRelation = false;
 
-  const { BracketedConstructor } = dom,
-        bracketedConstructor = BracketedConstructor.fromNothing();
+  const { PropertyRelation } = dom,
+        termNode = term.getNode(),
+        propertyRelation = PropertyRelation.fromTermNode(termNode, context);
 
-  unifiedWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, verifyAhead);
+  if (propertyRelation !== null) {
+    const termString = term.getString();
 
-  return unifiedWithBracketedConstructor;
-}
+    context.trace(`Verifying the '${termString}' term as a property relation...`);
 
-function unifyWithConstructors(term, context, verifyAhead) {
-  let unifiedWithConstructors;
+    const propertyRelationVerified = propertyRelation.verify(context);
 
-  const constructors = context.getConstructors();
+    if (propertyRelationVerified) {
+      let verifiedAhead;
 
-  unifiedWithConstructors = constructors.some((constructor) => {
-    const unifiedWithConstructor = constructor.unifyTerm(term, context, verifyAhead);
+      const type = propertyRelation.getType();
 
-    if (unifiedWithConstructor) {
-      return true;
+      term.setType(type);
+
+      verifiedAhead = verifyAhead();
+
+      verifiedAsPropertyRelation = verifiedAhead; ///
     }
-  });
 
-  return unifiedWithConstructors;
+    if (verifiedAsPropertyRelation) {
+      context.debug(`...verified the '${termString}' statement as a property relation.`);
+    }
+  }
+
+  return verifiedAsPropertyRelation;
 }
 
 const verifyMixins = [
-  verifyTermAsVariable,
   unifyWithBracketedConstructor,
-  unifyWithConstructors
+  unifyWithConstructors,
+  verifyTermAsVariable,
+  verifyAsPropertyRelation
 ];
 
 export default verifyMixins;

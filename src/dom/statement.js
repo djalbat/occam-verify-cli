@@ -11,7 +11,7 @@ import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
-import { definedAssertionFromStatement, containedAssertionFromStatement, subproofAssertionFromStatement } from "../utilities/verification";
+import { definedAssertionFromStatement, containedAssertionFromStatement, subproofAssertionFromStatement } from "../utilities/context";
 
 const { match, backwardsSome } = arrayUtilities;
 

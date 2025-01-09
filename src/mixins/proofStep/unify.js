@@ -2,7 +2,7 @@
 
 import StatementSubstitution from "../../substitution/statement";
 
-import { equalityFromStatement, judgementFromStatement, typeAssertionFromStatement } from "../../utilities/verification";
+import { equalityFromStatement, judgementFromStatement, typeAssertionFromStatement } from "../../utilities/context";
 
 function unifyAWithRule(statement, reference, substitutions, context) {
   let unifiedWithRule = false;

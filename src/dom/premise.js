@@ -4,7 +4,7 @@ import dom from "../dom";
 
 import { domAssigned } from "../dom";
 import { assignAssignments } from "../utilities/assignments";
-import { subproofAssertionFromStatement } from "../utilities/verification";
+import { subproofAssertionFromStatement } from "../utilities/context";
 import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default domAssigned(class Premise {

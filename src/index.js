@@ -37,6 +37,7 @@ import SubDerivation from "./dom/subDerivation";
 import TypeAssertion from "./dom/assertion/type";
 import TypeDeclaration from "./dom/declaration/type";
 import DefinedAssertion from "./dom/assertion/defined";
+import PropertyRelation from "./dom/relation/property";
 import SubproofAssertion from "./dom/assertion/subproof";
 import PropertyAssertion from "./dom/assertion/property";
 import ContainedAssertion from "./dom/assertion/contained";

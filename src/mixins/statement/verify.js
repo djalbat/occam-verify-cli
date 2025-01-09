@@ -9,7 +9,7 @@ import { equalityFromStatement,
          definedAssertionFromStatement,
          propertyAssertionFromStatement,
          containedAssertionFromStatement,
-         subproofAssertionFromStatement } from "../../utilities/verification";
+         subproofAssertionFromStatement } from "../../utilities/context";
 
 function unifyWithBracketedCombinator(statement, assignments, stated, context) {
   stated = true;  ///
