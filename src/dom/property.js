@@ -55,7 +55,7 @@ export default domAssigned(class Property {
   static fromJSON(json, fileContext) {
     const { name } = json,
           type = typeFromJSON(json, fileContext),
-          string = stringFromNameAndType(name, type, fileContext),
+          string = name,  ///
           property = new Property(string, name, type);
 
     return property;
