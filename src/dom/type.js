@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import dom from "../dom";
 
 import { domAssigned } from "../dom";
@@ -7,6 +9,8 @@ import { OBJECT_TYPE_NAME } from "../typeNames";
 import { typeNameFromTypeNode } from "../utilities/name";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { superTypeFromJSON, propertiesFromJSON, superTypeToSuperTypeJSON, propertiesToPropertiesJSON } from "../utilities/json";
+
+const { push } = arrayUtilities;
 
 const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type[0]"),
       propertyDeclarationNodesQuery = nodesQuery("/complexTypeDeclaration/propertyDeclaration"),
@@ -33,8 +37,18 @@ class Type {
     return this.superType;
   }
 
-  getProperties() {
-    return this.properties;
+  getProperties(includeSuperType = true) {
+    const properties = [];
+
+    push(properties, this.properties);
+
+    if (includeSuperType) {
+      const superTypeProperties = this.superType.getProperties();
+
+      push(properties, superTypeProperties);
+    }
+
+    return properties;
   }
 
   setString(string) {
@@ -281,6 +295,12 @@ function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fi
 }
 
 class ObjectType extends Type {
+  getProperties() {
+    const properties = [];
+
+    return properties;
+  }
+
   toJSON() {
     const superType = null,
           name = this.name,

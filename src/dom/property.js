@@ -3,6 +3,7 @@
 import dom from "../dom";
 
 import { nodeQuery } from "../utilities/query";
+import { objectType } from "./type";
 import { domAssigned } from "../dom";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
@@ -55,7 +56,7 @@ export default domAssigned(class Property {
   static fromJSON(json, fileContext) {
     const { name } = json,
           type = typeFromJSON(json, fileContext),
-          string = name,  ///
+          string = stringFromNameAndType(name, type),
           property = new Property(string, name, type);
 
     return property;
@@ -74,7 +75,7 @@ export default domAssigned(class Property {
   static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
     const { Type } = dom,
           propertyNode = propertyNodeQuery(propertyDeclarationNode),
-          node = propertyNode,  ///
+          node = propertyDeclarationNode,  ///
           name = nameFromPropertyNode(propertyNode),
           type = Type.fromPropertyDeclarationNode(propertyDeclarationNode),
           string = fileContext.nodeAsString(node),
@@ -83,6 +84,20 @@ export default domAssigned(class Property {
     return property;
   }
 });
+
+function stringFromNameAndType(name, type) {
+  let string;
+
+  if (type === objectType) {
+    string = name;  ///
+  } else {
+    const typeName = type.getName();
+
+    string = `${name}:${typeName}`;
+  }
+
+  return string;
+}
 
 function nameFromPropertyNode(propertyNode, fileContext) {
   const nameTerminalNode = nameTerminalNodeQuery(propertyNode),

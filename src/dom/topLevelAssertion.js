@@ -305,7 +305,7 @@ export function labelsStringFromLabels(labels) {
 
     labelsString = (labelsString === null) ?
                       labelString: ///
-                        `${labelsString},${labelString}`;
+                        `${labelsString}, ${labelString}`;
 
     return labelsString;
   }, null);

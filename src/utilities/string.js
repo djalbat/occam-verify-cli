@@ -20,7 +20,7 @@ export function nodesAsString(nodes, tokens) {
 
     string = (string === null) ?
                nodeString :
-                `${string},${nodeString}`;
+                `${string}, ${nodeString}`;
 
     return string;
   }, null);

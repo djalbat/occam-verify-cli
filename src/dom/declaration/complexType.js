@@ -31,8 +31,9 @@ export default domAssigned(class ComplexTypeDeclaration {
     const typeVerified = this.verifyType(this.type);
 
     if (typeVerified) {
-      const properties = this.type.getProperties(),
-            propertiesVerified = this.verifyProperties(properties);
+      const includeSuperType = false,
+            properties = this.type.getProperties(includeSuperType),
+            propertiesVerified = this.verifyProperties(properties, this.type);
 
       if (propertiesVerified) {
         this.fileContext.addType(this.type);
@@ -89,7 +90,7 @@ export default domAssigned(class ComplexTypeDeclaration {
     return typeVerified;
   }
 
-  verifyProperty(property, properties) {
+  verifyProperty(property, properties, superTypeProperties) {
     let propertyVerified = false;
 
     const propertyString = property.getString();
@@ -110,22 +111,36 @@ export default domAssigned(class ComplexTypeDeclaration {
     if (count > 1) {
       this.fileContext.debug(`The '${propertyString}' property appears more than once.`);
     } else {
-      let propertyType;
+      const superTypeProperty = superTypeProperties.find((superTypeProperty) => {
+        const propertyNameMatches = superTypeProperty.matchPropertyName(propertyName);
 
-      propertyType = property.getType();
+        if (propertyNameMatches) {
+          return true;
+        }
+      }) || null;
 
-      const propertyTypeVerified = this.verifyPropertyType(propertyType);
+      if (superTypeProperty !== null) {
+        const superTypePropertyString = superTypeProperty.getString();
 
-      if (propertyTypeVerified) {
-        const propertyTypeName = propertyType.getName();
+        this.fileContext.debug(`The '${propertyString}' property matches the super type's '${superTypePropertyString}' property.`);
+      } else {
+        let propertyType;
 
-        propertyType = this.fileContext.findTypeByTypeName(propertyTypeName);
+        propertyType = property.getType();
 
-        const type = propertyType;  ///
+        const propertyTypeVerified = this.verifyPropertyType(propertyType);
 
-        property.setType(type);
+        if (propertyTypeVerified) {
+          const propertyTypeName = propertyType.getName();
 
-        propertyVerified = true;
+          propertyType = this.fileContext.findTypeByTypeName(propertyTypeName);
+
+          const type = propertyType;  ///
+
+          property.setType(type);
+
+          propertyVerified = true;
+        }
       }
     }
 
@@ -136,9 +151,14 @@ export default domAssigned(class ComplexTypeDeclaration {
     return propertyVerified;
   }
 
-  verifyProperties(properties) {
-    const propertiesVerified = properties.every((property) => {
-      const propertyVerified = this.verifyProperty(property, properties);
+  verifyProperties(properties, type) {
+    let propertiesVerified;
+
+    const superType = type.getSuperType(),
+          superTypeProperties = superType.getProperties();
+
+    propertiesVerified = properties.every((property) => {
+      const propertyVerified = this.verifyProperty(property, properties, superTypeProperties);
 
       if (propertyVerified) {
         return true;
