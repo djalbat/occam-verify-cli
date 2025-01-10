@@ -140,7 +140,7 @@ export default domAssigned(class Variable {
     const termString = term.getString(),
           variableString = this.string; ///
 
-    generalContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
+    specificContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
     const effectivelyEqualToTerm = this.isEffectivelyEqualToTerm(term, generalContext, specificContext);
 
@@ -175,7 +175,7 @@ export default domAssigned(class Variable {
     }
 
     if (termUnified) {
-      generalContext.debug(`...unified the '${termString}' term with the '${variableString}' variable.`);
+      specificContext.debug(`...unified the '${termString}' term with the '${variableString}' variable.`);
     }
 
     return termUnified;
