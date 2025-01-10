@@ -176,15 +176,15 @@ export default class Substitutions {
     return substitutionPresent;
   }
 
-  addSubstitution(substitution, context) {
+  addSubstitution(substitution, specificContext) {
     this.array.push(substitution);
 
     const substitutionString = substitution.getString();
 
-    context.trace(`Added the ${substitutionString} substitution.`);
+    specificContext.trace(`Added the ${substitutionString} substitution.`);
   }
 
-  removeSubstitution(substitution, context) {
+  removeSubstitution(substitution, specificContext) {
     const substitutionA = substitution; ///
 
     prune(this.array, (substitution) => {
@@ -197,7 +197,7 @@ export default class Substitutions {
 
     const substitutionString = substitution.getString();
 
-    context.trace(`Removed the ${substitutionString} substitution.`);
+    specificContext.trace(`Removed the ${substitutionString} substitution.`);
   }
 
   matchSubstitutions(substitutions) {
@@ -270,7 +270,7 @@ export default class Substitutions {
     ];
   }
 
-  rollback(context) {
+  rollback(specificContext) {
     const array = [
       ...this.array
     ];
@@ -278,7 +278,7 @@ export default class Substitutions {
     leftDifference(array, this.savedArray);
 
     array.forEach((substitution) => {
-      this.removeSubstitution(substitution, context);
+      this.removeSubstitution(substitution, specificContext);
     });
 
     this.array = [

@@ -122,11 +122,9 @@ export default class StatementSubstitution extends Substitution {
         specificContext.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
       }
 
-      const context = specificContext;  ///
-
       substitutionUnified ?
         substitutions.continue() :
-          substitutions.rollback(context);
+          substitutions.rollback(specificContext);
 
       substitutionResolved = substitutionUnified;  ///
     }

@@ -2,13 +2,11 @@
 
 import dom from "../dom";
 import LocalContext from "../context/local";
+import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { subproofStringFromSubproofNode } from "../utilities/subproof";
-import unifyMixins from "../mixins/proofStep/unify";
-import Substitutions from "../substitutions";
-import {assignAssignments} from "../utilities/assignments";
 
 const subproofNodeQuery = nodeQuery("/subproof"),
       suppositionNodesQuery = nodesQuery("/subproof/supposition"),

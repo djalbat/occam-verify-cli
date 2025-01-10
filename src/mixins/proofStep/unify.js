@@ -43,10 +43,11 @@ function unifyAWithReference(statement, reference, substitutions, context) {
       context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
 
       const metavariable = reference.getMetavariable(),
+            specificContext = context,  ///
             statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
             substitution = statementSubstitution; ///
 
-      substitutions.addSubstitution(substitution, context);
+      substitutions.addSubstitution(substitution, specificContext);
 
       unifiedWithReference = true;
 
@@ -76,10 +77,11 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(statement, reference, substitut
 
       if (statementAndProofStepsUnified) {
         const metavariable = reference.getMetavariable(),
+              specificContext = context,  ///
               statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
-              substitution = statementSubstitution; ///
+              substitution = statementSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, context);
+        substitutions.addSubstitution(substitution, specificContext);
 
         unifiedWithAxiomLemmaTheoremOrConjecture = true;
       }

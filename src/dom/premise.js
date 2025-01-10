@@ -119,11 +119,9 @@ export default domAssigned(class Premise {
       substitutions.resolve(generalContext, specificContext);
     }
 
-    const context = specificContext;  ///
-
     proofStepSubproofUnified ?
       substitutions.continue() :
-        substitutions.rollback(context);
+        substitutions.rollback(specificContext);
 
     return proofStepSubproofUnified;
   }

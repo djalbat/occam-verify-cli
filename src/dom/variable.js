@@ -158,17 +158,12 @@ export default domAssigned(class Variable {
           termUnified = true;
         }
       } else {
-        let context;
-
-        context = specificContext;  ///
-
-        const variable = this,  ///
+        const context = specificContext,  ///
+              variable = this,  ///
               termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
               substitution = termSubstitution;  ///
 
-        context = generalContext;  ///
-
-        substitutions.addSubstitution(substitution, context);
+        substitutions.addSubstitution(substitution, specificContext);
 
         termUnified = true;
       }

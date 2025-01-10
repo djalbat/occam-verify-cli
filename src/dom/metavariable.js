@@ -184,7 +184,7 @@ export default domAssigned(class Metavariable {
               frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
               substitution = frameSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, context);
+        substitutions.addSubstitution(substitution, specificContext);
 
         frameUnified = true;
       }
@@ -227,7 +227,7 @@ export default domAssigned(class Metavariable {
               referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context),
               substitution = referenceSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, context);
+        substitutions.addSubstitution(substitution, specificContext);
 
         referenceUnified = true;
       }
@@ -274,7 +274,7 @@ export default domAssigned(class Metavariable {
 
         substitution = statementSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, context);
+        substitutions.addSubstitution(substitution, specificContext);
 
         statementUnified = true;
       }
