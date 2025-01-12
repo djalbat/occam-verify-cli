@@ -134,13 +134,14 @@ class Type {
   }
 
   findPropertyByPropertyName(propertyName) {
-    const property = this.properties.find((property) => {
-      const propertyNameMatches = property.matchPropertyName(propertyName);
+    const properties = this.getProperties(),
+          property = properties.find((property) => {
+          const propertyNameMatches = property.matchPropertyName(propertyName);
 
-      if (propertyNameMatches) {
-        return true;
-      }
-    }) || null;
+          if (propertyNameMatches) {
+            return true;
+          }
+        }) || null;
 
     return property;
   }
