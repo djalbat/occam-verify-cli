@@ -30,9 +30,17 @@ function createReleaseContext(dependency, dependentNames, context, callback) {
   }
 
   const { releaseContextFromDependency } = context,
-        dependencyString = dependency.asString();
+        dependencyString = dependency.asString(),
+        dependentNamesLength = dependentNames.length;
 
-  log.debug(`Creating the '${releaseName}' context given the '${dependencyString}' dependency...`);
+  if (dependentNamesLength === 0) {
+    log.debug(`Creating the '${releaseName}' context...`);
+  } else {
+    const lastDependentName = last(dependentNames),
+          dependentName = lastDependentName;  ///
+
+    log.debug(`Creating the '${releaseName}' context given the '${dependentName}' dependant's '${dependencyString}' dependency...`);
+  }
 
   releaseContextFromDependency(dependency, context, (error, releaseContext) => {
     if (error) {
@@ -65,8 +73,6 @@ function createReleaseContext(dependency, dependentNames, context, callback) {
 
     releaseContextMap[releaseName] = releaseContext;
 
-    log.info(`...created the '${releaseName}' context.`);
-
     createDependencyReleaseContexts(dependency, releaseContext, dependentNames, context, (error, success) => {
       if (error) {
         callback(error);
@@ -81,6 +87,8 @@ function createReleaseContext(dependency, dependentNames, context, callback) {
 
         return;
       }
+
+      log.info(`...created the '${releaseName}' context.`);
 
       callback(error, success);
     });
