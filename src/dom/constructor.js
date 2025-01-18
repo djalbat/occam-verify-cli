@@ -7,7 +7,6 @@ import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { unifyTermWithConstructor } from "../utilities/unification";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
-import {objectType} from "./type";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
       typeNodeQuery = nodeQuery("/constructorDeclaration/type");
