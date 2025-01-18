@@ -4,8 +4,10 @@ import dom from "../../dom";
 
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
+import VariableAssignment from "../../assignment/variable";
 
-const propertyNodeQuery = nodeQuery("/propertyAssertion/property"),
+const variableNodeQuery = nodeQuery("/term/variable!"),
+      propertyNodeQuery = nodeQuery("/propertyAssertion/property"),
       leftTermNodeQuery = nodeQuery("/propertyAssertion/term[0]"),
       rightTermNodeQuery = nodeQuery("/propertyAssertion/term[1]"),
       propertyAssertionNodeQuery = nodeQuery("/statement/propertyAssertion");
@@ -60,7 +62,18 @@ export default domAssigned(class PropertyAssertion {
         const propertyVerified = this.verifyProperty(assignments, stated, context);
 
         if (propertyVerified) {
-          verified = true;
+          let verifiedWhenStated = false,
+              verifiedWhenDerived = false;
+
+          if (stated) {
+            verifiedWhenStated = this.verifyWhenStated(assignments, context);
+          } else {
+            verifiedWhenDerived = this.verifyWhenDerived(context);
+          }
+
+          if (verifiedWhenStated || verifiedWhenDerived) {
+            verified = true;
+          }
         }
       }
     }
@@ -150,6 +163,55 @@ export default domAssigned(class PropertyAssertion {
     }
 
     return rightTermVerified;
+  }
+
+  verifyWhenStated(assignments, context) {
+    let verifiedWhenStated = false;
+
+    const propertyAssertionString = this.string; ///
+
+    context.trace(`Verifying the '${propertyAssertionString}' stated property assertion...`);
+
+    if (assignments !== null) {
+      const { Variable } = dom,
+            leftTermNode = this.leftTerm.getNode(),
+            termNode = leftTermNode,  ///
+            variableNode = variableNodeQuery(termNode);
+
+      if (variableNode)
+            variable = Variable.fromVariableNodeAndType(variableNode, this.type, context);
+
+      if (variable !== null) {
+        const variableAssignment = VariableAssignment.fromVariable(variable),
+              assignment = variableAssignment;  ///
+
+        assignments.push(assignment);
+      }
+    }
+
+    verifiedWhenStated = true;
+
+    if (verifiedWhenStated) {
+      context.debug(`...verified the '${propertyAssertionString}' stated property assertion.`);
+    }
+
+    return verifiedWhenStated;
+  }
+
+  verifyWhenDerived(assignments, context) {
+    let verifiedWhenDerived = false;
+
+    const propertyAssertionString = this.string; ///
+
+    context.trace(`Verifying the '${propertyAssertionString}' derived property assertion...`);
+
+    debugger
+
+    if (verifiedWhenDerived) {
+      context.debug(`...verified the '${propertyAssertionString}' derived property assertion.`);
+    }
+
+    return verifiedWhenDerived;
   }
 
   static name = "PropertyAssertion";
