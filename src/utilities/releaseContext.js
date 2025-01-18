@@ -34,12 +34,12 @@ function createReleaseContext(dependency, dependentNames, context, callback) {
         dependentNamesLength = dependentNames.length;
 
   if (dependentNamesLength === 0) {
-    log.debug(`Creating the '${releaseName}' context...`);
+    log.info(`Creating the '${releaseName}' context...`);
   } else {
     const lastDependentName = last(dependentNames),
           dependentName = lastDependentName;  ///
 
-    log.debug(`Creating the '${releaseName}' context given the '${dependentName}' dependant's '${dependencyString}' dependency...`);
+    log.info(`Creating the '${releaseName}' context given the '${dependentName}' dependant's '${dependencyString}' dependency...`);
   }
 
   releaseContextFromDependency(dependency, context, (error, releaseContext) => {
@@ -88,7 +88,7 @@ function createReleaseContext(dependency, dependentNames, context, callback) {
         return;
       }
 
-      log.info(`...created the '${releaseName}' context.`);
+      log.debug(`...created the '${releaseName}' context.`);
 
       callback(error, success);
     });
@@ -114,11 +114,11 @@ function initialiseReleaseContext(dependency, context) {
       const { log } = context,
             releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
 
-      log.debug(`Initialising the '${dependencyName}' context...`);
+      log.info(`Initialising the '${dependencyName}' context...`);
 
       releaseContext.initialise(releaseContexts);
 
-      log.info(`...initialised the '${dependencyName}' context.`);
+      log.debug(`...initialised the '${dependencyName}' context.`);
     }
   }
 }
