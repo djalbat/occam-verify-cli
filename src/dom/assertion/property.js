@@ -4,21 +4,18 @@ import dom from "../../dom";
 
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
-import VariableAssignment from "../../assignment/variable";
 
-const termNodeQuery = nodeQuery("/propertyAssertion/term"),
-      variableNodeQuery = nodeQuery("/propertyAssertion/variable"),
-      propertyNodeQuery = nodeQuery("/propertyAssertion/property"),
+const variableNodeQuery = nodeQuery("/propertyAssertion/variable"),
+      propertyRelationNodeQuery = nodeQuery("/propertyAssertion/propertyRelation"),
       propertyAssertionNodeQuery = nodeQuery("/statement/propertyAssertion");
 
 export default domAssigned(class PropertyAssertion {
-  constructor(string, node, tokens, property, variable, term) {
+  constructor(string, node, tokens, variable, propertyRelation) {
     this.string = string;
     this.node = node;
     this.tokens = tokens;
-    this.property = property;
     this.variable = variable;
-    this.term = term;
+    this.propertyRelation = propertyRelation;
   }
 
   getString() {
@@ -33,16 +30,12 @@ export default domAssigned(class PropertyAssertion {
     return this.tokens;
   }
 
-  getProperty() {
-    return this.property;
-  }
-
   getVariable() {
     return this.variable;
   }
 
-  getTerm() {
-    return this.term;
+  getPropertyRelation() {
+    return this.propertyRelation;
   }
 
   verify(assignments, stated, context) {
@@ -55,24 +48,20 @@ export default domAssigned(class PropertyAssertion {
     const variableVerified = this.verifyVariable(assignments, stated, context);
 
     if (variableVerified) {
-      const termVerified = this.verifyTerm(assignments, stated, context);
+      const propertyRelationVerified = this.verifyPropertyRelation(assignments, stated, context);
 
-      if (termVerified) {
-        const propertyVerified = this.verifyProperty(assignments, stated, context);
+      if (propertyRelationVerified) {
+        let verifiedWhenStated = false,
+            verifiedWhenDerived = false;
 
-        if (propertyVerified) {
-          let verifiedWhenStated = false,
-              verifiedWhenDerived = false;
+        if (stated) {
+          verifiedWhenStated = this.verifyWhenStated(assignments, context);
+        } else {
+          verifiedWhenDerived = this.verifyWhenDerived(context);
+        }
 
-          if (stated) {
-            verifiedWhenStated = this.verifyWhenStated(assignments, context);
-          } else {
-            verifiedWhenDerived = this.verifyWhenDerived(context);
-          }
-
-          if (verifiedWhenStated || verifiedWhenDerived) {
-            verified = true;
-          }
+        if (verifiedWhenStated || verifiedWhenDerived) {
+          verified = true;
         }
       }
     }
@@ -82,27 +71,6 @@ export default domAssigned(class PropertyAssertion {
     }
 
     return verified;
-  }
-
-  verifyTerm(assignments, stated, context) {
-    let termVerified;
-
-    const termString = this.term.getString(),
-      propertyAssertionString = this.string; ///
-
-    context.trace(`Verifying the '${propertyAssertionString}' property assertion's '${termString}' term...`);
-
-    termVerified = this.term.verify(context, () => {
-      const verifiedAhead = true;
-
-      return verifiedAhead;
-    });
-
-    if (termVerified) {
-      context.debug(`...verified the '${propertyAssertionString}' property assertion's '${termString}' term.`);
-    }
-
-    return termVerified;
   }
 
   verifyVariable(assignments, stated, context) {
@@ -122,42 +90,21 @@ export default domAssigned(class PropertyAssertion {
     return variableVerified;
   }
 
-  verifyProperty(assignments, stated, context) {
-    let propertyVerified;
+  verifyPropertyRelation(assignments, stated, context) {
+    let propertyRelationVerified;
 
-    const propertyString = this.property.getString(),
+    const propertyRelationString = this.propertyRelation.getString(),
           propertyAssertionString = this.string; ///
 
-    context.trace(`Verifying the '${propertyAssertionString}' property assertion's '${propertyString}' property...`);
+    context.trace(`Verifying the '${propertyAssertionString}' property assertion's '${propertyRelationString}' property relation...`);
 
-    const termType = this.term.getType(),
-          propertyName = this.property.getName(),
-          property = termType.findPropertyByPropertyName(propertyName);
+    propertyRelationVerified = this.propertyRelation.verify(context);
 
-    if (property === null) {
-      const termTypeName = termType.getName();
-
-      context.debug(`The '${propertyName}' property is not a property of the term's '${termTypeName}' type.`);
-    } else {
-      const variableType = this.variable.getType(),
-            propertyType = property.getType(),
-            variableTypeEqualToOrSubTypeOfPropertyType = variableType.isEqualToOrSubTypeOf(propertyType);
-
-      if (!variableTypeEqualToOrSubTypeOfPropertyType) {
-        const variableTypeName = variableType.getName(),
-              propertyTypeName = propertyType.getName();
-
-        context.debug(`The variable's '${variableTypeName}' type is not equal to or a sub-type of the '${propertyName}' property's '${propertyTypeName}' type.`);
-      } else {
-        propertyVerified = true;
-      }
+    if (propertyRelationVerified) {
+      context.debug(`...verified the '${propertyAssertionString}' property assertion's '${propertyRelationString}' property relation.`);
     }
 
-    if (propertyVerified) {
-      context.debug(`...verified the '${propertyAssertionString}' property assertion's '${propertyString}' property.`);
-    }
-
-    return propertyVerified;
+    return propertyRelationVerified;
   }
 
   verifyWhenStated(assignments, context) {
@@ -168,10 +115,10 @@ export default domAssigned(class PropertyAssertion {
     context.trace(`Verifying the '${propertyAssertionString}' stated property assertion...`);
 
     if (assignments !== null) {
-      const { Variable } = dom,
-            termNode = this.term.getNode(),
-            variableNode = variableNodeQuery(termNode),
-            variable = Variable.fromVariableNodeAndType(variableNode, this.type, context);
+      const variableName = this.variable.getName(),
+            variable = context.findVariableByVariableName(variableName);
+
+      debugger
 
     }
 
@@ -208,18 +155,16 @@ export default domAssigned(class PropertyAssertion {
     const propertyAssertionNode = propertyAssertionNodeQuery(statementNode);
 
     if (propertyAssertionNode !== null) {
-      const { Term, Variable, Property } = dom,
+      const { Variable, PropertyRelation } = dom,
             node = propertyAssertionNode,  ///
             string = context.nodeAsString(node),
             tokens = context.nodeAsTokens(node),
-            propertyNode = propertyNodeQuery(propertyAssertionNode),
             variableNode = variableNodeQuery(propertyAssertionNode),
-            termNode = termNodeQuery(propertyAssertionNode),
-            property = Property.fromPropertyNode(propertyNode, context),
+            propertyRelationNode = propertyRelationNodeQuery(propertyAssertionNode),
             variable = Variable.fromVariableNode(variableNode, context),
-            term = Term.fromTermNode(termNode, context);
+            propertyRelation = PropertyRelation.fromPropertyRelationNode(propertyRelationNode, context);
 
-      propertyAssertion = new PropertyAssertion(string, node, tokens, property, variable, term);
+      propertyAssertion = new PropertyAssertion(string, node, tokens, variable, propertyRelation);
     }
 
     return propertyAssertion;

@@ -69,45 +69,10 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
   return termVerifiedAsVariable;
 }
 
-function verifyAsPropertyRelation(term, context, verifyAhead) {
-  let verifiedAsPropertyRelation = false;
-
-  const { PropertyRelation } = dom,
-        termNode = term.getNode(),
-        propertyRelation = PropertyRelation.fromTermNode(termNode, context);
-
-  if (propertyRelation !== null) {
-    const termString = term.getString();
-
-    context.trace(`Verifying the '${termString}' term as a property relation...`);
-
-    const propertyRelationVerified = propertyRelation.verify(context);
-
-    if (propertyRelationVerified) {
-      let verifiedAhead;
-
-      const type = propertyRelation.getType();
-
-      term.setType(type);
-
-      verifiedAhead = verifyAhead();
-
-      verifiedAsPropertyRelation = verifiedAhead; ///
-    }
-
-    if (verifiedAsPropertyRelation) {
-      context.debug(`...verified the '${termString}' statement as a property relation.`);
-    }
-  }
-
-  return verifiedAsPropertyRelation;
-}
-
 const verifyMixins = [
   unifyWithBracketedConstructor,
   unifyWithConstructors,
-  verifyTermAsVariable,
-  verifyAsPropertyRelation
+  verifyTermAsVariable
 ];
 
 export default verifyMixins;

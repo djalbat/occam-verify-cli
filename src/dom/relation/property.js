@@ -6,8 +6,7 @@ import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
 
 const termNodeQuery = nodeQuery("/propertyRelation/term"),
-      propertyNodeQuery = nodeQuery("/propertyRelation/property"),
-      propertyRelationNodeQuery = nodeQuery("/term/propertyRelation");
+      propertyNodeQuery = nodeQuery("/propertyRelation/property");
 
 export default domAssigned(class PropertyRelation {
   constructor(string, node, tokens, property, term) {
@@ -68,45 +67,6 @@ export default domAssigned(class PropertyRelation {
     return verified;
   }
 
-  verifyProperty(context) {
-    let propertyVerified;
-
-    const propertyString = this.property.getString(),
-          propertyRelationString = this.string; ///
-
-    context.trace(`Verifying the '${propertyRelationString}' property relation's '${propertyString}' property...`);
-
-    const termType = this.term.getType(),
-          propertyName = this.property.getName(),
-          termTypeProperties = termType.getProperties(),
-          termTypeProperty = termTypeProperties.find((termTypeProperty) => {
-            const propertyNameMatches = termTypeProperty.matchPropertyName(propertyName);
-
-            if (propertyNameMatches) {
-              return true;
-            }
-          }) || null;
-
-    if (termTypeProperty === null) {
-      const termString = this.term.getString(),
-            termTypeName = termType.getName();
-
-      context.debug(`The '${propertyName}' property is not a property of the '${termString}' term's '${termTypeName}' type.`);
-    } else {
-      const type = termType;
-
-      this.property.setType(type);
-
-      propertyVerified = true;
-    }
-
-    if (propertyVerified) {
-      context.debug(`...verified the '${propertyRelationString}' property relation's '${propertyString}' property.`);
-    }
-
-    return propertyVerified;
-  }
-
   verifyTerm(context) {
     let termVerified;
 
@@ -128,25 +88,57 @@ export default domAssigned(class PropertyRelation {
     return termVerified;
   }
 
+  verifyProperty(context) {
+    let propertyVerified;
+
+    const propertyString = this.property.getString(),
+          propertyRelationString = this.string; ///
+
+    context.trace(`Verifying the '${propertyRelationString}' property relation's '${propertyString}' property...`);
+
+    const termType = this.term.getType(),
+          propertyName = this.property.getName(),
+          termTypeProperties = termType.getProperties(),
+          termTypeProperty = termTypeProperties.find((termTypeProperty) => {
+            const propertyNameMatches = termTypeProperty.matchPropertyName(propertyName);
+
+            if (propertyNameMatches) {
+              return true;
+            }
+          }) || null;
+
+    if (termTypeProperty === null) {
+      const termString = this.term.getString(),
+        termTypeName = termType.getName();
+
+      context.debug(`The '${propertyName}' property is not a property of the '${termString}' term's '${termTypeName}' type.`);
+    } else {
+      const type = termType;
+
+      this.property.setType(type);
+
+      propertyVerified = true;
+    }
+
+    if (propertyVerified) {
+      context.debug(`...verified the '${propertyRelationString}' property relation's '${propertyString}' property.`);
+    }
+
+    return propertyVerified;
+  }
+
   static name = "PropertyRelation";
 
-  static fromTermNode(termNode, context) {
-    let propertyRelation = null;
-
-    const propertyRelationNode = propertyRelationNodeQuery(termNode);
-
-    if (propertyRelationNode !== null) {
-      const { Term, Property } = dom,
-            node = propertyRelationNode,  ///
-            string = context.nodeAsString(node),
-            tokens = context.nodeAsTokens(node),
-            termNode = termNodeQuery(propertyRelationNode),
-            propertyNode = propertyNodeQuery(propertyRelationNode),
-            property = Property.fromPropertyNode(propertyNode, context),
-            term = Term.fromTermNode(termNode, context);
-
-      propertyRelation = new PropertyRelation(string, node, tokens, property, term);
-    }
+  static fromPropertyRelationNode(propertyRelationNode, context) {
+    const { Term, Property } = dom,
+          node = propertyRelationNode,  ///
+          string = context.nodeAsString(node),
+          tokens = context.nodeAsTokens(node),
+          termNode = termNodeQuery(propertyRelationNode),
+          propertyNode = propertyNodeQuery(propertyRelationNode),
+          property = Property.fromPropertyNode(propertyNode, context),
+          term = Term.fromTermNode(termNode, context),
+          propertyRelation = new PropertyRelation(string, node, tokens, property, term);
 
     return propertyRelation;
   }
