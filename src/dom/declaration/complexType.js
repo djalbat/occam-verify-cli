@@ -97,11 +97,11 @@ export default domAssigned(class ComplexTypeDeclaration {
 
     this.fileContext.trace(`Verifying the '${propertyString}' property...`);
 
-    const propertyName = property.getName(),
+    const propertyNames = property.getNames(),
           count = properties.reduce((count, property) => {
-            const propertyNameMatches = property.matchPropertyName(propertyName);
+            const propertyNamesMatch = property.matchPropertyNames(propertyNames);
 
-            if (propertyNameMatches) {
+            if (propertyNamesMatch) {
               count++;
             }
 
@@ -112,7 +112,7 @@ export default domAssigned(class ComplexTypeDeclaration {
       this.fileContext.debug(`The '${propertyString}' property appears more than once.`);
     } else {
       const superTypeProperty = superTypeProperties.find((superTypeProperty) => {
-        const propertyNameMatches = superTypeProperty.matchPropertyName(propertyName);
+        const propertyNameMatches = superTypeProperty.matchPropertyNames(propertyNames);
 
         if (propertyNameMatches) {
           return true;

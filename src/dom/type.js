@@ -133,19 +133,6 @@ class Type {
     return typeNameMatches;
   }
 
-  findPropertyByPropertyName(propertyName) {
-    const properties = this.getProperties(),
-          property = properties.find((property) => {
-          const propertyNameMatches = property.matchPropertyName(propertyName);
-
-          if (propertyNameMatches) {
-            return true;
-          }
-        }) || null;
-
-    return property;
-  }
-
   toJSON() {
     const propertiesJSON = propertiesToPropertiesJSON(this.properties),
           superTypeJSON = superTypeToSuperTypeJSON(this.superType),

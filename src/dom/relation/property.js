@@ -93,12 +93,12 @@ export default domAssigned(class PropertyRelation {
     context.trace(`Verifying the '${propertyRelationString}' property relation's '${propertyString}' property...`);
 
     const variableType = this.variable.getType(),
-          propertyName = this.property.getName(),
+          propertyNames = this.property.getNames(),
           variableTypeProperties = variableType.getProperties(),
           variableTypeProperty = variableTypeProperties.find((variableTypeProperty) => {
-            const propertyNameMatches = variableTypeProperty.matchPropertyName(propertyName);
+            const propertyNamesMatch = variableTypeProperty.matchPropertyNames(propertyNames);
 
-            if (propertyNameMatches) {
+            if (propertyNamesMatch) {
               return true;
             }
           }) || null;
