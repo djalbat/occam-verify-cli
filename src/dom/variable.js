@@ -7,6 +7,7 @@ import TermSubstitution from "../substitution/term";
 import { nodeQuery } from "../utilities/query";
 import { objectType } from "./type";
 import { domAssigned } from "../dom";
+import { EMPTY_STRING } from "../constants";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { variableNameFromVariableNode } from "../utilities/name";
 import { variableNodeFromVariableString } from "../context/partial/variable";
@@ -16,11 +17,12 @@ const termVariableNodeQuery = nodeQuery("/term/variable!"),
       variableDeclarationVariableNodeQuery = nodeQuery("/variableDeclaration/variable");
 
 export default domAssigned(class Variable {
-  constructor(string, node, name, type) {
+  constructor(string, node, name, type, propertyRelations) {
     this.string = string;
     this.node = node;
     this.name = name;
     this.type = type;
+    this.propertyRelations = propertyRelations;
   }
 
   getString() {
@@ -37,6 +39,10 @@ export default domAssigned(class Variable {
 
   getType() {
     return this.type;
+  }
+
+  getPropertyRelations() {
+    return this.propertyRelations;
   }
 
   setType(type) {
@@ -200,7 +206,8 @@ export default domAssigned(class Variable {
           node = variableNode,
           name = variableName,  ///
           type = typeFromJSON(json, fileContext),
-          variable = new Variable(string, node, name, type);
+          propertyRelations = [],
+          variable = new Variable(string, node, name, type, propertyRelations);
 
     return variable;
   }
@@ -216,9 +223,10 @@ export default domAssigned(class Variable {
             node = variableNode,  ///
             string = context.nodeAsString(node),
             name = variableName,  ///
-            type = null;
+            type = null,
+            propertyRelations = [];
 
-      variable = new Variable(string, node, name, type);
+      variable = new Variable(string, node, name, type, propertyRelations);
     }
 
     return variable;
@@ -232,9 +240,10 @@ export default domAssigned(class Variable {
             variableName = variableNameFromVariableNode(variableNode),
             string = context.nodeAsString(node),
             name = variableName,  ///
-            type = null;
+            type = null,
+            propertyRelations = [];
 
-      variable = new Variable(string, node, name, type);
+      variable = new Variable(string, node, name, type, propertyRelations);
     }
 
     return variable;
@@ -247,9 +256,10 @@ export default domAssigned(class Variable {
       const node = variableNode,  ///
             variableName = variableNameFromVariableNode(variableNode),
             string = context.nodeAsString(node),
-            name = variableName;  ///
+            name = variableName,  ///
+            propertyRelations = [];
 
-      variable = new Variable(string, node, name, type);
+      variable = new Variable(string, node, name, type, propertyRelations);
     }
 
     return variable;
@@ -264,7 +274,29 @@ export default domAssigned(class Variable {
           node = variableNode,  ///
           name = variableName,  ///
           type = typeFromVariableDeclarationNode(variableDeclarationNode, fileContext),
-          variable = new Variable(string, node, name, type);
+          propertyRelations = [],
+          variable = new Variable(string, node, name, type, propertyRelations);
+
+    return variable;
+  }
+
+  static fromVariableAndPropertyRelation(variable, propertyRelation, context) {
+    let propertyRelations;
+
+    const node = variable.getNode(),
+          name = variable.getName(),
+          type = variable.getType();
+
+    propertyRelations = variable.getPropertyRelations();
+
+    propertyRelations = [
+      ...propertyRelations,
+      propertyRelation
+    ];
+
+    const string = stringFromNameAndPropertyRelations(name, propertyRelations);
+
+    variable = new Variable(string, node, name, type, propertyRelations);
 
     return variable;
   }
@@ -278,4 +310,17 @@ function typeFromVariableDeclarationNode(variableDeclarationNode, fileContext) {
         type = Type.fromTypeNode(typeNode, context);
 
   return type;
+}
+
+function stringFromNameAndPropertyRelations(name, propertyRelations) {
+  const propertyRelationsString = propertyRelations.reduce((propertyRelationsString, propertyRelation) => {
+          const propertyRelationString = propertyRelation.getString();
+
+          propertyRelationsString = `${propertyRelationsString}, ${propertyRelationString}`;
+
+          return propertyRelationsString;
+        }, EMPTY_STRING),
+        string = `${name}${propertyRelationsString}`;
+
+  return string;
 }

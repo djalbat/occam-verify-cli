@@ -4,6 +4,7 @@ import dom from "../../dom";
 
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
+import VariableAssignment from "../../assignment/variable";
 
 const variableNodeQuery = nodeQuery("/propertyAssertion/variable"),
       propertyRelationNodeQuery = nodeQuery("/propertyAssertion/propertyRelation"),
@@ -108,18 +109,26 @@ export default domAssigned(class PropertyAssertion {
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiedWhenStated = false;
+    let verifiedWhenStated;
 
     const propertyAssertionString = this.string; ///
 
     context.trace(`Verifying the '${propertyAssertionString}' stated property assertion...`);
 
     if (assignments !== null) {
-      const variableName = this.variable.getName(),
-            variable = context.findVariableByVariableName(variableName);
+      let variable;
 
-      debugger
+      const { Variable } = dom,
+            variableName = this.variable.getName();
 
+      variable = context.findVariableByVariableName(variableName);
+
+      variable = Variable.fromVariableAndPropertyRelation(variable, this.propertyRelation);
+
+      const variableAssignment = VariableAssignment.fromVariable(variable),
+            assignment = variableAssignment;  ///
+
+      assignments.push(assignment);
     }
 
     verifiedWhenStated = true;
