@@ -75,12 +75,6 @@ export default class FileContext {
 
   getMetaTypes() { return this.releaseContext.getMetaTypes(); }
 
-  getTermType(term) {
-    const termType = term.getType();
-
-    return termType;
-  }
-
   getJudgements() {
     const judgements = [];
 

@@ -58,7 +58,7 @@ export default class Equivalence {
 
   equateTerm(term) {
     const termA = term, ///
-          termEquates = this.terms.some((term) => {
+          termEquates = this.someTerm((term) => {
             const termB = term, ///
                   termAEqualToTermB = termA.isEqualTo(termB);
 
@@ -73,7 +73,7 @@ export default class Equivalence {
   matchTermNode(termNode) {
     termNode = stripBracketsFromTermNode(termNode); ///
 
-    const termNodeMatches = this.terms.some((term) => {
+    const termNodeMatches = this.someTerm((term) => {
       const termNodeMatches = term.matchTermNode(termNode);
 
       if (termNodeMatches) {
@@ -84,11 +84,23 @@ export default class Equivalence {
     return termNodeMatches;
   }
 
+  matchTermNodes(termNodes) {
+    const termNodesMatch = termNodes.every((termNode) => {
+      const termNodeMatches = this.matchTermNode(termNode);
+
+      if (termNodeMatches) {
+        return true;
+      }
+    });
+
+    return termNodesMatch;
+  }
+
   matchVariableNode(variableNode) {
     const variableNodeA = variableNode, ///
-          variableNodeMatches = this.terms.some((term) => {
+          variableNodeMatches = this.someTerm((term) => {
             const termNode = term.getNode(),
-                  variableNode = variableNodeQuery(termNode);
+              variableNode = variableNodeQuery(termNode);
 
             if (variableNode !== null) {
               const variableNodeB = variableNode, ///
@@ -103,16 +115,21 @@ export default class Equivalence {
     return variableNodeMatches;
   }
 
-  matchTermNodes(termNodes) {
-    const termNodesMatch = termNodes.every((termNode) => {
-      const termNodeMatches = this.matchTermNode(termNode);
+  someTerm(callback) { return this.terms.some(callback); }
 
-      if (termNodeMatches) {
-        return true;
-      }
-    });
+  someOtherTerm(term, callback) {
+    const termA = term, ///
+          terms = this.terms.filter((term) => {
+            const termB = term, ///
+                  termAEqualToTermB = termA.isEqualTo(termB);
 
-    return termNodesMatch;
+            if (!termAEqualToTermB) {
+              return true;
+            }
+          }),
+          result = terms.some(callback);
+
+    return result;
   }
 
   getGroundedTerms(definedVariables, groundedTerms, context) {

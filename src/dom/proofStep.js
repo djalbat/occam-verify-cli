@@ -7,6 +7,7 @@ import Substitutions from "../substitutions";
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { assignAssignments } from "../utilities/assignments";
+import { propertyAssertionFromStatement } from "../utilities/context";
 
 const proofStepNodeQuery = nodeQuery("/proofStep");
 
@@ -39,6 +40,18 @@ export default domAssigned(class ProofStep {
     const proofStep = true;
 
     return proofStep;
+  }
+
+  matchTermAndPropertyRelation(term, propertyRelation, context) {
+    let termAndPropertyRelationMatch = false;
+
+    const propertyAssertion = propertyAssertionFromStatement(this.statement, context);
+
+    if (propertyAssertion !== null) {
+      termAndPropertyRelationMatch = propertyAssertion.matchTermAndPropertyRelation(term, propertyRelation, context);
+    }
+
+    return termAndPropertyRelationMatch;
   }
 
   unify(substitutions, context) {

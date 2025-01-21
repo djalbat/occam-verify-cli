@@ -5,16 +5,16 @@ import dom from "../../dom";
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
 
-const variableNodeQuery = nodeQuery("/propertyRelation/variable"),
+const termNodeQuery = nodeQuery("/propertyRelation/term"),
       propertyNodeQuery = nodeQuery("/propertyRelation/property");
 
 export default domAssigned(class PropertyRelation {
-  constructor(string, node, tokens, property, variable) {
+  constructor(string, node, tokens, property, term) {
     this.string = string;
     this.node = node;
     this.tokens = tokens;
     this.property = property;
-    this.variable = variable;
+    this.term = term;
   }
 
   getString() {
@@ -33,11 +33,18 @@ export default domAssigned(class PropertyRelation {
     return this.property;
   }
 
-  getVariable() {
-    return this.variable;
+  getTerm() {
+    return this.term;
   }
 
   getType() { return this.property.getType(); }
+
+  isEqualTo(propertyRelation) {
+    const propertyRelationString = propertyRelation.getString(),
+          equalTo = (propertyRelationString === this.string);
+
+    return equalTo;
+  }
 
   verify(context) {
     let verified = false;
@@ -46,18 +53,12 @@ export default domAssigned(class PropertyRelation {
 
     context.trace(`Verifying the '${propertyRelationString}' property relation...`);
 
-    const variableVerified = this.verifyVariable(context);
+    const termVerified = this.verifyTerm(context);
 
-    if (variableVerified) {
+    if (termVerified) {
       const propertyVerified = this.verifyProperty(context);
 
-      if (propertyVerified) {
-        const type = this.property.getType();
-
-        this.variable.setType(type);
-
-        verified = true;
-      }
+      verified = propertyVerified;
     }
 
     if (verified) {
@@ -67,21 +68,25 @@ export default domAssigned(class PropertyRelation {
     return verified;
   }
 
-  verifyVariable(context) {
-    let variableVerifyed;
+  verifyTerm(context) {
+    let termVerified;
 
-    const variableString = this.variable.getString(),
+    const termString = this.term.getString(),
           propertyRelationString = this.string; ///
 
-    context.trace(`Verifying the '${propertyRelationString}' property relation's '${variableString}' variable...`);
+    context.trace(`Verifying the '${propertyRelationString}' property relation's '${termString}' term...`);
 
-    variableVerifyed = this.variable.verify(context);
+    termVerified = this.term.verify(context, () => {
+      const verifiedAhead = true;
 
-    if (variableVerifyed) {
-      context.debug(`...verified the '${propertyRelationString}' property relation's '${variableString}' variable.`);
+      return verifiedAhead;
+    });
+
+    if (termVerified) {
+      context.debug(`...verified the '${propertyRelationString}' property relation's '${termString}' term.`);
     }
 
-    return variableVerifyed;
+    return termVerified;
   }
 
   verifyProperty(context) {
@@ -92,7 +97,7 @@ export default domAssigned(class PropertyRelation {
 
     context.trace(`Verifying the '${propertyRelationString}' property relation's '${propertyString}' property...`);
 
-    const variableType = this.variable.getType(),
+    const variableType = this.term.getType(),
           propertyNames = this.property.getNames(),
           variableTypeProperties = variableType.getProperties(),
           variableTypeProperty = variableTypeProperties.find((variableTypeProperty) => {
@@ -104,10 +109,10 @@ export default domAssigned(class PropertyRelation {
           }) || null;
 
     if (variableTypeProperty === null) {
-      const variableString = this.variable.getString(),
+      const variableString = this.term.getString(),
             variableTypeName = variableType.getName();
 
-      context.debug(`The '${propertyName}' property is not a property of the '${variableString}' variable's '${variableTypeName}' type.`);
+      context.debug(`The '${propertyNames}' property is not a property of the '${variableString}' variable's '${variableTypeName}' type.`);
     } else {
       const type = variableType;
 
@@ -126,15 +131,15 @@ export default domAssigned(class PropertyRelation {
   static name = "PropertyRelation";
 
   static fromPropertyRelationNode(propertyRelationNode, context) {
-    const { Variable, Property } = dom,
+    const { Term, Property } = dom,
           node = propertyRelationNode,  ///
           string = context.nodeAsString(node),
           tokens = context.nodeAsTokens(node),
-          variableNode = variableNodeQuery(propertyRelationNode),
           propertyNode = propertyNodeQuery(propertyRelationNode),
+          termNode = termNodeQuery(propertyRelationNode),
           property = Property.fromPropertyNode(propertyNode, context),
-          variable = Variable.fromVariableNode(variableNode, context),
-          propertyRelation = new PropertyRelation(string, node, tokens, property, variable);
+          term = Term.fromTermNode(termNode, context),
+          propertyRelation = new PropertyRelation(string, node, tokens, property, term);
 
     return propertyRelation;
   }

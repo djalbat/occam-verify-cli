@@ -76,17 +76,8 @@ export default domAssigned(class Term {
   }
 
   isEqualTo(term) {
-    let equalTo = false;
-
-    const termString = term.getString();
-
-    if (termString === this.string) {
-      const termType = term.getType();
-
-      if (termType === this.type) {
-        equalTo = true;
-      }
-    }
+    const termString = term.getString(),
+          equalTo = (termString === this.string);
 
     return equalTo;
   }

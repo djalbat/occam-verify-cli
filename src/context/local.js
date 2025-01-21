@@ -61,15 +61,27 @@ class LocalContext {
     return equivalences;
   }
 
+  getProofSteps() {
+    const proofStepSubproofs = this.getProofStepSubproofs(),
+          proofSteps = proofStepSubproofs.filter((proofStepSubproof) => {
+            const proofStepSubproofProofStep = proofStepSubproof.isProofStep();
+
+            if (proofStepSubproofProofStep) {
+              return true;
+            }
+          });
+
+    return proofSteps;
+  }
+
   getLastProofStep() {
     let lastProofStep = null;
 
-    const proofStepSubproofsLength = this.proofStepSubproofs.length;
+    const proofSteps = this.getProofSteps(),
+          proofStepsLength = proofSteps.length;
 
-    if (proofStepSubproofsLength > 0) {
-      const lastProofStepSubproof = last(this.proofStepSubproofs);
-
-      lastProofStep = lastProofStepSubproof;  ///
+    if (proofStepsLength > 0) {
+      lastProofStep = last(proofSteps);
     }
 
     return lastProofStep;
@@ -116,8 +128,8 @@ class LocalContext {
     } else {
       const leftTerm = equality.getLeftTerm(),
             rightTerm = equality.getRightTerm(),
-            leftEquivalence = this.equivalences.findEquivalenceByTerm(leftTerm),
-            rightEquivalence = this.equivalences.findEquivalenceByTerm(rightTerm);
+            leftEquivalence = this.findEquivalenceByTerm(leftTerm),
+            rightEquivalence = this.findEquivalenceByTerm(rightTerm);
 
       if (false) {
         ///
@@ -199,24 +211,6 @@ class LocalContext {
     return judgementAdded;
   }
 
-  getTermType(term) {
-    let termType;
-
-    const equivalences = this.getEquivalences(),
-          equivalence = equivalences.findEquivalenceByTerm(term);
-
-    if (equivalence !== null) {
-      const LocalContext = this,  ///
-            equivalenceType = equivalence.getType(LocalContext);
-
-      termType = equivalenceType;  ///
-    } else {
-      termType = term.getType();
-    }
-
-    return termType;
-  }
-
   findLabelByReference(reference, context) { return this.context.findLabelByReference(reference, context); }
 
   findRuleByReference(reference) { return this.context.findRuleByReference(reference); }
@@ -268,6 +262,8 @@ class LocalContext {
 
     return judgement;
   }
+
+  findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
 
   findMetavariable(metavariable, generalContext, specificContext) { return this.context.findMetavariable(metavariable, generalContext, specificContext); }
 
@@ -357,6 +353,20 @@ class LocalContext {
           metavariableDefined = judgementPresent; ///
 
     return metavariableDefined
+  }
+
+  matchTermAndPropertyRelation(term, propertyRelation) {
+    const context = this, ///
+          proofSteps = this.getProofSteps(),
+          termAndPropertyRelationMatches = proofSteps.some((proofStep) => {
+            const termAndPropertyRelationMatches = proofStep.matchTermAndPropertyRelation(term, propertyRelation, context);
+
+            if (termAndPropertyRelationMatches) {
+              return true;
+            }
+          });
+
+    return termAndPropertyRelationMatches;
   }
 
   nodeAsString(node, tokens = null) {

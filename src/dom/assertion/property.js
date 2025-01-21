@@ -5,6 +5,7 @@ import dom from "../../dom";
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
 import VariableAssignment from "../../assignment/variable";
+import {propertyAssertionFromStatement} from "../../utilities/context";
 
 const termNodeQuery = nodeQuery("/propertyAssertion/term"),
       propertyRelationNodeQuery = nodeQuery("/propertyAssertion/propertyRelation"),
@@ -37,6 +38,32 @@ export default domAssigned(class PropertyAssertion {
 
   getPropertyRelation() {
     return this.propertyRelation;
+  }
+
+  matchTermAndPropertyRelation(term, propertyRelation, context) {
+    let verifiedAsPropertyAssertion = false;
+
+    const termString = term.getString(),
+          propertyRelationString = propertyRelation.getString(),
+          propertyAssertionString = this.getString();
+
+    context.trace(`Matching the '${termString}' term and '${propertyRelationString}' property relation with  the '${propertyAssertionString}' property assertion...`);
+
+    const termA = term,
+          termB = this.term, ///
+          termAEqualToTermB = termA.isEqualTo(termB);
+
+    if (termAEqualToTermB) {
+      const propertyRelationEqualToPropertyRelation = this.propertyRelation.isEqualTo(propertyRelation);
+
+      verifiedAsPropertyAssertion = propertyRelationEqualToPropertyRelation;  ///
+    }
+
+    if (verifiedAsPropertyAssertion) {
+      context.debug(`...matched the '${termString}' term and '${propertyRelationString}' property relation with  the '${propertyAssertionString}' property assertion.`);
+    }
+
+    return verifiedAsPropertyAssertion;
   }
 
   verify(assignments, stated, context) {
@@ -154,14 +181,14 @@ export default domAssigned(class PropertyAssertion {
     return verifiedWhenStated;
   }
 
-  verifyWhenDerived(assignments, context) {
-    let verifiedWhenDerived = false;
+  verifyWhenDerived(context) {
+    let verifiedWhenDerived;
 
     const propertyAssertionString = this.string; ///
 
     context.trace(`Verifying the '${propertyAssertionString}' derived property assertion...`);
 
-    debugger
+    verifiedWhenDerived = true;
 
     if (verifiedWhenDerived) {
       context.debug(`...verified the '${propertyAssertionString}' derived property assertion.`);
