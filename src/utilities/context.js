@@ -73,6 +73,16 @@ export function propertyAssertionFromStatement(statement, context) {
   return propertyAssertion;
 }
 
+export function subproofAssertionFromStatement(statement, context) {
+  context = contextFromStatement(statement, context); ///
+
+  const { SubproofAssertion } = dom,
+    statementNode = statement.getNode(),
+    subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
+
+  return subproofAssertion;
+}
+
 export function containedAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
@@ -83,14 +93,14 @@ export function containedAssertionFromStatement(statement, context) {
   return containedAssertion;
 }
 
-export function subproofAssertionFromStatement(statement, context) {
+export function satisfyingAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { SubproofAssertion } = dom,
+  const { SatisfyingAssertion } = dom,
         statementNode = statement.getNode(),
-        subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
+        satisfyingAssertion = SatisfyingAssertion.fromStatementNode(statementNode, context);
 
-  return subproofAssertion;
+  return satisfyingAssertion;
 }
 
 function contextFromFrame(frame, context) {

@@ -8,8 +8,9 @@ import { equalityFromStatement,
          typeAssertionFromStatement,
          definedAssertionFromStatement,
          propertyAssertionFromStatement,
+         subproofAssertionFromStatement,
          containedAssertionFromStatement,
-         subproofAssertionFromStatement } from "../../utilities/context";
+         satisfyingAssertionFromStatement } from "../../utilities/context";
 
 function unifyWithBracketedCombinator(statement, assignments, stated, context) {
   stated = true;  ///
@@ -172,28 +173,6 @@ function verifyAsPropertyAssertion(statement, assignments, stated, context) {
   return verifiedAsPropertyAssertion;
 }
 
-function verifyAsContainedAssertion(statement, assignments, stated, context) {
-  let verifiedAsContainedAssertion = false;
-
-  const containedAssertion = containedAssertionFromStatement(statement, context);
-
-  if (containedAssertion !== null) {
-    const statementString = statement.getString();
-
-    context.trace(`Verifying the '${statementString}' statement as a contained assertion...`);
-
-    const containedAssertionVerified = containedAssertion.verify(assignments, stated, context);
-
-    verifiedAsContainedAssertion = containedAssertionVerified; ///
-
-    if (verifiedAsContainedAssertion) {
-      context.debug(`...verified the '${statementString}' statement as a defined assertion.`);
-    }
-  }
-
-  return verifiedAsContainedAssertion;
-}
-
 function verifyAsSubproofAssertion(statement, assignments, stated, context) {
   let verifiedAsSubproofAssertion = false;
 
@@ -216,6 +195,50 @@ function verifyAsSubproofAssertion(statement, assignments, stated, context) {
   return verifiedAsSubproofAssertion;
 }
 
+function verifyAsContainedAssertion(statement, assignments, stated, context) {
+  let verifiedAsContainedAssertion = false;
+
+  const containedAssertion = containedAssertionFromStatement(statement, context);
+
+  if (containedAssertion !== null) {
+    const statementString = statement.getString();
+
+    context.trace(`Verifying the '${statementString}' statement as a contained assertion...`);
+
+    const containedAssertionVerified = containedAssertion.verify(assignments, stated, context);
+
+    verifiedAsContainedAssertion = containedAssertionVerified; ///
+
+    if (verifiedAsContainedAssertion) {
+      context.debug(`...verified the '${statementString}' statement as a contained assertion.`);
+    }
+  }
+
+  return verifiedAsContainedAssertion;
+}
+
+function verifyAsSatisfyingAssertion(statement, assignments, stated, context) {
+  let verifiedAsSatisfyingAssertion = false;
+
+  const satisfyingAssertion = satisfyingAssertionFromStatement(statement, context);
+
+  if (satisfyingAssertion !== null) {
+    const statementString = statement.getString();
+
+    context.trace(`Verifying the '${statementString}' statement as a satisfying assertion...`);
+
+    const satisfyingAssertionVerified = satisfyingAssertion.verify(assignments, stated, context);
+
+    verifiedAsSatisfyingAssertion = satisfyingAssertionVerified; ///
+
+    if (verifiedAsSatisfyingAssertion) {
+      context.debug(`...verified the '${statementString}' statement as a defined assertion.`);
+    }
+  }
+
+  return verifiedAsSatisfyingAssertion;
+}
+
 const verifyMixins = [
   unifyWithBracketedCombinator,
   unifyWithCombinators,
@@ -224,9 +247,10 @@ const verifyMixins = [
   verifyAsJudgement,
   verifyAsTypeAssertion,
   verifyAsDefinedAssertion,
-  verifyAsContainedAssertion,
   verifyAsPropertyAssertion,
-  verifyAsSubproofAssertion
+  verifyAsSubproofAssertion,
+  verifyAsContainedAssertion,
+  verifyAsSatisfyingAssertion
 ];
 
 export default verifyMixins;

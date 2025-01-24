@@ -12,7 +12,8 @@ import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utiliti
 
 const proofStepReferenceNodeQuery = nodeQuery("/proofStep/reference"),
       procedureCallReferenceNodeQuery = nodeQuery("/procedureCall/reference"),
-      declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable");
+      declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable"),
+      satisfyingAssertionMetavariableNodeQuery = nodeQuery("/satisfyingAssertion/metavariable");
 
 export default domAssigned(class Reference {
   constructor(metavariable) {
@@ -180,11 +181,7 @@ export default domAssigned(class Reference {
   }
 
   static fromReferenceNode(referenceNode, fileContext) {
-    const { Metavariable } = dom,
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
-          metavariable = Metavariable.fromReferenceNode(referenceNode, context),
-          reference = new Reference(metavariable);
+    const reference = referenceFromReferenceNode(referenceNode, fileContext);
 
     return reference;
   }
@@ -195,36 +192,24 @@ export default domAssigned(class Reference {
     const proofStepReferenceNode = proofStepReferenceNodeQuery(proofStepNode);
 
     if (proofStepReferenceNode !== null) {
-      const { Metavariable } = dom,
-            referenceNode = proofStepReferenceNode, ///
-            localContext = LocalContext.fromFileContext(fileContext),
-            context = localContext, ///
-            metavariable = Metavariable.fromReferenceNode(referenceNode, context);
+      const referenceNode = proofStepReferenceNode; ///
 
-      reference = new Reference(metavariable);
+      reference = referenceFromReferenceNode(referenceNode, fileContext);
     }
 
     return reference;
   }
 
   static fromDeclarationNode(declarationNode, fileContext) {
-    const { Metavariable } = dom,
-          declarationMetavariableNode = declarationMetavariableNodeQuery(declarationNode),
+    const declarationMetavariableNode = declarationMetavariableNodeQuery(declarationNode),
           metavariableNode = declarationMetavariableNode, ///
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
-          metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
-          reference = new Reference(metavariable);
+          reference = referenceFromMetavariableNode(metavariableNode, fileContext);
 
     return reference;
   }
 
   static fromMetavariableNode(metavariableNode, fileContext) {
-    const { Metavariable } = dom,
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
-          metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
-          reference = new Reference(metavariable);
+    const reference = referenceFromMetavariableNode(metavariableNode, fileContext);
 
     return reference;
   }
@@ -235,15 +220,39 @@ export default domAssigned(class Reference {
     const procedureCallReferenceNode = procedureCallReferenceNodeQuery(procedureCallNode);
 
     if (procedureCallReferenceNode !== null) {
-      const { Metavariable } = dom,
-            referenceNode = procedureCallReferenceNode, ///
-            localContext = LocalContext.fromFileContext(fileContext),
-            context = localContext, ///
-            metavariable = Metavariable.fromReferenceNode(referenceNode, context);
+      const referenceNode = procedureCallReferenceNode; ///
 
-      reference = new Reference(metavariable);
+      reference = referenceFromReferenceNode(referenceNode, fileContext);
     }
 
     return reference;
   }
+
+  static fromSatisfyingAssertionNode(satisfyingAssertionNode, fileContext) {
+    const satisfyingAssertionMetavariableNode = satisfyingAssertionMetavariableNodeQuery(satisfyingAssertionNode),
+          metavariableNode = satisfyingAssertionMetavariableNode, ///
+          reference = referenceFromMetavariableNode(metavariableNode, fileContext);
+
+    return reference;
+  }
 });
+
+function referenceFromReferenceNode(referenceNode, fileContext) {
+  const { Reference, Metavariable } = dom,
+        localContext = LocalContext.fromFileContext(fileContext),
+        context = localContext, ///
+        metavariable = Metavariable.fromReferenceNode(referenceNode, context),
+        reference = new Reference(metavariable);
+
+  return reference;
+}
+
+function referenceFromMetavariableNode(metavariableNode, fileContext) {
+  const { Reference, Metavariable } = dom,
+        localContext = LocalContext.fromFileContext(fileContext),
+        context = localContext, ///
+        metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
+        reference = new Reference(metavariable);
+
+  return reference;
+}
