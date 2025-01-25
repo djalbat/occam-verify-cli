@@ -67,16 +67,29 @@ function unifyAWithReference(statement, reference, substitutions, context) {
 function unifyAsSatisfyingAssertion(statement, reference, substitutions, context) {
   let unifiedAsSatisfyingAssertion = false;
 
-  const satisfyingAssertion = satisfyingAssertionFromStatement(statement, context);
+  if (reference !== null) {
+    const satisfyingAssertion = satisfyingAssertionFromStatement(statement, context);
 
-  if (satisfyingAssertion !== null) {
-    const statementString = statement.getString();
+    if (satisfyingAssertion !== null) {
+      const statementString = statement.getString();
 
-    context.trace(`Unifying the '${statementString}' statement as a satisfying assertion...`);
+      context.trace(`Unifying the '${statementString}' statement as a satisfying assertion...`);
 
-    debugger
+      const axiomLemmaTheoremConjecture = context.findAxiomLemmaTheoremConjectureByReference(reference);
 
-    context.debug(`...unified the '${statementString}' statement as a satisfying assertion.`);
+      if (axiomLemmaTheoremConjecture !== null) {
+        reference = satisfyingAssertion.getReference();
+
+        const axiom = context.findAxiomByReference(reference),
+              axiomLemmaTheoremConjectureUnified = axiom.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context);
+
+        unifiedAsSatisfyingAssertion = axiomLemmaTheoremConjectureUnified;  ///
+      }
+
+      if (unifiedAsSatisfyingAssertion) {
+        context.debug(`...unified the '${statementString}' statement as a satisfying assertion.`);
+      }
+    }
   }
 
   return unifiedAsSatisfyingAssertion;
@@ -202,7 +215,9 @@ function unifyAsPropertyAssertion(statement, reference, substitutions, context) 
         });
       }
 
-      context.debug(`...unified the '${statementString}' statement as a property assertion.`);
+      if (unifiedAsPropertyAssertion) {
+        context.debug(`...unified the '${statementString}' statement as a property assertion.`);
+      }
     }
   }
 

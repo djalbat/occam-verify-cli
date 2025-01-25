@@ -316,7 +316,9 @@ export function labelsStringFromLabels(labels) {
 export function stringFromLabelsAndConsequent(labels, consequent) {
   const consequentString = consequent.getString(),
         labelsString = labelsStringFromLabels(labels),
-        string = `${labelsString} :: ${consequentString}`;
+        string = (labelsString === null) ?
+                   consequentString : ///
+                    `${labelsString} :: ${consequentString}`;
 
   return string;
 }

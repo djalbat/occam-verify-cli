@@ -54,7 +54,7 @@ export default class Equivalences {
     const index = this.array.indexOf(equivalence),
           start = index,  ///
           deleteCount = 1,
-          equivalenceString = equivalence.getString();
+          equivalenceString = equivalence.asString();
 
     context.trace(`Removed the '${equivalenceString}' equivalence.`);
 

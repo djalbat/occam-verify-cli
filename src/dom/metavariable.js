@@ -8,7 +8,6 @@ import StatementSubstitution from "../substitution/statement";
 import MetavariablePartialContext from "../context/partial/metavariable";
 
 import { nodeQuery } from "../utilities/query";
-import { objectType } from "../dom/type";
 import { domAssigned } from "../dom";
 import { EMPTY_STRING } from "../constants";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";

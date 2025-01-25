@@ -3,7 +3,6 @@
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { domAssigned } from "../dom";
-import { EMPTY_STRING } from "../constants";
 
 export default domAssigned(class Lemma extends TopLevelAssertion {
   verify() {
@@ -13,7 +12,7 @@ export default domAssigned(class Lemma extends TopLevelAssertion {
           fileContext = this.getFileContext(),
           lemmaString = lemma.getString();
 
-    (lemmaString === EMPTY_STRING) ?
+    (lemmaString === null) ?
       fileContext.trace(`Verifying a lemma...`) :
         fileContext.trace(`Verifying the '${lemmaString}' lemma...`);
 
@@ -24,7 +23,7 @@ export default domAssigned(class Lemma extends TopLevelAssertion {
 
       fileContext.addLemma(lemma);
 
-      (lemmaString === EMPTY_STRING) ?
+      (lemmaString === null) ?
         fileContext.debug(`...verified a lemma.`) :
           fileContext.debug(`...verified the '${lemmaString}' lemma.`);
     }

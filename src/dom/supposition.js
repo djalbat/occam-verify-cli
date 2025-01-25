@@ -172,7 +172,7 @@ export default domAssigned(class Supposition {
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`);
 
-    if (this.statement) {
+    if (this.statement !== null) {
       statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
     }
 

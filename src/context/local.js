@@ -159,7 +159,7 @@ class LocalContext {
 
           this.removeEquivalence(rightEquivalence, context);
 
-          this.addEquivalence(equivalence);
+          this.addEquivalence(equivalence, context);
         }
 
         equivalence.addTerm(leftTerm, context);

@@ -1,8 +1,13 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
+import Substitutions from "../substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { domAssigned } from "../dom";
+
+const { match } = arrayUtilities;
 
 export default domAssigned(class Axiom extends TopLevelAssertion {
   verify() {
@@ -25,6 +30,62 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     }
 
     return verified;
+  }
+
+  unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context) {
+    let axiomLemmaTheoremConjectureUnified = false;
+
+    const axiomString = this.getString(),
+          axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjecture.getString();
+
+    context.trace(`Unifying the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture against the '${axiomString}' axiom...`);
+
+    const fileContext = this.getFileContext(),
+          substitutions = Substitutions.fromNothing(),
+          generalContext = fileContext, ///
+          specificContext = context;  ///
+
+    let suppositions;
+
+    suppositions = this.getSuppositions();
+
+    const generalSuppositions = suppositions; ///
+
+    suppositions = axiomLemmaTheoremConjecture.getSuppositions();
+
+    const specificSuppositions = suppositions,  ///
+          suppositionsMatch = match(generalSuppositions, specificSuppositions, (generalSupposition, specificSupposition) => {
+            const statement = specificSupposition.getStatement(),
+                  statementUnified = generalSupposition.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+            if (statementUnified) {
+              return true;
+            }
+          });
+
+    if (suppositionsMatch) {
+      let consequent;
+
+      consequent = this.getConsequent();
+
+      const generalConsequent = consequent; ///
+
+      consequent = axiomLemmaTheoremConjecture.getConsequent();
+
+      const specificConsequent = consequent,
+            statement = specificConsequent.getStatement(),
+            statementUnified = generalConsequent.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+      if (statementUnified) {
+        axiomLemmaTheoremConjectureUnified = true;
+      }
+    }
+
+    if (axiomLemmaTheoremConjectureUnified) {
+      context.debug(`...unified the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture against the '${axiomString}' axiom.`);
+    }
+
+    return axiomLemmaTheoremConjectureUnified;
   }
 
   static name = "Axiom";
