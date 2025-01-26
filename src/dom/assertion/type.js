@@ -111,10 +111,11 @@ export default domAssigned(class TypeAssertion {
     });
 
     if (termVerified) {
-      const { Variable } = dom,
+      const { Type, Variable } = dom,
             termNode = this.term.getNode(),
             variableNode = variableNodeQuery(termNode),
-            variable = Variable.fromVariableNodeAndType(variableNode, this.type, context);
+            type = Type.fromType(this.type, context),
+            variable = Variable.fromVariableNodeAndType(variableNode, type, context);
 
       if (variable === null) {
         const termString = this.term.getString();
@@ -147,12 +148,16 @@ export default domAssigned(class TypeAssertion {
     context.trace(`Verifying the '${typeAssertionString}' derived type assertion...`);
 
     const termVerified = this.term.verify(context, () => {
-      let verifiedAhead;
+      let verifiedAhead = false;
 
       const termType = this.term.getType(),
-            typeEqualToOrSuperTypeOfTermType = this.type.isEqualToOrSuperTypeOf(termType);
+            termTypeProvisional = termType.isProvisional();
 
-      verifiedAhead = typeEqualToOrSuperTypeOfTermType; ///
+      if (!termTypeProvisional) {
+        const typeEqualToOrSuperTypeOfTermType = this.type.isEqualToOrSuperTypeOf(termType);
+
+        verifiedAhead = typeEqualToOrSuperTypeOfTermType; ///
+      }
 
       return verifiedAhead;
     });

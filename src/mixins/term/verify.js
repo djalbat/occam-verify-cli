@@ -39,8 +39,11 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
   const { Variable } = dom,
         context = localContext, ///
         termNode = term.getNode(),
-        variableNode = variableNodeQuery(termNode),
-        variable = Variable.fromVariableNode(variableNode, context);
+        variableNode = variableNodeQuery(termNode);
+
+  let variable;
+
+  variable = Variable.fromVariableNode(variableNode, context);
 
   if (variable !== null) {
     const termString = term.getString();
@@ -51,6 +54,10 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
 
     if (variableVerified) {
       let verifiedAhead;
+
+      const variableName = variable.getName();
+
+      variable = context.findVariableByVariableName(variableName);
 
       const type = variable.getType();
 
