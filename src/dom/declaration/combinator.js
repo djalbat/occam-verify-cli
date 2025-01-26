@@ -7,8 +7,9 @@ import { domAssigned } from "../../dom";
 import combinatorVerifier from "../../verifier/combinator";
 
 export default domAssigned(class CombinatorDeclaration {
-  constructor(fileContext, combinator) {
+  constructor(fileContext, string, combinator) {
     this.fileContext = fileContext;
+    this.string = string;
     this.combinator = combinator;
   }
 
@@ -16,11 +17,13 @@ export default domAssigned(class CombinatorDeclaration {
     return this.fileContext;
   }
 
+  getString() {
+    return this.string;
+  }
+
   getCombinator() {
     return this.combinator;
   }
-
-  getString() { return this.combinator.getString(); }
 
   verify() {
     let verified = false;
@@ -67,8 +70,10 @@ export default domAssigned(class CombinatorDeclaration {
 
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
     const { Combinator } = dom,
+          node = combinatorDeclarationNode, ///
+          string = fileContext.nodeAsString(node),
           combinator = Combinator.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
-          combinatorDeclaration = new CombinatorDeclaration(fileContext, combinator);
+          combinatorDeclaration = new CombinatorDeclaration(fileContext, string, combinator);
 
     return combinatorDeclaration;
   }

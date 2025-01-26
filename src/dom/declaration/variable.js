@@ -6,8 +6,9 @@ import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class VariableDeclaration {
-  constructor(fileContext, variable) {
+  constructor(fileContext, string, variable) {
     this.fileContext = fileContext;
+    this.string = string;
     this.variable = variable;
   }
 
@@ -15,11 +16,13 @@ export default domAssigned(class VariableDeclaration {
     return this.fileContext;
   }
 
+  getString() {
+    return this.string;
+  }
+
   getVariable() {
     return this.variable;
   }
-
-  getString() { return this.variable.getString(); }
 
   verify() {
     let verified = false;
@@ -28,25 +31,41 @@ export default domAssigned(class VariableDeclaration {
 
     this.fileContext.trace(`Verifying the '${variableDeclarationString}' variable declaration...`);
 
-    const variableVerified = this.verifyVariable(this.variable);
+    const variableVerified = this.verifyVariable();
 
     if (variableVerified) {
-      let type;
+      const variableTypeVerified = this.verifyVariableType();
 
-      type = this.variable.getType();
+      if (variableTypeVerified) {
+        let type;
 
-      const typeVerified = this.verifyType(type);
+        type = this.variable.getType();
 
-      if (typeVerified) {
         const typeName = type.getName();
 
         type = this.fileContext.findTypeByTypeName(typeName);
 
-        this.variable.setType(type);
+        const typeProvisional = type.isProvisional(),
+              variableProvisional = this.variable.isProvisional();
 
-        this.fileContext.addVariable(this.variable);
+        if (typeProvisional !== variableProvisional) {
+          const typeString = type.getString(),
+                variableString = this.variable.getString();
 
-        verified = true;
+          if (typeProvisional) {
+            this.fileContext.debug(`The '${typeString}' type is provisional bu the '${variableString}' variable's type is not.`);
+          }
+
+          if (variableProvisional) {
+            this.fileContext.debug(`The '${typeString}' type is not provisional bu the '${variableString}' variable's type is.`);
+          }
+        } else {
+          this.variable.setType(type);
+
+          this.fileContext.addVariable(this.variable);
+
+          verified = true;
+        }
       }
     }
 
@@ -57,8 +76,10 @@ export default domAssigned(class VariableDeclaration {
     return verified;
   }
 
-  verifyType(type) {
+  verifyVariableType() {
     let typeVerified = false;
+
+    const type = this.variable.getType();
 
     if (type === objectType) {
       typeVerified = true;
@@ -83,14 +104,14 @@ export default domAssigned(class VariableDeclaration {
     return typeVerified;
   }
 
-  verifyVariable(variable) {
+  verifyVariable() {
     let  variableVerified = false;
 
-    const variableString = variable.getString();
+    const variableString = this.variable.getString();
 
     this.fileContext.trace(`Verifying the '${variableString}' variable...`);
 
-    const variableName = variable.getName(),
+    const variableName = this.variable.getName(),
           variablePresent = this.fileContext.isVariablePresentByVariableName(variableName);
 
     if (variablePresent) {
@@ -110,8 +131,10 @@ export default domAssigned(class VariableDeclaration {
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
     const { Variable } = dom,
+          node = variableDeclarationNode, ///
+          string = fileContext.nodeAsString(node),
           variable = Variable.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
-          variableDeclaration = new VariableDeclaration(fileContext, variable);
+          variableDeclaration = new VariableDeclaration(fileContext, string, variable);
 
     return variableDeclaration;
   }

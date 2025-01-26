@@ -5,8 +5,9 @@ import dom from "../../dom";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class TypeDeclaration {
-  constructor(fileContext, type) {
+  constructor(fileContext, string, type) {
     this.fileContext = fileContext;
+    this.string = string;
     this.type = type;
   }
 
@@ -14,11 +15,13 @@ export default domAssigned(class TypeDeclaration {
     return this.fileContext;
   }
 
+  getString() {
+    return this.string;
+  }
+
   getType() {
     return this.type;
   }
-
-  getString() { return this.type.getString(); }
 
   verify() {
     let verified = false;
@@ -27,7 +30,7 @@ export default domAssigned(class TypeDeclaration {
 
     this.fileContext.trace(`Verifying the '${typeDeclarationString}' type declaration...`);
 
-    const typeVerified = this.verifyType(this.type);
+    const typeVerified = this.verifyType();
 
     if (typeVerified) {
       this.fileContext.addType(this.type);
@@ -42,10 +45,10 @@ export default domAssigned(class TypeDeclaration {
     return verified;
   }
 
-  verifyType(type) {
+  verifyType() {
     let typeVerified = false;
 
-    const typeName = type.getName();
+    const typeName = this.type.getName();
 
     this.fileContext.trace(`Verifying the '${typeName}' type...`);
 
@@ -56,7 +59,7 @@ export default domAssigned(class TypeDeclaration {
     } else {
       let superType;
 
-      superType = type.getSuperType();
+      superType = this.type.getSuperType();
 
       const superTypeName = superType.getName();
 
@@ -65,7 +68,7 @@ export default domAssigned(class TypeDeclaration {
       if (superType === null) {
         this.fileContext.debug(`The super-type '${superTypeName}' is not present.`);
       } else {
-        type.setSuperType(superType);
+        this.type.setSuperType(superType);
 
         typeVerified = true;
       }
@@ -83,7 +86,9 @@ export default domAssigned(class TypeDeclaration {
   static fromTypeDeclarationNode(typeDeclarationNode, fileContext) {
     const { Type } = dom,
           type = Type.fromTypeDeclarationNode(typeDeclarationNode, fileContext),
-          typeDeclaration = new TypeDeclaration(fileContext, type);
+          node = typeDeclarationNode, ///
+          string = fileContext.nodeAsString(node),
+          typeDeclaration = new TypeDeclaration(fileContext, string, type);
 
     return typeDeclaration;
   }

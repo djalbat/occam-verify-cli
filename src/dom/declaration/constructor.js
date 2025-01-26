@@ -8,8 +8,9 @@ import { domAssigned } from "../../dom";
 import constructorVerifier from "../../verifier/constructor";
 
 export default domAssigned(class ConstructorDeclaration {
-  constructor(fileContext, constructor) {
+  constructor(fileContext, string, constructor) {
     this.fileContext = fileContext;
+    this.string = string;
     this.constructor = constructor;
   }
 
@@ -17,11 +18,13 @@ export default domAssigned(class ConstructorDeclaration {
     return this.fileContext;
   }
 
+  getString() {
+    return this.string;
+  }
+
   getConstructor() {
     return this.constructor;
   }
-
-  getString() { return this.constructor.getString(); }
 
   verify() {
     let verified;
@@ -106,8 +109,10 @@ export default domAssigned(class ConstructorDeclaration {
 
   static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
     const { Constructor } = dom,
+          node = constructorDeclarationNode,  ///
+          string = fileContext.nodeAsString(node),
           constructor = Constructor.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
-          constructorDeclaration = new ConstructorDeclaration(fileContext, constructor);
+          constructorDeclaration = new ConstructorDeclaration(fileContext, string, constructor);
 
     return constructorDeclaration;
   }
