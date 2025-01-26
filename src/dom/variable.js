@@ -14,7 +14,7 @@ import { variableNodeFromVariableString } from "../context/partial/variable";
 
 const termVariableNodeQuery = nodeQuery("/term/variable!"),
       variableDeclarationVariableNodeQuery = nodeQuery("/variableDeclaration/variable"),
-      lastSecondaryKeywordTerminalNodeQuery = nodeQuery("/variableDeclaration/@secondary-keyword[-1]")
+      lastSecondaryKeywordTerminalNodeQuery = nodeQuery("/variableDeclaration/@secondary-keyword[-1]");
 
 export default domAssigned(class Variable {
   constructor(string, node, name, type, provisional, propertyRelations) {

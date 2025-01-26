@@ -32,10 +32,9 @@ export default domAssigned(class CombinatorDeclaration {
 
     this.fileContext.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
 
-    const statement = this.combinator.getStatement(),
-          statementVerified = this.verifyStatement(statement);
+    const combinatorVerified = this.verifyCombinator();
 
-    if (statementVerified) {
+    if (combinatorVerified) {
       this.fileContext.addCombinator(this.combinator);
 
       verified = true;
@@ -48,19 +47,20 @@ export default domAssigned(class CombinatorDeclaration {
     return verified;
   }
 
-  verifyStatement(statement) {
+  verifyCombinator() {
     let statementVerified;
 
-    const statementString = statement.getString(); ///
+    const combinatorString = this.combinator.getString();
 
-    this.fileContext.trace(`Verifying the '${statementString}' statement...`);
+    this.fileContext.trace(`Verifying the '${combinatorString}' statement...`);
 
-    const statementNode = statement.getNode();
+    const statement = this.combinator.getStatement(),
+          statementNode = statement.getNode();
 
     statementVerified = combinatorVerifier.verifyStatement(statementNode, this.fileContext);
 
     if (statementVerified) {
-      this.fileContext.debug(`...verified the '${statementString}' statement.`);
+      this.fileContext.debug(`...verified the '${combinatorString}' statement.`);
     }
 
     return statementVerified;

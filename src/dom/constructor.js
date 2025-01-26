@@ -5,16 +5,19 @@ import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
+import { PROVISIONALLY } from "../constants";
 import { unifyTermWithConstructor } from "../utilities/unification";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
 
 const termNodeQuery = nodeQuery("/constructorDeclaration/term"),
-      typeNodeQuery = nodeQuery("/constructorDeclaration/type");
+      typeNodeQuery = nodeQuery("/constructorDeclaration/type"),
+      lastSecondaryKeywordTerminalNodeQuery = nodeQuery("/constructorDeclaration/@secondary-keyword[-1]");
 
 export default domAssigned(class Constructor {
-  constructor(string, term) {
+  constructor(string, term, provisional) {
     this.string = string;
     this.term = term;
+    this.provisional = provisional;
   }
 
   getString() {
@@ -25,7 +28,13 @@ export default domAssigned(class Constructor {
     return this.term;
   }
 
+  isProvisional() {
+    return this.provisional;
+  }
+
   getType() { return this.term.getType(); }
+
+  setType(type) { this.term.setType(type); }
 
   unifyTerm(term, context, verifyAhead) {
     let termUnified = false;
@@ -59,19 +68,22 @@ export default domAssigned(class Constructor {
 
   toJSON() {
     const termJSON = termToTermJSON(this.term),
+          provisional = this.provisional,
           term = termJSON,  ///
           json = {
-            term
+            term,
+            provisional
           };
 
     return json;
   }
 
   static fromJSON(json, fileContext) {
-    const term = termFromJSON(json, fileContext),
+    const { provisional } = json,
+          term = termFromJSON(json, fileContext),
           type = term.getType(),
           string = stringFromTermAndType(term, type),
-          constructor = new Constructor(string, term);
+          constructor = new Constructor(string, term, provisional);
 
     return constructor;
   }
@@ -85,7 +97,8 @@ export default domAssigned(class Constructor {
           type = Type.fromTypeNode(typeNode),
           term = Term.fromTermNodeAndType(termNode, type, context),
           string = stringFromTermAndType(term, type),
-          constructor = new Constructor(string, term);
+          provisional = provisionalFromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
+          constructor = new Constructor(string, term, provisional);
 
     return constructor;
   }
@@ -105,4 +118,19 @@ export function stringFromTermAndType(term, type) {
   }
 
   return string;
+}
+
+function provisionalFromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
+  let provisional = false;
+
+  const lastSecondaryKeywordTerminalNode = lastSecondaryKeywordTerminalNodeQuery(constructorDeclarationNode);
+
+  if (lastSecondaryKeywordTerminalNode !== null) {
+    const content = lastSecondaryKeywordTerminalNode.getContent(),
+          contentProvisionally = (content === PROVISIONALLY);
+
+    provisional = contentProvisionally; ///
+  }
+
+  return provisional;
 }

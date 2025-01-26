@@ -33,24 +33,41 @@ export default domAssigned(class ConstructorDeclaration {
 
     this.fileContext.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
 
-    const term = this.constructor.getTerm(),
-          termVerified = this.verifyTerm(term);
+    const constructorVerified = this.verifyConstructor();
 
-    if (termVerified) {
-      let type = this.constructor.getType();
-
-      const typeVerified = this.verifyType(type);
+    if (constructorVerified) {
+      const typeVerified = this.verifyType();
 
       if (typeVerified) {
+        let type;
+
+        type = this.constructor.getType();
+
         const typeName = type.getName();
 
         type = this.fileContext.findTypeByTypeName(typeName);
 
-        term.setType(type);
+        const typeProvisional = type.isProvisional(),
+              constructorProvisional = this.constructor.isProvisional();
 
-        this.fileContext.addConstructor(this.constructor);
+        if (typeProvisional !== constructorProvisional) {
+          const typeString = type.getString(),
+                constructorString = this.constructor.getString();
 
-        verified = true;
+          if (typeProvisional) {
+            this.fileContext.debug(`The '${typeString}' type is provisional whilst the '${constructorString}' constructor's type is not.`);
+          }
+
+          if (constructorProvisional) {
+            this.fileContext.debug(`The '${typeString}' type is not provisional whilst the '${constructorString}' constructor's type is.`);
+          }
+        } else {
+          this.constructor.setType(type);
+
+          this.fileContext.addConstructor(this.constructor);
+
+          verified = true;
+        }
       }
     }
 
@@ -61,26 +78,10 @@ export default domAssigned(class ConstructorDeclaration {
     return verified;
   }
 
-  verifyTerm(term) {
-    let termVerified;
-
-    const termString = term.getString(); ///
-
-    this.fileContext.trace(`Verifying the '${termString}' term...`);
-
-    const termNode = term.getNode();
-
-    termVerified = constructorVerifier.verifyTerm(termNode, this.fileContext);
-
-    if (termVerified) {
-      this.fileContext.debug(`...verified the '${termString}' term.`);
-    }
-
-    return termVerified;
-  }
-
-  verifyType(type) {
+  verifyType() {
     let typeVerified;
+
+    const type = this.constructor.getType();
 
     if (type === objectType) {
       typeVerified = true;
@@ -103,6 +104,25 @@ export default domAssigned(class ConstructorDeclaration {
     }
 
     return typeVerified;
+  }
+
+  verifyConstructor() {
+    let constructorVerified;
+
+    const constructorString = this.constructor.getString();
+
+    this.fileContext.trace(`Verifying the '${constructorString}' constructor...`);
+
+    const term = this.constructor.getTerm(),
+          termNode = term.getNode();
+
+    constructorVerified = constructorVerifier.verifyTerm(termNode, this.fileContext);
+
+    if (constructorVerified) {
+      this.fileContext.debug(`...verified the '${constructorString}' constructor.`);
+    }
+
+    return constructorVerified;
   }
 
   static name = "ConstructorDeclaration";
