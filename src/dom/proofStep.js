@@ -6,7 +6,6 @@ import Substitutions from "../substitutions";
 
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
-import { assignAssignments } from "../utilities/assignments";
 import { propertyAssertionFromStatement } from "../utilities/context";
 
 const proofStepNodeQuery = nodeQuery("/proofStep");
@@ -76,50 +75,6 @@ export default domAssigned(class ProofStep {
     return unified;
   }
 
-  unifyStatement(statement, context) {
-    let statementUnified;
-
-    const specificContext = context, ///
-          generalContext = context, ///
-          substitutions = Substitutions.fromNothing();
-
-    statementUnified = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
-
-    if (statementUnified) {
-      const equivalences = context.getEquivalences(),
-            substitutionsUnified = equivalences.unifySubstitutions(substitutions);
-
-      statementUnified = substitutionsUnified;  ///
-    }
-
-    return statementUnified;
-  }
-
-  verifyAndUnify(substitutions, context) {
-    let verifiedAndUnified = false;
-
-    const assignments = [],
-          verified = this.verify(substitutions, assignments, context);
-
-    if (verified) {
-      const unified = this.unify(substitutions, context);
-
-      if (unified) {
-        const assignmentsAssigned = assignAssignments(assignments, context);
-
-        if (assignmentsAssigned) {
-          const proofStepSubproof = this; ///
-
-          context.addProofStepSubproof(proofStepSubproof);
-
-          verifiedAndUnified = true; ///
-        }
-      }
-    }
-
-    return verifiedAndUnified;
-  }
-
   verify(substitutions, assignments, context) {
     let verified = false;
 
@@ -150,6 +105,25 @@ export default domAssigned(class ProofStep {
     }
 
     return verified;
+  }
+
+  unifyStatement(statement, context) {
+    let statementUnified;
+
+    const specificContext = context, ///
+          generalContext = context, ///
+          substitutions = Substitutions.fromNothing();
+
+    statementUnified = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
+
+    if (statementUnified) {
+      const equivalences = context.getEquivalences(),
+            substitutionsUnified = equivalences.unifySubstitutions(substitutions);
+
+      statementUnified = substitutionsUnified;  ///
+    }
+
+    return statementUnified;
   }
 
   static name = "ProofStep";

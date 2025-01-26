@@ -6,6 +6,7 @@ import dom from "../dom";
 
 import { nodesQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
+import { assignAssignments } from "../utilities/assignments";
 
 const { last } = arrayUtilities;
 
@@ -31,10 +32,21 @@ export default domAssigned(class Derivation {
     let verified;
 
     verified = this.proofStepSubproofs.every((proofStepSubproof) => { ///
-      const proofStepSubproofVerifiedAndUnified = proofStepSubproof.verifyAndUnify(substitutions, context);
+      const assignments = [],
+            proofStepSubproofVerified = proofStepSubproof.verify(substitutions, assignments, context);
 
-      if (proofStepSubproofVerifiedAndUnified) {
-        return true;
+      if (proofStepSubproofVerified) {
+        const proofStepSubproofUnified = proofStepSubproof.unify(substitutions, context);
+
+        if (proofStepSubproofUnified) {
+          const assignmentsAssigned = assignAssignments(assignments, context);
+
+          if (assignmentsAssigned) {
+            context.addProofStepSubproof(proofStepSubproof);
+
+            return true;
+          }
+        }
       }
     });
 

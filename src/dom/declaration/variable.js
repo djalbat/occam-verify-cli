@@ -53,11 +53,11 @@ export default domAssigned(class VariableDeclaration {
                 variableString = this.variable.getString();
 
           if (typeProvisional) {
-            this.fileContext.debug(`The '${typeString}' type is provisional bu the '${variableString}' variable's type is not.`);
+            this.fileContext.debug(`The '${typeString}' type is provisional whilst the '${variableString}' variable's type is not.`);
           }
 
           if (variableProvisional) {
-            this.fileContext.debug(`The '${typeString}' type is not provisional bu the '${variableString}' variable's type is.`);
+            this.fileContext.debug(`The '${typeString}' type is not provisional whilst the '${variableString}' variable's type is.`);
           }
         } else {
           this.variable.setType(type);

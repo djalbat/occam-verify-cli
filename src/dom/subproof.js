@@ -89,7 +89,7 @@ export default domAssigned(class Subproof {
     return unified;
   }
 
-  verify(substitutions, context) {
+  verify(substitutions, assignments, context) {
     let subproofVerified = false;
 
     const localContext = LocalContext.fromContext(context);  ///
@@ -113,26 +113,6 @@ export default domAssigned(class Subproof {
     }
 
     return subproofVerified;
-  }
-
-  verifyAndUnify(substitutions, context) {
-    let verifiedAndUnified = false;
-
-    const verified = this.verify(substitutions, context);
-
-    if (verified) {
-      const unified = this.unify(substitutions, context);
-
-      if (unified) {
-        const proofStepSubproof = this; ///
-
-        context.addProofStepSubproof(proofStepSubproof);
-
-        verifiedAndUnified = true; ///
-      }
-    }
-
-    return verifiedAndUnified;
   }
 
   static name = "Subproof";
