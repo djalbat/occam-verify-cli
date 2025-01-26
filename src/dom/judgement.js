@@ -91,7 +91,7 @@ export default domAssigned(class Judgement {
 
     context.trace(`Verifying the '${judgementString}' judgement's '${declarationString}' declaration...`);
 
-    declarationVerified = this.declaration.verify(this.frame, assignments, stated, context);
+    declarationVerified = this.declaration.verify(assignments, stated, context);
 
     if (declarationVerified) {
       context.debug(`...verified the '${judgementString}' judgement's '${declarationString}' declaration.`);
@@ -125,13 +125,18 @@ export default domAssigned(class Judgement {
   }
 
   verifyWhenDerived(context) {
-    let verifiedWhenDerived ;
+    let verifiedWhenDerived;
 
     const judgementString = this.string;  ///
 
     context.trace(`Verifying the '${judgementString}' derived judgement...`);
 
-    verifiedWhenDerived = true;
+    const reference = this.declaration.getReference(),
+          metaLemmaMetatheorem = context.findMetaLemmaMetatheoremByReference(reference),
+          substitutions = metaLemmaMetatheorem.getSubstitutions(),
+          substitutionsMatch = this.frame.matchSubstitutions(substitutions, context);
+
+    verifiedWhenDerived = substitutionsMatch;
 
     if (verifiedWhenDerived) {
       context.debug(`...verified the '${judgementString}' derived judgement.`);

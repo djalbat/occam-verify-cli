@@ -227,8 +227,7 @@ export default domAssigned(class Frame {
       assignments = null; ///
 
       declarationsVerified = this.declarations.every((declaration) => {
-        const frame = null, ///
-              declarationVerified = declaration.verify(frame, assignments, stated, context);
+        const declarationVerified = declaration.verify(assignments, stated, context);
 
         return declarationVerified;
       });

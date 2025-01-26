@@ -735,6 +735,13 @@ export default class FileContext {
     return metavariablePresent;
   }
 
+  isMetaLemmaMetatheoremPresentByReference(reference) {
+    const metaLemmaMetatheorem = this.findMetaLemmaMetatheoremByReference(reference),
+          metaLemmaMetatheoremPresent = (metaLemmaMetatheorem !== null);
+
+    return metaLemmaMetatheoremPresent;
+  }
+
   nodeAsString(node, tokens = null) {
     if (tokens === null) {
       tokens = this.tokens;

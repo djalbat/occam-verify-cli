@@ -51,7 +51,7 @@ export default domAssigned(class Declaration {
     return substitutionMatches;
   }
 
-  verify(frame, assignments, stated, context) {
+  verify(assignments, stated, context) {
     let verified = false;
 
     const declarationString = this.string;  ///
@@ -68,9 +68,9 @@ export default domAssigned(class Declaration {
             verifiedWhenDerived = false;
 
         if (stated) {
-          verifiedWhenStated = this.verifyWhenStated(frame, assignments, context);
+          verifiedWhenStated = this.verifyWhenStated(assignments, context);
         } else {
-          verifiedWhenDerived = this.verifyWhenDerived(frame, context);
+          verifiedWhenDerived = this.verifyWhenDerived(context);
         }
 
         if (verifiedWhenStated || verifiedWhenDerived) {
@@ -124,7 +124,7 @@ export default domAssigned(class Declaration {
     return statementVerified;
   }
 
-  verifyWhenStated(frame, assignments, context) {
+  verifyWhenStated(assignments, context) {
     let verifiedWhenStated;
 
     const declarationString = this.string;  ///
@@ -155,21 +155,16 @@ export default domAssigned(class Declaration {
     return verifiedWhenStated;
   }
 
-  verifyWhenDerived(frame, context) {
+  verifyWhenDerived(context) {
     let verifiedWhenDerived;
 
     const declarationString = this.string;  ///
 
     context.trace(`Verifying the '${declarationString}' derived declaration...`);
 
-    const metaLemmaMetatheorem = context.findMetaLemmaMetatheoremByReference(this.reference);
+    const metaLemmaMetatheoremPresent = context.isMetaLemmaMetatheoremPresentByReference(this.reference);
 
-    if (metaLemmaMetatheorem !== null) {
-      const substitutions = metaLemmaMetatheorem.getSubstitutions(),
-            substitutionsMatches = frame.matchSubstitutions(substitutions, context);
-
-      verifiedWhenDerived = substitutionsMatches; ///
-    }
+    verifiedWhenDerived = metaLemmaMetatheoremPresent; ///
 
     if (verifiedWhenDerived) {
       context.debug(`...verified the '${declarationString}' derived declaration.`);
