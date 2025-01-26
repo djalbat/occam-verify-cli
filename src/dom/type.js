@@ -176,7 +176,7 @@ class Type {
 
   static fromType(type, context) {
     const name = type.getName(),
-          superType = type.getSuperType(),
+          superType = type, ///
           string = stringFromNameAndSuperType(name, superType),
           properties = type.getProperties(),
           provisional = false;  ///
