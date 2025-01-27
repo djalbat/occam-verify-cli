@@ -111,18 +111,14 @@ export default domAssigned(class TypeAssertion {
     });
 
     if (termVerified) {
-      const { Type, Variable } = dom,
-            termNode = this.term.getNode(),
-            variableNode = variableNodeQuery(termNode),
-            type = Type.fromType(this.type, context),
-            variable = Variable.fromVariableNodeAndType(variableNode, type, context);
+      if (assignments !== null) {
+        const { Type, Variable } = dom,
+              termNode = this.term.getNode(),
+              variableNode = variableNodeQuery(termNode),
+              type = Type.fromType(this.type, context),
+              variable = Variable.fromVariableNodeAndType(variableNode, type, context);
 
-      if (variable === null) {
-        const termString = this.term.getString();
-
-        context.debug(`The '${termString}' term is not a variable and therefore its type cannot be asserted.`)
-      } else {
-        if (assignments !== null) {
+        if (variable !== null) {
           const variableAssignment = VariableAssignment.fromVariable(variable),
                 assignment = variableAssignment;  ///
 
