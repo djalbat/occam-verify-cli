@@ -174,18 +174,6 @@ class Type {
     return type;
   }
 
-  static fromType(type, context) {
-    const name = type.getName(),
-          superType = type, ///
-          string = stringFromNameAndSuperType(name, superType),
-          properties = type.getProperties(),
-          provisional = false;  ///
-
-    type = new Type(string, name, superType, properties, provisional);  ///
-
-    return type;
-  }
-
   static fromTypeNode(typeNode) {
     let type;
 
@@ -201,6 +189,17 @@ class Type {
 
       type = new Type(string, name, superType, properties, provisional);
     }
+
+    return type;
+  }
+
+  static fromTypeAndProvisional(type, provisional, context) {
+    const name = type.getName(),
+          superType = type, ///
+          string = stringFromNameAndSuperType(name, superType),
+          properties = type.getProperties();
+
+    type = new Type(string, name, superType, properties, provisional);  ///
 
     return type;
   }

@@ -50,8 +50,12 @@ export default domAssigned(class TypeAssertion {
         verifiedWhenDerived = this.verifyWhenDerived(context);
       }
 
-      if (verifiedWhenStated || verifiedWhenDerived) {
-        verified = true;
+      verified = verifiedWhenStated || verifiedWhenDerived;
+    }
+
+    if (verified) {
+      if (stated) {
+        this.assign(assignments, context);
       }
     }
 
@@ -111,21 +115,6 @@ export default domAssigned(class TypeAssertion {
     });
 
     if (termVerified) {
-      if (assignments !== null) {
-        const { Type, Variable } = dom,
-              termNode = this.term.getNode(),
-              variableNode = variableNodeQuery(termNode),
-              type = Type.fromType(this.type, context),
-              variable = Variable.fromVariableNodeAndType(variableNode, type, context);
-
-        if (variable !== null) {
-          const variableAssignment = VariableAssignment.fromVariable(variable),
-                assignment = variableAssignment;  ///
-
-          assignments.push(assignment);
-        }
-      }
-
       verifiedWhenStated = true;
     }
 
@@ -165,6 +154,38 @@ export default domAssigned(class TypeAssertion {
     }
 
     return verifiedWhenDerived;
+  }
+
+  assign(assignments, context) {
+    if (assignments === null) {
+      return;
+    }
+
+    const { Type, Variable } = dom,
+          termNode = this.term.getNode(),
+          variableNode = variableNodeQuery(termNode);
+
+    let type,
+        provisional;
+
+    provisional = this.type.isProvisional();
+
+    if (!provisional) {
+      type = this.type;
+    } else {
+      provisional = false;
+
+      type = Type.fromTypeAndProvisional(this.type, provisional, context);
+    }
+
+    const variable = Variable.fromVariableNodeAndType(variableNode, type, context);
+
+    if (variable !== null) {
+      const variableAssignment = VariableAssignment.fromVariable(variable),
+            assignment = variableAssignment;  ///
+
+      assignments.push(assignment);
+    }
   }
 
   static name = "TypeAssertion";

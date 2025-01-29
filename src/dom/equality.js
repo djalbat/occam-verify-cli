@@ -86,45 +86,11 @@ export default domAssigned(class Equality {
         verifiedWhenDerived = this.verifyWhenDerived(context);
       }
 
-      if (verifiedWhenStated || verifiedWhenDerived) {
-        if (assignments !== null) {
-          const { Variable } = dom,
-                type = this.getType(),
-                leftTermNode = this.leftTerm.getNode(),
-                rightTermNode = this.rightTerm.getNode(),
-                leftVariableNode = variableNodeQuery(leftTermNode),
-                rightVariableNode = variableNodeQuery(rightTermNode),
-                leftVariable = Variable.fromVariableNodeAndType(leftVariableNode, type, context),
-                rightVariable = Variable.fromVariableNodeAndType(rightVariableNode, type, context);
+      verified = verifiedWhenStated || verifiedWhenDerived;
+    }
 
-          let assignment;
-
-          if (leftVariable !== null) {
-            const leftVariableAssignment = VariableAssignment.fromVariable(leftVariable);
-
-            assignment = leftVariableAssignment;  ///
-
-            assignments.push(assignment);
-          }
-
-          if (rightVariable !== null) {
-            const rightVariableAssignment = VariableAssignment.fromVariable(rightVariable);
-
-            assignment = rightVariableAssignment;  ///
-
-            assignments.push(assignment);
-          }
-
-          const equality = this,  //
-                equalityAssignment = EqualityAssignment.fromEquality(equality);
-
-          assignment = equalityAssignment; ///
-
-          assignments.push(assignment);
-        }
-
-        verified = true;
-      }
+    if (verified) {
+      this.assign(assignments, context);
     }
 
     if (verified) {
@@ -202,6 +168,46 @@ export default domAssigned(class Equality {
     }
 
     return verifiedWhenDerived;
+  }
+
+  assign(assignments, context) {
+    if (assignments === null) {
+      return;
+    }
+
+    const { Variable } = dom,
+          type = this.getType(),
+          leftTermNode = this.leftTerm.getNode(),
+          rightTermNode = this.rightTerm.getNode(),
+          leftVariableNode = variableNodeQuery(leftTermNode),
+          rightVariableNode = variableNodeQuery(rightTermNode),
+          leftVariable = Variable.fromVariableNodeAndType(leftVariableNode, type, context),
+          rightVariable = Variable.fromVariableNodeAndType(rightVariableNode, type, context);
+
+    let assignment;
+
+    if (leftVariable !== null) {
+      const leftVariableAssignment = VariableAssignment.fromVariable(leftVariable);
+
+      assignment = leftVariableAssignment;  ///
+
+      assignments.push(assignment);
+    }
+
+    if (rightVariable !== null) {
+      const rightVariableAssignment = VariableAssignment.fromVariable(rightVariable);
+
+      assignment = rightVariableAssignment;  ///
+
+      assignments.push(assignment);
+    }
+
+    const equality = this,  //
+          equalityAssignment = EqualityAssignment.fromEquality(equality);
+
+    assignment = equalityAssignment; ///
+
+    assignments.push(assignment);
   }
 
   static name = "Equality";

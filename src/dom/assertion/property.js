@@ -2,10 +2,10 @@
 
 import dom from "../../dom";
 
+import VariableAssignment from "../../assignment/variable";
+
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
-import VariableAssignment from "../../assignment/variable";
-import {propertyAssertionFromStatement} from "../../utilities/context";
 
 const termNodeQuery = nodeQuery("/propertyAssertion/term"),
       propertyRelationNodeQuery = nodeQuery("/propertyAssertion/propertyRelation"),
@@ -88,9 +88,13 @@ export default domAssigned(class PropertyAssertion {
           verifiedWhenDerived = this.verifyWhenDerived(context);
         }
 
-        if (verifiedWhenStated || verifiedWhenDerived) {
-          verified = true;
-        }
+        verified = verifiedWhenStated || verifiedWhenDerived;
+      }
+    }
+
+    if (verified) {
+      if (stated) {
+        this.assign(assignments, context);
       }
     }
 
@@ -140,37 +144,11 @@ export default domAssigned(class PropertyAssertion {
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiedWhenStated = false;
+    let verifiedWhenStated;
 
     const propertyAssertionString = this.string; ///
 
     context.trace(`Verifying the '${propertyAssertionString}' stated property assertion...`);
-
-    if (assignments !== null) {
-      let variable;
-
-      const { Variable } = dom,
-            termNode = this.term.getNode();
-
-      variable = Variable.fromTermNode(termNode, context);
-
-      if (variable === null) {
-        const termString = this.term.getString();
-
-        context.debug(`The '${propertyAssertionString}' stated property assertion's '${termString}' term is not a variable.`);
-      } else {
-        const variableName = variable.getName();
-
-        variable = context.findVariableByVariableName(variableName);
-
-        variable = Variable.fromVariableAndPropertyRelation(variable, this.propertyRelation);
-
-        const variableAssignment = VariableAssignment.fromVariable(variable),
-              assignment = variableAssignment;  ///
-
-        assignments.push(assignment);
-      }
-    }
 
     verifiedWhenStated = true;
 
@@ -195,6 +173,32 @@ export default domAssigned(class PropertyAssertion {
     }
 
     return verifiedWhenDerived;
+  }
+
+  assign(assignments, context) {
+    if (assignments === null) {
+      return;
+    }
+
+    let variable;
+
+    const { Variable } = dom,
+          termNode = this.term.getNode();
+
+    variable = Variable.fromTermNode(termNode, context);
+
+    if (variable !== null) {
+      const variableName = variable.getName();
+
+      variable = context.findVariableByVariableName(variableName);
+
+      variable = Variable.fromVariableAndPropertyRelation(variable, this.propertyRelation);
+
+      const variableAssignment = VariableAssignment.fromVariable(variable),
+            assignment = variableAssignment;  ///
+
+      assignments.push(assignment);
+    }
   }
 
   static name = "PropertyAssertion";

@@ -53,9 +53,13 @@ export default domAssigned(class Judgement {
           verifiedWhenDerived = this.verifyWhenDerived(context);
         }
 
-        if (verifiedWhenStated || verifiedWhenDerived) {
-          verified = true;
-        }
+        verified = verifiedWhenStated || verifiedWhenDerived;
+      }
+    }
+
+    if (verified) {
+      if (stated) {
+        this.assign(assignments, context);
       }
     }
 
@@ -107,14 +111,6 @@ export default domAssigned(class Judgement {
 
     context.trace(`Verifying the '${judgementString}' stated judgement...`);
 
-    if (assignments !== null) {
-      const judgement = this, ///
-            judgementAssignment = JudgementAssignment.fromJudgement(judgement),
-            assignment = judgementAssignment;
-
-      assignments.push(assignment);
-    }
-
     verifiedWhenStated = true;
 
     if (verifiedWhenStated) {
@@ -143,6 +139,18 @@ export default domAssigned(class Judgement {
     }
 
     return verifiedWhenDerived;
+  }
+
+  assign(assignments, context) {
+    if (assignments === null) {
+      return;
+    }
+
+    const judgement = this, ///
+          judgementAssignment = JudgementAssignment.fromJudgement(judgement),
+          assignment = judgementAssignment;
+
+    assignments.push(assignment);
   }
 
   static name = "Judgement";
