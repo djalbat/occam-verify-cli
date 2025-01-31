@@ -38,25 +38,25 @@ export default domAssigned(class ComplexTypeDeclaration {
       const superTypesVerified = this.verifySuperTypes();
 
       if (superTypesVerified) {
+        let superTypes;
+
+        superTypes = this.type.getSuperTypes();
+
+        superTypes = superTypes.map((superType) => {
+          const superTypeName = superType.getName();
+
+          superType = this.fileContext.findTypeByTypeName(superTypeName);
+
+          return superType;
+        });
+
+        this.type.setSuperTypes(superTypes);
+
         const includeSuperTypes = false,
               properties = this.type.getProperties(includeSuperTypes),
               propertiesVerified = this.verifyProperties(properties);
 
         if (propertiesVerified) {
-          let superTypes;
-
-          superTypes = this.type.getSuperTypes();
-
-          superTypes = superTypes.map((superType) => {
-            const superTypeName = superType.getName();
-
-            superType = this.fileContext.findTypeByTypeName(superTypeName);
-
-            return superType;
-          });
-
-          this.type.setSuperTypes(superTypes);
-
           this.fileContext.addType(this.type);
 
           verified = true;
