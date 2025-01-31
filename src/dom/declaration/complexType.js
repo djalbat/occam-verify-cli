@@ -34,8 +34,8 @@ export default domAssigned(class ComplexTypeDeclaration {
     const typeVerified = this.verifyType();
 
     if (typeVerified) {
-      const includeSuperType = false,
-            properties = this.type.getProperties(includeSuperType),
+      const includeSuperTypes = false,
+            properties = this.type.getProperties(includeSuperTypes),
             propertiesVerified = this.verifyProperties(properties);
 
       if (propertiesVerified) {

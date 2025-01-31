@@ -266,6 +266,21 @@ export function propertiesFromJSON(json, fileContext) {
   return properties;
 }
 
+export function superTypesFromJSON(json, fileContext) {
+  const { superTypes: superTypesJSON } = json;
+
+  const { Type } = dom,
+        superTypes = superTypesJSON.map((superTypeJSON) => {
+          const json = superTypeJSON,  ///
+                type = Type.fromJSON(json, fileContext),
+                superType = type; ///
+
+          return superType;
+        });
+
+  return superTypes;
+}
+
 export function parametersFromJSON(json, fileContext) {
   let { parameters } = json;
 
@@ -549,6 +564,18 @@ export function variablesToVariablesJSON(variables) {
   });
 
   return variablesJSON;
+}
+
+export function superTypesToSuperTypesJSON(superTypes) {
+  const superTypesJSON = superTypes.map((superType) => {
+    const superTypeJSON = superType.toJSON();
+
+    superType = superTypeJSON; ///
+
+    return superType;
+  });
+
+  return superTypesJSON;
 }
 
 export function parametersToParametersJSON(parameters) {

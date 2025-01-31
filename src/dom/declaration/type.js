@@ -57,21 +57,23 @@ export default domAssigned(class TypeDeclaration {
     if (typePresent) {
       this.fileContext.debug(`The type '${typeName}' is not present.`);
     } else {
-      let superType;
+      const superTypes = this.type.getSuperTypes();
 
-      superType = this.type.getSuperType();
+      this.type.resetSuperTypes();
 
-      const superTypeName = superType.getName();
+      typeVerified = superTypes.every((superType) => {
+        const superTypeName = superTypes.getName();
 
-      superType = this.fileContext.findTypeByTypeName(superTypeName);
+        superType = this.fileContext.findTypeByTypeName(superTypeName);
 
-      if (superType === null) {
-        this.fileContext.debug(`The super-type '${superTypeName}' is not present.`);
-      } else {
-        this.type.setSuperType(superType);
+        if (superType === null) {
+          this.fileContext.debug(`The super-type '${superTypeName}' is not present.`);
+        } else {
+          this.type.addSuperType(superType);
 
-        typeVerified = true;
-      }
+          return true;
+        }
+      });
     }
 
     if (typeVerified) {
