@@ -211,23 +211,29 @@ export default domAssigned(class ComplexTypeDeclaration {
     if (propertyType === objectType) {
       propertyTypeVerified = true;
     } else {
-      const propertyTypeString = propertyType.getString(); ///
+      const typeName = this.type.getName(),
+            propertyTypeName = propertyType.getName();
 
-      this.fileContext.trace(`Verifying the '${propertyTypeString}' property type...`);
-
-      const propertyTypeName = propertyType.getName(),
-            propertyTypePresent = this.fileContext.isTypePresentByTypeName(propertyTypeName);
-
-      if (!propertyTypePresent) {
-        const propertyTypeString = propertyType.getString();
-
-        this.fileContext.debug(`The '${propertyTypeString}' property type is not present.`);
-      } else {
+      if (typeName === propertyTypeName) {
         propertyTypeVerified = true;
-      }
+      } else  {
+        const propertyTypeString = propertyType.getString(); ///
 
-      if (propertyTypeVerified) {
-        this.fileContext.debug(`...verified the '${propertyTypeString}' property type.`);
+        this.fileContext.trace(`Verifying the '${propertyTypeString}' property type...`);
+
+        const propertyTypePresent = this.fileContext.isTypePresentByTypeName(propertyTypeName);
+
+        if (!propertyTypePresent) {
+          const propertyTypeString = propertyType.getString();
+
+          this.fileContext.debug(`The '${propertyTypeString}' property type is not present.`);
+        } else {
+          propertyTypeVerified = true;
+        }
+
+        if (propertyTypeVerified) {
+          this.fileContext.debug(`...verified the '${propertyTypeString}' property type.`);
+        }
       }
     }
 
