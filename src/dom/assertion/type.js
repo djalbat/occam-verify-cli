@@ -4,7 +4,7 @@ import dom from "../../dom";
 import VariableAssignment from "../../assignment/variable";
 
 import { nodeQuery } from "../../utilities/query";
-import { objectType } from "../../dom/type";
+import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 
 const termNodeQuery = nodeQuery("/typeAssertion/term"),

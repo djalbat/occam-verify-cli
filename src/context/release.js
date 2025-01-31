@@ -3,10 +3,10 @@
 import { arrayUtilities } from "necessary";
 import { FileContext as FurtleFileContext } from "occam-furtle";
 
-import FileContext from "../context/file";
-
 import { filePathUtilities } from "occam-entities";
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
+
+import FileContext from "../context/file";
 
 import { objectType } from "../dom/type";
 import { frameMetaType, referenceMetaType, statementMetaType } from "../dom/metaType";

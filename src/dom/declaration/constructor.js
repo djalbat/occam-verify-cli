@@ -2,10 +2,10 @@
 
 import dom from "../../dom";
 
+import constructorVerifier from "../../verifier/constructor";
+
 import { objectType } from "../type";
 import { domAssigned } from "../../dom";
-
-import constructorVerifier from "../../verifier/constructor";
 
 export default domAssigned(class ConstructorDeclaration {
   constructor(fileContext, string, constructor) {

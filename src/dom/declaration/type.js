@@ -2,8 +2,8 @@
 
 import dom from "../../dom";
 
+import { objectType } from "../type";
 import { domAssigned } from "../../dom";
-import {objectType} from "../type";
 
 export default domAssigned(class TypeDeclaration {
   constructor(fileContext, string, type) {

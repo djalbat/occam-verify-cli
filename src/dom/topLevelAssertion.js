@@ -253,9 +253,9 @@ export default class TopLevelAssertion {
           consequent = consequentFromNode(node, fileContext),
           proof = proofFromNode(node, fileContext),
           string = stringFromLabelsAndConsequent(labels, consequent),
-          metaLemma = new Class(fileContext, string, labels, suppositions, consequent, proof);
+          topLevelAssertion = new Class(fileContext, string, labels, suppositions, consequent, proof);
 
-    return metaLemma;
+    return topLevelAssertion;
   }
 }
 

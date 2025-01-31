@@ -10,7 +10,6 @@ import { OBJECT_TYPE_NAME } from "../typeNames";
 import { typeNameFromTypeNode } from "../utilities/name";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
-import object from "occam-furtle/lib/dom/assignment/object";
 
 const { push } = arrayUtilities;
 
@@ -329,7 +328,12 @@ function superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
                 superType = Type.fromTypeNode(superTypeNode);
 
           return superType;
-        });
+        }),
+        superTypesLength = superTypes.length;
+
+  if (superTypesLength === 0) {
+    superTypes.push(objectType);
+  }
 
   return superTypes;
 }
