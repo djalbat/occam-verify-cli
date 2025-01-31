@@ -43,22 +43,6 @@ export function metaTypeFromJSON(json, fileContext) {
   return metaType;
 }
 
-export function superTypeFromJSON(json, fileContext) {
-  let { superType } = json;
-
-  const superTypeJSON = superType;  ///
-
-  json = superTypeJSON; ///
-
-  const { name } = json,
-        typeName = name,  ///
-        type = fileContext.findTypeByTypeName(typeName);
-
-  superType = type; ///
-
-  return superType;
-}
-
 export function statementFromJSON(json, fileContext) {
   let { statement = null } = json;
 
@@ -269,11 +253,11 @@ export function propertiesFromJSON(json, fileContext) {
 export function superTypesFromJSON(json, fileContext) {
   const { superTypes: superTypesJSON } = json;
 
-  const { Type } = dom,
-        superTypes = superTypesJSON.map((superTypeJSON) => {
+  const superTypes = superTypesJSON.map((superTypeJSON) => {
           const json = superTypeJSON,  ///
-                type = Type.fromJSON(json, fileContext),
-                superType = type; ///
+                { name } = json,
+                superTypeName = name,  ///
+                superType = fileContext.findTypeByTypeName(superTypeName);
 
           return superType;
         });
