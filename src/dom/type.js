@@ -10,13 +10,14 @@ import { OBJECT_TYPE_NAME } from "../typeNames";
 import { typeNameFromTypeNode } from "../utilities/name";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
+import object from "occam-furtle/lib/dom/assignment/object";
 
 const { push } = arrayUtilities;
 
-const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type[0]"),
+const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type"),
       propertyDeclarationNodesQuery = nodesQuery("/complexTypeDeclaration/propertyDeclaration"),
       propertyDeclarationTypeNodeQuery = nodeQuery("/propertyDeclaration/type"),
-      typeDeclarationSuperTypeNodesQuery = nodesQuery("/typeDeclaration|complexTypeDeclaration/type[1]"),
+      typeDeclarationSuperTypeNodesQuery = nodesQuery("/typeDeclaration|complexTypeDeclaration/types/type"),
       firstPrimaryKeywordTerminalNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/@primary-keyword[0]"),
       variableDeclarationSuperTypeNodeQuery = nodeQuery("/variableDeclaration/type");
 
@@ -79,14 +80,6 @@ class Type {
 
   setProvisional(provisional) {
     this.provisional = provisional;
-  }
-
-  resetSuperTypes() {
-    this.superTypes = [];
-  }
-
-  addSuperTypes(superType) {
-    this.superTypes.push(superType);
   }
 
   isEqualTo(type) {
@@ -295,20 +288,10 @@ export default domAssigned(Type);
 function stringFromNameAndSuperTypes(name, superTypes) {
   let string = name;  ///
 
-  const superTypesString = superTypes.reduce((superTypesString, superType) => {
-    if (superType !== objectType) {
-      const superTypeName = superType.getName();
-
-      superTypesString = (superTypesString === null) ?
-                            superTypeName :
-                              `${superTypesString}, ${superTypeName}`;
-    }
-
-    return superTypesString;
-  }, null);
+  const superTypesString = superTypesStringFromSuperTypes(superTypes);
 
   if (superTypesString !== null) {
-    string = `${string}:${superTypeString}`;
+    string = `${string}:${superTypesString}`;
   }
 
   return string;
@@ -321,6 +304,22 @@ function nameFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
         name = typeName;  ///
 
   return name;
+}
+
+function superTypesStringFromSuperTypes(superTypes) {
+  const superTypesString = superTypes.reduce((superTypesString, superType) => {
+    if (superType !== objectType) {
+      const superTypeName = superType.getName();
+
+      superTypesString = (superTypesString === null) ?
+                           superTypeName :
+                            `${superTypesString}, ${superTypeName}`;
+    }
+
+    return superTypesString;
+  }, null);
+
+  return superTypesString;
 }
 
 function superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
@@ -360,7 +359,12 @@ function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fi
                 superType = Type.fromTypeNode(superTypeNode);
 
           return superType;
-        });
+        }),
+        superTypesLength = superTypes.length;
+
+  if (superTypesLength === 0) {
+    superTypes.push(objectType);
+  }
 
   return superTypes;
 }

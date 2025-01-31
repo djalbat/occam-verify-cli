@@ -3,6 +3,7 @@
 import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
+import {objectType} from "../type";
 
 export default domAssigned(class TypeDeclaration {
   constructor(fileContext, string, type) {
@@ -33,9 +34,27 @@ export default domAssigned(class TypeDeclaration {
     const typeVerified = this.verifyType();
 
     if (typeVerified) {
-      this.fileContext.addType(this.type);
+      const superTypesVerified = this.verifySuperTypes();
 
-      verified = true;
+      if (superTypesVerified) {
+        let superTypes;
+
+        superTypes = this.type.getSuperTypes();
+
+        superTypes = superTypes.map((superType) => {
+          const superTypeName = superType.getName();
+
+          superType = this.fileContext.findTypeByTypeName(superTypeName);
+
+          return superType;
+        });
+
+        this.type.setSuperTypes(superTypes);
+
+        this.fileContext.addType(this.type);
+
+        verified = true;
+      }
     }
 
     if (verified) {
@@ -55,32 +74,44 @@ export default domAssigned(class TypeDeclaration {
     const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
 
     if (typePresent) {
-      this.fileContext.debug(`The type '${typeName}' is not present.`);
+      this.fileContext.debug(`The type '${typeName}' is already present.`);
     } else {
-      const superTypes = this.type.getSuperTypes();
-
-      this.type.resetSuperTypes();
-
-      typeVerified = superTypes.every((superType) => {
-        const superTypeName = superTypes.getName();
-
-        superType = this.fileContext.findTypeByTypeName(superTypeName);
-
-        if (superType === null) {
-          this.fileContext.debug(`The super-type '${superTypeName}' is not present.`);
-        } else {
-          this.type.addSuperType(superType);
-
-          return true;
-        }
-      });
+      typeVerified = true;
     }
 
     if (typeVerified) {
-      this.fileContext.debug(`...typeVerified the '${typeName}' type.`);
+      this.fileContext.debug(`...verified the '${typeName}' type.`);
     }
 
     return typeVerified;
+  }
+
+  verifySuperTypes() {
+    let superTypesVerified = true;
+
+    const superTypes = this.type.getSuperTypes(),
+          superTypesString = superTypesStringFromSuperTypes(superTypes);
+
+    if (superTypesString !== null) {
+      const typeName = this.type.getString();
+
+      this.fileContext.trace(`Verifying the '${typeName}' type's ${superTypesString} super types...`);
+
+      superTypesVerified = superTypes.every((superType) => {
+        const superTypeName = superType.getName(),
+              superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
+
+        if (superTypePresent) {
+          return true;
+        }
+      });
+
+      if (superTypesVerified) {
+        this.fileContext.debug(`...verified the '${typeName}' type's ${superTypesString} super types.`);
+      }
+    }
+
+    return superTypesVerified;
   }
 
   static name = "TypeDeclaration";
@@ -95,3 +126,20 @@ export default domAssigned(class TypeDeclaration {
     return typeDeclaration;
   }
 });
+
+export function superTypesStringFromSuperTypes(superTypes) {
+  const superTypesString = superTypes.reduce((superTypesString, superType) => {
+    if (superType !== objectType) {
+      const superTypeName = superType.getName();
+
+      superTypesString = (superTypesString === null) ?
+                          `'${superTypeName}'` :
+                            `${superTypesString}, '${superTypeName}'`;
+    }
+
+    return superTypesString;
+  }, null);
+
+  return superTypesString;
+}
+
