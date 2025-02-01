@@ -109,11 +109,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     statementAndProofStepSubproofsUnified = super.unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, substitutions, context);
 
-    if (statementAndProofStepSubproofsUnified) {
-      if (this.satisfying) {
-        debugger
-      }
-    }
+    // if (statementAndProofStepSubproofsUnified) {
+    //   if (this.satisfying) {
+    //     debugger
+    //   }
+    // }
 
     return statementAndProofStepSubproofsUnified;
   }
