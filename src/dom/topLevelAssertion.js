@@ -156,14 +156,12 @@ export default class TopLevelAssertion {
     return deductionUnified;
   }
 
-  unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, context) {
+  unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, substitutions, context) {
     let statementAndProofStepSubproofsUnified = false;
 
     const localContext = LocalContext.fromFileContext(this.fileContext),
           generalContext = localContext, ///
-          specificContext = context; ///
-
-    const substitutions = Substitutions.fromNothing(),
+          specificContext = context, ///
           statementUnifiedWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifiedWithDeduction) {

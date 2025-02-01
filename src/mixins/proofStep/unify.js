@@ -1,5 +1,6 @@
 "use strict";
 
+import Substitutions from "../../substitutions";
 import StatementSubstitution from "../../substitution/statement";
 
 import { equalityFromStatement,
@@ -99,7 +100,8 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(statement, reference, substitut
   let unifiedWithAxiomLemmaTheoremOrConjecture = false;
 
   if (reference !== null) {
-    const axiomLemmaTheoremConjecture = context.findAxiomLemmaTheoremConjectureByReference(reference);
+    const axiomLemmaTheoremConjecture = context.findAxiomLemmaTheoremConjectureByReference(reference),
+          generalSubstitutions = substitutions; ///
 
     if (axiomLemmaTheoremConjecture !== null) {
       const statementString = statement.getString(),
@@ -108,13 +110,19 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(statement, reference, substitut
       context.trace(`Unifying the '${statementString}' statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`);
 
       const proofStepSubproofs = context.getProofStepSubproofs(),
-            statementAndProofStepsUnified = axiomLemmaTheoremConjecture.unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, context);
+            specificSubstitutions = Substitutions.fromNothing();
+
+      substitutions = specificSubstitutions;  ///
+
+      const statementAndProofStepsUnified = axiomLemmaTheoremConjecture.unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, substitutions, context);
 
       if (statementAndProofStepsUnified) {
         const metavariable = reference.getMetavariable(),
               specificContext = context,  ///
               statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
               substitution = statementSubstitution;  ///
+
+        substitutions = generalSubstitutions; ///
 
         substitutions.addSubstitution(substitution, specificContext);
 

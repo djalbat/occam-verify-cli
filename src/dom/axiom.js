@@ -104,6 +104,20 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return axiomLemmaTheoremConjectureUnified;
   }
 
+  unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, substitutions, context) {
+    let statementAndProofStepSubproofsUnified;
+
+    statementAndProofStepSubproofsUnified = super.unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, substitutions, context);
+
+    if (statementAndProofStepSubproofsUnified) {
+      if (this.satisfying) {
+        debugger
+      }
+    }
+
+    return statementAndProofStepSubproofsUnified;
+  }
+
   static name = "Axiom";
 
   static fromJSON(json, fileContext) {
