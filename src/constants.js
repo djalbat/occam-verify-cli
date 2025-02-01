@@ -5,6 +5,7 @@ export const NOTHING = "";
 export const MISSING = "missing";
 export const FUNCTION = "function";
 export const UNDEFINED = "undefined";
+export const SATISFYING = "Satisfying";
 export const PROVISIONAL = "Provisional";
 export const EMPTY_STRING = "";
 export const PROVISIONALLY = "provisionally";

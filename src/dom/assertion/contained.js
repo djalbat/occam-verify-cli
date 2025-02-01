@@ -235,10 +235,11 @@ export default domAssigned(class ContainedAssertion {
 
 function isNegated(definedAssertionNode) {
   const terminalNodes = terminalNodesQuery(definedAssertionNode),
-        negated = terminalNodes.some((terminalNode) => {
-          const content = terminalNode.getContent();
+        negated = terminalNodes.some((terminalNode) => {  ///
+          const content = terminalNode.getContent(),
+                contentMessing = (content === MISSING);
 
-          if (content === MISSING) {
+          if (contentMessing) {
             return true;
           }
         });

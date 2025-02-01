@@ -3,13 +3,29 @@
 import { arrayUtilities } from "necessary";
 
 import Substitutions from "../substitutions";
-import TopLevelAssertion from "./topLevelAssertion";
+import TopLevelAssertion  from "./topLevelAssertion";
 
+import { nodeQuery } from "../utilities/query";
+import { SATISFYING } from "../constants";
 import { domAssigned } from "../dom";
+import { labelsFromJSON, deductionFromJSON, satisfyingFromJSON, suppositionsFromJSON } from "../utilities/json";
+import { proofFromNode, labelsFromNode, deductionFromNode, suppositionsFromNode, stringFromLabelsAndDeduction } from "./topLevelAssertion";
 
 const { match } = arrayUtilities;
 
+const firstPrimaryKeywordTerminalNodeQuery = nodeQuery("/axiom/@primary-keyword[0]");
+
 export default domAssigned(class Axiom extends TopLevelAssertion {
+  constructor(fileContext, string, labels, suppositions, deduction, proof, satisfying) {
+    super(fileContext, string, labels, suppositions, deduction, proof);
+
+    this.satisfying = satisfying;
+  }
+
+  isSatisfying() {
+    return this.satisfying;
+  }
+
   verify() {
     let verified;
 
@@ -90,7 +106,38 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
   static name = "Axiom";
 
-  static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Axiom, json, fileContext); }
+  static fromJSON(json, fileContext) {
+    const labels = labelsFromJSON(json, fileContext),
+          suppositions = suppositionsFromJSON(json, fileContext),
+          deduction = deductionFromJSON(json, fileContext),
+          proof = null,
+          satisfying = satisfyingFromJSON(json, fileContext),
+          string = stringFromLabelsAndDeduction(labels, deduction),
+          topLevelAssertion = new Axiom(fileContext, string, labels, suppositions, deduction, proof, satisfying);
 
-  static fromAxiomNode(axiomNode, fileContext) { return TopLevelAssertion.fromNode(Axiom, axiomNode, fileContext); }
+    return topLevelAssertion;
+  }
+
+  static fromAxiomNode(axiomNode, fileContext) {
+    const node = axiomNode, ///
+          labels = labelsFromNode(node, fileContext),
+          suppositions = suppositionsFromNode(node, fileContext),
+          deduction = deductionFromNode(node, fileContext),
+          proof = proofFromNode(node, fileContext),
+          satisfying = satisfyingFromNode(node, fileContext),
+          string = stringFromLabelsAndDeduction(labels, deduction),
+          topLevelAssertion = new Axiom(fileContext, string, labels, suppositions, deduction, proof, satisfying);
+
+    return topLevelAssertion;
+  }
 });
+
+function satisfyingFromNode(node, fileContext) {
+  const firstPrimaryKeywordTerminalNode = firstPrimaryKeywordTerminalNodeQuery(node),
+        content = firstPrimaryKeywordTerminalNode.getContent(),
+        contentSatisfying = (content === SATISFYING),
+        satisfying = contentSatisfying; ///
+
+  return satisfying;
+}
+

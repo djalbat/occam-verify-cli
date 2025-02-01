@@ -257,7 +257,15 @@ export default class TopLevelAssertion {
   }
 }
 
-function labelsFromNode(node, fileContext) {
+export function proofFromNode(node, fileContext) {
+  const { Proof } = dom,
+        proofNode = proofNodeQuery(node),
+        proof = Proof.fromProofNode(proofNode, fileContext);
+
+  return proof;
+}
+
+export function labelsFromNode(node, fileContext) {
   const { Label } = dom,
         labelNodes = labelNodesQuery(node),
         labels = labelNodes.map((labelNode) => {
@@ -267,14 +275,6 @@ function labelsFromNode(node, fileContext) {
         });
 
   return labels;
-}
-
-export function proofFromNode(node, fileContext) {
-  const { Proof } = dom,
-        proofNode = proofNodeQuery(node),
-        proof = Proof.fromProofNode(proofNode, fileContext);
-
-  return proof;
 }
 
 export function deductionFromNode(node, fileContext) {

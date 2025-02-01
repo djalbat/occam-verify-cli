@@ -71,19 +71,6 @@ export function referenceFromJSON(json, fileContext) {
   return reference;
 }
 
-export function conclusionFromJSON(json, fileContext) {
-  let { conclusion } = json;
-
-  const { Conclusion } = dom,
-        conclusionJSON = conclusion;  ///
-
-  json = conclusionJSON;  ///
-
-  conclusion = Conclusion.fromJSON(json, fileContext);
-
-  return conclusion;
-}
-
 export function deductionFromJSON(json, fileContext) {
   let { deduction } = json;
 
@@ -95,6 +82,25 @@ export function deductionFromJSON(json, fileContext) {
   deduction = Deduction.fromJSON(json, fileContext);
 
   return deduction;
+}
+
+export function satisfyingFromJSON(json, fileContext) {
+  const { satisfying } = json;
+
+  return satisfying;
+}
+
+export function conclusionFromJSON(json, fileContext) {
+  let { conclusion } = json;
+
+  const { Conclusion } = dom,
+        conclusionJSON = conclusion;  ///
+
+  json = conclusionJSON;  ///
+
+  conclusion = Conclusion.fromJSON(json, fileContext);
+
+  return conclusion;
 }
 
 export function metavariableFromJSON(json, fileContext) {

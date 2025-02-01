@@ -204,10 +204,11 @@ export default domAssigned(class DefinedAssertion {
 
 function isNegated(definedAssertionNode) {
   const terminalNodes = terminalNodesQuery(definedAssertionNode),
-        negated = terminalNodes.some((terminalNode) => {
-          const content = terminalNode.getContent();
+        negated = terminalNodes.some((terminalNode) => {  ///
+          const content = terminalNode.getContent(),
+                contentUndefined = (content === UNDEFINED);
 
-          if (content === UNDEFINED) {
+          if (contentUndefined) {
             return true;
           }
         });

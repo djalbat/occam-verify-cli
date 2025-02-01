@@ -95,7 +95,11 @@ export default domAssigned(class SatisfyingAssertion {
     const axiom = context.findAxiomByReference(this.reference, context);
 
     if (axiom !== null) {
-      referenceVerified = true;
+      const axiomSatisfying = axiom.isSatisfying();
+
+      if (axiomSatisfying) {
+        referenceVerified = true;
+      }
     }
 
     if (referenceVerified) {

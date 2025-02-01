@@ -232,7 +232,7 @@ function verifyAsSatisfyingAssertion(statement, assignments, stated, context) {
     verifiedAsSatisfyingAssertion = satisfyingAssertionVerified; ///
 
     if (verifiedAsSatisfyingAssertion) {
-      context.debug(`...verified the '${statementString}' statement as a defined assertion.`);
+      context.debug(`...verified the '${statementString}' statement as a satisfying assertion.`);
     }
   }
 
