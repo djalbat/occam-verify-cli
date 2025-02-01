@@ -82,9 +82,19 @@ function unifyAsSatisfyingAssertion(statement, reference, substitutions, context
         reference = satisfyingAssertion.getReference();
 
         const axiom = context.findAxiomByReference(reference),
-              axiomLemmaTheoremConjectureUnified = axiom.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, context);
+              substitutions = Substitutions.fromNothing(),
+              axiomLemmaTheoremConjectureUnified = axiom.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, substitutions, context);
 
-        unifiedAsSatisfyingAssertion = axiomLemmaTheoremConjectureUnified;  ///
+        if (axiomLemmaTheoremConjectureUnified) {
+          const stated = true,
+                assignments = null;
+
+          satisfyingAssertion.verify(assignments, stated, context);
+
+          debugger
+
+          unifiedAsSatisfyingAssertion = axiomLemmaTheoremConjectureUnified;  ///
+        }
       }
 
       if (unifiedAsSatisfyingAssertion) {
