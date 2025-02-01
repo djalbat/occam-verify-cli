@@ -426,12 +426,6 @@ export function metaTypeToMetaTypeJSON(metaType) {
   return metaTypeJSON;
 }
 
-export function superTypeToSuperTypeJSON(superType) {
-  const superTypeJSON = superType.toJSON();
-
-  return superTypeJSON;
-}
-
 export function statementToStatementJSON(statement) {
   let statementJSON = null;
 
