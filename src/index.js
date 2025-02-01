@@ -22,7 +22,7 @@ import Reference from "./dom/reference";
 import Statement from "./dom/statement";
 import Judgement from "./dom/judgement";
 import MetaLemma from "./dom/metaLemma";
-import Consequent from "./dom/consequent";
+import Deduction from "./dom/deduction";
 import Conjecture from "./dom/conjecture";
 import Conclusion from "./dom/conclusion";
 import Derivation from "./dom/derivation";

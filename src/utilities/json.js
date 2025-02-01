@@ -84,17 +84,17 @@ export function conclusionFromJSON(json, fileContext) {
   return conclusion;
 }
 
-export function consequentFromJSON(json, fileContext) {
-  let { consequent } = json;
+export function deductionFromJSON(json, fileContext) {
+  let { deduction } = json;
 
-  const { Consequent } = dom,
-        consequentJSON = consequent;  ///
+  const { Deduction } = dom,
+        deductionJSON = deduction;  ///
 
-  json = consequentJSON;  ///
+  json = deductionJSON;  ///
 
-  consequent = Consequent.fromJSON(json, fileContext);
+  deduction = Deduction.fromJSON(json, fileContext);
 
-  return consequent;
+  return deduction;
 }
 
 export function metavariableFromJSON(json, fileContext) {
@@ -448,10 +448,10 @@ export function conclusionToConclusionJSON(conclusion) {
   return conclusionJSON;
 }
 
-export function consequentToConsequentJSON(consequent) {
-  const consequentJSON = consequent.toJSON();
+export function deductionToDeductionJSON(deduction) {
+  const deductionJSON = deduction.toJSON();
 
-  return consequentJSON;
+  return deductionJSON;
 }
 
 export function metavariableToMetavariableJSON(metavariable) {

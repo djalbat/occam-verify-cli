@@ -8,13 +8,13 @@ import Substitutions from "../substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
 import { nodeQuery } from "../utilities/query";
-import { proofFromNode, consequentFromNode, suppositionsFromNode, stringFromLabelsAndConsequent } from "./topLevelAssertion";
+import { proofFromNode, deductionFromNode, suppositionsFromNode, stringFromLabelsAndDeduction } from "./topLevelAssertion";
 import { labelsFromJSON,
          labelsToLabelsJSON,
-         consequentFromJSON,
+         deductionFromJSON,
          suppositionsFromJSON,
          substitutionsFromJSON,
-         consequentToConsequentJSON,
+         deductionToDeductionJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
@@ -23,8 +23,8 @@ const { first } = arrayUtilities;
 const labelNodeQuery = nodeQuery("/metatheorem/label");
 
 export default class TopLevelMetaAssertion extends TopLevelAssertion {
-  constructor(fileContext, string, labels, suppositions, consequent, proof, substitutions) {
-    super(fileContext, string, labels, suppositions, consequent, proof);
+  constructor(fileContext, string, labels, suppositions, deduction, proof, substitutions) {
+    super(fileContext, string, labels, suppositions, deduction, proof);
 
     this.substitutions = substitutions;
   }
@@ -65,13 +65,13 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
             });
 
       if (suppositionsVerified) {
-        const consequentVerified = this.consequent.verify(context);
+        const deductionVerified = this.deduction.verify(context);
 
-        if (consequentVerified) {
+        if (deductionVerified) {
           if (this.proof === null) {
             verified = true;
           } else {
-            const proofVerified = this.proof.verify(this.substitutions, this.consequent, context);
+            const proofVerified = this.proof.verify(this.substitutions, this.deduction, context);
 
             verified = proofVerified; ///
           }
@@ -97,16 +97,16 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
 
   toJSON() {
     const labelsJSON = labelsToLabelsJSON(this.labels),
-          consequentJSON = consequentToConsequentJSON(this.consequent),
+          deductionJSON = deductionToDeductionJSON(this.deduction),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
           labels = labelsJSON,  ///
-          consequent = consequentJSON,  ///
+          deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
           substitutions = substitutionsJSON,  ///
           json = {
             labels,
-            consequent,
+            deduction,
             suppositions,
             substitutions
           };
@@ -118,10 +118,10 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
     const labels = labelsFromJSON(json, fileContext),
           substitutions = substitutionsFromJSON(json, fileContext),
           suppositions = suppositionsFromJSON(json, fileContext),
-          consequent = consequentFromJSON(json, fileContext),
+          deduction = deductionFromJSON(json, fileContext),
           proof = null,
-          string = stringFromLabelsAndConsequent(labels, consequent),
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, consequent, proof, substitutions);
+          string = stringFromLabelsAndDeduction(labels, deduction),
+          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, substitutions);
 
     return topLevelAssertion;
   }
@@ -130,10 +130,10 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
     const labels = labelsFromNode(node, fileContext),
           substitutions = Substitutions.fromNothing(),
           suppositions = suppositionsFromNode(node, fileContext),
-          consequent = consequentFromNode(node, fileContext),
+          deduction = deductionFromNode(node, fileContext),
           proof = proofFromNode(node, fileContext),
-          string = stringFromLabelsAndConsequent(labels, consequent),
-          metaLemma = new Class(fileContext, string, labels, suppositions, consequent, proof, substitutions);
+          string = stringFromLabelsAndDeduction(labels, deduction),
+          metaLemma = new Class(fileContext, string, labels, suppositions, deduction, proof, substitutions);
 
     return metaLemma;
   }

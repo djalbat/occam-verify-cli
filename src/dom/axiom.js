@@ -64,17 +64,17 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
           });
 
     if (suppositionsMatch) {
-      let consequent;
+      let deduction;
 
-      consequent = this.getConsequent();
+      deduction = this.getDeduction();
 
-      const generalConsequent = consequent; ///
+      const generalDeduction = deduction; ///
 
-      consequent = axiomLemmaTheoremConjecture.getConsequent();
+      deduction = axiomLemmaTheoremConjecture.getDeduction();
 
-      const specificConsequent = consequent,
-            statement = specificConsequent.getStatement(),
-            statementUnified = generalConsequent.unifyStatement(statement, substitutions, generalContext, specificContext);
+      const specificDeduction = deduction,
+            statement = specificDeduction.getStatement(),
+            statementUnified = generalDeduction.unifyStatement(statement, substitutions, generalContext, specificContext);
 
       if (statementUnified) {
         axiomLemmaTheoremConjectureUnified = true;

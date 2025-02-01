@@ -19,8 +19,8 @@ const statementTermNodesQuery = nodesQuery("/statement//term"),
       statementFrameNodesQuery = nodesQuery("/statement//frame"),
       premiseStatementNodeQuery = nodeQuery("/premise/statement"),
       proofStepStatementNodeQuery = nodeQuery("/proofStep/statement"),
+      deductionStatementNodeQuery = nodeQuery("/deduction/statement"),
       conclusionStatementNodeQuery = nodeQuery("/conclusion/statement"),
-      consequentStatementNodeQuery = nodeQuery("/consequent/statement"),
       suppositionStatementNodeQuery = nodeQuery("/supposition/statement"),
       containedAssertionStatementNodeQuery = nodeQuery("/containedAssertion/statement");
 
@@ -307,13 +307,13 @@ export default domAssigned(class Statement {
     return statement;
   }
 
-  static fromConclusionNode(conclusionNode, fileContext) {
+  static fromDeductionNode(deductionNode, fileContext) {
     let statement = null;
 
-    const conclusionStatementNode = conclusionStatementNodeQuery(conclusionNode);
+    const deductionStatementNode = deductionStatementNodeQuery(deductionNode);
 
-    if (conclusionStatementNode !== null) {
-      const statementNode = conclusionStatementNode,  ///
+    if (deductionStatementNode !== null) {
+      const statementNode = deductionStatementNode,  ///
             localContext = LocalContext.fromFileContext(fileContext),
             context = localContext;  ///
 
@@ -323,13 +323,13 @@ export default domAssigned(class Statement {
     return statement;
   }
 
-  static fromConsequentNode(consequentNode, fileContext) {
+  static fromConclusionNode(conclusionNode, fileContext) {
     let statement = null;
 
-    const consequentStatementNode = consequentStatementNodeQuery(consequentNode);
+    const conclusionStatementNode = conclusionStatementNodeQuery(conclusionNode);
 
-    if (consequentStatementNode !== null) {
-      const statementNode = consequentStatementNode,  ///
+    if (conclusionStatementNode !== null) {
+      const statementNode = conclusionStatementNode,  ///
             localContext = LocalContext.fromFileContext(fileContext),
             context = localContext;  ///
 

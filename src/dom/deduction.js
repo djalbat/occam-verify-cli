@@ -5,7 +5,7 @@ import dom from "../dom";
 import { domAssigned } from "../dom";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
-export default domAssigned(class Consequent {
+export default domAssigned(class Deduction {
   constructor(string, statement) {
     this.string = string;
     this.statement = statement;
@@ -22,9 +22,9 @@ export default domAssigned(class Consequent {
   verify(context) {
     let verified = false;
 
-    const consequentString = this.string;  ///
+    const deductionString = this.string;  ///
 
-    context.trace(`Verifying the '${consequentString}' consequent...`);
+    context.trace(`Verifying the '${deductionString}' deduction...`);
 
     if (this.statement !== null) {
       const stated = true,
@@ -33,11 +33,11 @@ export default domAssigned(class Consequent {
 
       verified = statementVerified; ///
     } else {
-      context.debug(`Unable to verify the '${consequentString}' consequent because it is nonsense.`);
+      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`);
     }
 
     if (verified) {
-      context.debug(`...verified the '${consequentString}' consequent.`);
+      context.debug(`...verified the '${deductionString}' deduction.`);
     }
 
     return verified;
@@ -46,16 +46,16 @@ export default domAssigned(class Consequent {
   unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnified;
 
-    const consequent = this,  ///
+    const deduction = this,  ///
           statementString = statement.getString(),
-          consequentString = consequent.getString();
+          deductionString = deduction.getString();
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${consequentString}' consequent...`);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${deductionString}' deduction...`);
 
     statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${consequentString}' consequent.`);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${deductionString}' deduction.`);
     }
 
     return statementUnified;
@@ -71,23 +71,23 @@ export default domAssigned(class Consequent {
     return json;
   }
 
-  static name = "Consequent";
+  static name = "Deduction";
 
   static fromJSON(json, fileContext) {
     const statement = statementFromJSON(json, fileContext),
           string = statement.getString(),
-          consequent = new Consequent(string, statement);
+          deduction = new Deduction(string, statement);
 
-    return consequent;
+    return deduction;
   }
 
-  static fromConsequentNode(consequentNode, fileContext) {
+  static fromDeductionNode(deductionNode, fileContext) {
     const { Statement } = dom,
-          node = consequentNode,  ///
+          node = deductionNode,  ///
           string = fileContext.nodeAsString(node),
-          statement = Statement.fromConsequentNode(consequentNode, fileContext),
-          consequent = new Consequent(string, statement);
+          statement = Statement.fromDeductionNode(deductionNode, fileContext),
+          deduction = new Deduction(string, statement);
 
-    return consequent;
+    return deduction;
   }
 });

@@ -9,27 +9,25 @@ import Substitutions from "../substitutions";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { labelsFromJSON,
          labelsToLabelsJSON,
-         consequentFromJSON,
+         deductionFromJSON,
          suppositionsFromJSON,
-         substitutionsFromJSON,
-         consequentToConsequentJSON,
-         suppositionsToSuppositionsJSON,
-         substitutionsToSubstitutionsJSON } from "../utilities/json";
+         deductionToDeductionJSON,
+         suppositionsToSuppositionsJSON } from "../utilities/json";
 
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 const proofNodeQuery = nodeQuery("/*/proof"),
       labelNodesQuery = nodesQuery("/*/labels/label"),
-      consequentNodeQuery = nodeQuery("/*/consequent"),
+      deductionNodeQuery = nodeQuery("/*/deduction"),
       suppositionNodesQuery = nodesQuery("/*/supposition");
 
 export default class TopLevelAssertion {
-  constructor(fileContext, string, labels, suppositions, consequent, proof) {
+  constructor(fileContext, string, labels, suppositions, deduction, proof) {
     this.fileContext = fileContext;
     this.string = string;
     this.labels = labels;
     this.suppositions = suppositions;
-    this.consequent = consequent;
+    this.deduction = deduction;
     this.proof = proof;
   }
 
@@ -49,15 +47,15 @@ export default class TopLevelAssertion {
     return this.suppositions;
   }
 
-  getConsequent() {
-    return this.consequent;
+  getDeduction() {
+    return this.deduction;
   }
 
   getProof() {
     return this.proof;
   }
 
-  getStatement() { return this.consequent.getStatement(); }
+  getStatement() { return this.deduction.getStatement(); }
 
   matchMetavariableName(metavariableName) {
     const metavariableNameMatches = this.labels.some((label) => {
@@ -88,14 +86,14 @@ export default class TopLevelAssertion {
             });
 
       if (suppositionsVerified) {
-        const consequentVerified = this.consequent.verify(context);
+        const deductionVerified = this.deduction.verify(context);
 
-        if (consequentVerified) {
+        if (deductionVerified) {
           if (this.proof === null) {
             verified = true;
           } else {
             const substitutions = Substitutions.fromNothing(),
-                  proofVerified = this.proof.verify(substitutions, this.consequent, context);
+                  proofVerified = this.proof.verify(substitutions, this.deduction, context);
 
             verified = proofVerified; ///
           }
@@ -136,9 +134,9 @@ export default class TopLevelAssertion {
             localContext = LocalContext.fromFileContext(this.fileContext),
             generalContext = localContext,  ///
             specificContext = context,  ///
-            statementUnifiedWithConsequent = this.unifyStatementWithConsequent(statement, substitutions, generalContext, specificContext);
+            statementUnifiedWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
-      statementUnified = statementUnifiedWithConsequent;  ///
+      statementUnified = statementUnifiedWithDeduction;  ///
     }
 
     if (statementUnified) {
@@ -148,14 +146,14 @@ export default class TopLevelAssertion {
     return statementUnified;
   }
 
-  unifyStatementWithConsequent(statement, substitutions, generalContext, specificContext) {
-    let consequentUnified;
+  unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext) {
+    let deductionUnified;
 
-    const statementUnified = this.consequent.unifyStatement(statement, substitutions, generalContext, specificContext);  ///
+    const statementUnified = this.deduction.unifyStatement(statement, substitutions, generalContext, specificContext);  ///
 
-    consequentUnified = statementUnified; ///
+    deductionUnified = statementUnified; ///
 
-    return consequentUnified;
+    return deductionUnified;
   }
 
   unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, context) {
@@ -166,9 +164,9 @@ export default class TopLevelAssertion {
           specificContext = context; ///
 
     const substitutions = Substitutions.fromNothing(),
-          statementUnifiedWithConsequent = this.unifyStatementWithConsequent(statement, substitutions, generalContext, specificContext);
+          statementUnifiedWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
-    if (statementUnifiedWithConsequent) {
+    if (statementUnifiedWithDeduction) {
       const proofStepSubproofsUnifiedWithSuppositions = this.unifyProofStepSubproofsWithSuppositions(proofStepSubproofs, substitutions, generalContext, specificContext);
 
       if (proofStepSubproofsUnifiedWithSuppositions) {
@@ -222,14 +220,14 @@ export default class TopLevelAssertion {
 
   toJSON() {
     const labelsJSON = labelsToLabelsJSON(this.labels),
-          consequentJSON = consequentToConsequentJSON(this.consequent),
+          deductionJSON = deductionToDeductionJSON(this.deduction),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           labels = labelsJSON,  ///
-          consequent = consequentJSON,  ///
+          deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
           json = {
             labels,
-            consequent,
+            deduction,
             suppositions
           };
 
@@ -239,10 +237,10 @@ export default class TopLevelAssertion {
   static fromJSON(Class, json, fileContext) {
     const labels = labelsFromJSON(json, fileContext),
           suppositions = suppositionsFromJSON(json, fileContext),
-          consequent = consequentFromJSON(json, fileContext),
+          deduction = deductionFromJSON(json, fileContext),
           proof = null,
-          string = stringFromLabelsAndConsequent(labels, consequent),
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, consequent, proof);
+          string = stringFromLabelsAndDeduction(labels, deduction),
+          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof);
 
     return topLevelAssertion;
   }
@@ -250,10 +248,10 @@ export default class TopLevelAssertion {
   static fromNode(Class, node, fileContext) {
     const labels = labelsFromNode(node, fileContext),
           suppositions = suppositionsFromNode(node, fileContext),
-          consequent = consequentFromNode(node, fileContext),
+          deduction = deductionFromNode(node, fileContext),
           proof = proofFromNode(node, fileContext),
-          string = stringFromLabelsAndConsequent(labels, consequent),
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, consequent, proof);
+          string = stringFromLabelsAndDeduction(labels, deduction),
+          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof);
 
     return topLevelAssertion;
   }
@@ -279,12 +277,12 @@ export function proofFromNode(node, fileContext) {
   return proof;
 }
 
-export function consequentFromNode(node, fileContext) {
-  const { Consequent } = dom,
-        consequentNode = consequentNodeQuery(node),
-        consequent = Consequent.fromConsequentNode(consequentNode, fileContext);
+export function deductionFromNode(node, fileContext) {
+  const { Deduction } = dom,
+        deductionNode = deductionNodeQuery(node),
+        deduction = Deduction.fromDeductionNode(deductionNode, fileContext);
 
-  return consequent;
+  return deduction;
 }
 
 export function suppositionsFromNode(node, fileContext) {
@@ -313,12 +311,12 @@ export function labelsStringFromLabels(labels) {
   return labelsString;
 }
 
-export function stringFromLabelsAndConsequent(labels, consequent) {
-  const consequentString = consequent.getString(),
+export function stringFromLabelsAndDeduction(labels, deduction) {
+  const deductionString = deduction.getString(),
         labelsString = labelsStringFromLabels(labels),
         string = (labelsString === null) ?
-                   consequentString : ///
-                    `${labelsString} :: ${consequentString}`;
+                   deductionString : ///
+                    `${labelsString} :: ${deductionString}`;
 
   return string;
 }
