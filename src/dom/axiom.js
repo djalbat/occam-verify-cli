@@ -8,7 +8,13 @@ import TopLevelAssertion  from "./topLevelAssertion";
 import { nodeQuery } from "../utilities/query";
 import { SATISFYING } from "../constants";
 import { domAssigned } from "../dom";
-import { labelsFromJSON, deductionFromJSON, satisfyingFromJSON, suppositionsFromJSON } from "../utilities/json";
+import { labelsFromJSON,
+         deductionFromJSON,
+         satisfyingFromJSON,
+         labelsToLabelsJSON,
+         suppositionsFromJSON,
+         deductionToDeductionJSON,
+         suppositionsToSuppositionsJSON } from "../utilities/json";
 import { proofFromNode, labelsFromNode, deductionFromNode, suppositionsFromNode, stringFromLabelsAndDeduction } from "./topLevelAssertion";
 
 const { match } = arrayUtilities;
@@ -119,6 +125,30 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   }
 
   static name = "Axiom";
+
+  toJSON() {
+    let labels = this.getLabels(),
+        deduction = this.getDeduction(),
+        suppositions = this.getSuppositions();
+
+    const labelsJSON = labelsToLabelsJSON(labels),
+          deductionJSON = deductionToDeductionJSON(deduction),
+          suppositionsJSON = suppositionsToSuppositionsJSON(suppositions);
+
+    labels = labelsJSON;  ///
+    deduction = deductionJSON;  ///
+    suppositions = suppositionsJSON;  ///
+
+    const satisfying = this.satisfying,
+          json = {
+            labels,
+            deduction,
+            suppositions,
+            satisfying
+          };
+
+    return json;
+  }
 
   static fromJSON(json, fileContext) {
     const labels = labelsFromJSON(json, fileContext),
