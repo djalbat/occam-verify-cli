@@ -14,9 +14,10 @@ import { labelsFromJSON,
          suppositionsFromJSON,
          deductionToDeductionJSON,
          suppositionsToSuppositionsJSON } from "../utilities/json";
+import { satisfyingAssertionFromStatement } from "../utilities/context";
 import { proofFromNode, labelsFromNode, deductionFromNode, suppositionsFromNode, stringFromLabelsAndDeduction } from "./topLevelAssertion";
 
-const { match } = arrayUtilities;
+const { match, backwardsSome } = arrayUtilities;
 
 const firstPrimaryKeywordTerminalNodeQuery = nodeQuery("/axiom/@primary-keyword[0]");
 
@@ -161,16 +162,32 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     statementAndProofStepSubproofsUnified = super.unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, substitutions, context);
 
-    // if (statementAndProofStepSubproofsUnified) {
-    //   if (this.satisfying) {
-    //     debugger
-    //   }
-    // }
+    if (statementAndProofStepSubproofsUnified) {
+      if (this.satisfying) {
+        const substitutionsMatch = backwardsSome(proofStepSubproofs, (proofStepSubproof) => {
+          const proofStepSubproofProofStep = proofStepSubproof.isProofStep();
+
+          if (proofStepSubproofProofStep) {
+            const proofStep = proofStepSubproof,  ///
+                  statement = proofStep.getStatement(),
+                  satisfyingAssertion = satisfyingAssertionFromStatement(statement, context);
+
+            if (satisfyingAssertion !== null) {
+              const substitutionsMatch = satisfyingAssertion.matchSubstitutions(substitutions, context);
+
+              if (substitutionsMatch) {
+                return true;
+              }
+            }
+          }
+        });
+
+        statementAndProofStepSubproofsUnified = substitutionsMatch; ///
+      }
+    }
 
     return statementAndProofStepSubproofsUnified;
   }
-
-  static name = "Axiom";
 
   toJSON() {
     let labels = this.getLabels(),
@@ -195,6 +212,8 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     return json;
   }
+
+  static name = "Axiom";
 
   static fromJSON(json, fileContext) {
     const labels = labelsFromJSON(json, fileContext),
