@@ -77,7 +77,7 @@ export default domAssigned(class Frame {
     const frameString = this.string,  ///
           substitutionString = substitution.getString();
 
-    context.trace(`Matching the '${substitutionString}' substitution with the '${frameString}' frame...`);
+    context.trace(`Matching the '${substitutionString}' substitution against the '${frameString}' frame...`);
 
     if (!substitutionMatches) {
       substitutionMatches = this.declarations.some((declaration) => {
@@ -100,7 +100,7 @@ export default domAssigned(class Frame {
     }
 
     if (substitutionMatches) {
-      context.debug(`...matched the '${substitutionString}' substitutions with the '${frameString}' frame.`);
+      context.debug(`...matched the '${substitutionString}' substitutions against the '${frameString}' frame.`);
     }
 
     return substitutionMatches;
@@ -112,7 +112,7 @@ export default domAssigned(class Frame {
     const frameString = this.string,  ///
           substitutionsString = substitutions.asString();
 
-    context.trace(`Matching the '${substitutionsString}' substitutions with the '${frameString}' frame...`);
+    context.trace(`Matching the '${substitutionsString}' substitutions against the '${frameString}' frame...`);
 
     substitutionsMatch = substitutions.everySubstitution((substitution) => {
       const substitutionMatches = this.matchSubstitution(substitution, context);
@@ -123,7 +123,7 @@ export default domAssigned(class Frame {
     });
 
     if (substitutionsMatch) {
-      context.debug(`...matched the '${substitutionsString}' substitutions with the '${frameString}' frame.`);
+      context.debug(`...matched the '${substitutionsString}' substitutions against the '${frameString}' frame.`);
     }
 
     return substitutionsMatch;

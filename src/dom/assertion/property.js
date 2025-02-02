@@ -47,7 +47,7 @@ export default domAssigned(class PropertyAssertion {
           propertyRelationString = propertyRelation.getString(),
           propertyAssertionString = this.getString();
 
-    context.trace(`Matching the '${termString}' term and '${propertyRelationString}' property relation with  the '${propertyAssertionString}' property assertion...`);
+    context.trace(`Matching the '${termString}' term and '${propertyRelationString}' property relation against the '${propertyAssertionString}' property assertion...`);
 
     const termA = term,
           termB = this.term, ///
@@ -60,7 +60,7 @@ export default domAssigned(class PropertyAssertion {
     }
 
     if (verifiedAsPropertyAssertion) {
-      context.debug(`...matched the '${termString}' term and '${propertyRelationString}' property relation with  the '${propertyAssertionString}' property assertion.`);
+      context.debug(`...matched the '${termString}' term and '${propertyRelationString}' property relation against the '${propertyAssertionString}' property assertion.`);
     }
 
     return verifiedAsPropertyAssertion;

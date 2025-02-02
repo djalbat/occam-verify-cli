@@ -86,14 +86,9 @@ function unifyAsSatisfyingAssertion(statement, reference, substitutions, context
               axiomLemmaTheoremConjectureUnified = axiom.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, substitutions, context);
 
         if (axiomLemmaTheoremConjectureUnified) {
-          const stated = true,
-                assignments = null;
+          const substitutionsMatch = satisfyingAssertion.matchSubstitutions(substitutions, context);
 
-          satisfyingAssertion.verify(assignments, stated, context);
-
-          debugger
-
-          unifiedAsSatisfyingAssertion = axiomLemmaTheoremConjectureUnified;  ///
+          unifiedAsSatisfyingAssertion = substitutionsMatch;  ///
         }
       }
 

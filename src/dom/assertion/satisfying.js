@@ -37,6 +37,26 @@ export default domAssigned(class SatisfyingAssertion {
     return this.reference;
   }
 
+  matchSubstitutions(substitutions, context) {
+    let substitutionsMatch;
+
+    const termsString = termsStringFromTerms(this.terms),
+          substitutionsString = substitutions.asString(),
+          satisfyingAssertionString = this.string; ///
+
+    context.trace(`Matching the '${substitutionsString}' substitutions against the '${satisfyingAssertionString}' satisfying assertion's ${termsString} terms...`);
+
+    const termsEquate = substitutions.equateTerms(this.terms);
+
+    substitutionsMatch = termsEquate;  ///
+
+    if (substitutionsMatch) {
+      context.debug(`...matched the '${substitutionsString}' substitutions against the '${satisfyingAssertionString}' satisfying assertion's ${termsString} terms.`);
+    }
+
+    return substitutionsMatch;
+  }
+
   verify(assignments, stated, context) {
     let verified = false;
 

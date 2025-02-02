@@ -84,7 +84,7 @@ export default domAssigned(class Metavariable {
     const metavariableString = this.string,  ///
           substitutionString = substitution.getString();
 
-    context.trace(`Matching the '${substitutionString}' substitution with the '${metavariableString}' metavariable...`);
+    context.trace(`Matching the '${substitutionString}' substitution against the '${metavariableString}' metavariable...`);
 
     const metavariable = this, ///
           judgement = context.findJudgementByMetavariable(metavariable);
@@ -98,7 +98,7 @@ export default domAssigned(class Metavariable {
     }
 
     if (substitutionMatched) {
-      context.debug(`...matched the '${substitutionString}' substitution with the '${metavariableString}' metavariable.`);
+      context.debug(`...matched the '${substitutionString}' substitution against the '${metavariableString}' metavariable.`);
     }
 
     return substitutionMatched;

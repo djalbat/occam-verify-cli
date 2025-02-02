@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import { EMPTY_STRING } from "./constants";
 
-const { find, first, clear, prune, filter, compress, correlate } = arrayUtilities;
+const { find, first, clear, prune, match, filter, compress, correlate } = arrayUtilities;
 
 export default class Substitutions {
   constructor(array, savedArray) {
@@ -212,6 +212,20 @@ export default class Substitutions {
           match = correlates; ///
 
     return match;
+  }
+
+  equateTerms(terms) {
+    const termsMatch = match(this.array, terms, (substitution, term) => {
+            const substitutionTerm = substitution.getTerm(),
+                  substitutionTermEqualToTerm = substitutionTerm.isEqualTo(term);
+
+            if (substitutionTermEqualToTerm) {
+              return true;
+            }
+          }),
+          termsEquate = termsMatch; ///
+
+    return termsEquate;
   }
 
   clear() {

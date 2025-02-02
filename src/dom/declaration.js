@@ -35,7 +35,7 @@ export default domAssigned(class Declaration {
     const declarationString = this.string,  ///
           substitutionString = substitution.getString();
 
-    context.trace(`Matching the '${substitutionString}' substitution with the '${declarationString}' declaration...`);
+    context.trace(`Matching the '${substitutionString}' substitution against the '${declarationString}' declaration...`);
 
     const statement = substitution.getStatement(),
           metavariable = substitution.getMetavariable(),
@@ -45,7 +45,7 @@ export default domAssigned(class Declaration {
     substitutionMatches = (referenceMetavariableEqualToMetavariable && statementEqualToStatement);
 
     if (substitutionMatches) {
-      context.debug(`...matched the '${declarationString}' substitution with the '${substitutionString}' declaration.`);
+      context.debug(`...matched the '${declarationString}' substitution against the '${substitutionString}' declaration.`);
     }
 
     return substitutionMatches;
