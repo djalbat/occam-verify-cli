@@ -46,7 +46,7 @@ export default domAssigned(class SatisfyingAssertion {
 
     context.trace(`Matching the '${substitutionsString}' substitutions against the '${satisfyingAssertionString}' satisfying assertion's ${termsString} terms...`);
 
-    const termsEquate = substitutions.equateTerms(this.terms);
+    const termsEquate = substitutions.matchTerms(this.terms);
 
     substitutionsMatch = termsEquate;  ///
 
