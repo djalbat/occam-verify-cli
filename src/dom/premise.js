@@ -44,11 +44,11 @@ export default domAssigned(class Premise {
         const assignmentsAssigned = assignAssignments(assignments, context);
 
         if (assignmentsAssigned) {
-          const { ProofStep } = dom,
-                proofStep = ProofStep.fromStatement(this.statement, context),
-                proofStepSubproof = proofStep;  ///
+          const { Step } = dom,
+                step = Step.fromStatement(this.statement, context),
+                stepOrSubproof = step;  ///
 
-          context.addProofStepSubproof(proofStepSubproof);
+          context.addStepOrSubproof(stepOrSubproof);
 
           verified = true;
         }
@@ -90,15 +90,15 @@ export default domAssigned(class Premise {
     return unifiedIndependently;
   }
 
-  unifyProofStepSubproof(proofStepSubproof, substitutions, generalContext, specificContext) {
-    let proofStepSubproofUnified = false;
+  unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext) {
+    let stepOrSubproofUnified = false;
 
-    const proofStepSubProofProofStep = proofStepSubproof.isProofStep(),
-          subproof = proofStepSubProofProofStep ?
+    const stepOrSubProofStep = stepOrSubproof.isStep(),
+          subproof = stepOrSubProofStep ?
                        null :
-                         proofStepSubproof,
-          proofStep = proofStepSubProofProofStep ?
-                        proofStepSubproof :
+                         stepOrSubproof,
+          step = stepOrSubProofStep ?
+                        stepOrSubproof :
                           null;
 
     substitutions.snapshot();
@@ -106,35 +106,35 @@ export default domAssigned(class Premise {
     if (subproof !== null) {
       const subproofUnified = this.unifySubproof(subproof, substitutions, generalContext, specificContext);
 
-      proofStepSubproofUnified = subproofUnified; ///
+      stepOrSubproofUnified = subproofUnified; ///
     }
 
-    if (proofStep !== null) {
-      const statementUnified = this.unifyProofStep(proofStep, substitutions, generalContext, specificContext);
+    if (step !== null) {
+      const statementUnified = this.unifyStep(step, substitutions, generalContext, specificContext);
 
-      proofStepSubproofUnified = statementUnified;  ///
+      stepOrSubproofUnified = statementUnified;  ///
     }
 
-    if (proofStepSubproofUnified) {
+    if (stepOrSubproofUnified) {
       substitutions.resolve(generalContext, specificContext);
     }
 
-    proofStepSubproofUnified ?
+    stepOrSubproofUnified ?
       substitutions.continue() :
         substitutions.rollback(specificContext);
 
-    return proofStepSubproofUnified;
+    return stepOrSubproofUnified;
   }
 
-  unifyProofStep(proofStep, substitutions, generalContext, specificContext) {
-    let proofStepUnified;
+  unifyStep(step, substitutions, generalContext, specificContext) {
+    let stepUnified;
 
-    const statement = proofStep.getStatement(),
+    const statement = step.getStatement(),
           statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    proofStepUnified = statementUnified;  ///
+    stepUnified = statementUnified;  ///
 
-    return proofStepUnified;
+    return stepUnified;
   }
 
   unifySubproof(subproof, substitutions, generalContext, specificContext) {

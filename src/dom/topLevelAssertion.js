@@ -156,8 +156,8 @@ export default class TopLevelAssertion {
     return deductionUnified;
   }
 
-  unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, substitutions, context) {
-    let statementAndProofStepSubproofsUnified = false;
+  unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
+    let statementAndStepsOrSubproofsUnified = false;
 
     const localContext = LocalContext.fromFileContext(this.fileContext),
           generalContext = localContext, ///
@@ -165,55 +165,55 @@ export default class TopLevelAssertion {
           statementUnifiedWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifiedWithDeduction) {
-      const proofStepSubproofsUnifiedWithSuppositions = this.unifyProofStepSubproofsWithSuppositions(proofStepSubproofs, substitutions, generalContext, specificContext);
+      const stepsOrSubproofsUnifiedWithSuppositions = this.unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, generalContext, specificContext);
 
-      if (proofStepSubproofsUnifiedWithSuppositions) {
+      if (stepsOrSubproofsUnifiedWithSuppositions) {
         const substitutionsResolved = substitutions.areResolved();
 
-        statementAndProofStepSubproofsUnified = substitutionsResolved; ///
+        statementAndStepsOrSubproofsUnified = substitutionsResolved; ///
       }
     }
 
-    return statementAndProofStepSubproofsUnified;
+    return statementAndStepsOrSubproofsUnified;
   }
 
-  unifyProofStepSubproofsWithSupposition(proofStepSubproofs, supposition, substitutions, generalContext, specificContext) {
-    let proofStepSubproofsUnifiedWithSupposition  =false;
+  unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext) {
+    let stepsOrSubproofsUnifiedWithSupposition  =false;
 
     const context = specificContext,  ///
           suppositionUnifiedIndependently = supposition.unifyIndependently(substitutions, context);
 
     if (suppositionUnifiedIndependently) {
-      proofStepSubproofsUnifiedWithSupposition = true;
+      stepsOrSubproofsUnifiedWithSupposition = true;
     } else {
-      const proofStep = extract(proofStepSubproofs, (proofStepSubproof) => {
-        const proofStepUnified = supposition.unifyProofStepSubproof(proofStepSubproof, substitutions, generalContext, specificContext);
+      const step = extract(stepsOrSubproofs, (stepOrSubproof) => {
+        const stepUnified = supposition.unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext);
 
-        if (proofStepUnified) {
+        if (stepUnified) {
           return true;
         }
       }) || null;
 
-      if (proofStep !== null) {
-        proofStepSubproofsUnifiedWithSupposition = true;
+      if (step !== null) {
+        stepsOrSubproofsUnifiedWithSupposition = true;
       }
     }
 
-    return proofStepSubproofsUnifiedWithSupposition;
+    return stepsOrSubproofsUnifiedWithSupposition;
   }
 
-  unifyProofStepSubproofsWithSuppositions(proofStepSubproofs, substitutions, generalContext, specificContext) {
-    proofStepSubproofs = reverse(proofStepSubproofs); ///
+  unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, generalContext, specificContext) {
+    stepsOrSubproofs = reverse(stepsOrSubproofs); ///
 
-    const proofStepSubproofsUnifiedWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
-      const proofStepSubproofsUnifiedWithSupposition = this.unifyProofStepSubproofsWithSupposition(proofStepSubproofs, supposition, substitutions, generalContext, specificContext);
+    const stepsOrSubproofsUnifiedWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
+      const stepsOrSubproofsUnifiedWithSupposition = this.unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext);
 
-      if (proofStepSubproofsUnifiedWithSupposition) {
+      if (stepsOrSubproofsUnifiedWithSupposition) {
         return true;
       }
     });
 
-    return proofStepSubproofsUnifiedWithSuppositions;
+    return stepsOrSubproofsUnifiedWithSuppositions;
   }
 
   toJSON() {

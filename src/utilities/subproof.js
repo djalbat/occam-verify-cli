@@ -3,16 +3,16 @@
 import { nodeQuery, nodesQuery } from "./query";
 import { nodeAsString, nodesAsString } from "./string";
 
-const suppositionStatementNodesQuery = nodesQuery("/subproof/supposition/statement"),
-      lastProofStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/proofStep[-1]/statement");
+const lastStepStatementNodeQuery = nodeQuery("/subproof/subDerivation/step[-1]/statement"),
+      suppositionStatementNodesQuery = nodesQuery("/subproof/supposition/statement");
 
 export function subproofStringFromSubproofNode(subproofNode, fileContext) {
   const tokens = fileContext.getTokens(),
         suppositionStatementNodes = suppositionStatementNodesQuery(subproofNode),
-        lastProofStepStatementNode = lastProofStepStatementNodeQuery(subproofNode),
+        lastStepStatementNode = lastStepStatementNodeQuery(subproofNode),
         suppositionStatementsString = nodesAsString(suppositionStatementNodes, tokens),
-        lastProofStepStatementString = nodeAsString(lastProofStepStatementNode, tokens),
-        subproofString = `[${suppositionStatementsString}]...${lastProofStepStatementString}`;
+        lastStepStatementString = nodeAsString(lastStepStatementNode, tokens),
+        subproofString = `[${suppositionStatementsString}]...${lastStepStatementString}`;
 
   return subproofString;
 }

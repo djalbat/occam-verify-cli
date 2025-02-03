@@ -35,28 +35,28 @@ export default domAssigned(class Subproof {
     return this.subDerivation;
   }
 
-  getLastProofStep() { return this.subDerivation.getLastProofStep(); }
+  getLastStep() { return this.subDerivation.getLastStep(); }
 
   getStatements() {
-    const lastProofStep = this.getLastProofStep(),
+    const lastStep = this.getLastStep(),
           suppositionStatements = this.suppositions.map((supposition) => {
             const suppositionStatement = supposition.getStatement();
 
             return suppositionStatement;
           }),
-          lastProofStepStatement = lastProofStep.getStatement(),
+          lastStepStatement = lastStep.getStatement(),
           statements = [
             ...suppositionStatements,
-            lastProofStepStatement
+            lastStepStatement
           ];
 
     return statements;
   }
 
-  isProofStep() {
-    const proofStep = false;
+  isStep() {
+    const sStep = false;
 
-    return proofStep;
+    return sStep;
   }
 
   unifyStatement(statement, context) {
@@ -117,10 +117,10 @@ export default domAssigned(class Subproof {
 
   static name = "Subproof";
 
-  static fromProofStepSubproofNode(proofStepSubproofNode, fileContext) {
+  static fromStepOrSubproofNode(sStepOrSubproofNode, fileContext) {
     let subproof = null;
 
-    const subproofNode = subproofNodeQuery(proofStepSubproofNode);
+    const subproofNode = subproofNodeQuery(sStepOrSubproofNode);
 
     if (subproofNode !== null) {
       const subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),

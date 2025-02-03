@@ -17,12 +17,12 @@ export default domAssigned(class Proof {
     return this.derivation;
   }
 
-  getLastProofStep() { return this.derivation.getLastProofStep(); }
+  getLastStep() { return this.derivation.getLastStep(); }
 
   getStatement() {
-    const lastProofStep = this.getLastProofStep(),
-          lastProofStepStatement = lastProofStep.getStatement(),
-          statement = lastProofStepStatement; ///
+    const lastStep = this.getLastStep(),
+          lastStepStatement = lastStep.getStatement(),
+          statement = lastStepStatement; ///
 
     return statement;
   }
@@ -37,9 +37,9 @@ export default domAssigned(class Proof {
     const derivationVerified = this.derivation.verify(substitutions, context);
 
     if (derivationVerified) {
-      const lastProofStep = context.getLastProofStep();
+      const lastStep = context.getLastStep();
 
-      if (lastProofStep !== null) {
+      if (lastStep !== null) {
         const statement = this.getStatement(),
               conclusionStatement = conclusion.getStatement(),
               conclusionStatementEqualToStatement = conclusionStatement.isEqualTo(statement);

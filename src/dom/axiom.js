@@ -157,19 +157,19 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return axiomLemmaTheoremConjectureUnified;
   }
 
-  unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, substitutions, context) {
-    let statementAndProofStepSubproofsUnified;
+  unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
+    let statementAndStepsOrSubproofsUnified;
 
-    statementAndProofStepSubproofsUnified = super.unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, substitutions, context);
+    statementAndStepsOrSubproofsUnified = super.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 
-    if (statementAndProofStepSubproofsUnified) {
+    if (statementAndStepsOrSubproofsUnified) {
       if (this.satisfying) {
-        const substitutionsMatch = backwardsSome(proofStepSubproofs, (proofStepSubproof) => {
-          const proofStepSubproofProofStep = proofStepSubproof.isProofStep();
+        const substitutionsMatch = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
+          const stepSubstep = stepOrSubproof.isStep();
 
-          if (proofStepSubproofProofStep) {
-            const proofStep = proofStepSubproof,  ///
-                  statement = proofStep.getStatement(),
+          if (stepSubstep) {
+            const step = stepOrSubproof,  ///
+                  statement = step.getStatement(),
                   satisfyingAssertion = satisfyingAssertionFromStatement(statement, context);
 
             if (satisfyingAssertion !== null) {
@@ -182,11 +182,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
           }
         });
 
-        statementAndProofStepSubproofsUnified = substitutionsMatch; ///
+        statementAndStepsOrSubproofsUnified = substitutionsMatch; ///
       }
     }
 
-    return statementAndProofStepSubproofsUnified;
+    return statementAndStepsOrSubproofsUnified;
   }
 
   toJSON() {

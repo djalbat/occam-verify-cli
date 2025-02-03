@@ -3,6 +3,7 @@
 import Type from "./dom/type";
 import Term from "./dom/term";
 import Rule from "./dom/rule";
+import Step from "./dom/step";
 import Label from "./dom/label";
 import Axiom from "./dom/axiom";
 import Lemma from "./dom/lemma";
@@ -17,7 +18,6 @@ import Subproof from "./dom/subproof";
 import Variable from "./dom/variable";
 import Property from "./dom/property";
 import Parameter from "./dom/parameter";
-import ProofStep from "./dom/proofStep";
 import Reference from "./dom/reference";
 import Statement from "./dom/statement";
 import Judgement from "./dom/judgement";

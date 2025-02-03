@@ -15,10 +15,10 @@ import { definedAssertionFromStatement, containedAssertionFromStatement, subproo
 
 const { match, backwardsSome } = arrayUtilities;
 
-const statementTermNodesQuery = nodesQuery("/statement//term"),
+const stepStatementNodeQuery = nodeQuery("/step/statement"),
+      statementTermNodesQuery = nodesQuery("/statement//term"),
       statementFrameNodesQuery = nodesQuery("/statement//frame"),
       premiseStatementNodeQuery = nodeQuery("/premise/statement"),
-      proofStepStatementNodeQuery = nodeQuery("/proofStep/statement"),
       deductionStatementNodeQuery = nodeQuery("/deduction/statement"),
       conclusionStatementNodeQuery = nodeQuery("/conclusion/statement"),
       suppositionStatementNodeQuery = nodeQuery("/supposition/statement"),
@@ -233,19 +233,19 @@ export default domAssigned(class Statement {
     return unifiedIndependently;
   }
 
-  unifyWithProofStepSubproofs(proofStepSubproofs, context) {
-    let unifiedWithProofSteps;
+  unifyWithStepsOrSubproofs(stepsOrSubproofs, context) {
+    let unifiedWithSteps;
 
-    unifiedWithProofSteps = backwardsSome(proofStepSubproofs, (proofStepSubproof) => {
+    unifiedWithSteps = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
       const statement = this, ///
-            statementUnified =proofStepSubproof.unifyStatement(statement, context);
+            statementUnified =stepOrSubproof.unifyStatement(statement, context);
 
       if (statementUnified) {
         return true;
       }
     });
 
-    return unifiedWithProofSteps;
+    return unifiedWithSteps;
   }
 
   toJSON() {
@@ -287,13 +287,13 @@ export default domAssigned(class Statement {
     return statement;
   }
 
-  static fromProofStepNode(proofStepNode, fileContext) {
+  static fromStepNode(stepNode, fileContext) {
     let statement = null;
 
-    const proofStepStatementNode = proofStepStatementNodeQuery(proofStepNode);
+    const stepStatementNode = stepStatementNodeQuery(stepNode);
 
-    if (proofStepStatementNode !== null) {
-      const statementNode = proofStepStatementNode; ///
+    if (stepStatementNode !== null) {
+      const statementNode = stepStatementNode; ///
 
       statement = statementFromStatementNode(statementNode, fileContext);
     }

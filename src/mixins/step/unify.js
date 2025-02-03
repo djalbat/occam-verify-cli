@@ -21,10 +21,10 @@ function unifyAWithRule(statement, reference, substitutions, context) {
 
       context.trace(`Unifying the '${statementString}' statement with the '${ruleString}' rule...`);
 
-      const proofStepSubproofs = context.getProofStepSubproofs(),
-            statementAndProofStepsUnified = rule.unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, context);
+      const stepsOrSubproofs = context.getStepsOrSubproofs(),
+            statementAndStepsUnified = rule.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
 
-      unifiedWithRule = statementAndProofStepsUnified;  ///
+      unifiedWithRule = statementAndStepsUnified;  ///
 
       if (unifiedWithRule) {
         context.debug(`...unified the '${statementString}' statement with the '${ruleString}' rule.`);
@@ -114,14 +114,14 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(statement, reference, substitut
 
       context.trace(`Unifying the '${statementString}' statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`);
 
-      const proofStepSubproofs = context.getProofStepSubproofs(),
+      const stepsOrSubproofs = context.getStepsOrSubproofs(),
             specificSubstitutions = Substitutions.fromNothing();
 
       substitutions = specificSubstitutions;  ///
 
-      const statementAndProofStepsUnified = axiomLemmaTheoremConjecture.unifyStatementAndProofStepSubproofs(statement, proofStepSubproofs, substitutions, context);
+      const statementAndStepsUnified = axiomLemmaTheoremConjecture.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 
-      if (statementAndProofStepsUnified) {
+      if (statementAndStepsUnified) {
         const metavariable = reference.getMetavariable(),
               specificContext = context,  ///
               statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
@@ -237,17 +237,17 @@ function unifyAsPropertyAssertion(statement, reference, substitutions, context) 
   return unifiedAsPropertyAssertion;
 }
 
-function unifyWithProofStepSubproofs(statement, reference, substitutions, context) {
-  let unifiedWithProofSteps = false;
+function unifyWithStepsOrSubproofs(statement, reference, substitutions, context) {
+  let unifiedWithSteps = false;
 
   if (reference === null) {
-    const proofStepSubproofs = context.getProofStepSubproofs(),
-          statementUnifiedWithProofSteps = statement.unifyWithProofStepSubproofs(proofStepSubproofs, context);
+    const stepsOrSubproofs = context.getStepsOrSubproofs(),
+          statementUnifiedWithSteps = statement.unifyWithStepsOrSubproofs(stepsOrSubproofs, context);
 
-    unifiedWithProofSteps = statementUnifiedWithProofSteps; ///
+    unifiedWithSteps = statementUnifiedWithSteps; ///
   }
 
-  return unifiedWithProofSteps;
+  return unifiedWithSteps;
 }
 
 const unifyMixins = [
@@ -259,7 +259,7 @@ const unifyMixins = [
   unifyAsJudgement,
   unifyAsTypeAssertion,
   unifyAsPropertyAssertion,
-  unifyWithProofStepSubproofs
+  unifyWithStepsOrSubproofs
 ];
 
 export default unifyMixins;

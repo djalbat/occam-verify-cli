@@ -1,16 +1,16 @@
 "use strict";
 
 import dom from "../dom";
-import unifyMixins from "../mixins/proofStep/unify";
+import unifyMixins from "../mixins/step/unify";
 import Substitutions from "../substitutions";
 
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { propertyAssertionFromStatement } from "../utilities/context";
 
-const proofStepNodeQuery = nodeQuery("/proofStep");
+const stepNodeQuery = nodeQuery("/step");
 
-export default domAssigned(class ProofStep {
+export default domAssigned(class Step {
   constructor(string, statement, reference) {
     this.string = string;
     this.statement = statement;
@@ -35,10 +35,10 @@ export default domAssigned(class ProofStep {
     return qualified;
   }
 
-  isProofStep() {
-    const proofStep = true;
+  isStep() {
+    const step = true;
 
-    return proofStep;
+    return step;
   }
 
   matchTermAndPropertyRelation(term, propertyRelation, context) {
@@ -56,9 +56,9 @@ export default domAssigned(class ProofStep {
   unify(substitutions, context) {
     let unified;
 
-    const proofStepString = this.string;  ///
+    const stepString = this.string;  ///
 
-    context.trace(`Unifying the '${proofStepString}' proof step...`);
+    context.trace(`Unifying the '${stepString}' step...`);
 
     unified = unifyMixins.some((unifyMixin) => {
       const unified = unifyMixin(this.statement, this.reference, substitutions, context);
@@ -69,7 +69,7 @@ export default domAssigned(class ProofStep {
     });
 
     if (unified) {
-      context.debug(`...unified the '${proofStepString}' proof step.`);
+      context.debug(`...unified the '${stepString}' step.`);
     }
 
     return unified;
@@ -78,9 +78,9 @@ export default domAssigned(class ProofStep {
   verify(substitutions, assignments, context) {
     let verified = false;
 
-    const proofStepString = this.string;
+    const stepString = this.string;
 
-    context.trace(`Verifying the '${proofStepString}' proof step...`);
+    context.trace(`Verifying the '${stepString}' step...`);
 
     if (this.statement !== null) {
       const qualified = this.isQualified(),
@@ -97,11 +97,11 @@ export default domAssigned(class ProofStep {
         }
       }
     } else {
-      context.debug(`Cannot verify the '${proofStepString}' proof step because it is nonsense.`);
+      context.debug(`Cannot verify the '${stepString}' step because it is nonsense.`);
     }
 
     if (verified) {
-      context.debug(`...verified the '${proofStepString}' proof step.`);
+      context.debug(`...verified the '${stepString}' step.`);
     }
 
     return verified;
@@ -126,32 +126,32 @@ export default domAssigned(class ProofStep {
     return statementUnified;
   }
 
-  static name = "ProofStep";
+  static name = "Step";
 
   static fromStatement(statement, context) {
     const statementString = statement.getString(),
           string = statementString, ///
           reference = null,
-          proofStep = new ProofStep(string, statement, reference);
+          step = new Step(string, statement, reference);
 
-    return proofStep;
+    return step;
   }
 
-  static fromProofStepSubproofNode(proofStepSubproofNode, fileContext) {
-    let proofStep = null;
+  static fromStepOrSubproofNode(stepOrSubproofNode, fileContext) {
+    let step = null;
 
-    const proofStepNode = proofStepNodeQuery(proofStepSubproofNode);
+    const stepNode = stepNodeQuery(stepOrSubproofNode);
 
-    if (proofStepNode !== null) {
+    if (stepNode !== null) {
       const { Statement, Reference } = dom,
-            node = proofStepNode, ///
+            node = stepNode, ///
             string = fileContext.nodeAsString(node),
-            statement = Statement.fromProofStepNode(proofStepNode, fileContext),
-            reference = Reference.fromProofStepNode(proofStepNode, fileContext);
+            statement = Statement.fromStepNode(stepNode, fileContext),
+            reference = Reference.fromStepNode(stepNode, fileContext);
 
-      proofStep = new ProofStep(string, statement, reference);
+      step = new Step(string, statement, reference);
     }
 
-    return proofStep;
+    return step;
   }
 });

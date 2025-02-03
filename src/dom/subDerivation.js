@@ -10,39 +10,39 @@ import { assignAssignments } from "../utilities/assignments";
 
 const { last } = arrayUtilities;
 
-const proofStepSubproofNodesQuery = nodesQuery("/subDerivation/proofStep|subproof");
+const stepOrSubproofNodesQuery = nodesQuery("/subDerivation/step|subproof");
 
 export default domAssigned(class SubDerivation {
-  constructor(proofStepSubproofs) {
-    this.proofStepSubproofs = proofStepSubproofs;
+  constructor(stepsOrSubproofs) {
+    this.stepsOrSubproofs = stepsOrSubproofs;
   }
 
-  getProofStepSubproofs() {
-    return this.proofStepSubproofs;
+  getStepsOrSubproofs() {
+    return this.stepsOrSubproofs;
   }
 
-  getLastProofStep() {
-    const lastProofStepSubproof = last(this.proofStepSubproofs),
-          lastProofStep = lastProofStepSubproof;  ///
+  getLastStep() {
+    const lastStepOrSubproof = last(this.stepsOrSubproofs),
+          lastStep = lastStepOrSubproof;  ///
 
-    return lastProofStep;
+    return lastStep;
   }
 
   verify(substitutions, context) {
     let verified;
 
-    verified = this.proofStepSubproofs.every((proofStepSubproof) => { ///
+    verified = this.stepsOrSubproofs.every((stepOrSubproof) => { ///
       const assignments = [],
-            proofStepSubproofVerified = proofStepSubproof.verify(substitutions, assignments, context);
+            stepOrSubproofVerified = stepOrSubproof.verify(substitutions, assignments, context);
 
-      if (proofStepSubproofVerified) {
-        const proofStepSubproofUnified = proofStepSubproof.unify(substitutions, context);
+      if (stepOrSubproofVerified) {
+        const stepOrSubproofUnified = stepOrSubproof.unify(substitutions, context);
 
-        if (proofStepSubproofUnified) {
+        if (stepOrSubproofUnified) {
           const assignmentsAssigned = assignAssignments(assignments, context);
 
           if (assignmentsAssigned) {
-            context.addProofStepSubproof(proofStepSubproof);
+            context.addStepOrSubproof(stepOrSubproof);
 
             return true;
           }
@@ -56,23 +56,23 @@ export default domAssigned(class SubDerivation {
   static name = "SubDerivation";
 
   static fromSubDerivationNode(subDerivationNode, fileContext) {
-    const proofStepSubproofs = proofStepSubproofFromSubDerivationNode(subDerivationNode, fileContext),
-          subDerivation = new SubDerivation(proofStepSubproofs);
+    const stepsOrSubproofs = stepOrSubproofFromSubDerivationNode(subDerivationNode, fileContext),
+          subDerivation = new SubDerivation(stepsOrSubproofs);
 
     return subDerivation;
   }
 });
 
-function proofStepSubproofFromSubDerivationNode(subDerivationNode, fileContext) {
-  const { ProofStep, Subproof } = dom,
-        proofStepSubproofNodes = proofStepSubproofNodesQuery(subDerivationNode),
-        proofStepSubproofs = proofStepSubproofNodes.map((proofStepSubproofNode) => {
-          const subproof = Subproof.fromProofStepSubproofNode(proofStepSubproofNode, fileContext),
-                proofStep = ProofStep.fromProofStepSubproofNode(proofStepSubproofNode, fileContext),
-                proofStepSubproof = (proofStep || subproof);
+function stepOrSubproofFromSubDerivationNode(subDerivationNode, fileContext) {
+  const { Step, Subproof } = dom,
+        stepOrSubproofNodes = stepOrSubproofNodesQuery(subDerivationNode),
+        stepsOrSubproofs = stepOrSubproofNodes.map((stepOrSubproofNode) => {
+          const subproof = Subproof.fromStepOrSubproofNode(stepOrSubproofNode, fileContext),
+                step = Step.fromStepOrSubproofNode(stepOrSubproofNode, fileContext),
+                stepOrSubproof = (step || subproof);
 
-          return proofStepSubproof;
+          return stepOrSubproof;
         });
 
-  return proofStepSubproofs;
+  return stepsOrSubproofs;
 }

@@ -10,7 +10,7 @@ import { referenceMetaType } from "../dom/metaType";
 import { unifyMetavariableIntrinsically } from "../utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
-const proofStepReferenceNodeQuery = nodeQuery("/proofStep/reference"),
+const stepReferenceNodeQuery = nodeQuery("/step/reference"),
       procedureCallReferenceNodeQuery = nodeQuery("/procedureCall/reference"),
       declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable"),
       satisfyingAssertionMetavariableNodeQuery = nodeQuery("/satisfyingAssertion/metavariable");
@@ -186,13 +186,13 @@ export default domAssigned(class Reference {
     return reference;
   }
 
-  static fromProofStepNode(proofStepNode, fileContext) {
+  static fromStepNode(stepNode, fileContext) {
     let reference = null;
 
-    const proofStepReferenceNode = proofStepReferenceNodeQuery(proofStepNode);
+    const stepReferenceNode = stepReferenceNodeQuery(stepNode);
 
-    if (proofStepReferenceNode !== null) {
-      const referenceNode = proofStepReferenceNode; ///
+    if (stepReferenceNode !== null) {
+      const referenceNode = stepReferenceNode; ///
 
       reference = referenceFromReferenceNode(referenceNode, fileContext);
     }

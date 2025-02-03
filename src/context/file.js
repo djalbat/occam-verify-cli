@@ -87,10 +87,10 @@ export default class FileContext {
     return equivalences;
   }
 
-  getProofStepSubproofs() {
-    const proofStepSubproofs = [];
+  getStepsOrSubproofs() {
+    const stepsOrSubproofs = [];
 
-    return proofStepSubproofs;
+    return stepsOrSubproofs;
   }
 
   getLabels(includeRelease = true) {

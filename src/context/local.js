@@ -8,13 +8,13 @@ import Equivalences from "../equivalences";
 const { last } = arrayUtilities;
 
 class LocalContext {
-  constructor(context, tokens, variables, judgements, equivalences, proofStepSubproofs) {
+  constructor(context, tokens, variables, judgements, equivalences, stepsOrSubproofs) {
     this.context = context;
     this.tokens = tokens;
     this.variables = variables;
     this.judgements = judgements;
     this.equivalences = equivalences;
-    this.proofStepSubproofs = proofStepSubproofs;
+    this.stepsOrSubproofs = stepsOrSubproofs;
   }
 
   getContext() {
@@ -61,41 +61,41 @@ class LocalContext {
     return equivalences;
   }
 
-  getProofSteps() {
-    const proofStepSubproofs = this.getProofStepSubproofs(),
-          proofSteps = proofStepSubproofs.filter((proofStepSubproof) => {
-            const proofStepSubproofProofStep = proofStepSubproof.isProofStep();
+  getSteps() {
+    const stepsOrSubproofs = this.getStepsOrSubproofs(),
+          steps = stepsOrSubproofs.filter((stepOrSubproof) => {
+            const stepOrSubproofStep = stepOrSubproof.isStep();
 
-            if (proofStepSubproofProofStep) {
+            if (stepOrSubproofStep) {
               return true;
             }
           });
 
-    return proofSteps;
+    return steps;
   }
 
-  getLastProofStep() {
-    let lastProofStep = null;
+  getLastStep() {
+    let lastStep = null;
 
-    const proofSteps = this.getProofSteps(),
-          proofStepsLength = proofSteps.length;
+    const steps = this.getSteps(),
+          stepsLength = steps.length;
 
-    if (proofStepsLength > 0) {
-      lastProofStep = last(proofSteps);
+    if (stepsLength > 0) {
+      lastStep = last(steps);
     }
 
-    return lastProofStep;
+    return lastStep;
   }
 
-  getProofStepSubproofs() {
-    let proofStepSubproofs = this.context.getProofStepSubproofs();
+  getStepsOrSubproofs() {
+    let stepsOrSubproofs = this.context.getStepsOrSubproofs();
 
-    proofStepSubproofs = [  ///
-      ...proofStepSubproofs,
-      ...this.proofStepSubproofs
+    stepsOrSubproofs = [  ///
+      ...stepsOrSubproofs,
+      ...this.stepsOrSubproofs
     ];
 
-    return proofStepSubproofs;
+    return stepsOrSubproofs;
   }
 
   getFilePath() { return this.context.getFilePath(); }
@@ -192,8 +192,8 @@ class LocalContext {
 
   removeEquivalence(equivalence, context) { return this.equivalences.removeEquivalence(equivalence, context); }
 
-  addProofStepSubproof(proofStepSubproof) {
-    this.proofStepSubproofs.push(proofStepSubproof);
+  addStepOrSubproof(stepOrSubproof) {
+    this.stepsOrSubproofs.push(stepOrSubproof);
   }
 
   addJudgement(judgement) {
@@ -359,9 +359,9 @@ class LocalContext {
 
   matchTermAndPropertyRelation(term, propertyRelation) {
     const context = this, ///
-          proofSteps = this.getProofSteps(),
-          termAndPropertyRelationMatches = proofSteps.some((proofStep) => {
-            const termAndPropertyRelationMatches = proofStep.matchTermAndPropertyRelation(term, propertyRelation, context);
+          steps = this.getSteps(),
+          termAndPropertyRelationMatches = steps.some((step) => {
+            const termAndPropertyRelationMatches = step.matchTermAndPropertyRelation(term, propertyRelation, context);
 
             if (termAndPropertyRelationMatches) {
               return true;
@@ -428,8 +428,8 @@ class LocalContext {
           variables = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),
-          proofStepSubproofs = [],
-          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, proofStepSubproofs);
+          stepsOrSubproofs = [],
+          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, stepsOrSubproofs);
 
     return localContext;
   }
@@ -440,8 +440,8 @@ class LocalContext {
           variables = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),
-          proofStepSubproofs = [],
-          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, proofStepSubproofs);
+          stepsOrSubproofs = [],
+          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, stepsOrSubproofs);
 
     return localContext;
   }
@@ -450,8 +450,8 @@ class LocalContext {
     const variables = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),
-          proofStepSubproofs = [],
-          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, proofStepSubproofs);
+          stepsOrSubproofs = [],
+          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, stepsOrSubproofs);
 
     return localContext;
   }
