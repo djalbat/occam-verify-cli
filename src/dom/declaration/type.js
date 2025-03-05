@@ -86,29 +86,45 @@ export default domAssigned(class TypeDeclaration {
     return typeVerified;
   }
 
+  verifySuperType(superType) {
+    let superTypeVerified;
+
+    const typeName = this.type.getString(),
+          superTypeString = superTypeStringFromSuperType(superType);
+
+    this.fileContext.trace(`Verifying the '${typeName}' type's '${superTypeString}' super-type...`);
+
+    const superTypeName = superType.getName(),
+          superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
+
+    superTypeVerified = superTypePresent; ///
+
+    if (superTypeVerified) {
+      this.fileContext.debug(`...verified the '${typeName}' type's '${superTypeString}' super-type.`);
+    }
+
+    return superTypeVerified;
+  }
+
   verifySuperTypes() {
     let superTypesVerified = true;
 
-    const superTypes = this.type.getSuperTypes(),
+    const typeName = this.type.getString(),
+          superTypes = this.type.getSuperTypes(),
           superTypesString = superTypesStringFromSuperTypes(superTypes);
 
-    if (superTypesString !== null) {
-      const typeName = this.type.getString();
+    this.fileContext.trace(`Verifying the '${typeName}' type's ${superTypesString} super-types...`);
 
-      this.fileContext.trace(`Verifying the '${typeName}' type's ${superTypesString} super types...`);
+    superTypesVerified = superTypes.every((superType) => {
+      const superTypeVerified = this.verifySuperType(superType);
 
-      superTypesVerified = superTypes.every((superType) => {
-        const superTypeName = superType.getName(),
-              superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
-
-        if (superTypePresent) {
-          return true;
-        }
-      });
-
-      if (superTypesVerified) {
-        this.fileContext.debug(`...verified the '${typeName}' type's ${superTypesString} super types.`);
+      if (superTypeVerified) {
+        return true;
       }
+    });
+
+    if (superTypesVerified) {
+      this.fileContext.debug(`...verified the '${typeName}' type's ${superTypesString} super-types.`);
     }
 
     return superTypesVerified;
@@ -127,15 +143,20 @@ export default domAssigned(class TypeDeclaration {
   }
 });
 
+export function superTypeStringFromSuperType(superType) {
+  const superTypeName = superType.getName(),
+        superTypeString = superTypeName;  ///
+
+  return superTypeString;
+}
+
 export function superTypesStringFromSuperTypes(superTypes) {
   const superTypesString = superTypes.reduce((superTypesString, superType) => {
-    if (superType !== objectType) {
-      const superTypeName = superType.getName();
+    const superTypeString = superTypeStringFromSuperType(superType);
 
-      superTypesString = (superTypesString === null) ?
-                          `'${superTypeName}'` :
-                            `${superTypesString}, '${superTypeName}'`;
-    }
+    superTypesString = (superTypesString === null) ?
+                        `'${superTypeString}'` :
+                          `${superTypesString}, '${superTypeString}'`;
 
     return superTypesString;
   }, null);

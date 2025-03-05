@@ -125,7 +125,7 @@ export default domAssigned(class ComplexTypeDeclaration {
       if (superTypeProperty !== null) {
         const superTypePropertyString = superTypeProperty.getString();
 
-        this.fileContext.debug(`The '${propertyString}' property matches the super type's '${superTypePropertyString}' property.`);
+        this.fileContext.debug(`The '${propertyString}' property matches the super-type's '${superTypePropertyString}' property.`);
       } else {
         let propertyType;
 
@@ -186,11 +186,11 @@ export default domAssigned(class ComplexTypeDeclaration {
     if (superTypesString !== null) {
       const typeName = this.type.getString();
 
-      this.fileContext.trace(`Verifying the '${typeName}' type's ${superTypesString} super types...`);
+      this.fileContext.trace(`Verifying the '${typeName}' type's ${superTypesString} super-types...`);
 
       superTypesVerified = superTypes.every((superType) => {
         const superTypeName = superType.getName(),
-          superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
+              superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
 
         if (superTypePresent) {
           return true;
@@ -198,7 +198,7 @@ export default domAssigned(class ComplexTypeDeclaration {
       });
 
       if (superTypesVerified) {
-        this.fileContext.debug(`...verified the '${typeName}' type's ${superTypesString} super types.`);
+        this.fileContext.debug(`...verified the '${typeName}' type's ${superTypesString} super-types.`);
       }
     }
 

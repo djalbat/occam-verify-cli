@@ -4,6 +4,7 @@ export const S = "s";
 export const NOTHING = "";
 export const MISSING = "missing";
 export const FUNCTION = "function";
+export const TYPE_TYPE = "type";
 export const UNDEFINED = "undefined";
 export const SATISFYING = "Satisfying";
 export const PROVISIONAL = "Provisional";
