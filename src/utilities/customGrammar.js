@@ -3,11 +3,12 @@
 import { CustomGrammar, CombinedCustomGrammar } from "occam-custom-grammars";
 
 export function customGrammarFromNameAndEntries(name, entries) {
-  const termBNF = entries.getTermBNF(),
+  const typeBNF = entries.getTypeBNF(),
+        termBNF = entries.getTermBNF(),
         statementBNF = entries.getStatementBNF(),
         typePattern = entries.getTypePattern(),
         symbolPattern = entries.getSymbolPattern(),
-        customGrammar = CustomGrammar.fromNameTermBNFStatementBNFTypePatternAndSymbolPattern(name, termBNF, statementBNF, typePattern, symbolPattern);
+        customGrammar = CustomGrammar.fromNameTypeBNFTermBNFStatementBNFTypePatternAndSymbolPattern(name, typeBNF, termBNF, statementBNF, typePattern, symbolPattern);
 
   return customGrammar;
 }
