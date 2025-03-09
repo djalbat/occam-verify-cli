@@ -11,7 +11,7 @@ import { typeNameFromTypeNode } from "../utilities/name";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
-const { push } = arrayUtilities;
+const { push, first } = arrayUtilities;
 
 const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type"),
       propertyDeclarationNodesQuery = nodesQuery("/complexTypeDeclaration/propertyDeclaration"),
@@ -57,8 +57,36 @@ class Type {
     return properties;
   }
 
-  isProvisional() {
-    return this.provisional;
+  isProvisional(includeSuperTypes = true) {
+    let provisional = this.provisional;
+
+    if (includeSuperTypes) {
+      if (!provisional) {
+        provisional = this.superTypes.some((superType) => {
+          const superTypeProvisional = superType.isProvisional();
+
+          if (superTypeProvisional) {
+            return true;
+          }
+        });
+      }
+    }
+
+    return provisional;
+  }
+
+  getSoleSuperType() {
+    let soleSuperType = null;
+
+    const superTypesLength = this.superTypes.length;
+
+    if (superTypesLength === 1) {
+      const firstSuperType = first(this.superTypes);
+
+      soleSuperType = firstSuperType; ///
+    }
+
+    return soleSuperType;
   }
 
   setString(string) {
@@ -79,6 +107,34 @@ class Type {
 
   setProvisional(provisional) {
     this.provisional = provisional;
+  }
+
+  isRefined() {
+    let refined = false;
+
+    const soleSuperType = this.getSoleSuperType();
+
+    if (soleSuperType !== null) {
+      const soleSuperTypeNameMatchesName = soleSuperType.matchName(this.name);
+
+      refined = soleSuperTypeNameMatchesName; ///
+    }
+
+    return refined;
+  }
+
+  isBasic() {
+    let basic = false;
+
+    const soleSuperType = this.getSoleSuperType();
+
+    if (soleSuperType !== null) {
+      const soleSuperTypeObjectType = (soleSuperType === objectType);
+
+      basic = soleSuperTypeObjectType;  ///
+    }
+
+    return basic;
   }
 
   isEqualTo(type) {

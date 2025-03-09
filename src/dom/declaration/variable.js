@@ -41,9 +41,13 @@ export default domAssigned(class VariableDeclaration {
 
         type = this.variable.getType();
 
-        const typeName = type.getName();
+        const typeObjectType = (type === objectType);
 
-        type = this.fileContext.findTypeByTypeName(typeName);
+        if (!typeObjectType) {
+          const typeName = type.getName();
+
+          type = this.fileContext.findTypeByTypeName(typeName);
+        }
 
         const typeProvisional = type.isProvisional(),
               variableProvisional = this.variable.isProvisional();
