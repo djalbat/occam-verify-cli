@@ -5,10 +5,10 @@ import dom from "../../dom";
 import { domAssigned } from "../../dom";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
 
-const termNodesQuery = nodesQuery("/satisfyingAssertion/term"),
-      satisfyingAssertionNodeQuery = nodeQuery("/statement/satisfyingAssertion");
+const termNodesQuery = nodesQuery("/satisfiesAssertion/term"),
+      satisfiesAssertionNodeQuery = nodeQuery("/statement/satisfiesAssertion");
 
-export default domAssigned(class SatisfyingAssertion {
+export default domAssigned(class SatisfiesAssertion {
   constructor(string, node, tokens, terms, reference) {
     this.string = string;
     this.node = node;
@@ -42,16 +42,16 @@ export default domAssigned(class SatisfyingAssertion {
 
     const termsString = termsStringFromTerms(this.terms),
           substitutionsString = substitutions.asString(),
-          satisfyingAssertionString = this.string; ///
+          satisfiesAssertionString = this.string; ///
 
-    context.trace(`Matching the '${substitutionsString}' substitutions against the '${satisfyingAssertionString}' satisfying assertion's ${termsString} terms...`);
+    context.trace(`Matching the '${substitutionsString}' substitutions against the '${satisfiesAssertionString}' satisfies assertion's ${termsString} terms...`);
 
     const termsEquate = substitutions.matchTerms(this.terms);
 
     substitutionsMatch = termsEquate;  ///
 
     if (substitutionsMatch) {
-      context.debug(`...matched the '${substitutionsString}' substitutions against the '${satisfyingAssertionString}' satisfying assertion's ${termsString} terms.`);
+      context.debug(`...matched the '${substitutionsString}' substitutions against the '${satisfiesAssertionString}' satisfies assertion's ${termsString} terms.`);
     }
 
     return substitutionsMatch;
@@ -60,9 +60,9 @@ export default domAssigned(class SatisfyingAssertion {
   verify(assignments, stated, context) {
     let verified = false;
 
-    const satisfyingAssertionString = this.string; ///
+    const satisfiesAssertionString = this.string; ///
 
-    context.trace(`Verifying the '${satisfyingAssertionString}' satisfying assertion...`);
+    context.trace(`Verifying the '${satisfiesAssertionString}' satisfies assertion...`);
 
     const termsVerified = this.verifyTerms(assignments, stated, context);
 
@@ -73,7 +73,7 @@ export default domAssigned(class SatisfyingAssertion {
     }
 
     if (verified) {
-      context.debug(`...verified the '${satisfyingAssertionString}' satisfying assertion.`);
+      context.debug(`...verified the '${satisfiesAssertionString}' satisfies assertion.`);
     }
 
     return verified;
@@ -83,9 +83,9 @@ export default domAssigned(class SatisfyingAssertion {
     let termsVerified;
 
     const termsString = termsStringFromTerms(this.terms),
-          satisfyingAssertionString = this.string; ///
+          satisfiesAssertionString = this.string; ///
 
-    context.trace(`Verifying the '${satisfyingAssertionString}' satisfying assertion's ${termsString} terms...`);
+    context.trace(`Verifying the '${satisfiesAssertionString}' satisfies assertion's ${termsString} terms...`);
 
     termsVerified = this.terms.every((term) => {
       const termVerified = term.verify(context, () => {
@@ -98,7 +98,7 @@ export default domAssigned(class SatisfyingAssertion {
     });
 
     if (termsVerified) {
-      context.debug(`...verified the '${satisfyingAssertionString}' satisfying assertion's ${termsString} terms.`);
+      context.debug(`...verified the '${satisfiesAssertionString}' satisfies assertion's ${termsString} terms.`);
     }
 
     return termsVerified;
@@ -108,46 +108,46 @@ export default domAssigned(class SatisfyingAssertion {
     let referenceVerified = false;
 
     const referenceString = this.reference.getString(),
-          satisfyingAssertionString = this.string; ///
+          satisfiesAssertionString = this.string; ///
 
-    context.trace(`Verifying the '${satisfyingAssertionString}' satisfying assertion's '${referenceString}' reference...`);
+    context.trace(`Verifying the '${satisfiesAssertionString}' satisfies assertion's '${referenceString}' reference...`);
 
     const axiom = context.findAxiomByReference(this.reference, context);
 
     if (axiom !== null) {
-      const axiomSatisfying = axiom.isSatisfying();
+      const axiomSatisfiable = axiom.isSatisfiable();
 
-      if (axiomSatisfying) {
+      if (axiomSatisfiable) {
         referenceVerified = true;
       }
     }
 
     if (referenceVerified) {
-      context.debug(`...verified the '${satisfyingAssertionString}' satisfying assertion's '${referenceString}' reference.`);
+      context.debug(`...verified the '${satisfiesAssertionString}' satisfies assertion's '${referenceString}' reference.`);
     }
 
     return referenceVerified;
   }
 
-  static name = "SatisfyingAssertion";
+  static name = "SatisfiesAssertion";
 
   static fromStatementNode(statementNode, context) {
-    let satisfyingAssertion = null;
+    let satisfiesAssertion = null;
 
-    const satisfyingAssertionNode = satisfyingAssertionNodeQuery(statementNode);
+    const satisfiesAssertionNode = satisfiesAssertionNodeQuery(statementNode);
 
-    if (satisfyingAssertionNode !== null) {
+    if (satisfiesAssertionNode !== null) {
       const { Reference } = dom,
-            node = satisfyingAssertionNode,  ///
+            node = satisfiesAssertionNode,  ///
             string = context.nodeAsString(node),
             tokens = context.nodeAsTokens(node),
-            terms = termsFromSatisfyingAssertionNode(satisfyingAssertionNode, context),
-            reference = Reference.fromSatisfyingAssertionNode(satisfyingAssertionNode, context);
+            terms = termsFromSatisfiesAssertionNode(satisfiesAssertionNode, context),
+            reference = Reference.fromSatisfiesAssertionNode(satisfiesAssertionNode, context);
 
-      satisfyingAssertion = new SatisfyingAssertion(string, node, tokens, terms, reference);
+      satisfiesAssertion = new SatisfiesAssertion(string, node, tokens, terms, reference);
     }
 
-    return satisfyingAssertion;
+    return satisfiesAssertion;
   }
 });
 
@@ -165,8 +165,8 @@ function termsStringFromTerms(terms) {
   return termsString;
 }
 
-function termsFromSatisfyingAssertionNode(satisfyingAssertionNode, context) {
-  const termNodes = termNodesQuery(satisfyingAssertionNode),
+function termsFromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
+  const termNodes = termNodesQuery(satisfiesAssertionNode),
         terms = termNodes.map((termNode) => {
           const { Term } = dom,
                 term = Term.fromTermNode(termNode, context);

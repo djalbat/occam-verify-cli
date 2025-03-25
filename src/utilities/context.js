@@ -93,14 +93,14 @@ export function containedAssertionFromStatement(statement, context) {
   return containedAssertion;
 }
 
-export function satisfyingAssertionFromStatement(statement, context) {
+export function satisfiesAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { SatisfyingAssertion } = dom,
+  const { SatisfiesAssertion } = dom,
         statementNode = statement.getNode(),
-        satisfyingAssertion = SatisfyingAssertion.fromStatementNode(statementNode, context);
+        satisfiesAssertion = SatisfiesAssertion.fromStatementNode(statementNode, context);
 
-  return satisfyingAssertion;
+  return satisfiesAssertion;
 }
 
 function contextFromFrame(frame, context) {

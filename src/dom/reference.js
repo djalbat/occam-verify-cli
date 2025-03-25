@@ -13,7 +13,7 @@ import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utiliti
 const stepReferenceNodeQuery = nodeQuery("/step/reference"),
       procedureCallReferenceNodeQuery = nodeQuery("/procedureCall/reference"),
       declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable"),
-      satisfyingAssertionMetavariableNodeQuery = nodeQuery("/satisfyingAssertion/metavariable");
+      satisfiesAssertionMetavariableNodeQuery = nodeQuery("/satisfiesAssertion/metavariable");
 
 export default domAssigned(class Reference {
   constructor(metavariable) {
@@ -228,9 +228,9 @@ export default domAssigned(class Reference {
     return reference;
   }
 
-  static fromSatisfyingAssertionNode(satisfyingAssertionNode, fileContext) {
-    const satisfyingAssertionMetavariableNode = satisfyingAssertionMetavariableNodeQuery(satisfyingAssertionNode),
-          metavariableNode = satisfyingAssertionMetavariableNode, ///
+  static fromSatisfiesAssertionNode(satisfiesAssertionNode, fileContext) {
+    const satisfiesAssertionMetavariableNode = satisfiesAssertionMetavariableNodeQuery(satisfiesAssertionNode),
+          metavariableNode = satisfiesAssertionMetavariableNode, ///
           reference = referenceFromMetavariableNode(metavariableNode, fileContext);
 
     return reference;

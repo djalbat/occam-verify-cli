@@ -7,7 +7,7 @@ import { equalityFromStatement,
          judgementFromStatement,
          typeAssertionFromStatement,
          propertyAssertionFromStatement,
-         satisfyingAssertionFromStatement } from "../../utilities/context";
+         satisfiesAssertionFromStatement } from "../../utilities/context";
 
 function unifyAWithRule(statement, reference, substitutions, context) {
   let unifiedWithRule = false;
@@ -65,40 +65,40 @@ function unifyAWithReference(statement, reference, substitutions, context) {
   return unifiedWithReference;
 }
 
-function unifyAsSatisfyingAssertion(statement, reference, substitutions, context) {
-  let unifiedAsSatisfyingAssertion = false;
+function unifyAsSatisfiesAssertion(statement, reference, substitutions, context) {
+  let unifiedAsSatisfiesAssertion = false;
 
   if (reference !== null) {
-    const satisfyingAssertion = satisfyingAssertionFromStatement(statement, context);
+    const satisfiesAssertion = satisfiesAssertionFromStatement(statement, context);
 
-    if (satisfyingAssertion !== null) {
+    if (satisfiesAssertion !== null) {
       const statementString = statement.getString();
 
-      context.trace(`Unifying the '${statementString}' statement as a satisfying assertion...`);
+      context.trace(`Unifying the '${statementString}' statement as a satisfies assertion...`);
 
       const axiomLemmaTheoremConjecture = context.findAxiomLemmaTheoremConjectureByReference(reference);
 
       if (axiomLemmaTheoremConjecture !== null) {
-        reference = satisfyingAssertion.getReference();
+        reference = satisfiesAssertion.getReference();
 
         const axiom = context.findAxiomByReference(reference),
               substitutions = Substitutions.fromNothing(),
               axiomLemmaTheoremConjectureUnified = axiom.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, substitutions, context);
 
         if (axiomLemmaTheoremConjectureUnified) {
-          const substitutionsMatch = satisfyingAssertion.matchSubstitutions(substitutions, context);
+          const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
 
-          unifiedAsSatisfyingAssertion = substitutionsMatch;  ///
+          unifiedAsSatisfiesAssertion = substitutionsMatch;  ///
         }
       }
 
-      if (unifiedAsSatisfyingAssertion) {
-        context.debug(`...unified the '${statementString}' statement as a satisfying assertion.`);
+      if (unifiedAsSatisfiesAssertion) {
+        context.debug(`...unified the '${statementString}' statement as a satisfies assertion.`);
       }
     }
   }
 
-  return unifiedAsSatisfyingAssertion;
+  return unifiedAsSatisfiesAssertion;
 }
 
 function unifyAWithAxiomLemmaTheoremOrConjecture(statement, reference, substitutions, context) {
@@ -253,7 +253,7 @@ function unifyWithStepsOrSubproofs(statement, reference, substitutions, context)
 const unifyMixins = [
   unifyAWithRule,
   unifyAWithReference,
-  unifyAsSatisfyingAssertion,
+  unifyAsSatisfiesAssertion,
   unifyAWithAxiomLemmaTheoremOrConjecture,
   unifyAsEquality,
   unifyAsJudgement,

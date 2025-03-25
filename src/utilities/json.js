@@ -84,10 +84,10 @@ export function deductionFromJSON(json, fileContext) {
   return deduction;
 }
 
-export function satisfyingFromJSON(json, fileContext) {
-  const { satisfying } = json;
+export function satisfiableFromJSON(json, fileContext) {
+  const { satisfiable } = json;
 
-  return satisfying;
+  return satisfiable;
 }
 
 export function conclusionFromJSON(json, fileContext) {

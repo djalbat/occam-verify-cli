@@ -10,7 +10,7 @@ import { equalityFromStatement,
          propertyAssertionFromStatement,
          subproofAssertionFromStatement,
          containedAssertionFromStatement,
-         satisfyingAssertionFromStatement } from "../../utilities/context";
+         satisfiesAssertionFromStatement } from "../../utilities/context";
 
 function unifyWithBracketedCombinator(statement, assignments, stated, context) {
   stated = true;  ///
@@ -217,26 +217,26 @@ function verifyAsContainedAssertion(statement, assignments, stated, context) {
   return verifiedAsContainedAssertion;
 }
 
-function verifyAsSatisfyingAssertion(statement, assignments, stated, context) {
-  let verifiedAsSatisfyingAssertion = false;
+function verifyAsSatisfiesAssertion(statement, assignments, stated, context) {
+  let verifiedAsSatisfiesAssertion = false;
 
-  const satisfyingAssertion = satisfyingAssertionFromStatement(statement, context);
+  const satisfiesAssertion = satisfiesAssertionFromStatement(statement, context);
 
-  if (satisfyingAssertion !== null) {
+  if (satisfiesAssertion !== null) {
     const statementString = statement.getString();
 
-    context.trace(`Verifying the '${statementString}' statement as a satisfying assertion...`);
+    context.trace(`Verifying the '${statementString}' statement as a satisfies assertion...`);
 
-    const satisfyingAssertionVerified = satisfyingAssertion.verify(assignments, stated, context);
+    const satisfiesAssertionVerified = satisfiesAssertion.verify(assignments, stated, context);
 
-    verifiedAsSatisfyingAssertion = satisfyingAssertionVerified; ///
+    verifiedAsSatisfiesAssertion = satisfiesAssertionVerified; ///
 
-    if (verifiedAsSatisfyingAssertion) {
-      context.debug(`...verified the '${statementString}' statement as a satisfying assertion.`);
+    if (verifiedAsSatisfiesAssertion) {
+      context.debug(`...verified the '${statementString}' statement as a satisfies assertion.`);
     }
   }
 
-  return verifiedAsSatisfyingAssertion;
+  return verifiedAsSatisfiesAssertion;
 }
 
 const verifyMixins = [
@@ -250,7 +250,7 @@ const verifyMixins = [
   verifyAsPropertyAssertion,
   verifyAsSubproofAssertion,
   verifyAsContainedAssertion,
-  verifyAsSatisfyingAssertion
+  verifyAsSatisfiesAssertion
 ];
 
 export default verifyMixins;
