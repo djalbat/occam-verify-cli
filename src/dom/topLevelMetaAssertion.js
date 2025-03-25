@@ -20,7 +20,7 @@ import { labelsFromJSON,
 
 const { first } = arrayUtilities;
 
-const labelNodeQuery = nodeQuery("/metatheorem/label");
+const labelNodeQuery = nodeQuery("/*/parenthesisedLabel/label");
 
 export default class TopLevelMetaAssertion extends TopLevelAssertion {
   constructor(fileContext, string, labels, suppositions, deduction, proof, substitutions) {

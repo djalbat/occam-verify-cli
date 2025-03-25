@@ -17,7 +17,7 @@ import { labelsFromJSON,
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 const proofNodeQuery = nodeQuery("/*/proof"),
-      labelNodesQuery = nodesQuery("/*/labels/label"),
+      labelNodesQuery = nodesQuery("/*/parenthesisedLabels/labels/label"),
       deductionNodeQuery = nodeQuery("/*/deduction"),
       suppositionNodesQuery = nodesQuery("/*/supposition");
 
