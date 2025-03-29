@@ -180,12 +180,6 @@ export default domAssigned(class Reference {
     return reference;
   }
 
-  static fromReferenceNode(referenceNode, fileContext) {
-    const reference = referenceFromReferenceNode(referenceNode, fileContext);
-
-    return reference;
-  }
-
   static fromStepNode(stepNode, fileContext) {
     let reference = null;
 
@@ -196,6 +190,12 @@ export default domAssigned(class Reference {
 
       reference = referenceFromReferenceNode(referenceNode, fileContext);
     }
+
+    return reference;
+  }
+
+  static fromReferenceNode(referenceNode, fileContext) {
+    const reference = referenceFromReferenceNode(referenceNode, fileContext);
 
     return reference;
   }

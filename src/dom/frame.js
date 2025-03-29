@@ -10,8 +10,8 @@ import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 
 const declarationNodesQuery = nodesQuery("/frame/declaration"),
-      metavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       metavariableNodesQuery = nodesQuery("/frame/metavariable"),
+      judgementFrameNodeQuery = nodeQuery("/judgement/frame"),
       definedAssertionFrameNodeQuery = nodeQuery("/definedAssertion/frame"),
       containedAssertionFrameNodeQuery = nodeQuery("/containedAssertion/frame");
 
@@ -49,16 +49,12 @@ export default domAssigned(class Frame {
   getMetavariable() {
     let metavariable = null;
 
-    const declarationsLength = this.declarations.length;
+    const simple = this.isSimple();
 
-    if (declarationsLength === 0) {
-      const metavariablesLength = this.metavariables.length;
+    if (simple) {
+      const firstMetavariable = first(this.metavariables);
 
-      if (metavariablesLength === 1) {
-        const firstMetavariable = first(this.metavariables);
-
-        metavariable = firstMetavariable; ///
-      }
+      metavariable = firstMetavariable; ///
     }
 
     return metavariable;
@@ -69,6 +65,14 @@ export default domAssigned(class Frame {
           equalTo = (frameString === this.string);
 
     return equalTo;
+  }
+
+  isSimple() {
+    const metavariablesLength = this.metavariables.length,
+          declarationsLength = this.declarations.length,
+          simple = ((metavariablesLength === 1) && (declarationsLength === 0));
+
+    return simple;
   }
 
   matchSubstitution(substitution, context) {
@@ -250,7 +254,7 @@ export default domAssigned(class Frame {
                            S :
                              NOTHING,
             frameString = this.string,  ///
-            metavariablesString = metavariablesStringFromDeclarations(this.metavariables);
+            metavariablesString = metavariablesStringFromMetavariables(this.metavariables);
 
       context.trace(`Verifying the '${frameString}' frame's '${metavariablesString}' metavariable${sOrNothing}...`);
 
@@ -297,14 +301,16 @@ export default domAssigned(class Frame {
     let frame = null;
 
     if (frameNode !== null) {
-      const node = frameNode, ///
-            string = context.nodeAsString(node),
-            tokens = context.nodeAsTokens(node),
-            declarations = declarationsFromFrameNode(frameNode, context),
-            metavariables = metavariablesFromFrameNode(frameNode, context);
-
-      frame = new Frame(string, node, tokens, declarations, metavariables);
+      frame = frameFromFrameNode(frameNode, context);
     }
+
+    return frame;
+  }
+
+  static fromJudgementNode(judgementNode, context) {
+    const judgementFrameNode = judgementFrameNodeQuery(judgementNode),
+          frameNode = judgementFrameNode,
+          frame = frameFromFrameNode(frameNode, context);
 
     return frame;
   }
@@ -315,12 +321,9 @@ export default domAssigned(class Frame {
     const definedAssertionFrameNode = definedAssertionFrameNodeQuery(definedAssertionNode);
 
     if (definedAssertionFrameNode !== null) {
-      const frameNode = definedAssertionFrameNode,  ///
-            metavariableNode = metavariableNodeQuery(frameNode);
+      const frameNode = definedAssertionFrameNode;  ///
 
-      if (metavariableNode !== null) {
-        frame = frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context)
-      }
+      frame = frameFromFrameNode(frameNode, context);
     }
 
     return frame;
@@ -332,28 +335,22 @@ export default domAssigned(class Frame {
     const containedAssertionFrameNode = containedAssertionFrameNodeQuery(containedAssertionNode);
 
     if (containedAssertionFrameNode !== null) {
-      const frameNode = containedAssertionFrameNode,  ///
-            metavariableNode = metavariableNodeQuery(frameNode);
+      const frameNode = containedAssertionFrameNode;  ///
 
-      if (metavariableNode !== null) {
-        frame = frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context)
-      }
+      frame = frameFromFrameNode(frameNode, context)
     }
 
     return frame;
   }
 });
 
-function frameFromFrameNodeAndMetavariableNode(frameNode, metavariableNode, context) {
-  const { Frame, Metavariable } = dom,
-        metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
-        declarations = [],
-        metavariables = [
-          metavariable
-        ],
-        node = frameNode,  ///
+function frameFromFrameNode(frameNode, context) {
+  const { Frame } = dom,
+        node = frameNode, ///
         string = context.nodeAsString(node),
         tokens = context.nodeAsTokens(node),
+        declarations = declarationsFromFrameNode(frameNode, context),
+        metavariables = metavariablesFromFrameNode(frameNode, context),
         frame = new Frame(string, node, tokens, declarations, metavariables);
 
   return frame;
@@ -397,7 +394,7 @@ function declarationsStringFromDeclarations(declarations) {
   return declarationsString;
 }
 
-function metavariablesStringFromDeclarations(metavariable) {
+function metavariablesStringFromMetavariables(metavariable) {
   const metavariablesString = metavariable.reduce((metavariablesString, metavariable) => {
     const metavariableString = metavariable.getString();
 

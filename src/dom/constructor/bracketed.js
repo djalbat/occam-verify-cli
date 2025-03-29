@@ -6,7 +6,6 @@ import constructorBracketedContext from "../../context/bracketed/constructor";
 
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
-import { stringFromTermAndType } from "../constructor";
 
 const termNodeQuery = nodeQuery("/term/argument/term");
 
@@ -60,9 +59,9 @@ export default domAssigned(class BracketedConstructor extends Constructor {
           termNode = bracketedTermNode,  ///
           context = constructorBracketedContext, ///
           term = Term.fromTermNode(termNode, context),
-          type = null,
-          string = stringFromTermAndType(term, type),
-          bracketedConstructor = new BracketedConstructor(string, term);
+          string = term.getString(),
+          provisional = null,
+          bracketedConstructor = new BracketedConstructor(string, term, provisional);
 
     return bracketedConstructor;
   }

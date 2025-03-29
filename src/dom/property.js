@@ -11,8 +11,9 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 const { match } = arrayUtilities;
 
-const propertyNodeQuery = nodeQuery("/propertyDeclaration/property"),
-      nameTerminalNodesQuery = nodesQuery("/property/@name");
+const nameTerminalNodesQuery = nodesQuery("/property/@name"),
+      propertyRelationPropertyNodeQuery = nodeQuery("/propertyRelation/property"),
+      propertyDeclarationPropertyNodeQuery = nodeQuery("/propertyDeclaration/property");
 
 export default domAssigned(class Property {
   constructor(string, names, type) {
@@ -71,52 +72,41 @@ export default domAssigned(class Property {
   }
 
   static fromPropertyNode(propertyNode, fileContext) {
-    const node = propertyNode,  ///
-          names = namesFromPropertyNode(propertyNode),
-          type = null,
-          string = fileContext.nodeAsString(node),
-          property = new Property(string, names, type);
+    const property = propertyFromPropertyNode(propertyNode, fileContext)
+
+    return property;
+  }
+
+  static fromPropertyRelationNode(propertyRelationNode, fileContext) {
+    const propertyRelationPropertyNode = propertyRelationPropertyNodeQuery(propertyRelationNode),
+          propertyNode = propertyRelationPropertyNode,  ///
+          property = propertyFromPropertyNode(propertyNode, fileContext);
 
     return property;
   }
 
   static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
     const { Type } = dom,
-          propertyNode = propertyNodeQuery(propertyDeclarationNode),
-          node = propertyDeclarationNode,  ///
-          names = namesFromPropertyNode(propertyNode),
           type = Type.fromPropertyDeclarationNode(propertyDeclarationNode),
-          string = fileContext.nodeAsString(node),
-          property = new Property(string, names, type);
+          propertyDeclarationPropertyNode = propertyDeclarationPropertyNodeQuery(propertyDeclarationNode),
+          propertyNode = propertyDeclarationPropertyNode,  ///
+          property = propertyFromPropertyNode(propertyNode, fileContext);
+
+    property.setType(type);
 
     return property;
   }
 });
 
-function namesStringFromNames(names) {
-  const namesString = names.reduce((namesString, name) => {
-    const nameString = name;  ///
+function propertyFromPropertyNode(propertyNode, fileContext) {
+  const { Property } = dom,
+        node = propertyNode,  ///
+        names = namesFromPropertyNode(propertyNode),
+        type = null,
+        string = fileContext.nodeAsString(node),
+        property = new Property(string, names, type);
 
-    namesString = (namesString === null) ?
-                    nameString :  ///
-                     `${namesString} ${nameString}`;
-
-    return namesString;
-  }, null);
-
-  return namesString;
-}
-
-function namesFromPropertyNode(propertyNode, fileContext) {
-  const nameTerminalNodes = nameTerminalNodesQuery(propertyNode),
-        names = nameTerminalNodes.map((nameTerminalNode) => {
-          const nameTerminalNodeContent = nameTerminalNode.getContent(),
-                name = nameTerminalNodeContent; ///
-
-          return name;
-        });
-
-  return names;
+  return property;
 }
 
 function stringFromNamesAndType(names, type) {
@@ -134,3 +124,30 @@ function stringFromNamesAndType(names, type) {
 
   return string;
 }
+
+function namesFromPropertyNode(propertyNode, fileContext) {
+  const nameTerminalNodes = nameTerminalNodesQuery(propertyNode),
+        names = nameTerminalNodes.map((nameTerminalNode) => {
+          const nameTerminalNodeContent = nameTerminalNode.getContent(),
+                name = nameTerminalNodeContent; ///
+
+          return name;
+        });
+
+  return names;
+}
+
+function namesStringFromNames(names) {
+  const namesString = names.reduce((namesString, name) => {
+    const nameString = name;  ///
+
+    namesString = (namesString === null) ?
+                    nameString :  ///
+                     `${namesString} ${nameString}`;
+
+    return namesString;
+  }, null);
+
+  return namesString;
+}
+

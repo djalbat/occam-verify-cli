@@ -6,7 +6,7 @@ import dom from "../dom";
 
 import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import {parametersFromJSON, parametersToParametersJSON, referenceFromJSON} from "../utilities/json";
+import { referenceFromJSON, parametersFromJSON, parametersToParametersJSON } from "../utilities/json";
 
 const parameterNodesQuery = nodesQuery("/procedureCall/parameter"),
       premiseProcedureCallNodeQuery = nodeQuery("/premise/procedureCall"),
@@ -129,13 +129,9 @@ export default domAssigned(class ProcedureCall {
     const premiseProcedureCallNode = premiseProcedureCallNodeQuery(premiseNode);
 
     if (premiseProcedureCallNode !== null) {
-      const { Reference } = dom,
-            procedureCallNode = premiseProcedureCallNode, ///
-            parameters = parametersFromProcedureCallNode(procedureCallNode, context),
-            reference = Reference.fromProcedureCallNode(procedureCallNode, context),
-            string = stringFromReferenceAndParameters(reference, parameters);
+      const procedureCallNode = premiseProcedureCallNode; ///
 
-      procedureCall = new ProcedureCall(string, reference, parameters);
+      procedureCall = procedureCallFromProcedureCallNode(procedureCallNode, context);
     }
 
     return procedureCall;
@@ -147,18 +143,24 @@ export default domAssigned(class ProcedureCall {
     const suppositionProcedureCallNode = suppositionProcedureCallNodeQuery(suppositionNode);
 
     if (suppositionProcedureCallNode !== null) {
-      const { Reference } = dom,
-            procedureCallNode = suppositionProcedureCallNode, ///
-            parameters = parametersFromProcedureCallNode(procedureCallNode, context),
-            reference = Reference.fromProcedureCallNode(procedureCallNode, context),
-            string = stringFromReferenceAndParameters(reference, parameters);
+      const procedureCallNode = suppositionProcedureCallNode; ///
 
-      procedureCall = new ProcedureCall(string, reference, parameters);
+      procedureCall = procedureCallFromProcedureCallNode(procedureCallNode, context);
     }
 
     return procedureCall;
   }
 });
+
+function procedureCallFromProcedureCallNode(procedureCallNode, context) {
+  const { Reference, ProcedureCall } = dom,
+        parameters = parametersFromProcedureCallNode(procedureCallNode, context),
+        reference = Reference.fromProcedureCallNode(procedureCallNode, context),
+        string = stringFromReferenceAndParameters(reference, parameters),
+        procedureCall = new ProcedureCall(string, reference, parameters);
+
+  return procedureCall;
+}
 
 function parametersFromProcedureCallNode(procedureCallNode, context) {
   const { Parameter } = dom,

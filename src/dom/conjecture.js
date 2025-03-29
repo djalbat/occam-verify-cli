@@ -31,5 +31,5 @@ export default domAssigned(class Conjecture extends TopLevelAssertion {
 
   static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Conjecture, json, fileContext); }
 
-  static fromConjectureNode(conjectureNode, fileContext) { return TopLevelAssertion.fromNode(Conjecture, conjectureNode, fileContext); }
+  static fromNode(node, fileContext) { return TopLevelAssertion.fromNode(Conjecture, node, fileContext); }
 });

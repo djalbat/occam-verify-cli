@@ -249,10 +249,11 @@ class LocalContext {
   findJudgementByMetavariable(metavariable) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementMetavariable = judgement.getMetavariable();
+            const judgementSimple = judgement.isSimple();
 
-            if (judgementMetavariable !== null) {
-              const judgementMetavariableEqualToMetavariable = judgementMetavariable.isEqualTo(metavariable);
+            if (judgementSimple) {
+              const judgementMetavariable = judgement.getMetavariable(),
+                  judgementMetavariableEqualToMetavariable = judgementMetavariable.isEqualTo(metavariable);
 
               if (judgementMetavariableEqualToMetavariable) {
                 return true;

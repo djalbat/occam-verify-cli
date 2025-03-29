@@ -33,5 +33,5 @@ export default domAssigned(class Lemma extends TopLevelAssertion {
 
   static name = "Lemma";
 
-  static fromLemmaNode(metaLemmaNode, fileContext) { return TopLevelAssertion.fromNode(Lemma, metaLemmaNode, fileContext); }
+  static fromNode(node, fileContext) { return TopLevelAssertion.fromNode(Lemma, node, fileContext); }
 });

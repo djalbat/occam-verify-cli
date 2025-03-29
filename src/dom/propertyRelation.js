@@ -1,12 +1,11 @@
 "use strict";
 
-import dom from "../../dom";
+import dom from "../dom";
 
-import { nodeQuery } from "../../utilities/query";
-import { domAssigned } from "../../dom";
+import { nodeQuery } from "../utilities/query";
+import { domAssigned } from "../dom";
 
-const termNodeQuery = nodeQuery("/propertyRelation/term"),
-      propertyNodeQuery = nodeQuery("/propertyRelation/property");
+const propertyAssertionPropertyRelationNodeQuery = nodeQuery("/propertyAssertion/propertyRelation");
 
 export default domAssigned(class PropertyRelation {
   constructor(string, node, tokens, property, term) {
@@ -130,15 +129,15 @@ export default domAssigned(class PropertyRelation {
 
   static name = "PropertyRelation";
 
-  static fromPropertyRelationNode(propertyRelationNode, context) {
+  static fromPropertyAssertionNode(propertyAssertionNode, context) {
     const { Term, Property } = dom,
+          propertyAssertionPropertyRelationNode = propertyAssertionPropertyRelationNodeQuery(propertyAssertionNode),
+          propertyRelationNode = propertyAssertionPropertyRelationNode, ///
           node = propertyRelationNode,  ///
           string = context.nodeAsString(node),
           tokens = context.nodeAsTokens(node),
-          propertyNode = propertyNodeQuery(propertyRelationNode),
-          termNode = termNodeQuery(propertyRelationNode),
-          property = Property.fromPropertyNode(propertyNode, context),
-          term = Term.fromTermNode(termNode, context),
+          property = Property.fromPropertyRelationNode(propertyRelationNode, context),
+          term = Term.fromPropertyRelationNode(propertyRelationNode, context),
           propertyRelation = new PropertyRelation(string, node, tokens, property, term);
 
     return propertyRelation;

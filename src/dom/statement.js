@@ -11,6 +11,7 @@ import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
+import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { definedAssertionFromStatement, containedAssertionFromStatement, subproofAssertionFromStatement } from "../utilities/context";
 
 const { match, backwardsSome } = arrayUtilities;
@@ -22,7 +23,9 @@ const stepStatementNodeQuery = nodeQuery("/step/statement"),
       deductionStatementNodeQuery = nodeQuery("/deduction/statement"),
       conclusionStatementNodeQuery = nodeQuery("/conclusion/statement"),
       suppositionStatementNodeQuery = nodeQuery("/supposition/statement"),
-      containedAssertionStatementNodeQuery = nodeQuery("/containedAssertion/statement");
+      declarationStatementNodeQuery = nodeQuery("/declaration/statement"),
+      containedAssertionStatementNodeQuery = nodeQuery("/containedAssertion/statement"),
+      combinatorDeclarationStatementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
 export default domAssigned(class Statement {
   constructor(string, node, tokens) {
@@ -271,6 +274,20 @@ export default domAssigned(class Statement {
     return statement;
   }
 
+  static fromStepNode(stepNode, fileContext) {
+    let statement = null;
+
+    const stepStatementNode = stepStatementNodeQuery(stepNode);
+
+    if (stepStatementNode !== null) {
+      const statementNode = stepStatementNode; ///
+
+      statement = statementFromStatementNode(statementNode, fileContext);
+    }
+
+    return statement;
+  }
+
   static fromPremiseNode(premiseNode, fileContext) {
     let statement = null;
 
@@ -282,20 +299,6 @@ export default domAssigned(class Statement {
             context = localContext;  ///
 
       statement = statementFromStatementNode(statementNode, context);
-    }
-
-    return statement;
-  }
-
-  static fromStepNode(stepNode, fileContext) {
-    let statement = null;
-
-    const stepStatementNode = stepStatementNodeQuery(stepNode);
-
-    if (stepStatementNode !== null) {
-      const statementNode = stepStatementNode; ///
-
-      statement = statementFromStatementNode(statementNode, fileContext);
     }
 
     return statement;
@@ -355,13 +358,45 @@ export default domAssigned(class Statement {
     return statement;
   }
 
-  static fromContainedAssertionNode(suppositionNode, fileContext) {
+  static fromDeclarationNode(declarationNode, fileContext) {
+    let statementNode;
+
+    const declarationStatementNode = declarationStatementNodeQuery(declarationNode);
+
+    statementNode = declarationStatementNode; ///
+
+    statementNode = stripBracketsFromStatementNode(statementNode);  ///
+
+    const localContext = LocalContext.fromFileContext(fileContext),
+          context = localContext, ///
+          statement = statementFromStatementNode(statementNode, context);
+
+    return statement;
+  }
+
+  static fromContainedAssertionNode(containedAssertionNode, fileContext) {
     let statement = null;
 
-    const containedAssertionStatementNode = containedAssertionStatementNodeQuery(suppositionNode);
+    const containedAssertionStatementNode = containedAssertionStatementNodeQuery(containedAssertionNode);
 
     if (containedAssertionStatementNode !== null) {
       const statementNode = containedAssertionStatementNode, ///
+            localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext;  ///
+
+      statement = statementFromStatementNode(statementNode, context);
+    }
+
+    return statement;
+  }
+
+  static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
+    let statement = null;
+
+    const combinatorDeclarationStatementNode = combinatorDeclarationStatementNodeQuery(combinatorDeclarationNode);
+
+    if (combinatorDeclarationStatementNode !== null) {
+      const statementNode = combinatorDeclarationStatementNode, ///
             localContext = LocalContext.fromFileContext(fileContext),
             context = localContext;  ///
 

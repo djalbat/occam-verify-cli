@@ -54,6 +54,10 @@ export default domAssigned(class Variable {
     this.type = type;
   }
 
+  setProvisional(provisional) {
+    this.provisional = provisional;
+  }
+
   isEqualTo(variable) {
     const variableString = variable.getString(),
           equalTo = (variableString === this.string);
@@ -224,16 +228,9 @@ export default domAssigned(class Variable {
     const termVariableNode = termVariableNodeQuery(termNode);
 
     if (termVariableNode !== null) {
-      const variableNode = termVariableNode,  ///
-            variableName = variableNameFromVariableNode(variableNode),
-            node = variableNode,  ///
-            string = context.nodeAsString(node),
-            name = variableName,  ///
-            type = null,
-            provisional = null,
-            propertyRelations = [];
+      const variableNode = termVariableNode;  ///
 
-      variable = new Variable(string, node, name, type, provisional, propertyRelations);
+      variable = variableFromVariableNode(variableNode, context);
     }
 
     return variable;
@@ -243,15 +240,7 @@ export default domAssigned(class Variable {
     let variable = null;
 
     if (variableNode !== null) {
-      const node = variableNode,  ///
-            variableName = variableNameFromVariableNode(variableNode),
-            string = context.nodeAsString(node),
-            name = variableName,  ///
-            type = null,
-            provisional = null,
-            propertyRelations = [];
-
-      variable = new Variable(string, node, name, type, provisional, propertyRelations);
+      variable = variableFromVariableNode(variableNode, context);
     }
 
     return variable;
@@ -261,14 +250,9 @@ export default domAssigned(class Variable {
     let variable = null;
 
     if (variableNode !== null) {
-      const node = variableNode,  ///
-            variableName = variableNameFromVariableNode(variableNode),
-            string = context.nodeAsString(node),
-            name = variableName,  ///
-            provisional = null,
-            propertyRelations = [];
+      variable = variableFromVariableNode(variableNode, context);
 
-      variable = new Variable(string, node, name, type, provisional, propertyRelations);
+      variable.setType(type);
     }
 
     return variable;
@@ -278,15 +262,15 @@ export default domAssigned(class Variable {
     const { Type } = dom,
           variableDeclarationVariableNode = variableDeclarationVariableNodeQuery(variableDeclarationNode),
           variableNode = variableDeclarationVariableNode, ///
-          variableName = variableNameFromVariableNode(variableNode),
-          variableString = fileContext.nodeAsString(variableNode),
-          string = variableString,  ///
-          node = variableNode,  ///
-          name = variableName,  ///
+          localContext = LocalContext.fromFileContext(fileContext),
+          context = localContext, ///
+          variable = variableFromVariableNode(variableNode, context),
           type = Type.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
-          provisional = provisionalFromVariableDeclarationNode(variableDeclarationNode, fileContext),
-          propertyRelations = [],
-          variable = new Variable(string, node, name, type, provisional, propertyRelations);
+          provisional = provisionalFromVariableDeclarationNode(variableDeclarationNode, fileContext);
+
+    variable.setType(type);
+
+    variable.setProvisional(provisional);
 
     return variable;
   }
@@ -313,6 +297,20 @@ export default domAssigned(class Variable {
     return variable;
   }
 });
+
+function variableFromVariableNode(variableNode, context) {
+  const { Variable } = dom,
+        node = variableNode,  ///
+        variableName = variableNameFromVariableNode(variableNode),
+        string = context.nodeAsString(node),
+        name = variableName,  ///
+        type = null,
+        provisional = null,
+        propertyRelations = [],
+        variable = new Variable(string, node, name, type, provisional, propertyRelations);
+
+  return variable;
+}
 
 function stringFromNameAndPropertyRelations(name, propertyRelations) {
   const propertyRelationsString = propertyRelations.reduce((propertyRelationsString, propertyRelation) => {

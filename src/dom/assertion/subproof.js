@@ -8,7 +8,7 @@ import { domAssigned } from "../../dom";
 import { unifyStatement } from "../../utilities/unification";
 import { nodeQuery, nodesQuery } from "../../utilities/query";
 
-const { front, last, match } = arrayUtilities;
+const { match } = arrayUtilities;
 
 const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
       subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion");
@@ -102,11 +102,8 @@ export default domAssigned(class SubproofAssertion {
     const subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
 
     if (subproofAssertionNode !== null) {
-      const { Statement } = dom,
-            statement = Statement.fromStatementNode(statementNode, context),
-            statementString = statement.getString(),
-            string = statementString, ///
-            node = subproofAssertionNode, ///
+      const node = subproofAssertionNode, ///
+            string = context.nodeAsString(node),
             statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context);
 
       subproofAssertion = new SubproofAssertion(string, node, statements);
@@ -114,31 +111,7 @@ export default domAssigned(class SubproofAssertion {
 
     return subproofAssertion;
   }
-
-  static fromSubproofAssertionNode(subproofAssertionNode, context) {
-    let subproofAssertion = null;
-
-    if (subproofAssertionNode !== null) {
-      const node = subproofAssertionNode, ///
-            statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context),
-            string = stringFromStatements(statements);
-
-      subproofAssertion = new SubproofAssertion(string, node, statements);
-    }
-
-    return subproofAssertion;
-  }
 });
-
-function stringFromStatements(statements) {
-  const frontStatements = front(statements),
-        lastStatement = last(statements),
-        frontStatementsString = statementsStringFromStatements(frontStatements),
-        lastStatementString = lastStatement.getString(),
-        string = `[${frontStatementsString}] ... ${lastStatementString}`;
-
-  return string;
-}
 
 function statementsFromSubproofAssertionNode(subproofAssertionNode, context) {
   const { Statement } = dom,
@@ -150,18 +123,4 @@ function statementsFromSubproofAssertionNode(subproofAssertionNode, context) {
         });
 
   return statements;
-}
-
-function statementsStringFromStatements(statements) {
-  const statementsString = statements.reduce((statementsString, statement) => {
-    const statementString = statement.getString();
-
-    statementsString = (statementsString !== null) ?
-                        `${statementsString}, ${statementString}` :
-                           statementString;  ///
-
-    return statementsString;
-  }, null);
-
-  return statementsString
 }

@@ -1,11 +1,13 @@
 "use strict";
 
+import LocalContext from "../context/local";
+
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { metaTypeNameFromMetaTypeNode } from "../utilities/name";
 import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
-const metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType");
+const metavariableDeclarationMetaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType");
 
 class MetaType {
   constructor(name) {
@@ -54,19 +56,27 @@ class MetaType {
   }
 
   static fromMetaTypeNode(metaTypeNode, context) {
-    const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
-          metaType = metaTypeFromMetaTypeName(metaTypeName);
+    const metaType = metaTypeFromMetaTypeNode(metaTypeNode, context);
 
     return metaType;
   }
 
   static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
-    const metatypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
-          metaTypeName = metaTypeNameFromMetaTypeNode(metatypeNode),
-          metaType = fileContext.findMetaTypeByMetaTypeName(metaTypeName);
+    const metavariableDeclarationMetaTypeNode = metavariableDeclarationMetaTypeNodeQuery(metavariableDeclarationNode),
+          metaTypeNode = metavariableDeclarationMetaTypeNode, ///
+          localContext = LocalContext.fromFileContext(fileContext),
+          context = localContext, ///
+          metaType = metaTypeFromMetaTypeNode(metaTypeNode, context);
 
     return metaType;
   }
+}
+
+function metaTypeFromMetaTypeNode(metaTypeNode, context) {
+  const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
+        metaType = metaTypeFromMetaTypeName(metaTypeName);
+
+  return metaType;
 }
 
 export default domAssigned(MetaType);

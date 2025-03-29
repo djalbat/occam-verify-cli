@@ -1,14 +1,10 @@
 "use strict";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { unifyStatementWithCombinator } from "../utilities/unification";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
-
-const statementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
 
 export default domAssigned(class Combinator {
   constructor(statement) {
@@ -66,10 +62,7 @@ export default domAssigned(class Combinator {
 
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
     const { Statement } = dom,
-          statementNode = statementNodeQuery(combinatorDeclarationNode),
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
-          statement = Statement.fromStatementNode(statementNode, context),
+          statement = Statement.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
           combinator = new Combinator(statement);
 
     return combinator;

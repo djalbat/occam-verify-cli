@@ -6,9 +6,7 @@ import JudgementAssignment from "../assignment/judgement";
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 
-const frameNodeQuery = nodeQuery("/judgement/frame"),
-      judgementNodeQuery = nodeQuery("/statement/judgement"),
-      declarationNodeQuery = nodeQuery("/judgement/declaration");
+const judgementNodeQuery = nodeQuery("/statement/judgement");
 
 export default domAssigned(class Judgement {
   constructor(string, frame, declaration) {
@@ -28,6 +26,8 @@ export default domAssigned(class Judgement {
   getDeclaration() {
     return this.declaration;
   }
+
+  isSimple() { return this.frame.isSimple(); }
 
   getMetavariable() { return this.frame.getMetavariable(); }
 
@@ -161,10 +161,11 @@ export default domAssigned(class Judgement {
     const judgementNode = judgementNodeQuery(statementNode);
 
     if (judgementNode !== null) {
-      const node = judgementNode, ///
+      const { Frame, Declaration} = dom,
+            node = judgementNode, ///
             string = context.nodeAsString(node),
-            frame = frameFromJudgementNode(judgementNode, context),
-            declaration = declarationFromJudgementNode(judgementNode, context);
+            frame = Frame.fromJudgementNode(judgementNode, context),
+            declaration = Declaration.fromJudgementNode(judgementNode, context);
 
       judgement = new Judgement(string, frame, declaration);
     }
@@ -172,19 +173,3 @@ export default domAssigned(class Judgement {
     return judgement;
   }
 });
-
-function frameFromJudgementNode(judgementNode, context) {
-  const { Frame } = dom,
-        frameNode = frameNodeQuery(judgementNode),
-        frame = Frame.fromFrameNode(frameNode, context);
-
-  return frame;
-}
-
-function declarationFromJudgementNode(judgementNode, context) {
-  const { Declaration } = dom,
-        declarationNode = declarationNodeQuery(judgementNode),
-        declaration = Declaration.fromDeclarationNode(declarationNode, context);
-
-  return declaration;
-}

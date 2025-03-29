@@ -15,8 +15,12 @@ const { filter, compress } = arrayUtilities;
 
 const variableNodesQuery = nodesQuery("//variable"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
+      typeAssertionTermNodeQuery = nodeQuery("/typeAssertion/term"),
       definedAssertionTermNodeQuery = nodeQuery("/definedAssertion/term"),
-      containedAssertionTermNodeQuery = nodeQuery("/containedAssertion/term");
+      propertyRelationTermNodeQuery = nodeQuery("/propertyRelation/term"),
+      propertyAssertionTermNodeQuery = nodeQuery("/propertyAssertion/term"),
+      containedAssertionTermNodeQuery = nodeQuery("/containedAssertion/term"),
+      constructorDeclarationTermNodeQuery = nodeQuery("/constructorDeclaration/term");
 
 export default domAssigned(class Term {
   constructor(string, node, type) {
@@ -80,6 +84,13 @@ export default domAssigned(class Term {
           equalTo = (termString === this.string);
 
     return equalTo;
+  }
+
+  isSimple() {
+    const termVariableNode = termVariableNodeQuery(this.node),
+          simple = (termVariableNode !== null);
+
+    return simple;
   }
 
   isGrounded(definedVariables, context) {
@@ -199,11 +210,7 @@ export default domAssigned(class Term {
     let term = null;
 
     if (termNode !== null) {
-      const node = termNode,  ///
-            string = context.nodeAsString(node),
-            type = null;
-
-      term = new Term(string, node, type);
+      term = termFromTermNode(termNode, context);
     }
 
     return term;
@@ -217,23 +224,46 @@ export default domAssigned(class Term {
     return term;
   }
 
+  static fromTypeAssertionNode(typeAssertionNode, context) {
+    let term = null;
+
+    const typeAssertionTermNode = typeAssertionTermNodeQuery(typeAssertionNode);
+
+    if (typeAssertionTermNode !== null) {
+      const termNode = typeAssertionTermNode;  ///
+
+      term = termFromTermNode(termNode, context);
+    }
+
+    return term;
+  }
+
   static fromDefinedAssertionNode(definedAssertionNode, context) {
     let term = null;
 
     const definedAssertionTermNode = definedAssertionTermNodeQuery(definedAssertionNode);
 
     if (definedAssertionTermNode !== null) {
-      const termNode = definedAssertionTermNode,  ///
-            termVariableNode = termVariableNodeQuery(termNode);
+      const termNode = definedAssertionTermNode;  ///
 
-      if (termVariableNode !== null) {
-        const node = termNode,  ///
-              string = context.nodeAsString(node),
-              type = null;
-
-        term = new Term(string, node, type);
-      }
+      term = termFromTermNode(termNode, context);
     }
+
+    return term;
+  }
+
+  static fromPropertyRelationNode(propertyRelationNode, context) {
+    const propertyRelationTermNode = propertyRelationTermNodeQuery(propertyRelationNode),
+          termNode = propertyRelationTermNode, ///
+          term = termFromTermNode(termNode, context);
+
+    return term;
+  }
+
+  static fromPropertyAssertionNode(propertyAssertionNode, context) {
+    const propertyAssertionTermNode = propertyAssertionTermNodeQuery(propertyAssertionNode),
+          termNode = propertyAssertionTermNode,
+          term = termFromTermNode(termNode, context);
 
     return term;
   }
@@ -244,18 +274,33 @@ export default domAssigned(class Term {
     const containedAssertionTermNode = containedAssertionTermNodeQuery(containedAssertionNode);
 
     if (containedAssertionTermNode !== null) {
-      const termNode = containedAssertionTermNode,  ///
-            termVariableNode = termVariableNodeQuery(termNode);
+      const termNode = containedAssertionTermNode;
 
-      if (termVariableNode !== null) {
-        const node = termNode,  ///
-              string = context.nodeAsString(node),
-              type = null;
-
-        term = new Term(string, node, type);
-      }
+      term = termFromTermNode(termNode, context);
     }
 
     return term;
   }
+
+  static fromConstructorDeclarationNode(constructorDeclarationNode, context) {
+    const { Type } = dom,
+          constructorDeclarationTermNode = constructorDeclarationTermNodeQuery(constructorDeclarationNode),
+          termNode = constructorDeclarationTermNode,  ///
+          term = termFromTermNode(termNode, context),
+          type = Type.fromConstructorDeclarationNode(constructorDeclarationNode, context);
+
+    term.setType(type);
+
+    return term;
+  }
 });
+
+function termFromTermNode(termNode, context) {
+  const { Term } = dom,
+        node = termNode,  ///
+        string = context.nodeAsString(node),
+        type = null,
+        term = new Term(string, node, type);
+
+  return term;
+}

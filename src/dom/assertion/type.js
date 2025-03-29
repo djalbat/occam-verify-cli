@@ -7,9 +7,7 @@ import { nodeQuery } from "../../utilities/query";
 import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 
-const termNodeQuery = nodeQuery("/typeAssertion/term"),
-      typeNodeQuery = nodeQuery("/typeAssertion/type"),
-      variableNodeQuery = nodeQuery("/term/variable!"),
+const variableNodeQuery = nodeQuery("/term/variable!"),
       typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion");
 
 export default domAssigned(class TypeAssertion {
@@ -175,7 +173,7 @@ export default domAssigned(class TypeAssertion {
     } else {
       provisional = false;
 
-      type = Type.fromTypeAndProvisional(this.type, provisional, context);
+      type = Type.fromTypeAndProvisional(this.type, provisional);
     }
 
     const variable = Variable.fromVariableNodeAndType(variableNode, type, context);
@@ -197,11 +195,10 @@ export default domAssigned(class TypeAssertion {
 
     if (typeAssertionNode !== null) {
       const { Term, Type } = dom,
-            termNode = termNodeQuery(typeAssertionNode),
-            typeNode = typeNodeQuery(typeAssertionNode),
-            term = Term.fromTermNode(termNode, context),
-            type = Type.fromTypeNode(typeNode),
-            string = stringFromTermAndType(term, type);
+            node = typeAssertionNode, ///
+            string = context.nodeAsString(node),
+            term = Term.fromTypeAssertionNode(typeAssertionNode, context),
+            type = Type.fromTypeAssertionNode(typeAssertionNode, context);
 
       typeAssertion = new TypeAssertion(string, term, type);
     }
@@ -209,11 +206,3 @@ export default domAssigned(class TypeAssertion {
     return typeAssertion;
   }
 });
-
-function stringFromTermAndType(term, type) {
-  const termString = term.getString(),
-        typeName = type.getName(),
-        string = `${termString}:${typeName}`;
-
-  return string;
-}

@@ -6,9 +6,8 @@ import Substitutions from "../substitutions";
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { unifyStatementIntrinsically } from "../utilities/unification";
-import { stripBracketsFromStatementNode } from "../utilities/brackets";
 
-const statementNodeQuery = nodeQuery("/declaration/statement");
+const judgementDeclarationNodeQuery = nodeQuery("/judgement/declaration");
 
 export default domAssigned(class Declaration {
   constructor(string, reference, statement) {
@@ -255,21 +254,28 @@ export default domAssigned(class Declaration {
 
   static name = "Declaration";
 
+  static fromJudgementNode(judgementNode, context) {
+    const judgementDeclarationNode = judgementDeclarationNodeQuery(judgementNode),
+          declarationNode = judgementDeclarationNode, ///
+          declaration = declarationFromDeclarationNode(declarationNode, context);
+
+    return declaration;
+  }
+
   static fromDeclarationNode(declarationNode, context) {
-    const { Reference, Statement } = dom,
-          node = declarationNode,  ///
-          string = context.nodeAsString(node);
-
-    let statementNode;
-
-    statementNode = statementNodeQuery(declarationNode);
-
-    statementNode = stripBracketsFromStatementNode(statementNode);  ///
-
-    const reference = Reference.fromDeclarationNode(declarationNode, context),
-          statement = Statement.fromStatementNode(statementNode, context),
-          declaration = new Declaration(string, reference, statement);
+    const declaration = declarationFromDeclarationNode(declarationNode, context);
 
     return declaration;
   }
 });
+
+function declarationFromDeclarationNode(declarationNode, context) {
+  const { Declaration, Reference, Statement } = dom,
+        node = declarationNode,  ///
+        string = context.nodeAsString(node),
+        reference = Reference.fromDeclarationNode(declarationNode, context),
+        statement = Statement.fromDeclarationNode(declarationNode, context),
+        declaration = new Declaration(string, reference, statement);
+
+  return declaration;
+}

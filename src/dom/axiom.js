@@ -229,11 +229,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
   static fromAxiomNode(axiomNode, fileContext) {
     const node = axiomNode, ///
-          labels = labelsFromNode(node, fileContext),
-          suppositions = suppositionsFromNode(node, fileContext),
-          deduction = deductionFromNode(node, fileContext),
           proof = proofFromNode(node, fileContext),
+          labels = labelsFromNode(node, fileContext),
+          deduction = deductionFromNode(node, fileContext),
           satisfiable = satisfiableFromNode(node, fileContext),
+          suppositions = suppositionsFromNode(node, fileContext),
           string = stringFromLabelsAndDeduction(labels, deduction),
           topLevelAssertion = new Axiom(fileContext, string, labels, suppositions, deduction, proof, satisfiable);
 
@@ -241,7 +241,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   }
 });
 
-function satisfiableFromNode(node, fileContext) {
+export function satisfiableFromNode(node, fileContext) {
   const firstPrimaryKeywordTerminalNode = firstPrimaryKeywordTerminalNodeQuery(node),
         content = firstPrimaryKeywordTerminalNode.getContent(),
         contentSatisfiable = (content === SATISFIABLE),

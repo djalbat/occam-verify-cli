@@ -67,9 +67,18 @@ function stepsOrSubproofsFromDerivationNode(derivationNode, fileContext) {
   const { Step, Subproof } = dom,
         stepOrSubproofNodes = stepOrSubproofNodesQuery(derivationNode),
         stepsOrSubproofs = stepOrSubproofNodes.map((stepOrSubproofNode) => {
-          const subproof = Subproof.fromStepOrSubproofNode(stepOrSubproofNode, fileContext),
-                step = Step.fromStepOrSubproofNode(stepOrSubproofNode, fileContext),
-                stepOrSubproof = (step || subproof);
+          let stepOrSubproof;
+
+          const step = Step.fromStepOrSubproofNode(stepOrSubproofNode, fileContext),
+                subproof = Subproof.fromStepOrSubproofNode(stepOrSubproofNode, fileContext);
+
+          if (false) {
+            ///
+          } else if (step !== null) {
+            stepOrSubproof = step;  ///
+          } else if (subproof !== null) {
+            stepOrSubproof = subproof;  ///
+          }
 
           return stepOrSubproof;
         });

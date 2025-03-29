@@ -13,12 +13,14 @@ import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, pro
 
 const { push, first } = arrayUtilities;
 
-const typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type"),
+const typeAssertionTypeNodeQuery = nodeQuery("/typeAssertion/type"),
+      typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type"),
       propertyDeclarationNodesQuery = nodesQuery("/complexTypeDeclaration/propertyDeclaration"),
       propertyDeclarationTypeNodeQuery = nodeQuery("/propertyDeclaration/type"),
       typeDeclarationSuperTypeNodesQuery = nodesQuery("/typeDeclaration|complexTypeDeclaration/types/type"),
       firstPrimaryKeywordTerminalNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/@primary-keyword[0]"),
-      variableDeclarationSuperTypeNodeQuery = nodeQuery("/variableDeclaration/type");
+      variableDeclarationSuperTypeNodeQuery = nodeQuery("/variableDeclaration/type"),
+      constructorDeclarationSuperTypeNodeQuery = nodeQuery("/constructorDeclaration/type");
 
 class Type {
   constructor(string, name, superTypes, properties, provisional) {
@@ -238,26 +240,21 @@ class Type {
     return type;
   }
 
-  static fromTypeNode(typeNode) {
-    let type;
-
-    if (typeNode === null) {
-      type = objectType;
-    } else {
-      const typeName = typeNameFromTypeNode(typeNode),
-            name = typeName,  ///
-            string = name,  ///
-            superTypes = null,
-            properties = null,
-            provisional = null;
-
-      type = new Type(string, name, superTypes, properties, provisional);
-    }
+  static fromTypeNode(typeNode, fileContext) {
+    const type = typeFromTypeNode(typeNode, fileContext);
 
     return type;
   }
 
-  static fromTypeAndProvisional(type, provisional, context) {
+  static fromTypeAssertionNode(typeAssertionNode, fileContext) {
+    const typeAssertionTypeNode = typeAssertionTypeNodeQuery(typeAssertionNode),
+          typeNode = typeAssertionTypeNode, ///
+          type = typeFromTypeNode(typeNode, fileContext);
+
+    return type;
+  }
+
+  static fromTypeAndProvisional(type, provisional) {
     const name = type.getName(),
           superType = type, ///
           superTypes = [
@@ -283,45 +280,25 @@ class Type {
   }
 
   static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
-    let type;
-
-    const propertyDeclarationTypeNode = propertyDeclarationTypeNodeQuery(propertyDeclarationNode);
-
-    if (propertyDeclarationTypeNode === null) {
-      type = objectType;
-    } else {
-      const typeNode = propertyDeclarationTypeNode, ///
-            typeName = typeNameFromTypeNode(typeNode),
-            name = typeName,  ///
-            string = name,  ///
-            superTypes = null,
-            properties = null,
-            provisional = null;
-
-      type = new Type(string, name, superTypes, properties, provisional);
-    }
+    const propertyDeclarationTypeNode = propertyDeclarationTypeNodeQuery(propertyDeclarationNode),
+          typeNode = propertyDeclarationTypeNode, ///
+          type = typeFromTypeNode(typeNode, fileContext);
 
     return type;
   }
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-    let type;
+    const variableDeclarationSuperTypeNode = variableDeclarationSuperTypeNodeQuery(variableDeclarationNode),
+          typeNode = variableDeclarationSuperTypeNode,  ///
+          type = typeFromTypeNode(typeNode, fileContext);
 
-    const variableDeclarationSuperTypeNode = variableDeclarationSuperTypeNodeQuery(variableDeclarationNode);
+    return type;
+  }
 
-    if (variableDeclarationSuperTypeNode === null) {
-      type = objectType;
-    } else {
-      const typeNode = variableDeclarationSuperTypeNode,  ///
-            typeName = typeNameFromTypeNode(typeNode),
-            name = typeName,  ///
-            string = name,  ///
-            superTypes = null,
-            properties = null,
-            provisional = null;
-
-      type = new Type(string, name, superTypes, properties, provisional);
-    }
+  static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
+    const constructorDeclarationSuperTypeNode = constructorDeclarationSuperTypeNodeQuery(constructorDeclarationNode),
+          typeNode = constructorDeclarationSuperTypeNode, ///
+          type = typeFromTypeNode(typeNode, fileContext);
 
     return type;
   }
@@ -339,6 +316,26 @@ class Type {
 }
 
 export default domAssigned(Type);
+
+function typeFromTypeNode(typeNode, fileContext) {
+  let type;
+
+  if (typeNode === null) {
+    type = objectType;
+  } else {
+    const { Type } = dom,
+          typeName = typeNameFromTypeNode(typeNode),
+          name = typeName,  ///
+          string = name,  ///
+          superTypes = null,
+          properties = null,
+          provisional = null;
+
+    type = new Type(string, name, superTypes, properties, provisional);
+  }
+
+  return type;
+}
 
 function stringFromNameAndSuperTypes(name, superTypes) {
   let string = name;  ///
@@ -381,7 +378,7 @@ function superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
   const typeDeclarationSuperTypeNodes = typeDeclarationSuperTypeNodesQuery(typeDeclarationNode),
         superTypes = typeDeclarationSuperTypeNodes.map((typeDeclarationSuperTypeNode) => {
           const superTypeNode = typeDeclarationSuperTypeNode, ///
-                superType = Type.fromTypeNode(superTypeNode);
+                superType = Type.fromTypeNode(superTypeNode, fileContext);
 
           return superType;
         }),
@@ -416,7 +413,7 @@ function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fi
   const typeDeclarationSuperTypeNodes = typeDeclarationSuperTypeNodesQuery(complexTypeDeclarationNode),
         superTypes = typeDeclarationSuperTypeNodes.map((typeDeclarationSuperTypeNode) => {
           const superTypeNode = typeDeclarationSuperTypeNode, ///
-                superType = Type.fromTypeNode(superTypeNode);
+                superType = Type.fromTypeNode(superTypeNode, fileContext);
 
           return superType;
         }),

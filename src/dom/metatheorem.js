@@ -31,5 +31,5 @@ export default domAssigned(class Metatheorem extends TopLevelMetaAssertion {
 
   static fromJSON(json, fileContext) { return TopLevelMetaAssertion.fromJSON(Metatheorem, json, fileContext); }
 
-  static fromMetatheoremNode(axiomNode, fileContext) { return TopLevelMetaAssertion.fromNode(Metatheorem, axiomNode, fileContext); }
+  static fromNode(node, fileContext) { return TopLevelMetaAssertion.fromNode(Metatheorem, node, fileContext); }
 });

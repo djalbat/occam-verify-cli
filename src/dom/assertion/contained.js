@@ -92,14 +92,20 @@ export default domAssigned(class ContainedAssertion {
 
       context.trace(`Verifying the '${containedAssertionString}' contained assertion's '${termString}' term...`);
 
-      termVerified = this.term.verify(context, () => {
-        const verifiedAhead = true;
+      const termSimple = this.term.isSimple();
 
-        return verifiedAhead;
-      });
+      if (!termSimple) {
+        context.debug(`The '${termString}' term is not simple.`);
+      } else {
+        termVerified = this.term.verify(context, () => {
+          const verifiedAhead = true;
 
-      if (termVerified) {
-        context.debug(`...verified the '${containedAssertionString}' contained assertion's '${termString}' term.`);
+          return verifiedAhead;
+        });
+
+        if (termVerified) {
+          context.debug(`...verified the '${containedAssertionString}' contained assertion's '${termString}' term.`);
+        }
       }
     }
 
@@ -115,14 +121,20 @@ export default domAssigned(class ContainedAssertion {
 
       context.trace(`Verifying the '${containedAssertionString}' contained assertion's '${frameString}' frame...`);
 
-      stated = true;  ///
+      const frameSimple = this.frame.isSimple();
 
-      assignments = null; ///
+      if (!frameSimple) {
+        context.debug(`The '${frameString}' frame is not simple.`);
+      } else {
+        stated = true;  ///
 
-      frameVerified = this.frame.verify(assignments, stated, context);
+        assignments = null; ///
 
-      if (frameVerified) {
-        context.debug(`...verified the '${containedAssertionString}' contained assertion's '${frameString}' frame.`);
+        frameVerified = this.frame.verify(assignments, stated, context);
+
+        if (frameVerified) {
+          context.debug(`...verified the '${containedAssertionString}' contained assertion's '${frameString}' frame.`);
+        }
       }
     }
 

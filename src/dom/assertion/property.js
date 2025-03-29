@@ -7,9 +7,7 @@ import VariableAssignment from "../../assignment/variable";
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
 
-const termNodeQuery = nodeQuery("/propertyAssertion/term"),
-      propertyRelationNodeQuery = nodeQuery("/propertyAssertion/propertyRelation"),
-      propertyAssertionNodeQuery = nodeQuery("/statement/propertyAssertion");
+const propertyAssertionNodeQuery = nodeQuery("/statement/propertyAssertion");
 
 export default domAssigned(class PropertyAssertion {
   constructor(string, node, tokens, term, propertyRelation) {
@@ -213,10 +211,8 @@ export default domAssigned(class PropertyAssertion {
             node = propertyAssertionNode,  ///
             string = context.nodeAsString(node),
             tokens = context.nodeAsTokens(node),
-            termNode = termNodeQuery(propertyAssertionNode),
-            propertyRelationNode = propertyRelationNodeQuery(propertyAssertionNode),
-            term = Term.fromTermNode(termNode, context),
-            propertyRelation = PropertyRelation.fromPropertyRelationNode(propertyRelationNode, context);
+            term = Term.fromPropertyAssertionNode(propertyAssertionNode, context),
+            propertyRelation = PropertyRelation.fromPropertyAssertionNode(propertyAssertionNode, context);
 
       propertyAssertion = new PropertyAssertion(string, node, tokens, term, propertyRelation);
     }
