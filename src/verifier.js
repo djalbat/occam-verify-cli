@@ -48,7 +48,7 @@ export default class Verifier {
       childNodesVerify = childNodesVerifyAhead; ///
     } else {
       childNodesVerify = childNodes.every((childNode) => {
-        const node = childNode,
+        const node = childNode, ///
               nodeVerified = this.verifyNode(node, ...remainingArguments);
 
         if (nodeVerified) {
