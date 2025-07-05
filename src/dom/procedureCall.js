@@ -1,6 +1,6 @@
 "use strict";
 
-import { Values } from "occam-furtle";
+import { Expressions } from "occam-furtle";
 
 import dom from "../dom";
 
@@ -79,10 +79,10 @@ export default domAssigned(class ProcedureCall {
 
     const procedure = context.findProcedureByReference(this.reference),
           nodes = this.findNodes(substitutions),
-          values = Values.fromNodes(nodes, context);
+          expressions = Expressions.fromNodes(nodes, context);
 
     try {
-      const value = procedure.call(values, context),
+      const value = procedure.call(expressions, context),
             boolean = value.getBoolean();
 
       unifiedIndependently = boolean; ///
