@@ -2,7 +2,7 @@
 
 import dom from "../../dom";
 
-import { objectType } from "../type";
+import { baseType } from "../type";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class VariableDeclaration {
@@ -41,9 +41,9 @@ export default domAssigned(class VariableDeclaration {
 
         type = this.variable.getType();
 
-        const typeObjectType = (type === objectType);
+        const typeBaseType = (type === baseType);
 
-        if (!typeObjectType) {
+        if (!typeBaseType) {
           const typeName = type.getName();
 
           type = this.fileContext.findTypeByTypeName(typeName);
@@ -85,7 +85,7 @@ export default domAssigned(class VariableDeclaration {
 
     const type = this.variable.getType();
 
-    if (type === objectType) {
+    if (type === baseType) {
       typeVerified = true;
     } else {
       const typeName = type.getName();

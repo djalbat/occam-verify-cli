@@ -5,7 +5,7 @@ import LocalContext from "../context/local";
 import TermSubstitution from "../substitution/term";
 
 import { nodeQuery } from "../utilities/query";
-import { objectType } from "./type";
+import { BaseType } from "./type";
 import { domAssigned } from "../dom";
 import { EMPTY_STRING, PROVISIONALLY } from "../constants";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
@@ -124,7 +124,7 @@ export default domAssigned(class Variable {
   verifyType(fileContext) {
     let typeVerified = false;
 
-    if (this.type === objectType) {
+    if (this.type === BaseType) {
       typeVerified = true;
     } else {
       const typeName = this.type.getName();

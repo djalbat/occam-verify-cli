@@ -8,7 +8,7 @@ import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
 import FileContext from "../context/file";
 
-import { objectType } from "../dom/type";
+import { baseType } from "../dom/type";
 import { frameMetaType, referenceMetaType, statementMetaType } from "../dom/metaType";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
@@ -379,7 +379,7 @@ export default class ReleaseContext {
   findTypeByTypeName(typeName) {
     let types = this.getTypes();
 
-    types.push(objectType);
+    types.push(baseType);
 
     const type = types.find((type) => {
       const typeNameMatches = type.matchTypeName(typeName);

@@ -6,7 +6,7 @@ import Equivalences from "../equivalences";
 import Substitutions from "../substitutions";
 import topLevelVerifier from "../verifier/topLevel";
 
-import { objectType } from "../dom/type";
+import { baseType } from "../dom/type";
 import { nodeAsTokens, nodeAsString, nodesAsString, tokensAsString } from "../utilities/string";
 import { typesFromJSON,
          rulesFromJSON,
@@ -561,7 +561,7 @@ export default class FileContext {
   findTypeByTypeName(typeName) {
     let types = this.getTypes();
 
-    types.push(objectType);
+    types.push(baseType);
 
     const type = types.find((type) => {
       const typeNameMatches = type.matchTypeName(typeName);

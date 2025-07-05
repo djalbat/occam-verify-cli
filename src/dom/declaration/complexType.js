@@ -2,9 +2,9 @@
 
 import dom from "../../dom";
 
-import { objectType } from "../type";
+import { baseType } from "../type";
 import { domAssigned } from "../../dom";
-import {superTypesStringFromSuperTypes, superTypeStringFromSuperType} from "../declaration/type";
+import { superTypeStringFromSuperType, superTypesStringFromSuperTypes } from "../declaration/type";
 
 export default domAssigned(class ComplexTypeDeclaration {
   constructor(fileContext, string, type) {
@@ -133,9 +133,9 @@ export default domAssigned(class ComplexTypeDeclaration {
   verifySuperType(superType) {
     let superTypeVerified;
 
-    const superTypeObjectType = (superType === objectType);
+    const superTypeBaseType = (superType === baseType);
 
-    if (superTypeObjectType) {
+    if (superTypeBaseType) {
       superTypeVerified = true;
     } else {
       const typeName = this.type.getString(),
@@ -243,7 +243,7 @@ export default domAssigned(class ComplexTypeDeclaration {
   verifyPropertyType(propertyType) {
     let propertyTypeVerified = false;
 
-    if (propertyType === objectType) {
+    if (propertyType === baseType) {
       propertyTypeVerified = true;
     } else {
       const typeName = this.type.getName(),

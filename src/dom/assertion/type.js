@@ -3,8 +3,8 @@
 import dom from "../../dom";
 import VariableAssignment from "../../assignment/variable";
 
+import { baseType } from "../type";
 import { nodeQuery } from "../../utilities/query";
-import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 
 const variableNodeQuery = nodeQuery("/term/variable!"),
@@ -67,7 +67,7 @@ export default domAssigned(class TypeAssertion {
   verifyType(context) {
     let typeVerified;
 
-    if (this.type === objectType) {
+    if (this.type === baseType) {
       typeVerified = true;
     } else {
       const typeName = this.type.getName();

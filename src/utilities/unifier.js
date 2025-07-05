@@ -34,8 +34,8 @@ export function areTerminalNodeMapsEqual(generalTerminalNodeMap, specificTermina
   if (terminalNodeMapKeysMatch) {
     const generalTerminalNodes = Object.values(generalTerminalNodeMap), ///
           specificTerminalNodes = Object.values(specificTerminalNodeMap), ///
-          terminalNodeMapValuesMatch = match(generalTerminalNodes, specificTerminalNodes, (generalTerminalNode, specficTerminalNode) => {
-            const generalTerminalNodeMatchesSpecificTerminalNode = generalTerminalNode.match(specficTerminalNode);
+          terminalNodeMapValuesMatch = match(generalTerminalNodes, specificTerminalNodes, (generalTerminalNode, specificTerminalNode) => {
+            const generalTerminalNodeMatchesSpecificTerminalNode = generalTerminalNode.match(specificTerminalNode);
 
             if (generalTerminalNodeMatchesSpecificTerminalNode) {
               return true;
