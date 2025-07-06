@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
 
-import { baseType } from "./type";
+import { objectType } from "./type";
 import { domAssigned } from "../dom";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
@@ -114,7 +114,7 @@ function stringFromNamesAndType(names, type) {
 
   const namesString = namesStringFromNames(names);
 
-  if (type === baseType) {
+  if (type === objectType) {
     string = namesString;  ///
   } else {
     const typeName = type.getName();

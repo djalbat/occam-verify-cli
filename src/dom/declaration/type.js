@@ -2,7 +2,7 @@
 
 import dom from "../../dom";
 
-import { baseType } from "../type";
+import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class TypeDeclaration {
@@ -117,9 +117,9 @@ export default domAssigned(class TypeDeclaration {
   verifySuperType(superType) {
     let superTypeVerified;
 
-    const superTypeBaseType = (superType === baseType);
+    const superTypeObjectType = (superType === objectType);
 
-    if (superTypeBaseType) {
+    if (superTypeObjectType) {
       superTypeVerified = true;
     } else {
       const typeName = this.type.getString(),

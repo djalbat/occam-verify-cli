@@ -3,8 +3,8 @@
 import dom from "../dom";
 import LocalContext from "../context/local";
 
-import { baseType } from "./type";
 import { nodeQuery } from "../utilities/query";
+import { objectType } from "./type";
 import { domAssigned } from "../dom";
 import { PROVISIONALLY } from "../constants";
 import { unifyTermWithConstructor } from "../utilities/unification";
@@ -105,7 +105,7 @@ function stringFromTermAndProvisional(term, provisional) {
   const type = term.getType(),
         termString = term.getString();
 
-  if (type === baseType) {
+  if (type === objectType) {
     string = termString;  ///
   } else {
     const typeString = type.getString();

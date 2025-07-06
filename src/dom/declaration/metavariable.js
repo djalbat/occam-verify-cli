@@ -2,7 +2,7 @@
 
 import dom from "../../dom";
 
-import { baseType } from "../type";
+import { objectType } from "../type";
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
 
@@ -56,7 +56,7 @@ export default domAssigned(class MetavariableDeclaration {
     if (type === null) {
       typeVerified = true;
     } else {
-      if (type === baseType) {
+      if (type === objectType) {
         typeVerified = true;
       } else {
         const typeName = type.getName();

@@ -6,7 +6,7 @@ import dom from "../dom";
 
 import { PROVISIONAL } from "../constants";
 import { domAssigned } from "../dom";
-import { BASE_TYPE_NAME } from "../typeNames";
+import { OBJECT_TYPE_NAME } from "../typeNames";
 import { typeNameFromTypeNode } from "../utilities/name";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
@@ -131,9 +131,9 @@ class Type {
     const soleSuperType = this.getSoleSuperType();
 
     if (soleSuperType !== null) {
-      const soleSuperTypeBaseType = (soleSuperType === baseType);
+      const soleSuperTypeObjectType = (soleSuperType === objectType);
 
-      basic = soleSuperTypeBaseType;  ///
+      basic = soleSuperTypeObjectType;  ///
     }
 
     return basic;
@@ -148,7 +148,7 @@ class Type {
   isSubTypeOf(type) {
     let subTypeOf;
 
-    if (this === baseType) {
+    if (this === objectType) {
       subTypeOf = false;
     } else {
       subTypeOf = this.superTypes.some((superType) => { ///
@@ -321,7 +321,7 @@ function typeFromTypeNode(typeNode, fileContext) {
   let type;
 
   if (typeNode === null) {
-    type = baseType;
+    type = objectType;
   } else {
     const { Type } = dom,
           typeName = typeNameFromTypeNode(typeNode),
@@ -360,7 +360,7 @@ function nameFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
 
 function superTypesStringFromSuperTypes(superTypes) {
   const superTypesString = superTypes.reduce((superTypesString, superType) => {
-    if (superType !== baseType) {
+    if (superType !== objectType) {
       const superTypeName = superType.getName();
 
       superTypesString = (superTypesString === null) ?
@@ -385,7 +385,7 @@ function superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
         superTypesLength = superTypes.length;
 
   if (superTypesLength === 0) {
-    superTypes.push(baseType);
+    superTypes.push(objectType);
   }
 
   return superTypes;
@@ -420,7 +420,7 @@ function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fi
         superTypesLength = superTypes.length;
 
   if (superTypesLength === 0) {
-    superTypes.push(baseType);
+    superTypes.push(objectType);
   }
 
   return superTypes;
@@ -438,7 +438,7 @@ function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fi
   return properties;
 }
 
-class BaseType extends Type {
+class ObjectType extends Type {
   getProperties() {
     const properties = [];
 
@@ -461,15 +461,15 @@ class BaseType extends Type {
   }
 
   static fromNothing() {
-    const name = BASE_TYPE_NAME,
+    const name = OBJECT_TYPE_NAME,
           string = name,  //
           superTypes = [],
           properties = [],
           provisional = false,
-          baseType = new BaseType(string, name, superTypes, properties, provisional);
+          objectType = new ObjectType(string, name, superTypes, properties, provisional);
 
-    return baseType;
+    return objectType;
   }
 }
 
-export const baseType = BaseType.fromNothing();
+export const objectType = ObjectType.fromNothing();

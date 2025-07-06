@@ -4,7 +4,7 @@ import dom from "../../dom";
 
 import constructorVerifier from "../../verifier/constructor";
 
-import { baseType } from "../type";
+import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class ConstructorDeclaration {
@@ -83,7 +83,7 @@ export default domAssigned(class ConstructorDeclaration {
 
     const type = this.constructor.getType();
 
-    if (type === baseType) {
+    if (type === objectType) {
       typeVerified = true;
     } else {
       const typeName = type.getName();
