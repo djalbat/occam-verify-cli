@@ -117,9 +117,9 @@ function stringFromNamesAndType(names, type) {
   if (type === objectType) {
     string = namesString;  ///
   } else {
-    const typeName = type.getName();
+    const typeString = type.getString();
 
-    string = `${namesString}:${typeName}`;
+    string = `${namesString}:${typeString}`;
   }
 
   return string;

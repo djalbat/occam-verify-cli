@@ -59,20 +59,21 @@ export default domAssigned(class MetavariableDeclaration {
       if (type === objectType) {
         typeVerified = true;
       } else {
-        const typeName = type.getName();
+        const typeName = type.getName(),
+              typeString = type.getString();
 
-        this.fileContext.trace(`Verifying the '${typeName}' type...`);
+        this.fileContext.trace(`Verifying the '${typeString}' type...`);
 
         const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
 
         if (!typePresent) {
-          this.fileContext.debug(`The '${typeName}' type is not present.`);
+          this.fileContext.debug(`The '${typeString}' type is not present.`);
         } else {
           typeVerified = true;
         }
 
         if (typeVerified) {
-          this.fileContext.debug(`...verified the '${typeName}' type.`);
+          this.fileContext.debug(`...verified the '${typeString}' type.`);
         }
       }
     }

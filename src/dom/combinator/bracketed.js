@@ -5,7 +5,6 @@ import Combinator from "../combinator";
 import combinatorBracketedContext from "../../context/bracketed/combinator";
 
 import { domAssigned } from "../../dom";
-import { unifyStatementWithCombinator } from "../../utilities/unification";
 
 export default domAssigned(class BracketedCombinator extends Combinator {
   unifyStatement(statement, assignments, stated, context) {
@@ -15,11 +14,7 @@ export default domAssigned(class BracketedCombinator extends Combinator {
 
     context.trace(`Unifying the '${statementString}' statement with the bracketed combinator...`);
 
-    const bracketedCombinator = this, ///
-          combinator = bracketedCombinator, ///
-          statementUnifiedWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, context);
-
-    statementUnified = statementUnifiedWithCombinator;
+    statementUnified = super.unifyStatement(statement, assignments, stated, context);
 
     if (statementUnified) {
       context.debug(`...unified the '${statementString}' statement with the bracketed combinator.`);

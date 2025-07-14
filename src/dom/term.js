@@ -152,10 +152,10 @@ export default domAssigned(class Term {
   verifyGivenType(type, generalContext, specificContext) {
     let verifiedGivenType;
 
-    const typeName = type.getName(),
+    const typeString = type.getString(),
           termString = this.getString();  ///
 
-    specificContext.trace(`Verifying the '${termString}' term given the '${typeName}' type...`);
+    specificContext.trace(`Verifying the '${termString}' term given the '${typeString}' type...`);
 
     const context = specificContext, ///
           verified = this.verify(context, () => {
@@ -173,7 +173,7 @@ export default domAssigned(class Term {
     verifiedGivenType = verified; ///
 
     if (verifiedGivenType) {
-      specificContext.debug(`...verified the '${termString}' term given the '${typeName}' type.`);
+      specificContext.debug(`...verified the '${termString}' term given the '${typeString}' type.`);
     }
 
     return verifiedGivenType;

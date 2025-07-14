@@ -667,9 +667,9 @@ export default class FileContext {
 
   isTypePresentByTypeName(typeName) {
     const type = this.findTypeByTypeName(typeName),
-          typeDeclared = (type !== null);
+          typePresent = (type !== null);
 
-    return typeDeclared;
+    return typePresent;
   }
 
   isVariablePresentByVariableName(variableName) {

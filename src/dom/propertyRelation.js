@@ -109,9 +109,9 @@ export default domAssigned(class PropertyRelation {
 
     if (variableTypeProperty === null) {
       const variableString = this.term.getString(),
-            variableTypeName = variableType.getName();
+            variableTypeString = variableType.getString();
 
-      context.debug(`The '${propertyNames}' property is not a property of the '${variableString}' variable's '${variableTypeName}' type.`);
+      context.debug(`The '${propertyNames}' property is not a property of the '${variableString}' variable's '${variableTypeString}' type.`);
     } else {
       const type = variableType;
 

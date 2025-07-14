@@ -217,9 +217,9 @@ export default class Equivalence {
     }, null);
 
     const type = this.getType(),
-          typeName = type.getName();
+          typeString = type.getString();
 
-    string = `${string}:${typeName}`;
+    string = `${string}:${typeString}`;
 
     return string;
   }

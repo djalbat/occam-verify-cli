@@ -127,14 +127,14 @@ export default domAssigned(class Variable {
     if (this.type === ObjectType) {
       typeVerified = true;
     } else {
-      const typeName = this.type.getName();
+      const typeString = this.type.getString();
 
-      fileContext.trace(`Verifying the '${typeName}' type...`);
+      fileContext.trace(`Verifying the '${typeString}' type...`);
 
-      const type = fileContext.findTypeByTypeName(typeName);
+      const type = fileContext.findTypeByTypeName(typeString);
 
       if (type === null) {
-        fileContext.debug(`The '${typeName}' type is not present.`);
+        fileContext.debug(`The '${typeString}' type is not present.`);
       } else {
         this.type = type; ///
 
@@ -142,7 +142,7 @@ export default domAssigned(class Variable {
       }
 
       if (typeVerified) {
-        fileContext.debug(`...verified the '${typeName}' type.`);
+        fileContext.debug(`...verified the '${typeString}' type.`);
       }
     }
 

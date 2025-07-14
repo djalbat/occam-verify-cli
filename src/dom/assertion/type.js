@@ -70,22 +70,22 @@ export default domAssigned(class TypeAssertion {
     if (this.type === objectType) {
       typeVerified = true;
     } else {
-      const typeName = this.type.getName();
+      const typeString = this.type.getString();
 
-      context.trace(`Verifying the '${typeName}' type...`);
+      context.trace(`Verifying the '${typeString}' type...`);
 
-      const type = context.findTypeByTypeName(typeName);
+      const type = context.findTypeByTypeName(typeString);
 
       if (type !== null) {
         this.type = type;
 
         typeVerified = true;
       } else {
-        context.debug(`The '${typeName}' type is not present.`);
+        context.debug(`The '${typeString}' type is not present.`);
       }
 
       if (typeVerified) {
-        context.debug(`...verified the '${typeName}' type.`);
+        context.debug(`...verified the '${typeString}' type.`);
       }
     }
 

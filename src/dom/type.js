@@ -140,7 +140,15 @@ class Type {
   }
 
   isEqualTo(type) {
-    const equalTo = (this === type);
+    let equalTo = false;
+
+    if (this.type === type) {
+      equalTo = true;
+    } else {
+      if (type.name === null) {
+
+      }
+    }
 
     return equalTo;
   }
@@ -360,13 +368,11 @@ function nameFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
 
 function superTypesStringFromSuperTypes(superTypes) {
   const superTypesString = superTypes.reduce((superTypesString, superType) => {
-    if (superType !== objectType) {
-      const superTypeName = superType.getName();
+    const superTypeString = superType.getString();
 
-      superTypesString = (superTypesString === null) ?
-                           superTypeName :
-                            `${superTypesString}, ${superTypeName}`;
-    }
+    superTypesString = (superTypesString === null) ?
+                         `'${superTypeString}'` :
+                           `${superTypesString}, '${superTypeString}'`;
 
     return superTypesString;
   }, null);

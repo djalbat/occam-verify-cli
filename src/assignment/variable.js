@@ -14,12 +14,12 @@ export default class VariableAssignment {
           variableAdded = context.addVariable(this.variable, nested),
           variableType = this.variable.getType(),
           variableString = this.variable.getString(),
-          variableTypeName = variableType.getName(),
-          variableAssigned = variableAdded; ///
+          variableAssigned = variableAdded, ///
+          variableTypeString = variableType.getString();
 
     variableAssigned ?
-      context.trace(`Assigned the '${variableString}' variable with type '${variableTypeName}'.`) :
-        context.debug(`Unable to assign the '${variableString}' variable with type '${variableTypeName}'.`);
+      context.trace(`Assigned the '${variableString}' variable with type '${variableTypeString}'.`) :
+        context.debug(`Unable to assign the '${variableString}' variable with type '${variableTypeString}'.`);
 
     return variableAssigned;
   }
