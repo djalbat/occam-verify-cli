@@ -88,11 +88,12 @@ export default domAssigned(class VariableDeclaration {
     if (type === objectType) {
       typeVerified = true;
     } else {
-      const typeString = type.getString();
+      const typeName = type.getName(),
+            typeString = type.getString();
 
       this.fileContext.trace(`Verifying the '${typeString}' type...`);
 
-      const typePresent = this.fileContext.isTypePresentByTypeName(typeString);
+      const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
 
       if (!typePresent) {
         this.fileContext.debug(`The '${typeString}' type is not present.`);

@@ -4,6 +4,7 @@ import dom from "../../dom";
 
 import { objectType } from "../type";
 import { domAssigned } from "../../dom";
+import { superTypesStringFromSuperTypes } from "../../utilities/type";
 
 export default domAssigned(class TypeDeclaration {
   constructor(fileContext, string, type) {
@@ -74,7 +75,9 @@ export default domAssigned(class TypeDeclaration {
 
     const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
 
-    if (!typePresent) {
+    if (typePresent) {
+      this.fileContext.debug(`The type '${typeString}' is already present.`);
+    } else {
       typeVerified = true;
     }
 
@@ -93,8 +96,8 @@ export default domAssigned(class TypeDeclaration {
     if (typeBasic) {
       superTypesVerified = true;
     } else {
-      const superTypes = this.type.getSuperTypes(),
-            typeString = this.type.getString(),
+      const typeString = this.type.getString(),
+            superTypes = this.type.getSuperTypes(),
             superTypesString = superTypesStringFromSuperTypes(superTypes);
 
       this.fileContext.trace(`Verifying the '${typeString}' type's ${superTypesString} super-types...`);
@@ -153,18 +156,3 @@ export default domAssigned(class TypeDeclaration {
     return typeDeclaration;
   }
 });
-
-export function superTypesStringFromSuperTypes(superTypes) {
-  const superTypesString = superTypes.reduce((superTypesString, superType) => {
-    const superTypeString = superType.getString();
-
-    superTypesString = (superTypesString === null) ?
-                        `'${superTypeString}'` :
-                          `${superTypesString}, '${superTypeString}'`;
-
-    return superTypesString;
-  }, null);
-
-  return superTypesString;
-}
-
