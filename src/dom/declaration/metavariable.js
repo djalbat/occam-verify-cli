@@ -2,7 +2,6 @@
 
 import dom from "../../dom";
 
-import { objectType } from "../type";
 import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
 
@@ -56,25 +55,21 @@ export default domAssigned(class MetavariableDeclaration {
     if (type === null) {
       typeVerified = true;
     } else {
-      if (type === objectType) {
-        typeVerified = true;
+      const typeName = type.getName(),
+            typeString = type.getString();
+
+      this.fileContext.trace(`Verifying the '${typeString}' type...`);
+
+      const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+
+      if (!typePresent) {
+        this.fileContext.debug(`The '${typeString}' type is not present.`);
       } else {
-        const typeName = type.getName(),
-              typeString = type.getString();
+        typeVerified = true;
+      }
 
-        this.fileContext.trace(`Verifying the '${typeString}' type...`);
-
-        const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
-
-        if (!typePresent) {
-          this.fileContext.debug(`The '${typeString}' type is not present.`);
-        } else {
-          typeVerified = true;
-        }
-
-        if (typeVerified) {
-          this.fileContext.debug(`...verified the '${typeString}' type.`);
-        }
+      if (typeVerified) {
+        this.fileContext.debug(`...verified the '${typeString}' type.`);
       }
     }
 

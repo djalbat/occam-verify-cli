@@ -2,7 +2,6 @@
 
 import dom from "../../dom";
 
-import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 import { superTypesStringFromSuperTypes } from "../../utilities/type";
 
@@ -237,32 +236,28 @@ export default domAssigned(class ComplexTypeDeclaration {
   verifyPropertyType(propertyType) {
     let propertyTypeVerified = false;
 
-    if (propertyType === objectType) {
+    const typeEqualToPropertyType = this.type.isEqualTo(propertyType);
+
+    if (typeEqualToPropertyType) {
       propertyTypeVerified = true;
-    } else {
-      const typeEqualToPropertyType = this.type.isEqualTo(propertyType);
+    } else  {
+      const propertyTypeString = propertyType.getString(); ///
 
-      if (typeEqualToPropertyType) {
+      this.fileContext.trace(`Verifying the '${propertyTypeString}' property type...`);
+
+      const propertyTypeName = propertyType.getName(),
+            propertyTypePresent = this.fileContext.isTypePresentByTypeName(propertyTypeName);
+
+      if (!propertyTypePresent) {
+        const propertyTypeString = propertyType.getString();
+
+        this.fileContext.debug(`The '${propertyTypeString}' property type is not present.`);
+      } else {
         propertyTypeVerified = true;
-      } else  {
-        const propertyTypeString = propertyType.getString(); ///
+      }
 
-        this.fileContext.trace(`Verifying the '${propertyTypeString}' property type...`);
-
-        const propertyTypeName = propertyType.getName(),
-              propertyTypePresent = this.fileContext.isTypePresentByTypeName(propertyTypeName);
-
-        if (!propertyTypePresent) {
-          const propertyTypeString = propertyType.getString();
-
-          this.fileContext.debug(`The '${propertyTypeString}' property type is not present.`);
-        } else {
-          propertyTypeVerified = true;
-        }
-
-        if (propertyTypeVerified) {
-          this.fileContext.debug(`...verified the '${propertyTypeString}' property type.`);
-        }
+      if (propertyTypeVerified) {
+        this.fileContext.debug(`...verified the '${propertyTypeString}' property type.`);
       }
     }
 

@@ -2,7 +2,6 @@
 
 import dom from "../../dom";
 
-import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 import { superTypesStringFromSuperTypes } from "../../utilities/type";
 
@@ -121,24 +120,18 @@ export default domAssigned(class TypeDeclaration {
   verifySuperType(superType) {
     let superTypeVerified;
 
-    const superTypeObjectType = (superType === objectType);
+    const typeString = this.type.getString(),
+          superTypeString = superType.getString();
 
-    if (superTypeObjectType) {
-      superTypeVerified = true;
-    } else {
-      const typeString = this.type.getString(),
-            superTypeString = superType.getString();
+    this.fileContext.trace(`Verifying the '${typeString}' type's '${superTypeString}' super-type...`);
 
-      this.fileContext.trace(`Verifying the '${typeString}' type's '${superTypeString}' super-type...`);
+    const superTypeName = superType.getName(),
+          superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
 
-      const superTypeName = superType.getName(),
-            superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
+    superTypeVerified = superTypePresent; ///
 
-      superTypeVerified = superTypePresent; ///
-
-      if (superTypeVerified) {
-        this.fileContext.debug(`...verified the '${typeString}' type's '${superTypeString}' super-type.`);
-      }
+    if (superTypeVerified) {
+      this.fileContext.debug(`...verified the '${typeString}' type's '${superTypeString}' super-type.`);
     }
 
     return superTypeVerified;

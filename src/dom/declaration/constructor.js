@@ -4,7 +4,6 @@ import dom from "../../dom";
 
 import constructorVerifier from "../../verifier/constructor";
 
-import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class ConstructorDeclaration {
@@ -83,25 +82,21 @@ export default domAssigned(class ConstructorDeclaration {
 
     const type = this.constructor.getType();
 
-    if (type === objectType) {
-      typeVerified = true;
+    const typeName = type.getName(),
+          typeString = type.getString();
+
+    this.fileContext.trace(`Verifying the '${typeString}' type...`);
+
+    const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+
+    if (!typePresent) {
+      this.fileContext.debug(`The '${typeString}' type is not present.`);
     } else {
-      const typeName = type.getName(),
-            typeString = type.getString();
+      typeVerified = true;
+    }
 
-      this.fileContext.trace(`Verifying the '${typeString}' type...`);
-
-      const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
-
-      if (!typePresent) {
-        this.fileContext.debug(`The '${typeString}' type is not present.`);
-      } else {
-        typeVerified = true;
-      }
-
-      if (typeVerified) {
-        this.fileContext.debug(`...verified the '${typeString}' type.`);
-      }
+    if (typeVerified) {
+      this.fileContext.debug(`...verified the '${typeString}' type.`);
     }
 
     return typeVerified;

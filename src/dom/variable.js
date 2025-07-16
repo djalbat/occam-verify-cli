@@ -7,22 +7,20 @@ import TermSubstitution from "../substitution/term";
 import { nodeQuery } from "../utilities/query";
 import { ObjectType } from "./type";
 import { domAssigned } from "../dom";
-import { EMPTY_STRING, PROVISIONALLY } from "../constants";
+import { EMPTY_STRING } from "../constants";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { variableNameFromVariableNode } from "../utilities/name";
 import { variableNodeFromVariableString } from "../context/partial/variable";
 
 const termVariableNodeQuery = nodeQuery("/term/variable!"),
-      variableDeclarationVariableNodeQuery = nodeQuery("/variableDeclaration/variable"),
-      lastSecondaryKeywordTerminalNodeQuery = nodeQuery("/variableDeclaration/@secondary-keyword[-1]");
+      variableDeclarationVariableNodeQuery = nodeQuery("/variableDeclaration/variable");
 
 export default domAssigned(class Variable {
-  constructor(string, node, name, type, provisional, propertyRelations) {
+  constructor(string, node, name, type, propertyRelations) {
     this.string = string;
     this.node = node;
     this.name = name;
     this.type = type;
-    this.provisional = provisional;
     this.propertyRelations = propertyRelations;
   }
 
@@ -42,20 +40,12 @@ export default domAssigned(class Variable {
     return this.type;
   }
 
-  isProvisional() {
-    return this.provisional;
-  }
-
   getPropertyRelations() {
     return this.propertyRelations;
   }
 
   setType(type) {
     this.type = type;
-  }
-
-  setProvisional(provisional) {
-    this.provisional = provisional;
   }
 
   isEqualTo(variable) {
@@ -124,26 +114,22 @@ export default domAssigned(class Variable {
   verifyType(fileContext) {
     let typeVerified = false;
 
-    if (this.type === ObjectType) {
-      typeVerified = true;
+    const typeString = this.type.getString();
+
+    fileContext.trace(`Verifying the '${typeString}' type...`);
+
+    const type = fileContext.findTypeByTypeName(typeString);
+
+    if (type === null) {
+      fileContext.debug(`The '${typeString}' type is not present.`);
     } else {
-      const typeString = this.type.getString();
+      this.type = type; ///
 
-      fileContext.trace(`Verifying the '${typeString}' type...`);
+      typeVerified = true;
+    }
 
-      const type = fileContext.findTypeByTypeName(typeString);
-
-      if (type === null) {
-        fileContext.debug(`The '${typeString}' type is not present.`);
-      } else {
-        this.type = type; ///
-
-        typeVerified = true;
-      }
-
-      if (typeVerified) {
-        fileContext.debug(`...verified the '${typeString}' type.`);
-      }
+    if (typeVerified) {
+      fileContext.debug(`...verified the '${typeString}' type.`);
     }
 
     return typeVerified;
@@ -215,9 +201,8 @@ export default domAssigned(class Variable {
           node = variableNode,
           name = variableName,  ///
           type = typeFromJSON(json, fileContext),
-          provisional = null,
           propertyRelations = [],
-          variable = new Variable(string, node, name, type, provisional, propertyRelations);
+          variable = new Variable(string, node, name, type, propertyRelations);
 
     return variable;
   }
@@ -228,9 +213,10 @@ export default domAssigned(class Variable {
     const termVariableNode = termVariableNodeQuery(termNode);
 
     if (termVariableNode !== null) {
-      const variableNode = termVariableNode;  ///
+      const variableNode = termVariableNode,  ///
+            type = null;
 
-      variable = variableFromVariableNode(variableNode, context);
+      variable = variableFromVariableNodeAndType(variableNode, type, context);
     }
 
     return variable;
@@ -240,7 +226,9 @@ export default domAssigned(class Variable {
     let variable = null;
 
     if (variableNode !== null) {
-      variable = variableFromVariableNode(variableNode, context);
+      const type = null;
+
+      variable = variableFromVariableNodeAndType(variableNode, type, context);
     }
 
     return variable;
@@ -250,9 +238,7 @@ export default domAssigned(class Variable {
     let variable = null;
 
     if (variableNode !== null) {
-      variable = variableFromVariableNode(variableNode, context);
-
-      variable.setType(type);
+      variable = variableFromVariableNodeAndType(variableNode, type, context);
     }
 
     return variable;
@@ -264,13 +250,8 @@ export default domAssigned(class Variable {
           variableNode = variableDeclarationVariableNode, ///
           localContext = LocalContext.fromFileContext(fileContext),
           context = localContext, ///
-          variable = variableFromVariableNode(variableNode, context),
           type = Type.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
-          provisional = provisionalFromVariableDeclarationNode(variableDeclarationNode, fileContext);
-
-    variable.setType(type);
-
-    variable.setProvisional(provisional);
+          variable = variableFromVariableNodeAndType(variableNode, type, context);
 
     return variable;
   }
@@ -280,8 +261,7 @@ export default domAssigned(class Variable {
 
     const node = variable.getNode(),
           name = variable.getName(),
-          type = variable.getType(),
-          provisional = variable.isProvisional();
+          type = variable.getType();
 
     propertyRelations = variable.getPropertyRelations();
 
@@ -292,22 +272,20 @@ export default domAssigned(class Variable {
 
     const string = stringFromNameAndPropertyRelations(name, propertyRelations);
 
-    variable = new Variable(string, node, name, type, provisional, propertyRelations);
+    variable = new Variable(string, node, name, type, propertyRelations);
 
     return variable;
   }
 });
 
-function variableFromVariableNode(variableNode, context) {
+function variableFromVariableNodeAndType(variableNode, type, context) {
   const { Variable } = dom,
         node = variableNode,  ///
         variableName = variableNameFromVariableNode(variableNode),
         string = context.nodeAsString(node),
         name = variableName,  ///
-        type = null,
-        provisional = null,
         propertyRelations = [],
-        variable = new Variable(string, node, name, type, provisional, propertyRelations);
+        variable = new Variable(string, node, name, type, propertyRelations);
 
   return variable;
 }
@@ -323,19 +301,4 @@ function stringFromNameAndPropertyRelations(name, propertyRelations) {
         string = `${name}${propertyRelationsString}`;
 
   return string;
-}
-
-function provisionalFromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-  let provisional = false;
-
-  const lastSecondaryKeywordTerminalNode = lastSecondaryKeywordTerminalNodeQuery(variableDeclarationNode);
-
-  if (lastSecondaryKeywordTerminalNode !== null) {
-    const content = lastSecondaryKeywordTerminalNode.getContent(),
-          contentProvisionally = (content === PROVISIONALLY);
-
-    provisional = contentProvisionally; ///
-  }
-
-  return provisional;
 }

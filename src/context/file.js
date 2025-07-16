@@ -561,7 +561,10 @@ export default class FileContext {
   findTypeByTypeName(typeName) {
     let types = this.getTypes();
 
-    types.push(objectType);
+    types = [
+      ...types,
+      objectType
+    ];
 
     const type = types.find((type) => {
       const typeNameMatches = type.matchTypeName(typeName);

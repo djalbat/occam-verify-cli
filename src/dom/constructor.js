@@ -3,20 +3,15 @@
 import dom from "../dom";
 import LocalContext from "../context/local";
 
-import { nodeQuery } from "../utilities/query";
 import { objectType } from "./type";
 import { domAssigned } from "../dom";
-import { PROVISIONALLY } from "../constants";
 import { unifyTermWithConstructor } from "../utilities/unification";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
 
-const lastSecondaryKeywordTerminalNodeQuery = nodeQuery("/constructorDeclaration/@secondary-keyword[-1]");
-
 export default domAssigned(class Constructor {
-  constructor(string, term, provisional) {
+  constructor(string, term) {
     this.string = string;
     this.term = term;
-    this.provisional = provisional;
   }
 
   getString() {
@@ -25,10 +20,6 @@ export default domAssigned(class Constructor {
 
   getTerm() {
     return this.term;
-  }
-
-  isProvisional() {
-    return this.provisional;
   }
 
   getType() { return this.term.getType(); }
@@ -67,11 +58,9 @@ export default domAssigned(class Constructor {
 
   toJSON() {
     const termJSON = termToTermJSON(this.term),
-          provisional = this.provisional,
           term = termJSON,  ///
           json = {
-            term,
-            provisional
+            term
           };
 
     return json;
@@ -91,15 +80,14 @@ export default domAssigned(class Constructor {
           localContext = LocalContext.fromFileContext(fileContext),
           context = localContext, ///
           term = Term.fromConstructorDeclarationNode(constructorDeclarationNode, context),
-          provisional = provisionalFromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
-          string = stringFromTermAndProvisional(term, provisional),
-          constructor = new Constructor(string, term, provisional);
+          string = stringFromTerm(term),
+          constructor = new Constructor(string, term);
 
     return constructor;
   }
 });
 
-function stringFromTermAndProvisional(term, provisional) {
+function stringFromTerm(term) {
   let string;
 
   const type = term.getType(),
@@ -113,24 +101,5 @@ function stringFromTermAndProvisional(term, provisional) {
     string = `${termString}:${typeString}`;
   }
 
-  if (provisional) {
-    string = `${string} ${PROVISIONALLY}`;
-  }
-
   return string;
-}
-
-function provisionalFromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
-  let provisional = false;
-
-  const lastSecondaryKeywordTerminalNode = lastSecondaryKeywordTerminalNodeQuery(constructorDeclarationNode);
-
-  if (lastSecondaryKeywordTerminalNode !== null) {
-    const content = lastSecondaryKeywordTerminalNode.getContent(),
-          contentProvisionally = (content === PROVISIONALLY);
-
-    provisional = contentProvisionally; ///
-  }
-
-  return provisional;
 }

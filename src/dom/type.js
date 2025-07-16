@@ -4,11 +4,11 @@ import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
 
-import { PROVISIONAL } from "../constants";
 import { domAssigned } from "../dom";
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { typeNameFromTypeNode } from "../utilities/name";
 import { nodeQuery, nodesQuery } from "../utilities/query";
+import { PROVISIONAL, PROVISIONALLY } from "../constants";
 import { superTypesStringFromSuperTypes } from "../utilities/type";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
@@ -18,10 +18,11 @@ const typeAssertionTypeNodeQuery = nodeQuery("/typeAssertion/type"),
       typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type"),
       propertyDeclarationNodesQuery = nodesQuery("/complexTypeDeclaration/propertyDeclaration"),
       propertyDeclarationTypeNodeQuery = nodeQuery("/propertyDeclaration/type"),
+      variableDeclarationTypeNodeQuery = nodeQuery("/variableDeclaration/type"),
       typeDeclarationSuperTypeNodesQuery = nodesQuery("/typeDeclaration|complexTypeDeclaration/types/type"),
-      firstPrimaryKeywordTerminalNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/@primary-keyword[0]"),
-      variableDeclarationSuperTypeNodeQuery = nodeQuery("/variableDeclaration/type"),
-      constructorDeclarationSuperTypeNodeQuery = nodeQuery("/constructorDeclaration/type");
+      constructorDeclarationSuperTypeNodeQuery = nodeQuery("/constructorDeclaration/type"),
+      firstTypeDeclarationPrimaryKeywordTerminalNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/@primary-keyword[0]"),
+      lastVariableDeclarationSecondaryKeywordTerminalNodeQuery = nodeQuery("/variableDeclaration/@secondary-keyword[-1]");
 
 class Type {
   constructor(string, name, superTypes, properties, provisional) {
@@ -184,6 +185,20 @@ class Type {
     return typeNameMatches;
   }
 
+  matchProvisional(provisional) {
+    let provisionalMatches;
+
+    const provisionalA = provisional; ///
+
+    provisional = this.isProvisional();
+
+    const provisionalB = provisional; ///
+
+    provisionalMatches = (provisionalA === provisionalB);
+
+    return provisionalMatches;
+  }
+
   toJSON() {
     const propertiesJSON = propertiesToPropertiesJSON(this.properties),
           superTypesJSON = superTypesToSuperTypesJSON(this.superTypes),
@@ -242,20 +257,11 @@ class Type {
   }
 
   static fromTypeDeclarationNode(typeDeclarationNode, fileContext) {
-    const provisional = provisionalFromTypeDeclarationNode(typeDeclarationNode, fileContext),
+    const properties = [],
+          provisional = provisionalFromTypeDeclarationNode(typeDeclarationNode, fileContext),
           superTypes = superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext),
-          basic = basicFromSuperTypes(superTypes);
-
-    let name = nameFromTypeDeclarationNode(typeDeclarationNode, fileContext);
-
-    if (basic) {
-      if (name === OBJECT_TYPE_NAME) {
-        name = null;
-      }
-    }
-
-    const string = stringFromNameAndSuperTypes(name, superTypes),
-          properties = [],
+          name = nameFromTypeDeclarationNode(typeDeclarationNode, fileContext),
+          string = stringFromNameAndSuperTypes(name, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
 
     return type;
@@ -270,9 +276,12 @@ class Type {
   }
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-    const variableDeclarationSuperTypeNode = variableDeclarationSuperTypeNodeQuery(variableDeclarationNode),
-          typeNode = variableDeclarationSuperTypeNode,  ///
-          type = typeFromTypeNode(typeNode, fileContext);
+    const properties = null,
+          superTypes = null,
+          provisional = provisionalFromVariableDeclarationNode(variableDeclarationNode, fileContext),
+          name = nameFromVariableDeclarationNode(variableDeclarationNode, fileContext),
+          string = stringFromName(name),
+          type = new Type(string, name, superTypes, properties, provisional);
 
     return type;
   }
@@ -286,20 +295,11 @@ class Type {
   }
 
   static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
-    const provisional = provisionalFromTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
-          properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+    const properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+          provisional = provisionalFromTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
           superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
-          basic = basicFromSuperTypes(superTypes);
-
-    let name = nameFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext);
-
-    if (basic) {
-      if (name === OBJECT_TYPE_NAME) {
-        name = null;
-      }
-    }
-
-    const string = stringFromNameAndSuperTypes(name, superTypes),
+          name = nameFromComplexTypeDeclaration(complexTypeDeclarationNode, fileContext),
+          string = stringFromNameAndSuperTypes(name, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
 
     return type;
@@ -307,6 +307,14 @@ class Type {
 }
 
 export default domAssigned(Type);
+
+function stringFromName(name) {
+  const string = (name !== null) ?
+                   name :
+                     OBJECT_TYPE_NAME;
+
+  return string;
+}
 
 function typeFromTypeNode(typeNode, fileContext) {
   let type;
@@ -349,12 +357,12 @@ function stringFromNameAndSuperTypes(name, superTypes) {
   let string;
 
   if (name === null) {
-    string = OBJECT_TYPE_NAME;
+    string = OBJECT_TYPE_NAME;  ///
   } else {
     const superTypesString = superTypesStringFromSuperTypes(superTypes);
 
     string = (superTypesString !== null) ?
-                `${name}:${superTypesString}` :
+               `${name}:${superTypesString}` :
                   name; ///
   }
 
@@ -366,6 +374,30 @@ function nameFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
         typeNode = typeDeclarationTypeNode, ///
         typeName = typeNameFromTypeNode(typeNode),
         name = typeName;  ///
+
+  return name;
+}
+
+function nameFromComplexTypeDeclaration(complexTypeDeclarationNode, fileContext) {
+  const typeDeclarationTypeNode = typeDeclarationTypeNodeQuery(complexTypeDeclarationNode),
+        typeNode = typeDeclarationTypeNode, ///
+        typeName = typeNameFromTypeNode(typeNode),
+        name = typeName;  ///
+
+  return name;
+}
+
+function nameFromVariableDeclarationNode(variableDeclarationNode, fileContext) {
+  let name = null;
+
+  const variableDeclarationTypeNode = variableDeclarationTypeNodeQuery(variableDeclarationNode);
+
+  if (variableDeclarationTypeNode !== null) {
+    const typeNode = variableDeclarationTypeNode, ///
+          typeName = typeNameFromTypeNode(typeNode);
+
+    name = typeName;  ///
+  }
 
   return name;
 }
@@ -388,21 +420,27 @@ function superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
 }
 
 function provisionalFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
-  const firstPrimaryKeywordTerminalNode = firstPrimaryKeywordTerminalNodeQuery(typeDeclarationNode),
-        content = firstPrimaryKeywordTerminalNode.getContent(),
+  const firstTypeDeclarationPrimaryKeywordTerminalNode = firstTypeDeclarationPrimaryKeywordTerminalNodeQuery(typeDeclarationNode),
+        content = firstTypeDeclarationPrimaryKeywordTerminalNode.getContent(),
         contentProvisional = (content === PROVISIONAL),
         provisional = contentProvisional; ///
 
   return provisional;
 }
 
-function nameFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
-  const typeDeclarationTypeNode = typeDeclarationTypeNodeQuery(complexTypeDeclarationNode),
-        typeNode = typeDeclarationTypeNode, ///
-        typeName = typeNameFromTypeNode(typeNode),
-        name = typeName;  ///
+function provisionalFromVariableDeclarationNode(variableDeclarationNode, fileContext) {
+  let provisional = false;
 
-  return name;
+  const lastVariableDeclarationSecondaryKeywordTerminalNode = lastVariableDeclarationSecondaryKeywordTerminalNodeQuery(variableDeclarationNode);
+
+  if (lastVariableDeclarationSecondaryKeywordTerminalNode !== null) {
+    const content = lastVariableDeclarationSecondaryKeywordTerminalNode.getContent(),
+          contentProvisional = (content === PROVISIONALLY);
+
+    provisional = contentProvisional; ///
+  }
+
+  return provisional;
 }
 
 function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
@@ -441,24 +479,21 @@ class ObjectType extends Type {
     return properties;
   }
 
-  toJSON() {
-    const name = this.name,
-          superTypes = [],
-          properties = this.properties,
-          provisional = this.provisional,
-          json = {
-            name,
-            superTypes,
-            properties,
-            provisional
-          };
-
-    return json;
-  }
+  // matchName(name) {
+  //   const nameMatches = ((name === null) || (name === OBJECT_TYPE_NAME));
+  //
+  //   return nameMatches;
+  // }
+  //
+  // matchTypeName(typeName) {
+  //   const typeNameMatches = ((typeName === null) || (typeName === OBJECT_TYPE_NAME));
+  //
+  //   return typeNameMatches;
+  // }
 
   static fromNothing() {
-    const name = OBJECT_TYPE_NAME,
-          string = name,  //
+    const name = null,
+          string = OBJECT_TYPE_NAME,  ///
           superTypes = [],
           properties = [],
           provisional = false,

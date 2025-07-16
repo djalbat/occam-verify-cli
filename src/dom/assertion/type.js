@@ -4,7 +4,6 @@ import dom from "../../dom";
 import VariableAssignment from "../../assignment/variable";
 
 import { nodeQuery } from "../../utilities/query";
-import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 
 const variableNodeQuery = nodeQuery("/term/variable!"),
@@ -67,26 +66,22 @@ export default domAssigned(class TypeAssertion {
   verifyType(context) {
     let typeVerified;
 
-    if (this.type === objectType) {
+    const typeString = this.type.getString();
+
+    context.trace(`Verifying the '${typeString}' type...`);
+
+    const type = context.findTypeByTypeName(typeString);
+
+    if (type !== null) {
+      this.type = type;
+
       typeVerified = true;
     } else {
-      const typeString = this.type.getString();
+      context.debug(`The '${typeString}' type is not present.`);
+    }
 
-      context.trace(`Verifying the '${typeString}' type...`);
-
-      const type = context.findTypeByTypeName(typeString);
-
-      if (type !== null) {
-        this.type = type;
-
-        typeVerified = true;
-      } else {
-        context.debug(`The '${typeString}' type is not present.`);
-      }
-
-      if (typeVerified) {
-        context.debug(`...verified the '${typeString}' type.`);
-      }
+    if (typeVerified) {
+      context.debug(`...verified the '${typeString}' type.`);
     }
 
     return typeVerified;
