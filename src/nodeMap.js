@@ -35,8 +35,8 @@ import ProcedureCallNode from "./node/procedureCall"
 import SubDerivationNode from "./node/subDerivation"
 import TypeAssertionNode from "./node/assertion/type";
 import typeDeclarationNode from "./node/declaration/type";
-import DefinedAssertionNode from "./node/assertion/defined";
 import PropertyRelationNode from "./node/propertyRelation"
+import DefinedAssertionNode from "./node/assertion/defined";
 import PropertyAssertionNode from "./node/assertion/property";
 import SubproofAssertionNode from "./node/assertion/subproof";
 import ContainedAssertionNode from "./node/assertion/contained";
