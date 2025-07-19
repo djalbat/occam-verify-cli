@@ -2,7 +2,6 @@
 
 import { arrayUtilities } from "necessary";
 
-import dom from "../dom";
 import LocalContext from "../context/local";
 import verifyMixins from "../mixins/statement/verify";
 import StatementPartialContext from "../context/partial/statement";
@@ -11,6 +10,7 @@ import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
 import { nodeQuery, nodesQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
+import { statementFromStatementNode } from "../utilities/node";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { definedAssertionFromStatement, containedAssertionFromStatement, subproofAssertionFromStatement } from "../utilities/context";
 
@@ -24,8 +24,7 @@ const stepStatementNodeQuery = nodeQuery("/step/statement"),
       conclusionStatementNodeQuery = nodeQuery("/conclusion/statement"),
       suppositionStatementNodeQuery = nodeQuery("/supposition/statement"),
       declarationStatementNodeQuery = nodeQuery("/declaration/statement"),
-      containedAssertionStatementNodeQuery = nodeQuery("/containedAssertion/statement"),
-      combinatorDeclarationStatementNodeQuery = nodeQuery("/combinatorDeclaration/statement");
+      containedAssertionStatementNodeQuery = nodeQuery("/containedAssertion/statement");
 
 export default domAssigned(class Statement {
   constructor(string, node, tokens) {
@@ -391,28 +390,11 @@ export default domAssigned(class Statement {
   }
 
   static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
-    let statement = null;
-
-    const combinatorDeclarationStatementNode = combinatorDeclarationStatementNodeQuery(combinatorDeclarationNode);
-
-    if (combinatorDeclarationStatementNode !== null) {
-      const statementNode = combinatorDeclarationStatementNode, ///
-            localContext = LocalContext.fromFileContext(fileContext),
-            context = localContext;  ///
-
-      statement = statementFromStatementNode(statementNode, context);
-    }
+    const statementNode = combinatorDeclarationNode.getStatementNode(),
+          localContext = LocalContext.fromFileContext(fileContext),
+          context = localContext, ///
+          statement = statementFromStatementNode(statementNode, context);
 
     return statement;
   }
 });
-
-function statementFromStatementNode(statementNode, context) {
-  const { Statement } = dom,
-        node = statementNode, ///
-        tokens = context.nodeAsTokens(node),
-        string = context.tokensAsString(tokens),
-        statement = new Statement(string, node, tokens);
-
-  return statement;
-}

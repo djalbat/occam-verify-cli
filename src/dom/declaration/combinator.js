@@ -52,7 +52,7 @@ export default domAssigned(class CombinatorDeclaration {
 
     const combinatorString = this.combinator.getString();
 
-    this.fileContext.trace(`Verifying the '${combinatorString}' statement...`);
+    this.fileContext.trace(`Verifying the '${combinatorString}' combinator...`);
 
     const statement = this.combinator.getStatement(),
           statementNode = statement.getNode();
@@ -60,7 +60,7 @@ export default domAssigned(class CombinatorDeclaration {
     statementVerified = combinatorVerifier.verifyStatement(statementNode, this.fileContext);
 
     if (statementVerified) {
-      this.fileContext.debug(`...verified the '${combinatorString}' statement.`);
+      this.fileContext.debug(`...verified the '${combinatorString}' combinator.`);
     }
 
     return statementVerified;

@@ -13,8 +13,7 @@ import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, pro
 
 const { push, first } = arrayUtilities;
 
-const typeAssertionTypeNodeQuery = nodeQuery("/typeAssertion/type"),
-      constructorDeclarationSuperTypeNodeQuery = nodeQuery("/constructorDeclaration/type");
+const typeAssertionTypeNodeQuery = nodeQuery("/typeAssertion/type");
 
 class Type {
   constructor(string, name, superTypes, properties, provisional) {
@@ -279,9 +278,19 @@ class Type {
   }
 
   static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
-    const constructorDeclarationSuperTypeNode = constructorDeclarationSuperTypeNodeQuery(constructorDeclarationNode),
-          typeNode = constructorDeclarationSuperTypeNode, ///
-          type = typeFromTypeNode(typeNode, fileContext);
+    let type;
+
+    const typeNode = constructorDeclarationNode.getTypeNode();
+
+    if (typeNode === null) {
+      type = objectType;
+    } else {
+      const provisional = constructorDeclarationNode.isProvisional();
+
+      type = typeFromTypeNode(typeNode, fileContext);
+
+      type.setProvisional(provisional);
+    }
 
     return type;
   }

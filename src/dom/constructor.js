@@ -1,9 +1,8 @@
 "use strict";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 
-import { objectType } from "./type";
+import { objectType } from "../dom/type";
 import { domAssigned } from "../dom";
 import { unifyTermWithConstructor } from "../utilities/unification";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
@@ -23,6 +22,8 @@ export default domAssigned(class Constructor {
   }
 
   getType() { return this.term.getType(); }
+
+  isProvisional() { return this.term.isProvisional(); }
 
   setType(type) { this.term.setType(type); }
 
@@ -67,19 +68,16 @@ export default domAssigned(class Constructor {
   }
 
   static fromJSON(json, fileContext) {
-    const { provisional } = json,
-          term = termFromJSON(json, fileContext),
-          string = stringFromTermAndProvisional(term, provisional),
-          constructor = new Constructor(string, term, provisional);
+    const term = termFromJSON(json, fileContext),
+          string = stringFromTerm(term),
+          constructor = new Constructor(string, term);
 
     return constructor;
   }
 
   static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
     const { Term } = dom,
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
-          term = Term.fromConstructorDeclarationNode(constructorDeclarationNode, context),
+          term = Term.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
           string = stringFromTerm(term),
           constructor = new Constructor(string, term);
 
@@ -90,8 +88,8 @@ export default domAssigned(class Constructor {
 function stringFromTerm(term) {
   let string;
 
-  const type = term.getType(),
-        termString = term.getString();
+  const termString = term.getString(),
+        type = term.getType();
 
   if (type === objectType) {
     string = termString;  ///

@@ -33,6 +33,26 @@ export function typeFromTypeNode(typeNode) {
   return type;
 }
 
+export function termFromTermNode(termNode, context) {
+  const { Term } = dom,
+        node = termNode,  ///
+        string = context.nodeAsString(node),
+        type = null,
+        term = new Term(string, node, type);
+
+  return term;
+}
+
+export function statementFromStatementNode(statementNode, context) {
+  const { Statement } = dom,
+        node = statementNode, ///
+        tokens = context.nodeAsTokens(node),
+        string = context.tokensAsString(tokens),
+        statement = new Statement(string, node, tokens);
+
+  return statement;
+}
+
 function isNodeRuleNode(node, ruleName) {
   let nodeRuleNode = false;
 

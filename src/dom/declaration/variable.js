@@ -30,12 +30,12 @@ export default domAssigned(class VariableDeclaration {
 
     this.fileContext.trace(`Verifying the '${variableDeclarationString}' variable declaration...`);
 
-    const variableVerified = this.verifyVariable();
+    const variableTypeVerified = this.verifyVariableType();
 
-    if (variableVerified) {
-      const variableTypeVerified = this.verifyVariableType();
+    if (variableTypeVerified) {
+      const variableVerified = this.verifyVariable();
 
-      if (variableTypeVerified) {
+      if (variableVerified) {
         this.fileContext.addVariable(this.variable);
 
         verified = true;
@@ -73,7 +73,7 @@ export default domAssigned(class VariableDeclaration {
   }
 
   verifyVariableType() {
-    let typeVerified = false;
+    let variableTypeVerified = false;
 
     let type;
 
@@ -104,15 +104,15 @@ export default domAssigned(class VariableDeclaration {
       } else {
         this.variable.setType(type);
 
-        typeVerified = true;
+        variableTypeVerified = true;
       }
     }
 
-    if (typeVerified) {
+    if (variableTypeVerified) {
       this.fileContext.debug(`...verified the '${variableString}' variable's '${typeString}' type.`);
     }
 
-    return typeVerified;
+    return variableTypeVerified;
   }
 
   static name = "VariableDeclaration";

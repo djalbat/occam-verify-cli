@@ -7,6 +7,7 @@ import LocalContext from "../context/local";
 import verifyMixins from "../mixins/term/verify";
 
 import { domAssigned } from "../dom";
+import { termFromTermNode } from "../utilities/node";
 import { nodeQuery, nodesQuery } from "../utilities/query"
 import { termNodeFromTermString } from "../context/partial/term";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
@@ -19,8 +20,7 @@ const variableNodesQuery = nodesQuery("//variable"),
       definedAssertionTermNodeQuery = nodeQuery("/definedAssertion/term"),
       propertyRelationTermNodeQuery = nodeQuery("/propertyRelation/term"),
       propertyAssertionTermNodeQuery = nodeQuery("/propertyAssertion/term"),
-      containedAssertionTermNodeQuery = nodeQuery("/containedAssertion/term"),
-      constructorDeclarationTermNodeQuery = nodeQuery("/constructorDeclaration/term");
+      containedAssertionTermNodeQuery = nodeQuery("/containedAssertion/term");
 
 export default domAssigned(class Term {
   constructor(string, node, type) {
@@ -78,6 +78,8 @@ export default domAssigned(class Term {
 
     return termNodeMatches;
   }
+
+  isProvisional() { return this.type.isProvisional(); }
 
   isEqualTo(term) {
     const termString = term.getString(),
@@ -282,10 +284,11 @@ export default domAssigned(class Term {
     return term;
   }
 
-  static fromConstructorDeclarationNode(constructorDeclarationNode, context) {
+  static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
     const { Type } = dom,
-          constructorDeclarationTermNode = constructorDeclarationTermNodeQuery(constructorDeclarationNode),
-          termNode = constructorDeclarationTermNode,  ///
+          termNode = constructorDeclarationNode.getTermNode(),
+          localContext = LocalContext.fromFileContext(fileContext),
+          context = localContext, ///
           term = termFromTermNode(termNode, context),
           type = Type.fromConstructorDeclarationNode(constructorDeclarationNode, context);
 
@@ -295,12 +298,3 @@ export default domAssigned(class Term {
   }
 });
 
-function termFromTermNode(termNode, context) {
-  const { Term } = dom,
-        node = termNode,  ///
-        string = context.nodeAsString(node),
-        type = null,
-        term = new Term(string, node, type);
-
-  return term;
-}

@@ -54,6 +54,42 @@ function fromThirdChildNode(callback) {
   return result;
 }
 
+function fromFourthChildNode(callback) {
+  let result;
+
+  const fourthIndex = 3;
+
+  this.forwardsSomeChildNode((childNode, index) => {
+    if (index === fourthIndex) {
+      const fourthChildNode = childNode; ///
+
+      result = callback(fourthChildNode);
+
+      return true;
+    }
+  });
+
+  return result;
+}
+
+function fromFifthChildNode(callback) {
+  let result;
+
+  const fifthIndex = 4;
+
+  this.forwardsSomeChildNode((childNode, index) => {
+    if (index === fifthIndex) {
+      const fifthChildNode = childNode; ///
+
+      result = callback(fifthChildNode);
+
+      return true;
+    }
+  });
+
+  return result;
+}
+
 function fromFirstLastChildNode(callback) {
   let result;
 
@@ -62,9 +98,9 @@ function fromFirstLastChildNode(callback) {
 
   this.backwardsSomeChildNode((childNode, index) => {
     if (index === firstLastIndex) {
-      const thirdChildNode = childNode; ///
+      const firstLastChildNode = childNode; ///
 
-      result = callback(thirdChildNode);
+      result = callback(firstLastChildNode);
 
       return true;
     }
@@ -81,9 +117,9 @@ function fromSecondLastChildNode(callback) {
 
   this.backwardsSomeChildNode((childNode, index) => {
     if (index === secondLastIndex) {
-      const thirdChildNode = childNode; ///
+      const secondLastChildNode = childNode; ///
 
-      result = callback(thirdChildNode);
+      result = callback(secondLastChildNode);
 
       return true;
     }
@@ -96,13 +132,51 @@ function fromThirdLastChildNode(callback) {
   let result;
 
   const multiplicity = this.getMultiplicity(),
-        thirdLastIndex = multiplicity - 2;
+        thirdLastIndex = multiplicity - 3;
 
   this.backwardsSomeChildNode((childNode, index) => {
     if (index === thirdLastIndex) {
-      const thirdChildNode = childNode; ///
+      const thirdLastChildNode = childNode; ///
 
-      result = callback(thirdChildNode);
+      result = callback(thirdLastChildNode);
+
+      return true;
+    }
+  });
+
+  return result;
+}
+
+function fromFourthLastChildNode(callback) {
+  let result;
+
+  const multiplicity = this.getMultiplicity(),
+        fourthLastIndex = multiplicity - 4;
+
+  this.backwardsSomeChildNode((childNode, index) => {
+    if (index === fourthLastIndex) {
+      const fourthLastChildNode = childNode; ///
+
+      result = callback(fourthLastChildNode);
+
+      return true;
+    }
+  });
+
+  return result;
+}
+
+function fromFifthLastChildNode(callback) {
+  let result;
+
+  const multiplicity = this.getMultiplicity(),
+        fifthLastIndex = multiplicity - 5;
+
+  this.backwardsSomeChildNode((childNode, index) => {
+    if (index === fifthLastIndex) {
+      const fifthLastChildNode = childNode; ///
+
+      result = callback(fifthLastChildNode);
 
       return true;
     }
@@ -115,9 +189,13 @@ const nodeMixins = {
   fromFirstChildNode,
   fromSecondChildNode,
   fromThirdChildNode,
+  fromFourthChildNode,
+  fromFifthChildNode,
   fromFirstLastChildNode,
   fromSecondLastChildNode,
-  fromThirdLastChildNode
+  fromThirdLastChildNode,
+  fromFourthLastChildNode,
+  fromFifthLastChildNode
 };
 
 export default nodeMixins;
