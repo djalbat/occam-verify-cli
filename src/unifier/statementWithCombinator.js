@@ -4,7 +4,6 @@ import dom from "../dom";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
-import { typeNameFromTypeNode } from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type"),
@@ -87,7 +86,7 @@ class StatementWithCombinatorUnifier extends Unifier {
         const { Term } = dom,
               typeNode = generalTypeNode, ///
               termNode = specificTermNode, ///
-              typeName = typeNameFromTypeNode(typeNode);
+              typeName = typeNode.getTypeName();
 
         let context;
 

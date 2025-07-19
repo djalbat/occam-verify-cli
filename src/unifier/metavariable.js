@@ -4,7 +4,6 @@ import dom from "../dom";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
-import { typeNameFromTypeNode } from "../utilities/name";
 
 const typeNodeQuery = nodeQuery("/type"),
       termNodeQuery = nodeQuery("/term");
@@ -32,7 +31,7 @@ class MetavariableUnifier extends Unifier {
         const { Term } = dom,
               typeNode = generalTypeNode, ///
               termNode = specificTermNode, ///
-              typeName = typeNameFromTypeNode(typeNode),
+              typeName = typeNode.getTypeName(),
               type = generalContext.findTypeByTypeName(typeName),
               context = specificContext, ///
               term = Term.fromTermNode(termNode, context),

@@ -6,9 +6,8 @@ import dom from "../dom";
 
 import { domAssigned } from "../dom";
 import { OBJECT_TYPE_NAME } from "../typeNames";
-import { typeNameFromTypeNode } from "../utilities/name";
+import { typeFromTypeNode } from "../utilities/node";
 import { nodeQuery, nodesQuery } from "../utilities/query";
-import { PROVISIONAL, PROVISIONALLY } from "../constants";
 import { superTypesStringFromSuperTypes } from "../utilities/type";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
@@ -18,11 +17,8 @@ const typeAssertionTypeNodeQuery = nodeQuery("/typeAssertion/type"),
       typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type"),
       propertyDeclarationNodesQuery = nodesQuery("/complexTypeDeclaration/propertyDeclaration"),
       propertyDeclarationTypeNodeQuery = nodeQuery("/propertyDeclaration/type"),
-      variableDeclarationTypeNodeQuery = nodeQuery("/variableDeclaration/type"),
       typeDeclarationSuperTypeNodesQuery = nodesQuery("/typeDeclaration|complexTypeDeclaration/types/type"),
-      constructorDeclarationSuperTypeNodeQuery = nodeQuery("/constructorDeclaration/type"),
-      firstTypeDeclarationPrimaryKeywordTerminalNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/@primary-keyword[0]"),
-      lastVariableDeclarationSecondaryKeywordTerminalNodeQuery = nodeQuery("/variableDeclaration/@secondary-keyword[-1]");
+      constructorDeclarationSuperTypeNodeQuery = nodeQuery("/constructorDeclaration/type");
 
 class Type {
   constructor(string, name, superTypes, properties, provisional) {
@@ -287,17 +283,6 @@ class Type {
     return type;
   }
 
-  static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-    const properties = null,
-          superTypes = null,
-          provisional = variableDeclarationNode.isProvisional(),
-          name = nameFromVariableDeclarationNode(variableDeclarationNode, fileContext),
-          string = stringFromName(name),
-          type = new Type(string, name, superTypes, properties, provisional);
-
-    return type;
-  }
-
   static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
     const constructorDeclarationSuperTypeNode = constructorDeclarationSuperTypeNodeQuery(constructorDeclarationNode),
           typeNode = constructorDeclarationSuperTypeNode, ///
@@ -320,33 +305,6 @@ class Type {
 
 export default domAssigned(Type);
 
-function stringFromName(name) {
-  const string = (name !== null) ?
-                   name :
-                     OBJECT_TYPE_NAME;
-
-  return string;
-}
-
-function typeFromTypeNode(typeNode, fileContext) {
-  let type;
-
-  if (typeNode === null) {
-    type = objectType;
-  } else {
-    const { Type } = dom,
-          name = typeNode.getName(),
-          string = name,  ///
-          superTypes = null,
-          properties = null,
-          provisional = null;
-
-    type = new Type(string, name, superTypes, properties, provisional);
-  }
-
-  return type;
-}
-
 function stringFromNameAndSuperTypes(name, superTypes) {
   let string;
 
@@ -366,23 +324,8 @@ function stringFromNameAndSuperTypes(name, superTypes) {
 function nameFromComplexTypeDeclaration(complexTypeDeclarationNode, fileContext) {
   const typeDeclarationTypeNode = typeDeclarationTypeNodeQuery(complexTypeDeclarationNode),
         typeNode = typeDeclarationTypeNode, ///
-        typeName = typeNameFromTypeNode(typeNode),
+        typeName = typeNode.getTypeName(),
         name = typeName;  ///
-
-  return name;
-}
-
-function nameFromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-  let name = null;
-
-  const variableDeclarationTypeNode = variableDeclarationTypeNodeQuery(variableDeclarationNode);
-
-  if (variableDeclarationTypeNode !== null) {
-    const typeNode = variableDeclarationTypeNode, ///
-          typeName = typeNameFromTypeNode(typeNode);
-
-    name = typeName;  ///
-  }
 
   return name;
 }

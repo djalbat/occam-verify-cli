@@ -14,7 +14,6 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
 import { metavariableFromFrame, metavariableFromStatement } from "../utilities/context";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../utilities/unification";
-import { typeNameFromTypeNode, metavariableNameFromMetavariableNode } from "../utilities/name";
 
 const frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
       labelMetavariableNodeQuery = nodeQuery("/label/metavariable"),
@@ -458,7 +457,7 @@ export default domAssigned(class Metavariable {
           metavariablePartialContext = MetavariablePartialContext.fromStringLexerAndParser(string, lexer, parser),
           metavariableTokens = metavariablePartialContext.getMetavariableTokens(),
           metavariableNode = metavariablePartialContext.getMetavariableNode(),
-          metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+          metavariableName = metavariableNode.getMetavariableName(),
           name = metavariableName,  ///
           node = metavariableNode,  ///
           tokens = metavariableTokens, ///
@@ -543,7 +542,7 @@ export default domAssigned(class Metavariable {
 
 function metavariableFromMetavariableNode(metavariableNode, context) {
   const { Metavariable } = dom,
-        metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+        metavariableName = metavariableNode.getMetavariableName(),
         type = null,
         name = metavariableName,  ///
         node = metavariableNode,  ///
@@ -562,7 +561,7 @@ function typeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileCo
 
   if (metavariableDeclarationMetavariableTypeNode !== null) {
     const typeNode = metavariableDeclarationMetavariableTypeNode, ///
-          typeName = typeNameFromTypeNode(typeNode);
+          typeName = typeNode.getTypeName();
 
     type = fileContext.findTypeByTypeName(typeName);
   }

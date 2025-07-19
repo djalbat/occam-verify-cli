@@ -16,6 +16,7 @@ import SubproofNode from "./node/subproof"
 import PropertyNode from "./node/property"
 import MetaTypeNode from "./node/metaType"
 import EqualityNode from "./node/equality"
+import VariableNode from "./node/variable"
 import StatementNode from "./node/statement"
 import ReferenceNode from "./node/reference"
 import DeductionNode from "./node/deduction"
@@ -62,6 +63,7 @@ import { RULE_RULE_NAME,
          SUBPROOF_RULE_NAME,
          PROPERTY_RULE_NAME,
          EQUALITY_RULE_NAME,
+         VARIABLE_RULE_NAME,
          META_TYPE_RULE_NAME,
          DEDUCTION_RULE_NAME,
          JUDGEMENT_RULE_NAME,
@@ -108,8 +110,9 @@ const ruleMap = {
   [THEOREM_RULE_NAME]: TheoremNode,
   [PREMISE_RULE_NAME]: PremiseNode,
   [PROPERTY_RULE_NAME]: PropertyNode,
-  [EQUALITY_RULE_NAME]: EqualityNode,
   [SUBPROOF_RULE_NAME]: SubproofNode,
+  [EQUALITY_RULE_NAME]: EqualityNode,
+  [VARIABLE_RULE_NAME]: VariableNode,
   [REFERENCE_RULE_NAME]: ReferenceNode,
   [JUDGEMENT_RULE_NAME]: JudgementNode,
   [META_TYPE_RULE_NAME]: MetaTypeNode,

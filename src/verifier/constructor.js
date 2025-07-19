@@ -8,7 +8,6 @@ import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
 import { TYPE_TYPE } from "../constants";
-import { typeNameFromTypeNode } from "../utilities/name";
 
 const { last } = arrayUtilities;
 
@@ -74,7 +73,7 @@ class ConstructorVerifier extends Verifier {
       verify: (typeNode, fileContext, verifyAhead) => {
         let typeVerified;
 
-        const typeName = typeNameFromTypeNode(typeNode),
+        const typeName = typeNode.getTypeName(),
               typePresent = fileContext.isTypePresentByTypeName(typeName);
 
         if (typePresent) {

@@ -5,7 +5,6 @@ import Verifier from "../verifier";
 import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
-import { typeNameFromTypeNode } from "../utilities/name";
 
 const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type"),
@@ -60,7 +59,7 @@ class CombinatorVerifier extends Verifier {
       verify: (typeNode, fileContext) => {
         let typeVerified = false;
 
-        const typeName = typeNameFromTypeNode(typeNode),
+        const typeName = typeNode.getTypeName(),
               typePresent = fileContext.isTypePresentByTypeName(typeName);
 
         if (typePresent) {

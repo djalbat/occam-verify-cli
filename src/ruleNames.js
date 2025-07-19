@@ -14,6 +14,7 @@ export const THEOREM_RULE_NAME = "theorem";
 export const PREMISE_RULE_NAME = "premise";
 export const PROPERTY_RULE_NAME = "property";
 export const EQUALITY_RULE_NAME = "equality";
+export const VARIABLE_RULE_NAME = "variable";
 export const SUBPROOF_RULE_NAME = "subproof";
 export const META_TYPE_RULE_NAME = "metaType";
 export const PARAMETER_RULE_NAME = "parameter";

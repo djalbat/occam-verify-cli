@@ -4,7 +4,6 @@ import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
-import { metaTypeNameFromMetaTypeNode } from "../utilities/name";
 import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
 const metavariableDeclarationMetaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType");
@@ -73,7 +72,7 @@ class MetaType {
 }
 
 function metaTypeFromMetaTypeNode(metaTypeNode, context) {
-  const metaTypeName = metaTypeNameFromMetaTypeNode(metaTypeNode),
+  const metaTypeName = metaTypeNode.getMetaTypeName(),
         metaType = metaTypeFromMetaTypeName(metaTypeName);
 
   return metaType;

@@ -3,9 +3,27 @@
 import Node from "../../node";
 
 import { PROVISIONAL } from "../../constants";
-import { TYPE_RULE_NAME } from "../../ruleNames";
+import { isNodeTypeNode } from "../../utilities/node";
 
 export default class TypeDeclarationNode extends Node {
+  getTypeName() {
+    let typeName;
+
+    this.someChildNode((childNode) => {
+      const childNodeTypeNode = isNodeTypeNode(childNode);
+
+      if (childNodeTypeNode) {
+        const typeNode = childNode;  ///
+
+        typeName = typeNode.getTypeName();
+
+        return true;
+      }
+    });
+
+    return typeName;
+  }
+
   isProvisional() {
     const provisional = this.fromFirstChildNode((firstChildNode) => {
       const terminalNode = firstChildNode,  ///
@@ -17,24 +35,6 @@ export default class TypeDeclarationNode extends Node {
     });
 
     return provisional;
-  }
-
-  getTypeName() {
-    let typeName;
-
-    this.someChildNode((childNode) => {
-      const childNodeTypeNode = isNodeTypeNode(childNode);
-
-      if (childNodeTypeNode) {
-        const typeNode = childNode;  ///
-
-        typeName = typeNode.getName();
-
-        return true;
-      }
-    });
-
-    return typeName;
   }
 
   getSuperTypeNodes() {
@@ -60,20 +60,3 @@ export default class TypeDeclarationNode extends Node {
   static fromRuleNameChildNodesAndOpacity(ruleName, childNodes, opacity) { return Node.fromRuleNameChildNodesAndOpacity(TypeDeclarationNode, ruleName, childNodes, opacity); }
 }
 
-function isNodeTypeNode(node) {
-  let nodeTypeNode = false;
-
-  const nodeNonTerminalNode = node.isNonTerminalNode();
-
-  if (nodeNonTerminalNode) {
-    const nonTerminalNode = node, ///
-          ruleName = nonTerminalNode.getRuleName(),
-          ruleNameTypeRuleName = (ruleName === TYPE_RULE_NAME);
-
-    if (ruleNameTypeRuleName) {
-      nodeTypeNode = true;
-    }
-  }
-
-  return nodeTypeNode;
-}

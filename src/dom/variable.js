@@ -8,12 +8,11 @@ import { nodeQuery } from "../utilities/query";
 import { ObjectType } from "./type";
 import { domAssigned } from "../dom";
 import { EMPTY_STRING } from "../constants";
+import { typeFromTypeNode } from "../utilities/node";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
-import { variableNameFromVariableNode } from "../utilities/name";
 import { variableNodeFromVariableString } from "../context/partial/variable";
 
-const termVariableNodeQuery = nodeQuery("/term/variable!"),
-      variableDeclarationVariableNodeQuery = nodeQuery("/variableDeclaration/variable");
+const termVariableNodeQuery = nodeQuery("/term/variable!");
 
 export default domAssigned(class Variable {
   constructor(string, node, name, type, propertyRelations) {
@@ -197,7 +196,7 @@ export default domAssigned(class Variable {
           context = localContext, ///
           variableString = string,  ///
           variableNode = variableNodeFromVariableString(variableString, context),
-          variableName = variableNameFromVariableNode(variableNode),
+          variableName = variableNode.getVariableName(),
           node = variableNode,
           name = variableName,  ///
           type = typeFromJSON(json, fileContext),
@@ -245,13 +244,18 @@ export default domAssigned(class Variable {
   }
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
-    const { Type } = dom,
-          variableDeclarationVariableNode = variableDeclarationVariableNodeQuery(variableDeclarationNode),
-          variableNode = variableDeclarationVariableNode, ///
+    const { Variable } = dom,
           localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
-          type = Type.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
-          variable = variableFromVariableNodeAndType(variableNode, type, context);
+          context = localContext,
+          typeNode = variableDeclarationNode.getTypeNode(),
+          variableNode = variableDeclarationNode.getVariableNode(),
+          variableName = variableDeclarationNode.getVariableName(),
+          type = typeFromTypeNode(typeNode),
+          node = variableNode,  ///
+          name = variableName,  ///
+          string = context.nodeAsString(node),
+          propertyRelations = [],
+          variable = new Variable(string, node, name, type, propertyRelations);
 
     return variable;
   }
@@ -281,7 +285,7 @@ export default domAssigned(class Variable {
 function variableFromVariableNodeAndType(variableNode, type, context) {
   const { Variable } = dom,
         node = variableNode,  ///
-        variableName = variableNameFromVariableNode(variableNode),
+        variableName = variableNode.getVariableName(),
         string = context.nodeAsString(node),
         name = variableName,  ///
         propertyRelations = [],
