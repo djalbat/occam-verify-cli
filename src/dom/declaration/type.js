@@ -73,6 +73,25 @@ export default domAssigned(class TypeDeclaration {
     return typeVerified;
   }
 
+  verifySuperType(superType) {
+    let superTypeVerified;
+
+    const superTypeString = superType.getString();
+
+    this.fileContext.trace(`Verifying the '${superTypeString}' super-type...`);
+
+    const superTypeName = superType.getName(),
+          superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
+
+    superTypeVerified = superTypePresent; ///
+
+    if (superTypeVerified) {
+      this.fileContext.debug(`...verified the '${superTypeString}' super-type.`);
+    }
+
+    return superTypeVerified;
+  }
+
   verifySuperTypes() {
     let superTypesVerified;
 
@@ -83,13 +102,11 @@ export default domAssigned(class TypeDeclaration {
     } else {
       let superTypes;
 
-      const typeString = this.type.getString();
-
       superTypes = this.type.getSuperTypes();
 
       const superTypesString = superTypesStringFromSuperTypes(superTypes);
 
-      this.fileContext.trace(`Verifying the '${typeString}' type's ${superTypesString} super-types...`);
+      this.fileContext.trace(`Verifying the ${superTypesString} super-types...`);
 
       superTypesVerified = superTypes.every((superType) => {
         const superTypeVerified = this.verifySuperType(superType);
@@ -110,31 +127,11 @@ export default domAssigned(class TypeDeclaration {
 
         this.type.setSuperTypes(superTypes);
 
-        this.fileContext.debug(`...verified the '${typeString}' type's ${superTypesString} super-types.`);
+        this.fileContext.debug(`...verified the ${superTypesString} super-types.`);
       }
     }
 
     return superTypesVerified;
-  }
-
-  verifySuperType(superType) {
-    let superTypeVerified;
-
-    const typeString = this.type.getString(),
-          superTypeString = superType.getString();
-
-    this.fileContext.trace(`Verifying the '${typeString}' type's '${superTypeString}' super-type...`);
-
-    const superTypeName = superType.getName(),
-          superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
-
-    superTypeVerified = superTypePresent; ///
-
-    if (superTypeVerified) {
-      this.fileContext.debug(`...verified the '${typeString}' type's '${superTypeString}' super-type.`);
-    }
-
-    return superTypeVerified;
   }
 
   static name = "TypeDeclaration";
