@@ -42,6 +42,7 @@ import PropertyAssertionNode from "./node/assertion/property";
 import SubproofAssertionNode from "./node/assertion/subproof";
 import ContainedAssertionNode from "./node/assertion/contained";
 import SatisfiesAssertionNode from "./node/assertion/satisfies";
+import PropertyDeclarationNode from "./node/declaration/property";
 import variableDeclarationNode from "./node/declaration/variable";
 import combinatorDeclarationNode from "./node/declaration/combinator";
 import complexTypeDeclarationNode from "./node/declaration/complexType";
@@ -90,6 +91,7 @@ import { RULE_RULE_NAME,
          PROPERTY_ASSERTION_RULE_NAME,
          CONTAINED_ASSERTION_RULE_NAME,
          SATISFIES_ASSERTION_RULE_NAME,
+         PROPERTY_DECLARATION_RULE_NAME,
          VARIABLE_DECLARATION_RULE_NAME,
          COMBINATOR_DECLARATION_RULE_NAME,
          CONSTRUCTOR_DECLARATION_RULE_NAME,
@@ -140,6 +142,7 @@ const ruleMap = {
   [SATISFIES_ASSERTION_RULE_NAME]: SatisfiesAssertionNode,
   [CONTAINED_ASSERTION_RULE_NAME]: ContainedAssertionNode,
   [VARIABLE_DECLARATION_RULE_NAME]: variableDeclarationNode,
+  [PROPERTY_DECLARATION_RULE_NAME]: PropertyDeclarationNode,
   [COMBINATOR_DECLARATION_RULE_NAME]: combinatorDeclarationNode,
   [CONSTRUCTOR_DECLARATION_RULE_NAME]: constructorDeclarationNode,
   [COMPLEX_TYPE_DECLARATION_RULE_NAME]: complexTypeDeclarationNode,

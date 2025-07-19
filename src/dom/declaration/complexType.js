@@ -93,6 +93,32 @@ export default domAssigned(class ComplexTypeDeclaration {
     return typeVerified;
   }
 
+  verifySuperType(superType) {
+    let superTypesVerified;
+
+    const typeBasic = this.type.isBasic();
+
+    if (typeBasic) {
+      superTypesVerified = true;
+    } else {
+      const typeString = this.type.getString(),
+        superTypeString = superType.getString();
+
+      this.fileContext.trace(`Verifying the '${typeString}' type's '${superTypeString}' super-type...`);
+
+      const superTypeName = superType.getName(),
+        superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
+
+      superTypesVerified = superTypePresent; ///
+
+      if (superTypesVerified) {
+        this.fileContext.debug(`...verified the '${typeString}' type's '${superTypeString}' super-type.`);
+      }
+    }
+
+    return superTypesVerified;
+  }
+
   verifySuperTypes() {
     let superTypesVerified;
 
@@ -117,32 +143,6 @@ export default domAssigned(class ComplexTypeDeclaration {
 
       if (superTypesVerified) {
         this.fileContext.debug(`...verified the '${typeString}' type's ${superTypesString} super-types.`);
-      }
-    }
-
-    return superTypesVerified;
-  }
-
-  verifySuperTypes(superType) {
-    let superTypesVerified;
-
-    const typeBasic = this.type.isBasic();
-
-    if (typeBasic) {
-      superTypesVerified = true;
-    } else {
-      const typeString = this.type.getString(),
-            superTypeString = superType.getString();
-
-      this.fileContext.trace(`Verifying the '${typeString}' type's '${superTypeString}' super-type...`);
-
-      const superTypeName = superType.getName(),
-            superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
-
-      superTypesVerified = superTypePresent; ///
-
-      if (superTypesVerified) {
-        this.fileContext.debug(`...verified the '${typeString}' type's '${superTypeString}' super-type.`);
       }
     }
 

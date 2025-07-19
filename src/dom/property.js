@@ -12,8 +12,7 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 const { match } = arrayUtilities;
 
 const nameTerminalNodesQuery = nodesQuery("/property/@name"),
-      propertyRelationPropertyNodeQuery = nodeQuery("/propertyRelation/property"),
-      propertyDeclarationPropertyNodeQuery = nodeQuery("/propertyDeclaration/property");
+      propertyRelationPropertyNodeQuery = nodeQuery("/propertyRelation/property");
 
 export default domAssigned(class Property {
   constructor(string, names, type) {
@@ -88,11 +87,10 @@ export default domAssigned(class Property {
   static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
     const { Type } = dom,
           type = Type.fromPropertyDeclarationNode(propertyDeclarationNode),
-          propertyDeclarationPropertyNode = propertyDeclarationPropertyNodeQuery(propertyDeclarationNode),
-          propertyNode = propertyDeclarationPropertyNode,  ///
-          property = propertyFromPropertyNode(propertyNode, fileContext);
-
-    property.setType(type);
+          propertyNames = propertyDeclarationNode.getPropertyNames(),
+          names = propertyNames,  ///
+          string = stringFromNamesAndType(names, type),
+          property = new Property(string, names, type);
 
     return property;
   }

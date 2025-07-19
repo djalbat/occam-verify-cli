@@ -4,20 +4,16 @@ import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
 
+import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { typeFromTypeNode } from "../utilities/node";
-import { nodeQuery, nodesQuery } from "../utilities/query";
 import { superTypesStringFromSuperTypes } from "../utilities/type";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
 const { push, first } = arrayUtilities;
 
 const typeAssertionTypeNodeQuery = nodeQuery("/typeAssertion/type"),
-      typeDeclarationTypeNodeQuery = nodeQuery("/typeDeclaration|complexTypeDeclaration/type"),
-      propertyDeclarationNodesQuery = nodesQuery("/complexTypeDeclaration/propertyDeclaration"),
-      propertyDeclarationTypeNodeQuery = nodeQuery("/propertyDeclaration/type"),
-      typeDeclarationSuperTypeNodesQuery = nodesQuery("/typeDeclaration|complexTypeDeclaration/types/type"),
       constructorDeclarationSuperTypeNodeQuery = nodeQuery("/constructorDeclaration/type");
 
 class Type {
@@ -276,8 +272,7 @@ class Type {
   }
 
   static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
-    const propertyDeclarationTypeNode = propertyDeclarationTypeNodeQuery(propertyDeclarationNode),
-          typeNode = propertyDeclarationTypeNode, ///
+    const typeNode = propertyDeclarationNode.getTypeNode(),
           type = typeFromTypeNode(typeNode, fileContext);
 
     return type;
@@ -294,8 +289,9 @@ class Type {
   static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
     const properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
           provisional = complexTypeDeclarationNode.isProvisional(),
+          typeName = complexTypeDeclarationNode.getTypeName(),
+          name = typeName,
           superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
-          name = nameFromComplexTypeDeclaration(complexTypeDeclarationNode, fileContext),
           string = stringFromNameAndSuperTypes(name, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
 
@@ -321,15 +317,6 @@ function stringFromNameAndSuperTypes(name, superTypes) {
   return string;
 }
 
-function nameFromComplexTypeDeclaration(complexTypeDeclarationNode, fileContext) {
-  const typeDeclarationTypeNode = typeDeclarationTypeNodeQuery(complexTypeDeclarationNode),
-        typeNode = typeDeclarationTypeNode, ///
-        typeName = typeNode.getTypeName(),
-        name = typeName;  ///
-
-  return name;
-}
-
 function superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
   const superTypeNodes = typeDeclarationNode.getSuperTypeNodes(),
         superTypes = superTypeNodes.map((superTypeNode) => {
@@ -347,10 +334,9 @@ function superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
 }
 
 function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
-  const typeDeclarationSuperTypeNodes = typeDeclarationSuperTypeNodesQuery(complexTypeDeclarationNode),
-        superTypes = typeDeclarationSuperTypeNodes.map((typeDeclarationSuperTypeNode) => {
-          const superTypeNode = typeDeclarationSuperTypeNode, ///
-                superType = Type.fromTypeNode(superTypeNode, fileContext);
+  const superTypeNodes = complexTypeDeclarationNode.getSuperTypeNodes(),
+        superTypes = superTypeNodes.map((superTypeNode) => {
+          const superType = Type.fromTypeNode(superTypeNode, fileContext);
 
           return superType;
         }),
@@ -364,10 +350,10 @@ function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fi
 }
 
 function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
-  const propertyDeclarationNodes = propertyDeclarationNodesQuery(complexTypeDeclarationNode),
+  const { Property } = dom,
+        propertyDeclarationNodes = complexTypeDeclarationNode.getPropertyDeclarationNodes(),
         properties = propertyDeclarationNodes.map((propertyDeclarationNode) => {
-          const { Property } = dom,
-                property = Property.fromPropertyDeclarationNode(propertyDeclarationNode, fileContext);
+          const property = Property.fromPropertyDeclarationNode(propertyDeclarationNode, fileContext);
 
           return property;
         });
