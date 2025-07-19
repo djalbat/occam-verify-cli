@@ -37,20 +37,6 @@ export default domAssigned(class TypeDeclaration {
       const superTypesVerified = this.verifySuperTypes();
 
       if (superTypesVerified) {
-        let superTypes;
-
-        superTypes = this.type.getSuperTypes();
-
-        superTypes = superTypes.map((superType) => {
-          const superTypeName = superType.getName();
-
-          superType = this.fileContext.findTypeByTypeName(superTypeName);
-
-          return superType;
-        });
-
-        this.type.setSuperTypes(superTypes);
-
         this.fileContext.addType(this.type);
 
         verified = true;
@@ -95,9 +81,13 @@ export default domAssigned(class TypeDeclaration {
     if (typeBasic) {
       superTypesVerified = true;
     } else {
-      const typeString = this.type.getString(),
-            superTypes = this.type.getSuperTypes(),
-            superTypesString = superTypesStringFromSuperTypes(superTypes);
+      let superTypes;
+
+      const typeString = this.type.getString();
+
+      superTypes = this.type.getSuperTypes();
+
+      const superTypesString = superTypesStringFromSuperTypes(superTypes);
 
       this.fileContext.trace(`Verifying the '${typeString}' type's ${superTypesString} super-types...`);
 
@@ -110,6 +100,16 @@ export default domAssigned(class TypeDeclaration {
       });
 
       if (superTypesVerified) {
+        superTypes = superTypes.map((superType) => {
+          const superTypeName = superType.getName();
+
+          superType = this.fileContext.findTypeByTypeName(superTypeName);
+
+          return superType;
+        });
+
+        this.type.setSuperTypes(superTypes);
+
         this.fileContext.debug(`...verified the '${typeString}' type's ${superTypesString} super-types.`);
       }
     }

@@ -2,6 +2,7 @@
 
 import Node from "../../node";
 
+import { PROVISIONALLY } from "../../constants";
 import { isNodeTypeNode, isNodeVariableNode } from "../../utilities/node";
 
 export default class VariableDeclarationNode extends Node {
@@ -19,6 +20,28 @@ export default class VariableDeclarationNode extends Node {
     });
 
     return typeNode;
+  }
+
+  isProvisional() {
+    const provisional = this.fromSecondLastChildNode((secondLastChildNode) => {
+      let provisional = false;
+
+      const secondLastChildNodeTerminalNode = secondLastChildNode.isTerminalNode();
+
+      if (secondLastChildNodeTerminalNode) {
+        const terminalNode = secondLastChildNode, ///
+              content = terminalNode.getContent(),
+              contentProvisionally = (content === PROVISIONALLY);
+
+        if (contentProvisionally) {
+          provisional = true;
+        }
+      }
+
+      return provisional;
+    });
+
+    return provisional;
   }
 
   getVariableNode() {

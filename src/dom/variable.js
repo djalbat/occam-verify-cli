@@ -247,10 +247,14 @@ export default domAssigned(class Variable {
     const { Variable } = dom,
           localContext = LocalContext.fromFileContext(fileContext),
           context = localContext,
+          provisional = variableDeclarationNode.isProvisional(),
           typeNode = variableDeclarationNode.getTypeNode(),
-          variableNode = variableDeclarationNode.getVariableNode(),
+          type = typeFromTypeNode(typeNode);
+
+    type.setProvisional(provisional);
+
+    const variableNode = variableDeclarationNode.getVariableNode(),
           variableName = variableDeclarationNode.getVariableName(),
-          type = typeFromTypeNode(typeNode),
           node = variableNode,  ///
           name = variableName,  ///
           string = context.nodeAsString(node),

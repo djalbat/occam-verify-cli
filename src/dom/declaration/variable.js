@@ -36,33 +36,9 @@ export default domAssigned(class VariableDeclaration {
       const variableTypeVerified = this.verifyVariableType();
 
       if (variableTypeVerified) {
-        let type;
+        this.fileContext.addVariable(this.variable);
 
-        type = this.variable.getType();
-
-        const typeName = type.getName();
-
-        type = this.fileContext.findTypeByTypeName(typeName);
-
-        const typeProvisional = type.isProvisional(),
-              variableProvisional = this.variable.isProvisional();
-
-        if (typeProvisional !== variableProvisional) {
-          const typeString = type.getString(),
-                variableString = this.variable.getString();
-
-          if (typeProvisional) {
-            this.fileContext.debug(`The '${typeString}' type is provisional whilst the '${variableString}' variable's type is not.`);
-          }
-
-          if (variableProvisional) {
-            this.fileContext.debug(`The '${typeString}' type is not provisional whilst the '${variableString}' variable's type is.`);
-          }
-        } else {
-          this.fileContext.addVariable(this.variable);
-
-          verified = true;
-        }
+        verified = true;
       }
     }
 
@@ -71,6 +47,29 @@ export default domAssigned(class VariableDeclaration {
     }
 
     return verified;
+  }
+
+  verifyVariable() {
+    let  variableVerified = false;
+
+    const variableString = this.variable.getString();
+
+    this.fileContext.trace(`Verifying the '${variableString}' variable...`);
+
+    const variableName = this.variable.getName(),
+          variablePresent = this.fileContext.isVariablePresentByVariableName(variableName);
+
+    if (variablePresent) {
+      this.fileContext.debug(`The '${variableName}' variable is already present.`);
+    } else {
+      variableVerified = true;
+    }
+
+    if ( variableVerified) {
+      this.fileContext.debug(`...verified the '${variableString}' variable.`);
+    }
+
+    return  variableVerified;
   }
 
   verifyVariableType() {
@@ -114,29 +113,6 @@ export default domAssigned(class VariableDeclaration {
     }
 
     return typeVerified;
-  }
-
-  verifyVariable() {
-    let  variableVerified = false;
-
-    const variableString = this.variable.getString();
-
-    this.fileContext.trace(`Verifying the '${variableString}' variable...`);
-
-    const variableName = this.variable.getName(),
-          variablePresent = this.fileContext.isVariablePresentByVariableName(variableName);
-
-    if (variablePresent) {
-      this.fileContext.debug(`The '${variableName}' variable is already present.`);
-    } else {
-      variableVerified = true;
-    }
-
-    if ( variableVerified) {
-      this.fileContext.debug(`...verified the '${variableString}' variable.`);
-    }
-
-    return  variableVerified;
   }
 
   static name = "VariableDeclaration";
