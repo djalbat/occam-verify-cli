@@ -98,7 +98,7 @@ import { RULE_RULE_NAME,
          COMPLEX_TYPE_DECLARATION_RULE_NAME,
          METAVARIABLE_DECLARATION_RULE_NAME } from "./ruleNames";
 
-const ruleMap = {
+const nonTerminalNodeMap = {
   [RULE_RULE_NAME]: RuleNode,
   [STEP_RULE_NAME]: StepNode,
   [TERM_RULE_NAME]: TermNode,
@@ -149,4 +149,4 @@ const ruleMap = {
   [METAVARIABLE_DECLARATION_RULE_NAME]: metavariableDeclarationNode
 };
 
-export default ruleMap;
+export default nonTerminalNodeMap;
