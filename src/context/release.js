@@ -9,7 +9,6 @@ import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 import FileContext from "../context/file";
 
 import { objectType } from "../dom/type";
-import { setNonTerminalNodes } from "../utilities/parser";
 import { frameMetaType, referenceMetaType, statementMetaType } from "../dom/metaType";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
@@ -426,11 +425,8 @@ export default class ReleaseContext {
   initialise(releaseContexts) {
     const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),
           nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar),
-          nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar);
-
-    setNonTerminalNodes(nominalParser);
-
-    const releaseContext = this,  ///
+          nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar),
+          releaseContext = this,  ///
           released = this.isReleased();
 
     this.dependencyReleaseContexts = tail(releaseContexts); ///

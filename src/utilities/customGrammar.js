@@ -1,6 +1,8 @@
 "use strict";
 
-import { CustomGrammar, CombinedCustomGrammar } from "occam-custom-grammars";
+import { CustomGrammar } from "occam-custom-grammars";
+
+import CombinedCustomGrammar from "../customGrammar/combined";
 
 export function customGrammarFromNameAndEntries(name, entries) {
   const termBNF = entries.getTermBNF(),
