@@ -2,6 +2,9 @@
 
 import { lexersUtilities, parsersUtilities } from "occam-custom-grammars";
 
+import NominalLexer from "../nominal/lexer";
+import NominalParser from "../nominal/parser";
+
 import { combinedCustomGrammarFromNothing } from "./customGrammar";
 
 const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
@@ -9,6 +12,6 @@ const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
 
 const combinedCustomGrammar = combinedCustomGrammarFromNothing();
 
-export const nominalLexer = nominalLexerFromCombinedCustomGrammar(combinedCustomGrammar);
+export const nominalLexer = nominalLexerFromCombinedCustomGrammar(NominalLexer, combinedCustomGrammar);
 
-export const nominalParser = nominalParserFromCombinedCustomGrammar(combinedCustomGrammar);
+export const nominalParser = nominalParserFromCombinedCustomGrammar(NominalParser, combinedCustomGrammar);
