@@ -7,7 +7,7 @@ import { isNodeTypeNode, isNodePropertyDeclarationNode } from "../../utilities/n
 
 export default class ComplexTypeDeclarationNode extends Node {
   getTypeName() {
-    let typeName;
+    let typeName = null;
 
     this.someChildNode((childNode) => {
       const childNodeTypeNode = isNodeTypeNode(childNode);

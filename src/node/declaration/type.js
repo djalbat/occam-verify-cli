@@ -7,7 +7,7 @@ import { isNodeTypeNode } from "../../utilities/node";
 
 export default class TypeDeclarationNode extends Node {
   getTypeName() {
-    let typeName;
+    let typeName = null;
 
     this.someChildNode((childNode) => {
       const childNodeTypeNode = isNodeTypeNode(childNode);

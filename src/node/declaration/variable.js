@@ -7,17 +7,13 @@ import { isNodeTypeNode, isNodeVariableNode } from "../../utilities/node";
 
 export default class VariableDeclarationNode extends Node {
   getTypeNode() {
-    let typeNode;
-
-    this.someChildNode((childNode) => {
+    const typeNode = this.findChildNode((childNode) => {
       const childNodeTypeNode = isNodeTypeNode(childNode);
 
       if (childNodeTypeNode) {
-        typeNode = childNode; ///
-
         return true;
       }
-    });
+    }) || null;
 
     return typeNode;
   }
