@@ -108,15 +108,7 @@ class Type {
   }
 
   isEqualTo(type) {
-    let equalTo = false;
-
-    if (this.type === type) {
-      equalTo = true;
-    } else {
-      if (type.name === null) {
-
-      }
-    }
+    const equalTo = (this === type);
 
     return equalTo;
   }
