@@ -1,8 +1,8 @@
 "use strict";
 
-import Node from "../node";
+import { NonTerminalNode } from "occam-parsers";
 
-export default class PropertyNode extends Node {
+export default class PropertyNode extends NonTerminalNode {
   getPropertyName() {
     const propertyName = this.reduceChildNode((propertyName, firstChildNode) => {
       const nameTerminalNode = firstChildNode,  ///
@@ -18,5 +18,5 @@ export default class PropertyNode extends Node {
     return propertyName;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return Node.fromRuleNameChildNodesOpacityAndPrecedence(PropertyNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyNode, ruleName, childNodes, opacity, precedence); }
 }

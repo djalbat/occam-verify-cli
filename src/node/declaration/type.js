@@ -1,11 +1,11 @@
 "use strict";
 
-import Node from "../../node";
+import { NonTerminalNode } from "occam-parsers";
 
 import { PROVISIONAL } from "../../constants";
 import { isNodeTypeNode } from "../../utilities/node";
 
-export default class TypeDeclarationNode extends Node {
+export default class TypeDeclarationNode extends NonTerminalNode {
   getTypeName() {
     let typeName = null;
 
@@ -25,13 +25,22 @@ export default class TypeDeclarationNode extends Node {
   }
 
   isProvisional() {
-    const provisional = this.fromFirstChildNode((firstChildNode) => {
-      const terminalNode = firstChildNode,  ///
-            content = terminalNode.getContent(),
-            contentProvisional = (content === PROVISIONAL),
-            provisional = contentProvisional; ///
+    let provisional = false;
 
-      return provisional;
+    this.someChildNode((childNode) => {
+      const childNodeTerminalNode = childNode.isTerminalNode();
+
+      if (childNodeTerminalNode) {
+        const terminalNode = childNode, ///
+              content = terminalNode.getContent(),
+              contentProvisional = (content === PROVISIONAL);
+
+        if (contentProvisional) {
+          provisional = true;
+
+          return true;
+        }
+      }
     });
 
     return provisional;
@@ -57,6 +66,6 @@ export default class TypeDeclarationNode extends Node {
     return superTypeNodes;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return Node.fromRuleNameChildNodesOpacityAndPrecedence(TypeDeclarationNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TypeDeclarationNode, ruleName, childNodes, opacity, precedence); }
 }
 

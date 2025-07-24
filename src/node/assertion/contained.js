@@ -1,7 +1,7 @@
 "use strict";
 
-import Node from "../../node";
+import { NonTerminalNode } from "occam-parsers";
 
-export default class ContainedAssertionNode extends Node {
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return Node.fromRuleNameChildNodesOpacityAndPrecedence(ContainedAssertionNode, ruleName, childNodes, opacity, precedence); }
+export default class ContainedAssertionNode extends NonTerminalNode {
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ContainedAssertionNode, ruleName, childNodes, opacity, precedence); }
 }

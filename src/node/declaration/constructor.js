@@ -1,51 +1,56 @@
 "use strict";
 
-import Node from "../../node";
+import { NonTerminalNode } from "occam-parsers";
 
 import { PROVISIONALLY } from "../../constants";
+import { isNodeTermNode, isNodeTypeNode } from "../../utilities/node";
 
-export default class ConstructorDeclarationNode extends Node {
+export default class ConstructorDeclarationNode extends NonTerminalNode {
   getTermNode() {
-    const termNode = this.fromSecondChildNode((secondChildNode) => {
-      const termNode = secondChildNode; ///
+    const termNode = this.findChildNode((childNode) => {
+      const childNodeTermNode = isNodeTermNode(childNode);
 
-      return termNode;
-    });
+      if (childNodeTermNode) {
+        return true;
+      }
+    }) || null;
 
     return termNode;
   }
 
   getTypeNode() {
-    const typeNode = this.fromFourthChildNode((fourthChildNode) => {
-      const typeNode = fourthChildNode; ///
+    const typeNode = this.findChildNode((childNode) => {
+      const childNodeTypeNode = isNodeTypeNode(childNode);
 
-      return typeNode;
+      if (childNodeTypeNode) {
+        return true;
+      }
     }) || null;
 
     return typeNode;
   }
 
   isProvisional() {
-    const provisional = this.fromSecondLastChildNode((secondLastChildNode) => {
-      let provisional = false;
+    let provisional = false;
 
-      const secondLastChildNodeTerminalNode = secondLastChildNode.isTerminalNode();
+    this.someChildNode((childNode) => {
+      const childNodeTerminalNode = childNode.isTerminalNode();
 
-      if (secondLastChildNodeTerminalNode) {
-        const terminalNode = secondLastChildNode, ///
+      if (childNodeTerminalNode) {
+        const terminalNode = childNode,
               content = terminalNode.getContent(),
               contentProvisionally = (content === PROVISIONALLY);
 
         if (contentProvisionally) {
           provisional = true;
+
+          return true;
         }
       }
-
-      return provisional;
     });
 
     return provisional;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return Node.fromRuleNameChildNodesOpacityAndPrecedence(ConstructorDeclarationNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ConstructorDeclarationNode, ruleName, childNodes, opacity, precedence); }
 }

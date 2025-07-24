@@ -1,19 +1,26 @@
 "use strict";
 
-import Node from "../node";
+import { NonTerminalNode } from "occam-parsers";
 
-export default class MetaTypeNode extends Node {
+export default class MetaTypeNode extends NonTerminalNode {
   getMetaTypeName() {
-    const metaTypeName = this.fromFirstChildNode((firstChildNode) => {
-      const metaTypeTerminalNode = firstChildNode,  ///
-            content = metaTypeTerminalNode.getContent(),
-            metaTypeName = content; ///
+    let metaTypeName;
 
-      return metaTypeName;
+    this.someChildNode((childNode) => {
+      const childNodeTerminalNode = childNode.isTerminalNode();
+
+      if (childNodeTerminalNode) {
+        const terminalNode = childNode, ///
+              content = terminalNode.getContent();
+
+        metaTypeName = content; ///
+
+        return true;
+      }
     });
 
     return metaTypeName;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return Node.fromRuleNameChildNodesOpacityAndPrecedence(MetaTypeNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(MetaTypeNode, ruleName, childNodes, opacity, precedence); }
 }

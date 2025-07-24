@@ -4,10 +4,7 @@ import dom from "../../dom";
 
 import VariableAssignment from "../../assignment/variable";
 
-import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
-
-const propertyAssertionNodeQuery = nodeQuery("/statement/propertyAssertion");
 
 export default domAssigned(class PropertyAssertion {
   constructor(string, node, tokens, term, propertyRelation) {
@@ -204,7 +201,7 @@ export default domAssigned(class PropertyAssertion {
   static fromStatementNode(statementNode, context) {
     let propertyAssertion = null;
 
-    const propertyAssertionNode = propertyAssertionNodeQuery(statementNode);
+    const propertyAssertionNode = statementNode.getPropertyAssertionNode();
 
     if (propertyAssertionNode !== null) {
       const { Term, PropertyRelation } = dom,

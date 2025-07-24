@@ -19,7 +19,6 @@ const variableNodesQuery = nodesQuery("//variable"),
       typeAssertionTermNodeQuery = nodeQuery("/typeAssertion/term"),
       definedAssertionTermNodeQuery = nodeQuery("/definedAssertion/term"),
       propertyRelationTermNodeQuery = nodeQuery("/propertyRelation/term"),
-      propertyAssertionTermNodeQuery = nodeQuery("/propertyAssertion/term"),
       containedAssertionTermNodeQuery = nodeQuery("/containedAssertion/term");
 
 export default domAssigned(class Term {
@@ -263,8 +262,7 @@ export default domAssigned(class Term {
   }
 
   static fromPropertyAssertionNode(propertyAssertionNode, context) {
-    const propertyAssertionTermNode = propertyAssertionTermNodeQuery(propertyAssertionNode),
-          termNode = propertyAssertionTermNode,
+    const termNode = propertyAssertionNode.getTermNode(),
           term = termFromTermNode(termNode, context);
 
     return term;

@@ -1,7 +1,21 @@
 "use strict";
 
-import Node from "../node";
+import { NonTerminalNode } from "occam-parsers";
 
-export default class StatementNode extends Node {
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return Node.fromRuleNameChildNodesOpacityAndPrecedence(StatementNode, ruleName, childNodes, opacity, precedence); }
+import { isNodePropertyAssertionNode } from "../utilities/node";
+
+export default class StatementNode extends NonTerminalNode {
+  getPropertyAssertionNode() {
+    const propertyAssertionNode = this.findChildNode((childNode) => {
+      const childNodePropertyAssertionNode = isNodePropertyAssertionNode(childNode);
+
+      if (childNodePropertyAssertionNode) {
+        return true;
+      }
+    }) || null;
+
+    return propertyAssertionNode;
+  }
+
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(StatementNode, ruleName, childNodes, opacity, precedence); }
 }

@@ -1,11 +1,33 @@
 "use strict";
 
-import Node from "../../node";
+import { NonTerminalNode } from "occam-parsers";
 
 import { PROVISIONALLY } from "../../constants";
 import { isNodeTypeNode, isNodeVariableNode } from "../../utilities/node";
 
-export default class VariableDeclarationNode extends Node {
+export default class VariableDeclarationNode extends NonTerminalNode {
+  isProvisional() {
+    let provisional = false;
+
+    this.someChildNode((childNode) => {
+      const childNodeTerminalNode = childNode.isTerminalNode();
+
+      if (childNodeTerminalNode) {
+        const terminalNode = childNode, ///
+              content = terminalNode.getContent(),
+              contentProvisionally = (content === PROVISIONALLY);
+
+        if (contentProvisionally) {
+          provisional = true;
+
+          return true;
+        }
+      }
+    });
+
+    return provisional;
+  }
+
   getTypeNode() {
     const typeNode = this.findChildNode((childNode) => {
       const childNodeTypeNode = isNodeTypeNode(childNode);
@@ -18,40 +40,14 @@ export default class VariableDeclarationNode extends Node {
     return typeNode;
   }
 
-  isProvisional() {
-    const provisional = this.fromSecondLastChildNode((secondLastChildNode) => {
-      let provisional = false;
-
-      const secondLastChildNodeTerminalNode = secondLastChildNode.isTerminalNode();
-
-      if (secondLastChildNodeTerminalNode) {
-        const terminalNode = secondLastChildNode, ///
-              content = terminalNode.getContent(),
-              contentProvisionally = (content === PROVISIONALLY);
-
-        if (contentProvisionally) {
-          provisional = true;
-        }
-      }
-
-      return provisional;
-    });
-
-    return provisional;
-  }
-
   getVariableNode() {
-    let variableNode;
-
-    this.someChildNode((childNode) => {
+    const variableNode = this.findChildNode((childNode) => {
       const childNodeVariableNode = isNodeVariableNode(childNode);
 
       if (childNodeVariableNode) {
-        variableNode = childNode; ///
-
         return true;
       }
-    });
+    }) || null;
 
     return variableNode;
   }
@@ -63,5 +59,5 @@ export default class VariableDeclarationNode extends Node {
     return variableName;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return Node.fromRuleNameChildNodesOpacityAndPrecedence(VariableDeclarationNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(VariableDeclarationNode, ruleName, childNodes, opacity, precedence); }
 }
