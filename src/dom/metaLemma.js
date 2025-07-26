@@ -31,5 +31,10 @@ export default domAssigned(class MetaLemma extends TopLevelMetaAssertion {
 
   static fromJSON(json, fileContext) { return TopLevelMetaAssertion.fromJSON(MetaLemma, json, fileContext); }
 
-  static fromNode(node, fileContext) { return TopLevelMetaAssertion.fromNode(MetaLemma, node, fileContext); }
+  static fromMetaLemmaNode(metaLemmaNode, fileContext) {
+    const node = metaLemmaNode, ///
+          metaLemma = TopLevelMetaAssertion.fromNode(MetaLemma, node, fileContext);
+
+    return metaLemma;
+  }
 });

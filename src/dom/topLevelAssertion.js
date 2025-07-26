@@ -6,29 +6,25 @@ import dom from "../dom";
 import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
-import { nodeQuery, nodesQuery } from "../utilities/query";
 import { labelsFromJSON,
-         labelsToLabelsJSON,
          deductionFromJSON,
+         labelsToLabelsJSON,
+         satisfiableFromJSON,
          suppositionsFromJSON,
          deductionToDeductionJSON,
          suppositionsToSuppositionsJSON } from "../utilities/json";
 
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
-const proofNodeQuery = nodeQuery("/*/proof"),
-      labelNodesQuery = nodesQuery("/*/parenthesisedLabels/labels/label"),
-      deductionNodeQuery = nodeQuery("/*/deduction"),
-      suppositionNodesQuery = nodesQuery("/*/supposition");
-
 export default class TopLevelAssertion {
-  constructor(fileContext, string, labels, suppositions, deduction, proof) {
+  constructor(fileContext, string, labels, suppositions, deduction, proof, satisfiable) {
     this.fileContext = fileContext;
     this.string = string;
     this.labels = labels;
     this.suppositions = suppositions;
     this.deduction = deduction;
     this.proof = proof;
+    this.satisfiable = satisfiable;
   }
 
   getFileContext() {
@@ -53,6 +49,10 @@ export default class TopLevelAssertion {
 
   getProof() {
     return this.proof;
+  }
+
+  isSatisfiable() {
+    return this.satisfiable;
   }
 
   getStatement() { return this.deduction.getStatement(); }
@@ -223,10 +223,12 @@ export default class TopLevelAssertion {
           labels = labelsJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
+          satisfiable = this.satisfiable,
           json = {
             labels,
             deduction,
-            suppositions
+            suppositions,
+            satisfiable
           };
 
     return json;
@@ -234,38 +236,43 @@ export default class TopLevelAssertion {
 
   static fromJSON(Class, json, fileContext) {
     const labels = labelsFromJSON(json, fileContext),
-          suppositions = suppositionsFromJSON(json, fileContext),
           deduction = deductionFromJSON(json, fileContext),
+          satisfiable = satisfiableFromJSON(json, fileContext),
+          suppositions = suppositionsFromJSON(json, fileContext),
           proof = null,
           string = stringFromLabelsAndDeduction(labels, deduction),
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof);
+          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, satisfiable);
 
     return topLevelAssertion;
   }
 
   static fromNode(Class, node, fileContext) {
-    const labels = labelsFromNode(node, fileContext),
-          suppositions = suppositionsFromNode(node, fileContext),
-          deduction = deductionFromNode(node, fileContext),
-          proof = proofFromNode(node, fileContext),
+    const topLevelAssertionNode = node, ///
+          satisfiable = topLevelAssertionNode.isSatisfiable(),
+          proofNode = topLevelAssertionNode.getProofNode(),
+          labelNodes = topLevelAssertionNode.getLabelNodes(),
+          deductionNode = topLevelAssertionNode.getDeductionNode(),
+          suppositionNodes = topLevelAssertionNode.getSuppositionNodes(),
+          proof = proofFromProofNode(proofNode, fileContext),
+          labels = labelsFromLabelNodes(labelNodes, fileContext),
+          deduction = deductionFromDeductionNode(deductionNode, fileContext),
+          suppositions = suppositionsFromSuppositionNodes(suppositionNodes, fileContext),
           string = stringFromLabelsAndDeduction(labels, deduction),
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof);
+          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, satisfiable);
 
     return topLevelAssertion;
   }
 }
 
-export function proofFromNode(node, fileContext) {
+function proofFromProofNode(proofNode, fileContext) {
   const { Proof } = dom,
-        proofNode = proofNodeQuery(node),
         proof = Proof.fromProofNode(proofNode, fileContext);
 
   return proof;
 }
 
-export function labelsFromNode(node, fileContext) {
+function labelsFromLabelNodes(labelNodes, fileContext) {
   const { Label } = dom,
-        labelNodes = labelNodesQuery(node),
         labels = labelNodes.map((labelNode) => {
           const label = Label.fromLabelNode(labelNode, fileContext);
 
@@ -275,24 +282,22 @@ export function labelsFromNode(node, fileContext) {
   return labels;
 }
 
-export function deductionFromNode(node, fileContext) {
+function deductionFromDeductionNode(deductionNode, fileContext) {
   const { Deduction } = dom,
-        deductionNode = deductionNodeQuery(node),
         deduction = Deduction.fromDeductionNode(deductionNode, fileContext);
 
   return deduction;
 }
 
-export function suppositionsFromNode(node, fileContext) {
+function suppositionsFromSuppositionNodes(suppositionNodes, fileContext) {
   const { Supposition } = dom,
-        suppositionNodes = suppositionNodesQuery(node),
         suppositions = suppositionNodes.map((suppositionNode) => {
           const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
 
           return supposition;
         });
 
-  return suppositions;
+    return suppositions;
 }
 
 export function labelsStringFromLabels(labels) {

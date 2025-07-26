@@ -67,8 +67,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: lemmaNodeQuery,
       verify: (lemmaNode, fileContext) => {
         const { Lemma } = dom,
-              node = lemmaNode, ///
-              lemma = Lemma.fromNode(node, fileContext),
+              lemma = Lemma.fromLemmaNode(lemmaNode, fileContext),
               lemmaVerified = lemma.verify();
 
         return lemmaVerified;
@@ -78,8 +77,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: theoremNodeQuery,
       verify: (theoremNode, fileContext) => {
         const { Theorem } = dom,
-              node = theoremNode, ///
-              theorem = Theorem.fromNode(node, fileContext),
+              theorem = Theorem.fromTheoremNode(theoremNode, fileContext),
               theoremVerified = theorem.verify();
 
         return theoremVerified;
@@ -89,8 +87,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: metaLemmaNodeQuery,
       verify: (metaLemmaNode, fileContext) => {
         const { MetaLemma } = dom,
-              node = metaLemmaNode, ///
-              metaLemma = MetaLemma.fromNode(node, fileContext),
+              metaLemma = MetaLemma.fromMetaLemmaNode(metaLemmaNode, fileContext),
               metaLemmaVerified = metaLemma.verify();
 
         return metaLemmaVerified;
@@ -100,8 +97,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: conjectureNodeQuery,
       verify: (conjectureNode, fileContext) => {
         const { Conjecture } = dom,
-              node = conjectureNode,  ///
-              conjecture = Conjecture.fromNode(node, fileContext),
+              conjecture = Conjecture.fromConjectureNode(conjectureNode, fileContext),
               conjectureVerified = conjecture.verify();
 
         return conjectureVerified;
@@ -111,8 +107,7 @@ class TopLevelVerifier extends Verifier {
       nodeQuery: metatheoremNodeQuery,
       verify: (metatheoremNode, fileContext) => {
         const { Metatheorem } = dom,
-              node = metatheoremNode, ///
-              metatheorem = Metatheorem.fromNode(node, fileContext),
+              metatheorem = Metatheorem.fromMetatheoremNode(metatheoremNode, fileContext),
               metatheoremVerified = metatheorem.verify();
 
         return metatheoremVerified;

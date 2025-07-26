@@ -47,6 +47,7 @@ import { RULE_RULE_NAME,
          SATISFIES_ASSERTION_RULE_NAME,
          PROPERTY_DECLARATION_RULE_NAME,
          VARIABLE_DECLARATION_RULE_NAME,
+         PARENTHESISED_LABELS_RULE_NAME,
          COMBINATOR_DECLARATION_RULE_NAME,
          CONSTRUCTOR_DECLARATION_RULE_NAME,
          COMPLEX_TYPE_DECLARATION_RULE_NAME,
@@ -139,6 +140,8 @@ export function isNodeSatisfiesAssertionNode(node) { return isNodeRuleNodeByRule
 export function isNodePropertyDeclarationNode(node) { return isNodeRuleNodeByRuleName(node, PROPERTY_DECLARATION_RULE_NAME); }
 
 export function isNodeVariableDeclarationNode(node) { return isNodeRuleNodeByRuleName(node, VARIABLE_DECLARATION_RULE_NAME); }
+
+export function isNodeParenthesisedLabelsNode(node) { return isNodeRuleNodeByRuleName(node, PARENTHESISED_LABELS_RULE_NAME); }
 
 export function isNodeCombinatorDeclarationNode(node) { return isNodeRuleNodeByRuleName(node, COMBINATOR_DECLARATION_RULE_NAME); }
 

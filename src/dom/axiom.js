@@ -5,29 +5,11 @@ import { arrayUtilities } from "necessary";
 import TopLevelAssertion  from "./topLevelAssertion";
 
 import { domAssigned } from "../dom";
-import { labelsFromJSON,
-         deductionFromJSON,
-         satisfiableFromJSON,
-         labelsToLabelsJSON,
-         suppositionsFromJSON,
-         deductionToDeductionJSON,
-         suppositionsToSuppositionsJSON } from "../utilities/json";
 import { satisfiesAssertionFromStatement } from "../utilities/context";
-import { proofFromNode, labelsFromNode, deductionFromNode, suppositionsFromNode, stringFromLabelsAndDeduction } from "./topLevelAssertion";
 
 const { match, backwardsSome } = arrayUtilities;
 
 export default domAssigned(class Axiom extends TopLevelAssertion {
-  constructor(fileContext, string, labels, suppositions, deduction, proof, satisfiable) {
-    super(fileContext, string, labels, suppositions, deduction, proof);
-
-    this.satisfiable = satisfiable;
-  }
-
-  isSatisfiable() {
-    return this.satisfiable;
-  }
-
   verify() {
     let verified;
 
@@ -159,7 +141,9 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     statementAndStepsOrSubproofsUnified = super.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 
     if (statementAndStepsOrSubproofsUnified) {
-      if (this.satisfiable) {
+      const satisfiable = this.isSatisfiable();
+
+      if (satisfiable) {
         const substitutionsMatch = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
           const stepSubstep = stepOrSubproof.isStep();
 
@@ -185,54 +169,14 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return statementAndStepsOrSubproofsUnified;
   }
 
-  toJSON() {
-    let labels = this.getLabels(),
-        deduction = this.getDeduction(),
-        suppositions = this.getSuppositions();
-
-    const labelsJSON = labelsToLabelsJSON(labels),
-          deductionJSON = deductionToDeductionJSON(deduction),
-          suppositionsJSON = suppositionsToSuppositionsJSON(suppositions);
-
-    labels = labelsJSON;  ///
-    deduction = deductionJSON;  ///
-    suppositions = suppositionsJSON;  ///
-
-    const satisfiable = this.satisfiable,
-          json = {
-            labels,
-            deduction,
-            suppositions,
-            satisfiable
-          };
-
-    return json;
-  }
-
   static name = "Axiom";
 
-  static fromJSON(json, fileContext) {
-    const labels = labelsFromJSON(json, fileContext),
-          suppositions = suppositionsFromJSON(json, fileContext),
-          deduction = deductionFromJSON(json, fileContext),
-          proof = null,
-          satisfiable = satisfiableFromJSON(json, fileContext),
-          string = stringFromLabelsAndDeduction(labels, deduction),
-          topLevelAssertion = new Axiom(fileContext, string, labels, suppositions, deduction, proof, satisfiable);
-
-    return topLevelAssertion;
-  }
+  static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Axiom, json, fileContext); }
 
   static fromAxiomNode(axiomNode, fileContext) {
     const node = axiomNode, ///
-          proof = proofFromNode(node, fileContext),
-          labels = labelsFromNode(node, fileContext),
-          deduction = deductionFromNode(node, fileContext),
-          satisfiable = axiomNode.isSatisfiable(),
-          suppositions = suppositionsFromNode(node, fileContext),
-          string = stringFromLabelsAndDeduction(labels, deduction),
-          topLevelAssertion = new Axiom(fileContext, string, labels, suppositions, deduction, proof, satisfiable);
+          axiom = TopLevelAssertion.fromNode(Axiom, node, fileContext);
 
-    return topLevelAssertion;
+    return axiom;
   }
 });

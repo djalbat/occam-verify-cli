@@ -30,5 +30,10 @@ export default domAssigned(class Theorem extends TopLevelAssertion {
 
   static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Theorem, json, fileContext); }
 
-  static fromNode(node, fileContext) { return TopLevelAssertion.fromNode(Theorem, node, fileContext); }
+  static fromTheoremNode(theoremNode, fileContext) {
+    const node = theoremNode, ///
+          theorem = TopLevelAssertion.fromNode(Theorem, node, fileContext);
+
+    return theorem;
+  }
 });

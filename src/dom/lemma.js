@@ -33,5 +33,10 @@ export default domAssigned(class Lemma extends TopLevelAssertion {
 
   static name = "Lemma";
 
-  static fromNode(node, fileContext) { return TopLevelAssertion.fromNode(Lemma, node, fileContext); }
+  static fromLemmaNode(lemmaNode, fileContext) {
+    const node = lemmaNode, ///
+          lemma = TopLevelAssertion.fromNode(Lemma, node, fileContext);
+
+    return lemma;
+  }
 });
