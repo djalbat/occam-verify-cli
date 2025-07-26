@@ -4,16 +4,13 @@ import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { OBJECT_TYPE_NAME } from "../typeNames";
 import { typeFromTypeNode } from "../utilities/node";
-import { superTypesStringFromSuperTypes } from "../utilities/type";
+import { stringFromTypeNameNameAndSuperTypes } from "../utilities/type";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
 const { push, first } = arrayUtilities;
-
-const typeAssertionTypeNodeQuery = nodeQuery("/typeAssertion/type");
 
 class Type {
   constructor(string, name, superTypes, properties, provisional) {
@@ -216,7 +213,8 @@ class Type {
     const { name, provisional } = json,
           properties = propertiesFromJSON(json, fileContext),
           superTypes = superTypesFromJSON(json, fileContext),
-          string = stringFromNameAndSuperTypes(name, superTypes),
+          typeName = name,  ///
+          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
 
     return type;
@@ -229,8 +227,7 @@ class Type {
   }
 
   static fromTypeAssertionNode(typeAssertionNode, fileContext) {
-    const typeAssertionTypeNode = typeAssertionTypeNodeQuery(typeAssertionNode),
-          typeNode = typeAssertionTypeNode, ///
+    const typeNode = typeAssertionNode.getTypeNode(),
           type = typeFromTypeNode(typeNode, fileContext);
 
     return type;
@@ -239,10 +236,11 @@ class Type {
   static fromTypeAndProvisional(type, provisional) {
     const name = type.getName(),
           superType = type, ///
+          typeName = name,  ///
           superTypes = [
             superType
           ],
-          string = stringFromNameAndSuperTypes(name, superTypes),
+          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           properties = type.getProperties();
 
     type = new Type(string, name, superTypes, properties, provisional);  ///
@@ -256,7 +254,7 @@ class Type {
           typeName = typeDeclarationNode.getTypeName(),
           name = typeName,  ///
           superTypes = superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext),
-          string = stringFromNameAndSuperTypes(name, superTypes),
+          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
 
     return type;
@@ -293,7 +291,7 @@ class Type {
           typeName = complexTypeDeclarationNode.getTypeName(),
           name = typeName,
           superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
-          string = stringFromNameAndSuperTypes(name, superTypes),
+          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
 
     return type;
@@ -301,22 +299,6 @@ class Type {
 }
 
 export default domAssigned(Type);
-
-function stringFromNameAndSuperTypes(name, superTypes) {
-  let string;
-
-  if (name === null) {
-    string = OBJECT_TYPE_NAME;  ///
-  } else {
-    const superTypesString = superTypesStringFromSuperTypes(superTypes);
-
-    string = (superTypesString !== null) ?
-               `${name}:${superTypesString}` :
-                  name; ///
-  }
-
-  return string;
-}
 
 function superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
   const superTypeNodes = typeDeclarationNode.getSuperTypeNodes(),

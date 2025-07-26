@@ -234,11 +234,7 @@ export default domAssigned(class Variable {
   }
 
   static fromVariableNodeAndType(variableNode, type, context) {
-    let variable = null;
-
-    if (variableNode !== null) {
-      variable = variableFromVariableNodeAndType(variableNode, type, context);
-    }
+    const variable = variableFromVariableNodeAndType(variableNode, type, context);
 
     return variable;
   }

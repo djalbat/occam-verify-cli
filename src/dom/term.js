@@ -208,11 +208,7 @@ export default domAssigned(class Term {
   }
 
   static fromTermNode(termNode, context) {
-    let term = null;
-
-    if (termNode !== null) {
-      term = termFromTermNode(termNode, context);
-    }
+    const term = termFromTermNode(termNode, context);
 
     return term;
   }

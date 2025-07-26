@@ -3,7 +3,7 @@
 import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
-import { superTypesStringFromSuperTypes } from "../../utilities/type";
+import { stringFromTypeNameNameAndSuperTypes } from "../../utilities/type";
 
 export default domAssigned(class ComplexTypeDeclaration {
   constructor(fileContext, string, type) {
@@ -259,9 +259,10 @@ export default domAssigned(class ComplexTypeDeclaration {
 
   static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
     const { Type } = dom,
-          node = complexTypeDeclarationNode,  ///
-          string = fileContext.nodeAsString(node),
           type = Type.fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+          typeName = type.getName(),
+          superTypes = type.getSuperTypes(),
+          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           complexTypeDeclaration = new ComplexTypeDeclaration(fileContext, string, type);
 
     return complexTypeDeclaration;

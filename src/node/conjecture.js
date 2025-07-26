@@ -1,7 +1,7 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-parsers";
+import TopLevelAssertionNode from "../node/topLevelAssertion";
 
-export default class ConjectureNode extends NonTerminalNode {
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ConjectureNode, ruleName, childNodes, opacity, precedence); }
+export default class ConjectureNode extends TopLevelAssertionNode {
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return TopLevelAssertionNode.fromRuleNameChildNodesOpacityAndPrecedence(ConjectureNode, ruleName, childNodes, opacity, precedence); }
 }

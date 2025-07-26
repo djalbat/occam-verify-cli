@@ -4,6 +4,7 @@ import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
 import { superTypesStringFromSuperTypes } from "../../utilities/type";
+import { stringFromTypeNameNameAndSuperTypes } from "../../utilities/type";
 
 export default domAssigned(class TypeDeclaration {
   constructor(fileContext, string, type) {
@@ -139,8 +140,9 @@ export default domAssigned(class TypeDeclaration {
   static fromTypeDeclarationNode(typeDeclarationNode, fileContext) {
     const { Type } = dom,
           type = Type.fromTypeDeclarationNode(typeDeclarationNode, fileContext),
-          node = typeDeclarationNode, ///
-          string = fileContext.nodeAsString(node),
+          typeName = type.getName(),
+          superTypes = type.getSuperTypes(),
+          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           typeDeclaration = new TypeDeclaration(fileContext, string, type);
 
     return typeDeclaration;

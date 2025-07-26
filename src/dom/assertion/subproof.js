@@ -6,12 +6,8 @@ import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
 import { unifyStatement } from "../../utilities/unification";
-import { nodeQuery, nodesQuery } from "../../utilities/query";
 
 const { match } = arrayUtilities;
-
-const statementNodesQuery = nodesQuery("/subproofAssertion/statement"),
-      subproofAssertionNodeQuery = nodeQuery("/statement/subproofAssertion");
 
 export default domAssigned(class SubproofAssertion {
   constructor(string, node, statements) {
@@ -99,7 +95,7 @@ export default domAssigned(class SubproofAssertion {
   static fromStatementNode(statementNode, context) {
     let subproofAssertion = null;
 
-    const subproofAssertionNode = subproofAssertionNodeQuery(statementNode);
+    const subproofAssertionNode = statementNode.getSubproofAssertionNode();
 
     if (subproofAssertionNode !== null) {
       const node = subproofAssertionNode, ///
@@ -115,7 +111,7 @@ export default domAssigned(class SubproofAssertion {
 
 function statementsFromSubproofAssertionNode(subproofAssertionNode, context) {
   const { Statement } = dom,
-        statementNodes = statementNodesQuery(subproofAssertionNode),
+        statementNodes = subproofAssertionNode.getStatementNodes(),
         statements = statementNodes.map((statementNode) => {
           const statement = Statement.fromStatementNode(statementNode, context);
 

@@ -2,11 +2,7 @@
 
 import dom from "../../dom";
 
-import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
-
-const termNodeQuery = nodeQuery("/metavariable/argument/term"),
-      metaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType");
 
 export default domAssigned(class MetavariableDeclaration {
   constructor(fileContext, string, metavariable) {
@@ -84,7 +80,7 @@ export default domAssigned(class MetavariableDeclaration {
     this.fileContext.trace(`Verifying the '${metavariableString}' metavariable when declared...`);
 
     const metavariableNode = metavariable.getNode(), ///
-          termNode = termNodeQuery(metavariableNode);
+          termNode = metavariableNode.getTermNode();
 
     if (termNode !== null) {
       this.fileContext.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
@@ -140,7 +136,7 @@ function stringFromMetavariableAndMetaType(metavariable, metaType) {
 
 function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
   const { MetaType } = dom,
-        metaTypeNode = metaTypeNodeQuery(metavariableDeclarationNode),
+        metaTypeNode = metavariableDeclarationNode.getMetaTypeNode(),
         metaType = MetaType.fromMetaTypeNode(metaTypeNode, fileContext);
 
   return metaType;

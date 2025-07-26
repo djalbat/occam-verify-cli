@@ -4,8 +4,6 @@ import { arrayUtilities } from "necessary";
 
 import TopLevelAssertion  from "./topLevelAssertion";
 
-import { nodeQuery } from "../utilities/query";
-import { SATISFIABLE } from "../constants";
 import { domAssigned } from "../dom";
 import { labelsFromJSON,
          deductionFromJSON,
@@ -18,8 +16,6 @@ import { satisfiesAssertionFromStatement } from "../utilities/context";
 import { proofFromNode, labelsFromNode, deductionFromNode, suppositionsFromNode, stringFromLabelsAndDeduction } from "./topLevelAssertion";
 
 const { match, backwardsSome } = arrayUtilities;
-
-const firstPrimaryKeywordTerminalNodeQuery = nodeQuery("/axiom/@primary-keyword[0]");
 
 export default domAssigned(class Axiom extends TopLevelAssertion {
   constructor(fileContext, string, labels, suppositions, deduction, proof, satisfiable) {
@@ -232,7 +228,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
           proof = proofFromNode(node, fileContext),
           labels = labelsFromNode(node, fileContext),
           deduction = deductionFromNode(node, fileContext),
-          satisfiable = satisfiableFromNode(node, fileContext),
+          satisfiable = axiomNode.isSatisfiable(),
           suppositions = suppositionsFromNode(node, fileContext),
           string = stringFromLabelsAndDeduction(labels, deduction),
           topLevelAssertion = new Axiom(fileContext, string, labels, suppositions, deduction, proof, satisfiable);
@@ -240,13 +236,3 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return topLevelAssertion;
   }
 });
-
-export function satisfiableFromNode(node, fileContext) {
-  const firstPrimaryKeywordTerminalNode = firstPrimaryKeywordTerminalNodeQuery(node),
-        content = firstPrimaryKeywordTerminalNode.getContent(),
-        contentSatisfiable = (content === SATISFIABLE),
-        satisfiable = contentSatisfiable; ///
-
-  return satisfiable;
-}
-

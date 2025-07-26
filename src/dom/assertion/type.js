@@ -3,11 +3,7 @@
 import dom from "../../dom";
 import VariableAssignment from "../../assignment/variable";
 
-import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
-
-const variableNodeQuery = nodeQuery("/term/variable!"),
-      typeAssertionNodeQuery = nodeQuery("/statement/typeAssertion");
 
 export default domAssigned(class TypeAssertion {
   constructor(string, term, type) {
@@ -155,8 +151,7 @@ export default domAssigned(class TypeAssertion {
     }
 
     const { Type, Variable } = dom,
-          termNode = this.term.getNode(),
-          variableNode = variableNodeQuery(termNode);
+          termNode = this.term.getNode();
 
     let type,
         provisional;
@@ -171,10 +166,12 @@ export default domAssigned(class TypeAssertion {
       type = Type.fromTypeAndProvisional(this.type, provisional);
     }
 
-    const variable = Variable.fromVariableNodeAndType(variableNode, type, context);
+    const singularVariableNode = termNode.getSingularVariableNode();
 
-    if (variable !== null) {
-      const variableAssignment = VariableAssignment.fromVariable(variable),
+    if (singularVariableNode !== null) {
+      const variableNode = singularVariableNode,  ///
+            variable = Variable.fromVariableNodeAndType(variableNode, type, context),
+            variableAssignment = VariableAssignment.fromVariable(variable),
             assignment = variableAssignment;  ///
 
       assignments.push(assignment);
@@ -186,7 +183,7 @@ export default domAssigned(class TypeAssertion {
   static fromStatementNode(statementNode, context) {
     let typeAssertion = null;
 
-    const typeAssertionNode = typeAssertionNodeQuery(statementNode);
+    const typeAssertionNode = statementNode.getTypeAssertionNode();
 
     if (typeAssertionNode !== null) {
       const { Term, Type } = dom,

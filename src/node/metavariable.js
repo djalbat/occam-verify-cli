@@ -2,7 +2,21 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
+import { isNodeTermNode } from "../utilities/node";
+
 export default class MetavariableNode extends NonTerminalNode {
+  getTermNode() {
+    const termNode = this.findChildNode((childNode) => {
+      const childNodeTermNode = isNodeTermNode(childNode);
+
+      if (childNodeTermNode) {
+        return true;
+      }
+    }) || null;
+
+    return termNode;
+  }
+
   getMetavariableName() {
     let metaVariableName;
 

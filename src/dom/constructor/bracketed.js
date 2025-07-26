@@ -4,10 +4,7 @@ import dom from "../../dom";
 import Constructor from "../constructor";
 import constructorBracketedContext from "../../context/bracketed/constructor";
 
-import { nodeQuery } from "../../utilities/query";
 import { domAssigned } from "../../dom";
-
-const termNodeQuery = nodeQuery("/term/argument/term");
 
 export default domAssigned(class BracketedConstructor extends Constructor {
   unifyTerm(term, context, verifyAhead) {
@@ -23,11 +20,13 @@ export default domAssigned(class BracketedConstructor extends Constructor {
       const { Term } = dom,
             bracketedTerm = term, ///
             bracketedTermNode = bracketedTerm.getNode(),
-            termNode = termNodeQuery(bracketedTermNode); ///
+            singularTermNode = bracketedTermNode.getSingularTermNode();
 
-      term = Term.fromTermNode(termNode, context);
+      if (singularTermNode !== null) {
+        const termNode = singularTermNode;  ///
 
-      if (term !== null) {
+        term = Term.fromTermNode(termNode, context);
+
         const termVVerified = term.verify(context, () => {
           let verifiedAhead;
 
@@ -60,8 +59,7 @@ export default domAssigned(class BracketedConstructor extends Constructor {
           context = constructorBracketedContext, ///
           term = Term.fromTermNode(termNode, context),
           string = term.getString(),
-          provisional = null,
-          bracketedConstructor = new BracketedConstructor(string, term, provisional);
+          bracketedConstructor = new BracketedConstructor(string, term);
 
     return bracketedConstructor;
   }
