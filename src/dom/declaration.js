@@ -3,11 +3,8 @@
 import dom from "../dom";
 import Substitutions from "../substitutions";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { unifyStatementIntrinsically } from "../utilities/unification";
-
-const judgementDeclarationNodeQuery = nodeQuery("/judgement/declaration");
 
 export default domAssigned(class Declaration {
   constructor(string, reference, statement) {
@@ -255,8 +252,7 @@ export default domAssigned(class Declaration {
   static name = "Declaration";
 
   static fromJudgementNode(judgementNode, context) {
-    const judgementDeclarationNode = judgementDeclarationNodeQuery(judgementNode),
-          declarationNode = judgementDeclarationNode, ///
+    const declarationNode = judgementNode.getDeclarationNode(),
           declaration = declarationFromDeclarationNode(declarationNode, context);
 
     return declaration;
