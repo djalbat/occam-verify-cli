@@ -145,11 +145,11 @@ export default domAssigned(class ComplexTypeDeclaration {
 
     this.fileContext.trace(`Verifying the '${propertyString}' property...`);
 
-    const propertyNames = property.getNames(),
+    const propertyName = property.getName(),
           count = properties.reduce((count, property) => {
-            const propertyNamesMatch = property.matchPropertyNames(propertyNames);
+            const propertyNameMatches = property.matchPropertyName(propertyName);
 
-            if (propertyNamesMatch) {
+            if (propertyNameMatches) {
               count++;
             }
 

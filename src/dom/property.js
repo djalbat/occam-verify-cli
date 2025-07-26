@@ -1,23 +1,14 @@
 "use strict";
 
-import { arrayUtilities } from "necessary";
-
 import dom from "../dom";
 
-import { objectType } from "./type";
 import { domAssigned } from "../dom";
-import { nodeQuery, nodesQuery } from "../utilities/query";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
-const { match } = arrayUtilities;
-
-const nameTerminalNodesQuery = nodesQuery("/property/@name"),
-      propertyRelationPropertyNodeQuery = nodeQuery("/propertyRelation/property");
-
 export default domAssigned(class Property {
-  constructor(string, names, type) {
+  constructor(string, name, type) {
     this.string = string;
-    this.names = names;
+    this.name = name;
     this.type = type;
   }
 
@@ -25,8 +16,8 @@ export default domAssigned(class Property {
     return this.string;
   }
 
-  getNames() {
-    return this.names;
+  getName() {
+    return this.name;
   }
 
   getType() {
@@ -37,23 +28,19 @@ export default domAssigned(class Property {
     this.type = type;
   }
 
-  matchPropertyNames(propertyNames) {
-    const propertyNamesMatch = match(propertyNames, this.names, (propertyName, name) => {
-      if (propertyName === name) {
-        return true;
-      }
-    });
+  matchPropertyName(propertyName) {
+    const propertyNameMatches = (this.name === propertyName);
 
-    return propertyNamesMatch;
+    return propertyNameMatches;
   }
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          names = this.names, ///
+          name = this.name, ///
           type = typeJSON,  ///
           json = {
             type,
-            names
+            name
           };
 
     return json;
@@ -62,10 +49,10 @@ export default domAssigned(class Property {
   static name = "Property";
 
   static fromJSON(json, fileContext) {
-    const { names } = json,
+    const { name } = json,
           type = typeFromJSON(json, fileContext),
-          string = stringFromNamesAndType(names, type),
-          property = new Property(string, names, type);
+          string = name, ///
+          property = new Property(string, name, type);
 
     return property;
   }
@@ -77,8 +64,7 @@ export default domAssigned(class Property {
   }
 
   static fromPropertyRelationNode(propertyRelationNode, fileContext) {
-    const propertyRelationPropertyNode = propertyRelationPropertyNodeQuery(propertyRelationNode),
-          propertyNode = propertyRelationPropertyNode,  ///
+    const propertyNode = propertyRelationNode.getPropertyNode(),
           property = propertyFromPropertyNode(propertyNode, fileContext);
 
     return property;
@@ -87,10 +73,10 @@ export default domAssigned(class Property {
   static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
     const { Type } = dom,
           type = Type.fromPropertyDeclarationNode(propertyDeclarationNode),
-          propertyNames = propertyDeclarationNode.getPropertyNames(),
-          names = propertyNames,  ///
-          string = stringFromNamesAndType(names, type),
-          property = new Property(string, names, type);
+          propertyName = propertyDeclarationNode.getPropertyName(),
+          name = propertyName,  ///
+          string = name,  ///
+          property = new Property(string, name, type);
 
     return property;
   }
@@ -98,54 +84,10 @@ export default domAssigned(class Property {
 
 function propertyFromPropertyNode(propertyNode, fileContext) {
   const { Property } = dom,
-        node = propertyNode,  ///
-        names = namesFromPropertyNode(propertyNode),
+        name = propertyNode.getName(),
         type = null,
-        string = fileContext.nodeAsString(node),
-        property = new Property(string, names, type);
+        string = name,  ///
+        property = new Property(string, name, type);
 
   return property;
 }
-
-function stringFromNamesAndType(names, type) {
-  let string;
-
-  const namesString = namesStringFromNames(names);
-
-  if (type === objectType) {
-    string = namesString;  ///
-  } else {
-    const typeString = type.getString();
-
-    string = `${namesString}:${typeString}`;
-  }
-
-  return string;
-}
-
-function namesFromPropertyNode(propertyNode, fileContext) {
-  const nameTerminalNodes = nameTerminalNodesQuery(propertyNode),
-        names = nameTerminalNodes.map((nameTerminalNode) => {
-          const nameTerminalNodeContent = nameTerminalNode.getContent(),
-                name = nameTerminalNodeContent; ///
-
-          return name;
-        });
-
-  return names;
-}
-
-function namesStringFromNames(names) {
-  const namesString = names.reduce((namesString, name) => {
-    const nameString = name;  ///
-
-    namesString = (namesString === null) ?
-                    nameString :  ///
-                     `${namesString} ${nameString}`;
-
-    return namesString;
-  }, null);
-
-  return namesString;
-}
-

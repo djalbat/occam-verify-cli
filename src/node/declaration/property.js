@@ -17,21 +17,23 @@ export default class PropertyDeclarationNode extends NonTerminalNode {
     return typeNode;
   }
 
-  getPropertyNames() {
-    const propertyNames = this.reduceChildNode((propertyNames, childNode) => {
+  getPropertyNode() {
+    const propertyNode = this.findChildNode((childNode) => {
       const childNodePropertyNode = isNodePropertyNode(childNode);
 
       if (childNodePropertyNode) {
-        const propertyNode = childNode, ///
-              propertyName = propertyNode.getPropertyName();
-
-        propertyNames.push(propertyName);
+        return true;
       }
+    }) || null;
 
-      return propertyNames;
-    }, []);
+    return propertyNode;
+  }
 
-    return propertyNames;
+  getPropertyName() {
+    const propertyNode = this.getPropertyNode(),
+          propertyName = propertyNode.getPropertyName();
+
+    return propertyName;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyDeclarationNode, ruleName, childNodes, opacity, precedence); }

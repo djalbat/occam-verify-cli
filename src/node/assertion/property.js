@@ -2,7 +2,7 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeTermNode } from "../../utilities/node";
+import { isNodeTermNode, isNodePropertyRelationNode } from "../../utilities/node";
 
 export default class PropertyAssertionNode extends NonTerminalNode {
   getTermNode() {
@@ -15,6 +15,18 @@ export default class PropertyAssertionNode extends NonTerminalNode {
     }) || null;
 
     return termNode;
+  }
+
+  getPropertyRelationNode() {
+    const propertyRelationNode = this.findChildNode((childNode) => {
+      const childNodePropertyRelationNode = isNodePropertyRelationNode(childNode);
+
+      if (childNodePropertyRelationNode) {
+        return true;
+      }
+    }) || null;
+
+    return propertyRelationNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyAssertionNode, ruleName, childNodes, opacity, precedence); }

@@ -2,10 +2,7 @@
 
 import dom from "../dom";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
-
-const propertyAssertionPropertyRelationNodeQuery = nodeQuery("/propertyAssertion/propertyRelation");
 
 export default domAssigned(class PropertyRelation {
   constructor(string, node, tokens, property, term) {
@@ -96,24 +93,24 @@ export default domAssigned(class PropertyRelation {
 
     context.trace(`Verifying the '${propertyRelationString}' property relation's '${propertyString}' property...`);
 
-    const variableType = this.term.getType(),
-          propertyNames = this.property.getNames(),
-          variableTypeProperties = variableType.getProperties(),
-          variableTypeProperty = variableTypeProperties.find((variableTypeProperty) => {
-            const propertyNamesMatch = variableTypeProperty.matchPropertyNames(propertyNames);
+    const termType = this.term.getType(),
+          propertyName = this.property.getName(),
+          termTypeProperties = termType.getProperties(),
+          variableTypeProperty = termTypeProperties.find((termTypeProperty) => {
+            const propertyNameMatches = termTypeProperty.matchPropertyName(propertyName);
 
-            if (propertyNamesMatch) {
+            if (propertyNameMatches) {
               return true;
             }
           }) || null;
 
     if (variableTypeProperty === null) {
       const variableString = this.term.getString(),
-            variableTypeString = variableType.getString();
+            variableTypeString = termType.getString();
 
-      context.debug(`The '${propertyNames}' property is not a property of the '${variableString}' variable's '${variableTypeString}' type.`);
+      context.debug(`The '${propertyName}' property is not a property of the '${variableString}' variable's '${variableTypeString}' type.`);
     } else {
-      const type = variableType;
+      const type = termType;
 
       this.property.setType(type);
 
@@ -131,8 +128,7 @@ export default domAssigned(class PropertyRelation {
 
   static fromPropertyAssertionNode(propertyAssertionNode, context) {
     const { Term, Property } = dom,
-          propertyAssertionPropertyRelationNode = propertyAssertionPropertyRelationNodeQuery(propertyAssertionNode),
-          propertyRelationNode = propertyAssertionPropertyRelationNode, ///
+          propertyRelationNode = propertyAssertionNode.getPropertyRelationNode(),
           node = propertyRelationNode,  ///
           string = context.nodeAsString(node),
           tokens = context.nodeAsTokens(node),

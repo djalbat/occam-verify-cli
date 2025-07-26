@@ -2,20 +2,26 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
+import { SINGLE_SPACE } from "../constants";
+
 export default class PropertyNode extends NonTerminalNode {
   getPropertyName() {
-    const propertyName = this.reduceChildNode((propertyName, firstChildNode) => {
-      const nameTerminalNode = firstChildNode,  ///
-            content = nameTerminalNode.getContent();
-
-      propertyName = (propertyName !== null) ?
-                       `${propertyName} ${content}` :
-                          content;  ///
-
-      return propertyName;
-    }, null);
+    const names = this.getNames(),
+          propertyName = names.join(SINGLE_SPACE);
 
     return propertyName;
+  }
+
+  getNames() {
+    const names = this.mapChildNode((childNode) => {
+      const terminalNode = childNode, ///
+            content = terminalNode.getContent(),
+            name = content; //
+
+      return name;
+    });
+
+    return names;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyNode, ruleName, childNodes, opacity, precedence); }
