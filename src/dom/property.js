@@ -84,7 +84,8 @@ export default domAssigned(class Property {
 
 function propertyFromPropertyNode(propertyNode, fileContext) {
   const { Property } = dom,
-        name = propertyNode.getName(),
+        propertyName = propertyNode.getPropertyName(),
+        name = propertyName,  ///
         type = null,
         string = name,  ///
         property = new Property(string, name, type);
