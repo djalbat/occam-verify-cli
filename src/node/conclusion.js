@@ -6,7 +6,7 @@ import { isNodeStatementNode } from "../utilities/node";
 
 export default class ConclusionNode extends NonTerminalNode {
   getStatementNode() {
-    const statementNode = this.findChiildNode((childNode) => {
+    const statementNode = this.findChildNode((childNode) => {
       const childNodeStatementNode = isNodeStatementNode(childNode);
 
       if (childNodeStatementNode) {

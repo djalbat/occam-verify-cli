@@ -115,10 +115,11 @@ export default domAssigned(class Subproof {
   static fromStepOrSubproofNode(sStepOrSubproofNode, fileContext) {
     let subproof = null;
 
-    const subproofNode = sStepOrSubproofNode.getSubproofNode();
+    const subproofNode = sStepOrSubproofNode.isSubproofNode();
 
-    if (subproofNode !== null) {
-      const subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
+    if (subproofNode) {
+      const subproofNode = sStepOrSubproofNode, ///
+            subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
             string = subproofString,  ///
             suppositions = suppositionsFromSubproofNode(subproofNode, fileContext),
             subDerivation = subDerivationFromSubproofNode(subproofNode, fileContext);

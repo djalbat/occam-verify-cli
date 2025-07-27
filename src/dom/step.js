@@ -137,10 +137,11 @@ export default domAssigned(class Step {
   static fromStepOrSubproofNode(stepOrSubproofNode, fileContext) {
     let step = null;
 
-    const stepNode = stepOrSubproofNode.getStepNode();
+    const stepNode = stepOrSubproofNode.isStepNode();
 
-    if (stepNode !== null) {
+    if (stepNode) {
       const { Statement, Reference } = dom,
+            stepNode = stepOrSubproofNode,  ///
             node = stepNode, ///
             string = fileContext.nodeAsString(node),
             statement = Statement.fromStepNode(stepNode, fileContext),

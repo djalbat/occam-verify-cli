@@ -2,23 +2,17 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeSubproofNode, isNodeStatementNode, isNodeReferenceNode } from "../utilities/node";
+import { isNodeStatementNode, isNodeReferenceNode } from "../utilities/node";
 
 export default class StepNode extends NonTerminalNode {
-  getStepNode() {
-    const stepNode = null;
+  isStepNode() {
+    const stepNode = true;
 
     return stepNode;
   }
 
-  getSubproofNode() {
-    const subproofNode = this.findChildNode((childNode) => {
-      const childNodeSubproofNode = isNodeSubproofNode(childNode);
-
-      if (childNodeSubproofNode) {
-        return true;
-      }
-    }) || null;
+  isSubproofNode() {
+    const subproofNode = false;
 
     return subproofNode;
   }

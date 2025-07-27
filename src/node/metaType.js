@@ -3,6 +3,10 @@
 import { NonTerminalNode } from "occam-parsers";
 
 export default class MetaTypeNode extends NonTerminalNode {
+  getTypeNode() {
+
+  }
+
   getMetaTypeName() {
     let metaTypeName;
 

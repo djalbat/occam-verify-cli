@@ -6,7 +6,7 @@ import { isNodeStatementNode, isNodeProcedureCallNode } from "../utilities/node"
 
 export default class SuppositionNode extends NonTerminalNode {
   getStatementNode() {
-    const statementNode = this.findChiildNode((childNode) => {
+    const statementNode = this.findChildNode((childNode) => {
       const childNodeStatementNode = isNodeStatementNode(childNode);
 
       if (childNodeStatementNode) {
@@ -18,7 +18,7 @@ export default class SuppositionNode extends NonTerminalNode {
   }
 
   getProcedureCallNode() {
-    const procedureCallNode = this.findChiildNode((childNode) => {
+    const procedureCallNode = this.findChildNode((childNode) => {
       const childNodeProcedureCallNode = isNodeProcedureCallNode(childNode);
 
       if (childNodeProcedureCallNode) {

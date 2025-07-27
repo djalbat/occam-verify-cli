@@ -30,7 +30,7 @@ export default class ContainedAssertionNode extends NonTerminalNode {
   }
 
   getStatementNode() {
-    const statementNode = this.findChiildNode((childNode) => {
+    const statementNode = this.findChildNode((childNode) => {
       const childNodeStatementNode = isNodeStatementNode(childNode);
 
       if (childNodeStatementNode) {

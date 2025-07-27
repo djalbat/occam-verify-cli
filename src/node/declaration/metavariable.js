@@ -5,6 +5,13 @@ import { NonTerminalNode } from "occam-parsers";
 import { isNodeMetaTypeNode, isNodeMetavariableNode } from "../../utilities/node";
 
 export default class MetavariableDeclarationNode extends NonTerminalNode {
+  getTypeNode() {
+    const metavariableNode = this.getMetavariableNode(),
+          typeNode = metavariableNode.getTypeNode();
+
+    return typeNode;
+  }
+
   getMetaTypeNode() {
     const metaTypeNode = this.findChildNode((childNode) => {
       const childNodeMetaTypeNode = isNodeMetaTypeNode(childNode);

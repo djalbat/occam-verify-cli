@@ -1,7 +1,7 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-parsers";
+import TopLevelMetaAssertionNode from "../node/topLevelMetaAssertion";
 
-export default class RuleNode extends NonTerminalNode {
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(RuleNode, ruleName, childNodes, opacity, precedence); }
+export default class RuleNode extends TopLevelMetaAssertionNode {
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return TopLevelMetaAssertionNode.fromRuleNameChildNodesOpacityAndPrecedence(RuleNode, ruleName, childNodes, opacity, precedence); }
 }
