@@ -2,11 +2,8 @@
 
 import LocalContext from "../context/local";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
-
-const metavariableDeclarationMetaTypeNodeQuery = nodeQuery("/metavariableDeclaration/metaType");
 
 class MetaType {
   constructor(name) {
@@ -61,8 +58,7 @@ class MetaType {
   }
 
   static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
-    const metavariableDeclarationMetaTypeNode = metavariableDeclarationMetaTypeNodeQuery(metavariableDeclarationNode),
-          metaTypeNode = metavariableDeclarationMetaTypeNode, ///
+    const metaTypeNode = metavariableDeclarationNode.getMetaTypeNode(),
           localContext = LocalContext.fromFileContext(fileContext),
           context = localContext, ///
           metaType = metaTypeFromMetaTypeNode(metaTypeNode, context);

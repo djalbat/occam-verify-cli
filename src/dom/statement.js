@@ -8,23 +8,12 @@ import StatementPartialContext from "../context/partial/statement";
 
 import { domAssigned } from "../dom";
 import { unifyStatement } from "../utilities/unification";
-import { nodeQuery, nodesQuery } from "../utilities/query";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { statementFromStatementNode } from "../utilities/node";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 import { definedAssertionFromStatement, containedAssertionFromStatement, subproofAssertionFromStatement } from "../utilities/context";
 
 const { match, backwardsSome } = arrayUtilities;
-
-const stepStatementNodeQuery = nodeQuery("/step/statement"),
-      statementTermNodesQuery = nodesQuery("/statement//term"),
-      statementFrameNodesQuery = nodesQuery("/statement//frame"),
-      premiseStatementNodeQuery = nodeQuery("/premise/statement"),
-      deductionStatementNodeQuery = nodeQuery("/deduction/statement"),
-      conclusionStatementNodeQuery = nodeQuery("/conclusion/statement"),
-      suppositionStatementNodeQuery = nodeQuery("/supposition/statement"),
-      declarationStatementNodeQuery = nodeQuery("/declaration/statement"),
-      containedAssertionStatementNodeQuery = nodeQuery("/containedAssertion/statement");
 
 export default domAssigned(class Statement {
   constructor(string, node, tokens) {
@@ -62,12 +51,12 @@ export default domAssigned(class Statement {
 
     const termNode = term.getNode(),
           statementNode = this.node,
-          statementTermNodes = statementTermNodesQuery(statementNode);
+          statementNodeTermNodes = statementNode.getTermNodes();
 
-    termContained = statementTermNodes.some((statementTermNode) => {  ///
-      const termNodeMatchesStatementVariableNode = termNode.match(statementTermNode);
+    termContained = statementNodeTermNodes.some((statementNodeTermNode) => {  ///
+      const termNodeMatchesStatementNodeTermNode = termNode.match(statementNodeTermNode);
 
-      if (termNodeMatchesStatementVariableNode) {
+      if (termNodeMatchesStatementNodeTermNode) {
         return true;
       }
     });
@@ -89,12 +78,12 @@ export default domAssigned(class Statement {
 
     const frameNode = frame.getNode(),
           statementNode = this.node,
-          statementFrameNodes = statementFrameNodesQuery(statementNode);
+          statementNodeFrameNodes = statementNode.getFrameNodes();
 
-    frameContained = statementFrameNodes.some((statementFrameNode) => {  ///
-      const frameNodeMatchesStatementMetavariableNode = frameNode.match(statementFrameNode);
+    frameContained = statementNodeFrameNodes.some((statementNodeFrameNode) => {  ///
+      const frameNodeMatchesStatementNodeFrameNode = frameNode.match(statementNodeFrameNode);
 
-      if (frameNodeMatchesStatementMetavariableNode) {
+      if (frameNodeMatchesStatementNodeFrameNode) {
         return true;
       }
     });
@@ -276,11 +265,9 @@ export default domAssigned(class Statement {
   static fromStepNode(stepNode, fileContext) {
     let statement = null;
 
-    const stepStatementNode = stepStatementNodeQuery(stepNode);
+    const statementNode = stepNode.getStatementNode();
 
-    if (stepStatementNode !== null) {
-      const statementNode = stepStatementNode; ///
-
+    if (statementNode !== null) {
       statement = statementFromStatementNode(statementNode, fileContext);
     }
 
@@ -290,11 +277,10 @@ export default domAssigned(class Statement {
   static fromPremiseNode(premiseNode, fileContext) {
     let statement = null;
 
-    const premiseStatementNode = premiseStatementNodeQuery(premiseNode);
+    const statementNode = premiseNode.getStatementNode();
 
-    if (premiseStatementNode !== null) {
-      const statementNode = premiseStatementNode, ///
-            localContext = LocalContext.fromFileContext(fileContext),
+    if (statementNode !== null) {
+      const localContext = LocalContext.fromFileContext(fileContext),
             context = localContext;  ///
 
       statement = statementFromStatementNode(statementNode, context);
@@ -312,11 +298,10 @@ export default domAssigned(class Statement {
   static fromDeductionNode(deductionNode, fileContext) {
     let statement = null;
 
-    const deductionStatementNode = deductionStatementNodeQuery(deductionNode);
+    const statementNode = deductionNode.getStatementNode();
 
-    if (deductionStatementNode !== null) {
-      const statementNode = deductionStatementNode,  ///
-            localContext = LocalContext.fromFileContext(fileContext),
+    if (statementNode !== null) {
+      const localContext = LocalContext.fromFileContext(fileContext),
             context = localContext;  ///
 
       statement = statementFromStatementNode(statementNode, context);
@@ -328,11 +313,10 @@ export default domAssigned(class Statement {
   static fromConclusionNode(conclusionNode, fileContext) {
     let statement = null;
 
-    const conclusionStatementNode = conclusionStatementNodeQuery(conclusionNode);
+    const statementNode = conclusionNode.getStatementNode();
 
-    if (conclusionStatementNode !== null) {
-      const statementNode = conclusionStatementNode,  ///
-            localContext = LocalContext.fromFileContext(fileContext),
+    if (statementNode !== null) {
+      const localContext = LocalContext.fromFileContext(fileContext),
             context = localContext;  ///
 
       statement = statementFromStatementNode(statementNode, context);
@@ -344,11 +328,10 @@ export default domAssigned(class Statement {
   static fromSuppositionNode(suppositionNode, fileContext) {
     let statement = null;
 
-    const suppositionStatementNode = suppositionStatementNodeQuery(suppositionNode);
+    const statementNode = suppositionNode.getStatementNode();
 
-    if (suppositionStatementNode !== null) {
-      const statementNode = suppositionStatementNode, ///
-            localContext = LocalContext.fromFileContext(fileContext),
+    if (statementNode !== null) {
+      const localContext = LocalContext.fromFileContext(fileContext),
             context = localContext;  ///
 
       statement = statementFromStatementNode(statementNode, context);
@@ -360,9 +343,7 @@ export default domAssigned(class Statement {
   static fromDeclarationNode(declarationNode, fileContext) {
     let statementNode;
 
-    const declarationStatementNode = declarationStatementNodeQuery(declarationNode);
-
-    statementNode = declarationStatementNode; ///
+    statementNode = declarationNode.getStatementNode(); ///
 
     statementNode = stripBracketsFromStatementNode(statementNode);  ///
 
@@ -376,11 +357,10 @@ export default domAssigned(class Statement {
   static fromContainedAssertionNode(containedAssertionNode, fileContext) {
     let statement = null;
 
-    const containedAssertionStatementNode = containedAssertionStatementNodeQuery(containedAssertionNode);
+    const statementNode = containedAssertionNode.getStatementNode();
 
-    if (containedAssertionStatementNode !== null) {
-      const statementNode = containedAssertionStatementNode, ///
-            localContext = LocalContext.fromFileContext(fileContext),
+    if (statementNode !== null) {
+      const localContext = LocalContext.fromFileContext(fileContext),
             context = localContext;  ///
 
       statement = statementFromStatementNode(statementNode, context);

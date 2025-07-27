@@ -2,11 +2,78 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeTypeAssertionNode, isNodeSubproofAssertionNode, isNodePropertyAssertionNode } from "../utilities/node";
+import { isNodeTermNode,
+         isNodeFrameNode,
+         isNodeEqualityNode,
+         isNodeJudgementNode,
+         isNodeMetavariableNode,
+         isNodeTypeAssertionNode,
+         isNodeSubproofAssertionNode,
+         isNodePropertyAssertionNode } from "../utilities/node";
 
 export default class StatementNode extends NonTerminalNode {
+  getTermNodes() {
+    const termNodes = this.filterDescendantNode((descendantNode) => {
+      const descendantNodeTermNode = isNodeTermNode(descendantNode);
+
+      if (descendantNodeTermNode) {
+        return true;
+      }
+    });
+
+    return termNodes;
+  }
+
+  getFrameNodes() {
+    const frameNodes = this.filterDescendantNode((descendantNode) => {
+      const descendantNodeFrameNode = isNodeFrameNode(descendantNode);
+
+      if (descendantNodeFrameNode) {
+        return true;
+      }
+    });
+
+    return frameNodes;
+  }
+
+  getEqualityNode() {
+    const equalityNode = this.findChildNode((childNode) => {
+      const childNodeEqualityNode = isNodeEqualityNode(childNode);
+
+      if (childNodeEqualityNode) {
+        return true;
+      }
+    }) || null;
+
+    return equalityNode;
+  }
+
+  getJudgementNode() {
+    const judgementNode = this.findChildNode((childNode) => {
+      const childNodeJudgementNode = isNodeJudgementNode(childNode);
+
+      if (childNodeJudgementNode) {
+        return true;
+      }
+    }) || null;
+
+    return judgementNode;
+  }
+
+  getMetavariableNode() {
+    const metavariableNode = this.findChildNode((childNode) => {
+      const childNodeMetavariableNode = isNodeMetavariableNode(childNode);
+
+      if (childNodeMetavariableNode) {
+        return true;
+      }
+    }) || null;
+
+    return metavariableNode;
+  }
+
   getTypeAssertionNode() {
-    const typeyAssertionNode = this.findChildNode((childNode) => {
+    const typeAssertionNode = this.findChildNode((childNode) => {
       const childNodeTypeAssertionNode = isNodeTypeAssertionNode(childNode);
 
       if (childNodeTypeAssertionNode) {
@@ -14,7 +81,7 @@ export default class StatementNode extends NonTerminalNode {
       }
     }) || null;
 
-    return typeyAssertionNode;
+    return typeAssertionNode;
   }
 
   getSubproofAssertionNode() {

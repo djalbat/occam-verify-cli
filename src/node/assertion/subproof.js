@@ -6,17 +6,13 @@ import { isNodeStatementNode } from "../../utilities/node";
 
 export default class SubproofAssertionNode extends NonTerminalNode {
   getStatementNodes() {
-    const statementNodes = this.reduceChildNode((statementNodes, childNode) => {
+    const statementNodes = this.filterChildNode((childNode) => {
       const childNodeStatementNode = isNodeStatementNode(childNode);
 
       if (childNodeStatementNode) {
-        const statementNode = childNode;  ///
-
-        statementNodes.push(statementNode);
+        return true;
       }
-
-      return statementNodes;
-    }, []);
+    });
 
     return statementNodes;
   }

@@ -1,9 +1,6 @@
 "use strict";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
-
-const nameTerminalNodeQuery = nodeQuery("/parameter/@name");
 
 export default domAssigned(class Parameter {
   constructor(name) {
@@ -57,9 +54,8 @@ export default domAssigned(class Parameter {
   }
 
   static fromParameterNode(parameterNode, context) {
-    const nameTerminalNode = nameTerminalNodeQuery(parameterNode),
-          nameTerminalNodeContent = nameTerminalNode.getContent(),
-          name = nameTerminalNodeContent, ///
+    const parameterName = parameterNode.getParameterName(),
+          name = parameterName, ///
           parameter = new Parameter(name);
 
     return parameter;

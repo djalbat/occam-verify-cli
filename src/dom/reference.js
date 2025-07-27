@@ -4,16 +4,10 @@ import dom from "../dom";
 import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { referenceMetaType } from "../dom/metaType";
 import { unifyMetavariableIntrinsically } from "../utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
-
-const stepReferenceNodeQuery = nodeQuery("/step/reference"),
-      procedureCallReferenceNodeQuery = nodeQuery("/procedureCall/reference"),
-      declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable"),
-      satisfiesAssertionMetavariableNodeQuery = nodeQuery("/satisfiesAssertion/metavariable");
 
 export default domAssigned(class Reference {
   constructor(metavariable) {
@@ -183,11 +177,9 @@ export default domAssigned(class Reference {
   static fromStepNode(stepNode, fileContext) {
     let reference = null;
 
-    const stepReferenceNode = stepReferenceNodeQuery(stepNode);
+    const referenceNode = stepNode.getReferenceNode();
 
-    if (stepReferenceNode !== null) {
-      const referenceNode = stepReferenceNode; ///
-
+    if (referenceNode !== null) {
       reference = referenceFromReferenceNode(referenceNode, fileContext);
     }
 
@@ -201,8 +193,7 @@ export default domAssigned(class Reference {
   }
 
   static fromDeclarationNode(declarationNode, fileContext) {
-    const declarationMetavariableNode = declarationMetavariableNodeQuery(declarationNode),
-          metavariableNode = declarationMetavariableNode, ///
+    const metavariableNode = declarationNode.getMetavariableNode(),
           reference = referenceFromMetavariableNode(metavariableNode, fileContext);
 
     return reference;
@@ -217,11 +208,9 @@ export default domAssigned(class Reference {
   static fromProcedureCallNode(procedureCallNode, fileContext) {
     let reference = null;
 
-    const procedureCallReferenceNode = procedureCallReferenceNodeQuery(procedureCallNode);
+    const referenceNode = procedureCallNode.getReferenceNode();
 
-    if (procedureCallReferenceNode !== null) {
-      const referenceNode = procedureCallReferenceNode; ///
-
+    if (referenceNode !== null) {
       reference = referenceFromReferenceNode(referenceNode, fileContext);
     }
 
@@ -229,8 +218,7 @@ export default domAssigned(class Reference {
   }
 
   static fromSatisfiesAssertionNode(satisfiesAssertionNode, fileContext) {
-    const satisfiesAssertionMetavariableNode = satisfiesAssertionMetavariableNodeQuery(satisfiesAssertionNode),
-          metavariableNode = satisfiesAssertionMetavariableNode, ///
+    const metavariableNode = satisfiesAssertionNode.getMetavariableNode(),
           reference = referenceFromMetavariableNode(metavariableNode, fileContext);
 
     return reference;

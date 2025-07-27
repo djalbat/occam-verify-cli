@@ -5,12 +5,7 @@ import { Expressions } from "occam-furtle";
 import dom from "../dom";
 
 import { domAssigned } from "../dom";
-import { nodeQuery, nodesQuery } from "../utilities/query";
 import { referenceFromJSON, parametersFromJSON, parametersToParametersJSON } from "../utilities/json";
-
-const parameterNodesQuery = nodesQuery("/procedureCall/parameter"),
-      premiseProcedureCallNodeQuery = nodeQuery("/premise/procedureCall"),
-      suppositionProcedureCallNodeQuery = nodeQuery("/supposition/procedureCall");
 
 export default domAssigned(class ProcedureCall {
   constructor(string, reference, parameters) {
@@ -126,11 +121,9 @@ export default domAssigned(class ProcedureCall {
   static fromPremiseNode(premiseNode, context) {
     let procedureCall = null;
 
-    const premiseProcedureCallNode = premiseProcedureCallNodeQuery(premiseNode);
+    const procedureCallNode = premiseNode.getProcedureCallNode();
 
-    if (premiseProcedureCallNode !== null) {
-      const procedureCallNode = premiseProcedureCallNode; ///
-
+    if (procedureCallNode !== null) {
       procedureCall = procedureCallFromProcedureCallNode(procedureCallNode, context);
     }
 
@@ -140,11 +133,9 @@ export default domAssigned(class ProcedureCall {
   static fromSuppositionNode(suppositionNode, context) {
     let procedureCall = null;
 
-    const suppositionProcedureCallNode = suppositionProcedureCallNodeQuery(suppositionNode);
+    const procedureCallNode = suppositionNode.getProcedureCallNode();
 
-    if (suppositionProcedureCallNode !== null) {
-      const procedureCallNode = suppositionProcedureCallNode; ///
-
+    if (procedureCallNode !== null) {
       procedureCall = procedureCallFromProcedureCallNode(procedureCallNode, context);
     }
 
@@ -164,7 +155,7 @@ function procedureCallFromProcedureCallNode(procedureCallNode, context) {
 
 function parametersFromProcedureCallNode(procedureCallNode, context) {
   const { Parameter } = dom,
-        parameterNodes = parameterNodesQuery(procedureCallNode),
+        parameterNodes = procedureCallNode.getParameterNodes(),
         parameters = parameterNodes.map((parameterNode) => {
           const parameter = Parameter.fromParameterNode(parameterNode, context);
 

@@ -61,17 +61,13 @@ export default class TopLevelAssertionNode extends NonTerminalNode {
   }
 
   getSuppositionNodes() {
-    const suppositionNodes = this.reduceChildNode((suppositionNodes, childNode) => {
+    const suppositionNodes = this.filterChildNode((childNode) => {
       const childNodeSuppositionNode = isNodeSuppositionNode(childNode);
 
       if (childNodeSuppositionNode) {
-        const suppositionNode = childNode;  ///
-
-        suppositionNodes.push(suppositionNode);
+        return true;
       }
-
-      return suppositionNodes;
-    }, []);
+    });
 
     return suppositionNodes;
   }

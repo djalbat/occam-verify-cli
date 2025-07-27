@@ -11,17 +11,13 @@ export default class TermNode extends NonTerminalNode {
   getSingularTermNode() {
     let singularTermNode = null;
 
-    const termNodes = this.reduceChildNode((termNodes, childNode) => {
+    const termNodes = this.filterChildNode((childNode) => {
             const childNodeTermNode = isNodeTermNode(childNode);
 
             if (!childNodeTermNode) {
-              const singularTermNode = childNode; ///
-
-              termNodes.push(singularTermNode);
+              return true;
             }
-
-            return termNodes;
-          }, []),
+          }),
           termNodesLength = termNodes.length;
 
     if (termNodesLength === 1) {
@@ -36,17 +32,13 @@ export default class TermNode extends NonTerminalNode {
   getSingularVariableNode() {
     let singularVariableNode = null;
 
-    const variableNodes = this.reduceChildNode((variableNodes, childNode) => {
+    const variableNodes = this.filterChildNode((childNode) => {
             const childNodeVariableNode = isNodeVariableNode(childNode);
 
             if (!childNodeVariableNode) {
-              const singularVariableNode = childNode; ///
-
-              variableNodes.push(singularVariableNode);
+              return true;
             }
-
-            return variableNodes;
-          }, []),
+          }),
           variableNodesLength = variableNodes.length;
 
     if (variableNodesLength === 1) {

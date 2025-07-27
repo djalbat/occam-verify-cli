@@ -7,7 +7,6 @@ import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
-import { nodeQuery, nodesQuery } from "../utilities/query";
 import { labelsStringFromLabels } from "./topLevelAssertion";
 import { labelsFromJSON,
          premisesFromJSON,
@@ -17,11 +16,6 @@ import { labelsFromJSON,
          conclusionToConclusionJSON } from "../utilities/json";
 
 const { reverse, extract, backwardsEvery } = arrayUtilities;
-
-const proofNodeQuery = nodeQuery("/rule/proof"),
-      labelNodesQuery = nodesQuery("/rule/parenthesisedLabels/labels/label"),
-      premiseNodesQuery = nodesQuery("/rule/premise"),
-      conclusionNodeQuery = nodeQuery("/rule/conclusion");
 
 export default domAssigned(class Rule {
   constructor(fileContext, string, labels, premises, conclusion, proof) {
@@ -249,7 +243,7 @@ export default domAssigned(class Rule {
 
 function proofFromRuleNode(ruleNode, fileContext) {
   const { Proof } = dom,
-        proofNode = proofNodeQuery(ruleNode),
+        proofNode = ruleNode.getProofNode(),
         proof = Proof.fromProofNode(proofNode, fileContext);
 
   return proof;
@@ -257,7 +251,7 @@ function proofFromRuleNode(ruleNode, fileContext) {
 
 function labelsFromRuleNode(ruleNode, fileContext) {
   const { Label } = dom,
-        labelNodes = labelNodesQuery(ruleNode),
+        labelNodes = ruleNode.getLabelNodes(),
         labels = labelNodes.map((labelNode) => {
           const label = Label.fromLabelNode(labelNode, fileContext);
 
@@ -269,7 +263,7 @@ function labelsFromRuleNode(ruleNode, fileContext) {
 
 function premisesFromRuleNode(ruleNode, fileContext) {
   const { Premise } = dom,
-        premiseNodes = premiseNodesQuery(ruleNode),
+        premiseNodes = ruleNode.getPremiseNodes(),
         premises = premiseNodes.map((premiseNode) => {
           const premise = Premise.fromPremiseNode(premiseNode, fileContext);
 
@@ -281,7 +275,7 @@ function premisesFromRuleNode(ruleNode, fileContext) {
 
 function conclusionFromRuleNode(ruleNode, fileContext) {
   const { Conclusion } = dom,
-        conclusionNode = conclusionNodeQuery(ruleNode),
+        conclusionNode = ruleNode.getConclusionNode(),
         conclusion = Conclusion.fromConclusionNode(conclusionNode, fileContext);
 
   return conclusion;

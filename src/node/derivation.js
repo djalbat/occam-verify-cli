@@ -6,18 +6,14 @@ import { isNodeStepNode, isNodeSubproofNode } from "../utilities/node";
 
 export default class DerivationNode extends NonTerminalNode {
   getStepOrSubproofNodes() {
-    const stepOrSubproofNodes = this.reduceChildNode((stepOrSubproofNodes, childNode) => {
+    const stepOrSubproofNodes = this.filterChildNode((childNode) => {
       const childNodeStepNode = isNodeStepNode(childNode),
             childNodeSubproofNode = isNodeSubproofNode(childNode);
 
       if (childNodeStepNode || childNodeSubproofNode) {
-        const stepOrSubproofNode = childNode; ///
-
-        stepOrSubproofNodes.push(stepOrSubproofNode);
+        return true;
       }
-
-      return stepOrSubproofNodes;
-    }, []);
+    });
 
     return stepOrSubproofNodes;
   }

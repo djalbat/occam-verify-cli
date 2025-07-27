@@ -2,14 +2,26 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeDeclarationNode } from "../utilities/node";
+import { isNodeFrameNode, isNodeDeclarationNode } from "../utilities/node";
 
 export default class JudgementNode extends NonTerminalNode {
+  getFrameNode() {
+    const frameNode = this.findChildNode((childNode) => {
+      const childNodeFrameNode = isNodeFrameNode(childNode);
+
+      if (childNodeFrameNode) {
+        return true;
+      }
+    }) || null;
+
+    return frameNode;
+  }
+
   getDeclarationNode() {
     const declarationNode = this.findChildNode((childNode) => {
-      const childNodeDeclarationNOde = isNodeDeclarationNode(childNode);
+      const childNodeDeclarationNode = isNodeDeclarationNode(childNode);
 
-      if (childNodeDeclarationNOde) {
+      if (childNodeDeclarationNode) {
         return true;
       }
     }) || null;

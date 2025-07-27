@@ -47,17 +47,13 @@ export default class ComplexTypeDeclarationNode extends NonTerminalNode {
   }
 
   getSuperTypeNodes() {
-    const typeNodes = this.reduceChildNode((typeNodes, childNode) => {
+    const typeNodes = this.filterChildNode((childNode) => {
       const childNodeTypeNode = isNodeTypeNode(childNode);
 
       if (childNodeTypeNode) {
-        const typeNode = childNode;  ///
-
-        typeNodes.push(typeNode);
+        return true;
       }
-
-      return typeNodes;
-    }, []);
+    });
 
     typeNodes.pop();
 
@@ -67,17 +63,13 @@ export default class ComplexTypeDeclarationNode extends NonTerminalNode {
   }
 
   getPropertyDeclarationNodes() {
-    const propertyDeclarationNodes = this.reduceChildNode((propertyDeclarationNodes, childNode) => {
+    const propertyDeclarationNodes = this.filterChildNode((childNode) => {
       const childNodePropertyDeclarationNode = isNodePropertyDeclarationNode(childNode);
 
       if (childNodePropertyDeclarationNode) {
-        const propertyDeclarationNode = childNode;  ///
-
-        propertyDeclarationNodes.push(propertyDeclarationNode);
+        return true;
       }
-
-      return propertyDeclarationNodes;
-    }, []);
+    });
 
     return propertyDeclarationNodes;
   }

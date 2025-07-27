@@ -3,5 +3,22 @@
 import { NonTerminalNode } from "occam-parsers";
 
 export default class ParameterNode extends NonTerminalNode {
+  getParameterName() {
+    let parameterName;
+
+    this.someChildNode((childNode, index) => {
+      const nameTerminalNode = childNode, ///
+            content = nameTerminalNode.getContent();
+
+      parameterName = content;  ///
+
+      if (index === 0) {
+        return true;
+      }
+    });
+
+    return parameterName;
+  }
+
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ParameterNode, ruleName, childNodes, opacity, precedence); }
 }

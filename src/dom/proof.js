@@ -3,10 +3,7 @@
 import dom from "../dom";
 import LocalContext from "../context/local";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
-
-const derivationNodeQuery = nodeQuery("/proof/derivation");
 
 export default domAssigned(class Proof {
   constructor(derivation) {
@@ -60,7 +57,7 @@ export default domAssigned(class Proof {
 
     if (proofNode !== null) {
       const { Derivation } = dom,
-            derivationNode = derivationNodeQuery(proofNode),
+            derivationNode = proofNode.getDerivationNode(),
             derivation = Derivation.fromDerivationNode(derivationNode, fileContext);
 
       proof = new Proof(derivation);

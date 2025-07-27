@@ -2,6 +2,32 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
+import { isNodeFrameNode, isNodeStatementNode } from "../../utilities/node";
+
 export default class ContainedAssertionNode extends NonTerminalNode {
+  getFrameNode() {
+    const frameNode = this.findChildNode((childNode) => {
+      const childNodeFrameNode = isNodeFrameNode(childNode);
+
+      if (childNodeFrameNode) {
+        return true;
+      }
+    }) || null;
+
+    return frameNode;
+  }
+
+  getStatementNode() {
+    const statementNode = this.findChiildNode((childNode) => {
+      const childNodeStatementNode = isNodeStatementNode(childNode);
+
+      if (childNodeStatementNode) {
+        return true;
+      }
+    }) || null;
+
+    return statementNode;
+  }
+
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ContainedAssertionNode, ruleName, childNodes, opacity, precedence); }
 }

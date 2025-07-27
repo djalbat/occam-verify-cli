@@ -4,11 +4,8 @@ import dom from "../dom";
 import unifyMixins from "../mixins/step/unify";
 import Substitutions from "../substitutions";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { propertyAssertionFromStatement } from "../utilities/context";
-
-const stepNodeQuery = nodeQuery("/step");
 
 export default domAssigned(class Step {
   constructor(string, statement, reference) {
@@ -140,7 +137,7 @@ export default domAssigned(class Step {
   static fromStepOrSubproofNode(stepOrSubproofNode, fileContext) {
     let step = null;
 
-    const stepNode = stepNodeQuery(stepOrSubproofNode);
+    const stepNode = stepOrSubproofNode.getStepNode();
 
     if (stepNode !== null) {
       const { Statement, Reference } = dom,

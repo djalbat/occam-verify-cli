@@ -3,10 +3,7 @@
 import dom from "../dom";
 import JudgementAssignment from "../assignment/judgement";
 
-import { nodeQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
-
-const judgementNodeQuery = nodeQuery("/statement/judgement");
 
 export default domAssigned(class Judgement {
   constructor(string, frame, declaration) {
@@ -158,7 +155,7 @@ export default domAssigned(class Judgement {
   static fromStatementNode(statementNode, context) {
     let judgement = null;
 
-    const judgementNode = judgementNodeQuery(statementNode);
+    const judgementNode = statementNode.getJudgementNode();
 
     if (judgementNode !== null) {
       const { Frame, Declaration} = dom,

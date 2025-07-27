@@ -2,7 +2,7 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeMetaTypeNode } from "../../utilities/node";
+import { isNodeMetaTypeNode, isNodeMetavariableNode } from "../../utilities/node";
 
 export default class MetavariableDeclarationNode extends NonTerminalNode {
   getMetaTypeNode() {
@@ -15,6 +15,18 @@ export default class MetavariableDeclarationNode extends NonTerminalNode {
     }) || null;
 
     return metaTypeNode
+  }
+
+  getMetavariableNode() {
+    const metavariableNode = this.findChildNode((childNode) => {
+      const childNodeMetavariableNode = isNodeMetavariableNode(childNode);
+
+      if (childNodeMetavariableNode) {
+        return true;
+      }
+    }) || null;
+
+    return metavariableNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(MetavariableDeclarationNode, ruleName, childNodes, opacity, precedence); }

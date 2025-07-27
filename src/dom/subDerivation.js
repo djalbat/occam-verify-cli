@@ -4,13 +4,10 @@ import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
 
-import { nodesQuery } from "../utilities/query";
 import { domAssigned } from "../dom";
 import { assignAssignments } from "../utilities/assignments";
 
 const { last } = arrayUtilities;
-
-const stepOrSubproofNodesQuery = nodesQuery("/subDerivation/step|subproof");
 
 export default domAssigned(class SubDerivation {
   constructor(stepsOrSubproofs) {
@@ -65,7 +62,7 @@ export default domAssigned(class SubDerivation {
 
 function stepOrSubproofFromSubDerivationNode(subDerivationNode, fileContext) {
   const { Step, Subproof } = dom,
-        stepOrSubproofNodes = stepOrSubproofNodesQuery(subDerivationNode),
+        stepOrSubproofNodes = subDerivationNode.getStepOrSubproofNodes(),
         stepsOrSubproofs = stepOrSubproofNodes.map((stepOrSubproofNode) => {
           const subproof = Subproof.fromStepOrSubproofNode(stepOrSubproofNode, fileContext),
                 step = Step.fromStepOrSubproofNode(stepOrSubproofNode, fileContext),

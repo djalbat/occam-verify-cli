@@ -7,13 +7,6 @@ import dom from "../dom";
 import { S, NOTHING } from "../constants";
 import { domAssigned } from "../dom";
 import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
-import { nodeQuery, nodesQuery } from "../utilities/query";
-
-const declarationNodesQuery = nodesQuery("/frame/declaration"),
-      metavariableNodesQuery = nodesQuery("/frame/metavariable"),
-      judgementFrameNodeQuery = nodeQuery("/judgement/frame"),
-      definedAssertionFrameNodeQuery = nodeQuery("/definedAssertion/frame"),
-      containedAssertionFrameNodeQuery = nodeQuery("/containedAssertion/frame");
 
 const { first } = arrayUtilities;
 
@@ -308,8 +301,7 @@ export default domAssigned(class Frame {
   }
 
   static fromJudgementNode(judgementNode, context) {
-    const judgementFrameNode = judgementFrameNodeQuery(judgementNode),
-          frameNode = judgementFrameNode,
+    const frameNode = judgementNode.getFrameNode(),
           frame = frameFromFrameNode(frameNode, context);
 
     return frame;
@@ -318,11 +310,9 @@ export default domAssigned(class Frame {
   static fromDefinedAssertionNode(definedAssertionNode, context) {
     let frame = null;
 
-    const definedAssertionFrameNode = definedAssertionFrameNodeQuery(definedAssertionNode);
+    const frameNode = definedAssertionNode.getFrameNode();
 
-    if (definedAssertionFrameNode !== null) {
-      const frameNode = definedAssertionFrameNode;  ///
-
+    if (frameNode !== null) {
       frame = frameFromFrameNode(frameNode, context);
     }
 
@@ -332,11 +322,9 @@ export default domAssigned(class Frame {
   static fromContainedAssertionNode(containedAssertionNode, context) {
     let frame = null;
 
-    const containedAssertionFrameNode = containedAssertionFrameNodeQuery(containedAssertionNode);
+    const frameNode = containedAssertionNode.getFrameNode();
 
-    if (containedAssertionFrameNode !== null) {
-      const frameNode = containedAssertionFrameNode;  ///
-
+    if (frameNode !== null) {
       frame = frameFromFrameNode(frameNode, context)
     }
 
@@ -358,7 +346,7 @@ function frameFromFrameNode(frameNode, context) {
 
 function declarationsFromFrameNode(frameNode, context) {
   const { Declaration } = dom,
-        declarationNodes = declarationNodesQuery(frameNode),
+        declarationNodes = frameNode.getDeclarationNodes(),
         declarations = declarationNodes.map((declarationNode) => {
           const declaration = Declaration.fromDeclarationNode(declarationNode, context);
 
@@ -370,7 +358,7 @@ function declarationsFromFrameNode(frameNode, context) {
 
 function metavariablesFromFrameNode(frameNode, context) {
   const { Metavariable } = dom,
-        metavariableNodes = metavariableNodesQuery(frameNode),
+        metavariableNodes = frameNode.getMetavariableNodes(),
         metavariables = metavariableNodes.map((metavariableNode) => {
           const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
 
