@@ -2,7 +2,7 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeStatementNode, isNodeSubDerivationNode } from "../utilities/node";
+import { isNodeSuppositionNode, isNodeSubDerivationNode } from "../utilities/node";
 
 export default class SubproofNode extends NonTerminalNode {
   isStepNode() {
@@ -31,7 +31,7 @@ export default class SubproofNode extends NonTerminalNode {
 
   getSuppositionNodes() {
     const suppositionNodes = this.filterChildNode((childNode) => {
-      const childNodeSuppositionNode = isNodeStatementNode(childNode);
+      const childNodeSuppositionNode = isNodeSuppositionNode(childNode);
 
       if (childNodeSuppositionNode) {
         return true;

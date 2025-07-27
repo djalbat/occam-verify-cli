@@ -2,19 +2,26 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeLabelNode } from "../utilities/node";
+import { isNodeLabelsNode } from "../utilities/node";
 
 export default class ParenthesisedLabelsNode extends NonTerminalNode {
   getLabelNodes() {
-    const labelNodes = this.filterChildNode((childNode) => {
-      const childNodeLabelNode = isNodeLabelNode(childNode);
-
-      if (childNodeLabelNode) {
-        return true;
-      }
-    });
+    const labelsNode = this.getLabelsNode(),
+           labelNodes = labelsNode.getLabelNodes();
 
     return labelNodes;
+  }
+
+  getLabelsNode() {
+    const labelsNode = this.findChildNode((childNode) => {
+      const childNodeLabelsNode = isNodeLabelsNode(childNode);
+
+      if (childNodeLabelsNode) {
+        return true;
+      }
+    }) || null;
+
+    return labelsNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ParenthesisedLabelsNode, ruleName, childNodes, opacity, precedence); }

@@ -7,12 +7,13 @@ import { RULE_RULE_NAME,
          STEP_RULE_NAME,
          TERM_RULE_NAME,
          TYPE_RULE_NAME,
-         LABEL_RULE_NAME,
          LEMMA_RULE_NAME,
          AXIOM_RULE_NAME,
          ERROR_RULE_NAME,
          FRAME_RULE_NAME,
          PROOF_RULE_NAME,
+         LABEL_RULE_NAME,
+         LABELS_RULE_NAME,
          THEOREM_RULE_NAME,
          PREMISE_RULE_NAME,
          PROPERTY_RULE_NAME,
@@ -61,8 +62,6 @@ export function isNodeTermNode(node) { return isNodeRuleNodeByRuleName(node, TER
 
 export function isNodeTypeNode(node) { return isNodeRuleNodeByRuleName(node, TYPE_RULE_NAME); }
 
-export function isNodeLabelNode(node) { return isNodeRuleNodeByRuleName(node, LABEL_RULE_NAME); }
-
 export function isNodeLemmaNode(node) { return isNodeRuleNodeByRuleName(node, LEMMA_RULE_NAME); }
 
 export function isNodeAxiomNode(node) { return isNodeRuleNodeByRuleName(node, AXIOM_RULE_NAME); }
@@ -72,6 +71,10 @@ export function isNodeErrorNode(node) { return isNodeRuleNodeByRuleName(node, ER
 export function isNodeFrameNode(node) { return isNodeRuleNodeByRuleName(node, FRAME_RULE_NAME); }
 
 export function isNodeProofNode(node) { return isNodeRuleNodeByRuleName(node, PROOF_RULE_NAME); }
+
+export function isNodeLabelNode(node) { return isNodeRuleNodeByRuleName(node, LABEL_RULE_NAME); }
+
+export function isNodeLabelsNode(node) { return isNodeRuleNodeByRuleName(node, LABELS_RULE_NAME); }
 
 export function isNodeTheoremNode(node) { return isNodeRuleNodeByRuleName(node, THEOREM_RULE_NAME); }
 

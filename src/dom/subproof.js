@@ -119,10 +119,10 @@ export default domAssigned(class Subproof {
 
     if (subproofNode) {
       const subproofNode = sStepOrSubproofNode, ///
-            subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
-            string = subproofString,  ///
             suppositions = suppositionsFromSubproofNode(subproofNode, fileContext),
-            subDerivation = subDerivationFromSubproofNode(subproofNode, fileContext);
+            subDerivation = subDerivationFromSubproofNode(subproofNode, fileContext),
+            subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
+            string = subproofString;  ///
 
       subproof = new Subproof(string, suppositions, subDerivation);
     }

@@ -7,9 +7,10 @@ import StepNode from "./node/step"
 import ErrorNode from "./node/error"
 import FrameNode from "./node/frame"
 import AxiomNode from "./node/axiom"
-import LabelNode from "./node/label"
 import LemmaNode from "./node/lemma"
 import ProofNode from "./node/proof"
+import LabelNode from "./node/label"
+import LabelsNode from "./node/labels"
 import PremiseNode from "./node/premise"
 import TheoremNode from "./node/theorem"
 import SubproofNode from "./node/subproof"
@@ -58,8 +59,9 @@ import { RULE_RULE_NAME,
          ERROR_RULE_NAME,
          FRAME_RULE_NAME,
          AXIOM_RULE_NAME,
-         LABEL_RULE_NAME,
          LEMMA_RULE_NAME,
+         LABEL_RULE_NAME,
+         LABELS_RULE_NAME,
          THEOREM_RULE_NAME,
          PREMISE_RULE_NAME,
          SUBPROOF_RULE_NAME,
@@ -107,10 +109,11 @@ const nonTerminalNodeMap = {
   [TYPE_RULE_NAME]: TypeNode,
   [ERROR_RULE_NAME]: ErrorNode,
   [FRAME_RULE_NAME]: FrameNode,
-  [LABEL_RULE_NAME]: LabelNode,
   [LEMMA_RULE_NAME]: LemmaNode,
   [AXIOM_RULE_NAME]: AxiomNode,
   [PROOF_RULE_NAME]: ProofNode,
+  [LABEL_RULE_NAME]: LabelNode,
+  [LABELS_RULE_NAME]: LabelsNode,
   [THEOREM_RULE_NAME]: TheoremNode,
   [PREMISE_RULE_NAME]: PremiseNode,
   [PROPERTY_RULE_NAME]: PropertyNode,

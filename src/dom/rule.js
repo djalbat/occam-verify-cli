@@ -230,10 +230,10 @@ export default domAssigned(class Rule {
   }
 
   static fromRuleNode(ruleNode, fileContext) {
-    const labels = labelsFromRuleNode(ruleNode, fileContext),
+    const proof = proofFromRuleNode(ruleNode, fileContext),
+          labels = labelsFromRuleNode(ruleNode, fileContext),
           premises = premisesFromRuleNode(ruleNode, fileContext),
           conclusion = conclusionFromRuleNode(ruleNode, fileContext),
-          proof = proofFromRuleNode(ruleNode, fileContext),
           string = stringFromLabelsAndConclusion(labels, conclusion),
           rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
 
