@@ -2,9 +2,21 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeFrameNode, isNodeStatementNode } from "../../utilities/node";
+import { isNodeTermNode, isNodeFrameNode, isNodeStatementNode } from "../../utilities/node";
 
 export default class ContainedAssertionNode extends NonTerminalNode {
+  getTermNode() {
+    const termNode = this.findChildNode((childNode) => {
+      const childNodeTermNode = isNodeTermNode(childNode);
+
+      if (childNodeTermNode) {
+        return true;
+      }
+    }) || null;
+
+    return termNode;
+  }
+
   getFrameNode() {
     const frameNode = this.findChildNode((childNode) => {
       const childNodeFrameNode = isNodeFrameNode(childNode);

@@ -1,9 +1,21 @@
 "use strict";
 
 import { NonTerminalNode } from "occam-parsers";
-import { isNodePropertyNode } from "../utilities/node";
+import { isNodeTermNode, isNodePropertyNode } from "../utilities/node";
 
 export default class PropertyRelationNode extends NonTerminalNode {
+  getTermNode() {
+    const termNode = this.findChildNode((childNode) => {
+      const childNodeTermNode = isNodeTermNode(childNode);
+
+      if (childNodeTermNode) {
+        return true;
+      }
+    }) || null;
+
+    return termNode;
+  }
+
   getPropertyNode() {
     const propertyNode = this.findChildNode((childNode) => {
       const childNodePropertyNode = isNodePropertyNode(childNode);

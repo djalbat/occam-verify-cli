@@ -6,20 +6,15 @@ import dom from "../dom";
 import LocalContext from "../context/local";
 import verifyMixins from "../mixins/term/verify";
 
+import { nodeQuery } from "../utilities/query"
 import { domAssigned } from "../dom";
 import { termFromTermNode } from "../utilities/node";
-import { nodeQuery, nodesQuery } from "../utilities/query"
 import { termNodeFromTermString } from "../context/partial/term";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 const { filter, compress } = arrayUtilities;
 
-const variableNodesQuery = nodesQuery("//variable"),
-      termVariableNodeQuery = nodeQuery("/term/variable!"),
-      typeAssertionTermNodeQuery = nodeQuery("/typeAssertion/term"),
-      definedAssertionTermNodeQuery = nodeQuery("/definedAssertion/term"),
-      propertyRelationTermNodeQuery = nodeQuery("/propertyRelation/term"),
-      containedAssertionTermNodeQuery = nodeQuery("/containedAssertion/term");
+const containedAssertionTermNodeQuery = nodeQuery("/containedAssertion/term");
 
 export default domAssigned(class Term {
   constructor(string, node, type) {
@@ -53,7 +48,8 @@ export default domAssigned(class Term {
   }
 
   getVariables(context) {
-    const variableNodes = variableNodesQuery(this.node),
+    const termNode = this.node,
+          variableNodes = termNode.getVariableNodes(),
           variables = variableNodes.map((variableNode) => {
             const { Variable } = dom,
                   variable = Variable.fromVariableNode(variableNode, context);
@@ -88,8 +84,9 @@ export default domAssigned(class Term {
   }
 
   isSimple() {
-    const termVariableNode = termVariableNodeQuery(this.node),
-          simple = (termVariableNode !== null);
+    const termNode = this.node,
+          singularVariableNode = termNode.getSingularVariableNode(),
+          simple = (singularVariableNode !== null);
 
     return simple;
   }
@@ -224,11 +221,9 @@ export default domAssigned(class Term {
   static fromTypeAssertionNode(typeAssertionNode, context) {
     let term = null;
 
-    const typeAssertionTermNode = typeAssertionTermNodeQuery(typeAssertionNode);
+    const termNode = typeAssertionNode.getTermNode();
 
-    if (typeAssertionTermNode !== null) {
-      const termNode = typeAssertionTermNode;  ///
-
+    if (termNode !== null) {
       term = termFromTermNode(termNode, context);
     }
 
@@ -238,11 +233,9 @@ export default domAssigned(class Term {
   static fromDefinedAssertionNode(definedAssertionNode, context) {
     let term = null;
 
-    const definedAssertionTermNode = definedAssertionTermNodeQuery(definedAssertionNode);
+    const termNode = definedAssertionNode.getTermNode();
 
-    if (definedAssertionTermNode !== null) {
-      const termNode = definedAssertionTermNode;  ///
-
+    if (termNode !== null) {
       term = termFromTermNode(termNode, context);
     }
 
@@ -250,8 +243,7 @@ export default domAssigned(class Term {
   }
 
   static fromPropertyRelationNode(propertyRelationNode, context) {
-    const propertyRelationTermNode = propertyRelationTermNodeQuery(propertyRelationNode),
-          termNode = propertyRelationTermNode, ///
+    const termNode = propertyRelationNode.getTermNode(),
           term = termFromTermNode(termNode, context);
 
     return term;
@@ -267,11 +259,9 @@ export default domAssigned(class Term {
   static fromContainedAssertionNode(containedAssertionNode, context) {
     let term = null;
 
-    const containedAssertionTermNode = containedAssertionTermNodeQuery(containedAssertionNode);
+    const termNode = containedAssertionNode.getTermNode();
 
-    if (containedAssertionTermNode !== null) {
-      const termNode = containedAssertionTermNode;
-
+    if (termNode !== null) {
       term = termFromTermNode(termNode, context);
     }
 

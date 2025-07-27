@@ -5,12 +5,7 @@ import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
-import { nodeQuery, nodesQuery } from "../utilities/query";
 import { subproofStringFromSubproofNode } from "../utilities/subproof";
-
-const subproofNodeQuery = nodeQuery("/subproof"),
-      suppositionNodesQuery = nodesQuery("/subproof/supposition"),
-      subDerivationNodeQuery = nodeQuery("/subproof/subDerivation");
 
 export default domAssigned(class Subproof {
   constructor(string, suppositions, subDerivation) {
@@ -120,7 +115,7 @@ export default domAssigned(class Subproof {
   static fromStepOrSubproofNode(sStepOrSubproofNode, fileContext) {
     let subproof = null;
 
-    const subproofNode = subproofNodeQuery(sStepOrSubproofNode);
+    const subproofNode = sStepOrSubproofNode.getSubproofNode();
 
     if (subproofNode !== null) {
       const subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
@@ -137,7 +132,7 @@ export default domAssigned(class Subproof {
 
 function suppositionsFromSubproofNode(subproofNode, fileContext) {
   const { Supposition } = dom,
-        suppositionNodes = suppositionNodesQuery(subproofNode),
+        suppositionNodes = subproofNode.getSuppositionNodes(),
         suppositions = suppositionNodes.map((suppositionNode) => {
           const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
 
@@ -149,7 +144,7 @@ function suppositionsFromSubproofNode(subproofNode, fileContext) {
 
 function subDerivationFromSubproofNode(subproofNode, fileContext) {
   const { SubDerivation } = dom,
-        subDerivationNode = subDerivationNodeQuery(subproofNode),
+        subDerivationNode = subproofNode.getSubDerivationNode(),
         subDerivation = SubDerivation.fromSubDerivationNode(subDerivationNode, fileContext);
 
   return subDerivation;

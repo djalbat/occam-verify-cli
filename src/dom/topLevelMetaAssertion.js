@@ -2,13 +2,10 @@
 
 import { arrayUtilities } from "necessary";
 
-import dom from "../dom";
 import LocalContext from "../context/local";
-import Substitutions from "../substitutions";
 import TopLevelAssertion from "./topLevelAssertion";
 
-import { nodeQuery } from "../utilities/query";
-import { proofFromNode, deductionFromNode, suppositionsFromNode, stringFromLabelsAndDeduction } from "./topLevelAssertion";
+import { proofFromProofNode, labelsFromLabelNodes, deductionFromDeductionNode, suppositionsFromSuppositionNodes, stringFromLabelsAndDeduction } from "./topLevelAssertion";
 import { labelsFromJSON,
          labelsToLabelsJSON,
          deductionFromJSON,
@@ -19,8 +16,6 @@ import { labelsFromJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
 const { first } = arrayUtilities;
-
-const labelNodeQuery = nodeQuery("/*/parenthesisedLabel/label");
 
 export default class TopLevelMetaAssertion extends TopLevelAssertion {
   constructor(fileContext, string, labels, suppositions, deduction, proof, substitutions) {
@@ -116,36 +111,29 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
 
   static fromJSON(Class, json, fileContext) {
     const labels = labelsFromJSON(json, fileContext),
-          substitutions = substitutionsFromJSON(json, fileContext),
-          suppositions = suppositionsFromJSON(json, fileContext),
           deduction = deductionFromJSON(json, fileContext),
+          suppositions = suppositionsFromJSON(json, fileContext),
+          substitutions = substitutionsFromJSON(json, fileContext),
           proof = null,
           string = stringFromLabelsAndDeduction(labels, deduction),
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, substitutions);
+          topLevelMetaAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, substitutions);
 
-    return topLevelAssertion;
+    return topLevelMetaAssertion;
   }
 
   static fromNode(Class, node, fileContext) {
-    const labels = labelsFromNode(node, fileContext),
-          substitutions = Substitutions.fromNothing(),
-          suppositions = suppositionsFromNode(node, fileContext),
-          deduction = deductionFromNode(node, fileContext),
-          proof = proofFromNode(node, fileContext),
+    const topLevelAssertionNode = node, ///
+          proofNode = topLevelAssertionNode.getProofNode(),
+          labelNodes = topLevelAssertionNode.getLabelNodes(),
+          deductionNode = topLevelAssertionNode.getDeductionNode(),
+          suppositionNodes = topLevelAssertionNode.getSuppositionNodes(),
+          proof = proofFromProofNode(proofNode, fileContext),
+          labels = labelsFromLabelNodes(labelNodes, fileContext),
+          deduction = deductionFromDeductionNode(deductionNode, fileContext),
+          suppositions = suppositionsFromSuppositionNodes(suppositionNodes, fileContext),
           string = stringFromLabelsAndDeduction(labels, deduction),
-          metaLemma = new Class(fileContext, string, labels, suppositions, deduction, proof, substitutions);
+          topLevelMetaAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof);
 
-    return metaLemma;
+    return topLevelMetaAssertion;
   }
-}
-
-function labelsFromNode(node, fileContext) {
-  const { Label } = dom,
-        labelNode = labelNodeQuery(node),
-        label = Label.fromLabelNode(labelNode, fileContext),
-        labels = [
-          label
-        ];
-
-  return labels;
 }

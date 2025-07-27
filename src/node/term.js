@@ -8,6 +8,18 @@ import { isNodeTermNode, isNodeVariableNode } from "../utilities/node";
 const { first } = arrayUtilities;
 
 export default class TermNode extends NonTerminalNode {
+  getVariableNodes() {
+    const variableNodes = this.filterDescendantNode((descendantNode) => {
+      const descendantNodeVariableNode = isNodeVariableNode(descendantNode);
+
+      if (descendantNodeVariableNode) {
+        return true;
+      }
+    });
+
+    return variableNodes;
+  }
+
   getSingularTermNode() {
     let singularTermNode = null;
 

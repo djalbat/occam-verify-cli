@@ -4,15 +4,11 @@ import dom from "../dom";
 import LocalContext from "../context/local";
 import TermSubstitution from "../substitution/term";
 
-import { nodeQuery } from "../utilities/query";
-import { ObjectType } from "./type";
 import { domAssigned } from "../dom";
 import { EMPTY_STRING } from "../constants";
 import { typeFromTypeNode } from "../utilities/node";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { variableNodeFromVariableString } from "../context/partial/variable";
-
-const termVariableNodeQuery = nodeQuery("/term/variable!");
 
 export default domAssigned(class Variable {
   constructor(string, node, name, type, propertyRelations) {
@@ -209,10 +205,10 @@ export default domAssigned(class Variable {
   static fromTermNode(termNode, context) {
     let variable = null;
 
-    const termVariableNode = termVariableNodeQuery(termNode);
+    const singularVariableNode = termNode.getSingularVariableNode();
 
-    if (termVariableNode !== null) {
-      const variableNode = termVariableNode,  ///
+    if (singularVariableNode !== null) {
+      const variableNode = singularVariableNode,  ///
             type = null;
 
       variable = variableFromVariableNodeAndType(variableNode, type, context);

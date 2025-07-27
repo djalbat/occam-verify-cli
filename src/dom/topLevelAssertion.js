@@ -264,14 +264,14 @@ export default class TopLevelAssertion {
   }
 }
 
-function proofFromProofNode(proofNode, fileContext) {
+export function proofFromProofNode(proofNode, fileContext) {
   const { Proof } = dom,
         proof = Proof.fromProofNode(proofNode, fileContext);
 
   return proof;
 }
 
-function labelsFromLabelNodes(labelNodes, fileContext) {
+export function labelsFromLabelNodes(labelNodes, fileContext) {
   const { Label } = dom,
         labels = labelNodes.map((labelNode) => {
           const label = Label.fromLabelNode(labelNode, fileContext);
@@ -282,14 +282,14 @@ function labelsFromLabelNodes(labelNodes, fileContext) {
   return labels;
 }
 
-function deductionFromDeductionNode(deductionNode, fileContext) {
+export function deductionFromDeductionNode(deductionNode, fileContext) {
   const { Deduction } = dom,
         deduction = Deduction.fromDeductionNode(deductionNode, fileContext);
 
   return deduction;
 }
 
-function suppositionsFromSuppositionNodes(suppositionNodes, fileContext) {
+export function suppositionsFromSuppositionNodes(suppositionNodes, fileContext) {
   const { Supposition } = dom,
         suppositions = suppositionNodes.map((suppositionNode) => {
           const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
