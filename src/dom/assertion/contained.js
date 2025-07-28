@@ -87,10 +87,9 @@ export default domAssigned(class ContainedAssertion {
     let termVerified = false;
 
     if (this.term !== null) {
-      const termString = this.term.getString(),
-            containedAssertionString = this.string; ///
+      const termString = this.term.getString();
 
-      context.trace(`Verifying the '${containedAssertionString}' contained assertion's '${termString}' term...`);
+      context.trace(`Verifying the '${termString}' term...`);
 
       const termSimple = this.term.isSimple();
 
@@ -104,7 +103,7 @@ export default domAssigned(class ContainedAssertion {
         });
 
         if (termVerified) {
-          context.debug(`...verified the '${containedAssertionString}' contained assertion's '${termString}' term.`);
+          context.debug(`...verified the '${termString}' term.`);
         }
       }
     }
@@ -116,10 +115,9 @@ export default domAssigned(class ContainedAssertion {
     let frameVerified = false;
 
     if (this.frame !== null) {
-      const frameString = this.frame.getString(),
-            containedAssertionString = this.string; ///
+      const frameString = this.frame.getString();
 
-      context.trace(`Verifying the '${containedAssertionString}' contained assertion's '${frameString}' frame...`);
+      context.trace(`Verifying the '${frameString}' frame...`);
 
       const frameSimple = this.frame.isSimple();
 
@@ -133,7 +131,7 @@ export default domAssigned(class ContainedAssertion {
         frameVerified = this.frame.verify(assignments, stated, context);
 
         if (frameVerified) {
-          context.debug(`...verified the '${containedAssertionString}' contained assertion's '${frameString}' frame.`);
+          context.debug(`...verified the '${frameString}' frame.`);
         }
       }
     }
@@ -145,10 +143,9 @@ export default domAssigned(class ContainedAssertion {
     let statementVerified = false;
 
     if (this.statement !== null) {
-      const statementString = this.statement.getString(),
-            containedAssertionString = this.string; ///
+      const statementString = this.statement.getString();
 
-      context.trace(`Verifying the '${containedAssertionString}' contained assertion's '${statementString}' statement...`);
+      context.trace(`Verifying the '${statementString}' statement...`);
 
       stated = true;  ///
 
@@ -157,7 +154,7 @@ export default domAssigned(class ContainedAssertion {
       statementVerified = this.statement.verify(assignments, stated, context);
 
       if (statementVerified) {
-        context.debug(`...verified the '${containedAssertionString}' contained assertion's '${statementString}' statement.`);
+        context.debug(`...verified the '${statementString}' statement.`);
       }
     }
 

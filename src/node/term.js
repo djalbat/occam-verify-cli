@@ -47,7 +47,7 @@ export default class TermNode extends NonTerminalNode {
     const variableNodes = this.filterChildNode((childNode) => {
             const childNodeVariableNode = isNodeVariableNode(childNode);
 
-            if (!childNodeVariableNode) {
+            if (childNodeVariableNode) {
               return true;
             }
           }),

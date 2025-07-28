@@ -81,10 +81,9 @@ export default domAssigned(class DefinedAssertion {
     let termVerified = false;
 
     if (this.term !== null) {
-      const termString = this.term.getString(),
-            definedAssertionString = this.string; ///
+      const termString = this.term.getString(); ///
 
-      context.trace(`Verifying the '${definedAssertionString}' defined assertion's '${termString}' term...`);
+      context.trace(`Verifying the '${termString}' term...`);
 
       const termSimple = this.term.isSimple();
 
@@ -98,7 +97,7 @@ export default domAssigned(class DefinedAssertion {
         });
 
         if (termVerified) {
-          context.debug(`...verified the '${definedAssertionString}' defined assertion's '${termString}' term.`);
+          context.debug(`...verified the '${termString}' term.`);
         }
       }
     }
@@ -110,10 +109,9 @@ export default domAssigned(class DefinedAssertion {
     let frameVerified = false;
 
     if (this.frame !== null) {
-      const frameString = this.frame.getString(),
-            definedAssertionString = this.string; ///
+      const frameString = this.frame.getString(); ///
 
-      context.trace(`Verifying the '${definedAssertionString}' defined assertion's '${frameString}' frame...`);
+      context.trace(`Verifying the '${frameString}' frame...`);
 
       const frameSimple = this.frame.isSimple();
 
@@ -127,7 +125,7 @@ export default domAssigned(class DefinedAssertion {
         frameVerified = this.frame.verify(assignments, stated, context);
 
         if (frameVerified) {
-          context.debug(`...verified the '${definedAssertionString}' defined assertion's '${frameString}' frame.`);
+          context.debug(`...verified the '${frameString}' frame.`);
         }
       }
     }
