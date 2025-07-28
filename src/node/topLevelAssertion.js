@@ -30,8 +30,13 @@ export default class TopLevelAssertionNode extends NonTerminalNode {
   }
 
   getLabelNodes() {
-    const parenthesisedLabelsNode = this.getParenthesisedLabelsNode(),
-          labelNodes = parenthesisedLabelsNode.getLabelNodes();
+    let labelNodes = [];
+
+    const parenthesisedLabelsNode = this.getParenthesisedLabelsNode();
+
+    if (parenthesisedLabelsNode !== null) {
+      labelNodes = parenthesisedLabelsNode.getLabelNodes();
+    }
 
     return labelNodes;
   }

@@ -18,7 +18,7 @@ export default class ProcedureCallNode extends NonTerminalNode {
   }
 
   getParameterNodes() {
-    const parameterNodes = this.filterChildNodes((childNode) => {
+    const parameterNodes = this.filterChildNode((childNode) => {
       const childNodeParameterNode = isNodeParameterNode(childNode);
 
       if (childNodeParameterNode) {
