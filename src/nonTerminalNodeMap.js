@@ -44,6 +44,7 @@ import PropertyAssertionNode from "./node/assertion/property";
 import SubproofAssertionNode from "./node/assertion/subproof";
 import ContainedAssertionNode from "./node/assertion/contained";
 import SatisfiesAssertionNode from "./node/assertion/satisfies";
+import ParenthesisedLabelNode from "./node/parenthesisedLabel"
 import ParenthesisedLabelsNode from "./node/parenthesisedLabels"
 import PropertyDeclarationNode from "./node/declaration/property";
 import variableDeclarationNode from "./node/declaration/variable";
@@ -96,6 +97,7 @@ import { RULE_RULE_NAME,
          PROPERTY_ASSERTION_RULE_NAME,
          CONTAINED_ASSERTION_RULE_NAME,
          SATISFIES_ASSERTION_RULE_NAME,
+         PARENTHESISED_LABEL_RULE_NAME,
          PARENTHESISED_LABELS_RULE_NAME,
          PROPERTY_DECLARATION_RULE_NAME,
          VARIABLE_DECLARATION_RULE_NAME,
@@ -149,6 +151,7 @@ const nonTerminalNodeMap = {
   [PROPERTY_ASSERTION_RULE_NAME]: PropertyAssertionNode,
   [SATISFIES_ASSERTION_RULE_NAME]: SatisfiesAssertionNode,
   [CONTAINED_ASSERTION_RULE_NAME]: ContainedAssertionNode,
+  [PARENTHESISED_LABEL_RULE_NAME]: ParenthesisedLabelNode,
   [PARENTHESISED_LABELS_RULE_NAME]: ParenthesisedLabelsNode,
   [VARIABLE_DECLARATION_RULE_NAME]: variableDeclarationNode,
   [PROPERTY_DECLARATION_RULE_NAME]: PropertyDeclarationNode,

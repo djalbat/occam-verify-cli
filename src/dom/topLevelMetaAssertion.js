@@ -1,13 +1,11 @@
 "use strict";
 
-import { arrayUtilities } from "necessary";
-
+import dom from "../dom";
 import LocalContext from "../context/local";
-import TopLevelAssertion from "./topLevelAssertion";
 
-import { proofFromProofNode, labelsFromLabelNodes, deductionFromDeductionNode, suppositionsFromSuppositionNodes, stringFromLabelsAndDeduction } from "./topLevelAssertion";
-import { labelsFromJSON,
-         labelsToLabelsJSON,
+import { proofFromProofNode, deductionFromDeductionNode, suppositionsFromSuppositionNodes } from "./topLevelAssertion";
+import { labelFromJSON,
+         labelToLabelJSON,
          deductionFromJSON,
          suppositionsFromJSON,
          substitutionsFromJSON,
@@ -15,25 +13,39 @@ import { labelsFromJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
-const { first } = arrayUtilities;
-
-export default class TopLevelMetaAssertion extends TopLevelAssertion {
-  constructor(fileContext, string, labels, suppositions, deduction, proof, substitutions) {
-    super(fileContext, string, labels, suppositions, deduction, proof);
-
+export default class TopLevelMetaAssertion {
+  constructor(fileContext, string, label, suppositions, deduction, proof, substitutions) {
+    this.fileContext = fileContext;
+    this.string = string;
+    this.label = label;
+    this.suppositions = suppositions;
+    this.deduction = deduction;
+    this.proof = proof;
     this.substitutions = substitutions;
   }
 
-  getSubstitutions() {
-    return this.substitutions;
+  getFileContext() {
+    return this.fileContext;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getLabel() {
-    const labels = this.getLabels(),
-          firstLabel = first(labels),
-          label = firstLabel; ///
+    return this.label;
+  }
 
-    return label;
+  getSuppositions() {
+    return this.suppositions;
+  }
+
+  getDeduction() {
+    return this.deduction;
+  }
+
+  getProof() {
+    return this.proof;
   }
 
   matchReference(reference) {
@@ -46,9 +58,9 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
   verify() {
     let verified = false;
 
-    const labelsVerified = this.verifyLabels();
+    const labelVerified = this.verifyLabels();
 
-    if (labelsVerified) {
+    if (labelVerified) {
       const localContext = LocalContext.fromFileContext(this.fileContext),
             context = localContext, ///
             suppositionsVerified = this.suppositions.every((supposition) => {
@@ -78,29 +90,23 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
   }
 
   verifyLabels() {
-    const labelsVerified = this.labels.every((label) => {
-      const nameOnly = false,
-            labelVerified = label.verify(nameOnly);
+    const nameOnly = false,
+          labelVerified = this.label.verify(nameOnly);
 
-      if (labelVerified) {
-        return true;
-      }
-    });
-
-    return labelsVerified;
+    return labelVerified;
   }
 
   toJSON() {
-    const labelsJSON = labelsToLabelsJSON(this.labels),
+    const labelJSON = labelToLabelJSON(this.label),
           deductionJSON = deductionToDeductionJSON(this.deduction),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           substitutionsJSON = substitutionsToSubstitutionsJSON(this.substitutions),
-          labels = labelsJSON,  ///
+          label = labelJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
           substitutions = substitutionsJSON,  ///
           json = {
-            labels,
+            label,
             deduction,
             suppositions,
             substitutions
@@ -110,13 +116,13 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
   }
 
   static fromJSON(Class, json, fileContext) {
-    const labels = labelsFromJSON(json, fileContext),
+    const label = labelFromJSON(json, fileContext),
           deduction = deductionFromJSON(json, fileContext),
           suppositions = suppositionsFromJSON(json, fileContext),
           substitutions = substitutionsFromJSON(json, fileContext),
           proof = null,
-          string = stringFromLabelsAndDeduction(labels, deduction),
-          topLevelMetaAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, substitutions);
+          string = stringFromLabelAndDeduction(label, deduction),
+          topLevelMetaAssertion = new Class(fileContext, string, label, suppositions, deduction, proof, substitutions);
 
     return topLevelMetaAssertion;
   }
@@ -124,16 +130,46 @@ export default class TopLevelMetaAssertion extends TopLevelAssertion {
   static fromNode(Class, node, fileContext) {
     const topLevelAssertionNode = node, ///
           proofNode = topLevelAssertionNode.getProofNode(),
-          labelNodes = topLevelAssertionNode.getLabelNodes(),
+          labelNode = topLevelAssertionNode.getLabelNode(),
           deductionNode = topLevelAssertionNode.getDeductionNode(),
           suppositionNodes = topLevelAssertionNode.getSuppositionNodes(),
           proof = proofFromProofNode(proofNode, fileContext),
-          labels = labelsFromLabelNodes(labelNodes, fileContext),
+          label = labelFromLabelNode(labelNode, fileContext),
           deduction = deductionFromDeductionNode(deductionNode, fileContext),
           suppositions = suppositionsFromSuppositionNodes(suppositionNodes, fileContext),
-          string = stringFromLabelsAndDeduction(labels, deduction),
-          topLevelMetaAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof);
+          string = stringFromLabelAndDeduction(label, deduction),
+          topLevelMetaAssertion = new Class(fileContext, string, label, suppositions, deduction, proof);
 
     return topLevelMetaAssertion;
   }
+}
+
+function labelFromLabelNode(labelNode, fileContext) {
+  let label = null;
+
+  const { Label } = dom;
+
+  if (labelNode !== null) {
+    label = Label.fromLabelNode(labelNode, fileContext);
+  }
+
+  return label;
+}
+
+function labelStringFromLabel(label) {
+  const labelsString = (label !== null) ?
+                          label.getString() :
+                            null;
+
+  return labelsString;
+}
+
+function stringFromLabelAndDeduction(label, deduction) {
+  const deductionString = deduction.getString(),
+        labelString = labelStringFromLabel(label),
+        string = (labelString === null) ?
+                    deductionString : ///
+                     `${labelString} :: ${deductionString}`;
+
+  return string;
 }

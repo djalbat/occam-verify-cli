@@ -160,6 +160,19 @@ export function rulesFromJSON(json, fileContext) {
   return rules;
 }
 
+export function labelFromJSON(json, fileContext) {
+  let { label } = json;
+
+  const { Label } = dom,
+        labelJSON = label;  ///
+
+  json = labelJSON; ///
+
+  label = Label.fromJSON(json, fileContext);
+
+  return label;
+}
+
 export function labelsFromJSON(json, fileContext) {
   let { labels } = json;
 
@@ -423,6 +436,12 @@ export function typeToTypeJSON(type) {
                        null;
 
   return typeJSON;
+}
+
+export function labelToLabelJSON(label) {
+  const labelJSON = label.toJSON();
+
+  return labelJSON;
 }
 
 export function metaTypeToMetaTypeJSON(metaType) {

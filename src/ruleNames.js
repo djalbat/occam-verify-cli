@@ -44,6 +44,7 @@ export const PROPERTY_ASSERTION_RULE_NAME = "propertyAssertion";
 export const SUBPROOF_ASSERTION_RULE_NAME = "subproofAssertion";
 export const CONTAINED_ASSERTION_RULE_NAME = "containedAssertion";
 export const SATISFIES_ASSERTION_RULE_NAME = "satisfiesAssertion";
+export const PARENTHESISED_LABEL_RULE_NAME = "parenthesisedLabel";
 export const PARENTHESISED_LABELS_RULE_NAME = "parenthesisedLabels";
 export const PROPERTY_DECLARATION_RULE_NAME = "propertyDeclaration";
 export const VARIABLE_DECLARATION_RULE_NAME = "variableDeclaration";

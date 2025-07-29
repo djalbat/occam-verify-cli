@@ -1,12 +1,13 @@
 "use strict";
 
 import { NonTerminalNode } from "occam-parsers";
-import { isNodeProofNode, isNodePremiseNode, isNodeConclusionNode, isNodeParenthesisedLabelsNode } from "../utilities/node";
+
+import { isNodeProofNode, isNodeSuppositionNode, isNodeDeductionNode, isNodeParenthesisedLabelNode } from "../utilities/node";
 
 export default class TopLevelMetaAssertionNode extends NonTerminalNode {
-  getLabelNodes() {
-    const parenthesisedLabelsNode = this.getParenthesisedLabelsNode(),
-          labelNodes = parenthesisedLabelsNode.getLabelNodes();
+  getLabelNode() {
+    const parenthesisedLabelNode = this.getParenthesisedLabelNode(),
+          labelNodes = parenthesisedLabelNode.getLabelNode();
 
     return labelNodes;
   }
@@ -23,40 +24,40 @@ export default class TopLevelMetaAssertionNode extends NonTerminalNode {
     return proofNode;
   }
 
-  getPremiseNodes() {
-    const premiseNodes = this.filterChildNode((childNode) => {
-      const childNOdePremiseNode = isNodePremiseNode(childNode);
+  getDeductionNode() {
+    const deductionNode = this.findChildNode((childNode) => {
+      const childNOdeDeductionNode = isNodeDeductionNode(childNode);
 
-      if (childNOdePremiseNode) {
+      if (childNOdeDeductionNode) {
         return true;
       }
     }) || null;
 
-    return premiseNodes;
+    return deductionNode;
   }
 
-  getConclusionNode() {
-    const conclusionNode = this.findChildNode((childNode) => {
-      const childNOdeConclusionNode = isNodeConclusionNode(childNode);
+  getSuppositionNodes() {
+    const suppositionNodes = this.filterChildNode((childNode) => {
+      const childNOdeSuppositionNode = isNodeSuppositionNode(childNode);
 
-      if (childNOdeConclusionNode) {
+      if (childNOdeSuppositionNode) {
         return true;
       }
     }) || null;
 
-    return conclusionNode;
+    return suppositionNodes;
   }
 
-  getParenthesisedLabelsNode() {
-    const parenthesisedLabelsNode = this.findChildNode((childNode) => {
-      const childNodeParenthesisedLabelNode = isNodeParenthesisedLabelsNode(childNode);
+  getParenthesisedLabelNode() {
+    const parenthesisedLabelNode = this.findChildNode((childNode) => {
+      const childNodeParenthesisedLabelNode = isNodeParenthesisedLabelNode(childNode);
 
       if (childNodeParenthesisedLabelNode) {
         return true;
       }
     }) || null;
 
-    return parenthesisedLabelsNode;
+    return parenthesisedLabelNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence); }
