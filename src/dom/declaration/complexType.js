@@ -3,7 +3,7 @@
 import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
-import { stringFromTypeNameNameAndSuperTypes } from "../../utilities/type";
+import { superTypesStringFromSuperTypes, stringFromTypeNameNameAndSuperTypes } from "../../utilities/type";
 
 export default domAssigned(class ComplexTypeDeclaration {
   constructor(fileContext, string, type) {

@@ -3,13 +3,8 @@
 import dom from "../../dom";
 import LocalContext from "../../context/local";
 
-import { UNDEFINED } from "../../constants";
 import { domAssigned } from "../../dom";
-import { nodeQuery, nodesQuery } from "../../utilities/query";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
-
-const terminalNodesQuery = nodesQuery("/definedAssertion/@*"),
-      definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion");
 
 export default domAssigned(class DefinedAssertion {
   constructor(string, node, tokens, term, frame, negated) {
@@ -194,16 +189,16 @@ export default domAssigned(class DefinedAssertion {
   static fromStatementNode(statementNode, context) {
     let definedAssertion = null;
 
-    const definedAssertionNode = definedAssertionNodeQuery(statementNode);
+    const definedAssertionNode = statementNode.getDefinedAssertionNode();
 
     if (definedAssertionNode !== null) {
       const { Term, Frame } = dom,
             node = definedAssertionNode,  ///
             string = context.nodeAsString(node),
             tokens = context.nodeAsTokens(node),
+            negated = definedAssertionNode.isNegated(),
             term = Term.fromDefinedAssertionNode(definedAssertionNode, context),
-            frame = Frame.fromDefinedAssertionNode(definedAssertionNode, context),
-            negated = isNegated(definedAssertionNode);
+            frame = Frame.fromDefinedAssertionNode(definedAssertionNode, context);
 
       definedAssertion = new DefinedAssertion(string, node, tokens, term, frame, negated);
     }
@@ -211,20 +206,6 @@ export default domAssigned(class DefinedAssertion {
     return definedAssertion;
   }
 });
-
-function isNegated(definedAssertionNode) {
-  const terminalNodes = terminalNodesQuery(definedAssertionNode),
-        negated = terminalNodes.some((terminalNode) => {  ///
-          const content = terminalNode.getContent(),
-                contentUndefined = (content === UNDEFINED);
-
-          if (contentUndefined) {
-            return true;
-          }
-        });
-
-  return negated;
-}
 
 function verifyWhenDerived(term, frame, negated, context) {
   let verifiedWhenDerived = false;

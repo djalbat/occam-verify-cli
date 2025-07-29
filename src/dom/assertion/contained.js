@@ -3,13 +3,8 @@
 import dom from "../../dom";
 import LocalContext from "../../context/local";
 
-import { MISSING } from "../../constants";
 import { domAssigned } from "../../dom";
-import { nodeQuery, nodesQuery } from "../../utilities/query";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
-
-const terminalNodesQuery = nodesQuery("/containedAssertion/@*"),
-      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion");
 
 export default domAssigned(class ContainedAssertion {
   constructor(string, node, tokens, term, frame, negated, statement) {
@@ -223,17 +218,17 @@ export default domAssigned(class ContainedAssertion {
   static fromStatementNode(statementNode, context) {
     let containedAssertion = null;
 
-    const containedAssertionNode = containedAssertionNodeQuery(statementNode);
+    const containedAssertionNode = statementNode.getContainedAssertionNode();
 
     if (containedAssertionNode !== null) {
       const { Term, Frame, Statement } = dom,
             node = containedAssertionNode,  ///
             string = context.nodeAsString(node),
             tokens = context.nodeAsTokens(node),
+            negated = containedAssertionNode.isNegated(),
             term = Term.fromContainedAssertionNode(containedAssertionNode, context),
             frame = Frame.fromContainedAssertionNode(containedAssertionNode, context),
-            statement = Statement.fromContainedAssertionNode(containedAssertionNode, context),
-            negated = isNegated(containedAssertionNode);  ///
+            statement = Statement.fromContainedAssertionNode(containedAssertionNode, context);
 
       containedAssertion = new ContainedAssertion(string, node, tokens, term, frame, negated, statement);
     }
@@ -241,20 +236,6 @@ export default domAssigned(class ContainedAssertion {
     return containedAssertion;
   }
 });
-
-function isNegated(definedAssertionNode) {
-  const terminalNodes = terminalNodesQuery(definedAssertionNode),
-        negated = terminalNodes.some((terminalNode) => {  ///
-          const content = terminalNode.getContent(),
-                contentMessing = (content === MISSING);
-
-          if (contentMessing) {
-            return true;
-          }
-        });
-
-  return negated;
-}
 
 function verifyWhenDerived(term, frame, statement, negated, context) {
   let verifiedWhenDerived = false;

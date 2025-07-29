@@ -26,7 +26,7 @@ export default class TermNode extends NonTerminalNode {
     const termNodes = this.filterChildNode((childNode) => {
             const childNodeTermNode = isNodeTermNode(childNode);
 
-            if (!childNodeTermNode) {
+            if (childNodeTermNode) {
               return true;
             }
           }),

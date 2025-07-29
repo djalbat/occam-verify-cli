@@ -2,9 +2,21 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeMetavariableNode } from "../../utilities/node";
+import { isNodeTermNode, isNodeMetavariableNode } from "../../utilities/node";
 
 export default class SatisfiesAssertionNode extends NonTerminalNode {
+  getTermNodes() {
+    const termNodes = this.filterChildNode((childNode) => {
+      const childNodeTermNode = isNodeTermNode(childNode);
+
+      if (childNodeTermNode) {
+        return true;
+      }
+    });
+
+    return termNodes;
+  }
+
   getMetavariableNode() {
     const metavariableNode = this.findChildNode((childNode) => {
       const childNodeMetavariableNode = isNodeMetavariableNode(childNode);

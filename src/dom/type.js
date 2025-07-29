@@ -286,11 +286,11 @@ class Type {
   }
 
   static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
-    const properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
-          provisional = complexTypeDeclarationNode.isProvisional(),
+    const provisional = complexTypeDeclarationNode.isProvisional(),
           typeName = complexTypeDeclarationNode.getTypeName(),
           name = typeName,
           superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+          properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
           string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
 

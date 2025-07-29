@@ -2,9 +2,32 @@
 
 import { NonTerminalNode } from "occam-parsers";
 
+import { MISSING } from "../../constants";
 import { isNodeTermNode, isNodeFrameNode, isNodeStatementNode } from "../../utilities/node";
 
 export default class ContainedAssertionNode extends NonTerminalNode {
+  isNegated() {
+    let negated = false;
+
+    this.someChildNode((childNode) => {
+      const childNodeTerminalNode = childNode.isTerminalNode();
+
+      if (childNodeTerminalNode) {
+        const terminalNode = childNode, ///
+              content = terminalNode.getContent(),
+              contentMessing = (content === MISSING);
+
+        if (contentMessing) {
+          negated = true;
+
+          return true;
+        }
+      }
+    });
+
+    return negated;
+  }
+
   getTermNode() {
     const termNode = this.findChildNode((childNode) => {
       const childNodeTermNode = isNodeTermNode(childNode);

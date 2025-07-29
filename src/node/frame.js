@@ -38,7 +38,7 @@ export default class FrameNode extends NonTerminalNode {
     const metavariableNodes = this.filterChildNode((childNode) => {
             const childNodeMetavariableNode = isNodeMetavariableNode(childNode);
 
-            if (!childNodeMetavariableNode) {
+            if (childNodeMetavariableNode) {
               return true;
             }
           }),

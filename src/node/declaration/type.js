@@ -3,7 +3,7 @@
 import { NonTerminalNode } from "occam-parsers";
 
 import { PROVISIONAL } from "../../constants";
-import { isNodeTypeNode } from "../../utilities/node";
+import { isNodeTypeNode, isNodeTypesNode } from "../../utilities/node";
 
 export default class TypeDeclarationNode extends NonTerminalNode {
   getTypeName() {
@@ -24,6 +24,18 @@ export default class TypeDeclarationNode extends NonTerminalNode {
     return typeName;
   }
 
+  getTypesNode() {
+    const typesNode = this.findChildNode((childNode) => {
+      const childNodeTypesNode = isNodeTypesNode(childNode);
+
+      if (childNodeTypesNode) {
+        return true;
+      }
+    }) || null;
+
+    return typesNode;
+  }
+
   isProvisional() {
     let provisional = false;
 
@@ -31,7 +43,7 @@ export default class TypeDeclarationNode extends NonTerminalNode {
       const childNodeTerminalNode = childNode.isTerminalNode();
 
       if (childNodeTerminalNode) {
-        const terminalNode = childNode, ///
+        const terminalNode = childNode,
               content = terminalNode.getContent(),
               contentProvisional = (content === PROVISIONAL);
 
@@ -47,17 +59,15 @@ export default class TypeDeclarationNode extends NonTerminalNode {
   }
 
   getSuperTypeNodes() {
-    const typeNodes = this.filterChildNode((childNode) => {
-      const childNodeTypeNode = isNodeTypeNode(childNode);
+    let superTypeNodes = [];
 
-      if (childNodeTypeNode) {
-        return true;
-      }
-    });
+    const typesNode = this.getTypesNode();
 
-    typeNodes.pop();
+    if (typesNode !== null) {
+      const typeNodes = typesNode.getTypeNodes();
 
-    const superTypeNodes = typeNodes; ///
+      superTypeNodes = typeNodes; ///
+    }
 
     return superTypeNodes;
   }

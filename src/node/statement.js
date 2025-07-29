@@ -8,8 +8,11 @@ import { isNodeTermNode,
          isNodeJudgementNode,
          isNodeMetavariableNode,
          isNodeTypeAssertionNode,
+         isNodeDefinedAssertionNode,
          isNodeSubproofAssertionNode,
-         isNodePropertyAssertionNode } from "../utilities/node";
+         isNodePropertyAssertionNode,
+         isNodeSatisfiesAssertionNode,
+         isNodeContainedAssertionNode } from "../utilities/node";
 
 export default class StatementNode extends NonTerminalNode {
   getTermNodes() {
@@ -84,6 +87,18 @@ export default class StatementNode extends NonTerminalNode {
     return typeAssertionNode;
   }
 
+  getDefinedAssertionNode() {
+    const definedAssertionNode = this.findChildNode((childNode) => {
+      const definedAssertionNode = isNodeDefinedAssertionNode(childNode);
+
+      if (definedAssertionNode) {
+        return true;
+      }
+    }) || null;
+
+    return definedAssertionNode;
+  }
+
   getSubproofAssertionNode() {
     const subproofAssertionNode = this.findChildNode((childNode) => {
       const childNodeSubproofAssertionNode = isNodeSubproofAssertionNode(childNode);
@@ -106,6 +121,30 @@ export default class StatementNode extends NonTerminalNode {
     }) || null;
 
     return propertyAssertionNode;
+  }
+
+  getContainedAssertionNode() {
+    const containedAssertionNode = this.findChildNode((childNode) => {
+      const containedAssertionNode = isNodeContainedAssertionNode(childNode);
+
+      if (containedAssertionNode) {
+        return true;
+      }
+    }) || null;
+
+    return containedAssertionNode;
+  }
+
+  getSatisfiedAssertionNode() {
+    const satisfiedAssertionNode = this.findChildNode((childNode) => {
+      const childNodeSatisfiedAssertionNode = isNodeSatisfiesAssertionNode(childNode);
+
+      if (childNodeSatisfiedAssertionNode) {
+        return true;
+      }
+    }) || null;
+
+    return satisfiedAssertionNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(StatementNode, ruleName, childNodes, opacity, precedence); }

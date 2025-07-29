@@ -7,6 +7,7 @@ import { RULE_RULE_NAME,
          STEP_RULE_NAME,
          TERM_RULE_NAME,
          TYPE_RULE_NAME,
+         TYPES_RULE_NAME,
          LEMMA_RULE_NAME,
          AXIOM_RULE_NAME,
          ERROR_RULE_NAME,
@@ -61,6 +62,8 @@ export function isNodeStepNode(node) { return isNodeRuleNodeByRuleName(node, STE
 export function isNodeTermNode(node) { return isNodeRuleNodeByRuleName(node, TERM_RULE_NAME); }
 
 export function isNodeTypeNode(node) { return isNodeRuleNodeByRuleName(node, TYPE_RULE_NAME); }
+
+export function isNodeTypesNode(node) { return isNodeRuleNodeByRuleName(node, TYPES_RULE_NAME); }
 
 export function isNodeLemmaNode(node) { return isNodeRuleNodeByRuleName(node, LEMMA_RULE_NAME); }
 

@@ -3,7 +3,7 @@
 import { NonTerminalNode } from "occam-parsers";
 
 import { PROVISIONAL } from "../../constants";
-import { isNodeTypeNode, isNodePropertyDeclarationNode } from "../../utilities/node";
+import { isNodeTypeNode, isNodeTypesNode, isNodePropertyDeclarationNode } from "../../utilities/node";
 
 export default class ComplexTypeDeclarationNode extends NonTerminalNode {
   getTypeName() {
@@ -22,6 +22,18 @@ export default class ComplexTypeDeclarationNode extends NonTerminalNode {
     });
 
     return typeName;
+  }
+
+  getTypesNode() {
+    const typesNode = this.findChildNode((childNode) => {
+      const childNodeTypesNode = isNodeTypesNode(childNode);
+
+      if (childNodeTypesNode) {
+        return true;
+      }
+    }) || null;
+
+    return typesNode;
   }
 
   isProvisional() {
@@ -47,17 +59,15 @@ export default class ComplexTypeDeclarationNode extends NonTerminalNode {
   }
 
   getSuperTypeNodes() {
-    const typeNodes = this.filterChildNode((childNode) => {
-      const childNodeTypeNode = isNodeTypeNode(childNode);
+    let superTypeNodes = [];
 
-      if (childNodeTypeNode) {
-        return true;
-      }
-    });
+    const typesNode = this.getTypesNode();
 
-    typeNodes.pop();
+    if (typesNode !== null) {
+      const typeNodes = typesNode.getTypeNodes();
 
-    const superTypeNodes = typeNodes; ///
+      superTypeNodes = typeNodes; ///
+    }
 
     return superTypeNodes;
   }

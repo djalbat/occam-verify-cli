@@ -3,10 +3,6 @@
 import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
-import { nodeQuery, nodesQuery } from "../../utilities/query";
-
-const termNodesQuery = nodesQuery("/satisfiesAssertion/term"),
-      satisfiesAssertionNodeQuery = nodeQuery("/statement/satisfiesAssertion");
 
 export default domAssigned(class SatisfiesAssertion {
   constructor(string, node, tokens, terms, reference) {
@@ -134,7 +130,7 @@ export default domAssigned(class SatisfiesAssertion {
   static fromStatementNode(statementNode, context) {
     let satisfiesAssertion = null;
 
-    const satisfiesAssertionNode = satisfiesAssertionNodeQuery(statementNode);
+    const satisfiesAssertionNode = statementNode.getSatisfiedAssertionNode();
 
     if (satisfiesAssertionNode !== null) {
       const { Reference } = dom,
@@ -166,7 +162,7 @@ function termsStringFromTerms(terms) {
 }
 
 function termsFromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
-  const termNodes = termNodesQuery(satisfiesAssertionNode),
+  const termNodes = satisfiesAssertionNode.getTermNodes(),
         terms = termNodes.map((termNode) => {
           const { Term } = dom,
                 term = Term.fromTermNode(termNode, context);

@@ -1,9 +1,10 @@
 "use strict";
 
 import TermNode from "./node/term"
-import TypeNode from "./node/type"
 import RuleNode from "./node/rule"
 import StepNode from "./node/step"
+import TypeNode from "./node/type"
+import TypesNode from "./node/types"
 import ErrorNode from "./node/error"
 import FrameNode from "./node/frame"
 import AxiomNode from "./node/axiom"
@@ -55,6 +56,7 @@ import { RULE_RULE_NAME,
          STEP_RULE_NAME,
          TERM_RULE_NAME,
          TYPE_RULE_NAME,
+         TYPES_RULE_NAME,
          PROOF_RULE_NAME,
          ERROR_RULE_NAME,
          FRAME_RULE_NAME,
@@ -107,6 +109,7 @@ const nonTerminalNodeMap = {
   [STEP_RULE_NAME]: StepNode,
   [TERM_RULE_NAME]: TermNode,
   [TYPE_RULE_NAME]: TypeNode,
+  [TYPES_RULE_NAME]: TypesNode,
   [ERROR_RULE_NAME]: ErrorNode,
   [FRAME_RULE_NAME]: FrameNode,
   [LEMMA_RULE_NAME]: LemmaNode,
