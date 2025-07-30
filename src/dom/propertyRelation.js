@@ -67,10 +67,9 @@ export default domAssigned(class PropertyRelation {
   verifyTerm(context) {
     let termVerified;
 
-    const termString = this.term.getString(),
-          propertyRelationString = this.string; ///
+    const termString = this.term.getString();
 
-    context.trace(`Verifying the '${propertyRelationString}' property relation's '${termString}' term...`);
+    context.trace(`Verifying the '${termString}' term...`);
 
     termVerified = this.term.verify(context, () => {
       const verifiedAhead = true;
@@ -79,7 +78,7 @@ export default domAssigned(class PropertyRelation {
     });
 
     if (termVerified) {
-      context.debug(`...verified the '${propertyRelationString}' property relation's '${termString}' term.`);
+      context.debug(`...verified the '${termString}' term.`);
     }
 
     return termVerified;
@@ -88,10 +87,9 @@ export default domAssigned(class PropertyRelation {
   verifyProperty(context) {
     let propertyVerified;
 
-    const propertyString = this.property.getString(),
-          propertyRelationString = this.string; ///
+    const propertyString = this.property.getString();
 
-    context.trace(`Verifying the '${propertyRelationString}' property relation's '${propertyString}' property...`);
+    context.trace(`Verifying the '${propertyString}' property...`);
 
     const termType = this.term.getType(),
           propertyName = this.property.getName(),
@@ -118,7 +116,7 @@ export default domAssigned(class PropertyRelation {
     }
 
     if (propertyVerified) {
-      context.debug(`...verified the '${propertyRelationString}' property relation's '${propertyString}' property.`);
+      context.debug(`...verified the '${propertyString}' property.`);
     }
 
     return propertyVerified;

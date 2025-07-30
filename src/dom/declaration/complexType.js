@@ -160,7 +160,7 @@ export default domAssigned(class ComplexTypeDeclaration {
       this.fileContext.debug(`The '${propertyString}' property appears more than once.`);
     } else {
       const superTypeProperty = superTypeProperties.find((superTypeProperty) => {
-        const propertyNameMatches = superTypeProperty.matchPropertyNames(propertyNames);
+        const propertyNameMatches = superTypeProperty.matchPropertyName(propertyName);
 
         if (propertyNameMatches) {
           return true;

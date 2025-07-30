@@ -70,15 +70,14 @@ export default domAssigned(class Judgement {
   verifyFrame(assignments, stated, context) {
     let frameVerified;
 
-    const frameString = this.frame.getString(),
-          judgementString = this.string;  ///
+    const frameString = this.frame.getString();
 
-    context.trace(`Verifying the '${judgementString}' judgement's '${frameString}' frame...`);
+    context.trace(`Verifying the '${frameString}' frame...`);
 
     frameVerified = this.frame.verify(assignments, stated, context);
 
     if (frameVerified) {
-      context.debug(`...verified the '${judgementString}' judgement's '${frameString}' frame.`);
+      context.debug(`...verified the '${frameString}' frame.`);
     }
 
     return frameVerified;
@@ -87,15 +86,14 @@ export default domAssigned(class Judgement {
   verifyDeclaration(assignments, stated, context) {
     let declarationVerified;
 
-    const judgementString = this.string,  ///
-          declarationString = this.declaration.getString();
+    const declarationString = this.declaration.getString();
 
-    context.trace(`Verifying the '${judgementString}' judgement's '${declarationString}' declaration...`);
+    context.trace(`Verifying the '${declarationString}' declaration...`);
 
     declarationVerified = this.declaration.verify(assignments, stated, context);
 
     if (declarationVerified) {
-      context.debug(`...verified the '${judgementString}' judgement's '${declarationString}' declaration.`);
+      context.debug(`...verified the '${declarationString}' declaration.`);
     }
 
     return declarationVerified;

@@ -17,6 +17,7 @@ import { RULE_RULE_NAME,
          LABELS_RULE_NAME,
          THEOREM_RULE_NAME,
          PREMISE_RULE_NAME,
+         ARGUMENT_RULE_NAME,
          PROPERTY_RULE_NAME,
          EQUALITY_RULE_NAME,
          VARIABLE_RULE_NAME,
@@ -83,6 +84,8 @@ export function isNodeLabelsNode(node) { return isNodeRuleNodeByRuleName(node, L
 export function isNodeTheoremNode(node) { return isNodeRuleNodeByRuleName(node, THEOREM_RULE_NAME); }
 
 export function isNodePremiseNode(node) { return isNodeRuleNodeByRuleName(node, PREMISE_RULE_NAME); }
+
+export function isNodeArgumentNode(node) { return isNodeRuleNodeByRuleName(node, ARGUMENT_RULE_NAME); }
 
 export function isNodePropertyNode(node) { return isNodeRuleNodeByRuleName(node, PROPERTY_RULE_NAME); }
 

@@ -14,6 +14,7 @@ export const LABEL_RULE_NAME = "label";
 export const LABELS_RULE_NAME = "labels";
 export const THEOREM_RULE_NAME = "theorem";
 export const PREMISE_RULE_NAME = "premise";
+export const ARGUMENT_RULE_NAME = "argument";
 export const PROPERTY_RULE_NAME = "property";
 export const EQUALITY_RULE_NAME = "equality";
 export const VARIABLE_RULE_NAME = "variable";

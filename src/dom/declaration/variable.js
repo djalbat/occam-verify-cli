@@ -80,10 +80,9 @@ export default domAssigned(class VariableDeclaration {
     type = this.variable.getType();
 
     const typeName = type.getName(),
-          typeString = type.getString(),
-          variableString = this.variable.getString();
+          typeString = type.getString();
 
-    this.fileContext.trace(`Verifying the '${variableString}' variable's '${typeString}' type...`);
+    this.fileContext.trace(`Verifying the '${typeString}' type...`);
 
     const includeSupertypes = false,
           provisional = type.isProvisional(includeSupertypes);
@@ -93,14 +92,14 @@ export default domAssigned(class VariableDeclaration {
     const typePresent = (type !== null)
 
     if (!typePresent) {
-      this.fileContext.debug(`The '${variableString}' variable's '${typeString}' type is not present.`);
+      this.fileContext.debug(`The '${typeString}' type is not present.`);
     } else {
       const provisionalMatches = type.matchProvisional(provisional);
 
       if (!provisionalMatches) {
         provisional ?
-          this.fileContext.debug(`The '${variableString}' variable's '${typeString}' type is present but it should be provisional.`) :
-            this.fileContext.debug(`The '${variableString}' variable's '${typeString}' type is present but it should not be provisional.`);
+          this.fileContext.debug(`The '${typeString}' type is present but it should be provisional.`) :
+            this.fileContext.debug(`The '${typeString}' type is present but it should not be provisional.`);
       } else {
         this.variable.setType(type);
 
@@ -109,7 +108,7 @@ export default domAssigned(class VariableDeclaration {
     }
 
     if (variableTypeVerified) {
-      this.fileContext.debug(`...verified the '${variableString}' variable's '${typeString}' type.`);
+      this.fileContext.debug(`...verified the '${typeString}' type.`);
     }
 
     return variableTypeVerified;

@@ -214,10 +214,9 @@ export default domAssigned(class Frame {
       const sOrNothing = (declarationsLength > 1) ?
                            S :
                              NOTHING,
-            frameString = this.string,  ///
             declarationsString = declarationsStringFromDeclarations(this.declarations);
 
-      context.trace(`Verifying the '${frameString}' frame's '${declarationsString}' declaration${sOrNothing}...`);
+      context.trace(`Verifying the '${declarationsString}' declaration${sOrNothing}...`);
 
       stated = true;  ///
 
@@ -230,7 +229,7 @@ export default domAssigned(class Frame {
       });
 
       if (declarationsVerified) {
-        context.debug(`...verified the '${frameString}' frame's '${declarationsString}' declaration${sOrNothing}.`);
+        context.debug(`...verified the '${declarationsString}' declaration${sOrNothing}.`);
       }
     }
 
@@ -246,10 +245,9 @@ export default domAssigned(class Frame {
       const sOrNothing = (metavariablesLength > 1) ?
                            S :
                              NOTHING,
-            frameString = this.string,  ///
             metavariablesString = metavariablesStringFromMetavariables(this.metavariables);
 
-      context.trace(`Verifying the '${frameString}' frame's '${metavariablesString}' metavariable${sOrNothing}...`);
+      context.trace(`Verifying the '${metavariablesString}' metavariable${sOrNothing}...`);
 
       metavariablesVerified = this.metavariables.every((metavariable) => {
         const metavariableVerified = metavariable.verify(context);
@@ -258,7 +256,7 @@ export default domAssigned(class Frame {
       });
 
       if (metavariablesVerified) {
-        context.debug(`...verified the '${frameString}' frame's '${metavariablesString}' metavariable${sOrNothing}.`);
+        context.debug(`...verified the '${metavariablesString}' metavariable${sOrNothing}.`);
       }
     }
 

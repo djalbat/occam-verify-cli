@@ -1,50 +1,51 @@
 "use strict";
 
-import TermNode from "./node/term"
-import RuleNode from "./node/rule"
-import StepNode from "./node/step"
-import TypeNode from "./node/type"
-import TypesNode from "./node/types"
-import ErrorNode from "./node/error"
-import FrameNode from "./node/frame"
-import AxiomNode from "./node/axiom"
-import LemmaNode from "./node/lemma"
-import ProofNode from "./node/proof"
-import LabelNode from "./node/label"
-import LabelsNode from "./node/labels"
-import PremiseNode from "./node/premise"
-import TheoremNode from "./node/theorem"
-import SubproofNode from "./node/subproof"
-import PropertyNode from "./node/property"
-import MetaTypeNode from "./node/metaType"
-import EqualityNode from "./node/equality"
-import VariableNode from "./node/variable"
-import StatementNode from "./node/statement"
-import ReferenceNode from "./node/reference"
-import DeductionNode from "./node/deduction"
-import JudgementNode from "./node/judgement"
-import MetaLemmaNode from "./node/metaLemma"
-import ParameterNode from "./node/parameter"
-import DerivationNode from "./node/derivation"
-import CombinatorNode from "./node/combinator"
-import ConclusionNode from "./node/conclusion"
-import ConjectureNode from "./node/conjecture"
-import SuppositionNode from "./node/supposition"
-import ConstructorNode from "./node/constructor"
-import DeclarationNode from "./node/declaration"
-import MetatheoremNode from "./node/metatheorem"
-import MetavariableNode from "./node/metavariable"
-import ProcedureCallNode from "./node/procedureCall"
-import SubDerivationNode from "./node/subDerivation"
+import TermNode from "./node/term";
+import RuleNode from "./node/rule";
+import StepNode from "./node/step";
+import TypeNode from "./node/type";
+import TypesNode from "./node/types";
+import ErrorNode from "./node/error";
+import FrameNode from "./node/frame";
+import AxiomNode from "./node/axiom";
+import LemmaNode from "./node/lemma";
+import ProofNode from "./node/proof";
+import LabelNode from "./node/label";
+import LabelsNode from "./node/labels";
+import PremiseNode from "./node/premise";
+import TheoremNode from "./node/theorem";
+import ArgumentNode from "./node/argument";
+import SubproofNode from "./node/subproof";
+import PropertyNode from "./node/property";
+import MetaTypeNode from "./node/metaType";
+import EqualityNode from "./node/equality";
+import VariableNode from "./node/variable";
+import StatementNode from "./node/statement";
+import ReferenceNode from "./node/reference";
+import DeductionNode from "./node/deduction";
+import JudgementNode from "./node/judgement";
+import MetaLemmaNode from "./node/metaLemma";
+import ParameterNode from "./node/parameter";
+import DerivationNode from "./node/derivation";
+import CombinatorNode from "./node/combinator";
+import ConclusionNode from "./node/conclusion";
+import ConjectureNode from "./node/conjecture";
+import SuppositionNode from "./node/supposition";
+import ConstructorNode from "./node/constructor";
+import DeclarationNode from "./node/declaration";
+import MetatheoremNode from "./node/metatheorem";
+import MetavariableNode from "./node/metavariable";
+import ProcedureCallNode from "./node/procedureCall";
+import SubDerivationNode from "./node/subDerivation";
 import TypeAssertionNode from "./node/assertion/type";
 import typeDeclarationNode from "./node/declaration/type";
 import PropertyRelationNode from "./node/propertyRelation"
 import DefinedAssertionNode from "./node/assertion/defined";
 import PropertyAssertionNode from "./node/assertion/property";
 import SubproofAssertionNode from "./node/assertion/subproof";
+import ParenthesisedLabelNode from "./node/parenthesisedLabel";
 import ContainedAssertionNode from "./node/assertion/contained";
 import SatisfiesAssertionNode from "./node/assertion/satisfies";
-import ParenthesisedLabelNode from "./node/parenthesisedLabel"
 import ParenthesisedLabelsNode from "./node/parenthesisedLabels"
 import PropertyDeclarationNode from "./node/declaration/property";
 import variableDeclarationNode from "./node/declaration/variable";
@@ -67,6 +68,7 @@ import { RULE_RULE_NAME,
          LABELS_RULE_NAME,
          THEOREM_RULE_NAME,
          PREMISE_RULE_NAME,
+         ARGUMENT_RULE_NAME,
          SUBPROOF_RULE_NAME,
          PROPERTY_RULE_NAME,
          EQUALITY_RULE_NAME,
@@ -121,6 +123,7 @@ const nonTerminalNodeMap = {
   [LABELS_RULE_NAME]: LabelsNode,
   [THEOREM_RULE_NAME]: TheoremNode,
   [PREMISE_RULE_NAME]: PremiseNode,
+  [ARGUMENT_RULE_NAME]: ArgumentNode,
   [PROPERTY_RULE_NAME]: PropertyNode,
   [SUBPROOF_RULE_NAME]: SubproofNode,
   [EQUALITY_RULE_NAME]: EqualityNode,
@@ -149,9 +152,9 @@ const nonTerminalNodeMap = {
   [DEFINED_ASSERTION_RULE_NAME]: DefinedAssertionNode,
   [SUBPROOF_ASSERTION_RULE_NAME]: SubproofAssertionNode,
   [PROPERTY_ASSERTION_RULE_NAME]: PropertyAssertionNode,
+  [PARENTHESISED_LABEL_RULE_NAME]: ParenthesisedLabelNode,
   [SATISFIES_ASSERTION_RULE_NAME]: SatisfiesAssertionNode,
   [CONTAINED_ASSERTION_RULE_NAME]: ContainedAssertionNode,
-  [PARENTHESISED_LABEL_RULE_NAME]: ParenthesisedLabelNode,
   [PARENTHESISED_LABELS_RULE_NAME]: ParenthesisedLabelsNode,
   [VARIABLE_DECLARATION_RULE_NAME]: variableDeclarationNode,
   [PROPERTY_DECLARATION_RULE_NAME]: PropertyDeclarationNode,

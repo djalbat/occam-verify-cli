@@ -103,10 +103,9 @@ export default domAssigned(class PropertyAssertion {
   verifyTerm(assignments, stated, context) {
     let termVerified;
 
-    const termString = this.term.getString(),
-          propertyAssertionString = this.string; ///
+    const termString = this.term.getString();
 
-    context.trace(`Verifying the '${propertyAssertionString}' property assertion's '${termString}' term...`);
+    context.trace(`Verifying the '${termString}' term...`);
 
     termVerified = this.term.verify(context, () => {
       const verifiedAhead = true;
@@ -115,7 +114,7 @@ export default domAssigned(class PropertyAssertion {
     });
 
     if (termVerified) {
-      context.debug(`...verified the '${propertyAssertionString}' property assertion's '${termString}' term.`);
+      context.debug(`...verified the '${termString}' term.`);
     }
 
     return termVerified;
@@ -124,15 +123,14 @@ export default domAssigned(class PropertyAssertion {
   verifyPropertyRelation(assignments, stated, context) {
     let propertyRelationVerified;
 
-    const propertyRelationString = this.propertyRelation.getString(),
-          propertyAssertionString = this.string; ///
+    const propertyRelationString = this.propertyRelation.getString();
 
-    context.trace(`Verifying the '${propertyAssertionString}' property assertion's '${propertyRelationString}' property relation...`);
+    context.trace(`Verifying the '${propertyRelationString}' property relation...`);
 
     propertyRelationVerified = this.propertyRelation.verify(context);
 
     if (propertyRelationVerified) {
-      context.debug(`...verified the '${propertyAssertionString}' property assertion's '${propertyRelationString}' property relation.`);
+      context.debug(`...verified the '${propertyRelationString}' property relation.`);
     }
 
     return propertyRelationVerified;

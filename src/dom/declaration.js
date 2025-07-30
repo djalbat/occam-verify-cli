@@ -85,15 +85,14 @@ export default domAssigned(class Declaration {
   verifyReference(assignments, stated, context) {
     let referenceVerified;
 
-    const referenceString = this.reference.getString(),
-          declarationString = this.string;  ///
+    const referenceString = this.reference.getString();
 
-    context.trace(`Verifying the '${declarationString}' declaration's '${referenceString}' reference...`);
+    context.trace(`Verifying the '${referenceString}' reference...`);
 
     referenceVerified = this.reference.verify(context);
 
     if (referenceVerified) {
-      context.debug(`...verified the '${declarationString}' declaration's '${referenceString}' reference.`);
+      context.debug(`...verified the '${referenceString}' reference.`);
     }
 
     return referenceVerified;
@@ -102,10 +101,9 @@ export default domAssigned(class Declaration {
   verifyStatement(assignments, stated, context) {
     let statementVerified;
 
-    const statementString = this.statement.getString(),
-          declarationString = this.string;  ///
+    const statementString = this.statement.getString();
 
-    context.trace(`Verifying the '${declarationString}' declaration's '${statementString}' statement...`);
+    context.trace(`Verifying the '${statementString}' statement...`);
 
     stated = true;  ///
 
@@ -114,7 +112,7 @@ export default domAssigned(class Declaration {
     statementVerified = this.statement.verify(assignments, stated, context);
 
     if (statementVerified) {
-      context.debug(`...verified the '${declarationString}' declaration's '${statementString}' statement.`);
+      context.debug(`...verified the '${statementString}' statement.`);
     }
 
     return statementVerified;
@@ -174,10 +172,9 @@ export default domAssigned(class Declaration {
 
     const context = generalContext,  ///
           statementString = statement.getString(),
-          declarationString = this.string,  ///
           declarationStatementString = this.statement.getString();
 
-    context.trace(`Unifying the '${statementString}' statement with the '${declarationString}' declaration's '${declarationStatementString}' statement...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${declarationStatementString}' statement...`);
 
     const generalStatement = this.statement,
           specificStatement = statement,  ///
@@ -186,7 +183,7 @@ export default domAssigned(class Declaration {
     statementUnified = statementUUnifiedIntrinsically;  ///
 
     if (statementUnified) {
-      context.debug(`...unified the '${statementString}' statement with the '${declarationString}' declaration's '${declarationStatementString}' statement.`);
+      context.debug(`...unified the '${statementString}' statement with the '${declarationStatementString}' statement.`);
     }
 
     return statementUnified;
@@ -197,17 +194,16 @@ export default domAssigned(class Declaration {
 
     const context = generalContext, ///
           labelString = label.getString(),
-          referenceString = this.reference.getString(),
-          declarationString = this.string;  ///
+          referenceString = this.reference.getString();
 
-    context.trace(`Unifying the '${labelString}' label with the '${declarationString}' declaration's '${referenceString}' reference...`);
+    context.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
 
     const labelUnified = this.reference.unifyLabel(label, substitutions, context);
 
     labelUnifiedWithReference = labelUnified; ///
 
     if (labelUnifiedWithReference) {
-      context.debug(`...unified the '${labelString}' label with the '${declarationString}' declaration's '${referenceString}' reference.`);
+      context.debug(`...unified the '${labelString}' label with the '${referenceString}' reference.`);
     }
 
     return labelUnifiedWithReference;

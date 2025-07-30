@@ -78,10 +78,9 @@ export default domAssigned(class ConstructorDeclaration {
     type = this.constructor.getType();
 
     const typeName = type.getName(),
-          typeString = type.getString(),
-          constructorString = this.constructor.getString();
+          typeString = type.getString();
 
-    this.fileContext.trace(`Verifying the '${constructorString}' constructor's '${typeString}' type...`);
+    this.fileContext.trace(`Verifying the '${typeString}' type...`);
 
     const includeSupertypes = false,
           provisional = type.isProvisional(includeSupertypes);
@@ -91,14 +90,14 @@ export default domAssigned(class ConstructorDeclaration {
     const typePresent = (type !== null)
 
     if (!typePresent) {
-      this.fileContext.debug(`The '${constructorString}' constructor's '${typeString}' type is not present.`);
+      this.fileContext.debug(`The '${typeString}' type is not present.`);
     } else {
       const provisionalMatches = type.matchProvisional(provisional);
 
       if (!provisionalMatches) {
         provisional ?
-          this.fileContext.debug(`The '${constructorString}' constructor's '${typeString}' type is present but it should be provisional.`) :
-            this.fileContext.debug(`The '${constructorString}' constructor's '${typeString}' type is present but it should not be provisional.`);
+          this.fileContext.debug(`The '${typeString}' type is present but it should be provisional.`) :
+            this.fileContext.debug(`The '${typeString}' type is present but it should not be provisional.`);
       } else {
         this.constructor.setType(type);
 
@@ -107,7 +106,7 @@ export default domAssigned(class ConstructorDeclaration {
     }
 
     if (constructorTypeVerified) {
-      this.fileContext.debug(`...verified the '${constructorString}' constructor's '${typeString}' type.`);
+      this.fileContext.debug(`...verified the '${typeString}' type.`);
     }
 
     return constructorTypeVerified;

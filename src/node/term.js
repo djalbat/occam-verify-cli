@@ -3,7 +3,7 @@
 import { arrayUtilities } from "necessary";
 import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeTermNode, isNodeVariableNode } from "../utilities/node";
+import { isNodeTermNode, isNodeVariableNode, isNodeArgumentNode } from "../utilities/node";
 
 const { first } = arrayUtilities;
 
@@ -20,22 +20,34 @@ export default class TermNode extends NonTerminalNode {
     return variableNodes;
   }
 
-  getSingularTermNode() {
-    let singularTermNode = null;
+  getSingularArgumentNode() {
+    let singularArgumentNode = null;
 
-    const termNodes = this.filterChildNode((childNode) => {
-            const childNodeTermNode = isNodeTermNode(childNode);
+    const argumentNodes = this.filterChildNode((childNode) => {
+            const childNodeArgumentNode = isNodeArgumentNode(childNode);
 
-            if (childNodeTermNode) {
+            if (childNodeArgumentNode) {
               return true;
             }
           }),
-          termNodesLength = termNodes.length;
+          argumentNodesLength = argumentNodes.length;
 
-    if (termNodesLength === 1) {
-      const firstTermNode = first(termNodes);
+    if (argumentNodesLength === 1) {
+      const firstArgumentNode = first(argumentNodes);
 
-      singularTermNode = firstTermNode; ///
+      singularArgumentNode = firstArgumentNode; ///
+    }
+
+    return singularArgumentNode;
+  }
+
+  getSingularTermNode() {
+    let singularTermNode = null;
+
+    const singularArgumentNode = this.getSingularArgumentNode();
+
+    if (singularArgumentNode !== null) {
+      singularTermNode = singularArgumentNode.getSingularTermNode();
     }
 
     return singularTermNode;

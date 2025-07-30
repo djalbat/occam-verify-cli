@@ -103,10 +103,9 @@ export default domAssigned(class SatisfiesAssertion {
   verifyReference(assignments, stated, context) {
     let referenceVerified = false;
 
-    const referenceString = this.reference.getString(),
-          satisfiesAssertionString = this.string; ///
+    const referenceString = this.reference.getString();
 
-    context.trace(`Verifying the '${satisfiesAssertionString}' satisfies assertion's '${referenceString}' reference...`);
+    context.trace(`Verifying the '${referenceString}' reference...`);
 
     const axiom = context.findAxiomByReference(this.reference, context);
 
@@ -119,7 +118,7 @@ export default domAssigned(class SatisfiesAssertion {
     }
 
     if (referenceVerified) {
-      context.debug(`...verified the '${satisfiesAssertionString}' satisfies assertion's '${referenceString}' reference.`);
+      context.debug(`...verified the '${referenceString}' reference.`);
     }
 
     return referenceVerified;
