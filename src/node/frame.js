@@ -1,7 +1,8 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { NonTerminalNode } from "occam-parsers";
+
+import NonTerminalNode from "../node/nonTerminal";
 
 import { isNodeDeclarationNode, isNodeMetavariableNode } from "../utilities/node";
 

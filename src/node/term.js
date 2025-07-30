@@ -1,9 +1,10 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
-import { NonTerminalNode } from "occam-parsers";
 
-import { isNodeTermNode, isNodeVariableNode, isNodeArgumentNode } from "../utilities/node";
+import NonTerminalNode from "../node/nonTerminal";
+
+import { isNodeVariableNode, isNodeArgumentNode } from "../utilities/node";
 
 const { first } = arrayUtilities;
 

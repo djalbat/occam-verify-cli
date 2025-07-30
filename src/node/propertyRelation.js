@@ -1,6 +1,7 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-parsers";
+import NonTerminalNode from "../node/nonTerminal";
+
 import { isNodeTermNode, isNodePropertyNode } from "../utilities/node";
 
 export default class PropertyRelationNode extends NonTerminalNode {

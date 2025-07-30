@@ -1,6 +1,6 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-parsers";
+import NonTerminalNode from "../node/nonTerminal";
 
 import { SINGLE_SPACE } from "../constants";
 

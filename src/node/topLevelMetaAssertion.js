@@ -1,6 +1,6 @@
 "use strict";
 
-import { NonTerminalNode } from "occam-parsers";
+import NonTerminalNode from "../node/nonTerminal";
 
 import { isNodeProofNode, isNodeSuppositionNode, isNodeDeductionNode, isNodeParenthesisedLabelNode } from "../utilities/node";
 
