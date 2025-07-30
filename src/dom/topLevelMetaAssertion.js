@@ -2,6 +2,7 @@
 
 import dom from "../dom";
 import LocalContext from "../context/local";
+import Substitutions from "../substitutions";
 
 import { proofFromProofNode, deductionFromDeductionNode, suppositionsFromSuppositionNodes } from "./topLevelAssertion";
 import { labelFromJSON,
@@ -47,6 +48,12 @@ export default class TopLevelMetaAssertion {
   getProof() {
     return this.proof;
   }
+
+  getSubstitutions() {
+    return this.substitutions;
+  }
+
+  getStatement() { return this.deduction.getStatement(); }
 
   matchReference(reference) {
     const label = this.getLabel(),
@@ -137,8 +144,9 @@ export default class TopLevelMetaAssertion {
           label = labelFromLabelNode(labelNode, fileContext),
           deduction = deductionFromDeductionNode(deductionNode, fileContext),
           suppositions = suppositionsFromSuppositionNodes(suppositionNodes, fileContext),
+          substitutions = Substitutions.fromNothing(),
           string = stringFromLabelAndDeduction(label, deduction),
-          topLevelMetaAssertion = new Class(fileContext, string, label, suppositions, deduction, proof);
+          topLevelMetaAssertion = new Class(fileContext, string, label, suppositions, deduction, proof, substitutions);
 
     return topLevelMetaAssertion;
   }

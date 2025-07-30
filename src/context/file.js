@@ -127,9 +127,9 @@ export default class FileContext {
     });
 
     this.metatheorems.forEach((metatheorem) => {
-      const metatheoremLabels = metatheorem.getLabels();
+      const metatheoremLabel = metatheorem.getLabel();
 
-      push(labels, metatheoremLabels);
+      labels.push(metatheoremLabel);
     });
 
     if (includeRelease) {
