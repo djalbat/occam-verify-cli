@@ -2,29 +2,19 @@
 
 import NonTerminalNode from "../../node/nonTerminal";
 
-import { isNodeTermNode, isNodeTypeNode } from "../../utilities/node";
+import { TERM_RULE_NAME, TYPE_RULE_NAME } from "../../ruleNames";
 
 export default class TypeAssertionNode extends NonTerminalNode {
   getTermNode() {
-    const termNode = this.findChildNode((childNode) => {
-      const childNodeTermNode = isNodeTermNode(childNode);
-
-      if (childNodeTermNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = TERM_RULE_NAME,
+          termNode = this.getNodeByRuleName(ruleName);
 
     return termNode;
   }
 
   getTypeNode() {
-    const typeNode = this.findChildNode((childNode) => {
-      const childNodeTypeNode = isNodeTypeNode(childNode);
-
-      if (childNodeTypeNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = TYPE_RULE_NAME,
+          typeNode = this.getNodeByRuleName(ruleName);
 
     return typeNode;
   }

@@ -2,38 +2,28 @@
 
 import NonTerminalNode from "../../node/nonTerminal";
 
-import { isNodeTypeNode, isNodePropertyNode } from "../../utilities/node";
+import { TYPE_RULE_NAME, PROPERTY_RULE_NAME } from "../../ruleNames";
 
 export default class PropertyDeclarationNode extends NonTerminalNode {
-  getTypeNode() {
-    const typeNode = this.findChildNode((childNode) => {
-      const childNodeTypeNode = isNodeTypeNode(childNode);
-
-      if (childNodeTypeNode) {
-        return true;
-      }
-    }) || null;
-
-    return typeNode;
-  }
-
-  getPropertyNode() {
-    const propertyNode = this.findChildNode((childNode) => {
-      const childNodePropertyNode = isNodePropertyNode(childNode);
-
-      if (childNodePropertyNode) {
-        return true;
-      }
-    }) || null;
-
-    return propertyNode;
-  }
-
   getPropertyName() {
     const propertyNode = this.getPropertyNode(),
           propertyName = propertyNode.getPropertyName();
 
     return propertyName;
+  }
+
+  getTypeNode() {
+    const ruleName = TYPE_RULE_NAME,
+          typeNode = this.getNodeByRuleName(ruleName);
+
+    return typeNode;
+  }
+
+  getPropertyNode() {
+    const ruleName = PROPERTY_RULE_NAME,
+          propertyNode = this.getNodeByRuleName(ruleName);
+
+    return propertyNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyDeclarationNode, ruleName, childNodes, opacity, precedence); }

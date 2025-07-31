@@ -3,39 +3,9 @@
 import NonTerminalNode from "../../node/nonTerminal";
 
 import { PROVISIONAL } from "../../constants";
-import { isNodeTypeNode, isNodeTypesNode, isNodePropertyDeclarationNode } from "../../utilities/node";
+import { TYPE_RULE_NAME, TYPES_RULE_NAME, PROPERTY_DECLARATION_RULE_NAME } from "../../ruleNames";
 
 export default class ComplexTypeDeclarationNode extends NonTerminalNode {
-  getTypeName() {
-    let typeName = null;
-
-    this.someChildNode((childNode) => {
-      const childNodeTypeNode = isNodeTypeNode(childNode);
-
-      if (childNodeTypeNode) {
-        const typeNode = childNode;  ///
-
-        typeName = typeNode.getTypeName();
-
-        return true;
-      }
-    });
-
-    return typeName;
-  }
-
-  getTypesNode() {
-    const typesNode = this.findChildNode((childNode) => {
-      const childNodeTypesNode = isNodeTypesNode(childNode);
-
-      if (childNodeTypesNode) {
-        return true;
-      }
-    }) || null;
-
-    return typesNode;
-  }
-
   isProvisional() {
     let provisional = false;
 
@@ -58,6 +28,27 @@ export default class ComplexTypeDeclarationNode extends NonTerminalNode {
     return provisional;
   }
 
+  getTypeName() {
+    const typeNode = this.getTypeNode(),
+          typeName = typeNode.getTypeName();
+
+    return typeName;
+  }
+
+  getTypeNode() {
+    const ruleName = TYPE_RULE_NAME,
+          typeNode = this.getNodeByRuleName(ruleName);
+
+    return typeNode;
+  }
+
+  getTypesNode() {
+    const ruleName = TYPES_RULE_NAME,
+          typesNode = this.getNodeByRuleName(ruleName);
+
+    return typesNode;
+  }
+
   getSuperTypeNodes() {
     let superTypeNodes = [];
 
@@ -73,13 +64,8 @@ export default class ComplexTypeDeclarationNode extends NonTerminalNode {
   }
 
   getPropertyDeclarationNodes() {
-    const propertyDeclarationNodes = this.filterChildNode((childNode) => {
-      const childNodePropertyDeclarationNode = isNodePropertyDeclarationNode(childNode);
-
-      if (childNodePropertyDeclarationNode) {
-        return true;
-      }
-    });
+    const ruleName = PROPERTY_DECLARATION_RULE_NAME,
+          propertyDeclarationNodes = this.getNodesByRuleName(ruleName);
 
     return propertyDeclarationNodes;
   }

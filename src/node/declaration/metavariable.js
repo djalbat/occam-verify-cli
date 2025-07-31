@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../../node/nonTerminal";
 
-import { isNodeMetaTypeNode, isNodeMetavariableNode } from "../../utilities/node";
+import { META_TYPE_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
 
 export default class MetavariableDeclarationNode extends NonTerminalNode {
   getTypeNode() {
@@ -13,25 +13,15 @@ export default class MetavariableDeclarationNode extends NonTerminalNode {
   }
 
   getMetaTypeNode() {
-    const metaTypeNode = this.findChildNode((childNode) => {
-      const childNodeMetaTypeNode = isNodeMetaTypeNode(childNode);
-
-      if (childNodeMetaTypeNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = META_TYPE_RULE_NAME,
+          metaTypeNode = this.getNodeByRuleName(ruleName);
 
     return metaTypeNode
   }
 
   getMetavariableNode() {
-    const metavariableNode = this.findChildNode((childNode) => {
-      const childNodeMetavariableNode = isNodeMetavariableNode(childNode);
-
-      if (childNodeMetavariableNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = METAVARIABLE_RULE_NAME,
+          metavariableNode = this.getNodeByRuleName(ruleName);
 
     return metavariableNode;
   }

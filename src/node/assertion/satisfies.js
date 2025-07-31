@@ -2,29 +2,19 @@
 
 import NonTerminalNode from "../../node/nonTerminal";
 
-import { isNodeTermNode, isNodeMetavariableNode } from "../../utilities/node";
+import { TERM_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
 
 export default class SatisfiesAssertionNode extends NonTerminalNode {
-  getTermNodes() {
-    const termNodes = this.filterChildNode((childNode) => {
-      const childNodeTermNode = isNodeTermNode(childNode);
+  getTermNode() {
+    const ruleName = TERM_RULE_NAME,
+          termNode = this.getNodeByRuleName(ruleName);
 
-      if (childNodeTermNode) {
-        return true;
-      }
-    });
-
-    return termNodes;
+    return termNode;
   }
 
-  getMetavariableNode() {
-    const metavariableNode = this.findChildNode((childNode) => {
-      const childNodeMetavariableNode = isNodeMetavariableNode(childNode);
-
-      if (childNodeMetavariableNode) {
-        return true;
-      }
-    }) || null;
+  getFrameNode() {
+    const ruleName = METAVARIABLE_RULE_NAME,
+          metavariableNode = this.getNodeByRuleName(ruleName);
 
     return metavariableNode;
   }

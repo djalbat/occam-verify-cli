@@ -2,29 +2,19 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeParameterNode, isNodeReferenceNode } from "../utilities/node";
+import { REFERENCE_RULE_NAME, PARAMETER_RULE_NAME } from "../ruleNames";
 
 export default class ProcedureCallNode extends NonTerminalNode {
   getReferenceNode() {
-    const referenceNode = this.findChildNode((childNode) => {
-      const childNodeReferenceNode = isNodeReferenceNode(childNode);
-
-      if (childNodeReferenceNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = REFERENCE_RULE_NAME,
+          referenceNode = this.getNodeByRuleName(ruleName);
 
     return referenceNode;
   }
 
   getParameterNodes() {
-    const parameterNodes = this.filterChildNode((childNode) => {
-      const childNodeParameterNode = isNodeParameterNode(childNode);
-
-      if (childNodeParameterNode) {
-        return true;
-      }
-    });
+    const ruleName = PARAMETER_RULE_NAME,
+          parameterNodes = this.getNodesByRuleName(ruleName);
 
     return parameterNodes;
   }

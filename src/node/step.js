@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeStatementNode, isNodeReferenceNode } from "../utilities/node";
+import { REFERENCE_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
 
 export default class StepNode extends NonTerminalNode {
   isStepNode() {
@@ -18,25 +18,15 @@ export default class StepNode extends NonTerminalNode {
   }
 
   getStatementNode() {
-    const statementNode = this.findChildNode((childNode) => {
-      const childNodeStatementNode = isNodeStatementNode(childNode);
-
-      if (childNodeStatementNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = STATEMENT_RULE_NAME,
+          statementNode = this.getNodeByRuleName(ruleName);
 
     return statementNode;
   }
 
   getReferenceNode() {
-    const referenceNode = this.findChildNode((childNode) => {
-      const childNodeReferenceNode = isNodeReferenceNode(childNode);
-
-      if (childNodeReferenceNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = REFERENCE_RULE_NAME,
+          referenceNode = this.getNodeByRuleName(ruleName);
 
     return referenceNode;
   }

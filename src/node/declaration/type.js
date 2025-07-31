@@ -3,39 +3,9 @@
 import NonTerminalNode from "../../node/nonTerminal";
 
 import { PROVISIONAL } from "../../constants";
-import { isNodeTypeNode, isNodeTypesNode } from "../../utilities/node";
+import { TYPE_RULE_NAME, TYPES_RULE_NAME } from "../../ruleNames";
 
 export default class TypeDeclarationNode extends NonTerminalNode {
-  getTypeName() {
-    let typeName = null;
-
-    this.someChildNode((childNode) => {
-      const childNodeTypeNode = isNodeTypeNode(childNode);
-
-      if (childNodeTypeNode) {
-        const typeNode = childNode;  ///
-
-        typeName = typeNode.getTypeName();
-
-        return true;
-      }
-    });
-
-    return typeName;
-  }
-
-  getTypesNode() {
-    const typesNode = this.findChildNode((childNode) => {
-      const childNodeTypesNode = isNodeTypesNode(childNode);
-
-      if (childNodeTypesNode) {
-        return true;
-      }
-    }) || null;
-
-    return typesNode;
-  }
-
   isProvisional() {
     let provisional = false;
 
@@ -56,6 +26,32 @@ export default class TypeDeclarationNode extends NonTerminalNode {
     });
 
     return provisional;
+  }
+
+  getTypeName() {
+    let typeName = null;
+
+    const typeNode = this.getTypeNode();
+
+    if (typeNode !== null) {
+      typeName = typeNode.getTypeName();
+    }
+
+    return typeName;
+  }
+
+  getTypeNode() {
+    const ruleName = TYPE_RULE_NAME,
+          typeNode = this.getNodeByRuleName(ruleName);
+
+    return typeNode;
+  }
+
+  getTypesNode() {
+    const ruleName = TYPES_RULE_NAME,
+          typesNode = this.getNodeByRuleName(ruleName);
+
+    return typesNode;
   }
 
   getSuperTypeNodes() {

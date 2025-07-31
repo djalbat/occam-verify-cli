@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeSuppositionNode, isNodeSubDerivationNode } from "../utilities/node";
+import { SUPPOSITION_RULE_NAME, SUB_DERIVATION_RULE_NAME } from "../ruleNames";
 
 export default class SubproofNode extends NonTerminalNode {
   isStepNode() {
@@ -18,25 +18,15 @@ export default class SubproofNode extends NonTerminalNode {
   }
 
   getSubDerivationNode() {
-    const subDerivationNode = this.findChildNode((childNode) => {
-      const childNodeSubDerivationNode = isNodeSubDerivationNode(childNode);
-
-      if (childNodeSubDerivationNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = SUB_DERIVATION_RULE_NAME,
+          subDerivationNode = this.getNodeByRuleName(ruleName);
 
     return subDerivationNode;
   }
 
   getSuppositionNodes() {
-    const suppositionNodes = this.filterChildNode((childNode) => {
-      const childNodeSuppositionNode = isNodeSuppositionNode(childNode);
-
-      if (childNodeSuppositionNode) {
-        return true;
-      }
-    });
+    const ruleName = SUPPOSITION_RULE_NAME,
+          suppositionNodes = this.getNodesByRuleName(ruleName);
 
     return suppositionNodes;
   }

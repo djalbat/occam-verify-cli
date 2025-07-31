@@ -2,17 +2,12 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeLabelNode } from "../utilities/node";
+import { LABEL_RULE_NAME } from "../ruleNames";
 
 export default class ParenthesisedLabelNode extends NonTerminalNode {
   getLabelNode() {
-    const labelNode = this.findChildNode((childNode) => {
-      const childNodeLabelNode = isNodeLabelNode(childNode);
-
-      if (childNodeLabelNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = LABEL_RULE_NAME,
+          labelNode = this.getNodeByRuleName(ruleName);
 
     return labelNode;
   }

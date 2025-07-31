@@ -3,7 +3,7 @@
 import NonTerminalNode from "../../node/nonTerminal";
 
 import { PROVISIONALLY } from "../../constants";
-import { isNodeTypeNode, isNodeVariableNode } from "../../utilities/node";
+import { TYPE_RULE_NAME, VARIABLE_RULE_NAME } from "../../ruleNames";
 
 export default class VariableDeclarationNode extends NonTerminalNode {
   isProvisional() {
@@ -29,25 +29,15 @@ export default class VariableDeclarationNode extends NonTerminalNode {
   }
 
   getTypeNode() {
-    const typeNode = this.findChildNode((childNode) => {
-      const childNodeTypeNode = isNodeTypeNode(childNode);
-
-      if (childNodeTypeNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = TYPE_RULE_NAME,
+          typeNode = this.getNodeByRuleName(ruleName);
 
     return typeNode;
   }
 
   getVariableNode() {
-    const variableNode = this.findChildNode((childNode) => {
-      const childNodeVariableNode = isNodeVariableNode(childNode);
-
-      if (childNodeVariableNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = VARIABLE_RULE_NAME,
+          variableNode = this.getNodeByRuleName(ruleName);
 
     return variableNode;
   }

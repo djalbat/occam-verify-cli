@@ -3,10 +3,10 @@
 import NonTerminalNode from "../node/nonTerminal";
 
 import { SATISFIABLE } from "../constants";
-import { isNodeProofNode,
-         isNodeDeductionNode,
-         isNodeSuppositionNode,
-         isNodeParenthesisedLabelsNode } from "../utilities/node";
+import { PROOF_RULE_NAME,
+         DEDUCTION_RULE_NAME,
+         SUPPOSITION_RULE_NAME,
+         PARENTHESISED_LABELS_RULE_NAME } from "../ruleNames";
 
 export default class TopLevelAssertionNode extends NonTerminalNode {
   isSatisfiable() {
@@ -42,49 +42,29 @@ export default class TopLevelAssertionNode extends NonTerminalNode {
   }
 
   getProofNode() {
-    const proofNode = this.findChildNode((childNode) => {
-      const childNOdeProofNode = isNodeProofNode(childNode);
-
-      if (childNOdeProofNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = PROOF_RULE_NAME,
+          proofNode = this.getNodeByRuleName(ruleName);
 
     return proofNode;
   }
 
   getDeductionNode() {
-    const deductionNode = this.findChildNode((childNode) => {
-      const childNOdeDeductionNode = isNodeDeductionNode(childNode);
-
-      if (childNOdeDeductionNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = DEDUCTION_RULE_NAME,
+          deductionNode = this.getNodeByRuleName(ruleName);
 
     return deductionNode;
   }
 
   getSuppositionNodes() {
-    const suppositionNodes = this.filterChildNode((childNode) => {
-      const childNodeSuppositionNode = isNodeSuppositionNode(childNode);
-
-      if (childNodeSuppositionNode) {
-        return true;
-      }
-    });
+    const ruleName = SUPPOSITION_RULE_NAME,
+          suppositionNodes = this.getNodesByRuleName(ruleName);
 
     return suppositionNodes;
   }
 
   getParenthesisedLabelsNode() {
-    const parenthesisedLabelsNode = this.findChildNode((childNode) => {
-      const childNodeParenthesisedLabelNode = isNodeParenthesisedLabelsNode(childNode);
-
-      if (childNodeParenthesisedLabelNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = PARENTHESISED_LABELS_RULE_NAME,
+          parenthesisedLabelsNode = this.getNodesByRuleName(ruleName);
 
     return parenthesisedLabelsNode;
   }

@@ -2,29 +2,19 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeStatementNode, isNodeMetavariableNode } from "../utilities/node";
+import { STATEMENT_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class DeclarationNode extends NonTerminalNode {
   getStatementNode() {
-    const statementNode = this.findChildNode((childNode) => {
-      const childNodeStatementNode = isNodeStatementNode(childNode);
-
-      if (childNodeStatementNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = STATEMENT_RULE_NAME,
+          statementNode = this.getNodeByRuleName(ruleName);
 
     return statementNode;
   }
 
   getMetavariableNode() {
-    const metavariableNode = this.findChildNode((childNode) => {
-      const childNodeMetavariableNode = isNodeMetavariableNode(childNode);
-
-      if (childNodeMetavariableNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = METAVARIABLE_RULE_NAME,
+          metavariableNode = this.getNodeByRuleName(ruleName);
 
     return metavariableNode;
   }

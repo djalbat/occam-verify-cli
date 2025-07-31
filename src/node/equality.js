@@ -1,32 +1,33 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import NonTerminalNode from "../node/nonTerminal";
 
+import { TERM_RULE_NAME } from "../ruleNames";
+
+const { first, last } = arrayUtilities;
+
 export default class EqualityNode extends NonTerminalNode {
+  getTermNodes() {
+    const ruleName = TERM_RULE_NAME,
+          termNodes = this.getNodeByRuleName(ruleName);
+
+    return termNodes;
+  }
+
   getLeftTermNode() {
-    let leftTermNode;
-
-    this.someChildNode((childNode, index) => {
-      if (index === 0) {
-        leftTermNode = childNode; ///
-
-        return true;
-      }
-    });
+    const termNodes = this.getTermNodes(),
+          firstTermNode = first(termNodes),
+          leftTermNode = firstTermNode; ///
 
     return leftTermNode;
   }
 
   getRightTermNode() {
-    let rightTermNode;
-
-    this.someChildNode((childNode, index) => {
-      if (index === 2) {
-        rightTermNode = childNode; ///
-
-        return true;
-      }
-    });
+    const termNodes = this.getTermNodes(),
+          firstTermNode = last(termNodes),
+          rightTermNode = firstTermNode; ///
 
     return rightTermNode;
   }

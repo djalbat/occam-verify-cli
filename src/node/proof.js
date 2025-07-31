@@ -2,17 +2,12 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeDerivationNode } from "../utilities/node";
+import { DERIVATION_RULE_NAME } from "../ruleNames";
 
 export default class ProofNode extends NonTerminalNode {
   getDerivationNode() {
-    const derivationNode = this.findChildNode((childNode) => {
-      const childNodeDerivationNode = isNodeDerivationNode(childNode);
-
-      if (childNodeDerivationNode) {
-        return true;
-      }
-    });
+    const ruleName = DERIVATION_RULE_NAME,
+          derivationNode = this.getNodeByRuleName(ruleName);
 
     return derivationNode;
   }

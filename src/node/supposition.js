@@ -2,29 +2,19 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeStatementNode, isNodeProcedureCallNode } from "../utilities/node";
+import { STATEMENT_RULE_NAME, PROCEDURE_CALL_RULE_NAME } from "../ruleNames";
 
 export default class SuppositionNode extends NonTerminalNode {
   getStatementNode() {
-    const statementNode = this.findChildNode((childNode) => {
-      const childNodeStatementNode = isNodeStatementNode(childNode);
-
-      if (childNodeStatementNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = STATEMENT_RULE_NAME,
+          statementNode = this.getNodeByRuleName(ruleName);
 
     return statementNode;
   }
 
   getProcedureCallNode() {
-    const procedureCallNode = this.findChildNode((childNode) => {
-      const childNodeProcedureCallNode = isNodeProcedureCallNode(childNode);
-
-      if (childNodeProcedureCallNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = PROCEDURE_CALL_RULE_NAME,
+          procedureCallNode = this.getNodeByRuleName(ruleName);
 
     return procedureCallNode;
   }

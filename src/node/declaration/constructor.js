@@ -3,33 +3,9 @@
 import NonTerminalNode from "../../node/nonTerminal";
 
 import { PROVISIONALLY } from "../../constants";
-import { isNodeTermNode, isNodeTypeNode } from "../../utilities/node";
+import { TERM_RULE_NAME, TYPE_RULE_NAME } from "../../ruleNames";
 
 export default class ConstructorDeclarationNode extends NonTerminalNode {
-  getTermNode() {
-    const termNode = this.findChildNode((childNode) => {
-      const childNodeTermNode = isNodeTermNode(childNode);
-
-      if (childNodeTermNode) {
-        return true;
-      }
-    }) || null;
-
-    return termNode;
-  }
-
-  getTypeNode() {
-    const typeNode = this.findChildNode((childNode) => {
-      const childNodeTypeNode = isNodeTypeNode(childNode);
-
-      if (childNodeTypeNode) {
-        return true;
-      }
-    }) || null;
-
-    return typeNode;
-  }
-
   isProvisional() {
     let provisional = false;
 
@@ -50,6 +26,20 @@ export default class ConstructorDeclarationNode extends NonTerminalNode {
     });
 
     return provisional;
+  }
+
+  getTermNode() {
+    const ruleName = TERM_RULE_NAME,
+          termNode = this.getNodeByRuleName(ruleName);
+
+    return termNode;
+  }
+
+  getTypeNode() {
+    const ruleName = TYPE_RULE_NAME,
+          typeNode = this.getNodeByRuleName(ruleName);
+
+    return typeNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ConstructorDeclarationNode, ruleName, childNodes, opacity, precedence); }

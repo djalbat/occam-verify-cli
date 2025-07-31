@@ -2,31 +2,21 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeFrameNode, isNodeDeclarationNode } from "../utilities/node";
+import { FRAME_RULE_NAME, DECLARATION_RULE_NAME } from "../ruleNames";
 
 export default class JudgementNode extends NonTerminalNode {
   getFrameNode() {
-    const frameNode = this.findChildNode((childNode) => {
-      const childNodeFrameNode = isNodeFrameNode(childNode);
-
-      if (childNodeFrameNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = FRAME_RULE_NAME,
+          frameNode = this.getNodesByRuleName(ruleName);
 
     return frameNode;
   }
 
-  getDeclarationNode() {
-    const declarationNode = this.findChildNode((childNode) => {
-      const childNodeDeclarationNode = isNodeDeclarationNode(childNode);
+  getDeclarationNodes() {
+    const ruleName = DECLARATION_RULE_NAME,
+          declarationNodes = this.getNodesByRuleName(ruleName);
 
-      if (childNodeDeclarationNode) {
-        return true;
-      }
-    }) || null;
-
-    return declarationNode;
+    return declarationNodes;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(JudgementNode, ruleName, childNodes, opacity, precedence); }

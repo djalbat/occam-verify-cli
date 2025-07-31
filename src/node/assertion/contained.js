@@ -3,7 +3,7 @@
 import NonTerminalNode from "../../node/nonTerminal";
 
 import { MISSING } from "../../constants";
-import { isNodeTermNode, isNodeFrameNode, isNodeStatementNode } from "../../utilities/node";
+import { TERM_RULE_NAME, FRAME_RULE_NAME, STATEMENT_RULE_NAME } from "../../ruleNames";
 
 export default class ContainedAssertionNode extends NonTerminalNode {
   isNegated() {
@@ -29,37 +29,22 @@ export default class ContainedAssertionNode extends NonTerminalNode {
   }
 
   getTermNode() {
-    const termNode = this.findChildNode((childNode) => {
-      const childNodeTermNode = isNodeTermNode(childNode);
-
-      if (childNodeTermNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = TERM_RULE_NAME,
+          termNode = this.getNodeByRuleName(ruleName);
 
     return termNode;
   }
 
   getFrameNode() {
-    const frameNode = this.findChildNode((childNode) => {
-      const childNodeFrameNode = isNodeFrameNode(childNode);
-
-      if (childNodeFrameNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = FRAME_RULE_NAME,
+          frameNode = this.getNodeByRuleName(ruleName);
 
     return frameNode;
   }
 
   getStatementNode() {
-    const statementNode = this.findChildNode((childNode) => {
-      const childNodeStatementNode = isNodeStatementNode(childNode);
-
-      if (childNodeStatementNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = STATEMENT_RULE_NAME,
+          statementNode = this.getNodeByRuleName(ruleName);
 
     return statementNode;
   }

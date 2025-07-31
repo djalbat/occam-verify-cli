@@ -2,17 +2,12 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeTypeNode } from "../utilities/node";
+import { TYPE_RULE_NAME } from "../ruleNames";
 
 export default class TypesNode extends NonTerminalNode {
   getTypeNodes() {
-    const typeNodes = this.filterChildNode((childNode) => {
-      const childNodeTypeNode = isNodeTypeNode(childNode);
-
-      if (childNodeTypeNode) {
-        return true;
-      }
-    });
+    const ruleName = TYPE_RULE_NAME,
+          typeNodes = this.getNodesByRuleName(ruleName);
 
     return typeNodes;
   }

@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeProofNode, isNodeSuppositionNode, isNodeDeductionNode, isNodeParenthesisedLabelNode } from "../utilities/node";
+import { PROOF_RULE_NAME, DEDUCTION_RULE_NAME, SUPPOSITION_RULE_NAME, PARENTHESISED_LABEL_RULE_NAME } from "../ruleNames";
 
 export default class TopLevelMetaAssertionNode extends NonTerminalNode {
   getLabelNode() {
@@ -13,49 +13,29 @@ export default class TopLevelMetaAssertionNode extends NonTerminalNode {
   }
 
   getProofNode() {
-    const proofNode = this.findChildNode((childNode) => {
-      const childNOdeProofNode = isNodeProofNode(childNode);
-
-      if (childNOdeProofNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = PROOF_RULE_NAME,
+          proofNode = this.getNodeByRuleName(ruleName);
 
     return proofNode;
   }
 
   getDeductionNode() {
-    const deductionNode = this.findChildNode((childNode) => {
-      const childNOdeDeductionNode = isNodeDeductionNode(childNode);
-
-      if (childNOdeDeductionNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = DEDUCTION_RULE_NAME,
+          deductionNode = this.getNodeByRuleName(ruleName);
 
     return deductionNode;
   }
 
   getSuppositionNodes() {
-    const suppositionNodes = this.filterChildNode((childNode) => {
-      const childNOdeSuppositionNode = isNodeSuppositionNode(childNode);
-
-      if (childNOdeSuppositionNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = SUPPOSITION_RULE_NAME,
+          suppositionNodes = this.getNodesByRuleName(ruleName);
 
     return suppositionNodes;
   }
 
   getParenthesisedLabelNode() {
-    const parenthesisedLabelNode = this.findChildNode((childNode) => {
-      const childNodeParenthesisedLabelNode = isNodeParenthesisedLabelNode(childNode);
-
-      if (childNodeParenthesisedLabelNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = PARENTHESISED_LABEL_RULE_NAME,
+          parenthesisedLabelNode = this.getNodeByRuleName(ruleName);
 
     return parenthesisedLabelNode;
   }

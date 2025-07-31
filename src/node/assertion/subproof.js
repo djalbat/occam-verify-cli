@@ -2,17 +2,12 @@
 
 import NonTerminalNode from "../../node/nonTerminal";
 
-import { isNodeStatementNode } from "../../utilities/node";
+import { STATEMENT_RULE_NAME } from "../../ruleNames";
 
 export default class SubproofAssertionNode extends NonTerminalNode {
   getStatementNodes() {
-    const statementNodes = this.filterChildNode((childNode) => {
-      const childNodeStatementNode = isNodeStatementNode(childNode);
-
-      if (childNodeStatementNode) {
-        return true;
-      }
-    });
+    const ruleName = STATEMENT_RULE_NAME,
+          statementNodes = this.getNodesByRuleName(ruleName);
 
     return statementNodes;
   }

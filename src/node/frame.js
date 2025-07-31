@@ -1,55 +1,27 @@
 "use strict";
 
-import { arrayUtilities } from "necessary";
-
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeDeclarationNode, isNodeMetavariableNode } from "../utilities/node";
-
-const { first } = arrayUtilities;
+import { DECLARATION_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class FrameNode extends NonTerminalNode {
   getDeclarationNodes() {
-    const declarationNodes = this.filterChildNode((childNode) => {
-      const childNodeDeclarationNode = isNodeDeclarationNode(childNode);
-
-      if (childNodeDeclarationNode) {
-        return true;
-      }
-    });
+    const ruleName = DECLARATION_RULE_NAME,
+          declarationNodes = this.getNodesByRuleName(ruleName);
 
     return declarationNodes;
   }
 
   getMetavariableNodes() {
-    const metavariableNodes = this.filterChildNode((childNode) => {
-      const childNodeMetavariableNode = isNodeMetavariableNode(childNode);
-
-      if (childNodeMetavariableNode) {
-        return true;
-      }
-    });
+    const ruleName = METAVARIABLE_RULE_NAME,
+          metavariableNodes = this.getNodesByRuleName(ruleName);
 
     return metavariableNodes;
   }
 
   getSingularMetavariableNode() {
-    let singularMetavariableNode = null;
-
-    const metavariableNodes = this.filterChildNode((childNode) => {
-            const childNodeMetavariableNode = isNodeMetavariableNode(childNode);
-
-            if (childNodeMetavariableNode) {
-              return true;
-            }
-          }),
-          metavariableNodesLength = metavariableNodes.length;
-
-    if (metavariableNodesLength === 1) {
-      const firstMetavariableNode = first(metavariableNodes);
-
-      singularMetavariableNode = firstMetavariableNode; ///
-    }
+    const ruleName = METAVARIABLE_RULE_NAME,
+          singularMetavariableNode = this.getSingularTNodeByRuleName(ruleName);
 
     return singularMetavariableNode;
   }

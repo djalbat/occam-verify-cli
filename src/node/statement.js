@@ -2,147 +2,92 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeTermNode,
-         isNodeFrameNode,
-         isNodeEqualityNode,
-         isNodeJudgementNode,
-         isNodeMetavariableNode,
-         isNodeTypeAssertionNode,
-         isNodeDefinedAssertionNode,
-         isNodeSubproofAssertionNode,
-         isNodePropertyAssertionNode,
-         isNodeSatisfiesAssertionNode,
-         isNodeContainedAssertionNode } from "../utilities/node";
+import { TERM_RULE_NAME,
+         FRAME_RULE_NAME,
+         EQUALITY_RULE_NAME,
+         JUDGEMENT_RULE_NAME,
+         METAVARIABLE_RULE_NAME,
+         TYPE_ASSERTION_RULE_NAME,
+         DEFINED_ASSERTION_RULE_NAME,
+         PROPERTY_ASSERTION_RULE_NAME,
+         SUBPROOF_ASSERTION_RULE_NAME,
+         SATISFIES_ASSERTION_RULE_NAME,
+         CONTAINED_ASSERTION_RULE_NAME } from "../ruleNames";
 
 export default class StatementNode extends NonTerminalNode {
   getTermNodes() {
-    const termNodes = this.filterDescendantNode((descendantNode) => {
-      const descendantNodeTermNode = isNodeTermNode(descendantNode);
-
-      if (descendantNodeTermNode) {
-        return true;
-      }
-    });
+    const ruleName = TERM_RULE_NAME,
+          termNodes = this.getNodeByRuleName(ruleName);
 
     return termNodes;
   }
 
   getFrameNodes() {
-    const frameNodes = this.filterDescendantNode((descendantNode) => {
-      const descendantNodeFrameNode = isNodeFrameNode(descendantNode);
-
-      if (descendantNodeFrameNode) {
-        return true;
-      }
-    });
+    const ruleName = FRAME_RULE_NAME,
+          frameNodes = this.getNodeByRuleName(ruleName);
 
     return frameNodes;
   }
 
   getEqualityNode() {
-    const equalityNode = this.findChildNode((childNode) => {
-      const childNodeEqualityNode = isNodeEqualityNode(childNode);
-
-      if (childNodeEqualityNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = EQUALITY_RULE_NAME,
+          equalityNode = this.getNodeByRuleName(ruleName);
 
     return equalityNode;
   }
 
   getJudgementNode() {
-    const judgementNode = this.findChildNode((childNode) => {
-      const childNodeJudgementNode = isNodeJudgementNode(childNode);
-
-      if (childNodeJudgementNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = JUDGEMENT_RULE_NAME,
+          judgementNode = this.getNodeByRuleName(ruleName);
 
     return judgementNode;
   }
 
   getMetavariableNode() {
-    const metavariableNode = this.findChildNode((childNode) => {
-      const childNodeMetavariableNode = isNodeMetavariableNode(childNode);
-
-      if (childNodeMetavariableNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = METAVARIABLE_RULE_NAME,
+          metavariableNode = this.getNodeByRuleName(ruleName);
 
     return metavariableNode;
   }
 
   getTypeAssertionNode() {
-    const typeAssertionNode = this.findChildNode((childNode) => {
-      const childNodeTypeAssertionNode = isNodeTypeAssertionNode(childNode);
-
-      if (childNodeTypeAssertionNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = TYPE_ASSERTION_RULE_NAME,
+          typeAssertionNode = this.getNodeByRuleName(ruleName);
 
     return typeAssertionNode;
   }
 
   getDefinedAssertionNode() {
-    const definedAssertionNode = this.findChildNode((childNode) => {
-      const definedAssertionNode = isNodeDefinedAssertionNode(childNode);
-
-      if (definedAssertionNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = DEFINED_ASSERTION_RULE_NAME,
+          definedAssertionNode = this.getNodeByRuleName(ruleName);
 
     return definedAssertionNode;
   }
 
   getSubproofAssertionNode() {
-    const subproofAssertionNode = this.findChildNode((childNode) => {
-      const childNodeSubproofAssertionNode = isNodeSubproofAssertionNode(childNode);
-
-      if (childNodeSubproofAssertionNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = SUBPROOF_ASSERTION_RULE_NAME,
+          subproofAssertionNode = this.getNodeByRuleName(ruleName);
 
     return subproofAssertionNode;
   }
 
   getPropertyAssertionNode() {
-    const propertyAssertionNode = this.findChildNode((childNode) => {
-      const childNodePropertyAssertionNode = isNodePropertyAssertionNode(childNode);
-
-      if (childNodePropertyAssertionNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = PROPERTY_ASSERTION_RULE_NAME,
+          propertyAssertionNode = this.getNodeByRuleName(ruleName);
 
     return propertyAssertionNode;
   }
 
   getContainedAssertionNode() {
-    const containedAssertionNode = this.findChildNode((childNode) => {
-      const containedAssertionNode = isNodeContainedAssertionNode(childNode);
-
-      if (containedAssertionNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = CONTAINED_ASSERTION_RULE_NAME,
+          containedAssertionNode = this.getNodeByRuleName(ruleName);
 
     return containedAssertionNode;
   }
 
   getSatisfiedAssertionNode() {
-    const satisfiedAssertionNode = this.findChildNode((childNode) => {
-      const childNodeSatisfiedAssertionNode = isNodeSatisfiesAssertionNode(childNode);
-
-      if (childNodeSatisfiedAssertionNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = SATISFIES_ASSERTION_RULE_NAME,
+          satisfiedAssertionNode = this.getNodeByRuleName(ruleName);
 
     return satisfiedAssertionNode;
   }

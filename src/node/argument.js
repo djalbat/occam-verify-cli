@@ -1,31 +1,13 @@
 "use strict";
 
-import { arrayUtilities } from "necessary";
-
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeTermNode } from "../utilities/node";
-
-const { first } = arrayUtilities;
+import { TERM_RULE_NAME } from "../ruleNames";
 
 export default class ArgumentNode extends NonTerminalNode {
   getSingularTermNode() {
-    let singularTermNode = null;
-
-    const termNodes = this.filterChildNode((childNode) => {
-            const childNodeTermNode = isNodeTermNode(childNode);
-
-            if (childNodeTermNode) {
-              return true;
-            }
-          }),
-          termNodesLength = termNodes.length;
-
-      if (termNodesLength === 1) {
-        const firstTermNode = first(termNodes);
-
-        singularTermNode = firstTermNode; ///
-      }
+    const ruleName = TERM_RULE_NAME,
+          singularTermNode = this.getSingularTNodeByRuleName(ruleName);
 
     return singularTermNode;
   }

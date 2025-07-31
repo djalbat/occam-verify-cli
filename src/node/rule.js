@@ -2,10 +2,7 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeProofNode,
-         isNodePremiseNode,
-         isNodeConclusionNode,
-         isNodeParenthesisedLabelsNode } from "../utilities/node";
+import {  PROOF_RULE_NAME, PREMISE_RULE_NAME, CONCLUSION_RULE_NAME, PARENTHESISED_LABELS_RULE_NAME } from "../ruleNames";
 
 export default class RuleNode extends NonTerminalNode {
   getLabelNodes() {
@@ -16,49 +13,29 @@ export default class RuleNode extends NonTerminalNode {
   }
 
   getProofNode() {
-    const proofNode = this.findChildNode((childNode) => {
-      const childNOdeProofNode = isNodeProofNode(childNode);
-
-      if (childNOdeProofNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = PROOF_RULE_NAME,
+          proofNode = this.getNodeByRuleName(ruleName);
 
     return proofNode;
   }
 
   getPremiseNodes() {
-    const premiseNodes = this.filterChildNode((childNode) => {
-      const childNOdePremiseNode = isNodePremiseNode(childNode);
-
-      if (childNOdePremiseNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = PREMISE_RULE_NAME,
+          premiseNodes = this.getNodesByRuleName(ruleName);
 
     return premiseNodes;
   }
 
   getConclusionNode() {
-    const conclusionNode = this.findChildNode((childNode) => {
-      const childNOdeConclusionNode = isNodeConclusionNode(childNode);
-
-      if (childNOdeConclusionNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = CONCLUSION_RULE_NAME,
+          conclusionNode = this.getNodeByRuleName(ruleName);
 
     return conclusionNode;
   }
 
   getParenthesisedLabelsNode() {
-    const parenthesisedLabelsNode = this.findChildNode((childNode) => {
-      const childNodeParenthesisedLabelsNode = isNodeParenthesisedLabelsNode(childNode);
-
-      if (childNodeParenthesisedLabelsNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = PARENTHESISED_LABELS_RULE_NAME,
+          parenthesisedLabelsNode = this.getNodeByRuleName(ruleName);
 
     return parenthesisedLabelsNode;
   }

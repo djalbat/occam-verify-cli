@@ -2,17 +2,12 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeMetavariableNode } from "../utilities/node";
+import { METAVARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class LabelNode extends NonTerminalNode {
   getMetavariableNode() {
-    const metavariableNode = this.findChildNode((childNode) => {
-      const childNodeMetavariableNode = isNodeMetavariableNode(childNode);
-
-      if (childNodeMetavariableNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = METAVARIABLE_RULE_NAME,
+          metavariableNode = this.getNodeByRuleName(ruleName);
 
     return metavariableNode;
   }

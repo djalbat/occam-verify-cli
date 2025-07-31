@@ -2,17 +2,12 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { isNodeStatementNode } from "../utilities/node";
+import { STATEMENT_RULE_NAME } from "../ruleNames";
 
 export default class DeductionNode extends NonTerminalNode {
   getStatementNode() {
-    const statementNode = this.findChildNode((childNode) => {
-      const childNodeStatementNode = isNodeStatementNode(childNode);
-
-      if (childNodeStatementNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = STATEMENT_RULE_NAME,
+          statementNode = this.getNodeByRuleName(ruleName);
 
     return statementNode;
   }

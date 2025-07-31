@@ -2,29 +2,19 @@
 
 import NonTerminalNode from "../../node/nonTerminal";
 
-import { isNodeTermNode, isNodePropertyRelationNode } from "../../utilities/node";
+import { TERM_RULE_NAME, PROPERTY_RELATION_RULE_NAME } from "../../ruleNames";
 
 export default class PropertyAssertionNode extends NonTerminalNode {
   getTermNode() {
-    const termNode = this.findChildNode((childNode) => {
-      const childNodeTermNode = isNodeTermNode(childNode);
-
-      if (childNodeTermNode) {
-        return true;
-      }
-    }) || null;
+    const ruleName = TERM_RULE_NAME,
+          termNode = this.getNodeByRuleName(ruleName);
 
     return termNode;
   }
 
-  getPropertyRelationNode() {
-    const propertyRelationNode = this.findChildNode((childNode) => {
-      const childNodePropertyRelationNode = isNodePropertyRelationNode(childNode);
-
-      if (childNodePropertyRelationNode) {
-        return true;
-      }
-    }) || null;
+  getFrameNode() {
+    const ruleName = PROPERTY_RELATION_RULE_NAME,
+          propertyRelationNode = this.getNodeByRuleName(ruleName);
 
     return propertyRelationNode;
   }
