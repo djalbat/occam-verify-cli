@@ -4,12 +4,6 @@ import dom from "../dom";
 import Substitution from "../substitution";
 import ReferenceSubstitutionPartialContext from "../context/partial/substitution/reference";
 
-import { nodeQuery } from "../utilities/query";
-
-const referenceNodeQuery = nodeQuery("/referenceSubstitution/reference[0]"),
-      metavariableNodeQuery = nodeQuery("/referenceSubstitution/reference[1]/metavariable!"),
-      referenceSubstitutionNodeQuery = nodeQuery("/statement/referenceSubstitution");
-
 export default class ReferenceSubstitution extends Substitution {
   constructor(string, node, tokens, reference, metavariable) {
     super(string, node, tokens);
@@ -33,14 +27,17 @@ export default class ReferenceSubstitution extends Substitution {
   static fromStatementNode(statementNode, context) {
     let referenceSubstitution = null;
 
-    const referenceSubstitutionNode = referenceSubstitutionNodeQuery(statementNode);
+    const referenceSubstitutionNode = statementNode.getReferenceSubstitutionNode();
 
     if (referenceSubstitutionNode !== null) {
-      const referenceNode = referenceNodeQuery(referenceSubstitutionNode),
-            metavariableNode = metavariableNodeQuery(referenceSubstitutionNode);
+      const lastReferenceNode = referenceSubstitutionNode.getLastReferenceNode(),
+            firstReferenceNode = referenceSubstitutionNode.getFirstReferenceNode(),
+            singularMetavariableNode = lastReferenceNode.getSingularMetavariableNode();
 
-      if ((referenceNode !== null) && (metavariableNode !== null)) {
+      if (singularMetavariableNode !== null) {
         const { Reference, Metavariable } = dom,
+              referenceNode = firstReferenceNode, ///
+              metavariableNode = singularMetavariableNode,  ///
               reference = Reference.fromReferenceNode(referenceNode, context),
               metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
               node = referenceSubstitutionNode,  ///

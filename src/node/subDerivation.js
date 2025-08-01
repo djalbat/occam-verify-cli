@@ -5,6 +5,13 @@ import NonTerminalNode from "../node/nonTerminal";
 import { STEP_RULE_NAME, SUBPROOF_RULE_NAME } from "../ruleNames";
 
 export default class SubDerivationNode extends NonTerminalNode {
+  getLastStepNode() {
+    const ruleName = STEP_RULE_NAME,
+          lastStepNode = this.getLastNodeByRuleName(ruleName);
+
+    return lastStepNode;
+  }
+
   getStepOrSubproofNodes() {
     const ruleNames = [
             STEP_RULE_NAME,

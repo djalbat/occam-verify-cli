@@ -43,21 +43,3 @@ export function statementFromStatementNode(statementNode, context) {
 
   return statement;
 }
-
-function isNodeRuleNodeByRuleName(node, ruleName) {
-  let nodeRuleNode = false;
-
-  const nodeNonTerminalNode = node.isNonTerminalNode();
-
-  if (nodeNonTerminalNode) {
-    const nonTerminalNode = node, ///
-          nonTerminalNodeRuleName = nonTerminalNode.getRuleName(),
-          nonTerminalNodeRuleNameRuleName = (nonTerminalNodeRuleName === ruleName);
-
-    if (nonTerminalNodeRuleNameRuleName) {
-      nodeRuleNode = true;
-    }
-  }
-
-  return nodeRuleNode;
-}

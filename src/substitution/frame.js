@@ -4,12 +4,6 @@ import dom from "../dom";
 import Substitution from "../substitution";
 import FrameSubstitutionPartialContext from "../context/partial/substitution/frame";
 
-import { nodeQuery } from "../utilities/query";
-
-const frameNodeQuery = nodeQuery("/frameSubstitution/frame[0]"),
-      metavariableNodeQuery = nodeQuery("/frameSubstitution/frame[1]/metavariable!"),
-      frameSubstitutionNodeQuery = nodeQuery("/statement/frameSubstitution");
-
 export default class FrameSubstitution extends Substitution {
   constructor(string, node, tokens, frame, metavariable) {
     super(string, node, tokens);
@@ -42,14 +36,17 @@ export default class FrameSubstitution extends Substitution {
   static fromStatementNode(statementNode, context) {
     let frameSubstitution = null;
 
-    const frameSubstitutionNode = frameSubstitutionNodeQuery(statementNode);
+    const frameSubstitutionNode = statementNode.getFrameSubstitutionNode();
 
     if (frameSubstitutionNode !== null) {
-      const frameNode = frameNodeQuery(frameSubstitutionNode),
-            metavariableNode = metavariableNodeQuery(frameSubstitutionNode);
+      const lastFrameNode = frameSubstitutionNode.getLastFrameNode(),
+            firstFrameNode = frameSubstitutionNode.getFirstFrameNode(),
+            singularMetavariableNode = lastFrameNode.getSingularMetavariableNode();
 
-      if ((frameNode !== null) && (metavariableNode !== null)) {
+      if (singularMetavariableNode !== null) {
         const { Frame, Metavariable } = dom,
+              frameNode = firstFrameNode, ///
+              metavariableNode = singularMetavariableNode,  ///
               frame = Frame.fromFrameNode(frameNode, context),
               metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
               node = frameSubstitutionNode,  ///

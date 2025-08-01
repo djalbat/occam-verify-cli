@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import { NonTerminalNode as NonTerminalNodeBase } from "occam-parsers";
 
-const { first } = arrayUtilities;
+const { first, forwardsFind, backwardsFind } = arrayUtilities;
 
 export default class NonTerminalNode extends NonTerminalNodeBase {
   getNodeByRuleName(...ruleNames) {
@@ -43,6 +43,44 @@ export default class NonTerminalNode extends NonTerminalNodeBase {
     return nodes;
   }
 
+  getLastNodeByRuleName(...ruleNames) {
+    const childNodes = this.getChildNodes(),
+          lastNode = backwardsFind(childNodes, (childNode) => {
+            const childNodeNonTerminalNode = childNode.isNonTerminalNode();
+
+            if (childNodeNonTerminalNode) {
+              const nonTerminalNode = childNode, ///
+                    ruleName = nonTerminalNode.getRuleName(),
+                    ruleNamesIncludesRuleName = ruleNames.includes(ruleName);
+
+              if (ruleNamesIncludesRuleName) {
+                return true;
+              }
+            }
+          }) || null;
+
+    return lastNode;
+  }
+
+  getFirstNodeByRuleName(...ruleNames) {
+    const childNodes = this.getChildNodes(),
+          firstNode = forwardsFind(childNodes, (childNode) => {
+            const childNodeNonTerminalNode = childNode.isNonTerminalNode();
+
+            if (childNodeNonTerminalNode) {
+              const nonTerminalNode = childNode, ///
+                    ruleName = nonTerminalNode.getRuleName(),
+                    ruleNamesIncludesRuleName = ruleNames.includes(ruleName);
+
+              if (ruleNamesIncludesRuleName) {
+                return true;
+              }
+            }
+          }) || null;
+
+    return firstNode;
+  }
+
   getSingularTNodeByRuleName(...ruleNames) {
     let singularNode = null;
 
@@ -61,11 +99,11 @@ export default class NonTerminalNode extends NonTerminalNodeBase {
           }),
           nodesLength = nodes.length;
 
-      if (nodesLength === 1) {
-        const firstNode = first(nodes);
+    if (nodesLength === 1) {
+      const firstNode = first(nodes);
 
-        singularNode = firstNode; ///
-      }
+      singularNode = firstNode; ///
+    }
 
     return singularNode;
   }

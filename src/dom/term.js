@@ -6,15 +6,12 @@ import dom from "../dom";
 import LocalContext from "../context/local";
 import verifyMixins from "../mixins/term/verify";
 
-import { nodeQuery } from "../utilities/query"
 import { domAssigned } from "../dom";
 import { termFromTermNode } from "../utilities/node";
 import { termNodeFromTermString } from "../context/partial/term";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 const { filter, compress } = arrayUtilities;
-
-const containedAssertionTermNodeQuery = nodeQuery("/containedAssertion/term");
 
 export default domAssigned(class Term {
   constructor(string, node, type) {

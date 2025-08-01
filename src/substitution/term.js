@@ -4,13 +4,8 @@ import dom from "../dom";
 import Substitution from "../substitution";
 import TermSubstitutionPartialContext from "../context/partial/substitution/term";
 
-import { nodeQuery } from "../utilities/query";
 import { stripBracketsFromTerm } from "../utilities/brackets";
 import { stripBracketsFromTermNode } from "../utilities/brackets";
-
-const termNodeQuery = nodeQuery("/termSubstitution/term[0]"),
-      variableNodeQuery = nodeQuery("/termSubstitution/term[1]/variable!"),
-      termSubstitutionNodeQuery = nodeQuery("/statement/termSubstitution");
 
 export default class TermSubstitution extends Substitution {
   constructor(string, node, tokens, term, variable) {
@@ -68,14 +63,17 @@ export default class TermSubstitution extends Substitution {
   static fromStatementNode(statementNode, context) {
     let termSubstitution = null;
 
-    const termSubstitutionNode = termSubstitutionNodeQuery(statementNode);
+    const termSubstitutionNode = statementNode.getTermSubstitutionNode();
 
     if (termSubstitutionNode !== null) {
-      const termNode = termNodeQuery(termSubstitutionNode),
-            variableNode = variableNodeQuery(termSubstitutionNode);
+      const lastTermNode = termSubstitutionNode.getLastTermNode(),
+            firstTermNode = termSubstitutionNode.getFirstTermNode(),
+            singularVariableNode = lastTermNode.getSingularVariableNode(lastTermNode);
 
-      if ((termNode !== null) && (variableNode !== null)) {
+      if (singularVariableNode !== null) {
         const { Term, Variable } = dom,
+              termNode = firstTermNode, ///
+              variableNode = singularVariableNode,  ///
               term = Term.fromTermNode(termNode, context),
               variable = Variable.fromVariableNode(variableNode, context),
               node = termSubstitutionNode,  ///

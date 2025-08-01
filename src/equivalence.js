@@ -1,9 +1,6 @@
 "use strict";
 
-import { nodeQuery } from "./utilities/query";
 import { stripBracketsFromTermNode } from "./utilities/brackets";
-
-const variableNodeQuery = nodeQuery("/term/variable!");
 
 export default class Equivalence {
   constructor(terms) {
@@ -100,10 +97,10 @@ export default class Equivalence {
     const variableNodeA = variableNode, ///
           variableNodeMatches = this.someTerm((term) => {
             const termNode = term.getNode(),
-              variableNode = variableNodeQuery(termNode);
+                  singularVariableNode = termNode.getSingularVariableNode();
 
-            if (variableNode !== null) {
-              const variableNodeB = variableNode, ///
+            if (singularVariableNode !== null) {
+              const variableNodeB = singularVariableNode, ///
                     variableNodeAMatchesVariableNodeB = variableNodeA.match(variableNodeB);
 
               if (variableNodeAMatchesVariableNodeB) {

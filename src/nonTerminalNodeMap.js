@@ -34,6 +34,7 @@ import SuppositionNode from "./node/supposition";
 import ConstructorNode from "./node/constructor";
 import DeclarationNode from "./node/declaration";
 import MetatheoremNode from "./node/metatheorem";
+import MetaArgumentNode from "./node/metaArgument";
 import MetavariableNode from "./node/metavariable";
 import ProcedureCallNode from "./node/procedureCall";
 import SubDerivationNode from "./node/subDerivation";
@@ -41,14 +42,18 @@ import TypeAssertionNode from "./node/assertion/type";
 import typeDeclarationNode from "./node/declaration/type";
 import PropertyRelationNode from "./node/propertyRelation"
 import DefinedAssertionNode from "./node/assertion/defined";
+import TermSubstitutionNode from "./node/substitution/term";
 import PropertyAssertionNode from "./node/assertion/property";
 import SubproofAssertionNode from "./node/assertion/subproof";
+import FrameSubstitutionNode from "./node/substitution/frame";
 import ParenthesisedLabelNode from "./node/parenthesisedLabel";
 import ContainedAssertionNode from "./node/assertion/contained";
 import SatisfiesAssertionNode from "./node/assertion/satisfies";
 import ParenthesisedLabelsNode from "./node/parenthesisedLabels"
 import PropertyDeclarationNode from "./node/declaration/property";
 import variableDeclarationNode from "./node/declaration/variable";
+import StatementSubstitutionNode from "./node/substitution/statement";
+import ReferenceSubstitutionNode from "./node/substitution/reference";
 import combinatorDeclarationNode from "./node/declaration/combinator";
 import complexTypeDeclarationNode from "./node/declaration/complexType";
 import constructorDeclarationNode from "./node/declaration/constructor";
@@ -89,20 +94,25 @@ import { RULE_RULE_NAME,
          SUPPOSITION_RULE_NAME,
          METATHEOREM_RULE_NAME,
          METAVARIABLE_RULE_NAME,
+         META_ARGUMENT_RULE_NAME,
          SUB_DERIVATION_RULE_NAME,
          TYPE_ASSERTION_RULE_NAME,
          PROCEDURE_CALL_RULE_NAME,
          TYPE_DECLARATION_RULE_NAME,
          PROPERTY_RELATION_RULE_NAME,
          DEFINED_ASSERTION_RULE_NAME,
+         TERM_SUBSTITUTION_RULE_NAME,
          SUBPROOF_ASSERTION_RULE_NAME,
          PROPERTY_ASSERTION_RULE_NAME,
+         FRAME_SUBSTITUTION_RULE_NAME,
          CONTAINED_ASSERTION_RULE_NAME,
          SATISFIES_ASSERTION_RULE_NAME,
          PARENTHESISED_LABEL_RULE_NAME,
          PARENTHESISED_LABELS_RULE_NAME,
          PROPERTY_DECLARATION_RULE_NAME,
          VARIABLE_DECLARATION_RULE_NAME,
+         STATEMENT_SUBSTITUTION_RULE_NAME,
+         REFERENCE_SUBSTITUTION_RULE_NAME,
          COMBINATOR_DECLARATION_RULE_NAME,
          CONSTRUCTOR_DECLARATION_RULE_NAME,
          COMPLEX_TYPE_DECLARATION_RULE_NAME,
@@ -134,30 +144,35 @@ const nonTerminalNodeMap = {
   [DEDUCTION_RULE_NAME]: DeductionNode,
   [PARAMETER_RULE_NAME]: ParameterNode,
   [STATEMENT_RULE_NAME]: StatementNode,
+  [META_LEMMA_RULE_NAME]: MetaLemmaNode,
   [COMBINATOR_RULE_NAME]: CombinatorNode,
   [CONCLUSION_RULE_NAME]: ConclusionNode,
   [CONJECTURE_RULE_NAME]: ConjectureNode,
   [DERIVATION_RULE_NAME]: DerivationNode,
-  [META_LEMMA_RULE_NAME]: MetaLemmaNode,
   [SUPPOSITION_RULE_NAME]: SuppositionNode,
   [CONSTRUCTOR_RULE_NAME]: ConstructorNode,
   [DECLARATION_RULE_NAME]: DeclarationNode,
   [METATHEOREM_RULE_NAME]: MetatheoremNode,
   [METAVARIABLE_RULE_NAME]: MetavariableNode,
+  [META_ARGUMENT_RULE_NAME]: MetaArgumentNode,
   [TYPE_ASSERTION_RULE_NAME]: TypeAssertionNode,
   [PROCEDURE_CALL_RULE_NAME]: ProcedureCallNode,
   [SUB_DERIVATION_RULE_NAME]: SubDerivationNode,
   [TYPE_DECLARATION_RULE_NAME]: typeDeclarationNode,
   [PROPERTY_RELATION_RULE_NAME]: PropertyRelationNode,
   [DEFINED_ASSERTION_RULE_NAME]: DefinedAssertionNode,
+  [TERM_SUBSTITUTION_RULE_NAME]: TermSubstitutionNode,
   [SUBPROOF_ASSERTION_RULE_NAME]: SubproofAssertionNode,
   [PROPERTY_ASSERTION_RULE_NAME]: PropertyAssertionNode,
+  [FRAME_SUBSTITUTION_RULE_NAME]: FrameSubstitutionNode,
   [PARENTHESISED_LABEL_RULE_NAME]: ParenthesisedLabelNode,
   [SATISFIES_ASSERTION_RULE_NAME]: SatisfiesAssertionNode,
   [CONTAINED_ASSERTION_RULE_NAME]: ContainedAssertionNode,
   [PARENTHESISED_LABELS_RULE_NAME]: ParenthesisedLabelsNode,
   [VARIABLE_DECLARATION_RULE_NAME]: variableDeclarationNode,
   [PROPERTY_DECLARATION_RULE_NAME]: PropertyDeclarationNode,
+  [STATEMENT_SUBSTITUTION_RULE_NAME]: StatementSubstitutionNode,
+  [REFERENCE_SUBSTITUTION_RULE_NAME]: ReferenceSubstitutionNode,
   [COMBINATOR_DECLARATION_RULE_NAME]: combinatorDeclarationNode,
   [CONSTRUCTOR_DECLARATION_RULE_NAME]: constructorDeclarationNode,
   [COMPLEX_TYPE_DECLARATION_RULE_NAME]: complexTypeDeclarationNode,

@@ -17,6 +17,13 @@ export default class SubproofNode extends NonTerminalNode {
     return subproofNode;
   }
 
+  getLastStepNode() {
+    const subDerivationNode = this.getSubDerivationNode(),
+          lastStepNode = subDerivationNode.getLastStepNode();
+
+    return lastStepNode;
+  }
+
   getSubDerivationNode() {
     const ruleName = SUB_DERIVATION_RULE_NAME,
           subDerivationNode = this.getNodeByRuleName(ruleName);

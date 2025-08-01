@@ -12,7 +12,6 @@ const termNodeQuery = nodeQuery("/term"),
       statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
       frameMetavariableNodeQuery = nodeQuery("/frame/metavariable!"),
-      statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable!");
 
 class MetaLevelUnifier extends Unifier {
@@ -34,9 +33,9 @@ class MetaLevelUnifier extends Unifier {
         let statementUnified;
 
         const statementNode = generalStatementNode, ///
-              statementMetavariableNode = statementMetavariableNodeQuery(statementNode);
+              singularMetavariableNode = statementNode.getSingularMetavariableNode();
 
-        if (statementMetavariableNode !== null) {
+        if (singularMetavariableNode !== null) {
           const { Metavariable, Statement } = dom; ///
 
           let context,

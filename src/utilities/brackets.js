@@ -5,11 +5,7 @@ import LocalContext from "../context/local";
 import combinatorBracketedContext from "../context/bracketed/combinator";
 import constructorBracketedContext from "../context/bracketed/constructor";
 
-import { nodeQuery } from "../utilities/query";
 import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
-
-const bracketedTermChildNodeQuery = nodeQuery("/term/argument/term"),
-      bracketedStatementChildNodeQuery = nodeQuery("/statement/metaArgument/statement");
 
 export function stripBracketsFromTerm(term, context) {
   const termNode = term.getNode(),
@@ -69,7 +65,9 @@ export function bracketedTermChildNodeFromTermNode(termNode) {
         termNodeMatchBracketedTermNode = termNode.match(bracketedTermNode, depth);
 
   if (termNodeMatchBracketedTermNode) {
-    bracketedTermChildNode = bracketedTermChildNodeQuery(termNode);
+    const singularTermNode = termNode.getSingularTermNode();
+
+    bracketedTermChildNode = singularTermNode;  ///
   }
 
   return bracketedTermChildNode;
@@ -83,7 +81,9 @@ export function bracketedStatementChildNodeFromStatementNode(statementNode) {
         statementNodeMatchBracketedStatementNode = statementNode.match(bracketedStatementNode, depth);
 
   if (statementNodeMatchBracketedStatementNode) {
-    bracketedStatementChildNode = bracketedStatementChildNodeQuery(statementNode);
+    const singularStatementNode = statementNode.getSingularStatementNode();
+
+    bracketedStatementChildNode = singularStatementNode;  ///
   }
 
   return bracketedStatementChildNode;
@@ -91,8 +91,8 @@ export function bracketedStatementChildNodeFromStatementNode(statementNode) {
 
 function contextFromStatement(statement, context) {
   const statementTokens = statement.getTokens(),
-    tokens = statementTokens, ///
-    localContext = LocalContext.fromContextAndTokens(context, tokens);
+        tokens = statementTokens, ///
+        localContext = LocalContext.fromContextAndTokens(context, tokens);
 
   context = localContext; ///
 

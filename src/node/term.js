@@ -12,6 +12,18 @@ export default class TermNode extends NonTerminalNode {
     return variableNodes;
   }
 
+  getSingularTermNode() {
+    let singularTermNode = null;
+
+    const singularArgumentNode = this.getSingularArgumentNode();
+
+    if (singularArgumentNode !== null) {
+      singularTermNode = singularArgumentNode.getSingularTermNode();
+    }
+
+    return singularTermNode;
+  }
+
   getSingularArgumentNode() {
     const ruleName = ARGUMENT_RULE_NAME,
           singularArgumentNode = this.getSingularTNodeByRuleName(ruleName);
@@ -24,18 +36,6 @@ export default class TermNode extends NonTerminalNode {
           singularVariableNode = this.getSingularTNodeByRuleName(ruleName);
 
     return singularVariableNode;
-  }
-
-  getSingularTermNode() {
-    let singularTermNode = null;
-
-    const singularArgumentNode = this.getSingularArgumentNode();
-
-    if (singularArgumentNode !== null) {
-      singularTermNode = singularArgumentNode.getSingularTermNode();
-    }
-
-    return singularTermNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TermNode, ruleName, childNodes, opacity, precedence); }

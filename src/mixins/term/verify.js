@@ -2,10 +2,6 @@
 
 import dom from "../../dom";
 
-import { nodeQuery } from "../../utilities/query";
-
-const variableNodeQuery = nodeQuery("/term/variable!");
-
 function unifyWithBracketedConstructor(term, context, verifyAhead) {
   let unifiedWithBracketedConstructor;
 
@@ -39,14 +35,12 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
   const { Variable } = dom,
         context = localContext, ///
         termNode = term.getNode(),
-        variableNode = variableNodeQuery(termNode);
+        singularVariableNode = termNode.getSingularVariableNode();
 
-  let variable;
-
-  variable = Variable.fromVariableNode(variableNode, context);
-
-  if (variable !== null) {
-    const termString = term.getString();
+  if (singularVariableNode !== null) {
+    const variableNode = singularVariableNode,
+          variable = Variable.fromVariableNode(variableNode, context),
+          termString = term.getString();
 
     localContext.trace(`Verifying the '${termString}' term as a variable...`);
 
