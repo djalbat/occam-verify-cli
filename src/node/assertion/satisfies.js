@@ -5,14 +5,14 @@ import NonTerminalNode from "../../node/nonTerminal";
 import { TERM_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
 
 export default class SatisfiesAssertionNode extends NonTerminalNode {
-  getTermNode() {
+  getTermNodes() {
     const ruleName = TERM_RULE_NAME,
-          termNode = this.getNodeByRuleName(ruleName);
+          termNodes = this.getNodesByRuleName(ruleName);
 
-    return termNode;
+    return termNodes;
   }
 
-  getFrameNode() {
+  getMetavariableNode() {
     const ruleName = METAVARIABLE_RULE_NAME,
           metavariableNode = this.getNodeByRuleName(ruleName);
 

@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../../node/nonTerminal";
 
-import { TERM_RULE_NAME, PROPERTY_RELATION_RULE_NAME } from "../../ruleNames";
+import { TERM_RULE_NAME, FRAME_RULE_NAME, PROPERTY_RELATION_RULE_NAME } from "../../ruleNames";
 
 export default class PropertyAssertionNode extends NonTerminalNode {
   getTermNode() {
@@ -13,6 +13,13 @@ export default class PropertyAssertionNode extends NonTerminalNode {
   }
 
   getFrameNode() {
+    const ruleName = FRAME_RULE_NAME,
+          propertyRelationNode = this.getNodeByRuleName(ruleName);
+
+    return propertyRelationNode;
+  }
+
+  getPropertyRelationNode() {
     const ruleName = PROPERTY_RELATION_RULE_NAME,
           propertyRelationNode = this.getNodeByRuleName(ruleName);
 
