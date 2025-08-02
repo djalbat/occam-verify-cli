@@ -64,7 +64,7 @@ export default class TopLevelAssertionNode extends NonTerminalNode {
 
   getParenthesisedLabelsNode() {
     const ruleName = PARENTHESISED_LABELS_RULE_NAME,
-          parenthesisedLabelsNode = this.getNodesByRuleName(ruleName);
+          parenthesisedLabelsNode = this.getNodeByRuleName(ruleName);
 
     return parenthesisedLabelsNode;
   }

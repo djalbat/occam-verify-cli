@@ -7,14 +7,14 @@ import { FRAME_RULE_NAME, DECLARATION_RULE_NAME } from "../ruleNames";
 export default class JudgementNode extends NonTerminalNode {
   getFrameNode() {
     const ruleName = FRAME_RULE_NAME,
-          frameNode = this.getNodesByRuleName(ruleName);
+          frameNode = this.getNodeByRuleName(ruleName);
 
     return frameNode;
   }
 
-  getDeclarationNodes() {
+  getDeclarationNode() {
     const ruleName = DECLARATION_RULE_NAME,
-          declarationNodes = this.getNodesByRuleName(ruleName);
+          declarationNodes = this.getNodeByRuleName(ruleName);
 
     return declarationNodes;
   }

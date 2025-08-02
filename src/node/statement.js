@@ -22,14 +22,14 @@ import { TERM_RULE_NAME,
 export default class StatementNode extends NonTerminalNode {
   getTermNodes() {
     const ruleName = TERM_RULE_NAME,
-          termNodes = this.getNodeByRuleName(ruleName);
+          termNodes = this.getDescendantNodesByRuleName(ruleName);
 
     return termNodes;
   }
 
   getFrameNodes() {
     const ruleName = FRAME_RULE_NAME,
-          frameNodes = this.getNodeByRuleName(ruleName);
+          frameNodes = this.getDescendantNodesByRuleName(ruleName);
 
     return frameNodes;
   }

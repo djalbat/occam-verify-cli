@@ -108,5 +108,23 @@ export default class NonTerminalNode extends NonTerminalNodeBase {
     return singularNode;
   }
 
+  getDescendantNodesByRuleName(...ruleNames) {
+    const nodes = this.filterDescendantNode((descendantNode) => {
+      const descendantNodeNonTerminalNode = descendantNode.isNonTerminalNode();
+
+      if (descendantNodeNonTerminalNode) {
+        const nonTerminalNode = descendantNode, ///
+              ruleName = nonTerminalNode.getRuleName(),
+              ruleNamesIncludesRuleName = ruleNames.includes(ruleName);
+
+        if (ruleNamesIncludesRuleName) {
+          return true;
+        }
+      }
+    });
+
+    return nodes;
+  }
+
   static fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence) { return NonTerminalNodeBase.fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence); }
 }

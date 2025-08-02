@@ -11,7 +11,7 @@ const { first, last } = arrayUtilities;
 export default class EqualityNode extends NonTerminalNode {
   getTermNodes() {
     const ruleName = TERM_RULE_NAME,
-          termNodes = this.getNodeByRuleName(ruleName);
+          termNodes = this.getNodesByRuleName(ruleName);
 
     return termNodes;
   }
