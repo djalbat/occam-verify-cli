@@ -98,8 +98,8 @@ export default domAssigned(class VariableDeclaration {
 
       if (!provisionalMatches) {
         provisional ?
-          this.fileContext.debug(`The '${typeString}' type is present but it should be provisional.`) :
-            this.fileContext.debug(`The '${typeString}' type is present but it should not be provisional.`);
+          this.fileContext.debug(`The '${typeString}' type is present but not provisional.`) :
+            this.fileContext.debug(`The '${typeString}' type is present but provisional.`);
       } else {
         this.variable.setType(type);
 

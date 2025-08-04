@@ -1,5 +1,6 @@
 "use strict";
 
+import dom from "../../dom";
 import Substitutions from "../../substitutions";
 import StatementSubstitution from "../../substitution/statement";
 
@@ -250,6 +251,39 @@ function unifyWithStepsOrSubproofs(statement, reference, substitutions, context)
   return unifiedWithSteps;
 }
 
+function unifyWithSatisfiesAssertion(statement, reference, substitutions, context) {
+  let unifiedWithSatisfiesAssertion;
+
+  const stepsOrSubproofs = context.getStepsOrSubproofs(),
+        satisfiesAssertions = stepsOrSubproofs.reduce((satisfiesAssertions, stepOrSubproof) => {
+          const stepOrSubproofStep = stepOrSubproof.isStep();
+
+          if (stepOrSubproofStep) {
+            const { SatisfiesAssertion } = dom,
+                  step = stepOrSubproof,  ///
+                  statement = step.getStatement(),
+                  statementNode = statement.getNode(),
+                  satisfiesAssertion = SatisfiesAssertion.fromStatementNode(statementNode, context);
+
+            if (satisfiesAssertion !== null) {
+              satisfiesAssertions.unshift(satisfiesAssertion);
+            }
+          }
+
+          return satisfiesAssertions;
+        }, []);
+
+  unifiedWithSatisfiesAssertion = satisfiesAssertions.some((satisfiesAssertion) => {
+    const statementUnified = satisfiesAssertion.unifyStatement(statement, context);
+
+    if (statementUnified) {
+      return true;
+    }
+  });
+
+  return unifiedWithSatisfiesAssertion;
+}
+
 const unifyMixins = [
   unifyAWithRule,
   unifyAWithReference,
@@ -259,7 +293,8 @@ const unifyMixins = [
   unifyAsJudgement,
   unifyAsTypeAssertion,
   unifyAsPropertyAssertion,
-  unifyWithStepsOrSubproofs
+  unifyWithStepsOrSubproofs,
+  unifyWithSatisfiesAssertion
 ];
 
 export default unifyMixins;

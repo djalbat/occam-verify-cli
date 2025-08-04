@@ -4,6 +4,8 @@ import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
 
+import Substitutions from "../../substitutions";
+
 export default domAssigned(class SatisfiesAssertion {
   constructor(string, node, tokens, terms, reference) {
     this.string = string;
@@ -37,17 +39,16 @@ export default domAssigned(class SatisfiesAssertion {
     let substitutionsMatch;
 
     const termsString = termsStringFromTerms(this.terms),
-          substitutionsString = substitutions.asString(),
-          satisfiesAssertionString = this.string; ///
+          substitutionsString = substitutions.asString();
 
-    context.trace(`Matching the '${substitutionsString}' substitutions against the '${satisfiesAssertionString}' satisfies assertion's ${termsString} terms...`);
+    context.trace(`Matching the '${substitutionsString}' substitutions against the ${termsString} terms...`);
 
-    const termsEquate = substitutions.matchTerms(this.terms);
+    const termsMatch = substitutions.matchTerms(this.terms);
 
-    substitutionsMatch = termsEquate;  ///
+    substitutionsMatch = termsMatch;  ///
 
     if (substitutionsMatch) {
-      context.debug(`...matched the '${substitutionsString}' substitutions against the '${satisfiesAssertionString}' satisfies assertion's ${termsString} terms.`);
+      context.debug(`...matched the '${substitutionsString}' substitutions against the ${termsString} terms.`);
     }
 
     return substitutionsMatch;
@@ -78,10 +79,9 @@ export default domAssigned(class SatisfiesAssertion {
   verifyTerms(assignments, stated, context) {
     let termsVerified;
 
-    const termsString = termsStringFromTerms(this.terms),
-          satisfiesAssertionString = this.string; ///
+    const termsString = termsStringFromTerms(this.terms);
 
-    context.trace(`Verifying the '${satisfiesAssertionString}' satisfies assertion's ${termsString} terms...`);
+    context.trace(`Verifying the ${termsString} terms...`);
 
     termsVerified = this.terms.every((term) => {
       const termVerified = term.verify(context, () => {
@@ -94,7 +94,7 @@ export default domAssigned(class SatisfiesAssertion {
     });
 
     if (termsVerified) {
-      context.debug(`...verified the '${satisfiesAssertionString}' satisfies assertion's ${termsString} terms.`);
+      context.debug(`...verified the ${termsString} terms.`);
     }
 
     return termsVerified;
@@ -122,6 +122,32 @@ export default domAssigned(class SatisfiesAssertion {
     }
 
     return referenceVerified;
+  }
+
+  unifyStatement(statement, context) {
+    let statementUnified;
+
+    const statementString = statement.getString(),
+          satisfiesAssertionString = this.string;
+
+    context.trace(`Unifying the '${statementString}' statement with the '${satisfiesAssertionString}' satisfies assertion...`);
+
+    const axiom = context.findAxiomByReference(this.reference),
+          substitutions = Substitutions.fromNothing();
+
+    statementUnified = axiom.unifyStatement(statement, substitutions, context);
+
+    if (statementUnified) {
+      const substitutionsMatch = this.matchSubstitutions(substitutions, context);
+
+      statementUnified = substitutionsMatch;  ///
+    }
+
+    if (statementUnified) {
+      context.debug(`...unified the '${statementString}' statement with the '${satisfiesAssertionString}' satisfies assertion.`);
+    }
+
+    return statementUnified;
   }
 
   static name = "SatisfiesAssertion";

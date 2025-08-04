@@ -229,7 +229,7 @@ export default domAssigned(class Statement {
 
     unifiedWithSteps = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
       const statement = this, ///
-            statementUnified =stepOrSubproof.unifyStatement(statement, context);
+            statementUnified = stepOrSubproof.unifyStatement(statement, context);
 
       if (statementUnified) {
         return true;

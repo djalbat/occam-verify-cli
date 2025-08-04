@@ -32,6 +32,15 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return verified;
   }
 
+  unifyStatement(statement, substitutions, context) {
+    const deduction = this.getDeduction(),
+          generalContext = context, ///
+          specificContext = context,  ///
+          statementUnified = deduction.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    return statementUnified;
+  }
+
   unifyDeduction(generalDeduction, specificDeduction, substitutions, generalContext, specificContext) {
     let deductionUnified;
 
