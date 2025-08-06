@@ -1,10 +1,15 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
+import dom from "../dom";
 import LocalContext from "../context/local";
 
 import { domAssigned } from "../dom";
 import { termFromTermNode } from "../utilities/node";
 import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
+
+const { match } = arrayUtilities;
 
 export default domAssigned(class Signature {
   constructor(string, terms) {
@@ -44,6 +49,26 @@ export default domAssigned(class Signature {
     }
 
     return verified;
+  }
+
+  match(signature, substitutions, context) {
+    const terms = signature.getTerms(),
+          termsA = this.terms,  ///
+          termsB = terms, ///
+          matches = match(termsA, termsB, (termA, termB) => {
+            const termAType = termA.getType(),
+                  termBType = termB.getType(),
+                  termATypeEqualToOrSubTypeOfTermB = termAType.isEqualToOrSubTypeOf(termBType);
+
+            if (termATypeEqualToOrSubTypeOfTermB) {
+              const { TermSubstitution } = dom,
+                    termSubstitution = TermSubstitution.fromTerms
+
+              return true;
+            }
+          });
+
+    return matches;
   }
 
   toJSON() {

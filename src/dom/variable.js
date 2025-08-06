@@ -2,7 +2,6 @@
 
 import dom from "../dom";
 import LocalContext from "../context/local";
-import TermSubstitution from "../substitution/term";
 
 import { domAssigned } from "../dom";
 import { EMPTY_STRING } from "../constants";
@@ -154,7 +153,8 @@ export default domAssigned(class Variable {
           termUnified = true;
         }
       } else {
-        const context = specificContext,  ///
+        const { TermSubstitution } = dom,
+              context = specificContext,  ///
               variable = this,  ///
               termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
               substitution = termSubstitution;  ///

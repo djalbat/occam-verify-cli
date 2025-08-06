@@ -1,13 +1,14 @@
 "use strict";
 
-import dom from "../dom";
+import dom from "../../dom";
 import Substitution from "../substitution";
-import TermSubstitutionPartialContext from "../context/partial/substitution/term";
+import TermSubstitutionPartialContext from "../../context/partial/substitution/term";
 
-import { stripBracketsFromTerm } from "../utilities/brackets";
-import { stripBracketsFromTermNode } from "../utilities/brackets";
+import { domAssigned } from "../../dom";
+import { stripBracketsFromTerm } from "../../utilities/brackets";
+import { stripBracketsFromTermNode } from "../../utilities/brackets";
 
-export default class TermSubstitution extends Substitution {
+export default domAssigned(class TermSubstitution extends Substitution {
   constructor(string, node, tokens, term, variable) {
     super(string, node, tokens);
 
@@ -106,7 +107,7 @@ export default class TermSubstitution extends Substitution {
 
     return termSubstitution;
   }
-}
+});
 
 function stringFromTermAndVariable(term, variable) {
   const termString = term.getString(),

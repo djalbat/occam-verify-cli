@@ -2,7 +2,6 @@
 
 import dom from "../../dom";
 import Substitutions from "../../substitutions";
-import StatementSubstitution from "../../substitution/statement";
 
 import { equalityFromStatement,
          judgementFromStatement,
@@ -48,7 +47,8 @@ function unifyAWithReference(statement, reference, substitutions, context) {
 
       context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
 
-      const metavariable = reference.getMetavariable(),
+      const { StatementSubstitution } = dom,
+            metavariable = reference.getMetavariable(),
             specificContext = context,  ///
             statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
             substitution = statementSubstitution; ///
@@ -123,7 +123,8 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(statement, reference, substitut
       const statementAndStepsUnified = axiomLemmaTheoremConjecture.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 
       if (statementAndStepsUnified) {
-        const metavariable = reference.getMetavariable(),
+        const { StatementSubstitution } = dom,
+              metavariable = reference.getMetavariable(),
               specificContext = context,  ///
               statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
               substitution = statementSubstitution;  ///

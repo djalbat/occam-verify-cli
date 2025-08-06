@@ -116,8 +116,11 @@ export default domAssigned(class SatisfiesAssertion {
 
     context.trace(`Unifying the '${statementString}' statement with the '${satisfiesAssertionString}' satisfies assertion...`);
 
+    this.signature.verify(context);
+
     const axiom = context.findAxiomByReference(this.reference),
-          substitutions = Substitutions.fromNothing();
+          substitutions = Substitutions.fromNothing(),
+          signatureMatches = axiom.matchSignature(this.signature, substitutions, context);
 
     statementUnified = axiom.unifyStatement(statement, substitutions, context);
 

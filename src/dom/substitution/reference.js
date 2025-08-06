@@ -1,10 +1,12 @@
 "use strict";
 
-import dom from "../dom";
+import dom from "../../dom";
 import Substitution from "../substitution";
-import ReferenceSubstitutionPartialContext from "../context/partial/substitution/reference";
+import ReferenceSubstitutionPartialContext from "../../context/partial/substitution/reference";
 
-export default class ReferenceSubstitution extends Substitution {
+import { domAssigned } from "../../dom";
+
+export default domAssigned(class ReferenceSubstitution extends Substitution {
   constructor(string, node, tokens, reference, metavariable) {
     super(string, node, tokens);
 
@@ -62,7 +64,7 @@ export default class ReferenceSubstitution extends Substitution {
 
     return referenceSubstitution;
   }
-}
+});
 
 function stringFromReferenceAndMetavariable(reference, metavariable) {
   const referenceString = reference.getString(),

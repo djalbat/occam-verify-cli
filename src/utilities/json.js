@@ -1,7 +1,6 @@
 "use strict";
 
 import dom from "../dom";
-import StatementSubstitution from "../substitution/statement";
 
 export function termFromJSON(json, fileContext) {
   let { term } = json;
@@ -408,7 +407,8 @@ export function suppositionsFromJSON(json, fileContext) {
 export function substitutionsFromJSON(json, fileContext) {
   let { substitutions = [] } = json;  ///
 
-  const substitutionsJSON = substitutions,  ///
+  const { StatementSubstitution } = dom,
+        substitutionsJSON = substitutions,  ///
         Substitution = StatementSubstitution; ///
 
   substitutions = substitutionsJSON.map((substitutionJSON) => {

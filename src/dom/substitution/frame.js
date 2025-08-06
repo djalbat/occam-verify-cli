@@ -1,10 +1,12 @@
 "use strict";
 
-import dom from "../dom";
+import dom from "../../dom";
 import Substitution from "../substitution";
-import FrameSubstitutionPartialContext from "../context/partial/substitution/frame";
+import FrameSubstitutionPartialContext from "../../context/partial/substitution/frame";
 
-export default class FrameSubstitution extends Substitution {
+import { domAssigned } from "../../dom";
+
+export default domAssigned(class FrameSubstitution extends Substitution {
   constructor(string, node, tokens, frame, metavariable) {
     super(string, node, tokens);
 
@@ -71,7 +73,7 @@ export default class FrameSubstitution extends Substitution {
 
     return frameSubstitution;
   }
-}
+});
 
 function stringFromFrameAndMetavariable(frame, metavariable) {
   const frameString = frame.getString(),

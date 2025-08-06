@@ -1,14 +1,15 @@
 "use strict";
 
 import Substitution from "../substitution";
-import Substitutions from "../substitutions";
-import StatementSubstitutionPartialContext from "../context/partial/substitution/statement";
+import Substitutions from "../../substitutions";
+import StatementSubstitutionPartialContext from "../../context/partial/substitution/statement";
 
-import { unifySubstitution } from "../utilities/unification";
-import { stripBracketsFromStatement } from "../utilities/brackets";
-import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
+import { domAssigned } from "../../dom";
+import { unifySubstitution } from "../../utilities/unification";
+import { stripBracketsFromStatement } from "../../utilities/brackets";
+import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../../utilities/json";
 
-export default class StatementSubstitution extends Substitution {
+export default domAssigned(class StatementSubstitution extends Substitution {
   constructor(string, node, tokens, resolved, statement, metavariable, substitution) {
     super(string, node, tokens);
 
@@ -216,7 +217,7 @@ export default class StatementSubstitution extends Substitution {
 
     return statementSubstitution;
   }
-}
+});
 
 function stringFromStatementAndMetavariable(statement, metavariable) {
   const statementString = statement.getString(),

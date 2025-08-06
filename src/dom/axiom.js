@@ -47,10 +47,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   verifySignature() {
     let signatureVerified = true;
 
-    const signature = this.getSignature();
+    const satisfiable = this.isSatisfiable();
 
-    if (signature !== null) {
-      const fileContext = this.getFileContext(),
+    if (satisfiable) {
+      const signature = this.getSignature(),
+            fileContext = this.getFileContext(),
             localContext = LocalContext.fromFileContext(fileContext),
             context = localContext; ///
 
@@ -58,6 +59,24 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     }
 
     return signatureVerified;
+  }
+
+  matchSignature(signature, substitutions, context) {
+    let signatureMatches = false;
+
+    const satisfiable = this.isSatisfiable();
+
+    if (satisfiable) {
+      const signatureA = signature; ///
+
+      signature = this.getSignature()
+
+      const signatureB = signature; ///
+
+      signatureMatches = signatureA.match(signatureB, substitutions, context);
+    }
+
+    return signatureMatches;
   }
 
   unifyStatement(statement, substitutions, context) {

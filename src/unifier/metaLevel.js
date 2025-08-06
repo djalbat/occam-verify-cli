@@ -2,8 +2,6 @@
 
 import dom from "../dom";
 import Unifier from "../unifier";
-import TermSubstitution from "../substitution/term";
-import FrameSubstitution from "../substitution/frame";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -45,7 +43,8 @@ class MetaLevelUnifier extends Unifier {
 
           statementNode = generalStatementNode; ///
 
-          const frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context),
+          const { TermSubstitution, FrameSubstitution } = dom,
+                frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context),
                 termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
                 metavariable = Metavariable.fromStatementNode(statementNode, context),
                 substitution = (frameSubstitution || termSubstitution);

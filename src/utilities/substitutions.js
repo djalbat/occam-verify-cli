@@ -1,8 +1,6 @@
 "use strict";
 
 import dom from "../dom";
-import TermSubstitution from "../substitution/term";
-import FrameSubstitution from "../substitution/frame";
 
 export function termFromTermAndSubstitutions(term, substitutions, context) {
   if (term !== null) {
@@ -57,7 +55,8 @@ export function statementFromStatementAndSubstitutions(statement, substitutions,
     if (metavariable !== null) {
       let substitution;
 
-      const termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
+      const { TermSubstitution, FrameSubstitution } = dom,
+            termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
             frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context);
 
       substitution = (termSubstitution || frameSubstitution);

@@ -2,9 +2,6 @@
 
 import dom from "../dom";
 import LocalContext from "../context/local";
-import FrameSubstitution from "../substitution/frame";
-import ReferenceSubstitution from "../substitution/reference";
-import StatementSubstitution from "../substitution/statement";
 import MetavariablePartialContext from "../context/partial/metavariable";
 
 import { domAssigned } from "../dom";
@@ -189,7 +186,8 @@ export default domAssigned(class Metavariable {
           frameUnified = true;
         }
       } else {
-        const context = specificContext,  ///
+        const { FrameSubstitution } = dom,
+              context = specificContext,  ///
               metavariable = this,  ///
               frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
               substitution = frameSubstitution;  ///
@@ -232,7 +230,8 @@ export default domAssigned(class Metavariable {
           referenceUnified = true;
         }
       } else {
-        const context = specificContext,  ///
+        const { ReferenceSubstitution } = dom,
+              context = specificContext,  ///
               metavariable = this,  ///
               referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context),
               substitution = referenceSubstitution;  ///
@@ -279,7 +278,8 @@ export default domAssigned(class Metavariable {
           statementUnified = true;
         }
       } else {
-        const metavariable = this,
+        const { StatementSubstitution } = dom,
+              metavariable = this,
               statementSubstitution = StatementSubstitution.fromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context);
 
         substitution = statementSubstitution;  ///
