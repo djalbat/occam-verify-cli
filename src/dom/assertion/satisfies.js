@@ -7,11 +7,11 @@ import { domAssigned } from "../../dom";
 import Substitutions from "../../substitutions";
 
 export default domAssigned(class SatisfiesAssertion {
-  constructor(string, node, tokens, terms, reference) {
+  constructor(string, node, tokens, signature, reference) {
     this.string = string;
     this.node = node;
     this.tokens = tokens;
-    this.terms = terms;
+    this.signature = signature;
     this.reference = reference;
   }
 
@@ -27,8 +27,8 @@ export default domAssigned(class SatisfiesAssertion {
     return this.tokens;
   }
 
-  getTerms() {
-    return this.terms;
+  getSignature() {
+    return this.signature;
   }
 
   getReference() {
@@ -38,18 +38,20 @@ export default domAssigned(class SatisfiesAssertion {
   matchSubstitutions(substitutions, context) {
     let substitutionsMatch;
 
-    const termsString = termsStringFromTerms(this.terms),
-          substitutionsString = substitutions.asString();
+    debugger
 
-    context.trace(`Matching the '${substitutionsString}' substitutions against the ${termsString} terms...`);
-
-    const termsMatch = substitutions.matchTerms(this.terms);
-
-    substitutionsMatch = termsMatch;  ///
-
-    if (substitutionsMatch) {
-      context.debug(`...matched the '${substitutionsString}' substitutions against the ${termsString} terms.`);
-    }
+    // const termsString = termsStringFromTerms(this.terms),
+    //       substitutionsString = substitutions.asString();
+    //
+    // context.trace(`Matching the '${substitutionsString}' substitutions against the ${termsString} terms...`);
+    //
+    // const termsMatch = substitutions.matchTerms(this.terms);
+    //
+    // substitutionsMatch = termsMatch;  ///
+    //
+    // if (substitutionsMatch) {
+    //   context.debug(`...matched the '${substitutionsString}' substitutions against the ${termsString} terms.`);
+    // }
 
     return substitutionsMatch;
   }
@@ -61,9 +63,9 @@ export default domAssigned(class SatisfiesAssertion {
 
     context.trace(`Verifying the '${satisfiesAssertionString}' satisfies assertion...`);
 
-    const termsVerified = this.verifyTerms(assignments, stated, context);
+    const signatureVerified = this.verifySignature(assignments, stated, context);
 
-    if (termsVerified) {
+    if (signatureVerified) {
       const referenceVerified = this.verifyReference(assignments, stated, context);
 
       verified = referenceVerified; ///
@@ -76,28 +78,10 @@ export default domAssigned(class SatisfiesAssertion {
     return verified;
   }
 
-  verifyTerms(assignments, stated, context) {
-    let termsVerified;
+  verifySignature(assignments, stated, context) {
+    const signatureVerified = this.signature.verify(context);
 
-    const termsString = termsStringFromTerms(this.terms);
-
-    context.trace(`Verifying the ${termsString} terms...`);
-
-    termsVerified = this.terms.every((term) => {
-      const termVerified = term.verify(context, () => {
-        const verifiedAhead = true;
-
-        return verifiedAhead;
-      });
-
-      return termVerified;
-    });
-
-    if (termsVerified) {
-      context.debug(`...verified the ${termsString} terms.`);
-    }
-
-    return termsVerified;
+    return signatureVerified;
   }
 
   verifyReference(assignments, stated, context) {
@@ -162,38 +146,20 @@ export default domAssigned(class SatisfiesAssertion {
             node = satisfiesAssertionNode,  ///
             string = context.nodeAsString(node),
             tokens = context.nodeAsTokens(node),
-            terms = termsFromSatisfiesAssertionNode(satisfiesAssertionNode, context),
+            signature = signatureFromSatisfiesAssertionNode(satisfiesAssertionNode, context),
             reference = Reference.fromSatisfiesAssertionNode(satisfiesAssertionNode, context);
 
-      satisfiesAssertion = new SatisfiesAssertion(string, node, tokens, terms, reference);
+      satisfiesAssertion = new SatisfiesAssertion(string, node, tokens, signature, reference);
     }
 
     return satisfiesAssertion;
   }
 });
 
-function termsStringFromTerms(terms) {
-  const termsString = terms.reduce((termsString, term) => {
-    const termString = term.getString();
+function signatureFromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
+  const { Signature } = dom,
+        signatureNode = satisfiesAssertionNode.getSignatureNode(),
+        signature = Signature.fromSignatureNode(signatureNode, context);
 
-    termsString = (termsString === null) ?
-                   `'${termString}'` :  ///
-                     `${termsString}, '${termString}'`;
-
-    return termsString;
-  }, null);
-
-  return termsString;
-}
-
-function termsFromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
-  const termNodes = satisfiesAssertionNode.getTermNodes(),
-        terms = termNodes.map((termNode) => {
-          const { Term } = dom,
-                term = Term.fromTermNode(termNode, context);
-
-          return term;
-        });
-
-  return terms;
+  return signature;
 }

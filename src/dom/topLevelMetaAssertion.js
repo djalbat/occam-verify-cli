@@ -65,7 +65,7 @@ export default class TopLevelMetaAssertion {
   verify() {
     let verified = false;
 
-    const labelVerified = this.verifyLabels();
+    const labelVerified = this.verifyLabel();
 
     if (labelVerified) {
       const localContext = LocalContext.fromFileContext(this.fileContext),
@@ -96,7 +96,7 @@ export default class TopLevelMetaAssertion {
     return verified;
   }
 
-  verifyLabels() {
+  verifyLabel() {
     const nameOnly = false,
           labelVerified = this.label.verify(nameOnly);
 

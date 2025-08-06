@@ -2,6 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
+import LocalContext from "../context/local";
 import TopLevelAssertion  from "./topLevelAssertion";
 
 import { domAssigned } from "../dom";
@@ -10,6 +11,13 @@ import { satisfiesAssertionFromStatement } from "../utilities/context";
 const { match, backwardsSome } = arrayUtilities;
 
 export default domAssigned(class Axiom extends TopLevelAssertion {
+  isSatisfiable() {
+    const signature = this.getSignature(),
+          satisfiable = (signature !== null);
+
+    return satisfiable;
+  }
+
   verify() {
     let verified;
 
@@ -19,7 +27,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     fileContext.trace(`Verifying the '${axiomString}' axiom...`);
 
-    verified = super.verify();
+    const signatureVerified = this.verifySignature();
+
+    if (signatureVerified) {
+      verified = super.verify();
+    }
 
     if (verified) {
       const axiom = this; ///
@@ -30,6 +42,22 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     }
 
     return verified;
+  }
+
+  verifySignature() {
+    let signatureVerified = true;
+
+    const signature = this.getSignature();
+
+    if (signature !== null) {
+      const fileContext = this.getFileContext(),
+            localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext; ///
+
+      signatureVerified = signature.verify(context);
+    }
+
+    return signatureVerified;
   }
 
   unifyStatement(statement, substitutions, context) {

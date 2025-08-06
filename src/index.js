@@ -23,6 +23,7 @@ import Statement from "./dom/statement";
 import Judgement from "./dom/judgement";
 import MetaLemma from "./dom/metaLemma";
 import Deduction from "./dom/deduction";
+import Signature from "./dom/signature";
 import Conjecture from "./dom/conjecture";
 import Conclusion from "./dom/conclusion";
 import Derivation from "./dom/derivation";

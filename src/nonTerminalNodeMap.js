@@ -26,6 +26,7 @@ import DeductionNode from "./node/deduction";
 import JudgementNode from "./node/judgement";
 import MetaLemmaNode from "./node/metaLemma";
 import ParameterNode from "./node/parameter";
+import SignatureNode from "./node/signature";
 import DerivationNode from "./node/derivation";
 import CombinatorNode from "./node/combinator";
 import ConclusionNode from "./node/conclusion";
@@ -79,6 +80,7 @@ import { RULE_RULE_NAME,
          EQUALITY_RULE_NAME,
          VARIABLE_RULE_NAME,
          META_TYPE_RULE_NAME,
+         SIGNATURE_RULE_NAME,
          DEDUCTION_RULE_NAME,
          JUDGEMENT_RULE_NAME,
          PARAMETER_RULE_NAME,
@@ -138,9 +140,10 @@ const nonTerminalNodeMap = {
   [SUBPROOF_RULE_NAME]: SubproofNode,
   [EQUALITY_RULE_NAME]: EqualityNode,
   [VARIABLE_RULE_NAME]: VariableNode,
+  [META_TYPE_RULE_NAME]: MetaTypeNode,
+  [SIGNATURE_RULE_NAME]: SignatureNode,
   [REFERENCE_RULE_NAME]: ReferenceNode,
   [JUDGEMENT_RULE_NAME]: JudgementNode,
-  [META_TYPE_RULE_NAME]: MetaTypeNode,
   [DEDUCTION_RULE_NAME]: DeductionNode,
   [PARAMETER_RULE_NAME]: ParameterNode,
   [STATEMENT_RULE_NAME]: StatementNode,

@@ -2,33 +2,13 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { SATISFIABLE } from "../constants";
 import { PROOF_RULE_NAME,
          DEDUCTION_RULE_NAME,
+         SIGNATURE_RULE_NAME,
          SUPPOSITION_RULE_NAME,
          PARENTHESISED_LABELS_RULE_NAME } from "../ruleNames";
 
 export default class TopLevelAssertionNode extends NonTerminalNode {
-  isSatisfiable() {
-    let satisfiable = false;
-
-    this.someChildNode((childNode, index) => {
-      const terminalNode = childNode,
-            content = terminalNode.getContent(),
-            contentSatisfiable = (content === SATISFIABLE);
-
-      if (contentSatisfiable) {
-        satisfiable = true;
-      }
-
-      if (index === 0) {
-        return true;
-      }
-    });
-
-    return satisfiable;
-  }
-
   getLabelNodes() {
     let labelNodes = [];
 
@@ -53,6 +33,13 @@ export default class TopLevelAssertionNode extends NonTerminalNode {
           deductionNode = this.getNodeByRuleName(ruleName);
 
     return deductionNode;
+  }
+
+  getSignatureNode() {
+    const ruleName = SIGNATURE_RULE_NAME,
+          signatureNode = this.getNodeByRuleName(ruleName);
+
+    return signatureNode;
   }
 
   getSuppositionNodes() {

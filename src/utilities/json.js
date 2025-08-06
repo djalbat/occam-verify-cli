@@ -84,10 +84,19 @@ export function deductionFromJSON(json, fileContext) {
   return deduction;
 }
 
-export function satisfiableFromJSON(json, fileContext) {
-  const { satisfiable } = json;
+export function signatureFromJSON(json, fileContext) {
+  let { signature = null } = json;
 
-  return satisfiable;
+  if (signature !== null) {
+    const { Signature } = dom,
+          signatureJSON = signature;  ///
+
+    json = signatureJSON; ///
+
+    signature = Signature.fromJSON(json, fileContext);
+  }
+
+  return signature;
 }
 
 export function conclusionFromJSON(json, fileContext) {
@@ -144,15 +153,31 @@ export function typesFromJSON(json, types, fileContext) {
   });
 }
 
+export function termsFromJSON(json, fileContext) {
+  let { terms } = json;
+
+  const { Term } = dom,
+        termsJSON = terms; ///
+
+  terms = termsJSON.map((termJSON) => {
+    const json = termJSON,  ///
+          term = Term.fromJSON(json, fileContext);
+
+    return term;
+  });
+
+  return terms;
+}
+
 export function rulesFromJSON(json, fileContext) {
   let { rules } = json;
 
   const { Rule } = dom,
-        rulesJSON = rules; ///
+    rulesJSON = rules; ///
 
   rules = rulesJSON.map((ruleJSON) => {
     const json = ruleJSON,  ///
-          rule = Rule.fromJSON(json, fileContext);
+      rule = Rule.fromJSON(json, fileContext);
 
     return rule;
   });
@@ -461,16 +486,26 @@ export function statementToStatementJSON(statement) {
   return statementJSON;
 }
 
-export function conclusionToConclusionJSON(conclusion) {
-  const conclusionJSON = conclusion.toJSON();
-
-  return conclusionJSON;
-}
-
 export function deductionToDeductionJSON(deduction) {
   const deductionJSON = deduction.toJSON();
 
   return deductionJSON;
+}
+
+export function signatureToSignatureJSON(signature) {
+  let signatureJSON = null;
+
+  if (signature !== null) {
+    signatureJSON = signature.toJSON();
+  }
+
+  return signatureJSON;
+}
+
+export function conclusionToConclusionJSON(conclusion) {
+  const conclusionJSON = conclusion.toJSON();
+
+  return conclusionJSON;
 }
 
 export function metavariableToMetavariableJSON(metavariable) {
@@ -499,6 +534,18 @@ export function typesToTypesJSON(types) {
   });
 
   return typesJSON;
+}
+
+export function termsToTermsJSON(terms) {
+  const termsJSON = terms.map((term) => {
+    const termJSON = term.toJSON();
+
+    term = termJSON; ///
+
+    return term;
+  });
+
+  return termsJSON;
 }
 
 export function rulesToRulesJSON(rules) {

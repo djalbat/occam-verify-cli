@@ -8,23 +8,24 @@ import Substitutions from "../substitutions";
 
 import { labelsFromJSON,
          deductionFromJSON,
+         signatureFromJSON,
          labelsToLabelsJSON,
-         satisfiableFromJSON,
          suppositionsFromJSON,
          deductionToDeductionJSON,
+         signatureToSignatureJSON,
          suppositionsToSuppositionsJSON } from "../utilities/json";
 
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 export default class TopLevelAssertion {
-  constructor(fileContext, string, labels, suppositions, deduction, proof, satisfiable) {
+  constructor(fileContext, string, labels, suppositions, deduction, proof, signature) {
     this.fileContext = fileContext;
     this.string = string;
     this.labels = labels;
     this.suppositions = suppositions;
     this.deduction = deduction;
     this.proof = proof;
-    this.satisfiable = satisfiable;
+    this.signature = signature;
   }
 
   getFileContext() {
@@ -51,8 +52,8 @@ export default class TopLevelAssertion {
     return this.proof;
   }
 
-  isSatisfiable() {
-    return this.satisfiable;
+  getSignature() {
+    return this.signature;
   }
 
   getStatement() { return this.deduction.getStatement(); }
@@ -220,15 +221,16 @@ export default class TopLevelAssertion {
     const labelsJSON = labelsToLabelsJSON(this.labels),
           deductionJSON = deductionToDeductionJSON(this.deduction),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
+          signatureJSON = signatureToSignatureJSON(this.signature),
           labels = labelsJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
-          satisfiable = this.satisfiable,
+          signature = signatureJSON,
           json = {
             labels,
             deduction,
             suppositions,
-            satisfiable
+            signature,
           };
 
     return json;
@@ -237,28 +239,29 @@ export default class TopLevelAssertion {
   static fromJSON(Class, json, fileContext) {
     const labels = labelsFromJSON(json, fileContext),
           deduction = deductionFromJSON(json, fileContext),
-          satisfiable = satisfiableFromJSON(json, fileContext),
           suppositions = suppositionsFromJSON(json, fileContext),
+          signature = signatureFromJSON(json, fileContext),
           proof = null,
           string = stringFromLabelsAndDeduction(labels, deduction),
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, satisfiable);
+          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, signature);
 
     return topLevelAssertion;
   }
 
   static fromNode(Class, node, fileContext) {
     const topLevelAssertionNode = node, ///
-          satisfiable = topLevelAssertionNode.isSatisfiable(),
           proofNode = topLevelAssertionNode.getProofNode(),
           labelNodes = topLevelAssertionNode.getLabelNodes(),
           deductionNode = topLevelAssertionNode.getDeductionNode(),
           suppositionNodes = topLevelAssertionNode.getSuppositionNodes(),
+          signatureNode = topLevelAssertionNode.getSignatureNode(),
           proof = proofFromProofNode(proofNode, fileContext),
           labels = labelsFromLabelNodes(labelNodes, fileContext),
           deduction = deductionFromDeductionNode(deductionNode, fileContext),
           suppositions = suppositionsFromSuppositionNodes(suppositionNodes, fileContext),
+          signature = signatureFromSignatureNode(signatureNode, fileContext),
           string = stringFromLabelsAndDeduction(labels, deduction),
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, satisfiable);
+          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, signature);
 
     return topLevelAssertion;
   }
@@ -280,6 +283,18 @@ export function labelsFromLabelNodes(labelNodes, fileContext) {
         });
 
   return labels;
+}
+
+export function signatureFromSignatureNode(signatureNode, fileContext) {
+  let signature = null;
+
+  if (signatureNode !== null) {
+    const { Signature } = dom;
+
+    signature = Signature.fromSignatureNode(signatureNode, fileContext);
+  }
+
+  return signature;
 }
 
 export function deductionFromDeductionNode(deductionNode, fileContext) {

@@ -7,7 +7,6 @@ export const FUNCTION = "function";
 export const TYPE_TYPE = "type";
 export const UNDEFINED = "undefined";
 export const PROVISIONAL = "Provisional";
-export const SATISFIABLE = "Satisfiable";
 export const EMPTY_STRING = "";
 export const SINGLE_SPACE = " ";
 export const PROVISIONALLY = "provisionally";

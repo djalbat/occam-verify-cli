@@ -2,14 +2,14 @@
 
 import NonTerminalNode from "../../node/nonTerminal";
 
-import { TERM_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
+import { SIGNATURE_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
 
 export default class SatisfiesAssertionNode extends NonTerminalNode {
-  getTermNodes() {
-    const ruleName = TERM_RULE_NAME,
-          termNodes = this.getNodesByRuleName(ruleName);
+  getSignatureNode() {
+    const ruleName = SIGNATURE_RULE_NAME,
+          signatureNode = this.getNodeByRuleName(ruleName);
 
-    return termNodes;
+    return signatureNode;
   }
 
   getMetavariableNode() {
