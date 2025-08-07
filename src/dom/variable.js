@@ -211,7 +211,7 @@ export default domAssigned(class Variable {
       const variableNode = singularVariableNode,  ///
             type = null;
 
-      variable = variableFromVariableNodeAndType(variableNode, type, context);
+      variable = variableFromVariableNodeAndType(variableNode, type);
     }
 
     return variable;
@@ -223,22 +223,20 @@ export default domAssigned(class Variable {
     if (variableNode !== null) {
       const type = null;
 
-      variable = variableFromVariableNodeAndType(variableNode, type, context);
+      variable = variableFromVariableNodeAndType(variableNode, type);
     }
 
     return variable;
   }
 
   static fromVariableNodeAndType(variableNode, type, context) {
-    const variable = variableFromVariableNodeAndType(variableNode, type, context);
+    const variable = variableFromVariableNodeAndType(variableNode, type);
 
     return variable;
   }
 
   static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
     const { Variable } = dom,
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext,
           provisional = variableDeclarationNode.isProvisional(),
           typeNode = variableDeclarationNode.getTypeNode(),
           type = typeFromTypeNode(typeNode);
@@ -249,7 +247,7 @@ export default domAssigned(class Variable {
           variableName = variableDeclarationNode.getVariableName(),
           node = variableNode,  ///
           name = variableName,  ///
-          string = context.nodeAsString(node),
+          string = name,  ///
           propertyRelations = [],
           variable = new Variable(string, node, name, type, propertyRelations);
 
@@ -278,11 +276,11 @@ export default domAssigned(class Variable {
   }
 });
 
-function variableFromVariableNodeAndType(variableNode, type, context) {
+function variableFromVariableNodeAndType(variableNode, type) {
   const { Variable } = dom,
         node = variableNode,  ///
         variableName = variableNode.getVariableName(),
-        string = context.nodeAsString(node),
+        string = variableName,  ///,
         name = variableName,  ///
         propertyRelations = [],
         variable = new Variable(string, node, name, type, propertyRelations);

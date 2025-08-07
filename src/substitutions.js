@@ -202,7 +202,9 @@ export default class Substitutions {
 
   matchSubstitutions(substitutions) {
     const array = substitutions.getArray(),
-          correlates = correlate(array, this.array, (substitutionA, substitutionB) => {
+          arrayA = array, ///
+          arrayB = this.array,  ///
+          correlates = correlate(arrayA, arrayB, (substitutionA, substitutionB) => {
             const substitutionAMatchesSubstitutionB = substitutionA.match(substitutionB);
 
             if (substitutionAMatchesSubstitutionB) {

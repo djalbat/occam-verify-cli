@@ -4,7 +4,9 @@ import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
 
+import LocalContext from "../../context/local";
 import Substitutions from "../../substitutions";
+import {statementFromJSON} from "../../utilities/json";
 
 export default domAssigned(class SatisfiesAssertion {
   constructor(string, node, tokens, signature, reference) {
@@ -109,7 +111,7 @@ export default domAssigned(class SatisfiesAssertion {
   }
 
   unifyStatement(statement, context) {
-    let statementUnified;
+    let statementUnified = false;
 
     const statementString = statement.getString(),
           satisfiesAssertionString = this.string;
@@ -118,16 +120,33 @@ export default domAssigned(class SatisfiesAssertion {
 
     this.signature.verify(context);
 
+    let substitutions;
+
     const axiom = context.findAxiomByReference(this.reference),
-          substitutions = Substitutions.fromNothing(),
-          signatureMatches = axiom.matchSignature(this.signature, substitutions, context);
+          fileContext = axiom.getFileContext(),
+          localContext = LocalContext.fromFileContext(fileContext);
 
-    statementUnified = axiom.unifyStatement(statement, substitutions, context);
+    substitutions = Substitutions.fromNothing();
 
-    if (statementUnified) {
-      const substitutionsMatch = this.matchSubstitutions(substitutions, context);
+    const generalContext = localContext,  ///
+          specificContext = context,  ///
+          signatureMatches = axiom.matchSignature(this.signature, substitutions, generalContext, specificContext);
 
-      statementUnified = substitutionsMatch;  ///
+    if (signatureMatches) {
+      const substitutionsB = substitutions; ///
+
+      substitutions = Substitutions.fromNothing();
+
+      statementUnified = axiom.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+      if (statementUnified) {
+        const substitutionsA = substitutions, ///
+              substitutionsMatch = substitutionsB.matchSubstitutions(substitutionsA);
+
+        if (!substitutionsMatch) {
+          statementUnified = false;
+        }
+      }
     }
 
     if (statementUnified) {

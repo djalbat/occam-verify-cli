@@ -3,11 +3,10 @@
 import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 
 import { domAssigned } from "../dom";
-import { termFromTermNode } from "../utilities/node";
 import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
+import { stringFromTerms, variableFromTerm, termsFromTermNodes } from "../utilities/node";
 
 const { match } = arrayUtilities;
 
@@ -51,7 +50,7 @@ export default domAssigned(class Signature {
     return verified;
   }
 
-  match(signature, substitutions, context) {
+  match(signature, substitutions, generalContext, specificContext) {
     const terms = signature.getTerms(),
           termsA = this.terms,  ///
           termsB = terms, ///
@@ -61,8 +60,25 @@ export default domAssigned(class Signature {
                   termATypeEqualToOrSubTypeOfTermB = termAType.isEqualToOrSubTypeOf(termBType);
 
             if (termATypeEqualToOrSubTypeOfTermB) {
+              let context,
+                  term;
+
+
+              context = generalContext; ///
+
+              term = termB; ///
+
+              const variable = variableFromTerm(term, context);
+
+              context = specificContext;  ///
+
+              term = termA; ///
+
               const { TermSubstitution } = dom,
-                    termSubstitution = TermSubstitution.fromTerms
+                    termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
+                    substitution = termSubstitution;  ///
+
+              substitutions.addSubstitution(substitution, specificContext);
 
               return true;
             }
@@ -100,30 +116,3 @@ export default domAssigned(class Signature {
     return signature;
   }
 });
-
-function termsFromTermNodes(termNodes, fileContext) {
-  const localContext = LocalContext.fromContext(fileContext),
-        context = localContext, ///
-        terms = termNodes.map((termNode) => {
-          const term = termFromTermNode(termNode, context);
-
-          return term;
-        });
-
-  return terms;
-}
-
-function stringFromTerms(terms) {
-  const termsString = terms.reduce((termsString, term) => {
-          const termString = term.getString();
-
-          termsString = (termsString !== null) ?
-                          `${termsString}, ${termString}` :
-                            termString;
-
-          return termsString;
-        }, null),
-        string = `[${termsString}]`;
-
-  return string;
-}

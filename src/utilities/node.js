@@ -43,3 +43,48 @@ export function statementFromStatementNode(statementNode, context) {
 
   return statement;
 }
+
+export function termsFromTermNodes(termNodes, context) {
+  const terms = termNodes.map((termNode) => {
+          const term = termFromTermNode(termNode, context);
+
+          return term;
+        });
+
+  return terms;
+}
+
+export function variableFromTerm(term, context) {
+  let variable = null;
+
+  const termNode = term.getNode(),
+        singularVariableNode = termNode.getSingularVariableNode();
+
+  if (singularVariableNode !== null) {
+    const { Variable } = dom,
+          variableNode = singularVariableNode;  ///
+
+    variable = Variable.fromVariableNode(variableNode, context);
+
+    const type = term.getType();
+
+    variable.setType(type);
+  }
+
+  return variable;
+}
+
+export function stringFromTerms(terms) {
+  const termsString = terms.reduce((termsString, term) => {
+          const termString = term.getString();
+
+          termsString = (termsString !== null) ?
+                         `${termsString}, ${termString}` :
+                           termString;
+
+          return termsString;
+        }, null),
+        string = `[${termsString}]`;
+
+  return string;
+}

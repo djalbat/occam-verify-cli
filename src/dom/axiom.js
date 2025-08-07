@@ -61,7 +61,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return signatureVerified;
   }
 
-  matchSignature(signature, substitutions, context) {
+  matchSignature(signature, substitutions, generalContext, specificContext) {
     let signatureMatches = false;
 
     const satisfiable = this.isSatisfiable();
@@ -73,16 +73,14 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
       const signatureB = signature; ///
 
-      signatureMatches = signatureA.match(signatureB, substitutions, context);
+      signatureMatches = signatureA.match(signatureB, substitutions, generalContext, specificContext);
     }
 
     return signatureMatches;
   }
 
-  unifyStatement(statement, substitutions, context) {
+  unifyStatement(statement, substitutions, generalContext, specificContext) {
     const deduction = this.getDeduction(),
-          generalContext = context, ///
-          specificContext = context,  ///
           statementUnified = deduction.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     return statementUnified;
