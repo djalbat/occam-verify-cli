@@ -6,9 +6,8 @@ import LocalContext from "../context/local";
 import TopLevelAssertion  from "./topLevelAssertion";
 
 import { domAssigned } from "../dom";
-import { satisfiesAssertionFromStatement } from "../utilities/context";
 
-const { match, backwardsSome } = arrayUtilities;
+const { match } = arrayUtilities;
 
 export default domAssigned(class Axiom extends TopLevelAssertion {
   isSatisfiable() {
@@ -190,34 +189,18 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   }
 
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
-    let statementAndStepsOrSubproofsUnified;
+    let statementAndStepsOrSubproofsUnified = false;
 
-    statementAndStepsOrSubproofsUnified = super.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
+    const satisfiable = this.isSatisfiable();
 
-    if (statementAndStepsOrSubproofsUnified) {
-      const satisfiable = this.isSatisfiable();
+    if (satisfiable) {
+      const string = this.getString(),
+            axiomString = string, ///
+            statementString = statement.getString();
 
-      if (satisfiable) {
-        const substitutionsMatch = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
-          const stepSubstep = stepOrSubproof.isStep();
-
-          if (stepSubstep) {
-            const step = stepOrSubproof,  ///
-                  statement = step.getStatement(),
-                  satisfiesAssertion = satisfiesAssertionFromStatement(statement, context);
-
-            if (satisfiesAssertion !== null) {
-              const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
-
-              if (substitutionsMatch) {
-                return true;
-              }
-            }
-          }
-        });
-
-        statementAndStepsOrSubproofsUnified = substitutionsMatch; ///
-      }
+      context.debug(`The '${statementString}' statement cannot be unified with the '${axiomString}' axiom because the latter is satisfiable.`);
+    } else {
+      statementAndStepsOrSubproofsUnified = super.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
     }
 
     return statementAndStepsOrSubproofsUnified;
