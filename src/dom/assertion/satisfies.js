@@ -38,22 +38,7 @@ export default domAssigned(class SatisfiesAssertion {
   }
 
   matchSubstitutions(substitutions, context) {
-    let substitutionsMatch;
-
-    debugger
-
-    // const termsString = termsStringFromTerms(this.terms),
-    //       substitutionsString = substitutions.asString();
-    //
-    // context.trace(`Matching the '${substitutionsString}' substitutions against the ${termsString} terms...`);
-    //
-    // const termsMatch = substitutions.matchTerms(this.terms);
-    //
-    // substitutionsMatch = termsMatch;  ///
-    //
-    // if (substitutionsMatch) {
-    //   context.debug(`...matched the '${substitutionsString}' substitutions against the ${termsString} terms.`);
-    // }
+    const substitutionsMatch = this.signature.matchSubstitutions(substitutions, context);
 
     return substitutionsMatch;
   }

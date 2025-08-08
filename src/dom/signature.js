@@ -8,7 +8,7 @@ import { domAssigned } from "../dom";
 import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
 import { stringFromTerms, variableFromTerm, termsFromTermNodes } from "../utilities/node";
 
-const { match } = arrayUtilities;
+const { match, correlate } = arrayUtilities;
 
 export default domAssigned(class Signature {
   constructor(string, terms) {
@@ -85,6 +85,33 @@ export default domAssigned(class Signature {
           });
 
     return matches;
+  }
+
+  matchSubstitutions(substitutions, context) {
+    let substitutionsMatch;
+
+    const signatureString = this.string,
+          substitutionsString = substitutions.asString();
+
+    context.trace(`Matching the '${substitutionsString}' substitutions against the ${signatureString} signature...`);
+
+    const array = substitutions.getArray(),
+          correlates = correlate(this.terms, array, (term, substitution) => {
+            const substitutionTerm = substitution.getTerm(),
+                  substitutionTermEqualToTerm = substitutionTerm.isEqualTo(term);
+
+            if (substitutionTermEqualToTerm) {
+              return true;
+            }
+          });
+
+    substitutionsMatch = correlates;  ///
+
+    if (substitutionsMatch) {
+      context.debug(`...matched the '${substitutionsString}' substitutions against the ${signatureString} signature.`);
+    }
+
+    return substitutionsMatch;
   }
 
   toJSON() {

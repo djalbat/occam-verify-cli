@@ -216,20 +216,6 @@ export default class Substitutions {
     return match;
   }
 
-  matchTerms(terms) {
-    const correlates = correlate(terms, this.array, (term, substitution) => {
-            const substitutionTerm = substitution.getTerm(),
-                  substitutionTermEqualToTerm = substitutionTerm.isEqualTo(term);
-
-            if (substitutionTermEqualToTerm) {
-              return true;
-            }
-          }),
-          termsMatch = correlates; ///
-
-    return termsMatch;
-  }
-
   clear() {
     clear(this.array);
 
