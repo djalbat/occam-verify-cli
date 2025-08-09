@@ -54,32 +54,10 @@ export default domAssigned(class Subproof {
     return sStep;
   }
 
-  unifyStatement(statement, context) {
-    let statementUnified;
-
-    const specificContext = context, ///
-          generalContext = context, ///
-          substitutions = Substitutions.fromNothing(),
-          subproof = this;
-
-    const subproofUnified = statement.unifySubproof(subproof, substitutions, generalContext, specificContext);
-
-    statementUnified = subproofUnified; ///
-
-    if (statementUnified) {
-      const equivalences = context.getEquivalences(),
-            substitutionsUnified = equivalences.unifySubstitutions(substitutions);
-
-      statementUnified = substitutionsUnified;  ///
-    }
-
-    return statementUnified;
-  }
-
   unify(substitutions, context) {
     let unified;
 
-    unified = true;
+    unified = true; ///
 
     return unified;
   }
@@ -108,6 +86,23 @@ export default domAssigned(class Subproof {
     }
 
     return subproofVerified;
+  }
+
+  unifySatisfiesAssertion(satisfiesAssertion, context) {
+    let unifySatisfiesAssertion = false;
+
+    const reference = satisfiesAssertion.getReference(),
+          axiom = context.findAxiomByReference(reference);
+
+    if (axiom !== null) {
+      const axiomUnconditional = axiom.isUnconditional();
+
+      if (!axiomUnconditional) {
+        debugger
+      }
+    }
+
+    return unifySatisfiesAssertion;
   }
 
   static name = "Subproof";

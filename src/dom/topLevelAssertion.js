@@ -58,6 +58,13 @@ export default class TopLevelAssertion {
 
   getStatement() { return this.deduction.getStatement(); }
 
+  isUnconditional() {
+    const suppositionsLength = this.suppositions.length,
+          unconditional = (suppositionsLength === 0);
+
+    return unconditional;
+  }
+
   matchMetavariableName(metavariableName) {
     const metavariableNameMatches = this.labels.some((label) => {
       const metavariableNameMatches = label.matchMetavariableName(metavariableName);

@@ -6,6 +6,7 @@ import LocalContext from "../context/local";
 import TopLevelAssertion  from "./topLevelAssertion";
 
 import { domAssigned } from "../dom";
+import Substitutions from "../substitutions";
 
 const { match } = arrayUtilities;
 

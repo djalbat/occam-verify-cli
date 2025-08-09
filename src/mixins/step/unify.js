@@ -1,5 +1,7 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import dom from "../../dom";
 import Substitutions from "../../substitutions";
 
@@ -8,6 +10,8 @@ import { equalityFromStatement,
          typeAssertionFromStatement,
          propertyAssertionFromStatement,
          satisfiesAssertionFromStatement } from "../../utilities/context";
+
+const { backwardsSome } = arrayUtilities;
 
 function unifyAWithRule(statement, reference, substitutions, context) {
   let unifiedWithRule = false;
@@ -69,33 +73,51 @@ function unifyAWithReference(statement, reference, substitutions, context) {
 function unifyAsSatisfiesAssertion(statement, reference, substitutions, context) {
   let unifiedAsSatisfiesAssertion = false;
 
-  if (reference !== null) {
-    const satisfiesAssertion = satisfiesAssertionFromStatement(statement, context);
+  const satisfiesAssertion = satisfiesAssertionFromStatement(statement, context);
 
-    if (satisfiesAssertion !== null) {
-      const statementString = statement.getString();
+  if (satisfiesAssertion !== null) {
+    const statementString = statement.getString();
 
-      context.trace(`Unifying the '${statementString}' statement as a satisfies assertion...`);
+    context.trace(`Unifying the '${statementString}' statement as a satisfies assertion...`);
 
+    const stated = true,
+          assignments = null;
+
+    satisfiesAssertion.verifySignature(assignments, stated, context);
+
+    if (reference === null) {
+      const stepsOrSubproofs = context.getStepsOrSubproofs();
+
+      unifiedAsSatisfiesAssertion = backwardsSome(stepsOrSubproofs, (stepsOrSubproof) => {
+        const satisfiedAssertionUnified = stepsOrSubproof.unifySatisfiesAssertion(satisfiesAssertion, context);
+
+        if (satisfiedAssertionUnified) {
+          return true;
+        }
+      });
+    } else {
       const axiomLemmaTheoremConjecture = context.findAxiomLemmaTheoremConjectureByReference(reference);
 
       if (axiomLemmaTheoremConjecture !== null) {
         reference = satisfiesAssertion.getReference();
 
-        const axiom = context.findAxiomByReference(reference),
-              substitutions = Substitutions.fromNothing(),
-              axiomLemmaTheoremConjectureUnified = axiom.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, substitutions, context);
+        const axiom = context.findAxiomByReference(reference);
 
-        if (axiomLemmaTheoremConjectureUnified) {
-          const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
+        if (axiom !== null) {
+          const substitutions = Substitutions.fromNothing(),
+                axiomLemmaTheoremConjectureUnified = axiom.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, substitutions, context);
 
-          unifiedAsSatisfiesAssertion = substitutionsMatch;  ///
+          if (axiomLemmaTheoremConjectureUnified) {
+            const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
+
+            unifiedAsSatisfiesAssertion = substitutionsMatch;  ///
+          }
         }
       }
+    }
 
-      if (unifiedAsSatisfiesAssertion) {
-        context.debug(`...unified the '${statementString}' statement as a satisfies assertion.`);
-      }
+    if (unifiedAsSatisfiesAssertion) {
+      context.debug(`...unified the '${statementString}' statement as a satisfies assertion.`);
     }
   }
 
@@ -274,7 +296,7 @@ function unifyWithSatisfiesAssertion(statement, reference, substitutions, contex
           return satisfiesAssertions;
         }, []);
 
-  unifiedWithSatisfiesAssertion = satisfiesAssertions.some((satisfiesAssertion) => {
+  unifiedWithSatisfiesAssertion = backwardsSome(satisfiesAssertions, (satisfiesAssertion) => {
     const statementUnified = satisfiesAssertion.unifyStatement(statement, context);
 
     if (statementUnified) {

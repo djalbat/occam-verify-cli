@@ -2,6 +2,7 @@
 
 import dom from "../dom";
 import unifyMixins from "../mixins/step/unify";
+import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
@@ -121,6 +122,37 @@ export default domAssigned(class Step {
     }
 
     return statementUnified;
+  }
+
+  unifySatisfiesAssertion(satisfiesAssertion, context) {
+    let unifySatisfiesAssertion = false;
+
+    const reference = satisfiesAssertion.getReference(),
+          axiom = context.findAxiomByReference(reference);
+
+    if (axiom !== null) {
+      const axiomUnconditional = axiom.isUnconditional();
+
+      if (axiomUnconditional) {
+        const statement = axiom.getStatement(),
+              fileContext = axiom.getFileContext(),
+              localContext = LocalContext.fromFileContext(fileContext),
+              substitutions = Substitutions.fromNothing(),
+              generalContext = localContext,  ///
+              specificContext = context,  ///
+              statementUnified = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
+
+        if (statementUnified) {
+          const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
+
+          if (substitutionsMatch) {
+            unifySatisfiesAssertion = true;
+          }
+        }
+      }
+    }
+
+    return unifySatisfiesAssertion;
   }
 
   static name = "Step";
