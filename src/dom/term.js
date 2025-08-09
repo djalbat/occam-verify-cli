@@ -176,7 +176,7 @@ export default domAssigned(class Term {
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          string = this.string,
+          string = this.string, ///
           type = typeJSON,  ///
           json = {
             type,

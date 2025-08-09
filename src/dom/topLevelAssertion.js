@@ -58,6 +58,12 @@ export default class TopLevelAssertion {
 
   getStatement() { return this.deduction.getStatement(); }
 
+  getSupposition(index) {
+    const supposition = this.suppositions[index] || null;
+
+    return supposition;
+  }
+
   isUnconditional() {
     const suppositionsLength = this.suppositions.length,
           unconditional = (suppositionsLength === 0);

@@ -61,6 +61,28 @@ export default domAssigned(class Deduction {
     return statementUnified;
   }
 
+  unifyDeduction(deduction, substitutions, generalContext, specificContext) {
+    let deductionUnified;
+
+    const context = specificContext,  ///
+          specificDeduction = deduction,  ///
+          generalDeductionString = this.string, ///
+          specificDeductionString = specificDeduction.getString();
+
+    context.trace(`Unifying the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction...`);
+
+    const statement = specificDeduction.getStatement(),
+          statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    deductionUnified = statementUnified;  ///
+
+    if (deductionUnified) {
+      context.debug(`...unified the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction.`);
+    }
+
+    return deductionUnified;
+  }
+
   toJSON() {
     const statementJSON = statementToStatementJSON(this.statement),
           statement = statementJSON,  ///

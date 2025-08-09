@@ -72,6 +72,28 @@ export default domAssigned(class Supposition {
     return verified;
   }
 
+  unifySupposition(supposition, substitutions, generalContext, specificContext) {
+    let suppositionUnified;
+
+    const context = specificContext,  ///
+          specificSupposition = supposition,  ///
+          generalSuppositionString = this.string, ///
+          specificSuppositionString = specificSupposition.getString();
+
+    context.trace(`Unifying the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition...`);
+
+    const statement = specificSupposition.getStatement(),
+          statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    suppositionUnified = statementUnified;  ///
+
+    if (suppositionUnified) {
+      context.debug(`...unified the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition.`);
+    }
+
+    return suppositionUnified;
+  }
+
   unifyIndependently(substitutions, context) {
     let unifiedIndependently;
 

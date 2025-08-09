@@ -99,7 +99,7 @@ export default domAssigned(class SatisfiesAssertion {
     let statementUnified = false;
 
     const statementString = statement.getString(),
-          satisfiesAssertionString = this.string;
+          satisfiesAssertionString = this.string; ///
 
     context.trace(`Unifying the '${statementString}' statement with the '${satisfiesAssertionString}' satisfies assertion...`);
 

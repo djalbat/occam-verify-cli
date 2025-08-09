@@ -98,7 +98,21 @@ export default domAssigned(class Subproof {
       const axiomUnconditional = axiom.isUnconditional();
 
       if (!axiomUnconditional) {
-        debugger
+        const subproof = this,
+              fileContext = axiom.getFileContext(),
+              localContext = LocalContext.fromFileContext(fileContext),
+              substitutions = Substitutions.fromNothing(),
+              generalContext = localContext,  ///
+              specificContext = context,  ///
+              statementUnified = axiom.unifySubproof(subproof, substitutions, generalContext, specificContext);
+
+        if (statementUnified) {
+          const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
+
+          if (substitutionsMatch) {
+            unifySatisfiesAssertion = true;
+          }
+        }
       }
     }
 

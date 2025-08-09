@@ -174,7 +174,7 @@ export default domAssigned(class Variable {
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          string = this.string,
+          string = this.string, ///
           type = typeJSON,  ///
           json = {
             type,

@@ -430,7 +430,7 @@ export default domAssigned(class Metavariable {
           typeJSON = typeToTypeJSON(this.type),
           type = typeJSON,  ///
           metaType = metaTypeJSON,  ///
-          string = this.string,
+          string = this.string, ///
           json = {
             string,
             type,

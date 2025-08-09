@@ -76,7 +76,7 @@ export default domAssigned(class Step {
   verify(substitutions, assignments, context) {
     let verified = false;
 
-    const stepString = this.string;
+    const stepString = this.string; ///
 
     context.trace(`Verifying the '${stepString}' step...`);
 
@@ -134,13 +134,13 @@ export default domAssigned(class Step {
       const axiomUnconditional = axiom.isUnconditional();
 
       if (axiomUnconditional) {
-        const statement = axiom.getStatement(),
+        const step = this,  ///
               fileContext = axiom.getFileContext(),
               localContext = LocalContext.fromFileContext(fileContext),
               substitutions = Substitutions.fromNothing(),
               generalContext = localContext,  ///
               specificContext = context,  ///
-              statementUnified = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
+              statementUnified = axiom.unifyStep(step, substitutions, generalContext, specificContext);
 
         if (statementUnified) {
           const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
