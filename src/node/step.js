@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { REFERENCE_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
+import { NONSENSE_RULE_NAME, REFERENCE_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
 
 export default class StepNode extends NonTerminalNode {
   isStepNode() {
@@ -15,6 +15,13 @@ export default class StepNode extends NonTerminalNode {
     const subproofNode = false;
 
     return subproofNode;
+  }
+
+  getNonsenseNode() {
+    const ruleName = NONSENSE_RULE_NAME,
+          nonsenseNode = this.getNodeByRuleName(ruleName);
+
+    return nonsenseNode;
   }
 
   getStatementNode() {

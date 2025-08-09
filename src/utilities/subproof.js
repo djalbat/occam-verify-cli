@@ -1,34 +1,56 @@
 "use strict";
 
-import { nodeAsString, nodesAsString } from "./string";
-
 export function subproofStringFromSubproofNode(subproofNode, fileContext) {
-  const tokens = fileContext.getTokens(),
-        suppositionStatementNodes = suppositionStatementNodesFromSubproofNode(subproofNode),
-        lastStepStatementNode = lastStepStatementNodeFromSubproofNode(subproofNode),
-        suppositionStatementsString = nodesAsString(suppositionStatementNodes, tokens),
-        lastStepStatementString = nodeAsString(lastStepStatementNode, tokens),
-        subproofString = `[${suppositionStatementsString}]...${lastStepStatementString}`;
+  const suppositionStatementsOrNonsenseString = suppositionStatementOrNonsenseStringFromSubproofNode(subproofNode, fileContext),
+        lastStatementOrNonsenseString = lastStatementOrNonsenseStringFromSubproofNode(subproofNode, fileContext),
+        subproofString = `[${suppositionStatementsOrNonsenseString}]...${lastStatementOrNonsenseString}`;
 
   return subproofString;
 }
 
-function lastStepStatementNodeFromSubproofNode(subproofNode) {
-  const lastStepNode = subproofNode.getLastStepNode(),
-        lastStepNodeStatementNode = lastStepNode.getStatementNode(),
-        lastStepStatementNode = lastStepNodeStatementNode;  ///
+function suppositionStatementOrNonsenseStringFromSubproofNode(subproofNode, fileContext) {
+  const suppositionNodes = subproofNode.getSuppositionNodes(),
+        suppositionStatementsOrNonsenseString = suppositionNodes.reduce((suppositionStatementsOrNonsenseString, suppositionNode) => {
+          const suppositionOrStepNode = suppositionNode,  ///
+                statementOrNonsenseString = statementOrNonsenseStringFromSuppositionOrStepNode(suppositionOrStepNode, fileContext),
+                suppositionStatementOrNonsenseString = statementOrNonsenseString; ///
 
-  return lastStepStatementNode;
+          suppositionStatementsOrNonsenseString = (suppositionStatementsOrNonsenseString !== null) ?
+                                                    `${suppositionStatementsOrNonsenseString}, ${suppositionStatementOrNonsenseString}` :
+                                                      suppositionStatementOrNonsenseString; ///
+
+          return suppositionStatementsOrNonsenseString;
+        }, null);
+
+  return suppositionStatementsOrNonsenseString;
 }
 
-function suppositionStatementNodesFromSubproofNode(subproofNode) {
-  const suppositionNodes = subproofNode.getSuppositionNodes(),
-        suppositionNodeStatementNodes = suppositionNodes.map((suppositionNode) => {
-          const suppositionNodeStatementNode = suppositionNode.getStatementNode();
+function lastStatementOrNonsenseStringFromSubproofNode(subproofNode, fileContext) {
+  const lastStepNode = subproofNode.getLastStepNode(),
+        suppositionOrStepNode = lastStepNode, ///
+        statementOrNonsenseString = statementOrNonsenseStringFromSuppositionOrStepNode(suppositionOrStepNode, fileContext),
+        lastStatementOrNonsenseString = statementOrNonsenseString; ///
 
-          return suppositionNodeStatementNode;
-        }),
-        suppositionStatementNodes = suppositionNodeStatementNodes;  ///
+  return lastStatementOrNonsenseString;
+}
 
-  return suppositionStatementNodes;
+function statementOrNonsenseStringFromSuppositionOrStepNode(suppositionOrStepNode, fileContext) {
+  let statementOrNonsenseString;
+
+  const nonsenseNode = suppositionOrStepNode.getNonsenseNode(),
+        statementNode = suppositionOrStepNode.getStatementNode();
+
+  if (false) {
+    ///
+  } else if (nonsenseNode !== null) {
+    const nonsenseString = fileContext.nodeAsString(nonsenseNode);
+
+    statementOrNonsenseString = nonsenseString; ///
+  } else if (statementNode !== null) {
+    const statementString = fileContext.nodeAsString(statementNode);
+
+    statementOrNonsenseString = statementString;  ///
+  }
+
+  return statementOrNonsenseString;
 }

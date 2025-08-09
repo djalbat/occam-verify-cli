@@ -2,9 +2,16 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { STATEMENT_RULE_NAME, PROCEDURE_CALL_RULE_NAME } from "../ruleNames";
+import { NONSENSE_RULE_NAME, STATEMENT_RULE_NAME, PROCEDURE_CALL_RULE_NAME } from "../ruleNames";
 
 export default class SuppositionNode extends NonTerminalNode {
+  getNonsenseNode() {
+    const ruleName = NONSENSE_RULE_NAME,
+          nonsenseNode = this.getNodeByRuleName(ruleName);
+
+    return nonsenseNode;
+  }
+
   getStatementNode() {
     const ruleName = STATEMENT_RULE_NAME,
           statementNode = this.getNodeByRuleName(ruleName);

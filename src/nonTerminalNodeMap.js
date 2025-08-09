@@ -14,6 +14,7 @@ import LabelNode from "./node/label";
 import LabelsNode from "./node/labels";
 import PremiseNode from "./node/premise";
 import TheoremNode from "./node/theorem";
+import NonsenseNode from "./node/nonsense";
 import ArgumentNode from "./node/argument";
 import SubproofNode from "./node/subproof";
 import PropertyNode from "./node/property";
@@ -74,6 +75,7 @@ import { RULE_RULE_NAME,
          LABELS_RULE_NAME,
          THEOREM_RULE_NAME,
          PREMISE_RULE_NAME,
+         NONSENSE_RULE_NAME,
          ARGUMENT_RULE_NAME,
          SUBPROOF_RULE_NAME,
          PROPERTY_RULE_NAME,
@@ -140,6 +142,7 @@ const nonTerminalNodeMap = {
   [SUBPROOF_RULE_NAME]: SubproofNode,
   [EQUALITY_RULE_NAME]: EqualityNode,
   [VARIABLE_RULE_NAME]: VariableNode,
+  [NONSENSE_RULE_NAME]: NonsenseNode,
   [META_TYPE_RULE_NAME]: MetaTypeNode,
   [SIGNATURE_RULE_NAME]: SignatureNode,
   [REFERENCE_RULE_NAME]: ReferenceNode,
