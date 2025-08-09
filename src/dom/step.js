@@ -108,9 +108,9 @@ export default domAssigned(class Step {
   unifyStatement(statement, context) {
     let statementUnified;
 
-    const specificContext = context, ///
+    const substitutions = Substitutions.fromNothing(),
           generalContext = context, ///
-          substitutions = Substitutions.fromNothing();
+          specificContext = context; ///
 
     statementUnified = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
 

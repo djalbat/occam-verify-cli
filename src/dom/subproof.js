@@ -88,6 +88,29 @@ export default domAssigned(class Subproof {
     return subproofVerified;
   }
 
+  unifyStatement(statement, context) {
+    let statementUnified = false;
+
+    const subproof = this,
+          substitutions = Substitutions.fromNothing(),
+          generalContext = context, ///
+          specificContext = context, ///
+          subproofUnified = statement.unifySubproof(subproof, substitutions, generalContext, specificContext);
+
+    if (subproofUnified) {
+      if (statementUnified) {
+        const equivalences = context.getEquivalences(),
+              substitutionsUnified = equivalences.unifySubstitutions(substitutions);
+
+        if (substitutionsUnified) {
+          statementUnified = true;
+        }
+      }
+    }
+
+    return statementUnified;
+  }
+
   unifySatisfiesAssertion(satisfiesAssertion, context) {
     let unifySatisfiesAssertion = false;
 
