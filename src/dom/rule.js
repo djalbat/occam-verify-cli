@@ -119,7 +119,7 @@ export default domAssigned(class Rule {
     if (premiseUnifiedIndependently) {
       stepsOrSubproofsUnifiedWithPremise = true;
     } else {
-      const step = extract(stepsOrSubproofs, (stepOrSubproof) => {
+      const stepOrSubproof = extract(stepsOrSubproofs, (stepOrSubproof) => {
         const stepOrSubproofUnified = premise.unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext);
 
         if (stepOrSubproofUnified) {
@@ -127,7 +127,7 @@ export default domAssigned(class Rule {
         }
       }) || null;
 
-      if (step !== null) {
+      if (stepOrSubproof !== null) {
         stepsOrSubproofsUnifiedWithPremise = true;
       }
     }

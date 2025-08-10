@@ -137,10 +137,9 @@ function unifyAWithAxiomLemmaTheoremOrConjecture(statement, reference, substitut
 
       context.trace(`Unifying the '${statementString}' statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`);
 
-      const stepsOrSubproofs = context.getStepsOrSubproofs(),
-            specificSubstitutions = Substitutions.fromNothing();
+      const stepsOrSubproofs = context.getStepsOrSubproofs();
 
-      substitutions = specificSubstitutions;  ///
+      substitutions = Substitutions.fromNothing();
 
       const statementAndStepsUnified = axiomLemmaTheoremConjecture.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 

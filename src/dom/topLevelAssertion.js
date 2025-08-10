@@ -192,7 +192,7 @@ export default class TopLevelAssertion {
   }
 
   unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext) {
-    let stepsOrSubproofsUnifiedWithSupposition  =false;
+    let stepsOrSubproofsUnifiedWithSupposition = false;
 
     const context = specificContext,  ///
           suppositionUnifiedIndependently = supposition.unifyIndependently(substitutions, context);
@@ -200,15 +200,15 @@ export default class TopLevelAssertion {
     if (suppositionUnifiedIndependently) {
       stepsOrSubproofsUnifiedWithSupposition = true;
     } else {
-      const step = extract(stepsOrSubproofs, (stepOrSubproof) => {
-        const stepUnified = supposition.unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext);
+      const stepOrSubproof = extract(stepsOrSubproofs, (stepOrSubproof) => {
+        const stepOrSubproofUnified = supposition.unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext);
 
-        if (stepUnified) {
+        if (stepOrSubproofUnified) {
           return true;
         }
       }) || null;
 
-      if (step !== null) {
+      if (stepOrSubproof !== null) {
         stepsOrSubproofsUnifiedWithSupposition = true;
       }
     }

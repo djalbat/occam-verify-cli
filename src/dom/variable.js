@@ -61,23 +61,6 @@ export default domAssigned(class Variable {
     return variableNameMatches;
   }
 
-  isEffectivelyEqualToTerm(term, generalContext, specificContext) {
-    let effectivelyEqualToTerm = false;
-
-    const generalContextFilePath = generalContext.getFilePath(),
-          specificContextFilePath = specificContext.getFilePath();
-
-    if (generalContextFilePath === specificContextFilePath) {
-      const termString = term.getString();
-
-      if (termString === this.string) {
-        effectivelyEqualToTerm = true;
-      }
-    }
-
-    return effectivelyEqualToTerm;
-  }
-
   verify(context) {
     let verified;
 
@@ -137,32 +120,26 @@ export default domAssigned(class Variable {
 
     specificContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
-    const effectivelyEqualToTerm = this.isEffectivelyEqualToTerm(term, generalContext, specificContext);
+    const variable = this, ///
+          substitutionPresent = substitutions.isSubstitutionPresentByVariable(variable);
 
-    if (effectivelyEqualToTerm) {
-      termUnified = true;
-    } else {
-      const variable = this, ///
-            substitutionPresent = substitutions.isSubstitutionPresentByVariable(variable);
+    if (substitutionPresent) {
+      const substitution = substitutions.findSubstitutionByVariable(variable),
+            substitutionTermEqualToTerm = substitution.isTermEqualTo(term);
 
-      if (substitutionPresent) {
-        const substitution = substitutions.findSubstitutionByVariable(variable),
-              substitutionTermEqualToTerm = substitution.isTermEqualTo(term);
-
-        if (substitutionTermEqualToTerm) {
-          termUnified = true;
-        }
-      } else {
-        const { TermSubstitution } = dom,
-              context = specificContext,  ///
-              variable = this,  ///
-              termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
-              substitution = termSubstitution;  ///
-
-        substitutions.addSubstitution(substitution, specificContext);
-
+      if (substitutionTermEqualToTerm) {
         termUnified = true;
       }
+    } else {
+      const { TermSubstitution } = dom,
+            context = specificContext,  ///
+            variable = this,  ///
+            termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
+            substitution = termSubstitution;  ///
+
+      substitutions.addSubstitution(substitution, specificContext);
+
+      termUnified = true;
     }
 
     if (termUnified) {
