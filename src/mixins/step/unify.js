@@ -13,7 +13,7 @@ import { equalityFromStatement,
 
 const { backwardsSome } = arrayUtilities;
 
-function unifyAWithRule(statement, reference, substitutions, context) {
+function unifyWithRule(statement, reference, substitutions, context) {
   let unifiedWithRule = false;
 
   if (reference !== null) {
@@ -39,7 +39,7 @@ function unifyAWithRule(statement, reference, substitutions, context) {
   return unifiedWithRule;
 }
 
-function unifyAWithReference(statement, reference, substitutions, context) {
+function unifyWithReference(statement, reference, substitutions, context) {
   let unifiedWithReference = false;
 
   if (reference !== null) {
@@ -124,7 +124,7 @@ function unifyAsSatisfiesAssertion(statement, reference, substitutions, context)
   return unifiedAsSatisfiesAssertion;
 }
 
-function unifyAWithAxiomLemmaTheoremOrConjecture(statement, reference, substitutions, context) {
+function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, substitutions, context) {
   let unifiedWithAxiomLemmaTheoremOrConjecture = false;
 
   if (reference !== null) {
@@ -261,16 +261,16 @@ function unifyAsPropertyAssertion(statement, reference, substitutions, context) 
 }
 
 function unifyWithStepsOrSubproofs(statement, reference, substitutions, context) {
-  let unifiedWithSteps = false;
+  let unifiedWithStepOrSubproofs = false;
 
   if (reference === null) {
     const stepsOrSubproofs = context.getStepsOrSubproofs(),
           statementUnifiedWithSteps = statement.unifyWithStepsOrSubproofs(stepsOrSubproofs, context);
 
-    unifiedWithSteps = statementUnifiedWithSteps; ///
+    unifiedWithStepOrSubproofs = statementUnifiedWithSteps; ///
   }
 
-  return unifiedWithSteps;
+  return unifiedWithStepOrSubproofs;
 }
 
 function unifyWithSatisfiesAssertion(statement, reference, substitutions, context) {
@@ -307,10 +307,10 @@ function unifyWithSatisfiesAssertion(statement, reference, substitutions, contex
 }
 
 const unifyMixins = [
-  unifyAWithRule,
-  unifyAWithReference,
+  unifyWithRule,
+  unifyWithReference,
   unifyAsSatisfiesAssertion,
-  unifyAWithAxiomLemmaTheoremOrConjecture,
+  unifyWithAxiomLemmaTheoremOrConjecture,
   unifyAsEquality,
   unifyAsJudgement,
   unifyAsTypeAssertion,

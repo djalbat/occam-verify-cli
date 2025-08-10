@@ -24,6 +24,14 @@ export default domAssigned(class TermSubstitution extends Substitution {
     return this.variable;
   }
 
+  isTrivial() {
+    const termString = this.term.getString(),
+          variableString = this.variable.getString(),
+          trivial = (termString === variableString);
+
+    return trivial;
+  }
+
   isTermEqualTo(term, context) {
     term = stripBracketsFromTerm(term); ///
 

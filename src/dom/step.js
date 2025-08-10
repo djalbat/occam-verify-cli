@@ -115,6 +115,8 @@ export default domAssigned(class Step {
     statementUnified = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
 
     if (statementUnified) {
+      substitutions.removeTrivialSubstitutions();
+
       const equivalences = context.getEquivalences(),
             substitutionsUnified = equivalences.unifySubstitutions(substitutions);
 

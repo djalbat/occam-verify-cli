@@ -216,6 +216,16 @@ export default class Substitutions {
     return match;
   }
 
+  removeTrivialSubstitutions()  {
+    filter(this.array, (substitution) => {
+      const trivial = substitution.isTrivial();
+
+      if (!trivial) {
+        return true;
+      }
+    });
+  }
+
   clear() {
     clear(this.array);
 

@@ -74,6 +74,12 @@ export default class Substitution {
     return complex;
   }
 
+  isTrivial() {
+    const trivial = false;
+
+    return trivial;
+  }
+
   isEqualTo(substitution) {
     const substitutionString = substitution.getString(),
           equalTo = (substitutionString === this.string);
