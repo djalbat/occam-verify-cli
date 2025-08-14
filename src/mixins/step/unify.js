@@ -296,7 +296,7 @@ function unifyWithSatisfiesAssertion(statement, reference, substitutions, contex
         }, []);
 
   unifiedWithSatisfiesAssertion = backwardsSome(satisfiesAssertions, (satisfiesAssertion) => {
-    const statementUnified = satisfiesAssertion.unifyStatement(statement, context);
+    const statementUnified = satisfiesAssertion.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
 
     if (statementUnified) {
       return true;

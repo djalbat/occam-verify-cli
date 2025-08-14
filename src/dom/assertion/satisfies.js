@@ -4,9 +4,7 @@ import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
 
-import LocalContext from "../../context/local";
 import Substitutions from "../../substitutions";
-import {statementFromJSON} from "../../utilities/json";
 
 export default domAssigned(class SatisfiesAssertion {
   constructor(string, node, tokens, signature, reference) {
@@ -95,7 +93,7 @@ export default domAssigned(class SatisfiesAssertion {
     return referenceVerified;
   }
 
-  unifyStatement(statement, context) {
+  unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {
     let statementUnified = false;
 
     const statementString = statement.getString(),
@@ -105,31 +103,30 @@ export default domAssigned(class SatisfiesAssertion {
 
     this.signature.verify(context);
 
-    let substitutions;
-
     const axiom = context.findAxiomByReference(this.reference),
-          fileContext = axiom.getFileContext(),
-          localContext = LocalContext.fromFileContext(fileContext);
+          satisfiable = axiom.isSatisfiable();
 
-    substitutions = Substitutions.fromNothing();
-
-    const generalContext = localContext,  ///
-          specificContext = context,  ///
-          signatureMatches = axiom.matchSignature(this.signature, substitutions, generalContext, specificContext);
-
-    if (signatureMatches) {
-      const substitutionsB = substitutions; ///
+    if (satisfiable) {
+      let substitutions;
 
       substitutions = Substitutions.fromNothing();
 
-      statementUnified = axiom.unifyStatement(statement, substitutions, generalContext, specificContext);
+      const signatureMatches = axiom.matchSignature(this.signature, substitutions, context);
 
-      if (statementUnified) {
-        const substitutionsA = substitutions, ///
-              substitutionsMatch = substitutionsB.matchSubstitutions(substitutionsA);
+      if (signatureMatches) {
+        const substitutionsB = substitutions; ///
 
-        if (!substitutionsMatch) {
-          statementUnified = false;
+        substitutions = Substitutions.fromNothing();
+
+        statementUnified = axiom.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
+
+        if (statementUnified) {
+          const substitutionsA = substitutions, ///
+                substitutionsMatch = substitutionsB.matchSubstitutions(substitutionsA);
+
+          if (!substitutionsMatch) {
+            statementUnified = false;
+          }
         }
       }
     }

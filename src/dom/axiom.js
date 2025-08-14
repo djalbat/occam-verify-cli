@@ -1,13 +1,9 @@
 "use strict";
 
-import { arrayUtilities } from "necessary";
-
 import LocalContext from "../context/local";
 import TopLevelAssertion  from "./topLevelAssertion";
 
 import { domAssigned } from "../dom";
-
-const { match } = arrayUtilities;
 
 export default domAssigned(class Axiom extends TopLevelAssertion {
   isSatisfiable() {
@@ -60,7 +56,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return signatureVerified;
   }
 
-  matchSignature(signature, substitutions, generalContext, specificContext) {
+  matchSignature(signature, substitutions, context) {
     let signatureMatches = false;
 
     const satisfiable = this.isSatisfiable();
@@ -71,6 +67,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
       signature = this.getSignature()
 
       const signatureB = signature; ///
+
+      const fileContext = this.getFileContext(),
+            localContext = LocalContext.fromFileContext(fileContext),
+            generalContext = localContext,  ///
+            specificContext = context;  ///
 
       signatureMatches = signatureA.match(signatureB, substitutions, generalContext, specificContext);
     }
@@ -146,17 +147,10 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     }
 
     if (subproofUnified) {
-    context.debug(`...unified the '${subproofString}' subproof with the '${axiomString}' axiom.`);
-  }
+      context.debug(`...unified the '${subproofString}' subproof with the '${axiomString}' axiom.`);
+    }
 
     return subproofUnified;
-  }
-
-  unifyStatement(statement, substitutions, generalContext, specificContext) {
-    const deduction = this.getDeduction(),
-          statementUnified = deduction.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-    return statementUnified;
   }
 
   unifyDeduction(deduction, substitutions, generalContext, specificContext) {
@@ -247,24 +241,6 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     }
 
     return axiomLemmaTheoremConjectureUnified;
-  }
-
-  unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
-    let statementAndStepsOrSubproofsUnified = false;
-
-    const satisfiable = this.isSatisfiable();
-
-    if (satisfiable) {
-      const string = this.getString(),
-            axiomString = string, ///
-            statementString = statement.getString();
-
-      context.debug(`The '${statementString}' statement cannot be unified with the '${axiomString}' axiom because the latter is satisfiable.`);
-    } else {
-      statementAndStepsOrSubproofsUnified = super.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
-    }
-
-    return statementAndStepsOrSubproofsUnified;
   }
 
   static name = "Axiom";
