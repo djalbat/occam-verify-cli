@@ -2,7 +2,6 @@
 
 import dom from "../dom";
 import unifyMixins from "../mixins/step/unify";
-import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
@@ -129,29 +128,30 @@ export default domAssigned(class Step {
   unifySatisfiesAssertion(satisfiesAssertion, context) {
     let unifySatisfiesAssertion = false;
 
+    const stepString = this.string, ///
+          satisfiesAssertionString = satisfiesAssertion.getString();
+
+    context.trace(`Unifying hte '${satisfiesAssertionString}' with the '${stepString}' step...`);
+
     const reference = satisfiesAssertion.getReference(),
           axiom = context.findAxiomByReference(reference);
 
     if (axiom !== null) {
-      const axiomUnconditional = axiom.isUnconditional();
+      const step = this,  ///
+            substitutions = Substitutions.fromNothing(),
+            statementUnified = axiom.unifyStep(step, substitutions, context);
 
-      if (axiomUnconditional) {
-        const step = this,  ///
-              fileContext = axiom.getFileContext(),
-              localContext = LocalContext.fromFileContext(fileContext),
-              substitutions = Substitutions.fromNothing(),
-              generalContext = localContext,  ///
-              specificContext = context,  ///
-              statementUnified = axiom.unifyStep(step, substitutions, generalContext, specificContext);
+      if (statementUnified) {
+        const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
 
-        if (statementUnified) {
-          const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
-
-          if (substitutionsMatch) {
-            unifySatisfiesAssertion = true;
-          }
+        if (substitutionsMatch) {
+          unifySatisfiesAssertion = true;
         }
       }
+    }
+
+    if (unifySatisfiesAssertion) {
+      context.debug(`...unified hte '${satisfiesAssertionString}' with the '${stepString}' step.`);
     }
 
     return unifySatisfiesAssertion;

@@ -222,7 +222,7 @@ export default domAssigned(class Rule {
           labels = labelsFromJSON(json, fileContext),
           premises = premisesFromJSON(json, fileContext),
           conclusion = conclusionFromJSON(json, fileContext),
-          string = stringFromLabelsAndConclusion(labels, conclusion);
+          string = stringFromLabelsPremisesAndConclusion(labels, premises, conclusion);
 
     rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
 
@@ -234,7 +234,7 @@ export default domAssigned(class Rule {
           labels = labelsFromRuleNode(ruleNode, fileContext),
           premises = premisesFromRuleNode(ruleNode, fileContext),
           conclusion = conclusionFromRuleNode(ruleNode, fileContext),
-          string = stringFromLabelsAndConclusion(labels, conclusion),
+          string = stringFromLabelsPremisesAndConclusion(labels, premises, conclusion),
           rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
 
     return rule;
@@ -281,10 +281,25 @@ function conclusionFromRuleNode(ruleNode, fileContext) {
   return conclusion;
 }
 
-function stringFromLabelsAndConclusion(labels, conclusion) {
-  const conclusionString = conclusion.getString(),
+function premisesStringFromPremises(premises) {
+  const premisesString = premises.reduce((premisesString, premise) => {
+    const premiseString = premise.getString();
+
+    premisesString = (premisesString !== null) ?
+                       `${premisesString}, ${premiseString}` :
+                         premiseString;  ///
+
+    return premisesString;
+  }, null);
+
+  return premisesString;
+}
+
+function stringFromLabelsPremisesAndConclusion(labels, premises, conclusion) {
+  const premisesString = premisesStringFromPremises(premises),
+        conclusionString = conclusion.getString(),
         labelsString = labelsStringFromLabels(labels),
-        string = `${labelsString} :: ${conclusionString}`;
+        string = `${labelsString} :: [${premisesString}] ... ${conclusionString}`;
 
   return string;
 }

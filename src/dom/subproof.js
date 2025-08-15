@@ -114,20 +114,21 @@ export default domAssigned(class Subproof {
   unifySatisfiesAssertion(satisfiesAssertion, context) {
     let unifySatisfiesAssertion = false;
 
+    const subproofString = this.string, ///
+          satisfiesAssertionString = satisfiesAssertion.getString();
+
+    context.trace(`Unifying the '${satisfiesAssertionString}' satisfies assertion with the '${subproofString}' subproof...`)
+
     const reference = satisfiesAssertion.getReference(),
           axiom = context.findAxiomByReference(reference);
 
     if (axiom !== null) {
-      const axiomUnconditional = axiom.isUnconditional();
+      const axiomSatisfiable = axiom.isSatisfiable();
 
-      if (!axiomUnconditional) {
-        const subproof = this,
-              fileContext = axiom.getFileContext(),
-              localContext = LocalContext.fromFileContext(fileContext),
+      if (axiomSatisfiable) {
+        const subproof = this,  ///
               substitutions = Substitutions.fromNothing(),
-              generalContext = localContext,  ///
-              specificContext = context,  ///
-              statementUnified = axiom.unifySubproof(subproof, substitutions, generalContext, specificContext);
+              statementUnified = axiom.unifySubproof(subproof, substitutions, context);
 
         if (statementUnified) {
           const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
@@ -137,6 +138,10 @@ export default domAssigned(class Subproof {
           }
         }
       }
+    }
+
+    if (unifySatisfiesAssertion) {
+      context.debug(`...unified the '${satisfiesAssertionString}' satisfies assertion with the '${subproofString}' subproof.`)
     }
 
     return unifySatisfiesAssertion;

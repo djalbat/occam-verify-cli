@@ -64,13 +64,6 @@ export default class TopLevelAssertion {
     return supposition;
   }
 
-  isUnconditional() {
-    const suppositionsLength = this.suppositions.length,
-          unconditional = (suppositionsLength === 0);
-
-    return unconditional;
-  }
-
   matchMetavariableName(metavariableName) {
     const metavariableNameMatches = this.labels.some((label) => {
       const metavariableNameMatches = label.matchMetavariableName(metavariableName);
@@ -129,35 +122,6 @@ export default class TopLevelAssertion {
     });
 
     return labelsVerified;
-  }
-
-  unifyStatement(statement, context) {
-    let statementUnified;
-
-    const statementString = statement.getString(),
-          axiomLemmaTheoremConjecture = this, ///
-          axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjecture.getString();
-
-    context.trace(`Unifying the '${statementString}' statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`);
-
-    const suppositions = this.getSuppositions(),
-          suppositionsLength = suppositions.length;
-
-    if (suppositionsLength === 0) {
-      const substitutions = Substitutions.fromNothing(),
-            localContext = LocalContext.fromFileContext(this.fileContext),
-            generalContext = localContext,  ///
-            specificContext = context,  ///
-            statementUnifiedWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
-
-      statementUnified = statementUnifiedWithDeduction;  ///
-    }
-
-    if (statementUnified) {
-      context.debug(`...unified the '${statementString}' statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture.`);
-    }
-
-    return statementUnified;
   }
 
   unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext) {
@@ -255,7 +219,7 @@ export default class TopLevelAssertion {
           suppositions = suppositionsFromJSON(json, fileContext),
           signature = signatureFromJSON(json, fileContext),
           proof = null,
-          string = stringFromLabelsAndDeduction(labels, deduction),
+          string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
           topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, signature);
 
     return topLevelAssertion;
@@ -273,7 +237,7 @@ export default class TopLevelAssertion {
           deduction = deductionFromDeductionNode(deductionNode, fileContext),
           suppositions = suppositionsFromSuppositionNodes(suppositionNodes, fileContext),
           signature = signatureFromSignatureNode(signatureNode, fileContext),
-          string = stringFromLabelsAndDeduction(labels, deduction),
+          string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
           topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, signature);
 
     return topLevelAssertion;
@@ -342,12 +306,27 @@ export function labelsStringFromLabels(labels) {
   return labelsString;
 }
 
-export function stringFromLabelsAndDeduction(labels, deduction) {
-  const deductionString = deduction.getString(),
+export function suppositionsStringFromSuppositions(suppositions) {
+  const suppositionsString = suppositions.reduce((suppositionsString, supposition) => {
+    const suppositionString = supposition.getString();
+
+    suppositionsString = (suppositionsString !== null) ?
+                           `${suppositionsString}, ${suppositionString}` :
+                             suppositionString;  ///
+
+    return suppositionsString;
+  }, null);
+
+  return suppositionsString;
+}
+
+export function stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction) {
+  const suppositionsString = suppositionsStringFromSuppositions(suppositions),
+        deductionString = deduction.getString(),
         labelsString = labelsStringFromLabels(labels),
         string = (labelsString === null) ?
                    deductionString : ///
-                    `${labelsString} :: ${deductionString}`;
+                    `${labelsString} :: [${suppositionsString}] ... ${deductionString}`;
 
   return string;
 }

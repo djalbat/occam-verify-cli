@@ -128,7 +128,7 @@ export default class TopLevelMetaAssertion {
           suppositions = suppositionsFromJSON(json, fileContext),
           substitutions = substitutionsFromJSON(json, fileContext),
           proof = null,
-          string = stringFromLabelAndDeduction(label, deduction),
+          string = stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
           topLevelMetaAssertion = new Class(fileContext, string, label, suppositions, deduction, proof, substitutions);
 
     return topLevelMetaAssertion;
@@ -145,7 +145,7 @@ export default class TopLevelMetaAssertion {
           deduction = deductionFromDeductionNode(deductionNode, fileContext),
           suppositions = suppositionsFromSuppositionNodes(suppositionNodes, fileContext),
           substitutions = Substitutions.fromNothing(),
-          string = stringFromLabelAndDeduction(label, deduction),
+          string = stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
           topLevelMetaAssertion = new Class(fileContext, string, label, suppositions, deduction, proof, substitutions);
 
     return topLevelMetaAssertion;
@@ -172,12 +172,27 @@ function labelStringFromLabel(label) {
   return labelsString;
 }
 
-function stringFromLabelAndDeduction(label, deduction) {
-  const deductionString = deduction.getString(),
+function suppositionsStringFromSuppositions(suppositions) {
+  const suppositionsString = suppositions.reduce((suppositionsString, supposition) => {
+    const suppositionString = supposition.getString();
+
+    suppositionsString = (suppositionsString !== null) ?
+                          `${suppositionsString}, ${suppositionString}` :
+                            suppositionString;  ///
+
+    return suppositionsString;
+  }, null);
+
+  return suppositionsString;
+}
+
+function stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction) {
+  const suppositionsString = suppositionsStringFromSuppositions(suppositions),
+        deductionString = deduction.getString(),
         labelString = labelStringFromLabel(label),
         string = (labelString === null) ?
                     deductionString : ///
-                     `${labelString} :: ${deductionString}`;
+                     `${labelString} :: [${suppositionsString}] ... ${deductionString}`;
 
   return string;
 }

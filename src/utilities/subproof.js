@@ -3,7 +3,7 @@
 export function subproofStringFromSubproofNode(subproofNode, fileContext) {
   const suppositionStatementsOrNonsenseString = suppositionStatementOrNonsenseStringFromSubproofNode(subproofNode, fileContext),
         lastStatementOrNonsenseString = lastStatementOrNonsenseStringFromSubproofNode(subproofNode, fileContext),
-        subproofString = `[${suppositionStatementsOrNonsenseString}]...${lastStatementOrNonsenseString}`;
+        subproofString = `[${suppositionStatementsOrNonsenseString}] ... ${lastStatementOrNonsenseString}`;
 
   return subproofString;
 }

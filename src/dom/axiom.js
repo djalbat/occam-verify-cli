@@ -79,17 +79,16 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return signatureMatches;
   }
 
-  unifyStep(step, substitutions, generalContext, specificContext) {
+  unifyStep(step, substitutions, context) {
     let stepUnified = false;
 
-    const context = specificContext,  ///
-          stepString = step.getString(),
+    const stepString = step.getString(),
           axiomString = this.string;  ///
 
     context.trace(`Unifying the '${stepString}' step with the '${axiomString}' axiom...`);
 
     const statement = step.getStatement(),
-          statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+          statementUnified = this.unifyStatement(statement, substitutions, context);
 
     if (statementUnified) {
       stepUnified = true;
@@ -111,10 +110,10 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`)
 
-    const step = lastStep,  ///
-          stepUnified = this.unifyStep(step, substitutions, generalContext, specificContext);
+    const statement = lastStep.getStatement(),
+          statementUnified = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
-    if (stepUnified) {
+    if (statementUnified) {
       lastStepUnified = true;
     }
 
@@ -125,16 +124,19 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return lastStepUnified;
   }
 
-  unifySubproof(subproof, substitutions, generalContext, specificContext) {
+  unifySubproof(subproof, substitutions, context) {
     let subproofUnified = false;
 
-    const context = specificContext,  ///
-          axiomString = this.string,  ///
+    const axiomString = this.string,  ///
           subproofString = subproof.getString();
 
     context.trace(`Unifying the '${subproofString}' subproof with the '${axiomString}' axiom...`);
 
     const lastStep = subproof.getLastStep(),
+          fileContext = this.getFileContext(),
+          localContext = LocalContext.fromFileContext(fileContext),
+          generalContext = localContext,  ///
+          specificContext = context,  ///
           lastStepUnified = this.unifyLastStep(lastStep, substitutions, generalContext, specificContext);
 
     if (lastStepUnified) {
