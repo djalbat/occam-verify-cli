@@ -224,19 +224,19 @@ export default domAssigned(class Statement {
     return unifiedIndependently;
   }
 
-  unifyWithStepsOrSubproofs(stepsOrSubproofs, context) {
-    let unifiedWithSteps;
+  equateWithStepsOrSubproofs(stepsOrSubproofs, context) {
+    let equateDdWithStepsOrSubproofs;
 
-    unifiedWithSteps = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
+    equateDdWithStepsOrSubproofs = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
       const statement = this, ///
-            statementUnified = stepOrSubproof.unifyStatement(statement, context);
+            statementUnified = stepOrSubproof.equateWithStatement(statement, context);
 
       if (statementUnified) {
         return true;
       }
     });
 
-    return unifiedWithSteps;
+    return equateDdWithStepsOrSubproofs;
   }
 
   toJSON() {

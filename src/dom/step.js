@@ -3,6 +3,7 @@
 import dom from "../dom";
 import unifyMixins from "../mixins/step/unify";
 import Substitutions from "../substitutions";
+import equationalUnifier from "../unifier/equantional";
 
 import { domAssigned } from "../dom";
 import { propertyAssertionFromStatement } from "../utilities/context";
@@ -104,25 +105,18 @@ export default domAssigned(class Step {
     return verified;
   }
 
-  unifyStatement(statement, context) {
-    let statementUnified;
+  equateWithStatement(statement, context) {
+    let statementEquated;
 
-    const substitutions = Substitutions.fromNothing(),
-          generalContext = context, ///
-          specificContext = context; ///
+    const statementA = statement,  ///
+          statementB = this.statement,  ///
+          statementANode = statementA.getNode(),
+          statementBNode = statementB.getNode(),
+          statementsEquated = equationalUnifier.equateStatements(statementANode, statementBNode, context);
 
-    statementUnified = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
+    statementEquated = statementsEquated;  ///
 
-    if (statementUnified) {
-      substitutions.removeTrivialSubstitutions();
-
-      const equivalences = context.getEquivalences(),
-            substitutionsUnified = equivalences.unifySubstitutions(substitutions);
-
-      statementUnified = substitutionsUnified;  ///
-    }
-
-    return statementUnified;
+    return statementEquated;
   }
 
   unifySatisfiesAssertion(satisfiesAssertion, context) {

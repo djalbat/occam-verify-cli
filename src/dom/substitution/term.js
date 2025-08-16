@@ -51,24 +51,6 @@ export default domAssigned(class TermSubstitution extends Substitution {
 
   matchName(name) { return this.variable.matchName(name); }
 
-  unifyWithEquivalence(equivalence) {
-    let unifiedWithEquivalence;
-
-    const termNode = this.term.getNode(),
-          equivalenceMatchesTermNode = equivalence.matchTermNode(termNode);
-
-    if (equivalenceMatchesTermNode) {
-      const variableNode = this.variable.getNode(),
-            equivalenceMatchesVariableNode = equivalence.matchVariableNode(variableNode);
-
-      if (equivalenceMatchesVariableNode) {
-          unifiedWithEquivalence = true;
-        }
-    }
-
-    return unifiedWithEquivalence;
-  }
-
   static fromStatementNode(statementNode, context) {
     let termSubstitution = null;
 

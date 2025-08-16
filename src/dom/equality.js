@@ -1,11 +1,11 @@
 "use strict";
 
 import dom from "../dom";
+import equationalUnifier from "../unifier/equantional";
 import EqualityAssignment from "../assignment/equality";
 import VariableAssignment from "../assignment/variable";
 
 import { domAssigned } from "../dom";
-import { unifyEquality } from "../utilities/unification";
 
 export default domAssigned(class Equality {
   constructor(string, leftTerm, rightTerm) {
@@ -51,14 +51,6 @@ export default domAssigned(class Equality {
           reflexive = (leftTermString === rightTermString);
 
     return reflexive;
-  }
-
-  isEqual(context) {
-    const equality = this,  ///
-          equalityUnified = unifyEquality(equality, context),
-          equal = equalityUnified;  ///
-
-    return equal;
   }
 
   verify(assignments, stated, context) {
@@ -153,9 +145,11 @@ export default domAssigned(class Equality {
 
     context.trace(`Verifying the '${equalityString}' derived equality...`);
 
-    const equal = this.isEqual(context);
+    const leftTermNode = this.leftTerm.getNode(),
+          rightTermNode = this.rightTerm.getNode(),
+          termsEquated = equationalUnifier.equateTerms(leftTermNode, rightTermNode, context);
 
-    verifiedWhenDerived = equal;  ///
+    verifiedWhenDerived = termsEquated;  ///
 
     if (verifiedWhenDerived) {
       context.debug(`...verified the '${equalityString}' derived equality.`);
@@ -170,19 +164,19 @@ export default domAssigned(class Equality {
     }
 
     const { Variable } = dom,
-          type = this.getType(),
-          leftTermNode = this.leftTerm.getNode(),
-          rightTermNode = this.rightTerm.getNode(),
-          leftTermNodeSingularVariableNode = leftTermNode.getSingularVariableNode(),
-          rightTermNodeSingularVariableNode = rightTermNode.getSingularVariableNode(),
-          leftVariableNode = leftTermNodeSingularVariableNode,  ///
-          rightVariableNode = rightTermNodeSingularVariableNode;  ///
+      type = this.getType(),
+      leftTermNode = this.leftTerm.getNode(),
+      rightTermNode = this.rightTerm.getNode(),
+      leftTermNodeSingularVariableNode = leftTermNode.getSingularVariableNode(),
+      rightTermNodeSingularVariableNode = rightTermNode.getSingularVariableNode(),
+      leftVariableNode = leftTermNodeSingularVariableNode,  ///
+      rightVariableNode = rightTermNodeSingularVariableNode;  ///
 
     let assignment;
 
     if (leftVariableNode !== null) {
       const leftVariable = Variable.fromVariableNodeAndType(leftVariableNode, type, context),
-            leftVariableAssignment = VariableAssignment.fromVariable(leftVariable);
+        leftVariableAssignment = VariableAssignment.fromVariable(leftVariable);
 
       assignment = leftVariableAssignment;  ///
 
@@ -191,7 +185,7 @@ export default domAssigned(class Equality {
 
     if (rightVariableNode !== null) {
       const rightVariable = Variable.fromVariableNodeAndType(rightVariableNode, type, context),
-            rightVariableAssignment = VariableAssignment.fromVariable(rightVariable);
+        rightVariableAssignment = VariableAssignment.fromVariable(rightVariable);
 
       assignment = rightVariableAssignment;  ///
 
@@ -199,7 +193,7 @@ export default domAssigned(class Equality {
     }
 
     const equality = this,  //
-          equalityAssignment = EqualityAssignment.fromEquality(equality);
+      equalityAssignment = EqualityAssignment.fromEquality(equality);
 
     assignment = equalityAssignment; ///
 

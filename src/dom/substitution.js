@@ -153,10 +153,4 @@ export default class Substitution {
 
     return replacementNode;
   }
-
-  unifyWithEquivalence(equivalence) {
-    let unifiedWithEquivalence = false;
-
-    return unifiedWithEquivalence;
-  }
 }

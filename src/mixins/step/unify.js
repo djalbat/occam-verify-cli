@@ -260,19 +260,6 @@ function unifyAsPropertyAssertion(statement, reference, substitutions, context) 
   return unifiedAsPropertyAssertion;
 }
 
-function unifyWithStepsOrSubproofs(statement, reference, substitutions, context) {
-  let unifiedWithStepOrSubproofs = false;
-
-  if (reference === null) {
-    const stepsOrSubproofs = context.getStepsOrSubproofs(),
-          statementUnifiedWithSteps = statement.unifyWithStepsOrSubproofs(stepsOrSubproofs, context);
-
-    unifiedWithStepOrSubproofs = statementUnifiedWithSteps; ///
-  }
-
-  return unifiedWithStepOrSubproofs;
-}
-
 function unifyWithSatisfiesAssertion(statement, reference, substitutions, context) {
   let unifiedWithSatisfiesAssertion;
 
@@ -306,6 +293,19 @@ function unifyWithSatisfiesAssertion(statement, reference, substitutions, contex
   return unifiedWithSatisfiesAssertion;
 }
 
+function equateWithStepsOrSubproofs(statement, reference, substitutions, context) {
+  let unifiedWithStepOrSubproofs = false;
+
+  if (reference === null) {
+    const stepsOrSubproofs = context.getStepsOrSubproofs(),
+          statementUnifiedWithSteps = statement.equateWithStepsOrSubproofs(stepsOrSubproofs, context);
+
+    unifiedWithStepOrSubproofs = statementUnifiedWithSteps; ///
+  }
+
+  return unifiedWithStepOrSubproofs;
+}
+
 const unifyMixins = [
   unifyWithRule,
   unifyWithReference,
@@ -315,8 +315,8 @@ const unifyMixins = [
   unifyAsJudgement,
   unifyAsTypeAssertion,
   unifyAsPropertyAssertion,
-  unifyWithStepsOrSubproofs,
-  unifyWithSatisfiesAssertion
+  unifyWithSatisfiesAssertion,
+  equateWithStepsOrSubproofs
 ];
 
 export default unifyMixins;

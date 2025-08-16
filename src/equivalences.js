@@ -166,30 +166,6 @@ export default class Equivalences {
     }
   }
 
-  unifySubstitutions(substitutions) {
-    const substitutionsUnified = substitutions.everySubstitution((substitution) => {
-      const substitutionUnified = this.unifySubstitution(substitution);
-
-      if (substitutionUnified) {
-        return true;
-      }
-    });
-
-    return substitutionsUnified;
-  }
-
-  unifySubstitution(substitution) {
-    const substitutionUnified = this.array.some((equivalence) => {
-      const substitutionUnifiedWithEquivalence = substitution.unifyWithEquivalence(equivalence);
-
-      if (substitutionUnifiedWithEquivalence) {
-        return true;
-      }
-    });
-
-    return substitutionUnified;
-  }
-
   mergedWith(equivalences) {
     const equivalencesA = this, ///
           equivalencesB = equivalences;

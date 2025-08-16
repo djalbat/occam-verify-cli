@@ -1,25 +1,11 @@
 "use string";
 
 import LocalContext from "../context/local";
-import equalityUnifier from "../unifier/equality";
 import metaLevelUnifier from "../unifier/metaLevel";
 import metavariableUnifier from "../unifier/metavariable";
 import intrinsicLevelUnifier from "../unifier/intrinsicLevel";
 import termWithConstructorUnifier from "../unifier/termWithConstructor";
 import statementWithCombinatorUnifier from "../unifier/statementWithCombinator";
-
-export function unifyEquality(equality, context) {
-  let equalityUnified;
-
-  const leftTerm = equality.getLeftTerm(),
-        rightTerm = equality.getRightTerm(),
-        leftTermNode = leftTerm.getNode(),
-        rightTermNode = rightTerm.getNode();
-
-  equalityUnified = equalityUnifier.unify(leftTermNode, rightTermNode, context);
-
-  return equalityUnified;
-}
 
 export function unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext) {
   let statementUnified;
