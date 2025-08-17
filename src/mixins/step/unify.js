@@ -28,7 +28,9 @@ function unifyWithRule(statement, reference, substitutions, context) {
       const stepsOrSubproofs = context.getStepsOrSubproofs(),
             statementAndStepsUnified = rule.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
 
-      unifiedWithRule = statementAndStepsUnified;  ///
+      if (statementAndStepsUnified) {
+        unifiedWithRule = true;
+      }
 
       if (unifiedWithRule) {
         context.debug(`...unified the '${statementString}' statement with the '${ruleString}' rule.`);
@@ -110,7 +112,9 @@ function unifyAsSatisfiesAssertion(statement, reference, substitutions, context)
           if (axiomLemmaTheoremConjectureUnified) {
             const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
 
-            unifiedAsSatisfiesAssertion = substitutionsMatch;  ///
+            if (substitutionsMatch) {
+              unifiedAsSatisfiesAssertion = true;
+            }
           }
         }
       }
@@ -166,8 +170,8 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, substituti
   return unifiedWithAxiomLemmaTheoremOrConjecture;
 }
 
-function unifyAsEquality(statement, reference, substitutions, context) {
-  let unifiedAsEquality = false;
+function unifyAEquality(statement, reference, substitutions, context) {
+  let unifiedAEquality = false;
 
   if (reference === null) {
     const equality = equalityFromStatement(statement, context);
@@ -177,13 +181,17 @@ function unifyAsEquality(statement, reference, substitutions, context) {
 
       context.trace(`Unifying the '${statementString}' statement as an equality...`);
 
-      unifiedAsEquality = true;
+      const equalityEqual = equality.isEqual(context);
+
+      if (equalityEqual) {
+        unifiedAEquality = true;
+      }
 
       context.debug(`...unified the '${statementString}' statement as an equality.`);
     }
   }
 
-  return unifiedAsEquality;
+  return unifiedAEquality;
 }
 
 function unifyAsJudgement(statement, reference, substitutions, context) {
@@ -241,7 +249,7 @@ function unifyAsPropertyAssertion(statement, reference, substitutions, context) 
             equivalence = context.findEquivalenceByTerm(term);
 
       if (equivalence !== null) {
-        unifiedAsPropertyAssertion = equivalence.someOtherTerm(term, (term) => {  ///
+        const propertyAssertionMatches = equivalence.someOtherTerm(term, (term) => {  ///
           const propertyRelation = propertyAssertion.getPropertyRelation(),
                 propertyAssertionMatches = context.matchTermAndPropertyRelation(term, propertyRelation);
 
@@ -249,6 +257,10 @@ function unifyAsPropertyAssertion(statement, reference, substitutions, context) 
             return true;
           }
         });
+
+        if (propertyAssertionMatches) {
+          unifiedAsPropertyAssertion = true;
+        }
       }
 
       if (unifiedAsPropertyAssertion) {
@@ -261,7 +273,7 @@ function unifyAsPropertyAssertion(statement, reference, substitutions, context) 
 }
 
 function unifyWithSatisfiesAssertion(statement, reference, substitutions, context) {
-  let unifiedWithSatisfiesAssertion;
+  let unifiedWithSatisfiesAssertion = false;
 
   const stepsOrSubproofs = context.getStepsOrSubproofs(),
         satisfiesAssertions = stepsOrSubproofs.reduce((satisfiesAssertions, stepOrSubproof) => {
@@ -280,15 +292,18 @@ function unifyWithSatisfiesAssertion(statement, reference, substitutions, contex
           }
 
           return satisfiesAssertions;
-        }, []);
+        }, []),
+        statementUnified = backwardsSome(satisfiesAssertions, (satisfiesAssertion) => {
+          const statementUnified = satisfiesAssertion.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
 
-  unifiedWithSatisfiesAssertion = backwardsSome(satisfiesAssertions, (satisfiesAssertion) => {
-    const statementUnified = satisfiesAssertion.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
+          if (statementUnified) {
+            return true;
+          }
+        });
 
-    if (statementUnified) {
-      return true;
-    }
-  });
+  if (statementUnified) {
+    unifiedWithSatisfiesAssertion = true;
+  }
 
   return unifiedWithSatisfiesAssertion;
 }
@@ -300,7 +315,9 @@ function equateWithStepsOrSubproofs(statement, reference, substitutions, context
     const stepsOrSubproofs = context.getStepsOrSubproofs(),
           statementUnifiedWithSteps = statement.equateWithStepsOrSubproofs(stepsOrSubproofs, context);
 
-    unifiedWithStepOrSubproofs = statementUnifiedWithSteps; ///
+    if (statementUnifiedWithSteps) {
+      unifiedWithStepOrSubproofs = true;
+    }
   }
 
   return unifiedWithStepOrSubproofs;
@@ -311,7 +328,7 @@ const unifyMixins = [
   unifyWithReference,
   unifyAsSatisfiesAssertion,
   unifyWithAxiomLemmaTheoremOrConjecture,
-  unifyAsEquality,
+  unifyAEquality,
   unifyAsJudgement,
   unifyAsTypeAssertion,
   unifyAsPropertyAssertion,

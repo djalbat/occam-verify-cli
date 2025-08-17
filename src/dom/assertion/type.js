@@ -43,7 +43,9 @@ export default domAssigned(class TypeAssertion {
         verifiedWhenDerived = this.verifyWhenDerived(context);
       }
 
-      verified = verifiedWhenStated || verifiedWhenDerived;
+      if (verifiedWhenStated || verifiedWhenDerived) {
+        verified = true;
+      }
     }
 
     if (verified) {

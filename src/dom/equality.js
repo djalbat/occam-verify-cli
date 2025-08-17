@@ -53,6 +53,20 @@ export default domAssigned(class Equality {
     return reflexive;
   }
 
+  isEqual(context) {
+    let equal = false;
+
+    const leftTermNode = this.leftTerm.getNode(),
+          rightTermNode = this.rightTerm.getNode(),
+          termsEquated = equationalUnifier.equateTerms(leftTermNode, rightTermNode, context);
+
+    if (termsEquated) {
+      equal = true;
+    }
+
+    return equal;
+  }
+
   verify(assignments, stated, context) {
     let verified = false;
 
@@ -72,11 +86,15 @@ export default domAssigned(class Equality {
         verifiedWhenDerived = this.verifyWhenDerived(context);
       }
 
-      verified = verifiedWhenStated || verifiedWhenDerived;
+      if (verifiedWhenStated || verifiedWhenDerived) {
+        verified = true;
+      }
     }
 
     if (verified) {
-      this.assign(assignments, context);
+      if (stated) {
+        this.assign(assignments, context);
+      }
     }
 
     if (verified) {
@@ -145,11 +163,7 @@ export default domAssigned(class Equality {
 
     context.trace(`Verifying the '${equalityString}' derived equality...`);
 
-    const leftTermNode = this.leftTerm.getNode(),
-          rightTermNode = this.rightTerm.getNode(),
-          termsEquated = equationalUnifier.equateTerms(leftTermNode, rightTermNode, context);
-
-    verifiedWhenDerived = termsEquated;  ///
+    verifiedWhenDerived = true;  ///
 
     if (verifiedWhenDerived) {
       context.debug(`...verified the '${equalityString}' derived equality.`);

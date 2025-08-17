@@ -15,7 +15,7 @@ export function stripBracketsFromTerm(term, context) {
     const { Term } = dom,
           termNode = bracketedTermChildNode;  ///
 
-    term = Term.fromStatementNode(termNode, context);
+    term = Term.fromTermNode(termNode, context);
   }
 
   return term;

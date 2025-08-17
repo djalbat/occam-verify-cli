@@ -33,7 +33,7 @@ export default domAssigned(class TermSubstitution extends Substitution {
   }
 
   isTermEqualTo(term, context) {
-    term = stripBracketsFromTerm(term); ///
+    term = stripBracketsFromTerm(term, context); ///
 
     const termEqualTo = this.term.isEqualTo(term);
 

@@ -124,8 +124,9 @@ export default domAssigned(class Variable {
           substitutionPresent = substitutions.isSubstitutionPresentByVariable(variable);
 
     if (substitutionPresent) {
-      const substitution = substitutions.findSubstitutionByVariable(variable),
-            substitutionTermEqualToTerm = substitution.isTermEqualTo(term);
+      const context = specificContext,  ///
+            substitution = substitutions.findSubstitutionByVariable(variable),
+            substitutionTermEqualToTerm = substitution.isTermEqualTo(term, context);
 
       if (substitutionTermEqualToTerm) {
         termUnified = true;

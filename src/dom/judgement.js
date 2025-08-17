@@ -50,7 +50,9 @@ export default domAssigned(class Judgement {
           verifiedWhenDerived = this.verifyWhenDerived(context);
         }
 
-        verified = verifiedWhenStated || verifiedWhenDerived;
+        if (verifiedWhenStated || verifiedWhenDerived) {
+          verified = true;
+        }
       }
     }
 

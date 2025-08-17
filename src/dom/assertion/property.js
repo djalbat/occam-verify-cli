@@ -83,7 +83,9 @@ export default domAssigned(class PropertyAssertion {
           verifiedWhenDerived = this.verifyWhenDerived(context);
         }
 
-        verified = verifiedWhenStated || verifiedWhenDerived;
+        if (verifiedWhenStated || verifiedWhenDerived) {
+          verified = true;
+        }
       }
     }
 
