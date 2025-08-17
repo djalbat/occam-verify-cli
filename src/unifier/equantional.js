@@ -43,7 +43,7 @@ class EquationalUnifier extends Unifier {
                 leftTermNodeMatchesRightTermNode = leftTermNode.match(rightTermNode, depth);
 
           if (leftTermNodeMatchesRightTermNode) {
-            termUnified = leftTermNodeMatchesRightTermNode; ///
+            termUnified = true;
           }
         }
 
@@ -55,7 +55,9 @@ class EquationalUnifier extends Unifier {
                 ],
                 equivalence = equivalences.findEquivalenceByTermNodes(termNodes);
 
-          termUnified = (equivalence !== null);
+          if (equivalence !== null) {
+            termUnified = true;
+          }
         }
 
         if (!termUnified) {
@@ -71,7 +73,9 @@ class EquationalUnifier extends Unifier {
                   rightChildNodes = rightNonTerminalNodeChildNodes, ///
                   childNodesUnified = equationalUnifier.unifyChildNodes(leftChildNodes, rightChildNodes, context);
 
-            termUnified = childNodesUnified;  ////
+            if (childNodesUnified) {
+              termUnified = true;
+            }
           }
         }
 

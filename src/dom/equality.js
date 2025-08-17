@@ -92,9 +92,9 @@ export default domAssigned(class Equality {
     }
 
     if (verified) {
-      if (stated) {
+
         this.assign(assignments, context);
-      }
+
     }
 
     if (verified) {

@@ -187,7 +187,9 @@ function unifyAEquality(statement, reference, substitutions, context) {
         unifiedAEquality = true;
       }
 
-      context.debug(`...unified the '${statementString}' statement as an equality.`);
+      if (unifiedAEquality) {
+        context.debug(`...unified the '${statementString}' statement as an equality.`);
+      }
     }
   }
 
@@ -207,7 +209,9 @@ function unifyAsJudgement(statement, reference, substitutions, context) {
 
       unifiedAsJudgement = true;
 
-      context.debug(`...unified the '${statementString}' statement as a judgement.`);
+      if (unifiedAsJudgement) {
+        context.debug(`...unified the '${statementString}' statement as a judgement.`);
+      }
     }
   }
 
