@@ -2,9 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-import Equivalence from "./equivalence";
-
-const { push, compress, separate } = arrayUtilities;
+const { push, separate } = arrayUtilities;
 
 export default class Equivalences {
   constructor(array) {
@@ -27,51 +25,21 @@ export default class Equivalences {
     return types;
   }
 
-  pushEquivalences(equivalences) {
+  addEquivalence(equivalence) {
+    this.array.push(equivalence);
+  }
+
+  addEquivalences(equivalences) {
     const array = equivalences.getArray();
 
     push(this.array, array);
   }
 
+  someEquivalence(callback) { return this.array.some(callback); }
+
+  everyEquivalence(callback) { return this.array.every(callback); }
+
   forEachEquivalence(callback) { this.array.forEach(callback); }
-
-  separateEquivalences(equivalencesA, equivalencesB, callback) {
-    const arrayA = equivalencesA.getArray(),
-          arrayB = equivalencesB.getArray();
-
-    separate(this.array, arrayA, arrayB, callback);
-  }
-
-  addEquivalence(equivalence, context) {
-    const equivalenceString = equivalence.asString();
-
-    context.trace(`Added the '${equivalenceString}' equivalence.`);
-
-    this.array.push(equivalence);
-  }
-
-  removeEquivalence(equivalence, context) {
-    const index = this.array.indexOf(equivalence),
-          start = index,  ///
-          deleteCount = 1,
-          equivalenceString = equivalence.asString();
-
-    context.trace(`Removed the '${equivalenceString}' equivalence.`);
-
-    this.array.splice(start, deleteCount);
-  }
-
-  findEquivalenceByType(type) {
-    const equivalence = this.array.find((equivalence) => {
-      const equivalenceMatchesType = equivalence.matchType(type);
-
-      if (equivalenceMatchesType) {
-        return true;
-      }
-    }) || null;
-
-    return equivalence;
-  }
 
   findEquivalenceByTerm(term) {
     const equivalence = this.array.find((equivalence) => {
@@ -95,6 +63,45 @@ export default class Equivalences {
     }) || null;
 
     return equivalence;
+  }
+
+  mergedWith(equivalences) {
+    let  mergedEquivalences = this.clone(); ///
+
+    equivalences.forEachEquivalence((equivalence) => {
+      mergedEquivalences = mergedEquivalences.mergedWithEquivalence(equivalence);
+    });
+
+    return mergedEquivalences;
+  }
+
+  mergedWithEquivalence(equivalence) {
+    const equivalences = Equivalences.fromNothing();
+
+    let mergedEquivalence = equivalence; ///
+
+    this.forEachEquivalence((equivalence) => {
+      const mergedEquivalenceDisjointFromEquivalence = mergedEquivalence.isDisjointFrom(equivalence);
+
+      if (mergedEquivalenceDisjointFromEquivalence) {
+        equivalences.addEquivalence(equivalence);
+      } else {
+        mergedEquivalence = mergedEquivalence.mergedWith(equivalence);
+      }
+    });
+
+    equivalence = mergedEquivalence;  ///
+
+    equivalences.addEquivalence(equivalence);
+
+    return equivalences;
+  }
+
+  separateEquivalences(equivalencesA, equivalencesB, callback) {
+    const equivalencesAArray = equivalencesA.getArray(),
+          equivalencesBArray = equivalencesB.getArray();
+
+    separate(this.array, equivalencesAArray, equivalencesBArray, callback);
   }
 
   separateInitiallyGroundedEquivalences(remainingEquivalences, initiallyGroundedEquivalences, context) {
@@ -159,24 +166,18 @@ export default class Equivalences {
 
         equivalences.separateImplicitlyGroundedEquivalences(remainingEquivalences, implicitlyGroundedEquivalences, definedVariables, context);
 
-        groundedEquivalences.pushEquivalences(implicitlyGroundedEquivalences);
+        groundedEquivalences.addEquivalences(implicitlyGroundedEquivalences);
 
         implicitlyGroundedEquivalencesLength = implicitlyGroundedEquivalences.getLength();  ///
       }
     }
   }
 
-  mergedWith(equivalences) {
-    const equivalencesA = this, ///
-          equivalencesB = equivalences;
-
-    equivalences = mergeEquivalences(equivalencesA, equivalencesB); ///
-
-    return equivalences;
-  }
-
-  static fromArray(array) {
-    const equivalences = new Equivalences(array);
+  clone() {
+    const array = [
+            ...this.array
+          ],
+          equivalences = new Equivalences(array);
 
     return equivalences;
   }
@@ -187,45 +188,6 @@ export default class Equivalences {
 
     return equivalences;
   }
-}
-
-function mergeEquivalences(equivalencesA, equivalencesB) {
-  const typesA = equivalencesA.getTypes(),
-        typesB = equivalencesB.getTypes(),
-        types = [
-          ...typesA,
-          ...typesB
-        ];
-
-  compress(types, (typeA, typeB) => {
-    if (typeA === typeB) {
-      return true;
-    }
-  });
-
-  const array = types.map((type) => {
-    let equivalence;
-
-    const equivalenceA = equivalencesA.findEquivalenceByType(type), ///
-          equivalenceB = equivalencesB.findEquivalenceByType(type); ///
-
-    if ((equivalenceA !== null) && (equivalenceB !== null)) {
-      const leftEquivalence = equivalenceA, ///
-            rightEquivalence = equivalenceB;  ///
-
-      equivalence = Equivalence.merge(leftEquivalence, rightEquivalence);
-    } else if (equivalenceA !== null) {
-      equivalence = equivalenceA; ///
-    } else if (equivalenceB !== null) {
-      equivalence = equivalenceB; ///
-    }
-
-    return equivalence;
-  });
-
-  const equivalences = Equivalences.fromArray(array);
-
-  return equivalences;
 }
 
 function definedVariablesFromGroundedTerms(groundedTerms, definedVariables, context) {

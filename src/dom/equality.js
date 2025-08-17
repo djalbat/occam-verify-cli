@@ -45,6 +45,15 @@ export default domAssigned(class Equality {
     return type;
   }
 
+  getTerms() {
+    const terms = [
+      this.leftTerm,
+      this.rightTerm
+    ];
+
+    return terms;
+  }
+
   isReflexive() {
     const leftTermString = this.leftTerm.getString(),
           rightTermString = this.rightTerm.getString(),
@@ -178,19 +187,19 @@ export default domAssigned(class Equality {
     }
 
     const { Variable } = dom,
-      type = this.getType(),
-      leftTermNode = this.leftTerm.getNode(),
-      rightTermNode = this.rightTerm.getNode(),
-      leftTermNodeSingularVariableNode = leftTermNode.getSingularVariableNode(),
-      rightTermNodeSingularVariableNode = rightTermNode.getSingularVariableNode(),
-      leftVariableNode = leftTermNodeSingularVariableNode,  ///
-      rightVariableNode = rightTermNodeSingularVariableNode;  ///
+          type = this.getType(),
+          leftTermNode = this.leftTerm.getNode(),
+          rightTermNode = this.rightTerm.getNode(),
+          leftTermNodeSingularVariableNode = leftTermNode.getSingularVariableNode(),
+          rightTermNodeSingularVariableNode = rightTermNode.getSingularVariableNode(),
+          leftVariableNode = leftTermNodeSingularVariableNode,  ///
+          rightVariableNode = rightTermNodeSingularVariableNode;  ///
 
     let assignment;
 
     if (leftVariableNode !== null) {
       const leftVariable = Variable.fromVariableNodeAndType(leftVariableNode, type, context),
-        leftVariableAssignment = VariableAssignment.fromVariable(leftVariable);
+            leftVariableAssignment = VariableAssignment.fromVariable(leftVariable);
 
       assignment = leftVariableAssignment;  ///
 
@@ -199,7 +208,7 @@ export default domAssigned(class Equality {
 
     if (rightVariableNode !== null) {
       const rightVariable = Variable.fromVariableNodeAndType(rightVariableNode, type, context),
-        rightVariableAssignment = VariableAssignment.fromVariable(rightVariable);
+            rightVariableAssignment = VariableAssignment.fromVariable(rightVariable);
 
       assignment = rightVariableAssignment;  ///
 
@@ -207,7 +216,7 @@ export default domAssigned(class Equality {
     }
 
     const equality = this,  //
-      equalityAssignment = EqualityAssignment.fromEquality(equality);
+          equalityAssignment = EqualityAssignment.fromEquality(equality);
 
     assignment = equalityAssignment; ///
 

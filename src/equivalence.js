@@ -1,6 +1,10 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
 import { stripBracketsFromTermNode } from "./utilities/brackets";
+
+const { compress } = arrayUtilities;
 
 export default class Equivalence {
   constructor(terms) {
@@ -15,9 +19,23 @@ export default class Equivalence {
     const termString = term.getString(),
           equivalenceString = this.asString(); ///
 
-    context.trace(`Adding the '${termString}' term to the '${equivalenceString}' equivalence.`);
+    context.trace(`Adding the '${termString}' term to the '${equivalenceString}' equivalence....`);
 
-    this.terms.push(term);
+    const termA = term, ///
+          termPresent = this.someTerm((term) => {
+            const termB = term, ///
+                  termAEqualToTermB = termA.isEqualTo(termB);
+
+            if (termAEqualToTermB) {
+              return true;
+            }
+          });
+
+    if (!termPresent) {
+      this.terms.push(term);
+
+      context.debug(`...added the '${termString}' term to the '${equivalenceString}' equivalence.`);
+    }
   }
 
   getType() {
@@ -38,19 +56,6 @@ export default class Equivalence {
     }, null);
 
     return type;
-  }
-
-  matchType(type) {
-    const typeA = type; ///
-
-    type = this.getType();
-
-    const typeB = type; ///
-
-    const typeAEqualToTypeB = typeA.isEqualTo(typeB),
-          typeMatches = typeAEqualToTypeB;  ///
-
-    return typeMatches;
   }
 
   equateTerm(term) {
@@ -112,7 +117,44 @@ export default class Equivalence {
     return variableNodeMatches;
   }
 
+  isDisjointFrom(equivalence) {
+    const disjointFrom = equivalence.everyTerm((term) => {
+      const termEquates = this.equateTerm(term);
+
+      if (!termEquates) {
+        return true;
+      }
+    });
+
+    return disjointFrom;
+  }
+
+  mergedWith(equivalence) {
+    const equivalenceA = this,
+          equivalenceB = equivalence, ///
+          equivalenceATerms = equivalenceA.getTerms(),
+          equivalenceTermsB = equivalenceB.getTerms(),
+          terms = [
+            ...equivalenceATerms,
+            ...equivalenceTermsB
+          ];
+
+    compress(terms, (termA, termB) => {
+      const termAEqualToTermB = termA.isEqualTo(termB);
+
+      if (termAEqualToTermB) {
+        return true;
+      }
+    });
+
+    equivalence = new Equivalence(terms);
+
+    return equivalence;
+  }
+
   someTerm(callback) { return this.terms.some(callback); }
+
+  everyTerm(callback) { return this.terms.every(callback); }
 
   someOtherTerm(term, callback) {
     const termA = term, ///
@@ -201,43 +243,24 @@ export default class Equivalence {
   }
 
   asString() {
-    let string;
-
-    string = this.terms.reduce((string, term) => {
-      const termString = term.getString();
-
-      string = (string === null) ?
-                 termString :
-                    `${string} = ${termString}`;
-
-      return string;
-    }, null);
-
     const type = this.getType(),
-          typeString = type.getString();
+          typeString = type.getString(),
+          termsString = this.terms.reduce((termsString, term) => {
+            const termString = term.getString();
 
-    string = `${string}:${typeString}`;
+            termsString = (termsString === null) ?
+                            termString :
+                             `${termsString} = ${termString}`;
+
+            return termsString;
+          }, null),
+          string = `${termsString}:${typeString}`;
 
     return string;
   }
 
-  static merge(leftEquivalence, rightEquivalence) {
-    const leftEquivalenceTerms = leftEquivalence.getTerms(),
-          rightEquivalenceTerms = rightEquivalence.getTerms(),
-          terms = [
-            ...leftEquivalenceTerms,
-            ...rightEquivalenceTerms
-          ],
-          equivalence = new Equivalence(terms);
-
-    return equivalence;
-  }
-
-  static fromLeftTermAndRightTerm(leftTerm, rightTerm) {
-    const terms = [
-            leftTerm,
-            rightTerm
-          ],
+  static fromEquality(equality) {
+    const terms = equality.getTerms(),
           equivalence = new Equivalence(terms);
 
     return equivalence;

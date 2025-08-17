@@ -123,52 +123,13 @@ class LocalContext {
 
     const equalityReflexive = equality.isReflexive();
 
-    if (equalityReflexive) {
-      equalityAdded = true; ///
-    } else {
-      const leftTerm = equality.getLeftTerm(),
-            rightTerm = equality.getRightTerm(),
-            leftEquivalence = this.findEquivalenceByTerm(leftTerm),
-            rightEquivalence = this.findEquivalenceByTerm(rightTerm);
+    if (!equalityReflexive) {
+      const equivalence = Equivalence.fromEquality(equality);
 
-      if (false) {
-        ///
-      } else if ((leftEquivalence === null) && (rightEquivalence === null)) {
-        const equivalence = Equivalence.fromLeftTermAndRightTerm(leftTerm, rightTerm);
-
-        this.addEquivalence(equivalence, context);
-
-        equalityAdded = true;
-      } else if ((leftEquivalence !== null) && (rightEquivalence === null)) {
-        leftEquivalence.addTerm(rightTerm, context);
-
-        equalityAdded = true;
-      } else if ((leftEquivalence === null) && (rightEquivalence !== null)) {
-        rightEquivalence.addTerm(leftTerm, context);
-
-        equalityAdded = true;
-      } else if ((leftEquivalence !== null) && (rightEquivalence !== null)) {
-        let equivalence;
-
-        if (leftEquivalence === rightEquivalence) {
-          equivalence = leftEquivalence;  ///
-        } else {
-          equivalence = Equivalence.merge(leftEquivalence, rightEquivalence);
-
-          this.removeEquivalence(leftEquivalence, context);
-
-          this.removeEquivalence(rightEquivalence, context);
-
-          this.addEquivalence(equivalence, context);
-        }
-
-        equivalence.addTerm(leftTerm, context);
-
-        equivalence.addTerm(rightTerm, context);
-
-        equalityAdded = true;
-      }
+      this.equivalences = this.equivalences.mergedWithEquivalence(equivalence, context);
     }
+
+    equalityAdded = true;
 
     return equalityAdded;
   }
@@ -187,10 +148,6 @@ class LocalContext {
 
     return variableAdded;
   }
-
-  addEquivalence(equivalence, context) { return this.equivalences.addEquivalence(equivalence, context); }
-
-  removeEquivalence(equivalence, context) { return this.equivalences.removeEquivalence(equivalence, context); }
 
   addStepOrSubproof(stepOrSubproof) {
     this.stepsOrSubproofs.push(stepOrSubproof);
