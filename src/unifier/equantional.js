@@ -8,27 +8,27 @@ const termNodeQuery = nodeQuery("/term");
 
 class EquationalUnifier extends Unifier {
   equateTerms(leftTermNode, rightTermNode, context) {
-    let termsEquated;
+    let termsEquate;
 
     const generalNonTerminalNode = leftTermNode, ///
           specificNonTerminalNode = rightTermNode, ///
           nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, context);
 
-    termsEquated = nonTerminalNodeUnifies; ///
+    termsEquate = nonTerminalNodeUnifies; ///
 
-    return termsEquated;
+    return termsEquate;
   };
 
   equateStatements(statementANode, statementBNode, context) {
-    let statementsEquated;
+    let statementsEquate;
 
     const generalNonTerminalNode = statementANode, ///
           specificNonTerminalNode = statementBNode, ///
           nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, context);
 
-    statementsEquated = nonTerminalNodeUnifies; ///
+    statementsEquate = nonTerminalNodeUnifies; ///
 
-    return statementsEquated;
+    return statementsEquate;
   };
 
   static maps = [

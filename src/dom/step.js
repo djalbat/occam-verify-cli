@@ -106,17 +106,17 @@ export default domAssigned(class Step {
   }
 
   equateWithStatement(statement, context) {
-    let statementEquated;
+    let statementEquates;
 
     const statementA = statement,  ///
           statementB = this.statement,  ///
           statementANode = statementA.getNode(),
           statementBNode = statementB.getNode(),
-          statementsEquated = equationalUnifier.equateStatements(statementANode, statementBNode, context);
+          statementsEquates = equationalUnifier.equateStatements(statementANode, statementBNode, context);
 
-    statementEquated = statementsEquated;  ///
+    statementEquates = statementsEquates;  ///
 
-    return statementEquated;
+    return statementEquates;
   }
 
   unifySatisfiesAssertion(satisfiesAssertion, context) {

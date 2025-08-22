@@ -67,9 +67,9 @@ export default domAssigned(class Equality {
 
     const leftTermNode = this.leftTerm.getNode(),
           rightTermNode = this.rightTerm.getNode(),
-          termsEquated = equationalUnifier.equateTerms(leftTermNode, rightTermNode, context);
+          termsEquates = equationalUnifier.equateTerms(leftTermNode, rightTermNode, context);
 
-    if (termsEquated) {
+    if (termsEquates) {
       equal = true;
     }
 

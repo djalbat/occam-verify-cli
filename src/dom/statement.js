@@ -225,9 +225,9 @@ export default domAssigned(class Statement {
   }
 
   equateWithStepsOrSubproofs(stepsOrSubproofs, context) {
-    let equateDdWithStepsOrSubproofs;
+    let equatesWithStepsOrSubproofs;
 
-    equateDdWithStepsOrSubproofs = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
+    equatesWithStepsOrSubproofs = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
       const statement = this, ///
             statementUnifies = stepOrSubproof.equateWithStatement(statement, context);
 
@@ -236,7 +236,7 @@ export default domAssigned(class Statement {
       }
     });
 
-    return equateDdWithStepsOrSubproofs;
+    return equatesWithStepsOrSubproofs;
   }
 
   toJSON() {
