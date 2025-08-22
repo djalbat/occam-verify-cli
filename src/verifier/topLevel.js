@@ -13,9 +13,9 @@ const errorNodeQuery = nodeQuery("/error"),
       metaLemmaNodeQuery = nodeQuery("/metaLemma"),
       conjectureNodeQuery = nodeQuery("/conjecture"),
       metatheoremNodeQuery = nodeQuery("/metatheorem"),
-      typeDeclarationNodeQuery = nodeQuery("/typeDeclaration"),
       variableDeclarationNodeQuery = nodeQuery("/variableDeclaration"),
       combinatorDeclarationNodeQuery = nodeQuery("/combinatorDeclaration"),
+      simpleTypeDeclarationNodeQuery = nodeQuery("/simpleTypeDeclaration"),
       constructorDeclarationNodeQuery = nodeQuery("/constructorDeclaration"),
       complexTypeDeclarationNodeQuery = nodeQuery("/complexTypeDeclaration"),
       metavariableDeclarationNodeQuery = nodeQuery("/metavariableDeclaration");
@@ -114,16 +114,6 @@ class TopLevelVerifier extends Verifier {
       }
     },
     {
-      nodeQuery: typeDeclarationNodeQuery,
-      verify: (typeDeclarationNode, fileContext) => {
-        const { TypeDeclaration } = dom,
-              typeDeclaration = TypeDeclaration.fromTypeDeclarationNode(typeDeclarationNode, fileContext),
-              typeDeclarationVerifies = typeDeclaration.verify();
-
-        return typeDeclarationVerifies;
-      }
-    },
-    {
       nodeQuery: variableDeclarationNodeQuery,
       verify: (variableDeclarationNode, fileContext) => {
         const { VariableDeclaration } = dom,
@@ -131,6 +121,16 @@ class TopLevelVerifier extends Verifier {
               variableDeclarationVerifies = variableDeclaration.verify();
 
         return variableDeclarationVerifies;
+      }
+    },
+    {
+      nodeQuery: simpleTypeDeclarationNodeQuery,
+      verify: (simpleTypeDeclarationNode, fileContext) => {
+        const { SimpleTypeDeclaration } = dom,
+              simpleTypeDeclaration = SimpleTypeDeclaration.fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, fileContext),
+              simpleTypeDeclarationVerifies = simpleTypeDeclaration.verify();
+
+        return simpleTypeDeclarationVerifies;
       }
     },
     {

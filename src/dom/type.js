@@ -248,21 +248,33 @@ class Type {
     return type;
   }
 
-  static fromTypeDeclarationNode(typeDeclarationNode, fileContext) {
+  static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
+    const typeNode = propertyDeclarationNode.getTypeNode(),
+          type = typeFromTypeNode(typeNode, fileContext);
+
+    return type;
+  }
+
+  static fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, fileContext) {
     const properties = [],
-          provisional = typeDeclarationNode.isProvisional(),
-          typeName = typeDeclarationNode.getTypeName(),
+          provisional = simpleTypeDeclarationNode.isProvisional(),
+          typeName = simpleTypeDeclarationNode.getTypeName(),
           name = typeName,  ///
-          superTypes = superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext),
+          superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, fileContext),
           string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
 
     return type;
   }
 
-  static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
-    const typeNode = propertyDeclarationNode.getTypeNode(),
-          type = typeFromTypeNode(typeNode, fileContext);
+  static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
+    const provisional = complexTypeDeclarationNode.isProvisional(),
+          typeName = complexTypeDeclarationNode.getTypeName(),
+          name = typeName,
+          superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+          properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
+          type = new Type(string, name, superTypes, properties, provisional);
 
     return type;
   }
@@ -284,34 +296,17 @@ class Type {
 
     return type;
   }
-
-  static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
-    const provisional = complexTypeDeclarationNode.isProvisional(),
-          typeName = complexTypeDeclarationNode.getTypeName(),
-          name = typeName,
-          superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
-          properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
-          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
-          type = new Type(string, name, superTypes, properties, provisional);
-
-    return type;
-  }
 }
 
 export default domAssigned(Type);
 
-function superTypesFromTypeDeclarationNode(typeDeclarationNode, fileContext) {
-  const superTypeNodes = typeDeclarationNode.getSuperTypeNodes(),
+function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, fileContext) {
+  const superTypeNodes = simpleTypeDeclarationNode.getSuperTypeNodes(),
         superTypes = superTypeNodes.map((superTypeNode) => {
           const superType = Type.fromTypeNode(superTypeNode, fileContext);
 
           return superType;
-        }),
-        superTypesLength = superTypes.length;
-
-  if (superTypesLength === 0) {
-    superTypes.push(objectType);
-  }
+        });
 
   return superTypes;
 }
@@ -322,12 +317,7 @@ function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fi
           const superType = Type.fromTypeNode(superTypeNode, fileContext);
 
           return superType;
-        }),
-        superTypesLength = superTypes.length;
-
-  if (superTypesLength === 0) {
-    superTypes.push(objectType);
-  }
+        });
 
   return superTypes;
 }
