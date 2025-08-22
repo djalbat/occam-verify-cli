@@ -44,41 +44,41 @@ export default domAssigned(class Reference {
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
   verify(context) {
-    let verified = false;
+    let verifies = false;
 
     const referenceString = this.getString(); ///
 
     context.trace(`Verifying the '${referenceString}' reference...`);
 
-    if (!verified) {
-      const metavariableVerified = this.verifyMetavariable(context);
+    if (!verifies) {
+      const metavariableVerifies = this.verifyMetavariable(context);
 
-      verified = metavariableVerified; ///
+      verifies = metavariableVerifies; ///
     }
 
-    if (!verified) {
+    if (!verifies) {
       const reference = this, ///
             labelPresent = context.isLabelPresentByReference(reference);
 
-      verified = labelPresent;  ///
+      verifies = labelPresent;  ///
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${referenceString}' reference.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyMetavariable(context) {
-    let metavariableVerified;
+    let metavariableVerifies;
 
     const metaType = referenceMetaType, ///
-          metavariableVerifiedGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, context);
+          metavariableVerifiesGivenMetaType = this.metavariable.verifyGivenMetaType(metaType, context);
 
-    metavariableVerified = metavariableVerifiedGivenMetaType; ///
+    metavariableVerifies = metavariableVerifiesGivenMetaType; ///
 
-    return metavariableVerified;
+    return metavariableVerifies;
   }
 
   unifyLabel(label, substitutions, context) {

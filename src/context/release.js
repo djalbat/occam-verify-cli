@@ -447,20 +447,20 @@ export default class ReleaseContext {
   }
 
   verify() {
-    let verified = false;
+    let verifies = false;
 
     const verifiedFileContexts = [],
-          fileContextsVerified = verifyFileContexts(this.fileContexts, verifiedFileContexts);
+          fileContextsVerify = verifyFileContexts(this.fileContexts, verifiedFileContexts);
 
-    if (fileContextsVerified) {
+    if (fileContextsVerify) {
       this.fileContexts = verifiedFileContexts; ///
 
       this.verified = true;
 
-      verified = true;
+      verifies = true;
     }
 
-    return verified;
+    return verifies;
   }
 
   toJSON() {
@@ -477,12 +477,12 @@ export default class ReleaseContext {
   static fromLogNameJSONAndEntries(log, name, json, entries) {
     const lexer = null,
           parser = null,
-          verified = false,
+          verifies = false,
           initialised = false,
           fileContexts = [],
           customGrammar = customGrammarFromNameAndEntries(name, entries),
           dependencyReleaseContexts = null,
-          releaseContext = new ReleaseContext(log, name, json, entries, lexer, parser, verified, initialised, fileContexts, customGrammar, dependencyReleaseContexts);
+          releaseContext = new ReleaseContext(log, name, json, entries, lexer, parser, verifies, initialised, fileContexts, customGrammar, dependencyReleaseContexts);
 
     return releaseContext;
   }
@@ -490,15 +490,15 @@ export default class ReleaseContext {
 
 function verifyFileContexts(fileContexts, verifiedFileContexts) {
   const resolved = resolve(fileContexts, verifiedFileContexts, (fileContext) => {
-          const fileContextVerified = fileContext.verify();
+          const fileContextVerifies = fileContext.verify();
 
-          if (fileContextVerified) {
+          if (fileContextVerifies) {
             return true;
           }
         }),
-        fileContextsVerified = resolved;  ///
+        fileContextsVerify = resolved;  ///
 
-  return fileContextsVerified;
+  return fileContextsVerify;
 }
 
 function fileContextsFromJSON(json,fileContexts, releaseContext) {

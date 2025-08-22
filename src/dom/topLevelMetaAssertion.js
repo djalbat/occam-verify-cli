@@ -63,44 +63,44 @@ export default class TopLevelMetaAssertion {
   }
 
   verify() {
-    let verified = false;
+    let verifies = false;
 
-    const labelVerified = this.verifyLabel();
+    const labelVerifies = this.verifyLabel();
 
-    if (labelVerified) {
+    if (labelVerifies) {
       const localContext = LocalContext.fromFileContext(this.fileContext),
             context = localContext, ///
-            suppositionsVerified = this.suppositions.every((supposition) => {
-              const suppositionVerified = supposition.verify(context);
+            suppositionsVerify = this.suppositions.every((supposition) => {
+              const suppositionVerifies = supposition.verify(context);
 
-              if (suppositionVerified) {
+              if (suppositionVerifies) {
                 return true;
               }
             });
 
-      if (suppositionsVerified) {
-        const deductionVerified = this.deduction.verify(context);
+      if (suppositionsVerify) {
+        const deductionVerifies = this.deduction.verify(context);
 
-        if (deductionVerified) {
+        if (deductionVerifies) {
           if (this.proof === null) {
-            verified = true;
+            verifies = true;
           } else {
-            const proofVerified = this.proof.verify(this.substitutions, this.deduction, context);
+            const proofVerifies = this.proof.verify(this.substitutions, this.deduction, context);
 
-            verified = proofVerified; ///
+            verifies = proofVerifies; ///
           }
         }
       }
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyLabel() {
     const nameOnly = false,
-          labelVerified = this.label.verify(nameOnly);
+          labelVerifies = this.label.verify(nameOnly);
 
-    return labelVerified;
+    return labelVerifies;
   }
 
   toJSON() {

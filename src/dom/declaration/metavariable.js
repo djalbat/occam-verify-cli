@@ -24,32 +24,32 @@ export default domAssigned(class MetavariableDeclaration {
   }
 
   verify() {
-    let verified;
+    let verifies;
 
     const metavariableDeclarationString = this.string; ///
 
     this.fileContext.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
 
-    const metavariableVerified = this.verifyMetavariable(this.metavariable);
+    const metavariableVerifies = this.verifyMetavariable(this.metavariable);
 
-    if (metavariableVerified) {
+    if (metavariableVerifies) {
       this.fileContext.addMetavariable(this.metavariable);
 
-      verified = true;
+      verifies = true;
     }
 
-    if (verified) {
+    if (verifies) {
       this.fileContext.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyType(type) {
-    let typeVerified;
+    let typeVerifies;
 
     if (type === null) {
-      typeVerified = true;
+      typeVerifies = true;
     } else {
       const typeName = type.getName(),
             typeString = type.getString();
@@ -61,19 +61,19 @@ export default domAssigned(class MetavariableDeclaration {
       if (!typePresent) {
         this.fileContext.debug(`The '${typeString}' type is not present.`);
       } else {
-        typeVerified = true;
+        typeVerifies = true;
       }
 
-      if (typeVerified) {
+      if (typeVerifies) {
         this.fileContext.debug(`...verified the '${typeString}' type.`);
       }
     }
 
-    return typeVerified;
+    return typeVerifies;
   }
 
   verifyMetavariable(metavariable) {
-    let metavariableVerified = false;
+    let metavariableVerifies = false;
 
     const metavariableString = metavariable.getString();
 
@@ -92,17 +92,17 @@ export default domAssigned(class MetavariableDeclaration {
         this.fileContext.debug(`The '${metavariableName}' metavariable is already present.`);
       } else {
         const type = metavariable.getType(),
-              typeVerified = this.verifyType(type);
+              typeVerifies = this.verifyType(type);
 
-        metavariableVerified = typeVerified;  ///
+        metavariableVerifies = typeVerifies;  ///
       }
     }
 
-    if (metavariableVerified) {
+    if (metavariableVerifies) {
       this.fileContext.debug(`...verified the '${metavariableString}' metavariable when declared.`);
     }
 
-    return metavariableVerified;
+    return metavariableVerifies;
   }
 
   static name = "MetavariableDeclaration";

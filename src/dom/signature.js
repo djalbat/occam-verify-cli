@@ -25,29 +25,29 @@ export default domAssigned(class Signature {
   }
 
   verify(context) {
-    let verified;
+    let verifies;
 
     const signatureString = this.string;
 
     context.trace(`Verifying the ${signatureString} signature...`);
 
-    verified = this.terms.every((term) => {
-      const termVerified = term.verify(context, () => {
-        const verifiedAhead = true;
+    verifies = this.terms.every((term) => {
+      const termVerifies = term.verify(context, () => {
+        const verifiesAhead = true;
 
-        return verifiedAhead;
+        return verifiesAhead;
       });
 
-      if (termVerified) {
+      if (termVerifies) {
         return true;
       }
     });
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the ${signatureString} signature.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   match(signature, substitutions, generalContext, specificContext) {
@@ -88,7 +88,7 @@ export default domAssigned(class Signature {
   }
 
   correlateSubstitutions(substitutions, context) {
-    let substitutionsCorrelated;
+    let substitutionsCorrelates;
 
     const signatureString = this.string,
           substitutionsString = substitutions.asString();
@@ -105,13 +105,13 @@ export default domAssigned(class Signature {
             }
           });
 
-    substitutionsCorrelated = correlates;  ///
+    substitutionsCorrelates = correlates;  ///
 
-    if (substitutionsCorrelated) {
+    if (substitutionsCorrelates) {
       context.debug(`...correlated the '${substitutionsString}' substitutions against the ${signatureString} signature.`);
     }
 
-    return substitutionsCorrelated;
+    return substitutionsCorrelates;
   }
 
   toJSON() {

@@ -57,9 +57,9 @@ class MetaLevelUnifier extends Unifier {
 
           statementUnifies = metavariable.unifyStatement(statement, substitution, substitutions, generalContext, specificContext);
         } else {
-          const childNodesUnifies = unifyChildNodes(generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext);
+          const childNodesUnify = unifyChildNodes(generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext);
 
-          statementUnifies = childNodesUnifies; ///
+          statementUnifies = childNodesUnify; ///
         }
 
         return statementUnifies;
@@ -157,8 +157,7 @@ function unifyChildNodes(generalStatementNode, specificStatementNode, substituti
         specificNonTerminalNodeChildNodes = specificNonTerminalNode.getChildNodes(),
         generalChildNodes = generalNonTerminalNodeChildNodes, ///
         specificChildNodes = specificNonTerminalNodeChildNodes, ///
-        childNodesVerified = metaLevelUnifier.unifyChildNodes(generalChildNodes, specificChildNodes, substitutions, generalContext, specificContext),
-        childNodesUnifies = childNodesVerified; ///
+        childNodesUnify = metaLevelUnifier.unifyChildNodes(generalChildNodes, specificChildNodes, substitutions, generalContext, specificContext);
 
-  return childNodesUnifies;
+  return childNodesUnify;
 }

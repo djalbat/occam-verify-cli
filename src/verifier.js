@@ -7,33 +7,33 @@ const nonTerminalNodeQuery = nodeQuery("/*");
 
 export default class Verifier {
   verify(node, ...remainingArguments) {
-    let verified;
+    let verifies;
 
-    const nodeVerified = this.verifyNode(node, ...remainingArguments);
+    const nodeVerifies = this.verifyNode(node, ...remainingArguments);
 
-    verified = nodeVerified;  ///
+    verifies = nodeVerifies;  ///
 
-    return verified;
+    return verifies;
   }
 
   verifyNode(node, ...remainingArguments) {
-    let nodeVerified;
+    let nodeVerifies;
 
     const nodeTerminalNode = node.isTerminalNode();
 
     if (nodeTerminalNode) {
       const terminalNode = node,  ///
-            terminalNodeVerified = this.verifyTerminalNode(terminalNode, ...remainingArguments);
+            terminalNodeVerifies = this.verifyTerminalNode(terminalNode, ...remainingArguments);
 
-      nodeVerified = terminalNodeVerified;  ///
+      nodeVerifies = terminalNodeVerifies;  ///
     } else {
       const nonTerminalNode = node,  ///
-            nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNode, ...remainingArguments);
+            nonTerminalNodeVerifies = this.verifyNonTerminalNode(nonTerminalNode, ...remainingArguments);
 
-      nodeVerified = nonTerminalNodeVerified; ///
+      nodeVerifies = nonTerminalNodeVerifies; ///
     }
 
-    return nodeVerified;
+    return nodeVerifies;
   }
 
   verifyChildNodes(childNodes, ...remainingArguments) {
@@ -49,9 +49,9 @@ export default class Verifier {
     } else {
       childNodesVerify = childNodes.every((childNode) => {
         const node = childNode, ///
-              nodeVerified = this.verifyNode(node, ...remainingArguments);
+              nodeVerifies = this.verifyNode(node, ...remainingArguments);
 
-        if (nodeVerified) {
+        if (nodeVerifies) {
           return true;
         }
       });
@@ -61,26 +61,26 @@ export default class Verifier {
   }
 
   verifyTerminalNode(terminalNode, ...remainingArguments) {
-    let terminalNodeVerified;
+    let terminalNodeVerifies;
 
     const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
 
     if (lastRemainingArgumentFunction) {
       const verifyAhead = remainingArguments.pop(), ///
-            verifiedAhead = verifyAhead();
+            verifiesAhead = verifyAhead();
 
-      terminalNodeVerified = verifiedAhead; ///
+      terminalNodeVerifies = verifiesAhead; ///
 
       remainingArguments.push(verifyAhead);
     } else {
-      terminalNodeVerified = true;
+      terminalNodeVerifies = true;
     }
 
-    return terminalNodeVerified;
+    return terminalNodeVerifies;
   }
 
   verifyNonTerminalNode(nonTerminalNode, ...remainingArguments) {
-    let nonTerminalNodeVerified;
+    let nonTerminalNodeVerifies;
 
     let { maps } = this.constructor;
 
@@ -89,19 +89,19 @@ export default class Verifier {
       {
         nodeQuery: nonTerminalNodeQuery,
         verify: (node, ...remainingArguments) => {
-          let nonTerminalNodeVerified;
+          let nonTerminalNodeVerifies;
 
           const childNodes = nonTerminalNode.getChildNodes(), ///
                 childNodesVerify = this.verifyChildNodes(childNodes, ...remainingArguments);
 
-          nonTerminalNodeVerified = childNodesVerify; ///
+          nonTerminalNodeVerifies = childNodesVerify; ///
 
-          return nonTerminalNodeVerified;
+          return nonTerminalNodeVerifies;
         }
       }
     ]
 
-    let nodeVerified = false;
+    let nodeVerifies = false;
 
     maps.some((map) => {
       const { nodeQuery, verify } = map;
@@ -109,15 +109,15 @@ export default class Verifier {
       const node = nodeQuery(nonTerminalNode);
 
       if (node !== null) {
-        nodeVerified = verify(node, ...remainingArguments);
+        nodeVerifies = verify(node, ...remainingArguments);
 
         return true;
       }
     });
 
-    nonTerminalNodeVerified = nodeVerified; ///
+    nonTerminalNodeVerifies = nodeVerifies; ///
 
-    return nonTerminalNodeVerified;
+    return nonTerminalNodeVerifies;
   }
 
   verifyChildNodesAhead(index, childNodes, ...remainingArguments) {
@@ -127,13 +127,13 @@ export default class Verifier {
           childNodesLength = childNodes.length;
 
     if (index === childNodesLength) {
-      const verifiedAhead = verifyAhead();
+      const verifiesAhead = verifyAhead();
 
-      childNodesVerify = verifiedAhead; ///
+      childNodesVerify = verifiesAhead; ///
     } else {
       const childNode = childNodes[index],
             node = childNode, ///
-            nodeVerified = this.verifyNode(node, ...remainingArguments, () => {
+            nodeVerifies = this.verifyNode(node, ...remainingArguments, () => {
               remainingArguments.push(verifyAhead);
 
               const aheadIndex = index + 1,
@@ -142,7 +142,7 @@ export default class Verifier {
               return childNodesVerifyAhead;
             });
 
-      childNodesVerify = nodeVerified;  ///
+      childNodesVerify = nodeVerifies;  ///
     }
 
     return childNodesVerify;

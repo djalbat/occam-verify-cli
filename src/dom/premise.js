@@ -27,7 +27,7 @@ export default domAssigned(class Premise {
   }
 
   verify(context) {
-    let verified = false;
+    let verifies = false;
 
     const premiseString = this.string; ///
 
@@ -38,9 +38,9 @@ export default domAssigned(class Premise {
     } else if (this.statement !== null) {
       const stated = true,
             assignments = [],
-            statementVerified = this.statement.verify(assignments, stated, context);
+            statementVerifies = this.statement.verify(assignments, stated, context);
 
-      if (statementVerified) {
+      if (statementVerifies) {
         const assignmentsAssigned = assignAssignments(assignments, context);
 
         if (assignmentsAssigned) {
@@ -50,26 +50,26 @@ export default domAssigned(class Premise {
 
           context.addStepOrSubproof(stepOrSubproof);
 
-          verified = true;
+          verifies = true;
         }
       }
     } else if (this.procedureCall !== null) {
       const stated = true,
             assignments = null,
-            procedureCallVerified = this.procedureCall.verify(assignments, stated, context);
+            procedureCallVerifies = this.procedureCall.verify(assignments, stated, context);
 
-      if (procedureCallVerified) {
-        verified = true;
+      if (procedureCallVerifies) {
+        verifies = true;
       }
     } else {
       context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`);
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${premiseString}' premise.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   unifyIndependently(substitutions, context) {

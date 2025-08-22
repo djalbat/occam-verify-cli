@@ -38,7 +38,7 @@ export default domAssigned(class ProcedureCall {
   }
 
   verify(assignments, stated, context) {
-    let verified = false;
+    let verifies = false;
 
     const procedureCallString = this.string; ///
 
@@ -50,7 +50,7 @@ export default domAssigned(class ProcedureCall {
       const procedureBoolean = procedure.isBoolean();
 
       if (procedureBoolean) {
-        verified = true;
+        verifies = true;
       } else {
         context.trace(`The '${procedureCallString}' procedure is not boolean.`);
       }
@@ -58,11 +58,11 @@ export default domAssigned(class ProcedureCall {
       context.trace(`The '${procedureCallString}' procedure is not present.`);
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${procedureCallString}' procedure call.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   unifyIndependently(substitutions, context) {

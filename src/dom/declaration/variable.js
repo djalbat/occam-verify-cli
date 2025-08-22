@@ -24,33 +24,33 @@ export default domAssigned(class VariableDeclaration {
   }
 
   verify() {
-    let verified = false;
+    let verifies = false;
 
     const variableDeclarationString = this.getString();
 
     this.fileContext.trace(`Verifying the '${variableDeclarationString}' variable declaration...`);
 
-    const variableTypeVerified = this.verifyVariableType();
+    const variableTypeVerifies = this.verifyVariableType();
 
-    if (variableTypeVerified) {
-      const variableVerified = this.verifyVariable();
+    if (variableTypeVerifies) {
+      const variableVerifies = this.verifyVariable();
 
-      if (variableVerified) {
+      if (variableVerifies) {
         this.fileContext.addVariable(this.variable);
 
-        verified = true;
+        verifies = true;
       }
     }
 
-    if (verified) {
+    if (verifies) {
       this.fileContext.debug(`...verified the '${variableDeclarationString}' variable declaration.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyVariable() {
-    let  variableVerified = false;
+    let  variableVerifies = false;
 
     const variableString = this.variable.getString();
 
@@ -62,18 +62,18 @@ export default domAssigned(class VariableDeclaration {
     if (variablePresent) {
       this.fileContext.debug(`The '${variableName}' variable is already present.`);
     } else {
-      variableVerified = true;
+      variableVerifies = true;
     }
 
-    if ( variableVerified) {
+    if ( variableVerifies) {
       this.fileContext.debug(`...verified the '${variableString}' variable.`);
     }
 
-    return  variableVerified;
+    return  variableVerifies;
   }
 
   verifyVariableType() {
-    let variableTypeVerified = false;
+    let variableTypeVerifies = false;
 
     let type;
 
@@ -103,15 +103,15 @@ export default domAssigned(class VariableDeclaration {
       } else {
         this.variable.setType(type);
 
-        variableTypeVerified = true;
+        variableTypeVerifies = true;
       }
     }
 
-    if (variableTypeVerified) {
+    if (variableTypeVerifies) {
       this.fileContext.debug(`...verified the '${typeString}' type.`);
     }
 
-    return variableTypeVerified;
+    return variableTypeVerifies;
   }
 
   static name = "VariableDeclaration";

@@ -38,9 +38,9 @@ class TermWithConstructorUnifier extends Unifier {
                 term = Term.fromTermNode(termNode, context),
                 generalContext = context, ///
                 specificContext = context,  ///
-                termVerifiedGivenType = term.verifyGivenType(type, generalContext, specificContext);
+                termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
-          if (termVerifiedGivenType) {
+          if (termVerifiesGivenType) {
             unifies = true;
           }
         }

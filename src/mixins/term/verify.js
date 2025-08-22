@@ -30,7 +30,7 @@ function unifyWithConstructors(term, context, verifyAhead) {
 }
 
 function verifyTermAsVariable(term, localContext, verifyAhead) {
-  let termVerifiedAsVariable = false;
+  let termVerifiesAsVariable = false;
 
   const { Variable } = dom,
         context = localContext, ///
@@ -44,10 +44,10 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
 
     localContext.trace(`Verifying the '${termString}' term as a variable...`);
 
-    const variableVerified = variable.verify(localContext);
+    const variableVerifies = variable.verify(localContext);
 
-    if (variableVerified) {
-      let verifiedAhead;
+    if (variableVerifies) {
+      let verifiesAhead;
 
       const variableName = variable.getName();
 
@@ -57,17 +57,17 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
 
       term.setType(type);
 
-      verifiedAhead = verifyAhead();
+      verifiesAhead = verifyAhead();
 
-      termVerifiedAsVariable = verifiedAhead; ///
+      termVerifiesAsVariable = verifiesAhead; ///
     }
 
-    if (termVerifiedAsVariable) {
+    if (termVerifiesAsVariable) {
       localContext.debug(`...verified the '${termString}' term as a variable.`);
     }
   }
 
-  return termVerifiedAsVariable;
+  return termVerifiesAsVariable;
 }
 
 const verifyMixins = [

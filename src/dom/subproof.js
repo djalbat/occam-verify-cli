@@ -63,29 +63,29 @@ export default domAssigned(class Subproof {
   }
 
   verify(substitutions, assignments, context) {
-    let subproofVerified = false;
+    let subproofVerifies = false;
 
     const localContext = LocalContext.fromContext(context);  ///
 
     context = localContext; ///
 
-    const suppositionsVerified = this.suppositions.every((supposition) => {
-      const suppositionVerified = supposition.verify(context);
+    const suppositionsVerify = this.suppositions.every((supposition) => {
+      const suppositionVerifies = supposition.verify(context);
 
-      if (suppositionVerified) {
+      if (suppositionVerifies) {
         return true;
       }
     });
 
-    if (suppositionsVerified) {
-      const subDerivationVerified = this.subDerivation.verify(substitutions, context);
+    if (suppositionsVerify) {
+      const subDerivationVerifies = this.subDerivation.verify(substitutions, context);
 
-      if (subDerivationVerified) {
-        subproofVerified = true;
+      if (subDerivationVerifies) {
+        subproofVerifies = true;
       }
     }
 
-    return subproofVerified;
+    return subproofVerifies;
   }
 
   equateWithStatement(statement, context) {

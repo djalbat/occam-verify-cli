@@ -6,7 +6,7 @@ import { domAssigned } from "../dom";
 
 export default domAssigned(class MetaLemma extends TopLevelMetaAssertion {
   verify() {
-    let verified;
+    let verifies;
 
     const metaLemma = this, ///
           fileContext = this.getFileContext(),
@@ -14,9 +14,9 @@ export default domAssigned(class MetaLemma extends TopLevelMetaAssertion {
 
     fileContext.trace(`Verifying the '${metaLemmaString}' meta-lemma...`);
 
-    verified = super.verify();
+    verifies = super.verify();
 
-    if (verified) {
+    if (verifies) {
       const metaTheorem = this; ///
 
       fileContext.addMetatheorem(metaTheorem);
@@ -24,7 +24,7 @@ export default domAssigned(class MetaLemma extends TopLevelMetaAssertion {
       fileContext.debug(`...verified the '${metaLemmaString}' meta-lemma.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   static name = "MetaLemma";

@@ -48,58 +48,58 @@ export default domAssigned(class Declaration {
   }
 
   verify(assignments, stated, context) {
-    let verified = false;
+    let verifies = false;
 
     const declarationString = this.string;  ///
 
     context.trace(`Verifying the '${declarationString}' declaration...`);
 
-    const referenceVerified = this.verifyReference(assignments, stated, context);
+    const referenceVerifies = this.verifyReference(assignments, stated, context);
 
-    if (referenceVerified) {
-      const statementVerified = this.verifyStatement(assignments, stated, context);
+    if (referenceVerifies) {
+      const statementVerifies = this.verifyStatement(assignments, stated, context);
 
-      if (statementVerified) {
-        let verifiedWhenStated = false,
-            verifiedWhenDerived = false;
+      if (statementVerifies) {
+        let verifiesWhenStated = false,
+            verifiesWhenDerived = false;
 
         if (stated) {
-          verifiedWhenStated = this.verifyWhenStated(assignments, context);
+          verifiesWhenStated = this.verifyWhenStated(assignments, context);
         } else {
-          verifiedWhenDerived = this.verifyWhenDerived(context);
+          verifiesWhenDerived = this.verifyWhenDerived(context);
         }
 
-        if (verifiedWhenStated || verifiedWhenDerived) {
-          verified = true;
+        if (verifiesWhenStated || verifiesWhenDerived) {
+          verifies = true;
         }
       }
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${declarationString}' declaration.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyReference(assignments, stated, context) {
-    let referenceVerified;
+    let referenceVerifies;
 
     const referenceString = this.reference.getString();
 
     context.trace(`Verifying the '${referenceString}' reference...`);
 
-    referenceVerified = this.reference.verify(context);
+    referenceVerifies = this.reference.verify(context);
 
-    if (referenceVerified) {
+    if (referenceVerifies) {
       context.debug(`...verified the '${referenceString}' reference.`);
     }
 
-    return referenceVerified;
+    return referenceVerifies;
   }
 
   verifyStatement(assignments, stated, context) {
-    let statementVerified;
+    let statementVerifies;
 
     const statementString = this.statement.getString();
 
@@ -109,17 +109,17 @@ export default domAssigned(class Declaration {
 
     assignments = null; ///
 
-    statementVerified = this.statement.verify(assignments, stated, context);
+    statementVerifies = this.statement.verify(assignments, stated, context);
 
-    if (statementVerified) {
+    if (statementVerifies) {
       context.debug(`...verified the '${statementString}' statement.`);
     }
 
-    return statementVerified;
+    return statementVerifies;
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiedWhenStated;
+    let verifiesWhenStated;
 
     const declarationString = this.string;  ///
 
@@ -128,10 +128,10 @@ export default domAssigned(class Declaration {
     const metavariablePresent = context.isMetavariablePresentByReference(this.reference);
 
     if (metavariablePresent) {
-      verifiedWhenStated = true;
+      verifiesWhenStated = true;
     } else {
       const metaLemmaMetatheorems = context.findMetaLemmaMetatheoremsByReference(this.reference),
-            metaLemmaMetatheoremsUnifies = metaLemmaMetatheorems.every((metaLemmaMetatheorem) => {
+            metaLemmaMetatheoremsUnify = metaLemmaMetatheorems.every((metaLemmaMetatheorem) => {
               const metaLemmaMetatheoremUnifies = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
 
               if (metaLemmaMetatheoremUnifies) {
@@ -139,18 +139,18 @@ export default domAssigned(class Declaration {
               }
             });
 
-      verifiedWhenStated = metaLemmaMetatheoremsUnifies; ///
+      verifiesWhenStated = metaLemmaMetatheoremsUnify; ///
     }
 
-    if (verifiedWhenStated) {
+    if (verifiesWhenStated) {
       context.debug(`...verified the '${declarationString}' stated declaration.`);
     }
 
-    return verifiedWhenStated;
+    return verifiesWhenStated;
   }
 
   verifyWhenDerived(context) {
-    let verifiedWhenDerived;
+    let verifiesWhenDerived;
 
     const declarationString = this.string;  ///
 
@@ -158,13 +158,13 @@ export default domAssigned(class Declaration {
 
     const metaLemmaMetatheoremPresent = context.isMetaLemmaMetatheoremPresentByReference(this.reference);
 
-    verifiedWhenDerived = metaLemmaMetatheoremPresent; ///
+    verifiesWhenDerived = metaLemmaMetatheoremPresent; ///
 
-    if (verifiedWhenDerived) {
+    if (verifiesWhenDerived) {
       context.debug(`...verified the '${declarationString}' derived declaration.`);
     }
 
-    return verifiedWhenDerived;
+    return verifiesWhenDerived;
   }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {

@@ -29,96 +29,96 @@ export default domAssigned(class Judgement {
   getMetavariable() { return this.frame.getMetavariable(); }
 
   verify(assignments, stated, context) {
-    let verified = false;
+    let verifies = false;
 
     const judgementString = this.string;  ///
 
     context.trace(`Verifying the '${judgementString}' judgement...`);
 
-    const frameVerified = this.verifyFrame(assignments, stated, context);
+    const frameVerifies = this.verifyFrame(assignments, stated, context);
 
-    if (frameVerified) {
-      const declarationVerified = this.verifyDeclaration(assignments, stated, context);
+    if (frameVerifies) {
+      const declarationVerifies = this.verifyDeclaration(assignments, stated, context);
 
-      if (declarationVerified) {
-        let verifiedWhenStated = false,
-            verifiedWhenDerived = false;
+      if (declarationVerifies) {
+        let verifiesWhenStated = false,
+            verifiesWhenDerived = false;
 
         if (stated) {
-          verifiedWhenStated = this.verifyWhenStated(assignments, context);
+          verifiesWhenStated = this.verifyWhenStated(assignments, context);
         } else {
-          verifiedWhenDerived = this.verifyWhenDerived(context);
+          verifiesWhenDerived = this.verifyWhenDerived(context);
         }
 
-        if (verifiedWhenStated || verifiedWhenDerived) {
-          verified = true;
+        if (verifiesWhenStated || verifiesWhenDerived) {
+          verifies = true;
         }
       }
     }
 
-    if (verified) {
+    if (verifies) {
       if (stated) {
         this.assign(assignments, context);
       }
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${judgementString}' judgement.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyFrame(assignments, stated, context) {
-    let frameVerified;
+    let frameVerifies;
 
     const frameString = this.frame.getString();
 
     context.trace(`Verifying the '${frameString}' frame...`);
 
-    frameVerified = this.frame.verify(assignments, stated, context);
+    frameVerifies = this.frame.verify(assignments, stated, context);
 
-    if (frameVerified) {
+    if (frameVerifies) {
       context.debug(`...verified the '${frameString}' frame.`);
     }
 
-    return frameVerified;
+    return frameVerifies;
   }
 
   verifyDeclaration(assignments, stated, context) {
-    let declarationVerified;
+    let declarationVerifies;
 
     const declarationString = this.declaration.getString();
 
     context.trace(`Verifying the '${declarationString}' declaration...`);
 
-    declarationVerified = this.declaration.verify(assignments, stated, context);
+    declarationVerifies = this.declaration.verify(assignments, stated, context);
 
-    if (declarationVerified) {
+    if (declarationVerifies) {
       context.debug(`...verified the '${declarationString}' declaration.`);
     }
 
-    return declarationVerified;
+    return declarationVerifies;
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiedWhenStated;
+    let verifiesWhenStated;
 
     const judgementString = this.string;  ///
 
     context.trace(`Verifying the '${judgementString}' stated judgement...`);
 
-    verifiedWhenStated = true;
+    verifiesWhenStated = true;
 
-    if (verifiedWhenStated) {
+    if (verifiesWhenStated) {
       context.debug(`...verified the '${judgementString}' stated judgement.`);
     }
 
-    return verifiedWhenStated;
+    return verifiesWhenStated;
   }
 
   verifyWhenDerived(context) {
-    let verifiedWhenDerived;
+    let verifiesWhenDerived;
 
     const judgementString = this.string;  ///
 
@@ -129,13 +129,13 @@ export default domAssigned(class Judgement {
           substitutions = metaLemmaMetatheorem.getSubstitutions(),
           substitutionsMatch = this.frame.matchSubstitutions(substitutions, context);
 
-    verifiedWhenDerived = substitutionsMatch;
+    verifiesWhenDerived = substitutionsMatch;
 
-    if (verifiedWhenDerived) {
+    if (verifiesWhenDerived) {
       context.debug(`...verified the '${judgementString}' derived judgement.`);
     }
 
-    return verifiedWhenDerived;
+    return verifiesWhenDerived;
   }
 
   assign(assignments, context) {

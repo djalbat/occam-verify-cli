@@ -96,30 +96,30 @@ export default domAssigned(class Statement {
   }
 
   verify(assignments, stated, context) {
-    let verified;
+    let verifies;
 
     const statementString = this.string;  ///
 
     context.trace(`Verifying the '${statementString}' statement...`);
 
-    verified = verifyMixins.some((verifyMixin) => {
+    verifies = verifyMixins.some((verifyMixin) => {
       const statement = this, ///
-            verified = verifyMixin(statement, assignments, stated, context);
+            verifies = verifyMixin(statement, assignments, stated, context);
 
-      if (verified) {
+      if (verifies) {
         return true;
       }
     });
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${statementString}' statement.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyGivenMetaType(metaType, assignments, stated, context) {
-    let verifiedGivenMetaType = false;
+    let verifiesGivenMetaType = false;
 
     const metaTypeString = metaType.getString(),
           statementString = this.string;  ///
@@ -129,16 +129,16 @@ export default domAssigned(class Statement {
     const metaTypeName = metaType.getName();
 
     if (metaTypeName === STATEMENT_META_TYPE_NAME) {
-      const verified = this.verify(assignments, stated, context)
+      const verifies = this.verify(assignments, stated, context)
 
-      verifiedGivenMetaType = verified; ///
+      verifiesGivenMetaType = verifies; ///
     }
 
-    if (verifiedGivenMetaType) {
+    if (verifiesGivenMetaType) {
       context.debug(`...verified the '${statementString}' statement given the '${metaTypeString}' meta-type.`);
     }
 
-    return verifiedGivenMetaType;
+    return verifiesGivenMetaType;
   }
 
   unifySubproof(subproof, substitutions, generalContext, specificContext) {

@@ -64,7 +64,7 @@ export default domAssigned(class Rule {
   }
 
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {
-    let statementAndStepsOrSubproofsUnifies = false;
+    let statementAndStepsOrSubproofsUnify = false;
 
     const localContext = LocalContext.fromFileContext(this.fileContext),
           generalContext = localContext, ///
@@ -74,18 +74,18 @@ export default domAssigned(class Rule {
           statementUnifiesWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifiesWithConclusion) {
-      const stepsOrSubproofsUnifiesWithPremises = this.unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, generalContext, specificContext);
+      const stepsOrSubproofsUnifyWithPremises = this.unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, generalContext, specificContext);
 
-      if (stepsOrSubproofsUnifiesWithPremises) {
+      if (stepsOrSubproofsUnifyWithPremises) {
         const substitutionsResolved = substitutions.areResolved();
 
         if (substitutionsResolved) {
-          statementAndStepsOrSubproofsUnifies = true;
+          statementAndStepsOrSubproofsUnify = true;
         }
       }
     }
 
-    return statementAndStepsOrSubproofsUnifies;
+    return statementAndStepsOrSubproofsUnify;
   }
 
   unifyStatementWithConclusion(statement, substitutions, generalContext, specificContext) {
@@ -103,7 +103,7 @@ export default domAssigned(class Rule {
   unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, generalContext, specificContext) {
     stepsOrSubproofs = reverse(stepsOrSubproofs); ///
 
-    const stepsOrSubproofsUnifiesWithPremises = backwardsEvery(this.premises, (premise) => {
+    const stepsOrSubproofsUnifyWithPremises = backwardsEvery(this.premises, (premise) => {
       const stepUnifiesWithPremise = this.unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, generalContext, specificContext);
 
       if (stepUnifiesWithPremise) {
@@ -111,22 +111,22 @@ export default domAssigned(class Rule {
       }
     });
 
-    return stepsOrSubproofsUnifiesWithPremises;
+    return stepsOrSubproofsUnifyWithPremises;
   }
 
   unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, generalContext, specificContext) {
-    let stepsOrSubproofsUnifiesWithPremise = false;
+    let stepsOrSubproofsUnifyWithPremise = false;
 
-    if (!stepsOrSubproofsUnifiesWithPremise) {
+    if (!stepsOrSubproofsUnifyWithPremise) {
       const context = specificContext,  ///
             premiseUnifiesIndependently = premise.unifyIndependently(substitutions, context);
 
       if (premiseUnifiesIndependently) {
-        stepsOrSubproofsUnifiesWithPremise = true;
+        stepsOrSubproofsUnifyWithPremise = true;
       }
     }
 
-    if (!stepsOrSubproofsUnifiesWithPremise) {
+    if (!stepsOrSubproofsUnifyWithPremise) {
       const stepOrSubproof = extract(stepsOrSubproofs, (stepOrSubproof) => {
         const stepOrSubproofUnifies = premise.unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext);
 
@@ -136,73 +136,73 @@ export default domAssigned(class Rule {
       }) || null;
 
       if (stepOrSubproof !== null) {
-        stepsOrSubproofsUnifiesWithPremise = true;
+        stepsOrSubproofsUnifyWithPremise = true;
       }
     }
 
-    return stepsOrSubproofsUnifiesWithPremise;
+    return stepsOrSubproofsUnifyWithPremise;
   }
 
   verify() {
-    let verified = false;
+    let verifies = false;
 
     const ruleString = this.string; ///
 
     this.fileContext.trace(`Verifying the '${ruleString}' rule...`);
 
-    const labelsVerified = this.verifyLabels();
+    const labelsVerify = this.verifyLabels();
 
-    if (labelsVerified) {
+    if (labelsVerify) {
       const context = LocalContext.fromFileContext(this.fileContext),
-            premisesVerified = this.premises.every((premise) => {
-              const premiseVerified = premise.verify(context);
+            premisesVerify = this.premises.every((premise) => {
+              const premiseVerifies = premise.verify(context);
 
-              if (premiseVerified) {
+              if (premiseVerifies) {
                 return true;
               }
             });
 
-      if (premisesVerified) {
-        const conclusionVerified = this.conclusion.verify(context);
+      if (premisesVerify) {
+        const conclusionVerifies = this.conclusion.verify(context);
 
-        if (conclusionVerified) {
-          let proofVerified = true; ///
+        if (conclusionVerifies) {
+          let proofVerifies = true; ///
 
           if (this.proof !== null) {
             const substitutions = Substitutions.fromNothing();
 
-            proofVerified = this.proof.verify(substitutions, this.conclusion, context);
+            proofVerifies = this.proof.verify(substitutions, this.conclusion, context);
           }
 
-          if (proofVerified) {
+          if (proofVerifies) {
             const rule = this;  ///
 
             this.fileContext.addRule(rule);
 
-            verified = true;
+            verifies = true;
           }
         }
       }
     }
 
-    if (verified) {
+    if (verifies) {
       this.fileContext.debug(`...verified the '${ruleString}' rule.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyLabels() {
-    const labelsVerified = this.labels.every((label) => {
+    const labelsVerify = this.labels.every((label) => {
       const nameOnly = true,
-            labelVerified = label.verify(nameOnly);
+            labelVerifies = label.verify(nameOnly);
 
-      if (labelVerified) {
+      if (labelVerifies) {
         return true;
       }
     });
 
-    return labelsVerified;
+    return labelsVerify;
   }
 
   toJSON() {

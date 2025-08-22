@@ -77,108 +77,108 @@ export default domAssigned(class Equality {
   }
 
   verify(assignments, stated, context) {
-    let verified = false;
+    let verifies = false;
 
     const equalityString = this.string; ///
 
     context.trace(`Verifying the '${equalityString}' equality...`);
 
-    const termsVerified = this.verifyTerms(context);
+    const termsVerify = this.verifyTerms(context);
 
-    if (termsVerified) {
-      let verifiedWhenStated = false,
-          verifiedWhenDerived = false;
+    if (termsVerify) {
+      let verifiesWhenStated = false,
+          verifiesWhenDerived = false;
 
       if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(assignments, context);
+        verifiesWhenStated = this.verifyWhenStated(assignments, context);
       } else {
-        verifiedWhenDerived = this.verifyWhenDerived(context);
+        verifiesWhenDerived = this.verifyWhenDerived(context);
       }
 
-      if (verifiedWhenStated || verifiedWhenDerived) {
-        verified = true;
+      if (verifiesWhenStated || verifiesWhenDerived) {
+        verifies = true;
       }
     }
 
-    if (verified) {
+    if (verifies) {
 
         this.assign(assignments, context);
 
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${equalityString}' equality.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyTerms(context) {
-    let termsVerified;
+    let termsVerify;
 
     const equalityString = this.string; ///
 
     context.trace(`Verifying the '${equalityString}' equality's terms...`);
 
-    const leftTermVerified = this.leftTerm.verify(context, () => {
-      let verifiedAhead;
+    const leftTermVerifies = this.leftTerm.verify(context, () => {
+      let verifiesAhead;
 
-      const rightTermVerified = this.rightTerm.verify(context, () => {
-        let verifiedAhead;
+      const rightTermVerifies = this.rightTerm.verify(context, () => {
+        let verifiesAhead;
 
         const leftTermType = this.leftTerm.getType(),
               rightTermType = this.rightTerm.getType(),
               leftTermTypeComparableToRightTermType = leftTermType.isComparableTo(rightTermType);
 
-        verifiedAhead = leftTermTypeComparableToRightTermType;  ///
+        verifiesAhead = leftTermTypeComparableToRightTermType;  ///
 
-        return verifiedAhead;
+        return verifiesAhead;
       });
 
-      verifiedAhead = rightTermVerified; ///
+      verifiesAhead = rightTermVerifies; ///
 
-      return verifiedAhead;
+      return verifiesAhead;
     });
 
-    termsVerified = leftTermVerified; ///
+    termsVerify = leftTermVerifies; ///
 
-    if (termsVerified) {
+    if (termsVerify) {
       context.debug(`...verified the '${equalityString}' equality's terms.`);
     }
 
-    return termsVerified;
+    return termsVerify;
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiedWhenStated;
+    let verifiesWhenStated;
 
     const equalityString = this.string; ///
 
     context.trace(`Verifying the '${equalityString}' stated equality...`);
 
-    verifiedWhenStated = true;
+    verifiesWhenStated = true;
 
-    if (verifiedWhenStated) {
+    if (verifiesWhenStated) {
       context.debug(`...verified the '${equalityString}' stated equality.`);
     }
 
-    return verifiedWhenStated;
+    return verifiesWhenStated;
   }
 
   verifyWhenDerived(context) {
-    let verifiedWhenDerived;
+    let verifiesWhenDerived;
 
     const equalityString = this.string; ///
 
     context.trace(`Verifying the '${equalityString}' derived equality...`);
 
-    verifiedWhenDerived = true;  ///
+    verifiesWhenDerived = true;  ///
 
-    if (verifiedWhenDerived) {
+    if (verifiesWhenDerived) {
       context.debug(`...verified the '${equalityString}' derived equality.`);
     }
 
-    return verifiedWhenDerived;
+    return verifiesWhenDerived;
   }
 
   assign(assignments, context) {

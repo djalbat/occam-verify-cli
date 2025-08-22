@@ -25,44 +25,44 @@ export default domAssigned(class TypeAssertion {
   }
 
   verify(assignments, stated, context) {
-    let verified = false;
+    let verifies = false;
 
     let typeAssertionString = this.string;  ///
 
     context.trace(`Verifying the '${typeAssertionString}' type assertion...`);
 
-    const typeVerified = this.verifyType(context);
+    const typeVerifies = this.verifyType(context);
 
-    if (typeVerified) {
-      let verifiedWhenStated = false,
-          verifiedWhenDerived = false;
+    if (typeVerifies) {
+      let verifiesWhenStated = false,
+          verifiesWhenDerived = false;
 
       if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(assignments, context);
+        verifiesWhenStated = this.verifyWhenStated(assignments, context);
       } else {
-        verifiedWhenDerived = this.verifyWhenDerived(context);
+        verifiesWhenDerived = this.verifyWhenDerived(context);
       }
 
-      if (verifiedWhenStated || verifiedWhenDerived) {
-        verified = true;
+      if (verifiesWhenStated || verifiesWhenDerived) {
+        verifies = true;
       }
     }
 
-    if (verified) {
+    if (verifies) {
       if (stated) {
         this.assign(assignments, context);
       }
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${typeAssertionString}' type assertion.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyType(context) {
-    let typeVerified;
+    let typeVerifies;
 
     const typeString = this.type.getString();
 
@@ -73,58 +73,58 @@ export default domAssigned(class TypeAssertion {
     if (type !== null) {
       this.type = type;
 
-      typeVerified = true;
+      typeVerifies = true;
     } else {
       context.debug(`The '${typeString}' type is not present.`);
     }
 
-    if (typeVerified) {
+    if (typeVerifies) {
       context.debug(`...verified the '${typeString}' type.`);
     }
 
-    return typeVerified;
+    return typeVerifies;
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiedWhenStated = false;
+    let verifiesWhenStated = false;
 
     const typeAssertionString = this.string; ///
 
     context.trace(`Verifying the '${typeAssertionString}' stated type assertion...`);
 
-    const termVerified = this.term.verify(context, () => {
-      let verifiedAhead;
+    const termVerifies = this.term.verify(context, () => {
+      let verifiesAhead;
 
       const termType = this.term.getType(),
             typeEqualToOrSubTypeOfTermType = this.type.isEqualToOrSubTypeOf(termType);
 
       if (typeEqualToOrSubTypeOfTermType) {
-        verifiedAhead = true;
+        verifiesAhead = true;
       }
 
-      return verifiedAhead;
+      return verifiesAhead;
     });
 
-    if (termVerified) {
-      verifiedWhenStated = true;
+    if (termVerifies) {
+      verifiesWhenStated = true;
     }
 
-    if (verifiedWhenStated) {
+    if (verifiesWhenStated) {
       context.debug(`...verified the '${typeAssertionString}' stated type assertion.`);
     }
 
-    return verifiedWhenStated;
+    return verifiesWhenStated;
   }
 
   verifyWhenDerived(context) {
-    let verifiedWhenDerived;
+    let verifiesWhenDerived;
 
     const typeAssertionString = this.string; ///
 
     context.trace(`Verifying the '${typeAssertionString}' derived type assertion...`);
 
-    const termVerified = this.term.verify(context, () => {
-      let verifiedAhead = false;
+    const termVerifies = this.term.verify(context, () => {
+      let verifiesAhead = false;
 
       const termType = this.term.getType(),
             termTypeProvisional = termType.isProvisional();
@@ -132,19 +132,19 @@ export default domAssigned(class TypeAssertion {
       if (!termTypeProvisional) {
         const typeEqualToOrSuperTypeOfTermType = this.type.isEqualToOrSuperTypeOf(termType);
 
-        verifiedAhead = typeEqualToOrSuperTypeOfTermType; ///
+        verifiesAhead = typeEqualToOrSuperTypeOfTermType; ///
       }
 
-      return verifiedAhead;
+      return verifiesAhead;
     });
 
-    verifiedWhenDerived = termVerified; ///
+    verifiesWhenDerived = termVerifies; ///
 
-    if (verifiedWhenDerived) {
+    if (verifiesWhenDerived) {
       context.debug(`...verified the '${typeAssertionString}' derived type assertion.`);
     }
 
-    return verifiedWhenDerived;
+    return verifiesWhenDerived;
   }
 
   assign(assignments, context) {

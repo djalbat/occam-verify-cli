@@ -6,7 +6,7 @@ import { domAssigned } from "../dom";
 
 export default domAssigned(class Conjecture extends TopLevelAssertion {
   verify() {
-    let verified;
+    let verifies;
 
     const conjecture = this,  ///
           fileContext = this.getFileContext(),
@@ -14,9 +14,9 @@ export default domAssigned(class Conjecture extends TopLevelAssertion {
 
     fileContext.trace(`Verifying the '${conjectureString}' conjecture...`);
 
-    verified = super.verify();
+    verifies = super.verify();
 
-    if (verified) {
+    if (verifies) {
       const conjecture = this;  ///
 
       fileContext.addConjecture(conjecture);
@@ -24,7 +24,7 @@ export default domAssigned(class Conjecture extends TopLevelAssertion {
       fileContext.debug(`...verified the '${conjectureString}' conjecture.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   static name = "Conjecture";

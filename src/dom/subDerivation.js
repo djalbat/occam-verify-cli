@@ -26,13 +26,13 @@ export default domAssigned(class SubDerivation {
   }
 
   verify(substitutions, context) {
-    let verified;
+    let verifies;
 
-    verified = this.stepsOrSubproofs.every((stepOrSubproof) => { ///
+    verifies = this.stepsOrSubproofs.every((stepOrSubproof) => { ///
       const assignments = [],
-            stepOrSubproofVerified = stepOrSubproof.verify(substitutions, assignments, context);
+            stepOrSubproofVerifies = stepOrSubproof.verify(substitutions, assignments, context);
 
-      if (stepOrSubproofVerified) {
+      if (stepOrSubproofVerifies) {
         const stepOrSubproofUnifies = stepOrSubproof.unify(substitutions, context);
 
         if (stepOrSubproofUnifies) {
@@ -47,7 +47,7 @@ export default domAssigned(class SubDerivation {
       }
     });
 
-    return verified;
+    return verifies;
   }
 
   static name = "SubDerivation";

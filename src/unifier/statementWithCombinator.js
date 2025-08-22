@@ -44,9 +44,9 @@ class StatementWithCombinatorUnifier extends Unifier {
         context = specificContext;  ///
 
         const statement = Statement.fromStatementNode(statementNode, context),
-              statementVerifiedGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, context);
+              statementVerifiesGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, context);
 
-        unifies = statementVerifiedGivenType;
+        unifies = statementVerifiesGivenType;
 
         return unifies;
       }
@@ -70,9 +70,9 @@ class StatementWithCombinatorUnifier extends Unifier {
         context = specificContext;  ///
 
         const frame = Frame.fromFrameNode(frameNode, context),
-              frameVerifiedGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, context);
+              frameVerifiesGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, context);
 
-        unifies = frameVerifiedGivenType;
+        unifies = frameVerifiesGivenType;
 
         return unifies;
       }
@@ -97,9 +97,9 @@ class StatementWithCombinatorUnifier extends Unifier {
         context = specificContext;  ///
 
         const term = Term.fromTermNode(termNode, context),
-              termVerifiedGivenType = term.verifyGivenType(type, generalContext, specificContext);
+              termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
-        if (termVerifiedGivenType) {
+        if (termVerifiesGivenType) {
           unifies = true;
         }
 

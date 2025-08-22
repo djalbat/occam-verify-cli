@@ -801,7 +801,7 @@ export default class FileContext {
   error(message) { this.releaseContext.error(message, this.filePath); }
 
   verify() {
-    let verified = false;
+    let verifies = false;
 
     this.debug(`Verifying the '${this.filePath}' file...`);
 
@@ -811,20 +811,20 @@ export default class FileContext {
       this.warning(`Unable to verify the '${this.filePath}' file because it cannot be parsed.`);
     } else {
       const fileContext = this, ///
-            verifiedAtTopLevel = topLevelVerifier.verify(this.node, fileContext);
+            verifiesAtTopLevel = topLevelVerifier.verify(this.node, fileContext);
 
-      if (verifiedAtTopLevel) {
-        verified = true;
+      if (verifiesAtTopLevel) {
+        verifies = true;
       } else {
         this.clear();
       }
     }
 
-    if (verified) {
+    if (verifies) {
       this.info(`...verified the '${this.filePath}' file.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   clear() {

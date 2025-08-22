@@ -15,7 +15,7 @@ export default domAssigned(class BracketedConstructor extends Constructor {
     context.trace(`Unifying the '${termString}' term with the bracketed constructor...`, term);
 
     termUnifies = super.unifyTerm(term, context, () => {
-      let verifiedAhead = false;
+      let verifiesAhead = false;
 
       const { Term } = dom,
             bracketedTerm = term, ///
@@ -27,22 +27,22 @@ export default domAssigned(class BracketedConstructor extends Constructor {
 
         term = Term.fromTermNode(termNode, context);
 
-        const termVVerified = term.verify(context, () => {
-          let verifiedAhead;
+        const termVVerifies = term.verify(context, () => {
+          let verifiesAhead;
 
           const type = term.getType();
 
           bracketedTerm.setType(type);
 
-          verifiedAhead = verifyAhead();
+          verifiesAhead = verifyAhead();
 
-          return verifiedAhead;
+          return verifiesAhead;
         });
 
-        verifiedAhead = termVVerified;  ///
+        verifiesAhead = termVVerifies;  ///
       }
 
-      return verifiedAhead;
+      return verifiesAhead;
     });
 
     if (termUnifies) {

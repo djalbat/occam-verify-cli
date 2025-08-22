@@ -38,35 +38,35 @@ export default domAssigned(class SatisfiesAssertion {
   correlateSubstitutions(substitutions, context) { return this.signature.correlateSubstitutions(substitutions, context); }
 
   verify(assignments, stated, context) {
-    let verified = false;
+    let verifies = false;
 
     const satisfiesAssertionString = this.string; ///
 
     context.trace(`Verifying the '${satisfiesAssertionString}' satisfies assertion...`);
 
-    const signatureVerified = this.verifySignature(assignments, stated, context);
+    const signatureVerifies = this.verifySignature(assignments, stated, context);
 
-    if (signatureVerified) {
-      const referenceVerified = this.verifyReference(assignments, stated, context);
+    if (signatureVerifies) {
+      const referenceVerifies = this.verifyReference(assignments, stated, context);
 
-      verified = referenceVerified; ///
+      verifies = referenceVerifies; ///
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${satisfiesAssertionString}' satisfies assertion.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifySignature(assignments, stated, context) {
-    const signatureVerified = this.signature.verify(context);
+    const signatureVerifies = this.signature.verify(context);
 
-    return signatureVerified;
+    return signatureVerifies;
   }
 
   verifyReference(assignments, stated, context) {
-    let referenceVerified = false;
+    let referenceVerifies = false;
 
     const referenceString = this.reference.getString();
 
@@ -78,15 +78,15 @@ export default domAssigned(class SatisfiesAssertion {
       const axiomSatisfiable = axiom.isSatisfiable();
 
       if (axiomSatisfiable) {
-        referenceVerified = true;
+        referenceVerifies = true;
       }
     }
 
-    if (referenceVerified) {
+    if (referenceVerifies) {
       context.debug(`...verified the '${referenceString}' reference.`);
     }
 
-    return referenceVerified;
+    return referenceVerifies;
   }
 
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {

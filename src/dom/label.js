@@ -52,7 +52,7 @@ export default domAssigned(class Label {
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 
   verify(nameOnly) {
-    let verified = false;
+    let verifies = false;
 
     const labelString = this.getString(); ///
 
@@ -73,14 +73,14 @@ export default domAssigned(class Label {
     if (labelPresent) {
       this.fileContext.debug(`The '${labelString}' label is already present.`);
     } else {
-      verified = true;
+      verifies = true;
     }
 
-    if (verified) {
+    if (verifies) {
       this.fileContext.debug(`...verified the '${labelString}' label.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   toJSON() {

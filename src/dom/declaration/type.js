@@ -26,33 +26,33 @@ export default domAssigned(class TypeDeclaration {
   }
 
   verify() {
-    let verified = false;
+    let verifies = false;
 
     const typeDeclarationString = this.getString(); ///
 
     this.fileContext.trace(`Verifying the '${typeDeclarationString}' type declaration...`);
 
-    const typeVerified = this.verifyType();
+    const typeVerifies = this.verifyType();
 
-    if (typeVerified) {
-      const superTypesVerified = this.verifySuperTypes();
+    if (typeVerifies) {
+      const superTypesVerify = this.verifySuperTypes();
 
-      if (superTypesVerified) {
+      if (superTypesVerify) {
         this.fileContext.addType(this.type);
 
-        verified = true;
+        verifies = true;
       }
     }
 
-    if (verified) {
+    if (verifies) {
       this.fileContext.debug(`...verified the '${typeDeclarationString}' type declaration.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyType() {
-    let typeVerified = false;
+    let typeVerifies = false;
 
     const typeName = this.type.getName(),
           typeString = this.type.getString();
@@ -64,18 +64,18 @@ export default domAssigned(class TypeDeclaration {
     if (typePresent) {
       this.fileContext.debug(`The type '${typeString}' is already present.`);
     } else {
-      typeVerified = true;
+      typeVerifies = true;
     }
 
-    if (typeVerified) {
+    if (typeVerifies) {
       this.fileContext.debug(`...verified the '${typeString}' type.`);
     }
 
-    return typeVerified;
+    return typeVerifies;
   }
 
   verifySuperType(superType) {
-    let superTypeVerified;
+    let superTypeVerifies;
 
     const superTypeString = superType.getString();
 
@@ -84,22 +84,22 @@ export default domAssigned(class TypeDeclaration {
     const superTypeName = superType.getName(),
           superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
 
-    superTypeVerified = superTypePresent; ///
+    superTypeVerifies = superTypePresent; ///
 
-    if (superTypeVerified) {
+    if (superTypeVerifies) {
       this.fileContext.debug(`...verified the '${superTypeString}' super-type.`);
     }
 
-    return superTypeVerified;
+    return superTypeVerifies;
   }
 
   verifySuperTypes() {
-    let superTypesVerified;
+    let superTypesVerify;
 
     const typeBasic = this.type.isBasic();
 
     if (typeBasic) {
-      superTypesVerified = true;
+      superTypesVerify = true;
     } else {
       let superTypes;
 
@@ -109,15 +109,15 @@ export default domAssigned(class TypeDeclaration {
 
       this.fileContext.trace(`Verifying the ${superTypesString} super-types...`);
 
-      superTypesVerified = superTypes.every((superType) => {
-        const superTypeVerified = this.verifySuperType(superType);
+      superTypesVerify = superTypes.every((superType) => {
+        const superTypeVerifies = this.verifySuperType(superType);
 
-        if (superTypeVerified) {
+        if (superTypeVerifies) {
           return true;
         }
       });
 
-      if (superTypesVerified) {
+      if (superTypesVerify) {
         superTypes = superTypes.map((superType) => {
           const superTypeName = superType.getName();
 
@@ -132,7 +132,7 @@ export default domAssigned(class TypeDeclaration {
       }
     }
 
-    return superTypesVerified;
+    return superTypesVerify;
   }
 
   static name = "TypeDeclaration";

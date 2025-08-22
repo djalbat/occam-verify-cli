@@ -25,15 +25,15 @@ export default domAssigned(class Proof {
   }
 
   verify(substitutions, conclusion, context) {
-    let verified = false;
+    let verifies = false;
 
     const localContext = LocalContext.fromContext(context); ///
 
     context = localContext; ///
 
-    const derivationVerified = this.derivation.verify(substitutions, context);
+    const derivationVerifies = this.derivation.verify(substitutions, context);
 
-    if (derivationVerified) {
+    if (derivationVerifies) {
       const lastStep = context.getLastStep();
 
       if (lastStep !== null) {
@@ -42,12 +42,12 @@ export default domAssigned(class Proof {
               conclusionStatementEqualToStatement = conclusionStatement.isEqualTo(statement);
 
         if (conclusionStatementEqualToStatement) {
-          verified = true;
+          verifies = true;
         }
       }
     }
 
-    return verified;
+    return verifies;
   }
 
   static name = "Proof";

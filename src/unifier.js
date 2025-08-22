@@ -45,7 +45,7 @@ export default class Unifier {
   }
 
   unifyChildNodes(generalChildNodes, specificChildNodes, ...remainingArguments) {
-    let childNodesUnifies = false;
+    let childNodesUnify = false;
 
     const generalChildNodesLength = generalChildNodes.length,
           specificChildNodesLength = specificChildNodes.length;
@@ -60,11 +60,11 @@ export default class Unifier {
 
         if (lastRemainingArgumentFunction) {
           const index = 0,
-                childNodesUnifiesAhead = this.unifyChildNodesAhead(index, generalChildNodes, specificChildNodes,...remainingArguments);
+                childNodesUnifyAhead = this.unifyChildNodesAhead(index, generalChildNodes, specificChildNodes,...remainingArguments);
 
-          childNodesUnifies = childNodesUnifiesAhead; ///
+          childNodesUnify = childNodesUnifyAhead; ///
         } else {
-          childNodesUnifies = generalChildNodes.every((generalChildNode, index) => {
+          childNodesUnify = generalChildNodes.every((generalChildNode, index) => {
             const specificChildNode = specificChildNodes[index],
                   specificNode = specificChildNode, ///
                   generalNode = generalChildNode, ///
@@ -78,7 +78,7 @@ export default class Unifier {
       }
     }
 
-    return childNodesUnifies;
+    return childNodesUnify;
   }
 
   unifyTerminalNode(generalTerminalNode, specificTerminalNode, ...remainingArguments) { ///
@@ -121,9 +121,9 @@ export default class Unifier {
                   specificNonTerminalNodeChildNode = specificNonTerminalNode.getChildNodes(),
                   generalChildNodes = generalNonTerminalNodeChildNodes, ///
                   specificChildNodes = specificNonTerminalNodeChildNode, ///
-                  childNodesUnifies = this.unifyChildNodes(generalChildNodes, specificChildNodes, ...remainingArguments);
+                  childNodesUnify = this.unifyChildNodes(generalChildNodes, specificChildNodes, ...remainingArguments);
 
-            nonTerminalNodeUnifies = childNodesUnifies; ///
+            nonTerminalNodeUnifies = childNodesUnify; ///
           }
 
           return nonTerminalNodeUnifies;
@@ -152,7 +152,7 @@ export default class Unifier {
   }
 
   unifyChildNodesAhead(index, generalChildNodes, specificChildNodes, ...remainingArguments) {
-    let childNodesUnifies;
+    let childNodesUnify;
 
     const unifyAhead = remainingArguments.pop(), ///
           generalChildNodesLength = generalChildNodes.length;
@@ -160,7 +160,7 @@ export default class Unifier {
     if (index === generalChildNodesLength) {
       const unifiesAhead = unifyAhead();
 
-      childNodesUnifies = unifiesAhead; ///
+      childNodesUnify = unifiesAhead; ///
     } else {
       const generalChildNode = generalChildNodes[index],
             specificChildNode = specificChildNodes[index],
@@ -170,14 +170,14 @@ export default class Unifier {
               remainingArguments.push(unifyAhead); ///
 
               const aheadIndex = index + 1,
-                    childNodesUnifiesAhead = this.unifyChildNodesAhead(aheadIndex, generalChildNodes, specificChildNodes, ...remainingArguments);
+                    childNodesUnifyAhead = this.unifyChildNodesAhead(aheadIndex, generalChildNodes, specificChildNodes, ...remainingArguments);
 
-              return childNodesUnifiesAhead;
+              return childNodesUnifyAhead;
             });
 
-      childNodesUnifies = nodeUnifies;  ///
+      childNodesUnify = nodeUnifies;  ///
     }
 
-    return childNodesUnifies;
+    return childNodesUnify;
   }
 }

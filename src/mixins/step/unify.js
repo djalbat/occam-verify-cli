@@ -26,9 +26,9 @@ function unifyWithRule(statement, reference, substitutions, context) {
       context.trace(`Unifying the '${statementString}' statement with the '${ruleString}' rule...`);
 
       const stepsOrSubproofs = context.getStepsOrSubproofs(),
-            statementAndStepsUnifies = rule.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
+            statementAndStepsUnify = rule.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context);
 
-      if (statementAndStepsUnifies) {
+      if (statementAndStepsUnify) {
         unifiesWithRule = true;
       }
 
@@ -45,9 +45,9 @@ function unifyWithReference(statement, reference, substitutions, context) {
   let unifiesWithReference = false;
 
   if (reference !== null) {
-    const metavariableVerified = reference.verifyMetavariable(context);
+    const metavariableVerifies = reference.verifyMetavariable(context);
 
-    if (metavariableVerified) {
+    if (metavariableVerifies) {
       const statementString = statement.getString(),
             referenceString = reference.getString();
 
@@ -110,9 +110,9 @@ function unifyAsSatisfiesAssertion(statement, reference, substitutions, context)
                 axiomLemmaTheoremConjectureUnifies = axiom.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, substitutions, context);
 
           if (axiomLemmaTheoremConjectureUnifies) {
-            const substitutionsCorrelated = satisfiesAssertion.correlateSubstitutions(substitutions, context);
+            const substitutionsCorrelates = satisfiesAssertion.correlateSubstitutions(substitutions, context);
 
-            if (substitutionsCorrelated) {
+            if (substitutionsCorrelates) {
               unifiesAsSatisfiesAssertion = true;
             }
           }
@@ -145,9 +145,9 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, substituti
 
       substitutions = Substitutions.fromNothing();
 
-      const statementAndStepsUnifies = axiomLemmaTheoremConjecture.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
+      const statementAndStepsUnify = axiomLemmaTheoremConjecture.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 
-      if (statementAndStepsUnifies) {
+      if (statementAndStepsUnify) {
         const { StatementSubstitution } = dom,
               metavariable = reference.getMetavariable(),
               specificContext = context,  ///

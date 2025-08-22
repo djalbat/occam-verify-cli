@@ -74,7 +74,7 @@ export default domAssigned(class Step {
   }
 
   verify(substitutions, assignments, context) {
-    let verified = false;
+    let verifies = false;
 
     const stepString = this.string; ///
 
@@ -83,26 +83,26 @@ export default domAssigned(class Step {
     if (this.statement !== null) {
       const qualified = this.isQualified(),
             stated = qualified, ///
-            statementVerified = this.statement.verify(assignments, stated, context);
+            statementVerifies = this.statement.verify(assignments, stated, context);
 
-      if (statementVerified) {
+      if (statementVerifies) {
         if (this.reference === null) {
-          verified = true;
+          verifies = true;
         } else {
-          const referenceVerified = this.reference.verify(context);
+          const referenceVerifies = this.reference.verify(context);
 
-          verified = referenceVerified; ///
+          verifies = referenceVerifies; ///
         }
       }
     } else {
       context.debug(`Cannot verify the '${stepString}' step because it is nonsense.`);
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${stepString}' step.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   equateWithStatement(statement, context) {

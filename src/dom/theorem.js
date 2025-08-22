@@ -6,16 +6,16 @@ import { domAssigned } from "../dom";
 
 export default domAssigned(class Theorem extends TopLevelAssertion {
   verify() {
-    let verified;
+    let verifies;
 
     const fileContext = this.getFileContext(),
           theoremString = this.string;  ///
 
     fileContext.trace(`Verifying the '${theoremString}' theorem...`);
 
-    verified = super.verify();
+    verifies = super.verify();
 
-    if (verified) {
+    if (verifies) {
       const theorem = this; ///
 
       fileContext.addTheorem(theorem);
@@ -23,7 +23,7 @@ export default domAssigned(class Theorem extends TopLevelAssertion {
       fileContext.debug(`...verified the '${theoremString}' theorem.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   static name = "Theorem";

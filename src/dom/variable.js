@@ -62,7 +62,7 @@ export default domAssigned(class Variable {
   }
 
   verify(context) {
-    let verified;
+    let verifies;
 
     const variableString = this.string; ///
 
@@ -76,20 +76,20 @@ export default domAssigned(class Variable {
 
       this.type = type;
 
-      verified = true;
+      verifies = true;
     } else {
       context.debug(`The '${variableString}' variable is not present.`);
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${variableString}' variable.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyType(fileContext) {
-    let typeVerified = false;
+    let typeVerifies = false;
 
     const typeString = this.type.getString();
 
@@ -102,14 +102,14 @@ export default domAssigned(class Variable {
     } else {
       this.type = type; ///
 
-      typeVerified = true;
+      typeVerifies = true;
     }
 
-    if (typeVerified) {
+    if (typeVerifies) {
       fileContext.debug(`...verified the '${typeString}' type.`);
     }
 
-    return typeVerified;
+    return typeVerifies;
   }
 
   unifyTerm(term, substitutions, generalContext, specificContext) {

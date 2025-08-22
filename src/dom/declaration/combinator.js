@@ -26,29 +26,29 @@ export default domAssigned(class CombinatorDeclaration {
   }
 
   verify() {
-    let verified = false;
+    let verifies = false;
 
     const combinatorDeclarationString = this.getString(); ///
 
     this.fileContext.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
 
-    const combinatorVerified = this.verifyCombinator();
+    const combinatorVerifies = this.verifyCombinator();
 
-    if (combinatorVerified) {
+    if (combinatorVerifies) {
       this.fileContext.addCombinator(this.combinator);
 
-      verified = true;
+      verifies = true;
     }
 
-    if (verified) {
+    if (verifies) {
       this.fileContext.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyCombinator() {
-    let statementVerified;
+    let statementVerifies;
 
     const combinatorString = this.combinator.getString();
 
@@ -57,13 +57,13 @@ export default domAssigned(class CombinatorDeclaration {
     const statement = this.combinator.getStatement(),
           statementNode = statement.getNode();
 
-    statementVerified = combinatorVerifier.verifyStatement(statementNode, this.fileContext);
+    statementVerifies = combinatorVerifier.verifyStatement(statementNode, this.fileContext);
 
-    if (statementVerified) {
+    if (statementVerifies) {
       this.fileContext.debug(`...verified the '${combinatorString}' combinator.`);
     }
 
-    return statementVerified;
+    return statementVerifies;
   }
 
   static name = "CombinatorDeclaration";

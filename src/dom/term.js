@@ -122,30 +122,30 @@ export default domAssigned(class Term {
   }
 
   verify(context, verifyAhead) {
-    let verified;
+    let verifies;
 
     const termString = this.string;  ///
 
     context.trace(`Verifying the '${termString}' term...`);
 
-    verified = verifyMixins.some((verifyMixin) => {
+    verifies = verifyMixins.some((verifyMixin) => {
       const term = this, ///
-            verified = verifyMixin(term, context, verifyAhead);
+            verifies = verifyMixin(term, context, verifyAhead);
 
-      if (verified) {
+      if (verifies) {
         return true;
       }
     });
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${termString}' term.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyGivenType(type, generalContext, specificContext) {
-    let verifiedGivenType;
+    let verifiesGivenType;
 
     const typeString = type.getString(),
           termString = this.getString();  ///
@@ -153,25 +153,25 @@ export default domAssigned(class Term {
     specificContext.trace(`Verifying the '${termString}' term given the '${typeString}' type...`);
 
     const context = specificContext, ///
-          verified = this.verify(context, () => {
-            let verifiedAhead;
+          verifies = this.verify(context, () => {
+            let verifiesAhead;
 
             const typeEqualToOrSubTypeOfGivenTypeType = this.type.isEqualToOrSubTypeOf(type);
 
             if (typeEqualToOrSubTypeOfGivenTypeType) {
-              verifiedAhead = true;
+              verifiesAhead = true;
             }
 
-            return verifiedAhead;
+            return verifiesAhead;
           });
 
-    verifiedGivenType = verified; ///
+    verifiesGivenType = verifies; ///
 
-    if (verifiedGivenType) {
+    if (verifiesGivenType) {
       specificContext.debug(`...verified the '${termString}' term given the '${typeString}' type.`);
     }
 
-    return verifiedGivenType;
+    return verifiesGivenType;
   }
 
   toJSON() {

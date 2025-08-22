@@ -20,7 +20,7 @@ export default domAssigned(class Deduction {
   }
 
   verify(context) {
-    let verified = false;
+    let verifies = false;
 
     const deductionString = this.string;  ///
 
@@ -29,18 +29,18 @@ export default domAssigned(class Deduction {
     if (this.statement !== null) {
       const stated = true,
             assignments = null,
-            statementVerified = this.statement.verify(assignments, stated, context);
+            statementVerifies = this.statement.verify(assignments, stated, context);
 
-      verified = statementVerified; ///
+      verifies = statementVerifies; ///
     } else {
       context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`);
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${deductionString}' deduction.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {

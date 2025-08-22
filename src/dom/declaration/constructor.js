@@ -26,33 +26,33 @@ export default domAssigned(class ConstructorDeclaration {
   }
 
   verify() {
-    let verified;
+    let verifies;
 
     const constructorDeclarationString = this.getString(); ///
 
     this.fileContext.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
 
-    const constructorTypeVerified = this.verifyConstructorType();
+    const constructorTypeVerifies = this.verifyConstructorType();
 
-    if (constructorTypeVerified) {
-      const constructorVerified = this.verifyConstructor();
+    if (constructorTypeVerifies) {
+      const constructorVerifies = this.verifyConstructor();
 
-      if (constructorVerified) {
+      if (constructorVerifies) {
         this.fileContext.addConstructor(this.constructor);
 
-        verified = true;
+        verifies = true;
       }
     }
 
-    if (verified) {
+    if (verifies) {
       this.fileContext.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyConstructor() {
-    let constructorVerified;
+    let constructorVerifies;
 
     const constructorString = this.constructor.getString();
 
@@ -61,17 +61,17 @@ export default domAssigned(class ConstructorDeclaration {
     const term = this.constructor.getTerm(),
           termNode = term.getNode();
 
-    constructorVerified = constructorVerifier.verifyTerm(termNode, this.fileContext);
+    constructorVerifies = constructorVerifier.verifyTerm(termNode, this.fileContext);
 
-    if (constructorVerified) {
+    if (constructorVerifies) {
       this.fileContext.debug(`...verified the '${constructorString}' constructor.`);
     }
 
-    return constructorVerified;
+    return constructorVerifies;
   }
 
   verifyConstructorType() {
-    let constructorTypeVerified = false;
+    let constructorTypeVerifies = false;
 
     let type;
 
@@ -101,15 +101,15 @@ export default domAssigned(class ConstructorDeclaration {
       } else {
         this.constructor.setType(type);
 
-        constructorTypeVerified = true;
+        constructorTypeVerifies = true;
       }
     }
 
-    if (constructorTypeVerified) {
+    if (constructorTypeVerifies) {
       this.fileContext.debug(`...verified the '${typeString}' type.`);
     }
 
-    return constructorTypeVerified;
+    return constructorTypeVerifies;
   }
 
   static name = "ConstructorDeclaration";

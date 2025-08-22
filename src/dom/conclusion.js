@@ -20,7 +20,7 @@ export  default domAssigned(class Conclusion {
   }
 
   verify(context) {
-    let verified = false;
+    let verifies = false;
 
     const conclusionString = this.string;  ///
 
@@ -29,19 +29,19 @@ export  default domAssigned(class Conclusion {
     if (this.statement !== null) {
       const stated = true,
             assignments = null,
-            statementVerified = this.statement.verify(assignments, stated, context);
+            statementVerifies = this.statement.verify(assignments, stated, context);
 
-      verified = statementVerified; ///
+      verifies = statementVerifies; ///
 
     } else {
       context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`);
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${conclusionString}' conclusion.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {

@@ -42,7 +42,7 @@ function unifyWithCombinators(statement, assignments, stated, context) {
 }
 
 function verifyAsMetavariable(statement, assignments, stated, context) {
-  let verifiedAsMetavariable = false;
+  let verifiesAsMetavariable = false;
 
   const metavariable = metavariableFromStatement(statement, context);
 
@@ -51,20 +51,20 @@ function verifyAsMetavariable(statement, assignments, stated, context) {
 
     context.trace(`Verifying the '${statementString}' statement as a metavariable...`);
 
-    const metavariableVerified = metavariable.verify(context);
+    const metavariableVerifies = metavariable.verify(context);
 
-    verifiedAsMetavariable = metavariableVerified; ///
+    verifiesAsMetavariable = metavariableVerifies; ///
 
-    if (verifiedAsMetavariable) {
+    if (verifiesAsMetavariable) {
       context.debug(`...verified the '${statementString}' statement as a metavariable.`);
     }
   }
 
-  return verifiedAsMetavariable;
+  return verifiesAsMetavariable;
 }
 
 function verifyAsEquality(statement, assignments, stated, context) {
-  let verifiedAsEquality = false;
+  let verifiesAsEquality = false;
 
   const equality = equalityFromStatement(statement, context);
 
@@ -73,20 +73,20 @@ function verifyAsEquality(statement, assignments, stated, context) {
 
     context.trace(`Verifying the '${statementString}' statement as an equality...`);
 
-    const equalityVerified = equality.verify(assignments, stated, context);
+    const equalityVerifies = equality.verify(assignments, stated, context);
 
-    verifiedAsEquality = equalityVerified; ///
+    verifiesAsEquality = equalityVerifies; ///
 
-    if (verifiedAsEquality) {
+    if (verifiesAsEquality) {
       context.debug(`...verified the '${statementString}' statement as an equality.`);
     }
   }
 
-  return verifiedAsEquality;
+  return verifiesAsEquality;
 }
 
 function verifyAsJudgement(statement, assignments, stated, context) {
-  let verifiedAsJudgement = false;
+  let verifiesAsJudgement = false;
 
   const judgement = judgementFromStatement(statement, context);
 
@@ -95,20 +95,20 @@ function verifyAsJudgement(statement, assignments, stated, context) {
 
     context.trace(`Verifying the '${statementString}' statement as a judgement...`);
 
-    const judgementVerified = judgement.verify(assignments, stated, context);
+    const judgementVerifies = judgement.verify(assignments, stated, context);
 
-    verifiedAsJudgement = judgementVerified;  ///
+    verifiesAsJudgement = judgementVerifies;  ///
 
-    if (verifiedAsJudgement) {
+    if (verifiesAsJudgement) {
       context.debug(`...verified the '${statementString}' statement as a judgement.`);
     }
   }
 
-  return verifiedAsJudgement;
+  return verifiesAsJudgement;
 }
 
 function verifyAsTypeAssertion(statement, assignments, stated, context) {
-  let verifiedAsTypeAssertion = false;
+  let verifiesAsTypeAssertion = false;
 
   const typeAssertion = typeAssertionFromStatement(statement, context);
 
@@ -117,20 +117,20 @@ function verifyAsTypeAssertion(statement, assignments, stated, context) {
 
     context.trace(`Verifying the '${statementString}' statement as a type assertion...`);
 
-    const typeAssertionVerified = typeAssertion.verify(assignments, stated, context);
+    const typeAssertionVerifies = typeAssertion.verify(assignments, stated, context);
 
-    verifiedAsTypeAssertion = typeAssertionVerified; ///
+    verifiesAsTypeAssertion = typeAssertionVerifies; ///
 
-    if (verifiedAsTypeAssertion) {
+    if (verifiesAsTypeAssertion) {
       context.debug(`...verified the '${statementString}' statement as a type assertion.`);
     }
   }
 
-  return verifiedAsTypeAssertion;
+  return verifiesAsTypeAssertion;
 }
 
 function verifyAsDefinedAssertion(statement, assignments, stated, context) {
-  let verifiedAsDefinedAssertion = false;
+  let verifiesAsDefinedAssertion = false;
 
   const definedAssertion = definedAssertionFromStatement(statement, context);
 
@@ -139,20 +139,20 @@ function verifyAsDefinedAssertion(statement, assignments, stated, context) {
 
     context.trace(`Verifying the '${statementString}' statement as a defined assertion...`);
 
-    const definedAssertionVerified = definedAssertion.verify(assignments, stated, context);
+    const definedAssertionVerifies = definedAssertion.verify(assignments, stated, context);
 
-    verifiedAsDefinedAssertion = definedAssertionVerified; ///
+    verifiesAsDefinedAssertion = definedAssertionVerifies; ///
 
-    if (verifiedAsDefinedAssertion) {
+    if (verifiesAsDefinedAssertion) {
       context.debug(`...verified the '${statementString}' statement as a defined assertion.`);
     }
   }
 
-  return verifiedAsDefinedAssertion;
+  return verifiesAsDefinedAssertion;
 }
 
 function verifyAsPropertyAssertion(statement, assignments, stated, context) {
-  let verifiedAsPropertyAssertion = false;
+  let verifiesAsPropertyAssertion = false;
 
   const propertyAssertion = propertyAssertionFromStatement(statement, context);
 
@@ -161,20 +161,20 @@ function verifyAsPropertyAssertion(statement, assignments, stated, context) {
 
     context.trace(`Verifying the '${statementString}' statement as a property assertion...`);
 
-    const propertyAssertionVerified = propertyAssertion.verify(assignments, stated, context);
+    const propertyAssertionVerifies = propertyAssertion.verify(assignments, stated, context);
 
-    verifiedAsPropertyAssertion = propertyAssertionVerified; ///
+    verifiesAsPropertyAssertion = propertyAssertionVerifies; ///
 
-    if (verifiedAsPropertyAssertion) {
+    if (verifiesAsPropertyAssertion) {
       context.debug(`...verified the '${statementString}' statement as a property assertion.`);
     }
   }
 
-  return verifiedAsPropertyAssertion;
+  return verifiesAsPropertyAssertion;
 }
 
 function verifyAsSubproofAssertion(statement, assignments, stated, context) {
-  let verifiedAsSubproofAssertion = false;
+  let verifiesAsSubproofAssertion = false;
 
   const subproofAssertion = subproofAssertionFromStatement(statement, context);
 
@@ -183,20 +183,20 @@ function verifyAsSubproofAssertion(statement, assignments, stated, context) {
 
     context.trace(`Verifying the '${statementString}' statement as a subproof assertion...`);
 
-    const subproofAssertionVerified = subproofAssertion.verify(assignments, stated, context);
+    const subproofAssertionVerifies = subproofAssertion.verify(assignments, stated, context);
 
-    verifiedAsSubproofAssertion = subproofAssertionVerified; ///
+    verifiesAsSubproofAssertion = subproofAssertionVerifies; ///
 
-    if (verifiedAsSubproofAssertion) {
+    if (verifiesAsSubproofAssertion) {
       context.debug(`...verified the '${statementString}' statement as a subproof assertion.`);
     }
   }
 
-  return verifiedAsSubproofAssertion;
+  return verifiesAsSubproofAssertion;
 }
 
 function verifyAsContainedAssertion(statement, assignments, stated, context) {
-  let verifiedAsContainedAssertion = false;
+  let verifiesAsContainedAssertion = false;
 
   const containedAssertion = containedAssertionFromStatement(statement, context);
 
@@ -205,20 +205,20 @@ function verifyAsContainedAssertion(statement, assignments, stated, context) {
 
     context.trace(`Verifying the '${statementString}' statement as a contained assertion...`);
 
-    const containedAssertionVerified = containedAssertion.verify(assignments, stated, context);
+    const containedAssertionVerifies = containedAssertion.verify(assignments, stated, context);
 
-    verifiedAsContainedAssertion = containedAssertionVerified; ///
+    verifiesAsContainedAssertion = containedAssertionVerifies; ///
 
-    if (verifiedAsContainedAssertion) {
+    if (verifiesAsContainedAssertion) {
       context.debug(`...verified the '${statementString}' statement as a contained assertion.`);
     }
   }
 
-  return verifiedAsContainedAssertion;
+  return verifiesAsContainedAssertion;
 }
 
 function verifyAsSatisfiesAssertion(statement, assignments, stated, context) {
-  let verifiedAsSatisfiesAssertion = false;
+  let verifiesAsSatisfiesAssertion = false;
 
   const satisfiesAssertion = satisfiesAssertionFromStatement(statement, context);
 
@@ -227,16 +227,16 @@ function verifyAsSatisfiesAssertion(statement, assignments, stated, context) {
 
     context.trace(`Verifying the '${statementString}' statement as a satisfies assertion...`);
 
-    const satisfiesAssertionVerified = satisfiesAssertion.verify(assignments, stated, context);
+    const satisfiesAssertionVerifies = satisfiesAssertion.verify(assignments, stated, context);
 
-    verifiedAsSatisfiesAssertion = satisfiesAssertionVerified; ///
+    verifiesAsSatisfiesAssertion = satisfiesAssertionVerifies; ///
 
-    if (verifiedAsSatisfiesAssertion) {
+    if (verifiesAsSatisfiesAssertion) {
       context.debug(`...verified the '${statementString}' statement as a satisfies assertion.`);
     }
   }
 
-  return verifiedAsSatisfiesAssertion;
+  return verifiesAsSatisfiesAssertion;
 }
 
 const verifyMixins = [

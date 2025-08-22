@@ -22,14 +22,14 @@ const errorNodeQuery = nodeQuery("/error"),
 
 class TopLevelVerifier extends Verifier {
   verify(node, fileContext) {
-    let verifiedAtTopLevel;
+    let verifiesAtTopLevel;
 
     const nonTerminalNode = node, ///
-          nonTerminalNodeVerified = this.verifyNonTerminalNode(nonTerminalNode, fileContext);
+          nonTerminalNodeVerifies = this.verifyNonTerminalNode(nonTerminalNode, fileContext);
 
-    verifiedAtTopLevel = nonTerminalNodeVerified;  ///
+    verifiesAtTopLevel = nonTerminalNodeVerifies;  ///
 
-    return verifiedAtTopLevel;
+    return verifiesAtTopLevel;
   }
 
   static maps = [
@@ -38,9 +38,9 @@ class TopLevelVerifier extends Verifier {
       verify: (errorNode, fileContext) => {
         const { Error } = dom,
               error = Error.fromErrorNode(errorNode, fileContext),
-              errorVerified = error.verify();
+              errorVerifies = error.verify();
 
-        return errorVerified;
+        return errorVerifies;
       }
     },
     {
@@ -48,9 +48,9 @@ class TopLevelVerifier extends Verifier {
       verify: (ruleNode, fileContext) => {
         const { Rule } = dom,
               rule = Rule.fromRuleNode(ruleNode, fileContext),
-              ruleVerified = rule.verify();
+              ruleVerifies = rule.verify();
 
-        return ruleVerified;
+        return ruleVerifies;
       }
     },
     {
@@ -58,9 +58,9 @@ class TopLevelVerifier extends Verifier {
       verify: (axiomNode, fileContext) => {
         const { Axiom } = dom,
               axiom = Axiom.fromAxiomNode(axiomNode, fileContext),
-              axiomVerified = axiom.verify();
+              axiomVerifies = axiom.verify();
 
-        return axiomVerified;
+        return axiomVerifies;
       }
     },
     {
@@ -68,9 +68,9 @@ class TopLevelVerifier extends Verifier {
       verify: (lemmaNode, fileContext) => {
         const { Lemma } = dom,
               lemma = Lemma.fromLemmaNode(lemmaNode, fileContext),
-              lemmaVerified = lemma.verify();
+              lemmaVerifies = lemma.verify();
 
-        return lemmaVerified;
+        return lemmaVerifies;
       }
     },
     {
@@ -78,9 +78,9 @@ class TopLevelVerifier extends Verifier {
       verify: (theoremNode, fileContext) => {
         const { Theorem } = dom,
               theorem = Theorem.fromTheoremNode(theoremNode, fileContext),
-              theoremVerified = theorem.verify();
+              theoremVerifies = theorem.verify();
 
-        return theoremVerified;
+        return theoremVerifies;
       }
     },
     {
@@ -88,9 +88,9 @@ class TopLevelVerifier extends Verifier {
       verify: (metaLemmaNode, fileContext) => {
         const { MetaLemma } = dom,
               metaLemma = MetaLemma.fromMetaLemmaNode(metaLemmaNode, fileContext),
-              metaLemmaVerified = metaLemma.verify();
+              metaLemmaVerifies = metaLemma.verify();
 
-        return metaLemmaVerified;
+        return metaLemmaVerifies;
       }
     },
     {
@@ -98,9 +98,9 @@ class TopLevelVerifier extends Verifier {
       verify: (conjectureNode, fileContext) => {
         const { Conjecture } = dom,
               conjecture = Conjecture.fromConjectureNode(conjectureNode, fileContext),
-              conjectureVerified = conjecture.verify();
+              conjectureVerifies = conjecture.verify();
 
-        return conjectureVerified;
+        return conjectureVerifies;
       }
     },
     {
@@ -108,9 +108,9 @@ class TopLevelVerifier extends Verifier {
       verify: (metatheoremNode, fileContext) => {
         const { Metatheorem } = dom,
               metatheorem = Metatheorem.fromMetatheoremNode(metatheoremNode, fileContext),
-              metatheoremVerified = metatheorem.verify();
+              metatheoremVerifies = metatheorem.verify();
 
-        return metatheoremVerified;
+        return metatheoremVerifies;
       }
     },
     {
@@ -118,9 +118,9 @@ class TopLevelVerifier extends Verifier {
       verify: (typeDeclarationNode, fileContext) => {
         const { TypeDeclaration } = dom,
               typeDeclaration = TypeDeclaration.fromTypeDeclarationNode(typeDeclarationNode, fileContext),
-              typeDeclarationVerified = typeDeclaration.verify();
+              typeDeclarationVerifies = typeDeclaration.verify();
 
-        return typeDeclarationVerified;
+        return typeDeclarationVerifies;
       }
     },
     {
@@ -128,9 +128,9 @@ class TopLevelVerifier extends Verifier {
       verify: (variableDeclarationNode, fileContext) => {
         const { VariableDeclaration } = dom,
               variableDeclaration = VariableDeclaration.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
-              variableDeclarationVerified = variableDeclaration.verify();
+              variableDeclarationVerifies = variableDeclaration.verify();
 
-        return variableDeclarationVerified;
+        return variableDeclarationVerifies;
       }
     },
     {
@@ -138,9 +138,9 @@ class TopLevelVerifier extends Verifier {
       verify: (combinatorDeclarationNode, fileContext) => {
         const { CombinatorDeclaration } = dom,
               combinatorDeclaration = CombinatorDeclaration.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
-              combinatorDeclarationVerified = combinatorDeclaration.verify();
+              combinatorDeclarationVerifies = combinatorDeclaration.verify();
 
-        return combinatorDeclarationVerified;
+        return combinatorDeclarationVerifies;
       }
     },
     {
@@ -148,9 +148,9 @@ class TopLevelVerifier extends Verifier {
       verify: (constructorDeclarationNode, fileContext) => {
         const { ConstructorDeclaration } = dom,
               constructorDeclaration = ConstructorDeclaration.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
-              constructorDeclarationVerified = constructorDeclaration.verify();
+              constructorDeclarationVerifies = constructorDeclaration.verify();
 
-        return constructorDeclarationVerified;
+        return constructorDeclarationVerifies;
       }
     },
     {
@@ -158,9 +158,9 @@ class TopLevelVerifier extends Verifier {
       verify: (complexTypeDeclarationNode, fileContext) => {
         const { ComplexTypeDeclaration } = dom,
               complexTypeDeclaration = ComplexTypeDeclaration.fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
-              complexTypeDeclarationVerified = complexTypeDeclaration.verify();
+              complexTypeDeclarationVerifies = complexTypeDeclaration.verify();
 
-        return complexTypeDeclarationVerified;
+        return complexTypeDeclarationVerifies;
       }
     },
     {
@@ -168,9 +168,9 @@ class TopLevelVerifier extends Verifier {
       verify: (metavariableDeclarationNode, fileContext) => {
         const { MetavariableDeclaration } = dom,
               metavariableDeclaration = MetavariableDeclaration.fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
-              metavariableDeclarationVerified = metavariableDeclaration.verify();
+              metavariableDeclarationVerifies = metavariableDeclaration.verify();
 
-        return metavariableDeclarationVerified;
+        return metavariableDeclarationVerifies;
       }
     }
   ];

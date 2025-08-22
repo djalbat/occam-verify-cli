@@ -12,15 +12,15 @@ const termNodeQuery = nodeQuery("/term"),
 
 class CombinatorVerifier extends Verifier {
   verifyStatement(statementNode, fileContext) {
-    let statementVerifiedAsCombinator;
+    let statementVerifiesAsCombinator;
 
     const nonTerminalNode = statementNode, ///
           childNodes = nonTerminalNode.getChildNodes(),
-          childNodesVerified = this.verifyChildNodes(childNodes, fileContext);
+          childNodesVerify = this.verifyChildNodes(childNodes, fileContext);
 
-    statementVerifiedAsCombinator = childNodesVerified;  ///
+    statementVerifiesAsCombinator = childNodesVerify;  ///
 
-    return statementVerifiedAsCombinator;
+    return statementVerifiesAsCombinator;
   }
 
   static maps = [
@@ -33,9 +33,9 @@ class CombinatorVerifier extends Verifier {
               statement = Statement.fromStatementNode(statementNode, context),
               assignments = null,
               stated = false,
-              statementVerified = statement.verify(assignments, stated, context);
+              statementVerifies = statement.verify(assignments, stated, context);
 
-        return statementVerified;
+        return statementVerifies;
       }
     },
     {
@@ -45,28 +45,28 @@ class CombinatorVerifier extends Verifier {
               localContext = LocalContext.fromFileContext(fileContext),
               context = localContext, ///
               term = Term.fromTermNode(termNode, context),
-              termVerified = term.verify(context, () => {
-                const verifiedAhead = true;
+              termVerifies = term.verify(context, () => {
+                const verifiesAhead = true;
 
-                return verifiedAhead;
+                return verifiesAhead;
               });
 
-        return termVerified;
+        return termVerifies;
       }
     },
     {
       nodeQuery: typeNodeQuery,
       verify: (typeNode, fileContext) => {
-        let typeVerified = false;
+        let typeVerifies = false;
 
         const typeName = typeNode.getTypeName(),
               typePresent = fileContext.isTypePresentByTypeName(typeName);
 
         if (typePresent) {
-          typeVerified = true;
+          typeVerifies = true;
         }
 
-        return typeVerified;
+        return typeVerifies;
       }
     }
   ];

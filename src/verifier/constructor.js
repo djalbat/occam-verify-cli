@@ -16,23 +16,23 @@ const termNodeQuery = nodeQuery("/term"),
 
 class ConstructorVerifier extends Verifier {
   verifyTerm(termNode, fileContext) {
-    let termVerifiedAsConstructor;
+    let termVerifiesAsConstructor;
 
     const nonTerminalNode = termNode, ///
           childNodes = nonTerminalNode.getChildNodes(),
-          childNodesVerified = this.verifyChildNodes(childNodes, fileContext, () => {
-            const verifiedAhead = true;
+          childNodesVerify = this.verifyChildNodes(childNodes, fileContext, () => {
+            const verifiesAhead = true;
 
-            return verifiedAhead;
+            return verifiesAhead;
           });
 
-    termVerifiedAsConstructor = childNodesVerified;  ///
+    termVerifiesAsConstructor = childNodesVerify;  ///
 
-    return termVerifiedAsConstructor;
+    return termVerifiesAsConstructor;
   }
 
   verifyTerminalNode(terminalNode, ...remainingArguments) {
-    let terminalNodeVerified;
+    let terminalNodeVerifies;
 
     const type = terminalNode.getType();
 
@@ -45,14 +45,14 @@ class ConstructorVerifier extends Verifier {
 
       fileContext.debug(`The '${typeString}' type is present in the constructor but has not been declared beforehand.`);
 
-      terminalNodeVerified = false;
+      terminalNodeVerifies = false;
 
       remainingArguments.push(verifyAhead);
     } else {
-      terminalNodeVerified = super.verifyTerminalNode(terminalNode, ...remainingArguments);
+      terminalNodeVerifies = super.verifyTerminalNode(terminalNode, ...remainingArguments);
     }
 
-    return terminalNodeVerified;
+    return terminalNodeVerifies;
   }
 
   static maps = [
@@ -63,32 +63,32 @@ class ConstructorVerifier extends Verifier {
               localContext = LocalContext.fromFileContext(fileContext),
               context = localContext, ///
               term = Term.fromTermNode(termNode, context),
-              termVerified = term.verify(localContext, verifyAhead);
+              termVerifies = term.verify(localContext, verifyAhead);
 
-        return termVerified;
+        return termVerifies;
       }
     },
     {
       nodeQuery: typeNodeQuery,
       verify: (typeNode, fileContext, verifyAhead) => {
-        let typeVerified;
+        let typeVerifies;
 
         const typeName = typeNode.getTypeName(),
               typePresent = fileContext.isTypePresentByTypeName(typeName);
 
         if (typePresent) {
-          const verifiedAhead = verifyAhead();
+          const verifiesAhead = verifyAhead();
 
-          typeVerified = verifiedAhead; ///
+          typeVerifies = verifiesAhead; ///
         } else {
           const typeString = typeName;  ///
 
           fileContext.debug(`The '${typeString}' type is not present.`);
 
-          typeVerified = false;
+          typeVerifies = false;
         }
 
-        return typeVerified;
+        return typeVerifies;
       }
     }
   ];

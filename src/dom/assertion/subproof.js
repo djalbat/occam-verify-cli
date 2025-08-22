@@ -57,21 +57,21 @@ export default domAssigned(class SubproofAssertion {
   }
 
   verify(assignments, stated, context) {
-    let verified;
+    let verifies;
 
     const subproofAssertionString = this.string;  ///
 
     context.trace(`Verifying the '${subproofAssertionString}' subproof assertion...`);
 
-    const statementsVerified = this.verifyStatements(assignments, stated, context);
+    const statementsVerify = this.verifyStatements(assignments, stated, context);
 
-    verified = statementsVerified;  ///
+    verifies = statementsVerify;  ///
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${subproofAssertionString}' subproof assertion.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyStatements(assignments, stated, context) {
@@ -79,15 +79,15 @@ export default domAssigned(class SubproofAssertion {
 
     assignments = null; ///
 
-    const statementsVerified = this.statements.map((statement) => {
-      const statementVerified = statement.verify(assignments, stated, context);
+    const statementsVerify = this.statements.map((statement) => {
+      const statementVerifies = statement.verify(assignments, stated, context);
 
-      if (statementVerified) {
+      if (statementVerifies) {
         return true;
       }
     });
 
-    return statementsVerified;
+    return statementsVerify;
   }
 
   static name = "SubproofAssertion";

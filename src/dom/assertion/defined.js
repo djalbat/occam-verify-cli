@@ -41,39 +41,39 @@ export default domAssigned(class DefinedAssertion {
   }
 
   verify(assignments, stated, context) {
-    let verified = false;
+    let verifies = false;
 
     const definedAssertionString = this.string; ///
 
     context.trace(`Verifying the '${definedAssertionString}' defined assertion...`);
 
-    const termVerified = this.verifyTerm(assignments, stated, context),
-          frameVerified = this.verifyFrame(assignments, stated, context);
+    const termVerifies = this.verifyTerm(assignments, stated, context),
+          frameVerifies = this.verifyFrame(assignments, stated, context);
 
-    if (termVerified || frameVerified) {
-      let verifiedWhenStated = false,
-          verifiedWhenDerived = false;
+    if (termVerifies || frameVerifies) {
+      let verifiesWhenStated = false,
+          verifiesWhenDerived = false;
 
       if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(assignments, context);
+        verifiesWhenStated = this.verifyWhenStated(assignments, context);
       } else {
-        verifiedWhenDerived = this.verifyWhenDerived(context);
+        verifiesWhenDerived = this.verifyWhenDerived(context);
       }
 
-      if (verifiedWhenStated || verifiedWhenDerived) {
-        verified = true;
+      if (verifiesWhenStated || verifiesWhenDerived) {
+        verifies = true;
       }
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${definedAssertionString}' defined assertion.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyTerm(assignments, stated, context) {
-    let termVerified = false;
+    let termVerifies = false;
 
     if (this.term !== null) {
       const termString = this.term.getString(); ///
@@ -85,23 +85,23 @@ export default domAssigned(class DefinedAssertion {
       if (!termSimple) {
         context.debug(`The '${termString}' term is not simple.`);
       } else {
-        termVerified = this.term.verify(context, () => {
-          const verifiedAhead = true;
+        termVerifies = this.term.verify(context, () => {
+          const verifiesAhead = true;
 
-          return verifiedAhead;
+          return verifiesAhead;
         });
 
-        if (termVerified) {
+        if (termVerifies) {
           context.debug(`...verified the '${termString}' term.`);
         }
       }
     }
 
-    return termVerified;
+    return termVerifies;
   }
 
   verifyFrame(assignments, stated, context) {
-    let frameVerified = false;
+    let frameVerifies = false;
 
     if (this.frame !== null) {
       const frameString = this.frame.getString(); ///
@@ -117,47 +117,47 @@ export default domAssigned(class DefinedAssertion {
 
         assignments = null; ///
 
-        frameVerified = this.frame.verify(assignments, stated, context);
+        frameVerifies = this.frame.verify(assignments, stated, context);
 
-        if (frameVerified) {
+        if (frameVerifies) {
           context.debug(`...verified the '${frameString}' frame.`);
         }
       }
     }
 
-    return frameVerified;
+    return frameVerifies;
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiedWhenStated;
+    let verifiesWhenStated;
 
     const definedAssertionString = this.string; ///
 
     context.trace(`Verifying the '${definedAssertionString}' stated defined assertion...`);
 
-    verifiedWhenStated = true;
+    verifiesWhenStated = true;
 
-    if (verifiedWhenStated) {
+    if (verifiesWhenStated) {
       context.debug(`...verified the '${definedAssertionString}' stated defined assertion.`);
     }
 
-    return verifiedWhenStated;
+    return verifiesWhenStated;
   }
 
   verifyWhenDerived(context) {
-    let verifiedWhenDerived;
+    let verifiesWhenDerived;
 
     const definedAssertionString = this.string; ///
 
     context.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`);
 
-    verifiedWhenDerived = verifyWhenDerived(this.term, this.frame, this.negated, context);
+    verifiesWhenDerived = verifyWhenDerived(this.term, this.frame, this.negated, context);
 
-    if (verifiedWhenDerived) {
+    if (verifiesWhenDerived) {
       context.debug(`...verified the '${definedAssertionString}' derived defined assertion.`);
     }
 
-    return verifiedWhenDerived;
+    return verifiesWhenDerived;
   }
 
   unifyIndependently(substitutions, context) {
@@ -173,9 +173,9 @@ export default domAssigned(class DefinedAssertion {
 
     const term = termFromTermAndSubstitutions(this.term, substitutions, context),
           frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),
-          verifiedWhenDerived = verifyWhenDerived(term, frame, this.negated, context);
+          verifiesWhenDerived = verifyWhenDerived(term, frame, this.negated, context);
 
-    unifiesIndependently = verifiedWhenDerived; ///
+    unifiesIndependently = verifiesWhenDerived; ///
 
     if (unifiesIndependently) {
       context.debug(`...unified the '${definedAssertionString}' defined assertion independently.`);
@@ -208,7 +208,7 @@ export default domAssigned(class DefinedAssertion {
 });
 
 function verifyWhenDerived(term, frame, negated, context) {
-  let verifiedWhenDerived = false;
+  let verifiesWhenDerived = false;
 
   if (term !== null) {
     const { Variable } = dom,
@@ -218,11 +218,11 @@ function verifyWhenDerived(term, frame, negated, context) {
           variableDefined = generalContext.isVariableDefined(variable);
 
     if (!negated && variableDefined) {
-      verifiedWhenDerived = true;
+      verifiesWhenDerived = true;
     }
 
     if (negated && !variableDefined) {
-      verifiedWhenDerived = true;
+      verifiesWhenDerived = true;
     }
   }
 
@@ -233,13 +233,13 @@ function verifyWhenDerived(term, frame, negated, context) {
           metavariableDefined = context.isMetavariableDefined(metavariable);
 
     if (!negated && metavariableDefined) {
-      verifiedWhenDerived = true;
+      verifiesWhenDerived = true;
     }
 
     if (negated && !metavariableDefined) {
-      verifiedWhenDerived = true;
+      verifiesWhenDerived = true;
     }
   }
 
-  return verifiedWhenDerived;
+  return verifiesWhenDerived;
 }

@@ -35,9 +35,9 @@ class MetavariableUnifier extends Unifier {
               type = generalContext.findTypeByTypeName(typeName),
               context = specificContext, ///
               term = Term.fromTermNode(termNode, context),
-              termVerifiedGivenType = term.verifyGivenType(type, generalContext, specificContext);
+              termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
-        termUnifies = termVerifiedGivenType;  ///
+        termUnifies = termVerifiesGivenType;  ///
 
         return termUnifies;
       }

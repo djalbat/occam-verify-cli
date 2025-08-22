@@ -36,7 +36,7 @@ export default domAssigned(class PropertyAssertion {
   }
 
   matchTermAndPropertyRelation(term, propertyRelation, context) {
-    let verifiedAsPropertyAssertion = false;
+    let verifiesAsPropertyAssertion = false;
 
     const termString = term.getString(),
           propertyRelationString = propertyRelation.getString(),
@@ -51,123 +51,123 @@ export default domAssigned(class PropertyAssertion {
     if (termAEqualToTermB) {
       const propertyRelationEqualToPropertyRelation = this.propertyRelation.isEqualTo(propertyRelation);
 
-      verifiedAsPropertyAssertion = propertyRelationEqualToPropertyRelation;  ///
+      verifiesAsPropertyAssertion = propertyRelationEqualToPropertyRelation;  ///
     }
 
-    if (verifiedAsPropertyAssertion) {
+    if (verifiesAsPropertyAssertion) {
       context.debug(`...matched the '${termString}' term and '${propertyRelationString}' property relation against the '${propertyAssertionString}' property assertion.`);
     }
 
-    return verifiedAsPropertyAssertion;
+    return verifiesAsPropertyAssertion;
   }
 
   verify(assignments, stated, context) {
-    let verified = false;
+    let verifies = false;
 
     const propertyAssertionString = this.string; ///
 
     context.trace(`Verifying the '${propertyAssertionString}' property assertion...`);
 
-    const termVerified = this.verifyTerm(assignments, stated, context);
+    const termVerifies = this.verifyTerm(assignments, stated, context);
 
-    if (termVerified) {
-      const propertyRelationVerified = this.verifyPropertyRelation(assignments, stated, context);
+    if (termVerifies) {
+      const propertyRelationVerifies = this.verifyPropertyRelation(assignments, stated, context);
 
-      if (propertyRelationVerified) {
-        let verifiedWhenStated = false,
-            verifiedWhenDerived = false;
+      if (propertyRelationVerifies) {
+        let verifiesWhenStated = false,
+            verifiesWhenDerived = false;
 
         if (stated) {
-          verifiedWhenStated = this.verifyWhenStated(assignments, context);
+          verifiesWhenStated = this.verifyWhenStated(assignments, context);
         } else {
-          verifiedWhenDerived = this.verifyWhenDerived(context);
+          verifiesWhenDerived = this.verifyWhenDerived(context);
         }
 
-        if (verifiedWhenStated || verifiedWhenDerived) {
-          verified = true;
+        if (verifiesWhenStated || verifiesWhenDerived) {
+          verifies = true;
         }
       }
     }
 
-    if (verified) {
+    if (verifies) {
       if (stated) {
         this.assign(assignments, context);
       }
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${propertyAssertionString}' property assertion.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyTerm(assignments, stated, context) {
-    let termVerified;
+    let termVerifies;
 
     const termString = this.term.getString();
 
     context.trace(`Verifying the '${termString}' term...`);
 
-    termVerified = this.term.verify(context, () => {
-      const verifiedAhead = true;
+    termVerifies = this.term.verify(context, () => {
+      const verifiesAhead = true;
 
-      return verifiedAhead;
+      return verifiesAhead;
     });
 
-    if (termVerified) {
+    if (termVerifies) {
       context.debug(`...verified the '${termString}' term.`);
     }
 
-    return termVerified;
+    return termVerifies;
   }
 
   verifyPropertyRelation(assignments, stated, context) {
-    let propertyRelationVerified;
+    let propertyRelationVerifies;
 
     const propertyRelationString = this.propertyRelation.getString();
 
     context.trace(`Verifying the '${propertyRelationString}' property relation...`);
 
-    propertyRelationVerified = this.propertyRelation.verify(context);
+    propertyRelationVerifies = this.propertyRelation.verify(context);
 
-    if (propertyRelationVerified) {
+    if (propertyRelationVerifies) {
       context.debug(`...verified the '${propertyRelationString}' property relation.`);
     }
 
-    return propertyRelationVerified;
+    return propertyRelationVerifies;
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiedWhenStated;
+    let verifiesWhenStated;
 
     const propertyAssertionString = this.string; ///
 
     context.trace(`Verifying the '${propertyAssertionString}' stated property assertion...`);
 
-    verifiedWhenStated = true;
+    verifiesWhenStated = true;
 
-    if (verifiedWhenStated) {
+    if (verifiesWhenStated) {
       context.debug(`...verified the '${propertyAssertionString}' stated property assertion.`);
     }
 
-    return verifiedWhenStated;
+    return verifiesWhenStated;
   }
 
   verifyWhenDerived(context) {
-    let verifiedWhenDerived;
+    let verifiesWhenDerived;
 
     const propertyAssertionString = this.string; ///
 
     context.trace(`Verifying the '${propertyAssertionString}' derived property assertion...`);
 
-    verifiedWhenDerived = true;
+    verifiesWhenDerived = true;
 
-    if (verifiedWhenDerived) {
+    if (verifiesWhenDerived) {
       context.debug(`...verified the '${propertyAssertionString}' derived property assertion.`);
     }
 
-    return verifiedWhenDerived;
+    return verifiesWhenDerived;
   }
 
   assign(assignments, context) {

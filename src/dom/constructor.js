@@ -39,15 +39,15 @@ export default domAssigned(class Constructor {
     const termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, context);
 
     if (termUnifiesWithConstructor) {
-      let verifiedAhead;
+      let verifiesAhead;
 
       const type = constructor.getType();
 
       term.setType(type);
 
-      verifiedAhead = verifyAhead();
+      verifiesAhead = verifyAhead();
 
-      termUnifies = verifiedAhead;  ///
+      termUnifies = verifiesAhead;  ///
     }
 
     if (termUnifies) {

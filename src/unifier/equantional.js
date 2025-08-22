@@ -71,9 +71,9 @@ class EquationalUnifier extends Unifier {
                   rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
                   leftChildNodes = leftNonTerminalNodeChildNodes, ///
                   rightChildNodes = rightNonTerminalNodeChildNodes, ///
-                  childNodesUnifies = equationalUnifier.unifyChildNodes(leftChildNodes, rightChildNodes, context);
+                  childNodesUnify = equationalUnifier.unifyChildNodes(leftChildNodes, rightChildNodes, context);
 
-            if (childNodesUnifies) {
+            if (childNodesUnify) {
               termUnifies = true;
             }
           }

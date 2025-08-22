@@ -17,13 +17,13 @@ export default domAssigned(class Error {
   }
 
   verify() {
-    let verified = false;
+    let verifies = false;
 
     const errorString = this.string;  ///
 
     this.fileContext.warning(`The '${errorString}' error cannot be verified.`);
 
-    return verified;
+    return verifies;
   }
 
   static name = "Error";

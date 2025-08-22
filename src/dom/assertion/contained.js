@@ -46,40 +46,40 @@ export default domAssigned(class ContainedAssertion {
   }
 
   verify(assignments, stated, context) {
-    let verified = false;
+    let verifies = false;
 
     const containedAssertionString = this.string; ///
 
     context.trace(`Verifying the '${containedAssertionString}' contained assertion...`);
 
-    const termVerified = this.verifyTerm(assignments, stated, context),
-          frameVerified = this.verifyFrame(assignments, stated, context),
-          statementVerified = this.verifyStatement(assignments, stated, context)
+    const termVerifies = this.verifyTerm(assignments, stated, context),
+          frameVerifies = this.verifyFrame(assignments, stated, context),
+          statementVerifies = this.verifyStatement(assignments, stated, context)
 
-    if (termVerified || frameVerified || statementVerified) {
-      let verifiedWhenStated = false,
-          verifiedWhenDerived = false;
+    if (termVerifies || frameVerifies || statementVerifies) {
+      let verifiesWhenStated = false,
+          verifiesWhenDerived = false;
 
       if (stated) {
-        verifiedWhenStated = this.verifyWhenStated(assignments, context);
+        verifiesWhenStated = this.verifyWhenStated(assignments, context);
       } else {
-        verifiedWhenDerived = this.verifyWhenDerived(context);
+        verifiesWhenDerived = this.verifyWhenDerived(context);
       }
 
-      if (verifiedWhenStated || verifiedWhenDerived) {
-        verified = true;
+      if (verifiesWhenStated || verifiesWhenDerived) {
+        verifies = true;
       }
     }
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${containedAssertionString}' contained assertion.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyTerm(assignments, stated, context) {
-    let termVerified = false;
+    let termVerifies = false;
 
     if (this.term !== null) {
       const termString = this.term.getString();
@@ -91,23 +91,23 @@ export default domAssigned(class ContainedAssertion {
       if (!termSimple) {
         context.debug(`The '${termString}' term is not simple.`);
       } else {
-        termVerified = this.term.verify(context, () => {
-          const verifiedAhead = true;
+        termVerifies = this.term.verify(context, () => {
+          const verifiesAhead = true;
 
-          return verifiedAhead;
+          return verifiesAhead;
         });
 
-        if (termVerified) {
+        if (termVerifies) {
           context.debug(`...verified the '${termString}' term.`);
         }
       }
     }
 
-    return termVerified;
+    return termVerifies;
   }
 
   verifyFrame(assignments, stated, context) {
-    let frameVerified = false;
+    let frameVerifies = false;
 
     if (this.frame !== null) {
       const frameString = this.frame.getString();
@@ -123,19 +123,19 @@ export default domAssigned(class ContainedAssertion {
 
         assignments = null; ///
 
-        frameVerified = this.frame.verify(assignments, stated, context);
+        frameVerifies = this.frame.verify(assignments, stated, context);
 
-        if (frameVerified) {
+        if (frameVerifies) {
           context.debug(`...verified the '${frameString}' frame.`);
         }
       }
     }
 
-    return frameVerified;
+    return frameVerifies;
   }
 
   verifyStatement(assignments, stated, context) {
-    let statementVerified = false;
+    let statementVerifies = false;
 
     if (this.statement !== null) {
       const statementString = this.statement.getString();
@@ -146,46 +146,46 @@ export default domAssigned(class ContainedAssertion {
 
       assignments = null; ///
 
-      statementVerified = this.statement.verify(assignments, stated, context);
+      statementVerifies = this.statement.verify(assignments, stated, context);
 
-      if (statementVerified) {
+      if (statementVerifies) {
         context.debug(`...verified the '${statementString}' statement.`);
       }
     }
 
-    return statementVerified;
+    return statementVerifies;
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiedWhenStated;
+    let verifiesWhenStated;
 
     const containedAssertionString = this.string; ///
 
     context.trace(`Verifying the '${containedAssertionString}' stated contained assertion...`);
 
-    verifiedWhenStated = true;
+    verifiesWhenStated = true;
 
-    if (verifiedWhenStated) {
+    if (verifiesWhenStated) {
       context.debug(`...verified the '${containedAssertionString}' stated contained assertion.`);
     }
 
-    return verifiedWhenStated;
+    return verifiesWhenStated;
   }
 
   verifyWhenDerived(context) {
-    let verifiedWhenDerived;
+    let verifiesWhenDerived;
 
     const containedAssertionString = this.string; ///
 
     context.trace(`Verifying the '${containedAssertionString}' derived contained assertion...`);
 
-    verifiedWhenDerived = verifyWhenDerived(this.term, this.frame, this.statement, this.negated, context);
+    verifiesWhenDerived = verifyWhenDerived(this.term, this.frame, this.statement, this.negated, context);
 
-    if (verifiedWhenDerived) {
+    if (verifiesWhenDerived) {
       context.debug(`...verified the '${containedAssertionString}' derived contained assertion.`);
     }
 
-    return verifiedWhenDerived;
+    return verifiesWhenDerived;
   }
 
   unifyIndependently(substitutions, context) {
@@ -202,9 +202,9 @@ export default domAssigned(class ContainedAssertion {
     const term = termFromTermAndSubstitutions(this.term, substitutions, context),
           frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),
           statement = statementFromStatementAndSubstitutions(this.statement, substitutions, context),
-          verifiedWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, context);
+          verifiesWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, context);
 
-    unifiesIndependently = verifiedWhenDerived; ///
+    unifiesIndependently = verifiesWhenDerived; ///
 
     if (unifiesIndependently) {
       context.debug(`...unified the '${containedAssertionString}' contained assertion independently.`);
@@ -238,18 +238,18 @@ export default domAssigned(class ContainedAssertion {
 });
 
 function verifyWhenDerived(term, frame, statement, negated, context) {
-  let verifiedWhenDerived = false;
+  let verifiesWhenDerived = false;
 
   if (statement !== null) {
     if (term !== null) {
       const termContained = statement.isTermContained(term, context);
 
       if (!negated && termContained) {
-        verifiedWhenDerived = true;
+        verifiesWhenDerived = true;
       }
 
       if (negated && !termContained) {
-        verifiedWhenDerived = true;
+        verifiesWhenDerived = true;
       }
     }
 
@@ -257,14 +257,14 @@ function verifyWhenDerived(term, frame, statement, negated, context) {
       const frameContained = statement.isFrameContained(frame, context);
 
       if (!negated && frameContained) {
-        verifiedWhenDerived = true;
+        verifiesWhenDerived = true;
       }
 
       if (negated && !frameContained) {
-        verifiedWhenDerived = true;
+        verifiesWhenDerived = true;
       }
     }
   }
 
-  return verifiedWhenDerived;
+  return verifiesWhenDerived;
 }

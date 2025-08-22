@@ -14,7 +14,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   }
 
   verify() {
-    let verified;
+    let verifies;
 
     const axiom = this, ///
           axiomString = axiom.getString(),
@@ -22,13 +22,13 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     fileContext.trace(`Verifying the '${axiomString}' axiom...`);
 
-    const signatureVerified = this.verifySignature();
+    const signatureVerifies = this.verifySignature();
 
-    if (signatureVerified) {
-      verified = super.verify();
+    if (signatureVerifies) {
+      verifies = super.verify();
     }
 
-    if (verified) {
+    if (verifies) {
       const axiom = this; ///
 
       fileContext.addAxiom(axiom);
@@ -36,11 +36,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
       fileContext.debug(`...verified the '${axiomString}' axiom.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifySignature() {
-    let signatureVerified = true;
+    let signatureVerifies = true;
 
     const satisfiable = this.isSatisfiable();
 
@@ -50,10 +50,10 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
             localContext = LocalContext.fromFileContext(fileContext),
             context = localContext; ///
 
-      signatureVerified = signature.verify(context);
+      signatureVerifies = signature.verify(context);
     }
 
-    return signatureVerified;
+    return signatureVerifies;
   }
 
   matchSignature(signature, substitutions, context) {
@@ -141,9 +141,9 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     if (lastStepUnifies) {
       const suppositions = subproof.getSuppositions(),
-            suppositionsUnifies = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
+            suppositionsUnify = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
 
-      if (suppositionsUnifies) {
+      if (suppositionsUnify) {
         subproofUnifies = true;
       }
     }
@@ -188,7 +188,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   }
 
   unifySuppositions(suppositions, substitutions, generalContext, specificContext) {
-    let suppositionsUnifies = false;
+    let suppositionsUnify = false;
 
     const specificSuppositions = suppositions;  ///
 
@@ -210,11 +210,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
       });
 
       if (suppositionsMatch) {
-        suppositionsUnifies = true;
+        suppositionsUnify = true;
       }
     }
 
-    return suppositionsUnifies;
+    return suppositionsUnify;
   }
 
   unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, substitutions, context) {
@@ -233,9 +233,9 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     if (deductionUnifies) {
       const suppositions = axiomLemmaTheoremConjecture.getSuppositions(),
-            suppositionsUnifies = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
+            suppositionsUnify = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
 
-      axiomLemmaTheoremConjectureUnifies = suppositionsUnifies; ///
+      axiomLemmaTheoremConjectureUnifies = suppositionsUnify; ///
     }
 
     if (axiomLemmaTheoremConjectureUnifies) {

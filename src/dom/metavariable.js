@@ -113,7 +113,7 @@ export default domAssigned(class Metavariable {
   }
 
   verify(context) {
-    let verified;
+    let verifies;
 
     const metavariableString = this.string; ///
 
@@ -124,17 +124,17 @@ export default domAssigned(class Metavariable {
           specificContext = context,  ///
           metavariablePresent = generalContext.isMetavariablePresent(metavariable, generalContext, specificContext);
 
-    verified = metavariablePresent; ///
+    verifies = metavariablePresent; ///
 
-    if (verified) {
+    if (verifies) {
       context.debug(`...verified the '${metavariableString}' metavariable.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   verifyGivenMetaType(metaType, context) {
-    let verifiedGivenMetaType = false;
+    let verifiesGivenMetaType = false;
 
     const metavariableString = this.string,  ///
           metaTypeString = metaType.getString();
@@ -151,14 +151,14 @@ export default domAssigned(class Metavariable {
     if (metavariable !== null) {
       const metavariableMetaTypeEqualToMetaType = metavariable.isMetaTypeEqualTo(metaType);
 
-      verifiedGivenMetaType = metavariableMetaTypeEqualToMetaType;  ///
+      verifiesGivenMetaType = metavariableMetaTypeEqualToMetaType;  ///
     }
 
-    if (verifiedGivenMetaType) {
+    if (verifiesGivenMetaType) {
       context.debug(`...verified the '${metavariableString}' metavariable given the '${metaTypeString}' meta-type.`);
     }
 
-    return verifiedGivenMetaType;
+    return verifiesGivenMetaType;
   }
 
   unifyFrame(frame, substitutions, generalContext, specificContext) {

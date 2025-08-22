@@ -6,7 +6,7 @@ import { domAssigned } from "../dom";
 
 export default domAssigned(class Lemma extends TopLevelAssertion {
   verify() {
-    let verified;
+    let verifies;
 
     const lemma = this, ///
           fileContext = this.getFileContext(),
@@ -16,9 +16,9 @@ export default domAssigned(class Lemma extends TopLevelAssertion {
       fileContext.trace(`Verifying a lemma...`) :
         fileContext.trace(`Verifying the '${lemmaString}' lemma...`);
 
-    verified = super.verify();
+    verifies = super.verify();
 
-    if (verified) {
+    if (verifies) {
       const lemma = this; ///
 
       fileContext.addLemma(lemma);
@@ -28,7 +28,7 @@ export default domAssigned(class Lemma extends TopLevelAssertion {
           fileContext.debug(`...verified the '${lemmaString}' lemma.`);
     }
 
-    return verified;
+    return verifies;
   }
 
   static name = "Lemma";

@@ -1,7 +1,7 @@
 "use strict";
 
 function verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap) {
-  let releaseVerified = false;
+  let releaseVerifies = false;
 
   const releaseContext = releaseContextMap[releaseName];
 
@@ -9,37 +9,37 @@ function verifyRelease(releaseName, dependentName, dependentReleased, releaseCon
     const released = releaseContext.isReleased();
 
     if (released) {
-      releaseVerified = true;
+      releaseVerifies = true;
     } else {
       if (dependentReleased) {
-        releaseContext.warning(`The '${releaseName}' project cannot be verified because its '${dependentName}' dependent is a package.`);
+        releaseContext.warning(`The '${releaseName}' project cannot be verifies because its '${dependentName}' dependent is a package.`);
       } else {
         const dependentName = releaseName,  ///
               dependentReleased = released, ///
-              dependencyReleasesVVerified = verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap);
+              dependencyReleasesVVerifies = verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap);
 
-        if (dependencyReleasesVVerified) {
-          let releaseContextVerified;
+        if (dependencyReleasesVVerifies) {
+          const releaseContextVerified = releaseContext.isVerified();
 
-          releaseContextVerified = releaseContext.isVerified();
-
-          if (!releaseContextVerified) {
+          if (releaseContextVerified) {
+            releaseVerifies = true;
+          } else {
             releaseContext.info(`Verifying the '${releaseName}' project...`);
 
-            releaseContextVerified = releaseContext.verify();
+            const releaseContextVerifies = releaseContext.verify();
 
-            if (releaseContextVerified) {
+            if (releaseContextVerifies) {
               releaseContext.info(`...verified the '${releaseName}' project.`);
+
+              releaseVerifies = true;
             }
           }
-
-          releaseVerified = releaseContextVerified; ///
         }
       }
     }
   }
 
-  return releaseVerified;
+  return releaseVerifies;
 }
 
 export default {
@@ -48,15 +48,15 @@ export default {
 
 function verifyDependencyReleases(releaseContext, dependentName, dependentReleased, releaseContextMap) {
   const dependencies = releaseContext.getDependencies(),
-        dependencyReleasesVVerified = dependencies.everyDependency((dependency) => {
+        dependencyReleasesVVerifies = dependencies.everyDependency((dependency) => {
           const name = dependency.getName(),
                 releaseName = name, ///
-                releaseVerified = verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap);
+                releaseVerifies = verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap);
 
-          if (releaseVerified) {
+          if (releaseVerifies) {
             return true;
           }
         });
 
-  return dependencyReleasesVVerified;
+  return dependencyReleasesVVerifies;
 }
