@@ -24,7 +24,7 @@ export default domAssigned(class Combinator {
   }
 
   unifyStatement(statement, assignments, stated, context) {
-    let statementUnified;
+    let statementUnifies;
 
     const combinator = this,  ///
           statementString = statement.getString(),
@@ -32,15 +32,15 @@ export default domAssigned(class Combinator {
 
     context.trace(`Unifying the '${statementString}' statement with the '${combinatorString}' combinator...`);
 
-    const statementUnifiedWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, context);
+    const statementUnifiesWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, context);
 
-    statementUnified = statementUnifiedWithCombinator; ///
+    statementUnifies = statementUnifiesWithCombinator; ///
 
-    if (statementUnified) {
+    if (statementUnifies) {
       context.debug(`...unified the '${statementString}' statement with the '${combinatorString}' combinator.`);
     }
 
-    return statementUnified;
+    return statementUnifies;
   }
 
   toJSON() {

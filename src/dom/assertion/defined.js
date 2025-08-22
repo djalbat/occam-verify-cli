@@ -161,7 +161,7 @@ export default domAssigned(class DefinedAssertion {
   }
 
   unifyIndependently(substitutions, context) {
-    let unifiedIndependently;
+    let unifiesIndependently;
 
     const definedAssertionString = this.string; ///
 
@@ -175,13 +175,13 @@ export default domAssigned(class DefinedAssertion {
           frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),
           verifiedWhenDerived = verifyWhenDerived(term, frame, this.negated, context);
 
-    unifiedIndependently = verifiedWhenDerived; ///
+    unifiesIndependently = verifiedWhenDerived; ///
 
-    if (unifiedIndependently) {
+    if (unifiesIndependently) {
       context.debug(`...unified the '${definedAssertionString}' defined assertion independently.`);
     }
 
-    return unifiedIndependently;
+    return unifiesIndependently;
   }
 
   static name = "DefinedAssertion";

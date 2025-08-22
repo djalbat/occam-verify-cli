@@ -10,15 +10,15 @@ const typeNodeQuery = nodeQuery("/type"),
 
 class MetavariableUnifier extends Unifier {
   unify(generalMetavariableNode, specificMetavariableNode, generalContext, specificContext) {
-    let metavariableUnified;
+    let metavariableUnifies;
 
     const generalNonTerminalNode = generalMetavariableNode, ///
           specificNonTerminalNode = specificMetavariableNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, generalContext, specificContext);
+          nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, generalContext, specificContext);
 
-    metavariableUnified = nonTerminalNodeUnified; ///
+    metavariableUnifies = nonTerminalNodeUnifies; ///
 
-    return metavariableUnified;
+    return metavariableUnifies;
   }
 
   static maps = [
@@ -26,7 +26,7 @@ class MetavariableUnifier extends Unifier {
       generalNodeQuery: typeNodeQuery,
       specificNodeQuery: termNodeQuery,
       unify: (generalTypeNode, specificTermNode, generalContext, specificContext) => {
-        let termUnified;
+        let termUnifies;
 
         const { Term } = dom,
               typeNode = generalTypeNode, ///
@@ -37,9 +37,9 @@ class MetavariableUnifier extends Unifier {
               term = Term.fromTermNode(termNode, context),
               termVerifiedGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
-        termUnified = termVerifiedGivenType;  ///
+        termUnifies = termVerifiedGivenType;  ///
 
-        return termUnified;
+        return termUnifies;
       }
     }
   ];

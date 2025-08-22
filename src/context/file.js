@@ -358,9 +358,9 @@ export default class FileContext {
   findLabelByReference(reference, context) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
-            const metavariableUnified = label.unifyReference(reference, context);
+            const metavariableUnifies = label.unifyReference(reference, context);
 
-            if (metavariableUnified) {
+            if (metavariableUnifies) {
               return true;
             }
           }) || null;
@@ -484,9 +484,9 @@ export default class FileContext {
     filter(metaLemmas, (metaLemma) => {
       const context = this, ///
             metaLemmaMetaTheorem = metaLemma, ///
-            metaLemmaMetatheoremUnified = reference.unifyMetaLemmaMetatheorem(metaLemmaMetaTheorem, context);
+            metaLemmaMetatheoremUnifies = reference.unifyMetaLemmaMetatheorem(metaLemmaMetaTheorem, context);
 
-      if (metaLemmaMetatheoremUnified) {
+      if (metaLemmaMetatheoremUnifies) {
         return true;
       }
     });
@@ -500,9 +500,9 @@ export default class FileContext {
     filter(metatheorems, (metatheorem) => {
       const context = this, ///
             metaLemmaMetaTheorem = metatheorem, ///
-            metaLemmaMetatheoremUnified = reference.unifyMetaLemmaMetatheorem(metaLemmaMetaTheorem, context);
+            metaLemmaMetatheoremUnifies = reference.unifyMetaLemmaMetatheorem(metaLemmaMetaTheorem, context);
 
-      if (metaLemmaMetatheoremUnified) {
+      if (metaLemmaMetatheoremUnifies) {
         return true;
       }
     });
@@ -548,9 +548,9 @@ export default class FileContext {
 
       metavariable = specificMetavariable;  ///
 
-      const metavariableUnified = generalMetavariable.unifyMetavariable(metavariable, generalContext, specificContext);
+      const metavariableUnifies = generalMetavariable.unifyMetavariable(metavariable, generalContext, specificContext);
 
-      if (metavariableUnified) {
+      if (metavariableUnifies) {
         return true;
       }
     }) || null;
@@ -708,9 +708,9 @@ export default class FileContext {
           labelPresent = labels.some((label) => {
             const context = this, ///
                   substitutions = Substitutions.fromNothing(),
-                  labelUnified = reference.unifyLabel(label, substitutions, context);
+                  labelUnifies = reference.unifyLabel(label, substitutions, context);
 
-            if (labelUnified) {
+            if (labelUnifies) {
               return true;
             }
           });
@@ -729,9 +729,9 @@ export default class FileContext {
     const metavariables = this.getMetavariables(),
           metavariablePresent = metavariables.some((metavariable) => {
             const context = this, ///
-                  metavariableUnified = reference.unifyMetavariable(metavariable, context);
+                  metavariableUnifies = reference.unifyMetavariable(metavariable, context);
 
-            if (metavariableUnified) {
+            if (metavariableUnifies) {
               return true;
             }
           });

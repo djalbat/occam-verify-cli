@@ -8,19 +8,19 @@ import { domAssigned } from "../../dom";
 
 export default domAssigned(class BracketedCombinator extends Combinator {
   unifyStatement(statement, assignments, stated, context) {
-    let statementUnified;
+    let statementUnifies;
 
     const statementString = statement.getString();
 
     context.trace(`Unifying the '${statementString}' statement with the bracketed combinator...`);
 
-    statementUnified = super.unifyStatement(statement, assignments, stated, context);
+    statementUnifies = super.unifyStatement(statement, assignments, stated, context);
 
-    if (statementUnified) {
+    if (statementUnifies) {
       context.debug(`...unified the '${statementString}' statement with the bracketed combinator.`);
     }
 
-    return statementUnified;
+    return statementUnifies;
   }
 
   static fromNothing() {

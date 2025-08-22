@@ -8,13 +8,13 @@ import { domAssigned } from "../../dom";
 
 export default domAssigned(class BracketedConstructor extends Constructor {
   unifyTerm(term, context, verifyAhead) {
-    let termUnified;
+    let termUnifies;
 
     const termString = term.getString();
 
     context.trace(`Unifying the '${termString}' term with the bracketed constructor...`, term);
 
-    termUnified = super.unifyTerm(term, context, () => {
+    termUnifies = super.unifyTerm(term, context, () => {
       let verifiedAhead = false;
 
       const { Term } = dom,
@@ -45,11 +45,11 @@ export default domAssigned(class BracketedConstructor extends Constructor {
       return verifiedAhead;
     });
 
-    if (termUnified) {
+    if (termUnifies) {
       context.debug(`...unified the '${termString}' term with the bracketed constructor.`, term);
     }
 
-    return termUnified;
+    return termUnifies;
   }
 
   static fromNothing() {

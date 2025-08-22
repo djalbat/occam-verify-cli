@@ -116,18 +116,18 @@ export default domAssigned(class StatementSubstitution extends Substitution {
 
       specificContext.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
 
-      const substitutionUnified = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
+      const substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
 
 
-      if (substitutionUnified) {
+      if (substitutionUnifies) {
         specificContext.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
       }
 
-      substitutionUnified ?
+      substitutionUnifies ?
         substitutions.continue() :
           substitutions.rollback(specificContext);
 
-      substitutionResolved = substitutionUnified;  ///
+      substitutionResolved = substitutionUnifies;  ///
     }
 
     if (substitutionResolved) {
@@ -141,9 +141,9 @@ export default domAssigned(class StatementSubstitution extends Substitution {
     let specificSubstitution = null;
 
     const substitutions = Substitutions.fromNothing(),
-          statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+          statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    if (statementUnified) {
+    if (statementUnifies) {
       const substitutionsLength = substitutions.getLength();
 
       if (substitutionsLength === 1) {

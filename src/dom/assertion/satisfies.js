@@ -35,11 +35,7 @@ export default domAssigned(class SatisfiesAssertion {
     return this.reference;
   }
 
-  matchSubstitutions(substitutions, context) {
-    const substitutionsMatch = this.signature.matchSubstitutions(substitutions, context);
-
-    return substitutionsMatch;
-  }
+  correlateSubstitutions(substitutions, context) { return this.signature.correlateSubstitutions(substitutions, context); }
 
   verify(assignments, stated, context) {
     let verified = false;
@@ -94,7 +90,7 @@ export default domAssigned(class SatisfiesAssertion {
   }
 
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {
-    let statementUnified = false;
+    let statementUnifies = false;
 
     const statementString = statement.getString(),
           satisfiesAssertionString = this.string; ///
@@ -118,24 +114,29 @@ export default domAssigned(class SatisfiesAssertion {
 
         substitutions = Substitutions.fromNothing();
 
-        statementUnified = axiom.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
+        statementUnifies = axiom.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 
-        if (statementUnified) {
+        if (statementUnifies) {
           const substitutionsA = substitutions, ///
-                substitutionsMatch = substitutionsB.matchSubstitutions(substitutionsA);
+                substitutionsMatch = substitutionsA.correlateSubstitutions(substitutionsB);
 
           if (!substitutionsMatch) {
-            statementUnified = false;
+            const substitutionsAString = substitutionsA.asString(),
+                  substitutionsBString = substitutionsB.asString();
+
+            context.trace(`THe signature's ${substitutionsBString} substitutions do not correlate with the unification's ${substitutionsAString} substitutions.`);
+
+            statementUnifies = false;
           }
         }
       }
     }
 
-    if (statementUnified) {
+    if (statementUnifies) {
       context.debug(`...unified the '${statementString}' statement with the '${satisfiesAssertionString}' satisfies assertion.`);
     }
 
-    return statementUnified;
+    return statementUnifies;
   }
 
   static name = "SatisfiesAssertion";

@@ -142,7 +142,7 @@ export default domAssigned(class Statement {
   }
 
   unifySubproof(subproof, substitutions, generalContext, specificContext) {
-    let subproofUnified = false;
+    let subproofUnifies = false;
 
     const context = specificContext,  ///
           statement = this, ///
@@ -157,26 +157,26 @@ export default domAssigned(class Statement {
       const subproofStatements = subproof.getStatements(),
             subproofAssertionStatements = subproofAssertion.getStatements();
 
-      subproofUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
+      subproofUnifies = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
         const generalStatement = subproofAssertionStatement,  ///
               specificStatement = subproofStatement,  ///
-              statementUnified = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+              statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
-        if (statementUnified) {
+        if (statementUnifies) {
           return true;
         }
       });
 
-      if (subproofUnified) {
+      if (subproofUnifies) {
         specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
       }
     }
 
-    return subproofUnified;
+    return subproofUnifies;
   }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {
-    let statementUnified;
+    let statementUnifies;
 
     const generalStatement = this,  ///
           specificStatement = statement, ///
@@ -185,17 +185,17 @@ export default domAssigned(class Statement {
 
     specificContext.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`);
 
-    statementUnified = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+    statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
-    if (statementUnified) {
+    if (statementUnifies) {
       specificContext.debug(`...unified the '${specificStatementString}' statement with the '${generalStatementString}' statement.`);
     }
 
-    return statementUnified;
+    return statementUnifies;
   }
 
   unifyIndependently(substitutions, context) {
-    let unifiedIndependently = false;
+    let unifiesIndependently = false;
 
     const statement = this, ///
           statementString = this.string;  ///
@@ -206,22 +206,22 @@ export default domAssigned(class Statement {
           containedAssertion = containedAssertionFromStatement(statement, context);
 
     if (definedAssertion !== null) {
-      const definedAssertionUnifiedIndependently = definedAssertion.unifyIndependently(substitutions, context);
+      const definedAssertionUnifiesIndependently = definedAssertion.unifyIndependently(substitutions, context);
 
-      unifiedIndependently = definedAssertionUnifiedIndependently; ///
+      unifiesIndependently = definedAssertionUnifiesIndependently; ///
     }
 
     if (containedAssertion !== null) {
-      const containedAssertionUnifiedIndependently = containedAssertion.unifyIndependently(substitutions, context);
+      const containedAssertionUnifiesIndependently = containedAssertion.unifyIndependently(substitutions, context);
 
-      unifiedIndependently = containedAssertionUnifiedIndependently; ///
+      unifiesIndependently = containedAssertionUnifiesIndependently; ///
     }
 
-    if (unifiedIndependently) {
+    if (unifiesIndependently) {
       context.debug(`...unified the '${statementString}' statement independently.`);
     }
 
-    return unifiedIndependently;
+    return unifiesIndependently;
   }
 
   equateWithStepsOrSubproofs(stepsOrSubproofs, context) {
@@ -229,9 +229,9 @@ export default domAssigned(class Statement {
 
     equateDdWithStepsOrSubproofs = backwardsSome(stepsOrSubproofs, (stepOrSubproof) => {
       const statement = this, ///
-            statementUnified = stepOrSubproof.equateWithStatement(statement, context);
+            statementUnifies = stepOrSubproof.equateWithStatement(statement, context);
 
-      if (statementUnified) {
+      if (statementUnifies) {
         return true;
       }
     });

@@ -12,9 +12,9 @@ class EquationalUnifier extends Unifier {
 
     const generalNonTerminalNode = leftTermNode, ///
           specificNonTerminalNode = rightTermNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, context);
+          nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, context);
 
-    termsEquated = nonTerminalNodeUnified; ///
+    termsEquated = nonTerminalNodeUnifies; ///
 
     return termsEquated;
   };
@@ -24,9 +24,9 @@ class EquationalUnifier extends Unifier {
 
     const generalNonTerminalNode = statementANode, ///
           specificNonTerminalNode = statementBNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, context);
+          nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, context);
 
-    statementsEquated = nonTerminalNodeUnified; ///
+    statementsEquated = nonTerminalNodeUnifies; ///
 
     return statementsEquated;
   };
@@ -36,18 +36,18 @@ class EquationalUnifier extends Unifier {
       generalNodeQuery: termNodeQuery,  ///
       specificNodeQuery: termNodeQuery, ///
       unify: (leftTermNode, rightTermNode, context) => {
-        let termUnified = false;
+        let termUnifies = false;
 
-        if (!termUnified) {
+        if (!termUnifies) {
           const depth = Infinity,
                 leftTermNodeMatchesRightTermNode = leftTermNode.match(rightTermNode, depth);
 
           if (leftTermNodeMatchesRightTermNode) {
-            termUnified = true;
+            termUnifies = true;
           }
         }
 
-        if (!termUnified) {
+        if (!termUnifies) {
           const equivalences = context.getEquivalences(),
                 termNodes = [
                   leftTermNode,
@@ -56,11 +56,11 @@ class EquationalUnifier extends Unifier {
                 equivalence = equivalences.findEquivalenceByTermNodes(termNodes);
 
           if (equivalence !== null) {
-            termUnified = true;
+            termUnifies = true;
           }
         }
 
-        if (!termUnified) {
+        if (!termUnifies) {
           const depth = 1,
                 leftTermNodeMatchesRightTermNode = leftTermNode.match(rightTermNode, depth);
 
@@ -71,15 +71,15 @@ class EquationalUnifier extends Unifier {
                   rightNonTerminalNodeChildNodes = rightNonTerminalNode.getChildNodes(),
                   leftChildNodes = leftNonTerminalNodeChildNodes, ///
                   rightChildNodes = rightNonTerminalNodeChildNodes, ///
-                  childNodesUnified = equationalUnifier.unifyChildNodes(leftChildNodes, rightChildNodes, context);
+                  childNodesUnifies = equationalUnifier.unifyChildNodes(leftChildNodes, rightChildNodes, context);
 
-            if (childNodesUnified) {
-              termUnified = true;
+            if (childNodesUnifies) {
+              termUnifies = true;
             }
           }
         }
 
-        return termUnified;
+        return termUnifies;
       }
     }
   ];

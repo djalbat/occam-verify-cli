@@ -189,7 +189,7 @@ export default domAssigned(class ContainedAssertion {
   }
 
   unifyIndependently(substitutions, context) {
-    let unifiedIndependently;
+    let unifiesIndependently;
 
     const containedAssertionString = this.string; ///
 
@@ -204,13 +204,13 @@ export default domAssigned(class ContainedAssertion {
           statement = statementFromStatementAndSubstitutions(this.statement, substitutions, context),
           verifiedWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, context);
 
-    unifiedIndependently = verifiedWhenDerived; ///
+    unifiesIndependently = verifiedWhenDerived; ///
 
-    if (unifiedIndependently) {
+    if (unifiesIndependently) {
       context.debug(`...unified the '${containedAssertionString}' contained assertion independently.`);
     }
 
-    return unifiedIndependently;
+    return unifiesIndependently;
   }
 
   static name = "ContainedAssertion";

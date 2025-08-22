@@ -73,25 +73,25 @@ export default domAssigned(class Premise {
   }
 
   unifyIndependently(substitutions, context) {
-    let unifiedIndependently;
+    let unifiesIndependently;
 
     if (this.statement !== null) {
       const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, context);
 
-      unifiedIndependently = statementResolvedIndependently;  ///
+      unifiesIndependently = statementResolvedIndependently;  ///
     }
 
     if (this.procedureCall !== null) {
       const procedureCallResolvedIndependently = this.procedureCall.unifyIndependently(substitutions, context);
 
-      unifiedIndependently = procedureCallResolvedIndependently;  ///
+      unifiesIndependently = procedureCallResolvedIndependently;  ///
     }
 
-    return unifiedIndependently;
+    return unifiesIndependently;
   }
 
   unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext) {
-    let stepOrSubproofUnified = false;
+    let stepOrSubproofUnifies = false;
 
     const stepOrSubProofStep = stepOrSubproof.isStep(),
           subproof = stepOrSubProofStep ?
@@ -104,41 +104,43 @@ export default domAssigned(class Premise {
     substitutions.snapshot();
 
     if (subproof !== null) {
-      const subproofUnified = this.unifySubproof(subproof, substitutions, generalContext, specificContext);
+      const subproofUnifies = this.unifySubproof(subproof, substitutions, generalContext, specificContext);
 
-      stepOrSubproofUnified = subproofUnified; ///
+      stepOrSubproofUnifies = subproofUnifies; ///
     }
 
     if (step !== null) {
-      const statementUnified = this.unifyStep(step, substitutions, generalContext, specificContext);
+      const statementUnifies = this.unifyStep(step, substitutions, generalContext, specificContext);
 
-      stepOrSubproofUnified = statementUnified;  ///
+      stepOrSubproofUnifies = statementUnifies;  ///
     }
 
-    if (stepOrSubproofUnified) {
+    if (stepOrSubproofUnifies) {
       substitutions.resolve(generalContext, specificContext);
     }
 
-    stepOrSubproofUnified ?
+    stepOrSubproofUnifies ?
       substitutions.continue() :
         substitutions.rollback(specificContext);
 
-    return stepOrSubproofUnified;
+    return stepOrSubproofUnifies;
   }
 
   unifyStep(step, substitutions, generalContext, specificContext) {
-    let stepUnified;
+    let stepUnifies = false;
 
     const statement = step.getStatement(),
-          statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    stepUnified = statementUnified;  ///
+    if (statementUnifies) {
+      stepUnifies = true;
+    }
 
-    return stepUnified;
+    return stepUnifies;
   }
 
   unifySubproof(subproof, substitutions, generalContext, specificContext) {
-    let subproofUnified = false;
+    let subproofUnifies = false;
 
     const premise = this, ///
           subproofString = subproof.getString(),
@@ -152,19 +154,19 @@ export default domAssigned(class Premise {
             subproofAssertion = subproofAssertionFromStatement(this.statement, context);
 
       if (subproofAssertion !== null) {
-        subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
+        subproofUnifies = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
       }
     }
 
-    if (subproofUnified) {
+    if (subproofUnifies) {
       specificContext.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
     }
 
-    return subproofUnified;
+    return subproofUnifies;
   }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {
-    let statementUnified;
+    let statementUnifies;
 
     const premise = this, ///
           premiseString = premise.getString(),
@@ -173,14 +175,14 @@ export default domAssigned(class Premise {
     specificContext.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`);
 
     if (this.statement !== null) {
-      statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+      statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
     }
 
-    if (statementUnified) {
+    if (statementUnifies) {
       specificContext.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`);
     }
 
-    return statementUnified;
+    return statementUnifies;
   }
 
   toJSON() {

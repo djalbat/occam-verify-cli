@@ -82,7 +82,7 @@ export default domAssigned(class Reference {
   }
 
   unifyLabel(label, substitutions, context) {
-    let labelUnified;
+    let labelUnifies;
 
     const reference = this, ///
           labelString = label.getString(),
@@ -96,19 +96,19 @@ export default domAssigned(class Reference {
           labelMetavariable = label.getMetavariable(),
           generalMetavariable = this.metavariable,  ///
           specificMetavariable = labelMetavariable, ///
-          metavariableUnifiedIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
+          metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
 
-    labelUnified = metavariableUnifiedIntrinsically; ///
+    labelUnifies = metavariableUnifiesIntrinsically; ///
 
-    if (labelUnified) {
+    if (labelUnifies) {
       context.debug(`...unified the '${labelString}' label with the '${referenceString}' reference.`);
     }
 
-    return labelUnified;
+    return labelUnifies;
   }
 
   unifyMetavariable(metavariable, context) {
-    let metavariableUnified;
+    let metavariableUnifies;
 
     const reference = this, ///
           metavariableString = metavariable.getString(),
@@ -122,19 +122,19 @@ export default domAssigned(class Reference {
           specificContext = fileContext,  ///
           generalMetavariable = this.metavariable,  ///
           specificMetavariable = metavariable, ///
-          metavariableUnifiedIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
+          metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
 
-    metavariableUnified = metavariableUnifiedIntrinsically; ///
+    metavariableUnifies = metavariableUnifiesIntrinsically; ///
 
-    if (metavariableUnified) {
+    if (metavariableUnifies) {
       context.debug(`...unified the '${metavariableString}' metavariable with the '${referenceString}' reference.`);
     }
 
-    return metavariableUnified;
+    return metavariableUnifies;
   }
 
   unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context) {
-    let metaLemmaMetatheoremUnified;
+    let metaLemmaMetatheoremUnifies;
 
     const reference = this, ///
           referenceString = reference.getString(),
@@ -144,15 +144,15 @@ export default domAssigned(class Reference {
 
     const label = metaLemmaMetatheorem.getLabel(),
           substitutions = Substitutions.fromNothing(),
-          labelUnified = this.unifyLabel(label, substitutions, context);
+          labelUnifies = this.unifyLabel(label, substitutions, context);
 
-    metaLemmaMetatheoremUnified = labelUnified;  ///
+    metaLemmaMetatheoremUnifies = labelUnifies;  ///
 
-    if (metaLemmaMetatheoremUnified) {
+    if (metaLemmaMetatheoremUnifies) {
       context.trace(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${referenceString}' reference.`);
     }
 
-    return metaLemmaMetatheoremUnified;
+    return metaLemmaMetatheoremUnifies;
   }
 
   toJSON() {

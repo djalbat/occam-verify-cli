@@ -66,7 +66,7 @@ export default domAssigned(class ProcedureCall {
   }
 
   unifyIndependently(substitutions, context) {
-    let unifiedIndependently = false;
+    let unifiesIndependently = false;
 
     const procedureCallString = this.string; ///
 
@@ -80,18 +80,18 @@ export default domAssigned(class ProcedureCall {
       const value = procedure.call(expressions, context),
             boolean = value.getBoolean();
 
-      unifiedIndependently = boolean; ///
+      unifiesIndependently = boolean; ///
     } catch (exception) {
       const message = exception.getMessage();
 
       context.info(message);
     }
 
-    if (unifiedIndependently) {
+    if (unifiesIndependently) {
       context.debug(`...unified the '${procedureCallString}' procedure call independently.`);
     }
 
-    return unifiedIndependently;
+    return unifiesIndependently;
   }
 
   toJSON() {

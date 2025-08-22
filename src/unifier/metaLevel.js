@@ -14,13 +14,13 @@ const termNodeQuery = nodeQuery("/term"),
 
 class MetaLevelUnifier extends Unifier {
   unify(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext) {
-    let unifiedAtMetaLevel;
+    let unifiesAtMetaLevel;
 
-    const nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext);
+    const nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext);
 
-    unifiedAtMetaLevel = nonTerminalNodeUnified; ///
+    unifiesAtMetaLevel = nonTerminalNodeUnifies; ///
 
-    return unifiedAtMetaLevel;
+    return unifiesAtMetaLevel;
   }
 
   static maps = [
@@ -28,7 +28,7 @@ class MetaLevelUnifier extends Unifier {
       generalNodeQuery: statementNodeQuery,
       specificNodeQuery: statementNodeQuery,
       unify: (generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext) => {
-        let statementUnified;
+        let statementUnifies;
 
         const statementNode = generalStatementNode, ///
               singularMetavariableNode = statementNode.getSingularMetavariableNode();
@@ -55,21 +55,21 @@ class MetaLevelUnifier extends Unifier {
 
           const statement = Statement.fromStatementNode(statementNode, context);
 
-          statementUnified = metavariable.unifyStatement(statement, substitution, substitutions, generalContext, specificContext);
+          statementUnifies = metavariable.unifyStatement(statement, substitution, substitutions, generalContext, specificContext);
         } else {
-          const childNodesUnified = unifyChildNodes(generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext);
+          const childNodesUnifies = unifyChildNodes(generalStatementNode, specificStatementNode, substitutions, generalContext, specificContext);
 
-          statementUnified = childNodesUnified; ///
+          statementUnifies = childNodesUnifies; ///
         }
 
-        return statementUnified;
+        return statementUnifies;
       }
     },
     {
       generalNodeQuery: declarationMetavariableNodeQuery,
       specificNodeQuery: declarationMetavariableNodeQuery,
       unify: (generalDeclarationMetavariableNode, specificDeclarationMetavariableNode, substitutions, generalContext, specificContext) => {
-        let referenceUnified;
+        let referenceUnifies;
 
         const { Reference, Metavariable } = dom;
 
@@ -88,16 +88,16 @@ class MetaLevelUnifier extends Unifier {
 
         const reference = Reference.fromMetavariableNode(metavariableNode, context);
 
-        referenceUnified = metavariable.unifyReference(reference, substitutions, generalContext, specificContext);
+        referenceUnifies = metavariable.unifyReference(reference, substitutions, generalContext, specificContext);
 
-        return referenceUnified;
+        return referenceUnifies;
       }
     },
     {
       generalNodeQuery: frameMetavariableNodeQuery,
       specificNodeQuery: frameNodeQuery,
       unify: (generalFrameMetavariableNode, specificFrameNode, substitutions, generalContext, specificContext) => {
-        let frameUnified;
+        let frameUnifies;
 
         const { Frame, Metavariable } = dom,
               frameNode = specificFrameNode, ///
@@ -113,16 +113,16 @@ class MetaLevelUnifier extends Unifier {
 
         const frame = Frame.fromFrameNode(frameNode, context);
 
-        frameUnified = metavariable.unifyFrame(frame, substitutions, generalContext, specificContext);
+        frameUnifies = metavariable.unifyFrame(frame, substitutions, generalContext, specificContext);
 
-        return frameUnified;
+        return frameUnifies;
       }
     },
     {
       generalNodeQuery: termVariableNodeQuery,
       specificNodeQuery: termNodeQuery,
       unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
-        let termUnified;
+        let termUnifies;
 
         const { Term, Variable } = dom,
               termNode = specificTermNode, ///
@@ -138,9 +138,9 @@ class MetaLevelUnifier extends Unifier {
 
         const term = Term.fromTermNode(termNode, context);
 
-        termUnified = variable.unifyTerm(term, substitutions, generalContext, specificContext);
+        termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
 
-        return termUnified;
+        return termUnifies;
       }
     }
   ];
@@ -158,7 +158,7 @@ function unifyChildNodes(generalStatementNode, specificStatementNode, substituti
         generalChildNodes = generalNonTerminalNodeChildNodes, ///
         specificChildNodes = specificNonTerminalNodeChildNodes, ///
         childNodesVerified = metaLevelUnifier.unifyChildNodes(generalChildNodes, specificChildNodes, substitutions, generalContext, specificContext),
-        childNodesUnified = childNodesVerified; ///
+        childNodesUnifies = childNodesVerified; ///
 
-  return childNodesUnified;
+  return childNodesUnifies;
 }

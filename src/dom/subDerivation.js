@@ -33,9 +33,9 @@ export default domAssigned(class SubDerivation {
             stepOrSubproofVerified = stepOrSubproof.verify(substitutions, assignments, context);
 
       if (stepOrSubproofVerified) {
-        const stepOrSubproofUnified = stepOrSubproof.unify(substitutions, context);
+        const stepOrSubproofUnifies = stepOrSubproof.unify(substitutions, context);
 
-        if (stepOrSubproofUnified) {
+        if (stepOrSubproofUnifies) {
           const assignmentsAssigned = assignAssignments(assignments, context);
 
           if (assignmentsAssigned) {

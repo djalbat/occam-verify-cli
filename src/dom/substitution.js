@@ -135,13 +135,6 @@ export default class Substitution {
     return resolved;
   }
 
-  match(substitution) {
-    const equalTo = this.isEqualTo(substitution),
-          matches = equalTo;  ///
-
-    return matches;
-  }
-
   matchName(name) {
     const nameMatches = false;
 

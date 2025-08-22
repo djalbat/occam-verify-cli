@@ -13,15 +13,15 @@ const termNodeQuery = nodeQuery("/term"),
 
 class StatementWithCombinatorUnifier extends Unifier {
   unify(combinatorStatementNode, statementNode, assignments, stated, generalContext, specificContext) {
-    let statementUnifiedWithCombinator;
+    let statementUnifiesWithCombinator;
 
     const generalNonTerminalNode = combinatorStatementNode, ///
           specificNonTerminalNode = statementNode, ///
-          nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, assignments, stated, generalContext, specificContext);
+          nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, assignments, stated, generalContext, specificContext);
 
-    statementUnifiedWithCombinator = nonTerminalNodeUnified; ///
+    statementUnifiesWithCombinator = nonTerminalNodeUnifies; ///
 
-    return statementUnifiedWithCombinator;
+    return statementUnifiesWithCombinator;
   };
 
   static maps = [
@@ -29,7 +29,7 @@ class StatementWithCombinatorUnifier extends Unifier {
       generalNodeQuery: metaTypeNodeQuery,
       specificNodeQuery: statementNodeQuery,
       unify: (generalMetaTypeNode, specificStatementNode, assignments, stated, generalContext, specificContext) => {
-        let unified;
+        let unifies;
 
         const { Statement, MetaType } = dom,
               metaTypeNode = generalMetaTypeNode, ///
@@ -46,16 +46,16 @@ class StatementWithCombinatorUnifier extends Unifier {
         const statement = Statement.fromStatementNode(statementNode, context),
               statementVerifiedGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, context);
 
-        unified = statementVerifiedGivenType;
+        unifies = statementVerifiedGivenType;
 
-        return unified;
+        return unifies;
       }
     },
     {
       generalNodeQuery: metaTypeNodeQuery,
       specificNodeQuery: frameNodeQuery,
       unify: (generalMetaTypeNode, specificFrameNode, assignments, stated, generalContext, specificContext) => {
-        let unified;
+        let unifies;
 
         const { Frame, MetaType } = dom,
               metaTypeNode = generalMetaTypeNode, ///
@@ -72,16 +72,16 @@ class StatementWithCombinatorUnifier extends Unifier {
         const frame = Frame.fromFrameNode(frameNode, context),
               frameVerifiedGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, context);
 
-        unified = frameVerifiedGivenType;
+        unifies = frameVerifiedGivenType;
 
-        return unified;
+        return unifies;
       }
     },
     {
       generalNodeQuery: typeNodeQuery,
       specificNodeQuery: termNodeQuery,
       unify: (generalTypeNode, specificTermNode, assignments, stated, generalContext, specificContext) => {
-        let unified = false;
+        let unifies = false;
 
         const { Term } = dom,
               typeNode = generalTypeNode, ///
@@ -100,10 +100,10 @@ class StatementWithCombinatorUnifier extends Unifier {
               termVerifiedGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
         if (termVerifiedGivenType) {
-          unified = true;
+          unifies = true;
         }
 
-        return unified;
+        return unifies;
       }
     }
   ];

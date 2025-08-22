@@ -87,13 +87,13 @@ export default domAssigned(class Signature {
     return matches;
   }
 
-  matchSubstitutions(substitutions, context) {
-    let substitutionsMatch;
+  correlateSubstitutions(substitutions, context) {
+    let substitutionsCorrelated;
 
     const signatureString = this.string,
           substitutionsString = substitutions.asString();
 
-    context.trace(`Matching the '${substitutionsString}' substitutions against the ${signatureString} signature...`);
+    context.trace(`Correlating the '${substitutionsString}' substitutions against the ${signatureString} signature...`);
 
     const array = substitutions.getArray(),
           correlates = correlate(this.terms, array, (term, substitution) => {
@@ -105,13 +105,13 @@ export default domAssigned(class Signature {
             }
           });
 
-    substitutionsMatch = correlates;  ///
+    substitutionsCorrelated = correlates;  ///
 
-    if (substitutionsMatch) {
-      context.debug(`...matched the '${substitutionsString}' substitutions against the ${signatureString} signature.`);
+    if (substitutionsCorrelated) {
+      context.debug(`...correlated the '${substitutionsString}' substitutions against the ${signatureString} signature.`);
     }
 
-    return substitutionsMatch;
+    return substitutionsCorrelated;
   }
 
   toJSON() {

@@ -52,25 +52,25 @@ export default domAssigned(class Step {
   }
 
   unify(substitutions, context) {
-    let unified;
+    let unifies;
 
     const stepString = this.string;  ///
 
     context.trace(`Unifying the '${stepString}' step...`);
 
-    unified = unifyMixins.some((unifyMixin) => {
-      const unified = unifyMixin(this.statement, this.reference, substitutions, context);
+    unifies = unifyMixins.some((unifyMixin) => {
+      const unifies = unifyMixin(this.statement, this.reference, substitutions, context);
 
-      if (unified) {
+      if (unifies) {
         return true;
       }
     });
 
-    if (unified) {
+    if (unifies) {
       context.debug(`...unified the '${stepString}' step.`);
     }
 
-    return unified;
+    return unifies;
   }
 
   verify(substitutions, assignments, context) {
@@ -133,9 +133,9 @@ export default domAssigned(class Step {
     if (axiom !== null) {
       const step = this,  ///
             substitutions = Substitutions.fromNothing(),
-            statementUnified = axiom.unifyStep(step, substitutions, context);
+            stepUnifies = axiom.unifyStep(step, substitutions, context);
 
-      if (statementUnified) {
+      if (stepUnifies) {
         const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
 
         if (substitutionsMatch) {

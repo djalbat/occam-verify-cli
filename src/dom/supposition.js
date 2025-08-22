@@ -73,7 +73,7 @@ export default domAssigned(class Supposition {
   }
 
   unifySupposition(supposition, substitutions, generalContext, specificContext) {
-    let suppositionUnified;
+    let suppositionUnifies;
 
     const context = specificContext,  ///
           specificSupposition = supposition,  ///
@@ -83,37 +83,37 @@ export default domAssigned(class Supposition {
     context.trace(`Unifying the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition...`);
 
     const statement = specificSupposition.getStatement(),
-          statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    suppositionUnified = statementUnified;  ///
+    suppositionUnifies = statementUnifies;  ///
 
-    if (suppositionUnified) {
+    if (suppositionUnifies) {
       context.debug(`...unified the '${specificSuppositionString}' supposition with the '${generalSuppositionString}' supposition.`);
     }
 
-    return suppositionUnified;
+    return suppositionUnifies;
   }
 
   unifyIndependently(substitutions, context) {
-    let unifiedIndependently;
+    let unifiesIndependently;
 
     if (this.statement !== null) {
       const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, context);
 
-      unifiedIndependently = statementResolvedIndependently;  ///
+      unifiesIndependently = statementResolvedIndependently;  ///
     }
 
     if (this.procedureCall !== null) {
       const procedureCallResolvedIndependently = this.procedureCall.unifyIndependently(substitutions, context);
 
-      unifiedIndependently = procedureCallResolvedIndependently;  ///
+      unifiesIndependently = procedureCallResolvedIndependently;  ///
     }
 
-    return unifiedIndependently;
+    return unifiesIndependently;
   }
 
   unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext) {
-    let stepOrSubproofUnified = false;
+    let stepOrSubproofUnifies = false;
 
     const stepOrSubProofStep = stepOrSubproof.isStep(),
           subproof = stepOrSubProofStep ?
@@ -126,41 +126,41 @@ export default domAssigned(class Supposition {
     substitutions.snapshot();
 
     if (subproof !== null) {
-      const subproofUnified = this.unifySubproof(subproof, substitutions, generalContext, specificContext);
+      const subproofUnifies = this.unifySubproof(subproof, substitutions, generalContext, specificContext);
 
-      stepOrSubproofUnified = subproofUnified; ///
+      stepOrSubproofUnifies = subproofUnifies; ///
     }
 
     if (step !== null) {
-      const statementUnified = this.unifyStep(step, substitutions, generalContext, specificContext);
+      const statementUnifies = this.unifyStep(step, substitutions, generalContext, specificContext);
 
-      stepOrSubproofUnified = statementUnified;  ///
+      stepOrSubproofUnifies = statementUnifies;  ///
     }
 
-    if (stepOrSubproofUnified) {
+    if (stepOrSubproofUnifies) {
       substitutions.resolve(generalContext, specificContext);
     }
 
-    stepOrSubproofUnified ?
+    stepOrSubproofUnifies ?
       substitutions.continue() :
         substitutions.rollback(specificContext);
 
-    return stepOrSubproofUnified;
+    return stepOrSubproofUnifies;
   }
 
   unifyStep(step, substitutions, generalContext, specificContext) {
-    let stepUnified;
+    let stepUnifies;
 
     const statement = step.getStatement(),
-          statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    stepUnified = statementUnified;  ///
+    stepUnifies = statementUnifies;  ///
 
-    return stepUnified;
+    return stepUnifies;
   }
 
   unifySubproof(subproof, substitutions, generalContext, specificContext) {
-    let subproofUnified = false;
+    let subproofUnifies = false;
 
     const supposition = this, ///
           subproofString = subproof.getString(),
@@ -174,19 +174,19 @@ export default domAssigned(class Supposition {
             subproofAssertion = subproofAssertionFromStatement(this.statement, context);
 
       if (subproofAssertion !== null) {
-        subproofUnified = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
+        subproofUnifies = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
       }
     }
 
-    if (subproofUnified) {
+    if (subproofUnifies) {
       specificContext.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`);
     }
 
-    return subproofUnified;
+    return subproofUnifies;
   }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {
-    let statementUnified;
+    let statementUnifies;
 
     const supposition = this, ///
           statementString = statement.getString(),
@@ -195,14 +195,14 @@ export default domAssigned(class Supposition {
     specificContext.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`);
 
     if (this.statement !== null) {
-      statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+      statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
     }
 
-    if (statementUnified) {
+    if (statementUnifies) {
       specificContext.debug(`...unified the '${statementString}' statement with the '${suppositionString}' supposition.`);
     }
 
-    return statementUnified;
+    return statementUnifies;
   }
 
   toJSON() {

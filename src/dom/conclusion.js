@@ -45,7 +45,7 @@ export  default domAssigned(class Conclusion {
   }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {
-    let statementUnified;
+    let statementUnifies;
 
     const conclusion = this,  ///
           statementString = statement.getString(),
@@ -53,13 +53,13 @@ export  default domAssigned(class Conclusion {
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
 
-    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    if (statementUnified) {
+    if (statementUnifies) {
       specificContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
     }
 
-    return statementUnified;
+    return statementUnifies;
   }
 
   toJSON() {

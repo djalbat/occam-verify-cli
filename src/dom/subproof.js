@@ -55,11 +55,11 @@ export default domAssigned(class Subproof {
   }
 
   unify(substitutions, context) {
-    let unified;
+    let unifies;
 
-    unified = true; ///
+    unifies = true; ///
 
-    return unified;
+    return unifies;
   }
 
   verify(substitutions, assignments, context) {
@@ -89,11 +89,11 @@ export default domAssigned(class Subproof {
   }
 
   equateWithStatement(statement, context) {
-    let statementUnified = false;
+    let statementUnifies = false;
 
     debugger
 
-    return statementUnified;
+    return statementUnifies;
   }
 
   unifySatisfiesAssertion(satisfiesAssertion, context) {
@@ -113,9 +113,9 @@ export default domAssigned(class Subproof {
       if (axiomSatisfiable) {
         const subproof = this,  ///
               substitutions = Substitutions.fromNothing(),
-              statementUnified = axiom.unifySubproof(subproof, substitutions, context);
+              statementUnifies = axiom.unifySubproof(subproof, substitutions, context);
 
-        if (statementUnified) {
+        if (statementUnifies) {
           const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
 
           if (substitutionsMatch) {

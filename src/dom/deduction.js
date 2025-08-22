@@ -44,7 +44,7 @@ export default domAssigned(class Deduction {
   }
 
   unifyStatement(statement, substitutions, generalContext, specificContext) {
-    let statementUnified;
+    let statementUnifies;
 
     const deduction = this,  ///
           statementString = statement.getString(),
@@ -52,17 +52,17 @@ export default domAssigned(class Deduction {
 
     specificContext.trace(`Unifying the '${statementString}' statement with the '${deductionString}' deduction...`);
 
-    statementUnified = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+    statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    if (statementUnified) {
+    if (statementUnifies) {
       specificContext.debug(`...unified the '${statementString}' statement with the '${deductionString}' deduction.`);
     }
 
-    return statementUnified;
+    return statementUnifies;
   }
 
   unifyDeduction(deduction, substitutions, generalContext, specificContext) {
-    let deductionUnified;
+    let deductionUnifies;
 
     const context = specificContext,  ///
           specificDeduction = deduction,  ///
@@ -72,15 +72,15 @@ export default domAssigned(class Deduction {
     context.trace(`Unifying the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction...`);
 
     const statement = specificDeduction.getStatement(),
-          statementUnified = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
 
-    deductionUnified = statementUnified;  ///
+    deductionUnifies = statementUnifies;  ///
 
-    if (deductionUnified) {
+    if (deductionUnifies) {
       context.debug(`...unified the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction.`);
     }
 
-    return deductionUnified;
+    return deductionUnifies;
   }
 
   toJSON() {

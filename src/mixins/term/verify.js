@@ -3,30 +3,30 @@
 import dom from "../../dom";
 
 function unifyWithBracketedConstructor(term, context, verifyAhead) {
-  let unifiedWithBracketedConstructor;
+  let unifiesWithBracketedConstructor;
 
   const { BracketedConstructor } = dom,
         bracketedConstructor = BracketedConstructor.fromNothing();
 
-  unifiedWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, verifyAhead);
+  unifiesWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, verifyAhead);
 
-  return unifiedWithBracketedConstructor;
+  return unifiesWithBracketedConstructor;
 }
 
 function unifyWithConstructors(term, context, verifyAhead) {
-  let unifiedWithConstructors;
+  let unifiesWithConstructors;
 
   const constructors = context.getConstructors();
 
-  unifiedWithConstructors = constructors.some((constructor) => {
-    const unifiedWithConstructor = constructor.unifyTerm(term, context, verifyAhead);
+  unifiesWithConstructors = constructors.some((constructor) => {
+    const unifiesWithConstructor = constructor.unifyTerm(term, context, verifyAhead);
 
-    if (unifiedWithConstructor) {
+    if (unifiesWithConstructor) {
       return true;
     }
   });
 
-  return unifiedWithConstructors;
+  return unifiesWithConstructors;
 }
 
 function verifyTermAsVariable(term, localContext, verifyAhead) {

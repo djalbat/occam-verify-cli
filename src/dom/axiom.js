@@ -80,7 +80,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   }
 
   unifyStep(step, substitutions, context) {
-    let stepUnified = false;
+    let stepUnifies = false;
 
     const stepString = step.getString(),
           axiomString = this.string;  ///
@@ -88,21 +88,21 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     context.trace(`Unifying the '${stepString}' step with the '${axiomString}' axiom...`);
 
     const statement = step.getStatement(),
-          statementUnified = this.unifyStatement(statement, substitutions, context);
+          statementUnifies = this.unifyStatement(statement, substitutions, context);
 
-    if (statementUnified) {
-      stepUnified = true;
+    if (statementUnifies) {
+      stepUnifies = true;
     }
 
-    if (stepUnified) {
+    if (stepUnifies) {
       context.debug(`...unified the '${stepString}' step with the '${axiomString}' axiom.`);
     }
 
-    return stepUnified;
+    return stepUnifies;
   }
 
   unifyLastStep(lastStep, substitutions, generalContext, specificContext) {
-    let lastStepUnified = false;
+    let lastStepUnifies = false;
 
     const context = specificContext,  ///
           axiomString = this.string,  ///
@@ -111,21 +111,21 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`)
 
     const statement = lastStep.getStatement(),
-          statementUnified = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
+          statementUnifies = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
-    if (statementUnified) {
-      lastStepUnified = true;
+    if (statementUnifies) {
+      lastStepUnifies = true;
     }
 
-    if (lastStepUnified) {
+    if (lastStepUnifies) {
       context.debug(`...unified the '${lastStepString}' last step with the '${axiomString}' axiom.`)
     }
 
-    return lastStepUnified;
+    return lastStepUnifies;
   }
 
   unifySubproof(subproof, substitutions, context) {
-    let subproofUnified = false;
+    let subproofUnifies = false;
 
     const axiomString = this.string,  ///
           subproofString = subproof.getString();
@@ -137,26 +137,26 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
           localContext = LocalContext.fromFileContext(fileContext),
           generalContext = localContext,  ///
           specificContext = context,  ///
-          lastStepUnified = this.unifyLastStep(lastStep, substitutions, generalContext, specificContext);
+          lastStepUnifies = this.unifyLastStep(lastStep, substitutions, generalContext, specificContext);
 
-    if (lastStepUnified) {
+    if (lastStepUnifies) {
       const suppositions = subproof.getSuppositions(),
-            suppositionsUnified = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
+            suppositionsUnifies = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
 
-      if (suppositionsUnified) {
-        subproofUnified = true;
+      if (suppositionsUnifies) {
+        subproofUnifies = true;
       }
     }
 
-    if (subproofUnified) {
+    if (subproofUnifies) {
       context.debug(`...unified the '${subproofString}' subproof with the '${axiomString}' axiom.`);
     }
 
-    return subproofUnified;
+    return subproofUnifies;
   }
 
   unifyDeduction(deduction, substitutions, generalContext, specificContext) {
-    let deductionUnified;
+    let deductionUnifies;
 
     const specificDeduction = deduction;  ///
 
@@ -166,13 +166,13 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     deduction = specificDeduction;  ///
 
-    deductionUnified = generalDeduction.unifyDeduction(deduction, substitutions, generalContext, specificContext);
+    deductionUnifies = generalDeduction.unifyDeduction(deduction, substitutions, generalContext, specificContext);
 
-    return deductionUnified;
+    return deductionUnifies;
   }
 
   unifySupposition(supposition, index, substitutions, generalContext, specificContext) {
-    let suppositionUnified;
+    let suppositionUnifies;
 
     const specificSupposition = supposition;  ///
 
@@ -182,13 +182,13 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     supposition = specificSupposition;  ///
 
-    suppositionUnified = generalSupposition.unifySupposition(supposition, substitutions, generalContext, specificContext);
+    suppositionUnifies = generalSupposition.unifySupposition(supposition, substitutions, generalContext, specificContext);
 
-    return suppositionUnified;
+    return suppositionUnifies;
   }
 
   unifySuppositions(suppositions, substitutions, generalContext, specificContext) {
-    let suppositionsUnified = false;
+    let suppositionsUnifies = false;
 
     const specificSuppositions = suppositions;  ///
 
@@ -202,23 +202,23 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
       suppositions = specificSuppositions;  ///
 
       const suppositionsMatch = suppositions.every((supposition, index) => {
-        const suppositionUnified = this.unifySupposition(supposition, index, substitutions, generalContext, specificContext);
+        const suppositionUnifies = this.unifySupposition(supposition, index, substitutions, generalContext, specificContext);
 
-        if (suppositionUnified) {
+        if (suppositionUnifies) {
           return true;
         }
       });
 
       if (suppositionsMatch) {
-        suppositionsUnified = true;
+        suppositionsUnifies = true;
       }
     }
 
-    return suppositionsUnified;
+    return suppositionsUnifies;
   }
 
   unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, substitutions, context) {
-    let axiomLemmaTheoremConjectureUnified = false;
+    let axiomLemmaTheoremConjectureUnifies = false;
 
     const axiomString = this.getString(),
           axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjecture.getString();
@@ -229,20 +229,20 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
           fileContext = this.getFileContext(),
           generalContext = fileContext, ///
           specificContext = context,  ///
-          deductionUnified = this.unifyDeduction(deduction, substitutions, generalContext, specificContext);
+          deductionUnifies = this.unifyDeduction(deduction, substitutions, generalContext, specificContext);
 
-    if (deductionUnified) {
+    if (deductionUnifies) {
       const suppositions = axiomLemmaTheoremConjecture.getSuppositions(),
-            suppositionsUnified = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
+            suppositionsUnifies = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
 
-      axiomLemmaTheoremConjectureUnified = suppositionsUnified; ///
+      axiomLemmaTheoremConjectureUnifies = suppositionsUnifies; ///
     }
 
-    if (axiomLemmaTheoremConjectureUnified) {
+    if (axiomLemmaTheoremConjectureUnifies) {
       context.debug(`...unified the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom.`);
     }
 
-    return axiomLemmaTheoremConjectureUnified;
+    return axiomLemmaTheoremConjectureUnifies;
   }
 
   static name = "Axiom";

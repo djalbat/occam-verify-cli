@@ -8,17 +8,17 @@ const nonTerminalNodeQuery = nodeQuery("/*");
 
 export default class Unifier {
   unify(generalNode, specificNode, ...remainingArguments) {
-    let unified;
+    let unifies;
 
-    const nodeUnified = this.unifyNode(generalNode, specificNode, ...remainingArguments);
+    const nodeUnifies = this.unifyNode(generalNode, specificNode, ...remainingArguments);
 
-    unified = nodeUnified;  ///
+    unifies = nodeUnifies;  ///
 
-    return unified;
+    return unifies;
   }
 
   unifyNode(generalNode, specificNode, ...remainingArguments) {
-    let nodeUnified = false;
+    let nodeUnifies = false;
 
     const generalNodeTerminalNode = generalNode.isTerminalNode(),
           specificNodeTerminalNode = specificNode.isTerminalNode(),
@@ -30,22 +30,22 @@ export default class Unifier {
     } else if (generalNodeTerminalNode && specificNodeTerminalNode) {
       const generalTerminalNode = generalNode,  ///
             specificTerminalNode = specificNode,  ///
-            terminalNodeUnified = this.unifyTerminalNode(generalTerminalNode, specificTerminalNode, ...remainingArguments);
+            terminalNodeUnifies = this.unifyTerminalNode(generalTerminalNode, specificTerminalNode, ...remainingArguments);
 
-      nodeUnified = terminalNodeUnified;  ///
+      nodeUnifies = terminalNodeUnifies;  ///
     } else if (generalNodeNonTerminalNode && specificNodeNonTerminalNode) {
       const generalNonTerminalNode = generalNode,  ///
             specificNonTerminalNode = specificNode, ///
-            nonTerminalNodeUnified = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, ...remainingArguments);
+            nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, ...remainingArguments);
 
-      nodeUnified = nonTerminalNodeUnified; ///
+      nodeUnifies = nonTerminalNodeUnifies; ///
     }
 
-    return nodeUnified;
+    return nodeUnifies;
   }
 
   unifyChildNodes(generalChildNodes, specificChildNodes, ...remainingArguments) {
-    let childNodesUnified = false;
+    let childNodesUnifies = false;
 
     const generalChildNodesLength = generalChildNodes.length,
           specificChildNodesLength = specificChildNodes.length;
@@ -60,17 +60,17 @@ export default class Unifier {
 
         if (lastRemainingArgumentFunction) {
           const index = 0,
-                childNodesUnifiedAhead = this.unifyChildNodesAhead(index, generalChildNodes, specificChildNodes,...remainingArguments);
+                childNodesUnifiesAhead = this.unifyChildNodesAhead(index, generalChildNodes, specificChildNodes,...remainingArguments);
 
-          childNodesUnified = childNodesUnifiedAhead; ///
+          childNodesUnifies = childNodesUnifiesAhead; ///
         } else {
-          childNodesUnified = generalChildNodes.every((generalChildNode, index) => {
+          childNodesUnifies = generalChildNodes.every((generalChildNode, index) => {
             const specificChildNode = specificChildNodes[index],
                   specificNode = specificChildNode, ///
                   generalNode = generalChildNode, ///
-                  nodeUnified = this.unifyNode(generalNode, specificNode, ...remainingArguments);
+                  nodeUnifies = this.unifyNode(generalNode, specificNode, ...remainingArguments);
 
-            if (nodeUnified) {
+            if (nodeUnifies) {
               return true;
             }
           });
@@ -78,30 +78,30 @@ export default class Unifier {
       }
     }
 
-    return childNodesUnified;
+    return childNodesUnifies;
   }
 
   unifyTerminalNode(generalTerminalNode, specificTerminalNode, ...remainingArguments) { ///
-    let terminalNodeUnified;
+    let terminalNodeUnifies;
 
     const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
 
     if (lastRemainingArgumentFunction) {
       const unifyAhead = remainingArguments.pop(),
-            unifiedAhead = unifyAhead();
+            unifiesAhead = unifyAhead();
 
-      terminalNodeUnified = unifiedAhead;  ///
+      terminalNodeUnifies = unifiesAhead;  ///
 
-      remainingArguments.push(unifiedAhead);
+      remainingArguments.push(unifiesAhead);
     } else {
-      terminalNodeUnified = true;
+      terminalNodeUnifies = true;
     }
 
-    return terminalNodeUnified;
+    return terminalNodeUnifies;
   }
 
   unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, ...remainingArguments) {
-    let nonTerminalNodeUnified;
+    let nonTerminalNodeUnifies;
 
     let { maps } = this.constructor;
 
@@ -111,7 +111,7 @@ export default class Unifier {
         generalNodeQuery: nonTerminalNodeQuery,
         specificNodeQuery: nonTerminalNodeQuery,
         unify: (generalNode, specificNode, ...remainingArguments) => {
-          let nonTerminalNodeUnified;
+          let nonTerminalNodeUnifies;
 
           const generalNonTerminalNodeRuleName = generalNonTerminalNode.getRuleName(), ///
                 specificNonTerminalNodeRuleName = specificNonTerminalNode.getRuleName(); ///
@@ -121,17 +121,17 @@ export default class Unifier {
                   specificNonTerminalNodeChildNode = specificNonTerminalNode.getChildNodes(),
                   generalChildNodes = generalNonTerminalNodeChildNodes, ///
                   specificChildNodes = specificNonTerminalNodeChildNode, ///
-                  childNodesUnified = this.unifyChildNodes(generalChildNodes, specificChildNodes, ...remainingArguments);
+                  childNodesUnifies = this.unifyChildNodes(generalChildNodes, specificChildNodes, ...remainingArguments);
 
-            nonTerminalNodeUnified = childNodesUnified; ///
+            nonTerminalNodeUnifies = childNodesUnifies; ///
           }
 
-          return nonTerminalNodeUnified;
+          return nonTerminalNodeUnifies;
         }
       }
     ]
 
-    let nodeUnified = false;
+    let nodeUnifies = false;
 
     maps.some((map) => {
       const { generalNodeQuery, specificNodeQuery, unify } = map;
@@ -140,44 +140,44 @@ export default class Unifier {
             specificNode = specificNodeQuery(specificNonTerminalNode);  ///
 
       if ((generalNode !== null) && (specificNode !== null)) {
-        nodeUnified = unify(generalNode, specificNode, ...remainingArguments);
+        nodeUnifies = unify(generalNode, specificNode, ...remainingArguments);
 
         return true;
       }
     });
 
-    nonTerminalNodeUnified = nodeUnified; ///
+    nonTerminalNodeUnifies = nodeUnifies; ///
 
-    return nonTerminalNodeUnified;
+    return nonTerminalNodeUnifies;
   }
 
   unifyChildNodesAhead(index, generalChildNodes, specificChildNodes, ...remainingArguments) {
-    let childNodesUnified;
+    let childNodesUnifies;
 
     const unifyAhead = remainingArguments.pop(), ///
           generalChildNodesLength = generalChildNodes.length;
 
     if (index === generalChildNodesLength) {
-      const unifiedAhead = unifyAhead();
+      const unifiesAhead = unifyAhead();
 
-      childNodesUnified = unifiedAhead; ///
+      childNodesUnifies = unifiesAhead; ///
     } else {
       const generalChildNode = generalChildNodes[index],
             specificChildNode = specificChildNodes[index],
             generalNode = generalChildNode, ///
             specificNode = specificChildNode, ///
-            nodeUnified = this.unifyNode(generalNode, specificNode, ...remainingArguments, () => {
+            nodeUnifies = this.unifyNode(generalNode, specificNode, ...remainingArguments, () => {
               remainingArguments.push(unifyAhead); ///
 
               const aheadIndex = index + 1,
-                    childNodesUnifiedAhead = this.unifyChildNodesAhead(aheadIndex, generalChildNodes, specificChildNodes, ...remainingArguments);
+                    childNodesUnifiesAhead = this.unifyChildNodesAhead(aheadIndex, generalChildNodes, specificChildNodes, ...remainingArguments);
 
-              return childNodesUnifiedAhead;
+              return childNodesUnifiesAhead;
             });
 
-      childNodesUnified = nodeUnified;  ///
+      childNodesUnifies = nodeUnifies;  ///
     }
 
-    return childNodesUnified;
+    return childNodesUnifies;
   }
 }

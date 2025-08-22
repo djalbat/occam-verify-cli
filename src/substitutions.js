@@ -200,20 +200,19 @@ export default class Substitutions {
     specificContext.trace(`Removed the ${substitutionString} substitution.`);
   }
 
-  matchSubstitutions(substitutions) {
+  correlateSubstitutions(substitutions) {
     const array = substitutions.getArray(),
           arrayA = array, ///
           arrayB = this.array,  ///
           correlates = correlate(arrayA, arrayB, (substitutionA, substitutionB) => {
-            const substitutionAMatchesSubstitutionB = substitutionA.match(substitutionB);
+            const substitutionAIsEQualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
 
-            if (substitutionAMatchesSubstitutionB) {
+            if (substitutionAIsEQualToSubstitutionB) {
               return true;
             }
-          }),
-          match = correlates; ///
+          });
 
-    return match;
+    return correlates;
   }
 
   removeTrivialSubstitutions()  {

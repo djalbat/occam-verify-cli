@@ -113,7 +113,7 @@ export default domAssigned(class Variable {
   }
 
   unifyTerm(term, substitutions, generalContext, specificContext) {
-    let termUnified = false;
+    let termUnifies = false;
 
     const termString = term.getString(),
           variableString = this.string; ///
@@ -129,7 +129,7 @@ export default domAssigned(class Variable {
             substitutionTermEqualToTerm = substitution.isTermEqualTo(term, context);
 
       if (substitutionTermEqualToTerm) {
-        termUnified = true;
+        termUnifies = true;
       }
     } else {
       const { TermSubstitution } = dom,
@@ -140,14 +140,14 @@ export default domAssigned(class Variable {
 
       substitutions.addSubstitution(substitution, specificContext);
 
-      termUnified = true;
+      termUnifies = true;
     }
 
-    if (termUnified) {
+    if (termUnifies) {
       specificContext.debug(`...unified the '${termString}' term with the '${variableString}' variable.`);
     }
 
-    return termUnified;
+    return termUnifies;
   }
 
   toJSON() {

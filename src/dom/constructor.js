@@ -28,7 +28,7 @@ export default domAssigned(class Constructor {
   setType(type) { this.term.setType(type); }
 
   unifyTerm(term, context, verifyAhead) {
-    let termUnified = false;
+    let termUnifies = false;
 
     const constructor = this, ///
           termString = term.getString(),
@@ -36,9 +36,9 @@ export default domAssigned(class Constructor {
 
     context.trace(`Unifying the '${termString}' term with the '${constructorString}' constructor...`, term);
 
-    const termUnifiedWithConstructor = unifyTermWithConstructor(term, constructor, context);
+    const termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, context);
 
-    if (termUnifiedWithConstructor) {
+    if (termUnifiesWithConstructor) {
       let verifiedAhead;
 
       const type = constructor.getType();
@@ -47,14 +47,14 @@ export default domAssigned(class Constructor {
 
       verifiedAhead = verifyAhead();
 
-      termUnified = verifiedAhead;  ///
+      termUnifies = verifiedAhead;  ///
     }
 
-    if (termUnified) {
+    if (termUnifies) {
       context.debug(`...unified the '${termString}' term with the '${constructorString}' constructor.`, term);
     }
 
-    return termUnified;
+    return termUnifies;
   }
 
   toJSON() {

@@ -125,73 +125,75 @@ export default class TopLevelAssertion {
   }
 
   unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext) {
-    let deductionUnified;
+    let deductionUnifies;
 
-    const statementUnified = this.deduction.unifyStatement(statement, substitutions, generalContext, specificContext);  ///
+    const statementUnifies = this.deduction.unifyStatement(statement, substitutions, generalContext, specificContext);  ///
 
-    deductionUnified = statementUnified; ///
+    deductionUnifies = statementUnifies; ///
 
-    return deductionUnified;
+    return deductionUnifies;
   }
 
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
-    let statementAndStepsOrSubproofsUnified = false;
+    let statementAndStepsOrSubproofsUnifies = false;
 
     const localContext = LocalContext.fromFileContext(this.fileContext),
           generalContext = localContext, ///
           specificContext = context, ///
-          statementUnifiedWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
+          statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
-    if (statementUnifiedWithDeduction) {
-      const stepsOrSubproofsUnifiedWithSuppositions = this.unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, generalContext, specificContext);
+    if (statementUnifiesWithDeduction) {
+      const stepsOrSubproofsUnifiesWithSuppositions = this.unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, generalContext, specificContext);
 
-      if (stepsOrSubproofsUnifiedWithSuppositions) {
+      if (stepsOrSubproofsUnifiesWithSuppositions) {
         const substitutionsResolved = substitutions.areResolved();
 
-        statementAndStepsOrSubproofsUnified = substitutionsResolved; ///
+        if (substitutionsResolved) {
+          statementAndStepsOrSubproofsUnifies = true;
+        }
       }
     }
 
-    return statementAndStepsOrSubproofsUnified;
+    return statementAndStepsOrSubproofsUnifies;
   }
 
   unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext) {
-    let stepsOrSubproofsUnifiedWithSupposition = false;
+    let stepsOrSubproofsUnifiesWithSupposition = false;
 
     const context = specificContext,  ///
-          suppositionUnifiedIndependently = supposition.unifyIndependently(substitutions, context);
+          suppositionUnifiesIndependently = supposition.unifyIndependently(substitutions, context);
 
-    if (suppositionUnifiedIndependently) {
-      stepsOrSubproofsUnifiedWithSupposition = true;
+    if (suppositionUnifiesIndependently) {
+      stepsOrSubproofsUnifiesWithSupposition = true;
     } else {
       const stepOrSubproof = extract(stepsOrSubproofs, (stepOrSubproof) => {
-        const stepOrSubproofUnified = supposition.unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext);
+        const stepOrSubproofUnifies = supposition.unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext);
 
-        if (stepOrSubproofUnified) {
+        if (stepOrSubproofUnifies) {
           return true;
         }
       }) || null;
 
       if (stepOrSubproof !== null) {
-        stepsOrSubproofsUnifiedWithSupposition = true;
+        stepsOrSubproofsUnifiesWithSupposition = true;
       }
     }
 
-    return stepsOrSubproofsUnifiedWithSupposition;
+    return stepsOrSubproofsUnifiesWithSupposition;
   }
 
   unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, generalContext, specificContext) {
     stepsOrSubproofs = reverse(stepsOrSubproofs); ///
 
-    const stepsOrSubproofsUnifiedWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
-      const stepsOrSubproofsUnifiedWithSupposition = this.unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext);
+    const stepsOrSubproofsUnifiesWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
+      const stepsOrSubproofsUnifiesWithSupposition = this.unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext);
 
-      if (stepsOrSubproofsUnifiedWithSupposition) {
+      if (stepsOrSubproofsUnifiesWithSupposition) {
         return true;
       }
     });
 
-    return stepsOrSubproofsUnifiedWithSuppositions;
+    return stepsOrSubproofsUnifiesWithSuppositions;
   }
 
   toJSON() {

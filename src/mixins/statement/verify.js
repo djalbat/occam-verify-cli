@@ -19,9 +19,9 @@ function unifyWithBracketedCombinator(statement, assignments, stated, context) {
 
   const { BracketedCombinator } = dom,
         bracketedCombinator = BracketedCombinator.fromNothing(),
-        unifiedWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
+        unifiesWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
 
-  return unifiedWithBracketedCombinator;
+  return unifiesWithBracketedCombinator;
 }
 
 function unifyWithCombinators(statement, assignments, stated, context) {
@@ -30,15 +30,15 @@ function unifyWithCombinators(statement, assignments, stated, context) {
   assignments = null; ///
 
   const combinators = context.getCombinators(),
-        unifiedWithCombinators = combinators.some((combinator) => {
-          const unifiedWithCombinator = combinator.unifyStatement(statement, assignments, stated, context);
+        unifiesWithCombinators = combinators.some((combinator) => {
+          const unifiesWithCombinator = combinator.unifyStatement(statement, assignments, stated, context);
 
-          if (unifiedWithCombinator) {
+          if (unifiesWithCombinator) {
             return true;
           }
         });
 
-  return unifiedWithCombinators;
+  return unifiesWithCombinators;
 }
 
 function verifyAsMetavariable(statement, assignments, stated, context) {

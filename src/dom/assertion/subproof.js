@@ -29,7 +29,7 @@ export default domAssigned(class SubproofAssertion {
   }
 
   unifySubproof(subproof, substitutions, generalContext, specificContext) {
-    let subproofUnified;
+    let subproofUnifies;
 
     const subproofString = subproof.getString(),
           subproofAssertionString = this.string;  ///
@@ -39,21 +39,21 @@ export default domAssigned(class SubproofAssertion {
     const subproofStatements = subproof.getStatements(),
           subproofAssertionStatements = this.statements;  ///
 
-    subproofUnified = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
+    subproofUnifies = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
       const generalStatement = subproofAssertionStatement,  ///
             specificStatement = subproofStatement,  ///
-            statementUnified = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+            statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
-      if (statementUnified) {
+      if (statementUnifies) {
         return true;
       }
     });
 
-    if (subproofUnified) {
+    if (subproofUnifies) {
       specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
     }
 
-    return subproofUnified;
+    return subproofUnifies;
   }
 
   verify(assignments, stated, context) {
