@@ -5,7 +5,7 @@ import NonTerminalNode from "../../node/nonTerminal";
 import { PROVISIONAL } from "../../constants";
 import { TYPE_RULE_NAME, TYPES_RULE_NAME } from "../../ruleNames";
 
-export default class TypeDeclarationNode extends NonTerminalNode {
+export default class SimpleTypeDeclarationNode extends NonTerminalNode {
   isProvisional() {
     let provisional = false;
 
@@ -68,6 +68,6 @@ export default class TypeDeclarationNode extends NonTerminalNode {
     return superTypeNodes;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TypeDeclarationNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(SimpleTypeDeclarationNode, ruleName, childNodes, opacity, precedence); }
 }
 

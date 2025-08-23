@@ -41,7 +41,7 @@ import MetavariableNode from "./node/metavariable";
 import ProcedureCallNode from "./node/procedureCall";
 import SubDerivationNode from "./node/subDerivation";
 import TypeAssertionNode from "./node/assertion/type";
-import typeDeclarationNode from "./node/declaration/type";
+import SimpleTypeDeclarationNode from "./node/declaration/simpleType";
 import PropertyRelationNode from "./node/propertyRelation"
 import DefinedAssertionNode from "./node/assertion/defined";
 import TermSubstitutionNode from "./node/substitution/term";
@@ -102,7 +102,6 @@ import { RULE_RULE_NAME,
          SUB_DERIVATION_RULE_NAME,
          TYPE_ASSERTION_RULE_NAME,
          PROCEDURE_CALL_RULE_NAME,
-         TYPE_DECLARATION_RULE_NAME,
          PROPERTY_RELATION_RULE_NAME,
          DEFINED_ASSERTION_RULE_NAME,
          TERM_SUBSTITUTION_RULE_NAME,
@@ -118,6 +117,7 @@ import { RULE_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME,
          REFERENCE_SUBSTITUTION_RULE_NAME,
          COMBINATOR_DECLARATION_RULE_NAME,
+         SIMPLE_TYPE_DECLARATION_RULE_NAME,
          CONSTRUCTOR_DECLARATION_RULE_NAME,
          COMPLEX_TYPE_DECLARATION_RULE_NAME,
          METAVARIABLE_DECLARATION_RULE_NAME } from "./ruleNames";
@@ -164,7 +164,6 @@ const nonTerminalNodeMap = {
   [TYPE_ASSERTION_RULE_NAME]: TypeAssertionNode,
   [PROCEDURE_CALL_RULE_NAME]: ProcedureCallNode,
   [SUB_DERIVATION_RULE_NAME]: SubDerivationNode,
-  [TYPE_DECLARATION_RULE_NAME]: typeDeclarationNode,
   [PROPERTY_RELATION_RULE_NAME]: PropertyRelationNode,
   [DEFINED_ASSERTION_RULE_NAME]: DefinedAssertionNode,
   [TERM_SUBSTITUTION_RULE_NAME]: TermSubstitutionNode,
@@ -180,6 +179,7 @@ const nonTerminalNodeMap = {
   [STATEMENT_SUBSTITUTION_RULE_NAME]: StatementSubstitutionNode,
   [REFERENCE_SUBSTITUTION_RULE_NAME]: ReferenceSubstitutionNode,
   [COMBINATOR_DECLARATION_RULE_NAME]: combinatorDeclarationNode,
+  [SIMPLE_TYPE_DECLARATION_RULE_NAME]: SimpleTypeDeclarationNode,
   [CONSTRUCTOR_DECLARATION_RULE_NAME]: constructorDeclarationNode,
   [COMPLEX_TYPE_DECLARATION_RULE_NAME]: complexTypeDeclarationNode,
   [METAVARIABLE_DECLARATION_RULE_NAME]: metavariableDeclarationNode

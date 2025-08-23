@@ -104,6 +104,24 @@ class Type {
     return basic;
   }
 
+  isRefined() {
+    let refined = false;
+
+    const superTypesLength = this.superTypes.length;
+
+    if (superTypesLength === 1) {
+      const firstSuperType = first(this.superTypes),
+            superType = firstSuperType, ///
+            superTypeName = superType.getName();
+
+      if (superTypeName === this.name) {
+        refined = true;
+      }
+    }
+
+    return refined;
+  }
+
   isEqualTo(type) {
     const equalTo = (this === type);
 

@@ -258,6 +258,13 @@ export default domAssigned(class ComplexTypeDeclaration {
     }
 
     if (propertyVerifies) {
+      const typeName = this.type.getName(),
+            typeNameMatches = property.matchTypeName(typeName);
+
+      if (typeNameMatches) {
+        property.setType(this.type);
+      }
+
       this.fileContext.debug(`verifies the '${propertyString}' property.`);
     }
 
