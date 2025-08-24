@@ -91,9 +91,9 @@ function unifyAsSatisfiesAssertion(statement, reference, substitutions, context)
       const stepsOrSubproofs = context.getStepsOrSubproofs();
 
       unifiesAsSatisfiesAssertion = backwardsSome(stepsOrSubproofs, (stepsOrSubproof) => {
-        const satisfiedAssertionUnifies = stepsOrSubproof.unifySatisfiesAssertion(satisfiesAssertion, context);
+        const stepOrSubProofUnifiesWIthSatisfiesAssertion = stepsOrSubproof.unifyWithSatisfiesAssertion(satisfiesAssertion, context);
 
-        if (satisfiedAssertionUnifies) {
+        if (stepOrSubProofUnifiesWIthSatisfiesAssertion) {
           return true;
         }
       });

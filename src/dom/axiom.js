@@ -87,11 +87,21 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     context.trace(`Unifying the '${stepString}' step with the '${axiomString}' axiom...`);
 
-    const statement = step.getStatement(),
-          statementUnifies = this.unifyStatement(statement, substitutions, context);
+    const unconditional = this.isUnconditional();
 
-    if (statementUnifies) {
-      stepUnifies = true;
+    if (!unconditional) {
+      context.trace(`Cannot unify the '${stepString}' step with the '${axiomString}' axiom because the axiom is not unconditional.`);
+    } else {
+      const statement = step.getStatement(),
+            fileContext = this.getFileContext(),
+            localContext = LocalContext.fromFileContext(fileContext),
+            generalContext = localContext,  ///
+            specificContext = context,  ///
+            statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
+
+      if (statementUnifiesWithDeduction) {
+        stepUnifies = true;
+      }
     }
 
     if (stepUnifies) {
@@ -111,9 +121,9 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`)
 
     const statement = lastStep.getStatement(),
-          statementUnifies = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
+          statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
-    if (statementUnifies) {
+    if (statementUnifiesWithDeduction) {
       lastStepUnifies = true;
     }
 
@@ -132,19 +142,25 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     context.trace(`Unifying the '${subproofString}' subproof with the '${axiomString}' axiom...`);
 
-    const lastStep = subproof.getLastStep(),
-          fileContext = this.getFileContext(),
-          localContext = LocalContext.fromFileContext(fileContext),
-          generalContext = localContext,  ///
-          specificContext = context,  ///
-          lastStepUnifies = this.unifyLastStep(lastStep, substitutions, generalContext, specificContext);
+    const unconditional = this.isUnconditional();
 
-    if (lastStepUnifies) {
-      const suppositions = subproof.getSuppositions(),
-            suppositionsUnify = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
+    if (unconditional) {
+      context.trace(`Cannot unify the '${subproofString}' subproof with the '${axiomString}' axiom because the axiom is unconditional.`);
+    } else {
+      const lastStep = subproof.getLastStep(),
+            fileContext = this.getFileContext(),
+            localContext = LocalContext.fromFileContext(fileContext),
+            generalContext = localContext,  ///
+            specificContext = context,  ///
+            lastStepUnifies = this.unifyLastStep(lastStep, substitutions, generalContext, specificContext);
 
-      if (suppositionsUnify) {
-        subproofUnifies = true;
+      if (lastStepUnifies) {
+        const suppositions = subproof.getSuppositions(),
+              suppositionsUnify = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
+
+        if (suppositionsUnify) {
+          subproofUnifies = true;
+        }
       }
     }
 

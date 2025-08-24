@@ -96,13 +96,13 @@ export default domAssigned(class Subproof {
     return statementUnifies;
   }
 
-  unifySatisfiesAssertion(satisfiesAssertion, context) {
-    let unifySatisfiesAssertion = false;
+  unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
+    let unifiesWithSatisfiesAssertion = false;
 
     const subproofString = this.string, ///
           satisfiesAssertionString = satisfiesAssertion.getString();
 
-    context.trace(`Unifying the '${satisfiesAssertionString}' satisfies assertion with the '${subproofString}' subproof...`)
+    context.trace(`Unifying the '${subproofString}' subproof with the '${satisfiesAssertionString}' satisfies assertion...`)
 
     const reference = satisfiesAssertion.getReference(),
           axiom = context.findAxiomByReference(reference);
@@ -119,17 +119,17 @@ export default domAssigned(class Subproof {
           const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
 
           if (substitutionsMatch) {
-            unifySatisfiesAssertion = true;
+            unifiesWithSatisfiesAssertion = true;
           }
         }
       }
     }
 
-    if (unifySatisfiesAssertion) {
-      context.debug(`...unified the '${satisfiesAssertionString}' satisfies assertion with the '${subproofString}' subproof.`)
+    if (unifiesWithSatisfiesAssertion) {
+      context.debug(`...unified the '${subproofString}' subproof with the '${satisfiesAssertionString}' satisfies assertion.`)
     }
 
-    return unifySatisfiesAssertion;
+    return unifiesWithSatisfiesAssertion;
   }
 
   static name = "Subproof";

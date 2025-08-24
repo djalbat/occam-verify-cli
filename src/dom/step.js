@@ -119,13 +119,13 @@ export default domAssigned(class Step {
     return statementEquates;
   }
 
-  unifySatisfiesAssertion(satisfiesAssertion, context) {
-    let unifySatisfiesAssertion = false;
+  unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
+    let unifiesWithSatisfiesAssertion = false;
 
     const stepString = this.string, ///
           satisfiesAssertionString = satisfiesAssertion.getString();
 
-    context.trace(`Unifying hte '${satisfiesAssertionString}' with the '${stepString}' step...`);
+    context.trace(`Unifying the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion...`);
 
     const reference = satisfiesAssertion.getReference(),
           axiom = context.findAxiomByReference(reference);
@@ -139,16 +139,16 @@ export default domAssigned(class Step {
         const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
 
         if (substitutionsMatch) {
-          unifySatisfiesAssertion = true;
+          unifiesWithSatisfiesAssertion = true;
         }
       }
     }
 
-    if (unifySatisfiesAssertion) {
-      context.debug(`...unified hte '${satisfiesAssertionString}' with the '${stepString}' step.`);
+    if (unifiesWithSatisfiesAssertion) {
+      context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`);
     }
 
-    return unifySatisfiesAssertion;
+    return unifiesWithSatisfiesAssertion;
   }
 
   static name = "Step";

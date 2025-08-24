@@ -58,6 +58,13 @@ export default class TopLevelAssertion {
 
   getStatement() { return this.deduction.getStatement(); }
 
+  isUnconditional() {
+    const suppositionsLength = this.suppositions.length,
+          unconditional = (suppositionsLength === 0);
+
+    return unconditional;
+  }
+
   getSupposition(index) {
     const supposition = this.suppositions[index] || null;
 
@@ -125,13 +132,15 @@ export default class TopLevelAssertion {
   }
 
   unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext) {
-    let deductionUnifies;
+    let statementUnifiesWithDeduction = false;
 
     const statementUnifies = this.deduction.unifyStatement(statement, substitutions, generalContext, specificContext);  ///
 
-    deductionUnifies = statementUnifies; ///
+    if (statementUnifies) {
+      statementUnifiesWithDeduction = true;
+    }
 
-    return deductionUnifies;
+    return statementUnifiesWithDeduction;
   }
 
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
