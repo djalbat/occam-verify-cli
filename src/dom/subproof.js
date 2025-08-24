@@ -116,9 +116,9 @@ export default domAssigned(class Subproof {
               statementUnifies = axiom.unifySubproof(subproof, substitutions, context);
 
         if (statementUnifies) {
-          const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
+          const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);
 
-          if (substitutionsMatch) {
+          if (substitutionsCompare) {
             unifiesWithSatisfiesAssertion = true;
           }
         }

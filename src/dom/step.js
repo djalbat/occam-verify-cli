@@ -136,9 +136,9 @@ export default domAssigned(class Step {
             stepUnifies = axiom.unifyStep(step, substitutions, context);
 
       if (stepUnifies) {
-        const substitutionsMatch = satisfiesAssertion.matchSubstitutions(substitutions, context);
+        const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);
 
-        if (substitutionsMatch) {
+        if (substitutionsCompare) {
           unifiesWithSatisfiesAssertion = true;
         }
       }

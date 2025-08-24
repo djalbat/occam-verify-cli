@@ -8,7 +8,7 @@ import { domAssigned } from "../dom";
 import { termsFromJSON, termsToTermsJSON } from "../utilities/json";
 import { stringFromTerms, variableFromTerm, termsFromTermNodes } from "../utilities/node";
 
-const { match, correlate } = arrayUtilities;
+const { match, compare, correlate } = arrayUtilities;
 
 export default domAssigned(class Signature {
   constructor(string, terms) {
@@ -87,8 +87,37 @@ export default domAssigned(class Signature {
     return matches;
   }
 
+  compareSubstitutions(substitutions, context) {
+    let substitutionsCompares = false;
+
+    const signatureString = this.string,
+          substitutionsString = substitutions.asString();
+
+    context.trace(`Comparing the '${substitutionsString}' substitutions against the ${signatureString} signature...`);
+
+    const array = substitutions.getArray(),
+          compares = compare(this.terms, array, (term, substitution) => {
+            const substitutionTerm = substitution.getTerm(),
+                  substitutionTermEqualToTerm = substitutionTerm.isEqualTo(term);
+
+            if (substitutionTermEqualToTerm) {
+              return true;
+            }
+          });
+
+    if (compares) {
+      substitutionsCompares = true;
+    }
+
+    if (substitutionsCompares) {
+      context.debug(`...compared the '${substitutionsString}' substitutions against the ${signatureString} signature.`);
+    }
+
+    return substitutionsCompares;
+  }
+
   correlateSubstitutions(substitutions, context) {
-    let substitutionsCorrelates;
+    let substitutionsCorrelates = false;
 
     const signatureString = this.string,
           substitutionsString = substitutions.asString();
@@ -105,7 +134,9 @@ export default domAssigned(class Signature {
             }
           });
 
-    substitutionsCorrelates = correlates;  ///
+    if (correlates) {
+      substitutionsCorrelates = true;
+    }
 
     if (substitutionsCorrelates) {
       context.debug(`...correlated the '${substitutionsString}' substitutions against the ${signatureString} signature.`);

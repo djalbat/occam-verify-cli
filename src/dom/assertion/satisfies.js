@@ -35,6 +35,8 @@ export default domAssigned(class SatisfiesAssertion {
     return this.reference;
   }
 
+  compareSubstitutions(substitutions, context) { return this.signature.compareSubstitutions(substitutions, context); }
+
   correlateSubstitutions(substitutions, context) { return this.signature.correlateSubstitutions(substitutions, context); }
 
   verify(assignments, stated, context) {
