@@ -86,12 +86,14 @@ export default domAssigned(class Step {
             statementVerifies = this.statement.verify(assignments, stated, context);
 
       if (statementVerifies) {
-        if (this.reference === null) {
-          verifies = true;
-        } else {
+        if (qualified) {
           const referenceVerifies = this.reference.verify(context);
 
-          verifies = referenceVerifies; ///
+          if (referenceVerifies) {
+            verifies = true;
+          }
+        } else {
+          verifies = true;
         }
       }
     } else {

@@ -154,25 +154,13 @@ export default domAssigned(class Rule {
 
     if (labelsVerify) {
       const context = LocalContext.fromFileContext(this.fileContext),
-            premisesVerify = this.premises.every((premise) => {
-              const premiseVerifies = premise.verify(context);
-
-              if (premiseVerifies) {
-                return true;
-              }
-            });
+            premisesVerify = this.verifyPremises(context);
 
       if (premisesVerify) {
-        const conclusionVerifies = this.conclusion.verify(context);
+        const conclusionVerifies = this.verifyConclusion(context);
 
         if (conclusionVerifies) {
-          let proofVerifies = true; ///
-
-          if (this.proof !== null) {
-            const substitutions = Substitutions.fromNothing();
-
-            proofVerifies = this.proof.verify(substitutions, this.conclusion, context);
-          }
+          const proofVerifies = this.verifyProof(context);
 
           if (proofVerifies) {
             const rule = this;  ///
@@ -203,6 +191,44 @@ export default domAssigned(class Rule {
     });
 
     return labelsVerify;
+  }
+
+  verifyPremises(context) {
+    const premisesVerify = this.premises.every((premise) => {
+      const premiseVerifies = this.verifyPremise(premise, context);
+
+      if (premiseVerifies) {
+        return true;
+      }
+    });
+
+    return premisesVerify;
+  }
+
+  verifyPremise(premise, context) {
+    const premiseVerifies = premise.verify(context);
+
+    return premiseVerifies;
+  }
+
+  verifyConclusion(context) {
+    const conclusionVerifies = this.conclusion.verify(context);
+
+    return conclusionVerifies;
+  }
+
+  verifyProof(context) {
+    let proofVerifies;
+
+    if (this.proof === null) {
+      proofVerifies = true;
+    } else {
+      const substitutions = Substitutions.fromNothing();
+
+      proofVerifies = this.proof.verify(substitutions, this.conclusion, context);
+    }
+
+    return proofVerifies;
   }
 
   toJSON() {

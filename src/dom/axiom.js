@@ -40,7 +40,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   }
 
   verifySignature() {
-    let signatureVerifies = true;
+    let signatureVerifies;
 
     const satisfiable = this.isSatisfiable();
 
@@ -51,6 +51,8 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
             context = localContext; ///
 
       signatureVerifies = signature.verify(context);
+    } else {
+      signatureVerifies = true
     }
 
     return signatureVerifies;

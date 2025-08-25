@@ -139,7 +139,7 @@ export default domAssigned(class PropertyAssertion {
   }
 
   verifyWhenStated(assignments, context) {
-    let verifiesWhenStated;
+    let verifiesWhenStated = false;
 
     const propertyAssertionString = this.string; ///
 

@@ -91,25 +91,16 @@ export default class TopLevelAssertion {
     if (labelsVerify) {
       const localContext = LocalContext.fromFileContext(this.fileContext),
             context = localContext, ///
-            suppositionsVerify = this.suppositions.every((supposition) => {
-              const suppositionVerifies = supposition.verify(context);
-
-              if (suppositionVerifies) {
-                return true;
-              }
-            });
+            suppositionsVerify = this.verifySuppositions(context);
 
       if (suppositionsVerify) {
-        const deductionVerifies = this.deduction.verify(context);
+        const deductionVerifies = this.verifyDeduction(context);
 
         if (deductionVerifies) {
-          if (this.proof === null) {
-            verifies = true;
-          } else {
-            const substitutions = Substitutions.fromNothing(),
-                  proofVerifies = this.proof.verify(substitutions, this.deduction, context);
+          const proofVerifies = this.verifyProof(context);
 
-            verifies = proofVerifies; ///
+          if (proofVerifies) {
+            verifies = true;
           }
         }
       }
@@ -129,6 +120,44 @@ export default class TopLevelAssertion {
     });
 
     return labelsVerify;
+  }
+
+  verifySuppositions(context) {
+    const suppositionsVerify = this.suppositions.every((supposition) => {
+      const suppositionVerifies = this.verifySupposition(supposition, context);
+
+      if (suppositionVerifies) {
+        return true;
+      }
+    });
+
+    return suppositionsVerify;
+  }
+
+  verifySupposition(supposition, context) {
+    const suppositionVerifies = supposition.verify(context);
+
+    return suppositionVerifies;
+  }
+
+  verifyDeduction(context) {
+    const deductionVerifies = this.deduction.verify(context);
+
+    return deductionVerifies;
+  }
+
+  verifyProof(context) {
+    let proofVerifies;
+
+    if (this.proof === null) {
+      proofVerifies = true;
+    } else {
+      const substitutions = Substitutions.fromNothing();
+
+      proofVerifies = this.proof.verify(substitutions, this.deduction, context);
+    }
+
+    return proofVerifies;
   }
 
   unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext) {
