@@ -361,12 +361,21 @@ export function suppositionsStringFromSuppositions(suppositions) {
 }
 
 export function stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction) {
+  let string;
+
   const suppositionsString = suppositionsStringFromSuppositions(suppositions),
         deductionString = deduction.getString(),
-        labelsString = labelsStringFromLabels(labels),
-        string = (labelsString === null) ?
-                   deductionString : ///
-                    `${labelsString} :: [${suppositionsString}] ... ${deductionString}`;
+        labelsString = labelsStringFromLabels(labels);
+
+  if (labelsString !== null) {
+    string = (suppositionsString !== null) ?
+               `${labelsString} :: [${suppositionsString}] ... ${deductionString}` :
+                 `${labelsString} :: ${deductionString}`;
+  } else {
+    string = (suppositionsString !== null) ?
+               `[${suppositionsString}] ... ${deductionString}` :
+                 deductionString;
+  }
 
   return string;
 }

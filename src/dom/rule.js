@@ -333,7 +333,9 @@ function stringFromLabelsPremisesAndConclusion(labels, premises, conclusion) {
   const premisesString = premisesStringFromPremises(premises),
         conclusionString = conclusion.getString(),
         labelsString = labelsStringFromLabels(labels),
-        string = `${labelsString} :: [${premisesString}] ... ${conclusionString}`;
+        string = (premisesString !== null) ?
+                    `${labelsString} :: [${premisesString}] ... ${conclusionString}` :
+                      `${labelsString} :: ${conclusionString}`;
 
   return string;
 }
