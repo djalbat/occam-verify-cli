@@ -310,6 +310,21 @@ export default domAssigned(class Statement {
     return statement;
   }
 
+  static fromHypothesisNode(hypothesisNode, fileContext) {
+    let statement = null;
+
+    const statementNode = hypothesisNode.getStatementNode();
+
+    if (statementNode !== null) {
+      const localContext = LocalContext.fromFileContext(fileContext),
+            context = localContext;  ///
+
+      statement = statementFromStatementNode(statementNode, context);
+    }
+
+    return statement;
+  }
+
   static fromConclusionNode(conclusionNode, fileContext) {
     let statement = null;
 

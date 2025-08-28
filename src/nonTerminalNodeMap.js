@@ -12,6 +12,7 @@ import LemmaNode from "./node/lemma";
 import ProofNode from "./node/proof";
 import LabelNode from "./node/label";
 import LabelsNode from "./node/labels";
+import SectionNode from "./node/section";
 import PremiseNode from "./node/premise";
 import TheoremNode from "./node/theorem";
 import NonsenseNode from "./node/nonsense";
@@ -32,6 +33,7 @@ import DerivationNode from "./node/derivation";
 import CombinatorNode from "./node/combinator";
 import ConclusionNode from "./node/conclusion";
 import ConjectureNode from "./node/conjecture";
+import HypothesisNode from "./node/hypothesis";
 import SuppositionNode from "./node/supposition";
 import ConstructorNode from "./node/constructor";
 import DeclarationNode from "./node/declaration";
@@ -41,7 +43,6 @@ import MetavariableNode from "./node/metavariable";
 import ProcedureCallNode from "./node/procedureCall";
 import SubDerivationNode from "./node/subDerivation";
 import TypeAssertionNode from "./node/assertion/type";
-import SimpleTypeDeclarationNode from "./node/declaration/simpleType";
 import PropertyRelationNode from "./node/propertyRelation"
 import DefinedAssertionNode from "./node/assertion/defined";
 import TermSubstitutionNode from "./node/substitution/term";
@@ -56,6 +57,7 @@ import PropertyDeclarationNode from "./node/declaration/property";
 import variableDeclarationNode from "./node/declaration/variable";
 import StatementSubstitutionNode from "./node/substitution/statement";
 import ReferenceSubstitutionNode from "./node/substitution/reference";
+import SimpleTypeDeclarationNode from "./node/declaration/simpleType";
 import combinatorDeclarationNode from "./node/declaration/combinator";
 import complexTypeDeclarationNode from "./node/declaration/complexType";
 import constructorDeclarationNode from "./node/declaration/constructor";
@@ -75,6 +77,7 @@ import { RULE_RULE_NAME,
          LABELS_RULE_NAME,
          THEOREM_RULE_NAME,
          PREMISE_RULE_NAME,
+         SECTION_RULE_NAME,
          NONSENSE_RULE_NAME,
          ARGUMENT_RULE_NAME,
          SUBPROOF_RULE_NAME,
@@ -93,6 +96,7 @@ import { RULE_RULE_NAME,
          COMBINATOR_RULE_NAME,
          CONCLUSION_RULE_NAME,
          CONJECTURE_RULE_NAME,
+         HYPOTHESIS_RULE_NAME,
          CONSTRUCTOR_RULE_NAME,
          DECLARATION_RULE_NAME,
          SUPPOSITION_RULE_NAME,
@@ -137,6 +141,7 @@ const nonTerminalNodeMap = {
   [LABELS_RULE_NAME]: LabelsNode,
   [THEOREM_RULE_NAME]: TheoremNode,
   [PREMISE_RULE_NAME]: PremiseNode,
+  [SECTION_RULE_NAME]: SectionNode,
   [ARGUMENT_RULE_NAME]: ArgumentNode,
   [PROPERTY_RULE_NAME]: PropertyNode,
   [SUBPROOF_RULE_NAME]: SubproofNode,
@@ -155,6 +160,7 @@ const nonTerminalNodeMap = {
   [CONCLUSION_RULE_NAME]: ConclusionNode,
   [CONJECTURE_RULE_NAME]: ConjectureNode,
   [DERIVATION_RULE_NAME]: DerivationNode,
+  [HYPOTHESIS_RULE_NAME]: HypothesisNode,
   [SUPPOSITION_RULE_NAME]: SuppositionNode,
   [CONSTRUCTOR_RULE_NAME]: ConstructorNode,
   [DECLARATION_RULE_NAME]: DeclarationNode,

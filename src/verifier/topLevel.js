@@ -9,6 +9,7 @@ const errorNodeQuery = nodeQuery("/error"),
       ruleNodeQuery = nodeQuery("/rule"),
       axiomNodeQuery = nodeQuery("/axiom"),
       lemmaNodeQuery = nodeQuery("/lemma"),
+      sectionNodeQuery = nodeQuery("/section"),
       theoremNodeQuery = nodeQuery("/theorem"),
       metaLemmaNodeQuery = nodeQuery("/metaLemma"),
       conjectureNodeQuery = nodeQuery("/conjecture"),
@@ -71,6 +72,16 @@ class TopLevelVerifier extends Verifier {
               lemmaVerifies = lemma.verify();
 
         return lemmaVerifies;
+      }
+    },
+    {
+      nodeQuery: sectionNodeQuery,
+      verify: (sectionNode, fileContext) => {
+        const { Section } = dom,
+              section = Section.fromSectionNode(sectionNode, fileContext),
+              sectionVerifies = section.verify();
+
+        return sectionVerifies;
       }
     },
     {
