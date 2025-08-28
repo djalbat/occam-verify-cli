@@ -1,7 +1,6 @@
 "use strict";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
@@ -228,8 +227,6 @@ export default domAssigned(class Reference {
 
 function referenceFromReferenceNode(referenceNode, context) {
   const { Reference, Metavariable } = dom,
-        localContext = LocalContext.fromFileContext(context),
-        context = localContext, ///
         metavariable = Metavariable.fromReferenceNode(referenceNode, context),
         reference = new Reference(metavariable);
 
@@ -238,8 +235,6 @@ function referenceFromReferenceNode(referenceNode, context) {
 
 function referenceFromMetavariableNode(metavariableNode, context) {
   const { Reference, Metavariable } = dom,
-        localContext = LocalContext.fromFileContext(context),
-        context = localContext, ///
         metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
         reference = new Reference(metavariable);
 

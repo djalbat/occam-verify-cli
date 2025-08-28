@@ -3,6 +3,7 @@
 import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
+import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { labelsFromJSON,
@@ -88,7 +89,9 @@ export default class TopLevelAssertion {
     const labelsVerify = this.verifyLabels();
 
     if (labelsVerify) {
-      const suppositionsVerify = this.verifySuppositions(this.context);
+      const localContext = LocalContext.fromContext(this.context),
+            context = localContext, ///
+            suppositionsVerify = this.verifySuppositions(context);
 
       if (suppositionsVerify) {
         const deductionVerifies = this.verifyDeduction(context);

@@ -1,6 +1,5 @@
 "use strict";
 
-import LocalContext from "../context/local";
 import TopLevelAssertion  from "./topLevelAssertion";
 
 import { domAssigned } from "../dom";

@@ -12,6 +12,7 @@ import { labelFromJSON,
          deductionToDeductionJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
+import LocalContext from "../context/local";
 
 export default class TopLevelMetaAssertion {
   constructor(context, string, label, suppositions, deduction, proof, substitutions) {
@@ -67,13 +68,15 @@ export default class TopLevelMetaAssertion {
     const labelVerifies = this.verifyLabel();
 
     if (labelVerifies) {
-      const suppositionsVerify = this.verifySuppositions(this.context);
+      const localContext = LocalContext.fromContext(this.context),
+            context = localContext, ///
+            suppositionsVerify = this.verifySuppositions(context);
 
       if (suppositionsVerify) {
-        const deductionVerifies = this.verifyDeduction(this.context);
+        const deductionVerifies = this.verifyDeduction(context);
 
         if (deductionVerifies) {
-          const proofVerifies = this.verifyProof(this.context);
+          const proofVerifies = this.verifyProof(context);
 
           if (proofVerifies) {
             verifies = true;

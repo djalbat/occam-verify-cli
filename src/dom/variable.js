@@ -1,7 +1,6 @@
 "use strict";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 
 import { domAssigned } from "../dom";
 import { EMPTY_STRING } from "../constants";

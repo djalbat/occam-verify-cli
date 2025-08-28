@@ -104,8 +104,7 @@ export default domAssigned(class Label {
 
   static fromLabelNode(labelNode, context) {
     const { Metavariable } = dom,
-          localContext = LocalContext.fromFileContext(context),
-          metavariable = Metavariable.fromLabelNode(labelNode, localContext),
+          metavariable = Metavariable.fromLabelNode(labelNode, context),
           label = new Label(context, metavariable);
 
     return label;

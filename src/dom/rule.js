@@ -13,6 +13,7 @@ import { labelsFromJSON,
          labelsToLabelsJSON,
          premisesToPremisesJSON,
          conclusionToConclusionJSON } from "../utilities/json";
+import LocalContext from "../context/local";
 
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
@@ -151,13 +152,15 @@ export default domAssigned(class Rule {
     const labelsVerify = this.verifyLabels();
 
     if (labelsVerify) {
-      const premisesVerify = this.verifyPremises(this.context);
+      const localContext = LocalContext.fromContext(this.context),
+            context = localContext, ///
+            premisesVerify = this.verifyPremises(context);
 
       if (premisesVerify) {
-        const conclusionVerifies = this.verifyConclusion(this.context);
+        const conclusionVerifies = this.verifyConclusion(context);
 
         if (conclusionVerifies) {
-          const proofVerifies = this.verifyProof(this.context);
+          const proofVerifies = this.verifyProof(context);
 
           if (proofVerifies) {
             const rule = this;  ///
