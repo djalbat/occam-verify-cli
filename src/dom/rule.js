@@ -3,6 +3,7 @@
 import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
+import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
@@ -13,7 +14,6 @@ import { labelsFromJSON,
          labelsToLabelsJSON,
          premisesToPremisesJSON,
          conclusionToConclusionJSON } from "../utilities/json";
-import LocalContext from "../context/local";
 
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 

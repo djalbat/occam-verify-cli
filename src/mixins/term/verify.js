@@ -29,11 +29,10 @@ function unifyWithConstructors(term, context, verifyAhead) {
   return unifiesWithConstructors;
 }
 
-function verifyTermAsVariable(term, localContext, verifyAhead) {
+function verifyTermAsVariable(term, context, verifyAhead) {
   let termVerifiesAsVariable = false;
 
   const { Variable } = dom,
-        context = localContext, ///
         termNode = term.getNode(),
         singularVariableNode = termNode.getSingularVariableNode();
 
@@ -42,9 +41,9 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
           variable = Variable.fromVariableNode(variableNode, context),
           termString = term.getString();
 
-    localContext.trace(`Verifying the '${termString}' term as a variable...`);
+    context.trace(`Verifying the '${termString}' term as a variable...`);
 
-    const variableVerifies = variable.verify(localContext);
+    const variableVerifies = variable.verify(context);
 
     if (variableVerifies) {
       let verifiesAhead;
@@ -63,7 +62,7 @@ function verifyTermAsVariable(term, localContext, verifyAhead) {
     }
 
     if (termVerifiesAsVariable) {
-      localContext.debug(`...verified the '${termString}' term as a variable.`);
+      context.debug(`...verified the '${termString}' term as a variable.`);
     }
   }
 

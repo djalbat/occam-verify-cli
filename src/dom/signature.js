@@ -63,7 +63,6 @@ export default domAssigned(class Signature {
               let context,
                   term;
 
-
               context = generalContext; ///
 
               term = termB; ///

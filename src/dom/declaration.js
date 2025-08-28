@@ -219,9 +219,9 @@ export default domAssigned(class Declaration {
 
     const generalContext = context; ///
 
-    context = metaLemmaMetatheorem.getContext();
+    context = metaLemmaMetatheorem.getContext();  ///
 
-    const specificContext = context,
+    const specificContext = context,  ///
           labelSubstitutions = Substitutions.fromNothing(),
           label = metaLemmaMetatheorem.getLabel(),
           substitutions = labelSubstitutions, ///

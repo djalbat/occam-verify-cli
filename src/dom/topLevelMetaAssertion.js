@@ -1,6 +1,7 @@
 "use strict";
 
 import dom from "../dom";
+import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { proofFromProofNode, deductionFromDeductionNode, suppositionsFromSuppositionNodes } from "./topLevelAssertion";
@@ -12,7 +13,6 @@ import { labelFromJSON,
          deductionToDeductionJSON,
          suppositionsToSuppositionsJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
-import LocalContext from "../context/local";
 
 export default class TopLevelMetaAssertion {
   constructor(context, string, label, suppositions, deduction, proof, substitutions) {

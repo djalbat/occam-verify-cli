@@ -77,8 +77,8 @@ export function subproofAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
   const { SubproofAssertion } = dom,
-    statementNode = statement.getNode(),
-    subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
+        statementNode = statement.getNode(),
+        subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
 
   return subproofAssertion;
 }
