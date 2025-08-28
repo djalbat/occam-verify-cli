@@ -7,14 +7,14 @@ import { domAssigned } from "../../dom";
 import { stringFromTypeNameNameAndSuperTypes } from "../../utilities/type";
 
 export default domAssigned(class SimpleTypeDeclaration {
-  constructor(fileContext, string, type) {
-    this.fileContext = fileContext;
+  constructor(context, string, type) {
+    this.context = context;
     this.string = string;
     this.type = type;
   }
 
-  getFileContext() {
-    return this.fileContext;
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -30,7 +30,7 @@ export default domAssigned(class SimpleTypeDeclaration {
 
     const typeDeclarationString = this.getString(); ///
 
-    this.fileContext.trace(`Verifying the '${typeDeclarationString}' type declaration...`);
+    this.context.trace(`Verifying the '${typeDeclarationString}' type declaration...`);
 
     const typeVerifies = this.verifyType();
 
@@ -38,14 +38,14 @@ export default domAssigned(class SimpleTypeDeclaration {
       const superTypesVerify = this.verifySuperTypes();
 
       if (superTypesVerify) {
-        this.fileContext.addType(this.type);
+        this.context.addType(this.type);
 
         verifies = true;
       }
     }
 
     if (verifies) {
-      this.fileContext.debug(`...verified the '${typeDeclarationString}' type declaration.`);
+      this.context.debug(`...verified the '${typeDeclarationString}' type declaration.`);
     }
 
     return verifies;
@@ -56,19 +56,19 @@ export default domAssigned(class SimpleTypeDeclaration {
 
     const typeString = this.type.getString();
 
-    this.fileContext.trace(`Verifying the '${typeString}' type...`);
+    this.context.trace(`Verifying the '${typeString}' type...`);
 
     const typeName = this.type.getName(),
-          typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+          typePresent = this.context.isTypePresentByTypeName(typeName);
 
     if (typePresent) {
-      this.fileContext.debug(`The type '${typeString}' is already present.`);
+      this.context.debug(`The type '${typeString}' is already present.`);
     } else {
       typeVerifies = true;
     }
 
     if (typeVerifies) {
-      this.fileContext.debug(`...verified the '${typeString}' type.`);
+      this.context.debug(`...verified the '${typeString}' type.`);
     }
 
     return typeVerifies;
@@ -79,17 +79,17 @@ export default domAssigned(class SimpleTypeDeclaration {
 
     const superTypeString = superType.getString();
 
-    this.fileContext.trace(`Verifying the '${superTypeString}' super-type...`);
+    this.context.trace(`Verifying the '${superTypeString}' super-type...`);
 
     const superTypeName = superType.getName(),
-          superTypePresent = this.fileContext.isTypePresentByTypeName(superTypeName);
+          superTypePresent = this.context.isTypePresentByTypeName(superTypeName);
 
     if (superTypePresent) {
       superTypeVerifies = true;
     }
 
     if (superTypeVerifies) {
-      this.fileContext.debug(`...verified the '${superTypeString}' super-type.`);
+      this.context.debug(`...verified the '${superTypeString}' super-type.`);
     }
 
     return superTypeVerifies;
@@ -98,7 +98,7 @@ export default domAssigned(class SimpleTypeDeclaration {
   verifySuperTypes() {
     let superTypesVerify = false;
 
-    this.fileContext.trace(`Verifying the super-types...`);
+    this.context.trace(`Verifying the super-types...`);
 
     let superTypes;
 
@@ -119,7 +119,7 @@ export default domAssigned(class SimpleTypeDeclaration {
     if (typeBasic) {
       superTypesVerify = true;
 
-      this.fileContext.trace(`The '${typeString}' type is basic.`)
+      this.context.trace(`The '${typeString}' type is basic.`)
     } else  {
       const superTypeNames = superTypes.map((superType) => {
               const superTypeName = superType.getName();
@@ -129,7 +129,7 @@ export default domAssigned(class SimpleTypeDeclaration {
             superTypeNamesIncludesTypeName = superTypeNames.includes(typeName);
 
       if (superTypeNamesIncludesTypeName) {
-        this.fileContext.trace(`The '${typeName}' type cannot be a super-type `);
+        this.context.trace(`The '${typeName}' type cannot be a super-type `);
       } else {
         superTypesVerify = superTypes.every((superType) => {
           const superTypeVerifies = this.verifySuperType(superType);
@@ -143,7 +143,7 @@ export default domAssigned(class SimpleTypeDeclaration {
           superTypes = superTypes.map((superType) => {
             const superTypeName = superType.getName();
 
-            superType = this.fileContext.findTypeByTypeName(superTypeName);
+            superType = this.context.findTypeByTypeName(superTypeName);
 
             return superType;
           });
@@ -158,7 +158,7 @@ export default domAssigned(class SimpleTypeDeclaration {
     }
 
     if (superTypesVerify) {
-      this.fileContext.debug(`...verified the super-types.`);
+      this.context.debug(`...verified the super-types.`);
     }
 
     return superTypesVerify;
@@ -166,13 +166,13 @@ export default domAssigned(class SimpleTypeDeclaration {
 
   static name = "SimpleTypeDeclaration";
 
-  static fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, fileContext) {
+  static fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
     const { Type } = dom,
-          type = Type.fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, fileContext),
+          type = Type.fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
           typeName = type.getName(),
           superTypes = type.getSuperTypes(),
           string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
-          simpleTypeDeclaration = new SimpleTypeDeclaration(fileContext, string, type);
+          simpleTypeDeclaration = new SimpleTypeDeclaration(context, string, type);
 
     return simpleTypeDeclaration;
   }

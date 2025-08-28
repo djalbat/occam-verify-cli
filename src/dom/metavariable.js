@@ -1,7 +1,6 @@
 "use strict";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 import MetavariablePartialContext from "../context/partial/metavariable";
 
 import { domAssigned } from "../dom";
@@ -442,10 +441,10 @@ export default domAssigned(class Metavariable {
 
   static name = "Metavariable";
 
-  static fromJSON(json, fileContext) {
+  static fromJSON(json, context) {
     const { string } = json,
-          lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
+          lexer = context.getLexer(),
+          parser = context.getParser(),
           metavariablePartialContext = MetavariablePartialContext.fromStringLexerAndParser(string, lexer, parser),
           metavariableTokens = metavariablePartialContext.getMetavariableTokens(),
           metavariableNode = metavariablePartialContext.getMetavariableNode(),
@@ -453,8 +452,8 @@ export default domAssigned(class Metavariable {
           name = metavariableName,  ///
           node = metavariableNode,  ///
           tokens = metavariableTokens, ///
-          type = typeFromJSON(json, fileContext),
-          metaType = metaTypeFromJSON(json, fileContext),
+          type = typeFromJSON(json, context),
+          metaType = metaTypeFromJSON(json, context),
           metavariable = new Metavariable(string, node, tokens, name, type, metaType);
 
     return metavariable;
@@ -510,12 +509,10 @@ export default domAssigned(class Metavariable {
     return metavariable;
   }
 
-  static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
+  static fromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
     const { MetaType } = dom,
           metavariableNode = metavariableDeclarationNode.getMetavariableNode(),
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
-          type = typeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
+          type = typeFromMetavariableDeclarationNode(metavariableDeclarationNode, context),
           metaType = MetaType.fromMetavariableDeclarationNode(metavariableDeclarationNode, context),
           metavariable = metavariableFromMetavariableNode(metavariableNode, context);
 
@@ -541,7 +538,7 @@ function metavariableFromMetavariableNode(metavariableNode, context) {
   return metavariable;
 }
 
-function typeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
+function typeFromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
   let type = null;
 
   const typeNode = metavariableDeclarationNode.getTypeNode();
@@ -549,7 +546,7 @@ function typeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileCo
   if (typeNode !== null) {
     const typeName = typeNode.getTypeName();
 
-    type = fileContext.findTypeByTypeName(typeName);
+    type = context.findTypeByTypeName(typeName);
   }
 
   return type;

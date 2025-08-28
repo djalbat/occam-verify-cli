@@ -5,14 +5,14 @@ import dom from "../../dom";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class VariableDeclaration {
-  constructor(fileContext, string, variable) {
-    this.fileContext = fileContext;
+  constructor(context, string, variable) {
+    this.context = context;
     this.string = string;
     this.variable = variable;
   }
 
-  getFileContext() {
-    return this.fileContext;
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -28,7 +28,7 @@ export default domAssigned(class VariableDeclaration {
 
     const variableDeclarationString = this.getString();
 
-    this.fileContext.trace(`Verifying the '${variableDeclarationString}' variable declaration...`);
+    this.context.trace(`Verifying the '${variableDeclarationString}' variable declaration...`);
 
     const variableTypeVerifies = this.verifyVariableType();
 
@@ -36,14 +36,14 @@ export default domAssigned(class VariableDeclaration {
       const variableVerifies = this.verifyVariable();
 
       if (variableVerifies) {
-        this.fileContext.addVariable(this.variable);
+        this.context.addVariable(this.variable);
 
         verifies = true;
       }
     }
 
     if (verifies) {
-      this.fileContext.debug(`...verified the '${variableDeclarationString}' variable declaration.`);
+      this.context.debug(`...verified the '${variableDeclarationString}' variable declaration.`);
     }
 
     return verifies;
@@ -54,19 +54,19 @@ export default domAssigned(class VariableDeclaration {
 
     const variableString = this.variable.getString();
 
-    this.fileContext.trace(`Verifying the '${variableString}' variable...`);
+    this.context.trace(`Verifying the '${variableString}' variable...`);
 
     const variableName = this.variable.getName(),
-          variablePresent = this.fileContext.isVariablePresentByVariableName(variableName);
+          variablePresent = this.context.isVariablePresentByVariableName(variableName);
 
     if (variablePresent) {
-      this.fileContext.debug(`The '${variableName}' variable is already present.`);
+      this.context.debug(`The '${variableName}' variable is already present.`);
     } else {
       variableVerifies = true;
     }
 
     if ( variableVerifies) {
-      this.fileContext.debug(`...verified the '${variableString}' variable.`);
+      this.context.debug(`...verified the '${variableString}' variable.`);
     }
 
     return  variableVerifies;
@@ -82,24 +82,24 @@ export default domAssigned(class VariableDeclaration {
     const typeName = type.getName(),
           typeString = type.getString();
 
-    this.fileContext.trace(`Verifying the '${typeString}' type...`);
+    this.context.trace(`Verifying the '${typeString}' type...`);
 
     const includeSupertypes = false,
           provisional = type.isProvisional(includeSupertypes);
 
-    type = this.fileContext.findTypeByTypeName(typeName);
+    type = this.context.findTypeByTypeName(typeName);
 
     const typePresent = (type !== null)
 
     if (!typePresent) {
-      this.fileContext.debug(`The '${typeString}' type is not present.`);
+      this.context.debug(`The '${typeString}' type is not present.`);
     } else {
       const provisionalMatches = type.matchProvisional(provisional);
 
       if (!provisionalMatches) {
         provisional ?
-          this.fileContext.debug(`The '${typeString}' type is present but not provisional.`) :
-            this.fileContext.debug(`The '${typeString}' type is present but provisional.`);
+          this.context.debug(`The '${typeString}' type is present but not provisional.`) :
+            this.context.debug(`The '${typeString}' type is present but provisional.`);
       } else {
         this.variable.setType(type);
 
@@ -108,7 +108,7 @@ export default domAssigned(class VariableDeclaration {
     }
 
     if (variableTypeVerifies) {
-      this.fileContext.debug(`...verified the '${typeString}' type.`);
+      this.context.debug(`...verified the '${typeString}' type.`);
     }
 
     return variableTypeVerifies;
@@ -116,12 +116,12 @@ export default domAssigned(class VariableDeclaration {
 
   static name = "VariableDeclaration";
 
-  static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
+  static fromVariableDeclarationNode(variableDeclarationNode, context) {
     const { Variable } = dom,
           node = variableDeclarationNode, ///
-          string = fileContext.nodeAsString(node),
-          variable = Variable.fromVariableDeclarationNode(variableDeclarationNode, fileContext),
-          variableDeclaration = new VariableDeclaration(fileContext, string, variable);
+          string = context.nodeAsString(node),
+          variable = Variable.fromVariableDeclarationNode(variableDeclarationNode, context),
+          variableDeclaration = new VariableDeclaration(context, string, variable);
 
     return variableDeclaration;
   }

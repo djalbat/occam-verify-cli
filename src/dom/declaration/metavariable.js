@@ -5,14 +5,14 @@ import dom from "../../dom";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class MetavariableDeclaration {
-  constructor(fileContext, string, metavariable) {
-    this.fileContext = fileContext;
+  constructor(context, string, metavariable) {
+    this.context = context;
     this.string = string;
     this.metavariable = metavariable;
   }
 
-  getFileContext() {
-    return this.fileContext;
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -28,18 +28,18 @@ export default domAssigned(class MetavariableDeclaration {
 
     const metavariableDeclarationString = this.string; ///
 
-    this.fileContext.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
+    this.context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
 
     const metavariableVerifies = this.verifyMetavariable(this.metavariable);
 
     if (metavariableVerifies) {
-      this.fileContext.addMetavariable(this.metavariable);
+      this.context.addMetavariable(this.metavariable);
 
       verifies = true;
     }
 
     if (verifies) {
-      this.fileContext.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`);
+      this.context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`);
     }
 
     return verifies;
@@ -54,18 +54,18 @@ export default domAssigned(class MetavariableDeclaration {
       const typeName = type.getName(),
             typeString = type.getString();
 
-      this.fileContext.trace(`Verifying the '${typeString}' type...`);
+      this.context.trace(`Verifying the '${typeString}' type...`);
 
-      const typePresent = this.fileContext.isTypePresentByTypeName(typeName);
+      const typePresent = this.context.isTypePresentByTypeName(typeName);
 
       if (!typePresent) {
-        this.fileContext.debug(`The '${typeString}' type is not present.`);
+        this.context.debug(`The '${typeString}' type is not present.`);
       } else {
         typeVerifies = true;
       }
 
       if (typeVerifies) {
-        this.fileContext.debug(`...verified the '${typeString}' type.`);
+        this.context.debug(`...verified the '${typeString}' type.`);
       }
     }
 
@@ -77,19 +77,19 @@ export default domAssigned(class MetavariableDeclaration {
 
     const metavariableString = metavariable.getString();
 
-    this.fileContext.trace(`Verifying the '${metavariableString}' metavariable when declared...`);
+    this.context.trace(`Verifying the '${metavariableString}' metavariable when declared...`);
 
     const metavariableNode = metavariable.getNode(), ///
           termNode = metavariableNode.getTermNode();
 
     if (termNode !== null) {
-      this.fileContext.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
+      this.context.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
     } else {
       const metavariableName = metavariable.getName(),
-            metavariablePresent = this.fileContext.isMetavariablePresentByMetavariableName(metavariableName);
+            metavariablePresent = this.context.isMetavariablePresentByMetavariableName(metavariableName);
 
       if (metavariablePresent) {
-        this.fileContext.debug(`The '${metavariableName}' metavariable is already present.`);
+        this.context.debug(`The '${metavariableName}' metavariable is already present.`);
       } else {
         const type = metavariable.getType(),
               typeVerifies = this.verifyType(type);
@@ -99,7 +99,7 @@ export default domAssigned(class MetavariableDeclaration {
     }
 
     if (metavariableVerifies) {
-      this.fileContext.debug(`...verified the '${metavariableString}' metavariable when declared.`);
+      this.context.debug(`...verified the '${metavariableString}' metavariable when declared.`);
     }
 
     return metavariableVerifies;
@@ -107,12 +107,12 @@ export default domAssigned(class MetavariableDeclaration {
 
   static name = "MetavariableDeclaration";
 
-  static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
+  static fromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
     const { Metavariable } = dom,
-          metaType = metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
-          metavariable = Metavariable.fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext),
+          metaType = metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, context),
+          metavariable = Metavariable.fromMetavariableDeclarationNode(metavariableDeclarationNode, context),
           string = stringFromMetavariableAndMetaType(metavariable, metaType),
-          metavariableDeclaration = new MetavariableDeclaration(fileContext, string, metavariable);
+          metavariableDeclaration = new MetavariableDeclaration(context, string, metavariable);
 
     return metavariableDeclaration;
   }
@@ -134,10 +134,10 @@ function stringFromMetavariableAndMetaType(metavariable, metaType) {
   return string;
 }
 
-function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
+function metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
   const { MetaType } = dom,
         metaTypeNode = metavariableDeclarationNode.getMetaTypeNode(),
-        metaType = MetaType.fromMetaTypeNode(metaTypeNode, fileContext);
+        metaType = MetaType.fromMetaTypeNode(metaTypeNode, context);
 
   return metaType;
 }

@@ -3,7 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 import verifyMixins from "../mixins/term/verify";
 
 import { domAssigned } from "../dom";
@@ -188,14 +187,12 @@ export default domAssigned(class Term {
 
   static name = "Term";
 
-  static fromJSON(json, fileContext) {
+  static fromJSON(json, context) {
     const { string } = json,
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext,  ///
           termString = string,  ///
           termNode = termNodeFromTermString(termString, context),
           node = termNode,  ///
-          type = typeFromJSON(json, fileContext),
+          type = typeFromJSON(json, context),
           term = new Term(string, node, type);
 
     return term;
@@ -265,11 +262,9 @@ export default domAssigned(class Term {
     return term;
   }
 
-  static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
+  static fromConstructorDeclarationNode(constructorDeclarationNode, context) {
     const { Type } = dom,
           termNode = constructorDeclarationNode.getTermNode(),
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
           term = termFromTermNode(termNode, context),
           type = Type.fromConstructorDeclarationNode(constructorDeclarationNode, context);
 

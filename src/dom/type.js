@@ -227,10 +227,10 @@ class Type {
 
   static name = "Type";
 
-  static fromJSON(json, fileContext) {
+  static fromJSON(json, context) {
     const { name, provisional } = json,
-          properties = propertiesFromJSON(json, fileContext),
-          superTypes = superTypesFromJSON(json, fileContext),
+          properties = propertiesFromJSON(json, context),
+          superTypes = superTypesFromJSON(json, context),
           typeName = name,  ///
           string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
@@ -238,15 +238,15 @@ class Type {
     return type;
   }
 
-  static fromTypeNode(typeNode, fileContext) {
-    const type = typeFromTypeNode(typeNode, fileContext);
+  static fromTypeNode(typeNode, context) {
+    const type = typeFromTypeNode(typeNode, context);
 
     return type;
   }
 
-  static fromTypeAssertionNode(typeAssertionNode, fileContext) {
+  static fromTypeAssertionNode(typeAssertionNode, context) {
     const typeNode = typeAssertionNode.getTypeNode(),
-          type = typeFromTypeNode(typeNode, fileContext);
+          type = typeFromTypeNode(typeNode, context);
 
     return type;
   }
@@ -266,38 +266,38 @@ class Type {
     return type;
   }
 
-  static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
+  static fromPropertyDeclarationNode(propertyDeclarationNode, context) {
     const typeNode = propertyDeclarationNode.getTypeNode(),
-          type = typeFromTypeNode(typeNode, fileContext);
+          type = typeFromTypeNode(typeNode, context);
 
     return type;
   }
 
-  static fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, fileContext) {
+  static fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
     const properties = [],
           provisional = simpleTypeDeclarationNode.isProvisional(),
           typeName = simpleTypeDeclarationNode.getTypeName(),
           name = typeName,  ///
-          superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, fileContext),
+          superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
           string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
 
     return type;
   }
 
-  static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
+  static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
     const provisional = complexTypeDeclarationNode.isProvisional(),
           typeName = complexTypeDeclarationNode.getTypeName(),
           name = typeName,
-          superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
-          properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext),
+          superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
+          properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
           string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           type = new Type(string, name, superTypes, properties, provisional);
 
     return type;
   }
 
-  static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
+  static fromConstructorDeclarationNode(constructorDeclarationNode, context) {
     let type;
 
     const typeNode = constructorDeclarationNode.getTypeNode();
@@ -307,7 +307,7 @@ class Type {
     } else {
       const provisional = constructorDeclarationNode.isProvisional();
 
-      type = typeFromTypeNode(typeNode, fileContext);
+      type = typeFromTypeNode(typeNode, context);
 
       type.setProvisional(provisional);
     }
@@ -318,10 +318,10 @@ class Type {
 
 export default domAssigned(Type);
 
-function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, fileContext) {
+function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
   const superTypeNodes = simpleTypeDeclarationNode.getSuperTypeNodes(),
         superTypes = superTypeNodes.map((superTypeNode) => {
-          const superType = Type.fromTypeNode(superTypeNode, fileContext);
+          const superType = Type.fromTypeNode(superTypeNode, context);
 
           return superType;
         });
@@ -329,10 +329,10 @@ function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, file
   return superTypes;
 }
 
-function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
+function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
   const superTypeNodes = complexTypeDeclarationNode.getSuperTypeNodes(),
         superTypes = superTypeNodes.map((superTypeNode) => {
-          const superType = Type.fromTypeNode(superTypeNode, fileContext);
+          const superType = Type.fromTypeNode(superTypeNode, context);
 
           return superType;
         });
@@ -340,11 +340,11 @@ function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fi
   return superTypes;
 }
 
-function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, fileContext) {
+function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
   const { Property } = dom,
         propertyDeclarationNodes = complexTypeDeclarationNode.getPropertyDeclarationNodes(),
         properties = propertyDeclarationNodes.map((propertyDeclarationNode) => {
-          const property = Property.fromPropertyDeclarationNode(propertyDeclarationNode, fileContext);
+          const property = Property.fromPropertyDeclarationNode(propertyDeclarationNode, context);
 
           return property;
         });

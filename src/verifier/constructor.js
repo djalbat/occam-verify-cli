@@ -4,7 +4,6 @@ import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
 import Verifier from "../verifier";
-import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
 import { TYPE_TYPE } from "../constants";
@@ -15,12 +14,12 @@ const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type");
 
 class ConstructorVerifier extends Verifier {
-  verifyTerm(termNode, fileContext) {
+  verifyTerm(termNode, context) {
     let termVerifiesAsConstructor;
 
     const nonTerminalNode = termNode, ///
           childNodes = nonTerminalNode.getChildNodes(),
-          childNodesVerify = this.verifyChildNodes(childNodes, fileContext, () => {
+          childNodesVerify = this.verifyChildNodes(childNodes, context, () => {
             const verifiesAhead = true;
 
             return verifiesAhead;
@@ -39,11 +38,11 @@ class ConstructorVerifier extends Verifier {
     if (type === TYPE_TYPE) {
       const verifyAhead = remainingArguments.pop(), ///
             lastRemainingArgument = last(remainingArguments),
-            fileContext = lastRemainingArgument,  ///
+            context = lastRemainingArgument,  ///
             content = terminalNode.getContent(),
             typeString = content; ///
 
-      fileContext.debug(`The '${typeString}' type is present in the constructor but has not been declared beforehand.`);
+      context.debug(`The '${typeString}' type is present in the constructor but has not been declared beforehand.`);
 
       terminalNodeVerifies = false;
 
@@ -58,23 +57,21 @@ class ConstructorVerifier extends Verifier {
   static maps = [
     {
       nodeQuery: termNodeQuery,
-      verify: (termNode, fileContext, verifyAhead) => {
+      verify: (termNode, context, verifyAhead) => {
         const { Term } = dom,
-              localContext = LocalContext.fromFileContext(fileContext),
-              context = localContext, ///
               term = Term.fromTermNode(termNode, context),
-              termVerifies = term.verify(localContext, verifyAhead);
+              termVerifies = term.verify(context, verifyAhead);
 
         return termVerifies;
       }
     },
     {
       nodeQuery: typeNodeQuery,
-      verify: (typeNode, fileContext, verifyAhead) => {
+      verify: (typeNode, context, verifyAhead) => {
         let typeVerifies;
 
         const typeName = typeNode.getTypeName(),
-              typePresent = fileContext.isTypePresentByTypeName(typeName);
+              typePresent = context.isTypePresentByTypeName(typeName);
 
         if (typePresent) {
           const verifiesAhead = verifyAhead();
@@ -83,7 +80,7 @@ class ConstructorVerifier extends Verifier {
         } else {
           const typeString = typeName;  ///
 
-          fileContext.debug(`The '${typeString}' type is not present.`);
+          context.debug(`The '${typeString}' type is not present.`);
 
           typeVerifies = false;
         }

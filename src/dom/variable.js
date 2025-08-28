@@ -88,17 +88,17 @@ export default domAssigned(class Variable {
     return verifies;
   }
 
-  verifyType(fileContext) {
+  verifyType(context) {
     let typeVerifies = false;
 
     const typeString = this.type.getString();
 
-    fileContext.trace(`Verifying the '${typeString}' type...`);
+    context.trace(`Verifying the '${typeString}' type...`);
 
-    const type = fileContext.findTypeByTypeName(typeString);
+    const type = context.findTypeByTypeName(typeString);
 
     if (type === null) {
-      fileContext.debug(`The '${typeString}' type is not present.`);
+      context.debug(`The '${typeString}' type is not present.`);
     } else {
       this.type = type; ///
 
@@ -106,7 +106,7 @@ export default domAssigned(class Variable {
     }
 
     if (typeVerifies) {
-      fileContext.debug(`...verified the '${typeString}' type.`);
+      context.debug(`...verified the '${typeString}' type.`);
     }
 
     return typeVerifies;
@@ -164,16 +164,14 @@ export default domAssigned(class Variable {
 
   static name = "Variable";
 
-  static fromJSON(json, fileContext) {
+  static fromJSON(json, context) {
     const { string } = json,
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
           variableString = string,  ///
           variableNode = variableNodeFromVariableString(variableString, context),
           variableName = variableNode.getVariableName(),
           node = variableNode,
           name = variableName,  ///
-          type = typeFromJSON(json, fileContext),
+          type = typeFromJSON(json, context),
           propertyRelations = [],
           variable = new Variable(string, node, name, type, propertyRelations);
 
@@ -213,7 +211,7 @@ export default domAssigned(class Variable {
     return variable;
   }
 
-  static fromVariableDeclarationNode(variableDeclarationNode, fileContext) {
+  static fromVariableDeclarationNode(variableDeclarationNode, context) {
     const { Variable } = dom,
           provisional = variableDeclarationNode.isProvisional(),
           typeNode = variableDeclarationNode.getTypeNode(),

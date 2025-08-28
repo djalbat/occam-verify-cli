@@ -53,16 +53,16 @@ export default domAssigned(class Combinator {
     return json;
   }
 
-  static fromJSON(json, fileContext) {
-    const statement = statementFromJSON(json, fileContext),
+  static fromJSON(json, context) {
+    const statement = statementFromJSON(json, context),
           combinator = new Combinator(statement);
 
     return combinator;
   }
 
-  static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
+  static fromCombinatorDeclarationNode(combinatorDeclarationNode, context) {
     const { Statement } = dom,
-          statement = Statement.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
+          statement = Statement.fromCombinatorDeclarationNode(combinatorDeclarationNode, context),
           combinator = new Combinator(statement);
 
     return combinator;

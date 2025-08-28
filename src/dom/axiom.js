@@ -17,10 +17,10 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     let verifies;
 
     const axiom = this, ///
-          axiomString = axiom.getString(),
-          fileContext = this.getFileContext();
+          context = this.getContext(),
+          axiomString = axiom.getString();
 
-    fileContext.trace(`Verifying the '${axiomString}' axiom...`);
+    context.trace(`Verifying the '${axiomString}' axiom...`);
 
     const signatureVerifies = this.verifySignature();
 
@@ -31,9 +31,9 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     if (verifies) {
       const axiom = this; ///
 
-      fileContext.addAxiom(axiom);
+      context.addAxiom(axiom);
 
-      fileContext.debug(`...verified the '${axiomString}' axiom.`);
+      context.debug(`...verified the '${axiomString}' axiom.`);
     }
 
     return verifies;
@@ -45,10 +45,8 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     const satisfiable = this.isSatisfiable();
 
     if (satisfiable) {
-      const signature = this.getSignature(),
-            fileContext = this.getFileContext(),
-            localContext = LocalContext.fromFileContext(fileContext),
-            context = localContext; ///
+      const context = this.getContext(),
+            signature = this.getSignature();
 
       signatureVerifies = signature.verify(context);
     } else {
@@ -68,12 +66,12 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
       signature = this.getSignature()
 
-      const signatureB = signature; ///
-
-      const fileContext = this.getFileContext(),
-            localContext = LocalContext.fromFileContext(fileContext),
-            generalContext = localContext,  ///
+      const signatureB = signature, ///
             specificContext = context;  ///
+
+      context = this.getContext();
+
+      const generalContext = context;  ///
 
       signatureMatches = signatureA.match(signatureB, substitutions, generalContext, specificContext);
     }
@@ -95,10 +93,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
       context.trace(`Cannot unify the '${stepString}' step with the '${axiomString}' axiom because the axiom is not unconditional.`);
     } else {
       const statement = step.getStatement(),
-            fileContext = this.getFileContext(),
-            localContext = LocalContext.fromFileContext(fileContext),
-            generalContext = localContext,  ///
-            specificContext = context,  ///
+            specificContext = context;  ///
+
+      context = this.getContext();
+
+      const generalContext = context,  ///
             statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
       if (statementUnifiesWithDeduction) {
@@ -150,10 +149,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
       context.trace(`Cannot unify the '${subproofString}' subproof with the '${axiomString}' axiom because the axiom is unconditional.`);
     } else {
       const lastStep = subproof.getLastStep(),
-            fileContext = this.getFileContext(),
-            localContext = LocalContext.fromFileContext(fileContext),
-            generalContext = localContext,  ///
-            specificContext = context,  ///
+            specificContext = context;  ///
+
+      context = this.getContext();
+
+      const generalContext = context,  ///
             lastStepUnifies = this.unifyLastStep(lastStep, substitutions, generalContext, specificContext);
 
       if (lastStepUnifies) {
@@ -244,9 +244,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     context.trace(`Unifying the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom...`);
 
     const deduction = axiomLemmaTheoremConjecture.getDeduction(),  ///
-          fileContext = this.getFileContext(),
-          generalContext = fileContext, ///
-          specificContext = context,  ///
+          specificContext = context;  ///
+
+    context = this.getContext();
+
+    const generalContext = context, ///
           deductionUnifies = this.unifyDeduction(deduction, substitutions, generalContext, specificContext);
 
     if (deductionUnifies) {
@@ -265,11 +267,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
   static name = "Axiom";
 
-  static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Axiom, json, fileContext); }
+  static fromJSON(json, context) { return TopLevelAssertion.fromJSON(Axiom, json, context); }
 
-  static fromAxiomNode(axiomNode, fileContext) {
+  static fromAxiomNode(axiomNode, context) {
     const node = axiomNode, ///
-          axiom = TopLevelAssertion.fromNode(Axiom, node, fileContext);
+          axiom = TopLevelAssertion.fromNode(Axiom, node, context);
 
     return axiom;
   }

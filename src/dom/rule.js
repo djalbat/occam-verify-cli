@@ -3,7 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { domAssigned } from "../dom";
@@ -18,8 +17,8 @@ import { labelsFromJSON,
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 export default domAssigned(class Rule {
-  constructor(fileContext, string, labels, premises, conclusion, proof) {
-    this.fileContext = fileContext;
+  constructor(context, string, labels, premises, conclusion, proof) {
+    this.context = context;
     this.string = string;
     this.labels = labels;
     this.premises = premises;
@@ -27,8 +26,8 @@ export default domAssigned(class Rule {
     this.proof = proof;
   }
 
-  getFileContext() {
-    return this.fileContext;
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -66,8 +65,7 @@ export default domAssigned(class Rule {
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {
     let statementAndStepsOrSubproofsUnify = false;
 
-    const localContext = LocalContext.fromFileContext(this.fileContext),
-          generalContext = localContext, ///
+    const generalContext = this.context, ///
           specificContext = context; ///
 
     const substitutions = Substitutions.fromNothing(),
@@ -148,24 +146,23 @@ export default domAssigned(class Rule {
 
     const ruleString = this.string; ///
 
-    this.fileContext.trace(`Verifying the '${ruleString}' rule...`);
+    this.context.trace(`Verifying the '${ruleString}' rule...`);
 
     const labelsVerify = this.verifyLabels();
 
     if (labelsVerify) {
-      const context = LocalContext.fromFileContext(this.fileContext),
-            premisesVerify = this.verifyPremises(context);
+      const premisesVerify = this.verifyPremises(this.context);
 
       if (premisesVerify) {
-        const conclusionVerifies = this.verifyConclusion(context);
+        const conclusionVerifies = this.verifyConclusion(this.context);
 
         if (conclusionVerifies) {
-          const proofVerifies = this.verifyProof(context);
+          const proofVerifies = this.verifyProof(this.context);
 
           if (proofVerifies) {
             const rule = this;  ///
 
-            this.fileContext.addRule(rule);
+            this.context.addRule(rule);
 
             verifies = true;
           }
@@ -174,7 +171,7 @@ export default domAssigned(class Rule {
     }
 
     if (verifies) {
-      this.fileContext.debug(`...verified the '${ruleString}' rule.`);
+      this.context.debug(`...verified the '${ruleString}' rule.`);
     }
 
     return verifies;
@@ -249,45 +246,45 @@ export default domAssigned(class Rule {
 
   static name = "Rule";
 
-  static fromJSON(json, fileContext) {
+  static fromJSON(json, context) {
     let rule;
 
     const proof = null,
-          labels = labelsFromJSON(json, fileContext),
-          premises = premisesFromJSON(json, fileContext),
-          conclusion = conclusionFromJSON(json, fileContext),
+          labels = labelsFromJSON(json, context),
+          premises = premisesFromJSON(json, context),
+          conclusion = conclusionFromJSON(json, context),
           string = stringFromLabelsPremisesAndConclusion(labels, premises, conclusion);
 
-    rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
+    rule = new Rule(context, string, labels, premises, conclusion, proof);
 
     return rule;
   }
 
-  static fromRuleNode(ruleNode, fileContext) {
-    const proof = proofFromRuleNode(ruleNode, fileContext),
-          labels = labelsFromRuleNode(ruleNode, fileContext),
-          premises = premisesFromRuleNode(ruleNode, fileContext),
-          conclusion = conclusionFromRuleNode(ruleNode, fileContext),
+  static fromRuleNode(ruleNode, context) {
+    const proof = proofFromRuleNode(ruleNode, context),
+          labels = labelsFromRuleNode(ruleNode, context),
+          premises = premisesFromRuleNode(ruleNode, context),
+          conclusion = conclusionFromRuleNode(ruleNode, context),
           string = stringFromLabelsPremisesAndConclusion(labels, premises, conclusion),
-          rule = new Rule(fileContext, string, labels, premises, conclusion, proof);
+          rule = new Rule(context, string, labels, premises, conclusion, proof);
 
     return rule;
   }
 });
 
-function proofFromRuleNode(ruleNode, fileContext) {
+function proofFromRuleNode(ruleNode, context) {
   const { Proof } = dom,
         proofNode = ruleNode.getProofNode(),
-        proof = Proof.fromProofNode(proofNode, fileContext);
+        proof = Proof.fromProofNode(proofNode, context);
 
   return proof;
 }
 
-function labelsFromRuleNode(ruleNode, fileContext) {
+function labelsFromRuleNode(ruleNode, context) {
   const { Label } = dom,
         labelNodes = ruleNode.getLabelNodes(),
         labels = labelNodes.map((labelNode) => {
-          const label = Label.fromLabelNode(labelNode, fileContext);
+          const label = Label.fromLabelNode(labelNode, context);
 
           return label;
         });
@@ -295,11 +292,11 @@ function labelsFromRuleNode(ruleNode, fileContext) {
   return labels;
 }
 
-function premisesFromRuleNode(ruleNode, fileContext) {
+function premisesFromRuleNode(ruleNode, context) {
   const { Premise } = dom,
         premiseNodes = ruleNode.getPremiseNodes(),
         premises = premiseNodes.map((premiseNode) => {
-          const premise = Premise.fromPremiseNode(premiseNode, fileContext);
+          const premise = Premise.fromPremiseNode(premiseNode, context);
 
           return premise;
         });
@@ -307,10 +304,10 @@ function premisesFromRuleNode(ruleNode, fileContext) {
   return premises;
 }
 
-function conclusionFromRuleNode(ruleNode, fileContext) {
+function conclusionFromRuleNode(ruleNode, context) {
   const { Conclusion } = dom,
         conclusionNode = ruleNode.getConclusionNode(),
-        conclusion = Conclusion.fromConclusionNode(conclusionNode, fileContext);
+        conclusion = Conclusion.fromConclusionNode(conclusionNode, context);
 
   return conclusion;
 }

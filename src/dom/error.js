@@ -3,13 +3,13 @@
 import { domAssigned } from "../dom";
 
 export default domAssigned(class Error {
-  constructor(fileContext, string) {
-    this.fileContext = fileContext;
+  constructor(context, string) {
+    this.context = context;
     this.string = string;
   }
 
-  getFileContext() {
-    return this.fileContext;
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -21,17 +21,17 @@ export default domAssigned(class Error {
 
     const errorString = this.string;  ///
 
-    this.fileContext.warning(`The '${errorString}' error cannot be verified.`);
+    this.context.warning(`The '${errorString}' error cannot be verified.`);
 
     return verifies;
   }
 
   static name = "Error";
 
-  static fromErrorNode(errorNode, fileContext) {
+  static fromErrorNode(errorNode, context) {
     const node = errorNode, ///
-          string = fileContext.nodeAsString(node),
-          error = new Error(fileContext, string);
+          string = context.nodeAsString(node),
+          error = new Error(context, string);
 
     return error;
   }

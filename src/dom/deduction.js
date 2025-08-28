@@ -95,19 +95,19 @@ export default domAssigned(class Deduction {
 
   static name = "Deduction";
 
-  static fromJSON(json, fileContext) {
-    const statement = statementFromJSON(json, fileContext),
+  static fromJSON(json, context) {
+    const statement = statementFromJSON(json, context),
           string = statement.getString(),
           deduction = new Deduction(string, statement);
 
     return deduction;
   }
 
-  static fromDeductionNode(deductionNode, fileContext) {
+  static fromDeductionNode(deductionNode, context) {
     const { Statement } = dom,
           node = deductionNode,  ///
-          string = fileContext.nodeAsString(node),
-          statement = Statement.fromDeductionNode(deductionNode, fileContext),
+          string = context.nodeAsString(node),
+          statement = Statement.fromDeductionNode(deductionNode, context),
           deduction = new Deduction(string, statement);
 
     return deduction;

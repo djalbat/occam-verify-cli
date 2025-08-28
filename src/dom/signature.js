@@ -157,17 +157,17 @@ export default domAssigned(class Signature {
 
   static name = "Signature";
 
-  static fromJSON(json, fileContext) {
-    const terms = termsFromJSON(json, fileContext),
+  static fromJSON(json, context) {
+    const terms = termsFromJSON(json, context),
           string = stringFromTerms(terms),
           signature = new Signature(string, terms);
 
     return signature;
   }
 
-  static fromSignatureNode(signatureNode, fileContext) {
+  static fromSignatureNode(signatureNode, context) {
     const termNodes = signatureNode.getTermNodes(),
-          terms = termsFromTermNodes(termNodes, fileContext),
+          terms = termsFromTermNodes(termNodes, context),
           string = stringFromTerms(terms),
           signature = new Signature(string, terms);
 

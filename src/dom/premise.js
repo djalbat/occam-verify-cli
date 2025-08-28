@@ -200,9 +200,9 @@ export default domAssigned(class Premise {
 
   static name = "Premise";
 
-  static fromJSON(json, fileContext) {
-    const statement = statementFromJSON(json, fileContext),
-          procedureCall = procedureCallFromJSON(json, fileContext);
+  static fromJSON(json, context) {
+    const statement = statementFromJSON(json, context),
+          procedureCall = procedureCallFromJSON(json, context);
 
     let string;
 
@@ -219,12 +219,12 @@ export default domAssigned(class Premise {
     return premise;
   }
 
-  static fromPremiseNode(premiseNode, fileContext) {
+  static fromPremiseNode(premiseNode, context) {
     const { Statement, ProcedureCall } = dom,
-          node = premiseNode,
-          string = fileContext.nodeAsString(node),
-          statement = Statement.fromPremiseNode(premiseNode, fileContext),
-          procedureCall = ProcedureCall.fromPremiseNode(premiseNode, fileContext),
+          node = premiseNode, ///
+          string = context.nodeAsString(node),
+          statement = Statement.fromPremiseNode(premiseNode, context),
+          procedureCall = ProcedureCall.fromPremiseNode(premiseNode, context),
           premise = new Premise(string, statement, procedureCall);
 
     return premise

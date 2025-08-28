@@ -164,7 +164,7 @@ export default domAssigned(class Step {
     return step;
   }
 
-  static fromStepOrSubproofNode(stepOrSubproofNode, fileContext) {
+  static fromStepOrSubproofNode(stepOrSubproofNode, context) {
     let step = null;
 
     const stepNode = stepOrSubproofNode.isStepNode();
@@ -173,9 +173,9 @@ export default domAssigned(class Step {
       const { Statement, Reference } = dom,
             stepNode = stepOrSubproofNode,  ///
             node = stepNode, ///
-            string = fileContext.nodeAsString(node),
-            statement = Statement.fromStepNode(stepNode, fileContext),
-            reference = Reference.fromStepNode(stepNode, fileContext);
+            string = context.nodeAsString(node),
+            statement = Statement.fromStepNode(stepNode, context),
+            reference = Reference.fromStepNode(stepNode, context);
 
       step = new Step(string, statement, reference);
     }

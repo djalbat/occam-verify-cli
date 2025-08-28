@@ -2,7 +2,6 @@
 
 import { arrayUtilities } from "necessary";
 
-import LocalContext from "../context/local";
 import verifyMixins from "../mixins/statement/verify";
 import StatementPartialContext from "../context/partial/statement";
 
@@ -250,10 +249,10 @@ export default domAssigned(class Statement {
 
   static name = "Statement";
 
-  static fromJSON(json, fileContext) {
+  static fromJSON(json, context) {
     const { string } = json,
-          lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
+          lexer = context.getLexer(),
+          parser = context.getParser(),
           statementPartialContext = StatementPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = statementPartialContext.getNode(),
           tokens = statementPartialContext.getTokens(),
@@ -262,27 +261,24 @@ export default domAssigned(class Statement {
     return statement;
   }
 
-  static fromStepNode(stepNode, fileContext) {
+  static fromStepNode(stepNode, context) {
     let statement = null;
 
     const statementNode = stepNode.getStatementNode();
 
     if (statementNode !== null) {
-      statement = statementFromStatementNode(statementNode, fileContext);
+      statement = statementFromStatementNode(statementNode, context);
     }
 
     return statement;
   }
 
-  static fromPremiseNode(premiseNode, fileContext) {
+  static fromPremiseNode(premiseNode, context) {
     let statement = null;
 
     const statementNode = premiseNode.getStatementNode();
 
     if (statementNode !== null) {
-      const localContext = LocalContext.fromFileContext(fileContext),
-            context = localContext;  ///
-
       statement = statementFromStatementNode(statementNode, context);
     }
 
@@ -295,99 +291,80 @@ export default domAssigned(class Statement {
     return statement;
   }
 
-  static fromDeductionNode(deductionNode, fileContext) {
+  static fromDeductionNode(deductionNode, context) {
     let statement = null;
 
     const statementNode = deductionNode.getStatementNode();
 
     if (statementNode !== null) {
-      const localContext = LocalContext.fromFileContext(fileContext),
-            context = localContext;  ///
-
       statement = statementFromStatementNode(statementNode, context);
     }
 
     return statement;
   }
 
-  static fromHypothesisNode(hypothesisNode, fileContext) {
+  static fromHypothesisNode(hypothesisNode, context) {
     let statement = null;
 
     const statementNode = hypothesisNode.getStatementNode();
 
     if (statementNode !== null) {
-      const localContext = LocalContext.fromFileContext(fileContext),
-            context = localContext;  ///
-
       statement = statementFromStatementNode(statementNode, context);
     }
 
     return statement;
   }
 
-  static fromConclusionNode(conclusionNode, fileContext) {
+  static fromConclusionNode(conclusionNode, context) {
     let statement = null;
 
     const statementNode = conclusionNode.getStatementNode();
 
     if (statementNode !== null) {
-      const localContext = LocalContext.fromFileContext(fileContext),
-            context = localContext;  ///
-
       statement = statementFromStatementNode(statementNode, context);
     }
 
     return statement;
   }
 
-  static fromSuppositionNode(suppositionNode, fileContext) {
+  static fromSuppositionNode(suppositionNode, context) {
     let statement = null;
 
     const statementNode = suppositionNode.getStatementNode();
 
     if (statementNode !== null) {
-      const localContext = LocalContext.fromFileContext(fileContext),
-            context = localContext;  ///
-
       statement = statementFromStatementNode(statementNode, context);
     }
 
     return statement;
   }
 
-  static fromDeclarationNode(declarationNode, fileContext) {
+  static fromDeclarationNode(declarationNode, context) {
     let statementNode;
 
     statementNode = declarationNode.getStatementNode(); ///
 
     statementNode = stripBracketsFromStatementNode(statementNode);  ///
 
-    const localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
-          statement = statementFromStatementNode(statementNode, context);
+    const statement = statementFromStatementNode(statementNode, context);
 
     return statement;
   }
 
-  static fromContainedAssertionNode(containedAssertionNode, fileContext) {
+  static fromContainedAssertionNode(containedAssertionNode, context) {
     let statement = null;
 
     const statementNode = containedAssertionNode.getStatementNode();
 
     if (statementNode !== null) {
-      const localContext = LocalContext.fromFileContext(fileContext),
-            context = localContext;  ///
-
       statement = statementFromStatementNode(statementNode, context);
     }
 
     return statement;
   }
 
-  static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
+  static fromCombinatorDeclarationNode(combinatorDeclarationNode, context) {
     const statementNode = combinatorDeclarationNode.getStatementNode(),
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
           statement = statementFromStatementNode(statementNode, context);
 
     return statement;

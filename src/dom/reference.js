@@ -90,9 +90,11 @@ export default domAssigned(class Reference {
 
     context.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
 
-    const fileContext = label.getFileContext(),
-          generalContext = context, ///
-          specificContext = fileContext,  ///
+    const generalContext = context; ///
+
+    context = label.getContext();
+
+    const specificContext = context,  ///
           labelMetavariable = label.getMetavariable(),
           generalMetavariable = this.metavariable,  ///
           specificMetavariable = labelMetavariable, ///
@@ -116,10 +118,9 @@ export default domAssigned(class Reference {
 
     context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
 
-    const fileContext = context.getFileContext(),
-          substitutions = Substitutions.fromNothing(),
+    const substitutions = Substitutions.fromNothing(),
           generalContext = context, ///
-          specificContext = fileContext,  ///
+          specificContext = context,  ///
           generalMetavariable = this.metavariable,  ///
           specificMetavariable = metavariable, ///
           metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
@@ -167,67 +168,67 @@ export default domAssigned(class Reference {
 
   static name = "Reference";
 
-  static fromJSON(json, fileContext) {
-    const metavariable = metavariableFromJSON(json, fileContext),
+  static fromJSON(json, context) {
+    const metavariable = metavariableFromJSON(json, context),
           reference = new Reference(metavariable);
 
     return reference;
   }
 
-  static fromStepNode(stepNode, fileContext) {
+  static fromStepNode(stepNode, context) {
     let reference = null;
 
     const referenceNode = stepNode.getReferenceNode();
 
     if (referenceNode !== null) {
-      reference = referenceFromReferenceNode(referenceNode, fileContext);
+      reference = referenceFromReferenceNode(referenceNode, context);
     }
 
     return reference;
   }
 
-  static fromReferenceNode(referenceNode, fileContext) {
-    const reference = referenceFromReferenceNode(referenceNode, fileContext);
+  static fromReferenceNode(referenceNode, context) {
+    const reference = referenceFromReferenceNode(referenceNode, context);
 
     return reference;
   }
 
-  static fromDeclarationNode(declarationNode, fileContext) {
+  static fromDeclarationNode(declarationNode, context) {
     const metavariableNode = declarationNode.getMetavariableNode(),
-          reference = referenceFromMetavariableNode(metavariableNode, fileContext);
+          reference = referenceFromMetavariableNode(metavariableNode, context);
 
     return reference;
   }
 
-  static fromMetavariableNode(metavariableNode, fileContext) {
-    const reference = referenceFromMetavariableNode(metavariableNode, fileContext);
+  static fromMetavariableNode(metavariableNode, context) {
+    const reference = referenceFromMetavariableNode(metavariableNode, context);
 
     return reference;
   }
 
-  static fromProcedureCallNode(procedureCallNode, fileContext) {
+  static fromProcedureCallNode(procedureCallNode, context) {
     let reference = null;
 
     const referenceNode = procedureCallNode.getReferenceNode();
 
     if (referenceNode !== null) {
-      reference = referenceFromReferenceNode(referenceNode, fileContext);
+      reference = referenceFromReferenceNode(referenceNode, context);
     }
 
     return reference;
   }
 
-  static fromSatisfiesAssertionNode(satisfiesAssertionNode, fileContext) {
+  static fromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
     const metavariableNode = satisfiesAssertionNode.getMetavariableNode(),
-          reference = referenceFromMetavariableNode(metavariableNode, fileContext);
+          reference = referenceFromMetavariableNode(metavariableNode, context);
 
     return reference;
   }
 });
 
-function referenceFromReferenceNode(referenceNode, fileContext) {
+function referenceFromReferenceNode(referenceNode, context) {
   const { Reference, Metavariable } = dom,
-        localContext = LocalContext.fromFileContext(fileContext),
+        localContext = LocalContext.fromFileContext(context),
         context = localContext, ///
         metavariable = Metavariable.fromReferenceNode(referenceNode, context),
         reference = new Reference(metavariable);
@@ -235,9 +236,9 @@ function referenceFromReferenceNode(referenceNode, fileContext) {
   return reference;
 }
 
-function referenceFromMetavariableNode(metavariableNode, fileContext) {
+function referenceFromMetavariableNode(metavariableNode, context) {
   const { Reference, Metavariable } = dom,
-        localContext = LocalContext.fromFileContext(fileContext),
+        localContext = LocalContext.fromFileContext(context),
         context = localContext, ///
         metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
         reference = new Reference(metavariable);

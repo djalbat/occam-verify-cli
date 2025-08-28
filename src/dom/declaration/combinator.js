@@ -7,14 +7,14 @@ import { domAssigned } from "../../dom";
 import combinatorVerifier from "../../verifier/combinator";
 
 export default domAssigned(class CombinatorDeclaration {
-  constructor(fileContext, string, combinator) {
-    this.fileContext = fileContext;
+  constructor(context, string, combinator) {
+    this.context = context;
     this.string = string;
     this.combinator = combinator;
   }
 
-  getFileContext() {
-    return this.fileContext;
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -30,18 +30,18 @@ export default domAssigned(class CombinatorDeclaration {
 
     const combinatorDeclarationString = this.getString(); ///
 
-    this.fileContext.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
+    this.context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
 
     const combinatorVerifies = this.verifyCombinator();
 
     if (combinatorVerifies) {
-      this.fileContext.addCombinator(this.combinator);
+      this.context.addCombinator(this.combinator);
 
       verifies = true;
     }
 
     if (verifies) {
-      this.fileContext.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`);
+      this.context.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`);
     }
 
     return verifies;
@@ -52,15 +52,15 @@ export default domAssigned(class CombinatorDeclaration {
 
     const combinatorString = this.combinator.getString();
 
-    this.fileContext.trace(`Verifying the '${combinatorString}' combinator...`);
+    this.context.trace(`Verifying the '${combinatorString}' combinator...`);
 
     const statement = this.combinator.getStatement(),
           statementNode = statement.getNode();
 
-    statementVerifies = combinatorVerifier.verifyStatement(statementNode, this.fileContext);
+    statementVerifies = combinatorVerifier.verifyStatement(statementNode, this.context);
 
     if (statementVerifies) {
-      this.fileContext.debug(`...verified the '${combinatorString}' combinator.`);
+      this.context.debug(`...verified the '${combinatorString}' combinator.`);
     }
 
     return statementVerifies;
@@ -68,12 +68,12 @@ export default domAssigned(class CombinatorDeclaration {
 
   static name = "CombinatorDeclaration";
 
-  static fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext) {
+  static fromCombinatorDeclarationNode(combinatorDeclarationNode, context) {
     const { Combinator } = dom,
           node = combinatorDeclarationNode, ///
-          string = fileContext.nodeAsString(node),
-          combinator = Combinator.fromCombinatorDeclarationNode(combinatorDeclarationNode, fileContext),
-          combinatorDeclaration = new CombinatorDeclaration(fileContext, string, combinator);
+          string = context.nodeAsString(node),
+          combinator = Combinator.fromCombinatorDeclarationNode(combinatorDeclarationNode, context),
+          combinatorDeclaration = new CombinatorDeclaration(context, string, combinator);
 
     return combinatorDeclaration;
   }

@@ -171,16 +171,16 @@ export default domAssigned(class StatementSubstitution extends Substitution {
     return json;
   }
 
-  static fromJSON(json, fileContext) {
+  static fromJSON(json, context) {
     const { string } = json,
-          lexer = fileContext.getLexer(),
-          parser = fileContext.getParser(),
+          lexer = context.getLexer(),
+          parser = context.getParser(),
           statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = statementSubstitutionPartialContext.getNode(),
           tokens = statementSubstitutionPartialContext.getTokens(),
           resolved = true,
-          statement = statementFromJSON(json, fileContext),
-          metavariable = metavariableFromJSON(json, fileContext),
+          statement = statementFromJSON(json, context),
+          metavariable = metavariableFromJSON(json, context),
           substitution = null,  ///
           statementSubstitution = new StatementSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
 

@@ -217,9 +217,11 @@ export default domAssigned(class Declaration {
 
     context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${declarationString}' declaration...`);
 
-    const fileContext = metaLemmaMetatheorem.getFileContext(),
-          generalContext = context, ///
-          specificContext = fileContext,
+    const generalContext = context; ///
+
+    context = metaLemmaMetatheorem.getContext();
+
+    const specificContext = context,
           labelSubstitutions = Substitutions.fromNothing(),
           label = metaLemmaMetatheorem.getLabel(),
           substitutions = labelSubstitutions, ///

@@ -1,7 +1,5 @@
 "use strict";
 
-import LocalContext from "../context/local";
-
 import { domAssigned } from "../dom";
 import { FRAME_META_TYPE_NAME, REFERENCE_META_TYPE_NAME, STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 
@@ -43,7 +41,7 @@ class MetaType {
 
   static name = "MetaType";
 
-  static fromJSON(json, fileContext) {
+  static fromJSON(json, context) {
     const { name } = json,
           metaTypeName = name,  ///
           metaType = metaTypeFromMetaTypeName(metaTypeName);
@@ -57,10 +55,8 @@ class MetaType {
     return metaType;
   }
 
-  static fromMetavariableDeclarationNode(metavariableDeclarationNode, fileContext) {
+  static fromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
     const metaTypeNode = metavariableDeclarationNode.getMetaTypeNode(),
-          localContext = LocalContext.fromFileContext(fileContext),
-          context = localContext, ///
           metaType = metaTypeFromMetaTypeNode(metaTypeNode, context);
 
     return metaType;

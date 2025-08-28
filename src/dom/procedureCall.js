@@ -109,9 +109,9 @@ export default domAssigned(class ProcedureCall {
 
   static name = "ProcedureCall";
 
-  static fromJSON(json, fileContext) {
-    const reference = referenceFromJSON(json, fileContext),
-          parameters = parametersFromJSON(json, fileContext),
+  static fromJSON(json, context) {
+    const reference = referenceFromJSON(json, context),
+          parameters = parametersFromJSON(json, context),
           string = stringFromReferenceAndParameters(reference, parameters),
           procedureCall = new ProcedureCall(string, reference, parameters);
 

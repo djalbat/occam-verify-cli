@@ -9,23 +9,23 @@ export default domAssigned(class Lemma extends TopLevelAssertion {
     let verifies;
 
     const lemma = this, ///
-          fileContext = this.getFileContext(),
+          context = this.getContext(),
           lemmaString = lemma.getString();
 
     (lemmaString === null) ?
-      fileContext.trace(`Verifying a lemma...`) :
-        fileContext.trace(`Verifying the '${lemmaString}' lemma...`);
+      context.trace(`Verifying a lemma...`) :
+        context.trace(`Verifying the '${lemmaString}' lemma...`);
 
     verifies = super.verify();
 
     if (verifies) {
       const lemma = this; ///
 
-      fileContext.addLemma(lemma);
+      context.addLemma(lemma);
 
       (lemmaString === null) ?
-        fileContext.debug(`...verified a lemma.`) :
-          fileContext.debug(`...verified the '${lemmaString}' lemma.`);
+        context.debug(`...verified a lemma.`) :
+          context.debug(`...verified the '${lemmaString}' lemma.`);
     }
 
     return verifies;
@@ -33,9 +33,9 @@ export default domAssigned(class Lemma extends TopLevelAssertion {
 
   static name = "Lemma";
 
-  static fromLemmaNode(lemmaNode, fileContext) {
+  static fromLemmaNode(lemmaNode, context) {
     const node = lemmaNode, ///
-          lemma = TopLevelAssertion.fromNode(Lemma, node, fileContext);
+          lemma = TopLevelAssertion.fromNode(Lemma, node, context);
 
     return lemma;
   }

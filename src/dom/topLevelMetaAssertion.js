@@ -1,7 +1,6 @@
 "use strict";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { proofFromProofNode, deductionFromDeductionNode, suppositionsFromSuppositionNodes } from "./topLevelAssertion";
@@ -15,8 +14,8 @@ import { labelFromJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
 export default class TopLevelMetaAssertion {
-  constructor(fileContext, string, label, suppositions, deduction, proof, substitutions) {
-    this.fileContext = fileContext;
+  constructor(context, string, label, suppositions, deduction, proof, substitutions) {
+    this.context = context;
     this.string = string;
     this.label = label;
     this.suppositions = suppositions;
@@ -25,8 +24,8 @@ export default class TopLevelMetaAssertion {
     this.substitutions = substitutions;
   }
 
-  getFileContext() {
-    return this.fileContext;
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -68,15 +67,13 @@ export default class TopLevelMetaAssertion {
     const labelVerifies = this.verifyLabel();
 
     if (labelVerifies) {
-      const localContext = LocalContext.fromFileContext(this.fileContext),
-            context = localContext, ///
-            suppositionsVerify = this.verifySuppositions(context);
+      const suppositionsVerify = this.verifySuppositions(this.context);
 
       if (suppositionsVerify) {
-        const deductionVerifies = this.verifyDeduction(context);
+        const deductionVerifies = this.verifyDeduction(this.context);
 
         if (deductionVerifies) {
-          const proofVerifies = this.verifyProof(context);
+          const proofVerifies = this.verifyProof(this.context);
 
           if (proofVerifies) {
             verifies = true;
@@ -150,43 +147,43 @@ export default class TopLevelMetaAssertion {
     return json;
   }
 
-  static fromJSON(Class, json, fileContext) {
-    const label = labelFromJSON(json, fileContext),
-          deduction = deductionFromJSON(json, fileContext),
-          suppositions = suppositionsFromJSON(json, fileContext),
-          substitutions = substitutionsFromJSON(json, fileContext),
+  static fromJSON(Class, json, context) {
+    const label = labelFromJSON(json, context),
+          deduction = deductionFromJSON(json, context),
+          suppositions = suppositionsFromJSON(json, context),
+          substitutions = substitutionsFromJSON(json, context),
           proof = null,
           string = stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
-          topLevelMetaAssertion = new Class(fileContext, string, label, suppositions, deduction, proof, substitutions);
+          topLevelMetaAssertion = new Class(context, string, label, suppositions, deduction, proof, substitutions);
 
     return topLevelMetaAssertion;
   }
 
-  static fromNode(Class, node, fileContext) {
+  static fromNode(Class, node, context) {
     const topLevelAssertionNode = node, ///
           proofNode = topLevelAssertionNode.getProofNode(),
           labelNode = topLevelAssertionNode.getLabelNode(),
           deductionNode = topLevelAssertionNode.getDeductionNode(),
           suppositionNodes = topLevelAssertionNode.getSuppositionNodes(),
-          proof = proofFromProofNode(proofNode, fileContext),
-          label = labelFromLabelNode(labelNode, fileContext),
-          deduction = deductionFromDeductionNode(deductionNode, fileContext),
-          suppositions = suppositionsFromSuppositionNodes(suppositionNodes, fileContext),
+          proof = proofFromProofNode(proofNode, context),
+          label = labelFromLabelNode(labelNode, context),
+          deduction = deductionFromDeductionNode(deductionNode, context),
+          suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context),
           substitutions = Substitutions.fromNothing(),
           string = stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
-          topLevelMetaAssertion = new Class(fileContext, string, label, suppositions, deduction, proof, substitutions);
+          topLevelMetaAssertion = new Class(context, string, label, suppositions, deduction, proof, substitutions);
 
     return topLevelMetaAssertion;
   }
 }
 
-function labelFromLabelNode(labelNode, fileContext) {
+function labelFromLabelNode(labelNode, context) {
   let label = null;
 
   const { Label } = dom;
 
   if (labelNode !== null) {
-    label = Label.fromLabelNode(labelNode, fileContext);
+    label = Label.fromLabelNode(labelNode, context);
   }
 
   return label;

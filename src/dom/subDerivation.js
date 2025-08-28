@@ -52,20 +52,20 @@ export default domAssigned(class SubDerivation {
 
   static name = "SubDerivation";
 
-  static fromSubDerivationNode(subDerivationNode, fileContext) {
-    const stepsOrSubproofs = stepOrSubproofFromSubDerivationNode(subDerivationNode, fileContext),
+  static fromSubDerivationNode(subDerivationNode, context) {
+    const stepsOrSubproofs = stepOrSubproofFromSubDerivationNode(subDerivationNode, context),
           subDerivation = new SubDerivation(stepsOrSubproofs);
 
     return subDerivation;
   }
 });
 
-function stepOrSubproofFromSubDerivationNode(subDerivationNode, fileContext) {
+function stepOrSubproofFromSubDerivationNode(subDerivationNode, context) {
   const { Step, Subproof } = dom,
         stepOrSubproofNodes = subDerivationNode.getStepOrSubproofNodes(),
         stepsOrSubproofs = stepOrSubproofNodes.map((stepOrSubproofNode) => {
-          const subproof = Subproof.fromStepOrSubproofNode(stepOrSubproofNode, fileContext),
-                step = Step.fromStepOrSubproofNode(stepOrSubproofNode, fileContext),
+          const subproof = Subproof.fromStepOrSubproofNode(stepOrSubproofNode, context),
+                step = Step.fromStepOrSubproofNode(stepOrSubproofNode, context),
                 stepOrSubproof = (step || subproof);
 
           return stepOrSubproof;

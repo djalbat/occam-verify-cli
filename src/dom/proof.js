@@ -52,13 +52,13 @@ export default domAssigned(class Proof {
 
   static name = "Proof";
 
-  static fromProofNode(proofNode, fileContext) {
+  static fromProofNode(proofNode, context) {
     let proof = null;
 
     if (proofNode !== null) {
       const { Derivation } = dom,
             derivationNode = proofNode.getDerivationNode(),
-            derivation = Derivation.fromDerivationNode(derivationNode, fileContext);
+            derivation = Derivation.fromDerivationNode(derivationNode, context);
 
       proof = new Proof(derivation);
     }

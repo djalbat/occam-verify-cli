@@ -116,8 +116,6 @@ class LocalContext {
 
   getConstructors() { return this.context.getConstructors(); }
 
-  getFileContext() { return this.context.getFileContext(); }
-
   addEquality(equality, context) {
     let equalityAdded;
 
@@ -383,18 +381,6 @@ class LocalContext {
 
   static fromContext(context) {
     const tokens = null,
-          variables = [],
-          judgements = [],
-          equivalences = Equivalences.fromNothing(),
-          stepsOrSubproofs = [],
-          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, stepsOrSubproofs);
-
-    return localContext;
-  }
-
-  static fromFileContext(fileContext) {
-    const context = fileContext,  ///
-          tokens = null,
           variables = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),

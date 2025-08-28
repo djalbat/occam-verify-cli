@@ -8,20 +8,20 @@ export default domAssigned(class Conjecture extends TopLevelAssertion {
   verify() {
     let verifies;
 
-    const conjecture = this,  ///
-          fileContext = this.getFileContext(),
+    const context = this.getContext(),
+          conjecture = this,  ///
           conjectureString = conjecture.getString();
 
-    fileContext.trace(`Verifying the '${conjectureString}' conjecture...`);
+    context.trace(`Verifying the '${conjectureString}' conjecture...`);
 
     verifies = super.verify();
 
     if (verifies) {
       const conjecture = this;  ///
 
-      fileContext.addConjecture(conjecture);
+      context.addConjecture(conjecture);
 
-      fileContext.debug(`...verified the '${conjectureString}' conjecture.`);
+      context.debug(`...verified the '${conjectureString}' conjecture.`);
     }
 
     return verifies;
@@ -29,11 +29,11 @@ export default domAssigned(class Conjecture extends TopLevelAssertion {
 
   static name = "Conjecture";
 
-  static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Conjecture, json, fileContext); }
+  static fromJSON(json, context) { return TopLevelAssertion.fromJSON(Conjecture, json, context); }
 
-  static fromConjectureNode(conjectureNode, fileContext) {
+  static fromConjectureNode(conjectureNode, context) {
     const node = conjectureNode,  ///
-          conjecture = TopLevelAssertion.fromNode(Conjecture, node, fileContext);
+          conjecture = TopLevelAssertion.fromNode(Conjecture, node, context);
 
     return conjecture;
   }

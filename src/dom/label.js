@@ -7,17 +7,17 @@ import { domAssigned } from "../dom";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default domAssigned(class Label {
-  constructor(metavariable, fileContext) {
+  constructor(context, metavariable) {
+    this.context = context;
     this.metavariable = metavariable;
-    this.fileContext = fileContext;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getMetavariable() {
     return this.metavariable;
-  }
-
-  getFileContext() {
-    return this.fileContext;
   }
 
   getString() { return this.metavariable.getString(); }
@@ -56,28 +56,28 @@ export default domAssigned(class Label {
 
     const labelString = this.getString(); ///
 
-    this.fileContext.trace(`Verifying the '${labelString}' label...`);
+    this.context.trace(`Verifying the '${labelString}' label...`);
 
     let labelPresent;
 
     if (nameOnly) {
       const metavariableName = this.getMetavariableName();
 
-      labelPresent = this.fileContext.isLabelPresentByMetavariableName(metavariableName);
+      labelPresent = this.context.isLabelPresentByMetavariableName(metavariableName);
     } else {
       const metavariable = this.getMetavariable();
 
-      labelPresent = this.fileContext.isLabelPresentByMetavariable(metavariable);
+      labelPresent = this.context.isLabelPresentByMetavariable(metavariable);
     }
 
     if (labelPresent) {
-      this.fileContext.debug(`The '${labelString}' label is already present.`);
+      this.context.debug(`The '${labelString}' label is already present.`);
     } else {
       verifies = true;
     }
 
     if (verifies) {
-      this.fileContext.debug(`...verified the '${labelString}' label.`);
+      this.context.debug(`...verified the '${labelString}' label.`);
     }
 
     return verifies;
@@ -95,18 +95,18 @@ export default domAssigned(class Label {
 
   static name = "Label";
 
-  static fromJSON(json, fileContext) {
-    const metavariable = metavariableFromJSON(json, fileContext),
-          label = new Label(metavariable, fileContext);
+  static fromJSON(json, context) {
+    const metavariable = metavariableFromJSON(json, context),
+          label = new Label(context, metavariable);
 
     return label;
   }
 
-  static fromLabelNode(labelNode, fileContext) {
+  static fromLabelNode(labelNode, context) {
     const { Metavariable } = dom,
-          localContext = LocalContext.fromFileContext(fileContext),
+          localContext = LocalContext.fromFileContext(context),
           metavariable = Metavariable.fromLabelNode(labelNode, localContext),
-          label = new Label(metavariable, fileContext);
+          label = new Label(context, metavariable);
 
     return label;
   }

@@ -2,7 +2,6 @@
 
 import dom from "../dom";
 import Verifier from "../verifier";
-import LocalContext from "../context/local";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -11,12 +10,12 @@ const termNodeQuery = nodeQuery("/term"),
       statementNodeQuery = nodeQuery("/statement");
 
 class CombinatorVerifier extends Verifier {
-  verifyStatement(statementNode, fileContext) {
+  verifyStatement(statementNode, context) {
     let statementVerifiesAsCombinator;
 
     const nonTerminalNode = statementNode, ///
           childNodes = nonTerminalNode.getChildNodes(),
-          childNodesVerify = this.verifyChildNodes(childNodes, fileContext);
+          childNodesVerify = this.verifyChildNodes(childNodes, context);
 
     statementVerifiesAsCombinator = childNodesVerify;  ///
 
@@ -26,10 +25,8 @@ class CombinatorVerifier extends Verifier {
   static maps = [
     {
       nodeQuery: statementNodeQuery,
-      verify: (statementNode, fileContext) => {
+      verify: (statementNode, context) => {
         const { Statement } = dom,
-              localContext = LocalContext.fromFileContext(fileContext),
-              context = localContext, ///
               statement = Statement.fromStatementNode(statementNode, context),
               assignments = null,
               stated = false,
@@ -40,10 +37,8 @@ class CombinatorVerifier extends Verifier {
     },
     {
       nodeQuery: termNodeQuery,
-      verify: (termNode, fileContext) => {
+      verify: (termNode, context) => {
         const { Term } = dom,
-              localContext = LocalContext.fromFileContext(fileContext),
-              context = localContext, ///
               term = Term.fromTermNode(termNode, context),
               termVerifies = term.verify(context, () => {
                 const verifiesAhead = true;
@@ -56,11 +51,11 @@ class CombinatorVerifier extends Verifier {
     },
     {
       nodeQuery: typeNodeQuery,
-      verify: (typeNode, fileContext) => {
+      verify: (typeNode, context) => {
         let typeVerifies = false;
 
         const typeName = typeNode.getTypeName(),
-              typePresent = fileContext.isTypePresentByTypeName(typeName);
+              typePresent = context.isTypePresentByTypeName(typeName);
 
         if (typePresent) {
           typeVerifies = true;

@@ -67,17 +67,17 @@ export default domAssigned(class Constructor {
     return json;
   }
 
-  static fromJSON(json, fileContext) {
-    const term = termFromJSON(json, fileContext),
+  static fromJSON(json, context) {
+    const term = termFromJSON(json, context),
           string = stringFromTerm(term),
           constructor = new Constructor(string, term);
 
     return constructor;
   }
 
-  static fromConstructorDeclarationNode(constructorDeclarationNode, fileContext) {
+  static fromConstructorDeclarationNode(constructorDeclarationNode, context) {
     const { Term } = dom,
-          term = Term.fromConstructorDeclarationNode(constructorDeclarationNode, fileContext),
+          term = Term.fromConstructorDeclarationNode(constructorDeclarationNode, context),
           string = stringFromTerm(term),
           constructor = new Constructor(string, term);
 

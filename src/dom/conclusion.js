@@ -74,19 +74,19 @@ export  default domAssigned(class Conclusion {
 
   static name = "Conclusion";
 
-  static fromJSON(json, fileContext) {
-    const statement = statementFromJSON(json, fileContext),
+  static fromJSON(json, context) {
+    const statement = statementFromJSON(json, context),
           string = statement.getString(),
           conclusion = new Conclusion(string, statement);
 
     return conclusion;
   }
 
-  static fromConclusionNode(conclusionNode, fileContext) {
+  static fromConclusionNode(conclusionNode, context) {
     const { Statement } = dom,
           node = conclusionNode,  ///
-          string = fileContext.nodeAsString(node),
-          statement = Statement.fromConclusionNode(conclusionNode, fileContext),
+          string = context.nodeAsString(node),
+          statement = Statement.fromConclusionNode(conclusionNode, context),
           conclusion = new Conclusion(string, statement);
 
     return conclusion;

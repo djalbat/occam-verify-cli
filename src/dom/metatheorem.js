@@ -8,20 +8,20 @@ export default domAssigned(class Metatheorem extends TopLevelMetaAssertion {
   verify() {
     let verifies;
 
-    const metaLemma = this, ///
-          fileContext = this.getFileContext(),
+    const context = this.getContext(),
+          metaLemma = this, ///
           metaLemmaString = metaLemma.getString();
 
-    fileContext.trace(`Verifying the '${metaLemmaString}' metatheorem...`);
+    context.trace(`Verifying the '${metaLemmaString}' metatheorem...`);
 
     verifies = super.verify();
 
     if (verifies) {
       const metaTheorem = this; ///
 
-      fileContext.addMetatheorem(metaTheorem);
+      context.addMetatheorem(metaTheorem);
 
-      fileContext.debug(`...verified the '${metaLemmaString}' metatheorem.`);
+      context.debug(`...verified the '${metaLemmaString}' metatheorem.`);
     }
 
     return verifies;
@@ -29,11 +29,11 @@ export default domAssigned(class Metatheorem extends TopLevelMetaAssertion {
 
   static name = "Metatheorem";
 
-  static fromJSON(json, fileContext) { return TopLevelMetaAssertion.fromJSON(Metatheorem, json, fileContext); }
+  static fromJSON(json, context) { return TopLevelMetaAssertion.fromJSON(Metatheorem, json, context); }
 
-  static fromMetatheoremNode(metatheoremNode, fileContext) {
+  static fromMetatheoremNode(metatheoremNode, context) {
     const node = metatheoremNode, ///
-          metatheorem = TopLevelMetaAssertion.fromNode(Metatheorem, node, fileContext);
+          metatheorem = TopLevelMetaAssertion.fromNode(Metatheorem, node, context);
 
     return metatheorem;
   }

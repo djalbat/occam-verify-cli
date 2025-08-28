@@ -3,7 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import dom from "../dom";
-import LocalContext from "../context/local";
 import Substitutions from "../substitutions";
 
 import { labelsFromJSON,
@@ -18,8 +17,8 @@ import { labelsFromJSON,
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 export default class TopLevelAssertion {
-  constructor(fileContext, string, labels, suppositions, deduction, proof, signature) {
-    this.fileContext = fileContext;
+  constructor(context, string, labels, suppositions, deduction, proof, signature) {
+    this.context = context;
     this.string = string;
     this.labels = labels;
     this.suppositions = suppositions;
@@ -28,8 +27,8 @@ export default class TopLevelAssertion {
     this.signature = signature;
   }
 
-  getFileContext() {
-    return this.fileContext;
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -89,9 +88,7 @@ export default class TopLevelAssertion {
     const labelsVerify = this.verifyLabels();
 
     if (labelsVerify) {
-      const localContext = LocalContext.fromFileContext(this.fileContext),
-            context = localContext, ///
-            suppositionsVerify = this.verifySuppositions(context);
+      const suppositionsVerify = this.verifySuppositions(this.context);
 
       if (suppositionsVerify) {
         const deductionVerifies = this.verifyDeduction(context);
@@ -175,8 +172,7 @@ export default class TopLevelAssertion {
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
     let statementAndStepsOrSubproofsUnify = false;
 
-    const localContext = LocalContext.fromFileContext(this.fileContext),
-          generalContext = localContext, ///
+    const generalContext = this.context, ///
           specificContext = context, ///
           statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
@@ -253,48 +249,48 @@ export default class TopLevelAssertion {
     return json;
   }
 
-  static fromJSON(Class, json, fileContext) {
-    const labels = labelsFromJSON(json, fileContext),
-          deduction = deductionFromJSON(json, fileContext),
-          suppositions = suppositionsFromJSON(json, fileContext),
-          signature = signatureFromJSON(json, fileContext),
+  static fromJSON(Class, json, context) {
+    const labels = labelsFromJSON(json, context),
+          deduction = deductionFromJSON(json, context),
+          suppositions = suppositionsFromJSON(json, context),
+          signature = signatureFromJSON(json, context),
           proof = null,
           string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, signature);
+          topLevelAssertion = new Class(context, string, labels, suppositions, deduction, proof, signature);
 
     return topLevelAssertion;
   }
 
-  static fromNode(Class, node, fileContext) {
+  static fromNode(Class, node, context) {
     const topLevelAssertionNode = node, ///
           proofNode = topLevelAssertionNode.getProofNode(),
           labelNodes = topLevelAssertionNode.getLabelNodes(),
           deductionNode = topLevelAssertionNode.getDeductionNode(),
           suppositionNodes = topLevelAssertionNode.getSuppositionNodes(),
           signatureNode = topLevelAssertionNode.getSignatureNode(),
-          proof = proofFromProofNode(proofNode, fileContext),
-          labels = labelsFromLabelNodes(labelNodes, fileContext),
-          deduction = deductionFromDeductionNode(deductionNode, fileContext),
-          suppositions = suppositionsFromSuppositionNodes(suppositionNodes, fileContext),
-          signature = signatureFromSignatureNode(signatureNode, fileContext),
+          proof = proofFromProofNode(proofNode, context),
+          labels = labelsFromLabelNodes(labelNodes, context),
+          deduction = deductionFromDeductionNode(deductionNode, context),
+          suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context),
+          signature = signatureFromSignatureNode(signatureNode, context),
           string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-          topLevelAssertion = new Class(fileContext, string, labels, suppositions, deduction, proof, signature);
+          topLevelAssertion = new Class(context, string, labels, suppositions, deduction, proof, signature);
 
     return topLevelAssertion;
   }
 }
 
-export function proofFromProofNode(proofNode, fileContext) {
+export function proofFromProofNode(proofNode, context) {
   const { Proof } = dom,
-        proof = Proof.fromProofNode(proofNode, fileContext);
+        proof = Proof.fromProofNode(proofNode, context);
 
   return proof;
 }
 
-export function labelsFromLabelNodes(labelNodes, fileContext) {
+export function labelsFromLabelNodes(labelNodes, context) {
   const { Label } = dom,
         labels = labelNodes.map((labelNode) => {
-          const label = Label.fromLabelNode(labelNode, fileContext);
+          const label = Label.fromLabelNode(labelNode, context);
 
           return label;
         });
@@ -302,29 +298,29 @@ export function labelsFromLabelNodes(labelNodes, fileContext) {
   return labels;
 }
 
-export function signatureFromSignatureNode(signatureNode, fileContext) {
+export function signatureFromSignatureNode(signatureNode, context) {
   let signature = null;
 
   if (signatureNode !== null) {
     const { Signature } = dom;
 
-    signature = Signature.fromSignatureNode(signatureNode, fileContext);
+    signature = Signature.fromSignatureNode(signatureNode, context);
   }
 
   return signature;
 }
 
-export function deductionFromDeductionNode(deductionNode, fileContext) {
+export function deductionFromDeductionNode(deductionNode, context) {
   const { Deduction } = dom,
-        deduction = Deduction.fromDeductionNode(deductionNode, fileContext);
+        deduction = Deduction.fromDeductionNode(deductionNode, context);
 
   return deduction;
 }
 
-export function suppositionsFromSuppositionNodes(suppositionNodes, fileContext) {
+export function suppositionsFromSuppositionNodes(suppositionNodes, context) {
   const { Supposition } = dom,
         suppositions = suppositionNodes.map((suppositionNode) => {
-          const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
+          const supposition = Supposition.fromSuppositionNode(suppositionNode, context);
 
           return supposition;
         });

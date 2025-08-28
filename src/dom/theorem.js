@@ -8,19 +8,19 @@ export default domAssigned(class Theorem extends TopLevelAssertion {
   verify() {
     let verifies;
 
-    const fileContext = this.getFileContext(),
+    const context = this.getContext(),
           theoremString = this.string;  ///
 
-    fileContext.trace(`Verifying the '${theoremString}' theorem...`);
+    context.trace(`Verifying the '${theoremString}' theorem...`);
 
     verifies = super.verify();
 
     if (verifies) {
       const theorem = this; ///
 
-      fileContext.addTheorem(theorem);
+      context.addTheorem(theorem);
 
-      fileContext.debug(`...verified the '${theoremString}' theorem.`);
+      context.debug(`...verified the '${theoremString}' theorem.`);
     }
 
     return verifies;
@@ -28,11 +28,11 @@ export default domAssigned(class Theorem extends TopLevelAssertion {
 
   static name = "Theorem";
 
-  static fromJSON(json, fileContext) { return TopLevelAssertion.fromJSON(Theorem, json, fileContext); }
+  static fromJSON(json, context) { return TopLevelAssertion.fromJSON(Theorem, json, context); }
 
-  static fromTheoremNode(theoremNode, fileContext) {
+  static fromTheoremNode(theoremNode, context) {
     const node = theoremNode, ///
-          theorem = TopLevelAssertion.fromNode(Theorem, node, fileContext);
+          theorem = TopLevelAssertion.fromNode(Theorem, node, context);
 
     return theorem;
   }

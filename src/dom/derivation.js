@@ -52,22 +52,22 @@ export default domAssigned(class Derivation {
 
   static name = "Derivation";
 
-  static fromDerivationNode(derivationNode, fileContext) {
-    const stepsOrSubproofs = stepsOrSubproofsFromDerivationNode(derivationNode, fileContext),
+  static fromDerivationNode(derivationNode, context) {
+    const stepsOrSubproofs = stepsOrSubproofsFromDerivationNode(derivationNode, context),
           derivation = new Derivation(stepsOrSubproofs);
 
     return derivation;
   }
 });
 
-function stepsOrSubproofsFromDerivationNode(derivationNode, fileContext) {
+function stepsOrSubproofsFromDerivationNode(derivationNode, context) {
   const { Step, Subproof } = dom,
         stepOrSubproofNodes = derivationNode.getStepOrSubproofNodes(),
         stepsOrSubproofs = stepOrSubproofNodes.map((stepOrSubproofNode) => {
           let stepOrSubproof;
 
-          const step = Step.fromStepOrSubproofNode(stepOrSubproofNode, fileContext),
-                subproof = Subproof.fromStepOrSubproofNode(stepOrSubproofNode, fileContext);
+          const step = Step.fromStepOrSubproofNode(stepOrSubproofNode, context),
+                subproof = Subproof.fromStepOrSubproofNode(stepOrSubproofNode, context);
 
           if (false) {
             ///

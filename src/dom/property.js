@@ -50,29 +50,29 @@ export default domAssigned(class Property {
 
   static name = "Property";
 
-  static fromJSON(json, fileContext) {
+  static fromJSON(json, context) {
     const { name } = json,
-          type = typeFromJSON(json, fileContext),
+          type = typeFromJSON(json, context),
           string = name, ///
           property = new Property(string, name, type);
 
     return property;
   }
 
-  static fromPropertyNode(propertyNode, fileContext) {
-    const property = propertyFromPropertyNode(propertyNode, fileContext)
+  static fromPropertyNode(propertyNode, context) {
+    const property = propertyFromPropertyNode(propertyNode, context)
 
     return property;
   }
 
-  static fromPropertyRelationNode(propertyRelationNode, fileContext) {
+  static fromPropertyRelationNode(propertyRelationNode, context) {
     const propertyNode = propertyRelationNode.getPropertyNode(),
-          property = propertyFromPropertyNode(propertyNode, fileContext);
+          property = propertyFromPropertyNode(propertyNode, context);
 
     return property;
   }
 
-  static fromPropertyDeclarationNode(propertyDeclarationNode, fileContext) {
+  static fromPropertyDeclarationNode(propertyDeclarationNode, context) {
     const { Type } = dom,
           type = Type.fromPropertyDeclarationNode(propertyDeclarationNode),
           propertyName = propertyDeclarationNode.getPropertyName(),
@@ -84,7 +84,7 @@ export default domAssigned(class Property {
   }
 });
 
-function propertyFromPropertyNode(propertyNode, fileContext) {
+function propertyFromPropertyNode(propertyNode, context) {
   const { Property } = dom,
         propertyName = propertyNode.getPropertyName(),
         name = propertyName,  ///

@@ -9,14 +9,14 @@ import { domAssigned } from "../dom";
 const { first } = arrayUtilities;
 
 export default domAssigned(class Section {
-  constructor(fileContext, string, hypotheses) {
-    this.fileContext = fileContext;
+  constructor(context, string, hypotheses) {
+    this.context = context;
     this.string = string;
     this.hypotheses = hypotheses;
   }
 
-  getFileContext() {
-    return this.fileContext;
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -39,20 +39,20 @@ export default domAssigned(class Section {
 
   static name = "Section";
 
-  static fromSectionNode(sectionNode, fileContext) {
+  static fromSectionNode(sectionNode, context) {
     const hypothesisNodes = sectionNode.getHypothesisNodes(),
-          hypotheses = hypothesesFromHypothesisNodes(hypothesisNodes, fileContext),
-          string = stringFromHypotheses(hypotheses, fileContext),
-          section = new Section(fileContext, string, hypotheses);
+          hypotheses = hypothesesFromHypothesisNodes(hypothesisNodes, context),
+          string = stringFromHypotheses(hypotheses, context),
+          section = new Section(context, string, hypotheses);
 
     return section;
   }
 });
 
-function hypothesesFromHypothesisNodes(hypothesisNodes, fileContext) {
+function hypothesesFromHypothesisNodes(hypothesisNodes, context) {
   const hypotheses = hypothesisNodes.map((hypothesisNode) => {
     const { Hypothesis } = dom,
-          hypothesis = Hypothesis.fromHypothesisNode(hypothesisNode, fileContext);
+          hypothesis = Hypothesis.fromHypothesisNode(hypothesisNode, context);
 
     return hypothesis;
   });
@@ -60,9 +60,9 @@ function hypothesesFromHypothesisNodes(hypothesisNodes, fileContext) {
   return hypotheses;
 }
 
-function stringFromHypotheses(hypotheses, fileContext) {
+function stringFromHypotheses(hypotheses, context) {
   const firstHypothesis = first(hypotheses),
-        hypothesis = firstHypothesis,
+        hypothesis = firstHypothesis, ///
         hypothesisString = hypothesis.getString(),
         string = `'${hypothesisString}'...`;
 

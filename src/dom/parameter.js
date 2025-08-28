@@ -46,7 +46,7 @@ export default domAssigned(class Parameter {
 
   static name = "Parameter";
 
-  static fromJSON(json, fileContext) {
+  static fromJSON(json, context) {
     const { name } = json,
           parameter = new Parameter(name);
 

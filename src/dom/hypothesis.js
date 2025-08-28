@@ -204,8 +204,8 @@ export default domAssigned(class Hypothesis {
 
   static name = "Hypothesis";
 
-  static fromJSON(json, fileContext) {
-    const statement = statementFromJSON(json, fileContext);
+  static fromJSON(json, context) {
+    const statement = statementFromJSON(json, context);
 
     let string;
 
@@ -218,11 +218,11 @@ export default domAssigned(class Hypothesis {
     return hypothesis;
   }
 
-  static fromHypothesisNode(hypothesisNode, fileContext) {
+  static fromHypothesisNode(hypothesisNode, context) {
     const { Statement } = dom,
           node = hypothesisNode, ///
-          string = fileContext.nodeAsString(node),
-          statement = Statement.fromHypothesisNode(hypothesisNode, fileContext),
+          string = context.nodeAsString(node),
+          statement = Statement.fromHypothesisNode(hypothesisNode, context),
           hypothesis = new Hypothesis(string, statement);
 
     return hypothesis

@@ -134,16 +134,16 @@ export default domAssigned(class Subproof {
 
   static name = "Subproof";
 
-  static fromStepOrSubproofNode(sStepOrSubproofNode, fileContext) {
+  static fromStepOrSubproofNode(sStepOrSubproofNode, context) {
     let subproof = null;
 
     const subproofNode = sStepOrSubproofNode.isSubproofNode();
 
     if (subproofNode) {
       const subproofNode = sStepOrSubproofNode, ///
-            suppositions = suppositionsFromSubproofNode(subproofNode, fileContext),
-            subDerivation = subDerivationFromSubproofNode(subproofNode, fileContext),
-            subproofString = subproofStringFromSubproofNode(subproofNode, fileContext),
+            suppositions = suppositionsFromSubproofNode(subproofNode, context),
+            subDerivation = subDerivationFromSubproofNode(subproofNode, context),
+            subproofString = subproofStringFromSubproofNode(subproofNode, context),
             string = subproofString;  ///
 
       subproof = new Subproof(string, suppositions, subDerivation);
@@ -153,11 +153,11 @@ export default domAssigned(class Subproof {
   }
 });
 
-function suppositionsFromSubproofNode(subproofNode, fileContext) {
+function suppositionsFromSubproofNode(subproofNode, context) {
   const { Supposition } = dom,
         suppositionNodes = subproofNode.getSuppositionNodes(),
         suppositions = suppositionNodes.map((suppositionNode) => {
-          const supposition = Supposition.fromSuppositionNode(suppositionNode, fileContext);
+          const supposition = Supposition.fromSuppositionNode(suppositionNode, context);
 
           return supposition;
         });
@@ -165,10 +165,10 @@ function suppositionsFromSubproofNode(subproofNode, fileContext) {
   return suppositions;
 }
 
-function subDerivationFromSubproofNode(subproofNode, fileContext) {
+function subDerivationFromSubproofNode(subproofNode, context) {
   const { SubDerivation } = dom,
         subDerivationNode = subproofNode.getSubDerivationNode(),
-        subDerivation = SubDerivation.fromSubDerivationNode(subDerivationNode, fileContext);
+        subDerivation = SubDerivation.fromSubDerivationNode(subDerivationNode, context);
 
   return subDerivation;
 }

@@ -220,9 +220,9 @@ export default domAssigned(class Supposition {
 
   static name = "Supposition";
 
-  static fromJSON(json, fileContext) {
-    const statement = statementFromJSON(json, fileContext),
-          procedureCall = procedureCallFromJSON(json, fileContext);
+  static fromJSON(json, context) {
+    const statement = statementFromJSON(json, context),
+          procedureCall = procedureCallFromJSON(json, context);
 
     let string;
 
@@ -239,12 +239,12 @@ export default domAssigned(class Supposition {
     return supposition;
   }
 
-  static fromSuppositionNode(suppositionNode, fileContext) {
+  static fromSuppositionNode(suppositionNode, context) {
     const { Statement, ProcedureCall } = dom,
           node = suppositionNode, ///
-          string = fileContext.nodeAsString(node),
-          statement = Statement.fromSuppositionNode(suppositionNode, fileContext),
-          procedureCall = ProcedureCall.fromSuppositionNode(suppositionNode, fileContext),
+          string = context.nodeAsString(node),
+          statement = Statement.fromSuppositionNode(suppositionNode, context),
+          procedureCall = ProcedureCall.fromSuppositionNode(suppositionNode, context),
           supposition = new Supposition(string, statement, procedureCall);
 
     return supposition
