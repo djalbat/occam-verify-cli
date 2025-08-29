@@ -98,18 +98,18 @@ function unifyAsSatisfiesAssertion(statement, reference, substitutions, context)
         }
       });
     } else {
-      const axiomLemmaTheoremConjecture = context.findAxiomLemmaTheoremConjectureByReference(reference);
+      const axiomLemmaTheoremOrConjecture = context.findAxiomLemmaTheoremOrConjectureByReference(reference);
 
-      if (axiomLemmaTheoremConjecture !== null) {
+      if (axiomLemmaTheoremOrConjecture !== null) {
         reference = satisfiesAssertion.getReference();
 
         const axiom = context.findAxiomByReference(reference);
 
         if (axiom !== null) {
           const substitutions = Substitutions.fromNothing(),
-                axiomLemmaTheoremConjectureUnifies = axiom.unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, substitutions, context);
+                axiomLemmaTheoremOrConjectureUnifies = axiom.unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, substitutions, context);
 
-          if (axiomLemmaTheoremConjectureUnifies) {
+          if (axiomLemmaTheoremOrConjectureUnifies) {
             const substitutionsCorrelates = satisfiesAssertion.correlateSubstitutions(substitutions, context);
 
             if (substitutionsCorrelates) {
@@ -132,20 +132,20 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, substituti
   let unifiesWithAxiomLemmaTheoremOrConjecture = false;
 
   if (reference !== null) {
-    const axiomLemmaTheoremConjecture = context.findAxiomLemmaTheoremConjectureByReference(reference),
+    const axiomLemmaTheoremOrConjecture = context.findAxiomLemmaTheoremOrConjectureByReference(reference),
           generalSubstitutions = substitutions; ///
 
-    if (axiomLemmaTheoremConjecture !== null) {
+    if (axiomLemmaTheoremOrConjecture !== null) {
       const statementString = statement.getString(),
-            axiomLemmaTheoremConjectureString = reference.getString();
+            axiomLemmaTheoremOrConjectureString = reference.getString();
 
-      context.trace(`Unifying the '${statementString}' statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture...`);
+      context.trace(`Unifying the '${statementString}' statement with the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture...`);
 
       const stepsOrSubproofs = context.getStepsOrSubproofs();
 
       substitutions = Substitutions.fromNothing();
 
-      const statementAndStepsUnify = axiomLemmaTheoremConjecture.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
+      const statementAndStepsUnify = axiomLemmaTheoremOrConjecture.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 
       if (statementAndStepsUnify) {
         const { StatementSubstitution } = dom,
@@ -162,7 +162,7 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, substituti
       }
 
       if (unifiesWithAxiomLemmaTheoremOrConjecture) {
-        context.debug(`...unified the '${statementString}' statement with the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture.`);
+        context.debug(`...unified the '${statementString}' statement with the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture.`);
       }
     }
   }

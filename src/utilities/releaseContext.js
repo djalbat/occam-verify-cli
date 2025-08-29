@@ -193,7 +193,7 @@ function checkCyclicDependencyExists(dependency, dependentNames, context) {
           ],
           dependencyNamesString = dependencyNames.join(`' -> '`);
 
-    log.warning(`There is a cyclic dependency: '${dependencyNamesString}'.`);
+    log.warning(`There is a cyclic dependency, '${dependencyNamesString}'.`);
   }
 
   return cyclicDependencyExists;
@@ -216,7 +216,7 @@ function checkReleaseMatchesDependency(releaseContext, dependency, dependentName
             versionString = version.toString(),
             dependencyString = dependency.asString();
 
-      log.warning(`Version mismatch: The '${dependentName}' dependent requires the '${dependencyString}' dependency but a context with version '${versionString}' was provided.`);
+      log.warning(`The '${dependentName}' dependent requires the '${dependencyString}' dependency but a context with version '${versionString}' was provided.`);
 
       releaseMatchesDependency = false;
     }

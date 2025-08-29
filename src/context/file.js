@@ -529,14 +529,14 @@ export default class FileContext {
     return metaLemmaMetatheorems;
   }
 
-  findAxiomLemmaTheoremConjectureByReference(reference) {
+  findAxiomLemmaTheoremOrConjectureByReference(reference) {
     const axiom = this.findAxiomByReference(reference),
           lemma = this.findLemmaByReference(reference),
           theorem = this.findTheoremByReference(reference),
           conjecture = this.findConjectureByReference(reference),
-          axiomLemmaTheoremConjecture = (axiom || lemma || theorem || conjecture);
+          axiomLemmaTheoremOrConjecture = (axiom || lemma || theorem || conjecture);
 
-    return axiomLemmaTheoremConjecture;
+    return axiomLemmaTheoremOrConjecture;
   }
 
   findMetavariable(metavariable, generalContext, specificContext) {

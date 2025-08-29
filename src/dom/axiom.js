@@ -234,15 +234,15 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     return suppositionsUnify;
   }
 
-  unifyAxiomLemmaTheoremConjecture(axiomLemmaTheoremConjecture, substitutions, context) {
-    let axiomLemmaTheoremConjectureUnifies = false;
+  unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, substitutions, context) {
+    let axiomLemmaTheoremOrConjectureUnifies = false;
 
     const axiomString = this.getString(),
-          axiomLemmaTheoremConjectureString = axiomLemmaTheoremConjecture.getString();
+          axiomLemmaTheoremOrConjectureString = axiomLemmaTheoremOrConjecture.getString();
 
-    context.trace(`Unifying the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom...`);
+    context.trace(`Unifying the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom...`);
 
-    const deduction = axiomLemmaTheoremConjecture.getDeduction(),  ///
+    const deduction = axiomLemmaTheoremOrConjecture.getDeduction(),  ///
           specificContext = context;  ///
 
     context = this.getContext();
@@ -251,17 +251,17 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
           deductionUnifies = this.unifyDeduction(deduction, substitutions, generalContext, specificContext);
 
     if (deductionUnifies) {
-      const suppositions = axiomLemmaTheoremConjecture.getSuppositions(),
+      const suppositions = axiomLemmaTheoremOrConjecture.getSuppositions(),
             suppositionsUnify = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
 
-      axiomLemmaTheoremConjectureUnifies = suppositionsUnify; ///
+      axiomLemmaTheoremOrConjectureUnifies = suppositionsUnify; ///
     }
 
-    if (axiomLemmaTheoremConjectureUnifies) {
-      context.debug(`...unified the '${axiomLemmaTheoremConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom.`);
+    if (axiomLemmaTheoremOrConjectureUnifies) {
+      context.debug(`...unified the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom.`);
     }
 
-    return axiomLemmaTheoremConjectureUnifies;
+    return axiomLemmaTheoremOrConjectureUnifies;
   }
 
   static name = "Axiom";

@@ -239,7 +239,7 @@ class LocalContext {
 
   isMetaLemmaMetatheoremPresentByReference(reference) { return this.context.isMetaLemmaMetatheoremPresentByReference(reference); }
 
-  findAxiomLemmaTheoremConjectureByReference(reference) { return this.context.findAxiomLemmaTheoremConjectureByReference(reference); }
+  findAxiomLemmaTheoremOrConjectureByReference(reference) { return this.context.findAxiomLemmaTheoremOrConjectureByReference(reference); }
 
   isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
 

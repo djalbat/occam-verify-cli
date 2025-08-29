@@ -10,11 +10,13 @@ export default class VariableAssignment {
   }
 
   assign(context) {
-    const nested = false,
-          variableAdded = context.addVariable(this.variable, nested),
-          variableType = this.variable.getType(),
+    const nested = false;
+
+    context.addVariable(this.variable, nested);
+
+    const variableType = this.variable.getType(),
           variableString = this.variable.getString(),
-          variableAssigned = variableAdded, ///
+          variableAssigned = true, ///
           variableTypeString = variableType.getString();
 
     variableAssigned ?
