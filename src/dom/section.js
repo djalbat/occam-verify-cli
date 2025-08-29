@@ -58,7 +58,9 @@ export default domAssigned(class Section {
             axiomLemmaTheoremOrConjectureVerifies = axiomLemmaTheoremOrConjecture.verify(this.context);
 
       if (axiomLemmaTheoremOrConjectureVerifies) {
-        debugger
+        axiomLemmaTheoremOrConjecture.setHypotheses(this.hypotheses);
+
+        verifies = true;
       }
     }
 

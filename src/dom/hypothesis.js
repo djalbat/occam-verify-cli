@@ -59,137 +59,26 @@ export default domAssigned(class Hypothesis {
     return verifies;
   }
 
-  unifyHypothesis(hypothesis, substitutions, generalContext, specificContext) {
-    let hypothesisUnifies;
+  isEqualToStep(step, context) {
+    let equalToStep = false;
 
-    const context = specificContext,  ///
-          specificHypothesis = hypothesis,  ///
-          generalHypothesisString = this.string, ///
-          specificHypothesisString = specificHypothesis.getString();
+    const stepString = step.getString(),
+          hypothesisString = this.string; ///
 
-    context.trace(`Unifying the '${specificHypothesisString}' hypothesis with the '${generalHypothesisString}' hypothesis...`);
+    context.trace(`Is the '${hypothesisString}' hypothesis equal to the '${stepString}' step...`);
 
-    const statement = specificHypothesis.getStatement(),
-          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
+    const stepStatement = step.getStatement(),
+          statementEqualToStepStatement = this.statement.isEqualTo(stepStatement);
 
-    hypothesisUnifies = statementUnifies;  ///
-
-    if (hypothesisUnifies) {
-      context.debug(`...unified the '${specificHypothesisString}' hypothesis with the '${generalHypothesisString}' hypothesis.`);
+    if (statementEqualToStepStatement) {
+      equalToStep = true;
     }
 
-    return hypothesisUnifies;
-  }
-
-  unifyIndependently(substitutions, context) {
-    let unifiesIndependently;
-
-    if (this.statement !== null) {
-      const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, context);
-
-      unifiesIndependently = statementResolvedIndependently;  ///
+    if (equalToStep) {
+      context.trace(`...the '${hypothesisString}' hypothesis is equal to the '${stepString}' step.`);
     }
 
-    if (this.procedureCall !== null) {
-      const procedureCallResolvedIndependently = this.procedureCall.unifyIndependently(substitutions, context);
-
-      unifiesIndependently = procedureCallResolvedIndependently;  ///
-    }
-
-    return unifiesIndependently;
-  }
-
-  unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext) {
-    let stepOrSubproofUnifies = false;
-
-    const stepOrSubProofStep = stepOrSubproof.isStep(),
-          subproof = stepOrSubProofStep ?
-                        null :
-                          stepOrSubproof,
-          step = stepOrSubProofStep ?
-                   stepOrSubproof :
-                     null;
-
-    substitutions.snapshot();
-
-    if (subproof !== null) {
-      const subproofUnifies = this.unifySubproof(subproof, substitutions, generalContext, specificContext);
-
-      stepOrSubproofUnifies = subproofUnifies; ///
-    }
-
-    if (step !== null) {
-      const statementUnifies = this.unifyStep(step, substitutions, generalContext, specificContext);
-
-      stepOrSubproofUnifies = statementUnifies;  ///
-    }
-
-    if (stepOrSubproofUnifies) {
-      substitutions.resolve(generalContext, specificContext);
-    }
-
-    stepOrSubproofUnifies ?
-      substitutions.continue() :
-        substitutions.rollback(specificContext);
-
-    return stepOrSubproofUnifies;
-  }
-
-  unifyStep(step, substitutions, generalContext, specificContext) {
-    let stepUnifies;
-
-    const statement = step.getStatement(),
-          statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-    stepUnifies = statementUnifies;  ///
-
-    return stepUnifies;
-  }
-
-  unifySubproof(subproof, substitutions, generalContext, specificContext) {
-    let subproofUnifies = false;
-
-    const hypothesis = this, ///
-          subproofString = subproof.getString(),
-          hypothesisStatement = hypothesis.getStatement(),
-          hypothesisStatementString = hypothesisStatement.getString();
-
-    specificContext.trace(`Unifying the '${subproofString}' subproof with the hypothesis's '${hypothesisStatementString}' statement...`);
-
-    if (this.statement !== null) {
-      const context = generalContext, ///
-            subproofAssertion = subproofAssertionFromStatement(this.statement, context);
-
-      if (subproofAssertion !== null) {
-        subproofUnifies = subproofAssertion.unifySubproof(subproof, substitutions, generalContext, specificContext);
-      }
-    }
-
-    if (subproofUnifies) {
-      specificContext.debug(`...unified the '${subproofString}' subproof with the hypothesis's '${hypothesisStatementString}' statement.`);
-    }
-
-    return subproofUnifies;
-  }
-
-  unifyStatement(statement, substitutions, generalContext, specificContext) {
-    let statementUnifies;
-
-    const hypothesis = this, ///
-          statementString = statement.getString(),
-          hypothesisString = hypothesis.getString();
-
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${hypothesisString}' hypothesis...`);
-
-    if (this.statement !== null) {
-      statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
-    }
-
-    if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${hypothesisString}' hypothesis.`);
-    }
-
-    return statementUnifies;
+    return equalToStep;
   }
 
   toJSON() {

@@ -308,6 +308,22 @@ export function superTypesFromJSON(json, context) {
   return superTypes;
 }
 
+export function hypothesesFromJSON(json, context) {
+  let { hypotheses } = json;
+
+  const { Hypothesis } = dom,
+        hypothesesJSON = hypotheses;  ///
+
+  hypotheses = hypothesesJSON.map((hypothesisJSON) => {
+    const json = hypothesisJSON, ///
+          hypothesis = Hypothesis.fromJSON(json, context);
+
+    return hypothesis;
+  });
+
+  return hypotheses;
+}
+
 export function parametersFromJSON(json, context) {
   let { parameters } = json;
 
@@ -614,6 +630,18 @@ export function variablesToVariablesJSON(variables) {
   });
 
   return variablesJSON;
+}
+
+export function hypothesesToHypothesesJSON(hypotheses) {
+  const hypothesesJSON = hypotheses.map((hypothesis) => {
+    const hypothesisJSON = hypothesis.toJSON();
+
+    hypothesis = hypothesisJSON; ///
+
+    return hypothesis;
+  });
+
+  return hypothesesJSON;
 }
 
 export function superTypesToSuperTypesJSON(superTypes) {

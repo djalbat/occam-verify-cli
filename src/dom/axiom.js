@@ -242,19 +242,23 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
     context.trace(`Unifying the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom...`);
 
-    const deduction = axiomLemmaTheoremOrConjecture.getDeduction(),  ///
-          specificContext = context;  ///
+    const hypothesesCorrelate = axiomLemmaTheoremOrConjecture.correlateHypotheses(context);
 
-    context = this.getContext();
+    if (hypothesesCorrelate) {
+      const deduction = axiomLemmaTheoremOrConjecture.getDeduction(),  ///
+            specificContext = context;  ///
 
-    const generalContext = context, ///
-          deductionUnifies = this.unifyDeduction(deduction, substitutions, generalContext, specificContext);
+      context = this.getContext();
 
-    if (deductionUnifies) {
-      const suppositions = axiomLemmaTheoremOrConjecture.getSuppositions(),
-            suppositionsUnify = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
+      const generalContext = context, ///
+            deductionUnifies = this.unifyDeduction(deduction, substitutions, generalContext, specificContext);
 
-      axiomLemmaTheoremOrConjectureUnifies = suppositionsUnify; ///
+      if (deductionUnifies) {
+        const suppositions = axiomLemmaTheoremOrConjecture.getSuppositions(),
+              suppositionsUnify = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
+
+        axiomLemmaTheoremOrConjectureUnifies = suppositionsUnify; ///
+      }
     }
 
     if (axiomLemmaTheoremOrConjectureUnifies) {

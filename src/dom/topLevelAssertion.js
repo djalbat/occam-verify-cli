@@ -14,10 +14,10 @@ import { labelsFromJSON,
          suppositionsFromJSON,
          deductionToDeductionJSON,
          signatureToSignatureJSON,
-         hypthesesToHypohtesesSON,
+         hypothesesToHypothesesJSON,
          suppositionsToSuppositionsJSON } from "../utilities/json";
 
-const { reverse, extract, backwardsEvery } = arrayUtilities;
+const { extract, reverse, correlate, backwardsEvery } = arrayUtilities;
 
 export default class TopLevelAssertion {
   constructor(context, string, labels, suppositions, deduction, proof, signature, hypotheses) {
@@ -63,7 +63,30 @@ export default class TopLevelAssertion {
     return this.hypotheses;
   }
 
+  setContext(context) { this.context = context; }
+
+  setString(string) { this.string = string; }
+
+  setLabels(labels) { this.labels = labels; }
+
+  setSuppositions(suppositions) { this.suppositions = suppositions; }
+
+  setDeduction(deduction) { this.deduction = deduction; }
+
+  setProof(proof) { this.proof = proof; }
+
+  setSignature(signature) { this.signature = signature; }
+
+  setHypotheses(hypotheses) { this.hypotheses = hypotheses; }
+
   getStatement() { return this.deduction.getStatement(); }
+
+  isHypothetical() {
+    const hypothesesLength = this.hypotheses.length,
+          hypothetical = (hypothesesLength > 0);
+
+    return hypothetical;
+  }
 
   isUnconditional() {
     const suppositionsLength = this.suppositions.length,
@@ -167,6 +190,36 @@ export default class TopLevelAssertion {
     return proofVerifies;
   }
 
+  correlateHypotheses(context) {
+    let hypothesesCorrelate;
+
+    const hypothetical = this.isHypothetical();
+
+    if (hypothetical) {
+      const steps = context.getSteps(),
+            topLevelAssertionString = this.string;  ///
+
+      context.trace(`Correlating the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture...`);
+
+      hypothesesCorrelate = correlate(this.hypotheses, steps, (hypothesis, step) => {
+        const hypothesesEqualToStep = hypothesis.isEqualToStep(step, context);
+
+        if (hypothesesEqualToStep) {
+          return true;
+        }
+      });
+
+      if (hypothesesCorrelate) {
+        context.debug(`...correlated the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture.`);
+      }
+    } else {
+      hypothesesCorrelate = true
+    }
+
+
+    return hypothesesCorrelate;
+  }
+
   unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext) {
     let statementUnifiesWithDeduction = false;
 
@@ -182,20 +235,29 @@ export default class TopLevelAssertion {
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
     let statementAndStepsOrSubproofsUnify = false;
 
-    const generalContext = this.context, ///
-          specificContext = context, ///
-          statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
+    const hypothetical = this.isHypothetical();
 
-    if (statementUnifiesWithDeduction) {
-      const stepsOrSubproofsUnifyWithSuppositions = this.unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, generalContext, specificContext);
+    if (!hypothetical) {
+      const generalContext = this.context, ///
+            specificContext = context, ///
+            statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
 
-      if (stepsOrSubproofsUnifyWithSuppositions) {
-        const substitutionsResolved = substitutions.areResolved();
+      if (statementUnifiesWithDeduction) {
+        const stepsOrSubproofsUnifyWithSuppositions = this.unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, generalContext, specificContext);
 
-        if (substitutionsResolved) {
-          statementAndStepsOrSubproofsUnify = true;
+        if (stepsOrSubproofsUnifyWithSuppositions) {
+          const substitutionsResolved = substitutions.areResolved();
+
+          if (substitutionsResolved) {
+            statementAndStepsOrSubproofsUnify = true;
+          }
         }
       }
+    } else {
+      const statementString = statement.getString(),
+            topLevelAssertionString = this.string;  ///
+
+      context.trace(`Cannot unify the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture with the '${statementString}' and steps or subproofs because it is hypothetical.`);
     }
 
     return statementAndStepsOrSubproofsUnify;
@@ -245,7 +307,7 @@ export default class TopLevelAssertion {
           deductionJSON = deductionToDeductionJSON(this.deduction),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           signatureJSON = signatureToSignatureJSON(this.signature),
-          hypothesesJSON = hypthesesToHypohtesesSON(this.signature),
+          hypothesesJSON = hypothesesToHypothesesJSON(this.signature),
           labels = labelsJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
