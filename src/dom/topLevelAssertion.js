@@ -10,15 +10,17 @@ import { labelsFromJSON,
          deductionFromJSON,
          signatureFromJSON,
          labelsToLabelsJSON,
+         hypothesesFromJSON,
          suppositionsFromJSON,
          deductionToDeductionJSON,
          signatureToSignatureJSON,
+         hypthesesToHypohtesesSON,
          suppositionsToSuppositionsJSON } from "../utilities/json";
 
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 export default class TopLevelAssertion {
-  constructor(context, string, labels, suppositions, deduction, proof, signature) {
+  constructor(context, string, labels, suppositions, deduction, proof, signature, hypotheses) {
     this.context = context;
     this.string = string;
     this.labels = labels;
@@ -26,6 +28,7 @@ export default class TopLevelAssertion {
     this.deduction = deduction;
     this.proof = proof;
     this.signature = signature;
+    this.hypotheses = hypotheses;
   }
 
   getContext() {
@@ -54,6 +57,10 @@ export default class TopLevelAssertion {
 
   getSignature() {
     return this.signature;
+  }
+
+  getHypotheses() {
+    return this.hypotheses;
   }
 
   getStatement() { return this.deduction.getStatement(); }
@@ -238,15 +245,18 @@ export default class TopLevelAssertion {
           deductionJSON = deductionToDeductionJSON(this.deduction),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           signatureJSON = signatureToSignatureJSON(this.signature),
+          hypothesesJSON = hypthesesToHypohtesesSON(this.signature),
           labels = labelsJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
-          signature = signatureJSON,
+          signature = signatureJSON,  ///
+          hypotheses = hypothesesJSON,  ///
           json = {
             labels,
             deduction,
             suppositions,
             signature,
+            hypotheses
           };
 
     return json;
@@ -257,9 +267,10 @@ export default class TopLevelAssertion {
           deduction = deductionFromJSON(json, context),
           suppositions = suppositionsFromJSON(json, context),
           signature = signatureFromJSON(json, context),
+          hypotheses = hypothesesFromJSON(json, context),
           proof = null,
           string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-          topLevelAssertion = new Class(context, string, labels, suppositions, deduction, proof, signature);
+          topLevelAssertion = new Class(context, string, labels, suppositions, deduction, proof, signature, hypotheses);
 
     return topLevelAssertion;
   }
@@ -276,8 +287,9 @@ export default class TopLevelAssertion {
           deduction = deductionFromDeductionNode(deductionNode, context),
           suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context),
           signature = signatureFromSignatureNode(signatureNode, context),
+          hypotheses = [],
           string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-          topLevelAssertion = new Class(context, string, labels, suppositions, deduction, proof, signature);
+          topLevelAssertion = new Class(context, string, labels, suppositions, deduction, proof, signature, hypotheses);
 
     return topLevelAssertion;
   }

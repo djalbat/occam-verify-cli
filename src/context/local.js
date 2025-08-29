@@ -116,6 +116,12 @@ class LocalContext {
 
   getConstructors() { return this.context.getConstructors(); }
 
+  addAxiom(axiom) { this.context.addAxiom(axiom); }
+
+  addLemma(lemma) { this.context.addLemma(lemma); }
+
+  addTheorem(theorem) { this.context.addTheorem(theorem); }
+
   addEquality(equality, context) {
     let equalityAdded;
 

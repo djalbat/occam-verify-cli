@@ -54,7 +54,12 @@ export default domAssigned(class Section {
     const hypothesesVerify = this.verifyHypotheses();
 
     if (hypothesesVerify) {
-      debugger
+      const axiomLemmaTheoremOrConjecture = (this.axiom || this.lemma || this.theorem || this.conjecture),
+            axiomLemmaTheoremOrConjectureVerifies = axiomLemmaTheoremOrConjecture.verify(this.context);
+
+      if (axiomLemmaTheoremOrConjectureVerifies) {
+        debugger
+      }
     }
 
     if (verifies) {
