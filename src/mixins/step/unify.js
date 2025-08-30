@@ -106,15 +106,23 @@ function unifyAsSatisfiesAssertion(statement, reference, substitutions, context)
         const axiom = context.findAxiomByReference(reference);
 
         if (axiom !== null) {
-          const substitutions = Substitutions.fromNothing(),
-                axiomLemmaTheoremOrConjectureUnifies = axiom.unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, substitutions, context);
+          const satisfiable = axiom.isSatisfiable();
 
-          if (axiomLemmaTheoremOrConjectureUnifies) {
-            const substitutionsCorrelates = satisfiesAssertion.correlateSubstitutions(substitutions, context);
+          if (satisfiable) {
+            const substitutions = Substitutions.fromNothing(),
+                  axiomLemmaTheoremOrConjectureUnifies = axiom.unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, substitutions, context);
 
-            if (substitutionsCorrelates) {
-              unifiesAsSatisfiesAssertion = true;
+            if (axiomLemmaTheoremOrConjectureUnifies) {
+              const substitutionsCorrelates = satisfiesAssertion.correlateSubstitutions(substitutions, context);
+
+              if (substitutionsCorrelates) {
+                unifiesAsSatisfiesAssertion = true;
+              }
             }
+          } else {
+            const axiomString = axiom.getString();
+
+            context.debug(`Cannot unify with the '${axiomString}' because it is not satisfiable.`)
           }
         }
       }

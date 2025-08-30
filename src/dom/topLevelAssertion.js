@@ -216,7 +216,6 @@ export default class TopLevelAssertion {
       hypothesesCorrelate = true
     }
 
-
     return hypothesesCorrelate;
   }
 
@@ -235,9 +234,9 @@ export default class TopLevelAssertion {
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
     let statementAndStepsOrSubproofsUnify = false;
 
-    const hypothetical = this.isHypothetical();
+    const hypothesesCorrelate = this.correlateHypotheses(context);
 
-    if (!hypothetical) {
+    if (hypothesesCorrelate) {
       const generalContext = this.context, ///
             specificContext = context, ///
             statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
@@ -253,11 +252,6 @@ export default class TopLevelAssertion {
           }
         }
       }
-    } else {
-      const statementString = statement.getString(),
-            topLevelAssertionString = this.string;  ///
-
-      context.trace(`Cannot unify the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture with the '${statementString}' and steps or subproofs because it is hypothetical.`);
     }
 
     return statementAndStepsOrSubproofsUnify;
