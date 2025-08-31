@@ -143,20 +143,25 @@ export default domAssigned(class SatisfiesAssertion {
 
   static name = "SatisfiesAssertion";
 
+  static fromStepNode(stepNode, context) {
+    let satisfiesAssertion = null;
+
+    const satisfiesAssertionNode = stepNode.getSatisfiedAssertionNode();
+
+    if (satisfiesAssertionNode !== null) {
+      satisfiesAssertion = satisfiesAssertionFromSatisfiesAssertionNode(satisfiesAssertionNode, context);
+    }
+
+    return satisfiesAssertion;
+  }
+
   static fromStatementNode(statementNode, context) {
     let satisfiesAssertion = null;
 
     const satisfiesAssertionNode = statementNode.getSatisfiedAssertionNode();
 
     if (satisfiesAssertionNode !== null) {
-      const { Reference } = dom,
-            node = satisfiesAssertionNode,  ///
-            string = context.nodeAsString(node),
-            tokens = context.nodeAsTokens(node),
-            signature = signatureFromSatisfiesAssertionNode(satisfiesAssertionNode, context),
-            reference = Reference.fromSatisfiesAssertionNode(satisfiesAssertionNode, context);
-
-      satisfiesAssertion = new SatisfiesAssertion(string, node, tokens, signature, reference);
+      satisfiesAssertion = satisfiesAssertionFromSatisfiesAssertionNode(satisfiesAssertionNode, context);
     }
 
     return satisfiesAssertion;
@@ -169,4 +174,16 @@ function signatureFromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
         signature = Signature.fromSignatureNode(signatureNode, context);
 
   return signature;
+}
+
+function satisfiesAssertionFromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
+  const { Reference, SatisfiesAssertion } = dom,
+        node = satisfiesAssertionNode,  ///
+        string = context.nodeAsString(node),
+        tokens = context.nodeAsTokens(node),
+        signature = signatureFromSatisfiesAssertionNode(satisfiesAssertionNode, context),
+        reference = Reference.fromSatisfiesAssertionNode(satisfiesAssertionNode, context),
+        satisfiesAssertion = new SatisfiesAssertion(string, node, tokens, signature, reference);
+
+  return satisfiesAssertion;
 }

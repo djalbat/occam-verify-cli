@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { NONSENSE_RULE_NAME, REFERENCE_RULE_NAME, STATEMENT_RULE_NAME } from "../ruleNames";
+import { NONSENSE_RULE_NAME, REFERENCE_RULE_NAME, STATEMENT_RULE_NAME, SATISFIES_ASSERTION_RULE_NAME } from "../ruleNames";
 
 export default class StepNode extends NonTerminalNode {
   isStepNode() {
@@ -36,6 +36,13 @@ export default class StepNode extends NonTerminalNode {
           referenceNode = this.getNodeByRuleName(ruleName);
 
     return referenceNode;
+  }
+
+  getSatisfiedAssertionNode() {
+    const ruleName = SATISFIES_ASSERTION_RULE_NAME,
+          satisfiedAssertionNode = this.getNodeByRuleName(ruleName);
+
+    return satisfiedAssertionNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(StepNode, ruleName, childNodes, opacity, precedence); }

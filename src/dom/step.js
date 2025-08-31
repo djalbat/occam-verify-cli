@@ -9,10 +9,11 @@ import { domAssigned } from "../dom";
 import { propertyAssertionFromStatement } from "../utilities/context";
 
 export default domAssigned(class Step {
-  constructor(string, statement, reference) {
+  constructor(string, statement, reference, satisfiesAssertion) {
     this.string = string;
     this.statement = statement;
     this.reference = reference;
+    this.satisfiesAssertion = satisfiesAssertion;
   }
 
   getString() {
@@ -27,10 +28,27 @@ export default domAssigned(class Step {
     return this.reference;
   }
 
+  getSatisfiesAssertion() {
+    return this.satisfiesAssertion;
+  }
+
+  isSatisfied() {
+    const satisfied = (this.satisfiesAssertion !== null);
+
+    return satisfied;
+  }
+
   isQualified() {
     const qualified = (this.reference !== null);
 
     return qualified;
+  }
+
+  isStated() {
+    const qualified = this.isQualified(),
+          stated = qualified; ///
+
+    return stated;
   }
 
   isStep() {
@@ -59,7 +77,7 @@ export default domAssigned(class Step {
     context.trace(`Unifying the '${stepString}' step...`);
 
     unifies = unifyMixins.some((unifyMixin) => {
-      const unifies = unifyMixin(this.statement, this.reference, substitutions, context);
+      const unifies = unifyMixin(this.statement, this.reference, this.satisfiesAssertion, substitutions, context);
 
       if (unifies) {
         return true;
@@ -81,15 +99,27 @@ export default domAssigned(class Step {
     context.trace(`Verifying the '${stepString}' step...`);
 
     if (this.statement !== null) {
-      const qualified = this.isQualified(),
-            stated = qualified, ///
+      const stated = this.isStated(),
             statementVerifies = this.statement.verify(assignments, stated, context);
 
       if (statementVerifies) {
-        if (qualified) {
+        const qualified = this.isQualified(),
+              satisfied = this.isSatisfied();
+
+        if (false) {
+          ///
+        } else if (qualified) {
           const referenceVerifies = this.reference.verify(context);
 
           if (referenceVerifies) {
+            verifies = true;
+          }
+        } else if (satisfied) {
+          const stated = true,
+                assignments = null,
+                satisfiesAssertionVerifies = this.satisfiesAssertion.verify(assignments, stated, context);
+
+          if (satisfiesAssertionVerifies) {
             verifies = true;
           }
         } else {
@@ -159,7 +189,8 @@ export default domAssigned(class Step {
     const statementString = statement.getString(),
           string = statementString, ///
           reference = null,
-          step = new Step(string, statement, reference);
+          satisfiesAssertion = null,
+          step = new Step(string, statement, reference, satisfiesAssertion);
 
     return step;
   }
@@ -170,14 +201,15 @@ export default domAssigned(class Step {
     const stepNode = stepOrSubproofNode.isStepNode();
 
     if (stepNode) {
-      const { Statement, Reference } = dom,
+      const { Statement, Reference, SatisfiesAssertion } = dom,
             stepNode = stepOrSubproofNode,  ///
             node = stepNode, ///
             string = context.nodeAsString(node),
             statement = Statement.fromStepNode(stepNode, context),
-            reference = Reference.fromStepNode(stepNode, context);
+            reference = Reference.fromStepNode(stepNode, context),
+            satisfiesAssertion = SatisfiesAssertion.fromStepNode(stepNode, context);
 
-      step = new Step(string, statement, reference);
+      step = new Step(string, statement, reference, satisfiesAssertion);
     }
 
     return step;
