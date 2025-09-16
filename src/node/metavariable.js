@@ -2,21 +2,38 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { TERM_RULE_NAME, TYPE_RULE_NAME } from "../ruleNames";
+import { ARGUMENT_RULE_NAME } from "../ruleNames";
 
 export default class MetavariableNode extends NonTerminalNode {
   getTermNode() {
-    const ruleName = TERM_RULE_NAME,
-          termNode = this.getNodeByRuleName(ruleName);
+    let termNode = null;
+
+    const argumentNode = this.getArgumentNode();
+
+    if (argumentNode !== null) {
+      termNode = argumentNode.getTermNode();
+    }
 
     return termNode;
   }
 
   getTypeNode() {
-    const ruleName = TYPE_RULE_NAME,
-          typeNode = this.getNodeByRuleName(ruleName);
+    let typeNode = null;
+
+    const argumentNode = this.getArgumentNode();
+
+    if (argumentNode !== null) {
+      typeNode = argumentNode.getTypeNode();
+    }
 
     return typeNode;
+  }
+
+  getArgumentNode() {
+    const ruleName = ARGUMENT_RULE_NAME,
+          argumentNode = this.getNodeByRuleName(ruleName);
+
+    return argumentNode;
   }
 
   getMetavariableName() {
@@ -27,7 +44,7 @@ export default class MetavariableNode extends NonTerminalNode {
 
       if (childNodeTerminalNode) {
         const terminalNode = childNode, ///
-               content = terminalNode.getContent();
+              content = terminalNode.getContent();
 
         metaVariableName = content; ///
 

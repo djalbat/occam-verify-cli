@@ -5,9 +5,9 @@ import { CustomGrammar, CombinedCustomGrammar } from "occam-custom-grammars";
 export function customGrammarFromNameAndEntries(name, entries) {
   const termBNF = entries.getTermBNF(),
         statementBNF = entries.getStatementBNF(),
-        typePattern = entries.getTypePattern(),
-        symbolPattern = entries.getSymbolPattern(),
-        customGrammar = CustomGrammar.fromNameTermBNFStatementBNFTypePatternAndSymbolPattern(name, termBNF, statementBNF, typePattern, symbolPattern);
+        typeVocabulary = entries.getTypeVocabulary(),
+        symbolVocabulary = entries.getSymbolVocabulary(),
+        customGrammar = CustomGrammar.fromNameTermBNFStatementBNFTypeVocabularyAndSymbolVocabulary(name, termBNF, statementBNF, typeVocabulary, symbolVocabulary);
 
   return customGrammar;
 }

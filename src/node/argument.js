@@ -2,9 +2,23 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { TERM_RULE_NAME } from "../ruleNames";
+import { TERM_RULE_NAME, TYPE_RULE_NAME } from "../ruleNames";
 
 export default class ArgumentNode extends NonTerminalNode {
+  getTermNode() {
+    const ruleName = TERM_RULE_NAME,
+          termNode = this.getNodeByRuleName(ruleName);
+
+    return termNode;
+  }
+
+  getTypeNode() {
+    const ruleName = TYPE_RULE_NAME,
+          typeNode = this.getNodeByRuleName(ruleName);
+
+    return typeNode;
+  }
+
   getSingularTermNode() {
     const ruleName = TERM_RULE_NAME,
           singularTermNode = this.getSingularTNodeByRuleName(ruleName);

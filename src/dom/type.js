@@ -5,7 +5,7 @@ import { arrayUtilities } from "necessary";
 import dom from "../dom";
 
 import { domAssigned } from "../dom";
-import { OBJECT_TYPE_NAME } from "../typeNames";
+import { OBJECT_TYPE_NAME } from "../constants";
 import { typeFromTypeNode } from "../utilities/node";
 import { stringFromTypeNameNameAndSuperTypes } from "../utilities/type";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";

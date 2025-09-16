@@ -3,7 +3,7 @@
 import BracketedContext from "../../context/bracketted";
 import TermPartialContext from "../../context/partial/term";
 
-import { OBJECT_TYPE_NAME } from "../../typeNames";
+import { OBJECT_TYPE_NAME } from "../../constants";
 import { nominalLexer, nominalParser } from "../../utilities/nominal";
 
 class ConstructorBracketedContext extends BracketedContext {
