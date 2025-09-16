@@ -22,6 +22,7 @@ import PropertyNode from "./node/property";
 import MetaTypeNode from "./node/metaType";
 import EqualityNode from "./node/equality";
 import VariableNode from "./node/variable";
+import ruleBodyNode from "./node/body/rule";
 import StatementNode from "./node/statement";
 import ReferenceNode from "./node/reference";
 import DeductionNode from "./node/deduction";
@@ -29,23 +30,36 @@ import JudgementNode from "./node/judgement";
 import MetaLemmaNode from "./node/metaLemma";
 import ParameterNode from "./node/parameter";
 import SignatureNode from "./node/signature";
+import axiomBodyNode from "./node/body/axiom";
+import lemmaBodyNode from "./node/body/lemma";
 import DerivationNode from "./node/derivation";
 import CombinatorNode from "./node/combinator";
 import ConclusionNode from "./node/conclusion";
 import ConjectureNode from "./node/conjecture";
 import HypothesisNode from "./node/hypothesis";
+import ruleHeaderNode from "./node/header/rule";
 import SuppositionNode from "./node/supposition";
 import ConstructorNode from "./node/constructor";
 import DeclarationNode from "./node/declaration";
 import MetatheoremNode from "./node/metatheorem";
+import theoremBodyNode from "./node/body/theorem";
+import axiomHeaderNode from "./node/header/axiom";
+import lemmaHeaderNode from "./node/header/lemma";
 import MetaArgumentNode from "./node/metaArgument";
 import MetavariableNode from "./node/metavariable";
+import theoremHeaderNode from "./node/header/theorem";
+import metaLemmaBodyNode from "./node/body/metaLemma";
 import ProcedureCallNode from "./node/procedureCall";
 import SubDerivationNode from "./node/subDerivation";
 import TypeAssertionNode from "./node/assertion/type";
+import conjectureBodyNode from "./node/body/conjecture";
+import metatheoremBodyNode from "./node/body/metatheorem";
+import metaLemmaHeaderNode from "./node/header/metaLemma";
 import PropertyRelationNode from "./node/propertyRelation"
 import DefinedAssertionNode from "./node/assertion/defined";
 import TermSubstitutionNode from "./node/substitution/term";
+import conjectureHeaderNode from "./node/header/conjecture";
+import metatheoremHeaderNode from "./node/header/metatheorem";
 import PropertyAssertionNode from "./node/assertion/property";
 import SubproofAssertionNode from "./node/assertion/subproof";
 import FrameSubstitutionNode from "./node/substitution/frame";
@@ -91,24 +105,38 @@ import { RULE_RULE_NAME,
          PARAMETER_RULE_NAME,
          REFERENCE_RULE_NAME,
          STATEMENT_RULE_NAME,
+         RULE_BODY_RULE_NAME,
          META_LEMMA_RULE_NAME,
          DERIVATION_RULE_NAME,
          COMBINATOR_RULE_NAME,
          CONCLUSION_RULE_NAME,
          CONJECTURE_RULE_NAME,
          HYPOTHESIS_RULE_NAME,
+         AXIOM_BODY_RULE_NAME,
+         LEMMA_BODY_RULE_NAME,
+         RULE_HEADER_RULE_NAME,
          CONSTRUCTOR_RULE_NAME,
          DECLARATION_RULE_NAME,
          SUPPOSITION_RULE_NAME,
          METATHEOREM_RULE_NAME,
+         AXIOM_HEADER_RULE_NAME,
+         LEMMA_HEADER_RULE_NAME,
+         THEOREM_BODY_RULE_NAME,
          METAVARIABLE_RULE_NAME,
          META_ARGUMENT_RULE_NAME,
+         THEOREM_HEADER_RULE_NAME,
          SUB_DERIVATION_RULE_NAME,
          TYPE_ASSERTION_RULE_NAME,
          PROCEDURE_CALL_RULE_NAME,
+         CONJECTURE_BODY_RULE_NAME,
+         META_LEMMA_BODY_RULE_NAME,
+         METATHEOREM_BODY_RULE_NAME,
+         CONJECTURE_HEADER_RULE_NAME,
+         META_LEMMA_HEADER_RULE_NAME,
          PROPERTY_RELATION_RULE_NAME,
          DEFINED_ASSERTION_RULE_NAME,
          TERM_SUBSTITUTION_RULE_NAME,
+         METATHEOREM_HEADER_RULE_NAME,
          SUBPROOF_ASSERTION_RULE_NAME,
          PROPERTY_ASSERTION_RULE_NAME,
          FRAME_SUBSTITUTION_RULE_NAME,
@@ -148,6 +176,7 @@ const nonTerminalNodeMap = {
   [EQUALITY_RULE_NAME]: EqualityNode,
   [VARIABLE_RULE_NAME]: VariableNode,
   [NONSENSE_RULE_NAME]: NonsenseNode,
+  [RULE_BODY_RULE_NAME]: ruleBodyNode,
   [META_TYPE_RULE_NAME]: MetaTypeNode,
   [SIGNATURE_RULE_NAME]: SignatureNode,
   [REFERENCE_RULE_NAME]: ReferenceNode,
@@ -155,24 +184,37 @@ const nonTerminalNodeMap = {
   [DEDUCTION_RULE_NAME]: DeductionNode,
   [PARAMETER_RULE_NAME]: ParameterNode,
   [STATEMENT_RULE_NAME]: StatementNode,
+  [AXIOM_BODY_RULE_NAME]: axiomBodyNode,
+  [LEMMA_BODY_RULE_NAME]: lemmaBodyNode,
   [META_LEMMA_RULE_NAME]: MetaLemmaNode,
   [COMBINATOR_RULE_NAME]: CombinatorNode,
   [CONCLUSION_RULE_NAME]: ConclusionNode,
   [CONJECTURE_RULE_NAME]: ConjectureNode,
   [DERIVATION_RULE_NAME]: DerivationNode,
   [HYPOTHESIS_RULE_NAME]: HypothesisNode,
+  [RULE_HEADER_RULE_NAME]: ruleHeaderNode,
   [SUPPOSITION_RULE_NAME]: SuppositionNode,
   [CONSTRUCTOR_RULE_NAME]: ConstructorNode,
   [DECLARATION_RULE_NAME]: DeclarationNode,
   [METATHEOREM_RULE_NAME]: MetatheoremNode,
+  [AXIOM_HEADER_RULE_NAME]: axiomHeaderNode,
+  [LEMMA_HEADER_RULE_NAME]: lemmaHeaderNode,
+  [THEOREM_BODY_RULE_NAME]: theoremBodyNode,
   [METAVARIABLE_RULE_NAME]: MetavariableNode,
   [META_ARGUMENT_RULE_NAME]: MetaArgumentNode,
   [TYPE_ASSERTION_RULE_NAME]: TypeAssertionNode,
   [PROCEDURE_CALL_RULE_NAME]: ProcedureCallNode,
   [SUB_DERIVATION_RULE_NAME]: SubDerivationNode,
+  [THEOREM_HEADER_RULE_NAME]: theoremHeaderNode,
+  [META_LEMMA_BODY_RULE_NAME]: metaLemmaBodyNode,
+  [CONJECTURE_BODY_RULE_NAME]: conjectureBodyNode,
+  [METATHEOREM_BODY_RULE_NAME]: metatheoremBodyNode,
+  [META_LEMMA_HEADER_RULE_NAME]: metaLemmaHeaderNode,
+  [CONJECTURE_HEADER_RULE_NAME]: conjectureHeaderNode,
   [PROPERTY_RELATION_RULE_NAME]: PropertyRelationNode,
   [DEFINED_ASSERTION_RULE_NAME]: DefinedAssertionNode,
   [TERM_SUBSTITUTION_RULE_NAME]: TermSubstitutionNode,
+  [METATHEOREM_HEADER_RULE_NAME]: metatheoremHeaderNode,
   [SUBPROOF_ASSERTION_RULE_NAME]: SubproofAssertionNode,
   [PROPERTY_ASSERTION_RULE_NAME]: PropertyAssertionNode,
   [FRAME_SUBSTITUTION_RULE_NAME]: FrameSubstitutionNode,

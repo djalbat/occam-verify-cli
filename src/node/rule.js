@@ -2,42 +2,49 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import {  PROOF_RULE_NAME, PREMISE_RULE_NAME, CONCLUSION_RULE_NAME, PARENTHESISED_LABELS_RULE_NAME } from "../ruleNames";
+import {RULE_BODY_RULE_NAME, RULE_HEADER_RULE_NAME} from "../ruleNames";
 
 export default class RuleNode extends NonTerminalNode {
+  getRuleBodyNode() {
+    const ruleName = RULE_BODY_RULE_NAME,
+          ruleBodyNode = this.getNodeByRuleName(ruleName);
+
+    return ruleBodyNode;
+  }
+
+  getRuleHeaderNode() {
+    const ruleName = RULE_HEADER_RULE_NAME,
+          ruleHeaderNode = this.getNodeByRuleName(ruleName);
+
+    return ruleHeaderNode;
+  }
+
   getLabelNodes() {
-    const parenthesisedLabelsNode = this.getParenthesisedLabelsNode(),
-          labelNodes = parenthesisedLabelsNode.getLabelNodes();
+    const ruleHeaderNode = this.getRuleHeaderNode(),
+          labelNodes = ruleHeaderNode.getLabelNodes();
 
     return labelNodes;
   }
 
-  getProofNode() {
-    const ruleName = PROOF_RULE_NAME,
-          proofNode = this.getNodeByRuleName(ruleName);
-
-    return proofNode;
-  }
-
   getPremiseNodes() {
-    const ruleName = PREMISE_RULE_NAME,
-          premiseNodes = this.getNodesByRuleName(ruleName);
+    const ruleBodyNode = this.getRuleBodyNode(),
+          premiseNodes = ruleBodyNode.getPremiseNodes();
 
     return premiseNodes;
   }
 
   getConclusionNode() {
-    const ruleName = CONCLUSION_RULE_NAME,
-          conclusionNode = this.getNodeByRuleName(ruleName);
+    const ruleBodyNode = this.getRuleBodyNode(),
+          conclusionNode = ruleBodyNode.getConclusionNode();
 
     return conclusionNode;
   }
 
-  getParenthesisedLabelsNode() {
-    const ruleName = PARENTHESISED_LABELS_RULE_NAME,
-          parenthesisedLabelsNode = this.getNodeByRuleName(ruleName);
+  getProofNode() {
+    const ruleBodyNode = this.getRuleBodyNode(),
+          proofNode = ruleBodyNode.getProofNode();
 
-    return parenthesisedLabelsNode;
+    return proofNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(RuleNode, ruleName, childNodes, opacity, precedence); }
