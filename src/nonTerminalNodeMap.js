@@ -47,6 +47,7 @@ import axiomHeaderNode from "./node/header/axiom";
 import lemmaHeaderNode from "./node/header/lemma";
 import MetaArgumentNode from "./node/metaArgument";
 import MetavariableNode from "./node/metavariable";
+import QualificationNode from "./node/qualification";
 import theoremHeaderNode from "./node/header/theorem";
 import metaLemmaBodyNode from "./node/body/metaLemma";
 import ProcedureCallNode from "./node/procedureCall";
@@ -123,6 +124,7 @@ import { RULE_RULE_NAME,
          LEMMA_HEADER_RULE_NAME,
          THEOREM_BODY_RULE_NAME,
          METAVARIABLE_RULE_NAME,
+         QUALIFICATION_RULE_NAME,
          META_ARGUMENT_RULE_NAME,
          THEOREM_HEADER_RULE_NAME,
          SUB_DERIVATION_RULE_NAME,
@@ -154,7 +156,7 @@ import { RULE_RULE_NAME,
          COMPLEX_TYPE_DECLARATION_RULE_NAME,
          METAVARIABLE_DECLARATION_RULE_NAME } from "./ruleNames";
 
-const nonTerminalNodeMap = {
+const NonTerminalNodeMap = {
   [RULE_RULE_NAME]: RuleNode,
   [STEP_RULE_NAME]: StepNode,
   [TERM_RULE_NAME]: TermNode,
@@ -202,6 +204,7 @@ const nonTerminalNodeMap = {
   [THEOREM_BODY_RULE_NAME]: theoremBodyNode,
   [METAVARIABLE_RULE_NAME]: MetavariableNode,
   [META_ARGUMENT_RULE_NAME]: MetaArgumentNode,
+  [QUALIFICATION_RULE_NAME]: QualificationNode,
   [TYPE_ASSERTION_RULE_NAME]: TypeAssertionNode,
   [PROCEDURE_CALL_RULE_NAME]: ProcedureCallNode,
   [SUB_DERIVATION_RULE_NAME]: SubDerivationNode,
@@ -233,4 +236,4 @@ const nonTerminalNodeMap = {
   [METAVARIABLE_DECLARATION_RULE_NAME]: metavariableDeclarationNode
 };
 
-export default nonTerminalNodeMap;
+export default NonTerminalNodeMap;

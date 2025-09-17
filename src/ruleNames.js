@@ -47,6 +47,7 @@ export const LEMMA_HEADER_RULE_NAME = "lemmaHeader";
 export const THEOREM_BODY_RULE_NAME = "theoremBody";
 export const METAVARIABLE_RULE_NAME = "metavariable";
 export const META_ARGUMENT_RULE_NAME = "metaArgument";
+export const QUALIFICATION_RULE_NAME = "qualification";
 export const PROCEDURE_CALL_RULE_NAME = "procedureCall";
 export const SUB_DERIVATION_RULE_NAME = "subDerivation";
 export const TYPE_ASSERTION_RULE_NAME = "typeAssertion";

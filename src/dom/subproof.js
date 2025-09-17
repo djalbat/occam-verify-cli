@@ -89,9 +89,7 @@ export default domAssigned(class Subproof {
   }
 
   equateWithStatement(statement, context) {
-    let statementUnifies = false;
-
-    debugger
+    const statementUnifies = false;
 
     return statementUnifies;
   }
