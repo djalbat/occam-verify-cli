@@ -1,51 +1,13 @@
 "use strict";
 
-import NonTerminalNode from "../node/nonTerminal";
+import TopLevelMetaAssertionNode from "../node/topLevelMetaAssertion";
 
 import { METATHEOREM_BODY_RULE_NAME, METATHEOREM_HEADER_RULE_NAME } from "../ruleNames";
 
-export default class MetatheoremNode extends NonTerminalNode {
-  getMetatheoremBodyNode() {
-    const ruleName = METATHEOREM_BODY_RULE_NAME,
-          metatheoremBodyNode = this.getNodeByRuleName(ruleName);
+export default class MetatheoremNode extends TopLevelMetaAssertionNode {
+  static bodyRuleName = METATHEOREM_BODY_RULE_NAME;
 
-    return metatheoremBodyNode;
-  }
+  static headerRuleName = METATHEOREM_HEADER_RULE_NAME;
 
-  getMetatheoremHeaderNode() {
-    const ruleName = METATHEOREM_HEADER_RULE_NAME,
-          metatheoremHeaderNode = this.getNodeByRuleName(ruleName);
-
-    return metatheoremHeaderNode;
-  }
-
-  getLabelNode() {
-    const metatheoremHeaderNode = this.getMetatheoremHeaderNode(),
-          labelNode = metatheoremHeaderNode.getLabelNode();
-
-    return labelNode;
-  }
-
-  getSuppositionNodes() {
-    const metatheoremBodyNode = this.getMetatheoremBodyNode(),
-          suppositionNodes = metatheoremBodyNode.getSuppositionNodes();
-
-    return suppositionNodes;
-  }
-
-  getConclusionNode() {
-    const metatheoremBodyNode = this.getMetatheoremBodyNode(),
-          conclusionNode = metatheoremBodyNode.getConclusionNode();
-
-    return conclusionNode;
-  }
-
-  getProofNode() {
-    const metatheoremBodyNode = this.getMetatheoremBodyNode(),
-          proofNode = metatheoremBodyNode.getProofNode();
-
-    return proofNode;
-  }
-
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(MetatheoremNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return TopLevelMetaAssertionNode.fromRuleNameChildNodesOpacityAndPrecedence(MetatheoremNode, ruleName, childNodes, opacity, precedence); }
 }

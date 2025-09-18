@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { PARENTHESISED_LABELS_RULE_NAME } from "../ruleNames";
+import {PARENTHESISED_LABELS_RULE_NAME, SIGNATURE_RULE_NAME} from "../ruleNames";
 
 export default class HeaderNode extends NonTerminalNode {
   getParenthesisedLabelsNode() {
@@ -10,6 +10,13 @@ export default class HeaderNode extends NonTerminalNode {
           parenthesisedLabelsNode = this.getNodeByRuleName(ruleName);
 
     return parenthesisedLabelsNode;
+  }
+
+  getSignatureNode() {
+    const ruleName = SIGNATURE_RULE_NAME,
+          signatureNode = this.getNodeByRuleName(ruleName);
+
+    return signatureNode;
   }
 
   getLabelNodes() {
