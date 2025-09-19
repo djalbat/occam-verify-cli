@@ -3,21 +3,21 @@
 import NonTerminalNode from "../node/nonTerminal";
 
 export default class ParameterNode extends NonTerminalNode {
-  getParameterName() {
-    let parameterName;
+  getParameterValue() {
+    let parameterValue;
 
     this.someChildNode((childNode, index) => {
-      const nameTerminalNode = childNode, ///
-            content = nameTerminalNode.getContent();
+      const terminalNode = childNode, ///
+            content = terminalNode.getContent();
 
-      parameterName = content;  ///
+      parameterValue = content;  ///
 
       if (index === 0) {
         return true;
       }
     });
 
-    return parameterName;
+    return parameterValue;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ParameterNode, ruleName, childNodes, opacity, precedence); }

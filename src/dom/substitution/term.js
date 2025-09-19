@@ -49,7 +49,7 @@ export default domAssigned(class TermSubstitution extends Substitution {
     return replacementNode;
   }
 
-  matchName(name) { return this.variable.matchName(name); }
+  matchValue(value) { return this.variable.matchValue(value); }
 
   static fromStatementNode(statementNode, context) {
     let termSubstitution = null;

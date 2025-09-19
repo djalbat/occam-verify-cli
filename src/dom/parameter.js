@@ -3,16 +3,16 @@
 import { domAssigned } from "../dom";
 
 export default domAssigned(class Parameter {
-  constructor(name) {
-    this.name = name;
+  constructor(value) {
+    this.value = value;
   }
 
-  getName() {
-    return this.name;
+  getValue() {
+    return this.value;
   }
 
   getString() {
-    const string = this.name; ///
+    const string = this.value; ///
 
     return string;
   }
@@ -21,9 +21,9 @@ export default domAssigned(class Parameter {
     let replacementNode = null;
 
     const substitution = substitutions.findSubstitution((substitution) => {
-      const nameMatches = substitution.matchName(this.name);
+      const valueMatches = substitution.matchValue(this.value);
 
-      if (nameMatches) {
+      if (valueMatches) {
         return true;
       }
     });
@@ -36,9 +36,9 @@ export default domAssigned(class Parameter {
   }
 
   toJSON() {
-    const name = this.name,
+    const value = this.value,
           json = {
-            name
+            value
           };
 
     return json;
@@ -47,16 +47,16 @@ export default domAssigned(class Parameter {
   static name = "Parameter";
 
   static fromJSON(json, context) {
-    const { name } = json,
-          parameter = new Parameter(name);
+    const { value } = json,
+          parameter = new Parameter(value);
 
     return parameter;
   }
 
   static fromParameterNode(parameterNode, context) {
-    const parameterName = parameterNode.getParameterName(),
-          name = parameterName, ///
-          parameter = new Parameter(name);
+    const parameterValue = parameterNode.getParameterValue(),
+          value = parameterValue, ///
+          parameter = new Parameter(value);
 
     return parameter;
   }

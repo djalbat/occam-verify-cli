@@ -26,7 +26,7 @@ export default domAssigned(class FrameSubstitution extends Substitution {
 
   isMetavariableEqualTo(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
-  matchName(name) { return this.metavariable.matchName(name); }
+  matchValue(value) { return this.metavariable.matchValue(value); }
 
   getReplacementNode() {
     const frameNode = this.frame.getNode(),

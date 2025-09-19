@@ -9,11 +9,11 @@ import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { variableNodeFromVariableString } from "../context/partial/variable";
 
 export default domAssigned(class Variable {
-  constructor(string, node, name, type, propertyRelations) {
+  constructor(string, node, type, identifier, propertyRelations) {
     this.string = string;
     this.node = node;
-    this.name = name;
     this.type = type;
+    this.identifier = identifier;
     this.propertyRelations = propertyRelations;
   }
 
@@ -25,8 +25,8 @@ export default domAssigned(class Variable {
     return this.node;
   }
 
-  getName() {
-    return this.name;
+  getIdentifier() {
+    return this.identifier;
   }
 
   getType() {
@@ -48,16 +48,16 @@ export default domAssigned(class Variable {
     return equalTo;
   }
 
-  matchName(name) {
-    const nameMatches = (name === this.name);
+  mathValue(value) {
+    const valueMatches = (value === this.identifier);
 
-    return nameMatches;
+    return valueMatches;
   }
 
-  matchVariableName(variableName) {
-    const variableNameMatches = (variableName === this.name);
+  matchVariableIdentifier(variableIdentifier) {
+    const variableIdentifierMatches = (variableIdentifier === this.identifier);
 
-    return variableNameMatches;
+    return variableIdentifierMatches;
   }
 
   verify(context) {
@@ -67,8 +67,8 @@ export default domAssigned(class Variable {
 
     context.trace(`Verifying the '${variableString}' variable...`);
 
-    const variableName = this.name,
-          variable = context.findVariableByVariableName(variableName);
+    const variableIdentifier = this.identifier,
+          variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
     if (variable !== null) {
       const type = variable.getType();
@@ -167,12 +167,12 @@ export default domAssigned(class Variable {
     const { string } = json,
           variableString = string,  ///
           variableNode = variableNodeFromVariableString(variableString, context),
-          variableName = variableNode.getVariableName(),
+          variableIdentifier = variableNode.getVariableIdentifier(),
           node = variableNode,
-          name = variableName,  ///
+          identifier = variableIdentifier,  ///
           type = typeFromJSON(json, context),
           propertyRelations = [],
-          variable = new Variable(string, node, name, type, propertyRelations);
+          variable = new Variable(string, node, type, identifier, propertyRelations);
 
     return variable;
   }
@@ -219,12 +219,12 @@ export default domAssigned(class Variable {
     type.setProvisional(provisional);
 
     const variableNode = variableDeclarationNode.getVariableNode(),
-          variableName = variableDeclarationNode.getVariableName(),
+          variableIdentifier = variableDeclarationNode.getVariableIdentifier(),
           node = variableNode,  ///
-          name = variableName,  ///
-          string = name,  ///
+          identifier = variableIdentifier,  ///
+          string = identifier,  ///
           propertyRelations = [],
-          variable = new Variable(string, node, name, type, propertyRelations);
+          variable = new Variable(string, node, type, identifier, propertyRelations);
 
     return variable;
   }
@@ -233,7 +233,7 @@ export default domAssigned(class Variable {
     let propertyRelations;
 
     const node = variable.getNode(),
-          name = variable.getName(),
+          identifier = variable.getName(),
           type = variable.getType();
 
     propertyRelations = variable.getPropertyRelations();
@@ -243,9 +243,9 @@ export default domAssigned(class Variable {
       propertyRelation
     ];
 
-    const string = stringFromNameAndPropertyRelations(name, propertyRelations);
+    const string = stringFromNameAndPropertyRelations(identifier, propertyRelations);
 
-    variable = new Variable(string, node, name, type, propertyRelations);
+    variable = new Variable(string, node, type, identifier, propertyRelations);
 
     return variable;
   }
@@ -254,16 +254,16 @@ export default domAssigned(class Variable {
 function variableFromVariableNodeAndType(variableNode, type) {
   const { Variable } = dom,
         node = variableNode,  ///
-        variableName = variableNode.getVariableName(),
-        string = variableName,  ///,
-        name = variableName,  ///
+        variableIdentifier = variableNode.getVariableIdentifier(),
+        string = variableIdentifier,  ///,
+        identifier = variableIdentifier,  ///
         propertyRelations = [],
-        variable = new Variable(string, node, name, type, propertyRelations);
+        variable = new Variable(string, node, type, identifier, propertyRelations);
 
   return variable;
 }
 
-function stringFromNameAndPropertyRelations(name, propertyRelations) {
+function stringFromNameAndPropertyRelations(identifier, propertyRelations) {
   const propertyRelationsString = propertyRelations.reduce((propertyRelationsString, propertyRelation) => {
           const propertyRelationString = propertyRelation.getString();
 
@@ -271,7 +271,7 @@ function stringFromNameAndPropertyRelations(name, propertyRelations) {
 
           return propertyRelationsString;
         }, EMPTY_STRING),
-        string = `${name}${propertyRelationsString}`;
+        string = `${identifier}${propertyRelationsString}`;
 
   return string;
 }
