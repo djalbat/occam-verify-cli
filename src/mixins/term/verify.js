@@ -37,9 +37,12 @@ function verifyTermAsVariable(term, context, verifyAhead) {
         singularVariableNode = termNode.getSingularVariableNode();
 
   if (singularVariableNode !== null) {
-    const variableNode = singularVariableNode,
-          variable = Variable.fromVariableNode(variableNode, context),
-          termString = term.getString();
+    let variable;
+
+    const termString = term.getString(),
+          variableNode = singularVariableNode;  ///
+
+    variable = Variable.fromVariableNode(variableNode, context);
 
     context.trace(`Verifying the '${termString}' term as a variable...`);
 
@@ -48,9 +51,9 @@ function verifyTermAsVariable(term, context, verifyAhead) {
     if (variableVerifies) {
       let verifiesAhead;
 
-      const variableName = variable.getName();
+      const variableIdentifier = variable.getIdentifier();
 
-      variable = context.findVariableByVariableName(variableName);
+      variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
       const type = variable.getType();
 

@@ -141,8 +141,8 @@ class LocalContext {
   addVariable(variable, nested = true) {
     let variableAdded = false;
 
-    const variableName = variable.getNode(),
-          variablePresent = this.isVariablePresentByVariableName(variableName, nested);
+    const variableIdentifier = variable.getIdentifier(),
+          variablePresent = this.isVariablePresentByVariableIdentifier(variableIdentifier, nested);
 
     if (!variablePresent) {
       this.variables.push(variable);
@@ -194,12 +194,12 @@ class LocalContext {
 
   findMetaLemmaMetatheoremsByReference(reference) { return this.context.findMetaLemmaMetatheoremsByReference(reference); }
 
-  findVariableByVariableName(variableName, nested = true) {
+  findVariableByVariableIdentifier(variableIdentifier, nested = true) {
     const variables = this.getVariables(nested),
           variable = variables.find((variable) => {
-            const variableNameMatches = variable.matchVariableName(variableName);
+            const variableIdentifierMatches = variable.matchVariableIdentifier(variableIdentifier);
 
-            if (variableNameMatches) {
+            if (variableIdentifierMatches) {
               return true;
             }
           }) || null;
@@ -251,8 +251,8 @@ class LocalContext {
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
 
-  isVariablePresentByVariableName(variableName, nested = true) {
-    const variable = this.findVariableByVariableName(variableName, nested),
+  isVariablePresentByVariableIdentifier(variableIdentifier, nested = true) {
+    const variable = this.findVariableByVariableIdentifier(variableIdentifier, nested),
           variablePresent = (variable !== null);
 
     return variablePresent;

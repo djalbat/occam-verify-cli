@@ -5,23 +5,23 @@ import NonTerminalNode from "../node/nonTerminal";
 import { SINGLE_SPACE } from "../constants";
 
 export default class PropertyNode extends NonTerminalNode {
-  getPropertyName() {
-    const names = this.getNames(),
-          propertyName = names.join(SINGLE_SPACE);
+  getPropertyIdentifiers() {
+    const identifiers = this.getIdentifiers(),
+          propertyIdentifiers = identifiers.join(SINGLE_SPACE);
 
-    return propertyName;
+    return propertyIdentifiers;
   }
 
-  getNames() {
-    const names = this.mapChildNode((childNode) => {
+  getIdentifiers() {
+    const identifiers = this.mapChildNode((childNode) => {
       const terminalNode = childNode, ///
             content = terminalNode.getContent(),
-            name = content; //
+            identifier = content; //
 
-      return name;
+      return identifier;
     });
 
-    return names;
+    return identifiers;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyNode, ruleName, childNodes, opacity, precedence); }

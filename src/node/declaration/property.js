@@ -5,11 +5,11 @@ import NonTerminalNode from "../../node/nonTerminal";
 import { TYPE_RULE_NAME, PROPERTY_RULE_NAME } from "../../ruleNames";
 
 export default class PropertyDeclarationNode extends NonTerminalNode {
-  getPropertyName() {
+  getPropertyIdentifier() {
     const propertyNode = this.getPropertyNode(),
-          propertyName = propertyNode.getPropertyName();
+          propertyIdentifier = propertyNode.getPropertyIdentifier();
 
-    return propertyName;
+    return propertyIdentifier;
   }
 
   getTypeNode() {

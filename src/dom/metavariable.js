@@ -64,16 +64,12 @@ export default domAssigned(class Metavariable {
     this.metaType = metaType;
   }
 
-  matchName(name) {
-    const nameMatches = (name === this.name);
+  matchParameter(parameter) {
+    const name = parameter.getName(),
+          nameMatches = (name === this.name),
+          parameterMatches = nameMatches; ///
 
-    return nameMatches;
-  }
-
-  matchValue(value) {
-    const valueMatches = (value === this.name);
-
-    return valueMatches;
+    return parameterMatches;
   }
 
   matchMetavariableName(metavariableName) {

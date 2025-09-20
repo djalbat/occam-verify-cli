@@ -48,10 +48,12 @@ export default domAssigned(class Variable {
     return equalTo;
   }
 
-  mathValue(value) {
-    const valueMatches = (value === this.identifier);
+  matchParameter(parameter) {
+    const parameterName = parameter.getName(),
+          parameterNameMatchesIdentifier = (parameterName === this.identifier),
+          parameterMatches = parameterNameMatchesIdentifier;  ///
 
-    return valueMatches;
+    return parameterMatches;
   }
 
   matchVariableIdentifier(variableIdentifier) {
@@ -233,8 +235,8 @@ export default domAssigned(class Variable {
     let propertyRelations;
 
     const node = variable.getNode(),
-          identifier = variable.getName(),
-          type = variable.getType();
+          type = variable.getType(),
+          identifier = variable.getIdentifier();
 
     propertyRelations = variable.getPropertyRelations();
 

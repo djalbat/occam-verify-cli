@@ -42,11 +42,11 @@ export default class VariableDeclarationNode extends NonTerminalNode {
     return variableNode;
   }
 
-  getVariableName() {
+  getVariableIdentifier() {
     const variableNode = this.getVariableNode(),
-          variableName = variableNode.getVariableName();
+          variableIdentifier = variableNode.getVariableIdentifier();
 
-    return variableName;
+    return variableIdentifier;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(VariableDeclarationNode, ruleName, childNodes, opacity, precedence); }

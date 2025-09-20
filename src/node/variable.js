@@ -3,8 +3,8 @@
 import NonTerminalNode from "../node/nonTerminal";
 
 export default class VariableNode extends NonTerminalNode {
-  getVariableName() {
-    let variableName;
+  getVariableIdentifier() {
+    let variableIdentifier;
 
     this.someChildNode((childNode) => {
       const childNodeTerminalNode = childNode.isTerminalNode();
@@ -13,13 +13,13 @@ export default class VariableNode extends NonTerminalNode {
         const terminalNode = childNode, ///
               content = terminalNode.getContent();
 
-        variableName = content; ///
+        variableIdentifier = content; ///
 
         return true;
       }
     });
 
-    return variableName;
+    return variableIdentifier;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(VariableNode, ruleName, childNodes, opacity, precedence); }

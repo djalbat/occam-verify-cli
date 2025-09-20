@@ -69,7 +69,7 @@ export default domAssigned(class StatementSubstitution extends Substitution {
     return simple;
   }
 
-  matchName(name) { return this.metavariable.matchName(name); }
+  matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
 
   getReplacementNode() {
     const statementNode = this.statement.getNode(),

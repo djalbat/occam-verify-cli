@@ -135,10 +135,10 @@ export default class Substitution {
     return resolved;
   }
 
-  matchName(name) {
-    const nameMatches = false;
+  matchParameter(parameter) {
+    const parameterMatches = false;
 
-    return nameMatches;
+    return parameterMatches;
   }
 
   getReplacementNode() {

@@ -183,9 +183,9 @@ export default domAssigned(class PropertyAssertion {
     variable = Variable.fromTermNode(termNode, context);
 
     if (variable !== null) {
-      const variableName = variable.getName();
+      const variableIdentifier = variable.getIdentifier();
 
-      variable = context.findVariableByVariableName(variableName);
+      variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
       variable = Variable.fromVariableAndPropertyRelation(variable, this.propertyRelation);
 

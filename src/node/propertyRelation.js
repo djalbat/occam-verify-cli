@@ -19,11 +19,11 @@ export default class PropertyRelationNode extends NonTerminalNode {
     return propertyNode;
   }
 
-  getPropertyName() {
+  getPropertyIdentifier() {
     const propertyNode = this.getPropertyNode(),
-          propertyName = propertyNode.getPropertyName();
+          propertyIdentifier = propertyNode.getPropertyIdentifier();
 
-    return propertyName;
+    return propertyIdentifier;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyRelationNode, ruleName, childNodes, opacity, precedence); }

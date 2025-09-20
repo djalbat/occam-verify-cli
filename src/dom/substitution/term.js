@@ -42,14 +42,14 @@ export default domAssigned(class TermSubstitution extends Substitution {
 
   isVariableEqualTo(variable) { return this.variable.isEqualTo(variable); }
 
+  matchParameter(parameter) { return this.variable.matchParameter(parameter); }
+
   getReplacementNode() {
     const termNode = this.term.getNode(),
           replacementNode = termNode; ///
 
     return replacementNode;
   }
-
-  matchValue(value) { return this.variable.matchValue(value); }
 
   static fromStatementNode(statementNode, context) {
     let termSubstitution = null;

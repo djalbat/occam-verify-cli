@@ -56,8 +56,8 @@ export default domAssigned(class VariableDeclaration {
 
     this.context.trace(`Verifying the '${variableString}' variable...`);
 
-    const variableName = this.variable.getName(),
-          variablePresent = this.context.isVariablePresentByVariableName(variableName);
+    const variableIdentifier = this.variable.getIdentifier(),
+          variablePresent = this.context.isVariablePresentByVariableIdentifier(variableIdentifier);
 
     if (variablePresent) {
       this.context.debug(`The '${variableName}' variable is already present.`);
