@@ -144,9 +144,9 @@ export default domAssigned(class StatementSubstitution extends Substitution {
           statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      const substitutionsLength = substitutions.getLength();
+      const substitutionsNonTrivialLength = substitutions.getNonTrivialLength();
 
-      if (substitutionsLength === 1) {
+      if (substitutionsNonTrivialLength === 1) {
         const firstSubstitution = substitutions.getFirstSubstitution();
 
         specificSubstitution = firstSubstitution; ///

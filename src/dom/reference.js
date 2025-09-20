@@ -83,18 +83,21 @@ export default domAssigned(class Reference {
   unifyLabel(label, substitutions, context) {
     let labelUnifies;
 
+    const specificContext = context; ///
+
+    context = label.getContext();
+
+    const generalContext = context;  ///
+
+    context = specificContext;  ///
+
     const reference = this, ///
           labelString = label.getString(),
           referenceString = reference.getString();
 
     context.trace(`Unifying the '${labelString}' label with the '${referenceString}' reference...`);
 
-    const generalContext = context; ///
-
-    context = label.getContext();
-
-    const specificContext = context,  ///
-          labelMetavariable = label.getMetavariable(),
+    const labelMetavariable = label.getMetavariable(),
           generalMetavariable = this.metavariable,  ///
           specificMetavariable = labelMetavariable, ///
           metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);

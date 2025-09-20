@@ -56,6 +56,20 @@ export default class Substitutions {
     return metavariables;
   }
 
+  getNonTrivialLength() {
+    const nonTrivialLength = this.reduceSubstitution((nonTrivialLength, substitution) => {
+      const substitutionTrivial = substitution.isTrivial();
+
+      if (!substitutionTrivial) {
+        nonTrivialLength += 1;
+      }
+
+      return nonTrivialLength;
+    }, 0);
+
+    return nonTrivialLength;
+  }
+
   mapSubstitution(callback) { return this.array.map(callback); }
 
   findSubstitution(callback) { return this.array.find(callback) || null; }  ///
@@ -63,6 +77,8 @@ export default class Substitutions {
   someSubstitution(callback) { return this.array.some(callback); }
 
   everySubstitution(callback) { return this.array.every(callback); }
+
+  reduceSubstitution(callback, initialValue) { return this.array.reduce(callback, initialValue); }
 
   forEachSubstitution(callback) { this.array.forEach(callback); }
 
