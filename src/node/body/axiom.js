@@ -4,6 +4,12 @@ import BodyNode from "../../node/body";
 import { DEDUCTION_RULE_NAME, SUPPOSITION_RULE_NAME } from "../../ruleNames";
 
 export default class AxiomBodyNode extends BodyNode {
+  getProofNode() {
+    const proofNode = null;
+
+    return proofNode;
+  }
+
   getDeductionNode() {
     const ruleName = DEDUCTION_RULE_NAME,
           deductionNode = this.getNodeByRuleName(ruleName);
