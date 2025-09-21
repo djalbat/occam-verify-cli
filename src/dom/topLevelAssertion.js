@@ -301,7 +301,7 @@ export default class TopLevelAssertion {
           deductionJSON = deductionToDeductionJSON(this.deduction),
           suppositionsJSON = suppositionsToSuppositionsJSON(this.suppositions),
           signatureJSON = signatureToSignatureJSON(this.signature),
-          hypothesesJSON = hypothesesToHypothesesJSON(this.signature),
+          hypothesesJSON = hypothesesToHypothesesJSON(this.hypotheses),
           labels = labelsJSON,  ///
           deduction = deductionJSON,  ///
           suppositions = suppositionsJSON,  ///
