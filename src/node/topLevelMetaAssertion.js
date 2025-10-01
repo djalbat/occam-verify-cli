@@ -26,6 +26,20 @@ export default class TopLevelMetaAssertionNode extends NonTerminalNode {
     return labelNode;
   }
 
+  getSuppositionNodes() {
+    const bodyNode = this.getBodyNode(),
+          suppositionNodes = bodyNode.getSuppositionNodes();
+
+    return suppositionNodes;
+  }
+
+  getDeductionNode() {
+    const bodyNode = this.getBodyNode(),
+          deductionNode = bodyNode.getDeductionNode();
+
+    return deductionNode;
+  }
+
   getProofNode() {
     const bodyNode = this.getBodyNode(),
           proofNode = bodyNode.getProofNode();

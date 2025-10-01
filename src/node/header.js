@@ -2,11 +2,18 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import {PARENTHESISED_LABELS_RULE_NAME, SIGNATURE_RULE_NAME} from "../ruleNames";
+import {SIGNATURE_RULE_NAME, PARENTHESISED_LABEL_RULE_NAME, PARENTHESISED_LABELS_RULE_NAME } from "../ruleNames";
 
 export default class HeaderNode extends NonTerminalNode {
   getParenthesisedLabelsNode() {
     const ruleName = PARENTHESISED_LABELS_RULE_NAME,
+          parenthesisedLabelsNode = this.getNodeByRuleName(ruleName);
+
+    return parenthesisedLabelsNode;
+  }
+
+  getParenthesisedLabelNode() {
+    const ruleName = PARENTHESISED_LABEL_RULE_NAME,
           parenthesisedLabelsNode = this.getNodeByRuleName(ruleName);
 
     return parenthesisedLabelsNode;
@@ -29,6 +36,18 @@ export default class HeaderNode extends NonTerminalNode {
     }
 
     return labelNodes;
+  }
+
+  getLabelNode() {
+    let labelNode = [];
+
+    const parenthesisedLabelNode = this.getParenthesisedLabelNode();
+
+    if (parenthesisedLabelNode !== null) {
+      labelNode = parenthesisedLabelNode.getLabelNode();
+    }
+
+    return labelNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(Class, ruleName, childNodes, opacity, precedence); }
