@@ -34,7 +34,7 @@ export default domAssigned(class Constructor {
           termString = term.getString(),
           constructorString = constructor.getString();
 
-    context.trace(`Unifying the '${termString}' term with the '${constructorString}' constructor...`, term);
+    context.trace(`Unifying the '${termString}' term with the '${constructorString}' constructor...`);
 
     const termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, context);
 
@@ -51,7 +51,7 @@ export default domAssigned(class Constructor {
     }
 
     if (termUnifies) {
-      context.debug(`...unified the '${termString}' term with the '${constructorString}' constructor.`, term);
+      context.debug(`...unified the '${termString}' term with the '${constructorString}' constructor.`);
     }
 
     return termUnifies;

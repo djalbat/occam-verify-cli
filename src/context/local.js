@@ -375,15 +375,15 @@ class LocalContext {
 
   tokensAsString(tokens) { return this.context.tokensAsString(tokens); }
 
-  trace(message, node) { this.context.trace(message, node); }
+  trace(message, node = null) { this.context.trace(message, node); }
 
-  debug(message, node) { this.context.debug(message, node); }
+  debug(message, node = null) { this.context.debug(message, node); }
 
-  info(message, node) { this.context.info(message, node); }
+  info(message, node = null) { this.context.info(message, node); }
 
-  warning(message, node) { this.context.warning(message, node); }
+  warning(message, node = null) { this.context.warning(message, node); }
 
-  error(message, node) { this.context.error(message, node); }
+  error(message, node = null) { this.context.error(message, node); }
 
   static fromContext(context) {
     const tokens = null,

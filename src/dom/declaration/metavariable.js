@@ -5,14 +5,19 @@ import dom from "../../dom";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class MetavariableDeclaration {
-  constructor(context, string, metavariable) {
+  constructor(context, node, string, metavariable) {
     this.context = context;
+    this.node = node;
     this.string = string;
     this.metavariable = metavariable;
   }
 
   getContext() {
     return this.context;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -28,7 +33,7 @@ export default domAssigned(class MetavariableDeclaration {
 
     const metavariableDeclarationString = this.string; ///
 
-    this.context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`);
+    this.context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`, this.node);
 
     const metavariableVerifies = this.verifyMetavariable(this.metavariable);
 
@@ -39,7 +44,7 @@ export default domAssigned(class MetavariableDeclaration {
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`);
+      this.context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`, this.node);
     }
 
     return verifies;
@@ -54,18 +59,18 @@ export default domAssigned(class MetavariableDeclaration {
       const typeName = type.getName(),
             typeString = type.getString();
 
-      this.context.trace(`Verifying the '${typeString}' type...`);
+      this.context.trace(`Verifying the '${typeString}' type...`, this.node);
 
       const typePresent = this.context.isTypePresentByTypeName(typeName);
 
       if (!typePresent) {
-        this.context.debug(`The '${typeString}' type is not present.`);
+        this.context.debug(`The '${typeString}' type is not present.`, this.node);
       } else {
         typeVerifies = true;
       }
 
       if (typeVerifies) {
-        this.context.debug(`...verified the '${typeString}' type.`);
+        this.context.debug(`...verified the '${typeString}' type.`, this.node);
       }
     }
 
@@ -77,19 +82,19 @@ export default domAssigned(class MetavariableDeclaration {
 
     const metavariableString = metavariable.getString();
 
-    this.context.trace(`Verifying the '${metavariableString}' metavariable when declared...`);
+    this.context.trace(`Verifying the '${metavariableString}' metavariable when declared...`, this.node);
 
     const metavariableNode = metavariable.getNode(), ///
           termNode = metavariableNode.getTermNode();
 
     if (termNode !== null) {
-      this.context.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`);
+      this.context.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`, this.node);
     } else {
       const metavariableName = metavariable.getName(),
             metavariablePresent = this.context.isMetavariablePresentByMetavariableName(metavariableName);
 
       if (metavariablePresent) {
-        this.context.debug(`The '${metavariableName}' metavariable is already present.`);
+        this.context.debug(`The '${metavariableName}' metavariable is already present.`, this.node);
       } else {
         const type = metavariable.getType(),
               typeVerifies = this.verifyType(type);
@@ -99,7 +104,7 @@ export default domAssigned(class MetavariableDeclaration {
     }
 
     if (metavariableVerifies) {
-      this.context.debug(`...verified the '${metavariableString}' metavariable when declared.`);
+      this.context.debug(`...verified the '${metavariableString}' metavariable when declared.`, this.node);
     }
 
     return metavariableVerifies;
@@ -109,10 +114,11 @@ export default domAssigned(class MetavariableDeclaration {
 
   static fromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
     const { Metavariable } = dom,
+          node = metavariableDeclarationNode, ///
           metaType = metaTypeFromMetavariableDeclarationNode(metavariableDeclarationNode, context),
           metavariable = Metavariable.fromMetavariableDeclarationNode(metavariableDeclarationNode, context),
           string = stringFromMetavariableAndMetaType(metavariable, metaType),
-          metavariableDeclaration = new MetavariableDeclaration(context, string, metavariable);
+          metavariableDeclaration = new MetavariableDeclaration(context, node, string, metavariable);
 
     return metavariableDeclaration;
   }

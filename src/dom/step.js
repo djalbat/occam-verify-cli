@@ -9,11 +9,16 @@ import { domAssigned } from "../dom";
 import { propertyAssertionFromStatement } from "../utilities/context";
 
 export default domAssigned(class Step {
-  constructor(string, statement, reference, satisfiesAssertion) {
+  constructor(node, string, statement, reference, satisfiesAssertion) {
+    this.node = node;
     this.string = string;
     this.statement = statement;
     this.reference = reference;
     this.satisfiesAssertion = satisfiesAssertion;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -74,7 +79,7 @@ export default domAssigned(class Step {
 
     const stepString = this.string;  ///
 
-    context.trace(`Unifying the '${stepString}' step...`);
+    context.trace(`Unifying the '${stepString}' step...`, this.node);
 
     unifies = unifyMixins.some((unifyMixin) => {
       const unifies = unifyMixin(this.statement, this.reference, this.satisfiesAssertion, substitutions, context);
@@ -85,7 +90,7 @@ export default domAssigned(class Step {
     });
 
     if (unifies) {
-      context.debug(`...unified the '${stepString}' step.`);
+      context.debug(`...unified the '${stepString}' step.`, this.node);
     }
 
     return unifies;
@@ -96,7 +101,7 @@ export default domAssigned(class Step {
 
     const stepString = this.string; ///
 
-    context.trace(`Verifying the '${stepString}' step...`);
+    context.trace(`Verifying the '${stepString}' step...`, this.node);
 
     if (this.statement !== null) {
       const stated = this.isStated(),
@@ -127,11 +132,11 @@ export default domAssigned(class Step {
         }
       }
     } else {
-      context.debug(`Cannot verify the '${stepString}' step because it is nonsense.`);
+      context.debug(`Cannot verify the '${stepString}' step because it is nonsense.`, this.node);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${stepString}' step.`);
+      context.debug(`...verified the '${stepString}' step.`, this.node);
     }
 
     return verifies;
@@ -157,7 +162,7 @@ export default domAssigned(class Step {
     const stepString = this.string, ///
           satisfiesAssertionString = satisfiesAssertion.getString();
 
-    context.trace(`Unifying the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion...`);
+    context.trace(`Unifying the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion...`, this.node);
 
     const reference = satisfiesAssertion.getReference(),
           axiom = context.findAxiomByReference(reference);
@@ -177,7 +182,7 @@ export default domAssigned(class Step {
     }
 
     if (unifiesWithSatisfiesAssertion) {
-      context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`);
+      context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`, this.node);
     }
 
     return unifiesWithSatisfiesAssertion;
@@ -188,9 +193,10 @@ export default domAssigned(class Step {
   static fromStatement(statement, context) {
     const statementString = statement.getString(),
           string = statementString, ///
+          node = null,
           reference = null,
           satisfiesAssertion = null,
-          step = new Step(string, statement, reference, satisfiesAssertion);
+          step = new Step(node, string, statement, reference, satisfiesAssertion);
 
     return step;
   }
@@ -209,7 +215,7 @@ export default domAssigned(class Step {
             reference = Reference.fromStepNode(stepNode, context),
             satisfiesAssertion = SatisfiesAssertion.fromStepNode(stepNode, context);
 
-      step = new Step(string, statement, reference, satisfiesAssertion);
+      step = new Step(node, string, statement, reference, satisfiesAssertion);
     }
 
     return step;

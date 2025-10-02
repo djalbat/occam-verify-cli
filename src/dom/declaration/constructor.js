@@ -7,14 +7,19 @@ import constructorVerifier from "../../verifier/constructor";
 import { domAssigned } from "../../dom";
 
 export default domAssigned(class ConstructorDeclaration {
-  constructor(context, string, constructor) {
+  constructor(context, node, string, constructor) {
     this.context = context;
+    this.node = node;
     this.string = string;
     this.constructor = constructor;
   }
 
   getContext() {
     return this.context;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -30,7 +35,7 @@ export default domAssigned(class ConstructorDeclaration {
 
     const constructorDeclarationString = this.getString(); ///
 
-    this.context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`);
+    this.context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`, this.node);
 
     const constructorTypeVerifies = this.verifyConstructorType();
 
@@ -45,7 +50,7 @@ export default domAssigned(class ConstructorDeclaration {
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`);
+      this.context.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`, this.node);
     }
 
     return verifies;
@@ -56,7 +61,7 @@ export default domAssigned(class ConstructorDeclaration {
 
     const constructorString = this.constructor.getString();
 
-    this.context.trace(`Verifying the '${constructorString}' constructor...`);
+    this.context.trace(`Verifying the '${constructorString}' constructor...`, this.node);
 
     const term = this.constructor.getTerm(),
           termNode = term.getNode();
@@ -64,7 +69,7 @@ export default domAssigned(class ConstructorDeclaration {
     constructorVerifies = constructorVerifier.verifyTerm(termNode, this.context);
 
     if (constructorVerifies) {
-      this.context.debug(`...verified the '${constructorString}' constructor.`);
+      this.context.debug(`...verified the '${constructorString}' constructor.`, this.node);
     }
 
     return constructorVerifies;
@@ -80,7 +85,7 @@ export default domAssigned(class ConstructorDeclaration {
     const typeName = type.getName(),
           typeString = type.getString();
 
-    this.context.trace(`Verifying the '${typeString}' type...`);
+    this.context.trace(`Verifying the '${typeString}' type...`, this.node);
 
     const includeSupertypes = false,
           provisional = type.isProvisional(includeSupertypes);
@@ -90,14 +95,14 @@ export default domAssigned(class ConstructorDeclaration {
     const typePresent = (type !== null)
 
     if (!typePresent) {
-      this.context.debug(`The '${typeString}' type is not present.`);
+      this.context.debug(`The '${typeString}' type is not present.`, this.node);
     } else {
       const provisionalMatches = type.matchProvisional(provisional);
 
       if (!provisionalMatches) {
         provisional ?
-          this.context.debug(`The '${typeString}' type is present but not provisional.`) :
-            this.context.debug(`The '${typeString}' type is present but provisional.`);
+          this.context.debug(`The '${typeString}' type is present but not provisional.`, this.node) :
+            this.context.debug(`The '${typeString}' type is present but provisional.`, this.node);
       } else {
         this.constructor.setType(type);
 
@@ -106,7 +111,7 @@ export default domAssigned(class ConstructorDeclaration {
     }
 
     if (constructorTypeVerifies) {
-      this.context.debug(`...verified the '${typeString}' type.`);
+      this.context.debug(`...verified the '${typeString}' type.`, this.node);
     }
 
     return constructorTypeVerifies;
@@ -119,7 +124,7 @@ export default domAssigned(class ConstructorDeclaration {
           node = constructorDeclarationNode,  ///
           string = context.nodeAsString(node),
           constructor = Constructor.fromConstructorDeclarationNode(constructorDeclarationNode, context),
-          constructorDeclaration = new ConstructorDeclaration(context, string, constructor);
+          constructorDeclaration = new ConstructorDeclaration(context, node, string, constructor);
 
     return constructorDeclaration;
   }

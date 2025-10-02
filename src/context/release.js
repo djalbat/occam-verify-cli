@@ -414,15 +414,15 @@ export default class ReleaseContext {
 
   matchShortenedVersion(shortenedVersion) { return this.entries.matchShortenedVersion(shortenedVersion); }
 
-  trace(message, filePath = null) { this.log.trace(message, filePath); }
+  trace(message, filePath = null, lineIndex = null) { this.log.trace(message, filePath, lineIndex); }
 
-  debug(message, filePath = null) { this.log.debug(message, filePath); }
+  debug(message, filePath = null, lineIndex = null) { this.log.debug(message, filePath, lineIndex); }
 
-  info(message, filePath = null) { this.log.info(message, filePath); }
+  info(message, filePath = null, lineIndex = null) { this.log.info(message, filePath, lineIndex); }
 
-  warning(message, filePath = null) { this.log.warning(message, filePath); }
+  warning(message, filePath = null, lineIndex = null) { this.log.warning(message, filePath, lineIndex); }
 
-  error(message, filePath = null) { this.log.error(message, filePath); }
+  error(message, filePath = null, lineIndex = null) { this.log.error(message, filePath, lineIndex); }
 
   initialise(releaseContexts) {
     const combinedCustomGrammar = combinedCustomGrammarFromReleaseContexts(releaseContexts),

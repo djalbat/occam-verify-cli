@@ -7,14 +7,19 @@ import { domAssigned } from "../../dom";
 import combinatorVerifier from "../../verifier/combinator";
 
 export default domAssigned(class CombinatorDeclaration {
-  constructor(context, string, combinator) {
+  constructor(context, node, string, combinator) {
     this.context = context;
+    this.node = node;
     this.string = string;
     this.combinator = combinator;
   }
 
   getContext() {
     return this.context;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -30,7 +35,7 @@ export default domAssigned(class CombinatorDeclaration {
 
     const combinatorDeclarationString = this.getString(); ///
 
-    this.context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`);
+    this.context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`, this.node);
 
     const combinatorVerifies = this.verifyCombinator();
 
@@ -41,7 +46,7 @@ export default domAssigned(class CombinatorDeclaration {
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`);
+      this.context.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`, this.node);
     }
 
     return verifies;
@@ -52,7 +57,7 @@ export default domAssigned(class CombinatorDeclaration {
 
     const combinatorString = this.combinator.getString();
 
-    this.context.trace(`Verifying the '${combinatorString}' combinator...`);
+    this.context.trace(`Verifying the '${combinatorString}' combinator...`, this.node);
 
     const statement = this.combinator.getStatement(),
           statementNode = statement.getNode();
@@ -60,7 +65,7 @@ export default domAssigned(class CombinatorDeclaration {
     statementVerifies = combinatorVerifier.verifyStatement(statementNode, this.context);
 
     if (statementVerifies) {
-      this.context.debug(`...verified the '${combinatorString}' combinator.`);
+      this.context.debug(`...verified the '${combinatorString}' combinator.`, this.node);
     }
 
     return statementVerifies;
@@ -73,7 +78,7 @@ export default domAssigned(class CombinatorDeclaration {
           node = combinatorDeclarationNode, ///
           string = context.nodeAsString(node),
           combinator = Combinator.fromCombinatorDeclarationNode(combinatorDeclarationNode, context),
-          combinatorDeclaration = new CombinatorDeclaration(context, string, combinator);
+          combinatorDeclaration = new CombinatorDeclaration(context, node, string, combinator);
 
     return combinatorDeclaration;
   }

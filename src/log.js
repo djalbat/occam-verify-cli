@@ -1,6 +1,7 @@
 "use strict";
 
 import { levels } from "necessary";
+import {EMPTY_STRING} from "./constants";
 
 const { TRACE_LEVEL, DEBUG_LEVEL, INFO_LEVEL, WARNING_LEVEL, ERROR_LEVEL } = levels;
 
@@ -23,37 +24,37 @@ export default class Log {
     return this.follow;
   }
 
-  trace(message, filePath) {
+  trace(message, filePath, lineIndex = null) {
     const level = TRACE_LEVEL;
 
-    this.write(level, message, filePath);
+    this.write(level, message, filePath, lineIndex);
   }
 
-  debug(message, filePath) {
+  debug(message, filePath, lineIndex = null) {
     const level = DEBUG_LEVEL;
 
-    this.write(level, message, filePath);
+    this.write(level, message, filePath, lineIndex);
   }
 
-  info(message, filePath) {
+  info(message, filePath, lineIndex = null) {
     const level = INFO_LEVEL;
 
-    this.write(level, message, filePath);
+    this.write(level, message, filePath, lineIndex);
   }
 
-  warning(message, filePath) {
+  warning(message, filePath, lineIndex = null) {
     const level = WARNING_LEVEL;
 
-    this.write(level, message, filePath);
+    this.write(level, message, filePath, lineIndex);
   }
 
-  error(message, filePath) {
+  error(message, filePath, lineIndex = null) {
     const level = ERROR_LEVEL;
 
-    this.write(level, message, filePath);
+    this.write(level, message, filePath, lineIndex);
   }
 
-  write(level, message, filePath) {
+  write(level, message, filePath, lineIndex) {
     const levels = [
             TRACE_LEVEL,
             DEBUG_LEVEL,
@@ -68,7 +69,7 @@ export default class Log {
       return;
     }
 
-    message = formatMessage(level, message, filePath);  ///
+    message = formatMessage(level, message, filePath, lineIndex);  ///
 
     this.follow ?
       console.log(message) :
@@ -94,12 +95,24 @@ export default class Log {
   }
 }
 
-function formatMessage(level, message, filePath = null) {
+function formatMessage(level, message, filePath = null, lineIndex = null) {
+  let formattedMessage = EMPTY_STRING;
+
   const upperCaseLevel = level.toUpperCase();
 
-  message = (filePath !== null) ?
-            `${upperCaseLevel}: ${filePath} - ${message}`:
-              `${upperCaseLevel}: ${message}`;
+  formattedMessage += `${upperCaseLevel}:`;
+
+  if (filePath !== null) {
+    formattedMessage += ` ${filePath}`;
+  }
+
+  if (lineIndex !== null) {
+    formattedMessage += ` [${lineIndex}]`;
+  }
+
+  formattedMessage += ` - ${message}`;
+
+  message = formattedMessage; ///
 
   return message;
 }

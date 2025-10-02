@@ -34,9 +34,10 @@ import { typesFromJSON,
 const { push, filter } = arrayUtilities;
 
 export default class FileContext {
-  constructor(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables) {
+  constructor(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables) {
     this.releaseContext = releaseContext;
     this.filePath = filePath;
+    this.lineIndex = lineIndex;
     this.tokens = tokens;
     this.node = node;
     this.types = types;
@@ -59,6 +60,10 @@ export default class FileContext {
 
   getFilePath() {
     return this.filePath;
+  }
+
+  getLineIndex() {
+    return this.lineIndex;
   }
 
   getTokens() {
@@ -790,15 +795,45 @@ export default class FileContext {
 
   findFile(filePath) { return this.releaseContext.findFile(filePath); }
 
-  trace(message) { this.releaseContext.trace(message, this.filePath); }
+  trace(message, node = null) {
+    if (node !== null) {
+      this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens);
+    }
 
-  debug(message) { this.releaseContext.debug(message, this.filePath); }
+    this.releaseContext.trace(message, this.filePath, this.lineIndex);
+  }
 
-  info(message) { this.releaseContext.info(message, this.filePath); }
+  debug(message, node = null) {
+    if (node !== null) {
+      this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens);
+    }
 
-  warning(message) { this.releaseContext.warning(message, this.filePath); }
+    this.releaseContext.debug(message, this.filePath, this.lineIndex);
+  }
 
-  error(message) { this.releaseContext.error(message, this.filePath); }
+  info(message, node = null) {
+    if (node !== null) {
+      this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens);
+    }
+
+    this.releaseContext.info(message, this.filePath, this.lineIndex);
+  }
+
+  warning(message, node = null) {
+    if (node !== null) {
+      this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens);
+    }
+
+    this.releaseContext.warning(message, this.filePath, this.lineIndex);
+  }
+
+  error(message, node = null) {
+    if (node !== null) {
+      this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens);
+    }
+
+    this.releaseContext.error(message, this.filePath, this.lineIndex);
+  }
 
   verify() {
     let verifies = false;
@@ -810,6 +845,8 @@ export default class FileContext {
     if (this.node === null) {
       this.warning(`Unable to verify the '${this.filePath}' file because it cannot be parsed.`);
     } else {
+      this.lineIndex = 0;
+
       const fileContext = this, ///
             verifiesAtTopLevel = topLevelVerifier.verify(this.node, fileContext);
 
@@ -928,6 +965,7 @@ export default class FileContext {
 
   static fromFile(file, releaseContext) {
     const filePath = file.getPath(),
+          lineIndex = null,
           tokens = null,
           node = null,
           types = [],
@@ -942,13 +980,14 @@ export default class FileContext {
           constructors = [],
           metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
 
     return fileContext;
   }
 
   static fromFilePathAndJSON(filePath, json, releaseContext) {
-    const tokens = null,
+    const lineIndex = null,
+          tokens = null,
           node = null,
           types = null,
           rules = null,
@@ -962,10 +1001,30 @@ export default class FileContext {
           constructors = null,
           metatheorems = null,
           metavariables = null,
-          fileContext = new FileContext(releaseContext, filePath, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, lineIndex, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
 
     fileContext.initialise(json);
 
     return fileContext;
   }
+}
+
+function lineIndexFromNodeAndTokens(node, tokens) {
+  let lineIndex = 0;
+
+  const firstSignificantTokenIndex = node.getFirstSignificantTokenIndex(tokens);
+
+  tokens.some((token, tokenIndex) => {
+    const tokenEndOfLineToken = token.isEndOfLineToken();
+
+    if (tokenEndOfLineToken) {
+      lineIndex += 1;
+    }
+
+    if (tokenIndex === firstSignificantTokenIndex) {
+      return true;
+    }
+  });
+
+  return lineIndex;
 }
