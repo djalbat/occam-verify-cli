@@ -92,12 +92,12 @@ export default domAssigned(class PropertyRelation {
     context.trace(`Verifying the '${propertyString}' property...`);
 
     const termType = this.term.getType(),
-          propertyIdentifier = this.property.getIdentifier(),
+          propertyName = this.property.getName(),
           termTypeProperties = termType.getProperties(),
           variableTypeProperty = termTypeProperties.find((termTypeProperty) => {
-            const propertyIdentifierMatches = termTypeProperty.matchPropertyIdentifier(propertyIdentifier);
+            const propertyNameMatches = termTypeProperty.matchPropertyName(propertyName);
 
-            if (propertyIdentifierMatches) {
+            if (propertyNameMatches) {
               return true;
             }
           }) || null;
@@ -106,7 +106,7 @@ export default domAssigned(class PropertyRelation {
       const variableString = this.term.getString(),
             variableTypeString = termType.getString();
 
-      context.debug(`The '${propertyIdentifier}' property is not a property of the '${variableString}' variable's '${variableTypeString}' type.`);
+      context.debug(`The '${propertyName}' property is not a property of the '${variableString}' variable's '${variableTypeString}' type.`);
     } else {
       const type = termType;
 

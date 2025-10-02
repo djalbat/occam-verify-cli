@@ -215,11 +215,11 @@ export default domAssigned(class ComplexTypeDeclaration {
 
     this.context.trace(`Verifying the '${propertyString}' property...`, this.node);
 
-    const propertyIdentifier = property.getIdentifier(),
+    const propertyName = property.getName(),
           count = properties.reduce((count, property) => {
-            const propertyIdentifierMatches = property.matchPropertyIdentifier(propertyIdentifier);
+            const propertyNameMatches = property.matchPropertyName(propertyName);
 
-            if (propertyIdentifierMatches) {
+            if (propertyNameMatches) {
               count++;
             }
 
@@ -230,9 +230,9 @@ export default domAssigned(class ComplexTypeDeclaration {
       this.context.debug(`The '${propertyString}' property appears more than once.`, this.node);
     } else {
       const superTypeProperty = superTypeProperties.find((superTypeProperty) => {
-        const propertyIdentifierMatches = superTypeProperty.matchPropertyIdentifier(propertyIdentifier);
+        const propertyNameMatches = superTypeProperty.matchPropertyName(propertyName);
 
-        if (propertyIdentifierMatches) {
+        if (propertyNameMatches) {
           return true;
         }
       }) || null;

@@ -6,10 +6,10 @@ import { domAssigned } from "../dom";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 export default domAssigned(class Property {
-  constructor(string, type, name, identifier) {
+  constructor(string, type, name) {
     this.string = string;
     this.type = type;
-    this.identifier = identifier;
+    this.name = name;
   }
 
   getString() {
@@ -20,8 +20,8 @@ export default domAssigned(class Property {
     return this.type;
   }
 
-  getIdentifier() {
-    return this.identifier;
+  getName() {
+    return this.name;
   }
 
   setType(type) {
@@ -30,19 +30,19 @@ export default domAssigned(class Property {
 
   matchTypeName(typeName) { return this.type.matchTypeName(typeName); }
 
-  matchPropertyIdentifier(propertyIdentifier) {
-    const propertyIdentifierMatches = (this.identifier === propertyIdentifier);
+  matchPropertyName(propertyName) {
+    const propertyNameMatches = (this.name === propertyName);
 
-    return propertyIdentifierMatches;
+    return propertyNameMatches;
   }
 
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
-          identifier = this.identifier, ///
+          name = this.name, ///
           type = typeJSON,  ///
           json = {
             type,
-            identifier
+            name
           };
 
     return json;
@@ -51,10 +51,10 @@ export default domAssigned(class Property {
   static name = "Property";
 
   static fromJSON(json, context) {
-    const { identifier } = json,
+    const { name } = json,
           type = typeFromJSON(json, context),
-          string = identifier, ///
-          property = new Property(string, type, identifier);
+          string = name, ///
+          property = new Property(string, type, name);
 
     return property;
   }
@@ -75,10 +75,10 @@ export default domAssigned(class Property {
   static fromPropertyDeclarationNode(propertyDeclarationNode, context) {
     const { Type } = dom,
           type = Type.fromPropertyDeclarationNode(propertyDeclarationNode),
-          propertyIdentifier = propertyDeclarationNode.getPropertyIdentifier(),
-          identifier = propertyIdentifier,  ///
-          string = identifier,  ///
-          property = new Property(string, type, identifier);
+          propertyName = propertyDeclarationNode.getPropertyName(),
+          name = propertyName,  ///
+          string = name,  ///
+          property = new Property(string, type, name);
 
     return property;
   }
@@ -86,11 +86,11 @@ export default domAssigned(class Property {
 
 function propertyFromPropertyNode(propertyNode, context) {
   const { Property } = dom,
-        propertyIdentifier = propertyNode.getPropertyIdentifier(),
-        identifier = propertyIdentifier,  ///
+        propertyName = propertyNode.getPropertyName(),
+        name = propertyName,  ///
         type = null,
-        string = identifier,  ///
-        property = new Property(string, type, identifier);
+        string = name,  ///
+        property = new Property(string, type, name);
 
   return property;
 }

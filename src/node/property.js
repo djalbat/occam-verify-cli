@@ -5,15 +5,15 @@ import NonTerminalNode from "../node/nonTerminal";
 import { SINGLE_SPACE } from "../constants";
 
 export default class PropertyNode extends NonTerminalNode {
-  getPropertyIdentifiers() {
-    const identifiers = this.getIdentifiers(),
-          propertyIdentifiers = identifiers.join(SINGLE_SPACE);
+  getPropertyName() {
+    const names = this.getNames(),
+          propertyName = names.join(SINGLE_SPACE);
 
-    return propertyIdentifiers;
+    return propertyName;
   }
 
-  getIdentifiers() {
-    const identifiers = this.mapChildNode((childNode) => {
+  getNames() {
+    const names = this.mapChildNode((childNode) => {
       const terminalNode = childNode, ///
             content = terminalNode.getContent(),
             identifier = content; //
@@ -21,7 +21,7 @@ export default class PropertyNode extends NonTerminalNode {
       return identifier;
     });
 
-    return identifiers;
+    return names;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyNode, ruleName, childNodes, opacity, precedence); }
