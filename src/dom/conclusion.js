@@ -6,9 +6,14 @@ import { domAssigned } from "../dom";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export  default domAssigned(class Conclusion {
-  constructor(string, statement) {
+  constructor(node, string, statement) {
+    this.node = node;
     this.string = string;
     this.statement = statement;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -24,7 +29,7 @@ export  default domAssigned(class Conclusion {
 
     const conclusionString = this.string;  ///
 
-    context.trace(`Verifying the '${conclusionString}' conclusion...`);
+    context.trace(`Verifying the '${conclusionString}' conclusion...`, this.node);
 
     if (this.statement !== null) {
       const stated = true,
@@ -34,11 +39,11 @@ export  default domAssigned(class Conclusion {
       verifies = statementVerifies; ///
 
     } else {
-      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`);
+      context.debug(`Unable to verify the '${conclusionString}' conclusion because it is nonsense.`, this.node);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${conclusionString}' conclusion.`);
+      context.debug(`...verified the '${conclusionString}' conclusion.`, this.node);
     }
 
     return verifies;
@@ -51,12 +56,12 @@ export  default domAssigned(class Conclusion {
           statementString = statement.getString(),
           conclusionString = conclusion.getString();
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`, this.node);
 
     statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`, this.node);
     }
 
     return statementUnifies;
@@ -76,8 +81,9 @@ export  default domAssigned(class Conclusion {
 
   static fromJSON(json, context) {
     const statement = statementFromJSON(json, context),
+          node = null,
           string = statement.getString(),
-          conclusion = new Conclusion(string, statement);
+          conclusion = new Conclusion(node, string, statement);
 
     return conclusion;
   }
@@ -87,7 +93,7 @@ export  default domAssigned(class Conclusion {
           node = conclusionNode,  ///
           string = context.nodeAsString(node),
           statement = Statement.fromConclusionNode(conclusionNode, context),
-          conclusion = new Conclusion(string, statement);
+          conclusion = new Conclusion(node, string, statement);
 
     return conclusion;
   }

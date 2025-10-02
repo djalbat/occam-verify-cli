@@ -8,10 +8,15 @@ import { domAssigned } from "../dom";
 import { referenceFromJSON, parametersFromJSON, parametersToParametersJSON } from "../utilities/json";
 
 export default domAssigned(class ProcedureCall {
-  constructor(string, reference, parameters) {
+  constructor(node, string, reference, parameters) {
+    this.node = node;
     this.string = string;
     this.reference = reference;
     this.parameters = parameters;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -42,7 +47,7 @@ export default domAssigned(class ProcedureCall {
 
     const procedureCallString = this.string; ///
 
-    context.trace(`Verifying the '${procedureCallString}' procedure call...`);
+    context.trace(`Verifying the '${procedureCallString}' procedure call...`, this.node);
 
     const procedure = context.findProcedureByReference(this.reference);
 
@@ -52,14 +57,14 @@ export default domAssigned(class ProcedureCall {
       if (procedureBoolean) {
         verifies = true;
       } else {
-        context.trace(`The '${procedureCallString}' procedure is not boolean.`);
+        context.trace(`The '${procedureCallString}' procedure is not boolean.`, this.node);
       }
     } else {
-      context.trace(`The '${procedureCallString}' procedure is not present.`);
+      context.trace(`The '${procedureCallString}' procedure is not present.`, this.node);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${procedureCallString}' procedure call.`);
+      context.debug(`...verified the '${procedureCallString}' procedure call.`, this.node);
     }
 
     return verifies;
@@ -70,7 +75,7 @@ export default domAssigned(class ProcedureCall {
 
     const procedureCallString = this.string; ///
 
-    context.trace(`Unifying the '${procedureCallString}' procedure call independently...`);
+    context.trace(`Unifying the '${procedureCallString}' procedure call independently...`, this.node);
 
     const procedure = context.findProcedureByReference(this.reference),
           nodes = this.findNodes(substitutions),
@@ -88,7 +93,7 @@ export default domAssigned(class ProcedureCall {
     }
 
     if (unifiesIndependently) {
-      context.debug(`...unified the '${procedureCallString}' procedure call independently.`);
+      context.debug(`...unified the '${procedureCallString}' procedure call independently.`, this.node);
     }
 
     return unifiesIndependently;
@@ -112,8 +117,9 @@ export default domAssigned(class ProcedureCall {
   static fromJSON(json, context) {
     const reference = referenceFromJSON(json, context),
           parameters = parametersFromJSON(json, context),
+          node = null,
           string = stringFromReferenceAndParameters(reference, parameters),
-          procedureCall = new ProcedureCall(string, reference, parameters);
+          procedureCall = new ProcedureCall(node, string, reference, parameters);
 
     return procedureCall;
   }
@@ -145,10 +151,11 @@ export default domAssigned(class ProcedureCall {
 
 function procedureCallFromProcedureCallNode(procedureCallNode, context) {
   const { Reference, ProcedureCall } = dom,
+        node = procedureCallNode, ///
         parameters = parametersFromProcedureCallNode(procedureCallNode, context),
         reference = Reference.fromProcedureCallNode(procedureCallNode, context),
         string = stringFromReferenceAndParameters(reference, parameters),
-        procedureCall = new ProcedureCall(string, reference, parameters);
+        procedureCall = new ProcedureCall(node, string, reference, parameters);
 
   return procedureCall;
 }

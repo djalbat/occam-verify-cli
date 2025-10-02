@@ -9,12 +9,13 @@ export default domAssigned(class Lemma extends TopLevelAssertion {
     let verifies;
 
     const lemma = this, ///
+          node = this.getNode(),
           context = this.getContext(),
           lemmaString = lemma.getString();
 
     (lemmaString === null) ?
-      context.trace(`Verifying a lemma...`) :
-        context.trace(`Verifying the '${lemmaString}' lemma...`);
+      context.trace(`Verifying a lemma...`, node) :
+        context.trace(`Verifying the '${lemmaString}' lemma...`, node);
 
     verifies = super.verify();
 
@@ -24,8 +25,8 @@ export default domAssigned(class Lemma extends TopLevelAssertion {
       context.addLemma(lemma);
 
       (lemmaString === null) ?
-        context.debug(`...verified a lemma.`) :
-          context.debug(`...verified the '${lemmaString}' lemma.`);
+        context.debug(`...verified a lemma.`, node) :
+          context.debug(`...verified the '${lemmaString}' lemma.`, node);
     }
 
     return verifies;

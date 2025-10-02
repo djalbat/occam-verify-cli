@@ -8,10 +8,15 @@ import { subproofAssertionFromStatement } from "../utilities/context";
 import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default domAssigned(class Premise {
-  constructor(string, statement, procedureCall) {
+  constructor(node, string, statement, procedureCall) {
+    this.node = node;
     this.string = string;
     this.statement = statement;
     this.procedureCall = procedureCall;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -31,7 +36,7 @@ export default domAssigned(class Premise {
 
     const premiseString = this.string; ///
 
-    context.trace(`Verifying the '${premiseString}' premise...`);
+    context.trace(`Verifying the '${premiseString}' premise...`, this.node);
 
     if (false) {
       ///
@@ -62,11 +67,11 @@ export default domAssigned(class Premise {
         verifies = true;
       }
     } else {
-      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`);
+      context.debug(`Unable to verify the '${premiseString}' premise because it is nonsense.`, this.node);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${premiseString}' premise.`);
+      context.debug(`...verified the '${premiseString}' premise.`, this.node);
     }
 
     return verifies;
@@ -147,7 +152,7 @@ export default domAssigned(class Premise {
           premiseStatement = premise.getStatement(),
           premiseStatementString = premiseStatement.getString();
 
-    specificContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
+    specificContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`, this.node);
 
     if (this.statement !== null) {
       const context = generalContext,
@@ -159,7 +164,7 @@ export default domAssigned(class Premise {
     }
 
     if (subproofUnifies) {
-      specificContext.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
+      specificContext.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`, this.node);
     }
 
     return subproofUnifies;
@@ -172,14 +177,14 @@ export default domAssigned(class Premise {
           premiseString = premise.getString(),
           statementString = statement.getString();
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`, this.node);
 
     if (this.statement !== null) {
       statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
     }
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`, this.node);
     }
 
     return statementUnifies;
@@ -214,7 +219,8 @@ export default domAssigned(class Premise {
       string = procedureCall.getString();
     }
 
-    const premise = new Premise(string, statement, procedureCall);
+    const node = null,
+          premise = new Premise(node, string, statement, procedureCall);
 
     return premise;
   }
@@ -225,7 +231,7 @@ export default domAssigned(class Premise {
           string = context.nodeAsString(node),
           statement = Statement.fromPremiseNode(premiseNode, context),
           procedureCall = ProcedureCall.fromPremiseNode(premiseNode, context),
-          premise = new Premise(string, statement, procedureCall);
+          premise = new Premise(node, string, statement, procedureCall);
 
     return premise
   }

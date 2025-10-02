@@ -6,9 +6,14 @@ import { domAssigned } from "../dom";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export default domAssigned(class Deduction {
-  constructor(string, statement) {
+  constructor(node, string, statement) {
+    this.node = node;
     this.string = string;
     this.statement = statement;
+  }
+
+  getNode(node) {
+    return this.node;
   }
 
   getString() {
@@ -24,7 +29,7 @@ export default domAssigned(class Deduction {
 
     const deductionString = this.string;  ///
 
-    context.trace(`Verifying the '${deductionString}' deduction...`);
+    context.trace(`Verifying the '${deductionString}' deduction...`, this.node);
 
     if (this.statement !== null) {
       const stated = true,
@@ -33,11 +38,11 @@ export default domAssigned(class Deduction {
 
       verifies = statementVerifies; ///
     } else {
-      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`);
+      context.debug(`Unable to verify the '${deductionString}' deduction because it is nonsense.`, this.node);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${deductionString}' deduction.`);
+      context.debug(`...verified the '${deductionString}' deduction.`, this.node);
     }
 
     return verifies;
@@ -50,12 +55,12 @@ export default domAssigned(class Deduction {
           statementString = statement.getString(),
           deductionString = deduction.getString();
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${deductionString}' deduction...`);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${deductionString}' deduction...`, this.node);
 
     statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${deductionString}' deduction.`);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${deductionString}' deduction.`, this.node);
     }
 
     return statementUnifies;
@@ -69,7 +74,7 @@ export default domAssigned(class Deduction {
           generalDeductionString = this.string, ///
           specificDeductionString = specificDeduction.getString();
 
-    context.trace(`Unifying the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction...`);
+    context.trace(`Unifying the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction...`, this.node);
 
     const statement = specificDeduction.getStatement(),
           statementUnifies = this.unifyStatement(statement, substitutions, generalContext, specificContext);
@@ -77,7 +82,7 @@ export default domAssigned(class Deduction {
     deductionUnifies = statementUnifies;  ///
 
     if (deductionUnifies) {
-      context.debug(`...unified the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction.`);
+      context.debug(`...unified the '${specificDeductionString}' deduction with the '${generalDeductionString}' deduction.`, this.node);
     }
 
     return deductionUnifies;
@@ -97,8 +102,9 @@ export default domAssigned(class Deduction {
 
   static fromJSON(json, context) {
     const statement = statementFromJSON(json, context),
+          node = null,
           string = statement.getString(),
-          deduction = new Deduction(string, statement);
+          deduction = new Deduction(node, string, statement);
 
     return deduction;
   }
@@ -108,7 +114,7 @@ export default domAssigned(class Deduction {
           node = deductionNode,  ///
           string = context.nodeAsString(node),
           statement = Statement.fromDeductionNode(deductionNode, context),
-          deduction = new Deduction(string, statement);
+          deduction = new Deduction(node, string, statement);
 
     return deduction;
   }

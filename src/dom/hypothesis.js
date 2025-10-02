@@ -8,9 +8,14 @@ import { subproofAssertionFromStatement } from "../utilities/context";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export default domAssigned(class Hypothesis {
-  constructor(string, statement) {
+  constructor(node, string, statement) {
+    this.node = node;
     this.string = string;
     this.statement = statement;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -26,7 +31,7 @@ export default domAssigned(class Hypothesis {
 
     const hypothesisString = this.string; ///
 
-    context.trace(`Verifying the '${hypothesisString}' hypothesis...`);
+    context.trace(`Verifying the '${hypothesisString}' hypothesis...`, this.node);
 
     if (false) {
       ///
@@ -49,11 +54,11 @@ export default domAssigned(class Hypothesis {
         }
       }
     } else {
-      context.debug(`Unable to verify the '${hypothesisString}' hypothesis because it is nonsense.`);
+      context.debug(`Unable to verify the '${hypothesisString}' hypothesis because it is nonsense.`, this.node);
     }
 
     if (verifies) {
-      context.debug(`...verified the '${hypothesisString}' hypothesis.`);
+      context.debug(`...verified the '${hypothesisString}' hypothesis.`, this.node);
     }
 
     return verifies;
@@ -65,7 +70,7 @@ export default domAssigned(class Hypothesis {
     const stepString = step.getString(),
           hypothesisString = this.string; ///
 
-    context.trace(`Is the '${hypothesisString}' hypothesis equal to the '${stepString}' step...`);
+    context.trace(`Is the '${hypothesisString}' hypothesis equal to the '${stepString}' step...`, this.node);
 
     const stepStatement = step.getStatement(),
           statementEqualToStepStatement = this.statement.isEqualTo(stepStatement);
@@ -75,7 +80,7 @@ export default domAssigned(class Hypothesis {
     }
 
     if (equalToStep) {
-      context.trace(`...the '${hypothesisString}' hypothesis is equal to the '${stepString}' step.`);
+      context.trace(`...the '${hypothesisString}' hypothesis is equal to the '${stepString}' step.`, this.node);
     }
 
     return equalToStep;
@@ -102,7 +107,8 @@ export default domAssigned(class Hypothesis {
       string = statement.getString();
     }
 
-    const hypothesis = new Hypothesis(string, statement);
+    const node = null,
+          hypothesis = new Hypothesis(node, string, statement);
 
     return hypothesis;
   }
@@ -112,7 +118,7 @@ export default domAssigned(class Hypothesis {
           node = hypothesisNode, ///
           string = context.nodeAsString(node),
           statement = Statement.fromHypothesisNode(hypothesisNode, context),
-          hypothesis = new Hypothesis(string, statement);
+          hypothesis = new Hypothesis(node, string, statement);
 
     return hypothesis
   }

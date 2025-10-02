@@ -20,8 +20,9 @@ import { labelsFromJSON,
 const { extract, reverse, correlate, backwardsEvery } = arrayUtilities;
 
 export default class TopLevelAssertion {
-  constructor(context, string, labels, suppositions, deduction, proof, signature, hypotheses) {
+  constructor(context, node, string, labels, suppositions, deduction, proof, signature, hypotheses) {
     this.context = context;
+    this.node = node;
     this.string = string;
     this.labels = labels;
     this.suppositions = suppositions;
@@ -33,6 +34,10 @@ export default class TopLevelAssertion {
 
   getContext() {
     return this.context;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -199,7 +204,7 @@ export default class TopLevelAssertion {
       const steps = context.getSteps(),
             topLevelAssertionString = this.string;  ///
 
-      context.trace(`Correlating the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture...`);
+      context.trace(`Correlating the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture...`, this.node);
 
       hypothesesCorrelate = correlate(this.hypotheses, steps, (hypothesis, step) => {
         const hypothesesEqualToStep = hypothesis.isEqualToStep(step, context);
@@ -210,7 +215,7 @@ export default class TopLevelAssertion {
       });
 
       if (hypothesesCorrelate) {
-        context.debug(`...correlated the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture.`);
+        context.debug(`...correlated the hypotheses of the '${topLevelAssertionString}' axiom, lemma, theorem or conjecture.`, this.node);
       }
     } else {
       hypothesesCorrelate = true
@@ -324,9 +329,10 @@ export default class TopLevelAssertion {
           suppositions = suppositionsFromJSON(json, context),
           signature = signatureFromJSON(json, context),
           hypotheses = hypothesesFromJSON(json, context),
+          node = null,
           proof = null,
           string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-          topLevelAssertion = new Class(context, string, labels, suppositions, deduction, proof, signature, hypotheses);
+          topLevelAssertion = new Class(context, node, string, labels, suppositions, deduction, proof, signature, hypotheses);
 
     return topLevelAssertion;
   }
@@ -345,7 +351,7 @@ export default class TopLevelAssertion {
           signature = signatureFromSignatureNode(signatureNode, context),
           hypotheses = [],
           string = stringFromLabelsSuppositionsAndDeduction(labels, suppositions, deduction),
-          topLevelAssertion = new Class(context, string, labels, suppositions, deduction, proof, signature, hypotheses);
+          topLevelAssertion = new Class(context, node, string, labels, suppositions, deduction, proof, signature, hypotheses);
 
     return topLevelAssertion;
   }

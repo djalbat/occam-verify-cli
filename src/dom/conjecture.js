@@ -8,11 +8,12 @@ export default domAssigned(class Conjecture extends TopLevelAssertion {
   verify() {
     let verifies;
 
-    const context = this.getContext(),
+    const node = this.getNode(),
+          context = this.getContext(),
           conjecture = this,  ///
           conjectureString = conjecture.getString();
 
-    context.trace(`Verifying the '${conjectureString}' conjecture...`);
+    context.trace(`Verifying the '${conjectureString}' conjecture...`, node);
 
     verifies = super.verify();
 
@@ -21,7 +22,7 @@ export default domAssigned(class Conjecture extends TopLevelAssertion {
 
       context.addConjecture(conjecture);
 
-      context.debug(`...verified the '${conjectureString}' conjecture.`);
+      context.debug(`...verified the '${conjectureString}' conjecture.`, node);
     }
 
     return verifies;

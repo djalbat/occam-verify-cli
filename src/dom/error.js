@@ -3,13 +3,18 @@
 import { domAssigned } from "../dom";
 
 export default domAssigned(class Error {
-  constructor(context, string) {
+  constructor(context, node, string) {
     this.context = context;
+    this.node = node;
     this.string = string;
   }
 
   getContext() {
     return this.context;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -21,7 +26,7 @@ export default domAssigned(class Error {
 
     const errorString = this.string;  ///
 
-    this.context.warning(`The '${errorString}' error cannot be verified.`);
+    this.context.warning(`The '${errorString}' error cannot be verified.`, this.node);
 
     return verifies;
   }
@@ -31,7 +36,7 @@ export default domAssigned(class Error {
   static fromErrorNode(errorNode, context) {
     const node = errorNode, ///
           string = context.nodeAsString(node),
-          error = new Error(context, string);
+          error = new Error(context, node, string);
 
     return error;
   }

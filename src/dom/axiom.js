@@ -16,10 +16,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     let verifies;
 
     const axiom = this, ///
+          node = this.getNode(),
           context = this.getContext(),
           axiomString = axiom.getString();
 
-    context.trace(`Verifying the '${axiomString}' axiom...`);
+    context.trace(`Verifying the '${axiomString}' axiom...`, node);
 
     const signatureVerifies = this.verifySignature();
 
@@ -32,7 +33,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
 
       context.addAxiom(axiom);
 
-      context.debug(`...verified the '${axiomString}' axiom.`);
+      context.debug(`...verified the '${axiomString}' axiom.`, node);
     }
 
     return verifies;
@@ -81,15 +82,16 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   unifyStep(step, substitutions, context) {
     let stepUnifies = false;
 
-    const stepString = step.getString(),
-          axiomString = this.string;  ///
+    const node = this.getNode(),
+          stepString = step.getString(),
+          axiomString = this.getString();
 
-    context.trace(`Unifying the '${stepString}' step with the '${axiomString}' axiom...`);
+    context.trace(`Unifying the '${stepString}' step with the '${axiomString}' axiom...`, node);
 
     const unconditional = this.isUnconditional();
 
     if (!unconditional) {
-      context.trace(`Cannot unify the '${stepString}' step with the '${axiomString}' axiom because the axiom is not unconditional.`);
+      context.trace(`Cannot unify the '${stepString}' step with the '${axiomString}' axiom because the axiom is not unconditional.`, node);
     } else {
       const statement = step.getStatement(),
             specificContext = context;  ///
@@ -105,7 +107,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     }
 
     if (stepUnifies) {
-      context.debug(`...unified the '${stepString}' step with the '${axiomString}' axiom.`);
+      context.debug(`...unified the '${stepString}' step with the '${axiomString}' axiom.`, node);
     }
 
     return stepUnifies;
@@ -114,11 +116,12 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   unifyLastStep(lastStep, substitutions, generalContext, specificContext) {
     let lastStepUnifies = false;
 
-    const context = specificContext,  ///
-          axiomString = this.string,  ///
+    const node = this.getNode(),
+          context = specificContext,  ///
+          axiomString = this.getString(),
           lastStepString = lastStep.getString();
 
-    context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`)
+    context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`, node)
 
     const statement = lastStep.getStatement(),
           statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
@@ -128,7 +131,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     }
 
     if (lastStepUnifies) {
-      context.debug(`...unified the '${lastStepString}' last step with the '${axiomString}' axiom.`)
+      context.debug(`...unified the '${lastStepString}' last step with the '${axiomString}' axiom.`, node)
     }
 
     return lastStepUnifies;
@@ -137,15 +140,16 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   unifySubproof(subproof, substitutions, context) {
     let subproofUnifies = false;
 
-    const axiomString = this.string,  ///
+    const node = this.getNode(),
+          axiomString = this.getString(),
           subproofString = subproof.getString();
 
-    context.trace(`Unifying the '${subproofString}' subproof with the '${axiomString}' axiom...`);
+    context.trace(`Unifying the '${subproofString}' subproof with the '${axiomString}' axiom...`, node);
 
     const unconditional = this.isUnconditional();
 
     if (unconditional) {
-      context.trace(`Cannot unify the '${subproofString}' subproof with the '${axiomString}' axiom because the axiom is unconditional.`);
+      context.trace(`Cannot unify the '${subproofString}' subproof with the '${axiomString}' axiom because the axiom is unconditional.`, node);
     } else {
       const lastStep = subproof.getLastStep(),
             specificContext = context;  ///
@@ -166,7 +170,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     }
 
     if (subproofUnifies) {
-      context.debug(`...unified the '${subproofString}' subproof with the '${axiomString}' axiom.`);
+      context.debug(`...unified the '${subproofString}' subproof with the '${axiomString}' axiom.`, node);
     }
 
     return subproofUnifies;
@@ -237,10 +241,11 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
   unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, substitutions, context) {
     let axiomLemmaTheoremOrConjectureUnifies = false;
 
-    const axiomString = this.getString(),
+    const node = this.getNode(),
+          axiomString = this.getString(),
           axiomLemmaTheoremOrConjectureString = axiomLemmaTheoremOrConjecture.getString();
 
-    context.trace(`Unifying the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom...`);
+    context.trace(`Unifying the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom...`, node);
 
     const hypothesesCorrelate = axiomLemmaTheoremOrConjecture.correlateHypotheses(context);
 
@@ -262,7 +267,7 @@ export default domAssigned(class Axiom extends TopLevelAssertion {
     }
 
     if (axiomLemmaTheoremOrConjectureUnifies) {
-      context.debug(`...unified the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom.`);
+      context.debug(`...unified the '${axiomLemmaTheoremOrConjectureString}' axiom, lemma, theorem or conjecture with the '${axiomString}' axiom.`, node);
     }
 
     return axiomLemmaTheoremOrConjectureUnifies;
