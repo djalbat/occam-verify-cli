@@ -6,8 +6,9 @@ import LocalContext from "../context/local";
 import { domAssigned } from "../dom";
 
 export default domAssigned(class Section {
-  constructor(context, string, hypotheses, axiom, lemma, theorem, conjecture) {
+  constructor(context, node, string, hypotheses, axiom, lemma, theorem, conjecture) {
     this.context = context;
+    this.node = node;
     this.string = string;
     this.hypotheses = hypotheses;
     this.axiom = axiom;
@@ -18,6 +19,10 @@ export default domAssigned(class Section {
 
   getContext() {
     return this.context;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -49,7 +54,7 @@ export default domAssigned(class Section {
 
     const sectionString = this.string;  ///
 
-    this.context.trace(`Verifying the '${sectionString}' section...`);
+    this.context.trace(`Verifying the '${sectionString}' section...`, this.node);
 
     const hypothesesVerify = this.verifyHypotheses();
 
@@ -65,7 +70,7 @@ export default domAssigned(class Section {
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${sectionString}' section.`);
+      this.context.debug(`...verified the '${sectionString}' section.`, this.node);
     }
 
     return verifies;
@@ -96,8 +101,9 @@ export default domAssigned(class Section {
           lemma = lemmaFroSectionNode(sectionNode, context),
           theorem = theoremFroSectionNode(sectionNode, context),
           conjecture = conjectureFroSectionNode(sectionNode, context),
+          node = sectionNode, ///
           string = stringFromHypothesesAxiomLemmaTheoremAndConjecture(hypotheses, axiom, lemma, theorem, conjecture, context),
-          section = new Section(context, string, hypotheses, axiom, lemma, theorem, conjecture);
+          section = new Section(context, node, string, hypotheses, axiom, lemma, theorem, conjecture);
 
     return section;
   }

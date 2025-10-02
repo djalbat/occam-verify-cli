@@ -8,10 +8,11 @@ export default domAssigned(class Theorem extends TopLevelAssertion {
   verify() {
     let verifies;
 
-    const context = this.getContext(),
+    const node = this.getNode(),
+          context = this.getContext(),
           theoremString = this.string;  ///
 
-    context.trace(`Verifying the '${theoremString}' theorem...`);
+    context.trace(`Verifying the '${theoremString}' theorem...`, node);
 
     verifies = super.verify();
 
@@ -20,7 +21,7 @@ export default domAssigned(class Theorem extends TopLevelAssertion {
 
       context.addTheorem(theorem);
 
-      context.debug(`...verified the '${theoremString}' theorem.`);
+      context.debug(`...verified the '${theoremString}' theorem.`, node);
     }
 
     return verifies;

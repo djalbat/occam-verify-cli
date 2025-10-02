@@ -18,8 +18,9 @@ import { labelsFromJSON,
 const { reverse, extract, backwardsEvery } = arrayUtilities;
 
 export default domAssigned(class Rule {
-  constructor(context, string, labels, premises, conclusion, proof) {
+  constructor(context, node, string, labels, premises, conclusion, proof) {
     this.context = context;
+    this.node = node;
     this.string = string;
     this.labels = labels;
     this.premises = premises;
@@ -29,6 +30,10 @@ export default domAssigned(class Rule {
 
   getContext() {
     return this.context;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -147,7 +152,7 @@ export default domAssigned(class Rule {
 
     const ruleString = this.string; ///
 
-    this.context.trace(`Verifying the '${ruleString}' rule...`);
+    this.context.trace(`Verifying the '${ruleString}' rule...`, this.node);
 
     const labelsVerify = this.verifyLabels();
 
@@ -174,7 +179,7 @@ export default domAssigned(class Rule {
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${ruleString}' rule.`);
+      this.context.debug(`...verified the '${ruleString}' rule.`, this.node);
     }
 
     return verifies;
@@ -252,24 +257,26 @@ export default domAssigned(class Rule {
   static fromJSON(json, context) {
     let rule;
 
-    const proof = null,
+    const node = null,
+          proof = null,
           labels = labelsFromJSON(json, context),
           premises = premisesFromJSON(json, context),
           conclusion = conclusionFromJSON(json, context),
           string = stringFromLabelsPremisesAndConclusion(labels, premises, conclusion);
 
-    rule = new Rule(context, string, labels, premises, conclusion, proof);
+    rule = new Rule(context, node, string, labels, premises, conclusion, proof);
 
     return rule;
   }
 
   static fromRuleNode(ruleNode, context) {
-    const proof = proofFromRuleNode(ruleNode, context),
+    const node = ruleNode,  ///
+          proof = proofFromRuleNode(ruleNode, context),
           labels = labelsFromRuleNode(ruleNode, context),
           premises = premisesFromRuleNode(ruleNode, context),
           conclusion = conclusionFromRuleNode(ruleNode, context),
           string = stringFromLabelsPremisesAndConclusion(labels, premises, conclusion),
-          rule = new Rule(context, string, labels, premises, conclusion, proof);
+          rule = new Rule(context, node, string, labels, premises, conclusion, proof);
 
     return rule;
   }

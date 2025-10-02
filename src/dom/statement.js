@@ -46,7 +46,7 @@ export default domAssigned(class Statement {
     const termString = term.getString(),
           statementString = this.string;  ///
 
-    context.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`);
+    context.trace(`Is the '${termString}' term contained in the '${statementString}' statement...`, this.node);
 
     const termNode = term.getNode(),
           statementNode = this.node,
@@ -61,7 +61,7 @@ export default domAssigned(class Statement {
     });
 
     if (termContained) {
-      context.debug(`...the '${termString}' term is contained in the '${statementString}' statement.`);
+      context.debug(`...the '${termString}' term is contained in the '${statementString}' statement.`, this.node);
     }
 
     return termContained;
@@ -73,7 +73,7 @@ export default domAssigned(class Statement {
     const frameString = frame.getString(),
           statementString = this.string;  ///
 
-    context.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`);
+    context.trace(`Is the '${frameString}' frame contained in the '${statementString}' statement...`, this.node);
 
     const frameNode = frame.getNode(),
           statementNode = this.node,
@@ -88,7 +88,7 @@ export default domAssigned(class Statement {
     });
 
     if (frameContained) {
-      context.debug(`...the '${frameString}' frame is contained in the '${statementString}' statement.`);
+      context.debug(`...the '${frameString}' frame is contained in the '${statementString}' statement.`, this.node);
     }
 
     return frameContained;
@@ -99,7 +99,7 @@ export default domAssigned(class Statement {
 
     const statementString = this.string;  ///
 
-    context.trace(`Verifying the '${statementString}' statement...`);
+    context.trace(`Verifying the '${statementString}' statement...`, this.node);
 
     verifies = verifyMixins.some((verifyMixin) => {
       const statement = this, ///
@@ -111,7 +111,7 @@ export default domAssigned(class Statement {
     });
 
     if (verifies) {
-      context.debug(`...verified the '${statementString}' statement.`);
+      context.debug(`...verified the '${statementString}' statement.`, this.node);
     }
 
     return verifies;
@@ -123,7 +123,7 @@ export default domAssigned(class Statement {
     const metaTypeString = metaType.getString(),
           statementString = this.string;  ///
 
-    context.trace(`Verifying the '${statementString}' statement given the '${metaTypeString}' meta-type...`);
+    context.trace(`Verifying the '${statementString}' statement given the '${metaTypeString}' meta-type...`, this.node);
 
     const metaTypeName = metaType.getName();
 
@@ -134,7 +134,7 @@ export default domAssigned(class Statement {
     }
 
     if (verifiesGivenMetaType) {
-      context.debug(`...verified the '${statementString}' statement given the '${metaTypeString}' meta-type.`);
+      context.debug(`...verified the '${statementString}' statement given the '${metaTypeString}' meta-type.`, this.node);
     }
 
     return verifiesGivenMetaType;
@@ -151,7 +151,7 @@ export default domAssigned(class Statement {
       const subproofString = subproof.getString(),
             subproofAssertionString = subproofAssertion.getString();
 
-      specificContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
+      specificContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`, this.node);
 
       const subproofStatements = subproof.getStatements(),
             subproofAssertionStatements = subproofAssertion.getStatements();
@@ -167,7 +167,7 @@ export default domAssigned(class Statement {
       });
 
       if (subproofUnifies) {
-        specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
+        specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`, this.node);
       }
     }
 
@@ -182,12 +182,12 @@ export default domAssigned(class Statement {
           generalStatementString = generalStatement.getString(),
           specificStatementString = specificStatement.getString();
 
-    specificContext.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`);
+    specificContext.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`, this.node);
 
     statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${specificStatementString}' statement with the '${generalStatementString}' statement.`);
+      specificContext.debug(`...unified the '${specificStatementString}' statement with the '${generalStatementString}' statement.`, this.node);
     }
 
     return statementUnifies;
@@ -199,7 +199,7 @@ export default domAssigned(class Statement {
     const statement = this, ///
           statementString = this.string;  ///
 
-    context.trace(`Unifying the '${statementString}' statement independently...`);
+    context.trace(`Unifying the '${statementString}' statement independently...`, this.node);
 
     const definedAssertion = definedAssertionFromStatement(statement, context),
           containedAssertion = containedAssertionFromStatement(statement, context);
@@ -217,7 +217,7 @@ export default domAssigned(class Statement {
     }
 
     if (unifiesIndependently) {
-      context.debug(`...unified the '${statementString}' statement independently.`);
+      context.debug(`...unified the '${statementString}' statement independently.`, this.node);
     }
 
     return unifiesIndependently;

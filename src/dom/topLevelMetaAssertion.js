@@ -15,8 +15,9 @@ import { labelFromJSON,
          substitutionsToSubstitutionsJSON } from "../utilities/json";
 
 export default class TopLevelMetaAssertion {
-  constructor(context, string, label, suppositions, deduction, proof, substitutions) {
+  constructor(context, node, string, label, suppositions, deduction, proof, substitutions) {
     this.context = context;
+    this.node = node;
     this.string = string;
     this.label = label;
     this.suppositions = suppositions;
@@ -27,6 +28,10 @@ export default class TopLevelMetaAssertion {
 
   getContext() {
     return this.context;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getString() {
@@ -155,9 +160,10 @@ export default class TopLevelMetaAssertion {
           deduction = deductionFromJSON(json, context),
           suppositions = suppositionsFromJSON(json, context),
           substitutions = substitutionsFromJSON(json, context),
+          node = null,
           proof = null,
           string = stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
-          topLevelMetaAssertion = new Class(context, string, label, suppositions, deduction, proof, substitutions);
+          topLevelMetaAssertion = new Class(context, node, string, label, suppositions, deduction, proof, substitutions);
 
     return topLevelMetaAssertion;
   }
@@ -174,7 +180,7 @@ export default class TopLevelMetaAssertion {
           suppositions = suppositionsFromSuppositionNodes(suppositionNodes, context),
           substitutions = Substitutions.fromNothing(),
           string = stringFromLabelASuppositionsAndDeduction(label, suppositions, deduction),
-          topLevelMetaAssertion = new Class(context, string, label, suppositions, deduction, proof, substitutions);
+          topLevelMetaAssertion = new Class(context, node, string, label, suppositions, deduction, proof, substitutions);
 
     return topLevelMetaAssertion;
   }

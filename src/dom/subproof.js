@@ -8,18 +8,19 @@ import { domAssigned } from "../dom";
 import { subproofStringFromSubproofNode } from "../utilities/subproof";
 
 export default domAssigned(class Subproof {
-  constructor(string, suppositions, subDerivation) {
+  constructor(node, string, suppositions, subDerivation) {
+    this.node = node;
     this.string = string;
     this.suppositions = suppositions;
     this.subDerivation = subDerivation;
   }
 
-  getString() {
-    return this.string;
-  }
-
   getNode() {
     return this.node;
+  }
+
+  getString() {
+    return this.string;
   }
 
   getSuppositions() {
@@ -142,9 +143,10 @@ export default domAssigned(class Subproof {
             suppositions = suppositionsFromSubproofNode(subproofNode, context),
             subDerivation = subDerivationFromSubproofNode(subproofNode, context),
             subproofString = subproofStringFromSubproofNode(subproofNode, context),
+            node = subproofNode,  ///
             string = subproofString;  ///
 
-      subproof = new Subproof(string, suppositions, subDerivation);
+      subproof = new Subproof(node, string, suppositions, subDerivation);
     }
 
     return subproof;
