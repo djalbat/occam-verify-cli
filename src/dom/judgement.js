@@ -88,15 +88,7 @@ export default domAssigned(class Judgement {
   verifyDeclaration(assignments, stated, context) {
     let declarationVerifies;
 
-    const declarationString = this.declaration.getString();
-
-    context.trace(`Verifying the '${declarationString}' declaration...`);
-
     declarationVerifies = this.declaration.verify(assignments, stated, context);
-
-    if (declarationVerifies) {
-      context.debug(`...verified the '${declarationString}' declaration.`);
-    }
 
     return declarationVerifies;
   }
