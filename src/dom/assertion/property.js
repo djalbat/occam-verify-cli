@@ -36,7 +36,7 @@ export default domAssigned(class PropertyAssertion {
   }
 
   matchTermAndPropertyRelation(term, propertyRelation, context) {
-    let verifiesAsPropertyAssertion = false;
+    let propertyMatchesTermAndPropertyRelation = false;
 
     const termString = term.getString(),
           propertyRelationString = propertyRelation.getString(),
@@ -51,10 +51,10 @@ export default domAssigned(class PropertyAssertion {
     if (termAEqualToTermB) {
       const propertyRelationEqualToPropertyRelation = this.propertyRelation.isEqualTo(propertyRelation);
 
-      verifiesAsPropertyAssertion = propertyRelationEqualToPropertyRelation;  ///
+      propertyMatchesTermAndPropertyRelation = propertyRelationEqualToPropertyRelation;  ///
     }
 
-    if (verifiesAsPropertyAssertion) {
+    if (propertyMatchesTermAndPropertyRelation) {
       context.debug(`...matched the '${termString}' term and '${propertyRelationString}' property relation against the '${propertyAssertionString}' property assertion.`);
     }
 

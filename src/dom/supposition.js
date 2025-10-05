@@ -172,7 +172,7 @@ export default domAssigned(class Supposition {
           suppositionStatement = supposition.getStatement(),
           suppositionStatementString = suppositionStatement.getString();
 
-    specificContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`, this.node);
+    specificContext.trace(`Unifying the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement...`);
 
     if (this.statement !== null) {
       const context = generalContext, ///
@@ -184,7 +184,7 @@ export default domAssigned(class Supposition {
     }
 
     if (subproofUnifies) {
-      specificContext.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`, this.node);
+      specificContext.debug(`...unified the '${subproofString}' subproof with the supposition's '${suppositionStatementString}' statement.`);
     }
 
     return subproofUnifies;
@@ -197,14 +197,14 @@ export default domAssigned(class Supposition {
           statementString = statement.getString(),
           suppositionString = supposition.getString();
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`, this.node);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${suppositionString}' supposition...`);
 
     if (this.statement !== null) {
       statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
     }
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${suppositionString}' supposition.`, this.node);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${suppositionString}' supposition.`);
     }
 
     return statementUnifies;

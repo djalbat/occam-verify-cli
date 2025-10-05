@@ -75,7 +75,7 @@ export default domAssigned(class ProcedureCall {
 
     const procedureCallString = this.string; ///
 
-    context.trace(`Unifying the '${procedureCallString}' procedure call independently...`, this.node);
+    context.trace(`Unifying the '${procedureCallString}' procedure call independently...`);
 
     const procedure = context.findProcedureByReference(this.reference),
           nodes = this.findNodes(substitutions),
@@ -93,7 +93,7 @@ export default domAssigned(class ProcedureCall {
     }
 
     if (unifiesIndependently) {
-      context.debug(`...unified the '${procedureCallString}' procedure call independently.`, this.node);
+      context.debug(`...unified the '${procedureCallString}' procedure call independently.`);
     }
 
     return unifiesIndependently;

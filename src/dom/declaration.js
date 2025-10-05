@@ -7,14 +7,19 @@ import { domAssigned } from "../dom";
 import { unifyStatementIntrinsically } from "../utilities/unification";
 
 export default domAssigned(class Declaration {
-  constructor(string, reference, statement) {
+  constructor(string, node, reference, statement) {
     this.string = string;
+    this.node = node;
     this.reference = reference;
     this.statement = statement;
   }
 
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getReference() {
@@ -25,23 +30,52 @@ export default domAssigned(class Declaration {
     return this.statement;
   }
 
+  isSimple() { return this.node.isSimple(); }
+
+  getMetavariable() {
+    let metavariable = null;
+
+    const simple = this.isSimple();
+
+    if (simple) {
+      metavariable = this.reference.getMetavariable();
+    }
+
+    return metavariable;
+  }
+
   matchSubstitution(substitution, context) {
-    let substitutionMatches;
+    let substitutionMatches = false;
 
     const declarationString = this.string,  ///
           substitutionString = substitution.getString();
 
     context.trace(`Matching the '${substitutionString}' substitution against the '${declarationString}' declaration...`);
 
-    const statement = substitution.getStatement(),
-          metavariable = substitution.getMetavariable(),
-          statementEqualToStatement = this.statement.isEqualTo(statement),
-          referenceMetavariableEqualToMetavariable = this.reference.isMetavariableEqualTo(metavariable);
+    const simple = this.isSimple();
 
-    substitutionMatches = (referenceMetavariableEqualToMetavariable && statementEqualToStatement);
+    if (simple) {
+      const metavariable = this.reference.getMetavariable(),
+            judgement = context.findJudgementByMetavariable(metavariable);
+
+      if (judgement !== null) {
+        const declaration = judgement.getDeclaration();
+
+        substitutionMatches = declaration.matchSubstitution(substitution, context);
+      }
+    } else {
+      const statement = substitution.getStatement(),
+            metavariable = substitution.getMetavariable(),
+            statementEqualToStatement = this.statement.isEqualTo(statement),
+            referenceMetavariableEqualToMetavariable = this.reference.isMetavariableEqualTo(metavariable);
+
+      if (referenceMetavariableEqualToMetavariable && statementEqualToStatement) {
+        substitutionMatches = true;
+      }
+    }
 
     if (substitutionMatches) {
-      context.debug(`...matched the '${declarationString}' substitution against the '${substitutionString}' declaration.`);
+      context.debug(`...matches the '${declarationString}' substitution against the '${substitutionString}' declaration.`);
     }
 
     return substitutionMatches;
@@ -54,29 +88,37 @@ export default domAssigned(class Declaration {
 
     context.trace(`Verifying the '${declarationString}' declaration...`);
 
-    const referenceVerifies = this.verifyReference(assignments, stated, context);
+    const simple = this.isSimple();
 
-    if (referenceVerifies) {
-      const statementVerifies = this.verifyStatement(assignments, stated, context);
+    if (simple) {
+      const referenceVerifiesAsMetavariable = this.verifyReferenceAsMetavariable(assignments, stated, context);
 
-      if (statementVerifies) {
-        let verifiesWhenStated = false,
-            verifiesWhenDerived = false;
+      verifies = referenceVerifiesAsMetavariable; ///
+    } else {
+      const referenceVerifies = this.verifyReference(assignments, stated, context);
 
-        if (stated) {
-          verifiesWhenStated = this.verifyWhenStated(assignments, context);
-        } else {
-          verifiesWhenDerived = this.verifyWhenDerived(context);
-        }
+      if (referenceVerifies) {
+        const statementVerifies = this.verifyStatement(assignments, stated, context);
 
-        if (verifiesWhenStated || verifiesWhenDerived) {
-          verifies = true;
+        if (statementVerifies) {
+          let verifiesWhenStated = false,
+              verifiesWhenDerived = false;
+
+          if (stated) {
+            verifiesWhenStated = this.verifyWhenStated(assignments, context);
+          } else {
+            verifiesWhenDerived = this.verifyWhenDerived(context);
+          }
+
+          if (verifiesWhenStated || verifiesWhenDerived) {
+            verifies = true;
+          }
         }
       }
-    }
 
-    if (verifies) {
-      context.debug(`...verified the '${declarationString}' declaration.`);
+      if (verifies) {
+        context.debug(`...verified the '${declarationString}' declaration.`);
+      }
     }
 
     return verifies;
@@ -101,21 +143,44 @@ export default domAssigned(class Declaration {
   verifyStatement(assignments, stated, context) {
     let statementVerifies;
 
-    const statementString = this.statement.getString();
+    if (this.statement === null) {
+      statementVerifies = true;
+    } else {
+      const statementString = this.statement.getString();
 
-    context.trace(`Verifying the '${statementString}' statement...`);
+      context.trace(`Verifying the '${statementString}' statement...`);
 
-    stated = true;  ///
+      stated = true;  ///
 
-    assignments = null; ///
+      assignments = null; ///
 
-    statementVerifies = this.statement.verify(assignments, stated, context);
+      statementVerifies = this.statement.verify(assignments, stated, context);
 
-    if (statementVerifies) {
-      context.debug(`...verified the '${statementString}' statement.`);
+      if (statementVerifies) {
+        context.debug(`...verified the '${statementString}' statement.`);
+      }
     }
 
     return statementVerifies;
+  }
+
+  verifyReferenceAsMetavariable(assignments, stated, context) {
+    let referenceVerifiesAsMetavariable;
+
+    const referenceString = this.reference.getString();
+
+    context.trace(`Verifying the '${referenceString}' reference as a metavariable...`);
+
+    const metavariable = this.reference.getMetavariable(),
+          metavariableVerifies = metavariable.verify(context);
+
+    referenceVerifiesAsMetavariable = metavariableVerifies; ///
+
+    if (referenceVerifiesAsMetavariable) {
+      context.debug(`...verified the '${referenceString}' reference as a metavariable.`);
+    }
+
+    return referenceVerifiesAsMetavariable;
   }
 
   verifyWhenStated(assignments, context) {
@@ -170,20 +235,24 @@ export default domAssigned(class Declaration {
   unifyStatement(statement, substitutions, generalContext, specificContext) {
     let statementUnifies;
 
-    const context = generalContext,  ///
-          statementString = statement.getString(),
-          declarationStatementString = this.statement.getString();
+    if (this.statement === null) {
+      statementUnifies = false;
+    } else {
+      const context = generalContext,  ///
+            statementString = statement.getString(),
+            declarationStatementString = this.statement.getString();
 
-    context.trace(`Unifying the '${statementString}' statement with the '${declarationStatementString}' statement...`);
+      context.trace(`Unifying the '${statementString}' statement with the '${declarationStatementString}' statement...`);
 
-    const generalStatement = this.statement,
-          specificStatement = statement,  ///
-          statementUUnifiesIntrinsically = unifyStatementIntrinsically(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+      const generalStatement = this.statement,
+            specificStatement = statement,  ///
+            statementUUnifiesIntrinsically = unifyStatementIntrinsically(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
-    statementUnifies = statementUUnifiesIntrinsically;  ///
+      statementUnifies = statementUUnifiesIntrinsically;  ///
 
-    if (statementUnifies) {
-      context.debug(`...unified the '${statementString}' statement with the '${declarationStatementString}' statement.`);
+      if (statementUnifies) {
+        context.debug(`...unified the '${statementString}' statement with the '${declarationStatementString}' statement.`);
+      }
     }
 
     return statementUnifies;
@@ -271,7 +340,7 @@ function declarationFromDeclarationNode(declarationNode, context) {
         string = context.nodeAsString(node),
         reference = Reference.fromDeclarationNode(declarationNode, context),
         statement = Statement.fromDeclarationNode(declarationNode, context),
-        declaration = new Declaration(string, reference, statement);
+        declaration = new Declaration(string, node, reference, statement);
 
   return declaration;
 }

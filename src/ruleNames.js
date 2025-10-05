@@ -71,7 +71,6 @@ export const PARENTHESISED_LABELS_RULE_NAME = "parenthesisedLabels";
 export const PROPERTY_DECLARATION_RULE_NAME = "propertyDeclaration";
 export const VARIABLE_DECLARATION_RULE_NAME = "variableDeclaration";
 export const STATEMENT_SUBSTITUTION_RULE_NAME = "statementSubstitution";
-export const REFERENCE_SUBSTITUTION_RULE_NAME = "referenceSubstitution";
 export const COMBINATOR_DECLARATION_RULE_NAME = "combinatorDeclaration";
 export const SIMPLE_TYPE_DECLARATION_RULE_NAME = "simpleTypeDeclaration";
 export const CONSTRUCTOR_DECLARATION_RULE_NAME = "constructorDeclaration";

@@ -11,12 +11,11 @@ import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 const { first } = arrayUtilities;
 
 export default domAssigned(class Frame {
-  constructor(string, node, tokens, declarations, metavariables) {
+  constructor(string, node, tokens, declarations) {
     this.string = string;
     this.node = node;
     this.tokens = tokens;
     this.declarations = declarations;
-    this.metavariables = metavariables;
   }
 
   getString() {
@@ -35,9 +34,7 @@ export default domAssigned(class Frame {
     return this.declarations;
   }
 
-  getMetavariables() {
-    return this.metavariables;
-  }
+  getLength() { return this.declarations.length; }
 
   getMetavariable() {
     let metavariable = null;
@@ -45,12 +42,28 @@ export default domAssigned(class Frame {
     const simple = this.isSimple();
 
     if (simple) {
-      const firstMetavariable = first(this.metavariables);
+      const firstDeclaration = first(this.declarations),
+            declaration = firstDeclaration; ///
 
-      metavariable = firstMetavariable; ///
+      metavariable = declaration.getMetavariable();
     }
 
     return metavariable;
+  }
+
+  isSimple() {
+    let simple = false;
+
+    const length = this.getLength();
+
+    if (length === 1) {
+      const firstDeclaration = first(this.declarations),
+            declaration = firstDeclaration; ///
+
+      simple = declaration.isSimple();
+    }
+
+    return simple;
   }
 
   isEqualTo(frame) {
@@ -58,14 +71,6 @@ export default domAssigned(class Frame {
           equalTo = (frameString === this.string);
 
     return equalTo;
-  }
-
-  isSimple() {
-    const metavariablesLength = this.metavariables.length,
-          declarationsLength = this.declarations.length,
-          simple = ((metavariablesLength === 1) && (declarationsLength === 0));
-
-    return simple;
   }
 
   matchSubstitution(substitution, context) {
@@ -81,16 +86,6 @@ export default domAssigned(class Frame {
         const substitutionMatchesDeclaration = declaration.matchSubstitution(substitution, context);
 
         if (substitutionMatchesDeclaration) {
-          return true;
-        }
-      });
-    }
-
-    if (!substitutionMatches) {
-      substitutionMatches = this.metavariables.some((metavariable) => {
-        const substitutionMatchesMetavariable = metavariable.matchSubstitution(substitution, context);
-
-        if (substitutionMatchesMetavariable) {
           return true;
         }
       });
@@ -136,21 +131,17 @@ export default domAssigned(class Frame {
     const declarationsVerify = this.verifyDeclarations(assignments, stated, context);
 
     if (declarationsVerify) {
-      const  metavariablesVerify = this.verifyMetavariables(assignments, stated, context);
+      let verifiesWhenStated = false,
+          verifiesWhenDerived = false;
 
-      if (metavariablesVerify) {
-        let verifiesWhenStated = false,
-            verifiesWhenDerived = false;
+      if (stated) {
+        verifiesWhenStated = this.verifyWhenStated(assignments, context);
+      } else {
+        verifiesWhenDerived = this.verifyWhenDerived(context);
+      }
 
-        if (stated) {
-          verifiesWhenStated = this.verifyWhenStated(assignments, context);
-        } else {
-          verifiesWhenDerived = this.verifyWhenDerived(context);
-        }
-
-        if (verifiesWhenStated || verifiesWhenDerived) {
-          verifies = true;
-        }
+      if (verifiesWhenStated || verifiesWhenDerived) {
+        verifies = true;
       }
     }
 
@@ -168,18 +159,12 @@ export default domAssigned(class Frame {
 
     context.trace(`Verifying the '${frameString}' stated frame...`);
 
-    const declarationsLength = this.declarations.length;
+    const simple = this.isSimple();
 
-    if (declarationsLength > 0) {
-      context.trace(`The '${frameString}' stated frame cannot have declarations.`);
+    if (!simple) {
+      context.trace(`The '${frameString}' stated frame must be simple.`);
     } else {
-      const metavariablesLength = this.metavariables.length;
-
-      if (metavariablesLength > 1) {
-        context.trace(`The '${frameString}' stated frame cannot have more than one metavariable.`);
-      } else {
-        verifiesWhenStated = true;
-      }
+      verifiesWhenStated = true;
     }
 
     if (verifiesWhenStated) {
@@ -208,10 +193,10 @@ export default domAssigned(class Frame {
   verifyDeclarations(assignments, stated, context) {
     let declarationsVerify = true;  ///
 
-    const declarationsLength = this.declarations.length;
+    const length = this.getLength();
 
-    if (declarationsLength > 0) {
-      const sOrNothing = (declarationsLength > 1) ?
+    if (length > 0) {
+      const sOrNothing = (length > 1) ?
                            S :
                              NOTHING,
             declarationsString = declarationsStringFromDeclarations(this.declarations);
@@ -234,33 +219,6 @@ export default domAssigned(class Frame {
     }
 
     return declarationsVerify;
-  }
-
-  verifyMetavariables(assignments, stated, context) {
-    let metavariablesVerify = true;
-
-    const metavariablesLength = this.metavariables.length;
-
-    if (metavariablesLength > 0) {
-      const sOrNothing = (metavariablesLength > 1) ?
-                           S :
-                             NOTHING,
-            metavariablesString = metavariablesStringFromMetavariables(this.metavariables);
-
-      context.trace(`Verifying the '${metavariablesString}' metavariable${sOrNothing}...`);
-
-      metavariablesVerify = this.metavariables.every((metavariable) => {
-        const metavariableVerifies = metavariable.verify(context);
-
-        return metavariableVerifies;
-      });
-
-      if (metavariablesVerify) {
-        context.debug(`...verified the '${metavariablesString}' metavariable${sOrNothing}.`);
-      }
-    }
-
-    return metavariablesVerify;
   }
 
   verifyGivenMetaType(metaType, assignments, stated, context) {
@@ -378,18 +336,4 @@ function declarationsStringFromDeclarations(declarations) {
   }, null);
 
   return declarationsString;
-}
-
-function metavariablesStringFromMetavariables(metavariable) {
-  const metavariablesString = metavariable.reduce((metavariablesString, metavariable) => {
-    const metavariableString = metavariable.getString();
-
-    metavariablesString = (metavariablesString === null) ?
-                            metavariableString :
-                             `${metavariablesString}, ${metavariableString}`;
-
-    return metavariablesString;
-  }, null);
-
-  return metavariablesString;
 }

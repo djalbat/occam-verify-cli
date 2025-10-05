@@ -152,7 +152,7 @@ export default domAssigned(class Premise {
           premiseStatement = premise.getStatement(),
           premiseStatementString = premiseStatement.getString();
 
-    specificContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`, this.node);
+    specificContext.trace(`Unifying the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement...`);
 
     if (this.statement !== null) {
       const context = generalContext,
@@ -164,7 +164,7 @@ export default domAssigned(class Premise {
     }
 
     if (subproofUnifies) {
-      specificContext.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`, this.node);
+      specificContext.debug(`...unified the '${subproofString}' subproof with the premise's '${premiseStatementString}' statement.`);
     }
 
     return subproofUnifies;
@@ -177,14 +177,14 @@ export default domAssigned(class Premise {
           premiseString = premise.getString(),
           statementString = statement.getString();
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`, this.node);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${premiseString}' premise...`);
 
     if (this.statement !== null) {
       statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
     }
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`, this.node);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${premiseString}' premise.`);
     }
 
     return statementUnifies;

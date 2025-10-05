@@ -151,7 +151,7 @@ export default domAssigned(class Statement {
       const subproofString = subproof.getString(),
             subproofAssertionString = subproofAssertion.getString();
 
-      specificContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`, this.node);
+      specificContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
 
       const subproofStatements = subproof.getStatements(),
             subproofAssertionStatements = subproofAssertion.getStatements();
@@ -167,7 +167,7 @@ export default domAssigned(class Statement {
       });
 
       if (subproofUnifies) {
-        specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`, this.node);
+        specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
       }
     }
 
@@ -182,12 +182,12 @@ export default domAssigned(class Statement {
           generalStatementString = generalStatement.getString(),
           specificStatementString = specificStatement.getString();
 
-    specificContext.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`, this.node);
+    specificContext.trace(`Unifying the '${specificStatementString}' statement with the '${generalStatementString}' statement...`);
 
     statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${specificStatementString}' statement with the '${generalStatementString}' statement.`, this.node);
+      specificContext.debug(`...unified the '${specificStatementString}' statement with the '${generalStatementString}' statement.`);
     }
 
     return statementUnifies;
@@ -199,7 +199,7 @@ export default domAssigned(class Statement {
     const statement = this, ///
           statementString = this.string;  ///
 
-    context.trace(`Unifying the '${statementString}' statement independently...`, this.node);
+    context.trace(`Unifying the '${statementString}' statement independently...`);
 
     const definedAssertion = definedAssertionFromStatement(statement, context),
           containedAssertion = containedAssertionFromStatement(statement, context);
@@ -217,7 +217,7 @@ export default domAssigned(class Statement {
     }
 
     if (unifiesIndependently) {
-      context.debug(`...unified the '${statementString}' statement independently.`, this.node);
+      context.debug(`...unified the '${statementString}' statement independently.`);
     }
 
     return unifiesIndependently;
@@ -340,13 +340,17 @@ export default domAssigned(class Statement {
   }
 
   static fromDeclarationNode(declarationNode, context) {
+    let statement = null;
+
     let statementNode;
 
     statementNode = declarationNode.getStatementNode(); ///
 
-    statementNode = stripBracketsFromStatementNode(statementNode);  ///
+    if (statementNode !== null) {
+      statementNode = stripBracketsFromStatementNode(statementNode);  ///
 
-    const statement = statementFromStatementNode(statementNode, context);
+      statement = statementFromStatementNode(statementNode, context);
+    }
 
     return statement;
   }

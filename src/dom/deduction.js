@@ -55,12 +55,12 @@ export default domAssigned(class Deduction {
           statementString = statement.getString(),
           deductionString = deduction.getString();
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${deductionString}' deduction...`, this.node);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${deductionString}' deduction...`);
 
     statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${deductionString}' deduction.`, this.node);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${deductionString}' deduction.`);
     }
 
     return statementUnifies;

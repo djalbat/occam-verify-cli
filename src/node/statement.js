@@ -16,7 +16,6 @@ import { TERM_RULE_NAME,
          FRAME_SUBSTITUTION_RULE_NAME,
          SATISFIES_ASSERTION_RULE_NAME,
          CONTAINED_ASSERTION_RULE_NAME,
-         REFERENCE_SUBSTITUTION_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
 export default class StatementNode extends NonTerminalNode {
@@ -135,13 +134,6 @@ export default class StatementNode extends NonTerminalNode {
           singularMetaArgumentNode = this.getNodeByRuleName(ruleName);
 
     return singularMetaArgumentNode;
-  }
-
-  getReferenceSubstitutionNode() {
-    const ruleName = REFERENCE_SUBSTITUTION_RULE_NAME,
-      referenceSubstitutionNode = this.getNodeByRuleName(ruleName);
-
-    return referenceSubstitutionNode;
   }
 
   getStatementSubstitutionNode() {

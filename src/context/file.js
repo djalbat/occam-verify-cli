@@ -796,41 +796,31 @@ export default class FileContext {
   findFile(filePath) { return this.releaseContext.findFile(filePath); }
 
   trace(message, node = null) {
-    if (node !== null) {
-      this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens);
-    }
+    this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
 
     this.releaseContext.trace(message, this.filePath, this.lineIndex);
   }
 
   debug(message, node = null) {
-    if (node !== null) {
-      this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens);
-    }
+    this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
 
     this.releaseContext.debug(message, this.filePath, this.lineIndex);
   }
 
   info(message, node = null) {
-    if (node !== null) {
-      this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens);
-    }
+    this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
 
     this.releaseContext.info(message, this.filePath, this.lineIndex);
   }
 
   warning(message, node = null) {
-    if (node !== null) {
-      this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens);
-    }
+    this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
 
     this.releaseContext.warning(message, this.filePath, this.lineIndex);
   }
 
   error(message, node = null) {
-    if (node !== null) {
-      this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens);
-    }
+    this.lineIndex = lineIndexFromNodeAndTokens(node, this.tokens, this.lineIndex);
 
     this.releaseContext.error(message, this.filePath, this.lineIndex);
   }
@@ -838,14 +828,12 @@ export default class FileContext {
   verify() {
     let verifies = false;
 
-    this.debug(`Verifying the '${this.filePath}' file...`);
-
     this.prepare();
 
     if (this.node === null) {
       this.warning(`Unable to verify the '${this.filePath}' file because it cannot be parsed.`);
     } else {
-      this.lineIndex = 0;
+      this.debug(`Verifying the '${this.filePath}' file...`);
 
       const fileContext = this, ///
             verifiesAtTopLevel = topLevelVerifier.verify(this.node, fileContext);
@@ -855,10 +843,10 @@ export default class FileContext {
       } else {
         this.clear();
       }
-    }
 
-    if (verifies) {
-      this.info(`...verified the '${this.filePath}' file.`);
+      if (verifies) {
+        this.info(`...verified the '${this.filePath}' file.`);
+      }
     }
 
     return verifies;
@@ -880,6 +868,8 @@ export default class FileContext {
   }
 
   prepare() {
+    this.lineIndex = null;
+
     if (this.tokens !== null) {
       return;
     }
@@ -1009,22 +999,24 @@ export default class FileContext {
   }
 }
 
-function lineIndexFromNodeAndTokens(node, tokens) {
-  let lineIndex = 0;
+function lineIndexFromNodeAndTokens(node, tokens, lineIndex) {
+  if (node !== null) {
+    lineIndex = 0;
 
-  const firstSignificantTokenIndex = node.getFirstSignificantTokenIndex(tokens);
+    const firstSignificantTokenIndex = node.getFirstSignificantTokenIndex(tokens);
 
-  tokens.some((token, tokenIndex) => {
-    const tokenEndOfLineToken = token.isEndOfLineToken();
+    tokens.some((token, tokenIndex) => {
+      const tokenEndOfLineToken = token.isEndOfLineToken();
 
-    if (tokenEndOfLineToken) {
-      lineIndex += 1;
-    }
+      if (tokenEndOfLineToken) {
+        lineIndex += 1;
+      }
 
-    if (tokenIndex === firstSignificantTokenIndex) {
-      return true;
-    }
-  });
+      if (tokenIndex === firstSignificantTokenIndex) {
+        return true;
+      }
+    });
+  }
 
   return lineIndex;
 }

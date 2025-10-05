@@ -5,6 +5,13 @@ import NonTerminalNode from "../node/nonTerminal";
 import { STATEMENT_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class DeclarationNode extends NonTerminalNode {
+  isSimple() {
+    const statementNode = this.getStatementNode(),
+          simple = (statementNode === null);
+
+    return simple;
+  }
+
   getStatementNode() {
     const ruleName = STATEMENT_RULE_NAME,
           statementNode = this.getNodeByRuleName(ruleName);

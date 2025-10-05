@@ -56,12 +56,12 @@ export  default domAssigned(class Conclusion {
           statementString = statement.getString(),
           conclusionString = conclusion.getString();
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`, this.node);
+    specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
 
     statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`, this.node);
+      specificContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
     }
 
     return statementUnifies;

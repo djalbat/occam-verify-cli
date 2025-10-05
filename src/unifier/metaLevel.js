@@ -71,7 +71,7 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalDeclarationMetavariableNode, specificDeclarationMetavariableNode, substitutions, generalContext, specificContext) => {
         let referenceUnifies;
 
-        const { Reference, Metavariable } = dom;
+        const { Frame, Metavariable } = dom;
 
         let context,
             metavariableNode;
@@ -86,9 +86,9 @@ class MetaLevelUnifier extends Unifier {
 
         metavariableNode = specificDeclarationMetavariableNode; ///
 
-        const reference = Reference.fromMetavariableNode(metavariableNode, context);
+        const frame = Frame.fromMetavariableNode(metavariableNode, context);
 
-        referenceUnifies = metavariable.unifyReference(reference, substitutions, generalContext, specificContext);
+        referenceUnifies = metavariable.unifyFrame(frame, substitutions, generalContext, specificContext);
 
         return referenceUnifies;
       }

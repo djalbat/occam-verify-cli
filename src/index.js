@@ -50,7 +50,6 @@ import VariableDeclaration from "./dom/declaration/variable";
 import BracketedCombinator from "./dom/combinator/bracketed";
 import BracketedConstructor from "./dom/constructor/bracketed";
 import SimpleTypeDeclaration from "./dom/declaration/simpleType";
-import ReferenceSubstitution from "./dom/substitution/reference";
 import StatementSubstitution from "./dom/substitution/statement";
 import CombinatorDeclaration from "./dom/declaration/combinator";
 import ConstructorDeclaration from "./dom/declaration/constructor";

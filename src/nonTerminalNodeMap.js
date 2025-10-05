@@ -71,7 +71,6 @@ import ParenthesisedLabelsNode from "./node/parenthesisedLabels"
 import PropertyDeclarationNode from "./node/declaration/property";
 import variableDeclarationNode from "./node/declaration/variable";
 import StatementSubstitutionNode from "./node/substitution/statement";
-import ReferenceSubstitutionNode from "./node/substitution/reference";
 import SimpleTypeDeclarationNode from "./node/declaration/simpleType";
 import combinatorDeclarationNode from "./node/declaration/combinator";
 import complexTypeDeclarationNode from "./node/declaration/complexType";
@@ -149,7 +148,6 @@ import { RULE_RULE_NAME,
          PROPERTY_DECLARATION_RULE_NAME,
          VARIABLE_DECLARATION_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME,
-         REFERENCE_SUBSTITUTION_RULE_NAME,
          COMBINATOR_DECLARATION_RULE_NAME,
          SIMPLE_TYPE_DECLARATION_RULE_NAME,
          CONSTRUCTOR_DECLARATION_RULE_NAME,
@@ -228,7 +226,6 @@ const NonTerminalNodeMap = {
   [VARIABLE_DECLARATION_RULE_NAME]: variableDeclarationNode,
   [PROPERTY_DECLARATION_RULE_NAME]: PropertyDeclarationNode,
   [STATEMENT_SUBSTITUTION_RULE_NAME]: StatementSubstitutionNode,
-  [REFERENCE_SUBSTITUTION_RULE_NAME]: ReferenceSubstitutionNode,
   [COMBINATOR_DECLARATION_RULE_NAME]: combinatorDeclarationNode,
   [SIMPLE_TYPE_DECLARATION_RULE_NAME]: SimpleTypeDeclarationNode,
   [CONSTRUCTOR_DECLARATION_RULE_NAME]: constructorDeclarationNode,

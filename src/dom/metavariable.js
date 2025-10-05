@@ -87,32 +87,6 @@ export default domAssigned(class Metavariable {
     return equalTo;
   }
 
-  matchSubstitution(substitution, context) {
-    let substitutionMatched = false;
-
-    const metavariableString = this.string,  ///
-          substitutionString = substitution.getString();
-
-    context.trace(`Matching the '${substitutionString}' substitution against the '${metavariableString}' metavariable...`);
-
-    const metavariable = this, ///
-          judgement = context.findJudgementByMetavariable(metavariable);
-
-    if (judgement !== null) {
-      const declaration = judgement.getDeclaration();
-
-      substitutionMatched = declaration.matchSubstitution(substitution, context);
-    } else {
-      context.debug(`The '${metavariableString}' metavariable does not have a judgement.`);
-    }
-
-    if (substitutionMatched) {
-      context.debug(`...matched the '${substitutionString}' substitution against the '${metavariableString}' metavariable.`);
-    }
-
-    return substitutionMatched;
-  }
-
   verify(context) {
     let verifies;
 
@@ -204,50 +178,6 @@ export default domAssigned(class Metavariable {
     }
 
     return frameUnifies;
-  }
-
-  unifyReference(reference, substitutions, generalContext, specificContext) {
-    let referenceUnifies = false;
-
-    const referenceString = reference.getString(),
-          metavariableString = this.string; ///
-
-    specificContext.trace(`Unifying the '${referenceString}' reference with the '${metavariableString}' metavariable...`);
-
-    const referenceMetavariableUnifies = this.unifyReferenceMetavariable(reference, substitutions, generalContext, specificContext);
-
-    if (referenceMetavariableUnifies) {
-      referenceUnifies = true;
-    } else {
-      const metavariable = this, ///
-            simpleSubstitutionPresent = substitutions.isSimpleSubstitutionPresentByMetavariable(metavariable);
-
-      if (simpleSubstitutionPresent) {
-        const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable),
-              substitution = simpleSubstitution,  ///
-              substitutionReferenceEqualToReference = substitution.isReferenceEqualTo(reference);
-
-        if (substitutionReferenceEqualToReference) {
-          referenceUnifies = true;
-        }
-      } else {
-        const { ReferenceSubstitution } = dom,
-              context = specificContext,  ///
-              metavariable = this,  ///
-              referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context),
-              substitution = referenceSubstitution;  ///
-
-        substitutions.addSubstitution(substitution, specificContext);
-
-        referenceUnifies = true;
-      }
-    }
-
-    if (referenceUnifies) {
-      specificContext.debug(`...unified the '${referenceString}' reference with the '${metavariableString}' metavariable.`);
-    }
-
-    return referenceUnifies;
   }
 
   unifyStatement(statement, substitution, substitutions, generalContext, specificContext) {
@@ -353,39 +283,6 @@ export default domAssigned(class Metavariable {
     }
 
     return frameMetavariableUnifies;
-  }
-
-  unifyReferenceMetavariable(reference, substitutions, generalContext, specificContext) {
-    let referenceMetavariableUnifies = false;
-
-    const generalContextFilePath = generalContext.getFilePath(),
-          specificContextFilePath = specificContext.getFilePath();
-
-    if (generalContextFilePath === specificContextFilePath) {
-      const referenceString = reference.getString();
-
-      if (referenceString === this.string) {
-        referenceMetavariableUnifies = true;
-      } else {
-        const metavariableString = this.string, ///
-              referenceMetavariable = reference.getMetavariable(),
-              referenceMetavariableString = referenceMetavariable.getString();
-
-        specificContext.trace(`Unifying the reference's ${referenceMetavariableString}' metavariable with the '${metavariableString}' metavariable...`);
-
-        const specificMetavariable = referenceMetavariable, ///
-              generalMetavariable = this, ///
-              metavariableUnifiesIntrinsically = unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext);
-
-        referenceMetavariableUnifies = metavariableUnifiesIntrinsically; ///
-
-        if (referenceMetavariableUnifies) {
-          specificContext.debug(`...unified the reference's '${referenceMetavariableString}' metavariable with the '${metavariableString}' metavariable.`);
-        }
-      }
-    }
-
-    return referenceMetavariableUnifies;
   }
 
   unifyStatementMetavariable(statement, substitutions, generalContext, specificContext) {
