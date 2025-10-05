@@ -116,7 +116,8 @@ export default domAssigned(class Judgement {
 
     context.trace(`Verifying the '${judgementString}' derived judgement...`);
 
-    const reference = this.declaration.getReference(),
+    const metavariable = this.declaration.getMetavariable(),
+          reference = referenceFromMetavariable(metavariable, context),
           metaLemmaMetatheorem = context.findMetaLemmaMetatheoremByReference(reference),
           substitutions = metaLemmaMetatheorem.getSubstitutions(),
           substitutionsMatch = this.frame.matchSubstitutions(substitutions, context);
@@ -162,3 +163,12 @@ export default domAssigned(class Judgement {
     return judgement;
   }
 });
+
+function referenceFromMetavariable(metavariable, context) {
+  const { Reference } = dom,
+        metavariableNode = metavariable.getNode(),
+        reference = Reference.fromMetavariableNode(metavariableNode, context);
+
+  return reference;
+}
+
