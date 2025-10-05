@@ -19,9 +19,23 @@ export default class FrameNode extends NonTerminalNode {
     return metavariableNodes;
   }
 
+  getSingularDeclarationNode() {
+    const ruleName = DECLARATION_RULE_NAME,
+          singularDeclarationNode = this.getSingularTNodeByRuleName(ruleName);
+
+    return singularDeclarationNode;
+  }
+
   getSingularMetavariableNode() {
-    const ruleName = METAVARIABLE_RULE_NAME,
-          singularMetavariableNode = this.getSingularTNodeByRuleName(ruleName);
+    let singularMetavariableNode = null;
+
+    const singularDeclarationNode = this.getSingularDeclarationNode();
+
+    if (singularDeclarationNode !== null) {
+      const metavariableNode = singularDeclarationNode.getMetavariableNode();
+
+      singularMetavariableNode = metavariableNode;  ///
+    }
 
     return singularMetavariableNode;
   }
