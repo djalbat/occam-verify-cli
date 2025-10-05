@@ -195,13 +195,6 @@ export default domAssigned(class Reference {
     return reference;
   }
 
-  static fromDeclarationNode(declarationNode, context) {
-    const metavariableNode = declarationNode.getMetavariableNode(),
-          reference = referenceFromMetavariableNode(metavariableNode, context);
-
-    return reference;
-  }
-
   static fromMetavariableNode(metavariableNode, context) {
     const reference = referenceFromMetavariableNode(metavariableNode, context);
 

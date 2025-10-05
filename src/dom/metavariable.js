@@ -398,6 +398,13 @@ export default domAssigned(class Metavariable {
     return metavariable;
   }
 
+  static fromDeclarationNode(declarationNode, context) {
+    const metavariableNode = declarationNode.getMetavariableNode(),
+          metavariable = metavariableFromMetavariableNode(metavariableNode, context);
+
+    return metavariable;
+  }
+
   static fromMetavariableNode(metavariableNode, context) {
     let metavariable = null;
 

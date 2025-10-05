@@ -122,13 +122,6 @@ export default class StatementNode extends NonTerminalNode {
     return satisfiedAssertionNode;
   }
 
-  getSingularMetavariableNode() {
-    const ruleName = METAVARIABLE_RULE_NAME,
-          singularMetavariableNode = this.getSingularTNodeByRuleName(ruleName);
-
-    return singularMetavariableNode;
-  }
-
   getSingularMetaArgumentNode() {
     const ruleName = META_ARGUMENT_RULE_NAME,
           singularMetaArgumentNode = this.getNodeByRuleName(ruleName);

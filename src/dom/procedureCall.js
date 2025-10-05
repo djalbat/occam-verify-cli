@@ -71,7 +71,7 @@ export default domAssigned(class ProcedureCall {
   }
 
   unifyIndependently(substitutions, context) {
-    let unifiesIndependently;
+    let unifiesIndependently = false;
 
     const procedureCallString = this.string; ///
 
