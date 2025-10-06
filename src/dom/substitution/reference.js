@@ -21,6 +21,12 @@ export default domAssigned(class ReferenceSubstitution extends Substitution {
     return this.metavariable;
   }
 
+  isReferenceEqualTo(reference) {
+    const referenceEqualTo = this.reference.isEqualTo(reference);
+
+    return referenceEqualTo;
+  }
+
   static fromReferenceAndMetavariable(reference, metavariable, context) {
     const string = stringFromReferenceAndMetavariable(reference, metavariable),
           lexer = context.getLexer(),
