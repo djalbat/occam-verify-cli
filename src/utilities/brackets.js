@@ -21,6 +21,22 @@ export function stripBracketsFromTerm(term, context) {
   return term;
 }
 
+export function stripBracketsFromReference(reference, context) {
+  const referenceNode = reference.getNode(),
+    bracketedReferenceChildNode = bracketedReferenceChildNodeFromReferenceNode(referenceNode);
+
+  if (bracketedReferenceChildNode !== null) {
+    context = contextFromReference(reference, context); ///
+
+    const { Reference } = dom,
+          referenceNode = bracketedReferenceChildNode;  ///
+
+    reference = Reference.fromReferenceNode(referenceNode, context);
+  }
+
+  return reference;
+}
+
 export function stripBracketsFromStatement(statement, context) {
   const statementNode = statement.getNode(),
         bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
@@ -87,6 +103,16 @@ export function bracketedStatementChildNodeFromStatementNode(statementNode) {
   }
 
   return bracketedStatementChildNode;
+}
+
+function contextFromReference(reference, context) {
+  const referenceTokens = reference.getTokens(),
+        tokens = referenceTokens, ///
+        localContext = LocalContext.fromContextAndTokens(context, tokens);
+
+  context = localContext; ///
+
+  return context;
 }
 
 function contextFromStatement(statement, context) {

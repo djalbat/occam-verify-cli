@@ -4,12 +4,14 @@ import dom from "../dom";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
+import Metavariable from "./metavariable";
 
 const termNodeQuery = nodeQuery("/term"),
       frameNodeQuery = nodeQuery("/frame"),
       statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
+      declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable!"),
       frameDeclarationMetavariableNodeQuery = nodeQuery("/frame/declaration!/metavariable!");
 
 class MetaLevelUnifier extends Unifier {
@@ -108,6 +110,34 @@ class MetaLevelUnifier extends Unifier {
         termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
 
         return termUnifies;
+      }
+    },
+    {
+      generalNodeQuery: declarationMetavariableNodeQuery,
+      specificNodeQuery: declarationMetavariableNodeQuery,
+      unify: (generalDeclarationMetavariableNode, specificDeclarationMetavariableNode, substitutions, generalContext, specificContext) => {
+        let referenceUnifies;
+
+        const { Metavariable, Reference } = dom;
+
+        let context,
+            metavariableNode;
+
+        context = generalContext; ///
+
+        metavariableNode = generalDeclarationMetavariableNode;  ///
+
+        const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);  ///
+
+        context = specificContext;  ///
+
+        metavariableNode = specificDeclarationMetavariableNode; ///
+
+        const reference = Reference.fromMetavariableNode(metavariableNode, context);
+
+        referenceUnifies = metavariable.unifyReference(reference, substitutions, generalContext, specificContext);
+
+        return referenceUnifies;
       }
     }
   ];
