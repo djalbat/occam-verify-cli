@@ -229,7 +229,7 @@ class LocalContext {
 
   findMetavariable(metavariable, generalContext, specificContext) { return this.context.findMetavariable(metavariable, generalContext, specificContext); }
 
-  findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
+  findTypeByTypeName(typeName, includeDependencies = true) { return this.context.findTypeByTypeName(typeName, includeDependencies); }
 
   findLabelByMetavariable(metavariable) { return this.context.findLabelByMetavariable(metavariable); }
 
@@ -249,7 +249,7 @@ class LocalContext {
 
   isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
 
-  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
+  isTypePresentByTypeName(typeName, includeDependencies = true) { return this.context.isTypePresentByTypeName(typeName, includeDependencies); }
 
   isVariablePresentByVariableIdentifier(variableIdentifier, nested = true) {
     const variable = this.findVariableByVariableIdentifier(variableIdentifier, nested),

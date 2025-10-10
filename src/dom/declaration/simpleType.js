@@ -35,7 +35,7 @@ export default domAssigned(class SimpleTypeDeclaration {
 
     const typeDeclarationString = this.getString(); ///
 
-    this.context.trace(`Verifying the '${typeDeclarationString}' type declaration...`), this.node;
+    this.context.trace(`Verifying the '${typeDeclarationString}' simple type declaration...`, this.node);
 
     const typeVerifies = this.verifyType();
 
@@ -50,7 +50,7 @@ export default domAssigned(class SimpleTypeDeclaration {
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${typeDeclarationString}' type declaration.`, this.node);
+      this.context.debug(`...verified the '${typeDeclarationString}' simple type declaration.`, this.node);
     }
 
     return verifies;
@@ -61,19 +61,19 @@ export default domAssigned(class SimpleTypeDeclaration {
 
     const typeString = this.type.getString();
 
-    this.context.trace(`Verifying the '${typeString}' type...`), this.node;
+    this.context.trace(`Verifying the '${typeString}' simple type...`, this.node);
 
     const typeName = this.type.getName(),
           typePresent = this.context.isTypePresentByTypeName(typeName);
 
     if (typePresent) {
-      this.context.debug(`The type '${typeString}' is already present.`, this.node);
+      this.context.debug(`The '${typeString}' type is already present.`, this.node);
     } else {
       typeVerifies = true;
     }
 
     if (typeVerifies) {
-      this.context.debug(`...verified the '${typeString}' type.`, this.node);
+      this.context.debug(`...verified the '${typeString}' simple type.`, this.node);
     }
 
     return typeVerifies;
@@ -84,7 +84,7 @@ export default domAssigned(class SimpleTypeDeclaration {
 
     const superTypeString = superType.getString();
 
-    this.context.trace(`Verifying the '${superTypeString}' super-type...`), this.node;
+    this.context.trace(`Verifying the '${superTypeString}' super-type...`, this.node);
 
     const superTypeName = superType.getName(),
           superTypePresent = this.context.isTypePresentByTypeName(superTypeName);
@@ -103,7 +103,7 @@ export default domAssigned(class SimpleTypeDeclaration {
   verifySuperTypes() {
     let superTypesVerify = false;
 
-    this.context.trace(`Verifying the super-types...`), this.node;
+    this.context.trace(`Verifying the super-types...`, this.node);
 
     let superTypes;
 
@@ -124,7 +124,7 @@ export default domAssigned(class SimpleTypeDeclaration {
     if (typeBasic) {
       superTypesVerify = true;
 
-      this.context.trace(`The '${typeString}' type is basic.`, this.node)
+      this.context.trace(`The '${typeString}' simple type is basic.`, this.node)
     } else  {
       const superTypeNames = superTypes.map((superType) => {
               const superTypeName = superType.getName();
@@ -134,7 +134,7 @@ export default domAssigned(class SimpleTypeDeclaration {
             superTypeNamesIncludesTypeName = superTypeNames.includes(typeName);
 
       if (superTypeNamesIncludesTypeName) {
-        this.context.trace(`The '${typeName}' type cannot be a super-type `), this.node;
+        this.context.trace(`The '${typeName}' simple type cannot be a super-type `, this.node);
       } else {
         superTypesVerify = superTypes.every((superType) => {
           const superTypeVerifies = this.verifySuperType(superType);

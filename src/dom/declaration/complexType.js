@@ -32,20 +32,6 @@ export default domAssigned(class ComplexTypeDeclaration {
 
   getReleaseContext() { return this.context.getReleaseContext(); }
 
-  getReleaseTypes() {
-    const includeDependencies = false,
-          includeRelease = false,
-          releaseContext = this.getReleaseContext(),
-          contextTypes = this.context.getTypes(includeRelease),
-          releaseContextTypes = releaseContext.getTypes(includeDependencies),
-          releaseTypes = [
-            ...contextTypes,
-            ...releaseContextTypes
-          ];
-
-    return releaseTypes;
-  }
-
   verify() {
     let verifies = false;
 
@@ -79,28 +65,22 @@ export default domAssigned(class ComplexTypeDeclaration {
   verifyType() {
     let typeVerifies = false;
 
-    const complexTypeString = this.type.getString();
+    const typeString = this.type.getString();
 
-    this.context.trace(`Verifying the '${complexTypeString}' complex type...`, this.node);
+    this.context.trace(`Verifying the '${typeString}' complex type...`, this.node);
 
     const typeName = this.type.getName(),
-          releaseTypes = this.getReleaseTypes(),
-          typePresent = releaseTypes.some((releaseType) => {
-            const releaseTypeNameMatches = releaseType.matchTypeName(typeName);
-
-            if (releaseTypeNameMatches) {
-              return true;
-            }
-          });
+          includeDependencies = false, ///
+          typePresent = this.context.isTypePresentByTypeName(typeName, includeDependencies);
 
     if (typePresent) {
-      this.context.debug(`The type '${complexTypeString}' is already present in the package.`, this.node);
+      this.context.debug(`The '${typeString}' type is already present in the package.`, this.node);
     } else {
       typeVerifies = true;
     }
 
     if (typeVerifies) {
-      this.context.debug(`...verified the '${complexTypeString}' complex type.`, this.node);
+      this.context.debug(`...verified the '${typeString}' complex type.`, this.node);
     }
 
     return typeVerifies;
@@ -136,27 +116,23 @@ export default domAssigned(class ComplexTypeDeclaration {
 
     superTypes = this.type.getSuperTypes();
 
-    const typeName = this.type.getName(),
-          superTypesLength = superTypes.length;
+    const superTypesLength = superTypes.length;
 
     if (superTypesLength === 0) {
-      const type = this.context.findTypeByTypeName(typeName);
+      const superType = objectType; ///
 
-      if (type === null) {
-        const superType = objectType; ///
-
-        superTypes.push(superType);
-      }
+      superTypes.push(superType);
     }
 
-    const typeBasic = this.type.isBasic(),
+    const typeName = this.type.getName(),
+          typeBasic = this.type.isBasic(),
           typeString = this.type.getString();
 
     if (typeBasic) {
       superTypesVerify = true;
 
-      this.context.trace(`The '${typeString}' type is basic., this.node`)
-    } else {
+      this.context.trace(`The '${typeString}' complex type is basic.`, this.node)
+    } else  {
       const superTypeNames = superTypes.map((superType) => {
               const superTypeName = superType.getName();
 
@@ -165,15 +141,8 @@ export default domAssigned(class ComplexTypeDeclaration {
             superTypeNamesIncludesTypeName = superTypeNames.includes(typeName);
 
       if (superTypeNamesIncludesTypeName) {
-        this.context.trace(`The '${typeName}' type cannot be a super-type `, this.node);
+        this.context.trace(`The '${typeName}' complex type cannot be a super-type `, this.node);
       } else {
-        if (superTypesLength === 0) {
-          const type = this.context.findTypeByTypeName(typeName),
-                superType = type; ///
-
-          superTypes.push(superType);
-        }
-
         superTypesVerify = superTypes.every((superType) => {
           const superTypeVerifies = this.verifySuperType(superType);
 
@@ -191,8 +160,7 @@ export default domAssigned(class ComplexTypeDeclaration {
             return superType;
           });
 
-          const typeName = this.type.getName(),
-            string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes);
+          const string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes);
 
           this.type.setString(string);
 

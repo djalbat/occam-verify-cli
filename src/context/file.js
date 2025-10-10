@@ -146,13 +146,13 @@ export default class FileContext {
     return labels;
   }
 
-  getTypes(includeRelease = true) {
+  getTypes(includeRelease = true, includeDependencies = true) {
     const types = [];
 
     push(types, this.types);
 
     if (includeRelease) {
-      const releaseContextTypes = this.releaseContext.getTypes();
+      const releaseContextTypes = this.releaseContext.getTypes(includeDependencies);
 
       push(types, releaseContextTypes);
     }
@@ -563,8 +563,10 @@ export default class FileContext {
     return metavariable;
   }
 
-  findTypeByTypeName(typeName) {
-    let types = this.getTypes();
+  findTypeByTypeName(typeName, includeDependencies = true) {
+    const includeRelease = true;
+
+    let types = this.getTypes(includeRelease, includeDependencies);
 
     types = [
       ...types,
@@ -673,8 +675,8 @@ export default class FileContext {
     return metavariablePresent;
   }
 
-  isTypePresentByTypeName(typeName) {
-    const type = this.findTypeByTypeName(typeName),
+  isTypePresentByTypeName(typeName, includeDependencies = true) {
+    const type = this.findTypeByTypeName(typeName, includeDependencies),
           typePresent = (type !== null);
 
     return typePresent;
@@ -970,7 +972,7 @@ export default class FileContext {
           constructors = [],
           metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables);
 
     return fileContext;
   }
@@ -991,7 +993,7 @@ export default class FileContext {
           constructors = null,
           metatheorems = null,
           metavariables = null,
-          fileContext = new FileContext(releaseContext, filePath, lineIndex, node, types, rules, axioms, lemmas, variables, metaLemmas, theorems, conjectures, combinators, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, constructors, metatheorems, metavariables);
 
     fileContext.initialise(json);
 

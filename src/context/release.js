@@ -10,7 +10,6 @@ import FileContext from "../context/file";
 import NominalLexer from "../nominal/lexer";
 import NominalParser from "../nominal/parser";
 
-import { objectType } from "../dom/type";
 import { frameMetaType, referenceMetaType, statementMetaType } from "../dom/metaType";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
@@ -376,25 +375,6 @@ export default class ReleaseContext {
 
   addFileContext(fileContext) {
     this.fileContexts.push(fileContext);
-  }
-
-  findTypeByTypeName(typeName) {
-    let types = this.getTypes();
-
-    types = [
-      ...types,
-      objectType
-    ];
-
-    const type = types.find((type) => {
-      const typeNameMatches = type.matchTypeName(typeName);
-
-      if (typeNameMatches) {
-        return true;
-      }
-    }) || null;
-
-    return type;
   }
 
   getReleaseName() {
