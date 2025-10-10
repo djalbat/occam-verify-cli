@@ -146,13 +146,13 @@ export default class FileContext {
     return labels;
   }
 
-  getTypes(includeRelease = true, includeDependencies = true) {
+  getTypes(includeRelease = true) {
     const types = [];
 
     push(types, this.types);
 
     if (includeRelease) {
-      const releaseContextTypes = this.releaseContext.getTypes(includeDependencies);
+      const releaseContextTypes = this.releaseContext.getTypes();
 
       push(types, releaseContextTypes);
     }
@@ -563,10 +563,8 @@ export default class FileContext {
     return metavariable;
   }
 
-  findTypeByTypeName(typeName, includeDependencies = true) {
-    const includeRelease = true;
-
-    let types = this.getTypes(includeRelease, includeDependencies);
+  findTypeByTypeName(typeName) {
+    let types = this.getTypes();
 
     types = [
       ...types,
@@ -675,8 +673,8 @@ export default class FileContext {
     return metavariablePresent;
   }
 
-  isTypePresentByTypeName(typeName, includeDependencies = true) {
-    const type = this.findTypeByTypeName(typeName, includeDependencies),
+  isTypePresentByTypeName(typeName) {
+    const type = this.findTypeByTypeName(typeName),
           typePresent = (type !== null);
 
     return typePresent;

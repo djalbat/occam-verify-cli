@@ -70,8 +70,7 @@ export default domAssigned(class ComplexTypeDeclaration {
     this.context.trace(`Verifying the '${typeString}' complex type...`, this.node);
 
     const typeName = this.type.getName(),
-          includeDependencies = false, ///
-          typePresent = this.context.isTypePresentByTypeName(typeName, includeDependencies);
+          typePresent = this.context.isTypePresentByTypeName(typeName);
 
     if (typePresent) {
       this.context.debug(`The '${typeString}' type is already present in the package.`, this.node);
