@@ -35,7 +35,7 @@ export default domAssigned(class ComplexTypeDeclaration {
   verify() {
     let verifies = false;
 
-    const complexTypeDeclarationString = this.getString();
+    const complexTypeDeclarationString = this.string; ///
 
     this.context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration...`, this.node);
 

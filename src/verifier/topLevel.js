@@ -17,6 +17,7 @@ const errorNodeQuery = nodeQuery("/error"),
       variableDeclarationNodeQuery = nodeQuery("/variableDeclaration"),
       combinatorDeclarationNodeQuery = nodeQuery("/combinatorDeclaration"),
       simpleTypeDeclarationNodeQuery = nodeQuery("/simpleTypeDeclaration"),
+      typePrefixDeclarationNodeQuery = nodeQuery("/typePrefixDeclaration"),
       constructorDeclarationNodeQuery = nodeQuery("/constructorDeclaration"),
       complexTypeDeclarationNodeQuery = nodeQuery("/complexTypeDeclaration"),
       metavariableDeclarationNodeQuery = nodeQuery("/metavariableDeclaration");
@@ -143,6 +144,16 @@ class TopLevelVerifier extends Verifier {
               simpleTypeDeclarationVerifies = simpleTypeDeclaration.verify();
 
         return simpleTypeDeclarationVerifies;
+      }
+    },
+    {
+      nodeQuery: typePrefixDeclarationNodeQuery,
+      verify: (typePrefixDeclarationNode, context) => {
+        const { TypePrefixDeclaration } = dom,
+              typePrefixDeclaration = TypePrefixDeclaration.fromTypePrefixDeclarationNode(typePrefixDeclarationNode, context),
+              typePrefixDeclarationVerifies = typePrefixDeclaration.verify();
+
+        return typePrefixDeclarationVerifies;
       }
     },
     {

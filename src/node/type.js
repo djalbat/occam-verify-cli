@@ -6,12 +6,10 @@ export default class TypeNode extends NonTerminalNode {
   getTypeName() {
     let typeName;
 
-    this.someChildNode((childNode) => {
-      const childNodeTerminalNode = childNode.isTerminalNode();
-
-      if (childNodeTerminalNode) {
-        const terminalNode = childNode, ///
-              content = terminalNode.getContent();
+    this.someChildNode((childNode, index) => {
+      if (index === 0) {
+        const typeTerminalNode = childNode, ///
+              content = typeTerminalNode.getContent();
 
         typeName = content; ///
 
@@ -23,14 +21,12 @@ export default class TypeNode extends NonTerminalNode {
   }
 
   getTypePrefix() {
-    let typePrefix;
+    let typePrefix = null;
 
-    this.someChildNode((childNode) => {
-      const childNodeTerminalNode = childNode.isTerminalNode();
-
-      if (childNodeTerminalNode) {
-        const terminalNode = childNode, ///
-          content = terminalNode.getContent();
+    this.someChildNode((childNode, index) => {
+      if (index === 2) {
+        const typeTerminalNode = childNode, ///
+              content = typeTerminalNode.getContent();
 
         typePrefix = content; ///
 

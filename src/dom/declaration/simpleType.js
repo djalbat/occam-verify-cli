@@ -33,9 +33,9 @@ export default domAssigned(class SimpleTypeDeclaration {
   verify() {
     let verifies = false;
 
-    const typeDeclarationString = this.getString(); ///
+    const simpleTypeDeclarationString = this.string;  ///
 
-    this.context.trace(`Verifying the '${typeDeclarationString}' simple type declaration...`, this.node);
+    this.context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`, this.node);
 
     const typeVerifies = this.verifyType();
 
@@ -50,7 +50,7 @@ export default domAssigned(class SimpleTypeDeclaration {
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${typeDeclarationString}' simple type declaration.`, this.node);
+      this.context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration.`, this.node);
     }
 
     return verifies;
