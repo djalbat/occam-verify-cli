@@ -33,7 +33,7 @@ import { typesFromJSON,
          metatheoremsToMetatheoremsJSON,
          metavariablesToMetavariablesJSON } from "../utilities/json";
 
-const { push, first, filter } = arrayUtilities;
+const { push, filter } = arrayUtilities;
 
 export default class FileContext {
   constructor(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
@@ -106,117 +106,87 @@ export default class FileContext {
   getLabels(includeRelease = true) {
     const labels = [];
 
-    this.rules.forEach((rule) => {
-      const ruleLabels = rule.getLabels();
-
-      push(labels, ruleLabels);
-    });
-
-    this.axioms.forEach((axiom) => {
-      const axiomLabels = axiom.getLabels();
-
-      push(labels, axiomLabels);
-    });
-
-    this.lemmas.forEach((lemma) => {
-      const lemmaLabels = lemma.getLabels();
-
-      push(labels, lemmaLabels);
-    });
-
-    this.theorems.forEach((theorem) => {
-      const theoremLabels = theorem.getLabels();
-
-      push(labels, theoremLabels);
-    });
-
-    this.conjectures.forEach((conjecture) => {
-      const conjectureLabels = conjecture.getLabels();
-
-      push(labels, conjectureLabels);
-    });
-
-    this.metatheorems.forEach((metatheorem) => {
-      const metatheoremLabel = metatheorem.getLabel();
-
-      labels.push(metatheoremLabel);
-    });
-
     if (includeRelease) {
       const releaseContextLabels = this.releaseContext.getLabels();
 
       push(labels, releaseContextLabels);
+    } else {
+      this.rules.forEach((rule) => {
+        const ruleLabels = rule.getLabels();
+
+        push(labels, ruleLabels);
+      });
+
+      this.axioms.forEach((axiom) => {
+        const axiomLabels = axiom.getLabels();
+
+        push(labels, axiomLabels);
+      });
+
+      this.lemmas.forEach((lemma) => {
+        const lemmaLabels = lemma.getLabels();
+
+        push(labels, lemmaLabels);
+      });
+
+      this.theorems.forEach((theorem) => {
+        const theoremLabels = theorem.getLabels();
+
+        push(labels, theoremLabels);
+      });
+
+      this.conjectures.forEach((conjecture) => {
+        const conjectureLabels = conjecture.getLabels();
+
+        push(labels, conjectureLabels);
+      });
+
+      this.metatheorems.forEach((metatheorem) => {
+        const metatheoremLabel = metatheorem.getLabel();
+
+        labels.push(metatheoremLabel);
+      });
     }
 
     return labels;
   }
 
   getTypes(includeRelease = true) {
-    const types = [];
-
-    push(types, this.types);
-
-    if (includeRelease) {
-      const releaseContextTypes = this.releaseContext.getTypes();
-
-      push(types, releaseContextTypes);
-    }
+    const types = includeRelease ?
+                    this.releaseContext.getTypes() :
+                      this.types;
 
     return types;
   }
 
   getRules(includeRelease = true) {
-    const rules = []
-
-    push(rules, this.rules);
-
-    if (includeRelease) {
-      const releaseContextRules = this.releaseContext.getRules();
-
-      push(rules, releaseContextRules);
-    }
+    const rules = includeRelease ?
+                    this.releaseContext.getRules() :
+                      this.rules;
 
     return rules;
   }
 
   getAxioms(includeRelease = true) {
-    const axioms = [];
-
-    push(axioms, this.axioms);
-
-    if (includeRelease) {
-      const releaseContextAxioms = this.releaseContext.getAxioms();
-
-      push(axioms, releaseContextAxioms);
-    }
+    const axioms = includeRelease ?
+                     this.releaseContext.getAxioms() :
+                       this.axioms;
 
     return axioms;
   }
 
   getLemmas(includeRelease = true) {
-    const lemmas = [];
-
-    push(lemmas, this.lemmas);
-
-    if (includeRelease) {
-      const releaseContextLemmas = this.releaseContext.getLemmas();
-
-      push(lemmas, releaseContextLemmas);
-    }
+    const lemmas = includeRelease ?
+                     this.releaseContext.getLemmas() :
+                       this.lemmas;
 
     return lemmas;
   }
 
   getTheorems(includeRelease = true) {
-    const theorems = [];
-
-    push(theorems, this.theorems);
-
-    if (includeRelease) {
-      const releaseContextTheorems = this.releaseContext.getTheorems();
-
-      push(theorems, releaseContextTheorems);
-    }
+    const theorems = includeRelease ?
+                       this.releaseContext.getTheorems() :
+                         this.theorems;
 
     return theorems;
   }
@@ -226,97 +196,57 @@ export default class FileContext {
   }
 
   getProcedures(includeRelease = true) {
-    const procedures = [];
-
-    if (includeRelease) {
-      const releaseContextProcedures = this.releaseContext.getProcedures();
-
-      push(procedures, releaseContextProcedures);
-    }
+    const procedures = includeRelease ?
+                         this.releaseContext.getProcedures() :
+                           null;  ///
 
     return procedures;
   }
 
   getMetaLemmas(includeRelease = true) {
-    const metaLemmas = [];
-
-    push(metaLemmas, this.metaLemmas);
-
-    if (includeRelease) {
-      const releaseContextMetaLemmas = this.releaseContext.getMetaLemmas();
-
-      push(metaLemmas, releaseContextMetaLemmas);
-    }
+    const metaLemmas = includeRelease ?
+                         this.releaseContext.getMetaLemmas() :
+                           this.metaLemmas;
 
     return metaLemmas;
   }
 
   getConjectures(includeRelease = true) {
-    const conjectures = [];
-
-    push(conjectures, this.conjectures);
-
-    if (includeRelease) {
-      const releaseContextConjectures = this.releaseContext.getConjectures();
-
-      push(conjectures, releaseContextConjectures);
-    }
+    const conjectures = includeRelease ?
+                          this.releaseContext.getConjectures() :
+                            this.conjectures;
 
     return conjectures;
   }
 
   getCombinators(includeRelease = true) {
-    const combinators = [];
-
-    push(combinators, this.combinators);
-
-    if (includeRelease) {
-      const releaseContextCombinators = this.releaseContext.getCombinators();
-
-      push(combinators, releaseContextCombinators);
-    }
+    const combinators = includeRelease ?
+                          this.releaseContext.getCombinators() :
+                            this.combinators;
 
     return combinators;
   }
 
   getTypePrefixes(includeRelease = true) {
-    const typePrefixes = [];
-
-    push(typePrefixes, this.typePrefixes);
-
-    if (includeRelease) {
-      const releaseContextTypePrefixes = this.releaseContext.getTypePrefixes();
-
-      push(typePrefixes, releaseContextTypePrefixes);
-    }
+    const typePrefixes = includeRelease ?
+                           this.releaseContext.getTypePrefixes() :
+                             this.typePrefixes;
 
     return typePrefixes;
   }
 
   getConstructors(includeRelease = true) {
-    const constructors = [];
-
-    push(constructors, this.constructors);
-
-    if (includeRelease) {
-      const releaseContextConstructors = this.releaseContext.getConstructors();
-
-      push(constructors, releaseContextConstructors);
-    }
+    const constructors = includeRelease ?
+                           this.releaseContext.getConstructors() :
+                             this.constructors;
 
     return constructors;
   }
 
   getMetatheorems(includeRelease = true) {
-    const metatheorems = [];
-
-    push(metatheorems, this.metatheorems);
-
-    if (includeRelease) {
-      const releaseContextMetatheorems = this.releaseContext.getMetatheorems();
-
-      push(metatheorems, releaseContextMetatheorems);
-    }
+    const metatheorems = includeRelease ?
+                           this.releaseContext.getMetatheorems() :
+                             this.metatheorems;
 
     return metatheorems;
   }

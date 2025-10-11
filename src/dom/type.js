@@ -38,6 +38,18 @@ class Type {
     return this.superTypes;
   }
 
+  setProvisional(provisional) {
+    this.provisional = provisional;
+  }
+
+  replaceSuperType(oldSuperType, newSuperType) {
+    const index = this.superTypes.indexOf(oldSuperType),
+          start = index,
+          deleteCount = 1;
+
+    this.superTypes.splice(start, deleteCount, newSuperType);
+  }
+
   getProperties(includeSuperTypes = true) {
     const properties = [];
 
@@ -72,20 +84,22 @@ class Type {
     return provisional;
   }
 
-  setName(name) {
-    this.name = name;
+  getPrefixedName() {
+    const prefixName = this.getPrefixName(),
+          prefixedName = (prefixName !== null) ?
+                            `${prefixName}${this.name}` :
+                               this.name;
+
+    return prefixedName;
   }
 
-  setSuperTypes(superTypes) {
-    this.superTypes = superTypes;
-  }
+  getPrefixName() {
+    const prefix = this.getPrefix(),
+          prefixName = (prefix !== null) ?
+                          prefix.getName() :
+                            null;
 
-  setProperties(properties) {
-    this.properties = properties;
-  }
-
-  setProvisional(provisional) {
-    this.provisional = provisional;
+    return prefixName;
   }
 
   getPrefix() {
@@ -228,9 +242,9 @@ class Type {
     if (naked || internal) {
       typeNameMatches = (this.name === typeName);
     } else {
-      const prefix = this.getPrefix(),
-            name = (prefix !== null) ?
-                    `${prefix}${this.name}` :
+      const prefixName = this.getPrefixName(),
+            name = (prefixName !== null) ?
+                    `${prefixName}${this.name}` :
                        this.name;
 
       typeNameMatches = (name === typeName);
@@ -286,6 +300,15 @@ class Type {
 
   static fromTypeNode(typeNode, context) {
     const type = typeFromTypeNode(typeNode, context);
+
+    return type;
+  }
+
+  static fromSuperTypeNode(superTypeNode, context) {
+    context = null; ///
+
+    const typeNode = superTypeNode, ///
+          type = typeFromTypeNode(typeNode, context);
 
     return type;
   }
@@ -371,10 +394,17 @@ export default domAssigned(Type);
 function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
   const superTypeNodes = simpleTypeDeclarationNode.getSuperTypeNodes(),
         superTypes = superTypeNodes.map((superTypeNode) => {
-          const superType = Type.fromTypeNode(superTypeNode, context);
+          const superType = Type.fromSuperTypeNode(superTypeNode, context);
 
           return superType;
-        });
+        }),
+        superTypesLength = superTypes.length;
+
+  if (superTypesLength === 0) {
+    const superType = objectType; ///
+
+    superTypes.push(superType);
+  }
 
   return superTypes;
 }
@@ -382,10 +412,17 @@ function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, cont
 function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
   const superTypeNodes = complexTypeDeclarationNode.getSuperTypeNodes(),
         superTypes = superTypeNodes.map((superTypeNode) => {
-          const superType = Type.fromTypeNode(superTypeNode, context);
+          const superType = Type.fromSuperTypeNode(superTypeNode, context);
 
           return superType;
-        });
+        }),
+        superTypesLength = superTypes.length;
+
+  if (superTypesLength === 0) {
+    const superType = objectType; ///
+
+    superTypes.push(superType);
+  }
 
   return superTypes;
 }

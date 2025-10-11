@@ -2,7 +2,6 @@
 
 import dom from "../../dom";
 
-import { objectType } from "../type";
 import { domAssigned } from "../../dom";
 import { stringFromTypeNameTypePrefixNameAndSuperTypes } from "../../utilities/type";
 
@@ -103,11 +102,26 @@ export default domAssigned(class ComplexTypeDeclaration {
 
     this.context.trace(`Verifying the '${superTypeString}' super-type...`, this.node);
 
-    const superTypeName = superType.getName(),
-          superTypePresent = this.context.isTypePresentByTypeName(superTypeName);
+    const typeName = this.type.getName(),
+          superTypeName = superTypeString,  ///
+          typeNameMatches = (typeName === superTypeName);
 
-    if (superTypePresent) {
-      superTypeVerifies = true;
+    if (typeNameMatches) {
+      this.context.trace(`The super-type's name matches the ${typeName}' complex type's name.`, this.node);
+    } else {
+      const oldSuperType = superType; ///
+
+      superType = this.context.findTypeByTypeName(superTypeName);
+
+      const superTypePresent = (superType !== null);
+
+      if (superTypePresent) {
+        const newSuperType = superType; ///
+
+        this.type.replaceSuperType(oldSuperType, newSuperType);
+
+        superTypeVerifies = true;
+      }
     }
 
     if (superTypeVerifies) {
@@ -118,65 +132,32 @@ export default domAssigned(class ComplexTypeDeclaration {
   }
 
   verifySuperTypes() {
-    let superTypesVerify = false;
+    let superTypesVerify;
 
-    this.context.trace(`Verifying the super-types...`, this.node);
+    const typeString = this.type.getString();
 
-    let superTypes;
+    this.context.trace(`Verifying the super-types of the '${typeString}' complex type...`, this.node);
 
-    superTypes = this.type.getSuperTypes();
-
-    const superTypesLength = superTypes.length;
-
-    if (superTypesLength === 0) {
-      const superType = objectType; ///
-
-      superTypes.push(superType);
-    }
-
-    const typeName = this.type.getName(),
-          typeBasic = this.type.isBasic(),
-          typeString = this.type.getString();
+    const typeBasic = this.type.isBasic();
 
     if (typeBasic) {
       superTypesVerify = true;
 
       this.context.trace(`The '${typeString}' complex type is basic.`, this.node)
     } else  {
-      const superTypeNames = superTypes.map((superType) => {
-              const superTypeName = superType.getName();
+      const superTypes = this.type.getSuperTypes();
 
-              return superTypeName;
-            }),
-            superTypeNamesIncludesTypeName = superTypeNames.includes(typeName);
+      superTypesVerify = superTypes.every((superType) => {
+        const superTypeVerifies = this.verifySuperType(superType);
 
-      if (superTypeNamesIncludesTypeName) {
-        this.context.trace(`The '${typeName}' complex type cannot be a super-type `, this.node);
-      } else {
-        superTypesVerify = superTypes.every((superType) => {
-          const superTypeVerifies = this.verifySuperType(superType);
-
-          if (superTypeVerifies) {
-            return true;
-          }
-        });
-
-        if (superTypesVerify) {
-          superTypes = superTypes.map((superType) => {
-            const superTypeName = superType.getName();
-
-            superType = this.context.findTypeByTypeName(superTypeName);
-
-            return superType;
-          });
-
-          this.type.setSuperTypes(superTypes);
+        if (superTypeVerifies) {
+          return true;
         }
-      }
+      });
     }
 
     if (superTypesVerify) {
-      this.context.debug(`...verified the super-types.`, this.node);
+      this.context.debug(`...verified the super-types of the '${typeString}' complex type.`, this.node);
     }
 
     return superTypesVerify;
