@@ -217,7 +217,7 @@ export default domAssigned(class Variable {
     const { Variable } = dom,
           provisional = variableDeclarationNode.isProvisional(),
           typeNode = variableDeclarationNode.getTypeNode(),
-          type = typeFromTypeNode(typeNode);
+          type = typeFromTypeNode(typeNode, context);
 
     type.setProvisional(provisional);
 

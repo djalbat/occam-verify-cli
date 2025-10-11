@@ -4,7 +4,7 @@ import dom from "../dom";
 
 import { objectType } from "../dom/type";
 
-export function typeFromTypeNode(typeNode) {
+export function typeFromTypeNode(typeNode, context) {
   let type;
 
   if (typeNode === null) {
@@ -18,7 +18,7 @@ export function typeFromTypeNode(typeNode) {
           properties = null,
           provisional = null;
 
-    type = new Type(string, name, superTypes, properties, provisional);
+    type = new Type(context, string, name, superTypes, properties, provisional);
   }
 
   return type;

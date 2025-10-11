@@ -67,7 +67,14 @@ export default domAssigned(class TypePrefixDeclaration {
       if (typePrefixPresent) {
         this.context.debug(`The '${typePrefixString}' type prefix is already present.`, this.node);
       } else {
-        debugger
+        const typeName = typePrefixName,  ///
+              typePresent = this.context.isTypePresentByTypeName(typeName);
+
+        if (typePresent) {
+          this.context.debug(`The '${typePrefixString}' type is already present.`, this.node);
+        } else {
+          typePrefixVerifies = true;
+        }
       }
     }
 

@@ -28,7 +28,7 @@ export default domAssigned(class Property {
     this.type = type;
   }
 
-  matchTypeName(typeName) { return this.type.matchTypeName(typeName); }
+  matchTypeName(typeName, prefixed, context) { return this.type.matchTypeName(typeName, prefixed, context); }
 
   matchPropertyName(propertyName) {
     const propertyNameMatches = (this.name === propertyName);

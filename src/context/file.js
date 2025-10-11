@@ -602,7 +602,7 @@ export default class FileContext {
     return metavariable;
   }
 
-  findTypeByTypeName(typeName) {
+  findTypeByTypeName(typeName, prefixed = true) {
     let types = this.getTypes();
 
     types = [
@@ -610,13 +610,14 @@ export default class FileContext {
       objectType
     ];
 
-    const type = types.find((type) => {
-      const typeNameMatches = type.matchTypeName(typeName);
+    const context = this, ///
+          type = types.find((type) => {
+            const typeNameMatches = type.matchTypeName(typeName, prefixed, context);
 
-      if (typeNameMatches) {
-        return true;
-      }
-    }) || null;
+            if (typeNameMatches) {
+              return true;
+            }
+          }) || null;
 
     return type;
   }
@@ -725,8 +726,8 @@ export default class FileContext {
     return metavariablePresent;
   }
 
-  isTypePresentByTypeName(typeName) {
-    const type = this.findTypeByTypeName(typeName),
+  isTypePresentByTypeName(typeName, prefixed = true) {
+    const type = this.findTypeByTypeName(typeName, prefixed),
           typePresent = (type !== null);
 
     return typePresent;

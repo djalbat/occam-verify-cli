@@ -13,12 +13,17 @@ import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, pro
 const { push, first } = arrayUtilities;
 
 class Type {
-  constructor(string, name, superTypes, properties, provisional) {
+  constructor(context, string, name, superTypes, properties, provisional) {
+    this.context = context;
     this.string = string;
     this.name = name;
     this.superTypes = superTypes;
     this.properties = properties;
     this.provisional = provisional;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {
@@ -85,6 +90,42 @@ class Type {
 
   setProvisional(provisional) {
     this.provisional = provisional;
+  }
+
+  getPrefix() {
+    let prefix = null;
+
+    if (this.context !== null) {
+      const typePrefix = this.context.getTypePrefix();
+
+      prefix = typePrefix;  ///
+    }
+
+    return prefix;
+  }
+
+  isInternal(context) {
+    let internal,
+        fileContext,
+        releaseContext;
+
+    if (this.context !== null) {
+      fileContext = this.context; ///
+
+      releaseContext = fileContext.getReleaseContext();
+
+      const internalReleaseContext = releaseContext; ///
+
+      fileContext = context;  ///
+
+      releaseContext = fileContext.getReleaseContext();
+
+      internal = (internalReleaseContext === releaseContext); ///
+    } else {
+      internal = false;
+    }
+
+    return internal;
   }
 
   isBasic() {
@@ -182,8 +223,22 @@ class Type {
     return equalToOrSuperTypeOf;
   }
 
-  matchTypeName(typeName) {
-    const typeNameMatches = (this.name === typeName);
+  matchTypeName(typeName, prefixed, context) {
+    let typeNameMatches;
+
+    const naked = !prefixed,
+          internal = this.isInternal(context);
+
+    if (naked || internal) {
+      typeNameMatches = (this.name === typeName);
+    } else {
+      const prefix = this.getPrefix(),
+            name = (prefix !== null) ?
+                    `${prefix}${this.name}` :
+                       this.name;
+
+      typeNameMatches = (name === typeName);
+    }
 
     return typeNameMatches;
   }
@@ -227,7 +282,7 @@ class Type {
           superTypes = superTypesFromJSON(json, context),
           typeName = name,  ///
           string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
-          type = new Type(string, name, superTypes, properties, provisional);
+          type = new Type(context, string, name, superTypes, properties, provisional);
 
     return type;
   }
@@ -246,7 +301,8 @@ class Type {
   }
 
   static fromTypeAndProvisional(type, provisional) {
-    const name = type.getName(),
+    const context = type.getContext(),
+          name = type.getName(),
           superType = type, ///
           typeName = name,  ///
           superTypes = [
@@ -255,7 +311,7 @@ class Type {
           string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
           properties = type.getProperties();
 
-    type = new Type(string, name, superTypes, properties, provisional);  ///
+    type = new Type(context, string, name, superTypes, properties, provisional);  ///
 
     return type;
   }
@@ -274,7 +330,7 @@ class Type {
           name = typeName,  ///
           superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
           string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
-          type = new Type(string, name, superTypes, properties, provisional);
+          type = new Type(context, string, name, superTypes, properties, provisional);
 
     return type;
   }
@@ -286,7 +342,7 @@ class Type {
           superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
           properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
           string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
-          type = new Type(string, name, superTypes, properties, provisional);
+          type = new Type(context, string, name, superTypes, properties, provisional);
 
     return type;
   }
@@ -348,12 +404,13 @@ function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, co
 
 class ObjectType extends Type {
   static fromNothing() {
-    const name = OBJECT_TYPE_NAME,
+    const context = null,
+          name = OBJECT_TYPE_NAME,
           string = name,  ///
           superTypes = [],
           properties = [],
           provisional = false,
-          objectType = new ObjectType(string, name, superTypes, properties, provisional);
+          objectType = new ObjectType(context, string, name, superTypes, properties, provisional);
 
     return objectType;
   }

@@ -251,7 +251,7 @@ class LocalContext {
 
   isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
 
-  isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
+  isTypePresentByTypeName(typeName, prefixed = true) { return this.context.isTypePresentByTypeName(typeName, prefixed); }
 
   isTypePrefixPresentByTypePrefixName(typePrefixName) { return this.context.isTypePrefixPresentByTypePrefixName(typePrefixName); }
 

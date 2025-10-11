@@ -231,7 +231,8 @@ export default domAssigned(class ComplexTypeDeclaration {
 
     if (propertyVerifies) {
       const typeName = this.type.getName(),
-            typeNameMatches = property.matchTypeName(typeName);
+            prefixed = true,
+            typeNameMatches = property.matchTypeName(typeName, prefixed, this.context);
 
       if (typeNameMatches) {
         property.setType(this.type);
