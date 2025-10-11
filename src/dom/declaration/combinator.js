@@ -33,7 +33,7 @@ export default domAssigned(class CombinatorDeclaration {
   verify() {
     let verifies = false;
 
-    const combinatorDeclarationString = this.getString(); ///
+    const combinatorDeclarationString = this.string;  ///
 
     this.context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`, this.node);
 

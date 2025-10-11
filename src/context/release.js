@@ -13,7 +13,7 @@ import NominalParser from "../nominal/parser";
 import { frameMetaType, referenceMetaType, statementMetaType } from "../dom/metaType";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
-const { tail, push, clear, resolve } = arrayUtilities,
+const { tail, push, first, clear, resolve } = arrayUtilities,
       { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities,
       { isFilePathFurtleFilePath, isFilePathNominalFilePath } = filePathUtilities;
@@ -105,6 +105,22 @@ export default class ReleaseContext {
     });
 
     return fileContext;
+  }
+
+  getTypePrefix() {
+    let typePrefix = null;
+
+    const includeDependencies = false,
+          typePrefixes = this.getTypePrefixes(includeDependencies),
+          typePrefixesLength = typePrefixes.length;
+
+    if (typePrefixesLength === 1) {
+      const firstTypePrefix = first(typePrefixes);
+
+      typePrefix = firstTypePrefix; ///
+    }
+
+    return typePrefix;
   }
 
   getLabels(includeDependencies = true) {
@@ -323,6 +339,30 @@ export default class ReleaseContext {
     }
 
     return combinators;
+  }
+
+  getTypePrefixes(includeDependencies = true) {
+    const typePrefixes = [];
+
+    this.fileContexts.forEach((fileContext) => {
+      const includeRelease = false,
+            fileContextTypePrefixes = fileContext.getTypePrefixes(includeRelease);
+
+      push(typePrefixes, fileContextTypePrefixes);
+    });
+
+    if (includeDependencies) {
+      const dependencyReleaseContexts = this.getDependencyReleaseContexts();
+
+      dependencyReleaseContexts.forEach((releaseContext) => {
+        const includeDependencies = false,
+              releaseContextTypePrefixes = releaseContext.getTypePrefixes(includeDependencies);
+
+        push(typePrefixes, releaseContextTypePrefixes);
+      });
+    }
+
+    return typePrefixes;
   }
 
   getConstructors(includeDependencies = true) {

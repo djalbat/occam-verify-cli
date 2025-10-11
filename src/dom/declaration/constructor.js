@@ -33,7 +33,7 @@ export default domAssigned(class ConstructorDeclaration {
   verify() {
     let verifies;
 
-    const constructorDeclarationString = this.getString(); ///
+    const constructorDeclarationString = this.string; ///
 
     this.context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`, this.node);
 

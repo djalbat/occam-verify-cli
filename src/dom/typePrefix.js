@@ -3,23 +3,29 @@
 import { domAssigned } from "../dom";
 
 class TypePrefix {
-  constructor(string, prefix) {
+  constructor(string, name) {
     this.string = string;
-    this.prefix = prefix;
+    this.name = name;
   }
 
   getString() {
     return this.string;
   }
 
-  getPrefix() {
-    return this.prefix;
+  getName() {
+    return this.name;
+  }
+
+  matchTypePrefixName(typePrefixName) {
+    const typePrefixNameMatches = (this.name === typePrefixName);
+
+    return typePrefixNameMatches;
   }
 
   toJSON() {
-    const prefix = this.prefix,
+    const name = this.name,
           json = {
-            prefix
+            name
           };
 
     return json;
@@ -28,11 +34,20 @@ class TypePrefix {
   static name = "TypePrefix";
 
   static fromJSON(json, context) {
-    const { prefix } = json,
-          string = prefix,  ///
-          typePrefix = new TypePrefix(string, prefix);
+    const { name } = json,
+          string = name,  ///
+          typePrefix = new TypePrefix(string, name);
 
     return typePrefix;
+  }
+
+  static fromTypePrefixDeclarationNode(typePrefixDeclarationNode, context) {
+    const typePrefix = typePrefixDeclarationNode.getTypePrefix(),
+          name = typePrefix,  ///
+          string = name,  ///
+          type = new TypePrefix(string, name);
+
+    return type;
   }
 }
 

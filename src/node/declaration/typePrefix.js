@@ -7,9 +7,9 @@ import { TYPE_PREFIX_RULE_NAME } from "../../ruleNames";
 export default class TypePrefixDeclarationNode extends NonTerminalNode {
   getTypePrefix() {
     const typePrefixNode = this.getTypePrefixNode(),
-          typePrefix = typePrefixNode.getTypePrefix();
+          typePrefixName = typePrefixNode.getTypePrefixName();
 
-    return typePrefix;
+    return typePrefixName;
   }
 
   getTypePrefixNode() {

@@ -20,21 +20,21 @@ export default class TypeNode extends NonTerminalNode {
     return typeName;
   }
 
-  getTypePrefix() {
-    let typePrefix = null;
+  getTypePrefixName() {
+    let typePrefixName = null;
 
     this.someChildNode((childNode, index) => {
       if (index === 2) {
         const typeTerminalNode = childNode, ///
               content = typeTerminalNode.getContent();
 
-        typePrefix = content; ///
+        typePrefixName = content; ///
 
         return true;
       }
     });
 
-    return typePrefix;
+    return typePrefixName;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TypeNode, ruleName, childNodes, opacity, precedence); }

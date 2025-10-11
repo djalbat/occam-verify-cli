@@ -3,7 +3,6 @@
 import dom from "../../dom";
 
 import { domAssigned } from "../../dom";
-import { stringFromTypeNameNameAndSuperTypes } from "../../utilities/type";
 
 export default domAssigned(class TypePrefixDeclaration {
   constructor(context, node, string, typePrefix) {
@@ -32,11 +31,15 @@ export default domAssigned(class TypePrefixDeclaration {
   verify() {
     let verifies = false;
 
-    const typePrefixDeclarationString = this.getString(); ///
+    const typePrefixDeclarationString = this.string;  ///
 
     this.context.trace(`Verifying the '${typePrefixDeclarationString}' type prefix declaration...`, this.node);
 
-    debugger
+    const typePrefixVerifies = this.verifyTypePrefix();
+
+    if (typePrefixVerifies) {
+      verifies = true;
+    }
 
     if (verifies) {
       this.context.debug(`...verified the '${typePrefixDeclarationString}' type prefix declaration.`, this.node);
@@ -45,14 +48,44 @@ export default domAssigned(class TypePrefixDeclaration {
     return verifies;
   }
 
+  verifyTypePrefix() {
+    let typePrefixVerifies = false;
+
+    const typePrefixString = this.typePrefix.getString();
+
+    this.context.trace(`Verifying the '${typePrefixString}' type prefix...`, this.node);
+
+    const typePrefix = this.context.getTypePrefix();
+
+    if (typePrefix !== null) {
+      this.context.debug(`The package already has a '${typePrefixString}' type prefix.`, this.node);
+    } else {
+
+      const typePrefixName = this.typePrefix.getName(),
+            typePrefixPresent = this.context.isTypePrefixPresentByTypePrefixName(typePrefixName);
+
+      if (typePrefixPresent) {
+        this.context.debug(`The '${typePrefixString}' type prefix is already present.`, this.node);
+      } else {
+        debugger
+      }
+    }
+
+    if (typePrefixVerifies) {
+      this.context.debug(`...verified the '${typePrefixString}' type prefix.`, this.node);
+    }
+
+    return typePrefixVerifies;
+  }
+
   static name = "TypePrefixDeclaration";
 
   static fromTypePrefixDeclarationNode(typePrefixDeclarationNode, context) {
     const { TypePrefix } = dom,
           node = typePrefixDeclarationNode, ///
           typePrefix = TypePrefix.fromTypePrefixDeclarationNode(typePrefixDeclarationNode, context),
-          prefix = typePrefix.getPrefix(),
-          string = prefix,  ///
+          typePrefixName = typePrefix.getName(),
+          string = typePrefixName,  ///
           simpleTypeDeclaration = new TypePrefixDeclaration(context, node, string, typePrefix);
 
     return simpleTypeDeclaration;

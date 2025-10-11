@@ -116,6 +116,8 @@ class LocalContext {
 
   getConstructors() { return this.context.getConstructors(); }
 
+  getTypePrefix() { return this.context.getTypePrefix(); }
+
   addAxiom(axiom) { this.context.addAxiom(axiom); }
 
   addLemma(lemma) { this.context.addLemma(lemma); }
@@ -250,6 +252,8 @@ class LocalContext {
   isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
 
   isTypePresentByTypeName(typeName) { return this.context.isTypePresentByTypeName(typeName); }
+
+  isTypePrefixPresentByTypePrefixName(typePrefixName) { return this.context.isTypePrefixPresentByTypePrefixName(typePrefixName); }
 
   isVariablePresentByVariableIdentifier(variableIdentifier, nested = true) {
     const variable = this.findVariableByVariableIdentifier(variableIdentifier, nested),

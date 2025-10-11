@@ -278,7 +278,17 @@ export default class FileContext {
   }
 
   getTypePrefixes(includeRelease = true) {
-    return this.typePrefixes;
+    const typePrefixes = [];
+
+    push(typePrefixes, this.typePrefixes);
+
+    if (includeRelease) {
+      const releaseContextTypePrefixes = this.releaseContext.getTypePrefixes();
+
+      push(typePrefixes, releaseContextTypePrefixes);
+    }
+
+    return typePrefixes;
   }
 
   getConstructors(includeRelease = true) {
@@ -319,15 +329,23 @@ export default class FileContext {
     return fileContext;
   }
 
-  getTypePrefix() {
+  getTypePrefix(includeRelease = true) {
     let typePrefix = null;
 
-    const typePrefixesLength = this.typePrefixes.length;
+    if (typePrefix === null) {
+      const typePrefixesLength = this.typePrefixes.length;
 
-    if (typePrefixesLength === 1) {
-      const firstTypePrefix = first(this.typePrefixes);
+      if (typePrefixesLength === 1) {
+        const firstTypePrefix = first(this.typePrefixes);
 
-      typePrefix = firstTypePrefix; ///
+        typePrefix = firstTypePrefix; ///
+      }
+    }
+
+    if (typePrefix === null) {
+      if (includeRelease) {
+        typePrefix = this.releaseContext.getTypePrefix();
+      }
     }
 
     return typePrefix;
@@ -603,6 +621,19 @@ export default class FileContext {
     return type;
   }
 
+  findTypePrefixByTypePrefixName(typePrefixName) {
+    const typePrefixes = this.getTypePrefixes(),
+          typePrefix = typePrefixes.find((typePrefix) => {
+            const typePrefixNameMatches = typePrefix.matchTypePrefixName(typePrefixName);
+
+            if (typePrefixNameMatches) {
+              return true;
+            }
+          }) || null;
+
+    return typePrefix;
+  }
+
   findMetaTypeByMetaTypeName(metaTypeName) {
     const metaTypes = this.getMetaTypes(),
           metaType = metaTypes.find((metaType) => {
@@ -699,6 +730,13 @@ export default class FileContext {
           typePresent = (type !== null);
 
     return typePresent;
+  }
+
+  isTypePrefixPresentByTypePrefixName(typePrefixName) {
+    const typePrefix = this.findTypePrefixByTypePrefixName(typePrefixName),
+          typePrefixPresent = (typePrefix !== null);
+
+    return typePrefixPresent;
   }
 
   isVariablePresentByVariableIdentifier(variableIdentifier) {
