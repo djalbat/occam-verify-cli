@@ -4,14 +4,15 @@ import dom from "../../dom";
 
 import { objectType } from "../type";
 import { domAssigned } from "../../dom";
-import { stringFromTypeNameNameAndSuperTypes } from "../../utilities/type";
+import { stringFromTypeNameTypePrefixNameAndSuperTypes } from "../../utilities/type";
 
 export default domAssigned(class ComplexTypeDeclaration {
-  constructor(context, node, string, type) {
+  constructor(context, node, string, type, prefixed) {
     this.context = context;
     this.node = node;
     this.string = string;
     this.type = type;
+    this.prefixed = prefixed;
   }
 
   getContext() {
@@ -30,6 +31,10 @@ export default domAssigned(class ComplexTypeDeclaration {
     return this.type;
   }
 
+  isPrefixed() {
+    return this.prefixed;
+  }
+
   getReleaseContext() { return this.context.getReleaseContext(); }
 
   verify() {
@@ -39,18 +44,24 @@ export default domAssigned(class ComplexTypeDeclaration {
 
     this.context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration...`, this.node);
 
-    const typeVerifies = this.verifyType();
+    if (this.prefixed) {
+      const typeString = this.type.getString();
 
-    if (typeVerifies) {
-      const superTypesVerify = this.verifySuperTypes();
+      this.context.trace(`The '${typeString}' type is prefixed.`);
+    } else {
+      const typeVerifies = this.verifyType();
 
-      if (superTypesVerify) {
-        const propertiesVerify = this.verifyProperties();
+      if (typeVerifies) {
+        const superTypesVerify = this.verifySuperTypes();
 
-        if (propertiesVerify) {
-          this.context.addType(this.type);
+        if (superTypesVerify) {
+          const propertiesVerify = this.verifyProperties();
 
-          verifies = true;
+          if (propertiesVerify) {
+            this.context.addType(this.type);
+
+            verifies = true;
+          }
         }
       }
     }
@@ -158,10 +169,6 @@ export default domAssigned(class ComplexTypeDeclaration {
 
             return superType;
           });
-
-          const string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes);
-
-          this.type.setString(string);
 
           this.type.setSuperTypes(superTypes);
         }
@@ -304,12 +311,14 @@ export default domAssigned(class ComplexTypeDeclaration {
 
   static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
     const { Type } = dom,
-          node = complexTypeDeclarationNode,  ///
           type = Type.fromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
+          node = complexTypeDeclarationNode,  ///
+          prefixed = complexTypeDeclarationNode.isPrefixed(),
+          typePrefixName = complexTypeDeclarationNode.getTypePrefixName(),
           typeName = type.getName(),
           superTypes = type.getSuperTypes(),
-          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
-          complexTypeDeclaration = new ComplexTypeDeclaration(context, node, string, type);
+          string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
+          complexTypeDeclaration = new ComplexTypeDeclaration(context, node, string, type, prefixed);
 
     return complexTypeDeclaration;
   }

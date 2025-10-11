@@ -7,7 +7,7 @@ import dom from "../dom";
 import { domAssigned } from "../dom";
 import { OBJECT_TYPE_NAME } from "../constants";
 import { typeFromTypeNode } from "../utilities/node";
-import { stringFromTypeNameNameAndSuperTypes } from "../utilities/type";
+import { stringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/type";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
 
 const { push, first } = arrayUtilities;
@@ -70,10 +70,6 @@ class Type {
     }
 
     return provisional;
-  }
-
-  setString(string) {
-    this.string = string;
   }
 
   setName(name) {
@@ -281,7 +277,8 @@ class Type {
           properties = propertiesFromJSON(json, context),
           superTypes = superTypesFromJSON(json, context),
           typeName = name,  ///
-          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
+          typePrefixName = null,
+          string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
           type = new Type(context, string, name, superTypes, properties, provisional);
 
     return type;
@@ -305,10 +302,11 @@ class Type {
           name = type.getName(),
           superType = type, ///
           typeName = name,  ///
+          typePrefixName = null,
           superTypes = [
             superType
           ],
-          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
+          string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
           properties = type.getProperties();
 
     type = new Type(context, string, name, superTypes, properties, provisional);  ///
@@ -327,9 +325,10 @@ class Type {
     const properties = [],
           provisional = simpleTypeDeclarationNode.isProvisional(),
           typeName = simpleTypeDeclarationNode.getTypeName(),
+          typePrefixName = simpleTypeDeclarationNode.getTypePrefixName(),
           name = typeName,  ///
           superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
-          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
+          string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
           type = new Type(context, string, name, superTypes, properties, provisional);
 
     return type;
@@ -338,10 +337,11 @@ class Type {
   static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
     const provisional = complexTypeDeclarationNode.isProvisional(),
           typeName = complexTypeDeclarationNode.getTypeName(),
-          name = typeName,
+          typePrefixName = complexTypeDeclarationNode.getTypePrefixName(),
+          name = typeName,  ///
           superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
           properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
-          string = stringFromTypeNameNameAndSuperTypes(typeName, superTypes),
+          string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
           type = new Type(context, string, name, superTypes, properties, provisional);
 
     return type;

@@ -38,6 +38,8 @@ export default domAssigned(class TypePrefixDeclaration {
     const typePrefixVerifies = this.verifyTypePrefix();
 
     if (typePrefixVerifies) {
+      this.context.addTypePrefix(this.typePrefix);
+
       verifies = true;
     }
 
@@ -58,20 +60,20 @@ export default domAssigned(class TypePrefixDeclaration {
     const typePrefix = this.context.getTypePrefix();
 
     if (typePrefix !== null) {
-      this.context.debug(`The package already has a '${typePrefixString}' type prefix.`, this.node);
+      this.context.trace(`The package already has a '${typePrefixString}' type prefix.`, this.node);
     } else {
 
       const typePrefixName = this.typePrefix.getName(),
             typePrefixPresent = this.context.isTypePrefixPresentByTypePrefixName(typePrefixName);
 
       if (typePrefixPresent) {
-        this.context.debug(`The '${typePrefixString}' type prefix is already present.`, this.node);
+        this.context.trace(`The '${typePrefixString}' type prefix is already present.`, this.node);
       } else {
         const typeName = typePrefixName,  ///
               typePresent = this.context.isTypePresentByTypeName(typeName);
 
         if (typePresent) {
-          this.context.debug(`The '${typePrefixString}' type is already present.`, this.node);
+          this.context.trace(`The '${typePrefixString}' type is already present.`, this.node);
         } else {
           typePrefixVerifies = true;
         }

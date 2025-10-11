@@ -68,21 +68,9 @@ export default class TopLevelAssertion {
     return this.hypotheses;
   }
 
-  setContext(context) { this.context = context; }
-
-  setString(string) { this.string = string; }
-
-  setLabels(labels) { this.labels = labels; }
-
-  setSuppositions(suppositions) { this.suppositions = suppositions; }
-
-  setDeduction(deduction) { this.deduction = deduction; }
-
-  setProof(proof) { this.proof = proof; }
-
-  setSignature(signature) { this.signature = signature; }
-
-  setHypotheses(hypotheses) { this.hypotheses = hypotheses; }
+  setHypotheses(hypotheses) {
+    this.hypotheses = hypotheses;
+  }
 
   getStatement() { return this.deduction.getStatement(); }
 

@@ -28,6 +28,13 @@ export default class ComplexTypeDeclarationNode extends NonTerminalNode {
     return provisional;
   }
 
+  isPrefixed() {
+    const typeNode = this.getTypeNode(),
+          prefixed = typeNode.isPrefixed();
+
+    return prefixed;
+  }
+
   getTypeName() {
     const typeNode = this.getTypeNode(),
           typeName = typeNode.getTypeName();
@@ -61,6 +68,13 @@ export default class ComplexTypeDeclarationNode extends NonTerminalNode {
     }
 
     return superTypeNodes;
+  }
+
+  getTypePrefixName() {
+    const typeNode = this.getTypeNode(),
+          typePrefixName = typeNode.getTypePrefixName();
+
+    return typePrefixName;
   }
 
   getPropertyDeclarationNodes() {

@@ -83,6 +83,8 @@ export default class FileContext {
 
   getMetaTypes() { return this.releaseContext.getMetaTypes(); }
 
+  getTypePrefix() { return this.releaseContext.getTypePrefix(); }
+
   getJudgements() {
     const judgements = [];
 
@@ -329,28 +331,6 @@ export default class FileContext {
     return fileContext;
   }
 
-  getTypePrefix(includeRelease = true) {
-    let typePrefix = null;
-
-    if (typePrefix === null) {
-      const typePrefixesLength = this.typePrefixes.length;
-
-      if (typePrefixesLength === 1) {
-        const firstTypePrefix = first(this.typePrefixes);
-
-        typePrefix = firstTypePrefix; ///
-      }
-    }
-
-    if (typePrefix === null) {
-      if (includeRelease) {
-        typePrefix = this.releaseContext.getTypePrefix();
-      }
-    }
-
-    return typePrefix;
-  }
-
   addType(type) {
     this.types.push(type);
   }
@@ -385,6 +365,10 @@ export default class FileContext {
 
   addCombinator(combinator) {
     this.combinators.push(combinator);
+  }
+
+  addTypePrefix(typePrefix) {
+    this.typePrefixes.push(typePrefix);
   }
 
   addConstructor(constructor) {

@@ -2,11 +2,18 @@
 
 import { objectType } from "../dom/type";
 
-export function stringFromTypeNameNameAndSuperTypes(typeName, superTypes) {
-  const superTypesString = superTypesStringFromSuperTypes(superTypes),
-        string = (superTypesString !== null) ?
-                   `'${typeName}':${superTypesString}` :
-                     typeName; ///
+export function stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes) {
+  let string;
+
+  string = (typePrefixName !== null) ?
+             `${typePrefixName}${typeName}`:
+               typeName;
+
+  const superTypesString = superTypesStringFromSuperTypes(superTypes);
+
+  if (superTypesString !== null) {
+    string = `${string}:${superTypesString}`;
+  }
 
   return string;
 }
