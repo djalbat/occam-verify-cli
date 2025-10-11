@@ -1,0 +1,26 @@
+"use strict";
+
+import NonTerminalNode from "../node/nonTerminal";
+
+export default class TypePrefixNode extends NonTerminalNode {
+  getTypePrefix() {
+    let typePrefix;
+
+    this.someChildNode((childNode) => {
+      const childNodeTerminalNode = childNode.isTerminalNode();
+
+      if (childNodeTerminalNode) {
+        const terminalNode = childNode, ///
+              content = terminalNode.getContent();
+
+        typePrefix = content; ///
+
+        return true;
+      }
+    });
+
+    return typePrefix;
+  }
+
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TypePrefixNode, ruleName, childNodes, opacity, precedence); }
+}

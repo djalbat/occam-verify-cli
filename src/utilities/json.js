@@ -372,20 +372,20 @@ export function combinatorsFromJSON(json, context) {
   return combinators;
 }
 
-export function typeAliasesFromJSON(json, context) {
-  let { typeAliases } = json;
+export function typePrefixesFromJSON(json, context) {
+  let { typePrefixes } = json;
 
-  const { TypeAlias } = dom,
-        typeAliasesJSON = typeAliases; ///
+  const { TypePrefix } = dom,
+        typePrefixesJSON = typePrefixes; ///
 
-  typeAliases = typeAliasesJSON.map((typeAliasJSON) => {
-    const json = typeAliasJSON,  ///
-          typeAlias = TypeAlias.fromJSON(json, context);
+  typePrefixes = typePrefixesJSON.map((typePrefixJSON) => {
+    const json = typePrefixJSON,  ///
+          typePrefix = TypePrefix.fromJSON(json, context);
 
-    return typeAlias;
+    return typePrefix;
   });
 
-  return typeAliases;
+  return typePrefixes;
 }
 
 export function constructorsFromJSON(json, context) {
@@ -696,16 +696,16 @@ export function propertiesToPropertiesJSON(properties) {
   return propertiesJSON;
 }
 
-export function typeAliasesToTypeAliasesJSON(typeAliases) {
-  const typeAliasesJSON = typeAliases.map((typeAlias) => {
-    const typeAliasJSON = typeAlias.toJSON();
+export function typePrefixesToTypePrefixesJSON(typePrefixes) {
+  const typePrefixesJSON = typePrefixes.map((typePrefix) => {
+    const typePrefixJSON = typePrefix.toJSON();
 
-    typeAlias = typeAliasJSON; ///
+    typePrefix = typePrefixJSON; ///
 
-    return typeAlias;
+    return typePrefix;
   });
 
-  return typeAliasesJSON;
+  return typePrefixesJSON;
 }
 
 export function conjecturesToConjecturesJSON(conjectures) {

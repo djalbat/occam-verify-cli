@@ -19,14 +19,14 @@ import { typesFromJSON,
          axiomsToAxiomsJSON,
          conjecturesFromJSON,
          combinatorsFromJSON,
-         typeAliasesFromJSON,
+         typePrefixesFromJSON,
          constructorsFromJSON,
          metatheoremsFromJSON,
          metavariablesFromJSON,
          metaLemmasFromNothing,
          theoremsToTheoremsJSON,
          variablesToVariablesJSON,
-         typeAliasesToTypeAliasesJSON,
+         typePrefixesToTypePrefixesJSON,
          conjecturesToConjecturesJSON,
          combinatorsToCombinatorsJSON,
          constructorsToConstructorsJSON,
@@ -36,7 +36,7 @@ import { typesFromJSON,
 const { push, first, filter } = arrayUtilities;
 
 export default class FileContext {
-  constructor(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typeAliases, constructors, metatheorems, metavariables) {
+  constructor(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
     this.releaseContext = releaseContext;
     this.filePath = filePath;
     this.lineIndex = lineIndex;
@@ -51,7 +51,7 @@ export default class FileContext {
     this.metaLemmas = metaLemmas;
     this.conjectures = conjectures;
     this.combinators = combinators;
-    this.typeAliases = typeAliases;
+    this.typePrefixes = typePrefixes;
     this.constructors = constructors;
     this.metatheorems = metatheorems;
     this.metavariables = metavariables;
@@ -277,8 +277,8 @@ export default class FileContext {
     return combinators;
   }
 
-  getTypeAliases(includeRelease = true) {
-    return this.typeAliases;
+  getTypePrefixes(includeRelease = true) {
+    return this.typePrefixes;
   }
 
   getConstructors(includeRelease = true) {
@@ -319,18 +319,18 @@ export default class FileContext {
     return fileContext;
   }
 
-  getTypeAlias() {
-    let typeAlias = null;
+  getTypePrefix() {
+    let typePrefix = null;
 
-    const typeAliasesLength = this.typeAliases.length;
+    const typePrefixesLength = this.typePrefixes.length;
 
-    if (typeAliasesLength === 1) {
-      const firstTypeAlias = first(this.typeAliases);
+    if (typePrefixesLength === 1) {
+      const firstTypePrefix = first(this.typePrefixes);
 
-      typeAlias = firstTypeAlias; ///
+      typePrefix = firstTypePrefix; ///
     }
 
-    return typeAlias;
+    return typePrefix;
   }
 
   addType(type) {
@@ -883,7 +883,7 @@ export default class FileContext {
     this.metaLemmas = [];
     this.conjectures = [];
     this.combinators = [];
-    this.typeAliases = [];
+    this.typePrefixes = [];
     this.constructors = [];
     this.metatheorems = [];
     this.metavariables = [];
@@ -929,7 +929,7 @@ export default class FileContext {
 
     this.combinators = combinatorsFromJSON(json, fileContext);
 
-    this.typeAliases = typeAliasesFromJSON(json, fileContext);
+    this.typePrefixes = typePrefixesFromJSON(json, fileContext);
 
     this.constructors = constructorsFromJSON(json, fileContext);
 
@@ -946,7 +946,7 @@ export default class FileContext {
           variablesJSON = variablesToVariablesJSON(this.variables),
           conjecturesJSON = conjecturesToConjecturesJSON(this.conjectures),
           combinatorsJSON = combinatorsToCombinatorsJSON(this.combinators),
-          typeAliasesJSON = typeAliasesToTypeAliasesJSON(this.typeAliases),
+          typePrefixesJSON = typePrefixesToTypePrefixesJSON(this.typePrefixes),
           constructorsJSON = constructorsToConstructorsJSON(this.constructors),
           metatheoremsJSON = metatheoremsToMetatheoremsJSON(this.metatheorems),
           metavariablesJSON = metavariablesToMetavariablesJSON(this.metavariables),
@@ -958,7 +958,7 @@ export default class FileContext {
           variables = variablesJSON,  ///
           conjectures = conjecturesJSON,  ///
           combinators = combinatorsJSON,  ///
-          typeAliases = typeAliasesJSON,  ///
+          typePrefixes = typePrefixesJSON,  ///
           constructors = constructorsJSON,  ///
           metatheorems = metatheoremsJSON,  ///
           metavariables = metavariablesJSON,  ///
@@ -971,7 +971,7 @@ export default class FileContext {
             variables,
             conjectures,
             combinators,
-            typeAliases,
+            typePrefixes,
             constructors,
             metatheorems,
             metavariables
@@ -994,11 +994,11 @@ export default class FileContext {
           metaLemmas = [],
           conjectures = [],
           combinators = [],
-          typeAliases = [],
+          typePrefixes = [],
           constructors = [],
           metatheorems = [],
           metavariables = [],
-          fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typeAliases, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables);
 
     return fileContext;
   }
@@ -1016,11 +1016,11 @@ export default class FileContext {
           metaLemmas = null,
           conjectures = null,
           combinators = null,
-          typeAliases = null,
+          typePrefixes = null,
           constructors = null,
           metatheorems = null,
           metavariables = null,
-          fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typeAliases, constructors, metatheorems, metavariables);
+          fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables);
 
     fileContext.initialise(json);
 

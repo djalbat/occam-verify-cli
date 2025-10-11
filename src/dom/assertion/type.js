@@ -64,11 +64,12 @@ export default domAssigned(class TypeAssertion {
   verifyType(context) {
     let typeVerifies;
 
-    const typeString = this.type.getString();
+    const typeName = this.type.getName(),
+          typeString = this.type.getString();
 
     context.trace(`Verifying the '${typeString}' type...`);
 
-    const type = context.findTypeByTypeName(typeString);
+    const type = context.findTypeByTypeName(typeName);
 
     if (type !== null) {
       this.type = type;

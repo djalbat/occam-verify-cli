@@ -22,5 +22,24 @@ export default class TypeNode extends NonTerminalNode {
     return typeName;
   }
 
+  getTypePrefix() {
+    let typePrefix;
+
+    this.someChildNode((childNode) => {
+      const childNodeTerminalNode = childNode.isTerminalNode();
+
+      if (childNodeTerminalNode) {
+        const terminalNode = childNode, ///
+          content = terminalNode.getContent();
+
+        typePrefix = content; ///
+
+        return true;
+      }
+    });
+
+    return typePrefix;
+  }
+
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TypeNode, ruleName, childNodes, opacity, precedence); }
 }
