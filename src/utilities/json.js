@@ -372,6 +372,22 @@ export function combinatorsFromJSON(json, context) {
   return combinators;
 }
 
+export function typeAliasesFromJSON(json, context) {
+  let { typeAliases } = json;
+
+  const { TypeAlias } = dom,
+        typeAliasesJSON = typeAliases; ///
+
+  typeAliases = typeAliasesJSON.map((typeAliasJSON) => {
+    const json = typeAliasJSON,  ///
+          typeAlias = TypeAlias.fromJSON(json, context);
+
+    return typeAlias;
+  });
+
+  return typeAliases;
+}
+
 export function constructorsFromJSON(json, context) {
   let { constructors } = json;
 
@@ -678,6 +694,18 @@ export function propertiesToPropertiesJSON(properties) {
   });
 
   return propertiesJSON;
+}
+
+export function typeAliasesToTypeAliasesJSON(typeAliases) {
+  const typeAliasesJSON = typeAliases.map((typeAlias) => {
+    const typeAliasJSON = typeAlias.toJSON();
+
+    typeAlias = typeAliasJSON; ///
+
+    return typeAlias;
+  });
+
+  return typeAliasesJSON;
 }
 
 export function conjecturesToConjecturesJSON(conjectures) {
