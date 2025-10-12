@@ -381,7 +381,7 @@ export function combinatorsFromJSON(json, context) {
 }
 
 export function typePrefixesFromJSON(json, context) {
-  let { typePrefixes = [] } = json;
+  let { typePrefixes } = json;
 
   const { TypePrefix } = dom,
         typePrefixesJSON = typePrefixes; ///
