@@ -116,21 +116,20 @@ export default domAssigned(class ComplexTypeDeclaration {
     this.context.trace(`Verifying the '${superTypeString}' super-type...`, this.node);
 
     const typeName = this.type.getName(),
-          prefixedSuperTypeName = superTypeString,  ///
-          typeNameMatches = (typeName === prefixedSuperTypeName);
+          typeNameMatches = superType.matchTypeName(typeName);
 
     if (typeNameMatches) {
       this.context.trace(`The super-type's name matches the ${typeName}' complex type's name.`, this.node);
     } else {
-      const oldSuperType = superType; ///
+      const oldSuperType = superType, ///
+            nominalTypeName = superType.getNominalTypeName();
 
-      superType = this.context.findTypeByPrefixedTypeName(prefixedSuperTypeName);
+      superType = this.context.findTypeByNominalTypeName(nominalTypeName);
 
-      const superTypePresent = (superType !== null);
+      const newSuperType = superType, ///
+            superTypePresent = (superType !== null);
 
       if (superTypePresent) {
-        const newSuperType = superType; ///
-
         this.type.replaceSuperType(oldSuperType, newSuperType);
 
         superTypeVerifies = true;
@@ -261,15 +260,16 @@ export default domAssigned(class ComplexTypeDeclaration {
     this.context.trace(`Verifying the '${propertyTypeString}' property type...`, this.node);
 
     const typeName = this.type.getName(),
-          propertyPrefixedTypeName = propertyTypeString,  ///
-          typeNameMatches = (typeName === propertyPrefixedTypeName);
+          typeNameMatches = propertyType.matchTypeName(typeName);
 
     if (typeNameMatches) {
       propertyTypeVerifies = true;
 
       property.setType(this.type);
     } else {
-      propertyType = this.context.findTypeByPrefixedTypeName(propertyPrefixedTypeName);
+      const nominalTypeName = propertyType.getNominalTypeName();
+
+      propertyType = this.context.findTypeByNominalTypeName(nominalTypeName);
 
       const propertyTypePresent = (propertyType !== null);
 

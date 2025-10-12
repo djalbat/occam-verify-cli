@@ -106,21 +106,20 @@ export default domAssigned(class SimpleTypeDeclaration {
     this.context.trace(`Verifying the '${superTypeString}' super-type...`, this.node);
 
     const typeName = this.type.getName(),
-          superPrefixedTypeName = superTypeString,  ///
-          typeNameMatches = (typeName === superPrefixedTypeName);
+          typeNameMatches = superType.matchTypeName(typeName);
 
     if (typeNameMatches) {
       this.context.trace(`The super-type's name matches the ${typeName}' simple type's name.`, this.node);
     } else {
-      const oldSuperType = superType; ///
+      const oldSuperType = superType, ///
+            nominalTypeName = superType.getNominalTypeName();
 
-      superType = this.context.findTypeByPrefixedTypeName(superPrefixedTypeName);
+      superType = this.context.findTypeByNominalTypeName(nominalTypeName);
 
-      const superTypePresent = (superType !== null);
+      const newSuperType = superType, ///
+            superTypePresent = (superType !== null);
 
       if (superTypePresent) {
-        const newSuperType = superType; ///
-
         this.type.replaceSuperType(oldSuperType, newSuperType);
 
         superTypeVerifies = true;

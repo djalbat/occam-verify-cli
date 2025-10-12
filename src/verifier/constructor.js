@@ -78,7 +78,7 @@ class ConstructorVerifier extends Verifier {
 
           typeVerifies = verifiesAhead; ///
         } else {
-          const typeString = typeName;  ///
+          const typeString = nominalTypeName; ///
 
           context.debug(`The '${typeString}' type is not present.`);
 
