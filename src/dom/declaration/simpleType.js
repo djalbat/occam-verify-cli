@@ -128,6 +128,8 @@ export default domAssigned(class SimpleTypeDeclaration {
       const superTypePresent = (superType !== null);
 
       if (superTypePresent) {
+        const newSuperType = superType; ///
+
         this.type.replaceSuperType(oldSuperType, newSuperType);
 
         superTypeVerifies = true;
