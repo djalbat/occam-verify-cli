@@ -35,12 +35,21 @@ export default domAssigned(class TypePrefixDeclaration {
 
     this.context.trace(`Verifying the '${typePrefixDeclarationString}' type prefix declaration...`, this.node);
 
-    const typePrefixVerifies = this.verifyTypePrefix();
+    const includeRelease = true,
+          includeDependencies = false,
+          types = this.context.getTypes(includeRelease, includeDependencies),
+          typesLength = types.length;
 
-    if (typePrefixVerifies) {
-      this.context.addTypePrefix(this.typePrefix);
+    if (typesLength > 0) {
+      this.context.debug(`Cannot verify the '${typePrefixDeclarationString}' type prefix declaration because types have already been declared.`, this.node);
+    } else {
+      const typePrefixVerifies = this.verifyTypePrefix();
 
-      verifies = true;
+      if (typePrefixVerifies) {
+        this.context.addTypePrefix(this.typePrefix);
+
+        verifies = true;
+      }
     }
 
     if (verifies) {
