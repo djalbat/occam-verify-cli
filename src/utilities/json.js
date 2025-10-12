@@ -24,7 +24,7 @@ export function typeFromJSON(json, context) {
 
     const { name, prefixName } = json,
           nominalTypeName = (prefixName !== null) ?
-                               `${prefixName}:${name}` :
+                               `${prefixName}${name}` :
                                   name; ///
 
     type = context.findTypeByNominalTypeName(nominalTypeName);
