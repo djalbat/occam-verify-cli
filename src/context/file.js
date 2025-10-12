@@ -33,7 +33,7 @@ import { typesFromJSON,
          metatheoremsToMetatheoremsJSON,
          metavariablesToMetavariablesJSON } from "../utilities/json";
 
-const { push, first, filter } = arrayUtilities;
+const { push, filter } = arrayUtilities;
 
 export default class FileContext {
   constructor(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {

@@ -13,9 +13,9 @@ import NominalParser from "../nominal/parser";
 import { frameMetaType, referenceMetaType, statementMetaType } from "../dom/metaType";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
-const { tail, push, first, clear, resolve } = arrayUtilities,
-      { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
+const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
       { nominalParserFromCombinedCustomGrammar } = parsersUtilities,
+      { tail, push, first, clear, filter, resolve, compress } = arrayUtilities,
       { isFilePathFurtleFilePath, isFilePathNominalFilePath } = filePathUtilities;
 
 export default class ReleaseContext {
@@ -469,15 +469,21 @@ export default class ReleaseContext {
   verify() {
     let verifies = false;
 
-    const verifiedFileContexts = [],
-          fileContextsVerify = verifyFileContexts(this.fileContexts, verifiedFileContexts);
+    const typePrefixes = this.getTypePrefixes(),
+          releaseContext = this, ///
+          typePrefixesVerify = verifyTypePrefixes(typePrefixes, releaseContext);
 
-    if (fileContextsVerify) {
-      this.fileContexts = verifiedFileContexts; ///
+    if (typePrefixesVerify) {
+      const verifiedFileContexts = [],
+            fileContextsVerify = verifyFileContexts(this.fileContexts, verifiedFileContexts, releaseContext);
 
-      this.verified = true;
+      if (fileContextsVerify) {
+        this.fileContexts = verifiedFileContexts; ///
 
-      verifies = true;
+        this.verified = true;
+
+        verifies = true;
+      }
     }
 
     return verifies;
@@ -506,6 +512,46 @@ export default class ReleaseContext {
 
     return releaseContext;
   }
+}
+
+function verifyTypePrefixes(typePrefixes, releaseContext) {
+  let typePrefixesVerify = true;
+
+  const typePrefixesLength = typePrefixes.length,
+        compressedTypePrefixes = [  ///
+          ...typePrefixes,
+        ];
+
+  compress(compressedTypePrefixes, (typePrefixA, typePrefixB) => {
+    const typePrefixAName = typePrefixA.getName(),
+          typePrefixBName = typePrefixB.getName();
+
+    if (typePrefixAName === typePrefixBName) {
+      return true;
+    }
+  });
+
+  const compressTypePrefixesLength = compressedTypePrefixes.length;
+
+  if (typePrefixesLength > compressTypePrefixesLength) {
+    filter(compressedTypePrefixes, (typePrefix) => {
+      const typePrefixesIncludesTypePrefix = typePrefixes.includes(typePrefix);
+
+      if (!typePrefixesIncludesTypePrefix) {
+        return true;
+      }
+    });
+
+    const firstTypePrefix = first(typePrefixes),
+          typePrefix = firstTypePrefix, ///
+          typePrefixString = typePrefix.getString();
+
+    releaseContext.info(`The '${typePrefixString}' type prefix is duplicated at least once, possibly among others.`)
+
+    typePrefixesVerify = false;
+  }
+
+  return typePrefixesVerify;
 }
 
 function verifyFileContexts(fileContexts, verifiedFileContexts) {
