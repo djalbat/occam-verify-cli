@@ -38,18 +38,6 @@ class Type {
     return this.superTypes;
   }
 
-  setProvisional(provisional) {
-    this.provisional = provisional;
-  }
-
-  replaceSuperType(oldSuperType, newSuperType) {
-    const index = this.superTypes.indexOf(oldSuperType),
-          start = index,
-          deleteCount = 1;
-
-    this.superTypes.splice(start, deleteCount, newSuperType);
-  }
-
   getProperties(includeSuperTypes = true) {
     const properties = [];
 
@@ -82,6 +70,34 @@ class Type {
     }
 
     return provisional;
+  }
+
+  setName(name) {
+    this.name = name;
+  }
+
+  setPrefixName(prefixName) {
+    this.prefixName = prefixName;
+  }
+
+  setSuperTypes(superTypes) {
+    this.superTypes = superTypes;
+  }
+
+  setProperties(properties) {
+    this.properties = properties;
+  }
+
+  setProvisional(provisional) {
+    this.provisional = provisional;
+  }
+
+  replaceSuperType(oldSuperType, newSuperType) {
+    const index = this.superTypes.indexOf(oldSuperType),
+          start = index,
+          deleteCount = 1;
+
+    this.superTypes.splice(start, deleteCount, newSuperType);
   }
 
   isPrefixed() {
