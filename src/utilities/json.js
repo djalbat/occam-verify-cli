@@ -306,7 +306,7 @@ export function superTypesFromJSON(json, context) {
           const json = superTypeJSON,  ///
                 { name, prefixName } = json,
                 nominalSuperTypeName = (prefixName !== null) ?
-                                          `${prefixName}:${name}` :
+                                         `${prefixName}${name}` :
                                             name, ///
                 superType = context.findTypeByNominalTypeName(nominalSuperTypeName);
 
