@@ -231,9 +231,9 @@ class LocalContext {
 
   findMetavariable(metavariable, generalContext, specificContext) { return this.context.findMetavariable(metavariable, generalContext, specificContext); }
 
-  findTypeByTypeName(typeName) { return this.context.findTypeByTypeName(typeName); }
-
   findLabelByMetavariable(metavariable) { return this.context.findLabelByMetavariable(metavariable); }
+
+  findTypeByNominalTypeName(nominalTypeName) { return this.context.findTypeByNominalTypeName(nominalTypeName); }
 
   findMetaTypeByMetaTypeName(metaTypeName) { return this.context.findMetaTypeByMetaTypeName(metaTypeName); }
 
@@ -251,7 +251,11 @@ class LocalContext {
 
   isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
 
-  isTypePresentByTypeName(typeName, prefixed = true, includeDependencies = true) { return this.context.isTypePresentByTypeName(typeName, prefixed, includeDependencies); }
+  isTypePresentByTypeName(typeName, includeRelease = true, includeDependencies = true) { return this.context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies); }
+
+  isTypePresentByNominalTypeName(nominalTypeName) { return this.context.isTypePresentByNominalTypeName(nominalTypeName); }
+
+  isTypePresentByPrefixedTypeName(prefixedTypeName) { return this.context.isTypePresentByPrefixedTypeName(prefixedTypeName); }
 
   isTypePrefixPresentByTypePrefixName(typePrefixName) { return this.context.isTypePrefixPresentByTypePrefixName(typePrefixName); }
 

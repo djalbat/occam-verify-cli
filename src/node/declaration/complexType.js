@@ -77,6 +77,13 @@ export default class ComplexTypeDeclarationNode extends NonTerminalNode {
     return typePrefixName;
   }
 
+  getNominalTypeName() {
+    const typeNode = this.getTypeNode(),
+          nominalTypeName = typeNode.getNominalTypeName();
+
+    return nominalTypeName;
+  }
+
   getPropertyDeclarationNodes() {
     const ruleName = PROPERTY_DECLARATION_RULE_NAME,
           propertyDeclarationNodes = this.getNodesByRuleName(ruleName);

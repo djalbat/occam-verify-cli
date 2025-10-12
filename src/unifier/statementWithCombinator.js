@@ -86,13 +86,13 @@ class StatementWithCombinatorUnifier extends Unifier {
         const { Term } = dom,
               typeNode = generalTypeNode, ///
               termNode = specificTermNode, ///
-              typeName = typeNode.getTypeName();
+              nominalTypeName = typeNode.getNominalTypeName();
 
         let context;
 
         context = generalContext; ///
 
-        const type = context.findTypeByTypeName(typeName);
+        const type = context.findTypeByNominalTypeName(nominalTypeName);
 
         context = specificContext;  ///
 

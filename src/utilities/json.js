@@ -20,10 +20,14 @@ export function typeFromJSON(json, context) {
   let { type } = json;
 
   if (type !== null) {
-    const { name } = type,
-          typeName = name;  ///
+    json = type;  ///
 
-    type = context.findTypeByTypeName(typeName);
+    const { name, prefixName } = json,
+          nominalTypeName = (prefixName !== null) ?
+                               `${prefixName}:${name}` :
+                                  name; ///
+
+    type = context.findTypeByNominalTypeName(nominalTypeName);
   }
 
   return type;
@@ -33,7 +37,9 @@ export function metaTypeFromJSON(json, context) {
   let { metaType } = json;
 
   if (metaType !== null) {
-    const { name } = metaType,
+    json = metaType;  ///
+
+    const { name } = json,
           metaTypeName = name;  ///
 
     metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
@@ -172,11 +178,11 @@ export function rulesFromJSON(json, context) {
   let { rules } = json;
 
   const { Rule } = dom,
-    rulesJSON = rules; ///
+        rulesJSON = rules; ///
 
   rules = rulesJSON.map((ruleJSON) => {
     const json = ruleJSON,  ///
-      rule = Rule.fromJSON(json, context);
+          rule = Rule.fromJSON(json, context);
 
     return rule;
   });
@@ -298,9 +304,11 @@ export function superTypesFromJSON(json, context) {
 
   const superTypes = superTypesJSON.map((superTypeJSON) => {
           const json = superTypeJSON,  ///
-                { name } = json,
-                superTypeName = name,  ///
-                superType = context.findTypeByTypeName(superTypeName);
+                { name, prefixName } = json,
+                nominalSuperTypeName = (prefixName !== null) ?
+                                          `${prefixName}:${name}` :
+                                            name, ///
+                superType = context.findTypeByNominalTypeName(nominalSuperTypeName);
 
           return superType;
         });

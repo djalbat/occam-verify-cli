@@ -54,8 +54,8 @@ class CombinatorVerifier extends Verifier {
       verify: (typeNode, context) => {
         let typeVerifies = false;
 
-        const typeName = typeNode.getTypeName(),
-              typePresent = context.isTypePresentByTypeName(typeName);
+        const nominalTypeName = typeNode.getNominalTypeName(),
+              typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
         if (typePresent) {
           typeVerifies = true;

@@ -92,12 +92,12 @@ export default domAssigned(class Variable {
   verifyType(context) {
     let typeVerifies = false;
 
-    const typeName = this.tyupe.getName(),
-          typeString = this.type.getString();
+    const typeString = this.type.getString();
 
     context.trace(`Verifying the '${typeString}' type...`);
 
-    const type = context.findTypeByTypeName(typeName);
+    const prefixedTypeName = this.type.getPrefixedName(),
+          type = context.findTypeByPrefixedTypeName(prefixedTypeName);
 
     if (type === null) {
       context.debug(`The '${typeString}' type is not present.`);

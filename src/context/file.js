@@ -33,7 +33,7 @@ import { typesFromJSON,
          metatheoremsToMetatheoremsJSON,
          metavariablesToMetavariablesJSON } from "../utilities/json";
 
-const { push, filter } = arrayUtilities;
+const { push, first, filter } = arrayUtilities;
 
 export default class FileContext {
   constructor(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables) {
@@ -151,9 +151,9 @@ export default class FileContext {
     return labels;
   }
 
-  getTypes(includeRelease = true) {
+  getTypes(includeRelease = true, includeDependencies = true) {
     const types = includeRelease ?
-                    this.releaseContext.getTypes() :
+                    this.releaseContext.getTypes(includeDependencies) :
                       this.types;
 
     return types;
@@ -516,7 +516,26 @@ export default class FileContext {
     return metavariable;
   }
 
-  findTypeByTypeName(typeName, prefixed = true) {
+  findTypeByTypeName(typeName, includeRelease = true, includeDependencies = true) {
+    let types = this.getTypes(includeRelease, includeDependencies);
+
+    types = [
+      ...types,
+      objectType
+    ];
+
+    const type = types.find((type) => {
+      const typeNameMatches = type.matchTypeName(typeName);
+
+      if (typeNameMatches) {
+        return true;
+      }
+    }) || null;
+
+    return type;
+  }
+
+  findTypeByNominalTypeName(nominalTypeName) {
     let types = this.getTypes();
 
     types = [
@@ -524,29 +543,34 @@ export default class FileContext {
       objectType
     ];
 
-    const context = this, ///
-          type = types.find((type) => {
-            const typeNameMatches = type.matchTypeName(typeName, prefixed, context);
+    const type = types.find((type) => {
+      const typeNameMatches = type.matchNominalTypeName(nominalTypeName);
 
-            if (typeNameMatches) {
-              return true;
-            }
-          }) || null;
+      if (typeNameMatches) {
+        return true;
+      }
+    }) || null;
 
     return type;
   }
 
-  findTypePrefixByTypePrefixName(typePrefixName) {
-    const typePrefixes = this.getTypePrefixes(),
-          typePrefix = typePrefixes.find((typePrefix) => {
-            const typePrefixNameMatches = typePrefix.matchTypePrefixName(typePrefixName);
+  findTypeByPrefixedTypeName(prefixedTypeName) {
+    let types = this.getTypes();
 
-            if (typePrefixNameMatches) {
-              return true;
-            }
-          }) || null;
+    types = [
+      ...types,
+      objectType
+    ];
 
-    return typePrefix;
+    const type = types.find((type) => {
+      const typeNameMatches = type.matchPrefixedTypeName(prefixedTypeName);
+
+      if (typeNameMatches) {
+        return true;
+      }
+    }) || null;
+
+    return type;
   }
 
   findMetaTypeByMetaTypeName(metaTypeName) {
@@ -560,6 +584,19 @@ export default class FileContext {
           }) || null;
 
     return metaType;
+  }
+
+  findTypePrefixByTypePrefixName(typePrefixName) {
+    const typePrefixes = this.getTypePrefixes(),
+          typePrefix = typePrefixes.find((typePrefix) => {
+            const typePrefixNameMatches = typePrefix.matchTypePrefixName(typePrefixName);
+
+            if (typePrefixNameMatches) {
+              return true;
+            }
+          }) || null;
+
+    return typePrefix;
   }
 
   findVariableByVariableIdentifier(variableIdentifier) {
@@ -640,8 +677,22 @@ export default class FileContext {
     return metavariablePresent;
   }
 
-  isTypePresentByTypeName(typeName, prefixed = true) {
-    const type = this.findTypeByTypeName(typeName, prefixed),
+  isTypePresentByTypeName(typeName, includeRelease = true, includeDependencies = true) {
+    const type = this.findTypeByTypeName(typeName, includeRelease, includeDependencies),
+          typePresent = (type !== null);
+
+    return typePresent;
+  }
+
+  isTypePresentByNominalTypeName(nominalTypeName) {
+    const type = this.findTypeByNominalTypeName(nominalTypeName),
+          typePresent = (type !== null);
+
+    return typePresent;
+  }
+
+  isTypePresentByPrefixedTypeName(prefixedTypeName) {
+    const type = this.findTypeByPrefixedTypeName(prefixedTypeName),
           typePresent = (type !== null);
 
     return typePresent;

@@ -82,22 +82,22 @@ export default domAssigned(class ConstructorDeclaration {
 
     type = this.constructor.getType();
 
-    const typeName = type.getName(),
-          typeString = type.getString();
+    const typeString = type.getString();
 
     this.context.trace(`Verifying the '${typeString}' type...`, this.node);
 
-    const includeSupertypes = false,
-          provisional = type.isProvisional(includeSupertypes);
+    const nominalTypeName = type.getNominalTypeName();
 
-    type = this.context.findTypeByTypeName(typeName);
+    type = this.context.findTypeByNominalTypeName(nominalTypeName);
 
     const typePresent = (type !== null)
 
     if (!typePresent) {
       this.context.debug(`The '${typeString}' type is not present.`, this.node);
     } else {
-      const provisionalMatches = type.matchProvisional(provisional);
+      const includeSupertypes = false,
+            provisional = type.isProvisional(includeSupertypes),
+            provisionalMatches = type.matchProvisional(provisional);
 
       if (!provisionalMatches) {
         provisional ?

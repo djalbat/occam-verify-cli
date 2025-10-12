@@ -82,6 +82,13 @@ export default class SimpleTypeDeclarationNode extends NonTerminalNode {
     return superTypeNodes;
   }
 
+  getNominalTypeName() {
+    const typeNode = this.getTypeNode(),
+          nominalTypeName = typeNode.getNominalTypeName();
+
+    return nominalTypeName;
+  }
+
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(SimpleTypeDeclarationNode, ruleName, childNodes, opacity, precedence); }
 }
 

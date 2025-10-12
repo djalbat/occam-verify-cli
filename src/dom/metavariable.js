@@ -529,9 +529,9 @@ function typeFromMetavariableDeclarationNode(metavariableDeclarationNode, contex
   const typeNode = metavariableDeclarationNode.getTypeNode();
 
   if (typeNode !== null) {
-    const typeName = typeNode.getTypeName();
+    const nominalTypeName = typeNode.getNominalTypeName();
 
-    type = context.findTypeByTypeName(typeName);
+    type = context.findTypeByNominalTypeName(nominalTypeName);
   }
 
   return type;

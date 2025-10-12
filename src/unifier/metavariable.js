@@ -31,8 +31,8 @@ class MetavariableUnifier extends Unifier {
         const { Term } = dom,
               typeNode = generalTypeNode, ///
               termNode = specificTermNode, ///
-              typeName = typeNode.getTypeName(),
-              type = generalContext.findTypeByTypeName(typeName),
+              nominalTypeName = typeNode.getNominalTypeName(),
+              type = generalContext.findTypeByNominalTypeName(nominalTypeName),
               context = specificContext, ///
               term = Term.fromTermNode(termNode, context),
               termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);

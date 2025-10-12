@@ -13,17 +13,13 @@ import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, pro
 const { push, first } = arrayUtilities;
 
 class Type {
-  constructor(context, string, name, superTypes, properties, provisional) {
-    this.context = context;
+  constructor(string, name, prefixName, superTypes, properties, provisional) {
     this.string = string;
     this.name = name;
+    this.prefixName = prefixName;
     this.superTypes = superTypes;
     this.properties = properties;
     this.provisional = provisional;
-  }
-
-  getContext() {
-    return this.context;
   }
 
   getString() {
@@ -32,6 +28,10 @@ class Type {
 
   getName() {
     return this.name;
+  }
+
+  getPrefixName() {
+    return this.prefixName;
   }
 
   getSuperTypes() {
@@ -84,58 +84,31 @@ class Type {
     return provisional;
   }
 
+  isPrefixed() {
+    const prefixed = (this.prefixName !== null);
+
+    return prefixed;
+  }
+
   getPrefixedName() {
-    const prefixName = this.getPrefixName(),
-          prefixedName = (prefixName !== null) ?
-                            `${prefixName}${this.name}` :
-                               this.name;
+    let prefixedName = null;
+
+    const prefixed = this.isPrefixed();
+
+    if (prefixed) {
+      prefixedName = `${this.prefixName}${this.name}`;
+    }
 
     return prefixedName;
   }
 
-  getPrefixName() {
-    const prefix = this.getPrefix(),
-          prefixName = (prefix !== null) ?
-                          prefix.getName() :
-                            null;
+  getNominalTypeName() {
+    const prefixed = this.isPrefixed(),
+          nominalTypeName = prefixed ?
+                             `${this.prefixName}${this.name}` :
+                                this.name;
 
-    return prefixName;
-  }
-
-  getPrefix() {
-    let prefix = null;
-
-    if (this.context !== null) {
-      const typePrefix = this.context.getTypePrefix();
-
-      prefix = typePrefix;  ///
-    }
-
-    return prefix;
-  }
-
-  isInternal(context) {
-    let internal,
-        fileContext,
-        releaseContext;
-
-    if (this.context !== null) {
-      fileContext = this.context; ///
-
-      releaseContext = fileContext.getReleaseContext();
-
-      const internalReleaseContext = releaseContext; ///
-
-      fileContext = context;  ///
-
-      releaseContext = fileContext.getReleaseContext();
-
-      internal = (internalReleaseContext === releaseContext); ///
-    } else {
-      internal = false;
-    }
-
-    return internal;
+    return nominalTypeName;
   }
 
   isBasic() {
@@ -233,22 +206,9 @@ class Type {
     return equalToOrSuperTypeOf;
   }
 
-  matchTypeName(typeName, prefixed, context) {
-    let typeNameMatches;
-
-    const naked = !prefixed,
-          internal = this.isInternal(context);
-
-    if (naked || internal) {
-      typeNameMatches = (this.name === typeName);
-    } else {
-      const prefixName = this.getPrefixName(),
-            name = (prefixName !== null) ?
-                    `${prefixName}${this.name}` :
-                       this.name;
-
-      typeNameMatches = (name === typeName);
-    }
+  matchTypeName(typeName) {
+    const name = this.getName(),
+          typeNameMatches = (name === typeName);
 
     return typeNameMatches;
   }
@@ -267,6 +227,42 @@ class Type {
     return provisionalMatches;
   }
 
+  matchPrefixedTypeName(prefixedTypeName) {
+    let prefixedTypeNameMatches = false;
+
+    const prefixed = this.isPrefixed();
+
+    if (prefixed) {
+      const prefixedName = this.getPrefixedName();
+
+      prefixedTypeNameMatches = (prefixedTypeName === prefixedName);
+    }
+
+    return prefixedTypeNameMatches;
+  }
+
+  matchNominalTypeName(nominalTypeName) {
+    let nominalTypeNameMatches = false;
+
+    if (!nominalTypeNameMatches) {
+      const name = this.getName();
+
+      nominalTypeNameMatches = (nominalTypeName === name);
+    }
+
+    if (!nominalTypeNameMatches) {
+      const prefixed = this.isPrefixed();
+
+      if (prefixed) {
+        const prefixedName = this.getPrefixedName();
+
+        nominalTypeNameMatches = (nominalTypeName === prefixedName);
+      }
+    }
+
+    return nominalTypeNameMatches;
+  }
+
   toJSON() {
     const propertiesJSON = propertiesToPropertiesJSON(this.properties),
           superTypesJSON = superTypesToSuperTypesJSON(this.superTypes),
@@ -274,8 +270,10 @@ class Type {
           properties = propertiesJSON,  ///
           superTypes = superTypesJSON,  ///
           name = this.name,
+          prefixName = this.prefixName,
           json = {
             name,
+            prefixName,
             superTypes,
             properties,
             provisional
@@ -287,13 +285,13 @@ class Type {
   static name = "Type";
 
   static fromJSON(json, context) {
-    const { name, provisional } = json,
+    const { name, prefixName, provisional } = json,
           properties = propertiesFromJSON(json, context),
           superTypes = superTypesFromJSON(json, context),
           typeName = name,  ///
           typePrefixName = null,
           string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
-          type = new Type(context, string, name, superTypes, properties, provisional);
+          type = new Type(string, name, prefixName, superTypes, properties, provisional);
 
     return type;
   }
@@ -321,18 +319,18 @@ class Type {
   }
 
   static fromTypeAndProvisional(type, provisional) {
-    const context = type.getContext(),
-          name = type.getName(),
+    const name = type.getName(),
+          prefixName = type.getPrefixName(),
           superType = type, ///
           typeName = name,  ///
-          typePrefixName = null,
+          typePrefixName = prefixName,  ///
           superTypes = [
             superType
           ],
           string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
           properties = type.getProperties();
 
-    type = new Type(context, string, name, superTypes, properties, provisional);  ///
+    type = new Type(string, name, prefixName, superTypes, properties, provisional);  ///
 
     return type;
   }
@@ -350,9 +348,10 @@ class Type {
           typeName = simpleTypeDeclarationNode.getTypeName(),
           typePrefixName = simpleTypeDeclarationNode.getTypePrefixName(),
           name = typeName,  ///
+          prefixName = typePrefixName,  ///
           superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
           string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
-          type = new Type(context, string, name, superTypes, properties, provisional);
+          type = new Type(string, name, prefixName, superTypes, properties, provisional);
 
     return type;
   }
@@ -362,10 +361,11 @@ class Type {
           typeName = complexTypeDeclarationNode.getTypeName(),
           typePrefixName = complexTypeDeclarationNode.getTypePrefixName(),
           name = typeName,  ///
+          prefixName = typePrefixName,  ///
           superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
           properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
           string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
-          type = new Type(context, string, name, superTypes, properties, provisional);
+          type = new Type(string, name, prefixName, superTypes, properties, provisional);
 
     return type;
   }
@@ -441,13 +441,13 @@ function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, co
 
 class ObjectType extends Type {
   static fromNothing() {
-    const context = null,
-          name = OBJECT_TYPE_NAME,
+    const name = OBJECT_TYPE_NAME,
           string = name,  ///
+          prefixName = null,
           superTypes = [],
           properties = [],
           provisional = false,
-          objectType = new ObjectType(context, string, name, superTypes, properties, provisional);
+          objectType = new ObjectType(string, name, prefixName, superTypes, properties, provisional);
 
     return objectType;
   }

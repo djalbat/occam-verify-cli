@@ -30,8 +30,8 @@ class TermWithConstructorUnifier extends Unifier {
 
         const { Term } = dom,
               typeNode = generalTypeNode, ///
-              typeName = typeNode.getTypeName(),
-              type = context.findTypeByTypeName(typeName);
+              nominalTypeName = typeNode.getNominalTypeName(),
+              type = context.findTypeByNominalTypeName(nominalTypeName);
 
         if (type !== null) {
           const termNode = specificTermNode, ///

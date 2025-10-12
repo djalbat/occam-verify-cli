@@ -12,22 +12,16 @@ export function typeFromTypeNode(typeNode, context) {
   } else {
     const { Type } = dom,
           typeName = typeNode.getTypeName(),
-          typePrefixName = typeNode.getTypePrefixName();
-
-    let string;
-
-    string = typeName;  ///
-
-    if (typePrefixName !== null) {
-      string = `${typePrefixName}${string}`;
-    }
-
-    const name = typeName,  ///
+          typePrefixName = typeNode.getTypePrefixName(),
+          nominalTypeName = typeNode.getNominalTypeName(),
+          string = nominalTypeName,  ///
+          name = typeName,  ///
+          prefixName = typePrefixName,  ///
           superTypes = null,
           properties = null,
           provisional = null;
 
-    type = new Type(context, string, name, superTypes, properties, provisional);
+    type = new Type(string, name, prefixName, superTypes, properties, provisional);
   }
 
   return type;

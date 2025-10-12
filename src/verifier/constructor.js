@@ -70,8 +70,8 @@ class ConstructorVerifier extends Verifier {
       verify: (typeNode, context, verifyAhead) => {
         let typeVerifies;
 
-        const typeName = typeNode.getTypeName(),
-              typePresent = context.isTypePresentByTypeName(typeName);
+        const nominalTypeName = typeNode.getNominalTypeName(),
+              typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
         if (typePresent) {
           const verifiesAhead = verifyAhead();

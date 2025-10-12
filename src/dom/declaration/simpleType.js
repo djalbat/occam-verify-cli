@@ -74,12 +74,21 @@ export default domAssigned(class SimpleTypeDeclaration {
     this.context.trace(`Verifying the '${typeString}' simple type...`, this.node);
 
     const typeName = this.type.getName(),
-          typePresent = this.context.isTypePresentByTypeName(typeName);
+          includeRelease = true,
+          includeDependencies = false,
+          typePresent = this.context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies);
 
     if (typePresent) {
       this.context.trace(`The '${typeString}' type is already present.`, this.node);
     } else {
-      typeVerifies = true;
+      const prefixedTypeName = typeName, ///
+            typePresent = this.context.isTypePresentByPrefixedTypeName(prefixedTypeName);
+
+      if (typePresent) {
+        this.context.trace(`The '${typeString}' type is already present.`, this.node);
+      } else {
+        typeVerifies = true;
+      }
     }
 
     if (typeVerifies) {
@@ -97,15 +106,15 @@ export default domAssigned(class SimpleTypeDeclaration {
     this.context.trace(`Verifying the '${superTypeString}' super-type...`, this.node);
 
     const typeName = this.type.getName(),
-          superTypeName = superTypeString,  ///
-          typeNameMatches = (typeName === superTypeName);
+          superPrefixedTypeName = superTypeString,  ///
+          typeNameMatches = (typeName === superPrefixedTypeName);
 
     if (typeNameMatches) {
       this.context.trace(`The super-type's name matches the ${typeName}' simple type's name.`, this.node);
     } else {
       const oldSuperType = superType; ///
 
-      superType = this.context.findTypeByTypeName(superTypeName);
+      superType = this.context.findTypeByPrefixedTypeName(superPrefixedTypeName);
 
       const superTypePresent = (superType !== null);
 
@@ -130,7 +139,7 @@ export default domAssigned(class SimpleTypeDeclaration {
 
     const typeString = this.type.getString();
 
-    this.context.trace(`Verifying the super-types of the '${typeString}' simple type...`, this.node);
+    this.context.trace(`Verifying the '${typeString}' simple type's super-types...`, this.node);
 
     const typeBasic = this.type.isBasic();
 
@@ -151,7 +160,7 @@ export default domAssigned(class SimpleTypeDeclaration {
     }
 
     if (superTypesVerify) {
-      this.context.debug(`...verified the super-types of the '${typeString}' simple type.`, this.node);
+      this.context.debug(`...verified the '${typeString}' simple type's super-types.`, this.node);
     }
 
     return superTypesVerify;

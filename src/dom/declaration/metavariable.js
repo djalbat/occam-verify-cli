@@ -56,12 +56,12 @@ export default domAssigned(class MetavariableDeclaration {
     if (type === null) {
       typeVerifies = true;
     } else {
-      const typeName = type.getName(),
-            typeString = type.getString();
+      const typeString = type.getString();
 
       this.context.trace(`Verifying the '${typeString}' type...`, this.node);
 
-      const typePresent = this.context.isTypePresentByTypeName(typeName);
+      const nominalTypeName = type.getNominalTypeName(),
+            typePresent = this.context.isTypePresentByNominalTypeName(nominalTypeName);
 
       if (!typePresent) {
         this.context.debug(`The '${typeString}' type is not present.`, this.node);
