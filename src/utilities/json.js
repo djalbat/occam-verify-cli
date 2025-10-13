@@ -496,9 +496,7 @@ export function termToTermJSON(term) {
 }
 
 export function typeToTypeJSON(type) {
-  const typeJSON = (type !== null) ?
-                     type.toJSON() :
-                       null;
+  const typeJSON = type.toJSON();
 
   return typeJSON;
 }
@@ -517,11 +515,9 @@ export function metaTypeToMetaTypeJSON(metaType) {
 }
 
 export function statementToStatementJSON(statement) {
-  let statementJSON = null;
-
-  if (statement !== null) {
-    statementJSON = statement.toJSON();
-  }
+  const statementJSON = (statement !== null) ?
+                          statement.toJSON() :
+                            null;
 
   return statementJSON;
 }
@@ -533,11 +529,9 @@ export function deductionToDeductionJSON(deduction) {
 }
 
 export function signatureToSignatureJSON(signature) {
-  let signatureJSON = null;
-
-  if (signature !== null) {
-    signatureJSON = signature.toJSON();
-  }
+  const signatureJSON = (signature !== null) ?
+                          signature.toJSON() :
+                            null;
 
   return signatureJSON;
 }
@@ -555,11 +549,9 @@ export function metavariableToMetavariableJSON(metavariable) {
 }
 
 export function procedureCallToProcedureCallJSON(procedureCall) {
-  let procedureCallJSON = null;
-
-  if (procedureCall !== null) {
-    procedureCallJSON = procedureCall.toJSON();
-  }
+  const procedureCallJSON = (procedureCall !== null) ?
+                              procedureCall.toJSON() :
+                                null;
 
   return procedureCallJSON;
 }
