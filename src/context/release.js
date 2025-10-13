@@ -586,7 +586,7 @@ function fileContextsFromJSON(json,fileContexts, releaseContext) {
     }
 
     if (filePathNominalFilePath) {
-      const fileContext = FileContext.fromFilePath(filePath, json, releaseContext);
+      const fileContext = FileContext.fromFilePath(filePath, releaseContext);
 
       fileContexts.push(fileContext);
 
