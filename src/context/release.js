@@ -577,16 +577,20 @@ function fileContextsFromJSON(json,fileContexts, releaseContext) {
           filePathNominalFilePath = isFilePathNominalFilePath(filePath);
 
     if (filePathFurtleFilePath) {
-      const furtleFileContext = FurtleFileContext.fromFilePathAndJSON(filePath, json, releaseContext),
+      const furtleFileContext = FurtleFileContext.fromFilePath(filePath, releaseContext),
             fileContext = furtleFileContext;  ///
 
       fileContexts.push(fileContext);
+
+      fileContext.initialise(json);
     }
 
     if (filePathNominalFilePath) {
-      const fileContext = FileContext.fromFilePathAndJSON(filePath, json, releaseContext);
+      const fileContext = FileContext.fromFilePath(filePath, json, releaseContext);
 
       fileContexts.push(fileContext);
+
+      fileContext.initialise(json);
     }
   });
 }

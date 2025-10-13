@@ -1007,7 +1007,7 @@ export default class FileContext {
     return fileContext;
   }
 
-  static fromFilePathAndJSON(filePath, json, releaseContext) {
+  static fromFilePath(filePath, releaseContext) {
     const lineIndex = null,
           tokens = null,
           node = null,
@@ -1025,8 +1025,6 @@ export default class FileContext {
           metatheorems = null,
           metavariables = null,
           fileContext = new FileContext(releaseContext, filePath, lineIndex, tokens, node, types, rules, axioms, lemmas, theorems, variables, metaLemmas, conjectures, combinators, typePrefixes, constructors, metatheorems, metavariables);
-
-    fileContext.initialise(json);
 
     return fileContext;
   }
