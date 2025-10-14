@@ -285,35 +285,24 @@ export default domAssigned(class ComplexTypeDeclaration {
     let propertyNominalTypeNameVerifies = false;
 
     const propertyString = property.getString(),
-          propertyNominalTypeName = property.getNominalTypeName();
+          nominalTypeName = property.getNominalTypeName();
 
-    this.context.trace(`Verifying the '${propertyString}' property's '${propertyNominalTypeName}' nominal type name...`, this.node);
+    this.context.trace(`Verifying the '${propertyString}' property's '${nominalTypeName}' nominal type name...`, this.node);
 
-    const typeName = this.type.getName(),
-          typeNameMatches = propertyType.matchTypeName(typeName);
+    const nominalTypeNameMatches = this.type.matchNominalTypeName(nominalTypeName);
 
-    if (typeNameMatches) {
+    if (nominalTypeNameMatches) {
       propertyNominalTypeNameVerifies = true;
-
-      property.setType(this.type);
     } else {
-      const nominalTypeName = propertyType.getNominalTypeName();
+      const typePresent = this.context.isTypePresentByNominalTypeName(nominalTypeName);
 
-      propertyType = this.context.findTypeByNominalTypeName(nominalTypeName);
-
-      const propertyTypePresent = (propertyType !== null);
-
-      if (propertyTypePresent) {
-        const type = propertyType;  ///
-
-        property.setType(type);
-
+      if (typePresent) {
         propertyNominalTypeNameVerifies = true;
       }
     }
 
     if (propertyNominalTypeNameVerifies) {
-      this.context.debug(`...verified the '${propertyString}' property's '${propertyNominalTypeName}' nominal type name.`, this.node);
+      this.context.debug(`...verifies the '${propertyString}' property's '${nominalTypeName}' nominal type name.`, this.node);
     }
 
     return propertyNominalTypeNameVerifies;

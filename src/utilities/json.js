@@ -496,7 +496,9 @@ export function termToTermJSON(term) {
 }
 
 export function typeToTypeJSON(type) {
-  const typeJSON = type.toJSON();
+  const typeJSON = (type !== null) ?
+                      type.toJSON() :
+                        null;
 
   return typeJSON;
 }
