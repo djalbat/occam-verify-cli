@@ -33,8 +33,6 @@ export default domAssigned(class PropertyRelation {
     return this.term;
   }
 
-  getType() { return this.property.getType(); }
-
   isEqualTo(propertyRelation) {
     const propertyRelationString = propertyRelation.getString(),
           equalTo = (propertyRelationString === this.string);
@@ -108,10 +106,6 @@ export default domAssigned(class PropertyRelation {
 
       context.debug(`The '${propertyName}' property is not a property of the '${variableString}' variable's '${variableTypeString}' type.`);
     } else {
-      const type = termType;
-
-      this.property.setType(type);
-
       propertyVerifies = true;
     }
 

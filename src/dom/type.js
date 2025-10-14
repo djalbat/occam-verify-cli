@@ -2,9 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-import dom from "../dom";
-
-import { domAssigned } from "../dom";
+import dom, { domAssigned } from "../dom";
 import { OBJECT_TYPE_NAME } from "../constants";
 import { typeFromTypeNode } from "../utilities/node";
 import { stringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/type";
@@ -359,13 +357,13 @@ class Type {
   }
 
   static fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context) {
-    const properties = [],
+    const typeName = simpleTypeDeclarationNode.getTypeName(),
           provisional = simpleTypeDeclarationNode.isProvisional(),
-          typeName = simpleTypeDeclarationNode.getTypeName(),
           typePrefixName = simpleTypeDeclarationNode.getTypePrefixName(),
+          superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
           name = typeName,  ///
           prefixName = typePrefixName,  ///
-          superTypes = superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
+          properties = [],
           string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
           type = new Type(string, name, prefixName, superTypes, properties, provisional);
 
@@ -373,12 +371,12 @@ class Type {
   }
 
   static fromComplexTypeDeclarationNode(complexTypeDeclarationNode, context) {
-    const provisional = complexTypeDeclarationNode.isProvisional(),
-          typeName = complexTypeDeclarationNode.getTypeName(),
+    const typeName = complexTypeDeclarationNode.getTypeName(),
+          provisional = complexTypeDeclarationNode.isProvisional(),
           typePrefixName = complexTypeDeclarationNode.getTypePrefixName(),
+          superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
           name = typeName,  ///
           prefixName = typePrefixName,  ///
-          superTypes = superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
           properties = propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
           string = stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes),
           type = new Type(string, name, prefixName, superTypes, properties, provisional);
