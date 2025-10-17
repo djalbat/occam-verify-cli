@@ -58,7 +58,7 @@ export default domAssigned(class PropertyAssertion {
       context.debug(`...matched the '${termString}' term and '${propertyRelationString}' property relation against the '${propertyAssertionString}' property assertion.`);
     }
 
-    return verifiesAsPropertyAssertion;
+    return propertyMatchesTermAndPropertyRelation;
   }
 
   verify(assignments, stated, context) {
