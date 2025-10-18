@@ -2,13 +2,13 @@
 
 import dom from "../dom";
 
-import { objectType } from "../dom/type";
+import { baseType } from "../dom/type";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
 
   if (typeNode === null) {
-    type = objectType;
+    type = baseType;
   } else {
     const { Type } = dom,
           typeName = typeNode.getTypeName(),

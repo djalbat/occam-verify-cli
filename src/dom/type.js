@@ -2,8 +2,10 @@
 
 import { arrayUtilities } from "necessary";
 
-import dom, { domAssigned } from "../dom";
-import { OBJECT_TYPE_NAME } from "../constants";
+import dom from "../dom";
+
+import { domAssigned } from "../dom";
+import { BASE_TYPE_SYMBOL } from "../constants";
 import { typeFromTypeNode } from "../utilities/node";
 import { stringFromTypeNameTypePrefixNameAndSuperTypes } from "../utilities/type";
 import { superTypesFromJSON, propertiesFromJSON, superTypesToSuperTypesJSON, propertiesToPropertiesJSON } from "../utilities/json";
@@ -134,7 +136,7 @@ class Type {
       const firstSuperType = first(this.superTypes),
             superType = firstSuperType; ///
 
-      if (superType === objectType) {
+      if (superType === baseType) {
         basic = true;
       }
     }
@@ -169,7 +171,7 @@ class Type {
   isSubTypeOf(type) {
     let subTypeOf;
 
-    if (this === objectType) {
+    if (this === baseType) {
       subTypeOf = false;
     } else {
       subTypeOf = this.superTypes.some((superType) => { ///
@@ -390,7 +392,7 @@ class Type {
     const typeNode = constructorDeclarationNode.getTypeNode();
 
     if (typeNode === null) {
-      type = objectType;
+      type = baseType;
     } else {
       const provisional = constructorDeclarationNode.isProvisional();
 
@@ -415,7 +417,7 @@ function superTypesFromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, cont
         superTypesLength = superTypes.length;
 
   if (superTypesLength === 0) {
-    const superType = objectType; ///
+    const superType = baseType; ///
 
     superTypes.push(superType);
   }
@@ -433,7 +435,7 @@ function superTypesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, co
         superTypesLength = superTypes.length;
 
   if (superTypesLength === 0) {
-    const superType = objectType; ///
+    const superType = baseType; ///
 
     superTypes.push(superType);
   }
@@ -453,18 +455,18 @@ function propertiesFromComplexTypeDeclarationNode(complexTypeDeclarationNode, co
   return properties;
 }
 
-class ObjectType extends Type {
+class BaseType extends Type {
   static fromNothing() {
-    const name = OBJECT_TYPE_NAME,
+    const name = BASE_TYPE_SYMBOL,  ///
           string = name,  ///
           prefixName = null,
           superTypes = [],
           properties = [],
           provisional = false,
-          objectType = new ObjectType(string, name, prefixName, superTypes, properties, provisional);
+          baseType = new BaseType(string, name, prefixName, superTypes, properties, provisional);
 
-    return objectType;
+    return baseType;
   }
 }
 
-export const objectType = ObjectType.fromNothing();
+export const baseType = BaseType.fromNothing();

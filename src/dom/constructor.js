@@ -2,7 +2,7 @@
 
 import dom from "../dom";
 
-import { objectType } from "../dom/type";
+import { baseType } from "../dom/type";
 import { domAssigned } from "../dom";
 import { unifyTermWithConstructor } from "../utilities/unification";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
@@ -91,7 +91,7 @@ function stringFromTerm(term) {
   const termString = term.getString(),
         type = term.getType();
 
-  if (type === objectType) {
+  if (type === baseType) {
     string = termString;  ///
   } else {
     const typeString = type.getString();

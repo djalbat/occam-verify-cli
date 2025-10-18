@@ -3,7 +3,7 @@
 import BracketedContext from "../../context/bracketted";
 import TermPartialContext from "../../context/partial/term";
 
-import { OBJECT_TYPE_NAME } from "../../constants";
+import { BASE_TYPE_SYMBOL } from "../../constants";
 import { nominalLexer, nominalParser } from "../../utilities/nominal";
 
 class ConstructorBracketedContext extends BracketedContext {
@@ -15,7 +15,7 @@ class ConstructorBracketedContext extends BracketedContext {
   }
 
   static fromNothing() {
-    const string = `(${OBJECT_TYPE_NAME})`,
+    const string = `(${BASE_TYPE_SYMBOL})`,
           lexer = nominalLexer, ///
           parser = nominalParser, ///
           termPartialContext = TermPartialContext.fromStringLexerAndParser(string, lexer, parser),

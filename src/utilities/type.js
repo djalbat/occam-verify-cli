@@ -1,6 +1,6 @@
 "use strict";
 
-import { objectType } from "../dom/type";
+import { baseType } from "../dom/type";
 
 export function stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes) {
   let string;
@@ -20,7 +20,7 @@ export function stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePref
 
 export function superTypesStringFromSuperTypes(superTypes) {
   const superTypesString = superTypes.reduce((superTypesString, superType) => {
-    if (superType !== objectType) {
+    if (superType !== baseType) {
       const superTypeString = superType.getString();
 
       superTypesString = (superTypesString === null) ?

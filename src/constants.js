@@ -10,6 +10,6 @@ export const PROVISIONAL = "Provisional";
 export const EMPTY_STRING = "";
 export const SINGLE_SPACE = " ";
 export const PROVISIONALLY = "provisionally";
-export const OBJECT_TYPE_NAME = "_";
+export const BASE_TYPE_SYMBOL = "<>";
 export const BRACKETED_TERM_DEPTH = 2;
 export const BRACKETED_STATEMENT_DEPTH = 2;
