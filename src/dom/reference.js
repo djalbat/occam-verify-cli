@@ -214,8 +214,8 @@ export default domAssigned(class Reference {
   }
 
   static fromSatisfiesAssertionNode(satisfiesAssertionNode, context) {
-    const metavariableNode = satisfiesAssertionNode.getMetavariableNode(),
-          reference = referenceFromMetavariableNode(metavariableNode, context);
+    const simpleReferenceNode = satisfiesAssertionNode.getSimpleReferenceNode(),
+          reference = referenceFromSimpleReferenceNode(simpleReferenceNode, context);
 
     return reference;
   }
@@ -232,6 +232,14 @@ function referenceFromReferenceNode(referenceNode, context) {
 function referenceFromMetavariableNode(metavariableNode, context) {
   const { Reference, Metavariable } = dom,
         metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
+        reference = new Reference(metavariable);
+
+  return reference;
+}
+
+function referenceFromSimpleReferenceNode(simpleReferenceNode, context) {
+  const { Reference, Metavariable } = dom,
+        metavariable = Metavariable.fromSimpleReferenceNode(simpleReferenceNode, context),
         reference = new Reference(metavariable);
 
   return reference;

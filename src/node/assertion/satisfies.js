@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../../node/nonTerminal";
 
-import { SIGNATURE_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
+import { SIGNATURE_RULE_NAME, SIMPLE_REFERENCE_RULE_NAME } from "../../ruleNames";
 
 export default class SatisfiesAssertionNode extends NonTerminalNode {
   getSignatureNode() {
@@ -12,11 +12,11 @@ export default class SatisfiesAssertionNode extends NonTerminalNode {
     return signatureNode;
   }
 
-  getMetavariableNode() {
-    const ruleName = METAVARIABLE_RULE_NAME,
-          metavariableNode = this.getNodeByRuleName(ruleName);
+  getSimpleReferenceNode() {
+    const ruleName = SIMPLE_REFERENCE_RULE_NAME,
+          simpleReferenceNode = this.getNodeByRuleName(ruleName);
 
-    return metavariableNode;
+    return simpleReferenceNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(SatisfiesAssertionNode, ruleName, childNodes, opacity, precedence); }

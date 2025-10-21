@@ -56,6 +56,7 @@ export const THEOREM_HEADER_RULE_NAME = "theoremHeader";
 export const META_LEMMA_BODY_RULE_NAME = "metaLemmaBody";
 export const CONJECTURE_BODY_RULE_NAME = "conjectureBody";
 export const METATHEOREM_BODY_RULE_NAME = "metatheoremBody";
+export const SIMPLE_REFERENCE_RULE_NAME = "simpleReference";
 export const META_LEMMA_HEADER_RULE_NAME = "metaLemmaHeader";
 export const PROPERTY_RELATION_RULE_NAME = "propertyRelation";
 export const DEFINED_ASSERTION_RULE_NAME = "definedAssertion";

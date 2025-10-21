@@ -227,16 +227,16 @@ function verifyWhenDerived(term, frame, negated, context) {
   }
 
   if (frame!== null) {
-    const { Metavariable } = dom,
+    const { SimpleReference } = dom,
           frameNode = frame.getNode(),
-          metavariable = Metavariable.fromFrameNode(frameNode, context),
-          metavariableDefined = context.isMetavariableDefined(metavariable);
+          simpleReference = SimpleReference.fromFrameNode(frameNode, context),
+          simpleReferenceDefined = context.isSimpleReferenceDefined(simpleReference);
 
-    if (!negated && metavariableDefined) {
+    if (!negated && simpleReferenceDefined) {
       verifiesWhenDerived = true;
     }
 
-    if (negated && !metavariableDefined) {
+    if (negated && !simpleReferenceDefined) {
       verifiesWhenDerived = true;
     }
   }

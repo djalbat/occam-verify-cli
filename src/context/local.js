@@ -162,8 +162,8 @@ class LocalContext {
   addJudgement(judgement) {
     let judgementAdded = false;
 
-    const metavariable = judgement.getMetavariable(),
-          judgementPresent = this.isJudgementPresentByMetavariable(metavariable);
+    const simpleReference = judgement.getSimpleReference(),
+          judgementPresent = this.isJudgementPresentBySimpleReference(simpleReference);
 
     if (!judgementPresent) {
       this.judgements.push(judgement);
@@ -209,16 +209,16 @@ class LocalContext {
     return variable;
   }
 
-  findJudgementByMetavariable(metavariable) {
+  findJudgementBySimpleReference(simpleReference) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
             const judgementSimple = judgement.isSimple();
 
             if (judgementSimple) {
-              const judgementMetavariable = judgement.getMetavariable(),
-                  judgementMetavariableEqualToMetavariable = judgementMetavariable.isEqualTo(metavariable);
+              const judgementSimpleReference = judgement.getSimpleReference(),
+                    judgementSimpleReferenceEqualToSimpleReference = judgementSimpleReference.isEqualTo(simpleReference);
 
-              if (judgementMetavariableEqualToMetavariable) {
+              if (judgementSimpleReferenceEqualToSimpleReference) {
                 return true;
               }
             }
@@ -272,8 +272,8 @@ class LocalContext {
 
   isMetavariablePresentByMetavariableName(metavariableNode) { return this.context.isMetavariablePresentByMetavariableName(metavariableNode); }
 
-  isJudgementPresentByMetavariable(metavariable) {
-    const judgement = this.findJudgementByMetavariable(metavariable),
+  isJudgementPresentBySimpleReference(simpleReference) {
+    const judgement = this.findJudgementBySimpleReference(simpleReference),
           judgementPresent = (judgement !== null);
 
     return judgementPresent;
@@ -320,11 +320,11 @@ class LocalContext {
     return variableDefined;
   }
 
-  isMetavariableDefined(metavariable) {
-    const judgementPresent = this.isJudgementPresentByMetavariable(metavariable),
-          metavariableDefined = judgementPresent; ///
+  isSimpleReferenceDefined(simpleReference) {
+    const judgementPresent = this.isJudgementPresentBySimpleReference(simpleReference),
+          simpleReferenceDefined = judgementPresent; ///
 
-    return metavariableDefined
+    return simpleReferenceDefined
   }
 
   matchTermAndPropertyRelation(term, propertyRelation) {

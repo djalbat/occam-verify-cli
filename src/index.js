@@ -39,6 +39,7 @@ import Metavariable from "./dom/metavariable";
 import ProcedureCall from "./dom/procedureCall";
 import SubDerivation from "./dom/subDerivation";
 import TypeAssertion from "./dom/assertion/type";
+import SimpleReference from "./dom/simpleReference";
 import DefinedAssertion from "./dom/assertion/defined";
 import PropertyRelation from "./dom/propertyRelation";
 import TermSubstitution from "./dom/substitution/term";
