@@ -638,16 +638,16 @@ export default class FileContext {
     return label;
   }
 
-  findJudgementBySimpleReference(simpleReference) {
+  findJudgementByMetavariable(metavariable) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
             const judgementSimple = judgement.isSimple();
 
             if (judgementSimple) {
-              const judgementSimpleReference = judgement.getSimpleReference(),
-                    judgementSimpleReferenceEqualToSimpleReference = judgementSimpleReference.isEqualTo(simpleReference);
+              const judgementMetavariable = judgement.getMetavariable(),
+                    judgementMetavariableEqualToMetavariable = judgementMetavariable.isEqualTo(metavariable);
 
-              if (judgementSimpleReferenceEqualToSimpleReference) {
+              if (judgementMetavariableEqualToMetavariable) {
                 return true;
               }
             }

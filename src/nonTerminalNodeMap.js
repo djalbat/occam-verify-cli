@@ -57,7 +57,6 @@ import TypeAssertionNode from "./node/assertion/type";
 import ConjectureBodyNode from "./node/body/conjecture";
 import MetatheoremBodyNode from "./node/body/metatheorem";
 import MetaLemmaHeaderNode from "./node/header/metaLemma";
-import SimpleReferenceNode from "./node/simpleReference";
 import PropertyRelationNode from "./node/propertyRelation"
 import DefinedAssertionNode from "./node/assertion/defined";
 import TermSubstitutionNode from "./node/substitution/term";
@@ -216,7 +215,6 @@ const NonTerminalNodeMap = {
   [THEOREM_HEADER_RULE_NAME]: TheoremHeaderNode,
   [META_LEMMA_BODY_RULE_NAME]: MetaLemmaBodyNode,
   [CONJECTURE_BODY_RULE_NAME]: ConjectureBodyNode,
-  [SIMPLE_REFERENCE_RULE_NAME]: SimpleReferenceNode,
   [METATHEOREM_BODY_RULE_NAME]: MetatheoremBodyNode,
   [META_LEMMA_HEADER_RULE_NAME]: MetaLemmaHeaderNode,
   [CONJECTURE_HEADER_RULE_NAME]: ConjectureHeaderNode,

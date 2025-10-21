@@ -494,27 +494,6 @@ export default domAssigned(class Metavariable {
     return metavariable;
   }
 
-  static fromSimpleReferenceNode(simpleReferenceNode, context) {
-    const { Metavariable } = dom;
-
-    let node;
-
-    const type = null,
-          name = simpleReferenceNode.getName();
-
-    node = simpleReferenceNode;  ///
-
-    const string = context.nodeAsString(node),
-          tokens = context.nodeAsTokens(node),
-          metaType = null;
-
-    node = null;
-
-    const metavariable = new Metavariable(string, node, tokens, name, type, metaType);
-
-    return metavariable;
-  }
-
   static fromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
     const { MetaType } = dom,
           metavariableNode = metavariableDeclarationNode.getMetavariableNode(),

@@ -7,11 +7,11 @@ import { domAssigned } from "../dom";
 import { unifyStatementIntrinsically } from "../utilities/unification";
 
 export default domAssigned(class Declaration {
-  constructor(string, node, statement, simpleReference) {
+  constructor(string, node, statement, metavariable) {
     this.string = string;
     this.node = node;
     this.statement = statement;
-    this.simpleReference = simpleReference;
+    this.metavariable = metavariable;
   }
 
   getString() {
@@ -26,8 +26,8 @@ export default domAssigned(class Declaration {
     return this.statement;
   }
 
-  getSimpleReference() {
-    return this.simpleReference;
+  getMetavariable() {
+    return this.metavariable;
   }
 
   isSimple() {
@@ -47,7 +47,7 @@ export default domAssigned(class Declaration {
     const simple = this.isSimple();
 
     if (simple) {
-      const judgement = context.findJudgementBySimpleReference(this.simpleReference);
+      const judgement = context.findJudgementByMetavariable(this.metavariable);
 
       if (judgement !== null) {
         const declaration = judgement.getDeclaration();
@@ -56,9 +56,9 @@ export default domAssigned(class Declaration {
       }
     } else {
       const statement = substitution.getStatement(),
-            simpleReference = substitution.getMetavariable(),
+            metavariable = substitution.getMetavariable(),
             statementEqualToStatement = this.statement.isEqualTo(statement),
-            metavariableEqualToMetavariable = this.simpleReference.isEqualTo(simpleReference);
+            metavariableEqualToMetavariable = this.metavariable.isEqualTo(metavariable);
 
       if (metavariableEqualToMetavariable && statementEqualToStatement) {
         substitutionMatches = true;
@@ -119,17 +119,17 @@ export default domAssigned(class Declaration {
     let metavariableVerifiesAsReference;
 
     const declarationString = this.string,
-          metavariableString = this.simpleReference.getString();
+          metavariableString = this.metavariable.getString();
 
-    context.trace(`Verifying the '${declarationString}' declaration's '${metavariableString}' simpleReference as a reference...`);
+    context.trace(`Verifying the '${declarationString}' declaration's '${metavariableString}' metavariable as a reference...`);
 
-    const reference = referenceFromMetavariable(this.simpleReference, context),
+    const reference = referenceFromMetavariable(this.metavariable, context),
           referenceVerifies = reference.verify(context);
 
     metavariableVerifiesAsReference = referenceVerifies;  ///
 
     if (metavariableVerifiesAsReference) {
-      context.debug(`...verified the '${declarationString}' declaration's '${metavariableString}' simpleReference as a reference.`);
+      context.debug(`...verified the '${declarationString}' declaration's '${metavariableString}' metavariable as a reference.`);
     }
 
     return metavariableVerifiesAsReference;
@@ -163,14 +163,14 @@ export default domAssigned(class Declaration {
     let verifiesAsMetavariable;
 
     const declarationString = this.string,  ///
-          metavariableString = this.simpleReference.getString();
+          metavariableString = this.metavariable.getString();
 
-    context.trace(`Verifying the '${declarationString}' declaration's '${metavariableString}' simpleReference...`);
+    context.trace(`Verifying the '${declarationString}' declaration's '${metavariableString}' metavariable...`);
 
-    verifiesAsMetavariable = this.simpleReference.verify(context);
+    verifiesAsMetavariable = this.metavariable.verify(context);
 
     if (verifiesAsMetavariable) {
-      context.debug(`...verified the '${declarationString}' declaration's '${metavariableString}' simpleReference.`);
+      context.debug(`...verified the '${declarationString}' declaration's '${metavariableString}' metavariable.`);
     }
 
     return verifiesAsMetavariable;
@@ -183,7 +183,7 @@ export default domAssigned(class Declaration {
 
     context.trace(`Verifying the '${declarationString}' stated declaration...`);
 
-    const reference = referenceFromMetavariable(this.simpleReference, context),
+    const reference = referenceFromMetavariable(this.metavariable, context),
           metavariablePresent = context.isMetavariablePresentByReference(reference);
 
     if (metavariablePresent) {
@@ -215,7 +215,7 @@ export default domAssigned(class Declaration {
 
     context.trace(`Verifying the '${declarationString}' derived declaration...`);
 
-    const reference = referenceFromMetavariable(this.simpleReference, context),
+    const reference = referenceFromMetavariable(this.metavariable, context),
           metaLemmaMetatheoremPresent = context.isMetaLemmaMetatheoremPresentByReference(reference);
 
     verifiesWhenDerived = metaLemmaMetatheoremPresent; ///
@@ -264,7 +264,7 @@ export default domAssigned(class Declaration {
 
     context.trace(`Unifying the '${labelString}' label with the '${declarationString}' declaration...`);
 
-    const reference = referenceFromMetavariable(this.simpleReference, context),
+    const reference = referenceFromMetavariable(this.metavariable, context),
           labelUnifies = reference.unifyLabel(label, substitutions, context);
 
     labelUnifiesWithReference = labelUnifies; ///
@@ -332,9 +332,9 @@ export default domAssigned(class Declaration {
   }
 });
 
-function referenceFromMetavariable(simpleReference, context) {
+function referenceFromMetavariable(metavariable, context) {
   const { Reference } = dom,
-        metavariableNode = simpleReference.getNode(),
+        metavariableNode = metavariable.getNode(),
         reference = Reference.fromMetavariableNode(metavariableNode, context);
 
   return reference;
@@ -344,9 +344,9 @@ function declarationFromDeclarationNode(declarationNode, context) {
   const { Metavariable, Declaration, Statement } = dom,
         node = declarationNode,  ///
         string = context.nodeAsString(node),
-        simpleReference = Metavariable.fromDeclarationNode(declarationNode, context),
+        metavariable = Metavariable.fromDeclarationNode(declarationNode, context),
         statement = Statement.fromDeclarationNode(declarationNode, context),
-        declaration = new Declaration(string, node, statement, simpleReference);
+        declaration = new Declaration(string, node, statement, metavariable);
 
   return declaration;
 }
