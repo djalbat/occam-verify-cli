@@ -145,6 +145,12 @@ export function procedureCallFromJSON(json, context) {
   return procedureCall;
 }
 
+export function procedureNameFromJSON(json, context) {
+  const { procedureName } = json;
+
+  return procedureName;
+}
+
 export function typesFromJSON(json, types, context) {
   const { types: typesJSON } = json;
 

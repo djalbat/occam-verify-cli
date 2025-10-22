@@ -2,14 +2,14 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { REFERENCE_RULE_NAME, PARAMETER_RULE_NAME } from "../ruleNames";
+import { PARAMETER_RULE_NAME, PROCEDURE_REFERENCE_RULE_NAME } from "../ruleNames";
 
 export default class ProcedureCallNode extends NonTerminalNode {
-  getReferenceNode() {
-    const ruleName = REFERENCE_RULE_NAME,
-          referenceNode = this.getNodeByRuleName(ruleName);
+  getProcedureName() {
+    const procedureReferenceNode = this.getProcedureReferenceNode(),
+          procedureName = procedureReferenceNode.getProcedureName();
 
-    return referenceNode;
+    return procedureName;
   }
 
   getParameterNodes() {
@@ -17,6 +17,13 @@ export default class ProcedureCallNode extends NonTerminalNode {
           parameterNodes = this.getNodesByRuleName(ruleName);
 
     return parameterNodes;
+  }
+
+  getProcedureReferenceNode() {
+    const ruleName = PROCEDURE_REFERENCE_RULE_NAME,
+          procedureReferenceNode = this.getNodeByRuleName(ruleName);
+
+    return procedureReferenceNode;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ProcedureCallNode, ruleName, childNodes, opacity, precedence); }

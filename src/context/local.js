@@ -174,6 +174,8 @@ class LocalContext {
     return judgementAdded;
   }
 
+  findProcedureByName(name) { return this.context.findProcedureByName(name); }
+
   findLabelByReference(reference, context) { return this.context.findLabelByReference(reference, context); }
 
   findRuleByReference(reference) { return this.context.findRuleByReference(reference); }
@@ -183,8 +185,6 @@ class LocalContext {
   findLemmaByReference(reference) { return this.context.findLemmaByReference(reference); }
 
   findTheoremByReference(reference) { return this.context.findTheoremByReference(reference); }
-
-  findProcedureByReference(reference) { return this.context.findProcedureByReference(reference); }
 
   findConjectureByReference(reference) { return this.context.findConjectureByReference(reference); }
 
@@ -239,9 +239,9 @@ class LocalContext {
 
   findMetavariableByMetavariableName(metavariableName) { return this.context.findMetavariableByMetavariableName(metavariableName); }
 
-  isLabelPresentByReference(reference) { return this.context.isLabelPresentByReference(reference); }
+  isProcedurePresentByName(name) { return this.context.isProcedurePresentByName(name); }
 
-  isProcedurePresentByReference(reference) { return this.context.isProcedurePresentByReference(reference); }
+  isLabelPresentByReference(reference) { return this.context.isLabelPresentByReference(reference); }
 
   isMetavariablePresentByReference(reference) { return this.context.isMetavariablePresentByReference(reference); }
 

@@ -5,13 +5,13 @@ import { Expressions } from "occam-furtle";
 import dom from "../dom";
 
 import { domAssigned } from "../dom";
-import { referenceFromJSON, parametersFromJSON, parametersToParametersJSON } from "../utilities/json";
+import { parametersFromJSON, procedureNameFromJSON, parametersToParametersJSON } from "../utilities/json";
 
 export default domAssigned(class ProcedureCall {
-  constructor(node, string, reference, parameters) {
+  constructor(node, string, procedureName, parameters) {
     this.node = node;
     this.string = string;
-    this.reference = reference;
+    this.procedureName = procedureName;
     this.parameters = parameters;
   }
 
@@ -23,8 +23,8 @@ export default domAssigned(class ProcedureCall {
     return this.string;
   }
 
-  getReference() {
-    return this.reference;
+  getProcedureName() {
+    return this.procedureName;
   }
 
   getParameters() {
@@ -49,7 +49,8 @@ export default domAssigned(class ProcedureCall {
 
     context.trace(`Verifying the '${procedureCallString}' procedure call...`, this.node);
 
-    const procedure = context.findProcedureByReference(this.reference);
+    const name = this.procedureName,  ///
+          procedure = context.findProcedureByName(name);
 
     if (procedure !== null) {
       const procedureBoolean = procedure.isBoolean();
@@ -77,8 +78,9 @@ export default domAssigned(class ProcedureCall {
 
     context.trace(`Unifying the '${procedureCallString}' procedure call independently...`);
 
-    const procedure = context.findProcedureByReference(this.reference),
+    const name = this.procedureName,  ///
           nodes = this.findNodes(substitutions),
+          procedure = context.findProcedureByName(name),
           expressions = Expressions.fromNodes(nodes, context);
 
     try {
@@ -100,12 +102,11 @@ export default domAssigned(class ProcedureCall {
   }
 
   toJSON() {
-    const referenceJSON = this.reference.toJSON(),
-          parametersJSON = parametersToParametersJSON(this.parameters),
-          reference = referenceJSON,  ///
+    const parametersJSON = parametersToParametersJSON(this.parameters),
+          procedureName = this.procedureName,
           parameters = parametersJSON,  ///
           json = {
-            reference,
+            procedureName,
             parameters
           };
 
@@ -115,11 +116,11 @@ export default domAssigned(class ProcedureCall {
   static name = "ProcedureCall";
 
   static fromJSON(json, context) {
-    const reference = referenceFromJSON(json, context),
+    const procedureName = procedureNameFromJSON(json, context),
           parameters = parametersFromJSON(json, context),
           node = null,
-          string = stringFromReferenceAndParameters(reference, parameters),
-          procedureCall = new ProcedureCall(node, string, reference, parameters);
+          string = stringFromProcedureNameAndParameters(procedureName, parameters),
+          procedureCall = new ProcedureCall(node, string, procedureName, parameters);
 
     return procedureCall;
   }
@@ -150,12 +151,12 @@ export default domAssigned(class ProcedureCall {
 });
 
 function procedureCallFromProcedureCallNode(procedureCallNode, context) {
-  const { Reference, ProcedureCall } = dom,
+  const { ProcedureCall } = dom,
         node = procedureCallNode, ///
         parameters = parametersFromProcedureCallNode(procedureCallNode, context),
-        reference = Reference.fromProcedureCallNode(procedureCallNode, context),
-        string = stringFromReferenceAndParameters(reference, parameters),
-        procedureCall = new ProcedureCall(node, string, reference, parameters);
+        procedureName = procedureCallNode.getProcedureName(),
+        string = stringFromProcedureNameAndParameters(procedureName, parameters),
+        procedureCall = new ProcedureCall(node, string, procedureName, parameters);
 
   return procedureCall;
 }
@@ -172,9 +173,8 @@ function parametersFromProcedureCallNode(procedureCallNode, context) {
   return parameters;
 }
 
-function stringFromReferenceAndParameters(reference, parameters) {
-  const referenceString = reference.getString(),
-        parametersString = parameters.reduce((parametersString, parameter) => {
+function stringFromProcedureNameAndParameters(procedureName, parameters) {
+  const parametersString = parameters.reduce((parametersString, parameter) => {
           const parameterString = parameter.getString();
 
           parametersString = (parametersString === null) ?
@@ -183,7 +183,7 @@ function stringFromReferenceAndParameters(reference, parameters) {
 
           return parametersString;
         }, null),
-        string = `${referenceString}(${parametersString})`;
+        string = `${procedureName}(${parametersString})`;
 
   return string;
 }

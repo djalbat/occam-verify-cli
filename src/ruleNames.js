@@ -65,6 +65,7 @@ export const METATHEOREM_HEADER_RULE_NAME = "metatheoremHeader";
 export const PROPERTY_ASSERTION_RULE_NAME = "propertyAssertion";
 export const SUBPROOF_ASSERTION_RULE_NAME = "subproofAssertion";
 export const FRAME_SUBSTITUTION_RULE_NAME = "frameSubstitution";
+export const PROCEDURE_REFERENCE_RULE_NAME = "procedureReference";
 export const CONTAINED_ASSERTION_RULE_NAME = "containedAssertion";
 export const SATISFIES_ASSERTION_RULE_NAME = "satisfiesAssertion";
 export const PARENTHESISED_LABEL_RULE_NAME = "parenthesisedLabel";

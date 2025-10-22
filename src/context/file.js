@@ -408,9 +408,8 @@ export default class FileContext {
     return theorem;
   }
 
-  findProcedureByReference(reference) {
+  findProcedureByName(name) {
     const procedures = this.getProcedures(),
-          name = reference.getName(),
           procedure = procedures.find((procedure) => {
             const nameMatches = procedure.matchName(name);
 
@@ -748,8 +747,8 @@ export default class FileContext {
     return labelPresent;
   }
 
-  isProcedurePresentByReference(reference) {
-    const procedure = this.findProcedureByReference(reference),
+  isProcedurePresentByName(name) {
+    const procedure = this.findProcedureByName(name),
           procedurePresent = (procedure !== null);
 
     return procedurePresent;
