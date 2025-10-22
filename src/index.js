@@ -47,6 +47,7 @@ import SubproofAssertion from "./dom/assertion/subproof";
 import PropertyAssertion from "./dom/assertion/property";
 import ContainedAssertion from "./dom/assertion/contained";
 import SatisfiesAssertion from "./dom/assertion/satisfies";
+import ProcedureReference from "./dom/procedureReference";
 import VariableDeclaration from "./dom/declaration/variable";
 import BracketedCombinator from "./dom/combinator/bracketed";
 import BracketedConstructor from "./dom/constructor/bracketed";

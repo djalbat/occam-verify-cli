@@ -63,19 +63,6 @@ export function statementFromJSON(json, context) {
   return statement;
 }
 
-export function referenceFromJSON(json, context) {
-  let { reference } = json;
-
-  const { Reference } = dom,
-        referenceJSON = reference;  ///
-
-  json = referenceJSON;  ///
-
-  reference = Reference.fromJSON(json, context);
-
-  return reference;
-}
-
 export function deductionFromJSON(json, context) {
   let { deduction } = json;
 
@@ -145,10 +132,17 @@ export function procedureCallFromJSON(json, context) {
   return procedureCall;
 }
 
-export function procedureNameFromJSON(json, context) {
-  const { procedureName } = json;
+export function procedureReferenceFromJSON(json, context) {
+  let { procedureReference } = json;
 
-  return procedureName;
+  const { ProcedureReference } = dom,
+        procedureReferenceJSON = procedureReference;  ///
+
+  json = procedureReferenceJSON;  ///
+
+  procedureReference = ProcedureReference.fromJSON(json, context);
+
+  return procedureReference;
 }
 
 export function typesFromJSON(json, types, context) {
@@ -562,6 +556,12 @@ export function procedureCallToProcedureCallJSON(procedureCall) {
                                 null;
 
   return procedureCallJSON;
+}
+
+export function procedureReferenceToProcedureReferenceJSON(procedureReference) {
+  const procedureReferenceJSON = procedureReference.toJSON();
+
+  return procedureReferenceJSON;
 }
 
 export function typesToTypesJSON(types) {
