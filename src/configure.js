@@ -1,9 +1,9 @@
 "use strict";
 
-const { DEFAULT_HELP, DEFAULT_VERSION } = require("./defaults"),
-      { HELP_COMMAND, VERSION_COMMAND } = require("./commands");
+import { DEFAULT_HELP, DEFAULT_VERSION } from "./defaults";
+import { HELP_COMMAND, VERSION_COMMAND } from "./commands";
 
-function configure(command, argument, options, main) {
+export default function configure(command, argument, options, main) {
   const { help = DEFAULT_HELP, version = DEFAULT_VERSION } = options;
 
   if (false) {
@@ -16,5 +16,3 @@ function configure(command, argument, options, main) {
 
   main(command, argument, options);
 }
-
-module.exports = configure;

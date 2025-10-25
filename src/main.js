@@ -1,16 +1,16 @@
 "use strict";
 
-const { Log } = require("../lib/index"); ///
+import { Log } from "../lib/index";
 
-const helpAction = require("./action/help"),
-      verifyAction = require("./action/verify"),
-      versionAction = require("./action/version");
+import helpAction from "./action/help";
+import verifyAction from "./action/verify";
+import versionAction from "./action/version";
 
-const { NO_COMMAND_GIVEN_MESSAGE } = require("./messages"),
-      { HELP_COMMAND, VERIFY_COMMAND, VERSION_COMMAND } = require("./commands"),
-      { DEFAULT_TAIL, DEFAULT_FOLLOW, DEFAULT_LOG_LEVEL } = require("./defaults");
+import { NO_COMMAND_GIVEN_MESSAGE } from "./messages";
+import { HELP_COMMAND, VERIFY_COMMAND, VERSION_COMMAND } from "./commands";
+import { DEFAULT_TAIL, DEFAULT_FOLLOW, DEFAULT_LOG_LEVEL } from "./defaults";
 
-function main(command, argument, options) {
+export default function main(command, argument, options) {
   const { tail = DEFAULT_TAIL,
           follow = DEFAULT_FOLLOW,
           logLevel = DEFAULT_LOG_LEVEL } = options;
@@ -63,5 +63,3 @@ function main(command, argument, options) {
     });
   }
 }
-
-module.exports = main;

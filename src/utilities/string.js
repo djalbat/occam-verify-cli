@@ -56,6 +56,12 @@ export function nodeAsTokens(node, tokens) {
   return tokens;
 }
 
+export function trimTrailingSlash(string) {
+  string = string.replace(/\/$/, EMPTY_STRING); ///
+
+  return string;
+}
+
 function trimString(string) {
   string = string.replace(/\s+$/, EMPTY_STRING);  ///
 

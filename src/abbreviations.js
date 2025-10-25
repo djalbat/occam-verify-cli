@@ -1,6 +1,6 @@
 "use strict";
 
-const { HELP_OPTION, TAIL_OPTION, FOLLOW_OPTION, VERSION_OPTION, LOG_LEVEL_OPTION } = require("./options");
+import { HELP_OPTION, TAIL_OPTION, FOLLOW_OPTION, VERSION_OPTION, LOG_LEVEL_OPTION } from "./options";
 
 const h = HELP_OPTION,
       t = TAIL_OPTION,
@@ -8,10 +8,12 @@ const h = HELP_OPTION,
       v = VERSION_OPTION,
       l = LOG_LEVEL_OPTION
 
-module.exports = {
+const abbreviations = {
   h,
   t,
   f,
   v,
   l
 };
+
+export default abbreviations;

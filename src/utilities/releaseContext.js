@@ -1,10 +1,107 @@
 "use strict";
 
 import { arrayUtilities } from "necessary";
+import { Entries, metaJSONUtilities } from "occam-entities";
+import { fileSystemUtilities as occamFileSystemUtilities } from "occam-file-system";
+import { pathUtilities, fileSystemUtilities as necessaryFileSystemUtilities } from "necessary";
 
-const { last } = arrayUtilities;
+import ReleaseContext from "../context/release";
 
-function createReleaseContext(dependency, dependentNames, context, callback) {
+const { last } = arrayUtilities,
+      { loadProject } = occamFileSystemUtilities,
+      { concatenatePaths } = pathUtilities,
+      { isMetaJSONFileValid } = metaJSONUtilities,
+      { readFile, isEntryFile, checkEntryExists } = necessaryFileSystemUtilities;
+
+export function releaseContextFromDependency(dependency, context, callback) {
+  const projectsDirectoryPath = process.cwd(), ///
+    dependencyName = dependency.getName(),
+    entryPath = concatenatePaths(projectsDirectoryPath, dependencyName),
+    entryExists = checkEntryExists(entryPath);
+
+  if (!entryExists) {
+    const error = null,
+      releaseContext = null;
+
+    callback(error, releaseContext);
+
+    return;
+  }
+
+  let releaseContext = null;
+
+  try {
+    const entryFile = isEntryFile(entryPath);
+
+    if (entryFile) {
+      const filePath = entryPath, ///
+        content = readFile(filePath),
+        jsonString = content, ///
+        json = JSON.parse(jsonString);
+
+      releaseContext = releaseContextFromJSON(json, context);
+    } else {
+      const projectName = dependencyName, ///
+        project = loadProject(projectName, projectsDirectoryPath);
+
+      if (project !== null) {
+        releaseContext = releaseContextFromProject(project, context);
+      }
+    }
+  } catch (error) {
+    callback(error, releaseContext);
+
+    return;
+  }
+
+  const error = null;
+
+  callback(error, releaseContext);
+}
+
+export function releaseContextFromJSON(json, context) {
+  const { log } = context,
+    { name } = json;
+
+  ({context} = json); ///
+
+  let { entries } = json;
+
+  json = entries; ///
+
+  entries = Entries.fromJSON(json);
+
+  const contextJSON = context;  ///
+
+  json = contextJSON; ///
+
+  const releaseContext = ReleaseContext.fromLogNameJSONAndEntries(log, name, json, entries);
+
+  return releaseContext;
+}
+
+export function releaseContextFromProject(project, context) {
+  let releaseContext = null;
+
+  const metaJSONFile = project.getMetaJSONFile();
+
+  if (metaJSONFile !== null) {
+    const metaJSONFileValid = isMetaJSONFileValid(metaJSONFile);
+
+    if (metaJSONFileValid) {
+      const { log } = context,
+        name = project.getName(),
+        json = null,
+        entries = project.getEntries();
+
+      releaseContext = ReleaseContext.fromLogNameJSONAndEntries(log, name, json, entries);
+    }
+  }
+
+  return releaseContext;
+}
+
+export function createReleaseContext(dependency, dependentNames, context, callback) {
   const { log, releaseContextMap } = context,
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///
@@ -95,7 +192,7 @@ function createReleaseContext(dependency, dependentNames, context, callback) {
   }, context);
 }
 
-function initialiseReleaseContext(dependency, context) {
+export function initialiseReleaseContext(dependency, context) {
   const { releaseContextMap } = context,
         dependencyName = dependency.getName(),
         releaseName = dependencyName, ///
@@ -122,11 +219,6 @@ function initialiseReleaseContext(dependency, context) {
     }
   }
 }
-
-export default {
-  createReleaseContext,
-  initialiseReleaseContext
-};
 
 function retrieveReleaseContexts(releaseContext, releaseContextMap) {
   const releaseContexts = [],

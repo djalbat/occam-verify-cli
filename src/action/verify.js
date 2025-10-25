@@ -1,15 +1,15 @@
 "use strict";
 
-const { Dependency } = require("occam-entities"),
-      { releaseUtilities, releaseContextUtilities } = require("../../lib/index");  ///
+import { Dependency } from "occam-entities";
+import { releaseUtilities, releaseContextUtilities } from "../../lib/index";
 
-const { trimTrailingSlash } = require("../utilities/string"),
-      { releaseContextFromDependency } = require("../utilities/releaseContext");
+import { trimTrailingSlash } from "../utilities/string";
+import { releaseContextFromDependency } from "../utilities/releaseContext";
 
 const { verifyRelease } = releaseUtilities,
       { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
 
-function verifyAction(argument, log) {
+export default function verifyAction(argument, log) {
   const name = trimTrailingSlash(argument), ///
         context = {},
         dependency = Dependency.fromName(name),
@@ -62,8 +62,6 @@ function verifyAction(argument, log) {
     stopClock(now, log);
   });
 }
-
-module.exports = verifyAction;
 
 function startClock() {
   let now;
