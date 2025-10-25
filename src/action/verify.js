@@ -1,13 +1,11 @@
 "use strict";
 
 import { Dependency } from "occam-entities";
-import { releaseUtilities, releaseContextUtilities } from "../../lib/index";
 
+import { verifyRelease } from "../utilities/release";
 import { trimTrailingSlash } from "../utilities/string";
 import { releaseContextFromDependency } from "../utilities/releaseContext";
-
-const { verifyRelease } = releaseUtilities,
-      { createReleaseContext, initialiseReleaseContext } = releaseContextUtilities;
+import { createReleaseContext, initialiseReleaseContext } from "../utilities/releaseContext";
 
 export default function verifyAction(argument, log) {
   const name = trimTrailingSlash(argument), ///

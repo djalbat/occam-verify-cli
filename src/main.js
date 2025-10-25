@@ -1,7 +1,6 @@
 "use strict";
 
-import { Log } from "../lib/index";
-
+import Log from "./log";
 import helpAction from "./action/help";
 import verifyAction from "./action/verify";
 import versionAction from "./action/version";
