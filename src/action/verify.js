@@ -4,7 +4,7 @@ import { Dependency } from "occam-entities";
 
 import { verifyRelease } from "../utilities/release";
 import { trimTrailingSlash } from "../utilities/string";
-import { releaseContextFromDependency } from "../utilities/releaseContext";
+import { releaseContextFromDependency } from "../utilities/fileSystem";
 import { createReleaseContext, initialiseReleaseContext } from "../utilities/releaseContext";
 
 export default function verifyAction(argument, log) {
