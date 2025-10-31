@@ -99,6 +99,27 @@ export function createReleaseContext(dependency, dependentNames, context, callba
   }, context);
 }
 
+export function releaseContextFromJSON(json, context) {
+  const { log } = context,
+        { name } = json;
+
+  ({context} = json); ///
+
+  let { entries } = json;
+
+  json = entries; ///
+
+  entries = Entries.fromJSON(json);
+
+  const contextJSON = context;  ///
+
+  json = contextJSON; ///
+
+  const releaseContext = ReleaseContext.fromLogNameJSONAndEntries(log, name, json, entries);
+
+  return releaseContext;
+}
+
 export function initialiseReleaseContext(dependency, context) {
   const { releaseContextMap } = context,
         dependencyName = dependency.getName(),
@@ -127,27 +148,6 @@ export function initialiseReleaseContext(dependency, context) {
   }
 }
 
-export function releaseContextFromJSON(json, context) {
-  const { log } = context,
-        { name } = json;
-
-  ({context} = json); ///
-
-  let { entries } = json;
-
-  json = entries; ///
-
-  entries = Entries.fromJSON(json);
-
-  const contextJSON = context;  ///
-
-  json = contextJSON; ///
-
-  const releaseContext = ReleaseContext.fromLogNameJSONAndEntries(log, name, json, entries);
-
-  return releaseContext;
-}
-
 export function releaseContextFromProject(project, context) {
   let releaseContext = null;
 
@@ -168,6 +168,13 @@ export function releaseContextFromProject(project, context) {
 
   return releaseContext;
 }
+
+export default {
+  createReleaseContext,
+  releaseContextFromJSON,
+  initialiseReleaseContext,
+  releaseContextFromProject
+};
 
 function retrieveReleaseContexts(releaseContext, releaseContextMap) {
   const releaseContexts = [],
