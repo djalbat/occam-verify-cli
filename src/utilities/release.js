@@ -1,6 +1,6 @@
 "use strict";
 
-function verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap) {
+export function verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap) {
   let releaseVerifies = false;
 
   const releaseContext = releaseContextMap[releaseName];

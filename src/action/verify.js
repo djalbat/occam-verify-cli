@@ -2,6 +2,8 @@
 
 import { Dependency } from "occam-entities";
 
+import "../preamble";
+
 import { verifyRelease } from "../utilities/release";
 import { trimTrailingSlash } from "../utilities/string";
 import { releaseContextFromDependency } from "../utilities/fileSystem";

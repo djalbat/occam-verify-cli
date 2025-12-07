@@ -1,6 +1,6 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -28,7 +28,7 @@ class MetavariableUnifier extends Unifier {
       unify: (generalTypeNode, specificTermNode, generalContext, specificContext) => {
         let termUnifies;
 
-        const { Term } = dom,
+        const { Term } = ontology,
               typeNode = generalTypeNode, ///
               termNode = specificTermNode, ///
               nominalTypeName = typeNode.getNominalTypeName(),

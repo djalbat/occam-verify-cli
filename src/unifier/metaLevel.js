@@ -1,6 +1,6 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -32,7 +32,7 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalStatementMetavariableNode, specificStatementNode, substitutions, generalContext, specificContext) => {
         let statementUnifies;
 
-        const { Metavariable, Statement } = dom; ///
+        const { Metavariable, Statement } = ontology; ///
 
         let context,
             statementNode;
@@ -46,7 +46,7 @@ class MetaLevelUnifier extends Unifier {
 
         statementNode = metavariableNodeParentNode; ///
 
-        const { TermSubstitution, FrameSubstitution } = dom,
+        const { TermSubstitution, FrameSubstitution } = ontology,
               frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context),
               termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
               substitution = (frameSubstitution || termSubstitution);
@@ -68,7 +68,7 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalFrameDeclarationMetavariableNode, specificFrameNode, substitutions, generalContext, specificContext) => {
         let frameUnifies;
 
-        const { Frame, Metavariable } = dom,
+        const { Frame, Metavariable } = ontology,
               frameNode = specificFrameNode, ///
               metavariableNode = generalFrameDeclarationMetavariableNode;  ///
 
@@ -93,7 +93,7 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
         let termUnifies;
 
-        const { Term, Variable } = dom,
+        const { Term, Variable } = ontology,
               termNode = specificTermNode, ///
               variableNode = generalTermVariableNode; ///
 
@@ -118,7 +118,7 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalDeclarationMetavariableNode, specificDeclarationMetavariableNode, substitutions, generalContext, specificContext) => {
         let referenceUnifies;
 
-        const { Metavariable, Reference } = dom;
+        const { Metavariable, Reference } = ontology;
 
         let context,
             metavariableNode;

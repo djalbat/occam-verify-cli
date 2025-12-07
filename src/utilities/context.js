@@ -1,12 +1,12 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 import LocalContext from "../context/local";
 
 export function metavariableFromFrame(frame, context) {
   context = contextFromFrame(frame, context); ///
 
-  const { Metavariable } = dom,
+  const { Metavariable } = ontology,
         frameNode = frame.getNode(),
         metavariable = Metavariable.fromFrameNode(frameNode, context);
 
@@ -16,7 +16,7 @@ export function metavariableFromFrame(frame, context) {
 export function equalityFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { Equality } = dom,
+  const { Equality } = ontology,
         statementNode = statement.getNode(),
         equality = Equality.fromStatementNode(statementNode, context);
 
@@ -26,7 +26,7 @@ export function equalityFromStatement(statement, context) {
 export function judgementFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { Judgement } = dom,
+  const { Judgement } = ontology,
         statementNode = statement.getNode(),
         judgement = Judgement.fromStatementNode(statementNode, context);
 
@@ -36,7 +36,7 @@ export function judgementFromStatement(statement, context) {
 export function metavariableFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { Metavariable } = dom,
+  const { Metavariable } = ontology,
         statementNode = statement.getNode(),
         metavariable = Metavariable.fromStatementNode(statementNode, context);
 
@@ -46,7 +46,7 @@ export function metavariableFromStatement(statement, context) {
 export function typeAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { TypeAssertion } = dom,
+  const { TypeAssertion } = ontology,
         statementNode = statement.getNode(),
         typeAssertion = TypeAssertion.fromStatementNode(statementNode, context);
 
@@ -56,7 +56,7 @@ export function typeAssertionFromStatement(statement, context) {
 export function definedAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { DefinedAssertion } = dom,
+  const { DefinedAssertion } = ontology,
         statementNode = statement.getNode(),
         definedAssertion = DefinedAssertion.fromStatementNode(statementNode, context);
 
@@ -66,7 +66,7 @@ export function definedAssertionFromStatement(statement, context) {
 export function propertyAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { PropertyAssertion } = dom,
+  const { PropertyAssertion } = ontology,
         statementNode = statement.getNode(),
         propertyAssertion = PropertyAssertion.fromStatementNode(statementNode, context);
 
@@ -76,7 +76,7 @@ export function propertyAssertionFromStatement(statement, context) {
 export function subproofAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { SubproofAssertion } = dom,
+  const { SubproofAssertion } = ontology,
         statementNode = statement.getNode(),
         subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
 
@@ -86,7 +86,7 @@ export function subproofAssertionFromStatement(statement, context) {
 export function containedAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { ContainedAssertion } = dom,
+  const { ContainedAssertion } = ontology,
         statementNode = statement.getNode(),
         containedAssertion = ContainedAssertion.fromStatementNode(statementNode, context);
 
@@ -96,7 +96,7 @@ export function containedAssertionFromStatement(statement, context) {
 export function satisfiesAssertionFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 
-  const { SatisfiesAssertion } = dom,
+  const { SatisfiesAssertion } = ontology,
         statementNode = statement.getNode(),
         satisfiesAssertion = SatisfiesAssertion.fromStatementNode(statementNode, context);
 

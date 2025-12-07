@@ -3,7 +3,7 @@
 import { fileSystemUtilities as occamFileSystemUtilities } from "occam-file-system";
 import { pathUtilities, fileSystemUtilities as necessaryFileSystemUtilities } from "necessary";
 
-import { releaseContextFromJSON } from "../utilities/releaseContext";
+import { releaseContextFromJSON, releaseContextFromProject } from "../utilities/releaseContext";
 
 const { loadProject } = occamFileSystemUtilities,
       { concatenatePaths } = pathUtilities,

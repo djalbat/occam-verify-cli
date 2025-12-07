@@ -1,6 +1,6 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 import LocalContext from "../context/local";
 import combinatorBracketedContext from "../context/bracketed/combinator";
 import constructorBracketedContext from "../context/bracketed/constructor";
@@ -12,7 +12,7 @@ export function stripBracketsFromTerm(term, context) {
         bracketedTermChildNode = bracketedTermChildNodeFromTermNode(termNode);
 
   if (bracketedTermChildNode !== null) {
-    const { Term } = dom,
+    const { Term } = ontology,
           termNode = bracketedTermChildNode;  ///
 
     term = Term.fromTermNode(termNode, context);
@@ -28,7 +28,7 @@ export function stripBracketsFromReference(reference, context) {
   if (bracketedReferenceChildNode !== null) {
     context = contextFromReference(reference, context); ///
 
-    const { Reference } = dom,
+    const { Reference } = ontology,
           referenceNode = bracketedReferenceChildNode;  ///
 
     reference = Reference.fromReferenceNode(referenceNode, context);
@@ -44,7 +44,7 @@ export function stripBracketsFromStatement(statement, context) {
   if (bracketedStatementChildNode !== null) {
     context = contextFromStatement(statement, context); ///
 
-    const { Statement } = dom,
+    const { Statement } = ontology,
           statementNode = bracketedStatementChildNode;  ///
 
     statement = Statement.fromStatementNode(statementNode, context);

@@ -57,7 +57,7 @@ export function createReleaseContext(dependency, dependentNames, context, callba
 
     if (!releaseContextCreated) {
       const error = null,
-        success = false;
+            success = false;
 
       callback(error, success);
 
@@ -68,7 +68,7 @@ export function createReleaseContext(dependency, dependentNames, context, callba
 
     if (!releaseMatchesDependency) {
       const error = null,
-        success = false;
+            success = false;
 
       callback(error, success);
 
@@ -137,7 +137,7 @@ export function initialiseReleaseContext(dependency, context) {
       initialiseDependencyReleaseContexts(dependency, releaseContext, context);
 
       const { log } = context,
-        releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
+            releaseContexts = retrieveReleaseContexts(releaseContext, releaseContextMap);
 
       log.info(`Initialising the '${dependencyName}' context...`);
 

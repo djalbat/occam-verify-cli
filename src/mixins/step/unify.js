@@ -2,7 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-import dom from "../../dom";
+import ontology from "../../ontology";
 import Substitutions from "../../substitutions";
 
 import { equalityFromStatement,
@@ -53,7 +53,7 @@ function unifyWithReference(statement, reference, satisfiesAssertion, substituti
 
       context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
 
-      const { StatementSubstitution } = dom,
+      const { StatementSubstitution } = ontology,
             metavariable = reference.getMetavariable(),
             specificContext = context,  ///
             statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
@@ -156,7 +156,7 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, satisfiesA
       const statementAndStepsUnify = axiomLemmaTheoremOrConjecture.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 
       if (statementAndStepsUnify) {
-        const { StatementSubstitution } = dom,
+        const { StatementSubstitution } = ontology,
               metavariable = reference.getMetavariable(),
               specificContext = context,  ///
               statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),

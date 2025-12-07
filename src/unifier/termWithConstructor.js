@@ -1,6 +1,6 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -28,7 +28,7 @@ class TermWithConstructorUnifier extends Unifier {
       unify: (generalTypeNode, specificTermNode, context) => {
         let unifies = false;
 
-        const { Term } = dom,
+        const { Term } = ontology,
               typeNode = generalTypeNode, ///
               nominalTypeName = typeNode.getNominalTypeName(),
               type = context.findTypeByNominalTypeName(nominalTypeName);

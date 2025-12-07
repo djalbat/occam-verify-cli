@@ -6,7 +6,7 @@ import Equivalences from "../equivalences";
 import Substitutions from "../substitutions";
 import topLevelVerifier from "../verifier/topLevel";
 
-import { baseType } from "../dom/type";
+import { baseType } from "../ontology/type";
 import { nodeAsTokens, nodeAsString, nodesAsString, tokensAsString } from "../utilities/string";
 import { typesFromJSON,
          rulesFromJSON,

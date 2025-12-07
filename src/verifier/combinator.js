@@ -1,6 +1,6 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 import Verifier from "../verifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -26,7 +26,7 @@ class CombinatorVerifier extends Verifier {
     {
       nodeQuery: statementNodeQuery,
       verify: (statementNode, context) => {
-        const { Statement } = dom,
+        const { Statement } = ontology,
               statement = Statement.fromStatementNode(statementNode, context),
               assignments = null,
               stated = false,
@@ -38,7 +38,7 @@ class CombinatorVerifier extends Verifier {
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, context) => {
-        const { Term } = dom,
+        const { Term } = ontology,
               term = Term.fromTermNode(termNode, context),
               termVerifies = term.verify(context, () => {
                 const verifiesAhead = true;

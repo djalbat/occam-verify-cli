@@ -1,6 +1,6 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 import Verifier from "../verifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -39,7 +39,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: errorNodeQuery,
       verify: (errorNode, context) => {
-        const { Error } = dom,
+        const { Error } = ontology,
               error = Error.fromErrorNode(errorNode, context),
               errorVerifies = error.verify();
 
@@ -49,7 +49,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: ruleNodeQuery,
       verify: (ruleNode, context) => {
-        const { Rule } = dom,
+        const { Rule } = ontology,
               rule = Rule.fromRuleNode(ruleNode, context),
               ruleVerifies = rule.verify();
 
@@ -59,7 +59,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: axiomNodeQuery,
       verify: (axiomNode, context) => {
-        const { Axiom } = dom,
+        const { Axiom } = ontology,
               axiom = Axiom.fromAxiomNode(axiomNode, context),
               axiomVerifies = axiom.verify();
 
@@ -69,7 +69,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: lemmaNodeQuery,
       verify: (lemmaNode, context) => {
-        const { Lemma } = dom,
+        const { Lemma } = ontology,
               lemma = Lemma.fromLemmaNode(lemmaNode, context),
               lemmaVerifies = lemma.verify();
 
@@ -79,7 +79,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: sectionNodeQuery,
       verify: (sectionNode, context) => {
-        const { Section } = dom,
+        const { Section } = ontology,
               section = Section.fromSectionNode(sectionNode, context),
               sectionVerifies = section.verify();
 
@@ -89,7 +89,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: theoremNodeQuery,
       verify: (theoremNode, context) => {
-        const { Theorem } = dom,
+        const { Theorem } = ontology,
               theorem = Theorem.fromTheoremNode(theoremNode, context),
               theoremVerifies = theorem.verify();
 
@@ -99,7 +99,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metaLemmaNodeQuery,
       verify: (metaLemmaNode, context) => {
-        const { MetaLemma } = dom,
+        const { MetaLemma } = ontology,
               metaLemma = MetaLemma.fromMetaLemmaNode(metaLemmaNode, context),
               metaLemmaVerifies = metaLemma.verify();
 
@@ -109,7 +109,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: conjectureNodeQuery,
       verify: (conjectureNode, context) => {
-        const { Conjecture } = dom,
+        const { Conjecture } = ontology,
               conjecture = Conjecture.fromConjectureNode(conjectureNode, context),
               conjectureVerifies = conjecture.verify();
 
@@ -119,7 +119,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metatheoremNodeQuery,
       verify: (metatheoremNode, context) => {
-        const { Metatheorem } = dom,
+        const { Metatheorem } = ontology,
               metatheorem = Metatheorem.fromMetatheoremNode(metatheoremNode, context),
               metatheoremVerifies = metatheorem.verify();
 
@@ -129,7 +129,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: variableDeclarationNodeQuery,
       verify: (variableDeclarationNode, context) => {
-        const { VariableDeclaration } = dom,
+        const { VariableDeclaration } = ontology,
               variableDeclaration = VariableDeclaration.fromVariableDeclarationNode(variableDeclarationNode, context),
               variableDeclarationVerifies = variableDeclaration.verify();
 
@@ -139,7 +139,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: simpleTypeDeclarationNodeQuery,
       verify: (simpleTypeDeclarationNode, context) => {
-        const { SimpleTypeDeclaration } = dom,
+        const { SimpleTypeDeclaration } = ontology,
               simpleTypeDeclaration = SimpleTypeDeclaration.fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
               simpleTypeDeclarationVerifies = simpleTypeDeclaration.verify();
 
@@ -149,7 +149,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: typePrefixDeclarationNodeQuery,
       verify: (typePrefixDeclarationNode, context) => {
-        const { TypePrefixDeclaration } = dom,
+        const { TypePrefixDeclaration } = ontology,
               typePrefixDeclaration = TypePrefixDeclaration.fromTypePrefixDeclarationNode(typePrefixDeclarationNode, context),
               typePrefixDeclarationVerifies = typePrefixDeclaration.verify();
 
@@ -159,7 +159,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: combinatorDeclarationNodeQuery,
       verify: (combinatorDeclarationNode, context) => {
-        const { CombinatorDeclaration } = dom,
+        const { CombinatorDeclaration } = ontology,
               combinatorDeclaration = CombinatorDeclaration.fromCombinatorDeclarationNode(combinatorDeclarationNode, context),
               combinatorDeclarationVerifies = combinatorDeclaration.verify();
 
@@ -169,7 +169,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: constructorDeclarationNodeQuery,
       verify: (constructorDeclarationNode, context) => {
-        const { ConstructorDeclaration } = dom,
+        const { ConstructorDeclaration } = ontology,
               constructorDeclaration = ConstructorDeclaration.fromConstructorDeclarationNode(constructorDeclarationNode, context),
               constructorDeclarationVerifies = constructorDeclaration.verify();
 
@@ -179,7 +179,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: complexTypeDeclarationNodeQuery,
       verify: (complexTypeDeclarationNode, context) => {
-        const { ComplexTypeDeclaration } = dom,
+        const { ComplexTypeDeclaration } = ontology,
               complexTypeDeclaration = ComplexTypeDeclaration.fromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
               complexTypeDeclarationVerifies = complexTypeDeclaration.verify();
 
@@ -189,7 +189,7 @@ class TopLevelVerifier extends Verifier {
     {
       nodeQuery: metavariableDeclarationNodeQuery,
       verify: (metavariableDeclarationNode, context) => {
-        const { MetavariableDeclaration } = dom,
+        const { MetavariableDeclaration } = ontology,
               metavariableDeclaration = MetavariableDeclaration.fromMetavariableDeclarationNode(metavariableDeclarationNode, context),
               metavariableDeclarationVerifies = metavariableDeclaration.verify();
 

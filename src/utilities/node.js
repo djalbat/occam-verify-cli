@@ -1,8 +1,8 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 
-import { baseType } from "../dom/type";
+import { baseType } from "../ontology/type";
 
 export function typeFromTypeNode(typeNode, context) {
   let type;
@@ -10,7 +10,7 @@ export function typeFromTypeNode(typeNode, context) {
   if (typeNode === null) {
     type = baseType;
   } else {
-    const { Type } = dom,
+    const { Type } = ontology,
           typeName = typeNode.getTypeName(),
           typePrefixName = typeNode.getTypePrefixName(),
           nominalTypeName = typeNode.getNominalTypeName(),
@@ -28,7 +28,7 @@ export function typeFromTypeNode(typeNode, context) {
 }
 
 export function termFromTermNode(termNode, context) {
-  const { Term } = dom,
+  const { Term } = ontology,
         node = termNode,  ///
         string = context.nodeAsString(node),
         type = null,
@@ -38,7 +38,7 @@ export function termFromTermNode(termNode, context) {
 }
 
 export function statementFromStatementNode(statementNode, context) {
-  const { Statement } = dom,
+  const { Statement } = ontology,
         node = statementNode, ///
         tokens = context.nodeAsTokens(node),
         string = context.tokensAsString(tokens),
@@ -64,7 +64,7 @@ export function variableFromTerm(term, context) {
         singularVariableNode = termNode.getSingularVariableNode();
 
   if (singularVariableNode !== null) {
-    const { Variable } = dom,
+    const { Variable } = ontology,
           variableNode = singularVariableNode;  ///
 
     variable = Variable.fromVariableNode(variableNode, context);

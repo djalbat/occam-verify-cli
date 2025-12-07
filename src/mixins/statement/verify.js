@@ -1,6 +1,6 @@
 "use strict";
 
-import dom from "../../dom";
+import ontology from "../../ontology";
 
 import { equalityFromStatement,
          judgementFromStatement,
@@ -17,7 +17,7 @@ function unifyWithBracketedCombinator(statement, assignments, stated, context) {
 
   assignments = null; ///
 
-  const { BracketedCombinator } = dom,
+  const { BracketedCombinator } = ontology,
         bracketedCombinator = BracketedCombinator.fromNothing(),
         unifiesWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
 

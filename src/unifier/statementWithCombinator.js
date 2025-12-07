@@ -1,6 +1,6 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -31,7 +31,7 @@ class StatementWithCombinatorUnifier extends Unifier {
       unify: (generalMetaTypeNode, specificStatementNode, assignments, stated, generalContext, specificContext) => {
         let unifies;
 
-        const { Statement, MetaType } = dom,
+        const { Statement, MetaType } = ontology,
               metaTypeNode = generalMetaTypeNode, ///
               statementNode = specificStatementNode; ///
 
@@ -57,7 +57,7 @@ class StatementWithCombinatorUnifier extends Unifier {
       unify: (generalMetaTypeNode, specificFrameNode, assignments, stated, generalContext, specificContext) => {
         let unifies;
 
-        const { Frame, MetaType } = dom,
+        const { Frame, MetaType } = ontology,
               metaTypeNode = generalMetaTypeNode, ///
               frameNode = specificFrameNode; ///
 
@@ -83,7 +83,7 @@ class StatementWithCombinatorUnifier extends Unifier {
       unify: (generalTypeNode, specificTermNode, assignments, stated, generalContext, specificContext) => {
         let unifies = false;
 
-        const { Term } = dom,
+        const { Term } = ontology,
               typeNode = generalTypeNode, ///
               termNode = specificTermNode, ///
               nominalTypeName = typeNode.getNominalTypeName();

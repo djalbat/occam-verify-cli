@@ -1,6 +1,6 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -26,7 +26,7 @@ class IntrinsicLevelUnifier extends Unifier {
       unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
         let termUnifies;
 
-        const { Term, Variable } = dom,
+        const { Term, Variable } = ontology,
               termNode = specificTermNode, ///
               variableNode = generalTermVariableNode; ///
 

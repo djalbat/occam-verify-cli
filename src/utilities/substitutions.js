@@ -1,10 +1,10 @@
 "use strict";
 
-import dom from "../dom";
+import ontology from "../ontology";
 
 export function termFromTermAndSubstitutions(term, substitutions, context) {
   if (term !== null) {
-    const { Variable } = dom,
+    const { Variable } = ontology,
           termNode = term.getNode(),
           variable = Variable.fromTermNode(termNode, context);
 
@@ -24,7 +24,7 @@ export function termFromTermAndSubstitutions(term, substitutions, context) {
 
 export function frameFromFrameAndSubstitutions(frame, substitutions, context) {
   if (frame !== null) {
-    const { Metavariable } = dom,
+    const { Metavariable } = ontology,
           frameNode = frame.getNode(),
           metavariable = Metavariable.fromFrameNode(frameNode, context);
 
@@ -46,7 +46,7 @@ export function frameFromFrameAndSubstitutions(frame, substitutions, context) {
 
 export function statementFromStatementAndSubstitutions(statement, substitutions, context) {
   if (statement !== null) {
-    const { Metavariable } = dom,
+    const { Metavariable } = ontology,
           statementNode = statement.getNode(),
           metavariable = Metavariable.fromStatementNode(statementNode, context);
 
@@ -55,7 +55,7 @@ export function statementFromStatementAndSubstitutions(statement, substitutions,
     if (metavariable !== null) {
       let substitution;
 
-      const { TermSubstitution, FrameSubstitution } = dom,
+      const { TermSubstitution, FrameSubstitution } = ontology,
             termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
             frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context);
 
