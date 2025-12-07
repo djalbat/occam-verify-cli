@@ -155,10 +155,6 @@ class LocalContext {
     return variableAdded;
   }
 
-  addStepOrSubproof(stepOrSubproof) {
-    this.stepsOrSubproofs.push(stepOrSubproof);
-  }
-
   addJudgement(judgement) {
     let judgementAdded = false;
 
@@ -172,6 +168,10 @@ class LocalContext {
     }
 
     return judgementAdded;
+  }
+
+  addStepOrSubproof(stepOrSubproof) {
+    this.stepsOrSubproofs.push(stepOrSubproof);
   }
 
   findProcedureByName(name) { return this.context.findProcedureByName(name); }

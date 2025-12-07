@@ -3,18 +3,24 @@
 import ontology from "../ontology";
 import unifyMixins from "../mixins/step/unify";
 import Substitutions from "../substitutions";
+import TemporaryContext from "../context/temporary";
 import equationalUnifier from "../unifier/equantional";
 
 import { define } from "../ontology";
 import { propertyAssertionFromStatement } from "../utilities/context";
 
 export default define(class Step {
-  constructor(node, string, statement, reference, satisfiesAssertion) {
+  constructor(context, node, string, statement, reference, satisfiesAssertion) {
+    this.context = context;
     this.node = node;
     this.string = string;
     this.statement = statement;
     this.reference = reference;
     this.satisfiesAssertion = satisfiesAssertion;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getNode() {
@@ -196,7 +202,11 @@ export default define(class Step {
           node = null,
           reference = null,
           satisfiesAssertion = null,
-          step = new Step(node, string, statement, reference, satisfiesAssertion);
+          temporaryContext = TemporaryContext.fromContext(context);
+
+    context = temporaryContext; ///
+
+    const step = new Step(context, node, string, statement, reference, satisfiesAssertion);
 
     return step;
   }
@@ -213,9 +223,12 @@ export default define(class Step {
             string = context.nodeAsString(node),
             statement = Statement.fromStepNode(stepNode, context),
             reference = Reference.fromStepNode(stepNode, context),
-            satisfiesAssertion = SatisfiesAssertion.fromStepNode(stepNode, context);
+            satisfiesAssertion = SatisfiesAssertion.fromStepNode(stepNode, context),
+            temporaryContext = TemporaryContext.fromContext(context);
 
-      step = new Step(node, string, statement, reference, satisfiesAssertion);
+      context = temporaryContext; ///
+
+      step = new Step(context, node, string, statement, reference, satisfiesAssertion)
     }
 
     return step;

@@ -310,6 +310,8 @@ export default define(class Declaration {
     }
 
     if (metaLemmaMetatheoremUnifies) {
+      context = generalContext; ///
+
       context.trace(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${declarationString}' declaration...`);
     }
 
