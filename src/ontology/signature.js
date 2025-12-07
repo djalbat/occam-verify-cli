@@ -55,31 +55,26 @@ export default define(class Signature {
           termsA = this.terms,  ///
           termsB = terms, ///
           matches = match(termsA, termsB, (termA, termB) => {
-            const termAType = termA.getType(),
-                  termBType = termB.getType(),
-                  termATypeEqualToOrSubTypeOfTermB = termAType.isEqualToOrSubTypeOf(termBType);
+            const term = termB, ///
+                  context = generalContext, ///
+                  variable = variableFromTerm(term, context);
 
-            if (termATypeEqualToOrSubTypeOfTermB) {
-              let context,
-                  term;
+            if (variable !== null) {
+              const term = termA, ///
+                    termType = term.getType(),
+                    variableType = variable.getType(),
+                    termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
 
-              context = generalContext; ///
+              if (termTypeEqualToOrSubTypeOfVariableType) {
+                const { TermSubstitution } = ontology,
+                      context = specificContext,  ///
+                      termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
+                      substitution = termSubstitution;  ///
 
-              term = termB; ///
+                substitutions.addSubstitution(substitution, specificContext);
 
-              const variable = variableFromTerm(term, context);
-
-              context = specificContext;  ///
-
-              term = termA; ///
-
-              const { TermSubstitution } = ontology,
-                    termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
-                    substitution = termSubstitution;  ///
-
-              substitutions.addSubstitution(substitution, specificContext);
-
-              return true;
+                return true;
+              }
             }
           });
 

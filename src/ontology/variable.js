@@ -122,27 +122,54 @@ export default define(class Variable {
 
     specificContext.trace(`Unifying the '${termString}' term with the '${variableString}' variable...`);
 
-    const variable = this, ///
-          substitutionPresent = substitutions.isSubstitutionPresentByVariable(variable);
+    let context,
+        variable;
+
+    variable = this; ///
+
+    const substitutionPresent = substitutions.isSubstitutionPresentByVariable(variable);
 
     if (substitutionPresent) {
-      const context = specificContext,  ///
-            substitution = substitutions.findSubstitutionByVariable(variable),
+      context = specificContext;  ///
+
+      const substitution = substitutions.findSubstitutionByVariable(variable),
             substitutionTermEqualToTerm = substitution.isTermEqualTo(term, context);
 
       if (substitutionTermEqualToTerm) {
         termUnifies = true;
       }
     } else {
-      const { TermSubstitution } = ontology,
-            context = specificContext,  ///
-            variable = this,  ///
-            termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
-            substitution = termSubstitution;  ///
+      context = generalContext;  ///
 
-      substitutions.addSubstitution(substitution, specificContext);
+      const variableIdentifier = variable.getIdentifier();
 
-      termUnifies = true;
+      variable = context.findVariableByVariableIdentifier(variableIdentifier);
+
+      context = specificContext;  ///
+
+      const termVerifies = term.verify(context, () => {
+        let verifiesAhead = false;
+
+        const termType = term.getType(),
+              variableType = variable.getType(),
+              termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
+
+        if (termTypeEqualToOrSubTypeOfVariableType) {
+          verifiesAhead = true;
+        }
+
+        return verifiesAhead;
+      });
+
+      if (termVerifies) {
+        const { TermSubstitution } = ontology,
+              termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
+              substitution = termSubstitution;  ///
+
+        substitutions.addSubstitution(substitution, specificContext);
+
+        termUnifies = true;
+      }
     }
 
     if (termUnifies) {
