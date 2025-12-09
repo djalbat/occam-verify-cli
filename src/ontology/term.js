@@ -137,6 +137,10 @@ export default define(class Term {
     });
 
     if (verifies) {
+      const term = this;  ///
+
+      context.addTerm(term);
+
       context.debug(`...verified the '${termString}' term.`);
     }
 

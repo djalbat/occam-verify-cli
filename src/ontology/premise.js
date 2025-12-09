@@ -1,18 +1,24 @@
 "use strict";
 
 import ontology from "../ontology";
+import TemporaryContext from "../context/temporary";
 
 import { define } from "../ontology";
 import { assignAssignments } from "../utilities/assignments";
 import { subproofAssertionFromStatement } from "../utilities/context";
-import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
+import { termsFromJSON, statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default define(class Premise {
-  constructor(node, string, statement, procedureCall) {
+  constructor(context, node, string, statement, procedureCall) {
+    this.context = context;
     this.node = node;
     this.string = string;
     this.statement = statement;
     this.procedureCall = procedureCall;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getNode() {
@@ -33,6 +39,10 @@ export default define(class Premise {
 
   verify(context) {
     let verifies = false;
+
+    const temporaryContext = TemporaryContext.fromContext(context);
+
+    context = temporaryContext; ///
 
     const premiseString = this.string; ///
 
@@ -71,6 +81,8 @@ export default define(class Premise {
     }
 
     if (verifies) {
+      this.context = context;
+
       context.debug(`...verified the '${premiseString}' premise.`, this.node);
     }
 
@@ -206,8 +218,10 @@ export default define(class Premise {
   static name = "Premise";
 
   static fromJSON(json, context) {
-    const statement = statementFromJSON(json, context),
-          procedureCall = procedureCallFromJSON(json, context);
+    const terms = termsFromJSON(json, context),
+          statement = statementFromJSON(json, context),
+          procedureCall = procedureCallFromJSON(json, context),
+          temporaryContext = TemporaryContext.fromTerms(terms, context);
 
     let string;
 
@@ -219,8 +233,11 @@ export default define(class Premise {
       string = procedureCall.getString();
     }
 
-    const node = null,
-          premise = new Premise(node, string, statement, procedureCall);
+    const node = null;
+
+    context = temporaryContext; ///
+
+    const premise = new Premise(context, node, string, statement, procedureCall);
 
     return premise;
   }
@@ -231,7 +248,11 @@ export default define(class Premise {
           string = context.nodeAsString(node),
           statement = Statement.fromPremiseNode(premiseNode, context),
           procedureCall = ProcedureCall.fromPremiseNode(premiseNode, context),
-          premise = new Premise(node, string, statement, procedureCall);
+          temporaryContext = null;
+
+    context = temporaryContext; ///
+
+    const premise = new Premise(context, node, string, statement, procedureCall);
 
     return premise
   }

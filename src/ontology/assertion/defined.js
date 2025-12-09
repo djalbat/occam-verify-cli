@@ -1,7 +1,7 @@
 "use strict";
 
 import ontology from "../../ontology";
-import LocalContext from "../../context/local";
+import TemporaryContext from "../../context/temporary";
 
 import { define } from "../../ontology";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
@@ -167,9 +167,9 @@ export default define(class DefinedAssertion {
 
     context.trace(`Unifying the '${definedAssertionString}' defined assertion independently...`);
 
-    const localContext = LocalContext.fromContextAndTokens(context, this.tokens);
+    const temporaryContext = TemporaryContext.fromContextAndTokens(context, this.tokens);
 
-    context = localContext; ///
+    context = temporaryContext; ///
 
     const term = termFromTermAndSubstitutions(this.term, substitutions, context),
           frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),

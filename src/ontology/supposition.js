@@ -1,18 +1,24 @@
 "use strict";
 
 import ontology from "../ontology";
+import TemporaryContext from "../context/temporary";
 
 import { define } from "../ontology";
 import { assignAssignments } from "../utilities/assignments";
 import { subproofAssertionFromStatement } from "../utilities/context";
-import { statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
+import { termsFromJSON, statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default define(class Supposition {
-  constructor(node, string, statement, procedureCall) {
+  constructor(context, node, string, statement, procedureCall) {
+    this.context = context;
     this.node = node;
     this.string = string;
     this.statement = statement;
     this.procedureCall = procedureCall;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getNode() {
@@ -33,6 +39,10 @@ export default define(class Supposition {
 
   verify(context) {
     let verifies = false;
+
+    const temporaryContext = TemporaryContext.fromContext(context);
+
+    context = temporaryContext; ///
 
     const suppositionString = this.string; ///
 
@@ -71,6 +81,8 @@ export default define(class Supposition {
     }
 
     if (verifies) {
+      this.context = context;
+
       context.debug(`...verified the '${suppositionString}' supposition.`, this.node);
     }
 
@@ -226,8 +238,10 @@ export default define(class Supposition {
   static name = "Supposition";
 
   static fromJSON(json, context) {
-    const statement = statementFromJSON(json, context),
-          procedureCall = procedureCallFromJSON(json, context);
+    const terms = termsFromJSON(json, context),
+          statement = statementFromJSON(json, context),
+          procedureCall = procedureCallFromJSON(json, context),
+          temporaryContext = TemporaryContext.fromTerms(terms, context);
 
     let string;
 
@@ -239,8 +253,11 @@ export default define(class Supposition {
       string = procedureCall.getString();
     }
 
-    const node = null,
-          supposition = new Supposition(node, string, statement, procedureCall);
+    const node = null;
+
+    context = temporaryContext; ///
+
+    const supposition = new Supposition(context, node, string, statement, procedureCall);
 
     return supposition;
   }
@@ -251,7 +268,11 @@ export default define(class Supposition {
           string = context.nodeAsString(node),
           statement = Statement.fromSuppositionNode(suppositionNode, context),
           procedureCall = ProcedureCall.fromSuppositionNode(suppositionNode, context),
-          supposition = new Supposition(node, string, statement, procedureCall);
+          temporaryContext = null;
+
+    context = temporaryContext; ///
+
+    const supposition = new Supposition(context, node, string, statement, procedureCall);
 
     return supposition
   }

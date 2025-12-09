@@ -8,9 +8,8 @@ import Equivalences from "../equivalences";
 const { last } = arrayUtilities;
 
 class LocalContext {
-  constructor(context, tokens, variables, judgements, equivalences, stepsOrSubproofs) {
+  constructor(context, variables, judgements, equivalences, stepsOrSubproofs) {
     this.context = context;
-    this.tokens = tokens;
     this.variables = variables;
     this.judgements = judgements;
     this.equivalences = equivalences;
@@ -19,10 +18,6 @@ class LocalContext {
 
   getContext() {
     return this.context;
-  }
-
-  getTokens() {
-    return this.tokens;
   }
 
   getVariables(nested = true) {
@@ -341,45 +336,13 @@ class LocalContext {
     return termAndPropertyRelationMatches;
   }
 
-  nodeAsString(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
+  nodeAsString(node, tokens) { return this.context.nodeAsString(node, tokens); }
 
-    const string = this.context.nodeAsString(node, tokens);
+  nodesAsString(node, tokens) { return this.context.nodesAsString(node, tokens); }
 
-    return string;
-  }
+  nodeAsTokens(node, tokens) { return this.context.nodeAsTokens(node, tokens); }
 
-  nodesAsString(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
-
-    const string = this.context.nodesAsString(node, tokens);
-
-    return string;
-  }
-
-  nodeAsTokens(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
-
-    tokens = this.context.nodeAsTokens(node, tokens); ///
-
-    return tokens;
-  }
-
-  nodesAsTokens(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
-
-    tokens = this.context.nodesAsTokens(node, tokens);  ///
-
-    return tokens;
-  }
+  nodesAsTokens(node, tokens) { return this.context.nodesAsTokens(node, tokens); }
 
   tokensAsString(tokens) { return this.context.tokensAsString(tokens); }
 
@@ -394,22 +357,11 @@ class LocalContext {
   error(message, node = null) { this.context.error(message, node); }
 
   static fromContext(context) {
-    const tokens = null,
-          variables = [],
-          judgements = [],
-          equivalences = Equivalences.fromNothing(),
-          stepsOrSubproofs = [],
-          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, stepsOrSubproofs);
-
-    return localContext;
-  }
-
-  static fromContextAndTokens(context, tokens) {
     const variables = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),
           stepsOrSubproofs = [],
-          localContext = new LocalContext(context, tokens, variables, judgements, equivalences, stepsOrSubproofs);
+          localContext = new LocalContext(context, variables, judgements, equivalences, stepsOrSubproofs);
 
     return localContext;
   }

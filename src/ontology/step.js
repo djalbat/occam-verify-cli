@@ -105,6 +105,10 @@ export default define(class Step {
   verify(substitutions, assignments, context) {
     let verifies = false;
 
+    const temporaryContext = TemporaryContext.fromContext(context);
+
+    context = temporaryContext; ///
+
     const stepString = this.string; ///
 
     context.trace(`Verifying the '${stepString}' step...`, this.node);
@@ -142,6 +146,8 @@ export default define(class Step {
     }
 
     if (verifies) {
+      this.context = context;
+
       context.debug(`...verified the '${stepString}' step.`, this.node);
     }
 
@@ -201,8 +207,8 @@ export default define(class Step {
           string = statementString, ///
           node = null,
           reference = null,
-          satisfiesAssertion = null,
-          temporaryContext = TemporaryContext.fromContext(context);
+          temporaryContext = null,
+          satisfiesAssertion = null;
 
     context = temporaryContext; ///
 
@@ -224,7 +230,7 @@ export default define(class Step {
             statement = Statement.fromStepNode(stepNode, context),
             reference = Reference.fromStepNode(stepNode, context),
             satisfiesAssertion = SatisfiesAssertion.fromStepNode(stepNode, context),
-            temporaryContext = TemporaryContext.fromContext(context);
+            temporaryContext = null;
 
       context = temporaryContext; ///
 

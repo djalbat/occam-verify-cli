@@ -1,15 +1,21 @@
 "use strict";
 
 import ontology from "../ontology";
+import TemporaryContext from "../context/temporary";
 
 import { define } from "../ontology";
-import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
+import { termsFromJSON, statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export default define(class Deduction {
-  constructor(node, string, statement) {
+  constructor(context, node, string, statement) {
+    this.context = context;
     this.node = node;
     this.string = string;
     this.statement = statement;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getNode(node) {
@@ -27,6 +33,10 @@ export default define(class Deduction {
   verify(context) {
     let verifies = false;
 
+    const temporaryContext = TemporaryContext.fromContext(context);
+
+    context = temporaryContext; ///
+
     const deductionString = this.string;  ///
 
     context.trace(`Verifying the '${deductionString}' deduction...`, this.node);
@@ -42,6 +52,8 @@ export default define(class Deduction {
     }
 
     if (verifies) {
+      this.context = context;
+
       context.debug(`...verified the '${deductionString}' deduction.`, this.node);
     }
 
@@ -101,10 +113,15 @@ export default define(class Deduction {
   static name = "Deduction";
 
   static fromJSON(json, context) {
-    const statement = statementFromJSON(json, context),
+    const terms = termsFromJSON(json, context),
+          statement = statementFromJSON(json, context),
           node = null,
           string = statement.getString(),
-          deduction = new Deduction(node, string, statement);
+          temporaryContext = TemporaryContext.fromTerms(terms, context);
+
+    context = temporaryContext; ///
+
+    const deduction = new Deduction(context, node, string, statement);
 
     return deduction;
   }
@@ -114,7 +131,11 @@ export default define(class Deduction {
           node = deductionNode,  ///
           string = context.nodeAsString(node),
           statement = Statement.fromDeductionNode(deductionNode, context),
-          deduction = new Deduction(node, string, statement);
+          temporaryContext = null;
+
+    context = temporaryContext;  ///
+
+    const deduction = new Deduction(context, node, string, statement);
 
     return deduction;
   }

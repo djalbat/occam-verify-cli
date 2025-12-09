@@ -1,7 +1,7 @@
 "use strict";
 
 import ontology from "../ontology";
-import LocalContext from "../context/local";
+import TemporaryContext from "../context/temporary";
 import combinatorBracketedContext from "../context/bracketed/combinator";
 import constructorBracketedContext from "../context/bracketed/constructor";
 
@@ -19,22 +19,6 @@ export function stripBracketsFromTerm(term, context) {
   }
 
   return term;
-}
-
-export function stripBracketsFromReference(reference, context) {
-  const referenceNode = reference.getNode(),
-    bracketedReferenceChildNode = bracketedReferenceChildNodeFromReferenceNode(referenceNode);
-
-  if (bracketedReferenceChildNode !== null) {
-    context = contextFromReference(reference, context); ///
-
-    const { Reference } = ontology,
-          referenceNode = bracketedReferenceChildNode;  ///
-
-    reference = Reference.fromReferenceNode(referenceNode, context);
-  }
-
-  return reference;
 }
 
 export function stripBracketsFromStatement(statement, context) {
@@ -105,22 +89,12 @@ export function bracketedStatementChildNodeFromStatementNode(statementNode) {
   return bracketedStatementChildNode;
 }
 
-function contextFromReference(reference, context) {
-  const referenceTokens = reference.getTokens(),
-        tokens = referenceTokens, ///
-        localContext = LocalContext.fromContextAndTokens(context, tokens);
-
-  context = localContext; ///
-
-  return context;
-}
-
 function contextFromStatement(statement, context) {
   const statementTokens = statement.getTokens(),
         tokens = statementTokens, ///
-        localContext = LocalContext.fromContextAndTokens(context, tokens);
+        temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
 
-  context = localContext; ///
+  context = temporaryContext; ///
 
   return context;
 }

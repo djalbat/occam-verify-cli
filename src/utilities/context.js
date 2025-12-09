@@ -1,7 +1,7 @@
 "use strict";
 
 import ontology from "../ontology";
-import LocalContext from "../context/local";
+import TemporaryContext from "../context/temporary";
 
 export function metavariableFromFrame(frame, context) {
   context = contextFromFrame(frame, context); ///
@@ -106,9 +106,9 @@ export function satisfiesAssertionFromStatement(statement, context) {
 function contextFromFrame(frame, context) {
   const frameTokens = frame.getTokens(),
         tokens = frameTokens, ///
-        localContext = LocalContext.fromContextAndTokens(context, tokens);
+        temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
 
-  context = localContext; ///
+  context = temporaryContext; ///
 
   return context;
 }
@@ -116,9 +116,9 @@ function contextFromFrame(frame, context) {
 function contextFromStatement(statement, context) {
   const statementTokens = statement.getTokens(),
         tokens = statementTokens, ///
-        localContext = LocalContext.fromContextAndTokens(context, tokens);
+        temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
 
-  context = localContext; ///
+  context = temporaryContext; ///
 
   return context;
 }

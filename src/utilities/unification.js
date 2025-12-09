@@ -1,6 +1,6 @@
 "use string";
 
-import LocalContext from "../context/local";
+import TemporaryContext from "../context/temporary";
 import metaLevelUnifier from "../unifier/metaLevel";
 import metavariableUnifier from "../unifier/metavariable";
 import intrinsicLevelUnifier from "../unifier/intrinsicLevel";
@@ -144,9 +144,9 @@ export function unifyMetavariableIntrinsically(generalMetavariable, specificMeta
 }
 
 function contextFromTokens(tokens, context) {
-  const localContext = LocalContext.fromContextAndTokens(context, tokens);
+  const temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
 
-  context = localContext;  ///
+  context = temporaryContext;  ///
 
   return context;
 }

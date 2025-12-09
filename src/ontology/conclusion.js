@@ -1,15 +1,21 @@
 "use strict";
 
 import ontology from "../ontology";
+import TemporaryContext from "../context/temporary";
 
 import { define } from "../ontology";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export  default define(class Conclusion {
-  constructor(node, string, statement) {
+  constructor(context, node, string, statement) {
+    this.context = context;
     this.node = node;
     this.string = string;
     this.statement = statement;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getNode() {
@@ -27,6 +33,10 @@ export  default define(class Conclusion {
   verify(context) {
     let verifies = false;
 
+    const temporaryContext = TemporaryContext.fromContext(context);
+
+    context = temporaryContext; ///
+
     const conclusionString = this.string;  ///
 
     context.trace(`Verifying the '${conclusionString}' conclusion...`, this.node);
@@ -43,6 +53,8 @@ export  default define(class Conclusion {
     }
 
     if (verifies) {
+      this.context = context;
+
       context.debug(`...verified the '${conclusionString}' conclusion.`, this.node);
     }
 
@@ -80,10 +92,15 @@ export  default define(class Conclusion {
   static name = "Conclusion";
 
   static fromJSON(json, context) {
-    const statement = statementFromJSON(json, context),
+    const terms = termsFromJSON(json, context),
+          statement = statementFromJSON(json, context),
           node = null,
           string = statement.getString(),
-          conclusion = new Conclusion(node, string, statement);
+          temporaryContext = TemporaryContext.fromTerms(terms, context);
+
+    context = temporaryContext; ///
+
+    const conclusion = new Conclusion(context, node, string, statement);
 
     return conclusion;
   }
@@ -93,7 +110,11 @@ export  default define(class Conclusion {
           node = conclusionNode,  ///
           string = context.nodeAsString(node),
           statement = Statement.fromConclusionNode(conclusionNode, context),
-          conclusion = new Conclusion(node, string, statement);
+          temporaryContext = null;
+
+    context = temporaryContext; ///
+
+    const conclusion = new Conclusion(context, node, string, statement);
 
     return conclusion;
   }

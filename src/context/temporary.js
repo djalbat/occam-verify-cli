@@ -1,36 +1,38 @@
 "use strict";
 
 export default class TemporaryContext {
-  constructor(context, terms, frames, statement, reference) {
+  constructor(context, tokens, terms) {
     this.context = context;
+    this.tokens = tokens;
     this.terms = terms;
-    this.frames = frames;
-    this.statement = statement;
-    this.reference = reference;
   }
 
   getContext() {
     return this.context;
   }
 
+  getTokens() {
+    return tokens;
+  }
+
   getTerms() {
     return this.terms;
   }
 
-  getFrames() {
-    return this.frames;
+  addTerm(term) {
+    this.terms.push(term);
   }
 
-  getStatement() {
-    return this.statement;
-  }
+  findTermByTermNode(termNode) {
+    const term = this.terms.find((term) => {
+      const termMatchesTermNode = term.matchTermNode(termNode);
 
-  getReference() {
-    return this.reference;
-  }
+      if (termMatchesTermNode) {
+        return true;
+      }
+    }) || null;
 
-  getTokens() {
-    return this.tokens;
+    return null;
   }
 
   getVariables(nested = true) { return this.context.getVariables(nested); }
@@ -155,13 +157,45 @@ export default class TemporaryContext {
 
   matchTermAndPropertyRelation(term, propertyRelation) { return this.context.matchTermAndPropertyRelation(term, propertyRelation); }
 
-  nodeAsString(node, tokens = null) { return this.context.nodeAsString(node, tokens); }
+  nodeAsString(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
 
-  nodesAsString(node, tokens = null) { return this.context.nodesAsString(node, tokens); }
+    const string = this.context.nodeAsString(node, tokens);
 
-  nodeAsTokens(node, tokens = null) { return this.context.nodeAsTokens(node, tokens); }
+    return string;
+  }
 
-  nodesAsTokens(node, tokens = null) { return this.context.nodesAsTokens(node, tokens); }
+  nodesAsString(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
+
+    const string = this.context.nodesAsString(node, tokens);
+
+    return string;
+  }
+
+  nodeAsTokens(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
+
+    tokens = this.context.nodeAsTokens(node, tokens); ///
+
+    return tokens;
+  }
+
+  nodesAsTokens(node, tokens = null) {
+    if (tokens === null) {
+      tokens = this.tokens;
+    }
+
+    tokens = this.context.nodesAsTokens(node, tokens);  ///
+
+    return tokens;
+  }
 
   tokensAsString(tokens) { return this.context.tokensAsString(tokens); }
 
@@ -175,12 +209,24 @@ export default class TemporaryContext {
 
   error(message, node = null) { this.context.error(message, node); }
 
+  static fromTerms(terms, context) {
+    const tokens = null,
+          temporaryContext = new TemporaryContext(terms, tokens, context);
+
+    return temporaryContext;
+  }
+
   static fromContext(context) {
     const terms = [],
-          frames = [],
-          statement = null,
-          reference = null,
-          temporaryContext = new TemporaryContext(context, terms, frames, statement, reference);
+          tokens = null,
+          temporaryContext = new TemporaryContext(context, tokens, terms);
+
+    return temporaryContext;
+  }
+
+  static fromContextAndTokens(context, tokens) {
+    const terms = [],
+          temporaryContext = new TemporaryContext(context, tokens, terms);
 
     return temporaryContext;
   }
