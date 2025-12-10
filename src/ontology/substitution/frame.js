@@ -22,18 +22,18 @@ export default define(class FrameSubstitution extends Substitution {
     return this.metavariable;
   }
 
-  isFrameEqualTo(frame) { return this.frame.isEqualTo(frame); }
-
-  isMetavariableEqualTo(metavariable) { return this.metavariable.isEqualTo(metavariable); }
-
-  matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
-
   getReplacementNode() {
     const frameNode = this.frame.getNode(),
           replacementNode = frameNode; ///
 
     return replacementNode;
   }
+
+  isFrameEqualTo(frame) { return this.frame.isEqualTo(frame); }
+
+  isMetavariableEqualTo(metavariable) { return this.metavariable.isEqualTo(metavariable); }
+
+  matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
 
   static fromStatementNode(statementNode, context) {
     let frameSubstitution = null;

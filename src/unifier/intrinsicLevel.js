@@ -1,9 +1,9 @@
 "use strict";
 
-import ontology from "../ontology";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
+import { variableIdentifierFromVariableNode } from "../unifier/metaLevel";
 
 const termNodeQuery = nodeQuery("/term"),
       termVariableNodeQuery = nodeQuery("/term/variable!");
@@ -26,19 +26,19 @@ class IntrinsicLevelUnifier extends Unifier {
       unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
         let termUnifies;
 
-        const { Term, Variable } = ontology,
-              termNode = specificTermNode, ///
-              variableNode = generalTermVariableNode; ///
+        const termNode = specificTermNode, ///
+              variableNode = generalTermVariableNode, ///
+              variableIdentifier = variableIdentifierFromVariableNode(variableNode);
 
         let context;
 
         context = generalContext; ///
 
-        const variable = Variable.fromVariableNode(variableNode, context);
+        const variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
         context = specificContext;  ///
 
-        const term = Term.fromTermNode(termNode, context);
+        const term = context.findTermByTermNode(termNode);
 
         termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
 

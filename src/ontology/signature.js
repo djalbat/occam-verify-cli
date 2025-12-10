@@ -71,7 +71,7 @@ export default define(class Signature {
                       termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
                       substitution = termSubstitution;  ///
 
-                substitutions.addSubstitution(substitution, specificContext);
+                substitutions.addSubstitution(substitution, context);
 
                 return true;
               }

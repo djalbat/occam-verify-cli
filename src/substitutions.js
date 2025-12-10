@@ -22,18 +22,6 @@ export default class Substitutions {
 
   getLength() { return this.array.length; }
 
-  getFirstSubstitution() {
-    let firstSubstitution = null;
-
-    const length = this.getLength();
-
-    if (length > 0) {
-      firstSubstitution = first(this.array);
-    }
-
-    return firstSubstitution;
-  }
-
   getMetavariables() {
     const metavariables = [];
 
@@ -68,6 +56,18 @@ export default class Substitutions {
     }, 0);
 
     return nonTrivialLength;
+  }
+
+  getFirstSubstitution() {
+    let firstSubstitution = null;
+
+    const length = this.getLength();
+
+    if (length > 0) {
+      firstSubstitution = first(this.array);
+    }
+
+    return firstSubstitution;
   }
 
   mapSubstitution(callback) { return this.array.map(callback); }
@@ -192,15 +192,15 @@ export default class Substitutions {
     return substitutionPresent;
   }
 
-  addSubstitution(substitution, specificContext) {
+  addSubstitution(substitution, context) {
     this.array.push(substitution);
 
     const substitutionString = substitution.getString();
 
-    specificContext.trace(`Added the ${substitutionString} substitution.`);
+    context.trace(`Added the ${substitutionString} substitution.`);
   }
 
-  removeSubstitution(substitution, specificContext) {
+  removeSubstitution(substitution, context) {
     const substitutionA = substitution; ///
 
     prune(this.array, (substitution) => {
@@ -213,7 +213,7 @@ export default class Substitutions {
 
     const substitutionString = substitution.getString();
 
-    specificContext.trace(`Removed the ${substitutionString} substitution.`);
+    context.trace(`Removed the ${substitutionString} substitution.`);
   }
 
   correlateSubstitutions(substitutions) {
@@ -297,7 +297,7 @@ export default class Substitutions {
     ];
   }
 
-  rollback(specificContext) {
+  rollback(context) {
     const array = [
       ...this.array
     ];
@@ -305,7 +305,7 @@ export default class Substitutions {
     leftDifference(array, this.savedArray);
 
     array.forEach((substitution) => {
-      this.removeSubstitution(substitution, specificContext);
+      this.removeSubstitution(substitution, context);
     });
 
     this.array = [

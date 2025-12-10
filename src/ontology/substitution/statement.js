@@ -35,6 +35,13 @@ export default define(class StatementSubstitution extends Substitution {
     return this.substitution;
   }
 
+  getReplacementNode() {
+    const statementNode = this.statement.getNode(),
+          replacementNode = statementNode; ///
+
+    return replacementNode;
+  }
+
   isStatementEqualTo(statement, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
@@ -71,11 +78,23 @@ export default define(class StatementSubstitution extends Substitution {
 
   matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
 
-  getReplacementNode() {
-    const statementNode = this.statement.getNode(),
-          replacementNode = statementNode; ///
+  unifyStatement(statement, generalContext, specificContext) {
+    let specificSubstitution = null;
 
-    return replacementNode;
+    const substitutions = Substitutions.fromNothing(),
+          statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    if (statementUnifies) {
+      const substitutionsNonTrivialLength = substitutions.getNonTrivialLength();
+
+      if (substitutionsNonTrivialLength === 1) {
+        const firstSubstitution = substitutions.getFirstSubstitution();
+
+        specificSubstitution = firstSubstitution; ///
+      }
+    }
+
+    return specificSubstitution;
   }
 
   resolve(substitutions, generalContext, specificContext) {
@@ -118,14 +137,13 @@ export default define(class StatementSubstitution extends Substitution {
 
       const substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
 
-
       if (substitutionUnifies) {
         specificContext.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
       }
 
       substitutionUnifies ?
         substitutions.continue() :
-          substitutions.rollback(specificContext);
+          substitutions.rollback(context);
 
       substitutionResolved = substitutionUnifies;  ///
     }
@@ -135,25 +153,6 @@ export default define(class StatementSubstitution extends Substitution {
     }
 
     return substitutionResolved;
-  }
-
-  unifyStatement(statement, generalContext, specificContext) {
-    let specificSubstitution = null;
-
-    const substitutions = Substitutions.fromNothing(),
-          statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-    if (statementUnifies) {
-      const substitutionsNonTrivialLength = substitutions.getNonTrivialLength();
-
-      if (substitutionsNonTrivialLength === 1) {
-        const firstSubstitution = substitutions.getFirstSubstitution();
-
-        specificSubstitution = firstSubstitution; ///
-      }
-    }
-
-    return specificSubstitution;
   }
 
   toJSON() {

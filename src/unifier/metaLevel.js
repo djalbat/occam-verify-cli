@@ -4,12 +4,12 @@ import ontology from "../ontology";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
-import Metavariable from "./metavariable";
 
 const termNodeQuery = nodeQuery("/term"),
       frameNodeQuery = nodeQuery("/frame"),
       statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
+      variableIdentifierNodeQuery = nodeQuery("/variable/@identifier!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable!"),
       frameDeclarationMetavariableNodeQuery = nodeQuery("/frame/declaration!/metavariable!");
@@ -93,19 +93,19 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
         let termUnifies;
 
-        const { Term, Variable } = ontology,
-              termNode = specificTermNode, ///
-              variableNode = generalTermVariableNode; ///
+        const termNode = specificTermNode, ///
+              variableNode = generalTermVariableNode, ///
+              variableIdentifier = variableIdentifierFromVariableNode(variableNode);
 
         let context;
 
         context = generalContext; ///
 
-        const variable = Variable.fromVariableNode(variableNode, context);
+        const variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
         context = specificContext;  ///
 
-        const term = Term.fromTermNode(termNode, context);
+        const term = context.findTermByTermNode(termNode);
 
         termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
 
@@ -146,3 +146,11 @@ class MetaLevelUnifier extends Unifier {
 const metaLevelUnifier = new MetaLevelUnifier();
 
 export default metaLevelUnifier;
+
+export function variableIdentifierFromVariableNode(variableNode) {
+  const identifierTerminalNode = variableIdentifierNodeQuery(variableNode),
+        identifierTerminalNodeContent = identifierTerminalNode.getContent(),
+        variableIdentifier = identifierTerminalNodeContent; ///
+
+  return variableIdentifier;
+}

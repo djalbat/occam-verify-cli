@@ -24,6 +24,13 @@ export default define(class TermSubstitution extends Substitution {
     return this.variable;
   }
 
+  getReplacementNode() {
+    const termNode = this.term.getNode(),
+          replacementNode = termNode; ///
+
+    return replacementNode;
+  }
+
   isTrivial() {
     const termString = this.term.getString(),
           variableString = this.variable.getString(),
@@ -43,13 +50,6 @@ export default define(class TermSubstitution extends Substitution {
   isVariableEqualTo(variable) { return this.variable.isEqualTo(variable); }
 
   matchParameter(parameter) { return this.variable.matchParameter(parameter); }
-
-  getReplacementNode() {
-    const termNode = this.term.getNode(),
-          replacementNode = termNode; ///
-
-    return replacementNode;
-  }
 
   static fromStatementNode(statementNode, context) {
     let termSubstitution = null;

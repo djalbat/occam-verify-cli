@@ -12,14 +12,7 @@ export function unifyStatement(generalStatement, specificStatement, substitution
 
   const generalStatementNode = generalStatement.getNode(),
         specificStatementNode = specificStatement.getNode(),
-        generalStatementTokens = generalStatement.getTokens(),
-        specificStatementTokens = specificStatement.getTokens();
-
-  generalContext = contextFromTokens(generalStatementTokens, generalContext); ///
-
-  specificContext = contextFromTokens(specificStatementTokens, specificContext);  ///
-
-  const generalNonTerminalNode = generalStatementNode, ///
+        generalNonTerminalNode = generalStatementNode, ///
         specificNonTerminalNode = specificStatementNode,  ///
         unifiesAtMetaLevel = metaLevelUnifier.unify(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext);
 
@@ -106,17 +99,15 @@ export function unifyStatementWithCombinator(statement, combinator, assignments,
   let statementUnifiesWithCombinator;
 
   const statementNode = statement.getNode(),
-        statementTokens = statement.getTokens(),
         combinatorStatement = combinator.getStatement(),
         combinatorStatementNode = combinatorStatement.getNode(),
         combinatorStatementTokens = combinatorStatement.getTokens();
 
-  let generalContext = context, ///
-      specificContext = context;  ///
+  const specificContext = context;  ///
 
-  generalContext = contextFromTokens(combinatorStatementTokens, generalContext);  ///
+  context = contextFromTokens(combinatorStatementTokens, context);  ///
 
-  specificContext = contextFromTokens(statementTokens, specificContext);  ///
+  const generalContext = context; ///
 
   statementUnifiesWithCombinator = statementWithCombinatorUnifier.unify(combinatorStatementNode, statementNode, assignments, stated, generalContext, specificContext);
 

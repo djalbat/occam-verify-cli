@@ -167,7 +167,7 @@ export default define(class Metavariable {
               frameSubstitution = FrameSubstitution.fromFrameAndMetavariable(frame, metavariable, context),
               substitution = frameSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, specificContext);
+        substitutions.addSubstitution(substitution, context);
 
         frameUnifies = true;
       }
@@ -211,7 +211,7 @@ export default define(class Metavariable {
               referenceSubstitution = ReferenceSubstitution.fromReferenceAndMetavariable(reference, metavariable, context),
               substitution = referenceSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, specificContext);
+        substitutions.addSubstitution(substitution, context);
 
         referenceUnifies = true;
       }
@@ -259,7 +259,7 @@ export default define(class Metavariable {
 
         substitution = statementSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, specificContext);
+        substitutions.addSubstitution(substitution, context);
 
         statementUnifies = true;
       }

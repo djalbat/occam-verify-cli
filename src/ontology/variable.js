@@ -147,26 +147,20 @@ export default define(class Variable {
 
       context = specificContext;  ///
 
-      const termVerifies = term.verify(context, () => {
-        let verifiesAhead = false;
+      const termNode = term.getNode();
 
-        const termType = term.getType(),
-              variableType = variable.getType(),
-              termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
+      term = context.findTermByTermNode(termNode);
 
-        if (termTypeEqualToOrSubTypeOfVariableType) {
-          verifiesAhead = true;
-        }
+      const termType = term.getType(),
+            variableType = variable.getType(),
+            termTypeEqualToOrSubTypeOfVariableType = termType.isEqualToOrSubTypeOf(variableType);
 
-        return verifiesAhead;
-      });
-
-      if (termVerifies) {
+      if (termTypeEqualToOrSubTypeOfVariableType) {
         const { TermSubstitution } = ontology,
               termSubstitution = TermSubstitution.fromTernAndVariable(term, variable, context),
               substitution = termSubstitution;  ///
 
-        substitutions.addSubstitution(substitution, specificContext);
+        substitutions.addSubstitution(substitution, context);
 
         termUnifies = true;
       }

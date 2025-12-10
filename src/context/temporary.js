@@ -1,5 +1,9 @@
 "use strict";
 
+import { arrayUtilities } from "necessary";
+
+const { extract } = arrayUtilities;
+
 export default class TemporaryContext {
   constructor(context, tokens, terms) {
     this.context = context;
@@ -20,6 +24,16 @@ export default class TemporaryContext {
   }
 
   addTerm(term) {
+    const termNode = term.getNode();
+
+    extract(this.terms, (term) => {
+      const termMatchesTermNode = term.matchTermNode(termNode);
+
+      if (termMatchesTermNode) {
+        return true;
+      }
+    });
+
     this.terms.push(term);
   }
 
@@ -32,7 +46,7 @@ export default class TemporaryContext {
       }
     }) || null;
 
-    return null;
+    return term;
   }
 
   getVariables(nested = true) { return this.context.getVariables(nested); }

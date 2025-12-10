@@ -68,85 +68,6 @@ export default define(class Rule {
     return metavariableNameMatches;
   }
 
-  unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {
-    let statementAndStepsOrSubproofsUnify = false;
-
-    const generalContext = this.context, ///
-          specificContext = context; ///
-
-    const substitutions = Substitutions.fromNothing(),
-          statementUnifiesWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, generalContext, specificContext);
-
-    if (statementUnifiesWithConclusion) {
-      const stepsOrSubproofsUnifyWithPremises = this.unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, generalContext, specificContext);
-
-      if (stepsOrSubproofsUnifyWithPremises) {
-        const substitutionsResolved = substitutions.areResolved();
-
-        if (substitutionsResolved) {
-          statementAndStepsOrSubproofsUnify = true;
-        }
-      }
-    }
-
-    return statementAndStepsOrSubproofsUnify;
-  }
-
-  unifyStatementWithConclusion(statement, substitutions, generalContext, specificContext) {
-    let statementUnifiesWithConclusion = false;
-
-    const statementUnifies = this.conclusion.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-    if (statementUnifies) {
-      statementUnifiesWithConclusion = true;
-    }
-
-    return statementUnifiesWithConclusion;
-  }
-
-  unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, generalContext, specificContext) {
-    stepsOrSubproofs = reverse(stepsOrSubproofs); ///
-
-    const stepsOrSubproofsUnifyWithPremises = backwardsEvery(this.premises, (premise) => {
-      const stepUnifiesWithPremise = this.unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, generalContext, specificContext);
-
-      if (stepUnifiesWithPremise) {
-        return true;
-      }
-    });
-
-    return stepsOrSubproofsUnifyWithPremises;
-  }
-
-  unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, generalContext, specificContext) {
-    let stepsOrSubproofsUnifyWithPremise = false;
-
-    if (!stepsOrSubproofsUnifyWithPremise) {
-      const context = specificContext,  ///
-            premiseUnifiesIndependently = premise.unifyIndependently(substitutions, context);
-
-      if (premiseUnifiesIndependently) {
-        stepsOrSubproofsUnifyWithPremise = true;
-      }
-    }
-
-    if (!stepsOrSubproofsUnifyWithPremise) {
-      const stepOrSubproof = extract(stepsOrSubproofs, (stepOrSubproof) => {
-        const stepOrSubproofUnifies = premise.unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext);
-
-        if (stepOrSubproofUnifies) {
-          return true;
-        }
-      }) || null;
-
-      if (stepOrSubproof !== null) {
-        stepsOrSubproofsUnifyWithPremise = true;
-      }
-    }
-
-    return stepsOrSubproofsUnifyWithPremise;
-  }
-
   verify() {
     let verifies = false;
 
@@ -234,6 +155,81 @@ export default define(class Rule {
     }
 
     return proofVerifies;
+  }
+
+  unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {
+    let statementAndStepsOrSubproofsUnify = false;
+
+    const substitutions = Substitutions.fromNothing(),
+          statementUnifiesWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, context);
+
+    if (statementUnifiesWithConclusion) {
+      const stepsOrSubproofsUnifyWithPremises = this.unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, context);
+
+      if (stepsOrSubproofsUnifyWithPremises) {
+        const substitutionsResolved = substitutions.areResolved();
+
+        if (substitutionsResolved) {
+          statementAndStepsOrSubproofsUnify = true;
+        }
+      }
+    }
+
+    return statementAndStepsOrSubproofsUnify;
+  }
+
+  unifyStatementWithConclusion(statement, substitutions, context) {
+    let statementUnifiesWithConclusion = false;
+
+    const statementUnifies = this.conclusion.unifyStatement(statement, substitutions, context);
+
+    if (statementUnifies) {
+      statementUnifiesWithConclusion = true;
+    }
+
+    return statementUnifiesWithConclusion;
+  }
+
+  unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, context) {
+    stepsOrSubproofs = reverse(stepsOrSubproofs); ///
+
+    const stepsOrSubproofsUnifyWithPremises = backwardsEvery(this.premises, (premise) => {
+      const stepUnifiesWithPremise = this.unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, context);
+
+      if (stepUnifiesWithPremise) {
+        return true;
+      }
+    });
+
+    return stepsOrSubproofsUnifyWithPremises;
+  }
+
+  unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, context) {
+    let stepsOrSubproofsUnifyWithPremise = false;
+
+    if (!stepsOrSubproofsUnifyWithPremise) {
+      const premiseUnifiesIndependently = premise.unifyIndependently(substitutions, context);
+
+      if (premiseUnifiesIndependently) {
+        stepsOrSubproofsUnifyWithPremise = true;
+      }
+    }
+
+    if (!stepsOrSubproofsUnifyWithPremise) {
+      const stepOrSubproof = extract(stepsOrSubproofs, (stepOrSubproof) => {
+        const stepOrSubproofUnifies = premise.unifyStepOrSubproof(stepOrSubproof, substitutions, context);
+
+        if (stepOrSubproofUnifies) {
+          return true;
+        }
+      }) || null;
+
+      if (stepOrSubproof !== null) {
+        stepsOrSubproofsUnifyWithPremise = true;
+      }
+    }
+
+    return stepsOrSubproofsUnifyWithPremise;
   }
 
   toJSON() {

@@ -60,19 +60,22 @@ export default define(class Deduction {
     return verifies;
   }
 
-  unifyStatement(statement, substitutions, generalContext, specificContext) {
+  unifyStatement(statement, substitutions, context) {
     let statementUnifies;
 
     const deduction = this,  ///
           statementString = statement.getString(),
           deductionString = deduction.getString();
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${deductionString}' deduction...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${deductionString}' deduction...`);
+
+    const generalContext = this.context,  ///
+          specificContext = context;  ///
 
     statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${deductionString}' deduction.`);
+      context.debug(`...unified the '${statementString}' statement with the '${deductionString}' deduction.`);
     }
 
     return statementUnifies;

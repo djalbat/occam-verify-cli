@@ -80,28 +80,6 @@ export default define(class Step {
     return termAndPropertyRelationMatch;
   }
 
-  unify(substitutions, context) {
-    let unifies;
-
-    const stepString = this.string;  ///
-
-    context.trace(`Unifying the '${stepString}' step...`, this.node);
-
-    unifies = unifyMixins.some((unifyMixin) => {
-      const unifies = unifyMixin(this.statement, this.reference, this.satisfiesAssertion, substitutions, context);
-
-      if (unifies) {
-        return true;
-      }
-    });
-
-    if (unifies) {
-      context.debug(`...unified the '${stepString}' step.`, this.node);
-    }
-
-    return unifies;
-  }
-
   verify(substitutions, assignments, context) {
     let verifies = false;
 
@@ -152,6 +130,30 @@ export default define(class Step {
     }
 
     return verifies;
+  }
+
+  unify(substitutions, context) {
+    let unifies;
+
+    context = this.context;
+
+    const stepString = this.string;  ///
+
+    context.trace(`Unifying the '${stepString}' step...`, this.node);
+
+    unifies = unifyMixins.some((unifyMixin) => {
+      const unifies = unifyMixin(this.statement, this.reference, this.satisfiesAssertion, substitutions, context);
+
+      if (unifies) {
+        return true;
+      }
+    });
+
+    if (unifies) {
+      context.debug(`...unified the '${stepString}' step.`, this.node);
+    }
+
+    return unifies;
   }
 
   equateWithStatement(statement, context) {

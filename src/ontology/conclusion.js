@@ -61,19 +61,22 @@ export  default define(class Conclusion {
     return verifies;
   }
 
-  unifyStatement(statement, substitutions, generalContext, specificContext) {
+  unifyStatement(statement, substitutions, context) {
     let statementUnifies;
 
     const conclusion = this,  ///
           statementString = statement.getString(),
           conclusionString = conclusion.getString();
 
-    specificContext.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
+    context.trace(`Unifying the '${statementString}' statement with the '${conclusionString}' conclusion...`);
+
+    const generalContext = this.context,  ///
+          specificContext = context;  ///
 
     statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
-      specificContext.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
+      context.debug(`...unified the '${statementString}' statement with the '${conclusionString}' conclusion.`);
     }
 
     return statementUnifies;

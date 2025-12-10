@@ -82,6 +82,8 @@ export default define(class Axiom extends TopLevelAssertion {
   unifyStep(step, substitutions, context) {
     let stepUnifies = false;
 
+    context = step.getContext();
+
     const node = this.getNode(),
           stepString = step.getString(),
           axiomString = this.getString();
@@ -94,12 +96,7 @@ export default define(class Axiom extends TopLevelAssertion {
       context.trace(`Cannot unify the '${stepString}' step with the '${axiomString}' axiom because the axiom is not unconditional.`, node);
     } else {
       const statement = step.getStatement(),
-            specificContext = context;  ///
-
-      context = this.getContext();
-
-      const generalContext = context,  ///
-            statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
+            statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
 
       if (statementUnifiesWithDeduction) {
         stepUnifies = true;
@@ -113,18 +110,17 @@ export default define(class Axiom extends TopLevelAssertion {
     return stepUnifies;
   }
 
-  unifyLastStep(lastStep, substitutions, generalContext, specificContext) {
+  unifyLastStep(lastStep, substitutions, context) {
     let lastStepUnifies = false;
 
     const node = this.getNode(),
-          context = specificContext,  ///
           axiomString = this.getString(),
           lastStepString = lastStep.getString();
 
     context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`, node)
 
     const statement = lastStep.getStatement(),
-          statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
+          statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
 
     if (statementUnifiesWithDeduction) {
       lastStepUnifies = true;
@@ -152,16 +148,11 @@ export default define(class Axiom extends TopLevelAssertion {
       context.trace(`Cannot unify the '${subproofString}' subproof with the '${axiomString}' axiom because the axiom is unconditional.`, node);
     } else {
       const lastStep = subproof.getLastStep(),
-            specificContext = context;  ///
-
-      context = this.getContext();
-
-      const generalContext = context,  ///
-            lastStepUnifies = this.unifyLastStep(lastStep, substitutions, generalContext, specificContext);
+            lastStepUnifies = this.unifyLastStep(lastStep, substitutions, context);
 
       if (lastStepUnifies) {
         const suppositions = subproof.getSuppositions(),
-              suppositionsUnify = this.unifySuppositions(suppositions, substitutions, generalContext, specificContext);
+              suppositionsUnify = this.unifySuppositions(suppositions, substitutions, context);
 
         if (suppositionsUnify) {
           subproofUnifies = true;

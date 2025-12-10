@@ -212,10 +212,10 @@ export default class TopLevelAssertion {
     return hypothesesCorrelate;
   }
 
-  unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext) {
+  unifyStatementWithDeduction(statement, substitutions, context) {
     let statementUnifiesWithDeduction = false;
 
-    const statementUnifies = this.deduction.unifyStatement(statement, substitutions, generalContext, specificContext);  ///
+    const statementUnifies = this.deduction.unifyStatement(statement, substitutions, context);  ///
 
     if (statementUnifies) {
       statementUnifiesWithDeduction = true;
@@ -230,12 +230,10 @@ export default class TopLevelAssertion {
     const hypothesesCorrelate = this.correlateHypotheses(context);
 
     if (hypothesesCorrelate) {
-      const generalContext = this.context, ///
-            specificContext = context, ///
-            statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, generalContext, specificContext);
+      const statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
 
       if (statementUnifiesWithDeduction) {
-        const stepsOrSubproofsUnifyWithSuppositions = this.unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, generalContext, specificContext);
+        const stepsOrSubproofsUnifyWithSuppositions = this.unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, context);
 
         if (stepsOrSubproofsUnifyWithSuppositions) {
           const substitutionsResolved = substitutions.areResolved();

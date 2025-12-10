@@ -59,7 +59,7 @@ function unifyWithReference(statement, reference, satisfiesAssertion, substituti
             statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
             substitution = statementSubstitution; ///
 
-      substitutions.addSubstitution(substitution, specificContext);
+      substitutions.addSubstitution(substitution, context);
 
       unifiesWithReference = true;
 
@@ -164,7 +164,7 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, satisfiesA
 
         substitutions = generalSubstitutions; ///
 
-        substitutions.addSubstitution(substitution, specificContext);
+        substitutions.addSubstitution(substitution, context);
 
         unifiesWithAxiomLemmaTheoremOrConjecture = true;
       }
