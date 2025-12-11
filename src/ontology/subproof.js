@@ -8,19 +8,19 @@ import { define } from "../ontology";
 import { subproofStringFromSubproofNode } from "../utilities/subproof";
 
 export default define(class Subproof {
-  constructor(node, string, suppositions, subDerivation) {
-    this.node = node;
+  constructor(string, node, suppositions, subDerivation) {
     this.string = string;
+    this.node = node;
     this.suppositions = suppositions;
     this.subDerivation = subDerivation;
   }
 
-  getNode() {
-    return this.node;
-  }
-
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getSuppositions() {
@@ -146,7 +146,7 @@ export default define(class Subproof {
             node = subproofNode,  ///
             string = subproofString;  ///
 
-      subproof = new Subproof(node, string, suppositions, subDerivation);
+      subproof = new Subproof(string, node, suppositions, subDerivation);
     }
 
     return subproof;

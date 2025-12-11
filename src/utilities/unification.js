@@ -28,14 +28,7 @@ export function unifySubstitution(generalSubstitution, specificSubstitution, sub
 
   const generalSubstitutionNode = generalSubstitution.getNode(),
         specificSubstitutionNode = specificSubstitution.getNode(),
-        generalSubstitutionTokens = generalSubstitution.getTokens(),
-        specificSubstitutionTokens = specificSubstitution.getTokens();
-
-  generalContext = contextFromTokens(generalSubstitutionTokens, generalContext); ///
-
-  specificContext = contextFromTokens(specificSubstitutionTokens, specificContext);  ///
-
-  const generalNonTerminalNode = generalSubstitutionNode, ///
+        generalNonTerminalNode = generalSubstitutionNode, ///
         specificNonTerminalNode = specificSubstitutionNode,
         unifiesAtMetaLevel = metaLevelUnifier.unify(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext);
 

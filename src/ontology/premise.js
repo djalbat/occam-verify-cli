@@ -133,10 +133,7 @@ export default define(class Premise {
     }
 
     if (stepOrSubproofUnifies) {
-      const generalContext = this.context,  ///
-            specificContext = context;  ///
-
-      substitutions.resolve(generalContext, specificContext);
+      substitutions.resolve(context);
     }
 
     stepOrSubproofUnifies ?

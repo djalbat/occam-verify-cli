@@ -7,18 +7,18 @@ import { assignAssignments } from "../utilities/assignments";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export default define(class Hypothesis {
-  constructor(node, string, statement) {
-    this.node = node;
+  constructor(string, node, statement) {
     this.string = string;
+    this.node = node;
     this.statement = statement;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getStatement() {
@@ -107,7 +107,7 @@ export default define(class Hypothesis {
     }
 
     const node = null,
-          hypothesis = new Hypothesis(node, string, statement);
+          hypothesis = new Hypothesis(string, node, statement);
 
     return hypothesis;
   }
@@ -117,7 +117,7 @@ export default define(class Hypothesis {
           node = hypothesisNode, ///
           string = context.nodeAsString(node),
           statement = Statement.fromHypothesisNode(hypothesisNode, context),
-          hypothesis = new Hypothesis(node, string, statement);
+          hypothesis = new Hypothesis(string, node, statement);
 
     return hypothesis
   }

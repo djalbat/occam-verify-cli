@@ -6,8 +6,8 @@ import ReferenceSubstitutionPartialContext from "../../context/partial/substitut
 import { define } from "../../ontology";
 
 export default define(class ReferenceSubstitution extends Substitution {
-  constructor(string, node, tokens, reference, metavariable) {
-    super(string, node, tokens);
+  constructor(context, string, node, tokens, reference, metavariable) {
+    super(context, string, node, tokens);
 
     this.reference = reference;
     this.metavariable = metavariable;
@@ -34,7 +34,7 @@ export default define(class ReferenceSubstitution extends Substitution {
           referenceSubstitutionPartialContext = ReferenceSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = referenceSubstitutionPartialContext.getNode(),
           tokens = referenceSubstitutionPartialContext.getTokens(),
-          referenceSubstitution = new ReferenceSubstitution(string, node, tokens, reference, metavariable);
+          referenceSubstitution = new ReferenceSubstitution(context, string, node, tokens, reference, metavariable);
 
     return referenceSubstitution;
   }

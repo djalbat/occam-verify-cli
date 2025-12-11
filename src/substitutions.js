@@ -247,7 +247,7 @@ export default class Substitutions {
     this.savedArray = null;
   }
 
-  resolve(generalContext, specificContext) {
+  resolve(context) {
     const metavariables = this.getMetavariables();
 
     metavariables.forEach((metavariable) => {
@@ -261,7 +261,7 @@ export default class Substitutions {
               resolved = substitution.isResolved();
 
               if (!resolved) {
-                substitution.resolve(substitutions, generalContext, specificContext);
+                substitution.resolve(substitutions, context);
               }
             });
 

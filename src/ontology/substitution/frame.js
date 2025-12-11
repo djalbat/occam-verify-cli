@@ -7,8 +7,8 @@ import FrameSubstitutionPartialContext from "../../context/partial/substitution/
 import { define } from "../../ontology";
 
 export default define(class FrameSubstitution extends Substitution {
-  constructor(string, node, tokens, frame, metavariable) {
-    super(string, node, tokens);
+  constructor(context, string, node, tokens, frame, metavariable) {
+    super(context, string, node, tokens);
 
     this.frame = frame;
     this.metavariable = metavariable;
@@ -55,7 +55,7 @@ export default define(class FrameSubstitution extends Substitution {
               tokens = context.nodeAsTokens(node),
               string = stringFromFrameAndMetavariable(frame, metavariable);
 
-        frameSubstitution = new FrameSubstitution(string, node, tokens, frame, metavariable);
+        frameSubstitution = new FrameSubstitution(context, string, node, tokens, frame, metavariable);
       }
     }
 
@@ -69,7 +69,7 @@ export default define(class FrameSubstitution extends Substitution {
           frameSubstitutionPartialContext = FrameSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = frameSubstitutionPartialContext.getNode(),
           tokens = frameSubstitutionPartialContext.getTokens(),
-          frameSubstitution = new FrameSubstitution(string, node, tokens, frame, metavariable);
+          frameSubstitution = new FrameSubstitution(context, string, node, tokens, frame, metavariable);
 
     return frameSubstitution;
   }

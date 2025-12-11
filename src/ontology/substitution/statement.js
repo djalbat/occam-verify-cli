@@ -10,8 +10,8 @@ import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../../utilities/json";
 
 export default define(class StatementSubstitution extends Substitution {
-  constructor(string, node, tokens, resolved, statement, metavariable, substitution) {
-    super(string, node, tokens);
+  constructor(context, string, node, tokens, resolved, statement, metavariable, substitution) {
+    super(context, string, node, tokens);
 
     this.resolved = resolved;
     this.statement = statement;
@@ -42,6 +42,12 @@ export default define(class StatementSubstitution extends Substitution {
     return replacementNode;
   }
 
+  isSimple() {
+    const simple = (this.substitution === null);
+
+    return simple;
+  }
+
   isStatementEqualTo(statement, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
@@ -55,33 +61,27 @@ export default define(class StatementSubstitution extends Substitution {
   isSubstitutionEqualTo(substitution) {
     let substitutionEqualTo;
 
-    if (false) {
-      ///
-    } else if ((substitution === null) && (this.substitution === null)) {
-      substitutionEqualTo = true;
-    } else if ((substitution !== null) && (this.substitution === null)) {
-      substitutionEqualTo = false;
-    } else if ((substitution === null) && (this.substitution !== null)) {
-      substitutionEqualTo = false;
+    if (this.substitution === null) {
+      substitutionEqualTo = (substitution === null);
     } else {
-      substitutionEqualTo = this.substitution.isEqualTo(substitution);
+      if (substitution === null) {
+        substitutionEqualTo = false;
+      } else {
+        substitutionEqualTo = this.substitution.isEqualTo(substitution);
+      }
     }
 
     return substitutionEqualTo;
   }
 
-  isSimple() {
-    const simple = (this.substitution === null);
-
-    return simple;
-  }
-
   matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
 
-  unifyStatement(statement, generalContext, specificContext) {
+  unifyStatement(statement, context) {
     let specificSubstitution = null;
 
     const substitutions = Substitutions.fromNothing(),
+          generalContext = this.context,  ///
+          specificContext = context,  ///
           statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
@@ -97,35 +97,35 @@ export default define(class StatementSubstitution extends Substitution {
     return specificSubstitution;
   }
 
-  resolve(substitutions, generalContext, specificContext) {
+  resolve(substitutions, context) {
     const substitutionString = this.string; ///
+
+    context.trace(`Resolving the ${substitutionString} substitution...`);
 
     const metavariable = this.getMetavariable(),
           simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable);
 
     if (simpleSubstitution !== null) {
-      specificContext.trace(`Resolving the ${substitutionString} substitution...`);
-
       const substitution = simpleSubstitution,  ///
-            substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, generalContext, specificContext);
+            substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, context);
 
       this.resolved = substitutionResolved; ///
+    }
 
-      if (this.resolved) {
-        specificContext.debug(`...resolved the ${substitutionString} substitution.`);
-      }
+    if (this.resolved) {
+      context.debug(`...resolved the ${substitutionString} substitution.`);
     }
   }
 
-  resolveSubstitution(substitution, statement, substitutions, generalContext, specificContext) {
+  resolveSubstitution(substitution, statement, substitutions, context) {
     let substitutionResolved = false;
 
     const substitutionString = substitution.getString();
 
-    specificContext.trace(`Resolving the ${substitutionString} substitution...`);
+    context.trace(`Resolving the ${substitutionString} substitution...`);
 
     const generalSubstitution = substitution, ///
-          specificSubstitution = this.unifyStatement(statement, specificContext, specificContext);  ///
+          specificSubstitution = this.unifyStatement(statement, context);  ///
 
     if (specificSubstitution !== null) {
       substitutions.snapshot();
@@ -133,12 +133,16 @@ export default define(class StatementSubstitution extends Substitution {
       const generalSubstitutionString = generalSubstitution.getString(),
             specificSubstitutionString = specificSubstitution.getString();
 
-      specificContext.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
+      context.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
 
-      const substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
+      const generalSubstitutionContext = generalSubstitution.getContext(),
+            specificSubstitutionContext = specificSubstitution.getContext(),
+            generalContext = generalSubstitutionContext,  ///
+            specificContext = specificSubstitutionContext,  ///
+            substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
 
       if (substitutionUnifies) {
-        specificContext.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
+        context.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
       }
 
       substitutionUnifies ?
@@ -149,7 +153,7 @@ export default define(class StatementSubstitution extends Substitution {
     }
 
     if (substitutionResolved) {
-      specificContext.debug(`...resolved the ${substitutionString} substitution.`);
+      context.debug(`...resolved the ${substitutionString} substitution.`);
     }
 
     return substitutionResolved;
@@ -181,7 +185,7 @@ export default define(class StatementSubstitution extends Substitution {
           statement = statementFromJSON(json, context),
           metavariable = metavariableFromJSON(json, context),
           substitution = null,  ///
-          statementSubstitution = new StatementSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
+          statementSubstitution = new StatementSubstitution(context, string, node, tokens, resolved, statement, metavariable, substitution);
 
     return statementSubstitution;
   }
@@ -197,7 +201,7 @@ export default define(class StatementSubstitution extends Substitution {
           tokens = statementSubstitutionPartialContext.getTokens(),
           resolved = true,
           substitution = null,
-          statementSubstitution = new StatementSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
+          statementSubstitution = new StatementSubstitution(context, string, node, tokens, resolved, statement, metavariable, substitution);
 
     return statementSubstitution;
   }
@@ -212,7 +216,7 @@ export default define(class StatementSubstitution extends Substitution {
           node = statementSubstitutionPartialContext.getNode(),
           tokens = statementSubstitutionPartialContext.getTokens(),
           resolved = false,
-          statementSubstitution = new StatementSubstitution(string, node, tokens, resolved, statement, metavariable, substitution);
+          statementSubstitution = new StatementSubstitution(context, string, node, tokens, resolved, statement, metavariable, substitution);
 
     return statementSubstitution;
   }

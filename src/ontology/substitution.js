@@ -1,10 +1,15 @@
 "use strict";
 
 export default class Substitution {
-  constructor(string, node, tokens) {
+  constructor(context, string, node, tokens) {
+    this.context = context;
     this.string = string;
     this.node = node;
     this.tokens = tokens;
+  }
+
+  getContext() {
+    return this.context;
   }
 
   getString() {

@@ -9,8 +9,8 @@ import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { stripBracketsFromTermNode } from "../../utilities/brackets";
 
 export default define(class TermSubstitution extends Substitution {
-  constructor(string, node, tokens, term, variable) {
-    super(string, node, tokens);
+  constructor(context, string, node, tokens, term, variable) {
+    super(context, string, node, tokens);
 
     this.term = term;
     this.variable = variable;
@@ -71,7 +71,7 @@ export default define(class TermSubstitution extends Substitution {
               tokens = context.nodeAsTokens(node),
               string = stringFromTermAndVariable(term, variable);
 
-        termSubstitution = new TermSubstitution(string, node, tokens, term, variable);
+        termSubstitution = new TermSubstitution(context, string, node, tokens, term, variable);
       }
     }
 
@@ -93,7 +93,7 @@ export default define(class TermSubstitution extends Substitution {
           termSubstitutionPartialContext = TermSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = termSubstitutionPartialContext.getNode(),
           tokens = termSubstitutionPartialContext.getTokens(),
-          termSubstitution = new TermSubstitution(string, node, tokens, term, variable);
+          termSubstitution = new TermSubstitution(context, string, node, tokens, term, variable);
 
     return termSubstitution;
   }

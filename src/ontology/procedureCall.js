@@ -8,27 +8,27 @@ import { define } from "../ontology";
 import { parametersFromJSON, procedureReferenceFromJSON, parametersToParametersJSON, procedureReferenceToProcedureReferenceJSON } from "../utilities/json";
 
 export default define(class ProcedureCall {
-  constructor(node, string, procedureReference, parameters) {
-    this.node = node;
+  constructor(string, node, parameters, procedureReference) {
     this.string = string;
-    this.procedureReference = procedureReference;
+    this.node = node;
     this.parameters = parameters;
-  }
-
-  getNode() {
-    return this.node;
+    this.procedureReference = procedureReference;
   }
 
   getString() {
     return this.string;
   }
 
-  getProcedureReference() {
-    return this.procedureReference;
+  getNode() {
+    return this.node;
   }
 
   getParameters() {
     return this.parameters;
+  }
+
+  getProcedureReference() {
+    return this.procedureReference;
   }
 
   getName() { return this.procedureReference.getName(); }
@@ -118,11 +118,11 @@ export default define(class ProcedureCall {
   static name = "ProcedureCall";
 
   static fromJSON(json, context) {
-    const procedureReference = procedureReferenceFromJSON(json, context),
+    const node = null,
           parameters = parametersFromJSON(json, context),
-          node = null,
+          procedureReference = procedureReferenceFromJSON(json, context),
           string = stringFromProcedureReferenceAndParameters(procedureReference, parameters),
-          procedureCall = new ProcedureCall(node, string, procedureReference, parameters);
+          procedureCall = new ProcedureCall(string, node, parameters, procedureReference);
 
     return procedureCall;
   }
@@ -155,10 +155,10 @@ export default define(class ProcedureCall {
 function procedureCallFromProcedureCallNode(procedureCallNode, context) {
   const { ProcedureCall, ProcedureReference } = ontology,
         node = procedureCallNode, ///
-        procedureReference = ProcedureReference.fromProcedureCallNode(procedureCallNode, context),
         parameters = parametersFromProcedureCallNode(procedureCallNode, context),
+        procedureReference = ProcedureReference.fromProcedureCallNode(procedureCallNode, context),
         string = stringFromProcedureReferenceAndParameters(procedureReference, parameters),
-        procedureCall = new ProcedureCall(node, string, procedureReference, parameters);
+        procedureCall = new ProcedureCall(string, node, parameters, procedureReference);
 
   return procedureCall;
 }
