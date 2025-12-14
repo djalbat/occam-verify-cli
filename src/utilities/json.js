@@ -203,6 +203,22 @@ export function labelFromJSON(json, context) {
   return label;
 }
 
+export function framesFromJSON(json, context) {
+  let { frames } = json;
+
+  const { Frame } = ontology,
+        framesJSON = frames; ///
+
+  frames = framesJSON.map((frameJSON) => {
+    const json = frameJSON,  ///
+          frame = Frame.fromJSON(json, context);
+
+    return frame;
+  });
+
+  return frames;
+}
+
 export function labelsFromJSON(json, context) {
   let { labels } = json;
 
@@ -598,6 +614,18 @@ export function rulesToRulesJSON(rules) {
   });
 
   return rulesJSON;
+}
+
+export function framesToFramesJSON(frames) {
+  const framesJSON = frames.map((frame) => {
+    const frameJSON = frame.toJSON();
+
+    frame = frameJSON; ///
+
+    return frame;
+  });
+
+  return framesJSON;
 }
 
 export function labelsToLabelsJSON(labels) {

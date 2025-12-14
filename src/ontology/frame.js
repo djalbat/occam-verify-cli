@@ -36,14 +36,27 @@ export default define(class Frame {
 
   getLength() { return this.declarations.length; }
 
+  getDeclaration() {
+    let declaration = null;
+
+    const length = this.getLength();
+
+    if (length === 1) {
+      const firstDeclaration = first(this.declarations);
+
+      declaration = firstDeclaration; ///
+    }
+
+    return declaration;
+  }
+
   getMetavariable() {
     let metavariable = null;
 
     const simple = this.isSimple();
 
     if (simple) {
-      const firstDeclaration = first(this.declarations),
-            declaration = firstDeclaration; ///
+      const declaration = this.getDeclaration();
 
       metavariable = declaration.getMetavariable();
     }
@@ -54,12 +67,9 @@ export default define(class Frame {
   isSimple() {
     let simple = false;
 
-    const length = this.getLength();
+    const declaration = this.getDeclaration();
 
-    if (length === 1) {
-      const firstDeclaration = first(this.declarations),
-            declaration = firstDeclaration; ///
-
+    if (declaration !== null) {
       simple = declaration.isSimple();
     }
 
@@ -72,6 +82,8 @@ export default define(class Frame {
 
     return equalTo;
   }
+
+  matchFrameNode(frameNode) { return this.node.match(frameNode); }
 
   matchSubstitution(substitution, context) {
     let substitutionMatches = false;
@@ -146,6 +158,10 @@ export default define(class Frame {
     }
 
     if (verifies) {
+      const frame = this; ///
+
+      context.addFrame(frame);
+
       context.debug(`...verified the '${frameString}' frame.`);
     }
 
@@ -244,7 +260,41 @@ export default define(class Frame {
     return verifiesGivenMetaType;
   }
 
+  toJSON() {
+    let json = null;
+
+    const simple = this.isSimple();
+
+    if (simple) {
+      const declaration = this.getDeclaration(),
+            declarationJSON = declaration.toJSON();
+
+      json = declarationJSON;  ///
+    }
+
+    return json;
+  }
+
   static name = "Frame";
+
+  static fromJSON(json, context) {
+    let frame = null;
+
+    if (json !== null) {
+      const { Declaration } =ontology,
+            declaration = Declaration.fromJSON(json, context),
+            declarations = [
+              declaration
+            ],
+            string = null,
+            node = null,
+            tokens = null;
+
+      frame = new Frame(string, node, tokens, declarations);
+    }
+
+    return frame;
+  }
 
   static fromFrameNode(frameNode, context) {
     let frame = null;
@@ -294,8 +344,7 @@ function frameFromFrameNode(frameNode, context) {
         string = context.nodeAsString(node),
         tokens = context.nodeAsTokens(node),
         declarations = declarationsFromFrameNode(frameNode, context),
-        metavariables = metavariablesFromFrameNode(frameNode, context),
-        frame = new Frame(string, node, tokens, declarations, metavariables);
+        frame = new Frame(string, node, tokens, declarations);
 
   return frame;
 }
@@ -310,18 +359,6 @@ function declarationsFromFrameNode(frameNode, context) {
         });
 
   return declarations;
-}
-
-function metavariablesFromFrameNode(frameNode, context) {
-  const { Metavariable } = ontology,
-        metavariableNodes = frameNode.getMetavariableNodes(),
-        metavariables = metavariableNodes.map((metavariableNode) => {
-          const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
-
-          return metavariable;
-        });
-
-  return metavariables;
 }
 
 function declarationsStringFromDeclarations(declarations) {

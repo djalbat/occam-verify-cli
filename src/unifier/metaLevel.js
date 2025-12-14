@@ -9,6 +9,7 @@ const termNodeQuery = nodeQuery("/term"),
       frameNodeQuery = nodeQuery("/frame"),
       statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
+      metavariableNameNodeQuery = nodeQuery("/metavariable/@name!"),
       variableIdentifierNodeQuery = nodeQuery("/variable/@identifier!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
       termVariableIdentifierNodeQuery = nodeQuery("/term/variable!/@identifier!"),
@@ -69,19 +70,19 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalFrameDeclarationMetavariableNode, specificFrameNode, substitutions, generalContext, specificContext) => {
         let frameUnifies;
 
-        const { Frame, Metavariable } = ontology,
-              frameNode = specificFrameNode, ///
-              metavariableNode = generalFrameDeclarationMetavariableNode;  ///
+        const frameNode = specificFrameNode, ///
+              metavariableNode = generalFrameDeclarationMetavariableNode,  ///
+              metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
 
         let context;
 
         context = generalContext; ///
 
-        const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
+        const metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
         context = specificContext;  ///
 
-        const frame = Frame.fromFrameNode(frameNode, context);
+        const frame = context.findFrameByFrameNode(frameNode);
 
         frameUnifies = metavariable.unifyFrame(frame, substitutions, generalContext, specificContext);
 
@@ -157,6 +158,14 @@ class MetaLevelUnifier extends Unifier {
 const metaLevelUnifier = new MetaLevelUnifier();
 
 export default metaLevelUnifier;
+
+function metavariableNameFromMetavariableNode(metavariableNode) {
+  const metavariableNameTerminalNode = metavariableNameNodeQuery(metavariableNode),
+        metavariableNameTerminalNodeContent = metavariableNameTerminalNode.getContent(),
+        metavariableName = metavariableNameTerminalNodeContent; ///
+
+  return metavariableName;
+}
 
 export function termVariableIdentifierFromTermNode(TermNode) {
   const termVariableIdentifierTerminalNode = termVariableIdentifierNodeQuery(TermNode),

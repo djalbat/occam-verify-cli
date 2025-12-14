@@ -6,7 +6,7 @@ import TemporaryContext from "../context/temporary";
 import { define } from "../ontology";
 import { assignAssignments } from "../utilities/assignments";
 import { subproofAssertionFromStatement } from "../utilities/context";
-import { termsFromJSON, statementFromJSON, procedureCallFromJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
+import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default define(class Supposition {
   constructor(context, node, string, statement, procedureCall) {
@@ -231,13 +231,29 @@ export default define(class Supposition {
   }
 
   toJSON() {
-    const statementJSON = statementToStatementJSON(this.statement),
-          procedureCallJSON = procedureCallToProcedureCallJSON(this.procedureCall),
+    let frames,
+        terms;
+
+    frames = this.context.getFrames();
+
+    terms = this.context.getTerms();
+
+    const procedureCallJSON = procedureCallToProcedureCallJSON(this.procedureCall),
+          statementJSON = statementToStatementJSON(this.statement),
+          framesJSON = framesToFramesJSON(frames),
+          termsJSON = termsToTermsJSON(terms);
+
+    frames = framesJSON;  ///
+
+    terms = termsJSON;  ///
+
+    const procedureCall = procedureCallJSON,  ///
           statement = statementJSON,  ///
-          procedureCall = procedureCallJSON,  ///
           json = {
+            procedureCall,
             statement,
-            procedureCall
+            frames,
+            terms
           };
 
     return json;
@@ -247,9 +263,10 @@ export default define(class Supposition {
 
   static fromJSON(json, context) {
     const terms = termsFromJSON(json, context),
+          frames = framesFromJSON(json, context),
           statement = statementFromJSON(json, context),
           procedureCall = procedureCallFromJSON(json, context),
-          temporaryContext = TemporaryContext.fromTerms(terms, context);
+          temporaryContext = TemporaryContext.fromTermsAndFrames(terms, frames, context);
 
     let string;
 

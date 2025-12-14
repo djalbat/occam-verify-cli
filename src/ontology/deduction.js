@@ -4,7 +4,7 @@ import ontology from "../ontology";
 import TemporaryContext from "../context/temporary";
 
 import { define } from "../ontology";
-import { termsFromJSON, statementFromJSON, statementToStatementJSON } from "../utilities/json";
+import { termsFromJSON, framesFromJSON, statementFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON } from "../utilities/json";
 
 export default define(class Deduction {
   constructor(context, node, string, statement) {
@@ -104,10 +104,26 @@ export default define(class Deduction {
   }
 
   toJSON() {
+    let frames,
+        terms;
+
+    frames = this.context.getFrames();
+
+    terms = this.context.getTerms();
+
     const statementJSON = statementToStatementJSON(this.statement),
-          statement = statementJSON,  ///
+          framesJSON = framesToFramesJSON(frames),
+          termsJSON = termsToTermsJSON(terms);
+
+    frames = framesJSON;  ///
+
+    terms = termsJSON;  ///
+
+    const statement = statementJSON,  ///
           json = {
-            statement
+            statement,
+            frames,
+            terms
           };
 
     return json;
@@ -117,10 +133,11 @@ export default define(class Deduction {
 
   static fromJSON(json, context) {
     const terms = termsFromJSON(json, context),
+          frames = framesFromJSON(json, context),
           statement = statementFromJSON(json, context),
           node = null,
           string = statement.getString(),
-          temporaryContext = TemporaryContext.fromTerms(terms, context);
+          temporaryContext = TemporaryContext.fromTermsAndFrames(terms, frames, context);
 
     context = temporaryContext; ///
 

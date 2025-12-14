@@ -5,6 +5,7 @@ import Substitutions from "../substitutions";
 
 import { define } from "../ontology";
 import { unifyStatementIntrinsically } from "../utilities/unification";
+import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default define(class Declaration {
   constructor(string, node, statement, metavariable) {
@@ -318,7 +319,37 @@ export default define(class Declaration {
     return metaLemmaMetatheoremUnifies;
   }
 
+  toJSON() {
+    let json = null;
+
+    const simple = this.isSimple();
+
+    if (simple) {
+      const metavariable = this.getMetavariable(),
+            metavariableJSON = metavariableToMetavariableJSON(metavariable);
+
+      json = metavariableJSON;  ///
+    }
+
+    return json;
+  }
+
   static name = "Declaration";
+
+  static fromJSON(json, context) {
+    let declaration = null;
+
+    if (json !== null) {
+      const metavariable = metavariableFromJSON(json, context),
+            string = null,
+            node = null,
+            statement = null;
+
+      declaration = new Declaration(string, node, statement, metavariable)
+    }
+
+    return declaration;
+  }
 
   static fromJudgementNode(judgementNode, context) {
     const declarationNode = judgementNode.getDeclarationNode(),

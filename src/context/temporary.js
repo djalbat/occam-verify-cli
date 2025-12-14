@@ -5,10 +5,11 @@ import { arrayUtilities } from "necessary";
 const { extract } = arrayUtilities;
 
 export default class TemporaryContext {
-  constructor(context, tokens, terms) {
+  constructor(context, tokens, terms, frames) {
     this.context = context;
     this.tokens = tokens;
     this.terms = terms;
+    this.frames = frames;
   }
 
   getContext() {
@@ -21,6 +22,10 @@ export default class TemporaryContext {
 
   getTerms() {
     return this.terms;
+  }
+
+  getFrames() {
+    return this.frames;
   }
 
   addTerm(term) {
@@ -37,6 +42,21 @@ export default class TemporaryContext {
     this.terms.push(term);
   }
 
+  addFrame(frame) {
+    const frameNode = frame.getNode();
+
+    extract(this.frames, (frame) => {
+      const frameMatchesFrameNode = frame.matchFrameNode(frameNode);
+
+      if (frameMatchesFrameNode) {
+        return true;
+      }
+    });
+
+
+    this.frames.push(frame);
+  }
+
   findTermByTermNode(termNode) {
     const term = this.terms.find((term) => {
       const termMatchesTermNode = term.matchTermNode(termNode);
@@ -47,6 +67,18 @@ export default class TemporaryContext {
     }) || null;
 
     return term;
+  }
+
+  findFrameByFrameNode(frameNode) {
+    const frame = this.frames.find((frame) => {
+      const frameMatchesFrameNode = frame.matchFrameNode(frameNode);
+
+      if (frameMatchesFrameNode) {
+        return true;
+      }
+    }) || null;
+
+    return frame;
   }
 
   getVariables(nested = true) { return this.context.getVariables(nested); }
@@ -223,24 +255,26 @@ export default class TemporaryContext {
 
   error(message, node = null) { this.context.error(message, node); }
 
-  static fromTerms(terms, context) {
+  static fromTermsAndFrames(terms, frames, context) {
     const tokens = null,
-          temporaryContext = new TemporaryContext(terms, tokens, context);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames);
 
     return temporaryContext;
   }
 
   static fromNothing(context) {
     const terms = [],
+          frames = [],
           tokens = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames);
 
     return temporaryContext;
   }
 
   static fromContextAndTokens(context, tokens) {
     const terms = [],
-          temporaryContext = new TemporaryContext(context, tokens, terms);
+          frames = [],
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames);
 
     return temporaryContext;
   }
