@@ -107,7 +107,7 @@ export default class Substitutions {
 
   findSubstitutionsByMetavariable(metavariable) {
     const substitutions = this.findSubstitutions((substitution) => {
-      const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualTo(metavariable);
+      const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualToMetavariable(metavariable);
 
       if (substitutionMetavariableEqualToMetavariable) {
         return true;
@@ -123,7 +123,7 @@ export default class Substitutions {
 
       if (substitutionSimple) {
         const simpleSubstitution = substitution,  ///
-              simpleSubstitutionMetavariableEqualToMetavariable = simpleSubstitution.isMetavariableEqualTo(metavariable);
+              simpleSubstitutionMetavariableEqualToMetavariable = simpleSubstitution.isMetavariableEqualToMetavariable(metavariable);
 
         if (simpleSubstitutionMetavariableEqualToMetavariable) {
           return true;
@@ -140,7 +140,7 @@ export default class Substitutions {
 
       if (substitutionComplex) {
         const complexSubstitution = substitution, ///
-              complexSubstitutionMetavariableEqualToMetavariable = complexSubstitution.isMetavariableEqualTo(metavariable);
+              complexSubstitutionMetavariableEqualToMetavariable = complexSubstitution.isMetavariableEqualToMetavariable(metavariable);
 
         if (complexSubstitutionMetavariableEqualToMetavariable) {
           return true;
@@ -155,11 +155,11 @@ export default class Substitutions {
     const substitutionA = substitution; ///
 
     substitution = this.findSubstitution((substitution) => {  ///
-      const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualTo(metavariable);
+      const substitutionMetavariableEqualToMetavariable = substitution.isMetavariableEqualToMetavariable(metavariable);
 
       if (substitutionMetavariableEqualToMetavariable) {
         const substitutionB = substitution, ///
-              substitutionBSubstitutionEqualToSubstitutionA = substitutionB.isSubstitutionEqualTo(substitutionA);
+              substitutionBSubstitutionEqualToSubstitutionA = substitutionB.isSubstitutionEqualToSubstitution(substitutionA);
 
         if (substitutionBSubstitutionEqualToSubstitutionA) {
           return true;

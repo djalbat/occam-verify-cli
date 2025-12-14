@@ -230,7 +230,7 @@ export default class TemporaryContext {
     return temporaryContext;
   }
 
-  static fromContext(context) {
+  static fromNothing(context) {
     const terms = [],
           tokens = null,
           temporaryContext = new TemporaryContext(context, tokens, terms);

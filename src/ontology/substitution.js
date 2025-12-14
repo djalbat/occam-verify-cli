@@ -92,46 +92,46 @@ export default class Substitution {
     return equalTo;
   }
 
-  isTermEqualTo(term) {
-    const termEqualTo = false;
+  isTermEqualToTerm(term, context) {
+    const termEqualToTerm = false;
 
-    return termEqualTo;
+    return termEqualToTerm;
   }
 
-  isFrameEqualTo(frame) {
-    const frameEqualTo = false;
+  isFrameEqualToFrame(frame) {
+    const frameEqualToFrame = false;
 
-    return frameEqualTo;
+    return frameEqualToFrame;
   }
 
-  isVariableEqualTo(variable) {
-    const variableEqualTo = false;
+  isTermVariableEqualToTerm(termVariable, context) {
+    const termVariableEqualToTerm = false;
 
-    return variableEqualTo;
+    return termVariableEqualToTerm;
   }
 
-  isReferenceEqualTo(reference) {
-    const referenceEqualTo = false;
+  isReferenceEqualToReference(reference, context) {
+    const referenceEqualToReference = false;
 
-    return referenceEqualTo;
+    return referenceEqualToReference;
   }
 
-  isStatementEqualTo(statement) {
-    const statementEqualTo = false;
+  isStatementEqualToStatement(statement, context) {
+    const statementEqualToStatement = false;
 
-    return statementEqualTo;
+    return statementEqualToStatement;
   }
 
-  isMetavariableEqualTo(metavariable) {
-    const metavariableEqualTo = false;
+  isMetavariableEqualToMetavariable(metavariable) {
+    const metavariableEqualToMetavariable = false;
 
-    return metavariableEqualTo;
+    return metavariableEqualToMetavariable;
   }
 
-  isSubstitutionEqualTo(substitution) {
-    const substitutionEqualTo = (substitution === null);
+  isSubstitutionEqualToSubstitution(substitution) {
+    const substitutionEqualToSubstitution = (substitution === null);
 
-    return substitutionEqualTo;
+    return substitutionEqualToSubstitution;
   }
 
   resolve(substitutions, context) {

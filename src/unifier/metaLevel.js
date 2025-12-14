@@ -11,6 +11,7 @@ const termNodeQuery = nodeQuery("/term"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
       variableIdentifierNodeQuery = nodeQuery("/variable/@identifier!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
+      termVariableIdentifierNodeQuery = nodeQuery("/term/variable!/@identifier!"),
       declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable!"),
       frameDeclarationMetavariableNodeQuery = nodeQuery("/frame/declaration!/metavariable!");
 
@@ -91,7 +92,7 @@ class MetaLevelUnifier extends Unifier {
       generalNodeQuery: termVariableNodeQuery,
       specificNodeQuery: termNodeQuery,
       unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
-        let termUnifies;
+        let termUnifies = false;
 
         const termNode = specificTermNode, ///
               variableNode = generalTermVariableNode, ///
@@ -107,7 +108,17 @@ class MetaLevelUnifier extends Unifier {
 
         const term = context.findTermByTermNode(termNode);
 
-        termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
+        if (term !== null) {
+          termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
+        } else {
+          const termVariaibleIdentifer = termVariableIdentifierFromTermNode(termNode),
+                termVariable = context.findVariableByVariableIdentifier(termVariaibleIdentifer),
+                termVariableUnifies = variable.unifyTermVariable(termVariable, substitutions, generalContext, specificContext);
+
+          if (termVariableUnifies) {
+           termUnifies = true;
+          }
+        }
 
         return termUnifies;
       }
@@ -147,10 +158,18 @@ const metaLevelUnifier = new MetaLevelUnifier();
 
 export default metaLevelUnifier;
 
+export function termVariableIdentifierFromTermNode(TermNode) {
+  const termVariableIdentifierTerminalNode = termVariableIdentifierNodeQuery(TermNode),
+        termVariableIdentifierTerminalNodeContent = termVariableIdentifierTerminalNode.getContent(),
+        termVariableIdentifier = termVariableIdentifierTerminalNodeContent; ///
+
+  return termVariableIdentifier;
+}
+
 export function variableIdentifierFromVariableNode(variableNode) {
-  const identifierTerminalNode = variableIdentifierNodeQuery(variableNode),
-        identifierTerminalNodeContent = identifierTerminalNode.getContent(),
-        variableIdentifier = identifierTerminalNodeContent; ///
+  const variableIdentifierTerminalNode = variableIdentifierNodeQuery(variableNode),
+        variableIdentifierTerminalNodeContent = variableIdentifierTerminalNode.getContent(),
+        variableIdentifier = variableIdentifierTerminalNodeContent; ///
 
   return variableIdentifier;
 }

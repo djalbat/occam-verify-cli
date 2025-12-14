@@ -91,7 +91,7 @@ export default define(class Section {
   static name = "Section";
 
   static fromSectionNode(sectionNode, context) {
-    const localContext = LocalContext.fromContext(context);
+    const localContext = LocalContext.fromNothing(context);
 
     context = localContext; ///
 

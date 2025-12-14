@@ -19,9 +19,9 @@ function unifyWithBracketedCombinator(statement, assignments, stated, context) {
 
   const { BracketedCombinator } = ontology,
         bracketedCombinator = BracketedCombinator.fromNothing(),
-        unifiesWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
+        unifiedWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
 
-  return unifiesWithBracketedCombinator;
+  return unifiedWithBracketedCombinator;
 }
 
 function unifyWithCombinators(statement, assignments, stated, context) {
@@ -30,15 +30,15 @@ function unifyWithCombinators(statement, assignments, stated, context) {
   assignments = null; ///
 
   const combinators = context.getCombinators(),
-        unifiesWithCombinators = combinators.some((combinator) => {
-          const unifiesWithCombinator = combinator.unifyStatement(statement, assignments, stated, context);
+        unifiedWithCombinators = combinators.some((combinator) => {
+          const unifiedWithCombinator = combinator.unifyStatement(statement, assignments, stated, context);
 
-          if (unifiesWithCombinator) {
+          if (unifiedWithCombinator) {
             return true;
           }
         });
 
-  return unifiesWithCombinators;
+  return unifiedWithCombinators;
 }
 
 function verifyAsMetavariable(statement, assignments, stated, context) {

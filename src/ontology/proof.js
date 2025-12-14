@@ -27,7 +27,7 @@ export default define(class Proof {
   verify(substitutions, conclusion, context) {
     let verifies = false;
 
-    const localContext = LocalContext.fromContext(context); ///
+    const localContext = LocalContext.fromNothing(context); ///
 
     context = localContext; ///
 

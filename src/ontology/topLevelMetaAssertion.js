@@ -73,7 +73,7 @@ export default class TopLevelMetaAssertion {
     const labelVerifies = this.verifyLabel();
 
     if (labelVerifies) {
-      const localContext = LocalContext.fromContext(this.context),
+      const localContext = LocalContext.fromNothing(this.context),
             context = localContext, ///
             suppositionsVerify = this.verifySuppositions(context);
 

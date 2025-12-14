@@ -112,7 +112,7 @@ export default class TopLevelAssertion {
     const labelsVerify = this.verifyLabels();
 
     if (labelsVerify) {
-      const localContext = LocalContext.fromContext(this.context),
+      const localContext = LocalContext.fromNothing(this.context),
             context = localContext, ///
             suppositionsVerify = this.verifySuppositions(context);
 
@@ -213,49 +213,49 @@ export default class TopLevelAssertion {
   }
 
   unifyStatementWithDeduction(statement, substitutions, context) {
-    let statementUnifiesWithDeduction = false;
+    let statementUnifiedWithDeduction = false;
 
     const statementUnifies = this.deduction.unifyStatement(statement, substitutions, context);  ///
 
     if (statementUnifies) {
-      statementUnifiesWithDeduction = true;
+      statementUnifiedWithDeduction = true;
     }
 
-    return statementUnifiesWithDeduction;
+    return statementUnifiedWithDeduction;
   }
 
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context) {
-    let statementAndStepsOrSubproofsUnify = false;
+    let statementAndStepsOrSubproofsUnified = false;
 
     const hypothesesCorrelate = this.correlateHypotheses(context);
 
     if (hypothesesCorrelate) {
-      const statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
+      const statementUnifiedWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
 
-      if (statementUnifiesWithDeduction) {
+      if (statementUnifiedWithDeduction) {
         const stepsOrSubproofsUnifyWithSuppositions = this.unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, context);
 
         if (stepsOrSubproofsUnifyWithSuppositions) {
           const substitutionsResolved = substitutions.areResolved();
 
           if (substitutionsResolved) {
-            statementAndStepsOrSubproofsUnify = true;
+            statementAndStepsOrSubproofsUnified = true;
           }
         }
       }
     }
 
-    return statementAndStepsOrSubproofsUnify;
+    return statementAndStepsOrSubproofsUnified;
   }
 
   unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext) {
-    let stepsOrSubproofsUnifyWithSupposition = false;
+    let stepsOrSubproofsUnifiedWithSupposition = false;
 
     const context = specificContext,  ///
           suppositionUnifiesIndependently = supposition.unifyIndependently(substitutions, context);
 
     if (suppositionUnifiesIndependently) {
-      stepsOrSubproofsUnifyWithSupposition = true;
+      stepsOrSubproofsUnifiedWithSupposition = true;
     } else {
       const stepOrSubproof = extract(stepsOrSubproofs, (stepOrSubproof) => {
         const stepOrSubproofUnifies = supposition.unifyStepOrSubproof(stepOrSubproof, substitutions, generalContext, specificContext);
@@ -266,20 +266,20 @@ export default class TopLevelAssertion {
       }) || null;
 
       if (stepOrSubproof !== null) {
-        stepsOrSubproofsUnifyWithSupposition = true;
+        stepsOrSubproofsUnifiedWithSupposition = true;
       }
     }
 
-    return stepsOrSubproofsUnifyWithSupposition;
+    return stepsOrSubproofsUnifiedWithSupposition;
   }
 
   unifyStepsOrSubproofsWithSuppositions(stepsOrSubproofs, substitutions, generalContext, specificContext) {
     stepsOrSubproofs = reverse(stepsOrSubproofs); ///
 
     const stepsOrSubproofsUnifyWithSuppositions = backwardsEvery(this.suppositions, (supposition) => {
-      const stepsOrSubproofsUnifyWithSupposition = this.unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext);
+      const stepsOrSubproofsUnifiedWithSupposition = this.unifyStepsOrSubproofsWithSupposition(stepsOrSubproofs, supposition, substitutions, generalContext, specificContext);
 
-      if (stepsOrSubproofsUnifyWithSupposition) {
+      if (stepsOrSubproofsUnifiedWithSupposition) {
         return true;
       }
     });

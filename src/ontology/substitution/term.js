@@ -5,8 +5,10 @@ import Substitution from "../substitution";
 import TermSubstitutionPartialContext from "../../context/partial/substitution/term";
 
 import { define } from "../../ontology";
+import { nodeQuery } from "../../utilities/query";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
-import { stripBracketsFromTermNode } from "../../utilities/brackets";
+
+const termVariableNodeQuery = nodeQuery("/term/variable!");
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, tokens, term, variable) {
@@ -39,15 +41,38 @@ export default define(class TermSubstitution extends Substitution {
     return trivial;
   }
 
-  isTermEqualTo(term, context) {
+  isTermEqualToTerm(term, context) {
     term = stripBracketsFromTerm(term, context); ///
 
-    const termEqualTo = this.term.isEqualTo(term);
+    const termEqualToTerm = this.term.isEqualTo(term);
 
-    return termEqualTo;
+    return termEqualToTerm;
   }
 
-  isVariableEqualTo(variable) { return this.variable.isEqualTo(variable); }
+  isTermVariableEqualToTerm(termVariable, context) {
+    let termVariableEqualToTerm = false;
+
+    const termNode = this.term.getNode();
+
+    let termVariableNode;
+
+    termVariableNode = termVariableNodeQuery(termNode);
+
+    if (termVariableNode !== null) {
+      const termVariableNodeA = termVariableNode; ///
+
+      termVariableNode = termVariable.getNode();
+
+      const termVariableNodeB = termVariableNode, ///
+            termVariableNodeAMatchesTermVariableNodeB = termVariableNodeA.match(termVariableNodeB);
+
+      if (termVariableNodeAMatchesTermVariableNodeB) {
+        termVariableEqualToTerm = true;
+      }
+    }
+
+    return termVariableEqualToTerm;
+  }
 
   matchParameter(parameter) { return this.variable.matchParameter(parameter); }
 
@@ -79,21 +104,14 @@ export default define(class TermSubstitution extends Substitution {
   }
 
   static fromTernAndVariable(term, variable, context) {
-    let termNode = term.getNode();
-
-    termNode = stripBracketsFromTermNode(termNode); ///
-
-    const { Term } = ontology;
-
-    term = Term.fromTermNode(termNode, context);
-
-    const string = stringFromTermAndVariable(term, variable),
-          lexer = context.getLexer(),
+    const lexer = context.getLexer(),
           parser = context.getParser(),
+          string = stringFromTermAndVariable(term, variable),
           termSubstitutionPartialContext = TermSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
           node = termSubstitutionPartialContext.getNode(),
-          tokens = termSubstitutionPartialContext.getTokens(),
-          termSubstitution = new TermSubstitution(context, string, node, tokens, term, variable);
+          tokens = termSubstitutionPartialContext.getTokens();
+
+    const termSubstitution = new TermSubstitution(context, string, node, tokens, term, variable);
 
     return termSubstitution;
   }

@@ -83,7 +83,7 @@ export default define(class Step {
   verify(substitutions, assignments, context) {
     let verifies = false;
 
-    const temporaryContext = TemporaryContext.fromContext(context);
+    const temporaryContext = TemporaryContext.fromNothing(context);
 
     context = temporaryContext; ///
 
@@ -171,7 +171,7 @@ export default define(class Step {
   }
 
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
-    let unifiesWithSatisfiesAssertion = false;
+    let unifiedWithSatisfiesAssertion = false;
 
     const stepString = this.string, ///
           satisfiesAssertionString = satisfiesAssertion.getString();
@@ -190,16 +190,16 @@ export default define(class Step {
         const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);
 
         if (substitutionsCompare) {
-          unifiesWithSatisfiesAssertion = true;
+          unifiedWithSatisfiesAssertion = true;
         }
       }
     }
 
-    if (unifiesWithSatisfiesAssertion) {
+    if (unifiedWithSatisfiesAssertion) {
       context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`, this.node);
     }
 
-    return unifiesWithSatisfiesAssertion;
+    return unifiedWithSatisfiesAssertion;
   }
 
   static name = "Step";
@@ -209,12 +209,8 @@ export default define(class Step {
           string = statementString, ///
           node = null,
           reference = null,
-          temporaryContext = null,
-          satisfiesAssertion = null;
-
-    context = temporaryContext; ///
-
-    const step = new Step(context, node, string, statement, reference, satisfiesAssertion);
+          satisfiesAssertion = null,
+          step = new Step(context, node, string, statement, reference, satisfiesAssertion);
 
     return step;
   }

@@ -33,12 +33,7 @@ export default define(class Reference {
     return metavariableNode;
   }
 
-  isMetavariableEqualTo(metavariable) {
-    const equalTo = this.metavariable.isEqualTo(metavariable),
-          metavariableEqualTo = equalTo;  ///
-
-    return metavariableEqualTo;
-  }
+  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 

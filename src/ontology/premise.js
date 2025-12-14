@@ -40,7 +40,7 @@ export default define(class Premise {
   verify(context) {
     let verifies = false;
 
-    const temporaryContext = TemporaryContext.fromContext(context);
+    const temporaryContext = TemporaryContext.fromNothing(context);
 
     context = temporaryContext; ///
 

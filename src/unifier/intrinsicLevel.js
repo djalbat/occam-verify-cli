@@ -3,7 +3,7 @@
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
-import { variableIdentifierFromVariableNode } from "../unifier/metaLevel";
+import { termVariableIdentifierFromTermNode, variableIdentifierFromVariableNode } from "../unifier/metaLevel";
 
 const termNodeQuery = nodeQuery("/term"),
       termVariableNodeQuery = nodeQuery("/term/variable!");
@@ -24,7 +24,7 @@ class IntrinsicLevelUnifier extends Unifier {
       generalNodeQuery: termVariableNodeQuery,
       specificNodeQuery: termNodeQuery,
       unify: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
-        let termUnifies;
+        let termUnifies = false;
 
         const termNode = specificTermNode, ///
               variableNode = generalTermVariableNode, ///
@@ -40,7 +40,17 @@ class IntrinsicLevelUnifier extends Unifier {
 
         const term = context.findTermByTermNode(termNode);
 
-        termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
+        if (term !== null) {
+          termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
+        } else {
+          const termVariaibleIdentifer = termVariableIdentifierFromTermNode(termNode),
+                termVariable = context.findVariableByVariableIdentifier(termVariaibleIdentifer),
+                termVariableUnifies = variable.unifyTermVariable(termVariable, substitutions, generalContext, specificContext);
+
+          if (termVariableUnifies) {
+            termUnifies = true;
+          }
+        }
 
         return termUnifies;
       }

@@ -21,10 +21,10 @@ export default define(class ReferenceSubstitution extends Substitution {
     return this.metavariable;
   }
 
-  isReferenceEqualTo(reference) {
-    const referenceEqualTo = this.reference.isEqualTo(reference);
+  isReferenceEqualToReference(reference) {
+    const referenceEqualToReference = this.reference.isEqualTo(reference);
 
-    return referenceEqualTo;
+    return referenceEqualToReference;
   }
 
   static fromReferenceAndMetavariable(reference, metavariable, context) {

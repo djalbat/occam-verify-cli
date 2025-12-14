@@ -155,7 +155,7 @@ export default define(class Metavariable {
       if (simpleSubstitutionPresent) {
         const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable),
               substitution = simpleSubstitution,  ///
-              substitutionFrameEqualToFrame = substitution.isFrameEqualTo(frame);
+              substitutionFrameEqualToFrame = substitution.isFrameEqualToFrame(frame);
 
         if (substitutionFrameEqualToFrame) {
           frameUnifies = true;
@@ -200,7 +200,7 @@ export default define(class Metavariable {
       if (simpleSubstitutionPresent) {
         const simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable), ///
               substitution = simpleSubstitution,  ///
-              substitutionReferenceEqualToReference = substitution.isReferenceEqualTo(reference, context);
+              substitutionReferenceEqualToReference = substitution.isReferenceEqualToReference(reference, context);
 
         if (substitutionReferenceEqualToReference) {
           referenceUnifies = true;
@@ -247,7 +247,7 @@ export default define(class Metavariable {
       if (substitutionPresent) {
         substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
 
-        const substitutionStatementEqualToStatement = substitution.isStatementEqualTo(statement, context);
+        const substitutionStatementEqualToStatement = substitution.isStatementEqualToStatement(statement, context);
 
         if (substitutionStatementEqualToStatement) {
           statementUnifies = true;

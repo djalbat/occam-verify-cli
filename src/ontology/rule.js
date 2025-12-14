@@ -78,7 +78,7 @@ export default define(class Rule {
     const labelsVerify = this.verifyLabels();
 
     if (labelsVerify) {
-      const localContext = LocalContext.fromContext(this.context),
+      const localContext = LocalContext.fromNothing(this.context),
             context = localContext, ///
             premisesVerify = this.verifyPremises(context);
 
@@ -161,12 +161,12 @@ export default define(class Rule {
     let statementAndStepsOrSubproofsUnify = false;
 
     const substitutions = Substitutions.fromNothing(),
-          statementUnifiesWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, context);
+          statementUnifiedWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, context);
 
-    if (statementUnifiesWithConclusion) {
-      const stepsOrSubproofsUnifyWithPremises = this.unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, context);
+    if (statementUnifiedWithConclusion) {
+      const stepsOrSubproofsUnifiedWithPremises = this.unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, context);
 
-      if (stepsOrSubproofsUnifyWithPremises) {
+      if (stepsOrSubproofsUnifiedWithPremises) {
         const substitutionsResolved = substitutions.areResolved();
 
         if (substitutionsResolved) {
@@ -179,43 +179,43 @@ export default define(class Rule {
   }
 
   unifyStatementWithConclusion(statement, substitutions, context) {
-    let statementUnifiesWithConclusion = false;
+    let statementUnifiedWithConclusion = false;
 
     const statementUnifies = this.conclusion.unifyStatement(statement, substitutions, context);
 
     if (statementUnifies) {
-      statementUnifiesWithConclusion = true;
+      statementUnifiedWithConclusion = true;
     }
 
-    return statementUnifiesWithConclusion;
+    return statementUnifiedWithConclusion;
   }
 
   unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, context) {
     stepsOrSubproofs = reverse(stepsOrSubproofs); ///
 
-    const stepsOrSubproofsUnifyWithPremises = backwardsEvery(this.premises, (premise) => {
-      const stepUnifiesWithPremise = this.unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, context);
+    const stepsOrSubproofsUnifiedWithPremises = backwardsEvery(this.premises, (premise) => {
+      const stepUnifiedWithPremise = this.unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, context);
 
-      if (stepUnifiesWithPremise) {
+      if (stepUnifiedWithPremise) {
         return true;
       }
     });
 
-    return stepsOrSubproofsUnifyWithPremises;
+    return stepsOrSubproofsUnifiedWithPremises;
   }
 
   unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, context) {
-    let stepsOrSubproofsUnifyWithPremise = false;
+    let stepsOrSubproofsUnifiedWithPremise = false;
 
-    if (!stepsOrSubproofsUnifyWithPremise) {
+    if (!stepsOrSubproofsUnifiedWithPremise) {
       const premiseUnifiesIndependently = premise.unifyIndependently(substitutions, context);
 
       if (premiseUnifiesIndependently) {
-        stepsOrSubproofsUnifyWithPremise = true;
+        stepsOrSubproofsUnifiedWithPremise = true;
       }
     }
 
-    if (!stepsOrSubproofsUnifyWithPremise) {
+    if (!stepsOrSubproofsUnifiedWithPremise) {
       const stepOrSubproof = extract(stepsOrSubproofs, (stepOrSubproof) => {
         const stepOrSubproofUnifies = premise.unifyStepOrSubproof(stepOrSubproof, substitutions, context);
 
@@ -225,11 +225,11 @@ export default define(class Rule {
       }) || null;
 
       if (stepOrSubproof !== null) {
-        stepsOrSubproofsUnifyWithPremise = true;
+        stepsOrSubproofsUnifiedWithPremise = true;
       }
     }
 
-    return stepsOrSubproofsUnifyWithPremise;
+    return stepsOrSubproofsUnifiedWithPremise;
   }
 
   toJSON() {

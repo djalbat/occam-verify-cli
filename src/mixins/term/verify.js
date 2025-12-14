@@ -3,30 +3,30 @@
 import ontology from "../../ontology";
 
 function unifyWithBracketedConstructor(term, context, verifyAhead) {
-  let unifiesWithBracketedConstructor;
+  let unifiedWithBracketedConstructor;
 
   const { BracketedConstructor } = ontology,
         bracketedConstructor = BracketedConstructor.fromNothing();
 
-  unifiesWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, verifyAhead);
+  unifiedWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, verifyAhead);
 
-  return unifiesWithBracketedConstructor;
+  return unifiedWithBracketedConstructor;
 }
 
 function unifyWithConstructors(term, context, verifyAhead) {
-  let unifiesWithConstructors;
+  let unifiedWithConstructors;
 
   const constructors = context.getConstructors();
 
-  unifiesWithConstructors = constructors.some((constructor) => {
-    const unifiesWithConstructor = constructor.unifyTerm(term, context, verifyAhead);
+  unifiedWithConstructors = constructors.some((constructor) => {
+    const unifiedWithConstructor = constructor.unifyTerm(term, context, verifyAhead);
 
-    if (unifiesWithConstructor) {
+    if (unifiedWithConstructor) {
       return true;
     }
   });
 
-  return unifiesWithConstructors;
+  return unifiedWithConstructors;
 }
 
 function verifyTermAsVariable(term, context, verifyAhead) {

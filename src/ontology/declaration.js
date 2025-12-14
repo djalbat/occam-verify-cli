@@ -256,7 +256,7 @@ export default define(class Declaration {
   }
 
   unifyLabel(label, substitutions, generalContext, specificContext) {
-    let labelUnifiesWithReference;
+    let labelUnifiedWithReference;
 
     const context = generalContext, ///
           labelString = label.getString(),
@@ -267,13 +267,13 @@ export default define(class Declaration {
     const reference = referenceFromMetavariable(this.metavariable, context),
           labelUnifies = reference.unifyLabel(label, substitutions, context);
 
-    labelUnifiesWithReference = labelUnifies; ///
+    labelUnifiedWithReference = labelUnifies; ///
 
-    if (labelUnifiesWithReference) {
+    if (labelUnifiedWithReference) {
       context.debug(`...unified the '${labelString}' label with the '${declarationString}' declaration.`);
     }
 
-    return labelUnifiesWithReference;
+    return labelUnifiedWithReference;
   }
 
   unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context) {

@@ -48,30 +48,30 @@ export default define(class StatementSubstitution extends Substitution {
     return simple;
   }
 
-  isStatementEqualTo(statement, context) {
+  isStatementEqualToStatement(statement, context) {
     statement = stripBracketsFromStatement(statement, context); ///
 
-    const statementEqualTo = this.statement.isEqualTo(statement);
+    const statementEqualToStatement = this.statement.isEqualTo(statement);
 
-    return statementEqualTo;
+    return statementEqualToStatement;
   }
 
-  isMetavariableEqualTo(metavariable) { return this.metavariable.isEqualTo(metavariable); }
+  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
-  isSubstitutionEqualTo(substitution) {
-    let substitutionEqualTo;
+  isSubstitutionEqualToSubstitution(substitution) {
+    let substitutionEqualToSubstitution;
 
     if (this.substitution === null) {
-      substitutionEqualTo = (substitution === null);
+      substitutionEqualToSubstitution = (substitution === null);
     } else {
       if (substitution === null) {
-        substitutionEqualTo = false;
+        substitutionEqualToSubstitution = false;
       } else {
-        substitutionEqualTo = this.substitution.isEqualTo(substitution);
+        substitutionEqualToSubstitution = this.substitution.isEqualToSubstitution(substitution);
       }
     }
 
-    return substitutionEqualTo;
+    return substitutionEqualToSubstitution;
   }
 
   matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }

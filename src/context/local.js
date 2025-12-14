@@ -356,7 +356,7 @@ class LocalContext {
 
   error(message, node = null) { this.context.error(message, node); }
 
-  static fromContext(context) {
+  static fromNothing(context) {
     const variables = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),

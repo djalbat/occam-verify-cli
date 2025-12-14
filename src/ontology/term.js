@@ -64,11 +64,7 @@ export default define(class Term {
     return variables;
   }
 
-  matchTermNode(termNode) {
-    const termNodeMatches = this.node.match(termNode);
-
-    return termNodeMatches;
-  }
+  matchTermNode(termNode) { return this.node.match(termNode); }
 
   isProvisional() { return this.type.isProvisional(); }
 

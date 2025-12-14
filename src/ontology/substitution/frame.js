@@ -29,9 +29,9 @@ export default define(class FrameSubstitution extends Substitution {
     return replacementNode;
   }
 
-  isFrameEqualTo(frame) { return this.frame.isEqualTo(frame); }
+  isFrameEqualToFrame(frame) { return this.frame.isEqualTo(frame); }
 
-  isMetavariableEqualTo(metavariable) { return this.metavariable.isEqualTo(metavariable); }
+  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
   matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
 

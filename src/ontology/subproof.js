@@ -66,7 +66,7 @@ export default define(class Subproof {
   verify(substitutions, assignments, context) {
     let subproofVerifies = false;
 
-    const localContext = LocalContext.fromContext(context);  ///
+    const localContext = LocalContext.fromNothing(context);  ///
 
     context = localContext; ///
 
@@ -96,7 +96,7 @@ export default define(class Subproof {
   }
 
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
-    let unifiesWithSatisfiesAssertion = false;
+    let unifiedWithSatisfiesAssertion = false;
 
     const subproofString = this.string, ///
           satisfiesAssertionString = satisfiesAssertion.getString();
@@ -118,17 +118,17 @@ export default define(class Subproof {
           const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);
 
           if (substitutionsCompare) {
-            unifiesWithSatisfiesAssertion = true;
+            unifiedWithSatisfiesAssertion = true;
           }
         }
       }
     }
 
-    if (unifiesWithSatisfiesAssertion) {
+    if (unifiedWithSatisfiesAssertion) {
       context.debug(`...unified the '${subproofString}' subproof with the '${satisfiesAssertionString}' satisfies assertion.`)
     }
 
-    return unifiesWithSatisfiesAssertion;
+    return unifiedWithSatisfiesAssertion;
   }
 
   static name = "Subproof";

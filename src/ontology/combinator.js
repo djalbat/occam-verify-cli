@@ -32,9 +32,9 @@ export default define(class Combinator {
 
     context.trace(`Unifying the '${statementString}' statement with the '${combinatorString}' combinator...`);
 
-    const statementUnifiesWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, context);
+    const statementUnifiedWithCombinator = unifyStatementWithCombinator(statement, combinator, assignments, stated, context);
 
-    statementUnifies = statementUnifiesWithCombinator; ///
+    statementUnifies = statementUnifiedWithCombinator; ///
 
     if (statementUnifies) {
       context.debug(`...unified the '${statementString}' statement with the '${combinatorString}' combinator.`);

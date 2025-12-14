@@ -35,18 +35,13 @@ export default define(class Label {
 
   matchReference(reference) {
     const metavariable = reference.getMetavariable(),
-          metavariableEqualToMetavariable = this.isMetavariableEqualTo(metavariable),
+          metavariableEqualToMetavariable = this.isMetavariableEqualToMetavariable(metavariable),
           referenceMatches = metavariableEqualToMetavariable; ///
 
     return referenceMatches;
   }
 
-  isMetavariableEqualTo(metavariable) {
-    const equalTo = this.metavariable.isEqualTo(metavariable),
-          metavariableEqualTo = equalTo;  ///
-
-    return metavariableEqualTo;
-  }
+  isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
 

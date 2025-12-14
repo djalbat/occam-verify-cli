@@ -627,7 +627,7 @@ export default class FileContext {
   findLabelByMetavariable(metavariable) {
     const labels = this.getLabels(),
           label = labels.find((label) => {
-            const metavariableEqualToLabelMetavariable = label.isMetavariableEqualTo(metavariable);
+            const metavariableEqualToLabelMetavariable = label.isMetavariableEqualToMetavariable(metavariable);
 
             if (metavariableEqualToLabelMetavariable) {
               return true;
