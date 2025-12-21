@@ -53,6 +53,8 @@ export default define(class Combinator {
     return json;
   }
 
+  static name = "Combinator";
+
   static fromJSON(json, context) {
     const statement = statementFromJSON(json, context),
           combinator = new Combinator(statement);

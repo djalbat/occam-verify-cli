@@ -106,10 +106,10 @@ export default define(class StatementSubstitution extends Substitution {
           simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable);
 
     if (simpleSubstitution !== null) {
-      const substitution = simpleSubstitution,  ///
-            substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, context);
-
-      this.resolved = substitutionResolved; ///
+      //       specificSubstitution = this.unifyStatement(substitutionString, generalSubstitution),
+      //       substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, context);
+      //
+      // this.resolved = substitutionResolved; ///
     }
 
     if (this.resolved) {
@@ -119,10 +119,6 @@ export default define(class StatementSubstitution extends Substitution {
 
   resolveSubstitution(substitution, statement, substitutions, context) {
     let substitutionResolved = false;
-
-    const substitutionString = substitution.getString();
-
-    context.trace(`Resolving the ${substitutionString} substitution...`);
 
     const generalSubstitution = substitution, ///
           specificSubstitution = this.unifyStatement(statement, context);  ///
@@ -152,10 +148,6 @@ export default define(class StatementSubstitution extends Substitution {
       substitutionResolved = substitutionUnifies;  ///
     }
 
-    if (substitutionResolved) {
-      context.debug(`...resolved the ${substitutionString} substitution.`);
-    }
-
     return substitutionResolved;
   }
 
@@ -173,6 +165,8 @@ export default define(class StatementSubstitution extends Substitution {
 
     return json;
   }
+
+  static name = "StatementSubstitution";
 
   static fromJSON(json, context) {
     const { string } = json,

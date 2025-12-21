@@ -157,6 +157,18 @@ export default define(class Rule {
     return proofVerifies;
   }
 
+  unifyStatementWithConclusion(statement, substitutions, context) {
+    let statementUnifiedWithConclusion = false;
+
+    const statementUnifies = this.conclusion.unifyStatement(statement, substitutions, context);
+
+    if (statementUnifies) {
+      statementUnifiedWithConclusion = true;
+    }
+
+    return statementUnifiedWithConclusion;
+  }
+
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {
     let statementAndStepsOrSubproofsUnify = false;
 
@@ -176,32 +188,6 @@ export default define(class Rule {
     }
 
     return statementAndStepsOrSubproofsUnify;
-  }
-
-  unifyStatementWithConclusion(statement, substitutions, context) {
-    let statementUnifiedWithConclusion = false;
-
-    const statementUnifies = this.conclusion.unifyStatement(statement, substitutions, context);
-
-    if (statementUnifies) {
-      statementUnifiedWithConclusion = true;
-    }
-
-    return statementUnifiedWithConclusion;
-  }
-
-  unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, context) {
-    stepsOrSubproofs = reverse(stepsOrSubproofs); ///
-
-    const stepsOrSubproofsUnifiedWithPremises = backwardsEvery(this.premises, (premise) => {
-      const stepUnifiedWithPremise = this.unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, context);
-
-      if (stepUnifiedWithPremise) {
-        return true;
-      }
-    });
-
-    return stepsOrSubproofsUnifiedWithPremises;
   }
 
   unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, context) {
@@ -230,6 +216,20 @@ export default define(class Rule {
     }
 
     return stepsOrSubproofsUnifiedWithPremise;
+  }
+
+  unifyStepsOrSubproofsWithPremises(stepsOrSubproofs, substitutions, context) {
+    stepsOrSubproofs = reverse(stepsOrSubproofs); ///
+
+    const stepsOrSubproofsUnifiedWithPremises = backwardsEvery(this.premises, (premise) => {
+      const stepUnifiedWithPremise = this.unifyStepsOrSubproofsWithPremise(stepsOrSubproofs, premise, substitutions, context);
+
+      if (stepUnifiedWithPremise) {
+        return true;
+      }
+    });
+
+    return stepsOrSubproofsUnifiedWithPremises;
   }
 
   toJSON() {

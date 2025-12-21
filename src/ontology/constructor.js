@@ -67,6 +67,8 @@ export default define(class Constructor {
     return json;
   }
 
+  static name = "Constructor";
+
   static fromJSON(json, context) {
     const term = termFromJSON(json, context),
           string = stringFromTerm(term),

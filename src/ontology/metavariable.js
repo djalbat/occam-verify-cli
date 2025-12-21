@@ -95,9 +95,7 @@ export default define(class Metavariable {
     context.trace(`Verifying the '${metavariableString}' metavariable...`);
 
     const metavariable = this, ///
-          generalContext = context,  ///
-          specificContext = context,  ///
-          metavariablePresent = generalContext.isMetavariablePresent(metavariable, generalContext, specificContext);
+          metavariablePresent = context.isMetavariablePresent(metavariable);
 
     verifies = metavariablePresent; ///
 
@@ -118,10 +116,7 @@ export default define(class Metavariable {
 
     let metavariable = this;  ///
 
-    const specificContext = context,  ///
-          generalContext = context; ///
-
-    metavariable = generalContext.findMetavariable(metavariable, generalContext, specificContext);
+    metavariable = context.findMetavariable(metavariable);
 
     if (metavariable !== null) {
       const metavariableMetaTypeEqualToMetaType = metavariable.isMetaTypeEqualTo(metaType);
@@ -272,10 +267,12 @@ export default define(class Metavariable {
     return statementUnifies;
   }
 
-  unifyMetavariable(metavariable, generalContext, specificContext) {
+  unifyMetavariable(metavariable, context) {
     let metavariableUnifies;
 
-    const generalMetavariable = this, ///
+    const generalContext = context, ///
+          specificContext = context,  ///
+          generalMetavariable = this, ///
           specificMetavariable = metavariable,  ///
           generalMetavariableString = generalMetavariable.getString(),
           specificMetavariableString = specificMetavariable.getString();

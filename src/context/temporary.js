@@ -5,11 +5,14 @@ import { arrayUtilities } from "necessary";
 const { extract } = arrayUtilities;
 
 export default class TemporaryContext {
-  constructor(context, tokens, terms, frames) {
+  constructor(context, tokens, terms, frames, reference, statements, substitution) {
     this.context = context;
     this.tokens = tokens;
     this.terms = terms;
     this.frames = frames;
+    this.reference = reference;
+    this.statements = statements;
+    this.substitution = substitution;
   }
 
   getContext() {
@@ -26,6 +29,18 @@ export default class TemporaryContext {
 
   getFrames() {
     return this.frames;
+  }
+
+  getStatements() {
+    return this.statements;
+  }
+
+  getReferences() {
+    return this.reference;
+  }
+
+  getSubstitution() {
+    return this.substitution;
   }
 
   addTerm(term) {
@@ -53,8 +68,29 @@ export default class TemporaryContext {
       }
     });
 
-
     this.frames.push(frame);
+  }
+
+  addStatement(statement) {
+    const statementNode = statement.getNode();
+
+    extract(this.statements, (statement) => {
+      const statementMatchesFrameNode = statement.matchStatementNode(statementNode);
+
+      if (statementMatchesFrameNode) {
+        return true;
+      }
+    });
+
+    this.statements.push(statement);
+  }
+
+  addReference(reference) {
+    this.reference = reference;
+  }
+
+  addSubstitution(substitution) {
+    this.substitution = substitution;
   }
 
   findTermByTermNode(termNode) {
@@ -79,6 +115,30 @@ export default class TemporaryContext {
     }) || null;
 
     return frame;
+  }
+
+  findStatementByStatementNode(statementNode) {
+    const statement = this.statements.find((statement) => {
+      const statementMatchesStatementNode = statement.matchStatementNode(statementNode);
+
+      if (statementMatchesStatementNode) {
+        return true;
+      }
+    }) || null;
+
+    return statement;
+  }
+
+  findReferenceByMetavariableName(metavariableName) {
+    let reference = null;
+
+    const referenceMatchesMetavariableName = this.reference.matchMetavariableName(metavariableName);
+
+    if (referenceMatchesMetavariableName) {
+      reference = this.reference;
+    }
+
+    return reference;
   }
 
   getVariables(nested = true) { return this.context.getVariables(nested); }
@@ -155,7 +215,7 @@ export default class TemporaryContext {
 
   findEquivalenceByTerm(term) { return this.context.findEquivalenceByTerm(term); }
 
-  findMetavariable(metavariable, generalContext, specificContext) { return this.context.findMetavariable(metavariable, generalContext, specificContext); }
+  findMetavariable(metavariable) { return this.context.findMetavariable(metavariable); }
 
   findLabelByMetavariable(metavariable) { return this.context.findLabelByMetavariable(metavariable); }
 
@@ -175,7 +235,7 @@ export default class TemporaryContext {
 
   findAxiomLemmaTheoremOrConjectureByReference(reference) { return this.context.findAxiomLemmaTheoremOrConjectureByReference(reference); }
 
-  isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
+  isMetavariablePresent(metavariable) { return this.context.isMetavariablePresent(metavariable); }
 
   isTypePresentByTypeName(typeName, includeRelease = true, includeDependencies = true) { return this.context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies); }
 
@@ -255,18 +315,24 @@ export default class TemporaryContext {
 
   error(message, node = null) { this.context.error(message, node); }
 
-  static fromTermsAndFrames(terms, frames, context) {
-    const tokens = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames);
-
-    return temporaryContext;
-  }
-
   static fromNothing(context) {
     const terms = [],
           frames = [],
           tokens = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames);
+          reference = null,
+          statements = [],
+          substitution = null,
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, reference, statements, substitution);
+
+    return temporaryContext;
+  }
+
+  static fromTermsAndFrames(terms, frames, context) {
+    const tokens = null,
+          reference = null,
+          statements = [],
+          substitution = null,
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, reference, statements, substitution);
 
     return temporaryContext;
   }
@@ -274,7 +340,10 @@ export default class TemporaryContext {
   static fromContextAndTokens(context, tokens) {
     const terms = [],
           frames = [],
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames);
+          reference = null,
+          statements = [],
+          substitution = null,
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, reference, statements, substitution);
 
     return temporaryContext;
   }

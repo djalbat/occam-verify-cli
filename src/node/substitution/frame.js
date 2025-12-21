@@ -19,5 +19,31 @@ export default class FrameSubstitutionNode extends NonTerminalNode {
     return firstFrameNode;
   }
 
+  getLastMetavariableNode() {
+    let lastMetavariableNode = null;
+
+    const lastFrameNode = this.getLastFrameNode(),
+          singularMetavariableNode = lastFrameNode.getSingularMetavariableNode();
+
+    if (singularMetavariableNode !== null) {
+      lastMetavariableNode = singularMetavariableNode;  ///
+    }
+
+    return lastMetavariableNode;
+  }
+
+  getFirstMetavariableNode() {
+    let firstMetavariableNode = null;
+
+    const firstFrameNode = this.getFirstFrameNode(),
+          singularMetavariableNode = firstFrameNode.getSingularMetavariableNode();
+
+    if (singularMetavariableNode !== null) {
+      firstMetavariableNode = singularMetavariableNode;  ///
+    }
+
+    return firstMetavariableNode;
+  }
+
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(FrameSubstitutionNode, ruleName, childNodes, opacity, precedence); }
 }

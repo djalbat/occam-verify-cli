@@ -35,28 +35,74 @@ export default define(class FrameSubstitution extends Substitution {
 
   matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
 
-  static fromStatementNode(statementNode, context) {
+  verify(context) {
+    let verifies = false;
+
+    const frameSubstitutionString = this.string;  ///
+
+    context.trace(`Verifiying the '${frameSubstitutionString}' frame substitutin...`);
+
+    const frameSimple = this.frame.isSimple();
+
+    if (frameSimple) {
+      if (this.metavariable === null) {
+        context.debug(`The specific frame is not simple.`);
+      } else {
+        const metavariablePresent = context.isMetavariablePresent(this.metavariable);
+
+        if (metavariablePresent) {
+          const metavariable = this.frame.getMetavariable(),
+                metavariablePresent = context.isMetavariablePresent(metavariable);
+
+          if (metavariablePresent) {
+            verifies = true;
+          } else {
+            const metavariableString = metavariable.getString();
+
+            context.debug(`The '${metavariableString}' metavariable is not present.`);
+          }
+        } else {
+          const metavariableString = this.metavariable.getString();
+
+          context.debug(`The '${metavariableString}' metavariable is not present.`);
+        }
+      }
+    } else {
+      context.debug(`The general frame is not simple.`);
+    }
+
+    if (verifies) {
+      const substititoin = this;  ///
+
+      context.addSubstitution(substititoin);
+
+      context.debug(`...verified the '${frameSubstitutionString}' frame substitutin.`);
+    }
+
+    return verifies;
+  }
+
+  static name = "FrameSubstitution";
+
+  static fromStatement(statement, context) {
     let frameSubstitution = null;
 
-    const frameSubstitutionNode = statementNode.getFrameSubstitutionNode();
+    const statementNode = statement.getNode(),
+          frameSubstitutionNode = statementNode.getFrameSubstitutionNode();
 
     if (frameSubstitutionNode !== null) {
-      const lastFrameNode = frameSubstitutionNode.getLastFrameNode(),
+      const { Frame, Metavariable } = ontology,
             firstFrameNode = frameSubstitutionNode.getFirstFrameNode(),
-            singularMetavariableNode = lastFrameNode.getSingularMetavariableNode();
+            lastMetavariableNode = frameSubstitutionNode.getLastMetavariableNode(),
+            metavariableNode = lastMetavariableNode,  ///
+            frameNode = firstFrameNode, ///
+            node = frameSubstitutionNode,  ///
+            tokens = context.nodeAsTokens(node),
+            string = context.nodeAsString(node),
+            frame = Frame.fromFrameNode(frameNode, context),
+            metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
 
-      if (singularMetavariableNode !== null) {
-        const { Frame, Metavariable } = ontology,
-              frameNode = firstFrameNode, ///
-              metavariableNode = singularMetavariableNode,  ///
-              frame = Frame.fromFrameNode(frameNode, context),
-              metavariable = Metavariable.fromMetavariableNode(metavariableNode, context),
-              node = frameSubstitutionNode,  ///
-              tokens = context.nodeAsTokens(node),
-              string = stringFromFrameAndMetavariable(frame, metavariable);
-
-        frameSubstitution = new FrameSubstitution(context, string, node, tokens, frame, metavariable);
-      }
+      frameSubstitution = new FrameSubstitution(context, string, node, tokens, frame, metavariable);
     }
 
     return frameSubstitution;

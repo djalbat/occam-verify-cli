@@ -496,16 +496,17 @@ export default class FileContext {
     return axiomLemmaTheoremOrConjecture;
   }
 
-  findMetavariable(metavariable, generalContext, specificContext) {
-    const specificMetavariable = metavariable,  ///
-          metavariables = this.getMetavariables();
+  findMetavariable(metavariable) {
+    const metavariables = this.getMetavariables(),
+          specificMetavariable = metavariable;  ///
 
     metavariable = metavariables.find((metavariable) => {
       const generalMetavariable = metavariable; ///
 
       metavariable = specificMetavariable;  ///
 
-      const metavariableUnifies = generalMetavariable.unifyMetavariable(metavariable, generalContext, specificContext);
+      const context = this, ///
+            metavariableUnifies = generalMetavariable.unifyMetavariable(metavariable, context);
 
       if (metavariableUnifies) {
         return true;
@@ -668,8 +669,8 @@ export default class FileContext {
     return metavariable;
   }
 
-  isMetavariablePresent(metavariable, generalContext, specificContext) {
-    metavariable = this.findMetavariable(metavariable, generalContext, specificContext);  ///
+  isMetavariablePresent(metavariable) {
+    metavariable = this.findMetavariable(metavariable);
 
     const metavariablePresent = (metavariable !== null);
 

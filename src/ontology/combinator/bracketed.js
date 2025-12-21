@@ -23,6 +23,8 @@ export default define(class BracketedCombinator extends Combinator {
     return statementUnifies;
   }
 
+  static name = "BracketedCombinator";
+
   static fromNothing() {
     const { Statement } = ontology,
           bracketedStatementNode = combinatorBracketedContext.getBracketedStatementNode(),

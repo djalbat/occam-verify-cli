@@ -52,6 +52,8 @@ export default define(class BracketedConstructor extends Constructor {
     return termUnifies;
   }
 
+  static name = "BracketedConstructor";
+
   static fromNothing() {
     const { Term } = ontology,
           bracketedTermNode = constructorBracketedContext.getBracketedTermNode(),

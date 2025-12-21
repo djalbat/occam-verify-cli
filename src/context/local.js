@@ -224,7 +224,7 @@ class LocalContext {
 
   findEquivalenceByTerm(term) { return this.equivalences.findEquivalenceByTerm(term); }
 
-  findMetavariable(metavariable, generalContext, specificContext) { return this.context.findMetavariable(metavariable, generalContext, specificContext); }
+  findMetavariable(metavariable) { return this.context.findMetavariable(metavariable); }
 
   findLabelByMetavariable(metavariable) { return this.context.findLabelByMetavariable(metavariable); }
 
@@ -244,7 +244,7 @@ class LocalContext {
 
   findAxiomLemmaTheoremOrConjectureByReference(reference) { return this.context.findAxiomLemmaTheoremOrConjectureByReference(reference); }
 
-  isMetavariablePresent(metavariable, generalContext, specificContext) { return this.context.isMetavariablePresent(metavariable, generalContext, specificContext); }
+  isMetavariablePresent(metavariable) { return this.context.isMetavariablePresent(metavariable); }
 
   isTypePresentByTypeName(typeName, includeRelease = true, includeDependencies = true) { return this.context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies); }
 

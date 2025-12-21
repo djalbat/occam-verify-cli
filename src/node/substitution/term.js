@@ -19,5 +19,31 @@ export default class TermSubstitutionNode extends NonTerminalNode {
     return firstTermNode;
   }
 
+  getLastVariableNode() {
+    let lastVariableNode = null;
+
+    const lastTermNode = this.getLastTermNode(),
+          singularVariableNode = lastTermNode.getSingularVariableNode();
+
+    if (singularVariableNode !== null) {
+      lastVariableNode = singularVariableNode;  ///
+    }
+
+    return lastVariableNode;
+  }
+
+  getFirstVariableNode() {
+    let firstVariableNode = null;
+
+    const firstTermNode = this.getFirstTermNode(),
+          singularVariableNode = firstTermNode.getSingularVariableNode();
+
+    if (singularVariableNode !== null) {
+      firstVariableNode = singularVariableNode;  ///
+    }
+
+    return firstVariableNode;
+  }
+
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TermSubstitutionNode, ruleName, childNodes, opacity, precedence); }
 }

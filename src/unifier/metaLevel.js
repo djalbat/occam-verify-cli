@@ -4,15 +4,14 @@ import ontology from "../ontology";
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
+import { metavariableNameFromMetavariableNode } from "../utilities/metavariable";
+import { variableIdentifierFromVariableNode, termVariableIdentifierFromTermNode } from "../utilities/variable";
 
 const termNodeQuery = nodeQuery("/term"),
       frameNodeQuery = nodeQuery("/frame"),
       statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
-      metavariableNameNodeQuery = nodeQuery("/metavariable/@name!"),
-      variableIdentifierNodeQuery = nodeQuery("/variable/@identifier!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
-      termVariableIdentifierNodeQuery = nodeQuery("/term/variable!/@identifier!"),
       declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable!"),
       frameDeclarationMetavariableNodeQuery = nodeQuery("/frame/declaration!/metavariable!");
 
@@ -34,30 +33,32 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalStatementMetavariableNode, specificStatementNode, substitutions, generalContext, specificContext) => {
         let statementUnifies;
 
-        const { Metavariable, Statement } = ontology; ///
-
         let context,
+            statement,
             statementNode;
 
         context = generalContext; ///
 
         const metavariableNode = generalStatementMetavariableNode,  ///
-              metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);
+              metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+              metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
         const metavariableNodeParentNode = metavariableNode.getParentNode();
 
         statementNode = metavariableNodeParentNode; ///
 
+        statement = context.findStatementByStatementNode(statementNode);
+
         const { TermSubstitution, FrameSubstitution } = ontology,
-              frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context),
-              termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
+              frameSubstitution = FrameSubstitution.fromStatement(statement, context),
+              termSubstitution = TermSubstitution.fromStatement(statement, context),
               substitution = (frameSubstitution || termSubstitution);
 
         context = specificContext; ///
 
         statementNode = specificStatementNode;  ///
 
-        const statement = Statement.fromStatementNode(statementNode, context);
+        statement = context.findStatementByStatementNode(statementNode);
 
         statementUnifies = metavariable.unifyStatement(statement, substitution, substitutions, generalContext, specificContext);
 
@@ -130,7 +131,7 @@ class MetaLevelUnifier extends Unifier {
       unify: (generalDeclarationMetavariableNode, specificDeclarationMetavariableNode, substitutions, generalContext, specificContext) => {
         let referenceUnifies;
 
-        const { Metavariable, Reference } = ontology;
+        const { Reference } = ontology;
 
         let context,
             metavariableNode;
@@ -139,7 +140,8 @@ class MetaLevelUnifier extends Unifier {
 
         metavariableNode = generalDeclarationMetavariableNode;  ///
 
-        const metavariable = Metavariable.fromMetavariableNode(metavariableNode, context);  ///
+        const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+              metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
         context = specificContext;  ///
 
@@ -158,27 +160,3 @@ class MetaLevelUnifier extends Unifier {
 const metaLevelUnifier = new MetaLevelUnifier();
 
 export default metaLevelUnifier;
-
-function metavariableNameFromMetavariableNode(metavariableNode) {
-  const metavariableNameTerminalNode = metavariableNameNodeQuery(metavariableNode),
-        metavariableNameTerminalNodeContent = metavariableNameTerminalNode.getContent(),
-        metavariableName = metavariableNameTerminalNodeContent; ///
-
-  return metavariableName;
-}
-
-export function termVariableIdentifierFromTermNode(TermNode) {
-  const termVariableIdentifierTerminalNode = termVariableIdentifierNodeQuery(TermNode),
-        termVariableIdentifierTerminalNodeContent = termVariableIdentifierTerminalNode.getContent(),
-        termVariableIdentifier = termVariableIdentifierTerminalNodeContent; ///
-
-  return termVariableIdentifier;
-}
-
-export function variableIdentifierFromVariableNode(variableNode) {
-  const variableIdentifierTerminalNode = variableIdentifierNodeQuery(variableNode),
-        variableIdentifierTerminalNodeContent = variableIdentifierTerminalNode.getContent(),
-        variableIdentifier = variableIdentifierTerminalNodeContent; ///
-
-  return variableIdentifier;
-}

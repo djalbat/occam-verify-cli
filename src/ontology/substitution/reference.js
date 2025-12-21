@@ -27,6 +27,8 @@ export default define(class ReferenceSubstitution extends Substitution {
     return referenceEqualToReference;
   }
 
+  static name = "ReferenceSubstitution";
+
   static fromReferenceAndMetavariable(reference, metavariable, context) {
     const string = stringFromReferenceAndMetavariable(reference, metavariable),
           lexer = context.getLexer(),

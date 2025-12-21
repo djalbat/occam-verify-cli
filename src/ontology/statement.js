@@ -94,6 +94,8 @@ export default define(class Statement {
     return frameContained;
   }
 
+  matchStatementNode(statementNode) { return this.node.match(statementNode); }
+
   verify(assignments, stated, context) {
     let verifies;
 
@@ -111,6 +113,10 @@ export default define(class Statement {
     });
 
     if (verifies) {
+      const statement = this; ///
+
+      context.addStatement(statement);
+
       context.debug(`...verified the '${statementString}' statement.`, this.node);
     }
 

@@ -3,7 +3,7 @@
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
-import { termVariableIdentifierFromTermNode, variableIdentifierFromVariableNode } from "../unifier/metaLevel";
+import { variableIdentifierFromVariableNode, termVariableIdentifierFromTermNode } from "../utilities/variable";
 
 const termNodeQuery = nodeQuery("/term"),
       termVariableNodeQuery = nodeQuery("/term/variable!");

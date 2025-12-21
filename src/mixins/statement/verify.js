@@ -12,6 +12,41 @@ import { equalityFromStatement,
          containedAssertionFromStatement,
          satisfiesAssertionFromStatement } from "../../utilities/context";
 
+function verifyAsMetavariableAndSubstitution(statement, assignments, stated, context) {
+  let verifiesAsMetavariableAndSubstitution = false;
+
+  const metavariable = metavariableFromStatement(statement, context);
+
+  if (metavariable !== null) {
+    const statementString = statement.getString();
+
+    context.trace(`Verifying the '${statementString}' statement as a metavariable and substitution...`);
+
+    const metavariableVerifies = metavariable.verify(context);
+
+    if (metavariableVerifies) {
+      const { TermSubstitution, FrameSubstitution } = ontology,
+            substitution = TermSubstitution.fromStatement(statement, context) || FrameSubstitution.fromStatement(statement, context);
+
+      if (substitution !== null) {
+        const substitutionVerified = substitution.verify(context);
+
+        if (substitutionVerified) {
+          verifiesAsMetavariableAndSubstitution = true;
+        }
+      } else {
+        verifiesAsMetavariableAndSubstitution = true;
+      }
+    }
+
+    if (verifiesAsMetavariableAndSubstitution) {
+      context.debug(`...verified the '${statementString}' statement as a metavariable and substitution.`);
+    }
+  }
+
+  return verifiesAsMetavariableAndSubstitution;
+}
+
 function unifyWithBracketedCombinator(statement, assignments, stated, context) {
   stated = true;  ///
 
@@ -39,28 +74,6 @@ function unifyWithCombinators(statement, assignments, stated, context) {
         });
 
   return unifiedWithCombinators;
-}
-
-function verifyAsMetavariable(statement, assignments, stated, context) {
-  let verifiesAsMetavariable = false;
-
-  const metavariable = metavariableFromStatement(statement, context);
-
-  if (metavariable !== null) {
-    const statementString = statement.getString();
-
-    context.trace(`Verifying the '${statementString}' statement as a metavariable...`);
-
-    const metavariableVerifies = metavariable.verify(context);
-
-    verifiesAsMetavariable = metavariableVerifies; ///
-
-    if (verifiesAsMetavariable) {
-      context.debug(`...verified the '${statementString}' statement as a metavariable.`);
-    }
-  }
-
-  return verifiesAsMetavariable;
 }
 
 function verifyAsEquality(statement, assignments, stated, context) {
@@ -240,9 +253,9 @@ function verifyAsSatisfiesAssertion(statement, assignments, stated, context) {
 }
 
 const verifyMixins = [
+  verifyAsMetavariableAndSubstitution,
   unifyWithBracketedCombinator,
   unifyWithCombinators,
-  verifyAsMetavariable,
   verifyAsEquality,
   verifyAsJudgement,
   verifyAsTypeAssertion,

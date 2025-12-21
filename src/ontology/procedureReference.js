@@ -25,6 +25,8 @@ export default define(class ProcedureReference {
     return json;
   }
 
+  static name = "ProcedureReference";
+
   static fromJSON(json, context) {
     const { name } = json,
           string = name,  ///
@@ -32,8 +34,6 @@ export default define(class ProcedureReference {
 
     return procedureReference;
   }
-
-  static name = "ProcedureReference";
 
   static fromProcedureCallNode(procedureCallNode, context) {
     const procedureName = procedureCallNode.getProcedureName(),
