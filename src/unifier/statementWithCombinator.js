@@ -13,15 +13,15 @@ const termNodeQuery = nodeQuery("/term"),
 
 class StatementWithCombinatorUnifier extends Unifier {
   unify(combinatorStatementNode, statementNode, assignments, stated, generalContext, specificContext) {
-    let statementUnifiedWithCombinator;
+    let statementUnifiesWithCombinator;
 
     const generalNonTerminalNode = combinatorStatementNode, ///
           specificNonTerminalNode = statementNode, ///
           nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, assignments, stated, generalContext, specificContext);
 
-    statementUnifiedWithCombinator = nonTerminalNodeUnifies; ///
+    statementUnifiesWithCombinator = nonTerminalNodeUnifies; ///
 
-    return statementUnifiedWithCombinator;
+    return statementUnifiesWithCombinator;
   };
 
   static maps = [

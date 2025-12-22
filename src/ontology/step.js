@@ -171,7 +171,7 @@ export default define(class Step {
   }
 
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
-    let unifiedWithSatisfiesAssertion = false;
+    let unifiesWithSatisfiesAssertion = false;
 
     const stepString = this.string, ///
           satisfiesAssertionString = satisfiesAssertion.getString();
@@ -190,16 +190,16 @@ export default define(class Step {
         const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);
 
         if (substitutionsCompare) {
-          unifiedWithSatisfiesAssertion = true;
+          unifiesWithSatisfiesAssertion = true;
         }
       }
     }
 
-    if (unifiedWithSatisfiesAssertion) {
+    if (unifiesWithSatisfiesAssertion) {
       context.debug(`...unified the '${stepString}' step with the '${satisfiesAssertionString}' satisfies assertion.`, this.node);
     }
 
-    return unifiedWithSatisfiesAssertion;
+    return unifiesWithSatisfiesAssertion;
   }
 
   static name = "Step";

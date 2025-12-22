@@ -96,7 +96,7 @@ export default define(class Subproof {
   }
 
   unifyWithSatisfiesAssertion(satisfiesAssertion, context) {
-    let unifiedWithSatisfiesAssertion = false;
+    let unifiesWithSatisfiesAssertion = false;
 
     const subproofString = this.string, ///
           satisfiesAssertionString = satisfiesAssertion.getString();
@@ -118,17 +118,17 @@ export default define(class Subproof {
           const substitutionsCompare = satisfiesAssertion.compareSubstitutions(substitutions, context);
 
           if (substitutionsCompare) {
-            unifiedWithSatisfiesAssertion = true;
+            unifiesWithSatisfiesAssertion = true;
           }
         }
       }
     }
 
-    if (unifiedWithSatisfiesAssertion) {
+    if (unifiesWithSatisfiesAssertion) {
       context.debug(`...unified the '${subproofString}' subproof with the '${satisfiesAssertionString}' satisfies assertion.`)
     }
 
-    return unifiedWithSatisfiesAssertion;
+    return unifiesWithSatisfiesAssertion;
   }
 
   static name = "Subproof";

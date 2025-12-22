@@ -51,9 +51,9 @@ export default function verifyAction(argument, log) {
 
     const dependentName = null,
           dependentReleased = false,
-          releaseVerified = verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap);
+          releaseVerifies = verifyRelease(releaseName, dependentName, dependentReleased, releaseContextMap);
 
-    if (!releaseVerified) {
+    if (!releaseVerifies) {
       log.warning(`The '${name}' project or package cannot be verified.`);
 
       return;

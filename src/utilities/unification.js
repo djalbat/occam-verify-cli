@@ -57,15 +57,15 @@ export function unifyMetavariable(generalMetavariable, specificMetavariable, gen
 }
 
 export function unifyTermWithConstructor(term, constructor, context) {
-  let termUnifiedWithConstructor;
+  let termUnifiesWithConstructor;
 
   const termNode = term.getNode(),
         constructorTerm = constructor.getTerm(),
         constructorTermNode = constructorTerm.getNode();
 
-  termUnifiedWithConstructor = termWithConstructorUnifier.unify(constructorTermNode, termNode, context);
+  termUnifiesWithConstructor = termWithConstructorUnifier.unify(constructorTermNode, termNode, context);
 
-  return termUnifiedWithConstructor;
+  return termUnifiesWithConstructor;
 }
 
 export function unifyStatementIntrinsically(generalStatement, specificStatement, substitutions, generalContext, specificContext) {
@@ -89,7 +89,7 @@ export function unifyStatementIntrinsically(generalStatement, specificStatement,
 }
 
 export function unifyStatementWithCombinator(statement, combinator, assignments, stated, context) {
-  let statementUnifiedWithCombinator;
+  let statementUnifiesWithCombinator;
 
   const statementNode = statement.getNode(),
         combinatorStatement = combinator.getStatement(),
@@ -102,9 +102,9 @@ export function unifyStatementWithCombinator(statement, combinator, assignments,
 
   const generalContext = context; ///
 
-  statementUnifiedWithCombinator = statementWithCombinatorUnifier.unify(combinatorStatementNode, statementNode, assignments, stated, generalContext, specificContext);
+  statementUnifiesWithCombinator = statementWithCombinatorUnifier.unify(combinatorStatementNode, statementNode, assignments, stated, generalContext, specificContext);
 
-  return statementUnifiedWithCombinator;
+  return statementUnifiesWithCombinator;
 }
 
 export function unifyMetavariableIntrinsically(generalMetavariable, specificMetavariable, substitutions, generalContext, specificContext) {

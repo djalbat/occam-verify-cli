@@ -10,15 +10,15 @@ const termNodeQuery = nodeQuery("/term"),
 
 class TermWithConstructorUnifier extends Unifier {
   unify(constructorTermNode, termNode, context) {
-    let termUnifiedWithConstructor;
+    let termUnifiesWithConstructor;
 
     const generalNonTerminalNode = constructorTermNode, ///
           specificNonTerminalNode = termNode, ///
           nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, context);
 
-    termUnifiedWithConstructor = nonTerminalNodeUnifies; ///
+    termUnifiesWithConstructor = nonTerminalNodeUnifies; ///
 
-    return termUnifiedWithConstructor;
+    return termUnifiesWithConstructor;
   };
 
   static maps = [

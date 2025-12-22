@@ -96,9 +96,9 @@ export default define(class Axiom extends TopLevelAssertion {
       context.trace(`Cannot unify the '${stepString}' step with the '${axiomString}' axiom because the axiom is not unconditional.`, node);
     } else {
       const statement = step.getStatement(),
-            statementUnifiedWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
+            statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
 
-      if (statementUnifiedWithDeduction) {
+      if (statementUnifiesWithDeduction) {
         stepUnifies = true;
       }
     }
@@ -120,9 +120,9 @@ export default define(class Axiom extends TopLevelAssertion {
     context.trace(`Unifying the '${lastStepString}' last step with the '${axiomString}' axiom...`, node)
 
     const statement = lastStep.getStatement(),
-          statementUnifiedWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
+          statementUnifiesWithDeduction = this.unifyStatementWithDeduction(statement, substitutions, context);
 
-    if (statementUnifiedWithDeduction) {
+    if (statementUnifiesWithDeduction) {
       lastStepUnifies = true;
     }
 

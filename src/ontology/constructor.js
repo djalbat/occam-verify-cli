@@ -36,9 +36,9 @@ export default define(class Constructor {
 
     context.trace(`Unifying the '${termString}' term with the '${constructorString}' constructor...`);
 
-    const termUnifiedWithConstructor = unifyTermWithConstructor(term, constructor, context);
+    const termUnifiesWithConstructor = unifyTermWithConstructor(term, constructor, context);
 
-    if (termUnifiedWithConstructor) {
+    if (termUnifiesWithConstructor) {
       let verifiesAhead;
 
       const type = constructor.getType();

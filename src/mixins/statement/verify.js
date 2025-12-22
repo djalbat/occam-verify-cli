@@ -29,9 +29,9 @@ function verifyAsMetavariableAndSubstitution(statement, assignments, stated, con
             substitution = TermSubstitution.fromStatement(statement, context) || FrameSubstitution.fromStatement(statement, context);
 
       if (substitution !== null) {
-        const substitutionVerified = substitution.verify(context);
+        const substitutionVerifies = substitution.verify(context);
 
-        if (substitutionVerified) {
+        if (substitutionVerifies) {
           verifiesAsMetavariableAndSubstitution = true;
         }
       } else {
