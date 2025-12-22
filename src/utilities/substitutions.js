@@ -55,11 +55,9 @@ export function statementFromStatementAndSubstitutions(statement, substitutions,
     if (metavariable !== null) {
       let substitution;
 
-      const { TermSubstitution, FrameSubstitution } = ontology,
-            termSubstitution = TermSubstitution.fromStatementNode(statementNode, context),
-            frameSubstitution = FrameSubstitution.fromStatementNode(statementNode, context);
+      const { TermSubstitution, FrameSubstitution } = ontology;
 
-      substitution = (termSubstitution || frameSubstitution);
+      substitution = TermSubstitution.fromStatement(statement, context) || FrameSubstitution.fromStatement(statement, context);
 
       substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
 

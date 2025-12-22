@@ -77,12 +77,15 @@ export default define(class StatementSubstitution extends Substitution {
   matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
 
   unifyStatement(statement, context) {
-    let specificSubstitution = null;
+    let substitution = null;
 
     const substitutions = Substitutions.fromNothing(),
-          generalContext = this.context,  ///
-          specificContext = context,  ///
-          statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+          generalContext = context; ///
+
+    context = this.getContext();
+
+    const specificContext = context, ///
+          statementUnifies = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
 
     if (statementUnifies) {
       const substitutionsNonTrivialLength = substitutions.getNonTrivialLength();
@@ -90,11 +93,49 @@ export default define(class StatementSubstitution extends Substitution {
       if (substitutionsNonTrivialLength === 1) {
         const firstSubstitution = substitutions.getFirstSubstitution();
 
-        specificSubstitution = firstSubstitution; ///
+        substitution = firstSubstitution; ///
       }
     }
 
-    return specificSubstitution;
+    return substitution;
+  }
+
+  unifySubstitution(substitution, substitutions, context) {
+    const frame = context.getFrame(),
+          generalSubstitution = this.substitution,  ///
+          specificSubstitution = substitution,  ///
+          generalSubstitutionString = generalSubstitution.getString(),
+          specificSubstitutionString = specificSubstitution.getString();
+
+    context.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
+
+    let substitutionContext;
+
+    substitutionContext = this.substitution.getContext();
+
+    const generalContext = substitutionContext; ///
+
+    substitutionContext = substitution.getContext();
+
+    const specificContext = substitutionContext;  ///
+
+    specificContext.addFrame(frame);
+
+    substitutions.snapshot();
+
+    const substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
+
+    specificContext.removeFrame(frame);
+
+    substitutionUnifies ?
+      substitutions.continue() :
+        substitutions.rollback(context);
+
+    if (substitutionUnifies) {
+      context.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
+    }
+
+    return substitutionUnifies;
   }
 
   resolve(substitutions, context) {
@@ -106,49 +147,27 @@ export default define(class StatementSubstitution extends Substitution {
           simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable);
 
     if (simpleSubstitution !== null) {
-      //       specificSubstitution = this.unifyStatement(substitutionString, generalSubstitution),
-      //       substitutionResolved = substitution.resolveSubstitution(this.substitution, this.statement, substitutions, context);
-      //
-      // this.resolved = substitutionResolved; ///
+      let substitution;
+
+      substitution = simpleSubstitution;  ///
+
+      const context = substitution.getContext(),
+            statement = substitution.getStatement();
+
+      substitution = this.unifyStatement(statement, context);
+
+      if (substitution !== null) {
+        const substitutionUnifies = this.unifySubstitution(substitution, substitutions, context);
+
+        if (substitutionUnifies) {
+          this.resolved = true;
+        }
+      }
     }
 
     if (this.resolved) {
       context.debug(`...resolved the ${substitutionString} substitution.`);
     }
-  }
-
-  resolveSubstitution(substitution, statement, substitutions, context) {
-    let substitutionResolved = false;
-
-    const generalSubstitution = substitution, ///
-          specificSubstitution = this.unifyStatement(statement, context);  ///
-
-    if (specificSubstitution !== null) {
-      substitutions.snapshot();
-
-      const generalSubstitutionString = generalSubstitution.getString(),
-            specificSubstitutionString = specificSubstitution.getString();
-
-      context.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
-
-      const generalSubstitutionContext = generalSubstitution.getContext(),
-            specificSubstitutionContext = specificSubstitution.getContext(),
-            generalContext = generalSubstitutionContext,  ///
-            specificContext = specificSubstitutionContext,  ///
-            substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
-
-      if (substitutionUnifies) {
-        context.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
-      }
-
-      substitutionUnifies ?
-        substitutions.continue() :
-          substitutions.rollback(context);
-
-      substitutionResolved = substitutionUnifies;  ///
-    }
-
-    return substitutionResolved;
   }
 
   toJSON() {

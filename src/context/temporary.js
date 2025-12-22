@@ -2,7 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-const { extract } = arrayUtilities;
+const { first, extract } = arrayUtilities;
 
 export default class TemporaryContext {
   constructor(context, tokens, terms, frames, reference, statements, substitution) {
@@ -69,6 +69,14 @@ export default class TemporaryContext {
     });
 
     this.frames.push(frame);
+  }
+
+  removeFrame(frame) {
+    const index = this.frames.indexOf(frame),
+          start = index,  ///
+          deleteCount = 1;
+
+    this.frames.splice(start, deleteCount);
   }
 
   addStatement(statement) {
@@ -139,6 +147,20 @@ export default class TemporaryContext {
     }
 
     return reference;
+  }
+
+  getFrame() {
+    let frame = null;
+
+    const framesLengtrh = this.frames.length;
+
+    if (framesLengtrh === 1) {
+      const firstFrame = first(this.frames);
+
+      frame = firstFrame; ///
+    }
+
+    return frame;
   }
 
   getVariables(nested = true) { return this.context.getVariables(nested); }
