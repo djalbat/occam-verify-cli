@@ -6,10 +6,10 @@ import JudgementAssignment from "../assignment/judgement";
 import { define } from "../ontology";
 
 export default define(class Judgement {
-  constructor(string, frame, declaration) {
+  constructor(string, frame, assumption) {
     this.string = string;
     this.frame = frame;
-    this.declaration = declaration;
+    this.assumption = assumption;
   }
 
   getString() {
@@ -21,7 +21,7 @@ export default define(class Judgement {
   }
 
   getDeclaration() {
-    return this.declaration;
+    return this.assumption;
   }
 
   isSimple() { return this.frame.isSimple(); }
@@ -88,7 +88,7 @@ export default define(class Judgement {
   verifyDeclaration(assignments, stated, context) {
     let declarationVerifies;
 
-    declarationVerifies = this.declaration.verify(assignments, stated, context);
+    declarationVerifies = this.assumption.verify(assignments, stated, context);
 
     return declarationVerifies;
   }
@@ -116,7 +116,7 @@ export default define(class Judgement {
 
     context.trace(`Verifying the '${judgementString}' derived judgement...`);
 
-    const metavariable = this.declaration.getMetavariable(),
+    const metavariable = this.assumption.getMetavariable(),
           reference = referenceFromMetavariable(metavariable, context),
           metaLemmaMetatheorem = context.findMetaLemmaMetatheoremByReference(reference),
           substitutions = metaLemmaMetatheorem.getSubstitutions(),
@@ -151,13 +151,13 @@ export default define(class Judgement {
     const judgementNode = statementNode.getJudgementNode();
 
     if (judgementNode !== null) {
-      const { Frame, Declaration } = ontology,
+      const { Frame, Assumption } = ontology,
             node = judgementNode, ///
             string = context.nodeAsString(node),
             frame = Frame.fromJudgementNode(judgementNode, context),
-            declaration = Declaration.fromJudgementNode(judgementNode, context);
+            assumption = Assumption.fromJudgementNode(judgementNode, context);
 
-      judgement = new Judgement(string, frame, declaration);
+      judgement = new Judgement(string, frame, assumption);
     }
 
     return judgement;

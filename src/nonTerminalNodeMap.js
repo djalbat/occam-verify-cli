@@ -39,9 +39,9 @@ import ConjectureNode from "./node/conjecture";
 import HypothesisNode from "./node/hypothesis";
 import TypePrefixNode from "./node/typePrefix";
 import RuleHeaderNode from "./node/header/rule";
+import AssumptionNode from "./node/assumption";
 import SuppositionNode from "./node/supposition";
 import ConstructorNode from "./node/constructor";
-import DeclarationNode from "./node/declaration";
 import MetatheoremNode from "./node/metatheorem";
 import TheoremBodyNode from "./node/body/theorem";
 import AxiomHeaderNode from "./node/header/axiom";
@@ -118,11 +118,11 @@ import {
   HYPOTHESIS_RULE_NAME,
   AXIOM_BODY_RULE_NAME,
   LEMMA_BODY_RULE_NAME,
+  ASSUMPTION_RULE_NAME,
   TYPE_PREFIX_RULE_NAME,
   SUPPOSITION_RULE_NAME,
   RULE_HEADER_RULE_NAME,
   CONSTRUCTOR_RULE_NAME,
-  DECLARATION_RULE_NAME,
   METATHEOREM_RULE_NAME,
   AXIOM_HEADER_RULE_NAME,
   LEMMA_HEADER_RULE_NAME,
@@ -200,11 +200,11 @@ const NonTerminalNodeMap = {
   [CONJECTURE_RULE_NAME]: ConjectureNode,
   [DERIVATION_RULE_NAME]: DerivationNode,
   [HYPOTHESIS_RULE_NAME]: HypothesisNode,
+  [ASSUMPTION_RULE_NAME]: AssumptionNode,
   [RULE_HEADER_RULE_NAME]: RuleHeaderNode,
   [TYPE_PREFIX_RULE_NAME]: TypePrefixNode,
   [SUPPOSITION_RULE_NAME]: SuppositionNode,
   [CONSTRUCTOR_RULE_NAME]: ConstructorNode,
-  [DECLARATION_RULE_NAME]: DeclarationNode,
   [METATHEOREM_RULE_NAME]: MetatheoremNode,
   [AXIOM_HEADER_RULE_NAME]: AxiomHeaderNode,
   [LEMMA_HEADER_RULE_NAME]: LemmaHeaderNode,

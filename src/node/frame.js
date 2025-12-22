@@ -2,11 +2,11 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { DECLARATION_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
+import { ASSUMPTION_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class FrameNode extends NonTerminalNode {
-  getDeclarationNodes() {
-    const ruleName = DECLARATION_RULE_NAME,
+  getAssumptionNodes() {
+    const ruleName = ASSUMPTION_RULE_NAME,
           declarationNodes = this.getNodesByRuleName(ruleName);
 
     return declarationNodes;
@@ -19,20 +19,20 @@ export default class FrameNode extends NonTerminalNode {
     return metavariableNodes;
   }
 
-  getSingularDeclarationNode() {
-    const ruleName = DECLARATION_RULE_NAME,
-          singularDeclarationNode = this.getSingularTNodeByRuleName(ruleName);
+  getSingularAssumptionNode() {
+    const ruleName = ASSUMPTION_RULE_NAME,
+          singularAssumptionNode = this.getSingularTNodeByRuleName(ruleName);
 
-    return singularDeclarationNode;
+    return singularAssumptionNode;
   }
 
   getSingularMetavariableNode() {
     let singularMetavariableNode = null;
 
-    const singularDeclarationNode = this.getSingularDeclarationNode();
+    const singularAssumptionNode = this.getSingularAssumptionNode();
 
-    if (singularDeclarationNode !== null) {
-      const metavariableNode = singularDeclarationNode.getMetavariableNode();
+    if (singularAssumptionNode !== null) {
+      const metavariableNode = singularAssumptionNode.getMetavariableNode();
 
       singularMetavariableNode = metavariableNode;  ///
     }

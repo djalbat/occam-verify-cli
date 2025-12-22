@@ -2,7 +2,7 @@
 
 import NonTerminalNode from "../node/nonTerminal";
 
-import { FRAME_RULE_NAME, DECLARATION_RULE_NAME } from "../ruleNames";
+import { FRAME_RULE_NAME, ASSUMPTION_RULE_NAME } from "../ruleNames";
 
 export default class JudgementNode extends NonTerminalNode {
   getFrameNode() {
@@ -12,11 +12,11 @@ export default class JudgementNode extends NonTerminalNode {
     return frameNode;
   }
 
-  getDeclarationNode() {
-    const ruleName = DECLARATION_RULE_NAME,
-          declarationNodes = this.getNodeByRuleName(ruleName);
+  getAssumptionNode() {
+    const ruleName = ASSUMPTION_RULE_NAME,
+          assumptionNodes = this.getNodeByRuleName(ruleName);
 
-    return declarationNodes;
+    return assumptionNodes;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(JudgementNode, ruleName, childNodes, opacity, precedence); }

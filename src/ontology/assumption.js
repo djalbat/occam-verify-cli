@@ -7,7 +7,7 @@ import { define } from "../ontology";
 import { unifyStatementIntrinsically } from "../utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
-export default define(class Declaration {
+export default define(class Assumption {
   constructor(string, node, statement, metavariable) {
     this.string = string;
     this.node = node;
@@ -43,7 +43,7 @@ export default define(class Declaration {
     const declarationString = this.string,  ///
           substitutionString = substitution.getString();
 
-    context.trace(`Matching the '${substitutionString}' substitution against the '${declarationString}' declaration...`);
+    context.trace(`Matching the '${substitutionString}' substitution against the '${declarationString}' assumption...`);
 
     const simple = this.isSimple();
 
@@ -51,9 +51,9 @@ export default define(class Declaration {
       const judgement = context.findJudgementByMetavariable(this.metavariable);
 
       if (judgement !== null) {
-        const declaration = judgement.getDeclaration();
+        const assumption = judgement.getDeclaration();
 
-        substitutionMatches = declaration.matchSubstitution(substitution, context);
+        substitutionMatches = assumption.matchSubstitution(substitution, context);
       }
     } else {
       const statement = substitution.getStatement(),
@@ -67,7 +67,7 @@ export default define(class Declaration {
     }
 
     if (substitutionMatches) {
-      context.debug(`...matches the '${declarationString}' substitution against the '${substitutionString}' declaration.`);
+      context.debug(`...matches the '${declarationString}' substitution against the '${substitutionString}' assumption.`);
     }
 
     return substitutionMatches;
@@ -78,7 +78,7 @@ export default define(class Declaration {
 
     const declarationString = this.string;  ///
 
-    context.trace(`Verifying the '${declarationString}' declaration...`);
+    context.trace(`Verifying the '${declarationString}' assumption...`);
 
     const simple = this.isSimple();
 
@@ -109,7 +109,7 @@ export default define(class Declaration {
       }
 
       if (verifies) {
-        context.debug(`...verified the '${declarationString}' declaration.`);
+        context.debug(`...verified the '${declarationString}' assumption.`);
       }
     }
 
@@ -122,7 +122,7 @@ export default define(class Declaration {
     const declarationString = this.string,
           metavariableString = this.metavariable.getString();
 
-    context.trace(`Verifying the '${declarationString}' declaration's '${metavariableString}' metavariable as a reference...`);
+    context.trace(`Verifying the '${declarationString}' assumption's '${metavariableString}' metavariable as a reference...`);
 
     const reference = referenceFromMetavariable(this.metavariable, context),
           referenceVerifies = reference.verify(context);
@@ -130,7 +130,7 @@ export default define(class Declaration {
     metavariableVerifiesAsReference = referenceVerifies;  ///
 
     if (metavariableVerifiesAsReference) {
-      context.debug(`...verified the '${declarationString}' declaration's '${metavariableString}' metavariable as a reference.`);
+      context.debug(`...verified the '${declarationString}' assumption's '${metavariableString}' metavariable as a reference.`);
     }
 
     return metavariableVerifiesAsReference;
@@ -166,12 +166,12 @@ export default define(class Declaration {
     const declarationString = this.string,  ///
           metavariableString = this.metavariable.getString();
 
-    context.trace(`Verifying the '${declarationString}' declaration's '${metavariableString}' metavariable...`);
+    context.trace(`Verifying the '${declarationString}' assumption's '${metavariableString}' metavariable...`);
 
     verifiesAsMetavariable = this.metavariable.verify(context);
 
     if (verifiesAsMetavariable) {
-      context.debug(`...verified the '${declarationString}' declaration's '${metavariableString}' metavariable.`);
+      context.debug(`...verified the '${declarationString}' assumption's '${metavariableString}' metavariable.`);
     }
 
     return verifiesAsMetavariable;
@@ -182,7 +182,7 @@ export default define(class Declaration {
 
     const declarationString = this.string;  ///
 
-    context.trace(`Verifying the '${declarationString}' stated declaration...`);
+    context.trace(`Verifying the '${declarationString}' stated assumption...`);
 
     const reference = referenceFromMetavariable(this.metavariable, context),
           metavariablePresent = context.isMetavariablePresentByReference(reference);
@@ -203,7 +203,7 @@ export default define(class Declaration {
     }
 
     if (verifiesWhenStated) {
-      context.debug(`...verified the '${declarationString}' stated declaration.`);
+      context.debug(`...verified the '${declarationString}' stated assumption.`);
     }
 
     return verifiesWhenStated;
@@ -214,7 +214,7 @@ export default define(class Declaration {
 
     const declarationString = this.string;  ///
 
-    context.trace(`Verifying the '${declarationString}' derived declaration...`);
+    context.trace(`Verifying the '${declarationString}' derived assumption...`);
 
     const reference = referenceFromMetavariable(this.metavariable, context),
           metaLemmaMetatheoremPresent = context.isMetaLemmaMetatheoremPresentByReference(reference);
@@ -222,7 +222,7 @@ export default define(class Declaration {
     verifiesWhenDerived = metaLemmaMetatheoremPresent; ///
 
     if (verifiesWhenDerived) {
-      context.debug(`...verified the '${declarationString}' derived declaration.`);
+      context.debug(`...verified the '${declarationString}' derived assumption.`);
     }
 
     return verifiesWhenDerived;
@@ -263,7 +263,7 @@ export default define(class Declaration {
           labelString = label.getString(),
           declarationString = this.string;  //;/
 
-    context.trace(`Unifying the '${labelString}' label with the '${declarationString}' declaration...`);
+    context.trace(`Unifying the '${labelString}' label with the '${declarationString}' assumption...`);
 
     const reference = referenceFromMetavariable(this.metavariable, context),
           labelUnifies = reference.unifyLabel(label, substitutions, context);
@@ -271,7 +271,7 @@ export default define(class Declaration {
     labelUnifiesWithReference = labelUnifies; ///
 
     if (labelUnifiesWithReference) {
-      context.debug(`...unified the '${labelString}' label with the '${declarationString}' declaration.`);
+      context.debug(`...unified the '${labelString}' label with the '${declarationString}' assumption.`);
     }
 
     return labelUnifiesWithReference;
@@ -283,7 +283,7 @@ export default define(class Declaration {
     const declarationString = this.string,  ///
           metaLemmaMetatheoremString = metaLemmaMetatheorem.getString();
 
-    context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${declarationString}' declaration...`);
+    context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${declarationString}' assumption...`);
 
     const generalContext = context; ///
 
@@ -313,7 +313,7 @@ export default define(class Declaration {
     if (metaLemmaMetatheoremUnifies) {
       context = generalContext; ///
 
-      context.trace(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${declarationString}' declaration...`);
+      context.trace(`...unified the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${declarationString}' assumption...`);
     }
 
     return metaLemmaMetatheoremUnifies;
@@ -334,10 +334,10 @@ export default define(class Declaration {
     return json;
   }
 
-  static name = "Declaration";
+  static name = "Assumption";
 
   static fromJSON(json, context) {
-    let declaration = null;
+    let assumption = null;
 
     if (json !== null) {
       const string = null,
@@ -345,23 +345,23 @@ export default define(class Declaration {
             statement = null,
             metavariable = metavariableFromJSON(json, context);
 
-      declaration = new Declaration(string, node, statement, metavariable)
+      assumption = new Assumption(string, node, statement, metavariable)
     }
 
-    return declaration;
+    return assumption;
   }
 
   static fromJudgementNode(judgementNode, context) {
-    const declarationNode = judgementNode.getDeclarationNode(),
-          declaration = declarationFromDeclarationNode(declarationNode, context);
+    const assumptionNode = judgementNode.getAssumptionNode(),
+          assumption = declarationFromAssumptionNode(assumptionNode, context);
 
-    return declaration;
+    return assumption;
   }
 
-  static fromDeclarationNode(declarationNode, context) {
-    const declaration = declarationFromDeclarationNode(declarationNode, context);
+  static fromAssumptionNode(assumptionNode, context) {
+    const assumption = declarationFromAssumptionNode(assumptionNode, context);
 
-    return declaration;
+    return assumption;
   }
 });
 
@@ -373,13 +373,13 @@ function referenceFromMetavariable(metavariable, context) {
   return reference;
 }
 
-function declarationFromDeclarationNode(declarationNode, context) {
-  const { Metavariable, Declaration, Statement } = ontology,
-        node = declarationNode,  ///
+function declarationFromAssumptionNode(assumptionNode, context) {
+  const { Metavariable, Assumption, Statement } = ontology,
+        node = assumptionNode,  ///
         string = context.nodeAsString(node),
-        statement = Statement.fromDeclarationNode(declarationNode, context),
-        metavariable = Metavariable.fromDeclarationNode(declarationNode, context),
-        declaration = new Declaration(string, node, statement, metavariable);
+        statement = Statement.fromAssumptionNode(assumptionNode, context),
+        metavariable = Metavariable.fromAssumptionNode(assumptionNode, context),
+        assumption = new Assumption(string, node, statement, metavariable);
 
-  return declaration;
+  return assumption;
 }

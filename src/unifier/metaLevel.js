@@ -12,8 +12,8 @@ const termNodeQuery = nodeQuery("/term"),
       statementNodeQuery = nodeQuery("/statement"),
       termVariableNodeQuery = nodeQuery("/term/variable!"),
       statementMetavariableNodeQuery = nodeQuery("/statement/metavariable!"),
-      declarationMetavariableNodeQuery = nodeQuery("/declaration/metavariable!"),
-      frameDeclarationMetavariableNodeQuery = nodeQuery("/frame/declaration!/metavariable!");
+      assumptionMetavariableNodeQuery = nodeQuery("/assumption/metavariable!"),
+      frameAssumptionMetavariableNodeQuery = nodeQuery("/frame/assumption!/metavariable!");
 
 class MetaLevelUnifier extends Unifier {
   unify(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext) {
@@ -66,13 +66,13 @@ class MetaLevelUnifier extends Unifier {
       }
     },
     {
-      generalNodeQuery: frameDeclarationMetavariableNodeQuery,
+      generalNodeQuery: frameAssumptionMetavariableNodeQuery,
       specificNodeQuery: frameNodeQuery,
-      unify: (generalFrameDeclarationMetavariableNode, specificFrameNode, substitutions, generalContext, specificContext) => {
+      unify: (generalFrameAssumptionMetavariableNode, specificFrameNode, substitutions, generalContext, specificContext) => {
         let frameUnifies;
 
         const frameNode = specificFrameNode, ///
-              metavariableNode = generalFrameDeclarationMetavariableNode,  ///
+              metavariableNode = generalFrameAssumptionMetavariableNode,  ///
               metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
 
         let context;
@@ -126,9 +126,9 @@ class MetaLevelUnifier extends Unifier {
       }
     },
     {
-      generalNodeQuery: declarationMetavariableNodeQuery,
-      specificNodeQuery: declarationMetavariableNodeQuery,
-      unify: (generalDeclarationMetavariableNode, specificDeclarationMetavariableNode, substitutions, generalContext, specificContext) => {
+      generalNodeQuery: assumptionMetavariableNodeQuery,
+      specificNodeQuery: assumptionMetavariableNodeQuery,
+      unify: (generalAssumptionMetavariableNode, specificAssumptionMetavariableNode, substitutions, generalContext, specificContext) => {
         let referenceUnifies;
 
         const { Reference } = ontology;
@@ -138,14 +138,14 @@ class MetaLevelUnifier extends Unifier {
 
         context = generalContext; ///
 
-        metavariableNode = generalDeclarationMetavariableNode;  ///
+        metavariableNode = generalAssumptionMetavariableNode;  ///
 
         const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
               metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
         context = specificContext;  ///
 
-        metavariableNode = specificDeclarationMetavariableNode; ///
+        metavariableNode = specificAssumptionMetavariableNode; ///
 
         const reference = Reference.fromMetavariableNode(metavariableNode, context);
 

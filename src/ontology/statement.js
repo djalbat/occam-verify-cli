@@ -345,12 +345,12 @@ export default define(class Statement {
     return statement;
   }
 
-  static fromDeclarationNode(declarationNode, context) {
+  static fromDeclarationNode(assumptionNode, context) {
     let statement = null;
 
     let statementNode;
 
-    statementNode = declarationNode.getStatementNode(); ///
+    statementNode = assumptionNode.getStatementNode(); ///
 
     if (statementNode !== null) {
       statementNode = stripBracketsFromStatementNode(statementNode);  ///
