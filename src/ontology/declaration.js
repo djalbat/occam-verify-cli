@@ -340,10 +340,10 @@ export default define(class Declaration {
     let declaration = null;
 
     if (json !== null) {
-      const metavariable = metavariableFromJSON(json, context),
-            string = null,
+      const string = null,
             node = null,
-            statement = null;
+            statement = null,
+            metavariable = metavariableFromJSON(json, context);
 
       declaration = new Declaration(string, node, statement, metavariable)
     }
@@ -377,8 +377,8 @@ function declarationFromDeclarationNode(declarationNode, context) {
   const { Metavariable, Declaration, Statement } = ontology,
         node = declarationNode,  ///
         string = context.nodeAsString(node),
-        metavariable = Metavariable.fromDeclarationNode(declarationNode, context),
         statement = Statement.fromDeclarationNode(declarationNode, context),
+        metavariable = Metavariable.fromDeclarationNode(declarationNode, context),
         declaration = new Declaration(string, node, statement, metavariable);
 
   return declaration;

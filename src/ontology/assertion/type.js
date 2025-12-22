@@ -1,19 +1,17 @@
 "use strict";
 
 import ontology from "../../ontology";
+import Assertion from "../assertion";
 import VariableAssignment from "../../assignment/variable";
 
 import { define } from "../../ontology";
 
-export default define(class TypeAssertion {
-  constructor(string, term, type) {
-    this.string = string;
+export default define(class TypeAssertion extends Assertion {
+  constructor(string, node, tokens, term, type) {
+    super(string, node, tokens);
+
     this.term = term;
     this.type = type;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getTerm() {
@@ -27,7 +25,7 @@ export default define(class TypeAssertion {
   verify(assignments, stated, context) {
     let verifies = false;
 
-    let typeAssertionString = this.string;  ///
+    let typeAssertionString = this.getString();  ///
 
     context.trace(`Verifying the '${typeAssertionString}' type assertion...`);
 
@@ -89,7 +87,7 @@ export default define(class TypeAssertion {
   verifyWhenStated(assignments, context) {
     let verifiesWhenStated = false;
 
-    const typeAssertionString = this.string; ///
+    const typeAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${typeAssertionString}' stated type assertion...`);
 
@@ -120,7 +118,7 @@ export default define(class TypeAssertion {
   verifyWhenDerived(context) {
     let verifiesWhenDerived;
 
-    const typeAssertionString = this.string; ///
+    const typeAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${typeAssertionString}' derived type assertion...`);
 
@@ -191,11 +189,12 @@ export default define(class TypeAssertion {
     if (typeAssertionNode !== null) {
       const { Term, Type } = ontology,
             node = typeAssertionNode, ///
+            tokens = null,
             string = context.nodeAsString(node),
             term = Term.fromTypeAssertionNode(typeAssertionNode, context),
             type = Type.fromTypeAssertionNode(typeAssertionNode, context);
 
-      typeAssertion = new TypeAssertion(string, term, type);
+      typeAssertion = new TypeAssertion(string, node, tokens, term, type);
     }
 
     return typeAssertion;

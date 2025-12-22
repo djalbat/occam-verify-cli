@@ -1,31 +1,19 @@
 "use strict";
 
 import ontology from "../../ontology";
+import Assertion from "../assertion";
 import TemporaryContext from "../../context/temporary";
 
 import { define } from "../../ontology";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
 
-export default define(class DefinedAssertion {
+export default define(class DefinedAssertion extends Assertion {
   constructor(string, node, tokens, term, frame, negated) {
-    this.string = string;
-    this.node = node;
-    this.tokens = tokens;
+    super(string, node, tokens);
+
     this.term = term;
     this.frame= frame;
     this.negated = negated;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getTokens() {
-    return this.tokens;
   }
 
   getTerm() {
@@ -43,7 +31,7 @@ export default define(class DefinedAssertion {
   verify(assignments, stated, context) {
     let verifies = false;
 
-    const definedAssertionString = this.string; ///
+    const definedAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${definedAssertionString}' defined assertion...`);
 
@@ -131,7 +119,7 @@ export default define(class DefinedAssertion {
   verifyWhenStated(assignments, context) {
     let verifiesWhenStated;
 
-    const definedAssertionString = this.string; ///
+    const definedAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${definedAssertionString}' stated defined assertion...`);
 
@@ -147,7 +135,7 @@ export default define(class DefinedAssertion {
   verifyWhenDerived(context) {
     let verifiesWhenDerived;
 
-    const definedAssertionString = this.string; ///
+    const definedAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`);
 
@@ -163,11 +151,12 @@ export default define(class DefinedAssertion {
   unifyIndependently(substitutions, context) {
     let unifiesIndependently;
 
-    const definedAssertionString = this.string; ///
+    const definedAssertionString = this.getString(); ///
 
     context.trace(`Unifying the '${definedAssertionString}' defined assertion independently...`);
 
-    const temporaryContext = TemporaryContext.fromContextAndTokens(context, this.tokens);
+    const tokens = this.getTokens(),
+          temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
 
     context = temporaryContext; ///
 

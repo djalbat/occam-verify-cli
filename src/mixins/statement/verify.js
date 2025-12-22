@@ -135,6 +135,10 @@ function verifyAsTypeAssertion(statement, assignments, stated, context) {
     verifiesAsTypeAssertion = typeAssertionVerifies; ///
 
     if (verifiesAsTypeAssertion) {
+      const assertion = typeAssertion;  ///
+
+      context.addAssertion(assertion);
+
       context.debug(`...verified the '${statementString}' statement as a type assertion.`);
     }
   }
@@ -157,6 +161,10 @@ function verifyAsDefinedAssertion(statement, assignments, stated, context) {
     verifiesAsDefinedAssertion = definedAssertionVerifies; ///
 
     if (verifiesAsDefinedAssertion) {
+      const assertion = definedAssertion;  ///
+
+      context.addAssertion(assertion);
+
       context.debug(`...verified the '${statementString}' statement as a defined assertion.`);
     }
   }
@@ -179,6 +187,10 @@ function verifyAsPropertyAssertion(statement, assignments, stated, context) {
     verifiesAsPropertyAssertion = propertyAssertionVerifies; ///
 
     if (verifiesAsPropertyAssertion) {
+      const assertion = propertyAssertion; ///
+
+      context.addAssertion(assertion);
+
       context.debug(`...verified the '${statementString}' statement as a property assertion.`);
     }
   }
@@ -201,6 +213,10 @@ function verifyAsSubproofAssertion(statement, assignments, stated, context) {
     verifiesAsSubproofAssertion = subproofAssertionVerifies; ///
 
     if (verifiesAsSubproofAssertion) {
+      const assertion = subproofAssertion; ///
+
+      context.addAssertion(assertion);
+
       context.debug(`...verified the '${statementString}' statement as a subproof assertion.`);
     }
   }
@@ -223,6 +239,10 @@ function verifyAsContainedAssertion(statement, assignments, stated, context) {
     verifiesAsContainedAssertion = containedAssertionVerifies; ///
 
     if (verifiesAsContainedAssertion) {
+      const assertion = containedAssertion; ///
+
+      context.addAssertion(assertion);
+
       context.debug(`...verified the '${statementString}' statement as a contained assertion.`);
     }
   }
@@ -245,6 +265,10 @@ function verifyAsSatisfiesAssertion(statement, assignments, stated, context) {
     verifiesAsSatisfiesAssertion = satisfiesAssertionVerifies; ///
 
     if (verifiesAsSatisfiesAssertion) {
+      const assertion = satisfiesAssertion; ///
+
+      context.addAssertion(assertion);
+
       context.debug(`...verified the '${statementString}' statement as a satisfies assertion.`);
     }
   }

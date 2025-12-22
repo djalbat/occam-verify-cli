@@ -3,63 +3,28 @@
 import { arrayUtilities } from "necessary";
 
 import ontology from "../../ontology";
+import Assertion from "../assertion";
 
 import { define } from "../../ontology";
 import { unifyStatement } from "../../utilities/unification";
 
 const { match } = arrayUtilities;
 
-export default define(class SubproofAssertion {
-  constructor(string, node, statements) {
-    this.string = string;
-    this.node = node;
+export default define(class SubproofAssertion extends Assertion {
+  constructor(string, node, tokens, statements) {
+    super(string, node, tokens);
+
     this.statements = statements;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getStatements() {
     return this.statements;
   }
 
-  unifySubproof(subproof, substitutions, generalContext, specificContext) {
-    let subproofUnifies;
-
-    const subproofString = subproof.getString(),
-          subproofAssertionString = this.string;  ///
-
-    specificContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
-
-    const subproofStatements = subproof.getStatements(),
-          subproofAssertionStatements = this.statements;  ///
-
-    subproofUnifies = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
-      const generalStatement = subproofAssertionStatement,  ///
-            specificStatement = subproofStatement,  ///
-            statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
-
-      if (statementUnifies) {
-        return true;
-      }
-    });
-
-    if (subproofUnifies) {
-      specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
-    }
-
-    return subproofUnifies;
-  }
-
   verify(assignments, stated, context) {
     let verifies;
 
-    const subproofAssertionString = this.string;  ///
+    const subproofAssertionString = this.getString();  ///
 
     context.trace(`Verifying the '${subproofAssertionString}' subproof assertion...`);
 
@@ -90,6 +55,34 @@ export default define(class SubproofAssertion {
     return statementsVerify;
   }
 
+  unifySubproof(subproof, substitutions, generalContext, specificContext) {
+    let subproofUnifies;
+
+    const subproofString = subproof.getString(),
+          subproofAssertionString = this.getString();  ///
+
+    specificContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
+
+    const subproofStatements = subproof.getStatements(),
+          subproofAssertionStatements = this.statements;  ///
+
+    subproofUnifies = match(subproofAssertionStatements, subproofStatements, (subproofAssertionStatement, subproofStatement) => {
+      const generalStatement = subproofAssertionStatement,  ///
+            specificStatement = subproofStatement,  ///
+            statementUnifies = unifyStatement(generalStatement, specificStatement, substitutions, generalContext, specificContext);
+
+      if (statementUnifies) {
+        return true;
+      }
+    });
+
+    if (subproofUnifies) {
+      specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
+    }
+
+    return subproofUnifies;
+  }
+
   static name = "SubproofAssertion";
 
   static fromStatementNode(statementNode, context) {
@@ -99,10 +92,11 @@ export default define(class SubproofAssertion {
 
     if (subproofAssertionNode !== null) {
       const node = subproofAssertionNode, ///
+            tokens = null,
             string = context.nodeAsString(node),
             statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context);
 
-      subproofAssertion = new SubproofAssertion(string, node, statements);
+      subproofAssertion = new SubproofAssertion(string, node, tokens, statements);
     }
 
     return subproofAssertion;

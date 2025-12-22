@@ -1,30 +1,17 @@
 "use strict";
 
 import ontology from "../../ontology";
-
+import Assertion from "../assertion";
 import VariableAssignment from "../../assignment/variable";
 
 import { define } from "../../ontology";
 
-export default define(class PropertyAssertion {
+export default define(class PropertyAssertion extends Assertion {
   constructor(string, node, tokens, term, propertyRelation) {
-    this.string = string;
-    this.node = node;
-    this.tokens = tokens;
+    super(string, node, tokens);
+
     this.term = term;
     this.propertyRelation = propertyRelation;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getTokens() {
-    return this.tokens;
   }
 
   getTerm() {
@@ -64,7 +51,7 @@ export default define(class PropertyAssertion {
   verify(assignments, stated, context) {
     let verifies = false;
 
-    const propertyAssertionString = this.string; ///
+    const propertyAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${propertyAssertionString}' property assertion...`);
 
@@ -141,7 +128,7 @@ export default define(class PropertyAssertion {
   verifyWhenStated(assignments, context) {
     let verifiesWhenStated = false;
 
-    const propertyAssertionString = this.string; ///
+    const propertyAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${propertyAssertionString}' stated property assertion...`);
 
@@ -157,7 +144,7 @@ export default define(class PropertyAssertion {
   verifyWhenDerived(context) {
     let verifiesWhenDerived;
 
-    const propertyAssertionString = this.string; ///
+    const propertyAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${propertyAssertionString}' derived property assertion...`);
 

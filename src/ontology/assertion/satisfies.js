@@ -1,26 +1,17 @@
 "use strict";
 
 import ontology from "../../ontology";
+import Assertion from "../assertion";
+import Substitutions from "../../substitutions";
 
 import { define } from "../../ontology";
 
-import Substitutions from "../../substitutions";
-
-export default define(class SatisfiesAssertion {
+export default define(class SatisfiesAssertion extends Assertion {
   constructor(string, node, tokens, signature, reference) {
-    this.string = string;
-    this.node = node;
-    this.tokens = tokens;
+    super(string, node, tokens);
+
     this.signature = signature;
     this.reference = reference;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
   }
 
   getTokens() {
@@ -42,7 +33,7 @@ export default define(class SatisfiesAssertion {
   verify(assignments, stated, context) {
     let verifies = false;
 
-    const satisfiesAssertionString = this.string; ///
+    const satisfiesAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${satisfiesAssertionString}' satisfies assertion...`);
 
@@ -95,7 +86,7 @@ export default define(class SatisfiesAssertion {
     let statementUnifies = false;
 
     const statementString = statement.getString(),
-          satisfiesAssertionString = this.string; ///
+          satisfiesAssertionString = this.getString(); ///
 
     context.trace(`Unifying the '${statementString}' statement with the '${satisfiesAssertionString}' satisfies assertion...`);
 

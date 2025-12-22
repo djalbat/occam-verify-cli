@@ -1,32 +1,20 @@
 "use strict";
 
 import ontology from "../../ontology";
+import Assertion from "../assertion";
 import TemporaryContext from "../../context/temporary";
 
 import { define } from "../../ontology";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
 
-export default define(class ContainedAssertion {
+export default define(class ContainedAssertion extends Assertion {
   constructor(string, node, tokens, term, frame, negated, statement) {
-    this.string = string;
-    this.node = node;
-    this.tokens = tokens;
+    super(string, node, tokens);
+
     this.term = term;
     this.frame = frame;
     this.negated = negated;
     this.statement = statement;
-  }
-
-  getString() {
-    return this.string;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getTokens() {
-    return this.tokens;
   }
 
   getTerm() {
@@ -48,7 +36,7 @@ export default define(class ContainedAssertion {
   verify(assignments, stated, context) {
     let verifies = false;
 
-    const containedAssertionString = this.string; ///
+    const containedAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${containedAssertionString}' contained assertion...`);
 
@@ -159,7 +147,7 @@ export default define(class ContainedAssertion {
   verifyWhenStated(assignments, context) {
     let verifiesWhenStated;
 
-    const containedAssertionString = this.string; ///
+    const containedAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${containedAssertionString}' stated contained assertion...`);
 
@@ -175,7 +163,7 @@ export default define(class ContainedAssertion {
   verifyWhenDerived(context) {
     let verifiesWhenDerived;
 
-    const containedAssertionString = this.string; ///
+    const containedAssertionString = this.getString(); ///
 
     context.trace(`Verifying the '${containedAssertionString}' derived contained assertion...`);
 
@@ -191,11 +179,12 @@ export default define(class ContainedAssertion {
   unifyIndependently(substitutions, context) {
     let unifiesIndependently;
 
-    const containedAssertionString = this.string; ///
+    const containedAssertionString = this.getString(); ///
 
     context.trace(`Unifying the '${containedAssertionString}' contained assertion independently...`);
 
-    const temporaryContext = TemporaryContext.fromContextAndTokens(context, this.tokens);
+    const tokens = this.getTokens(),
+          temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
 
     context = temporaryContext; ///
 

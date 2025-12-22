@@ -5,13 +5,14 @@ import { arrayUtilities } from "necessary";
 const { first, extract } = arrayUtilities;
 
 export default class TemporaryContext {
-  constructor(context, tokens, terms, frames, reference, statements, substitution) {
+  constructor(context, tokens, terms, frames, statements, assertions, reference, substitution) {
     this.context = context;
     this.tokens = tokens;
     this.terms = terms;
     this.frames = frames;
-    this.reference = reference;
     this.statements = statements;
+    this.assertions = assertions;
+    this.reference = reference;
     this.substitution = substitution;
   }
 
@@ -33,6 +34,10 @@ export default class TemporaryContext {
 
   getStatements() {
     return this.statements;
+  }
+
+  getAssertions() {
+    return this.assertions;
   }
 
   getReferences() {
@@ -91,6 +96,20 @@ export default class TemporaryContext {
     });
 
     this.statements.push(statement);
+  }
+
+  addAssertion(assertion) {
+    const assertionNode = assertion.getNode();
+
+    extract(this.assertions, (assertion) => {
+      const assertionMatchesFrameNode = assertion.matchAssertionNode(assertionNode);
+
+      if (assertionMatchesFrameNode) {
+        return true;
+      }
+    });
+
+    this.assertions.push(assertion);
   }
 
   addReference(reference) {
@@ -341,20 +360,22 @@ export default class TemporaryContext {
     const terms = [],
           frames = [],
           tokens = null,
-          reference = null,
           statements = [],
+          assertions = [],
+          reference = null,
           substitution = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, reference, statements, substitution);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, reference, substitution);
 
     return temporaryContext;
   }
 
   static fromTermsAndFrames(terms, frames, context) {
     const tokens = null,
-          reference = null,
           statements = [],
+          assertions = [],
+          reference = null,
           substitution = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, reference, statements, substitution);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, reference, substitution);
 
     return temporaryContext;
   }
@@ -362,10 +383,11 @@ export default class TemporaryContext {
   static fromContextAndTokens(context, tokens) {
     const terms = [],
           frames = [],
-          reference = null,
           statements = [],
+          assertions = [],
+          reference = null,
           substitution = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, reference, statements, substitution);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, reference, substitution);
 
     return temporaryContext;
   }

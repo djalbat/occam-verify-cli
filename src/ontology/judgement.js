@@ -151,7 +151,7 @@ export default define(class Judgement {
     const judgementNode = statementNode.getJudgementNode();
 
     if (judgementNode !== null) {
-      const { Frame, Declaration} = ontology,
+      const { Frame, Declaration } = ontology,
             node = judgementNode, ///
             string = context.nodeAsString(node),
             frame = Frame.fromJudgementNode(judgementNode, context),
