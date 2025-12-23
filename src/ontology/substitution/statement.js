@@ -102,8 +102,7 @@ export default define(class StatementSubstitution extends Substitution {
   }
 
   unifySubstitution(substitution, substitutions, context) {
-    const frame = context.getFrame(),
-          generalSubstitution = this.substitution,  ///
+    const generalSubstitution = this.substitution,  ///
           specificSubstitution = substitution,  ///
           generalSubstitutionString = generalSubstitution.getString(),
           specificSubstitutionString = specificSubstitution.getString();
@@ -118,15 +117,29 @@ export default define(class StatementSubstitution extends Substitution {
 
     substitutionContext = substitution.getContext();
 
-    const specificContext = substitutionContext;  ///
+    const term = context.getTerm(),
+          frame = context.getFrame(),
+          specificContext = substitutionContext;  ///
 
-    specificContext.addFrame(frame);
+    if (term !== null) {
+      specificContext.addTerm(term);
+    }
+
+    if (frame !== null) {
+      specificContext.addFrame(frame);
+    }
 
     substitutions.snapshot();
 
     const substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
 
-    specificContext.removeFrame(frame);
+    if (term !== null) {
+      specificContext.removeTerm(term);
+    }
+
+    if (frame !== null) {
+      specificContext.removeFrame(frame);
+    }
 
     substitutionUnifies ?
       substitutions.continue() :

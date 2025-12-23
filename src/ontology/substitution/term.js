@@ -6,7 +6,7 @@ import TermSubstitutionPartialContext from "../../context/partial/substitution/t
 import ontology, { define } from "../../ontology";
 import { nodeQuery } from "../../utilities/query";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
-import { variableIdentifierFromVariableNode } from "../../utilities/variable";
+import { termVariableIdentifierFromTermNode } from "../../utilities/variable";
 
 const termVariableNodeQuery = nodeQuery("/term/variable!");
 
@@ -89,15 +89,15 @@ export default define(class TermSubstitution extends Substitution {
       if (this.variable === null) {
         context.debug(`The specific term is not simple.`);
       } else {
-        const variableIdentigier = this.variable.getIdentifier(),
-              variablePresent = context.isVariablePresentByVariableIdentifier(variableIdentigier);
+        const variableIdentifier = this.variable.getIdentifier(),
+              variablePresent = context.isVariablePresentByVariableIdentifier(variableIdentifier);
 
         if (variablePresent) {
-          const variable = this.term.getVariable(),
-                variableIdentigier = variable.getIdentifier(),
-                variablePresent = context.isVariablePresentByVariableIdentifier(variableIdentigier);
+          const termNode = this.term.getNode(),
+                termVariableIdentifier = termVariableIdentifierFromTermNode(termNode),
+                termVariablePresent = context.isVariablePresentByVariableIdentifier(termVariableIdentifier);
 
-          if (variablePresent) {
+          if (termVariablePresent) {
             verifies = true;
           } else {
             const variableString = variable.getString();

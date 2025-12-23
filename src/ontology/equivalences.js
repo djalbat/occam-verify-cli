@@ -3,6 +3,7 @@
 import { arrayUtilities } from "necessary";
 
 import { define } from "../ontology";
+import { variablesFromTerm } from "./term";
 
 const { push, separate } = arrayUtilities;
 
@@ -192,20 +193,19 @@ export default define(class Equivalences {
   }
 });
 
+
 function definedVariablesFromGroundedTerms(groundedTerms, definedVariables, context) {
-  const terms = groundedTerms,  ///
-        variables = definedVariables; ///
+  groundedTerms.forEach((groundedTerm) => {
+    const term = groundedTerm,  ///
+          variables = variablesFromTerm(term, context);
 
-  terms.forEach((term) => {
-    const termVariables = term.getVariables(context);
+    variables.forEach((variable) => {
+      const definedVariablesIncludesTermVariable = definedVariables.includes(variable);
 
-    termVariables.forEach((termVariable) => {
-      const variablesIncludesTermVariable = variables.includes(termVariable);
+      if (!definedVariablesIncludesTermVariable) {
+        const definedVariable = variable;  ///
 
-      if (!variablesIncludesTermVariable) {
-        const variable = termVariable;  ///
-
-        variables.push(variable);
+        definedVariables.push(definedVariable);
       }
     });
   });

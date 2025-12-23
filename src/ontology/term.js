@@ -9,6 +9,7 @@ import { define } from "../ontology";
 import { termFromTermNode } from "../utilities/node";
 import { termNodeFromTermString } from "../context/partial/term";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
+import { variableIdentifierFromVariableNode } from "../utilities/variable";
 
 const { filter, compress } = arrayUtilities;
 
@@ -35,27 +36,6 @@ export default define(class Term {
     this.type = type;
   }
 
-  getVariables(context) {
-    const termNode = this.node,
-          variableNodes = termNode.getVariableNodes(),
-          variables = variableNodes.map((variableNode) => {
-            const { Variable } = ontology,
-                  variable = Variable.fromVariableNode(variableNode, context);
-
-            return variable;
-          });
-
-    compress(variables, (variableA, variableB) => {
-      const variableAEqualToVariableB = variableA.isEqualTo(variableB);
-
-      if (variableAEqualToVariableB) {
-        return true;
-      }
-    });
-
-    return variables;
-  }
-
   matchTermNode(termNode) { return this.node.match(termNode); }
 
   isSimple() { return this.node.isSimple();}
@@ -70,7 +50,8 @@ export default define(class Term {
   }
 
   isGrounded(definedVariables, context) {
-    const variables = this.getVariables(context);
+    const term  = this, ///
+          variables = variablesFromTerm(term, context);
 
     filter(variables, (variable) => {
       const definedVariablesIncludesVariable = definedVariables.includes(variable);
@@ -88,7 +69,8 @@ export default define(class Term {
   }
 
   isInitiallyGrounded(context) {
-    const variables = this.getVariables(context),
+    const term  = this, ///
+          variables = variablesFromTerm(term, context),
           variablesLength = variables.length,
           initiallyGrounded = (variablesLength === 0);
 
@@ -259,4 +241,25 @@ export default define(class Term {
     return term;
   }
 });
+
+export function variablesFromTerm(term, context) {
+  const termNode = term.getNode(),
+        variableNodes = termNode.getVariableNodes(),
+        variables = variableNodes.map((variableNode) => {
+          const variableIdentifier = variableIdentifierFromVariableNode(variableNode),
+                variable = context.findVariableByVariableIdentifier(variableIdentifier);
+
+          return variable;
+        });
+
+  compress(variables, (variableA, variableB) => {
+    const variableAEqualToVariableB = variableA.isEqualTo(variableB);
+
+    if (variableAEqualToVariableB) {
+      return true;
+    }
+  });
+
+  return variables;
+}
 

@@ -76,6 +76,14 @@ export default class TemporaryContext {
     this.frames.push(frame);
   }
 
+  removeTerm(term) {
+    const index = this.terms.indexOf(term),
+          start = index,  ///
+          deleteCount = 1;
+
+    this.terms.splice(start, deleteCount);
+  }
+
   removeFrame(frame) {
     const index = this.frames.indexOf(frame),
           start = index,  ///
@@ -171,10 +179,12 @@ export default class TemporaryContext {
   findReferenceByMetavariableName(metavariableName) {
     let reference = null;
 
-    const referenceMatchesMetavariableName = this.reference.matchMetavariableName(metavariableName);
+    if (this.reference !== null) {
+      const referenceMatchesMetavariableName = this.reference.matchMetavariableName(metavariableName);
 
-    if (referenceMatchesMetavariableName) {
-      reference = this.reference;
+      if (referenceMatchesMetavariableName) {
+        reference = this.reference;
+      }
     }
 
     return reference;
@@ -183,13 +193,29 @@ export default class TemporaryContext {
   findSubstitutionBySubstitutionNode(substitutionNode) {
     let substitution = null;
 
-    const substitutionMatchesSubstitutionNode = this.substitution.matchSubstitutionNode(substitutionNode);
+    if (this.substitution !== null) {
+      const substitutionMatchesSubstitutionNode = this.substitution.matchSubstitutionNode(substitutionNode);
 
-    if (substitutionMatchesSubstitutionNode) {
-      substitution = this.substitution;
+      if (substitutionMatchesSubstitutionNode) {
+        substitution = this.substitution;
+      }
     }
 
     return substitution;
+  }
+
+  getTerm() {
+    let term = null;
+
+    const termsLengtrh = this.terms.length;
+
+    if (termsLengtrh === 1) {
+      const firstTerm = first(this.terms);
+
+      term = firstTerm; ///
+    }
+
+    return term;
   }
 
   getFrame() {
