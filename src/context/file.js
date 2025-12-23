@@ -2,8 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-import Equivalences from "../equivalences";
-import Substitutions from "../substitutions";
+import ontology from "../ontology";
 import topLevelVerifier from "../verifier/topLevel";
 
 import { baseType } from "../ontology/type";
@@ -92,7 +91,8 @@ export default class FileContext {
   }
 
   getEquivalences() {
-    const equivalences = Equivalences.fromNothing();
+    const { Equivalences } = ontology,
+          equivalences = Equivalences.fromNothing();
 
     return equivalences;
   }
@@ -736,7 +736,8 @@ export default class FileContext {
   isLabelPresentByReference(reference) {
     const labels = this.getLabels(),
           labelPresent = labels.some((label) => {
-            const context = this, ///
+            const { Substitutions } = ontology,
+                  context = this, ///
                   substitutions = Substitutions.fromNothing(),
                   labelUnifies = reference.unifyLabel(label, substitutions, context);
 

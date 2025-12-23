@@ -2,7 +2,6 @@
 
 import ontology from "../../ontology";
 import Assertion from "../assertion";
-import Substitutions from "../../substitutions";
 
 import { define } from "../../ontology";
 
@@ -97,6 +96,8 @@ export default define(class SatisfiesAssertion extends Assertion {
 
     if (satisfiable) {
       let substitutions;
+
+      const { Substitutions } = ontology;
 
       substitutions = Substitutions.fromNothing();
 

@@ -4,7 +4,6 @@ import { arrayUtilities } from "necessary";
 
 import ontology from "../ontology";
 import LocalContext from "../context/local";
-import Substitutions from "../substitutions";
 
 import { labelsFromJSON,
          deductionFromJSON,
@@ -175,7 +174,8 @@ export default class TopLevelAssertion {
     if (this.proof === null) {
       proofVerifies = true;
     } else {
-      const substitutions = Substitutions.fromNothing();
+      const { Substitutions } = ontology,
+            substitutions = Substitutions.fromNothing();
 
       proofVerifies = this.proof.verify(substitutions, this.deduction, context);
     }

@@ -1,7 +1,7 @@
 "use strict";
 
+import ontology from "../../ontology";
 import Substitution from "../substitution";
-import Substitutions from "../../substitutions";
 import StatementSubstitutionPartialContext from "../../context/partial/substitution/statement";
 
 import { define } from "../../ontology";
@@ -79,7 +79,8 @@ export default define(class StatementSubstitution extends Substitution {
   unifyStatement(statement, context) {
     let substitution = null;
 
-    const substitutions = Substitutions.fromNothing(),
+    const { Substitutions } = ontology,
+          substitutions = Substitutions.fromNothing(),
           generalContext = context; ///
 
     context = this.getContext();

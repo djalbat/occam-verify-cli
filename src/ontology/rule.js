@@ -4,7 +4,6 @@ import { arrayUtilities } from "necessary";
 
 import ontology from "../ontology";
 import LocalContext from "../context/local";
-import Substitutions from "../substitutions";
 
 import { define } from "../ontology";
 import { labelsStringFromLabels } from "./topLevelAssertion";
@@ -149,7 +148,8 @@ export default define(class Rule {
     if (this.proof === null) {
       proofVerifies = true;
     } else {
-      const substitutions = Substitutions.fromNothing();
+      const { Substitutions } = ontology,
+            substitutions = Substitutions.fromNothing();
 
       proofVerifies = this.proof.verify(substitutions, this.conclusion, context);
     }
@@ -172,7 +172,8 @@ export default define(class Rule {
   unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, context) {
     let statementAndStepsOrSubproofsUnify = false;
 
-    const substitutions = Substitutions.fromNothing(),
+    const { Substitutions } = ontology,
+          substitutions = Substitutions.fromNothing(),
           statementUnifiesWithConclusion = this.unifyStatementWithConclusion(statement, substitutions, context);
 
     if (statementUnifiesWithConclusion) {

@@ -2,7 +2,6 @@
 
 import ontology from "../ontology";
 import LocalContext from "../context/local";
-import Substitutions from "../substitutions";
 
 import { proofFromProofNode, deductionFromDeductionNode, suppositionsFromSuppositionNodes } from "./topLevelAssertion";
 import { labelFromJSON,
@@ -169,7 +168,8 @@ export default class TopLevelMetaAssertion {
   }
 
   static fromNode(Class, node, context) {
-    const topLevelAssertionNode = node, ///
+    const { Substitutions } = ontology,
+          topLevelAssertionNode = node, ///
           proofNode = topLevelAssertionNode.getProofNode(),
           labelNode = topLevelAssertionNode.getLabelNode(),
           deductionNode = topLevelAssertionNode.getDeductionNode(),

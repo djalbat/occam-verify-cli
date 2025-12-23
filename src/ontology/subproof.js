@@ -2,7 +2,6 @@
 
 import ontology from "../ontology";
 import LocalContext from "../context/local";
-import Substitutions from "../substitutions";
 
 import { define } from "../ontology";
 import { subproofStringFromSubproofNode } from "../utilities/subproof";
@@ -110,7 +109,8 @@ export default define(class Subproof {
       const axiomSatisfiable = axiom.isSatisfiable();
 
       if (axiomSatisfiable) {
-        const subproof = this,  ///
+        const { Substitutions } = ontology,
+              subproof = this,  ///
               substitutions = Substitutions.fromNothing(),
               statementUnifies = axiom.unifySubproof(subproof, substitutions, context);
 

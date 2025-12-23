@@ -109,7 +109,8 @@ function unifyAsSatisfiesAssertion(statement, reference, satisfiesAssertion, sub
           const satisfiable = axiom.isSatisfiable();
 
           if (satisfiable) {
-            const substitutions = Substitutions.fromNothing(),
+            const { Substitutions } = ontology,
+                  substitutions = Substitutions.fromNothing(),
                   axiomLemmaTheoremOrConjectureUnifies = axiom.unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, substitutions, context);
 
             if (axiomLemmaTheoremOrConjectureUnifies) {
@@ -140,7 +141,8 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, satisfiesA
   let unifiesWithAxiomLemmaTheoremOrConjecture = false;
 
   if (reference !== null) {
-    const axiomLemmaTheoremOrConjecture = context.findAxiomLemmaTheoremOrConjectureByReference(reference),
+    const { Substitutions } = ontology,
+          axiomLemmaTheoremOrConjecture = context.findAxiomLemmaTheoremOrConjectureByReference(reference),
           generalSubstitutions = substitutions; ///
 
     if (axiomLemmaTheoremOrConjecture !== null) {
@@ -158,7 +160,6 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, satisfiesA
       if (statementAndStepsUnify) {
         const { StatementSubstitution } = ontology,
               metavariable = reference.getMetavariable(),
-              specificContext = context,  ///
               statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
               substitution = statementSubstitution;  ///
 

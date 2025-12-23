@@ -2,11 +2,12 @@
 
 import { arrayUtilities } from "necessary";
 
-import { EMPTY_STRING } from "./constants";
+import { define } from "../ontology";
+import { EMPTY_STRING } from "../constants";
 
 const { find, first, clear, prune, filter, compress, correlate } = arrayUtilities;
 
-export default class Substitutions {
+export default define(class Substitutions {
   constructor(array, savedArray) {
     this.array = array;
     this.savedArray = savedArray;
@@ -357,7 +358,7 @@ export default class Substitutions {
 
     return substitutions;
   }
-}
+});
 
 function leftDifference(arrayA, arrayB) {
   filter(arrayA, (elementA) => {

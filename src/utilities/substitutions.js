@@ -2,19 +2,27 @@
 
 import ontology from "../ontology";
 
+import { frameMetavariableNameFromFrameNode } from "../utilities/frame";
+import { termVariableIdentifierFromTermNode } from "../utilities/variable";
+
 export function termFromTermAndSubstitutions(term, substitutions, context) {
   if (term !== null) {
-    const { Variable } = ontology,
-          termNode = term.getNode(),
-          variable = Variable.fromTermNode(termNode, context);
+    const termNode = term.getNode(),
+          termSimple = term.isSimple();
 
     term = null;  ///
 
-    if (variable !== null) {
-      const substitution = substitutions.findSubstitutionByVariable(variable);
+    if (termSimple) {
+      const termVariableIdentifier = termVariableIdentifierFromTermNode(termNode),
+            variableIdentifier = termVariableIdentifier,  ///
+            variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
-      if (substitution !== null) {
-        term = substitution.getTerm();
+      if (variable !== null) {
+        const substitution = substitutions.findSubstitutionByVariable(variable);
+
+        if (substitution !== null) {
+          term = substitution.getTerm();
+        }
       }
     }
   }
@@ -24,19 +32,22 @@ export function termFromTermAndSubstitutions(term, substitutions, context) {
 
 export function frameFromFrameAndSubstitutions(frame, substitutions, context) {
   if (frame !== null) {
-    const { Metavariable } = ontology,
-          frameNode = frame.getNode(),
-          metavariable = Metavariable.fromFrameNode(frameNode, context);
+    const frameNode = frame.getNode(),
+          frameSimple = frame.isSimple();
 
-    frame = null; ///
+    frame = null;  ///
 
-    if (metavariable !== null) {
-      let substitution = null;
+    if (frameSimple) {
+      const frameMetavariableName = frameMetavariableNameFromFrameNode(frameNode),
+            metavariableName = frameMetavariableName,
+            metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
-      substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution);
+      if (metavariable !== null) {
+        const substitution = substitutions.findSubstitutionByMetavariable(metavariable);
 
-      if (substitution !== null) {
-        frame = substitution.getFrame();
+        if (substitution !== null) {
+          frame = substitution.getFrame();
+        }
       }
     }
   }
@@ -53,13 +64,7 @@ export function statementFromStatementAndSubstitutions(statement, substitutions,
     statement = null; ///
 
     if (metavariable !== null) {
-      let substitution;
-
-      const { TermSubstitution, FrameSubstitution } = ontology;
-
-      substitution = TermSubstitution.fromStatement(statement, context) || FrameSubstitution.fromStatement(statement, context);
-
-      substitution = substitutions.findSubstitutionByMetavariableAndSubstitution(metavariable, substitution); ///
+      const substitution = context.getSubstitution();
 
       if (substitution !== null) {
         statement = substitution.getStatement();

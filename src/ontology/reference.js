@@ -1,7 +1,6 @@
 "use strict";
 
 import ontology from "../ontology";
-import Substitutions from "../substitutions";
 
 import { define } from "../ontology";
 import { referenceMetaType } from ".//metaType";
@@ -115,7 +114,8 @@ export default define(class Reference {
 
     context.trace(`Unifying the '${metavariableString}' metavariable with the '${referenceString}' reference...`);
 
-    const substitutions = Substitutions.fromNothing(),
+    const { Substitutions } = ontology,
+          substitutions = Substitutions.fromNothing(),
           generalContext = context, ///
           specificContext = context,  ///
           generalMetavariable = this.metavariable,  ///
@@ -140,7 +140,8 @@ export default define(class Reference {
 
     context.trace(`Unifying the '${metaLemmaMetatheoremString}' meta-lemma or metatheorem with the '${referenceString}' reference...`);
 
-    const label = metaLemmaMetatheorem.getLabel(),
+    const { Substitutions } = ontology,
+          label = metaLemmaMetatheorem.getLabel(),
           substitutions = Substitutions.fromNothing(),
           labelUnifies = this.unifyLabel(label, substitutions, context);
 

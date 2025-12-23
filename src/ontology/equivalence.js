@@ -2,11 +2,12 @@
 
 import { arrayUtilities } from "necessary";
 
-import { stripBracketsFromTermNode } from "./utilities/brackets";
+import { define } from "../ontology";
+import { stripBracketsFromTermNode } from "../utilities/brackets";
 
 const { compress } = arrayUtilities;
 
-export default class Equivalence {
+export default define(class Equivalence {
   constructor(terms) {
     this.terms = terms;
   }
@@ -265,4 +266,4 @@ export default class Equivalence {
 
     return equivalence;
   }
-}
+});

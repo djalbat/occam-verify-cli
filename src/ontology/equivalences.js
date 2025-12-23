@@ -2,9 +2,11 @@
 
 import { arrayUtilities } from "necessary";
 
+import { define } from "../ontology";
+
 const { push, separate } = arrayUtilities;
 
-export default class Equivalences {
+export default define(class Equivalences {
   constructor(array) {
     this.array = array;
   }
@@ -188,7 +190,7 @@ export default class Equivalences {
 
     return equivalences;
   }
-}
+});
 
 function definedVariablesFromGroundedTerms(groundedTerms, definedVariables, context) {
   const terms = groundedTerms,  ///

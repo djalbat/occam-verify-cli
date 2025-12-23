@@ -2,8 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-import Equivalence from "../equivalence";
-import Equivalences from "../equivalences";
+import ontology from "../ontology";
 
 const { last } = arrayUtilities;
 
@@ -125,7 +124,8 @@ class LocalContext {
     const equalityReflexive = equality.isReflexive();
 
     if (!equalityReflexive) {
-      const equivalence = Equivalence.fromEquality(equality);
+      const { Equivalence } = ontology,
+            equivalence = Equivalence.fromEquality(equality);
 
       this.equivalences = this.equivalences.mergedWithEquivalence(equivalence, context);
     }
@@ -357,7 +357,8 @@ class LocalContext {
   error(message, node = null) { this.context.error(message, node); }
 
   static fromNothing(context) {
-    const variables = [],
+    const { Equivalences } = ontology,
+          variables = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),
           stepsOrSubproofs = [],

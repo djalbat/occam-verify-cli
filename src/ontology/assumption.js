@@ -1,7 +1,6 @@
 "use strict";
 
 import ontology from "../ontology";
-import Substitutions from "../substitutions";
 
 import { define } from "../ontology";
 import { unifyStatementIntrinsically } from "../utilities/unification";
@@ -289,7 +288,8 @@ export default define(class Assumption {
 
     context = metaLemmaMetatheorem.getContext();  ///
 
-    const specificContext = context,  ///
+    const { Substitutions } = ontology,
+          specificContext = context,  ///
           labelSubstitutions = Substitutions.fromNothing(),
           label = metaLemmaMetatheorem.getLabel(),
           substitutions = labelSubstitutions, ///

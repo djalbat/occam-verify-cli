@@ -2,7 +2,6 @@
 
 import ontology from "../ontology";
 import unifyMixins from "../mixins/step/unify";
-import Substitutions from "../substitutions";
 import TemporaryContext from "../context/temporary";
 import equationalUnifier from "../unifier/equantional";
 
@@ -182,7 +181,8 @@ export default define(class Step {
           axiom = context.findAxiomByReference(reference);
 
     if (axiom !== null) {
-      const step = this,  ///
+      const { Substitutions } = ontology,
+            step = this,  ///
             substitutions = Substitutions.fromNothing(),
             stepUnifies = axiom.unifyStep(step, substitutions, context);
 

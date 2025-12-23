@@ -35,14 +35,6 @@ export default define(class Term {
     this.type = type;
   }
 
-  getVariable(context) {
-    const { Variable } = ontology,
-          termNode = this.node, ///
-          variable = Variable.fromTermNode(termNode, context);
-
-    return variable;
-  }
-
   getVariables(context) {
     const termNode = this.node,
           variableNodes = termNode.getVariableNodes(),
