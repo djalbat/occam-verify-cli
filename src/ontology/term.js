@@ -58,6 +58,8 @@ export default define(class Term {
 
   matchTermNode(termNode) { return this.node.match(termNode); }
 
+  isSimple() { return this.node.isSimple();}
+
   isProvisional() { return this.type.isProvisional(); }
 
   isEqualTo(term) {
@@ -65,14 +67,6 @@ export default define(class Term {
           equalTo = (termString === this.string);
 
     return equalTo;
-  }
-
-  isSimple() {
-    const termNode = this.node,
-          singularVariableNode = termNode.getSingularVariableNode(),
-          simple = (singularVariableNode !== null);
-
-    return simple;
   }
 
   isGrounded(definedVariables, context) {

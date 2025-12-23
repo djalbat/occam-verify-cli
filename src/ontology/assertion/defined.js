@@ -148,17 +148,13 @@ export default define(class DefinedAssertion extends Assertion {
     return verifiesWhenDerived;
   }
 
-  unifyIndependently(substitutions, context) {
+  unifyIndependently(substitutions, generalContext, specificContext) {
     let unifiesIndependently;
 
-    const definedAssertionString = this.getString(); ///
+    const context = generalContext, ///
+          definedAssertionString = this.getString(); ///
 
     context.trace(`Unifying the '${definedAssertionString}' defined assertion independently...`);
-
-    const tokens = this.getTokens(),
-          temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
-
-    context = temporaryContext; ///
 
     const term = termFromTermAndSubstitutions(this.term, substitutions, context),
           frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),

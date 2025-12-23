@@ -5,6 +5,18 @@ import NonTerminalNode from "../node/nonTerminal";
 import { STATEMENT_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class AssumptionpNode extends NonTerminalNode {
+  isSimple() {
+    let simple = false;
+
+    const statementNode = this.getStatementNode();
+
+    if (statementNode === null) {
+      simple = true;
+    }
+
+    return simple;
+  }
+
   getStatementNode() {
     const ruleName = STATEMENT_RULE_NAME,
           statementNode = this.getNodeByRuleName(ruleName);

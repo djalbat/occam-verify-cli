@@ -19,6 +19,18 @@ import { TERM_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
 export default class StatementNode extends NonTerminalNode {
+  isSimple() {
+    let simple = false;
+
+    const metavariableNode = this.getMetavariableNode();
+
+    if (metavariableNode !== null) {
+      simple = true;
+    }
+
+    return simple;
+  }
+
   getTermNodes() {
     const ruleName = TERM_RULE_NAME,
           termNodes = this.getDescendantNodesByRuleName(ruleName);

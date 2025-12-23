@@ -6,13 +6,17 @@ import verifyMixins from "../mixins/statement/verify";
 import StatementPartialContext from "../context/partial/statement";
 
 import { define } from "../ontology";
+import { nodeQuery } from "../utilities/query";
 import { unifyStatement } from "../utilities/unification";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { statementFromStatementNode } from "../utilities/node";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
-import { definedAssertionFromStatement, containedAssertionFromStatement, subproofAssertionFromStatement } from "../utilities/context";
 
 const { match, backwardsSome } = arrayUtilities;
+
+const definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
+      subproofAssertionNodeQuery = nodeQuery("/statement/subprootAssertion!"),
+      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
 
 export default define(class Statement {
   constructor(string, node, tokens) {
@@ -32,6 +36,8 @@ export default define(class Statement {
   getTokens() {
     return this.tokens;
   }
+
+  isSimple() { return this.node.isSimple();}
 
   isEqualTo(statement) {
     const statementString = statement.getString(),
@@ -150,14 +156,18 @@ export default define(class Statement {
     let subproofUnifies = false;
 
     const context = specificContext,  ///
-          statement = this, ///
-          subproofAssertion = subproofAssertionFromStatement(statement, context);
+          statementNode = this.node,
+          subproofAssertionNode = subproofAssertionNodeQuery(statementNode),
+          assertionNode = subproofAssertionNode;  ///
 
-    if (subproofAssertion !== null) {
+    if (assertionNode !== null) {
+      const assertion = generalContext.findAssertionByAssertionNode(assertionNode),
+            subproofAssertion = assertion;  ///
+
       const subproofString = subproof.getString(),
             subproofAssertionString = subproofAssertion.getString();
 
-      specificContext.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
+      context.trace(`Unifying the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion...`);
 
       const subproofStatements = subproof.getStatements(),
             subproofAssertionStatements = subproofAssertion.getStatements();
@@ -173,7 +183,7 @@ export default define(class Statement {
       });
 
       if (subproofUnifies) {
-        specificContext.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
+        context.debug(`...unified the '${subproofString}' subproof with the '${subproofAssertionString}' subproof assertion.`);
       }
     }
 
@@ -199,27 +209,26 @@ export default define(class Statement {
     return statementUnifies;
   }
 
-  unifyIndependently(substitutions, context) {
+  unifyIndependently(substitutions, generalContext, specificContext) {
     let unifiesIndependently = false;
 
-    const statement = this, ///
+    const context = specificContext,  ///
           statementString = this.string;  ///
 
     context.trace(`Unifying the '${statementString}' statement independently...`);
 
-    const definedAssertion = definedAssertionFromStatement(statement, context),
-          containedAssertion = containedAssertionFromStatement(statement, context);
+    const statementNode = this.node,
+          definedAssertionNode = definedAssertionNodeQuery(statementNode),
+          containedAssertionNode = containedAssertionNodeQuery(statementNode);
 
-    if (definedAssertion !== null) {
-      const definedAssertionUnifiesIndependently = definedAssertion.unifyIndependently(substitutions, context);
+    if ((definedAssertionNode !== null) || (containedAssertionNode !== null)) {
+      const assertionNode = (definedAssertionNode || containedAssertionNode),
+            assertion = generalContext.findAssertionByAssertionNode(assertionNode),
+            assertionUnifiesIndependently = assertion.unifyIndependently(substitutions, generalContext, specificContext);
 
-      unifiesIndependently = definedAssertionUnifiesIndependently; ///
-    }
-
-    if (containedAssertion !== null) {
-      const containedAssertionUnifiesIndependently = containedAssertion.unifyIndependently(substitutions, context);
-
-      unifiesIndependently = containedAssertionUnifiesIndependently; ///
+      if (assertionUnifiesIndependently) {
+        unifiesIndependently = true;
+      }
     }
 
     if (unifiesIndependently) {

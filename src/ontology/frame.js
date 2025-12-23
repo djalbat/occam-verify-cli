@@ -64,17 +64,7 @@ export default define(class Frame {
     return metavariable;
   }
 
-  isSimple() {
-    let simple = false;
-
-    const assumption = this.getAssumption();
-
-    if (assumption !== null) {
-      simple = assumption.isSimple();
-    }
-
-    return simple;
-  }
+  isSimple() { return this.node.isSimple();}
 
   isEqualTo(frame) {
     const frameString = frame.getString(),

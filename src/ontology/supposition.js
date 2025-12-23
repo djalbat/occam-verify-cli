@@ -112,18 +112,32 @@ export default define(class Supposition {
   }
 
   unifyIndependently(substitutions, context) {
-    let unifiesIndependently;
+    let unifiesIndependently = false;
+
+    const suppositionString = this.string,  ///
+          generalContext = this.context,  ///
+          specificContext = context;  ///
+
+    context.trace(`Unifying the '${suppositionString}' supposition independently...`, this.node);
 
     if (this.statement !== null) {
-      const statementResolvedIndependently = this.statement.unifyIndependently(substitutions, context);
+      const statementUnifiesIndependently = this.statement.unifyIndependently(substitutions, generalContext, specificContext);
 
-      unifiesIndependently = statementResolvedIndependently;  ///
+      if (statementUnifiesIndependently) {
+        unifiesIndependently = true;
+      }
     }
 
     if (this.procedureCall !== null) {
       const procedureCallResolvedIndependently = this.procedureCall.unifyIndependently(substitutions, context);
 
-      unifiesIndependently = procedureCallResolvedIndependently;  ///
+      if (procedureCallResolvedIndependently) {
+        unifiesIndependently = true;
+      }
+    }
+
+    if (unifiesIndependently) {
+      context.debug(`...unified the '${suppositionString}' supposition independenly.`, this.node);
     }
 
     return unifiesIndependently;

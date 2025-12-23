@@ -144,6 +144,18 @@ export default class TemporaryContext {
     return frame;
   }
 
+  findAssertionByAssertionNode(assertionNode) {
+    const assertion = this.assertions.find((assertion) => {
+      const assertionMatchesAssertionNode = assertion.matchAssertionNode(assertionNode);
+
+      if (assertionMatchesAssertionNode) {
+        return true;
+      }
+    }) || null;
+
+    return assertion;
+  }
+
   findStatementByStatementNode(statementNode) {
     const statement = this.statements.find((statement) => {
       const statementMatchesStatementNode = statement.matchStatementNode(statementNode);
@@ -166,6 +178,18 @@ export default class TemporaryContext {
     }
 
     return reference;
+  }
+
+  findSubstitutionBySubstitutionNode(substitutionNode) {
+    let substitution = null;
+
+    const substitutionMatchesSubstitutionNode = this.substitution.matchSubstitutionNode(substitutionNode);
+
+    if (substitutionMatchesSubstitutionNode) {
+      substitution = this.substitution;
+    }
+
+    return substitution;
   }
 
   getFrame() {

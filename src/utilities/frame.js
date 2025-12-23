@@ -2,10 +2,10 @@
 
 import { nodeQuery } from "../utilities/query";
 
-const frameMetavariableNameNodeQuery = nodeQuery("/frame/metavariable!/@name!");
+const frameMetavariableNameNodeQuery = nodeQuery("/frame/assumption!/metavariable!/@name!");
 
-export function frameMetavariableNameFromFrameNode(TermNode) {
-  const frameMetavariableNameTerminalNode = frameMetavariableNameNodeQuery(TermNode),
+export function frameMetavariableNameFromFrameNode(frmaeNode) {
+  const frameMetavariableNameTerminalNode = frameMetavariableNameNodeQuery(frmaeNode),
         frameMetavariableNameTerminalNodeContent = frameMetavariableNameTerminalNode.getContent(),
         frameMetavariableName = frameMetavariableNameTerminalNodeContent; ///
 

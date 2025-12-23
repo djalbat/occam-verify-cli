@@ -66,6 +66,12 @@ export default class Substitution {
     return substitution;
   }
 
+  getReplacementNode() {
+    const replacementNode = null;
+
+    return replacementNode;
+  }
+
   isSimple() {
     const simple = true;
 
@@ -134,21 +140,17 @@ export default class Substitution {
     return substitutionEqualToSubstitution;
   }
 
-  resolve(substitutions, context) {
-    const resolved = true;
-
-    return resolved;
-  }
-
   matchParameter(parameter) {
     const parameterMatches = false;
 
     return parameterMatches;
   }
 
-  getReplacementNode() {
-    const replacementNode = null;
+  matchSubstitutionNode(substitutionNode) { return this.node.match(substitutionNode); }
 
-    return replacementNode;
+  resolve(substitutions, context) {
+    const resolved = true;
+
+    return resolved;
   }
 }

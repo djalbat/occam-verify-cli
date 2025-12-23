@@ -3,7 +3,6 @@
 import { arrayUtilities } from "necessary";
 
 import ontology from "../../ontology";
-import Substitutions from "../../substitutions";
 
 import { equalityFromStatement,
          judgementFromStatement,

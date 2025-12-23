@@ -67,7 +67,7 @@ export default define(class StatementSubstitution extends Substitution {
       if (substitution === null) {
         substitutionEqualToSubstitution = false;
       } else {
-        substitutionEqualToSubstitution = this.substitution.isEqualToSubstitution(substitution);
+        substitutionEqualToSubstitution = this.substitution.isEqualTo(substitution);
       }
     }
 

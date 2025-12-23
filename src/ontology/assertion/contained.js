@@ -2,7 +2,6 @@
 
 import ontology from "../../ontology";
 import Assertion from "../assertion";
-import TemporaryContext from "../../context/temporary";
 
 import { define } from "../../ontology";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
@@ -176,22 +175,18 @@ export default define(class ContainedAssertion extends Assertion {
     return verifiesWhenDerived;
   }
 
-  unifyIndependently(substitutions, context) {
+  unifyIndependently(substitutions, generalContext, specificContext) {
     let unifiesIndependently;
 
-    const containedAssertionString = this.getString(); ///
+    const context = specificContext,  ///
+          containedAssertionString = this.getString(); ///
 
     context.trace(`Unifying the '${containedAssertionString}' contained assertion independently...`);
 
-    const tokens = this.getTokens(),
-          temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
-
-    context = temporaryContext; ///
-
-    const term = termFromTermAndSubstitutions(this.term, substitutions, context),
-          frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),
-          statement = statementFromStatementAndSubstitutions(this.statement, substitutions, context),
-          verifiesWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, context);
+    const term = termFromTermAndSubstitutions(this.term, substitutions, generalContext, specificContext),
+          frame = frameFromFrameAndSubstitutions(this.frame, substitutions, generalContext, specificContext),
+          statement = statementFromStatementAndSubstitutions(this.statement, substitutions, generalContext, specificContext),
+          verifiesWhenDerived = verifyWhenDerived(term, frame, statement, this.negated, generalContext, specificContext);
 
     unifiesIndependently = verifiesWhenDerived; ///
 
@@ -226,8 +221,10 @@ export default define(class ContainedAssertion extends Assertion {
   }
 });
 
-function verifyWhenDerived(term, frame, statement, negated, context) {
+function verifyWhenDerived(term, frame, statement, negated, generalContext, specificContext) {
   let verifiesWhenDerived = false;
+
+  const context = specificContext;  ///
 
   if (statement !== null) {
     if (term !== null) {
