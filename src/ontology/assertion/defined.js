@@ -2,7 +2,6 @@
 
 import ontology from "../../ontology";
 import Assertion from "../assertion";
-import TemporaryContext from "../../context/temporary";
 
 import { define } from "../../ontology";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions } from "../../utilities/substitutions";
@@ -139,7 +138,10 @@ export default define(class DefinedAssertion extends Assertion {
 
     context.trace(`Verifying the '${definedAssertionString}' derived defined assertion...`);
 
-    verifiesWhenDerived = verifyWhenDerived(this.term, this.frame, this.negated, context);
+    const generalContext = null,
+          specificContext = context;  ///
+
+    verifiesWhenDerived = verifyWhenDerived(this.term, this.frame, this.negated, generalContext, specificContext);
 
     if (verifiesWhenDerived) {
       context.debug(`...verified the '${definedAssertionString}' derived defined assertion.`);
@@ -156,9 +158,9 @@ export default define(class DefinedAssertion extends Assertion {
 
     context.trace(`Unifying the '${definedAssertionString}' defined assertion independently...`);
 
-    const term = termFromTermAndSubstitutions(this.term, substitutions, context),
-          frame = frameFromFrameAndSubstitutions(this.frame, substitutions, context),
-          verifiesWhenDerived = verifyWhenDerived(term, frame, this.negated, context);
+    const term = termFromTermAndSubstitutions(this.term, substitutions, generalContext, specificContext),
+          frame = frameFromFrameAndSubstitutions(this.frame, substitutions, generalContext, specificContext),
+          verifiesWhenDerived = verifyWhenDerived(term, frame, this.negated, generalContext, specificContext);
 
     unifiesIndependently = verifiesWhenDerived; ///
 
@@ -192,8 +194,10 @@ export default define(class DefinedAssertion extends Assertion {
   }
 });
 
-function verifyWhenDerived(term, frame, negated, context) {
+function verifyWhenDerived(term, frame, negated, generalContext, specificContext) {
   let verifiesWhenDerived = false;
+
+  const context = specificContext;  ///
 
   if (term !== null) {
     const { Variable } = ontology,

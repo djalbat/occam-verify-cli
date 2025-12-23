@@ -166,7 +166,10 @@ export default define(class ContainedAssertion extends Assertion {
 
     context.trace(`Verifying the '${containedAssertionString}' derived contained assertion...`);
 
-    verifiesWhenDerived = verifyWhenDerived(this.term, this.frame, this.statement, this.negated, context);
+    const generalCotnext = null,
+          specificContext = context; ///
+
+    verifiesWhenDerived = verifyWhenDerived(this.term, this.frame, this.statement, this.negated, generalCotnext, specificContext);
 
     if (verifiesWhenDerived) {
       context.debug(`...verified the '${containedAssertionString}' derived contained assertion.`);
