@@ -1,27 +1,15 @@
 "use strict";
 
 import ontology from "../../ontology";
+import Declaration from "../declaration";
 
 import { define } from "../../ontology";
 
-export default define(class VariableDeclaration {
+export default define(class VariableDeclaration extends Declaration {
   constructor(context, node, string, variable) {
-    this.context = context;
-    this.node = node;
-    this.string = string;
+    super(context, node, string);
+
     this.variable = variable;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getVariable() {
@@ -31,9 +19,11 @@ export default define(class VariableDeclaration {
   verify() {
     let verifies = false;
 
-    const variableDeclarationString = this.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          variableDeclarationString = this.getString(); ///
 
-    this.context.trace(`Verifying the '${variableDeclarationString}' variable declaration...`, this.node);
+    context.trace(`Verifying the '${variableDeclarationString}' variable declaration...`, node);
 
     const variableTypeVerifies = this.verifyVariableType();
 
@@ -41,14 +31,14 @@ export default define(class VariableDeclaration {
       const variableVerifies = this.verifyVariable();
 
       if (variableVerifies) {
-        this.context.addVariable(this.variable);
+        context.addVariable(this.variable);
 
         verifies = true;
       }
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${variableDeclarationString}' variable declaration.`, this.node);
+      context.debug(`...verified the '${variableDeclarationString}' variable declaration.`, node);
     }
 
     return verifies;
@@ -57,21 +47,23 @@ export default define(class VariableDeclaration {
   verifyVariable() {
     let  variableVerifies = false;
 
-    const variableString = this.variable.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          variableString = this.variable.getString();
 
-    this.context.trace(`Verifying the '${variableString}' variable...`, this.node);
+    context.trace(`Verifying the '${variableString}' variable...`, node);
 
     const variableIdentifier = this.variable.getIdentifier(),
-          variablePresent = this.context.isVariablePresentByVariableIdentifier(variableIdentifier);
+          variablePresent = context.isVariablePresentByVariableIdentifier(variableIdentifier);
 
     if (variablePresent) {
-      this.context.debug(`The '${variableName}' variable is already present.`, this.node);
+      context.debug(`The '${variableName}' variable is already present.`, node);
     } else {
       variableVerifies = true;
     }
 
     if ( variableVerifies) {
-      this.context.debug(`...verified the '${variableString}' variable.`, this.node);
+      context.debug(`...verified the '${variableString}' variable.`, node);
     }
 
     return  variableVerifies;
@@ -80,22 +72,25 @@ export default define(class VariableDeclaration {
   verifyVariableType() {
     let variableTypeVerifies = false;
 
+    const node = this.getNode(),
+          context = this.getContext();
+
     let type;
 
     type = this.variable.getType();
 
     const typeString = type.getString();
 
-    this.context.trace(`Verifying the '${typeString}' type...`, this.node);
+    context.trace(`Verifying the '${typeString}' type...`, node);
 
     const nominalTypeName = type.getNominalTypeName();
 
-    type = this.context.findTypeByNominalTypeName(nominalTypeName);
+    type = context.findTypeByNominalTypeName(nominalTypeName);
 
     const typePresent = (type !== null)
 
     if (!typePresent) {
-      this.context.debug(`The '${typeString}' type is not present.`, this.node);
+      context.debug(`The '${typeString}' type is not present.`, node);
     } else {
       const includeSupertypes = false,
             provisional = type.isProvisional(includeSupertypes),
@@ -103,8 +98,8 @@ export default define(class VariableDeclaration {
 
       if (!provisionalMatches) {
         provisional ?
-          this.context.debug(`The '${typeString}' type is present but not provisional.`, this.node) :
-            this.context.debug(`The '${typeString}' type is present but provisional.`, this.node);
+          context.debug(`The '${typeString}' type is present but not provisional.`, node) :
+            context.debug(`The '${typeString}' type is present but provisional.`, node);
       } else {
         this.variable.setType(type);
 
@@ -113,7 +108,7 @@ export default define(class VariableDeclaration {
     }
 
     if (variableTypeVerifies) {
-      this.context.debug(`...verified the '${typeString}' type.`, this.node);
+      context.debug(`...verified the '${typeString}' type.`, node);
     }
 
     return variableTypeVerifies;

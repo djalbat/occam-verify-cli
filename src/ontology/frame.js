@@ -30,21 +30,21 @@ export default define(class Frame {
     return this.tokens;
   }
 
-  getDeclarations() {
+  getAssumptions() {
     return this.assumptions;
   }
 
   getLength() { return this.assumptions.length; }
 
-  getDeclaration() {
+  getAssumption() {
     let assumption = null;
 
     const length = this.getLength();
 
     if (length === 1) {
-      const firstDeclaration = first(this.assumptions);
+      const firstAssumption = first(this.assumptions);
 
-      assumption = firstDeclaration; ///
+      assumption = firstAssumption; ///
     }
 
     return assumption;
@@ -56,7 +56,7 @@ export default define(class Frame {
     const simple = this.isSimple();
 
     if (simple) {
-      const assumption = this.getDeclaration();
+      const assumption = this.getAssumption();
 
       metavariable = assumption.getMetavariable();
     }
@@ -67,7 +67,7 @@ export default define(class Frame {
   isSimple() {
     let simple = false;
 
-    const assumption = this.getDeclaration();
+    const assumption = this.getAssumption();
 
     if (assumption !== null) {
       simple = assumption.isSimple();
@@ -95,9 +95,9 @@ export default define(class Frame {
 
     if (!substitutionMatches) {
       substitutionMatches = this.assumptions.some((assumption) => {
-        const substitutionMatchesDeclaration = assumption.matchSubstitution(substitution, context);
+        const substitutionMatchesAssumption = assumption.matchSubstitution(substitution, context);
 
-        if (substitutionMatchesDeclaration) {
+        if (substitutionMatchesAssumption) {
           return true;
         }
       });
@@ -140,7 +140,7 @@ export default define(class Frame {
 
     context.trace(`Verifying the '${frameString}' frame...`);
 
-    const assumptionsVerify = this.verifyDeclarations(assignments, stated, context);
+    const assumptionsVerify = this.verifyAssumptions(assignments, stated, context);
 
     if (assumptionsVerify) {
       let verifiesWhenStated = false,
@@ -206,7 +206,7 @@ export default define(class Frame {
     return verifiesWhenDerived;
   }
 
-  verifyDeclarations(assignments, stated, context) {
+  verifyAssumptions(assignments, stated, context) {
     let assumptionsVerify = true;  ///
 
     const length = this.getLength();
@@ -215,7 +215,7 @@ export default define(class Frame {
       const sOrNothing = (length > 1) ?
                            S :
                              NOTHING,
-            assumptionsString = assumptionsStringFromDeclarations(this.assumptions);
+            assumptionsString = assumptionsStringFromAssumptions(this.assumptions);
 
       context.trace(`Verifying the '${assumptionsString}' assumption${sOrNothing}...`);
 
@@ -266,7 +266,7 @@ export default define(class Frame {
     const simple = this.isSimple();
 
     if (simple) {
-      const assumption = this.getDeclaration(),
+      const assumption = this.getAssumption(),
             assumptionJSON = assumption.toJSON();
 
       json = assumptionJSON;  ///
@@ -351,9 +351,9 @@ function frameFromFrameNode(frameNode, context) {
 
 function assumptionsFromFrameNode(frameNode, context) {
   const { Assumption } = ontology,
-        assumptionNodes = frameNode.getDeclarationNodes(),
+        assumptionNodes = frameNode.getAssumptionNodes(),
         assumptions = assumptionNodes.map((assumptionNode) => {
-          const assumption = Assumption.fromDeclarationNode(assumptionNode, context);
+          const assumption = Assumption.fromAssumptionNode(assumptionNode, context);
 
           return assumption;
         });
@@ -361,7 +361,7 @@ function assumptionsFromFrameNode(frameNode, context) {
   return assumptions;
 }
 
-function assumptionsStringFromDeclarations(assumptions) {
+function assumptionsStringFromAssumptions(assumptions) {
   const assumptionsString = assumptions.reduce((assumptionsString, assumption) => {
     const assumptionString = assumption.getString();
 

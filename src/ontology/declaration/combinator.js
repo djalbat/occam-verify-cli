@@ -1,29 +1,16 @@
 "use strict";
 
 import ontology from "../../ontology";
+import Declaration from "../declaration";
 
 import { define } from "../../ontology";
 
 import combinatorVerifier from "../../verifier/combinator";
 
-export default define(class CombinatorDeclaration {
+export default define(class CombinatorDeclaration extends Declaration {
   constructor(context, node, string, combinator) {
-    this.context = context;
-    this.node = node;
-    this.string = string;
+    super(context, node, string);
     this.combinator = combinator;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getCombinator() {
@@ -33,20 +20,22 @@ export default define(class CombinatorDeclaration {
   verify() {
     let verifies = false;
 
-    const combinatorDeclarationString = this.string;  ///
+    const node = this.getNode(),
+          context = this.getContext(),
+          combinatorDeclarationString = this.getString();  ///
 
-    this.context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`, this.node);
+    context.trace(`Verifying the '${combinatorDeclarationString}' combinator declaration...`, node);
 
     const combinatorVerifies = this.verifyCombinator();
 
     if (combinatorVerifies) {
-      this.context.addCombinator(this.combinator);
+      context.addCombinator(this.combinator);
 
       verifies = true;
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`, this.node);
+      context.debug(`...verified the '${combinatorDeclarationString}' combinator declaration.`, node);
     }
 
     return verifies;
@@ -55,17 +44,19 @@ export default define(class CombinatorDeclaration {
   verifyCombinator() {
     let statementVerifies;
 
-    const combinatorString = this.combinator.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          combinatorString = this.combinator.getString();
 
-    this.context.trace(`Verifying the '${combinatorString}' combinator...`, this.node);
+    context.trace(`Verifying the '${combinatorString}' combinator...`, node);
 
     const statement = this.combinator.getStatement(),
           statementNode = statement.getNode();
 
-    statementVerifies = combinatorVerifier.verifyStatement(statementNode, this.context);
+    statementVerifies = combinatorVerifier.verifyStatement(statementNode, context);
 
     if (statementVerifies) {
-      this.context.debug(`...verified the '${combinatorString}' combinator.`, this.node);
+      context.debug(`...verified the '${combinatorString}' combinator.`, node);
     }
 
     return statementVerifies;

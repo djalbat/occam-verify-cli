@@ -1,29 +1,17 @@
 "use strict";
 
 import ontology from "../../ontology";
+import Declaration from "../declaration";
 
 import { define } from "../../ontology";
 import { stringFromTypeNameTypePrefixNameAndSuperTypes } from "../../utilities/type";
 
-export default define(class SimpleTypeDeclaration {
+export default define(class SimpleTypeDeclaration extends Declaration {
   constructor(context, node, string, type, prefixed) {
-    this.context = context;
-    this.node = node;
-    this.string = string;
+    super(context, node, string);
+
     this.type = type;
     this.prefixed = prefixed;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getType() {
@@ -37,14 +25,16 @@ export default define(class SimpleTypeDeclaration {
   verify() {
     let verifies = false;
 
-    const simpleTypeDeclarationString = this.string;  ///
+    const node = this.getNode(),
+          context = this.getContext(),
+          simpleTypeDeclarationString = this.getString();  ///
 
-    this.context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`, this.node);
+    context.trace(`Verifying the '${simpleTypeDeclarationString}' simple type declaration...`, node);
 
     if (this.prefixed) {
       const typeString = this.type.getString();
 
-      this.context.trace(`The '${typeString}' type is prefixed.`);
+      context.trace(`The '${typeString}' type is prefixed.`);
     } else {
       const typeVerifies = this.verifyType();
 
@@ -52,7 +42,7 @@ export default define(class SimpleTypeDeclaration {
         const superTypesVerify = this.verifySuperTypes();
 
         if (superTypesVerify) {
-          const typePrefix = this.context.getTypePrefix();
+          const typePrefix = context.getTypePrefix();
 
           if (typePrefix !== null) {
             const typePrefixName = typePrefix.getName(),
@@ -61,7 +51,7 @@ export default define(class SimpleTypeDeclaration {
             this.type.setPrefixName(prefixName);
           }
 
-          this.context.addType(this.type);
+          context.addType(this.type);
 
           verifies = true;
         }
@@ -69,7 +59,7 @@ export default define(class SimpleTypeDeclaration {
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration.`, this.node);
+      context.debug(`...verified the '${simpleTypeDeclarationString}' simple type declaration.`, node);
     }
 
     return verifies;
@@ -78,30 +68,32 @@ export default define(class SimpleTypeDeclaration {
   verifyType() {
     let typeVerifies = false;
 
-    const typeString = this.type.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          typeString = this.type.getString();
 
-    this.context.trace(`Verifying the '${typeString}' simple type...`, this.node);
+    context.trace(`Verifying the '${typeString}' simple type...`, node);
 
     const typeName = this.type.getName(),
           includeRelease = true,
           includeDependencies = false,
-          typePresent = this.context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies);
+          typePresent = context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies);
 
     if (typePresent) {
-      this.context.trace(`The '${typeString}' type is already present.`, this.node);
+      context.trace(`The '${typeString}' type is already present.`, node);
     } else {
       const prefixedTypeName = typeName, ///
-            typePresent = this.context.isTypePresentByPrefixedTypeName(prefixedTypeName);
+            typePresent = context.isTypePresentByPrefixedTypeName(prefixedTypeName);
 
       if (typePresent) {
-        this.context.trace(`The '${typeString}' type is already present.`, this.node);
+        context.trace(`The '${typeString}' type is already present.`, node);
       } else {
         typeVerifies = true;
       }
     }
 
     if (typeVerifies) {
-      this.context.trace(`...verified the '${typeString}' simple type.`, this.node);
+      context.trace(`...verified the '${typeString}' simple type.`, node);
     }
 
     return typeVerifies;
@@ -110,20 +102,22 @@ export default define(class SimpleTypeDeclaration {
   verifySuperType(superType) {
     let superTypeVerifies = false;
 
-    const superTypeString = superType.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          superTypeString = superType.getString();
 
-    this.context.trace(`Verifying the '${superTypeString}' super-type...`, this.node);
+    context.trace(`Verifying the '${superTypeString}' super-type...`, node);
 
     const nominalTypeName = superType.getNominalTypeName(),
           typeName = nominalTypeName, ///
           typeNameMatches = this.type.matchTypeName(typeName);
 
     if (typeNameMatches) {
-      this.context.trace(`The super-type's name matches the ${typeName}' simple type's name.`, this.node);
+      context.trace(`The super-type's name matches the ${typeName}' simple type's name.`, node);
     } else {
       const oldSuperType = superType;
 
-      superType = this.context.findTypeByNominalTypeName(nominalTypeName);
+      superType = context.findTypeByNominalTypeName(nominalTypeName);
 
       const superTypePresent = (superType !== null);
 
@@ -137,7 +131,7 @@ export default define(class SimpleTypeDeclaration {
     }
 
     if (superTypeVerifies) {
-      this.context.debug(`...verified the '${superTypeString}' super-type.`, this.node);
+      context.debug(`...verified the '${superTypeString}' super-type.`, node);
     }
 
     return superTypeVerifies;
@@ -146,16 +140,18 @@ export default define(class SimpleTypeDeclaration {
   verifySuperTypes() {
     let superTypesVerify;
 
-    const typeString = this.type.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          typeString = this.type.getString();
 
-    this.context.trace(`Verifying the '${typeString}' simple type's super-types...`, this.node);
+    context.trace(`Verifying the '${typeString}' simple type's super-types...`, node);
 
     const typeBasic = this.type.isBasic();
 
     if (typeBasic) {
       superTypesVerify = true;
 
-      this.context.trace(`The '${typeString}' simple type is basic.`, this.node)
+      context.trace(`The '${typeString}' simple type is basic.`, node)
     } else  {
       const superTypes = this.type.getSuperTypes();
 
@@ -169,7 +165,7 @@ export default define(class SimpleTypeDeclaration {
     }
 
     if (superTypesVerify) {
-      this.context.debug(`...verified the '${typeString}' simple type's super-types.`, this.node);
+      context.debug(`...verified the '${typeString}' simple type's super-types.`, node);
     }
 
     return superTypesVerify;

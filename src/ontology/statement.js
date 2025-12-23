@@ -333,19 +333,7 @@ export default define(class Statement {
     return statement;
   }
 
-  static fromSuppositionNode(suppositionNode, context) {
-    let statement = null;
-
-    const statementNode = suppositionNode.getStatementNode();
-
-    if (statementNode !== null) {
-      statement = statementFromStatementNode(statementNode, context);
-    }
-
-    return statement;
-  }
-
-  static fromDeclarationNode(assumptionNode, context) {
+  static fromAssumptionNode(assumptionNode, context) {
     let statement = null;
 
     let statementNode;
@@ -355,6 +343,18 @@ export default define(class Statement {
     if (statementNode !== null) {
       statementNode = stripBracketsFromStatementNode(statementNode);  ///
 
+      statement = statementFromStatementNode(statementNode, context);
+    }
+
+    return statement;
+  }
+
+  static fromSuppositionNode(suppositionNode, context) {
+    let statement = null;
+
+    const statementNode = suppositionNode.getStatementNode();
+
+    if (statementNode !== null) {
       statement = statementFromStatementNode(statementNode, context);
     }
 

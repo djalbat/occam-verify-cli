@@ -491,11 +491,11 @@ export default define(class Metavariable {
     return metavariable;
   }
 
-  static fromMetavariableAssumptionNode(metavariableAssumptionNode, context) {
+  static fromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
     const { MetaType } = ontology,
-          metavariableNode = metavariableAssumptionNode.getMetavariableNode(),
-          type = typeFromMetavariableAssumptionNode(metavariableAssumptionNode, context),
-          metaType = MetaType.fromMetavariableAssumptionNode(metavariableAssumptionNode, context),
+          metavariableNode = metavariableDeclarationNode.getMetavariableNode(),
+          type = typeFromMetavariableDeclarationNode(metavariableDeclarationNode, context),
+          metaType = MetaType.fromMetavariableDeclarationNode(metavariableDeclarationNode, context),
           metavariable = metavariableFromMetavariableNode(metavariableNode, context);
 
     metavariable.setType(type);
@@ -520,10 +520,10 @@ function metavariableFromMetavariableNode(metavariableNode, context) {
   return metavariable;
 }
 
-function typeFromMetavariableAssumptionNode(metavariableAssumptionNode, context) {
+function typeFromMetavariableDeclarationNode(metavariableDeclarationNode, context) {
   let type = null;
 
-  const typeNode = metavariableAssumptionNode.getTypeNode();
+  const typeNode = metavariableDeclarationNode.getTypeNode();
 
   if (typeNode !== null) {
     const nominalTypeName = typeNode.getNominalTypeName();

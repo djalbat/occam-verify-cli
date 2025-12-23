@@ -1,29 +1,16 @@
 "use strict";
 
 import ontology from "../../ontology";
-
+import Declaration from "../declaration";
 import constructorVerifier from "../../verifier/constructor";
 
 import { define } from "../../ontology";
 
-export default define(class ConstructorDeclaration {
+export default define(class ConstructorDeclaration extends Declaration {
   constructor(context, node, string, constructor) {
-    this.context = context;
-    this.node = node;
-    this.string = string;
+    super(context, node, string);
+
     this.constructor = constructor;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getConstructor() {
@@ -33,9 +20,11 @@ export default define(class ConstructorDeclaration {
   verify() {
     let verifies;
 
-    const constructorDeclarationString = this.string; ///
+    const node = this.getNode(),
+          context = this.getContext(),
+          constructorDeclarationString = this.getString(); ///
 
-    this.context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`, this.node);
+    context.trace(`Verifying the '${constructorDeclarationString}' constructor declaration...`, node);
 
     const constructorTypeVerifies = this.verifyConstructorType();
 
@@ -43,14 +32,14 @@ export default define(class ConstructorDeclaration {
       const constructorVerifies = this.verifyConstructor();
 
       if (constructorVerifies) {
-        this.context.addConstructor(this.constructor);
+        context.addConstructor(this.constructor);
 
         verifies = true;
       }
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`, this.node);
+      context.debug(`...verified the '${constructorDeclarationString}' constructor declaration.`, node);
     }
 
     return verifies;
@@ -59,17 +48,19 @@ export default define(class ConstructorDeclaration {
   verifyConstructor() {
     let constructorVerifies;
 
-    const constructorString = this.constructor.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          constructorString = this.constructor.getString();
 
-    this.context.trace(`Verifying the '${constructorString}' constructor...`, this.node);
+    context.trace(`Verifying the '${constructorString}' constructor...`, node);
 
     const term = this.constructor.getTerm(),
           termNode = term.getNode();
 
-    constructorVerifies = constructorVerifier.verifyTerm(termNode, this.context);
+    constructorVerifies = constructorVerifier.verifyTerm(termNode, context);
 
     if (constructorVerifies) {
-      this.context.debug(`...verified the '${constructorString}' constructor.`, this.node);
+      context.debug(`...verified the '${constructorString}' constructor.`, node);
     }
 
     return constructorVerifies;
@@ -78,22 +69,25 @@ export default define(class ConstructorDeclaration {
   verifyConstructorType() {
     let constructorTypeVerifies = false;
 
+    const node = this.getNode(),
+          context = this.getContext();
+
     let type;
 
     type = this.constructor.getType();
 
     const typeString = type.getString();
 
-    this.context.trace(`Verifying the '${typeString}' type...`, this.node);
+    context.trace(`Verifying the '${typeString}' type...`, node);
 
     const nominalTypeName = type.getNominalTypeName();
 
-    type = this.context.findTypeByNominalTypeName(nominalTypeName);
+    type = context.findTypeByNominalTypeName(nominalTypeName);
 
     const typePresent = (type !== null)
 
     if (!typePresent) {
-      this.context.debug(`The '${typeString}' type is not present.`, this.node);
+      context.debug(`The '${typeString}' type is not present.`, node);
     } else {
       const includeSupertypes = false,
             provisional = type.isProvisional(includeSupertypes),
@@ -101,8 +95,8 @@ export default define(class ConstructorDeclaration {
 
       if (!provisionalMatches) {
         provisional ?
-          this.context.debug(`The '${typeString}' type is present but not provisional.`, this.node) :
-            this.context.debug(`The '${typeString}' type is present but provisional.`, this.node);
+          context.debug(`The '${typeString}' type is present but not provisional.`, node) :
+            context.debug(`The '${typeString}' type is present but provisional.`, node);
       } else {
         this.constructor.setType(type);
 
@@ -111,7 +105,7 @@ export default define(class ConstructorDeclaration {
     }
 
     if (constructorTypeVerifies) {
-      this.context.debug(`...verified the '${typeString}' type.`, this.node);
+      context.debug(`...verified the '${typeString}' type.`, node);
     }
 
     return constructorTypeVerifies;

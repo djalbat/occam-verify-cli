@@ -1,27 +1,15 @@
 "use strict";
 
 import ontology from "../../ontology";
+import Declaration from "../declaration";
 
 import { define } from "../../ontology";
 
-export default define(class MetavariableDeclaration {
+export default define(class MetavariableDeclaration extends Declaration {
   constructor(context, node, string, metavariable) {
-    this.context = context;
-    this.node = node;
-    this.string = string;
+    super(context, node, string);
+
     this.metavariable = metavariable;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getMetavariable() {
@@ -31,20 +19,22 @@ export default define(class MetavariableDeclaration {
   verify() {
     let verifies;
 
-    const metavariableDeclarationString = this.string; ///
+    const node = this.getNode(),
+          context = this.getContext(),
+          metavariableDeclarationString = this.getString(); ///
 
-    this.context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`, this.node);
+    context.trace(`Verifying the '${metavariableDeclarationString}' metavariable declaration...`, node);
 
     const metavariableVerifies = this.verifyMetavariable(this.metavariable);
 
     if (metavariableVerifies) {
-      this.context.addMetavariable(this.metavariable);
+      context.addMetavariable(this.metavariable);
 
       verifies = true;
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`, this.node);
+      context.debug(`...verified the '${metavariableDeclarationString}' metavariable declaration.`, node);
     }
 
     return verifies;
@@ -53,24 +43,27 @@ export default define(class MetavariableDeclaration {
   verifyType(type) {
     let typeVerifies;
 
+    const node = this.getNode(),
+          context = this.getContext();
+
     if (type === null) {
       typeVerifies = true;
     } else {
       const typeString = type.getString();
 
-      this.context.trace(`Verifying the '${typeString}' type...`, this.node);
+      context.trace(`Verifying the '${typeString}' type...`, node);
 
       const nominalTypeName = type.getNominalTypeName(),
-            typePresent = this.context.isTypePresentByNominalTypeName(nominalTypeName);
+            typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
       if (!typePresent) {
-        this.context.debug(`The '${typeString}' type is not present.`, this.node);
+        context.debug(`The '${typeString}' type is not present.`, node);
       } else {
         typeVerifies = true;
       }
 
       if (typeVerifies) {
-        this.context.debug(`...verified the '${typeString}' type.`, this.node);
+        context.debug(`...verified the '${typeString}' type.`, node);
       }
     }
 
@@ -80,21 +73,23 @@ export default define(class MetavariableDeclaration {
   verifyMetavariable(metavariable) {
     let metavariableVerifies = false;
 
-    const metavariableString = metavariable.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          metavariableString = metavariable.getString();
 
-    this.context.trace(`Verifying the '${metavariableString}' metavariable when declared...`, this.node);
+    context.trace(`Verifying the '${metavariableString}' metavariable when declared...`, node);
 
     const metavariableNode = metavariable.getNode(), ///
           termNode = metavariableNode.getTermNode();
 
     if (termNode !== null) {
-      this.context.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`, this.node);
+      context.debug(`A term was found in the '${metavariableString}' metavariable when a type should have been present.`, node);
     } else {
       const metavariableName = metavariable.getName(),
-            metavariablePresent = this.context.isMetavariablePresentByMetavariableName(metavariableName);
+            metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
 
       if (metavariablePresent) {
-        this.context.debug(`The '${metavariableName}' metavariable is already present.`, this.node);
+        context.debug(`The '${metavariableName}' metavariable is already present.`, node);
       } else {
         const type = metavariable.getType(),
               typeVerifies = this.verifyType(type);
@@ -104,7 +99,7 @@ export default define(class MetavariableDeclaration {
     }
 
     if (metavariableVerifies) {
-      this.context.debug(`...verified the '${metavariableString}' metavariable when declared.`, this.node);
+      context.debug(`...verified the '${metavariableString}' metavariable when declared.`, node);
     }
 
     return metavariableVerifies;

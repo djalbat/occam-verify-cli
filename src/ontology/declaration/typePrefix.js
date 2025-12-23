@@ -1,27 +1,15 @@
 "use strict";
 
 import ontology from "../../ontology";
+import Declaration from "../declaration";
 
 import { define } from "../../ontology";
 
-export default define(class TypePrefixDeclaration {
+export default define(class TypePrefixDeclaration extends Declaration {
   constructor(context, node, string, typePrefix) {
-    this.context = context;
-    this.node = node;
-    this.string = string;
+    super(context, node, string);
+
     this.typePrefix = typePrefix;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getTypePrefix() {
@@ -31,29 +19,31 @@ export default define(class TypePrefixDeclaration {
   verify() {
     let verifies = false;
 
-    const typePrefixDeclarationString = this.string;  ///
+    const node = this.getNode(),
+          context = this.getContext(),
+          typePrefixDeclarationString = this.getString();  ///
 
-    this.context.trace(`Verifying the '${typePrefixDeclarationString}' type prefix declaration...`, this.node);
+    context.trace(`Verifying the '${typePrefixDeclarationString}' type prefix declaration...`, node);
 
     const includeRelease = true,
           includeDependencies = false,
-          types = this.context.getTypes(includeRelease, includeDependencies),
+          types = context.getTypes(includeRelease, includeDependencies),
           typesLength = types.length;
 
     if (typesLength > 0) {
-      this.context.debug(`Cannot verify the '${typePrefixDeclarationString}' type prefix declaration because types have already been declared.`, this.node);
+      context.debug(`Cannot verify the '${typePrefixDeclarationString}' type prefix declaration because types have already been declared.`, node);
     } else {
       const typePrefixVerifies = this.verifyTypePrefix();
 
       if (typePrefixVerifies) {
-        this.context.addTypePrefix(this.typePrefix);
+        context.addTypePrefix(this.typePrefix);
 
         verifies = true;
       }
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${typePrefixDeclarationString}' type prefix declaration.`, this.node);
+      context.debug(`...verified the '${typePrefixDeclarationString}' type prefix declaration.`, node);
     }
 
     return verifies;
@@ -62,27 +52,29 @@ export default define(class TypePrefixDeclaration {
   verifyTypePrefix() {
     let typePrefixVerifies = false;
 
-    const typePrefixString = this.typePrefix.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          typePrefixString = this.typePrefix.getString();
 
-    this.context.trace(`Verifying the '${typePrefixString}' type prefix...`, this.node);
+    context.trace(`Verifying the '${typePrefixString}' type prefix...`, node);
 
-    const typePrefix = this.context.getTypePrefix();
+    const typePrefix = context.getTypePrefix();
 
     if (typePrefix !== null) {
-      this.context.trace(`The package already has a '${typePrefixString}' type prefix.`, this.node);
+      context.trace(`The package already has a '${typePrefixString}' type prefix.`, node);
     } else {
 
       const typePrefixName = this.typePrefix.getName(),
-            typePrefixPresent = this.context.isTypePrefixPresentByTypePrefixName(typePrefixName);
+            typePrefixPresent = context.isTypePrefixPresentByTypePrefixName(typePrefixName);
 
       if (typePrefixPresent) {
-        this.context.trace(`The '${typePrefixString}' type prefix is already present.`, this.node);
+        context.trace(`The '${typePrefixString}' type prefix is already present.`, node);
       } else {
         const nominalTypeName = typePrefixName,  ///
-              typePresent = this.context.isTypePresentByNominalTypeName(nominalTypeName);
+              typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
         if (typePresent) {
-          this.context.trace(`The '${typePrefixString}' type is already present.`, this.node);
+          context.trace(`The '${typePrefixString}' type is already present.`, node);
         } else {
           typePrefixVerifies = true;
         }
@@ -90,7 +82,7 @@ export default define(class TypePrefixDeclaration {
     }
 
     if (typePrefixVerifies) {
-      this.context.debug(`...verified the '${typePrefixString}' type prefix.`, this.node);
+      context.debug(`...verified the '${typePrefixString}' type prefix.`, node);
     }
 
     return typePrefixVerifies;

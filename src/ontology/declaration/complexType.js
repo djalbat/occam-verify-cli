@@ -1,29 +1,17 @@
 "use strict";
 
 import ontology from "../../ontology";
+import Declaration from "../declaration";
 
 import { define } from "../../ontology";
 import { stringFromTypeNameTypePrefixNameAndSuperTypes } from "../../utilities/type";
 
-export default define(class ComplexTypeDeclaration {
+export default define(class ComplexTypeDeclaration extends Declaration {
   constructor(context, node, string, type, prefixed) {
-    this.context = context;
-    this.node = node;
-    this.string = string;
+    super(context, node, string);
+
     this.type = type;
     this.prefixed = prefixed;
-  }
-
-  getContext() {
-    return this.context;
-  }
-
-  getNode() {
-    return this.node;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getType() {
@@ -37,14 +25,16 @@ export default define(class ComplexTypeDeclaration {
   verify() {
     let verifies = false;
 
-    const complexTypeDeclarationString = this.string; ///
+    const node = this.getNode(),
+          context = this.getContext(),
+          complexTypeDeclarationString = this.getString(); ///
 
-    this.context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration...`, this.node);
+    context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration...`, node);
 
     if (this.prefixed) {
       const typeString = this.type.getString();
 
-      this.context.trace(`The '${typeString}' type is prefixed.`);
+      context.trace(`The '${typeString}' type is prefixed.`);
     } else {
       const typeVerifies = this.verifyType();
 
@@ -55,7 +45,7 @@ export default define(class ComplexTypeDeclaration {
           const propertiesVerify = this.verifyProperties();
 
           if (propertiesVerify) {
-            const typePrefix = this.context.getTypePrefix();
+            const typePrefix = context.getTypePrefix();
 
             if (typePrefix !== null) {
               const typePrefixName = typePrefix.getName(),
@@ -64,7 +54,7 @@ export default define(class ComplexTypeDeclaration {
               this.type.setPrefixName(prefixName);
             }
 
-            this.context.addType(this.type);
+            context.addType(this.type);
 
             verifies = true;
           }
@@ -73,7 +63,7 @@ export default define(class ComplexTypeDeclaration {
     }
 
     if (verifies) {
-      this.context.debug(`...verified the '${complexTypeDeclarationString}' complex type declaration.`, this.node);
+      context.debug(`...verified the '${complexTypeDeclarationString}' complex type declaration.`, node);
     }
 
     return verifies;
@@ -82,30 +72,32 @@ export default define(class ComplexTypeDeclaration {
   verifyType() {
     let typeVerifies = false;
 
-    const typeString = this.type.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          typeString = this.type.getString();
 
-    this.context.trace(`Verifying the '${typeString}' complex type...`, this.node);
+    context.trace(`Verifying the '${typeString}' complex type...`, node);
 
     const typeName = this.type.getName(),
           includeRelease = true,
           includeDependencies = false,
-          typePresent = this.context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies);
+          typePresent = context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies);
 
     if (typePresent) {
-      this.context.trace(`The '${typeString}' type is already present.`, this.node);
+      context.trace(`The '${typeString}' type is already present.`, node);
     } else {
       const prefixedTypeName = typeName, ///
-            typePresent = this.context.isTypePresentByPrefixedTypeName(prefixedTypeName);
+            typePresent = context.isTypePresentByPrefixedTypeName(prefixedTypeName);
 
       if (typePresent) {
-        this.context.trace(`The '${typeString}' type is already present.`, this.node);
+        context.trace(`The '${typeString}' type is already present.`, node);
       } else {
         typeVerifies = true;
       }
     }
 
     if (typeVerifies) {
-      this.context.trace(`...verified the '${typeString}' complex type.`, this.node);
+      context.trace(`...verified the '${typeString}' complex type.`, node);
     }
 
     return typeVerifies;
@@ -114,20 +106,22 @@ export default define(class ComplexTypeDeclaration {
   verifySuperType(superType) {
     let superTypeVerifies = false;
 
-    const superTypeString = superType.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          superTypeString = superType.getString();
 
-    this.context.trace(`Verifying the '${superTypeString}' super-type...`, this.node);
+    context.trace(`Verifying the '${superTypeString}' super-type...`, node);
 
     const nominalTypeName = superType.getNominalTypeName(),
           typeName = nominalTypeName, ///
           typeNameMatches = this.type.matchTypeName(typeName);
 
     if (typeNameMatches) {
-      this.context.trace(`The super-type's name matches the ${typeName}' complex type's name.`, this.node);
+      context.trace(`The super-type's name matches the ${typeName}' complex type's name.`, node);
     } else {
       const oldSuperType = superType;
 
-      superType = this.context.findTypeByNominalTypeName(nominalTypeName);
+      superType = context.findTypeByNominalTypeName(nominalTypeName);
 
       const superTypePresent = (superType !== null);
 
@@ -141,7 +135,7 @@ export default define(class ComplexTypeDeclaration {
     }
 
     if (superTypeVerifies) {
-      this.context.debug(`...verified the '${superTypeString}' super-type.`, this.node);
+      context.debug(`...verified the '${superTypeString}' super-type.`, node);
     }
 
     return superTypeVerifies;
@@ -150,16 +144,18 @@ export default define(class ComplexTypeDeclaration {
   verifySuperTypes() {
     let superTypesVerify;
 
-    const typeString = this.type.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          typeString = this.type.getString();
 
-    this.context.trace(`Verifying the '${typeString}' complex type's super-types...`, this.node);
+    context.trace(`Verifying the '${typeString}' complex type's super-types...`, node);
 
     const typeBasic = this.type.isBasic();
 
     if (typeBasic) {
       superTypesVerify = true;
 
-      this.context.trace(`The '${typeString}' complex type is basic.`, this.node)
+      context.trace(`The '${typeString}' complex type is basic.`, node)
     } else  {
       const superTypes = this.type.getSuperTypes();
 
@@ -173,7 +169,7 @@ export default define(class ComplexTypeDeclaration {
     }
 
     if (superTypesVerify) {
-      this.context.debug(`...verified the '${typeString}' complex type's super-types.`, this.node);
+      context.debug(`...verified the '${typeString}' complex type's super-types.`, node);
     }
 
     return superTypesVerify;
@@ -182,9 +178,11 @@ export default define(class ComplexTypeDeclaration {
   verifyProperty(property, properties) {
     let propertyVerifies = false;
 
-    const propertyString = property.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          propertyString = property.getString();
 
-    this.context.trace(`Verifying the '${propertyString}' property...`, this.node);
+    context.trace(`Verifying the '${propertyString}' property...`, node);
 
     const propertyNameVerifies = this.verifyPropertyName(property, properties);
 
@@ -197,7 +195,7 @@ export default define(class ComplexTypeDeclaration {
     }
 
     if (propertyVerifies) {
-      this.context.debug(`...verified the '${propertyString}' property.`, this.node);
+      context.debug(`...verified the '${propertyString}' property.`, node);
     }
 
     return propertyVerifies;
@@ -206,9 +204,11 @@ export default define(class ComplexTypeDeclaration {
   verifyProperties() {
     let propertiesVerify;
 
-    const typeString = this.type.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          typeString = this.type.getString();
 
-    this.context.trace(`Verifying the '${typeString}' complex type's properties...`, this.node);
+    context.trace(`Verifying the '${typeString}' complex type's properties...`, node);
 
     const includeSuperTypes = false,
           properties = this.type.getProperties(includeSuperTypes);
@@ -222,7 +222,7 @@ export default define(class ComplexTypeDeclaration {
     });
 
     if (propertiesVerify) {
-      this.context.debug(`...verified the '${typeString}' complex type's properties.`, this.node);
+      context.debug(`...verified the '${typeString}' complex type's properties.`, node);
     }
 
     return propertiesVerify;
@@ -231,9 +231,11 @@ export default define(class ComplexTypeDeclaration {
   verifyPropertyName(property, properties) {
     let propertyNameVerifies = false;
 
-    const propertyString = property.getString();
+    const node = this.getNode(),
+          context = this.getContext(),
+          propertyString = property.getString();
 
-    this.context.trace(`Verifying the '${propertyString}' property's name...`, this.node);
+    context.trace(`Verifying the '${propertyString}' property's name...`, node);
 
     const propertyName = property.getName(),
           count = properties.reduce((count, property) => {
@@ -247,7 +249,7 @@ export default define(class ComplexTypeDeclaration {
           }, 0);
 
     if (count > 1) {
-      this.context.debug(`The '${propertyString}' property appears more than once.`, this.node);
+      context.debug(`The '${propertyString}' property appears more than once.`, node);
     } else {
       const superTypes = this.type.getSuperTypes(),
             superType = superTypes.find((superType) => {
@@ -268,14 +270,14 @@ export default define(class ComplexTypeDeclaration {
       if (superType !== null) {
         const superTypeString = superType.getString();
 
-        this.context.debug(`The '${superTypeString}' super-type has the same property.`, this.node);
+        context.debug(`The '${superTypeString}' super-type has the same property.`, node);
       } else {
         propertyNameVerifies = true;
       }
     }
 
     if (propertyNameVerifies) {
-      this.context.debug(`...verified the '${propertyString}' property's name.`, this.node);
+      context.debug(`...verified the '${propertyString}' property's name.`, node);
     }
 
     return propertyNameVerifies;
@@ -284,17 +286,19 @@ export default define(class ComplexTypeDeclaration {
   verifyPropertyNominalTypeName(property) {
     let propertyNominalTypeNameVerifies = false;
 
-    const propertyString = property.getString(),
+    const node = this.getNode(),
+          context = this.getContext(),
+          propertyString = property.getString(),
           nominalTypeName = property.getNominalTypeName();
 
-    this.context.trace(`Verifying the '${propertyString}' property's '${nominalTypeName}' nominal type name...`, this.node);
+    context.trace(`Verifying the '${propertyString}' property's '${nominalTypeName}' nominal type name...`, node);
 
     const nominalTypeNameMatches = this.type.matchNominalTypeName(nominalTypeName);
 
     if (nominalTypeNameMatches) {
       propertyNominalTypeNameVerifies = true;
     } else {
-      const typePresent = this.context.isTypePresentByNominalTypeName(nominalTypeName);
+      const typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
 
       if (typePresent) {
         propertyNominalTypeNameVerifies = true;
@@ -302,7 +306,7 @@ export default define(class ComplexTypeDeclaration {
     }
 
     if (propertyNominalTypeNameVerifies) {
-      this.context.debug(`...verifies the '${propertyString}' property's '${nominalTypeName}' nominal type name.`, this.node);
+      context.debug(`...verifies the '${propertyString}' property's '${nominalTypeName}' nominal type name.`, node);
     }
 
     return propertyNominalTypeNameVerifies;
