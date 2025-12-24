@@ -1,6 +1,6 @@
 "use strict";
 
-import NonTerminalNode from "../node/nonTerminal";
+import NonTerminalNode from "../nonTerminalNode";
 
 import { FRAME_RULE_NAME, ASSUMPTION_RULE_NAME } from "../ruleNames";
 

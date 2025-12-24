@@ -1,8 +1,8 @@
 "use strict";
 
-import NonTerminalNode from "../node/nonTerminal";
+import NonTerminalNode from "../nonTerminalNode";
 
-export default class TopLevelAssertionNode extends NonTerminalNode {
+export default class AxiomLemmaTheoremConjectureNode extends NonTerminalNode {
   getBodyNode() {
     const { bodyRuleName } = this.constructor,
           ruleName = bodyRuleName,  ///

@@ -1,6 +1,6 @@
 "use strict";
 
-import NonTerminalNode from "../node/nonTerminal";
+import NonTerminalNode from "../nonTerminalNode";
 
 export default class ErrorNode extends NonTerminalNode {
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ErrorNode, ruleName, childNodes, opacity, precedence); }

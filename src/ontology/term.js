@@ -9,7 +9,6 @@ import { define } from "../ontology";
 import { termFromTermNode } from "../utilities/node";
 import { termNodeFromTermString } from "../context/partial/term";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
-import { variableIdentifierFromVariableNode } from "../utilities/variable";
 
 const { filter, compress } = arrayUtilities;
 
@@ -246,7 +245,7 @@ export function variablesFromTerm(term, context) {
   const termNode = term.getNode(),
         variableNodes = termNode.getVariableNodes(),
         variables = variableNodes.map((variableNode) => {
-          const variableIdentifier = variableIdentifierFromVariableNode(variableNode),
+          const variableIdentifier = variableNode.getVariableIdentifier(),
                 variable = context.findVariableByVariableIdentifier(variableIdentifier);
 
           return variable;

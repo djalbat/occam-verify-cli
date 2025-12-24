@@ -1,10 +1,10 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import AssertionNode from "../../node/assertion";
 
 import { SIGNATURE_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
 
-export default class SatisfiesAssertionNode extends NonTerminalNode {
+export default class SatisfiesAssertionNode extends AssertionNode {
   getSignatureNode() {
     const ruleName = SIGNATURE_RULE_NAME,
           signatureNode = this.getNodeByRuleName(ruleName);
@@ -19,5 +19,5 @@ export default class SatisfiesAssertionNode extends NonTerminalNode {
     return metavariableNode;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(SatisfiesAssertionNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return AssertionNode.fromRuleNameChildNodesOpacityAndPrecedence(SatisfiesAssertionNode, ruleName, childNodes, opacity, precedence); }
 }

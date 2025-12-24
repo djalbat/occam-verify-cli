@@ -1,6 +1,6 @@
 "use strict";
 
-import NonTerminalNode from "../node/nonTerminal";
+import NonTerminalNode from "../nonTerminalNode";
 
 import { ARGUMENT_RULE_NAME, VARIABLE_RULE_NAME } from "../ruleNames";
 
@@ -48,6 +48,20 @@ export default class TermNode extends NonTerminalNode {
           singularVariableNode = this.getSingularTNodeByRuleName(ruleName);
 
     return singularVariableNode;
+  }
+
+  getSingularVariableIdentifier() {
+    let singularVariableIdentifier = null;
+
+    const singularVariableNode = this.getSingularVariableNode();
+
+    if (singularVariableNode !== null) {
+      const variableIdentifier = singularVariableNode.getVariableIdentifier();
+
+      singularVariableIdentifier = variableIdentifier;  ///
+    }
+
+    return singularVariableIdentifier;
   }
 
   static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TermNode, ruleName, childNodes, opacity, precedence); }

@@ -4,7 +4,7 @@ import { arrayUtilities } from "necessary";
 
 import { NonTerminalNode as NonTerminalNodeBase } from "occam-parsers";
 
-const { first, forwardsFind, backwardsFind } = arrayUtilities;
+const { first } = arrayUtilities;
 
 export default class NonTerminalNode extends NonTerminalNodeBase {
   getNodeByRuleName(...ruleNames) {
@@ -44,39 +44,45 @@ export default class NonTerminalNode extends NonTerminalNodeBase {
   }
 
   getLastNodeByRuleName(...ruleNames) {
-    const childNodes = this.getChildNodes(),
-          lastNode = backwardsFind(childNodes, (childNode) => {
-            const childNodeNonTerminalNode = childNode.isNonTerminalNode();
+    let lastNode = null;
 
-            if (childNodeNonTerminalNode) {
-              const nonTerminalNode = childNode, ///
-                    ruleName = nonTerminalNode.getRuleName(),
-                    ruleNamesIncludesRuleName = ruleNames.includes(ruleName);
+    this.backwardsSomeChildNode((childNode) => {
+      const childNodeNonTerminalNode = childNode.isNonTerminalNode();
 
-              if (ruleNamesIncludesRuleName) {
-                return true;
-              }
-            }
-          }) || null;
+      if (childNodeNonTerminalNode) {
+        const nonTerminalNode = childNode, ///
+              ruleName = nonTerminalNode.getRuleName(),
+              ruleNamesIncludesRuleName = ruleNames.includes(ruleName);
+
+        if (ruleNamesIncludesRuleName) {
+          lastNode = childNode; ///
+
+          return true;
+        }
+      }
+    });
 
     return lastNode;
   }
 
   getFirstNodeByRuleName(...ruleNames) {
-    const childNodes = this.getChildNodes(),
-          firstNode = forwardsFind(childNodes, (childNode) => {
-            const childNodeNonTerminalNode = childNode.isNonTerminalNode();
+    let firstNode = null;
 
-            if (childNodeNonTerminalNode) {
-              const nonTerminalNode = childNode, ///
-                    ruleName = nonTerminalNode.getRuleName(),
-                    ruleNamesIncludesRuleName = ruleNames.includes(ruleName);
+    this.forwardsSomeChildNode((childNode) => {
+      const childNodeNonTerminalNode = childNode.isNonTerminalNode();
 
-              if (ruleNamesIncludesRuleName) {
-                return true;
-              }
-            }
-          }) || null;
+      if (childNodeNonTerminalNode) {
+        const nonTerminalNode = childNode, ///
+              ruleName = nonTerminalNode.getRuleName(),
+              ruleNamesIncludesRuleName = ruleNames.includes(ruleName);
+
+        if (ruleNamesIncludesRuleName) {
+          firstNode = childNode; ///
+
+          return true;
+        }
+      }
+    });
 
     return firstNode;
   }

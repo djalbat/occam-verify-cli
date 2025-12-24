@@ -1,10 +1,10 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import SubstitutionNode from "../../node/substitution";
 
 import { FRAME_RULE_NAME } from "../../ruleNames";
 
-export default class FrameSubstitutionNode extends NonTerminalNode {
+export default class FrameSubstitutionNode extends SubstitutionNode {
   getLastFrameNode() {
     const ruleName = FRAME_RULE_NAME,
           lastFrameNode = this.getLastNodeByRuleName(ruleName);
@@ -45,5 +45,5 @@ export default class FrameSubstitutionNode extends NonTerminalNode {
     return firstMetavariableNode;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(FrameSubstitutionNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return SubstitutionNode.fromRuleNameChildNodesOpacityAndPrecedence(FrameSubstitutionNode, ruleName, childNodes, opacity, precedence); }
 }

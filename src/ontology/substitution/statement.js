@@ -76,31 +76,6 @@ export default define(class StatementSubstitution extends Substitution {
 
   matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
 
-  unifyStatement(statement, context) {
-    let substitution = null;
-
-    const { Substitutions } = ontology,
-          substitutions = Substitutions.fromNothing(),
-          generalContext = context; ///
-
-    context = this.getContext();
-
-    const specificContext = context, ///
-          statementUnifies = statement.unifyStatement(this.statement, substitutions, generalContext, specificContext);
-
-    if (statementUnifies) {
-      const substitutionsNonTrivialLength = substitutions.getNonTrivialLength();
-
-      if (substitutionsNonTrivialLength === 1) {
-        const firstSubstitution = substitutions.getFirstSubstitution();
-
-        substitution = firstSubstitution; ///
-      }
-    }
-
-    return substitution;
-  }
-
   unifySubstitution(substitution, substitutions, context) {
     const generalSubstitution = this.substitution,  ///
           specificSubstitution = substitution,  ///
@@ -117,33 +92,8 @@ export default define(class StatementSubstitution extends Substitution {
 
     substitutionContext = substitution.getContext();
 
-    const term = context.getTerm(),
-          frame = context.getFrame(),
-          specificContext = substitutionContext;  ///
-
-    if (term !== null) {
-      specificContext.addTerm(term);
-    }
-
-    if (frame !== null) {
-      specificContext.addFrame(frame);
-    }
-
-    substitutions.snapshot();
-
-    const substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
-
-    if (term !== null) {
-      specificContext.removeTerm(term);
-    }
-
-    if (frame !== null) {
-      specificContext.removeFrame(frame);
-    }
-
-    substitutionUnifies ?
-      substitutions.continue() :
-        substitutions.rollback(context);
+    const specificContext = substitutionContext,  ///
+          substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
 
     if (substitutionUnifies) {
       context.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
@@ -152,25 +102,60 @@ export default define(class StatementSubstitution extends Substitution {
     return substitutionUnifies;
   }
 
+  unifyStatement(statement, context) {
+    let substitution = null;
+
+    const { Substitutions } = ontology,
+          substitutions = Substitutions.fromNothing(),
+          specificContext = context; ///
+
+    context = this.getContext();
+
+    const generalContext = context, ///
+          statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    if (statementUnifies) {
+      const substitutionsNonTrivialLength = substitutions.getNonTrivialLength();
+
+      if (substitutionsNonTrivialLength === 1) {
+        const firstSubstitution = substitutions.getFirstSubstitution();
+
+        substitution = firstSubstitution; ///
+      }
+    }
+
+    return substitution;
+  }
+
   resolve(substitutions, context) {
     const substitutionString = this.string; ///
 
     context.trace(`Resolving the ${substitutionString} substitution...`);
 
+    substitutions.snapshot();
+
     const metavariable = this.getMetavariable(),
           simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable);
 
     if (simpleSubstitution !== null) {
-      let substitution;
+      let context;
 
-      substitution = simpleSubstitution;  ///
+      context = this.getContext();
 
-      const context = substitution.getContext(),
-            statement = substitution.getStatement();
-
-      substitution = this.unifyStatement(statement, context);
+      const substitution = simpleSubstitution.unifyStatement(this.statement, context);
 
       if (substitution !== null) {
+        context = simpleSubstitution.getContext();
+
+        const terms = context.getTerms(),
+              frames = context.getFrames();
+
+        context = substitution.getContext();
+
+        context.addTerms(terms);
+
+        context.addFrames(frames);
+
         const substitutionUnifies = this.unifySubstitution(substitution, substitutions, context);
 
         if (substitutionUnifies) {
@@ -178,6 +163,10 @@ export default define(class StatementSubstitution extends Substitution {
         }
       }
     }
+
+    this.resolved ?
+      substitutions.continue() :
+        substitutions.rollback(context);
 
     if (this.resolved) {
       context.debug(`...resolved the ${substitutionString} substitution.`);

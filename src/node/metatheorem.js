@@ -1,13 +1,13 @@
 "use strict";
 
-import TopLevelMetaAssertionNode from "../node/topLevelMetaAssertion";
+import MetaLemmaMetaTheoremNode from "../node/metaLemmaMetaTheorem";
 
 import { METATHEOREM_BODY_RULE_NAME, METATHEOREM_HEADER_RULE_NAME } from "../ruleNames";
 
-export default class MetatheoremNode extends TopLevelMetaAssertionNode {
+export default class MetatheoremNode extends MetaLemmaMetaTheoremNode {
   static bodyRuleName = METATHEOREM_BODY_RULE_NAME;
 
   static headerRuleName = METATHEOREM_HEADER_RULE_NAME;
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return TopLevelMetaAssertionNode.fromRuleNameChildNodesOpacityAndPrecedence(MetatheoremNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return MetaLemmaMetaTheoremNode.fromRuleNameChildNodesOpacityAndPrecedence(MetatheoremNode, ruleName, childNodes, opacity, precedence); }
 }

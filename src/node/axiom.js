@@ -1,13 +1,13 @@
 "use strict";
 
-import TopLevelAssertionNode from "../node/topLevelAssertion";
+import AxiomLemmaTheoremConjectureNode from "../node/axiomLemmaTheoremConjecture";
 
 import { AXIOM_BODY_RULE_NAME, AXIOM_HEADER_RULE_NAME } from "../ruleNames";
 
-export default class AxiomNode extends TopLevelAssertionNode {
+export default class AxiomNode extends AxiomLemmaTheoremConjectureNode {
   static bodyRuleName = AXIOM_BODY_RULE_NAME;
 
   static headerRuleName = AXIOM_HEADER_RULE_NAME;
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return TopLevelAssertionNode.fromRuleNameChildNodesOpacityAndPrecedence(AxiomNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return AxiomLemmaTheoremConjectureNode.fromRuleNameChildNodesOpacityAndPrecedence(AxiomNode, ruleName, childNodes, opacity, precedence); }
 }

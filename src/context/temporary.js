@@ -2,7 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-const { first, extract } = arrayUtilities;
+const { extract } = arrayUtilities;
 
 export default class TemporaryContext {
   constructor(context, tokens, terms, frames, statements, assertions, reference, substitution) {
@@ -49,7 +49,9 @@ export default class TemporaryContext {
   }
 
   addTerm(term) {
-    const termNode = term.getNode();
+    const context = this, ///
+          termNode = term.getNode(),
+          termString = term.getString();
 
     extract(this.terms, (term) => {
       const termMatchesTermNode = term.matchTermNode(termNode);
@@ -59,11 +61,15 @@ export default class TemporaryContext {
       }
     });
 
+    context.trace(`ADded the '${termString}' term.`);
+
     this.terms.push(term);
   }
 
   addFrame(frame) {
-    const frameNode = frame.getNode();
+    const context = this, ///
+          frameNode = frame.getNode(),
+          frameString = frame.getString();
 
     extract(this.frames, (frame) => {
       const frameMatchesFrameNode = frame.matchFrameNode(frameNode);
@@ -73,27 +79,27 @@ export default class TemporaryContext {
       }
     });
 
+    context.trace(`Added the '${frameString}' frame.`);
+
     this.frames.push(frame);
   }
 
-  removeTerm(term) {
-    const index = this.terms.indexOf(term),
-          start = index,  ///
-          deleteCount = 1;
-
-    this.terms.splice(start, deleteCount);
+  addTerms(terms) {
+    terms.forEach((term) => {
+      this.addTerm(term);
+    });
   }
 
-  removeFrame(frame) {
-    const index = this.frames.indexOf(frame),
-          start = index,  ///
-          deleteCount = 1;
-
-    this.frames.splice(start, deleteCount);
+  addFrames(frames) {
+    frames.forEach((frame) => {
+      this.addFrame(frame);
+    });
   }
 
   addStatement(statement) {
-    const statementNode = statement.getNode();
+    const context = this, ///
+          statementNode = statement.getNode(),
+          statementString = statement.getString();
 
     extract(this.statements, (statement) => {
       const statementMatchesFrameNode = statement.matchStatementNode(statementNode);
@@ -103,11 +109,15 @@ export default class TemporaryContext {
       }
     });
 
+    context.trace(`Added the '${statementString}' statement.`);
+
     this.statements.push(statement);
   }
 
   addAssertion(assertion) {
-    const assertionNode = assertion.getNode();
+    const context = this, ///
+          assertionNode = assertion.getNode(),
+          assertionString = assertion.getString();
 
     extract(this.assertions, (assertion) => {
       const assertionMatchesFrameNode = assertion.matchAssertionNode(assertionNode);
@@ -117,15 +127,59 @@ export default class TemporaryContext {
       }
     });
 
+    context.trace(`Added the '${assertionString}' assertion.`);
+
     this.assertions.push(assertion);
   }
 
   addReference(reference) {
+    const context = this, ///
+          referenceString = reference.getString();
+
     this.reference = reference;
+
+    context.trace(`Added the '${referenceString}' reference.`);
   }
 
   addSubstitution(substitution) {
+    const context = this, ///
+          substitutionString = substitution.getString();
+
     this.substitution = substitution;
+
+    context.trace(`Added the '${substitutionString}' substitution.`);
+  }
+
+  removeTerm(term) {
+    const context = this, ///
+          termNode = term.getNode(),
+          termString = term.getString();
+
+    term = this.findTermByTermNode(termNode);
+
+    const index = this.terms.indexOf(term),
+          start = index,  ///
+          deleteCount = 1;
+
+    this.terms.splice(start, deleteCount);
+
+    context.trace(`Removed the '${termString}' term.`);
+  }
+
+  removeFrame(frame) {
+    const context = this, ///
+          frameNode = frame.getNode(),
+          frameString = frame.getString();
+
+    frame = this.findFrameByFrameNode(frameNode);
+
+    const index = this.frames.indexOf(frame),
+          start = index,  ///
+          deleteCount = 1;
+
+    this.frames.splice(start, deleteCount);
+
+    context.trace(`Removed the '${frameString}' frame.`);
   }
 
   findTermByTermNode(termNode) {
@@ -204,34 +258,6 @@ export default class TemporaryContext {
     return substitution;
   }
 
-  getTerm() {
-    let term = null;
-
-    const termsLengtrh = this.terms.length;
-
-    if (termsLengtrh === 1) {
-      const firstTerm = first(this.terms);
-
-      term = firstTerm; ///
-    }
-
-    return term;
-  }
-
-  getFrame() {
-    let frame = null;
-
-    const framesLengtrh = this.frames.length;
-
-    if (framesLengtrh === 1) {
-      const firstFrame = first(this.frames);
-
-      frame = firstFrame; ///
-    }
-
-    return frame;
-  }
-
   getVariables(nested = true) { return this.context.getVariables(nested); }
 
   getJudgements() { return this.context.getJudgements(); }
@@ -270,7 +296,7 @@ export default class TemporaryContext {
 
   addTheorem(theorem) { this.context.addTheorem(theorem); }
 
-  addEquality(equality, context) { return this.context.addEquality(equality, context); }
+  addEquality(equality) { return this.context.addEquality(equality); }
 
   addVariable(variable, nested = true) { return this.context.addVariable(variable, nested); }
 

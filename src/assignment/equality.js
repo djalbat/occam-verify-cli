@@ -10,7 +10,7 @@ export default class EqualityAssignment {
   }
 
   assign(context) {
-    const equalityAdded = context.addEquality(this.equality, context),
+    const equalityAdded = context.addEquality(this.equality),
           equalityString = this.equality.getString(),
           equalityAssigned = equalityAdded; ///
 

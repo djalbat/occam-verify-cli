@@ -1,6 +1,6 @@
 "use strict";
 
-import NonTerminalNode from "../node/nonTerminal";
+import NonTerminalNode from "../nonTerminalNode";
 
 import { REFERENCE_RULE_NAME, SATISFIES_ASSERTION_RULE_NAME } from "../ruleNames";
 

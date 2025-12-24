@@ -1,11 +1,11 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import AssertionNode from "../../node/assertion";
 
 import { UNDEFINED } from "../../constants";
 import { FRAME_RULE_NAME, TERM_RULE_NAME } from "../../ruleNames";
 
-export default class DefinedAssertionNode extends NonTerminalNode {
+export default class DefinedAssertionNode extends AssertionNode {
   isNegated() {
     let negated = false;
 
@@ -42,5 +42,5 @@ export default class DefinedAssertionNode extends NonTerminalNode {
     return frameNode;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(DefinedAssertionNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return AssertionNode.fromRuleNameChildNodesOpacityAndPrecedence(DefinedAssertionNode, ruleName, childNodes, opacity, precedence); }
 }

@@ -4,14 +4,10 @@ import { BNFLexer } from "occam-lexers";
 import { BNFParser } from "occam-parsers";
 import { arrayUtilities } from "necessary";
 
-import { nodeQuery } from "../utilities/query";
-
 const { first } = arrayUtilities;
 
 const bnfLexer = BNFLexer.fromNothing(),
       bnfParser = BNFParser.fromNothing();
-
-const childNodeQuery = nodeQuery("/*/*!");
 
 export default class PartialContext {
   constructor(node, tokens) {
@@ -29,25 +25,24 @@ export default class PartialContext {
 
   static fromStringLexerAndParser(Class, string, lexer, parser) {
     const { rule } = Class,
-          ruleMap = parser.getRuleMap(),
-          ruleName = rule.getName();
-
-    ruleMap[ruleName] = rule;
-
-    const startRule = rule, ///
+          startRule = rule, ///
           content = `${string}
 `;
 
     let tokens = lexer.tokenise(content),
         node = parser.parse(tokens, startRule);
 
-    delete  ruleMap[ruleName];
+    node.someChildNode((childNode) => {
+      const childNodeNonTerminalNode = childNode.isNonTerminalNode();
 
-    const childNode = childNodeQuery(node);
+      if (childNodeNonTerminalNode) {
+        node = childNode; ///
 
-    node = childNode; ///
+        tokens = tokensFromTokensAndNode(tokens, node);  ///
 
-    tokens = tokensFromTokensAndNode(tokens, node);  ///
+        return true;
+      }
+    })
 
     const partialContext = new Class(node, tokens);
 

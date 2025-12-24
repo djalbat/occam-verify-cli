@@ -1,10 +1,10 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import DeclarationNode from "../../node/declaration";
 
 import { TYPE_PREFIX_RULE_NAME } from "../../ruleNames";
 
-export default class TypePrefixDeclarationNode extends NonTerminalNode {
+export default class TypePrefixDeclarationNode extends DeclarationNode {
   getTypePrefix() {
     const typePrefixNode = this.getTypePrefixNode(),
           typePrefixName = typePrefixNode.getTypePrefixName();
@@ -19,6 +19,6 @@ export default class TypePrefixDeclarationNode extends NonTerminalNode {
     return typePrefixNode;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TypePrefixDeclarationNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return DeclarationNode.fromRuleNameChildNodesOpacityAndPrecedence(TypePrefixDeclarationNode, ruleName, childNodes, opacity, precedence); }
 }
 

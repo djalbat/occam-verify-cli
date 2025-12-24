@@ -1,14 +1,13 @@
 "use strict";
 
+import ontology from "../../ontology";
 import Substitution from "../substitution";
 import TermSubstitutionPartialContext from "../../context/partial/substitution/term";
 
-import ontology, { define } from "../../ontology";
-import { nodeQuery } from "../../utilities/query";
+import { define } from "../../ontology";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
 import { termVariableIdentifierFromTermNode } from "../../utilities/variable";
 
-const termVariableNodeQuery = nodeQuery("/term/variable!");
 
 export default define(class TermSubstitution extends Substitution {
   constructor(context, string, node, tokens, term, variable) {
@@ -47,31 +46,6 @@ export default define(class TermSubstitution extends Substitution {
     const termEqualToTerm = this.term.isEqualTo(term);
 
     return termEqualToTerm;
-  }
-
-  isTermVariableEqualToTerm(termVariable, context) {
-    let termVariableEqualToTerm = false;
-
-    const termNode = this.term.getNode();
-
-    let termVariableNode;
-
-    termVariableNode = termVariableNodeQuery(termNode);
-
-    if (termVariableNode !== null) {
-      const termVariableNodeA = termVariableNode; ///
-
-      termVariableNode = termVariable.getNode();
-
-      const termVariableNodeB = termVariableNode, ///
-            termVariableNodeAMatchesTermVariableNodeB = termVariableNodeA.match(termVariableNodeB);
-
-      if (termVariableNodeAMatchesTermVariableNodeB) {
-        termVariableEqualToTerm = true;
-      }
-    }
-
-    return termVariableEqualToTerm;
   }
 
   matchParameter(parameter) { return this.variable.matchParameter(parameter); }

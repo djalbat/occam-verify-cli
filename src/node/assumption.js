@@ -1,10 +1,10 @@
 "use strict";
 
-import NonTerminalNode from "../node/nonTerminal";
+import DocumentNode from "../nonTerminalNode";
 
 import { STATEMENT_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
 
-export default class AssumptionpNode extends NonTerminalNode {
+export default class AssumptionpNode extends DocumentNode {
   isSimple() {
     let simple = false;
 
@@ -31,5 +31,5 @@ export default class AssumptionpNode extends NonTerminalNode {
     return metavariableNode;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(AssumptionpNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return DocumentNode.fromRuleNameChildNodesOpacityAndPrecedence(AssumptionpNode, ruleName, childNodes, opacity, precedence); }
 }

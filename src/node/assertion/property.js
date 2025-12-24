@@ -1,10 +1,10 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import AssertionNode from "../../node/assertion";
 
 import { TERM_RULE_NAME, FRAME_RULE_NAME, PROPERTY_RELATION_RULE_NAME } from "../../ruleNames";
 
-export default class PropertyAssertionNode extends NonTerminalNode {
+export default class PropertyAssertionNode extends AssertionNode {
   getTermNode() {
     const ruleName = TERM_RULE_NAME,
           termNode = this.getNodeByRuleName(ruleName);
@@ -26,5 +26,5 @@ export default class PropertyAssertionNode extends NonTerminalNode {
     return propertyRelationNode;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyAssertionNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return AssertionNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyAssertionNode, ruleName, childNodes, opacity, precedence); }
 }

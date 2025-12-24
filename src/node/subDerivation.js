@@ -1,6 +1,6 @@
 "use strict";
 
-import NonTerminalNode from "../node/nonTerminal";
+import NonTerminalNode from "../nonTerminalNode";
 
 import { STEP_RULE_NAME, SUBPROOF_RULE_NAME } from "../ruleNames";
 

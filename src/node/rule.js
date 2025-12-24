@@ -1,8 +1,8 @@
 "use strict";
 
-import NonTerminalNode from "../node/nonTerminal";
+import NonTerminalNode from "../nonTerminalNode";
 
-import {RULE_BODY_RULE_NAME, RULE_HEADER_RULE_NAME} from "../ruleNames";
+import { RULE_BODY_RULE_NAME, RULE_HEADER_RULE_NAME } from "../ruleNames";
 
 export default class RuleNode extends NonTerminalNode {
   getRuleBodyNode() {

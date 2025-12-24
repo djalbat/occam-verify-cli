@@ -1,10 +1,10 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import DeclarationNode from "../../node/declaration";
 
 import { STATEMENT_RULE_NAME } from "../../ruleNames";
 
-export default class ContainedDeclarationNode extends NonTerminalNode {
+export default class ContainedDeclarationNode extends DeclarationNode {
   getStatementNode() {
     const ruleName = STATEMENT_RULE_NAME,
           statementNode = this.getNodeByRuleName(ruleName);
@@ -12,5 +12,5 @@ export default class ContainedDeclarationNode extends NonTerminalNode {
     return statementNode;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ContainedDeclarationNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return DeclarationNode.fromRuleNameChildNodesOpacityAndPrecedence(ContainedDeclarationNode, ruleName, childNodes, opacity, precedence); }
 }

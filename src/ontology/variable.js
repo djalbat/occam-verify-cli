@@ -172,60 +172,6 @@ export default define(class Variable {
     return termUnifies;
   }
 
-  unifyTermVariable(termVariable, substitutions, generalContext, specificContext) {
-    let termVariableUnifies = false;
-
-    const variableString = this.string, ///
-          termVariableString = termVariable.getString();
-
-    specificContext.trace(`Unifying the '${termVariableString}' term variable with the '${variableString}' variable...`);
-
-    let context,
-        variable;
-
-    variable = this; ///
-
-    const substitution = substitutions.findSubstitutionByVariable(variable);
-
-    if (substitution !== null) {
-      context = specificContext;  ///
-
-      const substitutionTermVariableEqualToTerm = substitution.isTermVariableEqualToTerm(termVariable, context);
-
-      if (substitutionTermVariableEqualToTerm) {
-        termVariableUnifies = true;
-      }
-    } else {
-      context = generalContext;  ///
-
-      const variableIdentifier = variable.getIdentifier();
-
-      variable = context.findVariableByVariableIdentifier(variableIdentifier);
-
-      context = specificContext;  ///
-
-      const variableType = variable.getType(),
-            termVariableType = termVariable.getType(),
-            termVariableTypeEqualToOrSubTypeOfVariableType = termVariableType.isEqualToOrSubTypeOf(variableType);
-
-      if (termVariableTypeEqualToOrSubTypeOfVariableType) {
-        const { TermSubstitution } = ontology,
-              termSubstitution = TermSubstitution.fromTernVariableAndVariable(termVariable, variable, context),
-              substitution = termSubstitution;  ///
-
-        substitutions.addSubstitution(substitution, context);
-
-        termVariableUnifies = true;
-      }
-    }
-
-    if (termVariableUnifies) {
-      specificContext.debug(`...unified the '${termVariableString}' term variable with the '${variableString}' variable.`);
-    }
-
-    return termVariableUnifies;
-  }
-
   toJSON() {
     const typeJSON = typeToTypeJSON(this.type),
           string = this.string, ///

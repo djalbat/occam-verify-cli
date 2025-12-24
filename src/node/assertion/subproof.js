@@ -1,10 +1,10 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import AssertionNode from "../../node/assertion";
 
 import { STATEMENT_RULE_NAME } from "../../ruleNames";
 
-export default class SubproofAssertionNode extends NonTerminalNode {
+export default class SubproofAssertionNode extends AssertionNode {
   getStatementNodes() {
     const ruleName = STATEMENT_RULE_NAME,
           statementNodes = this.getNodesByRuleName(ruleName);
@@ -12,5 +12,5 @@ export default class SubproofAssertionNode extends NonTerminalNode {
     return statementNodes;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(SubproofAssertionNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return AssertionNode.fromRuleNameChildNodesOpacityAndPrecedence(SubproofAssertionNode, ruleName, childNodes, opacity, precedence); }
 }

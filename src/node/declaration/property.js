@@ -1,10 +1,10 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import DeclarationNode from "../../node/declaration";
 
 import { TYPE_RULE_NAME, PROPERTY_RULE_NAME } from "../../ruleNames";
 
-export default class PropertyDeclarationNode extends NonTerminalNode {
+export default class PropertyDeclarationNode extends DeclarationNode {
   getTypeNode() {
     const ruleName = TYPE_RULE_NAME,
           typeNode = this.getNodeByRuleName(ruleName);
@@ -38,5 +38,5 @@ export default class PropertyDeclarationNode extends NonTerminalNode {
     return nominalTypeName;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyDeclarationNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return DeclarationNode.fromRuleNameChildNodesOpacityAndPrecedence(PropertyDeclarationNode, ruleName, childNodes, opacity, precedence); }
 }

@@ -1,10 +1,10 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import DeclarationNode from "../../node/declaration";
 
 import { META_TYPE_RULE_NAME, METAVARIABLE_RULE_NAME } from "../../ruleNames";
 
-export default class MetavariableDeclarationNode extends NonTerminalNode {
+export default class MetavariableDeclarationNode extends DeclarationNode {
   getTypeNode() {
     const metavariableNode = this.getMetavariableNode(),
           typeNode = metavariableNode.getTypeNode();
@@ -26,5 +26,5 @@ export default class MetavariableDeclarationNode extends NonTerminalNode {
     return metavariableNode;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(MetavariableDeclarationNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return DeclarationNode.fromRuleNameChildNodesOpacityAndPrecedence(MetavariableDeclarationNode, ruleName, childNodes, opacity, precedence); }
 }

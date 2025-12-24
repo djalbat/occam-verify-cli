@@ -1,11 +1,11 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import DeclarationNode from "../../node/declaration";
 
 import { PROVISIONAL } from "../../constants";
 import { TYPE_RULE_NAME, TYPES_RULE_NAME, PROPERTY_DECLARATION_RULE_NAME } from "../../ruleNames";
 
-export default class ComplexTypeDeclarationNode extends NonTerminalNode {
+export default class ComplexTypeDeclarationNode extends DeclarationNode {
   isProvisional() {
     let provisional = false;
 
@@ -91,5 +91,5 @@ export default class ComplexTypeDeclarationNode extends NonTerminalNode {
     return propertyDeclarationNodes;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(ComplexTypeDeclarationNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return DeclarationNode.fromRuleNameChildNodesOpacityAndPrecedence(ComplexTypeDeclarationNode, ruleName, childNodes, opacity, precedence); }
 }

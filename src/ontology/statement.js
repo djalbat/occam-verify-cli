@@ -6,17 +6,12 @@ import verifyMixins from "../mixins/statement/verify";
 import StatementPartialContext from "../context/partial/statement";
 
 import { define } from "../ontology";
-import { nodeQuery } from "../utilities/query";
 import { unifyStatement } from "../utilities/unification";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { statementFromStatementNode } from "../utilities/node";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
 
 const { match, backwardsSome } = arrayUtilities;
-
-const definedAssertionNodeQuery = nodeQuery("/statement/definedAssertion!"),
-      subproofAssertionNodeQuery = nodeQuery("/statement/subprootAssertion!"),
-      containedAssertionNodeQuery = nodeQuery("/statement/containedAssertion!");
 
 export default define(class Statement {
   constructor(string, node, tokens) {
@@ -157,7 +152,7 @@ export default define(class Statement {
 
     const context = specificContext,  ///
           statementNode = this.node,
-          subproofAssertionNode = subproofAssertionNodeQuery(statementNode),
+          subproofAssertionNode = statementNode.getSubproofAssertionNode(),
           assertionNode = subproofAssertionNode;  ///
 
     if (assertionNode !== null) {
@@ -218,8 +213,8 @@ export default define(class Statement {
     context.trace(`Unifying the '${statementString}' statement independently...`);
 
     const statementNode = this.node,
-          definedAssertionNode = definedAssertionNodeQuery(statementNode),
-          containedAssertionNode = containedAssertionNodeQuery(statementNode);
+          definedAssertionNode = statementNode.getDefinedAssertionNode(),
+          containedAssertionNode = statementNode.getContainedAssertionNode();
 
     if ((definedAssertionNode !== null) || (containedAssertionNode !== null)) {
       const assertionNode = (definedAssertionNode || containedAssertionNode),

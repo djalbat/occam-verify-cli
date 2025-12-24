@@ -2,7 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-import NonTerminalNode from "../node/nonTerminal";
+import NonTerminalNode from "../nonTerminalNode";
 
 import { TERM_RULE_NAME } from "../ruleNames";
 

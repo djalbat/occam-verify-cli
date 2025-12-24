@@ -1,6 +1,6 @@
 "use strict";
 
-import NonTerminalNode from "../node/nonTerminal";
+import NonTerminalNode from "../nonTerminalNode";
 
 import { NONSENSE_RULE_NAME, STATEMENT_RULE_NAME, PROCEDURE_CALL_RULE_NAME } from "../ruleNames";
 

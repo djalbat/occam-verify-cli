@@ -23,6 +23,7 @@ import MetaTypeNode from "./node/metaType";
 import EqualityNode from "./node/equality";
 import VariableNode from "./node/variable";
 import RuleBodyNode from "./node/body/rule";
+import DocumentNode from "./node/document";
 import StatementNode from "./node/statement";
 import ReferenceNode from "./node/reference";
 import DeductionNode from "./node/deduction";
@@ -38,9 +39,10 @@ import ConclusionNode from "./node/conclusion";
 import ConjectureNode from "./node/conjecture";
 import HypothesisNode from "./node/hypothesis";
 import TypePrefixNode from "./node/typePrefix";
-import RuleHeaderNode from "./node/header/rule";
 import AssumptionNode from "./node/assumption";
+import RuleHeaderNode from "./node/header/rule";
 import SuppositionNode from "./node/supposition";
+import PlaceholderNode from "./node/placeholder";
 import ConstructorNode from "./node/constructor";
 import MetatheoremNode from "./node/metatheorem";
 import TheoremBodyNode from "./node/body/theorem";
@@ -102,6 +104,7 @@ import {
   PROPERTY_RULE_NAME,
   EQUALITY_RULE_NAME,
   VARIABLE_RULE_NAME,
+  DOCUMENT_RULE_NAME,
   META_TYPE_RULE_NAME,
   SIGNATURE_RULE_NAME,
   DEDUCTION_RULE_NAME,
@@ -119,6 +122,7 @@ import {
   AXIOM_BODY_RULE_NAME,
   LEMMA_BODY_RULE_NAME,
   ASSUMPTION_RULE_NAME,
+  PLACEHOLDER_RULE_NAME,
   TYPE_PREFIX_RULE_NAME,
   SUPPOSITION_RULE_NAME,
   RULE_HEADER_RULE_NAME,
@@ -159,8 +163,7 @@ import {
   CONSTRUCTOR_DECLARATION_RULE_NAME,
   TYPE_PREFIX_DECLARATION_RULE_NAME,
   COMPLEX_TYPE_DECLARATION_RULE_NAME,
-  METAVARIABLE_DECLARATION_RULE_NAME
-} from "./ruleNames";
+  METAVARIABLE_DECLARATION_RULE_NAME } from "./ruleNames";
 
 const NonTerminalNodeMap = {
   [RULE_RULE_NAME]: RuleNode,
@@ -184,6 +187,7 @@ const NonTerminalNodeMap = {
   [EQUALITY_RULE_NAME]: EqualityNode,
   [VARIABLE_RULE_NAME]: VariableNode,
   [NONSENSE_RULE_NAME]: NonsenseNode,
+  [DOCUMENT_RULE_NAME]: DocumentNode,
   [RULE_BODY_RULE_NAME]: RuleBodyNode,
   [META_TYPE_RULE_NAME]: MetaTypeNode,
   [SIGNATURE_RULE_NAME]: SignatureNode,
@@ -203,6 +207,7 @@ const NonTerminalNodeMap = {
   [ASSUMPTION_RULE_NAME]: AssumptionNode,
   [RULE_HEADER_RULE_NAME]: RuleHeaderNode,
   [TYPE_PREFIX_RULE_NAME]: TypePrefixNode,
+  [PLACEHOLDER_RULE_NAME]: PlaceholderNode,
   [SUPPOSITION_RULE_NAME]: SuppositionNode,
   [CONSTRUCTOR_RULE_NAME]: ConstructorNode,
   [METATHEOREM_RULE_NAME]: MetatheoremNode,

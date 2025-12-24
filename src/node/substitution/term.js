@@ -1,10 +1,10 @@
 "use strict";
 
-import NonTerminalNode from "../../node/nonTerminal";
+import SubstitutionNode from "../../node/substitution";
 
 import { TERM_RULE_NAME } from "../../ruleNames";
 
-export default class TermSubstitutionNode extends NonTerminalNode {
+export default class TermSubstitutionNode extends SubstitutionNode {
   getLastTermNode() {
     const ruleName = TERM_RULE_NAME,
           lastTermNode = this.getLastNodeByRuleName(ruleName);
@@ -45,5 +45,5 @@ export default class TermSubstitutionNode extends NonTerminalNode {
     return firstVariableNode;
   }
 
-  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return NonTerminalNode.fromRuleNameChildNodesOpacityAndPrecedence(TermSubstitutionNode, ruleName, childNodes, opacity, precedence); }
+  static fromRuleNameChildNodesOpacityAndPrecedence(ruleName, childNodes, opacity, precedence) { return SubstitutionNode.fromRuleNameChildNodesOpacityAndPrecedence(TermSubstitutionNode, ruleName, childNodes, opacity, precedence); }
 }

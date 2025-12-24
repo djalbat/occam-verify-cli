@@ -110,12 +110,6 @@ export default class Substitution {
     return frameEqualToFrame;
   }
 
-  isTermVariableEqualToTerm(termVariable, context) {
-    const termVariableEqualToTerm = false;
-
-    return termVariableEqualToTerm;
-  }
-
   isReferenceEqualToReference(reference, context) {
     const referenceEqualToReference = false;
 

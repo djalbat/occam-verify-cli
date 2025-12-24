@@ -118,19 +118,27 @@ class LocalContext {
 
   addTheorem(theorem) { this.context.addTheorem(theorem); }
 
-  addEquality(equality, context) {
+  addEquality(equality) {
     let equalityAdded;
 
     const equalityReflexive = equality.isReflexive();
 
     if (!equalityReflexive) {
       const { Equivalence } = ontology,
-            equivalence = Equivalence.fromEquality(equality);
+            equivalence = Equivalence.fromEquality(equality),
+            context = this; ///
 
       this.equivalences = this.equivalences.mergedWithEquivalence(equivalence, context);
     }
 
     equalityAdded = true;
+
+    if (equalityAdded) {
+      const context = this, ///
+            equalityString = equality.getString();
+
+      context.trace(`Added the '${equalityString}' equality.`)
+    }
 
     return equalityAdded;
   }
@@ -147,6 +155,13 @@ class LocalContext {
       variableAdded = true;
     }
 
+    if (variableAdded) {
+      const context = this,
+            variableString = variable.getString();
+
+      context.trace(`Added the '${variableString}' variable.`)
+    }
+
     return variableAdded;
   }
 
@@ -160,6 +175,13 @@ class LocalContext {
       this.judgements.push(judgement);
 
       judgementAdded = true;
+    }
+
+    if (judgementAdded) {
+      const context = this, ///
+            judgementString = judgement.getString();
+
+      context.trace(`Added the '${judgementString}' judgement.`)
     }
 
     return judgementAdded;
