@@ -76,57 +76,6 @@ export default define(class StatementSubstitution extends Substitution {
 
   matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
 
-  unifySubstitution(substitution, substitutions, context) {
-    const generalSubstitution = this.substitution,  ///
-          specificSubstitution = substitution,  ///
-          generalSubstitutionString = generalSubstitution.getString(),
-          specificSubstitutionString = specificSubstitution.getString();
-
-    context.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
-
-    let substitutionContext;
-
-    substitutionContext = this.substitution.getContext();
-
-    const generalContext = substitutionContext; ///
-
-    substitutionContext = substitution.getContext();
-
-    const specificContext = substitutionContext,  ///
-          substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
-
-    if (substitutionUnifies) {
-      context.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
-    }
-
-    return substitutionUnifies;
-  }
-
-  unifyStatement(statement, context) {
-    let substitution = null;
-
-    const { Substitutions } = ontology,
-          substitutions = Substitutions.fromNothing(),
-          specificContext = context; ///
-
-    context = this.getContext();
-
-    const generalContext = context, ///
-          statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
-
-    if (statementUnifies) {
-      const substitutionsNonTrivialLength = substitutions.getNonTrivialLength();
-
-      if (substitutionsNonTrivialLength === 1) {
-        const firstSubstitution = substitutions.getFirstSubstitution();
-
-        substitution = firstSubstitution; ///
-      }
-    }
-
-    return substitution;
-  }
-
   resolve(substitutions, context) {
     const substitutionString = this.string; ///
 
@@ -171,6 +120,57 @@ export default define(class StatementSubstitution extends Substitution {
     if (this.resolved) {
       context.debug(`...resolved the ${substitutionString} substitution.`);
     }
+  }
+
+  unifyStatement(statement, context) {
+    let substitution = null;
+
+    const { Substitutions } = ontology,
+          substitutions = Substitutions.fromNothing(),
+          specificContext = context; ///
+
+    context = this.getContext();
+
+    const generalContext = context, ///
+          statementUnifies = this.statement.unifyStatement(statement, substitutions, generalContext, specificContext);
+
+    if (statementUnifies) {
+      const substitutionsNonTrivialLength = substitutions.getNonTrivialLength();
+
+      if (substitutionsNonTrivialLength === 1) {
+        const firstSubstitution = substitutions.getFirstSubstitution();
+
+        substitution = firstSubstitution; ///
+      }
+    }
+
+    return substitution;
+  }
+
+  unifySubstitution(substitution, substitutions, context) {
+    const generalSubstitution = this.substitution,  ///
+          specificSubstitution = substitution,  ///
+          generalSubstitutionString = generalSubstitution.getString(),
+          specificSubstitutionString = specificSubstitution.getString();
+
+    context.trace(`Unifying the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution...`);
+
+    let substitutionContext;
+
+    substitutionContext = this.substitution.getContext();
+
+    const generalContext = substitutionContext; ///
+
+    substitutionContext = substitution.getContext();
+
+    const specificContext = substitutionContext,  ///
+          substitutionUnifies = unifySubstitution(generalSubstitution, specificSubstitution, substitutions, generalContext, specificContext);
+
+    if (substitutionUnifies) {
+      context.trace(`...unified the '${specificSubstitutionString}' substitution with the '${generalSubstitutionString}' substitution.`);
+    }
+
+    return substitutionUnifies;
   }
 
   toJSON() {
