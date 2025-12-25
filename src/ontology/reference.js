@@ -6,6 +6,7 @@ import { define } from "../ontology";
 import { referenceMetaType } from ".//metaType";
 import { unifyMetavariableIntrinsically } from "../utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
+import reference from "./substitution/reference";
 
 export default define(class Reference {
   constructor(metavariable) {
@@ -15,6 +16,8 @@ export default define(class Reference {
   getMetavariable() {
     return this.metavariable;
   }
+
+  getName() { return this.metavariable.getName(); }
 
   getName() { return this.metavariable.getName(); }
 
@@ -32,9 +35,29 @@ export default define(class Reference {
     return metavariableNode;
   }
 
+  isEqualTo(refernece) {
+    const metavariable = refernece.getMetavariable(),
+          metavariableEqualToMetvariable = this.metavariable.isEqualTo(metavariable),
+          equalTo = metavariableEqualToMetvariable; ///
+
+    return equalTo;
+  }
+
   isMetavariableEqualToMetavariable(metavariable) { return this.metavariable.isEqualTo(metavariable); }
 
   matchMetavariableName(metavariableName) { return this.metavariable.matchMetavariableName(metavariableName); }
+
+  matchMetavariableNode(metavariableNode) {
+    const metavariableNodeA = metavariableNode; ///
+
+    metavariableNode = this.metavariable.getNode();
+
+    const metavariableNodeB = metavariableNode, ///
+          matches = metavariableNodeA.match(metavariableNodeB),
+          metavariableNodeMatches = matches;  ///
+
+    return metavariableNodeMatches; ///
+  }
 
   verify(context) {
     let verifies = false;
@@ -57,6 +80,10 @@ export default define(class Reference {
     }
 
     if (verifies) {
+      const reference = this; ///
+
+      context.addReference(reference);
+
       context.debug(`...verified the '${referenceString}' reference.`);
     }
 
@@ -187,6 +214,18 @@ export default define(class Reference {
 
   static fromReferenceNode(referenceNode, context) {
     const reference = referenceFromReferenceNode(referenceNode, context);
+
+    return reference;
+  }
+
+  static fromAssumptionNode(assumptionNode, context) {
+    let reference = null;
+
+    const metavariableNode = assumptionNode.getMetavariableNode();
+
+    if (metavariableNode !== null) {
+      reference = referenceFromMetavariableNode(metavariableNode, context);
+    }
 
     return reference;
   }

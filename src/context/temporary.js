@@ -5,15 +5,15 @@ import { arrayUtilities } from "necessary";
 const { extract, compress } = arrayUtilities;
 
 export default class TemporaryContext {
-  constructor(context, tokens, terms, frames, statements, assertions, substitutions, reference) {
+  constructor(context, tokens, terms, frames, statements, assertions, references, substitutions) {
     this.context = context;
     this.tokens = tokens;
     this.terms = terms;
     this.frames = frames;
     this.statements = statements;
     this.assertions = assertions;
+    this.references = references;
     this.substitutions = substitutions;
-    this.reference = reference;
   }
 
   getContext() {
@@ -40,23 +40,24 @@ export default class TemporaryContext {
     return this.assertions;
   }
 
+  getReferences() {
+    return this.references;
+  }
+
   getSubstitutions() {
     return this.substitutions;
   }
 
-  getReference() {
-    return this.reference;
-  }
-
   addTerm(term) {
-    const context = this, ///
-          termNode = term.getNode(),
+    const termA = term, ///
+          context = this, ///
           termString = term.getString();
 
     extract(this.terms, (term) => {
-      const termMatchesTermNode = term.matchTermNode(termNode);
+      const termB = term, ///
+            termAEqualToTermB = termA.isEqualTo(termB);
 
-      if (termMatchesTermNode) {
+      if (termAEqualToTermB) {
         return true;
       }
     });
@@ -67,14 +68,15 @@ export default class TemporaryContext {
   }
 
   addFrame(frame) {
-    const context = this, ///
-          frameNode = frame.getNode(),
+    const frameA = frame, ///
+          context = this, ///
           frameString = frame.getString();
 
     extract(this.frames, (frame) => {
-      const frameMatchesFrameNode = frame.matchFrameNode(frameNode);
+      const frameB = frame, ///
+            frameAEqualToFrameB = frameA.isEqualTo(frameB);
 
-      if (frameMatchesFrameNode) {
+      if (frameAEqualToFrameB) {
         return true;
       }
     });
@@ -86,13 +88,14 @@ export default class TemporaryContext {
 
   addStatement(statement) {
     const context = this, ///
-          statementNode = statement.getNode(),
+          statementA = statement, ///
           statementString = statement.getString();
 
     extract(this.statements, (statement) => {
-      const statementMatchesFrameNode = statement.matchStatementNode(statementNode);
+      const statementB = statement, ///
+            statementAEqualToFrameB = statementA.isEqualTo(statementB);
 
-      if (statementMatchesFrameNode) {
+      if (statementAEqualToFrameB) {
         return true;
       }
     });
@@ -104,13 +107,14 @@ export default class TemporaryContext {
 
   addAssertion(assertion) {
     const context = this, ///
-          assertionNode = assertion.getNode(),
+          assertionA = assertion, ///
           assertionString = assertion.getString();
 
     extract(this.assertions, (assertion) => {
-      const assertionMatchesFrameNode = assertion.matchAssertionNode(assertionNode);
+      const assertionB = assertion, ///
+            assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
 
-      if (assertionMatchesFrameNode) {
+      if (assertionAEqualToAssertionB) {
         return true;
       }
     });
@@ -120,15 +124,35 @@ export default class TemporaryContext {
     this.assertions.push(assertion);
   }
 
+  addReference(reference) {
+    const context = this, ///
+          referenceA = reference, ///
+          referenceString = reference.getString();
+
+    extract(this.references, (reference) => {
+      const referenceB = reference, ///
+            referenceAEqualToReferenceB = referenceA.isEqualTo(referenceB);
+
+      if (referenceAEqualToReferenceB) {
+        return true;
+      }
+    });
+
+    context.trace(`Added the '${referenceString}' reference to the context.`);
+
+    this.references.push(reference);
+  }
+
   addSubstitution(substitution) {
     const context = this, ///
-          substitutionNode = substitution.getNode(),
+          substitutionA = substitution, ///
           substitutionString = substitution.getString();
 
     extract(this.substitutions, (substitution) => {
-      const substitutionMatchesFrameNode = substitution.matchSubstitutionNode(substitutionNode);
+      const substitutionB = substitution, ///
+            substituionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
 
-      if (substitutionMatchesFrameNode) {
+      if (substituionAEqualToSubstitutionB) {
         return true;
       }
     });
@@ -136,15 +160,6 @@ export default class TemporaryContext {
     context.trace(`Added the '${substitutionString}' substitution to the context.`);
 
     this.substitutions.push(substitution);
-  }
-
-  addReference(reference) {
-    const context = this, ///
-          referenceString = reference.getString();
-
-    this.reference = reference;
-
-    context.trace(`Added the '${referenceString}' reference to the context.`);
   }
 
   findTermByTermNode(termNode) {
@@ -171,6 +186,18 @@ export default class TemporaryContext {
     return frame;
   }
 
+  findStatementByStatementNode(statementNode) {
+    const statement = this.statements.find((statement) => {
+      const statementMatchesStatementNode = statement.matchStatementNode(statementNode);
+
+      if (statementMatchesStatementNode) {
+        return true;
+      }
+    }) || null;
+
+    return statement;
+  }
+
   findAssertionByAssertionNode(assertionNode) {
     const assertion = this.assertions.find((assertion) => {
       const assertionMatchesAssertionNode = assertion.matchAssertionNode(assertionNode);
@@ -183,16 +210,16 @@ export default class TemporaryContext {
     return assertion;
   }
 
-  findStatementByStatementNode(statementNode) {
-    const statement = this.statements.find((statement) => {
-      const statementMatchesStatementNode = statement.matchStatementNode(statementNode);
+  findReferenceByMetavariableNode(metavariableNode) {
+    const reference = this.references.find((reference) => {
+      const referenceMatcheMetavariableNode = reference.matchMetavariableNode(metavariableNode);
 
-      if (statementMatchesStatementNode) {
+      if (referenceMatcheMetavariableNode) {
         return true;
       }
     }) || null;
 
-    return statement;
+    return reference;
   }
 
   findSubstitutionBySubstitutionNode(substitutionNode) {
@@ -386,6 +413,7 @@ export default class TemporaryContext {
           frames = context.getFrames(),
           statements = context.getStatements(),
           assertions = context.getAssertions(),
+          references = context.getReferences(),
           substitutions = context.getSubstitutions();
 
     this.terms = [
@@ -408,57 +436,60 @@ export default class TemporaryContext {
       ...assertions
     ];
 
+    this.references = [
+      ...this.references,
+      ...references
+    ];
+
     this.substitutions = [
       ...this.substitutions,
       ...substitutions
     ];
 
     compress(this.terms, (termA, termB) => {
-      const termANode = termA.getNode(),
-            termBNode = termB.getNode(),
-            termANodeMatchesTermBNode = termANode.match(termBNode);
+      const termAEqualToTermB = termA.isEqualTo(termB);
 
-      if (!termANodeMatchesTermBNode) {
+      if (!termAEqualToTermB) {
         return true;
       }
     });
 
     compress(this.frames, (frameA, frameB) => {
-      const frameANode = frameA.getNode(),
-            frameBNode = frameB.getNode(),
-            frameANodeMatchesFrameBNode = frameANode.match(frameBNode);
+      const frameAEqualToFrameB = frameA.isEqualTo(frameB);
 
-      if (!frameANodeMatchesFrameBNode) {
+      if (!frameAEqualToFrameB) {
         return true;
       }
     });
 
     compress(this.statements, (statementA, statementB) => {
-      const statementANode = statementA.getNode(),
-            statementBNode = statementB.getNode(),
-            statementANodeMatchesStatementBNode = statementANode.match(statementBNode);
+      const statementAEqualToStatementB = statementA.isEqualTo(statementB);
 
-      if (!statementANodeMatchesStatementBNode) {
+      if (!statementAEqualToStatementB) {
         return true;
       }
     });
 
     compress(this.assertions, (assertionA, assertionB) => {
-      const assertionANode = assertionA.getNode(),
-            assertionBNode = assertionB.getNode(),
-            assertionANodeMatchesAssertionBNode = assertionANode.match(assertionBNode);
+      const assertionAEqualToAssertionB = assertionA.isEqualTo(assertionB);
 
-      if (!assertionANodeMatchesAssertionBNode) {
+      if (!assertionAEqualToAssertionB) {
+        return true;
+      }
+    });
+
+    compress(this.references, (referenceA, referenceB) => {
+      const referenceAEqualToReferenceB = referenceA.isEqualTo(referenceB);
+
+      if (!referenceAEqualToReferenceB) {
         return true;
       }
     });
 
     compress(this.substitutions, (substitutionA, substitutionB) => {
-      const substitutionANode = substitutionA.getNode(),
-            substitutionBNode = substitutionB.getNode(),
-            substitutionANodeMatchesSubstitutionBNode = substitutionANode.match(substitutionBNode);
+      const substitutionAEqualToSubstitutionB = substitutionA.isEqualTo(substitutionB);
 
-      if (!substitutionANodeMatchesSubstitutionBNode) {
+      if (!substitutionAEqualToSubstitutionB) {
         return true;
       }
     });
@@ -470,9 +501,9 @@ export default class TemporaryContext {
           tokens = null,
           statements = [],
           assertions = [],
+          references = [],
           substitutions = [],
-          reference = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, substitutions, reference);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, references, substitutions);
 
     return temporaryContext;
   }
@@ -481,9 +512,9 @@ export default class TemporaryContext {
     const tokens = null,
           statements = [],
           assertions = [],
+          references = [],
           substitutions = [],
-          reference = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, substitutions, reference);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, references, substitutions);
 
     return temporaryContext;
   }
@@ -493,9 +524,9 @@ export default class TemporaryContext {
           frames = [],
           statements = [],
           assertions = [],
+          references = [],
           substitutions = [],
-          reference = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, substitutions, reference);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, references, substitutions);
 
     return temporaryContext;
   }

@@ -34,8 +34,9 @@ export default define(class PropertyRelation {
   }
 
   isEqualTo(propertyRelation) {
-    const propertyRelationString = propertyRelation.getString(),
-          equalTo = (propertyRelationString === this.string);
+    const propertyRelationNode = propertyRelation.getNode(),
+          matches = this.node.match(propertyRelationNode),
+          equalTo = matches;  ///
 
     return equalTo;
   }

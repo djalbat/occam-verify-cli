@@ -1,7 +1,6 @@
 "use strict";
 
 import Unifier from "../unifier";
-import ontology from "../ontology";
 
 import { nodeQuery } from "../utilities/query";
 import { metavariableNameFromMetavariableNode } from "../utilities/metavariable";
@@ -26,6 +25,33 @@ class MetaLevelUnifier extends Unifier {
   }
 
   static maps = [
+    {
+      generalNodeQuery: assumptionMetavariableNodeQuery,
+      specificNodeQuery: assumptionMetavariableNodeQuery,
+      unify: (generalAssumptionMetavariableNode, specificAssumptionMetavariableNode, substitutions, generalContext, specificContext) => {
+        let referenceUnifies;
+
+        let context,
+            metavariableNode;
+
+        context = generalContext; ///
+
+        metavariableNode = generalAssumptionMetavariableNode;  ///
+
+        const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+              metavariable = context.findMetavariableByMetavariableName(metavariableName);
+
+        context = specificContext;  ///
+
+        metavariableNode = specificAssumptionMetavariableNode; ///
+
+        const reference = context.findReferenceByMetavariableNode(metavariableNode);
+
+        referenceUnifies = metavariable.unifyReference(reference, substitutions, generalContext, specificContext);
+
+        return referenceUnifies;
+      }
+    },
     {
       generalNodeQuery: statementMetavariableNodeQuery,
       specificNodeQuery: statementNodeQuery,
@@ -110,35 +136,6 @@ class MetaLevelUnifier extends Unifier {
         termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
 
         return termUnifies;
-      }
-    },
-    {
-      generalNodeQuery: assumptionMetavariableNodeQuery,
-      specificNodeQuery: assumptionMetavariableNodeQuery,
-      unify: (generalAssumptionMetavariableNode, specificAssumptionMetavariableNode, substitutions, generalContext, specificContext) => {
-        let referenceUnifies;
-
-        const { Reference } = ontology;
-
-        let context,
-            metavariableNode;
-
-        context = generalContext; ///
-
-        metavariableNode = generalAssumptionMetavariableNode;  ///
-
-        const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-              metavariable = context.findMetavariableByMetavariableName(metavariableName);
-
-        context = specificContext;  ///
-
-        metavariableNode = specificAssumptionMetavariableNode; ///
-
-        const reference = Reference.fromMetavariableNode(metavariableNode, context);
-
-        referenceUnifies = metavariable.unifyReference(reference, substitutions, generalContext, specificContext);
-
-        return referenceUnifies;
       }
     }
   ];

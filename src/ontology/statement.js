@@ -35,8 +35,9 @@ export default define(class Statement {
   isSimple() { return this.node.isSimple();}
 
   isEqualTo(statement) {
-    const statementString = statement.getString(),
-          equalTo = (statementString === this.string);
+    const statementNode = statement.getNode(),
+          matches = this.node.match(statementNode),
+          equalTo = matches;  ///
 
     return equalTo;
   }

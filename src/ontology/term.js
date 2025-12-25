@@ -42,8 +42,9 @@ export default define(class Term {
   isProvisional() { return this.type.isProvisional(); }
 
   isEqualTo(term) {
-    const termString = term.getString(),
-          equalTo = (termString === this.string);
+    const termNode = term.getNode(),
+          matches = this.ndoe.match(termNode),
+          equalTo = matches;  ///
 
     return equalTo;
   }

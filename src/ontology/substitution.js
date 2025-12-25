@@ -92,8 +92,9 @@ export default class Substitution {
   }
 
   isEqualTo(substitution) {
-    const substitutionString = substitution.getString(),
-          equalTo = (substitutionString === this.string);
+    const substitutionNode = substitution.getNode(),
+          matches = this.node.match(substitutionNode),
+          equalTo = matches;  ///
 
     return equalTo;
   }

@@ -81,8 +81,9 @@ export default define(class Metavariable {
   isMetaTypeEqualTo(metaType) { return this.metaType.isEqualTo(metaType); }
 
   isEqualTo(metavariable) {
-    const metavariableString = metavariable.getString(),
-          equalTo = (metavariableString === this.string);
+    const metavariableNode = metavariable.getNode(),
+          matches = this.node.match(metavariableNode),
+          equalTo = matches;  ///
 
     return equalTo;
   }

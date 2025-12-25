@@ -67,8 +67,9 @@ export default define(class Frame {
   isSimple() { return this.node.isSimple();}
 
   isEqualTo(frame) {
-    const frameString = frame.getString(),
-          equalTo = (frameString === this.string);
+    const frameNode = frame.getNode(),
+          matches = this.node.match(frameNode),
+          equalTo = matches;  ///
 
     return equalTo;
   }

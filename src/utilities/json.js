@@ -91,6 +91,19 @@ export function signatureFromJSON(json, context) {
   return signature;
 }
 
+export function referenceFromJSON(json, context) {
+  let { reference } = json;
+
+  const { Reference } = ontology,
+        referenceJSON = reference;  ///
+
+  json = referenceJSON; ///
+
+  reference = Reference.fromJSON(json, context);
+
+  return reference;
+}
+
 export function conclusionFromJSON(json, context) {
   let { conclusion } = json;
 
@@ -530,6 +543,12 @@ export function metaTypeToMetaTypeJSON(metaType) {
                          metaType.toJSON() :
                            null;
   return metaTypeJSON;
+}
+
+export function referenceToReferenceJSON(reference) {
+  const referenceJSON = reference.toJSON();
+
+  return referenceJSON;
 }
 
 export function statementToStatementJSON(statement) {

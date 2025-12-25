@@ -4,14 +4,14 @@ import ontology from "../ontology";
 
 import { define } from "../ontology";
 import { unifyStatementIntrinsically } from "../utilities/unification";
-import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
+import { referenceFromJSON, referenceToReferenceJSON } from "../utilities/json";
 
 export default define(class Assumption {
-  constructor(string, node, statement, metavariable) {
+  constructor(string, node, statement, reference) {
     this.string = string;
     this.node = node;
     this.statement = statement;
-    this.metavariable = metavariable;
+    this.reference = reference;
   }
 
   getString() {
@@ -26,9 +26,11 @@ export default define(class Assumption {
     return this.statement;
   }
 
-  getMetavariable() {
-    return this.metavariable;
+  getReference() {
+    return this.reference;
   }
+
+  getMetavariable() { return this.reference.getMetavariable(); }
 
   isSimple() {
     const simple = (this.statement === null);
@@ -47,7 +49,8 @@ export default define(class Assumption {
     const simple = this.isSimple();
 
     if (simple) {
-      const judgement = context.findJudgementByMetavariable(this.metavariable);
+      const metavariable = this.reference.getMetavariable(),
+            judgement = context.findJudgementByMetavariable(metavariable);
 
       if (judgement !== null) {
         const assumption = judgement.getDeclaration();
@@ -58,9 +61,9 @@ export default define(class Assumption {
       const statement = substitution.getStatement(),
             metavariable = substitution.getMetavariable(),
             statementEqualToStatement = this.statement.isEqualTo(statement),
-            metavariableEqualToMetavariable = this.metavariable.isEqualTo(metavariable);
+            referenceMetavariableEqualToMetavariable = this.reference.isMetavariableEqualToMetavariable(metavariable);
 
-      if (metavariableEqualToMetavariable && statementEqualToStatement) {
+      if (statementEqualToStatement && referenceMetavariableEqualToMetavariable) {
         substitutionMatches = true;
       }
     }
@@ -82,13 +85,13 @@ export default define(class Assumption {
     const simple = this.isSimple();
 
     if (simple) {
-      const verifiesAsMetavariable = this.verifyAsMetavariable(assignments, stated, context);
+      const referenceVerifiesAsMetavariable = this.verifyReferenceAsMetavariable(assignments, stated, context);
 
-      verifies = verifiesAsMetavariable; ///
+      verifies = referenceVerifiesAsMetavariable; ///
     } else {
-      const metavariableVerifiesAsReference = this.verifyMetavariableAsReference(assignments, stated, context);
+      const referenceVerified = this.verifyReference(assignments, stated, context);
 
-      if (metavariableVerifiesAsReference) {
+      if (referenceVerified) {
         const statementVerifies = this.verifyStatement(assignments, stated, context);
 
         if (statementVerifies) {
@@ -115,24 +118,21 @@ export default define(class Assumption {
     return verifies;
   }
 
-  verifyMetavariableAsReference(assignments, stated, context) {
-    let metavariableVerifiesAsReference;
+  verifyReference(assignments, stated, context) {
+    let referenceVerified;
 
-    const assumptionString = this.string,
-          metavariableString = this.metavariable.getString();
+    const referenceString = this.reference.getString(),
+          assumptionString = this.string;
 
-    context.trace(`Verifying the '${assumptionString}' assumption's '${metavariableString}' metavariable as a reference...`);
+    context.trace(`Verifying the '${assumptionString}' assumption's '${referenceString}' reference...`);
 
-    const reference = referenceFromMetavariable(this.metavariable, context),
-          referenceVerifies = reference.verify(context);
+    referenceVerified = this.reference.verify(context);
 
-    metavariableVerifiesAsReference = referenceVerifies;  ///
-
-    if (metavariableVerifiesAsReference) {
-      context.debug(`...verified the '${assumptionString}' assumption's '${metavariableString}' metavariable as a reference.`);
+    if (referenceVerified) {
+      context.debug(`...verified the '${assumptionString}' assumption's '${referenceString}' reference.`);
     }
 
-    return metavariableVerifiesAsReference;
+    return referenceVerified;
   }
 
   verifyStatement(assignments, stated, context) {
@@ -159,21 +159,27 @@ export default define(class Assumption {
     return statementVerifies;
   }
 
-  verifyAsMetavariable(assignments, stated, context) {
-    let verifiesAsMetavariable;
+  verifyReferenceAsMetavariable(assignments, stated, context) {
+    let referenceVerifiesAsMetavariable = false;
 
-    const assumptionString = this.string,  ///
-          metavariableString = this.metavariable.getString();
+    const referenceString = this.reference.getString(),
+          assumptionString = this.string;
 
-    context.trace(`Verifying the '${assumptionString}' assumption's '${metavariableString}' metavariable...`);
+    context.trace(`Verifying the '${assumptionString}' assumption's '${referenceString}' reference as s metavariable...`);
 
-    verifiesAsMetavariable = this.metavariable.verify(context);
+    const metavariable = this.reference.getMetavariable(),
+          metavariableName = metavariable.getName(),
+          metavariablePresent = context.isMetavariablePresentByMetavariableName(metavariableName);
 
-    if (verifiesAsMetavariable) {
-      context.debug(`...verified the '${assumptionString}' assumption's '${metavariableString}' metavariable.`);
+    if (metavariablePresent) {
+      referenceVerifiesAsMetavariable = true;
     }
 
-    return verifiesAsMetavariable;
+    if (referenceVerifiesAsMetavariable) {
+      context.debug(`...verified the '${assumptionString}' assumption's '${referenceString}' reference as a metavariable.`);
+    }
+
+    return referenceVerifiesAsMetavariable;
   }
 
   verifyWhenStated(assignments, context) {
@@ -183,13 +189,12 @@ export default define(class Assumption {
 
     context.trace(`Verifying the '${assumptionString}' stated assumption...`);
 
-    const reference = referenceFromMetavariable(this.metavariable, context),
-          metavariablePresent = context.isMetavariablePresentByReference(reference);
+    const metavariablePresent = context.isMetavariablePresentByReference(this.reference);
 
     if (metavariablePresent) {
       verifiesWhenStated = true;
     } else {
-      const metaLemmaMetatheorems = context.findMetaLemmaMetatheoremsByReference(reference),
+      const metaLemmaMetatheorems = context.findMetaLemmaMetatheoremsByReference(this.reference),
             metaLemmaMetatheoremsUnify = metaLemmaMetatheorems.every((metaLemmaMetatheorem) => {
               const metaLemmaMetatheoremUnifies = this.unifyMetaLemmaMetatheorem(metaLemmaMetatheorem, context);
 
@@ -215,8 +220,7 @@ export default define(class Assumption {
 
     context.trace(`Verifying the '${assumptionString}' derived assumption...`);
 
-    const reference = referenceFromMetavariable(this.metavariable, context),
-          metaLemmaMetatheoremPresent = context.isMetaLemmaMetatheoremPresentByReference(reference);
+    const metaLemmaMetatheoremPresent = context.isMetaLemmaMetatheoremPresentByReference(this.reference);
 
     verifiesWhenDerived = metaLemmaMetatheoremPresent; ///
 
@@ -264,8 +268,7 @@ export default define(class Assumption {
 
     context.trace(`Unifying the '${labelString}' label with the '${assumptionString}' assumption...`);
 
-    const reference = referenceFromMetavariable(this.metavariable, context),
-          labelUnifies = reference.unifyLabel(label, substitutions, context);
+    const labelUnifies = this.reference.unifyLabel(label, substitutions, context);
 
     labelUnifiesWithReference = labelUnifies; ///
 
@@ -325,10 +328,10 @@ export default define(class Assumption {
     const simple = this.isSimple();
 
     if (simple) {
-      const metavariable = this.getMetavariable(),
-            metavariableJSON = metavariableToMetavariableJSON(metavariable);
+      const reference = this, ///
+            referenceJSON = referenceToReferenceJSON(reference);
 
-      json = metavariableJSON;  ///
+      json = referenceJSON;  ///
     }
 
     return json;
@@ -343,9 +346,9 @@ export default define(class Assumption {
       const string = null,
             node = null,
             statement = null,
-            metavariable = metavariableFromJSON(json, context);
+            reference = referenceFromJSON(json, context);
 
-      assumption = new Assumption(string, node, statement, metavariable)
+      assumption = new Assumption(string, node, statement, reference)
     }
 
     return assumption;
@@ -365,21 +368,13 @@ export default define(class Assumption {
   }
 });
 
-function referenceFromMetavariable(metavariable, context) {
-  const { Reference } = ontology,
-        metavariableNode = metavariable.getNode(),
-        reference = Reference.fromMetavariableNode(metavariableNode, context);
-
-  return reference;
-}
-
 function assumptionFromAssumptionNode(assumptionNode, context) {
-  const { Metavariable, Assumption, Statement } = ontology,
+  const { Reference, Assumption, Statement } = ontology,
         node = assumptionNode,  ///
         string = context.nodeAsString(node),
         statement = Statement.fromAssumptionNode(assumptionNode, context),
-        metavariable = Metavariable.fromAssumptionNode(assumptionNode, context),
-        assumption = new Assumption(string, node, statement, metavariable);
+        reference = Reference.fromAssumptionNode(assumptionNode, context),
+        assumption = new Assumption(string, node, statement, reference);
 
   return assumption;
 }

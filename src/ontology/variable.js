@@ -42,8 +42,9 @@ export default define(class Variable {
   }
 
   isEqualTo(variable) {
-    const variableString = variable.getString(),
-          equalTo = (variableString === this.string);
+    const variableNode = variable.getNode(),
+          matches = this.node.match(variableNode),
+          equalTo = matches;  ///
 
     return equalTo;
   }
