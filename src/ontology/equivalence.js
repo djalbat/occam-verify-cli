@@ -143,7 +143,7 @@ export default define(class Equivalence {
     compress(terms, (termA, termB) => {
       const termAEqualToTermB = termA.isEqualTo(termB);
 
-      if (termAEqualToTermB) {
+      if (!termAEqualToTermB) {
         return true;
       }
     });

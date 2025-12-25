@@ -37,7 +37,7 @@ export default define(class Substitutions {
     compress(metavariables, (metavariableA, metavariableB) => {
       const metavariableAEqualToMetavariableB = metavariableB.isEqualTo(metavariableA);
 
-      if (metavariableAEqualToMetavariableB) {
+      if (!metavariableAEqualToMetavariableB) {
         return true;
       }
     });
@@ -198,7 +198,7 @@ export default define(class Substitutions {
 
     const substitutionString = substitution.getString();
 
-    context.trace(`Added the ${substitutionString} substitution.`);
+    context.trace(`Added the '${substitutionString}' substitution.`);
   }
 
   removeSubstitution(substitution, context) {
@@ -214,7 +214,7 @@ export default define(class Substitutions {
 
     const substitutionString = substitution.getString();
 
-    context.trace(`Removed the ${substitutionString} substitution.`);
+    context.trace(`Removed the '${substitutionString}' substitution.`);
   }
 
   correlateSubstitutions(substitutions) {

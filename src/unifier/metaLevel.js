@@ -33,31 +33,29 @@ class MetaLevelUnifier extends Unifier {
         let statementUnifies;
 
         let context,
-            statement,
             statementNode;
 
         context = generalContext; ///
 
         const metavariableNode = generalStatementMetavariableNode,  ///
               metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
-              metavariable = context.findMetavariableByMetavariableName(metavariableName);
-
-        const metavariableNodeParentNode = metavariableNode.getParentNode();
+              metavariable = context.findMetavariableByMetavariableName(metavariableName),
+              metavariableNodeParentNode = metavariableNode.getParentNode();
 
         statementNode = metavariableNodeParentNode; ///
 
-        statement = context.findStatementByStatementNode(statementNode);
-
-        const { TermSubstitution, FrameSubstitution } = ontology,
-              frameSubstitution = FrameSubstitution.fromStatement(statement, context),
-              termSubstitution = TermSubstitution.fromStatement(statement, context),
-              substitution = (frameSubstitution || termSubstitution);
+        const frameSubstitutionNode = statementNode.getFrameSubstitutionNode(),
+              termSubstitutionNode = statementNode.getTermSubstitutionNode(),
+              substitutionNode = (frameSubstitutionNode || termSubstitutionNode),
+              substitution = (substitutionNode !== null) ?
+                               context.findSubstitutionBySubstitutionNode(substitutionNode) :
+                                 null;
 
         context = specificContext; ///
 
         statementNode = specificStatementNode;  ///
 
-        statement = context.findStatementByStatementNode(statementNode);
+        const statement = context.findStatementByStatementNode(statementNode);
 
         statementUnifies = metavariable.unifyStatement(statement, substitution, substitutions, generalContext, specificContext);
 

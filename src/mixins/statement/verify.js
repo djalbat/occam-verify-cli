@@ -26,7 +26,9 @@ function verifyAsMetavariableAndSubstitution(statement, assignments, stated, con
 
     if (metavariableVerifies) {
       const { TermSubstitution, FrameSubstitution } = ontology,
-            substitution = TermSubstitution.fromStatement(statement, context) || FrameSubstitution.fromStatement(statement, context);
+            frameSubstitution = FrameSubstitution.fromStatement(statement, context),
+            termSubstitution = TermSubstitution.fromStatement(statement, context),
+            substitution = (termSubstitution || frameSubstitution);
 
       if (substitution !== null) {
         const substitutionVerifies = substitution.verify(context);

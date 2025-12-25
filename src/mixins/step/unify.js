@@ -54,7 +54,6 @@ function unifyWithReference(statement, reference, satisfiesAssertion, substituti
 
       const { StatementSubstitution } = ontology,
             metavariable = reference.getMetavariable(),
-            specificContext = context,  ///
             statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
             substitution = statementSubstitution; ///
 

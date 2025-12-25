@@ -526,7 +526,7 @@ function verifyTypePrefixes(typePrefixes, releaseContext) {
     const typePrefixAName = typePrefixA.getName(),
           typePrefixBName = typePrefixB.getName();
 
-    if (typePrefixAName === typePrefixBName) {
+    if (typePrefixAName !== typePrefixBName) {
       return true;
     }
   });

@@ -96,14 +96,11 @@ export default define(class StatementSubstitution extends Substitution {
       if (substitution !== null) {
         context = simpleSubstitution.getContext();
 
-        const terms = context.getTerms(),
-              frames = context.getFrames();
+        const simpleContext = context;  ///
 
         context = substitution.getContext();
 
-        context.addTerms(terms);
-
-        context.addFrames(frames);
+        context.merge(simpleContext);
 
         const substitutionUnifies = this.unifySubstitution(substitution, substitutions, context);
 
@@ -118,7 +115,7 @@ export default define(class StatementSubstitution extends Substitution {
         substitutions.rollback(context);
 
     if (this.resolved) {
-      context.debug(`...resolved the ${substitutionString} substitution.`);
+      context.debug(`...resolved the '${substitutionString}' substitution.`);
     }
   }
 

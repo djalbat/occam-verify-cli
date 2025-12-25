@@ -61,7 +61,7 @@ export default class TemporaryContext {
       }
     });
 
-    context.trace(`ADded the '${termString}' term.`);
+    context.trace(`ADded the '${termString}' term to the context.`);
 
     this.terms.push(term);
   }
@@ -79,7 +79,7 @@ export default class TemporaryContext {
       }
     });
 
-    context.trace(`Added the '${frameString}' frame.`);
+    context.trace(`Added the '${frameString}' frame to the context.`);
 
     this.frames.push(frame);
   }
@@ -97,7 +97,7 @@ export default class TemporaryContext {
       }
     });
 
-    context.trace(`Added the '${statementString}' statement.`);
+    context.trace(`Added the '${statementString}' statement to the context.`);
 
     this.statements.push(statement);
   }
@@ -115,7 +115,7 @@ export default class TemporaryContext {
       }
     });
 
-    context.trace(`Added the '${assertionString}' assertion.`);
+    context.trace(`Added the '${assertionString}' assertion to the context.`);
 
     this.assertions.push(assertion);
   }
@@ -133,18 +133,18 @@ export default class TemporaryContext {
       }
     });
 
-    context.trace(`Added the '${substitutionString}' substitution.`);
+    context.trace(`Added the '${substitutionString}' substitution to the context.`);
 
     this.substitutions.push(substitution);
   }
 
   addReference(reference) {
     const context = this, ///
-      referenceString = reference.getString();
+          referenceString = reference.getString();
 
     this.reference = reference;
 
-    context.trace(`Added the '${referenceString}' reference.`);
+    context.trace(`Added the '${referenceString}' reference to the context.`);
   }
 
   findTermByTermNode(termNode) {
@@ -195,9 +195,9 @@ export default class TemporaryContext {
     return statement;
   }
 
-  findSubtitutionBySubtitutionNode(substitutionNode) {
+  findSubstitutionBySubstitutionNode(substitutionNode) {
     const substitution = this.substitutions.find((substitution) => {
-      const substitutionMatchesSubtitutionNode = substitution.matchSubtitutionNode(substitutionNode);
+      const substitutionMatchesSubtitutionNode = substitution.matchSubstitutionNode(substitutionNode);
 
       if (substitutionMatchesSubtitutionNode) {
         return true;
@@ -381,7 +381,7 @@ export default class TemporaryContext {
 
   error(message, node = null) { this.context.error(message, node); }
 
-  marge(context) {
+  merge(context) {
     const terms = context.getTerms(),
           frames = context.getFrames(),
           statements = context.getStatements(),
@@ -418,11 +418,50 @@ export default class TemporaryContext {
             termBNode = termB.getNode(),
             termANodeMatchesTermBNode = termANode.match(termBNode);
 
-      if (termAMatchesTermB) {
+      if (!termANodeMatchesTermBNode) {
         return true;
       }
     });
 
+    compress(this.frames, (frameA, frameB) => {
+      const frameANode = frameA.getNode(),
+            frameBNode = frameB.getNode(),
+            frameANodeMatchesFrameBNode = frameANode.match(frameBNode);
+
+      if (!frameANodeMatchesFrameBNode) {
+        return true;
+      }
+    });
+
+    compress(this.statements, (statementA, statementB) => {
+      const statementANode = statementA.getNode(),
+            statementBNode = statementB.getNode(),
+            statementANodeMatchesStatementBNode = statementANode.match(statementBNode);
+
+      if (!statementANodeMatchesStatementBNode) {
+        return true;
+      }
+    });
+
+    compress(this.assertions, (assertionA, assertionB) => {
+      const assertionANode = assertionA.getNode(),
+            assertionBNode = assertionB.getNode(),
+            assertionANodeMatchesAssertionBNode = assertionANode.match(assertionBNode);
+
+      if (!assertionANodeMatchesAssertionBNode) {
+        return true;
+      }
+    });
+
+    compress(this.substitutions, (substitutionA, substitutionB) => {
+      const substitutionANode = substitutionA.getNode(),
+            substitutionBNode = substitutionB.getNode(),
+            substitutionANodeMatchesSubstitutionBNode = substitutionANode.match(substitutionBNode);
+
+      if (!substitutionANodeMatchesSubstitutionBNode) {
+        return true;
+      }
+    });
   }
 
   static fromNothing(context) {
