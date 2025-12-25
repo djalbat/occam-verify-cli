@@ -1,7 +1,7 @@
 "use strict";
 
-import ontology from "../ontology";
 import Unifier from "../unifier";
+import ontology from "../ontology";
 
 import { nodeQuery } from "../utilities/query";
 import { metavariableNameFromMetavariableNode } from "../utilities/metavariable";

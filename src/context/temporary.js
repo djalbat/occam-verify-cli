@@ -2,18 +2,18 @@
 
 import { arrayUtilities } from "necessary";
 
-const { extract } = arrayUtilities;
+const { extract, compress } = arrayUtilities;
 
 export default class TemporaryContext {
-  constructor(context, tokens, terms, frames, statements, assertions, reference, substitution) {
+  constructor(context, tokens, terms, frames, statements, assertions, substitutions, reference) {
     this.context = context;
     this.tokens = tokens;
     this.terms = terms;
     this.frames = frames;
     this.statements = statements;
     this.assertions = assertions;
+    this.substitutions = substitutions;
     this.reference = reference;
-    this.substitution = substitution;
   }
 
   getContext() {
@@ -40,12 +40,12 @@ export default class TemporaryContext {
     return this.assertions;
   }
 
-  getReferences() {
-    return this.reference;
+  getSubstitutions() {
+    return this.substitutions;
   }
 
-  getSubstitution() {
-    return this.substitution;
+  getReference() {
+    return this.reference;
   }
 
   addTerm(term) {
@@ -84,18 +84,6 @@ export default class TemporaryContext {
     this.frames.push(frame);
   }
 
-  addTerms(terms) {
-    terms.forEach((term) => {
-      this.addTerm(term);
-    });
-  }
-
-  addFrames(frames) {
-    frames.forEach((frame) => {
-      this.addFrame(frame);
-    });
-  }
-
   addStatement(statement) {
     const context = this, ///
           statementNode = statement.getNode(),
@@ -132,54 +120,31 @@ export default class TemporaryContext {
     this.assertions.push(assertion);
   }
 
+  addSubstitution(substitution) {
+    const context = this, ///
+          substitutionNode = substitution.getNode(),
+          substitutionString = substitution.getString();
+
+    extract(this.substitutions, (substitution) => {
+      const substitutionMatchesFrameNode = substitution.matchSubstitutionNode(substitutionNode);
+
+      if (substitutionMatchesFrameNode) {
+        return true;
+      }
+    });
+
+    context.trace(`Added the '${substitutionString}' substitution.`);
+
+    this.substitutions.push(substitution);
+  }
+
   addReference(reference) {
     const context = this, ///
-          referenceString = reference.getString();
+      referenceString = reference.getString();
 
     this.reference = reference;
 
     context.trace(`Added the '${referenceString}' reference.`);
-  }
-
-  addSubstitution(substitution) {
-    const context = this, ///
-          substitutionString = substitution.getString();
-
-    this.substitution = substitution;
-
-    context.trace(`Added the '${substitutionString}' substitution.`);
-  }
-
-  removeTerm(term) {
-    const context = this, ///
-          termNode = term.getNode(),
-          termString = term.getString();
-
-    term = this.findTermByTermNode(termNode);
-
-    const index = this.terms.indexOf(term),
-          start = index,  ///
-          deleteCount = 1;
-
-    this.terms.splice(start, deleteCount);
-
-    context.trace(`Removed the '${termString}' term.`);
-  }
-
-  removeFrame(frame) {
-    const context = this, ///
-          frameNode = frame.getNode(),
-          frameString = frame.getString();
-
-    frame = this.findFrameByFrameNode(frameNode);
-
-    const index = this.frames.indexOf(frame),
-          start = index,  ///
-          deleteCount = 1;
-
-    this.frames.splice(start, deleteCount);
-
-    context.trace(`Removed the '${frameString}' frame.`);
   }
 
   findTermByTermNode(termNode) {
@@ -230,30 +195,14 @@ export default class TemporaryContext {
     return statement;
   }
 
-  findReferenceByMetavariableName(metavariableName) {
-    let reference = null;
+  findSubtitutionBySubtitutionNode(substitutionNode) {
+    const substitution = this.substitutions.find((substitution) => {
+      const substitutionMatchesSubtitutionNode = substitution.matchSubtitutionNode(substitutionNode);
 
-    if (this.reference !== null) {
-      const referenceMatchesMetavariableName = this.reference.matchMetavariableName(metavariableName);
-
-      if (referenceMatchesMetavariableName) {
-        reference = this.reference;
+      if (substitutionMatchesSubtitutionNode) {
+        return true;
       }
-    }
-
-    return reference;
-  }
-
-  findSubstitutionBySubstitutionNode(substitutionNode) {
-    let substitution = null;
-
-    if (this.substitution !== null) {
-      const substitutionMatchesSubstitutionNode = this.substitution.matchSubstitutionNode(substitutionNode);
-
-      if (substitutionMatchesSubstitutionNode) {
-        substitution = this.substitution;
-      }
-    }
+    }) || null;
 
     return substitution;
   }
@@ -432,15 +381,59 @@ export default class TemporaryContext {
 
   error(message, node = null) { this.context.error(message, node); }
 
+  marge(context) {
+    const terms = context.getTerms(),
+          frames = context.getFrames(),
+          statements = context.getStatements(),
+          assertions = context.getAssertions(),
+          substitutions = context.getSubstitutions();
+
+    this.terms = [
+      ...this.terms,
+      ...terms
+    ];
+
+    this.frames = [
+      ...this.frames,
+      ...frames
+    ];
+
+    this.statements = [
+      ...this.statements,
+      ...statements
+    ];
+
+    this.assertions = [
+      ...this.assertions,
+      ...assertions
+    ];
+
+    this.substitutions = [
+      ...this.substitutions,
+      ...substitutions
+    ];
+
+    compress(this.terms, (termA, termB) => {
+      const termANode = termA.getNode(),
+            termBNode = termB.getNode(),
+            termANodeMatchesTermBNode = termANode.match(termBNode);
+
+      if (termAMatchesTermB) {
+        return true;
+      }
+    });
+
+  }
+
   static fromNothing(context) {
     const terms = [],
           frames = [],
           tokens = null,
           statements = [],
           assertions = [],
+          substitutions = [],
           reference = null,
-          substitution = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, reference, substitution);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, substitutions, reference);
 
     return temporaryContext;
   }
@@ -449,9 +442,9 @@ export default class TemporaryContext {
     const tokens = null,
           statements = [],
           assertions = [],
+          substitutions = [],
           reference = null,
-          substitution = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, reference, substitution);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, substitutions, reference);
 
     return temporaryContext;
   }
@@ -461,9 +454,9 @@ export default class TemporaryContext {
           frames = [],
           statements = [],
           assertions = [],
+          substitutions = [],
           reference = null,
-          substitution = null,
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, reference, substitution);
+          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, substitutions, reference);
 
     return temporaryContext;
   }
