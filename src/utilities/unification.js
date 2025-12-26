@@ -1,6 +1,5 @@
 "use string";
 
-import TemporaryContext from "../context/temporary";
 import metaLevelUnifier from "../unifier/metaLevel";
 import metavariableUnifier from "../unifier/metavariable";
 import intrinsicLevelUnifier from "../unifier/intrinsicLevel";
@@ -43,13 +42,7 @@ export function unifyMetavariable(generalMetavariable, specificMetavariable, gen
   let metavariableUnifies;
 
   const generalMetavariableNode = generalMetavariable.getNode(),
-        specificMetavariableNode = specificMetavariable.getNode(),
-        generalMetavariableTokens = generalMetavariable.getTokens(),
-        specificMetavariableTokens = specificMetavariable.getTokens();
-
-  generalContext = contextFromTokens(generalMetavariableTokens, generalContext); ///
-
-  specificContext = contextFromTokens(specificMetavariableTokens, specificContext); ///
+        specificMetavariableNode = specificMetavariable.getNode();
 
   metavariableUnifies = metavariableUnifier.unify(generalMetavariableNode, specificMetavariableNode, generalContext, specificContext);
 
@@ -60,10 +53,12 @@ export function unifyTermWithConstructor(term, constructor, context) {
   let termUnifiesWithConstructor;
 
   const termNode = term.getNode(),
+        generalContext = context, ///
+        specificContext = context,  ///
         constructorTerm = constructor.getTerm(),
         constructorTermNode = constructorTerm.getNode();
 
-  termUnifiesWithConstructor = termWithConstructorUnifier.unify(constructorTermNode, termNode, context);
+  termUnifiesWithConstructor = termWithConstructorUnifier.unify(constructorTermNode, termNode, generalContext, specificContext);
 
   return termUnifiesWithConstructor;
 }
@@ -73,14 +68,7 @@ export function unifyStatementIntrinsically(generalStatement, specificStatement,
 
   const generalStatementNode = generalStatement.getNode(),
         specificStatementNode = specificStatement.getNode(),
-        generalStatementTokens = generalStatement.getTokens(),
-        specificStatementTokens = specificStatement.getTokens();
-
-  generalContext = contextFromTokens(generalStatementTokens, generalContext); ///
-
-  specificContext = contextFromTokens(specificStatementTokens, specificContext); ///
-
-  const generalNonTerminalNode = generalStatementNode, ///
+        generalNonTerminalNode = generalStatementNode, ///
         specificNonTerminalNode = specificStatementNode; ///
 
   metavariableUnifiesIntrinsically = intrinsicLevelUnifier.unify(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext);
@@ -92,15 +80,10 @@ export function unifyStatementWithCombinator(statement, combinator, assignments,
   let statementUnifiesWithCombinator;
 
   const statementNode = statement.getNode(),
+        generalContext = context, ///
+        specificContext = context,  ///
         combinatorStatement = combinator.getStatement(),
-        combinatorStatementNode = combinatorStatement.getNode(),
-        combinatorStatementTokens = combinatorStatement.getTokens();
-
-  const specificContext = context;  ///
-
-  context = contextFromTokens(combinatorStatementTokens, context);  ///
-
-  const generalContext = context; ///
+        combinatorStatementNode = combinatorStatement.getNode();
 
   statementUnifiesWithCombinator = statementWithCombinatorUnifier.unify(combinatorStatementNode, statementNode, assignments, stated, generalContext, specificContext);
 
@@ -112,25 +95,10 @@ export function unifyMetavariableIntrinsically(generalMetavariable, specificMeta
 
   const generalMetavariableNode = generalMetavariable.getNode(),
         specificMetavariableNode = specificMetavariable.getNode(),
-        generalMetavariableTokens = generalMetavariable.getTokens(),
-        specificMetavariableTokens = specificMetavariable.getTokens();
-
-  generalContext = contextFromTokens(generalMetavariableTokens, generalContext); ///
-
-  specificContext = contextFromTokens(specificMetavariableTokens, specificContext); ///
-
-  const generalNonTerminalNode = generalMetavariableNode, ///
+        generalNonTerminalNode = generalMetavariableNode, ///
         specificNonTerminalNode = specificMetavariableNode; ///
 
   metavariableUnifiesIntrinsically = intrinsicLevelUnifier.unify(generalNonTerminalNode, specificNonTerminalNode, substitutions, generalContext, specificContext);
 
   return metavariableUnifiesIntrinsically;
-}
-
-function contextFromTokens(tokens, context) {
-  const temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
-
-  context = temporaryContext;  ///
-
-  return context;
 }

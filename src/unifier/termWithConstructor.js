@@ -1,7 +1,7 @@
 "use strict";
 
-import ontology from "../ontology";
 import Unifier from "../unifier";
+import ontology from "../ontology";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -9,12 +9,12 @@ const termNodeQuery = nodeQuery("/term"),
       typeNodeQuery = nodeQuery("/type");
 
 class TermWithConstructorUnifier extends Unifier {
-  unify(constructorTermNode, termNode, context) {
+  unify(constructorTermNode, termNode, generalContext, specificContext) {
     let termUnifiesWithConstructor;
 
     const generalNonTerminalNode = constructorTermNode, ///
           specificNonTerminalNode = termNode, ///
-          nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, context);
+          nonTerminalNodeUnifies = this.unifyNonTerminalNode(generalNonTerminalNode, specificNonTerminalNode, generalContext, specificContext);
 
     termUnifiesWithConstructor = nonTerminalNodeUnifies; ///
 
@@ -25,27 +25,32 @@ class TermWithConstructorUnifier extends Unifier {
     {
       generalNodeQuery: typeNodeQuery,
       specificNodeQuery: termNodeQuery,
-      unify: (generalTypeNode, specificTermNode, context) => {
+      unify: (generalTypeNode, specificTermNode, generalContext, specificContext) => {
         let unifies = false;
 
-        const { Term } = ontology,
-              typeNode = generalTypeNode, ///
-              nominalTypeName = typeNode.getNominalTypeName(),
-              type = context.findTypeByNominalTypeName(nominalTypeName);
+        const typeNode = generalTypeNode, ///
+              termNode = specificTermNode, ///
+              nominalTypeName = typeNode.getNominalTypeName();
+
+        let context;
+
+        context = generalContext; ///
+
+        const type = context.findTypeByNominalTypeName(nominalTypeName);
 
         if (type !== null) {
-          const termNode = specificTermNode, ///
+          context = specificContext;  ///
+
+          const { Term } = ontology,
                 term = Term.fromTermNode(termNode, context),
-                generalContext = context, ///
-                specificContext = context,  ///
                 termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
           if (termVerifiesGivenType) {
             unifies = true;
           }
-        }
 
-        return unifies;
+          return unifies;
+        }
       }
     }
   ];

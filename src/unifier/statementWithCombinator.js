@@ -1,7 +1,7 @@
 "use strict";
 
-import ontology from "../ontology";
 import Unifier from "../unifier";
+import ontology from "../ontology";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -43,7 +43,8 @@ class StatementWithCombinatorUnifier extends Unifier {
 
         context = specificContext;  ///
 
-        const statement = context.findStatementByStatementNode(statementNode),
+        const { Statement } = ontology,
+              statement = Statement.fromStatementNode(statementNode, context),
               statementVerifiesGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, context);
 
         unifies = statementVerifiesGivenType;
@@ -69,7 +70,8 @@ class StatementWithCombinatorUnifier extends Unifier {
 
         context = specificContext;  ///
 
-        const frame = context.findFrameByFrameNode(frameNode),
+        const { Frame } = ontology,
+              frame = Frame.fromFrameNode(frameNode, context),
               frameVerifiesGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, context);
 
         unifies = frameVerifiesGivenType;
@@ -93,16 +95,19 @@ class StatementWithCombinatorUnifier extends Unifier {
 
         const type = context.findTypeByNominalTypeName(nominalTypeName);
 
-        context = specificContext;  ///
+        if (type !== null) {
+          context = specificContext;  ///
 
-        const term = context.findTermByTermNode(termNode),
-              termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
+          const { Term } = ontology,
+                term = Term.fromTermNode(termNode, context),
+                termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
-        if (termVerifiesGivenType) {
-          unifies = true;
+          if (termVerifiesGivenType) {
+            unifies = true;
+          }
+
+          return unifies;
         }
-
-        return unifies;
       }
     }
   ];
