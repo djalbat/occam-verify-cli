@@ -153,7 +153,7 @@ export default define(class DefinedAssertion extends Assertion {
   unifyIndependently(substitutions, generalContext, specificContext) {
     let unifiesIndependently;
 
-    const context = generalContext, ///
+    const context = specificContext, ///
           definedAssertionString = this.getString(); ///
 
     context.trace(`Unifying the '${definedAssertionString}' defined assertion independently...`);

@@ -20,27 +20,17 @@ export default class TermSubstitutionNode extends SubstitutionNode {
   }
 
   getLastVariableNode() {
-    let lastVariableNode = null;
-
     const lastTermNode = this.getLastTermNode(),
-          singularVariableNode = lastTermNode.getSingularVariableNode();
-
-    if (singularVariableNode !== null) {
-      lastVariableNode = singularVariableNode;  ///
-    }
+          singularVariableNode = lastTermNode.getSingularVariableNode(),
+          lastVariableNode = singularVariableNode;  ///
 
     return lastVariableNode;
   }
 
   getFirstVariableNode() {
-    let firstVariableNode = null;
-
     const firstTermNode = this.getFirstTermNode(),
-          singularVariableNode = firstTermNode.getSingularVariableNode();
-
-    if (singularVariableNode !== null) {
-      firstVariableNode = singularVariableNode;  ///
-    }
+          singularVariableNode = firstTermNode.getSingularVariableNode(),
+          firstVariableNode = singularVariableNode;  ///
 
     return firstVariableNode;
   }

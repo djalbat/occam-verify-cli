@@ -93,17 +93,7 @@ export function satisfiesAssertionFromStatement(statement, context) {
   return satisfiesAssertion;
 }
 
-function contextFromFrame(frame, context) {
-  const frameTokens = frame.getTokens(),
-        tokens = frameTokens, ///
-        temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
-
-  context = temporaryContext; ///
-
-  return context;
-}
-
-function contextFromStatement(statement, context) {
+export function contextFromStatement(statement, context) {
   const statementTokens = statement.getTokens(),
         tokens = statementTokens, ///
         temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);

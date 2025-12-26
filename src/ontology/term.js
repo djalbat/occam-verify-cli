@@ -41,6 +41,26 @@ export default define(class Term {
 
   matchTermNode(termNode) { return this.node.match(termNode); }
 
+  isEqualToVariable(variable) {
+    let variableNodeMathces = false;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const variableNode = variable.getNode(),
+            singularVariableNode = this.node.getSingularVariableNode(),
+            variableNodeA = variableNode, ///
+            variableNodeB = singularVariableNode, ///
+            matches = variableNodeA.match(variableNodeB);
+
+      if (matches) {
+        variableNodeMathces = true;
+      }
+    }
+
+    return variableNodeMathces;
+  }
+
   isEqualTo(term) {
     const termNode = term.getNode(),
           matches = this.node.match(termNode),

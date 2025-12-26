@@ -1,9 +1,10 @@
 "use strict";
 
 import ontology from "../ontology";
-import TemporaryContext from "../context/temporary";
 import combinatorBracketedContext from "../context/bracketed/combinator";
 import constructorBracketedContext from "../context/bracketed/constructor";
+
+import { contextFromStatement } from "../utilities/context";
 
 import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
 
@@ -87,14 +88,4 @@ export function bracketedStatementChildNodeFromStatementNode(statementNode) {
   }
 
   return bracketedStatementChildNode;
-}
-
-function contextFromStatement(statement, context) {
-  const statementTokens = statement.getTokens(),
-        tokens = statementTokens, ///
-        temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
-
-  context = temporaryContext; ///
-
-  return context;
 }

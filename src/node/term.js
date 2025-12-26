@@ -5,16 +5,30 @@ import NonTerminalNode from "../nonTerminalNode";
 import { ARGUMENT_RULE_NAME, VARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class TermNode extends NonTerminalNode {
-  isSimple() {
-    let simple = false;
+  getVariableIdentifier() {
+    let variableIdentifier = null;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const singularVariableNode = this.getSingularVariableNode();
+
+      variableIdentifier = singularVariableNode.getVariableIdentifier();
+    }
+
+    return variableIdentifier;
+  }
+
+  isSingular() {
+    let singular = false;
 
     const singularVariableNode = this.getSingularVariableNode();
 
     if (singularVariableNode !== null) {
-      simple = true;
+      singular = true;
     }
 
-    return simple;
+    return singular;
   }
 
   getVariableNodes() {

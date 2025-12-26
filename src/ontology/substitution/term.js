@@ -6,7 +6,6 @@ import TermSubstitutionPartialContext from "../../context/partial/substitution/t
 
 import { define } from "../../ontology";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
-import { termVariableIdentifierFromTermNode } from "../../utilities/variable";
 
 
 export default define(class TermSubstitution extends Substitution {
@@ -33,9 +32,13 @@ export default define(class TermSubstitution extends Substitution {
   }
 
   isTrivial() {
-    const termString = this.term.getString(),
-          variableString = this.variable.getString(),
-          trivial = (termString === variableString);
+    let trivial = false;
+
+    const termEqualToVariable = this.term.isEqualToVariable(this.variable);
+
+    if (termEqualToVariable) {
+      trivial = true;
+    }
 
     return trivial;
   }
@@ -55,37 +58,34 @@ export default define(class TermSubstitution extends Substitution {
 
     const termSubstitutionString = this.string;  ///
 
-    context.trace(`Verifiying the '${termSubstitutionString}' term substitutin...`);
+    context.trace(`Verifiying the '${termSubstitutionString}' term substitution...`);
 
     const termSingular = this.term.isSingular();
 
     if (termSingular) {
-      if (this.variable === null) {
-        context.debug(`The specific term is not singular.`);
-      } else {
+      if (this.variable !== null) {
         const variableIdentifier = this.variable.getIdentifier(),
               variablePresent = context.isVariablePresentByVariableIdentifier(variableIdentifier);
 
         if (variablePresent) {
           const termNode = this.term.getNode(),
-                termVariableIdentifier = termVariableIdentifierFromTermNode(termNode),
+                variableIdentifier = termNode.getVariableIdentifier(),
+                termVariableIdentifier = variableIdentifier,  ///
                 termVariablePresent = context.isVariablePresentByVariableIdentifier(termVariableIdentifier);
 
           if (termVariablePresent) {
             verifies = true;
           } else {
-            const variableString = variable.getString();
-
-            context.debug(`The '${variableString}' variable is not present.`);
+            context.debug(`The '${termSubstitutionString}' term substitution's general term's variable is not present.`);
           }
         } else {
-          const variableString = this.variable.getString();
-
-          context.debug(`The '${variableString}' variable is not present.`);
+          context.debug(`The '${termSubstitutionString}' term substitution's specific term's variable is not present.`);
         }
+      } else {
+        context.debug(`The '${termSubstitutionString}' term substitution's general term is not singular.`);
       }
     } else {
-      context.debug(`The general term is not simple.`);
+      context.debug(`The '${termSubstitutionString}' term substitution's specific term is not singular.`);
     }
 
     if (verifies) {
@@ -93,7 +93,7 @@ export default define(class TermSubstitution extends Substitution {
 
       context.addSubstitution(substititoin);
 
-      context.debug(`...verified the '${termSubstitutionString}' term substitutin.`);
+      context.debug(`...verified the '${termSubstitutionString}' term substitution.`);
     }
 
     return verifies;

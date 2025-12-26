@@ -76,49 +76,6 @@ export default define(class StatementSubstitution extends Substitution {
 
   matchParameter(parameter) { return this.metavariable.matchParameter(parameter); }
 
-  resolve(substitutions, context) {
-    const substitutionString = this.string; ///
-
-    context.trace(`Resolving the ${substitutionString} substitution...`);
-
-    substitutions.snapshot();
-
-    const metavariable = this.getMetavariable(),
-          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable);
-
-    if (simpleSubstitution !== null) {
-      let context;
-
-      context = this.getContext();
-
-      const substitution = simpleSubstitution.unifyStatement(this.statement, context);
-
-      if (substitution !== null) {
-        context = simpleSubstitution.getContext();
-
-        const simpleContext = context;  ///
-
-        context = substitution.getContext();
-
-        context.merge(simpleContext);
-
-        const substitutionUnifies = this.unifySubstitution(substitution, substitutions, context);
-
-        if (substitutionUnifies) {
-          this.resolved = true;
-        }
-      }
-    }
-
-    this.resolved ?
-      substitutions.continue() :
-        substitutions.rollback(context);
-
-    if (this.resolved) {
-      context.debug(`...resolved the '${substitutionString}' substitution.`);
-    }
-  }
-
   unifyStatement(statement, context) {
     let substitution = null;
 
@@ -168,6 +125,49 @@ export default define(class StatementSubstitution extends Substitution {
     }
 
     return substitutionUnifies;
+  }
+
+  resolve(substitutions, context) {
+    const substitutionString = this.string; ///
+
+    context.trace(`Resolving the ${substitutionString} substitution...`);
+
+    substitutions.snapshot();
+
+    const metavariable = this.getMetavariable(),
+          simpleSubstitution = substitutions.findSimpleSubstitutionByMetavariable(metavariable);
+
+    if (simpleSubstitution !== null) {
+      let context;
+
+      context = this.getContext();
+
+      const substitution = simpleSubstitution.unifyStatement(this.statement, context);
+
+      if (substitution !== null) {
+        context = simpleSubstitution.getContext();
+
+        const simpleContext = context;  ///
+
+        context = substitution.getContext();
+
+        context.merge(simpleContext);
+
+        const substitutionUnifies = this.unifySubstitution(substitution, substitutions, context);
+
+        if (substitutionUnifies) {
+          this.resolved = true;
+        }
+      }
+    }
+
+    this.resolved ?
+      substitutions.continue() :
+        substitutions.rollback(context);
+
+    if (this.resolved) {
+      context.debug(`...resolved the '${substitutionString}' substitution.`);
+    }
   }
 
   toJSON() {

@@ -40,35 +40,31 @@ export default define(class FrameSubstitution extends Substitution {
 
     const frameSubstitutionString = this.string;  ///
 
-    context.trace(`Verifiying the '${frameSubstitutionString}' frame substitutin...`);
+    context.trace(`Verifiying the '${frameSubstitutionString}' frame substitution...`);
 
     const frameSingular = this.frame.isSingular();
 
     if (frameSingular) {
-      if (this.metavariable === null) {
-        context.debug(`The specific frame is not singular.`);
-      } else {
+      if (this.metavariable !== null) {
         const metavariablePresent = context.isMetavariablePresent(this.metavariable);
 
         if (metavariablePresent) {
-          const metavariable = this.frame.getMetavariable(),
-                metavariablePresent = context.isMetavariablePresent(metavariable);
+          const frameMetavariable = this.frame.getMetavariable(),
+                frameMetavariablePresent = context.isMetavariablePresent(frameMetavariable);
 
-          if (metavariablePresent) {
+          if (frameMetavariablePresent) {
             verifies = true;
           } else {
-            const metavariableString = metavariable.getString();
-
-            context.debug(`The '${metavariableString}' metavariable is not present.`);
+            context.debug(`The '${frameSubstitutionString}' frame substitution's general frame's metavariable is not present.`);
           }
         } else {
-          const metavariableString = this.metavariable.getString();
-
-          context.debug(`The '${metavariableString}' metavariable is not present.`);
+          context.debug(`The '${frameSubstitutionString}' frame substitution's specific frame's metavariable is not present.`);
         }
+      } else {
+        context.debug(`The '${frameSubstitutionString}' frame substitution's general frame is not singular.`);
       }
     } else {
-      context.debug(`The general frame is not singular.`);
+      context.debug(`The '${frameSubstitutionString}' frame substitution's specific frame is not singular.`);
     }
 
     if (verifies) {
@@ -76,7 +72,7 @@ export default define(class FrameSubstitution extends Substitution {
 
       context.addSubstitution(substititoin);
 
-      context.debug(`...verified the '${frameSubstitutionString}' frame substitutin.`);
+      context.debug(`...verified the '${frameSubstitutionString}' frame substitution.`);
     }
 
     return verifies;

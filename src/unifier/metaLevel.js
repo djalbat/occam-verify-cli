@@ -3,7 +3,6 @@
 import Unifier from "../unifier";
 
 import { nodeQuery } from "../utilities/query";
-import { metavariableNameFromMetavariableNode } from "../utilities/metavariable";
 
 const termNodeQuery = nodeQuery("/term"),
       frameNodeQuery = nodeQuery("/frame"),
@@ -38,7 +37,7 @@ class MetaLevelUnifier extends Unifier {
 
         metavariableNode = generalAssumptionMetavariableNode;  ///
 
-        const metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+        const metavariableName = metavariableNode.getMetavariableName(),
               metavariable = context.findMetavariableByMetavariableName(metavariableName);
 
         context = specificContext;  ///
@@ -64,7 +63,7 @@ class MetaLevelUnifier extends Unifier {
         context = generalContext; ///
 
         const metavariableNode = generalStatementMetavariableNode,  ///
-              metavariableName = metavariableNameFromMetavariableNode(metavariableNode),
+              metavariableName = metavariableNode.getMetavariableName(),
               metavariable = context.findMetavariableByMetavariableName(metavariableName),
               metavariableNodeParentNode = metavariableNode.getParentNode();
 
@@ -96,7 +95,7 @@ class MetaLevelUnifier extends Unifier {
 
         const frameNode = specificFrameNode, ///
               metavariableNode = generalFrameAssumptionMetavariableNode,  ///
-              metavariableName = metavariableNameFromMetavariableNode(metavariableNode);
+              metavariableName = metavariableNode.getMetavariableName();
 
         let context;
 

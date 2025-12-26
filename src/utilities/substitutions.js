@@ -1,12 +1,5 @@
 "use strict";
 
-import { nodeQuery } from "../utilities/query";
-import { frameMetavariableNameFromFrameNode } from "../utilities/frame";
-import { termVariableIdentifierFromTermNode } from "../utilities/variable";
-import { statementMetavariableNameFromFrameNode } from "../utilities/statement";
-
-const substitutionNodeQuery = nodeQuery("/statement/termSubstitution|frameSubstitution!");
-
 export function termFromTermAndSubstitutions(term, substitutions, generalContext, specificContext) {
   if (term !== null) {
     const termNode = term.getNode(),
@@ -15,8 +8,7 @@ export function termFromTermAndSubstitutions(term, substitutions, generalContext
     term = null;  ///
 
     if (termSingular) {
-      const termVariableIdentifier = termVariableIdentifierFromTermNode(termNode),
-            variableIdentifier = termVariableIdentifier,  ///
+      const variableIdentifier = termNode.getVariableIdentifier(),
             variable = generalContext.findVariableByVariableIdentifier(variableIdentifier);
 
       if (variable !== null) {
@@ -42,8 +34,7 @@ export function frameFromFrameAndSubstitutions(frame, substitutions, generalCont
     frame = null;  ///
 
     if (frameSingular) {
-      const frameMetavariableName = frameMetavariableNameFromFrameNode(frameNode),
-            metavariableName = frameMetavariableName, ///
+      const metavariableName = frameNode.getMetavariableName(),
             metavariable = generalContext.findMetavariableByMetavariableName(metavariableName);
 
       if (metavariable !== null) {
@@ -73,14 +64,13 @@ export function statementFromStatementAndSubstitutions(statement, substitutions,
 
       let substitution = null;
 
-      const substitutionNode = substitutionNodeQuery(statementNode);
+      const substitutionNode = statementNode.getSubstitutionNode();
 
       if (substitutionNode !== null) {
         substitution = generalContext.findSubstitutionBySubstitutionNode(substitutionNode);
       }
 
-      const statementMetavariableName = statementMetavariableNameFromFrameNode(statementNode),
-            metavariableName = statementMetavariableName, ///
+      const metavariableName = statementNode.getMetavariableName(),
             metavariable = generalContext.findMetavariableByMetavariableName(metavariableName);
 
       if (metavariable !== null) {
