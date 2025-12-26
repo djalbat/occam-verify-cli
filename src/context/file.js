@@ -641,9 +641,9 @@ export default class FileContext {
   findJudgementByMetavariable(metavariable) {
     const judgements = this.getJudgements(),
           judgement = judgements.find((judgement) => {
-            const judgementSimple = judgement.isSimple();
+            const judgementSingular = judgement.isSingular();
 
-            if (judgementSimple) {
+            if (judgementSingular) {
               const judgementMetavariable = judgement.getMetavariable(),
                     judgementMetavariableEqualToMetavariable = judgementMetavariable.isEqualTo(metavariable);
 

@@ -37,11 +37,11 @@ export function termFromTermAndSubstitutions(term, substitutions, generalContext
 export function frameFromFrameAndSubstitutions(frame, substitutions, generalContext, specificContext) {
   if (frame !== null) {
     const frameNode = frame.getNode(),
-          frameSimple = frame.isSimple();
+          frameSingular = frame.isSingular();
 
     frame = null;  ///
 
-    if (frameSimple) {
+    if (frameSingular) {
       const frameMetavariableName = frameMetavariableNameFromFrameNode(frameNode),
             metavariableName = frameMetavariableName, ///
             metavariable = generalContext.findMetavariableByMetavariableName(metavariableName);
@@ -66,9 +66,9 @@ export function frameFromFrameAndSubstitutions(frame, substitutions, generalCont
 export function statementFromStatementAndSubstitutions(statement, substitutions, generalContext, specificContext) {
   if (statement !== null) {
     const statementNode = statement.getNode(),
-          statementSimple = statement.isSimple();
+          statementSingular = statement.isSingular();
 
-    if (statementSimple) {
+    if (statementSingular) {
       statement = null;
 
       let substitution = null;

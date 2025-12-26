@@ -43,7 +43,7 @@ export default define(class Term {
 
   isEqualTo(term) {
     const termNode = term.getNode(),
-          matches = this.ndoe.match(termNode),
+          matches = this.node.match(termNode),
           equalTo = matches;  ///
 
     return equalTo;

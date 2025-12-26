@@ -6,14 +6,19 @@ import JudgementAssignment from "../assignment/judgement";
 import { define } from "../ontology";
 
 export default define(class Judgement {
-  constructor(string, frame, assumption) {
+  constructor(string, node, frame, assumption) {
     this.string = string;
+    this.node = node;
     this.frame = frame;
     this.assumption = assumption;
   }
 
   getString() {
     return this.string;
+  }
+
+  getNode() {
+    return this.node;
   }
 
   getFrame() {
@@ -157,7 +162,7 @@ export default define(class Judgement {
             frame = Frame.fromJudgementNode(judgementNode, context),
             assumption = Assumption.fromJudgementNode(judgementNode, context);
 
-      judgement = new Judgement(string, frame, assumption);
+      judgement = new Judgement(string, node, frame, assumption);
     }
 
     return judgement;

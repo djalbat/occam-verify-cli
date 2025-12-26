@@ -31,19 +31,19 @@ class StatementWithCombinatorUnifier extends Unifier {
       unify: (generalMetaTypeNode, specificStatementNode, assignments, stated, generalContext, specificContext) => {
         let unifies;
 
-        const { Statement, MetaType } = ontology,
-              metaTypeNode = generalMetaTypeNode, ///
+        const metaTypeNode = generalMetaTypeNode, ///
               statementNode = specificStatementNode; ///
 
         let context;
 
         context = generalContext; ///
 
-        const metaType = MetaType.fromMetaTypeNode(metaTypeNode, context);
+        const metaTypeName = metaTypeNode.getMetaTypeName(),
+              metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
 
         context = specificContext;  ///
 
-        const statement = Statement.fromStatementNode(statementNode, context),
+        const statement = context.findStatementByStatementNode(statementNode),
               statementVerifiesGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, context);
 
         unifies = statementVerifiesGivenType;
@@ -57,19 +57,19 @@ class StatementWithCombinatorUnifier extends Unifier {
       unify: (generalMetaTypeNode, specificFrameNode, assignments, stated, generalContext, specificContext) => {
         let unifies;
 
-        const { Frame, MetaType } = ontology,
-              metaTypeNode = generalMetaTypeNode, ///
+        const metaTypeNode = generalMetaTypeNode, ///
               frameNode = specificFrameNode; ///
 
         let context;
 
         context = generalContext; ///
 
-        const metaType = MetaType.fromMetaTypeNode(metaTypeNode, context);
+        const metaTypeName = metaTypeNode.getMetaTypeName(),
+              metaType = context.findMetaTypeByMetaTypeName(metaTypeName);
 
         context = specificContext;  ///
 
-        const frame = Frame.fromFrameNode(frameNode, context),
+        const frame = context.findFrameByFrameNode(frameNode),
               frameVerifiesGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, context);
 
         unifies = frameVerifiesGivenType;
@@ -83,8 +83,7 @@ class StatementWithCombinatorUnifier extends Unifier {
       unify: (generalTypeNode, specificTermNode, assignments, stated, generalContext, specificContext) => {
         let unifies = false;
 
-        const { Term } = ontology,
-              typeNode = generalTypeNode, ///
+        const typeNode = generalTypeNode, ///
               termNode = specificTermNode, ///
               nominalTypeName = typeNode.getNominalTypeName();
 
@@ -96,7 +95,7 @@ class StatementWithCombinatorUnifier extends Unifier {
 
         context = specificContext;  ///
 
-        const term = Term.fromTermNode(termNode, context),
+        const term = context.findTermByTermNode(termNode),
               termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
         if (termVerifiesGivenType) {

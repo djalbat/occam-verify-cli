@@ -6,7 +6,6 @@ import { define } from "../ontology";
 import { referenceMetaType } from ".//metaType";
 import { unifyMetavariableIntrinsically } from "../utilities/unification";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
-import reference from "./substitution/reference";
 
 export default define(class Reference {
   constructor(metavariable) {
