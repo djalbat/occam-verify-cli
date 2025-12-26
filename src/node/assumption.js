@@ -5,16 +5,16 @@ import DocumentNode from "../nonTerminalNode";
 import { STATEMENT_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class AssumptionpNode extends DocumentNode {
-  isSimple() {
-    let simple = false;
+  isSingular() {
+    let singular = false;
 
     const statementNode = this.getStatementNode();
 
     if (statementNode === null) {
-      simple = true;
+      singular = true;
     }
 
-    return simple;
+    return singular;
   }
 
   getStatementNode() {

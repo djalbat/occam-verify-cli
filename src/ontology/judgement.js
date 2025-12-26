@@ -24,7 +24,7 @@ export default define(class Judgement {
     return this.assumption;
   }
 
-  isSimple() { return this.frame.isSimple(); }
+  isSingular() { return this.node.isSingular(); }
 
   getMetavariable() { return this.frame.getMetavariable(); }
 

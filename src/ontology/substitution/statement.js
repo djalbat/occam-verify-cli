@@ -175,7 +175,7 @@ export default define(class StatementSubstitution extends Substitution {
           statementJSON = statementToStatementJSON(this.statement),
           metavariable = metavariableJSON,  ///
           statement = statementJSON,  ///
-          string = this.string,
+          string = this.string, ///
           json = {
             string,
             statement,

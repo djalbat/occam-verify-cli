@@ -57,11 +57,11 @@ export default define(class TermSubstitution extends Substitution {
 
     context.trace(`Verifiying the '${termSubstitutionString}' term substitutin...`);
 
-    const termSimple = this.term.isSimple();
+    const termSingular = this.term.isSingular();
 
-    if (termSimple) {
+    if (termSingular) {
       if (this.variable === null) {
-        context.debug(`The specific term is not simple.`);
+        context.debug(`The specific term is not singular.`);
       } else {
         const variableIdentifier = this.variable.getIdentifier(),
               variablePresent = context.isVariablePresentByVariableIdentifier(variableIdentifier);

@@ -19,16 +19,16 @@ import { TERM_RULE_NAME,
          STATEMENT_SUBSTITUTION_RULE_NAME } from "../ruleNames";
 
 export default class StatementNode extends NonTerminalNode {
-  isSimple() {
-    let simple = false;
+  isSingular() {
+    let singular = false;
 
-    const metavariableNode = this.getMetavariableNode();
+    const singularMetavariableNode = this.getSingularMetavariableNode();
 
-    if (metavariableNode !== null) {
-      simple = true;
+    if (singularMetavariableNode !== null) {
+      singular = true;
     }
 
-    return simple;
+    return singular;
   }
 
   getTermNodes() {
@@ -57,13 +57,6 @@ export default class StatementNode extends NonTerminalNode {
           judgementNode = this.getNodeByRuleName(ruleName);
 
     return judgementNode;
-  }
-
-  getMetavariableNode() {
-    const ruleName = METAVARIABLE_RULE_NAME,
-          metavariableNode = this.getNodeByRuleName(ruleName);
-
-    return metavariableNode;
   }
 
   getTypeAssertionNode() {
@@ -132,6 +125,13 @@ export default class StatementNode extends NonTerminalNode {
           satisfiedAssertionNode = this.getNodeByRuleName(ruleName);
 
     return satisfiedAssertionNode;
+  }
+
+  getSingularMetavariableNode() {
+    const ruleName = METAVARIABLE_RULE_NAME,
+          singularMetavariableNode = this.getSingularNodeByRuleName(ruleName);
+
+    return singularMetavariableNode;
   }
 
   getSingularMetaArgumentNode() {

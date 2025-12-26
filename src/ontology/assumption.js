@@ -122,7 +122,7 @@ export default define(class Assumption {
     let referenceVerified;
 
     const referenceString = this.reference.getString(),
-          assumptionString = this.string;
+          assumptionString = this.string; ///
 
     context.trace(`Verifying the '${assumptionString}' assumption's '${referenceString}' reference...`);
 
@@ -163,7 +163,7 @@ export default define(class Assumption {
     let referenceVerifiesAsMetavariable = false;
 
     const referenceString = this.reference.getString(),
-          assumptionString = this.string;
+          assumptionString = this.string; ///
 
     context.trace(`Verifying the '${assumptionString}' assumption's '${referenceString}' reference as s metavariable...`);
 

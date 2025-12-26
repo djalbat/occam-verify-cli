@@ -3,16 +3,6 @@
 import ontology from "../ontology";
 import TemporaryContext from "../context/temporary";
 
-export function metavariableFromFrame(frame, context) {
-  context = contextFromFrame(frame, context); ///
-
-  const { Metavariable } = ontology,
-        frameNode = frame.getNode(),
-        metavariable = Metavariable.fromFrameNode(frameNode, context);
-
-  return metavariable;
-}
-
 export function equalityFromStatement(statement, context) {
   context = contextFromStatement(statement, context); ///
 

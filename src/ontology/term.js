@@ -35,11 +35,11 @@ export default define(class Term {
     this.type = type;
   }
 
-  matchTermNode(termNode) { return this.node.match(termNode); }
-
-  isSimple() { return this.node.isSimple();}
+  isSingular() { return this.node.isSingular(); }
 
   isProvisional() { return this.type.isProvisional(); }
+
+  matchTermNode(termNode) { return this.node.match(termNode); }
 
   isEqualTo(term) {
     const termNode = term.getNode(),

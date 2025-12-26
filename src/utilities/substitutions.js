@@ -10,11 +10,11 @@ const substitutionNodeQuery = nodeQuery("/statement/termSubstitution|frameSubsti
 export function termFromTermAndSubstitutions(term, substitutions, generalContext, specificContext) {
   if (term !== null) {
     const termNode = term.getNode(),
-          termSimple = term.isSimple();
+          termSingular = term.isSingular();
 
     term = null;  ///
 
-    if (termSimple) {
+    if (termSingular) {
       const termVariableIdentifier = termVariableIdentifierFromTermNode(termNode),
             variableIdentifier = termVariableIdentifier,  ///
             variable = generalContext.findVariableByVariableIdentifier(variableIdentifier);

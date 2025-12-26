@@ -5,16 +5,16 @@ import NonTerminalNode from "../nonTerminalNode";
 import { ASSUMPTION_RULE_NAME, METAVARIABLE_RULE_NAME } from "../ruleNames";
 
 export default class FrameNode extends NonTerminalNode {
-  isSimple() {
-    let simple = false;
+  isSingular() {
+    let singular = false;
 
     const singularAssumptionNode = this.getSingularAssumptionNode();
 
     if (singularAssumptionNode !== null) {
-      simple = singularAssumptionNode.isSimple();
+      singular = singularAssumptionNode.isSingular();
     }
 
-    return simple;
+    return singular;
   }
 
   getAssumptionNodes() {
@@ -22,6 +22,20 @@ export default class FrameNode extends NonTerminalNode {
           declarationNodes = this.getNodesByRuleName(ruleName);
 
     return declarationNodes;
+  }
+
+  getMetavariableName() {
+    let metavariableName = null;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const singularMetavariableNode = this.getSingularMetavariableNode();
+
+      metavariableName = singularMetavariableNode.getMetavariableName();
+    }
+
+    return metavariableName;
   }
 
   getMetavariableNodes() {
@@ -33,7 +47,7 @@ export default class FrameNode extends NonTerminalNode {
 
   getSingularAssumptionNode() {
     const ruleName = ASSUMPTION_RULE_NAME,
-          singularAssumptionNode = this.getSingularTNodeByRuleName(ruleName);
+          singularAssumptionNode = this.getSingularNodeByRuleName(ruleName);
 
     return singularAssumptionNode;
   }

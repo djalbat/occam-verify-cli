@@ -73,10 +73,10 @@ export default define(class ContainedAssertion extends Assertion {
 
       context.trace(`Verifying the '${termString}' term...`);
 
-      const termSimple = this.term.isSimple();
+      const termSingular = this.term.isSingular();
 
-      if (!termSimple) {
-        context.debug(`The '${termString}' term is not simple.`);
+      if (!termSingular) {
+        context.debug(`The '${termString}' term is not singular.`);
       } else {
         termVerifies = this.term.verify(context, () => {
           const verifiesAhead = true;
@@ -101,10 +101,10 @@ export default define(class ContainedAssertion extends Assertion {
 
       context.trace(`Verifying the '${frameString}' frame...`);
 
-      const frameSimple = this.frame.isSimple();
+      const frameSingular = this.frame.isSingular();
 
-      if (!frameSimple) {
-        context.debug(`The '${frameString}' frame is not simple.`);
+      if (!frameSingular) {
+        context.debug(`The '${frameString}' frame is not singular.`);
       } else {
         stated = true;  ///
 

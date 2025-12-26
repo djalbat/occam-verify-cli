@@ -32,7 +32,19 @@ export default define(class Statement {
     return this.tokens;
   }
 
-  isSimple() { return this.node.isSimple();}
+  getMetavariableName() {
+    let metavariableName = null;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      metavariableName = this.node.getMetavariableName();
+    }
+
+    return metavariableName;
+  }
+
+  isSingular() { return this.node.isSingular(); }
 
   isEqualTo(statement) {
     const statementNode = statement.getNode(),
@@ -94,6 +106,27 @@ export default define(class Statement {
     }
 
     return frameContained;
+  }
+
+  isMetavariableEqualToMetavariable(metavariable, context) {
+    let metavariableEqualToMetavariable;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const metavariableA = metavariable, ///
+            singularMetavariableNode = this.node.getSingularMetavariableNode(),
+            metavariableName = singularMetavariableNode.getMetavariableName();
+
+      metavariable = context.findMetavariableByMetavariableName(metavariableName)
+
+      const metavariableB = metavariable,
+            equalTo = metavariableA.isEqualTo(metavariableB);
+
+      metavariableEqualToMetavariable = equalTo;  ///
+    }
+
+    return metavariableEqualToMetavariable;
   }
 
   matchStatementNode(statementNode) { return this.node.match(statementNode); }

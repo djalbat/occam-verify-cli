@@ -38,14 +38,14 @@ export default class TermNode extends NonTerminalNode {
 
   getSingularArgumentNode() {
     const ruleName = ARGUMENT_RULE_NAME,
-          singularArgumentNode = this.getSingularTNodeByRuleName(ruleName);
+          singularArgumentNode = this.getSingularNodeByRuleName(ruleName);
 
     return singularArgumentNode;
   }
 
   getSingularVariableNode() {
     const ruleName = VARIABLE_RULE_NAME,
-          singularVariableNode = this.getSingularTNodeByRuleName(ruleName);
+          singularVariableNode = this.getSingularNodeByRuleName(ruleName);
 
     return singularVariableNode;
   }

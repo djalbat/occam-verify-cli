@@ -5,6 +5,13 @@ import NonTerminalNode from "../nonTerminalNode";
 import { FRAME_RULE_NAME, ASSUMPTION_RULE_NAME } from "../ruleNames";
 
 export default class JudgementNode extends NonTerminalNode {
+  isSingular() {
+    const frameNode = this.getFrameNode(),
+          singular = frameNode.isSingular();
+
+    return singular;
+  }
+
   getFrameNode() {
     const ruleName = FRAME_RULE_NAME,
           frameNode = this.getNodeByRuleName(ruleName);

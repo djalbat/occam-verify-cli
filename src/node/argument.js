@@ -21,7 +21,7 @@ export default class ArgumentNode extends NonTerminalNode {
 
   getSingularTermNode() {
     const ruleName = TERM_RULE_NAME,
-          singularTermNode = this.getSingularTNodeByRuleName(ruleName);
+          singularTermNode = this.getSingularNodeByRuleName(ruleName);
 
     return singularTermNode;
   }

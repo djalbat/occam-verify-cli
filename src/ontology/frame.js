@@ -53,9 +53,9 @@ export default define(class Frame {
   getMetavariable() {
     let metavariable = null;
 
-    const simple = this.isSimple();
+    const singular = this.isSingular();
 
-    if (simple) {
+    if (singular) {
       const assumption = this.getAssumption();
 
       metavariable = assumption.getMetavariable();
@@ -64,7 +64,19 @@ export default define(class Frame {
     return metavariable;
   }
 
-  isSimple() { return this.node.isSimple();}
+  getMetavariableName() {
+    let metavariableName = null;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      metavariableName = this.node.getMetavariableName();
+    }
+
+    return metavariableName;
+  }
+
+  isSingular() { return this.node.isSingular(); }
 
   isEqualTo(frame) {
     const frameNode = frame.getNode(),
@@ -72,6 +84,27 @@ export default define(class Frame {
           equalTo = matches;  ///
 
     return equalTo;
+  }
+
+  isMetavariableEqualToMetavariable(metavariable, context) {
+    let metavariableEqualToMetavariable;
+
+    const singular = this.isSingular();
+
+    if (singular) {
+      const metavariableA = metavariable, ///
+            singularMetavariableNode = this.node.getSingularMetavariableNode(),
+            metavariableName = singularMetavariableNode.getMetavariableName();
+
+      metavariable = context.findMetavariableByMetavariableName(metavariableName)
+
+      const metavariableB = metavariable,
+            equalTo = metavariableA.isEqualTo(metavariableB);
+
+      metavariableEqualToMetavariable = equalTo;  ///
+    }
+
+    return metavariableEqualToMetavariable;
   }
 
   matchFrameNode(frameNode) { return this.node.match(frameNode); }
@@ -166,10 +199,10 @@ export default define(class Frame {
 
     context.trace(`Verifying the '${frameString}' stated frame...`);
 
-    const simple = this.isSimple();
+    const singular = this.isSingular();
 
-    if (!simple) {
-      context.trace(`The '${frameString}' stated frame must be simple.`);
+    if (!singular) {
+      context.trace(`The '${frameString}' stated frame must be singular.`);
     } else {
       verifiesWhenStated = true;
     }
@@ -254,9 +287,9 @@ export default define(class Frame {
   toJSON() {
     let json = null;
 
-    const simple = this.isSimple();
+    const singular = this.isSingular();
 
-    if (simple) {
+    if (singular) {
       const assumption = this.getAssumption(),
             assumptionJSON = assumption.toJSON();
 

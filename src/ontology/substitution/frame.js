@@ -42,11 +42,11 @@ export default define(class FrameSubstitution extends Substitution {
 
     context.trace(`Verifiying the '${frameSubstitutionString}' frame substitutin...`);
 
-    const frameSimple = this.frame.isSimple();
+    const frameSingular = this.frame.isSingular();
 
-    if (frameSimple) {
+    if (frameSingular) {
       if (this.metavariable === null) {
-        context.debug(`The specific frame is not simple.`);
+        context.debug(`The specific frame is not singular.`);
       } else {
         const metavariablePresent = context.isMetavariablePresent(this.metavariable);
 
@@ -68,7 +68,7 @@ export default define(class FrameSubstitution extends Substitution {
         }
       }
     } else {
-      context.debug(`The general frame is not simple.`);
+      context.debug(`The general frame is not singular.`);
     }
 
     if (verifies) {

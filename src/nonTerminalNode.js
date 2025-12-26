@@ -87,7 +87,7 @@ export default class NonTerminalNode extends NonTerminalNodeBase {
     return firstNode;
   }
 
-  getSingularTNodeByRuleName(...ruleNames) {
+  getSingularNodeByRuleName(...ruleNames) {
     let singularNode = null;
 
     const nodes = this.filterChildNode((childNode) => {

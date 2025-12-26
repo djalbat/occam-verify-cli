@@ -27,7 +27,7 @@ export default define(class Signature {
   verify(context) {
     let verifies;
 
-    const signatureString = this.string;
+    const signatureString = this.string;  ///
 
     context.trace(`Verifying the ${signatureString} signature...`);
 
@@ -84,7 +84,7 @@ export default define(class Signature {
   compareSubstitutions(substitutions, context) {
     let substitutionsCompares = false;
 
-    const signatureString = this.string,
+    const signatureString = this.string,  ///
           substitutionsString = substitutions.asString();
 
     context.trace(`Comparing the '${substitutionsString}' substitutions against the ${signatureString} signature...`);
@@ -113,7 +113,7 @@ export default define(class Signature {
   correlateSubstitutions(substitutions, context) {
     let substitutionsCorrelates = false;
 
-    const signatureString = this.string,
+    const signatureString = this.string,  ///
           substitutionsString = substitutions.asString();
 
     context.trace(`Correlating the '${substitutionsString}' substitutions against the ${signatureString} signature...`);
