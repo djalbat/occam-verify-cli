@@ -7,7 +7,7 @@ import { define } from "../structure";
 import { EMPTY_STRING } from "../constants";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
-import { unifyMetavariable, unifyMetavariableIntrinsically } from "../utilities/unification";
+import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
 
 export default define(class Metavariable {
   constructor(string, node, tokens, name, type, metaType) {

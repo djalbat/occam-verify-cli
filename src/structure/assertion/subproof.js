@@ -6,7 +6,7 @@ import structure from "../../structure";
 import Assertion from "../assertion";
 
 import { define } from "../../structure";
-import { unifyStatement } from "../../utilities/unification";
+import { unifyStatement } from "../../process/unify";
 
 const { match } = arrayUtilities;
 

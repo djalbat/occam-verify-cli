@@ -4,7 +4,7 @@ import structure from "../structure";
 
 import { define } from "../structure";
 import { referenceMetaType } from ".//metaType";
-import { unifyMetavariableIntrinsically } from "../utilities/unification";
+import { unifyMetavariableIntrinsically } from "../process/unify";
 import { metavariableFromJSON, metavariableToMetavariableJSON } from "../utilities/json";
 
 export default define(class Reference {

@@ -5,7 +5,7 @@ import unifyMixins from "../mixins/step/unify";
 import TemporaryContext from "../context/temporary";
 
 import { define } from "../structure";
-import { equateStatements } from "../process/equate/equantional";
+import { equateStatements } from "../process/equate";
 import { propertyAssertionFromStatement } from "../utilities/context";
 
 export default define(class Step {

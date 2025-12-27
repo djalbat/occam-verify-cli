@@ -5,7 +5,7 @@ import Substitution from "../substitution";
 import StatementSubstitutionPartialContext from "../../context/partial/substitution/statement";
 
 import { define } from "../../structure";
-import { unifySubstitution } from "../../utilities/unification";
+import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../../utilities/json";
 

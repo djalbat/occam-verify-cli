@@ -3,7 +3,7 @@
 import structure from "../structure";
 
 import { define } from "../structure";
-import { unifyStatementIntrinsically } from "../utilities/unification";
+import { unifyStatementIntrinsically } from "../process/unify";
 import { referenceFromJSON, referenceToReferenceJSON } from "../utilities/json";
 
 export default define(class Assumption {

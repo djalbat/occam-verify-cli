@@ -5,7 +5,7 @@ import EqualityAssignment from "../assignment/equality";
 import VariableAssignment from "../assignment/variable";
 
 import { define } from "../structure";
-import { equateTerms } from "../process/equate/equantional";
+import { equateTerms } from "../process/equate";
 
 export default define(class Equality {
   constructor(string, leftTerm, rightTerm) {

@@ -3,7 +3,7 @@
 import structure from "../structure";
 
 import { define } from "../structure";
-import { unifyStatementWithCombinator } from "../utilities/unification";
+import { unifyStatementWithCombinator } from "../process/unify";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export default define(class Combinator {

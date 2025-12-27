@@ -6,7 +6,7 @@ import verifyMixins from "../mixins/statement/verify";
 import StatementPartialContext from "../context/partial/statement";
 
 import { define } from "../structure";
-import { unifyStatement } from "../utilities/unification";
+import { unifyStatement } from "../process/unify";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { statementFromStatementNode } from "../utilities/node";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";

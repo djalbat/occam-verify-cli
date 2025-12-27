@@ -4,7 +4,7 @@ import structure from "../structure";
 
 import { define } from "../structure";
 import { baseType } from ".//type";
-import { unifyTermWithConstructor } from "../utilities/unification";
+import { unifyTermWithConstructor } from "../process/unify";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
 
 export default define(class Constructor {
