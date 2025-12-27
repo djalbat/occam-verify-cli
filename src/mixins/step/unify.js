@@ -2,7 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-import structure from "../../structure";
+import ontology from "../../ontology";
 
 import { equalityFromStatement,
          judgementFromStatement,
@@ -52,7 +52,7 @@ function unifyWithReference(statement, reference, satisfiesAssertion, substituti
 
       context.trace(`Unifying the '${statementString}' statement with the '${referenceString}' reference...`);
 
-      const { StatementSubstitution } = structure,
+      const { StatementSubstitution } = ontology,
             metavariable = reference.getMetavariable(),
             statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
             substitution = statementSubstitution; ///
@@ -107,7 +107,7 @@ function unifyAsSatisfiesAssertion(statement, reference, satisfiesAssertion, sub
           const satisfiable = axiom.isSatisfiable();
 
           if (satisfiable) {
-            const { Substitutions } = structure,
+            const { Substitutions } = ontology,
                   substitutions = Substitutions.fromNothing(),
                   axiomLemmaTheoremOrConjectureUnifies = axiom.unifyAxiomLemmaTheoremOrConjecture(axiomLemmaTheoremOrConjecture, substitutions, context);
 
@@ -139,7 +139,7 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, satisfiesA
   let unifiesWithAxiomLemmaTheoremOrConjecture = false;
 
   if (reference !== null) {
-    const { Substitutions } = structure,
+    const { Substitutions } = ontology,
           axiomLemmaTheoremOrConjecture = context.findAxiomLemmaTheoremOrConjectureByReference(reference),
           generalSubstitutions = substitutions; ///
 
@@ -156,7 +156,7 @@ function unifyWithAxiomLemmaTheoremOrConjecture(statement, reference, satisfiesA
       const statementAndStepsUnify = axiomLemmaTheoremOrConjecture.unifyStatementAndStepsOrSubproofs(statement, stepsOrSubproofs, substitutions, context);
 
       if (statementAndStepsUnify) {
-        const { StatementSubstitution } = structure,
+        const { StatementSubstitution } = ontology,
               metavariable = reference.getMetavariable(),
               statementSubstitution = StatementSubstitution.fromStatementAndMetavariable(statement, metavariable, context),
               substitution = statementSubstitution;  ///

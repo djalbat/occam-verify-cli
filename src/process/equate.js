@@ -89,7 +89,7 @@ class Pass {
         leftNodeQuery: nonTerminalNodeQuery,
         rightNodeQuery: nonTerminalNodeQuery,
         run: (leftNode, rightNode, ...remainingArguments) => {
-          let visited;
+          let visited = false;
 
           const leftNonTerminalNodeRuleName = leftNonTerminalNode.getRuleName(), ///
                 rightNonTerminalNodeRuleName = rightNonTerminalNode.getRuleName(); ///
@@ -101,7 +101,9 @@ class Pass {
                   rightChildNodes = rightNonTerminalNodeChildNodes, ///
                   descended = this.descend(leftChildNodes, rightChildNodes, ...remainingArguments);
 
-            visited = descended; ///
+            if (descended) {
+              visited = true;
+            }
           }
 
           return visited;

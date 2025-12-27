@@ -1,6 +1,6 @@
 "use strict";
 
-import { baseType } from "../structure/type";
+import { baseType } from "../ontology/type";
 
 export function stringFromTypeNameTypePrefixNameAndSuperTypes(typeName, typePrefixName, superTypes) {
   let string;

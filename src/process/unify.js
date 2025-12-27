@@ -1,10 +1,9 @@
 "use strict";
 
-import structure from "../structure";
+import ontology from "../ontology";
 
 import { nodeQuery } from "../utilities/query";
-import { isLastRemainingArgumentFunction } from "../utilities/arguments";
-import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual } from "../utilities/pass";
+import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual, isLastRemainingArgumentFunction } from "../utilities/pass";
 
 const nonTerminalNodeQuery = nodeQuery("/*");
 
@@ -30,7 +29,7 @@ class Pass {
   }
 
   descend(generalChildNodes, specificChildNodes, ...remainingArguments) {
-    let descended = false;
+    let descendedAhead = false;
 
     const generalChildNodesLength = generalChildNodes.length,
           specificChildNodesLength = specificChildNodes.length;
@@ -46,9 +45,9 @@ class Pass {
         if (lastRemainingArgumentFunction) {
           const index = 0;
 
-          descended = this.descendAhead(index, generalChildNodes, specificChildNodes,...remainingArguments); ///
+          descendedAhead = this.descendAhead(index, generalChildNodes, specificChildNodes,...remainingArguments);
         } else {
-          descended = generalChildNodes.every((generalChildNode, index) => {
+          const visited = generalChildNodes.every((generalChildNode, index) => {
             const specificChildNode = specificChildNodes[index],
                   specificNode = specificChildNode, ///
                   generalNode = generalChildNode, ///
@@ -58,23 +57,25 @@ class Pass {
               return true;
             }
           });
+
+          if (visited) {
+            descendedAhead = true;
+          }
         }
       }
     }
 
-    return descended;
+    return descendedAhead;
   }
 
   descendAhead(index, generalChildNodes, specificChildNodes, ...remainingArguments) {
-    let descended;
+    let descendedAhead = false;
 
     const descendAhead = remainingArguments.pop(), ///
           generalChildNodesLength = generalChildNodes.length;
 
     if (index === generalChildNodesLength) {
-      const descendedAhead = descendAhead();
-
-      descended = descendedAhead; ///
+      descendedAhead = descendAhead();
     } else {
       const generalChildNode = generalChildNodes[index],
             specificChildNode = specificChildNodes[index],
@@ -89,10 +90,12 @@ class Pass {
               return descendedAhead;
             });
 
-      descended = visited;  ///
+      if (visited) {
+        descendedAhead = true;
+      }
     }
 
-    return descended;
+    return descendedAhead;
   }
 
   visitNode(generalNode, specificNode, ...remainingArguments) {
@@ -121,7 +124,7 @@ class Pass {
   }
 
   visitTerminalNode(generalTerminalNode, specificTerminalNode, ...remainingArguments) { ///
-    let visited;
+    let visited = false;
 
     const lastRemainingArgumentFunction = isLastRemainingArgumentFunction(remainingArguments);
 
@@ -129,7 +132,9 @@ class Pass {
       const descendAhead = remainingArguments.pop(),
             descendedAhead = descendAhead();
 
-      visited = descendedAhead;  ///
+      if (descendAhead) {
+        visited = descendedAhead;  ///
+      }
 
       remainingArguments.push(descendAhead);
     } else {
@@ -150,7 +155,7 @@ class Pass {
         generalNodeQuery: nonTerminalNodeQuery,
         specificNodeQuery: nonTerminalNodeQuery,
         run: (generalNode, specificNode, ...remainingArguments) => {
-          let visited;
+          let visited = false;
 
           const generalNonTerminalNodeRuleName = generalNonTerminalNode.getRuleName(), ///
                 specificNonTerminalNodeRuleName = specificNonTerminalNode.getRuleName(); ///
@@ -162,7 +167,9 @@ class Pass {
                   specificChildNodes = specificNonTerminalNodeChildNodes, ///
                   descended = this.descend(generalChildNodes, specificChildNodes, ...remainingArguments);
 
-            visited = descended; ///
+            if (descended) {
+              visited = true;
+            }
           }
 
           return visited;
@@ -187,39 +194,6 @@ class Pass {
 
     return visited;
   }
-}
-
-class IntrinsicLevelPass extends Pass {
-  static maps = [
-    {
-      generalNodeQuery: termVariableNodeQuery,
-      specificNodeQuery: termNodeQuery,
-      run: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
-        let success = false;
-
-        const termNode = specificTermNode, ///
-              variableNode = generalTermVariableNode, ///
-              variableIdentifier = variableNode.getVariableIdentifier();
-
-        let context;
-
-        context = generalContext; ///
-
-        const variable = context.findVariableByVariableIdentifier(variableIdentifier);
-
-        context = specificContext;  ///
-
-        const term = context.findTermByTermNode(termNode),
-              termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
-
-        if (termUnifies) {
-          success = true;
-        }
-
-        return success;
-      }
-    }
-  ];
 }
 
 class MetaLevelPass extends Pass {
@@ -352,32 +326,6 @@ class MetaLevelPass extends Pass {
   ];
 }
 
-class MetavariablePass extends Pass {
-  static maps = [
-    {
-      generalNodeQuery: typeNodeQuery,
-      specificNodeQuery: termNodeQuery,
-      run: (generalTypeNode, specificTermNode, generalContext, specificContext) => {
-        let success = false;
-
-        const typeNode = generalTypeNode, ///
-              termNode = specificTermNode, ///
-              nominalTypeName = typeNode.getNominalTypeName(),
-              type = generalContext.findTypeByNominalTypeName(nominalTypeName),
-              context = specificContext, ///
-              term = context.findTermByTermNode(termNode),
-              termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
-
-        if (termVerifiesGivenType) {
-          success = true;
-        }
-
-        return success;
-      }
-    }
-  ];
-}
-
 class CombinatorPass extends Pass {
   static maps = [
     {
@@ -398,7 +346,7 @@ class CombinatorPass extends Pass {
 
         context = specificContext;  ///
 
-        const { Statement } = structure,
+        const { Statement } = ontology,
               statement = Statement.fromStatementNode(statementNode, context),
               statementVerifiesGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, context);
 
@@ -427,7 +375,7 @@ class CombinatorPass extends Pass {
 
         context = specificContext;  ///
 
-        const { Frame } = structure,
+        const { Frame } = ontology,
               frame = Frame.fromFrameNode(frameNode, context),
               frameVerifiesGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, context);
 
@@ -457,7 +405,7 @@ class CombinatorPass extends Pass {
         if (type !== null) {
           context = specificContext;  ///
 
-          const { Term } = structure,
+          const { Term } = ontology,
                 term = Term.fromTermNode(termNode, context),
                 termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
@@ -493,13 +441,72 @@ class ConstructorPass extends Pass {
         if (type !== null) {
           context = specificContext;  ///
 
-          const { Term } = structure,
+          const { Term } = ontology,
                 term = Term.fromTermNode(termNode, context),
                 termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
           if (termVerifiesGivenType) {
             success = true;
           }
+        }
+
+        return success;
+      }
+    }
+  ];
+}
+
+class MetavariablePass extends Pass {
+  static maps = [
+    {
+      generalNodeQuery: typeNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      run: (generalTypeNode, specificTermNode, generalContext, specificContext) => {
+        let success = false;
+
+        const typeNode = generalTypeNode, ///
+              termNode = specificTermNode, ///
+              nominalTypeName = typeNode.getNominalTypeName(),
+              type = generalContext.findTypeByNominalTypeName(nominalTypeName),
+              context = specificContext, ///
+              term = context.findTermByTermNode(termNode),
+              termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
+
+        if (termVerifiesGivenType) {
+          success = true;
+        }
+
+        return success;
+      }
+    }
+  ];
+}
+
+class IntrinsicLevelPass extends Pass {
+  static maps = [
+    {
+      generalNodeQuery: termVariableNodeQuery,
+      specificNodeQuery: termNodeQuery,
+      run: (generalTermVariableNode, specificTermNode, substitutions, generalContext, specificContext) => {
+        let success = false;
+
+        const termNode = specificTermNode, ///
+              variableNode = generalTermVariableNode, ///
+              variableIdentifier = variableNode.getVariableIdentifier();
+
+        let context;
+
+        context = generalContext; ///
+
+        const variable = context.findVariableByVariableIdentifier(variableIdentifier);
+
+        context = specificContext;  ///
+
+        const term = context.findTermByTermNode(termNode),
+              termUnifies = variable.unifyTerm(term, substitutions, generalContext, specificContext);
+
+        if (termUnifies) {
+          success = true;
         }
 
         return success;

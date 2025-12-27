@@ -2,7 +2,9 @@
 
 import { arrayUtilities } from "necessary";
 
-const { match } = arrayUtilities;
+import { FUNCTION } from "../constants";
+
+const { match, last } = arrayUtilities;
 
 export function terminalNodeMapFromNodes(nodes) {
   const terminalNodeMap = {};
@@ -46,4 +48,18 @@ export function areTerminalNodeMapsEqual(generalTerminalNodeMap, specificTermina
   }
 
   return terminalNodeMapsEqual;
+}
+
+export function isLastRemainingArgumentFunction(remainingArguments) {
+  let lastRemainingArgumentFunction = false;
+
+  const remainingArgumentsLength = remainingArguments.length;
+
+  if (remainingArgumentsLength > 0) {
+    const lastRemainingArgument = last(remainingArguments);
+
+    lastRemainingArgumentFunction = (typeof lastRemainingArgument === FUNCTION);
+  }
+
+  return lastRemainingArgumentFunction;
 }

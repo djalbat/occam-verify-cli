@@ -10,7 +10,7 @@ import FileContext from "../context/file";
 import NominalLexer from "../nominal/lexer";
 import NominalParser from "../nominal/parser";
 
-import { frameMetaType, referenceMetaType, statementMetaType } from "../structure/metaType";
+import { frameMetaType, referenceMetaType, statementMetaType } from "../ontology/metaType";
 import { customGrammarFromNameAndEntries, combinedCustomGrammarFromReleaseContexts } from "../utilities/customGrammar";
 
 const { nominalLexerFromCombinedCustomGrammar } = lexersUtilities,
