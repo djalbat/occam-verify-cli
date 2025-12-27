@@ -1,7 +1,7 @@
 "use strict";
 
 import Unifier from "../unifier";
-import ontology from "../ontology";
+import structure from "../structure";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -41,7 +41,7 @@ class TermWithConstructorUnifier extends Unifier {
         if (type !== null) {
           context = specificContext;  ///
 
-          const { Term } = ontology,
+          const { Term } = structure,
                 term = Term.fromTermNode(termNode, context),
                 termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 

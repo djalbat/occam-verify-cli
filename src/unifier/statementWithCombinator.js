@@ -1,7 +1,7 @@
 "use strict";
 
 import Unifier from "../unifier";
-import ontology from "../ontology";
+import structure from "../structure";
 
 import { nodeQuery } from "../utilities/query";
 
@@ -43,7 +43,7 @@ class StatementWithCombinatorUnifier extends Unifier {
 
         context = specificContext;  ///
 
-        const { Statement } = ontology,
+        const { Statement } = structure,
               statement = Statement.fromStatementNode(statementNode, context),
               statementVerifiesGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, context);
 
@@ -70,7 +70,7 @@ class StatementWithCombinatorUnifier extends Unifier {
 
         context = specificContext;  ///
 
-        const { Frame } = ontology,
+        const { Frame } = structure,
               frame = Frame.fromFrameNode(frameNode, context),
               frameVerifiesGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, context);
 
@@ -98,7 +98,7 @@ class StatementWithCombinatorUnifier extends Unifier {
         if (type !== null) {
           context = specificContext;  ///
 
-          const { Term } = ontology,
+          const { Term } = structure,
                 term = Term.fromTermNode(termNode, context),
                 termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 

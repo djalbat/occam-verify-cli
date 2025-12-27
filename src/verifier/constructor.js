@@ -2,7 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-import ontology from "../ontology";
+import structure from "../structure";
 import Verifier from "../verifier";
 
 import { nodeQuery } from "../utilities/query";
@@ -58,7 +58,7 @@ class ConstructorVerifier extends Verifier {
     {
       nodeQuery: termNodeQuery,
       verify: (termNode, context, verifyAhead) => {
-        const { Term } = ontology,
+        const { Term } = structure,
               term = Term.fromTermNode(termNode, context),
               termVerifies = term.verify(context, verifyAhead);
 
