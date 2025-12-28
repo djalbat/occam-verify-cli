@@ -1,11 +1,10 @@
 "use strict";
 
 export default class Substitution {
-  constructor(context, string, node, tokens) {
+  constructor(context, string, node) {
     this.context = context;
     this.string = string;
     this.node = node;
-    this.tokens = tokens;
   }
 
   getContext() {
@@ -18,10 +17,6 @@ export default class Substitution {
 
   getNode() {
     return this.node;
-  }
-
-  getTokens() {
-    return this.tokens;
   }
 
   getTerm() {

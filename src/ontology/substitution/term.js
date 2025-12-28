@@ -2,15 +2,14 @@
 
 import ontology from "../../ontology";
 import Substitution from "../substitution";
-import TermSubstitutionPartialContext from "../../context/partial/substitution/term";
 
 import { define } from "../../ontology";
 import { stripBracketsFromTerm } from "../../utilities/brackets";
-
+import { instantiateTermSubstitution } from "../../process/instantiate";
 
 export default define(class TermSubstitution extends Substitution {
-  constructor(context, string, node, tokens, term, variable) {
-    super(context, string, node, tokens);
+  constructor(context, string, node, term, variable) {
+    super(context, string, node);
 
     this.term = term;
     this.variable = variable;
@@ -116,24 +115,19 @@ export default define(class TermSubstitution extends Substitution {
             term = Term.fromTermNode(termNode, context),
             variable = Variable.fromVariableNode(variableNode, context),
             node = termSubstitutionNode,  ///
-            tokens = context.nodeAsTokens(node),
             string = stringFromTermAndVariable(term, variable);
 
-      termSubstitution = new TermSubstitution(context, string, node, tokens, term, variable);
+      termSubstitution = new TermSubstitution(context, string, node, term, variable);
     }
 
     return termSubstitution;
   }
 
   static fromTernAndVariable(term, variable, context) {
-    const lexer = context.getLexer(),
-          parser = context.getParser(),
-          string = stringFromTermAndVariable(term, variable),
-          termSubstitutionPartialContext = TermSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
-          node = termSubstitutionPartialContext.getNode(),
-          tokens = termSubstitutionPartialContext.getTokens();
-
-    const termSubstitution = new TermSubstitution(context, string, node, tokens, term, variable);
+    const string = stringFromTermAndVariable(term, variable),
+          termSubstitutionNode = instantiateTermSubstitution(string, context),
+          node = termSubstitutionNode,  ///
+          termSubstitution = new TermSubstitution(context, string, node, term, variable);
 
     return termSubstitution;
   }

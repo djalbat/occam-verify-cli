@@ -1,13 +1,13 @@
 "use strict";
 
 import Substitution from "../substitution";
-import ReferenceSubstitutionPartialContext from "../../context/partial/substitution/reference";
 
 import { define } from "../../ontology";
+import { instantiateReferenceSubstitution } from "../../process/instantiate";
 
 export default define(class ReferenceSubstitution extends Substitution {
-  constructor(context, string, node, tokens, reference, metavariable) {
-    super(context, string, node, tokens);
+  constructor(context, string, node, reference, metavariable) {
+    super(context, string, node);
 
     this.reference = reference;
     this.metavariable = metavariable;
@@ -31,12 +31,9 @@ export default define(class ReferenceSubstitution extends Substitution {
 
   static fromReferenceAndMetavariable(reference, metavariable, context) {
     const string = stringFromReferenceAndMetavariable(reference, metavariable),
-          lexer = context.getLexer(),
-          parser = context.getParser(),
-          referenceSubstitutionPartialContext = ReferenceSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
-          node = referenceSubstitutionPartialContext.getNode(),
-          tokens = referenceSubstitutionPartialContext.getTokens(),
-          referenceSubstitution = new ReferenceSubstitution(context, string, node, tokens, reference, metavariable);
+          referenceSubstitutionNode = instantiateReferenceSubstitution(string, context),
+          node = referenceSubstitutionNode, ///
+          referenceSubstitution = new ReferenceSubstitution(context, string, node, reference, metavariable);
 
     return referenceSubstitution;
   }

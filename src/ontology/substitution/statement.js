@@ -2,16 +2,16 @@
 
 import ontology from "../../ontology";
 import Substitution from "../substitution";
-import StatementSubstitutionPartialContext from "../../context/partial/substitution/statement";
 
 import { define } from "../../ontology";
 import { unifySubstitution } from "../../process/unify";
 import { stripBracketsFromStatement } from "../../utilities/brackets";
+import { instantiateStatementSubstitution } from "../../process/instantiate";
 import { statementFromJSON, statementToStatementJSON, metavariableFromJSON, metavariableToMetavariableJSON } from "../../utilities/json";
 
 export default define(class StatementSubstitution extends Substitution {
-  constructor(context, string, node, tokens, resolved, statement, metavariable, substitution) {
-    super(context, string, node, tokens);
+  constructor(context, string, node, resolved, statement, metavariable, substitution) {
+    super(context, string, node);
 
     this.resolved = resolved;
     this.statement = statement;
@@ -189,16 +189,13 @@ export default define(class StatementSubstitution extends Substitution {
 
   static fromJSON(json, context) {
     const { string } = json,
-          lexer = context.getLexer(),
-          parser = context.getParser(),
-          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
-          node = statementSubstitutionPartialContext.getNode(),
-          tokens = statementSubstitutionPartialContext.getTokens(),
+          statementSubstitutionNode = instantiateStatementSubstitution(string, context),
+          node = statementSubstitutionNode,
           resolved = true,
           statement = statementFromJSON(json, context),
           metavariable = metavariableFromJSON(json, context),
           substitution = null,  ///
-          statementSubstitution = new StatementSubstitution(context, string, node, tokens, resolved, statement, metavariable, substitution);
+          statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
 
     return statementSubstitution;
   }
@@ -207,14 +204,11 @@ export default define(class StatementSubstitution extends Substitution {
     statement = stripBracketsFromStatement(statement, context); ///
 
     const string = stringFromStatementAndMetavariable(statement, metavariable),
-          lexer = context.getLexer(),
-          parser = context.getParser(),
-          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
-          node = statementSubstitutionPartialContext.getNode(),
-          tokens = statementSubstitutionPartialContext.getTokens(),
+          statementSubstitutionNode = instantiateStatementSubstitution(string, context),
+          node = statementSubstitutionNode,
           resolved = true,
           substitution = null,
-          statementSubstitution = new StatementSubstitution(context, string, node, tokens, resolved, statement, metavariable, substitution);
+          statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
 
     return statementSubstitution;
   }
@@ -223,13 +217,10 @@ export default define(class StatementSubstitution extends Substitution {
     statement = stripBracketsFromStatement(statement, context); ///
 
     const string = stringFromStatementMetavariableAndSubstitution(statement, metavariable, substitution, context),
-          lexer = context.getLexer(),
-          parser = context.getParser(),
-          statementSubstitutionPartialContext = StatementSubstitutionPartialContext.fromStringLexerAndParser(string, lexer, parser),
-          node = statementSubstitutionPartialContext.getNode(),
-          tokens = statementSubstitutionPartialContext.getTokens(),
+          statementSubstitutionNode = instantiateStatementSubstitution(string, context),
+          node = statementSubstitutionNode,
           resolved = false,
-          statementSubstitution = new StatementSubstitution(context, string, node, tokens, resolved, statement, metavariable, substitution);
+          statementSubstitution = new StatementSubstitution(context, string, node, resolved, statement, metavariable, substitution);
 
     return statementSubstitution;
   }
