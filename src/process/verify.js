@@ -1,9 +1,9 @@
 "use strict";
 
+import ontology from "../ontology";
+
 import { nodeQuery } from "../utilities/query";
 import { isLastRemainingArgumentFunction } from "../utilities/pass";
-import statement from "../ontology/statement";
-import ontology from "../ontology";
 
 const nonTerminalNodeQuery = nodeQuery("/*");
 
@@ -437,6 +437,20 @@ class TopLevelPass extends Pass {
 }
 
 class CombinatorPass extends Pass {
+  run(statementNode, context) {
+    let success = false;
+
+    const nonTerminalNode = statementNode,  ///
+          childNodes = nonTerminalNode.getChildNodes(), ///
+          descended = this.descend(childNodes,context);
+
+    if (descended) {
+      success = true;
+    }
+
+    return success;
+  }
+
   static maps = [
     {
       nodeQuery: statementNodeQuery,
@@ -495,6 +509,20 @@ class CombinatorPass extends Pass {
 }
 
 class ConstructorPass extends Pass {
+  run(statementNode, context) {
+    let success = false;
+
+    const nonTerminalNode = statementNode,  ///
+          childNodes = nonTerminalNode.getChildNodes(), ///
+          descended = this.descend(childNodes,context);
+
+    if (descended) {
+      success = true;
+    }
+
+    return success;
+  }
+
   static maps = [
     {
       nodeQuery: termNodeQuery,

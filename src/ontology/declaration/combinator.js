@@ -9,6 +9,7 @@ import { verifyStatement } from "../../process/verify";
 export default define(class CombinatorDeclaration extends Declaration {
   constructor(context, node, string, combinator) {
     super(context, node, string);
+
     this.combinator = combinator;
   }
 
