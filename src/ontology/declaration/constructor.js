@@ -2,9 +2,9 @@
 
 import ontology from "../../ontology";
 import Declaration from "../declaration";
-import constructorVerifier from "../../verifier/constructor";
 
 import { define } from "../../ontology";
+import { verifyTerm } from "../../process/verify";
 
 export default define(class ConstructorDeclaration extends Declaration {
   constructor(context, node, string, constructor) {
@@ -57,7 +57,7 @@ export default define(class ConstructorDeclaration extends Declaration {
     const term = this.constructor.getTerm(),
           termNode = term.getNode();
 
-    constructorVerifies = constructorVerifier.verifyTerm(termNode, context);
+    constructorVerifies = verifyTerm(termNode, context);
 
     if (constructorVerifies) {
       context.debug(`...verified the '${constructorString}' constructor.`, node);

@@ -3,9 +3,9 @@
 import { arrayUtilities } from "necessary";
 
 import ontology from "../ontology";
-import topLevelVerifier from "../verifier/topLevel";
 
 import { baseType } from "../ontology/type";
+import { verifyFile } from "../process/verify";
 import { nodeAsTokens, nodeAsString, nodesAsString, tokensAsString } from "../utilities/string";
 import { typesFromJSON,
          rulesFromJSON,
@@ -861,12 +861,12 @@ export default class FileContext {
     } else {
       this.debug(`Verifying the '${this.filePath}' file...`);
 
-      const fileContext = this, ///
-            verifiesAtTopLevel = topLevelVerifier.verify(this.node, fileContext);
+      const context = this, ///
+            fileNode = this.node; ///
 
-      if (verifiesAtTopLevel) {
-        verifies = true;
-      } else {
+      verifies = verifyFile(fileNode, context);
+
+      if (!verifies) {
         this.clear();
       }
 

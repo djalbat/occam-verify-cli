@@ -4,8 +4,7 @@ import ontology from "../../ontology";
 import Declaration from "../declaration";
 
 import { define } from "../../ontology";
-
-import combinatorVerifier from "../../verifier/combinator";
+import { verifyStatement } from "../../process/verify";
 
 export default define(class CombinatorDeclaration extends Declaration {
   constructor(context, node, string, combinator) {
@@ -53,7 +52,7 @@ export default define(class CombinatorDeclaration extends Declaration {
     const statement = this.combinator.getStatement(),
           statementNode = statement.getNode();
 
-    statementVerifies = combinatorVerifier.verifyStatement(statementNode, context);
+    statementVerifies = verifyStatement(statementNode, context);
 
     if (statementVerifies) {
       context.debug(`...verified the '${combinatorString}' combinator.`, node);
