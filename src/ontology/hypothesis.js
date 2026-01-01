@@ -3,7 +3,7 @@
 import ontology from "../ontology";
 
 import { define } from "../ontology";
-import { assignAssignments } from "../utilities/assignments";
+import { assignAssignments } from "../process/assign";
 import { statementFromJSON, statementToStatementJSON } from "../utilities/json";
 
 export default define(class Hypothesis {

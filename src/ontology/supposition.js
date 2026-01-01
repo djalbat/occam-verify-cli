@@ -4,7 +4,7 @@ import ontology from "../ontology";
 import TemporaryContext from "../context/temporary";
 
 import { define } from "../ontology";
-import { assignAssignments } from "../utilities/assignments";
+import { assignAssignments } from "../process/assign";
 import { subproofAssertionFromStatement } from "../utilities/statement";
 import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 

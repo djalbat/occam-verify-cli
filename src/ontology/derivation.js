@@ -5,7 +5,7 @@ import { arrayUtilities } from "necessary";
 import ontology from "../ontology";
 
 import { define } from "../ontology";
-import { assignAssignments } from "../utilities/assignments";
+import { assignAssignments } from "../process/assign";
 
 const { last } = arrayUtilities;
 

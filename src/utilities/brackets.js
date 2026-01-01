@@ -53,7 +53,7 @@ export function stripBracketsFromStatementNode(statementNode) {
   return statementNode;
 }
 
-export function bracketedTermChildNodeFromTermNode(termNode) {
+function bracketedTermChildNodeFromTermNode(termNode) {
   let bracketedTermChildNode = null;
 
   const depth = BRACKETED_TERM_DEPTH,
@@ -69,7 +69,7 @@ export function bracketedTermChildNodeFromTermNode(termNode) {
   return bracketedTermChildNode;
 }
 
-export function bracketedStatementChildNodeFromStatementNode(statementNode) {
+function bracketedStatementChildNodeFromStatementNode(statementNode) {
   let bracketedStatementChildNode = null;
 
   const depth = BRACKETED_STATEMENT_DEPTH,
