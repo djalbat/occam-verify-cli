@@ -2,9 +2,9 @@
 
 import ontology from "../../ontology";
 import Constructor from "../constructor";
-import constructorBracketedContext from "../../context/bracketed/constructor";
 
 import { define } from "../../ontology";
+import { bracketedConstructorTermString, instantiateBracketedConstructorTerm } from "../../process/instantiate";
 
 export default define(class BracketedConstructor extends Constructor {
   unifyTerm(term, context, verifyAhead) {
@@ -56,12 +56,12 @@ export default define(class BracketedConstructor extends Constructor {
 
   static fromNothing() {
     const { Term } = ontology,
-          bracketedTermNode = constructorBracketedContext.getBracketedTermNode(),
-          termNode = bracketedTermNode,  ///
-          context = constructorBracketedContext, ///
-          term = Term.fromTermNode(termNode, context),
-          string = term.getString(),
-          bracketedConstructor = new BracketedConstructor(string, term);
+          bracketedConstructorTermNode = instantiateBracketedConstructorTerm(),
+          string = bracketedConstructorTermString,  ///
+          node = bracketedConstructorTermNode,  ///
+          type = null,
+          term = new Term(string, node, type),
+          bracketedConstructor = new BracketedConstructor(term);
 
     return bracketedConstructor;
   }

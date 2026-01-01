@@ -2,9 +2,9 @@
 
 import ontology from "../../ontology";
 import Combinator from "../combinator";
-import combinatorBracketedContext from "../../context/bracketed/combinator";
 
 import { define } from "../../ontology";
+import { bracketedCombinatorStatementString, instantiateBracketedCombinatorStatement } from "../../process/instantiate";
 
 export default define(class BracketedCombinator extends Combinator {
   unifyStatement(statement, assignments, stated, context) {
@@ -27,10 +27,11 @@ export default define(class BracketedCombinator extends Combinator {
 
   static fromNothing() {
     const { Statement } = ontology,
-          bracketedStatementNode = combinatorBracketedContext.getBracketedStatementNode(),
-          statementNode = bracketedStatementNode, ///
-          context = combinatorBracketedContext, ///
-          statement = Statement.fromStatementNode(statementNode, context),
+          bracketedCombinatorStatementNode = instantiateBracketedCombinatorStatement(),
+          string = bracketedCombinatorStatementString,  ///
+          node = bracketedCombinatorStatementNode, ///
+          tokens = null,
+          statement = new Statement(string, node, tokens),
           bracketedCombinator = new BracketedCombinator(statement);
 
     return bracketedCombinator;

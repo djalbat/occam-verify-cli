@@ -1,10 +1,10 @@
 "use strict";
 
 import ontology from "../ontology";
-import MetavariablePartialContext from "../context/partial/metavariable";
 
 import { define } from "../ontology";
 import { EMPTY_STRING } from "../constants";
+import { instantiateMetavariable } from "../process/instantiate";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
@@ -422,15 +422,11 @@ export default define(class Metavariable {
 
   static fromJSON(json, context) {
     const { string } = json,
-          lexer = context.getLexer(),
-          parser = context.getParser(),
-          metavariablePartialContext = MetavariablePartialContext.fromStringLexerAndParser(string, lexer, parser),
-          metavariableTokens = metavariablePartialContext.getMetavariableTokens(),
-          metavariableNode = metavariablePartialContext.getMetavariableNode(),
+          metavariableNode = instantiateMetavariable(string, context),
           metavariableName = metavariableNode.getMetavariableName(),
           name = metavariableName,  ///
           node = metavariableNode,  ///
-          tokens = metavariableTokens, ///
+          tokens = null,
           type = typeFromJSON(json, context),
           metaType = metaTypeFromJSON(json, context),
           metavariable = new Metavariable(string, node, tokens, name, type, metaType);
@@ -519,7 +515,7 @@ function metavariableFromMetavariableNode(metavariableNode, context) {
         name = metavariableName,  ///
         node = metavariableNode,  ///
         string = context.nodeAsString(node),
-        tokens = context.nodeAsTokens(node),
+        tokens = null,
         metaType = null,
         metavariable = new Metavariable(string, node, tokens, name, type, metaType);
 

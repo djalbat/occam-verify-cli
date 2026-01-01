@@ -8,13 +8,8 @@ import { unifyTermWithConstructor } from "../process/unify";
 import { termFromJSON, termToTermJSON } from "../utilities/json";
 
 export default define(class Constructor {
-  constructor(string, term) {
-    this.string = string;
+  constructor(term) {
     this.term = term;
-  }
-
-  getString() {
-    return this.string;
   }
 
   getTerm() {
@@ -22,6 +17,8 @@ export default define(class Constructor {
   }
 
   getType() { return this.term.getType(); }
+
+  getString() { return this.term.getString(); }
 
   isProvisional() { return this.term.isProvisional(); }
 
@@ -71,8 +68,7 @@ export default define(class Constructor {
 
   static fromJSON(json, context) {
     const term = termFromJSON(json, context),
-          string = stringFromTerm(term),
-          constructor = new Constructor(string, term);
+          constructor = new Constructor(term);
 
     return constructor;
   }
@@ -80,26 +76,8 @@ export default define(class Constructor {
   static fromConstructorDeclarationNode(constructorDeclarationNode, context) {
     const { Term } = ontology,
           term = Term.fromConstructorDeclarationNode(constructorDeclarationNode, context),
-          string = stringFromTerm(term),
-          constructor = new Constructor(string, term);
+          constructor = new Constructor(term);
 
     return constructor;
   }
 });
-
-function stringFromTerm(term) {
-  let string;
-
-  const termString = term.getString(),
-        type = term.getType();
-
-  if (type === baseType) {
-    string = termString;  ///
-  } else {
-    const typeString = type.getString();
-
-    string = `${termString}:${typeString}`;
-  }
-
-  return string;
-}

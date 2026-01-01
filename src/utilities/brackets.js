@@ -1,12 +1,10 @@
 "use strict";
 
 import ontology from "../ontology";
-import combinatorBracketedContext from "../context/bracketed/combinator";
-import constructorBracketedContext from "../context/bracketed/constructor";
 
 import { contextFromStatement } from "../utilities/context";
-
 import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
+import { instantiateBracketedCombinatorStatement, instantiateBracketedConstructorTerm } from "../process/instantiate";
 
 export function stripBracketsFromTerm(term, context) {
   const termNode = term.getNode(),
@@ -62,10 +60,10 @@ export function bracketedTermChildNodeFromTermNode(termNode) {
   let bracketedTermChildNode = null;
 
   const depth = BRACKETED_TERM_DEPTH,
-        bracketedTermNode = constructorBracketedContext.getBracketedTermNode(),
-        termNodeMatchBracketedTermNode = termNode.match(bracketedTermNode, depth);
+        bracketedConstructorTermNode = instantiateBracketedConstructorTerm(),
+        termNodeMatchBracketedConstructorTermNode = termNode.match(bracketedConstructorTermNode, depth);
 
-  if (termNodeMatchBracketedTermNode) {
+  if (termNodeMatchBracketedConstructorTermNode) {
     const singularTermNode = termNode.getSingularTermNode();
 
     bracketedTermChildNode = singularTermNode;  ///
@@ -78,10 +76,10 @@ export function bracketedStatementChildNodeFromStatementNode(statementNode) {
   let bracketedStatementChildNode = null;
 
   const depth = BRACKETED_STATEMENT_DEPTH,
-        bracketedStatementNode = combinatorBracketedContext.getBracketedStatementNode(),
-        statementNodeMatchBracketedStatementNode = statementNode.match(bracketedStatementNode, depth);
+        bracketedCombinatorStatementNode = instantiateBracketedCombinatorStatement(),
+        statementNodeMatchBracketedCombinatorStatementNode = statementNode.match(bracketedCombinatorStatementNode, depth);
 
-  if (statementNodeMatchBracketedStatementNode) {
+  if (statementNodeMatchBracketedCombinatorStatementNode) {
     const singularStatementNode = statementNode.getSingularStatementNode();
 
     bracketedStatementChildNode = singularStatementNode;  ///

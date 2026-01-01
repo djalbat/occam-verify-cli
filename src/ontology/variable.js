@@ -5,8 +5,8 @@ import ontology from "../ontology";
 import { define } from "../ontology";
 import { EMPTY_STRING } from "../constants";
 import { typeFromTypeNode } from "../utilities/node";
+import { instantiateVariable } from "../process/instantiate";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
-import { variableNodeFromVariableString } from "../context/partial/variable";
 
 export default define(class Variable {
   constructor(string, node, type, identifier, propertyRelations) {
@@ -189,8 +189,7 @@ export default define(class Variable {
 
   static fromJSON(json, context) {
     const { string } = json,
-          variableString = string,  ///
-          variableNode = variableNodeFromVariableString(variableString, context),
+          variableNode = instantiateVariable(string, context),
           variableIdentifier = variableNode.getVariableIdentifier(),
           node = variableNode,
           identifier = variableIdentifier,  ///

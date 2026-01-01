@@ -3,10 +3,10 @@
 import { arrayUtilities } from "necessary";
 
 import verifyMixins from "../mixins/statement/verify";
-import StatementPartialContext from "../context/partial/statement";
 
 import { define } from "../ontology";
 import { unifyStatement } from "../process/unify";
+import { instantiateStatement } from "../process/instantiate";
 import { STATEMENT_META_TYPE_NAME } from "../metaTypeNames";
 import { statementFromStatementNode } from "../utilities/node";
 import { stripBracketsFromStatementNode } from "../utilities/brackets";
@@ -295,11 +295,9 @@ export default define(class Statement {
 
   static fromJSON(json, context) {
     const { string } = json,
-          lexer = context.getLexer(),
-          parser = context.getParser(),
-          statementPartialContext = StatementPartialContext.fromStringLexerAndParser(string, lexer, parser),
-          node = statementPartialContext.getNode(),
-          tokens = statementPartialContext.getTokens(),
+          statmentNode = instantiateStatement(string, context),
+          node = statmentNode,  ///,
+          tokens = null,
           statement = new Statement(string, node, tokens);
 
     return statement;

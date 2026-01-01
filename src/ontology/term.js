@@ -6,8 +6,8 @@ import ontology from "../ontology";
 import verifyMixins from "../mixins/term/verify";
 
 import { define } from "../ontology";
+import { instantiateTerm } from "../process/instantiate";
 import { termFromTermNode } from "../utilities/node";
-import { termNodeFromTermString } from "../context/partial/term";
 import { typeFromJSON, typeToTypeJSON } from "../utilities/json";
 
 const { filter, compress } = arrayUtilities;
@@ -177,8 +177,7 @@ export default define(class Term {
 
   static fromJSON(json, context) {
     const { string } = json,
-          termString = string,  ///
-          termNode = termNodeFromTermString(termString, context),
+          termNode = instantiateTerm(string, context),
           node = termNode,  ///
           type = typeFromJSON(json, context),
           term = new Term(string, node, type);
