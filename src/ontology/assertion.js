@@ -1,10 +1,9 @@
 "use strict";
 
 export default class Assertion {
-  constructor(string, node, tokens) {
+  constructor(string, node) {
     this.string = string;
     this.node = node;
-    this.tokens = tokens;
   }
 
   getString() {
@@ -13,10 +12,6 @@ export default class Assertion {
 
   getNode() {
     return this.node;
-  }
-
-  getTokens() {
-    return this.tokens;
   }
 
   matchAssertionNode(assertionNode) { return this.node.match(assertionNode); }

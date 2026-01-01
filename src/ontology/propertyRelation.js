@@ -5,10 +5,9 @@ import ontology from "../ontology";
 import { define } from "../ontology";
 
 export default define(class PropertyRelation {
-  constructor(string, node, tokens, property, term) {
+  constructor(string, node, property, term) {
     this.string = string;
     this.node = node;
-    this.tokens = tokens;
     this.property = property;
     this.term = term;
   }
@@ -19,10 +18,6 @@ export default define(class PropertyRelation {
 
   getNode() {
     return this.node;
-  }
-
-  getTokens() {
-    return this.tokens;
   }
 
   getProperty() {
@@ -124,10 +119,9 @@ export default define(class PropertyRelation {
           propertyRelationNode = propertyAssertionNode.getPropertyRelationNode(),
           node = propertyRelationNode,  ///
           string = context.nodeAsString(node),
-          tokens = context.nodeAsTokens(node),
           property = Property.fromPropertyRelationNode(propertyRelationNode, context),
           term = Term.fromPropertyRelationNode(propertyRelationNode, context),
-          propertyRelation = new PropertyRelation(string, node, tokens, property, term);
+          propertyRelation = new PropertyRelation(string, node, property, term);
 
     return propertyRelation;
   }

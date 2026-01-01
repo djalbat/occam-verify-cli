@@ -1,11 +1,8 @@
 "use strict";
 
 import ontology from "../ontology";
-import TemporaryContext from "../context/temporary";
 
 export function equalityFromStatement(statement, context) {
-  context = contextFromStatement(statement, context); ///
-
   const { Equality } = ontology,
         statementNode = statement.getNode(),
         equality = Equality.fromStatementNode(statementNode, context);
@@ -14,8 +11,6 @@ export function equalityFromStatement(statement, context) {
 }
 
 export function judgementFromStatement(statement, context) {
-  context = contextFromStatement(statement, context); ///
-
   const { Judgement } = ontology,
         statementNode = statement.getNode(),
         judgement = Judgement.fromStatementNode(statementNode, context);
@@ -24,8 +19,6 @@ export function judgementFromStatement(statement, context) {
 }
 
 export function metavariableFromStatement(statement, context) {
-  context = contextFromStatement(statement, context); ///
-
   const { Metavariable } = ontology,
         statementNode = statement.getNode(),
         metavariable = Metavariable.fromStatementNode(statementNode, context);
@@ -34,8 +27,6 @@ export function metavariableFromStatement(statement, context) {
 }
 
 export function typeAssertionFromStatement(statement, context) {
-  context = contextFromStatement(statement, context); ///
-
   const { TypeAssertion } = ontology,
         statementNode = statement.getNode(),
         typeAssertion = TypeAssertion.fromStatementNode(statementNode, context);
@@ -44,8 +35,6 @@ export function typeAssertionFromStatement(statement, context) {
 }
 
 export function definedAssertionFromStatement(statement, context) {
-  context = contextFromStatement(statement, context); ///
-
   const { DefinedAssertion } = ontology,
         statementNode = statement.getNode(),
         definedAssertion = DefinedAssertion.fromStatementNode(statementNode, context);
@@ -54,8 +43,6 @@ export function definedAssertionFromStatement(statement, context) {
 }
 
 export function propertyAssertionFromStatement(statement, context) {
-  context = contextFromStatement(statement, context); ///
-
   const { PropertyAssertion } = ontology,
         statementNode = statement.getNode(),
         propertyAssertion = PropertyAssertion.fromStatementNode(statementNode, context);
@@ -64,8 +51,6 @@ export function propertyAssertionFromStatement(statement, context) {
 }
 
 export function subproofAssertionFromStatement(statement, context) {
-  context = contextFromStatement(statement, context); ///
-
   const { SubproofAssertion } = ontology,
         statementNode = statement.getNode(),
         subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
@@ -74,8 +59,6 @@ export function subproofAssertionFromStatement(statement, context) {
 }
 
 export function containedAssertionFromStatement(statement, context) {
-  context = contextFromStatement(statement, context); ///
-
   const { ContainedAssertion } = ontology,
         statementNode = statement.getNode(),
         containedAssertion = ContainedAssertion.fromStatementNode(statementNode, context);
@@ -84,21 +67,9 @@ export function containedAssertionFromStatement(statement, context) {
 }
 
 export function satisfiesAssertionFromStatement(statement, context) {
-  context = contextFromStatement(statement, context); ///
-
   const { SatisfiesAssertion } = ontology,
         statementNode = statement.getNode(),
         satisfiesAssertion = SatisfiesAssertion.fromStatementNode(statementNode, context);
 
   return satisfiesAssertion;
-}
-
-export function contextFromStatement(statement, context) {
-  const statementTokens = statement.getTokens(),
-        tokens = statementTokens, ///
-        temporaryContext = TemporaryContext.fromContextAndTokens(context, tokens);
-
-  context = temporaryContext; ///
-
-  return context;
 }

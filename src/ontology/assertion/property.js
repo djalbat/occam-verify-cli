@@ -7,8 +7,8 @@ import VariableAssignment from "../../assignment/variable";
 import { define } from "../../ontology";
 
 export default define(class PropertyAssertion extends Assertion {
-  constructor(string, node, tokens, term, propertyRelation) {
-    super(string, node, tokens);
+  constructor(string, node, term, propertyRelation) {
+    super(string, node);
 
     this.term = term;
     this.propertyRelation = propertyRelation;
@@ -194,11 +194,10 @@ export default define(class PropertyAssertion extends Assertion {
       const { Term, PropertyRelation } = ontology,
             node = propertyAssertionNode,  ///
             string = context.nodeAsString(node),
-            tokens = context.nodeAsTokens(node),
             term = Term.fromPropertyAssertionNode(propertyAssertionNode, context),
             propertyRelation = PropertyRelation.fromPropertyAssertionNode(propertyAssertionNode, context);
 
-      propertyAssertion = new PropertyAssertion(string, node, tokens, term, propertyRelation);
+      propertyAssertion = new PropertyAssertion(string, node, term, propertyRelation);
     }
 
     return propertyAssertion;

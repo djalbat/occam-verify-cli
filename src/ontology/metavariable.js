@@ -10,10 +10,9 @@ import { metaTypeFromJSON, metaTypeToMetaTypeJSON } from "../utilities/json";
 import { unifyMetavariable, unifyMetavariableIntrinsically } from "../process/unify";
 
 export default define(class Metavariable {
-  constructor(string, node, tokens, name, type, metaType) {
+  constructor(string, node, name, type, metaType) {
     this.string = string;
     this.node = node;
-    this.tokens = tokens;
     this.name = name;
     this.type = type;
     this.metaType = metaType;
@@ -27,10 +26,6 @@ export default define(class Metavariable {
     return this.node;
   }
 
-  getTokens() {
-    return this.tokens;
-  }
-
   getName() {
     return this.name;
   }
@@ -41,18 +36,6 @@ export default define(class Metavariable {
 
   getMetaType() {
     return this.metaType;
-  }
-
-  setNode(node) {
-    this.node = node;
-  }
-
-  setTokens(tokens) {
-    this.tokens = tokens;
-  }
-
-  setName(name) {
-    this.name = name;
   }
 
   setType(type) {
@@ -426,10 +409,9 @@ export default define(class Metavariable {
           metavariableName = metavariableNode.getMetavariableName(),
           name = metavariableName,  ///
           node = metavariableNode,  ///
-          tokens = null,
           type = typeFromJSON(json, context),
           metaType = metaTypeFromJSON(json, context),
-          metavariable = new Metavariable(string, node, tokens, name, type, metaType);
+          metavariable = new Metavariable(string, node, name, type, metaType);
 
     return metavariable;
   }
@@ -515,9 +497,8 @@ function metavariableFromMetavariableNode(metavariableNode, context) {
         name = metavariableName,  ///
         node = metavariableNode,  ///
         string = context.nodeAsString(node),
-        tokens = null,
         metaType = null,
-        metavariable = new Metavariable(string, node, tokens, name, type, metaType);
+        metavariable = new Metavariable(string, node, name, type, metaType);
 
   return metavariable;
 }

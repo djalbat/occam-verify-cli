@@ -2,7 +2,6 @@
 
 import ontology from "../ontology";
 
-import { contextFromStatement } from "../utilities/context";
 import { BRACKETED_TERM_DEPTH, BRACKETED_STATEMENT_DEPTH } from "../constants";
 import { instantiateBracketedCombinatorStatement, instantiateBracketedConstructorTerm } from "../process/instantiate";
 
@@ -25,8 +24,6 @@ export function stripBracketsFromStatement(statement, context) {
         bracketedStatementChildNode = bracketedStatementChildNodeFromStatementNode(statementNode);
 
   if (bracketedStatementChildNode !== null) {
-    context = contextFromStatement(statement, context); ///
-
     const { Statement } = ontology,
           statementNode = bracketedStatementChildNode;  ///
 

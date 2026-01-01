@@ -11,10 +11,9 @@ import { FRAME_META_TYPE_NAME } from "../metaTypeNames";
 const { first } = arrayUtilities;
 
 export default define(class Frame {
-  constructor(string, node, tokens, assumptions) {
+  constructor(string, node, assumptions) {
     this.string = string;
     this.node = node;
-    this.tokens = tokens;
     this.assumptions = assumptions;
   }
 
@@ -24,10 +23,6 @@ export default define(class Frame {
 
   getNode() {
     return this.node;
-  }
-
-  getTokens() {
-    return this.tokens;
   }
 
   getAssumptions() {
@@ -311,10 +306,9 @@ export default define(class Frame {
               assumption
             ],
             string = null,
-            node = null,
-            tokens = null;
+            node = null;
 
-      frame = new Frame(string, node, tokens, assumptions);
+      frame = new Frame(string, node, assumptions);
     }
 
     return frame;
@@ -366,9 +360,8 @@ function frameFromFrameNode(frameNode, context) {
   const { Frame } = ontology,
         node = frameNode, ///
         string = context.nodeAsString(node),
-        tokens = context.nodeAsTokens(node),
         assumptions = assumptionsFromFrameNode(frameNode, context),
-        frame = new Frame(string, node, tokens, assumptions);
+        frame = new Frame(string, node, assumptions);
 
   return frame;
 }

@@ -8,7 +8,7 @@ import { equalityFromStatement,
          judgementFromStatement,
          typeAssertionFromStatement,
          propertyAssertionFromStatement,
-         satisfiesAssertionFromStatement } from "../../utilities/context";
+         satisfiesAssertionFromStatement } from "../../utilities/statement";
 
 const { backwardsSome } = arrayUtilities;
 

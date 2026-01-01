@@ -6,7 +6,7 @@ import TemporaryContext from "../context/temporary";
 
 import { define } from "../ontology";
 import { equateStatements } from "../process/equate";
-import { propertyAssertionFromStatement } from "../utilities/context";
+import { propertyAssertionFromStatement } from "../utilities/statement";
 
 export default define(class Step {
   constructor(context, node, string, statement, reference, satisfiesAssertion) {

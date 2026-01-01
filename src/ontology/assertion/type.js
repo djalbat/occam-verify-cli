@@ -7,8 +7,8 @@ import VariableAssignment from "../../assignment/variable";
 import { define } from "../../ontology";
 
 export default define(class TypeAssertion extends Assertion {
-  constructor(string, node, tokens, term, type) {
-    super(string, node, tokens);
+  constructor(string, node, term, type) {
+    super(string, node);
 
     this.term = term;
     this.type = type;
@@ -189,12 +189,11 @@ export default define(class TypeAssertion extends Assertion {
     if (typeAssertionNode !== null) {
       const { Term, Type } = ontology,
             node = typeAssertionNode, ///
-            tokens = null,
             string = context.nodeAsString(node),
             term = Term.fromTypeAssertionNode(typeAssertionNode, context),
             type = Type.fromTypeAssertionNode(typeAssertionNode, context);
 
-      typeAssertion = new TypeAssertion(string, node, tokens, term, type);
+      typeAssertion = new TypeAssertion(string, node, term, type);
     }
 
     return typeAssertion;

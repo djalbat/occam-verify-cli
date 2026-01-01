@@ -5,7 +5,7 @@ import TemporaryContext from "../context/temporary";
 
 import { define } from "../ontology";
 import { assignAssignments } from "../utilities/assignments";
-import { subproofAssertionFromStatement } from "../utilities/context";
+import { subproofAssertionFromStatement } from "../utilities/statement";
 import { termsFromJSON, framesFromJSON, statementFromJSON, procedureCallFromJSON, termsToTermsJSON, framesToFramesJSON, statementToStatementJSON, procedureCallToProcedureCallJSON } from "../utilities/json";
 
 export default define(class Premise {

@@ -5,9 +5,8 @@ import { arrayUtilities } from "necessary";
 const { extract, compress } = arrayUtilities;
 
 export default class TemporaryContext {
-  constructor(context, tokens, terms, frames, statements, assertions, references, substitutions) {
+  constructor(context, terms, frames, statements, assertions, references, substitutions) {
     this.context = context;
-    this.tokens = tokens;
     this.terms = terms;
     this.frames = frames;
     this.statements = statements;
@@ -18,10 +17,6 @@ export default class TemporaryContext {
 
   getContext() {
     return this.context;
-  }
-
-  getTokens() {
-    return tokens;
   }
 
   getTerms() {
@@ -356,45 +351,13 @@ export default class TemporaryContext {
 
   matchTermAndPropertyRelation(term, propertyRelation) { return this.context.matchTermAndPropertyRelation(term, propertyRelation); }
 
-  nodeAsString(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
+  nodeAsString(node, tokens = null) { return this.context.nodeAsString(node, tokens); }
 
-    const string = this.context.nodeAsString(node, tokens);
+  nodesAsString(node, tokens = null) { return this.context.nodesAsString(node, tokens); }
 
-    return string;
-  }
+  nodeAsTokens(node, tokens = null) { return this.context.nodeAsTokens(node, tokens); }
 
-  nodesAsString(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
-
-    const string = this.context.nodesAsString(node, tokens);
-
-    return string;
-  }
-
-  nodeAsTokens(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
-
-    tokens = this.context.nodeAsTokens(node, tokens); ///
-
-    return tokens;
-  }
-
-  nodesAsTokens(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
-
-    tokens = this.context.nodesAsTokens(node, tokens);  ///
-
-    return tokens;
-  }
+  nodesAsTokens(node, tokens = null) { return this.context.nodesAsTokens(node, tokens); }
 
   tokensAsString(tokens) { return this.context.tokensAsString(tokens); }
 
@@ -498,35 +461,21 @@ export default class TemporaryContext {
   static fromNothing(context) {
     const terms = [],
           frames = [],
-          tokens = null,
           statements = [],
           assertions = [],
           references = [],
           substitutions = [],
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, references, substitutions);
+          temporaryContext = new TemporaryContext(context, terms, frames, statements, assertions, references, substitutions);
 
     return temporaryContext;
   }
 
   static fromTermsAndFrames(terms, frames, context) {
-    const tokens = null,
-          statements = [],
+    const statements = [],
           assertions = [],
           references = [],
           substitutions = [],
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, references, substitutions);
-
-    return temporaryContext;
-  }
-
-  static fromContextAndTokens(context, tokens) {
-    const terms = [],
-          frames = [],
-          statements = [],
-          assertions = [],
-          references = [],
-          substitutions = [],
-          temporaryContext = new TemporaryContext(context, tokens, terms, frames, statements, assertions, references, substitutions);
+          temporaryContext = new TemporaryContext(context, terms, frames, statements, assertions, references, substitutions);
 
     return temporaryContext;
   }

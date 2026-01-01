@@ -6,15 +6,11 @@ import Assertion from "../assertion";
 import { define } from "../../ontology";
 
 export default define(class SatisfiesAssertion extends Assertion {
-  constructor(string, node, tokens, signature, reference) {
-    super(string, node, tokens);
+  constructor(string, node, signature, reference) {
+    super(string, node);
 
     this.signature = signature;
     this.reference = reference;
-  }
-
-  getTokens() {
-    return this.tokens;
   }
 
   getSignature() {
@@ -172,10 +168,9 @@ function satisfiesAssertionFromSatisfiesAssertionNode(satisfiesAssertionNode, co
   const { Reference, SatisfiesAssertion } = ontology,
         node = satisfiesAssertionNode,  ///
         string = context.nodeAsString(node),
-        tokens = context.nodeAsTokens(node),
         signature = signatureFromSatisfiesAssertionNode(satisfiesAssertionNode, context),
         reference = Reference.fromSatisfiesAssertionNode(satisfiesAssertionNode, context),
-        satisfiesAssertion = new SatisfiesAssertion(string, node, tokens, signature, reference);
+        satisfiesAssertion = new SatisfiesAssertion(string, node, signature, reference);
 
   return satisfiesAssertion;
 }

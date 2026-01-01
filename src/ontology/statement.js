@@ -14,10 +14,9 @@ import { stripBracketsFromStatementNode } from "../utilities/brackets";
 const { match, backwardsSome } = arrayUtilities;
 
 export default define(class Statement {
-  constructor(string, node, tokens) {
+  constructor(string, node) {
     this.string = string;
     this.node = node;
-    this.tokens = tokens;
   }
 
   getString() {
@@ -26,10 +25,6 @@ export default define(class Statement {
 
   getNode() {
     return this.node;
-  }
-
-  getTokens() {
-    return this.tokens;
   }
 
   getMetavariableName() {
@@ -297,8 +292,7 @@ export default define(class Statement {
     const { string } = json,
           statmentNode = instantiateStatement(string, context),
           node = statmentNode,  ///,
-          tokens = null,
-          statement = new Statement(string, node, tokens);
+          statement = new Statement(string, node);
 
     return statement;
   }

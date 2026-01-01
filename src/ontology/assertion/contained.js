@@ -7,8 +7,8 @@ import { define } from "../../ontology";
 import { termFromTermAndSubstitutions, frameFromFrameAndSubstitutions, statementFromStatementAndSubstitutions } from "../../utilities/substitutions";
 
 export default define(class ContainedAssertion extends Assertion {
-  constructor(string, node, tokens, term, frame, negated, statement) {
-    super(string, node, tokens);
+  constructor(string, node, term, frame, negated, statement) {
+    super(string, node);
 
     this.term = term;
     this.frame = frame;
@@ -211,13 +211,12 @@ export default define(class ContainedAssertion extends Assertion {
       const { Term, Frame, Statement } = ontology,
             node = containedAssertionNode,  ///
             string = context.nodeAsString(node),
-            tokens = context.nodeAsTokens(node),
             negated = containedAssertionNode.isNegated(),
             term = Term.fromContainedAssertionNode(containedAssertionNode, context),
             frame = Frame.fromContainedAssertionNode(containedAssertionNode, context),
             statement = Statement.fromContainedAssertionNode(containedAssertionNode, context);
 
-      containedAssertion = new ContainedAssertion(string, node, tokens, term, frame, negated, statement);
+      containedAssertion = new ContainedAssertion(string, node, term, frame, negated, statement);
     }
 
     return containedAssertion;

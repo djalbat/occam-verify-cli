@@ -10,7 +10,7 @@ import { equalityFromStatement,
          propertyAssertionFromStatement,
          subproofAssertionFromStatement,
          containedAssertionFromStatement,
-         satisfiesAssertionFromStatement } from "../../utilities/context";
+         satisfiesAssertionFromStatement } from "../../utilities/statement";
 
 function verifyAsMetavariableAndSubstitution(statement, assignments, stated, context) {
   let verifiesAsMetavariableAndSubstitution = false;

@@ -11,8 +11,8 @@ import { unifyStatement } from "../../process/unify";
 const { match } = arrayUtilities;
 
 export default define(class SubproofAssertion extends Assertion {
-  constructor(string, node, tokens, statements) {
-    super(string, node, tokens);
+  constructor(string, node, statements) {
+    super(string, node);
 
     this.statements = statements;
   }
@@ -92,11 +92,10 @@ export default define(class SubproofAssertion extends Assertion {
 
     if (subproofAssertionNode !== null) {
       const node = subproofAssertionNode, ///
-            tokens = null,
             string = context.nodeAsString(node),
             statements = statementsFromSubproofAssertionNode(subproofAssertionNode, context);
 
-      subproofAssertion = new SubproofAssertion(string, node, tokens, statements);
+      subproofAssertion = new SubproofAssertion(string, node, statements);
     }
 
     return subproofAssertion;
