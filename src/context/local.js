@@ -358,15 +358,9 @@ class LocalContext {
     return termAndPropertyRelationMatches;
   }
 
-  nodeAsString(node, tokens) { return this.context.nodeAsString(node, tokens); }
+  nodeAsString(node) { return this.context.nodeAsString(node); }
 
-  nodesAsString(node, tokens) { return this.context.nodesAsString(node, tokens); }
-
-  nodeAsTokens(node, tokens) { return this.context.nodeAsTokens(node, tokens); }
-
-  nodesAsTokens(node, tokens) { return this.context.nodesAsTokens(node, tokens); }
-
-  tokensAsString(tokens) { return this.context.tokensAsString(tokens); }
+  nodesAsString(node) { return this.context.nodesAsString(node); }
 
   trace(message, node = null) { this.context.trace(message, node); }
 

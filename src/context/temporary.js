@@ -351,15 +351,9 @@ export default class TemporaryContext {
 
   matchTermAndPropertyRelation(term, propertyRelation) { return this.context.matchTermAndPropertyRelation(term, propertyRelation); }
 
-  nodeAsString(node, tokens = null) { return this.context.nodeAsString(node, tokens); }
+  nodeAsString(node) { return this.context.nodeAsString(node); }
 
-  nodesAsString(node, tokens = null) { return this.context.nodesAsString(node, tokens); }
-
-  nodeAsTokens(node, tokens = null) { return this.context.nodeAsTokens(node, tokens); }
-
-  nodesAsTokens(node, tokens = null) { return this.context.nodesAsTokens(node, tokens); }
-
-  tokensAsString(tokens) { return this.context.tokensAsString(tokens); }
+  nodesAsString(node) { return this.context.nodesAsString(node); }
 
   trace(message, node = null) { this.context.trace(message, node); }
 

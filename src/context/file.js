@@ -6,7 +6,7 @@ import ontology from "../ontology";
 
 import { baseType } from "../ontology/type";
 import { verifyFile } from "../process/verify";
-import { nodeAsTokens, nodeAsString, nodesAsString, tokensAsString } from "../utilities/string";
+import { nodeAsString, nodesAsString } from "../utilities/string";
 import { typesFromJSON,
          rulesFromJSON,
          axiomsFromJSON,
@@ -777,47 +777,17 @@ export default class FileContext {
     return metaLemmaMetatheoremPresent;
   }
 
-  nodeAsString(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
-
-    const string = nodeAsString(node, tokens);
+  nodeAsString(node) {
+    const string = nodeAsString(node, this.tokens);
 
     return string;
   }
 
-  nodesAsString(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
-
-    const string = nodesAsString(node, tokens);
+  nodesAsString(node) {
+    const string = nodesAsString(node, this.tokens);
 
     return string;
   }
-
-  nodeAsTokens(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
-
-    tokens = nodeAsTokens(node, tokens);  ///
-
-    return tokens;
-  }
-
-  nodesAsTokens(node, tokens = null) {
-    if (tokens === null) {
-      tokens = this.tokens;
-    }
-
-    tokens = nodesAsTokens(node, tokens); ///
-
-    return tokens;
-  }
-
-  tokensAsString(tokens) { return tokensAsString(tokens); }
 
   findFile(filePath) { return this.releaseContext.findFile(filePath); }
 

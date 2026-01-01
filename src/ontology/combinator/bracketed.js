@@ -30,8 +30,7 @@ export default define(class BracketedCombinator extends Combinator {
           bracketedCombinatorStatementNode = instantiateBracketedCombinatorStatement(),
           string = bracketedCombinatorStatementString,  ///
           node = bracketedCombinatorStatementNode, ///
-          tokens = null,
-          statement = new Statement(string, node, tokens),
+          statement = new Statement(string, node),
           bracketedCombinator = new BracketedCombinator(statement);
 
     return bracketedCombinator;

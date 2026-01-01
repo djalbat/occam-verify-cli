@@ -28,7 +28,13 @@ export function nodesAsString(nodes, tokens) {
   return string;
 }
 
-export function tokensAsString(tokens) {
+function trimString(string) {
+  string = string.replace(/\s+$/, EMPTY_STRING);  ///
+
+  return string;
+}
+
+function tokensAsString(tokens) {
   const string = tokens.reduce((string, token) => {
     const content = token.getContent();
 
@@ -40,7 +46,7 @@ export function tokensAsString(tokens) {
   return string;
 }
 
-export function nodeAsTokens(node, tokens) {
+function nodeAsTokens(node, tokens) {
   const nodeTerminalNode = node.isTerminalNode();
 
   if (nodeTerminalNode) {
@@ -54,18 +60,6 @@ export function nodeAsTokens(node, tokens) {
   }
 
   return tokens;
-}
-
-export function trimTrailingSlash(string) {
-  string = string.replace(/\/$/, EMPTY_STRING); ///
-
-  return string;
-}
-
-function trimString(string) {
-  string = string.replace(/\s+$/, EMPTY_STRING);  ///
-
-  return string;
 }
 
 function terminalNodeAsTokens(terminalNode, tokens) {

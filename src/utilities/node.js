@@ -40,9 +40,8 @@ export function termFromTermNode(termNode, context) {
 export function statementFromStatementNode(statementNode, context) {
   const { Statement } = ontology,
         node = statementNode, ///
-        tokens = context.nodeAsTokens(node),
-        string = context.tokensAsString(tokens),
-        statement = new Statement(string, node, tokens);
+        string = context.nodeAsString(node),
+        statement = new Statement(string, node);
 
   return statement;
 }
