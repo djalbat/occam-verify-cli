@@ -1,6 +1,6 @@
 "use strict";
 
-import ontology from "../ontology";
+import elements from "../elements";
 
 import { nodeQuery } from "../utilities/query";
 import { isLastRemainingArgumentFunction } from "../utilities/pass";
@@ -182,7 +182,7 @@ class TopLevelPass extends Pass {
       run: (errorNode, context) => {
         let success = false;
 
-        const { Error } = ontology,
+        const { Error } = elements,
               error = Error.fromErrorNode(errorNode, context),
               errorVerifies = error.verify();
 
@@ -198,7 +198,7 @@ class TopLevelPass extends Pass {
       run: (ruleNode, context) => {
         let success = false;
 
-        const { Rule } = ontology,
+        const { Rule } = elements,
               rule = Rule.fromRuleNode(ruleNode, context),
               ruleVerifies = rule.verify();
 
@@ -214,7 +214,7 @@ class TopLevelPass extends Pass {
       run: (axiomNode, context) => {
         let success = false;
 
-        const { Axiom } = ontology,
+        const { Axiom } = elements,
               axiom = Axiom.fromAxiomNode(axiomNode, context),
               axiomVerifies = axiom.verify();
 
@@ -230,7 +230,7 @@ class TopLevelPass extends Pass {
       run: (lemmaNode, context) => {
         let success = false;
 
-        const { Lemma } = ontology,
+        const { Lemma } = elements,
               lemma = Lemma.fromLemmaNode(lemmaNode, context),
               lemmaVerifies = lemma.verify();
 
@@ -246,7 +246,7 @@ class TopLevelPass extends Pass {
       run: (sectionNode, context) => {
         let success = false;
 
-        const { Section } = ontology,
+        const { Section } = elements,
               section = Section.fromSectionNode(sectionNode, context),
               sectionVerifies = section.verify();
 
@@ -262,7 +262,7 @@ class TopLevelPass extends Pass {
       run: (theoremNode, context) => {
         let success = false;
 
-        const { Theorem } = ontology,
+        const { Theorem } = elements,
               theorem = Theorem.fromTheoremNode(theoremNode, context),
               theoremVerifies = theorem.verify();
 
@@ -278,7 +278,7 @@ class TopLevelPass extends Pass {
       run: (metaLemmaNode, context) => {
         let success = false;
 
-        const { MetaLemma } = ontology,
+        const { MetaLemma } = elements,
               metaLemma = MetaLemma.fromMetaLemmaNode(metaLemmaNode, context),
               metaLemmaVerifies = metaLemma.verify();
 
@@ -294,7 +294,7 @@ class TopLevelPass extends Pass {
       run: (conjectureNode, context) => {
         let success = false;
 
-        const { Conjecture } = ontology,
+        const { Conjecture } = elements,
               conjecture = Conjecture.fromConjectureNode(conjectureNode, context),
               conjectureVerifies = conjecture.verify();
 
@@ -310,7 +310,7 @@ class TopLevelPass extends Pass {
       run: (metatheoremNode, context) => {
         let success = false;
 
-        const { Metatheorem } = ontology,
+        const { Metatheorem } = elements,
               metatheorem = Metatheorem.fromMetatheoremNode(metatheoremNode, context),
               metatheoremVerifies = metatheorem.verify();
 
@@ -326,7 +326,7 @@ class TopLevelPass extends Pass {
       run: (variableDeclarationNode, context) => {
         let success = false;
 
-        const { VariableDeclaration } = ontology,
+        const { VariableDeclaration } = elements,
               variableDeclaration = VariableDeclaration.fromVariableDeclarationNode(variableDeclarationNode, context),
               variableDeclarationVerifies = variableDeclaration.verify();
 
@@ -342,7 +342,7 @@ class TopLevelPass extends Pass {
       run: (simpleTypeDeclarationNode, context) => {
         let success = false;
 
-        const { SimpleTypeDeclaration } = ontology,
+        const { SimpleTypeDeclaration } = elements,
               simpleTypeDeclaration = SimpleTypeDeclaration.fromSimpleTypeDeclarationNode(simpleTypeDeclarationNode, context),
               simpleTypeDeclarationVerifies = simpleTypeDeclaration.verify();
 
@@ -358,7 +358,7 @@ class TopLevelPass extends Pass {
       run: (typePrefixDeclarationNode, context) => {
         let success = false;
 
-        const { TypePrefixDeclaration } = ontology,
+        const { TypePrefixDeclaration } = elements,
               typePrefixDeclaration = TypePrefixDeclaration.fromTypePrefixDeclarationNode(typePrefixDeclarationNode, context),
               typePrefixDeclarationVerifies = typePrefixDeclaration.verify();
 
@@ -374,7 +374,7 @@ class TopLevelPass extends Pass {
       run: (combinatorDeclarationNode, context) => {
         let success = false;
 
-        const { CombinatorDeclaration } = ontology,
+        const { CombinatorDeclaration } = elements,
               combinatorDeclaration = CombinatorDeclaration.fromCombinatorDeclarationNode(combinatorDeclarationNode, context),
               combinatorDeclarationVerifies = combinatorDeclaration.verify();
 
@@ -390,7 +390,7 @@ class TopLevelPass extends Pass {
       run: (constructorDeclarationNode, context) => {
         let success = false;
 
-        const { ConstructorDeclaration } = ontology,
+        const { ConstructorDeclaration } = elements,
               constructorDeclaration = ConstructorDeclaration.fromConstructorDeclarationNode(constructorDeclarationNode, context),
               constructorDeclarationVerifies = constructorDeclaration.verify();
 
@@ -406,7 +406,7 @@ class TopLevelPass extends Pass {
       run: (complexTypeDeclarationNode, context) => {
         let success = false;
 
-        const { ComplexTypeDeclaration } = ontology,
+        const { ComplexTypeDeclaration } = elements,
               complexTypeDeclaration = ComplexTypeDeclaration.fromComplexTypeDeclarationNode(complexTypeDeclarationNode, context),
               complexTypeDeclarationVerifies = complexTypeDeclaration.verify();
 
@@ -422,7 +422,7 @@ class TopLevelPass extends Pass {
       run: (metavariableDeclarationNode, context) => {
         let success = false;
 
-        const { MetavariableDeclaration } = ontology,
+        const { MetavariableDeclaration } = elements,
               metavariableDeclaration = MetavariableDeclaration.fromMetavariableDeclarationNode(metavariableDeclarationNode, context),
               metavariableDeclarationVerifies = metavariableDeclaration.verify();
 
@@ -457,7 +457,7 @@ class CombinatorPass extends Pass {
       run: (statementNode, context) => {
         let success = false;
 
-        const { Statement } = ontology,
+        const { Statement } = elements,
               statement = Statement.fromStatementNode(statementNode, context),
               assignments = null,
               stated = false,
@@ -475,7 +475,7 @@ class CombinatorPass extends Pass {
       run: (termNode, context) => {
         let success = false;
 
-        const { Term } = ontology,
+        const { Term } = elements,
               term = Term.fromTermNode(termNode, context),
               termVerifies = term.verify(context, () => {
                 const verifiesAhead = true;
@@ -529,7 +529,7 @@ class ConstructorPass extends Pass {
       run: (termNode, context, verifyAhead) => {
         let success = false;
 
-        const { Term } = ontology,
+        const { Term } = elements,
               term = Term.fromTermNode(termNode, context),
               termVerifies = term.verify(context, verifyAhead);
 

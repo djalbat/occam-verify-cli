@@ -1,11 +1,11 @@
 "use strict";
 
-import ontology from "../../ontology";
+import elements from "../../elements";
 
 function unifyWithBracketedConstructor(term, context, verifyAhead) {
   let unifiesWithBracketedConstructor;
 
-  const { BracketedConstructor } = ontology,
+  const { BracketedConstructor } = elements,
         bracketedConstructor = BracketedConstructor.fromNothing();
 
   unifiesWithBracketedConstructor = bracketedConstructor.unifyTerm(term, context, verifyAhead);
@@ -32,7 +32,7 @@ function unifyWithConstructors(term, context, verifyAhead) {
 function verifyTermAsVariable(term, context, verifyAhead) {
   let termVerifiesAsVariable = false;
 
-  const { Variable } = ontology,
+  const { Variable } = elements,
         termNode = term.getNode(),
         singularVariableNode = termNode.getSingularVariableNode();
 

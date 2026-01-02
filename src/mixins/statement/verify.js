@@ -1,6 +1,6 @@
 "use strict";
 
-import ontology from "../../ontology";
+import elements from "../../elements";
 
 import { equalityFromStatement,
          judgementFromStatement,
@@ -25,7 +25,7 @@ function verifyAsMetavariableAndSubstitution(statement, assignments, stated, con
     const metavariableVerifies = metavariable.verify(context);
 
     if (metavariableVerifies) {
-      const { TermSubstitution, FrameSubstitution } = ontology,
+      const { TermSubstitution, FrameSubstitution } = elements,
             frameSubstitution = FrameSubstitution.fromStatement(statement, context),
             termSubstitution = TermSubstitution.fromStatement(statement, context),
             substitution = (termSubstitution || frameSubstitution);
@@ -54,7 +54,7 @@ function unifyWithBracketedCombinator(statement, assignments, stated, context) {
 
   assignments = null; ///
 
-  const { BracketedCombinator } = ontology,
+  const { BracketedCombinator } = elements,
         bracketedCombinator = BracketedCombinator.fromNothing(),
         unifiesWithBracketedCombinator = bracketedCombinator.unifyStatement(statement, assignments, stated, context);
 

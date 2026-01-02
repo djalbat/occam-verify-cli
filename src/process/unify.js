@@ -1,6 +1,6 @@
 "use strict";
 
-import ontology from "../ontology";
+import elements from "../elements";
 
 import { nodeQuery } from "../utilities/query";
 import { terminalNodeMapFromNodes, areTerminalNodeMapsEqual, isLastRemainingArgumentFunction } from "../utilities/pass";
@@ -346,7 +346,7 @@ class CombinatorPass extends Pass {
 
         context = specificContext;  ///
 
-        const { Statement } = ontology,
+        const { Statement } = elements,
               statement = Statement.fromStatementNode(statementNode, context),
               statementVerifiesGivenType = statement.verifyGivenMetaType(metaType, assignments, stated, context);
 
@@ -375,7 +375,7 @@ class CombinatorPass extends Pass {
 
         context = specificContext;  ///
 
-        const { Frame } = ontology,
+        const { Frame } = elements,
               frame = Frame.fromFrameNode(frameNode, context),
               frameVerifiesGivenType = frame.verifyGivenMetaType(metaType, assignments, stated, context);
 
@@ -405,7 +405,7 @@ class CombinatorPass extends Pass {
         if (type !== null) {
           context = specificContext;  ///
 
-          const { Term } = ontology,
+          const { Term } = elements,
                 term = Term.fromTermNode(termNode, context),
                 termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 
@@ -441,7 +441,7 @@ class ConstructorPass extends Pass {
         if (type !== null) {
           context = specificContext;  ///
 
-          const { Term } = ontology,
+          const { Term } = elements,
                 term = Term.fromTermNode(termNode, context),
                 termVerifiesGivenType = term.verifyGivenType(type, generalContext, specificContext);
 

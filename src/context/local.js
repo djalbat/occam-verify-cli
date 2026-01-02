@@ -2,7 +2,7 @@
 
 import { arrayUtilities } from "necessary";
 
-import ontology from "../ontology";
+import elements from "../elements";
 
 const { last } = arrayUtilities;
 
@@ -124,7 +124,7 @@ class LocalContext {
     const equalityReflexive = equality.isReflexive();
 
     if (!equalityReflexive) {
-      const { Equivalence } = ontology,
+      const { Equivalence } = elements,
             equivalence = Equivalence.fromEquality(equality),
             context = this; ///
 
@@ -373,7 +373,7 @@ class LocalContext {
   error(message, node = null) { this.context.error(message, node); }
 
   static fromNothing(context) {
-    const { Equivalences } = ontology,
+    const { Equivalences } = elements,
           variables = [],
           judgements = [],
           equivalences = Equivalences.fromNothing(),

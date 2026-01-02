@@ -1,0 +1,314 @@
+"use strict";
+
+import Declaration from "../declaration";
+
+import { define } from "../../elements";
+
+export default define(class ComplexTypeDeclaration extends Declaration {
+  constructor(context, node, string, type, prefixed) {
+    super(context, node, string);
+
+    this.type = type;
+    this.prefixed = prefixed;
+  }
+
+  getType() {
+    return this.type;
+  }
+
+  isPrefixed() {
+    return this.prefixed;
+  }
+
+  verify() {
+    let verifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          complexTypeDeclarationString = this.getString(); ///
+
+    context.trace(`Verifying the '${complexTypeDeclarationString}' complex type declaration...`, node);
+
+    if (this.prefixed) {
+      const typeString = this.type.getString();
+
+      context.trace(`The '${typeString}' type is prefixed.`);
+    } else {
+      const typeVerifies = this.verifyType();
+
+      if (typeVerifies) {
+        const superTypesVerify = this.verifySuperTypes();
+
+        if (superTypesVerify) {
+          const propertiesVerify = this.verifyProperties();
+
+          if (propertiesVerify) {
+            const typePrefix = context.getTypePrefix();
+
+            if (typePrefix !== null) {
+              const typePrefixName = typePrefix.getName(),
+                    prefixName = typePrefixName;  ///
+
+              this.type.setPrefixName(prefixName);
+            }
+
+            context.addType(this.type);
+
+            verifies = true;
+          }
+        }
+      }
+    }
+
+    if (verifies) {
+      context.debug(`...verified the '${complexTypeDeclarationString}' complex type declaration.`, node);
+    }
+
+    return verifies;
+  }
+
+  verifyType() {
+    let typeVerifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          typeString = this.type.getString();
+
+    context.trace(`Verifying the '${typeString}' complex type...`, node);
+
+    const typeName = this.type.getName(),
+          includeRelease = true,
+          includeDependencies = false,
+          typePresent = context.isTypePresentByTypeName(typeName, includeRelease, includeDependencies);
+
+    if (typePresent) {
+      context.trace(`The '${typeString}' type is already present.`, node);
+    } else {
+      const prefixedTypeName = typeName, ///
+            typePresent = context.isTypePresentByPrefixedTypeName(prefixedTypeName);
+
+      if (typePresent) {
+        context.trace(`The '${typeString}' type is already present.`, node);
+      } else {
+        typeVerifies = true;
+      }
+    }
+
+    if (typeVerifies) {
+      context.trace(`...verified the '${typeString}' complex type.`, node);
+    }
+
+    return typeVerifies;
+  }
+
+  verifySuperType(superType) {
+    let superTypeVerifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          superTypeString = superType.getString();
+
+    context.trace(`Verifying the '${superTypeString}' super-type...`, node);
+
+    const nominalTypeName = superType.getNominalTypeName(),
+          typeName = nominalTypeName, ///
+          typeNameMatches = this.type.matchTypeName(typeName);
+
+    if (typeNameMatches) {
+      context.trace(`The super-type's name matches the ${typeName}' complex type's name.`, node);
+    } else {
+      const oldSuperType = superType;
+
+      superType = context.findTypeByNominalTypeName(nominalTypeName);
+
+      const superTypePresent = (superType !== null);
+
+      if (superTypePresent) {
+        const newSuperType = superType; ///
+
+        this.type.replaceSuperType(oldSuperType, newSuperType);
+
+        superTypeVerifies = true;
+      }
+    }
+
+    if (superTypeVerifies) {
+      context.debug(`...verified the '${superTypeString}' super-type.`, node);
+    }
+
+    return superTypeVerifies;
+  }
+
+  verifySuperTypes() {
+    let superTypesVerify;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          typeString = this.type.getString();
+
+    context.trace(`Verifying the '${typeString}' complex type's super-types...`, node);
+
+    const typeBasic = this.type.isBasic();
+
+    if (typeBasic) {
+      superTypesVerify = true;
+
+      context.trace(`The '${typeString}' complex type is basic.`, node)
+    } else  {
+      const superTypes = this.type.getSuperTypes();
+
+      superTypesVerify = superTypes.every((superType) => {
+        const superTypeVerifies = this.verifySuperType(superType);
+
+        if (superTypeVerifies) {
+          return true;
+        }
+      });
+    }
+
+    if (superTypesVerify) {
+      context.debug(`...verified the '${typeString}' complex type's super-types.`, node);
+    }
+
+    return superTypesVerify;
+  }
+
+  verifyProperty(property, properties) {
+    let propertyVerifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          propertyString = property.getString();
+
+    context.trace(`Verifying the '${propertyString}' property...`, node);
+
+    const propertyNameVerifies = this.verifyPropertyName(property, properties);
+
+    if (propertyNameVerifies) {
+      const propertyNominalTypeNameVerifies = this.verifyPropertyNominalTypeName(property, properties);
+
+      if (propertyNominalTypeNameVerifies) {
+        propertyVerifies = true;
+      }
+    }
+
+    if (propertyVerifies) {
+      context.debug(`...verified the '${propertyString}' property.`, node);
+    }
+
+    return propertyVerifies;
+  }
+
+  verifyProperties() {
+    let propertiesVerify;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          typeString = this.type.getString();
+
+    context.trace(`Verifying the '${typeString}' complex type's properties...`, node);
+
+    const includeSuperTypes = false,
+          properties = this.type.getProperties(includeSuperTypes);
+
+    propertiesVerify = properties.every((property) => {
+      const propertyVerifies = this.verifyProperty(property, properties);
+
+      if (propertyVerifies) {
+        return true;
+      }
+    });
+
+    if (propertiesVerify) {
+      context.debug(`...verified the '${typeString}' complex type's properties.`, node);
+    }
+
+    return propertiesVerify;
+  }
+
+  verifyPropertyName(property, properties) {
+    let propertyNameVerifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          propertyString = property.getString();
+
+    context.trace(`Verifying the '${propertyString}' property's name...`, node);
+
+    const propertyName = property.getName(),
+          count = properties.reduce((count, property) => {
+            const propertyNameMatches = property.matchPropertyName(propertyName);
+
+            if (propertyNameMatches) {
+              count++;
+            }
+
+            return count;
+          }, 0);
+
+    if (count > 1) {
+      context.debug(`The '${propertyString}' property appears more than once.`, node);
+    } else {
+      const superTypes = this.type.getSuperTypes(),
+            superType = superTypes.find((superType) => {
+              const superTypeProperties = superType.getProperties(),
+                    propertyNameMatches = superTypeProperties.some((superTypeProperty) => {
+                      const propertyNameMatches = superTypeProperty.matchPropertyName(propertyName);
+
+                      if (propertyNameMatches) {
+                        return true;
+                      }
+                    });
+
+              if (propertyNameMatches) {
+                return true;
+              }
+            }) || null;
+
+      if (superType !== null) {
+        const superTypeString = superType.getString();
+
+        context.debug(`The '${superTypeString}' super-type has the same property.`, node);
+      } else {
+        propertyNameVerifies = true;
+      }
+    }
+
+    if (propertyNameVerifies) {
+      context.debug(`...verified the '${propertyString}' property's name.`, node);
+    }
+
+    return propertyNameVerifies;
+  }
+
+  verifyPropertyNominalTypeName(property) {
+    let propertyNominalTypeNameVerifies = false;
+
+    const node = this.getNode(),
+          context = this.getContext(),
+          propertyString = property.getString(),
+          nominalTypeName = property.getNominalTypeName();
+
+    context.trace(`Verifying the '${propertyString}' property's '${nominalTypeName}' nominal type name...`, node);
+
+    const nominalTypeNameMatches = this.type.matchNominalTypeName(nominalTypeName);
+
+    if (nominalTypeNameMatches) {
+      propertyNominalTypeNameVerifies = true;
+    } else {
+      const typePresent = context.isTypePresentByNominalTypeName(nominalTypeName);
+
+      if (typePresent) {
+        propertyNominalTypeNameVerifies = true;
+      }
+    }
+
+    if (propertyNominalTypeNameVerifies) {
+      context.debug(`...verifies the '${propertyString}' property's '${nominalTypeName}' nominal type name.`, node);
+    }
+
+    return propertyNominalTypeNameVerifies;
+  }
+
+  static name = "ComplexTypeDeclaration";
+});

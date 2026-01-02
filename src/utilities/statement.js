@@ -1,9 +1,9 @@
 "use strict";
 
-import ontology from "../ontology";
+import elements from "../elements";
 
 export function equalityFromStatement(statement, context) {
-  const { Equality } = ontology,
+  const { Equality } = elements,
         statementNode = statement.getNode(),
         equality = Equality.fromStatementNode(statementNode, context);
 
@@ -11,7 +11,7 @@ export function equalityFromStatement(statement, context) {
 }
 
 export function judgementFromStatement(statement, context) {
-  const { Judgement } = ontology,
+  const { Judgement } = elements,
         statementNode = statement.getNode(),
         judgement = Judgement.fromStatementNode(statementNode, context);
 
@@ -19,7 +19,7 @@ export function judgementFromStatement(statement, context) {
 }
 
 export function metavariableFromStatement(statement, context) {
-  const { Metavariable } = ontology,
+  const { Metavariable } = elements,
         statementNode = statement.getNode(),
         metavariable = Metavariable.fromStatementNode(statementNode, context);
 
@@ -27,7 +27,7 @@ export function metavariableFromStatement(statement, context) {
 }
 
 export function typeAssertionFromStatement(statement, context) {
-  const { TypeAssertion } = ontology,
+  const { TypeAssertion } = elements,
         statementNode = statement.getNode(),
         typeAssertion = TypeAssertion.fromStatementNode(statementNode, context);
 
@@ -35,7 +35,7 @@ export function typeAssertionFromStatement(statement, context) {
 }
 
 export function definedAssertionFromStatement(statement, context) {
-  const { DefinedAssertion } = ontology,
+  const { DefinedAssertion } = elements,
         statementNode = statement.getNode(),
         definedAssertion = DefinedAssertion.fromStatementNode(statementNode, context);
 
@@ -43,7 +43,7 @@ export function definedAssertionFromStatement(statement, context) {
 }
 
 export function propertyAssertionFromStatement(statement, context) {
-  const { PropertyAssertion } = ontology,
+  const { PropertyAssertion } = elements,
         statementNode = statement.getNode(),
         propertyAssertion = PropertyAssertion.fromStatementNode(statementNode, context);
 
@@ -51,7 +51,7 @@ export function propertyAssertionFromStatement(statement, context) {
 }
 
 export function subproofAssertionFromStatement(statement, context) {
-  const { SubproofAssertion } = ontology,
+  const { SubproofAssertion } = elements,
         statementNode = statement.getNode(),
         subproofAssertion = SubproofAssertion.fromStatementNode(statementNode, context);
 
@@ -59,7 +59,7 @@ export function subproofAssertionFromStatement(statement, context) {
 }
 
 export function containedAssertionFromStatement(statement, context) {
-  const { ContainedAssertion } = ontology,
+  const { ContainedAssertion } = elements,
         statementNode = statement.getNode(),
         containedAssertion = ContainedAssertion.fromStatementNode(statementNode, context);
 
@@ -67,7 +67,7 @@ export function containedAssertionFromStatement(statement, context) {
 }
 
 export function satisfiesAssertionFromStatement(statement, context) {
-  const { SatisfiesAssertion } = ontology,
+  const { SatisfiesAssertion } = elements,
         statementNode = statement.getNode(),
         satisfiesAssertion = SatisfiesAssertion.fromStatementNode(statementNode, context);
 

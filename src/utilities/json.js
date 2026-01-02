@@ -1,6 +1,6 @@
 "use strict";
 
-import ontology from "../ontology";
+import elements from "../elements";
 
 export function termFromJSON(json, context) {
   let { term } = json;
@@ -9,7 +9,7 @@ export function termFromJSON(json, context) {
 
   json = termJSON;  ///
 
-  const { Term } = ontology;
+  const { Term } = elements;
 
   term = Term.fromJSON(json, context);
 
@@ -52,7 +52,7 @@ export function statementFromJSON(json, context) {
   let { statement = null } = json;
 
   if (statement !== null) {
-    const { Statement } = ontology,
+    const { Statement } = elements,
           statementJSON = statement;  ///
 
     json = statementJSON; ///
@@ -66,7 +66,7 @@ export function statementFromJSON(json, context) {
 export function deductionFromJSON(json, context) {
   let { deduction } = json;
 
-  const { Deduction } = ontology,
+  const { Deduction } = elements,
         deductionJSON = deduction;  ///
 
   json = deductionJSON;  ///
@@ -80,7 +80,7 @@ export function signatureFromJSON(json, context) {
   let { signature = null } = json;
 
   if (signature !== null) {
-    const { Signature } = ontology,
+    const { Signature } = elements,
           signatureJSON = signature;  ///
 
     json = signatureJSON; ///
@@ -94,7 +94,7 @@ export function signatureFromJSON(json, context) {
 export function referenceFromJSON(json, context) {
   let { reference } = json;
 
-  const { Reference } = ontology,
+  const { Reference } = elements,
         referenceJSON = reference;  ///
 
   json = referenceJSON; ///
@@ -107,7 +107,7 @@ export function referenceFromJSON(json, context) {
 export function conclusionFromJSON(json, context) {
   let { conclusion } = json;
 
-  const { Conclusion } = ontology,
+  const { Conclusion } = elements,
         conclusionJSON = conclusion;  ///
 
   json = conclusionJSON;  ///
@@ -120,7 +120,7 @@ export function conclusionFromJSON(json, context) {
 export function metavariableFromJSON(json, context) {
   let { metavariable } = json;
 
-  const { Metavariable } = ontology,
+  const { Metavariable } = elements,
         metavariableJSON = metavariable;  ///
 
   json = metavariableJSON; ///
@@ -134,7 +134,7 @@ export function procedureCallFromJSON(json, context) {
   let { procedureCall = null } = json;
 
   if (procedureCall !== null) {
-    const { ProcedureCall } = ontology,
+    const { ProcedureCall } = elements,
           procedureCallJSON = procedureCall;  ///
 
     json = procedureCallJSON; ///
@@ -148,7 +148,7 @@ export function procedureCallFromJSON(json, context) {
 export function procedureReferenceFromJSON(json, context) {
   let { procedureReference } = json;
 
-  const { ProcedureReference } = ontology,
+  const { ProcedureReference } = elements,
         procedureReferenceJSON = procedureReference;  ///
 
   json = procedureReferenceJSON;  ///
@@ -161,7 +161,7 @@ export function procedureReferenceFromJSON(json, context) {
 export function typesFromJSON(json, types, context) {
   const { types: typesJSON } = json;
 
-  const { Type } = ontology;
+  const { Type } = elements;
 
   typesJSON.forEach((typeJSON) => {
     const json = typeJSON,  ///
@@ -174,7 +174,7 @@ export function typesFromJSON(json, types, context) {
 export function termsFromJSON(json, context) {
   let { terms } = json;
 
-  const { Term } = ontology,
+  const { Term } = elements,
         termsJSON = terms; ///
 
   terms = termsJSON.map((termJSON) => {
@@ -190,7 +190,7 @@ export function termsFromJSON(json, context) {
 export function rulesFromJSON(json, context) {
   let { rules } = json;
 
-  const { Rule } = ontology,
+  const { Rule } = elements,
         rulesJSON = rules; ///
 
   rules = rulesJSON.map((ruleJSON) => {
@@ -206,7 +206,7 @@ export function rulesFromJSON(json, context) {
 export function labelFromJSON(json, context) {
   let { label } = json;
 
-  const { Label } = ontology,
+  const { Label } = elements,
         labelJSON = label;  ///
 
   json = labelJSON; ///
@@ -219,7 +219,7 @@ export function labelFromJSON(json, context) {
 export function framesFromJSON(json, context) {
   let { frames } = json;
 
-  const { Frame } = ontology,
+  const { Frame } = elements,
         framesJSON = frames; ///
 
   frames = framesJSON.map((frameJSON) => {
@@ -235,7 +235,7 @@ export function framesFromJSON(json, context) {
 export function labelsFromJSON(json, context) {
   let { labels } = json;
 
-  const { Label } = ontology,
+  const { Label } = elements,
         labelsJSON = labels;  ///
 
   labels = labelsJSON.map((labelJSON) => {
@@ -251,7 +251,7 @@ export function labelsFromJSON(json, context) {
 export function axiomsFromJSON(json, context) {
   let { axioms } = json;
 
-  const { Axiom } = ontology,
+  const { Axiom } = elements,
         axiomsJSON = axioms; ///
 
   axioms = axiomsJSON.map((axiomJSON) => {
@@ -267,7 +267,7 @@ export function axiomsFromJSON(json, context) {
 export function premisesFromJSON(json, context) {
   let { premises } = json;
 
-  const { Premise } = ontology,
+  const { Premise } = elements,
         premisesJSON = premises;  ///
 
   premises = premisesJSON.map((premiseJSON) => {
@@ -283,7 +283,7 @@ export function premisesFromJSON(json, context) {
 export function theoremsFromJSON(json, context) {
   let { theorems } = json;
 
-  const { Theorem } = ontology,
+  const { Theorem } = elements,
         theoremsJSON = theorems; ///
 
   theorems = theoremsJSON.map((theoremJSON) => {
@@ -299,7 +299,7 @@ export function theoremsFromJSON(json, context) {
 export function variablesFromJSON(json, context) {
   let { variables } = json;
 
-  const { Variable } = ontology,
+  const { Variable } = elements,
         variablesJSON = variables; ///
 
   variables = variablesJSON.map((variableJSON) => {
@@ -315,7 +315,7 @@ export function variablesFromJSON(json, context) {
 export function propertiesFromJSON(json, context) {
   let { properties } = json;
 
-  const { Property } = ontology,
+  const { Property } = elements,
         propertiesJSON = properties; ///
 
   properties = propertiesJSON.map((propertyJSON) => {
@@ -348,7 +348,7 @@ export function superTypesFromJSON(json, context) {
 export function hypothesesFromJSON(json, context) {
   let { hypotheses } = json;
 
-  const { Hypothesis } = ontology,
+  const { Hypothesis } = elements,
         hypothesesJSON = hypotheses;  ///
 
   hypotheses = hypothesesJSON.map((hypothesisJSON) => {
@@ -364,7 +364,7 @@ export function hypothesesFromJSON(json, context) {
 export function parametersFromJSON(json, context) {
   let { parameters } = json;
 
-  const { Parameter } = ontology,
+  const { Parameter } = elements,
         parametersJSON = parameters; ///
 
   parameters = parametersJSON.map((parameterJSON) => {
@@ -380,7 +380,7 @@ export function parametersFromJSON(json, context) {
 export function conjecturesFromJSON(json, context) {
   let { conjectures } = json;
 
-  const { Conjecture } = ontology,
+  const { Conjecture } = elements,
         conjecturesJSON = conjectures; ///
 
   conjectures = conjecturesJSON.map((conjectureJSON) => {
@@ -396,7 +396,7 @@ export function conjecturesFromJSON(json, context) {
 export function combinatorsFromJSON(json, context) {
   let { combinators } = json;
 
-  const { Combinator } = ontology,
+  const { Combinator } = elements,
         combinatorsJSON = combinators; ///
 
   combinators = combinatorsJSON.map((combinatorJSON) => {
@@ -412,7 +412,7 @@ export function combinatorsFromJSON(json, context) {
 export function typePrefixesFromJSON(json, context) {
   let { typePrefixes } = json;
 
-  const { TypePrefix } = ontology,
+  const { TypePrefix } = elements,
         typePrefixesJSON = typePrefixes; ///
 
   typePrefixes = typePrefixesJSON.map((typePrefixJSON) => {
@@ -428,7 +428,7 @@ export function typePrefixesFromJSON(json, context) {
 export function constructorsFromJSON(json, context) {
   let { constructors } = json;
 
-  const { Constructor } = ontology,
+  const { Constructor } = elements,
         constructorsJSON = constructors; ///
 
   constructors = constructorsJSON.map((constructorJSON) => {
@@ -444,7 +444,7 @@ export function constructorsFromJSON(json, context) {
 export function metatheoremsFromJSON(json, context) {
   let { metatheorems } = json;
 
-  const { Metatheorem } = ontology,
+  const { Metatheorem } = elements,
         metatheoremsJSON = metatheorems; ///
 
   metatheorems = metatheoremsJSON.map((metatheoremJSON) => {
@@ -460,7 +460,7 @@ export function metatheoremsFromJSON(json, context) {
 export function suppositionsFromJSON(json, context) {
   let { suppositions } = json;
 
-  const { Supposition } = ontology,
+  const { Supposition } = elements,
         suppositionsJSON = suppositions;  ///
 
   suppositions = suppositionsJSON.map((suppositionJSON) => {
@@ -476,7 +476,7 @@ export function suppositionsFromJSON(json, context) {
 export function substitutionsFromJSON(json, context) {
   let { substitutions = [] } = json;  ///
 
-  const { StatementSubstitution } = ontology,
+  const { StatementSubstitution } = elements,
         substitutionsJSON = substitutions,  ///
         Substitution = StatementSubstitution; ///
 
@@ -493,7 +493,7 @@ export function substitutionsFromJSON(json, context) {
 export function metavariablesFromJSON(json, context) {
   let { metavariables } = json;
 
-  const { Metavariable } = ontology,
+  const { Metavariable } = elements,
         metavariablesJSON = metavariables; ///
 
   metavariables = metavariablesJSON.map((metavariableJSON) => {
